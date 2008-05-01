@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.1.1.1 2007-09-04 15:59:14 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.2 2008-05-01 19:37:54 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -34,13 +34,6 @@ StereoFitter::StereoFitter ( const std::string& type,
 {
   // interface
   declareInterface<IStereoFitter>(this);
-}
-
-StatusCode StereoFitter::initialize()
-{
-  // Sets up various tools and services
-  const StatusCode sc = Rich::Rec::ToolBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
 
   //----------set up some geometric parameters (also done in option file)
   //geometrical data: Z coordinate of entrance and exit windows (cm)
@@ -48,6 +41,7 @@ StatusCode StereoFitter::initialize()
   m_zinWindowRich.push_back( 990 ); // C4F10
   m_zinWindowRich.push_back( 9450 ); // CF4
   declareProperty( "ZinWindowRich",  m_zinWindowRich);
+
   m_zoutWindowRich.push_back( 0 );       // Aerogel
   m_zoutWindowRich.push_back( 2165 );   // C4F10
   m_zoutWindowRich.push_back( 11900 );   // CF4
@@ -64,18 +58,6 @@ StatusCode StereoFitter::initialize()
   m_thickRadiator.push_back( 2.60e-02 ); // C4F10
   m_thickRadiator.push_back( 2.04e-02 ); // CF4
   declareProperty( "ThicknessRadiator", m_thickRadiator );
-
-  //geometrical data: mean index of radiators
-  m_meanIndexRad.push_back( 1.033 );  // Aerogel
-  m_meanIndexRad.push_back( 1.00136 );  // C4F10
-  m_meanIndexRad.push_back( 1.000416 ); // CF4
-  declareProperty( "MeanIndexRad", m_meanIndexRad );
-
-  //geometrical data: RMS index of radiators
-  m_rmsIndexRad.push_back( 488.7e-6 );     // Aerogel
-  m_rmsIndexRad.push_back( 39.30e-06 );  // C4F10
-  m_rmsIndexRad.push_back( 12.31e-06 );   // CF4
-  declareProperty( "RmsIndexRad", m_rmsIndexRad );
 
   //geometrical data: X curvature in radiators
   m_curvX.push_back( 0 );  // Aerogel
@@ -126,6 +108,14 @@ StatusCode StereoFitter::initialize()
   //Scattering formula constant (P in GeV)
   declareProperty( "CScatt", m_scatt = 13.6e-03 );
 
+}
+
+StatusCode StereoFitter::initialize()
+{
+  // Sets up various tools and services
+  const StatusCode sc = Rich::Rec::ToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
   //-------------Acquire instances of tools
   acquireTool( "RichStereoProjection",    m_stereoProj );
   acquireTool( "RichCherenkovAngle",      m_ckAngleTool );
@@ -133,231 +123,259 @@ StatusCode StereoFitter::initialize()
   acquireTool( "RichParticleProperties",  m_richPartProp );
   acquireTool( "RichGeomEff",             m_geomEffic );
   acquireTool( "RichPhotonSignal",        m_photonSig );
+  acquireTool( "RichRefractiveIndex",     m_refIndex );
 
   return sc;
 }
 
 //Fitter
-int StereoFitter::Fit( RichRecSegment *richSegment, const Rich::ParticleIDType pidType,
-                       int MinRingPhotons, double nthcPhotSigMax, int ncandsPerPixMax,
-                       double maxBkgProb,
-                       double &Chi2, double &probChi2, int &ndof, double &thcFit, double &thcFitErr, double &thphotErr) const
+//int StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
+//                       double &Chi2,
+//                       double &probChi2,
+//                       int    &ndof,
+//                       double &thcFit,
+//                       double &thcFitErr,
+//                       double &thphotErr,
+//                       const Rich::ParticleIDType pidType,
+//                       int     MinRingPhotons,
+//                       double  nthcPhotSigMax,
+//                       int     ncandsPerPixMax,
+//                       double  maxBkgProb
+//                       ) const
+IStereoFitter::Result 
+StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
+                   const IStereoFitter::Configuration & config ) const
 {
   if ( msgLevel(MSG::DEBUG) ) debug()<<"Stereo Fitter"<<endreq;
 
-  if(richSegment!=0) {
-    //init some internal variables
-    m_chi2Prev=1e33;
-    m_chi2ExpPrev=-1;
-    m_probPrev=-1;
-    m_probExpPrev=-1;
-    m_dofPrev=-1;
-    m_CerenkovPrev=-1;
-    m_CerenkovErrPrev=-1;
-    m_photonThcSigmaPrev=-1;
+  if ( NULL == richSegment ) return Result(Result::Failed);
 
-    //basic track/segment info
-    Gaudi::XYZVector VPTrk=richSegment->trackSegment().bestMomentum();
-    double PTrk=VPTrk.R()/Gaudi::Units::GeV;
+  // initial internal values
+  m_chi2Prev=1e33;
+  m_chi2ExpPrev=-1;
+  m_probPrev=-1;
+  m_probExpPrev=-1;
+  m_dofPrev=-1;
+  m_CerenkovPrev=-1;
+  m_CerenkovErrPrev=-1;
+  m_photonThcSigmaPrev=-1;
 
-    //--------------Cerenkov angle and resolution (above threshold?)
-    double thcNominal=m_ckAngleTool->avgCherenkovTheta(richSegment,pidType);
-    double thcPhotSig=m_ckResTool->ckThetaResolution(richSegment,pidType);
-    if(thcNominal>0 && thcPhotSig>0) {
-      //----Rich track associated to segment and related info
-      const RichRecTrack *rTrack=richSegment->richRecTrack();
-      const LHCb::Track *parentTrack=dynamic_cast<const LHCb::Track*>(rTrack->parentTrack());   //Parent Track
-      if (!parentTrack) return(0);
-      //radiator type
-      Rich::RadiatorType richRadiator=richSegment->trackSegment().radiator();
+  //basic track/segment info
+  Gaudi::XYZVector VPTrk=richSegment->trackSegment().bestMomentum();
+  double PTrk=VPTrk.R()/Gaudi::Units::GeV;
 
-      //------------geometric info
-      //Get state closest to entrance window of radiator
-      const State *inRadiatorState = &(parentTrack->closestState(m_zinWindowRich[richRadiator]));
-      if(!inRadiatorState) return(0);
-      //geometric efficiency for current mass hypothesis
-      double geomEfficiency = m_geomEffic->geomEfficiency(richSegment, pidType);
+  //--------------Cerenkov angle and resolution (above threshold?)
+  const double thcNominal=m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
+  const double thcPhotSig=m_ckResTool->ckThetaResolution(richSegment,config.pidType);
+  if(thcNominal>0 && thcPhotSig>0) {
+    //----Rich track associated to segment and related info
+    const RichRecTrack *rTrack=richSegment->richRecTrack();
+    const LHCb::Track *parentTrack=dynamic_cast<const LHCb::Track*>(rTrack->parentTrack());   //Parent Track
+    if (!parentTrack) {
+      Error( "No track " );
+      return Result(Result::Failed);
+    }
+    //radiator type
+    Rich::RadiatorType richRadiator=richSegment->trackSegment().radiator();
 
-      //---------------------Asymptotic resolutions subtracted from chromatics, for each track type
-      Rich::Rec::Track::Type trType = rTrack->trackID().trackType();
-      bool unique = rTrack->trackID().unique();
-      double asymptoticRes(AsymptoticResDefault);
-      if(trType==Rich::Rec::Track::Forward && unique) asymptoticRes=m_asymptoticResFwrd[richRadiator];
-      else if(trType==Rich::Rec::Track::Match && unique) asymptoticRes=m_asymptoticResMatch[richRadiator];
-      else if(trType==Rich::Rec::Track::Seed && unique) asymptoticRes=m_asymptoticResPreDet[richRadiator];    //same
-      else if(trType==Rich::Rec::Track::VeloTT && unique) asymptoticRes=m_asymptoticResPreDet[richRadiator];
-      else if(trType==Rich::Rec::Track::KsTrack && unique) asymptoticRes=m_asymptoticResKsTrk[richRadiator];
+    //------------geometric info
+    //Get state closest to entrance window of radiator
+    const State *inRadiatorState = &(parentTrack->closestState(m_zinWindowRich[richRadiator]));
 
-      //------ preliminary error computation
-      double lengthEffect,errMom,err_tx2,err_ty2,trkCharge;
-      bool trkOK = trkErrStereo(inRadiatorState,richSegment,lengthEffect,errMom,err_tx2,err_ty2,trkCharge);
+    //---------------------Asymptotic resolutions subtracted from chromatics, for each track type
+    const Rich::Rec::Track::Type trType = rTrack->trackID().trackType();
+    const bool unique = rTrack->trackID().unique();
+    double asymptoticRes(s_AsymptoticResDefault);
+    if     (trType==Rich::Rec::Track::Forward && unique) asymptoticRes=m_asymptoticResFwrd[richRadiator];
+    else if(trType==Rich::Rec::Track::Match && unique)   asymptoticRes=m_asymptoticResMatch[richRadiator];
+    else if(trType==Rich::Rec::Track::Seed && unique)    asymptoticRes=m_asymptoticResPreDet[richRadiator];    //same
+    else if(trType==Rich::Rec::Track::VeloTT && unique)  asymptoticRes=m_asymptoticResPreDet[richRadiator];
+    else if(trType==Rich::Rec::Track::KsTrack && unique) asymptoticRes=m_asymptoticResKsTrk[richRadiator];
 
-      double m_photonThcSigma=improvedErrorPerPhoton_index(PTrk, lengthEffect, errMom, err_tx2, err_ty2,
-                                                           thcNominal, richRadiator, asymptoticRes, pidType);
+    //------ preliminary error computation
+    double lengthEffect,errMom,err_tx2,err_ty2,trkCharge;
+    //bool trkOK =
+    trkErrStereo(inRadiatorState,richSegment,lengthEffect,errMom,err_tx2,err_ty2,trkCharge);
 
-      //------------------- iterative fit section: initialization
-      g_XCenterGuess=0; g_YCenterGuess=0;
+    double m_photonThcSigma = improvedErrorPerPhoton_index( PTrk,
+                                                            lengthEffect,
+                                                            errMom,
+                                                            err_tx2,
+                                                            err_ty2,
+                                                            thcNominal,
+                                                            richRadiator,
+                                                            asymptoticRes,
+                                                            config.pidType );
 
-      int n_iter(0);
-      double diffChi2(diffChi2Lim);
-      bool segUpdateDone(false), photonUpdateDone(false);
+    //------------------- iterative fit section: initialization
+    g_XCenterGuess=0; g_YCenterGuess=0;
 
-      //save segment direction and crossing points before next steps
-      m_segEntryDir=richSegment->trackSegment().entryMomentum();
-      m_segMidDir=richSegment->trackSegment().middleMomentum();
-      m_segExitDir=richSegment->trackSegment().exitMomentum();
-      m_segEntryPtn=richSegment->trackSegment().entryPoint();
-      m_segMidPtn=richSegment->trackSegment().middlePoint();
-      m_segExitPtn=richSegment->trackSegment().exitPoint();
+    int n_iter(0);
+    double diffChi2(s_diffChi2Lim);
+    bool segUpdateDone(false), photonUpdateDone(false);
+
+    //save segment direction and crossing points before next steps
+    m_segEntryDir=richSegment->trackSegment().entryMomentum();
+    m_segMidDir=richSegment->trackSegment().middleMomentum();
+    m_segExitDir=richSegment->trackSegment().exitMomentum();
+    m_segEntryPtn=richSegment->trackSegment().entryPoint();
+    m_segMidPtn=richSegment->trackSegment().middlePoint();
+    m_segExitPtn=richSegment->trackSegment().exitPoint();
 
 
-      RichRecPhoton::ConstVector goodPhotons;
-      while((diffChi2 >= diffChi2Lim) && (n_iter < nIterMax)) {
-        //------------------Select good photons for ring stereo fit
-        RichRecRing recRing;
+    RichRecPhoton::ConstVector goodPhotons;
+    while((diffChi2 >= s_diffChi2Lim) && (n_iter < s_nIterMax)) {
+      //------------------Select good photons for ring stereo fit
+      RichRecRing recRing;
 
-        if(n_iter==0) {   //first iteration
+      if(n_iter==0) {   //first iteration
 
-          //global renormalization of individual photon variance
-          m_newErrorPerPhotonSelect*=pow(m_globGammmaNorm[richRadiator],2);
+        //global renormalization of individual photon variance
+        m_newErrorPerPhotonSelect*=std::pow(m_globGammmaNorm[richRadiator],2);
 
-          //-------------select photons using thetaC cut (iteration 0)
-          const RichRecSegment::Photons &photons=richSegment->richRecPhotons();     //segment photon candidates
-          for(RichRecSegment::Photons::const_iterator iPhot=photons.begin(); iPhot != photons.end(); ++iPhot) {
-            if(goodPhotonTheta(*iPhot, pidType, thcNominal, m_photonThcSigma, nthcPhotSigMax, ncandsPerPixMax, maxBkgProb)) {
-              goodPhotons.push_back(*iPhot);
-            }
+        //-------------select photons using thetaC cut (iteration 0)
+        const RichRecSegment::Photons &photons=richSegment->richRecPhotons();     //segment photon candidates
+        for(RichRecSegment::Photons::const_iterator iPhot=photons.begin(); iPhot != photons.end(); ++iPhot) {
+          if ( goodPhotonTheta( *iPhot, config.pidType, thcNominal, m_photonThcSigma,
+                                config.nthcPhotSigMax, config.ncandsPerPixMax, config.maxBkgProb) )
+          {
+            goodPhotons.push_back(*iPhot);
           }
-          int ngoodPhot=goodPhotons.size();
-
-          //stereo projection
-          m_stereoProj->Project(goodPhotons,recRing);
-
-          //compute initial (iteration 0) radius guestimation
-          double radiusSquareGuess(0);
-          for(int iphot=0;iphot<ngoodPhot;iphot++ ) {
-            Gaudi::XYZPoint vphot=recRing.ringPoints()[iphot].localPosition();
-            radiusSquareGuess+=(vphot.X()-g_XCenterGuess)*(vphot.X()-g_XCenterGuess);
-            radiusSquareGuess+=(vphot.Y()-g_YCenterGuess)*(vphot.Y()-g_YCenterGuess);
-          }
-          radiusSquareGuess/=ngoodPhot;
-          m_RadiusGuess=sqrt(radiusSquareGuess);
         }
-        else { // other iterations
-          //Update segment to account for ring center changes (due to fit)
-          if(!segUpdateDone) {
-            updateSegmentDirection(richSegment, goodPhotons, XcenterFitted(), YcenterFitted());
-          }
+        const int ngoodPhot = goodPhotons.size();
+        debug() << "2 goodPhotons.size() = " << goodPhotons.size() << endreq;
+        //stereo projection
+        m_stereoProj->Project(goodPhotons,recRing);
+        debug() << "3 goodPhotons.size() = " << goodPhotons.size() << endreq;
 
-          //update all photons associated to segment
-          if (!photonUpdateDone) {
-            updateAllPhotonAngles(richSegment, goodPhotons);
-          }
-
-          //stereo projection
-          int stat1=m_stereoProj->Project(goodPhotons,recRing);
-
-          //-------------select photons using distance in stereo plane (iteration > 0)
-          //adapt nsigma cut (in radius) to small radii and/or big errors...
-          double NsigRcut;
-          double RadiusErrorPhot = sqrt(m_newErrorPerPhotonSelect);
-          if((radiusFitted()-m_nSigmaCut*RadiusErrorPhot)<0) NsigRcut=fabs(radiusFitted()/RadiusErrorPhot);
-          else NsigRcut=m_nSigmaCut;
-          m_RadiusGuess=radiusFitted();     //refresh radius estimation
-
-          int index=0;
-          RichRecPhoton::ConstVector goodPhotonsTmp;
-          for(RichRecPhoton::ConstVector::iterator iPhot = goodPhotons.begin(); iPhot != goodPhotons.end(); ++iPhot) {
-            double xphot=recRing.ringPoints()[index].localPosition().X();
-            double yphot=recRing.ringPoints()[index].localPosition().Y();
-            double sep = radiusFitted()-sqrt(pow(xphot-XcenterFitted(),2) + pow(yphot-YcenterFitted(),2));
-            if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
-            index++;
-          }
-          goodPhotons = goodPhotonsTmp;
+        //compute initial (iteration 0) radius guestimation
+        double radiusSquareGuess(0);
+        for(int iphot=0;iphot<ngoodPhot;iphot++ ) {
+          Gaudi::XYZPoint vphot=recRing.ringPoints()[iphot].localPosition();
+          radiusSquareGuess+=(vphot.X()-g_XCenterGuess)*(vphot.X()-g_XCenterGuess);
+          radiusSquareGuess+=(vphot.Y()-g_YCenterGuess)*(vphot.Y()-g_YCenterGuess);
+        }
+        radiusSquareGuess/=ngoodPhot;
+        m_RadiusGuess=std::sqrt(radiusSquareGuess);
+      }
+      else { // other iterations
+        //Update segment to account for ring center changes (due to fit)
+        if(!segUpdateDone) {
+          updateSegmentDirection(richSegment, goodPhotons, XcenterFitted(), YcenterFitted());
         }
 
-        //filter according to number of photons
-        int ngoodPhot=goodPhotons.size();
-        if(ngoodPhot>=MinRingPhotons && ngoodPhot<NmaxFitPhot) {
+        //update all photons associated to segment
+        if (!photonUpdateDone) {
+          updateAllPhotonAngles(richSegment, goodPhotons);
+        }
 
-          //------------- begin fit steps
-          //compute covariance matrix, solve chi2 equations, get the fitted solution
-          bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
-          if(statusCovarianceMatrix = newCovarianceMatrix(recRing)) {
-            if(statusSolveChi2Eq = solveChi2Equations(recRing)) {
-              statusTransferFit=transferFitSolution(recRing);
-              if(statusTransferFit) {
-                diffChi2=m_chi2Prev-m_chi2;
-                //--keep 'old solution' if necessary
-                if(diffChi2>0) {
-                  for(int i=0;i<3;i++) m_solPrev[i]=m_sol[i];
-                  m_chi2Prev=m_chi2;
-                  m_chi2ExpPrev=m_chi2Exp;
-                  m_probPrev=m_prob;
-                  m_probExpPrev=m_probExp;
-                  m_dofPrev=m_dof;
-                  m_CerenkovPrev=m_Cerenkov;
-                  m_CerenkovErrPrev=m_CerenkovErr;
-                  m_photonThcSigmaPrev=m_photonThcSigma;
-                }
-              }
-              else {
-                resetSegmentDirection(richSegment);
-                return(0);
+        //stereo projection
+        //const int stat1=
+        m_stereoProj->Project(goodPhotons,recRing);
+
+
+        //-------------select photons using distance in stereo plane (iteration > 0)
+        //adapt nsigma cut (in radius) to small radii and/or big errors...
+        double NsigRcut;
+        double RadiusErrorPhot = std::sqrt(m_newErrorPerPhotonSelect);
+        if((radiusFitted()-m_nSigmaCut*RadiusErrorPhot)<0) NsigRcut=fabs(radiusFitted()/RadiusErrorPhot);
+        else NsigRcut=m_nSigmaCut;
+        m_RadiusGuess=radiusFitted();     //refresh radius estimation
+
+        int index=0;
+        RichRecPhoton::ConstVector goodPhotonsTmp;
+        for(RichRecPhoton::ConstVector::iterator iPhot = goodPhotons.begin();
+            iPhot != goodPhotons.end(); ++iPhot)
+        {
+          double xphot=recRing.ringPoints()[index].localPosition().X();
+          double yphot=recRing.ringPoints()[index].localPosition().Y();
+          double sep = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
+          debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endreq;
+          if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
+          debug() << "6 goodPhotonsTmp.size() = " << goodPhotonsTmp.size() << endreq;
+          index++;
+        }
+        goodPhotons = goodPhotonsTmp;
+        debug() << "5 goodPhotons.size() = " << goodPhotons.size() << endreq;
+        debug() << "6 goodPhotonsTmp.size() = " << goodPhotonsTmp.size() << endreq;
+      }
+
+      //filter according to number of photons
+      int ngoodPhot=goodPhotons.size();
+      debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
+      if(ngoodPhot>=config.minRingPhotons && ngoodPhot<s_NmaxFitPhot) {
+
+        //------------- begin fit steps
+        //compute covariance matrix, solve chi2 equations, get the fitted solution
+        bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
+        if(statusCovarianceMatrix = newCovarianceMatrix(recRing)) {
+          if(statusSolveChi2Eq = solveChi2Equations(recRing)) {
+            statusTransferFit=transferFitSolution(recRing);
+            if(statusTransferFit) {
+              diffChi2=m_chi2Prev-m_chi2;
+              //--keep 'old solution' if necessary
+              if(diffChi2>0) {
+                for(int i=0;i<3;i++) m_solPrev[i]=m_sol[i];
+                m_chi2Prev=m_chi2;
+                m_chi2ExpPrev=m_chi2Exp;
+                m_probPrev=m_prob;
+                m_probExpPrev=m_probExp;
+                m_dofPrev=m_dof;
+                m_CerenkovPrev=m_Cerenkov;
+                m_CerenkovErrPrev=m_CerenkovErr;
+                m_photonThcSigmaPrev=m_photonThcSigma;
               }
             }
             else {
               resetSegmentDirection(richSegment);
-              return(0);
+              return Result(Result::Failed);
             }
           }
           else {
             resetSegmentDirection(richSegment);
-            return(0);
+            return Result(Result::Failed);
           }
         }
         else {
-          if(msgLevel(MSG::DEBUG)) debug()<<"Too many or to few photons in stereo fitter"
-                                          <<", ngoodPhot="<<ngoodPhot<<endreq;
-          break;
+          resetSegmentDirection(richSegment);
+          return Result(Result::Failed);
         }
-        n_iter++;
-      }
-
-      //choose solution depending on chi2
-      if(m_chi2Prev<m_chi2) {
-        Chi2=m_chi2Prev;
-        probChi2=m_probPrev;
-        ndof=m_dofPrev;
-        thcFit=m_CerenkovPrev;
-        thcFitErr=m_CerenkovErrPrev;
-        thphotErr=m_photonThcSigmaPrev;
       }
       else {
-        Chi2=m_chi2;
-        probChi2=m_prob;
-        ndof=m_dof;
-        thcFit=m_Cerenkov;
-        thcFitErr=m_CerenkovErr;
-        thphotErr=m_photonThcSigma;
+        if(msgLevel(MSG::DEBUG)) debug()<<"Too many or to few photons in stereo fitter"
+                                        <<", ngoodPhot="<<ngoodPhot<<endreq;
+        break;
       }
-
-      //reset segment direction to what it was at call time...
-      resetSegmentDirection(richSegment);
-
-      return(1);
+      n_iter++;
     }
+
+    //choose solution depending on chi2
+    Result result(Result::Succeeded);
+    if(m_chi2Prev<m_chi2) {
+      result.chi2=m_chi2Prev;
+      result.probChi2=m_probPrev;
+      result.ndof=m_dofPrev;
+      result.thcFit=m_CerenkovPrev;
+      result.thcFitErr=m_CerenkovErrPrev;
+      result.thphotErr=m_photonThcSigmaPrev;
+    }
+    else {
+      result.chi2=m_chi2;
+      result.probChi2=m_prob;
+      result.ndof=m_dof;
+      result.thcFit=m_Cerenkov;
+      result.thcFitErr=m_CerenkovErr;
+      result.thphotErr=m_photonThcSigma;
+    }
+
+    //reset segment direction to what it was at call time...
+    resetSegmentDirection(richSegment);
+
+    return result;
   }
 
-  return(0);
+  return Result(Result::Failed);
 }
-
-
-
-
-
-
 
 
 
@@ -387,7 +405,7 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
   // the associated Unit vector in the lab (direction q_lab)
   const double t_x = state->tx();
   const double t_y = state->ty();
-  double den = sqrt(1+t_x*t_x+t_y*t_y);
+  double den = std::sqrt(1+t_x*t_x+t_y*t_y);
   const Gaudi::XYZVector q_lab(t_x/den,t_y/den,1/den);
 
   // construct a vector basis in the lab :
@@ -407,23 +425,23 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
   double err_txy = (state->errSlopes())(2,3);
   const Gaudi::SymMatrix5x5 &qCovMatrix = state->covariance();
   //####
-  double err_txp = qCovMatrix(3,5)*pow(PTrk,2)/Gaudi::Units::GeV;   //(x,y,tx,ty,q/p) matrix used to
-  double err_typ = qCovMatrix(4,5)*pow(PTrk,2)/Gaudi::Units::GeV;   //get approximately (tx,p), (ty,p) with |q|=1
+  double err_txp = qCovMatrix(3,5)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //(x,y,tx,ty,q/p) matrix used to
+  double err_typ = qCovMatrix(4,5)*std::pow(PTrk,2)/Gaudi::Units::GeV;   //get approximately (tx,p), (ty,p) with |q|=1
 
   //rms error on PTrk (GeV)
-  errMom=sqrt(state->errP2())/Gaudi::Units::GeV;
+  errMom=std::sqrt(state->errP2())/Gaudi::Units::GeV;
   trkCharge=state->qOverP();
   if(trkCharge>0) trkCharge=1;
   else if(trkCharge<0) trkCharge=-1;
   else trkCharge=0;
 
   // compute multiple scattering error, mult scatt for err_txy is neglected
-  lengthEffect = sqrt(1+t_x*t_x+t_y*t_y);   //also returned for angular error per photon
+  lengthEffect = std::sqrt(1+t_x*t_x+t_y*t_y);   //also returned for angular error per photon
   //longitudinal thickness in total for improved scatt. mult. computation
   double totalThicknessOfMaterial=m_thickInterface[radiator]+m_thickRadiator[radiator];
   // (stricly correct in the zero field approximation)
   double thicknessOfMaterial=totalThicknessOfMaterial*lengthEffect;
-  double multScattCoeff=m_scatt *sqrt(thicknessOfMaterial)*(1+0.038*log(thicknessOfMaterial));
+  double multScattCoeff=m_scatt *std::sqrt(thicknessOfMaterial)*(1+0.038*log(thicknessOfMaterial));
   double MultScattRes = multScattCoeff*multScattCoeff/(PTrk*PTrk);
   err_tx2 += MultScattRes;
   err_ty2 += MultScattRes;
@@ -473,10 +491,16 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
 
 
 //----------------------------------------------------------------------------
-double  StereoFitter::improvedErrorPerPhoton_index(double PTrk, double lengthEffect,
-                                                   double errMom, double err_tx2, double err_ty2, double ckExp,
-                                                   Rich::RadiatorType radiator, double asymptoticRes,
-                                                   const Rich::ParticleIDType pidType) const {
+double StereoFitter::improvedErrorPerPhoton_index( const double PTrk,
+                                                   const double lengthEffect,
+                                                   const double errMom,
+                                                   const double err_tx2,
+                                                   const double err_ty2,
+                                                   const double ckExp,
+                                                   const Rich::RadiatorType radiator,
+                                                   const double asymptoticRes,
+                                                   const Rich::ParticleIDType pidType ) const
+{
 
   //   COMPUTING THE RECONSTRUCTION ERRORS
   //   HERE WE LEAVE THE CHROMATIC ERROR VARY WITH THE CERENKOV ANGLE
@@ -488,65 +512,72 @@ double  StereoFitter::improvedErrorPerPhoton_index(double PTrk, double lengthEff
   // curvature errors are optimum if using the chord definition for the track
 
   //compute kinematic stuff
-  double massPid=m_richPartProp->mass(pidType)/Gaudi::Units::GeV;
-  double massFactor=pow(massPid,2)/(PTrk*PTrk+pow(massPid,2));
-  double betaPid = m_richPartProp->beta(PTrk*Gaudi::Units::GeV, pidType);  //be careful with units!!!
-  double EPid = sqrt(pow(massPid,2) + pow(PTrk,2));
+  const double massPid    = m_richPartProp->mass(pidType)/Gaudi::Units::GeV;
+  const double massFactor = std::pow(massPid,2)/(PTrk*PTrk+std::pow(massPid,2));
+  const double betaPid    = m_richPartProp->beta(PTrk*Gaudi::Units::GeV, pidType);// be careful with units!!!
+  const double EPid       = std::sqrt(std::pow(massPid,2) + std::pow(PTrk,2));
 
   //estimating multiple scattering effects:
-  double totalThicknessOfMaterial=m_thickInterface[radiator]+m_thickRadiator[radiator];
-  double thicknessOfMaterial=totalThicknessOfMaterial*lengthEffect;
-  double multScattCoeff=m_scatt *sqrt(thicknessOfMaterial)*(1+0.038*log(thicknessOfMaterial));   //####
-  double MultScattRes2 = 2*multScattCoeff*multScattCoeff/(PTrk*PTrk);
+  const double totalThicknessOfMaterial = m_thickInterface[radiator]+m_thickRadiator[radiator];
+  const double thicknessOfMaterial      = totalThicknessOfMaterial*lengthEffect;
+  const double multScattCoeff           = m_scatt *std::sqrt(thicknessOfMaterial)*(1+0.038*log(thicknessOfMaterial));
+  const double MultScattRes2            = 2*multScattCoeff*multScattCoeff/(PTrk*PTrk);
 
   //curvature effects :
-  double CurvatureRes2 = (pow(m_curvX[radiator],2) + pow(m_curvY[radiator],2))/(PTrk*PTrk) ;
+  const double CurvatureRes2 = (std::pow(m_curvX[radiator],2) + std::pow(m_curvY[radiator],2))/(PTrk*PTrk) ;
 
   //multiple scattering +curvature effects (PTrk in GeV)
-  double smearedTotal2=MultScattRes2+CurvatureRes2;
+  const double smearedTotal2 = MultScattRes2 + CurvatureRes2;
+
+  // average refractive index
+  const double avgRefIndex = m_refIndex->refractiveIndex(radiator);
+  // refractive index RMS
+  const double rmsRefIndex = m_refIndex->refractiveIndexRMS(radiator);
 
   //compute asymptotic and non asymptotic chromatic error
-  double chromaticErrCoeff=m_rmsIndexRad[radiator]/m_meanIndexRad[radiator];
-  double asymptoticChromaticErr=chromaticErrCoeff/sqrt(pow(m_meanIndexRad[radiator],2)-1);
-  double chromaticErr2 = pow(chromaticErrCoeff,2)/(tan(ckExp)*tan(ckExp));
+  const double chromaticErrCoeff      = rmsRefIndex / avgRefIndex;
+  const double asymptoticChromaticErr = chromaticErrCoeff/std::sqrt(std::pow(avgRefIndex,2)-1);
+  const double chromaticErr2          = std::pow(chromaticErrCoeff,2)/( std::pow(tan(ckExp),2) );
 
-  double errMomThc = errMom * massFactor/PTrk/tan(ckExp);
+  const double errMomThc = errMom * massFactor/PTrk/tan(ckExp);
 
   // starting values are rounded from last cerenkov bins of Chris
-  double asymptoticResSub=sqrt(pow(asymptoticRes,2)-pow(asymptoticChromaticErr,2));
-  double resolutionA2=pow(asymptoticResSub,2)+smearedTotal2;
+  const double asymptoticResSub = ( asymptoticRes < asymptoticChromaticErr ? 0 :
+                                    std::sqrt( std::pow(asymptoticRes,2) - std::pow(asymptoticChromaticErr,2) ) );
+  const double resolutionA2     = std::pow(asymptoticResSub,2)+smearedTotal2;
 
   // also take into account error on the averaged charged track direction
   // what done below is strictly valid at zero magnetic field
   // this correction is small (5-15%) except at low momenta (5 a 10 GeV/c)
   // where it can amounts to 20-50%
-  double errAvrgDir2=err_tx2+err_ty2;
+  const double errAvrgDir2 = err_tx2+err_ty2;
 
   // ===>>  total variance is :
-  double resolution2 = resolutionA2 + errAvrgDir2 + chromaticErr2 + pow(errMomThc,2);
+  const double resolution2 = resolutionA2 + errAvrgDir2 + chromaticErr2 + std::pow(errMomThc,2);
 
   //error per photon in selection
-  m_newErrorPerPhotonSelect = pow(asymptoticResSub,2) + CurvatureRes2 + MultScattRes2 + errAvrgDir2 + chromaticErr2;
-  m_var_nocor=pow(asymptoticResSub,2) + CurvatureRes2;
+  m_newErrorPerPhotonSelect =
+    std::pow(asymptoticResSub,2) + CurvatureRes2 + MultScattRes2 + errAvrgDir2 + chromaticErr2;
+  m_var_nocor = std::pow(asymptoticResSub,2) + CurvatureRes2;
 
   //compute track induced Cerenkov radius and variance
   //approximate variance only due to PTrk error(neglect corr. with track dir)
-  m_radiusSquaredPid = (betaPid * m_meanIndexRad[radiator]-1)/(betaPid * m_meanIndexRad[radiator]+1);
-  double errMomMf = errMom * massFactor/PTrk;
-  double var_n = pow(m_rmsIndexRad[radiator]/m_meanIndexRad[radiator],2);
-  double var_b=pow(errMomMf,2);
-  double m_var_c = var_n + var_b; //db/b+dn/n no longer divided by 4
+  m_radiusSquaredPid    = (betaPid * avgRefIndex-1)/(betaPid * avgRefIndex+1);
+  const double errMomMf = errMom * massFactor/PTrk;
+  const double var_n    = std::pow(rmsRefIndex/avgRefIndex,2);
+  const double var_b    = std::pow(errMomMf,2);
+  const double var_c    = var_n + var_b; //db/b+dn/n no longer divided by 4
 
-  m_radiusSquaredPid -= m_var_c/4; //#### //unbiased
+  m_radiusSquaredPid -= var_c/4; //#### //unbiased
   if(m_radiusSquaredPid < 0) m_radiusSquaredPid=1.0e-15;   // m_radiusSquaredPid <0 problem
 
   //renormalize the covariance terms to mass dependant factors
-  m_err_xp *= pow(massPid/EPid,2);
-  m_err_yp *= pow(massPid/EPid,2);
+  m_err_xp *= std::pow(massPid/EPid,2);
+  m_err_yp *= std::pow(massPid/EPid,2);
   m_var_beta  = var_b;
   m_var_index = var_n;
 
-  return sqrt(resolution2);
+  return std::sqrt(resolution2);
 }
 
 
@@ -554,18 +585,32 @@ double  StereoFitter::improvedErrorPerPhoton_index(double PTrk, double lengthEff
 
 //----------------------------------------------------------------------------
 // selects the best photons in a window around a given theta Cerenkov angle
-bool StereoFitter::goodPhotonTheta( RichRecPhoton *photon, const Rich::ParticleIDType pidHypo,
-                                    double thcCentral, double thcPhotSig, double nthcPhotSigMax,
-                                    unsigned int ncandsPerPixMax, double maxBkgProb ) const {
+bool StereoFitter::goodPhotonTheta( RichRecPhoton *photon,
+                                    const Rich::ParticleIDType pidHypo,
+                                    double thcCentral,
+                                    double thcPhotSig,
+                                    double nthcPhotSigMax,
+                                    unsigned int ncandsPerPixMax,
+                                    double maxBkgProb ) const
+{
 
-  //Check multiplicity of this pixel i.e. number of photons made from it.
-  if(photon->richRecPixel()->richRecPhotons().size() > ncandsPerPixMax) return false;
+  // Check multiplicity of this pixel i.e. number of photons made from it.
+  if ( photon->richRecPixel()->richRecPhotons().size() > ncandsPerPixMax)
+  {
+    debug() << " photon->richRecPixel()->richRecPhotons().size() > ncandsPerPixMax : "
+            << photon->richRecPixel()->richRecPhotons().size() << " > " << ncandsPerPixMax << endreq;
+    return false;
+  }
 
   // check background prob
-  if(photon->richRecPixel()->currentBackground() > maxBkgProb) return false;
+  if ( photon->richRecPixel()->currentBackground() > maxBkgProb )
+  {
+    debug() << photon->richRecPixel()->currentBackground() << " < " << maxBkgProb << endreq;
+    return false;
+  }
 
   double thetaExpRes=m_ckResTool->ckThetaResolution(photon->richRecSegment(),pidHypo);
-  if(thetaExpRes < MinthetaExpRes) return false;
+  if(thetaExpRes < s_MinthetaExpRes) return false;
 
   double thetaPhot=photon->geomPhoton().CherenkovTheta();
   if(thcPhotSig>0) {
@@ -592,11 +637,11 @@ bool StereoFitter::newCovarianceMatrix( RichRecRing &recRing ) const {
   for(int i=0;i<nphot; ++i ) {
     double xphot=recRing.ringPoints()[i].localPosition().X();
     double yphot=recRing.ringPoints()[i].localPosition().Y();
-    double rr2=pow(xphot,2)+pow(yphot,2);
-    double rr=sqrt(rr2);
+    double rr2=std::pow(xphot,2)+std::pow(yphot,2);
+    double rr=std::sqrt(rr2);
     radius.push_back(rr);
-    C2 += pow(xphot,2)/rr2;
-    S2 += pow(yphot,2)/rr2;
+    C2 += std::pow(xphot,2)/rr2;
+    S2 += std::pow(yphot,2)/rr2;
     CS += xphot*yphot/rr2;
     C  += xphot/rr;
     S  += yphot/rr;
@@ -641,7 +686,7 @@ bool StereoFitter::newCovarianceMatrix( RichRecRing &recRing ) const {
   }
 
   //test 1
-  if(nphot > NmaxFitPhot) return !status;
+  if(nphot > s_NmaxFitPhot) return !status;
 
   double eta=1./lambda;
 
@@ -783,9 +828,9 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
   det+=m_mat[0][2]*m_errPar[2][0];
 
   //fabs not needed because matrix should be positive definite
-  if(det < 1.0e-17) {
-    std::cout << " ---<> from solveMB() BAD FIT , det = "<< det << std::endl;
-    std::cout << " singular matrix = " << std::endl;
+  if (det < 1.0e-17) 
+  {
+    Warning( "solveChi2Equations : Fit failed : det < 1.0e-17" );
     return false;
   }
 
@@ -817,7 +862,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   err_R+=4*m_sol[1]*m_errPar[1][2];
   err_R+=8*m_sol[0]*m_sol[1]*m_errPar[0][1];
   err_R=err_R/(4*radius2);
-  m_err_R=sqrt(err_R);
+  m_err_R=std::sqrt(err_R);
 
   //statistical info
   double radiusSquareFitted=m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
@@ -825,7 +870,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   m_chi2Exp=chiSquare(recRing, m_radiusSquaredPid);
 
   if(m_chi2<0 || m_chi2Exp<0) {   //bad chi2 //####DBL
-    std::cout<<"---FastRingFitter::transferFitSolutionNormal: Chi2<0: "<<m_chi2<<" "<<m_chi2Exp<<std::endl;
+    Warning( "transferFitSolution : Chi2<0 ||m_chi2Exp<0" ); 
     return(0);
   }
 
@@ -835,8 +880,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
   // Cerenkov Angle and its error
   double tgTheta=2*radiusFitted()/(1-m_sol[2]);
-  double Theta_Crk=atan(tgTheta);
-  m_Cerenkov=Theta_Crk;
+  m_Cerenkov = atan(tgTheta);
 
   double UnPlusTg2 = 1+tgTheta*tgTheta;
   double cf_a = 2*m_sol[0]/radiusFitted()/(1-m_sol[2]);
@@ -845,7 +889,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   cf_S *= 1/radiusFitted()/(1-m_sol[2]);
   double errTheta=cf_S*cf_S*m_errPar[2][2]+cf_a*cf_a*m_errPar[0][0]+cf_b*cf_b*m_errPar[1][1];
   errTheta+=2*cf_S*cf_a*m_errPar[0][2]+2*cf_S*cf_b*m_errPar[1][2]+2*cf_a*cf_b*m_errPar[0][1];
-  errTheta=sqrt(errTheta)/UnPlusTg2;
+  errTheta=std::sqrt(errTheta)/UnPlusTg2;
   m_CerenkovErr=errTheta;
 
   return(1);
@@ -919,7 +963,7 @@ double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const 
   double chi2(0);
   for(int i=0;i<nphot;i++) for(int j=0;j<nphot;j++) chi2+=func[i]*func[j]*m_invCov[i][j];
 
-  double det=m_err_x2*m_err_y2-pow(m_err_xy,2);
+  double det=m_err_x2*m_err_y2-std::pow(m_err_xy,2);
   if(det<1e-18) det=1e-18;
   double uu = (m_sol[0]*m_sol[0]*m_err_y2 + m_sol[1]*m_sol[1]*m_err_x2-2*m_sol[0]*m_sol[1]*m_err_xy)/det;
   chi2 += uu;
@@ -933,7 +977,7 @@ double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const 
 
 //more utility functions
 double StereoFitter::radiusFitted() const {
-  if(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1>=0]) return(sqrt(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1]));
+  if(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1>=0]) return(std::sqrt(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1]));
   else return(0);
 };
 
@@ -968,9 +1012,9 @@ bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const 
   det+=mat[1][0]*invMat[0][1];
   det+=mat[2][0]*invMat[0][2];
 
-  if(fabs(det)<1.0e-15) {
-    std::cout << " ---<> from RichStereoFitter::invert3x3Matrix , det = " << det << std::endl;
-    std::cout << " singular matrix = " << std::endl;
+  if(fabs(det)<1.0e-15) 
+  {
+    Warning( "invert3x3Matrix : Fit failed : det < 1.0e-15" );
     return false;
   }
 

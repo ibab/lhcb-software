@@ -4,6 +4,12 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-05-01 - Chris Jones
+ - Implement improvements to the IStereoFitter interface
+ - Remove hard-coded refractive index assumptions in StereoFitter
+ - Move declareProperty(...) calls to constructor in StereoFitter
+ - Add additional debug printout + remove all cout calls from StereoFitter
+
 !======================= RichRecStereoTools v1r0 2007-09-20 ==================
 ! 2007-09-04 - Chris Jones
  - First version

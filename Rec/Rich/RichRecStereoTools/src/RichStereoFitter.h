@@ -32,7 +32,7 @@
 #include "RichRecBase/IRichStereoProjection.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichParticleProperties.h"
-
+#include "RichKernel/IRichRefractiveIndex.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 
 //Direct Root Math include
@@ -51,24 +51,13 @@ namespace Rich
   namespace Rec
   {
 
-    //Various useful constants
-    namespace
-    {
-      static const int NmassHyp(5);  //number of mass hypothesis
-      static const int nIterMax(10);
-      static const double diffChi2Lim(0.5);  //delta chi2 min between iterations
-      static const double MinThetaCerenkov(1e-8);
-      static const double MinThetaCerenkov2(1e-6);
-      static const double MinthetaExpRes(1e-4);    //Min theta experimental resolution
-      static const double AsymptoticResDefault(0.55e-03);  //default (radians) asymptotic thetac resolution  from TDR (with chromatics ???)
-      static const int NmaxFitPhot(250);    //max number of photons used by the fit (i.e, in fit window)
-    }
-
     //--------------------------------------------------------------------------------------
     /** @class StereoFitter IRichStereoFitter.h RichStereoFitter.h
      *
      *  Tool to perform a fit to a group of photons, as used by the Stereographic
-     *  PID algorithm
+     *  PID algorithm.
+     *
+     *  See http://cdsweb.cern.ch/record/815494 for more details.
      *
      *  @author Luigi Delbuono  delbuono@in2p3.fr
      *  @date   20/06/2007
@@ -82,7 +71,9 @@ namespace Rich
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      StereoFitter( const std::string& type, const std::string& name, const IInterface* parent );
+      StereoFitter( const std::string& type, 
+                    const std::string& name, 
+                    const IInterface* parent );
 
       /// Destructor
       virtual ~StereoFitter() {};
@@ -94,10 +85,19 @@ namespace Rich
 
       // Project (RichRec) photons pertaining to one segment in the stereo
       // plane perpendicular to the segemnt direction
-      int Fit( LHCb::RichRecSegment *richSegment, const Rich::ParticleIDType pidType,
-               int MinRingPhotons, double nthcPhotSigMax, int ncandsPerPixMax, double maxBkgProb,
-               double &Chi2, double &probChi2, int &ndof, double &thcFit, double &thcFitErr, double &thphotErr) const;
+      virtual IStereoFitter::Result Fit( LHCb::RichRecSegment *richSegment,
+                                         const IStereoFitter::Configuration & config ) const;
+      
+    private:// Various useful static constants
 
+      static const int    s_NmassHyp = 5;  ///< number of mass hypothesis
+      static const int    s_nIterMax = 10;
+      static const double s_diffChi2Lim = 0.5;  ///< delta chi2 min between iterations
+      static const double s_MinThetaCerenkov = 1e-8;
+      static const double s_MinThetaCerenkov2 = 1e-6;
+      static const double s_MinthetaExpRes = 1e-4;    ///< Min theta experimental resolution
+      static const double s_AsymptoticResDefault = 0.55e-03;  ///< default (radians) asymptotic thetac resolution from TDR (with chromatics ???)
+      static const int s_NmaxFitPhot = 250;    ///< max number of photons used by the fit (i.e, in fit window)
 
     private: // Private data
 
@@ -109,9 +109,7 @@ namespace Rich
       std::vector<double> m_thickInterface;
       std::vector<double> m_thickRadiator;
       ///Geometric data: indices, curvatures
-      std::vector<double> m_meanIndexRad;
-      std::vector<double> m_rmsIndexRad;
-      std::vector<double> m_curvX;   //curvature errors in xz and yz * momentum
+      std::vector<double> m_curvX;   // curvature errors in xz and yz * momentum
       std::vector<double> m_curvY;   //
 
       std::vector<double> m_globGammmaNorm;   //global photon dispersion renormalization factors
@@ -135,6 +133,7 @@ namespace Rich
       const IParticleProperties *m_richPartProp;
       const IGeomEff *m_geomEffic;                //Pointer to RichGeomEff tool
       const IPhotonSignal *m_photonSig;
+      const IRefractiveIndex * m_refIndex;
 
       //fitter internal variables ('mutable' because of 'const' functions and object....)
       mutable double m_err_xp;
@@ -154,7 +153,7 @@ namespace Rich
       mutable double m_newErrorPerPhotonSelect;
 
       //Fit related variables
-      mutable double m_invCov[NmaxFitPhot][NmaxFitPhot];
+      mutable double m_invCov[s_NmaxFitPhot][s_NmaxFitPhot];
       mutable double m_mat[3][3];
       mutable double m_right[3];
       mutable double m_errPar[3][3];
@@ -163,7 +162,7 @@ namespace Rich
       mutable double m_chi2Exp;
       mutable double m_prob;
       mutable double m_probExp;
-      mutable int m_dof;
+      mutable int    m_dof;
       mutable double m_Cerenkov;
       mutable double m_CerenkovErr;
 
@@ -173,7 +172,7 @@ namespace Rich
       mutable double m_chi2ExpPrev;
       mutable double m_probPrev;
       mutable double m_probExpPrev;
-      mutable int m_dofPrev;
+      mutable int    m_dofPrev;
       mutable double m_CerenkovPrev;
       mutable double m_CerenkovErrPrev;
       mutable double m_photonThcSigmaPrev;
@@ -187,16 +186,24 @@ namespace Rich
       mutable Gaudi::XYZPoint    m_segMidPtn;    ///< Stored segment mid point point
       mutable Gaudi::XYZPoint    m_segExitPtn;    ///< Stored segment exit point
 
-    private:
+      //class global variables
+      mutable double g_XCenterGuess, g_YCenterGuess;
+
+    private: // methods
 
       bool trkErrStereo(const LHCb::State *state, LHCb::RichRecSegment *segment, double &lengthEffect,
                         double &errMom, double &err_tx2, double &err_ty2, double &trkCharge) const;
 
 
-      double improvedErrorPerPhoton_index(double PTrk, double lengthEffect, double errMom,
-                                          double err_tx2, double err_ty2, double ckExp,
-                                          Rich::RadiatorType rad, double asymptoticResSub,
-                                          const Rich::ParticleIDType pidType) const;
+      double improvedErrorPerPhoton_index( const double PTrk, 
+                                           const double lengthEffect, 
+                                           const double errMom,
+                                           const double err_tx2, 
+                                           const double err_ty2, 
+                                           const double ckExp,
+                                           const Rich::RadiatorType rad,
+                                           const double asymptoticResSub,
+                                           const Rich::ParticleIDType pidType ) const;
 
 
       bool goodPhotonTheta( LHCb::RichRecPhoton *photon, const Rich::ParticleIDType pidHypo,
@@ -221,11 +228,7 @@ namespace Rich
       double YcenterFitted() const;
       bool invert3x3Matrix(double mat[3][3], double invMat[3][3]) const;
 
-      //class global variables
-      mutable double g_XCenterGuess, g_YCenterGuess;
-
     };
-    // End of class
 
   }
 }
