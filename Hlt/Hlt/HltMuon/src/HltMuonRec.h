@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.3 2008-01-22 09:59:19 hernando Exp $
+// $Id: HltMuonRec.h,v 1.4 2008-05-01 08:20:59 graven Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -84,8 +84,8 @@ private:
   int m_stationL1Stop[5];
 // for pad decoding
   unsigned int m_M1Tell1;
-  std::string getBasePath(int station);
-  std::string basePath[5] ;
+  std::string m_basePath[5];
+  const std::string& getBasePath(int station) { return m_basePath[station]; }
   std::vector<LHCb::MuonTileID> m_mapPad[20];
 
 

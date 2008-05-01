@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.11 2008-01-22 09:59:19 hernando Exp $
+// $Id: HltMuonRec.cpp,v 1.12 2008-05-01 08:20:59 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -74,9 +74,6 @@ StatusCode HltMuonRec::initialize() {
     m_timer->decreaseIndent();
   }
 
-
- 
-  
   //retrieve the pointer to the muon detector 
 
   m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
@@ -96,11 +93,11 @@ StatusCode HltMuonRec::initialize() {
     i++;
   }
 
-  basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
-  basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/"; 
-  basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
-  basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
-  basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
+  m_basePath[0]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M1/";
+  m_basePath[1]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M2/"; 
+  m_basePath[2]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M3/";
+  m_basePath[3]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M4/";
+  m_basePath[4]= "/dd/Conditions/ReadoutConf/Muon/Cabling/M5/";
 
 
  //how many tell1
@@ -131,13 +128,10 @@ StatusCode HltMuonRec::initialize() {
 
   for(unsigned int station=0;station<m_nStation;station++){
     m_station.push_back( HltMuonStationRec(msgSvc()));
-
     for(unsigned int region = 0 ; region < m_nRegion ; region++ ){      
-      HltMuonRegion* reg = new HltMuonRegion();
       //set some parameters 
       debug()<<station<<" "<<region<<endreq;
-      
-      m_station[station].region().push_back( reg );
+      m_station[station].region().push_back( new HltMuonRegion() );
     }
   }
   
@@ -148,38 +142,27 @@ StatusCode HltMuonRec::initialize() {
     for(unsigned int region = 0 ; region < m_nRegion ; region++ ){
       int xMap,yMap; 
       unsigned int numLayout=m_muonDetector->getLogMapInRegion(station,region);
-      m_station[station].region(region)->setLayoutNumber(numLayout);
-       debug()<<"numLayout "<<numLayout<<endreq;  
+      HltMuonRegion *r = m_station[station].region(region);
+      r->setLayoutNumber(numLayout);
+      debug()<<"numLayout "<<numLayout<<endreq;  
       for(unsigned int which_layout=0;which_layout<numLayout;which_layout++){
-        xMap=m_muonDetector->
-          getLayoutX (which_layout, station,region);          
-        yMap=m_muonDetector->  getLayoutY (which_layout, station,region); 
-         
-        m_station[station].region(region)->
-           setLayoutGridX(which_layout,(unsigned int) xMap);
-        m_station[station].region(region)->
-          setLayoutGridY(which_layout,(unsigned int) yMap); 
+        xMap=m_muonDetector->getLayoutX (which_layout, station,region);          
+        yMap=m_muonDetector->getLayoutY (which_layout, station,region); 
+        r-> setLayoutGridX(which_layout,(unsigned int) xMap);
+        r-> setLayoutGridY(which_layout,(unsigned int) yMap); 
       }
       debug()<<"numLayout "<<numLayout<<endreq;  
       if(numLayout>1){
-        int gridx1=m_station[station].region(region)->
-          layoutGridX(0);
-        int gridx2=m_station[station].region(region)->
-          layoutGridX(1);
+        int gridx1=r-> layoutGridX(0);
+        int gridx2=r-> layoutGridX(1);
         if(gridx1> gridx2){
           //reverse the order....
-          int gridy1=m_station[station].region(region)->
-            layoutGridY(0);
-          int gridy2=m_station[station].region(region)->
-            layoutGridY(1);
-          m_station[station].region(region)->
-            setLayoutGridX(0,(unsigned int) gridx2);
-          m_station[station].region(region)->
-            setLayoutGridY(0,(unsigned int) gridy2);
-          m_station[station].region(region)->
-            setLayoutGridX(1,(unsigned int) gridx1);
-          m_station[station].region(region)->
-            setLayoutGridY(1,(unsigned int) gridy1);    
+          int gridy1=r-> layoutGridY(0);
+          int gridy2=r-> layoutGridY(1);
+          r-> setLayoutGridX(0,(unsigned int) gridx2);
+          r-> setLayoutGridY(0,(unsigned int) gridy2);
+          r-> setLayoutGridX(1,(unsigned int) gridx1);
+          r-> setLayoutGridY(1,(unsigned int) gridy1);    
         }        
       }
     }    
@@ -276,6 +259,7 @@ StatusCode HltMuonRec::execute() {
   m_padM2=false;
 
 
+  //FIXME: what about m_station[0]
   for(unsigned  station = 1 ; station < m_nStation ; station++ ){
     m_station[station].clearRegions();
   }
@@ -285,9 +269,7 @@ StatusCode HltMuonRec::execute() {
   if(!m_decodingFromCoord){
     if ( m_measureTime ) m_timer->start( m_timeLoad );    
     decodeBuffer();
-    if ( m_measureTime ) {
-      m_timer->stop( m_timeLoad );   
-    }
+    if ( m_measureTime ) m_timer->stop( m_timeLoad );   
   }
   if ( m_measureTime ) m_timer->start( m_timePad );
   // decode only station M5
@@ -301,14 +283,15 @@ StatusCode HltMuonRec::execute() {
   }
   
   if ( m_measureTime ) {
-
     m_timer->stop ( m_timePad );
     m_timer->start( m_timeMuon );
   }  
 
   muonSearch();
-  if(m_cloneKiller)    detectClone();
-  if(m_cloneKiller)    strongCloneKiller();
+  if(m_cloneKiller)  {
+      detectClone();
+      strongCloneKiller();
+  }
 
   if ( m_measureTime ) {
     m_timer->stop ( m_timeMuon );
@@ -430,17 +413,10 @@ StatusCode HltMuonRec::finalize() {
   for (itSt=m_station.begin();itSt<m_station.end();itSt++){
     std  ::vector<HltMuonRegion*> regVector=itSt->region();
     std::vector<HltMuonRegion*>::iterator itReg;
-    for(itReg=regVector.begin();itReg<regVector.end();itReg++){
-      if((*itReg)!=NULL){
+    for(itReg=regVector.begin();itReg!=regVector.end();itReg++){
         delete *itReg;
-        //info()<<"deleting "<<endreq;
-        
-      }
-      
     }    
   }
-  
-
   
   info () << "Number of events processed: " << double(m_countEvents) << endreq;
   info () << "Average number of muon tracks: " 
@@ -971,8 +947,7 @@ StatusCode HltMuonRec::initializePadDecoding()
         //build LUT with ode ID --> MuonTileID
         unsigned int region=ode->region();        
         for(int TS=0;TS<ode->getTSNumber();TS++){        
-          std::string  TSPath= cablingBasePath+
-            ode->getTSName(TS);          
+          std::string  TSPath= cablingBasePath+ ode->getTSName(TS);          
           unsigned int quadrant= ode->getTSQuadrant(TS);
           unsigned int TSLayoutX=ode->getTSLayoutX();
           unsigned int TSLayoutY=ode->getTSLayoutY();
@@ -1157,8 +1132,8 @@ StatusCode HltMuonRec::getPads(int station)
       //if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
       //  unsigned int tell=(unsigned int)(*itB)->sourceID();      
         unsigned int pads=*it;
-        it++;      
-        for(unsigned int loop=0;loop<pads;loop++){
+        ++it;      
+        for(unsigned int loop=0;loop<pads;++loop){
           unsigned int address=*it;
           LHCb::MuonTileID padTile= (m_mapPad[tell1Now])[address]; 
           double x,y,z,dx,dy,dz;
@@ -1169,7 +1144,7 @@ StatusCode HltMuonRec::getPads(int station)
           thisRegion->addPoint( x, y,padTile );  
 
           //          storage.push_back(m_mapPad[tell][address]);        
-          it++;        
+          ++it;        
         }      
         //      }      
     }
@@ -1241,10 +1216,8 @@ StatusCode HltMuonRec::initializeLogChanDecoding()
             unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
             unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
             MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            MuonTileID muontile(station,lay,region,
-                                quadrant,digitX,digitY);
+            MuonTileID muontile(station,lay,region, quadrant,digitX,digitY);
             m_mapTileInODE[odenum-1].push_back(muontile);
-            
           }          
         }        
       }
@@ -1300,9 +1273,3 @@ StatusCode HltMuonRec::createCoordsFromLC(int istation)
   
   return StatusCode::SUCCESS;
 }
-
-std::string HltMuonRec::getBasePath(int station)  
-{
-  return basePath[station];
-    
-};
