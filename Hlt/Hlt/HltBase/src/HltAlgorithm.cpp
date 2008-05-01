@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.28 2008-02-15 15:33:11 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.29 2008-05-01 20:25:50 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -335,12 +335,13 @@ StatusCode HltAlgorithm::endExecute() {
 
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
+  debug() << "HltAlgorithm::finalize()" << endmsg;
 
   infoTotalEvents(m_counterEntries);
   infoSubsetEvents(m_counterAccepted, m_counterEntries, " passed/entries ");
   infoCandidates(m_counterCandidates, m_counterAccepted, " passed ");
 
-  return StatusCode::SUCCESS;  
+  return HltBaseAlg::finalize();
 }
 
 

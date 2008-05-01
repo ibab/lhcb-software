@@ -4,6 +4,8 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!2008-05-01 - Gerhard Raven
+   - fix initialize/finalize imbalances
 
 !========================== HltBase v4r2 2008-04-25 ===================
 !2008-04-17 - Johannes Albrecht
@@ -12,7 +14,7 @@
 		IPrepareCaloSeed.h
 
 ! 2008-04-21 - Jose A. Hernando
-	- removing IPrepareXXX interfaces from the dictionary
+ - removing IPrepareXXX interfaces from the dictionary
 
 ! 2008-04-07 - Jose A. Hernando
  - HltBase.icpp assert error if no selection valid, printout the missing selection name
@@ -27,6 +29,9 @@
 	- add IL0ConfExtrapolator.h:
 		Interface to L0Confirmation helper tool: holds parameterizations for search 
 		windows and extrapolates track hypothesis to T-stations
+
+! 2008-03-05 - Gerhard Raven
+ - changes for ConfigTreeEditor + Configuration use in python 
 
 !========================== HltBase v4r1 2008-03-07 ===================
 ! 2008-02-24 - Gerhard Raven

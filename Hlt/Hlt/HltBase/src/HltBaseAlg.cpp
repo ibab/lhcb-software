@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.cpp,v 1.11 2008-02-15 15:33:11 graven Exp $
+// $Id: HltBaseAlg.cpp,v 1.12 2008-05-01 20:25:50 graven Exp $
 // Include files 
 
 // local
@@ -15,9 +15,11 @@ HltBaseAlg::~HltBaseAlg() {}
 
 
 StatusCode HltBaseAlg::initialize() {
+  debug() << "HltBaseAlg::initialize()" << endmsg;
   return HltBase<GaudiHistoAlg>::initialize();
 }
 
 StatusCode HltBaseAlg::finalize() {
-  return HltBase<GaudiHistoAlg>::initialize();
+  debug() << "HltBaseAlg::finalize()" << endmsg;
+  return HltBase<GaudiHistoAlg>::finalize();
 }

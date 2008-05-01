@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.5 2008-04-07 15:23:05 hernando Exp $
+// $Id: HltBase.h,v 1.6 2008-05-01 20:25:50 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -64,7 +64,7 @@ public:
   virtual StatusCode execute() {return StatusCode::SUCCESS;};
   
   // finalize
-  virtual StatusCode finalize() {return BASE::finalize();};  
+  virtual StatusCode finalize();
 
 protected:
 

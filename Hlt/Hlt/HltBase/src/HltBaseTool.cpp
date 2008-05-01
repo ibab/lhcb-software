@@ -1,4 +1,4 @@
-// $Id: HltBaseTool.cpp,v 1.2 2008-02-15 15:33:11 graven Exp $
+// $Id: HltBaseTool.cpp,v 1.3 2008-05-01 20:25:50 graven Exp $
 // Include files 
 
 
@@ -18,12 +18,12 @@ HltBaseTool::~HltBaseTool() {}
 
 
 StatusCode HltBaseTool::initialize() {
-  StatusCode sc = HltBase<GaudiHistoTool>::initialize();
-  return sc;
+  debug() << " calling HltBase<GaudiHistTool>::initialize() " << endmsg;
+  return HltBase<GaudiHistoTool>::initialize();
 }
 
 
 StatusCode HltBaseTool::finalize() {
-  StatusCode sc = HltBase<GaudiHistoTool>::initialize();
-  return sc;
+  debug() << " calling HltBase<GaudiHistTool>::finalize() " << endmsg;
+  return HltBase<GaudiHistoTool>::finalize();
 }
