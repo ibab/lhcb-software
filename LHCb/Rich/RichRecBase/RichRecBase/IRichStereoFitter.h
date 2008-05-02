@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoFitter
  *
  *  CVS Log :-
- *  $Id: IRichStereoFitter.h,v 1.2 2008-05-01 19:34:52 jonrob Exp $
+ *  $Id: IRichStereoFitter.h,v 1.3 2008-05-02 21:34:06 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
@@ -68,16 +68,16 @@ namespace Rich
         /// Default constructor
         explicit Configuration( const Rich::ParticleIDType _pid = Rich::Pion ) :
           pidType          ( _pid   ),
-          minRingPhotons   ( 3      ),
+          minRingPhotons   ( 4      ),
           nthcPhotSigMax   ( 2      ),
           ncandsPerPixMax  ( 3      ),
-          maxBkgProb       ( 999    ) { }
+          maxBkgProb       ( 1e-3   ) { }
       public:
         Rich::ParticleIDType pidType; ///< The mass hypothesis for which the angle should be fitted
-        int     minRingPhotons;  ///< Minimum allowed photons on the ring
-        double  nthcPhotSigMax;  ///< Size of photons selection window in units of Cerenkov angle RMS
-        int     ncandsPerPixMax; ///< Maximum allowed number of candidate photons per pixel
-        double  maxBkgProb;      ///< Maximum allowed background probability of photons
+        int     minRingPhotons;       ///< Minimum allowed photons on the ring
+        float   nthcPhotSigMax;       ///< Size of photons selection window in units of Cherenkov angle RMS
+        int     ncandsPerPixMax;      ///< Maximum allowed number of candidate photons per pixel
+        float   maxBkgProb;           ///< Maximum allowed background probability of photons
       };
 
       //--------------------------------------------------------------------------------------
@@ -112,33 +112,33 @@ namespace Rich
       public:
         /// Default constructor
         explicit Result( const FitStatus _stat = Undefined ) :
-          status     ( _stat     ),
-          chi2       ( 9999999   ),
-          probChi2   ( 0         ),
-          ndof       ( 0         ),
-          thcFit     ( 0         ),
-          thcFitErr  ( 0         ),
-          thphotErr  ( 0         ) { }
+          status     ( _stat   ),
+          chi2       ( 9999999 ),
+          probChi2   ( 0       ),
+          ndof       ( 0       ),
+          thcFit     ( 0       ),
+          thcFitErr  ( 0       ),
+          thphotErr  ( 0       ) { }
       public:
-        FitStatus status; ///< THe fit status
-        double chi2;      ///< The Chi^2 of the circle fit
-        double probChi2;  ///< The chi^2 probability of circle fit
-        int    ndof;      ///< The number of degrees of freedom of circle fit
-        double thcFit;    ///< The fitted Cerenkov angle
-        double thcFitErr; ///< The fitted Cerenkov angle error
-        double thphotErr; ///< The individual photon Cerenkov angle error
+        FitStatus status;  ///< The fit status
+        float  chi2;       ///< The Chi^2 of the circle fit
+        float  probChi2;   ///< The chi^2 probability of circle fit
+        int    ndof;       ///< The number of degrees of freedom of circle fit
+        float  thcFit;     ///< The fitted Cherenkov angle
+        float  thcFitErr;  ///< The error on the fitted Cherenkov angle
+        float  thphotErr;  ///< The individual photon Cherenkov angle error
       public:
-        /// Implement ostream << method
+        /// Implement the ostream << printout method
         friend inline std::ostream& operator << ( std::ostream& s,
                                                   const Result& result )
         {
-          return s << "[ Status= " << result.status
-                   << " chi2=" << result.chi2
-                   << " probChi2=" << result.probChi2
-                   << " ndof=" << result.ndof
-                   << " ckTheta=" << result.thcFit
+          return s << "[ Status= "   << result.status
+                   << " chi2="       << result.chi2
+                   << " probChi2="   << result.probChi2
+                   << " ndof="       << result.ndof
+                   << " ckTheta="    << result.thcFit
                    << " ckThetaErr=" << result.thcFitErr
-                   << " photErr=" << result.thphotErr
+                   << " photErr="    << result.thphotErr
                    << " ]";
         }
       };
