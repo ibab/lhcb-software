@@ -6,6 +6,7 @@
 
 ! 2008-05-01 - Chris Jones
  - Add new monitor for stereographic refitting tests
+ - Add new plots to RichPhotonSignal monitor
 
 !====================== RichRecMonitors v2r16 2008-04-15 =====================
 ! 2008-03-25 - Chris Jones

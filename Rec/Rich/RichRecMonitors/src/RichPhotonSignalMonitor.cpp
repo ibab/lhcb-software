@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : PhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.9 2008-01-04 16:15:15 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.10 2008-05-02 21:36:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -39,7 +39,7 @@ PhotonSignalMonitor::PhotonSignalMonitor( const std::string& name,
 }
 
 // Destructor
-PhotonSignalMonitor::~PhotonSignalMonitor() {};
+PhotonSignalMonitor::~PhotonSignalMonitor() {}
 
 //  Initialize
 StatusCode PhotonSignalMonitor::initialize()
@@ -55,6 +55,7 @@ StatusCode PhotonSignalMonitor::initialize()
   acquireTool( "RichRefractiveIndex",     m_refIndex    );
   acquireTool( "TrackSelector",      m_trSelector, this );
 
+  // return
   return sc;
 }
 
@@ -67,11 +68,11 @@ StatusCode PhotonSignalMonitor::execute()
 
   // Histogramming
   const RichHistoID hid;
-  //            Radiator          Aerogel  Rich1Gas    Rich2Gas
-  const double minPhotEn[]    = { 1.5,     1.5,     1.5     };
-  const double maxPhotEn[]    = { 4,       7,       7.5     };
-  const double minRefInd[]    = { 0.031,   0.0013,  0.00044 };
-  const double maxRefInd[]    = { 0.034,   0.00155, 0.00052 };
+  //            Radiator          Aerogel  Rich1Gas  Rich2Gas
+  const double minPhotEn[]    = { 1.5,     1.5,      1.5     };
+  const double maxPhotEn[]    = { 4.5,     7,        7.5     };
+  const double minRefInd[]    = { 1.0280,  1.00128,  1.00039 };
+  const double maxRefInd[]    = { 1.0312,  1.00150,  1.00046 };
 
   // Iterate over segments
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
@@ -90,27 +91,54 @@ StatusCode PhotonSignalMonitor::execute()
     if ( mcType == Rich::Unknown ) continue;
 
     // Loop over all particle codes
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    for ( Particles::const_iterator hypo = particles().begin();
+          hypo != particles().end(); ++hypo )
     {
-      const Rich::ParticleIDType hypo = static_cast<Rich::ParticleIDType>(iHypo);
-
       // Expected number of emitted photons
-      const double emitPhots = m_tkSignal->nEmittedPhotons( segment, hypo );
-      plot1D( emitPhots, hid(rad,hypo,"nEmitPhots"), "Expected # emitted photons", 0, 100 );
+      const double emitPhots = m_tkSignal->nEmittedPhotons( segment, *hypo );
+      plot1D( emitPhots, hid(rad,*hypo,"nEmitPhots"), "Expected # emitted photons", 0, 100 );
 
       // Expected number of observable signal photons
-      const double sigPhots = m_tkSignal->nObservableSignalPhotons( segment, hypo );
-      plot1D( sigPhots, hid(rad,hypo,"nSigPhots"), "Expected # signal photons", 0,  100 );
+      const double sigPhots = m_tkSignal->nObservableSignalPhotons( segment, *hypo );
+      plot1D( sigPhots, hid(rad,*hypo,"nSigPhots"), "Expected # signal photons", 0,  100 );
 
       // Geometrical Efficiency
-      const double geomEff = m_geomEffic->geomEfficiency(segment,hypo);
-      plot1D( geomEff, hid(rad,hypo,"geomEff"), "Geom. Eff.", 0, 1 );
+      const double geomEff = m_geomEffic->geomEfficiency(segment,*hypo);
+      plot1D( geomEff, hid(rad,*hypo,"geomEff"), "Geom. Eff.", 0, 1 );
 
       // Scattered Geometrical Efficiency
       if ( Rich::Aerogel == rad )
       {
-        const double geomEffScat = m_geomEffic->geomEfficiencyScat(segment,hypo);
-        plot1D( geomEffScat, hid(rad,hypo,"geomEffScat"), "Scattered Geom. Eff.", 0, 1 );
+        const double geomEffScat = m_geomEffic->geomEfficiencyScat(segment,*hypo);
+        plot1D( geomEffScat, hid(rad,*hypo,"geomEffScat"), "Scattered Geom. Eff.", 0, 1 );
+      }
+
+      // Plot the expected spectra (energy, refIndex etc.)
+      const PhotonSpectra<LHCb::RichRecSegment::FloatType> & spectra 
+        = segment->signalPhotonSpectra();
+      // min and max ref index values
+      double minRefIn = m_refIndex->refractiveIndex( rad, spectra.minEnergy() );
+      double maxRefIn = m_refIndex->refractiveIndex( rad, spectra.maxEnergy() );
+      if ( minRefIn>maxRefIn )
+      {
+        const double tmp = minRefIn;
+        minRefIn = maxRefIn;
+        maxRefIn = tmp;
+      }
+      for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin )
+      {
+        // photon energy for this bin
+        const double energy = spectra.binEnergy(iEnBin);
+        // ref index for this energy bin
+        const double refInd = m_refIndex->refractiveIndex( rad, energy );
+        // energy spectra
+        plot1D( energy, hid(rad,*hypo,"energySpectra"), "Photon energy spectra",
+                spectra.minEnergy(), spectra.maxEnergy(), spectra.energyBins(), 
+                (spectra.energyDist(*hypo))[iEnBin] );
+        // ref index spectra
+        plot1D( refInd, hid(rad,*hypo,"refIndexSpectra"), "Refractive index spectra",
+                minRefIn, maxRefIn, spectra.energyBins(), 
+                (spectra.energyDist(*hypo))[iEnBin] );
       }
 
     }
@@ -128,7 +156,7 @@ StatusCode PhotonSignalMonitor::execute()
     // refractive index
     const double refInd = m_refIndex->refractiveIndex( rad, avgEnEmit );
     plot1D( refInd-1, hid(rad,mcType,"refIndM1"),
-            "Refractive index n-1", minRefInd[rad], maxRefInd[rad] );
+            "Refractive index n-1", minRefInd[rad]-1, maxRefInd[rad]-1 );
 
     // Number of signal photons for true type
     const double nSigTrue = m_tkSignal->nSignalPhotons( segment, mcType );
