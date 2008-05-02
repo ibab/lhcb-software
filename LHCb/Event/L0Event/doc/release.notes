@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.95 2008-04-15 14:17:51 cattanem Exp $
+! $Id: release.notes,v 1.96 2008-05-02 13:31:08 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+
+! 2008-05-02 - Olivier Deschamps
+ - fix bug in L0DUConfig::clearDataValue() [DO NOT reset the constant data]
+
 
 !======================== L0Event v16r9 2008-04-15 ===========================
 ! 2008-04-15 - Olivier Deschamps

@@ -126,6 +126,7 @@
       <method name  = "clearDataValue" desc = "clear all ElementaryData operands" type  = "void" >
         <code>
           for(LHCb::L0DUElementaryData::Map::iterator it = m_data.begin();it!=m_data.end();it++){
+          if( ((*it).second)->type() == L0DUElementaryData::Constant)continue;
           ((*it).second)->operands().clear();
           }
           resetEmulated();
