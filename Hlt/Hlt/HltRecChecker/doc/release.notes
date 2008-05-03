@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2008-05-02 - Gerhard Raven
+  - removing obsolete _dll.cpp file
+
 !========================== HltRecChecker v1r5 2008-03-07 ===================
 ! 2008-03-08 - Jose A. Hernando
   - removing printing into from HltLHCbIDMCParticleRelation.cpp
