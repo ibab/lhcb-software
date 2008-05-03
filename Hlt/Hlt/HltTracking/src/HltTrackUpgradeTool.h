@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.5 2008-04-24 14:32:36 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.6 2008-05-03 15:24:44 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -57,10 +57,7 @@ public:
   StatusCode upgrade(LHCb::Track& seed,
                      std::vector<LHCb::Track*>& track);
 
-protected:
-
-
-
+private:
   void recoConfiguration();
 
   bool isReco(const LHCb::Track& seed);
@@ -76,13 +73,16 @@ protected:
 
   void printInfo(const std::string& title, const LHCb::Track& track);
 
-protected:
+  template <class T>
+  void recoregister(const std::string& name, const std::string& prop,
+                    const T& t) {
+    std::string key = name+"/"+prop;m_recoConf.add(key,t);
+    info() << " reco ["<<key<<"] = " << t <<endreq;
+  }
 
   std::string m_TESOutput;
-  
-  std::vector<LHCb::Track*> m_tracks;
-
   std::string m_recoName;
+  
   int m_recoID;
   bool m_owner;
   int m_trackType;
@@ -93,27 +93,18 @@ protected:
   bool m_orderByPt;
   bool m_doTrackReco;
 
-protected:
+
 
   ISequencerTimerTool* m_timer;
   int m_timerTool;
-
-protected:
-
-  template <class T>
-  void recoregister(const std::string& name, const std::string& prop,
-                    const T& t) {
-    std::string key = name+"/"+prop;m_recoConf.add(key,t);
-    info() << " reco ["<<key<<"] = " << t <<endreq;
-  }
-
   zen::dictionary m_recoConf;
 
   LHCb::Tracks* m_otracks;
 
   ITracksFromTrack* m_tool;
 
-  Hlt::SortTrackByPt _sortByPt;
+
+
 
 };
 #endif // HLTTRACKING_H

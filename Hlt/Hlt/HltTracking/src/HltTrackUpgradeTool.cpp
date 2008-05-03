@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.12 2008-04-25 12:57:38 pkoppenb Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.13 2008-05-03 15:24:44 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -27,6 +27,9 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_otracks(0)
+  , m_tool(0)
+  , m_timer(0)
 {
   declareInterface<HltTrackUpgradeTool>(this);
   declareInterface<ITrackUpgrade>(this);
@@ -36,7 +39,6 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
   declareProperty("OrderByPt", m_orderByPt = false);
   declareProperty("DoTrackReco",m_doTrackReco = true);
 
-  m_tool = NULL;
 };
 
 void HltTrackUpgradeTool::recoConfiguration() {
@@ -89,7 +91,8 @@ HltTrackUpgradeTool::~HltTrackUpgradeTool() {}
 //=============================================================================
 StatusCode HltTrackUpgradeTool::initialize() {
 
-  StatusCode sc = StatusCode::SUCCESS;
+  StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   recoConfiguration();
 
@@ -129,16 +132,13 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
           << " transfer ancestor " << m_transferAncestor
           << " track type " << m_trackType << endreq;
   
-  if (m_tool) delete m_tool;
-  m_tool = NULL;
   m_tool = tool<ITracksFromTrack>(toolName,this);
   Assert(m_tool," setReco() not able to create tool "+toolName);
 
-  m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
+  // m_timer = tool<ISequencerTimerTool>("SequencerTimerTool");
   m_timer->increaseIndent();
   m_timerTool = m_timer->addTimer(toolName);
   m_timer->decreaseIndent();
-
 
   return StatusCode::SUCCESS;
 }
@@ -158,14 +158,15 @@ StatusCode HltTrackUpgradeTool::upgrade(std::vector<Track*>& itracks,
   StatusCode sc = StatusCode::SUCCESS;
   beginExecute();
   
+  std::vector<LHCb::Track*> tracks;
   for (std::vector<Track*>::iterator it = itracks.begin();
        it != itracks.end(); ++it) {
-    Track& seed = *(*it);
-    upgrade(seed,m_tracks);
-    zen::copy(m_tracks,otracks);
+    upgrade(**it,tracks);
+    //FIXME: otracks = tracks (iff otracks is empty)
+    otracks.insert(otracks.end(),tracks.begin(),tracks.end());
   }
   if (m_orderByPt)
-    std::sort(otracks.begin(),otracks.end(),_sortByPt);
+    std::sort(otracks.begin(),otracks.end(), Hlt::SortTrackByPt());
   
   debug() << " upgraded " << otracks.size() << " tracks " << endreq;
   return sc;
@@ -193,7 +194,7 @@ StatusCode HltTrackUpgradeTool::upgrade(LHCb::Track& seed,
     find(seed,tracks);
     verbose()<< " seed was upgraded, found tracks " << tracks.size() << endreq;
   }
-  if (tracks.size()>0) {
+  if (!tracks.empty()) {
     printInfo(" upgrade seed    ", seed);
     printInfo("         tracks  ", tracks);
   }

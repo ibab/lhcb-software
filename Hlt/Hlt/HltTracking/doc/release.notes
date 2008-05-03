@@ -4,6 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-05-02 - Gerhard Raven
+ - no longer need to set m_algoType in HltAlgorithm derived classes
+ - fix some initialize/finalize imbalances
+ - don't delete tools obtained with tool<IXXX>(...)
+ - don't request timertool twice
+
 !========================== HltTracking v3r2 2008-04-25 ===================
 ! 2008-04-25 - Patrick Koppenburg
  - Error become a warning

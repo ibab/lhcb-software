@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.4 2008-01-25 16:55:26 hernando Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.5 2008-05-03 15:24:44 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -28,7 +28,6 @@ HltTrackUpgrade::HltTrackUpgrade( const std::string& name,
 {
   declareProperty("RecoName", m_recoName = "empty");  
   m_doInitSelections = false;
-  m_algoType = "HltTrackUpgrade";
 };
 //=============================================================================
 // Destructor
@@ -60,12 +59,8 @@ StatusCode HltTrackUpgrade::initialize() {
 //=============================================================================
 StatusCode HltTrackUpgrade::execute() {
 
-  StatusCode sc = 
-    m_tool->upgrade(*m_inputTracks,*m_outputTracks);
-
-  if (m_debug)
-    printInfo(" upgraded tracks ",*m_outputTracks);
-  
+  StatusCode sc = m_tool->upgrade(*m_inputTracks,*m_outputTracks);
+  if (m_debug) printInfo(" upgraded tracks ",*m_outputTracks);
   return sc;
 }
 //=============================================================================

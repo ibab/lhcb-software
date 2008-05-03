@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.3 2008-04-24 14:32:36 hernando Exp $
+// $Id: HltTrackMatch.cpp,v 1.4 2008-05-03 15:24:44 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -129,8 +129,6 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
           << " quality [2] " << m_quality2Name << " " << m_quality2ID
           << endreq;
   
-  if (m_tool) delete m_tool;
-  m_tool = 0;
   m_tool = tool<ITrackMatch>(toolName,this);
   Assert(m_tool," setReco() not able to create tool "+toolName);
 
