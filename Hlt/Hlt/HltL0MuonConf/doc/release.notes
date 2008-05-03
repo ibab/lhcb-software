@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2008-05-02 - Gerhard Raven
+ - remove obsolete _dll.cpp file
 
 !========================== HltL0MuonConf v3r0 2008-02-05 ===================
 ! 2008-01-23 - Patrick Koppenburg
