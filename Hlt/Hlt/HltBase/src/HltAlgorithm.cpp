@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.29 2008-05-01 20:25:50 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.30 2008-05-03 15:18:57 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -38,7 +38,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("OutputTracksName", m_outputSelectionName);
   declareProperty("OutputVerticesName", m_outputSelectionName);
 
-  m_algoType = "Unknown";
 
   m_inputSelectionsNames.clear();
   m_inputSelections.clear();
@@ -183,14 +182,17 @@ void HltAlgorithm::saveConfiguration() {
   
   verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
 
-  std::string type = "unknown";
   Assert(m_outputSelection != 0," No output Selection");
+  std::string type = "unknown";
   if (m_outputSelection->classID() == LHCb::Track::classID()) type = "Track";
   else if (m_outputSelection->classID() == LHCb::RecVertex::classID())
     type = "Vertex";
   verbose() << "Type : " << type << endmsg ;
-  confregister("Algorithm",m_algoType+"/"+name(),m_outputSelectionName);
-  confregister("SelectionType",type,m_outputSelectionName);
+  
+  std::string algoType =  System::typeinfoName(typeid(*this));
+
+  confregister("Algorithm",algoType+"/"+name(),         m_outputSelectionName);
+  confregister("SelectionType",type,                    m_outputSelectionName);
   confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName);
   verbose() << "Done saveConfigureation" << endmsg ;  
   info() << " HLT input selections " << m_inputSelectionsNames << endreq;
@@ -284,9 +286,7 @@ void HltAlgorithm::monitorInputs()
   if (!m_monitor) return;
   for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it) {
-    int id = (*it)->id();
-    size_t n = (*it)->ncandidates();
-    fillHisto(*m_inputHistos[id],n,1.);
+    fillHisto(*m_inputHistos[(*it)->id()],(*it)->ncandidates(),1.);
   }
   // verbose() << " end monitor inputs " <<endreq;
 }

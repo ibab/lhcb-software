@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.2 2008-01-31 15:16:07 hernando Exp $
+// $Id: HltSelectionFilter.cpp,v 1.3 2008-05-03 15:19:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,6 @@ HltSelectionFilter::HltSelectionFilter( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   m_doInitSelections = false;
-  m_algoType = "HltSelectionFilter";
 }
 //=============================================================================
 // Destructor

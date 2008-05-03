@@ -1,4 +1,4 @@
-// $Id: L0Entry.h,v 1.8 2008-01-22 09:56:44 hernando Exp $
+// $Id: L0Entry.h,v 1.9 2008-05-03 15:19:53 graven Exp $
 #ifndef L0ENTRY_H 
 #define L0ENTRY_H 1
 
@@ -27,6 +27,7 @@
  */
 class L0Entry : public HltAlgorithm {
 public: 
+
   /// Standard constructor
   L0Entry( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -34,25 +35,16 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-  enum AlleysEntries {Muon,Hadron,Calo};
+private:
 
   std::string m_l0Location;
 
   StringArrayProperty m_l0ChannelsName;
 
-protected:
-
   Hlt::Histo* m_histoL0;
 
-  LHCb::L0DUReport* m_l0;
-
   std::vector<int> m_l0Channels;
-
-protected:
 
   void defineL0();
 

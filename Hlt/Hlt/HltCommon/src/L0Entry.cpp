@@ -1,11 +1,9 @@
-// $Id: L0Entry.cpp,v 1.12 2008-01-23 11:42:22 pkoppenb Exp $
+// $Id: L0Entry.cpp,v 1.13 2008-05-03 15:19:53 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Event/L0CaloCandidate.h"
-#include "Event/L0MuonCandidate.h"
 
 // local
 #include "L0Entry.h"
@@ -31,7 +29,6 @@ L0Entry::L0Entry( const std::string& name,
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("L0ChannelsName", m_l0ChannelsName);
   m_doInitSelections = false;
-  m_algoType = "L0Entry";
 }
 //=============================================================================
 // Destructor
@@ -54,7 +51,6 @@ StatusCode L0Entry::initialize() {
   
   m_histoL0 = initializeHisto("L0",0.,14.,28);
   
-
   return StatusCode::SUCCESS;
 };
 
@@ -63,43 +59,29 @@ StatusCode L0Entry::initialize() {
 //=============================================================================
 StatusCode L0Entry::execute() {
 
-  m_l0 = get<L0DUReport>(m_l0Location);
+  LHCb::L0DUReport* l0 = get<L0DUReport>(m_l0Location);
   
-  bool ok = m_l0->decision();
-  debug() << " L0 decision " << ok << endreq;
+  bool pass = l0->decision();
+  debug() << " L0 decision " << l0->decision() << endreq;
 
   if (!m_l0Channels.empty()) {
-    ok = false;
 
     if (m_monitor)
       for (int i = 0; i<14; ++i)
-        if (m_l0->channelDecision(i)) fillHisto(*m_histoL0, 1.*i , 1.);
+        if (l0->channelDecision(i)) fillHisto(*m_histoL0, 1.*i , 1.);
     
+    pass = false;
     for (std::vector<int>::iterator it = m_l0Channels.begin();
-         it != m_l0Channels.end(); ++it) {
-      ok = ( ok || m_l0->channelDecision( *it ) );
-      debug() << " accepted L0 channel trigger " 
-              << m_l0->channelName(*it ) 
-              << " ? " << m_l0->channelDecision(*it) << endreq;
+         it != m_l0Channels.end() && !pass ; ++it) {
+      pass = l0->channelDecision( *it );
     }
-
-  } else {
-    debug() << " accepting all L0 channels " << endreq;
   }
   
+  setDecision(pass);
+  debug() << "L0Entry: " << (pass?"accept":"reject") << endreq;
   
-  setDecision(ok);
-  
-  debug() << " accepted  l0 entry " << endreq;
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0Entry::finalize() {
-  return HltAlgorithm::finalize();  // must be called after all other actions
-}
 
 //=============================================================================
 
@@ -140,5 +122,3 @@ void L0Entry::defineL0() {
     info() << " accepting all L0 triggers " << endreq;
 
 }
-
-

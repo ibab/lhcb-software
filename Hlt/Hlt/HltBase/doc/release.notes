@@ -6,6 +6,10 @@
 
 !2008-05-02 - Gerhard Raven
    - replace class HltBaseAlg by a typedef, replace HltBaseTool by a typedef
+   - remove the need to set m_algoType explicitly by hand in any class
+     derived from HltAlgoritm by using algoType System::typeinfoName(typeid(*this)
+     instead. (note: this implies trivial but neccesary changes in all HltAlgorithm
+     derived classes)
 
 !2008-05-01 - Gerhard Raven
    - fix initialize/finalize imbalances

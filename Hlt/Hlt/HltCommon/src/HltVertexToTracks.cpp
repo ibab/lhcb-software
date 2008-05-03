@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.2 2008-01-22 09:56:44 hernando Exp $
+// $Id: HltVertexToTracks.cpp,v 1.3 2008-05-03 15:19:53 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -30,7 +30,6 @@ HltVertexToTracks::HltVertexToTracks( const std::string& name,
 {
 
   m_doInitSelections = false;
-  m_algoType = "HltVertesToTracks";
 }
 //=============================================================================
 // Destructor

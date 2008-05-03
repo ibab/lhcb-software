@@ -21,14 +21,12 @@ DECLARE_ALGORITHM_FACTORY( HltVertexPrepare );
 HltTrackFilter::HltTrackFilter( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   HltTFilter<LHCb::Track>(name,pSvcLocator) {
-  m_algoType = "HltTrackFilter";
   m_functionFactoryName = "HltTrackFunctionFactory";
 }
 
 HltVertexFilter::HltVertexFilter( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   HltTFilter<LHCb::RecVertex>(name,pSvcLocator) {
-  m_algoType = "HltVertexFilter";
   m_functionFactoryName = "HltVertexFunctionFactory";
 }
 
@@ -36,7 +34,6 @@ HltVertexFilter::HltVertexFilter( const std::string& name,
 HltTrackPrepare::HltTrackPrepare( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   HltTFilter<LHCb::Track>(name,pSvcLocator) {
-  m_algoType = "HltTrackPrepare";
   declareProperty("TESInputName", m_inputSelectionName = "");
   m_functionFactoryName = "HltTrackFunctionFactory";
   m_tesInput = true;
@@ -45,7 +42,6 @@ HltTrackPrepare::HltTrackPrepare( const std::string& name,
 HltVertexPrepare::HltVertexPrepare( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
   HltTFilter<LHCb::RecVertex>(name,pSvcLocator) {
-  m_algoType = "HltVertexPrepare";
   declareProperty("TESInputName", m_inputSelectionName = "");
   m_functionFactoryName = "HltVertexFunctionFactory";
   m_tesInput = true;

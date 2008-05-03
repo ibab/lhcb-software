@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.22 2008-02-13 09:15:49 pkoppenb Exp $
+// $Id: HltAlgorithm.h,v 1.23 2008-05-03 15:18:57 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -103,9 +103,6 @@ protected:
   size_t m_minNCandidates;
 
 protected:
-
-  // type of the algorithm (to be saved in the hlt configurtion)
-  std::string m_algoType;
 
   // name of the input selection (option)
   std::string m_inputSelectionName;

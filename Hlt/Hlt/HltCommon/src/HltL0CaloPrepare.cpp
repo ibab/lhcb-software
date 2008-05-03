@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.1 2008-01-22 09:56:32 hernando Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.2 2008-05-03 15:19:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,6 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
   declareProperty("CaloMakerTool", m_caloMakerName = "");
 
   m_doInitSelections = false;
-  m_algoType = "HltL0CaloPrepare";
   
 }
 //=============================================================================

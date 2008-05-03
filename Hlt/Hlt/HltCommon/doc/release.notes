@@ -6,6 +6,7 @@
 
 ! 2008-05-02 Gerhard Raven
  - remove HltSequencer, obsolete _dll.cpp file
+ - follow change in HltBase/HltAlgorithm: no need to explicitly set m_algoType
 
 !========================== HltCommon v3r2 2008-04-25 ===================
 ! 2008-04-23 (St. Jorge) - Jose A. Hernando

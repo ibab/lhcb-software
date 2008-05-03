@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.16 2008-04-23 09:08:22 hernando Exp $
+// $Id: HltVertexMaker.cpp,v 1.17 2008-05-03 15:19:53 graven Exp $
 // Include files 
 
 
@@ -44,7 +44,6 @@ HltVertexMaker::HltVertexMaker( const std::string& name,
   m_twoContainers = false;
   m_doInitSelections = false;
   m_considerInputs = false;
-  m_algoType = "HltVertexMaker";
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.1 2008-01-22 09:56:33 hernando Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.2 2008-05-03 15:19:53 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,6 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
   m_maker = 0;
 
   m_doInitSelections = false;
-  m_algoType = "HltL0MuonPrepare";
 }
 //=============================================================================
 // Destructor
