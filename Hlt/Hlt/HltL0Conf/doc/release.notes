@@ -4,6 +4,8 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-05-02 - Gerhard Raven
+ - remove obsolete HltL0Conf_dll.cpp
 
 !========================== HltL0Conf v2r0 2008-04-25 ===================
 ! 2008-04-28 - Patrick Koppenburg
