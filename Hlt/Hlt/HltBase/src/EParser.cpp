@@ -29,6 +29,6 @@ bool EParser::parseFilter(const std::string& descriptor,
   title = gens[0];
   mode = gens[1];
   x0 = boost::lexical_cast<float>(gens[2]);
-  if (nsize >3) xf =boost::lexical_cast<float>(gens[3]); 
+  if (nsize >3) xf = boost::lexical_cast<float>(gens[3]); 
   return true;
 }
