@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.4 2008-05-01 08:20:59 graven Exp $
+// $Id: HltMuonRec.h,v 1.5 2008-05-03 15:26:06 graven Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -55,14 +55,9 @@ public:
   StatusCode getPads(int station);
   StatusCode createCoordsFromLC(int station);
   StatusCode initializeLogChanDecoding();
-protected:
 private:
-  //  IMuonTileXYZTool  *m_iTileTool;
-  //  IMuonGeometryTool *m_iGeomTool;  
-  //  IMuonGetInfoTool  *m_iGetInfo;
   DeMuonDetector* m_muonDetector;
   IMuonPosTool      *m_iPosTool;
-  //ITrackSelector* m_trackSelector; // tool to accept a track
   
   unsigned int m_nStation;
   unsigned int m_nRegion;

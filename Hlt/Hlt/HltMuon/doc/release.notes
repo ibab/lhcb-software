@@ -6,6 +6,7 @@
 
  2008-05-02 - Gerhard Raven
   - remove obsolete _dll.cpp file 
+  - fix some ignored status codes
  2008-05-01 - Gerhard Raven
   - cosmetic changes only...
 

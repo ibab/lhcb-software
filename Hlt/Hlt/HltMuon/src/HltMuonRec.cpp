@@ -1,5 +1,7 @@
-// $Id: HltMuonRec.cpp,v 1.12 2008-05-01 08:20:59 graven Exp $
+// $Id: HltMuonRec.cpp,v 1.13 2008-05-03 15:26:06 graven Exp $
 // Include files 
+
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -34,7 +36,6 @@ HltMuonRec::HltMuonRec( const std::string& name,
 {
   declareProperty( "MeasureTime"   , m_measureTime   = true );
   declareProperty( "CloneKiller"   , m_cloneKiller   = true );
-  //declareProperty( "StoreTracks"   , m_storeTracks   = true );
   declareProperty( "OutputMuonTracksName" ,
                    m_outputMuonTracksName="Hlt/Tracks/MuonSeg");
   declareProperty("DecodingFromCoord", m_decodingFromCoord = true );
@@ -140,14 +141,13 @@ StatusCode HltMuonRec::initialize() {
   debug()<<"boards "<<endreq;  
   for(unsigned int station=0;station<m_nStation;station++){
     for(unsigned int region = 0 ; region < m_nRegion ; region++ ){
-      int xMap,yMap; 
       unsigned int numLayout=m_muonDetector->getLogMapInRegion(station,region);
       HltMuonRegion *r = m_station[station].region(region);
       r->setLayoutNumber(numLayout);
       debug()<<"numLayout "<<numLayout<<endreq;  
       for(unsigned int which_layout=0;which_layout<numLayout;which_layout++){
-        xMap=m_muonDetector->getLayoutX (which_layout, station,region);          
-        yMap=m_muonDetector->getLayoutY (which_layout, station,region); 
+        int xMap=m_muonDetector->getLayoutX (which_layout, station,region);          
+        int yMap=m_muonDetector->getLayoutY (which_layout, station,region); 
         r-> setLayoutGridX(which_layout,(unsigned int) xMap);
         r-> setLayoutGridY(which_layout,(unsigned int) yMap); 
       }
@@ -274,11 +274,11 @@ StatusCode HltMuonRec::execute() {
   if ( m_measureTime ) m_timer->start( m_timePad );
   // decode only station M5
   if(!m_padM5){
-    createCoords(4);
+    createCoords(4).ignore();
     m_padM5=true;
   }
   if(!m_padM4){
-    createCoords(3);
+    createCoords(3).ignore();
     m_padM4=true;
   }
   
@@ -287,7 +287,8 @@ StatusCode HltMuonRec::execute() {
     m_timer->start( m_timeMuon );
   }  
 
-  muonSearch();
+  StatusCode sc = muonSearch();
+  if (sc.isFailure()) return sc;
   if(m_cloneKiller)  {
       detectClone();
       strongCloneKiller();
@@ -304,80 +305,25 @@ StatusCode HltMuonRec::execute() {
   std::vector<HltMuonTrack>::iterator itMuonTrack;
   for(itMuonTrack=m_muonTracks.begin();
       itMuonTrack<m_muonTracks.end();itMuonTrack++){
-    if(!(itMuonTrack)->clone()){	
+    if((itMuonTrack)->clone())continue;
+
       m_countMuonCandidates++;
       LHCb::Track* trgTr = new LHCb::Track();
       //        trgTr->setType(Track::Muon);
       
-     
-//	info()<<" new muon track "<<endreq;
-      float xm=itMuonTrack->point(1).x();       
-      float ym=itMuonTrack->point(1).y();
-      float txm= itMuonTrack->
-        slopeX(1,2,m_station[1].z(),m_station[2].z());
-      float tym= itMuonTrack->
-        slopeY(1,2,m_station[1].z(),m_station[2].z());
-      
+    for (int i=1;i<5;++i) {
       LHCb::State temp;
-      temp.setZ(m_station[1].z());
-      temp.setX(xm);
-      temp.setY(ym);
-      temp.setTx(txm);
-      temp.setTy(tym);
-      trgTr->addToStates( temp );
+	temp.setX( itMuonTrack->point(i).x() );       
+	temp.setY( itMuonTrack->point(i).y() );
+	temp.setZ( m_station[i].z()          );
+	int ii = std::max(i,3);
+	temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
+	temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
       temp.setLocation(LHCb::State::Muon);
-      
-      
-      xm=itMuonTrack->point(2).x();       
-      ym=itMuonTrack->point(2).y();
-      txm= itMuonTrack->
-        slopeX(2,3,m_station[2].z(),m_station[3].z());
-      tym= itMuonTrack->
-        slopeY(2,3,m_station[2].z(),m_station[3].z());
-      
-      temp.setZ(m_station[2].z());
-      temp.setX(xm);   
-      temp.setY(ym);   
-      temp.setTx(txm);
-      temp.setTy(tym);
       trgTr->addToStates( temp );
-      temp.setLocation(LHCb::State::Muon);
-            
-      xm=itMuonTrack->point(3).x();       
-      ym=itMuonTrack->point(3).y();
-      txm= itMuonTrack->
-        slopeX(3,4,m_station[3].z(),m_station[4].z());
-      tym= itMuonTrack->
-        slopeY(3,4,m_station[3].z(),m_station[4].z());
-     
-      temp.setZ(m_station[3].z());
-      temp.setX(xm);   
-      temp.setY(ym);   
-      temp.setTx(txm);
-      temp.setTy(tym);
-      trgTr->addToStates( temp );
-      temp.setLocation(LHCb::State::Muon);
-            
+	trgTr->addToLhcbIDs(itMuonTrack->point(i).tile());
+    }
       
-      xm=itMuonTrack->point(4).x();       
-      ym=itMuonTrack->point(4).y();
-      txm= itMuonTrack->
-        slopeX(3,4,m_station[3].z(),m_station[4].z());
-      tym= itMuonTrack->
-        slopeY(3,4,m_station[3].z(),m_station[4].z());
-            
-      temp.setZ(m_station[4].z());
-      temp.setX(xm);   
-      temp.setY(ym);   
-      temp.setTx(txm);
-      temp.setTy(tym);
-      trgTr->addToStates( temp );
-      temp.setLocation(LHCb::State::Muon);
-      
-      trgTr->addToLhcbIDs(itMuonTrack->point(1).tile());    
-      trgTr->addToLhcbIDs(itMuonTrack->point(2).tile());     
-      trgTr->addToLhcbIDs(itMuonTrack->point(3).tile());     
-      trgTr->addToLhcbIDs(itMuonTrack->point(4).tile());
       
       Track* muonseg = 0;
       if (m_doPrepareMuonSeg) {
@@ -389,7 +335,7 @@ StatusCode HltMuonRec::execute() {
       } 
       if (muonseg) outputTracks->insert(muonseg);
 
-    }
+    
   }
   
   if ( m_measureTime ) { 
@@ -479,9 +425,7 @@ StatusCode HltMuonRec::decodeBuffer() {
         MuonTileID tile=(m_mapTileInODE[odenumber-1])[address];
         //info()<<"tile in tiol "<<tile.layout()<<" "<<tile.station()<<" "<<
         // tile.region()<<" "<<tile.nX()<<" "<<tile.nY()<<endmsg;
-        int station = tile.station();      
-        int region  = tile.region();
-        m_station[station].region(region)->addTile( tile );
+        m_station[tile.station()].region(tile.region())->addTile( tile );
         
         //        info()<<" qui "<<(unsigned int) tile<<endmsg;       
         it++;
@@ -497,17 +441,8 @@ StatusCode HltMuonRec::decodeBuffer() {
 
 StatusCode HltMuonRec::createCoords(int station) {
 
-
-
-  if(m_decodingFromCoord){    
-    StatusCode sc=getPads(station);
-    return sc;    
-  }else{
-
-    StatusCode sc=createCoordsFromLC(station);
-    return sc;
-  }
-  
+  return m_decodingFromCoord ?  getPads(station)
+	  		     :  createCoordsFromLC(station);
 
 }
 
@@ -525,40 +460,32 @@ StatusCode HltMuonRec::crossStrips(unsigned int station, unsigned int region) {
   //  std::vector<std::pair<MuonTileID,bool> > twelfthX[12];
   //std::vector<std::pair<MuonTileID,bool> > twelfthY[12];
 
-  /*  for(int index=0;index<12;index++){
-    twelfthX[index].reserve(50);
-    twelfthY[index].reserve(50);
-    }*/
   
-  unsigned int which_third=0;  
-  unsigned int which_layout=0;
   
-  std::vector<LHCb::MuonTileID>::const_iterator itTile;
   unsigned int layoutX[2];
   unsigned int layoutY[2];
   layoutX[0]=thisRegion->layoutGridX(0);
-  layoutX[1]=thisRegion->layoutGridX(1);
   layoutY[0]=thisRegion->layoutGridY(0);
+  layoutX[1]=thisRegion->layoutGridX(1);
   layoutY[1]=thisRegion->layoutGridY(1);
   
 
   
+  unsigned int which_third=0;  
+  unsigned int which_layout=0;
+  std::vector<LHCb::MuonTileID>::const_iterator itTile;
   for( itTile = padTiles.begin() ; itTile != padTiles.end() ; 
        ++itTile ){          
     unsigned int quadrant=(*itTile).quarter();
     
     if((itTile->nX())>=(itTile->layout()).xGrid()){
-      if((itTile->nY())>=(itTile->layout()).yGrid()){
+      if((itTile->nY())>=(itTile->layout()).yGrid()) {
          which_third=2;
-      }
-      
-      else{
+      } else{
          which_third=1;
       }
- 
     }else{
       which_third=3;
-      
     }
     
     
@@ -748,7 +675,7 @@ StatusCode HltMuonRec::muonSearch()
           m_timer->stop( m_timeMuon );
           m_timer->start( m_timePad );
         }
-        createCoords(2);
+        createCoords(2).ignore();
         m_padM3=true;
         if ( m_measureTime ) {
           m_timer->stop( m_timePad );
@@ -770,7 +697,7 @@ StatusCode HltMuonRec::muonSearch()
           m_timer->stop( m_timeMuon );     
           m_timer->start( m_timePad );
         }
-        createCoords(1);
+        createCoords(1).ignore();
         m_padM2=true;
         if ( m_measureTime ) {
           m_timer->stop( m_timePad );
@@ -1108,45 +1035,29 @@ std::vector<LHCb::MuonTileID> HltMuonRec::DoPad(std::vector<
 
 StatusCode HltMuonRec::getPads(int station)
 {
-  
-
   for(unsigned int region=0;region< m_nRegion;region++){
-     HltMuonRegion* thisRegion = m_station[station].region(region);
-     thisRegion->clearPoints();
+     m_station[station].region(region)->clearPoints();
   }
 
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  std::vector<RawBank*>::const_iterator itB;  
-  //unsigned int chIterator=0;
+  typedef std::vector<RawBank*>::const_iterator rbiter_t;
   
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;
+  for( rbiter_t itB = b.begin(); itB != b.end(); itB++ ) {    
     verbose()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;   
-    const short * it=r->begin<short>();
-    int tell1Now=(unsigned int)(*itB)->sourceID();
     
+    int tell1Now=(unsigned int)(*itB)->sourceID();
     if(tell1Now>=m_stationL1Start[station]&&
        tell1Now<m_stationL1Stop[station]){
-      
-      //if((unsigned int)(*itB)->sourceID()>=m_M1Tell1){
-      //  unsigned int tell=(unsigned int)(*itB)->sourceID();      
-        unsigned int pads=*it;
-        ++it;      
-        for(unsigned int loop=0;loop<pads;++loop){
-          unsigned int address=*it;
+    	const short * it=(*itB)->begin<short>();
+        unsigned int npads=*it++;
+        for(unsigned int i=0;i<npads;++i){
+          unsigned int address=*it++;
           LHCb::MuonTileID padTile= (m_mapPad[tell1Now])[address]; 
           double x,y,z,dx,dy,dz;
-          
           m_iPosTool-> calcTilePos(padTile,x, dx,y, dy,z, dz);
-          int region=padTile.region();
-          HltMuonRegion* thisRegion = m_station[station].region(region);
-          thisRegion->addPoint( x, y,padTile );  
-
-          //          storage.push_back(m_mapPad[tell][address]);        
-          ++it;        
+          m_station[station].region(padTile.region())->addPoint( x, y,padTile );  
         }      
-        //      }      
     }
   }
   return StatusCode::SUCCESS;
@@ -1174,14 +1085,12 @@ StatusCode HltMuonRec::initializeLogChanDecoding()
     
     for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
       debug()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
+      std::string L1path=cablingBasePath+ cabling->getL1Name(L1Board);
       SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
       unsigned totODE=0;
       
       for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
+        std::string ODEpath=cablingBasePath +l1->getODEName(ODEBoard);
         //info()<<"ODE number "<<L1Board<<" "<<l1->getODEName(ODEBoard)<<endmsg;
         SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
         if( 0 == ode ) {
@@ -1255,20 +1164,16 @@ StatusCode HltMuonRec::createCoordsFromLC(int istation)
         m_iPosTool-> calcTilePos(*itTile,x, dx,y, dy,z, dz);
         
         //          info()<<istation<<" "<<iregion<<" "<<x<<" "<<y<<endreq;
-          
         thisRegion->addPoint( x, y,  *itTile );
       }        
       //info()<<"no crossing "<<istation<<" "<<iregion<<" "<<
       //  ((m_station[istation].region(iregion))->tiles()).size()<<endreq;
-      
     }else if(m_station[istation].region(iregion)->layoutNumber()==2){
       //strips: need to crsso 2 layout!!!
       crossStrips(istation,iregion);
       //verbose()<<"crossing "<<istation<<" "<<iregion<<" "<<
       //  ((m_station[istation].region(iregion))->tiles()).size()<<endreq;
-      
     }      
-    
   }
   
   return StatusCode::SUCCESS;

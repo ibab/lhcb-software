@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.h,v 1.2 2007-07-12 16:41:29 asatta Exp $
+// $Id: MuonPosTool.h,v 1.3 2008-05-03 15:26:06 graven Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Point3DTypes.h"
 
 // local
 #include "MuonDet/DeMuonDetector.h"
@@ -41,7 +42,6 @@ public:
                                  double& z, double& deltaz);
   
   StatusCode initialize();
-  StatusCode finalize();
   
 private:
 
@@ -58,9 +58,7 @@ private:
   std::vector<float> m_padSizeX;
   std::vector<float> m_padSizeY;
 //  IDataProviderSvc* m_DDS;
-  std::vector<float> m_xpos[5];
-  std::vector<float> m_ypos[5];
-  std::vector<float> m_zpos[5];
+  std::vector<Gaudi::XYZPoint> m_pos[5];
   DeMuonDetector* m_muonDetector;  
   bool m_debug;
 };
