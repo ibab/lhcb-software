@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.6 2008-05-01 20:25:50 graven Exp $
+// $Id: HltBase.icpp,v 1.7 2008-05-03 09:22:28 graven Exp $
 // Include files
 
 
@@ -172,12 +172,11 @@ template <class EBASE>
 Hlt::Data& HltBase<EBASE>::hltData() 
 {
   if (m_hltData != 0) return *m_hltData;
-  std::string loca = "/Event/"+m_hltDataLocation;
-  if (m_TES) {
-    SmartDataPtr<Hlt::Data> obj(EBASE::evtSvc(),loca);m_hltData = obj;
-  } else {
-    SmartDataPtr<Hlt::Data> obj(&hltSvc(),loca);m_hltData = obj;
-  }
+
+  SmartDataPtr<Hlt::Data> obj(m_TES ? EBASE::evtSvc() 
+                                    : &hltSvc() ,
+                              "/Event/"+m_hltDataLocation);
+  m_hltData = obj;
   EBASE::Assert( m_hltData != 0, " hltData() no Hlt::Data");
   return *m_hltData;
 }
