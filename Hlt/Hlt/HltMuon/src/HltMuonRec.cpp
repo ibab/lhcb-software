@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.13 2008-05-03 15:26:06 graven Exp $
+// $Id: HltMuonRec.cpp,v 1.14 2008-05-03 15:32:42 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -313,29 +313,28 @@ StatusCode HltMuonRec::execute() {
       
     for (int i=1;i<5;++i) {
       LHCb::State temp;
-	temp.setX( itMuonTrack->point(i).x() );       
-	temp.setY( itMuonTrack->point(i).y() );
-	temp.setZ( m_station[i].z()          );
-	int ii = std::max(i,3);
-	temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
-	temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
+      temp.setX( itMuonTrack->point(i).x() );       
+      temp.setY( itMuonTrack->point(i).y() );
+      temp.setZ( m_station[i].z()          );
+      int ii = std::max(i,3);
+      temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
+      temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
       temp.setLocation(LHCb::State::Muon);
       trgTr->addToStates( temp );
-	trgTr->addToLhcbIDs(itMuonTrack->point(i).tile());
+      trgTr->addToLhcbIDs(itMuonTrack->point(i).tile());
     }
       
       
-      Track* muonseg = 0;
-      if (m_doPrepareMuonSeg) {
+    Track* muonseg = 0;
+    if (m_doPrepareMuonSeg) {
         muonseg = new Track();
         m_prepareMuonSeed->makeTrack(*trgTr,*muonseg);
         delete trgTr;
-      } else {
+    } else {
         muonseg = trgTr;
-      } 
-      if (muonseg) outputTracks->insert(muonseg);
+    } 
+    if (muonseg) outputTracks->insert(muonseg);
 
-    
   }
   
   if ( m_measureTime ) { 
@@ -475,7 +474,7 @@ StatusCode HltMuonRec::crossStrips(unsigned int station, unsigned int region) {
   unsigned int which_layout=0;
   std::vector<LHCb::MuonTileID>::const_iterator itTile;
   for( itTile = padTiles.begin() ; itTile != padTiles.end() ; 
-       ++itTile ){          
+       ++itTile ){
     unsigned int quadrant=(*itTile).quarter();
     
     if((itTile->nX())>=(itTile->layout()).xGrid()){
