@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-05-02 Gerhard Raven
+ - remove HltSequencer
+
 !========================== HltCommon v3r2 2008-04-25 ===================
 ! 2008-04-23 (St. Jorge) - Jose A. Hernando
  - MakeVertex set option DoMergeInputs option (true by default)   
