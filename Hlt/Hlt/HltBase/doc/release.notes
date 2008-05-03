@@ -5,7 +5,7 @@
 !----------------------------------------------------------------------------
 
 !2008-05-02 - Gerhard Raven
-   - replace class HltBaseAlg by a typedef
+   - replace class HltBaseAlg by a typedef, replace HltBaseTool by a typedef
 
 !2008-05-01 - Gerhard Raven
    - fix initialize/finalize imbalances
