@@ -1,4 +1,4 @@
-// $Id: HltBaseAlg.h,v 1.7 2008-01-22 09:34:58 hernando Exp $
+// $Id: HltBaseAlg.h,v 1.8 2008-05-03 09:21:12 graven Exp $
 #ifndef HLTBASE_HLTBASEALG_H 
 #define HLTBASE_HLTBASEALG_H 1
 
@@ -13,17 +13,6 @@
  *  @date   2006-06-15
  */
 
-class HltBaseAlg : public HltBase<GaudiHistoAlg> {
-public:
+typedef HltBase<GaudiHistoAlg> HltBaseAlg;
 
-  /// Standard constructor
-  HltBaseAlg( const std::string& name, ISvcLocator* pSvcLocator );
-
-  virtual ~HltBaseAlg( ); ///< Destructor
-
-  virtual StatusCode initialize();
-
-  virtual StatusCode finalize();
-
-};
 #endif // HLTBASE_HLTBASEALG_H
