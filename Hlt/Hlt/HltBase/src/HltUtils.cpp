@@ -302,9 +302,9 @@ double HltUtils::FC2(const LHCb::RecVertex& vertex1,
   const Track& track1 = *(vertex1.tracks()[0]);
   const Track& track2 = *(vertex1.tracks()[1]);
 
-  EVector udir = (vertex1.position() - vertex2.position()).unit();;
   EVector p = track1.momentum() + track2.momentum();
-  EVector wdir = udir.Cross(udir.Cross(p).unit());
+  EVector udir = (vertex1.position() - vertex2.position()).unit();
+  EVector wdir = udir.Cross(udir.Cross(p.unit()));
 
   double ptPerp = fabs(p.Dot(wdir));
   double pt     = track1.pt() + track2.pt();
