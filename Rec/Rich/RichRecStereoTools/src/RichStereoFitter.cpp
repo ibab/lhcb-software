@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.2 2008-05-01 19:37:54 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.3 2008-05-04 22:53:45 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -35,7 +35,6 @@ StereoFitter::StereoFitter ( const std::string& type,
   // interface
   declareInterface<IStereoFitter>(this);
 
-  //----------set up some geometric parameters (also done in option file)
   //geometrical data: Z coordinate of entrance and exit windows (cm)
   m_zinWindowRich.push_back( 0 ); // Aerogel
   m_zinWindowRich.push_back( 990 ); // C4F10
@@ -128,25 +127,11 @@ StatusCode StereoFitter::initialize()
   return sc;
 }
 
-//Fitter
-//int StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
-//                       double &Chi2,
-//                       double &probChi2,
-//                       int    &ndof,
-//                       double &thcFit,
-//                       double &thcFitErr,
-//                       double &thphotErr,
-//                       const Rich::ParticleIDType pidType,
-//                       int     MinRingPhotons,
-//                       double  nthcPhotSigMax,
-//                       int     ncandsPerPixMax,
-//                       double  maxBkgProb
-//                       ) const
-IStereoFitter::Result 
+IStereoFitter::Result
 StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                    const IStereoFitter::Configuration & config ) const
 {
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"Stereo Fitter"<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Stereo Fitter" << endreq;
 
   if ( NULL == richSegment ) return Result(Result::Failed);
 
@@ -161,13 +146,14 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
   m_photonThcSigmaPrev=-1;
 
   //basic track/segment info
-  Gaudi::XYZVector VPTrk=richSegment->trackSegment().bestMomentum();
-  double PTrk=VPTrk.R()/Gaudi::Units::GeV;
+  const Gaudi::XYZVector & VPTrk = richSegment->trackSegment().bestMomentum();
+  const double PTrk=VPTrk.R()/Gaudi::Units::GeV;
 
   //--------------Cerenkov angle and resolution (above threshold?)
-  const double thcNominal=m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
-  const double thcPhotSig=m_ckResTool->ckThetaResolution(richSegment,config.pidType);
-  if(thcNominal>0 && thcPhotSig>0) {
+  const double thcNominal = m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
+  const double thcPhotSig = m_ckResTool->ckThetaResolution(richSegment,config.pidType);
+  if ( thcNominal>0 && thcPhotSig>0 )
+  {
     //----Rich track associated to segment and related info
     const RichRecTrack *rTrack=richSegment->richRecTrack();
     const LHCb::Track *parentTrack=dynamic_cast<const LHCb::Track*>(rTrack->parentTrack());   //Parent Track
@@ -176,7 +162,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       return Result(Result::Failed);
     }
     //radiator type
-    Rich::RadiatorType richRadiator=richSegment->trackSegment().radiator();
+    const Rich::RadiatorType richRadiator = richSegment->trackSegment().radiator();
 
     //------------geometric info
     //Get state closest to entrance window of radiator
@@ -197,30 +183,32 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
     //bool trkOK =
     trkErrStereo(inRadiatorState,richSegment,lengthEffect,errMom,err_tx2,err_ty2,trkCharge);
 
-    double m_photonThcSigma = improvedErrorPerPhoton_index( PTrk,
-                                                            lengthEffect,
-                                                            errMom,
-                                                            err_tx2,
-                                                            err_ty2,
-                                                            thcNominal,
-                                                            richRadiator,
-                                                            asymptoticRes,
-                                                            config.pidType );
+    //const double photonThcSigma =
+    improvedErrorPerPhoton_index( PTrk,
+                                  lengthEffect,
+                                  errMom,
+                                  err_tx2,
+                                  err_ty2,
+                                  thcNominal,
+                                  richRadiator,
+                                  asymptoticRes,
+                                  config.pidType );
 
     //------------------- iterative fit section: initialization
-    g_XCenterGuess=0; g_YCenterGuess=0;
+    g_XCenterGuess=0;
+    g_YCenterGuess=0;
 
     int n_iter(0);
     double diffChi2(s_diffChi2Lim);
     bool segUpdateDone(false), photonUpdateDone(false);
 
     //save segment direction and crossing points before next steps
-    m_segEntryDir=richSegment->trackSegment().entryMomentum();
-    m_segMidDir=richSegment->trackSegment().middleMomentum();
-    m_segExitDir=richSegment->trackSegment().exitMomentum();
-    m_segEntryPtn=richSegment->trackSegment().entryPoint();
-    m_segMidPtn=richSegment->trackSegment().middlePoint();
-    m_segExitPtn=richSegment->trackSegment().exitPoint();
+    m_segEntryDir = richSegment->trackSegment().entryMomentum();
+    m_segMidDir   = richSegment->trackSegment().middleMomentum();
+    m_segExitDir  = richSegment->trackSegment().exitMomentum();
+    m_segEntryPtn = richSegment->trackSegment().entryPoint();
+    m_segMidPtn   = richSegment->trackSegment().middlePoint();
+    m_segExitPtn  = richSegment->trackSegment().exitPoint();
 
 
     RichRecPhoton::ConstVector goodPhotons;
@@ -828,7 +816,7 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
   det+=m_mat[0][2]*m_errPar[2][0];
 
   //fabs not needed because matrix should be positive definite
-  if (det < 1.0e-17) 
+  if (det < 1.0e-17)
   {
     Warning( "solveChi2Equations : Fit failed : det < 1.0e-17" );
     return false;
@@ -870,7 +858,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   m_chi2Exp=chiSquare(recRing, m_radiusSquaredPid);
 
   if(m_chi2<0 || m_chi2Exp<0) {   //bad chi2 //####DBL
-    Warning( "transferFitSolution : Chi2<0 ||m_chi2Exp<0" ); 
+    Warning( "transferFitSolution : Chi2<0 ||m_chi2Exp<0" );
     return(0);
   }
 
@@ -898,12 +886,14 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
 
 // Update the segment direction
-void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, RichRecPhoton::ConstVector &photons,
-                                          double Xcenter, double Ycenter) const {
-
+void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, 
+                                          RichRecPhoton::ConstVector &photons,
+                                          double Xcenter, 
+                                          double Ycenter) const 
+{
   //form rotation transformation to update segment directions
   Gaudi::XYZVector newDir(Xcenter, Ycenter, 1);
-  double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
+  const double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
   Gaudi::XYZVector axis = newDir.Cross( Gaudi::XYZVector(0,0,1) );
   Gaudi::AxisAngle axisangle(axis, angle);
   Gaudi::Transform3D trans(axisangle);
@@ -975,22 +965,6 @@ double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const 
 }
 
 
-//more utility functions
-double StereoFitter::radiusFitted() const {
-  if(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1>=0]) return(std::sqrt(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1]));
-  else return(0);
-};
-
-double StereoFitter::XcenterFitted() const { return(m_sol[0]); };
-double StereoFitter::YcenterFitted() const { return(m_sol[1]); };
-
-
-double StereoFitter::Proba(double chi2,double ndl) const {
-  if(ndl>0 && chi2>=0) return gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0);
-  else return 0;
-}
-
-
 // inversion of a 3 by 3 matrix ; successfull if returned bool is  = true
 // matrix is not necessarily symmetric ; tests OK
 bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const {
@@ -1012,7 +986,7 @@ bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const 
   det+=mat[1][0]*invMat[0][1];
   det+=mat[2][0]*invMat[0][2];
 
-  if(fabs(det)<1.0e-15) 
+  if(fabs(det)<1.0e-15)
   {
     Warning( "invert3x3Matrix : Fit failed : det < 1.0e-15" );
     return false;
