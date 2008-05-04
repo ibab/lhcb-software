@@ -1,4 +1,4 @@
-// $Id: MCChild.cpp,v 1.3 2007-06-10 19:59:05 ibelyaev Exp $
+// $Id: MCChild.cpp,v 1.4 2008-05-04 15:23:29 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -67,21 +67,22 @@ const LHCb::MCParticle* LoKi::MCChild::child
   return ev->products()[index-1] ;                                // RETURN 
 }
 // ========================================================================
-/*  get all daughter for th egiven MCparticle 
- *  @param particle  MC-particle 
+/*  get all daughters for the given MCparticle 
+ *  @param particle  MC-particle  
+ *  @param output the vector of daughetr particles 
  *  @param decayOnly flag to consider only particles from the decay
- *  @return vector of daughetr particles 
+ *  @return the size of daughter vector 
  *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
  *  @date 2007-06-02
  */
 // ========================================================================
-LHCb::MCParticle::ConstVector
-LoKi::MCChild::children 
-( const LHCb::MCParticle* particle  , 
-  const bool              decayOnly ) 
+size_t LoKi::MCChild::daughters
+( const LHCb::MCParticle*        particle  , 
+  LHCb::MCParticle::ConstVector& output    , 
+  const bool                     decayOnly ) 
 {
-  LHCb::MCParticle::ConstVector result ;
-  if ( 0 == particle                ) { return result  ;}  // RETURN 
+  if ( !output.empty() ) { output.clear() ; }
+  if ( 0 == particle                ) { return output.size() ;}  // RETURN 
   typedef SmartRefVector<LHCb::MCVertex> EVs ;
   const EVs& evs = particle->endVertices () ;
   for ( EVs::const_iterator iev = evs.begin() ; evs.end() != iev ; ++iev ) 
@@ -90,10 +91,10 @@ LoKi::MCChild::children
     if ( 0 == ev                     ) { continue ; }    // CONTINUE 
     if ( decayOnly && !ev->isDecay() ) { continue ; }    // CONTINUE 
     const SmartRefVector<LHCb::MCParticle>& products = ev->products() ;
-    result.insert( result.end () , products.begin () , products.end () ) ;
+    output.insert ( output.end () , products.begin () , products.end () ) ;
   }
-  return result ;
-} 
+  return output.size() ;
+}
 // ============================================================================
 /** get all descendants for the given MCparticle 
  *  @param particle  MC-particle 

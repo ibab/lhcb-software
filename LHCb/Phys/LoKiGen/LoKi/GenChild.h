@@ -1,4 +1,4 @@
-// $Id: GenChild.h,v 1.3 2007-08-11 20:18:13 ibelyaev Exp $
+// $Id: GenChild.h,v 1.4 2008-05-04 15:20:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENCHILD_H 
 #define LOKI_GENCHILD_H 1
@@ -149,10 +149,27 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */
+    size_t particles 
+    ( const HepMC::GenVertex*                 vertex , 
+      const HepMC::IteratorRange              range  , 
+      std::vector<const HepMC::GenParticle*>& output ) ;
+    // ========================================================================
+    /** get all particles form the given vertex form the given range 
+     *  @see HepMC::GenVertex::particles_begin
+     *  @see HepMC::GenVertex::particles_end
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */
+    inline 
     std::vector<const HepMC::GenParticle*> 
     particles 
     ( const HepMC::GenVertex*    vertex , 
-      const HepMC::IteratorRange range  ) ;
+      const HepMC::IteratorRange range  ) 
+    {
+      std::vector<const HepMC::GenParticle*> result ;
+      particles ( vertex , range , result ) ;
+      return result ;
+    }
     // ========================================================================
     /** get all "parents" particles form the given vertxex
      *  @see LoKi::Child::particles 
@@ -168,6 +185,23 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
+    inline size_t daughters 
+    ( const HepMC::GenVertex*                 vertex , 
+      std::vector<const HepMC::GenParticle*>& output )
+    { return particles ( vertex , HepMC::children , output ) ; }
+    // ========================================================================
+    /** get all "children" particles form the given particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    size_t daughters 
+    ( const HepMC::GenParticle*               vertex , 
+      std::vector<const HepMC::GenParticle*>& output ) ;
+    // ========================================================================
+    /** get all "children" particles form the given vertex
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
     inline 
     std::vector<const HepMC::GenParticle*> 
     children ( const HepMC::GenVertex*    vertex ) 
@@ -177,8 +211,14 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
+    inline 
     std::vector<const HepMC::GenParticle*> 
-    children ( const HepMC::GenParticle* particle ) ;
+    children ( const HepMC::GenParticle* particle ) 
+    {
+      std::vector<const HepMC::GenParticle*> result ;
+      daughters ( particle , result ) ;
+      return result ;  
+    }
     // ========================================================================
     /** get all "family" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

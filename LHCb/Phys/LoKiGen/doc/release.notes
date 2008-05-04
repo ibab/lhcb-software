@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.47 2008-04-03 11:28:05 cattanem Exp $ 
+! $Id: release.notes,v 1.48 2008-05-04 15:20:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,23 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-05-04 - Vanya BELYAEV
+
+ - LoKi/GenSections.h, 
+   src/GenSections.cpp
+
+     new files with functions which produce "sections" for the decay trees.
+
+ - LoKi/GenChild.h
+   src/GenChild.cpp
+
+     add "daughters" to the list of the available functions         
+
+ - cmt/requirmeents
+
+    version increment to v7r3 
+
 
 !============================ LoKiGen v7r2 2008-04-03 =========================
 ! 2008-03-30 - Vanya BELYAEV

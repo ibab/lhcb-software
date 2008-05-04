@@ -1,4 +1,4 @@
-// $Id: GenChild.cpp,v 1.2 2007-06-10 19:56:03 ibelyaev Exp $
+// $Id: GenChild.cpp,v 1.3 2008-05-04 15:20:49 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -73,17 +73,19 @@ const HepMC::GenParticle* LoKi::GenChild::child
  *  @date   2007-05-26
  */
 // ============================================================================
-std::vector<const HepMC::GenParticle*> 
-LoKi::GenChild::particles 
-( const HepMC::GenVertex*    vertex , 
-  const HepMC::IteratorRange range  ) 
+size_t LoKi::GenChild::particles 
+( const HepMC::GenVertex*                 vertex , 
+  const HepMC::IteratorRange              range  , 
+  std::vector<const HepMC::GenParticle*>& output ) 
 {
-  if ( 0 == vertex ) { return std::vector<const HepMC::GenParticle*>() ; }
+  if ( !output.empty() ) { output.clear() ; }
+  if ( 0 == vertex ) { return output.size() ; }
   HepMC::GenVertex* _v = const_cast<HepMC::GenVertex*> ( vertex ) ;
-  return std::vector<const HepMC::GenParticle*>
-    ( _v -> particles_begin ( range ) , 
-      _v -> particles_end   ( range ) ) ;
-} 
+  output.insert ( output.end() , 
+                  _v -> particles_begin ( range ) , 
+                  _v -> particles_end   ( range ) ) ;
+  return output.size() ;                
+}
 // ============================================================================
 /*  get all "in"-particles for the given vertex 
  *  @see HepMC::GenVertex::particles_in_const_begin() 
@@ -108,7 +110,7 @@ LoKi::GenChild::particles_in
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2007-05-26
  */
-// ============================================================================
+// ===========================================================================
 std::vector<const HepMC::GenParticle*>
 LoKi::GenChild::particles_out
 ( const HepMC::GenVertex* vertex ) 
@@ -158,11 +160,13 @@ LoKi::GenChild::vertices_all
  *  @date   2007-05-26
  */    
 // ============================================================================
-std::vector<const HepMC::GenParticle*> 
-LoKi::GenChild::children ( const HepMC::GenParticle* particle ) 
+size_t LoKi::GenChild::daughters 
+( const HepMC::GenParticle*               particle , 
+  std::vector<const HepMC::GenParticle*>& output   ) 
 {
-  if ( 0 == particle ){ return std::vector<const HepMC::GenParticle*>() ; }
-  return LoKi::GenChild::children ( particle->end_vertex() ) ;
+  if ( !output.empty() ) { output.clear() ; }
+  if ( 0 == particle   ) { return output.size() ; }  // RETURN
+  return daughters ( particle -> end_vertex() , output ) ;
 }
 // ============================================================================
 /*  get all "ancestors" particles form the givel particlle 

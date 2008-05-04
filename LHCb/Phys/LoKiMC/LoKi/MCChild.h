@@ -1,4 +1,4 @@
-// $Id: MCChild.h,v 1.3 2007-06-10 19:59:04 ibelyaev Exp $
+// $Id: MCChild.h,v 1.4 2008-05-04 15:23:29 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCCHILD_H 
 #define LOKI_MCCHILD_H 1
@@ -119,17 +119,35 @@ namespace LoKi
       const size_t             index4   )
     { return child ( child ( particle , index1 ) , index2 , index3 , index4 ) ; }
     // ========================================================================
-    /** get all daughter for th egiven MCparticle 
+    /** get all daughters for the given MCparticle 
+     *  @param particle  MC-particle  
+     *  @param output    the vector of daughetr particles 
+     *  @param decayOnly flag to consider only particles from the decay
+     *  @return the size of daughter vector 
+     *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+     *  @date 2007-06-02
+     */
+    size_t daughters 
+    ( const LHCb::MCParticle*        particle          , 
+      LHCb::MCParticle::ConstVector& output            , 
+      const bool                     decayOnly = false ) ;
+    // ========================================================================
+    /** get all daughters for the given MCparticle 
      *  @param particle  MC-particle 
      *  @param decayOnly flag to consider only particles from the decay
      *  @return vector of daughetr particles 
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
      *  @date 2007-06-02
      */
-    LHCb::MCParticle::ConstVector
+    inline LHCb::MCParticle::ConstVector
     children 
     ( const LHCb::MCParticle* particle          , 
-      const bool              decayOnly = false ) ;
+      const bool              decayOnly = false ) 
+    {
+      LHCb::MCParticle::ConstVector result ;
+      daughters ( particle , result , decayOnly ) ;
+      return result ;
+    }
     // ========================================================================
     /** get all descendants for the given MCparticle 
      *  @param particle  MC-particle 
