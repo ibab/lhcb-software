@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.37 2007-12-03 11:48:08 ibelyaev Exp $ 
+! $Id: release.notes,v 1.38 2008-05-04 17:59:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-04 - Vanya BELYAEV
+
+ - src/DumpHepMC.cpp 
+
+     new algorithm LoKi::DumpHepMC to perform the detailed prinput of 
+     HepMC information (it is very useful for debugging of generators)
+
+- cmt/requirements 
+ 
+     version increment to v7r1 
+
 
 !========================== LoKiPhysMC v7r0 2007-12-03 ========================
 ! 2007-12-03 - Vanya BELYAEV
