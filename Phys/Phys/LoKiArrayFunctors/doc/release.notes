@@ -1,9 +1,17 @@
-$Id: release.notes,v 1.23 2008-04-16 11:33:30 ibelyaev Exp $ 
+$Id: release.notes,v 1.24 2008-05-04 15:28:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2008-05-04 - Vanya BELYAEV
+
+ - remove all occurances of IGeomDispCalculatro tool and substitute 
+   them with IDistanceCalculator 
+
+ - cmt/requirements
+    incrmeent version to v7r3 
 
 !======================== LoKiArrayFunctors v7r2 2008-04-16 ===================
 

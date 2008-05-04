@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.6 2008-04-16 11:33:30 ibelyaev Exp $
+// $Id: AParticles.h,v 1.7 2008-05-04 15:28:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -18,13 +18,15 @@
 // ============================================================================
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IVertexFit.h"
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/ATypes.h"
 #include "LoKi/PhysTypes.h"
 #include "LoKi/AKinematics.h"
+#include "LoKi/AuxDesktopBase.h"
+#include "LoKi/Particles3.h"
 // ============================================================================
 class  ParticleProperty    ;
 class IParticlePropertySvc ;
@@ -650,26 +652,186 @@ namespace LoKi
       // the tool used for evaluation 
       LoKi::Interface<IVertexFit> m_fit ;
     } ;
+    // ========================================================================
+    /** @class DOCA 
+     *  Simple function which evalautes the distance of closets approach 
+     *  between two daughter particles 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-28
+     */
+    class DOCA 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from two indices and the tool 
+      DOCA ( const size_t                                i1 , 
+             const size_t                                i2 , 
+             const IDistanceCalculator*                  dc ) ;
+      /// constructor from two indices and the tool 
+      DOCA ( const size_t                                i1 , 
+             const size_t                                i2 , 
+             const LoKi::Interface<IDistanceCalculator>& dc ) ;
+      /// constructor from two indices and the tool nick-name 
+      DOCA ( const size_t       i1        , 
+             const size_t       i2        , 
+             const std::string& nick = "" ) ;
+      /// MANDATORY: virtual dectsructor
+      virtual ~DOCA() {}
+      // MANDATORY: clone method ('virtual constructor')
+      virtual  DOCA* clone() const { return new DOCA(*this) ; }  
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the doca 
+      inline double doca 
+      ( const LHCb::Particle* p1 , 
+        const LHCb::Particle* p2 ) const 
+      { return m_eval.distance ( p1 , p2 ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the tool 
+      const LoKi::Interface<IDistanceCalculator>& tool () const 
+      { return m_eval ; }      
+      /// cast to the tool 
+      operator const LoKi::Interface<IDistanceCalculator>& () const 
+      { return tool() ; }      
+      // ======================================================================
+      const std::string& nickname() const { return m_nick ; }
+      // ======================================================================
+      void setFirst  ( const size_t i1 ) const { m_first  = i1 ; }
+      // ======================================================================
+      void setSecond ( const size_t i2 ) const { m_second = i2 ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set the tool 
+      void setTool ( const IDistanceCalculator* t ) const 
+      { m_eval.setTool ( t ) ; }
+      /// set the tool 
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
+      { m_eval.setTool ( t ) ; }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DOCA() ; //                                        no default constructor
+      // ======================================================================
+    private:
+      // ======================================================================
+      LoKi::Particles::ClosestApproach m_eval ;
+      /// the first  index 
+      mutable size_t m_first  ; // the first  index 
+      /// the second index 
+      mutable size_t m_second ; // the second index
+      /// the tool nick
+      std::string  m_nick   ; // the tool nick
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class DOCAChi2 
+     *  Simple function which evaluates the distance of closets approach 
+     *  between two daughter particles (in chi2-units) 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-04-28
+     */
+    class DOCAChi2 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor from two indices and the tool 
+      DOCAChi2 ( const size_t                                i1 , 
+                 const size_t                                i2 , 
+                 const IDistanceCalculator*                  dc ) ;
+      /// constructor from two indices and the tool 
+      DOCAChi2 ( const size_t                                i1 , 
+                 const size_t                                i2 , 
+                 const LoKi::Interface<IDistanceCalculator>& dc ) ;
+      /// constructor from two indices and the tool nick-name 
+      DOCAChi2 ( const size_t       i1        , 
+                 const size_t       i2        , 
+                 const std::string& nick = "" ) ;
+      /// MANDATORY: virtual dectsructor
+      virtual ~DOCAChi2() {}
+      // MANDATORY: clone method ('virtual constructor')
+      virtual  DOCAChi2* clone() const { return new DOCAChi2(*this) ; }  
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate the doca 
+      inline double chi2 
+      ( const LHCb::Particle* p1 , 
+        const LHCb::Particle* p2 ) const { return m_eval.chi2 ( p1 , p2 ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the tool 
+      const LoKi::Interface<IDistanceCalculator>& tool () const 
+      { return m_eval ; }      
+      /// cast to the tool 
+      operator const LoKi::Interface<IDistanceCalculator>& () const 
+      { return tool() ; }      
+      // ======================================================================
+      const std::string& nickname() const { return m_nick ; }
+      // ======================================================================
+      void setFirst  ( const size_t i1 ) const { m_first  = i1 ; }
+      // ======================================================================
+      void setSecond ( const size_t i2 ) const { m_second = i2 ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set the tool 
+      void setTool ( const IDistanceCalculator* t ) const 
+      { m_eval.setTool ( t ) ; }
+      /// set the tool 
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
+      { m_eval.setTool ( t ) ; }      
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      DOCAChi2() ; //                                    no default constructor
+      // ======================================================================
+    private:
+      // ======================================================================
+      LoKi::Particles::ClosestApproachChi2 m_eval ;
+      /// the first  index 
+      mutable size_t m_first  ; // the first  index 
+      /// the second index 
+      mutable size_t m_second ; // the second index
+      /// the tool nick
+      std::string  m_nick   ; // the tool nick
+      // ======================================================================
+    } ;
     // ========================================================================    
     /** @class MaxDOCA
      *  Simple function which evaluates the maximnal 
      *  distance of the closest approach for all two-particle 
-     *  subcombinations using IGeomDispCalculator tool
+     *  subcombinations using IDistanceCalculator tool
      *  @see LoKi::Cuts::AMAXDOCA
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 20007-07-09
+     *  @date 2007-07-09
      */
-    class MaxDOCA 
-      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    class MaxDOCA : public DOCA 
     {
     public:
       /// constructor from the tool:
-      MaxDOCA (                       IGeomDispCalculator*  doca ) ;
+      MaxDOCA ( const                 IDistanceCalculator*  doca ) ;
       /// constructor from the tool:
-      MaxDOCA ( const LoKi::Interface<IGeomDispCalculator>& doca ) ;
-      /// copy constructor 
-      MaxDOCA ( const MaxDOCA& right ) ;
+      MaxDOCA ( const LoKi::Interface<IDistanceCalculator>& doca ) ;
+      /// constructor from the tool nickname 
+      MaxDOCA ( const std::string& doca ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCA () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -679,22 +841,14 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     private:
-      // the default constructor is disabled
-      MaxDOCA() ; /// the default constructor is disabled
-    public:
-      // get the tool 
-      const LoKi::Interface<IGeomDispCalculator>& tool     () const 
-      { return m_doca  ; }
-      // cast to the tool:
-      operator const LoKi::Interface<IGeomDispCalculator>& () const 
-      { return tool()  ; }
-    private:
-      // the tool used for evaluation 
-      LoKi::Interface<IGeomDispCalculator> m_doca ;
+      // ======================================================================
+      /// the default constructor is disabled
+      MaxDOCA() ; // the default constructor is disabled
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class MaxDOCAChi2
-     *  Simple function which evaluates the maximnal 
+     *  Simple function which evaluates the maximal 
      *  value of the chi2-distance of the closest approach for all two-particle 
      *  subcombinations using IGeomDispCalculator tool
      *  @see LoKi::Cuts::ADOCACHI2
@@ -702,16 +856,15 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 20007-07-09
      */
-    class MaxDOCAChi2 
-      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    class MaxDOCAChi2 : public DOCAChi2 
     {
     public:
       /// constructor from the tool:
-      MaxDOCAChi2 (                       IGeomDispCalculator*  doca ) ;
+      MaxDOCAChi2 ( const                 IDistanceCalculator*  doca ) ;
       /// constructor from the tool:
-      MaxDOCAChi2 ( const LoKi::Interface<IGeomDispCalculator>& doca ) ;
-      /// copy constructor 
-      MaxDOCAChi2 ( const MaxDOCAChi2& right ) ;
+      MaxDOCAChi2 ( const LoKi::Interface<IDistanceCalculator>& doca ) ;
+      /// constructor from the tool:
+      MaxDOCAChi2 ( const std::string& doca ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCAChi2 () {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -721,18 +874,10 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     private:
-      // the default constructor is disabled
-      MaxDOCAChi2() ; /// the default constructor is disabled
-    public:
-      // get the tool 
-      const LoKi::Interface<IGeomDispCalculator>& tool     () const 
-      { return m_doca  ; }
-      // cast to the tool:
-      operator const LoKi::Interface<IGeomDispCalculator>& () const 
-      { return tool()  ; }
-    private:
-      // the tool used for evaluation 
-      LoKi::Interface<IGeomDispCalculator> m_doca ;
+      // ======================================================================
+      /// the default constructor is disabled
+      MaxDOCAChi2() ; // the default constructor is disabled
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class MaxDOCACut
@@ -751,19 +896,14 @@ namespace LoKi
     {
     public:
       /// constructor from the tool and threshold 
-      MaxDOCACut ( IGeomDispCalculator*  doca      , 
-                   const double          threshold ) ;
+      MaxDOCACut ( const double                threshold ,
+                   const IDistanceCalculator*  doca      ) ;
       /// constructor from the tool and threshold 
       MaxDOCACut ( const double          threshold ,
-                   IGeomDispCalculator*  doca      ) ;
-      /// constructor from the tool and threshold 
-      MaxDOCACut ( const LoKi::Interface<IGeomDispCalculator>& doca ,
-                   const double          threshold ) ;
+                   const LoKi::Interface<IDistanceCalculator>& doca ) ;
       /// constructor from the tool and threshold 
       MaxDOCACut ( const double          threshold ,
-                   const LoKi::Interface<IGeomDispCalculator>& doca ) ;
-      /// copy constructor 
-      MaxDOCACut ( const MaxDOCACut& right ) ;
+                   const std::string&    doca ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCACut () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -773,19 +913,28 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
     private:
-      // the default constructor is disabled
-      MaxDOCACut() ; /// the default constructor is disabled
+      // ======================================================================
+      /// the default constructor is disabled
+      MaxDOCACut() ; // the default constructor is disabled
+      // ======================================================================
     public:
-      // get the tool 
-      const LoKi::Interface<IGeomDispCalculator>& tool     () const 
-      { return m_doca  ; }
-      // cast to the tool:
-      operator const LoKi::Interface<IGeomDispCalculator>& () const 
-      { return tool()  ; }
+      // ======================================================================
+      /// get the tool 
+      const LoKi::Interface<IDistanceCalculator>& tool     () const 
+      { return m_doca.getTool() ; }
+      /// cast to the tool:
+      operator const LoKi::Interface<IDistanceCalculator>& () const 
+      { return m_doca ; }
+      // ======================================================================
     private:
-      // the tool used for evaluation 
-      LoKi::Interface<IGeomDispCalculator> m_doca      ;
-      double                               m_threshold ;
+      // ======================================================================
+      /// the actual tool used for evaluation 
+      LoKi::Particles::ClosestApproach m_doca ; // the tool used for evaluation 
+      /// the threshold 
+      double                 m_threshold ; // the threshold 
+      /// the nickname of Distance Calculator 
+      std::string            m_nick      ; //  Distance Calculator 
+      // ======================================================================
     } ;
     // ========================================================================    
     /** @class MaxDOCAChi2Cut
@@ -804,19 +953,14 @@ namespace LoKi
     {
     public:
       /// constructor from the tool and threshold 
-      MaxDOCAChi2Cut ( IGeomDispCalculator*  doca      , 
-                       const double          threshold ) ;
+      MaxDOCAChi2Cut ( const double          threshold ,
+                       const IDistanceCalculator*  doca      ) ;
       /// constructor from the tool and threshold 
       MaxDOCAChi2Cut ( const double          threshold ,
-                       IGeomDispCalculator*  doca      ) ;
-      /// constructor from the tool and threshold 
-      MaxDOCAChi2Cut ( const LoKi::Interface<IGeomDispCalculator>& doca ,
-                       const double          threshold ) ;
+                       const LoKi::Interface<IDistanceCalculator>& doca ) ;
       /// constructor from the tool and threshold 
       MaxDOCAChi2Cut ( const double          threshold ,
-                       const LoKi::Interface<IGeomDispCalculator>& doca ) ;
-      /// copy constructor 
-      MaxDOCAChi2Cut ( const MaxDOCAChi2Cut& right ) ;
+                       const std::string&    doca ) ;
       /// MANDATORY: virtual destructor 
       virtual ~MaxDOCAChi2Cut () {}
       /// MANDATORY: clone method ("virtual constructor")  
@@ -830,15 +974,20 @@ namespace LoKi
       MaxDOCAChi2Cut() ; /// the default constructor is disabled
     public:
       // get the tool 
-      const LoKi::Interface<IGeomDispCalculator>& tool     () const 
+      const LoKi::Interface<IDistanceCalculator>& tool     () const 
       { return m_doca  ; }
       // cast to the tool:
-      operator const LoKi::Interface<IGeomDispCalculator>& () const 
+      operator const LoKi::Interface<IDistanceCalculator>& () const 
       { return tool()  ; }
     private:
-      // the tool used for evaluation 
-      LoKi::Interface<IGeomDispCalculator> m_doca      ;
-      double                               m_threshold ;
+      // ======================================================================
+      /// the actual tool used for evaluation 
+      LoKi::Particles::ClosestApproachChi2 m_doca ; // the tool used for evaluation 
+      /// the threshold 
+      double                 m_threshold ; // the threshold 
+      /// the nickname of Distance Calculator 
+      std::string            m_nick      ; //  Distance Calculator 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class DecayAngle
