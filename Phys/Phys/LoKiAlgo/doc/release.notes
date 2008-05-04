@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.34 2008-04-30 11:11:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2008-05-04 15:36:18 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-04 - Vanya BELYAEV
+
+ - LoKi/Algo.h
+   src/Algo.cpp
+   
+    remove all occurances of IGeomDispCalculator and substritute them with 
+    IDistanceCalculator 
+
+ - cmt/rerquirements
+    
+    version incrmeent to v7r4 
 
 !========================== LoKiAlgo v7r3 2008-04-30 ==========================
 

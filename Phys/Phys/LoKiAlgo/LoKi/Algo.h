@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.13 2008-04-30 05:39:20 cattanem Exp $
+// $Id: Algo.h,v 1.14 2008-05-04 15:36:18 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -916,46 +916,58 @@ namespace LoKi
   public:
     // ========================================================================
     /** get the helper "geometry" object
-     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  (essentially it is a wrapper for IDistanceCalculator tool 
      *  @param  vertex (input) vertex to ve used in the configuration
+     *  @param  nick nickname of IDistanceCalculatro tool 
      *  @return helper geometry object/tool 
      *  @see LoKi::Vertices::ImpParBase 
      *  @see LoKi::Vertices::ImpactParamTool
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      */
     // ========================================================================
-    LoKi::Vertices::ImpParBase geo ( const LHCb::VertexBase* vertex = 0 ) const ;
+    LoKi::Vertices::ImpParBase geo 
+    ( const LHCb::VertexBase* vertex = 0  , 
+      const std::string&      nick   = "" ) const ;
     /** get the helper "geometry" object
-     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  (essentially it is a wrapper for IDistanceCalculator tool 
      *  @param  point (input) point to be used in the configuration
+     *  @param  nick nickname of IDistanceCalculatro tool 
      *  @return helper geometry object/tool 
      *  @see LoKi::Vertices::ImpParBase 
      *  @see LoKi::Vertices::ImpactParamTool
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      */
-    LoKi::Vertices::ImpParBase geo ( const LoKi::Point3D& point ) const ;
+    LoKi::Vertices::ImpParBase geo 
+    ( const LoKi::Point3D& point      ,
+      const std::string&   nick  = "" ) const ;
     // ========================================================================
     /** get the helper "geometry" object
-     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  (essentially it is a wrapper for IDistanceCalculator tool 
      *  @param  vertex (input) vertex to ve used in the configuration
+     *  @param  nick nickname of IDistanceCalculatro tool 
      *  @return helper geometry object/tool 
      *  @see LoKi::Vertices::ImpParBase 
      *  @see LoKi::Vertices::ImpactParamTool
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      */
-    inline LoKi::Vertices::ImpParBase 
-    point ( const LHCb::VertexBase* vertex ) const { return geo ( vertex ) ; }
+    inline LoKi::Vertices::ImpParBase point
+    ( const LHCb::VertexBase* vertex    , 
+      const std::string&      nick  = "") const 
+    { return geo ( vertex , nick ) ; }
     // ========================================================================
     /** get the helper "geometry" object
-     *  (essentially it is a wrapper for IGeomDispCalculator tool 
+     *  (essentially it is a wrapper for IDistanceCalculator tool 
      *  @param  point (input) point to be used in the configuration
+     *  @param  nick nickname of IDistanceCalculatro tool 
      *  @return helper geometry object/tool 
      *  @see LoKi::Vertices::ImpParBase 
      *  @see LoKi::Vertices::ImpactParamTool
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      */
-    inline LoKi::Vertices::ImpParBase 
-    point ( const LoKi::Point3D& point ) const { return geo ( point ) ; }
+    inline LoKi::Vertices::ImpParBase point 
+    ( const LoKi::Point3D& point       , 
+      const std::string&    nick  = "" ) const 
+    { return geo ( point , nick ) ; }
     // ========================================================================
   public:
     /// helper method to get a proper ParticleProperty for the given name  

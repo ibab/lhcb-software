@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.19 2008-04-29 16:03:06 pkoppenb Exp $
+// $Id: Algo.cpp,v 1.20 2008-05-04 15:36:18 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -752,28 +752,33 @@ StatusCode LoKi::Algo::finalize ()
   }
   //
   return DVAlgorithm::finalize () ;
-} 
+}
 // ============================================================================
 // get the helper "geometry" object
 // ============================================================================
-LoKi::Vertices::ImpParBase 
-LoKi::Algo::geo ( const LHCb::VertexBase* vertex ) const 
+LoKi::Vertices::ImpParBase LoKi::Algo::geo 
+( const LHCb::VertexBase* vertex , 
+  const std::string&      nick   ) const 
 {
-  IGeomDispCalculator* t = geomDispCalculator() ;
-  if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
+  const IDistanceCalculator* t = distanceCalculator ( nick ) ;
+  if ( 0 == t ) 
+  { Error("geo(): IDistanceCalculator('"+nick+"') points to NULL!") ;}
   return LoKi::Vertices::ImpParBase ( vertex , t ) ;
 } 
 // ============================================================================
 // get the helper "geometry" object
 // ============================================================================
-LoKi::Vertices::ImpParBase 
-LoKi::Algo::geo ( const LoKi::Point3D& point ) const 
+LoKi::Vertices::ImpParBase LoKi::Algo::geo 
+( const LoKi::Point3D& point ,
+  const std::string&   nick  ) const 
 {
-  IGeomDispCalculator* t = geomDispCalculator() ;
-  if ( 0 == t ) { Error("geo(): IGeomDispCalculator points to NULL!") ;}
+  const IDistanceCalculator* t = distanceCalculator ( nick ) ;
+  if ( 0 == t ) 
+  { Error("geo(): IDistanceCalculator'"+nick+"' points to NULL!") ;}
   return LoKi::Vertices::ImpParBase ( point , t ) ;
 } 
 // ============================================================================
+
 
 // ============================================================================
 // The END 
