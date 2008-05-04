@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.7 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: ImpactParamTool.h,v 1.8 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -12,7 +12,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 /** @file
  *
@@ -32,6 +32,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @namespace LoKi::Vertices 
    *  collection of vertex-releated objects and functions 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -43,44 +44,64 @@ namespace LoKi
     /** @class ImpactParamTool 
      *  Helper class which allows safe manipulations with 
      *  IGeomDispCalculator tool 
-     *  @see IGeomDicpCalculator
+     *  Essentially it is some kind of "smart" reference to 
+     *  IDistanceCalculatro interface 
+     *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
      *  @dte 2006-02-19
      */
     class ImpactParamTool : virtual public LoKi::AuxFunBase 
     {    
     public:
+      // ======================================================================
       /// accessor to the tool itself 
-      inline IGeomDispCalculator*  tool () const { return getTool() ; }
+      inline const IDistanceCalculator* tool () const { return getTool() ; }
       /// accessor to the tool itself 
-      inline const LoKi::Interface<IGeomDispCalculator>& getTool () const { return m_tool ; }
+      inline const LoKi::Interface<IDistanceCalculator>& getTool () const
+      { return m_tool ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor 
       ImpactParamTool 
-      ( const IGeomDispCalculator* tool  ) ;
+      ( const IDistanceCalculator* tool  ) ;
+      /// constructor 
+      ImpactParamTool 
+      ( const LoKi::Interface<IDistanceCalculator>& tool  ) ;
       /// copy constructor 
       ImpactParamTool     
       ( const ImpactParamTool&     tool  ) ;
       /// virtual destructor 
       virtual ~ImpactParamTool();
+      // ======================================================================
     public:
-      // set the tool
-      void setTool ( const IGeomDispCalculator* t ) const { m_tool = t ; }
-      // set the tool
-      void setTool ( const LoKi::Interface<IGeomDispCalculator>& t ) const 
+      // ======================================================================
+      /// set the tool
+      void setTool ( const IDistanceCalculator* t ) const { m_tool = t ; }
+      /// set the tool
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
       { m_tool = t ; }      
+      // ======================================================================
     public:
+      // ======================================================================
       /// cast 
-      operator const LoKi::Interface<IGeomDispCalculator>& () const { return m_tool ; }
+      operator const LoKi::Interface<IDistanceCalculator>& () const 
+      { return getTool() ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private 
       ImpactParamTool();
+      // ======================================================================
     private:
+      // ======================================================================
       // the local pointer to the tool 
-      mutable LoKi::Interface<IGeomDispCalculator> m_tool ;
+      mutable LoKi::Interface<IDistanceCalculator> m_tool ;
+      // ======================================================================
     } ;
     // ========================================================================
   } // end of namespace LoKi::Vertices;
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

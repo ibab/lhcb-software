@@ -1,4 +1,4 @@
-// $Id: Particles4.cpp,v 1.14 2008-02-21 20:23:42 ibelyaev Exp $
+// $Id: Particles4.cpp,v 1.15 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -105,44 +105,38 @@ LoKi::Particles::ImpPar::result_type
 LoKi::Particles::ImpPar::ip
 ( LoKi::Particles::ImpPar::argument p ) const 
 {
-  if ( 0 == p ) 
-  {
-    Error(" Invalid argument! , return 'InvalidDistance'") ;
-    return LoKi::Constants::InvalidDistance ;
-  }
-  
+  //
   if ( !valid() ) 
   {
     Error(" Invalid vertex! , return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance ;
   }
-  
-  Assert ( 0 != tool() , " Invalid IGeomDispCalculator*" ) ;
-  
+  //
+  Assert ( 0 != tool() , " Invalid IDistanceCalculator*" ) ;
+  //
   StatusCode sc      = StatusCode::FAILURE  ;
-  double     impact = 0 ;
-  double     error  = 0 ;
-  
+  double     impact = LoKi::Constants::InvalidDistance ;
+  //
   switch ( type() ) 
   {
   case LoKi::Vertices::VertexHolder::_vertex :
-    sc = tool() -> calcImpactPar( *p , *vertex()   , impact , error ) ;
+    sc = tool() -> distance ( p , vertex()   , impact ) ;
     break ;                                                  // BREAK
   case LoKi::Vertices::VertexHolder::_point :
-    sc = tool() -> calcImpactPar( *p , position()  , impact , error ) ;
+    sc = tool() -> distance ( p , position() , impact ) ;
     break ;                                                  // BREAK
   default :
     Error ( "Invalid switch! '" + Gaudi::Utils::toString( type() ) + "'") ;
     return LoKi::Constants::InvalidDistance ;
     break ;                                                  // BREAK    
   }
-  
+  //
   if ( sc.isFailure() ) 
   {
-    Error("Error from IGeomDispCalculator; return 'InvalidDistance'" , sc ) ;
+    Error("Error from IDistanceCalculator; return 'InvalidDistance'" , sc ) ;
     return LoKi::Constants::InvalidDistance ;                // RETURN 
   }
-  
+  //
   return impact ;
 }
 // ============================================================================
@@ -213,51 +207,40 @@ LoKi::Particles::ImpParChi2::result_type
 LoKi::Particles::ImpParChi2::chi2
 ( LoKi::Particles::ImpParChi2::argument p ) const 
 {
-  if ( 0 == p ) 
-  {
-    Error ( " Invalid argument! , return 'InvalidChi2'") ;
-    return LoKi::Constants::InvalidChi2 ;
-  }
-  
+  //
   if ( !valid() ) 
   {
     Error ( " Invalid vertex! , return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2 ;
   }
-  
-  Assert ( 0 != tool() , " Invalid IGeomDispCalculator*") ;
-  
+  //
+  Assert ( 0 != tool() , " Invalid IDistanceCalculator*") ;
+  //
   StatusCode sc      = StatusCode::FAILURE  ;
-  double     impact = 0 ;
-  double     error  = 0 ;
-  
+  double     impact  = LoKi::Constants::InvalidDistance ;
+  double     chi2    = LoKi::Constants::InvalidChi2     ;
+  //
   switch ( type() ) 
   {
   case LoKi::Vertices::VertexHolder::_vertex :
-    sc = tool() -> calcImpactPar( *p , *vertex()   , impact , error ) ;
+    sc = tool() -> distance ( p , vertex()    , impact , chi2 ) ;
     break ;                                                  // BREAK
   case LoKi::Vertices::VertexHolder::_point :
-    sc = tool() -> calcImpactPar( *p , position()  , impact , error ) ;
+    sc = tool() -> distance ( p , position()  , impact , chi2 ) ;
     break ;                                                  // BREAK
   default :
     Error ( "Invalid switch! '" + Gaudi::Utils::toString( type() ) + "'") ;
     return LoKi::Constants::InvalidChi2 ;
     break ;                                                  // BREAK    
   }
-  
+  //
   if ( sc.isFailure() ) 
   {
-    Error("Error from IGeomDispCalculator; return 'InvalidChi2'" , sc ) ;
+    Error("Error from IDistanceCalculator; return 'InvalidChi2'" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                // RETURN 
   }
-  if ( 0 >= error ) 
-  {
-    Error ( "Invalid 'Sigma'; return 'InvalidChi2'" 
-            + Gaudi::Utils::toString ( error ) ) ;
-    return LoKi::Constants::InvalidChi2 ;                // RETURN 
-  }
-  
-  return impact * impact / error / error ;
+  //
+  return chi2 ;
 }
 // ============================================================================
 std::ostream&

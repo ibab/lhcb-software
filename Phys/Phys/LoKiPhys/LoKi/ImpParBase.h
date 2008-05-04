@@ -1,4 +1,4 @@
-// $Id: ImpParBase.h,v 1.5 2007-07-23 17:35:41 ibelyaev Exp $
+// $Id: ImpParBase.h,v 1.6 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMPPARBASE_H 
 #define LOKI_IMPPARBASE_H 1
@@ -42,41 +42,60 @@ namespace LoKi
       , public LoKi::Vertices::VertexHolder    
     {
     public:
+      // ======================================================================
       /// constructor 
       ImpParBase 
-      ( const LHCb::VertexBase*vertex ,   
-        IGeomDispCalculator*   tool   ) ;
+      ( const LHCb::VertexBase*    vertex ,   
+        const IDistanceCalculator* tool   ) ;
       /// constructor 
       ImpParBase 
-      ( const LoKi::Point3D&   point  ,   
-        IGeomDispCalculator*   tool   ) ;
+      ( const LoKi::Point3D&       point  ,   
+        const IDistanceCalculator* tool   ) ;
       /// constructor 
       ImpParBase 
-      ( const VertexHolder&    holder ,   
-        IGeomDispCalculator*   tool   ) ;
+      ( const VertexHolder&        holder ,   
+        const IDistanceCalculator* tool   ) ;
+      // ======================================================================
       /// constructor 
       ImpParBase 
-      ( const LHCb::VertexBase*vertex ,   
-        const ImpactParamTool& tool   ) ;
+      ( const LHCb::VertexBase*                     vertex ,   
+        const LoKi::Interface<IDistanceCalculator>& tool   ) ;
       /// constructor 
       ImpParBase 
-      ( const LoKi::Point3D&   point  ,   
-        const ImpactParamTool& tool   ) ;
+      ( const LoKi::Point3D&                        point  ,   
+        const LoKi::Interface<IDistanceCalculator>& tool   ) ;
       /// constructor 
       ImpParBase 
-      ( const VertexHolder&    holder ,   
-        const ImpactParamTool& tool   ) ;
+      ( const VertexHolder&                         holder ,   
+        const LoKi::Interface<IDistanceCalculator>& tool   ) ;
+      // ======================================================================
+      /// constructor 
+      ImpParBase 
+      ( const LHCb::VertexBase*    vertex ,   
+        const ImpactParamTool&     tool   ) ;
+      /// constructor 
+      ImpParBase 
+      ( const LoKi::Point3D&       point  ,   
+        const ImpactParamTool&     tool   ) ;
+      /// constructor 
+      ImpParBase 
+      ( const VertexHolder&        holder ,   
+        const ImpactParamTool&     tool   ) ;
       /// copy constructor 
       ImpParBase 
-      ( const ImpParBase&      base   ) ;
+      ( const ImpParBase&       base   ) ;
       /// the destructor is virtual 
       virtual ~ImpParBase () ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// default constructor is private 
       ImpParBase();
+      // ======================================================================
     };
     // ========================================================================
   } // end of namespace LoKi::Vertices;
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 // The END 

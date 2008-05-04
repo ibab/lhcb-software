@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.4 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.5 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,7 +10,7 @@
 // ============================================================================
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 #include "Kernel/GetDVAlgorithm.h"
 #include "Kernel/DVAlgorithm.h"
 // ============================================================================
@@ -35,7 +35,7 @@ namespace
 {
   // ==========================================================================
   /// "invalid" pointer 
-  const IGeomDispCalculator* const s_IGEO  = 0 ;
+  const IDistanceCalculator* const s_IGEO  = 0 ;
   /// "invalid" pointer 
   const ILifetimeFitter*     const s_LTIME = 0 ;
   // ==========================================================================
@@ -47,7 +47,7 @@ namespace
   /// "invalid" vertex 
   const LHCb::VertexBase* const s_VERTEX = 0 ;
   // ==========================================================================
-  /** get the IGeomDispCalculator tool from DValgorith
+  /** get the IDistanceCalculator tool from DValgorith
    *  @param tool to be updated 
    *  @param loki service 
    *  @param name nickname of full type/name of the tool
@@ -55,7 +55,7 @@ namespace
    *  @date 2008-01-16
    */  
   inline 
-  const IGeomDispCalculator* 
+  const IDistanceCalculator* 
   loadTool 
   ( const LoKi::Vertices::ImpactParamTool& tool      ,
     const LoKi::ILoKiSvc*                  loki      ,
@@ -66,7 +66,7 @@ namespace
     DVAlgorithm* alg = Gaudi::Utils::getDVAlgorithm ( loki -> contextSvc() ) ;
     if ( 0 == alg  ) { return 0 ; }                            // RETURN 
     // get the tool form the algorithm
-    const IGeomDispCalculator* geo = alg -> geomDispCalculator ( name ) ;
+    const IDistanceCalculator* geo = alg -> distanceCalculator ( name ) ;
     // set the tool 
     tool.setTool ( geo ) ;
     return geo ;                                               // RETURN
@@ -101,10 +101,10 @@ namespace
   /// the finder for the primary vertices:
   const LoKi::Vertices::IsPrimary s_PRIMARY = LoKi::Vertices::IsPrimary () ;
   // ==========================================================================
-  /// the defautl name of Lifetime fiteter:
+  /// the default name of Lifetime fitter:
   const std::string s_LIFETIME = "PropertimeFitter/properTime:PUBLIC" ;
   // ==========================================================================
-} // end of anonymout namespace 
+} // end of anonymous namespace 
 // ============================================================================
 // the default constructor: create the object in invalid state
 // ============================================================================
@@ -177,10 +177,10 @@ LoKi::Particles::ImpParWithTheBestPV::operator()
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
-  // get the IGeomDispCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == m_ip.tool() ) { loadTool ( m_ip , lokiSvc() , m_geo )  ; }
   // check it!
-  Assert ( 0 != m_ip.tool() , "No valid IGeomDispCalculator is found" ) ;
+  Assert ( 0 != m_ip.tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
   m_ip.setVertex ( desktop() -> relatedVertex ( p ) ) ;
   return m_ip.ip ( p ) ;
@@ -222,10 +222,10 @@ LoKi::Particles::ImpParChi2WithTheBestPV::operator()
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
-  // get the IGeomDispCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == m_ip.tool() ) { loadTool ( m_ip , lokiSvc() , m_geo )  ; }
   // check it!
-  Assert ( 0 != m_ip.tool() , "No valid IGeomDispCalculator is found" ) ;
+  Assert ( 0 != m_ip.tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
   m_ip.setVertex ( desktop() -> relatedVertex ( p ) ) ;
   return m_ip.chi2 ( p ) ;
@@ -237,10 +237,10 @@ std::ostream& LoKi::Particles::ImpParChi2WithTheBestPV::fillStream
 ( std::ostream& s ) const { return s << "BPVIPCHI2 ('" <<  m_geo << "')"; }
 // ============================================================================
 /*  constructor from the source and nickname or full type/name of 
- *  IGeomDispCalculator tool
- *  @see DVAlgorithm::geomDispCalculator 
+ *  IDistanceCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param source the source 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParWithSource::MinImpParWithSource 
@@ -269,7 +269,7 @@ LoKi::Particles::MinImpParWithSource::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IGeomDispCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == tool().tool() ) { loadTool ( m_mip , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
@@ -296,10 +296,10 @@ std::ostream& LoKi::Particles::MinImpParWithSource::fillStream
 { return s << "MIPSOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
 /* the "default" constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParDV::MinImpParDV 
@@ -308,10 +308,10 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
- *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
- *  @see DVAlgorithm::geomDispCalculator 
+ *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParDV::MinImpParDV 
@@ -321,10 +321,10 @@ LoKi::Particles::MinImpParDV::MinImpParDV
 {}
 // ============================================================================
 /*  the constructor form the vertex selection functor and 
- *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
- *  @see DVAlgorithm::geomDispCalculator 
+ *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParDV::MinImpParDV 
@@ -346,11 +346,11 @@ std::ostream& LoKi::Particles::MinImpParDV::fillStream
 { return s << "MIPDV('" << geo() << "')"; }
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -362,11 +362,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -377,11 +377,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -393,11 +393,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -409,11 +409,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -425,11 +425,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -441,11 +441,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -457,11 +457,11 @@ LoKi::Particles::MinImpParTES::MinImpParTES
 {}
 // ============================================================================
 /** the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParTES::MinImpParTES 
@@ -486,10 +486,10 @@ std::ostream& LoKi::Particles::MinImpParTES::fillStream
            << "," << geo() << "')"; }
 // ============================================================================
 /*  constructor from the source and nickname or full type/name of 
- *  IGeomDispCalculator tool
- *  @see DVAlgorithm::geomDispCalculator 
+ *  IDistanceCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param source the source 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2WithSource::MinImpParChi2WithSource 
@@ -518,7 +518,7 @@ LoKi::Particles::MinImpParChi2WithSource::operator()
     Error ( "LHCb::Particle* points to NULL, return -1000" ) ;
     return -1000 ;                                                     // RETURN 
   }
-  // get the IGeomDispCalculator from DVAlgorithm 
+  // get the IDistanceCalculator from DVAlgorithm 
   if ( 0 == tool().tool() ) { loadTool ( m_mip , lokiSvc() , m_geo )  ; }
   // check the event 
   if ( !sameEvent() ) 
@@ -544,10 +544,10 @@ std::ostream& LoKi::Particles::MinImpParChi2WithSource::fillStream
 { return s << "MIPCHI2SOURCE ('" <<  m_source << ", " << m_geo << "')"; }
 // ============================================================================
 /* the "default" constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
@@ -556,10 +556,10 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
@@ -569,10 +569,10 @@ LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV
 {}
 // ============================================================================
 /*  the  constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @see DVAlgorithm::distanceCalculator 
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2DV::MinImpParChi2DV 
@@ -594,11 +594,11 @@ std::ostream& LoKi::Particles::MinImpParChi2DV::fillStream
 { return s << "MIPCHI2DV('" << geo() << "')"; }
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -609,11 +609,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /* the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -624,11 +624,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -640,11 +640,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -656,11 +656,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -672,11 +672,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::vector<std::string>& path , 
@@ -687,11 +687,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the location of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 // ============================================================================
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
@@ -703,11 +703,11 @@ LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES
 {}
 // ============================================================================
 /*  the constructor,
- *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+ *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
  *  by full type/name
- *  @see DVAlgorithm::geomDispCalculator 
+ *  @see DVAlgorithm::distanceCalculator 
  *  @param path the locations of vertices in TES 
- *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+ *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
  */
 LoKi::Particles::MinImpParChi2TES::MinImpParChi2TES 
 ( const std::vector<std::string>& path , 

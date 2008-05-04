@@ -1,4 +1,4 @@
-// $Id: ImpParBase.cpp,v 1.6 2007-07-23 17:35:52 ibelyaev Exp $
+// $Id: ImpParBase.cpp,v 1.7 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -12,7 +12,7 @@
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 // LoKiPhys 
 // ============================================================================
@@ -42,8 +42,8 @@ namespace
 //  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
-( const LHCb::VertexBase* vertex ,   
-  IGeomDispCalculator* tool   )
+( const LHCb::VertexBase*    vertex ,   
+  const IDistanceCalculator* tool   )
   : LoKi::Vertices::ImpactParamTool ( tool    ) 
   , LoKi::Vertices::VertexHolder    ( vertex  )
 {
@@ -55,8 +55,8 @@ LoKi::Vertices::ImpParBase::ImpParBase
 //  constructor 
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
-( const LoKi::Point3D& point  ,   
-  IGeomDispCalculator* tool   )
+( const LoKi::Point3D&       point  ,   
+  const IDistanceCalculator* tool   )
   : LoKi::Vertices::ImpactParamTool ( tool  ) 
   , LoKi::Vertices::VertexHolder    ( point )
 {
@@ -69,7 +69,46 @@ LoKi::Vertices::ImpParBase::ImpParBase
 // ============================================================================
 LoKi::Vertices::ImpParBase::ImpParBase
 ( const LoKi::Vertices::VertexHolder& holder ,   
-  IGeomDispCalculator*                tool   )
+  const IDistanceCalculator*          tool   )
+  : LoKi::Vertices::ImpactParamTool ( tool   ) 
+  , LoKi::Vertices::VertexHolder    ( holder )
+{
+#ifdef LOKI_DEBUG
+  s_IPBCounter.increment();
+#endif 
+}
+// ============================================================================
+//  constructor 
+// ============================================================================
+LoKi::Vertices::ImpParBase::ImpParBase
+( const LHCb::VertexBase*                     vertex ,   
+  const LoKi::Interface<IDistanceCalculator>& tool   ) 
+  : LoKi::Vertices::ImpactParamTool ( tool   ) 
+  , LoKi::Vertices::VertexHolder    ( vertex )
+{
+#ifdef LOKI_DEBUG
+  s_IPBCounter.increment();
+#endif 
+}
+// ============================================================================
+//  constructor 
+// ============================================================================
+LoKi::Vertices::ImpParBase::ImpParBase
+( const LoKi::Point3D&                        point  ,   
+  const LoKi::Interface<IDistanceCalculator>& tool   ) 
+  : LoKi::Vertices::ImpactParamTool ( tool   ) 
+  , LoKi::Vertices::VertexHolder    ( point  )
+{
+#ifdef LOKI_DEBUG
+  s_IPBCounter.increment();
+#endif 
+}
+// ============================================================================
+//  constructor 
+// ============================================================================
+LoKi::Vertices::ImpParBase::ImpParBase
+( const VertexHolder&                         holder ,   
+  const LoKi::Interface<IDistanceCalculator>& tool   ) 
   : LoKi::Vertices::ImpactParamTool ( tool   ) 
   , LoKi::Vertices::VertexHolder    ( holder )
 {

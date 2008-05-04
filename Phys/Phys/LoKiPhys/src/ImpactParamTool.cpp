@@ -1,10 +1,10 @@
-// $Id: ImpactParamTool.cpp,v 1.5 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: ImpactParamTool.cpp,v 1.6 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -31,7 +31,17 @@
  */
 // ============================================================================
 LoKi::Vertices::ImpactParamTool::ImpactParamTool 
-( const IGeomDispCalculator* tool ) 
+( const IDistanceCalculator* tool ) 
+  : LoKi::AuxFunBase () 
+  , m_tool ( tool )
+{
+  //if ( 0 == m_tool.getObject() ) 
+  //{ throw LoKi::Exception("ImpactParamTool():  Tool* points to NULL "  ,
+  //                        StatusCode::FAILURE , __FILE__ , __LINE__ ); }
+}
+// ============================================================================
+LoKi::Vertices::ImpactParamTool::ImpactParamTool 
+( const LoKi::Interface<IDistanceCalculator>& tool ) 
   : LoKi::AuxFunBase () 
   , m_tool ( tool )
 {

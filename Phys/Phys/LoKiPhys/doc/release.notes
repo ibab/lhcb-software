@@ -1,9 +1,32 @@
-! $Id: release.notes,v 1.57 2008-04-22 17:19:06 cattanem Exp $ 
+! $Id: release.notes,v 1.58 2008-05-04 15:26:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-04 - Vanya BELYAEV
+
+ - LoKi/Sections.h
+   src/Sections.cpp
+  
+     add "sections" for the decay trees 
+  
+  LoKi/ImpParBase.h
+  LoKi/ImpactParamTool.h
+  LoKi/Particles20.h
+  LoKi/Particles3.h
+  src/ImpParBase.cpp
+  src/ImpactParamTool.cpp
+  src/Particles20.cpp
+  src/Particles3.cpp
+  src/Particles4.cpp
+
+  remove *all* occurances of IGeomDispCalculator and 
+  substitute them with IDistanceCalculator 
+
+ - cmt/requirements
+    version inctrement to v7r4 
 
 !========================== LoKiPhys v7r3 2008-04-22 ==========================
 ! 2008-04-22 - Vanya BELYAEV

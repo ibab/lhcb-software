@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.4 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: Particles20.h,v 1.5 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -99,10 +99,10 @@ namespace LoKi
     {
     public:
       /** the "default" constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       ImpParWithTheBestPV ( const std::string& geo = "" ) ;
       /// MANDATORY: virtual destructor 
@@ -115,22 +115,26 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
     public:
       // set the tool
-      void setTool ( const IGeomDispCalculator* t ) const 
+      void setTool ( const IDistanceCalculator* t ) const 
       { m_ip.setTool ( t ) ; }      
       // set the tool
-      void setTool ( const LoKi::Interface<IGeomDispCalculator>& t ) const 
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
       { m_ip.setTool ( t ) ; }
     public:
       /// get the tool
       const LoKi::Vertices::ImpactParamTool& tool() const { return m_ip ; }
     public:
-      // cast to
-      operator const LoKi::Vertices::ImpactParamTool& () const { return m_ip ; } 
+      // ======================================================================
+      /// cast to
+      operator const LoKi::Vertices::ImpactParamTool& () const { return m_ip ; }  
+      // ======================================================================
     private:
-      // the actual functor 
-      LoKi::Particles::ImpPar   m_ip  ; ///< the actual functor 
-      // the nick name or type name of the IGeomDispTool
+      // ======================================================================
+      /// the actual functor 
+      LoKi::Particles::ImpPar   m_ip  ; // the actual functor 
+      /// the nick name or type name of the IDistanceCalculator
       std::string               m_geo ;
+      // ======================================================================
     };
     // ========================================================================
     /** @class ImpParChi2WithTheBestPV
@@ -155,11 +159,12 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase 
     {
     public:
+      // ======================================================================
       /** the "default" constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       ImpParChi2WithTheBestPV ( const std::string& geo = "" ) ;
       /// MANDATORY: virtual destructor 
@@ -170,23 +175,30 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       // set the tool
-      void setTool ( const IGeomDispCalculator* t ) const 
+      void setTool ( const IDistanceCalculator* t ) const 
       { m_ip.setTool ( t ) ; }      
       // set the tool
-      void setTool ( const LoKi::Interface<IGeomDispCalculator>& t ) const 
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const 
       { m_ip.setTool ( t ) ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the tool
       const LoKi::Vertices::ImpactParamTool& tool() const { return m_ip ; }
+      // ======================================================================
     public:
-      // cast to
+      // ======================================================================
+      /// cast to
       operator const LoKi::Vertices::ImpactParamTool& () const { return m_ip ; } 
+      // ======================================================================
     private:
-      // the actual functor 
-      LoKi::Particles::ImpParChi2   m_ip  ; ///< the actual functor 
-      // the nick name or type name of the IGeomDispTool
+      /// the actual functor 
+      LoKi::Particles::ImpParChi2   m_ip  ; // the actual functor 
+      /// the nick name or type name of the IDistanceCalculator
       std::string                   m_geo ;
     };
     // ========================================================================
@@ -210,17 +222,22 @@ namespace LoKi
     class MinImpParWithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** constructor from the source and nickname or full type/name of 
-       *  IGeomDispCalculator tool
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  IDistanceCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param source the source 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParWithSource 
       ( const _Source&     source      , 
@@ -233,8 +250,10 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     public:
       /// get the tool
+      // ======================================================================
       const LoKi::Vertices::ImpactParamTool& tool() const { return m_mip.impPar()  ; }
       /// cast to the tool 
       operator const LoKi::Vertices::ImpactParamTool& () const { return m_mip.impPar()  ; } 
@@ -244,19 +263,25 @@ namespace LoKi
       /// cast to the source 
       operator const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& () const 
       { return m_source ; }
+      // ======================================================================
     public:
-      // get the nickname of full type/name of IGeomDispCalculator tool
+      // get the nickname of full type/name of IDistanceCalculator tool
+      // ======================================================================
       const std::string& geo() const { return m_geo ; }
     private:
+      // ======================================================================
       // no default constructor 
       MinImpParWithSource () ; ///< no default constructor
+      // ======================================================================
     private:
-      // the underlying functor 
-      mutable LoKi::Particles::MinImpPar m_mip    ; ///< the underlying functor 
-      // the source 
-      LoKi::Assignable<_Source>::Type    m_source ; ///< the source 
-      // the nickname or type/name of IGeomDispCalculator tool 
-      std::string                        m_geo    ; ///< IGeomDispCalculator tool
+      // ======================================================================
+      /// the underlying functor 
+      mutable LoKi::Particles::MinImpPar m_mip    ; // the underlying functor 
+      /// the source 
+      LoKi::Assignable<_Source>::Type    m_source ; // the source 
+      /// the nickname or type/name of IDistanceCalculator tool 
+      std::string                        m_geo    ; // IDistanceCalculator tool
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParDV
@@ -281,27 +306,28 @@ namespace LoKi
       : public LoKi::Particles::MinImpParWithSource 
     {
     public:
+      // ======================================================================
       /** the "default" constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParDV  ( const std::string& geo = "" ) ;
       /** the constructor form the vertex selection functot and 
-       *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParDV  
       ( const LoKi::PhysTypes::VCuts& cuts     , 
         const std::string&            geo = "" ) ;
       /** the constructor form the vertex selection functot and 
-       *  the name/nickname of IGeomDispCalculator tool from DVAlgorithm
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParDV  
       ( const std::string&            geo  , 
@@ -312,6 +338,7 @@ namespace LoKi
       virtual  MinImpParDV* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParTES
@@ -336,87 +363,88 @@ namespace LoKi
       : public LoKi::Particles::MinImpParWithSource 
     {
     public:
+      // ======================================================================
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::string& path      , 
         const std::string& geo  = "" ) ;      
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::vector<std::string>& path     , 
         const std::string&              geo = "" ) ;      
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const LoKi::PhysTypes::VCuts&   cuts     ,
         const std::vector<std::string>& path     , 
         const std::string&              geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const LoKi::PhysTypes::VCuts& cuts      ,
         const std::string&            path      , 
         const std::string&            geo  = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::vector<std::string>& path     , 
         const LoKi::PhysTypes::VCuts&   cuts     ,
         const std::string&              geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::string&            path      , 
         const LoKi::PhysTypes::VCuts& cuts      ,
         const std::string&            geo  = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::vector<std::string>& path , 
         const std::string&              geo  , 
         const LoKi::PhysTypes::VCuts&   cuts ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParTES
       ( const std::string&            path , 
@@ -428,9 +456,12 @@ namespace LoKi
       virtual  MinImpParTES* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       // the list of TES locations 
       std::vector<std::string> m_path ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParChi2WithSource
@@ -453,16 +484,21 @@ namespace LoKi
     class MinImpParChi2WithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** constructor from the source and nickname or full type/name of 
-       *  IGeomDispCalculator tool
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  IDistanceCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param source the source 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2WithSource 
       ( const _Source&     source      , 
@@ -475,7 +511,9 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the tool
       const LoKi::Vertices::ImpactParamTool& tool() const { return m_mip.impParChi2()  ; }
       /// cast to the tool 
@@ -486,19 +524,26 @@ namespace LoKi
       /// cast to the source 
       operator const LoKi::BasicFunctors<const LHCb::VertexBase*>::Source& () const 
       { return m_source ; }
+      // ======================================================================
     public:
-      // get the nickname of full type/name of IGeomDispCalculator tool
+      // ======================================================================
+      // get the nickname of full type/name of IDistanceCalculator tool
       const std::string& geo() const { return m_geo ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // no default constructor 
       MinImpParChi2WithSource () ; ///< no default constructor
+      // ======================================================================
     private:
+      // ======================================================================
       /// the underlying functor 
       mutable LoKi::Particles::MinImpParChi2 m_mip ; // the underlying functor 
       /// the source 
       LoKi::Assignable<_Source>::Type    m_source ; // the source 
-      /// the nickname or type/name of IGeomDispCalculator tool 
-      std::string                        m_geo    ; // IGeomDispCalculator tool
+      /// the nickname or type/name of IDistanceCalculator tool 
+      std::string                        m_geo    ; // IDistanceCalculator tool
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParChi2DV
@@ -523,27 +568,28 @@ namespace LoKi
       : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
+      // ======================================================================
       /** the "default" constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2DV  ( const std::string& geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2DV  
       ( const LoKi::PhysTypes::VCuts& cuts     , 
         const std::string&            geo = "" ) ;
       /** the  constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @see DVAlgorithm::distanceCalculator 
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2DV  
       ( const std::string&            geo  , 
@@ -554,6 +600,7 @@ namespace LoKi
       virtual  MinImpParChi2DV* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinImpParChi2TES
@@ -578,87 +625,88 @@ namespace LoKi
       : public LoKi::Particles::MinImpParChi2WithSource 
     {
     public:
+      // ======================================================================
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::string& path      , 
         const std::string& geo  = "" ) ;      
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::vector<std::string>& path     , 
         const std::string&              geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const LoKi::PhysTypes::VCuts& cuts      , 
         const std::string&            path      , 
         const std::string&            geo  = "" ) ;      
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const LoKi::PhysTypes::VCuts&   cuts     , 
         const std::vector<std::string>& path     , 
         const std::string&              geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::string&            path      , 
         const LoKi::PhysTypes::VCuts& cuts      , 
         const std::string&            geo  = "" ) ;      
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::vector<std::string>& path     , 
         const LoKi::PhysTypes::VCuts& cuts      , 
         const std::string&              geo = "" ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the location of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::string&            path , 
         const std::string&            geo  , 
         const LoKi::PhysTypes::VCuts& cuts ) ;
       /** the constructor,
-       *  gets the IGeomDispCalculator tool from DVAlgorithm by nickname or 
+       *  gets the IDistanceCalculator tool from DVAlgorithm by nickname or 
        *  by full type/name
-       *  @see DVAlgorithm::geomDispCalculator 
+       *  @see DVAlgorithm::distanceCalculator 
        *  @param path the locations of vertices in TES 
-       *  @param geo the nickname (or type/name)  of IGeomDispCalculator tool
+       *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParChi2TES
       ( const std::vector<std::string>& path , 
@@ -670,9 +718,12 @@ namespace LoKi
       virtual  MinImpParChi2TES* clone () const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the list of TES locations 
-      std::vector<std::string> m_path ;
+      // ======================================================================
+      /// the list of TES locations 
+      std::vector<std::string> m_path ; // the list of TES locations 
+      // ======================================================================
     } ; 
     // ========================================================================
     /** @class VertexDistanceDV 
@@ -697,6 +748,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexDistanceDV  () ;
       /// MANDATORY: virtual destructor
@@ -707,11 +759,14 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       // the actual evaluator 
       LoKi::Particles::VertexDistance m_fun ; ///< the actual evaluator
+      // ======================================================================
     } ;
-   // ========================================================================
+    // ========================================================================
     /** @class VertexSignedDistanceDV 
      *  The special version of LoKi::Particles::VertexSignedDistance functor
      *  which gets "the best primary vertex" from IPhysDesktop
@@ -734,6 +789,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexSignedDistanceDV  () ;
       /// MANDATORY: virtual destructor
@@ -744,9 +800,12 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::VertexSignedDistance m_fun ; ///< the actual evaluator
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::VertexSignedDistance m_fun ; // the actual evaluator
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexDotDistanceDV 
@@ -771,6 +830,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexDotDistanceDV  () ;
       /// MANDATORY: virtual destructor
@@ -781,9 +841,12 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::VertexDotDistance m_fun ; ///< the actual evaluator
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::VertexDotDistance m_fun ; // the actual evaluator
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexChi2DistanceDV 
@@ -808,6 +871,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexChi2DistanceDV  () ;
       /// MANDATORY: virtual destructor
@@ -818,9 +882,12 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::VertexChi2Distance m_fun ; ///< the actual evaluator
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::VertexChi2Distance m_fun ; // the actual evaluator
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class LifeTimeDV
@@ -846,6 +913,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the "default" constructor
       LifeTimeDV () ;
       /// the constructor form tool type/name 
@@ -858,11 +926,14 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::LifeTime m_fun ; ///< the actual evaluator
-      // the tool type/name 
-      std::string               m_fit ;  ///< the tool type/name 
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::LifeTime m_fun ; // the actual evaluator
+      /// the tool type/name 
+      std::string               m_fit ;  // the tool type/name 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class LifeTimeChi2DV
@@ -888,6 +959,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the "default" constructor
       LifeTimeChi2DV () ;
       /// the constructor form tool type/name 
@@ -900,11 +972,14 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::LifeTimeChi2 m_fun ; ///< the actual evaluator
-      // the tool type/name 
-      std::string                   m_fit ;  ///< the tool type/name 
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::LifeTimeChi2 m_fun ;  // the actual evaluator
+      /// the tool type/name 
+      std::string                   m_fit ;  // the tool type/name 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class LifeTimeSignedChi2DV
@@ -930,6 +1005,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the "default" constructor
       LifeTimeSignedChi2DV () ;
       /// the constructor form tool type/name 
@@ -942,11 +1018,14 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::LifeTimeSignedChi2 m_fun ; ///< the actual evaluator
-      // the tool type/name 
-      std::string                   m_fit ;  ///< the tool type/name 
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::LifeTimeSignedChi2 m_fun ; // the actual evaluator
+      /// the tool type/name 
+      std::string                         m_fit ; // the tool type/name 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class LifeTimeFitChi2DV
@@ -972,6 +1051,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the "default" constructor
       LifeTimeFitChi2DV () ;
       /// the constructor form tool type/name 
@@ -984,11 +1064,14 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      // the actual evaluator 
-      LoKi::Particles::LifeTimeFitChi2 m_fun ; ///< the actual evaluator
-      // the tool type/name 
-      std::string                   m_fit ;  ///< the tool type/name 
+      // ======================================================================
+      /// the actual evaluator 
+      LoKi::Particles::LifeTimeFitChi2 m_fun ; // the actual evaluator
+      /// the tool type/name 
+      std::string                      m_fit ; // the tool type/name 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexZDistanceWithTheBestPV
@@ -1015,6 +1098,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexZDistanceWithTheBestPV  () ;
       /// MANDATORY: virtual destructor
@@ -1025,6 +1109,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class VertexRhoDistanceWithTheBestPV
@@ -1052,6 +1137,7 @@ namespace LoKi
       , public virtual LoKi::AuxDesktopBase
     {
     public:
+      // ======================================================================
       /// the default constructor 
       VertexRhoDistanceWithTheBestPV  () ;
       /// MANDATORY: virtual destructor
@@ -1062,6 +1148,7 @@ namespace LoKi
       virtual  result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;      
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinVertexDistanceWithSource
@@ -1076,11 +1163,16 @@ namespace LoKi
     class MinVertexDistanceWithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
-      // the source of vertices 
+      // ======================================================================
+      /// the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the source 
       MinVertexDistanceWithSource ( const _Source& source ) ;
       /// MANDATORY: virtual destructor 
@@ -1122,6 +1214,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// the default constructor 
       MinVertexDistanceDV () ;
       /// the constructor from the vertex filter
@@ -1134,9 +1227,12 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the actual functor 
       LoKi::Vertices::MinVertexDistanceDV m_fun ; // the actual functor 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinVertexDistanceTES
@@ -1157,6 +1253,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// the constructor from the TES location  
       MinVertexDistanceTES ( const std::string& path ) ;
       /// the constructor from the TES locations 
@@ -1185,12 +1282,17 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       MinVertexDistanceTES() ; // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// The actual functor 
       LoKi::Vertices::MinVertexDistanceTES m_fun ; // The actual functor 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinVertexChi2DistanceWithSource
@@ -1205,11 +1307,16 @@ namespace LoKi
     class MinVertexChi2DistanceWithSource
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
+      // ======================================================================
       // the source of vertices 
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source _Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  Source ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor from the source 
       MinVertexChi2DistanceWithSource ( const _Source& source ) ;
       /// MANDATORY: virtual destructor 
@@ -1251,6 +1358,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// the default constructor 
       MinVertexChi2DistanceDV () ;
       /// the constructor from the vertex filter
@@ -1263,9 +1371,12 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the actual functor 
       LoKi::Vertices::MinVertexChi2DistanceDV m_fun ; // the actual functor 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinVertexChi2DistanceTES
@@ -1286,6 +1397,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
     {
     public:
+      // ======================================================================
       /// the constructor from the TES location  
       MinVertexChi2DistanceTES ( const std::string& path ) ;
       /// the constructor from the TES locations 
@@ -1314,12 +1426,17 @@ namespace LoKi
       virtual  result_type operator() ( argument v ) const ; 
       /// OPTIONAL: the specific printout
       virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     private:
+      // ======================================================================
       /// the default constructor is disabled 
       MinVertexChi2DistanceTES() ; // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       /// The actual functor 
       LoKi::Vertices::MinVertexChi2DistanceTES m_fun ; // The actual functor 
+      // ======================================================================
     } ;
   } // end of namespace LoKi::Particles    
 } // end of namespace LoKi   

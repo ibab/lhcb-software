@@ -1,4 +1,4 @@
-// $Id: Particles3.h,v 1.7 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles3.h,v 1.8 2008-05-04 15:26:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -40,11 +40,11 @@ namespace LoKi
      *  evaluator of the closest approach 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Cuts::CLAPP
      *
      *  @date 2003-03-17
@@ -55,6 +55,7 @@ namespace LoKi
       , public LoKi::Vertices::ImpactParamTool 
     {
     public:
+      // ======================================================================
       /// constructor from the particle and the tool  
       ClosestApproach 
       ( const LHCb::Particle*                  particle , 
@@ -73,8 +74,17 @@ namespace LoKi
       { return distance ( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// the actual evaluation
-      result_type distance( argument p ) const ;
+      result_type distance ( argument p ) const 
+      { return distance ( p , particle() ) ; }
+      /// the actual evaluation
+      result_type distance 
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const ;
+      // ======================================================================
     public:
       /// accessor to the particle 
       const LHCb::Particle* particle() const 
@@ -86,7 +96,10 @@ namespace LoKi
       // default constructor is private 
       ClosestApproach();
     private:
+      // ======================================================================
+      /// the particle 
       mutable const LHCb::Particle* m_particle ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class ClosestApproachChi2
@@ -94,11 +107,11 @@ namespace LoKi
      *  evaluator of the closest approach chi2 
      *  distance between 2 particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Cuts::CLAPPCHI2 
      * 
      *  @date 2003-03-17
@@ -109,10 +122,15 @@ namespace LoKi
       , public LoKi::Vertices::ImpactParamTool 
     {
     public:
+      // ======================================================================
       /// constructor from the particle and the tool  
       ClosestApproachChi2 
-      ( const LHCb::Particle*  particle , 
+      ( const LHCb::Particle*                  particle , 
         const LoKi::Vertices::ImpactParamTool& tool     ) ;
+      /// constructor from the particle and the tool  
+     ClosestApproachChi2 
+     ( const LoKi::Vertices::ImpactParamTool& tool     ,
+       const LHCb::Particle*                  particle ) ;
       /// MANDATORY: clone method ("virtual constructor")
       virtual  ClosestApproachChi2* clone() const 
       { return new ClosestApproachChi2(*this) ; }
@@ -123,19 +141,35 @@ namespace LoKi
       { return chi2( p ) ; }
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// the actual evaluation
-      result_type chi2( argument p ) const ;
+      result_type chi2 
+      ( const LHCb::Particle* p1 ,
+        const LHCb::Particle* p2 ) const ;
+      // ======================================================================
+      /// the actual evaluation
+      result_type chi2 ( argument p ) const { return chi2 ( p , particle() ) ; }
+      // ======================================================================
     public:
       /// accessor to the particle 
+      // ======================================================================
       const LHCb::Particle* particle() const { return m_particle ; }
       /// set new particle 
       void setParticle ( const LHCb::Particle* value ) const 
       { m_particle = value ; }
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is private 
       ClosestApproachChi2();
+      // ======================================================================
     private:
-      mutable const LHCb::Particle* m_particle ;
+      // ======================================================================
+      /// the particle 
+      mutable const LHCb::Particle* m_particle ; // the particle 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class MinClosestApproach
@@ -144,11 +178,11 @@ namespace LoKi
      *  closest approach distance between the 
      *  particle and soem other particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Particles::ClosestApproach
      * 
      *  @date 2003-03-17
@@ -265,11 +299,11 @@ namespace LoKi
      *  closest approach distance between the 
      *  particle and soem other particles 
      *  
-     *  The tool IGeomDispCalculator is used 
+     *  The tool IDistanceCalculator is used 
      *  for evaluation
      *
      *  @see LHCb::Particle
-     *  @see IGeomDispCalculator
+     *  @see IDistanceCalculator
      *  @see LoKi::Particles::ClosestApproachChi2
      * 
      *  @date 2003-03-17
