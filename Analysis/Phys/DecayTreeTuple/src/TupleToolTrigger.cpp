@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.3 2008-04-21 11:30:04 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.4 2008-05-04 18:53:45 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -39,6 +39,8 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   declareProperty( "VerboseL0",         m_verboseL0=false );
   declareProperty( "VerboseAlleys",     m_verboseAlleys=false );
   declareProperty( "VerboseSelections", m_verboseSelections=false );
+  declareProperty( "FillL0", m_fillL0=true );
+  declareProperty( "FillHlt", m_fillHLT=false );
 }
 
 //=========================================================================
@@ -56,8 +58,10 @@ StatusCode TupleToolTrigger::initialize ( ) {
 StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
   if (msgLevel(MSG::DEBUG)) debug() << "Tuple Tool Trigger" << endmsg ;
   
-  if (!fillL0(tuple)) return StatusCode::FAILURE ;
-  if (!fillHlt(tuple)) return StatusCode::FAILURE ;
+  if (m_fillL0)
+  	if (!fillL0(tuple)) return StatusCode::FAILURE ;
+  if (m_fillHLT)
+  	if (!fillHlt(tuple)) return StatusCode::FAILURE ;
   return StatusCode::SUCCESS;
 }
 //=============================================================================
