@@ -8,13 +8,13 @@
 #include <set>
 #include "MonTimer.h"
 
+
 // Forward declarations
 class ISvcLocator;
 class DimPropServer;
 class DimCmdServer;
-class DimMonObjectManager;
 class MonTimer;
-
+class DimServiceMonObject;
 
 namespace AIDA { class IBaseHistogram; }
 //class MonObjects;
@@ -30,6 +30,7 @@ the value of the property.
 @author Philippe Vannerem
 @author Jose Helder Lopes Jan. 2005
 @author Jose Helder Lopes 2006/12/26: Modified to publish general c-structures and AIDA::IProfile1D  
+@author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
 class MonitorSvc : public Service, virtual public IMonitorSvc {
@@ -44,7 +45,7 @@ public:
   
   /** Declare monitoring information
       @param name Monitoring information name knwon to the external system
-      @param var Monitoring Listener address
+      @param var  Monitoring Listener address
       @param desc Textual description
       @param owner Owner identifier of the monitoring information 
       (needed to peform clean up 
@@ -63,15 +64,14 @@ public:
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                    const std::string& desc, const IInterface* owner) ;
-
-  // Begin MO
-  void declareInfo(const std::string& name, const MonObject* var, const std::string& desc, const IInterface* owner) ;
-  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner) ;
-  // End MO
-
-void declareInfo(const std::string& name, const std::string& format, const void * var, 
-                   int size, const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const MonObject* var, 
+                   const std::string& desc, const IInterface* owner) ;
   
+  //Obsolete because the using of MonObjects
+  void declareInfo(const std::string& name, const std::string& format, const void * var, 
+                   int size, const std::string& desc, const IInterface* owner) ;
+
+			    
   /** Undeclare monitoring information
       @param name Monitoring information name knwon to the external system
       @param owner Owner identifier of the monitoring information
@@ -105,24 +105,33 @@ void declareInfo(const std::string& name, const std::string& format, const void 
   std::set<std::string> * getInfos(const IInterface* owner = 0);
 
 private:
+
+  std::string m_utgid; 
+  DimPropServer* m_dimpropsvr;
+  DimCmdServer* m_dimcmdsvr;
+  
   // Map associating to each algorithm name a set with the info 
   // names from this algorithm 
   typedef std::map<const IInterface*, std::set<std::string> > InfoNamesMap;
-  InfoNamesMap m_InfoNamesMap;
-  InfoNamesMap::iterator m_InfoNamesMapIt;
+  typedef InfoNamesMap::iterator InfoNamesMapIt;
+  InfoNamesMap  m_InfoNamesMap;
+  InfoNamesMapIt m_InfoNamesMapIt;
 
-  // The container below is necessary because usually the descriptions of 
-  // the services are constant strings, not variables. DimService expects 
-  // a variable address to monitor as its second argument and we are using 
-  // a DimService for strings to publish the descriptions.
-  std::map<std::string,std::string> m_infoDescriptions;
+  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
+  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
+  DimServiceMonObjectMap    m_dimMonObjects;
+  DimServiceMonObjectMapIt  m_dimMonObjectsIt;
+  
+/*  std::map<std::string, DimServiceMonObject*, std::less<std::string> > m_dimMonObjects;
+  std::map<std::string, DimServiceMonObject*, std::less<std::string> >::iterator m_dimMonObjectsIt;*/
+  
+  //All declareInfo Members call declareInfoMonObject 
+  void declareInfoMonObject(const std::string& name, MonObject* var, const std::string& desc, const IInterface* owner) ;
+  
+  void declServiceMonObject(std::string infoName, const MonObject* monObject);
+  void undeclServiceMonObject(std::string infoName);
+  void updateServiceMonObject(std::string infoName, bool endOfRun);
 
-  DimPropServer* m_dimpropsvr;
-  DimCmdServer* m_dimcmdsvr;
-  // Begin MO
-  // In the case of MonObjects use its DimMonObjectManager instead of DimEngine...
-  DimMonObjectManager* m_dimMonObjectManager;
-  // End MO
   
   MonTimer* m_dimtimer;
   int m_refreshTime;

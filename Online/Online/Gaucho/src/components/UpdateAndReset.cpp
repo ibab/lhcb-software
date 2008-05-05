@@ -67,12 +67,7 @@ StatusCode UpdateAndReset::execute() {
   if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default ) ) {
      odin=get<LHCb::ODIN> ( LHCb::ODINLocation::Default ); }
   else {
-       msg << MSG::WARNING<< "No ODIN Bank found. DIM services only updated when timer elapses. " <<endreq;   
-       m_timerElapsed=getTimerElapsed();
-       msg << MSG::INFO << "getTimerElapsed " << m_timerElapsed << endreq;
-       //check if update flag is set
-       //update if so
-       if (m_timerElapsed) updateAll(false);
+       msg << MSG::WARNING<< "No ODIN Bank found. Can't update DIM services. " <<endreq;   
        return StatusCode::SUCCESS;
   }     
   int currentRunNumber = odin->runNumber();

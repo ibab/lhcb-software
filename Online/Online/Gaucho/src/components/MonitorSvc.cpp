@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "Gaucho/DimServiceMonObject.h"
 #include "Gaucho/MonObject.h"
 #include "Gaucho/MonInt.h"
 #include "Gaucho/MonDouble.h"
@@ -21,7 +22,6 @@
 #include "Gaucho/MonH2F.h"
 #include "Gaucho/MonVectorI.h"
 #include "Gaucho/MonVectorD.h"
-#include "Gaucho/DimMonObjectManager.h"
 #include "MonitorSvc.h"
 #include "DimPropServer.h"
 #include "DimCmdServer.h"
@@ -39,7 +39,7 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 // Constructor
 MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl)
   : Service(name, sl), m_refreshTime(5) {
-    declareProperty("refreshtime",m_refreshTime);
+//    declareProperty("refreshtime",m_refreshTime);
 }
 
 //!destructor
@@ -66,21 +66,15 @@ StatusCode MonitorSvc::initialize() {
     return StatusCode::SUCCESS; 
   }
   Service::initialize(); 
-  const std::string& utgid = RTL::processName();
+  //const std::string& utgid = RTL::processName();
+  m_utgid = RTL::processName();
+  msg << MSG::INFO << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
 
-  msg << MSG::INFO << "initialize: Setting up DIM for UTGID " 
-      << utgid << endreq;
+  m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
+  msg << MSG::DEBUG << "DimPropServer created with name " << m_utgid << endreq;
 
-  m_dimMonObjectManager = new DimMonObjectManager(msgSvc(),"MonitorSvc");
-  m_dimMonObjectManager->setUTGID(utgid);
-  msg << MSG::DEBUG << "DimMonObjectManager created with utgid " << utgid  << endreq;
-
-  m_dimpropsvr= new DimPropServer(utgid ,serviceLocator());
-  msg << MSG::DEBUG << "DimPropServer created with name " << utgid << endreq;
-
-  m_dimcmdsvr = new DimCmdServer( (utgid+"/"), serviceLocator());
-  msg << MSG::DEBUG << "DimCmdServer created with name " 
-      << (utgid+"/") << endreq;
+  m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator());
+  msg << MSG::DEBUG << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
 
   setTimerElapsed(false);   
   m_dimtimer = new MonTimer(m_refreshTime, serviceLocator(), this);
@@ -93,11 +87,9 @@ StatusCode MonitorSvc::finalize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   
   m_InfoNamesMap.clear();
-  m_infoDescriptions.clear();
   delete m_dimcmdsvr;
   delete m_dimtimer;
   delete m_dimpropsvr;
-  delete m_dimMonObjectManager;
   msg << MSG::INFO << "finalized successfully" << endreq;
   return StatusCode::SUCCESS;
 }
@@ -213,7 +205,7 @@ void MonitorSvc::declareInfoMonObject(const std::string& name,
 	msg << MSG::DEBUG << "dimName: " << dimName << endreq;
 	
 	var->setComments(desc);
-	m_dimMonObjectManager->declServiceMonObject(dimName, var);
+	declServiceMonObject(dimName, var);
 
 }
 
@@ -233,7 +225,7 @@ void MonitorSvc::undeclareInfo( const std::string& name,
 
     std::string dimName = name;
     if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-    m_dimMonObjectManager->undeclServiceMonObject( dimName ) ;
+    undeclServiceMonObject( dimName ) ;
     
     (*infoNamesSet).erase(name);
     msg << MSG::INFO << "undeclareInfo: " << name << " from owner " 
@@ -290,7 +282,7 @@ void MonitorSvc::updateSvc( const std::string& name, bool endOfRun,
   if( (*infoNamesSet).find( name) !=  (*infoNamesSet).end() ){
     std::string dimName = name;
     if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-    m_dimMonObjectManager->updateServiceMonObject( dimName, endOfRun ) ;
+    updateServiceMonObject( dimName, endOfRun ) ;
     msg << MSG::DEBUG << "update: " << name << " from owner " 
         << ownerName  << " updated" << endreq;
   }  
@@ -326,7 +318,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-      m_dimMonObjectManager->undeclServiceMonObject( dimName ) ;
+      undeclServiceMonObject( dimName ) ;
       msg << MSG::INFO << "undeclareAll: Undeclared info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
@@ -361,7 +353,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-      m_dimMonObjectManager->updateServiceMonObject( dimName, endOfRun ) ;
+      updateServiceMonObject( dimName, endOfRun ) ;
       msg << MSG::DEBUG << "updateAll: Updated info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
@@ -396,4 +388,58 @@ void MonitorSvc::setTimerElapsed(bool elapsed) {
 
 bool MonitorSvc::getTimerElapsed() {
     return m_TimerElapsed;  
+}
+
+void MonitorSvc::declServiceMonObject(std::string infoName, const MonObject* monObject){
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  std::string typeName = monObject->typeName();
+  std::string dimPrefix = monObject->dimPrefix();
+
+  std::string dimSvcName = dimPrefix + "/"+m_utgid+"/"+infoName;
+
+  std::pair<DimServiceMonObjectMapIt,bool> p = m_dimMonObjects.insert(DimServiceMonObjectMap::value_type(infoName,0));
+
+  if (p.second) {
+
+    MonObject* monObjectAux = const_cast<MonObject *>(monObject);
+    std::stringstream ss; 
+    boost::archive::binary_oarchive oa(ss);
+    monObjectAux->save(oa, 0);
+    int size = ss.str().length();
+    m_dimMonObjects[infoName]=new DimServiceMonObject(dimSvcName, monObjectAux, size);
+
+    msg << MSG::DEBUG << "New DimMonObject: " + dimSvcName << endreq;
+  }
+  else msg << MSG::ERROR << "Already existing DimMonObject: " + dimSvcName << endreq;
+
+}
+
+void MonitorSvc::undeclServiceMonObject(std::string infoName){
+  MsgStream msg(msgSvc(),"MonitorSvc");
+
+  for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
+      msg << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
+  
+  m_dimMonObjectsIt = m_dimMonObjects.find(infoName);  
+
+  if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
+    delete (*m_dimMonObjectsIt).second;
+    m_dimMonObjects.erase(m_dimMonObjectsIt);
+    msg << MSG::DEBUG << "undeclSvc: Service " + infoName + " undeclared" << endreq;
+    return;
+  }
+  msg << MSG::ERROR << "undeclSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
+}
+
+void MonitorSvc::updateServiceMonObject(std::string infoName, bool endOfRun){
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  //for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
+  //  mes << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
+  m_dimMonObjectsIt = m_dimMonObjects.find(infoName);
+  if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
+    (*m_dimMonObjectsIt).second->updateService(endOfRun);
+    msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
+    return;
+  }
+  msg << MSG::WARNING << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
 }
