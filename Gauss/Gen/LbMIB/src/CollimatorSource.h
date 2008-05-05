@@ -1,8 +1,9 @@
-// $Id: CollimatorSource.h,v 1.1 2007-08-17 12:54:14 gcorti Exp $
+// $Id: CollimatorSource.h,v 1.2 2008-05-05 14:18:16 mlieng Exp $
 #ifndef COLLIMATORSOURCE_H
 #define COLLIMATORSOURCE_H 1
 
 // Include files
+#include <inttypes.h>
 // from Gaudi
 #include "GaudiAlg/GaudiHistoTool.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -95,7 +96,7 @@ private:
 
   /// Structure for full envelope version
   struct ParticleData {
-    int pid;
+    int64_t pid;
     double weight;
     double ekin;
     double x;

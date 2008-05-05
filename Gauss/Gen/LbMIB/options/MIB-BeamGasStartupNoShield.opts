@@ -1,0 +1,33 @@
+// $Id: MIB-BeamGasStartupNoShield.opts,v 1.1 2008-05-05 14:18:16 mlieng Exp $
+
+/** @file
+ *
+ *  Options to run Collimator source only without merging it with other
+ *  events
+ *
+ *  @author M.Lieng, G.Corti
+ *  @date 2007-07-03
+ *
+ */
+  
+ApplicationMgr.DLLs += { "LbMIB" };
+
+Generator.Members -= { "GaudiSequencer/GenMonitor" };
+Generator.Members += { "MIBackground" };
+Generator.Members += { "GaudiSequencer/GenMonitor"  };
+
+MIBackground.MIBSources  = { "CollimatorSource/BGStartupNoShieldBeam1Muons" };
+MIBackground.BGStartupNoShieldBeam1Muons.ParticleSourceFile = "$MIBDATAROOT/data/B1-Beta10-Startup.mu.data";
+MIBackground.MIBSources += { "CollimatorSource/BGStartupNoShieldBeam1Hadrons" };
+MIBackground.BGStartupNoShieldBeam1Hadrons.ParticleSourceFile = "$MIBDATAROOT/data/B1-Beta10-Startup.h.data";
+
+MIBackground.MIBSources += { "CollimatorSource/BGStartupNoShieldBeam2Muons" };
+MIBackground.BGStartupNoShieldBeam2Muons.ParticleSourceFile = "$MIBDATAROOT/data/B2-Beta10-Startup.mu.data";
+MIBackground.BGStartupNoShieldBeam2Muons.ZParticleOrigin = 19.9*m;
+MIBackground.BGStartupNoShieldBeam2Muons.ZDirection = -1;
+MIBackground.MIBSources += { "CollimatorSource/BGStartupNoShieldBeam2Hadrons" };
+MIBackground.BGStartupNoShieldBeam2Hadrons.ParticleSourceFile = "$MIBDATAROOT/data/B2-Beta10-Startup.h.data";
+MIBackground.BGStartupNoShieldBeam2Hadrons.ZParticleOrigin = 19.9*m;
+MIBackground.BGStartupNoShieldBeam2Hadrons.ZDirection = -1;
+
+MIBackground.EventType = 60040000;

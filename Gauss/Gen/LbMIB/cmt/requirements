@@ -3,11 +3,11 @@
 # Maintainer : Magnus Lieng, Gloria Corti
 #============================================================================
 package           LbMIB
-version           v2r1
+version           v2r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src options python scripts data
 
 # Used packages.
 #============================================================================
@@ -22,3 +22,5 @@ library          LbMIB    ../src/*.cpp  -import=AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=LbMIB
+apply_pattern    install_python_modules
+apply_pattern    install_python_scripts

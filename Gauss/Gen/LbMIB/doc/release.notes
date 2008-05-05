@@ -5,6 +5,28 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v2r2 2008-05-05 ===========================
+! 2008-05-05 - Magnus Lieng
+ - Fixed binary data format to be compatible with both 32 and 64bit platforms
+   . CollimatorSource.h
+
+! 2008-04-28 - Magnus Lieng
+ - ASCII input files for TCT background and Beam-Gas background is located on
+   Castor at /castor/cern.ch/lhcb/background/LHC/2006_Collimators and 
+   2008_BeamGas.
+ - Added python modules
+   . plotter.py
+   . gasmap.py
+ - Added python script for analyzing ASCII input files.
+   . mibplotter.py
+ - Added python script to translate and rescale Beam-Gas mars files to LbMIB
+   format. Gas density maps is located in folder 'data'. Beam-Gas mars files
+   can be found on Castor at /castor/cern.ch/lhcb/background/LHC/mars.
+   . beamgas2mib.py
+   . beamgas2mib_opts.py
+ - Added options for Beam Gas files
+   . MIB-BeamGasStartupNoShield.opts
+
 !=========================== LbMIB v2r1 2007-10-02 ===========================
 ! 2007-10-02 - Gloria Corti for Karl Harrison
  - Fix compilation problem on Win32 casting to double
