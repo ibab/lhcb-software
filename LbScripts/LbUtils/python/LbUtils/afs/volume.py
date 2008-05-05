@@ -35,7 +35,7 @@ class Volume(object):
     def mountPoints(self):
         return self._mtpoints
     def addMountPoint(self, dirname):
-        self_.mtpoints += MountPoint(dirname)
+        self._mtpoints += MountPoint(dirname)
     def update(self):
         if len(self._mtpoints) == 0:
             raise HasNoMountPoint, "Volume %s has not mount point" % self._name
