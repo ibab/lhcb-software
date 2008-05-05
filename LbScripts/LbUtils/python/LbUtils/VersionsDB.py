@@ -4,12 +4,15 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.6 2008-04-30 18:02:00 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.7 2008-05-05 17:12:01 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
 if sys.version_info < (2,4):
     from sets import Set as set
+
+#--- Constants
+DEFAULT_KEYPROJECT = "LHCb"
 
 #--- Error definitions
 class VersionsDBError(RuntimeError):
@@ -22,7 +25,7 @@ class DuplicatedReleaseError(VersionsDBError):
     Error raised when a new released is created with the same name of an existing
     one.
     """
-    def __init__(self,rel):
+    def __init__(self, rel):
         VersionsDBError.__init__(self,"Duplicated release '%s'"%(rel))
         self.release = rel
 class DuplicatedProjectError(VersionsDBError):
@@ -30,7 +33,7 @@ class DuplicatedProjectError(VersionsDBError):
     Error raised when a new project is added to a release, with the same name of
     an already existing project in that release.
     """
-    def __init__(self,rel,proj):
+    def __init__(self, rel, proj):
         VersionsDBError.__init__(self,"Duplicated project '%s' in release '%s'"%(proj,rel))
         self.release = rel
         self.project = proj
@@ -46,8 +49,6 @@ def _sortProjects(pl):
     """
     Sort a list of project objects according to the their dependencies.
     """
-    global DEBUG
-    tmp = []
     weights = {}
     modified = True
     loops_maxcount = 100
@@ -75,7 +76,7 @@ class Version:
     """
     __regexp__ = re.compile(r"v([0-9]+)r([0-9]+)(?:p([0-9]+))?")
     __regexp_lcg__ = re.compile(r"([0-9]+)([a-z])?")
-    def __init__(self,vers_string):
+    def __init__(self, vers_string):
         """
         Construct a version object from a version string, like "v1r2p3" or "54a".
         An empty version string identifies a project without versions.
@@ -126,26 +127,33 @@ class Version:
         return s
     def __hash__(self):
         return hash(self._version)
-    def __cmp__(self,other):
-        if other.__class__ is not self.__class__:
-            return self.__cmp__(Version(other))
-        if self._version < other._version: return -1
-        elif self._version == other._version: return 0
+    def __iter__(self):
+        return iter(self._version)
+    def __cmp__(self, other):
+        other = tuple(other)
+        if self._version < other: return -1
+        elif self._version == other: return 0
         else: return 1
 
 class Project:
     """
     Informations about a project.
     """
-    def __init__(self,name,version,buildtimedeps=[],runtimedeps=[]):
+    def __init__(self, name, version, buildtimedeps = None, runtimedeps = None):
         self.name = name
         self.version = Version(version)
-        self.buildtimedeps = buildtimedeps[:]
-        self.runtimedeps = runtimedeps[:]
-    def addBuildTimeDep(self,proj_name):
+        if buildtimedeps is None:
+            self.buildtimedeps = []
+        else:
+            self.buildtimedeps = buildtimedeps
+        if runtimedeps is None:
+            self.runtimedeps = []
+        else:
+            self.runtimedeps = runtimedeps
+    def addBuildTimeDep(self, proj_name):
         if proj_name not in self.buildtimedeps:
             self.buildtimedeps.append(proj_name)
-    def addRunTimeDep(self,proj_name):
+    def addRunTimeDep(self, proj_name):
         if proj_name not in self.runtimedeps:
             self.runtimedeps.append(proj_name)
     def __repr__(self):
@@ -208,11 +216,11 @@ class Release:
         for p in self.allProjects():
             s += "\n\t%s\t%s"%(p.name,p.version)
         return s
-    def __contains__(self,key):
+    def __contains__(self, key):
         return ( key in self.projects ) or \
                ( self.base is not None and key in self.__releases__[self.base] ) or \
                ( key in self.__unversioned_projects__ )
-    def __getitem__(self,key):
+    def __getitem__(self, key):
         if key in self.projects:
             return self.projects[key]
         elif self.base:
@@ -221,31 +229,31 @@ class Release:
             return self.__unversioned_projects__[key]
         else:
             raise KeyError(key)
-    def __setitem__(self,key,value):
+    def __setitem__(self, key, value):
         if key in self.projects:
-            raise DuplicatedProjectError(self.name,key)
-        self.projects[key] = Project(name=key,version=value)
-    def add(self,project):
+            raise DuplicatedProjectError(self.name, key)
+        self.projects[key] = Project(name=key, version=value)
+    def add(self, project):
         if project.name in self.projects:
-            raise DuplicatedProjectError(self.name,project.name)
+            raise DuplicatedProjectError(self.name, project.name)
         self.projects[project.name] = project
     def items(self):
         return self.projects.items()
     def values(self):
         return _sortProjects(self.projects.values())
-    def _expandDeps(self,project,function):
+    def _expandDeps(self, project, function):
         deps = function(self[project])
         deps += reduce(lambda a,b: a+b,
                        [self._expandDeps(p,function) for p in deps],
                        [])
         return deps
-    def expandBuildTimeDeps(self,project):
+    def expandBuildTimeDeps(self, project):
         """
         Return a list of projects on which the requested project depends for building
         (either directly or indirectly).
         """
         return list(set(self._expandDeps(project,lambda p: p.buildtimedeps)))
-    def expandRunTimeDeps(self,project):
+    def expandRunTimeDeps(self, project):
         """
         Return a list of projects on which the requested project depends at run-time
         (either directly or indirectly, through both build-time and run-time dependencies).
@@ -288,7 +296,7 @@ class _ReleaseSAXHandler(ContentHandler):
         #print "endDocument"
         #pprint(self.releases)
         pass
-    def startElement(self,name,attrs):
+    def startElement(self, name, attrs):
         #print "start element %s:"%name
         if name == u'releases_db':
             return
@@ -310,7 +318,7 @@ class _ReleaseSAXHandler(ContentHandler):
             self._currentProject.addRunTimeDep(name_attr)
         else:
             print "Warning: unknown element '%s'"%name
-    def endElement(self,name):
+    def endElement(self, name):
         #print "end element %s:"%name
         if name == u'release':
             self._currentRelease = None
@@ -342,7 +350,7 @@ def clean():
     Release.__unversioned_projects__ = {} 
     
 #--- Internal query functions
-def _findReleases(project,version):
+def _findReleases(project, version):
     """
     Find all the releases that feature the specified pair (project,version).
     """
@@ -350,7 +358,7 @@ def _findReleases(project,version):
              for r in Release.__releases__.values()
              if project in r and r[project].version == version ]
 
-def _findAllReleases(project,versions):
+def _findAllReleases(project, versions):
     """
     Find all the releases that feature the specified project in any of the
     specified versions.
@@ -362,7 +370,7 @@ def _findAllReleases(project,versions):
     tmp.sort()
     return tmp
 
-def _getVersions(project,releases):
+def _getVersions(project, releases):
     """
     Given a set of releases and a project, find all the versions of the project
     used in those releases.
@@ -375,7 +383,7 @@ def _getVersions(project,releases):
     return versions
 
 #--- Public query functions
-def getCompatibleVersions(project,version,otherproject,keyproj="LHCb"):
+def getCompatibleVersions(project, version, otherproject, keyproj = DEFAULT_KEYPROJECT):
     """
     Given a project and versions, find all the versions of 'otherproject' that
     share the same versions of 'keyproj' as (project,version).
@@ -385,7 +393,7 @@ def getCompatibleVersions(project,version,otherproject,keyproj="LHCb"):
                                          _getVersions(keyproj,
                                                       _findReleases(project, version))))
 
-def getRuntimeVersions(project,version,keyproj="LHCb"):
+def getRuntimeVersions(project, version, keyproj = DEFAULT_KEYPROJECT):
     """
     Get a list of projects needed by the specified project and compatible with
     the specified version of it. 
