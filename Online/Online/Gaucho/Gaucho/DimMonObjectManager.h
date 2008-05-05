@@ -53,11 +53,18 @@ private:
   DimTimerMonObjectAdder*       m_dimTimerMonObjectAdder;
 
 public:
-  DimMonObjectManager(IMessageSvc* msgSvc, const std::string& source);
+  DimMonObjectManager();
+  DimMonObjectManager(std::string source);
   virtual ~DimMonObjectManager();
   void setDimClientDns(std::string dimClientDns);
   void setDimBrowser(DimBrowser* dimBrowser);
+  //void setMsgSvc(IMessageSvc*  m_msgSvc);
+  //void setSource(const std::string& source);
   void deleteDimBrowser();
+  void printSource(){
+    std::cout << "printSource() --> m_name="<<m_name << std::endl;
+    std::cout << "printSource() --> m_source="<<m_source << std::endl;
+  }
   MonObject* createMonObject(std::string  monObjectTypeName);
   void deleteMonObject(MonObject* monObject);
   int monObjectSize(MonObject* monObject);
@@ -67,6 +74,8 @@ public:
   void msg(std::string msg, std::string source, int msgLevel);
 
   IMessageSvc* msgSvc(){return m_msgSvc;}
+  void setMsgSvc(IMessageSvc* msgSvc){m_msgSvc = msgSvc;}
+  
   std::string source(){return m_source;}
 
   void dimWait();
@@ -87,7 +96,7 @@ public:
   //Adder
   int adderCreateDimNames(std::vector<std::string> nodeNames, std::vector<std::string> taskName, std::vector<std::string> algorithmName, std::vector<std::string> objectName, std::string serverName);
   int adderCreateDimMonObjects(std::string procName, int refreshTime);
-  void adderDeleteDimMonObjects();
+  //void adderDeleteDimMonObjects();
   void adderCreateDimTimerMonObject(int refreshTime);
   void adderDeleteDimTimerMonObject();
 

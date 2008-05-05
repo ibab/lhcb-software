@@ -6,30 +6,31 @@
 #include "dis.hxx"
 #include <TStopwatch.h>
 #include <sstream>
-#include "GaudiKernel/IMessageSvc.h"
 
+//  Author: jotalo, 22/10/2007
 class MonObject;
-class DimMonObjectManager;
-
 class DimServiceMonObject : public DimService {
 
 private:
-	DimMonObjectManager* 	m_dimMonObjectManager;
-	int 		m_size;
-	void* 		m_data;
-	MonObject*	m_monObject;
-	std::string 	m_svcName;
-	std::stringstream m_ss;
+  int           m_size;
+  void*         m_data;
+  MonObject*    m_monObject;
+  std::string   m_svcName;
+  std::stringstream m_ss;
+  bool          m_enableHandler;
 
 public: 
-	DimServiceMonObject(DimMonObjectManager* manager, std::string svcName, MonObject *monObject, int size);
-	virtual ~DimServiceMonObject();
-        void updateService(bool endOfRun);
-	void setDataFromMonObject();
-	void serviceHandler();
-	MonObject* monObject(){return m_monObject;};
-	void deleteMonObject();
-	
+  DimServiceMonObject(std::string svcName, MonObject *monObject, int size);
+  virtual ~DimServiceMonObject();
+  
+  void enableHandler(){m_enableHandler = true;}
+  void disableHandler(){m_enableHandler = false;}
+  
+  void serviceHandler();
+  
+  void updateService(bool endOfRun);
+  void setDataFromMonObject();
+  MonObject* monObject(){return m_monObject;};
 };
 
 #endif // DIMSERVICEMONOBJECT_H

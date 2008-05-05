@@ -6,22 +6,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IMessageSvc.h"
 
 
 class DimInfoMonObject;
 class DimServiceMonObject;
 class MonObject;
-class DimMonObjectManager;
 
 class DimTimerMonObjectAdder: public DimTimer {
 private: 
-	DimMonObjectManager* 	m_dimMonObjectManager;
-	int m_time;
-	std::vector<std::vector<DimInfoMonObject*> >	m_dimInfoMonObjectVect2D;
-	std::vector<DimServiceMonObject*>		m_dimServiceMonObjectVect1D;
+  int m_time;
+  std::string  m_name;
+  IMessageSvc* m_msgSvc;
+
+  std::vector<std::vector<DimInfoMonObject*> >	m_dimInfoMonObjectVect2D;
+  std::vector<DimServiceMonObject*>		m_dimServiceMonObjectVect1D;
 public: 
-	DimTimerMonObjectAdder (DimMonObjectManager* manager, int ttime, std::vector<std::vector<DimInfoMonObject*> > dimInfo2D, std::vector<DimServiceMonObject*> dimService1D);
-	void timerHandler();
+  DimTimerMonObjectAdder (int ttime, std::vector<std::vector<DimInfoMonObject*> > dimInfo2D, std::vector<DimServiceMonObject*> dimService1D);
+  void setMsgSvc(IMessageSvc* msgSvc){m_msgSvc = msgSvc;}
+  void timerHandler();
   
 };   
 

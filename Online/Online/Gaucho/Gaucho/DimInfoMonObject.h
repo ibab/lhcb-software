@@ -1,3 +1,6 @@
+#ifndef DimInfoMonObject_H
+#define DimInfoMonObject_H 1
+
 #include "dic.hxx"
 #include <string>
 #include "GaudiKernel/MsgStream.h"
@@ -9,28 +12,34 @@
 //  Author: jotalo, 22/10/2007
 
 class MonObject;
-class DimMonObjectManager;
+class DimInfo;
 
-
-class DimInfoMonObject : public DimInfo {
+class DimInfoMonObject {
 private:
-  DimMonObjectManager*   m_dimMonObjectManager;
-  int     m_rtime;
-  bool    m_hasData;
-  MonObject*  m_monObject;
-  int     m_StringSize;
-  std::string  m_svcname;
+  bool         m_hasData;
   std::string  m_name;
+  std::string  m_svcName;
+  std::string  m_source;
+  MonObject*   m_monObject;
+  IMessageSvc* m_msgSvc;
+  int          m_StringSize;
+  DimInfo*     m_dimInfo;
   
 public : 
-  DimInfoMonObject(DimMonObjectManager* manager, std::string svcName);
-  DimInfoMonObject(DimMonObjectManager* manager, std::string svcName, int rTime);
+  DimInfoMonObject(std::string svcName);
+  DimInfoMonObject(std::string svcName, int refreshTime);
+  DimInfoMonObject(std::string svcName, int refreshTime, std::string source);
   virtual ~DimInfoMonObject();
-  virtual void infoHandler();
+  void infoHandler();
+  void setMsgSvc(IMessageSvc* msgSvc){m_msgSvc = msgSvc;}
+  IMessageSvc* msgSvc(){return m_msgSvc;}
+  std::string  name(){return m_name;}  
   void createMonObject();
-  void deleteMonObject();
   void loadMonObject();
   MonObject *monObject();
-  int stringSize() { return m_StringSize;};
-  std::string svcName(){return m_svcname;};
-};
+  DimInfo*  dimInfo(){ return m_dimInfo;};
+  int stringSize() const { return m_StringSize;};
+  std::string svcName() const {return m_svcName;};
+};  
+#endif    // DimInfoMonObject_H
+

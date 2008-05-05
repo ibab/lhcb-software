@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.2 2008-03-28 10:59:12 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.3 2008-05-05 14:16:45 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -46,6 +46,26 @@
   static const std::string s_monStatEntity("MonStatEntity");
   static const std::string s_monVectorI("MonVectorI");
   static const std::string s_monVectorD("MonVectorD");
+
+  static const std::string s_pfixMonObject("MonObj");
+  static const std::string s_pfixMonH1F("MonH1F");
+  static const std::string s_pfixMonH1D("MonH1D");
+  static const std::string s_pfixMonH2F("MonH2F");
+  static const std::string s_pfixMonH2D("MonH2D");
+  static const std::string s_pfixMonProfile("MonP1");
+  static const std::string s_pfixMonInt("MonI");
+  static const std::string s_pfixMonDouble("MonD");
+  static const std::string s_pfixMonFloat("MonF");
+  static const std::string s_pfixMonString("MonS");
+  static const std::string s_pfixMonLong("MonL");
+  static const std::string s_pfixMonBool("MonB");
+  static const std::string s_pfixMonPairDD("MonPDD");
+  static const std::string s_pfixMonPairII("MonPII");
+  static const std::string s_pfixMonPairDI("MonPDI");
+  static const std::string s_pfixMonHitMap2D("MonHM2D");
+  static const std::string s_pfixMonStatEntity("MonSE");
+  static const std::string s_pfixMonVectorI("MonVI");
+  static const std::string s_pfixMonVectorD("MonVD");
 
 class MonObject{
 
