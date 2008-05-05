@@ -3,13 +3,11 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r13 2008-05-05 ====================
 ! 2008-05-05 - Vanya BELYAEV
-
  - move class DaVinci::Decay into LHCbKernel package 
    (and rename it to LHCb::Decay) 
 
-
-!======================== DaVinciKernel v6r13 2008-04-29 ====================
 ! 2008-04-29 - Patrick Koppenburg
  - IPhysDesktop: remove save() method
  - ProtoParticleFilterBase.cpp : reduce verbosity
