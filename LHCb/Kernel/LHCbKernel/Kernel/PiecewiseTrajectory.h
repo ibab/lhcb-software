@@ -1,4 +1,4 @@
-// $Id: PiecewiseTrajectory.h,v 1.2 2008-03-18 13:02:35 mneedham Exp $
+// $Id: PiecewiseTrajectory.h,v 1.3 2008-05-05 13:26:40 graven Exp $
 #ifndef LHCbKernel_PiecewiseTrajectory_H
 #define LHCbKernel_PiecewiseTrajectory_H 1
 
@@ -66,13 +66,18 @@ namespace LHCb
                            double tolerance, 
                            int pathDirection = +1 ) const;
      
-    // note: we _will_ assume ownership of the passed Trajectory!
-    void append(Trajectory*); 
-    void prepend(Trajectory*); 
     
     /// Distance, along the Trajectory, between position(mu1) and
     /// position(mu2). .
     virtual double arclength(double mu1, double mu2) const { return mu2 - mu1 ; }
+
+    // functions specific to a PieceWiseTrajectory
+    // note: we _will_ assume ownership of the passed Trajectory!
+    void append(Trajectory*); 
+    void prepend(Trajectory*); 
+    unsigned int numberOfPieces() const { return m_traj.size(); }
+
+    std::ostream& print(std::ostream&) const;
 
   private:
      typedef std::pair<Trajectory*,double> Elem; // Traj, global mu for start for Traj

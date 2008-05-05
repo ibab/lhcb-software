@@ -157,3 +157,14 @@ LHCb::PiecewiseTrajectory::distToError( double s,
   }
   return dist;
 }
+
+std::ostream& 
+LHCb::PiecewiseTrajectory::print(std::ostream& os) const
+{
+   for (Trajs::const_iterator i=m_traj.begin();i != m_traj.end();++i) {
+        double pieceRange = i->first->endRange() - i->first->beginRange();
+        os << "   BeginPoint[global/local] : " << i->first->beginPoint() << " [" << i->second << "/" << i->first->beginRange() << "]\n"
+           << " ->  EndPoint[global/local] : " << i->first->endPoint() << " [" << i->second+pieceRange << "/" << i->first->endRange() << "]\n" << std::endl;
+   }
+
+}

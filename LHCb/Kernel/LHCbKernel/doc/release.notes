@@ -4,12 +4,15 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-05-05 - Gerhard Raven
+ - add 'numberOfPieces' and 'print' to PiecewiseTrajectory
+
 ! 2008-05-05 - Vanya BELYAEV
 
  - Kernel/Decay.h 
    src/Decay.cpp
    
-     new class (moved form DaVinciKernel) to represetn one-step decay 
+     new class (moved form DaVinciKernel) to represent one-step decay 
 
 
 !===================== LHCbKernel v8r3 2008-04-10 ========================
