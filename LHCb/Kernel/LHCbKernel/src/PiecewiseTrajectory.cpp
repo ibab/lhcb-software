@@ -166,5 +166,6 @@ LHCb::PiecewiseTrajectory::print(std::ostream& os) const
         os << "   BeginPoint[global/local] : " << i->first->beginPoint() << " [" << i->second << "/" << i->first->beginRange() << "]\n"
            << " ->  EndPoint[global/local] : " << i->first->endPoint() << " [" << i->second+pieceRange << "/" << i->first->endRange() << "]\n" << std::endl;
    }
+   return os;
 
 }
