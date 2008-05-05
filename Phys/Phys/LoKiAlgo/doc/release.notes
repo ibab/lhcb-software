@@ -1,36 +1,28 @@
-! $Id: release.notes,v 1.36 2008-05-05 13:31:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.37 2008-05-05 13:54:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgo v7r4 2008-05-05 ==========================
 ! 2008-05-05 - Vanya BELYAEV
-
  - rename DaVinci::Decay into LHCb::Decay 
 
 ! 2008-05-04 - Vanya BELYAEV
-
- - LoKi/Algo.h
-   src/Algo.cpp
-   
-    remove all occurances of IGeomDispCalculator and substritute them with 
+ - LoKi/Algo.h, src/Algo.cpp
+    remove all occurences of IGeomDispCalculator and substritute them with 
     IDistanceCalculator 
 
  - cmt/rerquirements
-    
     version incrmeent to v7r4 
 
 !========================== LoKiAlgo v7r3 2008-04-30 ==========================
-
 ! 2008-04-30 - Vanya BELYAEV
-
  - LoKi/ExtCalls.h
-
    fix the missing "__rshift__" to allow the proper decorations in Bender
 
  - cmt/requirements 
-
    version increment to v7r3 
 
 !========================== LoKiAlgo v7r2p1 2008-04-30 ========================
