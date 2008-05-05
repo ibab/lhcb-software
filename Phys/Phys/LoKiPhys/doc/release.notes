@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.58 2008-05-04 15:26:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.59 2008-05-05 13:49:09 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r3 2008-05-05 ==========================
 ! 2008-05-04 - Vanya BELYAEV
 
  - LoKi/Sections.h
@@ -22,13 +23,9 @@
   src/Particles3.cpp
   src/Particles4.cpp
 
-  remove *all* occurances of IGeomDispCalculator and 
+  remove *all* occurences of IGeomDispCalculator and 
   substitute them with IDistanceCalculator 
 
- - cmt/requirements
-    version inctrement to v7r4 
-
-!========================== LoKiPhys v7r3 2008-04-22 ==========================
 ! 2008-04-22 - Vanya BELYAEV
  - python/LoKiPhys/functions.py
    python/LoKiPhys/decorators.py
