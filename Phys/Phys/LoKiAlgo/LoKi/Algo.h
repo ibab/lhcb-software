@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.14 2008-05-04 15:36:18 ibelyaev Exp $
+// $Id: Algo.h,v 1.15 2008-05-05 13:31:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -34,7 +34,7 @@
 #include "LoKi/Loop.h"
 #include "LoKi/LoopObj.h"
 // ============================================================================
-namespace DaVinci { class Decay ; }
+namespace LHCb { class Decay ; }
 // ============================================================================
 /** @file
  *
@@ -704,7 +704,7 @@ namespace LoKi
      *  @return the valid looping-object
      */
     LoKi::Loop loop 
-    ( const DaVinci::Decay&    decay        , 
+    ( const LHCb::Decay&       decay        , 
       const IParticleCombiner* combiner = 0 ) ;
     // ========================================================================
   public:

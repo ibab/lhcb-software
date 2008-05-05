@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.35 2008-05-04 15:36:18 ibelyaev Exp $ 
+! $Id: release.notes,v 1.36 2008-05-05 13:31:24 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-05 - Vanya BELYAEV
+
+ - rename DaVinci::Decay into LHCb::Decay 
 
 ! 2008-05-04 - Vanya BELYAEV
 

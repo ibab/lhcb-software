@@ -1,4 +1,4 @@
-// $Id: Algo.cpp,v 1.20 2008-05-04 15:36:18 ibelyaev Exp $
+// $Id: Algo.cpp,v 1.21 2008-05-05 13:31:24 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -312,13 +312,13 @@ LoKi::Loop LoKi::Algo::loop
 } 
 // ============================================================================
 /* Create the loop object from "decay"
- *  @see DaVinci::Decay
+ *  @see LHCb::Decay
  *  @param decay the decay desctrptor
  *  @param combined the combiner
  *  @return the valid looping-object
  */
 LoKi::Loop LoKi::Algo::loop 
-( const DaVinci::Decay&    decay    , 
+( const LHCb::Decay&       decay    , 
   const IParticleCombiner* combiner ) 
 {
   // verify the decay descriptor
@@ -335,8 +335,8 @@ LoKi::Loop LoKi::Algo::loop
   // configure the loop object
   object -> setPID ( decay.mother().pp() ) ;
   // feed the data
-  const DaVinci::Decay::Items& children = decay.children() ;
-  for ( DaVinci::Decay::Items::const_iterator ic = 
+  const LHCb::Decay::Items& children = decay.children() ;
+  for ( LHCb::Decay::Items::const_iterator ic = 
           children.begin() ; children.end() != ic ; ++ic ) 
   {
     const std::string& c = ic->name()  ;
