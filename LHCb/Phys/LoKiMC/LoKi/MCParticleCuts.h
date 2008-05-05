@@ -1,4 +1,4 @@
-// $Id: MCParticleCuts.h,v 1.11 2007-11-28 14:13:59 ibelyaev Exp $
+// $Id: MCParticleCuts.h,v 1.12 2008-05-05 13:43:54 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLECUTS_H 
 #define LOKI_MCPARTICLECUTS_H 1
@@ -1367,7 +1367,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @see LoKi::Valid
-     *  @authot Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-01-21
      */
     const LoKi::Valid<const LHCb::MCParticle*>                        MCVALID ;

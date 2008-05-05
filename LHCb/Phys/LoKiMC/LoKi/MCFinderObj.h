@@ -1,4 +1,4 @@
-// $Id: MCFinderObj.h,v 1.11 2007-08-20 10:13:11 ibelyaev Exp $
+// $Id: MCFinderObj.h,v 1.12 2008-05-05 13:43:53 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -113,7 +113,7 @@ namespace LoKi
       LHCb::MCParticleLocation::Default ) const ;
     /** find MC decays.
      *  
-     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  It is just a short cut for very convenient and simple DecayFinder 
      *  tool by Olivier Dormond   
      *
      *  @code 
@@ -124,7 +124,7 @@ namespace LoKi
      * 
      *  @see DecayFinder  
      *  @param decay   decay   formula 
-     *  @param address location of container of MC particle
+     *  @param particles location of container of MC particle
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
@@ -132,7 +132,7 @@ namespace LoKi
       const LHCb::MCParticle::Container* particles ) const ;
     /** find MC decays.
      *  
-     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  It is just a short cut for very convenient and simple DecayFinder 
      *  tool by Olivier Dormond   
      *
      *  @code 
@@ -143,7 +143,7 @@ namespace LoKi
      * 
      *  @see DecayFinder  
      *  @param decay   decay   formula 
-     *  @param address location of container of MC particle
+     *  @param particles location of container of MC particle
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
@@ -151,7 +151,7 @@ namespace LoKi
       const LHCb::MCParticle::Vector& particles ) const ;
     /** find MC decays.
      *  
-     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  It is just a short cut for very convenient and simple DecayFinder 
      *  tool by Olivier Dormond   
      *
      *  @code 
@@ -162,7 +162,7 @@ namespace LoKi
      * 
      *  @see DecayFinder  
      *  @param decay   decay   formula 
-     *  @param address location of container of MC particle
+     *  @param particles location of container of MC particle
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
@@ -170,7 +170,7 @@ namespace LoKi
       const LHCb::MCParticle::ConstVector& particles ) const ;    
     /** find MC decays.
      *  
-     *  It is just a short cut for very convinient and simple DecayFinder 
+     *  It is just a short cut for very convenient and simple DecayFinder 
      *  tool by Olivier Dormond   
      *
      *  @code 
@@ -223,7 +223,7 @@ namespace LoKi
     void clear() ;
   private:
     /** templated decay extractor to eliminate code duplication 
-     *  @paran decay decay descriptor
+     *  @param decay decay descriptor
      *  @param source data source 
      *  @return the pseudocontainer of found decays 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
