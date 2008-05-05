@@ -4,6 +4,14 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-05-05 - Vanya BELYAEV
+
+ - Kernel/Decay.h 
+   src/Decay.cpp
+   
+     new class (moved form DaVinciKernel) to represetn one-step decay 
+
+
 !===================== LHCbKernel v8r3 2008-04-10 ========================
 ! 2008-04-10 - Marco Cattaneo
  - In LbAppInit.cpp, create CondDBCnvSvc if not existing
