@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.15 2008-04-29 14:15:37 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.16 2008-05-05 11:47:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,7 +11,8 @@
 // ============================================================================
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/IDecodeSimpleDecayString.h"
-#include "Kernel/Decay.h"
+#include "Kernel/GetDecay.h"
+#include "Kernel/GetParticlesForDecay.h"
 #include "Kernel/IPlotTool.h"
 // ============================================================================
 // LoKi
@@ -138,7 +139,7 @@
     private:   // local stuff
       // ======================================================================
       /// The actual list of decays 
-      DaVinci::Decays   m_decays   ; // The actual list of decays 
+      LHCb::Decays      m_decays   ; // The actual list of decays 
       /// the vector of daughter cuts 
       MyCuts            m_cuts     ; // the vector of daughter cuts 
       /// the actual cut for combination of good daughters 
@@ -297,11 +298,11 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   {
     typedef std::set<std::string> PIDs ;
     PIDs pids ;
-    for ( DaVinci::Decays::const_iterator idecay = m_decays.begin() ; 
+    for ( LHCb::Decays::const_iterator idecay = m_decays.begin() ; 
           m_decays.end()  != idecay ; ++idecay ) 
     {
-      const DaVinci::Decay::Items& ds= idecay->daughters () ;
-      for ( DaVinci::Decay::Items::const_iterator ic = ds.begin() ; 
+      const LHCb::Decay::Items& ds= idecay->daughters () ;
+      for ( LHCb::Decay::Items::const_iterator ic = ds.begin() ; 
             ds.end ()  != ic ; ++ic ) { pids.insert ( ic->name()  ) ; }  
     }
     // default cut: accept all
@@ -389,7 +390,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   size_t nTotal = 0 ;
   
   // loop over all decays 
-  for ( DaVinci::Decays::const_iterator idecay = m_decays.begin() ; 
+  for ( LHCb::Decays::const_iterator idecay = m_decays.begin() ; 
         m_decays.end() != idecay ; ++idecay ) 
   {
     // the counter of "good" selected decays 
@@ -403,8 +404,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
     Combiner loop ;
     
     // fill it with the input data:
-    const DaVinci::Decay::Items& items = idecay->children() ;
-    for ( DaVinci::Decay::Items::const_iterator child = items.begin() ;
+    const LHCb::Decay::Items& items = idecay->children() ;
+    for ( LHCb::Decay::Items::const_iterator child = items.begin() ;
           items.end() != child ; ++child ) { loop.add ( daughters ( child->name() ) ) ; } 
     
     // here we can start the actual looping

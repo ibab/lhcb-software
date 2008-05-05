@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.323 2008-04-29 14:16:14 pkoppenb Exp $
+! $Id: release.notes,v 1.324 2008-05-05 11:47:09 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-05-05 - Vanya BELYAEV
+
+ - DaVinci::Decay is renamed ot LHCb::Decay
 
 ! 2008-04-29 - Patrick Koppenburg
  - PhysDesktop, CombineParticles : remove save()

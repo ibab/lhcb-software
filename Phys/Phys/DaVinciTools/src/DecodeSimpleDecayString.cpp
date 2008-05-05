@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.cpp,v 1.12 2008-04-10 06:14:04 ibelyaev Exp $
+// $Id: DecodeSimpleDecayString.cpp,v 1.13 2008-05-05 11:47:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -271,7 +271,7 @@ StatusCode DecodeSimpleDecayString::strip_cc(void)
  */
 // ==========================================================================
 StatusCode DecodeSimpleDecayString::getDecay    
-( DaVinci::Decay& decay ) const  
+( LHCb::Decay& decay ) const  
 {
   //
   decay.setMother     ( m_mother    ) ;
@@ -286,7 +286,7 @@ StatusCode DecodeSimpleDecayString::getDecay
  */
 // ==========================================================================
 StatusCode DecodeSimpleDecayString::getDecay_cc    
-( DaVinci::Decay& decay ) const  
+( LHCb::Decay& decay ) const  
 {
   if ( !m_iscc ) { return StatusCode::FAILURE ; }  
   //
@@ -301,17 +301,17 @@ StatusCode DecodeSimpleDecayString::getDecay_cc
  *  @return status code 
  */
 StatusCode DecodeSimpleDecayString::getDecays    
-( std::vector<DaVinci::Decay>& decays ) const 
+( std::vector<LHCb::Decay>& decays ) const 
 {
   decays.clear() ;
   // the main decay:
-  DaVinci::Decay decay1 ( m_mother , m_daughters ) ;
+  LHCb::Decay decay1 ( m_mother , m_daughters ) ;
   StatusCode sc = decay1.validate ( m_ppSvc ) ;
   if ( sc.isFailure() ) { return sc ; }
   decays.push_back ( decay1 ) ;
   if ( m_iscc ) 
   {
-    DaVinci::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
+    LHCb::Decay decay2 ( m_mother_cc , m_daughters_cc ) ;
     sc = decay2.validate ( m_ppSvc ) ;
     if ( sc.isFailure() ) { return sc ; }
     decays.push_back ( decay2 ) ;

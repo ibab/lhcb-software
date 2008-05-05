@@ -1,4 +1,4 @@
-// $Id: DecodeSimpleDecayString.h,v 1.7 2008-03-31 13:03:01 ibelyaev Exp $
+// $Id: DecodeSimpleDecayString.h,v 1.8 2008-05-05 11:47:09 ibelyaev Exp $
 // ============================================================================
 #ifndef DECODESIMPLEDECAYSTRING_H 
 #define DECODESIMPLEDECAYSTRING_H 1
@@ -57,28 +57,28 @@ public:
    *  @return status code 
    */
   virtual StatusCode getDecay    
-  ( DaVinci::Decay& decay ) const  ;
+  ( LHCb::Decay& decay ) const  ;
   // ==========================================================================
   /** get the charge conjugated decay form the descriptor 
    *  @param decay (output) the decay 
    *  @return status code 
    */
   virtual StatusCode getDecay_cc 
-  ( DaVinci::Decay& decay ) const ;
+  ( LHCb::Decay& decay ) const ;
   // ==========================================================================
   /** get all decays form the descriptor 
    *  @param decays (output) the vector of decays
    *  @return status code 
    */
   virtual StatusCode getDecays   
-  ( std::vector<DaVinci::Decay>& decays ) const ;
+  ( std::vector<LHCb::Decay>& decays ) const ;
   // ==========================================================================
   
 protected:
   StatusCode reset();
   StatusCode PID(const std::string&, int&) const;
   StatusCode splitDescriptor(const std::string&,std::string&,
-                                         strings&) const;
+                             strings&) const;
   StatusCode strip_cc(void) ;
   StatusCode buildPIDs(const std::string,const strings,int&,ints&) const;
   StatusCode do_cc(void) ;
@@ -86,7 +86,7 @@ protected:
   
   
 private:
-
+  
   std::string m_descriptor;
   std::string m_mother;
   strings m_daughters;
