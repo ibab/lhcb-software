@@ -1,4 +1,4 @@
-// $Id: IDecodeSimpleDecayString.h,v 1.2 2008-03-31 13:00:04 ibelyaev Exp $
+// $Id: IDecodeSimpleDecayString.h,v 1.3 2008-05-05 11:46:04 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDECODESIMPLEDECAYSTRING_H 
 #define DAVINCIKERNEL_IDECODESIMPLEDECAYSTRING_H 1
@@ -16,7 +16,7 @@
 // ============================================================================
 // forward declarations
 // ============================================================================
-namespace DaVinci { class Decay ; }
+namespace LHCb { class Decay ; }
 // ============================================================================
 /// the helper type for vector of strings
 typedef std::vector<std::string> strings;
@@ -48,19 +48,19 @@ public:
    *  @param decay (output) the decay 
    *  @return status code 
    */
-  virtual StatusCode getDecay ( DaVinci::Decay& decay ) const  = 0 ;
+  virtual StatusCode getDecay ( LHCb::Decay& decay ) const  = 0 ;
   // ==========================================================================
   /** get the charge conjugated decay form the descriptor 
    *  @param decay (output) the decay 
    *  @return status code 
    */
-  virtual StatusCode getDecay_cc ( DaVinci::Decay& decay ) const  = 0 ;
+  virtual StatusCode getDecay_cc ( LHCb::Decay& decay ) const  = 0 ;
   // ==========================================================================
   /** get all decays form the descriptor 
    *  @param decays (output) the vector of decays
    *  @return status code 
    */
-  virtual StatusCode getDecays ( std::vector<DaVinci::Decay>& decays ) const = 0 ;
+  virtual StatusCode getDecays ( std::vector<LHCb::Decay>& decays ) const = 0 ;
   // ==========================================================================
 public:
   // ==========================================================================
