@@ -1,4 +1,4 @@
-// $Id: DecayChain.h,v 1.6 2007-11-28 14:54:09 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.7 2008-05-05 18:06:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -243,7 +243,12 @@ namespace LoKi
       const LHCb::Vertex* vertex = particle->endVertex ();
       
       if ( m_vertex && 0 != vertex ) 
-      { stream << " EndVertex " << toString( vertex->position() ) ; }
+      { 
+        // use the terminator 
+        stream << term ;  
+        stream << std::string ( 72 , ' ' ) ;
+        stream << " EndVertex " << toString( vertex->position() ) ; 
+      }
       // use the terminator 
       stream << term ;  
       
@@ -320,7 +325,10 @@ namespace LoKi
       const LHCb::MCVertex* vertex = particle->originVertex ();
       if     ( m_vertex && 0 != vertex ) 
       {
-        stream << " Origin x/y/z " << toString ( vertex -> position() ) ;
+        // use the terminator 
+        stream << term ;  
+        stream << std::string ( 72 , ' ' ) ;
+        stream << " Origin " << toString ( vertex -> position() ) ;
         if ( vertex -> hasKey() )  
         { stream << " #" << toString ( vertex -> key() ) ; }
       }
@@ -338,15 +346,17 @@ namespace LoKi
         if ( 0 == vertex ) { continue ; }
         if ( m_vertex && m_vertexe ) 
         {
+          // use the terminator 
+          stream << term ;
           stream << std::string( 92 , ' ' ) ;          
           stream << " EndVtx[" << (ev-endVertices.begin() ) << "] " ;
           stream << toString( vertex -> position() ) ; 
           stream << " type "   << vertex->type()  ;
           if ( vertex -> hasKey() )  
           { stream << " #" << toString ( vertex -> key() ) ; }
-          // use terminator 
-          stream << term ; 
         }
+        // use terminator 
+        stream << term ; 
         print ( vertex->products().begin ()  ,
                 vertex->products().end   ()  ,  
                 stream           , term      , 
@@ -413,31 +423,35 @@ namespace LoKi
       { stream << " ... (skip  by cuts) " << term ; return stream ; }
       
       stream << toString( particle->momentum() ) ;
-      stream << " #" << toString ( particle->barcode() ) ; 
+      stream << " #" << toString ( particle->barcode () ) 
+             << "/"  << toString ( particle->status  () )  ;
       ///
       
       HepMC::GenVertex* vertex = particle->production_vertex ();
       if     ( m_vertex && 0 != vertex ) 
       {
-        stream << " Origin x/y/z " 
+        // use the terminator 
+        stream << term ;  
+        stream << std::string ( 72 , ' ' ) ;
+        stream << " Origin " 
                << toString ( vertex -> point3d() ) ;
         stream << " #" << toString ( vertex -> barcode() ) ; 
       }
-      
-      // use the terminator 
-      stream << term ;  
       
       // print all end-vertices 
       HepMC::GenVertex* evertex = particle->end_vertex() ;
       if ( m_vertex && m_vertexe && 0 != evertex ) 
       { 
-        stream << std::string( 92 , ' ' ) ;          
+        // use terminator 
+        stream << term ;
+        stream << std::string ( 72 , ' ' ) ;          
         stream << " EndVtx " 
                << toString( evertex -> point3d() ) ; 
         stream << " #" << toString ( evertex -> barcode() ) ; 
-        // use terminator 
-        stream << term ;
       }
+      // use terminator 
+      stream << term ;
+      //
       if ( 0 != evertex ) 
       {
         HepMC::GenVertex::particle_iterator begin = 
@@ -449,6 +463,7 @@ namespace LoKi
                 accept , mark , 
                 prefix + "   " , depth + 1 ) ; 
       }
+      //
       return stream ;
     }
     // ========================================================================    
@@ -492,20 +507,6 @@ namespace LoKi
       { 
         Error ( " HepMC::GenEvent* points to NULL" ) ; 
         stream << term  ; return stream ; 
-      }
-      // use "signal vertex"
-      HepMC::GenVertex* vertex = event->signal_process_vertex() ;
-      if ( 0 == vertex ) 
-      {
-        // use the convention :
-        vertex = event->barcode_to_vertex ( -1 ) ;
-      }
-      if ( 0 != vertex ) 
-      {
-        return print 
-          ( vertex->particles_begin( HepMC::children ) , 
-            vertex->particles_end  ( HepMC::children ) , 
-            stream , term , accept , mark , prefix , depth ) ;
       }
       // select the trees 
       LoKi::GenTypes::GenContainer trees ;
@@ -662,8 +663,8 @@ namespace LoKi
         ( trees.begin () , 
           trees.end   () , 
           stream , term , accept , mark , prefix , depth ) ;
-    } ;
-
+    } 
+    // ========================================================================
     /** print decay chain for sequence of Particles/MCParticles/HepMCParticles
      * 
      *  @param first    begin of sequence to (MC/HepMC) particles 
