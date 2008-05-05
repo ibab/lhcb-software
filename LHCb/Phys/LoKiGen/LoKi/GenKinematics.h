@@ -1,4 +1,4 @@
-// $Id: GenKinematics.h,v 1.8 2007-11-28 14:08:28 ibelyaev Exp $
+// $Id: GenKinematics.h,v 1.9 2008-05-05 09:53:35 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GENKINEMATICS_H 
 #define LOKI_GENKINEMATICS_H 1
@@ -101,7 +101,7 @@ namespace LoKi
      *  @param  p1 the first particle 
      *  @param  p2 the second particle 
      *  @param  p3 the third  particle 
-     *  @param  p3 the fourth  particle 
+     *  @param  p4 the fourth  particle 
      *  @return invariant mass 
      *  @see HepMC::GenParticle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

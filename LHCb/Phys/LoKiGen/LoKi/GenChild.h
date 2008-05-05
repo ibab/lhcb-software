@@ -1,4 +1,4 @@
-// $Id: GenChild.h,v 1.4 2008-05-04 15:20:49 ibelyaev Exp $
+// $Id: GenChild.h,v 1.5 2008-05-05 09:53:35 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GENCHILD_H 
 #define LOKI_GENCHILD_H 1
@@ -31,8 +31,8 @@ namespace LoKi
      *  @attention index starts with 1 , null index corresponds 
      *             to the original particle 
      *
-     *  @param  particle (const) pointer to mother particle 
-     *  @param  index    index   index of the child particle 
+     *  @param  mother   (const) pointer to mother particle 
+     *  @param  index            index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-02

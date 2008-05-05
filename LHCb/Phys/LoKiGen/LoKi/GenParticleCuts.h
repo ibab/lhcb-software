@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.13 2007-12-09 18:08:00 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.14 2008-05-05 09:53:35 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -429,7 +429,7 @@ namespace LoKi
      */
     const LoKi::BasicFunctors<const HepMC::GenParticle*>::BooleanConstant GFALSE ( false ) ;
     // ========================================================================    
-    /** @typdef GFAEVX 
+    /** @typedef GFAEVX 
      *  helper adapter which delegates the evaluation of the 
      *  "vertex" function to end vertex of the particle
      *

@@ -1,4 +1,4 @@
-// $Id: GenAlgs.h,v 1.10 2007-07-23 17:23:35 ibelyaev Exp $
+// $Id: GenAlgs.h,v 1.11 2008-05-05 09:53:35 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -537,7 +537,7 @@ namespace LoKi
      *  @see LoKi::LorentzVector
      *  @see LoKi::Kinematics::Gen4Momentum
      *
-     *  @param  event     pointer to HepMC::GenEvent
+     *  @param  events    pointer to HepMC::GenEvent
      *  @param  functor   function to be evaluated 
      *  @param  predicate selection criteria 
      *  @param  result    the initial-value for the result
@@ -752,9 +752,8 @@ namespace LoKi
     /** simple function to extract the mminimul value of certain function 
      *  for whole HepMC-event 
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @param minval     the initial value 
      *  @return updated minimum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -779,9 +778,8 @@ namespace LoKi
     /** simple function to extract the mminimul value of certain function 
      *  for whole HepMC-event 
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @param minval     the initial value 
      *  @return updated minimum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -800,9 +798,8 @@ namespace LoKi
     /** simple function to extract the mminimul value of certain function 
      *  for whole HepMC-super-event 
      *  @param event      pointer to super-event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @param minval     the initial value 
      *  @return updated minimum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -824,10 +821,9 @@ namespace LoKi
     /** simple function to extract the maximum value of certain function 
      *  for whole HepMC event
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
-     *  @param minval     the initial value of maximum
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
+     *  @param maxval     the initial value of maximum
      *  @return updated maximum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -851,10 +847,9 @@ namespace LoKi
     /** simple function to extract the maximum value of certain function 
      *  for whole HepMC event
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
-     *  @param minval     the initial value of maximum
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
+     *  @param maxval     the initial value of maximum
      *  @return updated maximum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -871,11 +866,10 @@ namespace LoKi
     // ========================================================================    
     /** simple function to extract the maximum value of certain function 
      *  for whole HepMC super-event
-     *  @param event      pointer to super-event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
-     *  @param range      the type of HepMC-graph
-     *  @param minval     the initial value of maximum
+     *  @param events     pointer to super-event
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
+     *  @param maxval     the initial value of maximum
      *  @return updated maximum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -896,8 +890,8 @@ namespace LoKi
     /** simple function to extract the particle, which minimizes a 
      *  certain function
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @return particle which mimimizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -918,8 +912,8 @@ namespace LoKi
     /** simple function to extract the particle, which minimizes a 
      *  certain function
      *  @param event      pointer to event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @return particle which mimimizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -936,8 +930,8 @@ namespace LoKi
     /** simple function to extract the particle, which minimizes a 
      *  certain function
      *  @param event      pointer to super-event
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @return particle which mimimizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -962,8 +956,8 @@ namespace LoKi
     /** simple function to extract the particle, which minimizes a 
      *  certain function
      *  @param vertex     pointer to HepMC-graph
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun        function to be evaluated 
+     *  @param cut        restriction/selector for particles
      *  @param range      type of HepMC-graph
      *  @return particle which mimimizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -987,8 +981,8 @@ namespace LoKi
     /** simple function to extract the particle, which minimizes a 
      *  certain function
      *  @param particle pointer to mother particle
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun      function to be evaluated 
+     *  @param cut      restriction/selector for particles
      *  @return particle which mimimizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -1011,8 +1005,8 @@ namespace LoKi
     /** simple function to extract the particle, which maximizes a 
      *  certain function
      *  @param event pointer to the event  
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun   function to be evaluated 
+     *  @param cut   restriction/selector for particles
      *  @return particle which maximizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -1033,8 +1027,8 @@ namespace LoKi
     /** simple function to extract the particle, which maximizes a 
      *  certain function
      *  @param event pointer to the event  
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun   function to be evaluated 
+     *  @param cut   restriction/selector for particles
      *  @return particle which maximizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -1051,8 +1045,8 @@ namespace LoKi
     /** simple function to extract the particle, which maximizes a 
      *  certain function
      *  @param event pointer to the super-event  
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun   function to be evaluated 
+     *  @param cut   restriction/selector for particles
      *  @return particle which maximizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
@@ -1078,8 +1072,8 @@ namespace LoKi
     /** simple function to extract the particle, which maximizes a 
      *  certain function
      *  @param vertex pointer to HepMC-graph
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param fun    function to be evaluated 
+     *  @param cut    restriction/selector for particles
      *  @param range      type of HepMC-graph
      *  @return particle which maximizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -1102,9 +1096,9 @@ namespace LoKi
     // ========================================================================
     /** simple function to extract the particle, which maximizes a 
      *  certain function
-     *  @param event pointer to the mother particle
-     *  @param functor    function to be evaluated 
-     *  @param predicate  restriction/selector for particles
+     *  @param particle pointer to the mother particle
+     *  @param fun      function to be evaluated 
+     *  @param cut      restriction/selector for particles
      *  @return particle which maximizes the function
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
