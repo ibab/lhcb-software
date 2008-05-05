@@ -5,11 +5,10 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Event/TwoProngVertex.h"
 
 // forward declarations
 namespace LHCb {
- class State;
+ class TwoProngVertex;
 };
 
 static const InterfaceID IID_IHltV0Upgrade ( "IHltV0Upgrade", 1, 0 );
