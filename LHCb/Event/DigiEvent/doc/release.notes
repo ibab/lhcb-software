@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-05-05 M Needham
+ - Add source id to cluster class
+
 !========================== DigiEvent v2r5 2008-04-03 ========================
 ! 2008-04-02 - Marco Cattaneo
  - Adapt to new LHCb::Math namespace

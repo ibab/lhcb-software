@@ -27,16 +27,32 @@
                 ADCVector strips,
                 double neighbourSum'
         initList='m_liteCluster(lCluster), m_stripValues(strips),
-                  m_neighbourSum(neighbourSum)' >
+                  m_neighbourSum(neighbourSum) , m_sourceID(999)' >
      </constructor>
 
+    <constructor desc="Constructor with source id" 
+       argList='&liteClusterName; lCluster, 
+                ADCVector strips,
+                double neighbourSum, unsigned sourceID'
+        initList='m_liteCluster(lCluster), m_stripValues(strips),
+                  m_neighbourSum(neighbourSum) , m_sourceID(sourceID)' >
+     </constructor>
+
+
   &STClusterClass;
+
 
  <attribute 
        name="neighbourSum" 
        type="double" 
        desc="sum neighbour channels"
        setMeth="FALSE" />
+
+ <attribute 
+   name="sourceID"
+   type ="unsigned int"
+   desc = "Identifier of the tell1 giving the cluster "
+ />
 
    <method
      name = "firstChannel"
