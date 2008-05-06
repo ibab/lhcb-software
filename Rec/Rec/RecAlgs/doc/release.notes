@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-05-06 M Needham
+ - Remove obsolete STSummaryCreator class
+
 !========================== RecAlgs v1r5 2007-12-11 ==========================
 ! 2007-12-11 - Marco Cattaneo
  - In RecInit.cpp, raise AbortEvent incident if ODIN is missing. Allows to skip
