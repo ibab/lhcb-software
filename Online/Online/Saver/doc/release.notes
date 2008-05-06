@@ -1,6 +1,8 @@
 ! Package     : Saver
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20080506 - Juan Otalora. Saver v2r0. Uses MonObjects.
+
 ! 20080107 - Saver v1r3. Change saveset filename format.
 
 ! 20070129 - Markus Frank
