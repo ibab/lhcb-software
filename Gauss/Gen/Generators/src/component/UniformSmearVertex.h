@@ -1,4 +1,4 @@
-// $Id: UniformSmearVertex.h,v 1.1 2007-10-11 11:55:20 gcorti Exp $
+// $Id: UniformSmearVertex.h,v 1.2 2008-05-06 08:21:00 gcorti Exp $
 #ifndef GENERATORS_UNIFORMSMEARVERTEX_H 
 #define GENERATORS_UNIFORMSMEARVERTEX_H 1
 
@@ -53,6 +53,11 @@ class UniformSmearVertex : public GaudiTool,
 
   /// Difference between m_zmax and m_zmin (set at initialisation)
   double m_deltaz ;
+
+  /// Direction of the beam to take into account TOF vs nominal IP8, can have
+  /// only values -1 or 1, or 0 to switch off the TOF and set time of 
+  /// interaction to zero (default = 1, as for beam 1)
+  int m_zDir;
 
   Rndm::Numbers m_flatDist ; ///< Flat random number generator
 };

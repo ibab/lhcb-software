@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.h,v 1.3 2005-12-31 17:32:01 robbep Exp $
+// $Id: FlatZSmearVertex.h,v 1.4 2008-05-06 08:20:52 gcorti Exp $
 #ifndef GENERATORS_FLATZSMEARVERTEX_H 
 #define GENERATORS_FLATZSMEARVERTEX_H 1
 
@@ -54,6 +54,11 @@ class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
   
   /// Maximum value for the z coordinate of the vertex (set by options)
   double m_zmax   ;
+
+  /// Direction of the beam to take into account TOF vs nominal IP8, can have
+  /// only values -1 or 1, or 0 to switch off the TOF and set time of 
+  /// interaction to zero (default = 1, as for beam 1)
+  int m_zDir;
 
   Rndm::Numbers m_gaussDist ; ///< Gaussian random number generator
 

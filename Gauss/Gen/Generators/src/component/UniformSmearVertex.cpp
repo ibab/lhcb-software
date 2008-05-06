@@ -1,4 +1,4 @@
-// $Id: UniformSmearVertex.cpp,v 1.2 2008-04-28 17:40:24 gcorti Exp $
+// $Id: UniformSmearVertex.cpp,v 1.3 2008-05-06 08:21:03 gcorti Exp $
 // Include files 
 
 // local
@@ -38,6 +38,8 @@ UniformSmearVertex::UniformSmearVertex( const std::string& type,
     declareProperty( "RMax"   , m_rmax   =     1. * Gaudi::Units::mm ) ;
     declareProperty( "ZMin"   , m_zmin   = -1500. * Gaudi::Units::mm ) ;
     declareProperty( "ZMax"   , m_zmax   =  1500. * Gaudi::Units::mm ) ;
+    declareProperty( "BeamDirection", m_zDir = 1 );
+
 }
 
 //=============================================================================
@@ -62,8 +64,20 @@ StatusCode UniformSmearVertex::initialize( ) {
   if ( ! sc.isSuccess() ) 
     return Error( "Could not initialize flat random number generator" ) ;
 
+  std::string infoMsg = " applying TOF of interaction with ";
+  if ( m_zDir == -1 ) {
+    infoMsg = infoMsg + "negative beam direction";
+  } else if ( m_zDir == 1 ) {
+    infoMsg = infoMsg + "positive beam direction";
+  } else if ( m_zDir == 0 ) {
+    infoMsg = " with TOF of interaction equal to zero ";
+  } else {
+    return Error("BeamDirection can only be set to -1 or 1, or 0 to switch off TOF");
+  }
+
   info() << "Smearing of interaction point with flat distribution "
          << " in x, y and z " << endmsg;
+  info() << infoMsg << endmsg;
   if( msgLevel(MSG::DEBUG) ) {
     debug() << " with r less than " << m_rmax / Gaudi::Units::mm 
             << " mm." << endmsg ;
@@ -93,7 +107,7 @@ StatusCode UniformSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   r   = sqrt(rsq) ;
   dx  = r*cos(th) ;  
   dy  = r*sin(th) ;
-  dt  = dz/Gaudi::Units::c_light ;
+  dt  = m_zDir * dz/Gaudi::Units::c_light ;
   Gaudi::LorentzVector dpos( dx , dy , dz , dt ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
