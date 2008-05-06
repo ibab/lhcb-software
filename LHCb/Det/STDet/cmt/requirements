@@ -4,6 +4,7 @@ version v4r0
 branches cmt doc src STDet dict
 
 use DetDescCnv	v* Det
+use DetDesc     v* Det
 use LHCbKernel	v* Kernel
 use Boost       v* LCG_Interfaces
 

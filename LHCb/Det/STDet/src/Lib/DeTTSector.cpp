@@ -2,6 +2,7 @@
 #include "STDet/DeTTHalfModule.h"
 #include "STDet/DeTTSensor.h"
 #include "STDet/DeSTSensor.h"
+#include "STDet/STDetFun.h"
 
 /** @file DeTTSector.cpp
 *
@@ -80,6 +81,7 @@ StatusCode DeTTSector::initialize() {
     setElementID(chan);
 
     std::vector<DeTTSensor*> sensors = getChildren<DeTTSector>();
+    std::sort(sensors.begin(),sensors.end(),STDetFun::SortByY());
     std::vector<DeTTSensor*>::iterator iterS = sensors.begin();  
     for(; iterS != sensors.end(); ++iterS){
       m_sensors.push_back(*iterS);
@@ -94,6 +96,7 @@ StatusCode DeTTSector::initialize() {
     cacheInfo();
 
   }
+
   return StatusCode::SUCCESS;
 }
 

@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.36 2008-04-09 09:49:10 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.37 2008-05-06 09:57:52 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -141,16 +141,34 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::trajectoryLastStrip() const
 std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip, 
                                                       const double offset) const{
  
-  STTraj* traj = new STTraj(); 
-
   // collect the individual traj
   const Sensors& theSensors = sensors();
   Sensors::const_iterator iterS = theSensors.begin();
-  for (; iterS != theSensors.end(); ++iterS) {
-    std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip, offset);
-    traj->append(sensTraj.release()); 
-  }   
-  return std::auto_ptr<LHCb::Trajectory>(traj);
+
+  if (theSensors.size() == 1){
+    // can just return a line traj
+    return theSensors.front()->trajectory(strip,offset);  
+  }
+  else {
+    // return a piecewise traj
+    STTraj* traj = new STTraj(); 
+    for (; iterS != theSensors.end(); ++iterS) {                
+      std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);                                                                       
+      if (traj->numberOfPieces() != 0) {                                                                    
+         // double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
+         //double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
+         //     if (d1 < d2) {                                                     
+        double mu = sensTraj->muEstimate(traj->endPoint());        
+        sensTraj->setRange(mu,sensTraj->endRange());              
+      } 
+      traj->append(sensTraj.release());          
+ 	//} else {                                                           
+	//  double mu = sensTraj->muEstimate(traj->beginPoint());      
+	//	sensTraj->setRange(sensTraj->beginRange(),mu);             
+	//traj->prepend(sensTraj.release());                        
+    } // loop
+    return std::auto_ptr<LHCb::Trajectory>(traj);
+  } // if 
 }
 
 StatusCode DeSTSector::cacheInfo()
@@ -307,7 +325,7 @@ bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point,
                                         double tol) const
 { 
   const DeSTSensor* aSensor =  findSensor(point);
-  return (aSensor ?  aSensor->globalInBondGap(point) : false ); 
+  return (aSensor ?  aSensor->globalInBondGap(point, tol) : false ); 
 };
 
 

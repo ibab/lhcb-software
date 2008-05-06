@@ -2,6 +2,7 @@
 #include "STDet/DeITSensor.h"
 #include "STDet/DeSTSensor.h"
 #include "STDet/DeITLadder.h"
+#include "STDet/STDetFun.h"
 
 /** @file DeITSector.cpp
 *
@@ -51,6 +52,7 @@ StatusCode DeITSector::initialize() {
     setID(parentID.sector());
     
     std::vector<DeITSensor*> sensors = getChildren<DeITSector>();
+    std::sort(sensors.begin(),sensors.end(),STDetFun::SortByY());
     std::vector<DeITSensor*>::iterator iterS = sensors.begin();  
     for(; iterS != sensors.end(); ++iterS){
       m_sensors.push_back(*iterS);
