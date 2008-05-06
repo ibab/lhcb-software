@@ -12,8 +12,8 @@ use GaudiObjDesc         v11r2
 
 #                                         Maintainer
 # Kernel packages
-use KernelSys             v7r3p1  Kernel  # Marco Cattaneo
-use LHCbKernel            v8r3    Kernel  # Marco Cattaneo
+use KernelSys             v7r4  Kernel  # Marco Cattaneo
+use LHCbKernel            v8r4    Kernel  # Marco Cattaneo
 use LHCbMath              v2r7p1  Kernel  # Juan Palacios
 use CaloKernel            v5r1    Calo    # Olivier Deschamps
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
@@ -74,13 +74,13 @@ use DaVinciMCKernel       v2r7   Phys    # Juan Palacios
 use LHCbAlgs              v2r17  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
-use LoKiAlgo              v7r2p1 Phys    # Ivan Belyaev
+use LoKiAlgo              v7r4   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v7r0   Phys    # Ivan Belyaev
-use LoKiArrayFunctors     v7r2   Phys    # Ivan Belyaev
+use LoKiArrayFunctors     v7r3   Phys    # Ivan Belyaev
 use LoKiCore              v7r2   Phys    # Ivan Belyaev
-use LoKiGen               v7r2   Phys    # Ivan Belyaev
+use LoKiGen               v7r3   Phys    # Ivan Belyaev
 use LoKiGenMC             v7r0   Phys    # Ivan Belyaev
-use LoKiMC                v7r2   Phys    # Ivan Belyaev
+use LoKiMC                v7r3   Phys    # Ivan Belyaev
 use LoKiNumbers           v7r3   Phys    # Ivan Belyaev
 use LoKiPhys              v7r3   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r0   Phys    # Ivan Belyaev
@@ -95,7 +95,7 @@ use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r3   ST      # Matt Needham
 use Tell1Kernel           v1r3   DAQ     # Tomasz Szumlak
 use TfKernel              v2r4   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v3r13  Tr      # Matt Needham
+use TrackInterfaces       v3r14  Tr      # Matt Needham
 use TsaKernel             v3r2   Tf      # Matt Needham
 
 # LHCb  Examples

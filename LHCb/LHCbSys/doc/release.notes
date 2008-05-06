@@ -5,16 +5,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r6>2008-04-30 LHCbSys v23r6</A></H1><PRE>
+</PRE><H1><A NAME=v23r6>2008-05-05 LHCbSys v23r6</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 
-- Packages modified: KernelSys v7r3p1, LHCbMath v2r7p1, DetSys v12r0, DDDB v1r6,
-    STDet v4r0, EventSys v24r3, VeloEvent v16r4, DAQSys v3r9p1, CaloDAQ v4r4p1,
-    MuonDAQ v4r0p1, DaVinciKernel v6r13, LHCbAlgs v2r17, LoKiAlgo v7r2p1,
-    LoKiPhys v7r3, MDF v3r7, Tell1Kernel v1r3
+- Packages modified: KernelSys v7r4, LHCbKernel v8r4, LHCbMath v2r7p1,
+    DetSys v12r0, DDDB v1r6, STDet v4r0, EventSys v24r3, VeloEvent v16r4,
+    DAQSys v3r9p1, CaloDAQ v4r4p1, MuonDAQ v4r0p1, DaVinciKernel v6r13,
+    LHCbAlgs v2r17, LoKiAlgo v7r4, LoKiArrayFunctors v7r3, LoKiGen v7r3,
+    LoKiMC v7r3, LoKiPhys v7r3, MDF v3r7, Tell1Kernel v1r3, TrackInterfaces v3r14
 
-- In LHCBMath v2r7p1
-  . Fix LaTeX inside DoxyGen comments 
+- In LHCbKernel v8r4
+  . Add 'numberOfPieces' and 'print' to PiecewiseTrajectory
+  . Add Kernel/Decay.h, src/Decay.cpp, moved from DaVinciKernel, to represent
+    one-step decay 
 
 - In DDDB v1r6
   . Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080427, for use
@@ -45,29 +48,52 @@ This version uses Gaudi v19r9 and LCG_54e.
 - In MuonDAQ v4r0p1
   . Remove two obsolete lines causing a crash on Windows
 
+- In DaVinciKernel v6r13
+  . Move DaVinci::Decay into LHCbKernel package (and rename it to LHCb::Decay) 
+  . IPhysDesktop: remove save() method
+  . ProtoParticleFilterBase.cpp : reduce verbosity
+
 - In LHCbAlgs v2r17
   . Add rate prescaling based on run#, event#, gpsTime and algorithm instance
     name to DeterministicPrescaler
   . Add some comments to FilterByRunEvent pointing out that event# is NOT a 
     32 bit number -- fixing this properly requires adding a new property type.
 
-- In DaVinciKernel v6r13
-  . IPhysDesktop: remove save() method
-  . ProtoParticleFilterBase.cpp : reduce verbosity
-
-- In LoKiAlgo v7r2p1
+- In LoKiAlgo v7r2p1, v7r3, v7r4
+  . Follow change of DaVinci::Decay into LHCb::Decay 
+  . In LoKi/ExtCalls.h: fix the missing "__rshift__"
   . Follow change in IPhysDesktop interface
-  . Fix doxygen warnings
+
+- In LoKiAlgo v7r4, LoKiArrayFunctors v7r3, LoKiPhys v7r3
+  . Remove all occurences of IGeomDispCalculator and substitute them with 
+    IDistanceCalculator 
+
+- In LoKiGen v7r3
+  . LoKi/GenSections.h, src/GenSections.cpp
+    new files with functions which produce "sections" for the decay trees.
+  . In GenChild: Add "daughters" to the list of the available functions         
+
+- In LoKiMC v7r3
+  . LoKi/MCSections.h, src/MCSections.cpp: 
+    Add functions to produce "sections" for the decay trees 
+  . in MCChild:    Add "daughters" 
 
 - In LoKiPhys v7r3
+  . LoKi/Sections.h, src/Sections.cpp: Add "sections" for the decay trees 
   . fix a stupid bug with ISLONG/ISDOWN/IS<XXX> functors
 
 - In MDF v3r7
-  . Fix a doxygen comment and a duplicated function definition
+  . Fix a duplicated function definition
   . Fix initialization of MEPWriter, which got broken in v3r6.Used for tests only
 
 - In Tell1Kernel v1r3
   . Add stuff that helps to run Vetra (Velo part) with condition DB
+
+- In TrackInterfaces v3r14
+  . Added IHltV0Upgrade.h
+
+- In LHCbMath v2r7p1, LoKiAlgo v7r2p1, LoKiGen v7r3, LoKiMC v7r3, MDF v3r7
+  . Fix some doxygen comments
 
 </PRE><H1><A NAME=v23r5>2008-04-22 LHCbSys v23r5</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
