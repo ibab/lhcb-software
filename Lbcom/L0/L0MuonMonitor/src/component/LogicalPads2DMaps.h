@@ -1,4 +1,4 @@
-// $Id: LogicalPads2DMaps.h,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: LogicalPads2DMaps.h,v 1.2 2008-05-06 12:19:27 jucogan Exp $
 #ifndef COMPONENT_LOGICALPADS2DMAPS_H 
 #define COMPONENT_LOGICALPADS2DMAPS_H 1
 
@@ -30,7 +30,7 @@ public:
 
   void bookHistos();
   void bookHistos(int station);
-  void fillHistos(const std::vector<LHCb::MuonTileID> &pads);
+  void fillHistos(const std::vector<LHCb::MuonTileID> &pads, int ts=0);
   
   enum stations{M1=0,M2,M3,M4,M5,NStations};
   
@@ -40,6 +40,9 @@ protected:
 private:
 
   AIDA::IHistogram2D * m_hmap[5];
+  AIDA::IHistogram2D * m_hmultiBx[5];
+  AIDA::IHistogram2D * m_hmultiBx_region[5][4];
+
   MuonLayout m_stationLayouts[5];
 
 };

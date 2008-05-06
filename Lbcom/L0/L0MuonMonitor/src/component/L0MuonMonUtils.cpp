@@ -1,4 +1,4 @@
-// $Id: L0MuonMonUtils.cpp,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonMonUtils.cpp,v 1.2 2008-05-06 12:19:27 jucogan Exp $
 // Include files 
 
 
@@ -29,6 +29,19 @@ void L0MuonMonUtils::makePads(std::vector<LHCb::MuonTileID>& strips,std::vector<
   }
 
 }
+
+void L0MuonMonUtils::filterTilesWithStation(std::vector<LHCb::MuonTileID>& original,
+                                            std::vector<LHCb::MuonTileID>& filtered, int station)
+{
+  filtered.clear();
+  
+  std::vector<LHCb::MuonTileID>::iterator it;
+  for (it=original.begin();it<original.end();++it){
+    if (it->station()==station) filtered.push_back(*it);
+  }
+
+}
+
 
 void L0MuonMonUtils::flipCoord(int &x, int&y, const int qua)
 {

@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.3 2008-04-15 09:47:37 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.4 2008-05-06 12:19:27 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -8,6 +8,7 @@
 
 // from Event
 #include "Event/ODIN.h"
+#include "Event/RawEvent.h"
 #include "Event/L0MuonData.h"
 #include "Event/L0MuonCandidate.h"
 #include "Event/L0MuonInfo.h"
@@ -122,13 +123,19 @@ StatusCode L0MuonOnlineMonitor::execute() {
   
   debug() << "==> Execute" << endmsg;
 
+  setProperty("RootInTes",L0MuonMonUtils::timeSlot(0));
+  if (excludedBx()) return StatusCode::SUCCESS;
+  if (!exclusiveBx()) return StatusCode::SUCCESS;
+  if (!selectedTrigger()) return StatusCode::SUCCESS;
+
   int ncand=0;
   int npad[L0MuonMonUtils::NStations]; for (int i=0; i<L0MuonMonUtils::NStations; ++i) npad[i]=0;
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+
     setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
-    //     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
+    if (!exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) continue;
     
     std::string location;
     std::string name;
@@ -166,42 +173,20 @@ StatusCode L0MuonOnlineMonitor::execute() {
       }// End of loop over proc errors
     } // End if container found in TES
     
-    
     // Get L0Muon Hits
     std::vector<LHCb::MuonTileID> l0muontiles;
-    location = LHCb::L0MuonDataLocation::Default ;
-    if (  exist<LHCb::L0MuonDatas>(location ) ) {
-      LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
-      LHCb::L0MuonDatas::const_iterator itdata;
-      for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
-        LHCb::MuonTileID mkey = (*itdata)->key();    
-        std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
-        if (ols.size()>0) {
-          for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
-            if (!itol->isValid()){
-              info()<<"PU "<<mkey.toString()<<" tile is not valid"<<endreq;
-            }
-
-            if (!quarterInUse(itol->quarter())) continue;
-            if (!stationInUse(itol->station())) continue;
-            if (!regionInUse(itol->region())  ) continue;
-            
-            l0muontiles.push_back(*itol);
-          }
-        }
-      }
-    } // End if container found in TES
-    
+    sc = getL0MuonTiles(l0muontiles);
+    if (sc==StatusCode::FAILURE) continue;
 
     // Build logical channels 
     std::vector<LHCb::MuonTileID> l0muonpads;
     L0MuonMonUtils::makePads(l0muontiles,l0muonpads);
 
     // Physical channels histos
-    m_channelHist->fillHistos(l0muontiles);
+    m_channelHist->fillHistos(l0muontiles,*it_ts);
 
     // Logical channels histos
-    m_padsMaps->fillHistos(l0muonpads);
+    m_padsMaps->fillHistos(l0muonpads,*it_ts);
 
     // Multiplicity
     int np[L0MuonMonUtils::NStations]; for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) np[sta]=0;
@@ -215,14 +200,22 @@ StatusCode L0MuonOnlineMonitor::execute() {
     }
     for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) npad[sta]+=np[sta];
 
-
     // Candidates
     location = LHCb::L0MuonCandidateLocation::Default ;
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+      LHCb::L0MuonCandidates::const_iterator itcand;
+      int n=0;
+      for ( itcand= cands->begin(); itcand<cands->end();++itcand) {
+        LHCb::MuonTileID seed = (*itcand)->muonTileIDs(2)[0];
+        if (!quarterInUse(seed.quarter())) continue;
+        if (!regionInUse(seed.region())  ) continue;
+        ++n;
+      }
+      
       AIDA::IHistogram2D *hcand2 = histo2D(std::string("NCands_per_bx"));
-      if (hcand2!=NULL) fill(hcand2,(*it_ts),cands->size(),1.);
-      ncand+=cands->size();
+      if (hcand2!=NULL) fill(hcand2,(*it_ts),n,1.);
+      ncand+=n;
     }
 
     

@@ -9,7 +9,7 @@ S'../../../L0/L0MuonMonitor/slc4_ia32_gcc34/libL0MuonMonitor.so'
 p4
 S'../../../InstallArea/slc4_ia32_gcc34/lib/libL0MuonMonitor.so'
 p5
-sS'../../../../../../../lib/lhcb/GAUDI/GAUDI_v19r8/GaudiPolicy/v8r1/cmt/fragments/__init__.py'
+sS'../../../../../../../../../sw/lib/lhcb/GAUDI/GAUDI_v19r8/GaudiPolicy/v8r1/cmt/fragments/__init__.py'
 p6
 S'../../../InstallArea/python/L0/__init__.py'
 p7

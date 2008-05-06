@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.h,v 1.1 2008-04-16 07:13:44 jucogan Exp $
+// $Id: L0MuonAlgComparison.h,v 1.2 2008-05-06 12:19:27 jucogan Exp $
 #ifndef COMPONENT_L0MUONALGCOMPARISON_H 
 #define COMPONENT_L0MUONALGCOMPARISON_H 1
 
@@ -6,17 +6,18 @@
 
 
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
 
 #include "Event/L0MuonCandidate.h"
+
+#include "L0MuonMonitorBase.h"
 
 /** @class L0MuonAlgComparison L0MuonAlgComparison.h component/L0MuonAlgComparison.h
  *  
  *
- *  @author 
+ *  @author Julien Cogan
  *  @date   2008-04-08
  */
-class L0MuonAlgComparison : public GaudiHistoAlg {
+class L0MuonAlgComparison : public L0MuonMonitorBase {
 public: 
   /// Standard constructor
   L0MuonAlgComparison( const std::string& name, ISvcLocator* pSvcLocator );
@@ -27,14 +28,12 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  enum Counter {FOUND, NOT_FOUND, NCounters};
+  enum Counter {FOUND, NOT_FOUND, ADDITIONAL, PROCESSED, TOTAL, NCounters};
   
 
 protected:
 
 private:
-  
-  std::vector<int> m_quarters;
 
   unsigned int m_counters[NCounters];
   

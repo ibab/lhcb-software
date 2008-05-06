@@ -1,10 +1,11 @@
-// $Id: L0MuonMonitorBase.h,v 1.1 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.2 2008-05-06 12:19:27 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "Kernel/MuonTileID.h"
 
 /** @class L0MuonMonitorBase L0MuonMonitorBase.h component/L0MuonMonitorBase.h
  *  
@@ -25,11 +26,20 @@ public:
 
 protected:
 
+  StatusCode getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0muontiles);
+  bool excludedBx(); //Return true if the current Bx is in the list of exclusion  
+  bool exclusiveBx(); //Return true if the current Bx is in the list of exclusive  
+  bool selectedTrigger();
 
   std::vector<int> m_time_slots;
   std::vector<int> m_stations;
   std::vector<int> m_quarters;
   std::vector<int> m_regions;
+  std::vector<unsigned int> m_excludedBxs;
+  std::vector<unsigned int> m_exclusiveBxs;
+//   std::string m_triggerType;
+  int m_triggerType;
+  
 
   inline bool quarterInUse(int qua) 
   {

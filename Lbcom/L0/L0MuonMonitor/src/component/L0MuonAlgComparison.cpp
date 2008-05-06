@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.1 2008-04-16 07:13:44 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.2 2008-05-06 12:19:27 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -6,7 +6,11 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
+#include "Event/RawEvent.h"
+#include "Event/ODIN.h"
+
 // local
+#include "L0MuonMonUtils.h"
 #include "L0MuonAlgComparison.h"
 
 //-----------------------------------------------------------------------------
@@ -24,13 +28,10 @@ DECLARE_ALGORITHM_FACTORY( L0MuonAlgComparison );
 //=============================================================================
 L0MuonAlgComparison::L0MuonAlgComparison( const std::string& name,
                                           ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : L0MuonMonitorBase ( name , pSvcLocator )
 {
   declareProperty("Extension0"     , m_extension_0 = ""  );
   declareProperty("Extension1"     , m_extension_1 = ""  );
-  std::vector<int> quarters;
-  for (int i=0;i<4;++i) quarters.push_back(i);
-  declareProperty( "Quarters"  , m_quarters = quarters);
 
 }
 //=============================================================================
@@ -42,7 +43,7 @@ L0MuonAlgComparison::~L0MuonAlgComparison() {}
 // Initialization
 //=============================================================================
 StatusCode L0MuonAlgComparison::initialize() {
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
+  StatusCode sc = L0MuonMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
   debug() << "==> Initialize" << endmsg;
@@ -59,11 +60,18 @@ StatusCode L0MuonAlgComparison::execute() {
   
   debug() << "==> Execute" << endmsg;
   StatusCode sc;
+
+  ++m_counters[TOTAL];
+  if (excludedBx()) return StatusCode::SUCCESS;
+  if (!selectedTrigger()) return StatusCode::SUCCESS;
+  ++m_counters[PROCESSED];
+
+  info()<<" Event # : "<<m_counters[TOTAL] << " Processed event #: "<<m_counters[PROCESSED] << endmsg;
   
   sc = compare(LHCb::L0MuonCandidateLocation::Default);
   
-  if( msgLevel(MSG::DEBUG) && sc==StatusCode::FAILURE) {
-    info()<<"*** Dump Candidates ****"<<endmsg;
+  if( msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) {
+    info()<<"*** Dump Candidates **** TIME SLOT=0"<<endmsg;
     info()<<"-- Ctrl :"<<endmsg;
     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_1);
@@ -73,6 +81,20 @@ StatusCode L0MuonAlgComparison::execute() {
     debug()<<"-- PU :"<<endmsg;
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
+
+//     info()<<"*** Dump Candidates **** TIME SLOT=-1"<<endmsg;
+//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(-1));
+//     info()<<"-- Ctrl :"<<endmsg;
+//     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_0);
+//     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_1);
+//     debug()<<"-- BCSU :"<<endmsg;
+//     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_0);
+//     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_1);
+//     debug()<<"-- PU :"<<endmsg;
+//     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
+//     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
+//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(0));
+
   }
 
   return StatusCode::SUCCESS;
@@ -85,10 +107,12 @@ StatusCode L0MuonAlgComparison::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  info()<<"Number of candidates     found by the emulator "<<m_counters[FOUND]    << endmsg;
-  info()<<"Number of candidates NOT found by the emulator "<<m_counters[NOT_FOUND]<< endmsg;
+  info()<<"Number of events processed :  "<<m_counters[PROCESSED]    << endmsg;
+  info()<<"Number of candidates      found by the emulator "<<m_counters[FOUND]    << endmsg;
+  info()<<"Number of candidates NOT  found by the emulator "<<m_counters[NOT_FOUND]<< endmsg;
+  info()<<"Number of candidates ONLY found by the emulator "<<m_counters[ADDITIONAL]<< endmsg;
 
-  return GaudiHistoAlg::finalize();  // must be called after all other actions
+  return L0MuonMonitorBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -120,9 +144,26 @@ StatusCode L0MuonAlgComparison::compare(std::string location)
     if (!found) {
       ++m_counters[NOT_FOUND];
       sc = StatusCode::FAILURE;
-      debug()<<"Candidate not found "<<endmsg;
+      info()<<"Candidate not found in 2nd processing ... evt # "<<m_counters[TOTAL]<<endmsg;
     } else {
       ++m_counters[FOUND];
+      debug()<<"Candidate found !!! "<<endmsg;
+    }
+  }
+
+  for ( it1= cands1->begin(); it1<cands1->end();++it1) {
+    bool found=false;
+    for ( it0= cands0->begin(); it0<cands0->end();++it0) {
+      if (**it1==**it0) {
+        found=true;
+        break;
+      } 
+    }
+    if (!found) {
+      ++m_counters[ADDITIONAL];
+      sc = StatusCode::FAILURE;
+      info()<<"Candidate not found in 1st processing ... evt # "<<m_counters[TOTAL]<<endmsg;
+    } else {
       debug()<<"Candidate found !!! "<<endmsg;
     }
   }
@@ -135,13 +176,10 @@ LHCb::L0MuonCandidates* L0MuonAlgComparison::filterCand(LHCb::L0MuonCandidates* 
   LHCb::L0MuonCandidates* filtered = new LHCb::L0MuonCandidates();
   for (LHCb::L0MuonCandidates::const_iterator it=originals->begin(); it<originals->end();++it) {  
     std::vector<LHCb::MuonTileID> mids=(*it)->muonTileIDs(2);
-    for (std::vector<int>::iterator itq=m_quarters.begin();itq<m_quarters.end(); ++itq) {
-      if (mids[0].quarter()==(*itq) ) {
-        filtered->insert(*it);
-        break;
-      }
-    }
+    int qua=mids[0].quarter();
+    if (quarterInUse(qua)) filtered->insert(*it);
   }
+    
   return filtered;
 }
 

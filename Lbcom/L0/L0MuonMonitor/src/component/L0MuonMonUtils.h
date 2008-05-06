@@ -1,4 +1,4 @@
-// $Id: L0MuonMonUtils.h,v 1.2 2008-04-15 09:47:37 jucogan Exp $
+// $Id: L0MuonMonUtils.h,v 1.3 2008-05-06 12:19:27 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONUTILS_H 
 #define COMPONENT_L0MUONMONUTILS_H 1
 
@@ -14,6 +14,7 @@ namespace L0MuonMonUtils
   enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
 
   void makePads(std::vector<LHCb::MuonTileID>& tiles, std::vector<LHCb::MuonTileID>& pads);
+  void filterTilesWithStation(std::vector<LHCb::MuonTileID>& original, std::vector<LHCb::MuonTileID>& filtered, int station);
   void flipCoord(int &x, int&y, const int qua);
   std::string channelTypeName(Channel_type e);
   std::string quarterName(int qua);

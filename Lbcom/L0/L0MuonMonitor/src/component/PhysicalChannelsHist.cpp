@@ -1,4 +1,4 @@
-// $Id: PhysicalChannelsHist.cpp,v 1.2 2008-04-15 09:47:37 jucogan Exp $
+// $Id: PhysicalChannelsHist.cpp,v 1.3 2008-05-06 12:19:27 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -71,14 +71,17 @@ void PhysicalChannelsHist::bookHistos(int quarter, int region, int station)
     MuonLayout lay = m_channel_layout[type].stationLayout(station).regionLayout(region);
     if (lay.isDefined()){  
       int nbins=lay.xGrid()*lay.yGrid()*3;
-      m_hist[quarter][type][station][region]=book1D(hname,hname,-0.5,nbins-0.5,nbins);
+      AIDA::IHistogram1D * h = book1D(hname,hname,-0.5,nbins-0.5,nbins);
+      m_hist[quarter][type][station][region]= h;
       if (m_2D) {
         int xbins=2*lay.xGrid();
         int ybins=2*lay.yGrid();
-        m_hist2D[quarter][type][station][region]=book2D(hname+"2D",hname+"2D",-0.5,xbins-0.5,xbins,-0.5,ybins-0.5,ybins);
+        AIDA::IHistogram2D * h2D = book2D(hname+"2D",hname+"2D",-0.5,xbins-0.5,xbins,-0.5,ybins-0.5,ybins);
+        m_hist2D[quarter][type][station][region]= h2D;
       }
       if (m_BX){
-        m_histBX[quarter][type][station][region]=book2D(hname+"-VS-BX",hname+"-VS-BX",-0.5,nbins-0.5,nbins,-7.5,7.5,15);
+        AIDA::IHistogram2D * hBX = book2D(hname+"-VS-BX",hname+"-VS-BX",-0.5,nbins-0.5,nbins,-7.5,7.5,15);
+        m_histBX[quarter][type][station][region]= hBX;
       }
     }
   }
