@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.4 2007-11-16 16:43:36 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.5 2008-05-06 14:40:39 mneedham Exp $
 
 #include <algorithm>
 
@@ -10,6 +10,7 @@
 #include "Event/RawEvent.h"
 #include "Event/ByteStream.h"
 #include "Event/STCluster.h"
+#include "Event/STSummary.h"
 #include "Kernel/STDataFunctor.h"
 
 #include "Kernel/ISTReadoutTool.h"
@@ -41,6 +42,7 @@ GaudiAlgorithm (name , pSvcLocator){
  // Standard constructor, initializes variables
  declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");     
  declareProperty("detType", m_detType = "TT" );
+ declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
 }
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {
@@ -56,6 +58,7 @@ StatusCode STDecodingBaseAlg::initialize() {
   }
 
   STDetSwitch::flip(m_detType,m_readoutToolName);
+  STDetSwitch::flip(m_detType,m_summaryLocation);
   
   // readout tool
   m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
@@ -66,8 +69,14 @@ StatusCode STDecodingBaseAlg::initialize() {
   // tracker
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
+
   return StatusCode::SUCCESS;
 }
     
 
+void STDecodingBaseAlg::createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
+                                           const bool pcnsync, const std::vector<unsigned int>& bankList) const{
 
+  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList);   
+  put(sum, m_summaryLocation);
+}

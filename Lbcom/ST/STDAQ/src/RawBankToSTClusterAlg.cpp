@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.18 2008-01-08 10:22:29 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.19 2008-05-06 14:40:39 mneedham Exp $
 
 #include <algorithm>
 
@@ -44,6 +44,7 @@ STDecodingBaseAlg (name , pSvcLocator){
  // Standard constructor, initializes variables
   declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
   declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
+  declareProperty("createSummary", m_createSummary = true);
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -93,7 +94,10 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
                                               STClusters* clusCont ) const{
 
   // create Clusters from this type 
- 
+  unsigned int pcn = STDAQ::inValidPcn; // not allowed
+  bool pcnSync = true;
+  std::vector<unsigned int> bankList;
+
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
   std::vector<RawBank* >::const_iterator iterBank;
   // loop over the banks of this type..
@@ -107,10 +111,21 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     unsigned int version = (*iterBank)->version();
     
     if (decoder.hasError() == true){
-      warning() << "bank has errors - skip event" << endmsg;
-      return StatusCode::FAILURE;
+      if (m_createSummary) bankList.push_back((*iterBank)->sourceID());
+      Warning("bank has errors - skip bank", StatusCode::SUCCESS);
+      //return StatusCode::FAILURE;
     }
-  
+
+    if (m_createSummary){
+      unsigned bankpcn = decoder.header().pcn();
+      if (pcn == STDAQ::inValidPcn){
+        pcn = bankpcn;
+      }
+      else {
+        if (pcn != bankpcn) pcnSync = false; 
+      }
+    }
+
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
     for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
@@ -123,12 +138,17 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     
 
     if (iterDecoder.bytesRead() != ((*iterBank)->size())){
-      warning() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
+      debug() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
-      return StatusCode::FAILURE;
+      Warning("Inconsistant byte count", StatusCode::SUCCESS);
+      // return StatusCode::FAILURE;
     }
   } // iterBank
    
+  if (m_createSummary) {
+    createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList);
+  }
+
   return StatusCode::SUCCESS;
 
 }
@@ -184,7 +204,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 
                                                                nearestChan,
                                                                fracStrip),
-                                        adcs,neighbour);
+                                        adcs,neighbour, aBoard->boardID().id());
 
   // add to container
   clusCont->insert(newCluster,nearestChan);

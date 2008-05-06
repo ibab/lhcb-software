@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.4 2008-02-14 10:02:24 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.5 2008-05-06 14:40:39 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -113,7 +113,7 @@ double STReadoutTool::interStripToDAQ(const STChannelID aOfflineChan,
   double newisf = 0;
   
   if(aBoard->isInside(aOfflineChan,waferIndex)){
-    unsigned int orientation = aBoard->m_orientation[waferIndex];
+    unsigned int orientation = aBoard->orientation()[waferIndex];
     if(orientation == 0 && isf > 0.01){
       newisf = 1 - isf;
     } else {
@@ -135,7 +135,7 @@ bool STReadoutTool::ADCOfflineToDAQ(const STChannelID aOfflineChan,
   STTell1Board* aBoard = this->findByBoardID(aBoardID);
     
   if( aBoard->isInside(aOfflineChan,waferIndex) ) {
-    unsigned int orientation = aBoard->m_orientation[waferIndex];
+    unsigned int orientation = aBoard->orientation()[waferIndex];
     if( orientation == 0 ){
       STCluster::ADCVector adcsflip = adcs;
       for (unsigned int i = 0; i < adcs.size(); ++i) {

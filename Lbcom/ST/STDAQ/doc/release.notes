@@ -4,6 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-06-06 M Needham
+ - Add creation of summary block in decoding
+ - Improve error handling/reporting in decoding
+ - Follow addition of source id to cluster class
+ - Follow clean up in STKernel
+
 !=============================== STDAQ v3r5 2008-02-14 =======================
 ! 2008-02-14 M Needham
  - Add functionality of readout tool to give list of board IDs

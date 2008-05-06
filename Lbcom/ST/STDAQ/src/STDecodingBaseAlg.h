@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.2 2007-11-16 16:43:36 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.3 2008-05-06 14:40:39 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -50,10 +50,16 @@ protected:
 
  std::string detType() const;
 
+ void createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
+                         const bool pcnsync, const std::vector<unsigned int>& bankList) const;
+
+ bool m_createSummary;
+ 
 private:
 
   /// bank type
   std::string m_detType;
+  std::string m_summaryLocation;
   LHCb::RawBank::BankType m_bankType;
   std::string m_readoutToolName;
   ISTReadoutTool* m_readoutTool;
