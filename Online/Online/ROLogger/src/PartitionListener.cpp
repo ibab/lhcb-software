@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.3 2008-04-30 18:58:51 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.4 2008-05-06 16:29:38 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.3 2008-04-30 18:58:51 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.4 2008-05-06 16:29:38 frankm Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -38,15 +38,11 @@ using namespace ROLogger;
 /// Standard constructor with object setup through parameters
 PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent)
 {
-  std::string info, name=nam;
-  size_t idx = name.find(":");
-  if ( idx != std::string::npos ) name[idx] = '/';
-  if ( name[0] != '/' ) info = "/";
-  info += name + "_RunInfo";
-  name = info + ".HLTFarm.subFarms";
+  std::string name;
+  name = "RunInfo/" + nam + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
   ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
-  name = info + ".HLTFarm.nodeList";
+  name = "RunInfo/" + nam + "/HLTnodeList";
   m_nodesDP   = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,nodeHandler,(long)this,0,0);
   ::upic_write_message2("Nodelist content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
 }
