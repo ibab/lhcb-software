@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v4r1>2008-05-06 Moore v4r1</A></H1><PRE>
+ - Based on Hlt v3r2 and Online v4r8. Separation of Hlt1 and Hlt2.
+
 </PRE><H1><A NAME=v4r0>2008-03-26 Moore v4r0</A></H1><PRE>
  - Based on Hlt v3r1 with LoKi::Hybrid and big alleys cleanup. Depends on Online v4r7.
 
