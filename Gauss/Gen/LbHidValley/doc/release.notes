@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2007-03-07 19:14:00 gcorti Exp $ 
+! $Id: release.notes,v 1.8 2008-05-06 14:54:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -18,6 +18,17 @@
 !  program will gradually correct these issues."
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-05-06 - Vanya BELYAEV
+ 
+- clear *_load* and *_dll* files.
+
+- cmt/requirement 
+
+    uncoment the component library 
+
+    version increment to v2r1 
+ 
 
 !========================= LbHidValley v2r0 2007-03-07 ========================
 ! 2007-03-07 - Gloria CORTI
