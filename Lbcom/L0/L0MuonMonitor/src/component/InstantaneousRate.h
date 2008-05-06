@@ -1,4 +1,4 @@
-// $Id: InstantaneousRate.h,v 1.1 2008-05-06 12:18:20 jucogan Exp $
+// $Id: InstantaneousRate.h,v 1.2 2008-05-06 12:32:17 jucogan Exp $
 #ifndef COMPONENT_INSTANTANEOUSRATE_H 
 #define COMPONENT_INSTANTANEOUSRATE_H 1
 
@@ -32,7 +32,8 @@ public:
 
   double rate();
   int bunchId();
-  int deltaT()
+  int deltaT();
+  
 protected:
 
 private:
