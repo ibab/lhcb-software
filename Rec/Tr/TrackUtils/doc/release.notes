@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== TrackUtils v1r19 2008-04-22 ======================
+! 2008-05-05 - Adrian Perieanu
+ - Update of TrackEventCloneKiller for speed and lower clone rate
+
 ! 2008-04-22 - Marco Cattaneo
  - Fix TrackRemoveDoubleHits to compile on Windows (using abs on unsigned int)
 
