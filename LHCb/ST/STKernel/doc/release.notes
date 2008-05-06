@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.13 2008-05-06 11:56:03 mneedham Exp $
+! $Id: release.notes,v 1.14 2008-05-06 15:38:55 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r4 2008-05-05 ============================
 ! 2008-05-05 M Needham
  - Add invalid pcn constant
- - cleanup STTell1Board [orienetation data member was public]
+ - cleanup STTell1Board [orientation data member was public]
 
 !====================== STKernel v1r3 2008-04-03 ============================
 ! 2008-04-03 - Marco Cattaneo
