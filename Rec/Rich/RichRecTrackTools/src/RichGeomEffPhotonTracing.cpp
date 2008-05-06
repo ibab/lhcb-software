@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::GeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.2 2008-01-25 13:46:14 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -60,7 +60,7 @@ StatusCode GeomEffPhotonTracing::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
   if ( m_hpdCheck )
   {
-    m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+    m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
              StatusCode::SUCCESS );
   }

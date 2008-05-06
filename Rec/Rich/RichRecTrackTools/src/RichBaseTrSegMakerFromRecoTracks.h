@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::BaseTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBaseTrSegMakerFromRecoTracks.h,v 1.1 2007-12-11 14:17:42 jonrob Exp $
+ *  $Id: RichBaseTrSegMakerFromRecoTracks.h,v 1.2 2008-05-06 19:15:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -80,8 +80,8 @@ namespace Rich
         if ( !m_deBeam[rich] )
         {
           m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
-                                                   DeRichBeamPipeLocation::Rich1BeamPipe :
-                                                   DeRichBeamPipeLocation::Rich2BeamPipe );
+                                                   DeRichLocations::Rich1BeamPipe :
+                                                   DeRichLocations::Rich2BeamPipe );
         }
         return m_deBeam[rich];
       }

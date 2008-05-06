@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::FastTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
+ * $Id: RichFastTrSegMakerFromRecoTracks.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 23/08/2004
@@ -128,7 +128,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
-    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
   }
 
   // Make temporary Rich1Gas description
@@ -139,7 +139,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
-    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
   }
 
   // Make temporary Rich2Gas description
@@ -150,7 +150,7 @@ StatusCode FastTrSegMakerFromRecoTracks::initialize()
     m_rads.push_back(rad);
     m_entryPlanes[rad] = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_entryZ[rad]) );
     m_exitPlanes[rad]  = Gaudi::Plane3D( tmpNorm, Gaudi::XYZPoint(0,0,m_exitZ[rad]) );
-    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
+    m_deRads[rad]      = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
   }
 
   // Define the segment type

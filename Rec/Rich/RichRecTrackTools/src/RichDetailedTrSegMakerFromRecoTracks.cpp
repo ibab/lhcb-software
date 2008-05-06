@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.2 2007-12-11 14:17:42 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -64,9 +64,10 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   declareProperty( "NominalStateZ", m_nomZstates );
 
   // tolerances on z positions
+  // old
   m_zTolerance[Rich::Aerogel]  =  800*Gaudi::Units::mm;
-  m_zTolerance[Rich::Rich1Gas] =  800*Gaudi::Units::mm;
-  m_zTolerance[Rich::Rich2Gas] = 2000*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich1Gas] = 2000*Gaudi::Units::mm;
+  m_zTolerance[Rich::Rich2Gas] = 3000*Gaudi::Units::mm;
   declareProperty( "ZTolerances", m_zTolerance );
 
   // sanity checks on state information
@@ -113,13 +114,13 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
   acquireTool( "RichRadiatorTool",        m_radTool      );
 
   // get Detector elements for RICH1 and RICH2
-  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
-  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // get the radiators
-  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
-  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
-  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
   if ( m_extrapFromRef )
   {
@@ -196,10 +197,23 @@ constructSegments( const ContainedObject * obj,
 
     // choose appropriate z start position for initial track states for this radiator
     const double zStart = ( Rich::Rich2Gas == rad ? m_nomZstates[2] : m_nomZstates[0] );
-    // Get the track entry state points
 
+    // Get the track entry state points
     const LHCb::State * entryPStateRaw = &(track->closestState(zStart));
-    if ( !entryPStateRaw || fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) continue;
+    if ( !entryPStateRaw ) { Error( "Problem getting track state" ); continue; }
+
+    // check tolerance
+    if ( fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) 
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "  -> Entry State : Requested z=" << zStart << " found z=" 
+                  << entryPStateRaw->z() << " failed tolerance check dz=" 
+                  << m_zTolerance[rad] << endreq;
+      }
+      continue;
+    }
+
     // check above electron threshold
     if ( m_richPartProp->thresholdMomentum(Rich::Electron,rad) > entryPStateRaw->p() )
     {
@@ -211,10 +225,25 @@ constructSegments( const ContainedObject * obj,
     }
 
     // choose appropriate z end position for initial track states for this radiator
-    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] : m_nomZstates[1] );
+    const double zEnd   = ( Rich::Rich2Gas == rad ? m_nomZstates[3] : 
+                            Rich::Aerogel  == rad ? m_nomZstates[0] : 
+                            m_nomZstates[1] );
+
     // Get the track enrty state points
     const LHCb::State * exitPStateRaw = &(track->closestState(zEnd));
-    if ( !exitPStateRaw || fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] ) continue;
+    if ( !exitPStateRaw ) { Error( "Problem getting track state" ); continue; }
+
+    // check tolerance
+    if ( fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] )
+    {
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << "  -> Exit State  : Requested z=" << zEnd << " found z=" 
+                  << exitPStateRaw->z() << " failed tolerance check dz=" 
+                  << m_zTolerance[rad] << endreq;
+      }
+      continue;
+    }
 
     // Clone entry state
     LHCb::State * entryPState = entryPStateRaw->clone();

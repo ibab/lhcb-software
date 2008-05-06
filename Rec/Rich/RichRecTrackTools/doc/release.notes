@@ -4,6 +4,12 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-05-06 - Chris Jones
+ - Update the state z-tolerances in DetailedTrSegMakerFromRecoTracks to allow
+   running from DSTs (where only the states at the start of each RICH are 
+   stored).
+ - Adapt to the removal of old RichDet object locations.
+
 !======================== RichRecTrackTools v1r3 2008-04-15 ==================
 ! 2008-03-27 - Chris Jones
  - Pre-load beam pipe objects during initialisation of track creator, if 
