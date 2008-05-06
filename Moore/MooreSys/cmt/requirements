@@ -1,13 +1,14 @@
 package MooreSys
-version v4r0
+version v4r1
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore  v4r0    Hlt
+use  Moore  v4r1    Hlt
 
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
