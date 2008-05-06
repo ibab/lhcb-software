@@ -1,8 +1,4 @@
-// $Id: HidValleyProduction.cpp,v 1.1.1.1 2006-10-28 14:06:41 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: HidValleyProduction.cpp,v 1.2 2008-05-06 14:53:44 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -70,28 +66,28 @@ protected:
   {
     PythiaProduction::m_defaultSettings.clear() ;
     /// postpone the PyInit initialization 
-    setProperty ( "PostponePyInit" , "True" ) ;
-  } ;
+    setProperty ( "PostponePyInit" , true ) ;
+  } 
   /// virtual and protected desctructor 
   virtual ~HidValleyProduction() {}
   
 private:
-  // default constructor is disabled 
-  HidValleyProduction () ;
-  // copy constructor is disabled 
-  HidValleyProduction ( const HidValleyProduction& ) ;
-  // assignement operator is disabled 
+  // ==========================================================================
+  /// default constructor is disabled 
+  HidValleyProduction () ; // default constructor is disabled 
+  /// copy constructor is disabled 
+  HidValleyProduction ( const HidValleyProduction& ) ; // no copy
+  /// assignement operator is disabled 
   HidValleyProduction& operator=( const HidValleyProduction& );
+  // ==========================================================================
 private:
+  // ==========================================================================
   typedef std::set<std::string> Stable ;
   Stable m_stable ;
+  // ==========================================================================
 } ;
 // ============================================================================
-/// Declaration of the Tool Factory
-// ============================================================================
-DECLARE_TOOL_FACTORY( HidValleyProduction );
-// ============================================================================
-/// initilize the production tool 
+// initilize the production tool 
 // ============================================================================
 StatusCode HidValleyProduction::initialize() 
 {
@@ -120,9 +116,9 @@ StatusCode HidValleyProduction::initialize()
   Pythia::pydat1().mstu( 150 ) = 0 ;
   
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// generate the event
+// generate the event
 // ============================================================================
 StatusCode HidValleyProduction::generateEvent
 ( HepMC::GenEvent*    theEvent     , 
@@ -155,7 +151,10 @@ StatusCode HidValleyProduction::generateEvent
     if ( log.isActive() ) { theEvent->print ( log.stream() ) ; }
   }
   return sc ;
-} ;
+} 
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( HidValleyProduction )
 // ============================================================================
 
 // ============================================================================

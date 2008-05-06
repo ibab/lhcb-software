@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2007-03-07 19:14:00 gcorti Exp $ 
+# $Id: requirements,v 1.5 2008-05-06 14:53:41 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -26,7 +26,7 @@ library           LbHidValley    Components/*.cpp
 application       HidValley      Main/*.cpp Main/*.F 
 
 # =============== standard patterns ===========================================
-#apply_pattern     component_library library=LbHidValley
+apply_pattern     component_library library=LbHidValley
 apply_pattern     linker_library    library=LbHidValleyLib
 apply_pattern     application_path 
 
