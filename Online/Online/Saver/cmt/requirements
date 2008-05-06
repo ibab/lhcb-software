@@ -1,5 +1,5 @@
 package Saver
-version v1r3
+version v2r0
 
 branches cmt doc src 
 
@@ -14,10 +14,12 @@ use GaudiAud     v*
 use GaudiSvc     v*
 
 
-library Saver ../src/Saver_dll.cpp ../src/Saver_load.cpp ../src/Saver.cpp ../src/Saver.h  ../src/DimInfoHistos.cpp ../src/DimInfoTitle.cpp
+library Saver  ../src/Saver.cpp ../src/Saver.h \
+../src/Misc.cpp ../src/Misc.h \
+../src/DimInfoServerStatus.cpp ../src/DimInfoServerStatus.h
 
 apply_pattern component_library library=Saver
 
 private
-macro_append Saver_shlibflags "-lHist -lGraf -lGraf3d -lGpad  -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
+macro_append Saver_shlibflags "-lGaucho -lHist -lGraf -lGraf3d -lGpad  -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
   WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "
