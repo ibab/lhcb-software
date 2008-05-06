@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.12 2007-02-02 10:10:42 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.13 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,15 +46,9 @@ StatusCode TabulatedRayleighScatter::initialize()
   // Get aerogel radiator
   // for aero, get the "0" file, as the multisolid does not have any properties
   // this whole scheme needs reworking to cope properly with different aerogel tiles.
-  m_aero = getDet<DeRichAerogelRadiator>( DeRichRadiatorLocation::Aerogel+"T0:0" );
+  m_aero = getDet<DeRichAerogelRadiator>( DeRichLocations::Aerogel+"T0:0" );
 
   return sc;
-}
-
-StatusCode TabulatedRayleighScatter::finalize()
-{
-  // Execute base class method
-  return Rich::Rec::ToolBase::finalize();
 }
 
 double

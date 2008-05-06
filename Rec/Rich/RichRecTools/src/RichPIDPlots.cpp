@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.1 2008-04-29 12:52:30 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.2 2008-05-06 15:33:38 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -46,19 +46,17 @@ StatusCode PIDPlots::initialize()
 
 //=============================================================================
 
-void PIDPlots::setTrackSelector( const Rich::Rec::ITrackSelector * selector ) const
-{
-  m_trSelector = selector;
-}
-
 void PIDPlots::plots( const LHCb::RichPID * pid,
-                      const Rich::ParticleIDType reco_hypo,
-                      const Rich::ParticleIDType true_hypo ) const
+                      const Rich::ParticleIDType hypo,
+                      const Configuration & config ) const
 {
   if ( !pid ) { Warning( "Null RichPID pointer passed !" ); return; }
 
+  // track selection
+  if ( !selected(pid->track(),config) ) return;
+
   // Fill 'track' plots
-  this -> plots( pid->track(), reco_hypo, true_hypo );
+  this -> plots( pid->track(), hypo, config );
 
   // Now, plots that require RichPID info ...
 
@@ -77,14 +75,14 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
         std::string title = "DLL("+Rich::text(*i)+"-"+Rich::text(*j)+")";
         const double dll = pid->particleDeltaLL(*i) - pid->particleDeltaLL(*j);
         plot1D( dll,
-                hPath(reco_hypo,true_hypo)+title, title,
+                hPath(hypo)+title, title,
                -100, 100, m_bins );
         
         // # Sigma distributions
         title = "nSigma("+Rich::text(*i)+"-"+Rich::text(*j)+")";
         const double nsigma = pid->nSigmaSeparation(*i,*j);
         plot1D( nsigma,
-                hPath(reco_hypo,true_hypo)+title, title,
+                hPath(hypo)+title, title,
                 -30, 30, m_bins );
 
       }
@@ -95,29 +93,26 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
 }
 
 void PIDPlots::plots( const LHCb::Track * track, 
-                      const Rich::ParticleIDType reco_hypo,
-                      const Rich::ParticleIDType true_hypo ) const
+                      const Rich::ParticleIDType hypo,
+                      const Configuration & config ) const
 {
   if ( !track ) { Warning( "Null Track pointer passed !" ); return; }
 
+  // track selection
+  if ( !selected(track,config) ) return;
+  
   // Rich Histo ID
   const RichHistoID hid;
 
   // Number of each type of hypothesis
-  plot1D( (int)reco_hypo, "nPIDsPerRecoType", "# PIDs per reconstructed hypothesis", -1.5, 5.5, 7 );
-  plot1D( (int)true_hypo, "nPIDsPerTrueType", "# PIDs per 'true' hypothesis",        -1.5, 5.5, 7 );
-
-  // Fill performance table
-  plot2D( (int)reco_hypo, (int)true_hypo, "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
+  plot1D( (int)hypo, "nPIDsPerHypo", "# PIDs per hypothesis", -1.5, 5.5, 7 );
 
   // Track momentum in GeV/c
   const double tkPtot = trackP( track );
 
   // Momentum spectra
-  plot1D( tkPtot, hPath(reco_hypo,true_hypo)+"Ptot",
-          "Ptot : 'True'="+Rich::text(true_hypo)+ " Reco="+Rich::text(reco_hypo),
-          ( m_trSelector ? m_trSelector->minPCut() :   2*Gaudi::Units::GeV ),
-          ( m_trSelector ? m_trSelector->maxPCut() : 100*Gaudi::Units::GeV ),
-          m_bins );
+  plot1D( tkPtot, hPath(hypo)+"Ptot",
+          "Ptot : "+Rich::text(hypo),
+          config.minP, config.maxP, m_bins );
 
 }

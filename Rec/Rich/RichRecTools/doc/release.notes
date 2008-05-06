@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-05-06 - Chris Jones
+ - Adapt to the removal of some old obsolete RichDet object locations
+ - Add a new method to RichSellmeirFunc
+
 ! 2008-04-29 - Chris Jones
  - Add new tool for creating 'standard' PID calibration and monitoring plots
 

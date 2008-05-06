@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.17 2008-04-16 17:42:02 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.18 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -60,8 +60,8 @@ StatusCode TabulatedSignalDetectionEff::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle   );
 
   // Rich1 and Rich2
-  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocation::Rich1 );
-  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocation::Rich2 );
+  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
+  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
   // HPD panels
   m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(pdPanelName(Rich::Rich1,Rich::top));
@@ -273,10 +273,10 @@ TabulatedSignalDetectionEff::pdPanelName( const Rich::DetectorType rich,
   {
     // Backwards compat for DC06
     const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichHPDPanelLocation::Rich1Panel0,
-            &DeRichHPDPanelLocation::Rich1Panel1 },
-          { &DeRichHPDPanelLocation::Rich2Panel0,
-            &DeRichHPDPanelLocation::Rich2Panel1 } };
+      = { { &DeRichLocations::Rich1Panel0,
+            &DeRichLocations::Rich1Panel1 },
+          { &DeRichLocations::Rich2Panel0,
+            &DeRichLocations::Rich2Panel1 } };
     return *dc06Names[rich][panel];
   }
 }

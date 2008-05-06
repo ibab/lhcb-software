@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.13 2007-03-10 13:19:20 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.14 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,9 +64,6 @@ namespace Rich
 
       // Initialize method
       StatusCode initialize();
-
-      // Finalize method
-      StatusCode finalize();
 
     public: // methods (and doxygen comments) inherited from public interface
 

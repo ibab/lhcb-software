@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::NominalTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichNominalTabulatedSignalDetectionEff.cpp,v 1.1 2008-02-15 10:21:16 jonrob Exp $
+ *  $Id: RichNominalTabulatedSignalDetectionEff.cpp,v 1.2 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,8 +46,8 @@ StatusCode NominalTabulatedSignalDetectionEff::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Rich1 and Rich2
-  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocation::Rich1 );
-  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocation::Rich2 );
+  m_riches[Rich::Rich1] = getDet<DeRich1>( DeRichLocations::Rich1 );
+  m_riches[Rich::Rich2] = getDet<DeRich2>( DeRichLocations::Rich2 );
 
   // Quartz window eff
   const double qEff = m_riches[Rich::Rich1]->param<double>( "HPDQuartzWindowEff" );

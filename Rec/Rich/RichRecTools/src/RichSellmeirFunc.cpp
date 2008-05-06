@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.18 2007-09-04 16:54:00 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.19 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -57,7 +57,7 @@ StatusCode SellmeirFunc::initialize()
   releaseTool( partProp );
 
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
 
   // Load radiator parameters from XML
   m_selF1[Rich::Aerogel]  = Rich1DE->param<double>("SellAgelF1Param");
@@ -106,13 +106,13 @@ StatusCode SellmeirFunc::initialize()
     const double RM = RE + RC2;
     const double RS = RG + RC2;
     const double RT = sqrt( 0.25*RM*RM - RH*RS );
-    const double RXSP = sqrt( (RM/2. + RT)/RH );
-    const double RXSM = sqrt( (RM/2. - RT)/RH );
-    m_REP[rad] = sqrt(RE02) * RXSP;
-    m_REM[rad] = sqrt(RE02) * RXSM;
+    const double RXSP = std::sqrt( (RM/2. + RT)/RH );
+    const double RXSM = std::sqrt( (RM/2. - RT)/RH );
+    m_REP[rad] = std::sqrt(RE02) * RXSP;
+    m_REM[rad] = std::sqrt(RE02) * RXSM;
     m_RXSPscale[rad] = (RXSP - 1./RXSP);
     m_RXSMscale[rad] = (RXSM - 1./RXSM);
-    m_X[rad] = (RC3*sqrt(RE02)/(4.*RT));
+    m_X[rad] = (RC3*std::sqrt(RE02)/(4.*RT));
   }
 
   return sc;
@@ -123,22 +123,31 @@ double SellmeirFunc::photonsInEnergyRange( LHCb::RichRecSegment * segment,
                                            const double botEn,
                                            const double topEn ) const
 {
-
   // Some parameters of the segment
-  const double momentum = (double)sqrt((float)(segment->trackSegment().bestMomentum().Mag2()));
+  const double momentum = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
+  const double length   = segment->trackSegment().pathLength();
+  const Rich::RadiatorType rad = segment->trackSegment().radiator();
+  return length * photonsInEnergyRange ( rad, id, momentum, botEn, topEn );
+}
+
+double SellmeirFunc::photonsInEnergyRange( const Rich::RadiatorType rad,
+                                           const Rich::ParticleIDType id,
+                                           const double momentum,
+                                           const double botEn,
+                                           const double topEn ) const
+{
   const double Esq      = momentum*momentum + m_particleMassSq[id];
   const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
   const double gammaSq  = Esq/m_particleMassSq[id];
-  const double length   = segment->trackSegment().pathLength();
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-  // Compute number of photons
-  double nPhot = ( 37.0 * length / betaSq ) * ( paraW(rad,topEn) -
-                                                paraW(rad,botEn) -
-                                                (topEn-botEn)/gammaSq );
+   // Compute number of photons
+  double nPhot = ( 37.0 / betaSq ) * ( paraW(rad,topEn) -
+                                       paraW(rad,botEn) -
+                                       (topEn-botEn)/gammaSq );
 
   // correct for wavelength independant transmission coeff. in aerogel
   if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
 
+  // return
   return ( nPhot < 0 ? 0 : nPhot );
 }

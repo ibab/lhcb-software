@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::FunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.14 2007-02-02 10:10:40 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.15 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,7 +47,7 @@ StatusCode FunctionalRayleighScatter::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich1 Detector element
-  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
 
   // Rayleigh scattering parameters
   m_eVToMicron  = ( Gaudi::Units::h_Planck/(Gaudi::Units::joule*Gaudi::Units::s) *
@@ -88,5 +88,5 @@ FunctionalRayleighScatter::photonScatteredProb( const LHCb::RichRecSegment * seg
   const double lambda   = m_eVToMicron/energy;
   const double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
 
-  return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
+  return ( 1 - (scatLeng/path)*(1.0-std::exp(-path/scatLeng)) );
 }

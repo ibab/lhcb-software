@@ -5,7 +5,7 @@
  *  Header file for RICH tool : Rich::PIDPlots
  *
  *  CVS Log :-
- *  $Id: RichPIDPlots.h,v 1.1 2008-04-29 12:52:30 jonrob Exp $
+ *  $Id: RichPIDPlots.h,v 1.2 2008-05-06 15:33:38 jonrob Exp $
  *
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -59,23 +59,20 @@ namespace Rich
 
       // Fill the plots for the given RichPID and PID hypothesis
       virtual void plots( const LHCb::RichPID * pid,
-                          const Rich::ParticleIDType reco_hypo,
-                          const Rich::ParticleIDType true_hypo ) const;
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const;
 
       // Fill the plots for the given track and PID hypothesis
       virtual void plots( const LHCb::Track * track,
-                          const Rich::ParticleIDType reco_hypo,
-                          const Rich::ParticleIDType true_hypo ) const;
-
-      // Set the track selector for this tool to use. Useful to allow this plotting
-      virtual void setTrackSelector( const Rich::Rec::ITrackSelector * selector ) const;
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const;
 
     private:
 
       /// Get the track momentum (first State) in GeV
       inline double trackP( const LHCb::Track * track ) const
       {
-        return ( track ? track->firstState().p()/Gaudi::Units::GeV : 0 );
+        return ( track ? track->p() : 0 );
       }
 
       /// Get the track momentum (first State) in GeV
@@ -84,11 +81,33 @@ namespace Rich
         return ( pid ? trackP(pid->track()) : 0 );
       }
 
-      /// Return the correct histogram path
-      inline const std::string hPath( const Rich::ParticleIDType reco_hypo,
-                                      const Rich::ParticleIDType true_hypo ) const
+      /// Get the track momentum (first State) in GeV
+      inline double trackPt( const LHCb::Track * track ) const
       {
-        return "Reco"+Rich::text(reco_hypo)+"/True"+Rich::text(true_hypo)+"/";
+        return ( track ? track->pt() : 0 );
+      }
+
+      /// Get the track momentum (first State) in GeV
+      inline double trackPt( const LHCb::RichPID * pid ) const
+      {
+        return ( pid ? trackPt(pid->track()) : 0 );
+      }
+
+      /// Return the correct histogram path
+      inline const std::string hPath( const Rich::ParticleIDType hypo ) const
+      {
+        return Rich::text(hypo)+"/";
+      }
+
+      /// Track selection
+      inline bool selected( const LHCb::Track * track,
+                            const Configuration & config ) const
+      {
+        return ( track && 
+                 trackP(track)  > config.minP &&
+                 trackP(track)  < config.maxP &&
+                 trackPt(track) > config.minPt &&
+                 trackPt(track) < config.maxPt );
       }
 
     private: // data
