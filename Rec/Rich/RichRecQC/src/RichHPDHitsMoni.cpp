@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.5 2008-02-01 14:19:11 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.6 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -50,7 +50,7 @@ StatusCode HPDHitsMoni::initialize()
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
 }

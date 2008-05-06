@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.31 2007-10-23 10:46:10 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.32 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -16,7 +16,7 @@
 #define RICHRECQC_RICHPIDQC_H 1
 
 // base class
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -40,6 +40,7 @@
 #include "RichRecBase/IRichTrackSelector.h"
 #include "MCInterfaces/IRichRecMCTruthTool.h"
 #include "MCInterfaces/IMCParticleSelector.h"
+#include "RichRecBase/IRichPIDPlots.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -63,12 +64,10 @@ namespace Rich
        *
        *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
        *  @date   2002-06-13
-       *
-       *  @todo Review and perhaps rewrite this monitor... Its getting a little messy.
        */
       //-----------------------------------------------------------------------------
 
-      class PIDQC : public Rich::Rec::AlgBase
+      class PIDQC : public Rich::Rec::HistoAlgBase
       {
 
       public:
@@ -86,12 +85,6 @@ namespace Rich
 
         /// Loads the PID data from configured location
         StatusCode loadPIDData();
-
-        /// Book histograms
-        StatusCode bookHistograms();
-
-        /// Book MCTruth histograms
-        StatusCode bookMCHistograms();
 
         /// Count all Tracks in given location passing the selection criteria
         void countTracks( const std::string & location );
@@ -124,8 +117,6 @@ namespace Rich
         std::vector<ContainedObject*> m_richPIDs;
 
         // job options
-        std::string m_mcHstPth;        ///< Output MC truth histogram path
-        std::string m_hstPth;          ///< Output histogram path
         std::string m_pidTDS;          ///< Location of target RichPIDs in TDS
         int m_minMultCut;              ///< Minimum track multiplicity
         int m_maxMultCut;              ///< Maximum track multiplicity
@@ -133,7 +124,6 @@ namespace Rich
         bool m_doHistos;               ///< Flag controlling the creation of histograms
         int m_bins;                    ///< Number of bins
         bool m_finalPrintOut;          ///< Perform final prinout of PID tables
-        bool m_extraHistos;            ///< Fill full set of histograms
         bool m_ignoreRecoThres;        ///< Flag to turn on/off the setting of Reco-PIDs as "below threshold"
         bool m_ignoreMCThres;          ///< Flag to turn on/off the setting of MC-PIDs as "below threshold"
         bool m_mcPsel;                 ///< Flag to turn on/off the selection of 'nice' MCParticles
@@ -169,34 +159,12 @@ namespace Rich
         // format for numbers
         std::string m_sF;
 
-        // Histograms
+        // PID plot tools
+        const Rich::Rec::IPIDPlots * m_recoplots;  ///< Reco PID plot tool
+        const Rich::Rec::IPIDPlots * m_mcplots;    ///< MC PID plot tool
 
-        IHistogram1D* m_ids;           ///< Particle identifications per mass hypothesis
-        IHistogram1D* m_Nids;          ///< Number of particle identifications per event
-
-        IHistogram1D* m_pRaw[Rich::NParticleTypes];     ///< Particle ID raw probability
-        IHistogram1D* m_pNorm[Rich::NParticleTypes];    ///< Particle ID normalised probability
-        IHistogram1D* m_deltaLL[Rich::NParticleTypes];  ///< Delta Log-Likelihood
-        IHistogram1D* m_deltaLLTrue[Rich::NParticleTypes];  ///< Delta Log-Likelihood true particle hypothesis
-        IHistogram1D* m_deltaLLFake[Rich::NParticleTypes];  ///< Delta Log-Likelihood fakeparticle hypothesis
-
-        /// dll between types : True type
-        IHistogram1D* m_dLLTrue[Rich::NParticleTypes][Rich::NParticleTypes];
-        /// dll between types : Fake type
-        IHistogram1D* m_dLLFalse[Rich::NParticleTypes][Rich::NParticleTypes];
-
-        /// nSigma v ptot between types : True type
-        IHistogram2D* m_nsigvpTrue[Rich::NParticleTypes][Rich::NParticleTypes];
-        /// nsigma v ptot between types : Fake type
-        IHistogram2D* m_nsigvpFalse[Rich::NParticleTypes][Rich::NParticleTypes];
-
-        /// Momentum spectrum for IDed type versus true type
-        IHistogram1D* m_ptotSpec[Rich::NParticleTypes+1][Rich::NParticleTypes+1];
-
-        IHistogram2D* m_perfTable;        ///< Overall PID performance table
-
-        IHistogram1D* m_pidRate;          ///< Fraction of selected tracks with PID results
-        IHistogram1D* m_eventRate;        ///< Events with/without PID results
+        // Plots configuration object
+        Rich::Rec::IPIDPlots::Configuration m_plotsConfig;
 
         /// Utility class for radiators used
         class Radiators

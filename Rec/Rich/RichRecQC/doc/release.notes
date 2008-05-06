@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-05-06 - Chris Jones
+ - Update RichPIDQC to use new PID plotting tool
+ - Adapt to removal of some old RichDet locations
+
 !======================= RichRecQC v2r17 2008-02-22 ==========================
 ! 2008-02-21 - Chris Jones
  - Fix little bug where expect CK theta and CK resolution values where not

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.22 2007-11-26 17:33:38 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.23 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -124,8 +124,8 @@ namespace Rich
         std::vector<unsigned int> m_truePhotCount; ///< Total number of true cherenkov photons per radiator
         std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator
 
-        std::vector<double> m_chThetaRecHistoLimitMax; ///< Max theta limit for histos for each rad
-        std::vector<double> m_chThetaRecHistoLimitMin; ///< Min theta limit for histos for each rad
+        std::vector<double> m_ckThetaMax; ///< Max theta limit for histos for each rad
+        std::vector<double> m_ckThetaMin; ///< Min theta limit for histos for each rad
 
         /// Number of histogram bins
         unsigned int m_nBins;

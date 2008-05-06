@@ -2,41 +2,29 @@
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonMatch2To100.TrackSelector.MinPCut = 2;
 RiPIDMonMatch2To100.TrackSelector.MaxPCut = 100;
-RiPIDMonMatch2To100.MCHistoPath = "RICH/PIDQC/MATCH/2TO100/MC/";
-RiPIDMonMatch2To100.HistoPath = "RICH/PIDQC/MATCH/2TO100/";
 RiPIDMonMatch2To100.TrackSelector.TrackAlgs = { "Match" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonMatch0To2.TrackSelector.MinPCut = 0;
 RiPIDMonMatch0To2.TrackSelector.MaxPCut = 2;
-RiPIDMonMatch0To2.MCHistoPath = "RICH/PIDQC/MATCH/0TO2/MC/";
-RiPIDMonMatch0To2.HistoPath = "RICH/PIDQC/MATCH/0TO2/";
 RiPIDMonMatch0To2.TrackSelector.TrackAlgs = { "Match" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonMatch2To10.TrackSelector.MinPCut = 2;
 RiPIDMonMatch2To10.TrackSelector.MaxPCut = 10;
-RiPIDMonMatch2To10.MCHistoPath = "RICH/PIDQC/MATCH/2TO10/MC/";
-RiPIDMonMatch2To10.HistoPath = "RICH/PIDQC/MATCH/2TO10/";
 RiPIDMonMatch2To10.TrackSelector.TrackAlgs = { "Match" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
 RiPIDMonMatch10To70.TrackSelector.MinPCut = 10;
 RiPIDMonMatch10To70.TrackSelector.MaxPCut = 70;
-RiPIDMonMatch10To70.MCHistoPath = "RICH/PIDQC/MATCH/10TO70/MC/";
-RiPIDMonMatch10To70.HistoPath = "RICH/PIDQC/MATCH/10TO70/";
 RiPIDMonMatch10To70.TrackSelector.TrackAlgs = { "Match" };
 
 // High Momentum PID monitor : 70-100 GeV/c
 RiPIDMonMatch70To100.TrackSelector.MinPCut = 70;
 RiPIDMonMatch70To100.TrackSelector.MaxPCut = 100;
-RiPIDMonMatch70To100.MCHistoPath = "RICH/PIDQC/MATCH/70TO100/MC/";
-RiPIDMonMatch70To100.HistoPath = "RICH/PIDQC/MATCH/70TO100/";
 RiPIDMonMatch70To100.TrackSelector.TrackAlgs = { "Match" };
 
 // High Momentum PID monitor : 100+ GeV/c
 RiPIDMonMatch100Plus.TrackSelector.MinPCut = 100;
 RiPIDMonMatch100Plus.TrackSelector.MaxPCut = 200;
-RiPIDMonMatch100Plus.MCHistoPath = "RICH/PIDQC/MATCH/100PLUS/MC/";
-RiPIDMonMatch100Plus.HistoPath = "RICH/PIDQC/MATCH/100PLUS/";
 RiPIDMonMatch100Plus.TrackSelector.TrackAlgs = { "Match" };

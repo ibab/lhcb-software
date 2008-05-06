@@ -2,8 +2,6 @@
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonTrig2To100.TrackSelector.MinPCut = 2;
 RiPIDMonTrig2To100.TrackSelector.MaxPCut = 100;
-RiPIDMonTrig2To100.MCHistoPath = "RICH/PIDQC/TRIG/2TO100/MC/";
-RiPIDMonTrig2To100.HistoPath = "RICH/PIDQC/TRIG/2TO100/";
 RiPIDMonTrig2To100.FinalPrintout = true;
 RiPIDMonTrig2To100.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig2To100.InputPIDs = "Rec/Rich/TrgPIDs";
@@ -11,8 +9,6 @@ RiPIDMonTrig2To100.InputPIDs = "Rec/Rich/TrgPIDs";
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonTrig0To2.TrackSelector.MinPCut = 0;
 RiPIDMonTrig0To2.TrackSelector.MaxPCut = 2;
-RiPIDMonTrig0To2.MCHistoPath = "RICH/PIDQC/TRIG/0TO2/MC/";
-RiPIDMonTrig0To2.HistoPath = "RICH/PIDQC/TRIG/0TO2/";
 RiPIDMonTrig0To2.FinalPrintout = false;
 RiPIDMonTrig0To2.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig0To2.InputPIDs = "Rec/Rich/TrgPIDs";
@@ -20,8 +16,6 @@ RiPIDMonTrig0To2.InputPIDs = "Rec/Rich/TrgPIDs";
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonTrig2To10.TrackSelector.MinPCut = 2;
 RiPIDMonTrig2To10.TrackSelector.MaxPCut = 10;
-RiPIDMonTrig2To10.MCHistoPath = "RICH/PIDQC/TRIG/2TO10/MC/";
-RiPIDMonTrig2To10.HistoPath = "RICH/PIDQC/TRIG/2TO10/";
 RiPIDMonTrig2To10.FinalPrintout = true;
 RiPIDMonTrig2To10.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig2To10.InputPIDs = "Rec/Rich/TrgPIDs";
@@ -29,8 +23,6 @@ RiPIDMonTrig2To10.InputPIDs = "Rec/Rich/TrgPIDs";
 // Mid Momentum PID monitor : 10-70 GeV/c
 RiPIDMonTrig10To70.TrackSelector.MinPCut = 10;
 RiPIDMonTrig10To70.TrackSelector.MaxPCut = 70;
-RiPIDMonTrig10To70.MCHistoPath = "RICH/PIDQC/TRIG/10TO70/MC/";
-RiPIDMonTrig10To70.HistoPath = "RICH/PIDQC/TRIG/10TO70/";
 RiPIDMonTrig10To70.FinalPrintout = true;
 RiPIDMonTrig10To70.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig10To70.InputPIDs = "Rec/Rich/TrgPIDs";
@@ -38,8 +30,6 @@ RiPIDMonTrig10To70.InputPIDs = "Rec/Rich/TrgPIDs";
 // High Momentum PID monitor : 70-100 GeV/c
 RiPIDMonTrig70To100.TrackSelector.MinPCut = 70;
 RiPIDMonTrig70To100.TrackSelector.MaxPCut = 100;
-RiPIDMonTrig70To100.MCHistoPath = "RICH/PIDQC/TRIG/70TO100/MC/";
-RiPIDMonTrig70To100.HistoPath = "RICH/PIDQC/TRIG/70TO100/";
 RiPIDMonTrig70To100.FinalPrintout = true;
 RiPIDMonTrig70To100.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig70To100.InputPIDs = "Rec/Rich/TrgPIDs";
@@ -47,8 +37,6 @@ RiPIDMonTrig70To100.InputPIDs = "Rec/Rich/TrgPIDs";
 // High Momentum PID monitor : 100+ GeV/c
 RiPIDMonTrig100Plus.TrackSelector.MinPCut = 100;
 RiPIDMonTrig100Plus.TrackSelector.MaxPCut = 200;
-RiPIDMonTrig100Plus.MCHistoPath = "RICH/PIDQC/TRIG/100PLUS/MC/";
-RiPIDMonTrig100Plus.HistoPath = "RICH/PIDQC/TRIG/100PLUS/";
 RiPIDMonTrig100Plus.FinalPrintout = false;
 RiPIDMonTrig100Plus.TrackSelector.TrackAlgs = { "Trigger" };
 RiPIDMonTrig100Plus.InputPIDs = "Rec/Rich/TrgPIDs";

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.18 2008-02-01 14:26:57 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.19 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -36,7 +36,7 @@ PixelQC::PixelQC( const std::string& name,
     m_nEvts             ( 0    ) { }
 
 // Destructor
-PixelQC::~PixelQC() {};
+PixelQC::~PixelQC() { }
 
 //  Initialize
 StatusCode PixelQC::initialize()
@@ -51,7 +51,7 @@ StatusCode PixelQC::initialize()
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
 }

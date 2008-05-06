@@ -2,41 +2,29 @@
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonSeed2To100.TrackSelector.MinPCut = 2;
 RiPIDMonSeed2To100.TrackSelector.MaxPCut = 100;
-RiPIDMonSeed2To100.MCHistoPath = "RICH/PIDQC/SEED/2TO100/MC/";
-RiPIDMonSeed2To100.HistoPath = "RICH/PIDQC/SEED/2TO100/";
 RiPIDMonSeed2To100.TrackSelector.TrackAlgs = { "Seed" };
 
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonSeed0To2.TrackSelector.MinPCut = 0;
 RiPIDMonSeed0To2.TrackSelector.MaxPCut = 2;
-RiPIDMonSeed0To2.MCHistoPath = "RICH/PIDQC/SEED/0TO2/MC/";
-RiPIDMonSeed0To2.HistoPath = "RICH/PIDQC/SEED/0TO2/";
 RiPIDMonSeed0To2.TrackSelector.TrackAlgs = { "Seed" };
 
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonSeed2To10.TrackSelector.MinPCut = 2;
 RiPIDMonSeed2To10.TrackSelector.MaxPCut = 10;
-RiPIDMonSeed2To10.MCHistoPath = "RICH/PIDQC/SEED/2TO10/MC/";
-RiPIDMonSeed2To10.HistoPath = "RICH/PIDQC/SEED/2TO10/";
 RiPIDMonSeed2To10.TrackSelector.TrackAlgs = { "Seed" };
 
 // Mid Momentum PID monitor : 10-70 GeV/c
 RiPIDMonSeed10To70.TrackSelector.MinPCut = 10;
 RiPIDMonSeed10To70.TrackSelector.MaxPCut = 70;
-RiPIDMonSeed10To70.MCHistoPath = "RICH/PIDQC/SEED/10TO70/MC/";
-RiPIDMonSeed10To70.HistoPath = "RICH/PIDQC/SEED/10TO70/";
 RiPIDMonSeed10To70.TrackSelector.TrackAlgs = { "Seed" };
 
 // High Momentum PID monitor : 70-100 GeV/c
 RiPIDMonSeed70To100.TrackSelector.MinPCut = 70;
 RiPIDMonSeed70To100.TrackSelector.MaxPCut = 100;
-RiPIDMonSeed70To100.MCHistoPath = "RICH/PIDQC/SEED/70TO100/MC/";
-RiPIDMonSeed70To100.HistoPath = "RICH/PIDQC/SEED/70TO100/";
 RiPIDMonSeed70To100.TrackSelector.TrackAlgs = { "Seed" };
 
 // High Momentum PID monitor : 100+ GeV/c
 RiPIDMonSeed100Plus.TrackSelector.MinPCut = 100;
 RiPIDMonSeed100Plus.TrackSelector.MaxPCut = 200;
-RiPIDMonSeed100Plus.MCHistoPath = "RICH/PIDQC/SEED/100PLUS/MC/";
-RiPIDMonSeed100Plus.HistoPath = "RICH/PIDQC/SEED/100PLUS/";
 RiPIDMonSeed100Plus.TrackSelector.TrackAlgs = { "Seed" };

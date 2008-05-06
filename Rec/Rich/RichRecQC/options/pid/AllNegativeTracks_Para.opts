@@ -2,8 +2,6 @@
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonAll2To100Negative.TrackSelector.MinPCut = 2;
 RiPIDMonAll2To100Negative.TrackSelector.MaxPCut = 100;
-RiPIDMonAll2To100Negative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/2TO100/MC/";
-RiPIDMonAll2To100Negative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/2TO100/";
 RiPIDMonAll2To100Negative.FinalPrintout = true;
 RiPIDMonAll2To100Negative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll2To100Negative.TrackSelector.Charge = -1;
@@ -11,8 +9,6 @@ RiPIDMonAll2To100Negative.TrackSelector.Charge = -1;
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonAll0To2Negative.TrackSelector.MinPCut = 0;
 RiPIDMonAll0To2Negative.TrackSelector.MaxPCut = 2;
-RiPIDMonAll0To2Negative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/0TO2/MC/";
-RiPIDMonAll0To2Negative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/0TO2/";
 RiPIDMonAll0To2Negative.FinalPrintout = false;
 RiPIDMonAll0To2Negative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll0To2Negative.TrackSelector.Charge = -1;
@@ -20,8 +16,6 @@ RiPIDMonAll0To2Negative.TrackSelector.Charge = -1;
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonAll2To10Negative.TrackSelector.MinPCut = 2;
 RiPIDMonAll2To10Negative.TrackSelector.MaxPCut = 10;
-RiPIDMonAll2To10Negative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/2TO10/MC/";
-RiPIDMonAll2To10Negative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/2TO10/";
 RiPIDMonAll2To10Negative.FinalPrintout = true;
 RiPIDMonAll2To10Negative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll2To10Negative.TrackSelector.Charge = -1;
@@ -29,8 +23,6 @@ RiPIDMonAll2To10Negative.TrackSelector.Charge = -1;
 // Mid Momentum PID monitor : 10-70 GeV/c
 RiPIDMonAll10To70Negative.TrackSelector.MinPCut = 10;
 RiPIDMonAll10To70Negative.TrackSelector.MaxPCut = 70;
-RiPIDMonAll10To70Negative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/10TO70/MC/";
-RiPIDMonAll10To70Negative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/10TO70/";
 RiPIDMonAll10To70Negative.FinalPrintout = true;
 RiPIDMonAll10To70Negative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll10To70Negative.TrackSelector.Charge = -1;
@@ -38,8 +30,6 @@ RiPIDMonAll10To70Negative.TrackSelector.Charge = -1;
 // High Momentum PID monitor : 70-100 GeV/c
 RiPIDMonAll70To100Negative.TrackSelector.MinPCut = 70;
 RiPIDMonAll70To100Negative.TrackSelector.MaxPCut = 100;
-RiPIDMonAll70To100Negative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/70TO100/MC/";
-RiPIDMonAll70To100Negative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/70TO100/";
 RiPIDMonAll70To100Negative.FinalPrintout = true;
 RiPIDMonAll80To100Negative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll80To100Negative.TrackSelector.Charge = -1;
@@ -47,8 +37,6 @@ RiPIDMonAll80To100Negative.TrackSelector.Charge = -1;
 // High Momentum PID monitor : 100+ GeV/c
 RiPIDMonAll100PlusNegative.TrackSelector.MinPCut = 100;
 RiPIDMonAll100PlusNegative.TrackSelector.MaxPCut = 200;
-RiPIDMonAll100PlusNegative.MCHistoPath = "RICH/PIDQC/ALL/NEGATIVE/100PLUS/MC/";
-RiPIDMonAll100PlusNegative.HistoPath = "RICH/PIDQC/ALL/NEGATIVE/100PLUS/";
 RiPIDMonAll100PlusNegative.FinalPrintout = false;
 RiPIDMonAll100PlusNegative.TrackSelector.TrackAlgs = { "Forward", "Match", "Seed", "VeloTT", "KsTrack" };
 RiPIDMonAll100PlusNegative.TrackSelector.Charge = -1;

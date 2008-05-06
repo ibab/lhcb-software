@@ -2,15 +2,11 @@
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonAll2To100.TrackSelector.MinPCut = 2;
 RiPIDMonAll2To100.TrackSelector.MaxPCut = 100;
-RiPIDMonAll2To100.MCHistoPath = "RICH/PIDQC/ALL/2TO100/MC/";
-RiPIDMonAll2To100.HistoPath = "RICH/PIDQC/ALL/2TO100/";
 RiPIDMonAll2To100.FinalPrintout = true;
 
 // Default PID monitor : 2-100 GeV/c
 RiPIDMonAll2To100_Thres.TrackSelector.MinPCut = 2;
 RiPIDMonAll2To100_Thres.TrackSelector.MaxPCut = 100;
-RiPIDMonAll2To100_Thres.MCHistoPath = "RICH/PIDQC/ALLWTHRES/2TO100/MC/";
-RiPIDMonAll2To100_Thres.HistoPath = "RICH/PIDQC/ALLWTHRES/2TO100/";
 RiPIDMonAll2To100_Thres.FinalPrintout = true;
 RiPIDMonAll2To100_Thres.IgnoreRecoThresholds = true;
 RiPIDMonAll2To100_Thres.IgnoreMCThresholds = true;
@@ -18,34 +14,24 @@ RiPIDMonAll2To100_Thres.IgnoreMCThresholds = true;
 // Low Momentum PID monitor : 0-2 GeV/c
 RiPIDMonAll0To2.TrackSelector.MinPCut = 0;
 RiPIDMonAll0To2.TrackSelector.MaxPCut = 2;
-RiPIDMonAll0To2.MCHistoPath = "RICH/PIDQC/ALL/0TO2/MC/";
-RiPIDMonAll0To2.HistoPath = "RICH/PIDQC/ALL/0TO2/";
 RiPIDMonAll0To2.FinalPrintout = true;
 
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonAll2To10.TrackSelector.MinPCut = 2;
 RiPIDMonAll2To10.TrackSelector.MaxPCut = 10;
-RiPIDMonAll2To10.MCHistoPath = "RICH/PIDQC/ALL/2TO10/MC/";
-RiPIDMonAll2To10.HistoPath = "RICH/PIDQC/ALL/2TO10/";
 RiPIDMonAll2To10.FinalPrintout = true;
 
 // Mid Momentum PID monitor : 10-70 GeV/c
 RiPIDMonAll10To70.TrackSelector.MinPCut = 10;
 RiPIDMonAll10To70.TrackSelector.MaxPCut = 70;
-RiPIDMonAll10To70.MCHistoPath = "RICH/PIDQC/ALL/10TO70/MC/";
-RiPIDMonAll10To70.HistoPath = "RICH/PIDQC/ALL/10TO70/";
 RiPIDMonAll10To70.FinalPrintout = true;
 
 // High Momentum PID monitor : 70-100 GeV/c
 RiPIDMonAll70To100.TrackSelector.MinPCut = 70;
 RiPIDMonAll70To100.TrackSelector.MaxPCut = 100;
-RiPIDMonAll70To100.MCHistoPath = "RICH/PIDQC/ALL/70TO100/MC/";
-RiPIDMonAll70To100.HistoPath = "RICH/PIDQC/ALL/70TO100/";
 RiPIDMonAll70To100.FinalPrintout = true;
 
 // High Momentum PID monitor : 100+ GeV/c
 RiPIDMonAll100Plus.TrackSelector.MinPCut = 100;
 RiPIDMonAll100Plus.TrackSelector.MaxPCut = 200;
-RiPIDMonAll100Plus.MCHistoPath = "RICH/PIDQC/ALL/100PLUS/MC/";
-RiPIDMonAll100Plus.HistoPath = "RICH/PIDQC/ALL/100PLUS/";
 RiPIDMonAll100Plus.FinalPrintout = false;

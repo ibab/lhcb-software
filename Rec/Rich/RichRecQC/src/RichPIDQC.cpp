@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.69 2007-12-03 10:08:30 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.70 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -27,34 +27,33 @@ DECLARE_ALGORITHM_FACTORY( PIDQC );
 // Standard constructor, initializes variables
 PIDQC::PIDQC( const std::string& name,
               ISvcLocator* pSvcLocator )
-  : Rich::Rec::AlgBase ( name, pSvcLocator ),
+  : Rich::Rec::HistoAlgBase ( name, pSvcLocator ),
     m_pidTDS           ( LHCb::RichPIDLocation::Default ),
     m_trSelector       ( NULL ),
     m_mcTruth          ( NULL ),
     m_mcPselector      ( NULL ),
     m_requiredRads     ( Rich::NRadiatorTypes ),
-    m_sF               ( "%7.3f" )
+    m_sF               ( "%7.3f" ),
+    m_recoplots        ( NULL ),
+    m_mcplots          ( NULL )
 {
 
   if      ( context() == "Offline" )
   {
     m_pidTDS = LHCb::RichPIDLocation::Offline;
   }
-  else if ( context() == "HLT" )
+  else if ( context() == "HLT" || context() == "Hlt" )
   {
     m_pidTDS = LHCb::RichPIDLocation::HLT;
   }
 
   // Declare job options
   declareProperty( "InputPIDs",   m_pidTDS );
-  declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
-  declareProperty( "HistoPath",   m_hstPth   = "RICH/PIDQC/" );
   declareProperty( "MCTruth",     m_truth    = true );
   declareProperty( "MinimumTrackMultiplicity", m_minMultCut = 0 );
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
   declareProperty( "IgnoreRecoThresholds", m_ignoreRecoThres = false );
   declareProperty( "IgnoreMCThresholds", m_ignoreMCThres     = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = 9999999 );
@@ -68,13 +67,13 @@ PIDQC::PIDQC( const std::string& name,
 }
 
 // Destructor
-PIDQC::~PIDQC() {};
+PIDQC::~PIDQC() {}
 
 // Initialisation
 StatusCode PIDQC::initialize()
 {
   // Initialize base class
-  const StatusCode sc = Rich::Rec::AlgBase::initialize();
+  const StatusCode sc = Rich::Rec::HistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   acquireTool( "TrackSelector", m_trSelector, this );
@@ -82,9 +81,15 @@ StatusCode PIDQC::initialize()
   // Retrieve MC tool, if needed
   if ( m_truth ) acquireTool( "RichRecMCTruthTool", m_mcTruth );
 
-  // Book histograms
-  if ( !bookHistograms() ) return StatusCode::FAILURE;
-  if ( m_truth && !bookMCHistograms() ) return StatusCode::FAILURE;
+  // Retrieve the PID plotting tool
+  acquireTool( "RichPIDPlots", "Reco", m_recoplots, this );
+  acquireTool( "RichPIDPlots", "MC",   m_mcplots,   this );
+
+  // Plots config
+  m_plotsConfig.minP  = m_trSelector->minPCut()  * Gaudi::Units::GeV;
+  m_plotsConfig.maxP  = m_trSelector->maxPCut()  * Gaudi::Units::GeV;
+  m_plotsConfig.minPt = m_trSelector->minPtCut() * Gaudi::Units::GeV;
+  m_plotsConfig.maxPt = m_trSelector->maxPtCut() * Gaudi::Units::GeV;
 
   // Initialise summary information
   for ( int i = 0; i<6; ++i ) { for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; } }
@@ -98,9 +103,6 @@ StatusCode PIDQC::initialize()
     info() << "Will filter only selected MCParticles" << endreq;
     acquireTool( "MCParticleSelector", m_mcPselector, this );
   }
-
-  // Warn if extra histos are enabled
-  if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
 
   // Warn if ignoring threshold information
   if ( m_ignoreRecoThres ) Warning( "Ignoring reco threshold information", StatusCode::SUCCESS );
@@ -117,99 +119,6 @@ StatusCode PIDQC::initialize()
                                          StatusCode::SUCCESS );
 
   return sc;
-}
-
-StatusCode PIDQC::bookHistograms()
-{
-  std::string title;
-  HYPOTHESIS_NAMES;
-
-  title = "# PIDs per hypothesis";
-  m_ids = histoSvc()->book( m_hstPth, 1, title, 7, -0.5, 6.5 );
-  title = "# PIDs per event";
-  m_Nids = histoSvc()->book( m_hstPth, 2, title, 201, -0.5, 200.5 );
-  title = "Event Success/Failures";
-  m_eventRate = histoSvc()->book( m_hstPth, 3, title, 2, -0.5, 1.5 );
-  title = "Fraction of Tracks with PIDs";
-  m_pidRate = histoSvc()->book( m_hstPth, 4, title, m_bins, 0, 1 );
-
-  if ( m_extraHistos ) {
-
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      title =  hypothesis[iHypo] + " ID : raw probability";
-      m_pRaw[iHypo] = histoSvc()->book( m_hstPth, 10 + iHypo+1, title, m_bins, 0, 1 );
-      title =  hypothesis[iHypo] + " ID : normalised probability";
-      m_pNorm[iHypo] =  histoSvc()->book( m_hstPth, 20 + iHypo+1, title, m_bins, 0, 1 );
-      title =  hypothesis[iHypo] + " ID : delta LogLikelihood";
-      m_deltaLL[iHypo] = histoSvc()->book( m_hstPth, 30 + iHypo+1, title, m_bins, 0, 150 );
-    } // hypo loop
-
-  } // extra histo if
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode PIDQC::bookMCHistograms()
-{
-  std::string title;
-  int id;
-  HYPOTHESIS_NAMES;
-
-  title = "PID Performance Table";
-  m_perfTable = histoSvc()->book( m_mcHstPth, 1, title,
-                                  6, 0.5, 6.5, 6, 0.5, 6.5 );
-
-  {for ( int iTrue = 0; iTrue < Rich::NParticleTypes+1; ++iTrue ) {
-    for ( int iID = 0; iID < Rich::NParticleTypes+1; ++iID ) {
-      title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
-      id = 10*(1+iTrue) + (1+iID) + 100;
-      m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
-                                                 m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut() );
-    }
-  }}
-
-  if ( m_extraHistos ) {
-
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      title = hypothesis[iHypo] + " true ID : delta LogLikelihood";
-      m_deltaLLTrue[iHypo] = histoSvc()->book( m_mcHstPth, 70 + iHypo+1, title,
-                                               m_bins, 0.0, 150.0 );
-      title = hypothesis[iHypo] + " fake ID : delta LogLikelihood";
-      m_deltaLLFake[iHypo] = histoSvc()->book( m_mcHstPth, 80 + iHypo+1, title,
-                                               m_bins, 0.0, 150.0 );
-    } // end hypo loop
-
-    for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
-      for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
-        if ( iSec != iID ) {
-
-          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") : true " + hypothesis[iID];
-          id = 10*(1+iSec) + (1+iID) + 200;
-          m_dLLTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
-
-          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") : false " + hypothesis[iID];
-          id = 10*(1+iSec) + (1+iID) + 300;
-          m_dLLFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
-
-          title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : true " + hypothesis[iID];
-          id = 10*(1+iSec) + (1+iID) + 400;
-          m_nsigvpTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
-                                                      m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut(),
-                                                      m_bins, -30, 30 );
-
-          title = "#sigma("+hypothesis[iID]+"-"+hypothesis[iSec]+") V P : false " + hypothesis[iID];
-          id = 10*(1+iSec) + (1+iID) + 500;
-          m_nsigvpFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title,
-                                                       m_bins, m_trSelector->minPCut(), m_trSelector->maxPCut(),
-                                                       m_bins, -30, 30 );
-
-        }
-      }
-    }
-
-  } // extra histos if
-
-  return StatusCode::SUCCESS;
 }
 
 // Main execution
@@ -280,14 +189,8 @@ StatusCode PIDQC::execute()
            (m_requiredRads[Rich::Rich1Gas] && !iPID->usedRich1Gas()) ||
            (m_requiredRads[Rich::Rich2Gas] && !iPID->usedRich2Gas()) ) continue;
 
-      // must have aero or c4f10 segment
-      //if ( !iPID->usedAerogel() && !iPID->usedRich1Gas() ) continue;
-
       // Track selection
       if ( !selectTracks(track) ) continue;
-
-      // Track momentum in GeV/c
-      const double tkPtot = trackP( iPID );
 
       // Track type
       const Rich::Rec::Track::Type tkType = Rich::Rec::Track::type(track);
@@ -357,78 +260,30 @@ StatusCode PIDQC::execute()
       }
 
       // some verbose printout
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        print ( verbose(), iPID, pid, mcpid );
-      }
-
-      // Fill histos for deltaLLs and probabilities
-      m_ids->fill( pid+1 );
-
-      // Extra histograms
-      if ( m_extraHistos )
-      {
-        for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
-        {
-          m_pRaw[iHypo]->fill    ( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
-          m_pNorm[iHypo]->fill   ( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
-          m_deltaLL[iHypo]->fill ( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
-        }
-      }
+      if ( msgLevel(MSG::VERBOSE) ) { print ( verbose(), iPID, pid, mcpid ); }
 
       // MC Truth
       if ( m_truth )
       {
         if ( msgLevel(MSG::VERBOSE) ) verbose() << "  MCID        = " << mcpid << endreq;
 
+        // Fill plots in PID performance tool
+        m_recoplots->plots( iPID, pid, m_plotsConfig );
+        m_mcplots->plots( iPID, mcpid, m_plotsConfig );
+
+        // Fill performance table
+        plot2D( (int)pid, (int)mcpid, "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
+
         // Count track and PID types
-        if ( Rich::Unknown != mcpid ) {
+        if ( Rich::Unknown != mcpid ) 
+        {
           ++m_trackCount[tkType].second;
           ++m_pidPerTypeCount[iPID->pidType()].second;
         }
 
         // Fill performance tables
         if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown )
-        { m_perfTable->fill( mcpid+1, pid+1 ); ++m_sumTab[mcpid][pid]; }
-
-        // Momentum spectra histograms...
-        if ( mcpid != Rich::Unknown &&
-             pid   != Rich::Unknown ) { (m_ptotSpec[mcpid][pid])->fill(tkPtot); }
-
-        // Extra histograms
-        if ( m_extraHistos )
-        {
-
-          // Delta LL values with respect to the best ID
-          for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-            if ( iHypo == mcpid ) {
-              m_deltaLLTrue[iHypo]->fill(iPID->particleDeltaLL((Rich::ParticleIDType)iHypo));
-            } else {
-              m_deltaLLFake[iHypo]->fill(iPID->particleDeltaLL((Rich::ParticleIDType)iHypo));
-            }
-          }
-
-          // Delta LL between particle types
-          for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
-            for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
-              if ( iSec != iID ) {
-                const double Dll =  ( iPID->particleDeltaLL((Rich::ParticleIDType)iID) -
-                                      iPID->particleDeltaLL((Rich::ParticleIDType)iSec) );
-                const double nsig = ( iPID->nSigmaSeparation((Rich::ParticleIDType)iID,
-                                                             (Rich::ParticleIDType)iSec) );
-                if ( mcpid == iID ) {
-                  (m_dLLTrue[iID][iSec])->fill( Dll );
-                  (m_nsigvpTrue[iID][iSec])->fill( tkPtot, nsig );
-                } else {
-                  (m_dLLFalse[iID][iSec])->fill( Dll );
-                  (m_nsigvpFalse[iID][iSec])->fill( tkPtot, nsig );
-                }
-              }
-            }
-          }
-
-        } // extra histos
+             pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
 
       }
 
@@ -440,11 +295,12 @@ StatusCode PIDQC::execute()
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
   m_nTracks[0] += m_totalSelTracks;
   m_nTracks[1] += pidCount;
-  m_Nids->fill( pidCount );
-  m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
+  plot1D( pidCount, "# PIDs per event", -0.5, 200.5, 201 );
+  plot1D( (m_richPIDs.empty() ? 0 : 1), "Event Success/Failures", -0.5, 1.5, 2 );
   if ( m_totalSelTracks>0 )
   {
-    m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks) );
+    plot1D(  static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks),
+             "Fraction of Tracks with PIDs", 0, 1, m_bins );
   }
 
   if ( msgLevel(MSG::DEBUG) )
@@ -628,7 +484,7 @@ StatusCode PIDQC::finalize()
   } // final printout
 
     // finalize base class
-  return Rich::Rec::AlgBase::finalize();
+  return Rich::Rec::HistoAlgBase::finalize();
 }
 
 StatusCode PIDQC::loadPIDData()

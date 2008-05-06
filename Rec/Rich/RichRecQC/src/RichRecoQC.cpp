@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.36 2008-02-21 16:50:51 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.37 2008-05-06 15:35:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -35,9 +35,7 @@ RecoQC::RecoQC( const std::string& name,
     m_trSelector        ( NULL ),
     m_minBeta           ( Rich::NRadiatorTypes, 0.999 ),
     m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
-    m_nSegs             ( Rich::NRadiatorTypes, 0 ),
-    m_chThetaRecHistoLimitMax ( Rich::NRadiatorTypes, 0 ),
-    m_chThetaRecHistoLimitMin ( Rich::NRadiatorTypes, 0 )
+    m_nSegs             ( Rich::NRadiatorTypes, 0 )
 {
   // Declare job options
 
@@ -45,22 +43,19 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MinBeta", m_minBeta );
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, Cf4
-  m_chThetaRecHistoLimitMin[Rich::Aerogel]  = 0.1;
-  m_chThetaRecHistoLimitMin[Rich::Rich1Gas] = 0.03;
-  m_chThetaRecHistoLimitMin[Rich::Rich2Gas] = 0.01;
-  declareProperty( "ChThetaRecHistoLimitMax", m_chThetaRecHistoLimitMax );
-  m_chThetaRecHistoLimitMax[Rich::Aerogel]  = 0.3;
-  m_chThetaRecHistoLimitMax[Rich::Rich1Gas] = 0.08;
-  m_chThetaRecHistoLimitMax[Rich::Rich2Gas] = 0.05;
-  declareProperty( "ChThetaRecHistoLimitMin", m_chThetaRecHistoLimitMin );
+  declareProperty( "ChThetaRecHistoLimitMin", 
+                   m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
+  declareProperty( "ChThetaRecHistoLimitMax", 
+                   m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "CKResHistoRange", 
                    m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
 
   declareProperty( "NumberBins", m_nBins = 100 );
+
 }
 
 // Destructor
-RecoQC::~RecoQC() {};
+RecoQC::~RecoQC() { }
 
 // Initialisation
 StatusCode RecoQC::initialize()
@@ -150,7 +145,7 @@ StatusCode RecoQC::execute()
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
 
       plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta : All photons",
-              m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad], m_nBins );
+              m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
       plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi : All photons", 0.0, 2*Gaudi::Units::pi, m_nBins );
       plot1D( thetaRec-thetaExpTrue,
               hid(rad,"ckResAll"), "Rec-Exp Cktheta : beta=1 : All photons",
@@ -191,7 +186,7 @@ StatusCode RecoQC::execute()
       plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
       profile1D( avRecTrueTheta/(double)truePhotons,
                  truePhotons, hid(rad,"nCKphotsVcktheta"), "True # p.e.s Versus CK theta : beta=1",
-                 m_chThetaRecHistoLimitMin[rad], m_chThetaRecHistoLimitMax[rad] );
+                 m_ckThetaMin[rad], m_ckThetaMax[rad] );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];
     }
