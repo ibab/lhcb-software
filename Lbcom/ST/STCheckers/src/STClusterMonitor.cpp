@@ -1,10 +1,11 @@
-// $Id: STClusterMonitor.cpp,v 1.6 2008-01-18 10:15:09 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.7 2008-05-06 15:09:09 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // DigiEvent
 #include "Event/STCluster.h"
+#include "Event/STSummary.h"
 
 // STDet
 #include "STDet/DeSTDetector.h"
@@ -35,7 +36,7 @@ STClusterMonitor::STClusterMonitor( const std::string& name,
   declareProperty("SigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("DetType", m_detType = "TT"); 
   declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
-
+  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
 }
 
 STClusterMonitor::~STClusterMonitor() { }
@@ -52,7 +53,8 @@ StatusCode STClusterMonitor::initialize()
 
   // Determine the location of the STClusters
   STDetSwitch::flip(m_detType,m_clusterLocation);
- 
+  STDetSwitch::flip(m_detType,m_summaryLocation);
+
   // sig to noise tool
   m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
                                                m_sigNoiseToolName + m_detType);
@@ -72,6 +74,12 @@ StatusCode STClusterMonitor::execute()
   STClusters::const_iterator iterClus = clusterCont->begin();
   for( ; iterClus != clusterCont->end(); ++iterClus) fillHistograms(*iterClus);
 
+  // summary info....
+  const STSummary* summary = get<STSummary>(m_summaryLocation);
+
+  plot(summary->pcn(),10,"pcn", -0.5, 200.5, 201 );
+  if (summary->hasError()) ++counter("Errors");
+  
   return StatusCode::SUCCESS;
 }
 

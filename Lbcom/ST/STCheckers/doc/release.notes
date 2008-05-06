@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-05-06 M. Needham
+ - Add PCN + error monitoring
+
 !=========================== STCheckers v2r5 2008-04-18 =======================
 ! 2008-04-18 - Marco Cattaneo
  - Set default value of STEffChecker.IncludeGuardRings to false

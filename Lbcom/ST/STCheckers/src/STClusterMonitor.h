@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.2 2007-03-21 14:24:44 jvantilb Exp $
+// $Id: STClusterMonitor.h,v 1.3 2008-05-06 15:09:09 mneedham Exp $
 #ifndef STClusterMonitor_H
 #define STClusterMonitor_H 1
 
@@ -47,6 +47,7 @@ private:
   std::string m_sigNoiseToolName;
   ISTSignalToNoiseTool* m_sigNoiseTool;
 
+  std::string m_summaryLocation;
   std::string m_clusterLocation;
   std::string m_detType;
   
