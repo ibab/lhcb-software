@@ -1,7 +1,7 @@
-// $Id: IDecodeSimpleDecayString.h,v 1.3 2008-05-05 11:46:04 ibelyaev Exp $
+// $Id: IDecodeSimpleDecayString.h,v 1.4 2008-05-06 08:19:21 cattanem Exp $
 // ============================================================================
-#ifndef DAVINCIKERNEL_IDECODESIMPLEDECAYSTRING_H 
-#define DAVINCIKERNEL_IDECODESIMPLEDECAYSTRING_H 1
+#ifndef KERNEL_IDECODESIMPLEDECAYSTRING_H 
+#define KERNEL_IDECODESIMPLEDECAYSTRING_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -76,5 +76,5 @@ protected:
 // ============================================================================
 // The END 
 // ============================================================================
-#endif // DAVINCIKERNEL_IDECODESIMPLEDECAYSTRING_H
+#endif // KERNEL_IDECODESIMPLEDECAYSTRING_H
 // ============================================================================
