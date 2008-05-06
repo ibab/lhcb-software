@@ -1,4 +1,4 @@
-// $Id: ITrackCloneFinder.h,v 1.5 2006-06-14 20:28:50 erodrigu Exp $
+// $Id: ITrackCloneFinder.h,v 1.6 2008-05-06 09:34:37 aperiean Exp $
 #ifndef TRACKINTERFACES_ITRACKCLONEFINDER_H 
 #define TRACKINTERFACES_ITRACKCLONEFINDER_H 1
 
@@ -21,6 +21,9 @@ static const InterfaceID IID_ITrackCloneFinder ( "ITrackCloneFinder", 1, 0 );
  *
  *  @author Eduardo Rodrigues
  *  @date   2005-12-08
+ *  Modified for speed reason 
+ *  @author Adrian Perieanu
+ *  @date   2008-05-05
  */
 class ITrackCloneFinder : virtual public IAlgTool {
 public: 
@@ -32,16 +35,14 @@ public:
    *  of the other based on some "overlap criteria".
    *  The corresponding flag may be set accordingly (NOT DONE BY DEFAULT)
    *  depending on the value of the "setFlag" argument.
-   *  @return bool: True if one Track was set as a clone of the other.
-   *                False otherwise.
    *  @param  track1 input 1st track
    *  @param  track2 input 2nd track
    *  @param  setFlag input parameter indicates whether the clone track
    *          is to be set as such (default = false)
    */
-  virtual bool areClones( LHCb::Track& track1,
+  virtual void areClones( LHCb::Track& track1,
                           LHCb::Track& track2,
-                          bool setFlag = false ) const = 0;
+                          bool setFlag = false) const = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKCLONEFINDER_H
