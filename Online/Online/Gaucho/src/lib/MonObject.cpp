@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.2 2008-03-28 10:59:12 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.3 2008-05-06 11:45:06 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -6,13 +6,13 @@
 
 MonObject::MonObject(IMessageSvc* msgSvc, const std::string& source, int version)
 {
-  m_msgSvc=msgSvc;
-  m_source=source;
-  m_version=version;
-  m_typeName=s_monObject;
-  m_dimPrefix="MonObj";
-  m_comments="";
-  m_endOfRun=false;
+  m_msgSvc = msgSvc;
+  m_source = source;
+  m_version = version;
+  m_typeName = s_monObject;
+  m_dimPrefix = "MonObj";
+  m_comments = "";
+  m_endOfRun = false;
   pthread_mutex_init(&m_mtx,NULL);
 }
 
@@ -80,8 +80,8 @@ MsgStream MonObject::createMsgStream(){
 }
 
 void MonObject::doOutputMsgStream(MsgStream &mes){
-  if (0==m_msgSvc) {
-    mes.activate();
-    mes.doOutput();
-  }
+//   if (0==m_msgSvc) {
+//     mes.activate();
+//     mes.doOutput();
+//   }
 }

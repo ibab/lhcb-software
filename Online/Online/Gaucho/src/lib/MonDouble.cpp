@@ -1,14 +1,15 @@
 #include "Gaucho/MonDouble.h"
 
 MonDouble::MonDouble(IMessageSvc* msgSvc, const std::string& source, int version):
-MonObject(msgSvc, source, version)
+  MonObject(msgSvc, source, version)
 {
-  m_typeName=s_monDouble;
-  m_dimPrefix="MonD";
+  m_typeName = s_monDouble;
+  m_dimPrefix = "MonD";
   m_double = new double();
 }
 
 MonDouble::~MonDouble(){
+  if (m_double) {delete m_double; m_double = NULL;}
 }
 
 void MonDouble::save(boost::archive::binary_oarchive & ar, const unsigned int version){

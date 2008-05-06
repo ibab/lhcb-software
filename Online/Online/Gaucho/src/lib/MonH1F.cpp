@@ -3,13 +3,14 @@
 #include <GaudiUtils/Aida2ROOT.h>
 
 MonH1F::MonH1F(IMessageSvc* msgSvc, const std::string& source, int version):
-MonObject(msgSvc, source, version)
+  MonObject(msgSvc, source, version)
 {
-  m_typeName=s_monH1F;
-  m_dimPrefix="MonH1F";
-  isLoaded = false;
+  isLoaded = false ;
   objectCreated = false;
   m_hist = 0;
+  m_typeName = s_monH1F;
+  m_dimPrefix = "MonH1F";
+
 }
 
 MonH1F::~MonH1F(){
@@ -22,6 +23,14 @@ MonH1F::~MonH1F(){
   delete binLabel;
   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   delete m_fSumw2;
+  if (m_hist) {
+    msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
+    delete m_hist; m_hist = NULL;
+  }
+  if (m_aidaHist) {
+    msgStream <<MSG::DEBUG<<"deleting m_aidaHist" << endreq;
+    delete m_aidaHist; m_aidaHist = NULL;
+  }
 }
 
 void MonH1F::setAidaHisto(AIDA::IHistogram1D* iHistogram1D){
