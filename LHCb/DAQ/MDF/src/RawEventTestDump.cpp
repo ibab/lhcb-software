@@ -1,4 +1,4 @@
-// $Id: RawEventTestDump.cpp,v 1.10 2008-01-08 15:20:38 cattanem Exp $
+// $Id: RawEventTestDump.cpp,v 1.11 2008-05-06 12:22:28 frankm Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
 #include "GaudiKernel/IDataProviderSvc.h" 
@@ -20,21 +20,23 @@ namespace LHCb  {
   *  @date   2005-10-13
   */
   class RawEventTestDump : public Algorithm {
-    bool m_full;  ///< Property "FullDump". If true, full bank contents are dumped
-    bool m_dump;  ///< Property "DumpData". If true, full bank contents are dumped
-    bool m_check; ///< Property "CheckData". If true, full bank contents are checked
-    int  m_debug; ///< Number of events where all dump flags should be considered true
-    int  m_numEvent;  ///< Event counter
+    bool m_full;                 ///< Property "FullDump". If true, full bank contents are dumped
+    bool m_dump;                 ///< Property "DumpData". If true, full bank contents are dumped
+    bool m_check;                ///< Property "CheckData". If true, full bank contents are checked
+    int  m_debug;                ///< Number of events where all dump flags should be considered true
+    int  m_numEvent;             ///< Event counter
+    std::string  m_rawLocation;  ///< Property "RawLocation". Raw Event location
   public: 
     
     /// Standard constructor
     RawEventTestDump( const std::string& name, ISvcLocator* pSvcLocator )
     : Algorithm(name, pSvcLocator), m_numEvent(0)
     {
-      declareProperty( "DumpData",  m_dump = false );
-      declareProperty( "FullDump",  m_full = false );
-      declareProperty( "CheckData", m_check = false );
-      declareProperty( "Debug",     m_debug = 0 );
+      declareProperty( "DumpData",    m_dump = false );
+      declareProperty( "FullDump",    m_full = false );
+      declareProperty( "CheckData",   m_check = false );
+      declareProperty( "RawLocation", m_rawLocation=RawEventLocation::Default);
+      declareProperty( "Debug",       m_debug = 0 );
     }
     /// Destructor
     virtual ~RawEventTestDump()  {
@@ -51,7 +53,7 @@ namespace LHCb  {
     }
     /// Main execution
     virtual StatusCode execute()  {
-      SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
+      SmartDataPtr<RawEvent> raw(eventSvc(),m_rawLocation);
       MsgStream info(msgSvc(),name());
       bool dmp = m_numEvent<m_debug || m_dump;
       bool chk = m_numEvent<m_debug || m_check;
