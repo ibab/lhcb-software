@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.14 2008-02-15 15:07:52 mlieng Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.15 2008-05-06 16:25:42 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -43,12 +43,18 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
   , m_gigaSvc      ( 0 )
   , m_gigaKineCnvSvc ( 0 )
 {
-  declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa" );
-  declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine );
-  declareProperty( "ExtendedInfo",   m_extendedInfo = false );
-  declareProperty( "MCHitsLocation", m_hitsLocation = "" );
-  declareProperty( "CollectionName", m_colName = "" );
-  declareProperty( "Detector",       m_detName );
+  declareProperty( "GiGaService",    m_gigaSvcName  = "GiGa",
+                   "The service handling the intreface to Geant4" );
+  declareProperty( "KineCnvService", m_kineSvcName  = IGiGaCnvSvcLocation::Kine,
+                   "The service keeping the relation between Geant4 kinematic and MCTruth" );
+  declareProperty( "ExtendedInfo",   m_extendedInfo = false, 
+                   "Flag to control filling of MCExtendedHits instead of MCHits (def = false)" );
+  declareProperty( "MCHitsLocation", m_hitsLocation = "",
+                   "Location in TES where to put resulting MCHits" );
+  declareProperty( "CollectionName", m_colName = "",
+                   "Name of Geant4 collection where to retrieve hits" );
+  declareProperty( "Detectors",      m_detName,
+                   "List of detector paths in TDS for which to retrieve the hits (most of the time one" );
 }
 
 //=============================================================================

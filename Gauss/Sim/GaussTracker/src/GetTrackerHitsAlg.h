@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.h,v 1.4 2008-02-15 15:07:52 mlieng Exp $
+// $Id: GetTrackerHitsAlg.h,v 1.5 2008-05-06 16:25:42 gcorti Exp $
 #ifndef GETTRACKERHITSALG_H 
 #define GETTRACKERHITSALG_H 1
 
@@ -64,8 +64,8 @@ private:
   std::string        m_hitsLocation;     ///< Name of TES path for MCHits
   std::string        m_colName;          ///< Name of G4 hits collection
   
-  std::vector<std::string> m_detName;          ///< Detector PATH
-  std::vector<const DetectorElement*> m_detector;     ///< Pointer to DetectorEl
+  std::vector<std::string> m_detName;             ///< Detector PATHs
+  std::vector<const DetectorElement*> m_detector; ///< Pointers to DetectorEl
 
 };
 #endif // GETTRACKERHITSALG_H
