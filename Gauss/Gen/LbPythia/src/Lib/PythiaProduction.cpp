@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.5 2008-01-27 15:03:08 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.6 2008-05-06 14:50:40 ibelyaev Exp $
 
 // Include files
 
@@ -83,6 +83,9 @@ PythiaProduction::PythiaProduction( const std::string& type,
     // list of particles to be printed using PyList(12) 
     m_pdtlist    (   ) , 
     m_widthLimit ( 1.5e-6 * GeV ) 
+  /// boolean flag to force the valiadation of IO_HEPEVT 
+    , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
+  
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
@@ -92,6 +95,11 @@ PythiaProduction::PythiaProduction( const std::string& type,
   declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * GeV ) ;
   declareProperty( "SLHADecayFile" , m_slhaDecayFile = "empty" ) ;
 
+  declareProperty 
+    ( "ValidateHEPEVT"  , 
+      m_validate_HEPEVT ,
+      "The flag to force the validation (mother&daughter) of HEPEVT" ) ;
+  
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
   m_defaultSettings.push_back( "pysubs msel 0" ) ;
@@ -874,6 +882,12 @@ StatusCode PythiaProduction::toHepMC
   
   // Convert event in HepMC Format
   HepMC::IO_HEPEVT theHepIO ;
+
+  
+  // Force the verification of the HEPEVT  record 
+  if ( m_validate_HEPEVT ) 
+  { theHepIO.set_trust_both_mothers_and_daughters( true ) ; }
+  
   if ( ! theHepIO.fill_next_event( theEvent ) )
     return Error( "Could not fill HepMC event" ) ;
   

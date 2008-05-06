@@ -4,6 +4,20 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-05-06 - Vanya BELYAEV
+ - LbPythia/PythiaProduction.h 
+   src/Lib/PythiaProduction.cpp
+    
+   - add new boolean property "ValidateHEPEVT" (the default value s false) 
+   
+
+   If this property is activated the conversion policy 
+
+     "set_trust_both_mothers_and_daughters( true )" for HEPEVT -> HepMC 
+
+   is activated. Such trick is *MANDATORY* for "Hidden Valley" production..
+
+
 !========================= LbPythia v7r1 2008-04-29 ==========================
 ! 2008-03-16 - Patrick Robbe
  - src/Lib: move overriden Pythia Fortran libraries to GENSER package

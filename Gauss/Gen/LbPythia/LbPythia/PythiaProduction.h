@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.8 2008-01-27 15:03:27 robbep Exp $
+// $Id: PythiaProduction.h,v 1.9 2008-05-06 14:50:40 ibelyaev Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -135,5 +135,9 @@ private:
    *  directory)
    */
   std::string m_slhaDecayFile ; 
+  // ==========================================================================
+  /// boolean flag to force the valiadation of IO_HEPEVT 
+  bool m_validate_HEPEVT ; // force the valiadation of IO_HEPEVT 
+  // ==========================================================================
 };
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H
