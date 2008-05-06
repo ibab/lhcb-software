@@ -1,10 +1,10 @@
 package KernelSys
-version v7r3p1
+version v7r4
 
 branches doc cmt
 
 use CaloKernel      v5r1    Calo
-use LHCbKernel      v8r3    Kernel
+use LHCbKernel      v8r4    Kernel
 use LHCbMath        v2r7p1  Kernel
 use L0MuonKernel    v7r4    L0
 use MuonKernel      v4r0    Muon
