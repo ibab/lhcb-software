@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.10 2007-08-27 15:25:12 mneedham Exp $
+// $Id: TrackCloneFinder.cpp,v 1.11 2008-05-06 09:51:11 aperiean Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -14,6 +14,8 @@
 // Implementation file for class : TrackCloneFinder
 //
 // 2005-12-08 : Eduardo Rodrigues
+// Update
+// 2005-05-05 : Adrian Perieanu
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( TrackCloneFinder );
@@ -29,7 +31,9 @@ TrackCloneFinder::TrackCloneFinder( const std::string& type,
   declareInterface<ITrackCloneFinder>(this);
  
   declareProperty( "MatchingFraction",      m_matchingFraction      = 0.7   );
-  declareProperty( "CompareAtLHCbIDsLevel", m_compareAtLHCbIDsLevel = false );
+  declareProperty( "MatchingFractionT",     m_matchingFractionT     = 0.50);
+  declareProperty( "CompareAtLHCbIDsLevel", m_compareAtLHCbIDsLevel = false);
+  declareProperty( "CompareLDT",            m_compareLDT            = false);
 }
 
 //=============================================================================
@@ -55,9 +59,9 @@ StatusCode TrackCloneFinder::initialize() {
 // of the other based on some "overlap criteria".
 // The corresponding flags are set accordingly.
 //=============================================================================
-bool TrackCloneFinder::areClones( LHCb::Track& track1,
+void TrackCloneFinder::areClones( LHCb::Track& track1,
                                   LHCb::Track& track2,
-                                  bool setFlag ) const
+                                  bool setFlag) const
 {
   if ( m_debugLevel ) {
     debug() << "Looking at tracks " << track1.key() << " in "
@@ -71,9 +75,7 @@ bool TrackCloneFinder::areClones( LHCb::Track& track1,
   if ( ! m_compareAtLHCbIDsLevel ) {
     n1 = track1.nMeasurements();
     n2 = track2.nMeasurements();
-    
-  }
-  else {
+  } else {
     n1 = track1.nLHCbIDs();
     n2 = track2.nLHCbIDs();
   }
@@ -81,11 +83,9 @@ bool TrackCloneFinder::areClones( LHCb::Track& track1,
   if ( setFlag && theyAreClones ) {
     if ( n1 > n2 ) {
       track2.setFlag( LHCb::Track::Clone, true );
-    }
-    else if (n2 > n1) {
+    } else if (n2 > n1) {
       track1.setFlag( LHCb::Track::Clone, true );
-    }
-    else{
+    } else{
       const double chi1 = track1.chi2PerDoF();
       const double chi2 = track2.chi2PerDoF();
       chi1 < chi2 ? track2.setFlag( LHCb::Track::Clone, true ) :
@@ -94,8 +94,6 @@ bool TrackCloneFinder::areClones( LHCb::Track& track1,
   }
 
   if ( m_debugLevel ) debug() << "-> areClones = " << theyAreClones << endreq;
-
-  return theyAreClones;
 }
 
 //=============================================================================
@@ -107,161 +105,90 @@ bool TrackCloneFinder::clones( const LHCb::Track& track1,
 {
   if ( ! areSettingsConsistent( track1, track2 ) ) return false;
   
-  // Determine the number of common Velo hits
-  // ----------------------------------------
-  unsigned int nVelo1 = 0;
-  unsigned int nVelo2 = 0;
-  unsigned int nVeloCommon = nCommonHits( track1, track2, LHCb::LHCbID::Velo,
-                                          nVelo1, nVelo2 );
-  unsigned int nVeloMin = GSL_MIN( nVelo1, nVelo2 );
+  unsigned int nHitsCommon     = 0;
+  getCommonHits( track1, track2, nHitsCommon);
 
-  // Determine the number of common seed hits. Seed = IT + OT (not TT!)
-  // ------------------------------------------------------------------
-  unsigned int nIT1, nOT1 = 0;
-  unsigned int nIT2, nOT2 = 0;
-  unsigned int nSeedCommon =
-    nCommonHits( track1, track2, LHCb::LHCbID::IT, nIT1, nIT2 ) +
-    nCommonHits( track1, track2, LHCb::LHCbID::OT, nOT1, nOT2 );
-  unsigned int nSeedMin = GSL_MIN( nIT1 + nOT1 , nIT2 + nOT2 );
-  
-  if ( m_debugLevel ) {
-    debug() << "nVelo1, nVelo2, nVeloCommon = " << nVelo1 << ", "
-            << nVelo2 << ", "
-            << nVeloCommon << endreq
-            << "nSeed1, nSeed2, nSeedCommon = " << ( nIT1 + nOT1 ) << ", "
-            << ( nIT2 + nOT2 ) << ", "
-            << nSeedCommon << endreq;
+  unsigned int ntrack1= 0;
+  unsigned int ntrack2 = 0;
+  if( !m_compareAtLHCbIDsLevel){
+    ntrack1 = track1.nMeasurements();
+    ntrack2 = track2.nMeasurements();
+  }else{
+    ntrack1 = track1.nLHCbIDs();
+    ntrack2 = track2.nLHCbIDs();
   }
+  unsigned int nTrackMin = GSL_MIN( ntrack1, ntrack2);
 
-  // Decide whether these tracks are clones
-  // --------------------------------------
-  if ( ( nVeloMin > 0 ) &&
-       ( nVeloCommon < m_matchingFraction * nVeloMin ) )
-    return false;  // Not clones !
-
-  if ( ( nSeedMin > 0 ) &&
-       ( nSeedCommon < m_matchingFraction * nSeedMin ) )
-    return false;  // Not clones !
-
-  // Not clones if there is no common region (Velo or Seed) with clusters
-  if ( 0 == nVeloMin && 0 == nSeedMin ) return false;
-
-  // Else they are clones!
-  return true;
-}
-
-//=============================================================================
-// Calculate the number of common hits of a given LHCb type
-// between two input Tracks.
-//=============================================================================
-unsigned int TrackCloneFinder::nCommonHits( const LHCb::Track& track1,
-                                            const LHCb::Track& track2,
-                                            unsigned int lhcbidType,
-                                            unsigned int& nHits1,
-                                            unsigned int& nHits2 ) const
-{
-  const std::vector<LHCb::LHCbID> ids1 = lhcbIDsOfType( track1, lhcbidType );
-  const std::vector<LHCb::LHCbID> ids2 = lhcbIDsOfType( track2, lhcbidType );
-
-  nHits1 = ids1.size();
-  nHits2 = ids2.size();
-
-  if ( nHits1 == 0 || nHits2 == 0 ) return 0;
-
-  return nCommonLHCbIDs( ids1, ids2 ); 
-}
-
-//=============================================================================
-//  Calculate the number of common hits between two input Tracks.
-//=============================================================================
-unsigned int TrackCloneFinder::nCommonHits( const LHCb::Track& track1,
-                                            const LHCb::Track& track2,
-                                            unsigned int& nHits1,
-                                            unsigned int& nHits2 ) const
-{
-  return nCommonHits( track1, track2, 0, nHits1, nHits2 );
-}
-
-//=============================================================================
-// Calculate the number of common hits between two input Tracks.
-//=============================================================================
-unsigned int TrackCloneFinder::nCommonHits( const LHCb::Track& track1,
-                                            const LHCb::Track& track2 ) const
-{
-  unsigned int nHits1, nHits2 = 0;
-
-  return nCommonHits( track1, track2, 0, nHits1, nHits2 );
-}
-
-//=============================================================================
-// 
-//=============================================================================
-unsigned int
-TrackCloneFinder::nCommonLHCbIDs( const std::vector<LHCb::LHCbID>& ids1,
-                                  const std::vector<LHCb::LHCbID>& ids2 ) const
-{
-  if ( m_debugLevel ) {
-    debug() << "nLHCbIDs of type " << ids1[0].detectorType()
-            << " for track1, track2 = "
-            << ids1.size() << " , " << ids2.size() << endreq;
-    debug() << "  LHCbIDs track1: ";
-    unsigned int it;
-    for ( it = 0; it < ids1.size()-1; ++it ) {
-      debug() << ids1[it].channelID() << ", ";
-    }
-    debug() << ids1[it].channelID() << endreq
-            << "  LHCbIDs track2: ";
-    for ( it = 0; it < ids2.size()-1; ++it ) {
-      debug() << ids2[it].channelID() << ", ";
-    }
-    debug() << ids2[it].channelID() << endreq;
+  bool are_clones = false;
+  if( nHitsCommon > m_matchingFraction*nTrackMin){
+    are_clones = true;
   }
-
-  unsigned int nCommon = 0;
   
-  // Calculate the number of common LHCbIDs
-  for ( unsigned int i1 = 0; i1 < ids1.size(); ++i1 ) {
-    for ( unsigned int i2 = 0; i2 < ids2.size(); ++i2 ) {
-      if ( ids1[i1].channelID() == ids2[i2].channelID() ) {
-        ++nCommon;
-        break;
+  if( !are_clones && m_compareLDT){
+    if( (track1.type() == LHCb::Track::Long) &&
+	(track2.type()    == LHCb::Track::Downstream ||
+	 track2.type()    == LHCb::Track::Ttrack)){
+      if( nHitsCommon > m_matchingFractionT*nTrackMin){
+	are_clones = true;
       }
     }
-  }  
-
-  return nCommon;
-}
-
-//=============================================================================
-// Return a const vector of a Track's LHCbIDs of a given LHCbID type
-//=============================================================================
-const std::vector<LHCb::LHCbID>
-TrackCloneFinder::lhcbIDsOfType ( const LHCb::Track& track,
-                                  unsigned int lhcbidType ) const
-{
-  std::vector<LHCb::LHCbID> ids;
+  }
+ 
   
-  if ( ! m_compareAtLHCbIDsLevel ) {
-    const std::vector<LHCb::Measurement*>& allmeas = track.measurements();
-    for ( unsigned int it = 0; it < allmeas.size(); ++it ) {
-      LHCb::LHCbID id = allmeas[it] -> lhcbID();
-      if ( lhcbidType == 0 )
-        ids.push_back( id );
-      else if ( id.checkDetectorType( lhcbidType ) )
-        ids.push_back( id );
-    }
-  }
-  else {
-    if ( lhcbidType == 0 ) return track.lhcbIDs();
-    const std::vector<LHCb::LHCbID>& allids = track.lhcbIDs();
-    for ( unsigned int it = 0; it < allids.size(); ++it ) {
-      if ( allids[it].checkDetectorType( lhcbidType ) ) ids.push_back( allids[it] );
-    }
-  }
-
-  return ids;
+  return are_clones;
 }
+//=============================================================================
+//Calculate the number of common hits between two input Tracks.
+//=============================================================================
+void TrackCloneFinder::getCommonHits( const LHCb::Track& track1,
+				      const LHCb::Track& track2,
+				      unsigned int& nCommonHits) const
+{
+  if( !m_compareAtLHCbIDsLevel){
+    const std::vector<LHCb::Measurement*>& hits1 = track1.measurements();
+    const std::vector<LHCb::Measurement*>& hits2 = track2.measurements();
 
+    // Calculate the number of common LHCbIDs
+    for( unsigned int i1 = 0; i1 < hits1.size(); ++i1){
+      // if second track is VeloTT(Upstream) skip the IT&OT hits
+      if( track2.type() == LHCb::Track::Upstream &&
+	  ( hits1[i1]->type() ==  LHCb::Measurement::IT||
+	    hits1[i1]->type() ==  LHCb::Measurement::OT)) break;
+      // if second track is Tsa || Downstream skip the VeloR&VeloPhi hits
+      if( ( track2.type() == LHCb::Track::Downstream || 
+	    track2.type() == LHCb::Track::Ttrack) &&
+	  ( hits1[i1]->type() ==  LHCb::Measurement::VeloR ||
+	    hits1[i1]->type() ==  LHCb::Measurement::VeloPhi) )continue;
+      for( unsigned int i2 = 0; i2 < hits2.size(); ++i2){
+	if( hits1[i1]->lhcbID() == hits2[i2]->lhcbID()){
+	  ++nCommonHits;
+	  break;
+	}
+      }
+    }  
+  }else{
+    const std::vector<LHCb::LHCbID>& ids1 = track1.lhcbIDs();
+    const std::vector<LHCb::LHCbID>& ids2 = track2.lhcbIDs();
+    
+    // Calculate the number of common LHCbIDs
+    for( unsigned int i1 = 0; i1 < ids1.size(); ++i1){
+      // if second track is VeloTT(Upstream) skip the IT&OT hits
+      if( track2.type() == LHCb::Track::Upstream &&
+	  ( ids1[i1].isIT() || ids1[i1].isOT())) break;
+      // if second track is Tsa || Downstream skip the VeloR&VeloPhi hits
+      if( ( track2.type() == LHCb::Track::Downstream || 
+	    track2.type() == LHCb::Track::Ttrack) &&
+	  ids1[i1].isVelo() )continue;
+      
+      for( unsigned int i2 = 0; i2 < ids2.size(); ++i2){
+	if( ids1[i1].channelID() == ids2[i2].channelID()){
+	  ++nCommonHits;
+	  break;
+	}
+      }
+    }  
+  }
+}
 //=============================================================================
 // 
 //=============================================================================

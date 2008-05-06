@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.6 2007-01-23 16:36:39 erodrigu Exp $
+// $Id: TrackCloneFinder.h,v 1.7 2008-05-06 09:51:16 aperiean Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -24,6 +24,9 @@
  *
  *  @author Eduardo Rodrigues
  *  @date   2005-12-08
+ *  Modified for speed & clone rate
+ *  @author Adrian Perieanu
+ *  @date   2008-05-05
  */
 class TrackCloneFinder : public GaudiTool,
                          virtual public ITrackCloneFinder {
@@ -43,14 +46,12 @@ public:
    *  depending on the value of the "setFlag" argument.
    *  Note: the method ignores whether the Tracks themselves have been
    *        previously flagged as clones! It merely does a comparison.
-   *  @return bool: True if one Track was set as a clone of the other.
-   *                False otherwise.
    *  @param  track1 input 1st track
    *  @param  track2 input 2nd track
    *  @param  setFlag input parameter indicates whether the clone track
    *          is to be set as such (default = false)
    */
-  virtual bool areClones( LHCb::Track& track1,
+  virtual void areClones( LHCb::Track& track1,
                           LHCb::Track& track2,
                           bool setFlag = false ) const;
 
@@ -79,59 +80,12 @@ private:
    *        2) CompareAtLHCbIDsLevel = true:
    *           the comparison is based on the LHCbIDs and is therefore
    *           done on the Tracks as output by the pattern recognition
-   *  @return unsigned int: the number of common hits
    *  @param  track1: input 1st track
    *  @param  track2: input 2nd track
-   *  @param  lhcbidType: input LHCbID type
-   *  @param  nHits1: the number of track1 hits of lhcbidType type
-   *  @param  nHits2: the number of track2 hits of lhcbidType type
    */
-  unsigned int nCommonHits( const LHCb::Track& track1,
-                            const LHCb::Track& track2,
-                            unsigned int lhcbidType,
-                            unsigned int& nHits1,
-                            unsigned int& nHits2 ) const;
-
-  /** Calculate the number of common hits between two input Tracks.
-   *  Note: hits can here mean either Measurements or LHCbIDs,
-   *        depending on the settings for the "CompareAtLHCbIDsLevel"
-   *        tool property:
-   *        1) CompareAtLHCbIDsLevel = false (default):
-   *           the comparison is based on the Measurements and it is
-   *           therefore assumed that the Tracks have been fitted
-   *        2) CompareAtLHCbIDsLevel = true:
-   *           the comparison is based on the LHCbIDs and is therefore
-   *           done on the Tracks as output by the pattern recognition
-   *  @return unsigned int: the number of common hits
-   */
-  unsigned int nCommonHits( const LHCb::Track& track1,
-                            const LHCb::Track& track2,
-                            unsigned int& nHits1,
-                            unsigned int& nHits2 ) const;
-
-  /** Calculate the number of common hits between two input Tracks.
-   *  Note: hits can here mean either Measurements or LHCbIDs,
-   *        depending on the settings for the "CompareAtLHCbIDsLevel"
-   *        tool property:
-   *        1) CompareAtLHCbIDsLevel = false (default):
-   *           the comparison is based on the Measurements and it is
-   *           therefore assumed that the Tracks have been fitted
-   *        2) CompareAtLHCbIDsLevel = true:
-   *           the comparison is based on the LHCbIDs and is therefore
-   *           done on the Tracks as output by the pattern recognition
-   *  @return unsigned int: the number of common hits
-   */
-  unsigned int nCommonHits( const LHCb::Track& track1,
-                            const LHCb::Track& track2 ) const;
-
-  // Calculate the number of common LHCbIDs
-  unsigned int nCommonLHCbIDs( const std::vector<LHCb::LHCbID>& ids1,
-                               const std::vector<LHCb::LHCbID>& ids2 ) const;
-
-  // Return a const vector of a Track's LHCbIDs of a given LHCbID type
-  const std::vector<LHCb::LHCbID>
-    lhcbIDsOfType( const LHCb::Track& track,
-                   unsigned int lhcbidType = 0 ) const;
+  void getCommonHits( const LHCb::Track& track1,
+		      const LHCb::Track& track2,
+		      unsigned int& nCommonHits) const;
 
   bool areSettingsConsistent( const LHCb::Track& track1,
                               const LHCb::Track& track2 ) const;
@@ -144,6 +98,8 @@ private:
   /* fraction of hits in common that defines the overlap between the
    * two tracks and their being clones or not */
   double m_matchingFraction;
+  double m_matchingFractionT;
+  bool   m_compareLDT;
   /* compare the hits based on the list of LHCbIDs only instead of
    * comparing on the list of Measurements
    * (the difference comes from the possible outliers removed by

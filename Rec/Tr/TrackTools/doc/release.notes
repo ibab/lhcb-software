@@ -12,6 +12,8 @@
  - Update to changes in STDet [introduction of DeSTSensor]
 
 !======================== TrackTools v3r5 2008-04-16 ========================
+! 2008-05-05 - Adrian Perieanu
+ - TrackCloneFinder: update for speed and lower clone rate
 ! 2008-04-16 - Patrick Koppenburg
  - TrackSelector : initialisation printout in debug instead of info. That
    saves >200 lines of useless printout in a typical stripping job.
