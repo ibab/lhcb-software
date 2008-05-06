@@ -4,8 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r6 2008-05-05 ========================
 ! 2008-05-05 M Needham
- - Add source id to cluster class
+ - Add source id to STCluster class
 
 !========================== DigiEvent v2r5 2008-04-03 ========================
 ! 2008-04-02 - Marco Cattaneo
