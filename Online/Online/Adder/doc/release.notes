@@ -1,6 +1,9 @@
 ! Package     : Adder
 ! Responsible : Eric van Herwijnen/Monica Pepe-Altarelli
 
+! 20080506 - Juan Otalora  ==================== Adder v5r0 ==========================
+- New version with MonObjects.
+
 ! 20071221 - Eric vH       ==================== Adder v4r4 ==========================
 - Fix bug in adder when 0 histograms found.
 
