@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.5 2007-12-12 13:05:31 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.6 2008-05-06 11:45:01 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -14,6 +14,7 @@
 
 // forward declarations
 class DeOTDetector;
+class IOTChannelMapTool ;
 namespace LHCb {
   class RawBank ;
 }
@@ -72,11 +73,11 @@ public:
   /// Create a single OTLiteTime
   LHCb::OTLiteTime time( LHCb::OTChannelID channel, const DeOTModule& module ) const ;
   
-private:
+protected:
   virtual void handle ( const Incident& incident );
   size_t decodeModule( OTRawBankDecoderHelpers::Module& ) const ;
-  StatusCode decodeGolHeadersV3(const LHCb::RawBank&) const ;
-  StatusCode decodeGolHeadersDC06(const LHCb::RawBank&) const ;
+  StatusCode decodeGolHeadersV3(const LHCb::RawBank&, int bankversion) const ;
+  StatusCode decodeGolHeadersDC06(const LHCb::RawBank&, int bankversion) const ;
   
 private:
   // data
@@ -84,8 +85,9 @@ private:
   int  m_countsPerBX;                       ///< Counts per BX
   int  m_numberOfBX;                        ///< Number of BX
   double m_timePerBX;                       ///< Time Per BX
-  int m_forcebankversion;
+  int m_forcebankversion;                   ///< Overwrite bank version in bank header
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
+  IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
   double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns
   
   mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data

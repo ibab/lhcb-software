@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.9 2008-01-16 12:31:45 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.10 2008-05-06 11:45:01 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -28,10 +28,10 @@
 
 // local
 #include "Event/OTBankVersion.h"
-#include "ConversionFunctions.h"
 
 // Tool interface
 #include "OTDAQ/IOTReadOutWindow.h"
+#include "OTDAQ/IOTChannelMapTool.h"
 
 // local
 #include "OTRawBankDecoder.h"
@@ -46,7 +46,7 @@ namespace OTRawBankDecoderHelpers
   public:
     Module() : m_detelement(0), m_isdecoded(false), m_size(0), m_data(0) { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; }
-    void setData( unsigned int size, const unsigned short* data, unsigned int bankversion) { 
+    void setData( unsigned int size, const unsigned short* data, int bankversion) { 
       m_size = size ;  m_data = data ; m_bankversion = bankversion ; }
     bool isDecoded() const { return m_isdecoded ; }
     void setIsDecoded(bool b=true) { m_isdecoded = b ; }
@@ -54,7 +54,8 @@ namespace OTRawBankDecoderHelpers
     unsigned int size() const { return m_size ; }
     LHCb::OTLiteTimeContainer& ownedottimes() { return m_ottimes ; }
     LHCb::OTLiteTimeRange ottimes() const { return LHCb::OTLiteTimeRange(m_ottimes.begin(),m_ottimes.end()) ; }
-    void setDetElement( const DeOTModule& e) ;
+    void setDetElement( const DeOTModule& e ) ;
+    void setChannelMap( const OTDAQ::ChannelMap::Module& map ) { m_channelmap = &map ; }
     const DeOTModule& detelement() const { return *m_detelement ; }
     
     size_t decodeDC06(double tdcconversion) ;
@@ -62,12 +63,11 @@ namespace OTRawBankDecoderHelpers
     size_t decode(double tdcconversion) ;
     
   private:
-    void addHitDC06(unsigned short data, float tdcconversion) ;
-    void addHitV3(unsigned short data, float tdcconversion) ;
-    void addHit(unsigned int straw, unsigned int tdctime, float tdcconversion) ;
+    void addHit(unsigned short data, float tdcconversion) ;
     
   private:
     const DeOTModule* m_detelement ;
+    const OTDAQ::ChannelMap::Module* m_channelmap ;
     unsigned int m_station ;
     unsigned int m_layer ;
     unsigned int m_quarter ;
@@ -76,7 +76,7 @@ namespace OTRawBankDecoderHelpers
     bool m_isdecoded ;
     unsigned int m_size ;
     const unsigned short* m_data ;
-    unsigned int m_bankversion ;
+    int m_bankversion ;
     LHCb::OTLiteTimeContainer m_ottimes ;
   } ;
   
@@ -91,19 +91,16 @@ namespace OTRawBankDecoderHelpers
     m_module  = moduleid.module() ;
   }
   
-  inline void Module::addHit(unsigned int straw, unsigned int tdctime, float tdcconversion) 
+  inline void Module::addHit(unsigned short data, float tdcconversion) 
   { 
+    OTDAQ::RawHit hit(data) ;
+    assert( hit.otis()*32 +  hit.channelInOtis() == hit.channel() ) ;
+    unsigned int straw = m_channelmap->straw( hit.channel() ) ;
+    unsigned int tdctime = hit.time() ;
     LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
     float t0 = m_detelement->strawT0( straw ) ;
     m_ottimes.push_back( LHCb::OTLiteTime( channelid, tdctime * tdcconversion - t0) );
   } 
-  
-  inline void Module::addHitDC06(unsigned short data, float tdcconversion) 
-  { 
-    OTDAQ::RawHit hit(data) ;
-    unsigned int straw   = OTDAQ::DC06::channelToStraw( hit.otis(), hit.channel() ) ;
-    addHit( straw, hit.time(), tdcconversion ) ;
-  }
   
   inline size_t Module::decodeDC06(double tdcconversion) 
   {
@@ -116,21 +113,14 @@ namespace OTRawBankDecoderHelpers
         const unsigned short* end   = begin + (haspaddinghit ? m_size -2 : m_size) ;
         m_ottimes.reserve( m_size ) ;
         for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
-          addHitDC06(*ihit,tdcconversion) ;
-        if(haspaddinghit) addHitDC06(m_data[m_size-1],tdcconversion) ;
+          addHit(*ihit,tdcconversion) ;
+        if(haspaddinghit) addHit(m_data[m_size-1],tdcconversion) ;
       }
       m_isdecoded = true ;
     }
     return m_ottimes.size() ;
   }
 
-  inline void Module::addHitV3(unsigned short data, float tdcconversion) 
-  { 
-    OTDAQ::RawHit hit(data) ;
-    unsigned int straw = OTDAQ::V3::channelToStraw( hit.otis(), hit.channel(), m_layer ) ;
-    addHit( straw, hit.time(), tdcconversion ) ;
-  }
-  
   inline size_t Module::decodeV3(double tdcconversion) 
   {
     if(!m_isdecoded) {
@@ -139,7 +129,7 @@ namespace OTRawBankDecoderHelpers
         const unsigned short* end   = begin + m_size ;
         m_ottimes.reserve( m_size ) ;
         for( const unsigned short* ihit = begin ; ihit != end ; ++ihit)
-          addHitV3(*ihit,tdcconversion) ;
+          addHit(*ihit,tdcconversion) ;
       }
       m_isdecoded = true ;
     }
@@ -157,19 +147,23 @@ namespace OTRawBankDecoderHelpers
       rc = decodeV3(tdcconversion) ;
       break;
     }
-    return 0 ;
+    return rc ;
   }
   
   class Detector
   {
   public:
-    Detector(const DeOTDetector& det) : m_golHeadersLoaded(false) 
+    Detector(const DeOTDetector& det,
+	     const OTDAQ::ChannelMap::Detector& channelmap) : m_golHeadersLoaded(false) 
     {  
       for(DeOTDetector::Modules::const_iterator imod = det.modules().begin() ;
-          imod != det.modules().end(); ++imod) 
-        module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()).setDetElement(**imod) ;
+          imod != det.modules().end(); ++imod) {
+	Module& amodule = module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ;
+	amodule.setDetElement(**imod) ;
+	amodule.setChannelMap( channelmap.module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ) ;
+      }
     }
-    
+      
     void clearevent() {
       m_golHeadersLoaded = false ;
       for(iterator imod = begin(); imod!= end(); ++imod)
@@ -189,7 +183,8 @@ namespace OTRawBankDecoderHelpers
                    const unsigned int quarter, const unsigned int module) const {
       return station-1<=NumStations-1 && layer<=NumLayers-1  && quarter<=NumQuadrants-1 && module-1<=NumModules-1 ; }
 
-  private:
+  private: 
+    enum { OffsetStations=1, OffsetLayers=1, OffsetQuadrants=1, OffsetModules=0 } ;
     enum { NumStations=3, NumLayers=4, NumQuadrants=4, NumModules=9 } ;
     Module m_modules[NumStations][NumLayers][NumQuadrants][NumModules];
     bool m_golHeadersLoaded ;
@@ -247,7 +242,12 @@ StatusCode OTRawBankDecoder::initialize()
   
   // Loading OT Geometry from XML
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_detectordata = new OTRawBankDecoderHelpers::Detector(*m_otdet) ;
+
+  // access to the channel map
+  m_channelmaptool = tool<IOTChannelMapTool>("OTChannelMapTool");
+
+  // initialize the decoder data. this things basically contains the decoded event
+  m_detectordata = new OTRawBankDecoderHelpers::Detector(*m_otdet,m_channelmaptool->getChannelMap()) ;
   
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
@@ -289,14 +289,13 @@ void OTRawBankDecoder::handle ( const Incident& incident )
 //decoded once the module data is asked for. (That is the 'decoding
 //on demand' part.)
 //=============================================================================
-StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank) const
+StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank, int bankversion) const
 {
   // There is one word which contains no data. (In real data this is
   // the OTSpecificHeader). We just skip it.
   const unsigned int* begin = bank.data() + 1 ;
   const unsigned int* end   = bank.data() + bank.size()/4 ;
   const unsigned int* idata ;  
-  int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : bank.version();
   unsigned int station,layer,quarter,module,numhits ;
   bool decodingerror(false) ;
   for( idata = begin ; idata < end ; ++idata ) {
@@ -313,7 +312,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank) const
 	decodingerror = true ;
       } else {
 	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ; 
+	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
 	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
       }
       idata += golHeader.hitBufferSize() ;
@@ -327,10 +326,10 @@ StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank) const
   
   return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
 }
-StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank) const
+
+StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankversion) const
 {
   bool decodingerror(false) ;
-  int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : bank.version();
   // The first 4 bytes are the OTSpecificHeader
   OTDAQ::OTSpecificHeader otheader(*bank.data()) ;
   if( msgLevel(MSG::DEBUG)) 
@@ -361,7 +360,7 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank) const
 	decodingerror = true ;
       } else {
 	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bVersion) ; 
+	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
 	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
       }
       // skip the actual hits
@@ -410,13 +409,14 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
     
     // Choose decoding based on bank version
     int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
+    m_channelmaptool->setBankVersion( bVersion ) ;
     StatusCode sc ;
     switch( bVersion ) {
     case OTBankVersion::DC06:
-      sc = decodeGolHeadersDC06(**ibank) ;
+      sc = decodeGolHeadersDC06(**ibank,bVersion) ;
       break ;
     case OTBankVersion::v3:
-      sc = decodeGolHeadersV3(**ibank) ;
+      sc = decodeGolHeadersV3(**ibank,bVersion) ;
       break ;
     default:
       error() << "Cannot decode OT raw buffer bank version "

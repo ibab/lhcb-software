@@ -33,7 +33,7 @@ namespace OTDAQ
    * The Data Word is a word of 32 bits that containes the data of 2 hits of the
  * OT for the OTDAQ data format 
    *
-   * @author Jacopo Nardulli
+   * @author Jacopo Nardulli, Wouter Hulsbergen
    * created Wed Nov 14 17:03:07 2007
    * 
    */
@@ -51,10 +51,13 @@ namespace OTDAQ
     /// Retrieve tdc time
     unsigned int time() const;
   
-    /// Retrieve channel number
+    /// Retrieve channel number (0-127)
     unsigned int channel() const;
+
+    /// Retrieve channel number in otis (0-31)
+    unsigned int channelInOtis() const;
   
-    /// Retrieve otis number
+    /// Retrieve otis number (0-3)
     unsigned int otis() const;
 
     /// Retrieve another bit that I do not know the meaning of
@@ -74,8 +77,9 @@ namespace OTDAQ
     
     /// Bitmasks for bitfield dataWord
     enum dataWordMasks{TimeMask     = 0xFFL,
-                       ChannelMask  = 0x1F00L,
+                       ChannelInOtisMask  = 0x1F00L,
                        OtisMask     = 0x6000L,
+		       ChannelMask  = ChannelInOtisMask | OtisMask,
                        wordMask     = 0x8000L,
     };
     
@@ -97,6 +101,11 @@ namespace OTDAQ
   inline unsigned int RawHit::channel() const
   {
     return (unsigned int)((m_data & ChannelMask) >> ChannelBits);
+  }
+  
+  inline unsigned int RawHit::channelInOtis() const
+  {
+    return (unsigned int)((m_data & ChannelInOtisMask) >> ChannelBits);
   }
   
   inline unsigned int RawHit::otis() const
