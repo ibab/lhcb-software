@@ -1,15 +1,15 @@
-!$Id: release.notes,v 1.127 2008-05-06 09:57:52 mneedham Exp $
+!$Id: release.notes,v 1.128 2008-05-06 14:34:41 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r0 2008-05-05 ==========================
 ! 2008-05-05 M Needham/G. Raven
  - Sort sensors by increasing y in DeITSector and DeTTSector
  - Add fuctor for sorting detector elements by y (STDetFun.h)
  - Bug fixes in DeSTSector to get correct piecewise traj
  - Clean up compiler warning
 
-!======================== STDet v4r0 2008-04-16 ==========================
 ! 2008-04-09 M Needham
  - Avoid double counting bondgap
 
