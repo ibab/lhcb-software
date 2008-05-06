@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.2 2008-02-15 06:28:51 cattanem Exp $
+// $Id: STDAQDefinitions.h,v 1.3 2008-05-06 11:56:03 mneedham Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
@@ -34,6 +34,9 @@ namespace STDAQ{
 
   // n strips per Tell1 boar
   const unsigned int nStripsPerBoard = 3072;
+
+  // invalid pcn
+  const unsigned int inValidPcn = 200;
 
 };
 

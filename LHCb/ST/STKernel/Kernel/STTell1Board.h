@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+// $Id: STTell1Board.h,v 1.2 2008-05-06 11:56:03 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -58,6 +58,9 @@ public:
 			    double isf) const;
 
 
+  // vector of hybrid orientations
+  const std::vector<int>& orientation() const;
+
   /// Operator overloading for stringoutput
   friend std::ostream& operator<< (std::ostream& s, const STTell1Board& obj)
   {
@@ -68,20 +71,23 @@ public:
   // Fill the ASCII output stream
   virtual std::ostream& fillStream(std::ostream& s) const;
 
-
   //std::ostream& STTell1Board::printOut( std::ostream& os ) const;
-
-  std::vector<int> m_orientation;
 
 private:
 
   STTell1ID m_boardID;
   unsigned int m_nStripsPerHybrid;
   std::vector<LHCb::STChannelID> m_sectorsVector;
+  std::vector<int> m_orientation;
+
 };
 
 inline STTell1ID STTell1Board::boardID() const{
   return m_boardID;
+}
+
+inline const std::vector<int>& STTell1Board::orientation() const{
+  return m_orientation;
 }
 
 
