@@ -1,4 +1,4 @@
-// $Id: OTFillEventFromOTTime.cpp,v 1.8 2007-10-07 20:53:30 wouter Exp $
+// $Id: OTFillEventFromOTTime.cpp,v 1.9 2008-05-06 11:48:57 wouter Exp $
 // Include files
 
 // Gaudi
@@ -78,6 +78,7 @@ StatusCode OTFillEventFromOTTime::initialize() {
 //=============================================================================
 StatusCode OTFillEventFromOTTime::execute() 
 {
+  warning() << "Please do not use. Must be adapted to new decoding first." << endreq ;
   // Retrieve the RawEvent
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
  
