@@ -1,6 +1,8 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+  - Align.cpp: Changed update of VELO half alignment constants for closed position
+
   - AlignSensors.cpp: deleted obsolete option MinDelta
 
 !=============================================================================

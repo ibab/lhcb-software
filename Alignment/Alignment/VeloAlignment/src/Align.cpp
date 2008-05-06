@@ -904,6 +904,7 @@ StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<
     }
   }
   if ( m_step2 ) {  // VELO half alignment
+    Gaudi::Transform3D leftSideInverse = Gaudi::Transform3D();
     for (int side=0; side<2; side++)   // 0 left, 1 right
     {
       if ( side == 0 ) {
@@ -934,7 +935,12 @@ StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<
       std::vector<double> pivot;
       pivot.push_back( 0.0 );
       pivot.push_back( 0.0 );
-      pivot.push_back( 0.0 );
+      if( side == 0 ) { 
+        pivot.push_back( zmoy_L );
+      }
+      else { 
+        pivot.push_back( zmoy_R );
+      }
       // fill the translation & rotation vectors
       // by looping over the number of degrees of freedom
       // the vector m_align is filled according to the following scheme:
@@ -952,16 +958,10 @@ StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<
           rotation[d] = const_box[ pos2 ];
         }
         else {
-          if ( side == 0 ) {
-            translation[d] = 0;
-            rotation[d] = 0;
-          }
-          else {
-            unsigned int pos1 = 2 + n_stat * d; // translations
-            unsigned int pos2 = 2 + n_stat * (d + 3); //rotations
-            translation[d] = const_box[ pos1 ];
-            rotation[d] = const_box[ pos2 ];
-          }
+          unsigned int pos1 = 2 + n_stat * d; // translations
+          unsigned int pos2 = 2 + n_stat * (d + 3); //rotations
+          translation[d] = const_box[ pos1 ];
+          rotation[d] = const_box[ pos2 ];
         }
       }
   
@@ -969,14 +969,26 @@ StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<
     	        << "Rotation vector   : " << rotation << "\n"
   	        << "pivot point       : " << pivot << endreq;
   
-      for ( int jjj = 0; jjj < const_box.size(); jjj++ ) {
-        info() << jjj << " " << const_box[ jjj ] << endmsg;
-      }
+      //for ( int jjj = 0; jjj < const_box.size(); jjj++ ) {
+      //  info() << jjj << " " << const_box[ jjj ] << endmsg;
+      //}
  
-      const Gaudi::Transform3D halfDelta = DetDesc::localToGlobalTransformation( translation, rotation, pivot);
-      const Gaudi::Transform3D localDelta = geo->ownToOffNominalMatrix() * halfDelta;
-      myCond->offNominalMatrix( localDelta );
-      updMgrSvc()->invalidate(myCond);
+      if ( ( !m_VELOopen ) && ( side == 0 ) ) {
+        debug() << "Setting left half transformation to identity" << endmsg;
+        leftSideInverse = myCond->toNominalMatrix();
+        info() << "leftCondOld " << myCond->toXml() << endmsg;
+        myCond->offNominalMatrix( Gaudi::Transform3D() );
+        updMgrSvc()->invalidate(myCond);
+        info() << "leftCondNew " << myCond->toXml() << endmsg;
+      }
+      else {
+        const Gaudi::Transform3D halfDelta = DetDesc::localToGlobalTransformation( translation, rotation, pivot);
+        const Gaudi::Transform3D localDelta = geo->ownToOffNominalMatrix() * halfDelta * leftSideInverse;
+        info() << "rightCondNew " << myCond->toXml() << endmsg;
+        myCond->offNominalMatrix( localDelta );
+        updMgrSvc()->invalidate(myCond);
+        info() << "rightCondNew " << myCond->toXml() << endmsg;
+      }
     }
   }
   return StatusCode::SUCCESS;
