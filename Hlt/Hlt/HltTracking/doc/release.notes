@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-05-06 - Patrick Koppenburg
+ - Change order of initialisations in creator to avoid warning
+
 ! 2008-05-02 - Gerhard Raven
  - no longer need to set m_algoType in HltAlgorithm derived classes
  - fix some initialize/finalize imbalances
