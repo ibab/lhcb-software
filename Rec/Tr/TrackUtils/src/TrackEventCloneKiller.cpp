@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.cpp,v 1.10 2007-10-23 15:37:16 cattanem Exp $
+// $Id: TrackEventCloneKiller.cpp,v 1.11 2008-05-06 10:01:14 aperiean Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -16,6 +16,8 @@
 //
 // 2006-03-01 : Eduardo Rodrigues
 // Based on the clone killer algorithm of Rutger van der Eijk (2002-06-17)
+// 2008-04-15 : Adrian Perieanu
+// Update for speed and clone rate
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY( TrackEventCloneKiller );
@@ -29,11 +31,11 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   // default list of input containers
-  m_tracksInContainers.push_back( LHCb::TrackLocation::VeloTT     );
   m_tracksInContainers.push_back( LHCb::TrackLocation::Forward    );
   m_tracksInContainers.push_back( LHCb::TrackLocation::Match      );
-  m_tracksInContainers.push_back( LHCb::TrackLocation::Tsa        );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::VeloTT     );
   m_tracksInContainers.push_back( LHCb::TrackLocation::Downstream );
+  m_tracksInContainers.push_back( LHCb::TrackLocation::Tsa        );
 
   declareProperty( "TracksInContainers",
                    m_tracksInContainers );
@@ -45,6 +47,8 @@ TrackEventCloneKiller::TrackEventCloneKiller( const std::string& name,
                    m_storeCloneTracks = false );
   declareProperty( "SkipSameContainerTracks",
                    m_skipSameContainerTracks = true );
+  declareProperty( "CompareInSameContainerForwardUpstream",
+                   m_compareInSameContainerForwardUpstream = false);
   declareProperty( "CloneFinderTool",
                    m_cloneFinderName = "TrackCloneFinder" );
 }
@@ -88,180 +92,127 @@ StatusCode TrackEventCloneKiller::execute() {
   // Put all the input tracks into a temporary vector of pointers
   // ------------------------------------------------------------
   std::vector<LHCb::Track*> allTracks;
-  getAllInputTracks( allTracks );
-  
-  // Remove first all ancestors and/or clone tracks on this list
-  // (takes into account the "StoreCloneTracks" property!)
-  // ------------------------------------------------------------
-  if ( !m_storeCloneTracks ) removeAncestorsAndClones( allTracks );
+  getInputTracks( allTracks);
   
   // Find the clones and flag them
   // -----------------------------
-  unsigned int nClonesFlagged = 0;
-  bool cloneFound = false;
+  for( unsigned int i1 = 0; i1 < allTracks.size(); ++i1){
 
-  for ( unsigned int i1 = 0; i1 < allTracks.size(); ++i1 ) {
-    for ( unsigned int i2 = i1+1; i2 < allTracks.size(); ++i2 ) {
+    // second loop over input tracks
+    for( unsigned int i2 = i1+1; i2 < allTracks.size(); ++i2){
+
+      if( ( allTracks[i1]->checkFlag( LHCb::Track::Clone) &&   
+	    (allTracks[i1]->history() != LHCb::Track::PatForward)) ||   
+	  allTracks[i2]->checkFlag( LHCb::Track::Clone))continue;  
       
-      if ( allTracks[i1] -> checkFlag( LHCb::Track::Clone ) ||
-           allTracks[i2] -> checkFlag( LHCb::Track::Clone ) ) continue;
-      if ( m_skipSameContainerTracks &&
-           allTracks[i1]->parent()->name() == allTracks[i2]->parent()->name() )
-        continue;
+      if( m_skipSameContainerTracks &&
+	  !m_compareInSameContainerForwardUpstream){
+	if( allTracks[i1]->parent()->name() == 
+	    allTracks[i2]->parent()->name())continue;
+      }else if( m_skipSameContainerTracks &&
+		m_compareInSameContainerForwardUpstream){
+	if( ( allTracks[i1]->parent()->name() == 
+	      allTracks[i2]->parent()->name()) &&
+	    ( !( allTracks[i1]->type() == LHCb::Track::Upstream &&
+		 allTracks[i2]->type() == LHCb::Track::Upstream)) &&
+	    ( !( allTracks[i1]->history() == LHCb::Track::PatForward &&
+		 allTracks[i2]->history() == LHCb::Track::PatForward))
+	    )continue;
+      }
       
-      // clones are flagged by the tool!
-      cloneFound = m_cloneFinder -> areClones( *allTracks[i1], *allTracks[i2],
-                                               true );
-      if ( cloneFound ) {
-        ++nClonesFlagged;
-        if ( m_debugLevel ) {
-          debug() << "-> tracks " << allTracks[i1] -> key()
-                  << " in " << allTracks[i1] -> parent() -> name() << " and "
-                  << allTracks[i2] -> key()
-                  << " in " << allTracks[i2] -> parent() -> name()
-                  << " are clones" << endreq;
-        }
-      } // if ( cloneFound )
+      // clones are flagged by the tool
+      m_cloneFinder->areClones( *allTracks[i1], *allTracks[i2],
+				true);
     } // loop i2 over tracks
   } // loop i1 over tracks
-
-  if ( m_debugLevel )
-    debug() << "Flagged " << nClonesFlagged
-            << " tracks as clones out of " << allTracks.size() << endreq;
 
   // Make the output container
   // -------------------------
   LHCb::Tracks* tracksOutCont = new LHCb::Tracks();
+  tracksOutCont->reserve( allTracks.size());
 
   // Fill the output container
   // -------------------------
-  unsigned int nUnique   = 0;
-  unsigned int nFiltered = 0;
-  for ( unsigned int i = 0; i < allTracks.size(); ++i ) {
-    if ( !allTracks[i] -> checkFlag( LHCb::Track::Clone ) ) ++nUnique;
+  for( unsigned int i = 0; i < allTracks.size(); ++i){
     bool toStore = true;
-    for ( unsigned int k = 0 ; m_ignoredTrackTypes.size() > k ; ++k ) {
-      if ( m_ignoredTrackTypes[k] == allTracks[i] -> type() ) toStore = false;
+    for( unsigned int k = 0 ; k < m_ignoredTrackTypes.size(); ++k){
+      if( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
     }
-    if ( toStore &&
-         ( m_storeCloneTracks ||
-           !allTracks[i] -> checkFlag( LHCb::Track::Clone ) ) ) {
-      tracksOutCont -> add( allTracks[i] -> clone() );
-    }
-    else {
-      ++nFiltered;
+    if( toStore &&
+	( m_storeCloneTracks ||
+	  !allTracks[i]->checkFlag( LHCb::Track::Clone))){
+      tracksOutCont->add( allTracks[i]->clone());
     }
   }
+  // Store the tracks in the TES
+  // ---------------------------
+  put( tracksOutCont, m_tracksOutContainer);
 
-  if ( m_debugLevel )
+  if( m_debugLevel){
+    unsigned int nUnique   = 0;
+    unsigned int nFiltered = 0;
+    for( unsigned int i = 0; i < allTracks.size(); ++i){
+      if( !allTracks[i]->checkFlag( LHCb::Track::Clone)) ++nUnique;
+      bool toStore = true;
+      for ( unsigned int k = 0 ; m_ignoredTrackTypes.size() > k ; ++k ) {
+	if ( m_ignoredTrackTypes[k] == allTracks[i]->type()) toStore = false;
+      }
+      if(!( toStore &&
+	    ( m_storeCloneTracks ||
+	      !allTracks[i] -> checkFlag( LHCb::Track::Clone)))){
+	++nFiltered;
+      }
+    }
     debug() << "Stored " << tracksOutCont -> size() 
             << " tracks, identified "
             << ( allTracks.size()  - nUnique ) << " clones of which " 
             << nFiltered << " were not stored."
             << endreq;
-  
-  // Store the tracks in the TES
-  // ---------------------------
-  put( tracksOutCont, m_tracksOutContainer );
+  }
 
   return StatusCode::SUCCESS;
 };
-
 //=============================================================================
 // Retrieve the input tracks from all the user-specified containers
 // Note: are only taken into account Valid and Fitted tracks!
 //=============================================================================
-void TrackEventCloneKiller::getAllInputTracks( std::vector<LHCb::Track*>&
-                                               allTracks )
+void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
+					    allTracks)
 {
-  std::vector<std::string>::const_iterator itInCont =
-    m_tracksInContainers.begin();
+  std::vector<std::string>::const_iterator 
+    itInCont = m_tracksInContainers.begin();
 
-  while ( itInCont != m_tracksInContainers.end() ) {
+  LHCb::Tracks::const_iterator iTrack;
+  SmartRefVector<LHCb::Track>::iterator it;
+  while( itInCont != m_tracksInContainers.end()){
 
-    LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont );
+    LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont);
 
-    if ( m_debugLevel ) debug() << "# Tracks in " << *itInCont
-                                << " = " << inTracks -> size() << endreq;
+    if( m_debugLevel) debug() << "# Tracks in " << *itInCont
+			      << " = " << inTracks -> size() << endreq;
 
-    allTracks.reserve( allTracks.size() + inTracks -> size() );
-    LHCb::Tracks::const_iterator iTrack = inTracks -> begin();
-    for( ; iTrack != inTracks -> end(); ++iTrack ) {
-      if ( toBeUsed( *iTrack ) ) allTracks.push_back( *iTrack );
-    }
+    allTracks.reserve( allTracks.size() + inTracks->size());
+    // loop over container
+    for( iTrack = inTracks->begin(); iTrack != inTracks->end(); ++iTrack){
+      // label ancestors as clones 
+      if( *itInCont != "LHCb::TrackLocation::Tsa"){
+ 	SmartRefVector<LHCb::Track>& ancestors = (*iTrack)->ancestors();
+	for ( it = ancestors.begin(); it != ancestors.end(); ++it){
+	  if( (*it)->checkFlag( LHCb::Track::Clone))continue;
+	  (*it)->setFlag( LHCb::Track::Clone, true);
+	}
+      }
+      if( !m_storeCloneTracks &&
+	  (*iTrack)->checkFlag( LHCb::Track::Clone))continue;
+      
+      if( !(*iTrack)->checkFlag( LHCb::Track::Invalid))
+	allTracks.push_back( *iTrack);
+    }// end loop over container
     ++itInCont;
   }
   if ( m_debugLevel ) debug() << "-> total # of tracks retrieved = "
                               << allTracks.size() << endreq;
 };
-
-//=============================================================================
-//  Include this track in the list of input tracks to be considered
-//=============================================================================
-bool TrackEventCloneKiller::toBeUsed( const LHCb::Track* track )
-{
-  // discard invalid tracks
-  if ( track -> checkFlag( LHCb::Track::Invalid ) ) return false;
-  
-  return true;
-}
-
-//=============================================================================
-//  Remove ancestor and/or clone tracks from the list of input tracks
-//=============================================================================
-void
-TrackEventCloneKiller::removeAncestorsAndClones( std::vector<LHCb::Track*>&
-                                                 allTracks )
-{
-  // First remove all the clone tracks from the list
-  // (only needed for couting in debug mode - all clones are removed hereafter)
-  unsigned int nClonesRemoved = allTracks.size();
-  if ( m_debugLevel ) {
-    std::vector<LHCb::Track*>::iterator iCloneTracks =
-      std::remove_if( allTracks.begin(), allTracks.end(),
-                      TrackFunctor::HasKey<LHCb::Track,const LHCb::Track::Flags&>
-                      (&LHCb::Track::checkFlag,LHCb::Track::Clone) );
-    allTracks.erase( iCloneTracks, allTracks.end() );
-    nClonesRemoved -= allTracks.size();
-  }
-  
-  // Flag the ancestor tracks as clones!
-  for( std::vector<LHCb::Track*>::iterator iTrack = allTracks.begin();
-       iTrack != allTracks.end(); ++iTrack ) {
-    SmartRefVector<LHCb::Track>& ancestors = (*iTrack) -> ancestors();
-    for ( SmartRefVector<LHCb::Track>::iterator it = ancestors.begin();
-          it != ancestors.end(); ++it ) {
-      if ( std::find( allTracks.begin(), allTracks.end(), *it )
-           != allTracks.end() ) {
-        (*it) -> setFlag( LHCb::Track::Clone, true );
-        if ( m_debugLevel )
-          debug() << (*iTrack) -> parent() -> name() << " track with key "
-                  << (*iTrack) -> key() << " has ancestor "
-                  << (*it) -> parent() -> name() << " track with key "
-                  << (*it) -> key() << " -> ancestor to be removed"
-                  << endreq;
-      }
-    } // loop over ancestors
-  } // loop over allTracks
-  
-  // Remove the ancestor tracks from list
-  unsigned int nAncRemoved = allTracks.size();
-  std::vector<LHCb::Track*>::iterator iAncTracks =
-    std::remove_if( allTracks.begin(), allTracks.end(),
-                    TrackFunctor::HasKey<LHCb::Track,const LHCb::Track::Flags&>
-                    (&LHCb::Track::checkFlag,LHCb::Track::Clone) );
-  allTracks.erase( iAncTracks, allTracks.end() );
-  nAncRemoved -= allTracks.size();
-  
-  if ( m_debugLevel )
-    debug() << "Removed " << nAncRemoved
-            << " ancestor tracks and " << nClonesRemoved
-            << " clone tracks from the list of input tracks"
-            << endmsg
-            << "-> total # of tracks to be considered = "
-            << allTracks.size() << endreq;
-};
-
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -271,5 +222,3 @@ StatusCode TrackEventCloneKiller::finalize()
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 };
-
-//=============================================================================

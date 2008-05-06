@@ -1,4 +1,4 @@
-// $Id: TrackEventCloneKiller.h,v 1.4 2006-08-31 17:56:05 erodrigu Exp $
+// $Id: TrackEventCloneKiller.h,v 1.5 2008-05-06 10:01:10 aperiean Exp $
 #ifndef TRACKEVENTCLONEKILLER_H 
 #define TRACKEVENTCLONEKILLER_H 1
 
@@ -16,6 +16,9 @@
  *  @author Eduardo Rodrigues
  *  @date   2006-03-01
  *  Based on the clone killer algorithm of Rutger van der Eijk (2002-06-17)
+ *  Update for speed and clone rate
+ *  @author Adrian Perieanu
+ *  @date   2008-05-05
  */
 class TrackEventCloneKiller : public GaudiAlgorithm {
 public: 
@@ -31,18 +34,11 @@ public:
 protected:
   
 private:
-  /// Retrieve the input tracks from all the user-specified containers
-  void getAllInputTracks( std::vector<LHCb::Track*>& allTracks );
-  
-  /// Include this track in the list of input tracks to be considered
-  bool toBeUsed( const LHCb::Track* track );
-  
-  /// Remove ancestor and/or clone tracks from the list of input tracks
-  void removeAncestorsAndClones( std::vector<LHCb::Track*>& allTracks );
-  
-private:
   ITrackCloneFinder* m_cloneFinder; ///< interface to clone finder tool
   bool m_debugLevel;
+
+  // Retrieve the input tracks from specified containers
+  void getInputTracks( std::vector<LHCb::Track*>& allTracks);
 
   // job options
   // -----------
@@ -56,6 +52,7 @@ private:
   bool m_storeCloneTracks;
   // do not do a clone compare for tracks from a same container
   bool m_skipSameContainerTracks;
+  bool m_compareInSameContainerForwardUpstream;
   // clone finder tool name
   std::string m_cloneFinderName;
 
