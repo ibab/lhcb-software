@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+!======================== TrackTools v3r6 2008-05-05 ========================
 ! 2008-05-05 - Adrian Perieanu
  - TrackCloneFinder: update for speed and lower clone rate
 
-!======================== TrackTools v3r6 2008-05-05 ========================
 ! 2008-04-29 - Jaap Panman
  - Add HltV0Upgrade.cpp and HltV0Upgrade.h (needs also IHltV0Upgrade)
 
