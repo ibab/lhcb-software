@@ -5,7 +5,7 @@
  *  Header file for RICH tool interface : Rich::Rec::IPIDPlots
  *
  *  CVS Log :-
- *  $Id: IRichPIDPlots.h,v 1.1 2008-04-28 10:00:15 jonrob Exp $
+ *  $Id: IRichPIDPlots.h,v 1.2 2008-05-06 15:31:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -25,17 +25,17 @@
 #include "Kernel/RichParticleIDType.h"
 
 // Event
-namespace LHCb 
-{ 
-  class Track; 
+namespace LHCb
+{
+  class Track;
   class RichPID;
 }
-namespace Rich 
-{ 
-  namespace Rec 
-  { 
-    class ITrackSelector; 
-  } 
+namespace Rich
+{
+  namespace Rec
+  {
+    class ITrackSelector;
+  }
 }
 
 static const InterfaceID IID_IRichPIDPlots ( "IRichPIDPlots", 1, 0 );
@@ -59,37 +59,54 @@ namespace Rich
 
     public:
 
+      /** @class Configuration IRichPIDPlots.h RichKernel/IRichPIDPlots.h
+       *
+       *  Utility class used to pass some basic configuration options
+       *  to the tool to use when creating the reference histograms.
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   2008-04-14
+       */
+      class Configuration
+      {
+      public:
+        /// Default constructor with default parameters
+        Configuration() 
+          : minP  (   2 * Gaudi::Units::GeV ),
+            maxP  ( 100 * Gaudi::Units::GeV ),
+            minPt (   0 * Gaudi::Units::GeV ),
+            maxPt ( 100 * Gaudi::Units::GeV ) { }
+      public:
+        double minP;  ///< The minimum track momentum (MeV)
+        double maxP;  ///< The maximum track momentum (MeV)
+        double minPt; ///< The minimum track transverse (to z-axis) momentum (MeV)
+        double maxPt; ///< The maximum track transverse (to z-axis) momentum (MeV)
+      };
+
+    public:
+
       /// Return the interface ID
       static const InterfaceID& interfaceID() { return IID_IRichPIDPlots; }
 
       /** Fill the plots for the given RichPID data object and PID hypothesis
        *
-       *  @param[in] pid        Pointer to the RichPID data object to fill plots for
-       *  @param[in] reco_hypo  The recontructed mass hypothesis to assume for this track
-       *  @param[in] true_hypo  The 'true' (e.g. via MC or D*'s) mass hypothesis to assume for this track
+       *  @param[in] pid    Pointer to the RichPID data object to fill plots for
+       *  @param[in] hypo   The mass hypothesis to assume for this track
+       *  @param[in] config (Optional) Configuration object
        */
       virtual void plots( const LHCb::RichPID * pid,
-                          const Rich::ParticleIDType reco_hypo,
-                          const Rich::ParticleIDType true_hypo ) const = 0;
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const = 0;
 
       /** Fill the plots for the given track and PID hypothesis
        *
-       *  @param[in] track      Pointer to the track to fill plots for
-       *  @param[in] reco_hypo  The recontructed mass hypothesis to assume for this track
-       *  @param[in] true_hypo  The 'true' (e.g. via MC or D*'s) mass hypothesis to assume for this track
+       *  @param[in] track  Pointer to the track to fill plots for
+       *  @param[in] hypo   The mass hypothesis to assume for this track
+       *  @param[in] config (Optional) Configuration object
        */
       virtual void plots( const LHCb::Track * track,
-                          const Rich::ParticleIDType reco_hypo,
-                          const Rich::ParticleIDType true_hypo ) const = 0;
-
-      /** Set the track selector for this tool to use. Useful to allow this plotting
-       *  to use the same selection as for its parent tool or algorithm that is calling it.
-       *
-       *  @param selector Pointer to the track selector tool to use
-       *
-       *  @attention This is a bit of a hack, to get things working. Would like to remove this eventually.
-       */
-      virtual void setTrackSelector( const Rich::Rec::ITrackSelector * selector ) const = 0;
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const = 0;
 
     };
 

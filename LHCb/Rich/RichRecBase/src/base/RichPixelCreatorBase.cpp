@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.29 2008-04-16 17:31:38 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.30 2008-05-06 15:31:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -93,7 +93,7 @@ namespace Rich
       // get tools
       if ( m_hpdCheck )
       {
-        m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+        m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
         Warning( "Will check each pixel for HPD status. Takes additional CPU.",
                  StatusCode::SUCCESS );
       }

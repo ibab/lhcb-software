@@ -65,6 +65,7 @@
   <class name = "Rich::Rec::ITrackSelector" />
   <class name = "Rich::Rec::IPhotonEmissionPoint" />
   <class name = "Rich::Rec::IPIDPlots" />
+  <class name = "Rich::Rec::IPIDPlots::Configuration" />
   <class name = "Rich::Rec::IStereoFitter" />
   <class name = "Rich::Rec::IStereoFitter::Result" />
   <class name = "Rich::Rec::IStereoFitter::Configuration" />

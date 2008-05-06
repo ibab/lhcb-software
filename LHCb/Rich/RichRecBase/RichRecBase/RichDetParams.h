@@ -5,7 +5,7 @@
  * A collection of general parameters for histogramming limits etc.
  *
  * CVS Log :-
- * $Id: RichDetParams.h,v 1.9 2006-05-05 10:39:33 jonrob Exp $
+ * $Id: RichDetParams.h,v 1.10 2008-05-06 15:31:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -65,11 +65,11 @@ const double zMaxPDGlo[]  = {    1750.0,   11100.0   }
 
 //                                 Rich1     Rich2
 #define PD_LOCAL_POSITIONS_X \
-const double xMinPDLoc[] = {    -800.0,    -800.0   };\
-const double xMaxPDLoc[] = {     800.0,     800.0   }
+const double xMinPDLoc[] = {    -650.0,    -800.0   };\
+const double xMaxPDLoc[] = {     650.0,     800.0   }
 #define PD_LOCAL_POSITIONS_Y \
-const double yMinPDLoc[] = {    -800.0,    -800.0   };\
-const double yMaxPDLoc[] = {     800.0,     800.0   }
+const double yMinPDLoc[] = {    -650.0,    -800.0   };\
+const double yMaxPDLoc[] = {     650.0,     800.0   }
 #define PD_LOCAL_POSITIONS_Z \
 const double zMinPDLoc[] = {      -5.0,      -5.0   };\
 const double zMaxPDLoc[] = {       5.0,       5.0   }
