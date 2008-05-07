@@ -43,7 +43,7 @@ use XmlTools              v5r2    Tools   # Marco Clemencic
 # Event data model
 use EventSys              v24r3   Event   # Marco Cattaneo
 use DAQEvent              v7r10   Event   # Marco Cattaneo, Markus Frank
-use DigiEvent             v2r5    Event   # Marco Cattaneo and sub-det experts
+use DigiEvent             v2r6    Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v4r4    Event   # Ivan Belyaev
 use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r2    Event   # Gloria Corti
@@ -53,7 +53,7 @@ use L0Event               v16r9   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r8    Event   # Gloria Corti and sub-det experts
 use PackedEvent           v3r3    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r6   Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r11   Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v2r12   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r12   Event   # Matt Needham
 use VeloEvent             v16r4   Event   # Tomasz Szumlak, Chris Parkes
 
@@ -92,7 +92,7 @@ use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use RichRecBase           v3r12  Rich    # Chris Jones
 use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
-use STKernel              v1r3   ST      # Matt Needham
+use STKernel              v1r4   ST      # Matt Needham
 use Tell1Kernel           v1r3   DAQ     # Tomasz Szumlak
 use TfKernel              v2r4   Tf      # Stephanie Hansmann-Menzemer
 use TrackInterfaces       v3r14  Tr      # Matt Needham

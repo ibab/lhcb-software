@@ -9,10 +9,11 @@
 This version uses Gaudi v19r9 and LCG_54e.
 
 - Packages modified: KernelSys v7r4, LHCbKernel v8r4, LHCbMath v2r7p1,
-    DetSys v12r0, DDDB v1r6, STDet v4r0, EventSys v24r3, VeloEvent v16r4,
-    DAQSys v3r9p1, CaloDAQ v4r4p1, MuonDAQ v4r0p1, DaVinciKernel v6r13,
-    LHCbAlgs v2r17, LoKiAlgo v7r4, LoKiArrayFunctors v7r3, LoKiGen v7r3,
-    LoKiMC v7r3, LoKiPhys v7r3, MDF v3r7, Tell1Kernel v1r3, TrackInterfaces v3r14
+    DetSys v12r0, DDDB v1r6, STDet v4r0, EventSys v24r3, DigiEvent v2r6, 
+    RecEvent v2r12, VeloEvent v16r4, DAQSys v3r9p1, CaloDAQ v4r4p1,
+    MuonDAQ v4r0p1, DaVinciKernel v6r13, LHCbAlgs v2r17, LoKiAlgo v7r4,
+    LoKiArrayFunctors v7r3, LoKiGen v7r3, LoKiMC v7r3, LoKiPhys v7r3, MDF v3r7,
+    STKernel v1r4, Tell1Kernel v1r3, TrackInterfaces v3r14
 
 - In LHCbKernel v8r4
   . Add 'numberOfPieces' and 'print' to PiecewiseTrajectory
@@ -29,6 +30,12 @@ This version uses Gaudi v19r9 and LCG_54e.
     o See talk in ST software meeting 13/03/08
     o Requires SQLDDDB >= v4r3
   . Avoid double counting bondgap
+
+- In DigiEvent v2r6
+  . Add source id to STCluster class
+
+- In RecEvent v2r12
+  . Add new attributes to STSummary class 
 
 - In VeloEvent v16r4
   . New functionality added for VeloTELL1Data, allow to:
@@ -86,11 +93,16 @@ This version uses Gaudi v19r9 and LCG_54e.
   . Fix a duplicated function definition
   . Fix initialization of MEPWriter, which got broken in v3r6.Used for tests only
 
+- In STKernel v1r4
+  . Add invalid pcn constant
+  . cleanup STTell1Board [orientation data member was public]
+
 - In Tell1Kernel v1r3
   . Add stuff that helps to run Vetra (Velo part) with condition DB
 
 - In TrackInterfaces v3r14
   . Added IHltV0Upgrade.h
+  . Update of ITrackCloneFinder.h for speed
 
 - In LHCbMath v2r7p1, LoKiAlgo v7r2p1, LoKiGen v7r3, LoKiMC v7r3, MDF v3r7
   . Fix some doxygen comments
