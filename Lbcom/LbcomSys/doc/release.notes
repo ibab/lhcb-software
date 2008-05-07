@@ -6,13 +6,20 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r17>2008-04-23 LbcomSys v6r17</A></H1><PRE>
+</PRE><H1><A NAME=v6r17>2008-05-07 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
-- Packages modified: STCheckers v2r5
+- Packages modified: STCheckers v2r5, STDAQ v3r6
 
 - In STCheckers v2r5
   . Follow changes in DeSTDet v4r0 [introduction of DeSTSensor level]
+  . Add PCN + error monitoring
+
+- In STDAQ v3r6
+  . Add creation of summary block in decoding
+  . Improve error handling/reporting in decoding
+  . Follow addition of source id to cluster class
+  . Follow clean up in STKernel
 
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
