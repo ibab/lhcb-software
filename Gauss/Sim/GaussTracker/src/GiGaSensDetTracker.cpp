@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetTracker.cpp,v 1.12 2007-03-18 18:39:07 gcorti Exp $
+// $Id: GiGaSensDetTracker.cpp,v 1.13 2008-05-07 07:05:44 gcorti Exp $
 // Include files 
 
 // from CLHEP
@@ -42,6 +42,8 @@ GiGaSensDetTracker::GiGaSensDetTracker( const std::string& type,
 {  
 
   collectionName.insert( "Hits" );
+  declareProperty( "RequireEDep", m_requireEDep = true,
+                   "Flag to control storing of hits if track deposited energy or not" );
 
 }
 
@@ -83,11 +85,15 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
   G4Track* track=step->GetTrack();
   G4double charge = track->GetDefinition()->GetPDGCharge();
   
-  if( charge == 0.0 ) { return false; }
+  if( charge == 0.0 ) { return false; }   // fill hits only for charged tracks
   
+  // If required to have energy deposition check
   double edep = step->GetTotalEnergyDeposit();
-
-  if( (edep != 0.0 ) && (step->GetStepLength() != 0.0) ) {
+  if( m_requireEDep && ( edep <= 0.0 ) ) {
+    return false;
+  }
+  
+  if( step->GetStepLength() != 0.0 ) {     // step must be finite
 
     Print("Filling a hit", StatusCode::SUCCESS, MSG::VERBOSE);
 

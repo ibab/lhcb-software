@@ -5,11 +5,29 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!======================= GaussTracker v6r1 2008-02-14 ========================
+!======================= GaussTracker v6r1 2008-05-06 ========================
+! 2008-05-06 - Gloria CORTI
+ - Introduce as option possibility to not require dE/dx in the sensitive
+   detector to store the hit. This allow to store hits even for geantinos
+   or when switching off the energy loss. The options is called "RequireEDep"
+   and is a bool (Default = true). In addition require that dE/dx > 0 rather 
+   than != 0. 
+   Example: to switch off requiring dE/dx for TT the option is
+            GiGaGeo.TTSDet.RequireEDep = false;
+   . src/GiGaSensDetTracker.{h,cpp}
+
+! 2008-04-10 - Gloria CORTI
+ - Change name of property from singular ("Detector") to plural ("Detectors")
+   to reflect the change from a string to an array of string (see entry of
+   2008-02-14). Add explanation to properties.
+   . src/GetTrackerHitsAlg.cpp
+   . options/TrackersHits.opts       
+
 ! 2008-02-14 - Magnus LIENG
  - Changed option "Detector" to accept an array of strings. The algorithm can
-   now deal with detectors splitt over several detector locations.
-   . src/TrackerHit.{h,cpp}
+   now deal with detectors splitt over several detector locations like the
+   BCM that are in UpstreamRegion and BeforeMagnetRegion)
+   . src/GetTrackerHitsAlg.{h,cpp}
    . options/TrackersHits.opts       
 
 !======================= GaussTracker v6r0p1 2007-10-02 ======================

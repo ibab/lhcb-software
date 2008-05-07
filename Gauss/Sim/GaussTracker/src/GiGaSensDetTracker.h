@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetTracker.h,v 1.5 2007-03-18 18:39:07 gcorti Exp $
+// $Id: GiGaSensDetTracker.h,v 1.6 2008-05-07 07:05:44 gcorti Exp $
 #ifndef GIGASENSDETTRACKER_H
 #define GIGASENSDETTRACKER_H 1 
 
@@ -69,6 +69,11 @@ private:
 
   /// Pointer to G4 collection for this sensitive detector
   TrackerHitsCollection* m_trackerCol;
+
+  /// Flag to store hits if dE/dx occured, this is to enable hits when
+  /// switching it off for special studies (like with geantinos)
+  bool m_requireEDep;
+  
 };
 
 
