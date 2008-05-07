@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.7 2008-05-05 17:12:01 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.8 2008-05-07 15:23:42 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -130,7 +130,10 @@ class Version:
     def __iter__(self):
         return iter(self._version)
     def __cmp__(self, other):
-        other = tuple(other)
+        if type(other) is str:
+            other = tuple(Version(other))
+        else:
+            other = tuple(other)
         if self._version < other: return -1
         elif self._version == other: return 0
         else: return 1
@@ -442,14 +445,14 @@ def unversionedProjects():
     """
     return Release.__unversioned_projects__.values()
 
-def generateXML(withDTD = False, withSchema = True):
+def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
     # header
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    if withDTD:
-        xml += '<!DOCTYPE releases_db SYSTEM "releases_db.dtd">\n<releases_db>\n'
-    elif withSchema:
+    if stylesheet:
+        xml += '<?xml-stylesheet type="text/xsl" href="%s"?>\n'%stylesheet
+    if withSchema:
         xml += '<releases_db\n' + \
-               ' xmlns="http://cern.ch/lhcbproject/dist/"\n' + \
+               ' xmlns:lhcb="http://cern.ch/lhcbproject/dist/"\n' + \
                ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' + \
                ' xsi:schemaLocation="http://cern.ch/lhcbproject/dist/ releases_db.xsd ">\n'
     else:
