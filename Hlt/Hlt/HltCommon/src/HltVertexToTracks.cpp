@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.3 2008-05-03 15:19:53 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.4 2008-05-07 11:36:41 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -29,7 +29,6 @@ HltVertexToTracks::HltVertexToTracks( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
 
-  m_doInitSelections = false;
 }
 //=============================================================================
 // Destructor
@@ -62,14 +61,10 @@ StatusCode HltVertexToTracks::execute() {
 
   for(  Hlt::VertexContainer::const_iterator it= m_inputVertices->begin(); 
         it<m_inputVertices->end(); ++it){
-    
     SmartRefVector< LHCb::Track >  trks = (*it)->tracks();
     if(trks.size()!=2) return StatusCode::FAILURE;
-
-    Track* track0 = (Track*) trks[0];
-    Track* track1 = (Track*) trks[1];
-    zen::extend(*m_outputTracks,track0);
-    zen::extend(*m_outputTracks,track1);
+    zen::extend(*m_outputTracks,trks[0]);
+    zen::extend(*m_outputTracks,trks[1]);
   }
 
   return StatusCode::SUCCESS;

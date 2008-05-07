@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.23 2008-05-03 15:18:57 graven Exp $
+// $Id: HltAlgorithm.h,v 1.24 2008-05-07 11:36:40 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -44,9 +44,6 @@ protected:
 
   // initialize the counters
   virtual void initCounters();
-
-  // initialize the selections (keep for backward compatibility)
-  virtual void initSelections();
 
   // save configurtion of algorithm
   virtual void saveConfiguration();
@@ -167,10 +164,6 @@ protected:
 
 protected:
 
-  // for backward compatibility (to be deprecated)
-  // do or do not retrieve/register the Track/Vertex input/ouput selections 
-  bool m_doInitSelections;
-  
   Hlt::TrackSelection* m_inputTracks;
   Hlt::TrackSelection* m_inputTracks2;
   Hlt::VertexSelection* m_inputVertices;

@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.5 2008-02-12 16:08:53 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.6 2008-05-07 11:36:41 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -32,7 +32,6 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
   declareProperty( "TESOutputVerticesName",  
                    m_TESOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
  
-  m_doInitSelections = false;
 };
 //=============================================================================
 // Destructor

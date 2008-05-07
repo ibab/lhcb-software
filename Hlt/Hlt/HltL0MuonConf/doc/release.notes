@@ -3,6 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2008-05-07 - Gerhard Raven
+ - remove obsolete protected datamember in HltAlgorithm derived classes
+
 ! 2008-05-02 - Gerhard Raven
  - remove obsolete _dll.cpp file, add .cvsignore file
  - no longer need to set m_algoType in every HltAlgorithm derived class

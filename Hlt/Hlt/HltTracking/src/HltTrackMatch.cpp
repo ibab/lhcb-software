@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.4 2008-05-03 15:24:44 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.5 2008-05-07 11:36:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,6 @@ HltTrackMatch::HltTrackMatch( const std::string& name,
   declareProperty("MaxQuality",m_maxQuality = 1e6);
   declareProperty("MaxQuality2",m_maxQuality2 = 1e6);
 
-  m_doInitSelections = false;
   m_inputTracks = 0;
   m_inputTracks2 = 0;
   m_outputTracks = 0;

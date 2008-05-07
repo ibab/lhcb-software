@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-05-07 - Patrick Koppenburg
+ - remove unused protected datamember in HltAlgorithm derived classes
+
 ! 2008-05-06 - Patrick Koppenburg
  - Change order of initialisations in creator to avoid warning
 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.30 2008-05-03 15:18:57 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.31 2008-05-07 11:36:40 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -16,6 +16,12 @@
 HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
+  , m_inputTracks(0)
+  , m_inputTracks2(0)
+  , m_inputVertices(0)
+  , m_primaryVertices(0)
+  , m_outputTracks(0)
+  , m_outputVertices(0)
 {
   
   declareProperty("PassPeriod", m_passPeriod = 0);  
@@ -30,28 +36,11 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("InputSelections", m_extraInputSelectionsNames);
   declareProperty("OutputSelection", m_outputSelectionName = name);
 
-  // for backward compatibility
-  declareProperty("InputTracksName", m_inputSelectionName);
-  declareProperty("InputVerticesName", m_inputSelectionName);
-  declareProperty("InputTracks2Name", m_inputSelection2Name);
-  declareProperty("PrimaryVerticesName", m_inputSelection2Name);
-  declareProperty("OutputTracksName", m_outputSelectionName);
-  declareProperty("OutputVerticesName", m_outputSelectionName);
-
-
   m_inputSelectionsNames.clear();
   m_inputSelections.clear();
   m_outputSelection = 0;
 
-  // for backward compatibility
-  m_doInitSelections = false;
-  m_inputTracks = 0;
-  m_inputTracks2 = 0;
-  m_inputVertices = 0;
-  m_primaryVertices = 0;
 
-  m_outputTracks = 0;  
-  m_outputVertices = 0;  
 }
 
 HltAlgorithm::~HltAlgorithm() {
@@ -66,13 +55,6 @@ StatusCode HltAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;
 
   initCounters();
-
-  if (m_doInitSelections) {
-    initSelections();
-    verbose() << "Done initSelections" << endmsg ;
-    saveConfiguration();  
-    verbose() << "Saved config" << endmsg ;
-  }
 
   verbose() << "Initialised HltAlgorithms" << endmsg ;
   return StatusCode::SUCCESS;
@@ -90,85 +72,6 @@ void HltAlgorithm::initCounters()
   initializeCounter(m_counterCandidates, "nCandidates");
 }
 
-void HltAlgorithm::initSelections() {
-
-  info() << " init Selections " << endreq;
-  
-  // retrieving input selections
-  // to be backward compatible, set the track,vertices input selections
-  if (!m_doInitSelections) return;
-  verbose() << m_inputSelectionName << endmsg ;
-
-  if (!m_inputSelectionName.empty()) {
-    Hlt::Selection& sel = retrieveSelection(m_inputSelectionName);
-    if (sel.classID() == LHCb::Track::classID())
-      m_inputTracks = 
-        &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
-    else if (sel.classID() == LHCb::RecVertex::classID())
-      m_inputVertices = 
-        &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
-  }
-
-  verbose() << "Done input selection" << endmsg ;
-  verbose() << m_inputSelection2Name << endmsg ;
-
-  if (!m_inputSelection2Name.empty()) {
-    Hlt::Selection& sel = retrieveSelection(m_inputSelection2Name);
-    if (sel.classID() == LHCb::Track::classID())
-      m_inputTracks2 = 
-        &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-    else if (sel.classID() == LHCb::RecVertex::classID())
-      m_primaryVertices = 
-        &(retrieveTSelection<LHCb::RecVertex>(m_inputSelection2Name));
-  }
-
-  verbose() << "Done input selections 2" << endmsg ;
-
-
-  const std::vector<std::string>& names =m_extraInputSelectionsNames.value();
-  for (std::vector<std::string>::const_iterator it = names.begin();
-       it != names.end(); ++it) {
-    std::string name = (*it);
-    Hlt::Selection& sel = retrieveSelection(name);
-    if (sel.classID() == LHCb::Track::classID()) {
-      Hlt::TrackSelection& sel = (retrieveTSelection<LHCb::Track>(name));
-      if (!m_inputTracks) m_inputTracks = &sel;
-      else m_inputTracks2 = &sel;
-    } else if (sel.classID() == LHCb::RecVertex::classID()) {
-      Hlt::VertexSelection& sel= (retrieveTSelection<LHCb::RecVertex>(name));
-      if (!m_inputVertices) m_inputVertices = &sel;
-      else m_primaryVertices = &sel;
-    }
-  }
-
-  // create and ser the outputselection
-  // to be backward compatible, set the type of the output selection
-  // Track/Velo 
-  
-  Assert(!m_outputSelectionName.empty(), 
-         "initSelections() HltAlgorithm without output selection!");
-
-  std::string type = "";
-  std::vector<std::string> values = 
-    EParser::parse(m_outputSelectionName,"/");
-  m_outputSelectionName = values.back();
-  if (values.size() == 2) type = values[0];
-
-  if (type.empty()) {
-    debug() << " output selection name " << m_outputSelectionName
-            << " without type: no selection selection created!" << endreq;
-    return;
-  }
-  
-  if (type == "Track") {
-    m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
-  } else if (type == "Vertex") {
-    m_outputVertices = 
-      &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
-  } else{
-    Assert(0,"iniSelections() Unknown selection type "+type);
-  }
-}
 
 
 void HltAlgorithm::saveConfiguration() {

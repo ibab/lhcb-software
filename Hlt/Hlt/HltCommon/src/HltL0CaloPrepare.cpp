@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.2 2008-05-03 15:19:53 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.3 2008-05-07 11:36:40 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -35,9 +35,6 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
                   L0CaloCandidateLocation::Full);
 
   declareProperty("CaloMakerTool", m_caloMakerName = "");
-
-  m_doInitSelections = false;
-  
 }
 //=============================================================================
 // Destructor

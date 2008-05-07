@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.2 2008-05-03 15:19:53 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.3 2008-05-07 11:36:40 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -33,8 +33,6 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
   declareProperty("MinPt", m_PtMin = 0.1);
 
   m_maker = 0;
-
-  m_doInitSelections = false;
 }
 //=============================================================================
 // Destructor

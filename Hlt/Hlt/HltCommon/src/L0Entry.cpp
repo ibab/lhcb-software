@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.13 2008-05-03 15:19:53 graven Exp $
+// $Id: L0Entry.cpp,v 1.14 2008-05-07 11:36:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,6 @@ L0Entry::L0Entry( const std::string& name,
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("L0ChannelsName", m_l0ChannelsName);
-  m_doInitSelections = false;
 }
 //=============================================================================
 // Destructor

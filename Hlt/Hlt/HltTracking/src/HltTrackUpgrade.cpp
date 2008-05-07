@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.5 2008-05-03 15:24:44 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.6 2008-05-07 11:36:41 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -27,7 +27,6 @@ HltTrackUpgrade::HltTrackUpgrade( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("RecoName", m_recoName = "empty");  
-  m_doInitSelections = false;
 };
 //=============================================================================
 // Destructor

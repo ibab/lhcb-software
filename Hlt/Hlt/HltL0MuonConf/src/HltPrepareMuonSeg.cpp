@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.4 2008-05-03 15:20:38 graven Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.5 2008-05-07 11:36:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,6 @@ HltPrepareMuonSeg::HltPrepareMuonSeg( const std::string& name,
   declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName = "Hlt/Tracks/ConfirmedTMuon");
 
-  m_doInitSelections = false;
 }
 //=============================================================================
 // Destructor
