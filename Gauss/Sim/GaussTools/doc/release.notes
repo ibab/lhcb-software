@@ -4,7 +4,8 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
-! 2008-04-28 - Patrick Robbe
+!!======================== GaussTools v13r4 2008-05-07 ========================
+ 2008-04-28 - Patrick Robbe
  - src/Components/GaussEventActionHepMC: modifications to allow usage 
    of unknown particles
 
