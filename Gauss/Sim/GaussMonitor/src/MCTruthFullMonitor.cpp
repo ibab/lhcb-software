@@ -1,4 +1,4 @@
-// $Id: MCTruthFullMonitor.cpp,v 1.3 2005-12-16 20:13:50 gcorti Exp $
+// $Id: MCTruthFullMonitor.cpp,v 1.4 2008-05-07 09:54:20 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,7 @@ StatusCode MCTruthFullMonitor::initialize() {
         if( status.isSuccess() ) nt1->addItem("XOrigin",     m_xOvtx     );
         if( status.isSuccess() ) nt1->addItem("YOrigin",     m_yOvtx     );
         if( status.isSuccess() ) nt1->addItem("ZOrigin",     m_zOvtx     );
+        if( status.isSuccess() ) nt1->addItem("TOrigin",     m_tOvtx     );
         if( status.isSuccess() ) nt1->addItem("ParentType",  m_parent    );
         if( status.isSuccess() ) nt1->addItem("NDaughVtx",   m_daughVtx  );
         if( status.isSuccess() ) nt1->addItem("NDaughPart",  m_daughPart );
@@ -100,11 +101,13 @@ StatusCode MCTruthFullMonitor::execute() {
     m_xOvtx    = -9999.0;
     m_yOvtx    = -9999.0;
     m_zOvtx    = -9999.0;
+    m_tOvtx    = -9999.0;
     if( (*aPart)->originVertex() ) {
       m_typeOvtx = (*aPart)->originVertex()->type();
       m_xOvtx    = (*aPart)->originVertex()->position().x();
       m_yOvtx    = (*aPart)->originVertex()->position().y();
       m_zOvtx    = (*aPart)->originVertex()->position().z();
+      m_tOvtx    = (*aPart)->originVertex()->time();
     }
     m_parent = -1000000;
     if( (*aPart)->mother() ) { 

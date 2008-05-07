@@ -4,6 +4,17 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v5r1 2008-05-07 =========================
+! 2008-05-07 - Gloria CORTI
+ - Additional histograms of z coordinates of primay vertex with wider
+   boundaries
+   . src/GenMonitorAlg.{h,cpp}
+
+! 2008-04-10 - Gloria CORTI
+ - Introduce histograms or entry in ntuple to monitor time of primary vertex
+   . src/GenMonitorAlg.{h,cpp}
+   . src/MCTruthFullMonitor.{h,cpp}
+
 !====================== GaussMonitor v5r0 2007-06-26 =========================
 ! 2007-06-26 - Gloria Corti
  - Adapt to change in LHCb v22r6 with move of interfaces of MC tools in 

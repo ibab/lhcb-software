@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.11 2007-05-16 17:33:29 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.12 2008-05-07 09:54:20 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -134,8 +134,12 @@ StatusCode GenMonitorAlg::execute() {
                               Gaudi::Units::mm );
               m_hPrimZ->fill( hepMCpart->production_vertex()->position().z()/
                               Gaudi::Units::mm );
-              m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z()/
+              m_hPrimZV->fill( hepMCpart->production_vertex()->position().z()/
                                Gaudi::Units::mm );
+              m_hPrimZE->fill( hepMCpart->production_vertex()->position().z()/
+                               Gaudi::Units::mm );
+              m_hPrimT->fill( hepMCpart->production_vertex()->position().t()/
+                               Gaudi::Units::ns );
             }
           } 
           m_hPartP->fill( hepMCpart->momentum().vect().mag()/
@@ -270,7 +274,9 @@ void GenMonitorAlg::bookHistos()
   m_hPrimX   = book( 11, "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
   m_hPrimY   = book( 12, "PrimaryVertex y (mm)", -0.5, 0.5, 100 );
   m_hPrimZ   = book( 13, "PrimaryVertex z (mm)", -200., 200., 100 ); 
-  m_hPrimZZ  = book( 14, "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
+  m_hPrimZV  = book( 14, "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
+  m_hPrimZE  = book( 15, "PrimaryVertex z, all Exp Area (mm)", -1000., 20000., 105 );
+  m_hPrimT   = book( 16, "PrimaryVertex t (ns)", -75.5, 75.5, 151 );
   m_hPartP   = book( 21, "Momentum of all particles (GeV)", 0., 100., 100 );
   m_hPartPDG = book( 22, "PDGid of all particles", -4999., 5000., 10000 );
   m_hProtoP  = book( 31, "Momentum of protostable particles (GeV)", 0., 100., 100);

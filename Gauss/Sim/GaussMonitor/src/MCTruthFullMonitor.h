@@ -1,4 +1,4 @@
-// $Id: MCTruthFullMonitor.h,v 1.2 2005-12-16 20:13:50 gcorti Exp $
+// $Id: MCTruthFullMonitor.h,v 1.3 2008-05-07 09:54:20 gcorti Exp $
 #ifndef MCTRUTHMONITOR_H 
 #define MCTRUTHMONITOR_H 1
 
@@ -35,7 +35,7 @@ private:
   NTuple::Item<long>    m_pType;
   NTuple::Item<float>   m_pxOvtx, m_pyOvtx, m_pzOvtx;
   NTuple::Item<long>    m_typeOvtx;
-  NTuple::Item<float>   m_xOvtx, m_yOvtx, m_zOvtx;
+  NTuple::Item<float>   m_xOvtx, m_yOvtx, m_zOvtx, m_tOvtx;
   NTuple::Item<long>    m_parent;
   NTuple::Item<long>    m_daughVtx, m_daughPart;
 
