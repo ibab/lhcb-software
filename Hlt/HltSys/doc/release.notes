@@ -10,7 +10,7 @@ Purpose: LHCb High Level Trigger packages.
  - Splitting of Hlt in Hlt1 and Hlt2. Still ongoing. 
    . Hlt2 completely rewritten
 
-! 2008-05-27 - Gerhard Raven
+! 2008-05-07 - Gerhard Raven
  - Finish property migration in HltAlgorithm:
         InputTracksName -> InputSelection
         InputTracks2Name -> InputSelection2
