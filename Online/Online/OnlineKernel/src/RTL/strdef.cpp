@@ -48,6 +48,74 @@ int str_trim(const char* src, char* dst, size_t* resultant_length)    {
   return 0;
 }
 
+static bool match1(const char* pat, const char* str, bool case_sensitive) {
+  //
+  // Credits: Code from Alessandro Felice Cantatore.
+  // 
+  static char mapCaseTable[256];
+  static char mapNoCaseTable[256];
+  static bool first = true;
+
+  const char *s, *p, *table;
+  bool star = false;
+  if ( first ) {
+    for (int i = 0; i < 256; ++i) {
+      mapCaseTable[i] = i;
+      mapNoCaseTable[i] = ( i >= 'a' && i <='z' ) ? i+'A'-'a' : i;
+    }
+    first = false;
+  }
+  table = case_sensitive ? mapCaseTable : mapNoCaseTable;
+  
+ loopStart:
+  for (s = str, p = pat; *s; ++s, ++p) {
+    switch (*p) {
+    case '?':
+      if (*s == '.') goto starCheck;
+      break;
+    case '*':
+      star = true;
+      str = s, pat = p;
+      do { ++pat; } while (*pat == '*');
+      if (!*pat) return true;
+      goto loopStart;
+    default:
+      if ( *(table+*s) != *(table+*p) )
+	goto starCheck;
+      break;
+    } /* endswitch */
+  } /* endfor */
+  while (*p == '*') ++p;
+  return (!*p);
+  
+ starCheck:
+  if (!star) return false;
+  str++;
+  goto loopStart;
+}
+
+static bool match0(const char *pattern, const char *candidate)  {
+  switch (*pattern)   {
+  case '\0':
+    return !*candidate;
+  case '*':
+    return match0(pattern+1, candidate) || *candidate && match0(pattern, candidate+1);
+  case '?':
+    return *candidate && match0(pattern+1, candidate+1);
+  default:
+    return (*pattern == *candidate) && match0(pattern+1, candidate+1);   
+  }
+}
+
+int str_match_wild (const char *candidate_string, const char *pattern_string)   {
+  return match1(pattern_string,candidate_string,true) ? STR_MATCH : STR_NOMATCH;
+}
+
+int strcase_match_wild (const char *candidate_string, const char *pattern_string)   {
+  return match1(pattern_string,candidate_string,false) ? STR_MATCH : STR_NOMATCH;
+}
+
+#if 0
 int str_match_wild (const char *candidate_string, const char *pattern_string)   {
   int result = STR_NOMATCH;
   if ( candidate_string && pattern_string )   {
@@ -97,3 +165,4 @@ int str_match_wild (const char *candidate_string, const char *pattern_string)   
   }
   return result;
 }
+#endif
