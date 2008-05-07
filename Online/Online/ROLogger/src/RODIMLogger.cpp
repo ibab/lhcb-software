@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.6 2008-04-30 21:06:53 frankb Exp $
+// $Id: RODIMLogger.cpp,v 1.7 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,17 +11,28 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.6 2008-04-30 21:06:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.7 2008-05-07 16:22:21 frankb Exp $
 
 // Framework include files
+#include <cerrno>
+#include <cstdarg>
+#include <sstream>
+#include <iostream>
+#include "RTL/rtl.h"
+#include "RTL/strdef.h"
+#include "CPP/Event.h"
+#include "CPP/IocSensor.h"
+#include "UPI/UpiSensor.h"
+#include "UPI/upidef.h"
+
+#include "ROLogger/PartitionListener.h"
+#include "ROLogger/RODIMLogger.h"
+#include "ROLoggerDefs.h"
+
 extern "C" {
   #include "dic.h"
   #include "dis.h"
 }
-#include <cerrno>
-#include <iostream>
-#include "RTL/rtl.h"
-#include "ROLogger/RODIMLogger.h"
 
 #ifdef _WIN32
 #include "RTL/conioex.h"
@@ -204,19 +215,39 @@ using namespace graphics;
 
 /// Standard constructor
 RODIMLogger::RODIMLogger(int argc, char** argv) 
-: m_colors(true)
+  : m_colors(true), m_historySize(1000)
 {
-  std::string name;
+  std::string name, outfile = "logger.dat";
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("service",1,name);
+  cli.getopt("buffer",1,m_historySize);
   m_colors = cli.getopt("colors",1) != 0;
+  m_display = cli.getopt("display",1) != 0;
+  m_output = stdout;
+  m_upi = false;
+  m_id = 0;
+  if ( cli.getopt("file",1) ) {
+    cli.getopt("file",1,outfile);
+    m_colors = false;
+    m_display = true;
+    m_historySize = 0;
+    m_upi = true;
+    m_output = ::fopen(outfile.c_str(),"w");
+    if ( 0 == m_output ) {
+      logMessage("Cannot open output file: %s [%s]",outfile.c_str(),RTL::errorString());
+      exit(3);
+    }
+    logMessage("Opened output file:%s",outfile.c_str());
+  }
   if ( name.empty() ) {
-    std::cout << "You have to supply a service name to display its data." << std::endl;
+    logMessage("You have to supply a service name to display its data.");
     ::lib_rtl_sleep(10000);
     ::exit(2);
   }
+  logMessage("Service name:         %s", name.c_str());
+  logMessage("Message buffer size:  %d",m_historySize);
   m_service = ::dis_add_cmnd((char*)name.c_str(),(char*)"C",requestHandler,(long)this);
-  bg_black();
+  if ( m_colors ) bg_black();
 }
 
 /// Standard destructor
@@ -253,7 +284,7 @@ int RODIMLogger::msgSeverity(const char* msg) {
 }
 
 /// Print single message retrieved from error logger
-void RODIMLogger::printMessage(FILE* fp, const char* msg, bool crlf)  {
+void RODIMLogger::printMessage(const char* msg, bool crlf)  {
   if ( m_colors ) {
     bg_black();
     switch(msgSeverity(msg))      {
@@ -280,13 +311,101 @@ void RODIMLogger::printMessage(FILE* fp, const char* msg, bool crlf)  {
       break;
     } 
   }
-  fprintf(fp,msg);
-  if ( crlf ) fprintf(fp,"\n");
+  ::fprintf(m_output,msg);
+  if ( crlf ) ::fprintf(m_output,"\n");
   if ( m_colors ) ::plain();
+  if ( m_output != stdout ) ::fflush(m_output);
+}
+
+void RODIMLogger::updateHistory(const char* msg) {
+  if ( m_historySize > 0 ) {
+    m_history.push_back(msg);
+    if ( m_history.size() > m_historySize ) m_history.pop_front();
+  }
+}
+
+static std::string msg_src(const std::string& m) {
+  size_t idx = m.find("]"), idq = m.find(":");
+  if ( idx != std::string::npos && idq != std::string::npos ) {
+    while(m[++idx]==' ');
+    return m.substr(idx,idq-idx);
+  }
+  return "";
+}
+
+/// Print history records from stored memory
+void RODIMLogger::printHistory(const std::string& pattern) {
+  char text[132];
+  int  match = 0, displayed=0;
+  size_t numMsg = 999999999;
+
+  size_t idq, id1 = pattern.find("#Node:{"), id2 = pattern.find("#Msg:{"), id3 = pattern.find("#Num:{");
+  std::string node_pattern = "*", msg_pattern = "*", tmp;
+  std::vector<const char*> messages;
+  if ( id1 != std::string::npos ) {
+    idq = pattern.find("}",id1);
+    node_pattern = pattern.substr(id1+7,idq-id1-7);
+  }
+  if ( id2 != std::string::npos ) {
+    idq = pattern.find("}",id2);
+    msg_pattern = pattern.substr(id2+6,idq-id2-6);
+  }
+  if ( id3 != std::string::npos ) {
+    idq = pattern.find("}",id3);
+    std::string tmp = pattern.substr(id3+6,idq-id3-6);
+    ::sscanf(tmp.c_str(),"%d",&numMsg);
+  }
+  printHeader("Logger history of:"+node_pattern+" matching:"+msg_pattern);
+  for(History::const_iterator i=m_history.begin(); i != m_history.end(); ++i) {
+    const std::string& m = *i;
+    const std::string  src = msg_src(m);
+    if ( !src.empty() ) {
+      if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
+	if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
+	  messages.push_back(m.c_str());
+	  ++match;
+	}
+      }
+    }
+  }
+  for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
+    printMessage(messages[j], false);
+  ::sprintf(text,"History>    [WARN]  %d %s%s [%s]. %zd %s %d messages replayed.",
+	    match,"messages matched the request:",node_pattern.c_str(),
+	    msg_pattern.c_str(),numMsg,"messages requested.",displayed);
+  printMessage(text,true);
+}
+
+/// Print summary of history records from stored memory
+void RODIMLogger::summarizeHistory() {
+  typedef std::map<std::string,std::vector<int> > DataMap;
+  int sev, num_msg=0;
+  char text[512];
+  DataMap data;
+  printHeader("Logger history summary");
+  for(History::const_iterator i=m_history.begin(); i != m_history.end(); ++i) {
+    const std::string& m = *i;
+    std::string src = msg_src(m);
+    if ( !src.empty() ) {
+      DataMap::iterator i = data.find(src);
+      if ( i==data.end() ) data[src].resize(7);
+      sev = msgSeverity(m.c_str());
+      data[src][sev]++;
+      num_msg++;
+    }
+  }
+  for(DataMap::const_iterator j=data.begin(); j!=data.end();++j)  {
+    const std::vector<int>& v = (*j).second;
+    ::sprintf(text,"HistorySumm>[INFO] %-16s has sent %5d VERBOSE  %5d DEBUG  %5d INFO  %4d WARNING  %4d ERROR and %4d FATAL messages.",
+	      (*j).first.c_str(), v[1], v[2], v[3], v[4], v[5], v[6]);
+    printMessage(text,true);
+  }
+  ::sprintf(text,"HistorySumm>[WARN] Analysed a total of %d messages.",num_msg);
+  printMessage(text,true);
 }
 
 /// Print header information before starting output
-void RODIMLogger::printHeader(FILE* fp, const std::string& title) {
+void RODIMLogger::printHeader(const std::string& title) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -316,11 +435,11 @@ void RODIMLogger::printHeader(FILE* fp, const std::string& title) {
       return;
     }
   }
-  ::fprintf(fp,"\n                        Logger history of %s\n\n",title.c_str());
+  ::fprintf(m_output,"\n                        Logger history of %s\n\n",title.c_str());
 }
 
 /// Print multi-line header information before starting output
-void RODIMLogger::printHeader(FILE* fp, const std::vector<std::string>& titles) {
+void RODIMLogger::printHeader(const std::vector<std::string>& titles) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -353,7 +472,16 @@ void RODIMLogger::printHeader(FILE* fp, const std::vector<std::string>& titles) 
     }
   } 
   for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i)
-    ::fprintf(fp,"                   -> %s\n",(*i).c_str());
+    ::fprintf(m_output,"                   -> %s\n",(*i).c_str());
+}
+
+/// Clear all history content
+void RODIMLogger::clearHistory() {
+  size_t s = m_history.size();
+  char text[132];
+  m_history.clear();
+  ::sprintf(text,"clear>      [WARN] .... Clear all history .... Deleted %zd messages",s);
+  printMessage(text,true);
 }
 
 /// DIM command service callback
@@ -371,6 +499,18 @@ void RODIMLogger::requestHandler(void* tag, void* address, int* size) {
       return;
     }
     break;
+  case 'Q': // Wildcard Messages mode
+    idx = n.find(":");
+    if ( idx != std::string::npos ) {
+      h->printHistory(n.substr(idx+1));
+    }
+    return;
+  case 'C': // Clear history
+    h->clearHistory();
+    return;
+  case 'S': // Summarize history
+    h->summarizeHistory();
+    return;
   case 'M': // Messages mode
     idx = n.find(":");
     if ( idx != std::string::npos ) {
@@ -395,7 +535,7 @@ void RODIMLogger::requestHandler(void* tag, void* address, int* size) {
   default:
     break;
   }
-  std::cout << "Received invalid request." << std::endl;
+  h->printMessage(">>>>>>>>>>> [ERROR] Received invalid request.");
 }
 
 /// DIM command service callback
@@ -408,7 +548,7 @@ void RODIMLogger::handleMessages(const char* items, const char* end) {
 	Services::iterator i=m_infos.find(p);
 	if ( i == m_infos.end() ) {
 	  Entry* e = m_infos[p] = new Entry;
-	  std::cout << "Adding client:" << p << std::endl;
+	  logMessage("Adding client:%s",p);
 	  e->id      = ::dic_info_service((char*)p,MONITORED,0,0,0,messageInfoHandler,(long)e,0,0);
 	  e->created = now;
 	  e->self    = this;
@@ -418,7 +558,7 @@ void RODIMLogger::handleMessages(const char* items, const char* end) {
     }
     for(Services::iterator i=m_infos.begin();i!=m_infos.end();++i) 
       titles.push_back((*i).first);
-    printHeader(stdout,titles);
+    printHeader(titles);
   }
 }
 
@@ -437,7 +577,7 @@ void RODIMLogger::handleRemoveMessages(const char* items, const char* end) {
     }
     for(Services::iterator i=m_infos.begin();i!=m_infos.end();++i) 
       titles.push_back((*i).first);
-    printHeader(stdout,titles);
+    printHeader(titles);
   }
 }
 
@@ -459,7 +599,6 @@ void RODIMLogger::cleanupServices(const std::string& match) {
 /// Cleanup service entry
 void RODIMLogger::cleanupService(Entry* e) {
   if ( e ) {
-    //std::cout << "Removing client:" << e->name << std::endl;
     ::dic_release_service(e->id);
     delete e;
   }
@@ -469,7 +608,7 @@ void RODIMLogger::cleanupService(Entry* e) {
 void RODIMLogger::handleHistory(const std::string& nam) {
   time_t now = ::time(0);
   Entry* e = m_infos[nam] = new Entry;
-  std::cout << "Adding client:" << nam << std::endl;
+  logMessage("Adding client:%s", nam.c_str());
   e->id      = ::dic_info_service((char*)nam.c_str(),ONCE_ONLY,0,0,0,historyInfoHandler,(long)e,0,0);
   e->created = now;
   e->self    = this;
@@ -480,7 +619,8 @@ void RODIMLogger::handleHistory(const std::string& nam) {
 void RODIMLogger::messageInfoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     Entry* e = *(Entry**)tag;
-    e->self->printMessage(stdout,(char*)address,false);
+    e->self->updateHistory((char*)address);
+    if ( e->self->m_display ) e->self->printMessage((char*)address,false);
   }
 }
 
@@ -488,25 +628,25 @@ void RODIMLogger::messageInfoHandler(void* tag, void* address, int* size)  {
 void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     Entry* e = *(Entry**)tag;
-    Services& s = e->self->m_infos;
-    FILE* fp = stdout;
+    RODIMLogger *logger = e->self;
+    Services& s = logger->m_infos;
     char *msg = (char*)address, *end = msg + *size, *ptr = msg;
     std::string title = "Logger history of:";
     title += e->name;
-    e->self->printHeader(fp, title);
+    logger->printHeader(title);
     while (ptr<=end) {
       char* p = strchr(ptr,'\n');
       if ( p ) {
 	*p = 0;
-	e->self->printMessage(fp,ptr);
+	logger->printMessage(ptr);
 	ptr = p;
       }
       ++ptr;
     }
     for ( Services::iterator i=s.begin(); i != s.end(); ++i ) {
       if ( (*i).second == e ) {
-	std::cout << "Release client:" << e->name << std::endl;
-	e->self->cleanupService((*i).second);
+	logger->logMessage("Release client:%s", e->name.c_str());
+	logger->cleanupService((*i).second);
 	s.erase(i);
 	break;
       }
@@ -514,9 +654,104 @@ void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
   }
 }
 
+/// Delete UPI Menu
+void RODIMLogger::deleteMenu() {
+  if ( m_id != 0 ) {
+    UpiSensor::instance().remove(this,m_id);
+    ::upic_delete_menu(m_id);
+    ::upic_write_message("Close window.","");
+    m_id = 0;
+  }
+}
+
+/// Create UPI Menu
+void RODIMLogger::createMenu() {
+  m_id = UpiSensor::instance().newID();
+  ::upic_open_window();
+  ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
+  ::upic_add_comment(CMD_COM1,"----------------","");
+  ::upic_add_command(CMD_CLOSE,"Exit Logger","");
+  ::upic_close_menu();
+  UpiSensor::instance().add(this,m_id);
+}
+
+/// Display callback handler
+void RODIMLogger::handle(const Event& ev) {
+  typedef std::vector<std::string> _SV;
+  ioc_data data(ev.data);
+  const _SV* v = data.vec;
+  switch(ev.eventtype) {
+  case IocEvent:
+    switch(ev.type) {
+    case CMD_CONNECT:
+      deleteMenu();
+      createMenu();
+      return;
+    case CMD_UPDATE_NODES:
+      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_NODES",true);
+      delete data.vec;
+      return;
+    case CMD_UPDATE_FARMS: {
+      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_FARMS",true);
+      std::string tmp;
+      std::stringstream s;
+      for(_SV::const_iterator i=v->begin();i!=v->end();++i) {
+	std::string n = *i;
+	if ( n == "STORE" ) n = "STORECTL01";
+	s << "/" << n << "/gaudi/log" << std::ends;
+      }
+      s << std::ends;
+      tmp = s.str();
+      removeAllServices();
+      handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
+      delete data.vec;
+      }
+      return;
+    default:
+      break;
+    }
+    break;
+  case UpiEvent:
+    if ( ev.command_id == CMD_CLOSE ) {
+      deleteMenu();
+      ::upic_write_message("Close window.","");
+      ::upic_quit();
+      ::lib_rtl_sleep(200);
+      ::exit(0);
+    }
+    break;
+  default:
+    break;
+  }
+  logMessage("Received unknown input.....");
+}
+
+/// Log internal message
+void RODIMLogger::logMessage(const char* fmt, ...) {
+  va_list args;
+  char buffer[1024];
+  va_start( args, fmt );
+  ::vsnprintf(buffer, sizeof(buffer), fmt, args);
+  if ( m_upi ) {
+    ::upic_write_message(buffer,"");
+    return;
+  }
+  ::printf("%s\n",buffer);
+}
+
 extern "C" int romon_logger(int argc, char** argv) {
   RODIMLogger mon(argc, argv);
   ::dis_start_serving((char*)RTL::processName().c_str());
   while(1) ::lib_rtl_sleep(1000);
+  return 1;
+}
+
+extern "C" int romon_file_logger(int argc, char** argv) {
+  UpiSensor& s = UpiSensor::instance();
+  RODIMLogger mon(argc, argv);
+  PartitionListener listener(&mon,"LHCb");
+  ::dis_start_serving((char*)RTL::processName().c_str());
+  IocSensor::instance().send(&mon,CMD_CONNECT,CMD_CONNECT);
+  s.run();
   return 1;
 }

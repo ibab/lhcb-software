@@ -1,4 +1,4 @@
-// $Id: Logger.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: Logger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/Logger.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/Logger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
 #ifndef ROLOGGER_LOGGER_H
 #define ROLOGGER_LOGGER_H
 
@@ -56,10 +56,8 @@ namespace ROLogger {
     /// Connect to processing cluster of a given name
     int connectCluster(bool con, const std::string& name);
 
-    /// Show history of a given node
-    void showNodeHistory(const std::string& node);
-    /// Show farm history for all nodes of a farm
-    void showClusterHistory(const Nodes& nodes);
+    /// Send data string to logger service
+    int sendData(const std::string& msg);
   };
 }      /* End namespace ROLogger */
 #endif /* ROLOGGER_LOGGER_H */

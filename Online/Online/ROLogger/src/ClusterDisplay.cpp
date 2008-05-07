@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.2 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.2 2008-05-07 16:22:21 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -20,12 +20,15 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include "ROLoggerDefs.h"
+#include <sstream>
 
 using namespace ROLogger;
 
+static int s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
+
 /// Standard constructor with object setup through parameters
 ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std::string& name, const Nodes& nodes) 
-: m_name(name), m_nodes(nodes), m_parent(parent), m_logger(logger)
+  : m_name(name), m_nodes(nodes), m_parent(parent), m_logger(logger), m_numMsg(200)
 {
   int cnt = 0;
   if ( 0 == m_parent ) m_parent = this;
@@ -37,9 +40,17 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std
       ::upic_add_command(cnt+1, (*n).c_str(),"");
     }
   }
-  ::upic_add_comment(CMD_COM2,        "----------------------------------------","");
+  ::sprintf(m_wildNode,"%s*",m_name.c_str());
+  ::strcpy(m_wildMessage,"*");
+  ::upic_add_comment(CMD_COM2,        "-----------------------------------------------","");
+  ::upic_set_param(&m_numMsg,1,"I6",m_numMsg,0,0,s_NumList,sizeof(s_NumList)/sizeof(s_NumList[0]),0);
+  ::upic_add_command(CMD_COM3,        "Show                  ^^^^^^ Messages","");
   ::upic_add_command(CMD_FARM_HISTORY,"Show all histories","");
-  ::upic_add_comment(CMD_COM4,        "----------------------------------------","");
+  ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,0,0,0);
+  ::upic_add_command(CMD_WILD_NODE,   "Node match:           ^^^^^^^^^^^^^^^","");
+  ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);
+  ::upic_add_command(CMD_WILD_MESSAGE,"...and match message: ^^^^^^^^^^^^^^^","");
+  ::upic_add_comment(CMD_COM5,        "-----------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,       "Close","");
   ::upic_close_menu();
   ::upic_set_cursor(m_id,CMD_CLOSE,0);
@@ -50,6 +61,13 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std
 ClusterDisplay::~ClusterDisplay() {
   UpiSensor::instance().remove(this,m_id);
   ::upic_delete_menu(m_id);
+}
+
+/// Show history according to node and message pattern match
+void ClusterDisplay::showHistory(const char* node_match, const char* msg_match) {
+  std::stringstream s;
+  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << std::ends;
+  IocSensor::instance().send(m_logger,CMD_NODE_HISTORY,new std::string(s.str()));
 }
 
 /// Display callback handler
@@ -68,14 +86,23 @@ void ClusterDisplay::handle(const Event& ev) {
     }
     break;
   case UpiEvent:
+    m_wildNode[sizeof(m_wildNode)-1] = 0;
+    m_wildMessage[sizeof(m_wildMessage)-1] = 0;
+    if ( ::strchr(m_wildNode,' ') ) *::strchr(m_wildNode,' ') = 0;
+    if ( ::strchr(m_wildMessage,' ') ) *::strchr(m_wildMessage,' ') = 0;
     if ( ev.menu_id == m_id ) {
       IocSensor& ioc = IocSensor::instance();
       if ( ev.command_id == CMD_CLOSE )
 	ioc.send(m_parent,CMD_DELETE_FARM_DISPLAY,this);
       else if ( ev.command_id == CMD_FARM_HISTORY )
-	ioc.send(m_logger,CMD_FARM_HISTORY,new Nodes(m_nodes));
+	for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i)
+	  showHistory((*i).c_str(),"*");
+      else if ( ev.command_id == CMD_WILD_NODE )
+	showHistory(m_wildNode,"*");
+      else if ( ev.command_id == CMD_WILD_MESSAGE )
+	showHistory(m_wildNode,m_wildMessage);
       else if ( ev.command_id > 0 && ev.command_id <= (int)m_nodes.size() )
-	ioc.send(m_logger,CMD_NODE_HISTORY,new std::string(m_nodes[ev.command_id-1]));
+	showHistory(m_nodes[ev.command_id-1].c_str(),"*");
     }
     break;
   default:

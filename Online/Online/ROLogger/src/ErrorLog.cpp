@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.3 2008-04-30 19:19:11 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.4 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.3 2008-04-30 19:19:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.4 2008-05-07 16:22:21 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -32,8 +32,6 @@ extern "C" {
 }
 
 using namespace ROLogger;
-typedef std::vector<std::string> _SV;
-
 
 /// Standard constructor
 ErrorLog::ErrorLog(int argc, char** argv) 
@@ -67,34 +65,16 @@ ErrorLog::~ErrorLog()  {
 void ErrorLog::help_fun() {
 }
 
-static void addMonitoringNodes(_SV* data) {
-  data->push_back("STORECTL01");
-  data->push_back("STORERECV01");
-  data->push_back("STORERECV02");
-  data->push_back("STORESTRM01");
-  data->push_back("STORESTRM02");
-  data->push_back("MONA08");
-  data->push_back("MONA0801");
-  data->push_back("MONA0802");
-  data->push_back("MONA0803");
-  data->push_back("MONA0804");
-  data->push_back("MONA0805");
-}
-
 void ErrorLog::handle(const Event& ev) {
   IocSensor& ioc = IocSensor::instance();
-  _SV* data = (_SV*)ev.data;
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
     case CMD_UPDATE_NODES: // From PartitionListener
-      addMonitoringNodes(data);
-      ioc.send(m_partDisplay,CMD_UPDATE_NODES,data);
+      ioc.send(m_partDisplay,CMD_UPDATE_NODES,ev.data);
       return;
     case CMD_UPDATE_FARMS: // From PartitionListener
-      data->push_back("STORE");
-      data->push_back("MONA08");
-      ioc.send(m_partDisplay,CMD_UPDATE_FARMS,data);
+      ioc.send(m_partDisplay,CMD_UPDATE_FARMS,ev.data);
       return;
     case CMD_DELETE_PART_DISPLAY:
       delete this;

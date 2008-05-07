@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.2 2008-04-30 09:24:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.3 2008-05-07 16:22:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -21,6 +21,7 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include "ROLoggerDefs.h"
+#include <sstream>
 extern "C" {
   #include "dic.h"
 }
@@ -32,17 +33,29 @@ static char* s_enable[]  = {"Enable "};
 static char* s_disable[] = {"Disable"};
 static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
+static int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
 
 /// Standard constructor
 PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const std::string& name) 
-  : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_clDisp(0)
+  : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_clDisp(0), m_numMsg(200)
 {
   m_id = UpiSensor::instance().newID();
+  ::strcpy(m_wildNode,"*");
+  ::strcpy(m_wildMessage,"*");
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_add_comment(CMD_COM0,("Known processor clusters for partition "+name).c_str(),"");
   ::upic_add_comment(CMD_COM1,"---------------------------------------------------------","");
   ::upic_add_comment(CMD_COM2,"---------------------------------------------------------","");
+  ::upic_set_param(&m_numMsg,1,"I6",m_numMsg,0,0,s_NumList,sizeof(s_NumList)/sizeof(s_NumList[0]),0);
+  ::upic_add_command(CMD_COM3,         "Show                  ^^^^^^ Messages","");
+  ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,0,0,0);
+  ::upic_add_command(CMD_WILD_NODE,    "Node match:           ^^^^^^^^^^^^^^^","");
+  ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);
+  ::upic_add_command(CMD_WILD_MESSAGE, "...and match message: ^^^^^^^^^^^^^^^","");
+  ::upic_add_command(CMD_CLEAR_HISTORY,"Clear history","");
+  ::upic_add_command(CMD_SUMM_HISTORY,"History summary","");
+  ::upic_add_comment(CMD_COM5,"---------------------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,"Close","");
   ::upic_close_menu();
   UpiSensor::instance().add(this,m_id);
@@ -68,6 +81,13 @@ void PartitionDisplay::showCluster(int cmd) {
   m_clDisp = std::auto_ptr<Interactor>(new ClusterDisplay(this,m_history,name,nodes));
   m_menuCursor = cmd;
   dim_unlock();
+}
+
+/// Show history according to node and message pattern match
+void PartitionDisplay::showHistory(const char* node_match, const char* msg_match) {
+  std::stringstream s;
+  s << "#Node:{" << node_match << "}#Msg:{" << msg_match << "}#Num:{" << m_numMsg << "}" << std::ends;
+  IocSensor::instance().send(m_history,CMD_NODE_HISTORY,new std::string(s.str()));
 }
 
 static std::string setupParams(const std::string& name, bool val) {
@@ -96,6 +116,7 @@ void PartitionDisplay::updateFarms() {
 }
 
 void PartitionDisplay::handle(const Event& ev) {
+  typedef std::vector<std::string> _SV;
   IocSensor& ioc = IocSensor::instance();
   switch(ev.eventtype) {
   case IocEvent:
@@ -110,7 +131,8 @@ void PartitionDisplay::handle(const Event& ev) {
       m_farms = *(Farms*)ev.data;
       ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),m_farms.size());
       ioc.send(this,CMD_UPDATE_CLUSTERS,this);
-      ioc.send(m_msg,CMD_UPDATE_FARMS,ev.data);
+      ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(*(_SV*)ev.data));
+      ioc.send(m_history,CMD_UPDATE_FARMS,ev.data);
       return;
     case CMD_UPDATE_CLUSTERS:
       updateFarms();
@@ -128,9 +150,25 @@ void PartitionDisplay::handle(const Event& ev) {
     break;
   case UpiEvent:
     //::upic_write_message2("Got UPI command: %d %d %d",ev.menu_id,ev.command_id,ev.param_id);
+    m_wildNode[sizeof(m_wildNode)-1] = 0;
+    m_wildMessage[sizeof(m_wildMessage)-1] = 0;
+    if ( ::strchr(m_wildNode,' ') ) *::strchr(m_wildNode,' ') = 0;
+    if ( ::strchr(m_wildMessage,' ') ) *::strchr(m_wildMessage,' ') = 0;
     switch(ev.command_id) {
     case CMD_CLOSE:
       ioc.send(m_parent,CMD_DELETE_PART_DISPLAY,this);
+      return;
+    case CMD_SUMM_HISTORY:
+      ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
+      return;
+    case CMD_WILD_NODE:
+      showHistory(m_wildNode,"*");
+      return;
+    case CMD_WILD_MESSAGE:
+      showHistory(m_wildNode,m_wildMessage);
+      return;
+    case CMD_CLEAR_HISTORY:
+      IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
       return;
     default:
       if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {

@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.4 2008-05-06 16:29:38 frankm Exp $
+// $Id: PartitionListener.cpp,v 1.5 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.4 2008-05-06 16:29:38 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.5 2008-05-07 16:22:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -59,6 +59,8 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(data);
+  f->push_back("STORE");
+  f->push_back("MONA08");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -87,5 +89,16 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
       ::upic_write_message2("Failed to resolve network address:%s",data);
     }
   }
+  n->push_back("STORECTL01");
+  n->push_back("STORERECV01");
+  n->push_back("STORERECV02");
+  n->push_back("STORESTRM01");
+  n->push_back("STORESTRM02");
+  n->push_back("MONA08");
+  n->push_back("MONA0801");
+  n->push_back("MONA0802");
+  n->push_back("MONA0803");
+  n->push_back("MONA0804");
+  n->push_back("MONA0805");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
 }

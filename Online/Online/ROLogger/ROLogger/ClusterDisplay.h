@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: ClusterDisplay.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ClusterDisplay.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ClusterDisplay.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
 #ifndef ROLOGGER_CLUSTERDISPLAY_H
 #define ROLOGGER_CLUSTERDISPLAY_H
 
@@ -49,6 +49,15 @@ namespace ROLogger {
     Interactor* m_parent;
     /// Reference to output logger interactory
     Interactor* m_logger;
+    /// Match for wildcard node history match
+    char        m_wildNode[64];
+    /// Match for wildcard message history match
+    char        m_wildMessage[64];
+    /// Number of messages to display
+    int         m_numMsg;
+
+    /// Show history according to node and message pattern match
+    void showHistory(const char* node_match, const char* msg_match);
 
   public:
     /// Standard constructor with object setup through parameters
