@@ -4,6 +4,15 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v3r2 2008-05-07 ===========================
+! 2008-05-07 - Gloria CORTI
+ - Change printout of number of hits from info() to debug() to reduce 
+   log file during production
+   . GiGaGetHitsAlg.cpp
+
+ 2008-04-10 - Gloria CORTI
+ - Remove obsolete GaussAlgs_load.cpp
+
 !======================== GaussAlgs v3r1 2007-12-07 ===========================
 ! 2007-11-21 - Gloria Corti
  - In case of failure of Giga->retrieveEvent return failure of algorithm,

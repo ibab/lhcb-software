@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.11 2007-01-12 15:23:41 ranjard Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.12 2008-05-07 08:28:22 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -108,8 +108,8 @@ StatusCode GiGaGetHitsAlg::execute() {
       m_caloHits.end() != address ; ++address ) {
     if( (*address).empty() ) continue;
     LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( *address );
-    info() << "Number of extracted MCCaloHits  '" << *address << "' \t"
-           << hits->size() << endmsg ;
+    debug() << "Number of extracted MCCaloHits  '" << *address << "' \t"
+            << hits->size() << endmsg ;
     Stat stat( chronoSvc(), "#"+m_caloDet[idet]+" MCHits", hits->size() );
     ++idet;
   }
@@ -144,10 +144,10 @@ void GiGaGetHitsAlg::hitsTracker(const std::string det,
   if( !location.empty() ) {
     LHCb::MCHits* obj = get<LHCb::MCHits>( location );
     std::string dethits = det+" MCHits";
-    info() << "Number of extracted MCHits      '"
-           << location << "'  \t"
-           << obj->size()
-           << endmsg;
+    debug() << "Number of extracted MCHits      '"
+            << location << "'  \t"
+            << obj->size()
+            << endmsg;
     Stat stat( chronoSvc(), "#"+dethits, obj->size() );
     if( msgLevel( MSG::VERBOSE ) ) {
       int icount = 0;
@@ -174,10 +174,10 @@ void GiGaGetHitsAlg::infoRICH()
   // MCRichHits
   if( !m_richhits.empty() ) {
     LHCb::MCRichHits* obj = get<LHCb::MCRichHits>( m_richhits );
-    info() << "Number of extracted MCRichHits  '"
-           << m_richhits << "' \t"
-           << obj->size()
-           << endmsg ;
+    debug() << "Number of extracted MCRichHits  '"
+            << m_richhits << "' \t"
+            << obj->size()
+            << endmsg ;
     unsigned int nHitsRich1 = 0, nHitsRich2 = 0;
     int icount = 0;
     for( LHCb::MCRichHits::const_iterator hiter=obj->begin(); 
@@ -208,7 +208,7 @@ void GiGaGetHitsAlg::infoRICH()
   if( !m_richop.empty() ) {
     LHCb::MCRichOpticalPhotons* obj = 
       get<LHCb::MCRichOpticalPhotons>( m_richop );
-    info() << "Number of extracted MCRichOpticalPhotons '"
+    debug() << "Number of extracted MCRichOpticalPhotons '"
             << m_richop << "' \t"
             << obj->size()
             << endmsg;
@@ -223,10 +223,10 @@ void GiGaGetHitsAlg::infoRICH()
   // Rich segments
   if( !m_richsegments.empty() ) {
     LHCb::MCRichSegments* obj = get<LHCb::MCRichSegments>( m_richsegments );
-    info() << "Number of extracted MCRichSegments '"
-           << m_richsegments << "' \t"
-           << obj->size()
-           << endmsg;
+    debug() << "Number of extracted MCRichSegments '"
+            << m_richsegments << "' \t"
+            << obj->size()
+            << endmsg;
     for( LHCb::MCRichSegments::const_iterator hiter=obj->begin();
          hiter!=obj->end();  ++hiter ) {
       verbose() << "MCRichSegments " << std::endl << *(*hiter) << endmsg;
@@ -238,11 +238,11 @@ void GiGaGetHitsAlg::infoRICH()
   // Rich tracks
   if( !m_richtracks.empty() ) {
     LHCb::MCRichTracks* obj = get<LHCb::MCRichTracks>( m_richtracks );
-    info() << MSG::INFO
-           << "Number of extracted MCRichTracks '"
-           << m_richtracks << "' \t"
-           << obj->size()
-           << endmsg;
+    debug() << MSG::INFO
+            << "Number of extracted MCRichTracks '"
+            << m_richtracks << "' \t"
+            << obj->size()
+            << endmsg;
     Stat stat( chronoSvc(), "#MCRichTracks", obj->size() );
   }
 
