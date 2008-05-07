@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.cpp,v 1.7 2008-05-07 16:22:21 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.1 2008-05-07 16:24:16 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RODIMLogger.cpp,v 1.7 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.1 2008-05-07 16:24:16 frankb Exp $
 
 // Framework include files
 #include <cerrno>

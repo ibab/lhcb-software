@@ -1,4 +1,4 @@
-// $Id: RODIMLogger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Id: MessageLogger.h,v 1.1 2008-05-07 16:24:16 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/RODIMLogger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.1 2008-05-07 16:24:16 frankb Exp $
 #ifndef ROLOGGER_RODIMLOGGER_H
 #define ROLOGGER_RODIMLOGGER_H
 
