@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-05-05
+ - Allow that the summary block may not exist.
+
 !=========================== STCheckers v2r5 2008-05-06 =======================
 ! 2008-05-06 M. Needham
  - Add PCN + error monitoring

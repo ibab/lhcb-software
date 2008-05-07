@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.7 2008-05-06 15:09:09 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.8 2008-05-07 07:22:26 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -75,11 +75,11 @@ StatusCode STClusterMonitor::execute()
   for( ; iterClus != clusterCont->end(); ++iterClus) fillHistograms(*iterClus);
 
   // summary info....
-  const STSummary* summary = get<STSummary>(m_summaryLocation);
-
-  plot(summary->pcn(),10,"pcn", -0.5, 200.5, 201 );
-  if (summary->hasError()) ++counter("Errors");
-  
+  if (exist<STSummary>(m_summaryLocation) == true){
+    const STSummary* summary = get<STSummary>(m_summaryLocation);
+    plot(summary->pcn(),10,"pcn", -0.5, 200.5, 201 );
+    if (summary->hasError()) ++counter("Errors");
+  }
   return StatusCode::SUCCESS;
 }
 
