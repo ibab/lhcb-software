@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.2 2008-05-06 11:56:03 mneedham Exp $
+// $Id: STTell1Board.h,v 1.3 2008-05-07 12:09:12 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -57,7 +57,9 @@ public:
                             const unsigned int sectorIndex,
 			    double isf) const;
 
-
+  // vector of sectors on the board
+  const std::vector<LHCb::STChannelID>& sectorIDs() const;
+  
   // vector of hybrid orientations
   const std::vector<int>& orientation() const;
 
@@ -90,5 +92,8 @@ inline const std::vector<int>& STTell1Board::orientation() const{
   return m_orientation;
 }
 
-
+inline const std::vector<LHCb::STChannelID>& STTell1Board::sectorIDs() const{
+  return m_sectorsVector;
+}
+  
 #endif // _STTell1Board_H

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.14 2008-05-06 15:38:55 cattanem Exp $
+! $Id: release.notes,v 1.15 2008-05-07 12:09:12 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-05-07 M Needham
+ - Improve printout in mapping printout in STTell1Board
+ - Give access to list of sectors on a Tell1 board
 
 !====================== STKernel v1r4 2008-05-05 ============================
 ! 2008-05-05 M Needham

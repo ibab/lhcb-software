@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.2 2008-05-07 12:09:12 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 
@@ -45,7 +45,7 @@ STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan,
                                        const int version) const{
 
   // convert a DAQ channel to offline !
-  unsigned int index = aDAQChan/m_nStripsPerHybrid;
+  const unsigned int index = aDAQChan/m_nStripsPerHybrid;
   unsigned int strip =  aDAQChan - (index*m_nStripsPerHybrid);
 
   if (m_orientation[index] == 0) {
@@ -75,9 +75,9 @@ void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
                                 const unsigned int offset,
                                 const double interStripPos) const
 {
-  unsigned int index = aDAQChan/m_nStripsPerHybrid;
-  unsigned int size = adcs.size();
-  int newoffset;
+  const unsigned int index = aDAQChan/m_nStripsPerHybrid;
+  const unsigned int size = adcs.size();
+  int newoffset = 0;
 
   // flip sequence of adc vector
   if (m_orientation[index] == 0 && version >= STDAQ::v4){
@@ -127,8 +127,8 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
   os << " Board: " << m_boardID.region() << " " <<  m_boardID.subID() << std::endl;
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
   for (; iterW !=  m_sectorsVector.end() ;++iterW){
-    os << (*iterW).station() << " " << (*iterW).layer() 
-       << " " << (*iterW).detRegion() << " " << (*iterW).sector() << std::endl;
+    os << "Station: " << (*iterW).station() << "Layer: " << (*iterW).layer() 
+       << "Region: " << (*iterW).detRegion() <<"Sector: " << (*iterW).sector() << std::endl;
   }   // iW 
   os << " -----------" << std::endl; 
 
