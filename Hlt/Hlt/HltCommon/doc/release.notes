@@ -6,6 +6,8 @@
 
 ! 2008-05-07 Gerhard Raven
  - remove unused protected datamember in HltAlgorithm
+ - make sure that declareProperty isn't called more than once 
+   with the same argument in HltFilters
 
 ! 2008-05-02 Gerhard Raven
  - remove HltSequencer, obsolete _dll.cpp file
