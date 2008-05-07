@@ -326,7 +326,7 @@ MuonTrackRecForL0Single.OutputMuonTracksName="Hlt/Track/MuonSegmentForL0Single";
 MuonTrackRecForL0Single.DecodingFromCoord=true;
 //MuonTrackRecForL0Single.OutputLevel = 3;
 
-FilteredMuonSegments.TESInputName = "Hlt/Track/MuonSegmentForL0Single";
+FilteredMuonSegments.InputSelection = "Hlt/Track/MuonSegmentForL0Single";
 FilteredMuonSegments.FilterDescriptor = {
   "DoShareM3_L0MuonConfirmedWithT,<,0.5"
 };

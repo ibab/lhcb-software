@@ -16,6 +16,7 @@ Purpose: LHCb High Level Trigger packages.
         InputTracks2Name -> InputSelection2
         OutputTracksName -> OutputSelection
         etc...
+ - one more:   TESInputNume -> InputSelection
 
 !========================== HltSys v3r2 2008-04-25 ===================
 ! 2008-04-25 - Patrick Koppenburg

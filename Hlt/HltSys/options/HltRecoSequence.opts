@@ -63,13 +63,13 @@ PatHltPV2D.InputTracksName = "Hlt/Track/RZVelo";
 PatHltPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
 PatHltPV2D.OutputLevel = 3;
 
-HltPrepareRZVelo.TESInputName   = "Hlt/Track/RZVelo";
+HltPrepareRZVelo.InputSelection   = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.AddInfo = false;
 HltPrepareRZVelo.FilterDescriptor = {"IsBackward,<,0.5"};
 HltPrepareRZVelo.OutputSelection     = "RZVelo";
 HltPrepareRZVelo.OutputLevel = 3;
 
-HltPreparePrimaryVertices.TESInputName = "Hlt/Vertex/PV2D";
+HltPreparePrimaryVertices.InputSelection = "Hlt/Vertex/PV2D";
 HltPreparePrimaryVertices.OutputSelection   = "PV2D";
 HltPreparePrimaryVertices.OutputLevel = 3;
 
