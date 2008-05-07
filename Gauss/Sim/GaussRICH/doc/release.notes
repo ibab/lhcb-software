@@ -3,30 +3,40 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+
+!========================= GaussRICH v8r1 2008-05-07 =========================
 !2008-04-25 - Sajan Easo
-    - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+ - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+
 !2008-04-20 - Sajan Easo
-    - Fixed a typo in RichG4StepAnalysis3.cpp , which was caught only with 32-bit compilation.
+ - Fixed a typo in RichG4StepAnalysis3.cpp , which was caught only with 
+   32-bit compilation.
+
 !2008-04-15 - Sajan Easo
-    - Fixed a problem in RichG4StepAnalysis6.cpp and RichG4Analysis3.cpp for the HpdSMaster names.
-    - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+ - Fixed a problem in RichG4StepAnalysis6.cpp and RichG4Analysis3.cpp 
+   for the HpdSMaster names.
+ - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+
 !2008-04-11 - Sajan Easo
-  - Added the minor changes needed to accomodate the new Rich1 Flat mirrors
-    geometry structure in the database. The name changes are kept backward
-    compatible so that one can run with earlier versions of db released in 2008.
+ - Added the minor changes needed to accomodate the new Rich1 Flat mirrors
+   geometry structure in the database. The name changes are kept backward
+   compatible so that one can run with earlier versions of db released in 2008.
 
 !2008-03-31 - Sajan Easo
-  - Added a switch to Rich.opts to override the Hpd maxQE value in the DB.
-    The RichG4TrackActionPhotOpt is modified to use this. The default of the
-    switch is 'false', which means the DB value is used. 
-    To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and 
-    assign the new value to RichHpdMaxQEValueWhenOverRideDB
+ - Added a switch to Rich.opts to override the Hpd maxQE value in the DB.
+   The RichG4TrackActionPhotOpt is modified to use this. The default of the
+   switch is 'false', which means the DB value is used. 
+   To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and 
+   assign the new value to RichHpdMaxQEValueWhenOverRideDB
+
 !2008-03-27 - Sajan Easo  
-  - Made changes to accomodate the recent changes in xml geometry for RICH, which created 
-   one logical volume per hpd. This was to simulate the Silicon chip shifts inside the hpd.
-   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and in the part
-   making a test analysis reconstruction of data from hpds.
-  - cleanup of the way the sensitive detector name is used in RichSensDet
+ - Made changes to accomodate the recent changes in xml geometry for RICH, 
+   which created one logical volume per hpd. This was to simulate the 
+   Silicon chip shifts inside the hpd.
+   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and 
+   in the part making a test analysis reconstruction of data from hpds.
+ - cleanup of the way the sensitive detector name is used in RichSensDet
+
 !========================= GaussRICH v8r0 2008-02-20 =========================
 ! 2008-02-20 - Gloria CORTI
  - Increase major version number since it does NOT work with DC06 geometry
