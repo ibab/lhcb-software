@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+ xmlns:lhcb="http://cern.ch/lhcbproject/dist/">
   <xsl:output method="html" indent="yes"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
    doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"/>
@@ -11,7 +12,7 @@
       </head>
       <body>
         <h1>Releases Database</h1>
-        <xsl:for-each select="releases_db/release">
+        <xsl:for-each select="lhcb:releases_db/release">
           <h2>Release &quot;<xsl:value-of select="@name"/>&quot;</h2>
           <table border="1">
           <tr><th>Project</th><th>Version</th></tr>

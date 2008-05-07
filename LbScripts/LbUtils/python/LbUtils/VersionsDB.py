@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.8 2008-05-07 15:23:42 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.9 2008-05-07 17:12:12 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -301,7 +301,7 @@ class _ReleaseSAXHandler(ContentHandler):
         pass
     def startElement(self, name, attrs):
         #print "start element %s:"%name
-        if name == u'releases_db':
+        if u'releases_db' in name: # ignore top element
             return
         name_attr = attrs.getValue(u'name')
         if name == u'release':
@@ -451,7 +451,7 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
     if stylesheet:
         xml += '<?xml-stylesheet type="text/xsl" href="%s"?>\n'%stylesheet
     if withSchema:
-        xml += '<releases_db\n' + \
+        xml += '<lhcb:releases_db\n' + \
                ' xmlns:lhcb="http://cern.ch/lhcbproject/dist/"\n' + \
                ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n' + \
                ' xsi:schemaLocation="http://cern.ch/lhcbproject/dist/ releases_db.xsd ">\n'
@@ -483,5 +483,8 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
         for dep in p.runtimedeps:
             xml += '    <runtimedep name="%s"/>\n'%dep
         xml += '  </unversioned_project>\n'
-    xml += '</releases_db>\n'
+    if withSchema: 
+        xml += '</lhcb:releases_db>\n'
+    else: 
+        xml += '</releases_db>\n'
     return xml
