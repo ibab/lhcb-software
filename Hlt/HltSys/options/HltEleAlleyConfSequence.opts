@@ -125,7 +125,7 @@ ElePreTriggerSingle.OutputLevel = 3;
 // select velo tracks as companions 
 //
 EleCompanionTFVelo.InputSelection     = "Velo";
-EleCompanionTFVelo.PrimaryVerticesName = "PV2D";
+EleCompanionTFVelo.InputSelection2    = "PV2D";
 EleCompanionTFVelo.HistogramUpdatePeriod = 0;
 EleCompanionTFVelo.FilterDescriptor = {
   "IP_PV2D,||[],0.1,3.",

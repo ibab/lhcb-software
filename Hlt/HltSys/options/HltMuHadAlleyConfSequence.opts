@@ -43,8 +43,8 @@ MuonEntry.OutputLevel=3;
 MuHadEntry.InputSelections = {"MuonAndTVelo"};
 
 // Select Muons with IP and pT
-//MuHadMuonTF.InputTracksName  = "MuonsForwardSingle";
-MuHadMuonTF.InputTracksName  = "MuonAndTVelo";
+//MuHadMuonTF.InputSelection  = "MuonsForwardSingle";
+MuHadMuonTF.InputSelection  = "MuonAndTVelo";
 MuHadMuonTF.HistogramUpdatePeriod = 0;
 MuHadMuonTF.FilterDescriptor = {"PT,>,1000.",
                                 "IP_PV2D,||[],0.1,3."

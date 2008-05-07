@@ -85,8 +85,8 @@ HadL0Entry.OutputLevel = 3;
 //Get the B daughter tracks
 //
 GetBdaughterTracks.ParticlesName    = "/Event/Phys/PreselBd2DPi/Particles";
-GetBdaughterTracks.InputTracksName  = "RZVelo";
-GetBdaughterTracks.OutputTracksName = "TracksFromTheB";
+GetBdaughterTracks.InputSelection  = "RZVelo";
+GetBdaughterTracks.OutputSelection = "TracksFromTheB";
 GetBdaughterTracks.OutputLevel = 3;
 
 //
@@ -100,9 +100,9 @@ SwimPVS.OutputLevel = 3;
 //
 //Swim the selected B, if any
 //
-SelectBtracks.InputTracksName     = "RZVelo";
-SelectBtracks.InputTracks2Name    = "TracksFromTheB";
-SelectBtracks.OutputTracksName    = "RZVelo_SW";
+SelectBtracks.InputSelection     = "RZVelo";
+SelectBtracks.InputSelection2    = "TracksFromTheB";
+SelectBtracks.OutputSelection    = "RZVelo_SW";
 SelectBtracks.ParticlesName       = "/Event/Phys/PreselBd2DPi/Particles";
 SelectBtracks.OutputLevel = 3;
 
@@ -154,9 +154,9 @@ HadPreTriggerSingle.HistoDescriptor = {
   "PTBest":("PTBest",0.,6000.,100)
 };
 
-SelectBtracksForCompanion.InputTracksName     = "Velo";
-SelectBtracksForCompanion.InputTracks2Name    = "TracksFromTheB";
-SelectBtracksForCompanion.OutputTracksName    = "Velo_SW";
+SelectBtracksForCompanion.InputSelection     = "Velo";
+SelectBtracksForCompanion.InputSelection2    = "TracksFromTheB";
+SelectBtracksForCompanion.OutputSelection    = "Velo_SW";
 SelectBtracksForCompanion.ParticlesName       = "/Event/Phys/PreselBd2DPi/Particles";
 SelectBtracksForCompanion.OutputLevel = 3;
 

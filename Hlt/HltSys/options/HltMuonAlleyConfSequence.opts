@@ -161,7 +161,7 @@ VeloMuonConf.RecoName = "Velo";
 //VeloMuonConf.OutputLevel = 3;
 
 MuonAndTVelo.InputSelection =    "VeloMuonConf";
-MuonAndTVelo.InputTracks2Name =  "L0MuonAndTConfirmed";
+MuonAndTVelo.InputSelection2 =  "L0MuonAndTConfirmed";
 MuonAndTVelo.MatchName = "VeloT";
 //MuonAndTVelo.OutputLevel = 3;
 
