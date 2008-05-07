@@ -23,7 +23,6 @@ HltMuonTriggerDiMuons.OutputLevel = 4 ;
 
 #include "$HLTSELECTIONSROOT/options/HltMonitorPlots.opts"
 #include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
-#include "$HLTSELECTIONSROOT/options/HltSelTiming.opts"
 
 //HltSelectionsCorrs.Algorithms += { "IsBEvent" };
 

@@ -12,8 +12,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-05-07 - Patrick Koppenburg
+ - DVTestBackgroundCategory: don't include removed options
+
 ! 2008-05-02 - Gerhard Raven
  - remove obsolete _dll.cpp file
+
 ! 2008-05-01 - Gerhard Raven
  - Add HltEvent to requirements -- it is used by HltBackgroundCategory
 
