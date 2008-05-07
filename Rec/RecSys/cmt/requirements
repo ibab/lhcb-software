@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # General purpose components
-use RecAlgs             v1r5    Rec   # Marco Cattaneo
+use RecAlgs             v1r6    Rec   # Marco Cattaneo
 use RecCheckers         v1r0    Rec   # Marco Cattaneo
 use RecUtils            v1r5    Rec   # Juan Palacios, Patrick Koppenburg
 
@@ -30,7 +30,7 @@ use TrackMCTools        v2r17   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
 use TrackTools          v3r6    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r19   Tr    # Eduardo Rodrigues
+use TrackUtils          v1r20   Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys            v4r13   Tf    # Eduardo Rodrigues
