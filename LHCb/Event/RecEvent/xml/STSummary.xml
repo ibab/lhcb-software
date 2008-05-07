@@ -3,18 +3,25 @@
 <gdd>
   <package name='RecEvent'>
 
-  <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary">
+  <class author="Matthew Needham" desc="Silicon tracker summary class" id="9005" name="STSummary" >
       <base name="DataObject"/>
       &DataObject;
       <location name="TTSummary"   place="Rec/TT/Summary"   />
       <location name="ITSummary"   place="Rec/IT/Summary"   />
-       <constructor argList="int nDigits, int nClusters" 
-                    initList="m_nDigits(nDigits),
-                    m_nClusters(nClusters)" desc="special constructor">
+       <constructor argList="unsigned int nClusters, unsigned int pcn, bool pcnSynch , std::vector&lt; unsigned int &gt; banksWithError " 
+                    initList="m_nClusters(nClusters), m_pcn(pcn), m_pcnSynch(pcnSynch), m_banksWithError(banksWithError)" desc="special constructor">
        <code></code>
       </constructor>
-      <attribute name="nDigits" type="int" setMeth = "FALSE" desc="number of digits"/> 
-      <attribute name="nClusters" type="int" setMeth = "FALSE" desc="number of clusters"/>
+      <attribute name="nClusters" type="unsigned int" setMeth = "FALSE" desc="number of clusters"/>
+      <attribute name="pcn" type="unsigned int" setMeth = "FALSE" desc="pcn"/>
+      <attribute name="pcnSynch" type="bool" setMeth = "FALSE" desc="pcn agree"/>
+      <attribute name="banksWithError" type="std::vector &lt; unsigned int &gt;" setMeth = "FALSE" desc="banks with error"/>
+      <method name = "hasError" type = "bool" const = "TRUE" desc = "data is good or not">
+         <code>
+            bool good = m_pcnSynch &amp; m_banksWithError.empty(); 
+            return !good; 
+         </code>
+      </method>
   </class>
  </package>
 </gdd>
