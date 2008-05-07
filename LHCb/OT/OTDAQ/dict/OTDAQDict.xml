@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name = "IOTChannelMapTool" />
   <class name = "IOTRawBankDecoder" />
   <class name = "IOTReadOutWindow"  />
 </lcgdict>

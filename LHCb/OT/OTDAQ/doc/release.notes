@@ -2,6 +2,11 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v5r7 2008-05-07 ======================
+! 2008-05-07 - Marco Cattaneo
+ - Add new tool to dictionary
+ - Add missing include in header file
+
 ! 2007-11-26 - Wouter Hulsbergen
  - Make RawBankDecoder suitable for reading real data
 
