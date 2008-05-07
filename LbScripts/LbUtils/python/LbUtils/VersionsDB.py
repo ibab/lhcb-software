@@ -4,17 +4,20 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.9 2008-05-07 17:12:12 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.10 2008-05-07 18:50:26 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
 if sys.version_info < (2,4):
     from sets import Set as set
-
+#------------------------------------------------------------------------------ 
 #--- Constants
+#------------------------------------------------------------------------------ 
 DEFAULT_KEYPROJECT = "LHCb"
-
+DEFAULT_RELEASEDATE = (1970, 1, 1)
+#------------------------------------------------------------------------------ 
 #--- Error definitions
+#------------------------------------------------------------------------------ 
 class VersionsDBError(RuntimeError):
     """
     Generic VersionsDB error.
@@ -28,6 +31,7 @@ class DuplicatedReleaseError(VersionsDBError):
     def __init__(self, rel):
         VersionsDBError.__init__(self,"Duplicated release '%s'"%(rel))
         self.release = rel
+        
 class DuplicatedProjectError(VersionsDBError):
     """
     Error raised when a new project is added to a release, with the same name of
@@ -43,8 +47,9 @@ class DependencyLoopError(VersionsDBError):
     """
     def __init__(self):
         VersionsDBError.__init__(self,"detected possible dependency loop.")
-
+#------------------------------------------------------------------------------ 
 #--- Utility functions
+#------------------------------------------------------------------------------ 
 def _sortProjects(pl):
     """
     Sort a list of project objects according to the their dependencies.
@@ -67,8 +72,9 @@ def _sortProjects(pl):
     l = [ (weights[p.name],p.name,p) for p in pl ]
     l.sort()
     return [ i[2] for i in l ]
- 
+#------------------------------------------------------------------------------ 
 #--- Main classes
+#------------------------------------------------------------------------------ 
 import re
 class Version:
     """
@@ -107,7 +113,7 @@ class Version:
         Returns a string that can be evaluated to get a version object
         equivalent to the current one.
         """
-        return "%s(%s)"%(self.__class__.__name__,repr(str(self)))
+        return "%s(%r)"%(self.__class__.__name__,str(self))
     def __str__(self):
         """
         Return a the version as version string like "v1r2p3".
@@ -160,11 +166,11 @@ class Project:
         if proj_name not in self.runtimedeps:
             self.runtimedeps.append(proj_name)
     def __repr__(self):
-        return "Project(name=%s,version=%s,buildtimedeps=%s,runtimedeps=%s)" % \
-                (repr(self.name),
-                 repr(str(self.version)),
-                 repr(self.buildtimedeps),
-                 repr(self.runtimedeps))
+        return "Project(name=%r,version=%r,buildtimedeps=%r,runtimedeps=%r)" % \
+                (self.name,
+                 str(self.version),
+                 self.buildtimedeps,
+                 self.runtimedeps)
     
 class Release:
     """
@@ -177,7 +183,7 @@ class Release:
     """
     __releases__ = {}
     __unversioned_projects__ = {}
-    def __init__(self, name, projects = None, base = None):
+    def __init__(self, name, projects = None, base = None, date = None, tag = None):
         if name in self.__releases__:
             raise DuplicatedReleaseError(name)
         self.name = name
@@ -187,12 +193,14 @@ class Release:
             projects = []
         for (k,v) in projects:
             self.projects[k] = v
+        self._date = date
+        self._tag = tag
         self.__releases__[name] = self
         
     def __repr__(self):
-        return "Release(name=%s,projects=%s,base=%s)"%(repr(self.name),
-                                                       repr(self.projects.items()),
-                                                       repr(self.base))
+        return "Release(name=%r,projects=%r,base=%r)"%(self.name,
+                                                       self.projects.items(),
+                                                       self.base)
     def allProjects(self):
         """
         Returns a list of all the projects available in the release (either directly or
@@ -236,6 +244,29 @@ class Release:
         if key in self.projects:
             raise DuplicatedProjectError(self.name, key)
         self.projects[key] = Project(name=key, version=value)
+    def __getattr__(self, key):
+        if key == "date":
+            if self._date:
+                return self._date
+            elif self.base:
+                return self.__releases__[self.base].date
+            else:
+                return DEFAULT_RELEASEDATE
+        elif key == "tag":
+            if self._tag:
+                return self._tag
+            elif self.base:
+                return self.__releases__[self.base].tag
+            else:
+                return None
+        raise AttributeError(key)
+    def __setattr__(self, key, value):
+        if key == "date":
+            self._date = value
+        elif key == "tag":
+            self._tag = value
+        else:
+            self.__dict__[key] = value
     def add(self, project):
         if project.name in self.projects:
             raise DuplicatedProjectError(self.name, project.name)
@@ -305,8 +336,15 @@ class _ReleaseSAXHandler(ContentHandler):
             return
         name_attr = attrs.getValue(u'name')
         if name == u'release':
-            base = attrs.get(u'base',None)
-            self._currentRelease = Release(name_attr, base = base)
+            if u'date' in attrs:
+                # convert string like "2008-05-07" to tuple like (2008,5,7)
+                date = tuple([ int(i) for i in attrs[u'date'].split('-')])
+            else:
+                date = DEFAULT_RELEASEDATE
+            self._currentRelease = Release(name_attr,
+                                           base = attrs.get(u'base', None),
+                                           date = date,
+                                           tag  = attrs.get(u'tag',  None) )
         elif name == u'project':
             self._currentProject = Project(name = name_attr,
                                            version = attrs.getValue(u'version'))
@@ -329,8 +367,9 @@ class _ReleaseSAXHandler(ContentHandler):
             self._currentProject = None
         elif name == u'unversioned_project':
             self._currentProject = None
-
+#------------------------------------------------------------------------------ 
 #--- Initialization functions
+#------------------------------------------------------------------------------ 
 def load(source):
     """
     Load the database from an XML source (filename or file object).
@@ -351,8 +390,9 @@ def clean():
     """
     Release.__releases__ = {} 
     Release.__unversioned_projects__ = {} 
-    
+#------------------------------------------------------------------------------ 
 #--- Internal query functions
+#------------------------------------------------------------------------------ 
 def _findReleases(project, version):
     """
     Find all the releases that feature the specified pair (project,version).
@@ -384,8 +424,9 @@ def _getVersions(project, releases):
     versions = list(set(versions)) # remove duplicates
     versions.sort() 
     return versions
-
+#------------------------------------------------------------------------------ 
 #--- Public query functions
+#------------------------------------------------------------------------------ 
 def getCompatibleVersions(project, version, otherproject, keyproj = DEFAULT_KEYPROJECT):
     """
     Given a project and versions, find all the versions of 'otherproject' that
@@ -462,10 +503,11 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
     rel_names.sort()
     for rel_name in rel_names:
         rel = Release.__releases__[rel_name]
-        xml += '  <release name="' + rel.name
-        if rel.base is not None:
-            xml += '" base="' + rel.base
-        xml += '">\n'
+        xml += '  <release name="%s"'%rel.name
+        if rel.base: xml += ' base="%s"'%rel.base
+        if rel.date > DEFAULT_RELEASEDATE: xml += ' date="%4d-%02d-%02d"'%rel.date
+        if rel.tag: xml += ' tag="%s"'%rel.tag
+        xml += '>\n'
         for p in rel.values():
             xml += '    <project name="%s" version="%s">\n'%(p.name,p.version)
             for dep in p.buildtimedeps:

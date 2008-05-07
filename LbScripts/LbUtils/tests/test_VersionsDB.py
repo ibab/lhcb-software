@@ -1,7 +1,7 @@
 import unittest
 from LbUtils import VersionsDB
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: test_VersionsDB.py,v 1.5 2008-04-29 09:40:09 marcocle Exp $"
+__version__ = "$Id: test_VersionsDB.py,v 1.6 2008-05-07 18:50:26 marcocle Exp $"
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):
@@ -256,6 +256,42 @@ class VersionsDBTest(unittest.TestCase):
         self.assertEquals(rtv,expected)
         
         self.assertEquals([p.name for p in r.allProjects()],["a","u1","u2","b","c"])
+    def test_600_date_and_tag(self):
+        def test(self):
+            # check content of db
+            r = VersionsDB.getRelease("R1")
+            self.assertEquals(r.date, VersionsDB.DEFAULT_RELEASEDATE)
+            self.failIf(r.tag)
+            r = VersionsDB.getRelease("R2")
+            self.assertEquals(r.date, (2008,5,7))
+            self.failIf(r.tag)
+            r = VersionsDB.getRelease("R3")
+            self.assertEquals(r.date, (2008,5,7))
+            self.assertEquals(r.tag, "DC06")
+            r = VersionsDB.getRelease("R4")
+            self.assertEquals(r.date, (2008,5,7))
+            self.assertEquals(r.tag, "DC06")
+        # prepare db
+        VersionsDB.Release("R1")
+        VersionsDB.Release("R2", date = (2008,5,7))
+        VersionsDB.Release("R3", base = "R2", tag = "DC06")
+        VersionsDB.Release("R4", base = "R3")
+
+        test(self)
+        
+        # check XML generation 
+        xml = VersionsDB.generateXML()
+        VersionsDB.loadString(xml)
+        
+        test(self)
+        
+        # test assignment
+        r = VersionsDB.getRelease("R4")
+        r.date = (2015,1,1)
+        r.tag = "test" 
+        
+        self.assertEquals(r.date, (2015,1,1))
+        self.assertEquals(r.tag, "test")
         
     def test_900_generateXML(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0"),("P4","v1r0")]),

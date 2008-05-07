@@ -39,8 +39,20 @@
     		</xsi:documentation>
     	</xsi:annotation>
     	<xsi:complexContent>
-    		<xsi:extension base="tns:named"><xsi:sequence><xsi:element name="project" type="tns:project" minOccurs="1" maxOccurs="unbounded"></xsi:element></xsi:sequence><xsi:attribute name="base" type="xsi:string" use="optional"></xsi:attribute>
-    		</xsi:extension></xsi:complexContent></xsi:complexType>
+    		<xsi:extension base="tns:named">
+    			<xsi:sequence>
+    				<xsi:element name="project" type="tns:project"
+    					minOccurs="1" maxOccurs="unbounded">
+    				</xsi:element>
+    			</xsi:sequence>
+    			<xsi:attribute name="base" type="xsi:string"
+    				use="optional">
+    			</xsi:attribute>
+    			<xsi:attribute name="date" type="xsi:date" use="optional"></xsi:attribute>
+    			<xsi:attribute name="tag" type="xsi:string" use="optional"></xsi:attribute>
+    		</xsi:extension>
+    	</xsi:complexContent>
+    </xsi:complexType>
 
 
     <xsi:complexType name="release_db">
