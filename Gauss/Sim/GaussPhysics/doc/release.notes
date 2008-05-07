@@ -4,6 +4,15 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v5r1 2008-05-07 =========================
+! 2008-05-07 - Gloria CORTI for Neal GUEISSAZ
+ - Add neutralino particle definition for Geant4
+   . G4Neutralino.{h,cpp}
+
+! 2008-05-06 - Gloria CORTI
+ - Remove declaration of tool from GaussPhysics_load.cpp that is not necessary
+   with Gaudi v19
+
 ! 2008-04-26 - Patrick Robbe
  - Remove unnecessary particle definitions (shortlived particles) 
  - Add GiGaPhysUnknownParticles to define special long-lived particles
