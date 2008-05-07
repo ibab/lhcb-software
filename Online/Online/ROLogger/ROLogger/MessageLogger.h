@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.1 2008-05-07 16:24:16 frankb Exp $
+// $Id: MessageLogger.h,v 1.2 2008-05-07 17:58:06 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.1 2008-05-07 16:24:16 frankb Exp $
-#ifndef ROLOGGER_RODIMLOGGER_H
-#define ROLOGGER_RODIMLOGGER_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.2 2008-05-07 17:58:06 frankb Exp $
+#ifndef ROLOGGER_MESSAGELOGGER_H
+#define ROLOGGER_MESSAGELOGGER_H
 
 // Framework include files
 #include "CPP/Interactor.h"
@@ -32,23 +32,23 @@
 namespace ROLogger {
   // Forward declarations
 
-  /**@class RODIMLogger RODIMLogger.h ROLogger/RODIMLogger.h
+  /**@class MessageLogger MessageLogger.h ROLogger/MessageLogger.h
    *
    *   DIM error logger
    *
    *   @author M.Frank
    */
-  class RODIMLogger : public Interactor  {
+  class MessageLogger : public Interactor  {
   protected:
     struct Entry {
       time_t       created;
       int          id;
       std::string  name;
-      RODIMLogger* self;
+      MessageLogger* self;
       Entry() {}
     };
     typedef std::map<std::string,Entry*> Services;
-    typedef std::list<std::string> History;
+    typedef std::list<std::string>       History;
 
     /// DIM service identifier
     int m_service;
@@ -64,31 +64,21 @@ namespace ROLogger {
     size_t   m_historySize;
     /// Output device
     FILE*    m_output;
-    /// Flag to indicate the usage of UPI
-    bool     m_upi;
-    /// Menu id
-    int      m_id;
     /// Clear all history content
     void clearHistory();
     /// Print summary of history records from stored memory
     void summarizeHistory();
 
-    /// Create UPI Menu
-    void createMenu();
-    /// Delete UPI Menu
-    void deleteMenu();
     /// Print history records from stored memory
     void printHistory(const std::string& pattern);
     /// Update history content
     void updateHistory(const char* msg);
-    /// Log internal message
-    void logMessage(const char* fmt, ...);
 
   public:
     /// Standard constructor with object setup through parameters
-    RODIMLogger(int argc, char** argv);
+    MessageLogger(int argc, char** argv);
     /// Standard destructor
-    virtual ~RODIMLogger();
+    virtual ~MessageLogger();
 
     /// Interactor callback handler
     virtual void handle(const Event& ev);
@@ -127,4 +117,4 @@ namespace ROLogger {
     static void requestHandler(void* tag, void* address, int* size);
   };
 }
-#endif /* ROLOGGER_RODIMLOGGER_H */
+#endif /* ROLOGGER_MESSAGELOGGER_H */

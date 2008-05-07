@@ -1,41 +1,36 @@
 #!/bin/bash
 export UTGID=Errlog_$$
 #. /group/online/dataflow/scripts/preamble.sh
-directory=`dirname $0`
-export DATAFLOWDIR=/group/online/dataflow
-. ${directory}/../cmt/setup.vars
-. ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
+#export DATAFLOWDIR=/group/online/dataflow
+. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars
+#. ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
 #
 export DIM_DNS_NODE=ecs03
+directory=`dirname $0`
+eval `${directory}/internal/getMonOpts.sh $*`
 export TAN_PORT=YES
 export TAN_NODE=${HOST}
 export UTGID=${HOST}_Errlog_$$;
-#
-# Start the display window
-#
-xterm -ls -132 \
-    -geometry 210x45+0+0 -bg black -fg white \
-    -title "${UTGID}:Message display" \
-    -e "export UTGID=${UTGID}_display; \
-    exec -a \${UTGID} `which gentest.exe` \
-    libROLogger.so romon_logger -service=\$UTGID -col" &
-#
-# Start the history window
-#
-xterm -ls -132 \
-    -geometry 144x27+0+610 -bg black -fg white \
-    -title "${UTGID}:History display" \
-    -e "export UTGID=${UTGID}_history; \
-    exec -a \${UTGID} `which gentest.exe` \
-    libROLogger.so romon_logger -service=\$UTGID -col" &
-#
-# Start the control window
-#
-sleep 1;
-xterm -ls -132 \
-    -geometry 60x27+950+610 \
-    -title "${UTGID}:Error logger" \
-    -e "export UTGID=${UTGID}; \
-    exec -a \${UTGID} `which gentest.exe` \
-    libROLogger.so romon_display_server -service=$*" &
-
+if test "${terminal_type}" = "gnome";
+    then
+    gnome-terminal --sm-disable \
+	--disable-factory \
+	--hide-menubar \
+	--geometry=180x65 --title="Server ---- ${HOST} ---- ${UTGID}" \
+	-e "`which gentest.exe` libUPI.so upi_server" &
+else
+    xterm -ls -132 \
+	-geometry 210x45+0+0 -bg black -fg white \
+	-title "${UTGID}:Message display" \
+	-e "export UTGID=${UTGID}_display; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=0 -disp"&
+    xterm -ls -132 \
+	-geometry 144x27+0+610 -bg black -fg white \
+	-title "${UTGID}:History display" \
+	-e "export UTGID=${UTGID}_history; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=500000"&
+    echo $*
+    sleep 1;
+    xterm -ls -132 \
+	-geometry 60x27+950+610 \
+	-title "${UTGID}:Error logger" \
+	-e "export UTGID=${UTGID}; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_display_server -service=$*" &
+fi;

@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.1 2008-05-07 16:24:16 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.2 2008-05-07 17:58:06 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.1 2008-05-07 16:24:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.2 2008-05-07 17:58:06 frankb Exp $
 
 // Framework include files
 #include <cerrno>
@@ -20,13 +20,10 @@
 #include <iostream>
 #include "RTL/rtl.h"
 #include "RTL/strdef.h"
+#include "RTL/graphics.h"
 #include "CPP/Event.h"
-#include "CPP/IocSensor.h"
-#include "UPI/UpiSensor.h"
-#include "UPI/upidef.h"
 
-#include "ROLogger/PartitionListener.h"
-#include "ROLogger/RODIMLogger.h"
+#include "ROLogger/MessageLogger.h"
 #include "ROLoggerDefs.h"
 
 extern "C" {
@@ -34,224 +31,33 @@ extern "C" {
   #include "dis.h"
 }
 
-#ifdef _WIN32
-#include "RTL/conioex.h"
-#endif
-namespace graphics {
-#ifdef _WIN32
-  inline void  consolesize(size_t* rows, size_t* cols) { int x,y; ::consolesize(&y,&x); *rows=y;*cols=x; }
-  inline void  gotoxy(int x,int y) {    ::gotoxy(x,y);             }
-  inline void  bold()              {    highvideo();               }
-  inline void  nobold()            {    lowvideo();                }
-  inline void  dimmed()            {    lowvideo();                }
-  inline void  nodimmed()          {    normalvideo();             }
-  inline void  inverse()           {    inversevideo();            }
-  inline void  noinverse()         {    noinversevideo();          }
-  inline void  underline()         {    underlinevideo();          }
-  inline void  nounderline()       {    normalvideo();             }
-  inline void  flash()             {    blinkvideo();              }
-  inline void  noflash()           {    normalvideo();             }
-  inline void  normal()            {    normalvideo();             }
-
-  inline void  clear_screen()      {    clrscr();                  }
-  inline void  plain()             {    lowvideo();normalvideo();  }
-  inline void  narrow_screen()     {                               }
-  inline void  wide_screen()       {                               }
-  inline void  cursor_on()         {    _setcursortype(_NORMALCURSOR); }
-  inline void  cursor_off()        {    _setcursortype(_NOCURSOR);}
-
-  inline void  red()               {    textcolor(RED);           }
-  inline void  yellow()            {    textcolor(YELLOW);        }
-  inline void  white()             {    textcolor(WHITE);         }
-  inline void  green()             {    textcolor(GREEN);         }
-  inline void  blue()              {    textcolor(BLUE);          }
-  inline void  cyan()              {    textcolor(CYAN);          }
-  inline void  black()             {    textcolor(BLACK);         }
-  inline void  magenta()           {    textcolor(MAGENTA);       }
-
-
-  inline void  bg_red()            {    textbackground(RED);     }
-  inline void  bg_yellow()         {    textbackground(YELLOW);  }
-  inline void  bg_white()          {    textbackground(WHITE);   }
-  inline void  bg_green()          {    textbackground(GREEN);   }
-  inline void  bg_blue()           {    textbackground(BLUE);    }
-  inline void  bg_cyan()           {    textbackground(CYAN);    }
-  inline void  bg_black()          {    textbackground(BLACK);    }
-  inline void  bg_magenta()        {    textbackground(MAGENTA);    }
-
-  inline void  bold_yellow()       {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,YELLOW));  }
-  inline void  bold_magenta()      {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,MAGENTA)); }
-  inline void  bold_red()          {    highvideo(); textattr(BUILD_TEXTATTR(BLACK,RED));     }
-
-#else
-
-  inline void  consolesize(size_t* rows, size_t* cols);
-  inline void  gotoxy(int x,int y) {    ::printf("\033[%d;%dH",y,x);    }
-  inline void  scroll(int top,int bot)  { ::printf("\033[%d;%dr",top,bot); }
-
-  inline void  plain()             {    ::printf("\033[0m");         }
-  inline void  bold()              {    ::printf("\033[1m");         }
-  inline void  nobold()            {    ::printf("\033[21m");        }
-  inline void  dimmed()            {    ::printf("\033[2m");         }
-  inline void  nodimmed()          {    ::printf("\033[22m");        }
-  inline void  underline()         {    ::printf("\033[4m");         }
-  inline void  nounderline()       {    ::printf("\033[24m");        }
-  inline void  flash()             {    ::printf("\033[5m");         }
-  inline void  noflash()           {    ::printf("\033[25m");        }
-  inline void  hidden()            {    ::printf("\033[6m");         }
-  inline void  inverse()           {    ::printf("\033[7m");         }
-  inline void  noinverse()         {    ::printf("\033[27m");        }
-
-  inline void  normal()            {    ::printf("\033[27m");        }
-  inline void  clear_screen()      {    ::printf("\033[2J");         }
-  inline void  narrow_screen()     {    ::printf("\033[?3l");        }
-  inline void  wide_screen()       {    ::printf("\033[?3h");        }
-  inline void  cursor_on()         {    ::printf("\033[?25h");       }
-  inline void  cursor_off()        {    ::printf("\033[?25l");       }
-
-  inline void  black()             {    ::printf("\033[30m");     }
-  inline void  red()               {    ::printf("\033[31m");     }
-  inline void  green()             {    ::printf("\033[32m");     }
-  inline void  yellow()            {    ::printf("\033[33m");     }
-  inline void  blue()              {    ::printf("\033[34m");     }
-  inline void  magenta()           {    ::printf("\033[35m");     }
-  inline void  cyan()              {    ::printf("\033[36m");     }
-  inline void  white()             {    ::printf("\033[37m");     }
-
-  inline void  bg_black()          {    ::printf("\033[40m");     }
-  inline void  bg_red()            {    ::printf("\033[41m");     }
-  inline void  bg_green()          {    ::printf("\033[42m");     }
-  inline void  bg_yellow()         {    ::printf("\033[43m");     }
-  inline void  bg_blue()           {    ::printf("\033[44m");     }
-  inline void  bg_magenta()        {    ::printf("\033[45m");     }
-  inline void  bg_cyan()           {    ::printf("\033[46m");     }
-  inline void  bg_white()          {    ::printf("\033[47m");     }
-
-  inline void  tographics()          {    ::printf("\033>"); }
-  inline void  toascii()          {    ::printf("\033(B"); }
-#endif
-}
-
-#ifndef _WIN32
-#include <cstdlib>
-#include <sys/ioctl.h>
-
-void graphics::consolesize(size_t* rows, size_t* cols) {
-  int fd = ::fileno(stdout);
-  if ( ::isatty(fd) ) {
-    struct winsize wns;
-    do {
-      if( ::ioctl(fd,TIOCGWINSZ,&wns) == 0 ) {
-        *rows = wns.ws_row;
-        *cols = wns.ws_col;
-	return;
-      }
-    } while (errno == EINTR);   
-  }
-  *rows = 0;
-  *cols = 0;
-}
-#endif
-
-using namespace graphics;
-
-extern "C" int graphics_test(int,char**) {
-#define DO(x,y) x(); y();                printf(" test ");           plain();                      printf("   ");  \
-         x(); y();  dimmed();            printf(" Dimmed ");         nodimmed();                   printf("   ");  \
-         x(); y();  bold();              printf(" Bold ");           nobold();                     printf("   ");  \
-         x(); y();  underline();         printf(" Underline ");      nounderline();                printf("   ");  \
-         x(); y();  underline(); bold(); printf(" Bold-Underline "); nobold();      nounderline(); printf("   ");  \
-         x(); y();  inverse();           printf(" Inverse ");        noinverse();                  printf("   ");  \
-         x(); y();  inverse(); bold();   printf(" Bold-Inverse ");   nobold();      noinverse();   printf("   ");  \
-         x(); y();  flash();             printf(" Flash ");          noflash();                    plain();  printf("\n");
-  DO(bg_black,black);
-  DO(bg_black,white);
-  DO(bg_black,yellow);
-  DO(bg_black,green);
-  DO(bg_black,red);
-  DO(bg_black,magenta);
-  DO(bg_black,blue);
-  DO(bg_black,cyan);
-
-  DO(bg_white,black);
-  DO(bg_white,white);
-  DO(bg_white,yellow);
-  DO(bg_white,green);
-  DO(bg_white,red);
-  DO(bg_white,magenta);
-  DO(bg_white,blue);
-  DO(bg_white,cyan);
-
-  DO(bg_green,black);
-  DO(bg_green,white);
-  DO(bg_green,yellow);
-  DO(bg_green,green);
-  DO(bg_green,red);
-  DO(bg_green,magenta);
-  DO(bg_green,blue);
-  DO(bg_green,cyan);
-#ifndef _WIN32
-  fprintf(stdout,"\033#3");printf(" Hello\n");
-  fprintf(stdout,"\033#4");printf(" Hello\n");
-  fprintf(stdout,"\033#6");printf(" Hello\n");
-  for(int i = 0; i < 3; ++i) {
-    fprintf(stdout,"\033M"); fflush(stdout);
-    ::lib_rtl_sleep(10);
-  }
-  for(int i = 0; i < 3; ++i) {
-    fprintf(stdout,"\033D"); fflush(stdout);
-    ::lib_rtl_sleep(100);
-  }
-#endif
-  bg_black();
-  green();
-  normal();
-  return 1;
-}
-
-
 using namespace ROLogger;
 using namespace graphics;
 
 /// Standard constructor
-RODIMLogger::RODIMLogger(int argc, char** argv) 
-  : m_colors(true), m_historySize(1000)
+MessageLogger::MessageLogger(int argc, char** argv) 
+  : m_colors(true), m_historySize(0)
 {
   std::string name, outfile = "logger.dat";
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("service",1,name);
   cli.getopt("buffer",1,m_historySize);
-  m_colors = cli.getopt("colors",1) != 0;
+  m_colors  = cli.getopt("colors",1) != 0;
   m_display = cli.getopt("display",1) != 0;
-  m_output = stdout;
-  m_upi = false;
-  m_id = 0;
-  if ( cli.getopt("file",1) ) {
-    cli.getopt("file",1,outfile);
-    m_colors = false;
-    m_display = true;
-    m_historySize = 0;
-    m_upi = true;
-    m_output = ::fopen(outfile.c_str(),"w");
-    if ( 0 == m_output ) {
-      logMessage("Cannot open output file: %s [%s]",outfile.c_str(),RTL::errorString());
-      exit(3);
-    }
-    logMessage("Opened output file:%s",outfile.c_str());
-  }
+  m_output  = stdout;
   if ( name.empty() ) {
-    logMessage("You have to supply a service name to display its data.");
+    ::lib_rtl_output(LIB_RTL_INFO,"You have to supply a service name to display its data.");
     ::lib_rtl_sleep(10000);
     ::exit(2);
   }
-  logMessage("Service name:         %s", name.c_str());
-  logMessage("Message buffer size:  %d",m_historySize);
+  ::lib_rtl_output(LIB_RTL_INFO,"Service name:         %s", name.c_str());
+  ::lib_rtl_output(LIB_RTL_INFO,"Message buffer size:  %d",m_historySize);
   m_service = ::dis_add_cmnd((char*)name.c_str(),(char*)"C",requestHandler,(long)this);
   if ( m_colors ) bg_black();
 }
 
 /// Standard destructor
-RODIMLogger::~RODIMLogger()  {
+MessageLogger::~MessageLogger()  {
   if ( m_service ) {
     ::dis_remove_service(m_service);
     m_service = 0;
@@ -259,18 +65,18 @@ RODIMLogger::~RODIMLogger()  {
   removeAllServices();
 }
 
+void MessageLogger::help_fun() {
+}
+
 /// Remove unconditionally all connected services
-void RODIMLogger::removeAllServices() {
+void MessageLogger::removeAllServices() {
   for ( Services::iterator i=m_infos.begin(); i!=m_infos.end(); ++i )
     cleanupService((*i).second);
   m_infos.clear();
 }
 
-void RODIMLogger::help_fun() {
-}
-
 /// Retrieve message severity from DIM logger message
-int RODIMLogger::msgSeverity(const char* msg) {
+int MessageLogger::msgSeverity(const char* msg) {
   if ( msg ) {
     int len = ::strlen(msg);  
     if      ( len>18 && !strncmp(msg+12,"[VERB]",6)  ) return 1;
@@ -284,7 +90,7 @@ int RODIMLogger::msgSeverity(const char* msg) {
 }
 
 /// Print single message retrieved from error logger
-void RODIMLogger::printMessage(const char* msg, bool crlf)  {
+void MessageLogger::printMessage(const char* msg, bool crlf)  {
   if ( m_colors ) {
     bg_black();
     switch(msgSeverity(msg))      {
@@ -317,7 +123,7 @@ void RODIMLogger::printMessage(const char* msg, bool crlf)  {
   if ( m_output != stdout ) ::fflush(m_output);
 }
 
-void RODIMLogger::updateHistory(const char* msg) {
+void MessageLogger::updateHistory(const char* msg) {
   if ( m_historySize > 0 ) {
     m_history.push_back(msg);
     if ( m_history.size() > m_historySize ) m_history.pop_front();
@@ -334,7 +140,7 @@ static std::string msg_src(const std::string& m) {
 }
 
 /// Print history records from stored memory
-void RODIMLogger::printHistory(const std::string& pattern) {
+void MessageLogger::printHistory(const std::string& pattern) {
   char text[132];
   int  match = 0, displayed=0;
   size_t numMsg = 999999999;
@@ -377,7 +183,7 @@ void RODIMLogger::printHistory(const std::string& pattern) {
 }
 
 /// Print summary of history records from stored memory
-void RODIMLogger::summarizeHistory() {
+void MessageLogger::summarizeHistory() {
   typedef std::map<std::string,std::vector<int> > DataMap;
   int sev, num_msg=0;
   char text[512];
@@ -405,7 +211,7 @@ void RODIMLogger::summarizeHistory() {
 }
 
 /// Print header information before starting output
-void RODIMLogger::printHeader(const std::string& title) {
+void MessageLogger::printHeader(const std::string& title) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -439,7 +245,7 @@ void RODIMLogger::printHeader(const std::string& title) {
 }
 
 /// Print multi-line header information before starting output
-void RODIMLogger::printHeader(const std::vector<std::string>& titles) {
+void MessageLogger::printHeader(const std::vector<std::string>& titles) {
   if ( m_colors ) {
     size_t rows=0, cols=0;
     consolesize(&rows,&cols);
@@ -476,7 +282,7 @@ void RODIMLogger::printHeader(const std::vector<std::string>& titles) {
 }
 
 /// Clear all history content
-void RODIMLogger::clearHistory() {
+void MessageLogger::clearHistory() {
   size_t s = m_history.size();
   char text[132];
   m_history.clear();
@@ -485,8 +291,8 @@ void RODIMLogger::clearHistory() {
 }
 
 /// DIM command service callback
-void RODIMLogger::requestHandler(void* tag, void* address, int* size) {
-  RODIMLogger* h = *(RODIMLogger**)tag;
+void MessageLogger::requestHandler(void* tag, void* address, int* size) {
+  MessageLogger* h = *(MessageLogger**)tag;
   std::string nam, n = (char*)address;
   size_t idx;
   switch(::toupper(n[0])) {
@@ -539,7 +345,7 @@ void RODIMLogger::requestHandler(void* tag, void* address, int* size) {
 }
 
 /// DIM command service callback
-void RODIMLogger::handleMessages(const char* items, const char* end) {
+void MessageLogger::handleMessages(const char* items, const char* end) {
   if ( items ) {
     std::vector<std::string> titles;
     time_t now = ::time(0);
@@ -548,7 +354,7 @@ void RODIMLogger::handleMessages(const char* items, const char* end) {
 	Services::iterator i=m_infos.find(p);
 	if ( i == m_infos.end() ) {
 	  Entry* e = m_infos[p] = new Entry;
-	  logMessage("Adding client:%s",p);
+	  ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s",p);
 	  e->id      = ::dic_info_service((char*)p,MONITORED,0,0,0,messageInfoHandler,(long)e,0,0);
 	  e->created = now;
 	  e->self    = this;
@@ -563,7 +369,7 @@ void RODIMLogger::handleMessages(const char* items, const char* end) {
 }
 
 /// DIM command service callback
-void RODIMLogger::handleRemoveMessages(const char* items, const char* end) {
+void MessageLogger::handleRemoveMessages(const char* items, const char* end) {
   if ( items ) {
     std::vector<std::string> titles;
     for(const char* p=items; p < end; p += ::strlen(p)+1 ) {
@@ -582,7 +388,7 @@ void RODIMLogger::handleRemoveMessages(const char* items, const char* end) {
 }
 
 /// Cleanup service stack
-void RODIMLogger::cleanupServices(const std::string& match) {
+void MessageLogger::cleanupServices(const std::string& match) {
   time_t now = ::time(0);
   for ( Services::iterator i=m_infos.begin(); i != m_infos.end(); ) {
     Entry* e = (*i).second;
@@ -597,7 +403,7 @@ void RODIMLogger::cleanupServices(const std::string& match) {
 }
 
 /// Cleanup service entry
-void RODIMLogger::cleanupService(Entry* e) {
+void MessageLogger::cleanupService(Entry* e) {
   if ( e ) {
     ::dic_release_service(e->id);
     delete e;
@@ -605,10 +411,10 @@ void RODIMLogger::cleanupService(Entry* e) {
 }
 
 /// DIM command service callback
-void RODIMLogger::handleHistory(const std::string& nam) {
+void MessageLogger::handleHistory(const std::string& nam) {
   time_t now = ::time(0);
   Entry* e = m_infos[nam] = new Entry;
-  logMessage("Adding client:%s", nam.c_str());
+  ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s", nam.c_str());
   e->id      = ::dic_info_service((char*)nam.c_str(),ONCE_ONLY,0,0,0,historyInfoHandler,(long)e,0,0);
   e->created = now;
   e->self    = this;
@@ -616,7 +422,7 @@ void RODIMLogger::handleHistory(const std::string& nam) {
 }
 
 /// Dim Info callback overload to process messages
-void RODIMLogger::messageInfoHandler(void* tag, void* address, int* size)  {
+void MessageLogger::messageInfoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     Entry* e = *(Entry**)tag;
     e->self->updateHistory((char*)address);
@@ -625,10 +431,10 @@ void RODIMLogger::messageInfoHandler(void* tag, void* address, int* size)  {
 }
 
 /// Dim Info callback overload to process messages
-void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
+void MessageLogger::historyInfoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     Entry* e = *(Entry**)tag;
-    RODIMLogger *logger = e->self;
+    MessageLogger *logger = e->self;
     Services& s = logger->m_infos;
     char *msg = (char*)address, *end = msg + *size, *ptr = msg;
     std::string title = "Logger history of:";
@@ -645,7 +451,7 @@ void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
     }
     for ( Services::iterator i=s.begin(); i != s.end(); ++i ) {
       if ( (*i).second == e ) {
-	logger->logMessage("Release client:%s", e->name.c_str());
+	::lib_rtl_output(LIB_RTL_INFO,"Release client:%s", e->name.c_str());
 	logger->cleanupService((*i).second);
 	s.erase(i);
 	break;
@@ -654,104 +460,21 @@ void RODIMLogger::historyInfoHandler(void* tag, void* address, int* size)  {
   }
 }
 
-/// Delete UPI Menu
-void RODIMLogger::deleteMenu() {
-  if ( m_id != 0 ) {
-    UpiSensor::instance().remove(this,m_id);
-    ::upic_delete_menu(m_id);
-    ::upic_write_message("Close window.","");
-    m_id = 0;
-  }
-}
-
-/// Create UPI Menu
-void RODIMLogger::createMenu() {
-  m_id = UpiSensor::instance().newID();
-  ::upic_open_window();
-  ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
-  ::upic_add_comment(CMD_COM1,"----------------","");
-  ::upic_add_command(CMD_CLOSE,"Exit Logger","");
-  ::upic_close_menu();
-  UpiSensor::instance().add(this,m_id);
-}
-
 /// Display callback handler
-void RODIMLogger::handle(const Event& ev) {
-  typedef std::vector<std::string> _SV;
-  ioc_data data(ev.data);
-  const _SV* v = data.vec;
-  switch(ev.eventtype) {
-  case IocEvent:
-    switch(ev.type) {
-    case CMD_CONNECT:
-      deleteMenu();
-      createMenu();
-      return;
-    case CMD_UPDATE_NODES:
-      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_NODES",true);
-      delete data.vec;
-      return;
-    case CMD_UPDATE_FARMS: {
-      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_FARMS",true);
-      std::string tmp;
-      std::stringstream s;
-      for(_SV::const_iterator i=v->begin();i!=v->end();++i) {
-	std::string n = *i;
-	if ( n == "STORE" ) n = "STORECTL01";
-	s << "/" << n << "/gaudi/log" << std::ends;
-      }
-      s << std::ends;
-      tmp = s.str();
-      removeAllServices();
-      handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
-      delete data.vec;
-      }
-      return;
-    default:
-      break;
-    }
-    break;
-  case UpiEvent:
-    if ( ev.command_id == CMD_CLOSE ) {
-      deleteMenu();
-      ::upic_write_message("Close window.","");
-      ::upic_quit();
-      ::lib_rtl_sleep(200);
-      ::exit(0);
-    }
-    break;
-  default:
-    break;
-  }
-  logMessage("Received unknown input.....");
+void MessageLogger::handle(const Event& ) {
+  ::lib_rtl_output(LIB_RTL_INFO,"Received unknown input.....");
 }
 
-/// Log internal message
-void RODIMLogger::logMessage(const char* fmt, ...) {
-  va_list args;
+static size_t do_output(void*,int,const char* fmt, va_list args) {
   char buffer[1024];
-  va_start( args, fmt );
   ::vsnprintf(buffer, sizeof(buffer), fmt, args);
-  if ( m_upi ) {
-    ::upic_write_message(buffer,"");
-    return;
-  }
-  ::printf("%s\n",buffer);
+  return ::printf("%s\n",buffer);
 }
 
 extern "C" int romon_logger(int argc, char** argv) {
-  RODIMLogger mon(argc, argv);
+  ::lib_rtl_install_printer(do_output,0);
+  MessageLogger mon(argc, argv);
   ::dis_start_serving((char*)RTL::processName().c_str());
   while(1) ::lib_rtl_sleep(1000);
-  return 1;
-}
-
-extern "C" int romon_file_logger(int argc, char** argv) {
-  UpiSensor& s = UpiSensor::instance();
-  RODIMLogger mon(argc, argv);
-  PartitionListener listener(&mon,"LHCb");
-  ::dis_start_serving((char*)RTL::processName().c_str());
-  IocSensor::instance().send(&mon,CMD_CONNECT,CMD_CONNECT);
-  s.run();
   return 1;
 }
