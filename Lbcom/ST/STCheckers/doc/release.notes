@@ -6,6 +6,14 @@
 ! 2008-05-06 M. Needham
  - Add PCN + error monitoring
 
+! 2008-03-14  M Needham
+ - Follow changes in DeSTDet
+   [introduction of DeSTSensor level]
+
+! 2008-04-01 M Needham
+ - check for valid pointers in STClusterResolution
+
+!=========================== STCheckers v2r4p1 2008-04-18 =====================
 ! 2008-04-18 - Marco Cattaneo
  - Set default value of STEffChecker.IncludeGuardRings to false
  - Set default value of STEffChecker.HistoPrint to false
@@ -13,12 +21,7 @@
 ! 2008-04-17 M Needham
  - Bug fix in STEffChecker to prevent crash
 
-! 2008-04-01 M Needham
- - check for valid pointers in STClusterResolution
-
 ! 2008-03-14  M Needham
- - Follow changes in DeSTDet
-   [introduction of DeSTSensor level]
  - Add back functionality to exclude guard rings in eff calculation
 
 !=========================== STCheckers v2r4 2008-01-18 =======================
