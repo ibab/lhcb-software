@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -55,8 +55,8 @@ StatusCode PhotonSignalGaussProb::initialize()
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
-  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
-  const DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
+  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocations::Rich1 );
+  const DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocations::Rich2 );
 
   // Mirror radii of curvature in mm
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.h,v 1.2 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -96,14 +96,16 @@ namespace Rich
       /// Pointer to RichParticleProperties interface
       const IParticleProperties * m_richPartProp;
 
-      std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
-      std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
-      std::vector<double> m_maxROI2; ///< Square of m_maxROI
-      std::vector<double> m_minROI2; ///< Square of m_minROI
+      std::vector<double> m_minROI;     ///< Min hit radius of interest around track centres
+      std::vector<double> m_maxROI;     ///< Max hit radius of interest around track centres
+      std::vector<double> m_maxROI2;    ///< Square of m_maxROI
+      std::vector<double> m_minROI2;    ///< Square of m_minROI
       std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point
       std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
       std::vector<double> m_nSigma;     ///< N sigma for acceptance bands
       std::vector<double> m_scale;      ///< Internal cached parameter for speed
+      std::vector<double> m_minXlocal;  ///< Minimum local X coordinate for each radiator
+      std::vector<double> m_minYlocal;  ///< Minimum local Y coordinate for each radiator
 
       /// Particle ID types to consider in the likelihood minimisation
       Rich::Particles m_pidTypes;

@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -40,6 +40,8 @@ SepVCKthetaPhotonPredictor( const std::string& type,
     m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
     m_tolF          ( Rich::NRadiatorTypes, 0 ),
     m_scale         ( Rich::NRadiatorTypes, 0 ),
+    m_minXlocal     ( Rich::NRadiatorTypes, 0 ),
+    m_minYlocal     ( Rich::NRadiatorTypes, 0 ),
     m_Nselected     ( Rich::NRadiatorTypes, 0 ),
     m_Nreject       ( Rich::NRadiatorTypes, 0 )
 {
@@ -74,6 +76,16 @@ SepVCKthetaPhotonPredictor( const std::string& type,
   m_tolF[Rich::Rich2Gas]  = 40;
   declareProperty( "TolerenceFactor", m_tolF );
 
+  m_minXlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
+  m_minXlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
+  m_minXlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
+  declareProperty( "MinPixelXLocal", m_minXlocal );
+
+  m_minYlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
+  m_minYlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
+  m_minYlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
+  declareProperty( "MinPixelYLocal", m_minYlocal );
+
 }
 
 StatusCode SepVCKthetaPhotonPredictor::initialize()
@@ -97,12 +109,12 @@ StatusCode SepVCKthetaPhotonPredictor::initialize()
     // printout for this rad
     std::string trad = Rich::text((Rich::RadiatorType)rad);
     trad.resize(8,' ');
-    info() << trad << " : Sep. range     " 
+    info() << trad << " : Sep. range     "
            << boost::format("%5.1f") % m_minROI[rad] << " -> "
            << boost::format("%5.1f") % m_maxROI[rad] << " mm  : Tol. "
            << boost::format("%5.1f") % m_tolF[rad] << " mm" << endreq;
   }
-  
+
   m_pidTypes = m_richPartProp->particleTypes();
   info() << "Particle types considered = " << m_pidTypes << endreq;
 
@@ -155,51 +167,62 @@ SepVCKthetaPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
   if ( segment->trackSegment().rich() == pixel->detector() )
   {
 
-    // segment / hit separation squared
-    const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
-
-    // Check overall boundaries
-    if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
+    // Central region cut
+    // Most useful for aerogel since true photons tend to be in the out regions of
+    // the detector plane, and cutting central photons removes a significant number
+    // of fake photon candidates
+    const Gaudi::XYZPoint& locPos = pixel->radCorrLocalPositions().position(rad);
+    if ( fabs(locPos.x()) > m_minXlocal[rad] ||
+         fabs(locPos.y()) > m_minYlocal[rad] )
     {
 
-      // Cache separation
-      const double sep = sqrt(sep2);
+      // segment / hit separation squared
+      const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
 
-      // Loop over mass hypos and check finer grained boundaries
-      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin(); 
-            hypo != m_pidTypes.end(); ++hypo )
+      // Check overall boundaries
+      if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
       {
 
-        // expected separation, scales linearly with expected CK angle
-        const double expSep = m_ckAngle->avgCherenkovTheta(segment,*hypo) * m_scale[rad];
+        // Cache separation
+        const double sep = sqrt(sep2);
 
-        // is this pixel/segment pair in the accepted range
-        const double dsep = fabs(sep-expSep);
-        if ( dsep < m_tolF[rad] )
+        // Loop over mass hypos and check finer grained boundaries
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
         {
-          OK = true;
-          //if ( msgLevel(MSG::VERBOSE) )
+
+          // expected separation, scales linearly with expected CK angle
+          const double expSep = m_ckAngle->avgCherenkovTheta(segment,*hypo) * m_scale[rad];
+
+          // is this pixel/segment pair in the accepted range
+          const double dsep = fabs(sep-expSep);
+          if ( dsep < m_tolF[rad] )
+          {
+            OK = true;
+            //if ( msgLevel(MSG::VERBOSE) )
+            //{
+            //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
+            //            << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
+            //}
+            break;
+          }
+          //if ( msgLevel(MSG::VERBOSE) && !OK )
           //{
           //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-          //            << dsep << " PASSED tol=" << m_tolF[rad] << endreq;
+          //            << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
           //}
-          break;
-        }
-        //if ( msgLevel(MSG::VERBOSE) && !OK )
-        //{
-        //  verbose() << "  -> " << *hypo << " fabs(sep-expSep)="
-        //            << dsep << " FAILED tol=" << m_tolF[rad] << " -> reject" << endreq;
-        //}
 
-      } // loop over hypos
+        } // loop over hypos
 
-    } // overall boundary check
-    //else if ( msgLevel(MSG::VERBOSE) )
-    //{
-    //  verbose() << "  -> sep2=" << sep2
-    //            << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
-    //            << " -> reject" << endreq;
-    //}
+      } // overall boundary check
+      //else if ( msgLevel(MSG::VERBOSE) )
+      //{
+      //  verbose() << "  -> sep2=" << sep2
+      //            << " FAILED overall boundary check " << m_minROI2[rad] << "->" << m_maxROI2[rad]
+      //            << " -> reject" << endreq;
+      //}
+
+    } // inner region cut
 
   } // same detector
   //else if ( msgLevel(MSG::VERBOSE) )

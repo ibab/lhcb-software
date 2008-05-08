@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::SepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.2 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -103,7 +103,9 @@ namespace Rich
       std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
       std::vector<double> m_tolF;       ///< Region of tolerance in seperation
       std::vector<double> m_scale;      ///< Internal cached parameter for speed
-      
+      std::vector<double> m_minXlocal;  ///< Minimum local X coordinate for each radiator
+      std::vector<double> m_minYlocal;  ///< Minimum local Y coordinate for each radiator
+
       /// Particle ID types to consider in the likelihood minimisation
       Rich::Particles m_pidTypes;
       

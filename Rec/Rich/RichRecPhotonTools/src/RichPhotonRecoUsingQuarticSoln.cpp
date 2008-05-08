@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.4 2008-02-18 14:53:00 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.5 2008-05-08 13:21:32 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -86,8 +86,8 @@ StatusCode PhotonRecoUsingQuarticSoln::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get the detector elements
-  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
-  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // Get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );

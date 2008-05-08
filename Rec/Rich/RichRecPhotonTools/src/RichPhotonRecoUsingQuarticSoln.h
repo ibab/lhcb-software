@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.3 2008-02-18 14:53:00 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.4 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -170,8 +170,8 @@ namespace Rich
         if ( !m_deBeam[rich] )
         {
           m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
-                                                   DeRichBeamPipeLocation::Rich1BeamPipe :
-                                                   DeRichBeamPipeLocation::Rich2BeamPipe );
+                                                   DeRichLocations::Rich1BeamPipe :
+                                                   DeRichLocations::Rich2BeamPipe );
         }
         return m_deBeam[rich];
       }

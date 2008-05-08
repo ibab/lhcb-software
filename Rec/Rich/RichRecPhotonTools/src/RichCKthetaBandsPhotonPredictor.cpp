@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::CKthetaBandsPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichCKthetaBandsPhotonPredictor.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   26/07/2007
@@ -40,7 +40,9 @@ CKthetaBandsPhotonPredictor( const std::string& type,
     m_ckThetaMax    ( Rich::NRadiatorTypes, 0 ),
     m_sepGMax       ( Rich::NRadiatorTypes, 0 ),
     m_nSigma        ( Rich::NRadiatorTypes, 0 ),
-    m_scale         ( Rich::NRadiatorTypes, 0 )
+    m_scale         ( Rich::NRadiatorTypes, 0 ),
+    m_minXlocal     ( Rich::NRadiatorTypes, 0 ),
+    m_minYlocal     ( Rich::NRadiatorTypes, 0 )
 {
 
   // interface
@@ -72,6 +74,16 @@ CKthetaBandsPhotonPredictor( const std::string& type,
   m_nSigma[Rich::Rich1Gas]  = 6.5;
   m_nSigma[Rich::Rich2Gas]  = 12;
   declareProperty( "NSigma", m_nSigma );
+
+  m_minXlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
+  m_minXlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
+  m_minXlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
+  declareProperty( "MinPixelXLocal", m_minXlocal );
+
+  m_minYlocal[Rich::Aerogel]  = -1*Gaudi::Units::mm;
+  m_minYlocal[Rich::Rich1Gas] = -1*Gaudi::Units::mm;
+  m_minYlocal[Rich::Rich2Gas] = -1*Gaudi::Units::mm;
+  declareProperty( "MinPixelYLocal", m_minYlocal );
 
 }
 
@@ -125,36 +137,47 @@ CKthetaBandsPhotonPredictor::photonPossible( LHCb::RichRecSegment * segment,
     // which radiator
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-    // segment / hit separation squared
-    const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
-
-    // Check overall boundaries
-    if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
+    // Central region cut
+    // Most useful for aerogel since true photons tend to be in the out regions of
+    // the detector plane, and cutting central photons removes a significant number
+    // of fake photon candidates
+    const Gaudi::XYZPoint& locPos = pixel->radCorrLocalPositions().position(rad);
+    if ( fabs(locPos.x()) > m_minXlocal[rad] ||
+         fabs(locPos.y()) > m_minYlocal[rad] )
     {
 
-      // estimated CK theta
-      const double ckThetaEsti = sqrt(sep2)*m_scale[rad];
+      // segment / hit separation squared
+      const double sep2 = m_geomTool->trackPixelHitSep2(segment,pixel);
 
-      // Loop over mass hypos and check finer grained boundaries
-      for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
-            hypo != m_pidTypes.end(); ++hypo )
+      // Check overall boundaries
+      if ( sep2 < m_maxROI2[rad] && sep2 > m_minROI2[rad] )
       {
 
-        // expected CK theta
-        const double expCKtheta = m_ckAngle->avgCherenkovTheta(segment,*hypo);
-        // expected CK theta resolution
-        const double expCKres   = m_ckRes->ckThetaResolution(segment,*hypo);
+        // estimated CK theta
+        const double ckThetaEsti = std::sqrt(sep2)*m_scale[rad];
 
-        // is this pixel/segment pair in the accepted range
-        if ( fabs(expCKtheta-ckThetaEsti) < m_nSigma[rad]*expCKres )
+        // Loop over mass hypos and check finer grained boundaries
+        for ( Rich::Particles::const_iterator hypo = m_pidTypes.begin();
+              hypo != m_pidTypes.end(); ++hypo )
         {
-          OK = true;
-          break;
-        }
 
-      } // loop over hypos
+          // expected CK theta
+          const double expCKtheta = m_ckAngle->avgCherenkovTheta(segment,*hypo);
+          // expected CK theta resolution
+          const double expCKres   = m_ckRes->ckThetaResolution(segment,*hypo);
 
-    } // boundary check
+          // is this pixel/segment pair in the accepted range
+          if ( fabs(expCKtheta-ckThetaEsti) < m_nSigma[rad]*expCKres )
+          {
+            OK = true;
+            break;
+          }
+
+        } // loop over hypos
+
+      } // boundary check
+
+    } // central region check
 
   } // detector check
 

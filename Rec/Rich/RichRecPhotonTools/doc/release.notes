@@ -4,6 +4,13 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Chris Jones
+ - Adapt to removal of obsolete RichDet locations
+ - Add new cuts to photon predictors to allow hits close to the (0,0) to be
+   (optionally) rejected (disabled by default). Useful for aerogel since doing
+   so rejects a significant amount of fake photons, at the expense of a little
+   signal. To be studied more before being used.
+
 !======================= RichRecPhotonTools v1r2 2008-02-22 ==================
 ! 2008-02-21 - Chris Jones
  - Make sure CK phi values computed by iterative ray-tracing photon 
