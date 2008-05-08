@@ -100,7 +100,7 @@ def isAFSDir(dirpath):
     try:
         tmpdir = Directory(dirpath)
         tmpdir.ID()
-    except NotInAfs, NotInAfsInstance :
+    except NotInAFS :
         return False
     else:
         return True
