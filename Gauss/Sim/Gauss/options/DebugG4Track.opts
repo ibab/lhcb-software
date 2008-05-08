@@ -1,4 +1,4 @@
-// $Id: DebugG4Track.opts,v 1.3 2006-10-10 18:27:13 gcorti Exp $ 
+// $Id: DebugG4Track.opts,v 1.4 2008-05-08 20:29:48 gcorti Exp $ 
 
 /** @file 
  * 
@@ -12,8 +12,6 @@
 
 GiGa.TrackSeq.Members      += { "CommandTrackAction" };
 GiGa.TrackSeq.CommandTrackAction.TrackID     = 9961;
-// GiGa.TrackSeq.CommandTrackAction.PreCommand  = "/tracking/verbose 9";
-// GiGa.TrackSeq.CommandTrackAction.PostCommand = "/tracking/verbose 0";
 GiGa.TrackSeq.CommandTrackAction.PreCommand  = {
   "/tracking/verbose 1",
   "/geometry/navigator/verbose 4"
