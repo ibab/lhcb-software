@@ -1,0 +1,36 @@
+// $Id: BeamScintillators.opts,v 1.1 2008-05-08 20:32:19 gcorti Exp $
+
+/** @file
+ *
+ *  File containing options to simulate geometry upstream of VELO and
+ *  produce hits in Scintillator planes just at the wall.
+ *
+ *  @author G.Corti
+ *  @date 2008-05-06
+ */
+
+// Switch on geometry upstream and scintillator planes
+Geo.StreamItems += {"/dd/Structure/LHCb/UpstreamRegion" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BlockWallBefMag" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/GValve" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane1" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane2" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeBeforeVelo" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeSupportBeforeVelo" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeMobileSupport" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo" };
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BcmUp" };  
+
+
+// Retrieve hits from Scintillator planes
+DetectorsHits.Members += { "GetTrackerHitsAlg/GetScintillatorHits"};
+GetScintillatorHits.CollectionName = "VPlaneSDet/Hits";
+GetScintillatorHits.MCHitsLocation = "/Event/MC/Scintillators/Hits";
+GetScintillatorHits.Detectors = { 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane1", 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane2" 
+};
+GetScintillatorHits.ExtendedInfo = true;
+
+// and save them on sim file
+GaussTape.ItemList += { "/Event/MC/Scintillators/Hits#1" };
