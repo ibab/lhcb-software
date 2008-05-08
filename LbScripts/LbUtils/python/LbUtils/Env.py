@@ -96,25 +96,25 @@ class Environment:
         """
         shells = [ 'csh', 'sh', 'bat' ]
         if shell_type not in shells:
-            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type,shells))
+            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type, shells))
         out = ""
-        for key,value in self.old_values.items():
-            if key not in self.env:
+        for key in self.old_values.items():
+            if key[0] not in self.env:
                 # unset variable
                 if shell_type == 'csh':
-                    out += 'unsetenv %s\n'%key
+                    out += 'unsetenv %s\n'%key[0]
                 elif shell_type == 'sh':
-                    out += 'unset %s\n'%key
+                    out += 'unset %s\n'%key[0]
                 elif shell_type == 'bat':
-                    out += 'set %s=\n'%key
+                    out += 'set %s=\n'%key[0]
             else:
                 # set variable
                 if shell_type == 'csh':
-                    out += 'setenv %s "%s"\n'%(key,self.env[key])
+                    out += 'setenv %s "%s"\n'%(key[0], self.env[key[0]])
                 elif shell_type == 'sh':
-                    out += 'export %s="%s"\n'%(key,self.env[key])
+                    out += 'export %s="%s"\n'%(key[0], self.env[key[0]])
                 elif shell_type == 'bat':
-                    out += 'set %s=%s\n'%(key,self.env[key])
+                    out += 'set %s=%s\n'%(key[0], self.env[key[0]])
         return out
 
 
@@ -130,7 +130,7 @@ class EnvVarException(Exception):
 def varArgSplit(vararg):
     vardict = dict()
     varlist = []
-    pathsep = filter((lambda x: vararg.find(x) != -1),";")
+    pathsep = [ x for x in ";" if vararg.find(x) != -1 ]
     if len(pathsep) > 0:
         if len(pathsep) == 1 :
             varlist.append(vararg.split(pathsep))
@@ -139,7 +139,7 @@ def varArgSplit(vararg):
     else:
         varlist.append(vararg)
     for c in varlist:
-        varsep = filter((lambda x: c.find(x) != -1),"=")
+        varsep = [ x for x in "=" if c.find(x)!= -1 ]
         if len(varsep) > 0 :
             if len(varsep) == 1 :
                 varcontent = c.split(varsep)
@@ -152,7 +152,7 @@ def varArgSplit(vararg):
             vardict[c] = None
     return vardict
 
-def setVarCallBack(option, opt_str, value, parser):
+def setVarCallBack(option, opt_str, value, parser): #IGNORE:W0613
     log = logging.getLogger()
     env = getDefaultEnv()
     edict = varArgSplit(value)
@@ -173,7 +173,7 @@ def setVarCallBack(option, opt_str, value, parser):
                 env[e] = env[e].replace(edict[e],"")
                 log.info("changed %s to %s" % (e, env[e]))
 
-def setPathCallBack(option, opt_str, value, parser):
+def setPathCallBack(option, opt_str, value, parser): #IGNORE:W0613
     log = logging.getLogger()
     env = getDefaultEnv()
     edict = varArgSplit(value)
@@ -246,4 +246,5 @@ def addEnvironment(parser):
                       metavar = "VAR=str",
                       help = "remove a component to a path variable\n"
                       "--path-remove VAR:regexp")
+
     return _globalenv

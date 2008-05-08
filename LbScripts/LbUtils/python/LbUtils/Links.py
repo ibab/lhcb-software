@@ -46,7 +46,7 @@ def getCommonPath(dirnm, filename):
 
 
 def getRelativePath(dirnm, filename):
-    """ calculate the relative path of filename with regards to dirname """
+    """ calculate the relative path of filename with regards to dirnm """
     filename = realpath(filename)
     dirnm = realpath(dirnm)
     commonpath = getCommonPath(dirnm, filename)
@@ -132,17 +132,19 @@ def fixLinks(treebase):
 def removeBrokenLinks(treebase):
     """ removes links with non-existing targets """
     # @todo: implement
-    pass
+    print treebase
+
 
 def relativizeLinks(treebase):
     """ transforms absolute into relative links. The links are 
     calculted with regards to the tree base. """
     # @todo: implement
-    pass
+    print treebase
+
 
 def correctOvershoot(treebase):
     """ removes excedental '..' from relative links with regards
     to the tree base."""
     # @todo: implement
-    pass
+    print treebase
 

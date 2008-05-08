@@ -26,7 +26,7 @@ class FallBackOption(Option):
 class Parser(OptionParser):
     def __init__(self, *args, **kwargs):
         kwargs["option_class"] = FallBackOption
-        OptionParser.__init__(self, *args, **kwargs)
+        OptionParser.__init__(self, *args, **kwargs) #IGNORE:W0142
         Log.addDefaultLogger(self)
         Env.addEnvironment(self)
     def add_option(self, *args, **kwargs):
@@ -34,7 +34,7 @@ class Parser(OptionParser):
             kwargs["help"] += "\nThe fallback environment variable is set to %s" % kwargs["fallback_env"]
         if kwargs.has_key("fallback_conf") :
             kwargs["help"] += "\nThe fallback configuration is set to %s" % kwargs["fallback_conf"]
-        OptionParser.add_option(self, *args, **kwargs)
+        OptionParser.add_option(self, *args, **kwargs) #IGNORE:W0142
     def check_values(self, values, args):
         log = logging.getLogger()
         for opt in self._get_all_options():

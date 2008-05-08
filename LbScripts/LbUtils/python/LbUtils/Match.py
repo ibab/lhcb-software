@@ -185,7 +185,7 @@ class OctMatch(NumberMatch):
     def getNext(self, textinput):
         """ get next match and convert it to int """
         for i in super(OctMatch, self).getNext(textinput):
-            yield MatchedHex(i)
+            yield MatchedOct(i)
 
  
 import unittest

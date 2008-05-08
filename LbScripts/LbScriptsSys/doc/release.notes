@@ -1,3 +1,7 @@
+2008-04-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* LbUtils/python/LbUtils/Cache.py: added cache utility
+
 2008-02-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* LbScriptsPolicy/scripts/PathStripper.py: New file. Fixed problems with file

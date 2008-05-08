@@ -20,7 +20,7 @@ class Root(object):
               stdout=PIPE, close_fds=True)
         for line in p.stdout:
             self._modules.append(Module(line[:-1].split()[0]))
-        retcode = os.waitpid(p.pid, 0)
+        os.waitpid(p.pid, 0)
     def Modules(self):
         return self._modules
 
