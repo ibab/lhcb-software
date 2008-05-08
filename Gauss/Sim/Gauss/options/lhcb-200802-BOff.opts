@@ -1,0 +1,29 @@
+//#pragma print off
+//#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with evolving survey geometry
+ *  as available in corresponding "head" tag of DDDB
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+DDDB.DefaultTAG     = "head-20080225-no-TT";
+LHCBCOND.DefaultTAG = "head-20080225-no-TT";
+
+// Magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
+// Magnetic Field Off
+MagneticFieldSvc.UseConstantField = true;
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 13*s;

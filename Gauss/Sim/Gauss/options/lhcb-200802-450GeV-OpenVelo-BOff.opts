@@ -1,0 +1,45 @@
+#pragma print off
+#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-200802.opts
+ *  Velo Open
+ *  Magnetic field off
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+DDDB.DefaultTAG     = "head-20080225-no-TT";
+LHCBCOND.DefaultTAG = "head-20080225-no-TT";
+
+// Magnetic field
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+ 
+// Set generator settings
+#include "$GAUSSOPTS/PilotRun.opts"
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 1*s;
+
+// VELO Open 
+GiGaGeo.UseAlignment = true;
+GiGaGeo.AlignAllDetectors = true;
+UpdateManagerSvc.ConditionsOverride += {
+  "Conditions/Alignment/Velo/VeloRight := double_v dPosXYZ = -30 0 0;",
+  "Conditions/Alignment/Velo/VeloLeft := double_v dPosXYZ = 30 0 0;"
+};
+
+// Magnetic Field OFF, no crossing angle
+MagneticFieldSvc.UseConstantField = true;
+Generation.MinimumBias.PythiaProduction.CollidingBeams.HorizontalCrossingAngle = 0.0;
+Generation.MinimumBias.PythiaProduction.FixedTarget.HorizontalCrossingAngle = 0.0;
+ 
