@@ -1,0 +1,3 @@
+2008-05-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/BrunelBench.csh: Added Brunel benchmark shell script.
