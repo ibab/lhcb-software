@@ -2,10 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
-! 2008-05-09 M Needham
+!=========================== STCheckers v2r5 2008-05-08 =======================
+! 2008-05-08 M Needham
  - Bug fix in STClusterResolution 
 
-!=========================== STCheckers v2r5 2008-05-07 =======================
 ! 2008-05-06 M. Needham
  - Allow that the summary block may not exist.
 
