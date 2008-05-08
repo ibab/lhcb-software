@@ -6,6 +6,8 @@
 
 ! 2008-05-08 - Johannes Albrecht
 	- IMatchTool: Interface for new tool implementation of PatMatch
+	- IPtTransporter: Interface for tool which transports pt from T 
+		to the origin
 
 !====================== TrackInterfaces v3r14 2008-05-05 =====================
 ! 2008-05-05 - Adrian Perieanu
