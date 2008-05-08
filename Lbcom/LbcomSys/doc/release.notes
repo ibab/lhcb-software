@@ -6,9 +6,10 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r17>2008-05-07 LbcomSys v6r17</A></H1><PRE>
+</PRE><H1><A NAME=v6r17>2008-05-08 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
+- Packages added:    CaloTools v5r0 - Contains components previously in CaloUtils
 - Packages modified: STCheckers v2r5, STDAQ v3r6
 
 - In STCheckers v2r5

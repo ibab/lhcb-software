@@ -12,6 +12,7 @@ use Associators       v3r6    Associators # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r5    Calo      # Olivier Deschamps
+use CaloTools         v5r0    Calo      # Olivier Deschamps
 
 # L0 trigger simulation
 use L0Calo            v9r12   L0        # Olivier Deschamps, Patrick Robbe
