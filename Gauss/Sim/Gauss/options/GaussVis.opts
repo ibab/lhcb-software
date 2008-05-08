@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.10 2007-10-01 13:43:53 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.11 2008-05-08 20:29:29 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -7,31 +7,29 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @author G.Corti
  *  @date 2005-02-21
+ *  @date 2008-04-29
  */
 
-#include "$GAUSSOPTS/Gauss.opts"
+#include "$GAUSSOPTS/lhcb-200802.opts"
 
 #include "$PARTICLEGUNSROOT/options/ParticleGun.opts"
 
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
 GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
 
-// Switch off geometry from Calorimeters onward
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeDownstream"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownstream"};
-Geo.StreamItems -= {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
+// Switch off geometry from Calorimeters onward but for beam pipe
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Spd"};
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Converter"};
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Prs"};
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Ecal"};
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Hcal"};
+Geo.StreamItems  -= {"/dd/Structure/LHCb/DownstreamRegion/Muon"};
 
 //GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
 
 GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
 GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
-GiGa.EventSeq.OutputLevel = 1 ;
+//GiGa.EventSeq.OutputLevel = 1 ;
 ApplicationMgr.EvtMax = 1;
 
 GiGa.EventSeq.VisEvtCmd.EndOfEventCommands = 
