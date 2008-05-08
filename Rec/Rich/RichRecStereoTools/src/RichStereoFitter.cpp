@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.3 2008-05-04 22:53:45 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.4 2008-05-08 13:22:37 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -35,6 +35,7 @@ StereoFitter::StereoFitter ( const std::string& type,
   // interface
   declareInterface<IStereoFitter>(this);
 
+  //----------set up some geometric parameters (also done in option file)
   //geometrical data: Z coordinate of entrance and exit windows (cm)
   m_zinWindowRich.push_back( 0 ); // Aerogel
   m_zinWindowRich.push_back( 990 ); // C4F10
@@ -127,11 +128,12 @@ StatusCode StereoFitter::initialize()
   return sc;
 }
 
-IStereoFitter::Result
+//Fitter
+IStereoFitter::Result 
 StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                    const IStereoFitter::Configuration & config ) const
 {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Stereo Fitter" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Stereo Fitter"<<endreq;
 
   if ( NULL == richSegment ) return Result(Result::Failed);
 
@@ -146,14 +148,13 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
   m_photonThcSigmaPrev=-1;
 
   //basic track/segment info
-  const Gaudi::XYZVector & VPTrk = richSegment->trackSegment().bestMomentum();
-  const double PTrk=VPTrk.R()/Gaudi::Units::GeV;
+  Gaudi::XYZVector VPTrk=richSegment->trackSegment().bestMomentum();
+  double PTrk=VPTrk.R()/Gaudi::Units::GeV;
 
   //--------------Cerenkov angle and resolution (above threshold?)
-  const double thcNominal = m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
-  const double thcPhotSig = m_ckResTool->ckThetaResolution(richSegment,config.pidType);
-  if ( thcNominal>0 && thcPhotSig>0 )
-  {
+  const double thcNominal=m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
+  const double thcPhotSig=m_ckResTool->ckThetaResolution(richSegment,config.pidType);
+  if(thcNominal>0 && thcPhotSig>0) {
     //----Rich track associated to segment and related info
     const RichRecTrack *rTrack=richSegment->richRecTrack();
     const LHCb::Track *parentTrack=dynamic_cast<const LHCb::Track*>(rTrack->parentTrack());   //Parent Track
@@ -162,7 +163,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       return Result(Result::Failed);
     }
     //radiator type
-    const Rich::RadiatorType richRadiator = richSegment->trackSegment().radiator();
+    Rich::RadiatorType richRadiator=richSegment->trackSegment().radiator();
 
     //------------geometric info
     //Get state closest to entrance window of radiator
@@ -183,32 +184,30 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
     //bool trkOK =
     trkErrStereo(inRadiatorState,richSegment,lengthEffect,errMom,err_tx2,err_ty2,trkCharge);
 
-    //const double photonThcSigma =
-    improvedErrorPerPhoton_index( PTrk,
-                                  lengthEffect,
-                                  errMom,
-                                  err_tx2,
-                                  err_ty2,
-                                  thcNominal,
-                                  richRadiator,
-                                  asymptoticRes,
-                                  config.pidType );
+    double m_photonThcSigma = improvedErrorPerPhoton_index( PTrk,
+                                                            lengthEffect,
+                                                            errMom,
+                                                            err_tx2,
+                                                            err_ty2,
+                                                            thcNominal,
+                                                            richRadiator,
+                                                            asymptoticRes,
+                                                            config.pidType );
 
     //------------------- iterative fit section: initialization
-    g_XCenterGuess=0;
-    g_YCenterGuess=0;
+    g_XCenterGuess=0; g_YCenterGuess=0;
 
     int n_iter(0);
     double diffChi2(s_diffChi2Lim);
     bool segUpdateDone(false), photonUpdateDone(false);
 
     //save segment direction and crossing points before next steps
-    m_segEntryDir = richSegment->trackSegment().entryMomentum();
-    m_segMidDir   = richSegment->trackSegment().middleMomentum();
-    m_segExitDir  = richSegment->trackSegment().exitMomentum();
-    m_segEntryPtn = richSegment->trackSegment().entryPoint();
-    m_segMidPtn   = richSegment->trackSegment().middlePoint();
-    m_segExitPtn  = richSegment->trackSegment().exitPoint();
+    m_segEntryDir=richSegment->trackSegment().entryMomentum();
+    m_segMidDir=richSegment->trackSegment().middleMomentum();
+    m_segExitDir=richSegment->trackSegment().exitMomentum();
+    m_segEntryPtn=richSegment->trackSegment().entryPoint();
+    m_segMidPtn=richSegment->trackSegment().middlePoint();
+    m_segExitPtn=richSegment->trackSegment().exitPoint();
 
 
     RichRecPhoton::ConstVector goodPhotons;
@@ -231,10 +230,9 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
           }
         }
         const int ngoodPhot = goodPhotons.size();
-        debug() << "2 goodPhotons.size() = " << goodPhotons.size() << endreq;
+        debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
         //stereo projection
         m_stereoProj->Project(goodPhotons,recRing);
-        debug() << "3 goodPhotons.size() = " << goodPhotons.size() << endreq;
 
         //compute initial (iteration 0) radius guestimation
         double radiusSquareGuess(0);
@@ -280,12 +278,9 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
           double sep = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
           debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endreq;
           if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
-          debug() << "6 goodPhotonsTmp.size() = " << goodPhotonsTmp.size() << endreq;
           index++;
         }
         goodPhotons = goodPhotonsTmp;
-        debug() << "5 goodPhotons.size() = " << goodPhotons.size() << endreq;
-        debug() << "6 goodPhotonsTmp.size() = " << goodPhotonsTmp.size() << endreq;
       }
 
       //filter according to number of photons
@@ -339,7 +334,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
     //choose solution depending on chi2
     Result result(Result::Succeeded);
-    if(m_chi2Prev<m_chi2) {
+    if ( m_chi2Prev<m_chi2 ) 
+    {
       result.chi2=m_chi2Prev;
       result.probChi2=m_probPrev;
       result.ndof=m_dofPrev;
@@ -347,7 +343,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       result.thcFitErr=m_CerenkovErrPrev;
       result.thphotErr=m_photonThcSigmaPrev;
     }
-    else {
+    else 
+    {
       result.chi2=m_chi2;
       result.probChi2=m_prob;
       result.ndof=m_dof;
@@ -385,9 +382,9 @@ bool StereoFitter::trkErrStereo(const State *state, RichRecSegment *segment,
   // 1/measurement error 2/mult. scatt. , 3/curvature
 
   //-------useful informations
-  double PTrk=((RichRecSegment*)segment)->trackSegment().bestMomentum().R()/Gaudi::Units::GeV;
+  const double PTrk = segment->trackSegment().bestMomentum().R()/Gaudi::Units::GeV;
   //Rich radiator
-  Rich::RadiatorType radiator=((RichRecSegment*)segment)->trackSegment().radiator();
+  const Rich::RadiatorType radiator = segment->trackSegment().radiator();
 
   // get the direction parameters and construct
   // the associated Unit vector in the lab (direction q_lab)
@@ -585,20 +582,18 @@ bool StereoFitter::goodPhotonTheta( RichRecPhoton *photon,
   // Check multiplicity of this pixel i.e. number of photons made from it.
   if ( photon->richRecPixel()->richRecPhotons().size() > ncandsPerPixMax)
   {
-    debug() << " photon->richRecPixel()->richRecPhotons().size() > ncandsPerPixMax : "
-            << photon->richRecPixel()->richRecPhotons().size() << " > " << ncandsPerPixMax << endreq;
     return false;
   }
 
   // check background prob
   if ( photon->richRecPixel()->currentBackground() > maxBkgProb )
   {
-    debug() << photon->richRecPixel()->currentBackground() << " < " << maxBkgProb << endreq;
     return false;
   }
 
   double thetaExpRes=m_ckResTool->ckThetaResolution(photon->richRecSegment(),pidHypo);
-  if(thetaExpRes < s_MinthetaExpRes) return false;
+  if ( thetaExpRes < s_MinthetaExpRes ) return false; // CRJ : Seems wrong way around to me ??
+  //if ( thetaExpRes > s_MinthetaExpRes ) return false;
 
   double thetaPhot=photon->geomPhoton().CherenkovTheta();
   if(thcPhotSig>0) {
@@ -816,8 +811,7 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
   det+=m_mat[0][2]*m_errPar[2][0];
 
   //fabs not needed because matrix should be positive definite
-  if (det < 1.0e-17)
-  {
+  if(det < 1.0e-17) {
     Warning( "solveChi2Equations : Fit failed : det < 1.0e-17" );
     return false;
   }
@@ -868,7 +862,8 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
   // Cerenkov Angle and its error
   double tgTheta=2*radiusFitted()/(1-m_sol[2]);
-  m_Cerenkov = atan(tgTheta);
+  double Theta_Crk=atan(tgTheta);
+  m_Cerenkov=Theta_Crk;
 
   double UnPlusTg2 = 1+tgTheta*tgTheta;
   double cf_a = 2*m_sol[0]/radiusFitted()/(1-m_sol[2]);
@@ -886,14 +881,12 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
 
 // Update the segment direction
-void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, 
-                                          RichRecPhoton::ConstVector &photons,
-                                          double Xcenter, 
-                                          double Ycenter) const 
-{
+void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, RichRecPhoton::ConstVector &photons,
+                                          double Xcenter, double Ycenter) const {
+
   //form rotation transformation to update segment directions
   Gaudi::XYZVector newDir(Xcenter, Ycenter, 1);
-  const double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
+  double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
   Gaudi::XYZVector axis = newDir.Cross( Gaudi::XYZVector(0,0,1) );
   Gaudi::AxisAngle axisangle(axis, angle);
   Gaudi::Transform3D trans(axisangle);
@@ -965,6 +958,22 @@ double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const 
 }
 
 
+//more utility functions
+double StereoFitter::radiusFitted() const {
+  if(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1>=0]) return(std::sqrt(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1]));
+  else return(0);
+};
+
+double StereoFitter::XcenterFitted() const { return(m_sol[0]); };
+double StereoFitter::YcenterFitted() const { return(m_sol[1]); };
+
+
+double StereoFitter::Proba(double chi2,double ndl) const {
+  if(ndl>0 && chi2>=0) return gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0);
+  else return 0;
+}
+
+
 // inversion of a 3 by 3 matrix ; successfull if returned bool is  = true
 // matrix is not necessarily symmetric ; tests OK
 bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const {
@@ -986,8 +995,7 @@ bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const 
   det+=mat[1][0]*invMat[0][1];
   det+=mat[2][0]*invMat[0][2];
 
-  if(fabs(det)<1.0e-15)
-  {
+  if(fabs(det)<1.0e-15) {
     Warning( "invert3x3Matrix : Fit failed : det < 1.0e-15" );
     return false;
   }

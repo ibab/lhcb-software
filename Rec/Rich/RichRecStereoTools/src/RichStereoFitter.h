@@ -55,9 +55,7 @@ namespace Rich
     /** @class StereoFitter IRichStereoFitter.h RichStereoFitter.h
      *
      *  Tool to perform a fit to a group of photons, as used by the Stereographic
-     *  PID algorithm.
-     *
-     *  See http://cdsweb.cern.ch/record/815494 for more details.
+     *  PID algorithm
      *
      *  @author Luigi Delbuono  delbuono@in2p3.fr
      *  @date   20/06/2007
@@ -71,8 +69,8 @@ namespace Rich
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      StereoFitter( const std::string& type,
-                    const std::string& name,
+      StereoFitter( const std::string& type, 
+                    const std::string& name, 
                     const IInterface* parent );
 
       /// Destructor
@@ -87,7 +85,7 @@ namespace Rich
       // plane perpendicular to the segemnt direction
       virtual IStereoFitter::Result Fit( LHCb::RichRecSegment *richSegment,
                                          const IStereoFitter::Configuration & config ) const;
-
+      
     private:// Various useful static constants
 
       static const int    s_NmassHyp = 5;  ///< number of mass hypothesis
@@ -195,11 +193,11 @@ namespace Rich
                         double &errMom, double &err_tx2, double &err_ty2, double &trkCharge) const;
 
 
-      double improvedErrorPerPhoton_index( const double PTrk,
-                                           const double lengthEffect,
+      double improvedErrorPerPhoton_index( const double PTrk, 
+                                           const double lengthEffect, 
                                            const double errMom,
-                                           const double err_tx2,
-                                           const double err_ty2,
+                                           const double err_tx2, 
+                                           const double err_ty2, 
                                            const double ckExp,
                                            const Rich::RadiatorType rad,
                                            const double asymptoticResSub,
@@ -229,21 +227,6 @@ namespace Rich
       bool invert3x3Matrix(double mat[3][3], double invMat[3][3]) const;
 
     };
-
-    inline double StereoFitter::radiusFitted() const
-    {
-      const double tmp = m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
-      return ( tmp>0 ? std::sqrt(tmp) : 0 );
-    }
-
-    inline double StereoFitter::XcenterFitted() const { return(m_sol[0]); };
-
-    inline double StereoFitter::YcenterFitted() const { return(m_sol[1]); };
-
-    inline double StereoFitter::Proba(double chi2,double ndl) const 
-    {
-      return ( ndl>0 && chi2>=0 ? gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0) : 0 );
-    }
 
   }
 }
