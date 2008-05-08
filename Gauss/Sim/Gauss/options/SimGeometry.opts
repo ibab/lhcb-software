@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.25 2007-10-05 15:20:32 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.26 2008-05-08 20:28:31 gcorti Exp $
 
 /** @file
  *
@@ -38,6 +38,7 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 //GiGaGeo.ZsizeOfWorldVolume = 50.0*m; 
 
 // Geometry to be simulated Detector by detector
+// Standard geometry from VELO to Muon system
 //----------------------------------------------------------------------------
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo"};  
 Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1"};
@@ -49,6 +50,8 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/BeforeMagnetRegion/TT"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeInMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/PipeSupportsInMagnet"};
 Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/Magnet"};
+// The BCM have only been introduced with tag = head-20080225-no-TT
+Geo.StreamItems      += {"/dd/Structure/LHCb/MagnetRegion/BcmDown"};
 //
 Geo.StreamItems      += {"/dd/Structure/LHCb/AfterMagnetRegion/T"};
 // The line above can be expanded to the following 3 lines 
@@ -72,6 +75,7 @@ Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeSupportsDownst
 Geo.StreamItems      += {"/dd/Structure/LHCb/DownstreamRegion/PipeBakeoutDownstream"};
 // Specific configuration of sensitive detectors
 #include "$GAUSSCALOROOT/options/Calo.opts"
+
 
 // Magnetic field simulation
 // "Global Field Manager"
