@@ -16,12 +16,14 @@
 //--------------------------------------------------------------------------
 // Geometry database dependent options
 //--------------------------------------------------------------------------
-// Head database tags
-DDDB.DefaultTAG = "head-20080130";
+DDDB.DefaultTAG     = "head-20080130";
 LHCBCOND.DefaultTAG = "head-20080130";
 
 // Magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+
+// No BCM in this tag, so remove them from the list of detectors to simulate
+Geo.StreamItems    -= {"/dd/Structure/LHCb/MagnetRegion/BcmDown"};
 
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
