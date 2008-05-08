@@ -85,12 +85,15 @@
 
   <xsl:template match="release">
     <tr>
-    <th rowspan="2">
-    Release &quot;<xsl:value-of select="@name"/>&quot;
+    <td rowspan="2">
+    <b>Release &quot;<xsl:value-of select="@name"/>&quot;</b>
+    <xsl:if test="@base">
+      <br/>based on: &quot;<xsl:value-of select="@base"/>&quot;
+    </xsl:if>
     <xsl:if test="@date">
       <br/>date: <xsl:value-of select="@date"/>
     </xsl:if>
-    </th>
+    </td>
     <th>Project</th>
     <xsl:for-each select="project">
     <xsl:call-template name="projectlink"/>
