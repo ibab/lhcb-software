@@ -1,4 +1,4 @@
-// $Id: PhysList-QGSP.opts,v 1.1 2007-03-26 11:45:06 gcorti Exp $ 
+// $Id: PhysList-QGSP.opts,v 1.2 2008-05-08 20:26:56 gcorti Exp $ 
 
 /** @file 
  * 
@@ -57,5 +57,8 @@ GiGa.ModularPL.PhysicsConstructors += {
 // == LHCb specific RICH processes
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorOp"  };
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorHpd" };
+
+// == LHCb particles unknown to default Geant4
+GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysUnknownParticles" };
 
 
