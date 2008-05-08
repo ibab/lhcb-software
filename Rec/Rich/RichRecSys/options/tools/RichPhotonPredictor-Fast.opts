@@ -24,6 +24,8 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0
 ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0520,    0.030  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.SepGMax           = {  342.0,   75.0,      130.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.TolerenceFactor   = {  25,      15,        40     };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinPixelXLocal    = {  300*mm,  -1*mm,     -1*mm  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinPixelYLocal    = {  300*mm,  -1*mm,     -1*mm  };
 //----------------------------------------------------------------------------------------------------------
 */
 
@@ -39,4 +41,6 @@ ToolSvc.Offline.RichPhotonCreator.Predictor.MaxTrackROI       = {  390.0,   86.0
 ToolSvc.Offline.RichPhotonCreator.Predictor.CKthetaMax        = {  0.24,    0.0520,    0.030  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.SepGMax           = {  342.0,   75.0,      130.0  };
 ToolSvc.Offline.RichPhotonCreator.Predictor.NSigma            = {  5.5,     5.5,       11.5   };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinPixelXLocal    = {  300*mm,  -1*mm,     -1*mm  };
+//ToolSvc.Offline.RichPhotonCreator.Predictor.MinPixelYLocal    = {  300*mm,  -1*mm,     -1*mm  };
 //----------------------------------------------------------------------------------------------------------

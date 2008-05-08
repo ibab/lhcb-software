@@ -21,12 +21,13 @@ ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "TrSegMaker";
 ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DetailedTrSegMakerFromRecoTracks/TrSegMaker" };
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
-// which radiators to use                                    Aerogel   C4F10    CF4
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { true,     true,    true   };
+// which radiators to use                                                Aerogel   C4F10    CF4
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators             = { true,     true,    true    };
 // options
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
 //ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0,0,0 };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm, 500*mm, 1500*mm };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false, true, false };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm,     500*mm,  1500*mm };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false,    true,    false   };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.ZTolerances              = { 800*mm,   2000*mm, 3000*mm };
 //-----------------------------------------------------------------------------------------------------

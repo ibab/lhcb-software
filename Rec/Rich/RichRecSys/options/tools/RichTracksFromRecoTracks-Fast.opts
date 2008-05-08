@@ -47,7 +47,8 @@ ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators = { false,     true,   
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
 //ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0,0,0 };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm, 500*mm, 1500*mm };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false, true, false };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm,   500*mm,  1500*mm };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false,  true,    false   };
+ToolSvc.Offline.RichTrackCreator.TrSegMaker.ZTolerances              = { 800*mm, 2000*mm, 3000*mm };
 //-----------------------------------------------------------------------------------------------------
 
