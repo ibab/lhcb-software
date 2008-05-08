@@ -1,4 +1,4 @@
-// $Id: STClusterResolution.cpp,v 1.17 2008-04-18 08:33:24 cattanem Exp $
+// $Id: STClusterResolution.cpp,v 1.18 2008-05-08 09:57:45 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -123,7 +123,7 @@ void STClusterResolution::fillHistograms( const STCluster* aCluster,
       return;
     }
     const DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
-    if (aSector == 0){
+    if (aSensor == 0){
       Warning("Failed to find sensor", StatusCode::SUCCESS).ignore();
       return;
     }
