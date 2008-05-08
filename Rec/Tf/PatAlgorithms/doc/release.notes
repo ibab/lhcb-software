@@ -4,6 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Johannes Albrecht
+ - PatMatchTool: - New implementation of PatMatch as tool
+								 - public function: matchSingle for Hlt
+								 - quality of match is now job option: maxMatchChi2
+								 - momentum of matched tracks is calculated with tool
+ - PatMatch: algorithm which only calls the tool
+
 !========================== PatAlgorithms v3r4p1 2008-03-25 ==================
 ! 2008-03-25 - Jan Amoraal
  - Removed white space from property impactCurrentNorm in PatMakeV0. 
