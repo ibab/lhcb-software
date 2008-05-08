@@ -37,16 +37,17 @@
   </xsl:template>
 
   <xsl:template name="projectversionurl">
+    <xsl:param name="version"><xsl:value-of select="@version"/></xsl:param>
     <xsl:variable name="url">
       <xsl:call-template name="projecthomeurl">
       </xsl:call-template>
     </xsl:variable>  
     <xsl:choose>
     <xsl:when test="@name='LCGCMT'">
-      <xsl:value-of select="concat($url,'/LcgConfiguration',@version)"/>
+      <xsl:value-of select="concat($url,'/LcgConfiguration',$version)"/>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:value-of select="concat($url,'/releases/',@version)"/>
+      <xsl:value-of select="concat($url,'/releases/',$version)"/>
     </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -70,6 +71,15 @@
         </xsl:with-param>
         <xsl:with-param name="text"><xsl:value-of select="@version"/></xsl:with-param>
       </xsl:call-template>
+      <xsl:if test="@tag">
+      <br/>(<xsl:call-template name="hyperlink">
+        <xsl:with-param name="url">
+          <xsl:call-template name="projectversionurl">
+            <xsl:with-param name="version"><xsl:value-of select="@tag"/></xsl:with-param>
+          </xsl:call-template>
+        </xsl:with-param>
+        <xsl:with-param name="text"><xsl:value-of select="@tag"/></xsl:with-param>
+      </xsl:call-template>)</xsl:if>
     </td>
   </xsl:template>
 
@@ -98,10 +108,21 @@
   <xsl:template match="/">
     <html>
       <head>
+        <link rel="stylesheet" href="{$lhcbreleases}/css/lhcb.css" type="text/css" media="screen"/>
         <title>Releases Database</title>
       </head>
       <body>
-        <h1>Releases Database</h1>
+        <div class="ctitle">
+          <table id="pagetitle">
+            <tbody>
+              <tr>
+                <td valign="middle" align="center">
+                  <h1>Releases Database</h1>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <table border="1">
           <xsl:apply-templates select="lhcb:releases_db/release">
             <xsl:sort select="@date" order="descending"/>
