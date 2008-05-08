@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::PixelCreatorFromCheatedRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.9 2008-02-21 16:40:53 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRawBuffer.cpp,v 1.10 2008-05-08 13:16:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -88,8 +88,9 @@ void PixelCreatorFromCheatedRawBuffer::addMCInfo( LHCb::RichRecPixel * pixel ) c
       if ( mcPhot )
       {
         // Update coordinates with cheated info
-        pixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-        pixel->setLocalPosition( smartIDTool()->globalToPDPanel(mcPhot->pdIncidencePoint()) );
+        //pixel->setGlobalPosition( mcPhot->pdIncidencePoint() ); // old, inside HPD window
+        pixel->setGlobalPosition( mcPhot->hpdQWIncidencePoint() );
+        pixel->setLocalPosition( smartIDTool()->globalToPDPanel(pixel->globalPosition()) );
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Pixel " << pixel->hpdPixelCluster()

@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.10 2007-10-26 10:41:58 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.11 2008-05-08 13:16:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -76,9 +76,9 @@ StatusCode TrSegMakerFromMCRichTracks::initialize()
   acquireTool( "RichRecMCTruthTool", m_rectruth );
 
   // get the radiators
-  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
-  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
-  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
   info() << "Min path lengths for aero/Rich1Gas/Rich2Gas segments = " << m_minPathL << endreq;
   info() << "Min # photons for aero/Rich1Gas/Rich2Gas segments    = " << m_minPhots << endreq;

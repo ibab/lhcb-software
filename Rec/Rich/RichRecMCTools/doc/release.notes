@@ -4,6 +4,11 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-05-08 - Chris Jones
+ - Update RichPixelCreatorFromCheatedRawBuffer to use the improved HPD photon
+   impact position.
+ - Adapt to removal of obsolete RichDet locations
+
 !====================== RichRecMCTools v2r17 2008-04-15 =======================
 ! 2008-03-25 - Chris Jones
  - Update RichPixelCreatorFromSignalRawBuffer to reject specific types of 
