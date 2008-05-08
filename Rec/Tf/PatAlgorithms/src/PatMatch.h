@@ -1,4 +1,4 @@
-// $Id: PatMatch.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatMatch.h,v 1.2 2008-05-08 12:49:29 albrecht Exp $
 #ifndef PATMATCH_H
 #define PATMATCH_H 1
 
@@ -8,8 +8,7 @@
 
 #include "Event/Track.h"
 #include "GaudiKernel/IRegistry.h"
-#include "TrackInterfaces/IAddTTClusterTool.h"
-
+#include "TrackInterfaces/IMatchTool.h"
 
   /** @class PatMatch PatMatch.h
    *  Match Velo and Seed tracks
@@ -21,42 +20,7 @@
   {
 
   public:
-
-    /** @class MatchCandidate PatMatch.h
-     *
-     *  Match candidate for Tf::PatMatch algorithm
-     *
-     *  @author Olivier Callot
-     *  @date   2007-02-07 
-     */
-    class MatchCandidate {
-    public:
-      MatchCandidate( LHCb::Track* vTr, LHCb::Track* sTr, double dist ) {
-        m_vTr = vTr;
-        m_sTr = sTr;
-        m_dist = dist;
-      };
-
-      ~MatchCandidate() { };
-
-      LHCb::Track* vTr() { return m_vTr; }
-      LHCb::Track* sTr() { return m_sTr; }
-      double dist()      { return m_dist; }
-
-      class lowerByChi2 {
-      public:
-        bool operator() ( MatchCandidate first, MatchCandidate second ) const {
-          return first.dist() < second.dist();
-        }
-      };
-
-    private:
-      LHCb::Track* m_vTr;
-      LHCb::Track* m_sTr;
-      double m_dist;
-    };
-
-  public:
+    
     /// Standard constructor
     PatMatch( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -72,14 +36,8 @@
     std::string m_seedLocation;
     std::string m_matchLocation;
 
-    double m_zMagnet;
-    double m_zMatchY;
-    double m_dxTol;
-    double m_dxTolSlope;
-    double m_dyTol;
-    double m_dyTolSlope;
-    double m_momentumScale;
-    IAddTTClusterTool*   m_addTTClusterTool;
+    IMatchTool* m_matchTool;
+    
   };
 
 #endif // PATMATCH_H
