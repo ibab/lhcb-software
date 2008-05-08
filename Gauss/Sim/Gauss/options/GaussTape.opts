@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.26 2006-08-30 08:33:15 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.27 2008-05-08 20:50:33 gcorti Exp $ 
 
 /** @file 
  * 
@@ -17,7 +17,7 @@
 
 #include "$STDOPTS/SimContent.opts"
  
-GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
+GaussTape.Preload     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 3;
 
 // Write only events that were succefully processed by the simulation
