@@ -1,4 +1,4 @@
-// $Id: PhysList-LHEP.opts,v 1.2 2008-04-28 09:55:48 robbep Exp $ 
+// $Id: PhysList-LHEP.opts,v 1.3 2008-05-08 20:27:07 gcorti Exp $ 
 
 /** @file 
  * 
@@ -46,6 +46,8 @@ GiGa.ModularPL.PhysicsConstructors += {
 // == LHCb specific RICH processes
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorOp"  };
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysConstructorHpd" };
+
+// == LHCb particles unknown to default Geant4
 GiGa.ModularPL.PhysicsConstructors += { "GiGaPhysUnknownParticles" };
 
 
