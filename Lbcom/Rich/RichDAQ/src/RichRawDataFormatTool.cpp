@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.65 2008-01-24 17:17:02 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.66 2008-05-08 12:24:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -75,7 +75,7 @@ StatusCode RawDataFormatTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // if suppression is less than max possible number of (ALICE) hits, print a message.
   if ( m_maxHPDOc < BitsPerDataWord * MaxDataSizeALICE )

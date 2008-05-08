@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.17 2007-08-09 15:54:02 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.18 2008-05-08 12:24:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -66,7 +66,7 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   }
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // initialise data map
   sc = initOccMap();
