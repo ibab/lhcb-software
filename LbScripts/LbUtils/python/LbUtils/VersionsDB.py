@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.13 2008-05-08 20:38:58 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.14 2008-05-08 21:02:10 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -166,8 +166,6 @@ class Project:
     def addRunTimeDep(self, proj_name):
         if proj_name not in self.runtimedeps:
             self.runtimedeps.append(proj_name)
-    def __str__(self):
-        pass
     def __repr__(self):
         return "Project(name=%r,version=%r,tag=%r,buildtimedeps=%r,runtimedeps=%r)" % \
                 (self.name,
@@ -548,6 +546,23 @@ def generateHTML():
             return hyper_link(proj_home(p), p)
         else:
             return hyper_link(proj_version(p,str(v)), v)
+    def ordered_list_merge(orig,other):
+        a = orig[:]
+        b = other
+        r = []
+        for x in b:
+            if x in a:
+                p = a.index(x)
+                r,a = (r+a[:p+1]),a[p+1:]
+            else:
+                r.append(x)
+        return r + a
+    all_proj_names = reduce(ordered_list_merge,[ [ p.name for p in getRelease(r).allProjects() ]
+                                                 for r in getReleases() ])
+    unversioned_names = [ p.name for p in unversionedProjects() ]
+    all_proj_names = [ p
+                       for p in all_proj_names
+                       if p not in unversioned_names ]
     html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns:lhcb="http://cern.ch/lhcbproject/dist/">
 <head>
@@ -569,33 +584,28 @@ def generateHTML():
 '''%lhcb_base
     rels = [getRelease(r) for r in getReleases()]
     rels.sort(reverse=True)
+    html += '<tr><td></td>'
+    for pn in all_proj_names:
+        html += '<th>%s</th>'%proj_link(pn)
+    html += '</tr>'
     for r in rels:
-        html += '<tr><td rowspan="2"><b>Release "%s"</b>'%r.name
+        html += '<tr><td><b>Release "%s"</b>'%r.name
         if r.base:
             html += '<br/>based on: &quot;%s&quot;'%r.base 
         if r.date != DEFAULT_RELEASEDATE:
             html += '<br>date: %4d-%02d-%02d</td>'%r.date
-        html += '<th>Project</th>'
-        projs = [ p for p in r.allProjects() if p not in unversionedProjects() ]
-        local_projs = r.values()
-        for p in projs:
-            if p in local_projs:
-                html += '<td>%s</td>'%proj_link(p.name)
-            else:
-                html += '<td><i>%s</i></td>'%proj_link(p.name)
-        html += '</tr><tr><th>Version</th>'
-        for p in projs:
-            if p in local_projs:
-                html += '<td>'
-            else:
-                html += '<td><i>'
-            html += proj_link(p.name,p.version)
-            if p.tag:
-                html += "<br/>(%s)"%proj_link(p.name,p.tag)
-            if p in local_projs:
-                html += '</td>'
-            else:
-                html += '</i></td>'
+        for pn in all_proj_names:
+            html += '<td>'
+            if pn in r:
+                if pn not in r.projects: 
+                    html += '<i>'
+                p = r[pn]
+                html += proj_link(p.name,p.version)
+                if p.tag:
+                    html += "<br/>(%s)"%proj_link(p.name,p.tag)
+                if pn not in r.projects: 
+                    html += '</i>'
+            html += '</td>'
         html += '</tr>'
     html += '</table></body></html>'
     return html
