@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.26 2008-03-03 16:36:45 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.27 2008-05-08 16:28:56 ahicheur Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -19,6 +19,7 @@
  *
  *  @author Edgar De Oliveira
  *  @date   2002-05-21
+ *  Updated and further developped - Adlene Hicheur
  */
 
 DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
@@ -29,14 +30,26 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
             ISvcLocator* svc ) : Service( name, svc )
 {
+
+
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
   m_constFieldVector.push_back( 0. );
   
-  declareProperty( "FieldMapFile",        m_filename = "FieldMapFileNotSet" ); 
+  declareProperty( "FieldMapFile",        m_filename = "FieldMapFileNotSet" );
+  declareProperty( "FieldMapFileQ1",m_qfilename[0] = "FieldMapFileQ1NotSet");
+  declareProperty( "FieldMapFileQ2",m_qfilename[1] = "FieldMapFileQ2NotSet");
+  declareProperty( "FieldMapFileQ3",m_qfilename[2] = "FieldMapFileQ3NotSet");
+  declareProperty( "FieldMapFileQ4",m_qfilename[3] = "FieldMapFileQ4NotSet");
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
   declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
+  declareProperty( "UseRealMap", m_useRealMap = false);
+  //magnet current in kA, the default is the nominal value
+  declareProperty( "MagnetCurrent", m_current = 5.85);
+  declareProperty( "CondPath", m_condpath = "CondPathNotSet");
+  
+  
 }
 //=============================================================================
 // Standard destructor
@@ -59,13 +72,25 @@ StatusCode MagneticFieldSvc::initialize()
         << m_constFieldVector << " (Tesla)" << endmsg;
     return StatusCode::SUCCESS;
   }
- 
-  if( 1. != m_scaleFactor ) {
+  //retrieve current from conditions, then compute the scale factor:
+  // m_scaleFactor = retrieved_current/m_current;
+  
+  if( fabs(m_scaleFactor-1.) > 1e-6 ) {
     log << MSG::WARNING << "Field map will be scaled by a factor = "
         << m_scaleFactor << endmsg;
   }
   
-  status = parseFile();
+  if (m_useRealMap) { 
+    log << MSG::INFO << "*** Real Field parameterization will be used *** " << endreq;
+    status = parseRealFiles();
+
+  }
+  else {
+
+   status = parseFile(); 
+  }
+  
+
   if ( status.isSuccess() ) {
       log << MSG::DEBUG << "Magnetic field parsed successfully" << endreq;
 
@@ -215,6 +240,119 @@ StatusCode MagneticFieldSvc::parseFile() {
   return sc;
 }
 
+
+StatusCode MagneticFieldSvc::parseRealFiles() {
+  StatusCode sc = StatusCode::FAILURE;
+  
+  MsgStream log( msgSvc(), name() );
+  char line[ 255 ];
+
+for(int ifile=0;ifile<4;ifile++) {
+  std::ifstream infile( m_qfilename[ifile].c_str() );
+  
+  if ( infile ) {
+	  sc = StatusCode::SUCCESS;
+    log << MSG::INFO << "Opened magnetic field file : " << m_qfilename[ifile]
+	      << endreq;
+    
+    // Skip the header till PARAMETER
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != 'P' );
+    
+    // Get the PARAMETER
+    std::string sPar[2];
+    char* token = strtok( line, " " );
+    int ip = 0;
+    do{
+      if ( token ) { sPar[ip] = token; token = strtok( NULL, " " );} 
+      else continue;
+      ip++;
+    } while ( token != NULL );
+    long int npar = atoi( sPar[1].c_str() );
+
+    // Skip the header till GEOMETRY
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != 'G' );
+    
+    // Skip any comment before GEOMETRY 
+    do{
+	    infile.getline( line, 255 );
+	  } while( line[0] != '#' );
+    
+    // Get the GEOMETRY
+    infile.getline( line, 255 );
+    std::string sGeom[7];
+    token = strtok( line, " " );
+    int ig = 0;
+    do{
+      if ( token ) { sGeom[ig] = token; token = strtok( NULL, " " );} 
+      else continue; 
+      ig++;  
+    } while (token != NULL);
+
+    // Grid dimensions are given in cm in CDF file. Convert to CLHEP units
+    m_Dxyz[0] = atof( sGeom[0].c_str() ) * Gaudi::Units::cm;
+    m_Dxyz[1] = atof( sGeom[1].c_str() ) * Gaudi::Units::cm;
+    m_Dxyz[2] = atof( sGeom[2].c_str() ) * Gaudi::Units::cm;
+    m_Nxyz[0] = atoi( sGeom[3].c_str() );
+    m_Nxyz[1] = atoi( sGeom[4].c_str() );
+    m_Nxyz[2] = atoi( sGeom[5].c_str() );
+    m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
+    
+    m_Q_quadr[ifile].reserve(npar - 7);
+    // Number of lines with data to be read
+    long int nlines = ( npar - 7 ) / 3;
+    
+    // Check number of lines with data read in the loop
+    long int ncheck = 0;
+    
+    // Skip comments and fill a vector of magnetic components for the
+    // x, y and z positions given in GEOMETRY
+    
+   	while( infile ) {
+      // parse each line of the file, 
+      // comment lines begin with '#' in the cdf file
+	    infile.getline( line, 255 );
+	    if ( line[0] == '#' ) continue;
+	    std::string sFx, sFy, sFz; 
+	    char* token = strtok( line, " " );
+	    if ( token ) { sFx = token; token = strtok( NULL, " " );} else continue;
+  	  if ( token ) { sFy = token; token = strtok( NULL, " " );} else continue;
+  	  if ( token ) { sFz = token; token = strtok( NULL, " " );} else continue;
+	    if ( token != NULL ) continue;
+      
+      // Field values are given in gauss in CDF file. Convert to CLHEP units
+      double fx = atof( sFx.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
+      double fy = atof( sFy.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
+      double fz = atof( sFz.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
+      
+      // Add the magnetic field components of each point to 
+      // sequentialy in a vector 
+      m_Q_quadr[ifile].push_back( fx );
+      m_Q_quadr[ifile].push_back( fy );
+      m_Q_quadr[ifile].push_back( fz );
+      // counts after reading and filling to match the number of lines
+      ncheck++; 
+	  }
+    infile.close();
+    if ( nlines != ncheck ) {
+      log << MSG::ERROR << " Number of points in field map does not match" 
+          << endreq;
+      return StatusCode::FAILURE;
+    }
+  }
+  else {
+  	log << MSG::ERROR << "Unable to open magnetic field file : " 
+        << m_qfilename[ifile] << endreq;
+  }
+}
+ 
+  return sc;
+}
+
+
 //=============================================================================
 // FieldVector: find the magnetic field value at a given point in space
 //=============================================================================
@@ -250,33 +388,77 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
   int ijk110 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1)  + i + 1 );
   int ijk111 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1 ) + i + 1 );
 
+
   
   // auxiliary variables defined at the vertices of the cube that
   // contains the (x, y, z) point where the field is interpolated
-  double cx000 = m_Q[ ijk000 ];
-  double cx001 = m_Q[ ijk001 ];
-  double cx010 = m_Q[ ijk010 ];
-  double cx011 = m_Q[ ijk011 ];
-  double cx100 = m_Q[ ijk100 ];
-  double cx101 = m_Q[ ijk101 ];
-  double cx110 = m_Q[ ijk110 ];
-  double cx111 = m_Q[ ijk111 ];
-  double cy000 = m_Q[ ijk000+1 ];
-  double cy001 = m_Q[ ijk001+1 ];
-  double cy010 = m_Q[ ijk010+1 ];
-  double cy011 = m_Q[ ijk011+1 ];
-  double cy100 = m_Q[ ijk100+1 ];
-  double cy101 = m_Q[ ijk101+1 ];
-  double cy110 = m_Q[ ijk110+1 ];
-  double cy111 = m_Q[ ijk111+1 ];
-  double cz000 = m_Q[ ijk000+2 ];
-  double cz001 = m_Q[ ijk001+2 ];
-  double cz010 = m_Q[ ijk010+2 ];
-  double cz011 = m_Q[ ijk011+2 ];
-  double cz100 = m_Q[ ijk100+2 ];
-  double cz101 = m_Q[ ijk101+2 ];
-  double cz110 = m_Q[ ijk110+2 ];
-  double cz111 = m_Q[ ijk111+2 ];
+
+  double cx000,cx001,cx010,cx011,cx100,cx101,cx110,cx111,cy000,cy001,cy010,cy011,cy100,cy101,cy110,cy111,cz000,cz001,cz010,cz011,cz100,cz101,cz110,cz111;
+
+  if(!m_useRealMap) {
+    
+  cx000 = m_Q[ ijk000 ];
+  cx001 = m_Q[ ijk001 ];
+  cx010 = m_Q[ ijk010 ];
+  cx011 = m_Q[ ijk011 ];
+  cx100 = m_Q[ ijk100 ];
+  cx101 = m_Q[ ijk101 ];
+  cx110 = m_Q[ ijk110 ];
+  cx111 = m_Q[ ijk111 ];
+  cy000 = m_Q[ ijk000+1 ];
+  cy001 = m_Q[ ijk001+1 ];
+  cy010 = m_Q[ ijk010+1 ];
+  cy011 = m_Q[ ijk011+1 ];
+  cy100 = m_Q[ ijk100+1 ];
+  cy101 = m_Q[ ijk101+1 ];
+  cy110 = m_Q[ ijk110+1 ];
+  cy111 = m_Q[ ijk111+1 ];
+  cz000 = m_Q[ ijk000+2 ];
+  cz001 = m_Q[ ijk001+2 ];
+  cz010 = m_Q[ ijk010+2 ];
+  cz011 = m_Q[ ijk011+2 ];
+  cz100 = m_Q[ ijk100+2 ];
+  cz101 = m_Q[ ijk101+2 ];
+  cz110 = m_Q[ ijk110+2 ];
+  cz111 = m_Q[ ijk111+2 ];
+  
+  } else {
+    
+    int iquadr=999;
+    
+  if(r.x() >=0 && r.y() >=0) iquadr=0;
+  if(r.x() <0 && r.y() >0) iquadr=1;
+  if(r.x() >0 && r.y() <0) iquadr=2;
+  if(r.x() <0 && r.y() <0) iquadr=3;
+
+
+  cx000 = (m_Q_quadr[iquadr])[ ijk000 ];
+  cx001 = (m_Q_quadr[iquadr])[ ijk001 ];
+  cx010 = (m_Q_quadr[iquadr])[ ijk010 ];
+  cx011 = (m_Q_quadr[iquadr])[ ijk011 ];
+  cx100 = (m_Q_quadr[iquadr])[ ijk100 ];
+  cx101 = (m_Q_quadr[iquadr])[ ijk101 ];
+  cx110 = (m_Q_quadr[iquadr])[ ijk110 ];
+  cx111 = (m_Q_quadr[iquadr])[ ijk111 ];
+  cy000 = (m_Q_quadr[iquadr])[ ijk000+1 ];
+  cy001 = (m_Q_quadr[iquadr])[ ijk001+1 ];
+  cy010 = (m_Q_quadr[iquadr])[ ijk010+1 ];
+  cy011 = (m_Q_quadr[iquadr])[ ijk011+1 ];
+  cy100 = (m_Q_quadr[iquadr])[ ijk100+1 ];
+  cy101 = (m_Q_quadr[iquadr])[ ijk101+1 ];
+  cy110 = (m_Q_quadr[iquadr])[ ijk110+1 ];
+  cy111 = (m_Q_quadr[iquadr])[ ijk111+1 ];
+  cz000 = (m_Q_quadr[iquadr])[ ijk000+2 ];
+  cz001 = (m_Q_quadr[iquadr])[ ijk001+2 ];
+  cz010 = (m_Q_quadr[iquadr])[ ijk010+2 ];
+  cz011 = (m_Q_quadr[iquadr])[ ijk011+2 ];
+  cz100 = (m_Q_quadr[iquadr])[ ijk100+2 ];
+  cz101 = (m_Q_quadr[iquadr])[ ijk101+2 ];
+  cz110 = (m_Q_quadr[iquadr])[ ijk110+2 ];
+  cz111 = (m_Q_quadr[iquadr])[ ijk111+2 ];
+  
+  }
+  
   double hx1 = ( x-i*m_Dxyz[0] )/m_Dxyz[0];
   double hy1 = ( y-j*m_Dxyz[1] )/m_Dxyz[1];
   double hz1 = ( z-k*m_Dxyz[2] )/m_Dxyz[2];

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.15 2007-06-14 09:54:54 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.16 2008-05-08 16:28:56 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -19,6 +19,7 @@ template <class TYPE> class SvcFactory;
  *
  *  @author Edgar De Oliveira
  *  @date   2002-05-21
+ *  Updated and further developped - Adlene Hicheur
  */
 
 class MagneticFieldSvc : public Service,
@@ -64,9 +65,12 @@ private:
   friend class SvcFactory<MagneticFieldSvc>;
 
   StatusCode parseFile( );       ///< Reads the field map from file 
+  StatusCode parseRealFiles( );  ///< Reads the real field map from files 
   
   std::string m_filename;        ///< Magnetic field file name
+  std::string m_qfilename[4];    ///< True Magnetic field file names (one for each quadrant
   std::vector<double> m_Q;       ///< Field vector
+  std::vector<double> m_Q_quadr[4];      ///< Field vectors for 4 quadrants real map
   double m_Dxyz[3];              ///< Steps in x, y and z
   int    m_Nxyz[3];              ///< Number of steps in x, y and z
   double m_max_FL[3];    
@@ -77,6 +81,11 @@ private:
   bool                m_useConstField;    ///< Job option to use constant field
   std::vector<double> m_constFieldVector; ///< Option for constant field value
   double              m_scaleFactor;      ///< Option for field scaling factor
+  bool                m_useRealMap; ///< To use the real map for data
+  double              m_current; ///< To set up the running magnet current for rescaling
+  std::string m_condpath; ///< Path to access the field conditions from the database.
+  
+   
 };
 
 #endif  // MAGNETICFIELDSVC_H

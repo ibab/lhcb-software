@@ -4,6 +4,8 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Adlene Hicheur
+ - Upgrade MagneticFieldSvc to use real field map + properties for conditions
 !====================== Magnet v3r7 2008-03-03 ===============================
 ! 2008-03-03 - Marco Cattaneo
  - Remove pointless MagFieldReader::finalize method
