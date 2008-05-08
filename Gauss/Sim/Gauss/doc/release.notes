@@ -4,6 +4,74 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v31r0 2008-05-08 =============================
+! 2008-05-08 - Gloria CORTI
+ - Make Generator and Simulation members of a unique Gauss sequencer, instead
+   of TopAlgorithms. This allow to process with Geant4 only events satisfying
+   a given conditions in generator, eg. cuts on combined events.
+   . Gauss.opts
+ - Use DDDB tag geometry when reading a file
+   . GaussRead.opts
+ - Introduce physics list to declare unknown particles to G4 as listed 
+   below for LHEP
+   . PhysList-QSGP.opts
+ - Fix problem picking up options from wrong area
+   . Gauss_Ganga.py
+
+! 2008-05-07 - Gloria CORTI
+ - Use latest versions of DecFiles v14r3
+ - Fix version of generator data packages (MIBData v1r0, MCatNLOData v1r1)
+ - Use XmlVis v1r5
+ - Remove special executables for extra generators. In addition temporarly
+   switch off extension to Pythia because of circular dependency in loading
+   of overwritten routines as dispatcher of the extentions
+   Temporarly off: LbAlpGen
+                   LbBcVegPy
+                   LbHidValley
+ - Introduce use of the monitoring package for BCM (BcmMoniSim v*)
+ - Do not build LbPythia8 on Window since library not available yet from
+   LCG_Generators
+ - Introduce new steering options for latest geometry tag as available in
+   SQLDDDB version used and having hits in TT (so DC06 TT geometry)
+   . lhcb-200802.opts                       - NEW
+   . lhcb-200802-BOff.opts                  - NEW
+   . lhcb-200802-SimPhase.opts              - NEW
+   . lhcb-200802-450GeV-OpenVelo-BOff.opts  - NEW
+ - Introduce python scripts to run with gaudirun.py for latest geometries
+   . lhcb-200801.py                 - NEW
+   . lhcb-200802.py                 - NEW
+ - Introduce example python script to specify event type and name output
+   files depending on that. It can be used with any of the geomtries.
+   . EvtType.py                     - NEW
+     eg. to use it
+         lxplus> gaudirun.py $GAUSSOPTS/lhcb-200802.py $GAUSSOPTS/EvtType.py
+ - Introduce new options to be added to standard "lhcb-20080x.opts" to
+   generate scollisions in the center of the LHCb cavern (at 11.22m)
+   . CollisionsCenterOfCavern.opts  - NEW
+ - Introduce BCM after TT in geometry to simulate by default, since it is not
+   available for lhcb-200801 geometry, switch it off in that case
+   . SimGeometry.opts
+   . lhcb-200801.opts
+ - Provide options to append to standard "lhcb-20080x.opts" to simulate
+   BCM upstream of the VELO.
+   Since this is not for physics studies they need to be included exclicitely.
+   It adds the geometry of the area, including shielding wall and add BCM
+   sensitive detectors and writes their hits on the sim file.
+   . BCMSimulation.opts
+ - Provide options to append to standard "lhcb-20080x.opts" to simulate
+   possible beam scintillators upstream of the VELO.
+   They need to be included exclicitely.
+   It adds the geometry of the area, including shielding wall and add BCM
+   sensitive detectors and writes their hits on the sim file.
+   . BeamScintillators.opts
+ - Remove no longer supported DC06 geometry related options (cannot generate
+   events with RICH DC06 geometry becasue of incompatibility in the code)
+   . v200601.py                     - REMOVED
+   . v200601.opts                   - REMOVED
+   . v200601-BOff.opts              - REMOVED
+   . v200601-450GeV-xxxx.opts       - REMOVED
+   . v200601-SimPhase.opts          - REMOVED
+
 ! 2008-04-28 - Patrick Robbe
  - Phys-LHEP.opts: add new physics list which declares unknown particles to 
    Geant4.

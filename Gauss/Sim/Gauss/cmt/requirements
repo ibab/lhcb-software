@@ -17,8 +17,11 @@ branches src doc options cmt job
 use DDDB               v1r*   Det            -no_auto_imports
 use ParamFiles         v7r1                  -no_auto_imports
 use FieldMap           v4r7                  -no_auto_imports
-use DecFiles           v14r1  Gen            -no_auto_imports
+use DecFiles           v14r3  Gen            -no_auto_imports
 use Geant4Files	       v82r0	             -no_auto_imports
+use XmlVis             v1r5   Vis            -no_auto_imports
+use MIBData            v1r0                  -no_auto_imports
+use MCatNLOData        v1r1                  -no_auto_imports
 
 #===========================================================================
 
@@ -45,32 +48,27 @@ use SimComponents      v*     Sim            -no_auto_imports
  
 #===========================================================================
 
-# From GAUSS project
-
-#-- Optional Hijing
-macro LbHijing_use "" Linux&Hijing "LbHijing v* Gen"
-use $(LbHijing_use)
-
-#-- Optional Herwig
-use LbHerwig             v*    Gen  -no_auto_imports
-
-#-- Optional BcVegPy
-macro LbBcVegPy_use "" Linux&BcVegPy "LbBcVegPy v* Gen"
-use $(LbBcVegPy_use)
-
-#-- Optional Hidden Valley
-macro LbHidValley_use "" Linux&HidValley "LbHidValley v* Gen"
-use $(LbHidValley_use)
-
-#-- Optional AlpGen
-macro LbAlpGen_use "" Linux&AlpGen "LbAlpGen v* Gen"
-use $(LbAlpGen_use)
+#== From GAUSS project =====================================================
 
 #-- Generator
-use ParticleGuns         v*    Gen  -no_auto_imports 
-use LbMIB                v*    Gen  -no_auto_imports
-use LbPythia             v*    Gen  -no_auto_imports
-use LbPythia8            v*    Gen  -no_auto_imports
+use ParticleGuns       v*     Gen            -no_auto_imports 
+use LbMIB              v*     Gen            -no_auto_imports
+use LbPythia           v*     Gen            -no_auto_imports
+
+#-- Not built on Windows
+macro LbHerwig_use    "LbHerwig     v*  Gen  -no_auto_imports"  WIN32 ""
+macro LbBcVegPy_use   "LbBcVegPy    v*  Gen  -no_auto_imports"  WIN32 ""
+macro LbHidValley_use "LbHidValley  v*  Gen  -no_auto_imports"  WIN32 ""
+macro LbAlpGen_use    "LbAlpGen     v*  Gen  -no_auto_imports"  WIN32 ""
+macro LbHijing_use    "LbHijing     v*  Gen  -no_auto_imports"  WIN32 ""
+macro LbPythia8_use   "LbPythia8    v*  Gen  -no_auto_imports"  WIN32 ""
+use ${LbHerwig_use}
+#use ${LbBcVegPy_use}                   # TEMPORARLY OFF
+#use ${LbHidValley_use}                 # TEMPORARLY OFF
+#use ${LbAlpGen_use}                    # TEMPORARLY OFF
+use ${LbHijing_use}
+use ${LbPythia8_use}
+
 
 #-- Simulation
 use GiGaCnv              v*    Sim  -no_auto_imports
@@ -87,6 +85,7 @@ use GaussMonitor         v*    Sim   -no_auto_imports
 use CaloMoniSim          v*    Calo  -no_auto_imports
 use VeloGauss            v*    Velo  -no_auto_imports
 use MuonMoniSim          v*    Muon  -no_auto_imports
+use BcmMoniSim           v*    Bcm   -no_auto_imports
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
@@ -109,35 +108,21 @@ set AlwaysKillLeadingHadron 1
 
 application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
 
-application GaussHijing    $(GAUDICONFROOT)/src/GaudiMain.cpp
-application GaussBcVegPy   $(GAUDICONFROOT)/src/GaudiMain.cpp
-application GaussHidValley $(GAUDICONFROOT)/src/GaudiMain.cpp
-application GaussAlpGen    $(GAUDICONFROOT)/src/GaudiMain.cpp
-
-macro_remove constituents "GaussHijing"    Linux&Hijing "Gauss"
-macro_remove constituents "GaussBcVegPy"   Linux&BcVegPy "Gauss"
-macro_remove constituents "GaussHidValley" Linux&HidValley "Gauss"
-macro_remove constituents "GaussAlpGen"    Linux&AlpGen "Gauss"
-
 #===========================================================================
 #-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
-             Linux&Hijing   " -Wl,-Map,LinuxHijing.map "\
-             Linux&BcVegPy  " -Wl,-Map,LinuxBcVegPy.map "\
-             Linux&HidValley " -Wl,-Map,LinuxHidValley.map "\
              WIN32          " /STACK:4000000"
 
 #-- For visualization make appropriate engine visible (DAWN)
-#path_remove    PATH  "" Linux&Vis "/DAWN/"
-#path_append    PATH  "" Linux&Vis "${OSC_release_area}/DAWN/bin/Linux"
-#path_remove    PATH  "" Linux&Vis "/dawn/"
-path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
-
+path_remove    PATH  "" Linux&Vis "/DAWN/"
+path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/bin"
+#path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
 #-- Alias for exacutable have been removed: use instead script
 #    SetupProject Gauss <version>
 #   that includes the binary directory in the PATH so that you can type
 #    Gauss.exe 
+
