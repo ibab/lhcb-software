@@ -1,7 +1,8 @@
+# pylint: disable-msg=W0212
 import unittest
 from LbUtils import VersionsDB
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: test_VersionsDB.py,v 1.7 2008-05-08 15:38:53 marcocle Exp $"
+__version__ = "$Id: test_VersionsDB.py,v 1.8 2008-05-08 21:22:36 marcocle Exp $"
 
 class VersionsDBTest(unittest.TestCase):
     def _prepareXML(self, data):
@@ -104,18 +105,14 @@ class VersionsDBTest(unittest.TestCase):
     def test_120_parse_errors(self):
         """XML errors"""
         data = [("ReleaseName",None,[]),("ReleaseName",None,[])]
-        try:
-            VersionsDB.loadString(self._prepareXML(data))
-            self.fail("DuplicatedReleaseError exception expected")
-        except VersionsDB.DuplicatedReleaseError:
-            pass
+        self.assertRaises(VersionsDB.DuplicatedReleaseError,
+                          VersionsDB.loadString,
+                          self._prepareXML(data))
 
         data = [("ReleaseName",None,[("P","v1r0"),("P","v1r0")])]
-        try:
-            VersionsDB.loadString(self._prepareXML(data))
-            self.fail("DuplicatedProjectError exception expected")
-        except VersionsDB.DuplicatedProjectError:
-            pass
+        self.assertRaises(VersionsDB.DuplicatedProjectError,
+                          VersionsDB.loadString,
+                          self._prepareXML(data))
         
     def test_200_findReleases(self):
         data = [("R1",None,[("P1","v1r0"),("P2","v1r0"),("P3","v1r0")]),
