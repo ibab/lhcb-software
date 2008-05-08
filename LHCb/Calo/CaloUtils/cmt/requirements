@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.50 2008-03-28 13:36:17 cattanem Exp $
+# $Id: requirements,v 1.51 2008-05-08 09:25:49 cattanem Exp $
 # =============================================================================
 # Created    : 02/11/2001
 # Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v7r9
+version             v8r0
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
