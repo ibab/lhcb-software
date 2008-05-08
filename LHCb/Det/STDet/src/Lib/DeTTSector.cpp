@@ -93,7 +93,11 @@ StatusCode DeTTSector::initialize() {
       msg << MSG::ERROR << "Failed to registerConditions call backs";
       return sc;
     }
-    cacheInfo();
+    sc = cacheInfo();
+    if (sc.isFailure()){
+      msg << MSG::ERROR << "Failed to cache geometry";
+      return sc;
+    }
 
   }
 

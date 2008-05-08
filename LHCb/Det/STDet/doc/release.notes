@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.128 2008-05-06 14:34:41 cattanem Exp $
+!$Id: release.notes,v 1.129 2008-05-08 13:28:00 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2008-05-09 M Needham
+ - Fix untested status codes
+
 !======================== STDet v4r0 2008-05-05 ==========================
+
 ! 2008-05-05 M Needham/G. Raven
  - Sort sensors by increasing y in DeITSector and DeTTSector
  - Add fuctor for sorting detector elements by y (STDetFun.h)

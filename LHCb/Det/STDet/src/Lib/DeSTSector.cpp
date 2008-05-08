@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.37 2008-05-06 09:57:52 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.38 2008-05-08 13:28:00 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -217,6 +217,7 @@ StatusCode DeSTSector::cacheInfo()
   m_sinAngle = sin( m_angle ) ;
   
   return StatusCode::SUCCESS;
+
 }
 
 STChannelID DeSTSector::nextLeft(const STChannelID testChan) const
