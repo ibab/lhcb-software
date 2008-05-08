@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPhotonRecoTestAlg
  *
- *  $Id: RichPhotonRecoTestAlg.cpp,v 1.7 2007-11-26 17:14:01 jonrob Exp $
+ *  $Id: RichPhotonRecoTestAlg.cpp,v 1.8 2008-05-08 13:18:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/02/2006
@@ -37,7 +37,7 @@ PhotonRecoTestAlg::PhotonRecoTestAlg( const std::string& name,
 }
 
 // Destructor
-PhotonRecoTestAlg::~PhotonRecoTestAlg() {};
+PhotonRecoTestAlg::~PhotonRecoTestAlg() { }
 
 //  Initialize
 StatusCode PhotonRecoTestAlg::initialize()
@@ -47,9 +47,9 @@ StatusCode PhotonRecoTestAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get the radiators
-  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel  );
-  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich1Gas );
-  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Rich2Gas );
+  m_radiators[Rich::Aerogel]  = getDet<DeRichRadiator>( DeRichLocations::Aerogel  );
+  m_radiators[Rich::Rich1Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich1Gas );
+  m_radiators[Rich::Rich2Gas] = getDet<DeRichRadiator>( DeRichLocations::Rich2Gas );
 
   // Acquire instances of tools
   acquireTool( m_photonRecoName, m_photonReco, this );

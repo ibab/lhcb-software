@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Chris Jones
+ - Adapt to removal of obsolete RichDet locations
+
 ! 2008-05-01 - Chris Jones
  - Add new monitor for stereographic refitting tests
  - Add new plots to RichPhotonSignal monitor

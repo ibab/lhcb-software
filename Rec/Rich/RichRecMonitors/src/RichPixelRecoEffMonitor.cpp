@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.5 2007-08-13 12:38:49 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.6 2008-05-08 13:18:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -32,12 +32,10 @@ PixelRecoEffMonitor::PixelRecoEffMonitor( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_richRecMCTruth    ( 0 ),
     m_truth             ( 0 ),
-    m_richSys           ( 0 )
-{
-}
+    m_richSys           ( 0 ) { }
 
 // Destructor
-PixelRecoEffMonitor::~PixelRecoEffMonitor() {};
+PixelRecoEffMonitor::~PixelRecoEffMonitor() { }
 
 //  Initialize
 StatusCode PixelRecoEffMonitor::initialize()
@@ -52,7 +50,7 @@ StatusCode PixelRecoEffMonitor::initialize()
   acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // Force creation of tools some here, to avoid it happening during first
   // event and perturbing timing numbers

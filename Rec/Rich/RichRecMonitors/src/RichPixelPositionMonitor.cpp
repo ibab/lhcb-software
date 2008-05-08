@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelPositionMonitor
  *
- *  $Id: RichPixelPositionMonitor.cpp,v 1.14 2008-02-07 17:58:34 jonrob Exp $
+ *  $Id: RichPixelPositionMonitor.cpp,v 1.15 2008-05-08 13:18:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -54,7 +54,7 @@ StatusCode PixelPositionMonitor::initialize()
   acquireTool( "RichSmartIDTool", m_idTool,   0, true );
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   return sc;
 }
@@ -94,7 +94,7 @@ StatusCode PixelPositionMonitor::execute()
 
     // global position
     const Gaudi::XYZPoint & gPos = pixel->globalPosition();
-    // local position on HP panels
+    // local position on HPD panels
     const Gaudi::XYZPoint & lPos = pixel->localPosition();
     // position on anode in global coords
     Gaudi::XYZPoint anodeGlobal;

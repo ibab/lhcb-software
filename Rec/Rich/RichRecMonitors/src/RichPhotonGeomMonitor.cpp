@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.14 2007-11-26 17:14:01 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.15 2008-05-08 13:18:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -79,6 +79,8 @@ StatusCode PhotonGeomMonitor::execute()
   const RichHistoID hid;
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
+  PD_LOCAL_POSITIONS_X;
+  PD_LOCAL_POSITIONS_Y;
   //            Radiator          Aerogel  Rich1Gas    Rich2Gas
   const double tkHitSepMin[]  = { 0.0,     0.0,     0.0     };
   const double tkHitSepMax[]  = { 500.0,   120.0,   200.0   };
@@ -96,7 +98,9 @@ StatusCode PhotonGeomMonitor::execute()
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
 
     // Radiator info
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const Rich::RadiatorType rad  = segment->trackSegment().radiator();
+    // RICH info
+    const Rich::DetectorType rich = segment->trackSegment().rich();
 
     // Expected Cherenkov theta angle for true particle type
     // if MC type is not known, assume pion (maybe type should be a job option ??)
@@ -121,6 +125,9 @@ StatusCode PhotonGeomMonitor::execute()
       const double sepAngle =
         ( atan2( locPos.x() - segment->pdPanelHitPointLocal().x(),
                  locPos.y() - segment->pdPanelHitPointLocal().y() ) );
+
+      // local position on HPD panels
+      const double distFromBeam = std::sqrt((locPos.x()*locPos.x())+(locPos.y()*locPos.y()));
 
       // sep
       const double sepL = sqrt( m_geomTool->trackPixelHitSep2(segment,pixel) );
@@ -150,6 +157,19 @@ StatusCode PhotonGeomMonitor::execute()
                 minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
         profile1D( thetaExpTrue, sepL, hid(rad,"trueSepVCKExpP"), "Local Sep. V expected theta True",
                    minCkTheta[rad],maxCkTheta[rad] );
+        plot2D( locPos.x(), locPos.y(), hid(rad,"truePhotonHits"), 
+                "Observed hits yVx local : True Photons",
+                xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100, 100 );
+        plot1D( distFromBeam, hid(rad,"trueDistFromBeam"), 
+                "Observed hits sqrt(x^2+y^2) local : True Photons", 0, 1000 );
+      }
+      else
+      {
+        plot2D( locPos.x(), locPos.y(), hid(rad,"fakePhotonHits"), 
+                "Observed hits yVx local : Fake Photons",
+                xMinPDLoc[rich],xMaxPDLoc[rich],yMinPDLoc[rich],yMaxPDLoc[rich], 100, 100 );
+        plot1D( distFromBeam, hid(rad,"fakeDistFromBeam"), 
+                "Observed hits sqrt(x^2+y^2) local : Fake Photons", 0, 1000 );
       }
 
     }

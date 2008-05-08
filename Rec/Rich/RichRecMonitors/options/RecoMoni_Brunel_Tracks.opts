@@ -128,6 +128,9 @@ RichCKRes.Members += { "Rich::Rec::MC::CherenkovResMoni/RiRecKsTkCKResMoni" };
 RiRecKsTkCKResMoni.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // photon signal monitor
+// long tracks
+RichPhotSig.Members += { "Rich::Rec::MC::PhotonSignalMonitor/RiRecPhotSigLongTkMoni" };
+RiRecPhotSigLongTkMoni.TrackSelector.TrackAlgs = { "Forward","Match" };
 // forward tracks
 RichPhotSig.Members += { "Rich::Rec::MC::PhotonSignalMonitor/RiRecPhotSigFrwdTkMoni" };
 RiRecPhotSigFrwdTkMoni.TrackSelector.TrackAlgs = { "Forward" };
@@ -165,6 +168,9 @@ RichPhotAng.Members += { "Rich::Rec::MC::CherenkovAngleMonitor/RiRecPhotAngKsTkM
 RiRecPhotAngKsTkMoni.TrackSelector.TrackAlgs = { "KsTrack" };
 
 // Cherenkov geometry moni
+// long tracks
+RichPhotGeom.Members += { "Rich::Rec::MC::PhotonGeomMonitor/RiRecPhotGeomLongTkMoni" };
+RiRecPhotGeomLongTkMoni.TrackSelector.TrackAlgs = { "Forward","Match" };
 // forward tracks
 RichPhotGeom.Members += { "Rich::Rec::MC::PhotonGeomMonitor/RiRecPhotGeomFrwdTkMoni" };
 RiRecPhotGeomFrwdTkMoni.TrackSelector.TrackAlgs = { "Forward" };

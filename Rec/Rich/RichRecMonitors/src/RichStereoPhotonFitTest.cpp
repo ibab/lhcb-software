@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : StereoPhotonFitTest
  *
- *  $Id: RichStereoPhotonFitTest.cpp,v 1.1 2008-05-01 19:42:24 jonrob Exp $
+ *  $Id: RichStereoPhotonFitTest.cpp,v 1.2 2008-05-08 13:18:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -30,7 +30,9 @@ StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_fitter            ( NULL ),
     m_trSelector        ( NULL ),
-    m_ckAngle           ( NULL )
+    m_ckAngle           ( NULL ),
+    m_ckRes             ( NULL ),
+    m_richRecMCTruth    ( NULL )
 {
   declareProperty( "NumberBins", m_nBins = 100 );
   declareProperty( "ChThetaRecHistoLimitMin",
@@ -38,7 +40,7 @@ StereoPhotonFitTest::StereoPhotonFitTest( const std::string& name,
   declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
   declareProperty( "CKResHistoRange",
-                   m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
+                   m_ckResRange = boost::assign::list_of(0.01)(0.004)(0.002) );
 }
 
 // Destructor
@@ -55,6 +57,8 @@ StatusCode StereoPhotonFitTest::initialize()
   acquireTool( "RichStereoFitter",   m_fitter, this );
   acquireTool( "TrackSelector",      m_trSelector, this );
   acquireTool( "RichCherenkovAngle", m_ckAngle );
+  acquireTool( "RichCherenkovResolution", m_ckRes );
+  acquireTool( "RichRecMCTruthTool", m_richRecMCTruth );
 
   return sc;
 }
@@ -109,23 +113,43 @@ StatusCode StereoPhotonFitTest::execute()
               << endreq;
 
     // Is Fit 'OK' ?? Skip failed fits
-    if ( fitR.status != IStereoFitter::Result::Succeeded ) continue;
+    const bool fitOK = fitR.status == IStereoFitter::Result::Succeeded;
+    plot1D( (int)fitOK, hid(rad,"fitStatus"), "Fit Status (1=OK, 0=FAIL)",
+            -0.5, 1.5, 2 );
+    if ( !fitOK ) continue;
+
+    // Expected Cherenkov theta angle
+    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, pid );
+    // expected CK theta resolution
+    const double expCKres = m_ckRes->ckThetaResolution(segment,pid);
 
     // Compute the simple 'average' CK theta value
-    double segAvgCKtheta(0);
+    double segAvgCKtheta(0), segAvgCKthetaMC(0);
+    unsigned int nPhots(0), nPhotsMC(0);
     if ( !segment->richRecPhotons().empty() )
     {
+      const double nSigma(3.0);
       for ( LHCb::RichRecSegment::Photons::const_iterator iPhot
               = segment->richRecPhotons().begin();
             iPhot != segment->richRecPhotons().end(); ++iPhot )
       {
-        segAvgCKtheta += (*iPhot)->geomPhoton().CherenkovTheta();
+        if ( fabs( (*iPhot)->geomPhoton().CherenkovTheta() - thetaExp ) <
+             nSigma * expCKres )
+        {
+          ++nPhots;
+          segAvgCKtheta += (*iPhot)->geomPhoton().CherenkovTheta();
+          // true CK photon ?
+          const LHCb::MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(*iPhot);
+          if ( mcPhot )
+          {
+            ++nPhotsMC;
+            segAvgCKthetaMC += mcPhot->cherenkovTheta();
+          }
+        }
       }
-      segAvgCKtheta /= (double)(segment->richRecPhotons().size());
+      if ( nPhots>0   ) segAvgCKtheta   /= (double)(nPhots  );
+      if ( nPhotsMC>0 ) segAvgCKthetaMC /= (double)(nPhotsMC);
     }
-
-    // Expected Cherenkov theta angle
-    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, pid );
 
     // some plots
     plot1D( fitR.chi2, hid(rad,"fitChi2"), "Fit Chi^2", 0, 100, m_nBins );
@@ -137,12 +161,19 @@ StatusCode StereoPhotonFitTest::execute()
     plot1D( fitR.thcFit-thetaExp, hid(rad,"fittedCKthetaRes"),
             "Fitted CK theta - expected CK theta : All photons",
             -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+    plot1D( fitR.thcFit-segAvgCKthetaMC, hid(rad,"fittedCKthetaResMC"),
+            "Fitted CK theta - Average MC theta : All photons",
+            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
 
     plot1D( segAvgCKtheta, hid(rad,"avgCKtheta"), "Simple Avg. CK theta : All photons",
             m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
     plot1D( segAvgCKtheta-thetaExp, hid(rad,"avgCKthetaRes"),
             "Simple Avg. CK theta - expected CK theta : All photons",
             -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+    plot1D( segAvgCKtheta-segAvgCKthetaMC, hid(rad,"avgCKthetaResMC"),
+            "Simple Avg. CK theta - Average MC theta : All photons",
+            -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+
 
   } // end segment loop
 
