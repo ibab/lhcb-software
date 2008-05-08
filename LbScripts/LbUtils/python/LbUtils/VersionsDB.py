@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.10 2008-05-07 18:50:26 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.11 2008-05-08 11:19:57 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -223,7 +223,12 @@ class Release:
         return _sortProjects(all_projs)
         
     def __str__(self):
-        s = "Release %s:"%self.name
+        s = "Release '%s'"%self.name
+        if self.tag:
+            s += ", tag '%s'"%self.tag
+        if self.date > DEFAULT_RELEASEDATE:
+            s += ", date %4d-%02d-%02d"%self.date
+        s += ":"
         for p in self.allProjects():
             s += "\n\t%s\t%s"%(p.name,p.version)
         return s

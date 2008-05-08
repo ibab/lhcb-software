@@ -13,7 +13,14 @@
       <body>
         <h1>Releases Database</h1>
         <xsl:for-each select="lhcb:releases_db/release">
+          <xsl:sort select="@date" order="descending"/>
           <h2>Release &quot;<xsl:value-of select="@name"/>&quot;</h2>
+          <xsl:if test="@tag">
+            <p>tag: &quot;<xsl:value-of select="@tag"/>&quot;</p>
+          </xsl:if>
+          <xsl:if test="@date">
+            <p>date: <xsl:value-of select="@date"/></p>
+          </xsl:if>
           <table border="1">
           <tr><th>Project</th><th>Version</th></tr>
     	  <xsl:for-each select="project">
