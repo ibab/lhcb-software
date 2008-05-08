@@ -1,4 +1,4 @@
-// $Id: RichTrackResolutions.h,v 1.1 2007-07-25 14:44:22 jonrob Exp $
+// $Id: RichTrackResolutions.h,v 1.2 2008-05-08 13:26:40 jonrob Exp $
 #ifndef MACROS_RICHTRACKRESOLUTIONS_H
 #define MACROS_RICHTRACKRESOLUTIONS_H 1
 
@@ -13,10 +13,18 @@
 
 #include "Utilities.h"
 
-namespace RICH
+namespace Rich
 {
 
-  // RICH CK resolution functions
+  //-----------------------------------------------------------------------------
+  /** @namespace TrackResolution
+   *
+   *  General namespace for RICH ROOT utilities for Track resolution studies
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
   namespace TrackResolution
   {
     void trackRes( TFile * file,

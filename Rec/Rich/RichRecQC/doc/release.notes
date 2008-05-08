@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Chris Jones
+ - Update ROOT scripts for new implementation of RichPIDQC
+
 ! 2008-05-06 - Chris Jones
  - Update RichPIDQC to use new PID plotting tool
  - Adapt to removal of some old RichDet locations

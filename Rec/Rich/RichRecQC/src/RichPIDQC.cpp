@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.70 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.71 2008-05-08 13:26:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -33,9 +33,7 @@ PIDQC::PIDQC( const std::string& name,
     m_mcTruth          ( NULL ),
     m_mcPselector      ( NULL ),
     m_requiredRads     ( Rich::NRadiatorTypes ),
-    m_sF               ( "%7.3f" ),
-    m_recoplots        ( NULL ),
-    m_mcplots          ( NULL )
+    m_sF               ( "%7.3f" )
 {
 
   if      ( context() == "Offline" )
@@ -81,11 +79,8 @@ StatusCode PIDQC::initialize()
   // Retrieve MC tool, if needed
   if ( m_truth ) acquireTool( "RichRecMCTruthTool", m_mcTruth );
 
-  // Retrieve the PID plotting tool
-  acquireTool( "RichPIDPlots", "Reco", m_recoplots, this );
-  acquireTool( "RichPIDPlots", "MC",   m_mcplots,   this );
-
   // Plots config
+  m_plotTools.clear();
   m_plotsConfig.minP  = m_trSelector->minPCut()  * Gaudi::Units::GeV;
   m_plotsConfig.maxP  = m_trSelector->maxPCut()  * Gaudi::Units::GeV;
   m_plotsConfig.minPt = m_trSelector->minPtCut() * Gaudi::Units::GeV;
@@ -265,14 +260,11 @@ StatusCode PIDQC::execute()
       // MC Truth
       if ( m_truth )
       {
-        if ( msgLevel(MSG::VERBOSE) ) verbose() << "  MCID        = " << mcpid << endreq;
+        if ( msgLevel(MSG::VERBOSE) ) 
+          verbose() << "  MCID        = " << mcpid << endreq;
 
         // Fill plots in PID performance tool
-        m_recoplots->plots( iPID, pid, m_plotsConfig );
-        m_mcplots->plots( iPID, mcpid, m_plotsConfig );
-
-        // Fill performance table
-        plot2D( (int)pid, (int)mcpid, "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
+        plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig );
 
         // Count track and PID types
         if ( Rich::Unknown != mcpid ) 
@@ -282,6 +274,8 @@ StatusCode PIDQC::execute()
         }
 
         // Fill performance tables
+        plot2D( (int)pid, (int)mcpid, 
+                "pidTable", "PID Performance Table", -1.5, 6.5, -1.5, 6.5, 7, 7 );
         if ( mcpid != Rich::Unknown &&
              pid   != Rich::Unknown ) { ++m_sumTab[mcpid][pid]; }
 
@@ -296,7 +290,7 @@ StatusCode PIDQC::execute()
   m_nTracks[0] += m_totalSelTracks;
   m_nTracks[1] += pidCount;
   plot1D( pidCount, "# PIDs per event", -0.5, 200.5, 201 );
-  plot1D( (m_richPIDs.empty() ? 0 : 1), "Event Success/Failures", -0.5, 1.5, 2 );
+  plot1D( (m_richPIDs.empty() ? 0 : 1), "Event Success V Failures", -0.5, 1.5, 2 );
   if ( m_totalSelTracks>0 )
   {
     plot1D(  static_cast<double>(pidCount) / static_cast<double>(m_totalSelTracks),
@@ -578,4 +572,19 @@ void PIDQC::print( MsgStream & msg,
   msg << endreq
       << "  RecoPID     = " << pid << endreq;
   msg << "  MCID        = " << mcpid << endreq;
+}
+
+const Rich::Rec::IPIDPlots * PIDQC::plotsTool( const Rich::ParticleIDType mcpid )
+{
+  PIDMap::const_iterator iTool = m_plotTools.find(mcpid);
+  if ( iTool == m_plotTools.end() )
+  {
+    const Rich::Rec::IPIDPlots *& tool = m_plotTools[mcpid];
+    acquireTool( "RichPIDPlots", "MC"+Rich::text(mcpid), tool, this );
+    return tool;
+  }
+  else
+  {
+    return iTool->second;
+  } 
 }

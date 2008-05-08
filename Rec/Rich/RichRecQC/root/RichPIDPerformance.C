@@ -1,159 +1,153 @@
 
 #include "RichPIDPerformance.h"
 
-namespace RICH
+namespace Rich
 {
   namespace PIDPerformance
   {
+    // random histo number
+    TString uniqueHname()
+    {
+      static unsigned int i(0);
+      TString meanPhistName = "TMP";
+      meanPhistName += ++i;
+      return meanPhistName;
+    }
 
     TH1F * loadHist( TFile * file,
                      const std::string & location )
     {
       TH1F * h = (TH1F*)file->Get( location.c_str() );
-      if (!h) { cerr << "ERROR : Histogram '" << location << "' not found" << endl; }
+      if (!h) { cerr << "WARNING : Histogram '" << location << "' not found" << endl; }
       return h;
     }
+
+    void addHists( TH1F *& h1, TH1F * h2 )
+    {
+      if ( !h1 && !h2 ) return;
+      if ( !h1 )
+      {
+        h1 = (TH1F*)h2->Clone( uniqueHname() );
+      }
+      else if ( h2 )
+      {
+        h1->Add(h2);
+      }
+    }
+
 
     TH1F * heavyIDedKaons( TFile * file,
                            const std::string & location )
     {
-      TH1F * h1 = loadHist( file, location+"/MC/144" );
-      TH1F * h2 = loadHist( file, location+"/MC/145" );
-      if ( !h1 || !h2 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone( "TMP1" );
-      hout->Add(h2);
+      TH1F * hout = 0;
+      addHists( hout, loadHist( file, location+".MCkaon/kaon/Ptot"   ) );
+      addHists( hout, loadHist( file, location+".MCkaon/proton/Ptot" ) );
       return hout;
     }
 
     TH1F * lightIDedKaons( TFile * file,
                            const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/141");
-      TH1F * h2 = loadHist ( file, location+"/MC/142");
-      TH1F * h3 = loadHist ( file, location+"/MC/143");
-      if ( !h1 || !h2 || !h3 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP2");
-      hout->Add(h2);
-      hout->Add(h3);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCkaon/electron/Ptot") );
+      addHists( hout, loadHist ( file, location+".MCkaon/muon/Ptot")     );
+      addHists( hout, loadHist ( file, location+".MCkaon/pion/Ptot")     );
       return hout;
     }
 
     TH1F * lightIDedPions( TFile * file,
                            const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/131" );
-      TH1F * h2 = loadHist ( file, location+"/MC/132" );
-      TH1F * h3 = loadHist ( file, location+"/MC/133" );
-      if ( !h1 || !h2 || !h3 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP3");
-      hout->Add(h2);
-      hout->Add(h3);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCpion/electron/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/muon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/pion/Ptot" ) );
       return hout;
     }
 
     TH1F * heavyIDedPions( TFile * file,
                            const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/134" );
-      TH1F * h2 = loadHist ( file, location+"/MC/135" );
-      if ( !h1 || !h2 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP4");
-      hout->Add(h2);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCpion/kaon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/proton/Ptot" ) );
       return hout;
     }
 
     TH1F * allTruePions( TFile * file,
                          const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/131" );
-      TH1F * h2 = loadHist ( file, location+"/MC/132" );
-      TH1F * h3 = loadHist ( file, location+"/MC/133" );
-      TH1F * h4 = loadHist ( file, location+"/MC/134" );
-      TH1F * h5 = loadHist ( file, location+"/MC/135" );
-      TH1F * h6 = loadHist ( file, location+"/MC/136" );
-      if ( !h1 || !h2 || !h2 || !h3 || !h4 || !h5 || !h6 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP5");
-      hout->Add(h2);
-      hout->Add(h3);
-      hout->Add(h4);
-      hout->Add(h5);
-      // hout->Add(h6);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCpion/electron/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/muon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/pion/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/kaon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCpion/proton/Ptot" ) );
+      //addHists( hout, loadHist ( file, location+".MCpion/below threshold/Ptot" ) );
       return hout;
     }
 
     TH1F * allTrueKaons( TFile * file,
                          const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/141" );
-      TH1F * h2 = loadHist ( file, location+"/MC/142" );
-      TH1F * h3 = loadHist ( file, location+"/MC/143" );
-      TH1F * h4 = loadHist ( file, location+"/MC/144" );
-      TH1F * h5 = loadHist ( file, location+"/MC/145" );
-      TH1F * h6 = loadHist ( file, location+"/MC/146" );
-      if ( !h1 || !h2 || !h2 || !h3 || !h4 || !h5 || !h6 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP6");
-      hout->Add(h2);
-      hout->Add(h3);
-      hout->Add(h4);
-      hout->Add(h5);
-      //hout->Add(h6);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCkaon/electron/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCkaon/muon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCkaon/pion/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCkaon/kaon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCkaon/proton/Ptot" ) );
+      //addHists( hout,loadHist ( file, location+".MCkaon/below threshold/Ptot" ) );
       return hout;
     }
 
     TH1F * allTrueProtons( TFile * file,
                            const std::string & location )
     {
-      TH1F * h1 = loadHist ( file, location+"/MC/151" );
-      TH1F * h2 = loadHist ( file, location+"/MC/152" );
-      TH1F * h3 = loadHist ( file, location+"/MC/153" );
-      TH1F * h4 = loadHist ( file, location+"/MC/154" );
-      TH1F * h5 = loadHist ( file, location+"/MC/155" );
-      TH1F * h6 = loadHist ( file, location+"/MC/156" );
-      if ( !h1 || !h2 || !h2 || !h3 || !h4 || !h5 || !h6 ) return 0;
-      TH1F * hout = (TH1F*)h1->Clone("TMP7");
-      hout->Add(h2);
-      hout->Add(h3);
-      hout->Add(h4);
-      hout->Add(h5);
-      hout->Add(h6);
+      TH1F * hout = 0;
+      addHists( hout, loadHist ( file, location+".MCproton/electron/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCproton/muon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCproton/pion/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCproton/kaon/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCproton/proton/Ptot" ) );
+      addHists( hout, loadHist ( file, location+".MCproton/below threshold/Ptot" ) );
       return hout;
     }
 
     TH1F * protonIDedProtons( TFile * file,
                               const std::string & location )
     {
-      return loadHist ( file, location+"/MC/155" );
+      return loadHist ( file, location+".MCproton/proton/Ptot" );
     }
 
     TH1F * kaonIDedKaons( TFile * file,
                           const std::string & location )
     {
-      return loadHist ( file, location+"/MC/144" );
+      return loadHist ( file, location+".MCkaon/kaon/Ptot" );
     }
 
     TH1F * pionIDedPions( TFile * file,
                           const std::string & location )
     {
-      return loadHist ( file, location+"/MC/133" );
+      return loadHist ( file, location+".MCpion/pion/Ptot" );
     }
 
     TH1F * kaonIDedPions( TFile * file,
                           const std::string & location )
     {
-      return loadHist ( file, location+"/MC/134" );
+      return loadHist ( file, location+".MCpion/kaon/Ptot" );
     }
 
     TH1F * pionIDedKaons( TFile * file,
                           const std::string & location )
     {
-      return loadHist ( file, location+"/MC/143" );
+      return loadHist ( file, location+".MCkaon/pion/Ptot" );
     }
 
 
     TH1F * protonIDedKaons( TFile * file,
                             const std::string & location )
     {
-      return loadHist ( file, location+"/MC/145" );
+      return loadHist ( file, location+".MCkaon/proton/Ptot" );
     }
 
     std::string averageEff( TH1F * top, TH1F * bot )
@@ -244,7 +238,7 @@ namespace RICH
       for ( std::vector<std::string>::const_iterator iType = imageType.begin();
             iType != imageType.end(); ++iType )
       {
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_lightID-"+imageName+"."+(*iType));
+        Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_lightID-"+imageName+"."+(*iType));
       }
 
       delete top;
@@ -346,7 +340,7 @@ namespace RICH
         for ( std::vector<std::string>::const_iterator iType = imageType.begin();
               iType != imageType.end(); ++iType )
         {
-          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_heavyID-"+imageName+"."+(*iType) );
+          Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_heavyID-"+imageName+"."+(*iType) );
         }
       }
 
@@ -450,7 +444,7 @@ namespace RICH
         for ( std::vector<std::string>::const_iterator iType = imageType.begin();
               iType != imageType.end(); ++iType )
         {
-          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
+          Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
         }
       }
 
@@ -554,7 +548,7 @@ namespace RICH
         for ( std::vector<std::string>::const_iterator iType = imageType.begin();
               iType != imageType.end(); ++iType )
         {
-          RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
+          Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_kaonID-"+imageName+"."+(*iType) );
         }
       }
 
@@ -635,7 +629,7 @@ namespace RICH
       for ( std::vector<std::string>::const_iterator iType = imageType.begin();
             iType != imageType.end(); ++iType )
       {
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_pionID-"+imageName+"."+(*iType) );
+        Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_pionID-"+imageName+"."+(*iType) );
       }
 
       delete top;
@@ -715,7 +709,7 @@ namespace RICH
       for ( std::vector<std::string>::const_iterator iType = imageType.begin();
             iType != imageType.end(); ++iType )
       {
-        RichUtils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_protonID-"+imageName+"."+(*iType) );
+        Rich::Utils::systemSaveImage( canvas, prodTag+"/"+prodTag+"_protonID-"+imageName+"."+(*iType) );
       }
 
       delete top;
@@ -755,15 +749,15 @@ namespace RICH
                     const std::vector<std::string> & imageType )
     {
       // 2 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO100", "All Tracks"+titletag, "all_2to100GeV", imageType );
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonAll2To100",  "All Tracks"+titletag, "all_2to100GeV", imageType );
       // 2 - 10 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/2TO10", "All Tracks"+titletag,  "all_2to10GeV",  imageType );
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonAll2To10",   "All Tracks"+titletag,  "all_2to10GeV",  imageType );
       // 10 - 70 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/10TO70", "All Tracks"+titletag, "all_10to70GeV", imageType );
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonAll10To70",  "All Tracks"+titletag, "all_10to70GeV", imageType );
       // 70 - 100 GeV
-      allPIDMeasures( pFile, prodTag, "RICH/PIDQC/ALL/70TO100", "All Tracks"+titletag, "all_70to100GeV", imageType );
+      allPIDMeasures( pFile, prodTag, "RICH/RiPIDMonAll70To100", "All Tracks"+titletag, "all_70to100GeV", imageType );
       // pos/neg
-      posNegHeavyIDCompare( pFile, prodTag, "All Tracks", "all_2to100GeV_posneg", imageType );
+      //posNegHeavyIDCompare( pFile, prodTag, "All Tracks", "all_2to100GeV_posneg", imageType );
     }
 
     void forwardTracks( TFile * pFile,
@@ -868,7 +862,7 @@ namespace RICH
       allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/10TO70", "Long Tracks"+titletag, "long_pt05_10to70GeV", imageType );
       // 70 - 100 GeV
       allPIDMeasures( pFile, prodTag, "RICH/PIDQC/LONGPT05/70TO100", "Long Tracks"+titletag, "long_pt05_70to100GeV", imageType );
- 
+
 
     }
 
@@ -925,12 +919,12 @@ namespace RICH
       gSystem->Exec( ("mkdir -p "+filetag).c_str() );
       // make the plots
       allTracks     ( pFile, filetag, titletag, imageType );
-      longTracks    ( pFile, filetag, titletag, imageType );
-      forwardTracks ( pFile, filetag, titletag, imageType );
-      matchTracks   ( pFile, filetag, titletag, imageType );
-      seedTracks    ( pFile, filetag, titletag, imageType );
-      vttTracks     ( pFile, filetag, titletag, imageType );
-      ksTracks      ( pFile, filetag, titletag, imageType );
+      //longTracks    ( pFile, filetag, titletag, imageType );
+      //forwardTracks ( pFile, filetag, titletag, imageType );
+      //matchTracks   ( pFile, filetag, titletag, imageType );
+      //seedTracks    ( pFile, filetag, titletag, imageType );
+      //vttTracks     ( pFile, filetag, titletag, imageType );
+      //ksTracks      ( pFile, filetag, titletag, imageType );
     }
 
     // shortcut methods

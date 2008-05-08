@@ -4,7 +4,7 @@
 #include "RichTrackResolutions.h"
 #include "RichNCKPhotons.h"
 
-namespace RICH
+namespace Rich
 {
 
   // Creates images files for Aerogel CK resolution, for given root file
@@ -13,8 +13,8 @@ namespace RICH
                 const std::string & nameTag,
                 const std::string & imageType )
   {
-    RICH::CKResolution::ckRes(file,prodTag,nameTag,imageType,"Aerogel");
-    //RICH::TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Aerogel");
+    CKResolution::ckRes(file,prodTag,nameTag,imageType,"Aerogel");
+    //TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Aerogel");
   }
 
   // Creates images files for Aerogel CK resolution, for given root file
@@ -23,8 +23,8 @@ namespace RICH
               const std::string & nameTag,
               const std::string & imageType )
   {
-    RICH::CKResolution::ckRes(file,prodTag,nameTag,imageType,"Rich1Gas");
-    //RICH::TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Rich1Gas");
+    CKResolution::ckRes(file,prodTag,nameTag,imageType,"Rich1Gas");
+    //TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Rich1Gas");
   }
 
   // Creates images files for Aerogel CK resolution, for given root file
@@ -33,8 +33,8 @@ namespace RICH
             const std::string & nameTag,
             const std::string & imageType )
   {
-    RICH::CKResolution::ckRes(file,prodTag,nameTag,imageType,"Rich2Gas");
-    //RICH::TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Rich2Gas");
+    CKResolution::ckRes(file,prodTag,nameTag,imageType,"Rich2Gas");
+    //TrackResolution::trackRes(file,prodTag,nameTag,imageType,"Rich2Gas");
   }
 
   // shortcut to producing all resolution figures
@@ -56,9 +56,9 @@ namespace RICH
     //cf4(file,prodTag,nameTag,"png");
 
     // CK res V theta from ntuple
-    //RICH::CKResolution::ckResVtheta(file,prodTag,"Aerogel");
-    //RICH::CKResolution::ckResVtheta(file,prodTag,"Rich1Gas");
-    //RICH::CKResolution::ckResVtheta(file,prodTag,"Rich2Gas");
+    //CKResolution::ckResVtheta(file,prodTag,"Aerogel");
+    //CKResolution::ckResVtheta(file,prodTag,"Rich1Gas");
+    //CKResolution::ckResVtheta(file,prodTag,"Rich2Gas");
 
   }
 
@@ -80,10 +80,10 @@ namespace RICH
     //createAllFigures( file, tag, title );
 
     // PID curves
-    RICH::PIDPerformance::allPlots( file, tag, title, imageTypes );
+    PIDPerformance::allPlots( file, tag, title, imageTypes );
 
     // Number photons
-    //RICH::NCKPhotons::createAllFigures( file, tag, title );
+    //NCKPhotons::createAllFigures( file, tag, title );
 
     file->Close();
   }

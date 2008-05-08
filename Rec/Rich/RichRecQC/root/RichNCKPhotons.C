@@ -1,7 +1,7 @@
 
 #include "RichNCKPhotons.h"
 
-namespace RICH
+namespace Rich
 {
   // RICH CK photon yields
   namespace NCKPhotons
@@ -35,7 +35,7 @@ namespace RICH
         h->SetTitle(title.c_str());
         h->Fit(fitter,"R");
         const std::string fileName = prodTag+"/"+prodTag+"_"+trackType+"_"+radiator+"_nCKphotons."+imageType;
-        RichUtils::systemSaveImage( canvas, fileName );
+        Rich::Utils::systemSaveImage( canvas, fileName );
         delete fitter;
       } else { cerr << "Histogram '" << hPath << "' does not exist" << endl; }
     }

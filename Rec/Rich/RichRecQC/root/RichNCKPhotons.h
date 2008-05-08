@@ -1,4 +1,4 @@
-// $Id: RichNCKPhotons.h,v 1.2 2007-08-09 16:20:32 jonrob Exp $
+// $Id: RichNCKPhotons.h,v 1.3 2008-05-08 13:26:40 jonrob Exp $
 #ifndef MACROS_RICHNCKPHOTONS_H
 #define MACROS_RICHNCKPHOTONS_H 1
 
@@ -12,9 +12,18 @@
 
 #include "Utilities.h"
 
-namespace RICH
+namespace Rich
 {
-  // RICH CK photon yields
+  
+ //-----------------------------------------------------------------------------
+  /** @namespace PIDPerformance
+   *
+   *  General namespace for RICH ROOT utilities for photon yield studies
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
   namespace NCKPhotons
   {
 

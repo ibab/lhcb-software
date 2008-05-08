@@ -1,7 +1,7 @@
 
 #include "RichTrackResolutions.h"
 
-namespace RICH
+namespace Rich
 {
 
   // RICH CK resolution functions
@@ -31,7 +31,7 @@ namespace RICH
           h->GetXaxis()->SetRangeUser(Xmin,Xmax);
         }
         h->Draw();
-        RichUtils::systemSaveImage( canvas, fileName );
+        Rich::Utils::systemSaveImage( canvas, fileName );
       } else { cerr << "Histogram '" << hPath << "' does not exist" << endl; }
     }
 
@@ -49,7 +49,7 @@ namespace RICH
         h->SetTitle(title.c_str());
         h->GetXaxis()->SetTitle(xtitle.c_str());
         h->Fit(fitter,"R");
-        RichUtils::systemSaveImage( canvas, fileName );
+        Rich::Utils::systemSaveImage( canvas, fileName );
         delete fitter;
       } else { cerr << "Histogram '" << hPath << "' does not exist" << endl; }
     }

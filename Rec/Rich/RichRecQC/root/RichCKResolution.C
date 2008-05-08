@@ -1,7 +1,7 @@
 
 #include "RichCKResolution.h"
 
-namespace RICH
+namespace Rich
 {
 
   // RICH CK resolution functions
@@ -95,7 +95,7 @@ namespace RICH
         h->GetXaxis()->SetTitle(xName.c_str());
         h->SetTitle(title.c_str());
         h->Fit(fitter,"R");
-        RichUtils::systemSaveImage( canvas, fileName );
+        Rich::Utils::systemSaveImage( canvas, fileName );
         delete fitter;
       } else { cerr << "Histogram '" << hPath << "' does not exist" << endl; }
     }
@@ -229,8 +229,8 @@ namespace RICH
       g->GetYaxis()->SetTitle("Cherenkov Theta Resolution / rad");
       TCanvas * canvas = new TCanvas("c1","MOO",200,10,600,400);
       g->Draw("AL*");
-      RichUtils::systemSaveImage( canvas, fileName+".eps" );
-      RichUtils::systemSaveImage( canvas, fileName+".png" );
+      Rich::Utils::systemSaveImage( canvas, fileName+".eps" );
+      Rich::Utils::systemSaveImage( canvas, fileName+".png" );
 
     }
 

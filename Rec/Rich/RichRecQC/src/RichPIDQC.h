@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.32 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.33 2008-05-08 13:26:40 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -111,6 +111,9 @@ namespace Rich
         /// Select Tracks
         bool selectTracks( const LHCb::Track * track );
 
+        /// Access the PID plots tool for the given MC type
+        const Rich::Rec::IPIDPlots * plotsTool( const Rich::ParticleIDType mcpid );  
+
       private: // data
 
         // Vector of pointers to RichPIDs
@@ -156,12 +159,14 @@ namespace Rich
         /// Radiators to require are present
         std::vector<bool> m_requiredRads;
 
-        // format for numbers
+        /// format for numbers
         std::string m_sF;
 
-        // PID plot tools
-        const Rich::Rec::IPIDPlots * m_recoplots;  ///< Reco PID plot tool
-        const Rich::Rec::IPIDPlots * m_mcplots;    ///< MC PID plot tool
+        /// PID plots tool for each PID type
+        typedef Rich::Map< const Rich::ParticleIDType, 
+                           const Rich::Rec::IPIDPlots* > PIDMap;
+        /// PID plots tool for each PID type
+        PIDMap m_plotTools;
 
         // Plots configuration object
         Rich::Rec::IPIDPlots::Configuration m_plotsConfig;

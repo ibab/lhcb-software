@@ -1,4 +1,4 @@
-// $Id: RichPIDPerformance.h,v 1.2 2007-08-09 16:20:32 jonrob Exp $
+// $Id: RichPIDPerformance.h,v 1.3 2008-05-08 13:26:40 jonrob Exp $
 #ifndef MACROS_RICHPIDPERFORMANCE_H
 #define MACROS_RICHPIDPERFORMANCE_H 1
 
@@ -12,8 +12,18 @@
 
 #include "Utilities.h"
 
-namespace RICH
+namespace Rich
 {
+
+  //-----------------------------------------------------------------------------
+  /** @namespace PIDPerformance
+   *
+   *  General namespace for RICH ROOT utilities for PID performance studies
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
+   */
+  //-----------------------------------------------------------------------------
   namespace PIDPerformance
   {
 
