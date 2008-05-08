@@ -5,7 +5,7 @@
  * Header file for monitor algorithm Rich::MC::MCCKPhotonPropAlg
  *
  * CVS Log :-
- * $Id: RichMCCKPhotonPropAlg.h,v 1.2 2007-07-09 13:51:53 jonrob Exp $
+ * $Id: RichMCCKPhotonPropAlg.h,v 1.3 2008-05-08 12:36:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-03
@@ -30,6 +30,7 @@
 
 // tool Interfaces
 #include "MCInterfaces/IRichMCTruthTool.h"
+#include "RichKernel/IRichRefractiveIndex.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -64,21 +65,10 @@ namespace Rich
 
       virtual StatusCode initialize();    ///< Algorithm initialization
       virtual StatusCode execute   ();    ///< Algorithm execution
-      virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-    private: // methods
-
-      /// Access the MC Truth Tool on-demand
-      inline const Rich::MC::IMCTruthTool * mcTruthTool() const
-      {
-        if ( !m_mcTruth ) { acquireTool( "RichMCTruthTool", m_mcTruth, 0, true ); }
-        return m_mcTruth;
-      }
 
     private: // data
 
-      /// Pointer to MCtruth association tool
-      mutable const Rich::MC::IMCTruthTool * m_mcTruth;
+      const IRefractiveIndex * m_refIndex; ///< Refractive index tool
 
     };
 

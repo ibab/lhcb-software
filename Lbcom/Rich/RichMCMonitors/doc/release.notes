@@ -4,6 +4,10 @@
 ! Purpose     : Monitor algorithms that exclusively use MCEvent data objects
 !-----------------------------------------------------------------------------
 
+! 2008-05-08 - Chris Jones
+ - Tidy up RichMCCKPhotonPropAlg a little and add some new histos for the
+   refractive index
+
 !========================== RichMCMonitors v1r5 2007-11-30 ===================
 ! 2007-11-12 - Chris Jones
  - Add check for existence of MCRichHits in MCCKPhotonYieldAlg, so processing 
