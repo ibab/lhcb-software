@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.12 2008-05-08 15:38:53 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.13 2008-05-08 20:38:58 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -202,6 +202,10 @@ class Release:
         else:
             self.date = DEFAULT_RELEASEDATE
         self.__releases__[name] = self
+    def __cmp__(self,other):
+        if self.date < other.date: return -1
+        elif self.date == other.date: return 0
+        else: return 1
         
     def __repr__(self):
         return "Release(name=%r,projects=%r,base=%r,date=%r)"%(self.name,
@@ -521,3 +525,77 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
     else: 
         xml += '</releases_db>\n'
     return xml
+
+def generateHTML():
+    lhcb_base = "http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC"
+    def proj_home(p):
+        if p == "LCGCMT":
+            return "https://twiki.cern.ch/twiki/bin/view/SPI"
+        elif p == "Gaudi":
+            return "http://proj-gaudi.web.cern.ch/proj-gaudi"
+        else:
+            return '/'.join([lhcb_base,p.lower()]) 
+    def proj_version(p,v):
+        h = proj_home(p)
+        if p == "LCGCMT":
+            return '/'.join([h,'LcgConfiguration%s'%v])
+        else:
+            return '/'.join([h,'releases',v])
+    def hyper_link(url,text):
+        return '<a href="%s">%s</a>'%(url,text)
+    def proj_link(p, v = None):
+        if not v:
+            return hyper_link(proj_home(p), p)
+        else:
+            return hyper_link(proj_version(p,str(v)), v)
+    html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:lhcb="http://cern.ch/lhcbproject/dist/">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="%s/css/lhcb.css" type="text/css" media="screen">
+<title>Releases Database</title>
+</head>
+<body>
+  <div class="ctitle">
+    <table id="pagetitle">
+      <tbody>
+        <tr>
+        <td valign="middle" align="center"><h1>Releases Database</h1></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <table border="1">
+'''%lhcb_base
+    rels = [getRelease(r) for r in getReleases()]
+    rels.sort(reverse=True)
+    for r in rels:
+        html += '<tr><td rowspan="2"><b>Release "%s"</b>'%r.name
+        if r.base:
+            html += '<br/>based on: &quot;%s&quot;'%r.base 
+        if r.date != DEFAULT_RELEASEDATE:
+            html += '<br>date: %4d-%02d-%02d</td>'%r.date
+        html += '<th>Project</th>'
+        projs = [ p for p in r.allProjects() if p not in unversionedProjects() ]
+        local_projs = r.values()
+        for p in projs:
+            if p in local_projs:
+                html += '<td>%s</td>'%proj_link(p.name)
+            else:
+                html += '<td><i>%s</i></td>'%proj_link(p.name)
+        html += '</tr><tr><th>Version</th>'
+        for p in projs:
+            if p in local_projs:
+                html += '<td>'
+            else:
+                html += '<td><i>'
+            html += proj_link(p.name,p.version)
+            if p.tag:
+                html += "<br/>(%s)"%proj_link(p.name,p.tag)
+            if p in local_projs:
+                html += '</td>'
+            else:
+                html += '</i></td>'
+        html += '</tr>'
+    html += '</table></body></html>'
+    return html
