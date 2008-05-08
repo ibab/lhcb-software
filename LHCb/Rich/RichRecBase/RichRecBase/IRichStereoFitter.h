@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoFitter
  *
  *  CVS Log :-
- *  $Id: IRichStereoFitter.h,v 1.3 2008-05-02 21:34:06 jonrob Exp $
+ *  $Id: IRichStereoFitter.h,v 1.4 2008-05-08 12:22:42 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
@@ -36,8 +36,8 @@ namespace Rich
     //--------------------------------------------------------------------------------------
     /** @class IStereoFitter IRichStereoFitter.h RichRecBase/IRichStereoFitter.h
      *
-     *  Interface for tool to perform a fit to a group of photons, as used by the Stereographic
-     *  PID algorithm
+     *  Interface for tool to perform a fit to a group of photons, as used by the 
+     *  Stereographic refitting PID algorithm
      *
      *  @author Luigi Delbuono  delbuono@in2p3.fr
      *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
@@ -71,13 +71,26 @@ namespace Rich
           minRingPhotons   ( 4      ),
           nthcPhotSigMax   ( 2      ),
           ncandsPerPixMax  ( 3      ),
-          maxBkgProb       ( 1e-3   ) { }
+          maxBkgProb       ( 999    )
+        { }
       public:
         Rich::ParticleIDType pidType; ///< The mass hypothesis for which the angle should be fitted
         int     minRingPhotons;       ///< Minimum allowed photons on the ring
         float   nthcPhotSigMax;       ///< Size of photons selection window in units of Cherenkov angle RMS
         int     ncandsPerPixMax;      ///< Maximum allowed number of candidate photons per pixel
         float   maxBkgProb;           ///< Maximum allowed background probability of photons
+      public:
+        /// Implement the ostream << printout method
+        friend inline std::ostream& operator << ( std::ostream& s,
+                                                  const Configuration& config )
+        {
+          return s << "[ pid= "   << config.pidType
+                   << " minRingPhotons="   << config.minRingPhotons
+                   << " nthcPhotSigMax="   << config.nthcPhotSigMax
+                   << " ncandsPerPixMax="  << config.ncandsPerPixMax
+                   << " maxBkgProb="       << config.maxBkgProb
+                   << " ]";
+        }
       };
 
       //--------------------------------------------------------------------------------------

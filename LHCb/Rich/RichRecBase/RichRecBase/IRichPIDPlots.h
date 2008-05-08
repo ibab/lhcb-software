@@ -5,7 +5,7 @@
  *  Header file for RICH tool interface : Rich::Rec::IPIDPlots
  *
  *  CVS Log :-
- *  $Id: IRichPIDPlots.h,v 1.2 2008-05-06 15:31:12 jonrob Exp $
+ *  $Id: IRichPIDPlots.h,v 1.3 2008-05-08 12:22:42 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -30,14 +30,8 @@ namespace LHCb
   class Track;
   class RichPID;
 }
-namespace Rich
-{
-  namespace Rec
-  {
-    class ITrackSelector;
-  }
-}
 
+/// The interface ID
 static const InterfaceID IID_IRichPIDPlots ( "IRichPIDPlots", 1, 0 );
 
 namespace Rich
@@ -77,10 +71,10 @@ namespace Rich
             minPt (   0 * Gaudi::Units::GeV ),
             maxPt ( 100 * Gaudi::Units::GeV ) { }
       public:
-        double minP;  ///< The minimum track momentum (MeV)
-        double maxP;  ///< The maximum track momentum (MeV)
-        double minPt; ///< The minimum track transverse (to z-axis) momentum (MeV)
-        double maxPt; ///< The maximum track transverse (to z-axis) momentum (MeV)
+        double minP;  ///< The minimum track momentum (MeV/c)
+        double maxP;  ///< The maximum track momentum (MeV/c)
+        double minPt; ///< The minimum track transverse (to z-axis) momentum (MeV/c)
+        double maxPt; ///< The maximum track transverse (to z-axis) momentum (MeV/c)
       };
 
     public:
@@ -91,7 +85,7 @@ namespace Rich
       /** Fill the plots for the given RichPID data object and PID hypothesis
        *
        *  @param[in] pid    Pointer to the RichPID data object to fill plots for
-       *  @param[in] hypo   The mass hypothesis to assume for this track
+       *  @param[in] hypo   The mass hypothesis to assume for this RichPID
        *  @param[in] config (Optional) Configuration object
        */
       virtual void plots( const LHCb::RichPID * pid,
