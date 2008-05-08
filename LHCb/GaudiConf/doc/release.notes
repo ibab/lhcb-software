@@ -2,6 +2,12 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r8 2008-05-08 ========================
+! 2008-05-08 - Marco Cattaneo
+ - RawData.opts: remove redundant (obsolete) options
+ - Add "monitors" property to LHCbApp configurable. When set to ["SC"] performs
+   StatusCode check
+
 !======================== GaudiConf v10r7 2008-04-17 ========================
 ! 2008-04-17 - Marco Cattaneo
  - Add LHCbApp configurable with default options for LHCb applications:

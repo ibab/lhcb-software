@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.1 2008-04-17 11:51:37 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.2 2008-05-08 13:51:31 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -14,6 +14,7 @@ class LHCbApp(ConfigurableUser):
        ,"skipEvents":             0 # events to skip
        ,"DDDBtag":    "DC06-latest" # geometry   database tag
        ,"condDBtag":  "DC06-latest" # conditions database tag
+       ,"monitors"  :  []           # monitor actions
         }
 
     def getProp(self,name):
@@ -21,6 +22,9 @@ class LHCbApp(ConfigurableUser):
             return getattr(self,name)
         else:
             return self.getDefaultProperties()[name]
+
+    def setProp(self,name,value):
+        return setattr(self,name,value)
 
     def defineDB(self):
         condDBtag = self.getProp("condDBtag")
@@ -47,6 +51,11 @@ class LHCbApp(ConfigurableUser):
         else:
             ApplicationMgr().EvtMax = evtMax
 
+    def defineMonitors(self):
+        if "SC" in self.getProp("monitors"):
+            ApplicationMgr().StatusCodeCheck = True
+
     def applyConf(self):
         self.defineDB()
         self.defineEvents()
+        self.defineMonitors()
