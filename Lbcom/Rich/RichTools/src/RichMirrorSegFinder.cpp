@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::MirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.26 2008-02-08 20:57:59 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.27 2008-05-08 13:13:42 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -58,7 +58,7 @@ Rich::MirrorSegFinder::~MirrorSegFinder() { }
 StatusCode Rich::MirrorSegFinder::initialize( )
 {
   // intialise base class
-  const StatusCode sc = Rich::ToolBase::initialize();
+  StatusCode sc = Rich::ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // clear mirror vectors
@@ -120,7 +120,10 @@ StatusCode Rich::MirrorSegFinder::initialize( )
     }
   }
   else // DC06 way
-    getMirrors_old();
+  {
+    sc = getMirrors_old();
+    if ( sc.isFailure() ) return sc;
+  }
 
   // checks and balances...
   if ( m_sphMirrors[Rich::Rich1][Rich::top].empty() &&
