@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRadiatorTool
  *
  *  CVS Log :-
- *  $Id: RichRadiatorTool.cpp,v 1.9 2008-04-28 09:32:10 jonrob Exp $
+ *  $Id: RichRadiatorTool.cpp,v 1.10 2008-05-08 12:39:50 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2006-03-01
@@ -56,14 +56,14 @@ StatusCode Rich::RadiatorTool::initialize ( )
 
   // RICH1 gas
   m_radiators[Rich::Rich1Gas].clear();
-  m_radiators[Rich::Rich1Gas].push_back( getDet<DeRichRadiator>(DeRichRadiatorLocation::Rich1Gas) );
+  m_radiators[Rich::Rich1Gas].push_back( getDet<DeRichRadiator>(DeRichLocations::Rich1Gas) );
 
   // RICH2 gas
   m_radiators[Rich::Rich2Gas].clear();
-  m_radiators[Rich::Rich2Gas].push_back( getDet<DeRichRadiator>(DeRichRadiatorLocation::Rich2Gas) );
+  m_radiators[Rich::Rich2Gas].push_back( getDet<DeRichRadiator>(DeRichLocations::Rich2Gas) );
 
   // Rich1 DetElem
-  const DetectorElement * rich1 = getDet<DetectorElement>(DeRichLocation::Rich1);
+  const DetectorElement * rich1 = getDet<DetectorElement>(DeRichLocations::Rich1);
 
   // aerogel
   const IDetectorElement::IDEContainer& detelemsR1 = rich1->childIDetectorElements();

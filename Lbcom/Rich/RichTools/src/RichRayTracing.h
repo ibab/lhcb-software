@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::RayTracing
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.39 2008-02-17 13:33:34 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.40 2008-05-08 12:39:50 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -143,8 +143,8 @@ namespace Rich
       if ( !m_deBeam[rich] )
       {
         m_deBeam[rich] = getDet<DeRichBeamPipe>( Rich::Rich1 == rich ?
-                                                 DeRichBeamPipeLocation::Rich1BeamPipe :
-                                                 DeRichBeamPipeLocation::Rich2BeamPipe );
+                                                 DeRichLocations::Rich1BeamPipe :
+                                                 DeRichLocations::Rich2BeamPipe );
       }
       return m_deBeam[rich];
     }

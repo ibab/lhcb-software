@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::TabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.16 2007-03-09 17:40:29 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.17 2008-05-08 12:39:50 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -70,9 +70,6 @@ namespace Rich
     // Initialization of the tool after creation
     StatusCode initialize();
 
-    // Finalization of the tool before deletion
-    StatusCode finalize();
-
   public: // methods (and doxygen comments) inherited from interface
 
     // Calculates the refractive index for a given radiator type at a
@@ -110,9 +107,6 @@ namespace Rich
 
   private: // Private data
 
-    /// Quantum Efficiency function.
-    //Rich1DTabProperty * m_QE;
-
     /// Pointers to RICHes
     std::vector<const DeRich*> m_riches;
 
@@ -121,9 +115,6 @@ namespace Rich
 
     /// Pointers to RICH radiator detector elements
     std::vector<DeRichRadiator *> m_deRads;
-
-    /// refractive index RMS values
-    std::vector<double> m_refI;
 
     /// refractive index RMS values
     std::vector<double> m_refRMS;

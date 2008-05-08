@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.36 2008-02-08 20:57:59 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.37 2008-05-08 12:39:50 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -382,10 +382,10 @@ Rich::SmartIDTool::pdPanelName( const Rich::DetectorType rich,
   {
     // Backwards compat for DC06
     const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichHPDPanelLocation::Rich1Panel0,
-            &DeRichHPDPanelLocation::Rich1Panel1 },
-          { &DeRichHPDPanelLocation::Rich2Panel0,
-            &DeRichHPDPanelLocation::Rich2Panel1 } };
+      = { { &DeRichLocations::Rich1Panel0,
+            &DeRichLocations::Rich1Panel1 },
+          { &DeRichLocations::Rich2Panel0,
+            &DeRichLocations::Rich2Panel1 } };
     return *dc06Names[rich][panel];
   }
 }

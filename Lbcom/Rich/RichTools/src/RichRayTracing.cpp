@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.47 2008-02-21 16:38:30 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.48 2008-05-08 12:39:50 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -74,8 +74,8 @@ StatusCode Rich::RayTracing::initialize()
   acquireTool( "RichSnellsLawRefraction", m_snellsLaw   );
 
   // RICH detector elements
-  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
-  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   // photo detector panels
   for ( unsigned int rich=0; rich<m_photoDetPanels.size(); ++rich )
@@ -151,10 +151,10 @@ Rich::RayTracing::pdPanelName( const Rich::DetectorType rich,
   {
     // Backwards compat for DC06
     const std::string* dc06Names[Rich::NRiches][Rich::NHPDPanelsPerRICH]
-      = { { &DeRichHPDPanelLocation::Rich1Panel0,
-            &DeRichHPDPanelLocation::Rich1Panel1 },
-          { &DeRichHPDPanelLocation::Rich2Panel0,
-            &DeRichHPDPanelLocation::Rich2Panel1 } };
+      = { { &DeRichLocations::Rich1Panel0,
+            &DeRichLocations::Rich1Panel1 },
+          { &DeRichLocations::Rich2Panel0,
+            &DeRichLocations::Rich2Panel1 } };
     return *dc06Names[rich][panel];
   }
 }
