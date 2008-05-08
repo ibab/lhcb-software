@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.11 2008-05-08 11:19:57 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.12 2008-05-08 15:38:53 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -148,9 +148,10 @@ class Project:
     """
     Informations about a project.
     """
-    def __init__(self, name, version, buildtimedeps = None, runtimedeps = None):
+    def __init__(self, name, version, tag = None, buildtimedeps = None, runtimedeps = None):
         self.name = name
         self.version = Version(version)
+        self.tag = tag
         if buildtimedeps is None:
             self.buildtimedeps = []
         else:
@@ -165,10 +166,13 @@ class Project:
     def addRunTimeDep(self, proj_name):
         if proj_name not in self.runtimedeps:
             self.runtimedeps.append(proj_name)
+    def __str__(self):
+        pass
     def __repr__(self):
-        return "Project(name=%r,version=%r,buildtimedeps=%r,runtimedeps=%r)" % \
+        return "Project(name=%r,version=%r,tag=%r,buildtimedeps=%r,runtimedeps=%r)" % \
                 (self.name,
                  str(self.version),
+                 self.tag,
                  self.buildtimedeps,
                  self.runtimedeps)
     
@@ -183,7 +187,7 @@ class Release:
     """
     __releases__ = {}
     __unversioned_projects__ = {}
-    def __init__(self, name, projects = None, base = None, date = None, tag = None):
+    def __init__(self, name, projects = None, base = None, date = None):
         if name in self.__releases__:
             raise DuplicatedReleaseError(name)
         self.name = name
@@ -193,14 +197,17 @@ class Release:
             projects = []
         for (k,v) in projects:
             self.projects[k] = v
-        self._date = date
-        self._tag = tag
+        if date:
+            self.date = date
+        else:
+            self.date = DEFAULT_RELEASEDATE
         self.__releases__[name] = self
         
     def __repr__(self):
-        return "Release(name=%r,projects=%r,base=%r)"%(self.name,
-                                                       self.projects.items(),
-                                                       self.base)
+        return "Release(name=%r,projects=%r,base=%r,date=%r)"%(self.name,
+                                                               self.projects.items(),
+                                                               self.base,
+                                                               self.date)
     def allProjects(self):
         """
         Returns a list of all the projects available in the release (either directly or
@@ -224,13 +231,14 @@ class Release:
         
     def __str__(self):
         s = "Release '%s'"%self.name
-        if self.tag:
-            s += ", tag '%s'"%self.tag
         if self.date > DEFAULT_RELEASEDATE:
-            s += ", date %4d-%02d-%02d"%self.date
+            s += " (%4d-%02d-%02d)"%self.date
         s += ":"
         for p in self.allProjects():
-            s += "\n\t%s\t%s"%(p.name,p.version)
+            if p.tag:
+                s += "\n\t%s\t%s\t(%s)"%(p.name,p.version,p.tag)
+            else:
+                s += "\n\t%s\t%s"%(p.name,p.version)
         return s
     def __contains__(self, key):
         return ( key in self.projects ) or \
@@ -249,29 +257,6 @@ class Release:
         if key in self.projects:
             raise DuplicatedProjectError(self.name, key)
         self.projects[key] = Project(name=key, version=value)
-    def __getattr__(self, key):
-        if key == "date":
-            if self._date:
-                return self._date
-            elif self.base:
-                return self.__releases__[self.base].date
-            else:
-                return DEFAULT_RELEASEDATE
-        elif key == "tag":
-            if self._tag:
-                return self._tag
-            elif self.base:
-                return self.__releases__[self.base].tag
-            else:
-                return None
-        raise AttributeError(key)
-    def __setattr__(self, key, value):
-        if key == "date":
-            self._date = value
-        elif key == "tag":
-            self._tag = value
-        else:
-            self.__dict__[key] = value
     def add(self, project):
         if project.name in self.projects:
             raise DuplicatedProjectError(self.name, project.name)
@@ -348,11 +333,11 @@ class _ReleaseSAXHandler(ContentHandler):
                 date = DEFAULT_RELEASEDATE
             self._currentRelease = Release(name_attr,
                                            base = attrs.get(u'base', None),
-                                           date = date,
-                                           tag  = attrs.get(u'tag',  None) )
+                                           date = date )
         elif name == u'project':
             self._currentProject = Project(name = name_attr,
-                                           version = attrs.getValue(u'version'))
+                                           version = attrs.getValue(u'version'),
+                                           tag  = attrs.get(u'tag',  None))
             self._currentRelease.add(self._currentProject)
         elif name == u'unversioned_project':
             self._currentProject = Project(name = name_attr,
@@ -511,10 +496,11 @@ def generateXML(withSchema = True, stylesheet = "releases_db.xsl"):
         xml += '  <release name="%s"'%rel.name
         if rel.base: xml += ' base="%s"'%rel.base
         if rel.date > DEFAULT_RELEASEDATE: xml += ' date="%4d-%02d-%02d"'%rel.date
-        if rel.tag: xml += ' tag="%s"'%rel.tag
         xml += '>\n'
         for p in rel.values():
-            xml += '    <project name="%s" version="%s">\n'%(p.name,p.version)
+            xml += '    <project name="%s" version="%s"'%(p.name,p.version)
+            if p.tag: xml += ' tag="%s"'%p.tag
+            xml += '>\n'
             for dep in p.buildtimedeps:
                 xml += '      <buildtimedep name="%s"/>\n'%dep
             for dep in p.runtimedeps:
