@@ -4,13 +4,472 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v31r0">2008-03-20 - GaussSys v31r0</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. DC06 geometry no longer supported
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r4 (and Gaudi v19r8)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.0 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r1p2 (based on geant4.8.3.patch01)
+   <b>DecFiles v14r2</b>, ParamFiles v7r1 
+   DDDB v1r2, FieldMap v4r7, XmlVis v1r0</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   <b>pythia8 107.1</b></A></H3>
+<H3><A NAME="Details">
+   Development version.
+   Partially built on Win32, temporarly swith off all generators to test
+   new builds by LCG.
+   Remove v200601 options since cannot be supported anymore.
+   Introduce packages for Bcm, temporarly here also BcmDet, to be moved to
+   LHCb.
+   Temporarly remove extra generators that are extensions to Pythia because
+   of problems for linking executable: BcVegPy, LbBcVegPy, LbAlpGen and 
+   LbHidValley
+   Provide python steerings (lhcb-200802.py and lhcb-200801.py) for gaudirun.py
+</A></H3>
+
+!======================== Gauss v31r0 2008-05-08 =============================
+! 2008-05-08 - Gloria CORTI
+ - Make Generator and Simulation members of a unique Gauss sequencer, instead
+   of TopAlgorithms. This allow to process with Geant4 only events satisfying
+   a given conditions in generator, eg. cuts on combined events.
+   . Gauss.opts
+ - Use DDDB tag geometry when reading a file
+   . GaussRead.opts
+ - Introduce physics list to declare unknown particles to G4 as listed
+   below for LHEP
+   . PhysList-QSGP.opts
+ - Fix problem picking up options from wrong area
+   . Gauss_Ganga.py
+
+! 2008-05-07 - Gloria CORTI
+ - Use latest versions of DecFiles v14r3
+ - Fix version of generator data packages (MIBData v1r0, MCatNLOData v1r1)
+ - Use XmlVis v1r5
+ - Remove special executables for extra generators. In addition temporarly
+   switch off extension to Pythia because of circular dependency in loading
+   of overwritten routines as dispatcher of the extentions
+   Temporarly off: LbAlpGen
+                   LbBcVegPy
+                   LbHidValley
+ - Introduce use of the monitoring package for BCM (BcmMoniSim v*)
+ - Do not build LbPythia8 on Window since library not available yet from
+   LCG_Generators
+ - Introduce new steering options for latest geometry tag as available in
+   SQLDDDB version used and having hits in TT (so DC06 TT geometry)
+   . lhcb-200802.opts                       - NEW
+   . lhcb-200802-BOff.opts                  - NEW
+   . lhcb-200802-SimPhase.opts              - NEW
+   . lhcb-200802-450GeV-OpenVelo-BOff.opts  - NEW
+ - Introduce python scripts to run with gaudirun.py for latest geometries
+   . lhcb-200801.py                 - NEW
+   . lhcb-200802.py                 - NEW
+ - Introduce example python script to specify event type and name output
+   files depending on that. It can be used with any of the geomtries.
+   . EvtType.py                     - NEW
+     eg. to use it
+         lxplus> gaudirun.py $GAUSSOPTS/lhcb-200802.py $GAUSSOPTS/EvtType.py
+ - Introduce new options to be added to standard "lhcb-20080x.opts" to
+   generate scollisions in the center of the LHCb cavern (at 11.22m)
+   . CollisionsCenterOfCavern.opts  - NEW
+ - Introduce BCM after TT in geometry to simulate by default, since it is not
+   available for lhcb-200801 geometry, switch it off in that case
+   . SimGeometry.opts
+   . lhcb-200801.opts
+ - Provide options to append to standard "lhcb-20080x.opts" to simulate
+   BCM upstream of the VELO.
+   Since this is not for physics studies they need to be included exclicitely.
+   It adds the geometry of the area, including shielding wall and add BCM
+   sensitive detectors and writes their hits on the sim file.
+   . BCMSimulation.opts
+ - Provide options to append to standard "lhcb-20080x.opts" to simulate
+   possible beam scintillators upstream of the VELO.
+   They need to be included exclicitely.
+   It adds the geometry of the area, including shielding wall and add BCM
+   sensitive detectors and writes their hits on the sim file.
+   . BeamScintillators.opts
+ - Remove no longer supported DC06 geometry related options (cannot generate
+   events with RICH DC06 geometry becasue of incompatibility in the code)
+   . v200601.py                     - REMOVED
+   . v200601.opts                   - REMOVED
+   . v200601-BOff.opts              - REMOVED
+   . v200601-450GeV-xxxx.opts       - REMOVED
+   . v200601-SimPhase.opts          - REMOVED
+
+! 2008-04-28 - Patrick Robbe
+ - Phys-LHEP.opts: add new physics list which declares unknown particles to
+   Geant4.
+
+! 2008-02-08 - Gloria CORTI
+ - Use latest versions of ParamFiles v7r1 and DecFiles v14r1
+ - Adapt to change in the options for catalog:
+   PoolDbCacheSvc.Catalog = {...}; is now FileCatalog.Catalogs = {...};
+   . Gauss.opts
+ - Introduce new steering options for evolving survey geometry as tagged in
+   SQLDDD
+   . lhcb-200801.opts - NEW
+
+!========================== GENSER v4r0 2008-04-28 ===========================
+! 2008-04-28 - Gloria CORTI
+ - cmt/requirements: move to use latest version of pythia8 compiled with
+   HepMC 1.26 in LCG as from our request (107.1)
+
+! 2008-04-14 - Gloria CORTI, Hubert DEGAUDENZI, Patrick ROBBE
+ - cmt/requirements: take latest version of pythia6 (416.2) and change linking
+   statement to link always with block data in pydata.o as avalaible from
+   LCG. This fixes core dump at run time for not having loaded correctly
+   the block data and correcly forces loading of overwritten pythai6 routines
+
+! 2008-03-18 - Gloria CORTI
+ - cmt/requirements: force linking of routines in pythia6_dummy
+
+! 2008-03-16 - Patrick Robbe
+ - src/pythia6: new repository to contain Pythia Gauss specific Fortran
+   functions
+ - cmt/requirements: compilation of pythia6forgauss library for routines
+   used in Gauss
+
+!========================== EvtGen v9r1 2008-03-20 ===========================
+! 2008-03-20 - Gloria CORTI
+ - Pythia.F: Remove dummy routine calling PYTIME. This requires changes in
+   GENSER requirement file to resolve all symbols in libpythia6_dummy.so
+   even when not called directly.
+!========================== EvtGen v9r0 2008-02-08 ===========================
+! 2008-01-08 - Patrick Robbe
+ - Pythia.F: Add dummy subroutine calling PYTIME to force loading of
+   libpythia6_dummy.so in Gauss, with the new compilation options in
+   CMT.
+
+!====================== Generators v8r0 2008-05-06 ===========================
+! 2008-05-06 - Gloria CORTI
+ - New algorithm to allow filtering of "merged" events, i.e. events where
+   a pp-collision is alwasys forced togheter with a MIB event, eg. beam
+   gas in Experimental area, in Long Straight Section or quartiary halo.
+   In this case two algorithms are executed one after the other and global
+   event cuts need to be applied afterward, since the one in "Generation" is
+   only applied on the event generated by the given instance of the algorithm.
+   . src/component/MergedEventsFilter.{h,cpp} - NEW
+
+ - Introduce options to allow generation of pp-collisions elsewhere than
+   in IP8, for example in the center of the cavern. This can also be used
+   for interactions of satellite bunches.
+   Give mean z position of vertex as an option, "MeanZ" (Default = 0.0 as
+   in IP8, for center of the cavern it should be set to 11.22 m).
+   Can also set option to fix if time of interaction vs T0 of IP8 occured
+   before, after or at the same time, setting "SignOfTimeVsT0" (Default = 0.0
+   as in IP8, can be -1 or 1 in addition)
+   . src/component/BeamSpotSmearVertex.{h,cpp}
+
+! 2008-05-05 - Gloria CORTI
+ - Introduce direction of beam to take into account that time of interaction
+   for beam 2 with beam gas has to be negative to have the beam arriving at
+   t = 0 in IP8. To allow for events where beam 1 and beam 2 are togheter
+   the "BeamDirection" can be set to "dummy" zero value in which case the
+   time of interaction is set to zero. The option is called "BeamDirection"
+   and can have integer values -1, 1 and 0 (Default = 1, as for beam 1)
+   . src/component/FlatZSmearVertex.{h,cpp}
+   . src/component/UniformSmearVertex.{h,cpp}
+
+! 2008-03-20 - Gloria CORTI
+ - Temporarly exclude from library MuXMaxBias.cpp because of compilation
+   problems
+   . cmt/requirements
+ - Put time of vertex as z/c, assuming these smearing are used for beam
+   gas so the time on which the occur is the time the beam has travelled
+   at that z from IP.
+   . src/component/FlatZSmearVertex.cpp, UniformSmearVertex.cpp
+
+! 2008-03-16 - Patrick Robbe
+ - src/Lib/pyr.F: move to GENSER package
+
+! 2008-01-25 - Patrick Robbe
+ - Special.cpp: set pile-up generation tool as a private tool
+!====================== Generators v7r7 2007-12-19 ===========================
+! 2007-12-06 - Vanya BELYAEV
+ - src/Lib/ExternalGenerator.cpp
+   src/Lib/Signal.cpp
+   Allow the production of inclusive taus with SignalPlain tool
+
+!========================= LbPythia v7r1 2008-04-29 ==========================
+! 2008-03-16 - Patrick Robbe
+ - src/Lib: move overriden Pythia Fortran libraries to GENSER package
+!========================= LbPythia v7r0 2008-02-08 ==========================
+! 2008-01-27 - Patrick Robbe
+ - Pythia.h/.cpp: Add interface to PYSLHA function
+ - PythiaProduction: Add possibility to call PYSLHA using a Les Houches
+   Accord decay file
+
+! 2008-01-24 - Patrick Robbe
+ - Allow to choose the limit to apply to a particle to consider it as
+   a zero lifetime particle: New job option "WidthLimit" for
+   PythiaProduction tool.
+!========================= LbPythia v6r0 2008-01-08 ==========================
+! 2008-01-08 - Gloria CORTI for Victor COCO
+ - Allow to chose the type of leptons, their mother and the higgs via options,
+   passing their names.
+   The corresponding modified decay files are in DecFiles v14r0.
+   . src/component/PythiaHiggsType.{h,cpp}
+
+!========================= LbHijing v3r2 2008-04-11 ==========================
+! 2008-04-10 - Gloria CORTI
+ - Remove obsolete LbHijing_load.cpp
+
+!======================= ParticleGuns v4r0 2008-02-12 =======================
+! 2008-02-12 - Gloria CORTI
+ - Remove obsolete ParticleGun_load.cpp (imcompatible with Gaudi < 19)
+
+! 2008-02-12 - Wouter Hulsbergen
+ - Adapted OTCosmicGenerator to change in ROOT::Math::Transform3D
+
+! 2008-01-24 - Giulia Manca
+ - Added CosmicsGun, to generate cosmic rays in the all detector,
+  accorded to the model described in hep-ph 0604145.
+
+!=========================== SimSvc v5r1 2007-02-08 ==========================
+! 2007-12-12 - Gloria Corti
+ - Adapt to location of Simulation.xml in Gauss package for default file
+   . SimulationSvc.cpp
+
+!========================= GaussKine v2r0 2008-05-07 =========================
+ 2008-05-07 - Gloria CORTI
+ - Remove GaussKine_load.cpp obsolete for Gaudi v19
+
+! 2008-04-26 - Patrick Robbe
+ - GeneratorToG4.cpp: specify mass of shortlived particles
+
+!======================== GaussAlgs v3r2 2008-05-07 ===========================
+! 2008-05-07 - Gloria CORTI
+ - Change printout of number of hits from info() to debug() to reduce
+   log file during production
+   . GiGaGetHitsAlg.cpp
+
+ 2008-04-10 - Gloria CORTI
+ - Remove obsolete GaussAlgs_load.cpp
+
+!======================== GaussTools v13r4 2008-05-07 ========================
+ 2008-04-28 - Patrick Robbe
+ - src/Components/GaussEventActionHepMC: modifications to allow usage
+   of unknown particles
+
+!======================== GaussTools v13r3 2008-02-08 ========================
+! 2008-02-08 - Gloria CORTI
+ - Insert private preloading for Mac OS as provided by Brett VIREN
+
+! 2007-11-30 - Sajan Easo and Gloria Corti
+ - For Activating the creation of RICH-HpdBackscattered electrons
+   the files GaussPostTrackAction.cpp and GaussTrackActionHepMC.cpp modified.
+   This also required an associated change in the MCEvent/../MCVertex.xml.
+   This declares the Backscatering as one of the sources of particles.
+
+!========================= GaussRICH v8r1 2008-05-07 =========================
+!2008-04-25 - Sajan Easo
+ - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+
+!2008-04-20 - Sajan Easo
+ - Fixed a typo in RichG4StepAnalysis3.cpp , which was caught only with
+   32-bit compilation.
+
+!2008-04-15 - Sajan Easo
+ - Fixed a problem in RichG4StepAnalysis6.cpp and RichG4Analysis3.cpp
+   for the HpdSMaster names.
+ - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.
+
+!2008-04-11 - Sajan Easo
+ - Added the minor changes needed to accomodate the new Rich1 Flat mirrors
+   geometry structure in the database. The name changes are kept backward
+   compatible so that one can run with earlier versions of db released in 2008.
+
+!2008-03-31 - Sajan Easo
+ - Added a switch to Rich.opts to override the Hpd maxQE value in the DB.
+   The RichG4TrackActionPhotOpt is modified to use this. The default of the
+   switch is 'false', which means the DB value is used.
+   To override this, in Rich.opts, set RichHpdMaxQEOverRideDB=true and
+   assign the new value to RichHpdMaxQEValueWhenOverRideDB
+
+!2008-03-27 - Sajan Easo
+ - Made changes to accomodate the recent changes in xml geometry for RICH,
+   which created one logical volume per hpd. This was to simulate the
+   Silicon chip shifts inside the hpd.
+   The changes are in RichG4GaussPathNames.h and RichG4StepAnalysis3.cpp and
+   in the part making a test analysis reconstruction of data from hpds.
+ - cleanup of the way the sensitive detector name is used in RichSensDet
+!========================= GaussRICH v8r0 2008-02-20 =========================
+! 2008-02-20 - Gloria CORTI
+ - Increase major version number since it does NOT work with DC06 geometry
+   but only staring with head-20080130.
+! 2008-01-31 - Rob Lambert, Sajan Easo
+ - Fixed a problem in RichG4StepAnalysis6.cpp which was preventing the flags
+   for the various hpd reflections from being recorded into the userparameters
+   for the track and hence into the RichG4hit.
+
+! 2008-01-30 - Sajan Easo
+ - Fixed a problem with transport of backscattered photoelectron and the hit
+   it creates by modifying RichHpdSiEnergyLoss.cpp
+
+! 2008-01-29 - Sajan Easo, Marco Musy
+ - Added the reading of HPD QE Tables from the conditions DB. This would read
+   one table per HPD. An switch is available in Rich.opts to activate the
+   reading of the nominal QE table from sqldddb.
+   The default is set to reading the tables from Conditions DB.
+ - The HPD Demag reading is modified to read from the Conditions Database
+   via the RichDet so that the magnetic field distortions can be applied
+   directly from the conditions database.
+   A switch is available in Rich.opts to use the old cross-focussing parameters
+   used for DC06 which are useful for the no-magetic field running.
+ - The default for the HPD PSF is set to the new value set after DC06. This
+   would give a slightly worse resolution than that used for DC06.
+   A Switch is available in Rich.opts to use the DC06 compatible PSF value.
+ - In RichG4StepAnalysis5.cpp modified the the mirror number assignment in
+   accordance with the new Rich1 and Rich2 mirror configurations from Jan2008
+   in the database. In Rich1, this means using the 4 CMA mirrors and
+   in Rich2 this means using the envelope volumes of the mirror.
+
+! 2008-01-29 - Chris Jones
+ - Add summary printout for each type of HPD reflection background, not just
+   an overall summary.
+
+! 2008-01-28 - Chris Jones
+ - Activate the filling of the HPD reflection flags in the MCRichHits by
+   default.
+   Requires the head of Event/MCEvent
+ - Tidy up things a little.
+
+! 2008-01-25 - Sajan Easo
+ - In RichHpdPhotoElectricEffect and HpdSiEnergyLoss processes, the
+   RichPhotoelectron is activated insted of the normal  G4Electron as the
+   secondary particle created. This is seems to work ok with Gaussv30r5.
+ - GetMCRichHitsAlg.cpp and GetMCRichOpticalPhotonsAlg.cpp are modified in
+   preparation for modifications in the MCRichHit and MCRichOpticalPhoton
+   classes. The changes are commented out for now. The MCRichHit is expected
+   to have additional flags for the new HPD simulation.
+   The MCRichOpticalPhoton class is expected to have the photon
+   coordinate on the hpd quartz window.
+
+! 2008-01-23 - Sajan Easo
+ - In the RichG4Hit add the location of the Photon incidence point on the
+   external surface of the HPD quartz window so that it can be copied to the
+   MCRichOpticalPhoton class for Hpd debugging studies. This is done from the
+   Step action named RichG4StepAnalysis6.cpp and is activated only with the
+   RICH verbose output flag.
+
+! 2008-01-21 - Sajan Easo, Rob Lambert
+ - Changes in accordance with the new geometry changes in RICH in January 2008.
+ - Change in RichHpdPhotoElectricEffect to account for an extra layer of
+   containerof hpd array in RICH2.
+ - New Hpd Simulation from Rob Lambert which addes chromium ring around each
+   hpdquartz window. It also has new values for the reflectivities for the
+   various optical boundaries in the hpd,rescaling of QE table and an improved
+   simulation of the backscattering inside the hpds. These involves changes
+   mainly in RichHpdPhotoElectricEffect.cpp,RichHpdEnergyLossProcess.cpp,
+   RichHpdProperties.cpp, RichG4OpBoundaryprocess.cc and the files related to
+   these. The photons which are reflected in the various hpd boundaries and
+   the photoelectrons created by backscattering process are flagged in the
+   RichG4hit class. One result of this is to add about 10% noise
+   hits to the set of rich hits.
+ - HPD Max QE is seto 0.45 in the new sqldddb. This has the effect of
+   increasing the CPU  Time.
+
+!======================= GaussTracker v6r1 2008-05-06 ========================
+! 2008-05-06 - Gloria CORTI
+ - Introduce as option possibility to not require dE/dx in the sensitive
+   detector to store the hit. This allow to store hits even for geantinos
+   or when switching off the energy loss. The options is called "RequireEDep"
+   and is a bool (Default = true). In addition require that dE/dx > 0 rather
+   than != 0.
+   Example: to switch off requiring dE/dx for TT the option is
+            GiGaGeo.TTSDet.RequireEDep = false;
+   . src/GiGaSensDetTracker.{h,cpp}
+
+! 2008-04-10 - Gloria CORTI
+ - Change name of property from singular ("Detector") to plural ("Detectors")
+   to reflect the change from a string to an array of string (see entry of
+   2008-02-14). Add explanation to properties.
+   . src/GetTrackerHitsAlg.cpp
+   . options/TrackersHits.opts
+
+! 2008-02-14 - Magnus LIENG
+ - Changed option "Detector" to accept an array of strings. The algorithm can
+   now deal with detectors splitt over several detector locations like the
+   BCM that are in UpstreamRegion and BeforeMagnetRegion)
+   . src/GetTrackerHitsAlg.{h,cpp}
+   . options/TrackersHits.opts
+
+!====================== GaussPhysics v5r1 2008-05-07 =========================
+! 2008-05-07 - Gloria CORTI for Neal GUEISSAZ
+ - Add neutralino particle definition for Geant4
+   . G4Neutralino.{h,cpp}
+
+! 2008-05-06 - Gloria CORTI
+ - Remove declaration of tool from GaussPhysics_load.cpp that is not necessary
+   with Gaudi v19
+
+! 2008-04-26 - Patrick Robbe
+ - Remove unnecessary particle definitions (shortlived particles)
+ - Add GiGaPhysUnknownParticles to define special long-lived particles
+   and "unknown" particles
+
+!====================== GaussMonitor v5r1 2008-05-07 =========================
+! 2008-05-07 - Gloria CORTI
+ - Additional histograms of z coordinates of primay vertex with wider
+   boundaries
+   . src/GenMonitorAlg.{h,cpp}
+
+! 2008-04-10 - Gloria CORTI
+ - Introduce histograms or entry in ntuple to monitor time of primary vertex
+   . src/GenMonitorAlg.{h,cpp}
+   . src/MCTruthFullMonitor.{h,cpp}
+
+!======================== MuonMoniSim v2r3 2008-02-08 ========================
+!  2008-02-03 - Alessia Satta
+ - add counter for hit generated outside gaps volume
+
+
+!========================= BcmMoniSim v1r0 2008-02-15 =========================
+! 2008-02-15 - Magnus Lieng
+ - Created a new package BcmMoniSim.
+
+
+!========================= BcmDet v1r0 2008-02-11 ==========================
+! 2008-02-11 - Magnus Lieng
+ - Created a new package BcmDet
+
+!======================== VisSvc v5r2 2008-02-08 =============================
+! 2007-01-18 - Jeroen van Tilburg
+ - Get the name of the material from registry()->identifier(). Since this
+   returns the full path. The method name() only returns the last part of
+   the path.
+
+!=========================== XmlVis v1r5 =====================================
+!=========================== XmlVis v1r4 =====================================
+! 2008-02-21 - Thomas Ruf
+ - added nice colors for Ecal
+ - added colours for Infrastructure
+!=========================== XmlVis v1r3 2008-02-04 ==========================
+! 2008-01-31 - "Antonis Papanestis"
+ - New RICH attributes for the composite RICH1 spherical mirrors and the
+   extra volumes around the RICH2 spherical mirrors and HPDs.
+!=========================== XmlVis v1r2 2008-01-28 ==========================
+! 2008-01-18 - Jeroen van Tilburg
+ - Changed a few things in TT attributes.
+ - Added Copper to StandardMaterials.
+ - Made Vacuum transparent.
+!=========================== XmlVis v1r1 2007-12-19 ==========================
+! 2007-12-12 - Thomas Ruf
+ - Imported IT and TT attributes from Jeroen Tilburg and
+   added a few more things. Tried to optimize for an event display
+ - Made a first implementation for OT attributes
+
+!=============================================================================
 </PRE><H1><A NAME="v30r5">2007-12-10 - GaussSys v30r5</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Incompatible with DC06.</A></H2>
 <H3><A NAME="Use">This version uses:
    <b>LHCb v23r1 (and Gaudi v19r5)</b>
    pythia6 411.2, photos 215.2, lhapdf 5.3.0 (via LCG_GeneratorsInterfaces)
    HepMC 1.26.02 (via LCG_Interfaces)
-   Geant4 v83r1 (based on geant4.8.3.patch01)
+   Geant4 v83r1p1 (based on geant4.8.3.patch01)
    <b>DecFiles v13r16</b>, ParamFiles v7r0 
    DDDB v1r2, FieldMap v4r7, XmlVis v1r0</A></H3>
 <H3><A NAME="Exe">Used by GaussXXX executables:
