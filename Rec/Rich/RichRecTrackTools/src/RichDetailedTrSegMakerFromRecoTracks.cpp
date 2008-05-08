@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.3 2008-05-06 19:15:33 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.4 2008-05-08 13:28:21 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -84,8 +84,8 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   // Type of track segments to create
   declareProperty( "SegmentType", m_trSegTypeJO = "AllStateVectors" );
 
-  m_minRadLength[Rich::Aerogel]  = 20*Gaudi::Units::mm;
-  m_minRadLength[Rich::Rich1Gas] = 800*Gaudi::Units::mm;
+  m_minRadLength[Rich::Aerogel]  =   20*Gaudi::Units::mm;
+  m_minRadLength[Rich::Rich1Gas] =  800*Gaudi::Units::mm;
   m_minRadLength[Rich::Rich2Gas] = 1500*Gaudi::Units::mm;
   declareProperty( "MinRadiatorPathLength", m_minRadLength );
 
@@ -143,7 +143,8 @@ StatusCode DetailedTrSegMakerFromRecoTracks::initialize()
     return Error( "Unknown RichTrackSegment type " + m_trSegTypeJO );
   }
 
-  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : " << m_minRadLength << " mm " << endreq;
+  info() << "Min radiator path lengths (aero/R1Gas/R2Gas) : " 
+         << m_minRadLength << " mm " << endreq;
 
   return sc;
 }
@@ -343,17 +344,19 @@ constructSegments( const ContainedObject * obj,
     if ( entryStateOK && exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
-                                            << " Zexit=" << intersects2.back().exitPoint().z() << endreq;
+                                            << " Zexit=" << intersects2.back().exitPoint().z() 
+                                            << endreq;
 
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Checking entry point is at final z=" << entryPoint1.z() << endreq;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z() << endreq;
+        verbose() << "  Checking exit point is at final z=" << intersects2.back().exitPoint().z() 
+                  << endreq;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
-
+      
     }
     else if ( entryStateOK )
     {
@@ -374,7 +377,8 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint1.z() << endreq;
       const bool sc1 = moveState( entryPState, entryPoint1.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z() << endreq;
+        verbose() << "  Checking exit point is at final z= " << intersects1.back().exitPoint().z() 
+                  << endreq;
       const bool sc2 = moveState( exitPState, intersects1.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -395,7 +399,8 @@ constructSegments( const ContainedObject * obj,
         verbose() << "  Checking entry point is at final z= " << entryPoint2.z() << endreq;
       const bool sc1 = moveState( entryPState, entryPoint2.z(), entryPStateRaw );
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z() << endreq;
+        verbose() << "  Checking exit point is at final z= " << intersects2.back().exitPoint().z() 
+                  << endreq;
       const bool sc2 = moveState( exitPState,  intersects2.back().exitPoint().z(), exitPStateRaw );
       sc = sc1 && sc2;
 
@@ -431,7 +436,8 @@ constructSegments( const ContainedObject * obj,
         = deBeam(rad)->intersectionPoints( entryPState->position(), vect, inter1, inter2 );
 
       if (msgLevel(MSG::VERBOSE))
-        verbose() << "  --> Beam Intersects : " << intType << " : " << inter1 << " " << inter2 << endreq;
+        verbose() << "  --> Beam Intersects : " << intType << " : " 
+                  << inter1 << " " << inter2 << endreq;
 
       sc = true;
       if ( intType == DeRichBeamPipe::NoIntersection )
@@ -466,7 +472,8 @@ constructSegments( const ContainedObject * obj,
         delete entryPState;
         delete exitPState;
         if (msgLevel(MSG::VERBOSE))
-          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting." << endreq;
+          verbose() << "    --> Error fixing radiator entry/exit points for beam-pipe. Quitting." 
+                    << endreq;
         continue;
       }
 
@@ -633,14 +640,15 @@ constructSegments( const ContainedObject * obj,
 //====================================================================================================
 // creates middle point info
 bool
-DetailedTrSegMakerFromRecoTracks::createMiddleInfo( const Rich::RadiatorType rad,
-                                                    LHCb::State *& fState,
-                                                    const LHCb::State * fStateRef,
-                                                    LHCb::State *& lState,
-                                                    const LHCb::State * lStateRef,
-                                                    Gaudi::XYZPoint & midPoint,
-                                                    Gaudi::XYZVector & midMomentum,
-                                                    LHCb::RichTrackSegment::StateErrors & errors ) const
+DetailedTrSegMakerFromRecoTracks::
+createMiddleInfo( const Rich::RadiatorType rad,
+                  LHCb::State *& fState,
+                  const LHCb::State * fStateRef,
+                  LHCb::State *& lState,
+                  const LHCb::State * lStateRef,
+                  Gaudi::XYZPoint & midPoint,
+                  Gaudi::XYZVector & midMomentum,
+                  LHCb::RichTrackSegment::StateErrors & errors ) const
 {
   if (msgLevel(MSG::VERBOSE))
     verbose() << "   --> Creating middle point information" << endreq;

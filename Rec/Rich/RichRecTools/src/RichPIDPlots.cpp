@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.2 2008-05-06 15:33:38 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.3 2008-05-08 13:27:12 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -27,7 +27,7 @@ PIDPlots::PIDPlots( const std::string& type,
   declareInterface<Rich::Rec::IPIDPlots>(this);
   // JOs
   declareProperty( "HistoBins",   m_bins = 50 );
-  declareProperty( "ExtraHistos", m_extraHistos = true );
+  declareProperty( "ExtraHistos", m_extraHistos = false );
 }
 
 PIDPlots::~PIDPlots() {}
