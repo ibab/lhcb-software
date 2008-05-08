@@ -48,10 +48,10 @@ MagFieldReader.OutputLevel = 2;
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 // Uncomment to switch to real map, set up one file for each quadrant:
 //MagneticFieldSvc.UseRealMap     = true;
-//MagneticFieldSvc.FieldMapFileQ1 = "field048.c1.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ2 = "field048.c2.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ3 = "field048.c3.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ4 = "field048.c4.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ1 = "$FIELDMAPROOT/cdf/field048.c1.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ2 = "$FIELDMAPROOT/cdf/field048.c2.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ3 = "$FIELDMAPROOT/cdf/field048.c3.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ4 = "$FIELDMAPROOT/cdf/field048.c4.vp.cdf";
 
 //Uncomment for AnalyticFieldSvc testing
 //ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
