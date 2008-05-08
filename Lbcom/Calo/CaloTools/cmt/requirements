@@ -1,12 +1,28 @@
-# $Id: requirements,v 1.16 2002-11-13 21:35:04 ibelyaev Exp $
+# $Id: requirements,v 1.17 2008-05-08 09:16:39 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# Created    : 2008-05-08
+# Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
-# Created    : 29/10/2001
-# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
-# =============================================================================
-package            CaloTools
-version            v5r0
+package             CaloTools
+version             v1r0
 
-setup_script       message 
-# ================ The End ===================================================
+# ================= structure =================================================
+branches            cmt doc src
+
+# ================= dependencies ==============================================
+use GaudiAlg         v*
+use CaloInterfaces   v*      Calo 
+use CaloUtils        v*      Calo 
+use TrackInterfaces  v*      Tr
+use CaloDet          v*      Det 
+use RecEvent         v*      Event
+use TrackEvent       v*      Event
+use LHCbMath         v*      Kernel
+use LHCbKernel       v*      Kernel
+
+# ================= constituents: linker library ==============================
+library             CaloTools *.cpp
+
+# ================= patterns ==================================================
+apply_pattern       component_library library=CaloTools
+# =============================================================================
