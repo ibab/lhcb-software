@@ -1,4 +1,4 @@
-// $Id: GaussRead.opts,v 1.16 2006-07-27 16:06:28 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.17 2008-05-08 20:24:07 gcorti Exp $ 
 
 /** @file 
  * 
@@ -59,17 +59,19 @@ EventDataSvc.RootCLID = 1;
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtMax      = -1;
 
-//---------------------------------------------------------------------------
-// Detector used to produce the file read in: uncomment the chosen one
-//---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200601.xml";
+//--------------------------------------------------------------------------
+// Geometry database used to produce the file to be read in: choose the
+// appropriate tags
+//--------------------------------------------------------------------------
+DDDB.DefaultTAG     = "head-20080225-no-TT";
+LHCBCOND.DefaultTAG = "head-20080225-no-TT";
 
 //---------------------------------------------------------------------------
 // Input file 
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-   "DATAFILE='PFN:/afs/cern.ch/lhcb/software/DEV/GAUSS/Test_v24r8/10000000.500ev.12Jun.sim' TYP='POOL_ROOTTREE' OPT='READ'"
-};
+   "DATAFILE='PFN:rfio:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r0/30000000-1000ev-20080319.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+}; // Min bias events with Gauss v31r0, DDDB v1r* and tags head-20080225-no-TT
 
 //---------------------------------------------------------------------------
 // Output file(s). 
