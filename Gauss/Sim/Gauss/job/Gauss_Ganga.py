@@ -25,7 +25,7 @@
 #------------------------------------------------------------------------------
 # Define the version of Gauss to use
 #------------------------------------------------------------------------------
-GaussVersion = 'v30r5'
+GaussVersion = 'v31r0'
 #------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
@@ -44,7 +44,8 @@ myApplication.version = GaussVersion
 # Note, if you want you can replace the PFNs in this file with LFNs directly,
 # since ganga takes care of the book-keeping for you :)
 myApplication.optsfile = File ( myApplication.cmt_user_path
-   + '/Sim/Gauss/' + GaussVersion + '/options/v200601.opts' )
+   + '/Gauss_' + GaussVersion  + '/Sim/Gauss/' + GaussVersion
+   + '/options/lhcb-200801.opts' )
 # Extra options
 # Appended to the end of the main options to override default settings
 #myApplication.extraopts = ''
@@ -66,7 +67,7 @@ mySplitter = GaussSplitter( numberOfJobs = 2 , eventsPerJob = 5 )
 # Job merging
 #------------------------------------------------------------------------------
 # No merging
-#myMerger = None
+myMerger = None
 #
 # Root file merging. For more details run from the ganga prompt
 #  ganga > help( RootMerger )
@@ -75,7 +76,7 @@ mySplitter = GaussSplitter( numberOfJobs = 2 , eventsPerJob = 5 )
 # SmartMerger - Able to handle various file formats (including root files)
 #               For more details run from the ganga prompt
 #  ganga > help( SmartMerger )
-myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#myMerger = SmartMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
 #
 #------------------------------------------------------------------------------
 
