@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r5 2008-05-09 ====================
 ! 2008-05-08 - Johannes Albrecht
  - PatMatchTool: - New implementation of PatMatch as tool
 								 - public function: matchSingle for Hlt

@@ -1,8 +1,10 @@
-// $Id: PatMatchTool.h,v 1.1 2008-05-08 12:48:17 albrecht Exp $
+// $Id: PatMatchTool.h,v 1.2 2008-05-09 08:26:15 cattanem Exp $
 #ifndef PATMATCHTOOL_H 
 #define PATMATCHTOOL_H 1
 
 // Include files
+#include <string>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 

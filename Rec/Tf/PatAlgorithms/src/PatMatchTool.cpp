@@ -1,8 +1,8 @@
-// $Id: PatMatchTool.cpp,v 1.1 2008-05-08 12:48:41 albrecht Exp $
+// $Id: PatMatchTool.cpp,v 1.2 2008-05-09 08:26:15 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "PatMatchTool.h"
