@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf	         v10r7
+use GaudiConf	         v10r8
 use GaudiObjDesc         v11r2
 
 #                                         Maintainer
@@ -32,7 +32,7 @@ use DetCond               v11r10  Det     # Marco Clemencic
 use DetDesc               v18r4p1 Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r5    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r16   Det     # Marco Clemencic, Matt Needham
-use Magnet                v3r7    Det     # N.N.
+use Magnet                v3r8    Det     # Adlene Hicheur
 use MuonDet               v8r0    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v7r7    Det     # Jan Amoraal
 use RichDet               v10r11  Det     # Chris Jones
@@ -90,7 +90,7 @@ use MDF                   v3r7   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
-use RichRecBase           v3r12  Rich    # Chris Jones
+use RichRecBase           v3r13  Rich    # Chris Jones
 use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r4   ST      # Matt Needham
 use Tell1Kernel           v1r3   DAQ     # Tomasz Szumlak
