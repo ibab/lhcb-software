@@ -6,11 +6,22 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r17>2008-05-08 LbcomSys v6r17</A></H1><PRE>
+</PRE><H1><A NAME=v6r17>2008-05-09 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
 - Packages added:    CaloTools v5r0 - Contains components previously in CaloUtils
-- Packages modified: STCheckers v2r5, STDAQ v3r6
+- Packages modified: RichDAQ v3r15p1, RichMCMonitors v1r6, RichTools v2r20,
+    STCheckers v2r5, STDAQ v3r6
+
+- In RichDAQ v3r15p1, RichTools v2r20
+  . Adapt to removal of obsolete RichDet locations
+
+- In RichMCMonitors v1r6
+  . Tidy up RichMCCKPhotonPropAlg a little and add some new histos for the
+    refractive index
+
+- In RichTools v2r20
+  . Fix un-checked StatusCode in RichMirrorSegFinder
 
 - In STCheckers v2r5
   . Follow changes in DeSTDet v4r0 [introduction of DeSTSensor level]
