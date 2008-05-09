@@ -4,10 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+!======================== TrackTools v3r6 2008-05-09 ========================
 ! 2008-05-08 - Johannes Albrecht
  - PtTransporter.h,cpp: new tool to transport pt from T to origin
 
-!======================== TrackTools v3r6 2008-05-05 ========================
 ! 2008-05-05 - Adrian Perieanu
  - TrackCloneFinder: update for speed and lower clone rate
 

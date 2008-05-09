@@ -1,8 +1,10 @@
-// $Id: PtTransporter.h,v 1.1 2008-05-08 13:09:45 albrecht Exp $
+// $Id: PtTransporter.h,v 1.2 2008-05-09 08:26:58 cattanem Exp $
 #ifndef PTTRANSPORTER_H 
 #define PTTRANSPORTER_H 1
 
 // Include files
+#include <string>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/IPtTransporter.h"            // Interface

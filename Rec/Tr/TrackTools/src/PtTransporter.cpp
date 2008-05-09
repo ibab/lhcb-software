@@ -1,8 +1,8 @@
-// $Id: PtTransporter.cpp,v 1.1 2008-05-08 13:10:08 albrecht Exp $
+// $Id: PtTransporter.cpp,v 1.2 2008-05-09 08:26:58 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/ToolFactory.h" 
 
 #include "Event/State.h"
 #include "GaudiKernel/SystemOfUnits.h"
