@@ -4,11 +4,12 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.14 2008-05-08 21:02:10 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.15 2008-05-09 09:57:49 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
 if sys.version_info < (2,4):
+    # pylint: disable-msg=W0622
     from sets import Set as set
 #------------------------------------------------------------------------------ 
 #--- Constants
