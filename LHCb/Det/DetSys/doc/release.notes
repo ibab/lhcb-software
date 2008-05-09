@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v12r0 2008-04-28 ===========================
-! 2008-04-23 - Marco Cattaneo
- - Use DDDB v1r6, STDet v4r0
+!========================= DetSys v12r0 2008-05-05 ===========================
+! 2008-05-05 - Marco Cattaneo
+ - Use DDDB v1r6, Magnet v3r8, STDet v4r0
 
 !========================= DetSys v11r4 2008-04-17 ===========================
 ! 2008-04-17 - Marco Cattaneo
