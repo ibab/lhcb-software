@@ -4,7 +4,7 @@ The database is based on an XML file containing the list of (project,version)s
 for each version of the complete software stack.
 """
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
-__version__ = "$Id: VersionsDB.py,v 1.15 2008-05-09 09:57:49 marcocle Exp $"
+__version__ = "$Id: VersionsDB.py,v 1.16 2008-05-09 12:07:53 marcocle Exp $"
 
 # Hack to simplify the usage of sets with older versions of Python.
 import sys
@@ -377,6 +377,15 @@ def loadString(source):
     from xml.sax import parseString as parse
     parse(str(source),_ReleaseSAXHandler())
 
+def save(destination):
+    """
+    Write the XML representation of the database.
+    Destination can be a filename or a file object.
+    """
+    if not hasattr(destination,"write"):
+        destination = open(destination,"w")
+    destination.write(generateXML())
+    
 def clean():
     """
     Remove all entries from the database (in memory).
@@ -561,6 +570,13 @@ def generateHTML():
     all_proj_names = reduce(ordered_list_merge,[ [ p.name for p in getRelease(r).allProjects() ]
                                                  for r in getReleases() ])
     unversioned_names = [ p.name for p in unversionedProjects() ]
+    
+    # I need to remove duplicates that may appear in the output list
+    out = []
+    for x in all_proj_names:
+        if x not in out: out.append(x)
+    all_proj_names = out
+    del out
     all_proj_names = [ p
                        for p in all_proj_names
                        if p not in unversioned_names ]
@@ -569,20 +585,29 @@ def generateHTML():
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="%s/css/lhcb.css" type="text/css" media="screen">
+<style type="text/css">
+td.title {
+  font-variant: small-caps;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #191970;
+  text-align: center;
+}
+td.inherited {
+  background-color: #EEEEEE;
+}
+td.owned {
+  background-color: #FFFFFF;
+}
+</style>
 <title>Releases Database</title>
 </head>
 <body>
-  <div class="ctitle">
-    <table id="pagetitle">
-      <tbody>
-        <tr>
-        <td valign="middle" align="center"><h1>Releases Database</h1></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <table border="1">
-'''%lhcb_base
+  <table>
+    <tr>
+      <td class="title" valign="middle" align="center" colspan="%d"><h1>Releases Database</h1></td>
+    </tr>
+'''%(lhcb_base,len(all_proj_names)+1)
     rels = [getRelease(r) for r in getReleases()]
     rels.sort(reverse=True)
     html += '<tr><td></td>'
@@ -596,16 +621,15 @@ def generateHTML():
         if r.date != DEFAULT_RELEASEDATE:
             html += '<br>date: %4d-%02d-%02d</td>'%r.date
         for pn in all_proj_names:
-            html += '<td>'
+            if (pn in r.projects) or (pn not in r): 
+                html += '<td class="owned">'
+            else:
+                html += '<td class="inherited">'
             if pn in r:
-                if pn not in r.projects: 
-                    html += '<i>'
                 p = r[pn]
                 html += proj_link(p.name,p.version)
                 if p.tag:
                     html += "<br/>(%s)"%proj_link(p.name,p.tag)
-                if pn not in r.projects: 
-                    html += '</i>'
             html += '</td>'
         html += '</tr>'
     html += '</table></body></html>'
