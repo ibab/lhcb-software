@@ -4,6 +4,7 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r4 2008-05-08 ==================
 ! 2008-05-06 - Chris Jones
  - Update the state z-tolerances in DetailedTrSegMakerFromRecoTracks to allow
    running from DSTs (where only the states at the start of each RICH are 
