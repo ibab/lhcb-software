@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-04-25 09:00:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-05-09 14:51:06 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -27,6 +27,7 @@ class Brunel(ConfigurableUser):
        ,"condDBtag":"DEFAULT" # conditions database tag
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
+       ,"monitors": []        # list of monitors to execute
         }
 
     def getProp(self,name):
@@ -119,6 +120,12 @@ class Brunel(ConfigurableUser):
             importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
             IODataManager().AgeLimit += 1
 
+    def defineMonitors(self):
+        # get all defined monitors
+        monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
+        # pass to LHCbApp any monitors not dealt with here
+        LHCbApp().setProp("monitors", monitors)
+
     def histosName(self):
         histosName   = self.getProp("datasetName")
         if self.getProp( "recL0Only" ): histosName += '-L0Yes'
@@ -176,4 +183,5 @@ class Brunel(ConfigurableUser):
         self.defineOptions()
         self.defineHistos()
         self.defineOutput()
+        self.defineMonitors()
         LHCbApp().applyConf()

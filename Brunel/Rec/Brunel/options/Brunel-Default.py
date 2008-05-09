@@ -24,6 +24,7 @@ from Brunel.Configuration import *
 # Brunel().condDBtag    = "DC06-latest" # conditions database tag
 # Brunel().fieldOff     = False # set to True for magnetic field off data
 # Brunel().veloOpen     = False # set to True for Velo open data
+# Brunel().monitors.append("SC") # Add some monitors. SC: StatusCode check
 ##############################################################################
 
 ##############################################################################
