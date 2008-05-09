@@ -4,7 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
-!========================= STDigiAlgorithms v1r1 2008-04-08 ==================
+!========================= STDigiAlgorithms v1r1 2008-05-09 ==================
+! 2008-05-09 - Marco Cattaneo
+ - Fix untested StatusCodes
+
 ! 2008-04-08 - Marco Cattaneo
  - Follow change from LHCbMath to LHCb::Math namespace
 

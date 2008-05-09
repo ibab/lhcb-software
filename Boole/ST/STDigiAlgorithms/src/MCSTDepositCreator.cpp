@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.4 2008-04-08 05:32:12 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.5 2008-05-09 12:00:47 cattanem Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -167,7 +167,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
     if (aSector == 0) {
       //std::cout << STChannelID(aHit->sensDetID()) << std::endl;
       warning() << "point " << aHit->midPoint() << endreq;
-      Warning("Failed to find sector", StatusCode::SUCCESS, 1);
+      Warning("Failed to find sector", StatusCode::SUCCESS, 1).ignore();
       continue;
     }
 
@@ -180,7 +180,7 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
       // find the sensor
       DeSTSensor* aSensor = aSector->findSensor(aHit->midPoint());
       if (aSensor == 0){
-        Warning("Failed to find sensor", StatusCode::SUCCESS, 1);
+        Warning("Failed to find sensor", StatusCode::SUCCESS, 1).ignore();
         continue;
       } 
 
@@ -271,13 +271,13 @@ bool MCSTDepositCreator::hitToDigitize(const MCHit* aHit) const
 
   // some hits have a zero p...
   if (aHit->p() < 1e-3){
-    Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS, 1 );
+    Warning( "Hit with zero p - not digitized", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
 
   // check if entry and exit point are at the same z-position
   if (fabs(aHit->entry().z() - aHit->exit().z()) < LHCb::Math::lowTolerance) { 
-    Warning("Entry and exit at same z - not digitized", StatusCode::SUCCESS, 1);
+    Warning("Entry and exit at same z - not digitized", StatusCode::SUCCESS, 1).ignore();
     return false;
   }
 
