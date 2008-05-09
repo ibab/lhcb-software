@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r18 2008-05-09 ==========================
 ! 2008-05-08 - Chris Jones
  - Update ROOT scripts for new implementation of RichPIDQC
 
