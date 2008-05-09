@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v4r4 2008-05-09 ===========================
 ! 2008-05-06 - Chris Jones
  - Adapt to the removal of some old obsolete RichDet object locations
  - Add a new method to RichSellmeirFunc
