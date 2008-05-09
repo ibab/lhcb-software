@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r13 2008-05-09 ==========================
 ! 2008-05-06 - Chris Jones
  - Adapt to remove of some obsolete RichDet locations
 
