@@ -7,6 +7,8 @@
  - RawData.opts: remove redundant (obsolete) options
  - Add "monitors" property to LHCbApp configurable. When set to ["SC"] performs
    StatusCode check
+ - Add possibility to use 2008 default geometry and magnetic field in LHCbApp
+   configurable
 
 !======================== GaudiConf v10r7 2008-04-17 ========================
 ! 2008-04-17 - Marco Cattaneo

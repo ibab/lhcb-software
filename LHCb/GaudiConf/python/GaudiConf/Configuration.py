@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-05-08 13:51:31 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-05-09 13:40:35 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -32,11 +32,13 @@ class LHCbApp(ConfigurableUser):
         # For all DC06 cases, use latest DC06 tag
         if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
             importOptions( "$DDDBROOT/options/DC06.py" )
-        else:
+        elif condDBtag.find("LHCb-2008") :
+            importOptions( "$DDDBROOT/options/LHCb-2008.py" )
+        else :
             CondDBAccessSvc( "DDDB",     DefaultTAG = condDBtag )
             CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
-            #-- Always DC06 magnetic field for now....
-            MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAPROOT']+'/cdf/field047.cdf'
+            #-- Default field map set by Fieldmap package
+            MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAP']
 
     def defineEvents(self):
         skipEvents = self.getProp("skipEvents")
