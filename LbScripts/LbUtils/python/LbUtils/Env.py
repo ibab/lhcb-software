@@ -98,23 +98,23 @@ class Environment:
         if shell_type not in shells:
             raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type, shells))
         out = ""
-        for key in self.old_values.items():
-            if key[0] not in self.env:
+        for key in self.old_values:
+            if key not in self.env:
                 # unset variable
                 if shell_type == 'csh':
-                    out += 'unsetenv %s\n'%key[0]
+                    out += 'unsetenv %s\n'%key
                 elif shell_type == 'sh':
-                    out += 'unset %s\n'%key[0]
+                    out += 'unset %s\n'%key
                 elif shell_type == 'bat':
-                    out += 'set %s=\n'%key[0]
+                    out += 'set %s=\n'%key
             else:
                 # set variable
                 if shell_type == 'csh':
-                    out += 'setenv %s "%s"\n'%(key[0], self.env[key[0]])
+                    out += 'setenv %s "%s"\n'%(key,self.env[key])
                 elif shell_type == 'sh':
-                    out += 'export %s="%s"\n'%(key[0], self.env[key[0]])
+                    out += 'export %s="%s"\n'%(key,self.env[key])
                 elif shell_type == 'bat':
-                    out += 'set %s=%s\n'%(key[0], self.env[key[0]])
+                    out += 'set %s=%s\n'%(key,self.env[key])
         return out
 
 
@@ -246,5 +246,4 @@ def addEnvironment(parser):
                       metavar = "VAR=str",
                       help = "remove a component to a path variable\n"
                       "--path-remove VAR:regexp")
-
     return _globalenv
