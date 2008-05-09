@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r10 2008-05-09 ==========================
 ! 2008-05-08 - Chris Jones
  - Tune track state tolerances to allow DST tracks to be used (no radiator 
    exit states).
