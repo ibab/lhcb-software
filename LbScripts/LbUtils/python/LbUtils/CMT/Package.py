@@ -1,7 +1,9 @@
 from LbUtils import Env
+from LbUtils.Set import Set
 import os
 import logging
 from subprocess import Popen, PIPE
+
 
 class Package(object):
     def __init__(self, packagepath, parentproject=None):
@@ -12,8 +14,6 @@ class Package(object):
         self._usedpackagelist = {}
     def __eq__(self, other):
         return self._fulllocation == other.fullLocation()
-    def __hash__(self):
-        return self._fulllocation.__hash__()
     def setLocation(self):
         if self._parentproject :
             strtoremove = self._parentproject.location() + os.sep
@@ -54,7 +54,10 @@ class Package(object):
                             print pakpath
                     
             for line in p.stderr:
-                log.warning(line[:-1])
+                if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                    log.debug(line[:-1])
+                else : 
+                    log.warning(line[:-1])
             retcode = os.waitpid(p.pid, 0)[1]
             log.debug("return code of 'cmt show uses' in %s is %s", wdir, retcode)
             if retcode != 0:
@@ -65,7 +68,7 @@ class Package(object):
         return self._usedpackagelist
     def getBinaryUsedPackages(self, binary, projectlist=None):
         from LbUtils.CMT.Project import Project, isProject, getProjectInstance
-        packagelist = set()
+        packagelist = Set()
         log = logging.getLogger()
         wdir = os.path.join(self._fulllocation,"cmt")
         os.chdir(wdir)
@@ -96,7 +99,7 @@ class Package(object):
                 elif len(words) == 3:
                     pakpath = os.path.join(words[2], words[0])
                 if isPackage(pakpath):
-                    thepak = Package(pakpath)
+                    thepack = Package(pakpath)
                 else :
                     pakpath = os.path.join(pakpath,words[1])
                     if isPackage(pakpath):
@@ -108,12 +111,15 @@ class Package(object):
                 if thepack:
                     packagelist.add(thepack)
         for line in p.stderr:
-            log.warning(line[:-1])
+            if line.startswith("#CMT> Warning:") and line.find("not found") != -1 :
+                log.debug(line[:-1])
+            else : 
+                log.warning(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         log.debug("return code of 'cmt show uses' in %s is %s", wdir, retcode)
         if retcode != 0:
             log.warning("return code of 'cmt show uses' in %s is %s", wdir, retcode)
-        self._usedpackagelist[binary] = set()
+        self._usedpackagelist[binary] = Set()
         for pak in packagelist :
             if  pak.hasConstituents(binary):
                 self._usedpackagelist[binary].add(pak) 
@@ -130,14 +136,14 @@ class Package(object):
         env["CMTCONFIG"] = binary
         p = Popen(["cmt", "show", "macro_value","all_constituents"], stdout=PIPE, stderr=PIPE, close_fds=True)
         for line in p.stdout:
-            line = line[:-1].strip()
+            result = line[:-1].strip()
         for line in p.stderr:
             log.warning(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         log.debug("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
         if retcode != 0:
             log.warning("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
-        return line
+        return result
     def hasConstituents(self, binary):
         log = logging.getLogger()
         wdir = os.path.join(self._fulllocation,"cmt")
@@ -147,14 +153,14 @@ class Package(object):
         env["CMTCONFIG"] = binary
         p = Popen(["cmt", "show", "macro_value","all_constituents"], stdout=PIPE, stderr=PIPE, close_fds=True)
         for line in p.stdout:
-            line = line[:-1].strip()
+            result = line[:-1].strip()
         for line in p.stderr:
             log.warning(line[:-1])
         retcode = os.waitpid(p.pid, 0)[1]
         log.debug("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
         if retcode != 0:
             log.warning("return code of 'cmt show macro_value all_constituents' in %s is %s", wdir, retcode)
-        return (line != "")
+        return (result != "")
         
         
         

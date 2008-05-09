@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-# $Id: showCMTProjects.py,v 1.11 2008-03-31 18:10:30 hmdegaud Exp $
+# $Id: showCMTProjects.py,v 1.12 2008-05-09 15:53:15 hmdegaud Exp $
 
 from LbUtils.CMT import Project
 from LbUtils.Script import Script
+from LbUtils.Cache import File as Cache
+from LbUtils.Set import Set
 
 import copy
 
@@ -82,8 +84,17 @@ class showCMTProjScript(Script):
         parser.add_option("-t", "--tags",
                           dest="tags",
                           help="set CMT extra tags" )
-        
+
+        parser.set_defaults(usecache=True)
+        parser.add_option("--no-cache",
+                          action = "store_false",
+                          dest = "usecache",
+                          help = "prevent the use of the cache for the project list")
+
+#------------------------------------------------------------------------------ 
+
     def main(self):
+        
         if self.env.has_key("CMTPATH"): 
             del self.env["CMTPATH"]
     
@@ -96,8 +107,16 @@ class showCMTProjScript(Script):
             projvers = self.args[1]
         
         options = self.options
+
+        cache = Cache("cmt","projects")
     
-        projlist = Project.getProjects(options.cmtprojectpath, 
+        projlist = Set()
+    
+        if options.usecache:
+            for p in cache.load():
+                projlist |= p
+        else :
+            projlist = Project.getProjects(options.cmtprojectpath, 
                                        projname, projvers, 
                                        options.casesensitive, 
                                        options.selection)
@@ -138,8 +157,9 @@ class showCMTProjScript(Script):
                                   binary_list,
                                   intern_projlist)
 
+        cache.dump(projlist)
         
-
+#------------------------------------------------------------------------------ 
 if __name__ == '__main__':
 
     s = showCMTProjScript(usage="%prog [options] projectname version")
