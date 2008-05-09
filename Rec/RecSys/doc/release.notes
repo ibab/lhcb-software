@@ -5,17 +5,70 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r5>2008-05-07 RecSys v5r6</A></H1><PRE>
+</PRE><H1><A NAME=v5r5>2008-05-09 RecSys v5r6</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6.
 
-- Packages modified: CaloMoniDst v3r0p2, RecAlgs v1r6, TrackCheckers v3r4p2, 
+- Packages modified: CaloMoniDst v3r0p2, NNTools v1r2p1, PatAlgorithms v1r5, 
+    RecAlgs v1r6, RichRecMCTools v2r18, RichRecMonitors v2r17, RichRecQC v2r18,
+    RichRecPhotonTools v1r3, RichRecStereoTools v1r1, RichRecSys v3r10,
+    RichRecTools v4r4, RichRecTrackTools v1r4, TrackCheckers v3r4p2,
     TrackFitEvent v3r14, TrackTools v3r6, TrackUtils v1r20, TsaAlgorithms v3r3
 
 - In CaloMoniDst v3r0p2, TrackCheckers v3r4p2
   . Fixes for Python job options parsing and type checking
 
+- In NNTools v1r2p1
+  . Fix unchecked StatusCode
+
+- In PatAlgorithms v3r5
+  . PatMatchTool: New implementation of PatMatch as tool
+    o public function: matchSingle for Hlt
+    o quality of match is now job option: maxMatchChi2
+    o momentum of matched tracks is calculated with tool
+  . PatMatch: algorithm which only calls the tool
+
 - In RecAlgs v1r6
   . Remove obsolete STSummaryCreator class
+
+- In RichRecMCTools v2r18, RichRecMonitors v2r17, RichRecPhotonTools v1r3,
+     RichRecQC v2r18, RichRecStereoTools v1r1, RichRecTools v4r4, 
+     RichRecTrackTools v1r4
+  . Adapt to removal of obsolete RichDet locations
+
+- In RichRecMCTools v2r18
+  . Update RichPixelCreatorFromCheatedRawBuffer to use the improved HPD photon
+    impact position.
+
+- In RichRecMonitors v2r17
+  . Add new monitor for stereographic refitting tests
+  . Add new plots to RichPhotonSignal monitor
+
+- In RichRecPhotonTools v1r3
+  . Add new cuts to photon predictors to allow hits close to the (0,0) to be
+   (optionally) rejected (disabled by default).
+
+- In RichRecQC v2r18
+  . Update ROOT scripts for new implementation of RichPIDQC
+  . Update RichPIDQC to use new PID plotting tool
+
+- In RichRecStereoTools v1r1
+  . Implement improvements to the IStereoFitter interface
+  . Remove hard-coded refractive index assumptions in StereoFitter
+  . Move declareProperty(...) calls to constructor in StereoFitter
+  . Add additional debug printout + remove all cout calls from StereoFitter
+
+- In RichRecSys v3r10
+  . Tune track state tolerances to allow DST tracks to be used (no radiator 
+    exit states).
+
+- In RichRecTools v4r4
+  . Add a new method to RichSellmeirFunc
+  . Add new tool for creating 'standard' PID calibration and monitoring plots
+
+- In RichRecTrackTools v1r4
+  . Update the state z-tolerances in DetailedTrSegMakerFromRecoTracks to allow
+    running from DSTs
+  . Add new track isolation tool
 
 - In TrackFitEvent v3r14, TrackTools v3r6, TsaAlgorithms v3r3
   . Update to changes in STDet v4r0 [introduction of DeSTSensor]
@@ -23,6 +76,7 @@ This version uses Gaudi v19r9 and LHCb v23r6.
   . Fixed bug in MuonMeasurement
 
 - In TrackTools v3r6
+  . Add PtTransporter.h,cpp: new tool to transport pt from T to origin
   . Add HltV0Upgrade.cpp and HltV0Upgrade.h (needs also IHltV0Upgrade)
   . TrackCloneFinder: update for speed and lower clone rate
 
