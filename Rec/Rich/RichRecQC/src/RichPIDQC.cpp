@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::PIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.71 2008-05-08 13:26:40 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.72 2008-05-09 13:56:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -264,8 +264,10 @@ StatusCode PIDQC::execute()
           verbose() << "  MCID        = " << mcpid << endreq;
 
         // Fill plots in PID performance tool
-        plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig );
-
+        if ( mcpid != Rich::Unknown &&
+             pid   != Rich::Unknown )
+        { plotsTool(mcpid)->plots( iPID, pid, m_plotsConfig ); }
+        
         // Count track and PID types
         if ( Rich::Unknown != mcpid ) 
         {
