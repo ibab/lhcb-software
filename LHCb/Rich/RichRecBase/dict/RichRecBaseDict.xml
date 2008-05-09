@@ -70,5 +70,6 @@
   <class name = "Rich::Rec::IStereoFitter::Result" />
   <class name = "Rich::Rec::IStereoFitter::Configuration" />
   <class name = "Rich::Rec::IStereoProjection" />
+  <class name = "Rich::Rec::IIsolatedTrack" />
 
 </lcgdict>

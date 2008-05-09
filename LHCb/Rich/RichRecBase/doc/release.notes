@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !===================== RichRecBase v3r13 2008-05-09 ==========================
+! 2008-05-09 - Chris Jones
+ - Add a new interface from isolated track tools
+
 ! 2008-05-06 - Chris Jones
  - Adapt to remove of some obsolete RichDet locations
 
