@@ -1,5 +1,5 @@
 package BooleSys
-version v14r11
+version v15r0
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v14r11  Digi  # Marco Cattaneo
+use Boole               v15r0   Digi  # Marco Cattaneo
 use DigiAlg             v4r9    Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -29,7 +29,7 @@ use RichMCAssociators   v2r5    Rich  # Chris Jones
 use RichReadout         v2r9    Rich  # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v1r0p1  ST    # Matt Needham
+use STDigiAlgorithms    v1r1    ST    # Matt Needham
 
 
 # Allow the generation of QMTest summary 

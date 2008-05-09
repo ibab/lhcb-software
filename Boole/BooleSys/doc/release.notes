@@ -3,9 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v14r11>2008-04-28 Boole v14r11</A></H1><PRE>
-This version uses projects Gaudi v19r9, LHCb v23r5, Lbcom v6r16
- and DDDB v1r* (SQLDDDB v4r2 or greater), ParamFiles v7r1, FieldMap v4r7
+</PRE><H1><A NAME=v15r0>2008-05-09 Boole v15r0</A></H1><PRE>
+This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17
+ and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r0
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
