@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-05-09 13:40:35 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-05-09 14:01:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -32,7 +32,8 @@ class LHCbApp(ConfigurableUser):
         # For all DC06 cases, use latest DC06 tag
         if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
             importOptions( "$DDDBROOT/options/DC06.py" )
-        elif condDBtag.find("LHCb-2008") :
+        # For all 2008 cases, except DC06, use latest 2008 global tag
+        elif condDBtag.find("-2008") and DDDBtag.find("-2008") != -1 :
             importOptions( "$DDDBROOT/options/LHCb-2008.py" )
         else :
             CondDBAccessSvc( "DDDB",     DefaultTAG = condDBtag )
