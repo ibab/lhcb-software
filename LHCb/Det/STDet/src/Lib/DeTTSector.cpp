@@ -36,6 +36,7 @@ StatusCode DeTTSector::initialize() {
   StatusCode sc = DeSTSector::initialize();
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq;
+    return sc;
   }
   else {
 
@@ -90,12 +91,12 @@ StatusCode DeTTSector::initialize() {
 
     sc = registerConditionsCallbacks();
     if (sc.isFailure()){
-      msg << MSG::ERROR << "Failed to registerConditions call backs";
+      msg << MSG::ERROR << "Failed to registerConditions call backs" << endmsg;
       return sc;
     }
     sc = cacheInfo();
     if (sc.isFailure()){
-      msg << MSG::ERROR << "Failed to cache geometry";
+      msg << MSG::ERROR << "Failed to cache geometry" << endmsg;
       return sc;
     }
 

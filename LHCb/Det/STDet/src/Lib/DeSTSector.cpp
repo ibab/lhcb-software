@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.38 2008-05-08 13:28:00 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.39 2008-05-09 07:36:09 cattanem Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -86,6 +86,7 @@ StatusCode DeSTSector::initialize() {
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
+    return sc;
   }
   else {
 
@@ -153,11 +154,11 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
     // return a piecewise traj
     STTraj* traj = new STTraj(); 
     for (; iterS != theSensors.end(); ++iterS) {                
-      std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);                                                                       
-      if (traj->numberOfPieces() != 0) {                                                                    
+      std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);
+      if (traj->numberOfPieces() != 0) {
          // double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
          //double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
-         //     if (d1 < d2) {                                                     
+         //     if (d1 < d2) {
         double mu = sensTraj->muEstimate(traj->endPoint());        
         sensTraj->setRange(mu,sensTraj->endRange());              
       } 
