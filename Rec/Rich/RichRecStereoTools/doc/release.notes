@@ -4,6 +4,7 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+!======================= RichRecStereoTools v1r1 2008-05-09 ==================
 ! 2008-05-01 - Chris Jones
  - Implement improvements to the IStereoFitter interface
  - Remove hard-coded refractive index assumptions in StereoFitter
