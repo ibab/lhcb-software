@@ -1,10 +1,8 @@
-// $Id: IPtTransporter.h,v 1.1 2008-05-08 12:58:57 albrecht Exp $
+// $Id: IPtTransporter.h,v 1.2 2008-05-09 07:23:15 cattanem Exp $
 #ifndef TRACKINTERFACES_IPTTRANSPORTER_H 
 #define TRACKINTERFACES_IPTTRANSPORTER_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"

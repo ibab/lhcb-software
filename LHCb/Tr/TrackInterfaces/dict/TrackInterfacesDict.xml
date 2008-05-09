@@ -4,11 +4,13 @@
   <class name    = "IHitExpectation"         />
   <class name    = "IHltV0Upgrade"           />
   <class name    = "IMaterialLocator"        />
+  <class name    = "IMatchTool"              />
   <class name    = "IMeasurementProvider"    />
   <class name    = "IPatDebugTool"           />
   <class name    = "IPatDebugTTTool"         />
   <class name    = "IPatForwardTool"         />
   <class name    = "IPatSeedingTool"         />
+  <class name    = "IPtTransporter"          />
   <class name    = "IPVOfflineTool"          />
   <class name    = "IStateCorrectionTool"    />
   <class name    = "ITrackCaloMatch"         />

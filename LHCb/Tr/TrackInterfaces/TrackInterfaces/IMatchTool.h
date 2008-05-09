@@ -1,22 +1,19 @@
-// $Id: IMatchTool.h,v 1.1 2008-05-08 12:44:51 albrecht Exp $
+// $Id: IMatchTool.h,v 1.2 2008-05-09 07:23:15 cattanem Exp $
 #ifndef IMATCHTOOL_H 
 #define IMATCHTOOL_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// Event model
 #include "Event/Track.h"
-
-
 
 
 static const InterfaceID IID_IMatchTool ( "IMatchTool", 1, 0 );
 
-/** @class IMatchTool IMatchTool.h
+/** @class IMatchTool IMatchTool.h TrackInterfaces/IMatchTool.h
  *  
  *
  *  @author Johannes Albrecht
