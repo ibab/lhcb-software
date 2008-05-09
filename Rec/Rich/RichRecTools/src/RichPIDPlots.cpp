@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.3 2008-05-08 13:27:12 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.4 2008-05-09 13:56:26 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -105,7 +105,7 @@ void PIDPlots::plots( const LHCb::Track * track,
   const RichHistoID hid;
 
   // Number of each type of hypothesis
-  plot1D( (int)hypo, "nPIDsPerHypo", "# PIDs per hypothesis", -1.5, 5.5, 7 );
+  //plot1D( (int)hypo, "nPIDsPerHypo", "# PIDs per hypothesis", -1.5, 5.5, 7 );
 
   // Track momentum in GeV/c
   const double tkPtot = trackP( track );
