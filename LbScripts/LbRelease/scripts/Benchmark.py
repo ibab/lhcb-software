@@ -4,14 +4,15 @@ import sys
 import os, re
 from optparse import OptionParser
 from threading import Thread
-from subprocess import Popen
+from subprocess import Popen, PIPE
 from shutil import copy, rmtree
-from time import time
+from time import time, sleep
 from math import sqrt
 
 
 class TimedJob(Thread):
     id = 0
+    sourcelist = None
     def __init__(self, jobexe, joboptionfile, nbevent=0, randomseed=0, outputdir=None):
         # constructor of parent class
         Thread.__init__(self)
@@ -34,6 +35,7 @@ class TimedJob(Thread):
         self._intevtmintime = None
         self._intevtmaxtime = None
         self._intscale = None
+        self._sourcefile = None
         self._status = 0
     def setOuputFile(self):
         self._outfile = os.path.join(self._workdir,self._exename + ".log")
@@ -59,11 +61,42 @@ class TimedJob(Thread):
         os.mkdir(self._workdir)
         self.setOptFile(joboptionfile, nbevent, randomseed)
         self.setOuputFile()
+    def getSourceFiles(self, sourcedir):
+        flist = []
+        p = Popen(["nsls", sourcedir],
+                  stdout=PIPE, stderr=PIPE, close_fds=True)
+        if not sourcedir.endswith("/"):
+            sourcedir += "/"
+        for line in p.stdout:
+            fullname = sourcedir + line[:-1]
+            flist.append(fullname)
+        for line in p.stderr:
+            print "Error:", line[:-1]
+        retcode = os.waitpid(p.pid, 0)[1]
+        return flist
+    def setSourceFile(self, datasource, nbfiles=1):
+        if TimedJob.sourcelist is None:
+            TimedJob.sourcelist = self.getSourceFiles(datasource)
+        self._sourcefile = TimedJob.sourcelist[self._id]
+        shortfilename = self._sourcefile.split("/")[-1]
+        f = open(self._optfile, "a")
+        f.write("\nEventSelector.Input = {\n")
+        f.write(" \"DATAFILE='PFN:%s' TYP='POOL_ROOT' OPT='READ'\"\n" % shortfilename)
+        f.write("};\n")
+        f.close()
+        print "copying file %s to %s" % (self._sourcefile, self._workdir)
+        p = Popen(["rfcp", self._sourcefile, self._workdir], stdout=PIPE, stderr=PIPE, 
+                  close_fds=True)
+        for line in p.stdout:
+            print line[:-1]
+        for line in p.stderr:
+            print "Error:", line[:-1]
+        retcode = os.waitpid(p.pid, 0)[1]
     def run(self):
-        os.chdir(self._workdir)
         self._startextime = time()
         outfile = open(self._outfile, "w")
         p = Popen([self._exename, self._optfile],
+                  cwd=self._workdir,
                   stdout=outfile,
                   stderr=outfile,
                   close_fds=True)
@@ -74,7 +107,6 @@ class TimedJob(Thread):
         else :
             self._stopextime = time()
             self._extime = self._stopextime - self._startextime
-            os.chdir(self._startdir)
             print "Job external event rate: %e (%d events in %e s)" % (self.externalRate(), self._nbevent, self._extime)
             self.getInternalTime()
             print "  Job internal event rate: %e (%d events in %e s)" % (self.internalRate(), self._nbevent, self._intime),
@@ -98,7 +130,7 @@ class TimedJob(Thread):
                                             _exponentexpr)
         _floatnumberexpr = "(%s|%s)" % (_pointfloatexpr, _exponentfloatexpr)
         thefile = open(self._outfile, "r")
-        p = re.compile(r"Auditor\.TIMER\s+INFO\s+EVENT\s+LOOP\s+\|\s*(?P<user>%s)\s*\|\s*(?P<clock>%s)\s*\|\s*(?P<min>%s)\s+(?P<max>%s)\s*\|\s*(?P<entries>%s)\s*\|\s*(?P<total>%s)"% (_floatnumberexpr, _floatnumberexpr, _floatnumberexpr, _floatnumberexpr, _intpartexpr, _floatnumberexpr))
+        p = re.compile(r".+\s+INFO\s+EVENT\s+LOOP\s+\|\s*(?P<user>%s)\s*\|\s*(?P<clock>%s)\s*\|\s*(?P<min>%s)\s+(?P<max>%s)\s*\|\s*(?P<entries>%s)\s*\|\s*(?P<total>%s)"% (_floatnumberexpr, _floatnumberexpr, _floatnumberexpr, _floatnumberexpr, _intpartexpr, _floatnumberexpr))
         for l in thefile:
             m = p.search(l, 1)
             if m :
@@ -170,10 +202,16 @@ def printResults(thread_list, nthr):
         
     
 
-def runBench(jobexe, joboptionfile, nbevent=None, nbthread=1):
+def runBench(jobexe, joboptionfile, nbevent=None, nbthread=1, datasource=None, nbfiles=1):
     job_threads = [ TimedJob(jobexe, joboptionfile, nbevent, x) for x in range(nbthread) ]
+    if datasource is not None:
+        for s in job_threads :
+            s.setSourceFile(datasource, nbfiles)
+    sleep(10.0)
+    print "Starting the threads ..."
     glstarttime = time()
     for s in job_threads :
+        sleep(5.0)
         s.start()
     for s in job_threads :
         s.join()
@@ -188,7 +226,7 @@ def runBench(jobexe, joboptionfile, nbevent=None, nbthread=1):
     print "==================================================================================================="
     print "Raw results:"
     printResults(job_threads, nbthread)
-    valid_threads = filter(lambda x: not x.status(), job_threads)
+    valid_threads = [ x for x in job_threads if not x.status() ]
     print "Valid results:"
     printResults(valid_threads, nbthread)
 
@@ -203,7 +241,7 @@ def getNbProc():
 if __name__ == '__main__':
 
     usage = "%prog [options] exe optfile"
-    version = "$Id: Benchmark.py,v 1.2 2008-03-28 14:06:19 hmdegaud Exp $"
+    version = "$Id: Benchmark.py,v 1.3 2008-05-09 14:23:27 hmdegaud Exp $"
     
     parser = OptionParser(usage=usage, version=version)
     parser.set_defaults(nbevent=1)
@@ -220,6 +258,15 @@ if __name__ == '__main__':
     parser.add_option("-o", "--output-dir",
                       dest="outputdir",
                       help="results output directory")
+    parser.set_defaults(datasource=None)
+    parser.add_option("-D", "--data",
+                      dest="datasource",
+                      help="input data directory")
+    parser.set_defaults(nbfiles=1)
+    parser.add_option("-N", "--number-of-files",
+                      type = "int",
+                      dest="nbfiles",
+                      help="Number of input files per thread")
     
 
     options, args = parser.parse_args(sys.argv[1:])
@@ -230,5 +277,5 @@ if __name__ == '__main__':
     print "number of threads: %s" % options.nbthread
 
     
-    runBench(args[0], args[1], options.nbevent, options.nbthread)
+    runBench(args[0], args[1], options.nbevent, options.nbthread, options.datasource, options.nbfiles)
     

@@ -1,3 +1,8 @@
+2008-05-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/Benchmark.py: modified to take a castor directory as input for the
+	underlying executable
+
 2008-05-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/BrunelBench.csh: Added Brunel benchmark shell script.
