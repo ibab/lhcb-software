@@ -26,6 +26,7 @@ from Boole.Configuration import *
 # Boole().datasetName     = ""            # string used to build file names
 # Boole().DDDBtag         = "DC06-latest" # geometry database tag
 # Boole().condDBtag       = "DC06-latest" # conditions database tag
+# Boole().monitors.append("SC") # Add some monitors. SC: StatusCode check
 ##############################################################################
 
 ##############################################################################

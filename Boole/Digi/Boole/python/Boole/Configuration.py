@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-04-28 11:12:36 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-05-09 12:57:10 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -28,6 +28,7 @@ class Boole(ConfigurableUser):
        ,"datasetName":  '00001820_00000001' # string used to build file names
        ,"DDDBtag":   "DEFAULT" # geometry database tag
        ,"condDBtag": "DEFAULT" # conditions database tag
+       ,"monitors": []        # list of monitors to execute
         }
 
     def getProp(self,name):
@@ -111,6 +112,12 @@ class Boole(ConfigurableUser):
         initDataSeq = GaudiSequencer( "InitDataSeq" )
         initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )    
 
+    def defineMonitors(self):
+        # get all defined monitors
+        monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
+        # pass to LHCbApp any monitors not dealt with here
+        LHCbApp().setProp("monitors", monitors)
+
     def defineHistos(self):
         """
         Save histograms. If expert, fill and save also the expert histograms
@@ -183,4 +190,5 @@ class Boole(ConfigurableUser):
         self.defineOptions()
         self.defineHistos()
         self.defineOutput()
+        self.defineMonitors()
         LHCbApp().applyConf()
