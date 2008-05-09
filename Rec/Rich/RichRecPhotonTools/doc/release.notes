@@ -4,6 +4,7 @@
 ! Purpose     : Utility photon tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================= RichRecPhotonTools v1r3 2008-05-09 ==================
 ! 2008-05-08 - Chris Jones
  - Adapt to removal of obsolete RichDet locations
  - Add new cuts to photon predictors to allow hits close to the (0,0) to be
