@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.5 2008-01-25 12:18:50 graven Exp $
+// $Id: ANNSvc.h,v 1.6 2008-05-11 10:57:49 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -31,13 +31,23 @@ public:
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
-  boost::optional<int>           asInt   (const major_key_type& major, const std::string& minor) const;
-  boost::optional<std::string>   asString(const major_key_type& major, int minor) const;
+  boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const;
+  boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const;
 
   bool                           hasMajor(const major_key_type& major) const;
 
   std::vector<minor_value_type>  items(const major_key_type& major) const;
   std::vector<major_key_type>    majors() const;
+
+protected:
+  // Call handleUndefined if an unknown key/value is requested...
+  //  default implementation just returns an unitialized boost::optional
+  virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, int minor) const;
+  virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
+
+  // allow implementations to add items 'on the fly', when triggered by handleUndefined...
+  // bool addItem(const major_key_type& major, const minor_value_type& newitem );
+
 private:
   
   typedef ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> bimap_type;

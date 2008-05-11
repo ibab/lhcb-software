@@ -1,4 +1,4 @@
-// $Id: IANNSvc.h,v 1.4 2008-01-24 22:21:09 graven Exp $
+// $Id: IANNSvc.h,v 1.5 2008-05-11 10:57:49 graven Exp $
 #ifndef IANNSVC_H 
 #define IANNSVC_H 1
 
@@ -41,13 +41,12 @@ public:
   virtual ~IANNSvc();
 
   typedef std::string                                 major_key_type;
-
   typedef std::string                                 minor_key_type;
   typedef int                                         minor_mapped_type;
   typedef std::pair<minor_key_type,minor_mapped_type> minor_value_type;
 
-  virtual boost::optional<int>           asInt(   const major_key_type& major, const std::string& minor) const = 0;
-  virtual boost::optional<std::string>   asString(const major_key_type& major, int minor) const = 0;
+  virtual boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const = 0;
+  virtual boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const = 0;
 
   virtual bool hasMajor(const major_key_type& major) const = 0;
   virtual std::vector< major_key_type > majors() const = 0;

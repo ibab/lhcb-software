@@ -18,29 +18,29 @@ namespace ANNSvcUtilities {
 template <typename KEY, typename VALUE>
 class bimap_t {
 public:
-    typedef KEY    key_type;
-    typedef VALUE  value_type;
+    typedef KEY                                  key_type;
+    typedef VALUE                                value_type;
     typedef std::pair<KEY,VALUE>                 mapped_type;
+
     typedef GaudiUtils::VectorMap<KEY,VALUE>     k2v_type;
     typedef GaudiUtils::VectorMap<VALUE,KEY>     v2k_type;
     typedef SimpleProperty<std::map<KEY,VALUE> > property_type;
-    typedef optional<value_type>                 result_value_type; 
-    typedef optional<key_type>                   result_key_type; 
+    typedef optional<IANNSvc::minor_value_type>  result_type; 
 
     bimap_t();
 
     property_type& property() { return m_property; } 
 
-    result_value_type value(const key_type& key) const {
+    result_type value(const key_type& key) const {
         typename k2v_type::const_iterator i = m_map.find(key);
-        return i == m_map.end() ? result_value_type() 
-                                : result_value_type(i->second) ;
+        return i == m_map.end() ? result_type() 
+                                : result_type(*i) ;
     }
 
-    result_key_type   key(const value_type& value) const {
+    result_type   key(const value_type& value) const {
         typename v2k_type::const_iterator i = m_invmap.find(value);
-        return i == m_invmap.end() ? result_key_type() 
-                                   : result_key_type(i->second) ;
+        return i == m_invmap.end() ? result_type() 
+                                   : result_type(std::make_pair(i->second,i->first)) ;
     }
 
     const k2v_type& mapping() const { return m_map; }
@@ -62,8 +62,8 @@ bimap_t<KEY,VALUE>::bimap_t() {
 
 template <typename KEY, typename VALUE>
 bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs) {
-    m_map = rhs.m_map;
-    m_invmap = rhs.m_invmap;
+    m_map      = rhs.m_map;
+    m_invmap   = rhs.m_invmap;
     m_property = rhs.m_property;
     m_property.declareUpdateHandler(&bimap_t<KEY,VALUE>::updateHandler, this);
 }
@@ -71,12 +71,13 @@ bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs) {
 template <typename KEY, typename VALUE>
 void
 bimap_t<KEY,VALUE>::updateHandler(Property& /*prop*/) {
+    // grab the one we made ourselves...
+    m_map.   clear();
     m_invmap.clear();
-    m_map.clear();
     for (typename std::map<KEY,VALUE>::const_iterator i  = m_property.value().begin();
                                                       i != m_property.value().end(); ++i ) {
-        m_map.insert( i->first, i->second );
-        m_invmap.insert( i->second, i->first );
+        m_map.   insert( i->first,  i->second );
+        m_invmap.insert( i->second, i->first  );
     }
 }
 
@@ -124,16 +125,26 @@ bool ANNSvc::hasMajor(const IANNSvc::major_key_type& major) const {
     return m_maps.find(major)!=m_maps.end();
 }
 
-optional<int>  ANNSvc::asInt(const IANNSvc::major_key_type& major, const string& minor) const {
-    maps_type::const_iterator i = m_maps.find(major);
-    return i==m_maps.end() ?  optional<int>() 
-                           :  i->second->value(minor);
+boost::optional<IANNSvc::minor_value_type> ANNSvc::handleUndefined(const IANNSvc::major_key_type&, int ) const {
+    return optional<IANNSvc::minor_value_type>();
 }
 
-optional<string> ANNSvc::asString(const IANNSvc::major_key_type& major, int minor) const {
+boost::optional<IANNSvc::minor_value_type> ANNSvc::handleUndefined(const IANNSvc::major_key_type&, const std::string& ) const {
+    return optional<IANNSvc::minor_value_type>();
+}
+
+optional<IANNSvc::minor_value_type>  ANNSvc::value(const IANNSvc::major_key_type& major, const string& minor) const {
     maps_type::const_iterator i = m_maps.find(major);
-    return i==m_maps.end() ? optional<string>() 
-                           : i->second->key(minor);
+    if (i==m_maps.end()) return optional<IANNSvc::minor_value_type>();
+    optional<IANNSvc::minor_value_type> x = i->second->value(minor);
+    return x ? x : handleUndefined(major,minor);
+}
+
+optional<IANNSvc::minor_value_type> ANNSvc::value(const IANNSvc::major_key_type& major, int minor) const {
+    maps_type::const_iterator i = m_maps.find(major);
+    if (i==m_maps.end()) return optional<IANNSvc::minor_value_type>();
+    optional<IANNSvc::minor_value_type> x = i->second->key(minor);
+    return x ? x : handleUndefined(major,minor);
 }
 
 
@@ -154,4 +165,8 @@ std::vector<IANNSvc::major_key_type> ANNSvc::majors() const {
                     std::back_inserter(r), 
                     bl::bind(&maps_type::value_type::first,bl::_1) );
     return r;
+}
+
+bool ANNSvc::addItem(const major_key_type& major, const minor_value_type& newitem ) {
+
 }
