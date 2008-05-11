@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.14 2008-05-06 06:37:34 pkoppenb Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.15 2008-05-11 10:03:22 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -27,8 +27,8 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_otracks(0)
   , m_timer(0)
+  , m_otracks(0)
   , m_tool(0)
 {
   declareInterface<HltTrackUpgradeTool>(this);

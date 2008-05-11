@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.6 2008-05-03 15:24:44 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.7 2008-05-11 10:03:22 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -9,9 +9,7 @@
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrackUpgrade.h"
-// NEXT DEV take from here (27/6/07)
-// #include "TrackInterfaces/ITracksFromTrack.h"
-#include "ITracksFromTrack.h"
+#include "TrackInterfaces/ITracksFromTrack.h"
 
 /** @class HltTrackUpgradeTool HltTrackUpgradeTool.h
  *  

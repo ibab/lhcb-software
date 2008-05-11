@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.6 2008-05-07 11:36:41 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.7 2008-05-11 10:03:22 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -87,18 +87,18 @@ StatusCode HltVertexUpgrade::execute() {
       printInfo(" seed1 ", seed1);
       printInfo(" seed2 ", seed2);
     }
-    m_tracks1.clear(); m_tracks2.clear();
-    sc = m_tool->upgrade(seed1,m_tracks1);
-    sc = m_tool->upgrade(seed2,m_tracks2);
-    size_t n1 = m_tracks1.size();
-    size_t n2 = m_tracks2.size();
-    if (n1<=0 || n2 <=0) continue;
+    std::vector<LHCb::Track*> tracks1, tracks2;
+    sc = m_tool->upgrade(seed1,tracks1);
+    if (sc.isFailure()) return sc;
+    sc = m_tool->upgrade(seed2,tracks2);
+    if (sc.isFailure()) return sc;
+    if (tracks1.empty() || tracks2.empty() ) continue;
     debug() << " creating a vertex " << endreq;
-    for (std::vector<Track*>::iterator t1 = m_tracks1.begin();
-         t1 != m_tracks1.end(); ++t1) {
+    for (std::vector<Track*>::iterator t1 = tracks1.begin();
+         t1 != tracks1.end(); ++t1) {
       Track& track1 = *(*t1);
-      for (std::vector<Track*>::iterator t2 = m_tracks2.begin();
-           t2 != m_tracks2.end(); ++t2) {
+      for (std::vector<Track*>::iterator t2 = tracks2.begin();
+           t2 != tracks2.end(); ++t2) {
         Track& track2 = *(*t2);
         RecVertex* sv = new RecVertex();
         _makeVertex(track1,track2,*sv);
@@ -114,10 +114,6 @@ StatusCode HltVertexUpgrade::execute() {
   }
 
   return sc;
-}
-
-StatusCode HltVertexUpgrade::finalize() {
-  return HltAlgorithm::finalize();
 }
 
 

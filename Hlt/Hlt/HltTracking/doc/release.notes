@@ -4,7 +4,12 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2008-05-07 - Patrick Koppenburg
+! 2008-05-11 - Gerhard Raven
+ - remove ITracksFromTrack interface which is in TrackInterfaces
+ - HltVertexUpgrade: no need for local variables to be class members
+
+
+! 2008-05-07 - Gerhard Raven
  - remove unused protected datamember in HltAlgorithm derived classes
 
 ! 2008-05-06 - Patrick Koppenburg

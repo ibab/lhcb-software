@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.4 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltVertexUpgrade.h,v 1.5 2008-05-11 10:03:22 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -32,9 +32,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   StatusCode setReco();
   
@@ -42,15 +41,13 @@ protected:
 
   size_t upgrade(LHCb::Track& seed, std::vector<LHCb::Track*>& tracks);
   
-protected:
+private:
 
-  std::vector<LHCb::Track*> m_tracks1;
-  std::vector<LHCb::Track*> m_tracks2;
 
   std::string m_recoName;
   bool m_transferExtraInfo;
 
-protected:
+private:
 
   std::string m_TESOutputVerticesName;
 

@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.6 2008-05-07 11:36:41 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.7 2008-05-11 10:03:22 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -60,6 +60,7 @@ StatusCode HltTrackUpgrade::execute() {
 
   StatusCode sc = m_tool->upgrade(*m_inputTracks,*m_outputTracks);
   if (m_debug) printInfo(" upgraded tracks ",*m_outputTracks);
+  
   return sc;
 }
 //=============================================================================
