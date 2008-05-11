@@ -167,6 +167,3 @@ std::vector<IANNSvc::major_key_type> ANNSvc::majors() const {
     return r;
 }
 
-bool ANNSvc::addItem(const major_key_type& major, const minor_value_type& newitem ) {
-
-}
