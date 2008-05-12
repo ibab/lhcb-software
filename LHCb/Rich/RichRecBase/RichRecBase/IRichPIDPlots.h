@@ -5,7 +5,7 @@
  *  Header file for RICH tool interface : Rich::Rec::IPIDPlots
  *
  *  CVS Log :-
- *  $Id: IRichPIDPlots.h,v 1.3 2008-05-08 12:22:42 jonrob Exp $
+ *  $Id: IRichPIDPlots.h,v 1.4 2008-05-12 14:03:53 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -29,6 +29,7 @@ namespace LHCb
 {
   class Track;
   class RichPID;
+  class ProtoParticle;
 }
 
 /// The interface ID
@@ -99,6 +100,16 @@ namespace Rich
        *  @param[in] config (Optional) Configuration object
        */
       virtual void plots( const LHCb::Track * track,
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const = 0;
+
+      /** Fill the plots for the given ProtoParticle and PID hypothesis
+       *
+       *  @param[in] proto  Pointer to the ProtoParticle to fill plots for
+       *  @param[in] hypo   The mass hypothesis to assume for this track
+       *  @param[in] config (Optional) Configuration object
+       */
+      virtual void plots( const LHCb::ProtoParticle * proto,
                           const Rich::ParticleIDType hypo,
                           const Configuration & config = Configuration() ) const = 0;
 
