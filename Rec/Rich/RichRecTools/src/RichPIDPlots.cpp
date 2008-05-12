@@ -1,4 +1,4 @@
-// $Id: RichPIDPlots.cpp,v 1.4 2008-05-09 13:56:26 jonrob Exp $
+// $Id: RichPIDPlots.cpp,v 1.5 2008-05-12 14:04:17 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -46,6 +46,22 @@ StatusCode PIDPlots::initialize()
 
 //=============================================================================
 
+void PIDPlots::plots( const LHCb::ProtoParticle * proto,
+                      const Rich::ParticleIDType hypo,
+                      const Configuration & config ) const
+{
+  if ( !proto ) { Warning( "Null ProtoParticle pointer passed !" ); return; }
+
+  // track selection
+  if ( !selected( proto->track(), config ) ) return;
+  
+  // Fill 'track' plots
+  plots( proto->track(), hypo, config );
+
+  // Fill additional plots here ;)
+
+}
+
 void PIDPlots::plots( const LHCb::RichPID * pid,
                       const Rich::ParticleIDType hypo,
                       const Configuration & config ) const
@@ -56,7 +72,7 @@ void PIDPlots::plots( const LHCb::RichPID * pid,
   if ( !selected(pid->track(),config) ) return;
 
   // Fill 'track' plots
-  this -> plots( pid->track(), hypo, config );
+  plots( pid->track(), hypo, config );
 
   // Now, plots that require RichPID info ...
 

@@ -5,7 +5,7 @@
  *  Header file for RICH tool : Rich::PIDPlots
  *
  *  CVS Log :-
- *  $Id: RichPIDPlots.h,v 1.2 2008-05-06 15:33:38 jonrob Exp $
+ *  $Id: RichPIDPlots.h,v 1.3 2008-05-12 14:04:17 jonrob Exp $
  *
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
  *  @date   2008-04-14
@@ -25,6 +25,7 @@
 // Event
 #include "Event/Track.h"
 #include "Event/RichPID.h"
+#include "Event/ProtoParticle.h"
 
 namespace Rich
 {
@@ -64,6 +65,11 @@ namespace Rich
 
       // Fill the plots for the given track and PID hypothesis
       virtual void plots( const LHCb::Track * track,
+                          const Rich::ParticleIDType hypo,
+                          const Configuration & config = Configuration() ) const;
+
+      // Fill the plots for the given ProtoParticle and PID hypothesis
+      virtual void plots( const LHCb::ProtoParticle * proto,
                           const Rich::ParticleIDType hypo,
                           const Configuration & config = Configuration() ) const;
 
