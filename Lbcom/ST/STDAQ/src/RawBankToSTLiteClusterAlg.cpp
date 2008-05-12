@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.11 2007-11-16 16:43:36 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.12 2008-05-12 13:08:36 mneedham Exp $
 
 
 #include <algorithm>
@@ -95,17 +95,20 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 
     // get the board and data
     STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
+    if (!aBoard){
+      Warning("Invalid source ID --> skip bank", StatusCode::SUCCESS);
+    } 
  
     // make a SmartBank of shorts...
     STDecoder decoder((*iterBank)->data());
    
     // get number of clusters..
     if (decoder.hasError() == true){
-      warning() << "bank has errors - skip event" << endmsg;
-      return StatusCode::FAILURE;
+      Warning("bank has errors - skip", StatusCode::SUCCESS);
+      continue;
     }
 
-    int version = (*iterBank)->version();
+    const int version = (*iterBank)->version();
 
     // read in the first half of the bank
     STDecoder::pos_iterator iterDecoder = decoder.posBegin();
@@ -114,8 +117,11 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       STClusterWord aWord = *iterDecoder;
       unsigned int fracStrip = aWord.fracStripBits();
       
-      //      unsigned int pseudoSize = aWord.pseudoSizeBits(); //no change
-      //      bool secondThres = aWord.hasHighThreshold(); //no change
+      if (aBoard->validChannel(aWord.channelID()) == false){
+        Warning("Invalid channel --> skip cluster", StatusCode::SUCCESS); 
+        continue;
+      }
+
       STChannelID chan =  aBoard->DAQToOffline(aWord.channelID(),fracStrip,
                                                version);
 

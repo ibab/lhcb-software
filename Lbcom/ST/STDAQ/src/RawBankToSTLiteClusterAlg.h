@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.6 2007-11-16 16:43:36 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.7 2008-05-12 13:08:36 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -66,12 +66,10 @@ private:
     inline bool operator() ( LHCb::STLiteCluster obj1 , LHCb::STLiteCluster obj2 ) const
     {
       return obj1.channelID() < obj2.channelID() ;
-  }
-  
+    }
+  };
 };
 
 
- 
-};
 
 #endif //  RAWBANKTOSTLITECLUSTERALG_H 

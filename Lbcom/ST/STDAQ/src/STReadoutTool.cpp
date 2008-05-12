@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.5 2008-05-06 14:40:39 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.6 2008-05-12 13:08:36 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,7 @@ STReadoutTool::STReadoutTool(const std::string& type,
   m_nBoard(0)
 {
   // constructer
-  declareProperty("printMapping", m_printMapping = false);
+  declareProperty("printMapping", m_printMapping = true);
 
   m_boards.reserve(100); // about correct
 }
@@ -165,7 +165,7 @@ STTell1Board* STReadoutTool::findByOrder(const unsigned int aValue) const{
 void STReadoutTool::printMapping() const{
 
   // dump out the readout mapping
-  std::cout << "print mapping for: " << name() << std::endl;  
+  std::cout << "print mapping for: " << name() << " tool" << std::endl;  
   std::cout << " Number of boards " << m_nBoard << std::endl;
   std::vector<STTell1Board*>::const_iterator iterBoard = m_boards.begin();  
   for (; iterBoard != m_boards.end() ;++iterBoard){

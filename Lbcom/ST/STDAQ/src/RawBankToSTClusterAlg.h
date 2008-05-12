@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.6 2007-11-16 16:43:36 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.7 2008-05-12 13:08:36 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -54,8 +54,8 @@ private:
  
   double mean(const std::vector<SiADCWord>& adcValues) const;
    
-  LHCb::STLiteCluster word2LiteCluster(STClusterWord aWord, 
-				       LHCb::STChannelID chan,
+  LHCb::STLiteCluster word2LiteCluster(const STClusterWord aWord, 
+				       const LHCb::STChannelID chan,
 				       const unsigned int fracStrip) const;
 
   double stripFraction(const double interStripPos) const;
@@ -68,5 +68,15 @@ private:
   std::string m_rawEventLocation;
 
 };
+
+#include "Event/STLiteCluster.h"
+#include "Kernel/STChannelID.h"
+
+inline LHCb::STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(const STClusterWord aWord,
+                                                             const LHCb::STChannelID chan,
+                                                             const unsigned int fracStrip) const
+{
+  return LHCb::STLiteCluster(fracStrip,aWord.pseudoSizeBits(),aWord.hasHighThreshold(), chan);
+}
 
 #endif // RAWBUFFERTOSTDIGITALG_H 

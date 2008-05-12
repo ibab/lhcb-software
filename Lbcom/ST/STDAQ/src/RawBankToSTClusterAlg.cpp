@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.19 2008-05-06 14:40:39 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.20 2008-05-12 13:08:36 mneedham Exp $
 
 #include <algorithm>
 
@@ -104,16 +104,22 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
 
     // get the board and data
-    STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
+    const STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
+    if (!aBoard){
+      // not a valid IT
+      Warning("Invalid source ID --> skip bank",StatusCode::SUCCESS); 
+      continue;
+    }
+
     // make a decoder
     STDecoder decoder((*iterBank)->data());    
     // get verion of the bank
-    unsigned int version = (*iterBank)->version();
+    const unsigned int version = (*iterBank)->version();
     
     if (decoder.hasError() == true){
       if (m_createSummary) bankList.push_back((*iterBank)->sourceID());
       Warning("bank has errors - skip bank", StatusCode::SUCCESS);
-      //return StatusCode::FAILURE;
+      continue;
     }
 
     if (m_createSummary){
@@ -122,9 +128,13 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
         pcn = bankpcn;
       }
       else {
-        if (pcn != bankpcn) pcnSync = false; 
+        if (pcn != bankpcn) {
+          pcnSync = false;
+          Warning("PCNs out of sync", StatusCode::SUCCESS);
+          continue; 
+	}
       }
-    }
+    } // create summary
 
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
@@ -132,7 +142,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       StatusCode sc = createCluster(iterDecoder->first,aBoard,
                                     iterDecoder->second,clusCont,version);
       if (sc.isFailure()) {
-        return StatusCode::FAILURE;
+        Warning("Error decoding ADCs", StatusCode::SUCCESS);
+        continue;
       }
     } // iterDecoder
     
@@ -141,7 +152,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       debug() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       Warning("Inconsistant byte count", StatusCode::SUCCESS);
-      // return StatusCode::FAILURE;
+      continue;
     }
   } // iterBank
    
@@ -168,11 +179,11 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     
   // make some consistancy checks
   if ((adcValues.size() - 1u  < aWord.pseudoSize())) {
-    warning() << "adc values do not match ! " << adcValues.size()-1 << " "
+    debug() << "adc values do not match ! " << adcValues.size()-1 << " "
               << aWord.pseudoSize() << " chan "
               << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
               << endmsg ;
-    return StatusCode::FAILURE;
+    Warning("ADC values do not match", StatusCode::FAILURE);
   }
 
   // make a temporary vector to contain the ADC
@@ -192,12 +203,16 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   } // iDigit
 
   // decode the channel
+  if (aBoard->validChannel(aWord.channelID()) == false){
+    return Warning("Invalid tell1 channel --> skip cluster", StatusCode::SUCCESS); 
+  }
+
   STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
                                                  version);
   if (!tracker()->isValid(nearestChan)){
-    warning() << "invalid channel " << endmsg;
-    return StatusCode::FAILURE;
+    return Warning("invalid detector channel number", StatusCode::SUCCESS);
   }
+
   aBoard->ADCToOffline(aWord.channelID(),adcs,version,offset,interStripPos);
 
   // make cluster +set things
@@ -227,13 +242,6 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 }
 
 
-STLiteCluster RawBankToSTClusterAlg::word2LiteCluster(STClusterWord aWord,
-                                                      STChannelID chan,
-                                                      const unsigned int 
-                                                      fracStrip) const
-{
-  return STLiteCluster(fracStrip,aWord.pseudoSizeBits(),
-                       aWord.hasHighThreshold(), chan);
-}
+
 
 
