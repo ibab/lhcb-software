@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.3 2008-05-07 12:09:12 mneedham Exp $
+// $Id: STTell1Board.h,v 1.4 2008-05-12 13:08:26 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -57,6 +57,9 @@ public:
                             const unsigned int sectorIndex,
 			    double isf) const;
 
+  // check channel is valid
+  bool validChannel(const unsigned int daqChan) const;
+
   // vector of sectors on the board
   const std::vector<LHCb::STChannelID>& sectorIDs() const;
   
@@ -94,6 +97,10 @@ inline const std::vector<int>& STTell1Board::orientation() const{
 
 inline const std::vector<LHCb::STChannelID>& STTell1Board::sectorIDs() const{
   return m_sectorsVector;
+}
+
+inline bool STTell1Board::validChannel(const unsigned int daqChan) const{
+  return (daqChan < m_nStripsPerHybrid*m_sectorsVector.size()); 
 }
   
 #endif // _STTell1Board_H

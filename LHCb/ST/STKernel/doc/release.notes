@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.15 2008-05-07 12:09:12 mneedham Exp $
+! $Id: release.notes,v 1.16 2008-05-12 13:08:26 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-05-12 M Needham
+ - Improve printout in mapping printout in STTell1Board
+ - Add validChannel function
 
 ! 2008-05-07 M Needham
  - Improve printout in mapping printout in STTell1Board

@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.2 2008-05-07 12:09:12 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.3 2008-05-12 13:08:26 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 
@@ -125,6 +125,7 @@ std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 
   // print function
   os << " Board: " << m_boardID.region() << " " <<  m_boardID.subID() << std::endl;
+  os << "# readout sectors " << m_sectorsVector.size() << std::endl;
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
   for (; iterW !=  m_sectorsVector.end() ;++iterW){
     os << "Station: " << (*iterW).station() << "Layer: " << (*iterW).layer() 
