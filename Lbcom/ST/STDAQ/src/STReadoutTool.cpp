@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.6 2008-05-12 13:08:36 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.7 2008-05-13 11:52:20 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -24,7 +24,7 @@ STReadoutTool::STReadoutTool(const std::string& type,
   m_nBoard(0)
 {
   // constructer
-  declareProperty("printMapping", m_printMapping = true);
+  declareProperty("printMapping", m_printMapping = false );
 
   m_boards.reserve(100); // about correct
 }
