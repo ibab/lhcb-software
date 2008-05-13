@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v15r0>2008-05-09 Boole v15r0</A></H1><PRE>
+</PRE><H1><A NAME=v15r0>2008-05-13 Boole v15r0</A></H1><PRE>
  - In BooleMoni.opts: remove monitoring of OTTimes, no longer created in Boole
    by default
  - In Boole.opts:
@@ -25,6 +25,7 @@ Purpose: LHCb Digitization program
  - In requirements:
    o use GaudiApp pattern to set version number for gaudirun.py
    o use FieldMap v5r*, gives access to measured field map
+   o use all needed component libraries for cmt broadcast usage
 
 </PRE><H1><A NAME=v14r10>2008-03-06 Boole v14r10</A></H1><PRE>
  - In v200601.opts, TAE.opts, PilotRun.opts, adapt to new defaults in ST

@@ -22,13 +22,17 @@ use FieldMap           v5r*         -no_auto_imports
 # and to give a cmt broadcast dependency for user checked out component packages
 
 # From GAUDI project
-use GaudiSvc           v*           -no_auto_imports
+use Gaudi              v*           -no_auto_imports
 use GaudiPoolDb        v*           -no_auto_imports
-use GaudiPython        v*           -no_auto_imports
 
 # From LHCbSys
 use LHCbAlgs           v*    Kernel -no_auto_imports
 use SimComponents      v*    Sim    -no_auto_imports
+use XmlTools           v*    Tools  -no_auto_imports
+use CaloDetXmlCnv      v*    Det    -no_auto_imports
+use DetDescSvc         v*    Det    -no_auto_imports
+use Magnet             v*    Det    -no_auto_imports
+use MDF                v*    DAQ    -no_auto_imports
 
 # The whole LBCOM project
 use LbcomSys           v*           -no_auto_imports
