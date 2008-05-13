@@ -24,9 +24,9 @@ RiCKResAllHighP.HistoPrint       = false;
 
 // Long tracks tracks - all P
 CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResLongAll" };
-RiCKResLong.TrackSelector.TrackAlgs  = { "Forward", "Match" };
-RiCKResLong.HistoPrint = false;
-RiCKResLong.MinBeta = { 0, 0, 0 };
+RiCKResLongAll.TrackSelector.TrackAlgs  = { "Forward", "Match" };
+RiCKResLongAll.HistoPrint = false;
+RiCKResLongAll.MinBeta = { 0, 0, 0 };
 
 // forward tracks
 CheckRICHSeq.Members += { "Rich::Rec::MC::RecoQC/RiCKResFrwdHighBeta" };
