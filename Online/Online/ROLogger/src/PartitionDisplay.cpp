@@ -10,11 +10,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.3 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.4 2008-05-13 07:55:40 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
 #include "ROLogger/ClusterDisplay.h"
+#include "ROLogger/FilterDisplay.h"
 #include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
@@ -37,7 +38,7 @@ static int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
 
 /// Standard constructor
 PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const std::string& name) 
-  : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_clDisp(0), m_numMsg(200)
+  : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_numMsg(200)
 {
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_wildNode,"*");
@@ -54,7 +55,8 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);
   ::upic_add_command(CMD_WILD_MESSAGE, "...and match message: ^^^^^^^^^^^^^^^","");
   ::upic_add_command(CMD_CLEAR_HISTORY,"Clear history","");
-  ::upic_add_command(CMD_SUMM_HISTORY,"History summary","");
+  ::upic_add_command(CMD_SUMM_HISTORY, "History summary","");
+  ::upic_add_command(CMD_SHOW_FILTERS, "Edit filters","");
   ::upic_add_comment(CMD_COM5,"---------------------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,"Close","");
   ::upic_close_menu();
@@ -63,7 +65,6 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
 
 /// Standard destructor
 PartitionDisplay::~PartitionDisplay()  {
-  m_clDisp = std::auto_ptr<Interactor>(0);
   UpiSensor::instance().remove(this,m_id);
   ::upic_delete_menu(m_id);
   ::upic_write_message("Close window.","");
@@ -78,7 +79,7 @@ void PartitionDisplay::showCluster(int cmd) {
     if ( strncmp((*i).c_str(),name.c_str(),name.length())==0 ) 
       nodes.push_back(*i);
   }
-  m_clDisp = std::auto_ptr<Interactor>(new ClusterDisplay(this,m_history,name,nodes));
+  new ClusterDisplay(this,m_history,name,nodes);
   m_menuCursor = cmd;
   dim_unlock();
 }
@@ -137,12 +138,9 @@ void PartitionDisplay::handle(const Event& ev) {
     case CMD_UPDATE_CLUSTERS:
       updateFarms();
       return;
-    case CMD_DELETE_FARM_DISPLAY:
-      m_clDisp = std::auto_ptr<Interactor>(0);
+    case CMD_DELETE:
       ::upic_set_cursor(m_id,m_menuCursor,0);
-      return;
-    case CMD_DELETE_PART_DISPLAY:
-      delete this;
+      delete (Interactor*)ev.data;
       break;
     default:
       break;
@@ -156,7 +154,7 @@ void PartitionDisplay::handle(const Event& ev) {
     if ( ::strchr(m_wildMessage,' ') ) *::strchr(m_wildMessage,' ') = 0;
     switch(ev.command_id) {
     case CMD_CLOSE:
-      ioc.send(m_parent,CMD_DELETE_PART_DISPLAY,this);
+      ioc.send(m_parent,CMD_DELETE,this);
       return;
     case CMD_SUMM_HISTORY:
       ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
@@ -169,6 +167,9 @@ void PartitionDisplay::handle(const Event& ev) {
       return;
     case CMD_CLEAR_HISTORY:
       IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
+      return;
+    case CMD_SHOW_FILTERS:
+      new FilterDisplay(this,m_msg,m_history);
       return;
     default:
       if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {

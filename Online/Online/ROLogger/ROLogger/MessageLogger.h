@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.2 2008-05-07 17:58:06 frankb Exp $
+// $Id: MessageLogger.h,v 1.3 2008-05-13 07:55:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,20 +11,18 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.2 2008-05-07 17:58:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.3 2008-05-13 07:55:40 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
 // Framework include files
 #include "CPP/Interactor.h"
+#include "ROLogger/Filter.h"
 
 // C++ include files
 #include <map>
 #include <list>
 #include <vector>
-#include <string>
-#include <cstdio>
-
 
 /*
  *   ROLogger namespace declaration
@@ -49,6 +47,7 @@ namespace ROLogger {
     };
     typedef std::map<std::string,Entry*> Services;
     typedef std::list<std::string>       History;
+    typedef std::vector<Filter>          Filters;
 
     /// DIM service identifier
     int m_service;
@@ -56,6 +55,8 @@ namespace ROLogger {
     bool m_colors;
     /// Flag to indicate output to xterm 
     bool m_display;
+    /// Filter array
+    Filters  m_filters;
     /// Connected DIM services
     Services m_infos;
     /// History buffer
@@ -73,6 +74,8 @@ namespace ROLogger {
     void printHistory(const std::string& pattern);
     /// Update history content
     void updateHistory(const char* msg);
+    /// Check filters if this message should be printed....
+    bool checkFilters(const char* msg) const;
 
   public:
     /// Standard constructor with object setup through parameters
@@ -82,7 +85,6 @@ namespace ROLogger {
 
     /// Interactor callback handler
     virtual void handle(const Event& ev);
-
 
     /// Print header information before starting output
     void printHeader(const std::string& title);
@@ -98,6 +100,8 @@ namespace ROLogger {
     void cleanupService(Entry* e);
     /// Remove unconditionally all connected services
     void removeAllServices();
+    /// Load filters from string represntation
+    void loadFilters(const std::string& s);
 
     /// DIM command service callback
     void handleMessages(const char* nodes, const char* end);

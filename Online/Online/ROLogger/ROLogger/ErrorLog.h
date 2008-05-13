@@ -1,4 +1,4 @@
-// $Id: ErrorLog.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Id: ErrorLog.h,v 1.2 2008-05-13 07:55:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrorLog.h,v 1.1 2008-04-30 08:39:24 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrorLog.h,v 1.2 2008-05-13 07:55:40 frankb Exp $
 #ifndef ROMON_RODIMLOGGER_H
 #define ROMON_RODIMLOGGER_H
 
@@ -47,6 +47,9 @@ namespace ROLogger {
     ErrorLog(int argc, char** argv);
     /// Standard destructor
     virtual ~ErrorLog();
+
+    /// Shutdown client windows
+    void shutdown();
     /// Display callback handler
     virtual void handle(const Event& ev);
     /// Help printout for RTL CLI

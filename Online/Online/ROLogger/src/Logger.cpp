@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Id: Logger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -93,7 +93,11 @@ void Logger::handle(const Event& ev) {
       return;      
     case CMD_CLEAR_HISTORY:
       sendData("C:ClearAllHistory");
-      return;      
+      return;
+    case CMD_APPLY_FILTERS:
+      sendData("F:"+*data.str);
+      delete data.str;
+      return;
     case CMD_NODE_HISTORY:
       sendData("Q:"+*data.str);
       delete data.str;

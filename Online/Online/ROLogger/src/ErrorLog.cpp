@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.4 2008-05-07 16:22:21 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.5 2008-05-13 07:55:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.4 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.5 2008-05-13 07:55:40 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -39,13 +39,15 @@ ErrorLog::ErrorLog(int argc, char** argv)
   RTL::CLI cli(argc, argv, help_fun);
   std::string name, info;
   cli.getopt("service",1,name);
-  if ( name.empty() ) {
-    ::upic_write_message("You have to supply a service name to display its data.","");
-    ::lib_rtl_sleep(10000);
-    ::exit(2);
-  }
   m_messageLog = new Logger(RTL::processName()+"_display");
   m_historyLog = new Logger(RTL::processName()+"_history");
+  if ( name.empty() ) {
+    ::upic_write_message("You have to supply a service name to display its data.","");
+    ::lib_rtl_sleep(200);
+    shutdown();
+    IocSensor::instance().send(this,CMD_CLOSE,this);
+    return;
+  }
   m_partDisplay = new PartitionDisplay(this,m_messageLog,m_historyLog,name);
   m_partListener = new PartitionListener(this,name);
 }
@@ -54,8 +56,8 @@ ErrorLog::ErrorLog(int argc, char** argv)
 ErrorLog::~ErrorLog()  {
   delete m_partListener;
   delete m_partDisplay;
-  delete m_messageLog;
-  delete m_historyLog;
+  if ( m_messageLog ) delete m_messageLog;
+  if ( m_historyLog ) delete m_historyLog;
   ::upic_write_message("Close window.","");
   ::upic_quit();
   ::lib_rtl_sleep(200);
@@ -63,6 +65,14 @@ ErrorLog::~ErrorLog()  {
 }
 
 void ErrorLog::help_fun() {
+}
+
+/// Shutdown client windows
+void ErrorLog::shutdown() {
+  if ( m_messageLog ) delete m_messageLog;
+  m_messageLog = 0;
+  if ( m_historyLog ) delete m_historyLog;
+  m_historyLog = 0;
 }
 
 void ErrorLog::handle(const Event& ev) {
@@ -76,11 +86,14 @@ void ErrorLog::handle(const Event& ev) {
     case CMD_UPDATE_FARMS: // From PartitionListener
       ioc.send(m_partDisplay,CMD_UPDATE_FARMS,ev.data);
       return;
-    case CMD_DELETE_PART_DISPLAY:
+    case CMD_DELETE:
       delete this;
       ::lib_rtl_sleep(200);
       ::exit(0);
       return;
+    case CMD_CLOSE:
+      ::lib_rtl_sleep(5000);
+      ::exit(2);
     default:
       break;
     }

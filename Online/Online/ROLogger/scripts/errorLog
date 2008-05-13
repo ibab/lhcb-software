@@ -1,7 +1,7 @@
 #!/bin/bash
 export UTGID=Errlog_$$
 #. /group/online/dataflow/scripts/preamble.sh
-#export DATAFLOWDIR=/group/online/dataflow
+# export DATAFLOWDIR=/group/online/dataflow
 . /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars
 #. ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
 #

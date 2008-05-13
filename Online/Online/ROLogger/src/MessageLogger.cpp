@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.2 2008-05-07 17:58:06 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.2 2008-05-07 17:58:06 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
 
 // Framework include files
 #include <cerrno>
@@ -24,6 +24,7 @@
 #include "CPP/Event.h"
 
 #include "ROLogger/MessageLogger.h"
+#include "ROLogger/Filter.h"
 #include "ROLoggerDefs.h"
 
 extern "C" {
@@ -290,6 +291,18 @@ void MessageLogger::clearHistory() {
   printMessage(text,true);
 }
 
+/// Load filters from string represntation
+void MessageLogger::loadFilters(const std::string& s) {
+  std::stringstream str(s);
+  Filter filter;
+  m_filters.clear();
+  while(filter.read(str)>0) m_filters.push_back(filter);
+  printHeader("Message filters:");
+  for(Filters::const_iterator i=m_filters.begin();i!=m_filters.end();++i) {
+    (*i).dump(std::cout);
+  }
+}
+
 /// DIM command service callback
 void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   MessageLogger* h = *(MessageLogger**)tag;
@@ -317,6 +330,13 @@ void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   case 'S': // Summarize history
     h->summarizeHistory();
     return;
+  case 'F': // Load filters
+    idx = n.find(":");
+    if ( idx != std::string::npos ) {
+      h->loadFilters(n.substr(idx+1));
+      return;
+    }
+    break;
   case 'M': // Messages mode
     idx = n.find(":");
     if ( idx != std::string::npos ) {
@@ -421,12 +441,35 @@ void MessageLogger::handleHistory(const std::string& nam) {
   e->name    = nam;
 }
 
+/// Check filters if this message should be printed....
+bool MessageLogger::checkFilters(const char* msg) const {
+  if ( msg ) {
+    if ( !m_filters.empty() ) {
+      for(Filters::const_iterator i=m_filters.begin();i!=m_filters.end();++i) {
+	if ( !(*i).acceptMessage(msg) ) return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
 /// Dim Info callback overload to process messages
 void MessageLogger::messageInfoHandler(void* tag, void* address, int* size)  {
   if ( address && size && *size>0 ) {
     Entry* e = *(Entry**)tag;
-    e->self->updateHistory((char*)address);
-    if ( e->self->m_display ) e->self->printMessage((char*)address,false);
+    MessageLogger* l = e->self;
+    const char* msg = (char*)address;
+    l->updateHistory(msg);
+    if ( l->m_display )  {
+      if ( l->checkFilters(msg) ) {
+	l->printMessage(msg,false);
+      }
+      else {
+	l->printMessage(" ---------------------------- IGNORED:",false);
+	l->printMessage(msg,false);
+      }
+    }
   }
 }
 
