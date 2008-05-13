@@ -1,8 +1,11 @@
-// $Id: CaloBremMatch.cpp,v 1.4 2008-01-24 10:22:42 vegorych Exp $
+// $Id: CaloBremMatch.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/01/24 10:22:42  vegorych
+// _setProperty was removed, AddNeigbours warning was solved
+//
 // Revision 1.3  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -108,9 +111,9 @@ protected:
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     // 
-    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
-    setProperty ( "Tolerance"    , 10 ) ; // 10 millimeters
-    setProperty ( "zForFastExtrapolator" , 0 ) ; // 0  meters 
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal );
+    _setProperty ( "Tolerance"    , "10" ) ; // 10 millimeters
+    _setProperty ( "zForFastExtrapolator" , "0" ); // 0  meters 
   } ;
   /// virtual and protected destructor 
   virtual ~CaloBremMatch(){} ;

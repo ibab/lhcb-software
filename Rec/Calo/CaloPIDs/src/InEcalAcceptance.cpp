@@ -1,4 +1,4 @@
-// $Id: InEcalAcceptance.cpp,v 1.4 2008-01-24 10:22:42 vegorych Exp $
+// $Id: InEcalAcceptance.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +29,9 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Ecal ) ;
-    setProperty ( "UseFiducial" , true  ) ;
-    setProperty ( "Tolerance"   , 5 ) ;  /// 5 * Gaudi::Units::mm 
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Ecal ) ;
+    _setProperty ( "UseFiducial" , "true"  ) ;
+    _setProperty ( "Tolerance"   , "5" ) ;  /// 5 * Gaudi::Units::mm 
   } ;
   /// virtual and protected destructor 
   virtual ~InEcalAcceptance(){} ;

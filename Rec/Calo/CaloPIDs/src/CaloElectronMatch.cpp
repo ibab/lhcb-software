@@ -1,8 +1,11 @@
-// $Id: CaloElectronMatch.cpp,v 1.4 2008-01-24 10:22:42 vegorych Exp $
+// $Id: CaloElectronMatch.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/01/24 10:22:42  vegorych
+// _setProperty was removed, AddNeigbours warning was solved
+//
 // Revision 1.3  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -107,9 +110,9 @@ protected:
   {
     declareInterface<ICaloTrackMatch> ( this ) ;
     // 
-    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
-    setProperty ( "Tolerance"    , 5 ) ; // 5 millimeters
-    setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
+    _setProperty ( "Tolerance"    , "5" ); // 5 millimeters
+    _setProperty ( "Extrapolator" , "TrackMasterExtrapolator/Regular" ) ;
   } ;
   /// virtual and protected destructor 
   virtual ~CaloElectronMatch(){} ;

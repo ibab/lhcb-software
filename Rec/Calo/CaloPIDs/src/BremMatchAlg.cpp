@@ -1,8 +1,11 @@
-// $Id: BremMatchAlg.cpp,v 1.5 2008-01-24 10:22:42 vegorych Exp $
+// $Id: BremMatchAlg.cpp,v 1.6 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2008/01/24 10:22:42  vegorych
+// _setProperty was removed, AddNeigbours warning was solved
+//
 // Revision 1.4  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -56,13 +59,13 @@ protected:
   {
     Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Photons     ) ;
     //
-    setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-    setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
-    setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
-    setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
-    setProperty ( "Threshold" , 10000                             ) ;
+    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+    _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
+    _setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
+    _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
+    setProperty ( "Threshold" , 10000                               ).ignore() ;
     // track types:
-    setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
+    _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>
                    ( LHCb::Track::Velo     ,
                      LHCb::Track::Long     ,
                      LHCb::Track::Upstream ) ) ;

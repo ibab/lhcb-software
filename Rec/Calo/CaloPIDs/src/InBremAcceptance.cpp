@@ -1,4 +1,4 @@
-// $Id: InBremAcceptance.cpp,v 1.5 2008-01-24 10:22:42 vegorych Exp $
+// $Id: InBremAcceptance.cpp,v 1.6 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,8 +42,8 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    setProperty ( "Extrapolator" , "TrackLinearExtrapolator/Linear:PUBLIC" ) ;
-    setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
+    _setProperty ( "Extrapolator" , "TrackLinearExtrapolator/Linear:PUBLIC" ) ;
+    _setProperty ( "Calorimeter"  , DeCalorimeterLocation::Ecal ) ;
   } ;
   /// virtual and protected destructor 
   virtual ~InBremAcceptance(){} ;

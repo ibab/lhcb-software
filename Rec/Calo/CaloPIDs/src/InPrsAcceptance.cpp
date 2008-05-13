@@ -1,4 +1,4 @@
-// $Id: InPrsAcceptance.cpp,v 1.4 2008-01-24 10:22:42 vegorych Exp $
+// $Id: InPrsAcceptance.cpp,v 1.5 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,9 +29,9 @@ protected:
     const IInterface*  parent )
     : InCaloAcceptance( type, name , parent )
   {
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Prs ) ;
-    setProperty ( "UseFiducial" , false  ) ;
-    setProperty ( "Tolerance"   , 10 ) ;  /// 10 * Gaudi::Units::mm 
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Prs ) ;
+    _setProperty ( "UseFiducial" , "false"  ) ;
+    _setProperty ( "Tolerance"   , "10" ) ;  /// 10 * Gaudi::Units::mm 
   } ;
   /// virtual and protected destructor 
   virtual ~InPrsAcceptance(){} ;
@@ -46,6 +46,3 @@ private:
 DECLARE_TOOL_FACTORY( InPrsAcceptance ) ;
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.51 2008-01-24 16:56:52 cattanem Exp $ 
+! $Id: release.notes,v 1.52 2008-05-13 12:25:51 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2008-05-13 Olivier Deschamps
+- restore void _setProperty(..) instead of StatusCode setProperty(...)
 
 !========================== CaloPIDs v4r9 2008-01-24 ===================
 ! 2008-01-24 - Victor Egorychev

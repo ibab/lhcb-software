@@ -1,8 +1,11 @@
-// $Id: PrsEnergyForTrack.cpp,v 1.3 2008-01-24 10:22:42 vegorych Exp $
+// $Id: PrsEnergyForTrack.cpp,v 1.4 2008-05-13 12:25:51 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/01/24 10:22:42  vegorych
+// _setProperty was removed, AddNeigbours warning was solved
+//
 // Revision 1.2  2007/08/24 21:25:19  odescham
 // fix uncheck. StatusCodes
 //
@@ -31,9 +34,9 @@ protected:
     const IInterface*  parent ) 
     : CaloEnergyForTrack ( type , name , parent ) 
   {
-    setProperty ( "DataAddress" , LHCb::CaloDigitLocation::Prs ) ;
-    setProperty ( "Tolerance"   , 2    ) ; /// 2 * Gaudi::Units::mm 
-    setProperty ( "Calorimeter" , DeCalorimeterLocation::Prs   ) ;
+    _setProperty ( "DataAddress" , LHCb::CaloDigitLocation::Prs ) ;
+    _setProperty ( "Tolerance"   , "2"    ) ; /// 2 * Gaudi::Units::mm  
+    _setProperty ( "Calorimeter" , DeCalorimeterLocation::Prs   ) ;
   } ;
   virtual ~PrsEnergyForTrack() {}
 private:
