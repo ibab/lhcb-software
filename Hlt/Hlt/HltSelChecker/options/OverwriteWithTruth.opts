@@ -15,3 +15,36 @@ HltMuonID.TrackLocation = "Hlt/Track/Signal" ;
 HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Signal" ;
 
 HltMuonPAlg.InputTrackLocation = "Hlt/Track/SignalMuons";
+
+// redo association
+
+SeqHlt2TruthFilter.Members += { "GaudiSequencer/RedoTrueTrackAssoc",
+                                "GaudiSequencer/RedoMuonTrackAssoc" };
+
+
+RedoTrueTrackAssoc.Members += { "TESCheck/CheckSignalTracks",
+                                "TrackAssociator/HltSignalTrackAssociator" };
+
+RedoTrueMuonAssoc.Members += { "TESCheck/CheckSignalMuons",
+                               "TrackAssociator/HltSignalMuonAssociator" };
+
+CheckSignalTracks.Inputs = {"Hlt/Track/Signal"};
+CheckSignalTracks.Stop = false ;
+HltSignalTrackAssociator.TracksInContainer = "Hlt/Track/Signal" ;
+CheckSignalMuons.Inputs = {"Hlt/Track/SignalMuons"};
+CheckSignalMuons.Stop = false ;
+HltSignalMuonAssociator.TracksInContainer = "Hlt/Track/SignalMuons" ;
+
+
+/*
+ * tests by Vava
+KillMyNodes.Members += {"TESCheck/DaVinciEvtCheck2",
+                        "EventNodeKiller/DaVinciEvtNodeKiller2",
+                        "TrackAssociator/HltSignalTrackAssociator"};
+DaVinciEvtCheck2.Inputs = {"Link/Hlt/Track/ForwardCLEANED"};
+DaVinciEvtCheck2.Stop = false;
+DaVinciEvtCheck2.OutputLevel = 1;
+DaVinciEvtNodeKiller2.Nodes = {"Link/Hlt/Track/ForwardCLEANED"};
+DaVinciEvtNodeKiller2.OutputLevel = 1;
+TA2.TracksInContainer = "Hlt/Track/Signal" ;
+*/
