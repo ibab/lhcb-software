@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.32 2008-01-24 10:22:42 vegorych Exp $
+# $Id: requirements,v 1.33 2008-05-13 14:19:13 cattanem Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v4r9
+version           v4r10
 
 # =============== structure ===================================================
 branches          cmt doc src options 
@@ -31,51 +31,5 @@ library           CaloPIDs    ../src/*.cpp
 
 # =============== patterns/rules ==============================================
 apply_pattern     component_library library=CaloPIDs
-	
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.31  2007/09/20 09:31:59  cattanem
-# v4r8
-#
-# Revision 1.30  2007/05/26 17:18:06  vegorych
-# new PIDs from DC06 and BremPID added
-#
-# Revision 1.29  2007/03/02 15:22:07  cattanem
-# cleanups for Rec v4r2
-#
-# Revision 1.28  2006/11/27 17:06:48  cattanem
-# v4r5p1
-#
-# Revision 1.27  2006/11/27 15:48:08  vegorych
-# warning VERY PRELIMINARY was removed
-#
-# Revision 1.26  2006/11/07 16:20:09  cattanem
-# v4r5
-#
-# Revision 1.25  2006/11/06 11:05:24  vegorych
-#  New PID tuning for DC06
-#
-# Revision 1.24  2006/09/28 09:56:54  ibelyaev
-#  bug fix in BremChi2 evaluation
-#
-# Revision 1.23  2006/08/03 08:55:17  cattanem
-# v4r3
-#
-# Revision 1.22  2006/07/19 07:32:57  cattanem
-# fix for Gaudi v18r6
-#
-# Revision 1.21  2006/06/27 16:40:25  odescham
-# Add photon matching tool from CaloReco
-#
-# Revision 1.20  2006/06/19 08:56:14  cattanem
-# fix typo
-#
-# Revision 1.19  2006/06/18 18:35:26  ibelyaev
-#  the firstcommmit for DC06 branch
-#
-# Revision 1.18  2006/06/18 18:23:06  ibelyaev
-#  remove all old stuff
-# 	
-# =============================================================================
-# The END 
+
 # =============================================================================
