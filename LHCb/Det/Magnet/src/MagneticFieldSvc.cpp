@@ -1,10 +1,11 @@
-// $Id: MagneticFieldSvc.cpp,v 1.27 2008-05-08 16:28:56 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.28 2008-05-13 11:16:02 smenzeme Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include <iostream>
 
 #include "MagneticFieldSvc.h"
 
@@ -359,6 +360,7 @@ for(int ifile=0;ifile<4;ifile++) {
 StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
                                                Gaudi::XYZVector& bf ) const {
 
+
   if( m_useConstField ) {
     bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
                m_constFieldVector[1]*Gaudi::Units::tesla,
@@ -378,6 +380,7 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
   int i = int( x/m_Dxyz[0]);
   int j = int( y/m_Dxyz[1] );
   int k = int( z/m_Dxyz[2] );
+
   
   int ijk000 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j )     + i );
   int ijk001 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j )     + i );
@@ -387,9 +390,6 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
   int ijk101 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j)      + i + 1 );
   int ijk110 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1)  + i + 1 );
   int ijk111 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1 ) + i + 1 );
-
-
-  
   // auxiliary variables defined at the vertices of the cube that
   // contains the (x, y, z) point where the field is interpolated
 
@@ -397,66 +397,67 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 
   if(!m_useRealMap) {
     
-  cx000 = m_Q[ ijk000 ];
-  cx001 = m_Q[ ijk001 ];
-  cx010 = m_Q[ ijk010 ];
-  cx011 = m_Q[ ijk011 ];
-  cx100 = m_Q[ ijk100 ];
-  cx101 = m_Q[ ijk101 ];
-  cx110 = m_Q[ ijk110 ];
-  cx111 = m_Q[ ijk111 ];
-  cy000 = m_Q[ ijk000+1 ];
-  cy001 = m_Q[ ijk001+1 ];
-  cy010 = m_Q[ ijk010+1 ];
-  cy011 = m_Q[ ijk011+1 ];
-  cy100 = m_Q[ ijk100+1 ];
-  cy101 = m_Q[ ijk101+1 ];
-  cy110 = m_Q[ ijk110+1 ];
-  cy111 = m_Q[ ijk111+1 ];
-  cz000 = m_Q[ ijk000+2 ];
-  cz001 = m_Q[ ijk001+2 ];
-  cz010 = m_Q[ ijk010+2 ];
-  cz011 = m_Q[ ijk011+2 ];
-  cz100 = m_Q[ ijk100+2 ];
-  cz101 = m_Q[ ijk101+2 ];
-  cz110 = m_Q[ ijk110+2 ];
-  cz111 = m_Q[ ijk111+2 ];
-  
+    cx000 = m_Q[ ijk000 ];
+    cx001 = m_Q[ ijk001 ];
+    cx010 = m_Q[ ijk010 ];
+    cx011 = m_Q[ ijk011 ];
+    cx100 = m_Q[ ijk100 ];
+    cx101 = m_Q[ ijk101 ];
+    cx110 = m_Q[ ijk110 ];
+    cx111 = m_Q[ ijk111 ];
+    cy000 = m_Q[ ijk000+1 ];
+    cy001 = m_Q[ ijk001+1 ];
+    cy010 = m_Q[ ijk010+1 ];
+    cy011 = m_Q[ ijk011+1 ];
+    cy100 = m_Q[ ijk100+1 ];
+    cy101 = m_Q[ ijk101+1 ];
+    cy110 = m_Q[ ijk110+1 ];
+    cy111 = m_Q[ ijk111+1 ];
+    cz000 = m_Q[ ijk000+2 ];
+    cz001 = m_Q[ ijk001+2 ];
+    cz010 = m_Q[ ijk010+2 ];
+    cz011 = m_Q[ ijk011+2 ];
+    cz100 = m_Q[ ijk100+2 ];
+    cz101 = m_Q[ ijk101+2 ];
+    cz110 = m_Q[ ijk110+2 ];
+    cz111 = m_Q[ ijk111+2 ];
+    
   } else {
     
     int iquadr=999;
     
-  if(r.x() >=0 && r.y() >=0) iquadr=0;
-  if(r.x() <0 && r.y() >0) iquadr=1;
-  if(r.x() >0 && r.y() <0) iquadr=2;
-  if(r.x() <0 && r.y() <0) iquadr=3;
-
-
-  cx000 = (m_Q_quadr[iquadr])[ ijk000 ];
-  cx001 = (m_Q_quadr[iquadr])[ ijk001 ];
-  cx010 = (m_Q_quadr[iquadr])[ ijk010 ];
-  cx011 = (m_Q_quadr[iquadr])[ ijk011 ];
-  cx100 = (m_Q_quadr[iquadr])[ ijk100 ];
-  cx101 = (m_Q_quadr[iquadr])[ ijk101 ];
-  cx110 = (m_Q_quadr[iquadr])[ ijk110 ];
-  cx111 = (m_Q_quadr[iquadr])[ ijk111 ];
-  cy000 = (m_Q_quadr[iquadr])[ ijk000+1 ];
-  cy001 = (m_Q_quadr[iquadr])[ ijk001+1 ];
-  cy010 = (m_Q_quadr[iquadr])[ ijk010+1 ];
-  cy011 = (m_Q_quadr[iquadr])[ ijk011+1 ];
-  cy100 = (m_Q_quadr[iquadr])[ ijk100+1 ];
-  cy101 = (m_Q_quadr[iquadr])[ ijk101+1 ];
-  cy110 = (m_Q_quadr[iquadr])[ ijk110+1 ];
-  cy111 = (m_Q_quadr[iquadr])[ ijk111+1 ];
-  cz000 = (m_Q_quadr[iquadr])[ ijk000+2 ];
-  cz001 = (m_Q_quadr[iquadr])[ ijk001+2 ];
-  cz010 = (m_Q_quadr[iquadr])[ ijk010+2 ];
-  cz011 = (m_Q_quadr[iquadr])[ ijk011+2 ];
-  cz100 = (m_Q_quadr[iquadr])[ ijk100+2 ];
-  cz101 = (m_Q_quadr[iquadr])[ ijk101+2 ];
-  cz110 = (m_Q_quadr[iquadr])[ ijk110+2 ];
-  cz111 = (m_Q_quadr[iquadr])[ ijk111+2 ];
-  
+    if(r.x() >=0 )
+      if (r.y() >=0 ) iquadr=0;
+      else iquadr=2;
+    else 
+      if (r.y() >=0 ) iquadr=1;
+      else iquadr=3;
+    
+    cx000 = (m_Q_quadr[iquadr])[ ijk000 ];
+    cx001 = (m_Q_quadr[iquadr])[ ijk001 ];
+    cx010 = (m_Q_quadr[iquadr])[ ijk010 ];
+    cx011 = (m_Q_quadr[iquadr])[ ijk011 ];
+    cx100 = (m_Q_quadr[iquadr])[ ijk100 ];
+    cx101 = (m_Q_quadr[iquadr])[ ijk101 ];
+    cx110 = (m_Q_quadr[iquadr])[ ijk110 ];
+    cx111 = (m_Q_quadr[iquadr])[ ijk111 ];
+    cy000 = (m_Q_quadr[iquadr])[ ijk000+1 ];
+    cy001 = (m_Q_quadr[iquadr])[ ijk001+1 ];
+    cy010 = (m_Q_quadr[iquadr])[ ijk010+1 ];
+    cy011 = (m_Q_quadr[iquadr])[ ijk011+1 ];
+    cy100 = (m_Q_quadr[iquadr])[ ijk100+1 ];
+    cy101 = (m_Q_quadr[iquadr])[ ijk101+1 ];
+    cy110 = (m_Q_quadr[iquadr])[ ijk110+1 ];
+    cy111 = (m_Q_quadr[iquadr])[ ijk111+1 ];
+    cz000 = (m_Q_quadr[iquadr])[ ijk000+2 ];
+    cz001 = (m_Q_quadr[iquadr])[ ijk001+2 ];
+    cz010 = (m_Q_quadr[iquadr])[ ijk010+2 ];
+    cz011 = (m_Q_quadr[iquadr])[ ijk011+2 ];
+    cz100 = (m_Q_quadr[iquadr])[ ijk100+2 ];
+    cz101 = (m_Q_quadr[iquadr])[ ijk101+2 ];
+    cz110 = (m_Q_quadr[iquadr])[ ijk110+2 ];
+    cz111 = (m_Q_quadr[iquadr])[ ijk111+2 ];
+    
   }
   
   double hx1 = ( x-i*m_Dxyz[0] )/m_Dxyz[0];

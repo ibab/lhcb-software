@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+! 2008-05-08 - Stephanie Hansmann-Menzemer
+  - fix to look up proper field map for points at the corners (x=0 or y=0)
 
 !====================== Magnet v3r8 2008-05-08 ===============================
 ! 2008-05-08 - Adlene Hicheur
