@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.31 2008-03-03 20:05:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFIO.cpp,v 1.32 2008-05-13 15:42:01 frankb Exp $
 //  ====================================================================
 //  MDFIO.cpp
 //  --------------------------------------------------------------------
@@ -669,8 +669,9 @@ StatusCode LHCb::MDFIO::adoptBanks(RawEvent* evt,
                                    bool copy_banks)  
 {
   if ( evt )  {
+    // MsgStream log(m_msgSvc, m_parent);
     for(std::vector<RawBank*>::const_iterator k=bnks.begin(); k!=bnks.end(); ++k) {
-      // std::cout << RawEventPrintout::bankHeader(*k) << std::endl;
+      // log << MSG::DEBUG << "Adopt bank:" << RawEventPrintout::bankHeader(*k) << endmsg;
       evt->adoptBank(*k, copy_banks);
     }
     return StatusCode::SUCCESS;

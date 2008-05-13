@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.28 2008-05-06 12:22:28 frankm Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.29 2008-05-13 15:42:01 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -306,25 +306,27 @@ RawDataCnvSvc::unpackMEP(const MDFDescriptor& dat, const std::string& loc, RawEv
       std::map<unsigned int,std::vector<RawBank*> >::iterator it = evts.begin();
       std::vector<std::string> names = buffersMEP(dat.first);
       std::vector<std::string>::const_iterator i=names.begin();
+      setupMDFIO(msgSvc(),dataProvider());
       for(; i != names.end() && it != evts.end(); ++i, ++it)   {
-        if ( (*i) == loc )    {
+        std::string obj_loc = (*i)+"/DAQ/RawEvent";
+        if ( obj_loc == loc )    {
           r = raw;
         }
         else  {
-          sc = dataProvider()->retrieveObject((*i)+"/DAQ/RawEvent",(DataObject*&)r);
+          sc = dataProvider()->retrieveObject(obj_loc,(DataObject*&)r);
           if ( !sc.isSuccess() )  {
-            return error("Failed to access raw event at:"+(*i));
+            return error("Failed to access raw event at:"+obj_loc);
           }
         }
 	log << MSG::DEBUG
-	    << "Filling banks for " << *i << " " << r->clID() << " " << loc 
-	    << " [" << (*it).second.size() << " banks]."
-	    << endmsg;
+	    << "unpackMEP: Filling banks for " << obj_loc << " " << r->clID() 
+	    << " " << " [" << (*it).second.size() << " banks] (" << loc << ") " 
+	    << (void*)r << "<>" << (void*)raw << endmsg;
         sc = adoptBanks(r,(*it).second);
         if ( sc.isSuccess() )  {
           continue;
         }
-        return error("Failed to add MEP banks to raw event structure.");
+        return error("Failed to add MEP banks to raw event structure:"+obj_loc);
       }
       return StatusCode::SUCCESS;
     }

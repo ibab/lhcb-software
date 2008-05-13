@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2008-05-13 - Markus Frank
+ - Fix bug when reading MEP events from MBM.
+
 !========================= MDF v3r7 2008-04-29 ===============================
 ! 2008-04-29 - Marco Cattaneo
  - Fix a doxygen comment and a duplicated function definition
