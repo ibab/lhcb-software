@@ -3,10 +3,11 @@
 ! Responsible : 
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
-! 2008-05-08 - Stephanie Hansmann-Menzemer
+
+!====================== Magnet v3r8 2008-05-13 ===============================
+! 2008-05-13 - Stephanie Hansmann-Menzemer
   - fix to look up proper field map for points at the corners (x=0 or y=0)
 
-!====================== Magnet v3r8 2008-05-08 ===============================
 ! 2008-05-08 - Adlene Hicheur
  - Upgrade MagneticFieldSvc to use real field map + properties for conditions
  - For new field map requires FieldMap v5r0. Uses old fieldmap by default
