@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.16 2008-05-12 13:08:26 mneedham Exp $
+! $Id: release.notes,v 1.17 2008-05-13 09:55:28 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r4 2008-05-13 ============================
 ! 2008-05-12 M Needham
  - Improve printout in mapping printout in STTell1Board
  - Add validChannel function
@@ -11,7 +12,6 @@
  - Improve printout in mapping printout in STTell1Board
  - Give access to list of sectors on a Tell1 board
 
-!====================== STKernel v1r4 2008-05-05 ============================
 ! 2008-05-05 M Needham
  - Add invalid pcn constant
  - cleanup STTell1Board [orientation data member was public]
