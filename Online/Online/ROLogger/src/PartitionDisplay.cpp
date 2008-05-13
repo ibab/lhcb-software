@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.4 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.5 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -24,7 +24,7 @@
 #include "ROLoggerDefs.h"
 #include <sstream>
 extern "C" {
-  #include "dic.h"
+#include "dic.h"
 }
 using namespace ROLogger;
 
@@ -38,7 +38,7 @@ static int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
 
 /// Standard constructor
 PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const std::string& name) 
-  : m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_numMsg(200)
+: m_name(name), m_parent(parent), m_msg(msg), m_history(history), m_numMsg(200)
 {
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_wildNode,"*");
@@ -94,10 +94,10 @@ void PartitionDisplay::showHistory(const char* node_match, const char* msg_match
 static std::string setupParams(const std::string& name, bool val) {
   char text[132];
   ::sprintf(text,"%-12s %-10s  ^^^^     ^^^^^^^     ^^^^^^^^^",
-	    name.c_str(), val ? "[ENABLED]" : "[DISABLED]");
+    name.c_str(), val ? "[ENABLED]" : "[DISABLED]");
   ::upic_set_param(s_param_buff,1,"A4",s_show[0],0,0,s_show,1,1);
   ::upic_set_param(s_enableDisableResult,2,"A7",val?s_disable[0]:s_enable[0],
-		   0,0,val?s_disable:s_enable,1,1);
+    0,0,val?s_disable:s_enable,1,1);
   ::upic_set_param(s_param_buff,3,"A9",s_config[0],0,0,s_config,1,1);
   return text;
 }
@@ -123,27 +123,27 @@ void PartitionDisplay::handle(const Event& ev) {
   case IocEvent:
     //::upic_write_message2("Got IOC command: %d %p",ev.type,ev.data);
     switch(ev.type) {
-    case CMD_UPDATE_NODES:
-      m_nodes = *(Nodes*)ev.data;
-      delete (Nodes*)ev.data;
-      ::upic_write_message2("Updating node content of %s [%ld nodes]",m_name.c_str(),m_nodes.size());
-      return;
-    case CMD_UPDATE_FARMS:
-      m_farms = *(Farms*)ev.data;
-      ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),m_farms.size());
-      ioc.send(this,CMD_UPDATE_CLUSTERS,this);
-      ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(*(_SV*)ev.data));
-      ioc.send(m_history,CMD_UPDATE_FARMS,ev.data);
-      return;
-    case CMD_UPDATE_CLUSTERS:
-      updateFarms();
-      return;
-    case CMD_DELETE:
-      ::upic_set_cursor(m_id,m_menuCursor,0);
-      delete (Interactor*)ev.data;
-      break;
-    default:
-      break;
+      case CMD_UPDATE_NODES:
+        m_nodes = *(Nodes*)ev.data;
+        delete (Nodes*)ev.data;
+        ::upic_write_message2("Updating node content of %s [%ld nodes]",m_name.c_str(),m_nodes.size());
+        return;
+      case CMD_UPDATE_FARMS:
+        m_farms = *(Farms*)ev.data;
+        ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),m_farms.size());
+        ioc.send(this,CMD_UPDATE_CLUSTERS,this);
+        ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(*(_SV*)ev.data));
+        ioc.send(m_history,CMD_UPDATE_FARMS,ev.data);
+        return;
+      case CMD_UPDATE_CLUSTERS:
+        updateFarms();
+        return;
+      case CMD_DELETE:
+        ::upic_set_cursor(m_id,m_menuCursor,0);
+        delete (Interactor*)ev.data;
+        break;
+      default:
+        break;
     }
     break;
   case UpiEvent:
@@ -153,44 +153,44 @@ void PartitionDisplay::handle(const Event& ev) {
     if ( ::strchr(m_wildNode,' ') ) *::strchr(m_wildNode,' ') = 0;
     if ( ::strchr(m_wildMessage,' ') ) *::strchr(m_wildMessage,' ') = 0;
     switch(ev.command_id) {
-    case CMD_CLOSE:
-      ioc.send(m_parent,CMD_DELETE,this);
-      return;
-    case CMD_SUMM_HISTORY:
-      ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
-      return;
-    case CMD_WILD_NODE:
-      showHistory(m_wildNode,"*");
-      return;
-    case CMD_WILD_MESSAGE:
-      showHistory(m_wildNode,m_wildMessage);
-      return;
-    case CMD_CLEAR_HISTORY:
-      IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
-      return;
-    case CMD_SHOW_FILTERS:
-      new FilterDisplay(this,m_msg,m_history);
-      return;
-    default:
-      if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {
-	int val, cmd = ev.command_id;
-	switch(ev.param_id) {
-	case 1:
-	  showCluster(cmd);
-	  break;
-	case 2:
-	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
-	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
-	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
-	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
-	  break;
-	case 3:
-	  ::upic_write_message("Configuration by menu not implemented...","");
-	  break;
-	default:
-	  break;
-	}
-      }
+  case CMD_CLOSE:
+    ioc.send(m_parent,CMD_DELETE,this);
+    return;
+  case CMD_SUMM_HISTORY:
+    ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
+    return;
+  case CMD_WILD_NODE:
+    showHistory(m_wildNode,"*");
+    return;
+  case CMD_WILD_MESSAGE:
+    showHistory(m_wildNode,m_wildMessage);
+    return;
+  case CMD_CLEAR_HISTORY:
+    IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
+    return;
+  case CMD_SHOW_FILTERS:
+    new FilterDisplay(this,m_msg,m_history);
+    return;
+  default:
+    if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {
+      int val, cmd = ev.command_id;
+      switch(ev.param_id) {
+      case 1:
+        showCluster(cmd);
+        break;
+      case 2:
+        val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
+        ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
+        ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
+        ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
+        break;
+      case 3:
+        ::upic_write_message("Configuration by menu not implemented...","");
+        break;
+      default:
+        break;
+          }
+       }
     }
     break;
   default:  // Fall through: Handle request by client

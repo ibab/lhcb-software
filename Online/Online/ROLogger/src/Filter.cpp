@@ -10,14 +10,16 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.1 2008-05-13 07:56:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include "ROLogger/Filter.h"
 #include "ROLogger/MessageLine.h"
 #include "RTL/strdef.h"
 #include <iomanip>
-
+#ifdef _WIN32
+#define strcasecmp _stricmp
+#endif
 using namespace ROLogger;
 
 union _Match {
@@ -71,7 +73,7 @@ int Filter::acceptMatch(const std::string& cand, const std::string& pattern, uns
     result = ::strcmp(cand.c_str(),pattern.c_str())==0 ? 1 : 0;
   else if ( match&MATCH_NOCASE )
     result = ::strcasecmp(cand.c_str(),pattern.c_str())==0 ? 1 : 0;
-  
+
   /// If NOT(the match is 1 and the Select bit is set) ignore this message
   if (  result && match&MATCH_SELECT )
     return 1;
@@ -130,12 +132,12 @@ bool Filter::acceptMessage(const MessageLine& msg) const {
 /// Write filter object to file
 std::ostream& Filter::write(std::ostream& os) const {
   os << "<FILTER>"  <<std::endl
-     << std::hex    << std::setw(8) << std::setfill('0') << type << std::endl
-     << node        << std::endl
-     << utgid       << std::endl
-     << component   << std::endl
-     << message     << std::endl
-     << "</FILTER>" << std::endl;
+    << std::hex    << std::setw(8) << std::setfill('0') << type << std::endl
+    << node        << std::endl
+    << utgid       << std::endl
+    << component   << std::endl
+    << message     << std::endl
+    << "</FILTER>" << std::endl;
   return os;
 }
 
@@ -153,9 +155,9 @@ void Filter::dump() const {
 void Filter::dump(std::ostream& os) const {
   const unsigned char* m = match();
   os << "Filter match: Node: [" << std::hex << (int)m[NODE]      << "]  " << node << std::endl
-     << "             UTGID: [" << std::hex << (int)m[UTGID]     << "]  " << utgid << std::endl
-     << "         Component: [" << std::hex << (int)m[COMPONENT] << "]  " << component << std::endl
-     << "           Message: [" << std::hex << (int)m[MESSAGE]   << "]  " << message << std::endl;
+    << "             UTGID: [" << std::hex << (int)m[UTGID]     << "]  " << utgid << std::endl
+    << "         Component: [" << std::hex << (int)m[COMPONENT] << "]  " << component << std::endl
+    << "           Message: [" << std::hex << (int)m[MESSAGE]   << "]  " << message << std::endl;
 }
 
 /// read filter object from file
@@ -175,22 +177,22 @@ size_t Filter::read(std::istream& in) {
       //::upic_write_message2("%d: %ld %ld %s",start,siz,::strlen(txt),txt);
       switch(start) {
       case 1:
-	::sscanf(txt,"%08X",&type);
-	break;
+        ::sscanf(txt,"%08X",&type);
+        break;
       case 2:
-	node = txt;
-	break;
+        node = txt;
+        break;
       case 3:
-	utgid = txt;
-	break;
+        utgid = txt;
+        break;
       case 4:
-	component = txt;
-	break;
+        component = txt;
+        break;
       case 5:
-	message = txt;
-	break;
+        message = txt;
+        break;
       default:
-	return 0;
+        return 0;
       }
       start++;
     }

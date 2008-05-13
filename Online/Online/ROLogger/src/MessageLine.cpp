@@ -6,7 +6,7 @@
 using namespace ROLogger;
 
 MessageLine::MessageLine(const MessageLine& c) 
-  : m_buff(c.m_buff), m_type(c.m_type), m_comp(c.m_comp), m_mess(c.m_mess)
+: m_buff(c.m_buff), m_type(c.m_type), m_comp(c.m_comp), m_mess(c.m_mess)
 {
 }
 
@@ -18,10 +18,10 @@ int MessageLine::analyze() const {
     if ( idq != std::string::npos && idq>idx ) {
       idp = m_buff.find(":",idq+3);
       if ( idp != std::string::npos ) {
-	m_mess = idp+2;
-	m_comp = idq+3;
-	m_type = idx-1;
-	return m_type;
+        m_mess = idp+2;
+        m_comp = idq+3;
+        m_type = idx-1;
+        return m_type;
       }
     }
   }
@@ -32,7 +32,7 @@ int MessageLine::analyze() const {
 
 void MessageLine::dump()  const {
   std::cout << "Line:" << m_buff << std::endl
-	    << "  Type:" << type();
+    << "  Type:" << type();
   switch(type()) {
   case NONE:    
     std::cout << "[NONE]";
@@ -45,7 +45,7 @@ void MessageLine::dump()  const {
     break;
   }
   std::cout << " Severity:" << severity()
-	    << " Node:" << node();
+    << " Node:" << node();
   if ( type() > 0 ) {
     std::cout << " Utgid:" << utgid() << " Component:" << component();
   }

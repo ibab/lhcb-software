@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Id: Logger.cpp,v 1.4 2008-05-13 08:26:10 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.4 2008-05-13 08:26:10 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -20,7 +20,7 @@
 #include "ROLoggerDefs.h"
 #include <sstream>
 extern "C" {
-  #include "dic.h"
+#include "dic.h"
 }
 
 using namespace ROLogger;
@@ -88,39 +88,39 @@ void Logger::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
-    case CMD_SUMM_HISTORY:
-      sendData("S:SummarizeAllHistory");
-      return;      
-    case CMD_CLEAR_HISTORY:
-      sendData("C:ClearAllHistory");
-      return;
-    case CMD_APPLY_FILTERS:
-      sendData("F:"+*data.str);
-      delete data.str;
-      return;
-    case CMD_NODE_HISTORY:
-      sendData("Q:"+*data.str);
-      delete data.str;
-      return;
-    case CMD_CONNECT_STORAGE:
-    case CMD_DISCONNECT_STORAGE:
-      connectMessages(ev.type==CMD_CONNECT_STORAGE,"STORECTL01","gaudi");
-      return;
-    case CMD_CONNECT_MONITORING:
-    case CMD_DISCONNECT_MONITORING:
-      connectMessages(ev.type==CMD_CONNECT_MONITORING,"MONA08","gaudi");
-      return;
-    case CMD_CONNECT_CLUSTER:
-    case CMD_DISCONNECT_CLUSTER:
-      connectCluster(ev.type==CMD_CONNECT_CLUSTER,*data.str);
-      delete data.str;
-      return;
-    case CMD_UPDATE_FARMS:
-      connectMessages(*data.vec,"gaudi");
-      delete data.vec;
-      return;
-    default:
-      break;
+      case CMD_SUMM_HISTORY:
+        sendData("S:SummarizeAllHistory");
+        return;      
+      case CMD_CLEAR_HISTORY:
+        sendData("C:ClearAllHistory");
+        return;
+      case CMD_APPLY_FILTERS:
+        sendData("F:"+*data.str);
+        delete data.str;
+        return;
+      case CMD_NODE_HISTORY:
+        sendData("Q:"+*data.str);
+        delete data.str;
+        return;
+      case CMD_CONNECT_STORAGE:
+      case CMD_DISCONNECT_STORAGE:
+        connectMessages(ev.type==CMD_CONNECT_STORAGE,"STORECTL01","gaudi");
+        return;
+      case CMD_CONNECT_MONITORING:
+      case CMD_DISCONNECT_MONITORING:
+        connectMessages(ev.type==CMD_CONNECT_MONITORING,"MONA08","gaudi");
+        return;
+      case CMD_CONNECT_CLUSTER:
+      case CMD_DISCONNECT_CLUSTER:
+        connectCluster(ev.type==CMD_CONNECT_CLUSTER,*data.str);
+        delete data.str;
+        return;
+      case CMD_UPDATE_FARMS:
+        connectMessages(*data.vec,"gaudi");
+        delete data.vec;
+        return;
+      default:
+        break;
     }
     break;
   case UpiEvent:

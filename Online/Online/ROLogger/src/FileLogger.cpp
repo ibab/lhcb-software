@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.1 2008-05-07 17:58:53 frankb Exp $
+// $Id: FileLogger.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.1 2008-05-07 17:58:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -25,8 +25,11 @@
 #include "ROLogger/FileLogger.h"
 #include "ROLoggerDefs.h"
 extern "C" {
-  #include "dis.h"
+#include "dis.h"
 }
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
+#endif
 
 using namespace ROLogger;
 
@@ -113,40 +116,40 @@ void FileLogger::handle(const Event& ev) {
   switch(ev.eventtype) {
   case UpiEvent:
     switch(ev.command_id)  {
-    case CMD_CLOSE:
-      UpiSensor::instance().remove(this,m_id);
-      ::upic_delete_menu(m_id);
-      closeUPI();
-      return;
-    case CMD_CONNECT:
-      openOutput();
-      return;
+  case CMD_CLOSE:
+    UpiSensor::instance().remove(this,m_id);
+    ::upic_delete_menu(m_id);
+    closeUPI();
+    return;
+  case CMD_CONNECT:
+    openOutput();
+    return;
     }
     break;
   case IocEvent:
     switch(ev.type) {
-    case CMD_UPDATE_NODES:
-      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_NODES",true);
-      delete data.vec;
-      return;
-    case CMD_UPDATE_FARMS: {
-      printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_FARMS",true);
-      std::string tmp;
-      std::stringstream s;
-      for(_SV::const_iterator i=v->begin();i!=v->end();++i) {
-	std::string n = *i;
-	if ( n == "STORE" ) n = "STORECTL01";
-	s << "/" << n << "/gaudi/log" << std::ends;
-      }
-      s << std::ends;
-      tmp = s.str();
-      removeAllServices();
-      handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
-      delete data.vec;
-      }
-      return;
-    default:
-      break;
+  case CMD_UPDATE_NODES:
+    printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_NODES",true);
+    delete data.vec;
+    return;
+  case CMD_UPDATE_FARMS: {
+    printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_FARMS",true);
+    std::string tmp;
+    std::stringstream s;
+    for(_SV::const_iterator i=v->begin();i!=v->end();++i) {
+      std::string n = *i;
+      if ( n == "STORE" ) n = "STORECTL01";
+      s << "/" << n << "/gaudi/log" << std::ends;
+    }
+    s << std::ends;
+    tmp = s.str();
+    removeAllServices();
+    handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
+    delete data.vec;
+                         }
+                         return;
+  default:
+    break;
     }
     break;
   default:

@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.4 2008-05-13 08:26:10 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.4 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include <cerrno>
@@ -28,16 +28,19 @@
 #include "ROLoggerDefs.h"
 
 extern "C" {
-  #include "dic.h"
-  #include "dis.h"
+#include "dic.h"
+#include "dis.h"
 }
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
+#endif
 
 using namespace ROLogger;
 using namespace graphics;
 
 /// Standard constructor
 MessageLogger::MessageLogger(int argc, char** argv) 
-  : m_colors(true), m_historySize(0)
+: m_colors(true), m_historySize(0)
 {
   std::string name, outfile = "logger.dat";
   RTL::CLI cli(argc, argv, help_fun);
@@ -168,18 +171,18 @@ void MessageLogger::printHistory(const std::string& pattern) {
     const std::string  src = msg_src(m);
     if ( !src.empty() ) {
       if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
-	if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
-	  messages.push_back(m.c_str());
-	  ++match;
-	}
+        if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
+          messages.push_back(m.c_str());
+          ++match;
+        }
       }
     }
   }
   for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
     printMessage(messages[j], false);
   ::sprintf(text,"History>    [WARN]  %d %s%s [%s]. %zd %s %d messages replayed.",
-	    match,"messages matched the request:",node_pattern.c_str(),
-	    msg_pattern.c_str(),numMsg,"messages requested.",displayed);
+    match,"messages matched the request:",node_pattern.c_str(),
+    msg_pattern.c_str(),numMsg,"messages requested.",displayed);
   printMessage(text,true);
 }
 
@@ -204,7 +207,7 @@ void MessageLogger::summarizeHistory() {
   for(DataMap::const_iterator j=data.begin(); j!=data.end();++j)  {
     const std::vector<int>& v = (*j).second;
     ::sprintf(text,"HistorySumm>[INFO] %-16s has sent %5d VERBOSE  %5d DEBUG  %5d INFO  %4d WARNING  %4d ERROR and %4d FATAL messages.",
-	      (*j).first.c_str(), v[1], v[2], v[3], v[4], v[5], v[6]);
+      (*j).first.c_str(), v[1], v[2], v[3], v[4], v[5], v[6]);
     printMessage(text,true);
   }
   ::sprintf(text,"HistorySumm>[WARN] Analysed a total of %d messages.",num_msg);
@@ -262,14 +265,14 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
       ::printf(buffer);
       ::printf("\n");
       for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i) {
-	const std::string& title = *i;
-	::memcpy(&buffer[20],title.c_str(),title.length());
-	::printf(buffer);
-	::printf("\n");
-	::memset(&buffer[20],' ',title.length());
-	buffer[cols-1] = 0;
+        const std::string& title = *i;
+        ::memcpy(&buffer[20],title.c_str(),title.length());
+        ::printf(buffer);
+        ::printf("\n");
+        ::memset(&buffer[20],' ',title.length());
+        buffer[cols-1] = 0;
       }
-      
+
       ::printf(buffer);
       ::printf("\n");
       ::normal();
@@ -371,15 +374,15 @@ void MessageLogger::handleMessages(const char* items, const char* end) {
     time_t now = ::time(0);
     for(const char* p=items; p < end; p += ::strlen(p)+1 ) {
       if ( strlen(p)>0 ) {
-	Services::iterator i=m_infos.find(p);
-	if ( i == m_infos.end() ) {
-	  Entry* e = m_infos[p] = new Entry;
-	  ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s",p);
-	  e->id      = ::dic_info_service((char*)p,MONITORED,0,0,0,messageInfoHandler,(long)e,0,0);
-	  e->created = now;
-	  e->self    = this;
-	  e->name    = p;
-	}
+        Services::iterator i=m_infos.find(p);
+        if ( i == m_infos.end() ) {
+          Entry* e = m_infos[p] = new Entry;
+          ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s",p);
+          e->id      = ::dic_info_service((char*)p,MONITORED,0,0,0,messageInfoHandler,(long)e,0,0);
+          e->created = now;
+          e->self    = this;
+          e->name    = p;
+        }
       }
     }
     for(Services::iterator i=m_infos.begin();i!=m_infos.end();++i) 
@@ -394,11 +397,11 @@ void MessageLogger::handleRemoveMessages(const char* items, const char* end) {
     std::vector<std::string> titles;
     for(const char* p=items; p < end; p += ::strlen(p)+1 ) {
       if ( strlen(p)>0 ) {
-	Services::iterator i=m_infos.find(p);
-	if ( i != m_infos.end() ) {
-	  cleanupService((*i).second);
-	  m_infos.erase(i);
-	}
+        Services::iterator i=m_infos.find(p);
+        if ( i != m_infos.end() ) {
+          cleanupService((*i).second);
+          m_infos.erase(i);
+        }
       }
     }
     for(Services::iterator i=m_infos.begin();i!=m_infos.end();++i) 
@@ -446,7 +449,7 @@ bool MessageLogger::checkFilters(const char* msg) const {
   if ( msg ) {
     if ( !m_filters.empty() ) {
       for(Filters::const_iterator i=m_filters.begin();i!=m_filters.end();++i) {
-	if ( !(*i).acceptMessage(msg) ) return false;
+        if ( !(*i).acceptMessage(msg) ) return false;
       }
     }
     return true;
@@ -463,11 +466,11 @@ void MessageLogger::messageInfoHandler(void* tag, void* address, int* size)  {
     l->updateHistory(msg);
     if ( l->m_display )  {
       if ( l->checkFilters(msg) ) {
-	l->printMessage(msg,false);
+        l->printMessage(msg,false);
       }
       else {
-	l->printMessage(" ---------------------------- IGNORED:",false);
-	l->printMessage(msg,false);
+        l->printMessage(" ---------------------------- IGNORED:",false);
+        l->printMessage(msg,false);
       }
     }
   }
@@ -486,18 +489,18 @@ void MessageLogger::historyInfoHandler(void* tag, void* address, int* size)  {
     while (ptr<=end) {
       char* p = strchr(ptr,'\n');
       if ( p ) {
-	*p = 0;
-	logger->printMessage(ptr);
-	ptr = p;
+        *p = 0;
+        logger->printMessage(ptr);
+        ptr = p;
       }
       ++ptr;
     }
     for ( Services::iterator i=s.begin(); i != s.end(); ++i ) {
       if ( (*i).second == e ) {
-	::lib_rtl_output(LIB_RTL_INFO,"Release client:%s", e->name.c_str());
-	logger->cleanupService((*i).second);
-	s.erase(i);
-	break;
+        ::lib_rtl_output(LIB_RTL_INFO,"Release client:%s", e->name.c_str());
+        logger->cleanupService((*i).second);
+        s.erase(i);
+        break;
       }
     }
   }

@@ -1,4 +1,4 @@
-// $Id: ErrorLog.cpp,v 1.5 2008-05-13 07:55:40 frankb Exp $
+// $Id: ErrorLog.cpp,v 1.6 2008-05-13 08:26:10 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.5 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorLog.cpp,v 1.6 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -80,22 +80,22 @@ void ErrorLog::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
-    case CMD_UPDATE_NODES: // From PartitionListener
-      ioc.send(m_partDisplay,CMD_UPDATE_NODES,ev.data);
-      return;
-    case CMD_UPDATE_FARMS: // From PartitionListener
-      ioc.send(m_partDisplay,CMD_UPDATE_FARMS,ev.data);
-      return;
-    case CMD_DELETE:
-      delete this;
-      ::lib_rtl_sleep(200);
-      ::exit(0);
-      return;
-    case CMD_CLOSE:
-      ::lib_rtl_sleep(5000);
-      ::exit(2);
-    default:
-      break;
+  case CMD_UPDATE_NODES: // From PartitionListener
+    ioc.send(m_partDisplay,CMD_UPDATE_NODES,ev.data);
+    return;
+  case CMD_UPDATE_FARMS: // From PartitionListener
+    ioc.send(m_partDisplay,CMD_UPDATE_FARMS,ev.data);
+    return;
+  case CMD_DELETE:
+    delete this;
+    ::lib_rtl_sleep(200);
+    ::exit(0);
+    return;
+  case CMD_CLOSE:
+    ::lib_rtl_sleep(5000);
+    ::exit(2);
+  default:
+    break;
     }
     break;
   default:

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.1 2008-05-13 07:56:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -24,24 +24,24 @@
 #include <sstream>
 #include <fstream>
 extern "C" {
-  #include "dic.h"
+#include "dic.h"
 }
 
 using namespace ROLogger;
 
 const char* s_filterType[] = {
   "Exact match",
-  "Case blind",
-  "Wild card match",
-  "Wild card case blind"
-  //0123456789012345678901234567890123456789
+    "Case blind",
+    "Wild card match",
+    "Wild card case blind"
+    //0123456789012345678901234567890123456789
 };
 
 const char* s_matchType[] = {
   "Ignore filter where field matches",
-  "Apply filter where field matches",
-  "If no match, ignore the rest",
-  //0123456789012345678901234567890123456789
+    "Apply filter where field matches",
+    "If no match, ignore the rest",
+    //0123456789012345678901234567890123456789
 };
 
 /// Standard constructor
@@ -159,7 +159,7 @@ const char* s_clean(char* str, size_t len) {
   // upic_write_message2("'%s'",str);
   return str;
 }
-  
+
 /// Build filter object and add it to display
 void FilterDisplay::addFilter()   {
   Filter f;
@@ -201,7 +201,7 @@ void FilterDisplay::removeFilter(int cmd)   {
   for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j ) {
     if ( (*j).first == cmd ) {
       for(int i=0; i<5; ++i )
-	::upic_delete_command(m_id,i+cmd);
+        ::upic_delete_command(m_id,i+cmd);
       m_filters.erase(j);
       return;
     }
@@ -223,7 +223,7 @@ void FilterDisplay::saveFilters(const std::string& fname) {
     std::ofstream out(fname.c_str());
     if ( out.good() ) {
       for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
-	(*j).second.write(out);
+        (*j).second.write(out);
       ::upic_write_message2("Saved filters to file:%s",fname.c_str());
       return;
     }
@@ -254,58 +254,58 @@ void FilterDisplay::handle(const Event& ev) {
   case IocEvent:
     //::upic_write_message2("Got IOC command: %d %p",ev.type,ev.data);
     switch(ev.type) {
-    case CMD_CLOSE:
-    case CMD_BACKSPACE:
-      ioc.send(m_parent,CMD_DELETE,this);
-      return;
-    case CMD_RESET:
-      removeCommands();
-      addCommands();
-      break;
-    case CMD_ADD:
-      addFilter();
-      ::upic_set_cursor(m_id,CMD_RESET,0);
-      return;
-    case CMD_CLEAR:
-      removeFilters();
-      ::upic_set_cursor(m_id,CMD_RESET,0);
-      return;
-    case CMD_SAVE_FILTERS:
-      s_clean(m_file,sizeof(m_file));
-      saveFilters(m_file);
-      return;
-    case CMD_LOAD_FILTERS:
-      s_clean(m_file,sizeof(m_file));
-      loadFilters(m_file);
-      return;
-    case CMD_APPLY_FILTERS:
-      return;
-    default:
-      break;
+      case CMD_CLOSE:
+      case CMD_BACKSPACE:
+        ioc.send(m_parent,CMD_DELETE,this);
+        return;
+      case CMD_RESET:
+        removeCommands();
+        addCommands();
+        break;
+      case CMD_ADD:
+        addFilter();
+        ::upic_set_cursor(m_id,CMD_RESET,0);
+        return;
+      case CMD_CLEAR:
+        removeFilters();
+        ::upic_set_cursor(m_id,CMD_RESET,0);
+        return;
+      case CMD_SAVE_FILTERS:
+        s_clean(m_file,sizeof(m_file));
+        saveFilters(m_file);
+        return;
+      case CMD_LOAD_FILTERS:
+        s_clean(m_file,sizeof(m_file));
+        loadFilters(m_file);
+        return;
+      case CMD_APPLY_FILTERS:
+        return;
+      default:
+        break;
     }
     break;
   case UpiEvent:
     switch(ev.command_id) {
-    case CMD_ADD:
-    case CMD_CLEAR:
-    case CMD_RESET:
-    case CMD_CLOSE:
-    case CMD_BACKSPACE:
-    case CMD_SAVE_FILTERS:
-    case CMD_LOAD_FILTERS:
-      ioc.send(this,ev.command_id,this);
-      return;
-    case CMD_APPLY_FILTERS: {
-      std::stringstream out;
-      for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
-	(*j).second.write(out);
-      ioc.send(ev.param_id==1 ? m_history : m_msg, ev.command_id, new std::string(out.str()));
-      return;
-    }
-    default:
-      if ( ev.command_id >= CMD_1000 && ev.command_id < CMD_COM0 )
-	removeFilter(ev.command_id);
-      break;
+      case CMD_ADD:
+      case CMD_CLEAR:
+      case CMD_RESET:
+      case CMD_CLOSE:
+      case CMD_BACKSPACE:
+      case CMD_SAVE_FILTERS:
+      case CMD_LOAD_FILTERS:
+        ioc.send(this,ev.command_id,this);
+        return;
+      case CMD_APPLY_FILTERS: {
+        std::stringstream out;
+        for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
+          (*j).second.write(out);
+        ioc.send(ev.param_id==1 ? m_history : m_msg, ev.command_id, new std::string(out.str()));
+        return;
+                              }
+      default:
+        if ( ev.command_id >= CMD_1000 && ev.command_id < CMD_COM0 )
+          removeFilter(ev.command_id);
+        break;
     }
     break;
   default:  // Fall through: Handle request by client
