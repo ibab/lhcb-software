@@ -4,11 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r6 2008-05-13 =======================
 ! 2008-05-10
  - More improvements to error handling....
  - Only put valid sectors into readout mapping
 
-!=============================== STDAQ v3r6 2008-05-05 =======================
 ! 2008-05-05 M Needham
  - Add creation of summary block in decoding
  - Improve error handling/reporting in decoding
