@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.99 2008-05-13 12:26:10 odescham Exp $
+! $Id: release.notes,v 1.100 2008-05-13 14:13:58 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r0 2008-05-13 =========================
 ! 2008-05-13 - Olivier Deschamps
 - _setProperty() method restored in CaloTrackAlg and CaloTrackTool (check statsucode)
 
-!========================== CaloUtils v8r0 2008-05-08 =========================
 ! 2008-05-08 - Marco Cattaneo
  - Removed Calo2Calo, CaloElectron, Part2Calo, Track2Calo2 components, moved
    to new CaloTools package
