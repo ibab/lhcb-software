@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.53 2008-05-13 09:37:51 jucogan Exp $
+!  $Id: release.notes,v 1.54 2008-05-13 10:02:21 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v7r8p1 2008-05-13 ======================
 ! 2008-05-13 - Julien Cogan
  - Add check for untested status codes in L0MuonAlg.
 
