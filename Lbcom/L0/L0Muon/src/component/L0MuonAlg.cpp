@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.10 2008-04-15 09:19:29 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.11 2008-05-13 09:37:51 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -359,13 +359,15 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
 
 StatusCode L0MuonAlg::fillOLsfromDigits()
 {
+  StatusCode sc;
   //  debug() << "fillOLsfromDigits:  IN "<<endmsg;
-
+  
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
-    setProperty("RootInTes",timeSlot(*it_ts));
+    sc = setProperty("RootInTes",timeSlot(*it_ts));
+    if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
     //    info()<<"RootInTES "<<rootInTES()<<endmsg;
 
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
@@ -422,14 +424,14 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       }
       IProperty* prop = dynamic_cast<IProperty*>( m_muonBuffer );
       if( prop ) {
-        StatusCode sc = prop->setProperty( "RootInTES", rootInTES() );
-        if( sc.isFailure() )
-          return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
-      }
-      else
+        sc = prop->setProperty( "RootInTES", rootInTES() );
+        if( sc.isFailure() ) return Error( "Unable to set RootInTES property of MuonRawBuffer", sc );
+      } else {
         return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
-
-      m_muonBuffer->getTile(ddigits);
+      }
+    
+      sc = m_muonBuffer->getTile(ddigits);
+      if( sc.isFailure() ) return Error( "Unable to get the tiles from the MuonRawBuffer", sc );
       m_muonBuffer->forceReset();
     }  
 
