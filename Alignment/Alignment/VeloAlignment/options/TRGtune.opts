@@ -28,15 +28,18 @@ ToolSvc.PatVeloSpaceTool.MaxChiSqDof   = 15.0;
 //
 
 
-PatVeloGeneralTracking.PointErrorScale  = 2.;
-PatVeloGeneralTracking.PointErrorMin    = 1.;
-PatVeloGeneralTracking.PhiAngularTol    = 0.02;
-PatVeloGeneralTracking.MaxChiSqDof      = 15.0;
-PatVeloGeneralTracking.forwardStepError = 0.002;
+PatVeloGeneralTracking.PointErrorMin = 2*mm;
+PatVeloGeneralTracking.MaxExtrapStations = 4;
+PatVeloGeneralTracking.PointErrorScale = 2;
+PatVeloGeneralTracking.ErrorExtrapScale = 10;
+//PatVeloGeneralTracking.MaxChiAdd = ;
+//PatVeloGeneralTracking.MaxMissedSensor = ;
+PatVeloGeneralTracking.MaxChiSqDof = 10;
+ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;
 
 PatVeloGeneric.FullAlignment        = true;
-PatVeloGeneric.MinModules           = 4;  // 5 for closed VELO, 3 for Open
-PatVeloGeneric.ClusterCut           = 10;
+PatVeloGeneric.MinModules           = 7;  // 5 for closed VELO, 3 for Open
+PatVeloGeneric.ClusterCut           = 30;
 PatVeloGeneric.KalmanState          = 4;
 PatVeloGeneric.ForwardProp          = true;
 PatVeloGeneric.MaxSkip              = 3;
@@ -47,8 +50,6 @@ PatVeloGeneric.SigmaTol             = 5;
 PatVeloGeneric.RAliTol              = 0.05;
 PatVeloGeneric.PAliTol              = 0.005;
 
-//PatVeloGeneric.OverlapProp          = true;  // !!! Option not yet available
-PatVeloGeneric.ACDC                 = false; // 
+PatVeloGeneric.ACDC                 = false;  
 
-
-
+PatVeloGeneric.ConsiderOverlaps     = true;

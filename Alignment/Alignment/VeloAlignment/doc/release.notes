@@ -1,6 +1,15 @@
 ! Package     : VeloAlignment
 ! Responsible : Marco Gersabeck
 
+!=============================================================================
+! 14/05/2008 - Marco Gersabeck  ** v4r3 **
+
+  - AlignSensors.cpp: adapt to new version of VeloDet:
+                      replace phiOfStrip(...) by idealPhi(...)
+
+!=============================================================================
+! 06/05/2008 - Marco Gersabeck  ** v4r2 **
+
   - Align.cpp: Changed update of VELO half alignment constants for closed position
 
   - AlignSensors.cpp: deleted obsolete option MinDelta

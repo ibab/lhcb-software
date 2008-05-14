@@ -424,11 +424,11 @@ StatusCode AlignSensors::makeKalmanPlots( LHCb::Track* track )
             stereo_sign = 1;
           }
           if ( phiSensor->zoneOfStrip( vcID.strip() ) == 0 ) { // inner
-            phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
+            phi_state = phiSensor->idealPhi( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
             phi_state += stereo_sign * -20.04251;                                 // stereo angle for inner strips
           }
           else {                                      // outer
-            phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
+            phi_state = phiSensor->idealPhi( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
             phi_state += stereo_sign * 10.35288;                       // stereo angle for outer strips
           }
           // transform to global phi state
@@ -571,7 +571,7 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
 
         station = station-64;  // Phi stations are numbered from 64 to 95
         hits[station]      += 10;
-        phi[station]          = phiDet->phiOfStrip(cl_str,interStripFr,rstate);	  
+        phi[station]          = phiDet->idealPhi(cl_str,interStripFr,rstate);	  
         phi_s[2*station+1]    = phistate;
         r_s[2*station+1]      = rstate;
         nStrips[2*station+1]  = cluster->size();
@@ -826,11 +826,11 @@ StatusCode AlignSensors::makeStraightLinePlots( LHCb::Track* track ) {
           stereo_sign = 1;
         }
         if ( phiSensor->zoneOfStrip( vcID.strip() ) == 0 ) { // inner
-          phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
+          phi_state = phiSensor->idealPhi( vcID.strip(), interStripFr, phiSensor->rMin( 0 ) ) / degree;
           phi_state += stereo_sign * -20.04251;                                 // stereo angle for inner strips
         }
         else {                                               // outer
-          phi_state = phiSensor->phiOfStrip( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
+          phi_state = phiSensor->idealPhi( vcID.strip(), interStripFr, phiSensor->rMin( 1 ) ) / degree;
           phi_state += stereo_sign * 10.35288;                                // stereo angle for outer strips
         }
 
