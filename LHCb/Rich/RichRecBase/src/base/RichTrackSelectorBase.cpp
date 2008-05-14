@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichTrackSelectorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackSelectorBase.cpp,v 1.9 2008-02-15 14:32:24 cattanem Exp $
+ *  $Id: RichTrackSelectorBase.cpp,v 1.10 2008-05-14 09:45:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -201,7 +201,13 @@ namespace Rich
     bool TrackSelectorBase::trackSelected( const LHCb::Track * track ) const
     {
       // is this type selected ?
-      TrackTools::const_iterator iT = m_tkTools.find( Rich::Rec::Track::type(track) );
+      const Rich::Rec::Track::Type type = Rich::Rec::Track::type(track);
+      TrackTools::const_iterator iT = m_tkTools.find( type );
+      if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
+      {
+        verbose() << "Track algorithm type " << Rich::Rec::text(type)
+                  << " not selected" << endreq;
+      }
       return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
     }
 
@@ -209,7 +215,13 @@ namespace Rich
     bool TrackSelectorBase::trackSelected( const LHCb::RichRecTrack * track ) const
     {
       // is this type selected ?
-      TrackTools::const_iterator iT = m_tkTools.find( track->trackID().trackType() );
+      const Rich::Rec::Track::Type type = track->trackID().trackType();
+      TrackTools::const_iterator iT = m_tkTools.find( type );
+      if ( msgLevel(MSG::VERBOSE) && iT == m_tkTools.end() )
+      {
+        verbose() << "Track algorithm type " << Rich::Rec::text(type)
+                  << " not selected" << endreq;
+      }
       return ( iT != m_tkTools.end() ? iT->second->trackSelected(track) : false );
     }
 
