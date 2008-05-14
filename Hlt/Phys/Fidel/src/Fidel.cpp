@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.2 2008-03-19 11:23:24 pkoppenb Exp $ // Include files
+// $Id: Fidel.cpp,v 1.3 2008-05-14 09:12:22 pkoppenb Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
@@ -7,14 +7,9 @@
 // from Event
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
-#include "Event/RecHeader.h"
-#include "Event/ProcessHeader.h"
-#include "Event/MCParticle.h"
-#include "Event/MCVertex.h"
 
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
-#include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IRelatedPV.h"
 
 #include "Event/HltSummary.h"
@@ -25,32 +20,6 @@
 
 using namespace LHCb;
 using namespace Gaudi::Units;
-  
-  class Matrix{
-  public:            
-    Matrix(double a1,double a2,double a3, double b1,double b2, double b3, double c1, double c2, double c3){
-      a[0]=a1;
-      a[1]=a2;
-      a[2]=a3;
-      b[0]=b1;
-      b[1]=b2;
-      b[2]=b3;
-      c[0]=c1;
-      c[1]=c2;
-      c[2]=c3;
-    }
-    double a[3]; 
-    double b[3];
-    double c[3];
-    
-    double det(){
-      double det1=b[1]*c[2]-b[2]*c[1];
-      double det2=-1*(b[0]*c[2]-b[2]*c[0]);
-      double det3=b[0]*c[1]-b[1]*c[0];    
-      double d=a[0]*det1+a[1]*det2+a[2]*det3;
-      return d;
-    }			
-  };//class
 
 // local
 #include "Fidel.h"
@@ -71,8 +40,6 @@ DECLARE_ALGORITHM_FACTORY( Fidel );
 Fidel::Fidel( const std::string& name,
               ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-  
-  ,m_pLinker(0)
   
 {
   declareProperty("minMass", m_minMass = 5000); 
@@ -120,9 +87,7 @@ StatusCode Fidel::initialize() {
   debug()<<"minMass  "<<m_minMass<<", maxMass  "<<m_maxMass<<" MeV"<<endmsg;
   debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
   debug()<<"max distance between 2 secondary Vtx "<<m_maxDist<<" mm, pointing "<<m_maxPointing<<" rad"<<endmsg;
-
-  m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Chi2,"");
-
+  
   m_relatedPV = tool<IRelatedPV>("RelatedPV",this );
   if (!m_relatedPV) {
     fatal() << "    Unable to retrieve RelatedPV " ;
@@ -141,7 +106,6 @@ StatusCode Fidel::execute() {
   setFilterPassed(false);
 
   const Particle::ConstVector& parts = desktop()->particles();
-  const RecVertex::ConstVector& PVs = desktop()->primaryVertices();
   
   LHCb::Particle::ConstVector::const_iterator ip1;
   LHCb::Particle::ConstVector::const_iterator ip2;
@@ -153,21 +117,19 @@ StatusCode Fidel::execute() {
   StatusCode scMu = particleFilter() -> filterByPID(parts,Muons,13,true);
   
   Gaudi::LorentzVector Cand1Cand2Comb;
-  
-  double dist=0;
-  double pointing=1000;
-  double a = 0;
-  double Acos = 0;
-  double minflight = 0;
+
   double ips=0;
   double impCand=0;double iperr=0;
   double dist_B=0; double errdist_B=0; double fs_B=0;
-  double ipB_geo=0;
+  double distB=0; double errdistB=0; double fsB=0;
+  double distB1=-9; double errdistB1=-9;
+  double distB2=-9; double errdistB2=-9;
   double angleP=0;
   double Pchi2=0;
-  int    muonFlag=0;
-  
-  
+
+  LHCb::Vertex BCandVertex; 
+
+
   //============================================
   // Loop on particles
   //============================================
@@ -177,8 +139,7 @@ StatusCode Fidel::execute() {
       
       if(Candidates.size()>m_inputParticles)continue;
 
-      if(Muons.size()==0)muonFlag = 1;
-      if(m_muonReq && Muons.size()==0)continue;
+      if(m_muonReq && Muons.size()==0)continue;//to use to simulate Hlt single muon
       
       Gaudi::LorentzVector Cand1Cand2Comb = (*ip1)->momentum()+(*ip2)->momentum();
       
@@ -214,115 +175,40 @@ StatusCode Fidel::execute() {
       
       if(!m_basicparticle && (*ip1)->isBasicParticle() && (*ip2)->isBasicParticle())continue;
       
-      //---------------------//
-      //   Standard  Vertex  //
-      //---------------------//
-      LHCb::Vertex BCandVertex;      
+      //---------------//
+      //    Vertex     //
+      //---------------//
       LHCb::ParticleID m_MothID(pid);      
       LHCb::Particle::Particle BCand(m_MothID);
+      
       StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);
-      
-      //-----------------------//
-      //    Geometrical Tool  //
-      //-----------------------//
-      const Gaudi::XYZPoint pos1 = (*ip1)->referencePoint();
-      const Gaudi::XYZPoint pos2 = (*ip2)->referencePoint();      
-      double p1x = (*ip1)->momentum().x();double p1y =(*ip1)->momentum().y();double p1z = (*ip1)->momentum().z();
-      double p2x = (*ip2)->momentum().x();double p2y =(*ip2)->momentum().y();double p2z = (*ip2)->momentum().z();
-      Gaudi::XYZVector p1(p1x,p1y,p1z);
-      Gaudi::XYZVector p2(p2x,p2y,p2z);
-      Gaudi::XYZVector Psum = p1 + p2;
-      
-      //=====================================
-      //  simple distance between 2 vertex
-      //  Implemented by N.Serra 
-      //  Adapted by S.Furcas
-      //=====================================
-      
-      //=====================================
-      // Distance between  2 skew line
-      //=====================================
-      Gaudi::XYZVector v1;
-      v1=p1.Cross(p2);
-      v1=v1.Unit();
-      double m = (v1.X()*(pos1.X()-pos2.X()) + v1.Y()*(pos1.Y()-pos2.Y()) +v1.Z()*(pos1.Z()-pos2.Z()));
-      double x3 = pos1.X() + m * v1.X();
-      double y3 = pos1.Y() + m * v1.Y();
-      double z3 = pos1.Z() + m * v1.Z();
-      
-      dist = sqrt((pos1.X()-x3)*(pos1.X()-x3) + (pos1.Y()-y3)*(pos1.Y()-y3) + (pos1.Z()-z3)*(pos1.Z()-z3));
-      
-      //====================================
-      //   minimal approch line
-      //====================================
-      
-      Gaudi::XYZVector n1 = v1.Cross(p1);
-      n1=n1.Unit();
-      double d1 = -1*(n1.X()*pos1.X() + n1.Y()*pos1.Y() +n1.Z()*pos1.Z()) ;
-      Gaudi::XYZVector n2 = v1.Cross(p2);
-      n2=n2.Unit();
-      double d2 = -1*(n2.X()*pos2.X() + n2.Y()*pos2.Y() +n2.Z()*pos2.Z()) ;
-      Gaudi::XYZVector pos1v(pos1.X(),pos1.Y(),pos1.Z());
-      Gaudi::XYZVector n = pos1v.Cross(p2);
-      n=n.Unit();
-      double d3 = -1*((n.X()*pos1.X())+(n.Y()*pos1.Y())+(n.Z()*pos1.Z()));
-      double d4 = -1*((n.X()*pos2.X())+(n.Y()*pos2.Y())+(n.Z()*pos2.Z()));
-      //      double DetDen = n1.X()*((n2.Y()*n.Z()-n2.Z()*n.Y()))-n1.Y()*((n2.X()*n.Z()-n2.Z()*n.X()))+
-      //        n1.Z()*((n2.X()*n.Y()-n2.Y()*n.X()));
-      Matrix Det(n1.X(),n1.Y(),n1.Z(),n2.X(),n2.Y(),n2.Z(),n.X(),n.Y(),n.Z());
-      double den = Det.det();
-      Matrix X1_matrix(-1*d1, n1.Y(), n1.Z(), -1*d2, n2.Y(), n2.Z(), -1*d3, n.Y(), n.Z());
-      Matrix Y1_matrix(n1.X(), -1*d1, n1.Z(), n2.X(), -1*d2, n2.Z(), n.X(), -1*d3, n.Z());
-      Matrix Z1_matrix(n1.X(), n1.Y(), -1*d1, n2.X(), n2.Y(),  -1*d2, n.X(), n.Y(), -1*d3);
-      double X1=X1_matrix.det()/den;
-      double Y1=Y1_matrix.det()/den;
-      double Z1=Z1_matrix.det()/den;
-      Matrix X2_matrix(-1*d1, n1.Y(), n1.Z(), -1*d2, n2.Y(), n2.Z(), -1*d4, n.Y(), n.Z());
-      Matrix Y2_matrix(n1.X(), -1*d1, n1.Z(), n2.X(), -1*d2, n2.Z(), n.X(), -1*d4, n.Z());
-      Matrix Z2_matrix(n1.X(), n1.Y(), -1*d1, n2.X(), n2.Y(),  -1*d2, n.X(), n.Y(), -1*d4);
-      double X2=X2_matrix.det()/den;
-      double Y2=Y2_matrix.det()/den;
-      double Z2=Z2_matrix.det()/den;
-      double co1=X2-X1;
-      double co2=Y2-Y1;
-      double co3=Z2-Z1;
-      
-      Gaudi::XYZPoint VtxCand(co1+X1, co2+Y1, co3+Z1);
-      LHCb::Vertex BCandVtx(Gaudi::XYZPoint& VtxCand);
       
       const LHCb::VertexBase* bestPV  = m_relatedPV->bestPV(&BCand);//BCand
       
-      if(bestPV!=NULL){        
-        //geometrical variables 
-        Gaudi::XYZPoint Origin = bestPV->position();
-        Gaudi::XYZVector flight = VtxCand - Origin;
-        double FD_geom = sqrt(flight.Mag2());
-        flight = flight.Unit();
-        Psum = Psum.Unit();
-        a = flight.Dot(Psum);
-        Acos = acos (a);
-        if(a>0){
-          pointing = Acos;
-          minflight=FD_geom;
-          ipB_geo=sin(pointing)*minflight;
-          if(pointing==1000)continue;
-        }        
+      Gaudi::XYZPoint Origin = bestPV->position();
         
-        StatusCode sc = geomDispCalculator()->calcImpactPar(BCand,*bestPV,impCand,iperr);
-        //impact parameter significance
-        ips=impCand/iperr;            
-        //flight distance 
-        StatusCode sc_B = geomDispCalculator()->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
-        fs_B = dist_B / errdist_B;
-        //pointing
-        Gaudi::XYZPoint x = BCandVertex.position();
-        Gaudi::XYZVector myDist = x - Origin;
-        Gaudi::XYZVector p(BCand.momentum().Vect());
-        double cosangle = p.Dot(myDist)/sqrt(p.mag2())/sqrt(myDist.mag2());
-        if(cosangle>0){
-          angleP = acos(cosangle);//angle in rad
-        }
-      }//best PV
+      StatusCode sc = geomDispCalculator()->calcImpactPar(BCand,*bestPV,impCand,iperr);
+      //impact parameter significance
+      ips=impCand/iperr;
+      //flight distance Projected B
+      StatusCode sc_B = geomDispCalculator()->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
+      fs_B = dist_B / errdist_B;
+      //flight distance Signed B
+      StatusCode scB = geomDispCalculator()->calcSignedFlightDistance(*bestPV,BCand,distB,errdistB);
+      fsB = distB / errdistB;
+      //flight distance Projected B - Res 1
+      StatusCode scB1 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
+      //flight distance Projected B - Res 2
+      StatusCode scB2 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
+
+      //pointing
+      Gaudi::XYZPoint x = BCandVertex.position();
+      Gaudi::XYZVector myDist = x - Origin;
+      Gaudi::XYZVector p(BCand.momentum().Vect());
+      double cosangle = p.Dot(myDist)/sqrt(p.mag2())/sqrt(myDist.mag2());
+      if(cosangle>0){
+        angleP = acos(cosangle);//angle in rad
+      }
 
       //--------------------//
       //  chi2Probability   //
@@ -334,108 +220,15 @@ StatusCode Fidel::execute() {
       //============================================//
       if(m_maxIps>0.0 && ips>m_maxIps)continue;
       if(m_maxChi2>0.0 && BCandVertex.chi2()>m_maxChi2)continue;
-      if(m_maxDist>0.0 && dist>m_maxDist)continue;
-      if(m_maxPointing>0.0 && pointing>m_maxPointing)continue;      
+      if(m_maxPointing>0.0 && angleP>m_maxPointing)continue;      
       if(m_minCts>-999.0 && fs_B<m_minCts)continue;
       if(m_minProb>-999.0 && Pchi2<m_minProb)continue;
 
-      desktop()->save(&BCand); 
+      desktop()->keep(&BCand); 
       setFilterPassed(true);
       sc = StatusCode::SUCCESS;
       
-      //--------------//
-      //  Ntupla      //
-      //--------------//
-      if(m_fillTupla) {
-        
-        int runNum, evtNum;
-        SmartDataPtr<RecHeader> evt(eventSvc(), RecHeaderLocation::Default);
-        runNum=evt->runNumber();
-        evtNum=evt->evtNumber();
-        
-        LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
-        long Level0decision = report->decision();
-        
-        const LHCb::MCParticle* mc1;
-        const LHCb::MCParticle* mc2;
-        
-        Tuple MyTupla = nTuple("MyTupla");
-        MyTupla->column("evt",evtNum);
-        MyTupla->column("run",runNum);          
-        MyTupla->column("nPV",PVs.size());              
-        MyTupla->column("L0",Level0decision);
-        MyTupla->column("ch1",(*ip1)->charge());
-        MyTupla->column("ch2",(*ip2)->charge());
-        MyTupla->column("mass1",(*ip1)->momentum().mass());
-        MyTupla->column("mass2",(*ip2)->momentum().mass());
-        MyTupla->column("ID1",(*ip1)->particleID().pid());
-        MyTupla->column("ID2",(*ip2)->particleID().pid());
-        MyTupla->column("PT1",(*ip1)->pt());
-        MyTupla->column("PT2",(*ip2)->pt());
-        MyTupla->column("ipsB",ips);
-        MyTupla->column("ipB",impCand);            
-        MyTupla->column("muonFlag",muonFlag);      
-        /////////////////
-        // vertices    //
-        /////////////////
-        MyTupla->column("BCandVertex_ndof",BCandVertex.nDoF());
-        MyTupla->column("BCandVertex_chi2",BCandVertex.chi2());
-        MyTupla->column("ProbChi2",Pchi2);
-        MyTupla->column("FD_geom",minflight);
-        MyTupla->column("ipB_geo",ipB_geo);
-        MyTupla->column("anglepointing",angleP);            
-        ////////////
-        //	MC    //
-        ////////////
-        mc1 = m_pLinker->firstMCP( *ip1 );
-        mc2 = m_pLinker->firstMCP( *ip2 );
-        
-        if(mc1 && mc2){
-          MyTupla->column("MCID1",mc1 -> particleID().pid());
-          MyTupla->column("MCID2",mc2 -> particleID().pid());
-          
-          if(mc1->mother())MyTupla->column("MCMothID1",mc1 -> mother()-> particleID().pid());
-          else{MyTupla->column("MCMothID1",-999);}
-          if(mc2->mother())MyTupla->column("MCMothID2",mc2 -> mother()-> particleID().pid());
-          else{MyTupla->column("MCMothID2",-999);}
-        } 
-        
-        if(mc1 && mc2==0) {
-          MyTupla->column("MCID1",mc1 -> particleID().pid());
-          MyTupla->column("MCID2",-999);
-          if(mc1->mother())MyTupla->column("MCMothID1",mc1 -> mother()-> particleID().pid());
-          else{MyTupla->column("MCMothID1",-999);}  
-          MyTupla->column("MCMothID2",-999);
-        }
-        
-        if(mc2 && mc1==0) {
-          MyTupla->column("MCID2",mc2 -> particleID().pid());
-          MyTupla->column("MCID1",-999);
-          MyTupla->column("MCMothID1",-999);
-          if(mc2->mother())MyTupla->column("MCMothID2",mc2 -> mother()-> particleID().pid());
-          else{MyTupla->column("MCMothID2",-999);}
-        } 
-        
-        if(mc2==0 && mc1==0) {
-          MyTupla->column("MCID2",-999);
-          MyTupla->column("MCID1",-999);
-          MyTupla->column("MCMothID1",-999);
-          MyTupla->column("MCMothID2",-999);
-        }
-        
-        MyTupla->column("ChargeB",sumq);
-        MyTupla->column("InvMass",Cand1Cand2Comb.mass());
-        MyTupla->column("PMoth",Cand1Cand2Comb.P());
-        MyTupla->column("PTM",Cand1Cand2Comb.pt()); 
-        MyTupla->column("Pointing",pointing);//rad
-        MyTupla->column("dist",dist);//mm
-        MyTupla->column("Fd_B",dist_B);//mm
-        MyTupla->column("Fs_B",fs_B);//mm
-        MyTupla->write();
-      }//fill ntupla
-      
-      
-      
+
     }//ip2
   }//ip1
 
@@ -450,8 +243,6 @@ StatusCode Fidel::execute() {
 StatusCode Fidel::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
-  if(NULL!=m_pLinker) delete m_pLinker;
 
   return DVAlgorithm::finalize(); 
 }

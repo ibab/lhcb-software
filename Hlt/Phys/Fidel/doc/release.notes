@@ -4,5 +4,8 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Patrick Koppenburg
+ - Removed temporary Fidel_new and replaced Fidel by it.
+
 ! 2008-03-19 - Sara Furcas
  - first import

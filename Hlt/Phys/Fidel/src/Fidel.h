@@ -1,4 +1,4 @@
-// $Id: Fidel.h,v 1.2 2008-03-19 11:23:24 pkoppenb Exp $
+// $Id: Fidel.h,v 1.3 2008-05-14 09:12:22 pkoppenb Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -6,7 +6,7 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 
-#include "Kernel/Particle2MCLinker.h"
+//#include "Kernel/Particle2MCLinker.h"
 
 class IRelatedPV;
 
@@ -14,8 +14,7 @@ class IRelatedPV;
 
 /** @class Fidel Fidel.h
  *  
- *  Add some doc here
- *  
+ *
  *  @author Sara Furcas
  *  @date   2007-11-12
  */
@@ -60,7 +59,7 @@ private:
   double     m_minProb;
   
   
-  Particle2MCLinker*   m_pLinker;
+  //  Particle2MCLinker*   m_pLinker;
   IRelatedPV*        m_relatedPV;
   
   
