@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2008-05-14 Gerhard Raven
+ - enhance HltANNSvc, use new features of ANNSvc, like generation-on-the-fly
+
 ! 2008-05-07 Gerhard Raven
  - remove unused protected datamember in HltAlgorithm
  - make sure that declareProperty isn't called more than once 
