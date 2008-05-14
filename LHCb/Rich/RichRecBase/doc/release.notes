@@ -6,6 +6,8 @@
 
 ! 2008-05-14 - Chris Jones
  - Add some additional debug printout to track selector base class
+ - Add configuration option to stereographic fitter allow the user to decide 
+   if the segment and fitted photons are updated or not following the fit.
 
 !===================== RichRecBase v3r13 2008-05-09 ==========================
 ! 2008-05-09 - Chris Jones

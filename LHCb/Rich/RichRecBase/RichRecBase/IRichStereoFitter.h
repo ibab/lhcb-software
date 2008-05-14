@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoFitter
  *
  *  CVS Log :-
- *  $Id: IRichStereoFitter.h,v 1.4 2008-05-08 12:22:42 jonrob Exp $
+ *  $Id: IRichStereoFitter.h,v 1.5 2008-05-14 15:11:18 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
@@ -71,7 +71,9 @@ namespace Rich
           minRingPhotons   ( 4      ),
           nthcPhotSigMax   ( 2      ),
           ncandsPerPixMax  ( 3      ),
-          maxBkgProb       ( 999    )
+          maxBkgProb       ( 999    ),
+          updateSegment    ( false  ),
+          updatePhotons    ( false  )
         { }
       public:
         Rich::ParticleIDType pidType; ///< The mass hypothesis for which the angle should be fitted
@@ -79,6 +81,8 @@ namespace Rich
         float   nthcPhotSigMax;       ///< Size of photons selection window in units of Cherenkov angle RMS
         int     ncandsPerPixMax;      ///< Maximum allowed number of candidate photons per pixel
         float   maxBkgProb;           ///< Maximum allowed background probability of photons
+        bool    updateSegment;        ///< Update the track segment with the fitted information ?
+        bool    updatePhotons;        ///< Update the selected photons with the fitted information ?
       public:
         /// Implement the ostream << printout method
         friend inline std::ostream& operator << ( std::ostream& s,
