@@ -6,6 +6,9 @@ Purpose: LHCb High Level Trigger packages.
          LHCb High Level Trigger 
 
 ! 2008-05-14 - Patrick Koppenburg
+ - add HltInit.opts, which initializes the HltANNSvc
+
+! 2008-05-14 - Patrick Koppenburg
  - Added Fidel package
 
 </PRE><H1><A NAME=v3r2>2008-04-25 HltSys v3r2</A></H1><PRE>
