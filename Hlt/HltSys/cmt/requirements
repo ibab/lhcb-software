@@ -23,7 +23,7 @@ use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato
 use HltSelections       v7r0    Hlt   # Patrick Koppenburg
 use HltSelChecker       v6r1    Hlt   # Patrick Koppenburg
 
-use HltKshort           v1r2    Hlt   # Jaap Panman
+use HltKshort           v1r3    Hlt   # Jaap Panman
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
