@@ -3,6 +3,9 @@ Package : AlignmentTools
 Package Coordinator : Sebastien Viret
 Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
+</PRE><H1><A NAME=v2r9>2008-15-05 AlignmentTools v2r9</A></H1><PRE>
+- J.Blouw: create new tag, because of small changes listed below.
+
 - 04/02/08 - Johan Blouw: small change to Millepede class, 
                           in MakeGlobalFit. There, in an if statement
              it is checked whether "psigm[i] <= 0.0". This was changed to

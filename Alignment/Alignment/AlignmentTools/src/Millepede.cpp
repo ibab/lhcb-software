@@ -259,11 +259,12 @@ StatusCode Millepede::ParGlo(int index, double param)
  
 StatusCode Millepede::ParSig(int index, double sigma)
 {
-  if (index>=nagb) 
-    {return StatusCode::FAILURE;}
-  else
-    {psigm[index] = sigma;}
-
+  if (index>=nagb) {
+    error() << "index ( " << index << " ) >= nagb( " << nagb << " )!" << endreq;
+    return StatusCode::FAILURE;
+  } else {
+    psigm[index] = sigma;
+  }
   return StatusCode::SUCCESS;
 }
 

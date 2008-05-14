@@ -67,6 +67,15 @@ class Centipede : public Millepede, virtual public ICentipede {
 				    std::vector<double> &,
 				    std::vector<double> & );
 
+  virtual void CheckLChi2( const double &,
+                           const int &,
+                           const int &,
+                           const double &,
+                           const double &,
+                                 bool & );
+
+
+
   virtual void VectortoArray( const std::vector<double> &, double * );
   virtual void ArraytoVector( const double *, std::vector<double> & );
  private:
