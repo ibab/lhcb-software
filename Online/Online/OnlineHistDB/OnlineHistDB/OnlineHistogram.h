@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.22 2008-04-30 13:29:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistogram.h,v 1.23 2008-05-14 15:00:56 ggiacomo Exp $
 #ifndef ONLINEHISTOGRAM_H
 #define ONLINEHISTOGRAM_H 1
 /** @class  OnlineHistogram OnlineHistogram.h OnlineHistDB/OnlineHistogram.h
@@ -212,8 +212,15 @@ class  OnlineHistogram : public OnlineHistDBEnv
   bool maskAnalysis(int AnaID,
                     bool Mask=true); 
 
+  /// renames an histogram (including its full set if needed) 
+  /// ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
+  bool rename(std::string &newTask,
+              std::string &newAlgo,
+              std::string &newName);
+
   // methods to force reloading of all or part of histogram variables
   void load();
+  void reload();
   bool loadAnalysisDirections();
   bool loadCreationDirections();
 

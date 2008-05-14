@@ -29,22 +29,23 @@
 
 
 \item    OnlineHistogram* {\bf declareHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-				    double Cx,\\\mbox{}~~~~~~~~~
-				    double Cy,\\\mbox{}~~~~~~~~~
-				    double Sx,\\\mbox{}~~~~~~~~~
-				    double Sy,\\\mbox{}~~~~~~~~~
+				    double Xmin,\\\mbox{}~~~~~~~~~
+				    double Ymin,\\\mbox{}~~~~~~~~~
+				    double Xmax,\\\mbox{}~~~~~~~~~
+				    double Ymax,\\\mbox{}~~~~~~~~~
 				    unsigned int instance=1);
 
  adds or updates an histogram on the page. Use instance $>$ 1 to use the
  same histogram more than once. Returns the object attached to page (the input
- one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
+ one, or a new copy if a new instance needs to be created), or NULL in case of failure.
+ Positions are relative to the Pad size (i.e. should be numbers from 0 to 1)
 
 
 \item    OnlineHistogram* {\bf addHistogram}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-				double Cx,\\\mbox{}~~~~~~~~~
-				double Cy,\\\mbox{}~~~~~~~~~
-				double Sx,\\\mbox{}~~~~~~~~~
-				double Sy);
+				    double Xmin,\\\mbox{}~~~~~~~~~
+				    double Ymin,\\\mbox{}~~~~~~~~~
+				    double Xmax,\\\mbox{}~~~~~~~~~
+				    double Ymax);
 
  like declareHistogram, but a new instance is always created
 
@@ -73,10 +74,10 @@
 
 
 \item    bool {\bf getHistLayout}(OnlineHistogram* h,\\\mbox{}~~~~~~~~~
-		     double \&Cx,\\\mbox{}~~~~~~~~~
-		     double \&Cy,\\\mbox{}~~~~~~~~~
-		     double \&Sx,\\\mbox{}~~~~~~~~~
-		     double \&Sy,\\\mbox{}~~~~~~~~~
+		     double \&Xmin,\\\mbox{}~~~~~~~~~
+		     double \&Ymin,\\\mbox{}~~~~~~~~~
+		     double \&Xmax,\\\mbox{}~~~~~~~~~
+		     double \&Ymax,\\\mbox{}~~~~~~~~~
 		     unsigned int instance=1) const;
 
  get the layout of given histogram. returns false if histogram is not found

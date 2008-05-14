@@ -7,10 +7,15 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
  procedure DeclareTask (Name varchar2, ss1 varchar2:='NONE', ss2 varchar2:='NONE', ss3 varchar2:='NONE',
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0, SFreq float := NULL, 
 	Ref  varchar2:='NONE' );
+ function RenameTask(oldName IN varchar2, newName IN varchar2) return number;
  procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '');
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
  function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  thetype  VIEWHISTOGRAM.HSTYPE%TYPE ) 
-   return varchar2 ;
+   return varchar2 ; 
+ function RenameHistogramSet(oldTask IN varchar2, oldAlgo IN varchar2, oldTitle IN varchar2,
+                newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number;
+ function RenameHistogram(oldIdentifier IN varchar2, 
+                newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number;
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
  procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0 );
  procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
@@ -237,7 +242,25 @@ exception
  end DeclareTask;
  
 -----------------------
- 
+function RenameTask(oldName IN varchar2, newName IN varchar2) return number is
+ begin
+  savepoint beforeRNTwrite;
+  DeclareTask(newName);
+  UPDATE TASK set (RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SUBSYS1,SUBSYS2,SUBSYS3,SAVEFREQUENCY,REFERENCE) =
+      (select RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SUBSYS1,SUBSYS2,SUBSYS3,SAVEFREQUENCY,REFERENCE from task where
+       TASKNAME=oldName) where TASKNAME=newName;
+  UPDATE HISTOGRAMSET set HSTASK=newName where HSTASK=oldName;
+  delete from TASK where TASKNAME=oldName;
+  if (SQL%ROWCOUNT = 0) then
+   ROLLBACK TO beforeRNTwrite;
+  end if;
+  return SQL%ROWCOUNT;
+ exception
+ when OTHERS then 
+  ROLLBACK TO beforeRNTwrite;
+  raise_application_error(-20050,SQLERRM);
+end RenameTask;
+-----------------------
 
 procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', 
                            mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '') is
@@ -389,6 +412,91 @@ exception
   ROLLBACK TO beforeDHwrite;
   raise_application_error(-20050,SQLERRM);
 end DeclareHistByAttributes;
+
+-----------------------
+function RenameHistogramSet(oldTask IN varchar2, oldAlgo IN varchar2, oldTitle IN varchar2,
+                newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number is
+ cursor myhs is select HSID from HISTOGRAMSET where HSTASK = oldTask and HSALGO = oldAlgo and
+					HSTITLE = oldTitle;
+ cursor myh(Xset HISTOGRAM.HSET%TYPE) is select NAME,SUBTITLE from HISTOGRAM where HSET=Xset;
+ myhsid HISTOGRAMSET.HSID%TYPE;
+ myname HISTOGRAM.NAME%TYPE;
+ mysub HISTOGRAM.SUBTITLE%TYPE;
+begin
+ open myhs;
+ fetch myhs into myhsid;
+ if myhs%NOTFOUND then
+  return 0;
+ else
+  open myh(myhsid);
+  fetch myh into myname,mysub;
+  return RenameHistogram(myname, newTask, newAlgo, newTitle||SUBTITSTRING(mysub));
+ end if;
+exception
+ when OTHERS then 
+  return 0;
+end RenameHistogramSet;
+-----------------------
+
+function RenameHistogram(oldIdentifier IN varchar2, 
+                newTask IN varchar2, newAlgo IN varchar2, newTitle IN varchar2) return number is
+ cursor myh(Xid HISTOGRAM.NAME%TYPE) is select HID,HSET,ISANALYSISHIST,HSTASK,HSALGO,HSTITLE from 
+     HISTOGRAM h, HISTOGRAMSET hs where h.NAME=Xid and h.HSET = hs.HSID;
+ cursor myh2(Xid HISTOGRAM.NAME%TYPE) is select HID from HISTOGRAM where NAME=Xid ;
+ myhid HISTOGRAM.HID%TYPE;
+ myhset HISTOGRAM.HSET%TYPE;
+ myah HISTOGRAM.ISANALYSISHIST%TYPE;
+ myhid2 HISTOGRAM.HID%TYPE;
+ myhstask HISTOGRAMSET.HSTASK%TYPE;
+ myhsalgo HISTOGRAMSET.HSALGO%TYPE;
+ myhstitle HISTOGRAMSET.HSTITLE%TYPE;
+ newhstitle HISTOGRAMSET.HSTITLE%TYPE;
+ newsubtitle HISTOGRAM.SUBTITLE%TYPE;
+ newname HISTOGRAM.NAME%TYPE;
+begin
+ savepoint beforeRHwrite;
+ open myh(oldIdentifier);
+ fetch myh into myhid,myhset,myah,myhstask,myhsalgo,myhstitle;
+ if myh%NOTFOUND then
+  return 0;
+ else
+  if (myah = 1) then
+   raise_application_error(-20050,'you can''t change the name of an analysis histogram!');
+  end if;
+  close myh;
+  newname := newTask||'/'||newAlgo||'/'||newTitle; 
+  open myh2(newname);
+  fetch myh2 into  myhid2;
+  if myh2%FOUND then
+   raise_application_error(-20050,'the new histogram name '||newname||' exists already!');
+  end if;
+  if (INSTR(newTitle,Set_Separator()) != 0) then
+   newhstitle :=  REGEXP_REPLACE(newTitle,'^(.*)_\$.*$','\1');
+   newsubtitle :=  REGEXP_REPLACE(newTitle,'^.*_\$(.*)$','\1');
+  else
+   newhstitle := newTitle;
+   newsubtitle := NULL;
+  end if;
+  if ( newTask != myhstask or newAlgo != myhsalgo or newhstitle != myhstitle) then
+   -- if histogramset has changed, update it together with all his HISTOGRAM children
+   if( newTask != myhstask) then
+    DeclareTask(newTask);
+    UPDATE TASK set (RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SUBSYS1,SUBSYS2,SUBSYS3,SAVEFREQUENCY,REFERENCE) =
+      (select RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SUBSYS1,SUBSYS2,SUBSYS3,SAVEFREQUENCY,REFERENCE from task where
+       TASKNAME=myhstask) where TASKNAME=newTask;
+   end if;
+   UPDATE HISTOGRAMSET set HSTASK=newTask, HSALGO=newAlgo, HSTITLE=newhstitle where HSID = myhset;
+   UPDATE HISTOGRAM set NAME=newTask||'/'||newAlgo||'/'||newhstitle||SUBTITSTRING(SUBTITLE) where HSET = myhset;
+  end if;
+   -- eventually update the HISTOGRAM
+  UPDATE HISTOGRAM set NAME=newname, SUBTITLE = newsubtitle where HID = myhid;
+ end if;
+ return 1;
+exception
+ when OTHERS then 
+  ROLLBACK TO beforeRHwrite;
+  raise_application_error(-20050,SQLERRM);
+end RenameHistogram;
 -----------------------
 
 function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number is

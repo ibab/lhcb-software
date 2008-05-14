@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.21 2008-04-30 13:29:16 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistPage.cpp,v 1.22 2008-05-14 15:00:57 ggiacomo Exp $
 
 #include "OnlineHistDB/OnlineHistPage.h"
 using namespace std;
@@ -102,10 +102,10 @@ OnlineHistPage::~OnlineHistPage(){}
 
 
 OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
-						  double Cx,
-						  double Cy,
-						  double Sx,
-						  double Sy,
+						  double Xmin,
+						  double Ymin,
+						  double Xmax,
+						  double Ymax,
 						  unsigned int instance) {
   OnlineHistogram* outh=0;
   if (h->isAbort() == false) {
@@ -115,17 +115,17 @@ OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
     if (-1 == ih ) { // new histogram
       instance = newHistogramInstance(h);
       m_h.push_back(h);
-      m_cx.push_back((float) Cx);
-      m_cy.push_back((float) Cy);
-      m_sx.push_back((float) Sx);
-      m_sy.push_back((float) Sy);
+      m_cx.push_back((float) Xmin);
+      m_cy.push_back((float) Ymin);
+      m_sx.push_back((float) Xmax);
+      m_sy.push_back((float) Ymax);
       ih=m_h.size()-1;
     }
     else {
-      m_cx[ih] = (float) Cx;
-      m_cy[ih] = (float) Cy;
-      m_sx[ih] = (float) Sx;
-      m_sy[ih] = (float) Sy;
+      m_cx[ih] = (float) Xmin;
+      m_cy[ih] = (float) Ymin;
+      m_sx[ih] = (float) Xmax;
+      m_sy[ih] = (float) Ymax;
     }
     if(knownHisto) {
       // object has been already used in a previous instance: create new object 
@@ -140,30 +140,30 @@ OnlineHistogram* OnlineHistPage::declareHistogram(OnlineHistogram* h,
 }
 
 OnlineHistogram* OnlineHistPage::addHistogram(OnlineHistogram* h,
-					      double Cx,
-					      double Cy,
-					      double Sx,
-					      double Sy) {
+					      double Xmin,
+					      double Ymin,
+					      double Xmax,
+					      double Ymax) {
   OnlineHistogram* outh;
-  outh=declareHistogram(h,Cx,Cy,Sx,Sy,999999);
+  outh=declareHistogram(h,Xmin,Ymin,Xmax,Ymax,999999);
   return outh;
 }
 
 bool OnlineHistPage::getHistLayout(OnlineHistogram* h,
-				   double &Cx,
-				   double &Cy,
-				   double &Sx,
-				   double &Sy,
+				   double &Xmin,
+				   double &Ymin,
+				   double &Xmax,
+				   double &Ymax,
 				   unsigned int instance) const {
   bool found=false;
   bool known;
   int jh=findHistogram(h,instance,known);
   if (-1 != jh) {
     found = true;
-    Cx = (double) m_cx[jh];
-    Cy = (double) m_cy[jh];
-    Sx = (double) m_sx[jh];
-    Sy = (double) m_sy[jh];
+    Xmin = (double) m_cx[jh];
+    Ymin = (double) m_cy[jh];
+    Xmax = (double) m_sx[jh];
+    Ymax = (double) m_sy[jh];
   }
   return found;
 }
@@ -353,7 +353,7 @@ void OnlineHistPage::dump() {
     "Page "<< m_name << " in folder "<<m_folder<<" has "<< m_h.size() << " histograms:"<<endl;
   std::vector<OnlineHistogram*>::iterator ih;
   double Cx,Cy,Sx,Sy;
-  if(!m_h.empty() ) cout << "Histogram Identifier                              Cx    Cy    Sx    Sy"<<endl; 
+  if(!m_h.empty() ) cout << "Histogram Identifier                             Xmin   Ymin   Xmax   Ymax"<<endl; 
   for (ih = m_h.begin();ih != m_h.end(); ++ih) {
     if ( getHistLayout(*ih, Cx, Cy, Sx, Sy, (*ih)->instance() )) {
       cout << (*ih)->identifier() << " (Instance " << (*ih)->instance() 

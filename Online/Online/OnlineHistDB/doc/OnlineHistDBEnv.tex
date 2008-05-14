@@ -25,30 +25,30 @@
 
 
 
-\item    std::string {\bf PagenameSyntax}(std::string fullname,\\\mbox{}~~~~~~~~~ std::string \&folder);
+\item    std::string {\bf PagenameSyntax}(std::string \&fullname,\\\mbox{}~~~~~~~~~ std::string \&folder);
 
 
  check the syntax of the page full name, returning the correct syntax and the folder name 
 
 
-\item    int {\bf getAlgorithmNpar}(std::string AlgName,\\\mbox{}~~~~~~~~~
+\item    int {\bf getAlgorithmNpar}(std::string\& AlgName,\\\mbox{}~~~~~~~~~
 		       int* Ninput = NULL);
 
  gets the number of parameters, and optionally the number of input histograms, needed by algorithm AlgName.
 
 
-\item    std::string {\bf getAlgParName}(std::string AlgName,\\\mbox{}~~~~~~~~~
+\item    std::string {\bf getAlgParName}(std::string\& AlgName,\\\mbox{}~~~~~~~~~
 			    int Ipar);
 
  gets the name of parameter Ipar (starting from 1) of algorithm AlgName
 
 
-\item    inline std::string {\bf refRoot}() ;
+\item    inline std::string\& {\bf refRoot}() ;
 
  get reference histograms root directory 
 
 
-\item    inline std::string {\bf savesetsRoot}() ;
+\item    inline std::string\& {\bf savesetsRoot}() ;
 
  get saveset root directory 
 

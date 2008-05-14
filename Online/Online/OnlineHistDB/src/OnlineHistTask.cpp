@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.6 2008-04-30 13:29:16 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.7 2008-05-14 15:00:57 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
@@ -63,6 +63,22 @@ void  OnlineHistTask::load() {
     }
     releaseOCIStatement(stmt);
   }
+}
+
+bool  OnlineHistTask::rename(std::string &NewName) {
+  int out=0;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistTask::rename";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN :out := ONLINEHISTDB.RENAMETASK(:old,:new); END;") ) {
+    myOCIBindInt   (stmt,":out", out);  
+    myOCIBindString(stmt,":old",m_name);
+    myOCIBindString(stmt,":new", NewName);  
+    myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
+  }
+  if(out>0) m_name = NewName;
+  return (out>0);
 }
 
 
@@ -132,13 +148,13 @@ void OnlineHistTask::dump() {
     cout << "Task "<< name() << "  related to "<<ndet() << " detectors:"<<endl <<"             ";
     for (int i=0 ; i< ndet(); i++) 
       cout << det(i) << "  ";
-  cout << endl << " Run Conf: Ph=" << runsOnPhysics() <<
-    "  Calib=" << runsOnCalib() << "  Empty=" << runsOnEmpty() <<endl ;
-  if (m_SavingFrequency_null == 0)
-    cout << " Frequency : " << savingFrequency() <<endl;
-  if (m_Reference_null == 0)
-    cout << " Reference : " << reference() <<endl;
-  cout<< "-----------------------------------------------------------------------"<<endl;
+    cout << endl << " Run Conf: Ph=" << runsOnPhysics() <<
+      "  Calib=" << runsOnCalib() << "  Empty=" << runsOnEmpty() <<endl ;
+    if (m_SavingFrequency_null == 0)
+      cout << " Frequency : " << savingFrequency() <<endl;
+    if (m_Reference_null == 0)
+      cout << " Reference : " << reference() <<endl;
+    cout<< "-----------------------------------------------------------------------"<<endl;
 }
 
 
@@ -162,6 +178,7 @@ bool OnlineTaskStorage::declareTask(std::string Name,
 			       float SavingFrequency)
 {  
   bool out=true;
+  m_Taskenv->setStmtMethod("OnlineTaskStorage::declareTask");
   OnlineHistTask* tk=0;
   std::vector<OnlineHistTask*>::iterator it;
   for (it = m_myTask.begin();it != m_myTask.end(); ++it) {
@@ -179,21 +196,20 @@ bool OnlineTaskStorage::declareTask(std::string Name,
 			   RunsOnPhysics,RunsOnCalib,RunsOnEmpty,
 			   SavingFrequency);
     if(tk->isAbort()) {
-	cout<<"Error from OnlineHistDB::declareTask : error creating Task "
-	    << Name <<endl;
-	delete tk;
-	tk=0;
-	out=false;
+      m_Taskenv->warningMessage("error creating Task "+Name);
+      delete tk;
+      tk=0;
+      out=false;
     }
     else 
       m_myTask.push_back(tk);
   }
   return out;
-  
 }
 
 OnlineHistTask* OnlineTaskStorage::getTask(std::string Name) {
   OnlineHistTask* tk=0;
+  m_Taskenv->setStmtMethod("OnlineTaskStorage::getTask");
   std::vector<OnlineHistTask*>::iterator it;
   for (it = m_myTask.begin();it != m_myTask.end(); ++it) {
     if((*it)->name() ==  Name) { 
@@ -204,10 +220,9 @@ OnlineHistTask* OnlineTaskStorage::getTask(std::string Name) {
   if (tk == 0) { 
     tk= new OnlineHistTask(*m_Taskenv, Name);
     if(tk->isAbort()) {
-	cout<<"Error from OnlineHistDB::getTask : not existing Task " 
-	    << Name <<endl;
-	delete tk;
-	tk=0;
+      m_Taskenv->warningMessage("not existing Task "+Name);
+      delete tk;
+      tk=0;
     }
     else 
       m_myTask.push_back(tk);
@@ -221,3 +236,4 @@ void OnlineTaskStorage::reloadTasks() {
     (*it)->load();
   }
 }
+

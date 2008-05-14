@@ -152,17 +152,17 @@
  sets the algorithm list version (works only for DB admin account)
 
 
-\item    void {\bf setRefRoot}(std::string newroot) ;
+\item    void {\bf setRefRoot}(std::string\& newroot) ;
 
  change reference histograms root directory (for testing)
 
 
-\item    void {\bf setSavesetsRoot}(std::string newroot) ;
+\item    void {\bf setSavesetsRoot}(std::string\& newroot) ;
 
  change savesets root directory (for testing)
 
 
-\item    bool {\bf removePageFolder}(std::string Folder);
+\item    bool {\bf removePageFolder}(std::string\& Folder);
 
 
  removes Page Folder only if it doesn't have pages (useful for cleanup)
@@ -190,8 +190,8 @@
 
 
 \item    int {\bf getAllHistograms}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-		       std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-		       std::vector$<$string$>$* types = NULL);
+		       std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+		       std::vector$<$std::string$>$* types = NULL);
 
  gets the full list of histograms. Returns the number of histograms found. Vectors with pointers
  to OnlineHistogram objects, histogram identifiers, histogram types can optionally created  by the user
@@ -199,76 +199,76 @@
 
 
 \item    int {\bf getHistogramsWithAnalysis}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-				std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-				std::vector$<$string$>$* types = NULL);
+				std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+				std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms on which some check analysis has to be performed 
 
 
 \item    int {\bf getAnalysisHistograms}(std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-			    std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			    std::vector$<$string$>$* types = NULL);
+			    std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+			    std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms that have to be produced by analysis task
 
 
 \item    int {\bf getHistogramsBySubsystem}(std::string SubSys,\\\mbox{}~~~~~~~~~
 			       std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-			       std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			       std::vector$<$string$>$* types = NULL);
+			       std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+			       std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms related to subsystem SubSys
 
 
 \item    int {\bf getHistogramsByTask}(std::string Task,\\\mbox{}~~~~~~~~~
 			  std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* types = NULL);
+			  std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+			  std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms related to task Task
 
 
 \item    int {\bf getHistogramsByPage}(std::string Page,\\\mbox{}~~~~~~~~~
 			  std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			  std::vector$<$string$>$* types = NULL);
+			  std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+			  std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms displayed on page Page
 
 
 \item    int {\bf getHistogramsBySet}(std::string SetName,\\\mbox{}~~~~~~~~~
 			 std::vector$<$OnlineHistogram*$>$* list = NULL,\\\mbox{}~~~~~~~~~
-			 std::vector$<$string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
-			 std::vector$<$string$>$* types = NULL);
+			 std::vector$<$std::string$>$* ids = NULL,\\\mbox{}~~~~~~~~~
+			 std::vector$<$std::string$>$* types = NULL);
 
  gets the list of histograms in a Set
 
 
-\item    int {\bf getPageFolderNames}(std::vector$<$string$>$\& list,\\\mbox{}~~~~~~~~~ std::string Parent="\_ALL\_");
+\item    int {\bf getPageFolderNames}(std::vector$<$std::string$>$\& list,\\\mbox{}~~~~~~~~~ std::string Parent="\_ALL\_");
 
 
  gets the list of page folders, Parent can be "/", a page folder name or "\_ALL\_" for all folders  
 
 
 \item    int {\bf getPageNamesByFolder}(std::string Folder,\\\mbox{}~~~~~~~~~
-			   std::vector$<$string$>$\& list);
+			   std::vector$<$std::string$>$\& list);
 
  gets the list of pages in a folder
 
 
-\item    int {\bf getSubsystems}(std::vector$<$string$>$\& list);
+\item    int {\bf getSubsystems}(std::vector$<$std::string$>$\& list);
 
 
  gets the list of known subsystems
 
 
-\item    int {\bf getTasks}(std::vector$<$string$>$\& list);
+\item    int {\bf getTasks}(std::vector$<$std::string$>$\& list);
 
 
  gets the list of tasks
 
 
-\item    int {\bf getAlgorithms}(std::vector$<$string$>$\& list,\\\mbox{}~~~~~~~~~std::string type="\_ALL\_");
+\item    int {\bf getAlgorithms}(std::vector$<$std::string$>$\& list,\\\mbox{}~~~~~~~~~std::string type="\_ALL\_");
 
 
  gets the list of algorithms, type can be "\_ALL\_", "CHECK", "HCREATOR"

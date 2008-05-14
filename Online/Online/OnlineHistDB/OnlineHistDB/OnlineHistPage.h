@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.16 2008-03-20 14:43:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistPage.h,v 1.17 2008-05-14 15:00:55 ggiacomo Exp $
 #ifndef ONLINEHISTPAGE_H
 #define ONLINEHISTPAGE_H 1
 /** @class  OnlineHistPage OnlineHistPage.h OnlineHistDB/OnlineHistPage.h
@@ -34,19 +34,20 @@ class OnlineHistPage : public OnlineHistDBEnv
   bool setDoc(std::string Doc) {m_doc=Doc;return save();}
   /// adds or updates an histogram on the page. Use instance > 1 to use the
   /// same histogram more than once. Returns the object attached to page (the input
-  /// one, or a new copy if a new instance needs to be created), or NULL in case of failure. 
+  /// one, or a new copy if a new instance needs to be created), or NULL in case of failure.
+  /// Positions are relative to the Pad size (i.e. should be numbers from 0 to 1)
   OnlineHistogram* declareHistogram(OnlineHistogram* h,
-				    double Cx,
-				    double Cy,
-				    double Sx,
-				    double Sy,
+				    double Xmin,
+				    double Ymin,
+				    double Xmax,
+				    double Ymax,
 				    unsigned int instance=1);
   /// like declareHistogram, but a new instance is always created
   OnlineHistogram* addHistogram(OnlineHistogram* h,
-				double Cx,
-				double Cy,
-				double Sx,
-				double Sy);
+				    double Xmin,
+				    double Ymin,
+				    double Xmax,
+				    double Ymax);
   /// removes histogram from page, or one of its instances, returning true on success
   bool removeHistogram(OnlineHistogram* h,
 		       unsigned int instance=1);
@@ -64,10 +65,10 @@ class OnlineHistPage : public OnlineHistDBEnv
   }
   /// get the layout of given histogram. returns false if histogram is not found
   bool getHistLayout(OnlineHistogram* h,
-		     double &Cx,
-		     double &Cy,
-		     double &Sx,
-		     double &Sy,
+		     double &Xmin,
+		     double &Ymin,
+		     double &Xmax,
+		     double &Ymax,
 		     unsigned int instance=1) const;
   /// saves the current page layout to the DB
   bool save();

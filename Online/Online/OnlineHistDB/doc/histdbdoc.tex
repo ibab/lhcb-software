@@ -5,7 +5,7 @@
 \title{Histogram DB for Online Monitoring -- User's Manual}
 \doctyp{}
 \dociss{4}
-\docrev{7}
+\docrev{9}
 \doccre{March 21, 2007}
 \docmod{\today}
 \docref{}
@@ -234,14 +234,15 @@ a first version, sitting on the oracle server lbora01 and having TNS identifier
 ``HISTOGRAMDB'',  is still available for tests;\\
 the {\bf production DB} is available on the main Oracle server (RAC cluster)
 since October 2007. Its TNS identifier is {\bf HISTDB}. This is the DB to be
-used for real histograms produced by the Online system.
+used for real histograms produced by the Online system. The server is accessible only
+from the LHCb network at the pit.
 
 Two accounts are available:
 
 {HIST\_READER}   (read--only, password=''reader'') or \\
 {HIST\_WRITER}  (ask the password to DB mantainer)
 
-The DB can be accessed through a C++ API or interactively through a
+The DB can be accessed through a C++ API (from teh pit) or interactively through a
 Web interface written in PHP. In order to minimize client load and
 network traffic, and ease the maintenance of interface code, both
 interfaces  are based on a set of common PL/SQL procedures that are
@@ -249,10 +250,10 @@ precompiled on the Oracle server.
 
 \section{Web interface}
 
-It is available at the address\\
+It is available world--wide at the address\\
 {\it http://lbhistogramdb.cern.ch }
 
-world-wide, and at 
+and at 
 {\it http://histogramdb}
 
 from the LHCb online network at the pit.
@@ -263,9 +264,9 @@ from the LHCb online network at the pit.
 
 It is intended to be the most suitable tool to browse available
 histograms, edit the display options and the automatic analysis, including
-the definition of histograms to be produced at analysis level.
+the definition of histograms to be produced on the fly at display/analysis level.
 
-Presently, it is also possible to edit the viewer page configurations, though
+Presently, it is also possible to edit the page configurations, though
 a graphical editor in the presenter application will likely be the
 most suitable tool for that task.
 
@@ -305,7 +306,7 @@ getPage} methods. Such objects make sense only within the transaction
 and should never be deleted by the user (they are owned by the
 OnlineHistDB object and deleted by its destructor). 
 
-Changes are committed to the DB only by an explicit call to the {\it
+Changes are committed to the DB only by explicitly calling the {\it
 commit} method.
 
 By default, DB errors don't throw exceptions to the client code but
@@ -466,9 +467,9 @@ histograms.
 
    OnlineHistPage* pg=HistDB->getPage("/Examples/My Example Page");
    if(pg) {
-     pg->declareHistogram(h1,0. ,0. ,0.5,0.5);
-     pg->declareHistogram(h2,0. ,0.5,0.5,0.5);
-     pg->declareHistogram(h3,0.5,0.5,0.5,0.4);
+     pg->declareHistogram(h1, 0.  ,0.5 ,0.5, 1. ); 
+     pg->declareHistogram(h2, 0.5 ,0.5 ,1. , 1. ); 
+     pg->declareHistogram(h3, 0.  ,0.  ,0.6 , 0.5);
      pg->save(); // needed to sync pg object with DB
    
      int lc=2, fs=7, fc=3;
@@ -481,7 +482,7 @@ histograms.
      h1->dump();
 
      // second instance of h1
-     OnlineHistogram* newh = pg->declareHistogram(h1,0.5,0. ,0.5,0.4,2);
+     OnlineHistogram* newh = pg->declareHistogram(h1,0.61, 0. ,1. ,0.5 ,2);
      pg->save();
      ymax=200000.;
      newh->setDisplayOption("YMAX",(void*) &ymax); 

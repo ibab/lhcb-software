@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.8 2008-04-30 13:29:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/OnlineHistDB/OnlineHistTask.h,v 1.9 2008-05-14 15:00:55 ggiacomo Exp $
 #ifndef ONLINEHISTTASK_H
 #define ONLINEHISTTASK_H 1
 /** @class  OnlineHistTask OnlineHistTask.h OnlineHistDB/OnlineHistTask.h
@@ -66,6 +66,8 @@ class OnlineHistTask : public OnlineHistDBEnv
   void dump();
   // load task from DB
   void load();
+  // rename task
+  bool rename(std::string &NewName);
 
  private:
   std::string m_name;

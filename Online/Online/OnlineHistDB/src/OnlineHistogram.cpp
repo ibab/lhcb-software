@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.31 2008-04-30 13:29:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.32 2008-05-14 15:00:57 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -162,6 +162,44 @@ bool OnlineHistogram::verifyPage(std::string &Page, int Instance) {
   }
   return out;
 }
+
+void OnlineHistogram::reload() {
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistogram::reload";
+  if (OCI_SUCCESS == 
+      prepareOCIStatement(stmt,"SELECT NAME FROM HISTOGRAM WHERE HID=:1") ) {
+    myOCIBindString(stmt,":1", m_hid);
+    if (OCI_SUCCESS == myOCISelectExecute(stmt) ) {
+      text Name[VSIZE_NAME];
+      Name[0]= '\0';
+      myOCIDefineString(stmt, 1, Name  , VSIZE_NAME);
+      myOCIFetch(stmt, 1);
+      m_identifier = (const char*) Name;
+      load();
+    }
+    releaseOCIStatement(stmt);
+  }
+}
+
+bool OnlineHistogram::rename(std::string &newTask,
+                             std::string &newAlgo,
+                             std::string &newName) {
+  int out=0;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistogram::rename";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN :out := ONLINEHISTDB.RENAMEHISTOGRAM(:id,:1,:2,:3); END;") ) {
+    myOCIBindInt   (stmt,":out", out);  
+    myOCIBindString(stmt,":id",m_identifier);
+    myOCIBindString(stmt,":1", newTask);  
+    myOCIBindString(stmt,":2", newAlgo);
+    myOCIBindString(stmt,":3", newName);
+    myOCIStmtExecute(stmt, SEVERE);
+    releaseOCIStatement(stmt);
+  }
+  return (out>0);
+}
+
 
 void OnlineHistogram::load() {
   int out=0;
@@ -1499,6 +1537,6 @@ void OnlineHistogramStorage::reloadAnalysisForSet(int Hsid,
 void OnlineHistogramStorage::reloadHistograms() {
   std::vector<OnlineHistogram*>::iterator ih;
   for (ih = m_myHist.begin(); ih != m_myHist.end(); ++ih) {
-    (*ih)->load();
+    (*ih)->reload();
   }
 }

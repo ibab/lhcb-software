@@ -1,9 +1,9 @@
-\item    inline std::string {\bf identifier}() const ;
+\item    inline std::string\& {\bf identifier}() ;
 
  full histogram unique identifier Taskname/AlgorithmName/HistogramName
 
 
-\item    inline std::string {\bf page}() const ;
+\item    inline std::string\& {\bf page}() ;
 
  full path name of the page to which this histogram object is attached
 
@@ -13,7 +13,7 @@
  counter (starting from 1) to distinguish several instances of the same histogram on the same page
 
 
-\item    inline std::string {\bf dimServiceName}() const  ;
+\item    inline std::string\& {\bf dimServiceName}() ;
 
  name of the DIM service that is currently publishing the histogram
 
@@ -28,7 +28,7 @@
  position of this histogram in set (starting from 1). Can be larger than nhs() if some histogram in the set has been deleted
 
 
-\item    inline std::string {\bf hid}() const ;
+\item    inline std::string\& {\bf hid}() ;
 
  internal histogram ID (equivalent to hsid()/ihs())
 
@@ -38,12 +38,12 @@
  number of histograms in set
 
 
-\item    inline std::string {\bf hstype}() const ;
+\item    inline std::string\& {\bf hstype}() ;
 
  histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
 
 
-\item    inline OnlineHistDBEnv::HistType {\bf type}() const ;
+\item    inline OnlineHistDBEnv::HistType {\bf type}() ;
 
  histogram type (``H1D'', ``H2D'', ``P1D'',``P2D'' or ``CNT'' )
 
@@ -63,32 +63,32 @@
  standard DB histogram title (not necessarly equal to the published ROOT title)
 
 
-\item    inline std::string {\bf hsname}() const ;
+\item    inline std::string\& {\bf hsname}() ;
 
  histogram set name
 
 
-\item    inline std::string {\bf subname}() const ;
+\item    inline std::string\& {\bf subname}() ;
 
  subname
 
 
-\item    inline std::string {\bf task}() const ;
+\item    inline std::string\& {\bf task}() ;
 
  task name
 
 
-\item    inline std::string {\bf algorithm}() const ;
+\item    inline std::string\& {\bf algorithm}() ;
 
  algorithm name
 
 
-\item    std::string {\bf descr}() const ;
+\item    std::string\& {\bf descr}() ;
 
  short description of the histogram
 
 
-\item    std::string {\bf doc}() const ;
+\item    std::string\& {\bf doc}() ;
 
  link to a more extensive documentation
 
@@ -117,7 +117,7 @@
  unsets page associated to histogram object
 
 
-\item    bool {\bf setDimServiceName}(std::string DimServiceName);
+\item    bool {\bf setDimServiceName}(std::string\& DimServiceName);
 
 
  sets the DIM service name that is currently publishing the histogram. Returns true on success
@@ -262,7 +262,7 @@
  success.
 
 
-\item    bool {\bf getCreationDirections}(std::string \&Algorithm,\\\mbox{}~~~~~~~~~
+\item    bool {\bf getCreationDirections}(std::string\& Algorithm,\\\mbox{}~~~~~~~~~
 			     std::vector$<$std::string$>$ \&source\_list,\\\mbox{}~~~~~~~~~
 			     std::vector$<$float$>$ \&parameters);
 
@@ -325,5 +325,13 @@
                     bool Mask=true);
 
  masks analysis with ID AnaID. Use Mask=false to unmask. Returns true on success
+
+
+\item    bool {\bf rename}(std::string \&newTask,\\\mbox{}~~~~~~~~~
+              std::string \&newAlgo,\\\mbox{}~~~~~~~~~
+              std::string \&newName);
+
+ renames an histogram (including its full set if needed) 
+ ({\bf TEMPORARY METHOD TO BE REMOVED AT PRODUCTION STAGE})
 
 
