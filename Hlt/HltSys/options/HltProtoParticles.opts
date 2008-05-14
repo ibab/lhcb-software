@@ -213,3 +213,16 @@ HltElectrons.DecayDescriptor = "Electron" ;
 //---------------------------------------------------------------------
 // Special case for photons - NO PHOTONS YET
 //---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
+// Special case for Vzero particles
+//---------------------------------------------------------------------
+SeqHlt2ProtoParticles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
+SeqHlt2VzeroLL.MeasureTime = true ;
+SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
+#include "$HLTKSHORTROOT/options/HltV0LL.opts"
+HltV0LL.InputTrackContainer = "Hlt/Track/ForwardCLEANED";
+// Kzero from two long tracks
+SeqHlt2VzeroLL.Members += {
+  "CreateHltVzero/HltV0LL",
+};

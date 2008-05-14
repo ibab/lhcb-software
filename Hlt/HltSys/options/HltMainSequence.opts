@@ -18,7 +18,17 @@ HltSvc.ForceLeaves = true;
  * @todo Make ProtoParticlea and articles with these Ks
  * @todo See what to do with downstream Ks
  */
-#include "$HLTKSHORTROOT/options/HltVzero.opts"
+
+/**
+ * HltKshort moved to HltProtoparticles to profit from clone killing
+ *
+#include "$HLTKSHORTROOT/options/HltV0LL.opts"
+// Kzero from two long tracks
+HltRecoSequence.Members += {
+  "CreateHltVzero/HltV0LL",
+};
+
+*/
 
 /**
  * main HLT sequencer
