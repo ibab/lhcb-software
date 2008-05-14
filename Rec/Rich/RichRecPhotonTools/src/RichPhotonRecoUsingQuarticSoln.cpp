@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.5 2008-05-08 13:21:32 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.6 2008-05-14 09:55:11 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -57,13 +57,9 @@ PhotonRecoUsingQuarticSoln( const std::string& type,
   declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
   declareProperty( "UseSecondaryMirrors",                m_useSecMirs = true  );
   declareProperty( "RejectAmbiguousPhotons",       m_rejectAmbigPhots         );
-
   declareProperty( "CheckBeamPipe", m_checkBeamPipe );
-
   declareProperty( "CheckPrimaryMirrorSegments", m_checkPrimMirrSegs );
-
   declareProperty( "MinActiveFraction", m_minActiveFrac );
-
   m_minSphMirrTolIt[Rich::Aerogel]  = std::pow(0.10 * Gaudi::Units::mm,2);
   m_minSphMirrTolIt[Rich::Rich1Gas] = std::pow(0.08 * Gaudi::Units::mm,2);
   m_minSphMirrTolIt[Rich::Rich2Gas] = std::pow(0.05 * Gaudi::Units::mm,2);
