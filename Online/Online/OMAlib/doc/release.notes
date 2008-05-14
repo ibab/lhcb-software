@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.4 2008-04-30 13:28:54 ggiacomo Exp $
+! $Id: release.notes,v 1.5 2008-05-14 15:08:14 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20080514 - OMAlib v1r1
+  add OMADivide algorithm
 
 ! 20080430 
   Some style improvements:
