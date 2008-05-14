@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.h,v 1.1 2008-05-09 13:58:18 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.h,v 1.2 2008-05-14 10:01:37 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -13,42 +13,33 @@
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RichIsolatedTrackTool_H
-#define RICHRECTOOLS_RichIsolatedTrackTool_H 1
+#ifndef RICHRECTRACKTOOLS_RichIsolatedTrackTool_H
+#define RICHRECTRACKTOOLS_RichIsolatedTrackTool_H 1
 
-#include <sstream>
 #include <cmath>
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
-#include "RichRecBase/RichRecHistoAlgBase.h"
-#include "RichRecBase/RichRecTupleAlgBase.h"
-#include "RichRecBase/IRichGeomEff.h"
-#include "RichRecBase/RichRecHistoToolBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+// Gaudi
+#include "GaudiKernel/ToolFactory.h"
 
 // interfaces
+#include "RichRecBase/IRichGeomEff.h"
 #include "RichRecBase/IRichIsolatedTrack.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
 
 //RICH kernel
-#include "RichKernel/IRichRayTracing.h"
-#include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/RichStatDivFunctor.h"
-
-// temporary histogramming numbers
-//#include "RichRecBase/RichDetParams.h"
+#include "RichKernel/RichPoissonEffFunctor.h"
+#include "RichKernel/RichMap.h"
 
 // Event
 #include "Event/RichRecSegment.h"
 
 // boost
-//#include "boost/assign/list_of.hpp"
-
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -65,7 +56,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------------
 
-    class IsolatedTrackTool : public Rich::Rec::HistoToolBase,
+    class IsolatedTrackTool : public Rich::Rec::ToolBase,
                               virtual public IIsolatedTrack
     {
 
@@ -79,7 +70,9 @@ namespace Rich
       /// Destructor
       virtual ~IsolatedTrackTool(){}
 
-      virtual StatusCode initialize();    ///<  initialization
+      virtual StatusCode initialize();  ///< Initialization
+
+      virtual StatusCode finalize();    ///< Finalization
 
     public: // methods (and doxygen comments) inherited from public interface
 
@@ -92,29 +85,65 @@ namespace Rich
 
     private:
 
-      //pointers to tool instances
-      mutable const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
-      const IGeomTool * m_geomTool;///< Pointer to geometry tool
-      const Rich::Rec::IGeomEff * m_geomEffic;///< Pointer to RichGeomEff tool
-
-
-      //access rich Cherenkov tool
-      const ICherenkovAngle * ckAngleTool() const
+      //-----------------------------------------------------------------------------
+      /** @class CutEff RichIsolatedTrackTool.h
+       *
+       *  Tally class to store the result of a single cut
+       *
+       *  @author Susan Haines
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   15/02/2008
+       */
+      //-----------------------------------------------------------------------------
+      class CutEff
       {
-        if ( !m_ckAngle ) { acquireTool( "RichCherenkovAngle", m_ckAngle ); }
-        return m_ckAngle;
+      public:
+        CutEff() : failed(0), passed(0) { }
+        /// Total number
+        inline unsigned int total() const { return failed+passed; }
+      public:
+        unsigned int failed; ///< Number that failed the cut
+        unsigned int passed; ///< Number that passed the cut
+      };
+      typedef std::pair< Rich::RadiatorType, std::string > CutEffMapKey;
+      typedef Rich::Map< CutEffMapKey, CutEff > CutEffMap;
+
+      /// Test the given cut, and keep a summary tally of the result
+      inline bool testCut( const std::string & desc, 
+                           const Rich::RadiatorType rad,
+                           bool result ) const
+      {
+        if ( !m_abortEarly )
+        {
+          if ( result ) { ++(m_summary[CutEffMapKey(rad,desc)].passed); }
+          else          { ++(m_summary[CutEffMapKey(rad,desc)].failed); }
+        }
+        return result;
       }
 
-      double m_sizemomcut;
-      double m_sizegeocut;
-      double m_sizesepcut;
-      double m_sizeXexit;
-      double m_sizephotonassoccut;
-      double m_sizeringwidth;
-      double m_sizephicut;
-      double m_sizehitregioncut;
+    private:
 
-      std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
+      //pointers to tool instances
+      mutable const ICherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+      const IGeomTool * m_geomTool;               ///< Pointer to geometry tool
+      const Rich::Rec::IGeomEff * m_geomEffic;    ///< Pointer to RichGeomEff tool
+
+      mutable CutEffMap m_summary; ///< Cut performance summary
+
+      bool m_abortEarly; ///< Reject track as soon as possible
+
+      std::vector<double> m_sizemomcut; ///< Minimum momentum
+      std::vector<double> m_sizegeocut; ///< Minimum geom. eff.
+      std::vector<double> m_sizesepcut; ///< Minimum seperation between segment centres
+      std::vector<double> m_sizeXexit;  ///< Panel boundary X cut
+      std::vector<double> m_sizeYexit;  ///< Panel boundary Y cut
+      std::vector<double> m_sizephotonassoccut; ///< Fraction of multiple associated pixel(photons) cut
+      std::vector<double> m_sizeringwidth; ///< width of ring (in radians) around expect ring CK theta
+      std::vector<double> m_sizephicut;    ///< Maximum fraction of photons in each phi region
+      std::vector<unsigned int> m_nPhiRegions; ///< Number of phi regions to use
+      std::vector<double> m_sizehitregioncut; ///< Maximum fraction of hits outside CK ring
+
+      std::vector<double> m_maxROI;     ///< Max hit radius of interest around track centres
       std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point
       std::vector<double> m_sepGMax;    ///< Scaling parameter - Max separation point
       std::vector<double> m_scale;      ///< Internal cached parameter for speed
@@ -124,4 +153,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECTOOLS_RichIsolatedTrackTool_H
+#endif // RICHRECTRACKTOOLS_RichIsolatedTrackTool_H
