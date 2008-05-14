@@ -44,6 +44,7 @@ endif
 
 #################################################################
 # Parsing command line arguments
+# cloned from the getopt examples
 
 set debug = 0
 set mysiteroot = 0
@@ -96,6 +97,49 @@ while ($#argv > 0)
 	echo '--> '\`$1:q\'
     shift
 end
+
+unset temp
+
+###################################################################################
+# site independent setup
+# Gaudi:
+setenv GAUDIKSERVER ":kserver:isscvs.cern.ch:/local/reps/Gaudi"
+# LHCb
+setenv LHCBKSERVER ":kserver:isscvs.cern.ch:/local/reps/lhcb"
+
+###################################################################################
+# MYSITEROOT massaging
+if ( $mysiteroot != 0 ) then
+	setenv MYSITEROOT $mysiteroot
+	setenv SITEROOT $MYSITEROOT
+	setenv CMTSITE LOCAL
+else
+	if ("$?MYSITEROOT") then
+		setenv SITEROOT $MYSITEROOT
+		set mysiteroot $MYSITEROOT
+		setenv CMTSITE LOCAL		
+    else
+    	if (-d /afs/cern.ch) then
+			setenv CMTSITE CERN
+			setenv SITEROOT /afs/cern.ch
+			setenv AFSROOT /afs    		
+    	else
+			echo " "\$MYSITEROOT" is not defined"
+			echo " we suggest you install all software under" \$MYSITEROOT
+			echo " then LHCb software will be installed under" \$MYSITEROOT"/lhcb"
+			echo "      LCG software will be installed under" \$MYSITEROOT"/lcg/external"
+			echo "      CMT and OpenScientist will be installed under" \$MYSITEROOT"/contrib"
+			echo " as an example "
+			echo " setenv "\$MYSITEROOT" /home/ranjard/Install"
+			echo ""
+			exit
+    	endif
+	endif
+endif
+
+###################################################################################
+# shared area massaging
+# On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
 
 ###################################################################################
 echo "debug $debug"
@@ -160,9 +204,6 @@ unsetenv COMPILER_PATH
 unsetenv GCC_EXEC_PREFIX
 
 
-setenv CMTSITE CERN
-setenv AFSROOT /afs
-setenv SITEROOT /afs/cern.ch
 echo " -------------------------------------------------------------------"
 
 # remove any .cmtrc file stored in the $HOME directory
@@ -194,9 +235,8 @@ if !(-f $HOME/.rootauthrc) then
 	cp  /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
 endif 
 
-# Gaudi release area and cvs repository
+# Gaudi release area
 setenv GAUDISOFT $SITEROOT/sw/Gaudi/releases
-setenv GAUDIKSERVER ":kserver:isscvs.cern.ch:/local/reps/Gaudi"
 setenv Gaudi_release_area ${GAUDISOFT}
 
 # LCG release area
@@ -205,8 +245,7 @@ setenv LCG_release_area /afs/cern.ch/sw/lcg/app/releases
 # DIM release area
 setenv DIM_release_area /afs/cern.ch/lhcb/online/control
 
-# LHCb release area and cvs repository
-setenv LHCBKSERVER ":kserver:isscvs.cern.ch:/local/reps/lhcb" 
+# LHCb release area
 setenv LHCBRELEASES $SITEROOT/lhcb/software/releases
 setenv LHCBDEV $SITEROOT/lhcb/software/DEV
 setenv LHCBDOC $LHCBRELEASES/DOC
@@ -320,22 +359,18 @@ if ( ! $?ROOTSYS ) setenv ROOTSYS
 echo "******************************************************"
 echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
-
-
-#
-
-  echo " --- "\$CMTROOT " is set to $CMTROOT "
-  echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
-  if ($debug != 'debug') echo " --- to compile and link in debug mode : setenv CMTCONFIG "\$CMTDEB" ; gmake"
-#  echo " === "\$PATH " is set to $PATH "
-  if ($?CMTPATH) then
-    echo " --- "\$CMTPATH " is set to ${origin}/${work}" 
-  else
-    echo " --- "\$User_release_area " is set to ${User_release_area}" 
-    echo " --- "\$CMTPROJECTPATH "is set to "\$User_release_area ":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
-    echo " --- projects will be searched in "\$CMTPROJECTPATH
-  endif 
-  echo " -------------------------------------------------------------------- "
+echo " --- "\$CMTROOT " is set to $CMTROOT "
+echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
+	if ($debug != 'debug') echo " --- to compile and link in debug mode : setenv CMTCONFIG "\$CMTDEB" ; gmake"
+  	if ($?CMTPATH) then
+    	echo " --- "\$CMTPATH " is set to ${origin}/${work}" 
+  	else
+    	echo " --- "\$User_release_area " is set to ${User_release_area}" 
+    	echo " --- "\$CMTPROJECTPATH "is set to "\$User_release_area ":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
+    	echo " --- projects will be searched in "\$CMTPROJECTPATH
+  	endif 
+  	echo " -------------------------------------------------------------------- "
 end:
 unset newcomp, rh, rhv, comp, cmtvers
+unset debug, mysiteroot, cmtconfig, userarea, cmtvers
 exit
