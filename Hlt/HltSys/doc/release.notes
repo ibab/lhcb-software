@@ -5,8 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-! 2008-05-14 - Patrick Koppenburg
+! 2008-05-14 - Gerhard Raven
  - add HltInit.opts, which initializes the HltANNSvc
+ - fix some typos in options files
 
 ! 2008-05-14 - Patrick Koppenburg
  - Added Fidel package

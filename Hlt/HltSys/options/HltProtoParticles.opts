@@ -224,5 +224,5 @@ SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
 HltV0LL.InputTrackContainer = "Hlt/Track/ForwardCLEANED";
 // Kzero from two long tracks
 SeqHlt2VzeroLL.Members += {
-  "CreateHltVzero/HltV0LL",
+  "CreateHltVzero/HltV0LL"
 };

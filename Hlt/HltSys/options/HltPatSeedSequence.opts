@@ -5,7 +5,7 @@
 
 HltSeedSequence.Members = {
   "PatSeeding",
-  "PatDownstream/PatDownstream",
+  "PatDownstream/PatDownstream"
 };
 
 
