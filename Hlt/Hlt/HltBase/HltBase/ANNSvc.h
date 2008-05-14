@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.6 2008-05-11 10:57:49 graven Exp $
+// $Id: ANNSvc.h,v 1.7 2008-05-14 13:10:50 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -6,6 +6,7 @@
 #include "HltBase/IANNSvc.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/Service.h"
+#include "GaudiKernel/MsgStream.h"
 #include <string>
 
 namespace ANNSvcUtilities {
@@ -30,6 +31,7 @@ public:
   ~ANNSvc();
   
   StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
+  StatusCode finalize();
 
   boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const;
   boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const;
@@ -45,13 +47,15 @@ protected:
   virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, int minor) const;
   virtual boost::optional<minor_value_type> handleUndefined(const major_key_type& major, const std::string& minor) const;
 
-  // allow implementations to add items 'on the fly', when triggered by handleUndefined...
-  // bool addItem(const major_key_type& major, const minor_value_type& newitem );
+  MsgStream& log() const { return m_log; }
+
 
 private:
   
   typedef ANNSvcUtilities::bimap_t<minor_key_type, minor_mapped_type> bimap_type;
   typedef GaudiUtils::VectorMap< major_key_type, bimap_type* > maps_type;
   maps_type   m_maps;
+
+  mutable MsgStream m_log;
 };
 #endif // ANNSVC_H 1
