@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Chris Jones
+ - Add default mapping for isolated track tool
+
 !=========================== RichTools v2r20 2008-05-09 ======================
 ! 2008-05-08 - Chris Jones
  - Adapt to removal of obsolete RichDet locations

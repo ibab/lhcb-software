@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.23 2008-04-15 12:52:38 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.24 2008-05-14 09:47:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -75,6 +75,7 @@ StatusCode Rich::ToolRegistry::initialize()
   defaultTools.push_back ( "Rich::Rec::PhotonEmissionPoint/RichPhotonEmissionPoint" );
   defaultTools.push_back ( "Rich::Rec::BackgroundEstiAvHPD/PixelBackgroundTool" );
   defaultTools.push_back ( "Rich::Rec::PIDPlots/RichPIDPlots" );
+  defaultTools.push_back ( "Rich::Rec::IsolatedTrackTool/RichIsolatedTrack" );
   // Global PID
   defaultTools.push_back ( "Rich::Rec::GlobalPID::TrackCreator/GPIDTrackCreator" );
   defaultTools.push_back ( "Rich::Rec::GlobalPID::LikelihoodTool/GPIDLikelihoodTool" );
