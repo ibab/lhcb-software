@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.4 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.5 2008-05-14 10:01:16 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -71,6 +71,22 @@ class OMAEfficiency : public OMAHcreatorAlg
 {
  public:
   OMAEfficiency();
+  virtual TH1* exec( const std::vector<TH1*> *sources,
+                     const std::vector<float> *params,
+                     std::string outName,
+                     std::string outTitle,
+                     TH1* existingHisto=0);  
+  TH1* exec( TH1* okH,
+             TH1* allH,
+             std::string outName,
+             std::string outTitle,
+             TH1* existingHisto=0);
+};
+
+class OMADivide : public OMAHcreatorAlg
+{
+ public:
+  OMADivide();
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string outName,

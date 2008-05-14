@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.5 2008-04-30 13:28:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.6 2008-05-14 10:01:16 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -13,8 +13,8 @@
 class OnlineHistDB;
 
 namespace OMAconstants {
-  static const int AlgListID = 3;
-  static const std::string version = "v1r0";
+  static const int AlgListID = 4;
+  static const std::string version = "v1r1";
   static const double epsilon = 1.e-10;
 }
 

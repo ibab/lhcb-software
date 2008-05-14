@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.4 2008-04-30 13:28:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.5 2008-05-14 10:01:16 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
@@ -42,6 +42,7 @@ void OMAlib::doAlgList() {
   m_algorithms["GaussFit"] = new OMAGaussFit();
 
   m_algorithms["Efficiency"] = new OMAEfficiency();
+  m_algorithms["Divide"] = new OMADivide();
   m_algorithms["HMerge"] = new OMAHMerge();
   m_algorithms["Scale"] = new OMAScale();
   syncList();
