@@ -1,8 +1,11 @@
-// $Id: PatSeedTool.cpp,v 1.3 2008-01-27 23:02:00 mschille Exp $
+// $Id: PatSeedTool.cpp,v 1.4 2008-05-14 17:22:18 mschille Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+
+// from boost
+#include "boost/array.hpp"
 
 // local
 #include "PatFwdFitLine.h"
@@ -26,9 +29,9 @@ DECLARE_TOOL_FACTORY( PatSeedTool );
 // Standard constructor, initializes variables
 //=============================================================================
 PatSeedTool::PatSeedTool( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+    const std::string& name,
+    const IInterface* parent )
+: GaudiTool ( type, name , parent )
 {
   declareInterface<PatSeedTool>(this);
 
@@ -43,7 +46,8 @@ PatSeedTool::~PatSeedTool() {}
 //  Fit a Seed track
 //=========================================================================
 bool PatSeedTool::fitTrack( PatSeedTrack& track,
-                            double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) {
+    double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) const
+{
   bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
   PatFwdHits::iterator itH;
 
@@ -51,47 +55,47 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   if ( minPlanes > track.nPlanes() ) return false;
 
   if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
-                        << " size " << track.coordEnd() - track.coordBegin() << endreq;
+    << " size " << track.coordEnd() - track.coordBegin() << endreq;
 
   if ( !xOnly ) track.updateHits( );
-  bool first = true;
 
-  double highestChi2 = 10*maxChi2;
-  bool   ignoreX = !xOnly;   // make sense only if some stereo...
+  double highestChi2;
+  bool ignoreX = !xOnly;   // make sense only if some stereo...
+  bool first = true;
 
   fitInitialXProjection( track, forceDebug );
 
-  while ( highestChi2 > maxChi2 ) {
+  do {
     //== Improve X parameterisation
     fitXProjection( track, isDebug );
     bool hasStereo = false;
     if ( !xOnly ) {
       if ( first ) {
-        fitInitialStereoProjection( track, forceDebug );
-        first = false;
+	fitInitialStereoProjection( track, forceDebug );
+	first = false;
       }
 
-      for ( unsigned int kk = 0; 10 > kk; ++kk ) {
-        PatFwdFitLine line;
-        for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-          PatFwdHit* hit = *itH;
-          if ( !hit->isSelected() ) continue;
-          if ( hit->hit()->isX() ) continue;
-          double z     = hit->z();
-          double dist  = - track.distanceForFit( hit ) / hit->hit()->dxDy();
-          double w     = hit->hit()->weight();
-          line.addPoint( z, dist, w );
-          hasStereo = true;
-        }
-        if ( !hasStereo ) {
-          ignoreX = false;
-          break;
-        }
-        line.solve();
-        double day = line.ax();
-        double dby = line.bx();
-        if ( isDebug )
-		info() << "    day " << day << " dby " << dby << endreq;
+      for ( unsigned kk = 10; kk--; ) {
+	PatFwdFitLine line;
+	for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+	  PatFwdHit* hit = *itH;
+	  if ( !hit->isSelected() ) continue;
+	  if ( hit->hit()->isX() ) continue;
+	  double z     = hit->z();
+	  double dist  = - track.distanceForFit( hit ) / hit->hit()->dxDy();
+	  double w     = hit->hit()->weight();
+	  line.addPoint( z, dist, w );
+	  hasStereo = true;
+	}
+	if ( !hasStereo ) {
+	  ignoreX = false;
+	  break;
+	}
+	line.solve();
+	double day = line.ax();
+	double dby = line.bx();
+	if ( isDebug )
+	  info() << "    day " << day << " dby " << dby << endreq;
 	if ( fabs( dby ) > 1.0 ) {
 	  // if we get a track with stereo hits on it which do not
 	  // belong together, the y fit may diverge. the problem about
@@ -101,11 +105,11 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	  // become nan. to avoid this bad case, we stop the fit
 	  // iteration - and throw away the track in its entirety
 	  if ( isDebug )
-		  info() << "    fabs(dby) > 1.0, abandoning track!" << endreq;
+	    info() << "    fabs(dby) > 1.0, abandoning track!" << endreq;
 	  return false;
 	}
-        track.updateYParameters( day, dby );
-        if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
+	track.updateYParameters( day, dby );
+	if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
       }
     }
 
@@ -124,18 +128,18 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
       nDoF += 1.;
       totChi2 += chi2;
       if ( highestChi2 < chi2 ) {
-        highestChi2 = chi2;
-        worst = itH;
+	highestChi2 = chi2;
+	worst = itH;
       }
     }
     if ( msgLevel( MSG::VERBOSE ) || forceDebug ) {
       MsgStream& msg = info();
       for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
-        PatFwdHit* hit = *itH;
-        if ( !hit->isSelected() ) continue;
-        printTCoord( msg, track, hit );
-        if ( worst == itH ) msg << " -- worst";
-        msg << endreq;
+	PatFwdHit* hit = *itH;
+	if ( !hit->isSelected() ) continue;
+	printTCoord( msg, track, hit );
+	if ( worst == itH ) msg << " -- worst";
+	msg << endreq;
       }
     }
     if ( highestChi2 > maxChi2 ) {
@@ -143,22 +147,23 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
       if ( isDebug ) info() << " Remove hit and try again " << endreq;
 
       if ( minPlanes > track.nPlanes() ) {
-        if ( isDebug ) info() << " Abandon: Only " << track.nPlanes() << " planes, min " << minPlanes
-                              << " highestChi2 " << highestChi2 << endreq;
-        return false;
+	if ( isDebug ) info() << " Abandon: Only " << track.nPlanes()
+	  << " planes, min " << minPlanes
+	  << " highestChi2 " << highestChi2 << endreq;
+	return false;
       }
     }
     //== If almost there, force one iteration with X fitting, at least...
     if ( highestChi2 < 2 * maxChi2 ) {
       if ( ignoreX ) {
-        ignoreX = false;
-        highestChi2 = 2.* maxChi2;
+	ignoreX = false;
+	highestChi2 = 2.* maxChi2;
       }
     }
     track.setChi2( totChi2 / nDoF );
-  }
+  } while ( highestChi2 > maxChi2 );
   if ( isDebug ) info() << ".. OK with " << track.nPlanes() << " planes, min " << minPlanes
-                        << " highestChi2 " << highestChi2 << endreq;
+    << " highestChi2 " << highestChi2 << endreq;
   if ( minPlanes > track.nPlanes() ) return false;
   return true;
 
@@ -166,12 +171,12 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 //=========================================================================
 //  Parabolic fit to projection.
 //=========================================================================
-void PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) {
-
-  for ( unsigned int kk = 0 ; 10 > kk ; ++kk ) {
+void PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
+{
+  for ( unsigned kk = 10 ; kk-- ; ) {
     PatFwdFitParabola  parabola;
     for ( PatFwdHits::const_iterator itH = track.coordBegin(); 
-          track.coordEnd()!= itH ; ++itH ) {
+	track.coordEnd()!= itH ; ++itH ) {
       PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       double dist  = track.distanceForFit( hit );
@@ -187,12 +192,12 @@ void PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) {
 
     if ( msgLevel( MSG::VERBOSE ) || forceDebug  ) {
       info() << format( " dax %10.4f dbx%10.4f dcx %10.4f ",
-                        dax, dbx*1.e3, dcx*1.e6 ) << endreq;
+	  dax, dbx*1.e3, dcx*1.e6 ) << endreq;
     }
 
     if ( fabs( dax ) < 5.e-3 &&
-         fabs( dbx ) < 5.e-6 &&
-         fabs( dcx ) < 5.e-9    ) break;  // wait until stable, due to OT.
+	fabs( dbx ) < 5.e-6 &&
+	fabs( dcx ) < 5.e-9    ) break;  // wait until stable, due to OT.
   }
 }
 
@@ -200,12 +205,16 @@ void PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) {
 //  Initial fit: Find the best RL solution using the hits with highest
 //  drift distance in teh 3 stations.
 //=========================================================================
-void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug ) {
+void PatSeedTool::fitInitialXProjection (
+		PatSeedTrack& track, bool forceDebug ) const
+{
+  PatFwdHits::const_iterator itH;
 
-  PatFwdHits::const_iterator itH, itH1;
-
-  std::vector<double> largestDrift( 3, 0. );
-  PatFwdHits seeds(3);
+  // we use builtin arrays because we know there are three stations, and
+  // the cost of allocating memory dynamically for std::vector is too
+  // high
+  boost::array<double, 3> largestDrift = { 0., 0., 0. };
+  boost::array<PatFwdHit*, 3> seeds;
   for ( itH = track.coordBegin(); track.coordEnd()!= itH ; ++itH ) {
     PatFwdHit* hit = *itH;
     if ( !hit->isSelected() ) continue;
@@ -214,12 +223,13 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
       hit->setRlAmb( 0 );
       int sta = hit->hit()->station();
       if ( largestDrift[sta] < hit->driftDistance() ) {
-        largestDrift[sta] =  hit->driftDistance();
-        seeds[sta] = hit;
+	largestDrift[sta] =  hit->driftDistance();
+	seeds[sta] = hit;
       }
     }
   }
-  if ( 0.1 > largestDrift[0] || 0.1 > largestDrift[1] || 0.1 > largestDrift[2] ) return;
+  if ( 0.1 > largestDrift[0] || 0.1 > largestDrift[1]
+		  || 0.1 > largestDrift[2] ) return;
 
   double bestChi2 = 1.e10;
   int bestMask    = 0;
@@ -228,8 +238,9 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
     seeds[1]->setRlAmb( 2*((mask>>1)&1) -1 );
     seeds[2]->setRlAmb( 2*((mask>>2)&1) -1 );
     PatFwdFitParabola  parabola;
-    for ( itH1 = seeds.begin(); seeds.end()!= itH1 ; ++itH1 ) {
-      PatFwdHit* hit = *itH1;
+    for ( boost::array<PatFwdHit*, 3>::const_iterator it = seeds.begin();
+	seeds.end() != it; ++it ) {
+      const PatFwdHit* hit = *it;
       double dist  = track.distanceWithRL( hit );
       double dz    = hit->z() - track.z0();
       double w     = hit->hit()->weight();
@@ -242,8 +253,8 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
     track.updateParameters( dax, dbx, dcx );
     double totChi2 = 0.;
 
-    for ( itH1 = track.coordBegin(); track.coordEnd() != itH1 ; ++itH1 ) {
-      PatFwdHit* hit = *itH1;
+    for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+      PatFwdHit* hit = *itH;
       if ( !hit->isSelected() ) continue;
       if ( !hit->hit()->isX() ) continue;
       totChi2 += track.chi2Hit( hit );
@@ -261,8 +272,8 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
   seeds[2]->setRlAmb( 2*((bestMask>>2)&1) -1 );
 
   PatFwdFitParabola  parabola;
-  for ( itH1 = track.coordBegin(); track.coordEnd() != itH1 ; ++itH1 ) {
-    PatFwdHit* hit = *itH1;
+  for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
+    PatFwdHit* hit = *itH;
     if ( !hit->isSelected() ) continue;
     double dist  = track.distanceWithRL( hit );
     double dz    = hit->z() - track.z0();
@@ -278,22 +289,17 @@ void PatSeedTool::fitInitialXProjection ( PatSeedTrack& track, bool forceDebug )
 //=========================================================================
 //  Initial fit: Use the RL flags set in fitLineInY.
 //=========================================================================
-void PatSeedTool::fitInitialStereoProjection ( PatSeedTrack& track, bool forceDebug ) {
-  PatFwdHits::const_iterator itH, itH1;
-
-  for ( itH = track.coordBegin(); track.coordEnd()!= itH ; ++itH ) {
-    PatFwdHit* hit = *itH;
-    if ( !hit->isSelected() ) continue;
-    if ( hit->hit()->isX() ) continue;
-  }
-
+void PatSeedTool::fitInitialStereoProjection (
+		PatSeedTrack& track, bool forceDebug ) const
+{
+  PatFwdHits::const_iterator itH;
   PatFwdFitLine firstLine;
   for ( itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
     PatFwdHit* hit = *itH;
     if ( !hit->isSelected() ) continue;
     if ( hit->hit()->isX() ) continue;
     double z     = hit->z();
-    double dist  = track.distanceWithRL( hit ) / hit->hit()->dxDy();
+    double dist  = - track.distanceWithRL( hit ) / hit->hit()->dxDy();
     double w     = hit->hit()->weight();
     firstLine.addPoint( z, dist, w );
   }
@@ -301,7 +307,8 @@ void PatSeedTool::fitInitialStereoProjection ( PatSeedTrack& track, bool forceDe
   firstLine.solve();
   double day = firstLine.ax();
   double dby = firstLine.bx();
-  if ( forceDebug ) info() << "    day " << day << " dby " << dby << " initial" << endreq;
+  if ( forceDebug )
+	  info() << "    day " << day << " dby " << dby << " initial" << endreq;
   track.updateYParameters( day, dby );
 }
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: PatSeedTrack.cpp,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatSeedTrack.cpp,v 1.2 2008-05-14 17:22:18 mschille Exp $
 // Include files
 
 // local
@@ -17,7 +17,10 @@
 // Hits are NOT stored in the track.
 //=============================================================================
 PatSeedTrack::PatSeedTrack( double x0, double x1, double x2, double z0, double z1, double z2,
-                            double zRef, double dRatio ) {
+                            double zRef, double dRatio ) :
+	m_valid(true), m_ay(0.), m_by(0.), m_cosine(1.),
+	m_nbPlanes(0)
+{
   m_z0 = .5 * ( z0 + z2 );
   double dz = .5 * ( z2 - z0 );
   m_bx = ( x2 - x0 ) / ( 2. * dz );
@@ -36,13 +39,9 @@ PatSeedTrack::PatSeedTrack( double x0, double x1, double x2, double z0, double z
   m_cx = m_cx + zDiff * ( 3 * m_dx );
   m_z0 = zRef;
 
+  std::fill(m_planeList.begin(), m_planeList.end(), 0);
   m_coords.clear();
-  m_ay = 0.;
-  m_by = 0.;
-  m_planeList = std::vector<int>( 12, 0 );
-  m_nbPlanes  = 0;
-  m_cosine    = 1.;
-  m_valid = true;
+  m_coords.reserve(32);
 }
 
 //=========================================================================
@@ -50,7 +49,9 @@ PatSeedTrack::PatSeedTrack( double x0, double x1, double x2, double z0, double z
 //  the 4 coordinates are added to the track.
 //=========================================================================
 PatSeedTrack::PatSeedTrack( PatFwdHit* c0, PatFwdHit* c1, PatFwdHit* c2, PatFwdHit* c3,
-                            double zRef, double dRatio, double arrow ) {
+                            double zRef, double dRatio, double arrow ) :
+	m_valid(true), m_ay(0.0), m_cosine(1.), m_nbPlanes(0)
+{
   //== x = a + b*dz + c*dz^2 + d*dz^3
   //== d = dRation * c
   //== c = curvature * (x at z=0 )
@@ -75,14 +76,13 @@ PatSeedTrack::PatSeedTrack( PatFwdHit* c0, PatFwdHit* c1, PatFwdHit* c2, PatFwdH
   m_cx = curvature * ( m_ax - zRef * m_bx );
   m_dx = dRatio * m_cx;
 
-  m_ay = 0.;
   m_by = .5 * ( ( xAtZ( c1->z() ) - c1->x() ) / c1->hit()->dxDy() +
                 ( xAtZ( c2->z() ) - c2->x() ) / c2->hit()->dxDy()  ) / m_z0 ;
+
+  std::fill(m_planeList.begin(), m_planeList.end(), 0);
   m_coords.clear();
-  m_planeList = std::vector<int>( 12, 0 );
-  m_nbPlanes  = 0;
-  m_cosine    = 1.;
-  m_valid = true;
+  m_coords.reserve(32);
+
   addCoord( c0 );
   addCoord( c1 );
   addCoord( c2 );

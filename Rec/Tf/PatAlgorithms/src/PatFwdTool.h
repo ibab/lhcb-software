@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.h,v 1.3 2007-12-04 20:48:07 smenzeme Exp $
+// $Id: PatFwdTool.h,v 1.4 2008-05-14 17:22:18 mschille Exp $
 #ifndef FWDGEOMETRYTOOL_H
 #define FWDGEOMETRYTOOL_H 1
 
@@ -37,40 +37,41 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
 
     virtual StatusCode initialize();
 
-
-    double xAtReferencePlane( PatFwdTrackCandidate& track, PatFwdHit* hit, bool store=false );
-
+    double xAtReferencePlane( PatFwdTrackCandidate& track, PatFwdHit* hit,
+	bool store=false );
 
     double zReference() const { return m_zReference; }
 
-    std::vector<double> zOutputs()     const { return m_zOutputs; }
+    const std::vector<double>& zOutputs() const { return m_zOutputs; }
 
     bool fitXCandidate( PatFwdTrackCandidate& track,
-                        double maxChi2, int minPlanes );
+	double maxChi2, int minPlanes );
 
     bool fitStereoCandidate( PatFwdTrackCandidate& track,
-                             double maxChi2, int minPlanes );
+	double maxChi2, int minPlanes ) const;
 
     void fitXProjection ( PatFwdTrackCandidate& track,
                           PatFwdHits::iterator itBeg,
                           PatFwdHits::iterator itEnd,
-                          bool onlyXPlanes  );
+                          bool onlyXPlanes  ) const;
 
     void setRlDefault ( PatFwdTrackCandidate& track,
                         PatFwdHits::iterator itBeg,
-                        PatFwdHits::iterator itEnd );
+                        PatFwdHits::iterator itEnd ) const;
 
-    void updateHitsForTrack ( PatFwdTrackCandidate& track,
+    void updateHitsForTrack ( const PatFwdTrackCandidate& track,
                               PatFwdHits::iterator itBeg,
-                              PatFwdHits::iterator itEnd );
+                              PatFwdHits::iterator itEnd ) const;
 
-    double distanceForFit( PatFwdTrackCandidate& track,  PatFwdHit* hit) {
+    double distanceForFit( const PatFwdTrackCandidate& track,
+	const PatFwdHit* hit) const {
       double dist =  distanceHitToTrack( track, hit );
       if ( hit->hit()->region() > 1)  return dist;
       return dist / track.cosAfter();
     }
 
-    double distanceHitToTrack( PatFwdTrackCandidate& track,  PatFwdHit* hit) {
+    double distanceHitToTrack( const PatFwdTrackCandidate& track,
+	const PatFwdHit* hit) const {
       double dz   = hit->z() - m_zReference;
       double dist = hit->x() - track.x( dz );
       if ( hit->hit()->region() > 1 ) return dist;
@@ -88,20 +89,21 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
       return dist + dx;
     }
 
-    double chi2Hit( PatFwdTrackCandidate& track,  PatFwdHit* hit) {
+    double chi2Hit( const PatFwdTrackCandidate& track,
+	const PatFwdHit* hit) const {
       double dist = distanceHitToTrack( track, hit );
       return dist * dist * hit->hit()->weight();
     }
 
-    double distAtMagnetCenter( PatFwdTrackCandidate& track ) {
+    double distAtMagnetCenter( const PatFwdTrackCandidate& track ) const {
       double dz   = m_zMagnet - m_zReference;
       double dist = track.xStraight( m_zMagnet ) - track.xMagnet( dz );
       return dist;
     }
 
-    double chi2PerDoF(  PatFwdTrackCandidate& track );
+    double chi2PerDoF( PatFwdTrackCandidate& track ) const;
 
-    bool removeYIncompatible(  PatFwdTrackCandidate& track, double tol, int minPlanes ) {
+    bool removeYIncompatible(  PatFwdTrackCandidate& track, double tol, int minPlanes ) const {
       bool hasChanged = false;
       for ( PatFwdHits::iterator itH = track.coordBegin(); track.coordEnd() != itH ; ++itH ) {
         PatFwdHit* hit = *itH;
@@ -113,12 +115,12 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
       }
       if ( hasChanged ) return fitStereoCandidate( track, 1000000., minPlanes );
 
-      PatFwdPlaneCounter<PatForwardHit> planeCount( track.coordBegin(), track.coordEnd() );
+      PatFwdPlaneCounter planeCount( track.coordBegin(), track.coordEnd() );
       if ( minPlanes > planeCount.nbDifferent() ) return false;
       return true;
     }
 
-    bool filterOT(   PatFwdTrackCandidate& track, int minCoord ) {
+    bool filterOT(   PatFwdTrackCandidate& track, int minCoord ) const {
       PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
       int nbIT =  regions.nbInRegion( 2 ) +  regions.nbInRegion( 3 ) +
         regions.nbInRegion( 4 ) +  regions.nbInRegion( 5 ) ;
@@ -128,14 +130,14 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     }
 
 
-    double changeInY(  PatFwdTrackCandidate& track) {
+    double changeInY(  PatFwdTrackCandidate& track ) const {
       double yOriginal = track.yStraight( m_zReference );
       if (!m_withoutBField)
         yOriginal += track.dSlope() * track.dSlope() * track.slY() * m_yParams[0];
       return yOriginal - track.y( 0. );
     }
 
-    double qOverP( PatFwdTrackCandidate& track );
+    double qOverP( const PatFwdTrackCandidate& track ) const;
 
   protected:
 
@@ -153,4 +155,5 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     bool m_withoutBField;
 
   };
+
 #endif // FWDGEOMETRYTOOL_H

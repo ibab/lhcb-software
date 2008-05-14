@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatSeedTool.h,v 1.2 2008-05-14 17:22:18 mschille Exp $
 #ifndef PATSEEDTOOL_H
 #define PATSEEDTOOL_H 1
 
@@ -35,17 +35,19 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
 
     virtual ~PatSeedTool( ); ///< Destructor
 
-    bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes, bool xOnly, bool forceDebug );
+    bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) const;
 
   protected:
 
-    void fitXProjection( PatSeedTrack& track, bool forceDebug );
+    void fitXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
-    void fitInitialXProjection( PatSeedTrack& track, bool forceDebug );
+    void fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
-    void fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug );
+    void fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug ) const;
 
-    void printTCoord( MsgStream& msg, PatSeedTrack& track, PatFwdHit* hit )  {
+    void printTCoord( MsgStream& msg,
+	const PatSeedTrack& track, const PatFwdHit* hit ) const
+    {
       double dist = track.distance( hit );
       double chi2 = dist*dist* hit->hit()->weight();
       msg << "  Hit st " << hit->hit()->station() << " lay " << hit->hit()->layer()

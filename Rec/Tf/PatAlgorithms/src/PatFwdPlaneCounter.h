@@ -1,11 +1,14 @@
-// $Id: PatFwdPlaneCounter.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatFwdPlaneCounter.h,v 1.2 2008-05-14 17:22:18 mschille Exp $
 #ifndef PATFWDPLANECOUNTER_H
 #define PATFWDPLANECOUNTER_H 1
 
 // Include files
 #include "TfKernel/HitExtension.h"
 #include "TfKernel/LineHit.h"
+#include "TfKernel/RegionID.h"
 
+#include <algorithm>
+#include "boost/array.hpp"
 
   /** @class PatFwdPlaneCounter PatFwdPlaneCounter.h
    *  Small class to count how many different planes are in a list.
@@ -13,67 +16,61 @@
    *  @author Olivier Callot
    *  @date   2005-04-11 Initial version
    *  @date   2007-08-20 Update for A-Team framework
+   *  @date   2008-05-09 Use boost::array instead of std::vector
    */
 
-  template <class Hit>
-  class PatFwdPlaneCounter
-  {
-
+  class PatFwdPlaneCounter {
   public:
 
     /// Standard constructor
-    PatFwdPlaneCounter(typename std::vector< Hit* >::const_iterator first,
-                       typename std::vector< Hit* >::const_iterator last )
-      : m_planeList(12,0)
-      , m_nbDifferent(0)
+    template < class Iterator >
+    PatFwdPlaneCounter( Iterator first, Iterator last )
+      : m_nbDifferent(0)
     {
-      for ( typename std::vector< Hit* >::const_iterator ith = first;
-            last != ith; ++ith ) {
+      std::fill(m_planeList.begin(), m_planeList.end(), 0);
+      for ( Iterator ith = first; last != ith; ++ith ) {
         if ( !(*ith)->isSelected() ) continue;
-        int plane = (*ith)->planeCode();
-        if ( 0 == m_planeList[plane] ) m_nbDifferent++;
-        m_planeList[plane]++;
+        const int plane = (*ith)->planeCode();
+        if ( 0 == m_planeList[plane]++ )
+	  ++m_nbDifferent;
       }
-    };
+    }
 
-    virtual ~PatFwdPlaneCounter( ) {}; ///< Destructor
+    virtual ~PatFwdPlaneCounter( ) {} ///< Destructor
 
+    /// add a hit to be counted
+    template < class Hit >
+    int addHit( const Hit* hit )
+    {
+      if ( !hit->isSelected() ) return m_nbDifferent;
+      const int plane = hit->planeCode();
+      if ( 0 == m_planeList[plane]++ )
+        ++m_nbDifferent;
+      return m_nbDifferent;
+    }
+
+    /// remove a hit
+    template < class Hit >
+    int removeHit( const Hit* hit )
+    {
+      if ( !hit->isSelected() ) return m_nbDifferent;
+      const int plane = hit->planeCode();
+      if ( 0 == --m_planeList[plane] )
+	--m_nbDifferent;
+      return m_nbDifferent;
+    }
+
+    /// returns number of different planes
     int nbDifferent() const { return m_nbDifferent; }
 
-    int addHit( Hit* hit ) {
-      if ( !hit->isSelected() ) return m_nbDifferent;
-      int plane = hit->planeCode();
-      if ( 0 == m_planeList[plane] ) {
-        m_nbDifferent++;
-      }
-      m_planeList[plane]++;
-      return m_nbDifferent;
-    }
-
-    int removeHit( Hit* hit ) {
-      if ( !hit->isSelected() ) return m_nbDifferent;
-      int plane = hit->planeCode();
-      m_planeList[plane]--;
-      if ( 0 == m_planeList[plane] ) m_nbDifferent--;
-      return m_nbDifferent;
-    }
-
-    int maxPlane () {
-      int l = -1;
-      int max = 0;
-      for ( unsigned int kk = 0; m_planeList.size() > kk; ++kk ) {
-        if ( m_planeList[kk] > max ) {
-          max = m_planeList[kk];
-          l   = kk;
-        }
-      }
-      return l;
-    }
-
+    /// returns number of hits in specified plane
     int nbInPlane( int plane ) const { return m_planeList[plane]; }
 
-
-    int nbStereo() const {
+    /// returns number of stereo planes with hits
+    int nbStereo() const
+    {
+      // FIXME: If anyone comes up with something nicer which is just as
+      // fast, please go ahead
       int nb = 0;
       if ( 0 < m_planeList[1] ) ++nb;
       if ( 0 < m_planeList[2] ) ++nb;
@@ -84,11 +81,23 @@
       return nb;
     }
 
-
-  protected:
+    /// returns number of plane with most hits
+    int maxPlane () const
+    {
+      PlaneArray::const_iterator max = std::max_element(m_planeList.begin(),
+	  m_planeList.end());
+      if (0 == *max) return -1;
+      return std::distance(max, m_planeList.begin());
+    }
 
   private:
-    std::vector<int> m_planeList;
+    // FIXME: is there a way to break things at compile time if we ever
+    // have a different number of layers and stations in IT and OT?
+    enum { kNPlanes = Tf::RegionID::OTIndex::kNStations *
+	Tf::RegionID::OTIndex::kNLayers };
+    typedef boost::array< unsigned char, kNPlanes > PlaneArray;
+
+    PlaneArray m_planeList;
     int m_nbDifferent;
 
   };

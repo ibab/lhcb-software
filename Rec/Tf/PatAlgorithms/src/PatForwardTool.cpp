@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.8 2007-12-11 14:50:14 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.9 2008-05-14 17:22:18 mschille Exp $
 // Include files
 
 // from Gaudi
@@ -261,7 +261,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     double quality = 0.;
 
     // Enough stereo planes
-    PatFwdPlaneCounter<PatForwardHit> fullCount( temp.coordBegin(), temp.coordEnd() );
+    PatFwdPlaneCounter fullCount( temp.coordBegin(), temp.coordEnd() );
     int nbY = fullCount.nbStereo();
     if ( 4 > nbY ) {
       debug() << "Not enough Y planes : " << nbY << endreq;
@@ -305,7 +305,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     goodCandidates.push_back( temp );
 
     //== Update requirement according to already found good solutions...
-    PatFwdPlaneCounter<PatForwardHit> planeCounter( temp.coordBegin(), temp.coordEnd() );
+    PatFwdPlaneCounter planeCounter( temp.coordBegin(), temp.coordEnd() );
     if ( minPlanes+1 < planeCounter.nbDifferent() ) minPlanes =  planeCounter.nbDifferent()-1;
   }
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
@@ -351,7 +351,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     std::vector<PatFwdTrackCandidate> tempCandidates( goodCandidates );
     goodCandidates.clear();
     for ( itL = tempCandidates.begin(); tempCandidates.end() != itL; ++itL ) {
-      PatFwdPlaneCounter<PatForwardHit> tmp( (*itL).coordBegin(), (*itL).coordEnd() );
+      PatFwdPlaneCounter tmp( (*itL).coordBegin(), (*itL).coordEnd() );
       if ( tmp.nbDifferent() >= minPlanes ) {
         goodCandidates.push_back( *itL );
         if ( (*itL).quality() < bestQuality ) bestQuality = (*itL).quality();
@@ -654,7 +654,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     //== Add all hits inside the maximum spread. If not enough planes, restart
     while ( itE != temp.end() &&
             spread > (*itE)->projection() - (*itP)->projection() ) itE++;
-    PatFwdPlaneCounter<PatForwardHit> planeCount( itP, itE );
+    PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minYPlanes > planeCount.nbDifferent() ) {
       debug() << "   Not enough y planes : " << planeCount.nbDifferent() << endreq;
@@ -681,13 +681,13 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     double x1 = (*itB)->projection();
     double x2 = (*(itE-1))->projection();
     if ( msgLevel( MSG::VERBOSE )  ) {
-      PatFwdPlaneCounter<PatForwardHit> pc( itB, itE );
+      PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
                 << endreq;
     }
     //== We have the first list. The best one ????
-    PatFwdPlaneCounter<PatForwardHit> cnt( itB, itE );
+    PatFwdPlaneCounter cnt( itB, itE );
     if ( cnt.nbDifferent() >= nbDifferent ) {
       if ( cnt.nbDifferent() > nbDifferent || x2-x1 < size ) {
         nbDifferent =  cnt.nbDifferent();
@@ -817,7 +817,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     //== Add all hits inside the maximum spread. If not enough planes, restart
     while ( itE != m_xHitsAtReference.end() &&
             spread > (*itE)->projection() - (*itP)->projection() ) itE++;
-    PatFwdPlaneCounter<PatForwardHit> planeCount( itP, itE );
+    PatFwdPlaneCounter planeCount( itP, itE );
     //== Enough different planes
     if ( minXPlanes > planeCount.nbDifferent() ) {
       verbose() << "   Not enough x planes : " << planeCount.nbDifferent() << endreq;
@@ -842,7 +842,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
     double x1 = (*itB)->projection();
     double x2 = (*(itE-1))->projection();
     if ( msgLevel( MSG::VERBOSE )  ) {
-      PatFwdPlaneCounter<PatForwardHit> pc( itB, itE );
+      PatFwdPlaneCounter pc( itB, itE );
       verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                            x1, x2, itE-itB, pc.nbDifferent(), spread)
                 << endreq;

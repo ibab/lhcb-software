@@ -1,6 +1,5 @@
 // options to tune PatSeeding for tracking with B field off
-ToolSvc.PatSeedingTool.dRatio = 0.;
-ToolSvc.PatSeedingTool.InitialArrow = 0.;
-ToolSvc.PatSeedingTool.xMagTol = 500.;
-ToolSvc.PatSeedingTool.zMagnet = 0.;
-ToolSvc.PatSeedingTool.FieldOff = true;
+PatSeeding.PatSeedingTool.xMagTol = 4e2;
+PatSeeding.PatSeedingTool.zMagnet = 0.;
+PatSeeding.PatSeedingTool.FieldOff = true;
+PatSeeding.PatSeedingTool.MinMomentum = 5e4;

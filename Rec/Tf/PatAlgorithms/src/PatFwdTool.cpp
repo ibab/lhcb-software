@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.6 2007-12-05 10:37:21 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.7 2008-05-14 17:22:18 mschille Exp $
 // Include files
 
 // from Gaudi
@@ -73,7 +73,8 @@ StatusCode PatFwdTool::initialize ( ) {
 }
 
 
-double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* hit, bool store ) {
+double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* hit,
+    bool store ) {
 
   double x;
 
@@ -158,7 +159,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   bool isDebug = msgLevel( MSG::DEBUG );
 
   if ( minPlanes > track.setSelectedCoords() ) return false;
-  PatFwdPlaneCounter<PatForwardHit> maxPlanes( track.coordBegin(), track.coordEnd() );
+  PatFwdPlaneCounter maxPlanes( track.coordBegin(), track.coordEnd() );
   int bestPlanes = maxPlanes.nbDifferent();
   if ( minPlanes > maxPlanes.nbDifferent() ) return false;
 
@@ -172,7 +173,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
     for( unsigned int maxRegion = 0; 6 > maxRegion; ++maxRegion ) {
       if ( regions.nbInRegion( maxRegion ) >= 6 ) {  // count by plane
-        PatFwdPlaneCounter<PatForwardHit> planes( track.coordBegin(), track.coordBegin() );
+        PatFwdPlaneCounter planes( track.coordBegin(), track.coordBegin() );
         double first = 1.e7;
         double last  = first;
         for ( itH =  track.coordBegin(); track.coordEnd() > itH; ++itH ) {
@@ -213,7 +214,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   itEnd = itBeg + bestPlanes;
 
   //== get enough planes fired
-  PatFwdPlaneCounter<PatForwardHit> planeCount1( itBeg, itEnd );
+  PatFwdPlaneCounter planeCount1( itBeg, itEnd );
   while ( itEnd != track.coordEnd() && bestPlanes > planeCount1.nbDifferent() ) {
     PatFwdHit* hit = *itEnd++;
     if ( hit->isSelected() ) planeCount1.addHit( hit );
@@ -276,7 +277,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     ++itEnd;
   }
 
-  PatFwdPlaneCounter<PatForwardHit> planeCount( itBeg, itEnd );
+  PatFwdPlaneCounter planeCount( itBeg, itEnd );
   if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
                          << " size " << itEnd - itBeg << endreq;
 
@@ -343,7 +344,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
         hit->setSelected( close );
       }
       if ( hasNewHits ) {
-        PatFwdPlaneCounter<PatForwardHit> temp( itBeg, itEnd );
+        PatFwdPlaneCounter temp( itBeg, itEnd );
         planeCount = temp;  // update counter...
         debug() << "   new plane count " << planeCount.nbDifferent() << endreq;
         //setRlDefault( track, itBeg, itEnd );
@@ -365,13 +366,13 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 
 bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
-                                      double maxChi2, int minPlanes ) {
+                                      double maxChi2, int minPlanes ) const {
 
   bool isDebug = msgLevel( MSG::DEBUG );
   PatFwdHits::iterator itH;
 
   //== get enough planes fired
-  PatFwdPlaneCounter<PatForwardHit> planeCount( track.coordBegin(), track.coordEnd() );
+  PatFwdPlaneCounter planeCount( track.coordBegin(), track.coordEnd() );
   if ( minPlanes > planeCount.nbDifferent() ) return false;
 
   if ( isDebug ) debug() << "+++ Stereo fit, planeCount " << planeCount.nbDifferent()
@@ -475,7 +476,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
                                   PatFwdHits::iterator itBeg,
                                   PatFwdHits::iterator itEnd,
-                                  bool onlyXPlanes  ) {
+                                  bool onlyXPlanes  ) const {
 
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
   for ( unsigned int kk = 0 ; 10 > kk ; ++kk ) {
@@ -538,7 +539,7 @@ void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
 //  Compute the chi2 per DoF of the track
 //=========================================================================
 
-double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) {
+double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
   double totChi2 = 0.;
   int nDof = 0;
   bool hasStereo = false;
@@ -572,7 +573,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) {
 //=========================================================================
 //  Returns the q/p of the track
 //=========================================================================
-double PatFwdTool::qOverP ( PatFwdTrackCandidate& track ) {
+double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   double bx = track.bx();
   double bx2 = bx * bx;
   double coef = ( m_momentumParams[0] +
@@ -594,10 +595,11 @@ double PatFwdTool::qOverP ( PatFwdTrackCandidate& track ) {
 
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::iterator itBeg,
-                               PatFwdHits::iterator itEnd  ) {
+                               PatFwdHits::iterator itEnd  ) const {
   PatFwdHits::iterator itH;
+  PatFwdHits temp;
   for ( int planeCode = 0 ;12 > planeCode  ; ++planeCode ) {
-    PatFwdHits temp;
+    temp.clear();
     for ( itH = itBeg; itEnd != itH; ++itH ) {
       PatFwdHit* hit = (*itH);
       if ( planeCode != hit->planeCode() ) continue;
@@ -652,9 +654,9 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
 //=============================================================================
 
 
-void PatFwdTool::updateHitsForTrack ( PatFwdTrackCandidate& track,
+void PatFwdTool::updateHitsForTrack ( const PatFwdTrackCandidate& track,
                                       PatFwdHits::iterator itBeg,
-                                      PatFwdHits::iterator itEnd ) {
+                                      PatFwdHits::iterator itEnd ) const {
   for ( PatFwdHits::iterator it = itBeg; itEnd != it; ++it ) {
     double sly = track.ySlope( (*it)->z() - m_zReference );
     double y0  = track.y( (*it)->z() - m_zReference ) - (*it)->z() * sly;

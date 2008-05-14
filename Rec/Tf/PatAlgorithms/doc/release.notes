@@ -4,12 +4,74 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Manuel Tobias Schiller
+ - PatFwdPlaneCounter:
+   - now uses boost::array instead of std::vector for arrays with known size
+     at compile time -> see some small speed improvements for very hot events
+   - class itself no longer templated on hit type, instead, methods taking
+     hits (or iterators) are templated
+ - PatFwdRegionCounter:
+   - boost::array instead of std::vector, see above
+ - PatForwardTool, PatFwdTool:
+   - follow-up changes for the changes in PatFwdPlaneCounter above
+   - added some consts where possible to facilitate optimization by the
+     compiler
+ - PatSeedTool:
+   - boost::array instead of std::vector, see above
+   - added a missing minus sign in the initial iteration of the stereo fit
+   - added const to methods that do not change the object
+ - PatSeedTrack:
+   - boost::array instead of std::vector, see above
+   - added assignment operator
+   - removed unused members
+   - decreasingQuality() ordering class can now be used to sort containers
+     of objects as well (if desired) - used to be only pointers to objects
+ - PatSeedingTool:
+   - in collectStereoHits: restore coordinates only for the hits we actually
+     intend to consider further, not for the whole region
+     dramatic speed improvement, as collectStereoHits is executed once for
+     each candidate in xz
+   - save low quality tracks with high impact y during per region search, add
+     additional pass at the end of the algorithm to recover some of these
+     tracks (if not too many used hits)
+     this is fast (ca 0.7 ms/event), other improvements to algorithm actually
+     save more time than we spend here
+   - added code to account for OT tilt (dz/dy) before track in y is known
+     (need to slightly widen search windows, otherwise, upper and lower half
+     of OT show different efficiency at high fabs(y))
+     this involves code needed to get dz/dy and z at y=0 for a region
+   - boost::array instead of std::vector, see above
+   - regrouped property declarations so that related properties form groups
+   - improved debugging code: per stage timing has not survived move from
+     algorithm to tool, now resurrected
+   - cut on drift radii now available as job option
+   - when counting hits with some property to see if some cut is exceeded,
+     we now stop early when we hit the boundary
+   - improved memory management for temporary track candidates (read: faster)
+   - methods for each pass of the algorithm over the hits to make separation
+     clearer
+   - added convenience functions and typedefs to access the hit manager
+   - during xz search, cluster positions in the OT are now calculated the
+     "Kisel" way, weighting each hit with 1/(r^2+sigma^2); this gives
+     slightly better results because the parabola through these points is
+     closer to the true track then
+   - retuned some of the default properties for improved performance
+   - now uses FastMomentumEstimate tool to have all the parametrizations
+     available centrally in one place
+   - prepareHits() now returns the number of hits returned by the hit
+     manager - this might be useful for some applications and is easily
+     ignored in all others
+   - I'm sure I forgot something...
+ - PatSeeding:
+   - use private instance of PatSeedingTool to allow different configurations
+     for different instances of the algorithm
+
 !========================== PatAlgorithms v3r5 2008-05-09 ====================
 ! 2008-05-08 - Johannes Albrecht
  - PatMatchTool: - New implementation of PatMatch as tool
-								 - public function: matchSingle for Hlt
-								 - quality of match is now job option: maxMatchChi2
-								 - momentum of matched tracks is calculated with tool
+                         - public function: matchSingle for Hlt
+                         - quality of match is now job option: maxMatchChi2
+                         - momentum of matched tracks is calculated with tool
  - PatMatch: algorithm which only calls the tool
 
 !========================== PatAlgorithms v3r4p1 2008-03-25 ==================
