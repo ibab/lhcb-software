@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+- 14/05/2008 Marco Gersabeck head
+  - VeloAlignment.opts: removed duplicate PatVelo... options  
+                        they are in VeloAlignment/TRGtune.opts  
+
 - 16/04/2008 Marco Gersabeck head
   - VeloAlignment.opts: added use of WriteAlignmentConditions
                         added use of PatVeloGeneric

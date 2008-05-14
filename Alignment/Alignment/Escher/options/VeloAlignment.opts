@@ -1,4 +1,3 @@
-
 //--------------------------------------------------------------
 // Initiate Escher Reco Phase
 //--------------------------------------------------------------
@@ -31,38 +30,14 @@ RecoVELOSeq.Members += {  "DecodeVeloRawBuffer"
 //                    ,"Tf::PatVeloGeneralTracking/PatVeloGeneralTracking"
 };
 
-PatVeloAlignment.OutputLevel = 2;
-
 // Decode also VeloClusters, needed for track fit
 RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };
 DecodeVeloClusters.DecodeToVeloLiteClusters = false;
 DecodeVeloClusters.DecodeToVeloClusters     = true;
 
-//PatVeloGeneralTracking.PointErrorMin = 2*mm;
-//PatVeloGeneralTracking.MaxExtrapStations = 4;
-//PatVeloGeneralTracking.PointErrorScale = 2;
-//PatVeloGeneralTracking.ErrorExtrapScale = 10;
-//PatVeloGeneralTracking.MaxChiAdd = ;
-//PatVeloGeneralTracking.MaxMissedSensor = ;
-//PatVeloGeneralTracking.MaxChiSqDof = 10;
-//ToolSvc.PatVeloTrackTool.highChargeFract = 0.5;
-
-
-// options for PatVeloGeneric
-PatVeloGeneric.FullAlignment = false;
-PatVeloGeneric.RAliTol = 0.02; 
-PatVeloGeneric.PAliTol = 0.002;
-PatVeloGeneric.KalmanState = 2;
-PatVeloGeneric.MaxSkip = 10;
-PatVeloGeneric.ClusterCut  = 30;
-PatVeloGeneric.CleanSeed   = true;
-PatVeloGeneric.PrivateBest = true;
-
-
 // Alignment phase
 
-ApplicationMgr.DLLs += { "VeloAlignment", "PatVelo" };
-ApplicationMgr.DLLs += { "AlignmentTools" };
+ApplicationMgr.DLLs += { "VeloAlignment", "PatVelo", "AlignmentTools" };
 
 #include "$VELOALIGNMENTOPTS/VeloAlign.opts"
 #include "$VELOALIGNMENTOPTS/AlignSensors.opts"
