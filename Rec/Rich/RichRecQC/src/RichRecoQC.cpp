@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.37 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.38 2008-05-14 09:57:42 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -33,6 +33,8 @@ RecoQC::RecoQC( const std::string& name,
     m_ckRes             ( NULL ),
     m_richRecMCTruth    ( NULL ),
     m_trSelector        ( NULL ),
+    m_isoTrack          ( NULL ),
+    m_fitter            ( NULL ),
     m_minBeta           ( Rich::NRadiatorTypes, 0.999 ),
     m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
     m_nSegs             ( Rich::NRadiatorTypes, 0 )
@@ -43,11 +45,11 @@ RecoQC::RecoQC( const std::string& name,
   declareProperty( "MinBeta", m_minBeta );
 
   // Ch Theta Rec histogram limits: low, high -> aerogel, C4F10, Cf4
-  declareProperty( "ChThetaRecHistoLimitMin", 
+  declareProperty( "ChThetaRecHistoLimitMin",
                    m_ckThetaMin = boost::assign::list_of(0.1)(0.03)(0.01) );
-  declareProperty( "ChThetaRecHistoLimitMax", 
+  declareProperty( "ChThetaRecHistoLimitMax",
                    m_ckThetaMax = boost::assign::list_of(0.3)(0.08)(0.05) );
-  declareProperty( "CKResHistoRange", 
+  declareProperty( "CKResHistoRange",
                    m_ckResRange = boost::assign::list_of(0.01)(0.005)(0.0025) );
 
   declareProperty( "NumberBins", m_nBins = 100 );
@@ -64,8 +66,13 @@ StatusCode RecoQC::initialize()
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // get track selector
+  // get tools
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
   acquireTool( "TrackSelector", m_trSelector, this );
+  acquireTool( "RichStereoFitter",  m_fitter, this );
+  acquireTool( "RichCherenkovResolution", m_ckRes );
+  acquireTool( "RichIsolatedTrack", m_isoTrack );
+  acquireTool( "RichParticleProperties", m_richPartProp );
 
   return sc;
 }
@@ -121,15 +128,31 @@ StatusCode RecoQC::execute()
     }
 
     // Expected Cherenkov theta angle for 'true' particle type
-    thetaExpTrue = ckAngleTool()->avgCherenkovTheta( segment, mcType );
-    
+    thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
+
     // Cherenkov angle resolution for 'true' type
-    resExpTrue = ckResTool()->ckThetaResolution( segment, mcType );
+    resExpTrue = m_ckRes->ckThetaResolution( segment, mcType );
 
     // beta
-    const double beta = partPropTool()->beta( pTot, mcType );
+    const double beta = m_richPartProp->beta( pTot, mcType );
     // selection cuts
     if ( beta < m_minBeta[rad] ) continue; // skip non-saturated tracks
+
+    // isolated track ?
+    const bool isolated = m_isoTrack->isIsolated( segment, mcType );
+
+    if ( rad != Rich::Aerogel )
+    {
+      // do the stereographic re-fit
+      IStereoFitter::Configuration config(mcType);
+      const IStereoFitter::Result fitR = m_fitter->Fit( segment, config );
+      // refitted CK theta
+      if ( fitR.status == IStereoFitter::Result::Succeeded )
+        plot1D( fitR.thcFit-thetaExpTrue,
+                hid(rad,"ckResAllStereoRefit"),
+                "Rec-Exp Cktheta : beta=1 : All photons : Stereographic Refit",
+                -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+    }
 
     // loop over photons for this segment
     unsigned int truePhotons(0);
@@ -146,10 +169,20 @@ StatusCode RecoQC::execute()
 
       plot1D( thetaRec, hid(rad,"thetaRec"), "Reconstructed Ch Theta : All photons",
               m_ckThetaMin[rad], m_ckThetaMax[rad], m_nBins );
-      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi : All photons", 0.0, 2*Gaudi::Units::pi, m_nBins );
+      plot1D( phiRec, hid(rad,"phiRec"), "Reconstructed Ch Phi : All photons",
+              0.0, 2*Gaudi::Units::pi, m_nBins );
       plot1D( thetaRec-thetaExpTrue,
               hid(rad,"ckResAll"), "Rec-Exp Cktheta : beta=1 : All photons",
               -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+
+      // isolated segment ?
+      if ( isolated )
+      {
+        plot1D( thetaRec-thetaExpTrue,
+                hid(rad,"ckResAllIsolated"),
+                "Rec-Exp Cktheta : beta=1 : All photons : Isolated Track",
+                -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
+      }
 
       if ( mcTrackOK && mcRICHOK )
       {
@@ -161,7 +194,7 @@ StatusCode RecoQC::execute()
           avRecTrueTheta += thetaRec;
           // resolution plot
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResTrue"), "Rec-Exp Cktheta : beta=1 : MC true photons", 
+                  hid(rad,"ckResTrue"), "Rec-Exp Cktheta : beta=1 : MC true photons",
                   -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
           if ( resExpTrue>0 )
           {
@@ -173,7 +206,7 @@ StatusCode RecoQC::execute()
         else // fake photon
         {
           plot1D( thetaRec-thetaExpTrue,
-                  hid(rad,"ckResFake"), "Rec-Exp Cktheta : beta=1 : MC fake photons", 
+                  hid(rad,"ckResFake"), "Rec-Exp Cktheta : beta=1 : MC fake photons",
                   -m_ckResRange[rad], m_ckResRange[rad], m_nBins );
         }
       } // MC is available
@@ -200,36 +233,6 @@ StatusCode RecoQC::execute()
 StatusCode RecoQC::finalize()
 {
 
-  // test fitting
-
-  // Rich Histo ID
-  //const RichHistoID hid;
-
-  // Fit params
-  // CK res
-  /*
-    std::vector< std::vector<double> > ckResParams(Rich::NRadiatorTypes);
-    ckResParams[Rich::Aerogel]  = boost::assign::list_of(0.0)(0.002)(100.0);
-    ckResParams[Rich::Rich1Gas] = boost::assign::list_of(0.0)(0.0015)(100.0);
-    ckResParams[Rich::Rich2Gas] = boost::assign::list_of(0.0)(0.001)(100.0);
-    std::vector< std::pair<double,double> > ckResRange(Rich::NRadiatorTypes);
-    ckResRange[Rich::Aerogel]  = std::pair<double,double>( -0.004, 0.004 );
-    ckResRange[Rich::Rich1Gas] = std::pair<double,double>( -0.003, 0.003 );
-    ckResRange[Rich::Rich2Gas] = std::pair<double,double>( -0.002, 0.002 );
-    // CK pull
-    std::vector< std::vector<double> > ckPullParams(Rich::NRadiatorTypes);
-    ckPullParams[Rich::Aerogel]  = boost::assign::list_of(0.0)(1.0)(100.0);
-    ckPullParams[Rich::Rich1Gas] = boost::assign::list_of(0.0)(1.0)(100.0);
-    ckPullParams[Rich::Rich2Gas] = boost::assign::list_of(0.0)(1.0)(100.0);
-    std::vector< std::pair<double,double> > ckPullRange(Rich::NRadiatorTypes);
-    ckPullRange[Rich::Aerogel]  = std::pair<double,double>( -2.0, 2.0 );
-    ckPullRange[Rich::Rich1Gas] = std::pair<double,double>( -2.0, 2.0 );
-    ckPullRange[Rich::Rich2Gas] = std::pair<double,double>( -2.0, 2.0 );
-  */
-
-  // min number of entries for fitting
-  //const int minEnts = 10;
-
   // statistical tool
   const StatDivFunctor occ("%8.2f +-%5.2f");
 
@@ -253,53 +256,8 @@ StatusCode RecoQC::finalize()
     {
       info() << " " << radName << " Av. # CK photons = "
              << occ(m_truePhotCount[rad],m_nSegs[rad]) << " photons/segment" << endreq;
-
-      /*
-      // CK resolution
-      AIDA::IHistogram1D * hRes = histo1D( HistoID(hid(rad,"ckRes")) );
-      if ( hRes && hRes->entries() > minEnts )
-      {
-      AIDA::IFitResult * fit = fitHisto( hRes, ckResRange[rad], ckResParams[rad] );
-      if ( fit && fit->isValid() )
-      {
-      info() << " " << radName << "CK res  : fit status=" << fit->fitStatus()
-      << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
-      << "                 : " << fit->fittedParameterNames()[0] << " = "
-      << 100*fit->fittedParameters()[0] << " +- " << 100*fit->errors()[0] << " mrad" << endreq;
-      info() << "                 : " << fit->fittedParameterNames()[1] << " = "
-      << 100*fit->fittedParameters()[1] << " +- " << 100*fit->errors()[1] << " mrad" << endreq;
-      }
-      else
-      {
-      info() << " " << radName << "CK res fit FAILED" << endreq;
-      }
-      }
-      // CK pull
-      AIDA::IHistogram1D * hPull = histo1D( HistoID(hid(rad,"ckPull")) );
-      if ( hPull && hPull->entries() > minEnts )
-      {
-      AIDA::IFitResult * fit = fitHisto( hPull, ckPullRange[rad], ckPullParams[rad] );
-      if ( fit && fit->isValid() )
-      {
-      info() << " " << radName << "CK pull : fit status=" << fit->fitStatus()
-      << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
-      << "                 : " << fit->fittedParameterNames()[0] << " = "
-      << fit->fittedParameters()[0] << " +- " << fit->errors()[0] << endreq;
-      info() << "                 : " << fit->fittedParameterNames()[1] << " = "
-      << fit->fittedParameters()[1] << " +- " << fit->errors()[1] << endreq;
-      }
-      else
-      {
-      info() << " " << radName << "CK pull fit FAILED" << endreq;
-      }
-      }
-
-      */
-
-    }
-
+    }    
   }
-
 
   info() << "=============================================================================="
          << endreq;
@@ -307,40 +265,3 @@ StatusCode RecoQC::finalize()
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
 }
-
-/*
-  AIDA::IFitResult * RecoQC::fitHisto( AIDA::IHistogram1D * histo,
-  const std::pair<double,double> & range,
-  const std::vector<double> & params )
-  {
-  if ( !histo ) return NULL;
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-  debug() << "Fitting " << histo->title() << endreq;
-  }
-
-  // Creating the function which is going to be fitted with the histogram data
-  pi_aida::Function gaussFun("G");
-
-  // set function initial parameters
-  gaussFun.setParameter("mean" , params[0]);
-  gaussFun.setParameter("sigma", params[1]);
-  gaussFun.setParameter("amp"  , params[2]);
-
-  // Creating the fitter
-  pi_aida::Fitter fitter("Chi2","lcg_minuit");
-  //pi_aida::Fitter fitter("Chi2","minuit");
-
-  // create fit data
-  pi_aida::FitData fitData;
-  fitData.create1DConnection(*histo);
-
-  // set fit range
-  AIDA::IRangeSet & rangeset = fitData.range(0);
-  rangeset.include( range.first, range.second );
-
-  // Performing the fit and return
-  return fitter.fit( fitData, gaussFun );
-  }
-*/

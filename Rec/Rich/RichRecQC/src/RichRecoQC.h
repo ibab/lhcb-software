@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.23 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.24 2008-05-14 09:57:42 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -33,12 +33,11 @@
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
+#include "RichRecBase/IRichIsolatedTrack.h"
+#include "RichRecBase/IRichStereoFitter.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
-
-// GaudiPI
-//#include "AIDA_Proxy/AIDA_Proxy.h"
 
 // boost
 #include "boost/assign/list_of.hpp"
@@ -76,37 +75,11 @@ namespace Rich
 
       private: // methods
 
-        /// Fit a Gaussian to the given distribution
-        //AIDA::IFitResult * fitHisto( AIDA::IHistogram1D * histo,
-        //                             const std::pair<double,double> & range,
-        //                             const std::vector<double> & params );
-
-        /// Access RichParticleProperties tool on demand
-        const IParticleProperties * partPropTool() const
-        {
-          if ( !m_richPartProp ) { acquireTool( "RichParticleProperties", m_richPartProp ); }
-          return m_richPartProp;
-        }
-
-        /// access RichCherenkovAngle tool on demand
-        const ICherenkovAngle * ckAngleTool() const
-        {
-          if ( !m_ckAngle ) { acquireTool( "RichCherenkovAngle", m_ckAngle ); }
-          return m_ckAngle;
-        }
-
         /// access RichRecMCTruthTool tool on demand
         const Rich::Rec::MC::IMCTruthTool * richRecMCTool() const
         {
           if ( !m_richRecMCTruth ) { acquireTool( "RichRecMCTruthTool", m_richRecMCTruth ); }
           return m_richRecMCTruth;
-        }
-
-        /// access RichCherenkovResolution tool on demand
-        const ICherenkovResolution * ckResTool() const
-        {
-          if ( !m_ckRes ) { acquireTool( "RichCherenkovResolution", m_ckRes ); }
-          return m_ckRes;
         }
 
       private: // data
@@ -117,6 +90,10 @@ namespace Rich
         mutable const ICherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
         mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
         mutable const ITrackSelector * m_trSelector;  ///< Track selector
+        mutable const IIsolatedTrack * m_isoTrack;
+
+        /// Pointer to the Stereographic refitting tool
+        const IStereoFitter * m_fitter;
 
         // job options selection cuts
         std::vector<double> m_minBeta; ///< minimum beta value for 'saturated' tracks
