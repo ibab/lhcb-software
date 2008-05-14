@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Chris Jones
+ - Suppress some Warning messages in the fitter sooner + set status to SUCCESS
+
 !======================= RichRecStereoTools v1r1 2008-05-09 ==================
 ! 2008-05-01 - Chris Jones
  - Implement improvements to the IStereoFitter interface
