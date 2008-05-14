@@ -7,15 +7,15 @@ CheckRICHSeq.Context = "Offline";
 
 // track monitor sequences
 CheckRICHSeq.Members += {
-  // "GaudiSequencer/RichTkGeom" // general track geometry plots
-  //,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
-  //,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
-  //,"GaudiSequencer/RichTkRes" // track resolution plots
-  "GaudiSequencer/RichPhotSig" // photon signal number plots
-  //,"GaudiSequencer/RichPhotAng" // photon angle plots
+   "GaudiSequencer/RichTkGeom" // general track geometry plots
+  ,"GaudiSequencer/RichGhostTks"  // Ghost track monitors
+  ,"GaudiSequencer/RichCKRes"  // CK angle resolutions plots
+  ,"GaudiSequencer/RichTkRes" // track resolution plots
+  ,"GaudiSequencer/RichPhotSig" // photon signal number plots
+  ,"GaudiSequencer/RichPhotAng" // photon angle plots
   ,"GaudiSequencer/RichPhotGeom" // photon geometry plots
    //,"GaudiSequencer/RichPhotEff"  // photon reco efficiency plots
-  //,"GaudiSequencer/RichPixelMoni" // pixel plots
+  ,"GaudiSequencer/RichPixelMoni" // pixel plots
   //,"GaudiSequencer/RichRayTraceTests" // ray tracing plots
   ,"GaudiSequencer/RichStereoFitterTests" // stereographic refitting plots
 };
