@@ -1,4 +1,4 @@
-// $Id: IPatSeedingTool.h,v 1.3 2008-02-18 14:42:45 mschille Exp $
+// $Id: IPatSeedingTool.h,v 1.4 2008-05-14 17:24:34 mschille Exp $
 #ifndef TRACKINTERFACES_IPATSEEDINGTOOL_H 
 #define TRACKINTERFACES_IPATSEEDINGTOOL_H 1
 
@@ -38,8 +38,7 @@ public:
 		 std::vector<LHCb::Track*>& outputTracks,
 		 const LHCb::State* state = 0 ) = 0;
 
-  virtual void prepareHits () = 0; 
-
+  virtual unsigned prepareHits () = 0; 
  
 protected:
 

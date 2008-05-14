@@ -4,11 +4,14 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Manuel Tobias Schiller
+ - updated IPatSeedingTool to match changes in Tf/PatAlgorithms
+
 !====================== TrackInterfaces v3r14 2008-05-09 =====================
 ! 2008-05-08 - Johannes Albrecht
-	- IMatchTool: Interface for new tool implementation of PatMatch
-	- IPtTransporter: Interface for tool which transports pt from T 
-		to the origin
+   - IMatchTool: Interface for new tool implementation of PatMatch
+   - IPtTransporter: Interface for tool which transports pt from T 
+      to the origin
 
 ! 2008-05-05 - Adrian Perieanu
  - Update of ITrackCloneFinder.h for speed
@@ -294,10 +297,10 @@
 
 !====================== TrackInterfaces v1r2 2005-07-20 ======================
 ! 2005-07-19 - Jose A. Hernando
-	- added predict() to a "plane" to ITrackExtrapolator
+   - added predict() to a "plane" to ITrackExtrapolator
 
 ! 2005-07-06 - Edwin Bos
-	- added propagate() to ITrackExtrapolator
+   - added propagate() to ITrackExtrapolator
 
 ! 2005-06-28 - Eduardo Rodrigues
  - added interface to MeasurementProvider tool (concrete tool in Tr/TrackTools)
