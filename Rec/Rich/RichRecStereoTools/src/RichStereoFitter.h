@@ -35,6 +35,9 @@
 #include "RichKernel/IRichRefractiveIndex.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 
+// Kernel
+#include "RichKernel/RichMap.h"
+
 //Direct Root Math include
 #include "Math/GenVector/VectorUtil.h"   //For various basic vector routines  (angle, etc.)
 
@@ -187,10 +190,20 @@ namespace Rich
       //class global variables
       mutable double g_XCenterGuess, g_YCenterGuess;
 
+      typedef std::pair<double,double> ThetaPhi;
+      typedef Rich::Map< LHCb::RichRecPhoton*, ThetaPhi > ThetaPhiMap;
+      /// map containing original photon information before updating
+      mutable ThetaPhiMap m_origPhotInfo;
+
     private: // methods
 
-      bool trkErrStereo(const LHCb::State *state, LHCb::RichRecSegment *segment, double &lengthEffect,
-                        double &errMom, double &err_tx2, double &err_ty2, double &trkCharge) const;
+      bool trkErrStereo(const LHCb::State *state, 
+                        LHCb::RichRecSegment *segment, 
+                        double &lengthEffect,
+                        double &errMom, 
+                        double &err_tx2, 
+                        double &err_ty2, 
+                        double &trkCharge) const;
 
 
       double improvedErrorPerPhoton_index( const double PTrk, 
@@ -217,7 +230,8 @@ namespace Rich
       void updateSegmentDirection(LHCb::RichRecSegment *richSegment, LHCb::RichRecPhoton::ConstVector &photons,
                                   double Xcenter, double Ycenter) const;
       void updateAllPhotonAngles(LHCb::RichRecSegment *richSegment, LHCb::RichRecPhoton::ConstVector &photons) const;
-      void resetSegmentDirection(LHCb::RichRecSegment *richSegment) const;
+      void resetSegmentAndPhotons(LHCb::RichRecSegment *richSegment,
+                                  const IStereoFitter::Configuration & config) const;
       double chiSquare(LHCb::RichRecRing &recRing, double radiusSquare) const;
       double Proba(double chi2,double ndl) const;
 

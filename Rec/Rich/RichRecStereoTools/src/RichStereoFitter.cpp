@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.6 2008-05-14 11:06:04 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.7 2008-05-14 15:10:04 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -129,7 +129,7 @@ StatusCode StereoFitter::initialize()
 }
 
 //Fitter
-IStereoFitter::Result 
+IStereoFitter::Result
 StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                    const IStereoFitter::Configuration & config ) const
 {
@@ -146,24 +146,28 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
   m_CerenkovPrev=-1;
   m_CerenkovErrPrev=-1;
   m_photonThcSigmaPrev=-1;
+  m_origPhotInfo.clear();
 
   //basic track/segment info
-  Gaudi::XYZVector VPTrk=richSegment->trackSegment().bestMomentum();
-  double PTrk=VPTrk.R()/Gaudi::Units::GeV;
+  const Gaudi::XYZVector VPTrk = richSegment->trackSegment().bestMomentum();
+  const double PTrk = VPTrk.R()/Gaudi::Units::GeV;
 
   //--------------Cerenkov angle and resolution (above threshold?)
-  const double thcNominal=m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
-  const double thcPhotSig=m_ckResTool->ckThetaResolution(richSegment,config.pidType);
-  if(thcNominal>0 && thcPhotSig>0) {
+  const double thcNominal = m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
+  const double thcPhotSig = m_ckResTool->ckThetaResolution(richSegment,config.pidType);
+  if ( thcNominal>0 && thcPhotSig>0 )
+  {
     //----Rich track associated to segment and related info
     const RichRecTrack *rTrack=richSegment->richRecTrack();
     const LHCb::Track *parentTrack=dynamic_cast<const LHCb::Track*>(rTrack->parentTrack());   //Parent Track
-    if (!parentTrack) {
+    if (!parentTrack)
+    {
       Error( "No track " );
       return Result(Result::Failed);
     }
+
     //radiator type
-    Rich::RadiatorType richRadiator=richSegment->trackSegment().radiator();
+    const Rich::RadiatorType richRadiator = richSegment->trackSegment().radiator();
 
     //------------geometric info
     //Get state closest to entrance window of radiator
@@ -202,16 +206,16 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
     bool segUpdateDone(false), photonUpdateDone(false);
 
     //save segment direction and crossing points before next steps
-    m_segEntryDir=richSegment->trackSegment().entryMomentum();
-    m_segMidDir=richSegment->trackSegment().middleMomentum();
-    m_segExitDir=richSegment->trackSegment().exitMomentum();
-    m_segEntryPtn=richSegment->trackSegment().entryPoint();
-    m_segMidPtn=richSegment->trackSegment().middlePoint();
-    m_segExitPtn=richSegment->trackSegment().exitPoint();
-
+    m_segEntryDir  = richSegment->trackSegment().entryMomentum();
+    m_segMidDir    = richSegment->trackSegment().middleMomentum();
+    m_segExitDir   = richSegment->trackSegment().exitMomentum();
+    m_segEntryPtn  = richSegment->trackSegment().entryPoint();
+    m_segMidPtn    = richSegment->trackSegment().middlePoint();
+    m_segExitPtn   = richSegment->trackSegment().exitPoint();
 
     RichRecPhoton::ConstVector goodPhotons;
-    while((diffChi2 >= s_diffChi2Lim) && (n_iter < s_nIterMax)) {
+    while((diffChi2 >= s_diffChi2Lim) && (n_iter < s_nIterMax))
+    {
       //------------------Select good photons for ring stereo fit
       RichRecRing recRing;
 
@@ -222,7 +226,9 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
         //-------------select photons using thetaC cut (iteration 0)
         const RichRecSegment::Photons &photons=richSegment->richRecPhotons();     //segment photon candidates
-        for(RichRecSegment::Photons::const_iterator iPhot=photons.begin(); iPhot != photons.end(); ++iPhot) {
+        for ( RichRecSegment::Photons::const_iterator iPhot=photons.begin();
+              iPhot != photons.end(); ++iPhot)
+        {
           if ( goodPhotonTheta( *iPhot, config.pidType, thcNominal, m_photonThcSigma,
                                 config.nthcPhotSigMax, config.ncandsPerPixMax, config.maxBkgProb) )
           {
@@ -236,22 +242,28 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
         //compute initial (iteration 0) radius guestimation
         double radiusSquareGuess(0);
-        for(int iphot=0;iphot<ngoodPhot;iphot++ ) {
+        for ( int iphot=0;iphot<ngoodPhot; ++iphot )
+        {
           Gaudi::XYZPoint vphot=recRing.ringPoints()[iphot].localPosition();
           radiusSquareGuess+=(vphot.X()-g_XCenterGuess)*(vphot.X()-g_XCenterGuess);
           radiusSquareGuess+=(vphot.Y()-g_YCenterGuess)*(vphot.Y()-g_YCenterGuess);
         }
         radiusSquareGuess/=ngoodPhot;
         m_RadiusGuess=std::sqrt(radiusSquareGuess);
+
       }
-      else { // other iterations
+      else
+      { // other iterations
+
         //Update segment to account for ring center changes (due to fit)
-        if(!segUpdateDone) {
+        if (!segUpdateDone)
+        {
           updateSegmentDirection(richSegment, goodPhotons, XcenterFitted(), YcenterFitted());
         }
 
         //update all photons associated to segment
-        if (!photonUpdateDone) {
+        if (!photonUpdateDone)
+        {
           updateAllPhotonAngles(richSegment, goodPhotons);
         }
 
@@ -310,17 +322,17 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
               }
             }
             else {
-              resetSegmentDirection(richSegment);
+              resetSegmentAndPhotons(richSegment,config);
               return Result(Result::Failed);
             }
           }
           else {
-            resetSegmentDirection(richSegment);
+            resetSegmentAndPhotons(richSegment,config);
             return Result(Result::Failed);
           }
         }
         else {
-          resetSegmentDirection(richSegment);
+          resetSegmentAndPhotons(richSegment,config);
           return Result(Result::Failed);
         }
       }
@@ -334,7 +346,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
     //choose solution depending on chi2
     Result result(Result::Succeeded);
-    if ( m_chi2Prev<m_chi2 ) 
+    if ( m_chi2Prev<m_chi2 )
     {
       result.chi2=m_chi2Prev;
       result.probChi2=m_probPrev;
@@ -343,7 +355,7 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       result.thcFitErr=m_CerenkovErrPrev;
       result.thphotErr=m_photonThcSigmaPrev;
     }
-    else 
+    else
     {
       result.chi2=m_chi2;
       result.probChi2=m_prob;
@@ -353,8 +365,8 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       result.thphotErr=m_photonThcSigma;
     }
 
-    //reset segment direction to what it was at call time...
-    resetSegmentDirection(richSegment);
+    //reset segment direction and photon angles to what they where at call time...
+    resetSegmentAndPhotons(richSegment,config);
 
     return result;
   }
@@ -851,7 +863,7 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   m_chi2=chiSquare(recRing,radiusSquareFitted);
   m_chi2Exp=chiSquare(recRing, m_radiusSquaredPid);
 
-  if ( m_chi2<0 || m_chi2Exp<0 ) 
+  if ( m_chi2<0 || m_chi2Exp<0 )
   {   //bad chi2 //####DBL
     Warning( "transferFitSolution : Poor fit Chi^2", StatusCode::SUCCESS, 3 );
     return(0);
@@ -882,9 +894,11 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
 
 // Update the segment direction
-void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, RichRecPhoton::ConstVector &photons,
-                                          double Xcenter, double Ycenter) const {
-
+void StereoFitter::updateSegmentDirection( RichRecSegment *richSegment,
+                                           RichRecPhoton::ConstVector &photons,
+                                           double Xcenter,
+                                           double Ycenter) const
+{
   //form rotation transformation to update segment directions
   Gaudi::XYZVector newDir(Xcenter, Ycenter, 1);
   double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
@@ -901,12 +915,25 @@ void StereoFitter::updateSegmentDirection(RichRecSegment *richSegment, RichRecPh
 
 
 // Recomputes cherenkov angles for all photons associated to the parent segment
-void StereoFitter::updateAllPhotonAngles(RichRecSegment *richSegment, RichRecPhoton::ConstVector &photons) const {
+void StereoFitter::updateAllPhotonAngles(RichRecSegment *richSegment,
+                                         RichRecPhoton::ConstVector &photons) const
+{
+  // clear original info
+  m_origPhotInfo.clear();
 
-  for(RichRecPhoton::ConstVector::iterator iPhot=photons.begin(); iPhot!=photons.end(); ++iPhot) {
+  for ( RichRecPhoton::ConstVector::iterator iPhot = photons.begin();
+        iPhot!=photons.end();
+        ++iPhot)
+  {
+    RichRecPhoton *iPhotNonConst = (RichRecPhoton*)(*iPhot);
+
     //photon direction
     RichGeomPhoton &gPhot = (RichGeomPhoton&)((*iPhot)->geomPhoton());   //discard "const"
-    Gaudi::XYZVector photonDir = gPhot.sphMirReflectionPoint() - gPhot.emissionPoint();
+    const Gaudi::XYZVector photonDir = gPhot.sphMirReflectionPoint() - gPhot.emissionPoint();
+
+    // save original CK angles
+    m_origPhotInfo[iPhotNonConst] = ThetaPhi( gPhot.CherenkovTheta(),
+                                              gPhot.CherenkovPhi() );
 
     // Update angles using updated segment
     double thetaC, phiC;
@@ -914,22 +941,39 @@ void StereoFitter::updateAllPhotonAngles(RichRecSegment *richSegment, RichRecPho
     gPhot.setCherenkovTheta(thetaC);
     gPhot.setCherenkovPhi(phiC);
 
-    //reset photon to force recalculation of derived quantites in proceding algorithms  (discard "const")
-    RichRecPhoton *iPhotNonConst=(RichRecPhoton*)(*iPhot);
+    // reset photon to force recalculation of derived quantites in proceding algorithms  (discard "const")
     iPhotNonConst->reset();
   }
 }
 
 
-void StereoFitter::resetSegmentDirection(RichRecSegment *richSegment) const {
-  //reset segment direction to what it was...
-  richSegment->trackSegment().setEntryState(m_segEntryPtn, m_segEntryDir);
-  richSegment->trackSegment().setMiddleState(m_segMidPtn, m_segMidDir);
-  richSegment->trackSegment().setExitState(m_segExitPtn, m_segExitDir);
+void StereoFitter::resetSegmentAndPhotons( RichRecSegment *richSegment,
+                                           const IStereoFitter::Configuration & config ) const
+{
+  if ( !config.updateSegment )
+  {
+    // reset segment direction to what it was...
+    richSegment->trackSegment().setEntryState(m_segEntryPtn, m_segEntryDir);
+    richSegment->trackSegment().setMiddleState(m_segMidPtn, m_segMidDir);
+    richSegment->trackSegment().setExitState(m_segExitPtn, m_segExitDir);
+    richSegment->trackSegment().reset();
+  }
+  if ( !config.updatePhotons )
+  {
+    // and photon angles
+    for ( ThetaPhiMap::const_iterator iP = m_origPhotInfo.begin();
+          iP != m_origPhotInfo.end(); ++iP )
+    {
+      (*iP).first->geomPhoton().setCherenkovTheta( (*iP).second.first  );
+      (*iP).first->geomPhoton().setCherenkovPhi  ( (*iP).second.second );
+      (*iP).first->reset();
+    }
+  }
 }
 
 
-double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const {
+double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const
+{
   std::vector<double> func;
   func.clear();
 
@@ -966,10 +1010,11 @@ double StereoFitter::radiusFitted() const {
 };
 
 double StereoFitter::XcenterFitted() const { return(m_sol[0]); };
+
 double StereoFitter::YcenterFitted() const { return(m_sol[1]); };
 
-
-double StereoFitter::Proba(double chi2,double ndl) const {
+double StereoFitter::Proba(double chi2,double ndl) const
+{
   if(ndl>0 && chi2>=0) return gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0);
   else return 0;
 }

@@ -6,6 +6,8 @@
 
 ! 2008-05-14 - Chris Jones
  - Suppress some Warning messages in the fitter sooner + set status to SUCCESS
+ - Add configuration option to allow the user to decide if the segment and 
+   fitted photons are updated or not following the fit.
 
 !======================= RichRecStereoTools v1r1 2008-05-09 ==================
 ! 2008-05-01 - Chris Jones
