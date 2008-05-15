@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.12 2008-03-04 16:55:05 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.13 2008-05-15 15:27:58 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -63,59 +63,75 @@
 #include "boost/limits.hpp"
 
 class TAConfig : public GaudiTupleTool, 
-  virtual public ITAConfigTool {
+                 virtual public ITAConfigTool {
   
- public:
+public:
   
   /// constructer
-   TAConfig( const std::string& type,
-	     const std::string& name,
-	     const IInterface* parent);
+  TAConfig( const std::string& type,
+            const std::string& name,
+            const IInterface* parent);
    
-   virtual ~TAConfig(); // Destructor
+  virtual ~TAConfig(); // Destructor
    
-    /** Millepede-style alignment problem was properly configured
-    *
-    *  @param 
-    *
-    *  @return 
-    *  @retval 
-    *  @retval 
-    */
+
    StatusCode Initialize( std::vector<std::string> &);
-   StatusCode ConfMatrix( const double &,
-			  const double &,
-			  const double &,
-			  const double &,
-			  double [],
-			  double [][4] );
-   StatusCode ZeroMatrVec( double [][4], 
-			   double [] );
-   int InvMatrix( double [][4], 
-		  double [], 
-		  const int & ); 
-   StatusCode CalcResidual( const LHCb::Track &,
-			    const LHCb::Measurement *,
-			    const int &,
-			    const double &,
-			    double &,
-			    double &,
-			    double &,
-			    LHCb::State & );
-   StatusCode FillMatrix( const int &,
-			  const double [],
-			  const double &,
-			  const double &, 
-			  const double &);
-   StatusCode CacheDetElements();
-   StatusCode ResetGlVars();
-   StatusCode GlobalFit( std::vector<double> &, std::vector<double> &, std::vector<double> & );
- 
-   StatusCode LocalTrackFit( int &t, std::vector<double> &, const int &,  std::vector<double> &, double &, double & );
+
+   StatusCode ConfMatrix( unsigned int,
+			  double,
+			  std::vector<double> & );
+   void ZeroMatrix();
+   void ZeroMatrVec( ROOT::Math::SMatrix<double, 5,5> &, double *);
+   void ZeroMatrVec( ROOT::Math::SMatrix<double, 4,4> &, double *);
+
+   int InvMatrix( std::vector<double> &b, int n );
+
+
+   StatusCode CalcResidual( unsigned int,
+		      const LHCb::Track &,
+		      const LHCb::Measurement *,
+		      const LHCb::LHCbID &,
+		      bool,
+		      double & );
    
-   StatusCode PrintParameters( std::vector<double> & );
-  
-   bool AlignDetector( std::string &det ) {
+   bool CalcResidualOT( unsigned int,
+			    const LHCb::Track &,
+			    const LHCb::Measurement *,
+			    const LHCb::LHCbID &,
+			    bool,
+			    double & );
+
+   StatusCode FillMatrix( unsigned int,
+			  double );
+
+   void MakeAlignParVec();
+   void MakeTrackParVec();
+   void SetFlag( bool,
+		 unsigned int );
+   void SetAlignmentPar( const std::vector<double> & );
+   StatusCode CacheDetElements();
+   void ResetLVars();
+   void ResetGlVars();
+   void SetTrackPar( const std::vector<double> &, unsigned int ); 
+   StatusCode GlobalFit( std::vector<double> &, 
+			 std::vector<double> &, 
+			 std::vector<double> & );
+
+   StatusCode LocalTrackFit( unsigned int, 
+			     std::vector<double> &, 
+			     int,  
+			     std::vector<double> &, 
+			     double &, 
+			     double & );
+   StatusCode StoreParameters( std::vector<double> & );
+   double GetLChi2();
+   void CheckLChi2( int,
+		    int,
+		    bool,
+		    bool & );
+   const Gaudi::Transform3D &FindHitModule( const LHCb::LHCbID &,
+					    Gaudi::Transform3D & );
+   bool AlignDetector( const std::string &det ) {
      if ( det == "Velo" )
        return velo_detector;
      else if ( det == "TT" )
@@ -128,18 +144,16 @@ class TAConfig : public GaudiTupleTool,
        return muon_detector;
      return false;
    };
-   
+
+  
    int NumTrPars() {
      return m_ntrack_pars;
    };
-  //    int NumAlignPars() {
-  //      return 6 * m_DETmap.size();
-  //    };
-  //MD
    int NumAlignPars() {
-     return m_n_dof * m_DETmap.size();
+     m_n_apars = m_n_dof * m_DETmap.size();
+     return m_n_apars;
    };
-   
+
   /*********************************************
    * MD  getMPTrackPoints                       *
    * get the track information of Millepede     *
@@ -147,7 +161,7 @@ class TAConfig : public GaudiTupleTool,
   std::vector< std::vector<double> > TAConfig::getMPHits(){
     
     return m_trackpoints;
-   };
+  };
   /*********************************************
    * MD  clearMPTrackPoints                       *
    * clear the track information of Millepede     *
@@ -165,9 +179,12 @@ class TAConfig : public GaudiTupleTool,
   };
 
 
-   StatusCode Rank( LHCb::LHCbID &, int & );
- private:
-   
+  StatusCode Rank( const LHCb::LHCbID & );
+private:
+  /*   int InvMatrix( double [][4], 
+		  std::vector<double> &, 
+		  int ); */
+   int InvMatrix( double[][4], double [4], int);
    StatusCode GetAlignmentConstants( const std::string & );
    StatusCode ConfigTT( std::vector<Gaudi::Transform3D> & );
    StatusCode ConfigOT( std::vector<Gaudi::Transform3D> & );
@@ -176,9 +193,15 @@ class TAConfig : public GaudiTupleTool,
    void CreateMap( int &, IDetectorElement*, double & );
    StatusCode RetrieveAPars( const std::string & );
    StatusCode ConfigMillepede();
-   StatusCode ConstrainPositions( std::map<std::string,int> & );
-   StatusCode ConstrainPositions( const int &, const std::string &, const int & );
-   std::string MuonDetName( const unsigned int & );
+   StatusCode ConstrainPositions( std::vector<std::string> &, char* );
+   //   StatusCode ConstrainPositions( std::vector<std::string> &, std::string & );
+
+   double Measurement( const LHCb::Measurement *,
+		       const LHCb::Track &,
+		       const LHCb::Trajectory *,
+		       LHCb::State & );
+
+   std::string MuonDetName( int );
    //  StatusCode GlobalFit();
    void VectortoArray(const std::vector<double>& , double[] );
    void ArraytoVector(const double[], std::vector<double>& );
@@ -189,11 +212,15 @@ class TAConfig : public GaudiTupleTool,
    std::string m_MeasProvider;
    std::vector<std::string> m_detectors;
    int m_ntrack_pars; // number of local track parameters
+   int m_n_apars; // number of alignment parameters
    double m_commonXFraction;
    std::vector<bool> m_dof;
    std::vector<bool> m_constraint;
    std::vector<double> m_sigma;
    double m_l_chimax;
+   double m_scale;
+   double m_nstand;
+   double m_scale2;
    double m_residual_cut;
    double m_ini_residual_cut;
    int m_nstd;
@@ -204,15 +231,13 @@ class TAConfig : public GaudiTupleTool,
    double m_zmoy_it, s_zmoy_it;
    double m_zmoy_tt, s_zmoy_tt;
    std::vector<int> m_rank;
+   int m_rank_nr;
    std::vector<Gaudi::Transform3D> m_DETmap;
    std::vector<Gaudi::Transform3D> m_ALImap;
    std::vector<bool> m_VELOmap_l;
    std::vector<bool> m_VELOmap_r;
    bool m_fix;
    //   std::multiset m_fix_dofs;
-   bool m_fix_first, m_fix_last;
-   bool m_fix_x, m_fix_y, m_fix_z;
-   bool m_fix_a, m_fix_b, m_fix_g;
    double m_zmoy_l, m_zmoy_r;
    double s_zmoy_l, s_zmoy_r;
    //  std::vector<bool> m_OTmap;
@@ -228,16 +253,17 @@ class TAConfig : public GaudiTupleTool,
    std::map<std::string, int> m_C_pos;
    std::map<std::string, int> constrain_it, 
      constrain_ot, constrain_tt, constrain_velo, constrain_muon;
-
+   std::vector<std::string> m_ITConstrain, m_OTConstrain, m_VeLoConstrain, m_MuonConstrain, m_TTConstrain;
    bool *m_DOF;
    int m_n_dof;
+   std::vector<double> m_estimated, m_estimatedB4;
    bool m_CONSTRAINT[9];
    double m_SIGMA[6];
    std::vector<double>   m_derLC; 
    std::vector<double>   m_derGB;
    std::vector<double>   m_derNonLin;
    std::vector<double>   m_aliConstants;
-   
+   double m_chi2; 
    // The detectors
    bool velo_detector;
    bool tt_detector, it_detector, ot_detector, muon_detector;
@@ -288,7 +314,20 @@ class TAConfig : public GaudiTupleTool,
   std::vector<Gaudi::RotationY> m_rotationY;
   std::vector<Gaudi::RotationZ> m_rotationZ;
 
+  // define two kinds of matrices: 4 X 4 for the case with 4 track parameters
+  // and 5 X 5 for the case of 5 track parameters (e.g. for a magnetic field case).
+  ROOT::Math::SMatrix<double, 4, 4> m_chiMat4;
+  ROOT::Math::SMatrix<double, 5, 5> m_chiMat5;
 
+
+  // internal variables
+  Gaudi::XYZPoint cAlignD;
+  Gaudi::XYZPoint sD;
+  Gaudi::XYZPoint mC;
+  Gaudi::XYZVector kv;
+  Gaudi::XYZVector mv;
+  double m_weight;
+  double m_gamma;
 
   // The clusters
   LHCb::VeloClusters *m_veloClusters;
@@ -309,6 +348,20 @@ class TAConfig : public GaudiTupleTool,
 
   //MD check MP track fit
   std::vector< std::vector<double> > m_trackpoints;
+
+  // track counter
+  unsigned int tr_cnt;
+  // track parameter vectors 
+  std::vector<double> m_trx0;
+  std::vector<double> m_trtx;
+  std::vector<double> m_try0;
+  std::vector<double> m_trty;
+  std::vector<double> m_trQ;
+  std::vector<double> m_trf;
+
+  //MD
+  double m_local_mat[4][4];
+  
 };
 
 

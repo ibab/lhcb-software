@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ATrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.h,v 1.3 2007-12-10 13:49:26 lnicolas Exp $
+ *  $Id: ATrackSelector.h,v 1.4 2008-05-15 15:27:58 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   31/09/2006
@@ -17,6 +17,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "AlignmentInterfaces/IATrackSelectorTool.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrackCaloMatch.h"
+
 #include <string>
 
 // GaudiKernel
@@ -58,11 +60,16 @@ class ATrackSelector : public GaudiTool,
      
  private:
      
+  //Interfaces:
+  IATrackSelectorTool* m_trackselector;
+  ITrackCaloMatch *m_trackenergy;
+
      
      
   double m_minChi2Cut; ///< Min chi^2 cut
   double m_minPCut;    ///< Min p cut
   double m_minPtCut;   ///< Min pt cut
+  double m_energyMinCut; ///< Min energy cut
     
   int m_charge; ///< select particles with certain charge only
 

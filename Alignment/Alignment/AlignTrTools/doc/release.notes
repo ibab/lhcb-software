@@ -4,6 +4,19 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+</PRE><H1><A NAME=v3r5>2008-05-15 AlignTrTools v3r5 </A></H1><PRE>
+ - J. Blouw:  tagged v3r5 for alignment project software release v3r0
+
+! 2008-05-15 - Johan Blouw
+ - Florin implemented a new model for the global derivatives in the Derivatives class
+   in addition, a model describing hits in a sensor has been added to that class.
+ - Marc implemented a more general way to construct constraints for IT & OT
+ - Florin & Marc implemented a more proper iterative procedure in the TAConfig class.
+ - Johan added the possibility to cut on the energy deposit of the track in the calorimeters
+   in the ATrackSelector class.
+ - Florin & Johan added the possibility to store the M'pede calculated alignment parameters
+   on the TES. This is subsequently used by Matt's WriteAlignmentConditions algorithm.
+
 ! 2008-03-15 - Louis Nicolas
  - added cut on track fit match chi2
 

@@ -1,4 +1,3 @@
-
 #ifndef ALIGNTRTOOLS_Derivatives_H
 #define ALOGNTRTOOLS_Derivatives_H 1
 
@@ -31,15 +30,40 @@ public:
 virtual ~Derivatives(); ///< Destructor
 
 
-  StatusCode initialize( const int &, const int &, const
-std::vector<bool>& );
+  StatusCode initialize(  int, int, const std::vector<bool>& );
 
   StatusCode SetGlobal( const Gaudi::XYZVector &, const Gaudi::XYZVector &,
 			const Gaudi::Transform3D &,
-			std::vector<double> &, const int &, const double &, const double & );
+			std::vector<double> &, int, double, double );
 
-  StatusCode SetLocal( std::vector<double> &, const int &, const double &,
-		       const double &, const double & );
+  StatusCode SetLocal( std::vector<double> &, int, double,
+			double, double );
+
+
+  bool SetGlobalN( const std::vector<double> &, 
+			 const std::vector<double> &, 
+			 const Gaudi::XYZPoint &, 
+		   	 const Gaudi::XYZPoint &,
+			 std::vector<double> &, 
+	 		 int, 	
+			 const Gaudi::XYZVector &, 
+			 const Gaudi::XYZVector & );
+
+  bool SetLocalN( std::vector<double> &, 
+			int, 
+			const std::vector<double> &, 
+			const std::vector<double> &, 
+			const Gaudi::XYZPoint &, 
+			const Gaudi::XYZPoint &, 
+			const Gaudi::XYZVector &, 
+			const Gaudi::XYZVector & );
+
+  double Model( const std::vector<double> &, 
+		const std::vector<double> &,  
+		const Gaudi::XYZVector &, 
+		const Gaudi::XYZVector &, 
+		const Gaudi::XYZVector &,
+		const Gaudi::XYZVector & );
 
 
 

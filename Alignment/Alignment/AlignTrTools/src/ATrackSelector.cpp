@@ -4,7 +4,7 @@
  *  Implementation file for T-station alignment tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: ATrackSelector.cpp,v 1.3 2007-12-10 13:49:26 lnicolas Exp $
+ *  $Id: ATrackSelector.cpp,v 1.4 2008-05-15 15:27:58 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   31/09/2006
@@ -38,6 +38,7 @@ ATrackSelector::ATrackSelector( const std::string& type,
   info() << "Creating trackselector tool" << endreq;
   declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
+  declareProperty( "MinEnergyCut", m_energyMinCut = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
   declareProperty( "Charge", m_charge = 0 ); // charge of particle selection
 
@@ -52,6 +53,9 @@ ATrackSelector::~ATrackSelector() {};
 
 StatusCode ATrackSelector::initialize() {
  debug() << "Initialize track selector tool" << endreq;
+  // retrieve track-calo match tool
+  m_trackenergy = tool<ITrackCaloMatch>( "TrackCaloMatch" );
+
   return StatusCode::SUCCESS;
 }
 StatusCode ATrackSelector::finalize() {
@@ -99,7 +103,13 @@ bool ATrackSelector::accept ( const LHCb::Track& aTrack ) const {
       debug() << " -> Pt " << aTrack.pt() << " failed cut" << endreq;
     return false;
   }
-
+  // cut on energy deposited in calorimeters:
+  double energy = m_trackenergy->energy( aTrack );
+  if ( energy < m_energyMinCut ) {
+    if ( msgLevel(MSG::DEBUG) )
+       debug() << " -> energy " << energy << " failed cut" << endreq;
+    return false;
+  }
   if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
   return true;
 }
