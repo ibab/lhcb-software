@@ -1,4 +1,4 @@
-// $Id: PatFwdRegionCounter.h,v 1.3 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatFwdRegionCounter.h,v 1.4 2008-05-15 17:59:37 mschille Exp $
 #ifndef PATFWDREGIONCOUNTER_H
 #define PATFWDREGIONCOUNTER_H 1
 
@@ -61,7 +61,7 @@
       RegionArray::const_iterator max =
 	std::max_element(m_regionList.begin(), m_regionList.end());
       if (0 == *max) return -1;
-      return std::distance(max, m_regionList.begin());
+      return std::distance(m_regionList.begin(), max);
     }
 
   protected:

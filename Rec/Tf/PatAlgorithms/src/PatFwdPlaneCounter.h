@@ -1,4 +1,4 @@
-// $Id: PatFwdPlaneCounter.h,v 1.2 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatFwdPlaneCounter.h,v 1.3 2008-05-15 17:59:37 mschille Exp $
 #ifndef PATFWDPLANECOUNTER_H
 #define PATFWDPLANECOUNTER_H 1
 
@@ -87,7 +87,7 @@
       PlaneArray::const_iterator max = std::max_element(m_planeList.begin(),
 	  m_planeList.end());
       if (0 == *max) return -1;
-      return std::distance(max, m_planeList.begin());
+      return std::distance(m_planeList.begin(), max);
     }
 
   private:
