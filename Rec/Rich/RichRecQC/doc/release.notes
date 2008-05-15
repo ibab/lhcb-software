@@ -4,11 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r18 2008-05-15 ==========================
 ! 2008-05-14 - Chris Jones
  - Add use of stereographic refit and isolated tracks to RichRecoQC
  - Remove some redundant and commented out GaudiPI code from RichRecoQC
 
-!======================= RichRecQC v2r18 2008-05-09 ==========================
 ! 2008-05-08 - Chris Jones
  - Update ROOT scripts for new implementation of RichPIDQC
 
