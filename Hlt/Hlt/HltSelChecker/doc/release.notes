@@ -12,6 +12,11 @@
 !
 !-----------------------------------------------------------------------------
 
+
+!========================= HltSelChecker v6r1p1 2008-05-13 ==================
+! 2008-05-15 - Patrick Koppenburg
+ - Undo Gerhard's changes and tag as v6r1p1
+
 ! 2008-05-14 - Gerhard Raven
  - use IANNSvc to map names -> ids and vice versa
 
