@@ -7,4 +7,9 @@ use LbUtils		v*
 apply_pattern source_shell_alias script=LbLogin
 apply_pattern source_shell_alias script=setup_external
 apply_pattern source_shell_alias script=cleanup_external
-#apply_pattern source_shell_alias script=ExtCMT
+
+# give public (rl) access to the current directory
+alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
+
+# remove public (l) access to the current directory
+alias mkprivate "find . -type d -print -exec fs setacl {} system:anyuser l \;"
