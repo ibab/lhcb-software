@@ -2,6 +2,12 @@
 ! Responsible : Marco Gersabeck
 
 !=============================================================================
+! 15/05/2008 - Marco Gersabeck  ** v4r3p1 **
+
+  - TrackStore.cpp: adapt to new version of VeloDet:
+                    replace phiOfStrip(...) by idealPhi(...)
+
+!=============================================================================
 ! 14/05/2008 - Marco Gersabeck  ** v4r3 **
 
   - AlignSensors.cpp: adapt to new version of VeloDet:
