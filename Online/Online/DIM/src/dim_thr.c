@@ -331,7 +331,12 @@ void ignore_sigpipe()
     exit(1);
   }
   if(sig_info.sa_handler)
+  {
+/*
+	printf("DIM ignore_sigpipe() - Handler already defined %08X\n", sig_info.sa_handler);
+*/
     return;
+  }
   sigemptyset(&set);
   sig_info.sa_handler = pipe_sig_handler;
   sig_info.sa_mask = set;
@@ -351,10 +356,10 @@ void ignore_sigpipe()
 void pipe_sig_handler( num )
 int num;
 {
-  /*  
-
+ 
+/*
 	printf( "*** pipe_sig_handler called ***\n" );
-  */
+*/  
 }
 
 void dim_init_threads()

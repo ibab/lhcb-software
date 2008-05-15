@@ -18,6 +18,7 @@ typedef struct {
 }TT;
 
 TT t;
+
 /*
 int big_buff[1024];
 */
@@ -69,8 +70,8 @@ char **argv;
 			(void *)0, 0 );
 	}
 	t.i = 123;
-	t.j = 123;
-	t.k = 123;
+	t.j = 456;
+	t.k = 789;
 	t.d = 56.78;
 	t.s = 12;
 	t.t = 12;
@@ -82,7 +83,6 @@ char **argv;
 	sprintf(aux,"%s/TEST_SWAP",argv[1]);
 	id = dis_add_service( aux, "l:3;d:1;s:1;c:1;s:1;f:1;c:20", &t, sizeof(t), 
 		(void *)0, 0 );
-
 	sprintf(aux,"%s/TEST_CMD",argv[1]);
 	dis_add_cmnd(aux,"l:3;d:1;s:1;c:1;s:1;f:1;c:20",cmnd_rout, 0);
 

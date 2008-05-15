@@ -17,8 +17,10 @@
 #ifndef WIN32
 #include <netdb.h>
 #endif
-
+/*
 #define MAX_HASH_ENTRIES 5000
+*/
+#define MAX_HASH_ENTRIES 20000
 FILE	*foutptr;
 
 typedef struct node {

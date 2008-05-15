@@ -299,17 +299,13 @@ static int to_go;
 	{
 		if(DIM_next_time)
 		{
-/*
-//			DISABLE_AST
-*/
+			DISABLE_AST
 			DIM_time_left = DIM_next_time;
 			if(DIM_time_left == -1)
 				DIM_time_left = 0;
 			to_go = DIM_next_time;
 			DIM_next_time = 0;
-/*
-//			ENABLE_AST
-*/
+			ENABLE_AST
 		}
 		if(DIM_time_left < 0)
 		{

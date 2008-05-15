@@ -37,7 +37,12 @@
 */
 #define closesock close
 #define readsock(a,b,c,d) read(a,b,c)
+
+#if defined(__linux__) && !defined (darwin)
+#define writesock(a,b,c,d) send(a,b,c,MSG_NOSIGNAL)
+#else
 #define writesock(a,b,c,d) write(a,b,c)
+#endif
 
 #ifdef solaris
 #define BSD_COMP
@@ -294,7 +299,8 @@ int conn_id;
 		}
 		DIM_IO_valid = 1;
 #else
-		write(DIM_IO_path[1], &flags, 4);
+		if(DIM_IO_path[1])
+			write(DIM_IO_path[1], &flags, 4);
 #endif
 	}
 #ifndef WIN32
@@ -399,28 +405,7 @@ int *conn_id;
 	return 0;
 }
 
-#ifndef __linux__
-
-static void tcpip_test_write( conn_id )
-int conn_id;
-{
-	/* Write to every socket we use, which uses the TCPIP protocol,
-	 * which has an established connection (reading), which is currently
-	 * not writing data, so we can check if it is still alive.
-	 */
-	time_t cur_time;
-	
-	if(strcmp(Net_conns[conn_id].node,"MYNODE"))
-	{
-		cur_time = time(NULL);
-		if( cur_time - Net_conns[conn_id].last_used > Net_conns[conn_id].timeout )
-		{
-			dna_test_write( conn_id );
-		}
-	}
-}
-
-#else
+#if defined(__linux__) && !defined (darwin)
 
 void tcpip_set_keepalive( channel, tmout )
 int channel, tmout;
@@ -441,18 +426,39 @@ int channel, tmout;
    setsockopt(channel, IPPROTO_TCP, TCP_KEEPINTVL, (char*)&val, sizeof(val));
 }
 
+#else
+
+static void tcpip_test_write( conn_id )
+int conn_id;
+{
+	/* Write to every socket we use, which uses the TCPIP protocol,
+	 * which has an established connection (reading), which is currently
+	 * not writing data, so we can check if it is still alive.
+	 */
+	time_t cur_time;
+	
+	if(strcmp(Net_conns[conn_id].node,"MYNODE"))
+	{
+		cur_time = time(NULL);
+		if( cur_time - Net_conns[conn_id].last_used > Net_conns[conn_id].timeout )
+		{
+			dna_test_write( conn_id );
+		}
+	}
+}
+
 #endif
 
 void tcpip_set_test_write(conn_id, timeout)
 int conn_id, timeout;
 {
-#ifndef __linux__
+#if defined(__linux__) && !defined (darwin)
+	tcpip_set_keepalive(Net_conns[conn_id].channel, timeout);
+#else
 	Net_conns[conn_id].timr_ent = dtq_add_entry( queue_id, timeout, 
 		tcpip_test_write, conn_id );
 	Net_conns[conn_id].timeout = timeout;
 	Net_conns[conn_id].last_used = time(NULL);
-#else
-	tcpip_set_keepalive(Net_conns[conn_id].channel, timeout);
 #endif
 }
 
@@ -496,7 +502,7 @@ int conn_id;
 	return(count);
 }
 
-static void do_read( conn_id )
+static int do_read( conn_id )
 int conn_id;
 {
 	/* There is 'data' pending, read it.
@@ -521,7 +527,7 @@ int conn_id;
 		if( (len = readsock(Net_conns[conn_id].channel, p, size, 0)) <= 0 ) 
 		{	/* Connection closed by other side. */
 			Net_conns[conn_id].read_rout( conn_id, -1, 0 );
-			return;
+			return 0;
 		} 
 		else 
 		{
@@ -542,6 +548,7 @@ int conn_id;
 
 	Net_conns[conn_id].last_used = time(NULL);
 	Net_conns[conn_id].read_rout( conn_id, 1, totlen );
+	return 1;
 }
 
 
@@ -666,36 +673,32 @@ void tcpip_task( void *dummy)
 				FD_CLR( (unsigned)DIM_IO_path[0], pfds );
 			  }
 			{
-/*
-//			DISABLE_AST
-*/
+			  /*			DISABLE_AST */
 			while( (ret = fds_get_entry( &rfds, &conn_id )) > 0 ) 
 			{
 				if( Net_conns[conn_id].reading )
 				{
 					do
 					{
-			DISABLE_AST
+						DISABLE_AST
 						do_read( conn_id );
 						count = 0;
 						if(Net_conns[conn_id].channel)
 						{
 							count = get_bytes_to_read(conn_id);
 						}
-			ENABLE_AST
+						ENABLE_AST
 					}while(count > 0 );
 				}
 				else
 				{
-			DISABLE_AST
+					DISABLE_AST
 					do_accept( conn_id );
-			ENABLE_AST
+					ENABLE_AST
 				}
 				FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
 			}
-/*
-//			ENABLE_AST
-*/
+			/*			ENABLE_AST */
 			}
 #ifndef WIN32
 			return;
@@ -898,7 +901,7 @@ int port;
 		return(0);
 	}
 
-#ifdef __linux__
+#if defined(__linux__) && !defined (darwin)
 	val = 2;
 	if ((ret_code = setsockopt(path, IPPROTO_TCP, TCP_SYNCNT, 
 			(char*)&val, sizeof(val))) == -1 ) 

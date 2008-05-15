@@ -56,6 +56,7 @@ class RpcService : public DimRpc
 	{
 		val = getInt();
 		val++;
+cout << "Received " << val -1 << " Answering " << val << endl;
 		setData(val);
 	}
 public:

@@ -16,6 +16,10 @@ extern "C" {
 #define dim_Native_MONIT_ONLY 0x20L
 #undef dim_Native_UPDATE
 #define dim_Native_UPDATE 0x40L
+#undef dim_Native_TIMED_ONLY
+#define dim_Native_TIMED_ONLY	0x80L
+#undef dim_Native_MONIT_FIRST
+#define dim_Native_MONIT_FIRST 0x100L
 #undef dim_Native_F_STAMPED
 #define dim_Native_F_STAMPED /*4096L*/ 0x1000L
 #undef dim_Native_F_WAIT

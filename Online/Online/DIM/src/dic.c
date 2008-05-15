@@ -667,6 +667,8 @@ int stamped;
 	}
 
 	/* store_service */
+	if(req_timeout < 0)
+		req_timeout = 0;
 	if(req_type == ONCE_ONLY)
 	{
 		if( !Cmnd_head ) {

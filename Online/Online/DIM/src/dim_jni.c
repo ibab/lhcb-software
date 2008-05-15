@@ -863,6 +863,7 @@ void callTimerHandler(jobject* _aDimTimer)
 
 	doit = dim_jni_attachThread(&env);
 //	(*theJavaVM)->AttachCurrentThread(theJavaVM, (void *)&env, NULL);
+//printf("Got callback %08x\n", _aDimTimer);
   	(*env)->CallVoidMethod(env, (jobject)_aDimTimer, NativeDimTimer_timerHandler, NULL);
 	if(doit)
 		(*theJavaVM)->DetachCurrentThread(theJavaVM);
@@ -997,7 +998,7 @@ JNIEXPORT jint JNICALL Java_dim_Client_infoService
  * Method:    start
  * Signature: (Ldim/DimTimer;I)V
  */
-JNIEXPORT void JNICALL Java_dim_DimTimer_start
+JNIEXPORT jlong JNICALL Java_dim_DimTimer_start
   (JNIEnv *env, jclass This, jobject aDimTimer, jint secs)
 {
    jobject callback_param;
@@ -1006,9 +1007,10 @@ JNIEXPORT void JNICALL Java_dim_DimTimer_start
   callback_param = (*env)->NewGlobalRef(env, aDimTimer);
   callback_function = &timer_callback; //TODO who should do the cleanup?
 
+//printf("Starting timer %d, %08x %08x\n", secs, (long)callback_param, aDimTimer);
   dtq_start_timer(secs, callback_function, callback_param); 
 
-  return;
+  return (jlong)callback_param;
 }
 
 /*
@@ -1017,13 +1019,18 @@ JNIEXPORT void JNICALL Java_dim_DimTimer_start
  * Signature: (Ldim/DimTimer)V
  */
 JNIEXPORT void JNICALL Java_dim_DimTimer_stop
-  (JNIEnv *env, jclass This, jobject aDimTimer)
+//  (JNIEnv *env, jclass This, jobject aDimTimer)
+  (JNIEnv *env, jclass This, jlong aDimTimer)
 {
    jobject callback_param;
+   int ret;
  
-  callback_param = (*env)->NewGlobalRef(env, aDimTimer);
+//  callback_param = (*env)->NewGlobalRef(env, aDimTimer);
+   callback_param = (jobject) aDimTimer;
 
-  dtq_stop_timer(callback_param); 
+//printf("Stopping timer %08x %08X\n", callback_param, aDimTimer);
+  ret = dtq_stop_timer((long)callback_param);
+ //printf("ret = %d\n", ret);
 
   return;
 }

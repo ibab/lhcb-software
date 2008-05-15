@@ -501,6 +501,7 @@ DNS_DIS_PACKET *packet;
 			dtq_rem_entry( Dis_timer_q, Dns_timr_ent );
 			Dns_timr_ent = NULL;
 		}
+
 		dna_close(Dns_dis_conn_id);
 		if(Serving)
 		{
@@ -2454,8 +2455,10 @@ char *reason;
 		exit_handler(&exit_tag, &exit_code, &exit_size);
 	}
 }
-
+/*
 #define MAX_HASH_ENTRIES 2000
+*/
+#define MAX_HASH_ENTRIES 5000
 
 static SERVICE *Service_hash_table[MAX_HASH_ENTRIES];
 

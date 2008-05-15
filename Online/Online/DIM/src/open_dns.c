@@ -320,9 +320,10 @@ register int conn_pend_id;
 			strcpy(node_info,dns_node);
 			for(i = 0; i < 4; i ++)
 				node_info[strlen(node_info)+i+1] = (char)0xff;
-			if( (conn_id = dna_open_client( node_info, conn_pend->task_name,
+			conn_id = dna_open_client( node_info, conn_pend->task_name,
 					 dns_port, TCPIP,
-					 conn_pend->recv_rout, conn_pend->error_rout )) )
+					 conn_pend->recv_rout, conn_pend->error_rout );
+			if( conn_id )
 				break;
 			if( !ptr )
 				break;

@@ -11,7 +11,7 @@ char *DimServer::dimDnsNode = 0;
 int DimServer::autoStart = 1;
 
 extern "C" {
-static void user_routine( void *tagp, void **buf, int *size, int* /* first_time */ )
+static void user_routine( void *tagp, void **buf, int *size, int *first_time)
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;
@@ -123,8 +123,6 @@ void DimCommand::declareIt(char *name, char *format, DimCommandHandler *handler)
 
 extern "C" {
 
-#include <stdio.h>
-
 static void timeout_rout(DimRpc *t)
 {
 	sleep(t->itsTimeout);
@@ -172,7 +170,7 @@ static void rpcin_routine( void *tagp, void *buf, int *size)
 }
 
 extern "C" {
-  static void rpcout_routine( void *tagp, void **buf, int *size, int* /* firt_time */ )
+static void rpcout_routine( void *tagp, void **buf, int *size, int *firt_time)
 {
 //	int *tag = (int *)tagp;
 //	int id = *tag;

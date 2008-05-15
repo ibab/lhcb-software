@@ -340,7 +340,7 @@ register int conn_id;
 	test_p->header_magic = htovl(TST_MAGIC);
 	tcpip_code = dna_write_bytes(conn_id, &test_pkt, READ_HEADER_SIZE,0);
 	if(tcpip_failure(tcpip_code)) {
-		/* Connection lost. Signal upper layer ? */
+		 /* Connection lost. Signal upper layer ? */
 		if(dna_connp->read_ast)
 			dna_connp->read_ast(conn_id, NULL, 0, STA_DISC);
 		return;
@@ -732,6 +732,7 @@ void (*error_ast)();
 	tcpip_code = dna_write_nowait(conn_id, &local_buffer, sizeof(local_buffer));
 	if (tcpip_failure(tcpip_code))
 	{
+		dna_close(conn_id);
 		return(0);
 	}
 	read_ast(conn_id, NULL, 0, STA_CONN);
