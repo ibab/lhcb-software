@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.3 2008-05-07 11:36:40 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.4 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode HltL0CaloPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   m_histoEt = initializeHisto("Et",0.,6000.,100);
   m_histoEt1 = initializeHisto("Et1",0.,6000.,100);
@@ -76,7 +76,7 @@ StatusCode HltL0CaloPrepare::execute() {
   // get calo candidates
   L0CaloCandidates* calos = get<L0CaloCandidates>(m_caloCandidatesLocation);
   Tracks* output = new Tracks();
-  put(output,"Hlt/Track/"+m_outputSelectionName);
+  put(output,"Hlt/Track/"+m_outputTracks->id().str());
 
   for (L0CaloCandidates::iterator it = calos->begin(); 
        it != calos->end(); ++it) {

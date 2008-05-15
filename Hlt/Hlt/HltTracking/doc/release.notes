@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Gerhard Raven
+ - follow change in HltAlgorithm: no need to specify name for outputselection,
+   it is automaticaly taken from the OutputSelection property
+
 ! 2008-05-11 - Gerhard Raven
  - remove ITracksFromTrack interface which is in TrackInterfaces
  - HltVertexUpgrade: no need for local variables to be class members

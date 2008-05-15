@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.h,v 1.1 2008-01-22 09:56:36 hernando Exp $
+// $Id: HltSelectionFilter.h,v 1.2 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTCOMMON_HLTSELECTIONFILTER_H 
 #define HLTCOMMON_HLTSELECTIONFILTER_H 1
 
@@ -31,10 +31,7 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-  // Use HltAlgorithm m_extraInputSelectionsNames;
-  // StringArrayProperty m_inputSelectionsNames;
+private:
 
   std::vector<int> m_scounters;
 

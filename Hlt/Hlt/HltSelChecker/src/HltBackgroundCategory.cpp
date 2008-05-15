@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.4 2008-04-21 09:45:05 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.5 2008-05-15 08:56:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,9 @@
 #include "Kernel/IPrintDecayTreeTool.h"            // Interface
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
+
+
+#include "HltBase/IANNSvc.h"
 
 // local
 #include "HltBackgroundCategory.h"
@@ -103,9 +106,10 @@ StatusCode HltBackgroundCategory::execute() {
   
   for ( std::vector<std::string>::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
-    int id = m_summaryTool->confInt("SelectionID/"+*is);
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << *is << " " << id  << " says " 
+    //TODO: id will disappear once we change HltEvent/HltSummary...
+    int id = svc<IANNSvc>("HltANNSvc")->value("SelectionID",*is)->second;
+    if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " << id  <<  " says " 
                                           << m_summaryTool->decision() 
                                           << " has selection : " 
                                           << m_summaryTool->hasSelection(*is) 
@@ -113,7 +117,6 @@ StatusCode HltBackgroundCategory::execute() {
                                           << m_summaryTool->summary().hasSelectionSummary(id) << endmsg ;
     if (!m_summaryTool->selectionDecision(*is)) continue ;
     if (!m_summaryTool->hasSelection(*is)) continue ;  // ???
-    //    if (!m_summaryTool->summary().hasSelectionSummary(id)) continue ;  // why do I need this
      
     const LHCb::HltSelectionSummary& sum = m_summaryTool->summary().selectionSummary(id); // waiting for Particles method
 

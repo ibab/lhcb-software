@@ -1,5 +1,7 @@
-
 #include "HltBase/HltData.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/construct.hpp"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltData
@@ -8,8 +10,7 @@
 //-----------------------------------------------------------------------------
 
 Hlt::Data::~Data() {
-  for (std::vector<Hlt::Selection*>::iterator it = m_selections.begin();
-       it != m_selections.end(); ++it)
-    delete *it;
+  std::for_each( m_selections.begin(), 
+                 m_selections.end(), 
+                 boost::lambda::delete_ptr() ); 
 } 
-

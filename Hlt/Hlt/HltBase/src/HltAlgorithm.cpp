@@ -1,10 +1,9 @@
-// $Id: HltAlgorithm.cpp,v 1.31 2008-05-07 11:36:40 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.32 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
 
 #include "HltBase/ESequences.h"
-#include "HltBase/EParser.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAlgorithm
@@ -14,8 +13,9 @@
 
 
 HltAlgorithm::HltAlgorithm( const std::string& name,
-                            ISvcLocator* pSvcLocator)
+                            ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
+  , m_outputSelectionName(name)
   , m_inputTracks(0)
   , m_inputTracks2(0)
   , m_inputVertices(0)
@@ -31,10 +31,11 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   declareProperty("ConsiderInputs",m_considerInputs = true);  
   declareProperty("MinCandidates",m_minNCandidates = 1);
 
-  declareProperty("InputSelection", m_inputSelectionName = "");
-  declareProperty("InputSelection2", m_inputSelection2Name = "");
+  declareProperty("InputSelection",  m_inputSelectionName );
+  declareProperty("InputSelection2", m_inputSelection2Name );
   declareProperty("InputSelections", m_extraInputSelectionsNames);
-  declareProperty("OutputSelection", m_outputSelectionName = name);
+  declareProperty("OutputSelection", m_outputSelectionName.property(), "The location the output is written to");
+//                                     ->declareUpdateHandler( stringKey::updateHandler, &m_outputSelectionName );
 
   m_inputSelectionsNames.clear();
   m_inputSelections.clear();
@@ -43,14 +44,21 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
 }
 
-HltAlgorithm::~HltAlgorithm() {
-
-  if (!useTES())
-    if (m_outputSelection) delete m_outputSelection;
+HltAlgorithm::~HltAlgorithm()
+{
+  if (!useTES()) delete m_outputSelection;
 } 
 
 
+StatusCode HltAlgorithm::sysInitialize() {
+  // set up context such that tools can grab the algorithm...
+  // kind of non-local, but kind of OK.
+  Gaudi::Utils::AlgContext sentry( contextSvc(), this );
+  return HltBaseAlg::sysInitialize();
+}
+
 StatusCode HltAlgorithm::initialize() {
+
   StatusCode sc = HltBaseAlg::initialize(); 
   if ( sc.isFailure() ) return sc;
 
@@ -73,11 +81,11 @@ void HltAlgorithm::initCounters()
 }
 
 
-
 void HltAlgorithm::saveConfiguration() {
   
   if (!m_saveConf) return;
   verbose() << "Saving Config " << m_outputSelectionName << endmsg ;
+  assert( m_outputSelectionName == m_outputSelection->id() );
   if ( m_outputSelection == 0 ) {
     warning() << "m_outputSelection is NULL. Not saving config." << endmsg ;
     return ;
@@ -86,26 +94,32 @@ void HltAlgorithm::saveConfiguration() {
   verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
 
   Assert(m_outputSelection != 0," No output Selection");
-  std::string type = "unknown";
-  if (m_outputSelection->classID() == LHCb::Track::classID()) type = "Track";
-  else if (m_outputSelection->classID() == LHCb::RecVertex::classID())
-    type = "Vertex";
+
+  std::string type =
+     ( m_outputSelection->classID() == LHCb::Track::classID())    ?   "Track" :
+       m_outputSelection->classID() == LHCb::RecVertex::classID() ?  "Vertex" :
+       m_outputSelection->classID() == LHCb::Particle::classID() ?  "Particle":
+                                                                    "unknown" ;
   verbose() << "Type : " << type << endmsg ;
   
   std::string algoType =  System::typeinfoName(typeid(*this));
 
-  confregister("Algorithm",algoType+"/"+name(),         m_outputSelectionName);
-  confregister("SelectionType",type,                    m_outputSelectionName);
-  confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName);
+  confregister("Algorithm",algoType+"/"+name(),         m_outputSelectionName.str());
+  confregister("SelectionType",type,                    m_outputSelectionName.str());
+  confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName.str());
   verbose() << "Done saveConfigureation" << endmsg ;  
   info() << " HLT input selections " << m_inputSelectionsNames << endreq;
-  info() << " HLT output selection " << m_outputSelectionName << endreq;
+  info() << " HLT output selection " << m_outputSelection->id() << endreq;
 }
 
 
 StatusCode HltAlgorithm::sysExecute() {
 
   StatusCode sc = StatusCode::SUCCESS;
+  
+  // set up context such that tools can grab the algorithm...
+  // kind of non-local, but kind of OK.
+  Gaudi::Utils::AlgContext sentry( contextSvc(), this );
   
   // verbose() << " sys execute HltBaseAlg beginExecute() " << endreq;
   sc = beginExecute();
@@ -131,10 +145,10 @@ StatusCode HltAlgorithm::beginExecute() {
   
   increaseCounter( m_counterEntries );
 
-  m_filter =( m_passPeriod <= 0? true:
+  m_filter =( m_passPeriod <= 0 ? true:
               ( !(m_counterEntries % m_passPeriod) == 0 ) );
   
-  m_monitor =( m_histogramUpdatePeriod <= 0? false:
+  m_monitor =( m_histogramUpdatePeriod <= 0 ? false:
                ( (m_counterEntries % m_histogramUpdatePeriod) == 0 ) );
   
   verbose() << " filter? " << m_filter 
@@ -170,8 +184,9 @@ bool HltAlgorithm::considerInputs()
   for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it, ++i) {
     ok = ok && (*it)->decision();
+    assert( m_inputSelectionsNames[i] == (*it)->id() );
     if (m_debug) 
-      debug() << " input selection " << m_inputSelectionsNames[i]
+      debug() << " input selection " << (*it)->id()
               << " decision " << (*it)->decision() 
               << " candidates " << (*it)->ncandidates() << endreq;
   }
@@ -208,11 +223,12 @@ void HltAlgorithm::setDecision() {
   
   size_t nCandidates = m_outputSelection->ncandidates();
   increaseCounter(m_counterCandidates,nCandidates);
-  if (nCandidates >= m_minNCandidates) {
-    increaseCounter(m_counterAccepted);
-    setDecision(true);
-  } 
-  if (!m_filter) setDecision(true);
+  bool accept = ( nCandidates >= m_minNCandidates );
+
+  if (accept) increaseCounter(m_counterAccepted);
+  if (!m_filter||accept) setDecision(true);
+  // Assert( (accept || !m_filter) == filterPassed(), "filterPassed unexpected..");
+		  
   if (filterPassed()) increaseCounter(m_counterPassed);
 }
 
@@ -239,49 +255,38 @@ StatusCode HltAlgorithm::endExecute() {
 ////  Finalize
 StatusCode HltAlgorithm::finalize() {
   debug() << "HltAlgorithm::finalize()" << endmsg;
-
   infoTotalEvents(m_counterEntries);
   infoSubsetEvents(m_counterAccepted, m_counterEntries, " passed/entries ");
   infoCandidates(m_counterCandidates, m_counterAccepted, " passed ");
-
   return HltBaseAlg::finalize();
 }
 
 
-void HltAlgorithm::setInputSelection(Hlt::Selection& sel,
-                                     const std::string& selname) {
-  if (zen::find(m_inputSelectionsNames, selname)) {
-    debug() << " selection already in input " << selname << endreq;
+void HltAlgorithm::setInputSelection(Hlt::Selection& sel) {
+  if (zen::find(m_inputSelectionsNames, sel.id())) {
+    debug() << " selection already in input " << sel.id() << endreq;
     return;
   }
-  m_inputSelectionsNames.push_back(selname);
+  m_inputSelectionsNames.push_back(sel.id());
   if (m_histogramUpdatePeriod > 0) {
-    int id = hltSelectionID(selname);
-    Hlt::Histo* histo = initializeHisto(selname);
-    bool has = (m_inputHistos.find(id) != m_inputHistos.end());
-    Assert(!has,"setInputSelection() already input selection "+selname);
-    m_inputHistos[id] = histo;
+    Hlt::Histo* histo = initializeHisto(sel.id().str());
+    bool has = (m_inputHistos.find(sel.id()) != m_inputHistos.end());
+    Assert(!has,"setInputSelection() already input selection "+sel.id().str());
+    m_inputHistos[sel.id()] = histo;
   }
-  if (!useTES()) {
-    m_inputSelections.push_back(&sel);
-  }
-  debug() << " Input selection " << selname << endreq;
+  if (!useTES()) m_inputSelections.push_back(&sel);
+  debug() << " Input selection " << sel.id() << endreq;
 }
 
-void HltAlgorithm::setOutputSelection(Hlt::Selection* sel, 
-                                      const std::string& selname) {
-  m_outputSelectionName = selname;
+void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
+  Assert(m_outputSelectionName == sel->id(), "inconsistent selection vs selectionName!");
+  m_outputSelectionName = sel->id();
   Assert( 0 != sel,"setOutputSelection() no output selection");
-  if (m_histogramUpdatePeriod > 0) 
-    m_outputHisto = initializeHisto(selname);
+  if (m_histogramUpdatePeriod > 0) m_outputHisto = initializeHisto(sel->id().str());
   if (!useTES()) {
-    Assert(m_outputSelection == 0, 
-           " setOutputSelection() already set output selection!");    
+    Assert(m_outputSelection == 0, " setOutputSelection() already set output selection!");    
     m_outputSelection = sel;
-    std::vector<int>& selids = sel->inputSelectionsIDs();
-    for (Hlt::SelectionIterator it = m_inputSelections.begin();
-         it != m_inputSelections.end(); ++it) 
-      selids.push_back( (*it)->id() );
+    sel->addInputSelectionIDs( m_inputSelections.begin(), m_inputSelections.end() );
   }
-  debug() << " Output selection " << selname << endreq;
+  debug() << " Output selection " << sel->id() << endreq;
 }

@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.3 2008-05-07 11:36:40 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.4 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode HltL0MuonPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
   if (!m_maker)
@@ -69,8 +69,7 @@ StatusCode HltL0MuonPrepare::execute() {
     get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
 
   Tracks* muons = new Tracks();
-  //  put(muons,"Hlt/Track/L0Muon");
-  put(muons, "Hlt/Track/"+m_outputSelectionName);
+  put(muons, "Hlt/Track/"+m_outputTracks->id().str());
 
   for (std::vector<L0MuonCandidate*>::iterator it= inputL0Muon->begin();
        it !=  inputL0Muon->end(); ++it){
@@ -98,7 +97,6 @@ StatusCode HltL0MuonPrepare::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltL0MuonPrepare::finalize() {
-
   debug() << "==> Finalize" << endmsg;
   return HltAlgorithm::finalize();  
 }
@@ -118,26 +116,18 @@ bool HltL0MuonPrepare::checkClone(L0MuonCandidate* muon)
     MuonTileID oldTileM2;
 
     for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-      if(iM1->isMuon()){
-        if(iM1->muonID().station()==0){
+      if(iM1->isMuon() && iM1->muonID().station()==0) {
           oldTileM1=iM1->muonID();
           break;
         }
       }
-    }
     for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-      if(iM1->isMuon()){
-        if(iM1->muonID().station()==1){
+      if(iM1->isMuon() && iM1->muonID().station()==1){
           oldTileM2=iM1->muonID();
           break;
         }
       }
-    }
     if(oldTileM1.isValid()&&oldTileM1==tileM1&&oldTileM2.isValid()&&oldTileM2==tileM2)return true;
-
-
-
   }
   return false;
-
 }

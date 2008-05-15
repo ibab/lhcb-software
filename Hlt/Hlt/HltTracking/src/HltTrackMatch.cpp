@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.5 2008-05-07 11:36:41 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.6 2008-05-15 08:56:57 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -59,7 +59,7 @@ StatusCode HltTrackMatch::initialize() {
 
   m_inputTracks  = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
   m_inputTracks2 = &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
   
   recoConfiguration();
   

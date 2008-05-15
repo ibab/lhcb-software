@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.18 2008-05-07 11:36:40 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.19 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 
@@ -71,8 +71,7 @@ StatusCode HltVertexMaker::initialize() {
     debug() << " consider 2 container " << m_inputSelection2Name << endreq; 
   }
 
-  m_outputVertices = 
-    &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
+  m_outputVertices = &(registerTSelection<LHCb::RecVertex>());
 
   IBiTrackFactory* factory = 
     tool<IBiTrackFactory>("HltTrackBiFunctionFactory",this);
@@ -97,18 +96,17 @@ StatusCode HltVertexMaker::initialize() {
     m_filterIDs.push_back(id);
 
 
-    Hlt::Filter* fil = 0;
-    if (mode == "<") fil = new zen::less<double>(x0);
-    else if (mode == ">") fil = new zen::greater<double>(x0);
-    else fil = new zen::in_range<double>(x0,xf);
+    Hlt::Filter* fil = (  (mode == "<") ? (Hlt::Filter*)new zen::less<double>(x0) :
+                          (mode == ">") ? (Hlt::Filter*)new zen::greater<double>(x0) : 
+                                          (Hlt::Filter*)new zen::in_range<double>(x0,xf) );
+
     Assert( 0 !=  fil,  " initialize() filter no created"+filtername);
     m_filters.push_back(fil);
     
     m_tcounters.push_back(0);   
 
     if (m_histogramUpdatePeriod>0) {
-      Hlt::Histo* histo = initializeHisto(funname,0.,100.,100);
-      m_histos.push_back(histo);
+      m_histos.push_back( initializeHisto(funname,0.,100.,100) );
     }
 
     debug() << " filter " << filtername << " " << id << " "
@@ -132,7 +130,7 @@ StatusCode HltVertexMaker::execute() {
   if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,"Hlt/Vertex/"+m_outputSelectionName);
+  put(overtices,"Hlt/Vertex/"+m_outputVertices->id().str());
 
   if ((!m_twoContainers && m_inputTracks->size() <2)) {
     debug() << " no enought tracks in container to make vertices " << endreq;
@@ -186,7 +184,7 @@ StatusCode HltVertexMaker::execute() {
       // Check for segment overlaps
       bool accepted = true;
       if (m_checkForOverlaps)
-        accepted = !(haveOverlaps(track1,track2));
+        accepted = !HltUtils::matchIDs(track1,track2);
       
       verbose() << " accepted due to overlaps?" << accepted << endreq;
 
@@ -240,7 +238,6 @@ void HltVertexMaker::saveConfiguration() {
 //=============================================================================
 StatusCode HltVertexMaker::finalize() {
 
-  StatusCode sc = HltAlgorithm::finalize(); 
   
   info() << " N Combinations " << m_counterCombinations << endreq;
   for (size_t i = 0; i < m_filterNames.size(); ++i) {
@@ -249,15 +246,9 @@ StatusCode HltVertexMaker::finalize() {
     infoSubsetEvents(m_tcounters[i],m_counterCombinations,title);
   }
 
-  return sc;
+  return HltAlgorithm::finalize(); 
   
 }
 
 //=============================================================================
-
-bool HltVertexMaker::haveOverlaps( const LHCb::Track& track1, 
-                                   const LHCb::Track& track2) {
-  return HltUtils::matchIDs(track1,track2);
-}
-
 

@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.4 2008-05-07 11:36:40 graven Exp $
+// $Id: HltTFilter.icpp,v 1.5 2008-05-15 08:56:55 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -17,13 +17,15 @@
 
 template <class T>
 HltTFilter<T>::HltTFilter( const std::string& name,
-                           ISvcLocator* pSvcLocator)
+                           ISvcLocator* pSvcLocator,
+                           const std::string& factoryname)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_functionFactoryName( factoryname )
 {
   //  declareProperty("TESInput", m_tesInput = false);
   m_tesInput = false;
   
-  declareProperty("FunctionFactoryName", m_functionFactoryName ="");
+  declareProperty("FunctionFactoryName", m_functionFactoryName);
   declareProperty("FilterDescriptor", m_filterDescriptor);
   declareProperty("AddInfo", m_addInfo = true);
 
@@ -71,7 +73,7 @@ StatusCode HltTFilter<T>::initialize() {
 
   // output
   if (!m_outputSelectionName.empty()) {
-    m_tseloutput = &(registerTSelection<T>(m_outputSelectionName));
+    m_tseloutput = &(registerTSelection<T>());
     m_toutput = m_tseloutput;
   }
   
@@ -101,14 +103,16 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
   std::vector<std::string> cromos = EParser::parse(tf.functionname,"_");
   if (cromos.size() == 2) {
     tf.input2 = cromos[1];
-    debug() << " binder function against selection " << tf.input2 << endreq;
+    debug() << " bind function against input " << tf.input2 << endreq;
+    //TODO pass this on explicitly into the factory, as map 'label' -> selection
+    //i.e. _here_ is where we interpret the 'label'...
     retrieveSelection(tf.input2);
   }
-  tf.function = m_factory->function(tf.functionname);
-  Assert( 0 != tf.function,
+  tf.function.reset( m_factory->function(tf.functionname) );
+  Assert( 0 != tf.function.get(),
           " addTFilterData() function no created"+tf.functionname);
-  tf.filter   = m_factory->filter(tf.filtername);
-  Assert( 0 != tf.filter,
+  tf.filter.reset(  m_factory->filter(tf.filtername) );
+  Assert( 0 != tf.filter.get(),
           " addTFilterData() filter no created"+tf.filtername);
   tf.infoID = 0;
   if (m_addInfo) tf.infoID = hltInfoID(tf.functionname);
@@ -120,8 +124,8 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
     tf.histobest  = initializeHisto(tf.functionname+"Best",0.,100.,100);
   }
   debug() << " filtername " << tf.filtername
-          << " function " << tf.function
-          << " filter " << tf.filter
+          << " function " << tf.function.get()
+          << " filter " << tf.filter.get()
           << " counter  " << tf.counter
           << " counterCandidates  " << tf.counterCandidates
           << " histovalues " << tf.histovalues

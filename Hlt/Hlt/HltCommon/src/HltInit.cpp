@@ -1,13 +1,11 @@
-// $Id: HltInit.cpp,v 1.13 2008-04-21 12:57:05 hernando Exp $
+// $Id: HltInit.cpp,v 1.14 2008-05-15 08:56:55 graven Exp $
 // Include files
 
 // from Gaudi
-#include <boost/lexical_cast.hpp>
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h" 
 #include "GaudiKernel/AlgFactory.h"
-#include "Event/HltEnums.h"
 // local
 #include "HltInit.h"
 
@@ -31,13 +29,28 @@ DECLARE_ALGORITHM_FACTORY( HltInit );
 HltInit::HltInit( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : HltBaseAlg ( name , pSvcLocator )
+  , m_hltMan(0)
 {
   
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-HltInit::~HltInit() {} 
+HltInit::~HltInit() {
+  if (m_hltMan) {
+    m_hltMan->clearStore();  // this deletes HLTData and HLTConf...
+    m_hltMan->release();
+    m_hltMan=0;
+  }
+  // we do it here, and not in finalize because
+  // finalize is called in the same order as initialize
+  // (as opposed to the opposite order)
+  // and HltAlgorithms 'hang on' to their Selections, which live
+  // in m_HLTData...
+  // So because HltInit is  'first', this works in 'initialize'
+  // but doesn't in 'finalize'
+  // at some point I'll think of a solution to that...
+} 
 
 //=============================================================================
 // Initialization
@@ -47,54 +60,34 @@ StatusCode HltInit::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // create the Hlt Data Svc
-  m_hltMan = NULL;
+  if (!m_hltMan) {
   std::string name = "DataSvc/HltSvc";
   debug() << " creating hltSvc " << name << endreq;
   sc = serviceLocator()->service(name,m_hltMan,true);
+      if ( sc.isFailure() ) return sc; 
+  } else {
+      m_hltMan->clearStore();
+  }
   if (!m_hltMan) fatal() << " not able to create HltSvc " << endreq;
   info() << " created HltSvc " << endreq;
   m_hltMan->setRoot("/Event", new DataObject());
   
-  std::string loca = hltDataLocation();
-  m_HLTData = new Hlt::Data();
-  put(&hltSvc(), m_HLTData, loca);  
+  put(&hltSvc(), new Hlt::Data(), hltDataLocation() );  
   info() << " stored Hlt::Data in HltSvc at " << hltDataLocation() << endreq;
 
-  loca = hltConfigurationLocation();
-  m_HLTConf = new Hlt::Configuration();
-  put(&hltSvc(), m_HLTConf,loca);
+  put(&hltSvc(), new Hlt::Configuration() , hltConfigurationLocation());
   info() << " stored Hlt::Configuration in HltSvc at " 
          << hltConfigurationLocation() << endreq;
 
-  saveConfiguration();
   
   return StatusCode::SUCCESS;
 }
 
-
-void HltInit::saveConfiguration() {
-
-  bool info = m_info; m_info = 0;
-  for (int i = 0; i < HltEnums::HltSelLastSelection; ++i) {
-    std::string name = HltEnums::HltSelectionSummaryEnumToString(i);
-    if (name != "selectionSummaryUnknown") {
-      confregister(name,i,"SelectionID");
-      std::string sid = boost::lexical_cast<std::string>(i);
-      confregister(sid,name,"SelectionID");
-    }
-  }
-  
-
-  for (int i = 0; i <= HltEnums::Calo3DChi2; ++i) {
-    std::string name = HltEnums::HltParticleInfoToString(i);
-    if (name != "particleInfoUnknown") {
-      confregister(name,i,"InfoID");
-      std::string sid = boost::lexical_cast<std::string>(i);
-      confregister(sid,name,"InfoID");
-    }  
-  }
-  m_info = info;
-  
+StatusCode HltInit::reinitialize() {
+  info() << " reinitialize! " << endreq;
+  // StatusCode sc = finalize();
+  // return sc.isSuccess()? initialize(): sc;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -102,17 +95,8 @@ void HltInit::saveConfiguration() {
 // Main execution
 //=============================================================================
 StatusCode HltInit::execute() {
-  
-
-  std::vector<Hlt::Selection*>& selections = m_HLTData->selections();
-  for (std::vector<Hlt::Selection*>::iterator it = selections.begin();
-       it != selections.end(); ++it) {
-    Hlt::Selection& sel = *(*it);
-    if (sel.decision()) sel.clean();
-  }
-
+  hltData().clean();
   setFilterPassed(true);
-  
   return StatusCode::SUCCESS;
 }
 
@@ -120,12 +104,10 @@ StatusCode HltInit::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltInit::finalize() {
-
-  m_hltMan->clearStore();
-
-  StatusCode sc = HltBaseAlg::finalize();
-  debug() << " finalize " << sc << endreq;
-  return sc;
+  debug() << " finalize " << endreq;
+  //m_hltMan->clearStore();  // this deletes HLTData 
+  //                         // before other HltAlgorithms have finalized...
+  return HltBaseAlg::finalize();
 }
 
 //=============================================================================

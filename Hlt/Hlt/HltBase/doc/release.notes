@@ -3,10 +3,27 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+   - HltAlgorithm: register algorithm with context service, so that an instance
+     request a 'bound' functor, the binding argument is obtained through the 
+     'current' HltAlgorithm, so that one can determine the algorithm uses an
+     additional input selection,use stringKey as OutputSelection property
+   - move retrieveSelection from HltBase to HltAlgorithm for the above
+   - move registerSelection from HltBase to HltAlgorithm: only algorithms
+     will register. Also, always use the OutputSelection property as name
+   - comment out unused variables to kill compiler warning about them
+   - registerSelection _always_ uses m_outputSelection, i.e. the OutputSelection 
+     property as name to register.
+   - add stringKey class: behaves as integer, but uses (unexposed!) internal hash to 
+     speed up comparisons
+   - use stringKey instead of strings to speed up searching maps, lists, etc.
+   - add IANNSvc accessor to HltBase
+   - use IANNSvc in getId, htlSelectionName, hltInfoName,
+   - in HltData, use strings instead of IDs, add 'clean' member to clean 
+     contained Selections
 
 !2008-05-11 - Gerhard Raven
    - change return type of IANNSvc accessors -- always return key and value together
-   - add support to handle 'unknown' keys in ANNSbc
+   - add support to handle 'unknown' keys in ANNSvc
 
 !2008-05-07 - Gerhard Raven
    - finish migration of properties in HltAlgorithm

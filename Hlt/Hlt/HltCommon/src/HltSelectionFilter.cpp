@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.4 2008-05-07 11:36:40 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -42,17 +42,14 @@ StatusCode HltSelectionFilter::initialize() {
 
   m_considerInputs = false;
 
-  const std::vector<std::string>& values = 
-    m_extraInputSelectionsNames.value();
+  const std::vector<std::string>& values = m_extraInputSelectionsNames.value();
   for (std::vector<std::string>::const_iterator it = values.begin();
-       it != values.end(); ++it){
-    const std::string& selname = (*it);
-    retrieveSelection(selname);
+       it != values.end(); ++it) {
+    retrieveSelection(*it);
     m_scounters.push_back(0);
   }
   
-  m_outputSelections = 
-    &(registerTSelection<Hlt::Selection>(m_outputSelectionName));
+  m_outputSelections = &(registerTSelection<Hlt::Selection>());
   
   saveConfiguration();
 
@@ -67,14 +64,12 @@ StatusCode HltSelectionFilter::execute() {
   size_t i = 0;
   for (Hlt::SelectionIterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it, ++i) {
-    Hlt::Selection& sel = *(*it);
-    if (sel.decision()) {
-      debug() << " positive selection " << m_inputSelectionsNames[i] << endreq;
-      m_outputSelections->push_back(&sel);
-      m_scounters[i] += 1; 
+    if ( (*it)->decision()) {
+      debug() << " positive selection " << (*it)->id().str() << endreq;
+      m_outputSelections->push_back(*it);
+      ++m_scounters[i];
     }
   }  
-
   return StatusCode::SUCCESS;
 };
 
@@ -83,12 +78,12 @@ StatusCode HltSelectionFilter::execute() {
 //=============================================================================
 StatusCode HltSelectionFilter::finalize() {
 
-  StatusCode sc =  HltAlgorithm::finalize();  
-  for (size_t i = 0; i < m_scounters.size(); ++i){
-    std::string title = m_inputSelectionsNames[i];
-    infoSubsetEvents(m_scounters[i],m_counterEntries,title);
+  for (size_t i = 0; i < m_scounters.size(); ++i) {
+    infoSubsetEvents(m_scounters[i],
+                     m_counterEntries,
+                     m_inputSelections[i]->id().str());
   }
-  return sc;
+  return HltAlgorithm::finalize();  
 }
 
 //=============================================================================

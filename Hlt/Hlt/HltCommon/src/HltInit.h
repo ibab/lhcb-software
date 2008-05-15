@@ -1,4 +1,4 @@
-// $Id: HltInit.h,v 1.6 2008-01-22 09:56:32 hernando Exp $
+// $Id: HltInit.h,v 1.7 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTDATASTOREINIT_H 
 #define HLTDATASTOREINIT_H 1
 
@@ -27,20 +27,15 @@ public:
   virtual ~HltInit( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode reinitialize();    ///< Algorithm reinitialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
 
-  void saveConfiguration();
-
-protected:
+private:
 
   IDataManagerSvc* m_hltMan;
 
-  Hlt::Data* m_HLTData;
-
-  Hlt::Configuration* m_HLTConf;
 
 };
 #endif // HLTDATASTOREINIT_H

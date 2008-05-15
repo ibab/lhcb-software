@@ -2,6 +2,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/IIncidentSvc.h"
+// #include "GaudiKernel/IIncidentListener.h"
+
 
 // local
 #include "HltSummaryTool.h"
@@ -25,9 +28,8 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : HltBaseTool ( type, name , parent )
+  , m_summary(0)
 {
-  m_summary = 0;
-  
   declareInterface<IHltConfSummaryTool>(this);
   declareInterface<IHltSummaryTool>(this);
   
@@ -41,28 +43,36 @@ HltSummaryTool::HltSummaryTool( const std::string& type,
 HltSummaryTool::~HltSummaryTool() {}
 
 StatusCode HltSummaryTool::initialize() {
+  StatusCode status = HltBaseTool::initialize();
+  if ( !status.isSuccess() ) return status;
 
-  StatusCode sc = HltBaseTool::initialize();
+  IIncidentSvc*                incidentSvc(0);     ///<
+  if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
+  // add listener to be triggered by first BeginEvent
+  bool rethrow = false; bool oneShot = false; long priority = 0;
+  incidentSvc->addListener(this,IncidentType::BeginEvent,priority,rethrow,oneShot);
+  incidentSvc->release();
   
-  return sc;
+  return status;
 } 
 
-void HltSummaryTool::getSummary() {
-  m_summary = 0;
-  std::string loca = m_hltSummaryLocation;
-  m_summary = get<LHCb::HltSummary >(loca);  
-  Assert( 0 != m_summary, " getSummary() no summary in TES");
- 
+void HltSummaryTool::handle(const Incident& /*incident*/) {
+    m_summary=0;
 }
+ 
 
-const HltSummary& HltSummaryTool::summary() {
-  getSummary();
+const LHCb::HltSummary& HltSummaryTool::getSummary() {
+  if (m_summary==0) m_summary = get<LHCb::HltSummary >(m_hltSummaryLocation);
+  Assert( 0 != m_summary, " getSummary() no summary in TES");
   return *m_summary;
 }
 
+const HltSummary& HltSummaryTool::summary() {
+  return getSummary();
+}
+
 bool HltSummaryTool::decision() {
-  getSummary();
-  return m_summary->decision();
+  return getSummary().decision();
 }
 
 bool HltSummaryTool::decisionType(const std::string& name) {
@@ -73,16 +83,13 @@ bool HltSummaryTool::decisionType(const std::string& name) {
 bool HltSummaryTool::hasSelection(const std::string& name) {
   if (!validHltSelectionName(name))
     error() << " No valid selection name " << name << endreq;
-  getSummary();
-  int id = hltSelectionID(name);
-  return m_summary->hasSelectionSummary(id);
+  return getSummary().hasSelectionSummary(id(name));
 }
 
 bool HltSummaryTool::selectionDecision(const std::string& name) {
-  bool ok = checkSelection(name);
-  if (!ok) return false;
-  int id = hltSelectionID(name);
-  return m_summary->selectionSummary(id).decision();
+  return checkSelection(name) 
+         ? getSummary().selectionSummary(id(name)).decision()
+         : false;
 }
 
 bool HltSummaryTool::selectionDecisionType(const std::string& name,
@@ -93,32 +100,26 @@ bool HltSummaryTool::selectionDecisionType(const std::string& name,
 
 
 std::vector<std::string> HltSummaryTool::selections() {
-  getSummary();
-  std::vector<int> ids = m_summary->selectionSummaryIDs();
+  std::vector<int> ids = getSummary().selectionSummaryIDs();
   std::vector<std::string> names;
-  for (std::vector<int>::iterator it = ids.begin(); it!= ids.end(); ++it) {
-    int id = *it;
-    std::string name = hltSelectionName(id);
-    names.push_back(name);
+  for (std::vector<int>::const_iterator i=ids.begin();i!=ids.end();++i) {
+    names.push_back(name(*i));
   }
-  return names;  
+  return names;
 }
 
 size_t HltSummaryTool::selectionNCandidates(const std::string& name) {
-  bool ok = checkSelection(name);
-  if (!ok) return 0;
-  int id = hltSelectionID(name);
-  size_t ncans = m_summary->selectionSummary(id).data().size();
-  return ncans;
+  return checkSelection(name)
+            ? getSummary().selectionSummary(id(name)).data().size()
+            : size_t(0);
 }
 
 std::vector<std::string> 
 HltSummaryTool::selectionFilters(const std::string& name) {
-  std::vector<std::string> filters;
   std::string key = name+"/Filters";
-  if (hltConf().has_key(key))
-    filters = hltConf().retrieve<std::vector<std::string> >(key);
-  return filters;
+  return hltConf().has_key(key)
+            ? hltConf().retrieve<std::vector<std::string> >(key)
+            : std::vector<std::string>();
 }
 
 std::vector<std::string> 
@@ -132,29 +133,26 @@ HltSummaryTool::selectionInputSelections(const std::string& name) {
 
 std::string 
 HltSummaryTool::selectionType(const std::string& name) {
-  std::string type = "unknown";
   std::string key = name+"/SelectionType";
+  std::string type = "unknown";
   if (hltConf().has_key(key)) type = hltConf().retrieve<std::string >(key);
   return type;
 }
 
 std::vector<Track*> 
 HltSummaryTool::selectionTracks(const std::string& name) {
-  std::vector<Track*> tracks;
-  bool ok = checkSelection(name);
-  if (!ok) return tracks;
-  int id = hltSelectionID(name);
-  return Hlt::SummaryHelper::retrieve<Track>(*m_summary,id);
+  getSummary();
+  return checkSelection(name)
+         ? Hlt::SummaryHelper::retrieve<Track>(summary(),id(name))
+         : std::vector<Track*>();
 }
 
 
 std::vector<RecVertex*> 
 HltSummaryTool::selectionVertices(const std::string& name) {
-  std::vector<RecVertex*> vertices;
-  bool ok = checkSelection(name);
-  if (!ok) return vertices;
-  int id = hltSelectionID(name);
-  return Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,id);
+  return checkSelection(name)
+         ? Hlt::SummaryHelper::retrieve<RecVertex>(summary(),id(name))
+         : std::vector<RecVertex*>();
 }
 
 Particle::ConstVector HltSummaryTool::selectionParticles(const std::string& name) {
@@ -162,12 +160,9 @@ Particle::ConstVector HltSummaryTool::selectionParticles(const std::string& name
   bool ok = checkSelection(name);
   if (msgLevel(MSG::VERBOSE)) verbose () << "selectionParticles " << name << " OK: " << ok << endmsg ;
   if (!ok) return particles;
-  int id = hltSelectionID(name);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "selectionParticles " << name << " ID: " << id << endmsg ;
   /// @todo why can't the helper do this ?
-  for ( SmartRefVector<LHCb::Particle>::const_iterator ip = 
-          m_summary->selectionSummary(id).particles().begin() ; 
-        ip != m_summary->selectionSummary(id).particles().end() ; ++ip){
+  const SmartRefVector<LHCb::Particle>& p = summary().selectionSummary(id(name)).particles();
+  for ( SmartRefVector<LHCb::Particle>::const_iterator ip = p.begin() ; ip!=p.end(); ++ip) {
     if (msgLevel(MSG::VERBOSE)) verbose () << "Part " << (*ip)->particleID().pid() << endmsg ; 
     particles.push_back(*ip);
   }
@@ -177,59 +172,49 @@ Particle::ConstVector HltSummaryTool::selectionParticles(const std::string& name
 
 bool HltSummaryTool::isInSelection(const std::string& name,
                                    const Track& track) {
-  bool ok = false;
-  getSummary();
   std::vector<Track*> tracks = selectionTracks(name);
+  bool ok = false;
   for (std::vector<Track*>::const_iterator it = tracks.begin(); 
-       it != tracks.end(); it++) {
-    const Track& otrack = *(*it);
-    if (HltUtils::matchIDs(track,otrack)) ok = true;
+       it != tracks.end() && !ok; ++it) {
+    ok = HltUtils::matchIDs(track,**it);
   }
   return ok;
 }
 
-bool HltSummaryTool::isInSelection( const Track& track, int id) {
-  std::string name = hltSelectionName(id);
-  return isInSelection(name,track);
+
+bool HltSummaryTool::checkSelection(const std::string& name) {
+  if (!validHltSelectionName(name))
+    error() << " No valid selection name " << name << endreq;  
+  bool ok =  getSummary().hasSelectionSummary(id(name));
+  if (!ok && msgLevel(MSG::DEBUG)) debug() << " no selection in summary " << name << endreq;
+  return ok;
 }
+
+
 
 
 std::vector<std::string> HltSummaryTool::confKeys() {
   return hltConf().keys();
 }
 
+
+template <typename T> 
+T confVal(const std::string& name, Hlt::Configuration& conf, T unknownValue = T())
+{ return conf.has_key(name) ? conf.retrieve<T>(name) : T(unknownValue) ; }
+
 int HltSummaryTool::confInt(const std::string& name) {
-  int val = -1;
-  if (hltConf().has_key(name)) val = hltConf().retrieve<int>(name);
-  return val;
+  return confVal<int>(name, hltConf(),-1);
 }
 
 double HltSummaryTool::confDouble(const std::string& name) {
-  double val = 0.;
-  if (hltConf().has_key(name)) val = hltConf().retrieve<double>(name);
-  return val;
+  return confVal<double>(name, hltConf(),0);
 }
 
 std::string HltSummaryTool::confString(const std::string& name) {
-  std::string val = "unknown";
-  if (hltConf().has_key(name)) val = hltConf().retrieve<std::string>(name);
-  return val;
+  return confVal<std::string>(name, hltConf(),"unknown");
 }
 
 std::vector<std::string> HltSummaryTool::confStringVector(const std::string& name) 
 {
-  std::vector<std::string> val;
-  if (hltConf().has_key(name)) 
-    val = hltConf().retrieve<std::vector<std::string> >(name);
-  return val;
-}
-
-bool HltSummaryTool::checkSelection(const std::string& name) {
-  if (!validHltSelectionName(name))
-    error() << " No valid selection name " << name << endreq;  
-  getSummary();
-  int id = hltSelectionID(name);
-  bool ok =  m_summary->hasSelectionSummary(id);
-  if (!ok && msgLevel(MSG::DEBUG)) debug() << " no selection in summary " << name << endreq;
-  return ok;
+  return confVal<std::vector<std::string> >(name,hltConf());
 }

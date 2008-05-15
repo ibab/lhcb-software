@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-05-14 - Gerhard Raven
+ - use IANNSvc to map names -> ids and vice versa
+
 ! 2008-05-13 - Patrick Koppenburg
  - OverwriteWithTruth : Do also the track links.
 

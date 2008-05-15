@@ -3,6 +3,40 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-15 Gerhard Raven
+ - remove commented out code
+ - remove empty finalizes which only call baseclass version -- as that's the
+   default anyway...
+ - use dynamic_cast<T&>(t) instead of *dynamic_cast<T*>(&t) to get an exception
+   instead of SEGV when dynamic_cast fails
+ - HltTFunctionFactory: for binding, go through the algorithm requesting
+   the functor (using the context service) in order to make sure it registers 
+   the binding argument as input selection. use auto_ptr & disallow copy c'tor
+ - HltTFilter: make factoryName part of the constructor arguments instead
+   of setting it in derived classes; use auto_ptr to manage owned pointers,
+   disallow copy c'tor as compiler generated one is not the right one
+ - take advantage of having the name in Hlt::Selection instead of the ID
+   to reduce the number of conversions name <-> id
+ - HltSummaryTool: cache grabbing the summary from the event store, use
+   IIncidentSvc to clean cache at beginEvent; use ?: instead of ifs in a few
+   places; 
+ - register(T)Selection now _always_ uses m_outputSelectionName, so no need
+   to pass it along.
+ - HltSelectionToTes: move 'copy' template from header file to cpp file;
+   use strings instead of ID.
+ - HltInit: clear the store in the destructor instead of in finalize: because 
+   finalize is called in the same order as initialize instead of the opposite 
+   order, other algorithms still have pointers into the datastore; also, no
+   need to keep Data and Configuration pointers as data members. Finally, 
+   use new 'clean' function of Hlt::Data to clean selections instead of 
+   looping explicity over all selections in Hlt::Data...
+ - change protected into private when possible to indicate derived classes
+   are not changing member data
+ - don't set parent member data in derived classes in HltFilters -- instead
+   pass the value to the baseclass constructor
+ - use IANNSvc to map SelectionID  names <-> int
+   (will be needed _much_ less once we change HltSummary to use strings)
+   and InfoID names <-> int
 
 ! 2008-05-14 Gerhard Raven
  - enhance HltANNSvc, use new features of ANNSvc, like generation-on-the-fly

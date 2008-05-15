@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.5 2008-05-07 11:36:41 graven Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.6 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -44,7 +44,7 @@ StatusCode HltPrepareMuonSeg::initialize() {
 
   m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
   
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   debug() << "==> Initialize" << endmsg;
   

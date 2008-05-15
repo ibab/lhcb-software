@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.5 2008-01-22 09:34:59 hernando Exp $
+// $Id: HltTypes.h,v 1.6 2008-05-15 08:56:54 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -12,8 +12,7 @@
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 
-namespace LHCb 
-{
+namespace LHCb {
   class Track;
   class RecVertex;
   class L0CaloCandidate;
@@ -24,8 +23,7 @@ namespace AIDA {
   class IHistogram1D;
 }
 
-namespace Hlt 
-{
+namespace Hlt {
   template <class OBJ>
   class DObj : public OBJ, public DataObject {};
   

@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.7 2008-04-23 09:08:22 hernando Exp $
+// $Id: HltVertexMaker.h,v 1.8 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -29,11 +29,10 @@ class HltVertexMaker : public HltAlgorithm {
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
     
- protected:
+ private:
 
   void saveConfiguration();
   
-  bool haveOverlaps(const LHCb::Track& track1, const LHCb::Track& track2 );
 
  private:
 
@@ -42,14 +41,9 @@ class HltVertexMaker : public HltAlgorithm {
   bool m_checkForOverlaps;
   bool m_twoContainers;
 
-protected:
+private:
 
 
-  // In HltAlgorithm
-  // std::string m_inputSelection2Name;
-  // Hlt::TrackSelection* m_inputTracks;
-  // Hlt::TrackSelection* m_inputTracks2;
-  // Hlt::VertexSelection* m_outputVertices;
 
   StringArrayProperty m_filterDescriptor;
 

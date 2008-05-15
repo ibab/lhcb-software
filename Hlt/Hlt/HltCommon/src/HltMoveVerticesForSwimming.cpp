@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.2 2008-04-09 10:03:05 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.3 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
 
   m_inputVertices = &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
 
-  m_outputVertices = &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
+  m_outputVertices = &(registerTSelection<LHCb::RecVertex>());
 
   saveConfiguration();
   info() << "HltAlgorithm initialized" << endmsg;

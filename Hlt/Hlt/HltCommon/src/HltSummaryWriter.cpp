@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.8 2008-01-22 09:56:37 hernando Exp $
+// $Id: HltSummaryWriter.cpp,v 1.9 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -42,31 +42,28 @@ StatusCode HltSummaryWriter::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_selectionNames.clear();
   m_selectionIDs.clear();
   if (m_saveAll) {
-    m_selectionIDs = hltData().selectionIDs();      
+    const std::vector<Hlt::Selection*>& selections = hltData().selections();      
+    for (std::vector<Hlt::Selection*>::const_iterator i  = selections.begin(); 
+         i!= selections.end(); ++i)  m_selectionIDs.push_back((*i)->id());
   } else {
     std::vector<std::string> cromos = m_AselectionNames.value();
     for (std::vector<std::string>::iterator it = cromos.begin();
          it != cromos.end(); ++it) {
-      std::string name = *it;
-      if (!validHltSelectionName(name))
+      stringKey name(*it);
+      if (!validHltSelectionName(name)) {
         error() << " Not valid selection name " << name << endreq;
-      else {
-        int id = hltSelectionID(name);
-        m_selectionIDs.push_back(id);
+      } else {
+        m_selectionIDs.push_back(name);
       }
     }
   }
   
-  for (std::vector<int>::iterator it = m_selectionIDs.begin();
+  for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    int id = *it;
-    std::string selname = hltSelectionName(id);
-    info() << " write selection " << selname 
+    info() << " write selection " << it->str() 
            << " in HltSummary " << endreq;
-    m_selectionNames.push_back(selname);  
   }
   
   return StatusCode::SUCCESS;
@@ -79,20 +76,15 @@ StatusCode HltSummaryWriter::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  m_summary = new HltSummary();
-  put( m_summary, m_hltSummaryLocation );
+  HltSummary *summary = new HltSummary();
+  put( summary, m_hltSummaryLocation );
 
-  // loca = hltSummaryLocation()+"/Configuration";  
-  // put(n,loca);
-
-  for (std::vector<int>::iterator it = m_selectionIDs.begin();
+  for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    int id = *it;
-    if (hltData().hasSelection(id)) {
-      if (hltData().selection(id).decision())
-        writeSelection(id);
+    if (hltData().hasSelection(*it)) {
+      if (hltData().selection(*it).decision()) writeSelection(*summary,*it);
     } else {
-      std::string comment = " No selection in HLT " +hltSelectionName(id);
+      std::string comment = " No selection in HLT " + it->str();
       Warning(comment,1);
     }
   }
@@ -101,27 +93,26 @@ StatusCode HltSummaryWriter::execute() {
   return StatusCode::SUCCESS;
 }
 
-void HltSummaryWriter::writeSelection(int id) {
+void HltSummaryWriter::writeSelection(HltSummary& summary, const stringKey& id) {
+
   Hlt::Selection& sel = hltData().selection(id);
-  HltSelectionSummary& sum   = m_summary->selectionSummary(id);
+  HltSelectionSummary& sum   = summary.selectionSummary( annSvc().value("SelectionID",id.str())->second );
   if (sel.classID() == LHCb::Track::classID()) {
-    Hlt::TrackSelection& tsel = *(dynamic_cast<Hlt::TrackSelection*>(&sel));
+    Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);
     for (Hlt::TrackSelection::iterator it = tsel.begin(); it != tsel.end();
          ++it) sum.addData(*(*it));
   } else if (sel.classID() == LHCb::RecVertex::classID()) {
-    Hlt::VertexSelection& tsel = *(dynamic_cast<Hlt::VertexSelection*>(&sel));
+    Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);
     for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end();
          ++it) sum.addData(*(*it));
   }
   sum.setDecision(true);
 
-
-  debug() << " selection  " << hltSelectionName(id) 
+  debug() << " selection  " << id
           << " [hltdata] decision " << sel.decision() 
           << " candidates " << sel.ncandidates() 
           << " [hltsummary]: decision " << sum.decision() 
           <<  " candidates " << sum.data().size() << endreq;
-  
 }
 
 

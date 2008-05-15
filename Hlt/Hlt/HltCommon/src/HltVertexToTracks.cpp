@@ -1,4 +1,4 @@
-// $Id: HltVertexToTracks.cpp,v 1.4 2008-05-07 11:36:41 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -8,6 +8,7 @@
 // local
 #include "HltVertexToTracks.h"
 #include "HltBase/ESequences.h"
+#include "Event/RecVertex.h"
 
 using namespace LHCb;
 
@@ -43,10 +44,8 @@ StatusCode HltVertexToTracks::initialize() {
   debug() << "==> Initialize" << endmsg;
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
 
-  m_inputVertices = 
-    &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
-  
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_inputVertices = &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   saveConfiguration();
 

@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.h,v 1.3 2008-04-02 13:38:23 gligorov Exp $
+// $Id: HltTrackFromParticle.h,v 1.4 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTTRACKFROMPARTICLE_H 
 #define HLTTRACKFROMPARTICLE_H 1
 
@@ -23,9 +23,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   void loadParticle(const LHCb::Particle& par);
 

@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.4 2008-04-02 13:38:12 gligorov Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -39,21 +39,15 @@ HltTrackFromParticle::~HltTrackFromParticle() {}
 //=============================================================================
 StatusCode HltTrackFromParticle::initialize() {
 
-  info() << "Starts" << endmsg;
-  
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   saveConfiguration();
   info() << "HltAlgorithm initialized";
 
   return sc;
-
-  saveConfiguration();
-
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -78,15 +72,12 @@ StatusCode HltTrackFromParticle::execute() {
     loadParticle(**it);
   }
   
-  int ncan = m_outputTracks->size();
-  //candidateFound(ncan);
-  
-  debug() << " candidates found " << ncan << endreq;
-  if (m_debug)
+  if (m_debug) {
+    debug() << " candidates found " << m_outputTracks->size() << endreq;
     printInfo(" tracks from particles ",*m_outputTracks);
+  }
   
   return sc;
-  
 }
 
 void HltTrackFromParticle::loadParticle(const Particle& par) {
@@ -104,18 +95,3 @@ void HltTrackFromParticle::loadParticle(const Particle& par) {
     }
   }  
 }
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltTrackFromParticle::finalize() {
-
-  StatusCode sc = HltAlgorithm::finalize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  debug() << "==> Finalize" << endreq;
-
-  return  StatusCode::SUCCESS;
-}
-

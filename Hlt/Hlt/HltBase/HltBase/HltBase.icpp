@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.7 2008-05-03 09:22:28 graven Exp $
+// $Id: HltBase.icpp,v 1.8 2008-05-15 08:56:54 graven Exp $
 // Include files
 
 
@@ -41,6 +41,8 @@ StatusCode HltBase<EBASE>::initialize() {
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
+  if (!EBASE::service( "HltANNSvc", m_hltANNSvc).isSuccess()) return StatusCode::FAILURE;
+  
   initializeMsg();
   initializeHistosFromDescriptor();
 
@@ -50,6 +52,8 @@ StatusCode HltBase<EBASE>::initialize() {
 
 template <class EBASE>
 StatusCode HltBase<EBASE>::finalize() {  
+  if (m_hltANNSvc) m_hltANNSvc->release();
+  if (m_hltSvc) m_hltSvc->release();
   EBASE::debug() << "==> Finalize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::finalize"<< endreq;
   return EBASE::finalize();
 }  
@@ -138,6 +142,7 @@ void HltBase<EBASE>::fillHisto( Hlt::Histo& histo,
     EBASE::fill( &histo, (*it), weight);
 }
 
+//FIXME: don't use member data of Hlt::Counter directly...
 template <class EBASE>
 void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter, 
                                         const std::string& inputString) { 
@@ -161,11 +166,21 @@ void HltBase<EBASE>::increaseCounter( Hlt::Counter& count,
 }
 
 template <class EBASE>
-IDataProviderSvc& HltBase<EBASE>::hltSvc() {
-  if (m_hltSvc != 0) return *m_hltSvc;
+IDataProviderSvc& HltBase<EBASE>::hltSvc() const {
+  if (m_hltSvc == 0) {
   StatusCode sc = EBASE::serviceLocator()->service("HltSvc", m_hltSvc);
-  EBASE::Assert( m_hltSvc != 0, " hltSvc() no HltDataSvc");
+    EBASE::Assert( sc.isSuccess() && m_hltSvc != 0, " hltSvc() no HltDataSvc");
+  }
   return *m_hltSvc;
+}
+
+template <class EBASE>
+IANNSvc& HltBase<EBASE>::annSvc() const {
+  if (m_hltANNSvc == 0) {
+    StatusCode sc = EBASE::serviceLocator()->service("HltANNSvc", m_hltANNSvc);
+    EBASE::Assert( sc.isSuccess() && m_hltANNSvc != 0, " no HltANNSvc??");
+  }
+  return *m_hltANNSvc;
 }
 
 template <class EBASE>
@@ -196,33 +211,42 @@ Hlt::Configuration& HltBase<EBASE>::hltConf()
 
 
 template <class EBASE>
-bool HltBase<EBASE>::validHltSelectionName(const std::string& selname) 
+bool HltBase<EBASE>::validHltSelectionName(const stringKey& selname) 
 {
-  return Hlt::ConfigurationHelper::validID(hltConf(),"SelectionID",selname);
+    // use optional<int> automatic conversion to bool...
+  return annSvc().value("SelectionID",selname.str());
 }
 
 template <class EBASE>
-int HltBase<EBASE>::hltSelectionID(const std::string& selname) 
+int HltBase<EBASE>::hltSelectionID(const stringKey& selname) 
 {
-  return Hlt::ConfigurationHelper::getID(hltConf(),"SelectionID",selname);
+    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("SelectionID",selname.str());
+    EBASE::Assert( i, " request for unknown Selection ID");
+    return i->second;
 }
 
 template <class EBASE>
-std::string HltBase<EBASE>::hltSelectionName(int id) 
+stringKey HltBase<EBASE>::hltSelectionName(int id) 
 {
-  return Hlt::ConfigurationHelper::getName(hltConf(),"SelectionID",id);
+    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("SelectionID",id);
+    EBASE::Assert( i, " request for unknown Selection ID");
+    return i->first;
 }
 
 template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
 {
-  return Hlt::ConfigurationHelper::getID(hltConf(),"InfoID",infoname);
+    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
+    EBASE::Assert( i, " request for unknown Info ID");
+    return i->second;
 }
 
 template <class EBASE>
 std::string HltBase<EBASE>::hltInfoName(int id) 
 {
-  return Hlt::ConfigurationHelper::getName(hltConf(),"InfoID",id);
+    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
+    EBASE::Assert( i, " request for unknown Info ID");
+    return i->first;
 }
 
 template <class EBASE>
@@ -257,6 +281,3 @@ void HltBase<EBASE>::printInfo(const std::string& title,
                   << it->second << "; \t";
   EBASE::info() << endreq;
 }
-
-
-

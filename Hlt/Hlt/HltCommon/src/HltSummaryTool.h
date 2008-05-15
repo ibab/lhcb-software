@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.9 2008-02-18 18:12:36 pkoppenb Exp $
+// $Id: HltSummaryTool.h,v 1.10 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -8,6 +8,7 @@
 #include "HltBase/IHltConfSummaryTool.h"
 #include "Kernel/IHltSummaryTool.h"
 #include "Event/HltSummary.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 /** @class HltSummaryTool HltSummaryTool.h
  *  
@@ -18,9 +19,10 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-02-08
  */
-class HltSummaryTool : public HltBaseTool, 
-                       virtual public IHltConfSummaryTool,
-                       virtual public IHltSummaryTool
+class HltSummaryTool : public HltBaseTool
+                       , virtual public IIncidentListener
+                       , virtual public IHltConfSummaryTool
+                       , virtual public IHltSummaryTool
 {
 public:
   
@@ -31,13 +33,15 @@ public:
 
   virtual ~HltSummaryTool( ); ///< Destructor
 
-  StatusCode initialize();
+  virtual StatusCode initialize();
+  virtual void handle(const Incident&);
+
+
 
   StatusCode load() {getSummary();return StatusCode::SUCCESS;}  
 
   void setSummary(const LHCb::HltSummary& summary) {};
   
-  bool isInSelection(const LHCb::Track& track, int id);
 
   const LHCb::HltSummary& summary();
   
@@ -71,6 +75,10 @@ public:
   bool isInSelection(const std::string& name,
                      const LHCb::Track& track );
 
+
+
+
+
   std::vector<std::string> confKeys();
 
   int confInt(const std::string& name);
@@ -81,16 +89,21 @@ public:
 
   std::vector<std::string> confStringVector(const std::string& name);  
 
-protected:
+private:
 
-  void getSummary();
+  const LHCb::HltSummary& getSummary();
 
   bool checkSelection(const std::string& name);
   
-protected:
-
   std::string m_hltSummaryLocation;
   LHCb::HltSummary* m_summary;
+
+  int id(const std::string& name) const {
+     return annSvc().value("SelectionID",name)->second;
+  }
+  std::string name(int id) const {
+     return annSvc().value("SelectionID",id)->first;
+  }
   
 };
 #endif // HLTCOMMON_HLTSUMMARYTOOL_H

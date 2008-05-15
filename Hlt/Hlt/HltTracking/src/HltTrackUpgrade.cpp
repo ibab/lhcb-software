@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.7 2008-05-11 10:03:22 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.8 2008-05-15 08:56:57 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -41,7 +41,7 @@ StatusCode HltTrackUpgrade::initialize() {
   if (sc.isFailure()) return sc;
 
   m_inputTracks  = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));  
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
   if (!m_tool) 

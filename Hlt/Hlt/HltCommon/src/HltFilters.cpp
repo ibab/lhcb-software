@@ -13,34 +13,36 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltTrackFilter );
-DECLARE_ALGORITHM_FACTORY( HltVertexFilter );
-
-DECLARE_ALGORITHM_FACTORY( HltTrackPrepare );
-DECLARE_ALGORITHM_FACTORY( HltVertexPrepare );
 
 HltTrackFilter::HltTrackFilter( const std::string& name, 
-                                ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::Track>(name,pSvcLocator) {
-  m_functionFactoryName = "HltTrackFunctionFactory";
-}
+                                ISvcLocator* pSvcLocator ) 
+  : HltTFilter<LHCb::Track>(name,pSvcLocator, "HltTrackFunctionFactory") 
+{}
+
+
+DECLARE_ALGORITHM_FACTORY( HltVertexFilter );
 
 HltVertexFilter::HltVertexFilter( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::RecVertex>(name,pSvcLocator) {
-  m_functionFactoryName = "HltVertexFunctionFactory";
-}
+  HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory")
+{}
 
+
+DECLARE_ALGORITHM_FACTORY( HltTrackPrepare );
 
 HltTrackPrepare::HltTrackPrepare( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::Track>(name,pSvcLocator) {
-  m_functionFactoryName = "HltTrackFunctionFactory";
+  HltTFilter<LHCb::Track>(name,pSvcLocator, "HltTrackFunctionFactory")
+{
   m_tesInput = true;
 }
 
+
+DECLARE_ALGORITHM_FACTORY( HltVertexPrepare );
+
 HltVertexPrepare::HltVertexPrepare( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::RecVertex>(name,pSvcLocator) {
-  m_functionFactoryName = "HltVertexFunctionFactory";
+  HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory")
+{
   m_tesInput = true;
 }

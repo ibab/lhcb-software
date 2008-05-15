@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.24 2008-05-07 11:36:40 graven Exp $
+// $Id: HltAlgorithm.h,v 1.25 2008-05-15 08:56:54 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -33,6 +33,9 @@ public:
 
   // Standard destructor
   virtual ~HltAlgorithm( ); 
+
+  // driver of the initialize()
+  virtual StatusCode sysInitialize();
 
   // initialize algorithm
   virtual StatusCode initialize();
@@ -78,6 +81,62 @@ protected:
     
 protected:
 
+public:
+  // retrieve a selection
+  Hlt::Selection& retrieveSelection(const stringKey& selname) {
+    Assert(!selname.empty()," retrieveSelection() no selection name");
+    debug() << " retrieveSelection " << selname << endreq;
+    if (!validHltSelectionName(selname)) {
+      error() << " No valid selection name " << selname << endreq;
+      Assert(0," retrieveSelection, no valid name!");
+    }
+    Hlt::Selection& sel = hltData().selection(selname);
+    setInputSelection(sel);
+    debug() << " retrieved selection " << sel.id() << endreq;    
+    return sel;
+  }
+
+  // retrieve a selection with candidates of type T (e.g. Track)
+  template <class T>
+  Hlt::TSelection<T>& retrieveTSelection(const stringKey& selname) {
+      // dynamic_cast with reference will throw an execption when it fails...
+    return dynamic_cast<Hlt::TSelection<T>&>(retrieveSelection(selname));
+  }
+
+
+  // register a selection of no candidates
+  Hlt::Selection& registerSelection() {
+    debug() << " registerSelection " << m_outputSelectionName << endreq;
+    Hlt::Selection* sel = new Hlt::Selection(m_outputSelectionName);
+    hltData().addSelection(sel);
+    if (useTES()) this->put(sel,"Hlt/Selection/"+m_outputSelectionName.str());
+    setOutputSelection(sel);
+    debug() << " registered selection " << m_outputSelectionName << endreq;
+    return *sel;
+  }
+  
+  // register a selection with candidates of T type (i.e Track)
+  template <class T>
+  Hlt::TSelection<T>& registerTSelection()
+  {
+    debug() << " registerTSelection " << m_outputSelectionName << endreq;
+    Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(m_outputSelectionName);
+    hltData().addSelection(tsel);
+    if (useTES()) this->put(tsel,"Hlt/Selection/"+m_outputSelectionName.str());
+    setOutputSelection(tsel);
+    debug() << " registered selection " << m_outputSelectionName
+                 << " type " << tsel->classID() << endreq;
+    return *tsel;
+  }
+
+protected:
+
+
+  
+
+    
+protected:
+
   // period to always force decision true
   int m_passPeriod;
 
@@ -111,13 +170,13 @@ protected:
   StringArrayProperty m_extraInputSelectionsNames;
   
   // list of all the input selections names
-  std::vector<std::string> m_inputSelectionsNames;
+  std::vector<stringKey> m_inputSelectionsNames;
 
   // list of all the input selections
   std::vector<Hlt::Selection*> m_inputSelections;
 
   // name of the output selection
-  std::string m_outputSelectionName;
+ stringKey m_outputSelectionName;
 
   // (owner) pointer to the output selection
   Hlt::Selection* m_outputSelection;
@@ -128,13 +187,11 @@ protected:
   bool m_considerInputs;
 
   // set this selection as input, to be check and monitor every event
-  void setInputSelection(Hlt::Selection& sel, 
-                         const std::string& selname);
+  void setInputSelection(Hlt::Selection& sel);
   
   // set this selection as output, to be monitor, and to decide if the 
   // event pass
-  void setOutputSelection(Hlt::Selection* sel,
-                          const std::string& selname);
+  void setOutputSelection(Hlt::Selection* sel);
 
 protected:
 
@@ -157,7 +214,7 @@ protected:
 protected:
 
   // map of id of selection and histogram to monitor input candidate
-  std::map<int,Hlt::Histo*> m_inputHistos;
+  std::map<stringKey,Hlt::Histo*> m_inputHistos;
   
   // map of the output selection candidates
   Hlt::Histo* m_outputHisto;

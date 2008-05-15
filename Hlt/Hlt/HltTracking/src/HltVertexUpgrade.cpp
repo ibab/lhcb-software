@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.7 2008-05-11 10:03:22 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.8 2008-05-15 08:56:57 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -49,7 +49,7 @@ StatusCode HltVertexUpgrade::initialize() {
     &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
   
   m_outputVertices = 
-    &(registerTSelection<LHCb::RecVertex>(m_outputSelectionName));
+    &(registerTSelection<LHCb::RecVertex>());
   
 
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);

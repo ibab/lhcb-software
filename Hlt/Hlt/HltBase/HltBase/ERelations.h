@@ -1,4 +1,4 @@
-// $Id: ERelations.h,v 1.4 2008-01-22 09:34:58 hernando Exp $
+// $Id: ERelations.h,v 1.5 2008-05-15 08:56:54 graven Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
@@ -88,8 +88,8 @@ namespace zen
         // std::cout << " targets size " << tars.size() << std::endl;
         for (typename targets::const_iterator it2 = tars.begin();
              it2 != tars.end(); ++it2) {
-          const T2& t2 = (*it2).first;
-          double w = (*it2).second;
+          //const T2& t2 = (*it2).first;
+          //double w = (*it2).second;
           // std::cout  << "    t1 " << t1 
           //           << " -->  t2 " << t2 << " w " << w << std::endl;
         }

@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.h,v 1.4 2008-02-07 14:29:23 pkoppenb Exp $
+// $Id: HltSummaryWriter.h,v 1.5 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYWRITER_H 
 #define HLTCOMMON_HLTSUMMARYWRITER_H 1
 
@@ -25,28 +25,17 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-public:
+private:
 
-  void writeSelection(int id);
-
-
-protected:
-
-  LHCb::HltSummary* m_summary;
+  void writeSelection(LHCb::HltSummary&, const stringKey& id);
 
   bool m_saveAll;
 
   StringArrayProperty m_AselectionNames;
-  // StringArrayProperty m_monitorConditions;
 
-
-  std::vector<std::string> m_selectionNames;
-  std::vector<int> m_selectionIDs;
-
-protected:
+  std::vector<stringKey> m_selectionIDs;
 
   std::string m_hltSummaryLocation;
-
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

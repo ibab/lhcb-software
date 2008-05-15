@@ -1,12 +1,12 @@
-// $Id: HltTrackBiFunctionFactory.cpp,v 1.1 2008-01-22 09:56:37 hernando Exp $
+// $Id: HltTrackBiFunctionFactory.cpp,v 1.2 2008-05-15 08:56:55 graven Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackBiFunctionFactory.h"
-#include "HltBase/EParser.h"
 #include "HltFunctions.h"
+#include "boost/algorithm/string/regex.hpp"
 
 using namespace LHCb;
 
@@ -41,23 +41,18 @@ bool HltTrackBiFunctionFactory::command(const std::string& command,
   return true;
 }
 
-
 Hlt::TrackBiFunction* 
 HltTrackBiFunctionFactory::function(const std::string& fn) 
 {
   debug() << " creating function " << fn << endreq;
-  Hlt::TrackBiFunction* fun = 0;
 
-  std::vector<std::string> cromos = EParser::parse(fn,",");  
-  std::string name = cromos[0];
+  std::string name = boost::algorithm::erase_regex_copy(fn, boost::regex(",.*"));
 
-  if (name == "DOCA"){
-    fun = new Hlt::DOCA();
-  } else if (name == "DimuonMass") {
-    fun = new Hlt::DimuonMass();  
-  } else if (name == "SumPT") {
-    fun = new Hlt::SumPT();
-  }
+  Hlt::TrackBiFunction* fun = 
+           name == "DOCA"       ? new Hlt::DOCA()       :
+           name == "DimuonMass" ? new Hlt::DimuonMass() :
+           name == "SumPT"      ? new Hlt::SumPT()      :
+           (Hlt::TrackBiFunction*)0;
   
   Assert( fun != 0, " function() not able to create function" + name);
   debug() << " created function " << name << " fun " << fun << endreq;

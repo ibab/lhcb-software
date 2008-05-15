@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.1 2008-02-29 19:38:12 gligorov Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.2 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode HltSelectTracksForSwimming::initialize() {
       &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
   }
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>(m_outputSelectionName));
+  m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   saveConfiguration();
   info() << "HltAlgorithm initialized" << endmsg;

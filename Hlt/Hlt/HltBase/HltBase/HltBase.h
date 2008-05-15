@@ -1,10 +1,11 @@
-// $Id: HltBase.h,v 1.6 2008-05-01 20:25:50 graven Exp $
+// $Id: HltBase.h,v 1.7 2008-05-15 08:56:54 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
 // Include files
 
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "HltBase/IANNSvc.h"
 #include "HltBase/HltTypes.h"
 
 /** @class HltBase
@@ -29,13 +30,15 @@
 namespace Hlt {
   class  Counter {
   public:
-    Counter () {m_histo = NULL; m_counter = 0; m_name="";}
+    Counter () : m_histo(0),m_counter(0) {}
     virtual ~Counter(){}
+
     operator int () const { return m_counter;}
+    const std::string& name() const { return m_name;}
   public:
+    Hlt::Histo* m_histo;
     std::string m_name;
     long m_counter;
-    Hlt::Histo* m_histo;
   };
 }
 
@@ -53,24 +56,25 @@ public:
   
   // destructor
   virtual ~HltBase( ); ///< Destructor
-  
-  // delegate constructor
-  virtual void create();
-
   // initialize
   virtual StatusCode initialize();
 
   // execute
-  virtual StatusCode execute() {return StatusCode::SUCCESS;};
+  virtual StatusCode execute() {return StatusCode::SUCCESS;}
   
   // finalize
   virtual StatusCode finalize();
+
+private:  
+  // delegate constructor
+  virtual void create();
 
 protected:
 
   // to fill or not the histograms
   bool m_monitor; 
 
+private: 
   // Property to rebook histogram from options
   SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
@@ -145,90 +149,6 @@ protected:
   bool m_error;
   bool m_fatal;
 
-protected:
-  
-  // register a selection of no candidates
-  Hlt::Selection& registerSelection(const std::string& selname) {
-    BASE::debug() << " registerTSelection " << selname << endreq;
-    int id = hltSelectionID(selname);
-    Hlt::Selection* sel = new Hlt::Selection(id);
-    hltData().addSelection(id,sel);
-    if (m_TES)
-      this->put(sel,"Hlt/Selection/"+selname);
-    setOutputSelection(sel,selname);
-    BASE::debug() << " registered selection " << selname 
-                  << " id " << id << endreq;
-    return *sel;
-  }
-  
-  // register a selection with candidates of T type (i.e Track)
-  template <class T>
-  Hlt::TSelection<T>& registerTSelection(const std::string& selname) 
-  {
-    BASE::debug() << " registerTSelection " << selname << endreq;
-    int id = hltSelectionID(selname);
-    Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(id);
-    hltData().addSelection(id,tsel);
-    if (m_TES)
-      this->put(tsel,"Hlt/Selection/"+selname);
-    setOutputSelection(tsel,selname);
-    BASE::debug() << " registered selection " << selname
-                 << " id " << id << " type " << tsel->classID() << endreq;
-    return *tsel;
-  }
-
-
-public:
-  
-  // retrieve a selection with no candidates
-  Hlt::Selection& retrieveSelection(const std::string& selname) {
-    BASE::debug() << " retrieveSelection " << selname << endreq;
-    if (!validHltSelectionName(selname)) {
-      BASE::error() << " No valid selection name " << selname << endreq;
-      BASE::Assert(0," retrieveSelection, no valid name!");
-    }
-    int id = hltSelectionID(selname);
-    Hlt::Selection& sel = hltData().selection(id);
-    setInputSelection(sel,selname);
-    BASE::debug() << " retrieved selection " << selname 
-                  << " id " << id << endreq;    
-    return sel;
-  }
-
-  // retrieve a selection with candidates of type T (i.e Track)
-  template <class T>
-  Hlt::TSelection<T>& retrieveTSelection(const std::string& selname) {
-    Assert(!selname.empty()," retrieveTSelection() no selection name");
-    BASE::debug() << " retrieveTSelection " << selname << endreq;
-    if (!validHltSelectionName(selname)) {
-      BASE::error() << " No valid selection name " << selname << endreq;
-      BASE::Assert(0," retrieveSelection, no valid name!");
-    }
-    int id = hltSelectionID(selname);
-    Hlt::Selection* sel = &(hltData().selection(id));
-    typedef typename Hlt::TSelection<T> TSelection;
-    TSelection* tsel = dynamic_cast<TSelection*>(sel);
-    BASE::Assert( tsel != 0, " retrieveTSelection() no TSelection "+selname);
-    setInputSelection(*sel,selname);
-    BASE::debug() << " retrieved selection " << selname 
-                  << " id " << id << " type " << tsel->classID() << endreq;
-    return *tsel;
-  }
-
-protected:
-
-  virtual void setInputSelection(Hlt::Selection& sel, 
-                                 const std::string& selname) {
-    BASE::verbose() << " dummy input " << selname << " " << &sel << endreq;
-  }
-
-  virtual void setOutputSelection(Hlt::Selection* sel, 
-                                 const std::string& selname) {
-    BASE::error() << " dummy set output selection " << selname
-                  << " ownership of memory refused, possible memory leak! " 
-                  << sel << endreq;
-  }
-  
   
 protected:
   
@@ -247,7 +167,8 @@ protected:
 protected:
 
   // returns the hlt service
-  IDataProviderSvc& hltSvc();
+  IDataProviderSvc& hltSvc() const;
+  IANNSvc&          annSvc() const;
 
   // returns true if we use the TES to store the HltSelection
   bool useTES() {return m_TES;}
@@ -262,13 +183,13 @@ protected:
   Hlt::Configuration& hltConf();
   
   // returns true if this selection name is valid
-  bool validHltSelectionName(const std::string& name);
+  bool validHltSelectionName(const stringKey& name);
 
   // returns the ID of this selection name
-  int hltSelectionID(const std::string& name);
+  int hltSelectionID(const stringKey& name);
 
   // returns the selection name of this ID
-  std::string hltSelectionName(int id);
+  stringKey hltSelectionName(int id);
 
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);
@@ -287,7 +208,10 @@ protected:
 private:
 
   // hlt data provided service
-  IDataProviderSvc* m_hltSvc;
+  mutable IDataProviderSvc* m_hltSvc;
+
+  // assigned names and numbers service...
+  mutable IANNSvc *m_hltANNSvc;
 
   // if selection selections will be stored/retrieved from TES
   bool m_TES;

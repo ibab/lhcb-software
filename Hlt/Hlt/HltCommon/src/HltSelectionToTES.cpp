@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.2 2008-01-25 15:35:57 hernando Exp $
+// $Id: HltSelectionToTES.cpp,v 1.3 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,20 @@
 #include "HltSelectionToTES.h"
 
 using namespace LHCb;
+
+
+template <class CONT>
+CONT* copy(const Hlt::Selection& sel) 
+{
+  typedef typename Hlt::TSelection<typename CONT::contained_type> TSelection; 
+  typedef typename TSelection::const_iterator TSelectionIterator;
+  CONT* cont = new CONT();
+  const TSelection& tsel = dynamic_cast<const TSelection&>(sel);
+  for (TSelectionIterator it = tsel.begin(); it != tsel.end(); ++it) {
+     cont->insert((*it)->clone());
+  }
+  return cont;
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSelectionToTES
@@ -44,30 +58,27 @@ StatusCode HltSelectionToTES::initialize() {
   StatusCode sc = HltBaseAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  m_selectionNames.clear();
   m_selectionIDs.clear();
   if (m_copyAll) {
-    m_selectionIDs = hltData().selectionIDs();      
+    const std::vector<Hlt::Selection*>& selections = hltData().selections();      
+    for (std::vector<Hlt::Selection*>::const_iterator i  = selections.begin(); 
+         i != selections.end(); ++i) m_selectionIDs.push_back((*i)->id());
   } else {
     std::vector<std::string> cromos = m_AselectionNames.value();
     for (std::vector<std::string>::iterator it = cromos.begin();
          it != cromos.end(); ++it) {
-      std::string name = *it;
-      if (!validHltSelectionName(name))
-        error() << " Not valid selection name " << name << endreq;
-      else {
-        int id = hltSelectionID(name);
-        m_selectionIDs.push_back(id);
+      stringKey name(*it);
+      if (!validHltSelectionName(name)) {
+        error() << " Not a valid selection name " << name << endreq;
+      } else {
+        m_selectionIDs.push_back(name);
       }
     }
   }
   
-  for (std::vector<int>::iterator it = m_selectionIDs.begin();
+  for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    int id = *it;
-    std::string selname = hltSelectionName(id);
-    info() << " copy selection " << selname << " into TES "  << endreq;
-    m_selectionNames.push_back(selname);  
+    info() << " copy selection " << it->str() << " into TES "  << endreq;
   }
   
   return sc;
@@ -81,29 +92,25 @@ StatusCode HltSelectionToTES::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
   
-  for (std::vector<int>::iterator it = m_selectionIDs.begin();
+  for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    int id = *it;
-    if (!hltData().hasSelection(id)) {
-      warning() << " no hlt selection to put in TES "
-                << hltSelectionName(id) << endreq;
-    } else {
-      Hlt::Selection& sel = hltData().selection(id);
-      std::string selname = hltSelectionName(id);
+    if (!hltData().hasSelection(*it)) {
+      warning() << " no hlt selection to put in TES " << it->str() << endreq;
+      continue;
+    } 
+    Hlt::Selection& sel = hltData().selection(*it);
       if (sel.classID() == LHCb::Track::classID()) {
-        LHCb::Tracks* tracks = 0;
-        if (sel.decision()) tracks = copy<LHCb::Tracks,LHCb::Track>(id);
-        else tracks = new LHCb::Tracks();
-        put(tracks,m_trackLocation+selname);
+      LHCb::Tracks* tracks = 
+          sel.decision() ? copy<LHCb::Tracks>(hltData().selection(*it))
+                         : new LHCb::Tracks();
+      put(tracks,m_trackLocation+it->str());
       } else if (sel.classID() == LHCb::RecVertex::classID()) {
-        LHCb::RecVertices* vertices = 0;
-        if (sel.decision()) vertices = copy<LHCb::RecVertices,LHCb::RecVertex>(id);
-        else vertices = new LHCb::RecVertices();
-        put(vertices,m_vertexLocation+selname);
-      }
+      LHCb::RecVertices* vertices = 
+          sel.decision() ? copy<LHCb::RecVertices>(hltData().selection(*it))
+                         : new LHCb::RecVertices();
+      put(vertices,m_vertexLocation+it->str());
     }
   }
-
   setFilterPassed(true);  
   return sc;
 }
@@ -112,9 +119,7 @@ StatusCode HltSelectionToTES::execute() {
 //  Finalize
 //=============================================================================
 StatusCode HltSelectionToTES::finalize() {
-
   debug() << "==> Finalize" << endmsg;
-  
   return StatusCode::SUCCESS;
 }
 

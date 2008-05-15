@@ -16,24 +16,15 @@ namespace Hlt {
   
   namespace SummaryHelper {
     
-    size_t ncandidates(const LHCb::HltSummary& sum, int id) {
-      std::string key = " [retrieve] ";
-      if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(key);
-      const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
-      return sel.data().size();
-    }
-    
     template <class T>
     std::vector<T*> retrieve(const LHCb::HltSummary& sum,int id) {
       std::vector<T*> cont;
-      std::string key = " [retrieve] ";
-      if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(key);
+      if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(" [retrieve] ");
       const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
-      const std::vector<ContainedObject*>& data =sel.data();
+      const std::vector<ContainedObject*>& data = sel.data();
       for (std::vector<ContainedObject*>::const_iterator it = data.begin();
            it != data.end(); ++it) {
-        ContainedObject* obj = (ContainedObject*) (*it);
-        T* t = dynamic_cast<T*>(obj);
+        T* t = dynamic_cast<T*>(*it);
         if (t) cont.push_back(t);
       }
       return cont;

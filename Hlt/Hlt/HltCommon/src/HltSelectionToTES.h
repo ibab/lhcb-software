@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.h,v 1.1 2008-01-22 09:56:36 hernando Exp $
+// $Id: HltSelectionToTES.h,v 1.2 2008-05-15 08:56:55 graven Exp $
 #ifndef HLTCOMMON_HLTSELECTIONTOTES_H 
 #define HLTCOMMON_HLTSELECTIONTOTES_H 1
 
@@ -24,32 +24,15 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   bool m_copyAll;
 
   StringArrayProperty m_AselectionNames;
 
-  std::vector<std::string> m_selectionNames;
-  std::vector<int> m_selectionIDs;
+  std::vector<stringKey> m_selectionIDs;
 
   std::string m_trackLocation;
   std::string m_vertexLocation;
-
-  template <class TESCONT, class T>
-  TESCONT* copy(int id) 
-  {
-    typedef typename Hlt::TSelection<T> TSelection; 
-    typedef typename Hlt::TSelection<T>::iterator TSelectionIterator;
-    TESCONT* tcont = new TESCONT();
-    Hlt::Selection& sel = hltData().selection(id);
-    TSelection& tsel = *(dynamic_cast<TSelection*>(&sel));
-    for (TSelectionIterator it = tsel.begin(); it != tsel.end(); ++it) {
-      const T& t = *(*it); T* tc = t.clone(); tcont->insert(tc);
-    }
-    return tcont;
-  }
-
-
 };
 #endif // HLTTRACKFROMTES_H

@@ -3,6 +3,10 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2008-05-14 - Gerhard Raven
+ - follow change in HltAlgorithm: do not pass output name to registerSelection,
+   it is set automaticaly
+
 ! 2008-05-07 - Gerhard Raven
  - remove obsolete protected datamember in HltAlgorithm derived classes
 

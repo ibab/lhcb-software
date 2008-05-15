@@ -25,9 +25,8 @@ std::string Hlt::ConfigurationHelper::getName(Hlt::Configuration& conf,
                                               const std::string& root, 
                                               int id) {
   std::string key = root+"/"+boost::lexical_cast<std::string>(id);
-  std::string name = "unknown";
-  if (conf.has_key(key)) name = conf.retrieve<std::string>(key);
-  return name;
+  return conf.has_key(key) ? conf.retrieve<std::string>(key)
+                           : std::string("unknown");
 }
 
 bool Hlt::ConfigurationHelper::validID(Hlt::Configuration& conf,

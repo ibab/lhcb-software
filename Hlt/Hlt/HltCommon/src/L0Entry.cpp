@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.14 2008-05-07 11:36:41 graven Exp $
+// $Id: L0Entry.cpp,v 1.15 2008-05-15 08:56:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ StatusCode L0Entry::initialize() {
   // TODO; this needs to be solved with the TCK!!
   defineL0();
 
-  registerSelection(m_outputSelectionName);
+  registerSelection();
   
   m_histoL0 = initializeHisto("L0",0.,14.,28);
   

@@ -1,4 +1,4 @@
-// $Id: HltData.h,v 1.2 2008-01-25 16:55:03 hernando Exp $
+// $Id: HltData.h,v 1.3 2008-05-15 08:56:54 graven Exp $
 #ifndef HLTBASE_HLTDATA_H 
 #define HLTBASE_HLTDATA_H 1
 
@@ -9,6 +9,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ContainedObject.h"
 #include "HltBase/EAssertions.h"
+#include "HltBase/stringKey.h"
 
 namespace LHCb 
 {
@@ -48,62 +49,48 @@ namespace Hlt
   
   class Selection : public ContainedObject, public DataObject {
   public:
-    Selection(int id):m_id(id) {}
+    Selection(const stringKey& id):m_id(id) {}
     virtual ~Selection() {}
 
   public:
 
-    int id() const
-    {return m_id;}
-    
-    void setDecision(bool value) 
-    {m_decision = value;}
-
-    bool decision() const
-    {return m_decision;}
-
-    virtual CLID classID() 
-    {return DataObject::clID();}
-
-    virtual size_t ncandidates() const 
-    {return 0;}
-    
-    virtual void clean() 
-    {m_decision = false;}    
-    
+    const stringKey& id() const {return m_id;}
+    void setDecision(bool value) {m_decision = value;}
+    bool decision() const {return m_decision;}
+    virtual CLID classID() const {return DataObject::clID();}
+    virtual size_t ncandidates() const {return 0;}
+    virtual void clean() {m_decision = false;}    
     const std::vector<Hlt::Object*>& objects() const 
     {return m_objects;}
     
     virtual std::vector<Hlt::Object*>& objects() 
     {return m_objects;}
     
-    const std::vector<int>& inputSelectionsIDs() const
-    {return m_inputSelectionsIDs;}
-    
-    std::vector<int>& inputSelectionsIDs()
+    const std::vector<stringKey>& inputSelectionsIDs() const
     {return m_inputSelectionsIDs;}    
     
-  protected:
+    template <typename I> // I is assumed to be iterator over a range of Selection*
+    void addInputSelectionIDs(I i, I end) {
+        while (i!=end) m_inputSelectionsIDs.push_back( (*i++)->id() );
+    }
 
-    int m_id;
+  private:
 
+    stringKey m_id;
     bool m_decision;
-
     std::vector<Hlt::Object*> m_objects;
-
-    std::vector<int> m_inputSelectionsIDs;
+    std::vector<stringKey> m_inputSelectionsIDs;
       
   };
   
   template <class T>
   class TSelection : public std::vector<T*>, public Selection {
   public:
-    TSelection(int id):Selection(id) {}
+    TSelection(const stringKey& id) : Selection(id) {}
     virtual ~TSelection() {}
-    CLID classID() {return T::classID();}
+    CLID classID() const { return T::classID(); }
     size_t ncandidates() const {return this->size();}
-    void clean() 
-    {m_decision = false,this->clear();}
+    void clean() { Selection::clean(); this->clear();}
   };
   
   
@@ -116,52 +103,45 @@ namespace Hlt
     Data() {}
     virtual ~Data();
 
-    void addSelection(int id, Hlt::Selection* sel) {
-      if (hasSelection(id)) 
-        throw zen::invalid_key(" map has already id "+sid(id));
-      m_mapselections[id] = sel;
-      m_selectionsIDs.push_back(id);
+    void addSelection(Hlt::Selection* sel) {
+      if (hasSelection(sel->id())) throw zen::invalid_key(" map has already id "+sel->id().str());
+      m_mapselections[sel->id()] = sel;
       m_selections.push_back(sel);
     }
 
-    bool hasSelection(int id) const
+    bool hasSelection(const stringKey& id) const
     {return (m_mapselections.find(id) != m_mapselections.end());}
     
 
-    const Hlt::Selection& selection(int id) const {
-      if (!hasSelection(id)) 
-        throw zen::invalid_key(" no key "+sid(id));
-      return *(m_mapselections.find(id)->second);
+    const Hlt::Selection& selection(const stringKey& id) const {
+      // don't use hasSelection here to avoid doing 'find' twice...
+      std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
+      if (i == m_mapselections.end()) throw zen::invalid_key(" no key "+id.str());
+      return *(i->second);
     }
     
-    Hlt::Selection& selection(int id) {
-      if (!hasSelection(id)) 
-        throw zen::invalid_key(" no key "+sid(id));
-      return *m_mapselections[id];
+    Hlt::Selection& selection(const stringKey& id) {
+      // don't use hasSelection here to avoid doing 'find' twice...
+      std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
+      if (i == m_mapselections.end()) throw zen::invalid_key(" no key "+id.str());
+      return *(i->second);
     }    
 
-    const std::vector<int>& selectionIDs() const 
-    {return m_selectionsIDs;}
+    void clean() {
+        for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
+                                                            i != m_mapselections.end(); ++i)
+                i->second->clean();
+    }
     
     const std::vector<Hlt::Selection*>& selections() const
     {return m_selections;}
     
-    std::vector<Hlt::Selection*>& selections()
-    {return m_selections;}
-    
   private:
     
-    std::string sid(int id) const
-    {return boost::lexical_cast<std::string>(id);}
-    
-  protected:
-    
-    std::map<int,Hlt::Selection*> m_mapselections;
-    std::vector<int> m_selectionsIDs;
-    std::vector<Hlt::Selection*> m_selections;
+    std::map<stringKey,Hlt::Selection*> m_mapselections;
+    std::vector<Hlt::Selection*>        m_selections;  // owner.
     
   };  
  
 }
-
 #endif 
