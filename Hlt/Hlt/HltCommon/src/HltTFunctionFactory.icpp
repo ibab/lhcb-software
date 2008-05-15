@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.icpp,v 1.3 2008-05-15 14:50:44 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.4 2008-05-15 15:07:41 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
@@ -73,9 +73,6 @@ zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
     debug() << " created smart function " << name << " id " << id << endreq;
     delete fun1;
   }
-  
-  warning() << " created function "<< fn << " " << fun << endreq;
-  
   return fun;
 }
 
