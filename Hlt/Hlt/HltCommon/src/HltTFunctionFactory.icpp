@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.icpp,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.3 2008-05-15 14:50:44 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
@@ -44,7 +44,6 @@ bool HltTFunctionFactory<T>::command(const std::string& command,
 template <class T>
 zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
 
-  warning() << " creating function " << fn << endreq;
   std::vector<std::string> cromos = EParser::parse(fn,",");
   std::vector<std::string> gens = EParser::parse(cromos[0],"_");
   std::string name = gens[0];
@@ -56,12 +55,10 @@ zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
   HltAlgorithm *parent(0);
   if (gens.size() == 2) {
     input2 = gens[1];
-    warning() << " binding function against selection " << input2 << endreq;
     // FIXME: this is the only instance when 'input2' and 'parent' are actually needed...
     // FIXME: all others do NOT need them, require input2 to be actually empty...
     // FIXME: so the real problem is that m_creators violates the Liskov substitution principle...
     IAlgorithm *alg = contextSvc()->currentAlg();
-    warning() << " got currentAlg @ " << alg << " and parent @ " << parent << endmsg;
     parent = dynamic_cast<HltAlgorithm*>(alg);
     
     // grab selection from here, and pass it to create...
