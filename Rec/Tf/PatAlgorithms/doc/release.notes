@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r5 2008-05-15 ====================
 ! 2008-05-14 - Manuel Tobias Schiller
  - PatFwdPlaneCounter:
    - now uses boost::array instead of std::vector for arrays with known size
@@ -66,7 +67,6 @@
    - use private instance of PatSeedingTool to allow different configurations
      for different instances of the algorithm
 
-!========================== PatAlgorithms v3r5 2008-05-09 ====================
 ! 2008-05-08 - Johannes Albrecht
  - PatMatchTool: - New implementation of PatMatch as tool
                          - public function: matchSingle for Hlt
