@@ -3,6 +3,9 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-05-14 - Gerhard Raven
+  remove 'info()' printout of 'ecco' in HltMatchVeloTTracks
+  remove implementation of finalize which is identical to the default..
 
 !========================== HltMuonAlley v2r3 2008-04-25 ===================
 ! 2008-02-17 - Jose A. Hernando

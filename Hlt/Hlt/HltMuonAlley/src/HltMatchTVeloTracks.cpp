@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.2 2008-03-17 15:04:22 hernando Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.3 2008-05-15 08:47:44 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,7 @@ HltMatchTVeloTracks::HltMatchTVeloTracks( const std::string& type,
   declareInterface<IMatchTVeloTracks>(this);
   declareInterface<ITrackMatch>(this);
   declareInterface<ITrackBiFunctionTool>(this);
+
   declareProperty( "x2dMatchCut",   m_2dx_cut =80      );
   declareProperty( "sectorToll",   m_sec_tol  =1.0    );
   
@@ -40,7 +41,6 @@ HltMatchTVeloTracks::HltMatchTVeloTracks( const std::string& type,
   declareProperty( "yMatchCut",   m_y_cut  =40    ); 
   declareProperty( "spaceMatchCut",   m_space_cut =60     );  
   declareProperty( "ptkickConstant",  m_ptkickConstant  =  1263.0      );
-info()<<" ecco"<<endreq; 
 }
 //=============================================================================
 // Destructor
@@ -58,12 +58,6 @@ StatusCode HltMatchTVeloTracks::initialize()
  return StatusCode::SUCCESS;
 
 
-}
-StatusCode HltMatchTVeloTracks::finalize() 
-{
- StatusCode sc = GaudiTool::finalize();
- return StatusCode::SUCCESS;
-  
 }
 
 StatusCode HltMatchTVeloTracks::match2dVelo(const LHCb::Track& veloTrack,

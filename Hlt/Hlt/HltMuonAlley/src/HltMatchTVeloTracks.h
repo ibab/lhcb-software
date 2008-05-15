@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.h,v 1.1 2008-01-22 10:00:48 hernando Exp $
+// $Id: HltMatchTVeloTracks.h,v 1.2 2008-05-15 08:47:44 graven Exp $
 #ifndef HLTMUONALLEY_MATCHTVELOTRACKS_H 
 #define HLTMUONALLEY_MATCHTVELOTRACKS_H 1
 
@@ -34,7 +34,6 @@ public:
   virtual ~HltMatchTVeloTracks( ); ///< Destructor
 
   StatusCode initialize();
-  StatusCode finalize();
 
 
   StatusCode match2dVelo(const LHCb::Track& veloTrack,
