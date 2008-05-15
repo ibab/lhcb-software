@@ -12,6 +12,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-05-15 - Patrick Koppenburg
+ - Restore Gerhard's changes.
+ - Increment to v6r2
+  # IF IT DOES NOT COMPILE : do cvs update -r v6r1p1 src/
 
 !========================= HltSelChecker v6r1p1 2008-05-13 ==================
 ! 2008-05-15 - Patrick Koppenburg
