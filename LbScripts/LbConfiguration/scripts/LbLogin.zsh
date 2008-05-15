@@ -24,14 +24,6 @@ fi
 echo $scriptsdir
 
 
-#################################################################
-
-if [ ! -e ${HOME}/.rhosts ]; then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-	echo " "
-	echo "Joel.Closier@cern.ch"
-	echo "+ ${USER}" > ${HOME}/.rhosts
-fi
 
 #################################################################
 # parsing command line arguments
@@ -62,6 +54,28 @@ while true ; do
 done
 echo "Remaining arguments:"
 for arg do echo '--> '"\`$arg'" ; done
+
+#################################################################
+
+if [ ! -e ${HOME}/.rhosts ]; then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+	echo " "
+	echo "Joel.Closier@cern.ch"
+	echo "+ ${USER}" > ${HOME}/.rhosts
+fi
+
+# remove .cmtrc file if it exists
+if [ -f ${HOME}/.cmtrc ] ; then
+	/bin/rm  ${HOME}/.cmtrc
+fi
+
+# clear PATH and LD_LIBRARY_PATH
+if [ "x$SAVEPATH" != "x" ]; then
+	PATH="$SAVEPATH"; export PATH
+fi
+unset LD_LIBRARY_PATH
+unset COMPILER_PATH
+unset GCC_EXEC_PREFIX
 
 ###################################################################################
 # CVS setup
@@ -179,14 +193,6 @@ EMACSDIR="$LHCBRELEASES/TOOLS/Tools/Emacs/pro"; export EMACSDIR
 # LHCb styles configuration
 LHCBSTYLE="$LHCBRELEASES/TOOLS/Tools/Styles/pro"; export LHCBSTYLE
 
-# clear PATH and LD_LIBRARY_PATH
-PATH="$SAVEPATH"; export PATH
-unset LD_LIBRARY_PATH
-unset COMPILER_PATH
-
-# configure CMT
- . $SITEROOT/sw/contrib/CMT/v1r20p20070208/mgr/setup.sh
-
 # deal with different linux distributions
 if [ -e /etc/redhat-release ] ; then
 	distrib=`cat /etc/redhat-release | awk '{print $1}'`
@@ -267,24 +273,40 @@ elif [ "$OSTYPE" = "linux-gnu" -o "$OSTYPE" = "linux" ] ; then
 
 fi
 
+
+export CMTCONFIG="${CMTOPT}"
+export CMTDEB="${CMTCONFIG}_dbg"
+if [ "$debug" = "debug" ] ; then
+	export CMTCONFIG="${CMTDEB}"
+fi
+set -
+
+
+if [ !  ${LD_LIBRARY_PATH} ];then
+	export LD_LIBRARY_PATH=""
+fi
+if [ ! ${ROOTSYS} ]; then
+	export ROOTSYS=""
+fi
+
+
 echo "******************************************************"
 echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
-
-CMTCONFIG="${rh}_${comp}"; export CMTCONFIG
-
-CMTDEB="${CMTCONFIG}_dbg"; export CMTDEB
-CMTSTATIC="${CMTCONFIG}Static"; export CMTSTATIC
-
-# set the CMT path to find packages under CMT
-CMTPATH="${origin}/${work}"; export CMTPATH
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
-echo " --- to compile and link in debug mode : gmake tag="\$CMTDEB
-echo " --- to link in static mode : gmake tag="\$CMTSTATIC
-echo " --- "\$CMTPATH " is set to ${origin}/${work}" 
-echo " --- packages will be searched in "\$CMTPATH "and then in "\$LHCb_release_area":"\$Gaudi_release_area 
-echo " -------------------------------------------------------------------- "
+if [ "$debug" != "debug" ] ; then
+	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
+fi
+if [ "$CMTPATH" != "" ]; then
+	echo " --- "\$CMTPATH " is set to ${origin}/${work}"
+else
+	echo " --- "\$User_release_area " is set to ${origin}/${work}"
+	echo " --- "\$CMTPROJECTPATH " is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
+	echo " --- projects will be searched in "\$CMTPROJECTPATH
+fi 
+	echo " -------------------------------------------------------------------- "
+
 
 #==========================================================================
 

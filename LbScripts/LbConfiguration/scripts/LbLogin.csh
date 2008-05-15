@@ -33,14 +33,6 @@ if ( $scriptsdir == ".") then
 endif
 echo $scriptsdir
 
-#################################################################
-
-if ( ! -e ${HOME}/.rhosts ) then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-   	echo " "
-   	echo "Joel.Closier@cern.ch"
-   	echo "+ ${USER}" > ${HOME}/.rhosts
-endif
 
 #################################################################
 # Parsing command line arguments
@@ -99,6 +91,28 @@ while ($#argv > 0)
 end
 
 unset temp
+
+#################################################################
+
+if ( ! -e ${HOME}/.rhosts ) then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+   	echo " "
+   	echo "Joel.Closier@cern.ch"
+   	echo "+ ${USER}" > ${HOME}/.rhosts
+endif
+
+# remove any .cmtrc file stored in the $HOME directory
+if (-f ${HOME}/.cmtrc ) /bin/rm  ${HOME}/.cmtrc
+
+# clear PATH and LD_LIBRARY_PATH
+if ("$OSTYPE" == "linux" && $?SAVEPATH && "$PATH" != "$SAVEPATH") then
+  setenv PATH $SAVEPATH
+endif
+
+unsetenv LD_LIBRARY_PATH
+unsetenv COMPILER_PATH
+unsetenv GCC_EXEC_PREFIX
+
 
 ###################################################################################
 # site independent setup
@@ -216,28 +230,13 @@ while ($nar > 0)
 	@ nar = ${nar} - 1
 end
 
-# clear PATH and LD_LIBRARY_PATH
-if ("$OSTYPE" == "linux" && $?SAVEPATH && "$PATH" != "$SAVEPATH") then
-  setenv PATH $SAVEPATH
-endif
-
-unsetenv LD_LIBRARY_PATH
-unsetenv COMPILER_PATH
-unsetenv GCC_EXEC_PREFIX
 
 
 echo " -------------------------------------------------------------------"
 
-# remove any .cmtrc file stored in the $HOME directory
-if (-f ${HOME}/.cmtrc ) /bin/rm  ${HOME}/.cmtrc
 
 set origin = $HOME
 set work = "cmtuser"
-
-# give public (rl) access to the current directory
-alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
-# remove public (l) access to the current directory
-alias mkprivate "find . -type d -print -exec fs setacl {} system:anyuser l \;"
 
 # User_release_area
 if !(-d $origin/${work}) then

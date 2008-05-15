@@ -24,16 +24,6 @@ fi
 
 echo $scriptsdir
 
-
-#################################################################
-
-if [ ! -e ${HOME}/.rhosts ]; then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-	echo " "
-	echo "Joel.Closier@cern.ch"
-	echo "+ ${USER}" > ${HOME}/.rhosts
-fi
-
 #################################################################
 # parsing command line arguments
 
@@ -63,6 +53,28 @@ while true ; do
 done
 echo "Remaining arguments:"
 for arg do echo '--> '"\`$arg'" ; done
+
+#################################################################
+
+if [ ! -e ${HOME}/.rhosts ]; then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+	echo " "
+	echo "Joel.Closier@cern.ch"
+	echo "+ ${USER}" > ${HOME}/.rhosts
+fi
+
+# remove .cmtrc file if it exists
+if [ -f ${HOME}/.cmtrc ] ; then
+	/bin/rm  ${HOME}/.cmtrc
+fi
+
+# clear PATH and LD_LIBRARY_PATH
+if [ "x$SAVEPATH" != "x" ]; then
+	PATH="$SAVEPATH"; export PATH
+fi
+unset LD_LIBRARY_PATH
+unset COMPILER_PATH
+unset GCC_EXEC_PREFIX
 
 ###################################################################################
 # CVS setup
@@ -186,10 +198,6 @@ fi
 origin="$HOME"
 work="cmtuser"
 
-# remove .cmtrc file if it exists
-if [ -f ${HOME}/.cmtrc ] ; then
-	/bin/rm  ${HOME}/.cmtrc
-fi
 
 # User_release_area
 if [ ! -d $origin/${work} ] ; then
@@ -242,16 +250,7 @@ EMACSDIR="$LHCBRELEASES/TOOLS/Tools/Emacs/pro"; export EMACSDIR
 # LHCb styles configuration
 LHCBSTYLE="$LHCBRELEASES/TOOLS/Tools/Styles/pro"; export LHCBSTYLE
 
-# clear PATH and LD_LIBRARY_PATH
-if [ "x$SAVEPATH" != "x" ]; then
-	PATH="$SAVEPATH"; export PATH
-fi
-unset LD_LIBRARY_PATH
-unset COMPILER_PATH
 
-
-# configure CMT =================================================
-. $SITEROOT/sw/contrib/CMT/$cmtvers/mgr/setup.sh
 
 # deal with different linux distributions ======================
 if [ -e /etc/redhat-release ] ; then
@@ -318,19 +317,19 @@ elif [ "$OSTYPE" = "linux-gnu" -o "$OSTYPE" = "linux" ] ; then
 	CMTOPT=$binary ; export CMTOPT
 fi
 
-CMTCONFIG="${CMTOPT}"; export CMTCONFIG
-CMTDEB="${CMTCONFIG}_dbg"; export CMTDEB
+export CMTCONFIG="${CMTOPT}"
+export CMTDEB="${CMTCONFIG}_dbg"
 if [ "$debug" = "debug" ] ; then
-	CMTCONFIG="${CMTDEB}" ; export CMTCONFIG
+	export CMTCONFIG="${CMTDEB}"
 fi
 set -
 
 
 if [ !  ${LD_LIBRARY_PATH} ];then
-	LD_LIBRARY_PATH="" ; export LD_LIBRARY_PATH
+	export LD_LIBRARY_PATH=""
 fi
 if [ ! ${ROOTSYS} ]; then
-	ROOTSYS=""; export ROOTSYS
+	export ROOTSYS=""
 fi
 
 echo "******************************************************"
