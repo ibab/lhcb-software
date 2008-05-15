@@ -6,7 +6,6 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "Centipede.h"
-//#include "Singlepede.h"
 #include "math.h"
 
 /** @class Centipede Centipede.h AlignmentTools/Centipede.h
@@ -51,6 +50,11 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &par, std::vector<doubl
      delete [] pul;
      return StatusCode::FAILURE;
   }
+  storeind.clear();
+  storeare.clear();
+  storenl.clear();
+  storeplace.clear();
+
   ArraytoVector( para, par );
   ArraytoVector( error, err );
   ArraytoVector( pul, pull );
@@ -70,7 +74,6 @@ StatusCode Centipede::InitMille( bool DOF[],
   double Sigma[6];
   int n_fits = 1;
   info() << "Into  Centipede::InitMille" << endreq;
-  debug() << "Into  Centipede::InitMille" << endreq;
   // Need to set Sigma to an absurd value, such as not
   // to direct the global fit to a certain direction.
   // M'pede was changed to ignore ParSig when sigma < 0
@@ -392,13 +395,22 @@ StatusCode Centipede::ZerLoc( std::vector<double> &dergb,
   return sc;
 }
 
-
+//--------------------------
+//
+// FitLoc: performs trackfit
+// needs: track number (int n)
+//        vector<double> of track parameters
+//        int to check whether or not to iterate(outlier rejection)
+//        vector<double> of an estimate of the alignment parameters
+// returns: a double, the chi2
+//          a double, residual.
+//--------------------------
 StatusCode Centipede::FitLoc( int n,
-			      std::vector<double> &track_params,
-			      int single_fit,
-			      std::vector<double> &estimated_para,
-			      double &chi2,
-			      double &res ) {
+			std::vector<double> &track_params,
+			int single_fit,
+			std::vector<double> &estimated_para,
+			double &chi2,
+			double &res ) {
   // Few initializations
 	
   int i, j, k, ik, ij, ist, nderlc, ndergl, ndf;
@@ -591,9 +603,8 @@ StatusCode Centipede::FitLoc( int n,
             loctot++; //although rej. it was fittet before !
           }
           indst.clear(); // reset stores and go to the next track 
-          arest.clear();
-	  info() << "Rejecting track..." << endreq;
-          return false;
+          arest.clear();	  
+          return StatusCode::SUCCESS;
         }
         
         summ += wght*rmeas*rmeas ; // total chi^2
@@ -627,7 +638,7 @@ StatusCode Centipede::FitLoc( int n,
       
       indst.clear(); // reset stores and go to the next track 
       arest.clear();
-      return false;
+      return StatusCode::SUCCESS;
     }
   }
 
@@ -638,7 +649,7 @@ StatusCode Centipede::FitLoc( int n,
     
     indst.clear(); // Reset store for the next track 
     arest.clear();
-    return true;
+    return StatusCode::SUCCESS;
   }
 
 
@@ -767,3 +778,28 @@ void Centipede::ArraytoVector( const double the_array[], std::vector<double> &th
     *it = the_array[cnt];
   }
 }
+
+/////////////////
+//
+// Flag track if it does not satisfy this chi^2 criterion
+//
+///////////////////
+void Centipede::CheckLChi2(const double & chi2, 
+			   const int &tsize, 
+			   const int &nm, 
+			   const double &cfactrb, 
+			   const double &nsdtdevb , 
+			         bool & flag ) {
+
+  int nndf=nm-tsize;
+  int nsdtdev=nsdtdevb;
+  debug()<<"nsdtdev=" << nsdtdev << " nndf=" << nndf << " cfactrb=" << cfactrb <<endreq;
+  double cutval = Millepede::chindl(nsdtdev,nndf)*cfactrb;
+
+  if( cutval > (chi2/nndf) )
+    flag = true;
+  else
+    flag = false;
+  debug()<<"Centripede flag: " <<flag << " cutval=" << cutval << " reduced chi2 is: " <<chi2/nndf << endreq;
+}
+
