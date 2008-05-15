@@ -40,6 +40,6 @@ void IocSensor::sendHead( Interactor* it, int type, unsigned long data )  {
 
 //----------------------------------------------------------------------------
 IocSensor& IocSensor::instance()  {
-  static IocSensor sensor;
-  return sensor;
+  static IocSensor* sensor = new IocSensor;
+  return *sensor;
 }

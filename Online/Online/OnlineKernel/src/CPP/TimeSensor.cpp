@@ -190,6 +190,6 @@ void TimeSensor::rearm()  {
 }
 //----------------------------------------------------------------------------
 TimeSensor& TimeSensor::instance()    {
-  static TimeSensor sensor;
-  return sensor;
+  static TimeSensor *sensor = new TimeSensor;
+  return *sensor;
 }

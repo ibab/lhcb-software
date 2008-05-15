@@ -268,6 +268,6 @@ int AmsSensor::dispatchBroadCast()   {
 
 //-----------------------------------------------------------------------------
 AmsSensor& AmsSensor::instance()   {
-  static AmsSensor sensor;
-  return sensor;
+  static AmsSensor* sensor = new AmsSensor;
+  return *sensor;
 }
