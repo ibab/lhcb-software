@@ -138,6 +138,31 @@ else
 endif
 
 ###################################################################################
+# setup contrib area
+
+if ( "$CMTSITE" == "CERN") then 
+	setenv CONTRIBDIR $SITEROOT/sw/contrib
+else
+	setenv CONTRIBDIR $MYSITEROOT/contrib 
+endif
+
+
+###################################################################################
+# configure CMT
+
+if ( $cmtvers == 0 ) then
+	set cmtvers = 'v1r20p20070208'
+	if ( `uname` == Darwin ) then
+		set cmtvers = 'v1r20p20070524'
+	endif
+endif
+
+setenv CMT_DIR $CONTRIBDIR
+
+source $CMT_DIR/CMT/$cmtvers/mgr/setup.csh
+
+
+###################################################################################
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
 
@@ -165,10 +190,7 @@ endif
 
 set compdef = gcc$comp
 
-set cmtvers = 'v1r20p20070208'
-if ( `uname` == Darwin ) then
-  set cmtvers = 'v1r20p20070524'
-endif
+
 set debug = ''
 unset newcomp
 
@@ -253,11 +275,6 @@ setenv LHCBDOC $LHCBRELEASES/DOC
 # LHCb project path
 setenv LHCBPROJECTPATH ${LHCBRELEASES}:${GAUDISOFT}:${LCG_release_area}
 
-#=========================================================================
-# configure CMT
-unset echo
-source $SITEROOT/sw/contrib/CMT/$cmtvers/mgr/setup.csh
-#set echo on
 
 #===========================================================================
 # set CMTPATH or CMTPROJECTPATH

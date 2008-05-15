@@ -102,6 +102,29 @@ else
 fi
 
 ###################################################################################
+# setup contrib area
+
+if [ "$CMTSITE" = "CERN" ] ; then 
+	export CONTRIBDIR=$SITEROOT/sw/contrib
+else
+	export CONTRIBDIR=$MYSITEROOT/contrib 
+fi
+
+###################################################################################
+# configure CMT
+
+if [ "$cmtvers" = "0" ] ; then
+	cmtvers="v1r20p20070208"
+	if [ `uname` = "Darwin" ] ; then
+		cmtvers="v1r20p20070524"
+	fi
+fi
+
+export CMT_DIR=$CONTRIBDIR
+
+. $CMT_DIR/CMT/$cmtvers/mgr/setup.sh
+
+###################################################################################
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
 
