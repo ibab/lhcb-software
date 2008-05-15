@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.6 2008-01-22 11:04:06 hernando Exp $
+// $Id: HltRecChecker.cpp,v 1.7 2008-05-15 08:48:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ void HltRecChecker::checkTracks() {
 
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
   
-  int nbs = 0;
+  unsigned nbs = 0;
   for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
        it != m_inputTracks->end(); ++it) {
     const Track& track = *(*it);
@@ -83,7 +83,7 @@ void HltRecChecker::checkTracks() {
     const MCParticle& mother = MCHlt::ancestor( (*par) );
     int q = MCHlt::iquark(mother);
     if (q == 1) {
-      nbs +=1;
+      ++nbs;
       if (m_outputTracks) m_outputTracks->push_back( (Track*) &track);
     }
   }

@@ -4,6 +4,8 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2008-05-15 - Gerhard Raven
+  - fix compiler warning about int <-> unsigned comparison
 ! 2008-05-02 - Gerhard Raven
   - removing obsolete _dll.cpp file
 
