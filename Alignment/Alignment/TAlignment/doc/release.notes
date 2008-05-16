@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v3r5>2007-12-19 TAlignment v3r5</A></H1><PRE>
+- Johan Blouw: 2008-06-16, tagged the head as v3r5
+
 ! 2008-05-16 Johan Blouw
  - restructered main execution loop of GAlign to reflect better implementation of Newton-Rhapson method.
 
