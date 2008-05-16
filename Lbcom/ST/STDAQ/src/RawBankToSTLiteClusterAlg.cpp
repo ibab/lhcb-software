@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.13 2008-05-16 07:29:14 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.14 2008-05-16 08:55:02 mneedham Exp $
 
 
 #include <algorithm>
@@ -130,6 +130,9 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
                                 chan);
+
+      fCont->push_back(liteCluster);
+
     } //decoder
       
   } // iterBank
