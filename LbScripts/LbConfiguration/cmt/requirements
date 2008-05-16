@@ -7,6 +7,7 @@ use LbUtils		v*
 apply_pattern source_shell_alias script=LbLogin
 apply_pattern source_shell_alias script=setup_external
 apply_pattern source_shell_alias script=cleanup_external
+apply_pattern source_shell_alias script=SetupProject
 
 # give public (rl) access to the current directory
 alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
