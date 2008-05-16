@@ -9,7 +9,7 @@ Purpose: LHCb reconstruction packages.
 This version uses Gaudi v19r9 and LHCb v23r6.
 
 - Packages modified: CaloMoniDst v3r0p2, CaloPIDs v4r10, NNTools v1r2p1,
-    PatAlgorithms v1r5,  RecAlgs v1r6, RichRecMCTools v2r18,
+    PatAlgorithms v1r5,  RecAlgs v1r6, RecCheckers v1r0p1, RichRecMCTools v2r18,
     RichRecMonitors v2r17, RichRecQC v2r18, RichRecPhotonTools v1r3,
     RichRecStereoTools v1r1, RichRecSys v3r10, RichRecTools v4r4,
     RichRecTrackTools v1r4, TrackCheckers v3r4p2, TrackFitEvent v3r14,
@@ -36,6 +36,9 @@ This version uses Gaudi v19r9 and LHCb v23r6.
 
 - In RecAlgs v1r6
   . Remove obsolete STSummaryCreator class
+
+- In RecCheckers v1r0p1
+  . src/MCEffBuilder.h src/MCReconstructed.h : Added documentation for Doxygen
 
 - In RichRecMCTools v2r18, RichRecMonitors v2r17, RichRecPhotonTools v1r3,
      RichRecQC v2r18, RichRecStereoTools v1r1, RichRecTools v4r4, 
