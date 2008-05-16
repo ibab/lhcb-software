@@ -3,6 +3,9 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+</PRE><H1><A NAME=v2r6>2008-05-15 AlignmentInterfaces v2r6 </A></H1><PRE>
+- J. Blouw: 16/06/08: tag v2r6 for alignment project release v3r0
+
 </PRE><H1><A NAME=v2r5>2008-05-15 AlignmentInterfaces v2r5 </A></H1><PRE>
 - J. Blouw: 15/05/08, straightend out incompatability in ICentipede interface
 - J. Blouw: 14/05/08, modified interfaces to Derivatives class and to TAConfig class
@@ -10,7 +13,7 @@ Purpose :  Collection of interfaces needed for the T-station alignment
 - J. Blouw: 04/03/08, added call to ITAConfig for storing aligment parameters in cond dbase
 - J. Blouw: 31/01/08, small changes to ITAconfigTool and IDerivatives classes
 
-</PRE><H1><A NAME=v2r3>2007-12-19 AlignmentInterfaces v2r4 </A></H1><PRE>
+</PRE><H1><A NAME=v2r4>2007-12-19 AlignmentInterfaces v2r4 </A></H1><PRE>
  - J. Blouw: new tag for Alignment release v2r3
 
 ! 2007-12-06 - Jan AMORAAL
