@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.17 2008-05-15 15:27:58 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.18 2008-05-16 16:54:15 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -148,7 +148,9 @@ TAConfig::TAConfig( const std::string& type,
   m_DOF = new bool[m_dof.size()];
 }
 
-TAConfig::~TAConfig() {delete m_DOF;};
+TAConfig::~TAConfig() {
+  delete [] m_DOF;
+}
 
 StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_detectors = m_dets;
@@ -561,7 +563,7 @@ StatusCode TAConfig::StoreParameters( std::vector<double> &ali_par ) {
     IDetectorElement *det = getDet<IDetectorElement>(t->first);
     IGeometryInfo *geo = det->geometry();
     SmartRef<Condition> cond =  det->condition(t->first);
-    IAlignment *alicond = dynamic_cast<IAlignment*>( cond.target() );
+    //    IAlignment *alicond = dynamic_cast<IAlignment*>( cond.target() );
     
     // Convert alignment parameters into
     // a vector containing translations
@@ -684,7 +686,7 @@ StatusCode TAConfig::ConfigMillepede() {
   }
   //  info() << "Calling InitMille with m_sigma = " << m_sigma << "..." << endreq;
   /* HD Millepede initialization call */
-  m_Centipede->InitMille( m_DOF,
+  m_Centipede->InitMille( m_dof,
                           num_objects, m_ntrack_pars,  
                           m_l_chimax, m_nstd, 
                           m_residual_cut, m_ini_residual_cut);
@@ -1035,7 +1037,23 @@ StatusCode TAConfig::ConfMatrix( unsigned int cnt,
       j--;
     rm -= m_derGB[m_rank_nr + i * m_DETmap.size()] * (deltaNew[j] - deltaB4[j]);
   }
+  if ( fabs(m_derLC[0]) > 1.0e50 
+       || fabs(m_derLC[1]) > 1.0e50 
+       || fabs(m_derLC[2]) > 1.0e50 
+       || fabs(m_derLC[3]) > 1.0e50 ) {
+    info() << "m_derLC = " << m_derLC << endreq;
+    info() << "trpar = " << trpar << endreq;
+    info() << "deltaB4 = " << deltaB4 << endreq;
+  }
   m_derivatives->SetLocalN( m_derLC, m_rank_nr, trpar, deltaB4, cAlignD, sD, mv, kv );
+  if ( fabs(m_derLC[0]) > 1.0e50 
+       || fabs(m_derLC[1]) > 1.0e50 
+       || fabs(m_derLC[2]) > 1.0e50 
+       || fabs(m_derLC[3]) > 1.0e50 ) {
+    info() << "m_derLC = " << m_derLC << endreq;
+    info() << "trpar = " << trpar << endreq;
+    info() << "deltaB4 = " << deltaB4 << endreq;
+  }
   
   if ( m_ntrack_pars == 4 ) 
     FChiMat4D( m_weight, rm, local_vec, m_derLC, m_chiMat4 );
@@ -1193,25 +1211,42 @@ StatusCode TAConfig::FillMatrix( unsigned int trcnt,
   if ( m_ntrack_pars == 5 )
     trt.push_back( m_trQ[trcnt] );
   // store the alignment parameter estimates
+  int i = 0;
   std::vector<double> deltaNew;
   deltaNew.resize(6, 0.0 );
   if ( m_dof[0] ) 
-    deltaNew[0] = m_estimated[m_rank_nr];
+    deltaNew[0] = m_estimated[m_rank_nr + (i++)];
   if ( m_dof[1] ) 
-    deltaNew[1] = m_estimated[m_rank_nr+1*m_DETmap.size()];
+    deltaNew[1] = m_estimated[m_rank_nr + (i++) * m_DETmap.size()];
   if ( m_dof[2] ) 
-    deltaNew[2] = m_estimated[m_rank_nr+2*m_DETmap.size()];
+    deltaNew[2] = m_estimated[m_rank_nr + (i++) * m_DETmap.size()];
   if ( m_dof[3] ) 
-    deltaNew[3] = m_estimated[m_rank_nr+3*m_DETmap.size()];
+    deltaNew[3] = m_estimated[m_rank_nr + (i++) * m_DETmap.size()];
   if ( m_dof[4] ) 
-    deltaNew[4] = m_estimated[m_rank_nr+5*m_DETmap.size()];
+    deltaNew[4] = m_estimated[m_rank_nr + (i++) * m_DETmap.size()];
   if ( m_dof[5] ) 
-    deltaNew[5] = m_estimated[m_rank_nr+5*m_DETmap.size()];
+    deltaNew[5] = m_estimated[m_rank_nr + (i++) * m_DETmap.size()];
   // initialize the derivatives      
+  if ( fabs(m_derLC[0]) > 1.0e50 
+       || fabs(m_derLC[1]) > 1.0e50 
+       || fabs(m_derLC[2]) > 1.0e50 
+       || fabs(m_derLC[3]) > 1.0e50 ) {
+    info() << "Fillmatrix(1): m_derLC = " << m_derLC << endreq;
+    info() << "                   trt = " << trt << endreq;
+    info() << "              deltaNew = " << deltaNew << endreq;
+  }
   StatusCode sc = m_derivatives->SetLocalN( m_derLC, m_rank_nr, trt, deltaNew, cAlignD, sD, mv, kv );
   if ( sc == StatusCode::FAILURE ) {
     error() << "Error in calculating derivatives; will exit!" << endreq;
     return StatusCode::FAILURE;
+  }
+  if ( fabs(m_derLC[0]) > 1.0e50 
+       || fabs(m_derLC[1]) > 1.0e50 
+       || fabs(m_derLC[2]) > 1.0e50 
+       || fabs(m_derLC[3]) > 1.0e50 ) {
+    info() << "Fillmatrix(2): m_derLC = " << m_derLC << endreq;
+    info() << "                   trt = " << trt << endreq;
+    info() << "              deltaNew = " << deltaNew << endreq;
   }
 
   sc = m_derivatives->SetGlobalN( trt, deltaNew,  cAlignD, sD, m_derGB, m_rank_nr, mv, kv );
@@ -1499,12 +1534,11 @@ bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
 }
 
 
-StatusCode TAConfig::CalcResidual( unsigned int tr_cnt,
-			     const LHCb::Track &track, 
-			     const LHCb::Measurement *trMeas, 
-			     const LHCb::LHCbID &id,
-			     bool localF,
-			     double &measMP ) {
+StatusCode TAConfig::CalcResidual( const LHCb::Track &track, 
+				   const LHCb::Measurement *trMeas, 
+				   const LHCb::LHCbID &id,
+				   bool localF,
+				   double &measMP ) {
   // Check if this was a muon measurement.
   const LHCb::Trajectory *measTraj;
   double z = 0;
@@ -1560,7 +1594,7 @@ StatusCode TAConfig::CalcResidual( unsigned int tr_cnt,
   Gaudi::XYZVector P2; // center of object lowest in geo hierarchy
   Gaudi::Rotation3D R2; // rotation of that object in global coordinate system
   Gaudi::Transform3D M;
-  this->FindHitModule( id, M ).GetDecomposition( R, P );
+  FindHitModule( id, M ).GetDecomposition( R, P );
   if ( P.z() < 7900.0 ) {
     plot2D( P.x(), P.y(), "IT Hits in T1", -350.0, 350.0, -200.0, 200.0, 100, 100 );
   }
@@ -1850,7 +1884,7 @@ void TAConfig::CheckLChi2( int trsize,
 			   bool neXt,
 			   bool & flagC ) {
   bool flagb = false;
-  debug()<<"scale is II: " <<m_scale2 << endreq;
+  debug() << "scale is II: " << m_scale2 << endreq;
   if( neXt == true ) 
     m_scale2 = sqrt(m_scale2); // Florin: I do not think the measurement resolution estimates are reliable.
   double scale = m_scale2; 
@@ -1885,7 +1919,6 @@ StatusCode TAConfig::GlobalFit( std::vector<double> & parameter,
 
 StatusCode TAConfig::LocalTrackFit( unsigned int tr_cnt,
                              std::vector<double> &trpar,
-                             const int single_fit,
                              std::vector<double> & estimated,
                              double & chi2,
                              double & residual) {

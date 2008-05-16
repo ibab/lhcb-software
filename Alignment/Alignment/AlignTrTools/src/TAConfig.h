@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.13 2008-05-15 15:27:58 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.14 2008-05-16 16:54:15 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -87,12 +87,11 @@ public:
    int InvMatrix( std::vector<double> &b, int n );
 
 
-   StatusCode CalcResidual( unsigned int,
-		      const LHCb::Track &,
-		      const LHCb::Measurement *,
-		      const LHCb::LHCbID &,
-		      bool,
-		      double & );
+   StatusCode CalcResidual( const LHCb::Track &,
+			    const LHCb::Measurement *,
+			    const LHCb::LHCbID &,
+			    bool,
+			    double & );
    
    bool CalcResidualOT( unsigned int,
 			    const LHCb::Track &,
@@ -119,7 +118,6 @@ public:
 
    StatusCode LocalTrackFit( unsigned int, 
 			     std::vector<double> &, 
-			     int,  
 			     std::vector<double> &, 
 			     double &, 
 			     double & );
