@@ -38,13 +38,21 @@ class ICentipede : virtual public IMillepede {
 			     std::vector<double> &derlc ) = 0;
 
   virtual StatusCode FitLoc ( int n,
-			      std::vector<double> &track_params,
-			      int single_fit,
-			      std::vector<double> &estimated_para,
-			      double &summ,
-			      double &res ) = 0;
+			std::vector<double> &track_params,
+			int single_fit,
+			std::vector<double> &estimated_para,
+			double &summ,
+			double &res ) = 0;
   virtual StatusCode MakeGlobalFit( std::vector<double> &,
 				    std::vector<double> &,
 				    std::vector<double> & ) = 0;
+
+  virtual void CheckLChi2( const double &,
+                           const int &,
+                           const int  &,
+                           const double &,
+                           const double &,
+                                 bool & ) = 0;
+
 };
 #endif // ALIGNMENTINTERFACES_ICENTIPEDE_H 

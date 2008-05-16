@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.6 2008-03-04 09:24:56 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.7 2008-05-16 11:03:26 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -15,7 +15,7 @@
 
 
 #include "GaudiKernel/IAlgTool.h"
-#include "GaudiKernel/Transform3DTypes.h"
+#include "Math/SMatrix.h"
 
 #include <string>
 
@@ -39,47 +39,60 @@ class ITAConfigTool : virtual public IAlgTool {
   }
 
   virtual StatusCode Initialize( std::vector<std::string> & ) = 0;
-  virtual StatusCode CalcResidual( const LHCb::Track &, 
-				 const LHCb::Measurement *, 
-				 const int &,
-				 const double &,
-				 double &,
-				 double &,
-				 double &,
-				 LHCb::State & ) = 0;
-  virtual StatusCode FillMatrix( const int &,
-				 const double [], 
-				 const double &, 
-				 const double &, 
-				 const double & ) = 0;
-  virtual int InvMatrix( double [][4],
-			 double [],
-			 const int & ) = 0;
-  virtual StatusCode ConfMatrix( const double &,
-				 const double &,
-				 const double &,
-				 const double &,
-				 double [],
-				 double [][4] ) = 0;
-  virtual StatusCode ZeroMatrVec( double [][4], double [] ) = 0;
+  virtual StatusCode ConfMatrix( unsigned int,
+			   double,
+			   std::vector<double> & ) = 0;
+
+  virtual StatusCode CalcResidual( unsigned int,
+			     const LHCb::Track &, 
+			     const LHCb::Measurement *, 
+			     const LHCb::LHCbID &,
+			     bool,
+			     double & ) = 0;
+
+  virtual bool CalcResidualOT( unsigned int,
+			     const LHCb::Track &, 
+			     const LHCb::Measurement *, 
+			     const LHCb::LHCbID &,
+			     bool,
+			     double & ) = 0;
+  virtual void ZeroMatrix() = 0;
+
+  virtual StatusCode FillMatrix( unsigned int,
+				 double ) = 0; 
+//				 , double ) = 0;
+/*  virtual int InvMatrix( double [][4], 
+			 std::vector<double> &, 
+			 int ) = 0; */
+
+  virtual int InvMatrix( std::vector<double> &,
+			 int ) = 0;
+
+
+  virtual StatusCode StoreParameters( std::vector<double> & ) = 0;
   virtual StatusCode CacheDetElements() = 0;
-  virtual StatusCode ResetGlVars() = 0;
-  virtual bool AlignDetector( std::string & ) = 0;
-  virtual StatusCode LocalTrackFit( int &,
+  virtual void ResetLVars() = 0;
+  virtual void ResetGlVars() = 0;
+  virtual void SetTrackPar( const std::vector<double> &, unsigned int ) = 0;
+  virtual void MakeTrackParVec() = 0;
+  virtual double GetLChi2() = 0;
+  virtual void CheckLChi2( int, int, bool, bool & ) = 0;
+  virtual void SetAlignmentPar( const std::vector<double> & ) = 0;
+  virtual void SetFlag( bool, unsigned int ) = 0;
+
+  virtual bool AlignDetector( const std::string & ) = 0;
+  virtual StatusCode LocalTrackFit( unsigned int,
 				    std::vector<double> &,
-				    const int &,
+				    int,
 				    std::vector<double> &,
 				    double &,
 				    double & ) = 0;
-  virtual StatusCode PrintParameters( std::vector<double> & ) = 0;
   virtual int NumTrPars() = 0;
   virtual StatusCode GlobalFit( std::vector<double> &, 
 				std::vector<double> &, 
 				std::vector<double> & ) = 0;
-  virtual StatusCode Rank( LHCb::LHCbID &, int & ) = 0;
+  virtual StatusCode Rank( const LHCb::LHCbID & ) = 0;
   virtual int NumAlignPars() = 0;
-  virtual std::vector<Gaudi::Transform3D> GetDetMap() = 0;
-
 };
 
 #endif // ITACONFIGTOOL_H
