@@ -6,8 +6,8 @@
 
 from Boole.Configuration import *
 
-Boole().DDDBtag     = "head-20080422"
-Boole().condDBtag   = "head-20080422"
+Boole().DDDBtag     = "lhcb-2008"
+Boole().condDBtag   = "lhcb-2008"
 
 Boole().applyConf()
 
