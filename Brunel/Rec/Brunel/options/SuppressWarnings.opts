@@ -14,12 +14,23 @@ ToolSvc.PhotonPID.OutputLevel = 5; // Vertex location HARD-CODED : IP(0.,0.,0.)
 RichGloPIDFinalIt.OutputLevel = 5; // track(s) changed hypothesis
 ToolSvc.Offline.RichTrackCreator.TrSegMaker.OutputLevel = 5; // Bad states
 
+ToolSvc.Offline.RichIsolatedTrack.OutputLevel = 5; // Not yet for aerogel
+RiCKResAllHighP.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResLongAll.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResFrwdHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResMatchHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResKsTkHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResVeloTTHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+RiCKResSeedHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
+
+
 // Information to be kept
 BrunelInit.OutputLevel = 3;
 EventSelector.OutputLevel = 3;
 DstWriter.OutputLevel = 3;
 TimingAuditor.OutputLevel = 3;
 EventLoopMgr.OutputLevel = 3;
+StatusCodeSvc.OutputLevel = 3;
 
 // Add a time stamp to the remaining messages
 MessageSvc.Format = "%u % F%18W%S%7W%R%T %0W%M";
@@ -27,5 +38,32 @@ MessageSvc.timeFormat = "%Y-%m-%d %H:%M:%S UTC";
 
 // Remove histogram statistics
 RichRecPixelQC.HistoPrint = false;
-RiCKResLongAll.HistoPrint = false;
 MuonPIDChecker.HistoPrint = false;
+
+RiPIDMonAll2To100.HistoPrint = false;
+RiPIDMonAll2To100.MCbelow threshold.HistoPrint = false;
+RiPIDMonAll2To100.MCelectron.HistoPrint = false;
+RiPIDMonAll2To100.MCkaon.HistoPrint = false;
+RiPIDMonAll2To100.MCmuon.HistoPrint = false;
+RiPIDMonAll2To100.MCpion.HistoPrint = false;
+RiPIDMonAll2To100.MCproton.HistoPrint = false;
+RiPIDMonAll2To10.HistoPrint = false;
+RiPIDMonAll2To10.MCbelow threshold.HistoPrint = false;
+RiPIDMonAll2To10.MCelectron.HistoPrint = false;
+RiPIDMonAll2To10.MCkaon.HistoPrint = false;
+RiPIDMonAll2To10.MCmuon.HistoPrint = false;
+RiPIDMonAll2To10.MCpion.HistoPrint = false;
+RiPIDMonAll2To10.MCproton.HistoPrint = false;
+RiPIDMonAll10To70.HistoPrint = false;
+RiPIDMonAll10To70.MCbelow threshold.HistoPrint = false;
+RiPIDMonAll10To70.MCelectron.HistoPrint = false;
+RiPIDMonAll10To70.MCkaon.HistoPrint = false;
+RiPIDMonAll10To70.MCmuon.HistoPrint = false;
+RiPIDMonAll10To70.MCpion.HistoPrint = false;
+RiPIDMonAll10To70.MCproton.HistoPrint = false;
+RiPIDMonAll70To100.HistoPrint = false;
+RiPIDMonAll70To100.MCelectron.HistoPrint = false;
+RiPIDMonAll70To100.MCkaon.HistoPrint = false;
+RiPIDMonAll70To100.MCmuon.HistoPrint = false;
+RiPIDMonAll70To100.MCpion.HistoPrint = false;
+RiPIDMonAll70To100.MCproton.HistoPrint = false;

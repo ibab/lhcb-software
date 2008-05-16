@@ -3,8 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v32r6>2008-05-13 Brunel v32r6</A></H1><PRE>
+</PRE><H1><A NAME=v32r6>2008-05-16 Brunel v32r6</A></H1><PRE>
  - In Brunel.opts, removed workaround for fix in CaloDAQ v4r4p1
+ - Updated SuppressWarnings.opts for Rich changes in Rec v5r6
  - Added "monitors" option to Brunel Configurable
  - In requirements, use FieldMap v5r*, gives access to measured field map
  - In requirements, use all needed component libraries for cmt broadcast usage
