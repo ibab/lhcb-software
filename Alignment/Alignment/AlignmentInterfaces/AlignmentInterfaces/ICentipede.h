@@ -22,27 +22,27 @@ class ICentipede : virtual public IMillepede {
  public:
   // Retrieve Interface ID
   static const InterfaceID& interfaceID() { return IID_ICentipede;};
-  virtual StatusCode InitMille ( bool DOF[],
-				 int nglo,
-				 int nloc,
-				 double startfact,
-				 int nstd,
-				 double res_cut,
-				 double res_cut_init ) = 0;
+  virtual StatusCode InitMille ( std::vector<bool> &,
+				 int,
+				 int,
+				 double,
+				 int,
+				 double,
+				 double ) = 0;
 
-  virtual StatusCode EquLoc ( std::vector<double> &dergb,
-			      std::vector<double> &derlc,
-			      const double &rmeas,
-			      double sigma ) = 0;
-  virtual StatusCode ZerLoc( std::vector<double> &dergb,
-			     std::vector<double> &derlc ) = 0;
+  virtual StatusCode EquLoc ( std::vector<double> &,
+			      std::vector<double> &,
+			      const double &,
+			      double ) = 0;
+  virtual StatusCode ZerLoc( std::vector<double> &,
+			     std::vector<double> & ) = 0;
 
   virtual StatusCode FitLoc ( int n,
-			std::vector<double> &track_params,
-			int single_fit,
-			std::vector<double> &estimated_para,
-			double &summ,
-			double &res ) = 0;
+			std::vector<double> &,
+			int,
+			std::vector<double> &,
+			double &,
+			double & ) = 0;
   virtual StatusCode MakeGlobalFit( std::vector<double> &,
 				    std::vector<double> &,
 				    std::vector<double> & ) = 0;
