@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.h,v 1.2 2008-05-14 10:01:37 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.h,v 1.3 2008-05-16 14:27:55 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -142,6 +142,7 @@ namespace Rich
       std::vector<double> m_sizephicut;    ///< Maximum fraction of photons in each phi region
       std::vector<unsigned int> m_nPhiRegions; ///< Number of phi regions to use
       std::vector<double> m_sizehitregioncut; ///< Maximum fraction of hits outside CK ring
+      std::vector<unsigned int> m_minSegPhotons; ///< Minimum number of photons reconstructed for each segment
 
       std::vector<double> m_maxROI;     ///< Max hit radius of interest around track centres
       std::vector<double> m_ckThetaMax; ///< Scaling parameter - Max CK theta point

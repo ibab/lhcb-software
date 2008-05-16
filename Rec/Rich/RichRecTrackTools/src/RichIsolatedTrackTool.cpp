@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.2 2008-05-14 10:01:37 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.3 2008-05-16 14:27:55 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -48,7 +48,7 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
 
   //                                                                     Aero  C4F10  CF4
   declareProperty( "SizeMomCut", m_sizemomcut                 = list_of  (20)  (20)  (20)  );
-  declareProperty( "SizeGeoCut", m_sizegeocut                 = list_of  (0.7) (0.7) (0.7) ); // geometric efficiency
+  declareProperty( "SizeGeoCut", m_sizegeocut                 = list_of  (0.3) (0.3) (0.3) ); // geometric efficiency
   declareProperty( "SizeSepCut", m_sizesepcut                 = list_of  (260) (260) (260) ); // track hit point separation
   declareProperty( "SizeXposnCut", m_sizeXexit                = list_of  (0)   (0)   (100) ); // RICH X discontinuity
   declareProperty( "SizeYposnCut", m_sizeYexit                = list_of  (0)   (50)  (0)   ); // RICH Y discontinuity
@@ -60,8 +60,9 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   declareProperty( "CKthetaMax", m_ckThetaMax                 = list_of  (0.24)(0.052) (0.03) );
   declareProperty( "SepGMax", m_sepGMax                       = list_of  (342) (75) (130) );
   declareProperty( "NPhiRegions", m_nPhiRegions               = list_of  (8)   (8)  (8)   ); // Number of phi regions
+  declareProperty( "MinSegPhotons", m_minSegPhotons           = list_of  (2)   (2)  (2)   );
 
-  declareProperty( "AbortEarly", m_abortEarly = true );
+  declareProperty( "AbortEarly", m_abortEarly = false );
 
 }
 
@@ -77,9 +78,9 @@ StatusCode IsolatedTrackTool::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichGeomEff", m_geomEffic  );
-  acquireTool( "RichRecGeometry", m_geomTool );
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
+  acquireTool( "RichGeomEff",        m_geomEffic );
+  acquireTool( "RichRecGeometry",    m_geomTool  );
+  acquireTool( "RichCherenkovAngle", m_ckAngle   );
 
   // loop over radiators
   for ( int radi = 0; radi < Rich::NRadiatorTypes; ++radi )
@@ -228,8 +229,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
   //Photon association, position and total photon counters, initialise zero for each segment before looping over photons
-  int photonassoc = 0;
-  int photontotal = 0;
+  unsigned int photonassoc(0), photontotal(0);
 
   // Tally vector for number of photons in each phi region
   std::vector<int> regTally(m_nPhiRegions[rad],0);
@@ -264,8 +264,8 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
 
   if ( photontotal==0 ) { photontotal = 1; }//to prevent dividing by zero
   
-  // don't consider tracks with only one associated hit - optional
-  trackIsIsolated &= testCut( "min # associated photons", rad, photontotal > 1 );
+  // Minimum number of associated photons
+  trackIsIsolated &= testCut( "min # associated photons", rad, photontotal >= m_minSegPhotons[rad] );
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
   const double fracphotonsassoc = (double)photonassoc/(double)photontotal;
@@ -283,7 +283,6 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
       photonregionindicator = false;
     }
   }
-
   trackIsIsolated &= testCut( "photon phi regions", rad, photonregionindicator );
 
   // count final accept/reject
