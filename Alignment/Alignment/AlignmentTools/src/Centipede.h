@@ -39,7 +39,7 @@ class Centipede : public Millepede, virtual public ICentipede {
 
   // Standard constructor
 
-  virtual StatusCode InitMille( bool DOF[], 
+  virtual StatusCode InitMille( std::vector<bool> &DOF, 
 				int nglo, 
 				int nloc, 
 				double startfac, 

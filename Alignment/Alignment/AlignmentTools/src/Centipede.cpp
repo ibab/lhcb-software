@@ -64,7 +64,7 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &par, std::vector<doubl
    
   return StatusCode::SUCCESS;
 };
-StatusCode Centipede::InitMille( bool DOF[],
+StatusCode Centipede::InitMille( std::vector<bool>& DOF,
 				 int nglo,
 				 int nloc, 
 				 double startfact, 
@@ -792,7 +792,7 @@ void Centipede::CheckLChi2(const double & chi2,
 			         bool & flag ) {
 
   int nndf=nm-tsize;
-  int nsdtdev=nsdtdevb;
+  int nsdtdev= (int) nsdtdevb;
   debug()<<"nsdtdev=" << nsdtdev << " nndf=" << nndf << " cfactrb=" << cfactrb <<endreq;
   double cutval = Millepede::chindl(nsdtdev,nndf)*cfactrb;
 
