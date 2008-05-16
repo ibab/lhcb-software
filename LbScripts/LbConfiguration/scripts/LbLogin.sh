@@ -32,8 +32,9 @@ mysiteroot=0
 cmtconfig=0
 userarea=0
 cmtvers=0
+sharedarea=0
 
-TEMP=`getopt -o  d,m:,c:,u:,v: --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers: -- "$@"`
+TEMP=`getopt -o  d,m:,c:,u:,v:,s --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers,shared: -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
@@ -47,6 +48,7 @@ while true ; do
 	-c|--cmtconfig) cmtconfig=$2 ; shift 2 ;;
 	-u|--userarea)  userarea=$2 ; shift 2 ;; 
 	-v|--cmtvers)  cmtvers=$2 ; shift 2 ;; 
+	-s|--shared) sharedarea=1 ; shift ;;
 	--) shift ; break ;;
 	*) echo "Internal error!" ; exit 1 ;;
 	esac
@@ -176,7 +178,7 @@ if [ "$CMTSITE" = "LOCAL" ] ; then
 	export LCG_release_area=$MYSITEROOT/lcg/external
 	export LHCBRELEASES=$LHCBHOME/lhcb
 	export GAUDISOFT=$LHCBRELEASES
-	export LHCBPROJECTPATH=${LHCb_release_area}:${LCG_release_area}
+	export LHCBPROJECTPATH=${LHCBRELEASES}:${LCG_release_area}
 else
 	export LHCBHOME=$SITEROOT/lhcb
 	export DIM_release_area=$LHCBHOME/online/control
@@ -200,6 +202,17 @@ export LHCb_release_area=${LHCBRELEASES}
 ###################################################################################
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
+
+if [ ! "$sharedarea" = "0" ] ; then
+	if [ ! -z $VO_LHCB_SW_DIR ] ; then
+		export LHCBPROJECTPATH=${LHCBPROJECTPATH}:${VO_LHCB_SW_DIR}/lib/lhcb:${VO_LHCB_SW_DIR}/lib/lcg/external
+	else
+		echo 'You have requested a shared area but no VO_LHCB_SW_DIR is set.'
+		echo 'Please define it."
+		return
+	fi
+fi
+
 
 ###################################################################################
 echo "debug $debug"
@@ -379,6 +392,6 @@ unset mainscriptloc
 # the end
 
 unset newcomp rh rhv comp cmtvers
-unset debug mysiteroot cmtconfig userarea cmtvers
+unset debug mysiteroot cmtconfig userarea cmtvers sharedarea
 
 #set -

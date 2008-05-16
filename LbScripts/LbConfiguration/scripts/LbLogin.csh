@@ -43,8 +43,9 @@ set mysiteroot = 0
 set cmtconfig = 0
 set userarea = 0
 set cmtvers = 0
+set sharedarea = 0
 
-set temp=(`getopt -s tcsh -o d,m:,c:,u:,v: --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers: -- $argv:q`)
+set temp=(`getopt -s tcsh -o d,m:,c:,u:,v:,s --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers:,shared -- $argv:q`)
 if ($? != 0) then 
 	echo "Terminating..." >/dev/stderr
 	exit 1
@@ -73,6 +74,10 @@ while (1)
 	case -v:
 	case --cmtvers:
 		set cmtvers = $2 ;  shift; shift
+		breaksw
+	case -s:
+	case --shared:
+		set shared = 1 ;  shift
 		breaksw
     case --:
 		shift
@@ -232,6 +237,17 @@ setenv LHCb_release_area ${LHCBRELEASES}
 ###################################################################################
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
+
+if ($sharedarea !=  0) then
+	if ($?VO_LHCB_SW_DIR) then
+		export LHCBPROJECTPATH=${LHCBPROJECTPATH}:${VO_LHCB_SW_DIR}/lib/lhcb:${VO_LHCB_SW_DIR}/lib/lcg/external
+	else
+		echo 'You have requested a shared area but no VO_LHCB_SW_DIR is set.'
+		echo 'Please define it."
+		exit
+	endif
+endif
+
 
 ###################################################################################
 echo "debug $debug"
@@ -415,5 +431,5 @@ unset mainscriptloc
 # the end
 end:
 unset newcomp, rh, rhv, comp, cmtvers
-unset debug, mysiteroot, cmtconfig, userarea, cmtvers
+unset debug, mysiteroot, cmtconfig, userarea, cmtvers, sharedarea
 exit
