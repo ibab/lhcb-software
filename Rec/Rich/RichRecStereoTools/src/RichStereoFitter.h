@@ -54,6 +54,19 @@ namespace Rich
   namespace Rec
   {
 
+    // various useful constants
+    namespace
+    {
+      static const int    s_NmassHyp(5);  ///< number of mass hypothesis
+      static const int    s_nIterMax(10);
+      static const double s_diffChi2Lim(0.5);  ///< delta chi2 min between iterations
+      static const double s_MinThetaCerenkov(1e-8);
+      static const double s_MinThetaCerenkov2(1e-6);
+      static const double s_MinthetaExpRes(1e-4);    ///< Min theta experimental resolution
+      static const double s_AsymptoticResDefault(0.55e-03);  ///< default (radians) asymptotic thetac resolution from TDR (with chromatics ???)
+      static const int s_NmaxFitPhot(250);    ///< max number of photons used by the fit (i.e, in fit window)
+    }
+
     //--------------------------------------------------------------------------------------
     /** @class StereoFitter IRichStereoFitter.h RichStereoFitter.h
      *
@@ -72,8 +85,8 @@ namespace Rich
     public: // Methods for Gaudi Framework
 
       /// Standard constructor
-      StereoFitter( const std::string& type, 
-                    const std::string& name, 
+      StereoFitter( const std::string& type,
+                    const std::string& name,
                     const IInterface* parent );
 
       /// Destructor
@@ -88,17 +101,6 @@ namespace Rich
       // plane perpendicular to the segemnt direction
       virtual IStereoFitter::Result Fit( LHCb::RichRecSegment *richSegment,
                                          const IStereoFitter::Configuration & config ) const;
-      
-    private:// Various useful static constants
-
-      static const int    s_NmassHyp = 5;  ///< number of mass hypothesis
-      static const int    s_nIterMax = 10;
-      static const double s_diffChi2Lim = 0.5;  ///< delta chi2 min between iterations
-      static const double s_MinThetaCerenkov = 1e-8;
-      static const double s_MinThetaCerenkov2 = 1e-6;
-      static const double s_MinthetaExpRes = 1e-4;    ///< Min theta experimental resolution
-      static const double s_AsymptoticResDefault = 0.55e-03;  ///< default (radians) asymptotic thetac resolution from TDR (with chromatics ???)
-      static const int s_NmaxFitPhot = 250;    ///< max number of photons used by the fit (i.e, in fit window)
 
     private: // Private data
 
@@ -197,20 +199,20 @@ namespace Rich
 
     private: // methods
 
-      bool trkErrStereo(const LHCb::State *state, 
-                        LHCb::RichRecSegment *segment, 
+      bool trkErrStereo(const LHCb::State *state,
+                        LHCb::RichRecSegment *segment,
                         double &lengthEffect,
-                        double &errMom, 
-                        double &err_tx2, 
-                        double &err_ty2, 
+                        double &errMom,
+                        double &err_tx2,
+                        double &err_ty2,
                         double &trkCharge) const;
 
 
-      double improvedErrorPerPhoton_index( const double PTrk, 
-                                           const double lengthEffect, 
+      double improvedErrorPerPhoton_index( const double PTrk,
+                                           const double lengthEffect,
                                            const double errMom,
-                                           const double err_tx2, 
-                                           const double err_ty2, 
+                                           const double err_tx2,
+                                           const double err_ty2,
                                            const double ckExp,
                                            const Rich::RadiatorType rad,
                                            const double asymptoticResSub,
