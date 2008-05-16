@@ -115,6 +115,33 @@ else
 fi
 
 ###################################################################################
+# User release area massaging
+
+if [ ! "$userarea" = "0" ] ; then
+	export User_release_area=$userarea
+else
+	if [ -z $User_release_area ] ; then
+		export User_release_area=$HOME/cmtuser
+	fi
+fi
+
+# User_release_area
+if [ ! -d $User_release_area ] ; then
+	mkdir -p $User_release_area
+	echo " --- a new ${User_release_area:t} directory has been created in your HOME directory"
+	if [ "$CMTSITE" = "CERN" ] ; then
+		fs setacl $User_release_area system:anyuser rl
+		echo " --- with public access (readonly)"
+		echo " --- use mkprivat to remove public access to the current directory"
+		echo " --- use mkpublic to give public access to the current directory"
+	fi
+fi
+
+if [ -d ${User_release_area}/cmt ] ; then
+	rm -fr ${User_release_area}/cmt
+fi
+
+###################################################################################
 # setup contrib area
 
 if [ "$CMTSITE" = "CERN" ] ; then 
@@ -193,19 +220,6 @@ done
 # get .rootauthrc file if not yet there
 if [ ! -e $HOME/.rootauthrc ] ; then
 	cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
-fi
-
-origin="$HOME"
-work="cmtuser"
-
-
-# User_release_area
-if [ ! -d $origin/${work} ] ; then
-	mkdir -p $origin/${work}
-fi
-User_release_area="${origin}/${work}"; export User_release_area
-if [ -d ${User_release_area}/cmt ] ; then
-	/bin/rm -fr ${User_release_area}/cmt
 fi
 
 # Gaudi release area

@@ -152,9 +152,34 @@ else
 endif
 
 ###################################################################################
+# User release area massaging
+
+if ( $userarea != 0 ) then
+	setenv User_release_area $userarea
+else
+	if !("$?User_release_area") then
+		setenv User_release_area $HOME/cmtuser
+	endif
+endif
+
+# User_release_area
+if !(-d $User_release_area) then
+	mkdir -p $User_release_area
+	echo " --- a new ${User_release_area:t} directory has been created in your HOME directory"
+	if ( "$CMTSITE" == "CERN" ) then
+		fs setacl $User_release_area system:anyuser rl
+		echo " --- with public access (readonly)"
+		echo " --- use mkprivat to remove public access to the current directory"
+		echo " --- use mkpublic to give public access to the current directory"
+	endif
+endif
+
+if (-d ${User_release_area}/cmt) rm -fr ${User_release_area}/cmt
+
+###################################################################################
 # setup contrib area
 
-if ( "$CMTSITE" == "CERN") then 
+if ("$CMTSITE" == "CERN") then 
 	setenv CONTRIBDIR $SITEROOT/sw/contrib
 else
 	setenv CONTRIBDIR $MYSITEROOT/contrib 
@@ -235,21 +260,6 @@ end
 echo " -------------------------------------------------------------------"
 
 
-set origin = $HOME
-set work = "cmtuser"
-
-# User_release_area
-if !(-d $origin/${work}) then
-	mkdir -p $origin/${work}
-	fs setacl $origin/${work} system:anyuser rl
-	echo " --- ${work} directory has been created in your HOME directory"
-	echo " --- with public access (readonly)"
-	echo " --- use mkprivat to remove public access to the current directory"
-	echo " --- use mkpublic to give public access to the current directory"
-endif
-
-if !("$?User_release_area") setenv User_release_area $origin/$work
-if (-d ${User_release_area}/cmt) rm -fr ${User_release_area}/cmt
 
 # to work with rootd the .rootauthrc file is required
 if !(-f $HOME/.rootauthrc) then

@@ -116,6 +116,33 @@ else
 fi
 
 ###################################################################################
+# User release area massaging
+
+if [ ! "$userarea" = "0" ] ; then
+	export User_release_area=$userarea
+else
+	if [ -z $User_release_area ] ; then
+		export User_release_area=$HOME/cmtuser
+	fi
+fi
+
+# User_release_area
+if [ ! -d $User_release_area ] ; then
+	mkdir -p $User_release_area
+	echo " --- a new ${User_release_area:t} directory has been created in your HOME directory"
+	if [ "$CMTSITE" = "CERN" ] ; then
+		fs setacl $User_release_area system:anyuser rl
+		echo " --- with public access (readonly)"
+		echo " --- use mkprivat to remove public access to the current directory"
+		echo " --- use mkpublic to give public access to the current directory"
+	fi
+fi
+
+if [ -d ${User_release_area}/cmt ] ; then
+	rm -fr ${User_release_area}/cmt
+fi
+
+###################################################################################
 # setup contrib area
 
 if [ "$CMTSITE" = "CERN" ] ; then 
@@ -168,15 +195,6 @@ if [ ! -f $HOME/.rootauthrc ] ; then
 fi
 
 echo " -------------------------------------------------------------------"
-origin="$HOME"
-work="cmtuser"
-# $HOME/${work} is the CMT working area
-if [ ! -d $origin/${work}/cmt ] ; then
-	mkdir -p $origin/${work}/cmt
-	cp $LHCBRELEASES/cmtuser/cmt/project.cmt $origin/$work/cmt/.
-#   echo " ---- a new directory "\$HOME"/${work} has been created"
-#   echo " ---- it will be your working directory with CMT"
-fi
 
 
 # Gaudi release area and cvs repository
