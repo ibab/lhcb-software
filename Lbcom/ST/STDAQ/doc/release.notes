@@ -4,11 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r6 2008-05-16 =======================
 ! 2008-05-16
- - Check that key does not exist before inserting it (RawBanksToSTClusterAlg 
- - + RawBanksToSTLiteClusterAlg)
-
-!=============================== STDAQ v3r6 2008-05-13 =======================
+ - Check that key does not exist before inserting it (RawBanksToSTClusterAlg,
+   RawBanksToSTLiteClusterAlg)
 
 ! 2008-05-10
  - More improvements to error handling....
