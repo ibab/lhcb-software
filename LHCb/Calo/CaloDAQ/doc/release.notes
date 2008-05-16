@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 
+! 2008-05-16 - Olivier Deschamps
+ - reduce WARNING verbosity in CaloReadoutTool
+
 ! 2008-04-27 - Olivier Deschamps
  - fix Missing banks summary in ReadoutStatus setting (CaloReadoutTool.cpp)
 

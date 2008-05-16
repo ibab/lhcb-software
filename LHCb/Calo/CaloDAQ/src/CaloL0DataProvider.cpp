@@ -435,8 +435,6 @@ bool CaloL0DataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
           LHCb::L0CaloAdc temp( prsId, (item & 1));
           m_adcs.addEntry( temp, prsId );
         }
-
-
       }
       ++data;
       --size;
