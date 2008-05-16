@@ -53,6 +53,7 @@ inline uint32_t mix(uint32_t state, uint64_t extra)
     return  mix( state , uint32_t((extra >> 32) & mask_t::sig_bits_fast) );
 }
 
+#ifdef __GNUC__
 // for some reason, gcc thinks that mix(uint32_t,uint32_t)
 // and mix(uint32_t,uint64_t) are both equally good (bad?) matches
 // for mix(uint32_t,ulonglong), and thus cannot figure out which
@@ -64,6 +65,21 @@ inline uint32_t mix(uint32_t state, ulonglong extra)
     BOOST_STATIC_ASSERT(sizeof(ulonglong)==sizeof(uint64_t));
     return mix(state,uint64_t(extra)); 
 }
+#endif // __GNUC__
+
+#ifdef WIN32 
+// for some reason, vc thinks that mix(uint32_t,uint32_t)
+// and mix(uint32_t,uint64_t) are both equally good (bad?) matches
+// for mix(uint32_t,unsigned int), and thus cannot figure out which
+// mix to call for a unsigned int... 
+// Having an explicit mix(uint32_t, unsigned int) which forwards 
+// to mix(uint32_t,uint32_t) seems to solve the problem...
+inline uint32_t mix(uint32_t state, unsigned int extra) 
+{ 
+    BOOST_STATIC_ASSERT(sizeof(unsigned int)==sizeof(uint32_t));
+    return mix(state,uint32_t(extra)); 
+}
+#endif // WIN32
 
 // mix some 'extra' entropy into 'state' and return result
 inline uint32_t mix(uint32_t state, const std::string& extra)
