@@ -101,14 +101,14 @@ else
 			export AFSROOT="/afs"
 			export SITEROOT="/afs/cern.ch"
 		else
-			echo " "\$MYSITEROOT" is not defined"
-			echo " we suggest you install all software under" \$MYSITEROOT
-			echo " then LHCb software will be installed under" \$MYSITEROOT"/lhcb"
-			echo "      LCG software will be installed under" \$MYSITEROOT"/lcg/external"
-			echo "      CMT and OpenScientist will be installed under" \$MYSITEROOT"/contrib"
-			echo " as an example "
-			echo " MYSITEROOT=/home/ranjard/Install"
-			echo ""
+			echo ' $MYSITEROOT is not defined'
+			echo ' we suggest you install all software under $MYSITEROOT'
+			echo ' then LHCb software will be installed under $MYSITEROOT/lhcb'
+			echo '      LCG software will be installed under $MYSITEROOT/lcg/external'
+			echo '      CMT and OpenScientist will be installed under $MYSITEROOT/contrib'
+			echo ' as an example '
+			echo ' export MYSITEROOT=/home/ranjard/Install'
+			echo ''
 			return
 		fi
 	fi
@@ -167,6 +167,37 @@ export CMT_DIR=$CONTRIBDIR
 
 
 ###################################################################################
+# LHCb software locations
+
+if [ "$CMTSITE" = "LOCAL" ] ; then
+	export LHCBHOME=$MYSITEROOT
+	export DIM_release_area=$CONTRIBDIR
+	export XMLRPC_release_area=$CONTRIBDIR
+	export LCG_release_area=$MYSITEROOT/lcg/external
+	export LHCBRELEASES=$LHCBHOME/lhcb
+	export GAUDISOFT=$LHCBRELEASES
+	export LHCBPROJECTPATH=${LHCb_release_area}:${LCG_release_area}
+else
+	export LHCBHOME=$SITEROOT/lhcb
+	export DIM_release_area=$LHCBHOME/online/control
+	export XMLRPC_release_area=$LHCBHOME/project/web/online
+	export LCG_release_area=$SITEROOT/sw/lcg/app/releases
+	export SOFTWARE=$LHCBHOME/software
+	export LHCBRELEASES=$SOFTWARE/releases
+	export GAUDISOFT=$SITEROOT/sw/Gaudi/releases
+	export LHCBPROJECTPATH=${LHCBRELEASES}:${GAUDISOFT}:${LCG_release_area}
+	export LHCBDEV=$SITEROOT/lhcb/software/DEV
+	export LHCBDOC=$LHCBRELEASES/DOC
+	export EMACSDIR=$LHCBRELEASES/TOOLS/Tools/Emacs/pro
+	export LHCBSTYLE=$LHCBRELEASES/TOOLS/Tools/Styles/pro
+fi
+
+export OSC_release_area=$CONTRIBDIR
+export Gaudi_release_area=${GAUDISOFT}
+export LHCb_release_area=${LHCBRELEASES}
+
+
+###################################################################################
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
 
@@ -222,25 +253,6 @@ if [ ! -e $HOME/.rootauthrc ] ; then
 	cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
 fi
 
-# Gaudi release area
-GAUDISOFT="$SITEROOT/sw/Gaudi/releases"; export GAUDISOFT
-GAUDIDEV="$SITEROOT/sw/Gaudi/dev"; export GAUDIDEV
-Gaudi_release_area="$GAUDISOFT"; export Gaudi_release_area
-
-# LCG release area
-LCG_release_area="/afs/cern.ch/sw/lcg/app/releases"; export LCG_release_area
-
-# DIM release area
-DIM_release_area="/afs/cern.ch/lhcb/online/control"; export DIM_release_area
-
-# LHCb release area
-LHCBRELEASES="$SITEROOT/lhcb/software/releases"; export LHCBRELEASES
-LHCBDEV="$SITEROOT/lhcb/software/DEV"; export LHCBDEV
-LHCBDOC="$LHCBRELEASES/DOC"; export LHCBDOC
-
-# LHCb project path
-LHCBPROJECTPATH="$LHCBRELEASES:$GAUDISOFT:$LCG_release_area"; export LHCBPROJECTPATH
-
 #================================================================================================
 # set CMTPATH or CMTPROJECTPATH
 # if CMTPROJECTPATH is set beforehand keep it ( test)
@@ -256,14 +268,6 @@ else
 		CMTPROJECTPATH="${User_release_area}:${LHCb_release_area}:${Gaudi_release_area}:${LCG_release_area}"; export CMTPROJECTPATH
 	fi
 fi
-
-#==============================================================================================
-# new emacs environment
-EMACSDIR="$LHCBRELEASES/TOOLS/Tools/Emacs/pro"; export EMACSDIR
-
-# LHCb styles configuration
-LHCBSTYLE="$LHCBRELEASES/TOOLS/Tools/Styles/pro"; export LHCBSTYLE
-
 
 
 # deal with different linux distributions ======================
@@ -355,16 +359,26 @@ if [ "$debug" != "debug" ] ; then
 	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
 fi
 if [ "$CMTPATH" != "" ]; then
-	echo " --- "\$CMTPATH " is set to ${origin}/${work}"
+	echo " --- "\$CMTPATH " is set to ${User_release_area}"
 else
-	echo " --- "\$User_release_area " is set to ${origin}/${work}"
+	echo " --- "\$User_release_area " is set to ${User_release_area}"
 	echo " --- "\$CMTPROJECTPATH " is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
 	echo " --- projects will be searched in "\$CMTPROJECTPATH
 fi 
 	echo " -------------------------------------------------------------------- "
 
-#==========================================================================
+###################################################################################
+# setting up the LbScripts project
+  	
+mainscriptloc=$LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+export PATH=${PATH}:$mainscriptloc
+. $mainscriptloc/SetupProject.sh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
+unset mainscriptloc
+
+###################################################################################
+# the end
 
 unset newcomp rh rhv comp cmtvers
 unset debug mysiteroot cmtconfig userarea cmtvers
+
 #set -
