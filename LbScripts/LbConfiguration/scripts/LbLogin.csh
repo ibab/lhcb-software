@@ -99,16 +99,6 @@ unset temp
 
 #################################################################
 
-if ( ! -e ${HOME}/.rhosts ) then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-   	echo " "
-   	echo "Joel.Closier@cern.ch"
-   	echo "+ ${USER}" > ${HOME}/.rhosts
-endif
-
-# remove any .cmtrc file stored in the $HOME directory
-if (-f ${HOME}/.cmtrc ) /bin/rm  ${HOME}/.cmtrc
-
 # clear PATH and LD_LIBRARY_PATH
 if ("$OSTYPE" == "linux" ) then
 	if ( $?SAVEPATH ) then
@@ -324,10 +314,6 @@ echo " -------------------------------------------------------------------"
 
 
 
-# to work with rootd the .rootauthrc file is required
-if !(-f $HOME/.rootauthrc) then
-	cp  /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
-endif 
 
 #==============================================================
 # deal with different linux distributions
@@ -399,9 +385,33 @@ endif
 
 #=================================================================================================
 
-if ( ! $?LD_LIBRARY_PATH ) setenv LD_LIBRARY_PATH
-if ( ! $?ROOTSYS ) setenv ROOTSYS
 
+###################################################################################
+
+if ( ! -e ${HOME}/.rhosts ) then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+   	echo " "
+   	echo "Joel.Closier@cern.ch"
+   	echo "+ ${USER}" > ${HOME}/.rhosts
+endif
+
+# remove any .cmtrc file stored in the $HOME directory
+if (-f ${HOME}/.cmtrc ) /bin/rm  ${HOME}/.cmtrc
+# to work with rootd the .rootauthrc file is required
+
+if ("$CMTSITE" == "CERN") then 
+	if !(-f $HOME/.rootauthrc) then
+		cp  /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
+	endif 
+endif
+
+if ( ! $?LD_LIBRARY_PATH ) then 
+	setenv LD_LIBRARY_PATH
+endif
+
+if ( ! $?ROOTSYS ) then 
+	setenv ROOTSYS
+endif
 
 echo "******************************************************"
 echo "*           WELCOME to the $comp on $rh system       *"

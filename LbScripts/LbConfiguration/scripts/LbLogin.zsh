@@ -57,20 +57,7 @@ done
 echo "Remaining arguments:"
 for arg do echo '--> '"\`$arg'" ; done
 
-#################################################################
-
-if [ ! -e ${HOME}/.rhosts ]; then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-	echo " "
-	echo "Joel.Closier@cern.ch"
-	echo "+ ${USER}" > ${HOME}/.rhosts
-fi
-
-# remove .cmtrc file if it exists
-if [ -f ${HOME}/.cmtrc ] ; then
-	/bin/rm  ${HOME}/.cmtrc
-fi
-
+##################################################################################
 # clear PATH and LD_LIBRARY_PATH
 if [ "x$SAVEPATH" != "x" ]; then
 	PATH="$SAVEPATH"; export PATH
@@ -240,14 +227,6 @@ return
 echo "Returned"
 
 
-#set -x
-
-
-# get .rootauthrc file if not yet there
-if [ ! -f $HOME/.rootauthrc ] ; then
-	cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
-fi
-
 echo " -------------------------------------------------------------------"
 
 
@@ -339,6 +318,26 @@ if [ "$debug" = "1" ] ; then
 fi
 set -
 
+#################################################################
+
+if [ ! -e ${HOME}/.rhosts ]; then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+	echo " "
+	echo "Joel.Closier@cern.ch"
+	echo "+ ${USER}" > ${HOME}/.rhosts
+fi
+
+# remove .cmtrc file if it exists
+if [ -f ${HOME}/.cmtrc ] ; then
+	/bin/rm  ${HOME}/.cmtrc
+fi
+
+# get .rootauthrc file if not yet there
+if [ "$CMTSITE" = "CERN" ] ; then
+	if [ ! -e $HOME/.rootauthrc ] ; then
+		cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
+	fi
+fi
 
 if [ !  ${LD_LIBRARY_PATH} ];then
 	export LD_LIBRARY_PATH=""

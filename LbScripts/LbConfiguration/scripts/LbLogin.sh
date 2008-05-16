@@ -56,19 +56,6 @@ echo "Remaining arguments:"
 for arg do echo '--> '"\`$arg'" ; done
 
 #################################################################
-
-if [ ! -e ${HOME}/.rhosts ]; then
-	echo "Creating a ${HOME}/.rhosts to use CMT"
-	echo " "
-	echo "Joel.Closier@cern.ch"
-	echo "+ ${USER}" > ${HOME}/.rhosts
-fi
-
-# remove .cmtrc file if it exists
-if [ -f ${HOME}/.cmtrc ] ; then
-	/bin/rm  ${HOME}/.cmtrc
-fi
-
 # clear PATH and LD_LIBRARY_PATH
 if [ "x$SAVEPATH" != "x" ]; then
 	export PATH="$SAVEPATH"
@@ -275,10 +262,6 @@ done
 
 
 
-# get .rootauthrc file if not yet there
-if [ ! -e $HOME/.rootauthrc ] ; then
-	cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
-fi
 
 
 
@@ -355,6 +338,27 @@ fi
 set -
 
 
+#################################################################
+
+if [ ! -e ${HOME}/.rhosts ]; then
+	echo "Creating a ${HOME}/.rhosts to use CMT"
+	echo " "
+	echo "Joel.Closier@cern.ch"
+	echo "+ ${USER}" > ${HOME}/.rhosts
+fi
+
+# remove .cmtrc file if it exists
+if [ -f ${HOME}/.cmtrc ] ; then
+	/bin/rm  ${HOME}/.cmtrc
+fi
+
+# get .rootauthrc file if not yet there
+if [ "$CMTSITE" = "CERN" ] ; then
+	if [ ! -e $HOME/.rootauthrc ] ; then
+		cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
+	fi
+fi
+
 if [ !  ${LD_LIBRARY_PATH} ];then
 	export LD_LIBRARY_PATH=""
 fi
@@ -365,16 +369,16 @@ fi
 echo "******************************************************"
 echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
-echo " --- "\$CMTROOT " is set to $CMTROOT "
-echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
+echo " --- CMTROOT is set to $CMTROOT "
+echo " --- CMTCONFIG is set to $CMTCONFIG "
 if [ "$debug" != "1" ] ; then
 	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
 fi
 if [ "$CMTPATH" != "" ]; then
-	echo " --- "\$CMTPATH " is set to ${User_release_area}"
+	echo " --- CMTPATH is set to ${User_release_area}"
 else
-	echo " --- "\$User_release_area " is set to ${User_release_area}"
-	echo " --- "\$CMTPROJECTPATH " is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
+	echo " --- User_release_area is set to ${User_release_area}"
+	echo " --- CMTPROJECTPATH is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
 	echo " --- projects will be searched in "\$CMTPROJECTPATH
 fi 
 	echo " -------------------------------------------------------------------- "
