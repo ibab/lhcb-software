@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.3 2008-05-16 14:27:55 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.4 2008-05-16 15:01:21 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -166,11 +166,10 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   {
     const RichRecSegment * segment2 = *iSeg2;
 
-    if ( segment == segment2 ) continue;//check not comparing the segment with itself
+    if ( segment == segment2 ) continue; // check not comparing the segment with itself
 
     // The radiator type.  Must be same as main segment
-    const Rich::RadiatorType rad1 = segment2->trackSegment().radiator();
-    if ( rad1 != rad ) { continue; }
+    if ( segment2->trackSegment().radiator() != rad ) { continue; }
 
     //Track hit point (Ch ring centre)
     const Gaudi::XYZPoint & tkPtnLocal1 = segment2->pdPanelHitPointLocal();
