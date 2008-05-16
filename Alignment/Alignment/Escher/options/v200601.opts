@@ -28,27 +28,6 @@ LHCBCOND.DefaultTAG = "DC06-repro0710";
 #include "$DDDBROOT/options/DC06.opts"
 DDDB.ConnectionTimeOut = 0;
 
-// Redefine some of the dbase stuff...
-CondDBDispatcherSvc.Alternatives = {
-                                "/Conditions/OT=CondDBLayeringSvc/OTLayers"
-                                ,"/Conditions/IT=CondDBLayeringSvc/ITLayers"
-                                ,"/Conditions=CondDBLayeringSvc/CONDLayers"
-};
-CONDLayers.Layers = { "CondDBAccessSvc/LHCBCOND"};
-OTLayers.Layers = { "CondDBAccessSvc/OTCOND"};
-ITLayers.Layers = { "CondDBAccessSvc/ITCOND"};
-LHCBCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/db/LHCBCOND.db/LHCBCOND";
-LHCBCOND.DefaultTag = "DC06-repro0710";
-LHCBCOND.ConnectionTimeOut = 0;
-OTCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/db/LHCBCOND.db/LHCBCOND";
-OTCOND.DefaultTag = "IT_OT_1";
-OTCOND.ConnectionTimeOut = 0;
-ITCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/dbaw2/LHCBCOND.db/LHCBCOND";
-//ITCOND.DefaultTag = "DC06-repro0710";
-ITCOND.DefaultTag = "IT_OT_1";
-ITCOND.ConnectionTimeOut = 0;
-
-
 // DC06 magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //
@@ -72,9 +51,7 @@ HistogramPersistencySvc.OutputFile = "Escher.root";  // Monitoring histos
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 //};
 EventSelector.Input   = {
-//"DATAFILE='PFN:/dev/shm/FieldOff_sg_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-"DATAFILE='PFN:/dev/shm/FieldOff_AW2_IT_OT_01.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-//"DATAFILE='PFN:/work/blouw/cmtuser/Brunel_v32r3p1/Rec/Brunel/v32r3p1/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/work/blouw/cmtuser/Brunel_v32r3p1/Rec/Brunel/v32r3p1/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"
