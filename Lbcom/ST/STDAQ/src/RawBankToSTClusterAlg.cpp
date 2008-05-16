@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.20 2008-05-12 13:08:36 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.21 2008-05-16 07:29:14 mneedham Exp $
 
 #include <algorithm>
 
@@ -183,7 +183,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
               << aWord.pseudoSize() << " chan "
               << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
               << endmsg ;
-    Warning("ADC values do not match", StatusCode::FAILURE);
+    return Warning("ADC values do not match", StatusCode::FAILURE);
   }
 
   // make a temporary vector to contain the ADC
@@ -222,7 +222,14 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
                                         adcs,neighbour, aBoard->boardID().id());
 
   // add to container
-  clusCont->insert(newCluster,nearestChan);
+  if (!clusCont->object(nearestChan)) {
+    clusCont->insert(newCluster,nearestChan);
+  }
+  else {
+    delete newCluster;
+    debug() << "Cluster already exists not inserted: " << nearestChan << endmsg;  
+    return Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
+  }
 
   return StatusCode::SUCCESS;
 }

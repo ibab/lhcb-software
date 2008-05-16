@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.12 2008-05-12 13:08:36 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.13 2008-05-16 07:29:14 mneedham Exp $
 
 
 #include <algorithm>
@@ -125,19 +125,23 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       STChannelID chan =  aBoard->DAQToOffline(aWord.channelID(),fracStrip,
                                                version);
 
+
       STLiteCluster liteCluster(fracStrip,
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
                                 chan);
-
-      fCont->push_back(liteCluster); 
     } //decoder
       
   } // iterBank
 
   // sort 
-  std::sort(fCont->begin(),fCont->end(), Less_by_Channel());
- 
+  std::stable_sort(fCont->begin(),fCont->end(), Less_by_Channel());
+  const size_t decodedSize = fCont->size();
+  std::unique(fCont->begin(), fCont->end(), Equal_Channel()); 
+  if (fCont->size() != decodedSize){
+    return Warning("Removed duplicate clusters in the decoding", StatusCode::SUCCESS, 100);
+  }
+
   return StatusCode::SUCCESS;
 
 }

@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.7 2008-05-12 13:08:36 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.8 2008-05-16 07:29:14 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -68,6 +68,25 @@ private:
       return obj1.channelID() < obj2.channelID() ;
     }
   };
+
+   
+  class Equal_Channel : public std::binary_function<LHCb::STLiteCluster,LHCb::STLiteCluster ,bool>{
+  public:
+
+    /** compare the channel of one object with the
+     *  channel of another object
+     *  @param obj1   first  object
+     *  @param obj2   second object
+     *  @return  result of the comparision
+     */
+    //
+    inline bool operator() ( LHCb::STLiteCluster obj1 , LHCb::STLiteCluster obj2 ) const
+    {
+      return obj1.channelID() == obj2.channelID() ;
+    }
+  };
+
+  
 };
 
 
