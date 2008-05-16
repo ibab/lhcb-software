@@ -6,12 +6,15 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r17>2008-05-15 LbcomSys v6r17</A></H1><PRE>
+</PRE><H1><A NAME=v6r17>2008-05-16 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
 - Packages added:    CaloTools v5r0 - Contains components previously in CaloUtils
-- Packages modified: L0Muon v7r8p1, RichDAQ v3r15p1, RichMCMonitors v1r6,
-    RichTools v2r20, STCheckers v2r5, STDAQ v3r6
+- Packages modified: L0Calo v9r13, L0Muon v7r8p1, RichDAQ v3r15p1,
+    RichMCMonitors v1r6, RichTools v2r20, STCheckers v2r5, STDAQ v3r6
+
+- In L0Calo v9r13
+  . src/L0CaloCandidatesFromRaw: protect against missing L0Calo bank
 
 - In L0Muon v7r8p1
   . Add check for untested status codes in L0MuonAlg
@@ -37,6 +40,8 @@ This version uses Gaudi v19r9 and LHCb v23r6
   . Follow addition of source id to cluster class
   . Follow clean up in STKernel
   . Only put valid sectors into readout mapping
+  . Check that key does not exist before inserting it (RawBanksToSTClusterAlg,
+    RawBanksToSTLiteClusterAlg)
 
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
