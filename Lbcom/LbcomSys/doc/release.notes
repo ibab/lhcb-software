@@ -6,12 +6,15 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r17>2008-05-09 LbcomSys v6r17</A></H1><PRE>
+</PRE><H1><A NAME=v6r17>2008-05-15 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
 - Packages added:    CaloTools v5r0 - Contains components previously in CaloUtils
-- Packages modified: RichDAQ v3r15p1, RichMCMonitors v1r6, RichTools v2r20,
-    STCheckers v2r5, STDAQ v3r6
+- Packages modified: L0Muon v7r8p1, RichDAQ v3r15p1, RichMCMonitors v1r6,
+    RichTools v2r20, STCheckers v2r5, STDAQ v3r6
+
+- In L0Muon v7r8p1
+  . Add check for untested status codes in L0MuonAlg
 
 - In RichDAQ v3r15p1, RichTools v2r20
   . Adapt to removal of obsolete RichDet locations
@@ -22,6 +25,7 @@ This version uses Gaudi v19r9 and LHCb v23r6
 
 - In RichTools v2r20
   . Fix un-checked StatusCode in RichMirrorSegFinder
+  . Add default mapping for isolated track tool
 
 - In STCheckers v2r5
   . Follow changes in DeSTDet v4r0 [introduction of DeSTSensor level]
@@ -32,6 +36,7 @@ This version uses Gaudi v19r9 and LHCb v23r6
   . Improve error handling/reporting in decoding
   . Follow addition of source id to cluster class
   . Follow clean up in STKernel
+  . Only put valid sectors into readout mapping
 
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
