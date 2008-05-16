@@ -4,13 +4,13 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r5 2008-05-16 ====================
 ! 2008-05-15 - Manuel Tobias Schiller
  - PatFwdPlaneCounter, PatFwdRegionCounter:
    order of arguments to std::distance were given in reverse order, leading to
    slightly decreased performance in PatForward - swapped aruments so that
    order is correct now
 
-!========================== PatAlgorithms v3r5 2008-05-15 ====================
 ! 2008-05-14 - Manuel Tobias Schiller
  - PatFwdPlaneCounter:
    - now uses boost::array instead of std::vector for arrays with known size
