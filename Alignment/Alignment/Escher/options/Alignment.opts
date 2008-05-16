@@ -18,20 +18,31 @@ DecodingSeq.MeasureTime = true;
 
 //#include "$VELOTOOLSROOT/options/VeloClusterPosition.opts"
 
-DecodingSeq.Members += {"DecodeVeloRawBuffer"};
-DecodingSeq.Members += {"DecodeVeloRawBuffer/DecodeVeloClusters"};
-DecodeVeloClusters.DecodeToVeloLiteClusters = false;
-DecodeVeloClusters.DecodeToVeloClusters     = true;
+//DecodingSeq.Members += {"DecodeVeloRawBuffer"};
+//DecodingSeq.Members += {"DecodeVeloRawBuffer/DecodeVeloClusters"};
+//DecodeVeloClusters.DecodeToVeloLiteClusters = false;
+//DecodeVeloClusters.DecodeToVeloClusters     = true;
 
-DecodingSeq.Members += {"RawBankToSTClusterAlg/createITClusters"
-			,"RawBankToSTLiteClusterAlg/createITLiteClusters"
-};
-createITClusters.detType     = "IT";
-createITLiteClusters.detType = "IT";
+//DecodingSeq.Members += {"RawBankToSTClusterAlg/createITClusters"
+//			,"RawBankToSTLiteClusterAlg/createITLiteClusters"
+//};
+//createITClusters.detType     = "IT";
+//createITLiteClusters.detType = "IT";
 #include "$STTOOLSROOT/options/Brunel.opts"
 
 // OTTimes 
 DecodingSeq.Members += { "OTTimeCreator" };
+
+// Calo stuff
+DecodingSeq.Members += {"GaudiSequencer/CaloBanksHandler" };
+#include "$CALODAQROOT/options/CaloBankHandler.opts"
+
+// add calo reconstruction to the main sequence
+EscherMainSeq.Members += {"GaudiSequencer/RerunCALOSeq"};
+RerunCALOSeq.MeasureTime = true;
+// When one needs the calorimeter objects, uncomment the following:
+#include "$ESCHEROPTS/CaloReco.opts"
+
 
 EscherMainSeq.Members += {"GaudiSequencer/TrackSelectionSeq"};
 
@@ -42,6 +53,7 @@ TrackSelectionSeq.Members += { "TStation" };
 //ToolSvc.ATrackSelector.MinPCut = 10000.0; // value is in MeV...
 //ToolSvc.ATrackSelector.MinPtCut = 2000.0;
 ToolSvc.ATrackSelector.charge = 0;
+ToolSvc.ATrackSelector.MinEnergyCut = 5000;
 //TStation.MinPCut = 20000.0; // value is in MeV...
 TStation.MinITHitCut = 8; 
 TStation.MinOTHitCut = 20; 
@@ -106,10 +118,11 @@ AlignmentSeq.MeasureTime = true;
 //**************************
 EscherMainSeq.Members += {"GaudiSequencer/ClosedASeq"};
 ClosedASeq.Members += {"GAlign/Align"};
-Align.OutputLevel = 2;
-//Align.Detectors = {"OT"};
-Align.Detectors = {"Muon"};
-Align.InputContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
-//Align.InputContainer = "Alignment/OTTracks";
+Align.OutputLevel = 3;
+Align.Detectors = {"IT"};
+//Align.Detectors += {"OT"};
+//Align.Detectors = {"Muon"};
+//Align.InputContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
+Align.InputContainer = "Alignment/ITTracks";
 //Align.InputContainer = "Rec/Track/Best";
 #include "$ESCHERROOT/options/TAlignment.opts"

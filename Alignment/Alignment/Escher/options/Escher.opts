@@ -20,9 +20,6 @@ Escher.OutputLevel = 3;
 MessageSvc.OutputLevel = 3;
 ToolSvc.OutputLevel = 3;
 
-// choose one of the following two option files to run 
-// either T-station alignment or VELO sensor alignment
 #include "$ESCHEROPTS/Alignment.opts"
-//#include "$ESCHEROPTS/VeloAlignment.opts"
 
 #include "$ESCHEROPTS/EscherMessage.opts"

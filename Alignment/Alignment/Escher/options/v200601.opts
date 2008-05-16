@@ -26,18 +26,27 @@
 DDDB.DefaultTAG = "DC06-repro0710";
 LHCBCOND.DefaultTAG = "DC06-repro0710";
 #include "$DDDBROOT/options/DC06.opts"
+DDDB.ConnectionTimeOut = 0;
 
 // Redefine some of the dbase stuff...
-CondDBDispatcherSvc.MainAccessSvc = "CondDBLayeringSvc/DDDBLayers";
-DDDBLayers.Layers = {"CondDBAccessSvc/DDDBNew", "CondDBAccessSvc/DDDB"};
-DDDBNew.ConnectionString = "sqlite_file:/software/lhcb/DBASE/Det/SQLDDDB/v3r1/db/DDDB.db/DDDB";
-DDDBNew.DefaultTag = "DC06-repro0710";
-
-CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBLayeringSvc/CONDLayers"};
-CONDLayers.Layers = { "CondDBAccessSvc/CONDNew", "CondDBAccessSvc/LHCBCOND"};
-CONDNew.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND-v2r3.db/LHCBCOND";
-//CONDNew.DefaultTag = "MisAlign-1";
-CONDNew.DefaultTag = "DC06-repro0710";
+CondDBDispatcherSvc.Alternatives = {
+                                "/Conditions/OT=CondDBLayeringSvc/OTLayers"
+                                ,"/Conditions/IT=CondDBLayeringSvc/ITLayers"
+                                ,"/Conditions=CondDBLayeringSvc/CONDLayers"
+};
+CONDLayers.Layers = { "CondDBAccessSvc/LHCBCOND"};
+OTLayers.Layers = { "CondDBAccessSvc/OTCOND"};
+ITLayers.Layers = { "CondDBAccessSvc/ITCOND"};
+LHCBCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/db/LHCBCOND.db/LHCBCOND";
+LHCBCOND.DefaultTag = "DC06-repro0710";
+LHCBCOND.ConnectionTimeOut = 0;
+OTCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/db/LHCBCOND.db/LHCBCOND";
+OTCOND.DefaultTag = "IT_OT_1";
+OTCOND.ConnectionTimeOut = 0;
+ITCOND.ConnectionString = "sqlite_file:/mnt/raid/blouw/cmtuser/Alignment_v2r3/Tools/CondDBUI/v2r7/dbaw2/LHCBCOND.db/LHCBCOND";
+//ITCOND.DefaultTag = "DC06-repro0710";
+ITCOND.DefaultTag = "IT_OT_1";
+ITCOND.ConnectionTimeOut = 0;
 
 
 // DC06 magnetic field
@@ -47,7 +56,7 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 10000;
 //ApplicationMgr.EvtMax = -1;
 //EventSelector.FirstEvent = 187;  // To skip some events
 //---------------------------------------------------------------------------
@@ -58,12 +67,15 @@ HistogramPersistencySvc.OutputFile = "Escher.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
 //---------------------------------------------------------------------------
-PoolDbCacheSvc.Catalog = {
-  "xmlcatalog_file:$ESCHERROOT/job/MyCatalog.xml"
+//PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$ESCHERROOT/job/MyCatalog.xml"
   // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
-};
+//};
 EventSelector.Input   = {
-"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:/dev/shm/FieldOff_sg_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/dev/shm/FieldOff_AW2_IT_OT_01.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:/work/blouw/cmtuser/Brunel_v32r3p1/Rec/Brunel/v32r3p1/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 };
@@ -73,6 +85,3 @@ EventSelector.Input   = {
 //---------------------------------------------------------------------------
 DstWriter.Output = "DATAFILE='PFN:Escher.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////
-
-
-

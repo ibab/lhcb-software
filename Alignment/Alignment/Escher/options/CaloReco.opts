@@ -1,0 +1,57 @@
+RerunCALOSeq.Members += { "GaudiSequencer/CaloDigits" ,
+                              "GaudiSequencer/CaloClusters",
+                              "GaudiSequencer/CaloTrackMatch" ,
+                              "GaudiSequencer/CaloRec", 
+                              "GaudiSequencer/CaloEnergys" };
+
+//------ Clusterize, clean & compute cluster parameters
+CaloClusters.Members += { "CellularAutomaton/EcalClust",
+                          "CaloSharedCellAlg/EcalShare",
+                          "CaloClusterCovarianceAlg/EcalCovar",
+                          "CaloClusterCorrect3x3Position"};
+
+//------ Track-Cluster 2D matching for Neutral/Charged cluster selection
+
+CaloTrackMatch.Members +=     { "GaudiSequencer/CaloAcceptance",
+                                "PhotonMatchAlg/ClusterMatch"   } ;
+
+//------ Acceptance Filters
+CaloAcceptance.Members = { "InSpdAcceptanceAlg/InSPD" ,
+                           "InPrsAcceptanceAlg/InPRS" ,
+                           "InEcalAcceptanceAlg/InECAL",
+                           "InHcalAcceptanceAlg/InHCAL" ,
+                           "InBremAcceptanceAlg/InBREM" };
+
+CaloRec.Members += {"CaloElectronAlg/ElectronRec"};
+
+#include "$CALORECOOPTS/ElectronRec.opts"
+
+// Configure Tools
+#include "$CALORECOOPTS/ExtraDigits.opts"
+#include "$CALORECOOPTS/CaloECorrectionParam.opts"
+#include "$CALORECOOPTS/CaloSCorrectionParam.opts"
+#include "$CALORECOOPTS/CaloLCorrectionParam.opts"
+//------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
+
+CaloEnergys.Members +=
+  {
+    // 3D Matching
+     "GaudiSequencer/CaloMatch"
+    // Energy Deposit along track path
+    ,"GaudiSequencer/CaloEnergy"
+    // CaloID DLL's
+    // ,"GaudiSequencer/CaloDLLs"
+  } ;
+CaloMatch.Members +=
+  {
+    "ElectronMatchAlg/ElectronMatch"
+    ,"BremMatchAlg/BremMatch"
+  };
+CaloEnergy.Members =
+  {
+    "Track2SpdEAlg/SpdE"
+    ,"Track2PrsEAlg/PrsE"
+    ,"Track2EcalEAlg/EcalE"
+    ,"Track2HcalEAlg/HcalE"
+  };
+
