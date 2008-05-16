@@ -77,7 +77,7 @@ while (1)
 		breaksw
 	case -s:
 	case --shared:
-		set shared = 1 ;  shift
+		set sharedarea = 1 ;  shift
 		breaksw
     case --:
 		shift
@@ -110,8 +110,12 @@ endif
 if (-f ${HOME}/.cmtrc ) /bin/rm  ${HOME}/.cmtrc
 
 # clear PATH and LD_LIBRARY_PATH
-if ("$OSTYPE" == "linux" && $?SAVEPATH && "$PATH" != "$SAVEPATH") then
-  setenv PATH $SAVEPATH
+if ("$OSTYPE" == "linux" ) then
+	if ( $?SAVEPATH ) then
+		if ( "$PATH" != "$SAVEPATH") then
+  			setenv PATH $SAVEPATH
+  		endif
+  	endif
 endif
 
 unsetenv LD_LIBRARY_PATH
@@ -238,16 +242,32 @@ setenv LHCb_release_area ${LHCBRELEASES}
 # shared area massaging
 # On AFS the shared area is /afs/cern.ch/project/gd/apps/lhcb/lib
 
-if ($sharedarea !=  0) then
+if ! ( $sharedarea ==  0 ) then
 	if ($?VO_LHCB_SW_DIR) then
 		export LHCBPROJECTPATH=${LHCBPROJECTPATH}:${VO_LHCB_SW_DIR}/lib/lhcb:${VO_LHCB_SW_DIR}/lib/lcg/external
 	else
 		echo 'You have requested a shared area but no VO_LHCB_SW_DIR is set.'
-		echo 'Please define it."
+		echo 'Please define it.'
 		exit
 	endif
 endif
 
+###################################################################################
+# set CMTPATH or CMTPROJECTPATH
+# if CMTPROJECTPATH is set beforehand keep it
+if ("$?CMTPROJECTPATH")then
+	unsetenv CMTPATH
+else
+# today set CMTPROJECTPATH if the version of CMT is at least v1r20
+	echo `cmt version` | grep v1r20 > /dev/null
+	if ( $status == 1 ) then
+		setenv CMTPATH $User_release_area
+		unsetenv CMTPROJECTPATH
+	else
+		unsetenv CMTPATH
+		setenv CMTPROJECTPATH ${User_release_area}:${LHCBPROJECTPATH}
+	endif
+endif
 
 ###################################################################################
 echo "debug $debug"
@@ -255,7 +275,7 @@ echo "mysiteroot $mysiteroot"
 echo "cmtconfig $cmtconfig"
 echo "userarea $userarea"
 echo "cmtvers $cmtvers"
-
+echo "sharedarea $sharedarea"
 
 echo "Exiting ..."
 exit
@@ -274,7 +294,6 @@ endif
 set compdef = gcc$comp
 
 
-set debug = ''
 unset newcomp
 
 # get CMT and/or gcc versions from arguments if any
@@ -309,27 +328,6 @@ echo " -------------------------------------------------------------------"
 if !(-f $HOME/.rootauthrc) then
 	cp  /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
 endif 
-
-
-
-#===========================================================================
-# set CMTPATH or CMTPROJECTPATH
-# if CMTPROJECTPATH is set beforehand keep it ( test)
-if ("$?CMTPROJECTPATH")then
-	unsetenv CMTPATH
-else
-# today set CMTPROJECTPATH if the version of CMT is at least v1r20
-	echo `cmt version` | grep v1r20 > /dev/null
-	if ( $status == 1 ) then
-		setenv CMTPATH $User_release_area
-		unsetenv CMTPROJECTPATH
-	else
-		unsetenv CMTPATH
-		setenv CMTPROJECTPATH ${User_release_area}:${LHCb_release_area}:${Gaudi_release_area}:${LCG_release_area}
-	endif
-endif
-
-
 
 #==============================================================
 # deal with different linux distributions
@@ -395,8 +393,9 @@ unset echo
 
 setenv CMTDEB    "${CMTOPT}_dbg"
 setenv CMTCONFIG "${CMTOPT}"
-if ($debug == "debug") setenv CMTCONFIG "$CMTDEB"
-
+if ($debug == 1) then
+	setenv CMTCONFIG "$CMTDEB"
+endif
 
 #=================================================================================================
 
@@ -409,7 +408,7 @@ echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
-	if ($debug != 'debug') echo " --- to compile and link in debug mode : setenv CMTCONFIG "\$CMTDEB" ; gmake"
+	if ($debug != 1) echo " --- to compile and link in debug mode : setenv CMTCONFIG "\$CMTDEB" ; gmake"
   	if ($?CMTPATH) then
     	echo " --- "\$CMTPATH " is set to ${User_release_area}" 
   	else

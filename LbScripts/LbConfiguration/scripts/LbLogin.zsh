@@ -206,11 +206,26 @@ if [ ! "$sharedarea" = "0" ] ; then
 		export LHCBPROJECTPATH=${LHCBPROJECTPATH}:${VO_LHCB_SW_DIR}/lib/lhcb:${VO_LHCB_SW_DIR}/lib/lcg/external
 	else
 		echo 'You have requested a shared area but no VO_LHCB_SW_DIR is set.'
-		echo 'Please define it."
+		echo 'Please define it.'
 		return
 	fi
 fi
 
+###################################################################################
+# set CMTPATH or CMTPROJECTPATH
+# if CMTPROJECTPATH is set beforehand keep
+if [ "${CMTPROJECTPATH}" != "" ]; then
+	unset CMTPATH
+else
+	cvers=`echo $cmtvers | grep v1r20`
+	if  [ "W${cvers}" = "W" ]; then
+		export CMTPATH="${User_release_area}"  
+		unset CMTPROJECTPATH
+	else
+		unset CMTPATH
+		export CMTPROJECTPATH="${User_release_area}:${LHCBPROJECTPATH}"
+	fi
+fi
 
 ###################################################################################
 echo "debug $debug"
@@ -319,7 +334,7 @@ fi
 
 export CMTCONFIG="${CMTOPT}"
 export CMTDEB="${CMTCONFIG}_dbg"
-if [ "$debug" = "debug" ] ; then
+if [ "$debug" = "1" ] ; then
 	export CMTCONFIG="${CMTDEB}"
 fi
 set -
@@ -338,7 +353,7 @@ echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
-if [ "$debug" != "debug" ] ; then
+if [ "$debug" != "1" ] ; then
 	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
 fi
 if [ "$CMTPATH" != "" ]; then

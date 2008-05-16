@@ -1,5 +1,5 @@
 
-# set -x
+#set -v
 
 # get the location of this very script
 
@@ -23,7 +23,6 @@ if [ "$scriptsdir" = "." ]; then
 fi
 
 echo $scriptsdir
-
 #################################################################
 # parsing command line arguments
 
@@ -34,7 +33,7 @@ userarea=0
 cmtvers=0
 sharedarea=0
 
-TEMP=`getopt -o  d,m:,c:,u:,v:,s --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers,shared: -- "$@"`
+TEMP=`getopt -o  d,m:,c:,u:,v:,s --long debug,mysiteroot:,cmtconfig:,userarea:,cmtvers:,shared -- "$@"`
 
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; exit 1 ; fi
 
@@ -72,7 +71,7 @@ fi
 
 # clear PATH and LD_LIBRARY_PATH
 if [ "x$SAVEPATH" != "x" ]; then
-	PATH="$SAVEPATH"; export PATH
+	export PATH="$SAVEPATH"
 fi
 unset LD_LIBRARY_PATH
 unset COMPILER_PATH
@@ -208,11 +207,26 @@ if [ ! "$sharedarea" = "0" ] ; then
 		export LHCBPROJECTPATH=${LHCBPROJECTPATH}:${VO_LHCB_SW_DIR}/lib/lhcb:${VO_LHCB_SW_DIR}/lib/lcg/external
 	else
 		echo 'You have requested a shared area but no VO_LHCB_SW_DIR is set.'
-		echo 'Please define it."
+		echo 'Please define it.'
 		return
 	fi
 fi
 
+###################################################################################
+# set CMTPATH or CMTPROJECTPATH
+# if CMTPROJECTPATH is set beforehand keep
+if [ "${CMTPROJECTPATH}" != "" ]; then
+	unset CMTPATH
+else
+	cvers=`echo $cmtvers | grep v1r20`
+	if  [ "W${cvers}" = "W" ]; then
+		export CMTPATH="${User_release_area}"  
+		unset CMTPROJECTPATH
+	else
+		unset CMTPATH
+		export CMTPROJECTPATH="${User_release_area}:${LHCBPROJECTPATH}"
+	fi
+fi
 
 ###################################################################################
 echo "debug $debug"
@@ -237,7 +251,7 @@ fi
 
 compdef=gcc$comp
 newcomp=""
-debug=""
+
 
 # get CMT and/or gcc versions from arguments if any  
 
@@ -266,21 +280,6 @@ if [ ! -e $HOME/.rootauthrc ] ; then
 	cp /afs/cern.ch/lhcb/scripts/.rootauthrc $HOME/.
 fi
 
-#================================================================================================
-# set CMTPATH or CMTPROJECTPATH
-# if CMTPROJECTPATH is set beforehand keep it ( test)
-if [ "${CMTPROJECTPATH}" != "" ]; then
-	unset CMTPATH
-else
-	cvers=`echo $cmtvers | grep v1r20`
-	if  [ "W${cvers}" = "W" ]; then
-		CMTPATH="${User_release_area}"; export CMTPATH  
-		unset CMTPROJECTPATH
-	else
-		unset CMTPATH
-		CMTPROJECTPATH="${User_release_area}:${LHCb_release_area}:${Gaudi_release_area}:${LCG_release_area}"; export CMTPROJECTPATH
-	fi
-fi
 
 
 # deal with different linux distributions ======================
@@ -350,7 +349,7 @@ fi
 
 export CMTCONFIG="${CMTOPT}"
 export CMTDEB="${CMTCONFIG}_dbg"
-if [ "$debug" = "debug" ] ; then
+if [ "$debug" = "1" ] ; then
 	export CMTCONFIG="${CMTDEB}"
 fi
 set -
@@ -368,7 +367,7 @@ echo "*           WELCOME to the $comp on $rh system       *"
 echo "******************************************************"
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
-if [ "$debug" != "debug" ] ; then
+if [ "$debug" != "1" ] ; then
 	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
 fi
 if [ "$CMTPATH" != "" ]; then
