@@ -4,14 +4,14 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r6 2008-05-09 =============================
+!========================== DDDB v1r6 2008-05-16 =============================
 ! 2008-05-09 - Marco Cattaneo
- - Add LHCb-2008.py to describe default tags for real 2008 detector
+ - Add LHCb-2008.py to describe default tags for real 2008 detector. Current 
+   default tag is head-20080516, requires SQLDDDB >= v4r3
 
 ! 2008-04-23 - Marco Cattaneo
- - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080427, for use
-   with new ST detector elements in LHCb v23r6. 
-   Requires SQLDDDB >= v4r3
+ - Change default DC06 tag (in DC06.opts, DC06.py) to DC06-20080516, for use
+   with new ST detector elements in LHCb v23r6. Requires SQLDDDB >= v4r3
 
 !========================== DDDB v1r5 2008-04-11 =============================
 ! 2008-04-11 - Marco Cattaneo
