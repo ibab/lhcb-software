@@ -5,22 +5,29 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r5>2008-05-09 RecSys v5r6</A></H1><PRE>
+</PRE><H1><A NAME=v5r5>2008-05-13 RecSys v5r6</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6.
 
-- Packages modified: CaloMoniDst v3r0p2, NNTools v1r2p1, PatAlgorithms v1r5, 
-    RecAlgs v1r6, RichRecMCTools v2r18, RichRecMonitors v2r17, RichRecQC v2r18,
-    RichRecPhotonTools v1r3, RichRecStereoTools v1r1, RichRecSys v3r10,
-    RichRecTools v4r4, RichRecTrackTools v1r4, TrackCheckers v3r4p2,
-    TrackFitEvent v3r14, TrackTools v3r6, TrackUtils v1r20, TsaAlgorithms v3r3
+- Packages modified: CaloMoniDst v3r0p2, CaloPIDs v4r10, NNTools v1r2p1,
+    PatAlgorithms v1r5,  RecAlgs v1r6, RichRecMCTools v2r18,
+    RichRecMonitors v2r17, RichRecQC v2r18, RichRecPhotonTools v1r3,
+    RichRecStereoTools v1r1, RichRecSys v3r10, RichRecTools v4r4,
+    RichRecTrackTools v1r4, TrackCheckers v3r4p2, TrackFitEvent v3r14,
+    TrackTools v3r6, TrackUtils v1r20, TsaAlgorithms v3r3
 
 - In CaloMoniDst v3r0p2, TrackCheckers v3r4p2
   . Fixes for Python job options parsing and type checking
+
+- In CaloPIDs v4r10
+  . Restore void _setProperty(..) instead of StatusCode setProperty(...) to fix
+    untested StatusCodes
 
 - In NNTools v1r2p1
   . Fix unchecked StatusCode
 
 - In PatAlgorithms v3r5
+  . Many timing and efficiency improvements to PatSeeding
+  . Minor timing improvements in PatForward
   . PatMatchTool: New implementation of PatMatch as tool
     o public function: matchSingle for Hlt
     o quality of match is now job option: maxMatchChi2
@@ -50,12 +57,16 @@ This version uses Gaudi v19r9 and LHCb v23r6.
 - In RichRecQC v2r18
   . Update ROOT scripts for new implementation of RichPIDQC
   . Update RichPIDQC to use new PID plotting tool
+  . Add use of stereographic refit and isolated tracks to RichRecoQC
 
 - In RichRecStereoTools v1r1
   . Implement improvements to the IStereoFitter interface
   . Remove hard-coded refractive index assumptions in StereoFitter
   . Move declareProperty(...) calls to constructor in StereoFitter
   . Add additional debug printout + remove all cout calls from StereoFitter
+  . Suppress some Warning messages in the fitter sooner + set status to SUCCESS
+  . Add configuration option to allow the user to decide if the segment and 
+    fitted photons are updated or not following the fit.
 
 - In RichRecSys v3r10
   . Tune track state tolerances to allow DST tracks to be used (no radiator 
