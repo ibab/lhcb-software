@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.101 2008-05-15 23:02:37 robbep Exp $
+! $Id: release.notes,v 1.102 2008-05-16 09:05:28 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r13 2008-05-16 ========================
 ! 2008-05-16 - Patrick Robbe
  - src/L0CaloCandidatesFromRaw: protect against missing L0Calo bank
 
-!========================= L0Calo v9r12 2007-04-22 ========================
+!========================= L0Calo v9r12 2008-04-22 ========================
 ! 2008-04-10 - Patrick Robbe
  - src/L0CaloAlg: add options to use or not PS/SPD and ECAL information
    resp. to build electromagnetic and hadron candidates. Default is to
