@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.13 2008-04-02 11:04:33 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.14 2008-05-16 08:58:34 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -51,22 +51,34 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
   
   std::string name     = rootInTES() + LHCb::L0CaloCandidateLocation::Default + m_extension;
   std::string nameFull = rootInTES() + LHCb::L0CaloCandidateLocation::Full + m_extension;
-  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
-  const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Calo );
-
-  // convert the banks to two arrays of ints.
+  LHCb::RawEvent * rawEvt = 0 ;
+  int version = -1 ;
   std::vector<std::vector<unsigned int> > data;
-  for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
-    unsigned int* body = (*itBnk)->data();
-    std::vector<unsigned int> temp;
-    for ( int k = 0; (*itBnk)->size()/4 > k; ++k ) {
-      temp.push_back( *body++ );
+  
+  if ( exist< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ) {
+    rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ;
+    const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Calo );
+
+    if ( 0 == banks.size() ) {
+      Error( "L0Calo Bank has not been found" ).ignore() ;
+    } else {
+      // convert the banks to two arrays of ints.
+      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
+        unsigned int* body = (*itBnk)->data();
+        std::vector<unsigned int> temp;
+        for ( int k = 0; (*itBnk)->size()/4 > k; ++k ) {
+          temp.push_back( *body++ );
+        }
+        data.push_back( temp );
+      }
+      // Version of the bank
+      version = banks.front() -> version() ;
     }
-    data.push_back( temp );
+  } else {
+    Warning( "RawEvent not found" ).ignore() ;
   }
-  // Version of the bank
-  int version = banks.front() -> version() ;
+
   m_convertTool->convertRawBankToTES( data, nameFull, name , version );
   
   if ( "" != m_extension ) {
