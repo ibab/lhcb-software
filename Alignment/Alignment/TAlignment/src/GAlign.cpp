@@ -1,10 +1,9 @@
-//-----------------------------------------------------------------------------
-/** @file GAlign.cpp
+/*
  *
- *  Implementation file for RICH reconstruction tool : GAlign
+ *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.10 2008-03-04 09:40:29 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.11 2008-05-16 16:57:41 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -48,6 +47,7 @@
 // gsl stuff
 #include "gsl/gsl_cdf.h"
 
+#include "Math/SMatrix.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -62,6 +62,13 @@ GAlign::GAlign( const std::string& name,
                 ISvcLocator* pSvcLocator ):
   GaudiTupleAlg ( name , pSvcLocator ),
   m_converged(false),
+//  m_tr_cnt(0),
+//  m_trackselector(0),
+  m_taConfig(0),
+  m_measProvider(0),
+//  m_trackenergy(0),
+  m_AlignConfTool(""),
+  m_nGlPars(0),
   velo_detector(false),
   tt_detector(false),
   it_detector(false),
@@ -72,7 +79,13 @@ GAlign::GAlign( const std::string& name,
   m_ForceIterations(false),
   m_iterations(0),
   m_chi2(0.0),
-  m_ntr(0)
+  m_ntr(0),
+//  m_meas_cnt(0),
+  tr_cnt(0),
+  nfalse(false),
+  ntrue(false),
+  m_chi2B4(0.0),
+  m_ntrB4(0)
 {
   // define track containers
   declareProperty("TAlignment_Config_Tool", m_AlignConfTool = "TAConfig");
@@ -83,6 +96,7 @@ GAlign::GAlign( const std::string& name,
   declareProperty("MaxIterations", m_MaxIterations = 5);
   declareProperty("evtsPerRun", m_evtsPerRun = 2000);
   declareProperty("forceIterations", m_ForceIterations = false );
+  declareProperty("MinIterations", m_iterationsMin = 5 );
 }
 
 GAlign::~GAlign() { 
@@ -108,9 +122,12 @@ StatusCode GAlign::initialize() {
   }
   // get the number of alignment (== global) parameters
   m_nGlPars = m_taConfig->NumAlignPars();
-  m_align_err.resize( m_nGlPars );
-  m_align.resize( m_nGlPars );
-  m_estimated.resize( m_nGlPars );
+  m_align_err.resize( m_nGlPars, 0.0 );
+  m_align.resize( m_nGlPars, 0.0 );
+  m_estimated.resize( m_nGlPars, 0.0 );
+  m_ntrack_pars = m_taConfig->NumTrPars();
+  // set track counter
+  tr_cnt = 0;
   info() << "Number of global parameters = " << m_nGlPars << endreq;
   info() << "Size of m_estimated = " << m_estimated.size() << endreq;
   if ( sc.isFailure() ) {
@@ -127,32 +144,6 @@ StatusCode GAlign::initialize() {
   it_detector = m_taConfig->AlignDetector( s );
   s = "Muon";
   muon_detector = m_taConfig->AlignDetector( s );
-  //get detector map with Gaudi::Transform3D objects
-  std::vector<Gaudi::Transform3D> m_otmap = m_taConfig->GetDetMap();
-  EulerAngles EuAng( 0.,0., 0. );
-  Gaudi::Rotation3D Rotation(EuAng);
-  Gaudi::XYZVector position(0.,0.,0.);
-  double m_zmean;
-  for(int ra=0; ra< 12; ++ra){
-    
-    m_otmap[ra].GetDecomposition( Rotation, position );
-    double b11,b12,b13,b21,b22,b23,b31,b32,b33;
-    Rotation.GetComponents(b11,b12,b13,b21,b22,b23,b31,b32,b33);
-    double alpha = atan2(b21,b11);
-    double beta = atan2(-b31,sqrt(b32*b32+b33*b33));
-    double gamma = atan2(b32,b33);
-    info() << " use mod. 'SetLocal' for det with rank = " << ra <<endreq
-           << " and alpha--> " << alpha << endreq
-           << " and beta--> " << beta << endreq
-           << " and gamma--> " << gamma << endreq
-           << " and shifts--> " << position << endreq
-           << " and z pos --> " << position.z() << endreq;
-    m_zmean+=position.z();
-    info() << " and m_zmean = " << m_zmean << endreq;
-  }
-  m_zmean = m_zmean/12.;
-  info() << " m_zmean = " << m_zmean << endreq;
-
   // add listener to incident svc
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
   if (!incSvc) {
@@ -209,18 +200,16 @@ StatusCode GAlign::execute() {
   } else {
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
-    
-    int tr_cnt = 0;
     bool crossed = false;
-    
-    for ( iterT = inCont->begin(), tr_cnt = 0; iterT != inCont->end(); iterT++, tr_cnt++) {
+    for ( iterT = inCont->begin(); iterT != inCont->end(); iterT++, tr_cnt++) {
       debug() << "Looping... track nr: " << tr_cnt << endreq;
+      // create & initialize the track parameter vector with zeros
+      if ( m_iterations == 0 )
+	m_taConfig->MakeTrackParVec();
       Track *atrack = *iterT;
       if ( atrack->nStates() < 1 ) continue;
       if ( atrack->nMeasurements() == 0 ) {
 	// load the measurements on the track
-//	m_measProvider->load();
-	// calculate from the track what the measurement was
 	StatusCode mc = m_measProvider->load( *atrack );
 	if ( ! mc ) {
 	  error() << "Error re-creating measurements!" << endreq;
@@ -228,20 +217,19 @@ StatusCode GAlign::execute() {
 	}
       }
       // Reset MilleTool variables etc.
-      StatusCode sc =  m_taConfig->ResetGlVars();
+      m_taConfig->ResetGlVars();
+      m_taConfig->ResetLVars();
       // ************************
       // 
       // Loop over the LHCbIDs 
       // 
       // ************************
-      int rank; // position in c-matrix for a detector element
-      std::vector<LHCb::LHCbID> IDs;
       std::vector<LHCb::LHCbID>::const_iterator itID;
-      double weight = 1.0;
       crossed = false;
-      double trPar[4];
-      double chiMat[4][4];
-      m_taConfig->ZeroMatrVec( chiMat, trPar );
+      std::vector<double> trPar( m_ntrack_pars, 0.0 ); // set size & contents of vector for track parameters
+      m_taConfig->SetTrackPar( trPar, tr_cnt );
+      m_taConfig->ZeroMatrix();
+      int hit_cnt = 0;
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
@@ -250,13 +238,11 @@ StatusCode GAlign::execute() {
                  ( id.isOT() && ot_detector ) ||
                  ( id.isIT() && it_detector ) ||
                  ( id.isMuon() && muon_detector) ) ) {
-	  info() << "LHCbID " << id.detectorType() << " is on track!" << " "
-		  << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
-	  double Z_position = 0.0;
-	  double gamma = 0.0;
+	  hit_cnt++;
+	  //	  info() << "LHCbID " << id.detectorType() << " is on track!" << " "
+	  //		  << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
 	  double measMP = 0.0;
-	  LHCb::State trState;
-	  sc = m_taConfig->Rank( id, rank );
+	  StatusCode sc = m_taConfig->Rank( id ); // note, this sets also the variable m_rank_nr, local to TAConfig
 	  if ( sc.isFailure() ) {
             error() << "Not processing any data from tracks!" << endreq;
             error() << "while tt = " << tt_detector << " and it = "
@@ -277,35 +263,107 @@ StatusCode GAlign::execute() {
                 info() << "Muon measuremnt type = " << muMeas->muonProjection() << endreq;
             }
 	    if ( sc.isSuccess() ) {
+	      // Note: this sets the variables
+	      // m_weight (error on the measurement)
+	      // cAlignD (center of detector element to be aligned (Layer or Sensor)
+	      // mv (direction of strips/wires)
+	      // kv  (direction perpendicular to strips)					     //
+	      // mC (measurement center (for 1 strip cluster, is the center of strip)
+	      // sD (center of sensor)
+	      // These variables are local to TAConfig
 	      sc = m_taConfig->CalcResidual( *atrack, 
-				        trMeas, 
-				        rank, 
-				        weight, 
-				        measMP,
-				        Z_position, 
-				        gamma, 
-				        trState ); 
+					     trMeas, 
+					     id,
+  					     true,
+					     measMP ); 
               if ( sc.isFailure() ) {
                 error() << "1: Error calculating residual" << endreq;
+		continue;
               }
-	      sc = m_taConfig->ConfMatrix( gamma,
-				      measMP,
-				      weight,
-				      Z_position,
-				      trPar,
-				      chiMat );
-              if ( sc.isFailure() ) {
+	      sc = m_taConfig->ConfMatrix( tr_cnt, 
+					   measMP,
+					   trPar );
+              if ( sc.isFailure()  ) {
                 error() << "1: Error configuring matrix" << endreq;
+		continue;
 	      }
             }
           } // loop over measurements which belong to lhcbid.
-	} 
+	}
       } // First loop over hits
+      if ( hit_cnt == 0 ) 
+	// there were no usefull hits on this track, continue with next
+	continue; 
       // Do a local track fit to get an estimate of the track parameters
-      int rrank = m_taConfig->InvMatrix( chiMat, trPar, 4 );
-      double Z_position = -1000.0;
-      // Start second loop over hits
+      int rrank = m_taConfig->InvMatrix( trPar, m_ntrack_pars );
+      if ( rrank == -1 )
+	return StatusCode::FAILURE;
+      // store the track parameters
+      m_taConfig->SetTrackPar( trPar, tr_cnt );
+      // start second loop over hits
+      m_taConfig->ResetLVars(); 
+      int nmes = 0;
+      bool flagC = true;
+      bool flagC2 = true;
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
+        LHCb::LHCbID id = *itID;
+        if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+             && (( id.isTT() && tt_detector ) ||
+                 ( id.isOT() && ot_detector ) ||
+                 ( id.isIT() && it_detector ) ||
+                 ( id.isMuon() && muon_detector) ) ) {
+          double measMP = 0.0;
+          LHCb::State trState;
+          StatusCode sc = m_taConfig->Rank( id );
+	  if ( sc.isFailure() ) {
+            error() << "Not processing any data from tracks!" << endreq;
+	    error() << "while tt = " << tt_detector << " and it = "
+		  << it_detector << " and ot = " << ot_detector << endreq;
+            error() << "This hit: isOT(): " << id.isOT()
+                    << " isIT(): " << id.isIT() << " isTT(): "
+                    << id.isTT() << " id.isVelo(): " << id.isVelo() << endreq;
+	    return sc;
+          }
+          int numTrajs = 1;
+          if ( id.isMuon() ) numTrajs++;
+          for ( int i = 0; i < numTrajs; i++ ) {
+            LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
+            // get the angle of the trajectory wrt to the 'standard' X-axis...
+            nmes++;
+	    sc = m_taConfig->CalcResidual( *atrack,
+                                           trMeas,
+                                           id,
+                                           false,
+                                           measMP );
+	    if ( sc.isFailure() ) {
+	      error() << "Error in CalcResidual" << endreq;
+	      continue;
+	    }
+	  }
+	}
+	if ( m_taConfig->GetLChi2() > 3.0 )
+	  flagC2 = flagC2 && (false);
+      }
+      bool neXt = false;
+      flagC=true;
+      if ( tr_cnt == 0 && m_iterations > 9 ) 
+         neXt = true;
+      m_taConfig->CheckLChi2( m_ntrack_pars, nmes, flagC, neXt );
+      if ( m_iterations > 15 )
+         flagC = flagC && flagC2;
+      m_taConfig->SetFlag( flagC, tr_cnt );
+      if ( flagC == false ) 
+	 nfalse++;
+      else 
+         ntrue++;
+      if ( flagC == true )
+         m_chi2 += m_taConfig->GetLChi2(); 
+      m_taConfig->ResetLVars();
+      
+      // Start third loop over hits
+      for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
+        if ( flagC == false ) // go to next track if flag of chi2-cut-pass-test is false
+           break;
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
 	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
@@ -314,10 +372,9 @@ StatusCode GAlign::execute() {
                  ( id.isIT() && it_detector ) ||
                  ( id.isMuon() && muon_detector) ) ) {
 	  double measMP = 0.0;
-	  Z_position = -1000.0;
 	  LHCb::State trState;
-	  sc = m_taConfig->Rank( id, rank );
-	  if ( sc.isFailure() ) {
+	  StatusCode sc = m_taConfig->Rank( id );
+	  if ( ! sc ) {
 	    error() << "Not processing any data from tracks!" << endreq;
 	    error() << "while tt = " << tt_detector << " and it = " 
 		    << it_detector << " and ot = " << ot_detector << endreq;
@@ -332,26 +389,27 @@ StatusCode GAlign::execute() {
           for ( int i = 0; i < numTrajs; i++ ) {
             LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
 	    // get the angle of the trajectory wrt to the 'standard' X-axis...
-	    double gamma = 0.0;
+	    measMP = -99999.99;
 	    sc = m_taConfig->CalcResidual( *atrack,
-				          trMeas, 
-				          rank, 
-				          weight, 
-				          measMP,
-				          Z_position, 
-				          gamma, 
-				          trState ); 
-	    info() << "Measurement = " << measMP << endreq;
+				           trMeas, 
+ 					   id,
+					   false,
+				           measMP ); 
+	    if ( fabs(measMP) > 1000.0 ) {
+	      info() << "Measurement = " << measMP << endreq;
+	      info() << "tr_cnt = " << tr_cnt << endreq;
+	    }
 	    if ( sc.isFailure() ) {
 	      error() << "Error in CalcResidual, will continue!" << endreq;
 	      continue;
 	    }
 	    // Configure the 'large' C-matrix
-	    sc = m_taConfig->FillMatrix( rank, 
-				           trPar,
-				           measMP, 
-				           Z_position, 
-				           gamma );
+	    sc = m_taConfig->FillMatrix(  tr_cnt,
+				           measMP );
+	    if ( sc.isFailure() ) {
+	      error() << "Error in FillMatrix" << endreq;
+	      continue;
+	    }
 	  }
         }
       }
@@ -359,24 +417,24 @@ StatusCode GAlign::execute() {
        *  do local track fit with MP only when there was a track going through
        *  the detector part one wants to align.
        **********************************************************************/
-      if ( Z_position > 0.0 ) {
+      if ( nmes > 5 ) { // at least 5 hits on the track
 	std::vector<double> trpar( 2 * m_taConfig->NumTrPars(), 0.0 );
 	double chi2 = 0;
-	//local track fit
 	double residual = -99999.9;
-        m_ntr++;
-	sc = m_taConfig->LocalTrackFit(tr_cnt,trpar,0,m_estimated, chi2, residual);
-	plot2D( m_iterations, chi2, "Chi2 vs iteration", 0.0, 20.0,0.0,10000,21,100);
+        if ( flagC == true )
+           m_ntr++;
+        std::vector<double> estimated( m_estimated.size(), 0.0);
+	//	if ( m_iterations >= 1 )
+	estimated = m_estimated;
+	StatusCode sc = m_taConfig->LocalTrackFit( tr_cnt, trpar, estimated, chi2, residual );
+	//	plot2D( m_iterations, chi2, "Chi2 vs iteration", 0.0, 20.0,0.0,10000,21,100);
 	if ( chi2 > 0.0 ) m_chi2 += 1.0/chi2;
-	//	info() << "average chi2 = " << 1/m_chi2 << " instantenous chi2 = " << chi2 << endreq;
-	if ( sc != StatusCode::SUCCESS ) {
+	if ( sc.isFailure() ) {
 	  error() << "Error in LocalTrackFit: bailing out..." << endreq;
 	  return StatusCode::FAILURE;
 	}
-	
-	//	info()<< "------------------------------------" << endreq;
       }//long tracks 
-    } 
+    }
   }
   return StatusCode::SUCCESS;
 }
@@ -402,7 +460,9 @@ StatusCode GAlign::GloFit() {
   add(m_estimated, cp , m_align);
   info() << "m_align = " << m_align << endreq;
   info() << "m_estimated =  " << m_estimated << endreq;
-  sc = m_taConfig->PrintParameters( m_align );
+  info() << "m_align_err = " << m_align_err <<"\n" << endreq;
+  info() << "ntrue= "<< ntrue<< endl;
+  info() << "nfalse= "<< nfalse<< endl;
   // check various convergence criteria.
   // One criterium could be a check whether the values 
   // of the m_align vector are less than a certain minimum:
@@ -427,16 +487,40 @@ StatusCode GAlign::GloFit() {
   // bail out: we are satisfied with this accuracy.
   if ( ave/n < 0.0001 ) 
     m_converged = true;
+  m_taConfig->SetAlignmentPar( m_estimated );
+  
+  m_Tdof = m_ntr * m_taConfig->NumTrPars();
+  m_Tdof += m_estimated.size();
+  if ( m_chi2B4 != 0.0 )
+     m_converged = true;
+  for ( it = m_align.begin(); it < m_align.end(); ++it ) {
+    if ( fabs( *it ) > 0.0 ) {
+       if ( fabs( *it )/fabs(m_estimated[n]) > 0.01 ) {
+          n++;
+          m_converged = m_converged && false;
+       }
+    }
+  }
+  m_chi2 = m_chi2/m_Tdof;
+  m_chi2B4 = m_chi2;
+  m_ntrB4 = m_ntr;
+  
+  ntrue = 0;
+  nfalse = 0;
   m_ntr = 0;
   m_chi2 = 0.0;
+  tr_cnt = 0;
   return StatusCode::SUCCESS;
 }
 
 
 StatusCode GAlign::finalize(){
   debug() << "==> Finalize" << endreq;
-//  StatusCode sc = this->GloFit();
-  //  info() << "Alignment parameters = " << m_align << endreq;
+  //  StatusCode sc = this->GloFit();
+  StatusCode sc = m_taConfig->StoreParameters( m_align );
+  if ( sc.isFailure() )
+    error() << "Error storing alignment parameters in memory"<< endreq;
+  info() << "Alignment parameters = " << m_align << endreq;
   return GaudiAlgorithm::finalize();
 }
 

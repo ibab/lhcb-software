@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment algorithm: TAlignment
  *
  *  CVS Log :-
- *  $Id: GAlign.h,v 1.2 2008-01-29 16:40:39 jblouw Exp $
+ *  $Id: GAlign.h,v 1.3 2008-05-16 16:57:41 jblouw Exp $
  *
  *  @author J. Blouw  Johan.Blouw@cern.ch
  *  @date   30/12/2007
@@ -94,10 +94,17 @@ public:
   bool velo_detector, tt_detector, it_detector, ot_detector, muon_detector;
   int m_evtsPerRun;
   int m_MaxIterations;
+  int m_iterationsMin;
   bool m_ForceIterations;
   int m_iterations;
   double m_chi2;
+  unsigned int m_Tdof;
   int m_ntr;
+  int m_ntrack_pars;
+  int tr_cnt;
+  bool nfalse, ntrue;
+  double m_chi2B4;
+  int m_ntrB4;
   Gaudi::XYZVector m_res;
   std::vector<double> m_pull;
   std::vector<double> m_estimated;

@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-05-16 Johan Blouw
+ - restructered main execution loop of GAlign to reflect better implementation of Newton-Rhapson method.
+
 ! 2008-04-22 Jan Amoraal
  - Added a jab configurable AlConfigurable.py, see for example OT scripts to use it
  - Added some OT alignment scripts
