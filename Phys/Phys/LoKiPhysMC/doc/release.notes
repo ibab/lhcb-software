@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.39 2008-05-05 18:06:33 ibelyaev Exp $ 
+! $Id: release.notes,v 1.40 2008-05-17 17:34:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-17 - Vanya BELYAEV
+
+ - LoKi/DechayChain.h
+   src/DecayChain.cpp 
+    
+    put the various minor changes into improve the printout
+    in partular now all colors work nicely
+
+ 
 
 ! 2008-05-05 - Vanya BELYAEV
 

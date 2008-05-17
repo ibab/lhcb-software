@@ -1,14 +1,4 @@
-// $Id: DecayChain.cpp,v 1.4 2007-11-28 14:54:10 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/01/19 13:14:57  ibelyaev
-//  add good printout
-//
-// Revision 1.1  2006/05/27 11:47:14  ibelyaev
-//  add DecayChain utilities
-//
+// $Id: DecayChain.cpp,v 1.5 2008-05-17 17:34:02 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -32,18 +22,15 @@
 // ============================================================================
 #include "boost/format.hpp"
 // ============================================================================
-
 /** @file 
  *  
- *  Implementation file for class : DecayChain
+ *  Implementation file for class : LoKi::DecayChain
  * 
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date    2003-05-14 
  */
 // ============================================================================
-
-// ============================================================================
-/** set the colors for output stream (not actiev for WIN32)
+/*  set the colors for output stream (not actiev for WIN32)
  *  @param  stream  reference for stream 
  *  @param  fg      color for foreground 
  *  @param  fg      color for foreground 
@@ -56,18 +43,41 @@ bool LoKi::Colors::setColor
   const MSG::Color& bg     )
 {
 #ifndef WIN32    
-  int fc =  90 +       fg ;
-  stream << "\033[" <<  fc ;
-  int bc = 100 +       bg ;
-  stream << ";"    <<  bc ;
-  stream << ";1m";
+  int fc =  30 +        fg ;
+  int bc =  40 +        bg ;
+  stream << "\033[" << bc  << "m\033[1;" <<  fc << "m";
   return true  ;
 #else 
   return false ;
 #endif 
-};
+}
 // ============================================================================
-/** set the colors for output stream 
+/* reset the colors for output stream (not active for WIN32)
+ *  @param  stream  reference for stream 
+ *  @return true if color are changed 
+ */
+bool LoKi::Colors::resetColor ( std::ostream&     stream ) 
+{
+#ifndef WIN32 
+  stream << "\033[0m" ;
+  return true ;
+#else 
+  return false ;
+#endif
+}
+// ============================================================================
+/* reset the colors for output stream (not active for WIN32)
+ *  @param  stream  reference for stream 
+ *  @return true if color are changed 
+ */
+// ============================================================================
+bool LoKi::Colors::resetColor ( MsgStream&        stream ) 
+{
+  stream.resetColor() ;
+  return true ;
+}
+// ============================================================================
+/*  set the colors for output stream 
  *  @param  stream  reference for stream 
  *  @param  fg      color for foreground 
  *  @param  fg      color for foreground 
@@ -81,9 +91,9 @@ bool LoKi::Colors::setColor
 {
   stream.setColor ( fg , bg );
   return true ;
-};
+}
 // ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param svc       pointer to ParticleProertySvc 
  *  @param maxDepth  maximal decay depth 
  */
@@ -94,10 +104,12 @@ LoKi::DecayChain::DecayChain
   const bool             vertexe  , 
   const DecayChain::Mode mode     , 
   const MSG::Color&      fg       , 
-  const MSG::Color&      bg       ) 
+  const MSG::Color&      bg       , 
+  const bool             vertexd  )
   : m_maxDepth  ( maxDepth   ) 
   , m_vertex    ( vertex     ) 
   , m_vertexe   ( vertexe    ) 
+  , m_vertexd   ( vertexd    ) 
   , m_fg        ( fg         ) 
   , m_bg        ( bg         ) 
   , m_mode      ( mode       )
@@ -114,7 +126,7 @@ LoKi::DecayChain::DecayChain
 // ============================================================================
 LoKi::DecayChain::~DecayChain() {};
 // ============================================================================
-/// particle name by ID
+// particle name by ID
 // ============================================================================
 const std::string LoKi::DecayChain::name ( const LHCb::ParticleID& pid ) const 
 {
@@ -123,7 +135,7 @@ const std::string LoKi::DecayChain::name ( const LHCb::ParticleID& pid ) const
   return tmp ;
 };
 // ============================================================================
-/// double  to string 
+// double  to string 
 // ============================================================================
 const std::string LoKi::DecayChain::toString
 ( const double      val ) const 
@@ -131,9 +143,9 @@ const std::string LoKi::DecayChain::toString
   boost::format fmter( m_fmt_d ) ;
   fmter % val ;
   return fmter.str() ;
-};
+}
 // ============================================================================
-/// integer to string 
+// integer to string 
 // ============================================================================
 const std::string LoKi::DecayChain::toString 
 ( const long        val ) const 
@@ -141,31 +153,30 @@ const std::string LoKi::DecayChain::toString
   boost::format fmter( m_fmt_i ) ;
   fmter % val ;
   return fmter.str() ;
-};
+}
 // ============================================================================
-/// Lorentz vector as string
+// Lorentz vector as string
 // ============================================================================
 const std::string LoKi::DecayChain::toString 
 ( const LoKi::LorentzVector& v ) const 
-{ return toString( v , mode() ) ; } ;
-
-
+{ return toString( v , mode() ) ; } 
+// ============================================================================
 namespace 
 {
+  // ==========================================================================
   inline double adjust 
   ( const double value       , 
     const double limit       , 
     const double scale = 1.0 ) 
   { return ( ::fabs( value ) > limit ) ? value / scale : 0.0 / scale ; }
-};
-
-
+  // ==========================================================================
+}
 // ============================================================================
-/// Lorentz vector as string
+// Lorentz vector as string
 // ============================================================================
 const std::string LoKi::DecayChain::toString 
-( const LoKi::LorentzVector& v , 
-  const DecayChain::Mode& mode) const 
+( const LoKi::LorentzVector& v    , 
+  const DecayChain::Mode&    mode ) const 
 {
   //
   const double s_Min = 0.1 * Gaudi::Units::MeV ;
@@ -248,7 +259,7 @@ const std::string LoKi::DecayChain::toString
     %  adjust ( v.Pz    () , s_Min , Gaudi::Units::GeV ) ;
   //
   return  fmter.str() ;
-};
+}
 // ============================================================================
 // 3D-vector as string
 // ============================================================================
@@ -286,7 +297,7 @@ const std::string LoKi::DecayChain::toString
     %  adjust ( v.Z() , s_Min , Gaudi::Units::mm ) ;
   
   return fmter.str() ;  
-};
+}
 // ============================================================================
 // int    as string
 // ============================================================================
@@ -294,9 +305,9 @@ const std::string LoKi::DecayChain::toString ( const int v ) const
 {
   const long value = v ;
   return toString( value ) ;
-};
+}
 // ============================================================================
-/** print error message 
+/*  print error message 
  *  @param msg error message 
  *  @param sc status code
  *  @param mx number of prints 
@@ -309,11 +320,11 @@ StatusCode LoKi::DecayChain::Error
 {
   const LoKi::ErrorReport& report = LoKi::ErrorReport::instance();
   return report.Error( "LoKi::DecayChain " + msg , sc , mx ) ;
-};
+}
 // ============================================================================
 // atomic 
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print 
 ( const LHCb::Particle*       p      , 
@@ -321,7 +332,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::Cuts&    mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::MCParticle*     p      , 
@@ -329,7 +340,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::MCCuts&  mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const HepMC::GenParticle*   p      , 
@@ -337,9 +348,9 @@ void LoKi::DecayChain::print
   const LoKi::Types::GCuts&   mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// ranges 
+// ranges 
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LoKi::Types::Range&   p      ,
@@ -347,7 +358,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::Cuts&    mark   ) const 
 { print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LoKi::Types::MCRange& p      ,
@@ -355,7 +366,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::MCCuts&  mark   ) const
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LoKi::Types::GRange&  p      ,
@@ -363,9 +374,9 @@ void LoKi::DecayChain::print
   const LoKi::Types::GCuts&   mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// vectors 
+// vectors 
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::Particle::Vector& p    ,
@@ -373,7 +384,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::Cuts&    mark   ) const 
 { print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::MCParticle::Vector& p  ,
@@ -381,7 +392,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::MCCuts&  mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::Particle::ConstVector& p ,
@@ -389,7 +400,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::Cuts&    mark     ) const 
 { print ( p.begin() , p.end() , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::MCParticle::ConstVector&  p ,
@@ -397,7 +408,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::MCCuts&  mark        ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LoKi::GenTypes::GenContainer&   p ,
@@ -405,9 +416,9 @@ void LoKi::DecayChain::print
   const LoKi::Types::GCuts&   mark        ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// other containers
+// other containers
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::Particle::Container* p ,
@@ -418,7 +429,7 @@ void LoKi::DecayChain::print
   { print ( p->begin() , p->end() , std::cout , '\n' , accept , mark ) ; } 
 }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::MCParticle::Container* p ,
@@ -426,7 +437,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::MCCuts&   mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const HepMC::GenEvent*      p      , 
@@ -434,7 +445,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::GCuts&   mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::HepMCEvent*     p      , 
@@ -442,7 +453,7 @@ void LoKi::DecayChain::print
   const LoKi::Types::GCuts&   mark   ) const 
 { print ( p , std::cout , '\n' , accept , mark ) ; }
 // ============================================================================
-/// predefined printout 
+// predefined printout 
 // ============================================================================
 void LoKi::DecayChain::print
 ( const LHCb::HepMCEvent::Container* p,
