@@ -45,9 +45,9 @@ use STTools           v3r5    ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAssociators   v2r3    Velo      # Tomasz Szumlak
-use VeloAlgorithms    v4r7    Velo      # Tomasz Szumlak
+use VeloAlgorithms    v4r7p1  Velo      # Tomasz Szumlak
 use VeloDAQ           v4r1    Velo      # Kurt Rinnert
-use VeloSimulation    v3r0    Velo      # Tomasz Szumlak
+use VeloSimulation    v3r1    Velo      # Tomasz Szumlak
 use VeloTools         v3r1    Velo      # Tomasz Szumlak
 
 

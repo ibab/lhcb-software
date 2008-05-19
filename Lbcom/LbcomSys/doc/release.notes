@@ -11,7 +11,8 @@ This version uses Gaudi v19r9 and LHCb v23r6
 
 - Packages added:    CaloTools v5r0 - Contains components previously in CaloUtils
 - Packages modified: L0Calo v9r13, L0Muon v7r8p1, RichDAQ v3r15p1,
-    RichMCMonitors v1r6, RichTools v2r20, STCheckers v2r5, STDAQ v3r6
+    RichMCMonitors v1r6, RichTools v2r20, STCheckers v2r5, STDAQ v3r6,
+    VeloAlgorithms v4r7p1, VeloSimulation v3r1
 
 - In L0Calo v9r13
   . src/L0CaloCandidatesFromRaw: protect against missing L0Calo bank
@@ -42,6 +43,15 @@ This version uses Gaudi v19r9 and LHCb v23r6
   . Only put valid sectors into readout mapping
   . Check that key does not exist before inserting it (RawBanksToSTClusterAlg,
     RawBanksToSTLiteClusterAlg)
+
+- In VeloAlgorithms v4r7p1
+  . Changed VeloRawClusterMoni and VeloClusterMoni to reflect fix to linker in 
+    VeloSim.cpp
+
+- In VeloSimulation v3r1
+  . Fixed MCHit linking to only link to main event container
+  . Fixed PU veto input data in options
+  . Changed text in VeloSimMoni to reflect linker change
 
 </PRE><H1><A NAME=v6r16>2008-04-22 LbcomSys v6r16</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r5
