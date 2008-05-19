@@ -4,6 +4,13 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v2r3>2007-09-18 Escher v2r3</A></H1><PRE>
+- 19/05/2008 Johan Blouw: tagged head as v3r3.
+
+- 19/05/2008 Johan Blouw
+  - took IT constraints for M'pede style alignment out of 
+    TAlignment.opts into IT.opts
+
 - 14/05/2008 Marco Gersabeck head
   - VeloAlignment.opts: removed duplicate PatVelo... options  
                         they are in VeloAlignment/TRGtune.opts  

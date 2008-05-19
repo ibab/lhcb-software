@@ -1,5 +1,5 @@
 package Escher
-version v2r2
+version v2r3
 
 branches doc cmt job options
 
@@ -22,11 +22,11 @@ use RootHistCnv         v*         -no_auto_imports
 # Comment the line with SQLDDDB and uncomment
 # the 2 lines below to enable reading the xml versions of the dbase
 # Note that in the options file (v200601.opts) some changes are needed as well.
-#use SQLDDDB 		v*	Det -no_auto_imports
-use XmlDDDB             v40r0   Det  -no_auto_imports
-use XmlConditions       v2r5    Det  -no_auto_imports
-use FieldMap		v*         -no_auto_imports
-use ParamFiles          v*         -no_auto_imports
+#use SQLDDDB 		v*	Det  -no_auto_imports
+use XmlDDDB             v*	Det  -no_auto_imports
+use XmlConditions       v*	Det  -no_auto_imports
+use FieldMap		v*           -no_auto_imports
+use ParamFiles          v*           -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v21r11)
 use LHCbSys             v*        -no_auto_imports
