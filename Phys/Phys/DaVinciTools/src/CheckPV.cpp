@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.15 2008-01-15 18:05:10 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.16 2008-05-19 14:10:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -71,13 +71,13 @@ StatusCode CheckPV::initialize() {
 //=============================================================================
 StatusCode CheckPV::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   std::string m_PVContainer = m_OnOfflineTool->getPVLocation() ;
   int n = 0 ;
   bool ok = 0 ;
   
-  verbose() << "Getting PV from " << m_PVContainer << endreq ;  
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Getting PV from " << m_PVContainer << endreq ;  
   if ( !exist<LHCb::RecVertices>(m_PVContainer)){
     if (msgLevel(MSG::DEBUG)) debug() << m_PVContainer << " not found" << endmsg ;
     ok = (m_minPV<=0) ; // Ok if no PV required
@@ -89,7 +89,7 @@ StatusCode CheckPV::execute() {
       return StatusCode::FAILURE ;
     }
     n =  PV->size() ;
-    verbose() << "There are " << n << " primary vertices." << endreq ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "There are " << n << " primary vertices." << endreq ;
     m_nPV = m_nPV+n ;
     ++m_nEvent ;
     
@@ -98,9 +98,10 @@ StatusCode CheckPV::execute() {
       ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
     }
   }
-  
-  if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
-  else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
+  if (msgLevel(MSG::DEBUG)){
+    if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
+    else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
+  }
   
   setFilterPassed(ok);
   return StatusCode::SUCCESS;
