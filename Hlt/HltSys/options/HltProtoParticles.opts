@@ -224,5 +224,32 @@ SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
 HltV0LL.InputTrackContainer = "Hlt/Track/ForwardCLEANED";
 // Kzero from two long tracks
 SeqHlt2VzeroLL.Members += {
-  "CreateHltVzero/HltV0LL"
+  "CreateHltVzero/HltV0LL",
+  "GaudiSequencer/SeqMakeHltKsLL",
+  "GaudiSequencer/SeqMakeHltLambdaLL"
 };
+SeqMakeHltKsLL.Members += { "HltV0ParticleMakerAlg/HltKsLLParticles" };
+SeqMakeHltKsLL.IgnoreFilterPassed = true ;
+HltKsLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
+HltKsLLParticles.MakeKs = true ;
+HltKsLLParticles.MakeLambda = false ;
+HltKsLLParticles.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" };
+
+SeqMakeHltLambdaLL.Members += { "HltV0ParticleMakerAlg/HltLambdaLLParticles" };
+SeqMakeHltLambdaLL.IgnoreFilterPassed = true ;
+HltLambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
+HltLambdaLLParticles.MakeKs = false ;
+HltLambdaLLParticles.MakeLambda = true ;
+HltLambdaLLParticles.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions",
+                                                    "Phys/HltNoPIDsProtons"};
+/* printout 
+SeqMakeHltKsLL.Members += {  "PrintTree/PrintKs" };
+PrintKs.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
+SeqMakeHltLambdaLL.Members += {  "PrintTree/PrintLambda" };
+PrintLambda.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
+*/
+
+/* debug
+HltKsLLParticles.OutputLevel = 2;
+HltLambdaLLParticles.OutputLevel = 2;
+*/
