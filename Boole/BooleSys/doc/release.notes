@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v15r0>2008-05-09 Boole v15r0</A></H1><PRE>
+</PRE><H1><A NAME=v15r0>2008-05-19 Boole v15r0</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17
  and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r0
 
@@ -18,7 +18,7 @@ commissioned. Output requires Brunel v32r5 or later
 
 - New tuning
   . Major retuning of Velo simulation
-    (VeloAlgorithms v4r7, VeloSimulation v3r0, VeloDet v13r0)
+    (VeloAlgorithms v4r7+v4r7p1, VeloSimulation v3r0+v3r1, VeloDet v13r0)
     o Changed scaling in VeloDataProcessor to increase ADC values of clusters
     o VeloClusterMaker now sets strip thresholds from noise levels per strip
     o Changed curve in VeloDataProcessor to 2nd order non-linear response from JC
@@ -35,12 +35,23 @@ commissioned. Output requires Brunel v32r5 or later
     o Changed stored condition from strip capacitance to strip noise in
       DeVeloSensor. Requires SQLDDDB >= v4r2
   . Muon cabling readout info moved out of MuonDAQ
-    (MuonDet v8r0, MuonDAQ v4r0. Requires SQLDDDB v42 or later) 
+    (MuonDet v8r0, MuonDAQ v4r0. Requires SQLDDDB v42 or later)
+  . Major changes to ST geometry structure. Changes material distribution seen in
+    DC06 geometry. See talks at <a href="http://indico.cern.ch/conferenceDisplay.py?confId=30157">ST meeting on 2008-03-13</a>).
+    (STDet v4r0, STCheckers v2r5, STDigiAlgorithms v1r0p1)
+  . Default DC06 tag changed to DC06-20080516 to encompass ST changes
+    (DDDB v1r6, SQLDDDB v4r3)
   . Modified default idle connection time-out in CondDBAccessSvc from 600s to
     120s (DetCond v11r10)
 
 - New features
-  . In Boole/Configuration.py: 
+  . Possibility to use 2008 geometries. Default geometry for 2008 is
+    head-20080516, defined in LHCb-2008.py (GaudiConf v10r8, DDDB v1r6)
+  . Possibility to use measured magnetic field map, used by default with 2008
+    default geometry (FieldMap v5r0, Magnet v3r0)
+  . In Boole/Configuration.py:
+    o Added "monitors" property. When set to ["SC"] performs StatusCode check
+      (GaudiConf v10r8)
     o Added "writeDigi" option, default True. If False, .digi is output switched
       off. Can be used independently of "writeMDF"
     o Added options DDDBtag and EvtMax
@@ -59,6 +70,7 @@ commissioned. Output requires Brunel v32r5 or later
   . Muon2Pt was wrong for events with only 1 Muon candidate (Muon1 was used).
     Fix gives reduction in the rate of Muon2Pt (L0DU v8r4)
   . TT cluster killer was called in IT sequence, after writing TT RawBanks
+  . Check untested StatusCode (L0Muon v7r8p1)
 
 - Monitoring changes
   . Overhaul of L0Calo and L0DU monitoring (L0Calo v9r12, L0DU v8r4)
