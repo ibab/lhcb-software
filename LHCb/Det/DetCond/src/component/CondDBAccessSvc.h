@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.34 2008-04-17 13:00:19 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.35 2008-05-19 08:13:39 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -224,6 +224,15 @@ private:
   /// If true (the default), the connection to  (lazy = connect only when needed).
   bool m_lazyConnect;
 
+  /// Enable direct mapping from the database structure to the transient store
+  /// using XML persistency format.
+  /// @warning Highly experimental.
+  bool m_xmlDirectMapping;
+  
+  // ----------------------------------------------
+  // ---------- Private Member Functions ----------
+  // ----------------------------------------------
+  
   /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_initializeConnection();
   
@@ -244,8 +253,10 @@ private:
                                                 std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
                                                 bool use_numeric_chid,
                                                 cool::ChannelId channel, const std::string &channelstr);
-
-    /// Connect to the COOL database. It sets 'm_db'.
+  
+  void i_generateXMLCatalogFromFolderset(const std::string &path);
+  
+  /// Connect to the COOL database. It sets 'm_db'.
   StatusCode i_validateDefaultTag();
 
   /// Check if the TAG set exists in the DB.

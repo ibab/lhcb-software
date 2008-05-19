@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.49 2008-04-22 10:11:36 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.50 2008-05-19 08:13:39 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -81,7 +81,10 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 120 );
   
-  declareProperty("LazyConnect",       m_lazyConnect     = true );
+  declareProperty("LazyConnect",      m_lazyConnect      = true  );
+  declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = false,
+                  "(experimental) Allow direct mapping from CondDB structure to"
+                  " transient store.");
   
   if ( s_XMLstorageSpec.get() == NULL){
     // attribute list spec template
@@ -166,7 +169,12 @@ StatusCode CondDBAccessSvc::initialize(){
     log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
     m_cache = NULL;
   }
-
+  if ( m_xmlDirectMapping && ! m_useCache ) {
+    // @todo: make it possible to use the direct mapping without cache
+    log << MSG::FATAL << "Cannot use direct XML mapping without cache (YET)" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   return sc;
 }
 
@@ -763,18 +771,29 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
                                               std::string &descr, cool::ValidityKey &since, cool::ValidityKey &until,
                                               bool use_numeric_chid, cool::ChannelId channel, const std::string &channelstr){
   try {
-    DataBaseOperationLock dbLock(this);
+    bool existsFolderSet = false;
+    {
+      DataBaseOperationLock dbLock(this);
+      existsFolderSet = database()->existsFolderSet(path);
+    }
     // Check if the user asked for a folderset
-    if (database()->existsFolderSet(path)) {
+    if (existsFolderSet) {
+      if ( !m_xmlDirectMapping ) {
+        // with FolderSets, I put an empty entry and clear the shared_ptr
+        if (m_useCache) m_cache->addFolderSet(path,"");
+        data.reset();
+      } else {
+        // Using XML direct mapping, foldersets are replaced in the cache
+        // with the XML equivalent (a cataog).
+        i_generateXMLCatalogFromFolderset(path);
+        // now get the data from the cache
+        m_cache->get(path,when,channel,since,until,descr,data);
+      }
       
-      // with FolderSets, I put an empty entry and clear the shared_ptr
-      if (m_useCache) m_cache->addFolderSet(path,"");
-      data.reset();
       return StatusCode::SUCCESS;
-      
     }
     else {
-      
+      DataBaseOperationLock dbLock(this);
       // we want a folder, so go to the database to get it
       cool::IFolderPtr folder = database()->getFolder(path);
       cool::IObjectPtr obj;
@@ -1065,4 +1084,61 @@ void CondDBAccessSvc::clearCache()
 //=========================================================================
 void CondDBAccessSvc::dumpCache() const {
   if (m_useCache) m_cache->dump();
+}
+
+//=========================================================================
+//
+//=========================================================================
+void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path){
+  // Get the names of sub-folders and sub-foldersets
+  std::vector<std::string> fldr_names, fldrset_names;
+  {
+    // Get the child nodes.
+    DataBaseOperationLock dbLock(this);
+    cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
+    fldr_names = folderSet->listFolders();
+    fldrset_names = folderSet->listFolderSets();
+  }
+  
+  // Use the name of the folderset as catalog name.
+  std::string::size_type pos = path.rfind('/');
+  if ( std::string::npos == pos ) {
+    pos = 0; // if we cannot find '/' let's take the whole string
+  } else {
+    ++pos;
+  }
+  std::string folderset_name = path.substr(pos);
+  std::string object_name;
+  
+  std::ostringstream xml; // buffer for the XML
+  // XML header, root element and catalog initial tag
+  xml << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
+      << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">"
+      << "<DDDB><catalog name=\"" << folderset_name << "\">";
+  // sub-folders are considered as container of conditions
+  for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
+    pos = f->rfind('/');
+    (std::string::npos == pos) ? pos = 0 : ++pos;
+    object_name = f->substr(pos);
+    xml << "<conditionref href=\"" << folderset_name << '/' << object_name;
+    // If the folder has a ".xml" extension, we remove it for the actual object
+    // name
+    if (object_name.substr(object_name.size()-4) == ".xml"){
+      xml << "#" << object_name.substr(0,object_name.size()-4);
+    }
+    xml << "\"/>";
+  }
+  // sub-foldersets are considered as catalogs
+  for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
+    pos = f->rfind('/');
+    (std::string::npos == pos) ? pos = 0 : ++pos;
+    xml << "<catalogref href=\"" << folderset_name << '/' << f->substr(pos) << "\"/>";
+  }
+  // catalog and root element final tag
+  xml << "</catalog></DDDB>";
+  
+  // Put the data in the cache
+  if ( ! m_cache->hasPath(path) )
+    cacheAddXMLFolder(path);
+  cacheAddXMLData(path,Gaudi::Time::epoch(),Gaudi::Time::max(),xml.str(),0).ignore();
 }
