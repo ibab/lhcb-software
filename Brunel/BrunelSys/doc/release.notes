@@ -3,16 +3,51 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r6>2008-04-28 Brunel v32r6</A></H1><PRE>
+</PRE><H1><A NAME=v32r6>2008-05-19 Brunel v32r6</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r16, Rec v5r5
- and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v4r7
+ and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
+
+This is a development version.
+- Can be used to reconstruct 2008 geometries. 
+- Can be used for DC06 geometries, but material seen in ST detectors is different
+from DC06
 
 - New features
-  . new ST geometry (not yet complete)
+  . Possibility to use 2008 geometries. Default geometry for 2008 is
+    head-20080516, defined in LHCb-2008.py (GaudiConf v10r8, DDDB v1r6)
+  . Possibility to use measured magnetic field map, used by default with 2008
+    default geometry (FieldMap v5r0, Magnet v3r0)
+  . Added "monitors" property to Brunel Configurable. When set to ["SC"] performs
+    StatusCode check (GaudiConf v10r8)
+
+- New tuning
+  . Major changes to ST geometry structure. Changes material distribution seen in
+    DC06 geometry. See talks at <a href="http://indico.cern.ch/conferenceDisplay.py?confId=30157">ST meeting on 2008-03-13</a>).
+    (STDet v4r0, STCheckers v2r5, TrackFitEvent v3r14, TrackTools v3r6,
+     TsaAlgorithms v3r3)
+  . Improvements and protections in ST RawBank decoding
+    (DigiEvent v2r6, RecEvent v2r12, STDAQ v3r6)
+  . Minor changes to Rich reconstruction
+    (RichRecBase v3r13, RichRecStereoTools v1r1)
+  . Possibility to reconstruct Rich PID starting from DST tracks
+    (RichRecTrackTools v1r4, RichRecSys v3r10)
+  . Improvement to clone killer speed and efficiency. See talk at <a href="http://indico.cern.ch/conferenceDisplay.py?confId=33031">T-Rec meeting on 2008=05-05</a>
+    (TrackInterfaces v3r14, TrackTools v3r6, TrackUtils v1r20)
+  . Minor timing improvements in PatForward (PatAlgorithms v3r5)
+  . New (backwards compatible) implementation of PatMatch as a tool, quality of
+    match now in "maxMatchChi2" job option (PatAlgorithms v3r5)
+
+- Monitoring changes
+  . Reorganisation and additions to Rich monitoring and checking
+   (RichMCMonitors v1r6, RichRecMCTools v2r18, RichRecMonitors v2r17,
+    RichRecTools v4r4, RichRecQC v2r18)
 
 - Bug fixes
   . Fixes to spaces in job options, to allow use with python
     (CaloDAQ v4r4p1, CaloMoniDst v3r0p2, TrackCheckers v3r4p2)
+  . Fix in MuonMeasurement (TrackFitEvent v3r14)
+  . Fix untested StatusCode
+    (RichTools v2r20, CaloUtils v8r0, CaloPIDs v4r10, NNTools v1r2p1)
 
 </PRE><H1><A NAME=v32r5>2008-04-25 Brunel v32r5</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r5, Lbcom v6r16, Rec v5r5
