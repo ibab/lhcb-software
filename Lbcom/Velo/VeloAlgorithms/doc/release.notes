@@ -2,6 +2,10 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2008-05-19 - David Hutchcroft
+ - Changed VeloRawClusterMoni and VeloClusterMoni to reflect fix to linker in 
+   VeloSim.cpp
+
 !===================== VeloAlgorithms v4r7 2008-04-22 =====================
 ! 2008-04-22 - Marco Cattaneo
  - Use LHCb::Math::round to compile on Windows

@@ -1,4 +1,4 @@
-// $Id: VeloRawClustersMoni.cpp,v 1.8 2008-04-16 15:55:13 dhcroft Exp $
+// $Id: VeloRawClustersMoni.cpp,v 1.9 2008-05-19 13:46:39 dhcroft Exp $
 
 // Include files 
 
@@ -110,7 +110,7 @@ StatusCode VeloRawClustersMoni::finalize() {
   double allClusters=m_nClusS+m_nClusN+m_nClusO;
   if(allClusters>0){
     info().precision(4);
-    info()<< "| Clusters from signal + spillover:          " 
+    info()<< "| Clusters from signal:                      " 
           << (m_nClusS/allClusters)*100
           << "%" <<endmsg;
     info().precision(4);
@@ -118,7 +118,7 @@ StatusCode VeloRawClustersMoni::finalize() {
           << (m_nClusN/allClusters)*100
           << "%" <<endmsg;
     info().precision(4);
-    info()<< "| Clusters from other (coupling):            " 
+    info()<< "| Clusters from other (coupling+spillover):  " 
           << (m_nClusO/allClusters)*100
           << "%" <<endmsg;
     info()<< "------------------------------------------------------" <<endmsg;
