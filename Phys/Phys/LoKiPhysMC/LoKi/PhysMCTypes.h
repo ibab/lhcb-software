@@ -1,20 +1,4 @@
-// $Id: PhysMCTypes.h,v 1.6 2007-11-28 14:54:09 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2007/04/16 16:16:48  pkoppenb
-// removed polemic comment
-//
-// Revision 1.3  2006/11/27 11:56:15  ibelyaev
-//  prepare for LoKi v4r3
-//
-// Revision 1.2  2006/08/29 11:40:47  ibelyaev
-//  many fixed to simplify MC-match
-//
-// Revision 1.1.1.1  2006/03/14 19:12:21  ibelyaev
-// New package : RC <---> MC links for LoKi 
-// 
+// $Id: PhysMCTypes.h,v 1.7 2008-05-19 06:46:13 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCTYPES_H 
 #define LOKI_PHYSMCTYPES_H 1
@@ -65,12 +49,6 @@
 
 namespace LoKi 
 {
-  /** @namespace LoKi::PhysMCTypes PhysMCTypes.h LoKi/PhysMCTypes.h
-   *  
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-03-11
-   */
   namespace  PhysMCTypes 
   {
     /// the actual type of Particle->MCParticle relation  

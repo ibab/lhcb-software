@@ -1,4 +1,4 @@
-// $Id: DecayChain.h,v 1.8 2008-05-17 17:34:02 ibelyaev Exp $
+// $Id: DecayChain.h,v 1.9 2008-05-19 06:46:13 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -741,7 +741,7 @@ namespace LoKi
      *
      *  @endcode 
      * 
-     *  @param event    pointer to the container of events 
+     *  @param events   pointer to the container of events 
      *  @param stream   reference to output stream 
      *  @param term     stream terminator 
      */
@@ -786,9 +786,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param event    pointer to the container of particles 
-     *  @param stream   reference to output stream 
-     *  @param term     stream terminator 
+     *  @param particles pointer to the container of particles 
+     *  @param stream    reference to output stream 
+     *  @param term      stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -836,9 +836,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param event    pointer to the container of particles 
-     *  @param stream   reference to output stream 
-     *  @param term     stream terminator 
+     *  @param particles pointer to the container of particles 
+     *  @param stream    reference to output stream 
+     *  @param term      stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -880,9 +880,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param event    pointer to the container of particles 
-     *  @param stream   reference to output stream 
-     *  @param term     stream terminator 
+     *  @param particles pointer to the container of particles 
+     *  @param stream    reference to output stream 
+     *  @param term      stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 
@@ -924,9 +924,9 @@ namespace LoKi
      *  @endcode 
      * 
      *  @see LoKi::MCTrees::buildTrees 
-     *  @param event    pointer to the container of particles 
-     *  @param stream   reference to output stream 
-     *  @param term     stream terminator 
+     *  @param particles pointer to the container of particles 
+     *  @param stream    reference to output stream 
+     *  @param term      stream terminator 
      */
     template < class STREAM     , 
                class TERMINATOR , 

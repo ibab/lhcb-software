@@ -1,4 +1,4 @@
-// $Id: PhysMCParticles.h,v 1.9 2007-11-28 14:54:09 ibelyaev Exp $
+// $Id: PhysMCParticles.h,v 1.10 2008-05-19 06:46:13 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
@@ -526,7 +526,7 @@ namespace LoKi
     public:
       /** add additional particle to the 
        *  list of Particles to be matched 
-       *  @param particle particle to be added 
+       *  @param p particle to be added 
        */
       RCTruth& add ( const LHCb::Particle* p ) 
       { addObject ( p )  ; return *this ; }

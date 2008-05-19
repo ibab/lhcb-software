@@ -1,45 +1,37 @@
-! $Id: release.notes,v 1.40 2008-05-17 17:34:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.41 2008-05-19 06:46:13 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
-! 2008-05-17 - Vanya BELYAEV
+!========================== LoKiPhysMC v7r1 2008-05-19 ========================
+! 2008-05-19 - Marco Cattaneo
+ - Fix many "cut & paste" doxygen warnings
+ - Remove obsolete macro form requirements
 
- - LoKi/DechayChain.h
-   src/DecayChain.cpp 
-    
+! 2008-05-17 - Vanya BELYAEV
+ - LoKi/DechayChain.h, src/DecayChain.cpp 
     put the various minor changes into improve the printout
     in partular now all colors work nicely
 
- 
-
 ! 2008-05-05 - Vanya BELYAEV
-
  - src/Components/DumpMC.cpp 
-
      new algorithm LoKi::DumpMC to perform the detailed printout of 
      MC information
 
 ! 2008-05-04 - Vanya BELYAEV
-
  - src/Components/DumpHepMC.cpp 
-
      new algorithm LoKi::DumpHepMC to perform the detailed prinput of 
      HepMC information (it is very useful for debugging of generators)
 
-- cmt/requirements 
- 
-     version increment to v7r1 
-
+- cmt/requirements:  version increment to v7r1 
 
 !========================== LoKiPhysMC v7r0 2007-12-03 ========================
 ! 2007-12-03 - Vanya BELYAEV
  - update for the next major version of LoKi v7r0 ("The powerful Streamers")
  - cmt/requirements
    version increment to v7r0 
-
 
 !========================== LoKiPhysMC v6r2 2007-11-06 ========================
 ! 2007-11-06 - Marco Cattaneo

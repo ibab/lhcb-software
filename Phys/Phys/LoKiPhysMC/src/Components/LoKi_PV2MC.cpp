@@ -1,14 +1,4 @@
-// $Id: LoKi_PV2MC.cpp,v 1.6 2007-04-16 16:16:48 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/08/29 11:40:47  ibelyaev
-//  many fixed to simplify MC-match
-//
-// Revision 1.4  2006/08/15 15:27:43  ibelyaev
-//  adaptation to new inheritance scheme for Vertices
-//
+// $Id: LoKi_PV2MC.cpp,v 1.7 2008-05-19 06:46:13 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -74,7 +64,7 @@
  *  @see LHCb::PV2MC
  *  @see LoKi_PV2MCAlg
  *
- *  @author Vanya BELYAEV Ivan.Belyaev@ibelyaev@physics.syr.edu
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18
  */
 // ============================================================================
