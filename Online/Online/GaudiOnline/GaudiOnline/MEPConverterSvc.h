@@ -57,6 +57,8 @@ namespace LHCb  {
     MBM::Consumer*   m_consumer;
     /// Flag indicating that MBM event retrieval is active
     bool             m_receiveEvts;
+    /// Property: Execute in burst mode
+    bool             m_burstMode;
     /// Property: printout frequence
     float            m_freq;
     /// Property: Request specification
@@ -64,6 +66,8 @@ namespace LHCb  {
     /// Property: MEP manager service name/type
     std::string      m_mepMgrName;
 
+    /// Cached minimal allocation size for multi burst mode
+    int              m_minAlloc;
     /// Monitoring quantity: Number of events processed
     int              m_evtCount;
     /// Monitoring quantity: Number of MEPs processed
@@ -71,10 +75,12 @@ namespace LHCb  {
     /// Monitoring quantity: Packing factor
     int              m_packingFactor;
 
+    /// Declare all subevents of a full MEP in burst mode
+    int declareAllSubEvents(const MBM::EventDesc& evt, SubEvents& events);
     /// Declare all subevents of a full MEP
     int declareSubEvents(const MBM::EventDesc& evt, SubEvents& events);
     /// Declare single subevent
-    int declareSubEvent(const MBM::EventDesc& evt, int evID, const Frags& frags);
+    int declareSubEvent(const MBM::EventDesc& evt, int evID, const Frags& frags, int len);
   public:
     /// Standard Constructor
     MEPConverterSvc(const std::string& name, ISvcLocator* svc);

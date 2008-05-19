@@ -1,6 +1,8 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2008-05-19 Markus Frank
+ - Allow for multi burst mode of event producer.
 
 ! 2008-04-15 Markus Frank
  - Retry to access MBM events if corrupted data occur.

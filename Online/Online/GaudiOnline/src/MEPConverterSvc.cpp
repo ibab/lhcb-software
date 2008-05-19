@@ -32,7 +32,8 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPConverterSvc)
 LHCb::MEPConverterSvc::MEPConverterSvc(const std::string& nam, ISvcLocator* svc)
 : OnlineService(nam,svc), m_mepMgr(0),m_producer(0),m_consumer(0),m_receiveEvts(false)
 {
-  m_mepCount = m_evtCount = m_packingFactor = 0;
+  m_mepCount = m_evtCount = m_packingFactor = m_minAlloc = 0;
+  declareProperty("BurstMode",   m_burstMode=false);
   declareProperty("PrintFreq",   m_freq = 0.);
   declareProperty("Requirements",m_req);
   declareProperty("MEPManager",  m_mepMgrName="LHCb::MEPManager/MEPManager");
@@ -82,12 +83,16 @@ StatusCode LHCb::MEPConverterSvc::initialize()  {
           r.parse(*i);
           m_consumer->addRequest(r);
         }
+	m_minAlloc = m_producer->minAlloc();
         incidentSvc()->addListener(this,"DAQ_CANCEL");
         incidentSvc()->addListener(this,"DAQ_ENABLE");
         declareInfo("MEPsIn",   m_mepCount=0,"Number of MEPs processed.");
         declareInfo("EventsOut",m_evtCount=0,"Number of events processed.");
         declareInfo("Packing",  m_packingFactor=0,
                     "Packing factor of current/last event.");
+	log << MSG::DEBUG << "Running in " 
+	    << (const char*)(m_burstMode ? "multi burst" : "collision") 
+	    << "mode." << endreq;
         return StatusCode::SUCCESS;
       }
       catch( std::exception& e)  {
@@ -115,10 +120,44 @@ StatusCode LHCb::MEPConverterSvc::finalize()  {
   undeclareInfo("EventsOut");
   undeclareInfo("MEPsIn");
   undeclareInfo("Packing");
+  m_minAlloc = 0;
   m_mepCount = 0;
   m_evtCount = 0;
   m_packingFactor = 0;
   return OnlineService::finalize();
+}
+
+int LHCb::MEPConverterSvc::declareAllSubEvents(const EventDesc& evt, SubEvents& events)  {
+  int evID = 0;
+  size_t count = 0, numEvt = events.size();
+  int tot_evt_len = 0;
+
+  for(SubEvents::const_iterator j=events.begin(); j!=events.end(); ++j, ++count)  {
+    if ( count > numEvt ) {
+      error("Subevent iteration error: [found more events than declared]");
+      // Continue without error...
+      m_mepCount++;
+      return MBM_NORMAL;
+    }
+    const Frags& frags = (*j).second;
+    int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
+    tot_evt_len += ((sub_evt_len+1)*sizeof(int))/sizeof(int);
+    tot_evt_len += m_minAlloc; // Need more to handle internal event padding
+  }
+  int sc = m_producer->getSpace(tot_evt_len);
+  if ( sc == MBM_NORMAL ) {
+    for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
+      const Frags& frags = (*i).second;
+      int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
+      sc = declareSubEvent(evt, ++evID, frags, sub_evt_len);
+      if ( sc != MBM_NORMAL )
+	return sc;
+    }
+    sc = m_producer->sendSpace();
+    if ( sc == MBM_NORMAL )
+      m_mepCount++;
+  }
+  return sc;
 }
 
 int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& events)  {
@@ -132,46 +171,59 @@ int LHCb::MEPConverterSvc::declareSubEvents(const EventDesc& evt, SubEvents& eve
       return MBM_NORMAL;
     }
     else {
-      int sc = declareSubEvent(evt, ++evID, (*i).second);
-      if ( sc != MBM_NORMAL )  {
-        return sc;
+      const Frags& frags = (*i).second;
+      int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
+      int sc = m_producer->getSpace(sub_evt_len);
+      if ( sc == MBM_NORMAL ) {
+	sc = declareSubEvent(evt, ++evID, frags, sub_evt_len);
+	if ( sc == MBM_NORMAL ) {
+	  sc = m_producer->sendSpace();
+	  if ( sc == MBM_NORMAL )  {
+	    continue;
+	  }
+	}
       }
+      return sc;
     }
   }
   m_mepCount++;
   return MBM_NORMAL;
 }
 
-int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const Frags& frags)  {
-  int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
-  int sc = m_producer->getSpace(sub_evt_len);
+int LHCb::MEPConverterSvc::declareSubEvent(const EventDesc& evt, int evID, const Frags& frags, int sub_evt_len)  {
+  MEPID id = m_mepMgr->mepID();
+  EventDesc& e = m_producer->event();
+  MEPEVENT* ev = (MEPEVENT*)evt.data;
+  LHCb::RawEventHeader* h = (LHCb::RawEventHeader*)e.data;
+  h->setEventID(evID);
+  h->setMEPID(ev->evID);
+  h->setDataStart(ev->begin);
+  h->setNumberOfFragments(frags.size());
+  h->setErrorMask(0);
+  h->setNumberOfMissing(0);
+  h->setOffsetOfMissing(0);
+  for(size_t j=0; j<frags.size(); ++j)  {
+    LHCb::MEPFragment* f = frags[j];
+    long off =  long(long(f)-id->mepStart);
+    // printf("mep:%p Event:%d fragment:%p %d offset:%ld size:%ld\n",
+    //        id->mepStart,evID,f,j,off,long(f->size()));
+    h->setOffset(j, off);
+  }
+  //const char* before_p = (char*)e.data;
+  //int before_len = e.len;
+
+  e.mask[0] = id->partitionID;
+  e.mask[1] = 0;
+  e.mask[2] = 0;
+  e.mask[3] = 0;
+  e.type    = EVENT_TYPE_EVENT;
+  e.len     = sub_evt_len;
+  int sc = m_producer->declareEvent();
+  //const char* after_p = (char*)e.data;
+  //int after_len = e.len;
+  //printf("mep: data %p [%p] len:%d [%d] [%d]\n",before_p,after_p,before_len,sub_evt_len,after_len);
   if ( sc == MBM_NORMAL ) {
-    MEPID id = m_mepMgr->mepID();
-    EventDesc& e = m_producer->event();
-    MEPEVENT* ev = (MEPEVENT*)evt.data;
-    LHCb::RawEventHeader* h = (LHCb::RawEventHeader*)e.data;
-    h->setEventID(evID);
-    h->setMEPID(ev->evID);
-    h->setDataStart(ev->begin);
-    h->setNumberOfFragments(frags.size());
-    h->setErrorMask(0);
-    h->setNumberOfMissing(0);
-    h->setOffsetOfMissing(0);
-    for(size_t j=0; j<frags.size(); ++j)  {
-      LHCb::MEPFragment* f = frags[j];
-      long off =  long(long(f)-id->mepStart);
-      // printf("mep:%p Event:%d fragment:%p %d offset:%ld size:%ld\n",
-      //        id->mepStart,evID,f,j,off,long(f->size()));
-      h->setOffset(j, off);
-    }
-    e.mask[0] = id->partitionID;
-    e.mask[1] = 0;
-    e.mask[2] = 0;
-    e.mask[3] = 0;
-    e.type    = EVENT_TYPE_EVENT;
-    e.len     = sub_evt_len;
     m_evtCount++;
-    return m_producer->sendEvent();
   }
   return sc;
 }
@@ -194,7 +246,12 @@ StatusCode LHCb::MEPConverterSvc::run()  {
         error("Bad MEP magic pattern!!!!");
       }
       m_packingFactor = ev->packing = events.size();
-      if ( declareSubEvents(e, events) != MBM_NORMAL )  {
+      if ( m_burstMode )  {
+	if ( declareAllSubEvents(e,events) != MBM_NORMAL )  {
+	  return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
+	}
+      }
+      else if ( declareSubEvents(e, events) != MBM_NORMAL )  {
         return m_receiveEvts ? StatusCode::FAILURE : StatusCode::SUCCESS;
       }
       mep_decrement(id, ev, 1);
@@ -208,7 +265,7 @@ StatusCode LHCb::MEPConverterSvc::run()  {
       }
     }
   } catch( std::exception& e)  {
-    return error(std::string("Failed to get MEP buffers:")+e.what());
+    return error(std::string("Failed to access MEP buffers:")+e.what());
   }
   return StatusCode::SUCCESS;
 }
