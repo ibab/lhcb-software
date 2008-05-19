@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
+
+!======================== HltEvent v8r9 2008-05-19 ===========================
 ! 2008-05-19 - Gerhard Raven
  - In HltSummary, replace the integer ID with a string ID which better matches
    the vast majority of its use
