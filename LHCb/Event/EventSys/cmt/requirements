@@ -10,7 +10,7 @@ use DigiEvent   v2r6    Event
 use EventAssoc  v4r4    Event
 use EventBase   v2r5    Event
 use GenEvent    v5r2    Event
-use HltEvent    v8r8    Event
+use HltEvent    v8r9    Event
 use LinkerEvent v3r4    Event
 use L0Event     v16r9   Event
 use MCEvent     v2r8    Event

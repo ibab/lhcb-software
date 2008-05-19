@@ -2,9 +2,9 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
-!======================== EventSys v24r3 2008-05-05 ======================
-! 2008-05-05 - Marco Cattaneo
- - Use DigiEvent v2r6, RecEvent v2r12, VeloEvent v16r4
+!======================== EventSys v24r3 2008-05-19 ======================
+! 2008-05-19 - Marco Cattaneo
+ - Use DigiEvent v2r6, HltEvent v8r9, RecEvent v2r12, VeloEvent v16r4
 
 !======================== EventSys v24r2 2008-04-17 ======================
 ! 2008-04-17 - Marco Cattaneo
