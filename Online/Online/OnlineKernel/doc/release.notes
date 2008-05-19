@@ -1,6 +1,9 @@
 Package: OnlineKernel
 Author:  Markus Frank
 
+! 2008-05-19 Markus Frank
+ - Allow for multi burst mode producers.
+
 ! 2008-03-09 Markus Frank
   - Add application mbm_remove to clean up old unused buffers.
     See "mbm_remove.exe -h" for mbm installer help.

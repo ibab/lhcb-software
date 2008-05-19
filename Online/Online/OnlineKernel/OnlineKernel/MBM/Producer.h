@@ -30,9 +30,10 @@ namespace MBM {
     virtual ~Producer();
 
     /// Access to event descriptor
-    EventDesc& event() {
-      return m_event;
-    }
+    EventDesc& event() {      return m_event;    }
+
+    /// Access to minial buffer allocation size
+    int minAlloc();
 
     /// Switch to non-blocking asynchronous execution mode using WT
     virtual void setNonBlocking(int facility, bool subscribe);
@@ -49,8 +50,10 @@ namespace MBM {
     /// Event receival rearm
     virtual int spaceRearm(int new_length);
 
-    /// Declare event (without send space)
+    /// Declare event on space receival with possibility to declare multiple events
     virtual int declareEvent();
+
+    int declareEvent(void** fadd, int* flen);
 
     /// send event space to consumers
     virtual int sendSpace();

@@ -1308,13 +1308,14 @@ int mbm_reset_statistics (BMID bm) {
   return user.status();
 }
 
-int mbm_buffer_size (BMID bm, int* size) {
+
+int mbm_min_alloc(BMID bm, int* size) {
   Lock lock(bm);
   if ( lock )  {
     if ( !bm->_control() )  {
       _mbm_return_err (MBM_ILL_CONS);
     }
-    *size = bm->_control()->buff_size;
+    *size = bm->_control()->bytes_p_Bit;
   }
   return lock.status();
 }

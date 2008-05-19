@@ -16,7 +16,20 @@ MBM::Producer::Producer(BMID bmid, const std::string& client_name, int partition
 MBM::Producer::~Producer()    {
 }
 
-// Switch to non-blocking execution mode
+/// Access to minial buffer allocation size
+int MBM::Producer::minAlloc() {
+  if ( m_bmid != (BMID)-1 ) {
+    int size = 0;
+    int sc = ::mbm_min_alloc(m_bmid, &size);
+    if ( sc == MBM_NORMAL )  {
+      return size;
+    }
+    throw std::runtime_error("Failed to access minimal allocation size for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to access minimal allocation size for MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
+/// Switch to non-blocking execution mode
 void MBM::Producer::setNonBlocking(int facility, bool subscribe) {
   Client::setNonBlocking(facility,false);
   if ( subscribe ) {
@@ -104,7 +117,7 @@ int MBM::Producer::spaceAction() {
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
-// Action to be called on space receival
+/// Declare event on space receival with possibility to declare multiple events
 int MBM::Producer::declareEvent() {
   void *fadd;
   EventDesc& e = m_event;
@@ -112,6 +125,8 @@ int MBM::Producer::declareEvent() {
   if ( m_bmid != MBM_INV_DESC ) {
     sc = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
     if ( sc == MBM_NORMAL )  {
+      e.data = (int*)fadd;
+      e.len  = flen;
       return MBM_NORMAL;
     }
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");

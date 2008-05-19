@@ -77,23 +77,25 @@ extern "C"  {
     void** free_add, int* free_size, int part_id);
   int mbm_declare_event_and_send (BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask,
                         const char* dest, void** free_add, int* free_size, int part_id);
-  int  mbm_free_space (BMID bm);
-  int  mbm_send_space (BMID bm);
-  int  mbm_wait_space (BMID bm);
+  int  mbm_free_space  (BMID bm);
+  int  mbm_send_space  (BMID bm);
+  int  mbm_wait_space  (BMID bm);
   int  mbm_wait_space_a(BMID bm);
   /// Default AST implementation on get_space
   int  mbm_get_space_ast(void* par);
 
-  int  mbm_cancel_request (BMID bm);
-  int  mbm_grant_update (BMID bm);
-  int  mbm_events_actual (BMID bm, int *events);
-  int  mbm_events_produced (BMID bm, int *events);
-  int  mbm_events_seen (BMID bm, int *events);
+  int  mbm_cancel_request   (BMID bm);
+  int  mbm_grant_update     (BMID bm);
+  int  mbm_events_actual    (BMID bm, int *events);
+  int  mbm_events_produced  (BMID bm, int *events);
+  int  mbm_events_seen      (BMID bm, int *events);
   int  mbm_reset_statistics (BMID bm);
-  int  mbm_buffer_size (BMID bm, int* size);
+  int  mbm_buffer_size      (BMID bm, int* size);
+  /// Access to minimal buffer allocation size
+  int  mbm_min_alloc        (BMID bm, int* size);
   int  mbm_events_in_buffer (BMID bm, int* events);
-  int  mbm_space_in_buffer (BMID bm, int* total, int* large);
-  int  mbm_process_exists (BMID bm, const char* name, int* exists);
+  int  mbm_space_in_buffer  (BMID bm, int* total, int* large);
+  int  mbm_process_exists   (BMID bm, const char* name, int* exists);
 
   int  mbm_wait_event(BMID bm);
   int  mbm_wait_event_a(BMID bm);
