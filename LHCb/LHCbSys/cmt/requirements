@@ -28,7 +28,7 @@ use BcmDet                v1r1    Det     # Magnus Lieng
 use CaloDet               v8r6    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
 use DDDB                  v1r6    Det     # Marco Cattaneo
-use DetCond               v11r10  Det     # Marco Clemencic
+use DetCond               v11r11  Det     # Marco Clemencic
 use DetDesc               v18r4p1 Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r5    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v1r16   Det     # Marco Clemencic, Matt Needham
@@ -47,7 +47,7 @@ use DigiEvent             v2r6    Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v4r4    Event   # Ivan Belyaev
 use EventBase             v2r5    Event   # Marco Cattaneo, Gloria Corti
 use GenEvent              v5r2    Event   # Gloria Corti
-use HltEvent              v8r8    Event   # Jose Angel Hernando-Morata
+use HltEvent              v8r9    Event   # Jose Angel Hernando-Morata
 use LinkerEvent           v3r4    Event   # Olivier Callot
 use L0Event               v16r9   Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r8    Event   # Gloria Corti and sub-det experts
@@ -75,7 +75,7 @@ use LHCbAlgs              v2r17  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
 use LoKiAlgo              v7r4   Phys    # Ivan Belyaev
-use LoKiAlgoMC            v7r0   Phys    # Ivan Belyaev
+use LoKiAlgoMC            v7r1   Phys    # Ivan Belyaev
 use LoKiArrayFunctors     v7r3   Phys    # Ivan Belyaev
 use LoKiCore              v7r2   Phys    # Ivan Belyaev
 use LoKiGen               v7r3   Phys    # Ivan Belyaev
@@ -83,7 +83,7 @@ use LoKiGenMC             v7r0   Phys    # Ivan Belyaev
 use LoKiMC                v7r3   Phys    # Ivan Belyaev
 use LoKiNumbers           v7r3   Phys    # Ivan Belyaev
 use LoKiPhys              v7r3   Phys    # Ivan Belyaev
-use LoKiPhysMC            v7r0   Phys    # Ivan Belyaev
+use LoKiPhysMC            v7r1   Phys    # Ivan Belyaev
 use L0Interfaces          v1r1   L0      # Olivier Deschamps
 use MCInterfaces          v1r5   Kernel  # Marco Cattaneo et al.
 use MDF                   v3r8   DAQ     # Markus Frank
