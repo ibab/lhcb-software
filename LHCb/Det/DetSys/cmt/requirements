@@ -7,7 +7,7 @@ use BcmDet              v1r1    Det
 use CaloDet             v8r6    Det
 use CaloDetXmlCnv       v3r1    Det
 use DDDB                v1r6    Det
-use DetCond             v11r10  Det
+use DetCond             v11r11  Det
 use DetDesc             v18r4p1 Det
 use DetDescCnv          v4r5    Det
 use DetDescSvc          v1r16   Det
