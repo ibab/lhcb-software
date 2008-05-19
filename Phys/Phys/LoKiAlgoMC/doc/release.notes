@@ -1,26 +1,25 @@
-! $Id: release.notes,v 1.17 2008-05-17 17:38:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.18 2008-05-19 07:33:17 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgoMC v7r1 2008-05-19 ========================
+! 2008-05-19 - Marco Cattaneo
+ - Fix many doxygen warnings due to cut and paste typos
+
 ! 2008-05-17 - Vanya BELYAEV
-
  - src/Components/DecayTruth.cpp
-
-   Resurrent old (DC04) and very usedul algorithm LoKi::DecayTruth 
+   Resurrect old (DC04) and very useful algorithm LoKi::DecayTruth 
    for the study of MC-truth for the selected particles 
    (many thanks to Lesya SHCHUTSKA for the kind help)
 
 - cmt/requirements
-
      add the component library 
      version increment to v7r1 
 
-
 !========================== LoKiAlgoMC v7r0 2007-12-03 ========================
-
 ! 2007-12-03 - Vanya BELYAEV
  - the major update for new major version of LoKi v7r0 ("The powerful streamers")
  - cmt/requirements 

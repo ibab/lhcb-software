@@ -1,4 +1,4 @@
-// $Id: AlgoMC.h,v 1.7 2007-07-23 17:44:14 ibelyaev Exp $
+// $Id: AlgoMC.h,v 1.8 2008-05-19 07:33:17 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -84,8 +84,8 @@ namespace LoKi
      *  @see LoKi::Types::MCRange
      *  @see LoKi::Cuts::MCABSID 
      *  @see LoKi::Cuts::MCP
-     *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param cut      cut to be applied
      *  @param location TES location of MC-particles
      *  @return selected range of particles
      */
@@ -117,7 +117,7 @@ namespace LoKi
      *  @see LoKi::Cuts::MCABSID 
      *  @see LoKi::Cuts::MCP
      *  @see LoKi::Cuts::MC3Q
-     *  @param name  name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-particles 
      *  @param cut   cut to be applied
      *  @return selected range of particles
@@ -143,9 +143,9 @@ namespace LoKi
      *  @see LHCb::MCParticle 
      *  @see LoKi::Types::MCRange
      *  @see LoKi::Cuts::MC3Q
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-particles 
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
      LoKi::Types::MCRange 
@@ -169,9 +169,9 @@ namespace LoKi
      *  @see LHCb::MCParticle 
      *  @see LoKi::Types::MCRange
      *  @see LoKi::Cuts::MC3Q
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-particles 
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCRange 
@@ -195,9 +195,9 @@ namespace LoKi
      *  @see LHCb::MCParticle 
      *  @see LoKi::Types::MCRange
      *  @see LoKi::Cuts::MC3Q
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-particles 
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCRange 
@@ -260,8 +260,8 @@ namespace LoKi
      *  @see LHCb::MCVertex
      *  @see LoKi::Types::MCVRange
      *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
+     *  @param tag      name/tag assigned to the selected particles
+     *  @param cut      cut to be applied
      *  @param location TES location of MC-vertices
      *  @return selected range of particles
      */
@@ -283,9 +283,9 @@ namespace LoKi
      *  @see LHCb::MCVertex
      *  @see LoKi::Types::MCVRange
      *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-vertices
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
@@ -309,9 +309,9 @@ namespace LoKi
      *  @see LHCb::MCVertex
      *  @see LoKi::Types::MCVRange
      *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-vertices
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
@@ -335,9 +335,9 @@ namespace LoKi
      *  @see LHCb::MCVertex
      *  @see LoKi::Types::MCVRange
      *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-vertices
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
@@ -361,9 +361,9 @@ namespace LoKi
      *  @see LHCb::MCVertex
      *  @see LoKi::Types::MCVRange
      *  @see LoKi::Cuts::MCISPRIMARY 
-     *  @param name name/tag assigned to the selected particles
+     *  @param tag   name/tag assigned to the selected particles
      *  @param range input MC-vertices
-     *  @param cut  cut to be applied
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
@@ -422,7 +422,7 @@ namespace LoKi
      *
      *  @endcode
      *
-     *  @param name name/tag assigned to the selected vertices
+     *  @param  tag name/tag assigned to the selected vertices
      *  @return selected range of particles
      */
     LoKi::Types::MCRange 
@@ -438,7 +438,7 @@ namespace LoKi
      *
      *  @endcode
      *
-     *  @param name name/tag assigned to the selected vertices
+     *  @param  tag name/tag assigned to the selected vertices
      *  @return selected range of particles
      */
     LoKi::Types::MCVRange 
@@ -494,7 +494,7 @@ namespace LoKi
      *
      *   @param tag the unique tag to be associated with selecte dparticles 
      *   @param range the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -522,9 +522,9 @@ namespace LoKi
      *   @see LoKi::Types::GCuts
      *   @see LoKi::Cuts::G3Q
      *
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag   the unique tag to be associated with selecte dparticles 
      *   @param range the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -553,9 +553,9 @@ namespace LoKi
      *   @see LoKi::Types::GCuts
      *   @see LoKi::Cuts::G3Q
      *
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag    the unique tag to be associated with selecte dparticles 
      *   @param events the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut    the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -580,9 +580,9 @@ namespace LoKi
      *   @see LoKi::Types::GCuts
      *   @see LoKi::Cuts::G3Q
      *
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag   the unique tag to be associated with selecte dparticles 
      *   @param event the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -607,9 +607,9 @@ namespace LoKi
      *   @see LoKi::Types::GCuts
      *   @see LoKi::Cuts::G3Q
      *
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag   the unique tag to be associated with selecte dparticles 
      *   @param event the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -635,9 +635,9 @@ namespace LoKi
      *   @see LoKi::Types::GCuts
      *   @see LoKi::Cuts::G3Q
      *
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag   the unique tag to be associated with selected particles 
      *   @param event the source 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     LoKi::Types::GRange 
@@ -648,10 +648,10 @@ namespace LoKi
       const LoKi::Types::GCuts&           cut    ) ;
     // ========================================================================
     /** 'Select' generator(HepMC) from arbitrary container
-     *   @param tag the unique tag to be associated with selecte dparticles 
+     *   @param tag   the unique tag to be associated with selected particles 
      *   @param first begin-iterator for container 
      *   @param event end-iterator for the ocnatiner 
-     *   @param cuts the selection cuts to be applied 
+     *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
     template <class GENPARTICLE>
@@ -674,7 +674,7 @@ namespace LoKi
      *
      *  @endcode
      *
-     *  @param name name/tag assigned to the selected vertices
+     *  @param  tag name/tag assigned to the selected vertices
      *  @return selected range of HepMC-particles
      */
     LoKi::Types::GRange 
