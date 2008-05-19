@@ -8,6 +8,7 @@
 ! 2008-05-19 - David Hutchcroft
  - Fixed MCHit linking to only link to main event container
  - Fixed PU veto input data in options
+ - Changed text in VeloSimMoni to reflect linker change
 
 !===================== VeloSimulation v3r0 2008-04-18 ======================
 ! 2007-04-18 - Marco Cattaneo
