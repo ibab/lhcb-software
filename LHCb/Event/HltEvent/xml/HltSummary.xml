@@ -201,7 +201,7 @@
     <class
       name        = 'HltSelectionSummary'
       author      = 'Jose Hernando'
-      desc        = 'Summary class for Hlt box'>
+      desc        = 'Summary class for Hlt selections'>
 
       <import name='GaudiKernel/VectorMap' />
       <import name='Event/Particle' />
@@ -362,7 +362,7 @@ return ok;
       </attribute>
 
       <attribute
-        type      = 'GaudiUtils::VectorMap&lt; int, LHCb::HltSelectionSummary &gt;'
+        type      = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltSelectionSummary &gt;'
         name      = 'selections'
         desc      = 'map of HltSelectionSummary es'
         access    = 'PROTECTED' />
@@ -459,55 +459,53 @@ return ok;
       <method
         type = 'bool'
         name = 'hasSelectionSummary'
-        desc = 'has a summary from this trigger box?'
-        argList = 'int boxid'
+        desc = 'has a summary from this trigger line?'
+        argList = 'std::string selectionName'
         const = 'TRUE'>
         <code>
-    return (m_selections.find(boxid) != m_selections.end());
+    return (m_selections.find(selectionName) != m_selections.end());
         </code>
       </method>
 
       <method
         type = 'const LHCb::HltSelectionSummary &amp;'
         name = 'selectionSummary'
-        desc = 'return summary box from this triger selection'
-        argList = 'int boxid'
+        desc = 'return summary from this trigger selection'
+        argList = 'std::string selectionName'
         const = 'TRUE' >
         <code>
-   GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(boxid);  
-   if (it != m_selections.end()) return it->second;
-   else 
-      throw GaudiException( "No requested HltSelectionSummary in HltSummary","HltSummary",StatusCode::FAILURE );
+   GaudiUtils::VectorMap&lt;std::string,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(selectionName);  
+   if ( it == m_selections.end() ) throw GaudiException( "No requested HltSelectionSummary in HltSummary","HltSummary",StatusCode::FAILURE );
+   return it->second;
         </code>
       </method>
       
       <method
         type = 'LHCb::HltSelectionSummary &amp;'
         name = 'selectionSummary'
-        desc = 'returns selection sumary , if not in map, it will create it'
-        argList = 'int boxid'
+        desc = 'returns selection summary; if not in map, it will create it'
+        argList = 'std::string selectionName'
         const = 'FALSE'>
         <code>
-   GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(boxid);
+   GaudiUtils::VectorMap&lt;std::string,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.find(selectionName);
    if (it == m_selections.end()) {
-       LHCb::HltSelectionSummary thebox;
-       m_selections.insert(boxid,thebox);
+       LHCb::HltSelectionSummary summary;
+       m_selections.insert(selectionName,summary);
+       it = m_selections.find(selectionName);
    }
-   it = m_selections.find(boxid);
-   LHCb::HltSelectionSummary* thebox = (LHCb::HltSelectionSummary*) (&amp;(it->second));
-   return *thebox;
+   return const_cast&lt; LHCb::HltSelectionSummary&amp; &gt;(it->second);
         </code>
       </method>
 
       <method
-        type = 'std::vector &lt; int &gt;'
+        type = 'std::vector &lt; std::string &gt;'
         name = 'selectionSummaryIDs'
         desc = 'return the selections names stored in the summary'
         const = 'TRUE' >
         <code>
-    std::vector&lt;int&gt; names;
-    GaudiUtils::VectorMap&lt;int,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.begin();
-    for (; it != m_selections.end(); it++) names.push_back(it->first);
+    std::vector&lt;std::string&gt; names;
+    GaudiUtils::VectorMap&lt;std::string,LHCb::HltSelectionSummary&gt;::iterator it = m_selections.begin();
+    while ( it != m_selections.end()) names.push_back((it++)->first);
     return names;
         </code>
       </method>
