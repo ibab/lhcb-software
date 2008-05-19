@@ -26,6 +26,7 @@ Purpose: LHCb Digitization program
    o use GaudiApp pattern to set version number for gaudirun.py
    o use FieldMap v5r*, gives access to measured field map
    o use all needed component libraries for cmt broadcast usage
+ - Updated SuppressWarnings.opts for ST changes
 
 </PRE><H1><A NAME=v14r10>2008-03-06 Boole v14r10</A></H1><PRE>
  - In v200601.opts, TAE.opts, PilotRun.opts, adapt to new defaults in ST
