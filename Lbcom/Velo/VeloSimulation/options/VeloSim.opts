@@ -1,6 +1,7 @@
 VeloSim.InputContainers = { "MC/Velo/Hits"
  ,"Prev/MC/Velo/Hits", "PrevPrev/MC/Velo/Hits", 
   "Next/MC/Velo/Hits" };
+VeloSim.InputContainerToLink = "MC/Velo/Hits";
 VeloSim.InputTimeOffsets = { 0*ns, -25*ns, -50*ns, 25*ns };
 VeloSim.OutputContainers = { "MC/Velo/FE" };
 VeloSim.SimNoisePileUp = false;
@@ -31,9 +32,10 @@ VeloSim.SiTimeTool.values = {
  -0.034 , -0.035 , -0.028 , -0.024 , -0.021 , -0.017 , -0.013 ,
   0.000 };
 
-VeloPUSim.InputContainers = { "MC/PuVelo/Hits"
- ,"Prev/MC/PuVelo/Hits", "PrevPrev/MC/PuVelo/Hits", 
-  "Next/MC/PuVelo/Hits" };
+VeloPUSim.InputContainers = { "MC/PuVeto/Hits"
+ ,"Prev/MC/PuVeto/Hits", "PrevPrev/MC/PuVeto/Hits", 
+  "Next/MC/PuVeto/Hits" };
+VeloPUSim.InputContainerToLink = "MC/PuVeto/Hits";
 VeloPUSim.InputTimeOffsets = { 0*ns, -25*ns, -50*ns, 25*ns };
 // PU hits end up in two containers.
 VeloPUSim.OutputContainers = { "MC/Velo/FE", "MC/Velo/PuFE" };

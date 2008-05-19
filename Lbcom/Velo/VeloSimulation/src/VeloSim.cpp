@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.25 2008-04-18 17:17:47 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.26 2008-05-19 10:29:23 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -54,6 +54,7 @@ VeloSim::VeloSim( const std::string& name,
     m_veloDet ( 0 )
 {
   declareProperty("InputContainers", m_inputContainers );
+  declareProperty("InputContainerToLink", m_MCHitContainerToLinkName );
   declareProperty("InputTimeOffsets", m_inputTimeOffsets );
   declareProperty("OutputContainers", m_outputContainers );
   declareProperty("SimNoisePileUp", m_simNoisePileUp = false);
@@ -160,6 +161,15 @@ StatusCode VeloSim::initialize() {
 StatusCode VeloSim::execute() {
 
   if(m_isDebug) debug() << "==> Execute" << endmsg;
+
+  // get the pointer to the container of MCHits to make MC linker table to
+  m_MCHitContainerToLink = get<LHCb::MCHits>(m_MCHitContainerToLinkName);
+  if(m_isVerbose) verbose() << "m_MCHitContainerToLinkName " 
+			    << m_MCHitContainerToLinkName
+			    << " m_MCHitContainerToLink " 
+			    << m_MCHitContainerToLink
+			    << " " << m_MCHitContainerToLink->name() 
+			    << endreq;
 
   m_FEs = new LHCb::MCVeloFEs();
 
@@ -521,7 +531,13 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
 	// update charge and MCHit list
 	if (valid){
 	  LHCb::MCVeloFE* myFE = findOrInsertFE(stripKey);
-	  fillFE(myFE,hit,charge); // update and add MC link
+	  if( hit->parent() == m_MCHitContainerToLink ){
+	    if( m_isVerbose ) verbose() << "MCHit to link"  << endreq;
+	    fillFE(myFE,hit,charge); // update and add MC link
+	  }else{
+	    if( m_isVerbose ) verbose() << "Non-linked MCHit"  << endreq;
+            fillFE(myFE,charge); // update an unlinked FE
+          }
 	}
       }
     } // neighbours loop

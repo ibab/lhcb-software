@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.12 2008-04-16 15:53:01 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.13 2008-05-19 10:29:23 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -114,6 +114,10 @@ private:
   std::vector<std::string> m_inputContainers; ///< Name of input containers
   std::vector<double> m_inputTimeOffsets; ///< delta T0 of the input containers
   std::vector<std::string> m_outputContainers;///< Name of output containers
+  /// Name of MCHit container to make links to
+  std::string m_MCHitContainerToLinkName; 
+  /// MCHit container to make links to
+  ObjectContainerBase* m_MCHitContainerToLink; 
   //
   DeVelo* m_veloDet; ///< Detector Element
   LHCb::MCVeloFEs* m_FEs; ///< vector of FE output  signals
