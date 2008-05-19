@@ -25,6 +25,8 @@ from DC06
     DC06 geometry. See talks at <a href="http://indico.cern.ch/conferenceDisplay.py?confId=30157">ST meeting on 2008-03-13</a>).
     (STDet v4r0, STCheckers v2r5, TrackFitEvent v3r14, TrackTools v3r6,
      TsaAlgorithms v3r3)
+  . Default DC06 tag changed to DC06-20080516 to encompass ST changes
+    (DDDB v1r6, SQLDDDB v4r3)
   . Improvements and protections in ST RawBank decoding
     (DigiEvent v2r6, RecEvent v2r12, STDAQ v3r6)
   . Minor changes to Rich reconstruction
