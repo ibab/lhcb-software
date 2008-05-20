@@ -4,12 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r17 2008-05-20==========================
 ! 2008-05-20 - Gerhard Raven
  - Abandon dispatching on types in DeterministicPrescaler
-
-!======================== LHCbAlgs v2r17 2008-05-16 ==========================
-! 2008-05-16 - Marco Cattaneo
- - Add hacks to make Gerhard's hack compile on Windows
 
 ! 2008-04-25 - Gerhard Raven
  - add rate prescaling based on run#, event#, gpsTime and algorithm instance
