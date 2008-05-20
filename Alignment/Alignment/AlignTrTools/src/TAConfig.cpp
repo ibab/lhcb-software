@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.18 2008-05-16 16:54:15 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.19 2008-05-20 09:29:20 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -145,12 +145,10 @@ TAConfig::TAConfig( const std::string& type,
   debug() << "Derivative tool " << m_derivativTool << endreq;
   debug() << "nTrackModelParameters " << m_ntrack_pars << endreq;
   debug() << "Degrees_of_Freedom " << m_dof << endreq;
-  m_DOF = new bool[m_dof.size()];
+  //  m_DOF = new bool[m_dof.size()];
 }
 
-TAConfig::~TAConfig() {
-  delete [] m_DOF;
-}
+TAConfig::~TAConfig() {}
 
 StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_detectors = m_dets;
@@ -677,8 +675,8 @@ StatusCode TAConfig::ConfigMillepede() {
   int rs = m_rank.size();
   int num_objects = m_n_dof * rs;
   m_derGB.resize( m_n_dof * m_DETmap.size(), 0.0);
-  for (unsigned int j = 0; j < 6; j++) 
-    m_DOF[j] = m_dof[j];   // What are the parameters to align ?
+  //  for (unsigned int j = 0; j < 6; j++) 
+  //    m_DOF[j] = m_dof[j];   // What are the parameters to align ?
   //  for (int j = 0; j < 9; j++) {m_CONSTRAINT[j] = m_sigma[j];}
   // Needed for Sebastien's Millepede initialization
   for ( unsigned int i = 0; i < m_dof.size(); i++ ) {// loop over degrees of freedom per detector
