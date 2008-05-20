@@ -1,9 +1,10 @@
-// $Id: DetDesc.cpp,v 1.5 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: DetDesc.cpp,v 1.6 2008-05-20 08:15:22 smenzeme Exp $ 
 
 // Include files
 #include <string> 
 #include <stdio.h>
 #include "DetDesc/DetDesc.h"
+
 
 /** print double value using format
  *  @param value   value to be printed 

@@ -1,4 +1,4 @@
-// $Id: Material.h,v 1.11 2006-05-17 16:02:38 cattanem Exp $
+// $Id: Material.h,v 1.12 2008-05-20 08:15:10 smenzeme Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -82,8 +82,24 @@ public:
   
   /// Atomic number
   virtual const double Z() const = 0;
-  virtual void      setZ( const double value ) = 0;
-  
+  virtual void      setZ( const double value ) = 0; 
+
+  /// Mean excitiation energy
+  virtual const double I() const = 0;
+  virtual void      setI ( const double value ) = 0;
+
+  /// Parameters for density effect correction
+  virtual const double C() const = 0;
+  virtual void      setC ( const double value ) = 0;
+  virtual const double a() const = 0;
+  virtual void      seta ( const double value ) = 0;
+  virtual const double m() const = 0;
+  virtual void      setm ( const double value ) = 0;
+  virtual const double X1() const = 0;
+  virtual void      setX1 ( const double value ) = 0;
+  virtual const double X0() const = 0;
+  virtual void      setX0 ( const double value ) = 0;
+
   /// Number of nucleons
   virtual const double N() const = 0;
   

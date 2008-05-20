@@ -1,4 +1,4 @@
-// $Id: Isotope.icpp,v 1.6 2006-05-17 16:02:38 cattanem Exp $
+// $Id: Isotope.icpp,v 1.7 2008-05-20 08:15:06 smenzeme Exp $
 #ifndef      DETDESC_ISOTOPE_ICPP
 #define      DETDESC_ISOTOPE_ICPP
 // detdesc 
@@ -12,6 +12,24 @@ inline void         Isotope::setA( const double value ) { m_A = value; }
 ///////////////////////////////////////////////////////////////////////////
 inline const double Isotope::Z() const { return m_Z; }
 inline void         Isotope::setZ( const double value ) { m_Z = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::I() const { return m_I; }
+inline void         Isotope::setI( const double value ) { m_I = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::C() const { return m_C; }
+inline void         Isotope::setC( const double value ) { m_C = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::a() const { return m_a; }
+inline void         Isotope::seta( const double value ) { m_a = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::m() const { return m_m; }
+inline void         Isotope::setm( const double value ) { m_m = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::X0() const { return m_X0; }
+inline void         Isotope::setX0( const double value ) { m_X0 = value; }
+///////////////////////////////////////////////////////////////////////////
+inline const double Isotope::X1() const { return m_X1; }
+inline void         Isotope::setX1( const double value ) { m_X1 = value; }
 ///////////////////////////////////////////////////////////////////////////
 inline const double Isotope::N() const { return m_A*Gaudi::Units::mole/Gaudi::Units::g; }
 ///////////////////////////////////////////////////////////////////////////

@@ -1,12 +1,12 @@
-// $Id: Element.cpp,v 1.12 2007-10-05 13:01:59 cattanem Exp $
+// $Id: Element.cpp,v 1.13 2008-05-20 08:15:22 smenzeme Exp $
 /// STL and STD 
 #include <math.h>
+#include <iostream.h>
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
 #include "GaudiKernel/cbrt.h"
-///
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -14,22 +14,26 @@ Element::Element( const std::string& name    ,
                   const std::string& symb    ,
                   const double       a       , 
                   const double       z       , 
-                  const double       density ,                    
+		  const double       i       ,
+		  const double       density ,                    
                   const double       rl      , 
                   const double       al      ,
                   const double       temp    ,
                   const double       press   ,
                   const eState       s       )
   : Material( name , density , rl , al , temp, press , s )
-  , m_Aeff ( a )
-  , m_Zeff ( z )
-  , m_isotopes()
-  , m_coulomb ()
-  , m_tsai    ()
-  , m_symb ( symb )
+    , m_Aeff ( a )
+    , m_Zeff ( z )
+    , m_Ieff ( i )
+    , m_isotopes()
+    , m_coulomb ()
+    , m_tsai    ()
+    , m_symb ( symb )
 {
   if( 0 < Z() ) { ComputeCoulombFactor  (); } 
   if( 0 < Z() ) { ComputeLradTsaiFactor (); }
+  if( 0 < Z() && I()==0 ) { ComputeMeanExcitationEnergy (); }
+  if( 0 < Z() && I()!=0 ) { ComputeDensityEffect (); }
 };
 /////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
@@ -99,8 +103,15 @@ void Element::compute()
  
   // compute and set the interaction length
   ComputeInteractionLength(); 
+  
+  // compute mean excitation energy
+  ComputeMeanExcitationEnergy();
+
+  // compute density effect parameters
+  ComputeDensityEffect();
 
 }
+
 /////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeCoulombFactor()
 {
@@ -113,7 +124,7 @@ void Element::ComputeCoulombFactor()
   
   m_coulomb = (k1*az4 + k2 + 1./(1.+az2))*az2 - (k3*az4 + k4)*az4;
 }
-/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////7
 void Element::ComputeLradTsaiFactor()
 {
   // Compute Tsai's Expression for the Radiation Length
@@ -187,3 +198,44 @@ void  Element::ComputeRadiationLength(){
  setRadiationLength(1.0 / radleninv / density());
 
 };
+
+
+void Element::ComputeMeanExcitationEnergy(){
+    if (I()==0) 
+	if (Z() > 13)
+	    m_Ieff = (12*Z()+7)*Gaudi::Units::eV;
+	else
+	    m_Ieff = (9.76*Z()+58.8*pow(Z(),-0.19))*Gaudi::Units::eV;
+  };
+
+void Element::ComputeDensityEffect(){
+    
+    double A1 = 1*Gaudi::Units::g/Gaudi::Units::mole;
+    double D1 = 1*Gaudi::Units::g/Gaudi::Units::cm3;
+    
+    double plasma = 28.816*sqrt(density()/D1* Z()*A1/A())*Gaudi::Units::eV;
+    
+    m_C = 1+2*log(I()/plasma);
+    double x_a = m_C/4.606;
+    
+    if ( I() < 100*Gaudi::Units::eV )
+	if ( m_C > 3.681 ){
+	    m_X0 = 0.326*m_C-1.0;
+	    m_X1 = 2.0;
+	} else {
+	    m_X0 = 0.2;
+	    m_X1 = 2.0;
+	}
+    else 
+	if ( m_C > 5.215 ){
+	    m_X0 = 0.326*m_C-1.5;
+	    m_X1 = 3.0;
+	} else {
+	    m_X0 = 0.2;
+	    m_X1 = 3.0;
+	}
+
+    m_a = 4.606*(x_a-m_X0)/pow(m_X1-m_X0,3);
+    m_m = 3.0;
+
+}

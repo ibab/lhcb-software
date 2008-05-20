@@ -1,4 +1,4 @@
-// $Id: Mixture.h,v 1.13 2007-10-25 07:31:27 cattanem Exp $ 
+// $Id: Mixture.h,v 1.14 2008-05-20 08:15:16 smenzeme Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
@@ -35,6 +35,7 @@ public:
   Mixture( const std::string&  name    = ""               , 
            const double        a       = 0                , 
            const double        z       = 0                , 
+	   const double        i       = 0                ,
            const double        density = 0                ,
            const double        rl      = 0                , 
            const double        al      = 0                ,
@@ -88,7 +89,24 @@ public:
   ///        Atomic number
   virtual inline const double    Z() const;
   virtual inline void         setZ( const double value );  
-  ///        Number of nucleons
+  ///        Mean excitation energy
+  virtual inline const double    I() const;
+  virtual inline void         setI( const double value ); 
+  ///       Parameters for Density Effect Correction
+  virtual inline const double    C() const;
+  virtual inline void         setC( const double value );
+  virtual inline const double    a() const;
+  virtual inline void         seta( const double value );
+  virtual inline const double    m() const;
+  virtual inline void         setm( const double value );
+  virtual inline const double    X0() const;
+  virtual inline void         setX0( const double value );
+  virtual inline const double    X1() const;
+  virtual inline void         setX1( const double value );
+
+ 
+
+ ///        Number of nucleons
   virtual inline const double    N() const;
   ///
   virtual inline const CLID& clID    () const { return Mixture::classID(); }
@@ -102,9 +120,9 @@ public:
 protected:
   ///
   StatusCode addMyself();
-  /// Compute effective A,Z and fractions for compounds
+  /// Compute effective A,Z,I and fractions for compounds
   StatusCode computeByAtoms();  
-  /// Compute effective A,Z and number of atoms per volume for each element
+  /// Compute effective A,Z,I and number of atoms per volume for each element
   StatusCode computeByFraction () ;
   ///  
 private:
@@ -121,6 +139,12 @@ private:
   ///
   double         m_A ;
   double         m_Z ;
+  double         m_I ;
+  double         m_a ;
+  double         m_m ;
+  double         m_C ;
+  double         m_X0;
+  double         m_X1;
   ///
 };
 

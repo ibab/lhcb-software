@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.363 2008-03-28 12:39:59 cattanem Exp $ 
+! $Id: release.notes,v 1.364 2008-05-20 08:15:00 smenzeme Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+! 2008-05-20 - Stephanie Hansmann-Menzemer
+- Add computation of mean excitation energy and density effect 
+  correction paramters to elements and materials
+
 
 !====================== DetDesc v18r4p1 2008-03-28 ============================
 ! 2008-03-28 - Marco Gersabeck

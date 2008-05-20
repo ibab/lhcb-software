@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
-/// $Id: Element.h,v 1.14 2006-05-17 16:02:38 cattanem Exp $
+// $Id: Element.h,v 1.15 2008-05-20 08:15:05 smenzeme Exp $
+/// $Id: Element.h,v 1.15 2008-05-20 08:15:05 smenzeme Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -33,6 +33,7 @@ public:
            const std::string&  symb     = "??" ,
            const double        a        =  0   , 
            const double        z        =  0   , 
+	   const double        i        =  0   ,
            const double        density  =  0   ,
            const double        rl       =  0   , 
            const double        al       =  0   ,  
@@ -80,6 +81,20 @@ public:
   ///        Atomic number
   virtual inline const double    Z() const;
   virtual inline void         setZ( const double value );
+  ///        Mean excitation energy
+  virtual inline const double    I() const;
+  virtual inline void         setI( const double value );
+  ///        Parameters for density effect correction
+  virtual inline const double    C() const;
+  virtual inline void        setC( const double value);
+  virtual inline const double    a() const;
+  virtual inline void        seta( const double value);
+  virtual inline const double    m() const;
+  virtual inline void        setm( const double value);
+  virtual inline const double    X0() const;
+  virtual inline void        setX0( const double value);
+  virtual inline const double    X1() const;
+  virtual inline void        setX1( const double value);
   ///        Number of nucleons
   virtual inline const double    N() const;
   ///  Coulomb factor 
@@ -101,6 +116,13 @@ public:
   /// compute radiation length
   void ComputeRadiationLength();
 
+  /// compute mean excitation energy
+  void ComputeMeanExcitationEnergy();
+
+  /// compute parameters for density correction
+  void ComputeDensityEffect();
+
+
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)
@@ -111,6 +133,14 @@ private:
   double                  m_Aeff;
   /// Effective atomic number
   double                  m_Zeff;
+  // Effective mean escitation energy
+  double                  m_Ieff;
+  // Parameters for density effect correction
+  double                  m_C;
+  double                  m_a;
+  double                  m_m;
+  double                  m_X0;
+  double                  m_X1;
   /// Vector of isotopes this material is composed of
   Isotopes                m_isotopes;  
   /// Coulomb factor

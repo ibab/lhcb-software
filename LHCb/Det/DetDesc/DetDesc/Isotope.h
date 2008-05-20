@@ -1,4 +1,4 @@
-// $Id: Isotope.h,v 1.11 2006-05-17 16:02:38 cattanem Exp $
+// $Id: Isotope.h,v 1.12 2008-05-20 08:15:06 smenzeme Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -24,6 +24,7 @@ public:
   Isotope( const std::string name    = ""              , 
            const double      a       = 0               , 
            const double      z       = 0               , 
+	   const double      i       = 0               ,
            const double      density = 0               ,
            const double      rl      = 0               ,  
            const double      al      = 0               ,
@@ -39,7 +40,25 @@ public:
   
   //        Atomic number
   virtual inline const double   Z() const;
-  virtual inline void        setZ(  const double value );
+  virtual inline void        setZ(  const double value ); 
+
+ //        Mean excitation energy
+  virtual inline const double   I() const;
+  virtual inline void        setI(  const double value );
+
+  //       Parameters for density effect correction
+  virtual inline const double   C() const;
+  virtual inline void        setC(  const double value );
+  virtual inline const double   a() const;
+  virtual inline void        seta(  const double value );
+  virtual inline const double   m() const;
+  virtual inline void        setm(  const double value );
+  virtual inline const double   X0() const;
+  virtual inline void        setX0(  const double value );
+  virtual inline const double   X1() const;
+  virtual inline void        setX1(  const double value );
+
+
   
   //        Number of nucleons
   virtual inline const double   N() const;
@@ -54,7 +73,16 @@ protected:
   
   //        Atomic number
   double m_Z;
- 
+
+  //        Excitation energy
+  double m_I;
+
+  //        Parameters for density effect correction
+  double m_C;
+  double m_a;
+  double m_m;
+  double m_X0;
+  double m_X1;
   
 };
 ///

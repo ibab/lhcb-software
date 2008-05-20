@@ -1,12 +1,13 @@
-// $Id: Isotope.cpp,v 1.7 2006-02-10 08:02:45 mneedham Exp $
+// $Id: Isotope.cpp,v 1.8 2008-05-20 08:15:27 smenzeme Exp $
 /// DetDesc 
 #include "DetDesc/Isotope.h"
 ///
 
 ////////////////////////////////////////////////////////////////////////////////////
 Isotope::Isotope( const std::string name    , 
-                  const double      a       , 
+                  const double      A       , 
                   const double      z       , 
+		  const double      i       ,
                   const double      density ,
                   const double      rl      ,  
                   const double      al      ,
@@ -14,8 +15,9 @@ Isotope::Isotope( const std::string name    ,
                   const double      press   , 
                   const eState      s       )
   : Material( name , density , rl , al , temp , press , s )
-  , m_A( a ) 
-  , m_Z( z ) 
+    , m_A( A ) 
+    , m_Z( z )
+    , m_I( i )
 {};
 ////////////////////////////////////////////////////////////////////////////////////
 Isotope::~Isotope(){};

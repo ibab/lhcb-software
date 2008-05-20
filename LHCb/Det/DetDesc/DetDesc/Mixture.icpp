@@ -1,4 +1,4 @@
-// $Id: Mixture.icpp,v 1.5 2006-06-16 11:53:53 cattanem Exp $
+// $Id: Mixture.icpp,v 1.6 2008-05-20 08:15:18 smenzeme Exp $
 #ifndef    DETDESC_MIXTURE_ICPP 
 #define    DETDESC_MIXTURE_ICPP 1 
 
@@ -15,6 +15,24 @@ inline void         Mixture::setA( const double /*value*/ ){} ;
 inline const double Mixture::Z()        const { return m_Z    ; }
 /// Effective Z is computed, can't be set explicitly ////////////////////////////
 inline void         Mixture::setZ( const double /*value*/ ){} ; 
+/// Effective I is returned                          ////////////////////////////
+inline const double Mixture::I()        const { return m_I    ; }  
+// Effective I is computed, can't be set explicitly ////////////////////////////
+inline void         Mixture::setI( const double /*value*/ ){} ; 
+
+/// Parameters for density effect correction are set and returned ////////////////
+inline const double Mixture::C()        const { return m_C    ; }
+inline void         Mixture::setC( const double /*value*/ ){} ;
+inline const double Mixture::a()        const { return m_a    ; }
+inline void         Mixture::seta( const double /*value*/ ){} ;
+inline const double Mixture::m()        const { return m_m    ; }
+inline void         Mixture::setm( const double /*value*/ ){} ;
+inline const double Mixture::X0()        const { return m_X0    ; }
+inline void         Mixture::setX0( const double /*value*/ ){} ;
+inline const double Mixture::X1()        const { return m_X1    ; }
+inline void         Mixture::setX1( const double /*value*/ ){} ;
+
+
 /// Effective N is returned
 inline const double Mixture::N()        const { return m_A*Gaudi::Units::mole/Gaudi::Units::g; }  
 /////////////////////////////////////////////////////////////////////////////////
