@@ -1,28 +1,32 @@
-// $Id: Mixture.cpp,v 1.11 2006-06-16 11:53:53 cattanem Exp $ 
+// $Id: Mixture.cpp,v 1.12 2008-05-20 08:27:43 smenzeme Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Mixture.h"
+#include <cmath>
 
 //
 Mixture::Mixture( const std::string&  name    , 
                   const double        a       , 
                   const double        z       , 
-                  const double        density ,
+		  const double        i       ,
+		  const double        density ,
                   const double        rl      , 
                   const double        al      ,
                   const double        temp    ,
                   const double        press   ,
                   const eState s              )
   : Material( name ,         density , rl, al , temp , press , s )
-  , m_elements(   )
-  , m_atoms   (   )
-  , m_own     ( 0 )
-  , m_A       ( a )
-  , m_Z       ( z )
-{};
+    , m_elements(   )
+    , m_atoms   (   )
+    , m_own     ( 0 )
+    , m_A       ( a )
+    , m_Z       ( z )
+    , m_I       ( i )
+   {
+   };
 //
 Mixture::~Mixture() {}
 //
@@ -163,6 +167,7 @@ StatusCode Mixture::computeByFraction()
   ///
   m_A = 0 ;
   m_Z = 0 ;
+  m_I = 0;
   ///
   double radleninv = 0 ; 
   double lambdainv = 0 ;
@@ -174,6 +179,10 @@ StatusCode Mixture::computeByFraction()
     /// 
     m_A += frac * elem->A() ;
     m_Z += frac * elem->Z() ;
+
+   
+
+    m_I += frac*elem->Z()*log(elem->I()); 
     // 
     // Use the aproximate formula for radiation lengh of mixtures 1/x0 = sum(wi/Xi)
     if( elem->radiationLength() > 0.0 && elem->density() > 0.0) {
@@ -185,7 +194,37 @@ StatusCode Mixture::computeByFraction()
     if( elem->absorptionLength() > 0.0 ) { 
       lambdainv += frac/(elem->absorptionLength() * elem->density()); 
     }
-  } 
+  }
+
+  m_I = std::exp(m_I/m_Z);
+
+  double A1 = 1*Gaudi::Units::g/Gaudi::Units::mole;
+  double D1 = 1*Gaudi::Units::g/Gaudi::Units::cm3;
+
+  double plasma = 28.816*sqrt(density()/D1*Z()*A1/A())*Gaudi::Units::eV;
+
+  m_C = 1 + 2*log(m_I/plasma);
+  double x_a = m_C/4.606;
+
+  if ( m_I < 100 * Gaudi::Units::eV )
+      if ( m_C > 3.681){
+	  m_X0 = 0.326*m_C-1.0;
+	  m_X1 = 2;
+      } else {
+	  m_X0 = 0.2;
+	  m_X1 = 2;
+      }
+  else 
+      if ( m_C > 5.215){
+	  m_X0 = 0.326*m_C-1.5;
+	  m_X1 = 3;
+      } else {
+	  m_X0 = 0.2;
+	  m_X1 = 3;
+      }
+
+  m_a = 4.606*(x_a-m_X0)/pow(m_X1-m_X0,3.0);
+  m_m = 3.0;
 
   // only update the radiation and interaction length if the attribute is
   // is not provided in the input file
@@ -200,6 +239,7 @@ StatusCode Mixture::computeByFraction()
   return 
     A()       <= 0 ? StatusCode::FAILURE :
     Z()       <= 0 ? StatusCode::FAILURE :
+    I()       <= 0 ? StatusCode::FAILURE :
     radleninv <= 0 ? StatusCode::FAILURE :
     density() <= 0 ? StatusCode::FAILURE : 
     lambdainv <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
@@ -286,7 +326,8 @@ StatusCode Mixture::addMyself()
   m_own = new Element( name             () ,
                        "XX"                , 
                        A                () , 
-                       Z                () , 
+                       Z                () ,
+		       I                () ,
                        density          () , 
                        radiationLength  () , 
                        absorptionLength () , 

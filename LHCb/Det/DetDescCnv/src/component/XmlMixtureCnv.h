@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.h,v 1.4 2005-03-24 16:21:18 cattanem Exp $
+// $Id: XmlMixtureCnv.h,v 1.5 2008-05-20 08:28:10 smenzeme Exp $
 
 #ifndef DETDESCCNV_XMLMIXTURECNV_H
 #define DETDESCCNV_XMLMIXTURECNV_H
@@ -107,6 +107,7 @@ private:
   const XMLCh* stateString;
   const XMLCh* AeffString;
   const XMLCh* ZeffString;
+  const XMLCh* IeffString;
   const XMLCh* densityString;
   const XMLCh* radlenString;
   const XMLCh* lambdaString;
