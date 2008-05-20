@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.h,v 1.3 2005-03-24 16:21:18 cattanem Exp $ 
+// $Id: XmlElementCnv.h,v 1.4 2008-05-20 08:19:25 smenzeme Exp $ 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLELEMENTCNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLELEMENTCNV_H
 
@@ -92,6 +92,7 @@ private:
   const XMLCh* symbolString;
   const XMLCh* AString;
   const XMLCh* ZeffString;
+  const XMLCh* IString;
   const XMLCh* hrefString;
   const XMLCh* fractionmassString;
   const XMLCh* tabpropsString;

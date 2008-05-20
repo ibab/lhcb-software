@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.7 2006-12-14 13:14:10 ranjard Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.8 2008-05-20 08:19:25 smenzeme Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConversionSvc.h"
@@ -17,7 +17,6 @@
 #include "DetDescCnv/XmlCnvException.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
@@ -63,13 +62,15 @@ XmlElementCnv::XmlElementCnv (ISvcLocator* svc) :
   lambdaString = xercesc::XMLString::transcode("lambda");
   symbolString = xercesc::XMLString::transcode("symbol");
   AString = xercesc::XMLString::transcode("A");
-  ZeffString = xercesc::XMLString::transcode("Zeff");
+  ZeffString = xercesc::XMLString::transcode("Zeff"); 
+  IString = xercesc::XMLString::transcode("I");
   hrefString = xercesc::XMLString::transcode("href");
   fractionmassString = xercesc::XMLString::transcode("fractionmass");
   tabpropsString = xercesc::XMLString::transcode("tabprops");
   addressString = xercesc::XMLString::transcode("address");
   isotoperefString = xercesc::XMLString::transcode("isotoperef");
   atomString = xercesc::XMLString::transcode("atom");
+  
 }
 
 
@@ -86,13 +87,15 @@ XmlElementCnv::~XmlElementCnv () {
   xercesc::XMLString::release((XMLCh**)&lambdaString);
   xercesc::XMLString::release((XMLCh**)&symbolString);
   xercesc::XMLString::release((XMLCh**)&AString);
-  xercesc::XMLString::release((XMLCh**)&ZeffString);
+  xercesc::XMLString::release((XMLCh**)&ZeffString);  
+  xercesc::XMLString::release((XMLCh**)&IString);
   xercesc::XMLString::release((XMLCh**)&hrefString);
   xercesc::XMLString::release((XMLCh**)&fractionmassString);
   xercesc::XMLString::release((XMLCh**)&tabpropsString);
   xercesc::XMLString::release((XMLCh**)&addressString);
   xercesc::XMLString::release((XMLCh**)&isotoperefString);
   xercesc::XMLString::release((XMLCh**)&atomString);
+  
 }
 
 
@@ -103,6 +106,7 @@ StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
                                        DataObject*& refpObject) {
   // creates an object for the node found
   std::string elementName = dom2Std (element->getAttribute (nameString));
+ 
   Element* dataObj = new Element(elementName);
   refpObject = dataObj;
   // Now we have to process more material attributes if any      
@@ -124,10 +128,18 @@ StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
   }
   std::string densityAttribute =
     dom2Std (element->getAttribute (densityString));
-  if (!densityAttribute.empty()) {
+  if (!densityAttribute.empty()) 
     dataObj->setDensity
       (xmlSvc()->eval(densityAttribute));
-  }
+  
+  
+  std::string iAttribute =
+      dom2Std (element->getAttribute (IString));
+  if (!iAttribute.empty()) 
+      dataObj->setI (xmlSvc()->eval(iAttribute));
+  
+
+
   std::string radlenAttribute = dom2Std (element->getAttribute (radlenString));
   if (!radlenAttribute.empty()) {
     dataObj->setRadiationLength
@@ -142,7 +154,7 @@ StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
   if (!symbolAttribute.empty()) {
     dataObj->setSymbol (symbolAttribute);
   }
-
+  
   // returns
   return StatusCode::SUCCESS;
 } // end i_createObj
@@ -176,15 +188,14 @@ StatusCode XmlElementCnv::i_fillObj (xercesc::DOMElement*        childElement ,
     log << MSG::VERBOSE << "looking at an atom" << endreq;
     // Now we have to process atom attributes
     std::string aAttribute = dom2Std (childElement->getAttribute (AString));
-    if (!aAttribute.empty()) {
+    if (!aAttribute.empty()) 
       dataObj->setA (xmlSvc()->eval(aAttribute));
-    }
+     
     std::string zeffAttribute =
       dom2Std (childElement->getAttribute (ZeffString));
-    if (!zeffAttribute.empty()) {
+    if (!zeffAttribute.empty()) 
       dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
-    }
-    
+      
   } else if (0 == xercesc::XMLString::compareString
              (isotoperefString, tagName)) {
 
@@ -265,11 +276,11 @@ StatusCode XmlElementCnv::i_processObj (DataObject*        refpObject ,
     // We created the element from scratch so now we need to compute
     // the derived quantities
     dataObj->ComputeCoulombFactor();
-    dataObj->ComputeLradTsaiFactor();
-   
+    dataObj->ComputeLradTsaiFactor();   
     dataObj->ComputeInteractionLength(); 
     dataObj->ComputeRadiationLength();
-
+    dataObj->ComputeMeanExcitationEnergy();
+    dataObj->ComputeDensityEffect();
 
   
   }

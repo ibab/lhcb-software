@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.6 2006-12-14 13:14:10 ranjard Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.7 2008-05-20 08:19:25 smenzeme Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -20,7 +20,6 @@
 #include "DetDescCnv/XmlCnvException.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
@@ -63,11 +62,13 @@ XmlIsotopeCnv::XmlIsotopeCnv (ISvcLocator* svc) :
   stateString = xercesc::XMLString::transcode("state");
   AString = xercesc::XMLString::transcode("A");
   ZString = xercesc::XMLString::transcode("Z");
+  IString = xercesc::XMLString::transcode("I");
   densityString = xercesc::XMLString::transcode("density");
   radlenString = xercesc::XMLString::transcode("radlen");
   lambdaString = xercesc::XMLString::transcode("lambda");
   tabpropsString = xercesc::XMLString::transcode("tabprops");
   addressString = xercesc::XMLString::transcode("address");
+  
 }
 
 
@@ -80,12 +81,14 @@ XmlIsotopeCnv::~XmlIsotopeCnv () {
   xercesc::XMLString::release((XMLCh**)&pressureString);
   xercesc::XMLString::release((XMLCh**)&stateString);
   xercesc::XMLString::release((XMLCh**)&AString);
-  xercesc::XMLString::release((XMLCh**)&ZString);
+  xercesc::XMLString::release((XMLCh**)&ZString); 
+  xercesc::XMLString::release((XMLCh**)&IString);
   xercesc::XMLString::release((XMLCh**)&densityString);
   xercesc::XMLString::release((XMLCh**)&radlenString);
   xercesc::XMLString::release((XMLCh**)&lambdaString);
   xercesc::XMLString::release((XMLCh**)&tabpropsString);
-  xercesc::XMLString::release((XMLCh**)&addressString);  
+  xercesc::XMLString::release((XMLCh**)&addressString);   
+ 
 }
 
 
@@ -117,7 +120,12 @@ StatusCode XmlIsotopeCnv::i_createObj (xercesc::DOMElement* element,
   std::string aAttribute = dom2Std (element->getAttribute ( AString ));
   if (!aAttribute.empty()) {
     dataObj->setA (xmlSvc()->eval(aAttribute));
-  }
+  } 
+
+  std::string iAttribute = dom2Std (element->getAttribute ( IString ));
+  if (!iAttribute.empty()) 
+      dataObj->setI (xmlSvc()->eval(iAttribute));
+     
   std::string zAttribute = dom2Std (element->getAttribute ( ZString ));
   if (!zAttribute.empty()) {
     dataObj->setZ (xmlSvc()->eval(zAttribute, false));
@@ -135,6 +143,8 @@ StatusCode XmlIsotopeCnv::i_createObj (xercesc::DOMElement* element,
   if (!lambdaAttribute.empty()) {
     dataObj->setAbsorptionLength (xmlSvc()->eval(lambdaAttribute));
   }
+
+  
 
   // returns
   return StatusCode::SUCCESS;

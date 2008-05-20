@@ -1,4 +1,4 @@
-// $Id: XmlMixtureCnv.cpp,v 1.9 2008-01-23 17:22:30 marcocle Exp $
+// $Id: XmlMixtureCnv.cpp,v 1.10 2008-05-20 08:19:25 smenzeme Exp $
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
@@ -18,7 +18,6 @@
 #include "XmlTools/IXmlSvc.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
@@ -60,6 +59,7 @@ XmlMixtureCnv::XmlMixtureCnv (ISvcLocator* svc) :
   stateString = xercesc::XMLString::transcode("state");
   AeffString = xercesc::XMLString::transcode("Aeff");
   ZeffString = xercesc::XMLString::transcode("Zeff");
+  IeffString = xercesc::XMLString::transcode("I");
   densityString = xercesc::XMLString::transcode("density");
   radlenString = xercesc::XMLString::transcode("radlen");
   lambdaString = xercesc::XMLString::transcode("lambda");
@@ -81,6 +81,7 @@ XmlMixtureCnv::~XmlMixtureCnv () {
   xercesc::XMLString::release((XMLCh**)&stateString);
   xercesc::XMLString::release((XMLCh**)&AeffString);
   xercesc::XMLString::release((XMLCh**)&ZeffString);
+  xercesc::XMLString::release((XMLCh**)&IeffString);
   xercesc::XMLString::release((XMLCh**)&densityString);
   xercesc::XMLString::release((XMLCh**)&radlenString);
   xercesc::XMLString::release((XMLCh**)&lambdaString);
@@ -131,6 +132,11 @@ StatusCode XmlMixtureCnv::i_createObj (xercesc::DOMElement* element,
   if (!zeffAttribute.empty()) {
     dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
   }
+  std::string ieffAttribute = dom2Std (element->getAttribute (IeffString));
+  if (!ieffAttribute.empty()) {
+    dataObj->setI (xmlSvc()->eval(ieffAttribute));
+  }
+
   std::string densityAttribute =
     dom2Std (element->getAttribute (densityString));
   if (!densityAttribute.empty()) {
