@@ -13,7 +13,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-05-20 - Patrick Koppenburg
- - HltBackgroundCategory : Use strings as index, not int.
+ - HltBackgroundCategory : Use strings as index, not int. Requires HltEvent v8r8
 
 ! 2008-05-15 - Patrick Koppenburg
  - Restore Gerhard's changes.
