@@ -242,9 +242,10 @@ HltLambdaLLParticles.MakeKs = false ;
 HltLambdaLLParticles.MakeLambda = true ;
 HltLambdaLLParticles.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions",
                                                     "Phys/HltNoPIDsProtons"};
+
 /* printout 
 SeqMakeHltKsLL.Members += {  "PrintTree/PrintKs" };
-PrintKs.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
+PrintKs.PhysDesktop.InputLocations = { "Phys/HltKsLLParticles" };
 SeqMakeHltLambdaLL.Members += {  "PrintTree/PrintLambda" };
 PrintLambda.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
 */
@@ -253,3 +254,6 @@ PrintLambda.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
 HltKsLLParticles.OutputLevel = 2;
 HltLambdaLLParticles.OutputLevel = 2;
 */
+
+HltKsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
+HltLambdaLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixe
