@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+! 2008-05-20 - Stephanie Hansmann-Menzemer
+ - add StateDetailedBetheBloch dE/dx correction tool
 
 !======================== TrackTools v3r6 2008-05-09 ========================
 ! 2008-05-08 - Johannes Albrecht
