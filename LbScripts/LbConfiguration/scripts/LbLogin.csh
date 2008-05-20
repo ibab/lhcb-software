@@ -5,7 +5,7 @@
 unalias cwdcmd
 
 set a = `history -rh 1 | awk '{print $2}'`
-echo $a
+# echo $a
 #set b = `basename $a`
 set l = `readlink $a`
 if ( $l == "" ) then
@@ -31,8 +31,7 @@ unset d
 if ( $scriptsdir == ".") then
 	set scriptsdir = `pwd`
 endif
-echo $scriptsdir
-
+# echo $scriptsdir
 
 #################################################################
 # Parsing command line arguments
@@ -87,13 +86,13 @@ while (1)
     endsw
 end
 
-echo "Remaining arguments:"
+# echo "Remaining arguments:"
 # foreach el ($argv:q) created problems for some tcsh-versions (at least
 # 6.02). So we use another shift-loop here:
-while ($#argv > 0)
-	echo '--> '\`$1:q\'
-    shift
-end
+# while ($#argv > 0)
+#	echo '--> '\`$1:q\'
+#    shift
+#end
 
 unset temp
 
@@ -260,130 +259,104 @@ else
 endif
 
 ###################################################################################
-echo "debug $debug"
-echo "mysiteroot $mysiteroot"
-echo "cmtconfig $cmtconfig"
-echo "userarea $userarea"
-echo "cmtvers $cmtvers"
-echo "sharedarea $sharedarea"
 
-echo "Exiting ..."
-exit
-echo "Exited"
-
-#set echo on
-
-# set default values for CMT and gcc versions 
-set comp = `gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
-if ("$comp" >= "340") then
-  set gcc = `gcc --version | grep gcc | awk '{print $3}' | awk -F. '{for(i=1; i<=2; i++){print $i}}'`
-  set comp = `echo $gcc | tr -d " "`
-endif
-
-
-set compdef = gcc$comp
-
-
-unset newcomp
-
-# get CMT and/or gcc versions from arguments if any
-set nar = $#argv
-while ($nar > 0) 
-	set argn = $argv[${nar}]
-	if ($argn == 'HEAD') then
-		set cmtvers = 'HEAD'
-	else
-		if ($argn == 'debug') then
-			set debug = $argn
+# Guess the configuration
+if ( "$OSTYPE" == "linux" || "$OSTYPE" == "linux-gnu" ) then
+	set comp = `gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
+	if ("$comp" >= "340") then
+  		set gcc = `gcc --version | grep gcc | awk '{print $3}' | awk -F. '{for(i=1; i<=2; i++){print $i}}'`
+  		set comp = `echo $gcc | tr -d " "`
+	endif
+	set compdef = gcc$comp
+	if (-e /etc/redhat-release) then
+		set distrib = `cat /etc/redhat-release | awk '{print $1}'` 
+		set rhv = `cat /etc/redhat-release | tr -d '[a-z][A-Z]()'`
+		if ("$distrib" == "Scientific") then
+			set rhv = `echo ${rhv} | awk -F "." '{print $1}'`
+			set platform = "slc${rhv}"
 		else
-			set v = `echo $argn | grep 'v1r'`
-			if ($v != '') then
-				set cmtvers = $v
-			else
-				set newcomp = $argn
-			endif
+			set rhv = `echo ${rhv} | tr -d "."`
+			set platform = "rh${rhv}" 
 		endif
 	endif
-	set argv[${nar}] = ""
-	@ nar = ${nar} - 1
-end
 
-
-
-echo " -------------------------------------------------------------------"
-
-
-
-
-#==============================================================
-# deal with different linux distributions
-if (-e /etc/redhat-release) then
-	set distrib = `cat /etc/redhat-release | awk '{print $1}'` 
-	set rhv = `cat /etc/redhat-release | tr -d '[a-z][A-Z]()'`
-	if ("$distrib" == "Scientific") then
-		set nativehw = `uname -i`
-		set hw = $nativehw
-		if ($hw == "i386") set hw = "ia32"
-		if ($hw == "x86_64") set hw = "amd64"
-		set rhv = `echo ${rhv} | awk -F "." '{print $1}'`
-		set rh = "slc"${rhv}"_"${hw}
+	set nativehw = `uname -i`
+	set hw = $nativehw
+	if ($hw == "i386") then 
+		set hw = "ia32"
+	else if ($hw == "x86_64") then 
+		set hw = "amd64"
+	else if ($hw == "ia64") then
+		set hw ="amd64" 
+	endif
+	set binary = $hw
+else if ( `uname -s` == "Darwin" ) then 
+	set comp = `gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
+	set compdef = "gcc$comp"
+	set rh = `sw_vers | grep ProductVersion | awk '{print $2}' | awk -F . '{print $1 $2}'`
+	set platform = "osx$rh"
+	if ( `uname -p` == 'powerpc' ) then
+		set hw = 'ppc'
 	else
-		set rhv = `echo ${rhv} | tr -d "."`
-		set rh = "rh$rhv"
+		set hw = 'ia32'
+	endif
+	set binary = $hw
+endif
+
+
+# global override from the command line
+if ( $cmtconfig != 0 ) then
+	set conflist = `echo $cmtconfig | tr '_' ' '`
+	if ( $#conflist > 2) then
+		set platform = $conflist[1]
+		set binary = $conflist[2]
+		set compdef = $conflist[3]	
 	endif 
+	foreach c ( $conflist )
+		if ( $c =~ gcc32* ) then
+			set platform = slc3
+			set binary = ia32
+			set compdef = gcc323
+			break
+		endif 
+		switch($c)
+		case sl3:
+			set platform = slc3
+			set binary = ia32
+			set compdef = gcc323
+			break
+			breaksw
+		case sl4:
+			set platform = slc4
+			breaksw
+		endsw
+	end
+endif
+unset c, conflist 
+
+# fixes compiler path at CERN for slc3 on a native slc4
+
+if ("$CMTSITE" == "CERN") then 
+	if ( "$compdef" == "gcc323" && "$rhv" != "3" ) then
+    	setenv COMPILER_PATH "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
+    	if !(-d $COMPILER_PATH && -f /usr/bin/gcc32 ) then
+       		echo "$compdef compiler is not available on this node"
+       		goto end
+    	endif
+    	set path =(${COMPILER_PATH}/bin $path)
+    	setenv LD_LIBRARY_PATH "${COMPILER_PATH}/lib"
+	endif
 endif
 
-# deal with OS type ===========================================
-if ( `uname -s` == "Darwin" ) then
-  set rh = `sw_vers | grep ProductVersion | awk '{print $2}' | awk -F . '{print $1 $2}'`
-  set rh = "osx$rh"
-  set comp = `gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
-  set comp = "gcc$comp"
-  if ( `uname -p` == 'powerpc' ) then
-    set hw = 'ppc'
-  else
-    set hw = 'ia32'
-  endif
-  set rh = "${rh}_${hw}"
-  setenv CMTOPT ${rh}_${comp}
-#
-else if ( "$OSTYPE" == "linux" ) then
-# get the compiler from the arguments
-  if ("$?newcomp" == "0") then
-    set comp = $compdef
-  else
-    set comp = $newcomp
-  endif
+setenv CMTOPT ${platform}_${binary}_${compdef}
 
-#======= compile on SLC4 pretending it is SLC3
-  if ( $comp == "gcc323" && $rhv != "3") then
-  if ( $nativehw == "x86_64" || $nativehw == "i386" ) then
-    setenv COMPILER_PATH "/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
-    setenv CMTOPT "slc3_ia32_${comp}"
-    set rh = "slc3_ia32"
-    if !(-d $COMPILER_PATH ) then
-       echo "$comp compiler is not available on this node"
-       goto end
-    endif
-    set path =(${COMPILER_PATH}/bin $path)
-    setenv LD_LIBRARY_PATH "${COMPILER_PATH}/lib"
-  endif
-endif
-
-#==========================
-  set binary =  ${rh}_${comp}
-  if ($hw == "ia64") set binary = `echo $binary | sed -e 's/ia64/amd64/'`
-  setenv CMTOPT  ${binary}
-endif
-unset echo
+###################################################################################
 
 setenv CMTDEB    "${CMTOPT}_dbg"
 setenv CMTCONFIG "${CMTOPT}"
 if ($debug == 1) then
 	setenv CMTCONFIG "$CMTDEB"
 endif
-
-#=================================================================================================
 
 
 ###################################################################################
@@ -414,7 +387,7 @@ if ( ! $?ROOTSYS ) then
 endif
 
 echo "******************************************************"
-echo "*           WELCOME to the $comp on $rh system       *"
+echo "*           WELCOME to the $compdef on ${platform}_${binary} system       *"
 echo "******************************************************"
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
@@ -430,8 +403,13 @@ echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
 
 ###################################################################################
 # setting up the LbScripts project
-  	
-set mainscriptloc = $LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+
+if (-f  $scriptsdir/SetupProject.csh) then
+  	set mainscriptloc = $scriptsdir
+else
+	set mainscriptloc = $LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+endif
+
 setenv PATH ${PATH}:$mainscriptloc
 source $mainscriptloc/SetupProject.csh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
 unset mainscriptloc

@@ -1,4 +1,5 @@
-# set -x
+
+#set -v
 
 # get the location of this very script
 
@@ -18,13 +19,10 @@ else
 fi
 
 if [ "$scriptsdir" = "." ]; then
-	scriptsdir=`pwd`
+  scriptsdir=`pwd`
 fi
 
-echo $scriptsdir
-
-
-
+#echo $scriptsdir
 #################################################################
 # parsing command line arguments
 
@@ -49,18 +47,20 @@ while true ; do
 	-c|--cmtconfig) cmtconfig=$2 ; shift 2 ;;
 	-u|--userarea)  userarea=$2 ; shift 2 ;; 
 	-v|--cmtvers)  cmtvers=$2 ; shift 2 ;; 
-	-s|--shared)  sharedarea=1 ; shift ;; 
+	-s|--shared) sharedarea=1 ; shift ;;
 	--) shift ; break ;;
 	*) echo "Internal error!" ; exit 1 ;;
 	esac
 done
-echo "Remaining arguments:"
-for arg do echo '--> '"\`$arg'" ; done
+# echo "Remaining arguments:"
+# for arg do echo '--> '"\`$arg'" ; done
 
-##################################################################################
+
+set -
+#################################################################
 # clear PATH and LD_LIBRARY_PATH
 if [ "x$SAVEPATH" != "x" ]; then
-	PATH="$SAVEPATH"; export PATH
+	export PATH="$SAVEPATH"
 fi
 unset LD_LIBRARY_PATH
 unset COMPILER_PATH
@@ -140,6 +140,7 @@ else
 	export CONTRIBDIR=$MYSITEROOT/contrib 
 fi
 
+
 ###################################################################################
 # configure CMT
 
@@ -153,6 +154,7 @@ fi
 export CMT_DIR=$CONTRIBDIR
 
 . $CMT_DIR/CMT/$cmtvers/mgr/setup.sh
+
 
 ###################################################################################
 # LHCb software locations
@@ -183,6 +185,7 @@ fi
 export OSC_release_area=$CONTRIBDIR
 export Gaudi_release_area=${GAUDISOFT}
 export LHCb_release_area=${LHCBRELEASES}
+
 
 ###################################################################################
 # shared area massaging
@@ -215,110 +218,103 @@ else
 fi
 
 ###################################################################################
-echo "debug $debug"
-echo "mysiteroot $mysiteroot"
-echo "cmtconfig $cmtconfig"
-echo "userarea $userarea"
-echo "cmtvers $cmtvers"
 
-
-echo "Returning ..."
-return 
-echo "Returned"
-
-
-echo " -------------------------------------------------------------------"
-
-
-# deal with different linux distributions
-if [ -e /etc/redhat-release ] ; then
-	distrib=`cat /etc/redhat-release | awk '{print $1}'`
-	rhv=`cat /etc/redhat-release | awk '{print $5}'`
-	if [ "$distrib" = "Scientific" ] ; then
-		hw=`uname -i`
-		if [ "$hw" = "i386" ] ; then
-			hw="ia32"
-		else
-			if [ "$hw" = "x86_64" ] ; then
-				hw="amd64"
-			fi
-		fi
-		rhv=`echo ${rhv} | awk -F "." '{print $1}'`
-		rh="slc"${rhv}"_"${hw}
-	else
-		rhv=`echo ${rhv} | tr -d "."` 
-		rh="rh$rhv"
-	fi
-elif [ -e /etc/debian_version ] ; then
-	deb=`cat /etc/debian_version`
-	if [ "$deb" = "3.0" ] ; then
-		rh="rh73"
-	else
-		rh="deb$deb"
-	fi
-	distrib="debian"
-fi
-
-
-# deal with OS type ===========================================
-if [ "$OSTYPE" = "darwin" ] ; then
-	rh=`sw_vers | grep ProductVersion | awk '{print $2}' | awk -F . '{print $1 $2}'`
-	rh="osx$rh"
+if [ "$OSTYPE" = "linux" -o "$OSTYPE" = "linux-gnu" ] ; then
 	comp=`gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
-	comp="gcc$comp"
-elif [ "$OSTYPE" = "linux-gnu" -o "$OSTYPE" = "linux" ] ; then
-# get the compiler from the arguments
-	comp="$*"
-	if [ "W$comp" = "W" ] ; then
-		comp="gcc323"
+	if [ "$comp" -ge "340" ] ; then
+		gcc=`gcc --version | grep gcc | awk '{print $3}' | awk -F. '{for(i=1; i<=2; i++){print $i}}'`
+		comp=`echo $gcc | tr -d " "`
 	fi
-#================== redhat distribustion ==========================
-	if [ "$distrib" = "Red" ] ; then
-		echo $comp
-		if [ "$comp" = "gcc323" ] ; then
-			COMPILER_PATH="/usr/local/gcc-alt-3.2.3"; export COMPILER_PATH
-		elif [ "$comp" = "gcc32" ] ; then
-			COMPILER_PATH="/usr/local/gcc-alt-3.2"; export COMPILER_PATH
+	compdef=gcc$comp
+	
+	if [ -e /etc/redhat-release ] ; then
+		distrib=`cat /etc/redhat-release | awk '{print $1}'`
+		rhv=`cat /etc/redhat-release | tr -d '[a-z][A-Z]()'`
+		if [ "$distrib" = "Scientific" ] ; then
+			rhv=`echo ${rhv} | awk -F "." '{print $1}'`
+			platform="slc"${rhv}"_"${hw}
 		else
-			echo "$comp compiler is unknown"
-			goto end
+			rhv=`echo ${rhv} | tr -d "."` 
+			platform="rh$rhv"
 		fi
-		if ! [ -d ${COMPILER_PATH} ] ; then
-			echo "$comp compiler is not available on this node"
-			return
-		fi
-		PATH=${COMPILER_PATH}/bin:$PATH; export PATH
-		LD_LIBRARY_PATH=${COMPILER_PATH}/lib; export LD_LIBRARY_PATH    
-# ======= debian distribution
-	elif [ "$distrib" = "debian" ] ;then
-		if [ "$comp" = "gcc30" ] ; then
-			compiler="/usr/bin/gcc-3.0"
-		elif [ "$comp" = "gcc32" ] ; then
-			compiler="/usr/bin/gcc-3.2"
-		elif [ "$comp" = "gcc33" ] ; then
-			compiler="/usr/bin/gcc-3.3"
-		else
-			echo "$comp compiler is unknown"
-			return
-		fi 
-		if ! [ -x $compiler ] ; then
-			echo "$comp compiler is not available on this node"
-			return
-		fi 
-		alias gcc='$compiler'
 	fi
+
+	nativehw=`uname -i`
+	hw="$nativehw"
+	if [ "$hw" = "i386" ] ; then
+		hw="ia32"
+	elif [ "$hw" = "x86_64" ] ; then
+		hw="amd64"
+	elif [ "$hw" = "ia64" ] ; then
+ 		hw="amd64"
+	fi
+	binary="$hw"
+		
+elif [ `uname -s` = "Darwin" ] ; then
+	comp=`gcc --version | grep gcc | awk '{print $3}' | tr -d "."`
+	compdef="gcc$comp"
+	rh=`sw_vers | grep ProductVersion | awk '{print $2}' | awk -F . '{print $1 $2}'`
+	platform="osx$rh"
+	if [ `uname -p` = 'powerpc' ] ; then
+		hw='ppc'
+	else
+		hw='ia32'
+	fi
+	binary="${hw}"
 
 fi
 
+# global override from the command line
+if [ "$cmtconfig" != "0" ] ; then
+	conflist=(`echo $cmtconfig | tr '_' ' '`)
+	if [ ${#conflist[@]} -gt "2" ] ; then
+		platform=$conflist[0]
+		binary=$conflist[1]
+		compdef=$conflist[2]	
+	fi
+	for c in ${conflist[@]} ; do
+		echo $c| grep -q gcc32
+		b=$?
+		if [ "$b" = "0" ] ; then
+			platform=slc3
+			binary=ia32
+			compdef=gcc323
+			break
+		fi
+		case "$c" in
+			slc3) platform=slc3; binary=ia32; compdef=gcc323 ;;
+			sl4) platform=slc4 ;;
+			*) ;;
+		esac 
+	done
+fi
+unset c conflist 
+# fixes compiler path at CERN for slc3 on a native slc4
+
+if [ "$CMTSITE" == "CERN" ] ; then 
+	if [ "$compdef" = "gcc323" -a "$rhv" != "3" ] ;  then
+    	export COMPILER_PATH="/afs/cern.ch/lhcb/externallib/SLC3COMPAT/slc3_ia32_gcc323"
+    	if [ ! -d ${COMPILER_PATH} ] ; then
+       		echo "$compdef compiler is not available on this node"
+       		return
+    	fi
+    	export PATH=${COMPILER_PATH}/bin:$PATH
+    	export LD_LIBRARY_PATH="${COMPILER_PATH}/lib"
+    fi
+fi
+
+
+export CMTOPT="${platform}_${binary}_${compdef}"
+
+###################################################################################
 
 export CMTCONFIG="${CMTOPT}"
 export CMTDEB="${CMTCONFIG}_dbg"
 if [ "$debug" = "1" ] ; then
 	export CMTCONFIG="${CMTDEB}"
 fi
-set -
 
-#################################################################
+###################################################################################
 
 if [ ! -e ${HOME}/.rhosts ]; then
 	echo "Creating a ${HOME}/.rhosts to use CMT"
@@ -346,30 +342,33 @@ if [ ! ${ROOTSYS} ]; then
 	export ROOTSYS=""
 fi
 
-
 echo "******************************************************"
-echo "*           WELCOME to the $comp on $rh system       *"
+echo "*           WELCOME to the $compdef on ${platform}_${binary} system       *"
 echo "******************************************************"
-echo " --- "\$CMTROOT " is set to $CMTROOT "
-echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
+echo " --- CMTROOT is set to $CMTROOT "
+echo " --- CMTCONFIG is set to $CMTCONFIG "
 if [ "$debug" != "1" ] ; then
 	echo " --- to compile and link in debug mode : export CMTCONFIG="\$CMTDEB "; gmake"
 fi
 if [ "$CMTPATH" != "" ]; then
-	echo " --- "\$CMTPATH " is set to ${User_release_area}"
+	echo " --- CMTPATH is set to ${User_release_area}"
 else
-	echo " --- "\$User_release_area " is set to ${User_release_area}"
-	echo " --- "\$CMTPROJECTPATH " is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
+	echo " --- User_release_area is set to ${User_release_area}"
+	echo " --- CMTPROJECTPATH is set to "\$User_release_area":"\$LHCb_release_area":"\$Gaudi_release_area":"\$LCG_release_area
 	echo " --- projects will be searched in "\$CMTPROJECTPATH
 fi 
 	echo " -------------------------------------------------------------------- "
 
 ###################################################################################
-# setting up the LbScripts project together with python 2.5
-  	
-mainscriptloc=$LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+# setting up the LbScripts project
+
+if [ -f  $scriptsdir/SetupProject.sh ] ; then
+  	mainscriptloc=$scriptsdir
+else
+	mainscriptloc=$LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+fi
 export PATH=${PATH}:$mainscriptloc
-. $mainscriptloc/SetupProject.sh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
+source $mainscriptloc/SetupProject.sh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
 unset mainscriptloc
 
 ###################################################################################
@@ -377,5 +376,5 @@ unset mainscriptloc
 
 unset newcomp rh rhv comp cmtvers
 unset debug mysiteroot cmtconfig userarea cmtvers sharedarea
+
 #set -
-  
