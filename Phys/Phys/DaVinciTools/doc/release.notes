@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.325 2008-05-19 14:10:00 pkoppenb Exp $
+! $Id: release.notes,v 1.326 2008-05-20 14:44:10 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-05-20 - Patrick Koppenburg
+ - Remove OldCombineParticles
 
 ! 2008-05-19 - Patrick Koppenburg
  - CheckPV : protect printout
