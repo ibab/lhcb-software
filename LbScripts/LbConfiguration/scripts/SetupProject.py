@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.1 2008-05-16 09:17:40 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.2 2008-05-20 11:58:17 hmdegaud Exp $"
         
 ########################################################################
 # Utility classes
@@ -898,7 +898,7 @@ class SetupProject:
             if (l.find('Warning') >= 0):
                 error.append(l.strip())
                 continue
-            elif (not self.set_CMTPATH and l.find('CMTPATH') >= 0): # CMT is setting internally the CMTPATH, I ignore it
+            elif (not self.set_CMTPATH and re.match(r'CMTPATH=|setenv\s*CMTPATH',l)): # CMT is setting internally the CMTPATH, I ignore it
                 continue
             elif (l.find('command not found') >= 0) or (l.find('not recognized') >= 0):
                 raise RuntimeError("cmt is not in your PATH")
