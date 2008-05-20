@@ -9,7 +9,7 @@
 // from TrackInterfaces
 #include "TrackInterfaces/IFastMomentumEstimate.h"
 
-/** @class FastMomentumEstimate.h TrackTools/FastMomentumEstimate.h
+/** @class FastMomentumEstimate FastMomentumEstimate.h
  *  
  *  @author Stephanie Hansmann-Menzemer
  *  @date   2007-10-30

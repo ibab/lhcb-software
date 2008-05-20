@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 !======================== TrackTools v3r7 2008-05-20 ========================
+! 2008-05-20 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2008-05-20 - Stephanie Hansmann-Menzemer
  - add StateDetailedBetheBloch dE/dx correction tool
 
