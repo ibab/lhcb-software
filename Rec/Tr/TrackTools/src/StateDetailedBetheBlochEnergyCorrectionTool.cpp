@@ -3,6 +3,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from GSL
 #include "gsl/gsl_math.h"
@@ -59,8 +60,8 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   double eta = 1/(tX[4]*mass);
 
   double beta2 = (eta*eta)/(1.0+eta*eta);
-  double gamma2 = 1/((1-beta2+1e-12));
-  double me = 511000*Gaudi::Units::eV;
+
+  double me = Gaudi::Units::electron_mass_c2;
 
   double x = log(eta*eta)/4.606;
   double rho = 0;
@@ -75,8 +76,9 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   double eLoss =  m_energyLossCorr*wallThickness
      * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )
     * 30.71 * MeV*mm2/mole * material->Z() * material->density() / material->A()
-      *(log(2*me*beta2*gamma2/material->I()) - beta2 - rho*0.5)/beta2;
+      *(log(2*me*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
  
+  
   eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );
    if ( !upstream ) eLoss *= -1.;
   
