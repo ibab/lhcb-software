@@ -6,13 +6,110 @@ Purpose: LHCb Alignment packages.
          used by the Gaudi application Escher to align the LHCb detector 
          components.
 </PRE><H1><A NAME=v3r0>2007-11-09 AlignmentSys v3r0</A></H1><PRE>
+
 - Packages updated: AlignmentInterfaces	v2r6
 		    AlignmentTools	v2r10
-		    AlignSolvTools	v2r3
 		    AlignTrTools	v3r5
+ 		    SolvKernel		v1r3
+		    AlignSolvTools	v2r4
 		    TAlignment		v3r5
-		    Escher		v2r3
 		    VeloAlignment	v4r3p1
+		    Escher		v2r3
+
+- in AlignmentInterfaces	v2r6
+	- Modified interfaces to Centipede, TAConfig and Derivatives classes
+
+- in AlignmentTools	v2r10
+	- Modified Centipede class. Now, methods only accept vectors instead of arrays.
+
+- in AlignTrTools	v3r5
+	- big improvement in model describing geometry of alignable object;
+	- update of iterative Newton-Rhapson method.
+	- transform M'pede's alignment constants into LHCb local reference coordinate system
+	
+- in SolvKernel 	v1r3
+	- Added MA27 and AlSparseSymMatrix
+	- added operator(row,col) for all matrices
+	- bug fix in resize methods: didn't work if current size was 0
+
+- in AlignSolvTools	v2r4
+	- Add PersistSolv class to combine/read/write align algebra objects
+	- Remove a couple of warnings
+	- Add AlignSolvTools directory for include
+	- update requirements accordingly
+	- make sure gslSVDsolver returns the cov matrix as well
+	- fix cov matrix returned by DiagSolvTool
+	- make DiagSolvTool issue a warning for negative eigenvalues
+
+- in TAlignment		v3r5
+
+	- restructered main execution loop of GAlign to reflect better implementation of Newton-Rhapson method.
+
+	- Added a jab configurable AlConfigurable.py, see for example OT scripts to use it
+	- Added some OT alignment scripts
+	- Modified the elements to be aligned property of GetElementsToBeAligned. It's now a list of strings.
+	   Usage:
+	     .Elements = { "Group : regex representing path to det elems : dof",
+	                   "Group : regex representing path to det elems : dof" }
+	   Where "Group :" and " : dof" are optional
+
+	- added chi2 cut for outliers
+	- added job option to specify input alignderivative files
+	- Added vertex constraints
+
+	- Moved AlFileIO.h and AlEquations.h to TAlignment/ for include (put the appropriate ifndef stuff, etc...
+	- Added PersistSolv as a friend class in AlEquations.h
+	- Change after discussion: move  AlFileIO.h and AlEquations.{cpp,h} to AlignSolvTools
+
+	- added option to use local frame as alignment frame
+
+	- added possibility to align muon stations to GAlign class
+
+	- More monitoring and output
+	- Added more monitoring
+
+	- Plot total chi2 vs iteration
+	- changes to reflect changes in DetDesc (replace XYZTranslation with Translation3D)
+
+	- Added constraints for z-shearings (including z-scale)
+
+	- New classes AlParameters and AlDofMask
+	- Print parameter values when updating
+	- Add constraints for global translation and rotation
+	- Add threshold on minimum number of hits
+
+	- Plot chi2 variables vs iteration
+	
+	- Add more printouts in update
+	- Add option to update in finalize
+
+	- Can choose which global dofs to align for
+
+	- Added muon stations
+	- Bug fix: apply correlations correctly
+	- Use nodes in cavariance tools
+
+	- Modified TrackFilterAlg to only keep hits that are in a to-be-aligned detelem
+
+- in VeloAlignment	v4r3p1
+
+	- TrackStore.cpp: adapt to new version of VeloDet:
+       	             replace phiOfStrip(...) by idealPhi(...)
+
+- in Escher	v2r3
+	- took IT constraints for M'pede style alignment out of
+	    TAlignment.opts into IT.opts
+
+	- VeloAlignment.opts: removed duplicate PatVelo... options
+       	                 they are in VeloAlignment/TRGtune.opts
+
+	- VeloAlignment.opts: added use of WriteAlignmentConditions
+	                        added use of PatVeloGeneric
+
+	- added VELO sensor alignment functionality
+	- to run it change include statement in Escher.opts and
+	  run via python script in job directory
+
 
 </PRE><H1><A NAME=v2r3>2007-11-09 AlignmentSys v2r3</A></H1><PRE>
 - Packages updated: TAlignment		v2r4
