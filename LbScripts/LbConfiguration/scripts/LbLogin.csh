@@ -411,6 +411,8 @@ else
 	set mainscriptloc = $LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
 endif
 
+#echo $mainscriptloc
+
 setenv PATH ${PATH}:$mainscriptloc
 source $mainscriptloc/SetupProject.csh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
 unset mainscriptloc

@@ -1,9 +1,10 @@
 
 
-set tmpfile = `SetupProject.py --shell=csh --mktemp ${*:q}`
+set tmp2file = `SetupProject.py --shell=csh --mktemp ${*:q}`
 set SetupProjectStatus = $?
 if ( ! $SetupProjectStatus ) then
-    source $tmpfile
+    source $tmp2file
 endif
-rm -f $tmpfile
-unset tmpfile
+rm -f $tmp2file
+unset tmp2file
+

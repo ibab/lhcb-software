@@ -1,8 +1,8 @@
 
-tmpfile=`SetupProject.py --shell=sh --mktemp "$@"`
+tmp2file=`SetupProject.py --shell=sh --mktemp "$@"`
 SetupProjectStatus="$?"
 if [ "$SetupProjectStatus" = 0 ]; then
-    . $tmpfile
+    . $tmp2file
 fi
-rm -f $tmpfile
-unset tmpfile
+rm -f $tmp2file
+unset tmp2file

@@ -364,9 +364,9 @@ fi
 # setting up the LbScripts project
 
 if [ -f  $scriptsdir/SetupProject.sh ] ; then
-  	mainscriptloc=$scriptsdir
+  	mainscriptloc="$scriptsdir"
 else
-	mainscriptloc=$LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
+	mainscriptloc="$LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts"
 fi
 export PATH=${PATH}:$mainscriptloc
 source $mainscriptloc/SetupProject.sh LbScripts --runtime LCGCMT Python -v 2.5 > /dev/null
