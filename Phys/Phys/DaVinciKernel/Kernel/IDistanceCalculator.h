@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.2 2008-04-04 06:38:56 ibelyaev Exp $
+// $Id: IDistanceCalculator.h,v 1.3 2008-05-20 18:20:25 hmdegaud Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -527,7 +527,7 @@ public:
   // ==========================================================================
   /** Calculate the projected distance 
    *
-   *  \$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+   *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
    *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$,
    *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
    *  the primary to the secondary vertex: 
@@ -545,7 +545,7 @@ public:
   // ==========================================================================
   /** Calculate the projected distance 
    *
-   *  \$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+   *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
    *     \right)}{\left|\vec{\mathbf{p}}\right|}\f$,
    *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
    *  the primary to the secondary vertex: 
