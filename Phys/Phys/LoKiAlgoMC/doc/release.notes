@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.18 2008-05-19 07:33:17 cattanem Exp $ 
+! $Id: release.notes,v 1.19 2008-05-20 09:43:00 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
-!========================== LoKiAlgoMC v7r1 2008-05-19 ========================
+!========================== LoKiAlgoMC v7r1 2008-05-20 ========================
+! 2008-05-20 - Marco Cattaneo
+ - Remove include LoKi.h from DecayTruth.cpp (introduces dependency on LoKi/LoKi
+   which would be circular) and replace it with include of only needed headers
+
 ! 2008-05-19 - Marco Cattaneo
  - Fix many doxygen warnings due to cut and paste typos
 

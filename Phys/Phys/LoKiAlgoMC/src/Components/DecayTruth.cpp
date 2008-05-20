@@ -1,10 +1,14 @@
-// $Id: DecayTruth.cpp,v 1.1 2008-05-17 17:38:05 ibelyaev Exp $
+// $Id: DecayTruth.cpp,v 1.2 2008-05-20 09:43:00 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/LoKiAlgoMC.h"
+#include "LoKi/ParticleProperties.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
 #include "LoKi/DecayChain.h"
 #include "LoKi/BuildMCTrees.h"
 #include "LoKi/Child.h"
