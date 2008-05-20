@@ -25,7 +25,7 @@ use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato
 #=======================================================
 
 use HltSelections       v7r1    Hlt   # Patrick Koppenburg
-use HltSelChecker       v6r1    Hlt   # Patrick Koppenburg
+use HltSelChecker       v6r2    Hlt   # Patrick Koppenburg
 
 use HltKshort           v1r3    Hlt   # Jaap Panman
 
