@@ -40,49 +40,21 @@ inline uint32_t mix(uint32_t state)
 }
 
 // mix some 'extra' entropy into 'state' and return result
-inline uint32_t mix(uint32_t state, uint32_t extra)
+inline uint32_t mix32(uint32_t state, uint32_t extra)
 { 
     return mix( state + extra ); 
 }
 
 // mix some 'extra' entropy into 'state' and return result
-inline uint32_t mix(uint32_t state, uint64_t extra)
+inline uint32_t mix64(uint32_t state, uint64_t extra)
 { 
     typedef boost::low_bits_mask_t<32>  mask_t;
-    state = mix( state , uint32_t( extra        & mask_t::sig_bits_fast) );
-    return  mix( state , uint32_t((extra >> 32) & mask_t::sig_bits_fast) );
+    state = mix32( state , uint32_t( extra        & mask_t::sig_bits_fast) );
+    return  mix32( state , uint32_t((extra >> 32) & mask_t::sig_bits_fast) );
 }
-
-#ifdef __GNUC__
-// for some reason, gcc thinks that mix(uint32_t,uint32_t)
-// and mix(uint32_t,uint64_t) are both equally good (bad?) matches
-// for mix(uint32_t,ulonglong), and thus cannot figure out which
-// mix to call for a ulonglong... 
-// Having an explicit mix(uint32_t, ulonglong) which forwards 
-// to mix(uint32_t,uint64_t) seems to solve the problem...
-inline uint32_t mix(uint32_t state, ulonglong extra) 
-{ 
-    BOOST_STATIC_ASSERT(sizeof(ulonglong)==sizeof(uint64_t));
-    return mix(state,uint64_t(extra)); 
-}
-#endif // __GNUC__
-
-#ifdef WIN32 
-// for some reason, vc thinks that mix(uint32_t,uint32_t)
-// and mix(uint32_t,uint64_t) are both equally good (bad?) matches
-// for mix(uint32_t,unsigned int), and thus cannot figure out which
-// mix to call for a unsigned int... 
-// Having an explicit mix(uint32_t, unsigned int) which forwards 
-// to mix(uint32_t,uint32_t) seems to solve the problem...
-inline uint32_t mix(uint32_t state, unsigned int extra) 
-{ 
-    BOOST_STATIC_ASSERT(sizeof(unsigned int)==sizeof(uint32_t));
-    return mix(state,uint32_t(extra)); 
-}
-#endif // WIN32
 
 // mix some 'extra' entropy into 'state' and return result
-inline uint32_t mix(uint32_t state, const std::string& extra)
+inline uint32_t mixString(uint32_t state, const std::string& extra)
 { 
   // prefix name with ' ' until the size is a multiple of 4.
   std::string s = std::string((4-extra.size()%4)%4,' ') + extra;
@@ -93,7 +65,7 @@ inline uint32_t mix(uint32_t state, const std::string& extra)
                 | uint32_t(s[i*4+1])<< 8 
                 | uint32_t(s[i*4+2])<<16 
                 | uint32_t(s[i*4+3])<<24 ;
-     state = mix( state , x );
+     state = mix32( state , x );
   }
   return state;
 }
@@ -123,7 +95,7 @@ DeterministicPrescaler::initialize()
 
   m_seen    = 0;
   m_passed  = 0;
-  m_initial = mix( name().size(), name() );
+  m_initial = mixString( name().size(), name() );
 
   debug() << " generated initial value " << m_initial << endmsg;
   
@@ -159,9 +131,9 @@ bool
 DeterministicPrescaler::accept(const LHCb::ODIN& odin)  const
 {
   uint32_t x = m_initial;
-  x = mix( x, odin.gpsTime() );    // note that by relying on overloading, we automatically
-  x = mix( x, odin.runNumber() );  // dispatch to the correct 'mix' version and 
-  x = mix( x, odin.eventNumber() );// don't have to worry about the type returned
+  x = mix64( x, odin.gpsTime() );
+  x = mix32( x, odin.runNumber() );
+  x = mix64( x, odin.eventNumber() );
 
   debug() << "  gpsTime: " << odin.gpsTime() 
           << "  run#: "    << odin.runNumber()
