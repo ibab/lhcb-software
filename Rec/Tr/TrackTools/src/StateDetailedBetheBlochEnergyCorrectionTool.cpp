@@ -75,7 +75,7 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   double eLoss =  m_energyLossCorr*wallThickness
      * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )
     * 30.71 * MeV*mm2/mole * material->Z() * material->density() / material->A()
-      *(log(2*me*beta2*gamma2/material->I())- rho*0.5)/beta2;
+      *(log(2*me*beta2*gamma2/material->I()) - beta2 - rho*0.5)/beta2;
  
   eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );
    if ( !upstream ) eLoss *= -1.;
