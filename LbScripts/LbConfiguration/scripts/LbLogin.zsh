@@ -65,6 +65,7 @@ fi
 unset LD_LIBRARY_PATH
 unset COMPILER_PATH
 unset GCC_EXEC_PREFIX
+unset PYTHONPATH
 
 ###################################################################################
 # CVS setup

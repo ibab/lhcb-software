@@ -110,6 +110,7 @@ endif
 unsetenv LD_LIBRARY_PATH
 unsetenv COMPILER_PATH
 unsetenv GCC_EXEC_PREFIX
+unsetenv PYTHONPATH
 
 
 ###################################################################################
