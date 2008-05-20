@@ -4,7 +4,7 @@ version v3r3
 branches cmt doc options
 
 #=======================================================
-# LHCb High Level Trigger packages
+# HLT1 and common packages
 #=======================================================
 
 use HltCommon           v3r2    Hlt   # Jose Angel Hernando-Morata
@@ -20,7 +20,11 @@ use HltRecChecker	v1r5	Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v2r0    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato  
 
-use HltSelections       v7r0    Hlt   # Patrick Koppenburg
+#=======================================================
+# HLT2 packages
+#=======================================================
+
+use HltSelections       v7r1    Hlt   # Patrick Koppenburg
 use HltSelChecker       v6r1    Hlt   # Patrick Koppenburg
 
 use HltKshort           v1r3    Hlt   # Jaap Panman
@@ -32,7 +36,7 @@ use HltKshort           v1r3    Hlt   # Jaap Panman
 use HltBase             v4r2   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
-use TisTosTobbing       v2r3   Phys   # Tomasz Skwarnicki  
+# use TisTosTobbing       v2r3   Phys   # Tomasz Skwarnicki  
 use Fidel               v1r0   Phys   # Sara Furcas
 
 # Allow the generation of QMTest summary 
