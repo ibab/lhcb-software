@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.7 2008-05-15 12:55:46 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.8 2008-05-20 08:30:41 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -107,20 +107,19 @@ StatusCode HltBackgroundCategory::execute() {
   for ( std::vector<std::string>::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
 
-    //TODO: id will disappear once we change HltEvent/HltSummary...
-    int id = svc<IANNSvc>("HltANNSvc")->value("SelectionID",*is)->second;
-    if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " << id  <<  " says " 
-                                          << m_summaryTool->decision() 
+    if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " 
+                                          << svc<IANNSvc>("HltANNSvc")->value("SelectionID",*is)->first  
+                                          <<  " says " << m_summaryTool->decision() 
                                           << " has selection : " 
                                           << m_summaryTool->hasSelection(*is) 
                                           << " summary : " 
-                                          << m_summaryTool->summary().hasSelectionSummary(id) << endmsg ;
+                                          << m_summaryTool->summary().hasSelectionSummary(*is) << endmsg ;
     if (!m_summaryTool->selectionDecision(*is)) continue ;
     if (!m_summaryTool->hasSelection(*is)) continue ;  // ???
      
-    const LHCb::HltSelectionSummary& sum = m_summaryTool->summary().selectionSummary(id); // waiting for Particles method
+    const LHCb::HltSelectionSummary& sum = m_summaryTool->summary().selectionSummary(*is); // waiting for Particles method
 
-    // does not work yet
+    /// @todo does not work yet
     /*
     if (msgLevel(MSG::VERBOSE)) verbose() << *is << " found " 
                                       << m_summaryTool->selectionParticles(*is).size() 
