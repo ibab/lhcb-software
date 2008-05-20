@@ -1,4 +1,4 @@
-// $Id: IGeometryErrorSvc.h,v 1.1 2007-12-19 09:42:39 ibelyaev Exp $
+// $Id: IGeometryErrorSvc.h,v 1.2 2008-05-20 15:41:17 cattanem Exp $
 // ============================================================================
 #ifndef DETDESC_IGEOMETRYERRORSVC_H 
 #define DETDESC_IGEOMETRYERRORSVC_H 1
@@ -39,8 +39,8 @@ namespace DetDesc
     // ========================================================================
     /** inspect the potential error in intersections 
      *  @param  volume   the problematic volume 
-     *  @param  point    3D point 
-     *  @param  vector   3D direction vector 
+     *  @param  pnt      3D point 
+     *  @param  vect     3D direction vector 
      *  @param  cnt  the problematic container of intersections  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-12-14
@@ -67,7 +67,7 @@ namespace DetDesc
     // ========================================================================
     /** report the skipped intersection 
      *  @param  volume   the problematic volume 
-     *  @aram   material the affected material 
+     *  @param  material the affected material 
      *  @param  delta    the problematic delta  (non-negative!)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-12-14

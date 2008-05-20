@@ -1,4 +1,4 @@
-// $Id: IntersectionErrors.h,v 1.1 2007-12-19 09:42:39 ibelyaev Exp $
+// $Id: IntersectionErrors.h,v 1.2 2008-05-20 15:41:17 cattanem Exp $
 // ============================================================================
 #ifndef DETDESC_INTERSECTIONERRORS_H 
 #define DETDESC_INTERSECTIONERRORS_H 1
@@ -52,8 +52,8 @@ namespace DetDesc
     // ========================================================================
     /** report the recovered action in intersections 
      *  @param  volume    the problematic volume 
-     *  @aram   material1 the affected material 
-     *  @aram   material2 the affected material 
+     *  @param  material1 the affected material 
+     *  @param  material2 the affected material 
      *  @param  delta    the problematic delta  (non-negative!)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-12-14
@@ -66,7 +66,7 @@ namespace DetDesc
     // ========================================================================
     /** report the skipped intersection 
      *  @param  volume   the problematic volume 
-     *  @aram   material the affected material 
+     *  @param  material the affected material 
      *  @param  delta    the problematic delta  (non-negative!)
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-12-14

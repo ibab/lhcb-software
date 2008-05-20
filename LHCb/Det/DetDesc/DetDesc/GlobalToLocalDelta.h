@@ -1,4 +1,4 @@
-// $Id: GlobalToLocalDelta.h,v 1.12 2008-01-14 13:23:00 jpalac Exp $
+// $Id: GlobalToLocalDelta.h,v 1.13 2008-05-20 15:41:17 cattanem Exp $
 #ifndef DETDESC_GLOBALTOLOCALDELTA_H 
 #define DETDESC_GLOBALTOLOCALDELTA_H 1
 
@@ -22,12 +22,14 @@ class IGeometryInfo;
 namespace DetDesc {
 
 
-  /**
+  /** 
+   * Obtain the 3D transformation that applies misalignment from nominal 
+   * position in the frame of the detector element's parent.
+   *
    * @param  DE detector element in question.
    * @param  globalDelta 3D transformation that takes 
    *         global nominal position matrix and applies misalignment:
    *         Misaligned position matrix = globalDelta*M_nominal_global
-
    * @return 3D transformation that applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-05-31
@@ -38,11 +40,13 @@ namespace DetDesc {
                                             const Gaudi::Transform3D& globalDelta);  
   
   /**
+   * Obtain the 3D transformation that applies misalignment from nominal 
+   * position in the frame of the detector element's parent.
+   *
    * @param  GI IGeometryInfo from detector element in question.
    * @param  globalDelta 3D transformation that takes 
    *         global nominal position matrix and applies misalignment:
    *         Misaligned position matrix = globalDelta*M_nominal_global
-
    * @return 3D transformation that applies misalignment from nominal
    *         position in the frame of the detector element's parent.
    * @date 2007-05-31
@@ -173,8 +177,8 @@ namespace DetDesc {
    * from an arbitrary frame.
    * @param  frame the Transform3D of the frame with respect to which the position
    *         is taken
-   * @param  GI the IGeometryInfo of the detector element in question
-   * @param  parentTransform 3D transformation that describes 
+   * @param  DE the detector element in question
+   * @param  toGlobalInFrame 3D transformation that describes 
    *         the total "misaligned" global matrix T' in the frame of parentGI
    *         Misaligned position matrix T_k' = T_k * globalDelta^-1 * globalDelta'
    *
@@ -195,7 +199,7 @@ namespace DetDesc {
    * @param  frame the Transform3D of the frame with respect to which the position
    *         is taken
    * @param  GI the IGeometryInfo of the detector element in question
-   * @param  parentTransform 3D transformation that describes 
+   * @param  toGlobalInFrame 3D transformation that describes 
    *         the total "misaligned" global matrix T' in frame
    *
    * @return 3D transformation representing the local off-nominal matrix for
