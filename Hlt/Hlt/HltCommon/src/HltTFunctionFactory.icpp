@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.icpp,v 1.4 2008-05-15 15:07:41 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.5 2008-05-21 12:44:38 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
@@ -48,22 +48,20 @@ zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
   std::vector<std::string> gens = EParser::parse(cromos[0],"_");
   std::string name = gens[0];
   
-  bool has = (m_creators.find(name) != m_creators.end());
-  Assert(has," function() no function in factory "+fn);
+  Assert((m_creators.find(name) != m_creators.end()),
+         " function() no function in factory "+fn);
   
   std::string input2;
   HltAlgorithm *parent(0);
   if (gens.size() == 2) {
     input2 = gens[1];
-    // FIXME: this is the only instance when 'input2' and 'parent' are actually needed...
-    // FIXME: all others do NOT need them, require input2 to be actually empty...
-    // FIXME: so the real problem is that m_creators violates the Liskov substitution principle...
-    IAlgorithm *alg = contextSvc()->currentAlg();
-    parent = dynamic_cast<HltAlgorithm*>(alg);
-    
-    // grab selection from here, and pass it to create...
+    parent = dynamic_cast<HltAlgorithm*>(contextSvc()->currentAlg());
+    Assert(parent!=0," could not obtain HltAlgorithm from context...");
   }
-  
+  // FIXME: this is the only instance when 'input2' and 'parent' are actually needed...
+  // FIXME: all others do NOT need it, and require input2 to be actually empty...
+  // FIXME: so the real problem is that m_creators does not follow the Liskov 
+  // FIXME: substitution principle...
   zen::function<T>* fun = m_creators[name]->create(input2,parent);
 
   if (m_smart && fun) {
