@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.4 2008-03-18 18:00:08 sandra Exp $
+// $Id: HltFunctionFactories.cpp,v 1.5 2008-05-21 12:29:55 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -60,6 +60,8 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
 
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
+
+  declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
 
   return sc;
 }
