@@ -245,7 +245,7 @@ niks = []
 
 afsdir = '/afs/cern.ch/user/i/ibelyaev/vol10/DATA/'
 windir = 'C:\\data\\JpsiPhi\\'
-nikdir = '/data/bfys/vanya/JpsiPhi'
+nikdir = '/data/bfys/vanya/JpsiPhi/'
 
 for f in LFNs_ :
 	
