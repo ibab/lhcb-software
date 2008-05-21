@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTFilter.h,v 1.3 2008-05-21 12:36:51 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -57,7 +57,6 @@ public:
   //  typedef typename IFunctionFactory<T> ITFactory;
   typedef typename std::vector<T*> TContainer;
   typedef typename std::vector<T*>::iterator TContainerIterator;
-  typedef KeyedContainer<T,Containers::HashMap> TESCONT;
 
   /// Standard constructor
   HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName );
@@ -88,7 +87,6 @@ private:
   void setOutput(std::vector<T*>& cont) {m_toutput = &cont;}
 
   std::vector<T*>* m_tinput;
-  std::vector<T*> m_ttemp;
   std::vector<T*>* m_toutput;
 
   std::vector< TFilterData* > m_tfilters;

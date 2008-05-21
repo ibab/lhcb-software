@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.5 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTFilter.icpp,v 1.6 2008-05-21 12:36:51 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -154,20 +154,20 @@ StatusCode HltTFilter<T>::execute() {
 
   // if the input is not a HltSelection but a container in TES
   if (m_tesInput) {
+    typedef KeyedContainer<T,Containers::HashMap> TESCONT;
     TESCONT* ttes = this->get<TESCONT>(m_inputSelectionName);
     m_tinput->clear();
     zen::copy(*ttes,*m_tinput);
   }
 
   // check size of the input container
-  if (m_tinput->size() == 0) {
+  if (m_tinput->empty()) {
     debug() << " No data in TES " << m_inputSelectionName << endreq;    
     return sc;
   }
 
   // if no filters, copy input container
-  if (m_tfilters.size() == 0)
-    zen::copy(*m_tinput,*m_toutput);
+  if (m_tfilters.empty()) zen::copy(*m_tinput,*m_toutput);
 
   // loop in filters, and apply to the surviving objects
   size_t ncan = 0, i = 0;
@@ -177,28 +177,27 @@ StatusCode HltTFilter<T>::execute() {
     TFilterData& tf = *(*it);
     verbose() << " applying filter " << tf.filtername << endreq;
     
-    m_ttemp.clear();
-    if (i == 0) zen::copy(*m_tinput,m_ttemp);
-    else zen::copy(*m_toutput,m_ttemp);
+    std::vector<T*>  ttemp;
+    if (i == 0) zen::copy(*m_tinput, ttemp);
+    else        zen::copy(*m_toutput,ttemp);
 
-    verbose() << " input objects " << m_ttemp.size() << endreq;
+    verbose() << " input objects " << ttemp.size() << endreq;
 
     if (m_addInfo)
-      addInfo(m_ttemp,*tf.function,tf.infoID);
+      addInfo(ttemp,*tf.function,tf.infoID);
 
     // debug and monitor
     if ((m_debug || m_monitor) && m_addInfo) {
-      std::vector<double> vals = infos(m_ttemp,tf.infoID);
-      std::sort(vals.begin(),vals.end());
-      double val = 0.;
-      if (tf.isMin) val = vals[0];
-      else val = vals.back();
+      std::vector<double> vals = infos(ttemp,tf.infoID);
+      double val = *( tf.isMin ? std::min_element(vals.begin(),vals.end()) 
+                               : std::max_element(vals.begin(),vals.end()) );
       if (m_debug) {
         std::string name = tf.filtername+" : ";
         for (std::vector< double>::iterator itv = vals.begin();
              itv != vals.end(); ++itv)
           debug() << *itv << ", ";
-        debug() << endreq; debug() << " best " << val << endreq;
+        debug() << endreq; 
+        debug() << " best " << val << endreq;
       }
       if (m_monitor) {
         fillHisto(*tf.histovalues,vals,1.);
@@ -209,7 +208,7 @@ StatusCode HltTFilter<T>::execute() {
     // filter
     m_toutput->clear();
     verbose() << " applying filter " << tf.filtername << endreq;
-    zen::select(m_ttemp,*tf.filter,*m_toutput);
+    zen::select(ttemp,*tf.filter,*m_toutput);
 
     ncan = m_toutput->size();
     debug() << " filtered  " << ncan << endreq;
