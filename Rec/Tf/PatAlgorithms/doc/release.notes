@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-05-21 - Manuel Tobias Schiller
+ - PatSeedingTool: fixed a bug in the y window calculation used in L0
+   confirmation (no tacks are found in the L0 case)
+
 !========================== PatAlgorithms v3r5 2008-05-16 ====================
 ! 2008-05-15 - Manuel Tobias Schiller
  - PatFwdPlaneCounter, PatFwdRegionCounter:

@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.12 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.13 2008-05-21 08:39:14 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -1216,7 +1216,7 @@ void PatSeedingTool::updateSearchWindowY(double zref, double xref,
 			+ dz * dz * state->covariance()(3,3));
 	double y = state->y() + state->ty() * dz;
 	// intersect with present window
-	double xmi = ytol * tanT;
+	double xmi = -ytol * tanT;
 	double xma = ytol * tanT;
 	if (xmi > xma) std::swap(xmi, xma);
 	xref += y * tanT;
