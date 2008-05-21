@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.326 2008-05-20 14:44:10 pkoppenb Exp $
+! $Id: release.notes,v 1.327 2008-05-21 07:08:15 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-05-21 - Patrick Koppenburg
+ - Temporary file TemporaryGetDecay.cpp that implements a few methods which should 
+   be moved to DaVinciKernel.
 
 ! 2008-05-20 - Patrick Koppenburg
  - Remove OldCombineParticles
