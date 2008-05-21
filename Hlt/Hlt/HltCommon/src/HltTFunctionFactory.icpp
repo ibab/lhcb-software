@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.icpp,v 1.5 2008-05-21 12:44:38 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.6 2008-05-21 12:46:12 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
@@ -57,11 +57,11 @@ zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
     input2 = gens[1];
     parent = dynamic_cast<HltAlgorithm*>(contextSvc()->currentAlg());
     Assert(parent!=0," could not obtain HltAlgorithm from context...");
+    // FIXME: this is the only instance when 'input2' and 'parent' are actually needed...
+    // FIXME: all others do NOT need it, and require input2 to be actually empty...
+    // FIXME: so the real problem is that m_creators does not follow the Liskov 
+    // FIXME: substitution principle...
   }
-  // FIXME: this is the only instance when 'input2' and 'parent' are actually needed...
-  // FIXME: all others do NOT need it, and require input2 to be actually empty...
-  // FIXME: so the real problem is that m_creators does not follow the Liskov 
-  // FIXME: substitution principle...
   zen::function<T>* fun = m_creators[name]->create(input2,parent);
 
   if (m_smart && fun) {
