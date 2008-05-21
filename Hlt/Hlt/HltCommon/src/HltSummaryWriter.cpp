@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.9 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.10 2008-05-21 12:42:16 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -96,7 +96,7 @@ StatusCode HltSummaryWriter::execute() {
 void HltSummaryWriter::writeSelection(HltSummary& summary, const stringKey& id) {
 
   Hlt::Selection& sel = hltData().selection(id);
-  HltSelectionSummary& sum   = summary.selectionSummary( annSvc().value("SelectionID",id.str())->second );
+  HltSelectionSummary& sum   = summary.selectionSummary(id.str());
   if (sel.classID() == LHCb::Track::classID()) {
     Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);
     for (Hlt::TrackSelection::iterator it = tsel.begin(); it != tsel.end();
