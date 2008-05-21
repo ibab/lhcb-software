@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.h,v 1.2 2008-05-09 08:26:15 cattanem Exp $
+// $Id: PatMatchTool.h,v 1.3 2008-05-21 10:14:24 albrecht Exp $
 #ifndef PATMATCHTOOL_H 
 #define PATMATCHTOOL_H 1
 
@@ -13,7 +13,10 @@
 #include "TrackInterfaces/IAddTTClusterTool.h"
 
 #include "TrackInterfaces/IMatchTool.h"            // Interface
+#include "HltBase/ITrackMatch.h"            // Interface for Hlt
 #include "TrackInterfaces/IFastMomentumEstimate.h"
+
+
 
 /** @class PatMatchTool PatMatchTool.h
  *  
@@ -27,7 +30,9 @@
  *  @date   2007-02-07 
  */
 
-class PatMatchTool : public GaudiTool, virtual public IMatchTool {
+class PatMatchTool : public GaudiTool, 
+                     virtual public ITrackMatch,
+                     virtual public IMatchTool{
 public: 
   /// Standard constructor
   PatMatchTool( const std::string& type, 
@@ -47,7 +52,18 @@ public:
                                  const LHCb::Track& seed, 
                                  LHCb::Track& output ,
                                  double& chi2 );
-  
+
+  //function for matching in Hlt
+  StatusCode match(const LHCb::Track& veloTrack,
+                   const LHCb::Track& tTrack,
+                   LHCb::Track& matchedTrack,
+                   double& quality, double& quality2) {
+
+    StatusCode sc = this->matchSingle( veloTrack , tTrack , matchedTrack, quality );
+    
+    if(sc.isFailure()) if(msgLevel( MSG::DEBUG )) debug()<<"matching failed !"<<endmsg;
+    return sc;
+  }
   
 public:
 

@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.2 2008-05-09 08:26:15 cattanem Exp $
+// $Id: PatMatchTool.cpp,v 1.3 2008-05-21 10:14:28 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,8 @@ PatMatchTool::PatMatchTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IMatchTool>(this);
-
+  declareInterface<ITrackMatch>(this);
+ 
   declareProperty( "zMagnet"         , m_zMagnet       = 5290. * Gaudi::Units::mm   );
   declareProperty( "zMatchY"         , m_zMatchY       = 8420. * Gaudi::Units::mm   );
   declareProperty( "dxTol"           , m_dxTol         =    8. * Gaudi::Units::mm   );
