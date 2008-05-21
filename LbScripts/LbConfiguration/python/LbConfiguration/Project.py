@@ -2,12 +2,13 @@
 #@PydevCodeAnalysisIgnore
 
 import sys
+import os
 
 # list of original project names
 project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix"]
+                 "Panoramix", "LbScripts"]
 binaries = []
 
 class ProjectConfException(Exception):
@@ -21,6 +22,10 @@ class ProjectConf(object):
         self._fullsize = 5000000
         self._steeringpackage = projectname + "Sys"
         self._applicationpackage = projectname
+        if os.environ.has_key("LHCBRELEASES") :
+            self._release_area = os.environ["LHCBRELEASES"]
+        else :
+            self._release_area = None
     def Name(self):
         """ return original name """
         return self._name
@@ -56,6 +61,10 @@ class ProjectConf(object):
         self._applicationpackage = packname
     def ApplicationPackage(self):
         return self._applicationpackage
+    def setReleaseArea(self, release_area):
+        self._release_area = release_area
+    def ReleaseArea(self):
+        return self._release_area
     def __str__(self):
         """ return string representation for printing """
         rep = ""
@@ -66,6 +75,8 @@ class ProjectConf(object):
         rep += "Application Package\t: %s\n" % self._applicationpackage
         if self._cmtextratags:
             rep += "CMT Extra Tags\t\t: %s\n" % ", ".join(self._cmtextratags)
+        if self._release_area :
+            rep += "Release Area\t\t: %s\n" % self._release_area
         return rep
 
 project_list = []
@@ -93,6 +104,8 @@ del _pn
 # Extra configuration for selected projects
 Gaudi.setSteeringPackage("GaudiRelease") #IGNORE:E0602
 Gaudi.setApplicationPackage("GaudiExamples")#IGNORE:E0602
+if os.environ.has_key("GAUDISOFT") :
+    Gaudi.setReleaseArea(os.environ["GAUDISOFT"])#IGNORE:E0602
 
 LHCb.setApplicationPackage("Ex")#IGNORE:E0602
 
