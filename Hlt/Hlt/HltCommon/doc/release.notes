@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-21 Gerhard Raven
+ - rename L0Entry into HltL0Filter for consistentcy of other filters, and make 
+   it adapt dynamically to the L0 configuration
+
 ! 2008-05-15 Gerhard Raven
  - remove commented out code
  - remove empty finalizes which only call baseclass version -- as that's the
