@@ -12,6 +12,8 @@
  - HltTFilter: use min_element resp. max_element when looking for the min/max
    value instead of sorting the entire vector; make m_ttemp a local variable
    as it is only ever used in execute
+ - HltSummaryTool: follow change in HltEvent/HltSelectionSummary to use strings 
+   as key
 
 ! 2008-05-15 Gerhard Raven
  - remove commented out code
