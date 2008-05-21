@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-05-21 - Johannes Albrecht
+	- PatMatchTool. h / .cpp: Add interface for implementtion in Hlt
+
 ! 2008-05-21 - Manuel Tobias Schiller
  - PatSeedingTool: fixed a bug in the y window calculation used in L0
    confirmation (no tacks are found in the L0 case)
