@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-21 - Johannes Albrecht
+	- HltFunctionFactories.cpp: add PtTransporter tool to get pt at origin
+
 ! 2008-05-21 Gerhard Raven
  - rename L0Entry into HltL0Filter for consistentcy of other filters, and make 
    it adapt dynamically to the L0 configuration
