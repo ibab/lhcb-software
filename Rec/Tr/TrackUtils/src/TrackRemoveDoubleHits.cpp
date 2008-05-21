@@ -1,4 +1,4 @@
-// $Id: TrackRemoveDoubleHits.cpp,v 1.2 2008-04-22 13:59:19 cattanem Exp $
+// $Id: TrackRemoveDoubleHits.cpp,v 1.3 2008-05-21 12:23:25 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -262,12 +262,19 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	  int strawDiff = aLHCbID.otID().straw() - aLHCbID2.otID().straw();
 	  if ( (aLHCbID.otID().uniqueModule() == aLHCbID2.otID().uniqueModule()) &&
 	       (abs(strawDiff) < 10) ) {
-	    Warning("Found a double hit in OT. Removing both LHCbIDs from track!!!",
+
+	    const LHCb::State& tState = aTrack.closestState(7500.0);
+	    double tx = tState.tx();
+
+	    if ( fabs ( tx ) > 0.350 ) {
+	      Warning("Found a double hit in OT. Removing both LHCbIDs from track!!!",
+		      StatusCode::SUCCESS, 1);
+	      lhcbIDsToRemove.push_back( aLHCbID );
+	      lhcbIDsToRemove.push_back( aLHCbID2 );
+	      break;
+	    }
+	    Warning("Found an acceptable double hit in OT. Keeping both LHCbIDs on track.",
 		    StatusCode::SUCCESS, 1);
-	    
-	    lhcbIDsToRemove.push_back( aLHCbID );
-	    lhcbIDsToRemove.push_back( aLHCbID2 );
-	    break;
 	  }
 	  //**********************************************************************
 	}
