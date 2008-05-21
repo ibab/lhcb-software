@@ -1,12 +1,21 @@
-! $Id: release.notes,v 1.21 2008-04-30 10:43:55 ibelyaev Exp $
+! $Id: release.notes,v 1.22 2008-05-21 09:36:40 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.21 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.22 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v8r2p1 2008-05-21 ===================
+
+! 2008-05-21 - Vanya BELYAEV?
+
+ - python/BenderExample/data_bs2Jpsi_mumu.py 
+
+    define the default file location at NIKHEF 
+
 
 ! ====================== Ex/BenderExample v8r2 2008-04-30 =====================
 

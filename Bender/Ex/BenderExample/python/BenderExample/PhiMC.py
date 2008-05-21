@@ -117,6 +117,8 @@ def configure ( **args ) :
     evtSel = gaudi.evtSel()    
     evtSel.open ( input.FILEs ) 
     evtSel.PrintFreq = 100
+
+    print ' INPUT FILES ARE "%s" ' % input.FILEs
     
     return SUCCESS 
     

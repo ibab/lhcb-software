@@ -241,8 +241,11 @@ import os
 
 afss = []
 wins = []
+niks = []
+
 afsdir = '/afs/cern.ch/user/i/ibelyaev/vol10/DATA/'
 windir = 'C:\\data\\JpsiPhi\\'
+nikdir = '/data/bfys/vanya/JpsiPhi'
 
 for f in LFNs_ :
 	
@@ -250,14 +253,21 @@ for f in LFNs_ :
         if -1 == i : continue
         afs = afsdir + f[i+1:]
         win = windir + f[i+1:]
+	nik = nikdir + f[i+1:\
 	print afs 
-        if   os.path.exists ( afs ) : afss += [ afs ]
-        elif os.path.exists ( win ) : wins += [ win ]
+        if   os.path.exists ( win ) : wins += [ win ]
+        elif os.path.exists ( nik ) : niks += [ nik ]
+        elif os.path.exists ( afs ) : afss += [ afs ]
 
 if wins :
 
-        FILEs = afss
+        FILEs = wins
         print "Use local WIN-files #%s at '%s'"%(len(FILEs),windir)
+	
+elif niks :
+
+        FILEs = niks
+        print "Use local files #%s at '%s'"%(len(FILEs),nikdir)
 	
 elif afss :
 	
