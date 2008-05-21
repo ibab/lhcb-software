@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2008-05-21 - Johannes Albrecht
+	- HltTrackMatch.cpp: add reco configuration for PatMatchTool
 
 ! 2008-05-14 - Gerhard Raven
  - follow change in HltAlgorithm: no need to specify name for outputselection,
