@@ -106,6 +106,9 @@ class Alignables( list ):
     def IT( self, dofs = "" ) :
         self.__append( self.m_it, element )
 
+    def ITLadders( self, dofs = "" ) :
+        self.__append( self.m_it + "/Station./.+Box/Layer.{1,2}/Ladder.", dofs )
+        
     def OT( self, dofs = "" ) :
         self.__append( self.m_ot, dofs )
     
@@ -154,5 +157,7 @@ class Alignables( list ):
             
         self.__append( elements, dofs )
             
-
-    
+    def ITLadderOTModules( self, dofs = "" ) :
+        self.ITLadders( dofs )
+        self.OTModules( dofs )
+        
