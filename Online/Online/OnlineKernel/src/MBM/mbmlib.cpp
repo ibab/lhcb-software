@@ -1320,6 +1320,17 @@ int mbm_min_alloc(BMID bm, int* size) {
   return lock.status();
 }
 
+int mbm_buffer_size(BMID bm, int* size) {
+  Lock lock(bm);
+  if ( lock )  {
+    if ( !bm->_control() )  {
+      _mbm_return_err (MBM_ILL_CONS);
+    }
+    *size = bm->_control()->buff_size;
+  }
+  return lock.status();
+}
+
 int mbm_events_in_buffer (BMID bm, int* events)  {
   Lock lock(bm);
   if ( lock )  {

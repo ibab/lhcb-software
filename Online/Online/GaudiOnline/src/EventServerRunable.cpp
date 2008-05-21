@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.4 2008-04-10 10:04:32 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.5 2008-05-21 09:51:50 frankm Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.4 2008-04-10 10:04:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.5 2008-05-21 09:51:50 frankm Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -136,6 +136,7 @@ void EventServerRunable::handle(const Incident& inc)    {
         m_mepMgr->cancel();
       }
     }
+    ::lib_rtl_set_event(m_suspend);
   }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_consState = m_recipients.empty() ? WAIT_REQ : WAIT_EVT;
@@ -247,6 +248,11 @@ StatusCode EventServerRunable::run()   {
       case WAIT_REQ:
         ::lib_rtl_unlock(m_lock);
         ::lib_rtl_wait_for_event(m_suspend);
+        if ( m_consState == DONE )  {
+	  MsgStream log(msgSvc(),name());
+	  log << MSG::INFO << "End of event requests reached. Stopping..." << endreq;
+          return StatusCode::SUCCESS;
+        }
         m_consState = WAIT_EVT;
         break;
       case WAIT_EVT:
@@ -255,7 +261,7 @@ StatusCode EventServerRunable::run()   {
         if ( m_consState == DONE )  {
           return StatusCode::SUCCESS;
         }
-        else if ( sc == MBM_NORMAL )   {
+        else if ( sc == MBM_NORMAL )  {
           void* lock = 0;
           try {
             // Need to first lock all network channels to avoid dead-locks
@@ -267,7 +273,7 @@ StatusCode EventServerRunable::run()   {
             sendEvent();
 	    if ( ((++printN)%m_printNum) == 0 ) {
 	      MsgStream log(msgSvc(),name());
-	      log << MSG::INFO << "Delivered " << printN << " evets to clients." << endreq;
+	      log << MSG::INFO << "Delivered " << printN << " events to clients." << endreq;
 	    }
             net_unlock(netPlug(),lock);
             lock = 0;
