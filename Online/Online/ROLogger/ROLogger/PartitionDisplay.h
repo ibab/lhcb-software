@@ -1,4 +1,4 @@
-// $Id: PartitionDisplay.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Id: PartitionDisplay.h,v 1.3 2008-05-21 10:03:07 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionDisplay.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionDisplay.h,v 1.3 2008-05-21 10:03:07 frankm Exp $
 #ifndef ROLOGGER_PARTITIONDISPLAY_H
 #define ROLOGGER_PARTITIONDISPLAY_H
 
@@ -69,6 +69,10 @@ namespace ROLogger {
     char        m_wildNode[64];
     /// Match for wildcard message history match
     char        m_wildMessage[64];
+    /// Message window severity level
+    char        m_msgSeverity[16];
+    /// History window severity level
+    char        m_histSeverity[16];
     /// Number of messages to display
     int         m_numMsg;
 

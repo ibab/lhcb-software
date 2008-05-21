@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.4 2008-05-21 10:03:07 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.4 2008-05-21 10:03:07 frankm Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -33,20 +33,24 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const std
   int cnt = 0;
   if ( 0 == m_parent ) m_parent = this;
   m_id = UpiSensor::instance().newID();
-  ::upic_open_detached_menu(m_id,0,0,"Error logger",m_name.c_str(),RTL::nodeName().c_str());
-  ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
-  ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
-  for(Nodes::const_iterator n=m_nodes.begin(); n!=m_nodes.end(); ++n, ++cnt) {
-    if ( (*n).find(name) != std::string::npos ) {
-      ::upic_add_command(cnt+1, (*n).c_str(),"");
-    }
-  }
   ::sprintf(m_wildNode,"%s*",m_name.c_str());
   ::strcpy(m_wildMessage,"*");
-  ::upic_add_comment(CMD_COM2,        "-----------------------------------------------","");
+  ::upic_open_detached_menu(m_id,0,0,"Error logger",m_name.c_str(),RTL::nodeName().c_str());
+  ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
+  if ( !m_nodes.empty() ) {
+    ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
+    for(Nodes::const_iterator n=m_nodes.begin(); n!=m_nodes.end(); ++n, ++cnt) {
+      if ( (*n).find(name) != std::string::npos ) {
+	::upic_add_command(cnt+1, (*n).c_str(),"");
+      }
+    }
+    ::upic_add_comment(CMD_COM2,        "-----------------------------------------------","");
+  }
   ::upic_set_param(&m_numMsg,1,"I6",m_numMsg,0,0,s_NumList,sizeof(s_NumList)/sizeof(s_NumList[0]),0);
   ::upic_add_command(CMD_COM3,        "Show                  ^^^^^^ Messages","");
-  ::upic_add_command(CMD_FARM_HISTORY,"Show all histories","");
+  if ( !m_nodes.empty() ) {
+    ::upic_add_command(CMD_FARM_HISTORY,"Show all histories","");
+  }
   ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,0,0,0);
   ::upic_add_command(CMD_WILD_NODE,   "Node match:           ^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);

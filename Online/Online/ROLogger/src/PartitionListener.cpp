@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.5 2008-05-07 16:22:21 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.6 2008-05-21 10:03:07 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.5 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.6 2008-05-21 10:03:07 frankm Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -36,19 +36,23 @@ typedef std::vector<std::string> _SV;
 using namespace ROLogger;
 
 /// Standard constructor with object setup through parameters
-PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent)
+PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) : m_parent(parent), m_name(nam)
 {
   std::string name;
-  name = "RunInfo/" + nam + "/HLTsubFarms";
+  name = "RunInfo/" + m_name + "/HLTsubFarms";
   m_subFarmDP = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,subFarmHandler,(long)this,0,0);
-  ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
-  name = "RunInfo/" + nam + "/HLTnodeList";
+  ::upic_write_message2("Subfarm content for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  name = "RunInfo/" + m_name + "/HLTnodeList";
   m_nodesDP   = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,nodeHandler,(long)this,0,0);
-  ::upic_write_message2("Nodelist content for %s_RunInfo from:%s",nam.c_str(),name.c_str());
+  ::upic_write_message2("Nodelist content for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  name = "RunInfo/" + m_name + "/CALIBnodeList";
+  m_calibNodesDP   = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,calibNodeHandler,(long)this,0,0);
+  ::upic_write_message2("Calibration nodelist content for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
 }
 
 /// Standard destructor
 PartitionListener::~PartitionListener() {
+  ::dic_release_service(m_calibNodesDP);
   ::dic_release_service(m_subFarmDP);
   ::dic_release_service(m_nodesDP);
 }
@@ -61,13 +65,11 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     f->push_back(data);
   f->push_back("STORE");
   f->push_back("MONA08");
+  f->push_back("HLTA08");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
-/// DIM command service callback
-void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
-  std::auto_ptr<_SV> n(new _SV());
-  PartitionListener* h = *(PartitionListener**)tag;
+static void get_nodes(void* address, int* size, _SV* n) {
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
     in_addr addr;
     addr.s_addr = inet_addr(data);
@@ -89,6 +91,13 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
       ::upic_write_message2("Failed to resolve network address:%s",data);
     }
   }
+}
+
+/// DIM command service callback
+void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
+  std::auto_ptr<_SV> n(new _SV());
+  PartitionListener* h = *(PartitionListener**)tag;
+  get_nodes(address,size,n.get());
   n->push_back("STORECTL01");
   n->push_back("STORERECV01");
   n->push_back("STORERECV02");
@@ -101,4 +110,12 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   n->push_back("MONA0804");
   n->push_back("MONA0805");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
+}
+
+/// DIM command service callback
+void PartitionListener::calibNodeHandler(void* tag, void* address, int* size) {
+  std::auto_ptr<_SV> n(new _SV());
+  //PartitionListener* h = *(PartitionListener**)tag;
+  get_nodes(address,size,n.get());
+  //IocSensor::instance().send(h->m_parent,CMD_ADD_NODES,n.release());
 }

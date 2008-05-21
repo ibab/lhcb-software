@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Id: MessageLogger.h,v 1.4 2008-05-21 10:03:07 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.3 2008-05-13 07:55:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.4 2008-05-21 10:03:07 frankm Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -38,6 +38,9 @@ namespace ROLogger {
    */
   class MessageLogger : public Interactor  {
   protected:
+    /**@struct Entry 
+      *  Message logger service entry.
+      */
     struct Entry {
       time_t       created;
       int          id;
@@ -51,6 +54,8 @@ namespace ROLogger {
 
     /// DIM service identifier
     int m_service;
+    /// Default message severity to display
+    int m_severity;
     /// Flag to indicate output to xterm using colors
     bool m_colors;
     /// Flag to indicate output to xterm 
@@ -69,10 +74,12 @@ namespace ROLogger {
     void clearHistory();
     /// Print summary of history records from stored memory
     void summarizeHistory();
+    History::iterator m_histIter;
+    bool     m_wrapped;
 
     /// Print history records from stored memory
     void printHistory(const std::string& pattern);
-    /// Update history content
+    /// Update history records and flush obsolete records.
     void updateHistory(const char* msg);
     /// Check filters if this message should be printed....
     bool checkFilters(const char* msg) const;
@@ -86,6 +93,8 @@ namespace ROLogger {
     /// Interactor callback handler
     virtual void handle(const Event& ev);
 
+    /// Set message severity level for display
+    void setMessageSeverity(const std::string& severity);
     /// Print header information before starting output
     void printHeader(const std::string& title);
     /// Print multi-line header information before starting output

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.5 2008-05-13 08:26:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.6 2008-05-21 10:03:07 frankm Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -28,13 +28,14 @@ extern "C" {
 }
 using namespace ROLogger;
 
-static char* s_show[]    = {"Show"};
-static char* s_config[]  = {"Configure"};
-static char* s_enable[]  = {"Enable "};
-static char* s_disable[] = {"Disable"};
+static const char* s_show[]    = {"Show"};
+static const char* s_config[]  = {"Configure"};
+static const char* s_enable[]  = {"Enable "};
+static const char* s_disable[] = {"Disable"};
 static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
 static int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
+static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
 /// Standard constructor
 PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interactor* history, const std::string& name) 
@@ -43,21 +44,26 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   m_id = UpiSensor::instance().newID();
   ::strcpy(m_wildNode,"*");
   ::strcpy(m_wildMessage,"*");
+  ::strcpy(m_msgSeverity,s_SevList[2]);
+  ::strcpy(m_histSeverity,s_SevList[2]);
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
-  ::upic_add_comment(CMD_COM0,("Known processor clusters for partition "+name).c_str(),"");
-  ::upic_add_comment(CMD_COM1,"---------------------------------------------------------","");
-  ::upic_add_comment(CMD_COM2,"---------------------------------------------------------","");
+  ::upic_add_comment(CMD_COM0,        ("Known processor clusters for partition "+name).c_str(),"");
+  ::upic_add_comment(CMD_COM1,         "---------------------------------------------------------","");
+  ::upic_add_comment(CMD_COM2,         "---------------------------------------------------------","");
+  ::upic_set_param(m_msgSeverity,1, "A7",m_msgSeverity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
+  ::upic_set_param(m_histSeverity,2,"A7",m_histSeverity,0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
+  ::upic_add_command(CMD_SEVERITY,     "Severity for messages ^^^^^^^ history: ^^^^^^^","");
   ::upic_set_param(&m_numMsg,1,"I6",m_numMsg,0,0,s_NumList,sizeof(s_NumList)/sizeof(s_NumList[0]),0);
   ::upic_add_command(CMD_COM3,         "Show                  ^^^^^^ Messages","");
   ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,0,0,0);
   ::upic_add_command(CMD_WILD_NODE,    "Node match:           ^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);
   ::upic_add_command(CMD_WILD_MESSAGE, "...and match message: ^^^^^^^^^^^^^^^","");
-  ::upic_add_command(CMD_CLEAR_HISTORY,"Clear history","");
+  //::upic_add_command(CMD_CLEAR_HISTORY,"Clear history","");
   ::upic_add_command(CMD_SUMM_HISTORY, "History summary","");
   ::upic_add_command(CMD_SHOW_FILTERS, "Edit filters","");
-  ::upic_add_comment(CMD_COM5,"---------------------------------------------------------","");
+  ::upic_add_comment(CMD_COM5,         "---------------------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,"Close","");
   ::upic_close_menu();
   UpiSensor::instance().add(this,m_id);
@@ -150,47 +156,63 @@ void PartitionDisplay::handle(const Event& ev) {
     //::upic_write_message2("Got UPI command: %d %d %d",ev.menu_id,ev.command_id,ev.param_id);
     m_wildNode[sizeof(m_wildNode)-1] = 0;
     m_wildMessage[sizeof(m_wildMessage)-1] = 0;
-    if ( ::strchr(m_wildNode,' ') ) *::strchr(m_wildNode,' ') = 0;
-    if ( ::strchr(m_wildMessage,' ') ) *::strchr(m_wildMessage,' ') = 0;
+    m_msgSeverity[sizeof(m_msgSeverity)-1] = 0;
+    m_histSeverity[sizeof(m_histSeverity)-1] = 0;
+    if ( ::strchr(m_wildNode,' ')     ) *::strchr(m_wildNode,' ') = 0;
+    if ( ::strchr(m_wildMessage,' ')  ) *::strchr(m_wildMessage,' ') = 0;
+    if ( ::strchr(m_msgSeverity,' ')  ) *::strchr(m_msgSeverity,' ') = 0;
+    if ( ::strchr(m_histSeverity,' ') ) *::strchr(m_histSeverity,' ') = 0;
     switch(ev.command_id) {
-  case CMD_CLOSE:
-    ioc.send(m_parent,CMD_DELETE,this);
-    return;
-  case CMD_SUMM_HISTORY:
-    ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
-    return;
-  case CMD_WILD_NODE:
-    showHistory(m_wildNode,"*");
-    return;
-  case CMD_WILD_MESSAGE:
-    showHistory(m_wildNode,m_wildMessage);
-    return;
-  case CMD_CLEAR_HISTORY:
-    IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
-    return;
-  case CMD_SHOW_FILTERS:
-    new FilterDisplay(this,m_msg,m_history);
-    return;
-  default:
-    if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {
-      int val, cmd = ev.command_id;
+    case CMD_CLOSE:
+      ioc.send(m_parent,CMD_DELETE,this);
+      return;
+    case CMD_SUMM_HISTORY:
+      ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
+      return;
+    case CMD_WILD_NODE:
+      showHistory(m_wildNode,"*");
+      return;
+    case CMD_WILD_MESSAGE:
+      showHistory(m_wildNode,m_wildMessage);
+      return;
+    case CMD_CLEAR_HISTORY:
+      IocSensor::instance().send(m_history,CMD_CLEAR_HISTORY,CMD_CLEAR_HISTORY);
+      return;
+    case CMD_SHOW_FILTERS:
+      new FilterDisplay(this,m_msg,m_history);
+      return;
+    case CMD_SEVERITY:
       switch(ev.param_id) {
       case 1:
-        showCluster(cmd);
-        break;
+	ioc.send(m_msg,ev.command_id,new std::string(m_msgSeverity));
+	return;
       case 2:
-        val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
-        ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
-        ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
-        ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
-        break;
-      case 3:
-        ::upic_write_message("Configuration by menu not implemented...","");
-        break;
+	ioc.send(m_history,ev.command_id,new std::string(m_histSeverity));
+	return;
       default:
+	break;
+      }
+      break;
+    default:
+      if ( ev.command_id > 0 && ev.command_id <= (int)m_farms.size() ) {
+	int val, cmd = ev.command_id;
+	switch(ev.param_id) {
+	case 1:
+	  showCluster(cmd);
+	  break;
+	case 2:
+	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
+	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
+	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
+	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
+	  break;
+	case 3:
+	  ::upic_write_message("Configuration by menu not implemented...","");
         break;
-          }
-       }
+	default:
+	  break;
+	}
+      }
     }
     break;
   default:  // Fall through: Handle request by client
