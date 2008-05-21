@@ -27,9 +27,10 @@ class AlConfigurable( ConfigurableUser ) :
         "UsePreconditioning"           : False                      , ## Pre-conditioning
         "SolvTool"                     : "gslSolver"                , ## Solver to use
         "WriteCondToXML"               : False                      , ## Write conditions to xml file
-        "CondFileName"                 : "Conditions.xml"           , ## Name of xml file
-        "Precision"                    : 16                         , ## Set precision for conditions
-        "OutputLevel"                  : INFO                         ## Output level
+        "TopLevelElement"              : "/dd/Structure/LHCb/AfterMagnetRegion/T", 
+        "CondFileName"                 : "Conditions.xml"           ,              ## Name of xml file
+        "Precision"                    : 16                         ,              ## Set precision for conditions
+        "OutputLevel"                  : INFO                                      ## Output level
         }
 
     def getProp( self, name ) :
@@ -342,6 +343,7 @@ class AlConfigurable( ConfigurableUser ) :
                 from Configurables import WriteAlignmentConditions
                 alignSequencer.Members.append( WriteAlignmentConditions( "WriteConditionsToXML"                     ,
                                                                          OutputLevel = outputLevel                  ,
+                                                                         topElement  = self.getProp( "TopLevelElement" ),
                                                                          precision   = self.getProp( "Precision"   ),
                                                                          outputFile  = self.getProp( "CondFileName") ) )
                 
