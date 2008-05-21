@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.15 2008-03-17 14:07:04 janos Exp $
+// $Id: AlignSelTool.cpp,v 1.16 2008-05-21 10:59:26 lnicolas Exp $
 // Include files 
 
 // local
@@ -38,6 +38,9 @@ AlignSelTool::AlignSelTool ( const std::string& type,
 
   // Initializing the variables one might cut on
   m_multiplicity   ( defValue      ),
+  m_nITClusters    ( defValue      ),
+  m_nVeloClusters  ( defValue      ),
+  m_trEta          ( defValue      ),
   m_trP            ( abs(defValue) ),
   m_trPt           ( abs(defValue) ),
   m_trFitMatchChi2 ( defValue      ),
@@ -67,15 +70,18 @@ AlignSelTool::AlignSelTool ( const std::string& type,
   declareProperty ( "ModulesToAlign",    c_modulesToAlign = defValue );
   declareProperty ( "ConstantOccupancy", c_constOccup     = false    );
 
-  declareProperty ( "MultiplicityMaxCut", c_maxMulti         = abs(defValue) );
-  declareProperty ( "MomentumMinCut",     c_minP             = defValue      );
-  declareProperty ( "PtMinCut",           c_minPt            = defValue      );
-  declareProperty ( "FitMatchChi2MaxCut", c_maxFitMatchChi2  = abs(defValue) );
-  declareProperty ( "Chi2PerDoFMaxCut",   c_maxChi2PerDoF    = abs(defValue) );
-  declareProperty ( "Chi2ProbMinCut",     c_minChi2Prob      = defValue      );
-  declareProperty ( "NHolesMaxCut",       c_maxNHoles        = abs(defValue) );
-  declareProperty ( "NSharedHitsMaxCut",  c_maxNSharedHits   = abs(defValue) );
-  declareProperty ( "NCloseHitsMaxCut",   c_maxNCloseHits    = abs(defValue) );
+  declareProperty ( "MultiplicityMaxCut",  c_maxMulti         = abs(defValue) );
+  declareProperty ( "NITClustersMaxCut",   c_maxNITClusters   = abs(defValue) );
+  declareProperty ( "NVeloClustersMaxCut", c_maxNVeloClusters = abs(defValue) );
+  declareProperty ( "EtaMaxCut",           c_maxEta           = abs(defValue) );
+  declareProperty ( "MomentumMinCut",      c_minP             = defValue      );
+  declareProperty ( "PtMinCut",            c_minPt            = defValue      );
+  declareProperty ( "FitMatchChi2MaxCut",  c_maxFitMatchChi2  = abs(defValue) );
+  declareProperty ( "Chi2PerDoFMaxCut",    c_maxChi2PerDoF    = abs(defValue) );
+  declareProperty ( "Chi2ProbMinCut",      c_minChi2Prob      = defValue      );
+  declareProperty ( "NHolesMaxCut",        c_maxNHoles        = abs(defValue) );
+  declareProperty ( "NSharedHitsMaxCut",   c_maxNSharedHits   = abs(defValue) );
+  declareProperty ( "NCloseHitsMaxCut",    c_maxNCloseHits    = abs(defValue) );
 }
 //=============================================================================
 
@@ -160,6 +166,20 @@ void AlignSelTool::initEvent ( ) const {
   m_configured = true;
   m_tracks = get<LHCb::Tracks>( m_tracksPath );
 
+  if ( c_maxMulti < abs(defValue) )
+    m_multiplicity = m_tracks->size();
+
+  if ( (c_maxNITClusters < abs(defValue)) ||
+       (c_maxNCloseHits < abs(defValue)) ) {
+    m_itClusters = get<STLiteClusters>( m_itClustersPath );
+    m_nITClusters = m_itClusters->size();
+  }
+
+  if ( c_maxNVeloClusters < abs(defValue) ) {
+    m_veloClusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
+    m_nVeloClusters = m_veloClusters->size();
+  }
+
   // Get the hits close to any other
   if ( c_maxNCloseHits < abs(defValue) ) {
     m_closeHits.clear();
@@ -190,7 +210,8 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
     return false;
 
   // Cut on some variables
-  if ( cutMultiplicity( ) || cutTrackP( ) || cutTrackPt( ) ||
+  if ( cutMultiplicity( ) || cutNITClusters( ) || cutNVeloClusters( ) ||
+       cutTrackEta( ) || cutTrackP( ) || cutTrackPt( ) ||
        cutNHoles( ) || cutNSharedHits( ) || cutNCloseHits( ) ||
        cutTrackFitMatchChi2( ) || cutTrackChi2PerDoF( ) || cutTrackChi2Prob( ) ) return false;
 
@@ -207,9 +228,6 @@ bool AlignSelTool::accept ( const LHCb::Track& aTrack ) const {
 // Getting all the variables
 //=============================================================================
 int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
-
-  if ( c_maxMulti < abs(defValue) )
-    m_multiplicity = m_tracks->size();
 
   // Get the number of IT and OT hits
   int nITHits = 0;
@@ -259,10 +277,17 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   m_entryTX = aTrack.closestState( 7500. ).tx();
   m_entryTY = aTrack.closestState( 7500. ).ty();
 
+  // Pseudo-rapidity
+  if ( c_maxEta < abs(defValue) )
+    m_trEta = aTrack.pseudoRapidity();
+
+  // Momenta
   if ( m_fieldOn && (c_minP > defValue) )
     m_trP = aTrack.p();
   if ( m_fieldOn && (c_minPt > defValue) )
     m_trPt = aTrack.pt();
+
+  // Chi2
   if ( c_maxFitMatchChi2 < abs(defValue) )
     m_trFitMatchChi2 = aTrack.info(LHCb::Track::FitMatchChi2, 999999);
   if ( c_maxChi2PerDoF < abs(defValue) )
@@ -323,6 +348,36 @@ bool AlignSelTool::cutConstOccup ( ) const {
 //=============================================================================
 bool AlignSelTool::cutMultiplicity ( ) const {
   if ( m_multiplicity > c_maxMulti ) return true;
+  return false;
+}
+//=============================================================================
+
+
+//=============================================================================
+// Cutting on the number of IT clusters
+//=============================================================================
+bool AlignSelTool::cutNITClusters ( ) const {
+  if ( m_nITClusters > c_maxNITClusters ) return true;
+  return false;
+}
+//=============================================================================
+
+
+//=============================================================================
+// Cutting on the number of Velo clusters
+//=============================================================================
+bool AlignSelTool::cutNVeloClusters ( ) const {
+  if ( m_nVeloClusters > c_maxNVeloClusters ) return true;
+  return false;
+}
+//=============================================================================
+
+
+//=============================================================================
+// Cutting on the track pseudo-rapidity
+//=============================================================================
+bool AlignSelTool::cutTrackEta ( ) const {
+  if ( m_trEta > c_maxEta ) return true;
   return false;
 }
 //=============================================================================
@@ -458,14 +513,13 @@ bool AlignSelTool::isSharedHit ( const LHCb::Track& theTrack,
 //===========================================================================
 void AlignSelTool::getCloseHits ( ) const {
 
-  const STLiteClusters* itClusters = get<STLiteClusters>( m_itClustersPath );
   const LHCb::OTTimes* otTimes = get<LHCb::OTTimes>( m_otTimesPath );
-  STLiteClusters::const_iterator iClus = itClusters->begin();
+  STLiteClusters::const_iterator iClus = m_itClusters->begin();
   LHCb::OTTimes::const_iterator iTimes = otTimes->begin();
 
   // Loop over all the IT clusters
-  if ( itClusters->size() != 0 )
-    for ( ; iClus+1 != itClusters->end(); ++iClus )
+  if ( m_itClusters->size() != 0 )
+    for ( ; iClus+1 != m_itClusters->end(); ++iClus )
       if ( isNeighbouringHit( (*iClus).channelID(), (*(iClus+1)).channelID() ) ) {
         m_closeHits.push_back( (*iClus).channelID() );
         m_closeHits.push_back( (*(iClus+1)).channelID() );
@@ -754,23 +808,29 @@ void AlignSelTool::printCutValues( ) const {
   // Printing value of defined cuts
   if ( c_constOccup )
     info() << "          Will equalize occupancy over the detector surface" << endmsg;
-  if ( c_maxMulti != abs(defValue) )
+  if ( c_maxMulti < abs(defValue) )
     info() << "          Max Multiplicity cut = " << c_maxMulti << endmsg;
-  if ( m_fieldOn && (c_minP != defValue) )
+  if ( c_maxNITClusters < abs(defValue) )
+    info() << "          Max # IT clusters cut = " << c_maxNITClusters << endmsg;
+  if ( c_maxNVeloClusters < abs(defValue) )
+    info() << "          Max # Velo clusters cut = " << c_maxNVeloClusters << endmsg;
+  if ( c_maxEta < abs(defValue) )
+    info() << "          Max eta cut = " << c_maxEta << endmsg;
+  if ( m_fieldOn && (c_minP > defValue) )
     info() << "          Min P cut = " << c_minP << endmsg;
-  if ( m_fieldOn && (c_minPt != defValue) )
+  if ( m_fieldOn && (c_minPt > defValue) )
     info() << "          Min Pt cut = " << c_minPt << endmsg;
-  if ( c_maxFitMatchChi2 != abs(defValue) )
+  if ( c_maxFitMatchChi2 < abs(defValue) )
     info() << "          Max fit match chi2 cut = " << c_maxFitMatchChi2 << endmsg;
-  if ( c_maxChi2PerDoF != abs(defValue) )
+  if ( c_maxChi2PerDoF < abs(defValue) )
     info() << "          Max chi2/DoF cut = " << c_maxChi2PerDoF << endmsg;
-  if ( c_minChi2Prob != defValue )
+  if ( c_minChi2Prob > defValue )
     info() << "          Min chi2 prob. cut = " << c_minChi2Prob << endmsg;
-  if ( c_maxNHoles != abs(defValue) )
+  if ( c_maxNHoles < abs(defValue) )
     info() << "          Max # holes cut = " << c_maxNHoles << endmsg;
-  if ( c_maxNSharedHits != abs(defValue) )
+  if ( c_maxNSharedHits < abs(defValue) )
     info() << "          Max # shared hits cut = " << c_maxNSharedHits << endmsg;
-  if ( c_maxNCloseHits != abs(defValue) )
+  if ( c_maxNCloseHits < abs(defValue) )
     info() << "          Max # neighbouring hits cut = " << c_maxNCloseHits << endmsg;
 
   info() << " =============================================================" << endmsg

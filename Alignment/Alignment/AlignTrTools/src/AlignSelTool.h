@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.10 2008-03-15 12:17:22 lnicolas Exp $
+// $Id: AlignSelTool.h,v 1.11 2008-05-21 10:59:26 lnicolas Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -22,6 +22,7 @@
 #include "Event/Track.h"
 #include "Event/OTTime.h"
 #include "Event/STLiteCluster.h"
+#include "Event/VeloCluster.h"
 //===========================================================================
 
 //===========================================================================
@@ -106,6 +107,9 @@ private:
   mutable int alignSelectedModules;
   bool c_constOccup;
   int c_maxMulti;
+  int c_maxNITClusters;
+  int c_maxNVeloClusters;
+  double c_maxEta;
   double c_minP;
   double c_minPt;
   double c_maxFitMatchChi2;
@@ -120,6 +124,8 @@ private:
   //  Various containers
   //===========================================================================
   mutable const LHCb::Tracks* m_tracks;
+  mutable const STLiteClusters* m_itClusters;
+  mutable const LHCb::VeloClusters* m_veloClusters;
   mutable std::vector<LHCb::LHCbID> m_closeHits;
   mutable std::vector<LHCb::LHCbID> m_sharedHits;
   //===========================================================================
@@ -129,6 +135,9 @@ private:
   //===========================================================================
   LHCb::Track theTrack;
   mutable int m_multiplicity;
+  mutable int m_nITClusters;
+  mutable int m_nVeloClusters;
+  mutable double m_trEta;
   mutable double m_trP;
   mutable double m_trPt;
   mutable double m_entryTX;
@@ -164,6 +173,9 @@ private:
   bool selectBoxOverlaps ( const LHCb::Track& aTrack ) const;
   bool cutConstOccup ( ) const;
   bool cutMultiplicity ( ) const;
+  bool cutNITClusters ( ) const;
+  bool cutNVeloClusters ( ) const;
+  bool cutTrackEta ( ) const;
   bool cutTrackP ( ) const;
   bool cutTrackPt ( ) const;
   bool cutTrackFitMatchChi2 ( ) const;

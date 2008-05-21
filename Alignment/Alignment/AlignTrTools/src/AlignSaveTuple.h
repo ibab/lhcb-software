@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.4 2008-03-15 12:17:22 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.5 2008-05-21 10:59:26 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -26,6 +26,7 @@
 #include "Event/Track.h"
 #include "Event/STLiteCluster.h"
 #include "Event/STCluster.h"
+#include "Event/VeloCluster.h"
 #include "Event/OTTime.h"
 #include "Event/ODIN.h"
 #include "Event/FitNode.h"
@@ -36,7 +37,6 @@
 //===========================================================================
 class ITrackExtrapolator;
 class IMagneticFieldSvc;
-/* class ITrackCloneFinder; */
 class ITrackGhostClassification;
 class GhostTrackInfo;
 
@@ -64,11 +64,10 @@ private:
   typedef LinkerTool<LHCb::Track, LHCb::MCParticle> AsctTool;
   typedef AsctTool::DirectType DirectTable;
   typedef DirectTable::Range DirectRange;
-  typedef DirectTable::iterator direct_iterator;
   typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
 
   static const int defValue = -999999;
-  
+
   // Fill the Variables
   StatusCode fillVariables ( const LHCb::Track* aTrack,
                              Tuples::Tuple trackSelTuple );
@@ -128,12 +127,10 @@ private:
   std::string m_itClustersPath;
   std::string m_otTimesPath;
 
-/*   std::string m_cloneFinderName; */
   std::string m_ghostToolName;
   //======================================================================
 
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
-/*   ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool */
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
   ITrackGhostClassification* m_ghostClassification;  ///< Pointer to ghost tool 
 
@@ -154,6 +151,9 @@ private:
   int m_eventMultiplicity;
   double m_ghostRate;
 
+  int m_nVeLoClusters;
+  int m_nITClusters;
+
   // Track Variables
   int m_iGoodTrack;
 
@@ -170,6 +170,8 @@ private:
   double m_trackChi2PerDoF;
   double m_trackChi2Prob;
 
+  double m_trackEta;
+
   double m_trackP;
   double m_trackPt;
   double m_trackErrP;
@@ -184,14 +186,6 @@ private:
   // Hits Variables
   Array m_res;
   Array m_errRes;
-
-//   Array m_hitX;
-//   Array m_hitY;
-//   Array m_hitZ;
-
-//   Array m_hitLocalX;
-//   Array m_hitLocalY;
-//   Array m_hitLocalZ;
 
   int m_nLadOverlaps;
   Array m_ladOvlapRes;

@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.5 2008-03-15 12:17:22 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.6 2008-05-21 10:59:26 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -17,7 +17,6 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Interfaces
-// #include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 #include "MCInterfaces/ITrackGhostClassification.h"
 
@@ -54,10 +53,6 @@ AlignSaveTuple::AlignSaveTuple ( const std::string& name,
   // Reserving space for some vectors
   m_closeHits.reserve  ( 1000 );
   m_sharedHits.reserve ( 1000 );
-
-  // Clone finder
-//   this -> declareProperty ( "CloneFinderTool",
-//                             m_cloneFinderName = "TrackCloneFinder" );
 
   // Ghost classification
   this -> declareProperty( "GhostClassification",
@@ -111,10 +106,6 @@ StatusCode AlignSaveTuple::initialize ( ) {
 
   // The extrapolator
   m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
-
-  // Retrieve the clone finder tool
-//   m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
-//                                            "CloneFinderTool", this );
 
   // Retrieve the ghost classification tool
   m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
@@ -195,6 +186,9 @@ StatusCode AlignSaveTuple::execute ( ) {
   m_evtNr = odin->eventNumber(); 
   ++m_iEvent;
   m_eventMultiplicity = m_tracks->size();
+  m_nITClusters = m_itClusters->size();
+  const LHCb::VeloClusters* veloClusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
+  m_nVeLoClusters = veloClusters->size();
   //**********************************************************************
 
   if ( msgLevel( MSG::DEBUG ) ) {
@@ -215,28 +209,16 @@ StatusCode AlignSaveTuple::execute ( ) {
       else
         m_ghostRate = 0;
 
-//     bool isAClone = false;
-    // Do not run code on clones
     LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
     for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
       LHCb::Track& tr2 = **iTracks2;
-//       if ( m_cloneFinder->areClones( aTrack, tr2 ) ) {
-//         isAClone = true;
-//         break;
-//       }
-      
+
       // Compute ghost rate
       if ( iTracks == m_tracks->begin() )
         if ( isGhostTrack( &tr2 ) )
           m_ghostRate += (double)1/m_eventMultiplicity;
 
     }
-//     if ( isAClone ) {
-//       if ( msgLevel( MSG::DEBUG ) )
-//         debug() << "Track is a clone! Skipping track!" << endmsg;
-//       continue;
-//     }
-
     if ( msgLevel( MSG::DEBUG ) )     
       debug() << "******************************************************" << endmsg
               << "Entering new good track" << endmsg;
@@ -320,6 +302,8 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   m_trackChi2PerDoF = aTrack->chi2PerDoF();
   m_trackChi2Prob = aTrack->probChi2();
 
+  m_trackEta = aTrack->pseudoRapidity();
+
   m_trackP = aTrack->p()/Gaudi::Units::GeV;
   m_trackPt = aTrack->pt()/Gaudi::Units::GeV;
   m_trackErrP = sqrt(aTrack->firstState().errP2())/Gaudi::Units::GeV;
@@ -342,14 +326,6 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   //**********************************************************************
   m_res.clear();
   m_errRes.clear();
-
-//   m_hitX.clear();
-//   m_hitY.clear();
-//   m_hitZ.clear();
-
-//   m_hitLocalX.clear();
-//   m_hitLocalY.clear();
-//   m_hitLocalZ.clear();
 
   m_nLadOverlaps = 0;
   m_ladOvlapRes.clear();
@@ -442,27 +418,6 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 //     m_errRes.push_back(aNode.errResidual());
     m_res.push_back(fNode->unbiasedResidual());
     m_errRes.push_back(fNode->errUnbiasedResidual());
-    //**********************************************************************
-
-    //**********************************************************************    
-    // Hit Position
-    //**********************************************************************
-//     Gaudi::XYZPoint hitPos = aNode.state().position();
-//     m_hitX.push_back(hitPos.X());
-//     m_hitY.push_back(hitPos.Y());
-//     m_hitZ.push_back(hitPos.Z());
-
-//     Gaudi::XYZPoint hitLocalPos(defValue,defValue,defValue);
-//     if ( aNode.measurement().type() == LHCb::Measurement::IT )
-//       if( 0 != m_itTracker->DeSTDetector::findSector(theSTID) )
-//         hitLocalPos = m_itTracker->DeSTDetector::findSector(theSTID)->toLocal(hitPos);
-//       else if ( aNode.measurement().type() == LHCb::Measurement::OT )
-//         if( 0 != m_otTracker->findModule(theOTID) )
-//           hitLocalPos = m_otTracker->findModule(theOTID)->toLocal(hitPos);
-
-//     m_hitLocalX.push_back(hitLocalPos.X());
-//     m_hitLocalY.push_back(hitLocalPos.Y());
-//     m_hitLocalZ.push_back(hitLocalPos.Z());
     //**********************************************************************
 
     //**********************************************************************
@@ -904,6 +859,9 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   trackSelTuple -> column ( "Multiplicity", m_eventMultiplicity );
   trackSelTuple -> column ( "GhostRate", m_ghostRate );
 
+  trackSelTuple -> column ( "NVeLoClusters", m_nVeLoClusters );
+  trackSelTuple -> column ( "NITClusters", m_nITClusters );
+
   // Track Variables                     
   trackSelTuple -> column ( "ITrack", m_iGoodTrack );
   
@@ -921,7 +879,9 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   
   trackSelTuple -> column ( "TrackChi2PerDoF", m_trackChi2PerDoF );
   trackSelTuple -> column ( "TrackChi2Prob", m_trackChi2Prob );
-  
+
+  trackSelTuple -> column ( "TrackEta", m_trackEta );  
+
   trackSelTuple -> column ( "TrackP", m_trackP );
   trackSelTuple -> column ( "TrackPt", m_trackPt );
   trackSelTuple -> column ( "TrackErrP", m_trackErrP );
@@ -951,20 +911,6 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
                             m_res.end(), "NResiduals", m_maxNHits );
   trackSelTuple -> farray ( "ErrResiduals", m_errRes.begin(),
                             m_errRes.end(), "NResiduals", m_maxNHits );
-  
-//   trackSelTuple -> farray ( "HitX", m_hitX.begin(),
-//                             m_hitX.end(), "NResiduals", m_maxNHits );
-//   trackSelTuple -> farray ( "HitY", m_hitY.begin(),
-//                             m_hitY.end(), "NResiduals", m_maxNHits );
-//   trackSelTuple -> farray ( "HitZ", m_hitZ.begin(),
-//                             m_hitZ.end(), "NResiduals", m_maxNHits );
-  
-//   trackSelTuple -> farray ( "HitLocalX", m_hitLocalX.begin(),
-//                             m_hitLocalX.end(), "NResiduals", m_maxNHits );
-//   trackSelTuple -> farray ( "HitLocalY", m_hitLocalY.begin(),
-//                             m_hitLocalY.end(), "NResiduals", m_maxNHits );
-//   trackSelTuple -> farray ( "HitLocalZ", m_hitLocalZ.begin(),
-//                             m_hitLocalZ.end(), "NResiduals", m_maxNHits );
   //**********************************************************************
   
   return trackSelTuple->write();  

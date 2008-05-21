@@ -4,6 +4,10 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-05-21 - Louis Nicolas
+ - AlignSelTool: added cuts on track eta and on number of IT and Velo clusters in event
+ - AlignTrackMonitor and AlignSaveTuple: cleaned up a bit and added: track eta, # IT clusters and # Velo clusters
+
 </PRE><H1><A NAME=v3r5>2008-05-15 AlignTrTools v3r5 </A></H1><PRE>
  - J. Blouw:  tagged v3r5 for alignment project software release v3r0
 

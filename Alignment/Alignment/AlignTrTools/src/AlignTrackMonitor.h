@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.7 2007-10-31 10:57:26 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.8 2008-05-21 10:59:27 lnicolas Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -25,6 +25,7 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Event/STLiteCluster.h"
+#include "Event/VeloCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FitNode.h"
 //===========================================================================
@@ -60,7 +61,6 @@ private:
   typedef LinkerTool<LHCb::Track, LHCb::MCParticle> AsctTool;
   typedef AsctTool::DirectType DirectTable;
   typedef DirectTable::Range DirectRange;
-  typedef DirectTable::iterator direct_iterator;
   typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
 
   static const int defValue = -999999;
@@ -143,6 +143,8 @@ private:
   // event variables
   int m_eventMultiplicity;
   double m_ghostRate;
+  int m_nITClusters;
+  int m_nVeloClusters;
 
   // Various counters
   unsigned int m_nITHits;
@@ -164,6 +166,9 @@ private:
   double m_trackErrP;
   double m_trackMCP;
   double m_trackMCPt;
+
+  // Track pseudo-rapidity
+  double m_trackEta;
 
   // Track entry point in T-station
   double m_entryTX;

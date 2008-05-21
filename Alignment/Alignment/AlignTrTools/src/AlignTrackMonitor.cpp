@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.11 2007-12-10 14:42:56 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.12 2008-05-21 10:59:26 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -161,17 +161,20 @@ StatusCode AlignTrackMonitor::execute ( ) {
   AsctTool associator( evtSvc(), m_tracksPath );
   m_directTable = associator.direct();
 
-  if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << "Retrieved " << m_eventMultiplicity << " tracks." << endmsg;
-    debug() << "Retrieved " << m_itClusters->size() << " IT clusters." << endmsg;
-    debug() << "Retrieved " << m_otTimes->size() << " OT times." << endmsg;
-  }
-
   //**********************************************************************
   // Global Variables
   //**********************************************************************
   m_eventMultiplicity = m_tracks->size();
+  m_nITClusters = m_itClusters->size();
+  const LHCb::VeloClusters* veloClusters = get<LHCb::VeloClusters>( LHCb::VeloClusterLocation::Default );
+  m_nVeloClusters = veloClusters->size();
   //**********************************************************************
+
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "Retrieved " << m_eventMultiplicity << " tracks." << endmsg;
+    debug() << "Retrieved " << m_nITClusters << " IT clusters." << endmsg;
+    debug() << "Retrieved " << m_otTimes->size() << " OT times." << endmsg;
+  }
 
   // Loop over tracks - select some and make some plots
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
@@ -268,6 +271,9 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   m_trackErrP = sqrt(aTrack->firstState().errP2())/Gaudi::Units::GeV;
   m_trackMCP = defValue;
   m_trackMCPt = defValue;
+
+  // Track pseudo-rapidity
+  m_trackEta = aTrack->pseudoRapidity();
 
   // Track Slope and Position at 7500 mm
   LHCb::State aState = aTrack->closestState(7500.);
@@ -808,37 +814,43 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
 StatusCode AlignTrackMonitor::fillHistos ( ) {
 
   // Event Variables  
-  plot ( m_eventMultiplicity, "Multiplicity", "Multiplicity", 0., 500., 50);
+  plot ( m_eventMultiplicity, "Multiplicity", "Multiplicity", 0., 500., 50 );
   if ( m_mcData )
-    plot ( m_ghostRate, "GhostRate", "GhostRate", -0.01, 1.01, 50);
+    plot ( m_ghostRate, "GhostRate", "GhostRate", -0.01, 1.01, 50 );
+  plot ( m_nITClusters, "NITClusters", "NITClusters", 0., 2000., 50 );
+  plot ( m_nVeloClusters, "NVeloClusters", "NVeloClusters", 0., 5000., 50 );
 
   // Various numbers related to the track
-  plot ( m_nITHits, "NITHits", "NITHits", -0.5, 30.5, 31);
-  plot ( m_nOTHits, "NOTHits", "NOTHits", -0.5, 40.5, 41);
-  plot ( m_nSharedHits, "NSharedHits", "NSharedHits", -0.5, 30.5, 31);
-  plot ( m_fSharedHits, "FSharedHits", "FSharedHits", -0.01, 1.01, 50);
-  plot ( m_nCloseHits, "NNeighbouringHits", "NNeighbouringHits", -0.5, 50.5, 51);
-  plot ( m_nHoles, "NHoles", "NHoles", -0.5, 20.5, 21);
-  plot ( m_nLadOverlaps, "NLadOverlaps", "NLadOverlaps", -0.5, 15.5, 16);
-  plot ( m_nBoxOverlaps, "NBoxOverlaps", "NBoxOverlaps", -0.5, 3.5, 4);
+  plot ( m_nITHits, "NITHits", "NITHits", -0.5, 30.5, 31 );
+  plot ( m_nOTHits, "NOTHits", "NOTHits", -0.5, 40.5, 41 );
+  plot ( m_nSharedHits, "NSharedHits", "NSharedHits", -0.5, 30.5, 31 );
+  plot ( m_fSharedHits, "FSharedHits", "FSharedHits", -0.01, 1.01, 50 );
+  plot ( m_nCloseHits, "NNeighbouringHits", "NNeighbouringHits", -0.5, 50.5, 51 );
+  plot ( m_nHoles, "NHoles", "NHoles", -0.5, 20.5, 21 );
+  plot ( m_nLadOverlaps, "NLadOverlaps", "NLadOverlaps", -0.5, 15.5, 16 );
+  plot ( m_nBoxOverlaps, "NBoxOverlaps", "NBoxOverlaps", -0.5, 3.5, 4 );
   
   // Track fit "quality"
-  plot ( m_trackChi2PerDoF, "TrackChi2PerDoF", "TrackChi2PerDoF", -2., 100., 50);
-  plot ( m_trackChi2Prob, "TrackChi2Prob", "TrackChi2Prob", -0.01, 1.01, 50);
+  plot ( m_trackChi2PerDoF, "TrackChi2PerDoF", "TrackChi2PerDoF", -2., 100., 50 );
+  plot ( m_trackChi2Prob, "TrackChi2Prob", "TrackChi2Prob", -0.01, 1.01, 50 );
   
   // Track momentum and more
-  plot ( m_trackP, "TrackP", "TrackP", -5., 205., 50);
-  plot ( m_trackPt, "TrackPt", "TrackPt", -0.1, 10.1, 50);
-  plot ( m_trackErrP, "TrackErrP", "TrackErrP", -0.1, 10.1, 50);
+  plot ( m_trackP, "TrackP", "TrackP", -5., 205., 50 );
+  plot ( m_trackPt, "TrackPt", "TrackPt", -0.1, 10.1, 50 );
+  plot ( m_trackErrP, "TrackErrP", "TrackErrP", -0.1, 10.1, 50 );
   if ( m_mcData && (m_trackMCP != defValue) && (m_trackMCPt != defValue) ) {
-    plot ( m_trackMCP, "TrackMCP", "TrackMCP", -5., 205., 50);
-    plot ( m_trackMCPt, "TrackMCPt", "TrackMCPt", -0.1, 10.1, 50);
+    plot ( m_trackMCP, "TrackMCP", "TrackMCP", -5., 205., 50 );
+    plot ( m_trackMCPt, "TrackMCPt", "TrackMCPt", -0.1, 10.1, 50 );
   }
+
+  // Track pseudo-rapidity
+  plot ( m_trackEta, "TrackEta", "TrackEta", 0., 10., 50 );
+
   // Track State closest to 7500. mm
-  plot ( m_entryTX, "TXAt7500", "TXAt7500", -1., 1., 50);
-  plot ( m_entryTY, "TYAt7500", "TYAt7500", -0.5, 0.5, 50);
-  plot ( m_entryX, "XAt7500", "XAt7500", -3000., 3000., 50);
-  plot ( m_entryY, "YAt7500", "YAt7500", -3000., 3000., 50);
+  plot ( m_entryTX, "TXAt7500", "TXAt7500", -1., 1., 50 );
+  plot ( m_entryTY, "TYAt7500", "TYAt7500", -0.5, 0.5, 50 );
+  plot ( m_entryX, "XAt7500", "XAt7500", -3000., 3000., 50 );
+  plot ( m_entryY, "YAt7500", "YAt7500", -3000., 3000., 50 );
   //**********************************************************************
   
   return StatusCode::SUCCESS;
