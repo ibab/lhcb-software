@@ -253,8 +253,7 @@ for f in LFNs_ :
         if -1 == i : continue
         afs = afsdir + f[i+1:]
         win = windir + f[i+1:]
-	nik = nikdir + f[i+1:\
-	print afs 
+	nik = nikdir + f[i+1:]
         if   os.path.exists ( win ) : wins += [ win ]
         elif os.path.exists ( nik ) : niks += [ nik ]
         elif os.path.exists ( afs ) : afss += [ afs ]
