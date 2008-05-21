@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.6 2008-05-15 08:56:57 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.7 2008-05-21 12:24:07 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -89,6 +89,15 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Velo/VeloT/Alleys"));
   m_recoConf.add("VeloT/Quality",std::string("deltaX"));
   m_recoConf.add("VeloT/Quality2",std::string("deltaY"));
+
+  m_recoConf.add("PatMatch/Tool",std::string("PatMatchTool"));
+  m_recoConf.add("PatMatch/RecoID", (int) 102); //TODO
+  m_recoConf.add("PatMatch/TransferIDs",true);
+  m_recoConf.add("PatMatch/TransferAncestor",true);
+  m_recoConf.add("PatMatch/TrackType", (int) LHCb::Track::Long);
+  m_recoConf.add("PatMatch/TESOutput", std::string("Hlt/PatMatch")); //TODO
+  m_recoConf.add("PatMatch/Quality",std::string("chi2_PatMatch"));
+  m_recoConf.add("PatMatch/Quality2",std::string(""));
 }
 
 
