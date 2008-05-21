@@ -1,10 +1,11 @@
-// $Id: PtTransporter.cpp,v 1.2 2008-05-09 08:26:58 cattanem Exp $
+// $Id: PtTransporter.cpp,v 1.3 2008-05-21 11:55:12 albrecht Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "Event/State.h"
+#include "Event/Track.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include <cmath>
 
@@ -30,6 +31,7 @@ PtTransporter::PtTransporter( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IPtTransporter>(this);
+  declareInterface<ITrackFunctionTool>(this);
   declareProperty("zMagnet", m_zMagnet = 5300. * Gaudi::Units::mm);
 }
 //=============================================================================
