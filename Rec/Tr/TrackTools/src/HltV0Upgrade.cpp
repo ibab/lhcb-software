@@ -9,7 +9,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "HltV0Upgrade.h"
 
-/** @class HltV0Upgrade.cpp TrackTools/HltV0Upgrade.cpp
+/** @file HltV0Upgrade.cpp
  *  
  *  @author Jaap Panman
  *  @date   2008-03-04

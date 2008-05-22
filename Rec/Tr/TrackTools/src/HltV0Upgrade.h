@@ -15,7 +15,7 @@
 #include "Event/Track.h"
 #include "Event/TrackTraj.h"
 
-/** @class HltV0Upgrade.h TrackTools/HltV0Upgrade.h
+/** @class HltV0Upgrade HltV0Upgrade.h
  *  
  *  @author Jaap Panman
  *  @date   2008-03-04

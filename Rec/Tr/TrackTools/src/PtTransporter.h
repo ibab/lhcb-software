@@ -1,4 +1,4 @@
-// $Id: PtTransporter.h,v 1.3 2008-05-21 11:55:08 albrecht Exp $
+// $Id: PtTransporter.h,v 1.4 2008-05-22 09:55:17 cattanem Exp $
 #ifndef PTTRANSPORTER_H 
 #define PTTRANSPORTER_H 1
 
@@ -8,7 +8,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/IPtTransporter.h"            // Interface
-#include "HltBase/IFunctionTool.h"            // Interface for Hlt
+#include "TrackInterfaces/IFunctionTool.h"             // Interface for Hlt
 
 
 /** @class PtTransporter PtTransporter.h
@@ -37,13 +37,7 @@ public:
                             double tx, double ty, double p) const;
   virtual double ptAtOrigin(const LHCb::State& state) const;
 
-  double function(const LHCb::Track& track)
-  {
-    if( track.nStates() == 0 ) return 0.;
-    LHCb::State state = track.closestState(7800.);
-    return ptAtOrigin(state);
-  }
-  
+  double function(const LHCb::Track& track);
 
 protected:
 

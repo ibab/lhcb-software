@@ -4,10 +4,13 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+!======================== TrackTools v3r7 2008-05-21 ========================
+! 2008-05-22 - Marco Cattaneo
+ - In PtTransporter, get IFunctionTool.h from TrackInterfaces
+
 ! 2008-05-21 - Johannes Albrecht
  - PtTransporter.h,cpp: add interface for Hlt implementation
 
-!======================== TrackTools v3r7 2008-05-20 ========================
 ! 2008-05-20 - Marco Cattaneo
  - Fix a doxygen warning
 

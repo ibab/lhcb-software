@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.h,v 1.7 2008-05-06 09:51:16 aperiean Exp $
+// $Id: TrackCloneFinder.h,v 1.8 2008-05-22 09:55:17 cattanem Exp $
 #ifndef TRACKCLONEFINDER_H 
 #define TRACKCLONEFINDER_H 1
 
@@ -80,8 +80,9 @@ private:
    *        2) CompareAtLHCbIDsLevel = true:
    *           the comparison is based on the LHCbIDs and is therefore
    *           done on the Tracks as output by the pattern recognition
-   *  @param  track1: input 1st track
-   *  @param  track2: input 2nd track
+   *  @param[in]  track1      input 1st track
+   *  @param[in]  track2      input 2nd track
+   *  @param[out] nCommonHits number of shared hits
    */
   void getCommonHits( const LHCb::Track& track1,
 		      const LHCb::Track& track2,

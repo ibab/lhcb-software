@@ -1,4 +1,4 @@
-// $Id: PtTransporter.cpp,v 1.3 2008-05-21 11:55:12 albrecht Exp $
+// $Id: PtTransporter.cpp,v 1.4 2008-05-22 09:55:17 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -82,3 +82,11 @@ double PtTransporter::ptAtOrigin(const LHCb::State& state) const
   return ptAtOrigin(state.z(), state.x(), state.y(), state.tx(), state.ty(),
             1. / std::abs(state.qOverP()));
 }
+
+double PtTransporter::function(const LHCb::Track& track)
+{
+  if( track.nStates() == 0 ) return 0.;
+  LHCb::State state = track.closestState(7800.);
+  return ptAtOrigin(state);
+}
+  
