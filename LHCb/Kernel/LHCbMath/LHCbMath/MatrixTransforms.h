@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.4 2008-03-05 12:23:41 ibelyaev Exp $
+// $Id: MatrixTransforms.h,v 1.5 2008-05-22 13:45:39 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1
@@ -459,8 +459,9 @@ namespace Gaudi
      *
      *  @endcode
      *
-     *  @param  source (input) Linear Algebra vector3D
-     *  @param  dest   (output) Lorentz Vector 
+     *  @param[in]  source Linear Algebra vector3D
+     *  @param[in]  mass   Mass
+     *  @param[out] dest   Lorentz Vector 
      *  @return Lorentz Vector
      *  @author Sean BRISBANE sean.brisbane@cern.ch
      *  @date 2007-11-27
@@ -504,7 +505,7 @@ namespace Gaudi
      *
      * @endcode 
      *
-     * @param dP4dMom (input)  the txtyqop vector of track/perticle momenta
+     * @param mom     (input)  the txtyqop vector of track/particle momenta
      * @param mass    (input)  the particle mass
      * @param J       (output) the Jacobian for the transformation
      * @author Sean BRISBANE sean.brisbane@cern.ch
@@ -1394,7 +1395,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 
@@ -1432,7 +1433,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 
@@ -1470,7 +1471,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 
@@ -1508,7 +1509,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 
@@ -1546,7 +1547,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 
@@ -1584,7 +1585,7 @@ namespace Gaudi
        *  @endcode 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-       *  @daet 2008-03-03
+       *  @date 2008-03-03
        */
       template <class T, class C, class R, unsigned int D>
       inline 

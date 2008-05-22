@@ -1,4 +1,4 @@
-// $Id: Line.h,v 1.6 2008-04-29 10:44:29 ibelyaev Exp $
+// $Id: Line.h,v 1.7 2008-05-22 13:45:39 cattanem Exp $
 // ============================================================================
 #ifndef LHCBMATH_LINE_H 
 #define LHCBMATH_LINE_H 1
@@ -18,7 +18,7 @@ namespace Gaudi
    *      \vec{\mathbf{P}}_0 + \mu \vec{\mathbf{V}}_0 \f$.
    *  where \f$ \vec{\mathbf{V}}_0\f$ is a direction vector of the 
    *  line, \f$ \vec{\mathbf{V}}_0=\vec{\mathbf{P}}_1-\vec{\mathbf{P}}_1 \f$,
-   *  \f$ \vec{\mathbf{P}}_1\f$ and f$\vec{\mathbf{P}}_0 \f$
+   *  \f$ \vec{\mathbf{P}}_1\f$ and \f$\vec{\mathbf{P}}_0 \f$
    *   being two points on the line.
    *  
    *  The class can be used as a very general abstraction for a 3D line.
