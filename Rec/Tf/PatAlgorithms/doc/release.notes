@@ -4,8 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r6 2008-05-22 ====================
+! 2008-05-22 - Marco Cattaneo
+ - Get IMatchTool.h from TrackInterfaces
+
 ! 2008-05-21 - Johannes Albrecht
-	- PatMatchTool. h / .cpp: Add interface for implementtion in Hlt
+	- PatMatchTool. h / .cpp: Add interface for implementation in Hlt
 
 ! 2008-05-21 - Manuel Tobias Schiller
  - PatSeedingTool: fixed a bug in the y window calculation used in L0

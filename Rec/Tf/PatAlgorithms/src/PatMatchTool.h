@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.h,v 1.3 2008-05-21 10:14:24 albrecht Exp $
+// $Id: PatMatchTool.h,v 1.4 2008-05-22 12:00:37 cattanem Exp $
 #ifndef PATMATCHTOOL_H 
 #define PATMATCHTOOL_H 1
 
@@ -13,7 +13,7 @@
 #include "TrackInterfaces/IAddTTClusterTool.h"
 
 #include "TrackInterfaces/IMatchTool.h"            // Interface
-#include "HltBase/ITrackMatch.h"            // Interface for Hlt
+#include "TrackInterfaces/ITrackMatch.h"            // Interface for Hlt
 #include "TrackInterfaces/IFastMomentumEstimate.h"
 
 
@@ -53,17 +53,11 @@ public:
                                  LHCb::Track& output ,
                                  double& chi2 );
 
-  //function for matching in Hlt
+  /// Function for matching in Hlt
   StatusCode match(const LHCb::Track& veloTrack,
                    const LHCb::Track& tTrack,
                    LHCb::Track& matchedTrack,
-                   double& quality, double& quality2) {
-
-    StatusCode sc = this->matchSingle( veloTrack , tTrack , matchedTrack, quality );
-    
-    if(sc.isFailure()) if(msgLevel( MSG::DEBUG )) debug()<<"matching failed !"<<endmsg;
-    return sc;
-  }
+                   double& quality, double& quality2);
   
 public:
 

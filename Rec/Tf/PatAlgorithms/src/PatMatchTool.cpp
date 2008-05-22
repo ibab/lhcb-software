@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.3 2008-05-21 10:14:28 albrecht Exp $
+// $Id: PatMatchTool.cpp,v 1.4 2008-05-22 12:00:37 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -185,6 +185,7 @@ double PatMatchTool::getChi2Match(const LHCb::Track& velo,
   return chi2;
 }
 
+//=============================================================================
 void PatMatchTool::makeTrack( const LHCb::Track& velo,
                               const LHCb::Track& seed,
                               LHCb::Track& output,
@@ -230,3 +231,16 @@ void PatMatchTool::makeTrack( const LHCb::Track& velo,
         
   return;
 }
+
+//=============================================================================
+  StatusCode PatMatchTool::match( const LHCb::Track& veloTrack,
+                                  const LHCb::Track& tTrack,
+                                  LHCb::Track& matchedTrack,
+                                  double& quality, double& quality2 ) {
+
+    StatusCode sc = this->matchSingle( veloTrack, tTrack, matchedTrack, quality );
+    if(sc.isFailure()) 
+      if(msgLevel( MSG::DEBUG )) debug()<<"matching failed !"<<endmsg;
+
+    return sc;
+  }
