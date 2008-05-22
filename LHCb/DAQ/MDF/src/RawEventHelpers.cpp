@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.34 2008-04-09 15:16:43 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.35 2008-05-22 06:33:15 frankm Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -410,6 +410,16 @@ size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
   return count;
 }
 
+static void print_previous_bank(const RawBank* prev) {
+  char txt[255];
+  if ( prev == 0 )
+    ::sprintf(txt,"Bad bank is the first bank in the MEP fragment.");
+  else
+    ::sprintf(txt,"Previous (good) bank [%p]: %s",
+	      (void*)prev,RawEventPrintout::bankHeader(prev).c_str());
+  std::cout << txt << std::endl;
+}
+
 /// Check sanity of raw bank structure
 bool LHCb::checkRawBank(const RawBank* b, bool throw_exc, bool print_cout)  {
   typedef RawEventPrintout _P;
@@ -438,15 +448,20 @@ bool LHCb::checkRawBank(const RawBank* b, bool throw_exc, bool print_cout)  {
 /// Check consistency of MEP fragment using magic bank patterns.
 bool LHCb::checkRawBanks(const char* start, const char* end, bool exc,bool prt)  {
   char txt[255];
+  RawBank* prev = 0;
   if ( end >= start )  {
     for(RawBank* b=(RawBank*)start, *e=(RawBank*)end; b < e; b=MEPFragment::next(b))  {
       if ( !checkRawBank(b,false,true) ) goto Error;  // Check bank sanity
+      prev = b;
     }
     return true;
   }
 Error:  // Anyhow only end up here if no exception was thrown...
   ::sprintf(txt,"Error in multi raw bank buffer start:%p end:%p",start,end);
-  if ( prt ) std::cout << txt << std::endl;
+  if ( prt ) {
+    std::cout << txt << std::endl;
+    print_previous_bank(prev);
+  }
   if ( exc ) throw std::runtime_error(txt);
   return false;
 }
@@ -541,40 +556,73 @@ Error:  // Anyhow only end up here if no exception was thrown...
 
 /// Conditional decoding of raw buffer from MDF to raw event object
 StatusCode LHCb::decodeRawBanks(const char* start, const char* end, RawEvent* raw) {
-  while (start < end)  {
-    RawBank* bank = (RawBank*)start;
-    checkRawBank(bank);  // Check bank sanity
-    raw->adoptBank(bank, false);
-    start += bank->totalSize();
+  RawBank* prev = 0;
+  try {
+    while (start < end)  {
+      RawBank* bank = (RawBank*)start;
+      checkRawBank(bank);  // Check bank sanity
+      raw->adoptBank(bank, false);
+      start += bank->totalSize();
+      prev = bank;
+    }
+    return StatusCode::SUCCESS;
   }
-  return StatusCode::SUCCESS;
+  catch(const std::exception& e) {
+    print_previous_bank(prev);
+    throw e;
+  }
+  catch(...) {
+    print_previous_bank(prev);
+    throw std::runtime_error("Unknown error while checking banks.");
+  }
 }
 
 /// Conditional decoding of raw buffer from MDF to vector of raw banks
 StatusCode LHCb::decodeRawBanks(const char* start, const char* end, std::vector<RawBank*>& banks) {
-  RawBank *prev, *bank = (RawBank*)start;
-  while (start < end)  {
-    prev = bank;
-    bank = (RawBank*)start;
-    checkRawBank(bank);  // Check bank sanity
-    banks.push_back(bank);
-    start += bank->totalSize();
+  RawBank *prev = 0, *bank = (RawBank*)start;
+  try {
+    while (start < end)  {
+      bank = (RawBank*)start;
+      checkRawBank(bank);  // Check bank sanity
+      banks.push_back(bank);
+      start += bank->totalSize();
+      prev = bank;
+    }
+    return StatusCode::SUCCESS;
   }
-  return StatusCode::SUCCESS;
+  catch(const std::exception& e) {
+    print_previous_bank(prev);
+    throw e;
+  }
+  catch(...) {
+    print_previous_bank(prev);
+    throw std::runtime_error("Unknown error while checking banks.");
+  }
 }
 
 /// Conditional decoding of raw buffer from MDF to bank offsets
 StatusCode LHCb::decodeRawBanks(const char* start, const char* end, int* offsets, int* noffset) {
-  const char* s = start;
-  *noffset = 0;
-  while (s < end)  {
-    RawBank* bank = (RawBank*)s;
-    checkRawBank(bank);  // Check bank sanity
-    offsets[*noffset] = s-start;
-    (*noffset)++;
-    s += bank->totalSize();
+  RawBank *prev = 0;
+  try {
+    const char* s = start;
+    *noffset = 0;
+    while (s < end)  {
+      RawBank* bank = (RawBank*)s;
+      checkRawBank(bank);  // Check bank sanity
+      offsets[*noffset] = s-start;
+      (*noffset)++;
+      s += bank->totalSize();
+    }
+    return StatusCode::SUCCESS;
   }
-  return StatusCode::SUCCESS;
+  catch(const std::exception& e) {
+    print_previous_bank(prev);
+    throw e;
+  }
+  catch(...) {
+    print_previous_bank(prev);
+    throw std::runtime_error("Unknown error while checking banks.");
+  }
 }
 
 /// Copy RawEvent data from the object to sequential buffer
