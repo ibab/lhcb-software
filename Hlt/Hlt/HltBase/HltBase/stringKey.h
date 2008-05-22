@@ -1,3 +1,5 @@
+#ifndef STRINGKEY_H
+#define STRINGKEY_H 1
 #include <cassert>
 #include <boost/functional/hash.hpp>
 #include "GaudiKernel/Property.h"
@@ -60,3 +62,4 @@ inline std::ostream& stringKey::print(std::ostream & o ) const
 { assert(valid()); 
   return  o << "stringKey(" << str() << ")"; 
 }
+#endif
