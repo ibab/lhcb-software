@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.3 2008-05-15 08:47:44 graven Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.4 2008-05-22 13:39:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -87,21 +87,21 @@ StatusCode HltMatchTVeloTracks::match2dVelo(const LHCb::Track& veloTrack,
   double x_velo_mag = 0;
   double yVelo= 0;
   double xVelo= 0;
-  //  float x_cut;
+  //  double x_cut;
   
   //double  xmin = 99999.;
   
       
 
-  float xT=Ttrack.firstState().x();
-  float yT=Ttrack.firstState().y();
-  float zT=Ttrack.firstState().z();
-  float slopexT=Ttrack.firstState().tx();
-  float slopeyT=Ttrack.firstState().ty();
+  double xT=Ttrack.firstState().x();
+  double yT=Ttrack.firstState().y();
+  double zT=Ttrack.firstState().z();
+  double slopexT=Ttrack.firstState().tx();
+  double slopeyT=Ttrack.firstState().ty();
 /*
   debug() << "T track first state z " << zT << endmsg;
   State & stateAtT1 = Ttrack.stateAt(State::beginT1);
-  float zAtT1 = stateAtT1.z();
+  double zAtT1 = stateAtT1.z();
   debug() << "T track at T1 " << zAtT1 << endmsg;
 */
 
@@ -173,23 +173,23 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
  // double x_velo_mag = 0;
   double yVelo_mag= 0;
   double xVelo_mag= 0;
-  //  float x_cut;
+  //  double x_cut;
   
   //double  xmin = 99999.;
   xVelo_mag=trackDxDz*(z_magnet_center-trackZ)+trackX;
   
   
 
-  float xT=Ttrack.firstState().x();
-  float yT=Ttrack.firstState().y();
-  float zT=Ttrack.firstState().z();
-  float slopexT=Ttrack.firstState().tx();
-  // float slopeyT=muon->firstState().ty();
+  double xT=Ttrack.firstState().x();
+  double yT=Ttrack.firstState().y();
+  double zT=Ttrack.firstState().z();
+  double slopexT=Ttrack.firstState().tx();
+  // double slopeyT=muon->firstState().ty();
   
   
     
   yVelo_mag = trackY +  (trackDyDz) * (zT - trackZ);
-  float xMuon_magnet=slopexT*(z_magnet_center-zT)+xT;
+  double xMuon_magnet=slopexT*(z_magnet_center-zT)+xT;
   x_dist=xVelo_mag - xMuon_magnet;
   y_dist=yVelo_mag-yT;
   if(fabs(x_dist)<m_x_cut&&fabs(y_dist)<m_y_cut){

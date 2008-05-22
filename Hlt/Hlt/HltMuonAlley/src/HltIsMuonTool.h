@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.h,v 1.1 2008-01-31 14:59:55 hernando Exp $
+// $Id: HltIsMuonTool.h,v 1.2 2008-05-22 13:39:55 graven Exp $
 #ifndef HLTISMUONTOOL_H 
 #define HLTISMUONTOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "MuonDet/IMuonPosTool.h"
 #include "Event/Track.h"
-#include "HltBase/IFunctionTool.h"            // Interface
+#include "TrackInterfaces/IFunctionTool.h"            // Interface
 
 /** @class HltIsMuonTool HltIsMuonTool.h
  *  
@@ -16,7 +16,7 @@
  *  @date   2008-01-25
  */
 class HltIsMuonTool : public GaudiTool, 
-                              virtual public ITrackFunctionTool {
+                      virtual public ITrackFunctionTool {
 public: 
   /// Standard constructor
   HltIsMuonTool( const std::string& type, 
@@ -28,12 +28,12 @@ public:
   StatusCode initialize();
   
   double function(const LHCb::Track& track);
-  bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
-
-protected:
-  IMuonPosTool*      m_iPosTool;
 
 private:
+  bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
+
+  IMuonPosTool*      m_iPosTool;
+
 // FOI parameters
   std::vector<double> m_p1x;
   std::vector<double> m_p2x;

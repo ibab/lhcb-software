@@ -1,15 +1,15 @@
-// $Id: HltMatchTVeloTracks.h,v 1.2 2008-05-15 08:47:44 graven Exp $
+// $Id: HltMatchTVeloTracks.h,v 1.3 2008-05-22 13:39:55 graven Exp $
 #ifndef HLTMUONALLEY_MATCHTVELOTRACKS_H 
 #define HLTMUONALLEY_MATCHTVELOTRACKS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "HltBase/IMatchTVeloTracks.h"            // Interface
-#include "HltBase/ITrackMatch.h"            // Interface
-#include "HltBase/IBiFunctionTool.h"            // Interface
-#include "Event/StateParameters.h"
+#include "TrackInterfaces/ITrackMatch.h"            // Interface
 #include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "Event/StateParameters.h"
+#include "HltBase/IMatchTVeloTracks.h"            // Interface
+#include "HltBase/IBiFunctionTool.h"            // Interface
 
 
 
@@ -64,13 +64,13 @@ protected:
 
 private:
 
-  float m_2dx_cut;
-  float m_sec_tol;
-  float z_magnet_center;
-  float m_x_cut;
-  float m_y_cut;
-  float m_space_cut;
-  float m_ptkickConstant;
+  double m_2dx_cut;
+  double m_sec_tol;
+  double z_magnet_center;
+  double m_x_cut;
+  double m_y_cut;
+  double m_space_cut;
+  double m_ptkickConstant;
 
   IFastMomentumEstimate* m_fastPTool;
 

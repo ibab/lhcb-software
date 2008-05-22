@@ -1,4 +1,4 @@
-// $Id: HltMuonIDDistanceTool.h,v 1.2 2008-01-22 10:00:48 hernando Exp $
+// $Id: HltMuonIDDistanceTool.h,v 1.3 2008-05-22 13:39:55 graven Exp $
 #ifndef HLTMUONIDDISTANCETOOL_H 
 #define HLTMUONIDDISTANCETOOL_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "MuonDet/IMuonPosTool.h"
 #include "Event/Track.h"
-#include "HltBase/IFunctionTool.h"            // Interface
+#include "TrackInterfaces/IFunctionTool.h"            // Interface
 
 /** @class HltMuonIDDistanceTool HltMuonIDDistanceTool.h
  *  
@@ -29,13 +29,12 @@ public:
   
   double function(const LHCb::Track& track);
 
-protected:
+private:
 
   IMuonPosTool*      m_iPosTool;
-  float m_maxdist;
+  double m_maxdist;
 
 
-private:
 
 };
 #endif // HLTMUONIDDISTANCETOOL_H
