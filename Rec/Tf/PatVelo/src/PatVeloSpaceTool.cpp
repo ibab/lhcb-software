@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.10 2008-02-27 14:37:38 krinnert Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.11 2008-05-22 13:46:29 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -94,7 +94,10 @@ namespace Tf {
     bool isVerbose = msgLevel(MSG::VERBOSE);
     bool isDebug   = msgLevel(MSG::DEBUG);
 
-    if( seed.checkFlag(LHCb::Track::Invalid) ) return StatusCode::FAILURE;
+    if( seed.checkFlag(LHCb::Track::Invalid) ) {
+      Warning("Invalid RZ Velo track as input");
+      return StatusCode::FAILURE;
+    }
 
     // turn an LHCb::Track into a PatVeloSpaceTrack for fitting purposes
     PatVeloSpaceTrack* space =
