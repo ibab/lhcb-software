@@ -65,7 +65,7 @@ from AlConfigurable import *
 ## AlternativeDB
 AlConfigurable().AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
 AlConfigurable().AlternativeCondDBTag        = "DC06-20080407"
-AlConfigurable().AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/ET"]
+AlConfigurable().AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/OT"]
 
 ## Patttern Recognition?
 AlConfigurable().Pat                          = True
