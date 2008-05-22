@@ -16,6 +16,7 @@ use GaudiAlg            v*
 use HltEvent            v*    Event
 use TrackEvent          v*    Event
 use RecEvent            v*    Event
+use LHCbMath            v*    Kernel
 
 use DetDesc             v*    Det
 

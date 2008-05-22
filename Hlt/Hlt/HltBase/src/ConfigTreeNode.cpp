@@ -2,6 +2,7 @@
 #include "boost/regex.hpp"
 
 using namespace std;
+using Gaudi::Math::MD5;
 
 
 istream& ConfigTreeNode::read(istream& is) {

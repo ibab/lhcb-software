@@ -7,11 +7,11 @@
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/IProperty.h"
-#include "HltBase/MD5.h"
+#include "LHCbMath/MD5.h"
 
 class PropertyConfig {
 public:
-    typedef MD5::Digest digest_type;
+    typedef Gaudi::Math::MD5::Digest digest_type;
 
     typedef std::pair<std::string,std::string> Prop;
     typedef std::vector<Prop> Properties;
@@ -61,7 +61,7 @@ public:
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
-    digest_type digest() const { return MD5::computeDigest(*this); }
+    digest_type digest() const { return Gaudi::Math::MD5::computeDigest(*this); }
 
 private:
     Properties   m_properties;

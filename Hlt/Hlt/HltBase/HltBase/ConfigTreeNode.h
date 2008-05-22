@@ -1,7 +1,7 @@
 #ifndef CONFIGTREE_H
 #define CONFIGTREE_H 1
 
-#include "HltBase/MD5.h"
+#include "LHCbMath/MD5.h"
 #include <iostream>
 #include <vector>
 #include "boost/optional.hpp"
@@ -24,12 +24,12 @@ public:
     // Fetching the corresponding data is factored out of this class --
     // use an instance of the IConfigAccessSvc to do that.
     //
-    typedef MD5::Digest              digest_type;
+    typedef Gaudi::Math::MD5::Digest digest_type;
     typedef digest_type              LeafRef;
     typedef digest_type              NodeRef;
     typedef std::vector<NodeRef>     NodeRefs;
 
-    ConfigTreeNode() : m_leaf( MD5::createInvalidDigest() ) 
+    ConfigTreeNode() : m_leaf( Gaudi::Math::MD5::createInvalidDigest() ) 
     { }
 
     ConfigTreeNode(const LeafRef& leaf)
