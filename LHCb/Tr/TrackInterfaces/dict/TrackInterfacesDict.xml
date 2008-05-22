@@ -12,6 +12,7 @@
   <class name    = "IPatSeedingTool"         />
   <class name    = "IPtTransporter"          />
   <class name    = "IPVOfflineTool"          />
+  <class name    = "IRecVertexFunctionTool"  />
   <class name    = "IStateCorrectionTool"    />
   <class name    = "ITrackCaloMatch"         />
   <class name    = "ITrackChi2Calculator"    />
@@ -19,8 +20,10 @@
   <class name    = "ITrackExtrapolator"      />
   <class name    = "ITrackExtraSelector"     />
   <class name    = "ITrackFitter"            />
+  <class name    = "ITrackFunctionTool"      />
   <class name    = "ITrackInterpolator"      />
   <class name    = "ITrackManipulator"       />
+  <class name    = "ITrackMatch"             />
   <class name    = "ITrackProjector"         />
   <class name    = "ITrackProjectorSelector" />
   <class name    = "ITrackPtKick"            />

@@ -3,6 +3,7 @@
 
 #include "TrackInterfaces/IAddTTClusterTool.h"
 #include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/IFunctionTool.h"
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IHltV0Upgrade.h"
 #include "TrackInterfaces/IMaterialLocator.h"
@@ -23,6 +24,7 @@
 #include "TrackInterfaces/ITrackFitter.h"
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include "TrackInterfaces/ITrackManipulator.h"
+#include "TrackInterfaces/ITrackMatch.h"
 #include "TrackInterfaces/ITrackProjector.h"
 #include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackPtKick.h"
