@@ -1,20 +1,19 @@
 from Gaudi.Configuration import *
 
-appName            = "ModuleAlignment"
-appVersion         = "v3r4"
+appName            = "LaddersAndModuleAlignment"
+appVersion         = "v1r0"
 nIter              = 1
-nEvents            = 20000
+nEvents            = 1 #20000
 minNumHits         = 100
-alignDoFs          = "TxRz"
+alignDoFs          = "Tx"
 constraintStrategy = 0
-constraints        = [] #["Tx", "Szx"]
+constraints        = []
 solver             = "gslSolver"
 
 from Alignables import *
 elements           = Alignables()
-elements.ITLadderOTModules()
+elements.ITLadderOTModules( alignDoFs )
 
-group              = True
 trackingOpts       = "$TALIGNMENTROOT/python/ITOTTracking.py"
 
 from OTdata import *
@@ -64,9 +63,9 @@ from AlConfigurable import *
 # AlConfigurable().CondDBTag = "DC06-repro0710"
 
 ## AlternativeDB
-# AlConfigurable().AlternativeDB        = "$TALIGNMENTROOT/python/LHCBCOND.db/LHCBCOND"
-# AlConfigurable().AlternativeCondDBTag = "MisA-OTL-1"
-# AlConfigurable().AlternativeOverlay   = "/Conditions/OT"
+AlConfigurable().AlternativeCondDB           = "/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r3/db/LHCBCOND.db/LHCBCOND"
+AlConfigurable().AlternativeCondDBTag        = "DC06-20080407"
+AlConfigurable().AlternativeCondDBOverlays   = [ "/Conditions/IT", "/Conditions/ET"]
 
 ## Patttern Recognition?
 AlConfigurable().Pat                          = True
@@ -124,12 +123,22 @@ evtSel.open( data )
 
 ## Get pointer to ot traj projector
 otProjector = appMgr.tool( "ToolSvc.TrajOTProjector" )
+chi2Cleaner = appMgr.tool( "CleanChi2.Selector" )
 
 chi2CutStrategy = [100, 40, 20, 10]
 
 for i in range( nIter ) :
     evtSel.rewind()
 
+    if i == 0 :
+       chi2Cleaner.Chi2PerDoFMaxCut = chi2CutStrategy[0]
+    elif i == 1 :
+       chi2Cleaner.Chi2PerDoFMaxCut = chi2CutStrategy[1]
+    elif i == 2 :
+       chi2Cleaner.Chi2PerDoFMaxCut = chi2CutStrategy[2]
+    elif i > 3 :
+       chi2Cleaner.Chi2PerDoFMaxCut = chi2CutStrategy[3]
+    
     if i < (nIter/2) :
        otProjector.UseDrift = False
     else :

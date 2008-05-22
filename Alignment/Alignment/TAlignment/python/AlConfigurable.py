@@ -13,7 +13,7 @@ class AlConfigurable( ConfigurableUser ) :
         "AlternativeDDDBOverlay"       : ""                         , ## Alternative DDDB overlay
         "AlternativeCondDB"            : ""                         , ## Alternative CondDB
         "AlternativeCondDBTag"         : ""                         , ## Alternative CondDB tag
-        "AlternativeCondDBOverlay"     : ""                         , ## Alternative CondDB overlay
+        "AlternativeCondDBOverlays"    : []                         , ## Alternative CondDB overlay
         "SimplifiedGeom"               : False                      , ## Use simplified geometry
         "Pat"                          : False                      , ## Run pattern recognition
         "ElementsToAlign"              : []                         , ## Elements to align
@@ -98,12 +98,24 @@ class AlConfigurable( ConfigurableUser ) :
             ## Check there's a tag.
             ## No need to check for conditions overlay
             ## CondDBDispatcherSvc throws error
-            if self.getProp( "AlternativeCondDBTag" ) :
+            #if not self.getProp( "AlternativeCondDBTag" ) == None :
+            if self.getProp( "AlternativeCondDBTag" ) is not  None :
                 myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND"                                                     ,
                                                              ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeCondDB" )),
                                                              DefaultTAG       = self.getProp( "AlternativeCondDBTag" )
                                                              )
-                addCondDBAlternative( myCondDB , self.getProp( "AlternativeCondDBOverlay" ) )
+                listOfOverlays = self.getProp( "AlternativeCondDBOverlays" )
+                #if not len( listOfOverlays ) == 0 :
+                #    for i in range( len( listOfOverlays ) ) :
+                #        addCondDBAlternative( myCondDB , listOfOverlays[i] )
+                #else :
+                #    addCondDBAlternative( myCondDB , "/Conditions" )
+                if listOfOverlays:
+                    for d in listOfOverlays :
+                        addCondDBAlternative( myCondDB , d )
+                else :
+                    addCondDBAlternative( myCondDB , "/Conditions" )
+                    
             else: print "WARNING: Need to specify a tag for alternative CondDB!"
             
 
@@ -361,8 +373,8 @@ class AlConfigurable( ConfigurableUser ) :
         # Different sequencers depending on whether we use pat or not
         if not self.getProp( "Pat" ) :
             mainSeq.Members.append( self.decodingSeq(  self.getProp( "OutputLevel" ) ) )
-            mainSeq.Members.append( self.fitSeq(       self.getProp( "OutputLevel" ) ) )
             mainSeq.Members.append( self.filterSeq(    self.getProp( "OutputLevel" ) ) )
+            mainSeq.Members.append( self.fitSeq(       self.getProp( "OutputLevel" ) ) )
             mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
         elif self.getProp( "Pat" ) :
             mainSeq.Members.append( self.patSeq(       self.getProp( "OutputLevel" ) ) )
