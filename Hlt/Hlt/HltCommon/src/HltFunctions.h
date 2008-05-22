@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.1 2008-01-22 09:56:31 hernando Exp $
+// $Id: HltFunctions.h,v 1.2 2008-05-22 13:56:15 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -14,7 +14,7 @@
 
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
-#include "HltBase/IFunctionTool.h"
+#include "TrackInterfaces/IFunctionTool.h"
 #include "HltBase/IBiFunctionTool.h"
 
 namespace Hlt {  
@@ -158,8 +158,7 @@ namespace Hlt {
                        const LHCb::RecVertex& pv) const{
       double ip0 = HltUtils::impactParameter(pv,*(v.tracks()[0]));
       double ip1 = HltUtils::impactParameter(pv,*(v.tracks()[1]));
-      if (fabs(ip1)<fabs(ip0)) return ip1;
-      return ip0;
+      return (fabs(ip1)<fabs(ip0)) ? ip1 : ip0;
     }
     Hlt::VertexBiFunction* clone() const {return new VertexMinIP();}
   };
