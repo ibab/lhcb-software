@@ -28,6 +28,7 @@ def getModuleType(name):
 
 """extracts detector"""
 def getDetector(s):
+    s = lower(s)
     for m in ["tell", "ukl1", "hugin"]:
         if re.search(m, lower(s)):
             ss = s.split(lower(m))
@@ -77,7 +78,7 @@ def getDetector(s):
             elif ss[0] == "tfc":
                 return "tfc"
             else:
-                return "UNKOWN_DETECTOR"
+                return "UNKNOWN_DETECTOR"
             break
     return "UNKNOWN_DETECTOR"
 

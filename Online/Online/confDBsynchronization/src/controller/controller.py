@@ -20,5 +20,10 @@ class Controller(wx.PySimpleApp):
         self.mainWindow = MainWindow(self)
         self.SetTopWindow(self.mainWindow)
         return True
-    def UpdateMainFrameStausPanel(self):
+    def UpdateMainFrameStatusPanel(self):
         self.mainWindow.statusPanel.update()
+    def UpdateMainFrameSparePanel(self):
+        self.mainWindow.sparePanel.update()
+    def UpdateMainFrame(self):
+        self.UpdateMainFrameStatusPanel()
+        self.UpdateMainFrameSparePanel()

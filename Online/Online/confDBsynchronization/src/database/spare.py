@@ -1,7 +1,7 @@
 import database
-#from emptydatabase import removedev
-#from database.utilities import getModuleType, getDetector
-from cdbutils import *
+from emptydatabase import removedev
+from utilities import getModuleType, getDetector
+from cdbutils import subsystems, Tell1, UKL1, Hugin
 
 class Spare:
     def __init__(self, hwname, hwtype, serialnb, responsible, location, comments):
@@ -26,7 +26,6 @@ class Spare:
                 str(self.serialnb)+" "+\
                 str(self.responsible)+" "+\
                 str(self.location)+" "+\
-                str(self.location)+" "+\
                 str(self.comments)
     def insert(self, db):
         print "spare.insert start"
@@ -42,17 +41,16 @@ class SpareDB:
     def __init__(self, confdb, equipdb):
         self.confDB = confdb
         self.equipDB = equipdb
-    """returns a list with all spares from conf db"""
-    def getAllConfDBSpares(self):
-        query = "SELECT hwname, serialnb FROM lhcb_hw_devices WHERE hwname LIKE '%Spare%'"
-        spareResult = confDB.executeSelectQuery(query)
-        spares = []
-        for result in spareResult:
-            spares.append(result[0]+" ("+result[1]+")")
-        return spares
     """retruns a spare from coonfdb or None"""
     def getSpareConfDBByName(self, name):
-        query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments FROM lhcb_hw_devices"
+        query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments FROM lhcb_hw_devices WHERE hwname='"+name+"'"
+        result = self.confDB.executeSelectQuery(query)
+        if len(result) == 0:
+            return None
+        return Spare(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4], result[0][5])
+    """retruns a spare from coonfdb or None"""
+    def getSpareConfDBBySerial(self, serial):
+        query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments FROM lhcb_hw_devices WHERE serialnb='"+serial+"'"
         result = self.confDB.executeSelectQuery(query)
         if len(result) == 0:
             return None
@@ -60,12 +58,14 @@ class SpareDB:
     """returns a list with all spares that are in equipdb, but not in confdb"""
     def getNewSpares(self):
         equipdb_spares = self.equipDB.getAllSpares()
+        print "spares in equipdb: "+str(len(equipdb_spares))
         new_spares = []
         if len(equipdb_spares) == 0:
             return []
         for spare in equipdb_spares:
             query = "SELECT hwname, hwtype, serialnb, responsible, location, location, user_comments from lhcb_hw_devices WHERE serialnb like '"+spare.serialnb+"'"
             confdb_spare_result = self.confDB.executeSelectQuery(query)
+            print confdb_spare_result
             if len(confdb_spare_result) == 0: # not found means new
                 new_spares.append(spare)
         return new_spares
@@ -76,7 +76,7 @@ class SpareDB:
         if len(equipdb_spares) == 0:
             return []
         for spare in equipdb_spares:
-            query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE serialnb = '"+spare.serialnb+"'"
+            query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE serialnb = '"+spare.serialnb+"' and device_status = 2"
             confdb_spare_result = self.confDB.executeSelectQuery(query)
             if len(confdb_spare_result) > 0:
                 confdb_spare = Spare(confdb_spare_result[0][0], confdb_spare_result[0][1], confdb_spare_result[0][2], confdb_spare_result[0][3], confdb_spare_result[0][4], confdb_spare_result[0][5])
@@ -88,10 +88,18 @@ class SpareDB:
     """returns a list of Spares existing in confDB"""
     def getSparesInConfDB(self):
         spares = []
-        query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE hwname like '%Spare%'"
+        query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE device_status =2 and serialnb like '4%'"
         confdb_spare_result = self.confDB.executeSelectQuery(query)
         for spare_result in confdb_spare_result:
             spares.append(Spare(spare_result[0], spare_result[1], spare_result[2], spare_result[3], spare_result[4], spare_result[5]))
+        return spares
+    """returns a list of Spares existing in confDB as String like: sparename (spare_serialnb)"""
+    def getSparesInConfDBAsString(self):
+        spares = []
+        query = "SELECT hwname, serialnb from lhcb_hw_devices WHERE device_status =2 and serialnb like '4%'"
+        confdb_spare_result = self.confDB.executeSelectQuery(query)
+        for spare_result in confdb_spare_result:
+            spares.append(str(spare_result[0])+" ("+str(spare_result[1])+")")
         return spares
     """inserts all spares which are in equipdb but not yet in confdb"""
     def InsertNewSpares(self):
@@ -110,21 +118,37 @@ class SpareDB:
             spare.update(self.confDB)
         print "SpareDB.UpdateSpares end"
     """deletes a spare"""
-    def DeleteSpare(self, spare):
+    def DeleteSpare(self, spare, db = None):
         print "SpareDB.DeleteSpare start"
+        disconnect = False
         if spare is None:
             return None
-        db = database.connect()
+        if db is None:
+            db = database.connect()
+            disconnect = True # shall disonnect after finishing work
         try:
             db.DeleteHWDevice(spare.serialnb)
         except:
             print "error deleting :"+str(spare)
-        database.disconnect(db)
+        if disconnect:
+            database.disconnect(db)
         print "SpareDB.DeleteSpare end"
+    """deletes all spares from confdb"""
+    def DeleteSparesFromConfDB(self):
+        print "SpareDB.DeleteSparesFromConfDB start"
+        query = "select hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices where serialnb like '4%' and device_status != 1"
+        result = self.confDB.executeSelectQuery(query)
+        if len(result) == 0:
+            print "SpareDB.DeleteSparesFromConfDB end"
+            return True# nothing to delete was found
+        for r in result:
+            self.DeleteSpare(Spare(r[0], r[1], r[2], r[3], r[4], r[5]))
+        print "SpareDB.DeleteSparesFromConfDB end"
+        return True
         """deletes a list of spare"""
-    def DeleteSpare(self, spares):
+    def DeleteSpares(self, spares):
         print "SpareDB.DeleteSpare start"
-        if spare is None:
+        if spares is None:
             return None
         db = database.connect()
         for spare in spares:
@@ -140,40 +164,52 @@ class SpareDB:
         print "SpareDB.replaceDevice start"
         db = database.connect()
         #get data of the old device
-        query = "SELECT serialnb FROM lhcb_lg_devices WHERE devicame like '"+hwname+"'"
+        query = "SELECT serialnb FROM lhcb_lg_devices WHERE devicename like '"+hwname+"'"
         result = confdb.executeSelectQuery(query)
         try:
             serialnb = result[0][0]
+            print "serila of "+hwname+" + "+serialnb
         except:
             print str(devicename)+" does not exist in lhcb_lg_devices"
             return
         #get ipadress etc from the old device
-        query = "SELECT ipaddress FROM lhcb_ipinfo WHERE devicame like '"+hwname+"'"
+        query = "SELECT ipaddress FROM lhcb_ipinfo WHERE ipname like '"+hwname+"'"
         result = confdb.executeSelectQuery(query)
         ipaddress = ""
         if len(result) > 0:
             ipaddress = result[0][0]
-        device_query = "SELECT hwname, hwtype, serialnb, responsible, location, comments, device_status FROM LHCB_HW_DEVICES WHERE serialnb = '"+serialnb+"'"
+        device_query = "SELECT hwtype, serialnb, responsible, location, user_comments FROM LHCB_HW_DEVICES WHERE serialnb = '"+serialnb+"'"
         device_result = confdb.executeSelectQuery(device_query)
-        if len(result) == 0:
+        if len(device_result) == 0:
             print str(spare)+" was not found in lhcb_hw_devices"
+            print device_query
             return
-        newSpare = Spare(hwname, device_result[0][1], device_result[0][2], device_result[0][3], device_result[0][4], device_result[0][5], device_result[0][6])
+        query = "SELECT location from lhcb_lg_devices where serialnb = '"+serialnb+"'"
+        result = confdb.executeSelectQuery(query)
+        location = result[0][0]
+        print device_query
+        newSpare = Spare(hwname, str(device_result[0][0]), str(device_result[0][1]), str(device_result[0][2]), str(location), str(device_result[0][4]))
+        print newSpare
         #delete spare
-        self.DeleteSpare(spare)
+        self.DeleteSpare(spare, db)
         #delete device
-        removedev(confdb, hwname)
+        removedev(db, hwname)
         #insert device as spare
         newSpare.insert(db)
         #insert spare as device
         device = None
+        dhcp = self.equipDB.dhcp
         if getModuleType(hwname) == "Tell1":
             modulenumber = hwname[-2:]
-            device = Tell1(subsystems(hwname) ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
+            print hwname
+            print modulenumber
+            print getDetector(hwname)
+            print subsystems[getDetector(hwname)]
+            device = Tell1(subsystems[getDetector(hwname)] ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
         elif getModuleType(hwname) == "Ukl11":
-            device = Ukl11(subsystems(hwname) ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
+            device = UKL1(subsystems[getDetector(hwname)] ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
         elif getModuleType(hwname) == "Hugin":
-            device = Hugin(subsystems(hwname) ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
+            device = Hugin(subsystems[getDetector(hwname)] ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
         else:
             print "Error: Unknown Moduletyp for " + hwname
         device.insert(db, 1, 1)
@@ -186,7 +222,7 @@ class SpareDB:
     """returns a list with all spares from configurationdb"""
     def getAllSparesConfDB(self):
         spares = []
-        query = "select hwname, serialnb from lhcb_hw_devices where device_status = 2 and hwname like '%Spare%'"
+        query = "select hwname, serialnb from lhcb_hw_devices where device_status = 2 and hwname like '%Spare%' ORDER BY hwname ASC"
         result = self.confDB.executeSelectQuery(query)
         for r in result:
             spares.append(str(r[0])+" ("+str(r[1])+")")

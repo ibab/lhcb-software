@@ -2,7 +2,7 @@ import wx
 from string import split, replace
 
 class SpareWindow(wx.Frame):
-    def __init__(self, parentFrame = None, controller, id = wx.ID_ANY, heading = "Swap spare with device"):
+    def __init__(self, parentFrame = None, controller = None, id = wx.ID_ANY, heading = "Swap spare with device"):
         wx.Frame.__init__(self, parentFrame, wx.ID_ANY, heading, size=(600, 300))
         self.controller = controller
         self.panel = wx.Panel(self, wx.ID_ANY)
@@ -30,7 +30,7 @@ class SpareWindow(wx.Frame):
         device_serialnb = device_serialnb.replace(")", "")
         print spare_hwname, " :", spare_serialnb
         print device_hwname, " :", device_serialnb
-        spare = self.controller.spareDB.getSpareConfDBByName(spare_hwname)
+        spare = self.controller.spareDB.getSpareConfDBBySerial(spare_serialnb)
         self.controller.spareDB.replaceDevice(device_hwname, spare, self.controller.confDB)
         d= wx.MessageDialog( None, "Spare and device have been swapped","Success", wx.OK)
         d.ShowModal()
@@ -41,7 +41,7 @@ class SpareWindow(wx.Frame):
 
 class SimpleListBox(wx.ListBox):
     def __init__(self, parent, items, pos):
-        wx.ListBox.__init__(self, parent, wx.ID_ANY, pos, (200, 100), items, wx.LB_SINGLE | wx.LB_SORT)
+        wx.ListBox.__init__(self, parent, wx.ID_ANY, pos, (200, 100), items, wx.LB_SINGLE)
         if len(items) > 0:
             self.SetSelection(0)
 

@@ -23,12 +23,15 @@ ID_SUMMARY_LOG=170
 ID_SPARE_INSERT=300
 ID_SPARE_UPDATE=310
 ID_SPARE_SWAP=320
+ID_SPARE_DELETE=330
+
 class MainWindow(wx.Frame):
     def __init__(self, controller, parentFrame = None, id = wx.ID_ANY, heading = "SyncTool v3"):
-        wx.Frame.__init__(self, parentFrame, wx.ID_ANY, heading, size=(400, 300))
+        wx.Frame.__init__(self, parentFrame, wx.ID_ANY, heading, size=(400, 350))
         self.heading = heading
         self.CreateStatusBar()
         self.statusPanel = StatusPanel(self, controller)
+        self.sparePanel = SparePanel(self, controller)
         self.controller = controller
         filemenu= wx.Menu()
         filemenu.Append(ID_EMPTY, "&Empty ConfDB Database"," Deletes all devices and their connections from the Configuration Database")
@@ -44,9 +47,10 @@ class MainWindow(wx.Frame):
         logmenu = wx.Menu()
         logmenu.Append(ID_SUMMARY_LOG, "&Create Summary Log", "Creates a log file with a summary of changes")
         sparemenu = wx.Menu()
-        sparemenu.Append(ID_SPARE_INSERT, "&Insert new spares", "Inserts new spares")
-        sparemenu.Append(ID_SPARE_UPDATE, "&Update spares", "Updates existing spares")
+        sparemenu.Append(ID_SPARE_INSERT, "&Insert new spares", "Imports new spares from equipdb to confdb")
+        sparemenu.Append(ID_SPARE_UPDATE, "&Update spares", "Updates existing spares in confdb with data from equipdb")
         sparemenu.Append(ID_SPARE_SWAP, "&Replace device", "Replace a device with a spare")
+        sparemenu.Append(ID_SPARE_DELETE, "&Delete Spares", "Deletes all spares from configuration db")
         menuBar = wx.MenuBar()
         menuBar.Append(filemenu,"&File")
         menuBar.Append(editmenu,"&Edit")
@@ -72,6 +76,7 @@ class MainWindow(wx.Frame):
         wx.EVT_MENU(self, ID_SPARE_INSERT, self.OnInsertSpare)
         wx.EVT_MENU(self, ID_SPARE_UPDATE, self.OnUpdateSpare)
         wx.EVT_MENU(self, ID_SPARE_SWAP, self.OnSwapSpare)
+        wx.EVT_MENU(self, ID_SPARE_DELETE, self.OnDeleteSpare)
         self.Show(True)
     def OnEmpty(self, e):
         progressFrame = ProgressFrame(self, "Deleting all Devices...", "Please be patient", len(self.controller.devices.devices))
@@ -103,23 +108,31 @@ class MainWindow(wx.Frame):
         d.Destroy()
     def OnUpdateView(self, e):
         self.controller.devices.update()
-        self.controller.UpdateMainFrameStausPanel()
+        self.controller.UpdateMainFrame()
     def OnInsertSpare(self, e):
         self.controller.spareDB.InsertNewSpares()
-        self.statusPanel.update()
+        self.controller.UpdateMainFrameSparePanel()
     def OnUpdateSpare(self, e):
         self.controller.spareDB.UpdateSpares()
-        self.statusPanel.update()
+        self.controller.UpdateMainFrameSparePanel()
     def OnSwapSpare(self, e):
-        spareWindow = SpareWindow(self, controller)
+        spareWindow = SpareWindow(self, self.controller)
         spareWindow.setDevices(self.controller.confDB.getAllDevices())
-        spareWindow.setSpares(self.controller.spareDB.getAllSparesConfDB())
+        spareWindow.setSpares(self.controller.spareDB.getSparesInConfDBAsString())
         spareWindow.update()
         spareWindow.Show(True)
+    def OnDeleteSpare(self, e):
+        if self.controller.spareDB.DeleteSparesFromConfDB():
+            d= wx.MessageDialog( self, "All spares have been deleted from the configuration database","Success", wx.OK)
+        else:
+            d= wx.MessageDialog( self, "There occurred errors during deleting all spares from the configuration database","Failure", wx.OK)
+        d.ShowModal()
+        d.Destroy()
+        self.controller.UpdateMainFrameSparePanel()
 
 class StatusPanel(wx.Panel):
     def __init__(self, parent, controller, id = wx.ID_ANY):
-        wx.Panel.__init__(self, parent, id = wx.ID_ANY)
+        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 149), pos=(0,0))
         self.parent = parent
         self.controller = controller
         devices = self.controller.devices
@@ -129,9 +142,6 @@ class StatusPanel(wx.Panel):
         wx.StaticText(self, wx.ID_ANY, "Devices with new DHCP Data:", pos=(10, 70))
         wx.StaticText(self, wx.ID_ANY, "Devices up-to-date:", pos=(10, 90))
         wx.StaticText(self, wx.ID_ANY, "Devices at all:", pos=(10, 110))
-        wx.StaticText(self, wx.ID_ANY, "New spares:", pos=(10, 130))
-        wx.StaticText(self, wx.ID_ANY, "Changed spares:", pos=(10, 150))
-        wx.StaticText(self, wx.ID_ANY, "Spares up-to-date:", pos=(10, 170))
         ##############################################################################
         self.newDevicesWithoutDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.new_devices_no_dhcp)), pos=(200, 10))
         self.newDevicesWithoutDHCPText.SetEditable(False)
@@ -145,15 +155,6 @@ class StatusPanel(wx.Panel):
         self.newDevicesUpToDatePText.SetEditable(False)
         self.DevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.devices)), pos=(200, 110))
         self.DevicesAtAllText.SetEditable(False)
-        new_spares_count = len(controller.spareDB.getNewSpares())
-        self.NewSparesText = wx.TextCtrl(self, wx.ID_ANY, str(new_spares_count), pos=(200, 130))
-        self.NewSparesText.SetEditable(False)
-        changed_spares_count = len(controller.spareDB.getChangedSpares())
-        self.ChangedSparesText = wx.TextCtrl(self, wx.ID_ANY, str(changed_spares_count), pos=(200, 150))
-        self.ChangedSparesText.SetEditable(False)
-        uptodate_spares_count = len(controller.spareDB.getSparesInConfDB()) - new_spares_count - changed_spares_count
-        self.UpToDateSparesText = wx.TextCtrl(self, wx.ID_ANY, str(uptodate_spares_count), pos=(200, 170))
-        self.UpToDateSparesText.SetEditable(False)
     def update(self):
         devices = self.controller.devices
         spareDB = self.controller.spareDB
@@ -181,17 +182,48 @@ class StatusPanel(wx.Panel):
         self.DevicesAtAllText.SetModified(True)
         self.DevicesAtAllText.Refresh()
         self.DevicesAtAllText.Update()
+        self.Refresh()
+        self.Update()
+        self.parent.Refresh()
+        self.parent.Update()
+
+class SparePanel(wx.Panel):
+    def __init__(self, parent, controller, id = wx.ID_ANY):
+        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 150), pos=(0, 130))
+        self.parent = parent
+        self.controller = controller
+        wx.StaticText(self, wx.ID_ANY, "New spares:", pos=(10, 30))
+        wx.StaticText(self, wx.ID_ANY, "Changed spares:", pos=(10, 50))
+        wx.StaticText(self, wx.ID_ANY, "Spares in ConfDB:", pos=(10, 70))
+        new_spares_count = len(controller.spareDB.getNewSpares())
+        print "new_spares_count: "+str(new_spares_count)
+        self.NewSparesText = wx.TextCtrl(self, wx.ID_ANY, str(new_spares_count), pos=(200, 30))
+        self.NewSparesText.SetEditable(False)
+        changed_spares_count = len(controller.spareDB.getChangedSpares())
+        print "changed_spares_count: "+str(changed_spares_count)
+        self.ChangedSparesText = wx.TextCtrl(self, wx.ID_ANY, str(changed_spares_count), pos=(200, 50))
+        self.ChangedSparesText.SetEditable(False)
+        uptodate_spares_count = len(controller.spareDB.getSparesInConfDB())
+        print "uptodate_spares_count: "+str(uptodate_spares_count)
+        self.UpToDateSparesText = wx.TextCtrl(self, wx.ID_ANY, str(uptodate_spares_count), pos=(200, 70))
+        self.UpToDateSparesText.SetEditable(False)
+    def update(self):
+        devices = self.controller.devices
+        spareDB = self.controller.spareDB
         new_spares_count = len(spareDB.getNewSpares())
+        print "new_spares_count: "+str(new_spares_count)
         self.NewSparesText.ChangeValue(str(new_spares_count))
         self.NewSparesText.SetModified(True)
         self.NewSparesText.Refresh()
         self.NewSparesText.Update()
         changed_spares_count = len(spareDB.getChangedSpares())
+        print "changed_spares_count: "+str(changed_spares_count)
         self.ChangedSparesText.ChangeValue(str(changed_spares_count))
         self.ChangedSparesText.SetModified(True)
         self.ChangedSparesText.Refresh()
         self.ChangedSparesText.Update()
-        uptodate_spares_count = len(spareDB.getSparesInConfDB()) - new_spares_count - changed_spares_count
+        uptodate_spares_count = len(spareDB.getSparesInConfDB())
+        print "uptodate_spares_count: "+str(uptodate_spares_count)
         self.UpToDateSparesText.ChangeValue(str(uptodate_spares_count))
         self.UpToDateSparesText.SetModified(True)
         self.UpToDateSparesText.Refresh()

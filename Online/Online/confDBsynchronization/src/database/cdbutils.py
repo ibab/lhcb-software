@@ -513,7 +513,8 @@ subsystems = {"ecal" : ecal, "tcal" : tcal, "muon_a" : muon_a, "muon_c" : muon_c
               "ot_c" : ot_c, "mutq" : mutq, "velo_a" : velo_a, "velo_c" : velo_c, "prs" : prs,
               "tt" : tt, "rich1" : rich1, "rich2" : rich2, "hcal" : hcal, "it" : it,
               "pus" : pus, "tdet" : tdet, "tfc" : tfc, "DUM" : dum, 
-              "UNKNOWN" : ecal, "UNKOWN_DETECTOR" : ecal}
+              "UNKNOWN" : ecal, "UNKNOWN_DETECTOR" : ecal}
+
 #crat=D3B02F29
 import crates
 

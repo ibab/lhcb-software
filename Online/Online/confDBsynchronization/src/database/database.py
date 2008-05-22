@@ -41,7 +41,7 @@ class ConfigurationDB(DataBase):
         DataBase.__init__(self, name, user, password)
     """gets all devices"""
     def getAllDevices(self):
-        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
+        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 ORDER BY devicename ASC"
         result = self.executeSelectQuery(query)
         devices = []
         for r in result:
@@ -52,13 +52,13 @@ class ConfigurationDB(DataBase):
 class EquipmentDB(DataBase):
     def __init__(self, name = eDB_name, user = eDB_user, password = eDB_pass):
         DataBase.__init__(self, name, user, password)
+        self.dhcp = DHCP(dhcp_file, dhcp_flags)
     """returns a list of all devices (hugin, tell1 or UKL1)"""
     def getAllDevices(self):
         query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' order by name"
         modules = self.executeSelectQuery(query)
         result = []
-        dhcp = DHCP(dhcp_file, dhcp_flags)
-        self.dhcp = dhcp
+        dhcp = self.dhcp
         for module in modules:
             #print module
             modulenumber = module[0]
