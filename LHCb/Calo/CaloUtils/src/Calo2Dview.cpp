@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.5 2008-03-05 16:33:06 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.6 2008-05-22 22:50:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -218,8 +218,11 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
 
   // threshold
-  if( value < m_threshold)return histo2D(unit);
-
+  if( value < m_threshold){
+    if ( msgLevel(MSG::DEBUG) )debug() << "value = " << value << " < threshold = "<< m_threshold << endreq;
+    return histo2D(unit);
+  }
+  
 
   // check the cellID is consistent with the calo
   if(caloViewMap[unit] !=  calo){
@@ -274,6 +277,7 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
           }
           double x = m_xsize *  ((double) iic+0.5 ) /(double) m_reg ;
           double y = m_ysize *  ((double) iir+0.5 ) /(double) m_reg ;
+          if ( msgLevel(MSG::DEBUG) )debug() << " FILLING " << x << " " << y << " " << value+m_offset << endreq;
           GaudiHistoAlg::fill( histo2D(unit) ,  x, y , value + m_offset);
         }
       }
