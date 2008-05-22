@@ -5,6 +5,9 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2008-05-22 - Gerhard Raven
+ - Add MD5.h src/MD5.cpp: class to compute an MD5 digest of strings, or objects
+   which can be streamed into strings
 
 !========================= LHCbMath v2r7p1 2008-04-29 ========================
 ! 2008-04-29 - Marco Cattaneo
