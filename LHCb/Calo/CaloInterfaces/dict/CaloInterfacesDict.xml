@@ -15,7 +15,8 @@
   <class name    = "ICaloTrackMatch"          />
   <class name    = "IPart2Calo"               />
   <class name    = "ITrack2Calo"              />
-
+  <class name    = "ICaloCosmicsTool"         />
+  <class name    = "ICaloCosmicsTrackTool"    />
 </lcgdict>
 
 

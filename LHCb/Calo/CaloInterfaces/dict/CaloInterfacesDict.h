@@ -1,4 +1,4 @@
-// $Id: CaloInterfacesDict.h,v 1.4 2008-04-22 09:46:51 cattanem Exp $
+// $Id: CaloInterfacesDict.h,v 1.5 2008-05-22 22:48:36 odescham Exp $
 #ifndef DICT_CALOINTERFACESDICT_H 
 #define DICT_CALOINTERFACESDICT_H 1
 
@@ -17,5 +17,7 @@
 #include "CaloInterfaces/ICaloTrackMatch.h"         
 #include "CaloInterfaces/IPart2Calo.h"
 #include "CaloInterfaces/ITrack2Calo.h"
+#include "CaloInterfaces/ICaloCosmicsTool.h"
+#include "CaloInterfaces/ICaloCosmicsTrackTool.h"
 
 #endif //DICT_CALOINTERFACESDICT_H 
