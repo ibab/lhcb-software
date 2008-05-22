@@ -1,4 +1,4 @@
-#include <ostream>
+#include <cassert>
 #include <boost/functional/hash.hpp>
 #include "GaudiKernel/Property.h"
 
@@ -8,23 +8,20 @@ public:
 
     stringKey(const std::string& str) : m_str(str), m_hash( hasher(str) ) 
     { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
+
     const std::string& str() const { return m_str.value();}
     bool operator==(const stringKey& rhs) const ;
     bool operator!=(const stringKey& rhs) const ;
     bool operator<(const stringKey& rhs) const ;
     std::ostream& print(std::ostream & o ) const ;
 
-    // yes, this should work, as the real string is carried along as reference, 
-    // and survives copy-construction of properties!!!...
-    // hopefully, so does the updatehandler...
     StringProperty& property() { return m_str; }
     void updateHandler(Property& prop) { 
-        std::cout <<" updating " << m_str << " -> " << prop.toString() << std::endl;  
         m_str = prop.toString();
         m_hash = hasher(str());
     }
 
-// transitional functionality -- to be deleted when no longer needed...
+    // transitional functionality -- to be deleted when no longer needed...
     stringKey() : m_hash( 0 ) { }
     bool empty() const { return str().empty(); }
 
@@ -63,4 +60,3 @@ inline std::ostream& stringKey::print(std::ostream & o ) const
 { assert(valid()); 
   return  o << "stringKey(" << str() << ")"; 
 }
-
