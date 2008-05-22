@@ -12,16 +12,15 @@
  *  @date   2007-06-22
  */
 
-namespace Hlt {
-  
-  namespace SummaryHelper {
-    
+namespace Hlt { namespace SummaryHelper {
+      
     template <class T>
-    std::vector<T*> retrieve(const LHCb::HltSummary& sum,int id) {
-      std::vector<T*> cont;
-      if (!sum.hasSelectionSummary(id)) throw zen::invalid_key(" [retrieve] ");
-      const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id);
+    std::vector<T*> retrieve(const LHCb::HltSummary& sum,stringKey id) {
+      std::string key = " [retrieve] ";
+      if (!sum.hasSelectionSummary(id.str())) throw zen::invalid_key(" [retrieve] ");
+      const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id.str());
       const std::vector<ContainedObject*>& data = sel.data();
+      std::vector<T*> cont;
       for (std::vector<ContainedObject*>::const_iterator it = data.begin();
            it != data.end(); ++it) {
         T* t = dynamic_cast<T*>(*it);
@@ -30,8 +29,7 @@ namespace Hlt {
       return cont;
     }
     
-  };
-};
+}; };
 
 #endif
 

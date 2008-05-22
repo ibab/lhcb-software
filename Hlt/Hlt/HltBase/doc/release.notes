@@ -6,6 +6,7 @@
 !2008-05-22 - Gerhard Raven
    - move md5 into the private part of MD5, rename it MD5::md5_engine
    - migrate MD5 into LHCbMath, remove from here...
+   - adapt to change in HltEvent: HltSelectionSummary takes a string, not int
 
 ! 2008-05-22 - Marco Cattaneo
  - Remove IFunctionTool.h and ITrackMatch.h, moved to TrackInterfaces
