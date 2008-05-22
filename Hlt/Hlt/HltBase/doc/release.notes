@@ -3,6 +3,12 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2008-05-22 - Marco Cattaneo
+ - Remove IFunctionTool.h and ITrackMatch.h, moved to TrackInterfaces
+   In IFunctionTool.h, IVertexFunctionTool is renamed to IRecVertexFunctionTool
+
+! 2008-05-?? - N.N.
    - HltAlgorithm: register algorithm with context service, so that an instance
      request a 'bound' functor, the binding argument is obtained through the 
      'current' HltAlgorithm, so that one can determine the algorithm uses an

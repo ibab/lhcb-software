@@ -9,7 +9,6 @@
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/IL0Value.h"
 #include "HltBase/ITrackUpgrade.h"
-#include "HltBase/ITrackMatch.h"
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/ERelations.h"

@@ -9,7 +9,6 @@
   <class name = "ITrackBiFunctionFactory" />
   <class name = "IL0Value" />
   <class name = "ITrackUpgrade" />
-  <class name = "ITrackMatch" />
   <class name = "Hlt::Configuration" />
   <class name = "Hlt::TrackFunction" />
   <class name = "Hlt::TrackFilter" />
