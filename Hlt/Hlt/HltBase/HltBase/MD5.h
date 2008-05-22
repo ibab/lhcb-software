@@ -5,9 +5,10 @@
 #include <iostream>
 #include <sstream>
 
-class md5;
 
 class MD5 {
+private:
+    class md5_engine;
 public:
     class Digest {
         public:
@@ -24,7 +25,7 @@ public:
            bool operator!=(const Digest& rhs) const { return !operator==(rhs);}
         private:
            friend class MD5;
-           friend class md5;
+           friend class md5_engine;
            explicit Digest(const std::string& val);
            explicit Digest(const value_type& val) { memcpy(m_value,val,sizeof(m_value)); }
 

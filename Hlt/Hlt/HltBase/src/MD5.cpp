@@ -38,11 +38,11 @@ using namespace std;
     having a given prespecified target message digest. ... The MD5 algorithm
     is designed to be quite fast on 32-bit machines." -RFC1321
 */
-class md5
+class MD5::md5_engine
 {
 public:
-    md5() {}
-    ~md5() {}
+    md5_engine() {}
+    ~md5_engine() {}
 
 
     // Acquires the digest
@@ -64,7 +64,7 @@ private:
 
 MD5::Digest
 MD5::computeDigest(const string& s) {
-   md5 x;
+   MD5::md5_engine x;
    return x.digest( s.c_str() );
 }
 
@@ -229,7 +229,7 @@ namespace
 }
 
 
-void md5::update(const void* a_data, boost::uint32_t a_data_size)
+void MD5::md5_engine::update(const void* a_data, boost::uint32_t a_data_size)
 {
     // Compute number of bytes mod 64.
     boost::uint32_t buffer_index = static_cast<boost::uint32_t>((count[0] >> 3) & 0x3f);
@@ -265,7 +265,7 @@ void md5::update(const void* a_data, boost::uint32_t a_data_size)
         const boost::uint8_t*>(a_data)+input_index, a_data_size-input_index);
 }
 
-MD5::Digest md5::digest(const char * a_data)
+MD5::Digest MD5::md5_engine::digest(const char * a_data)
 {
     count[0] = 0;
     count[1] = 0;
@@ -306,7 +306,7 @@ MD5::Digest md5::digest(const char * a_data)
 
 
 
-void md5::process_block(const boost::uint8_t (*a_block)[64])
+void MD5::md5_engine::process_block(const boost::uint8_t (*a_block)[64])
 {
     boost::uint32_t a(state[0]);
     boost::uint32_t b(state[1]);
