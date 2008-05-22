@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.4 2008-05-15 08:56:55 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.5 2008-05-22 14:15:29 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode HltL0CaloPrepare::initialize() {
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
 
-  m_caloMaker = NULL;
+  m_caloMaker = 0;
   if (m_caloMakerName != "")
     m_caloMaker = tool<ICaloSeedTool>("HadronSeedTool");
 
@@ -78,25 +78,22 @@ StatusCode HltL0CaloPrepare::execute() {
   Tracks* output = new Tracks();
   put(output,"Hlt/Track/"+m_outputTracks->id().str());
 
-  for (L0CaloCandidates::iterator it = calos->begin(); 
+  for (L0CaloCandidates::const_iterator it = calos->begin(); 
        it != calos->end(); ++it) {
-    L0CaloCandidate& calo = *(*it);
-    if (calo.type() == m_caloType) {
-      if (calo.et() >= m_minEt) {
+    const L0CaloCandidate& calo = **it;
+    if (calo.type() == m_caloType && calo.et() >= m_minEt) {
         Track* tcalo = new Track();
         if (m_caloMaker) m_caloMaker->makeTrack(calo,*tcalo);
-        else makeTrack(calo,*tcalo);
+        else             makeTrack(calo,*tcalo);
         addExtras(calo,*tcalo);
         output->insert(tcalo);
         m_outputTracks->push_back(tcalo);
-      } 
     }
   }
 
   debug() << " number of calos above et " << m_outputTracks->size() 
           << " candidates " << m_outputSelection->ncandidates() << endreq;
-  if (m_debug)
-    printInfo(" Calos ",*m_outputTracks);
+  if (m_debug) printInfo(" Calos ",*m_outputTracks);
 
   return sc;
 }

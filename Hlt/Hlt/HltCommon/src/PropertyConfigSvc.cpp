@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.5 2008-03-05 08:06:30 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.6 2008-05-22 14:15:29 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -69,14 +69,14 @@ namespace {
 PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
   , m_joboptionsSvc(0)
-  , m_appMgr(0)
+  , m_algMgr(0)
   , m_os(0)
 {
   declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigFileAccessSvc");
   declareProperty("prefetchConfig", m_prefetch);
   declareProperty("skipAlgorithm", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
   declareProperty("optionsfile", m_ofname);
-  declareProperty("createGraphVizFile", m_createGraphVizFile);
+  declareProperty("createGraphVizFile", m_createGraphVizFile=false);
 }
 
 //=============================================================================
@@ -111,7 +111,9 @@ StatusCode PropertyConfigSvc::initialize() {
    if ( !status.isSuccess() )   return status;
    status = service(s_accessSvc,m_accessSvc);
    if ( !status.isSuccess() )   return status;
-   status = service("ApplicationMgr",m_appMgr);
+   status = service("ApplicationMgr",m_algMgr);
+   if ( !status.isSuccess() )   return status;
+   status = service("ApplicationMgr",m_appMgrUI);
    if ( !status.isSuccess() )   return status;
    status = service("JobOptionsSvc",m_joboptionsSvc);
    if ( !status.isSuccess() )   return status;
@@ -121,13 +123,11 @@ StatusCode PropertyConfigSvc::initialize() {
   // read table of pre-assigned, possible configurations for this job...
   // i.e. avoid reading _everything_ when we really need to be quick
   for (vector<string>::const_iterator i = m_prefetch.begin(); i!=m_prefetch.end(); ++i ) {
-     ConfigTreeNode::digest_type digest = MD5::convertString2Digest(*i);
+     ConfigTreeNode::digest_type digest = Gaudi::Math::MD5::convertString2Digest(*i);
      assert( digest.str() == *i) ;
      loadConfig( digest );
      if (m_createGraphVizFile) createGraphVizFile(digest, digest.str()); 
   } 
-
-
   return status;
 }
 
@@ -137,7 +137,7 @@ StatusCode PropertyConfigSvc::initialize() {
 StatusCode PropertyConfigSvc::finalize() {
   StatusCode status = Service::finalize();
   m_joboptionsSvc->release(); m_joboptionsSvc = 0;
-  m_appMgr->release();        m_appMgr = 0;
+  m_algMgr->release();        m_algMgr = 0;
   m_accessSvc->release();     m_accessSvc = 0;
   m_os.reset();               
   return status;
@@ -172,7 +172,7 @@ PropertyConfigSvc::findInTree(const ConfigTreeNode::digest_type& configTree, con
         assert(pc!=0);
         if ( pc->name() == name ) return *i;
    }
-   return MD5::createInvalidDigest();
+   return Gaudi::Math::MD5::createInvalidDigest();
 }
 
 //=============================================================================
@@ -228,6 +228,7 @@ PropertyConfigSvc::collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) c
 bool 
 PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef) 
 {
+     info() << "loading config " << nodeRef.str() << endmsg;
      const vector<PropertyConfig::digest_type>& list = collectLeafRefs(nodeRef);
      for (vector<PropertyConfig::digest_type>::const_iterator i = list.begin();i!=list.end();++i) {
             resolvePropertyConfig(*i);
@@ -263,10 +264,7 @@ PropertyConfigSvc::configure(const PropertyConfig& config) const
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID) const {
   // FIXME: make sure appmgr has the right topalgorithms...
-    vector<IService*> svcs;
-    vector<IAlgorithm*> algs;
-    // StatusCode sc = findServicesAndTopAlgorithms(configID,svcs,algs);
-    // if (sc.isFailure()) return sc;
+  setTopAlgs(configID);
 
     const vector<PropertyConfig::digest_type>& configs = collectLeafRefs(configID);
     for (vector<PropertyConfig::digest_type>::const_iterator i = configs.begin(); i!=configs.end();++i) {
@@ -282,12 +280,10 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID) const 
 //=============================================================================
 // Reconfigure & Reinitialize
 //=============================================================================
-//FIXME: return the leaf node ID's of the svcs and top algos, not more than that
-//       because the remainder of the action depends on initialize vs reinitialize
 StatusCode
-PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_type& configID,
-                                             vector<IService*>& svcs,
-                                             vector<IAlgorithm*>& algs) const {
+PropertyConfigSvc::findTopKind(const ConfigTreeNode::digest_type& configID,
+                               const std::string& kind,
+                               vector<PropertyConfig::digest_type>& ids) const {
 
     const ConfigTreeNode *node = resolveConfigTreeNode(configID);
     PropertyConfig::digest_type id = node->leaf();
@@ -297,7 +293,7 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
         const ConfigTreeNode::NodeRefs& deps = node->nodes();
         for (ConfigTreeNode::NodeRefs::const_iterator i  = deps.begin();
                                                       i != deps.end() && sc.isSuccess(); ++i ) {
-            sc = findServicesAndTopAlgorithms(*i,svcs,algs);
+            sc = findTopKind(*i,kind,ids);
         }
         return sc;
     }
@@ -308,37 +304,46 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
         error() << " could not find a configuration ID" << endmsg;
         return StatusCode::FAILURE;
     }
-    if (config->kind()=="IService") {
+    if (config->kind()==kind) ids.push_back(id);
+    return StatusCode::SUCCESS;
+}
+
+StatusCode
+PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_type& configID,
+                                                vector<IService*>& svcs,
+                                                vector<IAlgorithm*>& algs) const {
+
+    vector<PropertyConfig::digest_type> svc_ids;
+    StatusCode sc = findTopKind(configID, "IService", svc_ids);
+    for ( vector<PropertyConfig::digest_type>::const_iterator id = svc_ids.begin();
+          id != svc_ids.end(); ++id ) {
+        const PropertyConfig *config = resolvePropertyConfig(*id);
+        if ( config == 0 ) {
+                  error() << " could not find a configuration ID" << endmsg;
+                  return StatusCode::FAILURE;
+        }
         IService *isvc(0); 
         if (serviceLocator()->getService( config->type() + "/" + config->name(), isvc ).isSuccess()) {
-            assert(isvc!=0);
-//     FIXME: this check doesn't work: typeid(isvc) returns 'IService*'..... stupidly...
-//            if (System::typeinfoName(typeid(isvc))!=config->type()) {
-//               error() << "Got a service " << config->name() 
-//                       << " from the serviceLocator whose typename does not match the configured typename: " 
-//                       << System::typeinfoName(typeid(isvc)) << " vs " << config->type() << endmsg;
-//               return StatusCode::FAILURE;
-//            }
             svcs.push_back(isvc);
-            return StatusCode::SUCCESS;
         } else {
             error() << "Requested an unknown service with name " << config->name() << endmsg;
             return StatusCode::FAILURE;
         }
     }
-    if (config->kind()=="IAlgorithm") {
+
+    vector<PropertyConfig::digest_type> alg_ids;
+    sc = findTopKind(configID, "IAlgorithm", alg_ids);
+    for ( vector<PropertyConfig::digest_type>::const_iterator id = alg_ids.begin();
+          id != alg_ids.end(); ++id ) {
+        const PropertyConfig *config = resolvePropertyConfig(*id);
+        if ( config == 0 ) {
+                  error() << " could not find a configuration ID" << endmsg;
+                  return StatusCode::FAILURE;
+        }
         IAlgorithm* ialgo(0);
         //TODO: make sure that  the MinimalEventLoopMgr  has our 'topalgs' in its 'TopAlg' property...
-        if (m_appMgr->getAlgorithm( config->name(), ialgo ).isSuccess()) {
-//     FIXME: this check doesn't work: typeid(ialgo) returns 'IAlgorithm*'..... stupidly...
-//            if (System::typeinfoName(typeid(ialgo))!=config->type()) {
-//               error() << "Got a top level algorithm " << config->name() 
-//                       << " from the application manager  whose typename does not match the configured typename " 
-//                       << System::typeinfoName(typeid(ialgo)) << " vs " << config->type() << endmsg;
-//               return StatusCode::FAILURE;
-//            }
+        if (m_algMgr->getAlgorithm( config->name(), ialgo ).isSuccess()) {
             algs.push_back(ialgo);
-            return StatusCode::SUCCESS;
         } else {
             error() << "Got a top level algorithm you didn't inform the AppMgr/EventLoopMgr about (yet)\n"
                     << " -- for now this is an error, update your options by adding\n "
@@ -349,20 +354,36 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
             //        as a top level algorithm. Should be sufficient to 'push' the right value of
             //        the TopAlg property of the MinimalEventLoopMgr into the JOS (as this code executes
             //        before MinimalEventLoopMgr::initialize does....)
-            // StatusCode sc = m_appMgr->createAlgorithm( config->type(), config->name(), ialgo );
+            // StatusCode sc = m_algMgr->createAlgorithm( config->type(), config->name(), ialgo );
             // if (sc.isFailure()) return sc;
             // algs.push_back(ialgo);
             return StatusCode::FAILURE;
         }
     }
-    // not a service, not an algorithm, shouldn't be a tool
-    // so instead of second guessing, give up...
-    debug() << " got unexpected type of config during (re)initialize: " << config
-            << " you probably asked for an algorithm that didn't exist already..." 
-            << endmsg;
-    error() << " got unexpected type of config during (re)initialize " << endmsg;
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
 }
+
+StatusCode 
+PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
+
+    // Obtain the IProperty of the ApplicationMgr
+    SmartIF<IProperty> appProps(serviceLocator());
+    const Property& topAlgs = appProps->getProperty("TopAlgs");
+    cout << " current TopAlgs: " << topAlgs.toString() << endl;
+
+    vector<PropertyConfig::digest_type> ids;
+    StatusCode sc = findTopKind(id, "IAlgorithm", ids);
+    for ( vector<PropertyConfig::digest_type>::const_iterator id = ids.begin();
+          id != ids.end(); ++id ) {
+        const PropertyConfig *config = resolvePropertyConfig(*id);
+        if ( config == 0 ) {
+                  error() << " could not find a configuration ID, or ID not an algorithm" << endmsg;
+                  return StatusCode::FAILURE;
+        }
+        cout << " got requested topAlg: " <<  config->type() << "/" << config->name() << endl;
+    }
+    return StatusCode::SUCCESS;
+} 
 
 StatusCode 
 PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
@@ -378,11 +399,11 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     // and make sure everyone goes back to the JobOptionsSvc
     // to pick them up! i.e. call reinitialize for everyone...
     for (vector<IService*>::iterator i = svcs.begin(); i!=svcs.end()&&sc.isSuccess(); ++i) {
-       debug() << " calling sysReinitialize for service " << (*i)->name() << endmsg;
+       debug() << " invoking sysReinitialize for service " << (*i)->name() << endmsg;
        sc = (*i)->sysReinitialize();
     }
     for (vector<IAlgorithm*>::iterator i = algs.begin(); i!=algs.end()&&sc.isSuccess(); ++i) {
-       debug() << " calling sysReinitialize for algorithm " << (*i)->name() << endmsg;
+       debug() << " invoking sysReinitialize for algorithm " << (*i)->name() << endmsg;
        sc = (*i)->sysReinitialize();
     }
     return sc;

@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.3 2008-02-13 14:55:22 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.4 2008-05-22 14:15:29 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -89,8 +89,9 @@ HltConfigSvc::configure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    // FIXME: we have an entire ConfigNodeTree here, configure assumes a single PropertyConfig...
-    return PropertyConfigSvc::configure( MD5::convertString2Digest(i->second) );
+    debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << i->second << endmsg;
+    info() << "Invoking PropertyConfigSvc::configure" << endmsg;
+    return PropertyConfigSvc::configure( Gaudi::Math::MD5::convertString2Digest(i->second) );
 }
 
 //=============================================================================
@@ -103,7 +104,7 @@ HltConfigSvc::reconfigure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::reconfigure( MD5::convertString2Digest( i->second) );
+    return PropertyConfigSvc::reconfigure( Gaudi::Math::MD5::convertString2Digest( i->second) );
 }
 
 //=============================================================================
@@ -116,7 +117,7 @@ HltConfigSvc::loadConfig(const TCK_t& tck) {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::loadConfig( MD5::convertString2Digest(i->second) );
+    return PropertyConfigSvc::loadConfig( Gaudi::Math::MD5::convertString2Digest(i->second) );
 }
 
 //=============================================================================

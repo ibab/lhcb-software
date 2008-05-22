@@ -1,5 +1,4 @@
 #include "ConfigDBAccessSvc.h"
-// #include "md5.h"
 #include <sstream>
 #include <map>
 #include <memory>

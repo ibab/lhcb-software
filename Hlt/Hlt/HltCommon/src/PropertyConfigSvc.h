@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.4 2008-03-05 08:06:30 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.5 2008-05-22 14:15:29 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -12,6 +12,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/VectorMap.h"
 
@@ -91,7 +92,8 @@ private:
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          s_accessSvc;
   IJobOptionsSvc*                      m_joboptionsSvc;
-  IAlgManager*                         m_appMgr;
+  IAlgManager*                         m_algMgr;
+  IAppMgrUI*                           m_appMgrUI;
   IConfigAccessSvc*                    m_accessSvc;
   mutable PropertyConfigMap_t          m_configs;  // config ref -> config (leaf)
   mutable ConfigTreeNodeMap_t          m_nodes;    // node   ref -> node
@@ -105,7 +107,11 @@ private:
 
   MsgStream& msg(MSG::Level level) const;
 
-  StatusCode findServicesAndTopAlgorithms(const PropertyConfig::digest_type&top,
+  StatusCode setTopAlgs(const ConfigTreeNode::digest_type& id) const;
+  StatusCode findTopKind(const ConfigTreeNode::digest_type& configID,
+                         const std::string& kind,
+                         std::vector<PropertyConfig::digest_type>& ids) const;
+  StatusCode findServicesAndTopAlgorithms(const ConfigTreeNode::digest_type&top,
                                           std::vector<IService*>& svcs,
                                           std::vector<IAlgorithm*>& algs) const;
   void createGraphVizFile(const PropertyConfig::digest_type& ref, const std::string& fname) const;

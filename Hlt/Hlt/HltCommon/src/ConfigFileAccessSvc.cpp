@@ -107,7 +107,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
    fs::path fdir = fnam.branch_path();
    if (!fs::exists(fdir) && !fs::create_directory(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
-            return MD5::createInvalidDigest();
+            return Gaudi::Math::MD5::createInvalidDigest();
    }
    if (!fs::exists(fnam)) {
             fs::ofstream s( fnam );
@@ -120,7 +120,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
             s >> x;
             if ( x==config ) return digest;
             error() << " config already exists, but contents are different..." << endmsg;
-            return MD5::createInvalidDigest();
+            return Gaudi::Math::MD5::createInvalidDigest();
     }
 }
 
@@ -133,7 +133,7 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
    fs::path fdir = fnam.branch_path();
    if (!fs::exists(fdir) && !fs::create_directory(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
-            return MD5::createInvalidDigest();
+            return Gaudi::Math::MD5::createInvalidDigest();
    }
    if (!fs::exists(fnam)) {
             fs::ofstream s( fnam );
@@ -146,7 +146,7 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
             s >> x;
             if ( x==config ) return digest;
             error() << " TreeNode already exists, but contents are different..." << endmsg;
-            return MD5::createInvalidDigest();
+            return Gaudi::Math::MD5::createInvalidDigest();
     }
 }
 

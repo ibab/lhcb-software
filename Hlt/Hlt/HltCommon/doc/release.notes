@@ -6,6 +6,10 @@
 ! 2008-05-22 Gerhard Raven
   - HltFunctions: IFunctionTool moved from HltBase to TrackInterfaces
   - fix capitalization in HltL0Filter
+  - ConfigDBAccessSvc: remove commented out include line
+  - ConfigTreeEditor,ConfigFileAccessSvc,HltConfigSvc,HltGenConfig,
+    PropertyConfigSvc: MD5 is now in Gaudi::Math namespace
+  - PropertyConfigSvc: use ids instead of pointers to obtain top algorithms & services
 
 ! 2008-05-21 - Johannes Albrecht
 	- HltFunctionFactories.cpp: add PtTransporter tool to get pt at origin

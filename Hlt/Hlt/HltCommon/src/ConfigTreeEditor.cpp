@@ -156,7 +156,7 @@ public:
    }
 
    ConfigTreeNode::digest_type write(IConfigAccessSvc& w) {
-       ConfigTreeNode::LeafRef  lr = ( m_leaf == 0 ? MD5::createInvalidDigest()
+       ConfigTreeNode::LeafRef  lr = ( m_leaf == 0 ? Gaudi::Math::MD5::createInvalidDigest()
                                                    : w.writePropertyConfig(*m_leaf) );
        assert(m_leaf==0||!lr.invalid());
        ConfigTreeNode::NodeRefs nr;
