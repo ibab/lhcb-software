@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Det/Magnet
-! Responsible : 
+! Responsible : Adlene Hicheur
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+
+
+! 2008-05-22 - Adlene Hicheur
+ - Moved analytical parameterization files to FieldMap/cdf
 
 !====================== Magnet v3r8 2008-05-13 ===============================
 ! 2008-05-13 - Stephanie Hansmann-Menzemer

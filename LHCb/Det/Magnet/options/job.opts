@@ -56,9 +56,9 @@ MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 //Uncomment for AnalyticFieldSvc testing
 //ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
 //ApplicationMgr.ExtSvc += { "AnalyticFieldSvc/MagneticFieldSvc" };
-//MagneticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
-//MagneticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
-//MagneticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
+//MagneticFieldSvc.BxMapFile="$FIELDMAPROOT/cmt/Bx_parameterization.cdf";
+//MagneticFieldSvc.ByMapFile="$FIELDMAPROOT/cmt/By_parameterization.cdf";
+//MagneticFieldSvc.BzMapFile="$FIELDMAPROOT/cmt/Bz_parameterization.cdf";
 
 
 // Set zero field
