@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.4 2008-05-21 10:03:07 frankm Exp $
+// $Id: MessageLogger.h,v 1.5 2008-05-22 06:32:29 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.4 2008-05-21 10:03:07 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.5 2008-05-22 06:32:29 frankm Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -70,13 +70,17 @@ namespace ROLogger {
     size_t   m_historySize;
     /// Output device
     FILE*    m_output;
-    /// Clear all history content
-    void clearHistory();
+    /// Iterator in history circular buffer
+    History::iterator m_histIter;
+    /// Flag if iterator wrapped
+    bool     m_wrapped;
+    /// Monitoring slice name
+    std::string m_monitoring;
+    /// Storage slice name
+    std::string m_storage;
+
     /// Print summary of history records from stored memory
     void summarizeHistory();
-    History::iterator m_histIter;
-    bool     m_wrapped;
-
     /// Print history records from stored memory
     void printHistory(const std::string& pattern);
     /// Update history records and flush obsolete records.

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.3 2008-05-22 06:32:33 frankm Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -56,20 +56,20 @@ FilterDisplay::FilterDisplay(Interactor* parent, Interactor* msg, Interactor* hi
   ::upic_open_window();
   ::upic_open_detached_menu(m_id,0,0,"Filter Editor",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
-  ::upic_add_comment(CMD_COM1,"---------------------------------------------------","");
-  ::upic_add_comment(CMD_COM2,"---------------------------------------------------","");
-  ::upic_add_command(CMD_RESET,         "Reset menu to defaults","");
-  ::upic_add_command(CMD_ADD,           "Add filter","");
-  ::upic_add_command(CMD_CLEAR,         "Clear filters","");
+  ::upic_add_comment(CMD_COM1,   "---------------------------------------------------","");
+  ::upic_add_comment(CMD_COM2,   "---------------------------------------------------","");
+  ::upic_add_command(CMD_RESET,  "Reset menu to defaults","");
+  ::upic_add_command(CMD_ADD,    "Add filter","");
+  ::upic_add_command(CMD_CLEAR,  "Clear filters","");
   ::upic_set_param(m_buff, 1, "A9", hist[0], 0,0,hist,1,1);
   ::upic_set_param(m_buff, 2, "A10", mess[0],  0,0,mess,1,1);
-  ::upic_add_command(CMD_APPLY_FILTERS, "Apply to ^^^^^^^^^  /  ^^^^^^^^^^","");
-  ::upic_add_command(CMD_SAVE_FILTERS,  "Save  filters","");
-  ::upic_add_command(CMD_LOAD_FILTERS,  "Load  filters","");
+  ::upic_add_command(CMD_APPLY,  "Apply to ^^^^^^^^^  /  ^^^^^^^^^^","");
+  ::upic_add_command(CMD_SAVE,   "Save  filters","");
+  ::upic_add_command(CMD_LOAD,   "Load  filters","");
   ::upic_set_param(m_file, 1, "A45", m_file,  0,0,0,0,0);
   ::upic_add_command(CMD_CONNECT,"->File:^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
-  ::upic_add_comment(CMD_COM5,"---------------------------------------------------","");
-  ::upic_add_command(CMD_CLOSE,"Close","");
+  ::upic_add_comment(CMD_COM5,   "---------------------------------------------------","");
+  ::upic_add_command(CMD_CLOSE,  "Close","");
   ::upic_close_menu();
   ::upic_set_cursor(m_id, CMD_CLOSE, 0);
   UpiSensor::instance().add(this,m_id);
@@ -270,15 +270,15 @@ void FilterDisplay::handle(const Event& ev) {
         removeFilters();
         ::upic_set_cursor(m_id,CMD_RESET,0);
         return;
-      case CMD_SAVE_FILTERS:
+      case CMD_SAVE:
         s_clean(m_file,sizeof(m_file));
         saveFilters(m_file);
         return;
-      case CMD_LOAD_FILTERS:
+      case CMD_LOAD:
         s_clean(m_file,sizeof(m_file));
         loadFilters(m_file);
         return;
-      case CMD_APPLY_FILTERS:
+      case CMD_APPLY:
         return;
       default:
         break;
@@ -291,11 +291,11 @@ void FilterDisplay::handle(const Event& ev) {
       case CMD_RESET:
       case CMD_CLOSE:
       case CMD_BACKSPACE:
-      case CMD_SAVE_FILTERS:
-      case CMD_LOAD_FILTERS:
+      case CMD_SAVE:
+      case CMD_LOAD:
         ioc.send(this,ev.command_id,this);
         return;
-      case CMD_APPLY_FILTERS: {
+      case CMD_APPLY: {
         std::stringstream out;
         for (Filters::iterator j=m_filters.begin(); j!=m_filters.end(); ++j )
           (*j).second.write(out);

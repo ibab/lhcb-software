@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.5 2008-05-21 10:03:07 frankm Exp $
+// $Id: MessageLogger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.5 2008-05-21 10:03:07 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
 
 // Framework include files
 #include <cerrno>
@@ -169,8 +169,6 @@ void MessageLogger::printMessage(const char* msg, bool crlf)  {
 /// Update history records and flush obsolete records.
 void MessageLogger::updateHistory(const char* msg) {
   if ( m_historySize > 0 ) {
-    //m_history.push_back(msg);
-    //if ( m_history.size() > m_historySize ) m_history.pop_front();
     (*m_histIter) = msg;
     m_histIter++;
     if ( m_histIter == m_history.end() )  {
@@ -205,7 +203,7 @@ void MessageLogger::printHistory(const std::string& pattern) {
   printHeader("Logger history of:"+node_pattern+" matching:"+msg_pattern);
   History::iterator i = m_histIter, n = m_histIter;
   if ( m_wrapped ) {
-    for(i; i != m_history.end(); ++i) {
+    for(; i != m_history.end(); ++i) {
       const std::string& m = *i;
       const std::string  src = msg_src(m);
       if ( !src.empty() ) {
@@ -221,7 +219,7 @@ void MessageLogger::printHistory(const std::string& pattern) {
       }
     }
   }
-  for(i=m_history.begin(), ++n; i != n; ++i) {
+  for(i=m_history.begin(); i != n; ++i) {
     const std::string& m = *i;
     const std::string  src = msg_src(m);
     if ( !src.empty() ) {
@@ -283,36 +281,8 @@ void MessageLogger::summarizeHistory() {
 
 /// Print header information before starting output
 void MessageLogger::printHeader(const std::string& title) {
-  if ( m_colors ) {
-    size_t rows=0, cols=0;
-    consolesize(&rows,&cols);
-    if ( rows>0 && cols>0 ) {
-      char buffer[1024];
-      cols  = cols<sizeof(buffer)?cols:sizeof(buffer);
-
-      ::white();
-      ::bg_black();
-      ::inverse();
-      ::bold();
-
-      ::memset(buffer,' ',cols);
-      buffer[cols-1] = 0;	
-      ::printf(buffer);
-      ::printf("\n");
-      ::memcpy(&buffer[20],title.c_str(),title.length());
-      ::printf(buffer);
-      ::printf("\n");
-      ::memset(&buffer[20],' ',title.length());
-      buffer[cols-1] = 0;
-      ::printf(buffer);
-      ::printf("\n");
-      ::normal();
-      ::plain();
-      ::printf("\n");
-      return;
-    }
-  }
-  ::fprintf(m_output,"\n                        Logger history of %s\n\n",title.c_str());
+  std::vector<std::string> v(1,title);
+  printHeader(v);
 }
 
 /// Print multi-line header information before starting output
@@ -339,7 +309,6 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
         ::memset(&buffer[20],' ',title.length());
         buffer[cols-1] = 0;
       }
-
       ::printf(buffer);
       ::printf("\n");
       ::normal();
@@ -349,16 +318,7 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
     }
   } 
   for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i)
-    ::fprintf(m_output,"                   -> %s\n",(*i).c_str());
-}
-
-/// Clear all history content
-void MessageLogger::clearHistory() {
-  size_t s = m_history.size();
-  char text[132];
-  m_history.clear();
-  ::sprintf(text,"clear>      [ALWAYS] .... Clear all history .... Deleted %zd messages",s);
-  printMessage(text,true);
+    ::fprintf(m_output,"                      %s\n",(*i).c_str());
 }
 
 /// Set message severity level for display
@@ -407,60 +367,55 @@ void MessageLogger::loadFilters(const std::string& s) {
 /// DIM command service callback
 void MessageLogger::requestHandler(void* tag, void* address, int* size) {
   MessageLogger* h = *(MessageLogger**)tag;
-  std::string nam, n = (char*)address;
-  size_t idx;
-  switch(::toupper(n[0])) {
-  case 'H':  // History mode
-    idx = n.find(":");
-    if ( idx != std::string::npos ) {
-      nam = n.substr(idx+1);
+  const char* p = (const char*)address;
+  std::string n = p;
+  size_t idx = n.find(":");
+  if ( idx != std::string::npos ) {
+    std::string nam = n.substr(idx+1);
+    switch(::toupper(n[0])) {
+    case 'H':  // History mode
       h->cleanupServices(nam);
       h->handleHistory(nam);
       return;
-    }
-    break;
-  case 'Q': // Wildcard Messages mode
-    idx = n.find(":");
-    if ( idx != std::string::npos ) {
-      h->printHistory(n.substr(idx+1));
-    }
-    return;
-  case 'C': // Clear history
-    h->clearHistory();
-    return;
-  case 'S': // Summarize history
-    h->summarizeHistory();
-    return;
-  case 'F': // Load filters
-    idx = n.find(":");
-    if ( idx != std::string::npos ) {
-      h->loadFilters(n.substr(idx+1));
+    case 'Q': // Wildcard Messages mode
+      h->printHistory(nam);
       return;
-    }
-    break;
-  case 'L': // Set message severity level
-    idx = n.find(":");
-    if ( idx != std::string::npos ) {
-      h->setMessageSeverity(n.substr(idx+1));
-    }
-    return;
-  case 'M': // Messages mode
-    idx = n.find(":");
-    if ( idx != std::string::npos ) {
-      const char* p = (const char*)address;
+    case 'F': // Load filters
+      h->loadFilters(nam);
+      return;
+    case 'L': // Set message severity level
+      h->setMessageSeverity(nam);
+      return;
+    case 'M': // Messages mode
       h->removeAllServices();
       h->handleMessages(p+idx+1,p + (*size));
       return;
+    case 'X': // Connect monitoring slice
+      h->cleanupServices(h->m_monitoring);
+      h->m_monitoring = nam;
+      h->handleMessages(p+idx+1,p + (*size));      
+      return;
+    case 'Y': // Connect storage slice
+      h->cleanupServices(h->m_storage);
+      h->m_storage = nam;
+      h->handleMessages(p+idx+1,p + (*size));
+      return;
+    default:
+      break;
     }
+  }
+  switch(::toupper(n[0])) {
+  case 'S': // Summarize history
+    h->summarizeHistory();
+    return;
+  case 'M': // Messages mode
     idx = n.find("+");
     if ( idx != std::string::npos ) {
-      const char* p = (const char*)address;
       h->handleMessages(p+idx+1,p + (*size));
       return;
     }
     idx = n.find("-");
     if ( idx != std::string::npos ) {
-      const char* p = (const char*)address;
       h->handleRemoveMessages(p+idx+1,p + (*size));
       return;
     }
@@ -481,7 +436,7 @@ void MessageLogger::handleMessages(const char* items, const char* end) {
         Services::iterator i=m_infos.find(p);
         if ( i == m_infos.end() ) {
           Entry* e = m_infos[p] = new Entry;
-          ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s",p);
+          // ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s",p);
           e->id      = ::dic_info_service((char*)p,MONITORED,0,0,0,messageInfoHandler,(long)e,0,0);
           e->created = now;
           e->self    = this;
@@ -541,7 +496,7 @@ void MessageLogger::cleanupService(Entry* e) {
 void MessageLogger::handleHistory(const std::string& nam) {
   time_t now = ::time(0);
   Entry* e = m_infos[nam] = new Entry;
-  ::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s", nam.c_str());
+  //::lib_rtl_output(LIB_RTL_INFO,"Adding client:%s", nam.c_str());
   e->id      = ::dic_info_service((char*)nam.c_str(),ONCE_ONLY,0,0,0,historyInfoHandler,(long)e,0,0);
   e->created = now;
   e->self    = this;

@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.6 2008-05-21 10:03:07 frankm Exp $
+// $Id: PartitionListener.cpp,v 1.7 2008-05-22 06:32:33 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.6 2008-05-21 10:03:07 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.7 2008-05-22 06:32:33 frankm Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -48,6 +48,12 @@ PartitionListener::PartitionListener(Interactor* parent,const std::string& nam) 
   name = "RunInfo/" + m_name + "/CALIBnodeList";
   m_calibNodesDP   = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,calibNodeHandler,(long)this,0,0);
   ::upic_write_message2("Calibration nodelist content for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  name = "RunInfo/" + m_name + "/MonitoringSlice";
+  m_monSliceDP     = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,monSliceHandler,(long)this,0,0);
+  ::upic_write_message2("Monitoring slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
+  name = "RunInfo/" + m_name + "/StorageSlice";
+  m_storSliceDP    = ::dic_info_service((char*)name.c_str(),MONITORED,0,0,0,storSliceHandler,(long)this,0,0);
+  ::upic_write_message2("Storage slice info for %s_RunInfo from:%s",m_name.c_str(),name.c_str());
 }
 
 /// Standard destructor
@@ -55,17 +61,58 @@ PartitionListener::~PartitionListener() {
   ::dic_release_service(m_calibNodesDP);
   ::dic_release_service(m_subFarmDP);
   ::dic_release_service(m_nodesDP);
+  ::dic_release_service(m_storSliceDP);
+  ::dic_release_service(m_monSliceDP);
+}
+
+/// DIM command service callback
+void PartitionListener::storSliceHandler(void* tag, void* address, int* size) {
+  PartitionListener* h = *(PartitionListener**)tag;
+  if(*size > 0)  {
+    std::string slice = (char*)address;
+    if ( slice.empty() ) {
+      IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_STORAGE,(void*)0);
+    }
+    else {
+      std::string svc = "/STORECTL01/";
+      svc += (char*)address;
+      svc += "/log";
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_STORAGE,new std::string(svc));
+    }
+  }
+}
+
+/// DIM command service callback
+void PartitionListener::monSliceHandler(void* tag, void* address, int* size) {
+  PartitionListener* h = *(PartitionListener**)tag;
+  if(*size > 0)  {
+    std::string slice = (char*)address;
+    if ( slice.empty() ) {
+      IocSensor::instance().send(h->m_parent,CMD_DISCONNECT_MONITORING,(void*)0);
+    }
+    else {
+      std::string svc = "/MONA08/";
+      svc += (char*)address;
+      svc += "/log";
+      IocSensor::instance().send(h->m_parent,CMD_CONNECT_MONITORING,new std::string(svc));
+    }
+  }
 }
 
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
+  std::string svc;
   std::auto_ptr<_SV> f(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
-  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
-    f->push_back(data);
-  f->push_back("STORE");
-  f->push_back("MONA08");
-  f->push_back("HLTA08");
+  for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1) {
+    svc = "/";
+    svc += data;
+    svc += "/gaudi/log";
+    f->push_back(svc);
+  }
+  // f->push_back("STORE");
+  // f->push_back("MONA08");
+  f->push_back("/HLTA08/gaudi/log");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
 
@@ -109,13 +156,18 @@ void PartitionListener::nodeHandler(void* tag, void* address, int* size) {
   n->push_back("MONA0803");
   n->push_back("MONA0804");
   n->push_back("MONA0805");
+  n->push_back("HLTA0801");
+  n->push_back("HLTA0802");
+  n->push_back("HLTA0803");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_NODES,n.release());
 }
 
 /// DIM command service callback
 void PartitionListener::calibNodeHandler(void* tag, void* address, int* size) {
   std::auto_ptr<_SV> n(new _SV());
-  //PartitionListener* h = *(PartitionListener**)tag;
+  PartitionListener* h = *(PartitionListener**)tag;
   get_nodes(address,size,n.get());
+  if ( h ) {
   //IocSensor::instance().send(h->m_parent,CMD_ADD_NODES,n.release());
+  }
 }

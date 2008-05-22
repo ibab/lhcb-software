@@ -1,4 +1,4 @@
-// $Id: Logger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Id: Logger.h,v 1.3 2008-05-22 06:32:29 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/Logger.h,v 1.2 2008-05-07 16:22:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/Logger.h,v 1.3 2008-05-22 06:32:29 frankm Exp $
 #ifndef ROLOGGER_LOGGER_H
 #define ROLOGGER_LOGGER_H
 
@@ -50,9 +50,9 @@ namespace ROLogger {
     void shutdown();
 
     /// Connect to messages of a given source
-    int connectMessages(const std::vector<std::string>& name, const std::string& item);
+    int connectMessages(const std::vector<std::string>& name);
     /// Connect to messages of a given source
-    int connectMessages(bool con, const std::string& name, const std::string& item);
+    int connectMessages(bool con, const std::string& name);
     /// Connect to processing cluster of a given name
     int connectCluster(bool con, const std::string& name);
 

@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.5 2008-05-21 10:03:07 frankm Exp $
+// $Id: Logger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.5 2008-05-21 10:03:07 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -44,42 +44,31 @@ void Logger::shutdown() {
   }
 }
 
-/// Connect to messages of a given source
-int Logger::connectMessages(bool con, const std::string& name, const std::string& item) {
-  std::stringstream s;
-  s << "Messages" << (const char*)(con ? "-" : "+") 
-    << "/" << name << "/" << item << "/log" << std::ends << std::ends;
-  return sendData(s.str());
-}
-
 /// Send data string to logger service
 int Logger::sendData(const std::string& msg) {
   if ( 1 != ::dic_cmnd_service((char*)m_name.c_str(),(char*)msg.c_str(),msg.length()+1) ) {
     ::upic_write_message2("Failed to update history server:%s with data:%s",m_name.c_str(), msg.c_str());
     return 0;
   }
+  ::upic_write_message2("%s: %s",m_name.c_str()+23,msg.c_str());
   return 1;
 }
 
 /// Connect to messages of a given source
-int Logger::connectMessages(const std::vector<std::string>& names, const std::string& item) {
+int Logger::connectMessages(bool con, const std::string& name) {
   std::stringstream s;
-  s << "Messages:";
-  for(std::vector<std::string>::const_iterator i=names.begin();i!=names.end();++i) {
-    std::string n = *i;
-    if ( n == "STORE" ) n = "STORECTL01";
-    s << "/" << n << "/" << item << "/log" << std::ends;
-  }
-  s << std::ends;
+  s << "Messages" << (const char*)(con ? "-" : "+") << name << std::ends;
   return sendData(s.str());
 }
 
-/// Connect to processing cluster of a given name
-int Logger::connectCluster(bool con, const std::string& name)   {
-  std::string c = name;
-  if ( c == "STORE" ) c = "STORECTL01";
-  for(size_t i=0; i<c.length();++i) c[i]=::toupper(c[i]);
-  return connectMessages(con, c, "gaudi");
+/// Connect to messages of a given source
+int Logger::connectMessages(const std::vector<std::string>& names) {
+  std::stringstream s;
+  s << "Messages:";
+  for(std::vector<std::string>::const_iterator i=names.begin();i!=names.end();++i)
+    s << *i << std::ends;
+  s << std::ends;
+  return sendData(s.str());
 }
 
 /// Display callback handler
@@ -90,9 +79,6 @@ void Logger::handle(const Event& ev) {
     switch(ev.type) {
       case CMD_SUMM_HISTORY:
         sendData("S:SummarizeAllHistory");
-        return;      
-      case CMD_CLEAR_HISTORY:
-        sendData("C:ClearAllHistory");
         return;
       case CMD_APPLY_FILTERS:
         sendData("F:"+*data.str);
@@ -106,21 +92,21 @@ void Logger::handle(const Event& ev) {
         sendData("L:"+*data.str);
         delete data.str;
         return;
-      case CMD_CONNECT_STORAGE:
-      case CMD_DISCONNECT_STORAGE:
-        connectMessages(ev.type==CMD_CONNECT_STORAGE,"STORECTL01","gaudi");
-        return;
       case CMD_CONNECT_MONITORING:
-      case CMD_DISCONNECT_MONITORING:
-        connectMessages(ev.type==CMD_CONNECT_MONITORING,"MONA08","gaudi");
+	sendData("X:"+*data.str);
+        delete data.str;
+        return;
+      case CMD_CONNECT_STORAGE:
+	sendData("Y:"+*data.str);
+        delete data.str;
         return;
       case CMD_CONNECT_CLUSTER:
       case CMD_DISCONNECT_CLUSTER:
-        connectCluster(ev.type==CMD_CONNECT_CLUSTER,*data.str);
+        connectMessages(ev.type==CMD_CONNECT_CLUSTER,*data.str);
         delete data.str;
         return;
       case CMD_UPDATE_FARMS:
-        connectMessages(*data.vec,"gaudi");
+        connectMessages(*data.vec);
         delete data.vec;
         return;
       default:

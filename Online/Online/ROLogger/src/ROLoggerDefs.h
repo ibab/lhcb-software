@@ -35,9 +35,15 @@ namespace ROLogger {
     CMD_CLOSE   = 11000, 
     CMD_CONNECT,
     CMD_ADD,
+    CMD_LOAD,
+    CMD_APPLY,
+    CMD_SAVE,
+    CMD_SHOW,
+    CMD_EDIT,
     CMD_CLEAR,
     CMD_RESET,
     CMD_DELETE,
+    CMD_UPDATE,
 
     CMD_SEVERITY,
     CMD_ADD_NODES,
@@ -45,7 +51,6 @@ namespace ROLogger {
     CMD_UPDATE_NODES,
     CMD_UPDATE_CLUSTERS,
 
-    CMD_CLEAR_HISTORY,
     CMD_SUMM_HISTORY,
     CMD_NODE_HISTORY,
     CMD_FARM_HISTORY,
@@ -65,7 +70,6 @@ namespace ROLogger {
     CMD_LOAD_FILTERS,
     CMD_SAVE_FILTERS,
     CMD_APPLY_FILTERS,
-    CMD_CLEAR_FILTERS,
 
     CMD_LAST
   };
