@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.1 2008-05-21 12:28:34 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.2 2008-05-22 14:03:35 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -63,14 +63,14 @@ StatusCode HltL0Filter::execute() {
   // make sure we have the correct mapping for this L0 configuration
   TCKMap_t::const_iterator map =  m_map.find(L0TCK);
   if (map == m_map.end()) {
-	if (MsgLevel(Msg::DEBUG)) {
+	if (msgLevel(MSG::DEBUG)) {
         debug() << " adding new map for L0 TCK " << L0TCK << endmsg;
     }
     map = m_map.insert( L0TCK, getL0Map(l0->configuration()->channels()) ).first;
   }
 
   bool pass = l0->decision();
-  if (MsgLevel(Msg::DEBUG)) debug() << " L0 decision " << pass << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << " L0 decision " << pass << endreq;
 
   //TODO CHECK: is it possible l0->decision is false, but a channel is true?
   //    if not, we can abandon anything with the global L0 negative here...
@@ -83,7 +83,7 @@ StatusCode HltL0Filter::execute() {
   }
   
   setDecision(pass);
-  if (MsgLevel(Msg::DEBUG)) 
+  if (msgLevel(MSG::DEBUG)) 
     debug() << "HltL0Filter: " << (pass?"accept":"reject") << endreq;
   return StatusCode::SUCCESS;
 };

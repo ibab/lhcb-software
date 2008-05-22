@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 ! 2008-05-22 Gerhard Raven
   - HltFunctions: IFunctionTool moved from HltBase to TrackInterfaces
+  - fix capitalization in HltL0Filter
 
 ! 2008-05-21 - Johannes Albrecht
 	- HltFunctionFactories.cpp: add PtTransporter tool to get pt at origin
