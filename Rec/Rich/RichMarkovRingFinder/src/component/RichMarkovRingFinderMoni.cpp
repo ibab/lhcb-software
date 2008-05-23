@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.23 2008-05-23 14:19:36 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.24 2008-05-23 15:14:03 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,7 +16,7 @@
 
 // namespace
 using namespace LHCb;
-using namespace Rich::Rec;
+using namespace Rich::Rec::MC;
 
 //---------------------------------------------------------------------------
 
