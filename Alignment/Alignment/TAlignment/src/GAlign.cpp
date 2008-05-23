@@ -3,7 +3,7 @@
  *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.11 2008-05-16 16:57:41 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.12 2008-05-23 16:29:21 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -62,11 +62,8 @@ GAlign::GAlign( const std::string& name,
                 ISvcLocator* pSvcLocator ):
   GaudiTupleAlg ( name , pSvcLocator ),
   m_converged(false),
-//  m_tr_cnt(0),
-//  m_trackselector(0),
   m_taConfig(0),
   m_measProvider(0),
-//  m_trackenergy(0),
   m_AlignConfTool(""),
   m_nGlPars(0),
   velo_detector(false),
@@ -79,12 +76,8 @@ GAlign::GAlign( const std::string& name,
   m_ForceIterations(false),
   m_iterations(0),
   m_chi2(0.0),
-  m_ntr(0),
-//  m_meas_cnt(0),
-  tr_cnt(0),
-  nfalse(false),
-  ntrue(false),
   m_chi2B4(0.0),
+  m_ntr(0),
   m_ntrB4(0)
 {
   // define track containers
@@ -201,8 +194,7 @@ StatusCode GAlign::execute() {
     Tracks *inCont = get<Tracks>(m_inputcontainer);
     Tracks::const_iterator iterT;
     bool crossed = false;
-    for ( iterT = inCont->begin(); iterT != inCont->end(); iterT++, tr_cnt++) {
-      debug() << "Looping... track nr: " << tr_cnt << endreq;
+    for ( iterT = inCont->begin(); iterT != inCont->end(); iterT++ ) {
       // create & initialize the track parameter vector with zeros
       if ( m_iterations == 0 )
 	m_taConfig->MakeTrackParVec();
@@ -216,6 +208,8 @@ StatusCode GAlign::execute() {
 	  return StatusCode::FAILURE;
 	}
       }
+      tr_cnt++;
+      debug() << "Looping... track nr: " << tr_cnt << endreq;
       // Reset MilleTool variables etc.
       m_taConfig->ResetGlVars();
       m_taConfig->ResetLVars();
@@ -240,7 +234,7 @@ StatusCode GAlign::execute() {
                  ( id.isMuon() && muon_detector) ) ) {
 	  hit_cnt++;
 	  //	  info() << "LHCbID " << id.detectorType() << " is on track!" << " "
-	  //		  << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
+	  //		 << "and has Measurement " << atrack->isMeasurementOnTrack( id ) << endreq;
 	  double measMP = 0.0;
 	  StatusCode sc = m_taConfig->Rank( id ); // note, this sets also the variable m_rank_nr, local to TAConfig
 	  if ( sc.isFailure() ) {
@@ -263,15 +257,8 @@ StatusCode GAlign::execute() {
                 info() << "Muon measuremnt type = " << muMeas->muonProjection() << endreq;
             }
 	    if ( sc.isSuccess() ) {
-	      // Note: this sets the variables
-	      // m_weight (error on the measurement)
-	      // cAlignD (center of detector element to be aligned (Layer or Sensor)
-	      // mv (direction of strips/wires)
-	      // kv  (direction perpendicular to strips)					     //
-	      // mC (measurement center (for 1 strip cluster, is the center of strip)
-	      // sD (center of sensor)
-	      // These variables are local to TAConfig
-	      sc = m_taConfig->CalcResidual( *atrack, 
+	      sc = m_taConfig->CalcResidual( tr_cnt,
+					     *atrack, 
 					     trMeas, 
 					     id,
   					     true,
@@ -296,6 +283,11 @@ StatusCode GAlign::execute() {
 	continue; 
       // Do a local track fit to get an estimate of the track parameters
       int rrank = m_taConfig->InvMatrix( trPar, m_ntrack_pars );
+      // histogramize the track parameteres
+      plot( trPar[0], "x0", -20,20,200);
+      plot( trPar[1], "tx", -0.25,0.25,400);
+      plot( trPar[2], "y0", -300, 300, 200);
+      plot( trPar[3], "ty", -0.4, 0.4, 400);
       if ( rrank == -1 )
 	return StatusCode::FAILURE;
       // store the track parameters
@@ -330,7 +322,8 @@ StatusCode GAlign::execute() {
             LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
             // get the angle of the trajectory wrt to the 'standard' X-axis...
             nmes++;
-	    sc = m_taConfig->CalcResidual( *atrack,
+	    sc = m_taConfig->CalcResidual( tr_cnt,
+					   *atrack,
                                            trMeas,
                                            id,
                                            false,
@@ -376,11 +369,6 @@ StatusCode GAlign::execute() {
 	  StatusCode sc = m_taConfig->Rank( id );
 	  if ( ! sc ) {
 	    error() << "Not processing any data from tracks!" << endreq;
-	    error() << "while tt = " << tt_detector << " and it = " 
-		    << it_detector << " and ot = " << ot_detector << endreq;
-	    error() << "This hit: isOT(): " << id.isOT() 
-		    << " isIT(): " << id.isIT() << " isTT(): " 
-		    << id.isTT() << " id.isVelo(): " << id.isVelo() << endreq;
 	  }
           // in case we have more than one measurement per LHCbID (e.g. for the Muonchambers)
           // loop over the measurements that belong to this LHCbID.
@@ -390,7 +378,8 @@ StatusCode GAlign::execute() {
             LHCb::Measurement *trMeas = m_measProvider->measurement( id, i );
 	    // get the angle of the trajectory wrt to the 'standard' X-axis...
 	    measMP = -99999.99;
-	    sc = m_taConfig->CalcResidual( *atrack,
+	    sc = m_taConfig->CalcResidual( tr_cnt,
+					   *atrack,
 				           trMeas, 
  					   id,
 					   false,
@@ -423,11 +412,10 @@ StatusCode GAlign::execute() {
 	double residual = -99999.9;
         if ( flagC == true )
            m_ntr++;
-        std::vector<double> estimated( m_estimated.size(), 0.0);
-	//	if ( m_iterations >= 1 )
-	estimated = m_estimated;
+	std::vector<double> estimated( m_estimated.size(), 0.0);
+	//        std::vector<double> estimated = m_estimated;
 	StatusCode sc = m_taConfig->LocalTrackFit( tr_cnt, trpar, estimated, chi2, residual );
-	//	plot2D( m_iterations, chi2, "Chi2 vs iteration", 0.0, 20.0,0.0,10000,21,100);
+	plot2D( m_iterations, chi2, "Chi2 vs iteration", 0.0, 20.0,0.0,10000,21,100);
 	if ( chi2 > 0.0 ) m_chi2 += 1.0/chi2;
 	if ( sc.isFailure() ) {
 	  error() << "Error in LocalTrackFit: bailing out..." << endreq;
