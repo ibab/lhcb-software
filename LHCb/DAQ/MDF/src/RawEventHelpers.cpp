@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.35 2008-05-22 06:33:15 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.36 2008-05-23 09:12:23 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -416,7 +416,7 @@ static void print_previous_bank(const RawBank* prev) {
     ::sprintf(txt,"Bad bank is the first bank in the MEP fragment.");
   else
     ::sprintf(txt,"Previous (good) bank [%p]: %s",
-	      (void*)prev,RawEventPrintout::bankHeader(prev).c_str());
+	      (void*)prev,LHCb::RawEventPrintout::bankHeader(prev).c_str());
   std::cout << txt << std::endl;
 }
 
