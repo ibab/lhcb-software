@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2008-05-23 - Patrick Robbe
+ - add photos subdirectory to build a photosforgauss library containing
+   FORTRAN overriden functions
+
 !========================== GENSER v4r0 2008-04-28 ===========================
 ! 2008-04-28 - Gloria CORTI
  - cmt/requirements: move to use latest version of pythia8 compiled with 
