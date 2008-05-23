@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-05-23 - Wouter Hulsbergen
+ - Fixed bug exposed when reconstructing in a non-ideal gemetry
+
 !========================== VeloTools v3r1 2008-04-03 ========================
 ! 2008-04-03 - Marco Cattaneo
  - Adapt to change in namespace LHCbMath -> LHCb::Math
