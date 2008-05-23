@@ -11,11 +11,12 @@ namespace Lester {
 
   template <class Index>
   class FiniteRelativeProbabilityChooser {
-  private:
+  public:
     class NoSamplesPossible {
     };
     class NoMaxExists {
     };
+  private:
     double totalProb;
     typedef std::map<double, Index> Map; // Want it to store biggest probabilities first  We are choosing this direction for speed of sampling not for mathematical accuraccy in summing!
     Map cache;

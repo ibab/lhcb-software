@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.29 2006-08-12 10:49:35 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.30 2008-05-23 14:19:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -17,6 +17,7 @@
 
 // namespaces
 using namespace LHCb;
+using namespace Rich::Rec;
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( Rich2LeftPanelMarkovRingFinderAlg  );
@@ -325,21 +326,26 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
   {
     RichRecPixel * pix = (*iP).pixel();
     const double prob  = (*iP).associationProb();
-    if ( pix ) { pix->richRecRings().push_back( RichRecRingOnPixel(ring,prob) ); }
-    else       { Exception( "Null pixel pointer in RichRecRing" );               }
+    // CRJ : Need to remove this ...
+    LHCb::RichRecPixel::RingsOnPixel* rings
+      = const_cast<LHCb::RichRecPixel::RingsOnPixel*>(&pix->richRecRings());
+    if ( rings )
+    {
+      if ( pix ) { rings->push_back( RichRecRingOnPixel(ring,prob) ); }
+      else       { Exception( "Null pixel pointer in RichRecRing" ); }
+    }
   }
 }
 
 StatusCode RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
 {
   // Iterate over pixels
-  RichRecPixels::const_iterator iPix   ( pixelCreator()->begin ( rich(), panel() ) );
-  RichRecPixels::const_iterator endPix ( pixelCreator()->end   ( rich(), panel() ) );
-  for ( ; iPix != endPix; ++iPix )
+  const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
+  for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
   {
     // get X and Y
-    const double X ( m_scaleFactor * (*iPix)->localPosition(rad()).x() );
-    const double Y ( m_scaleFactor * (*iPix)->localPosition(rad()).y() );
+    const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+    const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
     verbose() << "Adding data point at " << X << "," << Y << endreq;
     input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
   }
@@ -353,7 +359,7 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
                                                const unsigned int nPoints ) const
 {
   // NB : Much of this could be optimised and run in the initialisation
-  const double incr ( twopi / static_cast<double>(nPoints) );
+  const double incr ( 2.0 * M_PI / static_cast<double>(nPoints) );
   double angle(0);
   for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
   {
@@ -361,8 +367,8 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
     const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
     const Gaudi::XYZPoint pLocal ( X, Y, 0 );
     ring->ringPoints().push_back( RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,rich(),panel()),
-                                                      pLocal, 
-                                                      RichSmartID(rich(),panel()), 
+                                                      pLocal,
+                                                      RichSmartID(rich(),panel()),
                                                       RichRecPointOnRing::InHPDTube ) // to be improved !! Temp hack to get these rings drawn. Need to fix properly here or update Vis/SoRichRec properly
                                   );
   }
@@ -397,13 +403,12 @@ StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const
     info() << "Creating data text file : " << filename.str() << endreq;
     std::ofstream file(filename.str().c_str(),std::ios::app);
     // Iterate over pixels
-    RichRecPixels::const_iterator iPix   ( pixelCreator()->begin ( rich(), panel() ) );
-    RichRecPixels::const_iterator endPix ( pixelCreator()->end   ( rich(), panel() ) );
-    for ( ; iPix != endPix; ++iPix )
+    const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
+    for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
       // get X and Y
-      const double X ( m_scaleFactor * (*iPix)->localPosition(rad()).x() );
-      const double Y ( m_scaleFactor * (*iPix)->localPosition(rad()).y() );
+      const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+      const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
       file << X << " " << Y << std::endl;
     }
   }

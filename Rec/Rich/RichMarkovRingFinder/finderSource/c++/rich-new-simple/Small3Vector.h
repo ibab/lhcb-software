@@ -7,6 +7,7 @@
 
 // includes
 #include <iostream>
+#include <cmath>
 
 // declaration
 class Small3Vector {

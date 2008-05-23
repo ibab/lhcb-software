@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.22 2006-08-13 17:11:15 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.23 2008-05-23 14:19:36 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,12 +16,12 @@
 
 // namespace
 using namespace LHCb;
+using namespace Rich::Rec;
 
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichMarkovRingFinderMoni>          s_factory ;
-const        IAlgFactory& RichMarkovRingFinderMoniFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( RichMarkovRingFinderMoni );
 
 // Standard constructor, initializes variables
 RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const std::string& name,

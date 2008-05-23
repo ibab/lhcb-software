@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.18 2006-08-13 17:11:15 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.19 2008-05-23 14:19:37 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -31,42 +31,50 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
-//---------------------------------------------------------------------------
-/** @class RichMarkovRingFinderMoni RichMarkovRingFinderMoni.h
- *
- *  Runs various calibration tasks for the markov ring finder
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   05/04/2002
- */
-//---------------------------------------------------------------------------
-
-class RichMarkovRingFinderMoni : public RichRecHistoAlgBase
+namespace Rich
 {
+  namespace Rec
+  {
 
-public:
+    //---------------------------------------------------------------------------
+    /** @class RichMarkovRingFinderMoni RichMarkovRingFinderMoni.h
+     *
+     *  Runs various calibration tasks for the markov ring finder
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   05/04/2002
+     */
+    //---------------------------------------------------------------------------
 
-  /// Standard constructor
-  RichMarkovRingFinderMoni( const std::string& name,
-                            ISvcLocator* pSvcLocator );
+    class RichMarkovRingFinderMoni : public RichRecHistoAlgBase
+    {
 
-  virtual ~RichMarkovRingFinderMoni( ); ///< Destructor
+    public:
 
-  virtual StatusCode initialize();    // Algorithm initialization
-  virtual StatusCode execute   ();    // Algorithm execution
-  virtual StatusCode finalize  ();    // Algorithm finalization
+      /// Standard constructor
+      RichMarkovRingFinderMoni( const std::string& name,
+                                ISvcLocator* pSvcLocator );
 
-private: // data
+      virtual ~RichMarkovRingFinderMoni( ); ///< Destructor
 
-  /// Pointer RichDetector ray tracing tool
-  const IRichRayTracing * m_rayTrace;
+      virtual StatusCode initialize();    // Algorithm initialization
+      virtual StatusCode execute   ();    // Algorithm execution
+      virtual StatusCode finalize  ();    // Algorithm finalization
 
-  /// Pointer to RichSmartID tool
-  const IRichSmartIDTool * m_idTool;
+    private: // data
 
-  /// Track selector
-  const Rich::IRichTrackSelector * m_trSelector;
+      /// Pointer RichDetector ray tracing tool
+      const IRayTracing * m_rayTrace;
 
-};
+      /// Pointer to RichSmartID tool
+      const ISmartIDTool * m_idTool;
+
+      /// Track selector
+      const ITrackSelector * m_trSelector;
+
+    };
+
+  }
+}
 
 #endif // RICHRECMONITOR_RichMarkovRingFinderMoni_H

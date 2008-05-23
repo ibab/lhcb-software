@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 #include "CLHEP/Random/RandFlat.h"
 
 namespace Lester {
