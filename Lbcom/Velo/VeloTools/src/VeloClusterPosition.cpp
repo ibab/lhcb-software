@@ -1,4 +1,4 @@
-// $Id: VeloClusterPosition.cpp,v 1.18 2008-04-03 15:21:27 cattanem Exp $
+// $Id: VeloClusterPosition.cpp,v 1.19 2008-05-23 10:19:47 wouter Exp $
 // Include files
 
 // stl
@@ -424,9 +424,11 @@ Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
       locPair=std::make_pair(projectedAngle, localPitch);
     }else{                              //-- approximated calculations for Phi
       // this is an approximation, but should be ok since sensors are never 
-      // tilted so much that it matters
-      double stereoAngle=
-        acos(traj->direction(0.5).Dot(m_gloPoint)/m_gloPoint.rho());
+      // tilted so much that it matters. Make sure we just use the xy-plane:
+      Gaudi::XYZVector stripdir = traj->direction(0.5).Unit() ;
+      double cosangle = (stripdir.x()*m_gloPoint.x() + stripdir.y()*m_gloPoint.y())/m_gloPoint.rho() ;
+      double stereoAngle = std::abs(cosangle)<1 ? acos( cosangle ) : 0 ;
+
       // for phi sensors, projection angle is diluted by stereo angle
       projectedAngle=m_trackDir.rho()*stereoAngle;
       locPair=std::make_pair(projectedAngle, localPitch);
