@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.12 2006-04-04 14:56:38 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.13 2008-05-23 11:53:29 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -8,9 +8,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/ISampleGenerationTool.h"
-
-// from SEAL
-#include "SealBase/Filename.h"
 
 // from LHCb
 #include "Kernel/ParticleID.h"
@@ -24,11 +21,6 @@ namespace HepMC {
   class GenEvent ; 
   class GenParticle ;
 }
-
-namespace seal {
-  class File ;
-}
-
 
 /** @class ExternalGenerator ExternalGenerator.h "Generators/ExternalGenerator.h"
  *  
@@ -182,11 +174,5 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Keep original particle properties of the production generator
   bool m_keepOriginalProperties ;
-
-  /// Temporary filename to redirect LHAPDF output
-  seal::Filename m_lhapdfTempFilename ;
-  
-  /// File for LHAPDF output
-  seal::File * m_lhapdfTempFile ;
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H
