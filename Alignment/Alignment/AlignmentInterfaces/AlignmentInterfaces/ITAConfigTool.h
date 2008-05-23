@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : ITAConfigTool
  *
  *  CVS Log :-
- *  $Id: ITAConfigTool.h,v 1.8 2008-05-16 16:53:00 jblouw Exp $
+ *  $Id: ITAConfigTool.h,v 1.9 2008-05-23 16:26:07 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -43,7 +43,8 @@ class ITAConfigTool : virtual public IAlgTool {
 			   double,
 			   std::vector<double> & ) = 0;
 
-  virtual StatusCode CalcResidual( const LHCb::Track &, 
+  virtual StatusCode CalcResidual( unsigned int,
+				   const LHCb::Track &, 
 				   const LHCb::Measurement *, 
 				   const LHCb::LHCbID &,
 				   bool,
