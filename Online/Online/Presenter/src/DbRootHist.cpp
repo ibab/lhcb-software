@@ -134,8 +134,8 @@ void DbRootHist::setDimServiceName(std::string newDimServiceName)
 {
 // std::cout << "m_identifier " <<m_identifier << std::endl;
 // std::cout << "histogramIdentifier " <<HistogramIdentifier(newDimServiceName).histogramIdentifier()<< std::endl;
-  if (HistogramIdentifier(newDimServiceName)
-      .histogramIdentifier() == m_identifier) {
+  if (HistogramIdentifier(newDimServiceName).histogramIdentifier()
+      == m_identifier) {
     if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
     m_dimInfo = new DimInfo(newDimServiceName.c_str(), m_refreshTime,
                             (float)-1.0);
@@ -192,12 +192,6 @@ void DbRootHist::disableClear()
 {
   m_cleared = false;
 }
-//void DbRootHist::infoHandler()
-//{
-//  TThread::Lock();
-////  m_toRefresh = true;
-//  TThread::UnLock();
-//}
 void DbRootHist::initHistogram()
 {
   // If not AnaLib hist:
@@ -303,11 +297,12 @@ void DbRootHist::initHistogram()
     }
     OMAHcreatorAlg* creator = dynamic_cast<OMAHcreatorAlg*>
                  (m_analysisLib->getAlg(m_creationAlgorithm));
-    if(creator)
+    if(creator) {
       rootHistogram = creator->exec(&sources, &m_parameters,
                                     identifier(),
                                     onlineHistogram()->htitle(),
                                     rootHistogram);
+    }
     if (!rootHistogram) { beEmptyHisto(); }
   }
   rootHistogram->SetBit(kNoContextMenu);
@@ -339,7 +334,6 @@ void DbRootHist::beEmptyHisto()
     setRootHistogram(rootHistogram);
   }
 }
-
 void DbRootHist::fillHistogram()
 {
   // TODO: rebin: nBins nBinsX nBinsY initHistogram
@@ -411,7 +405,6 @@ void DbRootHist::fillHistogram()
 //          ((TH2F*)rootHistogram)->GetNbinsY() + 2); // , gHistImagePalette
 
       } else if (s_P1D == m_hstype || s_HPD == m_hstype) {
-//        rootHistogram->Reset();
         const int   nBins   = (int) m_histoDimData[1];
 //        const float xMin    = m_histoDimData[2];
 //        const float xMax    = m_histoDimData[3];

@@ -124,7 +124,6 @@ class DbRootHist : public HistogramIdentifier
     // dimbuffer
     float*  m_histoDimData;
     // overloaded from DimInfo
-//    void      infoHandler();
     // generated ROOT histo name for identification
     TString   m_histoRootName;
     // generated ROOT histo title from DIM gauchocomment

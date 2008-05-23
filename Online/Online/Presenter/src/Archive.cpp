@@ -73,11 +73,22 @@ void Archive::fillHistogram(DbRootHist* histogram,
   if (m_verbosity >= Debug) {
     std::cout << "Histogram to seek: " << histogram->identifier() << std::endl;
   }
-  // listFiles()
   if ( ! (histogram->isAnaHist()) ) {
-    std::vector<path> foundRootFiles = findSavesets(histogram->taskName(),
-                                                    timePoint,
-                                                    pastDuration);
+    std::vector<path> foundRootFiles;
+    if (s_startupFile == timePoint) {
+      path filePath(pastDuration);
+      if (s_rootFileExtension == extension(filePath) ) {
+        if (exists(filePath)){
+          foundRootFiles.push_back(filePath);
+        } else if (exists(m_savesetPath/filePath)){
+          foundRootFiles.push_back(m_savesetPath/filePath);
+        } 
+      }
+    } else {
+      foundRootFiles = findSavesets(histogram->taskName(),
+                                    timePoint,
+                                    pastDuration);
+    } 
     if (!foundRootFiles.empty()) {
       if (m_verbosity >= Verbose) {
         std::cout << "Merging " << foundRootFiles.size() <<
@@ -85,7 +96,6 @@ void Archive::fillHistogram(DbRootHist* histogram,
       }
       std::vector<path>::const_iterator foundRootFilesIt;
       foundRootFilesIt = foundRootFiles.begin();
-
       TFile rootFile((*foundRootFilesIt).file_string().c_str());
       if (rootFile.IsZombie()) {
         cout << "Error opening Root file" << endl;

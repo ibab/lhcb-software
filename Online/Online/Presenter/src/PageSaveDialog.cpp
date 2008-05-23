@@ -47,7 +47,7 @@ void PageSaveDialog::build()
 {
   SetLayoutBroken(true);
 
-  TGLabel *fLabel530 = new TGLabel(this,"Enter or select the parent folder:");
+  TGLabel *fLabel530 = new TGLabel(this,"Enter (new) or select the parent folder(s):");
   fLabel530->SetTextJustify(36);
   AddFrame(fLabel530, new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   fLabel530->MoveResize(16, 8, 192, 18);

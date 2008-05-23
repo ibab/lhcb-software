@@ -102,7 +102,8 @@ class PresenterMainFrame : public TGMainFrame
       M_DeleteFolder_COMMAND,
       M_LAST_1_HOURS,
       M_LAST_8_HOURS,
-      M_LAST_DEMO,
+      M_File,
+      M_File_Dlg,
       M_IntervalPicker
     };
 
@@ -119,7 +120,7 @@ class PresenterMainFrame : public TGMainFrame
       int m_lineWidth;
       int m_lineStyle;
     };
-
+    
     //slots
     void about();
     void buildGUI();
@@ -273,6 +274,7 @@ class PresenterMainFrame : public TGMainFrame
     std::string       m_archiveRoot;
     std::string       m_referencePath;
     std::string       m_savesetPath;
+    std::string       m_savesetFileName;
     DimBrowser*       m_dimBrowser;
     Archive*          m_archive;
     pres::PresenterMode m_presenterMode;

@@ -5,7 +5,7 @@
 #include <TPRegexp.h>
 #include <TString.h>
 
-static const std::string s_presenterVersion("v0r8");
+static const std::string s_presenterVersion("v0r9");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_groupdir("GROUPDIR");
 
@@ -72,6 +72,7 @@ namespace pres
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
+// w partition: ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
 // test cases:
 //  CC-PC/CCPCAlg/TELL1Mult3_$T3/L2/Q1/myTell1
 //  H1D/node00101_taskname_1/CCPCAlg/TELL1Mult3_$T3/L2/Q1/myTell1
@@ -82,6 +83,30 @@ namespace pres
 //  CC-PC/CCPCAlg/T3/L2/Q1/myTell1
 //  H2D/RichOnlAna/Ana_R21PixelRC/His_$tory_0
 //  H2D/RichiOnlAna/Ana_R20PixelRC/Histo/ry_diff_0
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/10001
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/10002
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/10003
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/10004
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/10005
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10001
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10002
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10003
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10004
+//  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10005
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1001
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1002
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1003
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1004
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1005
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1006
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/1007
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1001
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1002
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1003
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1004
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1005
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1006
+//  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1007
   static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$");
 
   static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
@@ -89,7 +114,7 @@ namespace pres
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
   static const int s_estimatedHistosOnPage = 200;
-  static const int s_timeoutOfMainTimer = 2000;
+  static const int s_pageRefreshRate = 2000;
   static const int s_maxWindowWidth = 32767;
   static const int s_maxWindowHeight = 32767;
 
@@ -110,5 +135,7 @@ namespace pres
   static const std::string s_Entries("ENTR");
   static const std::string s_NoReference("NOREF");
   static const std::string s_NoNormalization("NONE");
+  
+  static const std::string s_startupFile("startupFile");
 }
 #endif /*PRESENTER_H_*/
