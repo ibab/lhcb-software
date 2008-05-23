@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.4 2007-12-06 16:20:59 mneedham Exp $
+! $Id: release.notes,v 1.5 2008-05-23 09:11:27 szumlat Exp $
 ! Package     : STOnline
 ! Responsible : Mathias Knecht
+
+! 2008-05-23 T Szumlak
+ -Retag for joint Velo+ST Vetra release 
 
 ! 2007-12-05 M Needham
  -Remove unneeded files from Event directory

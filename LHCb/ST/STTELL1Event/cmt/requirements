@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.1.1.1 2007-10-23 09:24:28 akeune Exp $
+# $Id: requirements,v 1.2 2008-05-23 09:11:26 szumlat Exp $
 package STTell1Event
-version v1r0
+version v1r1
 
 branches Event xml cmt doc src
 
