@@ -4,6 +4,23 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r9 2008-05-23 =============
+! 2008-05-23
+o use ROOT "thermic" coulour palette instead of custom
+o default error bars when rendering profile histograms
++ history mode: can specify a root file at startup;
+  there is also a rudmientary file picker for savesets.
+  Pressing Cancel in TGFileDialog file picker invokes
+  a crash as of now: please press "Ok" instead.
++ faster startup: reading DIM services to fill trees is
+  done only in Editor mode
+o reverted to "power" editor mode (can clear histos
+  again)
+
+!============ Presenter v0r8 2008-04-19 =============
+! 2008-04-19
+o recover from profile histogram rendering regression
+
 !============ Presenter v0r7 2008-03-19 =============
 ! 2008-03-19
 o Root-style multiple selection on trees
