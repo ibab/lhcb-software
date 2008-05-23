@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
+// $Id: MessageLogger.cpp,v 1.7 2008-05-23 21:55:32 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.7 2008-05-23 21:55:32 frankb Exp $
 
 // Framework include files
 #include <cerrno>
@@ -236,9 +236,9 @@ void MessageLogger::printHistory(const std::string& pattern) {
   }
   for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
     printMessage(messages[j], false);
-  ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %zd %s %d messages replayed.",
+  ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
 	    match,"messages matched the request:",node_pattern.c_str(),
-	    msg_pattern.c_str(),numMsg,"messages requested.",displayed);
+	    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
   printMessage(text,true);
 }
 
