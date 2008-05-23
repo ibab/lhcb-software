@@ -1,4 +1,4 @@
-// $Id: LhaPdf.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: LhaPdf.h,v 1.3 2008-05-23 11:55:05 robbep Exp $
 #ifndef GENERATORS_LHAPDF_H 
 #define GENERATORS_LHAPDF_H 1
 
@@ -18,6 +18,6 @@ class LhaPdf {
   static Lhacontrol & lhacontrol() { return s_lhacontrol ; }
   
  private:
-	static Lhacontrol s_lhacontrol ; ///< LHACONTROL Common Block data
+  static Lhacontrol s_lhacontrol ; ///< LHACONTROL Common Block data
 };
 #endif // GENERATORS_LHAPDF_H
