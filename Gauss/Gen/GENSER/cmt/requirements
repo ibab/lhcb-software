@@ -60,6 +60,7 @@ macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
 
 #-- Redefine symbols of MCGenerators libraries
+#-- Pythia 6
 #============================================================================
 library      pythia6forgauss   pythia6/*.F 
 
@@ -72,6 +73,16 @@ include_dirs $(GENSERROOT)/src/pythia6
 
 # force the order of link for pythia6
 macro_append GENSER_linkopts " $(pythia6_linkopts) "
+
+#-- Photos
+#============================================================================
+library      photosforgauss   photos/*.F 
+
+apply_pattern linker_library library=photosforgauss
+
+# force the order of link for photos
+macro_append GENSER_linkopts " $(photos_linkopts) "
+
 
 private
 macro_remove libraryshr_linkopts "-Wl,--no-undefined"
