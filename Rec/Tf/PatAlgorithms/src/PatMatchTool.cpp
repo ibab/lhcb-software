@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.4 2008-05-22 12:00:37 cattanem Exp $
+// $Id: PatMatchTool.cpp,v 1.5 2008-05-23 06:54:30 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -238,6 +238,7 @@ void PatMatchTool::makeTrack( const LHCb::Track& velo,
                                   LHCb::Track& matchedTrack,
                                   double& quality, double& quality2 ) {
 
+    quality2=0;
     StatusCode sc = this->matchSingle( veloTrack, tTrack, matchedTrack, quality );
     if(sc.isFailure()) 
       if(msgLevel( MSG::DEBUG )) debug()<<"matching failed !"<<endmsg;
