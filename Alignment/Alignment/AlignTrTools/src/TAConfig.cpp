@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.19 2008-05-20 09:29:20 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.20 2008-05-23 16:28:19 jblouw Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -99,7 +99,6 @@ TAConfig::TAConfig( const std::string& type,
   declareProperty("DerivativeTool", m_derivativTool = "Derivatives");
   declareProperty("MeasurementProvider", m_MeasProvider = "MuonMeasurementProvider");
   declareProperty("nTrackModelParameters", m_ntrack_pars = 4 );
-  declareProperty("CommonXFraction", m_commonXFraction = 0.69 );
   declareProperty("Degrees_of_Freedom", m_dof );
   declareProperty("Constraint_Equations",m_constraint);
   declareProperty("PenaltyTerms", m_sigma );
@@ -117,14 +116,13 @@ TAConfig::TAConfig( const std::string& type,
   declareProperty("Constrain_VeLo", m_VeLoConstrain); //MD
   declareProperty("Constrain_Muon", m_MuonConstrain); //MD
   declareProperty("Constrain_TT", m_TTConstrain); //MD
-  //  declareProperty("FixDofs", m_fix_dofs );
-  //  declareProperty("OT_objects", m_OTmap );
+  // OT
   declareProperty("OT_system",m_otSys = false );
   declareProperty("OT_station",m_otStation = false );
   declareProperty("OT_layer",m_otLayer = false );
   declareProperty("OT_quadrant",m_otQuadrant = false );
   declareProperty("OT_module",m_otModule = false );
-  //  declareProperty("IT_objects", m_ITmap );
+  // IT
   declareProperty("IT_system",m_itSys = false );
   declareProperty("IT_station",m_itStation = false );
   declareProperty("IT_box",m_itBox = false );
@@ -148,7 +146,9 @@ TAConfig::TAConfig( const std::string& type,
   //  m_DOF = new bool[m_dof.size()];
 }
 
-TAConfig::~TAConfig() {}
+TAConfig::~TAConfig() {
+  //  delete [] m_DOF;
+}
 
 StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_detectors = m_dets;
@@ -938,19 +938,18 @@ void TAConfig::ResetGlVars() {
 //------------------------------
 void TAConfig::SetTrackPar( const std::vector<double> & vt, unsigned int ntr ) {
   // for the linear track model
-  //MD
   m_trx0[ntr] = vt[0];
   if ( isnan(m_trx0[ntr]) )
-    error() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
+    warning() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
   m_trtx[ntr] = vt[1];
   if ( isnan(m_trtx[ntr]) )
-    error() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
+    warning() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
   m_try0[ntr] = vt[2];
   if ( isnan(m_try0[ntr]) )
-    error() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
+    warning() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
   m_trty[ntr] = vt[3];
   if ( isnan(m_trty[ntr]) )
-    error() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
+    warning() << "in SetTrackPar: nan in m_trx0 for track " << ntr << endreq;
   if ( vt.size() == 5 ) {
     m_trQ[ntr] += vt[4];
   }
@@ -1088,6 +1087,7 @@ void TAConfig::ZeroMatrVec( ROOT::Math::SMatrix<double, 4,4> &mat, double *vec) 
 }
 
 int TAConfig::InvMatrix( std::vector<double> &b, int n ) {
+  /*
   if(n==4 && ot_detector){
     double vec[4];
     VectortoArray(b,vec);
@@ -1095,7 +1095,8 @@ int TAConfig::InvMatrix( std::vector<double> &b, int n ) {
     ArraytoVector(vec,b);
     return ret;
   }
-  else if ( n == 4 && !ot_detector) 
+  */
+  if ( n == 4 ) 
     return invMatrix( m_chiMat4, b, n );
   else if ( n == 5 )
     return invMatrix( m_chiMat5, b, n );
@@ -1282,147 +1283,60 @@ bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
   
   // const LHCb::Measurement trMeas(track.measurement(id)); // Get measurement    
   if(id.isOT()){
-
-    info() << "----> --------------------" << m_rank_nr << endreq;
-    info() << "----> CALC --> parameters: " << endreq;
-    
-    //    weight = 1./pow(trMeas.errMeasure(),2.);
     double weight = 1./1.44;
     double stereo_angle= stereo_angle = m_ot->findLayer( id.otID() )->angle();
-    
-    // referece of trajectory
     Gaudi::XYZPoint Ppoint = (trMeas->trajectory()).position(0.);
-    
-    //MD get another reference without measurement info
     std::auto_ptr<LHCb::Trajectory> lhcbidTraj = m_ot->findModule( id.otID() )->trajectory(id.otID());   
     Gaudi::XYZPoint idTrajPoint = lhcbidTraj->position(0.);
     Gaudi::XYZVector idTrajDir =  lhcbidTraj->direction(0.);    
-    
-    // get sensor where hit appeared
     DeOTLayer*  layer =  m_ot->findLayer( id.otID() );
     DeOTModule* module = m_ot->findModule( id.otID() );
-    
-    //get otchannelid and straw and monolayer
     const OTChannelID  chID= id.otID();
     const unsigned int straw = chID.straw();
     bool mLayA = module->monoLayerA(straw);
-    
-    //   get measurement trajectory and its direction
     const Trajectory& measTraj = trMeas->trajectory();
     Gaudi::XYZVector trajeDa =  measTraj.direction(0.);
     Gaudi::XYZVector trajeD;
-    debug() << " idtrajDira = " << trajeDa << endmsg;    
     if(trajeDa.y() < 0.) //make sure all trajsdirection is upwards    //MD 15-04
       trajeD.SetXYZ(-trajeDa.x()/sqrt(trajeDa.Mag2()),-trajeDa.y()/sqrt(trajeDa.Mag2()),-trajeDa.z()/sqrt(trajeDa.Mag2()));
     else
       trajeD.SetXYZ(trajeDa.x()/sqrt(trajeDa.Mag2()),trajeDa.y()/sqrt(trajeDa.Mag2()),trajeDa.z()/sqrt(trajeDa.Mag2()));
     Gaudi::Rotation3D R, Rnom;
     Gaudi::XYZVector Lay,Mod,Pnom;
-
-    //MD
-    info() << "--------------------------------------------------------------" << endreq;
-    //     debug() << " idtrajDir = " << trajeD << endmsg;
-    info() << " idtraj   -->  trajPos = " << idTrajPoint << " idtrajDir = " << trajeD << endmsg;
-    //     info() << " begin point of idtraj = " << lhcbidTraj->beginPoint()    << endmsg;
-    //     info() << " end   point of idtraj = " << lhcbidTraj->endPoint()    << endmsg;
-
-    // get center of Layer and Rotation matrix in LHCb coordinate frame
     layer->geometry()->toGlobalMatrix().GetDecomposition( R, Lay);
     const Gaudi::XYZPoint cenLayer(Lay.x(),Lay.y(),Lay.z());
-    // get center of Module including misalignments
     module->geometry()->toGlobalMatrix().GetDecomposition( R, Mod);
     const Gaudi::XYZPoint cenMod(Mod.x(),Mod.y(),Mod.z());
-    //     info() << " positioning vector of Module (Mod) " << Mod.x() << " " << Mod.y() << " " << Mod.z() << endmsg;    
-    //     info() << " positioning vector of Layer (Lay)   " << Lay.x() << " " << Lay.y() << " " << Lay.z() << endmsg;
-    // get center of Module nominal position 
     module->geometry()->toGlobalMatrixNominal().GetDecomposition( Rnom, Pnom);
-
     std::auto_ptr< LHCb::Trajectory > mLayTraj;
     std::auto_ptr< LHCb::Trajectory > bmLayTraj;
-    //get the plane of first monolayer
     if(mLayA){
-      //      info() << " use module : " << module->name() << " monoB? " << !mLayA << endreq;
       mLayTraj = module->trajectoryFirstWire(0);//first monolayerRight
       bmLayTraj = module->trajectoryLastWire(0);//first monolayerLeft
-      //MD 14-04    
     }
-    //get the plane of the second monolayer
-    //MD14-04 
     else if(!mLayA){
       mLayTraj = module->trajectoryFirstWire(1);//second monolayerRight
       bmLayTraj = module->trajectoryLastWire(1);//second monolayerLeft
     }
-    
     Gaudi::XYZPoint  mLayP  = mLayTraj->position(0.);
     Gaudi::XYZPoint  bmLayP = bmLayTraj->position(0.);
-    //     Gaudi::XYZVector fmLayD  = fmLayTraj->direction(0.);
-    //     Gaudi::XYZVector bfmLayD = bfmLayTraj->direction(0.);
-    //dist between two trajs
     Gaudi::XYZVector dLay(mLayP.x()-bmLayP.x(),mLayP.y()-bmLayP.y(),mLayP.z()-bmLayP.z());
-    //new center of  Monolayer
-    //     LHCb::LineTraj montraj = LineTraj(mLayP,bmLayP);
-    //     double path=0.;
-    //     Gaudi::XYZVector perpCen(-999999.9999,-999999.9999,-999999.99999);
-    //     m_poca-> minimize( montraj, path, cenMod, perpCen, m_tolerance); //module wise
-    //     Gaudi::XYZVector perpCenUnit= perpCen/sqrt(perpCen.Mag2());
-    //     Gaudi::XYZPoint mModCen =  cenMod+2.75*perpCenUnit;
     Gaudi::XYZPoint mModCen =  mLayP-0.5*dLay;
-
-    //     info() <<" ---> mLayP  = " << mLayP << " Layer A? " << mLayA << " distance = " << dLay << endreq;
-    //info() <<" ---> cenMod = " << cenMod<< " Layer A? " << mLayA << " newmModCen= "<< mModCen<<endreq;
-    //     info() << "----------------------------------------------------------------------------------------" << endreq;
-    
-    /*********************
-     ** def new Mod & Lay ***
-     ********************/
-    
     Mod.SetXYZ(mModCen.x(),mModCen.y(),mModCen.z());
-    debug() << " NEW positing vector of Module NEW (Mod) " << Mod.x() << " " << Mod.y() << " " << Mod.z() << endmsg;    
-    debug() << " positioning vector of Module (P Nominal) " << Pnom.x() << " " << Pnom.y() << " " 
-           << Pnom.z() << endmsg;
     Gaudi::Plane3D         planeLay = layer->plane();
     const Gaudi::XYZVector planeN   = planeLay.Normal();    // Normal of plane
     Gaudi::Plane3D         planeMod = module->entryPlane(); //to get distance
     const double           planeD   = planeMod.Distance(cenMod); // Distance center - surface
-    //seems to be no difference
-    //MD16-04    const double           planeD   = planeMod.Distance(cenLayer); // Distance center - surface
-    //propagate layer center to monolayer plane
     double dir = 0.;
     if(mLayA) dir = -1.;
     else if( !mLayA) dir = 1.;
-    // !! multiplication with 0.5 maybe not accurate enough!! 11-04-08
     Gaudi::XYZPoint cenLayer_mono = cenLayer + dir*0.5*fabs(planeD)*planeN;
-    //MD 27-03 test 
     Lay.SetXYZ(cenLayer_mono.x(),cenLayer_mono.y(),cenLayer_mono.z());
-    //Lay.SetXYZ(mModCen.x(),mModCen.y(),mModCen.z());
-    debug() << "rank = " << m_rank_nr << " positing vector of Layer NEW (Lay) " 
-            << Lay.x() << " " << Lay.y() << " " << Lay.z() << endmsg;    
-    
-    //MD21-2, following is new
-    //calculate poca between ???Center & wire
     Gaudi::XYZVector Mtraje(-999999.9999,-999999.9999,-999999.99999);
     double onwire=0.;
-
-    //    m_poca-> minimize( (*lhcbidTraj), onwire, cenLayer, Mtraje, m_tolerance);
-    //     m_poca-> minimize( (*lhcbidTraj), onwire, cenMod, Mtraje, m_tolerance); //module wise
-    //     debug() <<" my minimization results (module)  : " << endreq
-    //             << " ---> Mtraje = " << Mtraje << endmsg;
     m_poca-> minimize( (*lhcbidTraj), onwire, mModCen, Mtraje, m_tolerance); //module wise
-    debug() <<"LayerA? " << mLayA << " my minimization results (mModCen)  :   ---> Mtraje = " << Mtraje << endmsg;
-    
-    //get the right sign & abs value
     double myU4=0.;
-    myU4 = sqrt(Mtraje.Mag2()) * ( (Mtraje.x()*cos(stereo_angle) + Mtraje.y()*sin(stereo_angle) ) 
-                                   /fabs( Mtraje.x()*cos(stereo_angle) + Mtraje.y()*sin(stereo_angle) ) ); 
-    debug() << "my U4 (Mtraje length) =" << myU4 << endmsg;
-    debug() << "stereo = " << stereo_angle << " x = " << Mtraje.x() << " y= " << Mtraje.y() << endreq;
-    debug() << "Mtraje.x()*cos(stereo_angle)  "<<  Mtraje.x()*cos(stereo_angle) << endreq;
-    
-    if(mLayA)  plot(myU4,"MtrajABS for mono A",-200,200,200);
-    if(!mLayA) plot(myU4,"MtrajABS for mono B",-200,200,200);
-    debug() <<"LayerA? " << mLayA << " sqrt(Mtraj2) = myU4 = " << myU4 << endmsg;
-
-    //normalize to unit vector
+    myU4 = sqrt(Mtraje.Mag2()) * ( (Mtraje.x()*cos(stereo_angle) + Mtraje.y()*sin(stereo_angle) ) );
     if(Mtraje.Mag2()!=0.){
       if(Mtraje.x()>0.){
         Mtraje=Mtraje/sqrt(Mtraje.Mag2()); 
@@ -1437,8 +1351,6 @@ bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
         
     std::vector<double> trt;
     if(m_ntrack_pars==4){
-      debug() << " trx0[0] = " << m_trx0[0] <<" trtx[0] = " << m_trtx[0] << " try0[0]= " 
-             << m_try0[0] << " trty[0]= " << m_trty[0] <<endmsg;
       trt.push_back(m_trx0[0]);
       trt.push_back(m_trtx[0]);
       trt.push_back(m_try0[0]);
@@ -1532,7 +1444,8 @@ bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
 }
 
 
-StatusCode TAConfig::CalcResidual( const LHCb::Track &track, 
+StatusCode TAConfig::CalcResidual( unsigned int tr_cnt,
+				   const LHCb::Track &track, 
 				   const LHCb::Measurement *trMeas, 
 				   const LHCb::LHCbID &id,
 				   bool localF,
@@ -1587,18 +1500,17 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   //----------------------
   // Find detector element lowest in DE hierarchy that was hit.
   // e.g. for OT case: module, for VeLo/IT case: sensor
-  Gaudi::XYZVector P; // center of module which contained the hit (in global coordinates)
+  Gaudi::XYZVector cenMod; // center of module which contained the hit (in global coordinates)
   Gaudi::Rotation3D R; // rotation of that hit in global coordinate system
-  Gaudi::XYZVector P2; // center of object lowest in geo hierarchy
+  Gaudi::XYZVector cenLH; // center of object lowest in geo hierarchy
   Gaudi::Rotation3D R2; // rotation of that object in global coordinate system
-  Gaudi::Transform3D M;
-  FindHitModule( id, M ).GetDecomposition( R, P );
-  if ( P.z() < 7900.0 ) {
-    plot2D( P.x(), P.y(), "IT Hits in T1", -350.0, 350.0, -200.0, 200.0, 100, 100 );
+  Gaudi::Transform3D M; // transformation matrix of the alignable object containing the hit
+  FindHitModule( id, M ).GetDecomposition( R, cenMod );
+  if ( cenMod.z() < 7900.0 ) {
+    plot2D( cenMod.x(), cenMod.y(), "IT Hits in T1", -350.0, 350.0, -200.0, 200.0, 100, 100 );
   }
-  M.GetDecomposition( R2, P2 );
-  mC.SetCoordinates( P2.x(), P2.y(), P2.z() ); // center of alignable detector element which was hit
-
+  M.GetDecomposition( R2, cenLH );
+  mC.SetCoordinates( cenLH.x(), cenLH.y(), cenLH.z() ); // center of alignable detector element which was hit
   //---------------------
   // calculate poca between hit-trajectory and center-of-module
   //---------------------
@@ -1619,49 +1531,10 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
   }
   plot( measTraj->direction( onstraw ).x(), "Hit position (x)", -0.2,0.2,100);
   plot( measTraj->direction( onstraw ).y(), "Hit position (y)", 0.8,1.2,100);
-  
   //---------------------
   // Error on the measurement at the position of the impact point
   //---------------------
   m_weight = Measurement ( trMeas, track, measTraj, trState );
-  //-----------------------------------------------
-  // !! make LineTraj object of straw and of zAxis
-  //-----------------------------------------------
-  Gaudi::XYZPoint pointZero; pointZero.SetCoordinates(0,0,0); 
-  Gaudi::XYZPoint pointatZ; pointatZ.SetCoordinates(0,0,20000); 
-  // x-axis through the point on the wire where the hit occured
-  Gaudi::XYZPoint XpointatZ1; XpointatZ1.SetCoordinates(hit_point.x(),hit_point.y(),hit_point.z() ); 
-  Gaudi::XYZPoint XpointatZ2; XpointatZ2.SetCoordinates(6000,hit_point.y(),hit_point.z()); 
-  Gaudi::XYZVector ZVec;     
-  int direction = 0; //direction of measMP seen from (0,0,z)
-  // make a line trajectory between the begin and end point of measurement.
-  const LineTraj* linearhit = new LineTraj(measTraj->beginPoint(), measTraj->endPoint() );
-  // make a line trajectory describing z and x axes.
-  const LineTraj* ZaxisTraj = new LineTraj( pointZero, pointatZ );
-  const LineTraj* XaxisTraj = new LineTraj( XpointatZ1, XpointatZ2 );
-  // find the poca between (linearized) hit trajectory and z-axis.
-  double onstraw2 = 0.0;
-  sc = m_poca->minimize( (*linearhit), onstraw2, false, (*ZaxisTraj), onZaxis, false, ZVec, 0.01);    
-  if( sc.isFailure() ) {
-    error() << "Error in calculating Poca!!!" << endreq;
-    return StatusCode::FAILURE;
-  }
-  //  info() << "Direction of hit: " << linearhit->direction() << endreq;
-  // get angle between x-axis and trajectory describing the hit:
-  // First, calculate the product of the absolute values of the lengths of both vectors
-  double l1 = sqrt( XaxisTraj->direction().Mag2() );
-  double l2 = sqrt( linearhit->direction().Mag2() );
-  double dp = XaxisTraj->direction().Dot( linearhit->direction() );
-  dp = dp / ( l1 * l2 );
-  m_gamma = acos( dp );
-  Gaudi::XYZVector z_direction = XaxisTraj->direction().Cross( linearhit->direction() );
-  //  info() << "z-direction = " << z_direction << " z-axis = " << ZaxisTraj->direction() << endreq;
-  if ( z_direction.Dot( ZaxisTraj->direction() ) > 0 ) {
-    // the hit trajectory may point downward or upward, and hence
-    m_gamma =  - m_gamma;
-  }
-  m_gamma = 3.14159265359/2.0 - m_gamma;
-
   // Create a vector describing a track
   std::vector<double> trt(m_ntrack_pars, 0.0);
   trt[0] = m_trx0[tr_cnt];
@@ -1691,52 +1564,45 @@ StatusCode TAConfig::CalcResidual( const LHCb::Track &track,
     delta[4] = dummy[m_rank_nr + (i++) * sz];
   if ( m_dof[5] )
     delta[5] = dummy[m_rank_nr + (i++) * sz];
-  double mf = m_derivatives->Model( trt,
-				    delta,
-				    P,
-				    P2,
+  double mf = m_derivatives->Model( trt,    // track parameters
+				    delta,  // estimated misalignments
+				    cenMod, // center of object to align
+				    cenLH,  // center of object lowest in geometrical hierarchy
 				    measTraj->direction( onstraw )/sqrt(measTraj->direction( onstraw ).Mag2()),
 				    distance );
   measMP = sqrt(distance.Mag2()) - mf;
-   if ( isnan(mf) || fabs(measMP) > 1000.0 ) {
-    error() << "Error in calculating poca!" << endreq;
-    error() << "trt = " << trt << "\n"
-	    << "m_trx0 = " << m_trx0[tr_cnt] << "\n"
-	    << "m_rank_nr = " << m_rank_nr << "\n"
-	    << "delta = " << delta << "\n"
-	    << "m_estimated (x): " << m_estimated[m_rank_nr] << "\n"
-	    << "m_estimatedB4 (x) " << m_estimatedB4[m_rank_nr] << "\n"
-	    << "P = " << P << "\n"
-	    << "P2 = " << P2 << "\n"
-	    << "distance = " << distance << endreq;
-    error() << "measurement traj: " << measTraj->direction(onstraw) << endreq;
-    error() << "traj.Mag2() = " << measTraj->direction(onstraw).Mag2() << endreq;
-    error() << "Center of module: " << mC << endreq;
-    error() << "Model calculation failure: model = " << mf << endreq;
-    //    return StatusCode::FAILURE;
-     }
-
+  if ( isnan(mf) || fabs(measMP) > 1000.0 ) {
+    warning() << "Error in calculating poca!" << endreq;
+    warning() << "trt = " << trt << endreq;
+    warning() << "m_trx0 = " << m_trx0[tr_cnt] << endreq;
+    warning() << "m_rank_nr = " << m_rank_nr << endreq;
+    warning() << "delta = " << delta << endreq;
+    warning() << "m_estimated (x): " << m_estimated[m_rank_nr] << endreq;
+    warning() << "m_estimatedB4 (x) " << m_estimatedB4[m_rank_nr] << endreq;
+    warning() << "Center of Module = " << cenMod << endreq;
+    warning() << "Center of element lowest in hierarchy = " << cenLH << endreq;
+    warning() << "distance = " << distance << endreq;
+    warning() << "measurement traj: " << measTraj->direction(onstraw) << endreq;
+    warning() << "traj.Mag2() = " << measTraj->direction(onstraw).Mag2() << endreq;
+    warning() << "Center of module: " << mC << endreq;
+    warning() << "Model calculation failure: model = " << mf << endreq;
+  }
   // set a few variables which are also used in FillMatrix method.
+  // m_weight (error on the measurement)
+  // cAlignD (center of detector element to be aligned (Layer or Sensor)
+  // mv (direction of strips/wires)
+  // kv  (direction perpendicular to strips)					     //
+  // mC (measurement center (for 1 strip cluster, is the center of strip)
+  // sD (center of sensor)
   Gaudi::XYZVector trajeD = measTraj->direction( onstraw );
   trajeD = trajeD/sqrt(trajeD.Mag2());
-  cAlignD.SetXYZ( P.x(), P.y(), P.z() ); // center of alignable object in LHCb coordinates
-  sD.SetCoordinates( P2.x(), P2.y(), P2.z() ); // center of lowest hierarchial object in LHCb coordinates
-  mC.SetCoordinates(P2.x(), P2.y(), P2.z() );
+  cAlignD.SetXYZ( cenMod.x(), cenMod.y(), cenMod.z() ); // center of alignable object in LHCb coordinates
+  sD.SetCoordinates( cenLH.x(), cenLH.y(), cenLH.z() ); // center of lowest hierarchial object in LHCb coordinates
+  mC.SetCoordinates( cenLH.x(), cenLH.y(), cenLH.z() );
   kv.SetXYZ( distance.x()/sqrt(distance.Mag2()),
 	     distance.y()/sqrt(distance.Mag2()),
 	     distance.z()/sqrt(distance.Mag2()) );
   mv.SetXYZ( trajeD.x(), trajeD.y(), trajeD.z() );
-
-  //  projection of wire on z Axis -> for XPLANES it gives right x&z value
-  Gaudi::XYZPoint pointZonAxis = ZaxisTraj->position(onZaxis);
-  direction = (ZVec.x() > 0 ) ? 1 : -1;  //get the right side
-  //measMP = direction*( sqrt( ZVec.x()*ZVec.x() + ZVec.y()*ZVec.y() )) - (sign*drDist); 
-  //----------------------------------
-  //  no drift distance info !!
-  //---------------------------------
-  //  measMP = direction*( sqrt( ZVec.x()*ZVec.x() + ZVec.y()*ZVec.y() )) ; 
-  //  info() << "Residual = " << measMP << endreq;
-//  referenceZ = measTraj->position(alongWire).z();
   m_chi2 += measMP * measMP * m_weight;
   return StatusCode::SUCCESS;
 }
@@ -1897,7 +1763,7 @@ void TAConfig::CheckLChi2( int trsize,
 			   scale, 
 			   sdtdevb, 
 			   flagb );
-  debug()<<"TAConfig flag: " <<flagb <<"scale is" <<m_scale2 << endreq;
+  debug()<<"TAConfig flag: " <<flagb <<" scale is" <<m_scale2 << endreq;
 
   if( m_scale2 < 3.0 )
     m_scale2= 1;
@@ -1944,28 +1810,72 @@ StatusCode TAConfig::LocalTrackFit( unsigned int tr_cnt,
 // lowest in the hierarchy. For the IT, this means a sensor.
 //
 //---------------------------------
-const Gaudi::Transform3D & TAConfig::FindHitModule( const LHCb::LHCbID &id, 
+const Gaudi::Transform3D TAConfig::FindHitModule( const LHCb::LHCbID &id, 
 						    Gaudi::Transform3D &M ) {
+  Gaudi::Transform3D module, layer;
   if ( id.isST() ) {
     if ( id.stID().isIT() ) {
       M = m_it->findSector( id.stID() )->geometry()->toGlobalMatrix();
       if ( m_itLayer ) {
-        return m_it->findLayer( id.stID() )->geometry()->toGlobalMatrix();
+	layer = m_it->findLayer( id.stID() )->geometry()->toGlobalMatrix(); 
+        return layer;
       } else if ( m_itLadder ) {
         DeITLayer * itl = dynamic_cast<DeITLayer*> (m_it->findLayer( id.stID() ));
-        return (itl->findLadder( id.stID() ))->geometry()->toGlobalMatrix();
+	module = (itl->findLadder( id.stID() ))->geometry()->toGlobalMatrix(); 
+        return module;
       }
     }
   } else if ( id.isOT() ) {
     DeOTModule * otm = dynamic_cast<DeOTModule*> (m_ot->findModule( id.otID() ));
     M = otm->geometry()->toGlobalMatrix();
-    if ( m_otLayer ) {
-      return m_ot->findLayer( id.otID() )->geometry()->toGlobalMatrix();
-    } else if ( m_otModule ) {
+    const OTChannelID  chID= id.otID();
+    const unsigned int straw = chID.straw();
+    Gaudi::Transform3D original = m_ot->findLayer( id.otID() )->geometry()->toGlobalMatrix();
+    std::auto_ptr<LHCb::Trajectory> firstWire;
+    std::auto_ptr<LHCb::Trajectory> lastWire;				
+    bool monoA = otm->monoLayerA( straw );
+    bool monoB = otm->monoLayerB( straw );
+    double dir = 0.0;
+    if ( monoA ) { // hit was in first mono-layer
+      firstWire = otm->trajectoryFirstWire(0);
+      lastWire = otm->trajectoryLastWire(0);
+      dir = -1.0;
+    }
+    if ( monoB ) {
+      firstWire = otm->trajectoryFirstWire(0);
+      lastWire = otm->trajectoryLastWire(0);
+      dir = 1.0;
+    }
+    Gaudi::XYZPoint         mModP = firstWire->position(0.);
+    Gaudi::XYZPoint        bmModP = lastWire->position(0.);
+    Gaudi::XYZVector dMod(mModP.x() - bmModP.x(), 
+			  mModP.y() - bmModP.y(),
+			  mModP.z() - bmModP.z() );
+    Gaudi::XYZPoint       mModCen =  mModP - 0.5*dMod;
+    Gaudi::XYZVector Mod( mModCen.x(), mModCen.y(), mModCen.z() );
+    Gaudi::XYZVector L;
+    Gaudi::Rotation3D R;
+    original.GetDecomposition( R, L ); // transformation matrix of geometrical center of layer
+    if ( m_otLayer ) { // we want to align layers
+      Gaudi::Plane3D       planeLay = m_ot->findLayer( id.otID() )->plane();
+      const Gaudi::XYZVector normal = planeLay.Normal(); // normal vector of OT layer
+      Gaudi::Plane3D       planeMod = m_ot->findModule( id.otID() )->entryPlane(); // to get distance
+      Gaudi::XYZPoint cenMod(Mod.x(), Mod.y(), Mod.z() );
+      Gaudi::XYZPoint cenLay( L.x(), L.y(), L.z() ); // geometrical center of the layer      
+      const double planeD = planeMod.Distance(cenMod); //distance center to surface
+      Gaudi::XYZPoint cenMonoLayer = cenLay + dir * 0.5 * fabs( planeD ) * normal; //center of the monolayer
+      Gaudi::XYZVector cenMLayer( cenMonoLayer.x(), cenMonoLayer.y(), cenMonoLayer.z() );
+      Gaudi::Transform3D t_lay( R, cenMLayer );
+      layer = t_lay;
+      return layer;
+    } else if ( m_otModule ) { // we want to align modules
       DeOTModule * otm = dynamic_cast<DeOTModule*> (m_ot->findModule( id.otID() ));
-      return otm->geometry()->toGlobalMatrix();
+      Gaudi::Transform3D t_mod( R, Mod );
+      module = t_mod;
+      return module;
     }
   }
+  return module;
   // To do: same thing for Velo/TT/muon chambers
 
   // safety trap: return zero transform3D object:

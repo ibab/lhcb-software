@@ -6,7 +6,7 @@
  *  Header file for Tstation alignment : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.h,v 1.14 2008-05-16 16:54:15 jblouw Exp $
+ *  $Id: TAConfig.h,v 1.15 2008-05-23 16:28:19 jblouw Exp $
  *
  *  @author J. Blouw johan.blouw@cern.ch
  *  @date   12/04/2007
@@ -87,7 +87,8 @@ public:
    int InvMatrix( std::vector<double> &b, int n );
 
 
-   StatusCode CalcResidual( const LHCb::Track &,
+   StatusCode CalcResidual( unsigned int,
+			    const LHCb::Track &,
 			    const LHCb::Measurement *,
 			    const LHCb::LHCbID &,
 			    bool,
@@ -127,8 +128,8 @@ public:
 		    int,
 		    bool,
 		    bool & );
-   const Gaudi::Transform3D &FindHitModule( const LHCb::LHCbID &,
-					    Gaudi::Transform3D & );
+   const Gaudi::Transform3D FindHitModule( const LHCb::LHCbID &,
+					   Gaudi::Transform3D & );
    bool AlignDetector( const std::string &det ) {
      if ( det == "Velo" )
        return velo_detector;
@@ -179,9 +180,6 @@ public:
 
   StatusCode Rank( const LHCb::LHCbID & );
 private:
-  /*   int InvMatrix( double [][4], 
-		  std::vector<double> &, 
-		  int ); */
    int InvMatrix( double[][4], double [4], int);
    StatusCode GetAlignmentConstants( const std::string & );
    StatusCode ConfigTT( std::vector<Gaudi::Transform3D> & );
@@ -192,15 +190,12 @@ private:
    StatusCode RetrieveAPars( const std::string & );
    StatusCode ConfigMillepede();
    StatusCode ConstrainPositions( std::vector<std::string> &, char* );
-   //   StatusCode ConstrainPositions( std::vector<std::string> &, std::string & );
-
    double Measurement( const LHCb::Measurement *,
 		       const LHCb::Track &,
 		       const LHCb::Trajectory *,
 		       LHCb::State & );
 
    std::string MuonDetName( int );
-   //  StatusCode GlobalFit();
    void VectortoArray(const std::vector<double>& , double[] );
    void ArraytoVector(const double[], std::vector<double>& );
    std::string m_inputcontainer;
@@ -347,8 +342,6 @@ private:
   //MD check MP track fit
   std::vector< std::vector<double> > m_trackpoints;
 
-  // track counter
-  unsigned int tr_cnt;
   // track parameter vectors 
   std::vector<double> m_trx0;
   std::vector<double> m_trtx;
