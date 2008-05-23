@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.22 2007-12-06 16:45:25 ibelyaev Exp $
+// $Id: ExternalGenerator.cpp,v 1.23 2008-05-23 11:55:50 robbep Exp $
 // Include files 
 
 // local
@@ -6,7 +6,6 @@
 
 // SEAL
 #include "SealBase/StringOps.h"
-#include "SealBase/TempFile.h"
 
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
@@ -19,20 +18,6 @@
 #include "Generators/LhaPdf.h"
 #include "Generators/StringParse.h"
 #include "Generators/HepMCUtils.h"
-
-// Calls to FORTRAN routines
-#ifdef WIN32
-extern "C" {
-  void __stdcall LHAPDFGAUSS_INIT( int * , const char * filename , 
-                                   int length ) ;
-  void __stdcall LHAPDFGAUSS_END ( ) ;
-}
-#else
-extern "C" {
-  void lhapdfgauss_init__( int * , const char * filename , int length ) ;
-  void lhapdfgauss_end__ ( ) ;
-}
-#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ExternalGenerator
@@ -74,27 +59,13 @@ StatusCode ExternalGenerator::initialize( ) {
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
 
-  // Handle LHAPDF output
-  m_lhapdfTempFile = seal::TempFile::file( m_lhapdfTempFilename ) ;
-  m_lhapdfTempFile -> close() ;
-  int ival ;
   if ( msgLevel( MSG::DEBUG ) ) {
-    ival = 1 ;    
     LhaPdf::lhacontrol().setlhaparm( 19 , "DEBUG" ) ;
   }
   else {
-    ival = 0 ;
     LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
   }
   
-#ifdef WIN32
-  LHAPDFGAUSS_INIT( &ival , m_lhapdfTempFilename.name() , 
-                    strlen( m_lhapdfTempFilename.name() ) ) ;
-#else
-  lhapdfgauss_init__ ( &ival , m_lhapdfTempFilename.name() , 
-                       strlen( m_lhapdfTempFilename.name() ) ) ;
-#endif
-
   // Set default LHAPDF parameters:
   sc = parseLhaPdfCommands( m_defaultLhaPdfSettings ) ;
   // Set user LHAPDF parameters:
@@ -346,15 +317,6 @@ StatusCode ExternalGenerator::parseLhaPdfCommands( const CommandVector &
 // Finalize method
 //=============================================================================
 StatusCode ExternalGenerator::finalize( ) {
-  if ( ! msgLevel( MSG::DEBUG ) ) 
-#ifdef WIN32
-    LHAPDFGAUSS_END( ) ;
-#else
-  lhapdfgauss_end__() ;
-#endif
-  delete m_lhapdfTempFile ;
-  seal::Filename::remove( m_lhapdfTempFilename , false , true ) ;
-
   if ( 0 != m_decayTool ) release( m_decayTool ) ;
   if ( 0 != m_productionTool ) release( m_productionTool ) ;
   if ( 0 != m_cutTool ) release( m_cutTool ) ;
