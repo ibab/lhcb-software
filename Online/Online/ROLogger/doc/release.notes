@@ -1,7 +1,7 @@
 Package: ROLogger
 Author:  Markus Frank
 
-!================== ROLogger v1r0 2008-05-01 =============================
+!================== ROLogger v0r1 2008-05-01 =============================
 
   New Package.
   The ROLogger package interfaces to the FMC loggers.

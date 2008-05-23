@@ -12,6 +12,7 @@ eval `${directory}/internal/getMonOpts.sh $*`
 export TAN_PORT=YES
 export TAN_NODE=${HOST}
 export UTGID=${HOST}_Errlog_$$;
+PARTITION="$*"
 if test "${terminal_type}" = "gnome";
     then
     gnome-terminal --sm-disable \
@@ -22,17 +23,15 @@ if test "${terminal_type}" = "gnome";
 else
     xterm -ls -132 \
 	-geometry 210x45+0+0 -bg black -fg white \
-	-title "${UTGID}:Message display" \
-	-e "export UTGID=${UTGID}_display; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=0 -disp"&
+	-title "${PARTITION}: Message display" \
+	-e "export UTGID=${PARTITION}_${UTGID}_display; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=0 -disp"&
     xterm -ls -132 \
 	-geometry 144x27+0+610 -bg black -fg white \
-	-title "${UTGID}:History display" \
-	-e "export UTGID=${UTGID}_history; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=500000"&
-    echo $*
+	-title "${PARTITION}: History display" \
+	-e "export UTGID=${PARTITION}_${UTGID}_history; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=500000"&
     sleep 1;
     xterm -ls -132 \
-	-geometry 60x27+950+610 \
-	-title "${UTGID}:Error logger" \
-	-e "export UTGID=${UTGID}; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_display_server -service=$*" &
-	echo "export UTGID=${UTGID}; gentest.exe libROLogger.so romon_display_server -service=$*"
+	-geometry 60x27+890+610 \
+	-title "$PARTITION: Error Logger Control" \
+	-e "export UTGID=${PARTITION}_${UTGID}; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_display_server -service=$*" &
 fi;

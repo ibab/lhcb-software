@@ -26,7 +26,7 @@ int MessageLine::analyze() const {
     }
   }
   m_mess = m_buff.find(":",NOD_START);
-  if ( m_mess != std::string::npos ) m_mess += 2;
+  if ( m_mess != (int)std::string::npos ) m_mess += 2;
   return m_type=OTHER;
 }
 

@@ -6,37 +6,37 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-### use MDF               v3r3     DAQ
+use MDF               v3r9     DAQ
 #=======================================================
 # LHCb Online packages
 #=======================================================
 use Adder             v4r6     Online
-use confDB            v1r5     Online
-### Note: confDBPython is internally forced to python 2.5
+use confDB            v1r6     Online
 use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
-use DIM               v17r1    Online
+use DIM               v17r5    Online
 ### Obsolete: use DimCond          v1r0     Online
 use ExampleGaucho     v2r5     Online
 use Gaucho            v5r6     Online
 ### Obsolete: use GauchoJob         v3r1     Online
-use GaudiOnline       v2r15    Online
-use GaudiUPI          v1r7     Online
+use GaudiOnline       v2r16    Online
+use GaudiUPI          v1r8     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
 use MBMDump           v1r8     Online
 use OMAlib            v1r1     Online
 use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r9     Online
-use OnlineKernel      v1r15    Online
+use OnlineKernel      v1r16    Online
 use OnlineTasks       v1r11    Online
 use Presenter         v0r9     Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
 use PyDIM             v2r3     Online
-use ROMon             v1r2     Online
+use ROMon             v1r3     Online
+use ROLogger          v0r1     Online
 ### Obsolete: use RunDatabase       v1r2     Online
 use Saver             v1r5     Online
 use UPI               v1r9     Online

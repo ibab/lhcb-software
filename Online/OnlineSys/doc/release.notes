@@ -5,8 +5,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r6>2008-03-20 OnlineSys v4r8</A></H1><PRE>
-New version v4r5 built against LHCb v23r5.
+</PRE><H1><A NAME=v4r9>2008-03-20 OnlineSys v4r9</A></H1><PRE>
+New version v4r9 built against LHCb v23r6.
+Changes and bug fixes in confDB, DIM (v17r5), GaudiOnline, GaudiUPI,
+OnlineHistDB, OMAlib, Presenter, OnlineKernel,
+ROMon. New package: ROLogger.
+
+</PRE><H1><A NAME=v4r8>2008-03-20 OnlineSys v4r8</A></H1><PRE>
+New version v4r8 built against LHCb v23r5.
 Changes and bug fixes in confDBpython, GaudiOnline,
 OnlineHistDB, Presenter, OnlineKernel,
 PyDIM, ROMon and Writer.
