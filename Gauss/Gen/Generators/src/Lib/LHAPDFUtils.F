@@ -1,4 +1,4 @@
-C $Id: LHAPDFUtils.F,v 1.5 2007-09-09 19:32:43 robbep Exp $
+C $Id: LHAPDFUtils.F,v 1.6 2008-05-23 11:56:18 robbep Exp $
       SUBROUTINE GGETLHAPARM( INDEX , VALUE ) 
       IMPLICIT NONE 
       
@@ -52,31 +52,3 @@ C $Id: LHAPDFUtils.F,v 1.5 2007-09-09 19:32:43 robbep Exp $
 
       LHAVALUE( INDEX ) = VALUE
       END
-
-      SUBROUTINE LHAPDFGAUSS_INIT( INDEX , FILENAME ) 
-*   if INDEX = 0 , SUPPRESS Output. 
-*   if INDEX = 1 , KEEP Output
-      IMPLICIT NONE
-      INTEGER INDEX
-      CHARACTER*(*) FILENAME
-*
-      COMMON /GAUSSLHAPDF/ IPDFUNIT
-      INTEGER IPDFUNIT
-*
-      EXTERNAL LHAPDFSET
-*
-      IF ( INDEX .EQ. 0 ) THEN
-        IPDFUNIT = 74
-        OPEN( UNIT = 74 , FILE = FILENAME( 1:LEN(FILENAME) ) ) 
-      ELSE
-        IPDFUNIT = 6 
-      ENDIF
-*
-      END
-*
-*
-      SUBROUTINE LHAPDFGAUSS_END
-      IMPLICIT NONE
-      CLOSE( UNIT = 74 ) 
-      END
-
