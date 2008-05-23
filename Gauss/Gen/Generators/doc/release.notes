@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.121 2008-05-06 08:28:26 gcorti Exp $
+! $Id: release.notes,v 1.122 2008-05-23 11:58:02 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-05-23 - Patrick Robbe
+ - Move Photos fortran files to GENSER
+ - Remove unnecessary LHAPDF routines
 
 !====================== Generators v8r0 2008-05-06 ===========================
 ! 2008-05-06 - Gloria CORTI
