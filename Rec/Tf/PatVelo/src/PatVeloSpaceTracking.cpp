@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.8 2008-05-22 13:46:32 dhcroft Exp $
+// $Id: PatVeloSpaceTracking.cpp,v 1.9 2008-05-26 07:24:30 cattanem Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -121,8 +121,8 @@ namespace Tf {
       LHCb::Track& track = **itT;
 
       if( track.checkFlag(LHCb::Track::Invalid) ) {
-	Warning("Invalid RZ Velo track as input: skipping conversion to 3D");
-	continue;
+        Warning("Invalid RZ Velo track as input: skipping conversion to 3D").ignore();
+        continue;
       }
 
       // JAH: accept this track
