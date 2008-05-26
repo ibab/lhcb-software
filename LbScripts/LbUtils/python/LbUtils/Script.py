@@ -26,5 +26,5 @@ class Script():
     def run(self, args=sys.argv[1:]):
         self.defineOpts()
         self.parseOpts(args)
-        self.main()
+        return self.main()
         
