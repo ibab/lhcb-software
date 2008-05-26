@@ -4,9 +4,9 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-
+!====================== Magnet v3r8 2008-05-26 ===============================
 ! 2008-05-22 - Adlene Hicheur
- - Moved analytical parameterization files to FieldMap/cdf
+ - Moved analytical parameterization files to FieldMap/cdf (from FieldMap v5r1)
 
 !====================== Magnet v3r8 2008-05-13 ===============================
 ! 2008-05-13 - Stephanie Hansmann-Menzemer
