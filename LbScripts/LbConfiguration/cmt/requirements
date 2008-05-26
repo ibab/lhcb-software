@@ -17,3 +17,8 @@ alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
 
 # remove public (l) access to the current directory
 alias mkprivate "find . -type d -print -exec fs setacl {} system:anyuser l \;"
+
+
+cmtpath_pattern \
+	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup
+	
