@@ -16,7 +16,8 @@
 **********************************************************************/
 HRESULT CreateShortcut(/*in*/ LPCTSTR lpszFileName, 
                     /*in*/ LPCTSTR lpszDesc, 
-                    /*in*/ LPCTSTR lpszShortcutPath)
+                    /*in*/ LPCTSTR lpszShortcutPath,
+                    /*in*/ LPCTSTR icon)
 {
     HRESULT hRes = E_FAIL;
     DWORD dwRet = 0;
@@ -57,6 +58,12 @@ HRESULT CreateShortcut(/*in*/ LPCTSTR lpszFileName,
         hRes = ipShellLink->SetDescription(lpszDesc);
         if (FAILED(hRes))
             return hRes;
+        if (strlen(icon) != 0)
+        {
+          hRes = ipShellLink->SetIconLocation(icon,0);
+          if (FAILED(hRes))
+            return hRes;
+        }
 
         // IPersistFile is using LPCOLESTR, so make sure 
                 // that the string is Unicode
@@ -156,12 +163,21 @@ int main( int argc, char **argv)
 //    LPCTSTR lpszShortcutPath = 
 //_T("C:\\Documents and Settings\\Administrator\\Desktop\\Sample Shortcut.lnk");
 	int status;
-		if (argc <3)
+  char *icon;
+		if (argc <4)
 		{
-			printf("Usage: CreShrt <targeFileName> <Description Text> <Shortcut_full_Path_with_filename>\n");
+			printf("Usage: CreShrt <targetFileName> <Description Text> <Shortcut_full_Path_with_filename> (optional) <Icon Path>\n");
 			return(0);
 		}
-    status = CreateShortcut(argv[1], argv[2], argv[3]);
+    if (argc == 4)
+    {
+      icon = "";
+    }
+    else
+    {
+      icon = argv[4];
+    }
+    status = CreateShortcut(argv[1], argv[2], argv[3], icon);
 		return(status);
 }
 
