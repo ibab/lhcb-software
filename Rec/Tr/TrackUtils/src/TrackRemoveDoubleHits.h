@@ -1,4 +1,4 @@
-// $Id: TrackRemoveDoubleHits.h,v 1.1 2008-03-27 12:33:48 lnicolas Exp $
+// $Id: TrackRemoveDoubleHits.h,v 1.2 2008-05-26 15:45:59 lnicolas Exp $
 #ifndef _TrackRemoveDoubleHits_H_
 #define _TrackRemoveDoubleHits_H_
 
@@ -19,6 +19,7 @@
 
 // Event
 #include "Event/Track.h"
+#include "Event/Node.h"
 #include "Event/STCluster.h"
 #include "Event/STLiteCluster.h"
 #include "Event/OTTime.h"

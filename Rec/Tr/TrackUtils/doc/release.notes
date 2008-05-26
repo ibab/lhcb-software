@@ -6,6 +6,7 @@
 
 ! 2008-05-21 - Louis Nicolas
  - TrackRemoveDoubleHits: separated OT double hits in acceptable (high tx) / not acceptable.
+ - TrackRemoveDoubleHits: remove measurements from tracks and set node as Outlier + added security check instead of removing LHCbIDs
 
 !========================== TrackUtils v1r20 2008-05-05 ======================
 ! 2008-05-05 - Adrian Perieanu
