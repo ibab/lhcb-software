@@ -132,7 +132,7 @@ class MainWindow(wx.Frame):
 
 class StatusPanel(wx.Panel):
     def __init__(self, parent, controller, id = wx.ID_ANY):
-        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 149), pos=(0,0))
+        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 139), pos=(0,0))
         self.parent = parent
         self.controller = controller
         devices = self.controller.devices
@@ -189,7 +189,7 @@ class StatusPanel(wx.Panel):
 
 class SparePanel(wx.Panel):
     def __init__(self, parent, controller, id = wx.ID_ANY):
-        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 150), pos=(0, 130))
+        wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 150), pos=(0, 140))
         self.parent = parent
         self.controller = controller
         wx.StaticText(self, wx.ID_ANY, "New spares:", pos=(10, 30))

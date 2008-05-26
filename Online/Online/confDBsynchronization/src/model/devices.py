@@ -10,6 +10,7 @@ from database.cdbutils import Tell1
 from database.utilities import getModuleType
 from time import strftime
 from re import compile
+import wx
 
 class Devices:
     def __init__(self, confdb, equipdb):
@@ -199,7 +200,7 @@ class Devices:
             except RuntimeError, inst:
                 self.log("error updating location of "+device.devicename,+"("+device.sn+")"+" new location: "+device.loc+" ERROR: "+inst.__str__())
             if progressFrame is not None:
-                progressFrame.update(i)
+                wx.CallAfter(progressFrame.update, i)
                 i+=1
         database.database.disconnect(db)
         self.create_connectivity(new_connections)
@@ -219,7 +220,7 @@ class Devices:
             self.confdb.executeQuery(update_query1)
             self.confdb.executeQuery(update_query2)
             if progressFrame is not None:
-                progressFrame.update(i)
+                wx.CallAfter(progressFrame.update, i)
                 i+=1
         print "\nUpdating associations of serialnb and ipname finished!"
     def insertNewDevices(self, progressFrame = None):
@@ -234,7 +235,7 @@ class Devices:
                 self.log("error inserting "+device.devicename+", "+device.sn+", "+inst.__str__())
                 print "Error inserting ", device.devicename, "(",device.sn, ")"
             if progressFrame is not None:
-                progressFrame.update(i)
+                wx.CallAfter(progressFrame.update, i)
                 i+=1
         print "\ninserting ports of devices..."
         for device in self.new_devices:
@@ -248,7 +249,7 @@ class Devices:
                 self.log("error inserting insports for "+device.devicename+", "+device.sn+", "+inst.__str__())
                 print "Error inserting insports for", device.devicename, "(",device.sn, ")"
             if progressFrame is not None:
-                progressFrame.update(i)
+                wx.CallAfter(progressFrame.update, i)
                 i+=1
         database.database.disconnect(db)
         print "inserting new devices finished!"
@@ -346,7 +347,7 @@ class Devices:
                     except RuntimeError, inst:
                         self.log("error updating ipaddress of "+item.devicename+" "+inst.__str__())
             if progressFrame is not None:
-                progressFrame.update(i)
+                wx.CallAfter(progressFrame.update, i)
         database.database.disconnect(db)
         print "\nUpdating DHCP data finished!"
     """creates the session log file"""
