@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.h,v 1.11 2008-02-05 16:44:18 frankb Exp $
+// $Id: RawDataCnvSvc.h,v 1.12 2008-05-26 06:16:46 cattanem Exp $
 //  ====================================================================
 //  RawDataCnvSvc.h
 //  --------------------------------------------------------------------
@@ -145,7 +145,7 @@ namespace LHCb  {
 
     /** Callback for reference processing (misused to attach leaves)
       *  @param[in]   pAddr     Reference to opaque object address
-      *  @param[out]  refpObj   Reference to store pointer to created object
+      *  @param[out]  pObj      Reference to store pointer to created object
       *
       *  @return Status code indicating success or failure
       */

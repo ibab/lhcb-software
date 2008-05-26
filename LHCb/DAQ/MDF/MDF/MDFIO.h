@@ -1,4 +1,4 @@
-// $Id: MDFIO.h,v 1.18 2008-02-05 16:44:17 frankb Exp $
+// $Id: MDFIO.h,v 1.19 2008-05-26 06:16:46 cattanem Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -156,7 +156,7 @@ namespace LHCb {
       */
     virtual StatusCode writeDataSpace(int         compTyp, 
                                       int         chksumTyp, 
-                                      void* const iodesc,
+                                      void* const ioDesc,
                                       RawBank*    hdr,
                                       char* const data,
                                       size_t      len);
@@ -220,8 +220,8 @@ namespace LHCb {
                                        void* const       ioDesc);
 
     /** Read raw banks from IO stream
-      * @param[in] data   Reference to StreamBuffer for storing data
       * @param[in] ioDesc Input IO descriptor       
+      * @param[in] dbg    Optional flag for debug printout (default false)
       *
       * @return  Number of valid bytes in stream buffer (-1 on failure).
       */

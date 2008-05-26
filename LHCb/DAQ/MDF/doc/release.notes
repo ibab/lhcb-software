@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r8 2008-05-26 ===============================
+! 2008-05-26 - Marco Cattaneo
+ - Fix doxygen warnings
+
 ! 2008-05-22 - Markus Frank
  - Improve error printouts in the event the raw bank structure is
    corrupted. Add printout of last known good bank.

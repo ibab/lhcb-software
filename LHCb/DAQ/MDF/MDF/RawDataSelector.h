@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.16 2008-04-10 09:58:42 cattanem Exp $
+// $Id: RawDataSelector.h,v 1.17 2008-05-26 06:16:46 cattanem Exp $
 //====================================================================
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -87,7 +87,7 @@ namespace LHCb  {
     virtual StatusCode createContext(Context*& refpCtxt) const = 0;
 
     /** Access last item in the iteration
-      * @param[in.out] refContext Reference to the Context object.
+      * @param[in,out] refContext Reference to the Context object.
       */
     virtual StatusCode last(Context& /* refContext */ ) const    {
       return StatusCode::FAILURE;
@@ -102,6 +102,7 @@ namespace LHCb  {
 
     /** Get next iteration item from the event loop context, but skip jump elements
       * @param[in,out] refCtxt   Reference to the context
+      * @param[in]     jump      Number of events to be skipped
       * 
       * @return StatusCode indicating success or failure
       */
@@ -109,7 +110,6 @@ namespace LHCb  {
 
     /** Get previous iteration item from the event loop context
       * @param[in,out] refCtxt   Reference to the context
-      * @param[in]     jump      Number of events to be skipped
       * 
       * @return StatusCode indicating success or failure
       */

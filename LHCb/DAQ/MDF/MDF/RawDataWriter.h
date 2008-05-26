@@ -1,4 +1,4 @@
-// $Id: RawDataWriter.h,v 1.7 2008-02-05 16:44:18 frankb Exp $
+// $Id: RawDataWriter.h,v 1.8 2008-05-26 06:16:46 cattanem Exp $
 //  ====================================================================
 //  RawDataWriter.h
 //  --------------------------------------------------------------------
@@ -147,6 +147,7 @@ namespace LHCb    {
     virtual std::pair<char*,int> getDataSpace(void* const ioDesc, size_t len);
 
     /** Write byte buffer to output stream
+      * @param[in] iodesc  Output IO descriptor       
       * @param[in] data    Data buffer to be streamed
       * @param[in] len     Length of the data buffer
       *
