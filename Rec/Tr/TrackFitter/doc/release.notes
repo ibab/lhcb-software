@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-05-27 Wouter Hulsbergen
+ - bug fix: don't remove outlier from track with 1 dof
+ - added debug output
+
 !=========================== TrackFitter v2r24 2008-04-04 ===================
 ! 2008-03-31 M Needham 
  - Follow changes in fitter interface 
