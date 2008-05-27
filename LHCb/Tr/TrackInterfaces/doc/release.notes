@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2008-05-27 - Wouter Hulsbergen
+ - Extended interface of ITrackVertexer
+
 !====================== TrackInterfaces v3r15 2008-05-22 =====================
 ! 2008-05-22 - Marco Cattaneo
  - Add IFunctionTool.h and ITrackMatch.h, previously in HltBase
