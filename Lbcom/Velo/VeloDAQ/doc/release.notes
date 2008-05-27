@@ -2,6 +2,10 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+!=========================  VeloDAQ v4r2 2008-05-26 =======================
+! 2008-05-26 T Szumlak
+ - adapt VeloFull decoding to run without ODIN bank; this behaviour
+   is contorlable via options file 
 
 !=========================  VeloDAQ v4r1 2008-04-17 =======================
 ! 2008-03-18 - Kurt Rinnert

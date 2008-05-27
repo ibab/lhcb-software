@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.1 2007-09-18 00:04:14 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.2 2008-05-27 13:40:07 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -47,7 +47,7 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
     m_pedBankPresent ( false ),
     m_errorBankPresent ( false )
 {
-
+  declareProperty("RunWithODIN", m_runWithODIN=true);  
 }
 //=============================================================================
 // Destructor
@@ -219,8 +219,10 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
     m_rawEvent->banks(LHCb::RawBank::ODIN);
   // cache the bank if present
   if(odinBank.empty()){
-    Error(" ==> Data stream corrupted!");
-    return ( StatusCode::FAILURE );
+    if(m_runWithODIN){
+      Error(" ==> Data stream corrupted!");
+      return ( StatusCode::FAILURE );
+    }
   }
   //
   if(m_data.empty()) return ( StatusCode::FAILURE );
