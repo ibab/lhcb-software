@@ -7,7 +7,7 @@ class DHCP:
     Given an Iterator (e.g. CSV iteratable), the DHCP-class will find
     the appropriate date (mac adresse and ip adress)
     
-    You can say which index (column) of the data the iterator returns is which data
+    You can define the columns just in case the dhcp file changes
     """ 
     def __init__(self, file, flags, name_index = 0, location_index = 1, ip_index = 2, mac_index = 3, serial_index = 6):
         self.file = file

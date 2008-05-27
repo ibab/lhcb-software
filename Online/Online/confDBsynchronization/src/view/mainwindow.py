@@ -5,7 +5,8 @@ from worker.threads import EmptyThread, InsertThread, SynchronizeThread
 from spareWindow import SpareWindow
 
 from config import cDB_name, cDB_user, cDB_pass
-from model.devices import Devices
+#from model.devices import Devices
+from model.device import Device
 from worker.log import createLog
 
 ID_ABOUT=101
@@ -79,19 +80,19 @@ class MainWindow(wx.Frame):
         wx.EVT_MENU(self, ID_SPARE_DELETE, self.OnDeleteSpare)
         self.Show(True)
     def OnEmpty(self, e):
-        progressFrame = ProgressFrame(self, "Deleting all Devices...", "Please be patient", len(self.controller.devices.devices))
+        progressFrame = ProgressFrame(self, "Deleting all Devices...", "Please be patient", len(Device.equipdb_devices))
         emptyThread = EmptyThread(self.controller.devices, progressFrame, self.controller)
         emptyThread.start()
     def OnInsert(self, e):
-        progressFrame = ProgressFrame(self, "Inserting new Devices...", "Please be patient", 2*(len(self.controller.devices.new_devices_no_dhcp)+len(self.controller.devices.new_devices_with_dhcp)))
+        progressFrame = ProgressFrame(self, "Inserting new Devices...", "Please be patient", 2*(len(Device.new_devices)))
         insertThread = InsertThread(self.controller.devices, progressFrame, self.controller)
         insertThread.start()
     def OnSynchronize(self, e):
-        progressFrame = ProgressFrame(self, "Synchronizing Devices...", "Please be patient", 2*(len(self.controller.devices.devices_new_dhcp)+len(self.controller.devices.changed_association)+len(self.controller.devices.changed_location)))
+        progressFrame = ProgressFrame(self, "Synchronizing Devices...", "Please be patient", 2*(len(Device.changed_devices)))
         synchronizeThread = SynchronizeThread(self.controller.devices, progressFrame, self.controller)
         synchronizeThread.start()
     def OnTFCMUNIN01(self, e):
-        devices.connect_masterhugins()
+        self.controller.devices.connect_masterhugins()
         d= wx.MessageDialog( self, "Connecting the hugin01 to TFCMUNIN01 has finished","Finished ", wx.OK)
         d.ShowModal()
         d.Destroy()
@@ -139,46 +140,46 @@ class StatusPanel(wx.Panel):
         wx.StaticText(self, wx.ID_ANY, "New devices without DHCP Data:", pos=(10, 10))
         wx.StaticText(self, wx.ID_ANY, "New devices with DHCP Data:", pos=(10, 30))
         wx.StaticText(self, wx.ID_ANY, "New devices at all:", pos=(10, 50))
-        wx.StaticText(self, wx.ID_ANY, "Devices with new DHCP Data:", pos=(10, 70))
+        wx.StaticText(self, wx.ID_ANY, "Changed devices:", pos=(10, 70))
         wx.StaticText(self, wx.ID_ANY, "Devices up-to-date:", pos=(10, 90))
         wx.StaticText(self, wx.ID_ANY, "Devices at all:", pos=(10, 110))
         ##############################################################################
-        self.newDevicesWithoutDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.new_devices_no_dhcp)), pos=(200, 10))
+        self.newDevicesWithoutDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_no_dhcp)), pos=(200, 10))
         self.newDevicesWithoutDHCPText.SetEditable(False)
-        self.newDevicesWithDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.new_devices_with_dhcp)), pos=(200, 30))
+        self.newDevicesWithDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_with_dhcp)), pos=(200, 30))
         self.newDevicesWithDHCPText.SetEditable(False)
-        self.newDevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.new_devices_with_dhcp)+len(devices.new_devices_no_dhcp)), pos=(200, 50))
+        self.newDevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_with_dhcp)+len(Device.new_devices_no_dhcp)), pos=(200, 50))
         self.newDevicesAtAllText.SetEditable(False)
-        self.DevicesWithNewDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.devices_new_dhcp)), pos=(200, 70))
+        self.DevicesWithNewDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.changed_devices)), pos=(200, 70))
         self.DevicesWithNewDHCPText.SetEditable(False)
-        self.newDevicesUpToDatePText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.devices)-len(devices.changed_association)-len(devices.changed_location)-len(devices.new_devices_with_dhcp)-len(devices.new_devices_no_dhcp)-len(devices.devices_new_dhcp)), pos=(200, 90))
+        self.newDevicesUpToDatePText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.up_to_date_devices)), pos=(200, 90))
         self.newDevicesUpToDatePText.SetEditable(False)
-        self.DevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(devices.devices)), pos=(200, 110))
+        self.DevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.equipdb_devices)), pos=(200, 110))
         self.DevicesAtAllText.SetEditable(False)
     def update(self):
         devices = self.controller.devices
         spareDB = self.controller.spareDB
-        self.newDevicesWithoutDHCPText.ChangeValue(str(len(devices.new_devices_no_dhcp)))
+        self.newDevicesWithoutDHCPText.ChangeValue(str(len(Device.new_devices_no_dhcp)))
         self.newDevicesWithoutDHCPText.SetModified(True)
         self.newDevicesWithoutDHCPText.Refresh()
         self.newDevicesWithoutDHCPText.Update()
-        self.newDevicesWithDHCPText.ChangeValue(str(len(devices.new_devices_with_dhcp)))
+        self.newDevicesWithDHCPText.ChangeValue(str(len(Device.new_devices_with_dhcp)))
         self.newDevicesWithDHCPText.SetModified(True)
         self.newDevicesWithDHCPText.Refresh()
         self.newDevicesWithDHCPText.Update()
-        self.newDevicesAtAllText.ChangeValue(str(len(devices.new_devices_with_dhcp)+len(devices.new_devices_no_dhcp)))
+        self.newDevicesAtAllText.ChangeValue(str(len(Device.new_devices_with_dhcp)+len(Device.new_devices_no_dhcp)))
         self.newDevicesAtAllText.SetModified(True)
         self.newDevicesAtAllText.Refresh()
         self.newDevicesAtAllText.Update()
-        self.DevicesWithNewDHCPText.ChangeValue(str(len(devices.devices_new_dhcp)))
+        self.DevicesWithNewDHCPText.ChangeValue(str(len(Device.changed_devices)))
         self.DevicesWithNewDHCPText.SetModified(True)
         self.DevicesWithNewDHCPText.Refresh()
         self.DevicesWithNewDHCPText.Update()
-        self.newDevicesUpToDatePText.ChangeValue(str(len(devices.devices)-len(devices.changed_association)-len(devices.changed_location)-len(devices.new_devices_with_dhcp)-len(devices.new_devices_no_dhcp)-len(devices.devices_new_dhcp)))
+        self.newDevicesUpToDatePText.ChangeValue(str(len(Device.up_to_date_devices)))
         self.newDevicesUpToDatePText.SetModified(True)
         self.newDevicesUpToDatePText.Refresh()
         self.newDevicesUpToDatePText.Update()
-        self.DevicesAtAllText.ChangeValue(str(len(devices.devices)))
+        self.DevicesAtAllText.ChangeValue(str(len(Device.equipdb_devices)))
         self.DevicesAtAllText.SetModified(True)
         self.DevicesAtAllText.Refresh()
         self.DevicesAtAllText.Update()

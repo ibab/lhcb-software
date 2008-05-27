@@ -41,6 +41,7 @@ class SynchronizeThread(Thread):
     def run(self):
         self.devices.updateDHCP(self.progressFrame)
         self.devices.updateChangesOfLocation(self.progressFrame)
+        #self.devices.updateConfDB() #TODO
         self.devices.update()
         self.progressFrame.OnFinish()
         d2= wx.MessageDialog( None, "Updating Devices finished!","Updating devices finished!", wx.OK)
