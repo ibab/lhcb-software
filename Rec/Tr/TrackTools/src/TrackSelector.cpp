@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.14 2008-04-16 15:34:31 pkoppenb Exp $
+ *  $Id: TrackSelector.cpp,v 1.15 2008-05-27 10:49:21 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -38,14 +38,14 @@ TrackSelector::TrackSelector( const std::string& type,
 
   declareProperty( "MinPCut",    m_minPCut     = 0.0 ); // in GeV
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
-  declareProperty( "MinChi2Cut", m_minChi2Cut  = 0.0 );
+  declareProperty( "MinChi2Cut", m_minChi2Cut  = -1  );
   declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
   declareProperty("MinEtaCut", m_minEtaCut  = boost::numeric::bounds<double>::lowest());
 
 
   declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
-  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = boost::numeric::bounds<double>::highest() );
+  declareProperty( "MaxChi2Cut", m_maxChi2Cut  = -1 );
   declareProperty( "MaxHitCut",  m_maxHitCut   = boost::numeric::bounds<double>::highest() );
 
   declareProperty( "MaxEtaCut",  m_maxEtaCut   = boost::numeric::bounds<double>::highest() );
@@ -114,13 +114,13 @@ bool TrackSelector::accept ( const Track& aTrack ) const
 
   // chi-squared
   const double chi2 = aTrack.chi2PerDoF();
-  if ( chi2 < m_minChi2Cut || chi2 > m_maxChi2Cut )
-  {
+  if ( (m_maxChi2Cut>=0 && (chi2 > m_maxChi2Cut || aTrack.nDoF()<=0 ) )  ||
+       (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) ) {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
   }
-
+  
   // cut p
   const double p = aTrack.p();
   if ( p < m_minPCut || p > m_maxPCut )
