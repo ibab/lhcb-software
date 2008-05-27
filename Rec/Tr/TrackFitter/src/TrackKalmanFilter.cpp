@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.58 2008-05-27 10:12:19 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.59 2008-05-27 10:35:32 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -47,7 +47,6 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "Smooth", m_smooth = true ) ;
-  declareProperty( "UseCLHEPInversion", m_useCLHEPInversion = false ) ;
 }
 
 //=========================================================================
@@ -546,8 +545,6 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   // Get the filtered state from the forward fit
   const TrackVector& filtStateX = thisNode.state().stateVector();
   const TrackSymMatrix& filtStateC = thisNode.state().covariance();
-#define CURRENT
-#ifdef CURRENT
   // Calculate the gain matrix. Start with inverting the cov matrix of the difference.
   TrackSymMatrix R = filtStateC + predRevC ;
   TrackSymMatrix invR = R ;
@@ -559,10 +556,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
 
   TrackVector    smoothedX ;
   TrackSymMatrix smoothedC ;
-
-  // Now we need to choose wisely which state is the reference. (In a
-  // perfect world it would not make a difference.) There are three
-  // expressions:
+  // Now we need to choose wisely which state is the reference. (In
+  // a perfect world it would not make a difference.)
   if( filtStateC(0,0) < predRevC(0,0) ) {
     SMatrix<double,5,5> K = filtStateC * invR ;
     smoothedX = filtStateX + K * (predRevX - filtStateX) ;
@@ -583,23 +578,9 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
     ROOT::Math::AssignSym::Evaluate(smoothedC, -2 * K * predRevC) ;
     smoothedC += predRevC + ROOT::Math::Similarity(K,R) ;
   }
-#else
-  TrackSymMatrix invfiltStateC(filtStateC) ;
-  invertMatrix(invfiltStateC) ;
-  TrackSymMatrix invpredRevC(predRevC) ;
-  invertMatrix(invpredRevC) ;
-  TrackSymMatrix smoothedC( invpredRevC + invfiltStateC ) ; 
-  invertMatrix(smoothedC) ;
-  TrackVector    smoothedX = smoothedC * ( invpredRevC * predRevX + invfiltStateC * filtStateX ) ;
-#endif
-
-  if( !fabs(smoothedX(0))>0 ) {
-    error() << "problem in smoother: "
-	    << smoothedX << endreq ;
-  }
-
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
+
   return StatusCode::SUCCESS;
 }
 
@@ -623,7 +604,7 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
 //=========================================================================
 // Invert covariance matrix after conditioning
 //=========================================================================
-#include "CLHEP/Matrix/SymMatrix.h"
+
 bool TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& matrix ) const
 {
   // Reduce matrix condition number by scaling it such that it has
@@ -637,21 +618,7 @@ bool TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& matrix ) const
   for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
     for(size_t k=0; k<=j; ++k)
       matrix(j,k) *= scale[j] * scale[k] ;
-  bool OK(true) ;
-  if( !m_useCLHEPInversion ) {
-    OK = matrix.Invert() ;
-  } else {
-    int ierr ;
-    static CLHEP::HepSymMatrix clhepmatrix(5) ;
-    for( size_t j=0; j<TrackSymMatrix::kRows; ++j) 
-      for( size_t k=0; k<=j; ++k) 
-	clhepmatrix.fast(j+1,k+1) = matrix(j,k) ;
-    clhepmatrix.invert(ierr) ;
-    for( size_t j=0; j<TrackSymMatrix::kRows; ++j) 
-      for( size_t k=0; k<=j; ++k) 
-	matrix(j,k) = clhepmatrix.fast(j+1,k+1);
-    OK = ierr==0 ;
-  }
+  bool OK = matrix.Invert() ;
   for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
     for(size_t k=0; k<=j; ++k)
       matrix(j,k) *= scale[j] * scale[k] ;
