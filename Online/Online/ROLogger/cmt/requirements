@@ -13,3 +13,6 @@ use DIM           v* Online
 apply_pattern install_more_includes more=ROLogger
 library ROLogger *.cpp
 apply_pattern linker_library   library=ROLogger
+
+private
+macro cppdebugflags    "" debug " -D_DEBUG " 

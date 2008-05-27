@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.5 2008-05-27 19:05:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.6 2008-05-27 19:40:50 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -178,8 +178,10 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     ioc.send(m_msg,CMD_START,new std::string(text));
     ::strftime(tim,12,"%Y-",&start);
     tim[17] = 0;
+    //#ifdef _DEBUG
     begin = ::mktime(gmtime(&begin));
     end = ::mktime(gmtime(&end));
+    //#endif
     int sev = MessageLine::severityLevel(m_severity);
     while(in.getline(text,sizeof(text)).good()) {
       p = ::strchr(text,'\n');
@@ -187,6 +189,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
       ::strncpy(&tim[5],text,12);
       ::strptime(tim,"%Y-%b%d-%H%M%S",&curr);
       time_t now = ::mktime(&curr);
+      //now = ::mktime(gmtime(&now));
       if ( now >= begin && now <= end ) {
 	MessageLine line(text);
 	if ( f.acceptMessage(line) ) {
