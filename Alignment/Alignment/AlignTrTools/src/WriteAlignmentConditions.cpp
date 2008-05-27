@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.4 2008-03-18 07:37:34 janos Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.5 2008-05-27 16:49:48 gersabec Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -29,7 +29,7 @@ WriteAlignmentConditions::WriteAlignmentConditions( const std::string& name,
   declareProperty("footer", m_footer = "</DDDB>");
   declareProperty("startTag", m_startTag = "<condition");
   declareProperty("outputFile",m_outputFileName = "alignment.xml");
-  declareProperty("depth", m_depth = 3u);
+  declareProperty("depths", m_depths );
   declareProperty("precision", m_precision = 16u);
 }
 
@@ -51,25 +51,32 @@ StatusCode WriteAlignmentConditions::initialize() {
 	 << "footer     = " << m_footer << "\n"
 	 << "startTag   = " << m_startTag << "\n"
 	 << "outputFile = " << m_outputFileName << "\n"
-	 << "depth      = " << m_depth << "\n"
          << "precision  = " << m_precision << endreq;
   
   return sc;
 }
 
-void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& out)
+void WriteAlignmentConditions::children(DetectorElement* parent, std::ofstream& out, unsigned int depth)
 {
   if (parent != 0){
     const Condition* aCon = parent->geometry()->alignmentCondition();
-    if (aCon) {
-      std::string temp = strip(aCon->toXml("", false, m_precision));
-      replaceChars(temp);
-      out << temp << std::endl;
+    if ( aCon ) {
+      bool wanted = false;
+      for ( unsigned int i = 0; i < m_depths.size(); i++ ) { // check if current depth is wanted for output
+        if ( depth == m_depths[ i ] ) wanted = true;
+      }
+      if ( 0 == m_depths.size() ) wanted = true; // in case of empty list print all levels
+      if ( wanted ) {
+        std::string temp = strip(aCon->toXml("", false, m_precision));
+        replaceChars(temp);
+        out << temp << std::endl;
+      }
     }
+    depth++;
     IDetectorElement::IDEContainer::const_iterator iChild = parent->childBegin();
     for ( ; iChild != parent->childEnd(); ++iChild ) {
       DetectorElement* tElem = dynamic_cast<DetectorElement*>(*iChild);
-      children(tElem,out);
+      children(tElem,out,depth);
     }  
   }
 }
@@ -90,7 +97,7 @@ StatusCode WriteAlignmentConditions::finalize()
   const Condition* aCon = det->geometry()->alignmentCondition();
   if (aCon) {
     outputFile << header(aCon->toXml("", true, m_precision)) << std::endl;
-    children(det, outputFile);
+    children(det, outputFile, 0);
     outputFile << footer() << std::endl;
   }
   else {

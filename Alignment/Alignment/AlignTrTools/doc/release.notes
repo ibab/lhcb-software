@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-05-27 - Marco Gersabeck
+ - WriteAlignmentConditions: Added choice to select layers to be printed as needed by VELO. Default behaviour unchanged.
+
 ! 2008-05-21 - Louis Nicolas
  - AlignSelTool: added cuts on track eta and on number of IT and Velo clusters in event
  - AlignTrackMonitor and AlignSaveTuple: cleaned up a bit and added: track eta, # IT clusters and # Velo clusters

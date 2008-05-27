@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.h,v 1.3 2008-03-18 07:37:34 janos Exp $
+// $Id: WriteAlignmentConditions.h,v 1.4 2008-05-27 16:49:48 gersabec Exp $
 #ifndef WriteAlignmentConditions_H
 #define WriteAlignmentConditions_H 1
 
@@ -43,7 +43,7 @@ private:
   std::string m_startTag;
 
   /// Recursively print out the tree of the child DetectorElements
-  void children(DetectorElement* parent, std::ofstream& out);
+  void children(DetectorElement* parent, std::ofstream& out, unsigned int depth);
 
   std::string footer() const;
   std::string header(const std::string& conString) const;
@@ -53,8 +53,8 @@ private:
 
   std::string m_outputFileName;
   std::ofstream m_outputFile;
-  unsigned int m_depth;
   unsigned int m_precision;
+  std::vector<unsigned int> m_depths;
 };
 
 #endif // WriteAlignment conditions
