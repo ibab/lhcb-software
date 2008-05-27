@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.46 2008-03-31 07:07:59 mneedham Exp $
+// $Id: TrackMasterFitter.cpp,v 1.47 2008-05-27 10:38:56 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -105,7 +105,7 @@ StatusCode TrackMasterFitter::initialize()
   m_refStateTool      = tool<ITrackManipulator>( "LongTrackReferenceCreator", "RefStateTool", this );
   m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
   
-  m_debugLevel   = msgLevel( MSG::DEBUG );  
+  m_debugLevel   = msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) ;  
 
   info() << " " << endmsg
          << "============ TrackMasterFitter Settings ===========" << endmsg
@@ -200,7 +200,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   // Outlier removal iterations
   iter = 1;
   while ( iter <= m_numOutlierIter &&
-          nNodesWithMeasurement( track ) > seed.nParameters() &&
+          nNodesWithMeasurement( track ) > seed.nParameters() + 1 &&
           outlierRemoved( track ) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
 
@@ -231,7 +231,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   sc = determineStates( track, pid );
   if ( sc.isFailure() )  {
     track.clearNodes() ;
-    debug() << "fit failed" << endmsg ;
+    if( m_debugLevel ) debug() << "fit failed" << endmsg ;
   } else {
     if ( m_debugLevel && !track.states().empty() )
       debug() << "first state = " << track.firstState() << endmsg;
@@ -260,7 +260,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track, ParticleID pid ) co
     double z = closestToBeamLine( closeState );    
     sc = m_extrapolator -> propagate( closeState , z, pid );
     if ( sc.isFailure() ) {
-      debug() << "Extrapolating to z = " << z << endmsg;
+      if( m_debugLevel ) debug() << "Extrapolating to z = " << z << " failed " << endmsg;
       Warning("State closest to beam line not added, extrapolation failed",StatusCode::FAILURE,1).ignore() ;
     } else {
       // add the state at the position closest to the beam line
@@ -448,6 +448,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   track.clearNodes() ;
 
   // make sure the track has sufficient reference states
+  if( m_debugLevel ) debug() << "Track before making nodes: " << track << endmsg ;
   StatusCode sc = m_refStateTool -> execute( track );
   if (sc.isFailure())
     return Warning("Problems setting reference info", StatusCode::FAILURE, 1);
@@ -458,8 +459,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
     if ( sc.isFailure() )
       return Error( "Unable to load measurements!", StatusCode::FAILURE );
     track.setPatRecStatus( Track::PatRecMeas );
-    debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
-            << ", " << track.nMeasurements() << endreq;
+    if(m_debugLevel)
+      debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
+	      << ", " << track.nMeasurements() << endreq;
   }
 
   // Create the nodes for the measurements.
@@ -565,7 +567,8 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   int    nhitsT(0), nhitsTT(0), nhitsVelo(0) ;
   for( std::vector<Node*>::const_iterator iNode = iNode = track.nodes().begin(); 
        iNode != track.nodes().end(); ++iNode ) 
-    if( (*iNode)->hasMeasurement() ) {
+    if( (*iNode)->hasMeasurement() &&
+	(*iNode)->type() != LHCb::Node::Outlier ) {
       const FitNode* node = dynamic_cast<FitNode*>(*iNode) ;
       if(!node) {
 	error() << "fillExtraInfo: node is not a FitNode" << endmsg ;
@@ -597,34 +600,22 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   const int nPar = track.nStates()>0 ? track.firstState().nParameters() : 5 ;
   
   if( track.hasT() ) {
-    track.addInfo( Track::FitTChi2 , m_upstream ? chisqT[0] : chisqT[1] ) ;
+    track.addInfo( Track::FitTChi2 , chisqT[0] ) ;
     track.addInfo( Track::FitTNDoF , nhitsT - nPar ) ;
-    // if( track.hasTT() ) {
-    //   track.addInfo( TTTChi2Key , m_upstream ? chisqT[0] + chisqTT[0] : chisqT[1] + chisqTT[1] ) ;
-    //   track.addInfo( TTTNDoFKey , nhitsT + nhitsTT - nPar ) ;
-    // }
   }
-
-  if( track.hasVelo() ) {
-    track.addInfo( Track::FitVeloChi2, m_upstream ? chisqVelo[1] : chisqVelo[0] ) ;
-    track.addInfo( Track::FitVeloNDoF, nhitsVelo - nPar ) ;
-    // if( track.hasTT() ) {
-    //   track.addInfo( VeloTTChi2Key , m_upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0] ) ;
-    //   track.addInfo( VeloTTNDoFKey , nhitsVelo + nhitsTT - nPar ) ;
-    // }
   
+  if( track.hasVelo() ) {
+    track.addInfo( Track::FitVeloChi2, chisqVelo[1] ) ;
+    track.addInfo( Track::FitVeloNDoF, nhitsVelo - nPar ) ;
     if( track.hasT() ) {
       // Calculate the chisquare of the breakpoint between TT and T
-      double thischisqT       = m_upstream ? chisqT[0] : chisqT[1] ;
-      double thischisqVeloTT  = m_upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0] ;
+      double thischisqT       = chisqT[0] ;
+      double thischisqVeloTT  = chisqVelo[1] + chisqTT[1] ;
       // they should be equal, but this is safer
       double chisqTot   = std::max( chisqT[0]+chisqTT[0]+chisqVelo[0], chisqT[1]+chisqTT[1]+chisqVelo[1] ) ;
       double chisqMatch = chisqTot - thischisqT - thischisqVeloTT ;
       track.addInfo( Track::FitMatchChi2, chisqMatch ) ;
     }
-
-    double thischisqvelo = m_upstream ? chisqVelo[1] : chisqVelo[0] ;
-    assert( thischisqvelo == track.info( Track::FitVeloChi2, 0 ) );
   }
 }
 
@@ -652,8 +643,6 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       scatteringMomentum = m_scatteringPt/tanth ;
     }
     
-#define USETRACKTRAJ
-#ifdef USETRACKTRAJ
     LHCb::TrackTraj tracktraj( nodes ) ;
     IMaterialLocator::Intersections intersections ;
     m_materialLocator->intersect( tracktraj, intersections ) ;
@@ -673,30 +662,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
       zorigin = ztarget ;
     }
-#else
-    IMaterialLocator::Intersections intersections ;
-
-    // now we need to redistribute the result between the nodes. the first node cannot have any noise.
-    LHCb::Track::NodeContainer::iterator inode = nodes.begin() ;
-    LHCb::Track::NodeContainer::iterator prevnode = inode ;
-    for(++inode; inode!=nodes.end(); ++inode) {
-      m_materialLocator->intersect((*prevnode)->refVector(),
-				   (*inode)->refVector(),intersections) ;
-      
-      FitNode* node = dynamic_cast<FitNode*>(*inode) ;
-      double ztarget = node->z() ;
-      double zorigin = (*prevnode)->z() ;
-      Gaudi::TrackSymMatrix noise ;
-      Gaudi::TrackVector delta;
-      m_materialLocator->computeMaterialCorrection(noise,delta,intersections,zorigin,ztarget,
-                                                   scatteringMomentum,pid ;
-      node->setNoiseMatrix( noise ) ;
-      double deltaE = 1 / ( 1/scatteringMomentum + delta(4) ) - scatteringMomentum ;
-      node->setDeltaEnergy( applyenergyloss ? deltaE : 0 ) ;
-      prevnode = inode ;
-    } 
-
-#endif
+    
   }
   return StatusCode::SUCCESS ;
 }
@@ -720,7 +686,9 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       StatusCode thissc = m_extrapolator -> propagate(statevector,z,&F) ;
       if ( thissc.isFailure() ) {
         error() << "unable to propagate reference vector from z=" << refvector->z() 
-                << " to " << z ;
+		<< " to " << z 
+		<< "; track type = " << track.type()
+		<< ": vec = " << refvector->parameters() << endmsg ;
         sc = thissc ;
       }
       
