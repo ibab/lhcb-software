@@ -115,6 +115,14 @@
       </method>
 
       <method
+        type = 'double'
+        name = 'propagationTimeFromY'
+        desc = 'Retrieve the propagation time for a given global y position'
+        const = 'TRUE'>
+        <arg type='double' name='globalY' />
+      </method>
+
+      <method
         type    = 'LHCb::OTMeasurement*'
         name    = 'clone'
         desc    = 'Clone the OTMeasurement'
