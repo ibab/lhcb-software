@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.23 2007-10-03 06:58:08 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.24 2008-05-27 13:32:56 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -31,8 +31,6 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   , m_pMCDecFinder(0)
   , m_pLinker(0)
   , m_mcParticles(0)
-  , m_eventCount(0)
-  , m_foundDecay(0)
 {
   declareInterface<IFilterCriterion>(this);
   declareProperty( "VetoSignal", m_filterOut = false );
@@ -65,15 +63,31 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 
   info() << "Associating using method " << m_method << endmsg ;
 
-  // For Particle -> MCParticle association  
-  m_pLinker = new Particle2MCLinker(this,
-                                    m_method,
-                                    m_particlePaths);
+  // Setup incident services
+  incSvc()->addListener( this, IncidentType::BeginEvent );
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "Initialised happily" << endmsg ;
   setActive(); 
 
   return sc ;
+}
+
+//=========================================================================
+// handle method for incident service 
+//=========================================================================
+void TrueMCFilterCriterion::handle( const Incident& incident) {
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() ){
+    if ( 0!= m_mcParticles ){
+      m_mcParticles = 0;
+      if (msgLevel(MSG::DEBUG)) debug() << "New event, resetting mc Particles" << endmsg ;
+    }
+    if (0!=m_pLinker){
+      delete m_pLinker ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Deleted Linker" << endmsg ;
+      m_pLinker = 0 ;
+    }
+  }
 }
 //=============================================================================
 // Test if filter is satisfied
@@ -94,7 +108,8 @@ bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
     if( NULL == MC ){
       if (msgLevel(MSG::DEBUG)) debug() << "Empty association range" << endmsg;
       if (msgLevel(MSG::DEBUG)) debug() << "No association for " << part->key() << " "
-                                        << part->particleID().pid() << " " << part->momentum()  << endmsg ;
+                                        << part->particleID().pid() << " " 
+                                        << part->momentum()  << endmsg ;
       return m_filterOut ; // true if one wants to kill all, false else
     }
     
@@ -125,14 +140,17 @@ bool TrueMCFilterCriterion::testParticle( const LHCb::Particle* const & part ) {
 //=========================================================================
 bool TrueMCFilterCriterion::preloadMCParticles ( ) {
   // MC list
-  const LHCb::MCParticle::Container* kmcparts = get<LHCb::MCParticle::Container>( m_mcParticlePath );
-  if( !kmcparts ){
-    fatal() << "Unable to find MC particles at '" << m_mcParticlePath << "'" << endmsg;
-    return false;
-  }
-  if ( kmcparts != m_mcParticles ){ // new event -> load particles
-    if (msgLevel(MSG::DEBUG)) debug() << "New event " << endmsg ;
-    m_eventCount++;
+  if ( 0 == m_mcParticles ){ // new event -> load particles
+
+    // For Particle -> MCParticle association  
+    if ( 0 != m_pLinker ) Exception("Linker should have been deleted");
+    m_pLinker = new Particle2MCLinker(this,m_method,m_particlePaths);
+
+    if (msgLevel(MSG::DEBUG)) debug() << "New event, get MC particles " << endmsg ;
+    // this will issue an error if no MC particles present
+    const LHCb::MCParticle::Container* kmcparts = 
+      get<LHCb::MCParticle::Container>( m_mcParticlePath );
+    counter("New Events")++;
     m_mcParticles = kmcparts ;
     m_decayMembers.clear() ; // clear decay members
     
@@ -145,7 +163,7 @@ bool TrueMCFilterCriterion::preloadMCParticles ( ) {
     }
     if (MCHead.empty()) {
       if (m_complain)  warning() << "Expected decay not found in this event" << endmsg ;
-    } else m_foundDecay++ ;
+    } else counter("Found Decay")++ ;
     LHCb::MCParticle::ConstVector::const_iterator ihead;
     for( ihead = MCHead.begin(); ihead != MCHead.end(); ++ihead){
       const LHCb::MCParticle* mc = *ihead;
@@ -188,7 +206,6 @@ bool TrueMCFilterCriterion::findMCParticle( const LHCb::MCParticle* MC ) {
 StatusCode TrueMCFilterCriterion::finalize(){
   
   if( NULL != m_pLinker ) delete m_pLinker;
-  always() << "Tested " << m_eventCount << " events of which " << m_foundDecay << " contained the decay" << endmsg ;
   return GaudiTool::finalize() ;
   
 }

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.215 2008-04-24 14:49:48 jpalac Exp $
+! $Id: release.notes,v 1.216 2008-05-27 13:32:56 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+temporary tag :  v9r12p1
+! 2008-05-27 - Patrick Koppenburg
+ - TrueMCFilterCriterion : use Incident Service to find new events, not pointer
+   to MC Particles container.
 
 !========================== DaVinciMCTools v9r12 2008-04-24 ==================
 

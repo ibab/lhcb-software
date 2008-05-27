@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.h,v 1.14 2007-10-03 06:58:08 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.15 2008-05-27 13:32:56 pkoppenb Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
@@ -8,6 +8,8 @@
 
 class IMCDecayFinder;
 #include "Relations/RelationWeighted1D.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 /** @class TrueMCFilterCriterion TrueMCFilterCriterion.h
  *  
@@ -17,7 +19,8 @@ class IMCDecayFinder;
  *  @date   2004-09-13
  *
  */
-class TrueMCFilterCriterion : public FilterCriterionBase {
+class TrueMCFilterCriterion : public FilterCriterionBase,
+                              virtual public IIncidentListener {
 
 public: 
 
@@ -30,6 +33,8 @@ public:
   /// Initialize
   StatusCode initialize( );
   
+  /// Implement the handle method for the Incident service.
+  void handle( const Incident& incident );
 
   /// Finalize
   StatusCode finalize( );
@@ -52,8 +57,6 @@ private:
   
   const LHCb::MCParticle::Container* m_mcParticles ; ///< pointer to MC particles
   LHCb::MCParticle::ConstVector m_decayMembers ; ///< list of decay members in this decay
-  int m_eventCount ; ///< Count the number of new events
-  int m_foundDecay ; ///< Count number of times the decay has been found per event
   bool m_complain ;  ///< Complain about events without MC truth (i.e. for signal)
   int m_method ; ///< method to associate
   
