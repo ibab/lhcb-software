@@ -41,13 +41,21 @@ ApplicationMgr.DLLs += { "VeloAlignment", "PatVelo", "AlignmentTools" };
 
 #include "$VELOALIGNMENTOPTS/VeloAlign.opts"
 #include "$VELOALIGNMENTOPTS/AlignSensors.opts"
+
 //====================================================
 // decide here whether to run module alignment (Align) 
 // or sensor alignment (AlignSensors)
 //----------------------------------------------------
-RecoAlignmentSeq.Members += { "Align", "WriteAlignmentConditions" };
-//RecoAlignmentSeq.Members += { "AlignSensors", "WriteAlignmentConditions" };
+RecoAlignmentSeq.Members += { "Align", "WriteAlignmentConditions/WriteGlobal", "WriteAlignmentConditions/WriteModules" };
+//RecoAlignmentSeq.Members += { "AlignSensors", "WriteAlignmentConditions/WriteDetectors" };
 //====================================================
 
-WriteAlignmentConditions.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
-WriteAlignmentConditions.outputFile = "Detectors.xml";
+WriteGlobal.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+WriteGlobal.depths = { 0, 1 };
+WriteGlobal.outputFile = "Global.xml";
+WriteModules.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+WriteModules.depths = { 2 };
+WriteModules.outputFile = "Modules.xml";
+WriteDetectors.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
+WriteDetectors.depths = { 4 };
+WriteDetectors.outputFile = "Detectors.xml";
