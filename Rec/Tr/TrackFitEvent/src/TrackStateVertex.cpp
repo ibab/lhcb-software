@@ -183,15 +183,26 @@ namespace LHCb
   }
   
   TrackStateVertex::TrackStateVertex()
-    : m_isFitted(false)
+    : m_fitStatus(UnFitted), m_chi2(-1)
   {
     for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
   }
-
+  
+  TrackStateVertex::TrackStateVertex( const std::vector<const LHCb::State*>& states,
+				      double maxdchisq, size_t maxnumiter)
+    : m_fitStatus(UnFitted), m_chi2(-1)
+  {
+    for(size_t i=0; i<PositionParameters::kSize; ++i) m_pos(i) = 0 ;
+    for( std::vector<const LHCb::State*>::const_iterator istate = states.begin() ;
+	 istate != states.end(); ++istate ) 
+      addTrack( **istate ) ;
+    fit( maxdchisq, maxnumiter ) ;
+  }
+  
   void TrackStateVertex::addTrack( const LHCb::State& inputstate )
   {
     m_tracks.push_back( new VertexTrack( inputstate, m_poscov ) ) ;
-    m_isFitted = false ;
+    m_fitStatus = UnFitted ;
     int N = m_tracks.size() ;
     m_pos(0) = ( (N-1) * m_pos(0) + inputstate.x())/N ;
     m_pos(1) = ( (N-1) * m_pos(1) + inputstate.y())/N ;
@@ -220,20 +231,23 @@ namespace LHCb
       (*itrack)->updateSlopes(m_pos) ;
     // return the delta-chisquare
     double dchisq = ROOT::Math::Dot(dpos,halfDChisqDX) ;
-    m_isFitted = true ;
+    m_fitStatus = FitSuccess ;
+    m_chi2      = -1 ;
     return dchisq ;
   }
   
   double TrackStateVertex::chi2() const
   {
-    double chisq = 0 ;
-    for( VertexTrackContainer::const_iterator itrack = m_tracks.begin() ;
-	 itrack != m_tracks.end(); ++itrack ) 
-      chisq += (*itrack)->chisq(m_pos) ;
-    return chisq ;
+    if( m_chi2 < 0 ) {
+      m_chi2 = 0 ;
+      for( VertexTrackContainer::const_iterator itrack = m_tracks.begin() ;
+	   itrack != m_tracks.end(); ++itrack ) 
+	m_chi2 += (*itrack)->chisq(m_pos) ;
+    }
+    return m_chi2 ;
   }
 
-  bool TrackStateVertex::fit( double maxdchisq, size_t maxnumiter)
+  TrackStateVertex::FitStatus TrackStateVertex::fit( double maxdchisq, size_t maxnumiter)
   {
     bool converged(false) ;
     size_t iter(0) ;
@@ -241,7 +255,8 @@ namespace LHCb
       double dchisq = fitOneStep() ;
       converged = -dchisq < maxdchisq ;
     }
-    return converged ;
+    m_fitStatus = converged ? FitSuccess : FitFailure ;
+    return m_fitStatus ;
   }
 
   Gaudi::TrackVector

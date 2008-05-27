@@ -26,8 +26,14 @@ namespace LHCb
   class TrackStateVertex
   {
   public:
+    ///
+    enum FitStatus { FitSuccess, FitFailure, UnFitted } ;
+
     /// Sets minimal data content for useable vertex. The rest we do with setters.
     TrackStateVertex() ;
+    
+    /// Construct vertex from set of states
+    TrackStateVertex(const std::vector<const LHCb::State*>& states, double maxdchisq=0.01, size_t maxiterations=10) ;
     
     ///
     ~TrackStateVertex() ;
@@ -39,9 +45,12 @@ namespace LHCb
     double fitOneStep() ;
 
     /// fit until converged
-    bool fit( double maxdchisq=0.01, size_t maxiterations=10) ;
+    FitStatus fit( double maxdchisq=0.01, size_t maxiterations=10) ;
 
-    // calculate the chisquare of the vertex fit
+    /// return the fit status
+    FitStatus fitStatus() const { return m_fitStatus ; }
+
+    /// calculate the chisquare of the vertex fit
     double chi2() const ;
 
     /// number of dofs in vertex fit
@@ -63,6 +72,8 @@ namespace LHCb
     LHCb::TwoProngVertex* createTwoProngVertex(bool computemomcov) const ;
     /// Position of the vertex
     Gaudi::XYZPoint position() const { return Gaudi::XYZPoint(m_pos(0),m_pos(1),m_pos(2)) ; }
+    /// Position covariance of the vertex
+    const Gaudi::SymMatrix3x3& covMatrix() const { return m_poscov ; }
 
   private:
     typedef TrackVertexHelpers::VertexTrack VertexTrack ;
@@ -74,7 +85,8 @@ namespace LHCb
     VertexTrackContainer m_tracks ;
     PositionParameters m_pos ;
     PositionCovariance m_poscov ;
-    bool m_isFitted ;
+    FitStatus m_fitStatus ;
+    mutable double m_chi2 ;
   } ;
   
 } // namespace LHCb;
