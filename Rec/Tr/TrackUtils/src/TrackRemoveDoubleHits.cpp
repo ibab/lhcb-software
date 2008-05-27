@@ -1,4 +1,4 @@
-// $Id: TrackRemoveDoubleHits.cpp,v 1.4 2008-05-26 15:45:59 lnicolas Exp $
+// $Id: TrackRemoveDoubleHits.cpp,v 1.5 2008-05-27 08:42:01 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -257,11 +257,12 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 		nodesToRemove.push_back( aNode );
 		nodesToRemove.push_back( aNode2 );
 	      }
-	      else if ( abs(sectorDiff) == 1 )
+	      else if ( abs(sectorDiff) == 1 ) {
 		Warning("Found a double hit in TT (different sectors). Removing both measurements from track!!!",
 			StatusCode::SUCCESS, 1);
-	      nodesToRemove.push_back( aNode );
-	      nodesToRemove.push_back( aNode2 );
+		nodesToRemove.push_back( aNode );
+		nodesToRemove.push_back( aNode2 );
+	      }
 	    }
 	    break;
 	  }
@@ -299,8 +300,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
       LHCb::Measurement& theMeas = (*rNodes)->measurement();
       (*rNodes)->removeMeasurement();
       (*rNodes)->setType( LHCb::Node::Outlier );
-      if ( aTrack.isOnTrack( theMeas ) )
-	aTrack.removeFromMeasurements( &theMeas );
+      aTrack.removeFromMeasurements( &theMeas );
     }
   }
   
