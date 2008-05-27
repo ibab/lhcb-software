@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.10 2008-05-06 11:45:01 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.11 2008-05-27 13:46:27 hterrier Exp $
 // Include files
 #include <algorithm>
 
@@ -154,13 +154,13 @@ namespace OTRawBankDecoderHelpers
   {
   public:
     Detector(const DeOTDetector& det,
-	     const OTDAQ::ChannelMap::Detector& channelmap) : m_golHeadersLoaded(false) 
+             const OTDAQ::ChannelMap::Detector& channelmap) : m_golHeadersLoaded(false) 
     {  
       for(DeOTDetector::Modules::const_iterator imod = det.modules().begin() ;
           imod != det.modules().end(); ++imod) {
-	Module& amodule = module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ;
-	amodule.setDetElement(**imod) ;
-	amodule.setChannelMap( channelmap.module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ) ;
+        Module& amodule = module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ;
+        amodule.setDetElement(**imod) ;
+        amodule.setChannelMap( channelmap.module((*imod)->stationID(),(*imod)->layerID(),(*imod)->quarterID(),(*imod)->moduleID()) ) ;
       }
     }
       
@@ -202,8 +202,8 @@ DECLARE_TOOL_FACTORY( OTRawBankDecoder );
 // Standard constructor, initializes variables
 //=============================================================================
 OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
-				    const std::string& name,
-				    const IInterface* parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_countsPerBX(64),
     m_numberOfBX(3),
@@ -217,7 +217,8 @@ OTRawBankDecoder::OTRawBankDecoder( const std::string& type,
   declareProperty("countsPerBX", m_countsPerBX );
   declareProperty("numberOfBX", m_numberOfBX );
   declareProperty("timePerBX", m_timePerBX );
-  declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED) ;
+  declareProperty("ForceBankVersion", m_forcebankversion = OTBankVersion::UNDEFINED );
+  declareProperty("RawEventLocation", m_rawEventLocation = RawEventLocation::Default );
 }
 //=============================================================================
 // Destructor
@@ -257,6 +258,11 @@ StatusCode OTRawBankDecoder::initialize()
   
   if( m_forcebankversion != OTBankVersion::UNDEFINED )
     warning() << "Forcing bank version to be " << m_forcebankversion << endreq ;
+  
+  info() << " countsPerBX = " << m_countsPerBX << endmsg;
+  info() << " numberOfBX  = " << m_numberOfBX << endmsg;
+  info() << " timePerBX = " << m_timePerBX << endmsg;
+  info() << " ForceBankVersion = " << m_forcebankversion << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -308,19 +314,19 @@ StatusCode OTRawBankDecoder::decodeGolHeadersDC06(const RawBank& bank, int bankv
       quarter = golHeader.quarter();
       module = golHeader.module();
       if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
-	error() << "Invalid gol header "<< golHeader << endmsg ;
-	decodingerror = true ;
+        warning() << "Invalid gol header "<< golHeader << endmsg ;
+        decodingerror = true ;
       } else {
-	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
-	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
+        const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+        m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
+        if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
       }
       idata += golHeader.hitBufferSize() ;
     }
   }
   
   if(idata != end) {
-    error() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    warning() << "OTRawBankDecoder: gol headers do not add up to buffer size. " << idata << " " << end << endreq ;
     decodingerror = true ;
   }
   
@@ -356,12 +362,12 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankver
       module = golHeader.module();
       // check that the GOL ID is valid  
       if(!m_detectordata->isvalidID(station,layer,quarter,module) ) {
-	error() << "Invalid gol header "<< golHeader << endmsg ;
-	decodingerror = true ;
+        warning() << "Invalid gol header "<< golHeader << endmsg ;
+        decodingerror = true ;
       } else {
-	const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
-	m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
-	if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
+        const unsigned short* firsthit = reinterpret_cast<const unsigned short*>(idata+1) ;
+        m_detectordata->module(station,layer,quarter,module).setData(numhits,firsthit,bankversion) ; 
+        if (msgLevel(MSG::DEBUG)) debug() << "Reading gol header " << golHeader << endmsg ;
       }
       // skip the actual hits
       idata += golHeader.hitBufferSize() ;
@@ -371,14 +377,14 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankver
 
   // check that everything is well aligned
   if(idata != end) {
-    error() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
+    warning() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
     decodingerror = true ;
   }
   
   // check that we have read the right number of GOLs
   if( numgols != otheader.numberOfGOLs() ) {
-    error() << "Found " << otheader.numberOfGOLs() << " in bank header, but read only " 
-	    << numgols << " from bank." << endmsg ;
+    warning() << "Found " << otheader.numberOfGOLs() << " in bank header, but read only " 
+              << numgols << " from bank." << endmsg ;
     decodingerror = true ;
   }
     
@@ -389,45 +395,53 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
 {
   
   // Retrieve the RawEvent:
-  RawEvent* event = get<RawEvent>("DAQ/RawEvent" );
-  
-  // Get the buffers associated with OT
-  const std::vector<RawBank*>& OTBanks = event->banks(RawBank::OT );
-  
-  // Report the number of banks
-  if (msgLevel(MSG::DEBUG)) 
-    debug() << "Decoding GOL headers in OTRawBankDecoder. Number of OT banks is " 
-	    << OTBanks.size() << endreq ;
-  
-  for (std::vector<RawBank*>::const_iterator  ibank = OTBanks.begin();
-       ibank != OTBanks.end() ; ++ibank) {
+  RawEvent* event;
+  if ( exist<RawEvent>(m_rawEventLocation) )
+  {
+    event = get<RawEvent>(m_rawEventLocation);
     
-    // Report the bank size and version
-    if (msgLevel(MSG::DEBUG))
-      debug() << "OT Bank sourceID= " << (*ibank)->sourceID() 
-	      << " size=" << (*ibank)->size()/4 << " bankversion=" << (*ibank)->version() << endmsg;
+    // Get the buffers associated with OT
+    const std::vector<RawBank*>& OTBanks = event->banks(RawBank::OT );
     
-    // Choose decoding based on bank version
-    int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
-    m_channelmaptool->setBankVersion( bVersion ) ;
-    StatusCode sc ;
-    switch( bVersion ) {
-    case OTBankVersion::DC06:
-      sc = decodeGolHeadersDC06(**ibank,bVersion) ;
-      break ;
-    case OTBankVersion::v3:
-      sc = decodeGolHeadersV3(**ibank,bVersion) ;
-      break ;
-    default:
-      error() << "Cannot decode OT raw buffer bank version "
-              << bVersion << " with this version of OTDAQ" << endmsg;
-    } ;
-    // ignore errors
-    sc.ignore() ;
+    // Report the number of banks
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "Decoding GOL headers in OTRawBankDecoder. Number of OT banks is " 
+              << OTBanks.size() << endreq ;
+    
+    for (std::vector<RawBank*>::const_iterator  ibank = OTBanks.begin();
+         ibank != OTBanks.end() ; ++ibank) {
+      
+      // Report the bank size and version
+      if (msgLevel(MSG::DEBUG))
+        debug() << "OT Bank sourceID= " << (*ibank)->sourceID() 
+                << " size=" << (*ibank)->size()/4 << " bankversion=" << (*ibank)->version() << endmsg;
+      
+      // Choose decoding based on bank version
+      int bVersion = m_forcebankversion != OTBankVersion::UNDEFINED ? m_forcebankversion : (*ibank)->version();
+      m_channelmaptool->setBankVersion( bVersion ) ;
+      StatusCode sc ;
+      switch( bVersion ) {
+      case OTBankVersion::DC06:
+        sc = decodeGolHeadersDC06(**ibank,bVersion) ;
+        break ;
+      case OTBankVersion::v3:
+        sc = decodeGolHeadersV3(**ibank,bVersion) ;
+        break ;
+      default:
+        warning() << "Cannot decode OT raw buffer bank version "
+                  << bVersion << " with this version of OTDAQ" << endmsg;
+      } ;
+      // ignore errors
+      sc.ignore() ;
+    }
+  
+    // make sure we don't call this until the next event
+    m_detectordata->setGolHeadersLoaded(true) ; 
   }
-  
-  // make sure we don't call this until the next event
-  m_detectordata->setGolHeadersLoaded(true) ; 
+  else
+  {
+    warning() << " RawEvent does not exist at " << m_rawEventLocation << " location " << endmsg;
+  }
   
   return StatusCode::SUCCESS ;
 }

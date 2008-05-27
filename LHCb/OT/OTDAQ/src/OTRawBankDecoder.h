@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.6 2008-05-06 11:45:01 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.7 2008-05-27 13:46:27 hterrier Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -38,16 +38,16 @@ namespace OTRawBankDecoderHelpers
  */
 
 class OTRawBankDecoder : public GaudiTool,
-       virtual public IOTRawBankDecoder,
-			 virtual public IIncidentListener
+                         virtual public IOTRawBankDecoder,
+                         virtual public IIncidentListener
 {
   
 public: 
   
   /// Standard constructor
   OTRawBankDecoder( const std::string& type,
-		    const std::string& name,
-		    const IInterface* parent);
+                    const std::string& name,
+                    const IInterface* parent);
   
   /// Destructor
   virtual ~OTRawBankDecoder( ) ; ///< Destructor
@@ -89,6 +89,7 @@ private:
   DeOTDetector* m_otdet  ;                  ///< Pointer to OT geometry
   IOTChannelMapTool* m_channelmaptool ;     ///< Pointer to IOTChannelMapTool
   double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns
+  std::string m_rawEventLocation;           ///< Location where we get the RawEvent
   
   mutable OTRawBankDecoderHelpers::Detector* m_detectordata ; ///< Contains decoded data
 };
