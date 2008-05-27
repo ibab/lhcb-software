@@ -1,4 +1,4 @@
-// $Id: ErrShowDisplay.h,v 1.1 2008-05-27 06:53:12 frankb Exp $
+// $Id: ErrShowDisplay.h,v 1.2 2008-05-27 18:42:03 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -9,7 +9,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrShowDisplay.h,v 1.1 2008-05-27 06:53:12 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrShowDisplay.h,v 1.2 2008-05-27 18:42:03 frankb Exp $
 #ifndef ROLOGGER_ERRSHOWDISPLAY_H
 #define ROLOGGER_ERRSHOWDISPLAY_H
 
@@ -82,7 +82,7 @@ namespace ROLogger {
 
   public:
     /// Standard constructor with object setup through parameters
-    ErrShowDisplay(Interactor* parent, Interactor* msg);
+    ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part="");
     /// Standard destructor
     virtual ~ErrShowDisplay();
     /// Display callback handler

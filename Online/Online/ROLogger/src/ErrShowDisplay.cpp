@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.1 2008-05-27 06:53:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.2 2008-05-27 18:39:05 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -122,7 +122,7 @@ void ErrShowDisplay::getFiles(Files& files)  {
   begin = ::mktime(&start);
   end   = ::mktime(&stop);
   if ( (end - begin) > 0 ) {
-    std::string last, dirname = m_logDir;
+    std::string first, dirname = m_logDir;
     dirname += m_name;
     DIR* dir = opendir(dirname.c_str());
     if ( dir ) {
@@ -134,15 +134,18 @@ void ErrShowDisplay::getFiles(Files& files)  {
 	const char* fname = dp->d_name;
 	if ( 0 != ::strptime(fname,fmt,&curr) ) {
 	  now = ::mktime(&curr);
-	  if ( now >= begin && now < end ) {
-	    if ( !last.empty() ) files.push_back(last);
+	  if ( now >= begin && now <= end ) {
 	    files.push_back(dirname+fname);
-	    last = "";
-	    continue;
+	    ::upic_write_message2("Adding file:%s %d %d %d",files.back().c_str(),(int)begin,(int)now,(int)end);
 	  }
-	  last = dirname+fname;
+	  else if ( now < begin ) {
+	    first = dirname+fname;
+	  }
 	}
-	if ( files.empty() && !last.empty() ) files.push_back(last);
+      }
+      if ( !first.empty() ) {
+	::upic_write_message2("Adding first file:%s",first.c_str());
+	files.insert(files.begin(),first);
       }
       ::closedir(dir);
       return;
@@ -184,7 +187,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
       ::strncpy(&tim[5],text,12);
       ::strptime(tim,"%Y-%b%d-%H%M%S",&curr);
       now = ::mktime(&curr);
-      if ( now >= begin && now < end ) {
+      if ( now >= begin && now <= end ) {
 	MessageLine line(text);
 	if ( f.acceptMessage(line) ) {
 	  if ( line.msgSeverity() >= sev ) {
@@ -194,9 +197,12 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
 	    else {
 	      ::fprintf(output,"%s\n",text);
 	    }
+	    continue;
 	  }
 	}
       }
+      // ::sprintf(text,"Rejected: %d %s %d %d",(int)now,tim,(int)begin,(int)end);
+      // ioc.send(m_msg,CMD_SHOW,new std::string(text));
     }
     return;
   }
@@ -241,6 +247,7 @@ void ErrShowDisplay::saveMessages() {
     showMessages(outFile);
     ::fclose(outFile);
     ::strftime(txt,sizeof(txt),"%b%d-%H%M%S [ALWAYS] Output file written:",now);
+    ::strcat(txt,m_outFileName);
     IocSensor::instance().send(m_msg,CMD_SHOW,new std::string(txt));
     return;
   }
