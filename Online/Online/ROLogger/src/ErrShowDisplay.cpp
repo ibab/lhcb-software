@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.2 2008-05-27 18:39:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.3 2008-05-27 18:42:03 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -49,13 +49,13 @@ static void clean_str(char* n,size_t len)  {
 }
 
 /// Standard constructor
-ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg) 
+ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part) 
   : m_parent(parent), m_msg(msg), m_numMsg(200)
 {
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   m_id = UpiSensor::instance().newID();
-  ::strcpy(m_name,"LHCb");
+  ::strcpy(m_name,part.empty() ? "LHCb" : part.c_str());
   ::strcpy(m_node,"*");
   ::strcpy(m_process,"*");
   ::strcpy(m_component,"*");

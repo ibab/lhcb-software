@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.8 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.9 2008-05-27 18:42:03 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -147,7 +147,7 @@ void PartitionDisplay::handle(const Event& ev) {
     switch(ev.type) {
     case CMD_FILE:
       m_menuCursor = CMD_FILE;
-      new ErrShowDisplay(this,m_msg);
+      new ErrShowDisplay(this,m_msg, m_name);
       return;
     case CMD_UPDATE: 
       {
