@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
+// $Id: FileLogger.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
+
+#include "ROLogger/FileLogger.h"
 
 // Framework include files
 #include <sstream>
@@ -19,10 +21,10 @@
 #include "CPP/Event.h"
 #include "CPP/IocSensor.h"
 #include "UPI/UpiSensor.h"
+#include "UPI/UpiDisplay.h"
 #include "UPI/upidef.h"
 
 #include "ROLogger/PartitionListener.h"
-#include "ROLogger/FileLogger.h"
 #include "ROLoggerDefs.h"
 extern "C" {
 #include "dis.h"
@@ -30,6 +32,7 @@ extern "C" {
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #endif
+static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
 using namespace ROLogger;
 
@@ -41,12 +44,13 @@ static void closeUPI() {
 }
 
 /// Standard constructor
-FileLogger::FileLogger(int argc, char** argv) : MessageLogger(argc,argv)
+FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false)
 {
   std::string partition, title;
   RTL::CLI cli(argc, argv, help_fun);
   cli.getopt("partition",1,partition);
   cli.getopt("logdir",1,m_outdir);
+  cli.getopt("severity",1,m_severity);
   if ( partition.empty() ) {
     ::lib_rtl_output(LIB_RTL_INFO,"You have to supply a partition name to display its data.");
     ::lib_rtl_sleep(3000);
@@ -59,14 +63,16 @@ FileLogger::FileLogger(int argc, char** argv) : MessageLogger(argc,argv)
   }
   m_id = UpiSensor::instance().newID();
   title = "Error logger:"+partition;
+  ::strcpy(m_msgSeverity,s_SevList[m_severity-1]);
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,title.c_str(),RTL::processName().c_str(),RTL::nodeName().c_str());
-  ::upic_add_comment(CMD_COM1,   "-------------------------","");
-  ::upic_add_comment(CMD_COM2,   "Output file:","");
-  ::upic_add_comment(CMD_COM3,   "-------------------------","");
-  ::upic_add_command(CMD_CONNECT,"Switch output file","");
-  ::upic_add_command(CMD_CLOSE,  "Exit Logger","");
-  ::upic_add_comment(CMD_COM4,   "-------------------------","");
+  ::upic_add_comment(CMD_COM1,    "Current output file:","");
+  ::upic_add_comment(CMD_COM2,    "","");
+  ::upic_set_param(m_msgSeverity,1, "A7",m_msgSeverity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
+  ::upic_add_command(CMD_SEVERITY,"Log Severity level ^^^^^^^ ","");
+  ::upic_add_command(CMD_SHOW,    "Show summary","");
+  ::upic_add_command(CMD_CONNECT, "Switch output file","");
+  ::upic_add_command(CMD_CLOSE,   "Exit Logger","");
   ::upic_close_menu();
   m_colors  = false;
   m_display = true;
@@ -80,6 +86,14 @@ FileLogger::FileLogger(int argc, char** argv) : MessageLogger(argc,argv)
   }
   m_listener = new PartitionListener(this,partition);
   UpiSensor::instance().add(this,m_id);
+  m_quit = new UPI::ReallyClose(m_id,CMD_CLOSE);
+  ::upic_set_cursor(m_id,CMD_SHOW,0);
+}
+
+/// Standard destructor
+FileLogger::~FileLogger()  {
+  delete m_listener;
+  delete m_quit;
 }
 
 /// Open new output file
@@ -96,67 +110,115 @@ FILE* FileLogger::openOutput() {
   }
   else {
     ::lib_rtl_output(LIB_RTL_INFO,"Opened output file:%s",txt);
-    std::string t = "Output file:";
-    t += txt;
-    ::upic_replace_comment(m_id,CMD_COM2,t.c_str(),"");
+    ::upic_replace_comment(m_id,CMD_COM2,txt,"");
   }
+  ::strftime(tmbuff,sizeof(tmbuff),"%d%m",now);
+  m_date = tmbuff;
   return m_output;
 }
 
-/// Standard destructor
-FileLogger::~FileLogger()  {
-  delete m_listener;
+/// Handle DIM message
+void FileLogger::handleMessage(const char* msg) {
+  if ( !m_date.empty() && ::strncmp(m_date.c_str(),msg,5) != 0 ) {
+    m_output = openOutput();
+    m_date = std::string(msg).substr(0,5);
+  }
+  MessageLogger::handleMessage(msg);
 }
 
 /// Display callback handler
 void FileLogger::handle(const Event& ev) {
   typedef std::vector<std::string> _SV;
+  IocSensor& ioc = IocSensor::instance();
   ioc_data data(ev.data);
-  const _SV* v = data.vec;
   switch(ev.eventtype) {
   case UpiEvent:
+    m_msgSeverity[sizeof(m_msgSeverity)-1] = 0;
+    if ( ::strchr(m_msgSeverity,' ')  ) *::strchr(m_msgSeverity,' ') = 0;
     switch(ev.command_id)  {
-  case CMD_CLOSE:
-    UpiSensor::instance().remove(this,m_id);
-    ::upic_delete_menu(m_id);
-    closeUPI();
-    return;
-  case CMD_CONNECT:
-    openOutput();
-    return;
+    case UPI::UpiDisplay::CMD_CLOSE:
+      UpiSensor::instance().remove(this,m_id);
+      ::upic_delete_menu(m_id);
+      closeUPI();
+      return;
+    case CMD_SEVERITY:
+      ioc.send(this,ev.command_id,new std::string(m_msgSeverity));
+      return;
+    case CMD_CLOSE:
+      //UpiSensor::instance().remove(this,m_id);
+      //::upic_delete_menu(m_id);
+      //closeUPI();
+      m_quit->invoke();
+      return;
+    case CMD_CONNECT:
+      openOutput();
+      return;
+    case CMD_SHOW:
+      ::upic_write_message(getSummary().c_str(),"");
+      return;
     }
     break;
   case IocEvent:
     switch(ev.type) {
-  case CMD_UPDATE_NODES:
-    printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_NODES",true);
-    delete data.vec;
-    return;
-  case CMD_UPDATE_FARMS: {
-    printMessage(">>>>>>>>>>> [INFo] Handle: CMD_UPDATE_FARMS",true);
-    std::string tmp;
-    std::stringstream s;
-    for(_SV::const_iterator i=v->begin();i!=v->end();++i) {
-      std::string n = *i;
-      if ( n == "STORE" ) n = "STORECTL01";
-      s << "/" << n << "/gaudi/log" << std::ends;
+    case CMD_UPDATE: {
+      _SV v = m_farms;      
+      std::string tmp;
+      std::stringstream s;
+      if ( !m_storage.empty() ) v.push_back(m_storage);
+      if ( !m_monitoring.empty() ) v.push_back(m_monitoring);
+      tmp = "Farm content:";
+      for(_SV::const_iterator i=v.begin();i!=v.end();++i) {
+	const std::string& n = *i;
+	s << n << std::ends;
+	tmp += n;
+	tmp += " ";
+      }
+      s << std::ends;
+      ::upic_write_message(tmp.c_str(),"");
+      tmp = s.str();
+      removeAllServices();
+      handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
     }
-    s << std::ends;
-    tmp = s.str();
-    removeAllServices();
-    handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
-    delete data.vec;
-                         }
-                         return;
-  default:
-    break;
+    return;
+    case CMD_SEVERITY:
+      setMessageSeverity(m_msgSeverity);
+      delete data.str;
+      return;
+    case CMD_UPDATE_NODES:
+      delete data.vec;
+      return;
+    case CMD_CONNECT_STORAGE:
+      m_storage = *data.str;
+      delete data.str;
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_CONNECT_MONITORING:
+      m_monitoring = *data.str;
+      delete data.str;
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_DISCONNECT_STORAGE:
+      m_storage = "";
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_DISCONNECT_MONITORING:
+      m_monitoring = "";
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    case CMD_UPDATE_FARMS:
+      m_farms = *data.vec;
+      delete data.vec;
+      ioc.send(this,CMD_UPDATE,this);
+      return;
+    default:
+      break;
     }
     break;
   default:
     MessageLogger::handle(ev);
     return;
   }
-  ::lib_rtl_output(LIB_RTL_INFO,"Received unknown input.....");
+  ::lib_rtl_output(LIB_RTL_INFO,"Received unknown input.....%d",ev.eventtype);
 }
 
 

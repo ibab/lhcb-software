@@ -1,4 +1,4 @@
-// $Id: Logger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
+// $Id: Logger.cpp,v 1.7 2008-05-27 06:52:49 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.6 2008-05-22 06:32:33 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Logger.cpp,v 1.7 2008-05-27 06:52:49 frankb Exp $
 
 #include "ROLogger/Logger.h"
 #include "CPP/IocSensor.h"
@@ -50,7 +50,7 @@ int Logger::sendData(const std::string& msg) {
     ::upic_write_message2("Failed to update history server:%s with data:%s",m_name.c_str(), msg.c_str());
     return 0;
   }
-  ::upic_write_message2("%s: %s",m_name.c_str()+23,msg.c_str());
+  //::upic_write_message2("%s: %s",m_name.c_str()+23,msg.c_str());
   return 1;
 }
 
@@ -77,40 +77,48 @@ void Logger::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
-      case CMD_SUMM_HISTORY:
-        sendData("S:SummarizeAllHistory");
-        return;
-      case CMD_APPLY_FILTERS:
-        sendData("F:"+*data.str);
-        delete data.str;
-        return;
-      case CMD_NODE_HISTORY:
-        sendData("Q:"+*data.str);
-        delete data.str;
-        return;
-      case CMD_SEVERITY:
-        sendData("L:"+*data.str);
-        delete data.str;
-        return;
-      case CMD_CONNECT_MONITORING:
-	sendData("X:"+*data.str);
-        delete data.str;
-        return;
-      case CMD_CONNECT_STORAGE:
-	sendData("Y:"+*data.str);
-        delete data.str;
-        return;
-      case CMD_CONNECT_CLUSTER:
-      case CMD_DISCONNECT_CLUSTER:
-        connectMessages(ev.type==CMD_CONNECT_CLUSTER,*data.str);
-        delete data.str;
-        return;
-      case CMD_UPDATE_FARMS:
-        connectMessages(*data.vec);
-        delete data.vec;
-        return;
-      default:
-        break;
+    case CMD_SHOW:
+      sendData("D:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_START:
+      sendData("T:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_SUMM_HISTORY:
+      sendData("S:SummarizeAllHistory");
+      return;
+    case CMD_APPLY_FILTERS:
+      sendData("F:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_NODE_HISTORY:
+      sendData("Q:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_SEVERITY:
+      sendData("L:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_CONNECT_MONITORING:
+      sendData("X:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_CONNECT_STORAGE:
+      sendData("Y:"+*data.str);
+      delete data.str;
+      return;
+    case CMD_CONNECT_CLUSTER:
+    case CMD_DISCONNECT_CLUSTER:
+      connectMessages(ev.type==CMD_CONNECT_CLUSTER,*data.str);
+      delete data.str;
+      return;
+    case CMD_UPDATE_FARMS:
+      connectMessages(*data.vec);
+      delete data.vec;
+      return;
+    default:
+      break;
     }
     break;
   case UpiEvent:

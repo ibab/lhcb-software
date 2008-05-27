@@ -1,4 +1,4 @@
-// $Id: ErrorLog.h,v 1.3 2008-05-27 06:52:49 frankb Exp $
+// $Id: ErrorShow.h,v 1.1 2008-05-27 06:53:13 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrorLog.h,v 1.3 2008-05-27 06:52:49 frankb Exp $
-#ifndef ROLOGGER_ERRORLOG_H
-#define ROLOGGER_ERRORLOG_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ErrorShow.h,v 1.1 2008-05-27 06:53:13 frankb Exp $
+#ifndef ROLOGGER_ERRORSHOW_H
+#define ROLOGGER_ERRORSHOW_H
 
 // Framework include files
 #include "CPP/Interactor.h"
@@ -29,28 +29,24 @@ namespace ROLogger {
 
   class Logger;
 
-  /**@class ErrorLog ErrorLog.h ROLogger/ErrorLog.h
+  /**@class ErrorShow ErrorShow.h ROLogger/ErrorShow.h
    *
-   *   DIM error logger
+   *   Error history viewer.
    *
    *   @author M.Frank
    */
-  class ErrorLog : public Interactor {
+  class ErrorShow : public Interactor {
   protected:
     /// Reference to message logger
-    Interactor* m_messageLog;
-    /// Reference to history logger
-    Interactor* m_historyLog;
-    /// Reference to partition display
-    Interactor* m_partDisplay;
-    /// Reference to partition listener
-    Interactor* m_partListener;
+    Interactor* m_msg;
+    /// Reference to history display
+    Interactor* m_display;
 
   public:
     /// Standard constructor with object setup through parameters
-    ErrorLog(int argc, char** argv);
+    ErrorShow(int argc, char** argv);
     /// Standard destructor
-    virtual ~ErrorLog();
+    virtual ~ErrorShow();
 
     /// Shutdown client windows
     void shutdown();
@@ -60,4 +56,4 @@ namespace ROLogger {
     static void help_fun();
   };
 }      /* End namespace ROLogger */
-#endif /* ROLOGGER_ERRORLOG_H */
+#endif /* ROLOGGER_ERRORSHOW_H */

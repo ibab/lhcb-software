@@ -52,6 +52,53 @@ void MessageLine::dump()  const {
   std::cout << std::endl << "  Message:" << message() << std::endl;
 }
 
+/// Retrieve message severity from DIM logger message
+int MessageLine::msgSeverity() const {
+  return MessageLine::msgSeverity(m_buff.c_str());
+}
+
+/// Retrieve message severity from DIM logger message
+int MessageLine::msgSeverity(const char* msg) {
+  if ( msg ) {
+    int len = ::strlen(msg);
+    if      ( len>18 && !::strncmp(msg+12,"[VERB]",6)   ) return Msg_Verbose;
+    else if ( len>19 && !::strncmp(msg+12,"[DEBUG]",7)  ) return Msg_Debug;
+    else if ( len>18 && !::strncmp(msg+12,"[INFO]",6)   ) return Msg_Info;
+    else if ( len>18 && !::strncmp(msg+12,"[WARN]",6)   ) return Msg_Warning;
+    else if ( len>19 && !::strncmp(msg+12,"[ERROR]",7)  ) return Msg_Error;
+    else if ( len>19 && !::strncmp(msg+12,"[FATAL]",7)  ) return Msg_Fatal;
+    else if ( len>19 && !::strncmp(msg+12,"[ALWAYS]",8) ) return Msg_Always;
+  }
+  return 3;
+}
+
+/// Convert severity string to enum
+int MessageLine::severityLevel(const std::string& severity) {
+  switch(::toupper(severity[0])) {
+  case 'V':
+    return Msg_Verbose;
+    break;
+  case 'D':
+    return Msg_Debug;
+    break;
+  case 'I':
+    return Msg_Info;
+    break;
+  case 'W':
+    return Msg_Warning;
+    break;
+  case 'E':
+    return Msg_Error;
+    break;
+  case 'F':
+    return Msg_Always;
+    break;
+  default:
+    return Msg_Info;
+  }
+}
+
+
 extern "C" int test_MessageLine(int,char**) {
   const char* lines[] = {
     "May08-133647[INFO] mona0803: Gaudi.exe(LHCb_MONA0803_MonEvents_00): StoreExplorerAlg: | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject",
@@ -65,3 +112,4 @@ extern "C" int test_MessageLine(int,char**) {
   }
   return 1;
 }
+

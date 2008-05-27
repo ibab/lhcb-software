@@ -1,8 +1,8 @@
 //====================================================================
-//  ROMon
+//  ROLogger
 //--------------------------------------------------------------------
 //
-//  Package    : ROMon
+//  Package    : ROLogger
 //
 //  Description: Readout monitoring in the LHCb experiment
 //
@@ -10,11 +10,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.7 2008-05-22 06:32:33 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.8 2008-05-27 06:52:49 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
 #include "ROLogger/ClusterDisplay.h"
+#include "ROLogger/ErrShowDisplay.h"
 #include "ROLogger/FilterDisplay.h"
 #include "UPI/UpiSensor.h"
 #include "CPP/IocSensor.h"
@@ -32,10 +33,10 @@ static const char* s_show[]    = {"Show"};
 static const char* s_config[]  = {"Configure"};
 static const char* s_enable[]  = {"Enable "};
 static const char* s_disable[] = {"Disable"};
+static const int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
+static const char* s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 static char  s_enableDisableResult[80];
 static char  s_param_buff[80];
-static int   s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
-static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
 static std::string item_name(const std::string& svc_name) {
   size_t idx = svc_name.find("/",1);
@@ -68,8 +69,8 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
   ::upic_add_comment(CMD_COM0,        ("Known processor clusters for partition "+name).c_str(),"");
-  ::upic_add_comment(CMD_COM1,         "---------------------------------------------------------","");
-  ::upic_add_comment(CMD_COM2,         "---------------------------------------------------------","");
+  ::upic_add_comment(CMD_COM1,         "----------------------------------------------------------","");
+  ::upic_add_comment(CMD_COM2,         "----------------------------------------------------------","");
   ::upic_set_param(m_msgSeverity,1, "A7",m_msgSeverity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
   ::upic_set_param(m_histSeverity,2,"A7",m_histSeverity,0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
   ::upic_add_command(CMD_SEVERITY,     "Severity for messages ^^^^^^^ history: ^^^^^^^","");
@@ -81,8 +82,9 @@ PartitionDisplay::PartitionDisplay(Interactor* parent, Interactor* msg, Interact
   ::upic_add_command(CMD_WILD_MESSAGE, "...and match message: ^^^^^^^^^^^^^^^","");
   ::upic_add_command(CMD_SUMM_HISTORY, "History summary","");
   ::upic_add_command(CMD_EDIT,         "Edit filters","");
-  ::upic_add_comment(CMD_COM5,         "---------------------------------------------------------","");
-  ::upic_add_command(CMD_CLOSE,"Close","");
+  ::upic_add_comment(CMD_COM5,         "----------------------------------------------------------","");
+  ::upic_add_command(CMD_FILE,         "Process history files","");
+  ::upic_add_command(CMD_CLOSE,        "Close","");
   ::upic_close_menu();
   UpiSensor::instance().add(this,m_id);
 }
@@ -143,16 +145,21 @@ void PartitionDisplay::handle(const Event& ev) {
   case IocEvent:
     //::upic_write_message2("Got IOC command: %d %p",ev.type,ev.data);
     switch(ev.type) {
-    case CMD_UPDATE: {
-      _SV f = m_farms;
-      f.push_back(m_monitoring);
-      if ( !m_storage.empty() ) f.push_back(m_storage);
-      if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
-      ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
-      ioc.send(this,CMD_UPDATE_CLUSTERS,this);
-      ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
-      ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
-    }
+    case CMD_FILE:
+      m_menuCursor = CMD_FILE;
+      new ErrShowDisplay(this,m_msg);
+      return;
+    case CMD_UPDATE: 
+      {
+	_SV f = m_farms;
+	f.push_back(m_monitoring);
+	if ( !m_storage.empty() ) f.push_back(m_storage);
+	if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
+	::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
+	ioc.send(this,CMD_UPDATE_CLUSTERS,this);
+	ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
+	ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
+      }
       return;
     case CMD_UPDATE_NODES:
       m_nodes = *(Nodes*)ev.data;
@@ -185,9 +192,9 @@ void PartitionDisplay::handle(const Event& ev) {
       updateFarms();
       return;
     case CMD_DELETE:
-      ::upic_set_cursor(m_id,m_menuCursor,0);
-    delete (Interactor*)ev.data;
-    break;
+      upic_set_cursor(m_id,m_menuCursor,0);
+      delete (Interactor*)ev.data;
+      break;
     default:
       break;
     }
@@ -203,6 +210,9 @@ void PartitionDisplay::handle(const Event& ev) {
     if ( ::strchr(m_msgSeverity,' ')  ) *::strchr(m_msgSeverity,' ') = 0;
     if ( ::strchr(m_histSeverity,' ') ) *::strchr(m_histSeverity,' ') = 0;
     switch(ev.command_id) {
+    case CMD_FILE:
+      ioc.send(this,CMD_FILE,this);
+      return;
     case CMD_CLOSE:
       ioc.send(m_parent,CMD_DELETE,this);
       return;

@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.3 2008-05-22 06:32:33 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FilterDisplay.cpp,v 1.4 2008-05-27 06:52:49 frankb Exp $
 
 // Framework include files
 #include "ROLogger/FilterDisplay.h"
@@ -31,17 +31,17 @@ using namespace ROLogger;
 
 const char* s_filterType[] = {
   "Exact match",
-    "Case blind",
-    "Wild card match",
-    "Wild card case blind"
-    //0123456789012345678901234567890123456789
+  "Case blind",
+  "Wild card match",
+  "Wild card case blind"
+  //0123456789012345678901234567890123456789
 };
 
 const char* s_matchType[] = {
   "Ignore filter where field matches",
-    "Apply filter where field matches",
-    "If no match, ignore the rest",
-    //0123456789012345678901234567890123456789
+  "Apply filter where field matches",
+  "If no match, ignore the rest",
+  //0123456789012345678901234567890123456789
 };
 
 /// Standard constructor

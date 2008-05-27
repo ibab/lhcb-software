@@ -1,0 +1,22 @@
+#!/bin/bash
+export UTGID=Errlog_$$
+#. /group/online/dataflow/scripts/preamble.sh
+export DATAFLOWDIR=/group/online/dataflow
+. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars
+# . $DATAFLOWDIR/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.opt
+# . ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
+#
+export DIM_DNS_NODE=ecs03
+directory=`dirname $0`
+export TAN_PORT=YES
+export TAN_NODE=${HOST}
+export UTGID=${HOST}_ErrShow_$$;
+xterm -ls -132 \
+    -geometry 210x45+0+0 -bg black -fg white \
+    -title "${UTGID}:Message display" \
+    -e "export UTGID=${UTGID}_display; exec -a \${UTGID} `which gentest.exe` libROLogger.so romon_logger -service=\$UTGID -col -buff=0 -disp"&
+sleep 1;
+xterm -ls -132 \
+    -geometry 132x27+0+610 \
+    -title "${UTGID}:Error history" \
+    -e "export UTGID=${UTGID}; exec -a \${UTGID} `which gentest.exe` libROLogger.so rologger_error_show" &

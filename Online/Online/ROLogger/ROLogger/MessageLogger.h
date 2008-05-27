@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.5 2008-05-22 06:32:29 frankm Exp $
+// $Id: MessageLogger.h,v 1.6 2008-05-27 06:52:49 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.5 2008-05-22 06:32:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.6 2008-05-27 06:52:49 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -28,6 +28,7 @@
  *   ROLogger namespace declaration
  */
 namespace ROLogger {
+
   // Forward declarations
 
   /**@class MessageLogger MessageLogger.h ROLogger/MessageLogger.h
@@ -53,31 +54,33 @@ namespace ROLogger {
     typedef std::vector<Filter>          Filters;
 
     /// DIM service identifier
-    int m_service;
+    int               m_service;
     /// Default message severity to display
-    int m_severity;
+    int               m_severity;
     /// Flag to indicate output to xterm using colors
-    bool m_colors;
+    bool              m_colors;
     /// Flag to indicate output to xterm 
-    bool m_display;
+    bool              m_display;
     /// Filter array
-    Filters  m_filters;
+    Filters           m_filters;
     /// Connected DIM services
-    Services m_infos;
+    Services          m_infos;
     /// History buffer
-    History  m_history;
+    History           m_history;
     /// Size of history record
-    size_t   m_historySize;
+    size_t            m_historySize;
     /// Output device
-    FILE*    m_output;
+    FILE*             m_output;
     /// Iterator in history circular buffer
     History::iterator m_histIter;
     /// Flag if iterator wrapped
-    bool     m_wrapped;
+    bool              m_wrapped;
     /// Monitoring slice name
-    std::string m_monitoring;
+    std::string       m_monitoring;
     /// Storage slice name
-    std::string m_storage;
+    std::string       m_storage;
+    /// Message counter by type
+    std::vector<int>  m_numMsg;
 
     /// Print summary of history records from stored memory
     void summarizeHistory();
@@ -87,10 +90,16 @@ namespace ROLogger {
     void updateHistory(const char* msg);
     /// Check filters if this message should be printed....
     bool checkFilters(const char* msg) const;
+    /// Get summary line from running messages
+    std::string getSummary();
 
+    /// Handle DIM message
+    virtual void handleMessage(const char* msg);
   public:
     /// Standard constructor with object setup through parameters
     MessageLogger(int argc, char** argv);
+    /// Standard constructor, with initialisation
+    MessageLogger(int sev, bool display, bool colors);
     /// Standard destructor
     virtual ~MessageLogger();
 

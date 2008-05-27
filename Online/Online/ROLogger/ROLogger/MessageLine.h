@@ -1,4 +1,4 @@
-// $Id: MessageLine.h,v 1.1 2008-05-13 07:56:02 frankb Exp $
+// $Id: MessageLine.h,v 1.2 2008-05-27 06:52:49 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,9 +11,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLine.h,v 1.1 2008-05-13 07:56:02 frankb Exp $
-#ifndef ROLOGGER_MESSAGELOGGER_H
-#define ROLOGGER_MESSAGELOGGER_H
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLine.h,v 1.2 2008-05-27 06:52:49 frankb Exp $
+#ifndef ROLOGGER_MESSAGELINE_H
+#define ROLOGGER_MESSAGELINE_H
 
 // C++ include files
 #include <string>
@@ -34,6 +34,16 @@ namespace ROLogger {
   class MessageLine  {
   public:
     enum MsgType { NONE=-1, OTHER=0 };
+    enum msg_Level {
+      Msg_Verbose = 1,
+      Msg_Debug,
+      Msg_Info,
+      Msg_Warning,
+      Msg_Error,
+      Msg_Fatal,
+      Msg_Always
+    };
+
   protected:
     typedef std::string _S;
     std::string  m_buff;
@@ -66,6 +76,12 @@ namespace ROLogger {
     std::string message() const   {  return type()>=0 ? m_buff.substr(m_mess) : _S("");                     }
     int type() const              {  return m_type!=NONE ? m_type : analyze();                              }
     void dump() const;
+    /// Access severity level from message content
+    int msgSeverity() const;
+    /// Access severity level from message content
+    static int msgSeverity(const char* msg);
+    /// Convert severity string to enum
+    static int severityLevel(const std::string& severity);
   };
 }
-#endif /* ROLOGGER_MESSAGELOGGER_H */
+#endif /* ROLOGGER_MESSAGELINE_H */

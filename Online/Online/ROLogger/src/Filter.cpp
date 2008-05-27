@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.2 2008-05-13 08:26:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Filter.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
 
 // Framework include files
 #include "ROLogger/Filter.h"
@@ -75,11 +75,11 @@ int Filter::acceptMatch(const std::string& cand, const std::string& pattern, uns
     result = ::strcasecmp(cand.c_str(),pattern.c_str())==0 ? 1 : 0;
 
   /// If NOT(the match is 1 and the Select bit is set) ignore this message
-  if (  result && match&MATCH_SELECT )
+  if (  result && (match&MATCH_SELECT) )
     return 1;
-  else if ( !result && match&MATCH_INVERSE ) 
+  else if ( !result && (match&MATCH_INVERSE) ) 
     return 1;
-  else if ( !result && match&MATCH_REQUIRE )
+  else if ( !result && (match&MATCH_REQUIRE) )
     return 2;
   return 0;
 }
@@ -89,43 +89,56 @@ bool Filter::acceptMessage(const std::string& message) const {
   return acceptMessage(msg);
 }
 
+static void doNothing(...) {}
+#define __dbgPrint doNothing
+
 bool Filter::acceptMessage(const MessageLine& msg) const {
   int res;
   _Match m(&type);
   if ( 0 == (res=acceptMatch(msg.node(),node,m.match[0])) ) {
-    ::printf("NODE match [failed]: %s <> %s\n",node.c_str(),msg.node().c_str());
+    __dbgPrint("NODE match [failed]: %s <> %s\n",node.c_str(),msg.node().c_str());
     return false;
   }
   if ( 2 == res ) {
-    ::printf("NODE match [required]: %s <> %s\n",node.c_str(),msg.node().c_str());
+    __dbgPrint("NODE match [required]: %s <> %s\n",node.c_str(),msg.node().c_str());
     return true;
   }
   res = 2;
   if ( msg.type() > 0 )  {
     if ( 0 == (res=acceptMatch(msg.utgid(),utgid,m.match[1])) ) {
-      printf("UTGID match [failed]: %s <> %s\n",utgid.c_str(),msg.utgid().c_str());
+      __dbgPrint("UTGID match [failed]: %s <> %s\n",utgid.c_str(),msg.utgid().c_str());
       return false;
     }
   }
-  if ( 2 == res )  {
-    printf("UTGID match [required]: %s <> %s\n",utgid.c_str(),msg.utgid().c_str());
+  if ( 2 == res && 0 != (m.match[1]&MATCH_SELECT) && utgid != "*" )  {
+    __dbgPrint("UTGID match [failed]: %s <> %s\n",utgid.c_str(),msg.utgid().c_str());
+    return false;
+  }
+  else if ( 2 == res && 0 != (m.match[1]&MATCH_REQUIRE) )  {
+    __dbgPrint("UTGID match [required]: %s <> %s\n",utgid.c_str(),msg.utgid().c_str());
     return true;
   }
   res = 2;
   if ( msg.type() > 0 )  {
     if ( 0 == (res=acceptMatch(msg.component(),component,m.match[2])) ) {
-      printf("COMPONENT match [failed]: %s <> %s\n",component.c_str(),msg.component().c_str());
+      __dbgPrint("COMPONENT match [failed]: %s <> %s [%d]\n",component.c_str(),msg.component().c_str(),msg.type());
       return false;
     }
   }
-  if ( 2 == res )  {
-    printf("COMPONENT match [required]: %s <> %s\n",component.c_str(),msg.component().c_str());
+  if ( 2 == res && 0 != (m.match[2]&MATCH_SELECT) && component != "*" )  {
+    __dbgPrint("COMPONENT match [failed]: %s <> %s [%d]\n",component.c_str(),msg.component().c_str(),msg.type());
+    return false;
+  }
+  else if ( 2 == res && 0 != (m.match[2]&MATCH_REQUIRE) )  {
+    __dbgPrint("COMPONENT match [required]: %s <> %s\n",component.c_str(),msg.component().c_str());
     return true;
   }
   if ( 0 == acceptMatch(msg.message(),message,m.match[3]) ) {
-    printf("MESSAGE match [failed]: %s <> %s",message.c_str(),msg.message().c_str());
+    __dbgPrint("MESSAGE match [failed]: %s <> %s\n",message.c_str(),msg.message().c_str());
     return false;
   }
+  __dbgPrint("COMPONENT match [ACCEPTED]: %s <> %s [%d]\n",component.c_str(),msg.component().c_str(),m.match[2]&MATCH_SELECT);
+  __dbgPrint("MESSAGE match   [ACCEPTED]: %s <> %s [%d]\n",message.c_str(),msg.message().c_str(),msg.type());
   return true;
 }
 
