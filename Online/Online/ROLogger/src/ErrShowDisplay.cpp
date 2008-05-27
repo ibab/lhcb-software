@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.4 2008-05-27 18:54:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.5 2008-05-27 19:05:21 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -174,7 +174,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     f.setUtgidMatch     (m_process,  flag);
     f.setComponentMatch (m_component,flag);
     f.setMessageMatch   (m_message,  flag);
-    ::sprintf(text,"Logger output:%s",fname.c_str());
+    ::sprintf(text,"Logger output:%s   from '%s' to '%s'",fname.c_str(),m_startTime,m_endTime);
     ioc.send(m_msg,CMD_START,new std::string(text));
     ::strftime(tim,12,"%Y-",&start);
     tim[17] = 0;
