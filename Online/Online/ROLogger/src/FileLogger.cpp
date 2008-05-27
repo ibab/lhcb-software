@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
+// $Id: FileLogger.cpp,v 1.4 2008-05-27 16:50:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.3 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.4 2008-05-27 16:50:40 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -44,7 +44,7 @@ static void closeUPI() {
 }
 
 /// Standard constructor
-FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false)
+FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false), m_connected(false)
 {
   std::string partition, title;
   RTL::CLI cli(argc, argv, help_fun);
@@ -71,6 +71,7 @@ FileLogger::FileLogger(int argc, char** argv) : MessageLogger(3,true,false)
   ::upic_set_param(m_msgSeverity,1, "A7",m_msgSeverity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
   ::upic_add_command(CMD_SEVERITY,"Log Severity level ^^^^^^^ ","");
   ::upic_add_command(CMD_SHOW,    "Show summary","");
+  ::upic_add_command(CMD_START,   "Connect to messages","");
   ::upic_add_command(CMD_CONNECT, "Switch output file","");
   ::upic_add_command(CMD_CLOSE,   "Exit Logger","");
   ::upic_close_menu();
@@ -111,19 +112,20 @@ FILE* FileLogger::openOutput() {
   else {
     ::lib_rtl_output(LIB_RTL_INFO,"Opened output file:%s",txt);
     ::upic_replace_comment(m_id,CMD_COM2,txt,"");
+    m_date = now->tm_wday;
   }
-  ::strftime(tmbuff,sizeof(tmbuff),"%d%m",now);
-  m_date = tmbuff;
   return m_output;
 }
 
-/// Handle DIM message
-void FileLogger::handleMessage(const char* msg) {
-  if ( !m_date.empty() && ::strncmp(m_date.c_str(),msg,5) != 0 ) {
+/// Print single message retrieved from error logger
+void FileLogger::printMessage(const char* msg, bool crlf) {
+  time_t tim = ::time(0);
+  tm* now = ::localtime(&tim);
+  if ( m_date != now->tm_wday ) {
     m_output = openOutput();
-    m_date = std::string(msg).substr(0,5);
   }
-  MessageLogger::handleMessage(msg);
+  MessageLogger::printMessage(msg,crlf);
+  if ( m_connected ) ::upic_write_message(msg+12,"");  
 }
 
 /// Display callback handler
@@ -149,6 +151,13 @@ void FileLogger::handle(const Event& ev) {
       //::upic_delete_menu(m_id);
       //closeUPI();
       m_quit->invoke();
+      return;
+    case CMD_START:
+      if ( m_connected )
+	::upic_replace_command(m_id,CMD_START,"Connect to messages","");
+      else
+	::upic_replace_command(m_id,CMD_START,"Disconnect from messages","");
+      m_connected = !m_connected;
       return;
     case CMD_CONNECT:
       openOutput();

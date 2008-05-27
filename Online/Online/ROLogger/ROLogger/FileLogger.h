@@ -1,4 +1,4 @@
-// $Id: FileLogger.h,v 1.2 2008-05-27 06:52:49 frankb Exp $
+// $Id: FileLogger.h,v 1.3 2008-05-27 16:50:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/FileLogger.h,v 1.2 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/FileLogger.h,v 1.3 2008-05-27 16:50:40 frankb Exp $
 #ifndef ROLOGGER_FILELOGGER_H
 #define ROLOGGER_FILELOGGER_H
 
@@ -49,14 +49,15 @@ namespace ROLogger {
     /// Buffer to store HT farm content
     Farms              m_farms;
     /// Prefix for date check of messages
-    std::string        m_date;
+    int                m_date;
     /// Menu to shutdown application
     UPI::ReallyClose*  m_quit;
-
-    /// Handle DIM message
-    virtual void handleMessage(const char* msg);
+    /// Flag to dump messages to UPI
+    bool               m_connected;
     /// Open new output file
     FILE* openOutput();
+    /// Print single message retrieved from error logger
+    virtual void printMessage(const char* msg, bool crlf=true);
 
   public:
     /// Standard constructor with object setup through parameters

@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.6 2008-05-27 06:52:49 frankb Exp $
+// $Id: MessageLogger.h,v 1.7 2008-05-27 16:50:40 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.6 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.7 2008-05-27 16:50:40 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -95,6 +95,7 @@ namespace ROLogger {
 
     /// Handle DIM message
     virtual void handleMessage(const char* msg);
+
   public:
     /// Standard constructor with object setup through parameters
     MessageLogger(int argc, char** argv);
@@ -106,14 +107,15 @@ namespace ROLogger {
     /// Interactor callback handler
     virtual void handle(const Event& ev);
 
+    /// Print single message retrieved from error logger
+    virtual void printMessage(const char* msg, bool crlf=true);
+
     /// Set message severity level for display
     void setMessageSeverity(const std::string& severity);
     /// Print header information before starting output
     void printHeader(const std::string& title);
     /// Print multi-line header information before starting output
     void printHeader(const std::vector<std::string>& titles);
-    /// Print single message retrieved from error logger
-    void printMessage(const char* msg, bool crlf=true);
     /// Retrieve message severity from DIM logger message
     int msgSeverity(const char* msg);
     /// Cleanup service stack
