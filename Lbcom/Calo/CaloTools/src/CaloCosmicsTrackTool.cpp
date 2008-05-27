@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.1 2008-05-22 22:47:59 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.2 2008-05-27 08:46:22 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -448,7 +448,7 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
   hTrM(2,2) = m_stx;
   hTrM(3,3) = m_sty;
 
-  LHCb::State hState = LHCb::State( eTrV , eTrM , ecal()->referencePoint().Z() , LHCb::State::MidHCal);
+  LHCb::State hState = LHCb::State( hTrV , hTrM , hcal()->referencePoint().Z() , LHCb::State::MidHCal);
 
   // Track
 

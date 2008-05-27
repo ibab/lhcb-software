@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.37 2008-05-22 22:47:59 odescham Exp $
+! $Id: release.notes,v 1.38 2008-05-27 08:46:22 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-05-27 - Deschamps Olivier
+  - fix bug in CaloCosmicsTrackTool.cpp (Hcal state replicated Ecal state)
 
 ! 2008-05-22 - Deschamps Olivier
   - Add new tools and alg for cosmics track reconstruction in calorimeter : 
