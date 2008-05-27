@@ -2,6 +2,13 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2008-05-27 Herve Terrier
+ - check for duplicate hits in OTTimeCreator
+ - made decoder tool private in OTTimeCreator
+ - made raw bank location property of rawbankdecoder
+ - changed errors into warnings in rawbankdecoder
+ - added access to L0 event id in OTSpecific header
+
 !======================= OTDAQ v5r7 2008-05-07 ======================
 ! 2008-05-07 - Marco Cattaneo
  - Add new tool to dictionary
