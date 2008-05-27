@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-05-27 Wouter Hulsbergen
+ - Added fit-status flag to TrackStateVertex
+ - Added method to get propagation time to OTMeasurement
+
 !========================== TrackFitEvent v3r14 2008-04-30 ===================
 ! 2008-04-30 M Needham
  - Change STMeasurement to prevent crash in init due to 0 pointer for sensor 
