@@ -3,8 +3,8 @@ export UTGID=Errlog_$$
 #. /group/online/dataflow/scripts/preamble.sh
 export DATAFLOWDIR=/group/online/dataflow
 #. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.opt
-. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.deb
-# . $DATAFLOWDIR/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.opt
+#. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.deb
+. $DATAFLOWDIR/cmtuser/Online_v4r9/Online/ROLogger/cmt/setup.vars.opt
 # . ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
 #
 export DIM_DNS_NODE=ecs03
