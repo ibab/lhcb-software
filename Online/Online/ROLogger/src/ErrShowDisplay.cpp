@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.3 2008-05-27 18:42:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.4 2008-05-27 18:54:04 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -165,7 +165,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     IocSensor& ioc = IocSensor::instance();
     Filter f;
     struct tm start, stop, curr;
-    time_t begin, end, now;
+    time_t begin, end;
     ::strptime(m_endTime,   s_timeFmt, &stop);
     ::strptime(m_startTime, s_timeFmt, &start);
     begin = ::mktime(&start);
@@ -186,7 +186,7 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
       if ( p ) *p = 0;
       ::strncpy(&tim[5],text,12);
       ::strptime(tim,"%Y-%b%d-%H%M%S",&curr);
-      now = ::mktime(&curr);
+      time_t now = ::mktime(&curr);
       if ( now >= begin && now <= end ) {
 	MessageLine line(text);
 	if ( f.acceptMessage(line) ) {
