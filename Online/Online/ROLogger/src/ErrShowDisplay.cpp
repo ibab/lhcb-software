@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.6 2008-05-27 19:40:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.7 2008-05-27 19:52:49 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -179,8 +179,8 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     ::strftime(tim,12,"%Y-",&start);
     tim[17] = 0;
     //#ifdef _DEBUG
-    begin = ::mktime(gmtime(&begin));
-    end = ::mktime(gmtime(&end));
+    //begin = ::mktime(gmtime(&begin));
+    //end = ::mktime(gmtime(&end));
     //#endif
     int sev = MessageLine::severityLevel(m_severity);
     while(in.getline(text,sizeof(text)).good()) {
