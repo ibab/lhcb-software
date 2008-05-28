@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.h,v 1.5 2008-05-03 15:26:06 graven Exp $
+// $Id: HltMuonRec.h,v 1.6 2008-05-28 10:04:20 asatta Exp $
 #ifndef HLTMUON_H 
 #define HLTMUON_H 1
 
@@ -18,6 +18,7 @@
 #include "HltMuonTrack.h"
 
 #include "HltBase/IMuonSeedTool.h"
+#include "MuonDAQ/IMuonRawBuffer.h"
 
 /** @class HltMuonRec HltMuonRec.h
  *  
@@ -48,10 +49,6 @@ public:
 
   void insertMatch(int muon,LHCb::Track* track,float distance);
 	StatusCode printOut();  
-  StatusCode initializePadDecoding();
-
-  std::vector<LHCb::MuonTileID> DoPad(std::vector<LHCb::MuonTileID>
-                                      digit,MuonTSMap* TS);
   StatusCode getPads(int station);
   StatusCode createCoordsFromLC(int station);
   StatusCode initializeLogChanDecoding();
@@ -115,5 +112,6 @@ protected:
 
   bool m_doPrepareMuonSeg;
   IMuonSeedTool* m_prepareMuonSeed;  
+  IMuonRawBuffer* m_muonBuffer;
 };
 #endif // HLTMUON_H

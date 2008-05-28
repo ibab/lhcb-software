@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.14 2008-05-03 15:32:42 graven Exp $
+// $Id: HltMuonRec.cpp,v 1.15 2008-05-28 10:04:20 asatta Exp $
 // Include files 
 
 #include <algorithm>
@@ -83,6 +83,10 @@ StatusCode HltMuonRec::initialize() {
 
   m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
+
+  m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
+  if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endreq;
+
 
   //all geometry stuff
   MuonBasicGeometry basegeometry( detSvc(),msgSvc());
@@ -173,7 +177,7 @@ StatusCode HltMuonRec::initialize() {
   //initialze the decoding of the raw buffer
 
   if(m_decodingFromCoord ){
-    initializePadDecoding();    
+
   }else{    
     initializeLogChanDecoding();
     for(int index=0;index<12;index++){
@@ -268,7 +272,8 @@ StatusCode HltMuonRec::execute() {
 
   if(!m_decodingFromCoord){
     if ( m_measureTime ) m_timer->start( m_timeLoad );    
-    decodeBuffer();
+    StatusCode scb=decodeBuffer();
+    if(scb.isFailure())return scb;
     if ( m_measureTime ) m_timer->stop( m_timeLoad );   
   }
   if ( m_measureTime ) m_timer->start( m_timePad );
@@ -290,8 +295,10 @@ StatusCode HltMuonRec::execute() {
   StatusCode sc = muonSearch();
   if (sc.isFailure()) return sc;
   if(m_cloneKiller)  {
-      detectClone();
-      strongCloneKiller();
+      StatusCode sck=detectClone();
+      if(sck.isFailure())return sck;
+      sck=strongCloneKiller();
+      if(sck.isFailure())return sck;	
   }
 
   if ( m_measureTime ) {
@@ -328,7 +335,7 @@ StatusCode HltMuonRec::execute() {
     Track* muonseg = 0;
     if (m_doPrepareMuonSeg) {
         muonseg = new Track();
-        m_prepareMuonSeed->makeTrack(*trgTr,*muonseg);
+        m_prepareMuonSeed->makeTrack(*trgTr,*muonseg).ignore();
         delete trgTr;
     } else {
         muonseg = trgTr;
@@ -844,224 +851,38 @@ StatusCode HltMuonRec::printOut()
 };
 
 
-
-
-StatusCode HltMuonRec::initializePadDecoding()
-{
-
-  std::string cablingBasePath=getBasePath(0);    
-  std::string cablingPath=cablingBasePath+"Cabling";
-  SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
-  m_M1Tell1=cabling->getNumberOfL1Board();
-  int countTell1=m_M1Tell1;
-
-  for(int station=1;station<5;station++){
-    verbose()<<"station number "<<station<<endreq;    
-    std::string cablingBasePath=getBasePath(station);    
-    std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);   
-    for(int L1Board=0;L1Board<cabling->getNumberOfL1Board();L1Board++){    
-      verbose()<<"L1 number "<<cabling->getL1Name(0)<<endreq;
-      std::string L1path=cablingBasePath+
-        cabling->getL1Name(L1Board);
-      SmartDataPtr<MuonL1Board>  l1(detSvc(),L1path);
-      //      unsigned totODE=0;      
-      for(int ODEBoard=0;ODEBoard<l1->numberOfODE();ODEBoard++){
-        std::string ODEpath=cablingBasePath
-          +l1->getODEName(ODEBoard);
-        SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
-        //build LUT with ode ID --> MuonTileID
-        unsigned int region=ode->region();        
-        for(int TS=0;TS<ode->getTSNumber();TS++){        
-          std::string  TSPath= cablingBasePath+ ode->getTSName(TS);          
-          unsigned int quadrant= ode->getTSQuadrant(TS);
-          unsigned int TSLayoutX=ode->getTSLayoutX();
-          unsigned int TSLayoutY=ode->getTSLayoutY();
-          unsigned int TSGridX=ode->getTSGridX(TS);
-          unsigned int TSGridY=ode->getTSGridY(TS);
-          unsigned int digitOffSetX=0;
-          unsigned int digitOffSetY=0;          
-          SmartDataPtr<MuonTSMap>  TSMap(detSvc(),TSPath);
-          verbose()<<"trigger sector "<<TSPath<<endreq;
-          
-          std::vector<LHCb::MuonTileID> digitInTS;          
-          for(int i=0;i<TSMap->numberOfOutputSignal();i++){
-            //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
-            unsigned int layout=TSMap->layoutOutputChannel(i);
-            unsigned int  layoutX=TSMap->gridXLayout(layout);
-            unsigned int  layoutY=TSMap->gridYLayout(layout);            
-            digitOffSetX=layoutX*TSGridX;
-            digitOffSetY=layoutY*TSGridY;
-            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
-            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
-            MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
-            LHCb::MuonTileID muontile(station,lay,region,
-                                quadrant,digitX,digitY);
-            digitInTS.push_back(muontile);            
-          }
-          std::vector<LHCb::MuonTileID> crossAddress=DoPad(digitInTS,TSMap);  
-          std::vector<LHCb::MuonTileID>::iterator itPad;
-          for(itPad=crossAddress.begin();itPad<crossAddress.end();itPad++){
-            m_mapPad[countTell1].push_back(*itPad);
-          }        
-        }
-      }
-      countTell1++;      
-    }    
-  }  
-  return StatusCode::SUCCESS;  
-
-
-
-  
-}
-
-
-std::vector<LHCb::MuonTileID> HltMuonRec::DoPad(std::vector<
-                                                   LHCb::MuonTileID> digit,
-                                                   MuonTSMap* TS)
-{
-  
-  std::vector<LHCb::MuonTileID> list_of_pads;
-  if(TS->numberOfLayout()==2){
-    //how many subsector????
-    int NX=TS->gridXLayout(1);    
-    int NY=TS->gridYLayout(0);
-    int Nsub=NX*NY;
-
-    verbose()<<"number NX NY "<<NX<<" "<<NY<<endreq;   
-    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(1);   
-    list_of_pads.reserve(maxPads);
-    LHCb::MuonTileID t;    
-    for(int i=0;i<maxPads;i++){
-      list_of_pads.push_back(t);      
-    }    
-    // work on sub sector 
-    if(Nsub>8){
-      err()<<"error the dimensioning of the TS subsector is wrong "<<endreq;
-      return list_of_pads;
-      
-    }
-    std::vector<unsigned int> horiz[8];
-    std::vector<unsigned int> hvert[8];
-    // clear the memory;    
-    // start fill the sub sector matrices
-    std::vector<LHCb::MuonTileID>::iterator it;
-    int index=0;
-    for(it=digit.begin();it<digit.end();it++,index++){
-      //also zero must be set
-      // which subsector?
-      int mx=TS->gridXOutputChannel(index)/
-        (TS->gridXLayout(TS->layoutOutputChannel(index))/NX);
-      int my=TS->gridYOutputChannel(index)/
-        (TS->gridYLayout(TS->layoutOutputChannel(index))/NY);
-      debug()<<" digit "<<index<<" "<<mx<<" "<<my<<" "<<*it<<endreq;     
-      int Msub=mx+my*NX;
-      // horizntal o vertical?
-      bool horizontal=false;
-      if(TS->layoutOutputChannel(index)==0)horizontal=true;
-      if(horizontal)horiz[Msub].push_back(*it);
-      else hvert[Msub].push_back(*it);
-      verbose()<<" horizontal ? "<<     horizontal<<endreq;      
-    }
-    // now the address of fired pads..
-    for(int i=0;i<Nsub;i++){
-      // cross only local to each sub matrix
-      std::vector<unsigned int>::iterator itx;
-      std::vector<unsigned int>::iterator ity;
-      //debug 
-      verbose()<<" sub matrix "<<i<<endreq;
-      verbose()<<" horizontal sequence ";
-      for(itx=horiz[i].begin();
-          itx<horiz[i].end();itx++){
-        verbose()<<*itx<<" ";
-      }
-      verbose()<<endreq;
-      verbose()<<" vertical sequence ";     
-      for(ity=hvert[i].begin();ity<hvert[i].end();ity++){
-        verbose()<<*ity<<" ";        
-      }
-      verbose()<<endreq;      
-      //end debug
-      unsigned int y_index=0;
-      unsigned int subY=i/NX;
-      unsigned int subX=i-subY*NX;      
-      unsigned int offsetY=subY*(TS->gridYLayout(1)/NY);
-      unsigned int offsetX=subX*(TS->gridXLayout(0)/NX);      
-      for(ity=hvert[i].begin();
-          ity<hvert[i].end();ity++,y_index++){                  
-        unsigned int x_index=0;
-        LHCb::MuonTileID tileY=*ity;
-        
-        for(itx=horiz[i].begin();
-            itx<horiz[i].end();itx++,x_index++){          
-            unsigned int address=offsetX+x_index+
-              (offsetY+y_index)*(TS->gridXLayout(0));             
-            verbose()<<" result of the address "<<address<<endreq;   
-            LHCb::MuonTileID padTile=tileY.intercept(*itx);            
-            list_of_pads[address]=padTile; 
-            verbose()<<" TS dec "<<address<<" "<<
-                  padTile.layout()<<" "<<padTile.station()<<" "<<
-              padTile.region()<<" "<<padTile.quarter()<<" "<<
-              padTile.nX()<<" "<<padTile.nY()<<" "<<endreq;
-            
-        }     
-      }            
-    }   
-  }else{    
-    //easy only zero suppression
-    int maxPads=TS->gridXLayout(0)*TS->gridYLayout(0);   
-    list_of_pads.reserve(maxPads);
-    LHCb::MuonTileID t;    
-    for(int i=0;i<maxPads;i++){
-      list_of_pads.push_back(t);      
-    }
-
-    std::vector<LHCb::MuonTileID>::iterator it;
-    unsigned int index=0;    
-    for(it=digit.begin();it<digit.end();it++,index++){
-      unsigned int address=index;
-      list_of_pads[address]=*it;
-      verbose()<<" result of the address "<<address<<endreq; 
-    }    
-  }
-  return list_of_pads;  
-
-
-}
-
-
-
 StatusCode HltMuonRec::getPads(int station)
 {
+      
+for (int test=0;test<1;test++){
   for(unsigned int region=0;region< m_nRegion;region++){
-     m_station[station].region(region)->clearPoints();
+     HltMuonRegion* thisRegion = m_station[station].region(region);
+     thisRegion->clearPoints();
   }
-
-  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
-  typedef std::vector<RawBank*>::const_iterator rbiter_t;
+  std::vector<std::vector<LHCb::MuonTileID>* > pads;
+  std::vector<LHCb::MuonTileID>::iterator iPad;
+  std::vector<std::vector<LHCb::MuonTileID>* >::iterator iList;
+      
+  StatusCode sc=m_muonBuffer->getPadsInStation(station,pads);
+  if(sc.isFailure())return sc;
   
-  for( rbiter_t itB = b.begin(); itB != b.end(); itB++ ) {    
-    verbose()<<"start of the bank "<<(*itB)->sourceID()<<endmsg;   
-    
-    int tell1Now=(unsigned int)(*itB)->sourceID();
-    if(tell1Now>=m_stationL1Start[station]&&
-       tell1Now<m_stationL1Stop[station]){
-    	const short * it=(*itB)->begin<short>();
-        unsigned int npads=*it++;
-        for(unsigned int i=0;i<npads;++i){
-          unsigned int address=*it++;
-          LHCb::MuonTileID padTile= (m_mapPad[tell1Now])[address]; 
-          double x,y,z,dx,dy,dz;
-          m_iPosTool-> calcTilePos(padTile,x, dx,y, dy,z, dz);
-          m_station[station].region(padTile.region())->addPoint( x, y,padTile );  
-        }      
+       double x,y,z,dx,dy,dz;
+  
+  for(iList=pads.begin();iList!=pads.end();iList++){
+     for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
+       StatusCode sc=m_iPosTool-> calcTilePos(*iPad,x, dx,y, dy,z, dz);
+       if(sc.isFailure())break;
+       int region=iPad->region();
+       HltMuonRegion* thisRegion = m_station[station].region(region);
+       thisRegion->addPoint( x, y,*iPad );
     }
   }
+
+} 
   return StatusCode::SUCCESS;
-  
+
 }
+
 
 
 StatusCode HltMuonRec::initializeLogChanDecoding()

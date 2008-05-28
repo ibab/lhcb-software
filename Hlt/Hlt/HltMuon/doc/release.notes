@@ -4,6 +4,8 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+ 2008-05-28 - Alessia Satta
+  - adapt code to the new CondDB/data format structure
  2008-05-02 - Gerhard Raven
   - remove obsolete _dll.cpp file 
   - fix some ignored status codes
