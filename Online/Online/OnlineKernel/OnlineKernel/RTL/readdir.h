@@ -3,6 +3,7 @@
 
 #ifndef _WIN32
 #include <readdir.h>
+#include <dirent.h>
 #else
 
 /*
