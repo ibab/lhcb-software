@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.4 2008-05-22 14:15:29 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.5 2008-05-28 18:53:27 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -8,6 +8,9 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/SmartDataPtr.h"
+
+#include "Event/ODIN.h"
 
 // local
 #include "HltConfigSvc.h"
@@ -30,6 +33,7 @@ DECLARE_SERVICE_FACTORY( HltConfigSvc );
 HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   : PropertyConfigSvc( name , pSvcLocator )
   , m_configuredTCK(0)
+  , m_evtSvc(0)
 {
   declareProperty("TCK2ConfigMap", m_tck2config);
   declareProperty("initialTCK", m_initialTCK = TCK_t(1));
@@ -46,6 +50,7 @@ HltConfigSvc::~HltConfigSvc() {
 // Finalization
 //=============================================================================
 StatusCode HltConfigSvc::finalize() {
+  m_evtSvc->release();
   return PropertyConfigSvc::finalize();
 }
 
@@ -55,6 +60,9 @@ StatusCode HltConfigSvc::finalize() {
 StatusCode HltConfigSvc::initialize() {
   StatusCode status = PropertyConfigSvc::initialize();
   if ( !status.isSuccess() ) return status;
+
+  if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
+
 
   IIncidentSvc*                incidentSvc;     ///< 
   if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
@@ -91,7 +99,7 @@ HltConfigSvc::configure(const TCK_t& tck) const {
     }
     debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << i->second << endmsg;
     info() << "Invoking PropertyConfigSvc::configure" << endmsg;
-    return PropertyConfigSvc::configure( Gaudi::Math::MD5::convertString2Digest(i->second) );
+    return PropertyConfigSvc::configure( ConfigTreeNode::digest_type::createFromStringRep(i->second) );
 }
 
 //=============================================================================
@@ -104,7 +112,7 @@ HltConfigSvc::reconfigure(const TCK_t& tck) const {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::reconfigure( Gaudi::Math::MD5::convertString2Digest( i->second) );
+    return PropertyConfigSvc::reconfigure( ConfigTreeNode::digest_type::createFromStringRep( i->second) );
 }
 
 //=============================================================================
@@ -117,27 +125,49 @@ HltConfigSvc::loadConfig(const TCK_t& tck) {
         error() << " could not resolve " << tck << " to a configID " << endl;
         return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::loadConfig( Gaudi::Math::MD5::convertString2Digest(i->second) );
+    return PropertyConfigSvc::loadConfig( ConfigTreeNode::digest_type::createFromStringRep(i->second) );
 }
 
 //=============================================================================
 // Check TCK on 'beginEvent' incident
 //=============================================================================
-void HltConfigSvc::handle(const Incident& /*incident*/) {
-  info() << "HltConfigSvc::handle: currently configured TCK: " << m_configuredTCK << endl;
+void HltConfigSvc::dummyVerifyTCK() {
   // check if TCK still the same -- if not, reconfigure... 
   TCK_t currentTCK = m_configuredTCK;
   static unsigned nEvent(0);
   info() << "nEvent: " << nEvent << endl;
   if (++nEvent%100==0) { 
       info()   << " ********************************************\n"
-             << " *********INCREASING TCK !!!!****************\n"
-             << " ********************************************\n" << endl;
+               << " *********INCREASING TCK !!!!****************\n"
+               << " ********************************************\n" << endl;
       ++currentTCK;
   }
   if (m_configuredTCK != currentTCK) {
-      info() << "updating config from TCK " << m_configuredTCK << " to TCK " << currentTCK << endl;
-      StatusCode sc = reconfigure( currentTCK);
+      info() << "updating configuration from TCK " << m_configuredTCK << " to TCK " << currentTCK << endl;
+      StatusCode sc = reconfigure( currentTCK );
       if (sc.isSuccess()) m_configuredTCK = currentTCK;
   }
+}
+
+void HltConfigSvc::verifyTCK() {
+
+    SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
+    unsigned int TCK = odin->triggerConfigurationKey();
+
+    debug() << "verifyTCK: currently configured TCK: " << m_configuredTCK << endmsg;
+    debug() << "verifyTCK: TCK in ODIN bank: " << TCK << endmsg;
+
+    if ( m_configuredTCK == TCK ) return;
+
+    info() << "updating configuration from TCK " << m_configuredTCK << " to TCK " << TCK << endmsg;
+    if (reconfigure( TCK ).isSuccess()) { 
+        m_configuredTCK = TCK;
+    } else {
+        warning() << " reconfigure failed... " << endmsg;
+    }
+}
+
+void HltConfigSvc::handle(const Incident& /*incident*/) {
+  // dummyVerifyTCK();
+  verifyTCK();
 }

@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.4 2008-03-13 15:45:39 graven Exp $
+// $Id: HltGenConfig.h,v 1.5 2008-05-28 18:53:36 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -8,6 +8,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/IConfigAccessSvc.h"
+#include "HltBase/IPropertyConfigSvc.h"
 
 /** @class HltGenConfig HltGenConfig.h
  *  
@@ -39,6 +40,8 @@ private:
   IAlgManager*             m_appMgr;
   std::string              s_accessSvc;
   IConfigAccessSvc*        m_accessSvc;
+  std::string              s_configSvc;
+  IPropertyConfigSvc*      m_configSvc;
   std::vector<std::string> m_topConfig;   ///< where to start when configuring 
   std::vector<std::string> m_svcConfig;   ///< Which services to configure
 
@@ -50,6 +53,9 @@ private:
   typedef std::multimap<std::string,const IAlgTool*> Map_t;
   Map_t m_toolmap;
   std::pair<Map_t::const_iterator,Map_t::const_iterator> findTools(const std::string& parent) const;
+
+  // obtain dependencies
+  std::vector<PropertyConfig::digest_type> gatherDependencies(const INamedInterface& obj) const;
 
 };
 #endif // HLTGENCONFIG_H

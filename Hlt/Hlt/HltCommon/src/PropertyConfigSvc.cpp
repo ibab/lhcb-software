@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.6 2008-05-22 14:15:29 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.7 2008-05-28 18:53:36 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -123,7 +123,7 @@ StatusCode PropertyConfigSvc::initialize() {
   // read table of pre-assigned, possible configurations for this job...
   // i.e. avoid reading _everything_ when we really need to be quick
   for (vector<string>::const_iterator i = m_prefetch.begin(); i!=m_prefetch.end(); ++i ) {
-     ConfigTreeNode::digest_type digest = Gaudi::Math::MD5::convertString2Digest(*i);
+     ConfigTreeNode::digest_type digest = ConfigTreeNode::digest_type::createFromStringRep(*i);
      assert( digest.str() == *i) ;
      loadConfig( digest );
      if (m_createGraphVizFile) createGraphVizFile(digest, digest.str()); 
@@ -154,11 +154,12 @@ PropertyConfigSvc::currentConfiguration(const INamedInterface& obj) const {
                                                              // wants non-const version of obj
 
   // figure out whether we have a Service, Tool, Algorithm or Auditor...
-  string kind = "Unknown";
-  if      (SmartIF<IAlgorithm>(ini).isValid()) kind = "IAlgorithm";
-  else if (SmartIF<IService>(ini).isValid())   kind = "IService";
-  else if (SmartIF<IAlgTool>(ini).isValid())   kind = "IAlgTool";
-  else if (SmartIF<IAuditor>(ini).isValid())   kind = "IAuditor";
+  // figure out whether we have a Service, Tool, Algorithm or Auditor...
+  string kind = ( SmartIF<IAlgorithm>(ini).isValid() ? "IAlgorithm"
+                : SmartIF<IService  >(ini).isValid() ? "IService"
+                : SmartIF<IAlgTool  >(ini).isValid() ? "IAlgTool"
+                : SmartIF<IAuditor  >(ini).isValid() ? "IAuditor"
+                : "Unknown" );
 
   SmartIF<IProperty> ip(ini);
   return PropertyConfig( obj.name(), *ip, kind);
@@ -172,7 +173,7 @@ PropertyConfigSvc::findInTree(const ConfigTreeNode::digest_type& configTree, con
         assert(pc!=0);
         if ( pc->name() == name ) return *i;
    }
-   return Gaudi::Math::MD5::createInvalidDigest();
+   return PropertyConfig::digest_type::createInvalid();
 }
 
 //=============================================================================
@@ -263,8 +264,7 @@ PropertyConfigSvc::configure(const PropertyConfig& config) const
 
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID) const {
-  // FIXME: make sure appmgr has the right topalgorithms...
-  setTopAlgs(configID);
+    setTopAlgs(configID);
 
     const vector<PropertyConfig::digest_type>& configs = collectLeafRefs(configID);
     for (vector<PropertyConfig::digest_type>::const_iterator i = configs.begin(); i!=configs.end();++i) {
@@ -341,7 +341,6 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
                   return StatusCode::FAILURE;
         }
         IAlgorithm* ialgo(0);
-        //TODO: make sure that  the MinimalEventLoopMgr  has our 'topalgs' in its 'TopAlg' property...
         if (m_algMgr->getAlgorithm( config->name(), ialgo ).isSuccess()) {
             algs.push_back(ialgo);
         } else {
@@ -350,13 +349,6 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
                     << "ApplicationMgr.TopAlg += {\"" << config->type() << "/" << config->name() << "\"};\n"
                     << " -- in the future, we might do the equivalent automagically... "
                     << endmsg;
-            // FIXME: it is insufficient to just create this algorithm -- it needs to be registered
-            //        as a top level algorithm. Should be sufficient to 'push' the right value of
-            //        the TopAlg property of the MinimalEventLoopMgr into the JOS (as this code executes
-            //        before MinimalEventLoopMgr::initialize does....)
-            // StatusCode sc = m_algMgr->createAlgorithm( config->type(), config->name(), ialgo );
-            // if (sc.isFailure()) return sc;
-            // algs.push_back(ialgo);
             return StatusCode::FAILURE;
         }
     }
@@ -381,6 +373,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
                   return StatusCode::FAILURE;
         }
         cout << " got requested topAlg: " <<  config->type() << "/" << config->name() << endl;
+        
     }
     return StatusCode::SUCCESS;
 } 
@@ -392,7 +385,7 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     StatusCode sc = configure(top);
     if (!sc.isSuccess()) return sc;
 
-    vector<IService*> svcs;
+    vector<IService*>   svcs;
     vector<IAlgorithm*> algs;
     sc = findServicesAndTopAlgorithms(top,svcs,algs);
     if (!sc.isSuccess()) return sc;
