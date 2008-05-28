@@ -1,5 +1,29 @@
 #-- start of python_alias_header ------
+# create bat files even on Linux
 
+installarea = ${CMTINSTALLAREA}
+install_scripts_dir = $(installarea)/scripts
+bat_file = $(install_scripts_dir)/$(script).bat
+py_file = $(install_scripts_dir)/$(script).py
 
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install :: $(bat_file)
+
+$(bat_file) :: $(py_file)
+	@if [ -e $(install_scripts_dir) ] ; then \
+	  echo "Creating $(bat_file) file" ; \
+	  echo "python %~d0%~p0\$(script).py %*" > $(bat_file) ; \
+	fi
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	echo "Remove $(bat_file)"
+	@rm -f $(bat_file)
 
 #-- end of python_alias_header ------
