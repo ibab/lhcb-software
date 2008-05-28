@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.h,v 1.2 2008-05-22 13:39:55 graven Exp $
+// $Id: HltIsMuonTool.h,v 1.3 2008-05-28 10:09:30 asatta Exp $
 #ifndef HLTISMUONTOOL_H 
 #define HLTISMUONTOOL_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "MuonDet/IMuonPosTool.h"
 #include "Event/Track.h"
+#include "MuonDAQ/IMuonRawBuffer.h"
 #include "TrackInterfaces/IFunctionTool.h"            // Interface
 
 /** @class HltIsMuonTool HltIsMuonTool.h
@@ -33,7 +34,12 @@ private:
   bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
 
   IMuonPosTool*      m_iPosTool;
+<<<<<<< HltIsMuonTool.h
+  IMuonRawBuffer* m_muonBuffer;
+private:
+=======
 
+>>>>>>> 1.2
 // FOI parameters
   std::vector<double> m_p1x;
   std::vector<double> m_p2x;
@@ -41,6 +47,7 @@ private:
   std::vector<double> m_p1y;
   std::vector<double> m_p2y;
   std::vector<double> m_p3y;
+  bool m_useFastDecoding; 
 
 };
 #endif // HLTISMUONTOOL_H

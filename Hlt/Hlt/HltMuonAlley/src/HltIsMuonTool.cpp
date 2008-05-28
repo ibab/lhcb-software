@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.3 2008-02-07 14:03:36 hernando Exp $
+// $Id: HltIsMuonTool.cpp,v 1.4 2008-05-28 10:09:30 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ HltIsMuonTool::HltIsMuonTool( const std::string& type,
   declareProperty( "par1y", m_p1y = boost::assign::list_of (5.5)(4.0)(2.5)(2.5));
   declareProperty( "par2y", m_p2y = boost::assign::list_of (35.)(35.)(25.)(25.));
   declareProperty( "par3y", m_p3y = boost::assign::list_of (.07)(.17)(.17)(.22));
-
+  declareProperty("UseFastDecoding", m_useFastDecoding = true );
   declareInterface<ITrackFunctionTool>(this);
 }
 //=============================================================================
@@ -56,6 +56,8 @@ StatusCode HltIsMuonTool::initialize() {
   debug() << "==> Initialize" << endmsg;
   m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
   if(!m_iPosTool)debug()<<"error retrieving the pos tool "<<endreq;
+  m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
+  if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -64,7 +66,7 @@ StatusCode HltIsMuonTool::initialize() {
 
 double  HltIsMuonTool::function(const Track& ctrack)
 {
-
+  
   // A dirty trick!
   Track* track = (Track*) &ctrack;
   
@@ -77,71 +79,100 @@ double  HltIsMuonTool::function(const Track& ctrack)
   bool inFOIM5=false;
   bool inFOIM2=false;
   bool muonSeg=false;
-
-// looping over lhcbIDs 
+  
+  // looping over lhcbIDs 
   for(it=lista.end()-1;it>=lista.begin();it--){ 
     if(it->isMuon()){
       MuonTileID tile=it->muonID();
       if(tile.station()==4){
-         muonSeg=true;
-         tileM5=tile;
-         // M5 hit out of FOI or invalid
-         if(!(tileM5.isValid())||!(isInFOI(track,tileM5))) return 0;
+        muonSeg=true;
+        tileM5=tile;
+        // M5 hit out of FOI or invalid
+        if(!(tileM5.isValid())||!(isInFOI(track,tileM5))) return 0;
       }else if(tile.station()==3){
-         tileM4=tile;
-         // M4 hit out of FOI or invalid
-         if(!(tileM4.isValid())||!(isInFOI(track,tileM4))) return 0;
+        tileM4=tile;
+        // M4 hit out of FOI or invalid
+        if(!(tileM4.isValid())||!(isInFOI(track,tileM4))) return 0;
       }else if(tile.station()==2){
-         tileM3=tile;
-         // M3 hit out of FOI or invalid
-         if(!(tileM3.isValid())||!(isInFOI(track,tileM3))) return 0;
+        tileM3=tile;
+        // M3 hit out of FOI or invalid
+        if(!(tileM3.isValid())||!(isInFOI(track,tileM3))) return 0;
       }else if(tile.station()==1){
-         tileM2=tile;
-         if(!(tileM2.isValid()))continue;
-         // M2 hits inside FOI
+        tileM2=tile;
+        if(!(tileM2.isValid()))continue;
+        // M2 hits inside FOI
          if(isInFOI(track,tileM2)) {inFOIM2=true; break;}
       }else{
-         // All M2 hits outside FOI
-         return 0;
+        // All M2 hits outside FOI
+        return 0;
       }
     }
   }
   if(!inFOIM2) return 0;
   if(muonSeg) return 1;
-  //M4 and M5 for L0 candidates
-  LHCb::MuonCoords* coords =  get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
-  if ( coords==0 ) {
-    err() << " Cannot retrieve MuonCoords " << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // loop over the coords starting from M5
-  LHCb::MuonCoords::const_iterator iCoord;
-  for ( iCoord = coords->end() -1 ; iCoord >= coords->begin() ; iCoord-- ){
-    int region = (*iCoord)->key().region();
-    int station = (*iCoord)->key().station();
-    debug()<<station<<" "<<region<<endreq;
-    //if(region!=0 && (*iCoord)->uncrossed())continue;
-    if(station==4){
+  
+  
+  if(!m_useFastDecoding){
+    //M4 and M5 for L0 candidates
+    LHCb::MuonCoords* coords =  get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
+    if ( coords==0 ) {
+      err() << " Cannot retrieve MuonCoords " << endreq;
+      return StatusCode::FAILURE;
+    }
+    
+    // loop over the coords starting from M5
+    LHCb::MuonCoords::const_iterator iCoord;
+    for ( iCoord = coords->end() -1 ; iCoord >= coords->begin() ; iCoord-- ){
+      int region = (*iCoord)->key().region();
+      int station = (*iCoord)->key().station();
+      debug()<<station<<" "<<region<<endreq;
+      //if(region!=0 && (*iCoord)->uncrossed())continue;
+      if(station==4){
         if(inFOIM5) continue;
         // M5 hit found inside FOI
         if(isInFOI(track,(*iCoord)->key())) inFOIM5=true;
-    }else if(station==3){
+      }else if(station==3){
         // All M5 hits outside FOI
         if(!inFOIM5) return 0;
         // M2, M3, M4 and M5 hits inside FOI
         if(isInFOI(track,(*iCoord)->key())) return 1;
-    }else{
+      }else{
         // All M4 hits outside FOI
         return 0;
+      }
     }
+  }else{
+    std::vector<std::vector<LHCb::MuonTileID>* > pads;
+    std::vector<LHCb::MuonTileID>::iterator iPad;
+    std::vector<std::vector<LHCb::MuonTileID>* >::iterator iList;
+    StatusCode sc=m_muonBuffer->getPadsInStation(4,pads);
+    if(sc.isFailure())return sc;
+    for(iList=pads.begin();iList!=pads.end();iList++){
+      for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
+        if(inFOIM5) continue;
+        // M5 hit found inside FOI
+        if(isInFOI(track,(*iPad))) inFOIM5=true;
+      }
+    }
+    sc=m_muonBuffer->getPadsInStation(3,pads);
+      if(sc.isFailure())return sc;
+      for(iList=pads.begin();iList!=pads.end();iPad++){
+        for(iPad=(*iList)->begin();iPad!=(*iList)->end();iPad++){
+          // All M5 hits outside FOI
+          if(!inFOIM5) return 0;
+          // M2, M3, M4 and M5 hits inside FOI
+          if(isInFOI(track,(*iPad))) return 1;
+        }
+        // All M4 hits outside FOI
+        return 0;
+      }  
   }
-// no muon hits
-return 0;
+  // no muon hits
+  return 0;
 } 
 
 bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
- 
+  
   State* stato=NULL;
   double x,y,z,dx,dy,dz;
   int region = tileMX.region();

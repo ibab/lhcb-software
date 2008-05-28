@@ -3,11 +3,14 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-05-28 - Alessia Satta
+  - Change in HltIsMuonTool to use directly the trigger part of muon data 
+    format and not the offline. aim: get rid of MuonRec which is time 
+    consuming. There is a switch to choose the input.
 ! 2008-05-22 - Gerhard Raven
   - HltMatchTVeloTracks,HltIsMuonTool,HltMuonIDDistanceTool:
   follow migration of ITrackMatch from HltBase to TrackInterfaces
   replace floats with double -- why use floats given that they are NOT faster?
-
 ! 2008-05-14 - Gerhard Raven
   remove 'info()' printout of 'ecco' in HltMatchVeloTTracks
   remove implementation of finalize which is identical to the default..
