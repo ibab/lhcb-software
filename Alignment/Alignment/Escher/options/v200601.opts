@@ -48,7 +48,6 @@ HistogramPersistencySvc.OutputFile = "Escher.root";  // Monitoring histos
 //---------------------------------------------------------------------------
 //PoolDbCacheSvc.Catalog = {
 //  "xmlcatalog_file:$ESCHERROOT/job/MyCatalog.xml"
-  // ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
 //};
 EventSelector.Input   = {
 "DATAFILE='PFN:/work/blouw/cmtuser/Brunel_v32r3p1/Rec/Brunel/v32r3p1/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
