@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.8 2008-04-11 11:07:11 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.9 2008-05-28 10:02:38 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -51,7 +51,8 @@ public:
   //StatusCode getTDCInODE();
  
   StatusCode getPads( int tell1,std::vector<LHCb::MuonTileID>& pads);
-  StatusCode getPadsInStation( int station,std::vector<LHCb::MuonTileID>& pads);
+  StatusCode getPads( int tell1);
+  StatusCode getPadsInStation( int station,std::vector<std::vector<LHCb::MuonTileID>* > & pads);
   
 
   void forceReset()

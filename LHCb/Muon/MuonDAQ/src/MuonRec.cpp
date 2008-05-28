@@ -1,4 +1,4 @@
-// $Id: MuonRec.cpp,v 1.5 2008-04-02 11:52:05 asatta Exp $
+// $Id: MuonRec.cpp,v 1.6 2008-05-28 10:02:38 asatta Exp $
 // Include files 
 #include <cstdio>
 
@@ -103,7 +103,11 @@ StatusCode MuonRec::execute() {
   std::vector<std::pair<LHCb::MuonTileID,unsigned int > > decoding;
 
 
-	m_muonBuffer->getTileAndTDC(decoding);
+  StatusCode sc=	m_muonBuffer->getTileAndTDC(decoding);
+  if(sc.isFailure()){
+    error()<<" error in decoding the muon raw data "<<endreq;
+    return sc;
+  }
   debug()<<decoding.size()<<" digits in input "<<endreq;
   
   int station;

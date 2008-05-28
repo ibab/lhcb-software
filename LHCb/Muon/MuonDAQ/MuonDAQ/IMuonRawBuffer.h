@@ -1,4 +1,4 @@
-// $Id: IMuonRawBuffer.h,v 1.7 2008-04-11 11:07:11 asatta Exp $
+// $Id: IMuonRawBuffer.h,v 1.8 2008-05-28 10:02:38 asatta Exp $
 #ifndef MUONDAQ_IMUONRAWBUFFER_H 
 #define MUONDAQ_IMUONRAWBUFFER_H 1
 
@@ -51,8 +51,8 @@ ode_num)=0;
   virtual StatusCode getTileAndTDC( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode getNZSupp( LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode getPads( int tell1,std::vector<LHCb::MuonTileID>& pads)  =0;
-  
-  virtual StatusCode getPadsInStation( int station,std::vector<LHCb::MuonTileID>& pads)=0;
+  virtual StatusCode getPads( int tell1)  =0;
+  virtual StatusCode getPadsInStation( int station,std::vector<std::vector<LHCb::MuonTileID>* >& pads)=0;
   
   virtual void forceReset()=0; 	
   virtual MuonODEData getODEData(const LHCb::RawBank* r,unsigned int link)=0;

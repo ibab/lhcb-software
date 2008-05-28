@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.13 2008-04-29 12:55:21 cattanem Exp $
+// $Id: MuonRawBuffer.cpp,v 1.14 2008-05-28 10:02:38 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -651,18 +651,22 @@ StatusCode MuonRawBuffer::getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonT
 
 
 StatusCode MuonRawBuffer::DecodeData(const LHCb::RawBank* r)
-{
+{ 
+  StatusCode sc=StatusCode::FAILURE;
   unsigned int tell1Number=(r)->sourceID();
   if(tell1Number>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE; 
- 
+   
   if(!m_alreadyDecoded[tell1Number]){
     if(r->version()==MuonBankVersion::DC06){
+      sc=decodeTileAndTDCDC06(r);
       
-      decodeTileAndTDCDC06(r);
-      }else if(r->version()==MuonBankVersion::v1){
-        
-        decodeTileAndTDCV1(r);
-      }m_alreadyDecoded[tell1Number]=true;
+      
+    }else if(r->version()==MuonBankVersion::v1){
+      
+      sc=decodeTileAndTDCV1(r); 
+      
+    }m_alreadyDecoded[tell1Number]=true;
+    if(sc.isFailure())return sc;
   }
   
   
@@ -672,24 +676,22 @@ StatusCode MuonRawBuffer::DecodeData(const LHCb::RawBank* r)
 StatusCode MuonRawBuffer::DecodeDataPad(const LHCb::RawBank* r)
 {
   StatusCode sc=StatusCode::FAILURE;
-  
+  sc.ignore();
   unsigned int tell=(r)->sourceID();
   if(tell>MuonDAQHelper_maxTell1Number)return StatusCode::FAILURE;
   //  debug()<<tell<<" "<<m_padAlreadyDecoded[tell]<<endreq; 
   if((unsigned int)(r)->sourceID()>=m_M1Tell1){
     if(!m_padAlreadyDecoded[tell]){
-      if(r->version()==MuonBankVersion::DC06){
-        
+      m_padAlreadyDecoded[tell]=true;
+      if(r->version()==MuonBankVersion::DC06){        
         sc=decodePadsDC06(r);
-      }else if(r->version()==MuonBankVersion::v1){
-        
+        if(sc.isFailure())return sc;
+      }else if(r->version()==MuonBankVersion::v1){        
         sc=decodePadsV1(r);
-      }
-      
-      m_padAlreadyDecoded[tell]=true;  
-      if(sc.isFailure())return sc;
+        if(sc.isFailure())return sc;
+      }      
     }  
-  }else m_alreadyDecoded[tell]=true;
+  }else m_padAlreadyDecoded[tell]=true;
   return StatusCode::SUCCESS;
 }
 
@@ -1054,19 +1056,16 @@ bool MuonRawBuffer::LinkReachedHitLimit(unsigned int Tell1Number,int link_num)
 }
 
 
-StatusCode MuonRawBuffer::getPadsInStation( int station,std::vector<LHCb::MuonTileID>& pads)
+StatusCode MuonRawBuffer::getPadsInStation(int station,std::vector<std::vector<LHCb::MuonTileID>* > & pads)
 {
 
   std::vector<int> tell1_list=
     (m_muonDet->getDAQInfo())-> getTell1InStation(station);
   std::vector<int>::iterator iTell;
   for(iTell=tell1_list.begin();iTell<tell1_list.end();iTell++){
-    std::vector<LHCb::MuonTileID> pads_in_tell;
-    StatusCode sc=getPads(*iTell,pads_in_tell);
+    StatusCode sc=getPads(*iTell);
     if(sc.isFailure())return sc;
-    for(std::vector<LHCb::MuonTileID>::iterator iPad=pads_in_tell.begin();
-        iPad<pads_in_tell.end();iPad++)
-      pads.push_back(*iPad);
+    pads.push_back(&m_padStorage[*iTell]);
   }
   return StatusCode::SUCCESS;
 
@@ -1090,16 +1089,29 @@ StatusCode MuonRawBuffer::getPads( int tell1,std::vector<LHCb::MuonTileID>& pads
       StatusCode sc=DecodeDataPad(r);
       if(sc.isFailure())return sc;
       std::vector<LHCb::MuonTileID>::iterator itStorage;
-      for(itStorage=(m_padStorage[tell1]).begin();
-          itStorage<(m_padStorage[tell1]).end();itStorage++){
-        pads.push_back(*itStorage);
-      }
+      pads=(m_padStorage[tell1]);
+
     }
   }
-
-
-
-
   return StatusCode::SUCCESS;
 
 }
+StatusCode MuonRawBuffer::getPads( int tell1)
+{
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;
+ //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {
+    const RawBank* r = *itB; 
+    if( r->sourceID()==tell1){
+ 
+      StatusCode sc=DecodeDataPad(r);
+      if(sc.isFailure())return sc;
+    }
+  }
+  return StatusCode::SUCCESS;
+
+}
+
+
