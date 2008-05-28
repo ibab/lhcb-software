@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-05-28 Wouter Hulsbergen
+ - check #dof for chisquare cut in TrackSelector
+ - extend interface of TrackVertexer
+
 !======================== TrackTools v3r7 2008-05-21 ========================
 ! 2008-05-22 - Marco Cattaneo
  - In PtTransporter, get IFunctionTool.h from TrackInterfaces
