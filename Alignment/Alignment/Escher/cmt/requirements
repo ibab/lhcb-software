@@ -44,6 +44,7 @@ use AlignTrTools	v*    Alignment -no_auto_imports
 use SolvKernel		v*    Alignment -no_auto_imports
 use AlignSolvTools      v*    Alignment -no_auto_imports
 use TAlignment		v*    Alignment -no_auto_imports
+use VeloAlignment       v*    Alignment -no_auto_imports
 #
 #===== build Escher =========================
 application Escher $(GAUDICONFROOT)/src/GaudiMain.cpp
