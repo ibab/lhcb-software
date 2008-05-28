@@ -1,10 +1,12 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.16 2007-06-27 15:22:24 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.17 2008-05-28 20:10:34 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+#include "LHCbMath/LHCbMath.h"
 
 // OTDAQ
 #include "OTDAQ/IOTReadOutWindow.h"
@@ -32,12 +34,21 @@ DECLARE_TOOL_FACTORY( OTRandomDepositCreator );
 OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type, 
                                                const std::string& name, 
                                                const IInterface* parent) : 
-  GaudiTool( type, name, parent )
+  GaudiTool( type, name, parent ),
+  m_rgs(0),
+  m_tracker(0),
+  m_modules(),
+  m_nModules(0u),
+  m_nMaxChanInModule(0u),
+  m_nChannels(0u),
+  m_windowSize(0u),
+  m_deadTime(0.0),
+  m_nNoise(0u),
+  m_windowOffSet()
 {
-  declareProperty( "noiseRate", m_noiseRate = 10.0*Gaudi::Units::kilohertz );
-  declareProperty( "readOutWindowToolName", m_readoutWindowToolName ="OTReadOutWindow" ),
-
   declareInterface<IOTRandomDepositCreator>(this);
+  declareProperty( "NoiseRate"            , m_noiseRate             = 10.0*Gaudi::Units::kilohertz );
+  declareProperty( "ReadOutWindowToolName", m_readoutWindowToolName = "OTReadOutWindow"            );
 }
 
 OTRandomDepositCreator::~OTRandomDepositCreator()
@@ -50,21 +61,21 @@ StatusCode OTRandomDepositCreator::initialize()
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize OTRandomDepositCreator", sc );
 
-  // get interface to generator
-  IRndmGenSvc* randSvc = svc<IRndmGenSvc>("RndmGenSvc", true);
-  sc = randSvc->generator(Rndm::Flat(0.0,1.0),m_genDist.pRef()); 
-  if ( sc.isFailure() ) {
-    return Error("Failed to generate random number distribution",sc);
-  }
-  sc = release(randSvc);
-  if (sc.isFailure()) {
-    return Error("Failed to release RndmGenSvc", sc);
-  }
-
+  /// Random number from a flat distribution between 0 and 1
+  /// for cross talk and double pulses
+  sc = m_flat.initialize( randSvc() , Rndm::Flat( 0.0, 1.0) );
+  
   // Get OT geometry
-  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  m_tracker   = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  m_modules   = m_tracker->modules();
+  m_nModules  = m_modules.size();
+  /// Get the possible maximum number of channels.
+  /// Can not be more than num modules times 128
+  m_nMaxChanInModule = m_tracker->nMaxChanInModule();
+  m_nChannels        = m_nMaxChanInModule*m_nModules; //m_tracker->nChannels();
 
-  // Get channel deadtime
+  /// Get channel deadtime
+  /// This either needs to be an option or go into the conditions database
   m_deadTime = m_tracker->deadTime();
 
   // pointer to OTReadoutWindow tool
@@ -79,45 +90,50 @@ StatusCode OTRandomDepositCreator::initialize()
   m_windowSize = readoutTool->sizeOfReadOutGate() + m_deadTime;
   // release tool 
   release(readoutTool);
-  
-  m_nMaxChanInModule = m_tracker->nMaxChanInModule();
-  m_nNoise = nNoiseHits();
+
+  /// Determine the number of noise hits to generate
+  m_nNoise = unsigned(m_nChannels*m_windowSize*m_noiseRate);
 
   return StatusCode::SUCCESS;  
 }
 
-void OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector) const 
-{
-  // get number of modules 
-  std::vector<DeOTModule*> otModules =  m_tracker->modules();
-  unsigned int nModules = otModules.size();
-  
-  for (unsigned(iDep) = 0; iDep < m_nNoise; ++iDep) {
-    double randomNum = m_genDist->shoot();
-    unsigned int moduleNum = unsigned((nModules*randomNum));
-    DeOTModule* aModule = otModules[moduleNum];
-    
-    unsigned int strawID = unsigned(m_nMaxChanInModule*m_genDist->shoot())+1u;
+IRndmGenSvc* OTRandomDepositCreator::randSvc() const {
+  if( 0 == m_rgs ) m_rgs = svc<IRndmGenSvc>( "RndmGenSvc", true );
+  return m_rgs;
+}
 
-    if (strawID <= aModule->nChannels()) {
-      unsigned int stationID = aModule->elementID().station();
-      double time = m_windowOffSet[stationID-1u] + (m_genDist->shoot() * m_windowSize);  
-      OTChannelID aChan(stationID, aModule->elementID().layer(), aModule->elementID().quarter(),
-			aModule->elementID().module(), strawID);
-      MCOTDeposit* newDeposit = new MCOTDeposit(0, aChan, time, 0, 0);
-      depVector->push_back(newDeposit);
+void OTRandomDepositCreator::createDeposits(OTDeposits& deposits) const 
+{
+  for ( unsigned iDep = 0; iDep < m_nNoise; ++iDep ) {
+    /// Get a random module
+    /// Random number between 0 and 1
+    const double modRanNum = m_flat();
+    /// Start counting modules from 0 and not 1
+    /// i.e. get a number between 0 and 431 and not between 1 and 432.
+    /// Since we're randomly accessing the vector of modules
+    unsigned int moduleNum = unsigned(m_nModules*modRanNum);
+    DeOTModule*  module    = m_modules[moduleNum];
+    
+    /// Get a random straw in module
+    /// Random number between 0 and 1
+    const double strawRanNum = m_flat();
+    /// Straw numbering starts from 1, but we want a random "straw number" between 0 and n.
+    /// So the straw id is random straw number + 1u
+    unsigned int strawID     = unsigned(m_nMaxChanInModule*strawRanNum) + 1u;
+    
+    if (strawID <= module->nChannels()) {
+      const unsigned int stationID  = module->elementID().station();
+      const double time             = m_windowOffSet[stationID-1u] + (m_flat() * m_windowSize);
+      MCOTDeposit* newDeposit = new MCOTDeposit( 0, 
+                                                 OTChannelID( stationID, 
+                                                              module->elementID().layer(), 
+                                                              module->elementID().quarter(),
+                                                              module->elementID().module(), 
+                                                              strawID ), 
+                                                 time, 
+                                                 0, 
+                                                 0 );
+      deposits.push_back(newDeposit);
     }
   } // iDep
-}
-
-unsigned int OTRandomDepositCreator::nNoiseHits() const
-{ 
-  // number of hits to generate
-  return unsigned((nChannels()*m_windowSize*m_noiseRate));
-}
-
-unsigned int OTRandomDepositCreator::nChannels() const 
-{
-  /// return maximum number of channels
-  return unsigned(m_nMaxChanInModule*(m_tracker->modules()).size());
 }

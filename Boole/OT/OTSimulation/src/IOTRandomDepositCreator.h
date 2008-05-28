@@ -1,4 +1,4 @@
-// $Id: IOTRandomDepositCreator.h,v 1.4 2007-06-27 15:27:12 janos Exp $
+// $Id: IOTRandomDepositCreator.h,v 1.5 2008-05-28 20:10:34 janos Exp $
 #ifndef OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 1
 
@@ -22,12 +22,12 @@ class IOTRandomDepositCreator : virtual public IAlgTool {
 public:
 
   /// Handy typdedef
-  typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
+  typedef std::vector<LHCb::MCOTDeposit*> OTDeposits;
 
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_OTRandomDepositCreator; }
 
-  virtual void createDeposits(MCOTDepositVec* depVector) const = 0; 
+  virtual void createDeposits(OTDeposits& deposits) const = 0;
 
 };
 #endif // OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
