@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.7 2008-05-27 19:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.8 2008-05-28 10:22:39 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -21,6 +21,7 @@
 #include "CPP/Event.h"
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
+#include "RTL/time.h"
 #include "ROLoggerDefs.h"
 #include <sstream>
 #include <fstream>
@@ -28,7 +29,6 @@
 #include <dirent.h>
 
 using namespace ROLogger;
-
 
 static const int   s_NumList[]  = {1,10,50,100,200,300,500,1000,5000,10000};
 static const char* s_SevList[]  = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
@@ -41,7 +41,7 @@ static const char* s_PartList[] = {"TDET",
 				   "PRS","ECAL","HCAL","CALO",
 				   "MUONA","MUONC","MUON"
 };
-static const char* s_timeFmt = "%d-%m-%Y %H:%M:%S";
+static const char* s_timeFmt = "%d-%b-%Y %H:%M:%S";
 
 static void clean_str(char* n,size_t len)  {
   n[len-1] = 0;
@@ -52,6 +52,7 @@ static void clean_str(char* n,size_t len)  {
 ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part) 
   : m_parent(parent), m_msg(msg), m_numMsg(200)
 {
+  ::tzset();
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
   m_id = UpiSensor::instance().newID();
@@ -70,15 +71,15 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::s
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
 
   ::upic_add_comment(CMD_COM0,           "Log file directory:","");
-  ::upic_set_param(m_logDir,1,    "A53", m_logDir, 0,0,0,0,0);
-  ::upic_add_command(CMD_DIR,            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
-  ::upic_add_comment(CMD_COM1,           "------------------  Search Zone  ------------------","");
+  ::upic_set_param(m_logDir,1,    "A55", m_logDir, 0,0,0,0,0);
+  ::upic_add_command(CMD_DIR,            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
+  ::upic_add_comment(CMD_COM1,           "-------------------  Search Zone  -------------------","");
   ::upic_set_param(m_name,1,      "A10", m_name, 0,0,s_PartList,sizeof(s_PartList)/sizeof(s_PartList[0]),0);
   ::upic_add_command(CMD_CONNECT,        "Select Partition: ^^^^^^^^^","");
-  ::upic_set_param(m_startTime,1, "A20", m_startTime, 0,0,0,0,0);
-  ::upic_add_command(CMD_START,          "Retrieve messages starting from ^^^^^^^^^^^^^^^^^^^","");
-  ::upic_set_param(m_endTime,  1, "A20", m_endTime, 0,0,0,0,0);
-  ::upic_add_command(CMD_STOP,           "                          until ^^^^^^^^^^^^^^^^^^^","");
+  ::upic_set_param(m_startTime,1, "A21", m_startTime, 0,0,0,0,0);
+  ::upic_add_command(CMD_START,          "Retrieve messages starting from ^^^^^^^^^^^^^^^^^^^^","");
+  ::upic_set_param(m_endTime,  1, "A21", m_endTime, 0,0,0,0,0);
+  ::upic_add_command(CMD_STOP,           "                          until ^^^^^^^^^^^^^^^^^^^^","");
   ::upic_add_comment(CMD_COM2,           "","");
   ::upic_set_param(m_severity, 1,  "A7", m_severity, 0,0,s_SevList,sizeof(s_SevList)/sizeof(s_SevList[0]),1);
   ::upic_add_command(CMD_SEVERITY,       "Severity for messages ^^^^^^^","");
@@ -90,15 +91,15 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::s
   ::upic_add_command(CMD_WILD_PROCESS,   "Process match:   ^^^^^^^^^^^^^^^","");
   ::upic_set_param(m_component,1, "A16", m_component,0,0,0,0,0);
   ::upic_add_command(CMD_WILD_COMPONENT, "Component match: ^^^^^^^^^^^^^^^","");
-  ::upic_set_param(m_message,  1, "A37", m_message,0,0,0,0,0);
-  ::upic_add_command(CMD_WILD_MESSAGE,   "Message match: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
-  ::upic_add_comment(CMD_COM5,           "---------------------------------------------------","");
+  ::upic_set_param(m_message,  1, "A39", m_message,0,0,0,0,0);
+  ::upic_add_command(CMD_WILD_MESSAGE,   "Message match: ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
+  ::upic_add_comment(CMD_COM5,           "-----------------------------------------------------","");
   ::upic_add_command(CMD_SHOW,           "Show list of log files","");
   ::upic_add_command(CMD_LOAD,           "Show result","");
   ::upic_add_command(CMD_SAVE,           "Write to File:","");
-  ::upic_set_param(m_outFileName,1,"A53", m_outFileName, 0,0,0,0,0);
-  ::upic_add_command(CMD_FILE,           "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
-  ::upic_add_comment(CMD_COM6,           "---------------------------------------------------","");
+  ::upic_set_param(m_outFileName,1,"A55", m_outFileName, 0,0,0,0,0);
+  ::upic_add_command(CMD_FILE,           "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
+  ::upic_add_comment(CMD_COM6,           "-----------------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,          "Close","");
   ::upic_close_menu();
   ::upic_set_cursor(m_id,CMD_CONNECT,0);
@@ -114,14 +115,10 @@ ErrShowDisplay::~ErrShowDisplay()  {
 
 /// Retrieve all files corresponding to this request
 void ErrShowDisplay::getFiles(Files& files)  {
-  struct tm start, stop, curr;
-  time_t begin, end, now;
+  time_t begin = ::str2time(m_startTime,s_timeFmt);
+  time_t end   = ::str2time(m_endTime,  s_timeFmt);
   files.clear();
-  ::strptime(m_endTime,   s_timeFmt, &stop);
-  ::strptime(m_startTime, s_timeFmt, &start);
-  begin = ::mktime(&start);
-  end   = ::mktime(&stop);
-  if ( (end - begin) > 0 ) {
+  if ( (end - begin) >= 0 ) {
     std::string first, dirname = m_logDir;
     dirname += m_name;
     DIR* dir = opendir(dirname.c_str());
@@ -131,16 +128,13 @@ void ErrShowDisplay::getFiles(Files& files)  {
       dirname += "/";
       ::sprintf(fmt,"%s_%%Y.%%m.%%d-%%H.%%M.%%S.log",m_name);
       while ((dp=readdir(dir)) != 0) {
-	const char* fname = dp->d_name;
-	if ( 0 != ::strptime(fname,fmt,&curr) ) {
-	  now = ::mktime(&curr);
-	  if ( now >= begin && now <= end ) {
-	    files.push_back(dirname+fname);
-	    ::upic_write_message2("Adding file:%s %d %d %d",files.back().c_str(),(int)begin,(int)now,(int)end);
-	  }
-	  else if ( now < begin ) {
-	    first = dirname+fname;
-	  }
+	time_t now = ::str2time(dp->d_name,fmt);
+	if ( now >= begin && now <= end ) {
+	  files.push_back(dirname+dp->d_name);
+	  ::upic_write_message2("Adding file:%s",files.back().c_str());
+	}
+	else if ( now < begin ) {
+	  first = dirname+dp->d_name;
 	}
       }
       if ( !first.empty() ) {
@@ -164,32 +158,23 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
     int flag = Filter::MATCH_WILD+Filter::MATCH_NOCASE+Filter::MATCH_SELECT;
     IocSensor& ioc = IocSensor::instance();
     Filter f;
-    struct tm start, stop, curr;
-    time_t begin, end;
-    ::strptime(m_endTime,   s_timeFmt, &stop);
-    ::strptime(m_startTime, s_timeFmt, &start);
-    begin = ::mktime(&start);
-    end   = ::mktime(&stop);
+    time_t begin = ::str2time(m_startTime,s_timeFmt);
+    time_t end   = ::str2time(m_endTime,  s_timeFmt);
     f.setNodeMatch      (m_node,     flag);
     f.setUtgidMatch     (m_process,  flag);
     f.setComponentMatch (m_component,flag);
     f.setMessageMatch   (m_message,  flag);
-    ::sprintf(text,"Logger output:%s   from '%s' to '%s'",fname.c_str(),m_startTime,m_endTime);
+    ::sprintf(text,"Logger output:%s from %s to %s",fname.c_str(),m_startTime,m_endTime);
     ioc.send(m_msg,CMD_START,new std::string(text));
-    ::strftime(tim,12,"%Y-",&start);
+    ::memcpy(tim,m_startTime+7,4);
+    tim[4] = ' ';
     tim[17] = 0;
-    //#ifdef _DEBUG
-    //begin = ::mktime(gmtime(&begin));
-    //end = ::mktime(gmtime(&end));
-    //#endif
     int sev = MessageLine::severityLevel(m_severity);
     while(in.getline(text,sizeof(text)).good()) {
       p = ::strchr(text,'\n');
       if ( p ) *p = 0;
       ::strncpy(&tim[5],text,12);
-      ::strptime(tim,"%Y-%b%d-%H%M%S",&curr);
-      time_t now = ::mktime(&curr);
-      //now = ::mktime(gmtime(&now));
+      time_t now = ::str2time(tim,"%Y %b%d-%H%M%S");
       if ( now >= begin && now <= end ) {
 	MessageLine line(text);
 	if ( f.acceptMessage(line) ) {
