@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-05-28 - Louis Nicolas
+ - TrackRemoveDoubleHits: Go back to removing lhcbIDs. User has to make sure where in the sequence he's using it: before the fit.
+
 ! 2008-05-27 - Louis Nicolas
  - TrackRemoveDoubleHits: Bug fix
 
