@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.8 2008-05-28 10:22:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.9 2008-05-28 12:22:56 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -22,11 +22,16 @@
 #include "UPI/upidef.h"
 #include "RTL/rtl.h"
 #include "RTL/time.h"
+#include "RTL/readdir.h"
 #include "ROLoggerDefs.h"
 #include <sstream>
 #include <fstream>
 #include <cerrno>
-#include <dirent.h>
+#ifdef _WIN32
+static const char* LOG_DIR="G:/online/dataflow/logs/";
+#else
+static const char* LOG_DIR="/group/online/dataflow/logs/";
+#endif
 
 using namespace ROLogger;
 
@@ -62,7 +67,7 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::s
   ::strcpy(m_component,"*");
   ::strcpy(m_message,"*");
   ::strcpy(m_severity,s_SevList[2]);
-  ::strcpy(m_logDir,"/group/online/dataflow/logs/");
+  ::strcpy(m_logDir,LOG_DIR);
   ::strcpy(m_outFileName,"Output.dat");
   ::strftime(m_endTime,sizeof(m_endTime),s_timeFmt,now);
   ::strftime(m_startTime,sizeof(m_startTime),s_timeFmt,now);
