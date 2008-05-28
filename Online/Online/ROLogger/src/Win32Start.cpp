@@ -1,4 +1,4 @@
-// $Id: Win32Start.cpp,v 1.1 2008-05-23 21:56:11 frankb Exp $
+// $Id: Win32Start.cpp,v 1.2 2008-05-28 13:15:19 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.1 2008-05-23 21:56:11 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.2 2008-05-28 13:15:19 frankb Exp $
 #ifdef _WIN32
 
 #include <windows.h>
@@ -85,6 +85,7 @@ static void help()  {
 
 extern "C" start_rologger_win32(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
+  std::string part_name = "LHCb";  
   int hist_buff     = 500000;
   int history_height= 400;
   int ctrl_width    = 450;
@@ -104,13 +105,14 @@ extern "C" start_rologger_win32(int argc, char** argv)  {
   cli.getopt("buffer",        2,  hist_buff);
   cli.getopt("hscroll",       2,  his_scroll);
   cli.getopt("mscroll",       2,  msg_scroll);
+  cli.getopt("partition",     2,  part_name);
 
   HWND h = ::GetDesktopWindow();
   if ( 0 != h )  {
     RECT rc;
     if ( 0 != ::GetWindowRect(h, &rc) )   {
       //    std::cout << rc.left << " " << rc.top << " " << rc.right << " " << rc.bottom << std::endl;
-      const char* partition = "LHCb";
+      const char* partition = part_name.c_str();
       int pid = ::lib_rtl_pid();
       char utgid[128], comm[255], title[255], node[128];
       const char* logger = "gentest.exe ROLogger";
