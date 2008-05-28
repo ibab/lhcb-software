@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.9 2008-05-28 12:22:56 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.10 2008-05-28 16:05:05 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -74,7 +74,7 @@ ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::s
 
   ::upic_open_window();
   ::upic_open_menu(m_id,0,0,"Error logger",RTL::processName().c_str(),RTL::nodeName().c_str());
-
+  ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
   ::upic_add_comment(CMD_COM0,           "Log file directory:","");
   ::upic_set_param(m_logDir,1,    "A55", m_logDir, 0,0,0,0,0);
   ::upic_add_command(CMD_DIR,            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^","");
@@ -275,6 +275,9 @@ void ErrShowDisplay::handle(const Event& ev) {
     break;
   case UpiEvent:
     switch(ev.command_id) {
+    case CMD_BACKSPACE:
+      ioc.send(this,CMD_CLOSE,this);
+      return;
     case CMD_SHOW:
     case CMD_LOAD:
     case CMD_CLOSE:

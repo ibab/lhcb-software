@@ -1,8 +1,8 @@
-#ifndef READDIR_H
-#define READDIR_H
+#ifndef ONLINEKERNEL_READDIR_H
+#define ONLINEKERNEL_READDIR_H
 
 #ifndef _WIN32
-#include <readdir.h>
+//#include <readdir.h>
 #include <dirent.h>
 #else
 
@@ -49,4 +49,4 @@ extern "C"  {
 }
 #endif
 #endif /* WIN32     */
-#endif /* READDIR_H */
+#endif /* ONLINEKERNEL_READDIR_H */
