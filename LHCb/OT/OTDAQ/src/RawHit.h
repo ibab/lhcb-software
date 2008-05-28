@@ -42,12 +42,17 @@ namespace OTDAQ
   {
   public:
 
-    /// constructor with RawHit
-    RawHit(unsigned short data) : m_data(data) {}
-  
     /// Default Constructor
     RawHit() : m_data(0) {}
   
+    /// constructor with RawHit
+    RawHit(unsigned short data) : m_data(data) {}
+
+    /// constructor with word, channel in OTIS (0 -127), tdctime
+    RawHit( unsigned int word,
+            unsigned int channel,
+            unsigned int tdcTime ) ;
+
     /// Retrieve tdc time
     unsigned int time() const;
   
@@ -92,7 +97,13 @@ namespace OTDAQ
   // end of class
   // -----------------------------------------------------------------------------
   
-  
+  inline RawHit::RawHit( unsigned int word,
+                         unsigned int channel,
+                         unsigned int tdcTime )
+  {
+   m_data = ( word << wordBits ) + ( channel << ChannelBits ) + ( tdcTime << TimeBits );
+  }
+ 
   inline unsigned int RawHit::time() const
   {
     return (unsigned int)((m_data & TimeMask) >> TimeBits);
@@ -117,6 +128,7 @@ namespace OTDAQ
   {
     return 0 != ((m_data & wordMask) >> wordBits);
   }
+
 }
 
 
