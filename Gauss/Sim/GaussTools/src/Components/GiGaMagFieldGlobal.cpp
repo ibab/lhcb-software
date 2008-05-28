@@ -1,21 +1,19 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.6 2007-01-12 15:36:51 ranjard Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.7 2008-05-28 16:22:38 gcorti Exp $ 
 // Include files 
 
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
-// LHCb (MathCore)
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "ClhepTools/MathCore2Clhep.h"
-
 // GaudiKernel
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
-// GiGa 
-//#include "GiGa/GiGaMACROs.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+
+// LHCb (MathCore)
+#include "ClhepTools/MathCore2Clhep.h"
 
 // local 
 #include "GiGaMagFieldGlobal.h"
