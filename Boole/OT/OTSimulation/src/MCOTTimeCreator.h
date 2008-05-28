@@ -1,10 +1,11 @@
-// $Id: MCOTTimeCreator.h,v 1.8 2007-09-01 18:18:29 janos Exp $
+// $Id: MCOTTimeCreator.h,v 1.9 2008-05-28 20:08:17 janos Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "LHCbMath/LHCbMath.h"
 
 namespace LHCb 
 {
@@ -73,8 +74,8 @@ inline int MCOTTimeCreator::calculateTDCTime(const LHCb::MCOTDeposit* firstDep) 
   /// Get deposit time apply sart of read out gate correction and convert
   /// to tdc counts
   double tdcTime = (firstDep->time()-m_startReadOutGate[stationNum-1])*m_nsToTDCcounts;
-  
-  return int(tdcTime);
+
+  return LHCbMath::round(tdcTime);
 }
 
 inline bool MCOTTimeCreator::insideReadoutWindow(int tdcTime) const {

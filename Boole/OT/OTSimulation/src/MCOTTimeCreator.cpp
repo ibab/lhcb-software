@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.13 2007-09-01 18:18:24 janos Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.14 2008-05-28 20:08:17 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -58,7 +58,7 @@ StatusCode MCOTTimeCreator::initialize()
   release(aReadOutWindow);
 
   m_nsToTDCcounts = double(m_countsPerBX)/m_timePerBX;
-  m_readoutWindow = m_countsPerBX * m_numberOfBX; /// = 192 ns
+  m_readoutWindow = m_countsPerBX * m_numberOfBX; /// = 192
 
   return StatusCode::SUCCESS;
 }
