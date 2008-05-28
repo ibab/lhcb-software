@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 ! 2008-05-28 Gerhard Raven
   - remove L0Names.h which isn't referenced anymore
+  - follow cleanup of MD5 in LHCbMath
+  - start adding code to insure topalgorithms are automatically set when
+    using TCK (not quite finished yet...)
 
 ! 2008-05-22 Gerhard Raven
   - HltFunctions: IFunctionTool moved from HltBase to TrackInterfaces
