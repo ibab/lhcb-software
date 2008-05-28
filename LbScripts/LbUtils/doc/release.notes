@@ -1,5 +1,6 @@
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* scripts/which.bat: added which utility for windows
 	* python/LbUtils/Script.py: added a default return value
 	to the main() method. And a few doc strings.
 
