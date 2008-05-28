@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2008-05-28 - Chris Jones
+ - Reorganise how Track -> MCparticle linkers are handled to avoid memory 
+   corruptions.
+
 !====================== RichRecMCTools v2r18 2008-05-09 =======================
 ! 2008-05-08 - Chris Jones
  - Update RichPixelCreatorFromCheatedRawBuffer to use the improved HPD photon

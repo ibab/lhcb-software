@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.31 2008-03-25 16:46:21 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.32 2008-05-28 11:55:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -76,45 +76,73 @@ void MCTruthTool::handle ( const Incident& incident )
 MCTruthTool::TrackToMCP *
 MCTruthTool::trackToMCPLinks( const LHCb::Track * track ) const
 {
-  debug() << "trackToMCPLinks called for " << track << endreq;
+  if ( !track ) return NULL;
+
+  // TES location for the container for this track
   const std::string & loc = ( track ? objectLocation(track->parent()) : m_trLoc );
-  MCTruthTool::TrackToMCP *& linker = m_trToMCPLinks[loc];
-  if ( !linker )
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "trackToMCPLinks for Track " << track->key()
+              << " at TES '" << loc << "'" << endreq;
+
+  // See if linker has already been loaded for this TES location
+  TrackLocToMCPs::iterator iLinks = m_trToMCPLinks.find(loc);
+  if ( m_trToMCPLinks.end() == iLinks )
   {
-    trackToMCPLinks(loc);
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> failed to find linker for this location. Attempting to load one" << endreq;
+
+    // try and load a new linker for this location
+    MCTruthTool::TrackToMCP * linker = trackToMCPLinks(loc);
     if ( !linker && loc != m_trLoc )
     {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "  -> No linker availanble for Track TES container. Returning default at "
+                  << m_trLoc << endreq;
       linker = trackToMCPLinks(m_trLoc);
     }
+
+    // return this new linker
+    return linker;
   }
-  return linker;
+
+  // return found linker
+  return iLinks->second;
 }
 
 MCTruthTool::TrackToMCP *
 MCTruthTool::trackToMCPLinks( const std::string & loc ) const
 {
-  MCTruthTool::TrackToMCP *& linker = m_trToMCPLinks[loc];
-  if ( !linker )
+  // See if linker has already been loaded for this TES location
+  TrackLocToMCPs::iterator iLinks = m_trToMCPLinks.find(loc);
+  if ( m_trToMCPLinks.end() == iLinks )
   {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> Attempting to load TrackToMCP Linker for '" << loc << "'" << endreq;
-    linker = new TrackToMCP( evtSvc(), loc );
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << " -> Attempting to load TrackToMCP Linker for '" << loc << "'" << endreq;
+
+    MCTruthTool::TrackToMCP * linker = new TrackToMCP( evtSvc(), loc );
     if ( !linker->direct() )
     {
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "  -> Linker for Tracks to MCParticles not found for '"
-                << loc << "'" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "  -> Linker for Tracks to MCParticles not found" << endreq;
       // delete object and set to NULL, to force retrying next time this method is called.
       delete linker;
       linker = NULL;
     }
     else
     {
-      debug() << "  -> Found " << linker->direct()->relations().size()
-              << " Track to MCParticle associations" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "  -> Found " << linker->direct()->relations().size()
+                  << " Track to MCParticle associations" << endreq;
+      // Save this linker in the map
+      m_trToMCPLinks[loc] = linker;
     }
+
+    // return this new linker
+    return linker;
   }
-  return linker;
+
+  // return found linker
+  return iLinks->second;
 }
 
 MCTruthTool::MCRichSegToMCCKRing *
@@ -374,8 +402,8 @@ Rich::ParticleIDType
 MCTruthTool::mcParticleType( const LHCb::RichRecSegment * richSegment,
                              const double minWeight ) const
 {
-  return ( richSegment ? 
-           mcParticleType(richSegment->richRecTrack(),minWeight) : 
+  return ( richSegment ?
+           mcParticleType(richSegment->richRecTrack(),minWeight) :
            Rich::Unknown );
 }
 
@@ -383,7 +411,7 @@ const LHCb::MCParticle *
 MCTruthTool::mcParticle( const LHCb::RichRecSegment * richSegment,
                          const double minWeight ) const
 {
-  return ( richSegment ? 
+  return ( richSegment ?
            mcParticle( richSegment->richRecTrack(), minWeight ) :
            NULL );
 }
@@ -571,7 +599,10 @@ MCTruthTool::mcCKRing( const LHCb::RichRecSegment * segment ) const
 void MCTruthTool::cleanUpLinkers()
 {
   for ( TrackLocToMCPs::iterator iP = m_trToMCPLinks.begin();
-        iP != m_trToMCPLinks.end(); ++iP ) { delete iP->second; }
+        iP != m_trToMCPLinks.end(); ++iP )
+  {
+    if ( iP->second ) { delete iP->second; iP->second = NULL; };
+  }
   m_trToMCPLinks.clear();
   if ( m_mcSegToRingLinks ) { delete m_mcSegToRingLinks; m_mcSegToRingLinks = NULL; }
 }
