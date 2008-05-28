@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.h,v 1.3 2008-05-28 10:09:30 asatta Exp $
+// $Id: HltIsMuonTool.h,v 1.4 2008-05-28 18:36:07 asatta Exp $
 #ifndef HLTISMUONTOOL_H 
 #define HLTISMUONTOOL_H 1
 
@@ -34,13 +34,8 @@ private:
   bool isInFOI(LHCb::Track* track, LHCb::MuonTileID tile);
 
   IMuonPosTool*      m_iPosTool;
-<<<<<<< HltIsMuonTool.h
   IMuonRawBuffer* m_muonBuffer;
 private:
-=======
-
->>>>>>> 1.2
-// FOI parameters
   std::vector<double> m_p1x;
   std::vector<double> m_p2x;
   std::vector<double> m_p3x;
