@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.5 2008-02-05 01:52:24 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.6 2008-05-28 07:47:01 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -69,7 +69,7 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
     m_offlineInput[hitType].reserve(500);
   }
 
-  m_track2calo = NULL;
+  m_track2calo = 0;
   
   m_warning_count=0;
  
@@ -197,7 +197,7 @@ void TriggerSelectionTisTos::matchIDs(const LHCb::Track & track,
 std::vector<const LHCb::Particle*> TriggerSelectionTisTos::finalStateParticles(const LHCb::Particle* particle) 
 {
   std::vector<const LHCb::Particle*> outputParticles;
-  if( particle == NULL )return outputParticles;
+  if( particle == 0 )return outputParticles;
   std::vector<const LHCb::Particle*> daughters = particle->daughtersVector();  
   if( daughters.size() >0 ){
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
@@ -226,7 +226,7 @@ void TriggerSelectionTisTos::trackListTISTOS(const std::vector<Track*> & ontrack
        const Track& ontrack = *(*onit);
        double overlap[nHitTypes];
        matchIDs(ontrack,offidlist,overlap);
-       if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+       if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
        if( !TOS ){
          // effectively .and. requirement between all types
          for( int hitType=0; hitType!=nHitTypes; ++hitType ){
@@ -265,7 +265,7 @@ void TriggerSelectionTisTos::vertexListTISTOS(const std::vector<RecVertex*> & on
             const Track& ontrack = *(*onit);
             double overlap[nHitTypes];
             matchIDs(ontrack,offidlist,overlap);
-            if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+            if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
             if( thisTOS ){
                // effectively .and. requirement between all types
                for( int hitType=0; hitType!=nHitTypes; ++hitType ){
@@ -314,7 +314,7 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
             const Track& ontrack = *onit;
             double overlap[nHitTypes];
             matchIDs(ontrack,offidlist,overlap);
-            if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+            if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
             if( thisTOS ){
                // effectively .and. requirement between all types
                for( int hitType=0; hitType!=nHitTypes; ++hitType ){
@@ -345,13 +345,13 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
 
 void TriggerSelectionTisTos::getHltSummary()
 {
-  if( (m_summary == NULL) || (m_hltconf==NULL) ){
+  if( (m_summary == 0) || (m_hltconf==0) ){
     m_summary = get<HltSummary>(m_HltSummaryLocation);
-    if( m_summary == NULL ){ 
+    if( m_summary == 0 ){ 
       error() << " No HLT Summary at " << m_HltSummaryLocation << " No TisTosing possible " << endmsg; 
     } else {
       m_hltconf = &hltConf();
-      if( m_hltconf == NULL ){ error() << " No HLT Configuration! " << endreq;
+      if( m_hltconf == 0 ){ error() << " No HLT Configuration! " << endreq;
       }
     }
   }
@@ -368,13 +368,13 @@ void TriggerSelectionTisTos::setOfflineInput( )
   for( int hitType=0; hitType!=nHitTypes; ++hitType ){
     m_offlineInput[hitType].clear();
   }
-  m_hcalDeCal = NULL;
-  m_ecalDeCal = NULL;
+  m_hcalDeCal = 0;
+  m_ecalDeCal = 0;
 
-  m_muonTracks = NULL;
+  m_muonTracks = 0;
 
-  m_summary = NULL;
-  m_hltconf = NULL;
+  m_summary = 0;
+  m_hltconf = 0;
 
   clearCache();
 
@@ -434,9 +434,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
   // ------------------ add expected Hcal hits (3x3 group around cell crossed at shower max) ------------
   // do it only if needed 
   if( ( m_TOSFrac[kHcal] > 0.0 ) && ( m_TISFrac[kHcal] < 1.0 ) ){
-    if( m_track2calo != NULL ){
-      if( m_hcalDeCal==NULL ){ m_hcalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ); }
-      if( m_hcalDeCal != NULL ){
+    if( m_track2calo != 0 ){
+      if( m_hcalDeCal==0 ){ m_hcalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ); }
+      if( m_hcalDeCal != 0 ){
 
         // do not project through the magnet 
         if( track.closestState( m_hcalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
@@ -458,9 +458,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
   // ------------------ add expected Ecal hits (3x3 group around cell crossed at shower max) ------------
   // do it only if needed 
   if( ( m_TOSFrac[kEcal] > 0.0 ) && ( m_TISFrac[kEcal] < 1.0 ) ){
-    if( m_track2calo != NULL ){
-      if( m_ecalDeCal==NULL ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
-      if( m_ecalDeCal != NULL ){
+    if( m_track2calo != 0 ){
+      if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+      if( m_ecalDeCal != 0 ){
 
         // do not project through the magnet 
         if( track.closestState( m_ecalDeCal->plane( CaloPlane::ShowerMax ) ).z() > 5000.0 ){
@@ -519,7 +519,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
       }
       
       if( !(centerCell == dummyCell) ){
-        if( m_ecalDeCal==NULL ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
+        if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
         std::vector<LHCb::CaloCellID> cells3x3;
         cells3x3.push_back(centerCell);
         const std::vector<LHCb::CaloCellID> & neighbors = m_ecalDeCal->neighborCells( centerCell );
@@ -541,7 +541,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
     addToOfflineInput(*t,hitidlist);
     // add muon hits only if needed 
     if( ( m_TOSFrac[kMuon] > 0.0 ) && ( m_TISFrac[kMuon] < 1.0 ) ){
-      if( m_muonTracks==NULL ){ 
+      if( m_muonTracks==0 ){ 
         if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
           m_muonTracks = get<LHCb::Tracks>(LHCb::TrackLocation::Muon);
         } else {
@@ -554,7 +554,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
           }
         }
       }
-      if( m_muonTracks != NULL ){
+      if( m_muonTracks != 0 ){
         const LHCb::MuonPID* muid = protoParticle.muonPID();
         if( muid!=0 ){
           if( muid->IsMuon() ){
@@ -612,21 +612,20 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle,
 
 // ------------ single selection summary TisTos
 void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,  
-					      bool & decision, bool & tis, bool & tos )
+                     					      bool & decision, bool & tis, bool & tos )
 {
   if( findInCache( selectionName, decision, tis, tos ) )return;
 
   decision=false; tis=false; tos=false;
   getHltSummary();
-  if( (m_summary==NULL)||(m_hltconf==NULL) ){ storeInCache(selectionName,decision,tis,tos); return;}
+  if( (m_summary==0)||(m_hltconf==0) ){ storeInCache(selectionName,decision,tis,tos); return;}
   
 
-  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
-  decision= m_summary->hasSelectionSummary( selID );
+  decision= m_summary->hasSelectionSummary( selectionName );
   if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
 
-  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selID );
+  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selectionName );
 
   decision= sel.decision();
   if( !decision ){ storeInCache(selectionName,decision,tis,tos); return;}
@@ -636,14 +635,14 @@ void TriggerSelectionTisTos::selectionTisTos( const std::string & selectionName,
     // JAH: changed 22/1/08
     //----------------------
     std::vector<Track*> tracks = 
-      Hlt::SummaryHelper::retrieve<Track>(*m_summary,selID);
+      Hlt::SummaryHelper::retrieve<Track>(*m_summary,selectionName);
     if (tracks.size() >0) {
       trackListTISTOS(tracks,m_offlineInput,tis,tos);
       storeInCache(selectionName,decision,tis,tos); return;
     }
     
     std::vector<RecVertex*> vertices = 
-      Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selID);
+      Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selectionName);
     if (vertices.size() >0) {
     vertexListTISTOS(vertices,m_offlineInput,tis,tos);
     storeInCache(selectionName,decision,tis,tos); return;
@@ -745,23 +744,21 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( co
   std::vector<const LHCb::Track*> matchedTracks;
 
   getHltSummary();
-  if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedTracks;
+  if( (m_summary==0)||(m_hltconf==0) )return matchedTracks;
 
-  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
-  bool decision= m_summary->hasSelectionSummary( selID );
+  bool decision= m_summary->hasSelectionSummary( selectionName );
   if( !decision )return matchedTracks;
 
-  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selID );
+  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selectionName );
 
   decision= sel.decision();
   if( !decision )return matchedTracks;
 
   if( sel.data().size() <= 0 )return matchedTracks;
   
-  std::vector<Track*> tracks = 
-    Hlt::SummaryHelper::retrieve<Track>(*m_summary,selID);
-  if (tracks.size() == 0) return matchedTracks;
+  std::vector<Track*> tracks = Hlt::SummaryHelper::retrieve<Track>(*m_summary,selectionName);
+  if (tracks.empty() ) return matchedTracks;
     
     // JAH 22/1/08 Previous code
     //   ContainedObject* obj = sel.data().front();
@@ -779,7 +776,7 @@ std::vector<const LHCb::Track*>     TriggerSelectionTisTos::matchedTOSTracks( co
        const Track& ontrack = *(*onit);
        double overlap[nHitTypes];
        matchIDs(ontrack, m_offlineInput,overlap);
-       if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+       if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
        bool TOS(false); double ovlp(0.0); int n(0);
        // effectively .and. requirement between all types
        for( int hitType=0; hitType!=nHitTypes; ++hitType ){
@@ -821,14 +818,13 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
   std::vector<const  LHCb::RecVertex*> matchedVertices;
 
   getHltSummary();
-  if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedVertices;
+  if( (m_summary==0)||(m_hltconf==0) )return matchedVertices;
 
-  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
-  bool decision= m_summary->hasSelectionSummary( selID );
+  bool decision= m_summary->hasSelectionSummary( selectionName );
   if( !decision )return matchedVertices;
 
-  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selID );
+  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selectionName );
 
   decision= sel.decision();
   if( !decision )return matchedVertices;
@@ -836,7 +832,7 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
   if( sel.data().size() <= 0 )return matchedVertices;
     
   std::vector<RecVertex*> onvertices = 
-    Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selID);
+    Hlt::SummaryHelper::retrieve<RecVertex>(*m_summary,selectionName);
   if (onvertices.size() == 0) return matchedVertices;
 
   // JAH 22/1/08 Previous Code
@@ -857,7 +853,7 @@ std::vector<const LHCb::RecVertex*> TriggerSelectionTisTos::matchedTOSVertices( 
             const Track& ontrack = *(*onit);
             double overlap[nHitTypes];
             matchIDs(ontrack,m_offlineInput,overlap);
-            if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+            if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
             if( thisTOS ){
                // effectively .and. requirement between all types
                for( int hitType=0; hitType!=nHitTypes; ++hitType ){
@@ -903,14 +899,13 @@ std::vector<const LHCb::Particle*>  TriggerSelectionTisTos::matchedTOSParticles(
   std::vector<const  LHCb::Particle*> matchedParticles;
 
   getHltSummary();
-  if( (m_summary==NULL)||(m_hltconf==NULL) )return matchedParticles;
+  if( (m_summary==0)||(m_hltconf==0) )return matchedParticles;
 
-  int selID = Hlt::ConfigurationHelper::getID(*m_hltconf,"SelectionID",selectionName);
 
-  bool decision= m_summary->hasSelectionSummary( selID );
+  bool decision= m_summary->hasSelectionSummary( selectionName );
   if( !decision )return matchedParticles;
 
-  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selID );
+  const LHCb::HltSelectionSummary& sel = m_summary->selectionSummary( selectionName );
 
   decision= sel.decision();
   if( !decision )return matchedParticles;
@@ -933,7 +928,7 @@ std::vector<const LHCb::Particle*>  TriggerSelectionTisTos::matchedTOSParticles(
             const Track& ontrack = *onit;
             double overlap[nHitTypes];
             matchIDs(ontrack,m_offlineInput,overlap);
-            if( m_muonTracks == NULL ){ overlap[kMuon]=2.0; }
+            if( m_muonTracks == 0 ){ overlap[kMuon]=2.0; }
             if( thisTOS ){
                // effectively .and. requirement between all types
               for( int hitType=0; hitType!=nHitTypes; ++hitType ){

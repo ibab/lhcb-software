@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.15 2008-04-25 16:48:51 pkoppenb Exp $
+! $Id: release.notes,v 1.16 2008-05-28 07:47:01 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-05-28 Gerhard Raven
+ - changes to follow update of HltEvent: Selections uses strings, not ids anymore
+ - replace NULL by 0
 
 !========================== TisTosTobbing v2r3 2008-04-25 ===================
 !========================== TisTosTobbing v2r2 2008-02-05 ===================
