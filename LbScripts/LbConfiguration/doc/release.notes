@@ -1,6 +1,7 @@
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/setenvProject: added the setenvProject script 
+	* scripts/AllProjectsSetup.py: added the generation of the setenv aliases
+	* scripts/setenvProject: added the setenvProject script
 	* scripts/LbLogin: added the fullpath to some basic utilities
 
 2008-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
