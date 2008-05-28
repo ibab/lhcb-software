@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #------------------------------------------------------------------------------
 """ Script to check projects used by other projects"""
 #------------------------------------------------------------------------------
@@ -7,6 +9,8 @@ import sys, os, string, glob, getopt
 usedProjects = {}
 allProjects  = []
 printAll     = False
+allDbases    = []
+usedDbases   = []
 
 #--------------------------------------------------------------------------------
 # check the arguments
@@ -53,19 +57,22 @@ def findAllProjects( releaseArea ):
         cmtdir =  os.environ.get(releaseArea) + os.sep + file.split('project.cmt')[0]
         os.chdir( cmtdir )
         project = file.split(os.sep)[1]
-        if printAll: print 'Processing ', project 
-        if project not in allProjects: allProjects.append(project)
-        for line in os.popen('cmt show projects').readlines():
-            if line.find('(current)') == -1 and line.split()[1].find('_') != -1:
-                uses = line.split()[1]
-                if printAll: print '-->  uses ', uses 
-                if uses in usedProjects:
-                    usedBy = usedProjects[uses]
-                    if project not in usedBy:
-                        usedBy.append( project )
-                        usedProjects[uses] = usedBy
-                else:
-                    usedProjects[uses] = [ project ]
+        if project.find('_') == -1:
+            print 'Skipping ', file  
+        else:
+            if printAll: print 'Processing ', project 
+            if project not in allProjects: allProjects.append(project)
+            for line in os.popen('cmt show projects').readlines():
+                if line.find('(current)') == -1 and line.split()[1].find('_') != -1:
+                    uses = line.split()[1]
+                    if printAll: print '-->  uses ', uses 
+                    if uses in usedProjects:
+                        usedBy = usedProjects[uses]
+                        if project not in usedBy:
+                            usedBy.append( project )
+                            usedProjects[uses] = usedBy
+                    else:
+                        usedProjects[uses] = [ project ]
     os.chdir( here )
 
 #------------------------------------------------------------------------------
@@ -124,11 +131,46 @@ def printProjects():
     for pName in unusedProjects:
         print pName, ' versions: ', unusedProjectVersions[pName]
 
+
+#------------------------------------------------------------------------------
+# Find database packages known to distribution area
+#------------------------------------------------------------------------------
+def findAllDatabases( distArea ):
+    here = os.getcwd()
+    os.chdir( os.environ.get( distArea ) )
+    print 'Processing all databases in ', os.getcwd()
+
+    # Find all databases 
+    for line in open('html/distribution.htm', 'r' ).readlines():
+        # One line per tar file in the distribution area
+        if line.find('<H3>') !=-1 :
+            # Skip CMT projects
+            if line.find('Project') == -1:
+                dbase   = (line.split(' version ')[0]).split('>')[1].strip() \
+                        + '_' \
+                        + (line.split(' version ')[1]).split('<')[0].strip()
+                if printAll: print 'Processing ', dbase 
+                if dbase not in allDbases: allDbases.append(dbase)
+
+    # Check if dbase is used by any project
+    for line in open('html/distribution.htm', 'r' ).readlines():
+        if line.find('HREF') != -1 and line.find('NAME') == -1 :
+            for dbase in allDbases :
+                if line.find(dbase) != -1 : 
+                    if dbase not in usedDbases: usedDbases.append(dbase)
+
+    for dbase in allDbases :
+        if dbase not in usedDbases:
+            print dbase, 'is not in use'
+
+    os.chdir( here )
+
 #------------------------------------------------------------------------------
 # set up the job, defining the release areas to process
 #------------------------------------------------------------------------------
 argChecker()
 envChecker()
+findAllDatabases( 'LHCBTAR' )
 findAllProjects( 'Gaudi_release_area' )
 findAllProjects( 'LHCb_release_area' )
 processOldProjects( 'Gaudi_release_area' )
