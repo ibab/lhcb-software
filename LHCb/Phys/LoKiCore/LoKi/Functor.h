@@ -1,4 +1,4 @@
-// $Id: Functor.h,v 1.3 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Functor.h,v 1.4 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_FUNCTOR_H 
 #define LOKI_FUNCTOR_H 1
@@ -222,21 +222,6 @@ namespace LoKi
     TYPE2 m_value ; ///< the constant itself 
   } ;
   // ==========================================================================
-  /** @class Functor Functor.h LoKi/Functor.h
-   *  The most generic LoKi-functor, needed for implementation
-   *  of numerious brilliant ideas by Gerhard "The Great".
-   *
-   *  This file is a part of LoKi project - 
-   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
-   *
-   *  The package has been designed with the kind help from
-   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
-   *  contributions and advices from G.Raven, J.van Tilburg, 
-   *  A.Golutvin, P.Koppenburg have been used in the design 
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2007-10-31
-   */
   template <class TYPE2>
   class Functor<void,TYPE2> 
     : public std::unary_function<void,TYPE2> 

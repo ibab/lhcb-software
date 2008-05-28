@@ -1,4 +1,4 @@
-// $Id: Geometry.h,v 1.6 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Geometry.h,v 1.7 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GEOMETRY_H 
 #define LOKI_GEOMETRY_H 1
@@ -86,10 +86,10 @@ namespace LoKi
      *  
      *   chi2 = [(p1-p2)^T][(cov1+cov2)^-1][(p1-p2)]
      * 
-     *  @param p1  the first  point 
-     *  @param c1  the first  covariance matrix 
-     *  @param p2  the second point 
-     *  @param c2  the second covariance matrix 
+     *  @param p1   the first  point 
+     *  @param cov1 the first  covariance matrix 
+     *  @param p2   the second point 
+     *  @param cov2 the second covariance matrix 
      *  @param value the chi2 value (to be updated)
      *  @return status code 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

@@ -1,4 +1,4 @@
-// $Id: Info.h,v 1.2 2007-07-25 15:14:13 ibelyaev Exp $
+// $Id: Info.h,v 1.3 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_INFO_H 
 #define LOKI_INFO_H 1
@@ -113,7 +113,7 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param vmap "vector-map" itself 
+     *  @param object "vector-map" itself 
      *  @param key   the key
      *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
      *  @date 2007-06-14 
@@ -135,7 +135,7 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param vmap "vector-map" itself 
+     *  @param object "vector-map" itself 
      *  @param key   the key
      *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
      *  @date 2007-06-14 
@@ -281,7 +281,7 @@ namespace LoKi
      *
      *  @endcode 
      *  
-     *  @param  obejct obejct to be modified 
+     *  @param  object object to be modified 
      *  @param  key  the key
      *  @param  val  the value associated with the key 
      *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
@@ -305,7 +305,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @attention There no action for invalid pointer!
-     *  @param  obejct obejct to be modified 
+     *  @param  object object to be modified 
      *  @param  key  the key
      *  @param  val  the value associated with the key 
      *  @author Vanya BELAYEV ibelyaev@physics.syr.edu

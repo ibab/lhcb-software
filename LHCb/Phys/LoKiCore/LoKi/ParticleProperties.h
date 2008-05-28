@@ -1,4 +1,4 @@
-// $Id: ParticleProperties.h,v 1.6 2007-07-23 17:07:39 ibelyaev Exp $
+// $Id: ParticleProperties.h,v 1.7 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLEPROPERTIES_H 
 #define LOKI_PARTICLEPROPERTIES_H 1
@@ -68,47 +68,49 @@ namespace LoKi
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
-     *  @param particle property 
+     *  @return particle property 
      */
     const ParticleProperty* _ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
-     *  @param particle property 
+     *  @return particle property 
      */
     const ParticleProperty* ppFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
      *  @param pid particle ID 
-     *  @param particle mass 
+     *  @return particle mass 
      */
     const double massFromPID  ( const LHCb::ParticleID& pid   ) ;
     // ========================================================================    
     /** retrieve ParticleProperty from ParticleID 
-     *  @param pid particle ID 
-     *  @param particle property 
+     *  @param name particle name 
+     *  @return particle mass 
      */
     const double massFromName ( const std::string&      name ) ;
     // ========================================================================    
-    /** retrieve the lifetime (c*tau) for the particle form the name 
+    /** retrieve the lifetime (c*tau) for the particle from the name 
      *  @param name particle name 
+     *  @return particle lifetime
      */
     const double lifeTime     ( const std::string&      name ) ;
     // ========================================================================    
-    /** retrieve the lifetime (c*tau) for the particle form the name 
-     *  @param name particle name 
+    /** retrieve the lifetime (c*tau) for the particle form the pid 
+     *  @param pid particle ID 
+     *  @return particle lifetime
      */
     const double lifeTime     ( const LHCb::ParticleID& pid ) ;
     // ========================================================================    
     /** get name of 'antiparticle'
      *  @param name particlre name 
-     *  @return anme of antiParticle 
+     *  @return name of antiParticle 
      */
     std::string             antiParticle( const std::string&      name ) ;
     // ========================================================================    
     /** get ParticleProperty of 'antiparticle'
      *  @param  pp ParticleProperty object for the particle 
-     *  @return ParticleProperty obejct for antiparticle 
+     *  @return ParticleProperty object for antiparticle 
      */
     const ParticleProperty* antiParticle( const ParticleProperty* pp   ) ;
     // ========================================================================    

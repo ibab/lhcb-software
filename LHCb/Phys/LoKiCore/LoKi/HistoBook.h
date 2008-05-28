@@ -1,4 +1,4 @@
-// $Id: HistoBook.h,v 1.1 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: HistoBook.h,v 1.2 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_HISTOBOOK_H 
 #define LOKI_HISTOBOOK_H 1
@@ -21,19 +21,17 @@ namespace LoKi
   {
     // ========================================================================
     /** helper function to book 1D-histogram
-     *  @param svc pointer to Histogram Service 
      *  @param path full path in Histogram Data Store 
-     *  @param hist histogram desctription
+     *  @param hist histogram description
      */ 
     AIDA::IHistogram1D* book
     ( const std::string&       path ,
       const Gaudi::Histo1DDef& hist ) ;
     // ========================================================================
     /** helper function to book 1D-histogram
-     *  @param svc  pointer to Histogram Service 
      *  @param dir  directory path in Histogram Data Store 
-     *  @param id   historgam identifier 
-     *  @param hist histogram desctription
+     *  @param id   histogram identifier 
+     *  @param hist histogram description
      */ 
     AIDA::IHistogram1D* book
     ( const std::string&       dir  ,
@@ -41,9 +39,8 @@ namespace LoKi
       const Gaudi::Histo1DDef& hist ) ;
     // ========================================================================
     /** helper function to book 1D-histogram
-     *  @param svc pointer to Histogram Service 
      *  @param dir  directory path in Histogram Data Store 
-     *  @param id  historgam identifier 
+     *  @param id   histogram identifier 
      *  @param hist histogram desctription
      */ 
     AIDA::IHistogram1D* book

@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.7 2008-04-03 11:27:10 cattanem Exp $
+// $Id: Primitives.h,v 1.8 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1228,7 +1228,7 @@ namespace LoKi
      *
      *  @param cut predicate for branch
      *  @param fun1 the function
-     *  @param val2 the constant 
+     *  @param fun2 the constant 
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
      *  @date 2005-02-11
@@ -1247,7 +1247,7 @@ namespace LoKi
      *  value of function is returned 
      *
      *  @param cut predicate for branch
-     *  @param val1 the constant 
+     *  @param fun1 the constant 
      *  @param fun2 the function
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
@@ -1273,8 +1273,8 @@ namespace LoKi
      *  @see SimpleSwitch 
      *  
      *  @param cut predicate for branch
-     *  @param val1 the first constant 
-     *  @param val2 the second constant 
+     *  @param fun1 the first constant 
+     *  @param fun2 the second constant 
      *
      *
      *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
@@ -1285,7 +1285,7 @@ namespace LoKi
       : LoKi::Functor<TYPE,TYPE2>  (      ) 
       , m_cut  ( cut  ) 
       , m_two  ( LoKi::Constant<TYPE,TYPE2>( fun1 ) ,
-                 LoKi::Constant<TYPE,TYPE2>( fun1 ) )
+                 LoKi::Constant<TYPE,TYPE2>( fun2 ) )
     {}
     /// copy constructor 
     Switch ( const Switch& right ) 
@@ -1552,9 +1552,6 @@ namespace LoKi
     LoKi::FunctorFromFunctor<TYPE3,TYPE2> m_fun2 ; ///< the second functor 
   } ;
   // ==========================================================================
-  /** @class Compose 
-   *  the general case of fun2(fun1) function:
-   */  
   template <class TYPE1, class TYPE2, class TYPE3>
   class Compose<void,TYPE1,TYPE2,TYPE3> : public LoKi::Functor<void,TYPE2>
   {

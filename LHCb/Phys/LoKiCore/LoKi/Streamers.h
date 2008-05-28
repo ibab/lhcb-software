@@ -1,4 +1,4 @@
-// $Id: Streamers.h,v 1.1 2007-12-03 12:03:23 ibelyaev Exp $
+// $Id: Streamers.h,v 1.2 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_STREAMERS_H 
 #define LOKI_STREAMERS_H 1
@@ -64,7 +64,7 @@ operator >> ( const LoKi::Functor<TYPE,TYPE1>&  fun1 ,
  *   /// the same, but a bit "old-fashined":
  *   SEQUENCE output2 = input >> ( pred1 && pred2 ) ;
  *
- *  @code  
+ *  @endcode  
  *  
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2001-01-23   
@@ -223,8 +223,8 @@ operator >>
  *
  *  @see LoKi::apply 
  *
- *  @param input vector in input arguments 
- *  @param pred the predicate to be evaluated 
+ *  @param a vector in input arguments 
+ *  @param f the predicate to be evaluated 
  *  @return the filtered inputs 
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

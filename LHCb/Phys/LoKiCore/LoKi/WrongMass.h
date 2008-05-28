@@ -1,6 +1,6 @@
-// $Id: WrongMass.h,v 1.7 2007-07-26 13:27:05 ibelyaev Exp $
+// $Id: WrongMass.h,v 1.8 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $, verision $Revision: 1.8 $
 // ============================================================================
 #ifndef LOKI_WRONGMASS_H 
 #define LOKI_WRONGMASS_H 1
@@ -65,7 +65,7 @@ namespace LoKi
     // ========================================================================    
     /** Use a wrong mass-hypothesis for the given 4-momentum 
      *  @param v    vector of 4-momentum 
-     *  @param name particle name  
+     *  @param pid  particle ID  
      *  @return the 4-momentum with "wrong" mass hypothesis 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -117,12 +117,12 @@ namespace LoKi
       const std::string&         name2 ) ;
     // ========================================================================
     /** Use a wrong mass-hypothesis for the given 4-momenta 
-     *  to evaluate the effective invarinat mass 
+     *  to evaluate the effective invariant mass 
      *
-     *  @param v1    the first 4-momentum 
-     *  @param name1 the name of the first particle
-     *  @param v2    the second 4-momentum 
-     *  @param name2 the name of the second particle 
+     *  @param v1   the first 4-momentum 
+     *  @param pid1 the ParticleID of the first particle
+     *  @param v2   the second 4-momentum 
+     *  @param pid2 the ParticleID of the second particle 
      *  @return the invariant mass evaluated using "wrong" masses 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

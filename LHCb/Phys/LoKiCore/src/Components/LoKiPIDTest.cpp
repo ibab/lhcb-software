@@ -1,4 +1,4 @@
-// $Id: LoKiPIDTest.cpp,v 1.3 2007-08-22 17:25:27 pkoppenb Exp $
+// $Id: LoKiPIDTest.cpp,v 1.4 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -19,8 +19,8 @@
 // ============================================================================
 namespace LoKi 
 {
-  /** @class PIDTest  LoKiPIDest.cpp
-   *  Simple algorithm to veryfy teh fast acces to PID information
+  /** @class PIDTest
+   *  Simple algorithm to veryfy the fast access to PID information
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-065-31
    */

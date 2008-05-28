@@ -1,4 +1,4 @@
-// $Id: Interface.h,v 1.8 2007-12-03 12:03:22 ibelyaev Exp $
+// $Id: Interface.h,v 1.9 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_INTERFACE_H 
 #define LOKI_INTERFACE_H 1
@@ -32,7 +32,7 @@ namespace LoKi
    *  Helper class for manipulations with interfaces 
    *  It looks like reduced smart INTRUSIVE pointer 
    *
-   *  @author Vanya BELYAEV ibelyaev@physics,syr.edu
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2006-03-10
    */
   template <class TYPE>

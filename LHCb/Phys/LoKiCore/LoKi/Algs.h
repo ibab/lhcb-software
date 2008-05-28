@@ -1,4 +1,4 @@
-// $Id: Algs.h,v 1.11 2007-11-28 13:56:32 ibelyaev Exp $
+// $Id: Algs.h,v 1.12 2008-05-28 13:40:29 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -43,7 +43,7 @@ namespace LoKi
      * 
      *  @param first    'begin'-iterator for the sequence
      *  @param last      'end'-iterator for the sequence
-     *  @param function  function to be evaluated 
+     *  @param functor   function to be evaluated 
      *  @param result    the initial value 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -68,7 +68,7 @@ namespace LoKi
      * 
      *  @param first    'begin'-iterator for the sequence
      *  @param last      'end'-iterator for the sequence
-     *  @param function  function to be evaluated 
+     *  @param functor   function to be evaluated 
      *  @param predicate the seelection criteria
      *  @param result    the initial value 
      *
