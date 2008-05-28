@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.15 2008-05-05 13:31:24 ibelyaev Exp $
+// $Id: Algo.h,v 1.16 2008-05-28 14:53:55 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -122,7 +122,8 @@ namespace LoKi
      *  @see LoKi::Cuts::ABSID
      *  @see LoKi::Cuts::P 
      *  @see LoKi::Cuts::Q
-     *  @param name name/tag assigned to the selected particles
+     *  @param name  name/tag assigned to the selected particles
+     *  @param range input range from which particles should be selected
      *  @param cut  cut to be applied
      *  @return selected range of particles
      */
@@ -348,10 +349,10 @@ namespace LoKi
      *  @see LoKi::Types::Range
      *  @see LoKi::Types::Cuts
      *  @see LoKi::Cuts::Q
-     *  @param name name/tag assigned to the selected particles
-     *  @param first begin of sequence of particls 
-     *  @param last  last  of sequence of particls 
-     *  @param cuts cut to be applied
+     *  @param name  name/tag assigned to the selected particles
+     *  @param first begin of sequence of particles 
+     *  @param last  last  of sequence of particles 
+     *  @param cut   cut to be applied
      *  @return selected range of particles
      */
     template <class PARTICLE, class CUT>
@@ -364,7 +365,7 @@ namespace LoKi
     {
       return m_selected.add ( name , first , last , cut ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  - Vertices are selected from desktop
      *  @param name name/tag assigned to the selected vertices
@@ -375,12 +376,12 @@ namespace LoKi
     vselect   
     ( const std::string&         name  ,
       const LoKi::Types::VCuts&  cut   ) ;
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "range")
-     *  @param name name/tag assigned to the selected particles
-     *  @param cut  cut to be applied
-     *  @return selected range of particles
+     *  @param name  name/tag assigned to the selected vertices
+     *  @param range range of vertices to be selected
+     *  @param cut   cut to be applied
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange         
     vselect   
@@ -392,10 +393,10 @@ namespace LoKi
     } 
     // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -405,12 +406,12 @@ namespace LoKi
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect    
@@ -422,10 +423,10 @@ namespace LoKi
     } 
     // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -435,12 +436,12 @@ namespace LoKi
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -452,10 +453,10 @@ namespace LoKi
     } 
     // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -465,12 +466,13 @@ namespace LoKi
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      *  (Vertices are selected from the "cont")
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -480,12 +482,12 @@ namespace LoKi
     {
       return vselect ( name , cont.begin() , cont.end() , cuts ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
-     *  (Vertices are selected from the "cont" )
-     *  @param name name/tag assigned to the selected particles
+     *  @param name name/tag assigned to the selected vertices
+     *  @param cont container of vertices to be selected
      *  @param cuts cut to be applied
-     *  @return selected range of particles
+     *  @return selected range of vertices
      */
     LoKi::Types::VRange        
     vselect   
@@ -500,7 +502,7 @@ namespace LoKi
       }
       return vselect ( name , cont->begin() , cont->end() , cuts ) ;
     } 
-    // ========================================================================    
+    // ========================================================================
     /** 'Select' the vertices to be used in local storage
      * 
      *  - vertices are selected from arbitrary sequence of particles 
@@ -542,7 +544,7 @@ namespace LoKi
     { 
       return m_vselected.add ( name , first , last , cut ) ; 
     } 
-    // ========================================================================    
+    // ========================================================================
     /** Extract the selected particles from local LoKi storage  
      *   by their name/tag
      *  
@@ -562,7 +564,7 @@ namespace LoKi
     {
       return m_selected ( name ) ; 
     } 
-    // ========================================================================    
+    // ========================================================================
     /** Extract the selected vertices from local LoKi storage  
      *   by their name/tag
      *  
@@ -751,7 +753,7 @@ namespace LoKi
       const LoKi::Types::Cuts&  cut        , 
       const LoKi::Types::VCuts& vcut       , 
       const IParticleReFitter*  fitter = 0 ) ;
-    // ========================================================================    
+    // ========================================================================
     /** shortcut for the following symbolic expression:
      * 
      *  @code 
@@ -793,7 +795,7 @@ namespace LoKi
       const LoKi::Types::Cuts&  cut        , 
       const LoKi::Types::VCuts& vcut       , 
       const IParticleReFitter*  fitter = 0 ) ;
-    // ========================================================================    
+    // ========================================================================
     /** shortcut for the following expression:
      *
      *  @code 

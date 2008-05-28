@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.37 2008-05-05 13:54:16 cattanem Exp $ 
+! $Id: release.notes,v 1.38 2008-05-28 14:53:55 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2008-05-28 - Marco Cattaneo
+ - In LoKiAlgoDict.h: add hack to suppress _POSIX_C_SOURCE redefinition warning
+ - Fix many doxygen typos
+ - In requirements increment version to v7r4p1
 
 !========================== LoKiAlgo v7r4 2008-05-05 ==========================
 ! 2008-05-05 - Vanya BELYAEV
@@ -15,7 +20,7 @@
     IDistanceCalculator 
 
  - cmt/rerquirements
-    version incrmeent to v7r4 
+    version increment to v7r4 
 
 !========================== LoKiAlgo v7r3 2008-04-30 ==========================
 ! 2008-04-30 - Vanya BELYAEV

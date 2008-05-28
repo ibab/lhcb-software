@@ -1,4 +1,4 @@
-// $Id: PrintLoopDecay.h,v 1.3 2008-04-30 05:39:20 cattanem Exp $
+// $Id: PrintLoopDecay.h,v 1.4 2008-05-28 14:53:55 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PRINTLOOPDECAY_H 
 #define LOKI_PRINTLOOPDECAY_H 1
@@ -56,7 +56,8 @@ namespace LoKi
      *
      *  @param particle pointer to particle to be printed 
      *  @param stream   stream to be used 
-     *  @param cut      condition 
+     *  @param cut      condition
+     *  @param level    recursion level 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
@@ -87,7 +88,7 @@ namespace LoKi
     printDecay 
     ( const LoKi::Loop&            particle  , 
       std::ostream&                stream    ) ;
-    // ========================================================================    
+    // ========================================================================
     /** Simple function to print decay in more or less "readable" format 
      *
      *  @code
@@ -101,6 +102,7 @@ namespace LoKi
      *  @param particle pointer to Particle to be printed 
      *  @param stream   stream to be used 
      *  @param cut      condition 
+     *  @param level    recursion level 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
@@ -112,7 +114,7 @@ namespace LoKi
       const LoKi::Types::Cuts&     cut                 ,
       const int                    level = s_maxLevel4 ,
       const std::string&           blank = "<cut>"     ) ;
-    // ========================================================================    
+    // ========================================================================
     /** Simple function to print decay in more or less "readable" format 
      *
      *  @code
@@ -145,6 +147,7 @@ namespace LoKi
      *
      *  @param particle pointer to Particle to be printed 
      *  @param cut      condition 
+     *  @param level    recursion level 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18

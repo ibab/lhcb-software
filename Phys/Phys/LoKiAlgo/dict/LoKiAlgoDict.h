@@ -1,4 +1,4 @@
-// $Id: LoKiAlgoDict.h,v 1.4 2007-06-04 20:22:22 ibelyaev Exp $
+// $Id: LoKiAlgoDict.h,v 1.5 2008-05-28 14:53:55 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -11,6 +11,12 @@
 #include "LoKi/ExtCalls.h"
 #include "LoKi/LoopChild.h"
 #include "LoKi/LoopDecorator.h"
+// ============================================================================
+// Trick to suppress _POSIX_C_SOURCE redefinition warning
+#ifdef __GNUC__
+#undef _POSIX_C_SOURCE
+#endif
+// ============================================================================
 #include "LoKi/AlgoDecorator.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
