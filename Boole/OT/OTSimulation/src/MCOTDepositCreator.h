@@ -1,31 +1,27 @@
-// $Id: MCOTDepositCreator.h,v 1.13 2007-05-29 15:10:56 mneedham Exp $
+// $Id: MCOTDepositCreator.h,v 1.14 2008-05-28 20:07:31 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
 // Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/SmartIF.h"
 
 // forward declarations
 class IOTEffCalculator;
-class IOTSmearer;
-class IOTrtRelation;
 class IOTRandomDepositCreator;
 class DeOTDetector;
+
 namespace LHCb
 {
   class MCOTDeposit;
 }
 
-
-/** @class MCOTDepositCreator MCOTDepositCreator.h \
- *         "OTSimulation/MCOTDepositCreator.h"
- *
+/** @class MCOTDepositCreator MCOTDepositCreator.h 
+ *        
  *  Top level algorithm that makes MCOTDeposits from MCHits.
  *   @li find hits and calculate distance to closest wire
  *   @li apply single cell efficiency (function of distance).
- *   @li smear the distance with a Gaussian
+ *   @li smear the time with a Gaussian
  *   @li apply r-t relation
  *   @li add propagation time along wire
  *   @li add cross talk
@@ -36,8 +32,6 @@ namespace LHCb
  *          jtilburg@nikhef.nl (03-04-2002)
  *  @date   21/10/2000
  */
-
-typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
 
 class MCOTDepositCreator : public GaudiAlgorithm {
 
@@ -58,67 +52,39 @@ public:
 
 private:
 
-  /// make initial list of digitizations
-  void makeDigitizations();
-
-  /// apply single cell effiency
-  void singleCellEff();
-
-  /// apply resolution smearing
-  void applySmear();
-
-  /// apply r-t relation
-  void applyRTrelation();
+  /// Make initial vector of deposits from MCHits
+  void makeDeposits() const;
 
   /// apply cross talk
-  void addCrossTalk();
-
-  /// apply random noise
-  //void addNoise();
+  void addCrossTalk() const;
 
   /// apply pulse reflections
-  void addPulseReflect();
+  void addDoublePulse() const;
 
-  /// make unique name
-  std::string toolName(const std::string& aName, 
-                       const int id) const;
+  /// make unique name for each tool instance
+  std::string toolName(const std::string& aName, const int id) const;
+
   /// pointer to XML geometry:
   DeOTDetector* m_tracker;
 
   /// pointers to Tools
   std::vector<IOTEffCalculator*> m_singleCellEffVector;
-  std::vector<IOTSmearer*> m_smearerVector;
-  std::vector<IOTrtRelation*> m_rtRelationVector;
+  IOTRandomDepositCreator*       m_noiseTool;
 
-  std::string m_noiseToolName;
-  IOTRandomDepositCreator* m_noiseTool;
- 
-  /// temporary deposits vector
-  MCOTDepositVec* m_tempDeposits;          ///< Vector of tmp deposits
-
-  //unsigned int m_nStations;                ///< number of stations
-  unsigned int m_firstStation;             ///< first OT station
-  std::vector<std::string> m_spillVector;  ///< spills to digitize  
-  std::vector<double>  m_spillTimes;       ///< spillTime
-  std::vector<std::string> m_spillNames;   ///< spillNames
-
-  bool m_addCrossTalk;                     ///< flag to add Xtalk
-  double m_crossTalkLevel;                 ///< level of crosstalk
-  bool m_addNoise;                         ///< flag to add random noise
-  
-  bool m_addPulse;                         ///< flag to add Pulse Reflection
-  double m_PulseTime;                      ///< PulseTime Reflection Time
-  double m_PulseProbability;               ///< PulseTime Reflection Prob. 
-  SmartIF<IRndmGen> m_genDist;             ///< random number generator
-
-  double m_noiseLevel;                     ///< level of random noise
-  Rndm::Numbers m_flatDist;                ///< flat dist for crosstalk
-
-  std::vector<double> m_startReadOutGate;  ///< start of readout gate
-  double m_sizeOfReadOutGate;              ///< end of readout gate   
-
-  bool m_smearTime;
-
+  typedef std::vector<LHCb::MCOTDeposit*> OTDeposits;
+  mutable OTDeposits       m_deposits;               ///< Vector of tmp deposits
+  unsigned int             m_firstStation;           ///< First OT station
+  std::vector<std::string> m_spillVector;            ///< Spills to digitize  
+  std::vector<double>      m_spillTimes;             ///< Spill times
+  std::vector<std::string> m_spillNames;             ///< Spill names
+  bool                     m_addCrossTalk;           ///< Flag to add Xtalk
+  double                   m_crossTalkLevel;         ///< Level of crosstalk
+  bool                     m_addNoise;               ///< Flag to add random noise
+  bool                     m_addDoublePulse;         ///< Flag to add double pulses
+  double                   m_doublePulseTime;        ///< Double pulse time
+  double                   m_doublePulseProbability; ///< Double pulse probability
+  mutable Rndm::Numbers    m_flat;                   ///< Flat random dist for crosstalk & double pulses
+  mutable Rndm::Numbers    m_gauss;                  ///< Gauss random dist
 };
 
 #endif // OTSIMULATION_MCOTDEPOSITCREATOR_H

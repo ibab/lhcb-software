@@ -1,15 +1,15 @@
-// $Id: MCOTDepositCreator.cpp,v 1.25 2007-12-10 09:31:25 mneedham Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.26 2008-05-28 20:07:31 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
-#include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Point3DTypes.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h" 
 #include "OTDet/DeOTModule.h"
+#include "OTDet/RtRelation.h"
  
 // Event
 #include "Event/MCHit.h"
@@ -19,13 +19,8 @@
 #include "Kernel/OTDataFunctor.h"
 #include "Kernel/OTChannelID.h"
 
-// OTDAQ
-#include "OTDAQ/IOTReadOutWindow.h"
-
 // OTSimulation
 #include "MCOTDepositCreator.h"
-#include "IOTSmearer.h" 
-#include "IOTrtRelation.h"
 #include "IOTEffCalculator.h"
 #include "IOTRandomDepositCreator.h"
 
@@ -57,47 +52,37 @@ DECLARE_ALGORITHM_FACTORY( MCOTDepositCreator );
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :
   GaudiAlgorithm(name, pSvcLocator),
-  m_tempDeposits(0)
+  m_deposits(),
+  m_firstStation(0u),
+  m_spillNames()
 {
-  // constructor 
-
-  // jobOptions - defaults
-  m_spillVector = boost::assign::list_of("/PrevPrev/")("/Prev/")("/")
-                         ("/Next/")("/NextNext/");
+  // constructor
+  m_spillVector = boost::assign::list_of("/PrevPrev/")
+                                        ("/Prev/")
+                                        ("/")
+                                        ("/Next/")
+                                        ("/NextNext/");
 
   m_spillTimes = boost::assign::list_of(-50.0*Gaudi::Units::ns)
-                        (-25.0*Gaudi::Units::ns)
-                        (0.0*Gaudi::Units::ns)
-                        (25.0*Gaudi::Units::ns)
-                        (50.0*Gaudi::Units::ns);
+                                       (-25.0*Gaudi::Units::ns)
+                                       (0.0*Gaudi::Units::ns)
+                                       (25.0*Gaudi::Units::ns)
+                                       (50.0*Gaudi::Units::ns);
 
-  declareProperty("spillVector", m_spillVector);
-  declareProperty("spillTimes", m_spillTimes);
-
-  declareProperty("addCrosstalk", m_addCrossTalk = true);
-  declareProperty("crossTalkLevel", m_crossTalkLevel = 0.025);
-  declareProperty("addNoise", m_addNoise = true);
-
-  declareProperty("addPulse", m_addPulse = true);
-  declareProperty("PulseTime", m_PulseTime = 30*Gaudi::Units::ns);
-  declareProperty("PulseProbability", m_PulseProbability = 0.3);
-
-  declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
-
-  declareProperty("smearTime", m_smearTime = true);
-
-  // container for temporary digit storage 
-  m_tempDeposits = new MCOTDepositVec();
-
-  // reserve some space
-  m_tempDeposits->reserve(8000);
+  declareProperty("SpillVector"            , m_spillVector                                   );
+  declareProperty("SpillTimes"             , m_spillTimes                                    );
+  declareProperty("AddCrosstalk"           , m_addCrossTalk           = true                 );
+  declareProperty("CrossTalkLevel"         , m_crossTalkLevel         = 0.025                );
+  declareProperty("AddNoise"               , m_addNoise               = true                 );
+  declareProperty("AddDoublePulse"         , m_addDoublePulse         = true                 );
+  declareProperty("DoublePulseTime"        , m_doublePulseTime        = 30.0*Gaudi::Units::ns);
+  declareProperty("DoublePulseProbability" , m_doublePulseProbability = 0.3                  );
 }
 
 
 MCOTDepositCreator::~MCOTDepositCreator()
 {
   // destructor
-  delete m_tempDeposits;
 }
 
 StatusCode MCOTDepositCreator::initialize()
@@ -107,60 +92,29 @@ StatusCode MCOTDepositCreator::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // sanity checks
-  if  (m_spillVector.empty()) return Error("No spills selected to be digitized !");
+  if (m_spillVector.empty()) return Error("No spills selected to be digitized !");
     
   // Get OT Geometry
-  m_tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
-  m_firstStation = m_tracker->firstStation();  
+  m_tracker              = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  m_firstStation         = m_tracker->firstStation();  
   unsigned int nStations = m_tracker->nStation();
-   
+
   // retrieve efficiency calculator tool
   for (unsigned int iEff = 0 ; iEff < nStations; ++iEff) {
     // get tool
     std::string aName = toolName("EffCalculator", iEff);
     IOTEffCalculator* aSingleCellEff = tool<IOTEffCalculator>("OTEffCalculator", aName, this);
     // add tool to vector
-    m_singleCellEffVector.push_back(aSingleCellEff);
+    m_singleCellEffVector.push_back( aSingleCellEff );
   } //loop eff calculators
-
-  // smearer
-  for (unsigned int iSmearTool = 0; iSmearTool < nStations; ++iSmearTool){
-    // get tool
-    std::string aName = toolName("Smearer", iSmearTool);
-    IOTSmearer* aSmearer = tool<IOTSmearer>("OTSmearer", aName, this);
-    // add tool to vector
-    m_smearerVector.push_back(aSmearer);
-  } // loop smearing tools
-
-  // make r-t calculators
-  for (unsigned int iRT = 0; iRT < nStations; ++iRT) {
-    // get tool
-    std::string aName = toolName("RTrelation", iRT);
-    IOTrtRelation* aRTrelation = tool<IOTrtRelation>("OTrtRelation", aName, this);
-    // add tool to vector
-    m_rtRelationVector.push_back(aRTrelation);   
-  } //  loop r-t calculators
-
-  // flat rand dist for crosstalk
-  sc = m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));
-  if ( !sc.isSuccess() ) return Error("Unable to initialize rdnm Service", sc);
   
-  // Read out window tool
-  IOTReadOutWindow* aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
-  m_sizeOfReadOutGate = aReadOutWindow->sizeOfReadOutGate();
-  m_startReadOutGate  = aReadOutWindow->startReadOutGate();
-  release( aReadOutWindow );
+  /// Random number from a gauss distribution between 0 and 1
+  /// for smearing
+  sc = m_gauss.initialize( randSvc() , Rndm::Gauss( 0.0, 1.0) );
 
-  // retrieve pointer to random number service
-  IRndmGenSvc* randSvc = 0;
-  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
-  if ( sc.isFailure() ) return Error("Failed to retrieve random number service", sc);
-    
-
-  // get interface to generator
-  sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
-  if ( sc.isFailure() ) return Error("Failed to generate random number distribution", sc);
-  randSvc->release();
+  /// Random number from a flat distribution between 0 and 1
+  /// for cross talk and double pulses
+  sc = m_flat.initialize( randSvc() , Rndm::Flat( 0.0, 1.0) );
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
@@ -170,7 +124,7 @@ StatusCode MCOTDepositCreator::initialize()
     m_spillNames.push_back(mcHitPath);
     ++iSpillName;
   } // iterSpillName
-  m_noiseTool = tool<IOTRandomDepositCreator>(m_noiseToolName);
+  m_noiseTool = tool<IOTRandomDepositCreator>( "OTRandomDepositCreator" );
   
   return StatusCode::SUCCESS;
 }
@@ -178,71 +132,63 @@ StatusCode MCOTDepositCreator::initialize()
 StatusCode MCOTDepositCreator::execute(){
 
   // execute once per event
-
+  // reserve some space
+  m_deposits.reserve(6000);
+ 
   // make initial list of deposits
   if (msgLevel(MSG::DEBUG)) debug() << "Making deposits from hits" << endmsg;
-  makeDigitizations();
-  
-  // single cell eff
-  if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before applying efficiency cut = "
-                                    << m_tempDeposits->size() << endmsg;
-  singleCellEff();
-  if (msgLevel(MSG::DEBUG)) debug() << "Numer of deposits after applying efficiency cut = "
-                                    << m_tempDeposits->size() << endmsg;
-
-  // smear
-  if (msgLevel(MSG::DEBUG))  debug() << "Applying single cell smearing" << endmsg;
-  applySmear();
-  
-  // r-to-t
-  if (msgLevel(MSG::DEBUG)) debug() << "Applying r-t relation" << endmsg;
-  applyRTrelation();
+  makeDeposits();
 
   // add crosstalk
   if (m_addCrossTalk) {
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding XTalk = "
-                                      << m_tempDeposits->size() << endmsg;
+                                      << m_deposits.size() << endmsg;
     addCrossTalk();
     //if (sc.isFailure()) return Error("problems applying crosstalk", sc ); 
     if (msgLevel(MSG::DEBUG))debug() << "Number of deposits after adding XTalk = "
-                                     << m_tempDeposits->size() << endmsg;
+                                     << m_deposits.size() << endmsg;
   }
   
   // add random noise
   if (m_addNoise) {
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding noise = "
-                                      << m_tempDeposits->size() << endmsg;
-    m_noiseTool->createDeposits(m_tempDeposits);
+                                      << m_deposits.size() << endmsg;
+    m_noiseTool->createDeposits(m_deposits);
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding XTalk = "
-                                      << m_tempDeposits->size() << endmsg;
+                                      << m_deposits.size() << endmsg;
   }
 
   // add Double Pulse Reflection
-  if (m_addPulse) {
+  if (m_addDoublePulse) {
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits before adding double pulse = "
-                                      << m_tempDeposits->size() << endmsg;
-    addPulseReflect();
+                                      << m_deposits.size() << endmsg;
+    addDoublePulse();
     if (msgLevel(MSG::DEBUG)) debug() << "Number of deposits after adding noise = "
-                                      << m_tempDeposits->size() << endmsg;
+                                      << m_deposits.size() << endmsg;
   }
   
   // sort - first by channel
-  std::stable_sort(m_tempDeposits->begin(),m_tempDeposits->end(),
-                   OTDataFunctor::Less_by_ChannelAndTime<const MCOTDeposit*>());
+  std::stable_sort( m_deposits.begin(),
+                    m_deposits.end()  ,
+                    OTDataFunctor::Less_by_ChannelAndTime<const MCOTDeposit*>() );
 
+  /// Fill the MCOTDeposits container and put it in  the TES
   MCOTDeposits* deposits = new MCOTDeposits();
-  deposits->reserve(m_tempDeposits->size());
-  for_each(m_tempDeposits->begin(), m_tempDeposits->end(),
-           bind(&MCOTDeposits::add, deposits, _1));
-  m_tempDeposits->clear();
-
-  // store deposit container in EvDS
+  deposits->reserve(m_deposits.size());
+  for_each( m_deposits.begin() , 
+            m_deposits.end()   ,
+            bind( &MCOTDeposits::add, 
+                  deposits,
+                  _1 ) );
   put(deposits, MCOTDepositLocation::Default);
+
+  /// Clear deposits vector
+  m_deposits.clear();
 
   return StatusCode::SUCCESS;
 }
 
-void MCOTDepositCreator::makeDigitizations()
+void MCOTDepositCreator::makeDeposits() const
 {
   // retrieve MCHits and make first list of deposits
   for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
@@ -263,21 +209,42 @@ void MCOTDepositCreator::makeDigitizations()
         
         // time offset
         const double tTimeOffset = aMCHit->time() + m_spillTimes[iSpill];
-
+        
         // make deposits
         std::vector<std::pair<OTChannelID, double> > chanAndDist;
-        const DeOTModule* aModule = m_tracker->findModule(aMCHit->midPoint());
-        if (aModule) {
-          aModule->calculateHits(aMCHit->entry(), aMCHit->exit(), chanAndDist);
+        const DeOTModule* module = m_tracker->findModule(aMCHit->midPoint());
+        if ( module ) {
+          module->calculateHits(aMCHit->entry(), aMCHit->exit(), chanAndDist);
         } else continue;
                 
-        if (!chanAndDist.empty()) {
+        if ( !chanAndDist.empty() ) {
           // OK got some hits
-          for (std::vector<std::pair<OTChannelID,double> >::const_iterator iT = chanAndDist.begin(), iTend = chanAndDist.end(); 
-               iT != iTend; ++iT) {
-            const double dist = iT->second;
-            const int amb = (dist< 0.0) ? -1 : 1;
-            m_tempDeposits->push_back(new MCOTDeposit(aMCHit, iT->first, tTimeOffset, std::abs(dist), amb));
+          for (std::vector< std::pair<OTChannelID,double> >::const_iterator iT = chanAndDist.begin(), 
+               iTend = chanAndDist.end(); iT != iTend; ++iT) {
+            const unsigned int toolIndex = (iT->first).station() - m_firstStation;
+            const double dist            = iT->second;
+            const int amb                = (dist< 0.0) ? -1 : 1;
+            /// create deposit
+            MCOTDeposit* deposit = new MCOTDeposit(aMCHit, iT->first, tTimeOffset, std::abs(dist), amb);
+            /// Apply single cell efficiency cut
+            /// Currently per station; but I can imagine we want to do it per module or straw
+            bool accept = false;
+            m_singleCellEffVector[toolIndex]->calculate( deposit, accept );
+            if ( accept ) {
+              /// Smear deposit in time
+              const double sigmaT   = (module->rtRelation()).drifttimeError(deposit->driftDistance());
+              const double smearedT = m_gauss()*sigmaT;
+              deposit->addTime(smearedT);
+              /// R-T relation per module
+              const double tFromR   = (module->rtRelation()).drifttime(deposit->driftDistance());
+              /// propagation time per module is the distance traveled along the wire divided
+              /// by the propagation velocity
+              const double propTime = module->distanceAlongWire( ( aMCHit->midPoint() ).x(), 
+                                                                 ( aMCHit->midPoint() ).y() ) / module->propagationVelocity();
+              
+              deposit->addTime( tFromR + propTime );
+              m_deposits.push_back(deposit);
+            } else delete deposit;
           }
         }
       } // iterHit
@@ -285,84 +252,13 @@ void MCOTDepositCreator::makeDigitizations()
   } // loop spills
 }
 
-void MCOTDepositCreator::singleCellEff() 
-{
-  // apply single cell efficiency
-  MCOTDepositVec::iterator iterDeposit    = m_tempDeposits->begin();
-  MCOTDepositVec::iterator iterDepositEnd = m_tempDeposits->end();
-  while (iterDeposit != iterDepositEnd) {
-    MCOTDeposit* aDeposit = (*iterDeposit);
-    
-    // number of tool - want 0,1,2 and not 1,2,3
-    int iEffTool = (aDeposit->channel()).station() - m_firstStation;
-
-    bool accept = false;
-    m_singleCellEffVector[iEffTool]->calculate(aDeposit, accept);
-    if (!accept) {
-      /// delete MCOTDeposit*
-      delete *iterDeposit;
-      /// set to 0
-      (*iterDeposit) = static_cast<MCOTDeposit*>(0);
-    }
-    ++iterDeposit;
-  } // loop m_tempDeposits
-  /// remove zero deposits
-  m_tempDeposits->erase(std::remove(m_tempDeposits->begin(), m_tempDeposits->end(), 
-                                    static_cast<MCOTDeposit*>(0)), m_tempDeposits->end());
-}
-
-void MCOTDepositCreator::applySmear()
-{
-  // smear tmp deposits to simulate single cell resolution
-  MCOTDepositVec::const_iterator iterDeposit    = m_tempDeposits->begin();
-  MCOTDepositVec::const_iterator iterDepositEnd = m_tempDeposits->end();
-  while (iterDeposit != iterDepositEnd) {    
-    MCOTDeposit* aDeposit = (*iterDeposit);
-    
-    // number of tool - want 0,1,2 and not 1,2,3
-    int iSmearTool = (aDeposit->channel()).station() - m_firstStation;
-    // smear     
-    if (m_smearTime == true){ 
-      m_smearerVector[iSmearTool]->smearTime(aDeposit);
-    } else {
-      m_smearerVector[iSmearTool]->smearDistance(aDeposit);
-      // hack as drift dist can be < 0 due to smearing
-      // If < 0 then flip ambiguity
-      double driftDist = aDeposit->driftDistance();
-      if (driftDist < 0.0) {
-        aDeposit->setDriftDistance( std::abs(driftDist) );
-        int ambiguity = aDeposit->ambiguity();
-        aDeposit->setAmbiguity(-1 * ambiguity);
-      } // negative distance
-    } 
-    ++iterDeposit;
-  } // loop m_tempDeposits
-}
-
-void MCOTDepositCreator::applyRTrelation()
-{
-  // apply r-t relation
-  MCOTDepositVec::const_iterator iterDeposit    = m_tempDeposits->begin();
-  MCOTDepositVec::const_iterator iterDepositEnd = m_tempDeposits->end();
-  while (iterDeposit != iterDepositEnd) {
-    MCOTDeposit* aDeposit = (*iterDeposit);
-
-    // number of tool - want 0,1,2 and not 1,2,3
-    int iRTTool = (aDeposit->channel()).station() - m_firstStation;
-    // convert      
-    m_rtRelationVector[iRTTool]->convertRtoT(aDeposit);
-    
-    ++iterDeposit;
-  } // loop m_tempDeposits
-}
-
-void MCOTDepositCreator::addCrossTalk()
+void MCOTDepositCreator::addCrossTalk() const
 {
   // Add cross talk to deposits
   std::list<MCOTDeposit*> crossTalkList;
   
-  MCOTDepositVec::const_iterator iterDeposit    = m_tempDeposits->begin();
-  MCOTDepositVec::const_iterator iterDepositEnd = m_tempDeposits->end();
+  OTDeposits::const_iterator iterDeposit    = m_deposits.begin();
+  OTDeposits::const_iterator iterDepositEnd = m_deposits.end();
   while (iterDeposit != iterDepositEnd){
     const MCOTDeposit* aDeposit = (*iterDeposit);
 
@@ -381,7 +277,7 @@ void MCOTDepositCreator::addCrossTalk()
     std::list<OTChannelID>::const_iterator iterChan    = neighbours.begin();
     std::list<OTChannelID>::const_iterator iterChanEnd = neighbours.end();
     while (iterChan != iterChanEnd) {
-      const double testVal = m_flatDist();
+      const double testVal = m_flat();
       if ( testVal < m_crossTalkLevel) {
         // crosstalk in neighbour - copy hit - this is very ugly
         crossTalkList.push_back(new MCOTDeposit(0, *iterChan, aDeposit->time(), 
@@ -393,24 +289,23 @@ void MCOTDepositCreator::addCrossTalk()
   } // iterDeposit
 
   // move hits from crosstalk list to deposit vector
-  m_tempDeposits->insert(m_tempDeposits->end(), crossTalkList.begin(), crossTalkList.end());
+  m_deposits.insert(m_deposits.end(), crossTalkList.begin(), crossTalkList.end());
 }
 
 // Add Pulse Reflection
-void MCOTDepositCreator::addPulseReflect()
+void MCOTDepositCreator::addDoublePulse() const
 {
   std::list<MCOTDeposit*> DoublePulseList;
-  MCOTDepositVec::const_iterator iterDeposit    = m_tempDeposits->begin();
-  MCOTDepositVec::const_iterator iterDepositEnd = m_tempDeposits->end();
+  OTDeposits::const_iterator iterDeposit    = m_deposits.begin();
+  OTDeposits::const_iterator iterDepositEnd = m_deposits.end();
   while (iterDeposit != iterDepositEnd) {
     const MCOTDeposit* aDeposit = (*iterDeposit);
-    
-    const double randomNr = m_genDist->shoot();
-    if (randomNr <  m_PulseProbability) {
+    const double probability = m_flat();
+    if ( probability <  m_doublePulseProbability ) {
       
       // Time - OTChannelID
       const OTChannelID aChan = aDeposit->channel();
-      const double time = aDeposit->time() + m_PulseTime;     
+      const double time       = aDeposit->time() + m_doublePulseTime;     
 
       // New Deposit
       DoublePulseList.push_back(new MCOTDeposit(0, aChan, time, 0, 0));
@@ -419,7 +314,7 @@ void MCOTDepositCreator::addPulseReflect()
   }
  
   // move hits from double pulse list to deposit vector
-  m_tempDeposits->insert(m_tempDeposits->end(), DoublePulseList.begin(), DoublePulseList.end());
+  m_deposits.insert( m_deposits.end(), DoublePulseList.begin(), DoublePulseList.end() );
 }
 
 std::string MCOTDepositCreator::toolName(const std::string& aName, const int id) const
