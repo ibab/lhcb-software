@@ -1,4 +1,4 @@
-// $Id: TupleTool.cpp,v 1.2 2008-03-31 07:05:21 ibelyaev Exp $
+// $Id: TupleTool.cpp,v 1.3 2008-05-28 16:15:33 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -90,7 +90,7 @@ namespace LoKi
     public:
       // ======================================================================
       /// initialization of the tool 
-      virtual StatusCode intialize () 
+      virtual StatusCode initialize () 
       {
         StatusCode sc = GaudiTool::initialize() ;
         if ( sc.isFailure() ) {  return sc ; }               // RETURN 
@@ -200,11 +200,13 @@ StatusCode LoKi::Hybrid::TupleTool::fill
   //
   if ( !tuple.valid() ) { return Error ( "Invalid tuple " ) ; } 
   //
+  std::string head_ = head + "_" ;
+  //
   for ( Items::const_iterator item = m_items.begin() ; 
         m_items.end() != item ; ++item ) 
   {
     // fill N-tuple 
-    tuple -> column ( head + item->m_name , item->m_fun ( particle ) ) ; 
+    tuple -> column ( head_ + item->m_name , item->m_fun ( particle ) ) ; 
   }
   //
   return StatusCode::SUCCESS ;

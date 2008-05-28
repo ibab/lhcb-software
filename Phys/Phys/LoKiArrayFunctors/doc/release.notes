@@ -1,10 +1,22 @@
-$Id: release.notes,v 1.26 2008-05-28 11:39:20 cattanem Exp $ 
+$Id: release.notes,v 1.27 2008-05-28 16:15:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2008-05-28 - Vanya BELYAEV
+
+ - src/Components/TupleTool.cpp
+
+     a) fix a stupid errot/type for "initialize" 
+     b) use the conventions proosed by Vava for the column name: "head+'_'+name"
+
+ - cmt/requirements 
+     version increment to v7r4 
+
+
+  
 ! 2008-05-28 - Marco Cattaneo
  - In PrintTool.cpp: fix a compiler warning
  - Fix several doxygen typos
