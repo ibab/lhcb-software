@@ -2,6 +2,19 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+! 2008-05-27 Jan Amoraal
+ - Added algorithm OTFillRawBuffer
+  o Uses OTRawBankEncoder tool in OTDAQ to encode MCOTTimes
+  o Replaces OTFillRawEvent (removed)
+ - Modified algorithm MCOTDepositCreator
+  o Use DeOTModule interface to get t0 and R-T relation
+  o Smear time
+  o Following tools are thus obselete and have been removed
+    - OTrtRelation, OTSmearer
+ - Minor bug fix in MCOTTimeCreator
+  o Fix rounding of tdc time
+ - Cleaned-up OTRandomDepositCreator
+
 !====================== OTSimulation v3r15 2007-12-11 =====================
 ! 2007-12-10 M Needham
  - Smear time not distance 
