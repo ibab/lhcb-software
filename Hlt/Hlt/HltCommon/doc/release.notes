@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-28 Gerhard Raven
+  - remove L0Names.h which isn't referenced anymore
+
 ! 2008-05-22 Gerhard Raven
   - HltFunctions: IFunctionTool moved from HltBase to TrackInterfaces
   - fix capitalization in HltL0Filter
