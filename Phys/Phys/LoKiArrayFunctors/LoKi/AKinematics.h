@@ -1,4 +1,4 @@
-// $Id: AKinematics.h,v 1.4 2008-04-16 11:33:30 ibelyaev Exp $
+// $Id: AKinematics.h,v 1.5 2008-05-28 11:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_AKINEMATICS_H 
 #define LOKI_AKINEMATICS_H 1
@@ -252,6 +252,7 @@ namespace LoKi
      *  @param  index1 index of the first particle in the sub-combination
      *  @param  index2 index of the second particle in the sub-combination
      *  @param  index3 index of the third particle in the sub-combination
+     *  @param  index4 index of the fourth particle in the sub-combination
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -281,6 +282,7 @@ namespace LoKi
      *  @param  index1 index of the first particle in the sub-combination
      *  @param  index2 index of the second particle in the sub-combination
      *  @param  index3 index of the third particle in the sub-combination
+     *  @param  index4 index of the fourth particle in the sub-combination
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -307,6 +309,7 @@ namespace LoKi
      *  @param  index1 index of the first particle in the sub-combination
      *  @param  index2 index of the second particle in the sub-combination
      *  @param  index3 index of the third particle in the sub-combination
+     *  @param  index4 index of the fourth particle in the sub-combination
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -330,7 +333,6 @@ namespace LoKi
      *
      *  @param  begin the begin-iterator of the sequence of the particles 
      *  @param  end   the end-iterator of the sequence of the particles 
-     *  @param  comb   combination 
      *  @param  indices vector of indices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15

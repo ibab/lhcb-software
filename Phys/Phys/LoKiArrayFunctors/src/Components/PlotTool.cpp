@@ -1,4 +1,4 @@
-// $Id: PlotTool.cpp,v 1.1 2008-03-18 16:26:13 ibelyaev Exp $
+// $Id: PlotTool.cpp,v 1.2 2008-05-28 11:39:20 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -49,7 +49,7 @@ namespace LoKi
      *    - <b>Selector</b>: the python predicate to be used for selection
      *                      of particles, the default value is <c>ALL</c>
      *
-     *    - <b>Histos</b: the map  { functor : histogram }, default is the empty map. 
+     *    - <b>Histos</b>: the map  { functor : histogram }, default is the empty map. 
      *
      *
      *  The examples of "{ functor : histogram }"-map:
@@ -168,7 +168,7 @@ namespace LoKi
       // ======================================================================
       /** Fill plots using a single Particle
        *  @see IPlotTool 
-       *  @param particles vector of particles 
+       *  @param particle  particle 
        *  @param trailer   the trailer 
        *  @return status code 
        */
@@ -283,7 +283,7 @@ namespace LoKi
        *             the selector 
        *  
        *  @param h the base description
-       *  @param traler the trailer 
+       *  @param trailer the trailer 
        *  @return fresh booked histogram
        */
       inline AIDA::IHistogram1D* bookHisto 

@@ -1,4 +1,4 @@
-// $Id: AChild.h,v 1.3 2007-12-02 17:10:38 ibelyaev Exp $
+// $Id: AChild.h,v 1.4 2008-05-28 11:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ACHILD_H 
 #define LOKI_ACHILD_H 1
@@ -98,7 +98,7 @@ namespace LoKi
     // ========================================================================
     /** trivial function to access all children particles 
      *  @param vct  "pseudo-particle"
-     *  @param return vector of children
+     *  @return vector of children
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
@@ -109,7 +109,7 @@ namespace LoKi
     // ========================================================================
     /** trivial function to access all descendants particles 
      *  @param vct  "pseudo-particle"
-     *  @param return vector of descendants 
+     *  @return vector of descendants 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */

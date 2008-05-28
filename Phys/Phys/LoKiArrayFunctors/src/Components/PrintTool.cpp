@@ -1,4 +1,4 @@
-// $Id: PrintTool.cpp,v 1.3 2008-04-10 17:15:31 ibelyaev Exp $
+// $Id: PrintTool.cpp,v 1.4 2008-05-28 11:39:20 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -107,9 +107,9 @@ namespace LoKi
         const IInterface*  parent )          // the parent  
         : GaudiTool ( type, name , parent )
         , m_vars        (   ) 
-        , m_header      (   )
-        , m_format      (   )
         , m_funcs       (   ) 
+        , m_format      (   )
+        , m_header      (   )
         , m_factory     ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC") 
       {
         declareInterface<IPrintDecay> ( this ) ;

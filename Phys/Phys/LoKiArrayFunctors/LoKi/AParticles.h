@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.7 2008-05-04 15:28:13 ibelyaev Exp $
+// $Id: AParticles.h,v 1.8 2008-05-28 11:39:20 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -209,7 +209,7 @@ namespace LoKi
      *  @see LoKi::Cuts::AM34
      *  @attention indices starts from one! Zero corresponds to the combination!
      *  @see LoKi::AKinematics::momentum
-     *  @se  LoKi::AParticles::FourMomentum
+     *  @see LoKi::AParticles::FourMomentum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -262,7 +262,7 @@ namespace LoKi
      *  evaluator of the momentum of the various subcombinations
      *  @attention indices starts from one! Zero corresponds to the combination!
      *  @see LoKi::AKinematics::momentum
-     *  @se  LoKi::AParticles::FourMomentum
+     *  @see LoKi::AParticles::FourMomentum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -359,7 +359,7 @@ namespace LoKi
      *  evaluator of the momentum of the various subcombinations
      *  @attention indices starts from one! Zero corresponds to the combination!
      *  @see LoKi::AKinematics::momentum
-     *  @se  LoKi::AParticles::FourMomentum
+     *  @see LoKi::AParticles::FourMomentum
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-06-15
      */
@@ -1016,7 +1016,7 @@ namespace LoKi
     public:
       /** constructor with daughter index (starts from 1).
        *  E.g. for 2-body decays it could be 1 or 2 
-       *  @param index of daughter particles
+       *  @param child of daughter particles
        */
       DecayAngle ( std::size_t child ) ;
       /// copy constructor 
