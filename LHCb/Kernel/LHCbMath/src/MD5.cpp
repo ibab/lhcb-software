@@ -46,7 +46,7 @@ public:
 
 
     // Acquires the digest
-    Gaudi::Math::MD5::Digest digest(const char * a_data=0);
+    Gaudi::Math::MD5 digest(const char * a_data=0);
 
 private:
     // Updates the digest with additional message data.
@@ -61,15 +61,15 @@ private:
 };
 
 
-
-Gaudi::Math::MD5::Digest
-Gaudi::Math::MD5::computeDigest(const string& s) {
+Gaudi::Math::MD5
+Gaudi::Math::MD5::compute(const string& s) {
    Gaudi::Math::MD5::md5_engine x;
    return x.digest( s.c_str() );
 }
 
+
 string 
-Gaudi::Math::MD5::Digest::str() const {
+Gaudi::Math::MD5::str() const {
     string s; s.reserve(2*sizeof(value_type));
     for (const boost::uint8_t* i = m_value; i!=m_value+sizeof(value_type); ++i) {
         static const char *digits="0123456789abcdef";
@@ -89,17 +89,17 @@ namespace {
     };
 };
 
-Gaudi::Math::MD5::Digest 
-Gaudi::Math::MD5::convertString2Digest(const std::string& val) { 
-    assert(val.size()==2*sizeof(Gaudi::Math::MD5::Digest::value_type) || val.empty());
-    if (val.empty()) return createInvalidDigest();
-    Gaudi::Math::MD5::Digest::value_type d;
+Gaudi::Math::MD5
+Gaudi::Math::MD5::createFromStringRep(const std::string& val) { 
+    assert(val.size()==2*sizeof(Gaudi::Math::MD5::value_type) || val.empty());
+    if (val.empty()) return createInvalid();
+    Gaudi::Math::MD5::value_type d;
     for (size_t i=0;i<sizeof(d);++i) d[i]=(unhex(val[2*i])<<4|unhex(val[2*i+1]));
-    return Digest(d);
+    return MD5(d);
 };
 
 
-ostream& operator<<(ostream& os, const Gaudi::Math::MD5::Digest& x) {
+ostream& operator<<(ostream& os, const Gaudi::Math::MD5& x) {
    return os << x.str(); 
 }
 
@@ -265,7 +265,7 @@ void Gaudi::Math::MD5::md5_engine::update(const void* a_data, boost::uint32_t a_
         const boost::uint8_t*>(a_data)+input_index, a_data_size-input_index);
 }
 
-Gaudi::Math::MD5::Digest Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
+Gaudi::Math::MD5 Gaudi::Math::MD5::md5_engine::digest(const char * a_data)
 {
     count[0] = 0;
     count[1] = 0;
@@ -299,9 +299,9 @@ Gaudi::Math::MD5::Digest Gaudi::Math::MD5::md5_engine::digest(const char * a_dat
     update(saved_count, 8);
 
     // Store state in digest.
-    MD5::Digest::value_type digest;
+    MD5::value_type digest;
     pack(digest, state, sizeof(digest));
-    return MD5::Digest(digest);
+    return MD5(digest);
 }
 
 
