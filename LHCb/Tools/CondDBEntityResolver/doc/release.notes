@@ -5,6 +5,9 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
+! 2008-05-28 - Marco Cattaneo
+ - Fix compilation warning
+
 !================ Tools/CondDBEntityResolver v4r1 2008-04-10 =================
 ! 2008-04-10 - Marco Clemencic
  - Moved the loading of DetDescSvc and CondDBCnvSvc from initialization to
