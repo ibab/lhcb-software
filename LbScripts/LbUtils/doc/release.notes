@@ -1,3 +1,8 @@
+2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Script.py: added a default return value
+	to the main() method. And a few doc strings.
+
 2008-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r1
