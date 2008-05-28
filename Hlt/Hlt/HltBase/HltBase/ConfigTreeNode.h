@@ -24,12 +24,12 @@ public:
     // Fetching the corresponding data is factored out of this class --
     // use an instance of the IConfigAccessSvc to do that.
     //
-    typedef Gaudi::Math::MD5::Digest digest_type;
+    typedef Gaudi::Math::MD5         digest_type;
     typedef digest_type              LeafRef;
     typedef digest_type              NodeRef;
     typedef std::vector<NodeRef>     NodeRefs;
 
-    ConfigTreeNode() : m_leaf( Gaudi::Math::MD5::createInvalidDigest() ) 
+    ConfigTreeNode() : m_leaf( digest_type::createInvalid() ) 
     { }
 
     ConfigTreeNode(const LeafRef& leaf)

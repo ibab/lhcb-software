@@ -11,7 +11,7 @@
 
 class PropertyConfig {
 public:
-    typedef Gaudi::Math::MD5::Digest digest_type;
+    typedef Gaudi::Math::MD5 digest_type;
 
     typedef std::pair<std::string,std::string> Prop;
     typedef std::vector<Prop> Properties;
@@ -61,7 +61,7 @@ public:
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
-    digest_type digest() const { return Gaudi::Math::MD5::computeDigest(*this); }
+    digest_type digest() const { return digest_type::compute(*this); }
 
 private:
     Properties   m_properties;

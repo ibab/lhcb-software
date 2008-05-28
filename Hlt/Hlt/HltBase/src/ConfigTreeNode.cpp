@@ -20,13 +20,13 @@ istream& ConfigTreeNode::read(istream& is) {
             if (boost::regex_match(s,what,nodeend) ) { 
                 parsing_nodes = false;
             } else if (boost::regex_match(s,what,node) ) { 
-                m_nodes.push_back( MD5::convertString2Digest(what[1]));
+                m_nodes.push_back( digest_type::createFromStringRep(what[1]));
             } else {
                 cout << "parsing error while looking for nodes!!! : [" << s << "]" << endl;
             }
         } else {
             if (boost::regex_match(s,what,leaf) ) { assert(m_leaf.invalid());
-                m_leaf = MD5::convertString2Digest( what[1] );
+                m_leaf = digest_type::createFromStringRep( what[1] );
             } else if (boost::regex_match(s,what,nodestart) ) { assert(m_nodes.empty());
                 parsing_nodes = true;
             } else if (boost::regex_match(s,what,label) ) { assert(m_label.empty());
@@ -50,7 +50,7 @@ ostream& ConfigTreeNode::print(ostream& os) const {
     return os << "]" << endl;
 }
 
-ConfigTreeNode::digest_type ConfigTreeNode::digest() const { return MD5::computeDigest(*this); }
+ConfigTreeNode::digest_type ConfigTreeNode::digest() const { return digest_type::compute(*this); }
 
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os);}
 std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is);}
