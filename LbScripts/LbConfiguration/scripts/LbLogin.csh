@@ -6,17 +6,17 @@ unalias cwdcmd
 
 set a = `history -rh 1 | awk '{print $2}'`
 # echo $a
-#set b = `basename $a`
-set l = `readlink $a`
+#set b = `/bin/basename $a`
+set l = `/usr/bin/readlink $a`
 if ( $l == "" ) then
 	set l = $a
-	set scriptsdir = `dirname $a`
+	set scriptsdir = `/usr/bin/dirname $a`
 else
-	set d = `dirname $a`
+	set d = `/usr/bin/dirname $a`
 	if ( $d != $cwd && $d != "." ) then
 		pushd $d # >& /dev/null
   	endif
-  	pushd `dirname $l` # >& /dev/null
+  	pushd `/usr/bin/dirname $l` # >& /dev/null
   	set scriptsdir = `pwd`
   	popd # >& /dev/null
   	if ( $d != $cwd && $d != "." ) then
@@ -387,9 +387,10 @@ if ( ! $?ROOTSYS ) then
 	setenv ROOTSYS
 endif
 
-echo "******************************************************"
+echo "*****************************************************************"
 echo "*           WELCOME to the $compdef on ${platform}_${binary} system       *"
-echo "******************************************************"
+echo "*           DEVELOPMENT SCRIPT                                  *"
+echo "*****************************************************************"
 echo " --- "\$CMTROOT " is set to $CMTROOT "
 echo " --- "\$CMTCONFIG " is set to $CMTCONFIG "
 	if ($debug != 1) echo " --- to compile and link in debug mode : setenv CMTCONFIG "\$CMTDEB" ; gmake"
@@ -410,6 +411,7 @@ if (-f  $scriptsdir/SetupProject.csh) then
 else
 	set mainscriptloc = $LHCBRELEASES/LBSCRIPTS/prod/InstallArea/scripts
 endif
+unset scriptsdir
 
 #echo $mainscriptloc
 

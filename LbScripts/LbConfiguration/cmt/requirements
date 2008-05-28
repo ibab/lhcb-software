@@ -8,6 +8,7 @@ apply_pattern source_shell_alias script=LbLogin
 apply_pattern source_shell_alias script=setup_external
 apply_pattern source_shell_alias script=cleanup_external
 apply_pattern source_shell_alias script=SetupProject
+apply_pattern source_shell_alias script=setenvProject
 
 apply_pattern python_alias script=LbShowProjectConf
 

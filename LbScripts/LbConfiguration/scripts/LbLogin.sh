@@ -5,14 +5,14 @@
 
 
 a=`history 1 | awk '{print $3}'`
-#b=`basename $a`
-l=`readlink $a`
+#b=`/bin/basename $a`
+l=`/usr/bin/readlink $a`
 if [ "$l" = "" ]; then
 	l=$a
-	scriptsdir=`dirname $a`
+	scriptsdir=`/usr/bin/dirname $a`
 else
-	pushd `dirname $a` &> /dev/null
-	pushd `dirname $l` &> /dev/null
+	pushd `/usr/bin/dirname $a` &> /dev/null
+	pushd `/usr/bin/dirname $l` &> /dev/null
 	scriptsdir=`pwd`
 	popd &> /dev/null
 	popd &> /dev/null
@@ -343,9 +343,10 @@ if [ ! ${ROOTSYS} ]; then
 	export ROOTSYS=""
 fi
 
-echo "******************************************************"
+echo "*****************************************************************"
 echo "*           WELCOME to the $compdef on ${platform}_${binary} system       *"
-echo "******************************************************"
+echo "*           DEVELOPMENT SCRIPT                                  *"
+echo "*****************************************************************"
 echo " --- CMTROOT is set to $CMTROOT "
 echo " --- CMTCONFIG is set to $CMTCONFIG "
 if [ "$debug" != "1" ] ; then
