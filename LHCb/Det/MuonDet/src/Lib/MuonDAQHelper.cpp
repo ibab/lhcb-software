@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.5 2008-04-16 08:28:16 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.6 2008-05-28 10:02:23 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1633,7 +1633,7 @@ StatusCode  MuonDAQHelper::findHWNumber(LHCb::MuonTileID digit,
 
 StatusCode  MuonDAQHelper::initODENames()
 {
-  StatusCode sc=StatusCode::FAILURE;
+  //StatusCode sc=StatusCode::FAILURE;
   MsgStream log(m_msgSvc, "MuonDAQHelper");
 
   for(int station=0;station<5;station++){
