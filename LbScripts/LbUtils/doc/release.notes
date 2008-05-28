@@ -1,8 +1,10 @@
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Env.py: added the Aliases class in order to generate the
+	aliases source script
 	* scripts/which.bat: added which utility for windows
-	* python/LbUtils/Script.py: added a default return value
-	to the main() method. And a few doc strings.
+	* python/LbUtils/Script.py: added a default return value to the main() method.
+	And a few doc strings.
 
 2008-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

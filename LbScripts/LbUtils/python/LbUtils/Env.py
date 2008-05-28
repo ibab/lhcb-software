@@ -118,6 +118,32 @@ class Environment:
         return out
 
 
+class Aliases(Environment) :
+    def __init__(self, keep_same=False):
+        Environment.__init__(self, orig=dict(), keep_same=keep_same)
+    def gen_script(self,shell_type):
+        """
+        Generate a shell script to reproduce the changes in the aliases.
+        """
+        shells = [ 'csh', 'sh', 'bat' ]
+        if shell_type not in shells:
+            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type, shells))
+        out = ""
+        for key in self.old_values:
+            if key not in self.env:
+                # unset variable
+                if shell_type == 'csh':
+                    out += 'unalias %s\n'%key
+                elif shell_type == 'sh':
+                    out += 'unalias %s\n'%key
+            else:
+                # set variable
+                if shell_type == 'csh':
+                    out += 'alias %s "%s"\n'%(key,self.env[key])
+                elif shell_type == 'sh':
+                    out += 'alias %s="%s"\n'%(key,self.env[key])
+        return out
+
 _globalenv = Environment()
 
 def getDefaultEnv():
