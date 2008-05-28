@@ -2,6 +2,14 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2008-05-27 Jan Amoraal
+ - Added interface IOTRawBankEncoder
+ - Added tool OTRawRawBankEncoder
+  o Encodes channel ids and puts them in the RawBuffer
+  o Used to encoded MCOTTimes and can be used to encoded OTTime
+ - Modified RawHit
+  o Added constructor for word channel and time 
+
 ! 2008-05-27 Herve Terrier
  - check for duplicate hits in OTTimeCreator
  - made decoder tool private in OTTimeCreator
