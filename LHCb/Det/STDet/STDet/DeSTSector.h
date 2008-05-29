@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.26 2008-05-29 10:49:47 smenzeme Exp $
+// $Id: DeSTSector.h,v 1.27 2008-05-29 11:40:51 cattanem Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -223,7 +223,7 @@ public:
   DeSTSensor* findSensor(const Gaudi::XYZPoint& point) const;  
 
   /** check if inside the active area  
-  * @param Gaudi::XYZPoint point in global frame
+  * @param  point point in global frame
   * @return bool isInside  
   **/
   bool globalInActive(const Gaudi::XYZPoint& point ) const;
@@ -234,7 +234,7 @@ public:
    * @return bool in bondgap
    */
   bool globalInBondGap(const Gaudi::XYZPoint& point,
-                       double ol = 0) const;
+                       double tol = 0) const;
 
 protected:
 

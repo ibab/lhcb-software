@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.12 2008-01-08 15:56:34 cattanem Exp $
+// $Id: DeSTBaseElement.h,v 1.13 2008-05-29 11:40:51 cattanem Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -93,7 +93,7 @@ public:
   * @param caller
   * @param conditionName 
   * @param mf
-  * @param foceUpdate force update
+  * @param forceUpdate force update
   * @return StatusCode Success or Failure
   */
   template<typename CallerClass>

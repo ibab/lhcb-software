@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.1 2008-03-14 18:26:39 mneedham Exp $
+// $Id: DeSTSensor.h,v 1.2 2008-05-29 11:40:51 cattanem Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -118,9 +118,9 @@ public:
                       Gaudi::XYZPoint tol = Gaudi::XYZPoint(0.,0.,0.)) const;
 
   /** localInBondGap
-   * @param  point point in local frame
+   * @param  v     coordinate in local frame
    * @param  tol   tolerance
-   * @return boo if in bond gap
+   * @return bool if in bond gap
    */
   bool localInBondGap(const double v,
                       const double tol) const;
@@ -131,7 +131,7 @@ public:
    * @return bool in bondgap
    */
   bool globalInBondGap(const Gaudi::XYZPoint& point,
-                       double ol = 0) const;
+                       double tol = 0) const;
 
   /** thickness
    * @return double thickness
