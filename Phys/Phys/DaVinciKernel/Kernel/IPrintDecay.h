@@ -1,4 +1,4 @@
-// $Id: IPrintDecay.h,v 1.1 2008-03-30 17:59:18 ibelyaev Exp $
+// $Id: IPrintDecay.h,v 1.2 2008-05-29 14:55:49 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IPRINTDECAY_H 
 #define DAVINCIKERNEL_IPRINTDECAY_H 1
@@ -17,7 +17,7 @@ namespace LHCb { class Particle ; }
  *  Simple & MC-independent abstact interface for 
  *  the printout of the decay tree of the particle
  *  Essentially it is just an subset of abstract interface IPrintDecayTreeTool 
- *  @seeIPrintDecayTreeTool 
+ *  @see IPrintDecayTreeTool 
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2008-03-30
  */
@@ -54,7 +54,8 @@ public:
    *
    *  @endcode 
    *
-   *  @param mother the pointer to the particle 
+   *  @param begin    begin iterator of the particle vector
+   *  @param end      end iterator of the particle vector
    *  @param maxDepth the maximal depth level
    */
   template <class PARTICLE>

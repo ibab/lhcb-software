@@ -3,9 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
-! 2008-05-29 - Vanya BELYAEV
- - move the file GetDecay.cpp form the temporary location.
+!======================== DaVinciKernel v6r14 2008-05-29 ====================
+! 2008-05-29 - Marco Cattaneo
+ - Fix doxygen warnings
 
+! 2008-05-29 - Vanya BELYAEV
+ - Add the file GetDecay.cpp, adds methods lost in move of Decay to LHCbKernel
 
 !======================== DaVinciKernel v6r13 2008-05-05 ====================
 ! 2008-05-05 - Vanya BELYAEV

@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.3 2008-05-20 18:20:25 hmdegaud Exp $
+// $Id: IDistanceCalculator.h,v 1.4 2008-05-29 14:55:49 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -39,9 +39,8 @@ class IDistanceCalculator : virtual public IAlgTool
 {
 public:
   // ==========================================================================
-  /** @defgroup ParticleVertex
-   *   The set of the methods for evaluation of the various distances
-   *   between "particle" and "vertex"
+  /** @defgroup ParticleVertex Methods to evaluate distances between "particle" and "vertex"
+   *
    *  @{
    */
   // ==========================================================================
@@ -132,9 +131,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup ParticlePoint
-   *   The set of the methods for evaluation of the various distances
-   *   between "particle" and "fixed point"
+  /** @defgroup ParticlePoint Methods to evaluate distances between "particle" and "fixed point"
+   *
    *  @{
    */
   // ==========================================================================
@@ -227,9 +225,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup VertexVertex
-   *   The set of the methods for evaluation of the various distances
-   *   between who "vertices"
+  /** @defgroup VertexVertex Methods to evaluate distances between tho "vertices"
+   *
    *  @{
    */
   // ==========================================================================
@@ -260,7 +257,7 @@ public:
    *  @param v1   (input) the pointr to the first vertex 
    *  @param v2   (input) the pointer to the second vertex 
    *  @param dist (output) the distance between two vertices 
-   *  @param return status code 
+   *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::VertexBase*  v1   , 
@@ -297,7 +294,7 @@ public:
    *  @param v2   (input) the pointer to the second vertex 
    *  @param dist (output) the distance between two vertices 
    *  @param chi2 (output) the chi2 of the separation significance
-   *  @param return status code 
+   *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::VertexBase*  v1   , 
@@ -309,9 +306,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup VertexPoint
-   *   The set of the methods for evaluation of the various distances
-   *   between the vertex and th efixed point 
+  /** @defgroup VertexPoint Methods to evaluate distances between a vertex and a fixed point 
+   *
    *  @{
    */
   // ==========================================================================
@@ -343,7 +339,7 @@ public:
    *  @param v   (input) the pointr to the first vertex 
    *  @param p   (input) the fixed point  
    *  @param dist (output) the distance between two vertices 
-   *  @param return status code 
+   *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::VertexBase*  v    , 
@@ -381,7 +377,7 @@ public:
    *  @param p   (input)   the fixed point 
    *  @param dist (output) the distance between two vertices 
    *  @param chi2 (output) the chi2 of the separation significance
-   *  @param return status code 
+   *  @return status code 
    */
   virtual StatusCode distance 
   ( const LHCb::VertexBase*  v    , 
@@ -393,9 +389,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup ParticleParticle
-   *   The set of the methods for evaluation of the various distances
-   *   between two particles 
+  /** @defgroup ParticleParticle Methods to evaluate distances between two particles 
+   *
    *  @{
    */
   // ==========================================================================
@@ -471,8 +466,8 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
-  /** @defgroup OtherDistances
-   *   The set of the methods for evaluation of some other "distances"
+  /** @defgroup OtherDistances Methods to evaluate of some other "distances"
+   *
    *  @{
    */
   // ==========================================================================
@@ -510,7 +505,7 @@ public:
    *  @endcode 
    * 
    *  @param   particle (input) the pointer to the particle 
-   *  @param   primary  (input) the pointer to the production vertex
+   *  @param   vertex   (input) the pointer to the production vertex
    *  @param   path     (output) the "path-distance"
    *  @param   errror   (output) the estimate of the uncertanti in 
    *                the projected distance
@@ -533,9 +528,9 @@ public:
    *  the primary to the secondary vertex: 
    *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
    *
-   * @param particle (input)  the pointer to the particle 
-   * @param primary  (input)  the pointer to the production vertex 
-   * @param dist     (output) the projected distance
+   * @param[in]  particle the pointer to the particle 
+   * @param[in]  primary  the pointer to the production vertex 
+   * @param[out] dist     the projected distance
    * @return status code 
    */
   virtual StatusCode projectedDistance   

@@ -1,4 +1,4 @@
-// $Id: GetDecay.h,v 1.1 2008-05-05 11:46:04 ibelyaev Exp $
+// $Id: GetDecay.h,v 1.2 2008-05-29 14:55:49 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_GETDECAY_H 
 #define DAVINCIKERNEL_GETDECAY_H 1
@@ -22,7 +22,7 @@ namespace DaVinci
   /** create decay object from the descriptor
    *  @attention only "main" decay is created!
    *  @param descriptor the decay descriptor 
-   *  @param decode the decoder tool
+   *  @param decoder the decoder tool
    *  @return the constructed decay
    */
   LHCb::Decay decay 
@@ -31,7 +31,7 @@ namespace DaVinci
   // ==========================================================================
   /** create all decay objects from the descriptor
    *  @param descriptor the decay descriptor 
-   *  @param decode the decoder tool
+   *  @param decoder the decoder tool
    *  @return the constructed decay
    */
   LHCb::Decays decays
@@ -39,7 +39,7 @@ namespace DaVinci
     IDecodeSimpleDecayString* decoder    ) ;
   /** create all decay objects from the descriptor
    *  @param descriptors the decay descriptors 
-   *  @param decode the decoder tool
+   *  @param decoder the decoder tool
    *  @return the constructed decay
    */
   LHCb::Decays decays

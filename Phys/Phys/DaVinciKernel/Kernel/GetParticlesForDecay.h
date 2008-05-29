@@ -1,4 +1,4 @@
-// $Id: GetParticlesForDecay.h,v 1.1 2008-05-05 11:46:04 ibelyaev Exp $
+// $Id: GetParticlesForDecay.h,v 1.2 2008-05-29 14:55:49 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_GETPARTICLESFORDECAY_H 
 #define DAVINCIKERNEL_GETPARTICLESFORDECAY_H 1
@@ -62,7 +62,7 @@ namespace DaVinci
      *  @param end   the end   iterator for the input sequence  
      *  @param item  the decay component 
      *  @param result the output iterator 
-     *  @param return the updated output iterator 
+     *  @return the updated output iterator 
      *
      *  @author  Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-03-31

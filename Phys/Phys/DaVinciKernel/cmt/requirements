@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.54 2008-04-29 14:17:45 pkoppenb Exp $
+# $Id: requirements,v 1.55 2008-05-29 14:55:49 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg, J. Palcios
 #============================================================================
 
 package           DaVinciKernel
-version           v6r13
+version           v6r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -35,5 +35,3 @@ apply_pattern reflex_dictionary                                             \
               headerfiles=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.h     \
               selectionfile=$(DAVINCIKERNELROOT)/dict/DaVinciKernelDict.xml \
               options="-U__MINGW32__"
-
-macro DaVinciKernelDict_use_linkopts $(use_linkopts)

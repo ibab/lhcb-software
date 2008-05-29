@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.10 2007-12-03 09:17:41 ibelyaev Exp $
+// $Id: ICheckOverlap.h,v 1.11 2008-05-29 14:55:49 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
@@ -76,7 +76,7 @@ public:
   /** Check for the overlap for the arbitrary sequence of the objects, 
    *  implicitely convertible to <c>const LHCb::Particle*</c>.
    *  E.g. any STL container with <c>const LHCb::Particle*</c> or 
-   *  <c>LHCb::Particle*</c>, <c>SmartRefVector<LHCb::Particle> 
+   *  <c>LHCb::Particle*</c>, <c>SmartRefVector<LHCb::Particle></c> 
    *  and <c>LHCb::Particle::Container</c> are OK.
    *  The various container adapters (e.g. <c>LoKi::Range_</c>)
    *  also fit nicely into the concept
@@ -93,7 +93,7 @@ public:
   /** Remove the overlap for the arbitrary sequence of the objects, 
    *  implicitely convertible to <c>const LHCb::Particle*</c>.
    *  E.g. any STL container with <c>const LHCb::Particle*</c> or 
-   *  <c>LHCb::Particle*</c>, <c>SmartRefVector<LHCb::Particle> and 
+   *  <c>LHCb::Particle*</c>, <c>SmartRefVector<LHCb::Particle></c> and 
    *  <c>LHCb::Particle::Container</c> are OK.
    *  The various container adapters (e.g. <c>LoKi::Range_</c>)
    *  also fit nicely into the concept
