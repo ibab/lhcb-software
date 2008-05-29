@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-29 Gerhard Raven
+  - PropertyConfigSvc: properly set the TopAlgs according to the configuration,
+    no need to do this explicitly by hand anymore...
+
 ! 2008-05-28 Gerhard Raven
   - remove L0Names.h which isn't referenced anymore
   - follow cleanup of MD5 in LHCbMath

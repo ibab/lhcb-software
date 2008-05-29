@@ -1,8 +1,9 @@
-// $Id: PropertyConfigSvc.cpp,v 1.7 2008-05-28 18:53:36 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.8 2008-05-29 21:25:28 graven Exp $
 // Include files 
 
 #include <sstream>
 #include <algorithm>
+#include <list>
 
 #include "boost/filesystem/fstream.hpp"
 #include "boost/lambda/lambda.hpp"
@@ -360,21 +361,58 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
 
     // Obtain the IProperty of the ApplicationMgr
     SmartIF<IProperty> appProps(serviceLocator());
-    const Property& topAlgs = appProps->getProperty("TopAlgs");
-    cout << " current TopAlgs: " << topAlgs.toString() << endl;
+    StringArrayProperty topAlgs("TopAlg",std::vector<std::string>());
+    if ( appProps->getProperty(&topAlgs).isFailure() ) {
+        error() << " problem getting StringArrayProperty \"TopAlg\"" << endmsg;
+    }
+
+    debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
 
     vector<PropertyConfig::digest_type> ids;
+    std::list<std::string> request;
     StatusCode sc = findTopKind(id, "IAlgorithm", ids);
     for ( vector<PropertyConfig::digest_type>::const_iterator id = ids.begin();
           id != ids.end(); ++id ) {
         const PropertyConfig *config = resolvePropertyConfig(*id);
         if ( config == 0 ) {
-                  error() << " could not find a configuration ID, or ID not an algorithm" << endmsg;
-                  return StatusCode::FAILURE;
+            error() << " could not find a configuration ID, or ID not an algorithm" << endmsg;
+            return StatusCode::FAILURE;
         }
-        cout << " got requested topAlg: " <<  config->type() << "/" << config->name() << endl;
-        
+        debug() << " got requested topAlg: " <<  config->type() << "/" << config->name() << endmsg;
+        request.push_back( config->type()+"/"+config->name() );
     }
+
+    // merge the current TopAlg, and requested TopAlg list, conserving
+    // the order of BOTH lists.
+    // We first loop over the to-be-inserted algos. As soon as one of them 
+    // is already present, we push everyone 'up to' this algo just in front
+    // of it. Next we repeat until done, checking that the next requested algo is not 
+    // already in the current list prior to the point we're at...
+
+    std::list<std::string> merge(topAlgs.value().begin(),topAlgs.value().end());
+
+    std::list<std::string>::iterator ireq = request.begin();
+    while (ireq != request.end()) {
+       std::list<std::string>::iterator i = std::find(merge.begin(),merge.end(),*ireq);
+       //TODO: make sure we don't go backward in i...
+       // example: topalgs = [ A, B, C ]
+       //          merge = [ X,Y,B,Z,A ] should give error on meeting A
+       if (i != merge.end()) {
+        merge.splice(i,request,request.begin(),ireq);
+       }
+        ++ireq;
+    }
+    merge.splice(merge.end(),request);
+    assert(request.empty());
+
+    topAlgs.setValue( std::vector<std::string>(merge.begin(),merge.end()) );
+    if ( appProps->setProperty(topAlgs).isFailure() ) { 
+        error() << " failed to set property" << endmsg;
+        return StatusCode::FAILURE;
+    }
+    debug() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
+
+
     return StatusCode::SUCCESS;
 } 
 
