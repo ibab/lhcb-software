@@ -4,7 +4,7 @@
  *
  *  Implemetnation file for class : Tf::Tsa::TStationHitManager
  *
- *  $Id: TsaTStationHitManager.cpp,v 1.1 2008-04-09 07:51:57 smenzeme Exp $
+ *  $Id: TsaTStationHitManager.cpp,v 1.2 2008-05-29 10:55:36 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Houlsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -46,7 +46,7 @@ TStationHitManager::~TStationHitManager() {}
 Tf::Tsa::SeedingHit *
 Tf::Tsa::TStationHitManager::createHit( const Tf::OTHit & othit ) const
 {
-  Tf::Tsa::SeedingHit * hit
+   Tf::Tsa::SeedingHit * hit
     = Tf::TStationHitManager<Tf::Tsa::SeedingHit>::createHit(othit);
   // Matt, do whaver you want to your hit here ...
   return hit;

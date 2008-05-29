@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.3 2008-01-19 12:49:55 graven Exp $
+ *  $Id: STHitCreator.cpp,v 1.4 2008-05-29 10:55:36 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -221,8 +221,8 @@ namespace Tf
   Tf::STHitRange STHitCreator<Trait>::hits( const typename Trait::StationID iStation,
 					    const typename Trait::LayerID iLayer,
 					    const typename Trait::RegionID iRegion,
-					    const float xmin,
-					    const float xmax ) const
+					    const double xmin,
+					    const double xmax ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
@@ -233,10 +233,10 @@ namespace Tf
   Tf::STHitRange STHitCreator<Trait>::hits( const typename Trait::StationID iStation,
 					    const typename Trait::LayerID iLayer,
 					    const typename Trait::RegionID iRegion,
-					    const float xmin,
-					    const float xmax,
-					    const float ymin,
-					    const float ymax) const
+					    const double xmin,
+					    const double xmax,
+					    const double ymin,
+					    const double ymax) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
     const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;

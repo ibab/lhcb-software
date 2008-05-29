@@ -253,17 +253,17 @@ namespace Tf
         return HitRangeType(m_modules.front()->hits().begin(), m_modules.back()->hits().end()) ; }
 
       /// find the hits in a region of interest with a bounding box in X
-      virtual HitRangeType hits(float xmin, float xmax) const ;
+      virtual HitRangeType hits(double xmin, double xmax) const ;
 
       /// find the hits in a region of interest with a bounding box in X and Y
-      virtual HitRangeType hits(float thisxmin, float thisxmax, float thisymin, float thisymax) const ;
+      virtual HitRangeType hits(double thisxmin, double thisxmax, double thisymin, double thisymax) const ;
 
     private:
-      float xT( float cosT, float sinT, float x, float y) const {
+      double xT( double cosT, double sinT, double x, double y) const {
         return x*cosT + y*sinT ; }
-      float xTMin( float cosT, float sinT, float x, float ymin, float ymax) const {
+      double xTMin( double cosT, double sinT, double x, double ymin, double ymax) const {
         return x*cosT + std::min( ymin*sinT, ymax*sinT ) ; }
-      float xTMax( float cosT, float sinT, float x, float ymin, float ymax) const {
+      double xTMax( double cosT, double sinT, double x, double ymin, double ymax) const {
         return x*cosT + std::max( ymin*sinT, ymax*sinT ) ; }
 
     private:
@@ -273,7 +273,7 @@ namespace Tf
 
     template<class ModuleType, class HitLoader>
     typename RegionOfModules<ModuleType,HitLoader>::HitRangeType
-    RegionOfModules<ModuleType,HitLoader>::hits(float xmin, float xmax) const
+    RegionOfModules<ModuleType,HitLoader>::hits(double xmin, double xmax) const
     {
       typename ModuleContainer::const_iterator first = modules().begin() ;
       typename ModuleContainer::const_iterator last = modules().end() ; --last ;
@@ -320,7 +320,7 @@ namespace Tf
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     template<class ModuleType, class HitLoader>
     typename RegionOfModules<ModuleType,HitLoader>::HitRangeType
-    RegionOfModules<ModuleType,HitLoader>::hits(float thisxmin, float thisxmax, float thisymin, float thisymax) const
+    RegionOfModules<ModuleType,HitLoader>::hits(double thisxmin, double thisxmax, double thisymin, double thisymax) const
     {
       HitRangeType rc ;
       // first check in global coordinates if the ranges overlap at all
@@ -360,7 +360,7 @@ namespace Tf
           // binary search to find first hit in first module
           const HitRangeType& firstrange = (*beginmodule)->hits() ;
           typename HitRangeType::const_iterator beginhit = firstrange.begin() ;
-          float thisxTmin = xTMin( (*beginmodule)->cosT(), (*beginmodule)->sinT(), thisxmin, thisymin,thisymax) ;
+          double thisxTmin = xTMin( (*beginmodule)->cosT(), (*beginmodule)->sinT(), thisxmin, thisymin,thisymax) ;
           if( firstrange.size()>0)
             beginhit = std::lower_bound(firstrange.begin(), firstrange.end(),thisxTmin ,
                                         boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
@@ -368,7 +368,7 @@ namespace Tf
           // binary search to find last hit in last module
           typename ModuleContainer::const_iterator lastmodule = endmodule - 1 ;
           const HitRangeType& lastrange = (*lastmodule)->hits() ;
-          float thisxTmax = xTMax( (*lastmodule)->cosT(), (*lastmodule)->sinT(), thisxmax, thisymin,thisymax) ;
+          double thisxTmax = xTMax( (*lastmodule)->cosT(), (*lastmodule)->sinT(), thisxmax, thisymin,thisymax) ;
           typename HitRangeType::const_iterator endhit = lastrange.end() ;
           if( lastrange.size()>0)
             endhit = std::lower_bound(lastrange.begin(), lastrange.end(), thisxTmax,

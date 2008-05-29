@@ -3,6 +3,9 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2008-05-27 - Stephanie Hansmann-Menzemer
+ - fix float/double conversion problem. all floates moved to doubles, not
+   loss in performance.
 
 !============================ TfTools v1r4 2008-04-09 ========================
 ! 2008-04-09 - Stephanie Hansmann-Menzemer

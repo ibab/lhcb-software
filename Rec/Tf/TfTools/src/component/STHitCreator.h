@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.h,v 1.1.1.1 2007-10-09 17:30:06 smenzeme Exp $
+ *  $Id: STHitCreator.h,v 1.2 2008-05-29 10:55:36 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -84,17 +84,17 @@ namespace Tf
     virtual STHitRange hits(const typename Trait::StationID iStation,
                             const typename Trait::LayerID iLayer,
                             const typename Trait::RegionID iRegion,
-                            const float xmin,
-                            const float xmax) const ;
+                            const double xmin,
+                            const double xmax) const ;
 
     // Load the hits for a given region of interest
     virtual STHitRange hits(const typename Trait::StationID iStation,
                             const typename Trait::LayerID iLayer,
                             const typename Trait::RegionID iRegion,
-                            const float xmin,
-                            const float xmax,
-                            const float ymin,
-                            const float ymax) const ;
+                            const double xmin,
+                            const double xmax,
+                            const double ymin,
+                            const double ymax) const ;
 
     // Retrieve the STRegion for a certain region ID. The region
     virtual const STRegion* region(const typename Trait::StationID iStation,

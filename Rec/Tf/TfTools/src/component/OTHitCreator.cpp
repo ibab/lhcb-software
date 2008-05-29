@@ -53,7 +53,7 @@ namespace Tf
       void print(std::ostream& os) const ;
 
       // loading and clearing event
-      size_t loadHits(const IOTRawBankDecoder& decoder, float tmin, float tmax) ;
+      size_t loadHits(const IOTRawBankDecoder& decoder, double tmin, double tmax) ;
       void clearEvent() { m_ownedhits.clear() ;  m_sortedhits.clear() ; m_isloaded = false ;}
       void setRange( OTHits::const_iterator begin, OTHits::const_iterator end ) { m_hitrange = OTHitRange(begin,end) ; }
       static size_t moduleIndexInRegion( LHCb::OTChannelID id ) { return id.module() + (id.quarter()%2) * 9 ; }
@@ -82,7 +82,7 @@ namespace Tf
 
     /// Decode this module
     size_t OTModule::loadHits(const IOTRawBankDecoder& decoder,
-                              float tmin, float tmax)
+                              double tmin, double tmax)
     {
       if( !m_isloaded ) {
         // create the otlitetimes
@@ -98,7 +98,7 @@ namespace Tf
           if( tmin < tmax ) {
             for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
                  ihit != otlitetimes.end(); ++ihit) {
-              float calibTime = ihit->calibratedTime() ;
+              double calibTime = ihit->calibratedTime() ;
               if( tmin <= calibTime && calibTime <= tmax )
                 m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
             }
@@ -113,7 +113,7 @@ namespace Tf
           if( tmin < tmax ) {
             for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
                  ihit != otlitetimes.end(); ++ihit) {
-              float calibTime = ihit->calibratedTime() ;
+              double calibTime = ihit->calibratedTime() ;
               if( tmin <= calibTime && calibTime <= tmax )
                 m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
             }
@@ -360,8 +360,8 @@ namespace Tf
   Tf::OTHitRange OTHitCreator::hits( const TStationID iStation,
                                      const TLayerID iLayer,
                                      const OTRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax ) const
+                                     const double xmin,
+                                     const double xmax ) const
   {
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax) ;
@@ -370,10 +370,10 @@ namespace Tf
   Tf::OTHitRange OTHitCreator::hits( const TStationID iStation,
                                      const TLayerID iLayer,
                                      const OTRegionID iRegion,
-                                     const float xmin,
-                                     const float xmax,
-                                     const float ymin,
-                                     const float ymax ) const
+                                     const double xmin,
+                                     const double xmax,
+                                     const double ymin,
+                                     const double ymax ) const
   {
     const Tf::HitCreatorGeom::OTRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax,ymin,ymax) ;
