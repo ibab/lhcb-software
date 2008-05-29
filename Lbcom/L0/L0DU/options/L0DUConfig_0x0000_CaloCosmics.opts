@@ -14,7 +14,15 @@ ToolSvc.L0DUConfig.TCK_0x0000.Conditions = {
 //------------------
 // L0-Channels 
 ToolSvc.L0DUConfig.TCK_0x0000.Channels ={ 
-  {"name=[CaloCosmicsTrigger]"       , "rate==[100]", "conditions= [Electron] && [Hadron]   "},
-  {"name=[MuonCosmicsTrigger]"       , "rate==[100]", "conditions= [Muon]"}
+  {"name=[CaloCosmics]"       , "rate==[100]", "conditions= [Electron] && [Hadron]   "},
+  {"name=[MuonCosmics]"       , "rate==[100]", "conditions= [Muon]"}
 };
+
+
+
+
+ToolSvc.L0DUConfig.TCK_0x0000.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[CaloCosmics]"},
+  {"name=[L0Muon]"     , "channels=[MuonCosmics]"}
+}; 
 

@@ -1,0 +1,85 @@
+ApplicationMgr.TopAlg += {"L0Pattern"};
+L0Pattern.TCKList = { "0x0000" , "0x0001" , "0x0002"};
+
+
+//L0Pattern.OutputLevel=1;
+//L0Pattern.L0DUFromRawTool.OutputLevel=3;
+
+//--------------------------------------------- TCK = 0x0000 Electron channels
+ToolSvc.L0PatternConfig.registerTCK += {"0x0000"};
+ToolSvc.L0PatternConfig.TCK_0x0000.Description ="Pattern Generator Config 0x0000  :  Electron channel";
+
+ToolSvc.L0PatternConfig.TCK_0x0000.Conditions = {   
+	{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]"   },
+	{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"    },
+        { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  
+	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
+        { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
+        { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     }
+};
+ToolSvc.L0PatternConfig.TCK_0x0000.Channels ={ 
+	{"name=[Electron]"      , "rate==[100]", "conditions= [Electron,HighEt] && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" }, 
+	{"name=[Electron,down]" , "rate==[20]" , "conditions= [Electron,LowEt]  && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" } 
+};
+
+//--------------------------------------------- TCK = 0x0001 Electron || Muon channels
+
+ToolSvc.L0PatternConfig.registerTCK += {"0x0001"};
+ToolSvc.L0PatternConfig.TCK_0x0001.Description ="Pattern Generator Config 0x0001  :  Electron || Muon channel";
+
+ToolSvc.L0PatternConfig.TCK_0x0001.Conditions = {   
+	{ "name=[Electron,HighEt]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[130]"   },
+	{ "name=[Electron,LowEt]"  , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[70]"    },
+	{ "name=[Muon1,HighEt]"    , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[32]"    },
+	{ "name=[Muon1,LowEt]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[20]"    },
+        { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  
+	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
+        { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
+        { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     }
+};
+
+ToolSvc.L0PatternConfig.TCK_0x0001.Channels ={ 
+	{"name=[Electron]"      , "rate==[100]", "conditions= [Electron,HighEt] && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" }, 
+	{"name=[Electron,down]" , "rate==[20]" , "conditions= [Electron,LowEt]  && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" }, 
+	{"name=[Muon]"          , "rate==[100]", "conditions= [Muon1,HighEt]    && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" }, 
+	{"name=[Muon,down]"     , "rate==[56]" , "conditions= [Muon1,LowEt]     && [SpdMult] && [PuMult] && [PuPeak2] && [SumEt]" } 
+};
+
+
+//--------------------------------------------- TCK = 0x0002  Compound data  
+
+ToolSvc.L0PatternConfig.registerTCK += {"0x0002"};
+
+ToolSvc.L0PatternConfig.TCK_0x0002.Description ="Pattern Generator Config 0x0002  :  Compound data";
+
+
+ToolSvc.L0PatternConfig.TCK_0x0002.ConstData = {"CaloArea" : 12288 };  // The mask to retrieve the 2-bits calo-area within the 14-bit calo-address  (0x3000)
+ToolSvc.L0PatternConfig.TCK_0x0002.Data      += {  { "name=[Electron(Area)]"  , "data=[Electron(Add)]", "operator=[&]", "data=[CaloArea]"   }  };
+ToolSvc.L0PatternConfig.TCK_0x0002.Data      += {  { "name=[DiMuon(Sgn)]"     , "data= [Muon1(Sgn)]"  , "operator=[+]", "data=[Muon2(Sgn)]" }  };
+ToolSvc.L0PatternConfig.TCK_0x0002.Data      += {  { "name=[Photon2(Et)]"     , "data= [LocalPi0(Et)]", "operator=[-]", "data=[Photon(Et)]" }  };
+
+
+ToolSvc.L0PatternConfig.TCK_0x0002.Conditions = {   
+	{ "name=[Electron,Et]"      , "data=[Electron(Et)]" , "comparator=[>]" , "threshold=[130]"   },
+	{ "name=[Electron,Inner]"  ," data=[Electron(Area)]", "comparator=[==]" , "threshold=[8192]"  }, // (0x2000)
+	{ "name=[Photon,Pt]"       , "data=[Photon(Et)]"    , "comparator=[>]" , "threshold=[100]"   },
+	{ "name=[Photon2,Pt]"      , "data=[Photon2(Et)]"   , "comparator=[>]" , "threshold=[50]"    },
+	{ "name=[DiMuon,Pt]"       , "data=[DiMuon(Pt)]"    , "comparator=[>]" , "threshold=[37]"    }, 
+	{ "name=[DiMuon,Opposite]" , "data=[DiMuon(Sgn)]"   , "comparator=[==]" , "threshold=[1]"     },
+        { "name=[SumEt]"           , "data=[Sum(Et)]"       , "comparator=[>]" , "threshold=[250]"   },  
+	{ "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[<]" , "threshold=[280]"   },
+        { "name=[PuMult]"          , "data=[PUHits(Mult)]"  , "comparator=[<]" , "threshold=[112]"   },
+        { "name=[PuPeak2]"         , "data=[PUPeak2(Cont)]" , "comparator=[<]" , "threshold=[3]"     }
+};
+
+ToolSvc.L0PatternConfig.TCK_0x0002.Channels ={ 
+	{"name=[GEC]"            , "rate==[100]" , "conditions= [SpdMult]  && [PuMult] && [SumEt] && [PuPeak2] ", "DISABLE=[TRUE]" },
+	{"name=[Electron]"       , "rate==[100]" , "conditions= [Electron,Et] && [GEC]" },
+	{"name=[InnerElectron]"  , "rate==[100]" , "conditions= [Electron,Et] && [Electron,Inner] && [GEC]" },
+	{"name=[DiMuon]"         , "rate==[100]" , "conditions= [DiMuon,Pt]   && [GEC]" }, 
+	{"name=[OppositeDiMuon]" , "rate==[100]" , "conditions= [DiMuon,Pt]   && [DiMuon,Opposite] && [GEC]" }, 
+	{"name=[Photon]"         , "rate==[100]" , "conditions= [Photon,Pt]   && [GEC]" },
+	{"name=[Photon2]"        , "rate==[100]" , "conditions= [Photon2,Pt]  && [GEC]" } 
+};
+
+

@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.9 2008-04-18 11:36:25 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.10 2008-05-29 14:01:15 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -28,14 +28,19 @@ L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
     m_condCntMap(),
     m_chanRateMap(),
     m_condRateMap(),
+    m_trigCntMap(),
+    m_trigRateMap(),
+    m_trigRelRateMap(),
     m_evtCntMap(),
-    m_decCntMap()  
+    m_decCntMap()
 {
   declareProperty( "ReportLocation"    , m_reportLocation =  LHCb::L0DUReportLocation::Default );
   declareProperty( "DataMonitor"       , m_data = false );
   declareProperty( "ConditionsMonitor" , m_cond = false );
-  declareProperty( "ChannelsMonitor"   , m_chan = true );
-  declareProperty( "DecisionMonitor"   , m_dec  = true );
+  declareProperty( "ChannelsMonitor"   , m_chan = false );
+  declareProperty( "TriggersMonitor"   , m_trig = false );
+  declareProperty( "DecisionMonitor"   , m_dec  = true  );
+  declareProperty( "FullMonitoring"    , m_full  = false);
   declareProperty( "DataReBinFactor"   , m_bin = 1);
   declareProperty( "SplitConfig"       , m_split = true);
 
@@ -56,6 +61,15 @@ StatusCode L0DUReportMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_prevTCK   = -1;
+
+  if(m_full){
+    m_data=true;
+    m_cond=true;
+    m_chan=true;
+    m_trig=true;
+    m_dec=true;
+  }
+  
 
   return StatusCode::SUCCESS;
 }
@@ -106,6 +120,9 @@ StatusCode L0DUReportMonitor::execute() {
       m_condRate    = m_condRateMap[tck];
       m_evtCnt      = m_evtCntMap[tck];
       m_decCnt      = m_decCntMap[tck];
+      m_trigCnt     = m_trigCntMap[tck];
+      m_trigRate    = m_trigRateMap[tck];
+      m_trigRelRate = m_trigRelRateMap[tck];
     }
     if(m_prevTCK != -1){
       if( !m_split){
@@ -129,34 +146,46 @@ StatusCode L0DUReportMonitor::execute() {
   }
   LHCb::L0DUChannel::Map channels = config->channels();
   LHCb::L0DUElementaryCondition::Map conditions = config->conditions();
-  
+  LHCb::L0DUTrigger::Map triggers = config->triggers();
 
   
   m_evtCnt += 1.;  // event counter
   if(report->decision())m_decCnt += 1.; // decision counter
-  std::stringstream chanName("[");
-  std::stringstream condName("[");
   m_chanSeq[ "Global" ] = 0;
+
+  // Channel counters 
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     if( init )m_chanCnt[ (*it).first ]=0;//init    
     if(report->channelDecision( ((*it).second)->id() )) m_chanCnt[ (*it).first ] += 1.;
     m_chanRate[(*it).first ] = 0.;
     m_chanRelRate[(*it).first ] = 0.;
-    chanName << ":" <<  (*it).first;
     m_chanSeq[ (*it).first ] = 0;
   }
+  // Condition counter 
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     if( init ) m_condCnt[ (*it).first ]=0;//init    
     if( report->conditionValue( ((*it).second)->id() ) ) m_condCnt[ (*it).first ] += 1.;
     m_condRate[(*it).first ] = 0.;
-    condName << ":" <<  (*it).first;
     m_condSeq[ (*it).first ] = 0;
   }
-  chanName << "]";
-  condName << "]";
+  // Trigger counters 
+  for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it!=triggers.end();it++){
+    if( init ) m_trigCnt[ (*it).first ] = 0;
+    if( report->triggerDecisionByName( (*it).first )) m_trigCnt[ (*it).first ] += 1;
+    m_trigRate[ (*it).first ] = 0;
+    m_trigRelRate[ (*it).first ] = 0;
+    m_trigSeq[ (*it).first ] = 0;
+  }
 
   // Ratios
-
+  for(CounterMap::iterator it = m_trigCnt.begin(); m_trigCnt.end()!=it;it++){
+    double rate = 0;
+    double relRate = 0;
+    if(m_evtCnt != 0) rate = 100. * (*it).second / m_evtCnt;
+    if(m_decCnt != 0) relRate= 100. * (*it).second / m_decCnt;    
+    m_trigRate[(*it).first] = rate ;
+    m_trigRelRate[(*it).first] = relRate ;
+  }
   for(CounterMap::iterator it = m_chanCnt.begin(); m_chanCnt.end()!=it;it++){
     double rate = 0;
     double relRate = 0;
@@ -172,13 +201,16 @@ StatusCode L0DUReportMonitor::execute() {
   }
 
 
-  m_chanCntMap[tck]    = m_chanCnt;
+  m_trigCntMap[tck]     = m_trigCnt;
+  m_trigRateMap[tck]    = m_trigRate;
+  m_trigRelRateMap[tck] = m_trigRelRate;
+  m_chanCntMap[tck]     = m_chanCnt;
+  m_chanRateMap[tck]    = m_chanRate;
+  m_chanRelRateMap[tck] = m_chanRelRate;
   m_condCntMap[tck]     = m_condCnt;
-  m_chanRateMap[tck]   = m_chanRate;
-  m_chanRelRateMap[tck]= m_chanRelRate;
   m_condRateMap[tck]    = m_condRate;
-  m_evtCntMap[tck]     = m_evtCnt;
-  m_decCntMap[tck]     = m_decCnt;
+  m_evtCntMap[tck]      = m_evtCnt;
+  m_decCntMap[tck]      = m_decCnt;
 
 
   // -----------------------------------------------------------------------------------------
@@ -311,7 +343,7 @@ StatusCode L0DUReportMonitor::execute() {
     std::stringstream tcName("");
     tcName << "L0DU  Channels Decision counters (TCK = " << ttck.str() << ")";
     std::stringstream fcName("");
-    fcName << "L0DU  triggered Channels counters (TCK = " << ttck.str() << ")";
+    fcName << "L0DU  Channels PreDecision counters (TCK = " << ttck.str() << ")";
     int cBin = channels.size();
     plot1D( -1. , base.str() + "/L0Channels/Counters/1" , tcName.str()+ " - BX=T0", -1. ,(double) cBin  , cBin+1);
     plot1D( -1. , base.str() + "/L0Channels/Counters/2" , fcName.str()+ " - BX=T0", -1. ,(double) cBin  , cBin+1);
@@ -364,7 +396,7 @@ StatusCode L0DUReportMonitor::execute() {
         m_chanSeq["Global"] |=  (1 << 4);
         m_chanSeq[name] |=  (1 << 4);
       }    
-      if( report->triggeredChannel( id ) )
+      if( report->channelPreDecision( id ) )
         plot1D( (double) id , base.str() + "/L0Channels/Counters/2" , fcName.str()+ " - BX=T0"    , -1. ,(double) cBin  , cBin+1);
       
       std::stringstream xid("");
@@ -396,6 +428,91 @@ StatusCode L0DUReportMonitor::execute() {
             if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Channels/Counters2D/2" 
                            , "L0DU Channels Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
                            , -1. ,(double) cBin, -1. ,(double) cBin , cBin+1 , cBin+1);
+          }
+        }
+      }
+    }
+  }
+  
+  // ------------ L0DU Triggers --------------
+  if(m_trig && triggers.size() != 0){
+    std::stringstream tName("");
+    tName << "L0DU  Trigger Decision counters (TCK = " << ttck.str() << ")";
+    int tBin = triggers.size();
+    plot1D( -1. , base.str() + "/L0Triggers/Counters/1" , tName.str()+ " - BX=T0", -1. ,(double) tBin  , tBin+1);
+    plot1D( -1. , base.str() + "/L0Triggers/Counters/Prev2/1" , tName.str()+ " - BX=Prev2", -1. ,(double) tBin  , tBin+1);
+    plot1D( -1. , base.str() + "/L0Triggers/Counters/Prev1/1" , tName.str()+ " - BX=Prev1", -1. ,(double) tBin  , tBin+1);
+    plot1D( -1. , base.str() + "/L0Triggers/Counters/Next1/1" , tName.str()+ " - BX=Next1", -1. ,(double) tBin  , tBin+1);
+    plot1D( -1. , base.str() + "/L0Triggers/Counters/Next2/1" , tName.str()+ " - BX=Next2", -1. ,(double) tBin  , tBin+1);
+    if(tBin > 1)plot2D( -1. , -1. , base.str() + "/L0Triggers/Counters2D/1" 
+                        , "L0DU Triggers Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
+                        , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);
+    if(tBin > 1)plot2D( -1. , -1. , base.str() + "/L0Triggers/Counters2D/2" 
+                        , "L0DU Triggers Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
+                        , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);
+    
+    
+    for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it!=triggers.end();it++){
+      std::string name = (*it).first;
+      int id = (*it).second->id();
+      if( report->triggerDecisionByName( name ) ){
+        plot1D( (double) id , base.str() + "/L0Triggers/Counters/1" , tName.str()+ " - BX=T0"    , -1. ,(double) tBin  , tBin+1);
+        m_trigSeq[name] |=  (1 << 2);
+      }    
+
+
+      if( report->triggerDecisionByName( name , -2) ){
+        plot1D( (double) id , base.str() + "/L0Triggers/Counters/Prev2/1" 
+                , tName.str()+ " - BX=Prev2" , -1. ,(double) tBin  , tBin+1);
+        m_trigSeq[name] |=  (1 << 0);
+      }
+      
+      if( report->triggerDecisionByName( name , -1) ){
+        plot1D( (double) id , base.str() + "/L0Triggers/Counters/Prev1/1" 
+                , tName.str()+ " - BX=Prev1" , -1. ,(double) tBin  , tBin+1);
+        m_trigSeq[name] |=  (1 << 1);
+      }
+      if( report->triggerDecisionByName( name , +1) ){
+        plot1D( (double) id , base.str() + "/L0Triggers/Counters/Next1/1" 
+                , tName.str()+ " - BX=Next1" , -1. ,(double) tBin  , tBin+1);
+        m_trigSeq[name] |=  (1 << 3);
+      }
+    
+      if( report->triggerDecisionByName( name , +2) ){
+        plot1D( (double) id , base.str() + "/L0Triggers/Counters/Next2/1"
+                , tName.str()+ " - BX=Next2" , -1. ,(double) tBin  , tBin+1);
+        m_trigSeq[name] |=  (1 << 4);
+      }    
+
+      std::stringstream xid("");
+      xid << id+1;
+      plot1D( m_trigSeq[name] , base.str() + "/L0Triggers/Sequence/" + xid.str() 
+              , "Decision sequence over 5 BX for -" + name + "- trigger (TCK " + ttck.str() +") - LSB = Prev2", 0. , 32., 32);
+      
+      if(tBin <= 1)continue;
+
+      // correlations
+      if( report->triggerDecisionByName( name ) ){
+        for(LHCb::L0DUTrigger::Map::iterator jt = it ;jt!=triggers.end();jt++){
+          int jd = (*jt).second->id();
+          if( report->triggerDecision( jd ) ){
+            // inclusive 2D counters
+            plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Counters2D/1" 
+                    , "L0DU Triggers Decision 2D INclusive counters (TCK = " + ttck.str() + ")"
+                    , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);          
+            //exclusive 2D counters
+            bool isX = true;
+            for(LHCb::L0DUTrigger::Map::iterator kt = triggers.begin();kt!=triggers.end();kt++){
+              int kd = ((*kt).second)->id() ;
+              if( kd == id || kd == jd)continue;
+              if( report->triggerDecision( kd ) ){
+                isX = false;
+                break;
+              }  
+            }
+            if(isX)plot2D( (double) id , (double) jd , base.str() + "/L0Triggers/Counters2D/2" 
+                           , "L0DU Triggers Decision 2D EXclusive counters (TCK = " + ttck.str() + ")"
+                           , -1. ,(double) tBin, -1. ,(double) tBin , tBin+1 , tBin+1);
           }
         }
       }
@@ -436,6 +553,9 @@ StatusCode L0DUReportMonitor::finalize() {
     unsigned int tck = (*it).first;
     LHCb::L0DUConfig* config =(*it).second;
 
+    m_trigCnt     = m_trigCntMap[tck];
+    m_trigRate    = m_trigRateMap[tck];
+    m_trigRelRate = m_trigRelRateMap[tck];
     m_chanCnt     = m_chanCntMap[tck];
     m_condCnt     = m_condCntMap[tck];
     m_chanRate    = m_chanRateMap[tck];
@@ -459,6 +579,17 @@ StatusCode L0DUReportMonitor::finalize() {
     info() << "              *  Accepted L0          : " 
            << format( " %8.0f events :  rate = ( %6.2f +- %6.2f) %% ", m_decCnt, rate, eRate ) 
            << endreq;
+
+    if( m_trigCnt.size() != 0){
+      info() << "   ------------------------ TRIGGERS --------------------------------- " <<endreq;
+      for(CounterMap::iterator it =  m_trigRate.begin(); m_trigRate.end()!=it ; it++){
+        std::string name = (*it).first;
+        info() << "   * Trigger set : " 
+             << format( "%20s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
+                        name.c_str(), m_trigCnt[name], m_trigRate[name] , m_trigRelRate[name]) << endreq;
+      }
+    }
+    
     info() << "   ------------------------ CHANNELS --------------------------------- " <<endreq;
     for(CounterMap::iterator ic =  m_chanRate.begin(); m_chanRate.end()!=ic ; ic++){
       std::string name = (*ic).first;
@@ -476,6 +607,7 @@ StatusCode L0DUReportMonitor::finalize() {
                         name.c_str(), m_chanCnt[name], m_chanRate[name]) << endreq;
       }
     }
+
     info() << "   ------------------------ CONDITIONS ------------------------------ " <<endreq;
     for(CounterMap::iterator ic =  m_condRate.begin(); m_condRate.end()!=ic ; ic++){
       std::string name = (*ic).first;

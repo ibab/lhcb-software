@@ -20,8 +20,7 @@ MoniL0.Members += { "L0DUReportMonitor" };
 //------------------------
 // L0DU From Raw sequence
 //-----------------------
-L0FromRaw.Members += { "L0DUFromRawAlg" };
-
+L0DUFromRaw.Members += { "L0DUFromRawAlg" };
 
 
 

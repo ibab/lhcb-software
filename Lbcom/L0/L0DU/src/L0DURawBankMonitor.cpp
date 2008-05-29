@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.2 2008-04-18 11:36:25 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.3 2008-05-29 14:01:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -34,6 +34,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "AddressMonitor"    , m_addr = true);
   declareProperty( "ProcessingMonitor" , m_proc = true);
   declareProperty( "StatusMonitor"     , m_status = true);
+  declareProperty( "FullMonitoring"    , m_full = false);
   declareProperty( "DataReBinFactor"   , m_bin = 1);
   declareProperty( "LocationsForEmulatorCheck"   , m_locs);
     
@@ -53,6 +54,16 @@ StatusCode L0DURawBankMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+
+
+  if(m_full){
+    m_data=true;
+    m_addr=true;
+    m_proc=true;
+    m_status=true;
+  }
+
+
 
   // get the tools
   m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
@@ -89,7 +100,7 @@ StatusCode L0DURawBankMonitor::execute() {
     return StatusCode::SUCCESS;
   } 
 
-  m_report = m_fromRaw->report();
+  LHCb::L0DUReport report = m_fromRaw->report();
   
   double Sgn[2];
   Sgn[0]=+1.;
@@ -193,10 +204,10 @@ StatusCode L0DURawBankMonitor::execute() {
 
     // L0DU Emulator check
     bool check = true;
-    LHCb::L0DUConfig* config = m_report.configuration();
+    LHCb::L0DUConfig* config = report.configuration();
     if( NULL == config){
       std::stringstream ttck("");
-      ttck << format("0x%04X", m_report.tck() ) ;
+      ttck << format("0x%04X", report.tck() ) ;
       Warning("L0DUConfig for tck = " + ttck.str() + " has not been registered -> cannot perform the emulator check").ignore();
     }else{
       std::stringstream local("");
@@ -387,23 +398,27 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   int ecBin = conditions.size();
   // Counters
   plot1D( -1. ,"Status/L0DU/EmulatorCheck/" + one.str(),
-          "L0DU triggered channels emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
+          "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
   plot1D( -1. ,"Status/L0DU/EmulatorCheck/" + two.str(),
           "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
+
+  LHCb::L0DUReport report = m_fromRaw->report();
 
 
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     int id = ((*it).second)->id() ;
-    if( m_report.triggeredChannel( id ) != ((*it).second)->emulate()->emulatedDecision() ){
+    if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
+      debug() << "Emulator check error for channel " << (*it).first << endreq;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/" + one.str(),
-              "L0DU triggered channels emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
+              "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
       check = false;
     }
   }
   
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     int id = ((*it).second)->id() ;
-    if( m_report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
+    if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
+      debug() << "Emulator check error for condition " << (*it).first << endreq;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/" + two.str(), 
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;

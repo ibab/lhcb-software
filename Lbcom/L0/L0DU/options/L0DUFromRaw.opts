@@ -6,16 +6,8 @@
 #include "$L0DUROOT/options/L0Sequence.opts"
 
 
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0FromRaw" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0DUFromRaw" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MoniL0" };
 
-
-
-// IF YOU RUN ON OLD L0DU RAWBANK FORMAT (version 0) AS FOR DC06 DATA PRODUCED SO FAR
-// YOU MUST UNCOMMENT THE FOLLOWING LINE
-// WARNING : YOU MUST KNOW WHAT YOU ARE DOING : THIS BREAKS THE TCK MECHANISM
-//-----------------------------------
-////// L0DUFromRaw.forcedTCK = 65535;
-//-----------------------------------
 
 

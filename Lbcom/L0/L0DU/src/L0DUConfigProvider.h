@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.2 2008-01-29 16:02:29 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.3 2008-05-29 14:01:15 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -61,6 +61,7 @@ private:
   ConfigType m_data;
   ConfigType m_conditions;
   ConfigType m_channels;
+  ConfigType m_triggers;
   
 
   bool m_print;
@@ -73,14 +74,19 @@ private:
   StatusCode createData();
   StatusCode createConditions();
   StatusCode createChannels();
+  StatusCode createTriggers();
 
   //options-defined data/conditions/channels
   LHCb::L0DUElementaryData::Map m_dataMap;
   LHCb::L0DUElementaryCondition::Map m_conditionsMap;
   LHCb::L0DUChannel::Map m_channelsMap;
+  LHCb::L0DUTrigger::Map m_triggersMap;
+
   LHCb::L0DUConfigs m_configs;
   LHCb::L0DUConfig* m_config;
   
+
+
   unsigned long m_cData;
   int m_pData;
   long m_tckopts;
@@ -93,6 +99,7 @@ private:
   std::vector<std::string> m_dataFlags;
   std::vector<std::string> m_condFlags;
   std::vector<std::string> m_chanFlags;
+  std::vector<std::string> m_trigFlags;
   
   
   std::string m_def;

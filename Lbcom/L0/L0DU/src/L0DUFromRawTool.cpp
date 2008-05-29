@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.8 2008-04-04 13:36:05 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.9 2008-05-29 14:01:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -25,7 +25,6 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_report(),
-    m_reportLocal(),
     m_processorDatas(),
     // DO NOT TOUCH !! IF YOU MODIFY THIS VALUE THIS WILL BREAK THE DC06 BACKWARD COMPATIBILITY
     m_tck(0xDC06), // default value for DC06 production (TCK was not implemented in Bank) 
@@ -384,13 +383,13 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     for(unsigned int i = 0 ; i < itc ; i++){
       if( !nextData() )return false;
       m_tcs[std::make_pair(0,i)] = *m_data;
-      if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> Triggered channel summary[BX=0, Word=" << i << "] = "
+      if ( msgLevel( MSG::VERBOSE) )verbose() << "   ->  Channel PreDecision summary[BX=0, Word=" << i << "] = "
                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
     }
     for(unsigned int i = 0 ; i < itc ; i++){
       if( !nextData() )return false;
       m_cds[std::make_pair(0,i)]=*m_data;
-      if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> Trigger channel summary[BX=0, Word=" << i << "] = "
+      if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> Channel Decision summary[BX=0, Word=" << i << "] = "
                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
     }
     for(unsigned int i = 0 ; i < iec ; i++){
@@ -523,7 +522,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endreq;
     m_report.setChannelsDecisionSummaries( m_cds );
     m_report.setConditionsValueSummaries(  m_ecs );
-    m_report.setTriggeredChannelsSummaries( m_tcs );  
+    m_report.setChannelsPreDecisionSummaries( m_tcs );  
     m_report.setSumEt( m_sumEt );    
     if ( msgLevel( MSG::VERBOSE) )verbose() 
       << " <==== Building output (emulated ProcessorData & L0DUReport) completed successfuly ====>" 

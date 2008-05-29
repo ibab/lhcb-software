@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.6 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.7 2008-05-29 14:01:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -42,6 +42,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Data"                    , m_data     );
   declareProperty( "Conditions"              , m_conditions );
   declareProperty( "Channels"                , m_channels );
+  declareProperty( "Triggers"                , m_triggers );
   // for options defined configuration
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION");  
   declareProperty( "Separators"              , m_sepMap);
@@ -74,8 +75,11 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   m_chanFlags.push_back("disable");
   m_chanFlags.push_back("index");
 
+  m_trigFlags.push_back("name");
+  m_trigFlags.push_back("channel");  
+  m_trigFlags.push_back("index");  
 
-  // define the allowed operators, comparators and units
+  // define the allowed operator and comparators
   m_comparators.push_back(">");
   m_comparators.push_back("<");
   m_comparators.push_back("==");
@@ -102,6 +106,10 @@ StatusCode L0DUConfigProvider::finalize(){
   debug() << "release L0DUConfigProvider" << endreq;
   
   
+  debug() << "Deleting " <<  m_triggersMap.size() << " L0DUTrigger* " << endreq;
+  for(LHCb::L0DUTrigger::Map::iterator id=m_triggersMap.begin();id!=m_triggersMap.end();id++){
+   delete (*id).second;
+  }
   
   debug() << "Deleting " <<  m_dataMap.size() << " L0DUElementaryData* " << endreq;
   for(LHCb::L0DUElementaryData::Map::iterator id=m_dataMap.begin();id!=m_dataMap.end();id++){
@@ -116,9 +124,11 @@ StatusCode L0DUConfigProvider::finalize(){
   for(LHCb::L0DUChannel::Map::iterator id=m_channelsMap.begin();id!=m_channelsMap.end();id++){
    delete (*id).second;
   }
-  
-  m_configs.release();
 
+
+  //delete m_config;
+  m_configs.release();
+  
   
   return GaudiTool::finalize();
 }
@@ -135,7 +145,7 @@ StatusCode L0DUConfigProvider::initialize(){
   
   m_separators = *(m_sepMap.begin());
   if(m_sepMap.size() != 1)
-    warning() << "Only one pair of separators must be defined - will use the first : " 
+    warning() << "A single pair of separators must be defined - will use the first : " 
               << m_separators.first << "data" << m_separators.second << endreq;
 
   // clear L0DUConfig container
@@ -161,7 +171,11 @@ StatusCode L0DUConfigProvider::initialize(){
 
   // create L0DU configuration 
   m_config = new LHCb::L0DUConfig(m_tckopts);
-  sc = createChannels();
+
+
+  sc = createTriggers();  // the main method
+
+
   if(sc.isFailure()){
     fatal() << " configuring L0DU failed" << endreq;
     return StatusCode::FAILURE; 
@@ -172,6 +186,7 @@ StatusCode L0DUConfigProvider::initialize(){
   m_config->setData( m_dataMap );
   m_config->setConditions( m_conditionsMap );
   m_config->setChannels( m_channelsMap );
+  if(m_triggersMap.size() !=0)m_config->setTriggers( m_triggersMap);
   m_configs.insert(m_config);
   //=====================================
   printConfig(*m_config);
@@ -179,7 +194,7 @@ StatusCode L0DUConfigProvider::initialize(){
 }
 
 void L0DUConfigProvider::printConfig(LHCb::L0DUConfig config){
-  info() << "**** L0DU Configs loading : " << format("0x%04X" , config.tck()) << endreq;
+  info() << "**** L0DU Configs loading : TCK = " << format("0x%04X" , config.tck()) << endreq;
   debug() << "              - " << config.data().size()<< " data with "<<endreq;
   debug() << "                    - " << m_pData << " predefined data "<<endreq;
   debug() << "                    - " << m_cData << " constant   data "<<endreq;
@@ -455,7 +470,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     if(values.size() != 1){
       error() << "The CONDITION defined via option (num = " << iconfig-m_conditions.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endreq;
-      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Conditions +={ {''name=[DataName]'', "
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Conditions +={ {''name=[ConditionName]'', "
              <<" ''data=[dataName]'', ''comparator=[>/</=/!=]'', ''threshold=[value]''} };" << endreq;
 
       return StatusCode::FAILURE;  
@@ -538,7 +553,7 @@ StatusCode L0DUConfigProvider::createConditions(){
     // the index (facultatif)
     //---------- 
     int index = id;
-    values = Parse("bit", *iconfig);
+    values = Parse("index", *iconfig);
     if(values.size() > 0){
       std::string id =  *(values.begin()); // The INDEX
       std::stringstream str("");
@@ -610,7 +625,7 @@ StatusCode L0DUConfigProvider::createChannels(){
     if(values.size() != 1){
       error() << "The CHANNEL defined via option (num = " << iconfig-m_channels.begin() 
               << ") should have an unique name (found " << values.size() << ")" << endreq;
-      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Channels +={ {''name=[DataName]'', "
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Channels +={ {''name=[ChannelName]'', "
              <<" ''rate=[value]'', ''condition=[conditionName1],[conditionName2], ...'', ''disable=[FALSE]'' } };" << endreq;
 
       return StatusCode::FAILURE;  
@@ -688,7 +703,7 @@ StatusCode L0DUConfigProvider::createChannels(){
     // the index (facultatif) 
     // ---------
     int index = id;
-    values = Parse("bit", *iconfig);
+    values = Parse("index", *iconfig);
     if(values.size() > 0){
       std::string id =  *(values.begin()); // The INDEX
       std::stringstream str("");
@@ -717,6 +732,12 @@ StatusCode L0DUConfigProvider::createChannels(){
     // --------------
     values = Parse("condition", *iconfig);    
 
+    if(values.size() == 0 ){
+      error() << "The channel " << channelName << " has no ElementaryCondition" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+
     // add Elementary Condition(s)
     for(std::vector<std::string>::iterator icond = values.begin() ;icond != values.end() ; icond++){
       // Find required Elementary Condition
@@ -730,9 +751,9 @@ StatusCode L0DUConfigProvider::createChannels(){
         // check if the name  is a previously defined channel
         if( m_channelsMap.end() != icc && *icond != channelName ){
           // YES it is - add all the conditions from this channel
-          LHCb::L0DUElementaryCondition::Map m_condFromChanMap = ((*icc).second)->elementaryConditions();
-          for(LHCb::L0DUElementaryCondition::Map::iterator iccc = m_condFromChanMap.begin();
-              iccc!=m_condFromChanMap.end();iccc++){
+          LHCb::L0DUElementaryCondition::Map condFromChanMap = ((*icc).second)->elementaryConditions();
+          for(LHCb::L0DUElementaryCondition::Map::iterator iccc = condFromChanMap.begin();
+              iccc!=condFromChanMap.end();iccc++){
             channel->addElementaryCondition ( (*iccc).second ) ;
           }          
         } else{        
@@ -745,6 +766,7 @@ StatusCode L0DUConfigProvider::createChannels(){
       } else {
         channel->addElementaryCondition ( (*ic).second ) ;
       }
+    
     }
     
     debug() << "Created Channel : " << channel->description() << endreq;
@@ -757,3 +779,133 @@ StatusCode L0DUConfigProvider::createChannels(){
 };
 
 
+
+//===============================================================
+StatusCode L0DUConfigProvider::createTriggers(){
+
+  StatusCode sc = createChannels();
+  if(sc.isFailure())return sc;
+
+  int id = m_triggersMap.size();  
+  for(ConfigIterator iconfig = m_triggers.begin(); iconfig != m_triggers.end() ; ++iconfig){
+    
+    // check all tags exist
+    for(std::vector<std::string>::iterator itag = (*iconfig).begin() ; itag != (*iconfig).end() ; itag++){
+      bool ok = false;
+      for(std::vector<std::string>::iterator iflag = m_trigFlags.begin();iflag!=m_trigFlags.end();iflag++){
+        std::string uTag(*itag);
+        std::string uFlag(*iflag);
+        std::transform( (*itag).begin() , (*itag).end() , uTag.begin () , ::toupper ) ;
+        std::transform( (*iflag).begin() , (*iflag).end() , uFlag.begin () , ::toupper ) ;
+        int index = (uTag).find( uFlag );
+        if( index > -1)ok=true;
+      }      
+      if( !ok ){ 
+        error() << "Description tag : '" << *itag << "' is unknown for the new TRIGGER set defined via options (num =  " 
+                << iconfig-m_triggers.begin()  << ")" << endreq;
+        info()  << "Allowed flags for new TRIGGER description are : " << m_trigFlags << endreq;
+        return StatusCode::FAILURE;
+      } 
+    }
+
+
+
+    // The Trigger name 
+    //------------------
+    std::vector<std::string> values = Parse("name", *iconfig);
+    if(values.size() != 1){
+      error() << "The TRIGGER defined via option (num = " << iconfig-m_channels.begin() 
+              << ") should have an unique name (found " << values.size() << ")" << endreq;
+      info() << "The syntax is ToolSvc.L0DUConfig.TCK_0xXXXX.Triggers +={ {''name=[TriggerName]'', "
+             <<" ''channels=[channelName1],[channelName2], ...'' } };" << endreq;
+
+      return StatusCode::FAILURE;  
+    }
+
+    
+    std::string triggerName = *(values.begin()); // The NAME
+
+
+    // Check if the triggers set already exists 
+    LHCb::L0DUTrigger::Map::iterator ic = m_triggersMap.find(triggerName);
+    if( ic != m_triggersMap.end() ){
+      warning() << "A L0DU Trigger with name  '" << triggerName <<"' already exists " 
+                << " - Please check your settings" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+
+    // the index (facultatif) 
+    // ---------
+    int index = id;
+    values = Parse("index", *iconfig);
+    if(values.size() > 0){
+      std::string id =  *(values.begin()); // The INDEX
+      std::stringstream str("");
+      str << id;
+      str >> index;
+    }
+    else if(values.size() > 1){
+      error() << "Should be an unique index for the new TRIGGER : " 
+              << triggerName << " (found "<< values.size() << ")" << endreq;
+      return StatusCode::FAILURE;  
+    }
+    // check the index is not already used
+    for(LHCb::L0DUTrigger::Map::iterator ii = m_triggersMap.begin(); ii!=m_triggersMap.end();ii++){
+      if(index == ((*ii).second)->index() ){
+        error() << "The bit index " << index << " is already assigned to the Trigger " << ((*ii).second)->name() << endreq;
+        return StatusCode::FAILURE;
+      }
+    }
+
+    // create trigger
+    LHCb::L0DUTrigger* trigger = new LHCb::L0DUTrigger(index,  triggerName ) ;
+
+
+
+     // The channels 
+    // --------------
+    std::vector<std::string> channels = Parse("channel", *iconfig);
+
+    if(channels.size() == 0 ){
+      error() << "The trigger " << triggerName << " has no Channel" << endreq;
+      return StatusCode::FAILURE;
+    }
+
+
+    // check all requested channels exists
+    for(std::vector<std::string>::iterator ichan = channels.begin() ;ichan != channels.end() ; ichan++){
+
+      LHCb::L0DUChannel::Map::iterator ic  = m_channelsMap.find( *ichan );
+      LHCb::L0DUTrigger::Map::iterator icc = m_triggersMap.find( *ichan );
+      if( m_triggersMap.end() != icc && m_channelsMap.end() != ic){
+        error() << "A Channel  and a Trigger have the same name - please check your setting " << endreq;
+        return StatusCode::FAILURE;
+      }
+      if( m_channelsMap.end() == ic ){
+        if( m_triggersMap.end() != icc && *ichan != triggerName ){
+          LHCb::L0DUChannel::Map chanFromTrigMap = ((*icc).second)->channels();
+          for(LHCb::L0DUChannel::Map::iterator iccc = chanFromTrigMap.begin(); iccc!=chanFromTrigMap.end();iccc++){
+            trigger->addChannel( (*iccc).second );
+          }
+        } else {
+          fatal() << " Can not set-up the '" <<  triggerName
+                  << "' L0DU Trigger "
+                  << " because the required '" << *ichan 
+                  << "' is neither a  defined Channel nor a defined Trigger." << endreq;
+          return StatusCode::FAILURE;
+        }
+      } else {
+        trigger->addChannel ( (*ic).second );
+      }
+    }
+
+    debug() << "Created Trigger  : " << trigger->description() << endreq;
+
+    m_triggersMap[triggerName] = trigger;
+
+    id++;
+  }   // end loop over trigger sets 
+
+  return StatusCode::SUCCESS;
+}

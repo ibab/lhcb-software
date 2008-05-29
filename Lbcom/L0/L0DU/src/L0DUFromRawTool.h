@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.4 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.5 2008-05-29 14:01:15 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -80,9 +80,7 @@ private:
   std::map<std::pair<int , unsigned int>, unsigned int > m_tcs;
   std::map<int , unsigned int> m_sumEt;
   
-  //  std::map<std::string, LHCb::L0DUReport> m_report;
   LHCb::L0DUReport m_report;
-  LHCb::L0DUReport m_reportLocal;
   LHCb::L0ProcessorDatas* m_processorDatas;
   unsigned int m_tck;  
   bool m_warning;

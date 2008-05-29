@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.101 2008-04-18 11:44:53 cattanem Exp $
+! $Id: release.notes,v 1.102 2008-05-29 14:01:09 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
-!========================== L0DU v8r4 2008-04-18 =========================
+
+! 2008-05-29 - Olivier Deschamps 
+  - add standard definition of sub-triggers  in the configuration options files ("L0Muon", "L0Ecal", "L0Hcal")
+  - implement sub-trigger where it is needed (L0DUReportMonitor, L0DUConfigProvider)
+  - adapt to changes in L0Event
+  - clean options
+  - add options for L0DU test pattern production (expert usage) : L0DUPattern.opts & L0DUPatternConfig.opts
+  - naming : L0.opts -> L0Emulator.opts to avoid confusion 
+
+
+
+!========================== L0du v8r4 2008-04-18 =========================
 ! 2008-04-18 - Olivier Deschamps 
  - add cosmics muon trigger in options/L0DUConfig_0x0000.opts
  - fix few problems in monitoring algo.

@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.3 2008-04-10 11:31:48 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.4 2008-05-29 14:01:15 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -270,7 +270,7 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
   for( LHCb::L0DUChannel::Map::iterator ichan = channelMap.begin() ; ichan != channelMap.end() ; ichan++){
     LHCb::L0DUChannel* channel = (*ichan).second ;
     m_report.setChannelDecision(channel->name(), channel->emulatedDecision() );
-    m_report.setTriggeredChannel(channel->name(), channel->emulatedTrigger() );
+    m_report.setChannelPreDecision(channel->name(), channel->emulatedPreDecision() );
   }
 
   for( LHCb::L0DUElementaryCondition::Map::iterator icond = conditionMap.begin() ; icond != conditionMap.end() ; icond++){
@@ -431,7 +431,7 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
     l0Block.push_back( ( rsda | status << 16 | nBxm << 28 |  nBxp <<30)  ); // header
     // PGA2-Block
     for(unsigned int itc = 0 ; itc <tc_size ; ++itc ){
-      l0Block.push_back( m_report.triggeredChannelsSummary(itc)  & 0xFFFFFFFF ); // Channel summary
+      l0Block.push_back( m_report.channelsPreDecisionSummary(itc)  & 0xFFFFFFFF ); // Channel summary
     }
     for(unsigned int itc = 0 ; itc < tc_size ; ++itc ){
       l0Block.push_back( m_report.channelsDecisionSummary(itc)  & 0xFFFFFFFF ); // Channel summary

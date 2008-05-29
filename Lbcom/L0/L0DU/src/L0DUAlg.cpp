@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.6 2008-04-10 11:31:48 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.7 2008-05-29 14:01:14 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -120,7 +120,7 @@ StatusCode L0DUAlg::execute() {
   if(m_writeOnTES){
     debug() <<"Push L0DUReport on TES" << endreq;
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->emulatedReport());
-    put (report   , rootInTES() + m_reportLocation );//non-const
+    put (report   ,  m_reportLocation );//non-const
   }
   
   //push bank in RawBuffer

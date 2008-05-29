@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.1 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.2 2008-05-29 14:01:15 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -60,13 +60,13 @@ private:
   IL0DUEmulatorTool*     m_emuTool;
   IL0CondDBProvider*   m_condDB;  
   IEventTimeDecoder* m_odin;
-  LHCb::L0DUReport m_report;
 
   bool m_conv;
   bool m_data;
   bool m_proc;
   bool m_status;
   bool m_addr;
+  bool m_full;
   int m_bin;
   std::vector<std::vector<std::string> > m_locs;
 };

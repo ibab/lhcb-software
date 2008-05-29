@@ -1,5 +1,5 @@
 
-L0DU.TCK = "0xFFFF";  // This is the default for L0DUAlg
+L0DU.TCK = "0xFFFF";  // This is the default for Emulation/Simulation
 
 
 // PREDEFINED L0DU CONFIGURATION (L0DUMultiConfigProvider tool)

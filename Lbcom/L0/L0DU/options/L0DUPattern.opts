@@ -1,0 +1,32 @@
+#include "$STDOPTS/LHCbApplication.opts"
+#include "$STDOPTS/DC06Conditions.opts"
+#include "$STDOPTS/SimDicts.opts"
+//--------------------------------------------------------
+
+
+#include "$L0DUROOT/options/L0DUBankSwap.opts"
+#include "$L0DUROOT/options/L0DUPatternConfig.opts"
+
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+
+ApplicationMgr.HistogramPersistency = "HBOOK";
+NTupleSvc.Output={"FILE1 DATAFILE='l0pattern.hbook' TYP='HBOOK' OPT='NEW'"};
+
+// Root format 
+//ApplicationMgr.HistogramPersistency = "ROOT";
+//NTupleSvc.Output={"FILE1 DATAFILE='L0Pattern.root' TYP='ROOT' OPT='NEW'"};
+
+
+//---------------------------------------------------------------------------
+// Event input  (& output)
+//---------------------------------------------------------------------------
+
+ApplicationMgr.EvtMax = 3600;
+EventSelector.FirstEvent = 1;  
+EventSelector.Input += {  
+	"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
