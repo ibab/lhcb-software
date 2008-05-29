@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.7 2008-05-27 13:46:27 hterrier Exp $
+// $Id: OTRawBankDecoder.h,v 1.8 2008-05-29 10:53:06 smenzeme Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -99,6 +99,7 @@ private:
 inline LHCb::OTLiteTime 
 OTRawBankDecoder::time( LHCb::OTChannelID channel, const DeOTModule& module ) const
 {
+ 
   return LHCb::OTLiteTime( channel, channel.tdcTime() * m_nsPerTdcCount - module.strawT0(channel.straw())) ;
 }
 

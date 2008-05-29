@@ -1,6 +1,8 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
+! 2008-05-27 - Stephanie Hansmann-Menzemer
+ - remove all float variables, replace them by doubles
 
 !======================= OTDAQ v6r0 2008-05-29 ======================
 ! 2008-05-29 - Marco Cattaneo

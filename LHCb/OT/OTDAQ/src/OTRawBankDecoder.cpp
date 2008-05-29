@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.11 2008-05-27 13:46:27 hterrier Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.12 2008-05-29 10:53:06 smenzeme Exp $
 // Include files
 #include <algorithm>
 
@@ -63,9 +63,8 @@ namespace OTRawBankDecoderHelpers
     size_t decode(double tdcconversion) ;
     
   private:
-    void addHit(unsigned short data, float tdcconversion) ;
-    
-  private:
+    void addHit(unsigned short data, double tdcconversion) ;
+   
     const DeOTModule* m_detelement ;
     const OTDAQ::ChannelMap::Module* m_channelmap ;
     unsigned int m_station ;
@@ -91,14 +90,14 @@ namespace OTRawBankDecoderHelpers
     m_module  = moduleid.module() ;
   }
   
-  inline void Module::addHit(unsigned short data, float tdcconversion) 
+  inline void Module::addHit(unsigned short data, double tdcconversion) 
   { 
     OTDAQ::RawHit hit(data) ;
     assert( hit.otis()*32 +  hit.channelInOtis() == hit.channel() ) ;
     unsigned int straw = m_channelmap->straw( hit.channel() ) ;
     unsigned int tdctime = hit.time() ;
     LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
-    float t0 = m_detelement->strawT0( straw ) ;
+    double t0 = m_detelement->strawT0( straw ) ;
     m_ottimes.push_back( LHCb::OTLiteTime( channelid, tdctime * tdcconversion - t0) );
   } 
   

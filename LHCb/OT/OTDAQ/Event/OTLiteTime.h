@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.5 2008-05-29 08:53:05 cattanem Exp $
+ *  $Id: OTLiteTime.h,v 1.6 2008-05-29 10:53:06 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -38,14 +38,14 @@ namespace LHCb
     OTLiteTime() : m_channelid(0), m_calibratedTime(0) {}
     
     /// Constructor from an OTChannelID
-    OTLiteTime(LHCb::OTChannelID channelid, float calibratedtime) 
+    OTLiteTime(LHCb::OTChannelID channelid, double calibratedtime) 
       : m_channelid(channelid), m_calibratedTime(calibratedtime) {}
 
     /// Access the OTChannelID for this OTLiteTime
     const LHCb::OTChannelID& channel() const { return m_channelid ; }
 
     /// Access to the calibrated time
-    float calibratedTime() const { return m_calibratedTime ; }
+    double calibratedTime() const { return m_calibratedTime ; }
 
   public:
 
@@ -64,7 +64,7 @@ namespace LHCb
 
   private:
     LHCb::OTChannelID m_channelid ; ///< The OTChannelID
-    float m_calibratedTime ;        ///< T0 corrected timet0 corrected; calibratedTime=propagationTime+driftTime 
+    double m_calibratedTime ;        ///< T0 corrected timet0 corrected; calibratedTime=propagationTime+driftTime 
   } ;
 
   /// Type for a container of OTLiteTime objects
