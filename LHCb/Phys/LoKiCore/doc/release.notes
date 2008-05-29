@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.88 2008-05-29 15:05:12 cattanem Exp $ 
+! $Id: release.notes,v 1.89 2008-05-29 15:08:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,9 +15,10 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-! 2008-04-28 - Marco Cattaneo
+! =========================== LoKiCore v7r3 2008-05-29 ========================
+! 2008-05-28 - Marco Cattaneo
  - In Primitives.h: fix typo (bug) in a constructor
- - In HybridBase.cpp: add hack to suppress _POSIX_C_SOURCE redefintion warning
+ - In HybridBase.cpp: add hack to suppress _POSIX_C_SOURCE redefinition warning
  - Fix many doxygen typos
  - In requirements: increment version to v7r3, remove obsolete macro
 
