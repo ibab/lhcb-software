@@ -5,10 +5,11 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+
+!========================= LHCbMath v2r8 2008-05-29 ==========================
 ! 2008-05-28 - Gerhard Raven
  - cleanup of MD5 code, don't artificially distinguish between digest and engine
 
-!========================= LHCbMath v2r8 2008-05-22 ==========================
 ! 2008-05-22 - Marco Cattaneo
  - Fix some doxygen warnings
 
