@@ -2,6 +2,10 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v4r0 2008-05-29 ======================
+! 2008-05-29 - Marco Cattaneo
+ - Adapt to LHCbMath -> LHCb::Math namespace change
+
 ! 2008-05-27 Jan Amoraal
  - Added algorithm OTFillRawBuffer
   o Uses OTRawBankEncoder tool in OTDAQ to encode MCOTTimes

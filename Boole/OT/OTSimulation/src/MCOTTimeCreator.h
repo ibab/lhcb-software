@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.h,v 1.9 2008-05-28 20:08:17 janos Exp $
+// $Id: MCOTTimeCreator.h,v 1.10 2008-05-29 09:19:47 cattanem Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
@@ -75,7 +75,7 @@ inline int MCOTTimeCreator::calculateTDCTime(const LHCb::MCOTDeposit* firstDep) 
   /// to tdc counts
   double tdcTime = (firstDep->time()-m_startReadOutGate[stationNum-1])*m_nsToTDCcounts;
 
-  return LHCbMath::round(tdcTime);
+  return LHCb::Math::round(tdcTime);
 }
 
 inline bool MCOTTimeCreator::insideReadoutWindow(int tdcTime) const {
