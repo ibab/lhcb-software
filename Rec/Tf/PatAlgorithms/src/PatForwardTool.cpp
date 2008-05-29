@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.9 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatForwardTool.cpp,v 1.10 2008-05-29 10:54:25 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -495,7 +495,7 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track, double xMin, doubl
           PatFwdHit* hit = *itH;
           updateHitForTrack( hit, y0, ty);
 
-          if ( !hit->hit()->isYCompatible( (float)yRegion, (float)yCompat ) )
+          if ( !hit->hit()->isYCompatible( yRegion, yCompat ) )
             continue;
 
 
