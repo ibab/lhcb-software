@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.110 2008-04-16 08:36:48 cattanem Exp $
+! $Id: release.notes,v 1.111 2008-05-29 15:35:40 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+!========================= MuonDet v8r0p1 2008-05-29 ========================
+! 2008-05-29 - Alessia Satta
+ - Fix untested Status Code
 
 !========================= MuonDet v8r0 2008-04-16 ==========================
 ! 2008-04-16 - Alessia Satta
