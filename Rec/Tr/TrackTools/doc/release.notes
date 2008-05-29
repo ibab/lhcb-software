@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+! 2008-05-29 Stephanie Hansmann-Menzemer
+ - fix float/double conversions
 
 ! 2008-05-28 Wouter Hulsbergen
  - check #dof for chisquare cut in TrackSelector

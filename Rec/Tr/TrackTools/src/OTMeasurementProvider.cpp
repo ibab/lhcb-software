@@ -1,4 +1,4 @@
-// $Id: OTMeasurementProvider.cpp,v 1.1 2007-11-30 15:10:37 wouter Exp $
+// $Id: OTMeasurementProvider.cpp,v 1.2 2008-05-29 14:05:18 smenzeme Exp $
 
 /** @class OTMeasurementProvider OTMeasurementProvider.cpp
  *
@@ -163,7 +163,7 @@ double OTMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
   if(module==0) error() << "Cannot find OT module for ID = " << otid << endreq ;
   else {
     // It would be nice if there were a short cut ...
-    float dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+    double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
     module->trajectory(otid.straw(),dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
     // This is the z-position of the 'non-readout' side.
     // z = zAtYEq0 + ybegin * dzdy ;

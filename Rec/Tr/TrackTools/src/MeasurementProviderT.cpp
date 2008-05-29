@@ -1,4 +1,4 @@
-// $Id: MeasurementProviderT.cpp,v 1.10 2008-03-28 11:41:21 wouter Exp $
+// $Id: MeasurementProviderT.cpp,v 1.11 2008-05-29 14:05:18 smenzeme Exp $
 // Include files
 
 //=============================================================================
@@ -279,7 +279,7 @@ double MeasurementProviderT<MeasurementProviderTypes::TT>::nominalZ( const LHCb:
   // extremely ugly. need more functionality in det elements to do this quicker.
   LHCb::STChannelID stid(id.stID()) ;
   const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
-  float dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+  double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
   sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
   return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
 }
@@ -310,7 +310,7 @@ double MeasurementProviderT<MeasurementProviderTypes::IT>::nominalZ( const LHCb:
   // extremely ugly. need more functionality in det elements to do this quicker.
   LHCb::STChannelID stid(id.stID()) ;
   const DeSTSector* sector = const_cast<DeSTDetector*>(m_det)->findSector(stid) ;
-  float dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+  double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
   sector->trajectory(stid.strip(),0,dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
   return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
 }
