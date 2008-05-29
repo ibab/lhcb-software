@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.4 2008-01-24 20:12:53 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.5 2008-05-29 21:52:16 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -76,5 +76,6 @@ protected:
   LHCb::RawBankReadoutStatus m_status;
   std::vector<int> m_readSources;
 private:
+  bool m_first;
 };
 #endif // CALODAQ_CALOREADOUTTOOL_H

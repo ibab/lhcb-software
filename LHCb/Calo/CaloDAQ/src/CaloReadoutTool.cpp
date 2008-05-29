@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.27 2008-05-16 20:03:52 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.28 2008-05-29 21:52:16 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,7 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_first(true)
 {
   declareInterface<ICaloReadoutTool>(this);
 
@@ -46,7 +47,7 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //=========================================================================
 bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 
-
+  
   m_readSources.clear();
 
   m_banks = NULL;
@@ -56,7 +57,8 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    info()<<"rawEvent not found at location '" << rootInTES() << m_raw <<endreq;
+    if(m_first)info()<<"rawEvent not found at location '" << rootInTES() << m_raw <<endreq;
+    m_first=false;
     return false;
   }
       
