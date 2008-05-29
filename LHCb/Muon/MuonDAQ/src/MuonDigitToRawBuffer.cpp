@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.20 2008-04-11 11:31:58 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.21 2008-05-29 11:21:20 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -86,10 +86,11 @@ StatusCode MuonDigitToRawBuffer::execute() {
   //MuonBankVersion::versions v;
   // v=m_vtype;
   if(m_vtype==MuonBankVersion::DC06) {
-    ProcessDC06();
+    StatusCode sc=ProcessDC06();
+    if(sc.isFailure())return sc;
   }else if(m_vtype==MuonBankVersion::v1){
-    ProcessV1();
-
+    StatusCode sc=ProcessV1();
+    if(sc.isFailure())return sc;
   }
   
   debug()<<" exit "<<endmsg;
@@ -236,8 +237,9 @@ StatusCode MuonDigitToRawBuffer::ProcessDC06()
   LHCb::RawEvent* raw = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
 
   sc=ProcessDigitDC06();
-  
+  if(sc.isFailure())return sc;
   sc=ProcessPads();
+  if(sc.isFailure())return sc;
   
   
   for(unsigned int i=0;i<(unsigned int) m_TotL1Board;i++){   
