@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.11 2008-05-06 08:20:55 gcorti Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.12 2008-05-29 14:21:59 gcorti Exp $
 // Include files 
 
 // local
@@ -8,9 +8,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
 #include "GaudiKernel/PhysicalConstants.h"
-
-// from LHCb
-#include "Kernel/Vector4DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 // from Event
 #include "Event/HepMCEvent.h"

@@ -1,12 +1,11 @@
-// $Id: SignalForcedFragmentation.h,v 1.5 2006-06-07 12:49:48 robbep Exp $
+// $Id: SignalForcedFragmentation.h,v 1.6 2008-05-29 14:22:00 gcorti Exp $
 #ifndef GENERATORS_SIGNALFORCEDFRAGMENTATION_H 
 #define GENERATORS_SIGNALFORCEDFRAGMENTATION_H 1
 
 // Include files
 #include "Generators/Signal.h"
-
-// LHCb
-#include "Kernel/Transform4DTypes.h"
+#include "GaudiKernel/Transform4DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 /** @class SignalForcedFragmentation SignalForcedFragmentation.h "SignalForcedFragmentation.h"
  *  

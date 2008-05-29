@@ -1,4 +1,4 @@
-// $Id: BiasedBB.cpp,v 1.4 2007-02-22 13:30:24 robbep Exp $
+// $Id: BiasedBB.cpp,v 1.5 2008-05-29 14:21:59 gcorti Exp $
 // Include files 
 
 // local
@@ -6,10 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
-
-// from LHCb
-#include "Kernel/Point4DTypes.h"
-#include "Kernel/Transform4DTypes.h"
+#include "GaudiKernel/Point4DTypes.h"
+#include "GaudiKernel/Transform4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"

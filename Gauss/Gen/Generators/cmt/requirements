@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.44 2008-04-28 17:41:59 gcorti Exp $ 
+# $Id: requirements,v 1.45 2008-05-29 14:21:46 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-06-20
 # Maintainer : Patrick ROBBE
 #============================================================================
 package       Generators
-version       v8r0
+version       v8r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,7 +17,6 @@ branches      Generators doc cmt src
 #============================================================================
 use           SEAL              v*                LCG_Interfaces
 use           GaudiAlg          v*
-use           LHCbDefinitions   v*                Kernel 
 use           GenEvent          v*                Event
 use           EvtGen            v*                Gen
 use           LoKiGen           v*                Phys 
@@ -25,8 +24,8 @@ use           LoKiGen           v*                Phys
 #============================================================================
 # Include directories
 #============================================================================
-include_dirs  $(GENERATORSROOT)
- 
+apply_pattern install_more_includes more=Generators
+
 #============================================================================
 # Component and linker libraries building rule
 #============================================================================

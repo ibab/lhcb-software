@@ -1,4 +1,4 @@
-// $Id: DaughtersInLHCb.h,v 1.3 2007-05-08 13:42:00 robbep Exp $
+// $Id: DaughtersInLHCb.h,v 1.4 2008-05-29 14:21:59 gcorti Exp $
 #ifndef GENERATORS_DAUGHTERSINLHCB_H 
 #define GENERATORS_DAUGHTERSINLHCB_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 #include "Generators/IGenCutTool.h"
-#include "Kernel/Transform4DTypes.h"
+#include "GaudiKernel/Transform4DTypes.h"
 
 /** @class DaughtersInLHCb DaughtersInLHCb.h 
  *  

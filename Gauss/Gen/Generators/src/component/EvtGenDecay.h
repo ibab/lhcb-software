@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.5 2007-09-09 19:32:44 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.6 2008-05-29 14:21:59 gcorti Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -29,15 +29,13 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 // from GeneratorModules
 #include "Generators/IDecayTool.h"
 
 // from EvtGen
 #include "EvtGenBase/EvtId.hh"
-
-// from Kernel
-#include "Kernel/Vector4DTypes.h"
 
 // from SEAL
 #include "SealBase/Filename.h"

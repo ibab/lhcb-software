@@ -1,11 +1,11 @@
-// $Id: IBeamTool.h,v 1.3 2005-12-31 17:30:37 robbep Exp $
+// $Id: IBeamTool.h,v 1.4 2008-05-29 14:21:46 gcorti Exp $
 #ifndef GENERATORS_IBEAMTOOL_H 
 #define GENERATORS_IBEAMTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 /** @class IBeamTool IBeamTool.h "Generators/IBeamTool.h"
  *  

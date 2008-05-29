@@ -1,16 +1,10 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.13 2007-09-09 13:59:49 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.14 2008-05-29 14:22:00 gcorti Exp $
 // Include files
-
-// local
-#include "SignalForcedFragmentation.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-
-// from LHCb
-#include "Kernel/Vector4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenEvent.h"
@@ -20,6 +14,9 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/HepMCUtils.h"
+
+// local
+#include "SignalForcedFragmentation.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalForcedFragmentation

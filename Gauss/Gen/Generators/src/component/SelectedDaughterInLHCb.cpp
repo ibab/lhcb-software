@@ -1,4 +1,4 @@
-// $Id: SelectedDaughterInLHCb.cpp,v 1.6 2007-05-08 13:42:00 robbep Exp $
+// $Id: SelectedDaughterInLHCb.cpp,v 1.7 2008-05-29 14:22:00 gcorti Exp $
 // Include files 
 
 // local
@@ -11,7 +11,6 @@
 
 // from Kernel
 #include "Kernel/ParticleID.h"
-#include "Kernel/Vector4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"

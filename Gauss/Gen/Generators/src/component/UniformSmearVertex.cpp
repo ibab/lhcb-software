@@ -1,4 +1,4 @@
-// $Id: UniformSmearVertex.cpp,v 1.3 2008-05-06 08:21:03 gcorti Exp $
+// $Id: UniformSmearVertex.cpp,v 1.4 2008-05-29 14:22:00 gcorti Exp $
 // Include files 
 
 // local
@@ -8,9 +8,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
 #include "GaudiKernel/PhysicalConstants.h"
-
-// from LHCb
-#include "Kernel/Vector4DTypes.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 // from Event
 #include "Event/HepMCEvent.h"

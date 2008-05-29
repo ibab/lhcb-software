@@ -1,4 +1,4 @@
-// $Id: DaughtersInLHCb.cpp,v 1.5 2007-05-08 13:42:00 robbep Exp $
+// $Id: DaughtersInLHCb.cpp,v 1.6 2008-05-29 14:21:59 gcorti Exp $
 // Include files 
 
 // local
@@ -6,10 +6,10 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Vector4DTypes.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
-#include "Kernel/Vector4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
