@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.88 2008-04-18 06:53:42 cattanem Exp $ 
+! $Id: release.notes,v 1.89 2008-05-29 21:42:41 odescham Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+- 2008-05-30 Olivier Deschamps
+
+- allow Readout channel re-mapping in FEB (mapping table from condDB)
+
+
 !======================== CaloDet v8r6 2008-04-18 =============================
-! 2007-02-15 - Olivier Deschamps
+! 2008-02-15 - Olivier Deschamps
 - Fix led numbering in case of special LED/PIN/CHANNEL Layout
   (2 special Ecal LED cabling):
 

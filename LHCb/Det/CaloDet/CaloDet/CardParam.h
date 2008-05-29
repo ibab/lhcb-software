@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.11 2007-08-23 17:53:40 odescham Exp $
+/// $Id: CardParam.h,v 1.12 2008-05-29 21:42:41 odescham Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -18,7 +18,17 @@ class CardParam
   
   friend class DeCalorimeter;
   
-public:
+public:  
+
+
+
+
+  enum Mapping { None=0, 
+                 Prs64Top=1,
+                 Prs64Bottom=2,
+                 Prs32Top=3,
+                 Prs32Bottom=4};
+  
   
   /** constructor 
       @param iArea  calorimeter area 
@@ -38,7 +48,7 @@ public:
              int iNum  = 0 ,
              int iCrate= 0 ,
              int iSlot = 0
-) ;
+             ) ;
   
   /// destructor 
   ~CardParam();
@@ -59,8 +69,9 @@ public:
   int  crate          () const { return m_crate          ; }
   int  slot           () const { return m_slot           ; }
   int  code           () const { return 16*m_crate+m_slot; }
-  int  selectionType  () const { return m_selectionType;   }    
-
+  int  selectionType  () const { return m_selectionType  ; }    
+  Mapping mapping     () const { return m_mapping        ; }
+  
   std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
   
   
@@ -78,6 +89,7 @@ public:
   }
   void setIsPin(bool pin)  {    m_isPin = pin;  }
   void setSelectionType( int num){ m_selectionType = num;}
+  void setMapping(Mapping typ){m_mapping = typ;}
   
     
   
@@ -100,6 +112,7 @@ private:
   int m_slot;
   int m_tell1;
   int m_selectionType; // [e,g,pi0L,pi0G] = -1 ; [hadronMaster] = 0 ; [hadronSlave1]=1 ; [hadronSlave2]=2
+  Mapping m_mapping;  // see CardParam::Mapping  enum
 };
 
 

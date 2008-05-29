@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2007/08/22 19:05:13  odescham
+// implement time misalignment
+//
 // Revision 1.5  2007/07/19 20:37:01  odescham
 // fix CardParam initialisation for PIN FEB
 //
@@ -59,6 +62,7 @@ CardParam::CardParam( int iArea ,
     ,m_slot( iSlot)
     ,m_tell1 (-1)
     ,m_selectionType(-1)
+    ,m_mapping( CardParam::None )
 {
   m_ids.reserve( 64 );
 } ;

@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.45 2008-02-15 18:06:59 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.46 2008-05-29 21:42:41 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -451,7 +451,37 @@ StatusCode DeCalorimeter::buildCards( )  {
   } else{
     m_pinArea = cond->paramAsInt( "PinArea" );
   }
-  
+
+
+  // Look for maps 
+  std::vector<int> vec;
+  if( cond->exists( "Mapping"  ) )vec= cond->paramAsIntVect( "Mapping" ) ;
+  std::map<int , std::vector<int> > maps;
+  unsigned int k = 0;
+
+  while( k < vec.size() ){
+    int typ = vec[k];
+    msg << MSG::DEBUG << "Building mapping : type =  " << typ << endreq;
+    if( typ == CardParam::None ){
+      msg << MSG::ERROR << "The map type = " << typ << " is reserved ! Please change in condDB" << endreq;
+      return StatusCode::FAILURE;
+    }
+    k++;
+    int siz = 0;
+    if(k < vec.size())siz = vec[k];
+    for( int id = 0 ; id < siz ; id++ ){
+      k++;
+      if(k<vec.size())maps[ typ ].push_back( vec[ k] );
+    }
+    k++;
+    if( k == vec.size() ){
+      msg << MSG::DEBUG << "Maps from condDB are completed " << endreq;
+    }    
+  }
+
+  msg << MSG::DEBUG << "Defined " << maps.size() << " channels mapping" << endreq;
+
+  // Cards
   int aSize = cond->paramAsInt( "CardArraySize" );
   std::vector<int> temp = cond->paramAsIntVect( "cards" );
   msg << MSG::DEBUG << "The calorimeter has " << temp.size()/aSize
@@ -468,11 +498,12 @@ StatusCode DeCalorimeter::buildCards( )  {
     int lRow    = temp[ll+5];
     int crate   = temp[ll+6];
     int slot    = temp[ll+7];
+    int mapType = 0;
+    if(aSize == 9)mapType = temp[ll+8];
 
-
-    
     // build the FEcard
     CardParam myCard(area, fRow, fCol ,lRow,lCol, cardNum, crate, slot);
+    myCard.setMapping( (CardParam::Mapping) mapType );
     if(m_pinArea == area)myCard.setIsPin(true);
     if ( (int) kk != cardNum ) {
       msg << MSG::ERROR << "FE-Card number not in sequence: Found " << cardNum
@@ -480,25 +511,54 @@ StatusCode DeCalorimeter::buildCards( )  {
       return StatusCode::FAILURE;
     }
 
+
+    std::vector<LHCb::CaloCellID> cellids;
     // Update CellParam
     LHCb::CaloCellID dummy( 0, 0, 0, 0 );
     for ( int row = fRow; lRow >= row; ++row ) {
       for ( int col = fCol; lCol >= col; ++col ) {
         LHCb::CaloCellID id( m_caloIndex, area, row, col );        
         if ( !valid( id ) ) {
-          // Add 32 dummy cellIDs in PIN FE-board
-          // Will be updated in BuildMonitoring
-         myCard.addID( dummy );
+          ( mapType == CardParam::None) ? myCard.addID( dummy ) : cellids.push_back( dummy );
         }else{  
           m_cells[id].setFeCard( cardNum, col-fCol, row-fRow );
-          myCard.addID( id ); // update myCard  
+          ( mapType == CardParam::None) ? myCard.addID( id ) : cellids.push_back( id );
         }
       }
     }
+    
+    // Re-map if needed
+    std::map<int , std::vector<int> >::iterator it = maps.find( mapType );
+    if( it == maps.end() && mapType != CardParam::None ){
+      msg << MSG::ERROR << "The requested map type = " << mapType << " is not defined in condDB." << endreq;
+      return StatusCode::FAILURE;
+    }
+
+    if( it != maps.end() ){
+      msg << MSG::DEBUG << "The FE-board " << cardNum << " channels are re-mapped using mapping type = " << mapType << endreq;
+      std::vector<int> map = (*it).second;
+      unsigned int count = 0;
+      for( std::vector<int>::iterator i = map.begin() ; i != map.end() ; ++i){
+        LHCb::CaloCellID dummy( 0, 0, 0, 0 );
+        if( *i < 0 ){
+          myCard.addID( dummy );
+        }else if( *i < (int) cellids.size() ){
+          count++;
+          myCard.addID( cellids [ *i ] );
+        }else{
+          msg << MSG::ERROR << "The FEB "<< cardNum << " has no channel number " << *i 
+              << " as expected with mapping " << mapType << endreq;
+          return StatusCode::FAILURE;            
+        }
+      }
+      if( cellids.size()  != count ){
+        msg << MSG::ERROR << "The mapping with type = " << mapType << " is not consistent with the FEB "<< cardNum << endreq;
+        return StatusCode::FAILURE;
+      }    
+    }
+    //
     m_feCards.push_back( myCard ); // add card
   }
-
-
 
   // Selection Board  Type ( e,g.pi0L,pi0G = -1 , hadron master = 0 , had. slave1 = 1, had. slave 2 = 2)
   if ( cond->exists( "HadronSB" ) ) {
