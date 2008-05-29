@@ -33,7 +33,8 @@ namespace OTDAQ
     class Module
     {
     public:
-      Module() : m_nchannels(0) {}
+      enum { NumStraws = OTDAQ::NumStraws, NumChannels = NumStraws } ;
+      Module() ;
       unsigned int straw( unsigned int channel ) const { return m_channelToStraw[channel] ; }
       unsigned int channel( unsigned int straw ) const { return m_strawToChannel[straw-OffsetStraws] ; }
       friend class OTChannelMapTool ;
@@ -42,14 +43,21 @@ namespace OTDAQ
     private:
       unsigned char m_channelToStraw[NumStraws] ;
       unsigned char m_strawToChannel[NumStraws] ;
-      unsigned char m_nchannels ;
+      unsigned char m_nstraws ;
     } ;
+    
+    inline Module::Module() : m_nstraws(0) 
+    {
+      memset(m_strawToChannel,0xFF,NumStraws*sizeof(unsigned char)) ;
+      memset(m_channelToStraw,0xFF,NumStraws*sizeof(unsigned char)) ;
+    }
     
     inline void Module::fillStrawToChannelMap() {
       // Fills the inverse map
       memset(m_strawToChannel,0,NumStraws*sizeof(unsigned char)) ;
-      for(unsigned char ichan = 0; ichan < m_nchannels; ++ichan)
-        m_strawToChannel[m_channelToStraw[ichan]-OffsetStraws] = ichan ;
+      for(unsigned char ichan = 0; ichan <NumStraws; ++ichan)
+	if( m_channelToStraw[ichan]!=0xFF )
+	  m_strawToChannel[m_channelToStraw[ichan]-OffsetStraws] = ichan ;
     }
     
     class Detector

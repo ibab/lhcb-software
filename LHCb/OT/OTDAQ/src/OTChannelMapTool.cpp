@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.1 2008-05-06 11:45:01 wouter Exp $
+// $Id: OTChannelMapTool.cpp,v 1.2 2008-05-29 13:05:11 wouter Exp $
 // Include files
 
 // Include files
@@ -144,18 +144,28 @@ unsigned char OTChannelMapTool::computeStrawV3( const OTDAQ::EModuleLayout& layo
   // See Antonio's web page
   // http://www.nikhef.nl/pub/experiments/bfys/lhcb/outerTracker/NamingConventions/FE-Channels/index.html
   
-  // first 'compute' the number of straws per mono layer
-  unsigned char numStrawPerMono = computeNumStrawPerMono(layout) ;
-
   // now calculate the mono-layer (0-1) and the straw-in-mono-layer
   // (1-64) corresponding to the most 'regular' conversion: otis 0 and
   // 1 are the first monolayer and channel numbering for those is
   // already in positive x. otis 2 and 3 are the second mono layer,
-  // but the numbering is inverted in x.
-  unsigned char tmpMono        = channel>=numStrawPerMono ? 1 : 0 ;
-  unsigned char tmpStrawInMono = tmpMono ? 2*numStrawPerMono - channel : channel + 1 ;
+  // but the numbering is inverted in x. 
+
+  // We first create the map as if this was a long module. For short
+  // modules, we'll swap things around afterwards. The main motivation
+  // for this is that this routine also needs to do something quasi
+  // sensible for non-existing straws.
+
+  // This is the corresponding formula:
+  unsigned char NumStrawPerMono = 2*NumChanPerOtis ;
+  unsigned char otis           = channel/32 ;
+  unsigned char tmpMono        = otis >= 2 ? 1 : 0 ;
+  unsigned char tmpStrawInMono = tmpMono ? 2*NumStrawPerMono - channel : channel + 1 ;
   
-  assert(tmpStrawInMono <= numStrawPerMono ) ;
+  if( !(tmpStrawInMono <= NumStrawPerMono ) ) {
+    std::cout << int(channel) << " " << int(tmpStrawInMono) << std::endl ;
+  }
+
+  assert(tmpStrawInMono <= NumStrawPerMono ) ;
   // depending on the type of module, we now correct this 'default'
   // numbering with rotation or mirror operations
   unsigned char rc(1) ;
@@ -163,26 +173,41 @@ unsigned char OTChannelMapTool::computeStrawV3( const OTDAQ::EModuleLayout& layo
   case OddLayerPosY:
   case OddLayerPosYShort: 
     // most regular
-    rc = tmpMono*numStrawPerMono + tmpStrawInMono ;
+    rc = tmpMono*NumStrawPerMono + tmpStrawInMono ;
     break ;
   case EvenLayerPosY:
   case EvenLayerPosYShort:
     // rotated around y
-    rc = (2-tmpMono)*numStrawPerMono - tmpStrawInMono + 1 ;
+    rc = (2-tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
     break;
   case OddLayerNegY:
   case OddLayerNegYShort: 
     // mirrored in x
-    rc = (1+tmpMono)*numStrawPerMono - tmpStrawInMono + 1 ;
+    rc = (1+tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
     break ;
   case EvenLayerNegY:
   case EvenLayerNegYShort:
   case NumDefaultModuleLayouts:
     // rotated and mirrored (--> monolayers are swapped)
-    rc = (1-tmpMono)*numStrawPerMono + tmpStrawInMono ;
+    rc = (1-tmpMono)*NumStrawPerMono + tmpStrawInMono ;
     break ;
   }
 
+  // now treat the short modules. otis 0 and 3 must be in the realm
+  // straws [1,64]. otis 1 and 2 will be moved to nonexisting straws
+  // [65,128]. this is really ugly, but it works, somehow.
+  switch( layout ) {
+  case OddLayerPosYShort:
+  case EvenLayerPosYShort:
+  case OddLayerNegYShort: 
+  case EvenLayerNegYShort: 
+    rc = (rc-1)%NumChanPerOtis + ((rc-1)/(2*NumChanPerOtis)) * NumChanPerOtis  // this moves it to the (1-64) range
+      +  ((otis==1 || otis==2) ? 2*NumChanPerOtis :0)                          // add 64 for the non-existing channels
+      + 1;                                                                     // add the straw offset
+    break ;
+  default: ;
+  }
+  
   return rc ;
 }
 
@@ -218,16 +243,15 @@ void OTChannelMapTool::updateChannelMap() const
     OTDAQ::ChannelMap::Module module ;
 
     // set the number of channels
-    module.m_nchannels = 2*computeNumStrawPerMono(it->first) ;
+    module.m_nstraws = 2*computeNumStrawPerMono(it->first) ;
     
     // what happens next depends on the bank version. eventually, we
     // can also read a file that corrects the channel map
     if( m_currentBankVersion == OTBankVersion::DC06 ) {
-      for(unsigned int ichan = 0; ichan < module.m_nchannels; ++ichan) 
+      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan) 
 	module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
     } else {
-      // just use the function made by Antonio. Do we trust him ?-)
-      for(unsigned int ichan = 0; ichan < module.m_nchannels; ++ichan)
+      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan)
 	module.m_channelToStraw[ichan] = computeStrawV3( it->first, ichan ) ; 
     }
     
