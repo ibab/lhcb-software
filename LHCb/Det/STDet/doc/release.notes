@@ -1,7 +1,9 @@
-!$Id: release.notes,v 1.130 2008-05-09 07:36:09 cattanem Exp $
+!$Id: release.notes,v 1.131 2008-05-29 10:49:47 smenzeme Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+! 2008-05-27 Stephanie Hansmann-Menzemer
+- Removed all float variables, changed them into doubles
 
 !======================== STDet v4r0 2008-05-09 ==========================
 ! 2008-05-09 M Needham
