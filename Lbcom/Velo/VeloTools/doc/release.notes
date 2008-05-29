@@ -4,8 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== VeloTools v3r2 2008-05-29 ========================
 ! 2008-05-23 - Wouter Hulsbergen
- - Fixed bug exposed when reconstructing in a non-ideal gemetry
+ - Fixed bug exposed when reconstructing in a non-ideal geometry
 
 !========================== VeloTools v3r1 2008-04-03 ========================
 ! 2008-04-03 - Marco Cattaneo
