@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.102 2008-05-29 10:50:41 smenzeme Exp $
+! $Id: release.notes,v 1.103 2008-05-29 11:30:43 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+!========================== OTDet v7r8 2008-05-29 =========================
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - removed float variables, changed them into double
 

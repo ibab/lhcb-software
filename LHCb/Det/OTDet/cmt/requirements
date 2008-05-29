@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.39 2007-11-30 16:15:38 cattanem Exp $
+# $Id: requirements,v 1.40 2008-05-29 11:28:42 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v7r7
+version  v7r8
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet dict
@@ -33,6 +33,3 @@ apply_pattern     reflex_dictionary                             \
                   headerfiles=$(OTDETROOT)/dict/OTDetDict.h     \
                   selectionfile=$(OTDETROOT)/dict/OTDetDict.xml \
                   options="-U__MINGW32__"
-
-# Hack for cmt v1r19 bug to link dictionary on windows
-macro OTDetDict_use_linkopts $(use_linkopts)
