@@ -971,21 +971,16 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
     nf = 0; // First look at the fixed global params
     
-    for (i=0; i<nagb; i++)
-    {
+    for (i=0; i<nagb; i++) {
       // JB modifed the comparison from <= to ==.
       // That way, in case psigm[i] < 0, mpede could ignore this psigm.
-      if (psigm[i] == 0.0)   // fixed global param
-      {
+      if (psigm[i] == 0.0) {  // fixed global param
 	nf++;
-
-	for (j=0; j<nagb; j++)
-	{
+	for (j=0; j<nagb; j++) {
 	  cgmat[i][j] = 0.0;  // Reset row and column
 	  cgmat[j][i] = 0.0;
 	}			
-      }
-      else if (psigm[i] > 0.0) {
+      } else if (psigm[i] > 0.0) {
         cgmat[i][i] += 1.0/(psigm[i]*psigm[i]);
       } else {
         debug() << "Ignoring ParSig!" << endreq;
@@ -1017,19 +1012,12 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
     // Intended to compute the final global chisquare
 
 
-    if (itert > 1)
-    {
-      for (j=0; j<nagb; j++)
-      {
-
+    if (itert > 1) {
+      for (j=0; j<nagb; j++) {
 	debug() << "Psigm       = " << std::setprecision(5) << psigm[j] << endmsg;
-
 	debug() << "diag. value : " << j << " = " << std::setprecision(5) << cgmat[j][j] << endmsg;
-
-	for (i=0; i<nagb; i++)
-	{
-	  if (psigm[i] > 0.0)
-	  {
+	for (i=0; i<nagb; i++) {
+	  if (fabs(psigm[i]) > 0.0) {
 	    final_cor += step[j]*cgmat[j][i]*step[i]; 
 	    if (i == j) final_cor -= step[i]*step[i]/(psigm[i]*psigm[i]);
 	  }
