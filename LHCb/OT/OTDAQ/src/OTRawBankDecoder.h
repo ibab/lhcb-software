@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.8 2008-05-29 10:53:06 smenzeme Exp $
+// $Id: OTRawBankDecoder.h,v 1.9 2008-05-29 13:05:35 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -67,6 +67,9 @@ public:
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
   
+  /// Decode all modules but retrieve as 'raw hits'
+  StatusCode decode( LHCb::OTRawHitContainer& othits ) const ;
+
   /// Get the conversion factor
   double nsPerTdcCount() const { return m_nsPerTdcCount ; }
   

@@ -17,7 +17,7 @@
 #include "OTRawBankEncoder.h"
 #include "OTSpecificHeader.h"
 #include "GolHeaderV3.h"
-#include "RawHit.h"
+#include "Event/OTRawHit.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTRawBankEncoder
@@ -36,9 +36,9 @@ namespace {
  };
 
  struct CompareChannel {
-   bool operator()( const OTDAQ::RawHit& lhs, const OTDAQ::RawHit& rhs ) {
+   bool operator()( const LHCb::OTRawHit& lhs, const LHCb::OTRawHit& rhs ) {
      return lhs.channel() < rhs.channel() ;
-   }  
+   }
  };
 
  /// These simple classes are needed for sorting
@@ -217,7 +217,7 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
                                         gol->nChannels() ), buffer );
       
       /// tmp vector of raw hits
-      std::vector<OTDAQ::RawHit> rawHits;
+      LHCb::OTRawHitContainer rawHits;
       rawHits.reserve( (*gol).nChannels() );
       for ( ; firstChannel != (*gol).lastChannel(); ++firstChannel ) {
         if ( isDebug ) debug() << " Gol ID  = " << gol->id()
@@ -228,16 +228,16 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
                                << " nHits   = " << gol->nChannels() << endmsg;
         
         size_t channel = m_channelmaptool->channel( (*firstChannel) ) ;
-        rawHits.push_back( OTDAQ::RawHit( 0, channel, firstChannel->tdcTime() ) );
+        rawHits.push_back( LHCb::OTRawHit( 0, channel, firstChannel->tdcTime() ) );
       }
       
       /// Sort according to channel in Tell1
       std::sort( rawHits.begin(), rawHits.end(), CompareChannel() );
       
       // add padding i.e. empty hit
-      if ( rawHits.size()%2 ) rawHits.push_back( OTDAQ::RawHit() );
+      if ( rawHits.size()%2 ) rawHits.push_back( LHCb::OTRawHit() );
       
-      for ( std::vector<OTDAQ::RawHit>::const_iterator it = rawHits.begin(); it != rawHits.end(); ++it ) 
+      for ( LHCb::OTRawHitContainer::const_iterator it = rawHits.begin(); it != rawHits.end(); ++it ) 
         pipeToBuffer( *it, buffer );
   
       // padding should not be necessary

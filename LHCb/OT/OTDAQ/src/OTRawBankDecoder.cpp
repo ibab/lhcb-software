@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.12 2008-05-29 10:53:06 smenzeme Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.13 2008-05-29 13:05:35 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -14,9 +14,9 @@
 // Event
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
+#include "Event/OTRawHit.h"
 
 // local
-#include "RawHit.h"
 #include "GolHeaderDC06.h"
 #include "GolHeaderV3.h"
 #include "OTSpecificHeader.h"
@@ -61,6 +61,9 @@ namespace OTRawBankDecoderHelpers
     size_t decodeDC06(double tdcconversion) ;
     size_t decodeV3(double tdcconversion) ;
     size_t decode(double tdcconversion) ;
+    LHCb::OTRawHitRange rawhits() const { 
+      return LHCb::OTRawHitRange( LHCb::OTRawHitContainer::const_iterator(reinterpret_cast<const LHCb::OTRawHit*>(m_data)),
+				  LHCb::OTRawHitContainer::const_iterator(reinterpret_cast<const LHCb::OTRawHit*>(m_data+m_size))) ; }
     
   private:
     void addHit(unsigned short data, double tdcconversion) ;
@@ -92,8 +95,7 @@ namespace OTRawBankDecoderHelpers
   
   inline void Module::addHit(unsigned short data, double tdcconversion) 
   { 
-    OTDAQ::RawHit hit(data) ;
-    assert( hit.otis()*32 +  hit.channelInOtis() == hit.channel() ) ;
+    LHCb::OTRawHit hit(data) ;
     unsigned int straw = m_channelmap->straw( hit.channel() ) ;
     unsigned int tdctime = hit.time() ;
     LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
@@ -473,6 +475,24 @@ StatusCode OTRawBankDecoder::decode( LHCb::OTLiteTimeContainer& ottimes ) const
   for( OTRawBankDecoderHelpers::Module* imod = m_detectordata->begin(); 
        imod != m_detectordata->end(); ++imod)
     ottimes.insert(ottimes.end(), imod->ottimes().begin(), imod->ottimes().end() ) ;
+  // We'll need some proper error handling.
+  return StatusCode::SUCCESS ;
+}
+
+StatusCode OTRawBankDecoder::decode( LHCb::OTRawHitContainer& rawhits ) const
+{
+  // decode all modules. keep track of total number of hits. we can
+  // actually get rid of this: decoding the gols should be enough.
+  size_t numhits(0) ;
+  for( OTRawBankDecoderHelpers::Module* imod = m_detectordata->begin(); 
+       imod != m_detectordata->end(); ++imod)
+    numhits += decodeModule( *imod ) ;
+  // reserve and copy
+  rawhits.clear() ;
+  rawhits.reserve( numhits ) ;
+  for( OTRawBankDecoderHelpers::Module* imod = m_detectordata->begin(); 
+       imod != m_detectordata->end(); ++imod)
+    rawhits.insert(rawhits.end(), imod->rawhits().begin(), imod->rawhits().end() ) ;
   // We'll need some proper error handling.
   return StatusCode::SUCCESS ;
 }
