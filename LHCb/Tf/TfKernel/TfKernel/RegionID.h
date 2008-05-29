@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::RegionID
  *
  *  CVS Log :-
- *  $Id: RegionID.h,v 1.9 2007-08-26 14:10:41 krinnert Exp $
+ *  $Id: RegionID.h,v 1.10 2008-05-29 11:53:56 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -98,7 +98,7 @@ namespace Tf
      *  code more consistent and readable. */
     inline unsigned char zone()     const { return m_region ; }
 
-    /** @struct OTIndex TkKernel/RegionID.h
+    /** @struct OTIndex RegionID.h TfKernel/RegionID.h
      *  Collection of detector information for OT
      *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30
@@ -120,7 +120,7 @@ namespace Tf
         } ;
     } ;
 
-   /** @struct ITIndex TkKernel/RegionID.h
+   /** @struct ITIndex RegionID.h TfKernel/RegionID.h
      * Collection of detector information for IT
      * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
@@ -142,7 +142,7 @@ namespace Tf
         } ;
     } ;
 
-   /** @struct TTIndex TkKernel/RegionID.h
+   /** @struct TTIndex RegionID.h TfKernel/RegionID.h
      * Collection of detector information for TT
      * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
@@ -163,7 +163,7 @@ namespace Tf
         } ;
     } ;
 
-    /** @struct VeloRIndex TkKernel/RegionID.h
+   /** @struct VeloRIndex RegionID.h TfKernel/RegionID.h
      * Collection of detector information for Velo R sensors
      * @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      * @date   2007-05-30
@@ -184,7 +184,7 @@ namespace Tf
         } ;
     } ;
 
-    /** @struct VeloPhiIndex TkKernel/RegionID.h
+    /** @struct VeloPhiIndex RegionID.h TfKernel/RegionID.h
      *  Collection of detector information for Velo Phi sensors
      *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
      *  @date   2007-05-30

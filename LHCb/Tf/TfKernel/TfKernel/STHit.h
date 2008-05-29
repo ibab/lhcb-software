@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::STHit
  *
  *  CVS Log :-
- *  $Id: STHit.h,v 1.4 2007-08-20 11:07:07 jonrob Exp $
+ *  $Id: STHit.h,v 1.5 2008-05-29 11:53:56 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -76,10 +76,9 @@ namespace Tf
   /// Type for a container for STHitRange
   typedef std::vector<STHitRange> STHitRanges;
 
-  ////////////////////////////////////////////////////////////////////////////////////
+  //----------------------------------------------------------------------------
   // Inline function definitions
-  ////////////////////////////////////////////////////////////////////////////////////
-
+  //----------------------------------------------------------------------------
   inline STHit::STHit( const DeSTSector& aSector, const LHCb::STLiteCluster& clus )
     : LineHit   ( aSector, clus ),
       m_sector  ( &aSector      ),

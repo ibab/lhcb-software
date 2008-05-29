@@ -3,6 +3,11 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfKernel v2r5 2008-05-29 =======================
+! 2008-05-29 - Marco Cattaneo
+ - Fix doxygen warnings
+
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - Fix for float/double conversion issues in the rest of the tracking.
    As well here not timing issues.

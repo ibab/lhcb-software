@@ -5,7 +5,7 @@
  *  Header file for track find hit base class Tf::HitBase
  *
  *  CVS Log :-
- *  $Id: HitBase.h,v 1.14 2008-04-14 15:09:10 krinnert Exp $
+ *  $Id: HitBase.h,v 1.15 2008-05-29 11:53:56 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -43,19 +43,26 @@ namespace Tf
 
   public:
 
-    /** @struct hit_base_tag @brief type tag for hit base */
+    /** @struct hit_base_tag
+     *  @brief type tag for hit base */
     struct hit_base_tag                          {}; 
-    /** @struct line_hit_tag @brief type tag for line hit */
+    /** @struct line_hit_tag
+      * @brief type tag for line hit */
     struct line_hit_tag    : public hit_base_tag {}; 
-    /** @struct ot_hit_tag @brief type tag for OT hit */
+    /** @struct ot_hit_tag 
+      * @brief type tag for OT hit */
     struct ot_hit_tag      : public line_hit_tag {};
-    /** @struct st_hit_tag @brief type tag for ST hit */
+    /** @struct st_hit_tag
+      * @brief type tag for ST hit */
     struct st_hit_tag      : public line_hit_tag {}; 
-    /** @struct velo_hit_tag @brief type tag for Velo hit */
+    /** @struct velo_hit_tag
+      * @brief type tag for Velo hit */
     struct velo_hit_tag    : public hit_base_tag {}; 
-    /** @struct velo_rhit_tag @brief type tag for Velo R hit */
+    /** @struct velo_rhit_tag
+      * @brief type tag for Velo R hit */
     struct velo_rhit_tag   : public velo_hit_tag {}; 
-    /** @struct velo_phihit_tag @brief type tag for Velo Phi hit */
+    /** @struct velo_phihit_tag
+      * @brief type tag for Velo Phi hit */
     struct velo_phihit_tag : public velo_hit_tag {}; 
 
   public:
