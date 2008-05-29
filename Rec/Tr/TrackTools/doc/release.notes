@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
+
+!======================== TrackTools v3r7 2008-05-29 ========================
 ! 2008-05-29 Stephanie Hansmann-Menzemer
  - fix float/double conversions
 
@@ -10,7 +12,6 @@
  - check #dof for chisquare cut in TrackSelector
  - extend interface of TrackVertexer
 
-!======================== TrackTools v3r7 2008-05-21 ========================
 ! 2008-05-22 - Marco Cattaneo
  - In PtTransporter, get IFunctionTool.h from TrackInterfaces
 

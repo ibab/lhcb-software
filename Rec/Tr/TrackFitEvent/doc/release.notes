@@ -3,10 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+
+!========================== TrackFitEvent v3r15 2008-05-28 ===================
 ! 2008-05-28 Stephanie Hansmann-Menzemer
  - fixed problem with float double conversion
 
-!========================== TrackFitEvent v3r15 2008-05-28 ===================
 ! 2008-05-27 Wouter Hulsbergen
  - Added fit-status flag to TrackStateVertex
  - Added method to get propagation time to OTMeasurement
