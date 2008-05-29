@@ -1,4 +1,4 @@
-// $Id: SeedHit.h,v 1.4 2007-10-09 18:03:39 smenzeme Exp $
+// $Id: SeedHit.h,v 1.5 2008-05-29 10:56:06 smenzeme Exp $
 #ifndef SEEDHIT_H
 #define SEEDHIT_H 1
 
@@ -188,7 +188,7 @@ namespace Tf
 
       inline bool onTrack() const { return tfHit()->onTrack(); }
 
-      inline float length() const { return tfHit()->hit()->length(); }
+      inline double length() const { return tfHit()->hit()->length(); }
 
     public: // setters
 

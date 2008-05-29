@@ -76,7 +76,7 @@ namespace Tf
       }
 
       /// The drift distance
-      inline float driftRadius() const { return m_driftRadius; }
+      inline double driftRadius() const { return m_driftRadius; }
 
       /// set that the hit is on track
       inline void setOnTrack(bool used) const { m_onTrack = used; }
@@ -87,7 +87,7 @@ namespace Tf
     private:
 
       bool m_isOT;         ///< Flag to indicate if the hit is OT or not (thus ST)
-      float m_driftRadius; ///< The drift distance
+      double m_driftRadius; ///< The drift distance
       mutable bool m_onTrack;
 
     };

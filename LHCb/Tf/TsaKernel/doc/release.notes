@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2008-05-27 - Stephanie Hansmann-Menzemer
+ - fix double/float conversion problem. All variables are doubles now, 
+   no loss in performance.
 
 !======================= TsaKernel v3r2 2008-04-09 ==========================
 ! 2008-04-09 - Stephanie Hansmann-Menzemer
