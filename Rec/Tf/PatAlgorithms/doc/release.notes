@@ -3,10 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================== PatAlgorithms v3r6 2008-05-29 ====================
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - removed all float variables, replaced them by doubles
 
-!========================== PatAlgorithms v3r6 2008-05-26 ====================
 ! 2008-05-23 - Johannes Albrecht
 	- PatMatchTool.cpp: set unused variable quality2 to 0 (needed for Hlt interface)
 
