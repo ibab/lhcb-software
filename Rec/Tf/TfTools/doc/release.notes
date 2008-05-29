@@ -3,8 +3,13 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfTools v1r5 2008-05-29 ========================
+! 2008-05-29 - Marco Cattaneo
+ - Fix doxygen warning
+
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
- - fix float/double conversion problem. all floates moved to doubles, not
+ - fix float/double conversion problem. all floats moved to doubles, no
    loss in performance.
 
 !============================ TfTools v1r4 2008-04-09 ========================

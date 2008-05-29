@@ -1,10 +1,10 @@
 
 //-----------------------------------------------------------------------------
-/** @file STHitCreator.h
+/** @file STHitCreator.cpp
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.4 2008-05-29 10:55:36 smenzeme Exp $
+ *  $Id: STHitCreator.cpp,v 1.5 2008-05-29 13:45:57 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
