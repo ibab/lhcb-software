@@ -5,7 +5,7 @@
 namespace OTDet
 {
   
-  RtRelation::RtRelation(float rmax, 
+  RtRelation::RtRelation(double rmax, 
 			 const std::vector<double>& tcoeff, 
 			 const std::vector<double>& terrcoeff,
 			 size_t ntbins)
@@ -16,9 +16,9 @@ namespace OTDet
     initRTable(ntbins) ;
   }
 
-  RtRelation::RtRelation(float rmax, 
+  RtRelation::RtRelation(double rmax, 
 			 const std::vector<double>& tcoeff, 
-			 float sigmaR, size_t ntbins)
+			 double sigmaR, size_t ntbins)
     : m_rmax(rmax),
       m_tcoeff(tcoeff),
       m_terrcoeff(tcoeff.size()-1)
@@ -63,7 +63,7 @@ namespace OTDet
     }
   }
   
-  //   RtRelation::RtRelation(float tmin, float tmax, const std::vector<float>& radius) 
+  //   RtRelation::RtRelation(double tmin, double tmax, const std::vector<double>& radius) 
   //     : m_tmin(tmin), m_tmax(tmax), m_rtable(radius), m_dt( (tmax-tmin) / (radius.size()-1)), m_rmin(radius.front()), m_rmax(radius.back()) 
   //   {
   //     // now we still need to create the coefficients for the t(r)
