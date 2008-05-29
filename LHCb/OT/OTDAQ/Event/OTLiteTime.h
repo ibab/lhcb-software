@@ -5,7 +5,7 @@
  *  Header file for track find class LHCb::OTLiteTime
  *
  *  CVS Log :-
- *  $Id: OTLiteTime.h,v 1.4 2007-12-12 13:04:42 wouter Exp $
+ *  $Id: OTLiteTime.h,v 1.5 2008-05-29 08:53:05 cattanem Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -22,7 +22,7 @@
 namespace LHCb
 {
 
-  /** @class OTLiteTime OTDAQ/OTLiteTime.h
+  /** @class OTLiteTime OTLiteTime.h OTDAQ/OTLiteTime.h
    *  Simple class to hold an OT hit, including a 'calibrated' drift time. This
    *  is the 'light' version of an OTTime. (It is light because it is not a
    *  contained object.)

@@ -3,6 +3,7 @@
 
 #include "OTDAQ/IOTChannelMapTool.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
+#include "OTDAQ/IOTRawBankEncoder.h"
 #include "OTDAQ/IOTReadOutWindow.h"
 
 #endif // DICT_OTDAQDICT_H
