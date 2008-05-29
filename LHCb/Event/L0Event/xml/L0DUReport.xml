@@ -23,7 +23,7 @@
 
       <constructor 
         desc = "Default constructor" 
-        initList= "m_tck(0xFFFF) , m_configuration(NULL)">
+        initList= "m_tck(0x0000) , m_configuration(NULL)">
         <code>
            clear();
         </code>
@@ -43,12 +43,12 @@
       <attribute  desc=" global decision"          name="decision"           type="bool"/>
       <attribute  desc=" Timing Trigger Decision"  name="timingTriggerBit"   type="bool" />
       <attribute  desc=" Force Bit"                name="forceBit"           type="bool" />
-      <attribute  desc=" L0DU algorithm configuration Key" name="tck"        type="long" />
-      <attribute  desc=" L0DU algorithm configuration"          name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
-      <attribute  desc="'Triggered channels' Summaries   (FCS)"     name="triggeredChannelsSummaries"   type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
-      <attribute  desc="'Channel decisions' Summaries  (TCS)"   name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
-      <attribute  desc="'Elementary conditions' Summaries (ECS)"name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
-      <attribute  desc=" sum(Et) value over several BX"         name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
+      <attribute  desc=" L0DU algorithm configuration Key"         name="tck"        type="long" />
+      <attribute  desc=" L0DU algorithm configuration"             name="configuration"            type="LHCb::L0DUConfig*" setMeth = 'FALSE' nonconstaccessor='TRUE'/>
+      <attribute  desc="'channels pre-decision' Summaries   (FCS)" name="channelsPreDecisionSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;"/>
+      <attribute  desc="'Channel decisions' Summaries  (TCS)"      name="channelsDecisionSummaries"type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
+      <attribute  desc="'Elementary conditions' Summaries (ECS)"   name="conditionsValueSummaries" type="std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;" />
+      <attribute  desc=" sum(Et) value over several BX"            name="sumEt"                    type="std::map&lt;int , unsigned int&gt;" getMeth='FALSE'/>
 
 
 
@@ -58,10 +58,12 @@
         type="void">
         <code> 
           m_channelsDecisionSummaries.clear();
-          m_triggeredChannelsSummaries.clear();
+          m_channelsPreDecisionSummaries.clear();
           m_conditionsValueSummaries.clear();
           m_sumEt.clear();
           m_decision=false;
+          m_timingTriggerBit = false;
+          m_forceBit = false;
         </code>
       </method>
 
@@ -137,13 +139,13 @@
 
 
       <method  
-        name   = "setTriggeredChannelsSummary"
+        name   = "setChannelsPreDecisionSummary"
         desc   = "add a 32-bit L0DUChannels firing summary (FCS)"
         argList= "const unsigned int summary,  unsigned int loc=0, int bx=0"
         type   = "void"> 
         <code>
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,loc);
-          m_triggeredChannelsSummaries[key]=summary;
+          m_channelsPreDecisionSummaries[key]=summary;
         </code>
       </method>
 
@@ -168,8 +170,8 @@
         </code>
       </method>
       <method  
-        name   = "setTriggeredChannel"
-        desc   = "add a triggered channel bit in the FCS summary"
+        name   = "setChannelPreDecision"
+        desc   = "add a channel pre-decision bit in the FCS summary"
         argList= "std::string name , bool triggered, int  bx=0 "
         type   = "void"> 
         <code>
@@ -181,10 +183,10 @@
           unsigned int pos = ((*it).second)->id();
           unsigned int index = pos / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
-          unsigned int summary = m_triggeredChannelsSummaries[key];
+          unsigned int summary = m_channelsPreDecisionSummaries[key];
           unsigned int loc   = pos - index *32;
           triggered ? summary |= (1 &lt;&lt; loc) : summary &amp;= ~(1 &lt;&lt; loc);
-          m_triggeredChannelsSummaries[key] = summary;
+          m_channelsPreDecisionSummaries[key] = summary;
         </code>
       </method>
 
@@ -249,15 +251,15 @@
 
 
       <method
-        name="triggeredChannelsSummary"
-        desc="32-bit summary for the triggered channels"
+        name="channelsPreDecisionSummary"
+        desc="32-bit summary for the channels pre-decision"
         argList="unsigned int index=0, int bx=0"
         const = "TRUE"
         type="const unsigned int">
         <code> 
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index); 
-          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_triggeredChannelsSummaries.find( key );
-          if(it == m_triggeredChannelsSummaries.end())return 0;
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsPreDecisionSummaries.find( key );
+          if(it == m_channelsPreDecisionSummaries.end())return 0;
           return (*it).second;
         </code>
       </method>
@@ -295,7 +297,7 @@
         </code>
       </method>
       <method
-        name="triggeredChannel"
+        name="channelPreDecision"
         argList="const unsigned int channel, int bx=0"
         desc="return the channel decision by channel number (NOT incl. the downscaling decision)"
         type="bool"
@@ -303,8 +305,8 @@
         <code> 
           unsigned int index = channel / 32;
           std::pair&lt;int,unsigned int&gt;  key = std::make_pair(bx,index);
-          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_triggeredChannelsSummaries.find(key);
-          if( it == m_triggeredChannelsSummaries.end())return 0;
+          std::map&lt;std::pair&lt;int,unsigned int&gt;,unsigned int&gt;::const_iterator it = m_channelsPreDecisionSummaries.find(key);
+          if( it == m_channelsPreDecisionSummaries.end())return 0;
           unsigned int summary = (*it).second;
           unsigned int loc   = channel - index *32;
           return ( 1 &amp; (summary >> loc));
@@ -332,7 +334,7 @@
 
                                                           
       <method
-        name="triggeredChannelByName"
+        name="channelPreDecisionByName"
         argList="const std::string name, int bx=0"
         desc="return channel firing by channel name"
         type="bool"
@@ -343,7 +345,7 @@
           LHCb::L0DUChannel::Map::iterator it = channels.find( name );
           if( it == channels.end() )return false;
           const unsigned int pos = ((*it).second)->id();
-          return triggeredChannel( pos,bx );
+          return channelPreDecision( pos,bx );
         </code>
       </method>
       <method
@@ -445,6 +447,53 @@
           for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
            if( channelDecision( channel->id(),bx  ) &amp;&amp; channel->enable() )return true;
+          }
+          return false;
+        </code>
+      </method>
+
+
+
+
+
+
+      <method
+        name="triggerDecisionByName" 
+        argList="std::string name, int bx=0"
+        desc="return the L0 decision for any set of channels as defined in the configuration"
+        type="bool" 
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUTrigger::Map triggers = m_configuration->triggers();
+          LHCb::L0DUTrigger::Map::iterator it = triggers.find( name );
+          if( it == triggers.end()){
+            if( "L0" == name){
+              return decisionFromSummary( bx );
+            }else{
+              return false;
+           }
+          }
+
+          LHCb::L0DUChannel::Map channels = (*it).second-&gt;channels();
+          for(LHCb::L0DUChannel::Map::iterator ic = channels.begin();ic != channels.end();++ic){
+           if( channelDecisionByName( (*ic).second-&gt;name(), bx) )return true;
+          }
+          return false;
+        </code>
+      </method>
+
+      <method
+        name="triggerDecision" 
+        argList="int index, int bx=0"
+        desc="return the L0 decision for any set of channels as defined in the configuration"
+        type="bool" 
+        const="TRUE">
+        <code> 
+          if(NULL == m_configuration)return false;
+          LHCb::L0DUTrigger::Map triggers = m_configuration->triggers();
+          for(LHCb::L0DUTrigger::Map::iterator it = triggers.begin();it != triggers.end();++it){
+           if( index = (*it).second-&gt;id() )return triggerDecisionByName( (*it).first, bx  );
           }
           return false;
         </code>

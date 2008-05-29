@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+
+    
+    <class 
+      author="Olivier Deschamps"
+      desc="This class represents individual L0DU Trigger (i.e. L0DUChannel set)"
+      name="L0DUTrigger"
+      serializers="FALSE">
+
+      <base name="ContainedObject"/>
+       &ContainedObject;
+
+      <location name = "Default"   place = "Trig/L0/L0DUTriggers" />
+      <location name = "Emulated"  place = "Emu/L0/L0DUTriggers"  />
+
+
+      <import name="string" std="TRUE"/>
+      <import name="map" std="TRUE"/>
+      <import name="Event/L0DUChannel"/>
+
+      <typedef def    = "Map" 
+        desc   = "std::map Container "
+        type   = "std::map&lt;std::string,L0DUTrigger* &gt;" 
+        access = "PUBLIC"/>
+
+      <copyconstructor/>
+      <constructor 
+        desc = "non-default constructor"
+        argList   = "int id, const std::string name" 
+        initList  = "m_id(id),m_name(name)">
+      </constructor>
+
+      <constructor 
+        desc = "default constructor"
+        initList  = "m_id(0),m_name()">
+      </constructor>
+
+ 
+      <attribute name = "id"       desc = " L0DU Trigger index "  type = "unsigned int" />
+      <attribute name = "name"     desc = " L0DU Trigger name "   type = "std::string" />
+      <attribute name = "channels" desc = " L0DU Channels"        type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>
+
+
+      <method name      = "emulatedDecision" desc = "get the trigger emulated decision" type  = "bool" >
+        <code> 
+          for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!= m_channels.end() ; ic++ ){
+           if( (*ic).second-&gt;emulatedDecision() ) return true;
+          }
+	  return false;
+        </code>
+      </method>
+
+      <method name      = "addChannel" desc = "push_back L0DU channel"
+        type  = "void" 
+        argList   = "LHCb::L0DUChannel* channel">
+        <code> m_channels[channel->name()]=channel; </code>
+      </method>
+
+      <method name      = "resetChannels" desc = "Clear channels "
+        type  = "void" >
+        <code> m_channels.clear(); </code>
+      </method>
+
+      <method name  = "clone" desc = "clone this trigger" type  = "LHCb::L0DUTrigger*" virtual = "TRUE">
+        <code>
+          L0DUTrigger* trigger = new L0DUTrigger( *this ); 
+          return trigger;
+        </code>
+      </method>
+
+      <method name  = "description" desc = "L0DUTrigger short description" type  = "std::string" ></method>
+      <method name  = "summary" desc = "L0DUTrigger summary" type  = "std::string" > </method>
+      
+    </class>
+
+
+
+  </package>
+</gdd>
+
+
+

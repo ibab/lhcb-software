@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.96 2008-05-02 13:31:08 odescham Exp $
+! $Id: release.notes,v 1.97 2008-05-29 14:10:07 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
 
+! 2008-05-29 - Olivier Deschamps
+ - new object description : L0DUTrigger.xml  for  "sub-trigger" (i.e. 'OR' of several channels)
+ - change few method names to avoid confusion : "PreDecision" = decision not including downscaling (was previously tagged as "Trigger")
+                                                "Decision" == decision including downscaling 
+ - adapt L0DUConfig/L0DUReport
+ - fix uninitialised data member in L0DUReport
+ - fix bug concerning the creation of compound data with operator "-" in xml/L0DUElementaryData.xml
+
+
 ! 2008-05-02 - Olivier Deschamps
  - fix bug in L0DUConfig::clearDataValue() [DO NOT reset the constant data]
+ 
+
 
 
 !======================== L0Event v16r9 2008-04-15 ===========================

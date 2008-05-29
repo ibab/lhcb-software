@@ -42,11 +42,11 @@
       <constructor 
         desc = "non-default constructor"
         argList   = "int id, const std::string name, const count rate, bool enable=true" 
-        initList  = "m_id(id),m_name(name),m_rate(rate),m_enable(enable),m_counter(0),m_emulatedDecision(false),m_emulatedTrigger(false),m_emulated(false)">
+        initList  = "m_id(id),m_name(name),m_rate(rate),m_enable(enable),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false)">
       </constructor>
       <constructor 
         desc = "default constructor"
-        initList  = "m_id(0),m_name(),m_rate(100),m_enable(true),m_counter(0),m_emulatedDecision(false),m_emulatedTrigger(false),m_emulated(false)">
+        initList  = "m_id(0),m_name(),m_rate(100),m_enable(true),m_counter(0),m_emulatedDecision(false),m_emulatedPreDecision(false),m_emulated(false)">
       </constructor>
 
  
@@ -57,28 +57,28 @@
 
       <attribute name = "elementaryConditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map" />
       <attribute name = "counter"   desc = " counter value" type = "unsigned int" init = "0" />     
-      <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (trigger value + downscaling)"  
+      <attribute name = "emulatedDecision"  desc = "L0DU Channel emulated Decision (incl. downscaling decision)"  
                  type = "bool" init = "false" setMeth = "FALSE" getMeth="FALSE"/>  
-      <attribute name = "emulatedTrigger"   desc = "L0DU Channel emulated trigger value "   
+      <attribute name = "emulatedPreDecision"   desc = "L0DU Channel emulated trigger value (NOT applying downscaling)"   
                  type = "bool" init = "false" setMeth="FALSE" getMeth="FALSE"/>
       <attribute name = "emulated"  desc = "L0DU Channel emulation flag"  type = "bool" init = "false" />
 
       
 
-      <method name      = "emulatedDecision" desc = "get the channel emulated decision (trigger value + downscaling)" type  = "bool" >
+      <method name      = "emulatedDecision" desc = "get the channel emulated decision (incl. downscaling decision)" type  = "bool" >
         <code> 
           return emulate()->m_emulatedDecision;
         </code>
       </method>
-      <method name      = "emulatedTrigger" desc = "get the channel emulated trigger value" type  = "bool" >
+      <method name      = "emulatedPreDecision" desc = "get the channel emulated trigger value (NOT applying downscaling)" type  = "bool" >
         <code> 
           emulate();
-          return emulate()->m_emulatedTrigger;
+          return emulate()->m_emulatedPreDecision;
         </code>
       </method>
-      <method name      = "isDownscaled" desc = "return emulatedDecision == emulatedTrigger" type  = "bool" >
+      <method name      = "isDownscaled" desc = "return downscaling decision as (emulatedDecision == emulatedPreDecision)" type  = "bool" >
         <code>
-          return emulatedDecision() == emulatedTrigger();
+          return emulatedDecision() == emulatedPreDecision();
         </code>
       </method>
 

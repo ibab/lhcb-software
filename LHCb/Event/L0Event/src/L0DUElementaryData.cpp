@@ -1,4 +1,4 @@
-// $Id: L0DUElementaryData.cpp,v 1.5 2007-11-29 09:38:16 cattanem Exp $
+// $Id: L0DUElementaryData.cpp,v 1.6 2008-05-29 14:10:07 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -13,8 +13,8 @@
 // 09/02/2006 : Olivier Deschamps
 //-----------------------------------------------------------------------------
 
-unsigned long LHCb::L0DUElementaryData::operation(const std::string& v_operator, const std::vector<unsigned long>& v_operands){
-  unsigned long digit = 0;
+long LHCb::L0DUElementaryData::operation(const std::string& v_operator, const std::vector<long>& v_operands){
+  long digit = 0;
   // 1 dimensional operator (Identity)
   if(1 == v_operands.size() ){
     if( "Id" == v_operator ){digit = v_operands[0] ;}

@@ -19,6 +19,7 @@
       <import name="Event/L0DUElementaryData"/>
       <import name="Event/L0DUElementaryCondition"/>
       <import name="Event/L0DUChannel"/>
+      <import name="Event/L0DUTrigger"/>
       <import name="string" std="TRUE"/>
 
       <typedef
@@ -31,13 +32,13 @@
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( 0x0000   )  , m_definition(),m_data(),m_conditions(),m_channels()"
+        initList = "Base ( 0x0000   )  , m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
         > <code/></constructor>
 
       <constructor
         desc     = "non-default constructor"
         argList  = "long tck "
-        initList = "Base ( tck ) , m_definition(),m_data(),m_conditions(),m_channels()"
+        initList = "Base ( tck ) , m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
         > <code/> </constructor>
 
 
@@ -45,7 +46,7 @@
         desc     = "Copy Constructor" 
         argList  = "LHCb::L0DUConfig rh"
         initList = "Base(rh.key() ), m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() )
-        , m_channels(rh.channels() )"
+        , m_channels(rh.channels() ),m_triggers(rh.triggers() )"
         > <code/> </constructor>
 
 
@@ -53,12 +54,16 @@
       <attribute name = "data" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryData::Map" nonconstaccessor='TRUE' />
       <attribute name = "conditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map"  nonconstaccessor='TRUE'/>
       <attribute name = "channels" desc = " L0DU channels" type = "LHCb::L0DUChannel::Map"  nonconstaccessor='TRUE'/>      
-
-
+      <attribute name = "triggers" desc = "Set of L0DU channels" type = "LHCb::L0DUTrigger::Map"  nonconstaccessor='TRUE'/>      
 
       <method desc   = "return Trigger Configuration Key @alias of key() " name   = "tck" type   = "long" const = 'TRUE'><code>return key();</code></method>
       <method desc   = "delete MAPs content" name="release" type="void">
         <code>
+          for(LHCb::L0DUTrigger::Map::iterator ic = m_triggers.begin();ic!=m_triggers.end();++ic){
+          if( NULL != (*ic).second)delete (*ic).second;
+          }
+          m_triggers.clear();
+
           for(LHCb::L0DUChannel::Map::iterator ic = m_channels.begin();ic!=m_channels.end();++ic){
            if( NULL != (*ic).second)delete (*ic).second;
           }
@@ -71,6 +76,7 @@
            if( NULL != (*ic).second)delete (*ic).second;
           }
           m_data.clear();
+
         </code>
       </method>
 
@@ -143,7 +149,7 @@
       </method>
 
 
-      <method name  = "emulatedDecision" desc = "global emulated decision" type  = "bool" >
+      <method name  = "emulatedDecision" desc = "global emulated decision (incl. downscaling)" type  = "bool" >
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
@@ -154,11 +160,11 @@
       </method>
 
 
-      <method name  = "emulatedTrigger" desc = "global emulated decision (without downscaling)" type  = "bool" >
+      <method name  = "emulatedPreDecision" desc = "global emulated decision (without downscaling)" type  = "bool" >
         <code>
           for(LHCb::L0DUChannel::Map::iterator it = m_channels.begin();it!=m_channels.end();it++){
            LHCb::L0DUChannel* channel = (*it).second;
-           if( channel->emulatedTrigger() &amp;&amp; channel->enable() )return true;
+           if( channel->emulatedPreDecision() &amp;&amp; channel->enable() )return true;
           }
 	  return false;
         </code>
@@ -166,11 +172,33 @@
 
       <method name  = "isDownscaled" desc = "return true if the L0 decision would be yes without any downscaling" type  = "bool" >
         <code>
-          return (emulatedTrigger() == emulatedDecision() );
+          return (emulatedPreDecision() == emulatedDecision() );
         </code>
       </method>
 
 
+
+      <method
+        name="triggerByChannelName" 
+        argList="std::string name"
+        desc="return the  trigger(s) the channel belongs to"
+        type="std::vector&lt;std::string&gt;" 
+        const="TRUE">
+        <code> 
+          std::vector&lt;std::string&gt; list;
+          for(LHCb::L0DUTrigger::Map::const_iterator it = m_triggers.begin();it!=m_triggers.end();++it){
+          std::string trigName = (*it).first;
+          LHCb::L0DUChannel::Map channels = (*it).second-&gt;channels();
+          for(LHCb::L0DUChannel::Map::iterator ic = channels.begin() ; ic != channels.end() ; ++ic){
+          if( (*ic).second->name() == name){
+          list.push_back(trigName);
+          continue;
+          }
+          }
+          }
+         return list;
+        </code>
+      </method>
 
 
 
