@@ -4,7 +4,7 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-
+!========================== MuonDAQ v4r1 2008-05-29 ==========================
 ! 2008-05-29 - Alessia Satta
  - fix for unchecked statuscode
 
