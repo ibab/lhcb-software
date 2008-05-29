@@ -1,4 +1,4 @@
-// $Id: RegionSelectors.h,v 1.11 2007-08-28 12:03:58 jonrob Exp $
+// $Id: RegionSelectors.h,v 1.12 2008-05-29 10:55:11 smenzeme Exp $
 #ifndef TFKERNEL_REGIONSELECTORS_H
 #define TFKERNEL_REGIONSELECTORS_H 1
 
@@ -19,19 +19,19 @@ namespace Tf
   {
   public:
     /// Constructor from the min and max values
-    XYSearchWindow( const float _minX, ///< The minimum x value for the search window
-                    const float _maxX, ///< The maximum x value for the search window
-                    const float _minY, ///< The minimum y value for the search window
-                    const float _maxY  ///< The maximum y value for the search window
+    XYSearchWindow( const double _minX, ///< The minimum x value for the search window
+                    const double _maxX, ///< The maximum x value for the search window
+                    const double _minY, ///< The minimum y value for the search window
+                    const double _maxY  ///< The maximum y value for the search window
                     )
       : m_minX(_minX), m_maxX(_maxX), m_minY(_minY), m_maxY(_maxY) { }
   public:
-    inline float minX() const { return m_minX; } ///< The minimum x value for the search window
-    inline float maxX() const { return m_maxX; } ///< The maximum x value for the search window
-    inline float minY() const { return m_minY; } ///< The minimum y value for the search window
-    inline float maxY() const { return m_maxY; } ///< The maximum y value for the search window
+    inline double minX() const { return m_minX; } ///< The minimum x value for the search window
+    inline double maxX() const { return m_maxX; } ///< The maximum x value for the search window
+    inline double minY() const { return m_minY; } ///< The minimum y value for the search window
+    inline double maxY() const { return m_maxY; } ///< The maximum y value for the search window
   private:
-    float m_minX, m_maxX, m_minY, m_maxY;
+    double m_minX, m_maxX, m_minY, m_maxY;
   };
 
   /** @class StateRegionSelector RegionSelectors.h TfKernel/RegionSelectors.h
@@ -98,8 +98,8 @@ namespace Tf
     {
       const double x = (z*((a_x*z)+b_x)+c_x);
       const double y = (m_y*z+c_y);
-      return XYSearchWindow( (float)(x-dx), (float)(x+dx), 
-                             (float)(y-dy), (float)(y+dy) );
+      return XYSearchWindow( x-dx, x+dx, 
+                             y-dy, y+dy );
     }
 
   private:

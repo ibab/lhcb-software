@@ -5,7 +5,7 @@
  *  Header file for track finding 'Region' objects
  *
  *  CVS Log :-
- *  $Id: Region.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
+ *  $Id: Region.h,v 1.5 2008-05-29 10:55:11 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -218,7 +218,7 @@ namespace Tf
      *  @param xmax the maximum x value
      *  @return Range object covering the hits in the given x range
      */
-    virtual HitRangeType hits(float xmin, float xmax) const = 0 ;
+    virtual HitRangeType hits(double xmin, double xmax) const = 0 ;
     /** Access all the hits within a given region of x and y
      *  @param xmin the minimum x value
      *  @param xmax the maximum x value
@@ -226,7 +226,7 @@ namespace Tf
      *  @param ymax the maximum y value
      *  @return Range object covering the hits in the given x and y range
      */
-    virtual HitRangeType hits(float xmin, float xmax, float ymin, float ymax) const = 0 ;
+    virtual HitRangeType hits(double xmin, double xmax, double ymin, double ymax) const = 0 ;
 
     /// Returns the RegionID object for this region
     RegionID id() const { return m_id ; }

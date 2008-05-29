@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.8 2007-09-26 07:35:04 wouter Exp $
+ *  $Id: IOTHitCreator.h,v 1.9 2008-05-29 10:55:11 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -150,8 +150,8 @@ namespace Tf
     virtual OTHitRange hits(const TStationID iStation, 
                             const TLayerID iLayer, 
                             const OTRegionID iRegion, 
-                            const float xmin, 
-                            const float xmax) const = 0 ;
+                            const double xmin, 
+                            const double xmax) const = 0 ;
 
     /** Load the hits for a given region of interest
      *
@@ -171,10 +171,10 @@ namespace Tf
     virtual OTHitRange hits(const TStationID iStation, 
                             const TLayerID iLayer, 
                             const OTRegionID iRegion,
-                            const float xmin, 
-                            const float xmax, 
-                            const float ymin,
-                            const float ymax) const = 0 ;
+                            const double xmin, 
+                            const double xmax, 
+                            const double ymin,
+                            const double ymax) const = 0 ;
 
     /** Retrieve the OTRegion for a certain region ID. The region
      *  knows its 'size' and gives access to its hits.

@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.22 2008-03-19 09:53:58 smenzeme Exp $
+ *  $Id: TStationHitManager.h,v 1.23 2008-05-29 10:55:12 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -33,6 +33,7 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/TfIDTypes.h"
 #include "TfKernel/RegionSelectors.h"
+
 
 /// Static interface ID
 static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );

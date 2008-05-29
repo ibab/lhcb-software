@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IITHitCreator
  *
- *  $Id: IITHitCreator.h,v 1.1 2007-09-10 08:54:31 wouter Exp $
+ *  $Id: IITHitCreator.h,v 1.2 2008-05-29 10:55:11 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -167,8 +167,8 @@ namespace Tf
     virtual STHitRange hits(const TStationID iStation,
                             const TLayerID iLayer,
                             const ITRegionID iRegion,
-                            const float xmin,
-                            const float xmax) const = 0 ;
+                            const double xmin,
+                            const double xmax) const = 0 ;
 
     /** Load the IT hits for a given region of interest
      *
@@ -188,10 +188,10 @@ namespace Tf
     virtual STHitRange hits(const TStationID iStation,
                             const TLayerID iLayer,
                             const ITRegionID iRegion,
-                            const float xmin,
-                            const float xmax,
-                            const float ymin,
-                            const float ymax) const = 0 ;
+                            const double xmin,
+                            const double xmax,
+                            const double ymin,
+                            const double ymax) const = 0 ;
 
     /** Retrieve the IT STRegion for a certain region ID. The region
      *   knows its 'size' and gives access to its hits.

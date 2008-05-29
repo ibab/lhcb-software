@@ -1,4 +1,4 @@
-// $Id: IOTHitCleaner.h,v 1.4 2007-08-28 12:03:58 jonrob Exp $
+// $Id: IOTHitCleaner.h,v 1.5 2008-05-29 10:55:11 smenzeme Exp $
 #ifndef TFTOOLS_IOTHITCLEANER_H
 #define TFTOOLS_IOTHITCLEANER_H 1
 
@@ -84,7 +84,7 @@ namespace Tf
     public:
       /// a bit more than the pitch, but less than twice the pitch, to
       /// allow for misalignments.
-      AdjacentByCoordinate(const float maxdistance = 8*Gaudi::Units::mm )
+      AdjacentByCoordinate(const double maxdistance = 8*Gaudi::Units::mm )
         : m_d(maxdistance) {}
       /// Comparision operator
       inline bool operator() (const OTHit* lhs, const OTHit* rhs)
@@ -94,7 +94,7 @@ namespace Tf
           lhs->regionID() == rhs->regionID() ;
       }
     private:
-      float m_d ; ///< The maximum distance for separation
+      double m_d ; ///< The maximum distance for separation
     };
 
   };

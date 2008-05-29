@@ -1,4 +1,4 @@
-// $Id: DefaultVeloHitManager.h,v 1.12 2008-03-04 10:12:36 krinnert Exp $
+// $Id: DefaultVeloHitManager.h,v 1.13 2008-05-29 10:55:11 smenzeme Exp $
 #ifndef INCLUDE_TF_DEFAULTVELOHITMANAGER_H
 #define INCLUDE_TF_DEFAULTVELOHITMANAGER_H 1
 
@@ -75,8 +75,8 @@ namespace Tf {
   private:
 
     void prepareClusterRanges();
-    void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_rhit_tag);
-    void addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_phihit_tag);
+    void addHit(const LHCb::VeloLiteCluster& clu, double signal, HitBase::velo_rhit_tag);
+    void addHit(const LHCb::VeloLiteCluster& clu, double signal, HitBase::velo_phihit_tag);
     void createPointerListsAndSort();
 
   private:
@@ -229,7 +229,7 @@ namespace Tf {
 
       for( ; iClus != stop; ++iClus) {
 
-        float signal = static_cast<float>((*iClus)->totalCharge());
+        double signal = (*iClus)->totalCharge();
 
         // don't use this cluster if we run in ingore mode and the total charge is too low
         if ( m_ignoreLowClusters && (signal < m_lowThreshold) ) continue;
@@ -251,7 +251,7 @@ namespace Tf {
       unsigned int cnt = 0;
       for( ; iClus != stop; ++iClus, ++cnt) {
 
-        float signal = 100.0;
+        double signal = 100.0;
         // in ignore low charge cluster mode skip this cluster if high threshold bit unset
         if( !iClus->highThreshold() ) {
           if( m_ignoreLowClusters ) continue;
@@ -294,7 +294,7 @@ namespace Tf {
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_rhit_tag)
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, double signal, HitBase::velo_rhit_tag)
   {
     // only import r clusters
     if ( !clu.isRType() ) return;
@@ -307,7 +307,7 @@ namespace Tf {
   }
 
   template <typename SENSORTYPE, typename HIT, int NZONES>
-  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, float signal, HitBase::velo_phihit_tag)
+  void DefaultVeloHitManager<SENSORTYPE,HIT,NZONES>::addHit(const LHCb::VeloLiteCluster& clu, double signal, HitBase::velo_phihit_tag)
   {
     // only import r clusters
     if ( !clu.isPhiType() ) return;

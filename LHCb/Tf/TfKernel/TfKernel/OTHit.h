@@ -5,7 +5,7 @@
  *  Header file for track finding class Tf::OTHit
  *
  *  CVS Log :-
- *  $Id: OTHit.h,v 1.9 2007-12-18 09:33:14 mschille Exp $
+ *  $Id: OTHit.h,v 1.10 2008-05-29 10:55:11 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -19,6 +19,7 @@
 #include "TfKernel/LineHit.h"
 #include "LoKi/Range.h"
 #include "Event/OTLiteTime.h"
+
 
 namespace Tf
 {
@@ -58,7 +59,7 @@ namespace Tf
   public: // Simple accessors to internal data members
 
     /** Returns the calibrated time is drift time + propagation time - default tof */
-    inline float calibratedTime() const { return m_rawhit.calibratedTime(); }
+    inline double calibratedTime() const { return m_rawhit.calibratedTime(); }
 
     /** Access the associated DeOTModule for this hit
      *  @return Reference to the associated DeOTModule */
@@ -71,26 +72,26 @@ namespace Tf
     /** Access the default drift distance. 
      *  Defined at the point halfway along the length the wire.
      *  @return The drift distrance */
-    inline float driftDistance()  const { return m_driftDistance; }
+    inline double driftDistance()  const { return m_driftDistance; }
 
     /** Access the y-coordinate of the readout side of the wire (defines t0) */
-    inline float  yReadout()   const { return yEnd() ; }
+    inline double  yReadout()   const { return yEnd() ; }
 
     /** Access the propagation time relative to the default, which is halfway along the
         wire. The velocity has been corrected for sign and direction */
-    inline float propagationTime( const double globaly ) const 
+    inline double propagationTime( const double globaly ) const 
     {
-      return (float)((yReadout()- globaly)/module().propagationVelocityY()); 
+      return (yReadout()- globaly)/module().propagationVelocityY(); 
     }
 
     /** The drift time after correction for propagation time */
-    inline float driftTime( const double globaly ) const 
+    inline double driftTime( const double globaly ) const 
     { 
       return calibratedTime() - propagationTime( globaly ) ;
     }
 
     /** The drift distance after correction for propagation time */
-    inline float driftDistance( const double globaly ) const
+    inline double driftDistance( const double globaly ) const
     { 
       return m_rtrel->radius( driftTime( globaly) ) ; 
     }
@@ -98,16 +99,14 @@ namespace Tf
     /** Test if this hit is out-of-time */
     bool outOfTime( const double globaly, const double numsigma ) const ;
 
-    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
-     *  XXX???XXX If obsolete, should we not remove this method entirely */
-    inline float untruncatedDriftDistance( const double globaly ) const 
+    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
+    inline double untruncatedDriftDistance( const double globaly ) const 
     { 
       return m_rtrel->extrapolatedradius( driftTime( globaly) ) ; 
     }
 
-    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime.
-     *  XXX???XXX If obsolete, should we not remove this method entirely */
-    inline float untruncatedDriftDistance() const 
+    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
+    inline double untruncatedDriftDistance() const 
     { 
       return m_rtrel->extrapolatedradius( driftTime(yMid()) ) ; 
     }
@@ -115,7 +114,7 @@ namespace Tf
     /** Access the straw number for this hit */
     inline unsigned int straw() const { return m_rawhit.channel().straw() ; }
 
-    /** Access the monolayer number for this hit (XXX???XXX what exactly is this) */
+    /** Access the monolayer number for this hit */
     inline unsigned int monolayer() const { return module().monoLayerB(straw()) ; }
 
     /** The length of the wire */
@@ -125,7 +124,7 @@ namespace Tf
 
     const DeOTModule* m_module ;         ///< Pointer to the associated DeOTModule
     LHCb::OTLiteTime  m_rawhit ;         ///< The raw OTLiteTime for this hit
-    float             m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
+    double            m_driftDistance ;  ///< The default drift distance. Defined at the point halfway along the length the wire.
     const OTDet::RtRelation* m_rtrel;	 ///< The rt relation used to convert drift times to radii
 
   private: // methods
@@ -150,7 +149,7 @@ namespace Tf
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
-    const float time = driftTime(yMid()) ;
+    const double time = driftTime(yMid()) ;
     OTDet::RadiusWithError r = m_rtrel->radiusWithError( time ) ;
     m_driftDistance  = r.val ;
     setVariance(r.err*r.err) ;
@@ -162,8 +161,8 @@ namespace Tf
     m_module(&aModule),
     m_rawhit(rawhit),
     m_rtrel(&rtrel)
-  { setDriftDistAndVar(); }
-
+    { setDriftDistAndVar(); }
+  
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit ) :
     LineHit(aModule,rawhit),
     m_module(&aModule),
@@ -173,9 +172,9 @@ namespace Tf
 
   inline bool OTHit::outOfTime( double globaly, double numsigma ) const 
   {
-    const float tres = m_rtrel->drifttimeError(m_driftDistance) ;
-    const float tmax = m_rtrel->tmax() ;
-    const float t    = driftTime( globaly) ;
+    const double tres = m_rtrel->drifttimeError(m_driftDistance) ;
+    const double tmax = m_rtrel->tmax() ;
+    const double t    = driftTime( globaly) ;
     return t<-numsigma*tres || t>tmax + numsigma*tres ;
   }
 

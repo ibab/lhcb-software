@@ -1,4 +1,4 @@
-// $Id: VeloHitExtension.h,v 1.4 2007-09-10 18:09:07 krinnert Exp $
+// $Id: VeloHitExtension.h,v 1.5 2008-05-29 10:55:12 smenzeme Exp $
 #ifndef INCLUDE_TF_VELOHITEXTENSION_H
 #define INCLUDE_TF_VELOHITEXTENSION_H 1
 
@@ -44,26 +44,26 @@ namespace Tf {
     {;}
 
     /// Access to coordinate of underlying VELO hit
-    float coord() const { return m_hit->coord(); }
+    double coord() const { return m_hit->coord(); }
 
     /// Access to coordinate in VELO half box frame of underlying VELO hit
-    float coordHalfBox() const { return m_hit->coordHalfBox(); }
+    double coordHalfBox() const { return m_hit->coordHalfBox(); }
 
     /// Access to ideal coordinate of underlying VELO hit
-    float coordIdeal() const { return m_hit->coordIdeal(); }
+    double coordIdeal() const { return m_hit->coordIdeal(); }
 
     /// Access to sort coordinate in global frame of the underlying VELO hit.
-    float sortCoord() const { return m_hit->sortCoord(); }
+    double sortCoord() const { return m_hit->sortCoord(); }
 
     /// Access to sort coordinate in half box frame of the underlying VELO hit.
-    float sortCoordHalfBox() const { return m_hit->sortCoordHalfBox(); }
+    double sortCoordHalfBox() const { return m_hit->sortCoordHalfBox(); }
 
     /// Access to sort coordinate in ideal frame of the underlying VELO hit.
-    float sortCoordIdeal() const { return m_hit->sortCoordIdeal(); }
+    double sortCoordIdeal() const { return m_hit->sortCoordIdeal(); }
 
 
     /// Access to z position of underlying VELO hit
-    float z() const { return m_hit->z(); }
+    double z() const { return m_hit->z(); }
 
     /// Access to LHCbID
     LHCb::LHCbID lhcbID() const { return m_hit->lhcbID(); }
