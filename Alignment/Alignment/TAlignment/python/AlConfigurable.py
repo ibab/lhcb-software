@@ -20,17 +20,23 @@ class AlConfigurable( ConfigurableUser ) :
         "NumIterations"                : 10                         , ## Number of iterations
         "AlignInputTackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
         "UseCorrelations"              : True                       , ## Correlations
+        "ApplyMS"                      : True                       , ## Multiple Scattering
         "CanonicalConstraintStrategy"  : 0                          , ## Constrain Strategy ( 0 == off, 1 == on, 2 == auto )
         "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
-        "UseWeightedAverageConstraint" : False                      , ## Weighted avergae constrain
-        "MinNumberOfHits"              : 1                          , ## Min number of hits
+        "UseWeightedAverageConstraint" : False                      , ## Weighted average constraint
+        "MinNumberOfHits"              : 1                          , ## Min number of hits per element
         "UsePreconditioning"           : False                      , ## Pre-conditioning
         "SolvTool"                     : "gslSolver"                , ## Solver to use
         "WriteCondToXML"               : False                      , ## Write conditions to xml file
-        "TopLevelElement"              : "/dd/Structure/LHCb/AfterMagnetRegion/T", 
-        "CondFileName"                 : "Conditions.xml"           ,              ## Name of xml file
-        "Precision"                    : 16                         ,              ## Set precision for conditions
-        "OutputLevel"                  : INFO                                      ## Output level
+        "WriteCondSubDetList"          : []                         , ## List of sub-detectors for which to write out the conditions
+        "CondFileName"                 : "Detectors.xml"            , ## Name of xml file for conditions
+        "VeloTopLevelElement"          : "/dd/Structure/LHCb/BeforeMagnetRegion/Velo",
+        "TTTopLevelElement"            : "/dd/Structure/LHCb/BeforeMagnetRegion/TT",
+        "ITTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/IT",
+        "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT",
+        "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon",
+        "Precision"                    : 16                         , ## Set precision for conditions
+        "OutputLevel"                  : INFO                         ## Output level
         }
 
     def getProp( self, name ) :
@@ -87,10 +93,9 @@ class AlConfigurable( ConfigurableUser ) :
             ## No need to check for conditions overlay
             ## CondDBDispatcherSvc throws error
             if self.getProp( "AlternativeDDDBTag" ) :
-                myDDDB = CondDBAccessSvc("DDDB").clone("MyDDDB"                                                                         ,
+                myDDDB = CondDBAccessSvc("DDDB").clone("MyDDDB",
                                                        ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeDDDB" )),
-                                                       DefaultTAG       = self.getProp( "AlternativeDDDBTag" )
-                                                       )
+                                                       DefaultTAG = self.getProp( "AlternativeDDDBTag" ) )
                 addCondDBAlternative( myDDDB , self.getProp( "AlternativeDDDBOverlay" ) )
             else: print "WARNING: Need to specify a tag for alternative DDDB!"
 
@@ -98,18 +103,11 @@ class AlConfigurable( ConfigurableUser ) :
             ## Check there's a tag.
             ## No need to check for conditions overlay
             ## CondDBDispatcherSvc throws error
-            #if not self.getProp( "AlternativeCondDBTag" ) == None :
-            if self.getProp( "AlternativeCondDBTag" ) is not  None :
-                myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND"                                                     ,
+            if self.getProp( "AlternativeCondDBTag" ) is not None:
+                myCondDB = CondDBAccessSvc("LHCBCOND").clone("MyLHCBCOND",
                                                              ConnectionString = "sqlite_file:%s"%expandvars(self.getProp( "AlternativeCondDB" )),
-                                                             DefaultTAG       = self.getProp( "AlternativeCondDBTag" )
-                                                             )
+                                                             DefaultTAG = self.getProp( "AlternativeCondDBTag" ) )
                 listOfOverlays = self.getProp( "AlternativeCondDBOverlays" )
-                #if not len( listOfOverlays ) == 0 :
-                #    for i in range( len( listOfOverlays ) ) :
-                #        addCondDBAlternative( myCondDB , listOfOverlays[i] )
-                #else :
-                #    addCondDBAlternative( myCondDB , "/Conditions" )
                 if listOfOverlays:
                     for d in listOfOverlays :
                         addCondDBAlternative( myCondDB , d )
@@ -132,8 +130,8 @@ class AlConfigurable( ConfigurableUser ) :
             ## Velo Decoding
             from Configurables import ( DecodeVeloRawBuffer )
 
-            decodeVeloClusters                          = DecodeVeloRawBuffer( "DecodeVeloClusters"     ,
-                                                                               OutputLevel = outputLevel )
+            decodeVeloClusters = DecodeVeloRawBuffer( "DecodeVeloClusters",
+                                                      OutputLevel = outputLevel )
             decodeVeloClusters.DecodeToVeloLiteClusters = False
             decodeVeloClusters.DecodeToVeloClusters     = True
             
@@ -144,24 +142,23 @@ class AlConfigurable( ConfigurableUser ) :
             from Configurables import ( RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg, STOfflinePosition ) 
 
             ## Following comes from $STTOOLSROOT/options/Brunel.opts
-            ## importOptions( "$STTOOLSROOT/options/Brunel.opts" )
-            itClusterPosition          = STOfflinePosition( "ITClusterPosition"      ,
-                                                        OutputLevel = outputLevel )
+            itClusterPosition = STOfflinePosition( "ITClusterPosition",
+                                                   OutputLevel = outputLevel )
             itClusterPosition.ErrorVec = [ 0.22, 0.11, 0.24, 0.20 ]
         
             ## TT Decoding
-            createTTClusters     =  RawBankToSTClusterAlg( "CreateTTClusters"       ,
-                                                           OutputLevel = outputLevel )
-            createTTLiteClusters =  RawBankToSTLiteClusterAlg( "CreateTTLiteClusters"   ,
+            createTTClusters =  RawBankToSTClusterAlg( "CreateTTClusters",
+                                                       OutputLevel = outputLevel )
+            createTTLiteClusters =  RawBankToSTLiteClusterAlg( "CreateTTLiteClusters",
                                                                OutputLevel = outputLevel )
 
             decodingSequencer.Members.append( createTTClusters     )
             decodingSequencer.Members.append( createTTLiteClusters )
         
             ## IT Decoding
-            createITClusters     = RawBankToSTClusterAlg( "CreateITClusters"       ,
-                                                          OutputLevel = outputLevel )
-            createITLiteClusters = RawBankToSTLiteClusterAlg( "CreateITLiteClusters"   ,
+            createITClusters = RawBankToSTClusterAlg( "CreateITClusters",
+                                                      OutputLevel = outputLevel )
+            createITLiteClusters = RawBankToSTLiteClusterAlg( "CreateITLiteClusters",
                                                               OutputLevel = outputLevel )
         
             createITClusters.detType     = "IT";
@@ -191,8 +188,8 @@ class AlConfigurable( ConfigurableUser ) :
             
             from Configurables import ( TESCheck, EventNodeKiller ) 
             
-            patSequencer.Members.append( TESCheck()        )
-            patSequencer.Members.append( EventNodeKiller() )
+            patSequencer.Members.append( TESCheck( Inputs = [ "Link/Rec/Track/Best" ] ) )
+            patSequencer.Members.append( EventNodeKiller( Nodes = [ "Rec", "Raw", "Link/Rec" ] ) )
             
             patSequencer.Members.append( GaudiSequencer( "RecoVELOSeq", MeasureTime = True ) )
             patSequencer.Members.append( GaudiSequencer( "RecoTTSeq"  , MeasureTime = True ) )
@@ -206,87 +203,6 @@ class AlConfigurable( ConfigurableUser ) :
 
             allConfigurables["RecoTrSeq"].Members.append( PatPVOffline() )
             
-            ### ( WDH thinks this was a waste of time )
-            #             # Velo Pat
-            #             from Configurables import ( Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking )
-            
-            #             patVeloRTracking       = Tf__PatVeloRTracking( "PatVeloRTracking"       ,
-            #                                                            OutputLevel = outputLevel )
-            #             patVeloSpaceTracking   = Tf__PatVeloSpaceTracking( "PatVeloSpaceTracking"   ,
-            #                                                                OutputLevel = outputLevel )
-            #             patVeloGeneralTracking = Tf__PatVeloGeneralTracking( "PatVeloGeneralTracking" ,
-            #                                                                  OutputLevel = outputLevel )
-            
-            #             patSequencer.Members.append( patVeloRTracking )
-            #             patSequencer.Members.append( patVeloSpaceTracking )
-            #             patSequencer.Members.append( patVeloSpaceTracking )
-            
-            #             # Forward Pat
-            #             from Configurables import ( PatFwdTool, PatAddTTCoord, PatForwardTool, PatForward )
-            
-            #             # Following comes from $PATALGORITHMSROOT/options/PatFwdTool.opts
-            #             # Options obtained by the fit of the MC track parameters
-            #             # Fit for DC06, updated position, 5 parameters for zMagnet
-            #             patFwdTool     = PatFwdTool( OutputLevel    = outputLevel                                                ,
-            #                                          ZMagnetParams  = [5199.31, 334.725, -1283.86, 9.59486e-06, -413.281]        ,
-            #                                          xParams        = [16.8238, -6.35556]                                        ,
-            #                                          yParams        = [-970.89,  -0.686028]                                      ,
-            #                                          momentumParams = [1.21909, 0.627841, -0.235216, 0.433811, 2.92798, -21.3909] )
-            #             patAddTTCoord  = PatAddTTCoord( OutputLevel  = outputLevel ) 
-            #             patForwardTool                  = PatForwardTool( OutputLevel = outputLevel )
-            #             patForwardTool.AddTTClusterName = patAddTTCoord
-            #             patForward = PatForward(OutputLevel = outputLevel)
-            
-            #             patSequencer.Members.append( patForward )
-            
-            #             # Seed Pat
-            #             from Configurables import ( Tf__Tsa__ITXSearch, Tf__Tsa__ITStereoSearch,
-            #                                         Tf__Tsa__OTXSearch, Tf__Tsa__OTStereoSearch,
-            #                                         Tf__Tsa__Seed     , Tf__Tsa__SeedTrackCnv  ,
-            #                                         FastMomentumEstimate, Tf__Tsa__TStationHitManager )
-            
-            
-            #             tsaSeed = Tf__Tsa__Seed( "TsaSeed"                ,
-            #                                      OutputLevel = outputLevel )
-            
-            #             # Add IT / OT X / Stereo search tools
-            #             for i in range(5):
-            #                 if i < 3:
-            #                     ToolName = "xSearchS" + str(i)
-            #                     tsaSeed.addTool( Tf__Tsa__ITXSearch(      OutputLevel = outputLevel, sector = i ), ToolName )
-            #                     ToolName = "stereoS"  + str(i)
-            #                     tsaSeed.addTool( Tf__Tsa__ITStereoSearch( OutputLevel = outputLevel, sector = i ), ToolName )
-            #                 else:
-            #                     ToolName = "xSearchS" + str(i)
-            #                     tsaSeed.addTool( Tf__Tsa__OTXSearch(      OutputLevel = outputLevel, sector = i ), ToolName )
-            #                     ToolName = "stereoS"  + str(i)
-            #                     tsaSeed.addTool( Tf__Tsa__OTStereoSearch( OutputLevel = outputLevel, sector = i ), ToolName )
-            
-            #             # This is a hack, until I can figure out how to properly configure "TsaDataManager"
-            #             # Do I actually need this for refitting?
-            #             importOptions( "$TALIGNMENTROOT/options/TsaDataManager.opts" )
-            
-            ## Following comes from $TRACKTOOLSROOT/options/FastMomentumEstimate.opts
-            #             FastMomentumEstimate( ParamsTCubic        = [ -6.3453 , -4.77725 ,  -14.9039  , 3.13647e-08                    ],
-            #                                   ParamsTParabola     = [ -6.31652, -4.46153 ,  -16.694   , 2.55588e-08                    ],
-            #                                   ParamsVeloTCubic    = [  1.21909,  0.627841,   -0.235216, 0.433811,   2.92798, -21.3909  ],
-            #                                   ParamsVeloTParabola = [  1.21485,  0.64199 ,  - 0.27158 , 0.440325,   2.9191 , -20.4831  ],
-            #                                   OutputLevel         = outputLevel )
-            
-            #             tsaSeedTrackCnv = Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv"        , 
-            #                                                      OutputLevel = outputLevel )
-            
-            #             patSequencer.Members.append( tsaSeed         )
-            #             patSequencer.Members.append( tsaSeedTrackCnv )
-            
-            
-            #             # Match Pat
-            #             from Configurables import ( TrackMatchVeloSeed )
-            #             trackMatch = TrackMatchVeloSeed( "TrackMatch"             ,
-            #                                              OutputLevel = outputLevel )
-            
-            #             patSequencer.Members.append( trackMatch )
-
             return patSequencer
         else :
             if outputLevel == VERBOSE: print "VERBOSE: Pat Sequencer already defined!" 
@@ -323,17 +239,18 @@ class AlConfigurable( ConfigurableUser ) :
             alignSequencer = GaudiSequencer( "AlignmentSeq" )
             alignSequencer.MeasureTime = True
             
-            from Configurables import ( AlignAlgorithm, GetElementsToBeAligned, gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool )
-            alignAlg = AlignAlgorithm( "Alignment"                                                                  ,
-                                       OutputLevel                  = INFO                                   ,
-                                       NumberOfIterations           = self.getProp( "NumIterations"                ),
-                                       TracksLocation               = self.getProp( "AlignInputTackCont"           ),
-                                       UseCorrelations              = self.getProp( "UseCorrelations"              ),
-                                       CanonicalConstraintStrategy  = self.getProp( "CanonicalConstraintStrategy"  ),
-                                       Constraints                  = self.getProp( "Constraints"                  ),
-                                       UseWeightedAverageConstraint = self.getProp( "UseWeightedAverageConstraint" ),
-                                       MinNumberOfHits              = self.getProp( "MinNumberOfHits"              ),
-                                       UsePreconditioning           = self.getProp( "UsePreconditioning"           ) )
+            from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
+                                        gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool )
+            alignAlg = AlignAlgorithm( "Alignment" )
+            alignAlg.OutputLevel                  = outputLevel
+            alignAlg.NumberOfIterations           = self.getProp( "NumIterations"                )
+            alignAlg.TracksLocation               = self.getProp( "AlignInputTackCont"           )
+            alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"              )
+            alignAlg.CanonicalConstraintStrategy  = self.getProp( "CanonicalConstraintStrategy"  )
+            alignAlg.Constraints                  = self.getProp( "Constraints"                  )
+            alignAlg.UseWeightedAverageConstraint = self.getProp( "UseWeightedAverageConstraint" )
+            alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
+            alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
 
 
             if self.getProp( "SolvTool" ) == "gslSolver" :
@@ -345,20 +262,28 @@ class AlConfigurable( ConfigurableUser ) :
             if self.getProp( "SolvTool" ) == "DiagSolvTool" :
                 alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
                 
-            alignAlg.addTool( GetElementsToBeAligned( OutputLevel   = INFO, #outputLevel                      ,
-                                                      Elements      = self.getProp( "ElementsToAlign" ) ),
-                              name = "GetElementsToBeAligned" )
+            alignAlg.addTool( GetElementsToBeAligned( "GetElementsToBeAligned" ) )
+            alignAlg.GetElementsToBeAligned.OutputLevel = outputLevel
+            alignAlg.GetElementsToBeAligned.Elements    = self.getProp( "ElementsToAlign" )
             
             alignSequencer.Members.append(alignAlg)
 
             if self.getProp( "WriteCondToXML" ) :                 
                 from Configurables import WriteAlignmentConditions
-                alignSequencer.Members.append( WriteAlignmentConditions( "WriteConditionsToXML"                     ,
-                                                                         OutputLevel = outputLevel                  ,
-                                                                         topElement  = self.getProp( "TopLevelElement" ),
-                                                                         precision   = self.getProp( "Precision"   ),
-                                                                         outputFile  = self.getProp( "CondFileName") ) )
-                
+
+                listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+                if listOfCondToWrite:
+                    for subDet in listOfCondToWrite :
+                        writeCondInstName = 'Write' + subDet + 'ConditionsToXML'
+                        topLevelElement = subDet + 'TopLevelElement'
+                        condFileName = subDet + self.getProp( "CondFileName" )
+                        alignSequencer.Members.append (
+                            WriteAlignmentConditions( writeCondInstName,
+                                                      OutputLevel = outputLevel,
+                                                      topElement = self.getProp( topLevelElement ),
+                                                      precision = self.getProp( "Precision" ),
+                                                      outputFile = condFileName ) )
+                            
             return alignSequencer
         else :
             if outputLevel == VERBOSE : print "VERBOSE: Alignment Sequencer already defined!" 

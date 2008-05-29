@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-05-29 - Louis Nicolas
+ - added alignable objects in Alignables.py
+ - added possibility to give a list of sub-detectors for which to write out the conditions in AlConfigurable.py + some clean-up
+
 </PRE><H1><A NAME=v3r5>2007-12-19 TAlignment v3r5</A></H1><PRE>
 - Johan Blouw: 2008-06-16, tagged the head as v3r5
 
