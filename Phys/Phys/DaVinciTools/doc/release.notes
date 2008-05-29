@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.327 2008-05-21 07:08:15 pkoppenb Exp $
+! $Id: release.notes,v 1.328 2008-05-29 13:59:29 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-05-29 - Vanya BELYAEV
+ - move (and rename) the temporary file TemporaryGetDecay.cpp into DaVinciKernel package
 
 ! 2008-05-21 - Patrick Koppenburg
  - Temporary file TemporaryGetDecay.cpp that implements a few methods which should 
