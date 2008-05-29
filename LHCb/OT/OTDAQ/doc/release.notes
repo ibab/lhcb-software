@@ -2,11 +2,11 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v6r0 2008-05-29 ======================
 ! 2008-05-29 - Wouter Hulsbergen
  - fixed bug in decoding of hits in short modules
  - added access function to list of raw hits
 
-!======================= OTDAQ v6r0 2008-05-29 ======================
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - remove all float variables, replace them by doubles
 
