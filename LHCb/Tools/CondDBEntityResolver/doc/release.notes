@@ -5,8 +5,9 @@
 !               CondDB URLs into xml documents
 !-----------------------------------------------------------------------------
 
+!================ Tools/CondDBEntityResolver v4r1p1 2008-05-28 ===============
 ! 2008-05-28 - Marco Cattaneo
- - Fix compilation warning
+ - Fix trivial compilation warning
 
 !================ Tools/CondDBEntityResolver v4r1 2008-04-10 =================
 ! 2008-04-10 - Marco Clemencic
