@@ -203,7 +203,7 @@ class AlConfigurable( ConfigurableUser ) :
             if allConfigurables.get( "TrackForwardPatSeq" ):
                 trackFwdPatSeq = GaudiSequencer( "TrackForwardPatSeq" )
                 trackRemoveDoubleHitsFwd = TrackRemoveDoubleHits( "RemoveDoubleHitsFwd" )
-                trackRemoveDoubleHitsFwd.TracksLocation = "Rec/Track/Match"
+                trackRemoveDoubleHitsFwd.TracksLocation = "Rec/Track/Forward"
                 trackFwdPatSeq.Members.append( trackRemoveDoubleHitsFwd )
 
             if allConfigurables.get( "TrackMatchPatSeq" ):
