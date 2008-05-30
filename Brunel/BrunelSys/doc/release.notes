@@ -3,8 +3,28 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r7>2008-05-30 Brunel v32r7</A></H1><PRE>
+This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18, Rec v5r6
+ and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
+
+This is a development version.
+- Can be used to reconstruct 2008 geometries. 
+- Can be used for DC06 geometries, but material seen in ST detectors is different
+from DC06
+
+- New features
+  . Add ability to decode 2008 OT data format (OTDAQ v6r0)
+
+- Bug fixes
+  . Remove all float-double conversion warnings in tracking code, should improve
+    cross-platform reproducibility. Does not affect timing performance
+    (PatAlgorithms v3r6, TfTools v1r6, TrackFitEvent v3r15, TrackTools v3r7,
+     TfKernel v2r5, TsaKernel v3r3) 
+  . Fixed bug preventing reconstruction with tilted Velo detectors
+    (VeloTools v3r2)
+
 </PRE><H1><A NAME=v32r6>2008-05-19 Brunel v32r6</A></H1><PRE>
-This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r16, Rec v5r5
+This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17, Rec v5r5
  and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
 
 This is a development version.
