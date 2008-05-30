@@ -141,7 +141,7 @@ DigiTTSeq.Members += { "STClustersToRawBankAlg/createTTRawBuffer" };
 // Outer tracker digitisation
 DigiOTSeq.Members += { "MCOTDepositCreator"
                       ,"MCOTTimeCreator"
-                      ,"OTFillRawEvent"
+                      ,"OTFillRawBuffer"
                      };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
