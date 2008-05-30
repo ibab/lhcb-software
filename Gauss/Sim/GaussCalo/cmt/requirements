@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2007-10-05 07:24:42 gcorti Exp $ 
+# $Id: requirements,v 1.30 2008-05-30 13:51:07 gcorti Exp $ 
 #============================================================================
 # Created    : 2005-12-08
 # Maintainer : Patrick ROBBE
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussCalo
-version           v9r0p1
+version           v9r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -29,7 +29,7 @@ use LHCbKernel    v*     Kernel
 #============================================================================
 # Component library building rule
 #============================================================================
-library          GaussCalo   *.cpp                  
+library          GaussCalo   *.cpp  
 
 #============================================================================
 # define component library link options

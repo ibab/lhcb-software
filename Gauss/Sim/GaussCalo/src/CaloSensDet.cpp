@@ -1,4 +1,4 @@
-// $Id: CaloSensDet.cpp,v 1.22 2007-01-12 15:24:45 ranjard Exp $ 
+// $Id: CaloSensDet.cpp,v 1.23 2008-05-30 13:51:07 gcorti Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -8,9 +8,9 @@
 
 // LHCbDefintions
 #include "CLHEP/Geometry/Point3D.h"
-#include "Kernel/Point3DTypes.h"
 
 // from Gaudi
+#include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -20,7 +20,6 @@
 #include "GaudiKernel/Stat.h"
 
 // GiGa 
-//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaHashMap.h"
 
 // GaussTools 

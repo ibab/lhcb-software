@@ -1,6 +1,6 @@
-// $Id: EcalSensDet.h,v 1.10 2007-03-18 21:33:19 gcorti Exp $ 
+// $Id: EcalSensDet.h,v 1.11 2008-05-30 13:51:07 gcorti Exp $ 
 #ifndef       GAUSSCALO_EcalSensDet_H
-#define       GAUSSCALO_EcalSensDet_H 1 
+#define       GAUSSCALO_EcalSensDet_H 1
 
 // Ntuple Svc 
 #include "GaudiKernel/INTuple.h"
@@ -168,14 +168,14 @@ inline double EcalSensDet::localNonUniformity
   // Local uniformity is product of x and y sine-like functions
   // The Amplitude of the sin-like function is a function of x and 
   // y
-  if ( A_local > LHCbMath::lowTolerance ) 
+  if ( A_local > LHCb::Math::lowTolerance ) 
     correction += A_local / 2. * ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
       ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
 
   double rX(0.) , rY(0.) , hCell(0.) ;
   
   // Global non uniformity
-  if ( A_global > LHCbMath::lowTolerance ) {
+  if ( A_global > LHCb::Math::lowTolerance ) {
     rX = x - x0 ;
     rY = y - y0 ;
     hCell = cellSize / 2. ;
@@ -185,7 +185,7 @@ inline double EcalSensDet::localNonUniformity
   }
   
   // Light Reflexion on the edges
-  if ( m_a_reflection_height > LHCbMath::lowTolerance ) {
+  if ( m_a_reflection_height > LHCb::Math::lowTolerance ) {
     rX = rX / m_a_reflection_width ;
     rY = rY / m_a_reflection_width ;
     hCell = hCell / m_a_reflection_width ;

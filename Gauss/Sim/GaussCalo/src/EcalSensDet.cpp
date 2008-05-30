@@ -1,4 +1,4 @@
-// $Id: EcalSensDet.cpp,v 1.10 2007-01-12 15:24:46 ranjard Exp $ 
+// $Id: EcalSensDet.cpp,v 1.11 2008-05-30 13:51:07 gcorti Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -19,7 +19,7 @@
 #include "GiGa/GiGaHashMap.h"
 
 // LHCb
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 
 // GaussTools 
 #include "GaussTools/GaussTrackInformation.h"

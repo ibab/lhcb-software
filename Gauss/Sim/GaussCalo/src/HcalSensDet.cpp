@@ -1,4 +1,4 @@
-// $Id: HcalSensDet.cpp,v 1.9 2007-01-12 15:24:49 ranjard Exp $ 
+// $Id: HcalSensDet.cpp,v 1.10 2008-05-30 13:51:07 gcorti Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -15,7 +15,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 // LHCb
-#include "Kernel/LHCbMath.h"
+#include "LHCbMath/LHCbMath.h"
 
 // GiGa 
 #include "GiGa/GiGaHashMap.h"
