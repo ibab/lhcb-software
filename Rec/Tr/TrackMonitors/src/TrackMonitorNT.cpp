@@ -1,0 +1,296 @@
+// $Id: TrackMonitorNT.cpp,v 1.1 2008-05-30 13:49:13 wouter Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiAlg/GaudiTupleAlg.h"
+#include "TrackInterfaces/ITrackSelector.h"
+
+// from Event
+#include "Event/Track.h"
+#include "Event/State.h"
+#include "Kernel/LHCbID.h"
+#include "Event/FitNode.h"
+
+// Det
+//#include "OTDet/DeOTDetector.h"
+//#include "STDet/DeSTDetector.h"
+//#include "STDet/DeITDetector.h"
+
+// gsl
+//#include "gsl/gsl_math.h"
+
+#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/ToStream.h"
+
+#include <map>
+
+#include "Map.h"
+
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+using namespace boost::lambda;
+using namespace LHCb;
+using namespace Gaudi;
+ 
+
+/** @class TrackMonitor TrackMonitor.h "TrackCheckers/TrackMonitor"
+ * 
+ * Class for track monitoring
+ *  @author M. Needham.
+ *  @date   6-5-2007
+ */                 
+                                                           
+class TrackMonitorNT : public GaudiTupleAlg {
+                                                                             
+ public:
+                                                                             
+  /** Standard construtor */
+  TrackMonitorNT( const std::string& name, ISvcLocator* pSvcLocator );
+                                                                             
+  /** Destructor */
+  virtual ~TrackMonitorNT();
+
+  /** Algorithm execute */
+  virtual StatusCode execute();
+
+  /** Algorithm initialize */
+  virtual StatusCode initialize();
+
+ private:
+
+  ITrackSelector* selector(LHCb::Track::Types aType) const {
+    return m_splitByAlgorithm == true ? m_selectors[aType] : m_selectors[LHCb::Track::TypeUnknown];
+  }
+  
+  void fillNtuple(const LHCb::Track* aTrack, 
+		  const std::string& type);
+private:
+  std::string m_tracksInContainer;    ///< Input Tracks container location
+  bool m_splitByAlgorithm; 
+  typedef std::map<LHCb::Track::Types,ITrackSelector*> Selectors;
+  mutable Selectors m_selectors; 
+  std::string m_allString;  
+
+};
+
+DECLARE_ALGORITHM_FACTORY( TrackMonitorNT );
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+TrackMonitorNT::TrackMonitorNT(const std::string& name,
+                           ISvcLocator* pSvcLocator ) :
+  GaudiTupleAlg( name , pSvcLocator ),
+  m_allString("ALL")
+{
+  declareProperty( "TracksInContainer", m_tracksInContainer = LHCb::TrackLocation::Default  );
+  declareProperty("SplitByAlgorithm", m_splitByAlgorithm = false);
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+TrackMonitorNT::~TrackMonitorNT() {}; 
+
+//=============================================================================
+// Initialization. Check parameters
+//=============================================================================
+StatusCode TrackMonitorNT::initialize()
+{
+  // Mandatory initialization of GaudiAlgorithm
+  StatusCode sc = GaudiTupleAlg::initialize();
+  if ( sc.isFailure() ) { return sc; }
+
+  if (m_splitByAlgorithm == true){
+    const TrackMonitorMaps::TypeMap& tMap = TrackMonitorMaps::typeDescription();
+    TrackMonitorMaps::TypeMap::const_iterator iterM = tMap.begin();
+    for (; iterM != tMap.end(); ++iterM ){
+      // make a tool from this
+      std::string name = iterM->first+"Selector";
+      ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
+      m_selectors[iterM->second] = selector;  
+    } // iterM
+  }
+  else {
+    std::string name = m_allString+"Selector";
+    ITrackSelector* selector = tool<ITrackSelector>("TrackSelector",name);  
+    m_selectors[LHCb::Track::TypeUnknown] = selector;  
+  } // splitByType
+
+  return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+// Execute
+//=============================================================================
+StatusCode TrackMonitorNT::execute()
+{
+  
+  // get the input data
+  LHCb::Tracks* tracks = get<LHCb::Tracks>(m_tracksInContainer);
+
+  std::map<std::string, unsigned int> tMap;
+  std::string type = "";
+
+  // # number of tracks
+  plot(tracks->size(),1, "# tracks", 0., 500., 50);
+
+  // histograms per track
+  LHCb::Tracks::const_iterator iterT = tracks->begin();
+  
+  for (; iterT != tracks->end(); ++iterT){
+    if (selector((*iterT)->type())->accept(**iterT) == true){
+
+      m_splitByAlgorithm == true ? 
+        type = Gaudi::Utils::toString((*iterT)->history()) : type= m_allString ; 
+
+      tMap[type]+= 1;
+      fillNtuple(*iterT,type);
+    }
+  } // iterT
+
+  // fill counters....
+  counter("#Tracks") += tracks->size();
+  for (std::map<std::string,unsigned int>::const_iterator iterS = tMap.begin();
+       iterS != tMap.end(); ++iterS){
+    counter("#"+iterS->first) += iterS->second;
+  } // iterS
+
+  return StatusCode::SUCCESS;
+};
+
+
+void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
+			     const std::string& type){
+
+
+ 
+
+  int maxVelo = 40; 
+  std::vector<double> Velo_res;
+  std::vector<double> Velo_pull;
+  std::vector<bool>   Velo_rType;
+  std::vector<int>    Velo_sensor;
+ 
+  int maxTT = 10;
+  std::vector<double> TT_res;
+  std::vector<double> TT_pull;
+  std::vector<int>    TT_station;
+  std::vector<int>    TT_layer;
+  std::vector<int>    TT_region;
+  std::vector<int>    TT_sector;
+
+  int maxOT = 50;
+  std::vector<double> OT_res;
+  std::vector<double> OT_pull;
+  std::vector<int>    OT_station;
+  std::vector<int>    OT_layer;
+  std::vector<int>    OT_quarter;
+  std::vector<int>    OT_module;
+  
+  int maxIT = 50;
+  std::vector<double> IT_res;
+  std::vector<double> IT_pull;
+  std::vector<int>    IT_station;
+  std::vector<int>    IT_layer;
+  std::vector<int>    IT_box;
+  std::vector<int>    IT_sector;
+    
+  LHCb::STChannelID   theSTID;
+  LHCb::OTChannelID   theOTID;
+  LHCb::STChannelID   theTTID;
+  LHCb::VeloChannelID theVeloID;
+  
+  // Loop over the nodes to get the hits variables
+  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
+
+  for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
+
+    // Only loop on hits with measurement
+    if ( !(**iNodes).hasMeasurement() ) continue;
+    
+    const LHCb::Node& aNode = **iNodes;
+    LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
+    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+
+    if ( aNode.measurement().type() == LHCb::Measurement::IT ){  
+      theSTID = nodeID.stID();
+      IT_res.push_back(fNode->unbiasedResidual());
+      IT_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
+      IT_station.push_back(theSTID.station());
+      IT_layer.push_back(theSTID.layer());
+      IT_box.push_back(theSTID.detRegion());
+      IT_sector.push_back(theSTID.sector());
+    }
+    else if ( aNode.measurement().type() == LHCb::Measurement::OT ) {
+      theOTID = nodeID.otID();
+      OT_res.push_back(fNode->unbiasedResidual()); 
+      OT_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
+      OT_station.push_back(theOTID.station());
+      OT_layer.push_back(theOTID.layer());
+      OT_quarter.push_back(theOTID.quarter());
+      OT_module.push_back(theOTID.module());
+    }
+    else if ( aNode.measurement().type() == LHCb::Measurement::TT ) {
+      theTTID = nodeID.stID(); 
+      TT_res.push_back(fNode->unbiasedResidual());
+      TT_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
+      TT_station.push_back(theTTID.station());
+      TT_layer.push_back(theTTID.layer());
+      TT_region.push_back(theTTID.detRegion());
+      TT_sector.push_back(theTTID.sector());
+    }
+     else if (aNode.measurement().type() == LHCb::Measurement::VeloR){
+       theVeloID = nodeID.veloID();  
+       Velo_res.push_back(fNode->unbiasedResidual());
+       Velo_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
+       Velo_sensor.push_back(theVeloID.sensor());
+       Velo_rType.push_back(theVeloID.isRType());
+     } 
+    else if (aNode.measurement().type() == LHCb::Measurement::VeloPhi){
+       theVeloID = nodeID.veloID();  
+       Velo_res.push_back(fNode->unbiasedResidual()); 
+       Velo_pull.push_back(fNode->unbiasedResidual()/fNode->errUnbiasedResidual());
+       Velo_sensor.push_back(theVeloID.sensor());
+       Velo_rType.push_back(theVeloID.isRType());
+     }
+    
+  }
+
+  Tuple theTuple = nTuple( "HitResiduals/"+type+"/" , "" , CLID_ColumnWiseTuple );
+
+  theTuple->farray( "Velo_res"     , Velo_res     , "nVelo" , maxVelo );  
+  theTuple->farray( "Velo_pull"    , Velo_pull    , "nVelo" , maxVelo );
+  theTuple->farray( "Velo_sensor"  , Velo_sensor  , "nVelo" , maxVelo ); 
+  theTuple->farray( "Velo_rType"   , Velo_rType   , "nVelo" , maxVelo );  
+    
+  theTuple->farray( "TT_res"       , TT_res       , "nTT"   , maxTT );
+  theTuple->farray( "TT_pull"      , TT_pull      , "nTT"   , maxTT );
+  theTuple->farray( "TT_station"   , TT_station   , "nTT"   , maxTT ); 
+  theTuple->farray( "TT_layer"     , TT_layer     , "nTT"   , maxTT );  
+  theTuple->farray( "TT_region"    , TT_region    , "nTT"   , maxTT ); 
+  theTuple->farray( "TT_sector"    , TT_sector    , "nTT"   , maxTT );
+
+  theTuple->farray( "OT_res"       , OT_res       , "nOT"   , maxOT );  
+  theTuple->farray( "OT_pull"      , OT_pull      , "nOT"   , maxOT );
+  theTuple->farray( "OT_station"   , OT_station   , "nOT"   , maxOT ); 
+  theTuple->farray( "OT_layer"     , OT_layer     , "nOT"   , maxOT );  
+  theTuple->farray( "OT_quarter"   , OT_quarter   , "nOT"   , maxOT ); 
+  theTuple->farray( "OT_module"    , OT_module    , "nOT"   , maxOT );
+
+  theTuple->farray( "IT_res"       , IT_res       , "nIT"   , maxIT );
+  theTuple->farray( "IT_pull"      , IT_pull      , "nIT"   , maxIT );
+  theTuple->farray( "IT_station"   , IT_station   , "nIT"   , maxIT ); 
+  theTuple->farray( "IT_layer"     , IT_layer     , "nIT"   , maxIT );  
+  theTuple->farray( "IT_box"       , IT_box       , "nIT"   , maxIT ); 
+  theTuple->farray( "IT_sector"    , IT_sector    , "nIT"   , maxIT );
+  
+  theTuple->column("p"           , aTrack->p()/Gaudi::Units::GeV );
+  theTuple->column("chi2PerDoF"  , aTrack->chi2PerDoF()          );
+  theTuple->column("probChi2"    , aTrack->probChi2()            );
+  
+  theTuple->write();
+}
