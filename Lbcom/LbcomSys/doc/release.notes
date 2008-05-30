@@ -6,6 +6,28 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r18>2008-05-29 LbcomSys v6r18</A></H1><PRE>
+This version uses Gaudi v19r9 and LHCb v23r7
+
+- Packages modified: L0DU v8r5, VeloDAQ v4r2, VeloTools v3r2
+
+- In L0DU v8r5
+  . add standard definition of sub-triggers in the configuration options files
+    ("L0Muon", "L0Ecal", "L0Hcal")
+  . implement sub-trigger where it is needed 
+  . adapt to changes in L0Event
+  . clean options
+  . add options for L0DU test pattern production (expert usage) : 
+    L0DUPattern.opts & L0DUPatternConfig.opts
+  . rename L0.opts -> L0Emulator.opts to avoid confusion 
+
+- In VeloDAQ v4r2
+  . Adapt VeloFull decoding to run without ODIN bank; this behaviour
+    is controlable via options file 
+
+- In VeloTools v3r2
+  . Fixed bug exposed when reconstructing in a non-ideal geometry
+
 </PRE><H1><A NAME=v6r17>2008-05-16 LbcomSys v6r17</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6
 
