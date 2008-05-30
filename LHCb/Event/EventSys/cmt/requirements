@@ -1,5 +1,5 @@
 package EventSys
-version v24r3
+version v24r4
 
 branches doc cmt
 
@@ -12,7 +12,7 @@ use EventBase   v2r5    Event
 use GenEvent    v5r2    Event
 use HltEvent    v8r9    Event
 use LinkerEvent v3r4    Event
-use L0Event     v16r9   Event
+use L0Event     v16r10  Event
 use MCEvent     v2r8    Event
 use PackedEvent v3r3    Event
 use PhysEvent   v11r6   Event
