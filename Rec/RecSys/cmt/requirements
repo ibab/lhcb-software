@@ -1,5 +1,5 @@
 package RecSys
-version v5r6
+version v5r7
 
 branches cmt doc
  
@@ -23,22 +23,22 @@ use PatFitParams        v3r1    Tr    # Olivier Callot
 use TrackAssociators    v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers       v3r4p2  Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r18   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r14   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r15   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r24   Tr    # Eduardo Rodrigues
 use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
 use TrackMCTools        v2r17   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackTools          v3r6    Tr    # Eduardo Rodrigues
+use TrackTools          v3r7    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r20   Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys            v4r13   Tf    # Eduardo Rodrigues
 use NNTools             v1r2p1  Tr    # Adrian Perieanu
-use PatAlgorithms       v3r5    Tf    # Stephanie Hansmann-Menzemer
-use PatVelo             v3r5    Tf    # David Hutchcroft
+use PatAlgorithms       v3r6    Tf    # Stephanie Hansmann-Menzemer
+use PatVelo             v3r6    Tf    # David Hutchcroft
 use PatVeloTT           v3r1    Tf    # Mariusz Witek
-use TfTools             v1r4    Tf    # Stephanie Hansmann-Menzemer
+use TfTools             v1r5    Tf    # Stephanie Hansmann-Menzemer
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
 use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
 use TsaAlgorithms       v3r3    Tf    # Matt Needham

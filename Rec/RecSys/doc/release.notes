@@ -5,6 +5,40 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v5r7>2008-05-29 RecSys v5r7</A></H1><PRE>
+This version uses Gaudi v19r9 and LHCb v23r7.
+
+- Packages modified: PatAlgorithms v3r6, PatVelo v3r6, TfTools v1r5, 
+    TrackFitEvent v3r15, TrackTools v3r7
+
+- In PatAlgorithms v3r6
+	. PatMatchTool: Add interface for Hlt implementation
+  . PatSeedingTool: fixed a bug in the y window calculation used in L0
+                    confirmation (no tracks are found in the L0 case)
+
+- In PatAlgorithms v3r6, TfTools v1r6, TrackFitEvent v3r15, TrackTools v3r7
+  . Removed all float variables, replaced them by doubles, no loss in performance
+
+- In PatVelo v3r6
+  . Changed behaviour of PatVeloSpaceTracking in the case of invalid RZ tracks
+    Now prints a warning and continues, previously aborted job
+  . Added ConsiderOverlaps to property to PatVeloGeneric, allowing to pick up 
+    clusters in the other VELO half during candidate propagation. 
+    Default is false, i.e. the old behaviour.
+
+- In TrackFitEvent v3r15
+  . Added fit-status flag to TrackStateVertex
+  . Added method to get propagation time to OTMeasurement
+
+- In TrackTools v3r7
+  . PtTransporter.h,cpp: add interface for Hlt implementation
+  . Add StateDetailedBetheBloch dE/dx correction tool
+  . Check #dof for chisquare cut in TrackSelector
+  . Extend interface of TrackVertexer
+
+- In TfTools v1r5, TrackTools v3r7 
+  . Fix doxygen warning
+
 </PRE><H1><A NAME=v5r6>2008-05-19 RecSys v5r6</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r6.
 
