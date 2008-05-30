@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-05-30 - Louis Nicolas
+ - added TrackRemoveDoubleHits in Pat Rec sequence (AlConfigurable.py).
+ - added fit sequence in case pat rec is not run (ITOTTracking.py).
+ - added AlignITBoxes.py script to align IT boxes (and gives an example of how to set misalignments in xml or sqlite).
+ - removed cut on chi2 in TrackFilterAlg as it is better to cut after the fit (using TrackContainerCleaner along with AlignSelTool, for example).
+ - some clean-up in Escher_nikhef.opts
+
 ! 2008-05-29 - Louis Nicolas
  - added alignable objects in Alignables.py
  - added possibility to give a list of sub-detectors for which to write out the conditions in AlConfigurable.py + some clean-up

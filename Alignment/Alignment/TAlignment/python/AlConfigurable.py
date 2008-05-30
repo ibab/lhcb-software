@@ -199,6 +199,19 @@ class AlConfigurable( ConfigurableUser ) :
             
             importOptions("$TALIGNMENTROOT/options/PatRecognition.opts")
 
+            from Configurables import TrackRemoveDoubleHits
+            if allConfigurables.get( "TrackForwardPatSeq" ):
+                trackFwdPatSeq = GaudiSequencer( "TrackForwardPatSeq" )
+                trackRemoveDoubleHitsFwd = TrackRemoveDoubleHits( "RemoveDoubleHitsFwd" )
+                trackRemoveDoubleHitsFwd.TracksLocation = "Rec/Track/Match"
+                trackFwdPatSeq.Members.append( trackRemoveDoubleHitsFwd )
+
+            if allConfigurables.get( "TrackMatchPatSeq" ):
+                trackMatchPatSeq = GaudiSequencer( "TrackMatchPatSeq" )
+                trackRemoveDoubleHitsMatch = TrackRemoveDoubleHits ( "RemoveDoubleHitsMatch" )
+                trackRemoveDoubleHitsMatch.TracksLocation = "Rec/Track/Match"
+                trackMatchPatSeq.Members.append( trackRemoveDoubleHitsMatch )
+
             from Configurables import ( PatPVOffline )
 
             allConfigurables["RecoTrSeq"].Members.append( PatPVOffline() )

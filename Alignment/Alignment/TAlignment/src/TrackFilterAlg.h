@@ -1,4 +1,4 @@
-// $Id: TrackFilterAlg.h,v 1.5 2008-02-18 18:43:59 janos Exp $
+// $Id: TrackFilterAlg.h,v 1.6 2008-05-30 13:29:12 lnicolas Exp $
 #ifndef TALIGNMENT_TRACKFILTERALG_H 
 #define TALIGNMENT_TRACKFILTERALG_H 1
 
@@ -70,7 +70,6 @@ private:
   std::string                               m_trackSelectorName;     ///< Name of track selector for alignment
   bool                                      m_strip;                 ///< Flag to strip unwanted hits   
   std::string                               m_detector;              ///< Sub-detector
-  double                                    m_maxNormTrackChi2;      ///< max Chi2/dof of track
   unsigned int                              m_nMinHits;              ///< Min number of hits
   LHCbDetChecks                             m_lhcbDetChecks;         ///< Map LHCb id det checks methods  
   ITrackSelector*                           m_trackSelector;         ///< Pointer to track selector tool for alignment

@@ -29,3 +29,6 @@ PatVeloTT.Fitter.Extrapolator.MaterialLocator        = "SimplifiedMaterialLocato
 PatVeloTT.Fitter.MaterialLocator                     = "SimplifiedMaterialLocator" ;
 
 ToolSvc.TrackMasterExtrapolator.MaterialLocator      = "SimplifiedMaterialLocator" ;
+
+TrackMatch.ExtrapolatorVelo.MaterialLocator          = "SimplifiedMaterialLocator" ;
+TrackMatch.ExtrapolatorSeed.MaterialLocator          = "SimplifiedMaterialLocator" ;
