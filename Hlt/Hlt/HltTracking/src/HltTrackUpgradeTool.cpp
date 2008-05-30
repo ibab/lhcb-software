@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.16 2008-05-15 15:59:46 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.17 2008-05-30 16:38:53 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -80,6 +80,17 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("Forward/TrackType", (int) LHCb::Track::Long);
   m_recoConf.add("Forward/TESInput",LHCb::TrackLocation::HltVelo+"_Alleys");
   m_recoConf.add("Forward/TESOutput", LHCb::TrackLocation::HltForward+"_Alleys");
+
+  m_recoConf.add("GuidedForward/Tool",std::string("HltGuidedForward"));
+  m_recoConf.add("GuidedForward/RecoID", (int) HltEnums::ForwardKey);
+  m_recoConf.add("GuidedForward/Owner",true);
+  m_recoConf.add("GuidedForward/TransferIDs",false);
+  m_recoConf.add("GuidedForward/TransferAncestor",false);
+  m_recoConf.add("GuidedForward/TrackType", (int) LHCb::Track::Long);
+  m_recoConf.add("GuidedForward/TESInput",
+                 std::string("Hlt/Track/VeloCalo_Alleys"));
+  m_recoConf.add("GuidedForward/TESOutput",
+                 std::string("Hlt/Track/GuidedForward_Alleys"));
 
 }
 //=============================================================================

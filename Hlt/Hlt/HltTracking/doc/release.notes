@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2008-05-30 - Jose A. Hernando
+  - adaptations for the velo+calo match in the hadron alley
+
 ! 2008-05-22 - Gerhard Raven
   - follow migration of some interfaces from HltBase to TrackInterfaces
 
