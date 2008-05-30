@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.120 2007-10-03 15:21:09 gcorti Exp $
+! $Id: release.notes,v 1.121 2008-05-30 13:24:54 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2008-05-30 - Gloria CORTI
+ - Adapt to change introduced by patch #1757 stopping execution when loop in
+   use of services by removing retrieval of GiGa in itialization but doing it
+   when it is used the first time.
+   . GiGa/GiGaBase.h
+   . src/Lib/GiGaBase.cpp
 
 !======================= GiGa v19r1 2007-10-02 ===============================
 ! 2007-10-02 - Gloria Corti for Karl Harrison

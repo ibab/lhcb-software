@@ -1,4 +1,4 @@
-// $Id: GiGaBase.h,v 1.25 2007-03-18 18:25:04 gcorti Exp $
+// $Id: GiGaBase.h,v 1.26 2008-05-30 13:24:42 gcorti Exp $
 #ifndef GIGA_GIGABASE_H
 #define GIGA_GIGABASE_H 1 
 
@@ -19,6 +19,8 @@
 
 // from GiGa
 #include "GiGa/IGiGaInterface.h"
+#include "GiGa/IGiGaSvc.h"
+#include "GiGa/IGiGaSetUpSvc.h"
 
 // Forward declarations 
 class IMessageSvc          ;
@@ -27,8 +29,6 @@ class IChronoStatSvc       ;
 class IDataProviderSvc     ;
 class IIncidentSvc         ;
 class IObjManager          ;
-class IGiGaSvc             ; 
-class IGiGaSetUpSvc        ; 
 //
 class PropertyMgr          ;
 class MsgStream            ;
@@ -94,12 +94,28 @@ public:
   /** accessor to GiGa Service 
    *  @return pointer to GiGa Service 
    */
-  inline IGiGaSvc* gigaSvc() const { return m_gigaSvc; }; 
-  
+  inline IGiGaSvc* gigaSvc() const { 
+    if( m_gigaSvc == 0 ) {
+      m_gigaSvc = svc<IGiGaSvc>( m_gigaName , true );
+    } 
+    return m_gigaSvc;
+  };
+
   /** accessor to GiGa SetUp Service 
    *  @return pointer to GiGa SetUp Service 
    */
-  inline IGiGaSetUpSvc* setupSvc() const { return m_setupSvc; };
+  inline IGiGaSetUpSvc* setupSvc() const { 
+    if( m_setupSvc == 0 ) {
+      if( m_setupName == m_gigaName ) {
+        // cast to correct type
+        m_setupSvc = dynamic_cast<IGiGaSetUpSvc*>( gigaSvc() ); 
+      }
+      else {
+        m_setupSvc = svc<IGiGaSetUpSvc> ( m_setupName , true );
+      }
+    }
+    return m_setupSvc; 
+  };
 
 private: 
   
@@ -111,8 +127,8 @@ private:
 
   std::string    m_gigaName;        ///< Name of GiGa service
   std::string    m_setupName;       ///< Name of GiGa SetUp Service 
-  IGiGaSvc*      m_gigaSvc;         ///< Pointer to GiGa Service
-  IGiGaSetUpSvc* m_setupSvc;        ///< Pointer to GiGa SetUp Service
+  mutable IGiGaSvc*      m_gigaSvc;         ///< Pointer to GiGa Service
+  mutable IGiGaSetUpSvc* m_setupSvc;        ///< Pointer to GiGa SetUp Service
 
 };
 

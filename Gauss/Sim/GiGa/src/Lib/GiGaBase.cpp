@@ -1,4 +1,4 @@
-// $Id: GiGaBase.cpp,v 1.24 2006-07-27 09:33:00 gcorti Exp $
+// $Id: GiGaBase.cpp,v 1.25 2008-05-30 13:24:33 gcorti Exp $
 #define GIGA_GIGABASE_CPP 1 
 
 // includes 
@@ -61,25 +61,13 @@ StatusCode GiGaBase::initialize()
   }
 
   // Load GiGa
-  if( !m_gigaName.empty() ) { 
-    m_gigaSvc = svc<IGiGaSvc>( m_gigaName , true );
-  }
-  else { 
-    Warning("GiGa Service is not requested to be located"); 
+  if( m_gigaName.empty() ) { 
+    return Warning("GiGa Service is not requested to be located"); 
   }
 
   // If the setup service is the same, just get the interface
-  if( !m_setupName.empty() ) { 
-    if( m_setupName == m_gigaName ) {
-      // cast to correct type
-      m_setupSvc = dynamic_cast<IGiGaSetUpSvc*>( m_gigaSvc ); 
-    }
-    else {
-      m_setupSvc = svc<IGiGaSetUpSvc> ( m_setupName , true );
-    }
-  }
-  else { 
-    Warning("GiGaSetUp Service is not requested to be located");
+  if( m_setupName.empty() ) { 
+    return Warning("GiGaSetUp Service is not requested to be located");
   }
 
   return StatusCode::SUCCESS;
