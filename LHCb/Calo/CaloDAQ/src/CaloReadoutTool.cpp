@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.28 2008-05-29 21:52:16 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.29 2008-05-30 12:50:05 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -213,7 +213,7 @@ void CaloReadoutTool::checkCtrl(int ctrl,int sourceID){
   if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
   
   if( 0 != (0x1& ctrl) || 0 != (0x20& ctrl) || 0 != (0x40& ctrl)){
-    if(msgLevel(MSG::WARNING))Warning("Tell1 error bits have been detected in data", StatusCode::SUCCESS).ignore();
+    if(msgLevel(MSG::DEBUG))debug() << "Tell1 error bits have been detected in data" << endreq;
     if( 0 != (0x1  & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
     if( 0 != (0x20 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
     if( 0 != (0x40 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );
