@@ -5,49 +5,7 @@
  *  @date 2006-02-01
  */
 //--------------------------------------------------------------
-// Common initialisation when running on digi
-// #include "$DAVINCIROOT/options/DaVinciCommonDigi.opts"
-// *REPLACE* the above by the following when running on DST
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
-//=================================================================
-//-----------------------------------------------------------
-// HLT
-//-----------------------------------------------------------
-#include "$HLTSYSROOT/options/L0.opts"
-#pragma print on
-#include "$HLTSYSROOT/options/Hlt.opts"
-HltMuonTriggerDiMuons.OutputLevel = 4 ;
-
-//ApplicationMgr.TopAlg += { "IsBEvent"};
-
-#include "$HLTSELECTIONSROOT/options/HltMonitorPlots.opts"
-#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
-
-//HltSelectionsCorrs.Algorithms += { "IsBEvent" };
-
-//ApplicationMgr.ExtSvc += { "NTupleSvc" };
-
-ApplicationMgr.DLLs += { "RootHistCnv" };
-ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
-
-
-HltEnd.OnTES = true; // store all on TES
-
-//HltChargedProtoPAlg.OutputLevel = 1 ;
-//HltMuonPAlg.OutputLevel = 1 ;
-//----------------------------------------------------------------
-// Selections monitoring
-//----------------------------------------------------------------
-HltSelections.Members += { "PrintHeader/HltSelectionsAccepted" } ;
-
-ApplicationMgr.TopAlg += { "ReadHltSummary" };
-ReadHltSummary.OutputLevel = 3 ;
-
-DaVinciMainSeq.Members -= { "ProtoPRecalibration" };
-ProtoPRecalibration.Members = {};
-
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
 
 ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; 
 HltBackgroundCategory.PrintTree = true ;
@@ -69,9 +27,9 @@ MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 //#include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
 
 // DST
-//#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
+#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
 ApplicationMgr.EvtMax = 1000 ;
 EventSelector.PrintFreq = 100 ;
 
-#include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
+//#include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
 

@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-05-30 - Patrick Koppenburg
+ - Do not use HltEnums anymore
+
 ! 2008-05-20 - Patrick Koppenburg
  - HltBackgroundCategory : Use strings as index, not int. Requires HltEvent v8r8
 

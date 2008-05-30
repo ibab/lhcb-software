@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.8 2008-05-20 08:30:41 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.9 2008-05-30 17:16:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,13 +8,11 @@
 #include "Event/Particle.h"
 #include "Kernel/IHltSummaryTool.h"
 #include "Event/HltSummary.h"
-#include "Event/HltEnums.h"
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
 #include "Kernel/IPrintDecayTreeTool.h"            // Interface
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
-
 
 #include "HltBase/IANNSvc.h"
 
@@ -79,11 +77,13 @@ StatusCode HltBackgroundCategory::initialize() {
     cats.push_back(i->second);
   }
 
+  IANNSvc *ann = svc<IANNSvc>("HltANNSvc");
+  std::vector<IANNSvc::minor_value_type> selections2 = ann->items("Hlt2SelectionID");
   std::vector<std::string> selections ;
-  LHCb::HltEnums le ; // I actually need an instance of the HltEnums class to access methods
-  for ( GaudiUtils::VectorMap < std::string, LHCb::HltEnums::HltSelectionSummaryEnum >::const_iterator i 
-          = le.hltSelectionSummaryEnumTypMap().begin() ; i != le.hltSelectionSummaryEnumTypMap().end() ; ++i ){
-    if ( i->second > LHCb::HltEnums::HltSelEntry ) selections.push_back(i->first) ;
+
+  for (std::vector<IANNSvc::minor_value_type>::const_iterator i =
+         selections2.begin(); i!=selections2.end(); ++i) {
+    selections.push_back(i->first) ;
   }
   
   sc =  m_algoCorr->algorithms(cats);
