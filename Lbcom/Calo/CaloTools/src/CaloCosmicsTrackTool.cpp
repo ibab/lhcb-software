@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.2 2008-05-27 08:46:22 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.3 2008-05-30 13:10:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -164,7 +164,7 @@ StatusCode CaloCosmicsTrackTool::processing() {
   // Update track info
   if( timed() ){
     m_track.setFlag( LHCb::Track::Selected , true );
-    m_track.addInfo( LHCb::Track::Likelihood, m_time );
+    m_track.addInfo( LHCb::Track::CaloTimeInfo, m_time );
   }  
 
 
@@ -433,7 +433,7 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
   eTrM(1,1) = m_refPointCov[0](1,1);
   eTrM(2,2) = m_stx;
   eTrM(3,3) = m_sty;
-  LHCb::State eState = LHCb::State( eTrV , eTrM , ecal()->referencePoint().Z() , LHCb::State::ECalShowerMax);
+  LHCb::State eState = LHCb::State( eTrV , eTrM , ecal()->referencePoint().Z() , LHCb::State::MidECal);
 
 
   Gaudi::TrackVector hTrV ;
@@ -451,9 +451,9 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
   LHCb::State hState = LHCb::State( hTrV , hTrM , hcal()->referencePoint().Z() , LHCb::State::MidHCal);
 
   // Track
-
+  m_track.setType(LHCb::Track::Calo);
   // Default reference position is Ecal
-  m_ref = 0; // reference is Ecal
+  m_ref = 0; // reference is Ecal by default
   // Set first state according to 'timer'
   if(m_timer == "Ecal"){
     m_track.addToStates( eState ); // 1st state is Ecal
@@ -480,7 +480,7 @@ StatusCode CaloCosmicsTrackTool::buildTrack(){
     m_track.addToStates( hState );
   }
 
-  m_track.addInfo( LHCb::Track::MatchChi2, m_chi2);
+  m_track.addInfo( LHCb::Track::CaloMatchChi2, m_chi2);
   if( !forward())m_track.setFlag( LHCb::Track::Backward, true );
 
 

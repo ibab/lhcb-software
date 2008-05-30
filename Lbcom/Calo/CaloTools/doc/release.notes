@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.38 2008-05-27 08:46:22 odescham Exp $
+! $Id: release.notes,v 1.39 2008-05-30 13:10:58 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-05-29 - Deschamps Olivier
+  - use dedicated TrackEvent/Track flags
+
+! 2008-05-29 - Deschamps Olivier
+  - add more monitoring histo (split monitoring according to forward/backward cosmics tracks)
 
 ! 2008-05-27 - Deschamps Olivier
   - fix bug in CaloCosmicsTrackTool.cpp (Hcal state replicated Ecal state)

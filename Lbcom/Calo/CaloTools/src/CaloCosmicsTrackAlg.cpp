@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.1 2008-05-22 22:47:59 odescham Exp $
+// $Id: CaloCosmicsTrackAlg.cpp,v 1.2 2008-05-30 13:10:58 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,8 +31,8 @@ CaloCosmicsTrackAlg::CaloCosmicsTrackAlg( const std::string& name,
 {
 
   declareProperty("TrackTool" , m_trackToolType = "CaloCosmicsTrackTool");
-  declareProperty("ForwardTrackContainer"   , m_forward="Calo/Track/Forward");
-  declareProperty("BackwardTrackContainer"  , m_backward="Calo/Track/Backward");
+  declareProperty("ForwardTrackContainer"   , m_forward=LHCb::TrackLocation::CaloCosmicsForward);
+  declareProperty("BackwardTrackContainer"  , m_backward=LHCb::TrackLocation::CaloCosmicsBackward);
   declareProperty("Monitor"   , m_monitor=false);
 
 }
@@ -46,7 +46,7 @@ CaloCosmicsTrackAlg::~CaloCosmicsTrackAlg() {}
 //=============================================================================
 StatusCode CaloCosmicsTrackAlg::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoeAlg
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTupleeAlg
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
@@ -54,10 +54,13 @@ StatusCode CaloCosmicsTrackAlg::initialize() {
   m_caloTrack = tool<ICaloCosmicsTrackTool>(m_trackToolType , "TrackTool", this);
 
   if(m_monitor){
-    book1D( "Rec/1"  ,  "Reconstruction performance"   ,  0. , 5.   , 5);
-    book2D( "Rec/2"  ,  "Ecal versus Hcal timing slot" ,  -25 , 25. , 2  , -25. , 25. , 2 );
+    book1D( "Rec/1"   ,  "Reconstruction performance"   ,  0. , 5.   , 5);
+    book2D( "Rec/2"   ,  "Ecal versus Hcal timing slot" ,  -25 , 25. , 2  , -25. , 25. , 2 );
+    book1D( "Rec/Forward/1"   ,  "Reconstruction performance (forward)"   ,  0. , 5.   , 5);
+    book2D( "Rec/Forward/2"   ,  "Ecal versus Hcal timing slot (forward)" ,  -25 , 25. , 2  , -25. , 25. , 2 );
+    book1D( "Rec/Backward/1"  ,  "Reconstruction performance (backward)"   ,  0. , 5.   , 5);
+    book2D( "Rec/Backward/2"  ,  "Ecal versus Hcal timing slot (backward)" ,  -25 , 25. , 2  , -25. , 25. , 2 );
   }
-  
   return StatusCode::SUCCESS;
 }
 
@@ -69,8 +72,13 @@ StatusCode CaloCosmicsTrackAlg::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
 
-  if(m_monitor)fill( histo1D(HistoID("Rec/1"))  ,  0. , 1.); // bin0 = counter
-
+  if(m_monitor){
+    fill( histo1D(HistoID("Rec/1"))  ,  0. , 1.); // bin0 = counter
+    fill( histo1D(HistoID("Rec/Forward/1"))  ,  0. , 1.); // bin0 = counter
+    fill( histo1D(HistoID("Rec/Backward/1"))  ,  0. , 1.); // bin0 = counter
+  }
+  
+  
   // create and store container
   LHCb::Tracks* forwards = new LHCb::Tracks();
   LHCb::Tracks* backwards = new LHCb::Tracks();
@@ -90,28 +98,39 @@ StatusCode CaloCosmicsTrackAlg::execute() {
   track->copy( m_caloTrack->track() );
   ( m_caloTrack->forward() ) ?  forwards->insert( track ) : backwards->insert( track );
 
+  
   // Checks
-  debug() << " Track ---- " << endreq;
-  debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endreq;
-  debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endreq;
-  debug() << " firstState : "<< track->firstState() << endreq;
-  debug() << " Time : " << track->info(LHCb::Track::Likelihood, -999.)<< endreq;
-  debug() << " Chi2 : " << track->info(LHCb::Track::MatchChi2, 999.)<< endreq; 
-  double z = 8000;
-  m_caloTrack->propagate( z );
-  debug() << "Propagated track ---" << endreq;
-  debug() << "Position : " << m_caloTrack->referencePoint() << endreq;
-  debug() << "Position Error : " << sqrt(m_caloTrack->referencePointCovariance()) << endreq;
-  debug() << "Time : " << m_caloTrack->time() << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << " Track ---- " << endreq;
+    debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endreq;
+    debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endreq;
+    debug() << " firstState : "<< track->firstState() << endreq;
+    debug() << " Time : " << track->info(LHCb::Track::Likelihood, -999.)<< endreq;
+    debug() << " Chi2 : " << track->info(LHCb::Track::MatchChi2, 999.)<< endreq; 
+    double z = 8000;
+    m_caloTrack->propagate( z );
+    debug() << "Propagated track ---" << endreq;
+    debug() << "Position : " << m_caloTrack->referencePoint() << endreq;
+    debug() << "Position Error : " << sqrt(m_caloTrack->referencePointCovariance()) << endreq;
+    debug() << "Time : " << m_caloTrack->time() << endreq;
+  }
+  
+
     
-  // Monitor
-  if(m_monitor 
-     && m_caloTrack->tracked())fill( histo1D(HistoID("Rec/1"))  ,  1. , 1.); // bin1 = reconstructed
-  if(m_monitor 
-     && m_caloTrack->timed())fill( histo1D(HistoID("Rec/1"))  ,  2. , 1.); // bin2 = timed (ecal or hcal)
-  if(m_monitor 
-     && m_caloTrack->ecal()->timed() 
-     && m_caloTrack->hcal()->timed()){
+  // Monitoring
+  std::stringstream dir("");
+  dir << ( m_caloTrack->forward()  ?  "Forward/" : "Backward/" );
+  if(m_monitor && m_caloTrack->tracked()){    
+    fill( histo1D(HistoID("Rec/"+dir.str()+"1"))  ,  1. , 1.); // bin1 = reconstructed
+    fill( histo1D(HistoID("Rec/1"))  ,  1. , 1.); // bin1 = reconstructed
+  }
+  if(m_monitor && m_caloTrack->timed()){
+    fill( histo1D(HistoID("Rec/"+dir.str()+"1"))  ,  2. , 1.); // bin2 = timed (ecal or hcal)
+    fill( histo1D(HistoID("Rec/1"))  ,  2. , 1.); // bin2 = timed (ecal or hcal)
+  }
+  if(m_monitor && m_caloTrack->ecal()->timed() && m_caloTrack->hcal()->timed()){
+    fill( histo1D(HistoID("Rec/"+dir.str()+"1"))  ,  3. , 1.); // bin2 = ecal+hcal timing
+    fill( histo2D(HistoID("Rec/"+dir.str()+"2"))  , m_caloTrack->ecal()->slot()+12.5, m_caloTrack->hcal()->slot()+12.5, 1. );
     fill( histo1D(HistoID("Rec/1"))  ,  3. , 1.); // bin2 = ecal+hcal timing
     fill( histo2D(HistoID("Rec/2"))  , m_caloTrack->ecal()->slot()+12.5, m_caloTrack->hcal()->slot()+12.5, 1. );
   }
@@ -127,8 +146,6 @@ StatusCode CaloCosmicsTrackAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode CaloCosmicsTrackAlg::finalize() {
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
   return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
