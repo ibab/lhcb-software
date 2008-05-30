@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.79 2008-04-29 11:06:01 pkoppenb Exp $ 
+! $Id: release.notes,v 1.80 2008-05-30 17:44:52 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+! 2008-05-30 - Patrick Koppenburg
+ - Check StatsuCodes
 
 ! 2008-04-29 - Patrick Koppenburg
  - CombienParticleMaker : less verbose in intialize()

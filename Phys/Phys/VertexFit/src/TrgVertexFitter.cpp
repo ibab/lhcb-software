@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.23 2008-02-20 20:43:11 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.24 2008-05-30 17:44:29 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -366,7 +366,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   }
 
   if ( R2 < m_epsilon ) {
-    Warning("R2 is too small, leaving.", StatusCode::FAILURE, 1);
+    Warning("R2 is too small, leaving.", StatusCode::FAILURE, 1).ignore();
     debug() << " R1 " << R1 << " R2 " << R2 << endmsg ;
     return StatusCode::FAILURE;
   }   
@@ -386,12 +386,12 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
 
   double det = ( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
   if ( 0 == gsl_fcmp ( det , 0 , 1.e-8 ) ) { 
-    Warning("Position covariance matrix determinant is zero");
+    Warning("Position covariance matrix determinant is zero").ignore();
     return StatusCode::FAILURE;    
   }
   double invDet = 1./det ;
   if ( ! lfin(invDet) ){ // that's probably not needed anymore
-    Warning("Position covariance matrix determinant cannot be inverted");
+    Warning("Position covariance matrix determinant cannot be inverted").ignore();
     return StatusCode::FAILURE;
   }
   

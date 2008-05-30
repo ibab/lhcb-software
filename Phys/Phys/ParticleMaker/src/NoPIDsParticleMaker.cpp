@@ -1,4 +1,4 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.12 2008-04-23 20:31:01 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.13 2008-05-30 17:44:52 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -179,7 +179,7 @@ StatusCode NoPIDsParticleMaker::makeParticles( LHCb::Particle::ConstVector & par
        m_inputs.end() != input ; ++input ) 
   {
     if ( !exist<LHCb::ProtoParticles>( *input ) ){
-      Warning("No ProtoParticles at "+*input);
+      Warning("No ProtoParticles at "+*input).ignore();
       continue ;
     }
     const LHCb::ProtoParticles* pps = get<LHCb::ProtoParticles>( *input );
