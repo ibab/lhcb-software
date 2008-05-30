@@ -1,3 +1,10 @@
+2008-05-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Option.py: added the --long-help option. Now the --help option
+	shows only the own options of the script. The --long-help adds to this printout
+	the help on the Logging and Environment sections which come by default with every
+	script.
+
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Env.py: added the Aliases class in order to generate the

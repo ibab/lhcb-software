@@ -1,7 +1,8 @@
-from optparse import OptionParser, Option
+from optparse import OptionParser, Option, OptionContainer
 from LbUtils import Log, Env
-import os
+import os, sys
 import logging
+from gettext import gettext
 
 
 class FallBackOption(Option):
@@ -20,7 +21,24 @@ class FallBackOption(Option):
              'fallback_env',
              'fallback_conf',
              'mandatory']
+    ACTIONS = ("store",
+               "store_const",
+               "store_true",
+               "store_false",
+               "append",
+               "append_const",
+               "count",
+               "callback",
+               "help",
+               "longhelp",
+               "version")
 
+    def take_action(self, action, dest, opt, value, values, parser):
+        if action == "longhelp" :
+            parser.print_longhelp()
+            parser.exit()
+        else :
+            Option.take_action(self, action, dest, opt, value, values, parser)
 
 
 class Parser(OptionParser):
@@ -29,6 +47,11 @@ class Parser(OptionParser):
         OptionParser.__init__(self, *args, **kwargs) #IGNORE:W0142
         Log.addDefaultLogger(self)
         Env.addEnvironment(self)
+    def _add_help_option(self):
+        OptionParser._add_help_option(self)
+        self.add_option( "--long-help",
+                        action="longhelp",
+                        help=gettext("show the complete help message and exit"))
     def add_option(self, *args, **kwargs):
         if kwargs.has_key("fallback_env") :
             kwargs["help"] += "\nThe fallback environment variable is set to %s" % kwargs["fallback_env"]
@@ -56,3 +79,53 @@ class Parser(OptionParser):
                     else :
                         log.error("no value for %s" % dest)
         return (values, args)
+    def format_option_help(self, formatter=None):
+        if formatter is None:
+            formatter = self.formatter
+        formatter.store_option_strings(self)
+        result = []
+        result.append(formatter.format_heading(gettext("Options")))
+        formatter.indent()
+        if self.option_list:
+            result.append(OptionContainer.format_option_help(self, formatter))
+            result.append("\n")
+        for group in self.option_groups:
+            if group.title != "Logging" and group.title != "Environment" :
+                result.append(group.format_help(formatter))
+                result.append("\n")
+        formatter.dedent()
+        # Drop the last "\n", or the header if no options or option groups:
+        return "".join(result[:-1])
+    def format_option_longhelp(self, formatter=None):
+        if formatter is None:
+            formatter = self.formatter
+        formatter.store_option_strings(self)
+        result = []
+        result.append(formatter.format_heading(gettext("Options")))
+        formatter.indent()
+        if self.option_list:
+            result.append(OptionContainer.format_option_help(self, formatter))
+            result.append("\n")
+        for group in self.option_groups:
+            result.append(group.format_help(formatter))
+            result.append("\n")
+        formatter.dedent()
+        # Drop the last "\n", or the header if no options or option groups:
+        return "".join(result[:-1])
+    def format_longhelp(self, formatter=None):
+        if formatter is None:
+            formatter = self.formatter
+        result = []
+        if self.usage:
+            result.append(self.get_usage() + "\n")
+        if self.description:
+            result.append(self.format_description(formatter) + "\n")
+        result.append(self.format_option_longhelp(formatter))
+        result.append(self.format_epilog(formatter))
+        return "".join(result)
+
+    def print_longhelp(self, file=None):
+        if file is None:
+            file = sys.stdout
+        encoding = self._get_encoding(file)
+        file.write(self.format_longhelp().encode(encoding, "replace"))
