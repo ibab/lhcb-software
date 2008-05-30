@@ -1,0 +1,223 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackCheckers
+! Responsible : Edwin Bos
+! Purpose     : Package for track checking algorithms
+!-----------------------------------------------------------------------------
+
+!======================= TrackCheckers v3r4p2 2008-04-23 =====================
+! 2008-04-23 - Marco Cattaneo
+ - In TrackResChecker.h change type of m_plotsByMeasType to bool, to match
+   Property type. Needed for Python options type checking
+
+!======================= TrackCheckers v3r4p1 2008-02-08 =====================
+! 2008-02-08 - Marco Cattaneo
+ - Add missing includes following changes in event model includes
+
+!======================= TrackCheckers v3r4 2008-01-28 =======================
+! 2008-01-30 - Marco Cattaneo
+ - In refit_ntupling.opts, replace PoolDbCacheSvc.Catalog by FileCatalog.Catalogs
+   for Gaudi v19r7
+
+! 2008-01-22 Stephanie Hansmann-Menzemer
+ - Add hit-track residuals to Monitoring classes
+
+!======================= TrackCheckers v3r3 2007-11-30 =======================
+! 2007-11-19 Wouter Hulsbergen
+ - Adapted to change in OTMeasurement interface
+
+!======================= TrackCheckers v3r2 2007-10-22 =======================
+! 2007-10-18 - Manuel Schiller
+ - Fixed TrackCheckerNT algorithm to use IProjectorSelector interface
+ - same algorithm: bug fix in OT hit mask calculation
+ - same algorithm: added new fields containing total number of hits per
+   subdetector for easier occupancy calculation
+ - same algorithm: brought macros in root subdirectory in sync with changes
+
+!======================= TrackCheckers v3r1 2007-09-20 =======================
+! 2007-09-14 - Chris Jones
+ - Add monitor for Clone variable (KL distance)
+ - Add a little additional protection to TrackCheckerBase
+
+! 2007-08-01 M. Needham
+ - Bug fix, pulls at first meas were in fact last meas
+
+!======================= TrackCheckers v3r0 2007-07-10 =======================
+! 2007-09-11 M Needham
+ - Add found/expected hits histos to TrackMonitor
+ - Update the histo property maps
+ - Protect TrackEffChecker/TrackMonitor in case that info exists
+   but histo properties do not
+
+! 2007-09-07 M Needham
+ - Bug fix in TrackMonitor
+
+! 2007-07-10 M. Needham
+ - Remove velo missed tag
+
+! 2007-07-04 M Needham
+ - Add plots to TrackEffChecker
+
+! 2007-06-28 M Needham
+ - Remove unused inclusion of TrackCriteriaSelector header
+
+! 2007-06-27 M. Needham
+ - Add new checking base class TrackCheckerBase
+ - New checkers TrackResChecker (replaces TrackChecker), TrackEffChecker
+ - Remove TrackChecker
+ - ExtrapolatorChecker derives from TrackCheckerBase, particles 
+   selected using IMCReconstructible not TrackCriteriaSelector
+ - For configuration for long track see TrackChecking.opts in TrackSys
+ 
+!======================= TrackCheckers v2r14 2007-05-31 ======================
+! 2007-05-31 - Marco Cattaneo
+ - Follow change in interface locations to Kernel/MCInterfaces package
+
+!======================= TrackCheckers v2r13 2007-05-15 ======================
+! 2007-05-06 M. Needham
+ - Put monitoring histos in Track dir
+
+! 2007-05-06 M. Needham
+ - Add TrackMonitor, TrackMonitorBase (MC independent monitoring)
+
+! 2007-05-07 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Remove obsolete file TrackCheckers_load.cpp
+
+! 2007-05-06 M Needham
+ - Follow changes in IIdealStateCreator interface
+
+!======================= TrackCheckers v2r12 2007-02-08 ======================
+! 2007-02-08 - Marco Cattaneo (for Manuel Schiller)
+ - Fix bug in TrackCheckerNT algorithm which could cause Brunel to crash under
+   some circumstances.
+
+!======================= TrackCheckers v2r11 2007-01-19 ======================
+! 2007-01-19 - Eduardo Rodrigues
+ - Replacement of master projector by the new projector selector
+
+!======================= TrackCheckers v2r10 2006-11-30 ======================
+! 2006-11-30 - Edwin Bos
+ - Calls to TrajPoca minimize now handle returned StatusCode
+
+! 2006-11-16 - Manuel Schiller
+ - Added TrackCheckerNT, an NTuple writing class
+ - Added subdirectory scripts for ROOT macros which process the NTuple
+ - Added a few ROOT macros to do something with the NTuple
+
+!======================= TrackCheckers v2r9 2006-11-07 =======================
+! 2006-10-27 - Jeroen VAN TILBURG
+ - Improvements in ExtrapolatorChecker: include plots of q/p pull, adapted
+   binning, added seperate plots for long extrapolations, apply correction on
+   slopes.
+
+!======================= TrackCheckers v2r8 2006-10-13 =======================
+! 2006-10-09 Eduardo Rodrigues
+ - added new histograms to TrackChecker and adapted some binnings
+
+!======================= TrackCheckers v2r7 2006-10-03 =======================
+! 2006-09-14 Manuel Schiller
+ - bug fix in the purity calculations in the TrackChecker
+
+!======================= TrackCheckers v2r6 2006-09-01 =======================
+! 2006-09-01 Eduardo Rodrigues
+ - TrackChecker: using the pre-defined z-positions related to state locations
+   from the file StateParameters.h instead of old plain option
+ - TrackMatchChecker:
+   - added possibility to use other "add TT clusters" tools
+   - algorithm using Tsa seeds by default
+
+! 2006-08-29 - Eduardo Rodrigues
+ - added errors on true states to pull distributions
+ - added new histograms
+ - small fixes and redefinitions of histograms IDs
+ - new properties capitalized, to meet conventions
+
+!======================= TrackCheckers v2r5 2006-08-03 =======================
+! 2006-07-06 Jeroen van Tilburg
+ - Added new algorithm: ExtrapolatorChecker, to check the consistency between
+   Geant and the TrackExtrapolators.
+
+! 2006-06-30 M Needham
+ - Add L/R ambiguity checking
+
+!======================= TrackCheckers v2r4 2006-06-30 =======================
+! 2006-06-30 - Jeroen van Tilburg
+ - Added histograms to monitor the measurement residuals and pulls using
+   ideal states.
+
+! 2006-06-29 M Needham
+ - many fixes: chi-sq histos added, p histos made at 
+   user defined z, memory leaks fixed,...
+
+!======================= TrackCheckers v2r3 2006-06-16 =======================
+! 2006-06-14 - Jeroen van Tilburg
+ - Moved TrackMatchChecker algorithm from Tr/TrackMatching.
+
+! 2006-06-14 - Eduardo Rodrigues
+ - added new histograms to the TrackChecker
+ - introduced the possibility to produce a set of resolution and pull
+   distributions at the z of all measurements on the track, separately
+   per measurement type
+ - plots at defined z-positions now use the track extrapolation if necessary
+ - plots binning improved
+
+! 2006-05-25 - Eduardo Rodrigues
+ - plots at first measurement position now use the track extrapolation
+   to obtain a track state at the z-position of the first measurement
+ - use the master extrapolator everywhere
+ - extrapolate track rather than via closest state
+
+! 2006-05-22 - Eduardo Rodrigues
+ - bug fixed in looping over OTTimes
+ - bugs in momentum calculations fixed (mass used instead of 3-momentum mag.)
+ - added separate computations for TT and IT and corresponding histograms
+ - introduced "TrackSelector" option for tracks selector tool
+ - some clean-up
+
+! 2006-05-19 - Eduardo Rodrigues
+ - "using namespace ..." removed from header files
+ - path to linker table set by default to same path as input tracks
+   (no more need to set it explicitly via options for defaults)
+
+!======================= TrackCheckers v2r2 2006-05-17 =======================
+! 2006-05-17 - Marco Cattaneo
+ - Migrate to Gaudi::Units
+
+!======================= TrackCheckers v2r1 2006-05-03 =======================
+! 2006-05-02 - Eduardo Rodrigues
+ - propagation of the renaming of the Track Event Model typedefs
+   (in TrackTypes.h in Kernel/LHCbDefinitions)
+ - propagation of change Track::Unique -> Track::Clone in Event/TrackEvent
+
+!======================= TrackCheckers v2r0 2006-03-29 =======================
+! 2006-03-09 - Edwin Bos
+ - Moved to LHCb v20r0
+
+!======================= TrackCheckers v1r1 2006-01-27 =======================
+! 2005-12-14 - Eduardo Rodrigues
+ - propagation of changes in Measurement base class
+ - propagation of changes ITMeasurement -> STMeasurement
+
+!======================= TrackCheckers v1r0 2005-11-28 =======================
+! 2005-11-22 - Eduardo Rodrigues
+ - TrackVeloTTChecker algorithm introduced - it is the adaptation of the
+   original VeloTTStoredChecker algorithm from Y. Xie (in Tr/VeloTT)
+   to the new Track Event Model and GaudiTupleAlg class
+
+! 2005-11-14 - Edwin Bos
+  - Creation of package, based on Tr/TrCheck
+  - Useage for instance in $BRUNELOPTS/BrunelCheck.opts :
+
+             // Track checker
+             ApplicationMgr.DLLs += { "TrackCheckers",
+                                      "TrackExtrapolators",
+                                      "TrackMCTools" };
+             XXXYYYSeq.Members += { "TrackChecker" };
+             // example:  XXXYYY = CheckTr
+             TrackChecker.TracksInContainer = "Rec/Track/ZZZ";
+             // example : ZZZ = Best
+             // automatically prefixes "Link/" for linker :
+             TrackChecker.LinkerInTable = "Rec/Track/ZZZ";
+             // Select only long type tracks
+             TrackChecker.TrackSelector.TrackTypes = { 3 };
+
