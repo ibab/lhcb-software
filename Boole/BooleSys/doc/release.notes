@@ -3,6 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v15r1>2008-05-29 Boole v15r1</A></H1><PRE>
+This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18
+ and DDDB v1r* (SQLDDDB v4r4 or greater), ParamFiles v7r1, FieldMap v5r1
+
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v32r6 or later
+
+- Persistency changes (require Brunel v32r6 or greater to read)
+  . Outer tracker RawBank is now in 2008 format (OTSimulation v4r0, OTDAQ v6r0)
+
+- Tuning changes
+  . OT T0 and R-T relation are now obtained from CondDB via detector element 
+    (OTSimulation v4r0)
+
+- New features
+  . Implement "sub-triggers" (L0DU v8r5, L0Event v16r10)
+
+- Bug fixes
+  . Fix rounding of tdc time in MCOTTimeCreator (OTSimulation v4r0)
+  . Fix untested StatusCode (MuonDAQ v4r1, MuonDet v8r0p1)
+  . Fix uninitialised data member in L0DUReport (L0Event v16r10)
+
 </PRE><H1><A NAME=v15r0>2008-05-19 Boole v15r0</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17
  and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r0
