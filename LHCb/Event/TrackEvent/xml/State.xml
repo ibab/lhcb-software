@@ -37,12 +37,13 @@
    *    EndRich2          : at the end of RICH2
    *    Spd               : at the Scintillating Pad Detector SPD
    *    Prs               : at the Preshower detector
-   *    BegECal           : at the beginning of the ECAL
+   *    BegECal           : at the beginning of the ECAL active area
    *    ECalShowerMax     : at the maximum-shower position in the ECAL
-   *    EndECal           : at the end of the ECAL
-   *    BegHCal           : at the beginning of the HCAL
-   *    MidHCal           : at the middle of the HCAL
-   *    EndHCal           : at the end of the HCAL
+   *    MidECal           : at the middle of the ECAL active area
+   *    EndECal           : at the end of the ECAL active area
+   *    BegHCal           : at the beginning of the HCAL active area
+   *    MidHCal           : at the middle of the HCAL  active area
+   *    EndHCal           : at the end of the HCAL active area
    *    Muon              : in the muon stations
    *
    */
@@ -64,6 +65,7 @@
 		 Prs,
 		 BegECal,
 		 ECalShowerMax,
+                 MidECal,
 		 EndECal,
 		 BegHCal,
 		 MidHCal,

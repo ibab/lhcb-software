@@ -35,6 +35,9 @@
       <location name="HltTsa"        place="Hlt/Track/Tsa"/>
       <location name="HltMuon"       place="Hlt/Track/Muon"/>
 
+      <location name="CaloCosmicsForward"       place="Calo/Track/Forward"/>
+      <location name="CaloCosmicsBackward"      place="Calo/Track/Backward"/>
+
 
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
@@ -94,6 +97,7 @@
         <enumval name = "Downstream"  desc="downstream track"/>
         <enumval name = "Ttrack"      desc="seed track"/>
         <enumval name = "Muon"        desc="muon track"/>
+        <enumval name = "Calo"        desc="calo cosmics track"/>
       </enum>
 
       <enum
@@ -152,6 +156,11 @@
 	<enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
         <enumval name = "GhostProbability" value = "102" desc=" gives the NN ghost probability"/>
+
+        
+        <enumval name = "CaloMatchChi2"  value = "201" desc="Chi2 from the 2D Ecal-Hcal matching (cosmics tracks)"/>
+        <enumval name = "CaloTimeInfo"   value = "202" desc="Time info from Calo "/>
+
        </enum>
 
    <typedef
