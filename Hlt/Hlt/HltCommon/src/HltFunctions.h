@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.2 2008-05-22 13:56:15 graven Exp $
+// $Id: HltFunctions.h,v 1.3 2008-05-30 08:40:39 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -169,7 +169,7 @@ namespace Hlt {
     explicit FunctionTool() {_tool = 0;}
     explicit FunctionTool(ITOOL& tool) {_tool = &tool;}
     double operator() (const T& t1) const {
-      if (!_tool) throw zen::invalid_key(" null tool pointer");
+      if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
       double value = _tool->function(t1);return value;
     }
     zen::function<T>* clone() const {
@@ -185,7 +185,7 @@ namespace Hlt {
     explicit BiFunctionTool() {_tool = 0;}
     explicit BiFunctionTool(ITOOL& tool) {_tool = &tool;}
     double operator() (const T& t1, const T2& t2) const {
-      if (!_tool) throw zen::invalid_key(" null tool pointer");
+      if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
       double value = _tool->function(t1,t2);return value;
     }
     zen::bifunction<T,T2>* clone() const {

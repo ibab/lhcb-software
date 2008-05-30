@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2008-05-30 Gerhard Raven
+  - HltFunctions: throw GaudiException instead of zen::invalid_key
+
 ! 2008-05-29 Gerhard Raven
   - PropertyConfigSvc: properly set the TopAlgs according to the configuration,
     no need to do this explicitly by hand anymore...
