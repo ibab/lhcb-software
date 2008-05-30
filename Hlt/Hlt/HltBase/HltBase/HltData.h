@@ -1,4 +1,4 @@
-// $Id: HltData.h,v 1.3 2008-05-15 08:56:54 graven Exp $
+// $Id: HltData.h,v 1.4 2008-05-30 11:20:54 graven Exp $
 #ifndef HLTBASE_HLTDATA_H 
 #define HLTBASE_HLTDATA_H 1
 
@@ -8,7 +8,8 @@
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ContainedObject.h"
-#include "HltBase/EAssertions.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/StatusCode.h"
 #include "HltBase/stringKey.h"
 
 namespace LHCb 
@@ -94,7 +95,7 @@ namespace Hlt
   };
   
   
-  typedef TSelection<LHCb::Track> TrackSelection;
+  typedef TSelection<LHCb::Track>      TrackSelection;
   typedef TSelection<LHCb::RecVertex> VertexSelection;
 
   // Hlt::Data is the prototype class for LHCb::HltSummary
@@ -104,7 +105,7 @@ namespace Hlt
     virtual ~Data();
 
     void addSelection(Hlt::Selection* sel) {
-      if (hasSelection(sel->id())) throw zen::invalid_key(" map has already id "+sel->id().str());
+      if (hasSelection(sel->id())) error(std::string(" map has already id ")+sel->id().str());
       m_mapselections[sel->id()] = sel;
       m_selections.push_back(sel);
     }
@@ -116,14 +117,14 @@ namespace Hlt
     const Hlt::Selection& selection(const stringKey& id) const {
       // don't use hasSelection here to avoid doing 'find' twice...
       std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
-      if (i == m_mapselections.end()) throw zen::invalid_key(" no key "+id.str());
+      if (i == m_mapselections.end()) error(std::string(" no key ")+id.str());
       return *(i->second);
     }
     
     Hlt::Selection& selection(const stringKey& id) {
       // don't use hasSelection here to avoid doing 'find' twice...
       std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
-      if (i == m_mapselections.end()) throw zen::invalid_key(" no key "+id.str());
+      if (i == m_mapselections.end()) error(std::string(" no key ")+id.str());
       return *(i->second);
     }    
 
@@ -137,6 +138,11 @@ namespace Hlt
     {return m_selections;}
     
   private:
+
+    void error(const std::string& msg) const { 
+        std::cout << msg << std::endl;
+        throw GaudiException( msg, "", StatusCode::FAILURE);
+    }
     
     std::map<stringKey,Hlt::Selection*> m_mapselections;
     std::vector<Hlt::Selection*>        m_selections;  // owner.

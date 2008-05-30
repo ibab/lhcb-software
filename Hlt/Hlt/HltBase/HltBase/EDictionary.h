@@ -6,9 +6,10 @@
 #include <map>
 #include <iostream>
 #include <stdexcept>
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/StatusCode.h"
 #include "boost/any.hpp"
 
-#include "HltBase/EAssertions.h"
 
 namespace zen {
 
@@ -32,6 +33,7 @@ namespace zen {
     template <class T>
     bool add(const Key& key, const T& t){
       if (has_key(key)) return false;
+      std::cout << "dictionary::add adding item to dictionary with: " << key << std::endl;
       _map.insert( std::make_pair(key, boost::any(t)) );
       _keys.push_back(key);
       return true;
@@ -49,13 +51,15 @@ namespace zen {
     //! if it is not there raise an exception
     template <class T>
     T& retrieve(const Key& key) {
-      if (!has_key(key)) throw zen::invalid_key(key);
+      if (!has_key(key)) 
+          throw GaudiException( "Dictionary::retrieve: invalid key: " + key, "", StatusCode::FAILURE );
       return boost::any_cast<T&>(_map[key]);
     }
 
     template <class T>
     const T& retrieve(const Key& key) const {
-      if (!has_key(key)) throw zen::invalid_key(key);
+      if (!has_key(key)) 
+          throw GaudiException( "Dictionary::retrieve: invalid key: " +key,  "",StatusCode::FAILURE );
       return boost::any_cast<T&>(_map[key]);
     } 
 

@@ -1,9 +1,10 @@
 #ifndef HLT_HLTSUMMARYHELPER_H 
 #define HLT_HLTSUMMARYHELPER_H 1
 
-#include "HltBase/EAssertions.h"
-#include "HltBase/HltTypes.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/StatusCode.h"
 #include "Event/HltSummary.h"
+#include "HltBase/stringKey.h"
 
 // Include files
 
@@ -15,9 +16,8 @@
 namespace Hlt { namespace SummaryHelper {
       
     template <class T>
-    std::vector<T*> retrieve(const LHCb::HltSummary& sum,stringKey id) {
-      std::string key = " [retrieve] ";
-      if (!sum.hasSelectionSummary(id.str())) throw zen::invalid_key(" [retrieve] ");
+    std::vector<T*> retrieve(const LHCb::HltSummary& sum,const stringKey& id) {
+      if (!sum.hasSelectionSummary(id.str())) throw GaudiException("Hlt::SummaryHelper::retrieve","",StatusCode::FAILURE);
       const LHCb::HltSelectionSummary& sel = sum.selectionSummary(id.str());
       const std::vector<ContainedObject*>& data = sel.data();
       std::vector<T*> cont;

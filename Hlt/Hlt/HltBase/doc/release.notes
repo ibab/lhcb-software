@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!2008-05-30 - Gerhard Raven
+   - throw GaudiExceptions instead of zen::invalid_key, remove EAssertions
+
 !2008-05-28 - Gerhard Raven
    - adapt to cleanup of MD5 in LHCbMath
 
