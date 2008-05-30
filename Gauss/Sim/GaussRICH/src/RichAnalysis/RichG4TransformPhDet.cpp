@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.cpp,v 1.3 2008-03-28 13:24:20 seaso Exp $
+// $Id: RichG4TransformPhDet.cpp,v 1.4 2008-05-30 13:43:23 gcorti Exp $
 // Include files 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -24,12 +24,9 @@
 // RichDet
 #include "RichDet/DeRich.h"
  
-//#include <CLHEP/Geometry/Point3D.h>
-//#include <CLHEP/Geometry/Vector3D.h>
-//#include <CLHEP/Geometry/Transform3D.h>
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
  
 #include "RichG4SvcLocator.h"
  

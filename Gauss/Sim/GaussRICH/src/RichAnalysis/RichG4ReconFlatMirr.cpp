@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.11 2008-04-11 13:40:23 seaso Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.12 2008-05-30 13:43:23 gcorti Exp $
 // Include files
 
 
@@ -17,13 +17,10 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/SolidBoolean.h"
 
-//#include <CLHEP/Geometry/Point3D.h>
-//#include <CLHEP/Geometry/Vector3D.h>
-//#include <CLHEP/Geometry/Transform3D.h>
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
                                                                                                                     
 
 // local

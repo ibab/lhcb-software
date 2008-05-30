@@ -4,6 +4,16 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2008-05-30 - Gloria CORTI
+ - Adapt to removal of LHCbDefinitions from GAUSS. The header files are
+   now taken from GaudiKernel.
+   . src/Analysis/RichG4CkvRecon.{h,cpp}
+   . src/RichAnalysis/RichG4HitCoordResult.h
+   . src/RichAnalysis/RichG4ReconFlatMirr.{h,cpp}
+   . src/RichAnalysis/RichG4ReconHpd.{h,cpp}
+   . src/RichAnalysis/RichG4ReconTransformHpd.{h,cpp}
+   . src/RichAnalysis/RichG4TransformPhDet.{h,cpp}
+
 !========================= GaussRICH v8r1 2008-05-07 =========================
 !2008-04-25 - Sajan Easo
  - Fixed a problem in RichG4StepAnalysis5 for Rich2 mirror name.

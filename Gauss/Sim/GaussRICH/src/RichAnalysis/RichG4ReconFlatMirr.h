@@ -1,9 +1,9 @@
-// $Id: RichG4ReconFlatMirr.h,v 1.3 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconFlatMirr.h,v 1.4 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4RECONFLATMIRR_H
 #define RICHANALYSIS_RICHG4RECONFLATMIRR_H 1
 
 // Include files
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/SolidSphere.h"
 #include "DetDesc/ISolid.h"

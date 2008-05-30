@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.14 2008-04-25 11:55:08 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.15 2008-05-30 13:43:23 gcorti Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -11,13 +11,11 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
-#include "Kernel/Plane3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
 #include "Math/VectorUtil.h"
+
 // local
 #include "RichG4SvcLocator.h"
-
-
-// local
 #include "RichG4CkvRecon.h"
 #include "RichG4ReconHpd.h"
 #include "RichG4ReconTransformHpd.h"

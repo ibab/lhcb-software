@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.9 2006-03-06 17:42:19 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.10 2008-05-30 13:43:23 gcorti Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -12,8 +12,8 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/TabulatedProperty.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
 
 // local
 #include "RichG4SvcLocator.h"

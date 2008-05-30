@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.h,v 1.5 2008-03-28 13:24:20 seaso Exp $
+// $Id: RichG4ReconTransformHpd.h,v 1.6 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H
 #define RICHANALYSIS_RICHG4RECONTRANSFORMHPD_H 1
 // Include files
@@ -6,7 +6,7 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
  
 
 /** @class RichG4ReconTransformHpd RichG4ReconTransformHpd.h RichAnalysis/RichG4ReconTransformHpd.h

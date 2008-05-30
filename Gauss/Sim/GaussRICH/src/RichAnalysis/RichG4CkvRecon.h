@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.h,v 1.5 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4CkvRecon.h,v 1.6 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4CKVRECON_H
 #define RICHANALYSIS_RICHG4CKVRECON_H 1
 
@@ -25,13 +25,6 @@
 
 #include "RichG4SvcLocator.h"
 
-//#include <CLHEP/Geometry/Point3D.h>
-//#include <CLHEP/Geometry/Plane3D.h>
-//#include <CLHEP/Geometry/Vector3D.h>
-//#include <CLHEP/Geometry/Transform3D.h>
-
-
-
 #include <CLHEP/Vector/ThreeVector.h>
 
 #include "RichG4ReconTransformHpd.h"
@@ -41,10 +34,10 @@
 #include "RichG4Hit.h"
 #include <complex>
 #include "RichSolveQuarticEqn.h"
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Plane3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 class RichG4CkvRecon {
 public:

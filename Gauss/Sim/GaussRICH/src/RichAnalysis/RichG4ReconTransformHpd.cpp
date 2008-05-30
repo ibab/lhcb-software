@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.9 2008-03-28 13:24:20 seaso Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.10 2008-05-30 13:43:23 gcorti Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -25,9 +25,9 @@
 // RichDet
 #include "RichDet/DeRich.h"
 
-#include "Kernel/Point3DTypes.h"
-#include "Kernel/Vector3DTypes.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 
 // local

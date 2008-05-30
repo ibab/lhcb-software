@@ -1,9 +1,10 @@
-// $Id: RichG4ReconHpd.h,v 1.4 2006-02-10 09:36:04 seaso Exp $
+// $Id: RichG4ReconHpd.h,v 1.5 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4RECONHPD_H 
 #define RICHANALYSIS_RICHG4RECONHPD_H 1
 
 // Include files
-#include "Kernel/Point3DTypes.h"
+#include "GaudiKernel/Point3DTypes.h"
+
 /** @class RichG4ReconHpd RichG4ReconHpd.h RichAnalysis/RichG4ReconHpd.h
  *  
  *

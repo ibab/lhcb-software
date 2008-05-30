@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.h,v 1.2 2008-03-28 13:24:20 seaso Exp $
+// $Id: RichG4TransformPhDet.h,v 1.3 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4TRANSFORMPHDET_H 
 #define RICHANALYSIS_RICHG4TRANSFORMPHDET_H 1
 
@@ -7,7 +7,7 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
   
 
 /** @class RichG4TransformPhDet RichG4TransformPhDet.h RichAnalysis/RichG4TransformPhDet.h

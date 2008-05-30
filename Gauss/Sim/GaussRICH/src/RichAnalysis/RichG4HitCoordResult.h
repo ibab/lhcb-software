@@ -1,4 +1,4 @@
-// $Id: RichG4HitCoordResult.h,v 1.1 2006-02-21 17:05:27 seaso Exp $
+// $Id: RichG4HitCoordResult.h,v 1.2 2008-05-30 13:43:23 gcorti Exp $
 #ifndef RICHANALYSIS_RICHG4HITCOORDRESULT_H 
 #define RICHANALYSIS_RICHG4HITCOORDRESULT_H 1
 
@@ -7,7 +7,7 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/Material.h"
-#include "Kernel/Transform3DTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
   
 
 /** @class RichG4HitCoordResult RichG4HitCoordResult.h RichAnalysis/RichG4HitCoordResult.h
