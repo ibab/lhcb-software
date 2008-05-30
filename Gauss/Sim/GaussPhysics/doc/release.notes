@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-05-30 - Gloria CORTI
+ - Fix problem with compilation of G4Neutralino due to removal of G4VMeson
+   class from Geant4 8
+
 !====================== GaussPhysics v5r1 2008-05-07 =========================
 ! 2008-05-07 - Gloria CORTI for Neal GUEISSAZ
  - Add neutralino particle definition for Geant4

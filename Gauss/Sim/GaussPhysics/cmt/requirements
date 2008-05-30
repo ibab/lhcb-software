@@ -16,7 +16,7 @@ use G4physics_lists    v*	Geant4
 
 # Component library building rule
 #============================================================================
-library          GaussPhysics      *.cpp  
+library          GaussPhysics      *.cpp  -x=G4Neutralino.cpp
 
 # define component library link options
 #============================================================================

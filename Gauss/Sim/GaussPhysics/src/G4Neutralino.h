@@ -1,4 +1,4 @@
-// $Id: G4Neutralino.h,v 1.1 2008-05-07 08:34:30 gcorti Exp $
+// $Id: G4Neutralino.h,v 1.2 2008-05-30 13:47:03 gcorti Exp $
 
 // Each class inheriting from G4VMeson
 // corresponds to a particle type; one and only one
@@ -9,14 +9,13 @@
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "G4VMeson.hh"
 #include "G4ParticleDefinition.hh"
 
 // ######################################################################
 // ###                         Neutralino                             ###
 // ######################################################################
 
-class G4Neutralino : public G4ParticleDefinition//public G4VMeson
+class G4Neutralino : public G4ParticleDefinition
 {
  private:
    static G4Neutralino theNeutralino;

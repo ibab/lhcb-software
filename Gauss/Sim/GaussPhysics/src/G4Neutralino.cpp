@@ -1,4 +1,4 @@
-// $Id: G4Neutralino.cpp,v 1.1 2008-05-07 08:34:30 gcorti Exp $
+// $Id: G4Neutralino.cpp,v 1.2 2008-05-30 13:47:03 gcorti Exp $
 // For simplicity, neutralinos are constructed from mesons.
 // For a correct implementation, see
 ///atlas/Simulation/G4Extensions/Gauginos/src/G4Neutralino.cxx
@@ -24,9 +24,6 @@ G4Neutralino::G4Neutralino(
        G4int               baryon,       G4int               encoding,
        G4bool              stable,       G4double            lifetime,
        G4DecayTable        *decaytable )
-//  : G4VMeson( aName,mass,width,charge,iSpin,iParity,
-//              iConjugation,iIsospin,iIsospin3,gParity,pType,
-//              lepton,baryon,encoding,stable,lifetime,decaytable )
   : G4ParticleDefinition( aName,mass,width,charge,iSpin,iParity,
 			  iConjugation,iIsospin,iIsospin3,gParity,pType,
 			  lepton,baryon,encoding,stable,lifetime,decaytable )
