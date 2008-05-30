@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 #include <iostream>
-#include <stdexcept>
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/StatusCode.h"
 #include "boost/any.hpp"
@@ -33,7 +32,6 @@ namespace zen {
     template <class T>
     bool add(const Key& key, const T& t){
       if (has_key(key)) return false;
-      std::cout << "dictionary::add adding item to dictionary with: " << key << std::endl;
       _map.insert( std::make_pair(key, boost::any(t)) );
       _keys.push_back(key);
       return true;
