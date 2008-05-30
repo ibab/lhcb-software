@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.h,v 1.14 2007-01-12 15:45:54 ranjard Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.15 2008-05-30 13:13:17 gcorti Exp $ 
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
 
@@ -18,6 +18,9 @@
 // from GiGa 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaLeaf.h" 
+#include "GiGa/IGiGaSvc.h"
+#include "GiGa/IGiGaSetUpSvc.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Forward declarations
 class IDataProviderSvc     ; 
@@ -26,10 +29,8 @@ class IMagneticFieldSvc    ;
 class IChronoStatSvc       ; 
 class IToolSvc             ; 
 class IIncidentSvc         ; 
-class IGiGaSvc             ;
-class IGiGaSetUpSvc        ;
 class ISvcLocator          ;
-class GaudiException       ;
+//class GaudiException       ;
 
 
 /** @class GiGaCnvSvc GiGaCnvSvc.h GiGaCnv/GiGaCnvSvc.h
@@ -82,9 +83,40 @@ public:
   virtual void       handle         ( const Incident&      );
   ///
   /// GiGa service                 (mandatory)
-  virtual IGiGaSvc*         gigaSvc   ()  const { return m_gigaSvc     ; }  
+  virtual IGiGaSvc* gigaSvc   ()  const {
+    if( m_gigaSvc == 0 ) {
+      StatusCode status = serviceLocator()->service( m_gigaName, m_gigaSvc, 
+                                                     true );
+      if( status.isFailure() ) { 
+        //FIXME Throw exception
+        Error("Initialize::Could not locate IGiGaSvc=" + m_gigaName, status );
+      }       
+      if( 0 == gigaSvc() ) {
+        Error("Initialize::Could not locate IGiGaSvc=" + m_gigaName );
+      }
+      Print( " Located GiGa Service="+m_gigaName, MSG::VERBOSE ); 
+    } 
+    return m_gigaSvc; 
+  }  
+  
   /// GiGaSetUp service            (mandatory)
-  virtual IGiGaSetUpSvc*    setupSvc  ()  const { return m_setupSvc    ; } 
+  virtual IGiGaSetUpSvc*    setupSvc  ()  const {
+    
+    if( m_setupSvc == 0 ) {
+      StatusCode status = serviceLocator()->service( m_setupName, m_setupSvc, 
+                                                     true );
+      if( status.isFailure() ){ 
+        Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
+              m_setupName, status );
+      }      
+      if( 0 == setupSvc() ) { 
+        Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
+              m_setupName );
+      }
+      Print( " Located GiGa SetUp Service="+m_setupName, MSG::VERBOSE ); 
+    } 
+    return m_setupSvc;
+  } 
   
   /** register all declared leaves 
    *  @return status code 
@@ -387,10 +419,10 @@ private:
   IDataProviderSvc*                    m_detSvc     ; 
   ///
   std::string                          m_gigaName   ; 
-  IGiGaSvc*                            m_gigaSvc    ; 
+  mutable IGiGaSvc*                    m_gigaSvc    ; 
   ///
   std::string                          m_setupName  ; 
-  IGiGaSetUpSvc*                       m_setupSvc   ; 
+  mutable IGiGaSetUpSvc*               m_setupSvc   ; 
   ///
   std::string                          m_chronoName ; 
   IChronoStatSvc*                      m_chronoSvc  ;

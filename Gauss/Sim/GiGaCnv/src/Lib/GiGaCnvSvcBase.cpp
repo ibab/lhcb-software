@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.21 2007-07-02 08:50:47 gcorti Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.22 2008-05-30 13:13:21 gcorti Exp $ 
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 
 // Include files
@@ -24,8 +24,6 @@
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Stat.h"
 // from GiGa
-#include "GiGa/IGiGaSvc.h"
-#include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/GiGaException.h"
 #include "GiGaCnv/IGiGaCnvSvc.h" 
@@ -136,33 +134,13 @@ StatusCode GiGaCnvSvcBase::initialize()
     } 
   else { return Error(" IDataProvider is not requested to be located!") ;} 
 
-  if( !m_gigaName.empty() ) 
-    {
-      StatusCode status = 
-        serviceLocator()->service( m_gigaName , m_gigaSvc , true ) ;
-      if( status.isFailure() ) 
-        { return Error("Initialize::Could not locate IGiGaSvc=" + 
-                       m_gigaName, status );}      
-      if( 0 == gigaSvc()     ) 
-        { return Error("Initialize::Could not locate IGiGaSvc=" + 
-                       m_gigaName         );}
-      Print( " Located GiGa Service="+m_gigaName, MSG::VERBOSE ); 
-    } 
-  else { return Error(" IGiGaSvc is not requested to be located!") ;} 
+  if( m_gigaName.empty() ) { 
+    return Error(" IGiGaSvc is not requested to be located!");
+  } 
 
-  if( !m_setupName.empty() ) 
-    {
-      StatusCode status = 
-        serviceLocator()->service( m_setupName , m_setupSvc , true ) ;
-      if( status.isFailure() ) 
-        { return Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
-                       m_setupName, status );}      
-      if( 0 == setupSvc()    ) 
-        { return Error("Initialize::Could not locate IGiGaSetUpSvc=" + 
-                       m_setupName         );}
-      Print( " Located GiGa SetUp Service="+m_setupName, MSG::VERBOSE ); 
-    } 
-  else { return Error(" IGiGaSetUpSvc is not requested to be located!") ;} 
+  if( m_setupName.empty() ) { 
+    return Error(" IGiGaSetUpSvc is not requested to be located!");
+  } 
 
   if( !m_evtName.empty() ) 
     {

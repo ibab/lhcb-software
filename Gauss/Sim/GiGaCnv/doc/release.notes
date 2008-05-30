@@ -4,6 +4,13 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-05-30 - Gloria CORTI
+ - Adapt to change introduced by patch #1757 stopping execution when loop in
+   use of services by removing retrieval of GiGa in itialization but doing it
+   when it is used the first time.
+   . GiGaCnv/GiGaCnvSvcBase.h
+   . src/Lib/GiGaCnvSvcBase.cpp
+
 !========================= GiGaCnv v18r4 2007-12-07 ==========================
 ! 2007-11-08 - Gloria Corti
  - Include IChronoStatSvc.h to be able to compile with Gaudi v19r5: before
