@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.10 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.11 2008-05-31 11:58:58 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -365,7 +365,6 @@ StatusCode L0DUReportMonitor::execute() {
 
       if( report->channelDecision( id ) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/1" , tcName.str()+ " - BX=T0"    , -1. ,(double) cBin  , cBin+1);
-        m_chanSeq["Global"] |=  (1 << 2);
         m_chanSeq[name] |=  (1 << 2);
       }    
 
@@ -373,27 +372,23 @@ StatusCode L0DUReportMonitor::execute() {
       if( report->channelDecision( id , -2) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/Prev2/1" 
                 , tcName.str()+ " - BX=Prev2" , -1. ,(double) cBin  , cBin+1);
-        m_chanSeq["Global"] |=  (1 << 0);
         m_chanSeq[name] |=  (1 << 0);
       }
       
       if( report->channelDecision( id , -1) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/Prev1/1" 
                 , tcName.str()+ " - BX=Prev1" , -1. ,(double) cBin  , cBin+1);
-        m_chanSeq["Global"] |=  (1 << 1);
         m_chanSeq[name] |=  (1 << 1);
       }
       if( report->channelDecision( id , +1) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/Next1/1" 
                 , tcName.str()+ " - BX=Next1" , -1. ,(double) cBin  , cBin+1);
-        m_chanSeq["Global"] |=  (1 << 3);
         m_chanSeq[name] |=  (1 << 3);
       }
     
       if( report->channelDecision( id , +2) ){
         plot1D( (double) id , base.str() + "/L0Channels/Counters/Next2/1"
                 , tcName.str()+ " - BX=Next2" , -1. ,(double) cBin  , cBin+1);
-        m_chanSeq["Global"] |=  (1 << 4);
         m_chanSeq[name] |=  (1 << 4);
       }    
       if( report->channelPreDecision( id ) )
@@ -529,6 +524,11 @@ StatusCode L0DUReportMonitor::execute() {
     if(report->decision())        plot1D( 0. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
     if(report->timingTriggerBit())plot1D( 1. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
     if(report->forceBit())        plot1D( 2. , base.str() + "/L0Decision/Counters/1" , decName.str(),  -1. ,3  , 4);
+
+    //sequence
+    for(int i=-2;i<=2;i++){
+      if(report->decisionFromSummary( i ))m_chanSeq["Global"] |=  (1 << (i+2) );
+    }
     std::stringstream seqName("");
     seqName << "L0 Decision sequence over 5 BX (TCK = " << ttck.str() << ") - LSB = Prev2";
     plot1D( (double) m_chanSeq["Global"] , base.str() + "/L0Decision/Sequence/1" , seqName.str(), 0 ,32  , 32);

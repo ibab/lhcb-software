@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.103 2008-05-29 15:56:10 cattanem Exp $
+! $Id: release.notes,v 1.104 2008-05-31 11:58:58 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-05-31 - Olivier Deschamps 
+  - Fix : decision sequence monitoring when ChannelsMonitor=false ;
+
 
 !========================== L0DU v8r4 2008-05-29 =========================
 ! 2008-05-29 - Olivier Deschamps 
