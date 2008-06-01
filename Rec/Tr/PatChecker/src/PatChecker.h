@@ -1,4 +1,4 @@
-// $Id: PatChecker.h,v 1.2 2007-10-22 15:50:57 ocallot Exp $
+// $Id: PatChecker.h,v 1.3 2008-06-01 17:28:53 mjohn Exp $
 #ifndef PATCHECKER_H 
 #define PATCHECKER_H 1
 
@@ -65,7 +65,8 @@
     ISequencerTimerTool* m_timer;
     int m_initTime;
     int m_partTime;
-    
+
+    std::string veloSpaceName;    
   }; 
 
 #endif // PATCHECKER_H

@@ -1,4 +1,4 @@
-// $Id: PatCounter.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatCounter.h,v 1.2 2008-06-01 17:28:53 mjohn Exp $
 #ifndef PATCOUNTER_H 
 #define PATCOUNTER_H 1
 
@@ -69,10 +69,22 @@ static const InterfaceID IID_PatCounter ( "PatCounter", 1, 0 );
     // Event variables  
     int m_nbTrack;                 ///< Tracks for this event
     int m_nbGhost;                 ///< Ghosts for this event
+    int m_nbGhostSpc;                 ///< Ghosts for this event
+    int m_nbGhostGen;                 ///< Ghosts for this event
+    int m_nbGhostGrl;                 ///< Ghosts for this event
+    int m_nbGhostOpn;                 ///< Ghosts for this event
     
     // total variables
+    int m_totTrackSpc;                ///< Total number of tracks processed
+    int m_totTrackGrl;                ///< Total number of tracks processed
+    int m_totTrackGen;                ///< Total number of tracks processed
+    int m_totTrackOpn;                ///< Total number of tracks processed
     int m_totTrack;                ///< Total number of tracks processed
     int m_totGhost;                ///< Total number of ghosts
+    int m_totGhostSpc;                ///< Total number of ghosts
+    int m_totGhostGrl;                ///< Total number of ghosts
+    int m_totGhostGen;                ///< Total number of ghosts
+    int m_totGhostOpn;                ///< Total number of ghosts
     double m_fracGhost;
     double m_nEvent;
     

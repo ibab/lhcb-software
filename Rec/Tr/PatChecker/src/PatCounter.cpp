@@ -1,4 +1,4 @@
-// $Id: PatCounter.cpp,v 1.2 2007-10-12 06:39:58 cattanem Exp $
+// $Id: PatCounter.cpp,v 1.3 2008-06-01 17:28:53 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -26,8 +26,14 @@ PatCounter::PatCounter( const std::string& type,
 {
   declareInterface<PatCounter>(this);
   m_link     = NULL;
-  m_totTrack = 0;
-  m_totGhost = 0;
+  m_totTrackSpc = 0;
+  m_totTrackGrl = 0;
+  m_totTrackGen = 0;
+  m_totTrackOpn = 0;
+  m_totGhostSpc = 0;
+  m_totGhostGrl = 0;
+  m_totGhostGen = 0;
+  m_totGhostOpn = 0;
   m_selectId = 0;
   m_fracGhost = 0.;
   m_nEvent    = 0.;
@@ -67,7 +73,10 @@ void PatCounter::initEvent ( ) {
     return;
   }
   if ( NULL == m_link ) m_link = new MyAsct( evtSvc(), m_container );
-
+  m_nbGhostSpc = 0;
+  m_nbGhostGrl = 0;
+  m_nbGhostGen = 0;
+  m_nbGhostOpn = 0;
   m_nbGhost = 0;
 
   LHCb::Tracks* tracks = get<LHCb::Tracks>( m_container );
@@ -84,11 +93,25 @@ void PatCounter::initEvent ( ) {
         tracks->end() != itT; ++itT ) {
     if ( (*itT)->checkFlag( LHCb::Track::Invalid ) ) continue;
     Range range = table->relations( *itT );
-    if ( range.empty() ) m_nbGhost++;
+    if ( range.empty() ){
+      if( 3==(*itT)->history())m_nbGhostSpc++;
+      if(13==(*itT)->history())m_nbGhostGrl++;
+      if(12==(*itT)->history())m_nbGhostGen++;
+      if(14==(*itT)->history())m_nbGhostOpn++;
+      m_nbGhost++;
+    }
+    if( 3==(*itT)->history())m_totTrackSpc++;
+    if(13==(*itT)->history())m_totTrackGrl++;
+    if(12==(*itT)->history())m_totTrackGen++;
+    if(14==(*itT)->history())m_totTrackOpn++;
     m_totTrack++;
     nbTracks++;
   }
   m_totGhost += m_nbGhost;
+  m_totGhostSpc += m_nbGhostSpc;
+  m_totGhostGrl += m_nbGhostGrl;
+  m_totGhostGen += m_nbGhostGen;
+  m_totGhostOpn += m_nbGhostOpn;
   double fracGhost = 0.;
   if ( 0 < nbTracks ) fracGhost = double(m_nbGhost) / nbTracks;
   m_fracGhost += fracGhost;
@@ -206,6 +229,19 @@ int PatCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
 //=========================================================================
 void PatCounter::printStatistics ( ) {
   if ( 0 == m_totTrack ) return;
+
+
+
+  info() << "**** Space "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
+                                    m_totTrackSpc, m_totGhostSpc, 100.*double(m_totGhostSpc)/double(m_totTrackSpc) ) << endreq;
+  info() << "**** Genrl "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
+                                    m_totTrackGrl, m_totGhostGrl, 100.*double(m_totGhostGrl)/double(m_totTrackGrl) ) << endreq;
+  info() << "**** Genric"<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
+                                    m_totTrackGen, m_totGhostGen, 100.*double(m_totGhostGen)/double(m_totTrackGen) ) << endreq;
+  info() << "**** Open  "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
+                                    m_totTrackOpn, m_totGhostOpn, 100.*double(m_totGhostOpn)/double(m_totTrackOpn) ) << endreq;
+
+
 
   double totT = m_totTrack + 0.00000000001;
   double frac = 100. * double( m_totGhost ) / totT;
