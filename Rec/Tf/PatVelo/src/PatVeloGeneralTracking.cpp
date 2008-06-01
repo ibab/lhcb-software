@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.10 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.11 2008-06-01 17:32:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -31,6 +31,7 @@ Tf::PatVeloGeneralTracking::PatVeloGeneralTracking( const std::string& name,
       m_outputTracksLocation = LHCb::TrackLocation::Velo );
   declareProperty( "RHitManagerName", m_rHitManagerName="PatVeloRHitManager");
   declareProperty( "PhiHitManagerName", m_phiHitManagerName="PatVeloPhiHitManager");
+  declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
   declareProperty( "PointErrorScale"  ,   m_ErrScale         = 1.1       );
   declareProperty( "PointErrorMin"    ,   m_ErrMin           = 
       0.250*Gaudi::Units::mm);
@@ -67,7 +68,7 @@ StatusCode Tf::PatVeloGeneralTracking::initialize() {
 
   if( m_isDebug ) debug() << "==> Initialize" << endmsg;
 
-  m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
+  m_PatVeloTrackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool",m_trackToolName);
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 

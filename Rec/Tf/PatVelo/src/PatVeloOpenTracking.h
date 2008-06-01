@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.h,v 1.4 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloOpenTracking.h,v 1.5 2008-06-01 17:32:05 mjohn Exp $
 #ifndef PATVELOOPENTRACKING_H
 #define PATVELOOPENTRACKING_H 1
 
@@ -97,5 +97,6 @@ private:
 
   std::string m_rHitManagerName; ///< name of the R hit manager instance
   std::string m_phiHitManagerName; ///< name of the Phi hit manager instance
+  std::string m_trackToolName; /// name of the track tool instance used here
 };
 #endif // PATVELOOPENTRACKING_H

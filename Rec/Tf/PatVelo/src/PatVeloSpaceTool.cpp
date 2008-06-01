@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.12 2008-05-26 07:24:30 cattanem Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.13 2008-06-01 17:32:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -51,6 +51,7 @@ namespace Tf {
       declareProperty( "NMissedFirst"    , m_NMissedFirst     = 4         );
       declareProperty( "RHitManagerName" , m_rHitManagerName  = "PatVeloRHitManager" );
       declareProperty( "PhiHitManagerName" , m_phiHitManagerName  = "PatVeloPhiHitManager" );
+      declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
 
     }
   //=============================================================================
@@ -70,7 +71,7 @@ namespace Tf {
     // get some constants for later use
     m_numberRSensors = m_velo->numberRSensors();
 
-    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
+    m_trackTool = tool<PatVeloTrackTool>("Tf::PatVeloTrackTool", m_trackToolName );
 
     info() << "========== Tool " << name() << " parameters ======"   << endreq
       << "FractionFound        = " << m_fractionFound       << endreq

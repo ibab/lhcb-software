@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.5 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.6 2008-06-01 17:32:05 mjohn Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -191,6 +191,7 @@ namespace Tf {
       std::string m_outputTracksLocation;///< name of place to write the tracks
       std::string m_rHitManagerName; ///< name of the R hit manager instance
       std::string m_phiHitManagerName; ///< name of the Phi hit manager instance
+      std::string m_trackToolName; /// name of the track tool instance used here
       double m_phiAngularTol;  ///< tolerance in rad between R and phi sectors
       double m_ErrScale;       ///< scale factor for linear cluster errors
       double m_ErrMin;         ///< const term to add to linear cluster errors

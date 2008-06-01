@@ -1,4 +1,4 @@
-// $Id: PatVeloOpenTracking.cpp,v 1.4 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloOpenTracking.cpp,v 1.5 2008-06-01 17:32:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -44,6 +44,7 @@ PatVeloOpenTracking::PatVeloOpenTracking( const std::string& name,
 
   declareProperty( "RHitManagerName" , m_rHitManagerName="PatVeloRHitManager");
   declareProperty( "PhiHitManagerName" , m_phiHitManagerName="PatVeloPhiHitManager");
+  declareProperty( "TrackToolName",          m_trackToolName = "PatVeloTrackTool" );
 }
 //=============================================================================
 // Destructor
@@ -61,7 +62,7 @@ StatusCode PatVeloOpenTracking::initialize() {
 
   m_rHitManager   = tool<Tf::PatVeloRHitManager>( "Tf::PatVeloRHitManager", m_rHitManagerName );
   m_phiHitManager = tool<Tf::PatVeloPhiHitManager>( "Tf::PatVeloPhiHitManager", m_phiHitManagerName );
-  m_trackTool     = tool<Tf::PatVeloTrackTool>("Tf::PatVeloTrackTool","PatVeloTrackTool");
+  m_trackTool     = tool<Tf::PatVeloTrackTool>("Tf::PatVeloTrackTool",m_trackToolName);
   m_debugTool     = 0;
   if ( "" != m_debugToolName ) m_debugTool = tool<IPatDebugTool>( m_debugToolName );
 

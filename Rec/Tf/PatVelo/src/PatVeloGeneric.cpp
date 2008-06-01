@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneric.cpp,v 1.3 2008-04-16 12:28:09 krinnert Exp $
+// $Id: PatVeloGeneric.cpp,v 1.4 2008-06-01 17:32:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -217,19 +217,19 @@ namespace Tf {
 
               PatVeloRHitRange hitsR0 = stationR0->hits(zoneR0);
               for(cR0 = hitsR0.begin(); hitsR0.end() != cR0; ++cR0) {
-                if ((*cR0)->hit()->testStatus(HitBase::UsedByVeloSpace) || (*cR0)->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
+                if ( (*cR0)->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
 
                 PatVeloRHitRange hitsR2 = stationR2->hits(zoneR0);
                 for(cR2 = hitsR2.begin(); hitsR2.end() != cR2; ++cR2) {
-                  if ((*cR2)->hit()->testStatus(HitBase::UsedByVeloSpace) || (*cR2)->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
+                  if ( (*cR2)->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
 
                   PatVeloPhiHitRange hitsP0 = stationP0->hits(zoneP0);
                   for(cP0 = hitsP0.begin(); hitsP0.end() != cP0; ++cP0) {
-                    if ((*cP0)->hit()->testStatus(HitBase::UsedByVeloSpace) || (*cP0)->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
+                    if ( (*cP0)->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
 
                     PatVeloPhiHitRange hitsP2 = stationP2->hits(zoneP2);
                     for(cP2 = hitsP2.begin(); hitsP2.end() != cP2; ++cP2) {
-                      if ((*cP2)->hit()->testStatus(HitBase::UsedByVeloSpace) || (*cP2)->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
+                      if ( (*cP2)->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
 
                       PatGenericFitter fitter(m_rHitManager, m_phiHitManager, m_align);
                       fitter.addPair(*cR0,*cP0);
@@ -251,11 +251,11 @@ namespace Tf {
 
                       PatVeloRHit* rCand = rCandidate(stationR1,zoneR0,rEst);
                       if (0 == rCand) continue;
-                      if (rCand->hit()->testStatus(HitBase::UsedByVeloSpace) || rCand->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
-
+                      if ( rCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
+                      
                       PatVeloPhiHit* pCand = pCandidate(stationR1,&fitter);
                       if (0 == pCand) continue;
-                      if (pCand->hit()->testStatus(HitBase::UsedByVeloSpace) || pCand->hit()->testStatus(HitBase::UsedByVeloGeneric)) continue;
+                      if ( pCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) continue;
 
                       fitter.addPair(rCand,pCand);
                       trackSeeds.push_back(fitter);
@@ -333,10 +333,10 @@ namespace Tf {
               if ( !consist ) continue;
 
               PatVeloRHit* rCand = rCandidate(stationR,zoneR,rEst);                  
-              if ( rCand && (rCand->hit()->testStatus(HitBase::UsedByVeloSpace) || rCand->hit()->testStatus(HitBase::UsedByVeloGeneric))) rCand = 0;  
+              if ( rCand &&  rCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) rCand = 0;
 
               PatVeloPhiHit* pCand = pCandidate(stationR,fitter);
-              if ( pCand && (pCand->hit()->testStatus(HitBase::UsedByVeloSpace) || pCand->hit()->testStatus(HitBase::UsedByVeloGeneric))) pCand = 0;  
+              if ( pCand &&  pCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) pCand = 0;
 
               if ( 0 == pCand && 0 == rCand ) continue; 
 
@@ -387,10 +387,10 @@ namespace Tf {
                 if ( !consist ) continue;
 
                 PatVeloRHit* rCand = rCandidate(stationR,zoneR,rEst);                  
-                if ( rCand && (rCand->hit()->testStatus(HitBase::UsedByVeloSpace) || rCand->hit()->testStatus(HitBase::UsedByVeloGeneric))) rCand = 0;  
-
+                if ( rCand &&  rCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) rCand = 0;
+                
                 PatVeloPhiHit* pCand = pCandidate(stationR,fitter);
-                if ( pCand && (pCand->hit()->testStatus(HitBase::UsedByVeloSpace) || pCand->hit()->testStatus(HitBase::UsedByVeloGeneric))) pCand = 0;  
+                if ( pCand &&  pCand->hit()->isUsedByAnyOtherThan(HitBase::UsedByVeloRZ) ) pCand = 0;
 
                 if ( 0 == pCand && 0 == rCand ) continue; 
 

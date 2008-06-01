@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.h,v 1.4 2008-02-27 14:37:38 krinnert Exp $
+// $Id: PatVeloSpaceTool.h,v 1.5 2008-06-01 17:32:05 mjohn Exp $
 #ifndef TF_PATVELOSPACETOOL_H 
 #define TF_PATVELOSPACETOOL_H 1
 
@@ -96,6 +96,9 @@ namespace Tf {
       std::string m_rHitManagerName;
       /// Name of the Phi hit manager instance
       std::string m_phiHitManagerName;
+      /// Name of the Track Tool used here
+      std::string m_trackToolName;
+
 
       double           m_chiSqDofMax;  ///< Maximum chiSq/ndf for an offline track
       /// MS error between two Velo points
