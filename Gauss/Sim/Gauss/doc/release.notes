@@ -1,8 +1,26 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/Gauss
-! Responsible : Gloria CORTI, Florence RANJARD 
+! Responsible : Gloria CORTI
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
+
+! 2008-06-02 - Gloria CORTI
+ - New steering options to pick up latest version of geometry
+   ( tag=head-20080516 ).
+   . options/lhcb-2008.{opts,py}
+
+! 2008-05-30 - Gloria CORTI
+ - Use latest version of FieldMap DB (v5r0) with measured field
+ - Use latest version of DecFiles (v14r4) with new event types
+ - Use latest version of MIBData (v2r0) with beam gas in LSS sources and 
+   compatible with both 32-bit and 64-bit
+ - Use ParticleTable with corrected PDG for D(2S), D*(2640) and Lambda_c(2625)
+   . options/Common.opts
+ - Introduce options to run with measured magnetic field map
+   . options/MeasuredFieldMap.opts
+ - Move in item list the "RIchHpdSurfaces" after "RICH2Surfaces" otherwise
+   simulation does NOT work with latest geometry
+   . options/SimGeometry.opts
 
 !======================== Gauss v31r0 2008-05-08 =============================
 ! 2008-05-08 - Gloria CORTI
