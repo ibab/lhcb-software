@@ -1,4 +1,4 @@
-// $Id: DecayTruth.cpp,v 1.2 2008-05-20 09:43:00 cattanem Exp $
+// $Id: DecayTruth.cpp,v 1.3 2008-06-02 12:22:05 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,19 +46,19 @@ namespace LoKi
    *   - <b>"RCDepth"</b>: the depth of the printout level, the default is 9
    *   - <b>"RCMode"</b>: the mode of kinematical-printout, 
    *                      the default value is 0, @see LoKi::DecayChain::Mode
-   *   - <b>"RCVertex"</d>: print also the decay-vertex information, 
+   *   - <b>"RCVertex"</b>: print also the decay-vertex information, 
    *                     the default value is <c>false</c> 
    *   - <b>"MCDepth"</b>: the depth of the printout level for Monte Carlo 
    *                       particles, the default is 5
    *   - <b>"MCMode"</b>: the mode of kinematical-printout, 
    *                      the default value is 0, @see LoKi::DecayChain::Mode
-   *   - <b>"MCVertex"</d>: print the origin-vertex information for
+   *   - <b>"MCVertex"</b>: print the origin-vertex information for
    *                       Monte Carlo particle, the default value is <c>false</c> 
-   *   - <b>"MCVertexE"</d>: print the end-vertices information for
+   *   - <b>"MCVertexE"</b>: print the end-vertices information for
    *                       Monte Carlo particle, requires also 
    *                       the activation of <c>"MCVertex"</c> flag,
    *                       the default value is <c>false</c> 
-   *   - <b>"MCVertexD"</d>: If <c>true</c> treat <b>ONLY</b> the 
+   *   - <b>"MCVertexD"</b>: If <c>true</c> treat <b>ONLY</b> the 
    *                        decay vertices and ignore all MonteCarlo 
    *                        particles from other sources (e.g. interactions 
    *                        in the detector material),

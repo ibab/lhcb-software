@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.19 2008-05-20 09:43:00 cattanem Exp $ 
+! $Id: release.notes,v 1.20 2008-06-02 12:22:05 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiAlgoMC v7r1p1 2008-06-02 ======================
+! 2008-06-02 - Marco Cattaneo
+ - In LoKiAlgoMCDict.h: add hack to suppress _POSIX_C_SOURCE redefinition warning
+ - Fix many doxygen typos
+ - In requirements increment version to v7r1p1
 
 !========================== LoKiAlgoMC v7r1 2008-05-20 ========================
 ! 2008-05-20 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: LoKiAlgoMCDict.h,v 1.3 2007-06-10 20:21:43 ibelyaev Exp $
+// $Id: LoKiAlgoMCDict.h,v 1.4 2008-06-02 12:22:05 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -8,8 +8,14 @@
 // LoKi
 // ============================================================================
 #include "LoKi/LoKiAlgoMC.h"
-#include "LoKi/AlgoDecorator.h"
 #include "LoKi/MCMatchAlgoDicts.h"
+// ============================================================================
+// Trick to suppress _POSIX_C_SOURCE redefinition warning
+#ifdef __GNUC__
+#undef _POSIX_C_SOURCE
+#endif
+// ============================================================================
+#include "LoKi/AlgoDecorator.h"
 // ============================================================================
 namespace
 {

@@ -1,4 +1,4 @@
-// $Id: AlgoMC.h,v 1.8 2008-05-19 07:33:17 cattanem Exp $
+// $Id: AlgoMC.h,v 1.9 2008-06-02 12:22:05 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_ALGOMC_H 
 #define LOKI_ALGOMC_H 1
@@ -636,7 +636,7 @@ namespace LoKi
      *   @see LoKi::Cuts::G3Q
      *
      *   @param tag   the unique tag to be associated with selected particles 
-     *   @param event the source 
+     *   @param vertex the source 
      *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
@@ -650,7 +650,7 @@ namespace LoKi
     /** 'Select' generator(HepMC) from arbitrary container
      *   @param tag   the unique tag to be associated with selected particles 
      *   @param first begin-iterator for container 
-     *   @param event end-iterator for the ocnatiner 
+     *   @param last  end-iterator for the ocnatiner 
      *   @param cut   the selection cuts to be applied 
      *   @return selected particles, saved into the local storage 
      */
