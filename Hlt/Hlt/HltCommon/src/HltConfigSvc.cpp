@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.5 2008-05-28 18:53:27 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.6 2008-06-02 19:57:57 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -154,12 +154,16 @@ void HltConfigSvc::verifyTCK() {
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
     unsigned int TCK = odin->triggerConfigurationKey();
 
+    cout << " warning : " << (warning().isActive()?"yes":"no") << endl;
+
+    std::cout << "verifyTCK: currently configured TCK: " << m_configuredTCK << endl;
     debug() << "verifyTCK: currently configured TCK: " << m_configuredTCK << endmsg;
+    std::cout << "verifyTCK: TCK in ODIN bank: " << TCK << endl;
     debug() << "verifyTCK: TCK in ODIN bank: " << TCK << endmsg;
 
     if ( m_configuredTCK == TCK ) return;
 
-    info() << "updating configuration from TCK " << m_configuredTCK << " to TCK " << TCK << endmsg;
+    info() << "requesting update of from TCK " << m_configuredTCK << " to TCK " << TCK << endmsg;
     if (reconfigure( TCK ).isSuccess()) { 
         m_configuredTCK = TCK;
     } else {
@@ -168,6 +172,9 @@ void HltConfigSvc::verifyTCK() {
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {
+  std::cout << "received an Incident!" << std::endl;
+
+  debug() << "received an Incident!" << endmsg;
   // dummyVerifyTCK();
   verifyTCK();
 }

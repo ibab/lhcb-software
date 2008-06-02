@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.cpp,v 1.21 2008-02-07 15:19:43 hernando Exp $
+// $Id: HltFunctionFactory.cpp,v 1.22 2008-06-02 19:57:57 graven Exp $
 // Include files
 
 // from Gaudi
@@ -25,7 +25,6 @@ HltFunctionFactory::HltFunctionFactory( const std::string& type,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  //  declareInterface<IPyHltFunctionFactory>(this);
 
 }
 //=============================================================================
@@ -56,7 +55,8 @@ HltFunctionFactory::trackFunction(const std::string& name)
 Hlt::TrackFilter* 
 HltFunctionFactory::trackFilter(const std::string& name)
 {return m_trackFactory->filter(name);} 
-  
+ 
+
 Hlt::VertexFunction* 
 HltFunctionFactory::vertexFunction(const std::string& name)
 {return m_vertexFactory->function(name);}
@@ -64,7 +64,8 @@ HltFunctionFactory::vertexFunction(const std::string& name)
 Hlt::VertexFilter* 
 HltFunctionFactory::vertexFilter(const std::string& name)
 {return m_vertexFactory->filter(name);}
-  
+ 
+
 Hlt::TrackBiFunction* 
 HltFunctionFactory::trackBiFunction(const std::string& name)
 {return m_trackBiFactory->function(name);}

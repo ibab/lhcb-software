@@ -1,4 +1,4 @@
-// $Id: HltInit.cpp,v 1.14 2008-05-15 08:56:55 graven Exp $
+// $Id: HltInit.cpp,v 1.15 2008-06-02 19:57:57 graven Exp $
 // Include files
 
 // from Gaudi
@@ -61,12 +61,12 @@ StatusCode HltInit::initialize() {
   
   // create the Hlt Data Svc
   if (!m_hltMan) {
-  std::string name = "DataSvc/HltSvc";
-  debug() << " creating hltSvc " << name << endreq;
-  sc = serviceLocator()->service(name,m_hltMan,true);
-      if ( sc.isFailure() ) return sc; 
+    std::string name = "DataSvc/HltSvc";
+    debug() << " creating hltSvc " << name << endreq;
+    sc = serviceLocator()->service(name,m_hltMan,true);
+    if ( sc.isFailure() ) return sc; 
   } else {
-      m_hltMan->clearStore();
+    m_hltMan->clearStore();
   }
   if (!m_hltMan) fatal() << " not able to create HltSvc " << endreq;
   info() << " created HltSvc " << endreq;

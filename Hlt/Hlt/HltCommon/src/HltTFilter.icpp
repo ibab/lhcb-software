@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.7 2008-06-02 11:39:20 graven Exp $
+// $Id: HltTFilter.icpp,v 1.8 2008-06-02 19:57:57 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -21,8 +21,8 @@ HltTFilter<T>::HltTFilter( const std::string& name,
                            const std::string& factoryname,
                            bool tesInput)
   : HltAlgorithm ( name , pSvcLocator )
-  , m_functionFactoryName( factoryname )
   , m_tesInput(tesInput)
+  , m_functionFactoryName( factoryname )
 {
   
   declareProperty("FunctionFactoryName", m_functionFactoryName);
@@ -196,9 +196,9 @@ StatusCode HltTFilter<T>::execute() {
         debug() << endreq; 
         debug() << " best " << val << endreq;
       }
-        fillHisto(*tf.histovalues,vals,1.);
-        fillHisto(*tf.histobest,val,1.);
-      }
+      fillHisto(*tf.histovalues,vals,1.);
+      fillHisto(*tf.histobest,val,1.);
+    }
 
     // filter
     

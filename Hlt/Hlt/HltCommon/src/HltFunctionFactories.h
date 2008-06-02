@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.h,v 1.1 2008-01-22 09:56:30 hernando Exp $
+// $Id: HltFunctionFactories.h,v 1.2 2008-06-02 19:57:57 graven Exp $
 #ifndef HLTFUNCTIONFACTORIES_H 
 #define HLTFUNCTIONFACTORIES_H 1
 
@@ -14,11 +14,11 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2007-12-04
  */
-class HltTrackFunctionFactory : public HltTFunctionFactory<LHCb::Track>{
+class HltTrackFunctionFactory : public HltTFunctionFactory<LHCb::Track> {
 public: 
 
-  typedef Hlt::FunctionCreator<LHCb::Track> TCreator;
-  typedef Hlt::TFunctionCreator<LHCb::Track,LHCb::Track> TTCreator;
+  typedef Hlt::FunctionCreator<LHCb::Track>                   TCreator;
+  typedef Hlt::TFunctionCreator<LHCb::Track,LHCb::Track>     TTCreator;
   typedef Hlt::TFunctionCreator<LHCb::Track,LHCb::RecVertex> TVCreator;
   
 
@@ -43,8 +43,8 @@ public:
 class HltVertexFunctionFactory : public HltTFunctionFactory<LHCb::RecVertex>{
 public: 
 
-  typedef Hlt::FunctionCreator<LHCb::RecVertex> VCreator;
-  typedef Hlt::TFunctionCreator<LHCb::RecVertex,LHCb::Track> VTCreator;
+  typedef Hlt::FunctionCreator<LHCb::RecVertex>                   VCreator;
+  typedef Hlt::TFunctionCreator<LHCb::RecVertex,LHCb::Track>     VTCreator;
   typedef Hlt::TFunctionCreator<LHCb::RecVertex,LHCb::RecVertex> VVCreator;
   
 

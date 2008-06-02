@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.3 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSelectionToTES.cpp,v 1.4 2008-06-02 19:57:57 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -99,12 +99,12 @@ StatusCode HltSelectionToTES::execute() {
       continue;
     } 
     Hlt::Selection& sel = hltData().selection(*it);
-      if (sel.classID() == LHCb::Track::classID()) {
+    if (sel.classID() == LHCb::Track::classID()) {
       LHCb::Tracks* tracks = 
           sel.decision() ? copy<LHCb::Tracks>(hltData().selection(*it))
                          : new LHCb::Tracks();
       put(tracks,m_trackLocation+it->str());
-      } else if (sel.classID() == LHCb::RecVertex::classID()) {
+    } else if (sel.classID() == LHCb::RecVertex::classID()) {
       LHCb::RecVertices* vertices = 
           sel.decision() ? copy<LHCb::RecVertices>(hltData().selection(*it))
                          : new LHCb::RecVertices();

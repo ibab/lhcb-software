@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.6 2008-06-02 19:57:57 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -63,11 +63,14 @@ StatusCode HltTrackFromParticle::execute() {
   Particles* pars = get<Particles>(m_particlesName);
   if (m_debug) {
     if (pars == 0) verbose() << " no particles found! " << endreq;
-    else verbose() << " particles found " << pars->size() << endreq;
+    else           verbose() << " particles found " << pars->size() << endreq;
   }  
   if (pars == 0) return sc;
   
   m_outputTracks->clear();
+//  std::for_each( boost::iterator::make_indirect_iterator(pars->begin()),
+//                 boost::iterator::make_indirect_iterator(pars->end()),
+//                 boost::bind(&HltTrackFromParticle::loadParticle,this,_1));
   for (Particles::iterator it = pars->begin(); it != pars->end(); ++it) {
     loadParticle(**it);
   }
@@ -84,7 +87,7 @@ void HltTrackFromParticle::loadParticle(const Particle& par) {
   verbose() << " loading " << par.pt() << endreq;
   if (par.isBasicParticle()) {
     const Track* track = par.proto()->track();
-    if (track)  m_outputTracks->push_back( const_cast<Track*>(track));
+    if (track) m_outputTracks->push_back( const_cast<Track*>(track));
     verbose() << " loading particle " << par.pt() 
               << " as track " << track->pt() << endreq;
   } else {

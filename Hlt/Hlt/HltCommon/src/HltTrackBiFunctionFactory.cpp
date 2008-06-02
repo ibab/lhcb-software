@@ -1,4 +1,4 @@
-// $Id: HltTrackBiFunctionFactory.cpp,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTrackBiFunctionFactory.cpp,v 1.3 2008-06-02 19:57:57 graven Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -36,18 +36,17 @@ StatusCode HltTrackBiFunctionFactory::initialize() {
 }
 
 bool HltTrackBiFunctionFactory::command(const std::string& command,
-                                      const std::string & value) {
+                                        const std::string & value) {
   info() << " command " << command << " value " << value << endreq;
   return true;
 }
 
 Hlt::TrackBiFunction* 
-HltTrackBiFunctionFactory::function(const std::string& fn) 
+HltTrackBiFunctionFactory::function(const std::string& fn)
 {
   debug() << " creating function " << fn << endreq;
 
   std::string name = boost::algorithm::erase_regex_copy(fn, boost::regex(",.*"));
-
   Hlt::TrackBiFunction* fun = 
            name == "DOCA"       ? new Hlt::DOCA()       :
            name == "DimuonMass" ? new Hlt::DimuonMass() :

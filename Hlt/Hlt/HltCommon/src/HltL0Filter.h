@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.h,v 1.1 2008-05-21 12:28:34 graven Exp $
+// $Id: HltL0Filter.h,v 1.2 2008-06-02 19:57:57 graven Exp $
 #ifndef HLTL0FILTER_H 
 #define HLTL0FILTER_H 1
 
@@ -41,6 +41,11 @@ private:
 
   std::string         m_l0Location;
   StringArrayProperty m_l0Channels;
+  //TODO: replace TCKMap_t with a priority queue: move requested entry
+  //      to the front if it isn't there, cut away the entry at the
+  //      back when we the size gets too large...
+  //      that way most of the time the requested map is the first
+  //      one tried...
   TCKMap_t            m_map;
 
 };
