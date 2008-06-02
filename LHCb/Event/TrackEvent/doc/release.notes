@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!======================= TrackEvent v4r13 2008-06-02 =========================
+! 2008-06-02 - Olivier Deschamps
+ - Add flags and enum values for Calo cosmics reconstruction 
+
 !======================= TrackEvent v4r12 2008-04-17 =========================
 ! 2008-04-17 - Wouter Hulsbergen
  - fixed bug in State::posMomCovariance found by Cedric Potterat
