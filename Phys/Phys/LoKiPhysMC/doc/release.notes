@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.42 2008-06-02 09:59:31 ibelyaev Exp $ 
+! $Id: release.notes,v 1.43 2008-06-02 11:56:38 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v7r2 2008-06-02 ========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix two doxygen warnings
+ - cmt/requirements:  version increment to v7r2 
+
 ! 2008-06-02 - Vanya Belyaev
-
- -  Change the handled incidents from EndEvent to BeginEvent 
-
+ - Change the handled incidents from EndEvent to BeginEvent 
 
 !========================== LoKiPhysMC v7r1 2008-05-19 ========================
 ! 2008-05-19 - Marco Cattaneo

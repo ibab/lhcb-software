@@ -1,4 +1,4 @@
-// $Id: DumpMC.cpp,v 1.1 2008-05-05 18:06:33 ibelyaev Exp $
+// $Id: DumpMC.cpp,v 1.2 2008-06-02 11:56:39 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,7 +27,7 @@ namespace LoKi
   // ==========================================================================
   /** @class DumpMC    
    *  Simple class to dump MC-information 
-   *  @authro Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2008-05-04 
    */
   class DumpMC : public GaudiAlgorithm 
