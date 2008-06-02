@@ -7,7 +7,7 @@ version           v2r7
 branches          cmt doc src GaudiOnline 
 # dependency list
 use AIDA          v* LCG_Interfaces -no_auto_imports
-use Python        v* LCG_Interfaces -no_auto_imports
+use Python        v* LCG_Interfaces 
 use DAQEvent      v* Event          -no_auto_imports
 use MDF           v* DAQ            -no_auto_imports
 use DIM           v* Online         -no_auto_imports

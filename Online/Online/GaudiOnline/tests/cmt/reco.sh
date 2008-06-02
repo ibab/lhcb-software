@@ -40,4 +40,6 @@ $MINITERM RECWriter@${HOST}  -e "export UTGID=${NODENAME}/RECWriter;    exec -a 
 # For debugging enable this and disable any other
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
 # export UTGID=${NODENAME}/prod_0; $gaudi_run libGaudiOnline.so mep_producer -n=prod_0 -p=333 -s=500 -r=2
-tail -n 3 ${0}
+# $MINITERM MDF2MBM@${HOST}  -e "export UTGID=${NODENAME}/MDF2MBM;    exec -a \${UTGID} $gaudi_task -opt=../../recopts/DimRPCFileReader.opts"&
+# $MINITERM Reader@${HOST}  -e "export UTGID=Reader;    exec -a \${UTGID} $gaudi_task -opt=../recopts/DimRPCFileReader.opts"&
+tail -n 5 reco.sh | head -n 4
