@@ -9,7 +9,7 @@ class AlDofMask
 {
 public:
   /** Enums, typedefs */
-  enum { NumPars = 6 } ;
+  enum { Tx=0, Ty, Tz, Rx, Ry, Rz, NumPars = 6 } EParameter ;
   typedef boost::array<bool,NumPars> MaskType ;
   
   /** Constructors */

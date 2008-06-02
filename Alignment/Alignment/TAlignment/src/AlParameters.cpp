@@ -43,6 +43,13 @@ AlParameters::AlParameters(double parameters[6], AlDofMask mask)
     m_parameters[i] = parameters[mask.parIndex(i)] ;
 }
 
+AlParameters::AlParameters(const TransformParameters& parameters, AlDofMask mask)
+  : m_mask(mask), m_parameters(dim()), m_covariance(dim())
+{
+  for( unsigned int i = 0u; i < dim(); ++i) 
+    m_parameters[i] = parameters[mask.parIndex(i)] ;
+}
+
 std::string AlParameters::parName(int parindex)
 {
   std::string rc ;
@@ -107,18 +114,22 @@ std::vector<double> AlParameters::errRotation() const {
   return errR;
 }
 
-ROOT::Math::Transform3D AlParameters::transform() const
+AlParameters::TransformParameters AlParameters::parameterArray() const 
 {
-  boost::array<double, 6> pars;
+  TransformParameters pars;
   /// Initialise all elements to 0.0
   std::fill(pars.begin(), pars.end(), 0.0);
   /// Set unmasked parameters
   for (size_t iactive = 0u; iactive < dim(); ++iactive) pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
-
-  return transform(pars) ;
+  return pars ;
 }
 
-ROOT::Math::Transform3D AlParameters::transform(const boost::array<double, 6>& pars)
+ROOT::Math::Transform3D AlParameters::transform() const
+{
+  return transform( parameterArray() ) ;
+}
+
+ROOT::Math::Transform3D AlParameters::transform(const TransformParameters& pars)
 {
   ROOT::Math::Transform3D translation( ROOT::Math::XYZVector(pars[0], pars[1], pars[2])) ;
   ROOT::Math::Transform3D rotation( ROOT::Math::RotationX(pars[3])*

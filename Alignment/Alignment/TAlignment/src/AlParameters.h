@@ -14,7 +14,7 @@ class AlParameters
 {
 public:
   /** Enums, typedefs */
-  enum { Tx=0, Ty, Tz, Rx, Ry, Rz, NumPars } EParameter ;
+  enum { Tx=0, Ty, Tz, Rx, Ry, Rz, NumPars = 6 } EParameter ;
   typedef AlVec                             Vector ;
   typedef AlSymMat                          Covariance ;
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
@@ -25,7 +25,8 @@ public:
   AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, const Covariance& weightmatrix,
 	       AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
-  AlParameters( double parameters[6], AlDofMask mask) ;
+  AlParameters(double parameters[6], AlDofMask mask=AlDofMask()) ;
+  AlParameters(const TransformParameters& parameters, AlDofMask mask=AlDofMask()) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;
@@ -46,6 +47,7 @@ public:
   const Covariance& covariance() const { return m_covariance ; }
   double globalCorrelationCoefficient(int iactive) const ;
   double measurementCoordinateSigma(double weightR) const ;
+  TransformParameters parameterArray() const ;
 
 private:
   AlDofMask   m_mask;
