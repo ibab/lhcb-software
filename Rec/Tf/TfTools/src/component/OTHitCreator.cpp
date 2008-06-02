@@ -258,7 +258,7 @@ namespace Tf
     }
 
     // reset pointer to list of clusters at beginevent
-    incSvc()->addListener(this, IncidentType::EndEvent);
+    incSvc()->addListener(this, IncidentType::BeginEvent);
 
     // tool handle to the otlitetimedecoder
     m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
@@ -318,6 +318,7 @@ namespace Tf
 
   StatusCode OTHitCreator::finalize()
   {
+    if (m_detectordata) m_detectordata->clearEvent();
     delete m_detectordata ;
     m_detectordata = 0 ;
     delete m_rtrel;
@@ -327,7 +328,7 @@ namespace Tf
 
   void OTHitCreator::handle ( const Incident& incident )
   {
-    if ( IncidentType::EndEvent == incident.type() ) m_detectordata->clearEvent() ;
+    if ( IncidentType::BeginEvent == incident.type() ) m_detectordata->clearEvent() ;
   }
 
   Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,

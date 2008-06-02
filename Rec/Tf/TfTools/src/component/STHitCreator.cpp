@@ -4,7 +4,7 @@
  *
  *  Implementation file for class : Tf::STHitCreator
  *
- *  $Id: STHitCreator.cpp,v 1.5 2008-05-29 13:45:57 cattanem Exp $
+ *  $Id: STHitCreator.cpp,v 1.6 2008-06-02 13:48:38 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -172,7 +172,7 @@ namespace Tf
     m_detectordata = new HitCreatorGeom::STDetector(*itdet,m_clusterLocation,*this) ;
 
     // reset pointer to list of clusters at beginevent
-    incSvc()->addListener(this, IncidentType::EndEvent);
+    incSvc()->addListener(this, IncidentType::BeginEvent);
 
     return sc;
   }
@@ -180,6 +180,7 @@ namespace Tf
   template<class Trait>
   StatusCode STHitCreator<Trait>::finalize()
   {
+    if (m_detectordata) m_detectordata->clearEvent();
     delete m_detectordata;
     return GaudiTool::finalize();
   }
@@ -187,7 +188,7 @@ namespace Tf
   template<class Trait>
   void STHitCreator<Trait>::handle ( const Incident& incident )
   {
-    if ( IncidentType::EndEvent == incident.type() ) 
+    if ( IncidentType::BeginEvent == incident.type() ) 
     {
       if ( m_detectordata ) m_detectordata->clearEvent() ;
     }
