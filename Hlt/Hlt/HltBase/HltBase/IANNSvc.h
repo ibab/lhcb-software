@@ -1,4 +1,4 @@
-// $Id: IANNSvc.h,v 1.5 2008-05-11 10:57:49 graven Exp $
+// $Id: IANNSvc.h,v 1.6 2008-06-02 11:38:36 graven Exp $
 #ifndef IANNSVC_H 
 #define IANNSVC_H 1
 
@@ -45,12 +45,16 @@ public:
   typedef int                                         minor_mapped_type;
   typedef std::pair<minor_key_type,minor_mapped_type> minor_value_type;
 
+  /// the two main functions: map 'major/minor key' -> minor key, value
   virtual boost::optional<minor_value_type>  value(const major_key_type& major, const std::string& minor) const = 0;
+  ///                     and map 'major/minor value' -> minor key, value
   virtual boost::optional<minor_value_type>  value(const major_key_type& major, int minor) const = 0;
 
+  /// introspection, i.e. access to what is available: is a major present?
   virtual bool hasMajor(const major_key_type& major) const = 0;
+  ///                                                  return list of majors
   virtual std::vector< major_key_type > majors() const = 0;
-
+  ///                                                  return minors for a given major
   virtual std::vector<minor_value_type> items(const major_key_type& major) const = 0;
 };
 #endif // IANNSVC_H

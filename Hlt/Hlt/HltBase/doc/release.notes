@@ -3,6 +3,19 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!2008-06-02 - Gerhard Raven
+   HltAlgorithm:
+   - remove passPeriod, which allows to pass events based on ordinal event
+     number because it has been superseded with bypass alleys
+   - replace m_monitor with the use of produceHistos() from GaudiHistoAlg
+   - implement histogramUpdatePeriod in terms of the above
+   HltBase:
+   - zero svc pointers after release to insure they're no longer used
+   - adapt to m_monitor -> produceHistos()
+   IANNSvc:
+   - add some doxygen comments
+
+
 !2008-05-30 - Gerhard Raven
    - throw GaudiExceptions instead of zen::invalid_key, remove EAssertions
 

@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.8 2008-05-15 08:56:54 graven Exp $
+// $Id: HltBase.icpp,v 1.9 2008-06-02 11:38:36 graven Exp $
 // Include files
 
 
@@ -26,7 +26,6 @@ void HltBase<EBASE>::create() {
                          LHCb::HltSummaryLocation::Default+"/Configuration");
 
   m_TES = false;
-  m_monitor = true;
   m_hltSvc  = 0;
   m_hltData = 0;
   m_hltConf = 0;
@@ -52,8 +51,8 @@ StatusCode HltBase<EBASE>::initialize() {
 
 template <class EBASE>
 StatusCode HltBase<EBASE>::finalize() {  
-  if (m_hltANNSvc) m_hltANNSvc->release();
-  if (m_hltSvc) m_hltSvc->release();
+  if (m_hltANNSvc) { m_hltANNSvc->release(); m_hltANNSvc=0;}
+  if (m_hltSvc)    { m_hltSvc->release(); m_hltSvc=0;}
   EBASE::debug() << "==> Finalize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::finalize"<< endreq;
   return EBASE::finalize();
 }  
@@ -81,7 +80,7 @@ template <class EBASE>
 void HltBase<EBASE>::infoSubsetEvents(  int nEventsInSubset, int  nTotEvts, 
                                     const std::string& subsetName)
 {
-  double f = (nTotEvts<=0? 0.: float(nEventsInSubset)/float(nTotEvts) );
+  double f = (nTotEvts<=0? 0.: double(nEventsInSubset)/double(nTotEvts) );
   EBASE::info() << " N " <<subsetName << "\t" << nEventsInSubset 
          << " (" << 100.*f << "%)" << endreq;
 }
@@ -97,7 +96,7 @@ void HltBase<EBASE>::infoCandidates(  int nTotCandidates, int  nTotEvts,
 template <class EBASE>
 void HltBase<EBASE>::initializeHistosFromDescriptor() {
 
-  if (!m_monitor) return;
+  if (!EBASE::produceHistos()) return;
 
   const std::map<std::string, Gaudi::Histo1DDef>& hdes =
     m_histoDescriptor.value();
@@ -112,9 +111,9 @@ void HltBase<EBASE>::initializeHistosFromDescriptor() {
 
 template <class EBASE>
 Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
-                                            float x0, float xf, int nbins) {
+                                            double x0, double xf, int nbins) {
   Hlt::Histo* histo = 0;
-  if (!m_monitor) return histo;
+  if (!EBASE::produceHistos()) return histo;
 
   const std::map<std::string,Gaudi::Histo1DDef>& values = 
         m_histoDescriptor.value();
@@ -122,23 +121,22 @@ Hlt::Histo* HltBase<EBASE>::initializeHisto(const std::string& title,
         values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef(title,x0,xf,nbins);
-  EBASE::debug() << " booking histo  " << hd << endreq;
+  EBASE::debug() << " booking histogram  " << hd << endreq;
   return EBASE::book(hd);
 };
 
 template <class EBASE>
-void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, float x, float weight) {
-  if (!m_monitor) return;
-  EBASE::fill( &histo , x, weight);
+void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, double x, double weight) {
+  if (EBASE::produceHistos()) EBASE::fill( &histo , x, weight);
 }
 
 template <class EBASE>
 void HltBase<EBASE>::fillHisto( Hlt::Histo& histo, 
                                 const std::vector<double>& x, 
-                                float weight) {
-  if (!m_monitor) return;
-  for (std::vector<double>::const_iterator it = x.begin(); it != x.end();
-       ++it)
+                                double weight) {
+  if (EBASE::produceHistos()) 
+      for (std::vector<double>::const_iterator it = x.begin(); 
+                                               it != x.end(); ++it)
     EBASE::fill( &histo, (*it), weight);
 }
 
@@ -149,7 +147,7 @@ void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter,
   counter.m_name = inputString;
   counter.m_histo = 0;
   counter.m_counter = 0;
-  // if (m_monitor >0)
+  // if (EBASE::produceHistos())
   //  counter.m_histo = initializeHisto(inputString,0.,1.,1);
   EBASE::debug() << " counter " << counter.m_name 
                  << " " << counter.m_counter << endreq;
@@ -215,22 +213,6 @@ bool HltBase<EBASE>::validHltSelectionName(const stringKey& selname)
 {
     // use optional<int> automatic conversion to bool...
   return annSvc().value("SelectionID",selname.str());
-}
-
-template <class EBASE>
-int HltBase<EBASE>::hltSelectionID(const stringKey& selname) 
-{
-    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("SelectionID",selname.str());
-    EBASE::Assert( i, " request for unknown Selection ID");
-    return i->second;
-}
-
-template <class EBASE>
-stringKey HltBase<EBASE>::hltSelectionName(int id) 
-{
-    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("SelectionID",id);
-    EBASE::Assert( i, " request for unknown Selection ID");
-    return i->first;
 }
 
 template <class EBASE>

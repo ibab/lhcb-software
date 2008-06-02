@@ -1,4 +1,4 @@
-// $Id: IBiFunctionFactory.h,v 1.1 2008-01-22 09:35:00 hernando Exp $
+// $Id: IBiFunctionFactory.h,v 1.2 2008-06-02 11:38:36 graven Exp $
 #ifndef HLTBASE_IBIFUNCTIONFACTORY_H 
 #define HLTBASE_IBIFUNCTIONFACTORY_H 1
 
@@ -6,6 +6,7 @@
 // from STL
 #include <string>
 #include "HltBase/EFunctions.h"
+
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"

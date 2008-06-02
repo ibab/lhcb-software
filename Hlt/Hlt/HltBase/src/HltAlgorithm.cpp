@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.32 2008-05-15 08:56:55 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.33 2008-06-02 11:38:36 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -24,7 +24,6 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
   , m_outputVertices(0)
 {
   
-  declareProperty("PassPeriod", m_passPeriod = 0);  
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
   declareProperty("SaveConfiguration", m_saveConf = true);
 
@@ -52,7 +51,8 @@ HltAlgorithm::~HltAlgorithm()
 
 StatusCode HltAlgorithm::sysInitialize() {
   // set up context such that tools can grab the algorithm...
-  // kind of non-local, but kind of OK.
+  // kind of non-local, but kind of better (much more 
+  // lightweight and less invasive) than the alternative.
   Gaudi::Utils::AlgContext sentry( contextSvc(), this );
   return HltBaseAlg::sysInitialize();
 }
@@ -65,7 +65,7 @@ StatusCode HltAlgorithm::initialize() {
   initCounters();
 
   verbose() << "Initialised HltAlgorithms" << endmsg ;
-  return StatusCode::SUCCESS;
+  return sc;
 
 }
 
@@ -121,16 +121,23 @@ StatusCode HltAlgorithm::sysExecute() {
   // kind of non-local, but kind of OK.
   Gaudi::Utils::AlgContext sentry( contextSvc(), this );
   
-  // verbose() << " sys execute HltBaseAlg beginExecute() " << endreq;
+  bool restore=false;
+  if (produceHistos()&&m_histogramUpdatePeriod>0 && (m_counterEntries % m_histogramUpdatePeriod !=0))  {
+      // switch of histogramming for this event only
+      setProduceHistos(false) ;
+      restore=true;
+  }
+  
   sc = beginExecute();
   if (sc.isFailure()) return sc;
   
-  // verbose() << " sys execute DefAlgo " << endreq;
   sc = HltBaseAlg::sysExecute();
   if (sc.isFailure()) return sc;
   
-  // verbose() << " sys execute HltBaseAlg endExecute() " << endreq;
   sc = endExecute();
+  
+      // restore original setting of produceHistos...
+  if (restore) setProduceHistos(true) ;
   
   return sc;
 
@@ -145,14 +152,7 @@ StatusCode HltAlgorithm::beginExecute() {
   
   increaseCounter( m_counterEntries );
 
-  m_filter =( m_passPeriod <= 0 ? true:
-              ( !(m_counterEntries % m_passPeriod) == 0 ) );
   
-  m_monitor =( m_histogramUpdatePeriod <= 0 ? false:
-               ( (m_counterEntries % m_histogramUpdatePeriod) == 0 ) );
-  
-  verbose() << " filter? " << m_filter 
-            << " monitor? " << m_monitor << endreq;
   
   if (useTES()) {
     debug() << " cleaning from the TES " << endreq;
@@ -167,7 +167,7 @@ StatusCode HltAlgorithm::beginExecute() {
   m_outputSelection->clean();
   bool ok = true;
   if (m_considerInputs) ok = considerInputs();
-  if (m_monitor) monitorInputs();
+  if (produceHistos()) monitorInputs();
 
   if (ok) increaseCounter(m_counterInputs);
   else sc = StatusCode::FAILURE;
@@ -201,7 +201,7 @@ bool HltAlgorithm::considerInputs()
 
 void HltAlgorithm::monitorInputs() 
 {
-  if (!m_monitor) return;
+  if (!produceHistos()) return;
   for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
        it != m_inputSelections.end(); ++it) {
     fillHisto(*m_inputHistos[(*it)->id()],(*it)->ncandidates(),1.);
@@ -210,7 +210,7 @@ void HltAlgorithm::monitorInputs()
 }
 
 void HltAlgorithm::monitorOutput() {
-  if (!m_monitor) return;
+  if (!produceHistos()) return;
   size_t nCandidates = m_outputSelection->ncandidates();
   Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
   fillHisto(*m_outputHisto,nCandidates,1.);
@@ -226,7 +226,7 @@ void HltAlgorithm::setDecision() {
   bool accept = ( nCandidates >= m_minNCandidates );
 
   if (accept) increaseCounter(m_counterAccepted);
-  if (!m_filter||accept) setDecision(true);
+  if (accept) setDecision(true);
   // Assert( (accept || !m_filter) == filterPassed(), "filterPassed unexpected..");
 		  
   if (filterPassed()) increaseCounter(m_counterPassed);
@@ -234,7 +234,7 @@ void HltAlgorithm::setDecision() {
 
 void HltAlgorithm::setDecision(bool ok) {
   setFilterPassed(ok);
-  if (m_filter) m_outputSelection->setDecision(ok);
+  m_outputSelection->setDecision(ok);
   
   // verbose() << " decision " << filterPassed() 
   //        << " in selection " << m_outputSelection->decision() << endreq;
@@ -244,7 +244,7 @@ StatusCode HltAlgorithm::endExecute() {
   StatusCode sc = StatusCode::SUCCESS;
   
   setDecision();
-  if (m_monitor) monitorOutput();
+  if (produceHistos()) monitorOutput();
   
   debug() << " output candidates " << m_outputSelection->ncandidates() 
           << " decision " << filterPassed() << endreq;
@@ -268,7 +268,7 @@ void HltAlgorithm::setInputSelection(Hlt::Selection& sel) {
     return;
   }
   m_inputSelectionsNames.push_back(sel.id());
-  if (m_histogramUpdatePeriod > 0) {
+  if (produceHistos()) {
     Hlt::Histo* histo = initializeHisto(sel.id().str());
     bool has = (m_inputHistos.find(sel.id()) != m_inputHistos.end());
     Assert(!has,"setInputSelection() already input selection "+sel.id().str());
@@ -282,7 +282,7 @@ void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
   Assert(m_outputSelectionName == sel->id(), "inconsistent selection vs selectionName!");
   m_outputSelectionName = sel->id();
   Assert( 0 != sel,"setOutputSelection() no output selection");
-  if (m_histogramUpdatePeriod > 0) m_outputHisto = initializeHisto(sel->id().str());
+  if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
   if (!useTES()) {
     Assert(m_outputSelection == 0, " setOutputSelection() already set output selection!");    
     m_outputSelection = sel;

@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.7 2008-05-15 08:56:54 graven Exp $
+// $Id: HltBase.h,v 1.8 2008-06-02 11:38:36 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -60,7 +60,7 @@ public:
   virtual StatusCode initialize();
 
   // execute
-  virtual StatusCode execute() {return StatusCode::SUCCESS;}
+//  virtual StatusCode execute() {return StatusCode::SUCCESS;}
   
   // finalize
   virtual StatusCode finalize();
@@ -68,11 +68,6 @@ public:
 private:  
   // delegate constructor
   virtual void create();
-
-protected:
-
-  // to fill or not the histograms
-  bool m_monitor; 
 
 private: 
   // Property to rebook histogram from options
@@ -85,15 +80,15 @@ protected:
   
   // initialize Histo (overwrite booking via options)
   Hlt::Histo* initializeHisto(const std::string& name,
-                              float min = 0., float max = 100., 
+                              double min = 0., double max = 100., 
                               int nBins = 100 );
 
   // fill histogram
-  void fillHisto( Hlt::Histo& histo, float x, float weight );
+  void fillHisto( Hlt::Histo& histo, double x, double weight );
 
   // fill histogram
   void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
-                  float weight );
+                  double weight );
 
 protected:
 
@@ -149,7 +144,6 @@ protected:
   bool m_error;
   bool m_fatal;
 
-  
 protected:
   
   // register a value with a root/key into the hlt configuration
@@ -184,12 +178,6 @@ protected:
   
   // returns true if this selection name is valid
   bool validHltSelectionName(const stringKey& name);
-
-  // returns the ID of this selection name
-  int hltSelectionID(const stringKey& name);
-
-  // returns the selection name of this ID
-  stringKey hltSelectionName(int id);
 
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);

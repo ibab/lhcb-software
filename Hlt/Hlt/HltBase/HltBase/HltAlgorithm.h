@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.25 2008-05-15 08:56:54 graven Exp $
+// $Id: HltAlgorithm.h,v 1.26 2008-06-02 11:38:36 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -51,7 +51,7 @@ protected:
   // save configurtion of algorithm
   virtual void saveConfiguration();
 
-protected:  
+private:  
 
   // begin execution: monitor input selections
   StatusCode beginExecute();
@@ -79,8 +79,6 @@ protected:
   // decision according with nCandidates and filter
   void setDecision() ;
     
-protected:
-
 public:
   // retrieve a selection
   Hlt::Selection& retrieveSelection(const stringKey& selname) {
@@ -129,16 +127,8 @@ public:
     return *tsel;
   }
 
-protected:
-
-
-  
-
     
-protected:
-
-  // period to always force decision true
-  int m_passPeriod;
+private:
 
   // period to update filling of histogram
   int m_histogramUpdatePeriod;
@@ -146,14 +136,6 @@ protected:
   // fill the hlt configuration
   bool m_saveConf;
 
-  // internal bool to indicate if this event must be filter
-  bool m_filter;
-  
-  // internal bool to indicate if this event should be monitor
-  bool m_monitor;
-
-protected:
-  
   // minimun number of candidates
   //   deciison true if output selection has more candidates than the minimun
   size_t m_minNCandidates;
@@ -169,9 +151,11 @@ protected:
   // names of the extra input selections (option)
   StringArrayProperty m_extraInputSelectionsNames;
   
+private:
   // list of all the input selections names
   std::vector<stringKey> m_inputSelectionsNames;
 
+protected:
   // list of all the input selections
   std::vector<Hlt::Selection*> m_inputSelections;
 
@@ -226,7 +210,6 @@ protected:
   Hlt::VertexSelection* m_inputVertices;
   Hlt::VertexSelection* m_primaryVertices;
   
-
   Hlt::TrackSelection* m_outputTracks;
   Hlt::VertexSelection* m_outputVertices;
 
