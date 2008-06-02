@@ -38,9 +38,11 @@ HltDecayTreeTuple.ToolList += {
 // Can be overwritten for special branches
 HltDecayTreeTuple.Branches = { };
 
+/* testing
 HltDecayTreeTuple.TupleToolMCTruth.StoreKineticInfo = true;
 HltDecayTreeTuple.TupleToolMCTruth.StoreVertexInfo = true;
 HltDecayTreeTuple.TupleToolTrigger.VerboseL0 = true ;
 HltDecayTreeTuple.TupleToolTrigger.VerboseAlleys = true ;
 HltDecayTreeTuple.TupleToolTrigger.VerboseSelections = true ;
 HltDecayTreeTuple.LoKiTool.Variables = { "LifeTimeChi2" : "BPVLTFITCHI2" };
+*/
