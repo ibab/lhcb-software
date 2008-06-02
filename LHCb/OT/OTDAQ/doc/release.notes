@@ -1,11 +1,12 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
+
+!======================= OTDAQ v6r0 2008-06-02 ======================
 ! 2008-06-02 - Stephanie Hansmann-Menzemer
  - move cleaning of det info from EndEvent to BeginEvent
    in OTRawBankDecoder.cpp
 
-!======================= OTDAQ v6r0 2008-05-29 ======================
 ! 2008-05-29 - Wouter Hulsbergen
  - fixed bug in decoding of hits in short modules
  - added access function to list of raw hits
