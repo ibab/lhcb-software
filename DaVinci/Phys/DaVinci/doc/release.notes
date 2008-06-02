@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.218 2008-05-14 13:22:10 pkoppenb Exp $
+! $Id: release.notes,v 1.219 2008-06-02 06:51:45 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-06-02 - Patrick Koppenburg
+ - Use Fieldmap v5r0 which gives access to measured field
 
 ! 2008-05-14 - Patrick Koppenburg
  - Set version v19r13 in DaVinci_Ganga.py
