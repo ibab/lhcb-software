@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.42 2008-04-14 20:46:08 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.43 2008-06-02 09:08:58 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -281,6 +281,10 @@ StatusCode AlignAlgorithm::finalize() {
   if(!m_outputDataFileName.empty()) 
     m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   if (m_updateInFinalize) update() ;
+  if(!m_logFileName.empty()) {
+    std::ofstream logfile(m_logFileName.c_str()) ;
+    logfile << m_logMessage.str() << std::endl ;
+  }
   return  
     m_trackresidualtool.release() && 
     m_vertexresidualtool.release() && 
@@ -300,15 +304,23 @@ StatusCode AlignAlgorithm::execute() {
     // just a sanity check
     if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
 	(*iTrack)->nDoF() > 0 &&
-	!(*iTrack)->nodes().empty() ) {
-      selectedtracks.push_back( *iTrack ) ;
+	!(*iTrack)->nodes().empty() ) { 
+      const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
+      if( res ) {
+	selectedtracks.push_back( *iTrack ) ;
+      } else {
+	warning() << "Error computing residual cov matrix. Skipping track of type "
+		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
+	++m_covFailure;
+      }
     } else {
       warning() << "Skipping bad track:"
 		<< " fitstatus = " << (*iTrack)->fitStatus()
 		<< " nDoF = " << (*iTrack)->nDoF()
 		<< " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
-  m_nTracks += selectedtracks.size();
+  size_t numusedtracks = selectedtracks.size();
+  m_nTracks += selectedtracks.size() ;
 
   // Now deal with vertices, if there are any.
   size_t numusedvertices(0) ;
@@ -317,16 +329,15 @@ StatusCode AlignAlgorithm::execute() {
     if(vertices ) {
       for( LHCb::RecVertices::const_iterator ivertex = vertices->begin() ;
 	   ivertex != vertices->end(); ++ivertex ) {
-	// used tracks are automatically removed from the output list
+	// used tracks are automatically removed from the output
+	// list. if the vertex is not accepted (e.g. because there are
+	// not enough tracks), then a 0 pointer is returned.
 	const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(**ivertex,selectedtracks) ;
 	if (res ) {
 	  accumulate( *res ) ;
 	  // need some histogramming here
 	  ++numusedvertices ;
-	} else {
-	  warning() << "Error computing residual cov matrix for vertex." << endmsg;
-	  ++m_covFailure;
-	}
+	} 
       }
     }
   }	
@@ -335,20 +346,16 @@ StatusCode AlignAlgorithm::execute() {
   if (printVerbose()) verbose() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
   for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
        iTrack != selectedtracks.end(); ++iTrack ) {
-    
+
+    // this cannot return a zero pointer since we have already checked before
     const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
-    if( res ) {
-      accumulate( *res ) ;
-      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
-    } else {
-      warning() << "Error computing residual cov matrix. Skipping track of type "
-		<< (*iTrack)->type() << " with key: " << (*iTrack)->key() << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
-      ++m_covFailure;
-    }
+    assert(res!=0) ;
+    accumulate( *res ) ;
+    m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
+    m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
   } 
 
-  m_equations->addEventSummary( selectedtracks.size(), numusedvertices ) ;
+  m_equations->addEventSummary( numusedtracks, numusedvertices ) ;
 
   return StatusCode::SUCCESS;
 }
@@ -371,7 +378,8 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
     const AlignmentElement* elem = m_align->findElement(meas);
     if (!elem) {
       if (printVerbose()) verbose() << "==> Measurement not on a to-be-aligned DetElem " 
-				    << meas.lhcbID() << endmsg;
+				    << meas.lhcbID() << " "
+				    << meas.detectorElement()->name() << endmsg;
       ++numexternalhits ;
       continue;
     }
@@ -873,10 +881,7 @@ void AlignAlgorithm::update() {
     info() << (*i) << (i != iEnd-1u ? ", " : "]");
   }
   info() << endmsg;
-  if(!m_logFileName.empty()) {
-    std::ofstream logfile(m_logFileName.c_str()) ;
-    logfile << logmessage.str() << std::endl ;
-  }
+  m_logMessage << logmessage.str() ;
 }
 
 void AlignAlgorithm::reset() {

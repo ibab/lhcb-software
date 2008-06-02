@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.28 2008-04-14 20:46:08 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.29 2008-06-02 09:08:58 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -135,9 +135,10 @@ private:
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
   bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
   std::string                       m_logFileName ;
+  std::ostringstream                m_logMessage ;
   std::string                       m_outputDataFileName ;
   std::vector<std::string>          m_inputDataFileNames ;
-  
+
   /// Monitoring
   // @todo: Move this to a monitoring tool
   std::map<unsigned int, IHistogram2D*>                          m_resHistos;
