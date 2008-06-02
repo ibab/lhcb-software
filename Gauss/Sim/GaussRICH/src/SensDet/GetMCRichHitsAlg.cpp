@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.32 2008-06-02 13:00:18 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.33 2008-06-02 14:21:56 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -275,18 +275,6 @@ StatusCode GetMCRichHitsAlg::execute()
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Created MCRichHit " << *mchit << endreq;
-        }
-
-        // (temp) Debug reflection hits
-        if ( msgLevel(MSG::DEBUG) && mchit->hpdReflection() ) 
-        {
-          debug() << "HPD internal Reflection Hit : " << *mchit << endreq;
-        }
-
-        // (temp) si back-scatter hits
-        if ( msgLevel(MSG::DEBUG) && mchit->hpdSiBackscatter() ) 
-        {
-          debug() << "Si back-scatter hit : " << *mchit << endreq;
         }
 
       } // end loop on hits in the collection
