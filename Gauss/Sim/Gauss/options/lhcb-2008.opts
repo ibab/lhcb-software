@@ -1,0 +1,34 @@
+//#pragma print off
+//#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with evolving survey geometry
+ *  as available in corresponding "head" tag of DDDB
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+DDDB.DefaultTAG     = "head-20080516";
+LHCBCOND.DefaultTAG = "head-20080516";
+
+// Magnetic field: measured map
+#include "$GAUSSOPTS/MeasuredFieldMap.opts"
+
+// Integrate geometry info from CondDB
+GiGaGeo.UseAlignment      = true;
+GiGaGeo.AlignAllDetectors = true;
+
+//--------------------------------------------------------------------------
+// Switch off monitors of detectors in production
+//--------------------------------------------------------------------------
+// SimMonitor.Members  -= { "GaudiSequencer/DetectorsMonitor" };
+// GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
+// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
