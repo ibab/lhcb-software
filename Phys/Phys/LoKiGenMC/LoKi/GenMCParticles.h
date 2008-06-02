@@ -1,4 +1,4 @@
-// $Id: GenMCParticles.h,v 1.9 2007-11-28 14:20:06 ibelyaev Exp $
+// $Id: GenMCParticles.h,v 1.10 2008-06-02 11:46:04 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GENMCPARTICLES_H 
 #define LOKI_GENMCPARTICLES_H 1
@@ -77,7 +77,7 @@ namespace LoKi
       /** templated constructor from the particles relation table 
        *  @see IHepMC2MC
        *  @param first "begin"-iterator for sequence of MC particles 
-       *  @param end   "end"-iterator for sequence of MC particles 
+       *  @param last  "end"-iterator for sequence of MC particles 
        *  @param table relation table  
        */
       template <class MCPARTICLE>

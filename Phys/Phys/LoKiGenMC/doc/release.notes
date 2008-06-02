@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2008-06-02 09:54:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.27 2008-06-02 11:46:04 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,18 +15,18 @@
 ! 
 ! -----------------------------------------------------------------------------
 
-! 2008-06-02 - Vanya Belyaev
+!========================== LoKiGenMC v7r1 2008-06-02 =========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix a doxygen warning
+ - In requirements: remove obsolete macro
 
+! 2008-06-02 - Vanya Belyaev
  - Change the handled incidents from EndEvent to BeginEvent 
 
  - cmt/requirements 
-
     version increment to v7r1 
 
-
-
 !========================== LoKiGenMC v7r0 2007-12-02 =========================
-
 ! 2007-12-02 - Vanya BELYAEV
  - the upgrade for th next ajor versionof LoKi v7r0 ("The powerful streamers")
  - cmt/requirements
@@ -399,6 +399,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.26  2008/06/02 09:54:46  ibelyaev
+!  change the incidents: EndEvent -> BeginEvent
+!
 ! Revision 1.25  2007/12/02 11:57:06  ibelyaev
 !  v7r0: 'the powerful streamers'
 !
