@@ -175,98 +175,167 @@ char scrc_vertical_bar()  {
 int scrc_fputs (Pasteboard *pb)   {
 #ifdef _WIN32
   if ( !s_termType )  {
+    static bool s_bold = false;
+    static bool s_blink = false;
+    static bool s_inverse = false;
+    static bool s_underline = false;
     int row,col,r;
     char* s=pb->bufout;
     char* last = pb->bufout+strlen(pb->bufout);
     for(; s<last; ++s )  {
       if ( *s == ESCAPE )  {
         ++s;
-        if ( (r=strncmp(s,"[7m",3))==0 )  {         // inverse
-          textattr(BUILD_TEXTATTR(WHITE,BLACK));
-          s += 2;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[1m",3))==0 )  {    // bold
-          highvideo();
-          s += 2;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[27m",4))==0 )  {   // normal
-          textattr(BUILD_TEXTATTR(BLACK,WHITE));
-          lowvideo();
-          s += 3;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[0m",3))==0 )  {    // plain
-          textattr(BUILD_TEXTATTR(BLACK,WHITE));
-          lowvideo();
-          s += 2;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[5m",3))==0 )  {    // flash
-          s += 2;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[4;30m",6))==0 )  { // underline
-          textattr(BUILD_TEXTATTR(BLACK,LIGHTRED));
-          s += 5;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[?25h",5))==0 )  {  // cursor on
-          _setcursortype(_SOLIDCURSOR);
-          s += 4;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[?25l",5))==0 )  {  // cursor off
-          _setcursortype(_NOCURSOR);
-          s += 4;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[?3l",4))==0 )  {   // narrow_screen
-          s += 3;
-          continue;
-        }
-        else if ( (r=strncmp(s,"[?3h",4))==0 )  {   // wide_screen
-          s += 3;
-          continue;
-        }
-        else if ( (r=strncmp(s,"(B",2))==0 )  {     // toascii
+	if ( *s == '[' ) {
+	  ++s;
+	  if      ( (r=::strncmp(s,"0m",2))==0 )  {    // plain
+	    if ( s_bold ) { lowvideo(); s_bold = false; }
+	    if ( s_blink ) { noblinkvideo(); s_blink = false; }
+	    if ( s_inverse ) { /* noinversevideo(); */ s_inverse = false; }
+	    if ( s_underline ) { nounderlinevideo(); s_underline = false; }
+	    ::textattr(BUILD_TEXTATTR(::BLACK,::WHITE));
+	    // lowvideo();
+	    ++s;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"0;49m",5))==0 )  { // plain
+	    if ( s_bold ) { lowvideo(); s_bold = false; }
+	    if ( s_blink ) { noblinkvideo(); s_blink = false; }
+	    if ( s_inverse ) { /* noinversevideo(); */ s_inverse = false; }
+	    if ( s_underline ) { nounderlinevideo(); s_underline = false; }
+	    ::textattr(BUILD_TEXTATTR(::BLACK,::WHITE));
+	    // lowvideo();
+	    s += 4;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"27m",3))==0 )  {   // normal
+	    if ( s_bold ) { lowvideo(); s_bold = false; }
+	    if ( s_blink ) { noblinkvideo(); s_blink = false; }
+	    if ( s_inverse   ) { /* noinversevideo(); */ s_inverse = false; }
+	    if ( s_underline ) { nounderlinevideo(); s_underline = false; }
+	     ::textattr(BUILD_TEXTATTR(::BLACK,::WHITE));
+	    //lowvideo();
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"7m",2))==0 )  {    // inverse
+	    //::textattr(BUILD_TEXTATTR(::BLACK,WHITE));
+	    if ( !s_inverse ) {
+	      s_inverse = true;
+	      inversevideo();
+	    }
+	    ++s;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"1m",2))==0 )  {    // bold
+	    if ( !s_bold ) {
+	      s_bold = true;
+	      highvideo();
+	    }
+	    ++s;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"5m",2))==0 )  {    // flash
+	    if ( !s_blink ) {
+	      s_blink = true;
+	      blinkvideo();
+	    }
+	    ++s;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"4;30m",5))==0 )  { // underline
+	    if ( !s_underline ) {
+	      underlinevideo();
+	      s_underline = true;
+	    }
+	    s += 4;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"?25h",4))==0 )  {  // cursor on
+	    _setcursortype(_SOLIDCURSOR);
+	    s += 3;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"?25l",4))==0 )  {  // cursor off
+	    _setcursortype(_NOCURSOR);
+	    s += 3;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"?3l",3))==0 )  {   // narrow_screen
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"?3h",3))==0 )  {   // wide_screen
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"31m",3))==0 )  {   // fg_red
+	    ::textcolor(::RED);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"32m",3))==0 )  {   // fg_green
+	    ::textcolor(::GREEN);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"33m",3))==0 )  {   // fg_yellow
+	    ::textcolor(::YELLOW);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"34m",3))==0 )  {   // fg_blue
+	    ::textcolor(::BLUE);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"35m",3))==0 )  {   // fg_magenta
+	    ::textcolor(::MAGENTA);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"36m",3))==0 )  {   // fg_cyan
+	    ::textcolor(::CYAN);
+	    s += 2;
+	    continue;
+	  }
+	  else if ( (r=::strncmp(s,"2J",2))==0 )  {    // clear screen
+	    clrscr();
+	    s += 2;
+	    continue;
+	  }
+          else if ( 2 == ::sscanf(s,"%d;%dH",&row,&col) )  {
+            gotoxy(col,row);
+            s = strchr(s,'H');
+            continue;
+          }
+	}
+        else if ( (r=::strncmp(s,"(B",2))==0 )  {     // toascii
           s += 1;
           continue;
         }
-        else if ( (r=strncmp(s,"(0",2))==0 )  {     // tographic
+        else if ( (r=::strncmp(s,"(0",2))==0 )  {     // tographic
           s += 1;
           continue;
         }
-        else if ( (r=strncmp(s,")0",2))==0 )  {     // part 2 of setfonts
+        else if ( (r=::strncmp(s,")0",2))==0 )  {     // part 2 of setfonts
           s += 1;
           continue;
         }
-        else if ( (r=strncmp(s,"*<",2))==0 )  {     // part 3 of setfonts
+        else if ( (r=::strncmp(s,"*<",2))==0 )  {     // part 3 of setfonts
           s += 1;
           continue;
         }
-        else if ( (r=strncmp(s,"+>",2))==0 )  {     // part 4 of setfonts
+        else if ( (r=::strncmp(s,"+>",2))==0 )  {     // part 4 of setfonts
           s += 1;
           continue;
         }
-        else if ( (r=strncmp(s,"=",1))==0 )  {      // setansi
+        else if ( (r=::strncmp(s,"=",1))==0 )  {      // setansi
           continue;
         }
-        else if ( (r=strncmp(s,">",1))==0 )  {      // touser
+        else if ( (r=::strncmp(s,">",1))==0 )  {      // touser
           continue;
         }
-        else if ( (r=strncmp(s,"<",1))==0 )  {      // tosupp
-          continue;
-        }
-        else if ( (r=strncmp(s,"[2J",3))==0 )  {    // clear screen
-          clrscr();
-          s += 2;
-          continue;
-        }
-        else if ( 2 == ::sscanf(s,"[%d;%dH",&row,&col) )  {
-          gotoxy(col,row);
-          s = strchr(s,'H');
+        else if ( (r=::strncmp(s,"<",1))==0 )  {      // tosupp
           continue;
         }
         write(1,s,1);

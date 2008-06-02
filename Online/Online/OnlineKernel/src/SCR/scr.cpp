@@ -25,9 +25,7 @@ using namespace SCR;
 #define plain()            scrc_putes("[0;49m", pb)
 //#define plain()            scrc_putes("[30;47m", pb)
 
-
 #define fg_red()           scrc_putes("[31m",pb)
-
 #define fg_green()         scrc_putes("[32m",pb)
 #define fg_yellow()        scrc_putes("[33m",pb)
 #define fg_blue()          scrc_putes("[34m",pb)

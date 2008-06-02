@@ -125,8 +125,6 @@ namespace SCR {
           MODIFIED            = 0x0040,
 
 	  /*  Colors                */
-          BLACK               = 0x0000,
-
 	  RED                 = 0x0200,
 	  GREEN               = 0x0400,
 	  YELLOW              = 0x0800,
