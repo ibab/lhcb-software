@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.20 2007-12-19 09:46:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.21 2008-06-02 11:30:58 cattanem Exp $ 
 # ============================================================================
 # Created    : 2005-04-22
 # Maintainer : Matt Needham, Marco Clemencic
 # ============================================================================
 package           DetDescSvc
-version           v1r16
+version           v1r17
 
 branches          cmt doc src
 

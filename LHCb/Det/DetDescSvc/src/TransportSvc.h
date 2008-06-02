@@ -1,4 +1,4 @@
-// $Id: TransportSvc.h,v 1.5 2007-12-19 09:46:43 ibelyaev Exp $ 
+// $Id: TransportSvc.h,v 1.6 2008-06-02 11:30:58 cattanem Exp $ 
 // ============================================================================
 #ifndef     _DETDESCSVC_TRANSPORTSVC_H
 #define     _DETDESCSVC_TRANSPORTSVC_H
@@ -130,8 +130,8 @@ public:
   // ==========================================================================
   /** inspect the potential error in intersections 
    *  @param  volume   the problematic volume 
-   *  @param  point    3D point 
-   *  @param  vector   3D direction vector 
+   *  @param  pnt      3D point 
+   *  @param  vect     3D direction vector 
    *  @param  cnt  the problematic container of intersections  
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14
@@ -158,7 +158,7 @@ public:
   // ========================================================================
   /** report the skipped intersection 
    *  @param  volume   the problematic volume 
-   *  @aram   material the affected material 
+   *  @param  material the affected material 
    *  @param  delta    the problematic delta  (non-negative!)
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date 2007-12-14

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.44 2008-06-02 07:48:07 marcocle Exp $ 
+! $Id: release.notes,v 1.45 2008-06-02 11:30:58 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+!========================= DetDescSvc v1r17 2008-06-02 ========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix doxygen warnings
 
 ! 2008-06-02 - Malcolm John / Marco Clemencic
  - Added '-' and ':' to the list of allowed characters that the ConditionParser
