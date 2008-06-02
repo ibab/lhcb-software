@@ -1,13 +1,12 @@
-! $Id: release.notes,v 1.89 2008-05-29 21:42:41 odescham Exp $ 
+! $Id: release.notes,v 1.90 2008-06-02 11:09:12 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-- 2008-05-30 Olivier Deschamps
-
-- allow Readout channel re-mapping in FEB (mapping table from condDB)
-
+!======================== CaloDet v8r7 2008-05-30 =============================
+! 2008-05-30 Olivier Deschamps
+ - Allow Readout channel re-mapping in FEB (mapping table from condDB >= v4r4)
 
 !======================== CaloDet v8r6 2008-04-18 =============================
 ! 2008-02-15 - Olivier Deschamps
