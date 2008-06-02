@@ -17,6 +17,7 @@ RecoVELOSeq.Members += {  "DecodeVeloRawBuffer"
                          ,"Tf::PatVeloGeneralTracking/PatVeloGeneralTracking" 
 };
 
+PatVeloSpaceTracking.PatVeloSpaceTool.MarkClustersUsed = true;
 
 // Decode also VeloClusters, needed for track fit
 RecoVELOSeq.Members += { "DecodeVeloRawBuffer/DecodeVeloClusters" };

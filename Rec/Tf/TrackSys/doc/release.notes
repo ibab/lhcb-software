@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-06-01 - David Hutchcroft
+ - Added a line to set PatVeloSpaceTool to flag clusters as used, was default
+
 !============================ TrackSys v4r13 2008-01-28 ======================
 ! 2008-01-28 - Manuel Schiller
  - In NoFieldTracking.opts, added include to use new PatSeeding tuning when
