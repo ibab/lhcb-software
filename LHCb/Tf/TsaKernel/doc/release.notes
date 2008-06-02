@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================= TsaKernel v3r3 2008-05-29 ==========================
+!======================= TsaKernel v3r3 2008-06-02 ==========================
+! 2008-06-02 - Marco Cattaneo
+ - Fix dictionary selection file
+
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - fix double/float conversion problem. All variables are doubles now, 
    no loss in performance.
