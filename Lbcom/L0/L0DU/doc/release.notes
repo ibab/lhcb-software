@@ -1,13 +1,12 @@
-! $Id: release.notes,v 1.104 2008-05-31 11:58:58 odescham Exp $
+! $Id: release.notes,v 1.105 2008-06-02 15:46:10 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r5 2008-06-02 =========================
 ! 2008-05-31 - Olivier Deschamps 
   - Fix : decision sequence monitoring when ChannelsMonitor=false ;
 
-
-!========================== L0DU v8r4 2008-05-29 =========================
 ! 2008-05-29 - Olivier Deschamps 
   - add standard definition of sub-triggers in the configuration options files
     ("L0Muon", "L0Ecal", "L0Hcal")
