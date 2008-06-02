@@ -124,8 +124,9 @@ class Parser(OptionParser):
         result.append(self.format_epilog(formatter))
         return "".join(result)
 
-    def print_longhelp(self, file=None):
-        if file is None:
-            file = sys.stdout
-        encoding = self._get_encoding(file)
-        file.write(self.format_longhelp().encode(encoding, "replace"))
+    def print_longhelp(self, filename=None):
+        if filename is None:
+            filename = sys.stdout
+        encoding = self._get_encoding(filename)
+        filename.write(self.format_longhelp().encode(encoding, "replace"))
+        
