@@ -3,7 +3,7 @@
 using namespace SCR;
 
 //----------------------------------------------------------------------------
-int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, char attr)  {
+int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, unsigned int attr)  {
   if (!disp || !rows || !cols) return 1;
   int width = disp->cols + 2;
   int offset = r1*width + c1;
@@ -11,7 +11,7 @@ int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, ch
   int c2  = c1 + cols - 1;
   attr |= disp->def_attr;
   for (int r=r1; r<=r2; r++)  {
-    char *a = disp->attr + offset;
+    unsigned int *a = disp->attr + offset;
     for (int c=c1; c<=c2; c++) *a++ = attr;
     offset += width;
   }
@@ -20,7 +20,7 @@ int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, ch
 }
 
 //----------------------------------------------------------------------------
-int scrc_insert_line (Display *disp, const char *str, byte attr, int row, int scroll)   {
+int scrc_insert_line (Display *disp, const char *str, unsigned int attr, int row, int scroll)   {
   Pasteboard *pb = disp->pb;
   int h = disp->rows;
   int w = disp->cols;
@@ -31,7 +31,7 @@ int scrc_insert_line (Display *disp, const char *str, byte attr, int row, int sc
     if (row > 1)    {
       int offset = 2 * (w + 2) + 1;
       char* m = disp->map + offset;
-      char* a = disp->attr + offset;
+      unsigned int* a = disp->attr + offset;
       for (int r = 1; r < row; r++, m += 2, a += 2)
         for (int c = 1; c <= w; c++)
           scrc_put_char (disp, *m++, *a++, r, c);
@@ -42,7 +42,7 @@ int scrc_insert_line (Display *disp, const char *str, byte attr, int row, int sc
       int offset = (h-1) * (w + 2) + 1;
       for (int r = h-1; r >= row; r--, offset -= w + 2)  {
         char* m = disp->map + offset;
-        char* a = disp->attr + offset;
+        unsigned int* a = disp->attr + offset;
         for (int c = 1; c <= w; c++)
           scrc_put_char (disp, *m++, *a++, r+1, c);
       }
@@ -54,7 +54,7 @@ int scrc_insert_line (Display *disp, const char *str, byte attr, int row, int sc
 }
 
 //----------------------------------------------------------------------------
-int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col)  {
+int scrc_insert_char (Display *disp, char ch, unsigned int attr, int row, int col)  {
   Pasteboard *pb = disp->pb;
   int h = disp->rows;
   int w = disp->cols;
@@ -64,7 +64,7 @@ int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col)  {
   if (row != h || col != w)  {
     int offset = h * (w + 2) + w - 1;
     char* m = disp->map + offset;
-    char* a = disp->attr + offset;
+    unsigned int* a = disp->attr + offset;
     for (int r = h, c0 = 1; r >= row; r--)  {
       if (r == row) c0 = col;
       for (int c = w; c > c0; c--)
@@ -90,7 +90,7 @@ int scrc_delete_line (Display *disp, int row)   {
   if (row < h)  {
     int offset = (row + 1) * (w + 2) + 1;
     char* m = disp->map + offset;
-    char* a = disp->attr + offset;
+    unsigned int* a = disp->attr + offset;
     for (int r = row; r < h; r++, m+=2, a+=2)
       for (int c = 1; c <= w; c++)
         scrc_put_char (disp, *m++, *a++, r, c);
@@ -112,7 +112,7 @@ int scrc_delete_char (Display *disp, int row, int col)  {
   if (row != h || col != w)  {
     int offset = row * (w + 2) + col + 1;
     char* m = disp->map + offset;
-    char* a = disp->attr + offset;
+    unsigned int* a = disp->attr + offset;
     for (int c, r = row; r <= h; r++)  {
       for (c = col; c < w; c++)
         scrc_put_char (disp, *m++, *a++, r, c);

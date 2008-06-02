@@ -109,18 +109,32 @@ namespace SCR {
           UPDATE_KEY          = CTRL_W,
 
           SPACE               = ' ',
-          NORMAL              = 0x00,
-          BOLD                = 0x01,
-          UNDERLINE           = 0x02,
-          INVERSE             = 0x04,
-          FLASH               = 0x08,
-          ATTRIBUTES          = 0x0F,
-          ASCII               = 0x00,
-          GRAPHIC             = 0x10,
-          FONT_SUPP           = 0x20,
-          FONT_USER           = 0x30,
-          FONTS               = 0x30,
-          MODIFIED            = 0x40,
+
+	  /* Rendering */
+          NORMAL              = 0x0000,
+          BOLD                = 0x0001,
+          UNDERLINE           = 0x0002,
+          INVERSE             = 0x0004,
+          FLASH               = 0x0008,
+
+          ASCII               = 0x0000,
+          GRAPHIC             = 0x0010,
+          FONT_SUPP           = 0x0020,
+          FONT_USER           = 0x0030,
+          FONTS               = 0x0030,
+          MODIFIED            = 0x0040,
+
+	  /*  Colors                */
+          BLACK               = 0x0000,
+
+	  RED                 = 0x0200,
+	  GREEN               = 0x0400,
+	  YELLOW              = 0x0800,
+	  BLUE                = 0x1000,
+	  MAGENTA             = 0x2000,
+	  CYAN                = 0x4000,
+          COLORS              = 0xFF00,
+          ATTRIBUTES          = 0xFFFF,
 
           SEQUENTIAL_WINDOW   = 0,
           DETACHED_WINDOW     = 1,

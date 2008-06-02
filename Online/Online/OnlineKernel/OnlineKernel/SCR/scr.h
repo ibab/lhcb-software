@@ -31,22 +31,22 @@ struct Paste_entry    {
 };
 
 struct Window   {
-    Window Link_items;
-    int   id;
-    struct    {
-      Paste_entry Linked_list_items;
-    }       paste;
-    Pasteboard *pb;
-    Display *on_screen;
-    Display *title;
-    int   row;
-    int   col;
-    int   height;
-    int   width;
-
-    int   type;
-    int   moved;
-    int   iconified;
+  Window Link_items;
+  int   id;
+  struct    {
+    Paste_entry Linked_list_items;
+  }       paste;
+  Pasteboard *pb;
+  Display    *on_screen;
+  Display    *title;
+  int         row;
+  int         col;
+  int         height;
+  int         width;
+  
+  int         type;
+  int         moved;
+  int         iconified;
 };
 
 struct Screen  {
@@ -79,9 +79,9 @@ struct Pasteboard   {
     Screen      Linked_list_items;
   }       scr;
   Update  *upd, *old;
-  int     updating;
-  byte    old_attr;
-  int     smgid;
+  int          updating;
+  unsigned int old_attr;
+  int          smgid;
   
   Display *moving;
   Display *resizing;
@@ -103,24 +103,24 @@ struct Display    {
           col1,
           height,
           width;
-  char    *map,
-          *attr;
-  int     def_attr;
+  char    *map;
+  unsigned int *attr;
+  unsigned int def_attr;
+  unsigned int brd_attr;
   flag    border;
   char   *title;
-  
-  int    (* scroll)(int);
-  int    (* resize)(Display*, int, int);
-  int    (* drag)(Display*, int, int);
+
+  int    (*scroll)(int);
+  int    (*resize)(Display*, int, int);
+  int    (*drag)(Display*, int, int);
 };
 
-struct Update
-{
-  char    *map,
-          *attr;
-  char    *mod_rows;
-  int     *mod_col0,
-          *mod_col1;
+struct Update    {
+  char         *map;
+  unsigned int *attr;
+  char         *mod_rows;
+  int          *mod_col0,
+               *mod_col1;
 };
 #ifdef __cplusplus
  struct PasteboardContext {
@@ -149,9 +149,9 @@ extern "C"  {
 #endif
 
 //scr_edit.cpp
-int scrc_change_rendition (SCR::Display *disp, int r1, int c1, int rows, int cols, char attr);
-int scrc_insert_line (SCR::Display *disp, __CXX_CONST char *str, SCR::byte attr, int row, int scroll);
-int scrc_insert_char (SCR::Display *disp, char ch, SCR::byte attr, int row, int col);
+int scrc_change_rendition (SCR::Display *disp, int r1, int c1, int rows, int cols, unsigned int attr);
+int scrc_insert_line (SCR::Display *disp, __CXX_CONST char *str, unsigned int attr, int row, int scroll);
+int scrc_insert_char (SCR::Display *disp, char ch, unsigned int attr, int row, int col);
 int scrc_delete_line (SCR::Display *disp, int row);
 int scrc_delete_char (SCR::Display *disp, int row, int col);
 
@@ -221,29 +221,29 @@ int scrc_clear_screen (SCR::Pasteboard *pb);
 int scrc_save_screen (SCR::Pasteboard *pb);
 int scrc_restore_screen (SCR::Pasteboard *pb);
 int scrc_repaint_screen (SCR::Pasteboard *pb);
-int scrc_create_display (SCR::Display** disp, int rows, int cols, int attr, SCR::flag border, __CXX_CONST char* title);
+int scrc_create_display (SCR::Display** disp, int rows, int cols, unsigned int attr, SCR::flag border, __CXX_CONST char* title);
 int scrc_memory_of_display (SCR::Display *disp);
 int scrc_enable_scroll (SCR::Display *disp, int (*scroll)(int));
 int scrc_enable_resize (SCR::Display *disp, int (*resize)(SCR::Display*,int,int));
 int scrc_enable_drag (SCR::Display *disp, int (*drag)(SCR::Display*,int,int));
 int scrc_get_display_attr (SCR::Display *disp, int* rows, int* cols);
 int scrc_read_from_display (SCR::Display *disp, char *string, int maxlen, int row);
-int scrc_set_border (SCR::Display *disp, __CXX_CONST char *title, char attr);
+int scrc_set_border (SCR::Display *disp, __CXX_CONST char *title, unsigned int attr);
 int scrc_paste_display (SCR::Display *disp, SCR::Pasteboard *pb, int row, int col);
 int scrc_unpaste_display (SCR::Display *disp, SCR::Pasteboard *pb);
 int scrc_bring_display_to_back (SCR::Display *disp, SCR::Pasteboard *pb);
 int scrc_move_display (SCR::Display *disp, SCR::Pasteboard *pb, int drow, int dcol);
 int scrc_change_display (SCR::Display *disp, int rows, int cols);
 char *scrc_get_title (SCR::Display *disp);
-int scrc_draw_box (SCR::Display *disp, char attr);
+int scrc_draw_box (SCR::Display *disp, unsigned int attr);
 int scrc_draw_block (SCR::Display *disp, int r1, int r2, int c1, int c2);
 int scrc_undraw_block (SCR::Display *disp, int r1, int r2, int c1, int c2);
 SCR::Display* scrc_display_at (SCR::Pasteboard* pb, int row, int col);
 int scrc_display_occluded (SCR::Display *disp);
 int scrc_occluded (SCR::Display *disp, int row, int col);
-int scrc_put_chars (SCR::Display *disp, __CXX_CONST char *str, SCR::byte attr, int row, int col, int erase);
+int scrc_put_chars (SCR::Display *disp, __CXX_CONST char *str, unsigned int attr, int row, int col, int erase);
 int scrc_erase_line (SCR::Display *disp, int row);
-int scrc_put_char_all (SCR::Display *disp, int offset, char c, unsigned char attr, int row, int col);
+int scrc_put_char_all (SCR::Display *disp, int offset, char c, unsigned int attr, int row, int col);
 int scrc_restore_cursor(SCR::Pasteboard *pb, int context[]);
 int scrc_save_cursor(SCR::Pasteboard *pb, int *(context[]));
 int scrc_fflush(SCR::Pasteboard *pb);
@@ -256,11 +256,11 @@ int scrc_ring_bell (SCR::Display *disp);
 int scrc_check_key_buffer (char *buffer);
 int scrc_set_cursor (SCR::Display *disp, int row, int col);
 int scrc_set_cursor_abs (SCR::Pasteboard *pb, int row, int col);
-int scrc_draw_char_on_pb (SCR::Pasteboard *pb, char c, int attr, int row, int col);
+int scrc_draw_char_on_pb (SCR::Pasteboard *pb, char c, unsigned int attr, int row, int col);
 int scrc_draw_char (SCR::Display *disp, SCR::Pasteboard *pb, int offset, 
-                    char c, unsigned char attr, SCR::Display *ddef, int row, int col);
+                    char c, unsigned int attr, SCR::Display *ddef, int row, int col);
 int scrc_get_char (SCR::Display *disp, int row, int col, char* c, unsigned int* attr);
-int scrc_put_char (SCR::Display *disp, char c, unsigned char attr, int row, int col);
+int scrc_put_char (SCR::Display *disp, char c, unsigned int attr, int row, int col);
 
 
 
@@ -270,7 +270,7 @@ int scrc_puts (__CXX_CONST char* s, SCR::Pasteboard *pb);
 int scrc_puti (int i, SCR::Pasteboard *pb);
 int scrc_begin_pasteboard_update (SCR::Pasteboard *pb);
 int scrc_end_pasteboard_update (SCR::Pasteboard *pb);
-int scrc_count_unmodified (char* attr, char* last);
+int scrc_count_unmodified (unsigned int* attr, unsigned int* last);
 int cursor (SCR::Pasteboard *pb, int row, int col);
 int scrc_set_scroll (SCR::Pasteboard *pb, int row1, int row2);
 int scrc_cursor_on (SCR::Pasteboard *pb);

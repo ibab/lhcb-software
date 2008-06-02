@@ -2,6 +2,9 @@ Package: OnlineKernel
 Author:  Markus Frank
 
 ! 2008-05-19 Markus Frank
+ - Fix problems in scr.
+
+! 2008-05-19 Markus Frank
  - Allow for multi burst mode producers.
 
 ! 2008-03-09 Markus Frank

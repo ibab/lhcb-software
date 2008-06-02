@@ -22,7 +22,18 @@ using namespace SCR;
 #define normal()           scrc_putes("[27m", pb)
 #define clear_screen()     scrc_putes("[2J", pb)
 #define flash()            scrc_putes("[5m", pb)
-#define plain()            scrc_putes("[0m", pb)
+#define plain()            scrc_putes("[0;49m", pb)
+//#define plain()            scrc_putes("[30;47m", pb)
+
+
+#define fg_red()           scrc_putes("[31m",pb)
+
+#define fg_green()         scrc_putes("[32m",pb)
+#define fg_yellow()        scrc_putes("[33m",pb)
+#define fg_blue()          scrc_putes("[34m",pb)
+#define fg_magenta()       scrc_putes("[35m",pb)
+#define fg_cyan()          scrc_putes("[36m",pb)
+
 #define beep()             scrc_puti (BELL, pb)
 #define toascii()          scrc_putes("(B", pb)
 #define tographic()        scrc_putes("(0", pb)
@@ -41,6 +52,7 @@ static Pasteboard *Paste = 0;
 static Display *Moving_display, *Moving_text;
 static Display *Resizing_display, *Resizing_text;
 int scr_ignore_input;
+typedef unsigned int uint_t;
 
 //---------------------------------------------------------------------------
 int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, int* cols)  {
@@ -73,19 +85,19 @@ int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, in
 
   list_init (&pb->paste);
 
-  Update* u = (Update *) list_malloc (sizeof(Update));
+  Update* u = (Update*) list_malloc (sizeof(Update));
   pb->upd = u;
 
-  u->map  = (char *) list_malloc (size);
-  u->attr = (char *) list_malloc (size);
-  u->mod_rows = (char *) list_malloc (pb->rows);
+  u->map      = (char*)   list_malloc (size);
+  u->attr     = (uint_t*) list_malloc (size*sizeof(uint_t));
+  u->mod_rows = (char*)   list_malloc (pb->rows);
 
   u = (Update *) list_malloc (sizeof(Update));
   pb->old = u;
 
-  u->map  = (char *) list_malloc (size);
-  u->attr = (char *) list_malloc (size);
-  u->mod_rows = (char *) list_malloc (pb->rows);
+  u->map  = (char*) list_malloc (size);
+  u->attr = (uint_t*) list_malloc (size*sizeof(uint_t));
+  u->mod_rows = (char*) list_malloc (pb->rows);
 
   pb->updating = OFF;
   pb->old_attr = 0;
@@ -170,20 +182,20 @@ int scrc_change_pasteboard (Pasteboard *pb, int *prows, int *pcols)   {
   free (u->mod_rows);
 
   u->map  = (char *) list_malloc (size);
-  u->attr = (char *) list_malloc (size);
+  u->attr = (uint_t *) list_malloc (size*sizeof(uint_t));
   u->mod_rows = (char *) list_malloc (pb->rows);
 
   u = pb->old;
 
-  free (u->map);
-  free (u->attr);
-  free (u->mod_rows);
+  ::free (u->map);
+  ::free (u->attr);
+  ::free (u->mod_rows);
 
-  u->map  = (char *) list_malloc (size);
-  u->attr = (char *) list_malloc (size);
-  u->mod_rows = (char *) list_malloc (pb->rows);
+  u->map  = (char*) list_malloc (size);
+  u->attr = (uint_t*) list_malloc (size*sizeof(uint_t));
+  u->mod_rows = (char*) list_malloc (pb->rows);
 
-  scrc_repaint_screen (pb);
+  ::scrc_repaint_screen (pb);
   return 1;
 }
 
@@ -239,14 +251,14 @@ int scrc_clear_screen (Pasteboard *pb)    {
   pb->old_attr = 0;
   clear_screen ();
   Update *u = pb->old;
-  int size = pb->rows * pb->cols;
-  memset (u->map,  ' ', size);
+  size_t size = pb->rows * pb->cols;
+  ::memset (u->map,SPACE,size);
 #ifdef USE_FONT_SUPP
-  memset (u->attr, FONT_SUPP, size);
+  for(size_t j=0; j<size; ++j)u->attr[j]=FONT_SUPP;
 #else
-  memset (u->attr, NORMAL, size);
+  for(size_t j=0; j<size; ++j)u->attr[j]=NORMAL;
 #endif
-  memset (u->mod_rows, 0, pb->rows);
+  ::memset (u->mod_rows, 0, pb->rows);
   toascii();
   plain();
   cursor (pb, 1, 1);
@@ -289,43 +301,44 @@ int scrc_repaint_screen (Pasteboard *pb)  {
 }
 
 //---------------------------------------------------------------------------
-int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, const char* title) {
-  int size;
-  Display *d = (Display *) list_malloc (sizeof(Display));
-  d->pb = (Pasteboard *) 0;
-  d->paste = (Paste_entry *) 0;
-  d->rows  = rows;
-  d->cols  = cols;
-  d->row   = d->col  = 0;
-  d->def_attr = attr;
-  d->border = border;
-  d->scroll = 0;
-  d->resize = 0;
-  d->drag = 0;
-  d->wind = 0;
-  rows += 2;
-  cols += 2;
-  size    = rows * cols;
-  d->map  = (char *) list_malloc (size);
-  d->attr = (char *) list_malloc (size);
-  memset (d->map , SPACE, size);
-  memset (d->attr, NORMAL, size);
-  d->title  = 0;
+int scrc_create_display (Display** disp, int rows, int cols, uint_t attr, flag border, const char* title) {
+  size_t size;
+  Display *d  = (Display *) list_malloc(sizeof(Display));
+  d->pb       = (Pasteboard *) 0;
+  d->paste    = (Paste_entry *) 0;
+  d->rows     = rows;
+  d->cols     = cols;
+  d->row      = d->col  = 0;
+  d->def_attr = attr&(~COLORS);
+  d->brd_attr = attr;
+  d->border   = border;
+  d->scroll   = 0;
+  d->resize   = 0;
+  d->drag     = 0;
+  d->wind     = 0;
+  rows       += 2;
+  cols       += 2;
+  size        = rows * cols;
+  d->map      = (char*)list_malloc(size);
+  d->attr     = (uint_t*)list_malloc(size*sizeof(uint_t));
+  ::memset (d->map,SPACE,size);
+  for(size_t j=0; j<size; ++j)d->attr[j] = attr;
+  d->title    = 0;
   if (border)  {
-    d->row0 = d->col0 = 0;
-    d->row1 = d->rows + 1;
-    d->col1 = d->cols + 1;
+    d->row0   = d->col0 = 0;
+    d->row1   = d->rows + 1;
+    d->col1   = d->cols + 1;
     d->height = rows;
     d->width  = cols;
-    scrc_set_border (d, title, NORMAL);
+    ::scrc_set_border(d,title,d->brd_attr);
   }
   else  {
-    d->row0 = d->col0 = 1;
-    d->row1 = d->rows;
-    d->col1 = d->cols;
+    d->row0   = d->col0 = 1;
+    d->row1   = d->rows;
+    d->col1   = d->cols;
     d->height = rows - 2;
     d->width  = cols - 2;
-  }
+  } 
   *disp = d;
   return 1;
 }
@@ -368,26 +381,26 @@ int scrc_read_from_display (Display *disp, char *string, int maxlen, int row)   
     int cols = disp->cols;
     char* m = disp->map + row * (cols + 2) + 1;
     if (maxlen > cols) maxlen = cols;
-    strncpy (string, m, maxlen);
+    ::strncpy(string, m, maxlen);
   }
   return 1;
 }
 
 //---------------------------------------------------------------------------
-int scrc_set_border (Display *disp, const char *title, char attr)   {
+int scrc_set_border (Display *disp, const char *title, uint_t attr)   {
   int cols = disp->cols;
-  int len = (title) ? strlen(title) : 0;
-  char * tmp = disp->title;
-  disp->title = (char *) list_malloc (len + 1);
-  strcpy (disp->title, (title) ? title : "");
-  scrc_draw_box (disp, attr);
+  int len = (title) ? ::strlen(title) : 0;
+  char* tmp = disp->title;
+  disp->title = (char*)list_malloc (len + 1);
+  ::strcpy(disp->title, (title) ? title : "");
+  ::scrc_draw_box (disp, attr);
   if (cols > 1 && (len != 0))  {
     if (len > cols) len = cols;
     int pos = (cols - len + 2) >> 1;
     for (;len;len--,pos++)
-      scrc_put_char_all (disp, pos, *title++, attr, 0, pos);
+      ::scrc_put_char_all (disp, pos, *title++, attr, 0, pos);
   }
-  if (tmp) free (tmp);
+  if (tmp) ::free (tmp);
   return 1;
 }
 
@@ -397,19 +410,19 @@ int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col)    {
   level_up (pb);
   if ((d = disp->paste))  {
     if (row != disp->row || col != disp->col)
-      scrc_move_display (disp, pb, row - disp->row, col - disp->col);
+      ::scrc_move_display (disp, pb, row - disp->row, col - disp->col);
     if (d != pb->paste.last)
       list_move_entry (d, pb->paste.last, 0);
   }
   else  {
     d = (Paste_entry *) list_add_entry (&pb->paste, sizeof(Paste_entry));
-    scrc_uniconify_display (disp);
+    ::scrc_uniconify_display (disp);
     disp->paste = d;
   }
   disp->pb       = pb;
   disp->row      = row;
   disp->col      = col;
-  scrc_draw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
+  ::scrc_draw_block(disp,disp->row0,disp->row1,disp->col0,disp->col1);
   d->disp = disp;
   level_down (pb);
   return 1;
@@ -419,8 +432,8 @@ int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col)    {
 int scrc_unpaste_display (Display *disp, Pasteboard *pb)    {
   if (disp && disp->paste)    {
     level_up (pb);
-    scrc_undraw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
-    list_remove_entry (disp->paste);
+    ::scrc_undraw_block(disp,disp->row0,disp->row1,disp->col0,disp->col1);
+    list_remove_entry(disp->paste);
     disp->paste = 0;
     level_down (pb);
   }
@@ -438,7 +451,7 @@ int scrc_bring_display_to_back (Display *disp, Pasteboard *pb)    {
     d = pb->paste.first;
     while (d)      {
       Display *dd = d->disp;
-      scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
+      ::scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
       d = d->next;
     }
     level_down (pb);
@@ -452,7 +465,7 @@ int scrc_move_display (Display *disp, Pasteboard *pb, int drow, int dcol) {
   scrc_undraw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
   disp->row += drow;
   disp->col += dcol;
-  scrc_draw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
+  ::scrc_draw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
   level_down (pb);
   return 1;
 }
@@ -461,8 +474,8 @@ int scrc_move_display (Display *disp, Pasteboard *pb, int drow, int dcol) {
 int scrc_change_display (Display *disp, int rows, int cols)   {
   int r, c;
   char *map, *mm;
-  char *attr, *aa;
-  int size = (rows + 2)*(cols + 2);
+  uint_t *attr, *aa;
+  size_t size = (rows + 2)*(cols + 2);
   int r0, r1, c0, c1;
   Pasteboard *pb = disp->pb;
   int offset;
@@ -474,7 +487,7 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
 
   level_up (pb);
   char* m = disp->map;
-  char* a = disp->attr;
+  uint_t* a = disp->attr;
 
   if (disp->border)  {
     r0 = c0 = 0;
@@ -487,14 +500,14 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
     c1 = cols;
   }
 
-  disp->map  = map  = (char *) list_malloc (size);
-  disp->attr = attr = (char *) list_malloc (size);
-  memset (map,  ' ', size);
-  memset (attr, disp->def_attr, size);
+  disp->map  = map  = (char *)list_malloc (size);
+  disp->attr = attr = (uint_t*)list_malloc (size*sizeof(uint_t));
+  memset (map,SPACE,size);
+  for(size_t j=0;j<size;++j) attr[j] = disp->def_attr;
   if (rows < disp->rows)
-    scrc_undraw_block (disp, r1+1, disp->row1, disp->col0, disp->col1);
+    ::scrc_undraw_block(disp,r1+1,disp->row1,disp->col0,disp->col1);
   if (cols < disp->cols)
-    scrc_undraw_block (disp, r0, r1, c1+1, disp->col1);
+    ::scrc_undraw_block(disp,r0,r1,c1+1,disp->col1);
 
   disp->rows = rows;
   disp->cols = cols;
@@ -515,12 +528,10 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
 
   for (r = 1; r <= min(h,rows); r++)  {
     offset = r * (cols + 2) + 1;
-    for (c = 1; c <= min(w,cols); c++, offset++)    {
-      scrc_put_char_all (disp, offset, *mm++, *aa++, r, c);
-    }
-    for (; c<=cols; c++, offset++)    {
-      scrc_put_char_all (disp, offset, ' ', NORMAL, r, c);
-    }
+    for (c = 1; c <= min(w,cols); c++, offset++)
+      ::scrc_put_char_all(disp, offset, *mm++, *aa++, r, c);
+    for (; c<=cols; c++, offset++)
+      ::scrc_put_char_all(disp,offset,SPACE,disp->brd_attr,r,c);
     if (w > cols)    {
       mm += w - cols;
       aa += w - cols;
@@ -529,15 +540,15 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
     aa += 2;
   }
   for (; r<=rows; r++)  {
-    offset = r*(cols + 2) + 1;
+    offset = r * (cols + 2) + 1;
     for (c = 1; c <= cols; c++, offset++)
-      scrc_put_char_all (disp, offset, ' ', NORMAL, r, c);
+      ::scrc_put_char_all(disp,offset,SPACE,disp->brd_attr,r,c);
   }
 
-  if (disp->border) scrc_set_border (disp, disp->title, NORMAL);
+  if (disp->border) ::scrc_set_border(disp,disp->title,disp->brd_attr);
 
-  if (rows > h) scrc_draw_block (disp, h+1, r1, c0, c1);
-  if (cols > w) scrc_draw_block (disp, r0, r1, w+1, c1);
+  if (rows > h) ::scrc_draw_block (disp, h+1, r1, c0, c1);
+  if (cols > w) ::scrc_draw_block (disp, r0, r1, w+1, c1);
 
   free (m);
   free (a);
@@ -591,11 +602,10 @@ int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
 
   for (r=r1; r<=r2; r++)  {
     char* map    = disp->map + offset;
-    char* attr   = disp->attr + offset;
-
+    uint_t* attr = disp->attr + offset;
     pb_offset = (r - 1)*pb->cols + c1 - 1;
     for (c=c1; c<=c2; c++, pb_offset++)   {
-      scrc_draw_char (disp, pb, pb_offset, *map, *attr, disp, r, c);
+      ::scrc_draw_char (disp, pb, pb_offset, *map, *attr, disp, r, c);
       map++;
       attr++;
     }
@@ -641,24 +651,21 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
   for (r=r1; r<=r2; r++)  {
     pb_offset = (r - 1)*pb->cols + c1 - 1;
     for (c=c1; c<=c2; c++, pb_offset++)  {
-      int done;
-
-      done = 0;
       d = disp->paste->prev;
       while (d)  {
         dd = d->disp;
         if (belongs_to(dd, r, c))  {
           offset = (r - dd->row + 1)*(dd->cols + 2) + c - dd->col + 1;
-          scrc_draw_char (disp, pb, pb_offset, *(dd->map + offset),
-            *(dd->attr + offset), dd, r, c);
+          ::scrc_draw_char(disp, pb, pb_offset, *(dd->map + offset),
+			   *(dd->attr + offset), dd, r, c);
           break;
         }
         d = d->prev;
       }
 #ifdef USE_FONT_SUPP
-      if (!d) scrc_draw_char (disp, pb, pb_offset, ' ', FONT_SUPP, 0, r, c);
+      if (!d) ::scrc_draw_char(disp,pb,pb_offset,SPACE,FONT_SUPP,0,r,c);
 #else
-      if (!d) scrc_draw_char (disp, pb, pb_offset, ' ', NORMAL, 0, r, c);
+      if (!d) ::scrc_draw_char(disp,pb,pb_offset,SPACE,NORMAL,0,r,c);
 #endif
     }
   }
@@ -677,35 +684,35 @@ Display* scrc_display_at (Pasteboard* pb, int row, int col)    {
 }
 
 //---------------------------------------------------------------------------
-int scrc_draw_box (Display *disp, char attr)    {
+int scrc_draw_box (Display *disp, uint_t attr)    {
   int r, c, offset;
   int r2 = disp->rows + 1;
   int c2 = disp->cols + 1;
   char hb = scrc_horizontal_bar();
   char vb = scrc_vertical_bar();
 
-  attr |= GRAPHIC;
+  attr |= (GRAPHIC|disp->def_attr);
+  //::fprintf(stdout,"(5-%p)%X-%X#\n",disp,disp->def_attr,attr);
 
-  scrc_put_char_all (disp, 0, scrc_top_left_corner(), attr, 0, 0);
+  ::scrc_put_char_all (disp, 0, scrc_top_left_corner(), attr, 0, 0);
   for (c = 1, offset = 1; c < c2; c++, offset++)  {
-    scrc_put_char_all (disp, offset, hb, attr, 0, c);
+    ::scrc_put_char_all (disp, offset, hb, attr, 0, c);
   }
-  scrc_put_char_all (disp, offset, scrc_top_right_corner(), attr, 0, c);
+  ::scrc_put_char_all (disp, offset, scrc_top_right_corner(), attr, 0, c);
   offset++;
 
   for (r = 1; r < r2; r++)  {
-    scrc_put_char_all (disp, offset, vb, attr, r, 0);
+    ::scrc_put_char_all (disp, offset, vb, attr, r, 0);
     offset += c2;
-    scrc_put_char_all (disp, offset, vb, attr, r, c2);
+    ::scrc_put_char_all (disp, offset, vb, attr, r, c2);
     offset++;
   }
 
-  scrc_put_char_all (disp, offset, scrc_bottom_left_corner(), attr, r, 0);
+  ::scrc_put_char_all (disp, offset, scrc_bottom_left_corner(), attr, r, 0);
   offset++;
-  for (c = 1; c < c2; c++, offset++)  {
-    scrc_put_char_all (disp, offset, hb, attr, r, c);
-  }
-  scrc_put_char_all (disp, offset, scrc_bottom_right_corner(), attr, r, c);
+  for (c = 1; c < c2; c++, offset++)
+    ::scrc_put_char_all (disp, offset, hb, attr, r, c);
+  ::scrc_put_char_all (disp, offset, scrc_bottom_right_corner(), attr, r, c);
   return 1;
 }
 
@@ -713,7 +720,7 @@ int scrc_draw_box (Display *disp, char attr)    {
 int scrc_display_occluded (Display *disp)   {
   for (int row = disp->row0 + disp->row; row <= disp->row1 + disp->row; row++)
     for (int col = disp->col0 + disp->col; col <= disp->col1 + disp->col; col++)
-      if (scrc_occluded (disp, row, col)) return 1;
+      if ( ::scrc_occluded (disp, row, col) ) return 1;
   return 0;
 }
 
@@ -734,17 +741,16 @@ int scrc_occluded (Display *disp, int row, int col)   {
 }
 
 //---------------------------------------------------------------------------
-int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col, int erase) {
+int scrc_put_chars (Display *disp, const char *str, uint_t attr, int row, int col, int erase) {
   int len = strlen(str);
   int h = disp->rows;
   int w = disp->cols;
 
   if (row < 0 || col < 0 || row > h || col > w) return 0;
   if (len > w - col + 1) len = w - col + 1;
-  for (;len;len--) scrc_put_char (disp, *str++, attr, row, col++);
+  for (;len;len--) ::scrc_put_char (disp, *str++, attr, row, col++);
   if (erase)
-    for (; col <= w; col++)
-      scrc_put_char (disp, ' ', attr, row, col);
+    for (; col <= w; col++) ::scrc_put_char(disp,SPACE,attr,row,col);
   return 1;
 }
 
@@ -752,12 +758,12 @@ int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col,
 int scrc_erase_line (Display *disp, int row)  {
   if (row > disp->rows) return 0;
   for (int i = 1;i <= disp->cols; i++) 
-    scrc_put_char (disp, ' ', NORMAL, row, i);
+    ::scrc_put_char (disp,SPACE,disp->brd_attr, row, i);
   return 1;
 }
 
 //---------------------------------------------------------------------------
-int scrc_put_char_all (Display *disp, int offset, char c, unsigned char attr, int row, int col)   {
+int scrc_put_char_all (Display *disp, int offset, char c, uint_t attr, int row, int col)   {
   *(disp->map  + offset) = c;
   *(disp->attr + offset) = attr;
   if (disp->paste)  {
@@ -766,14 +772,14 @@ int scrc_put_char_all (Display *disp, int offset, char c, unsigned char attr, in
     col += disp->col - 1;
     if (visible (pb, row, col))    {
       int pb_offset = (row - 1)*pb->cols + col - 1;
-      scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
+      ::scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
     }
   }
   return 1;
 }
 
 //---------------------------------------------------------------------------
-int scrc_put_char (Display *disp, char c, unsigned char attr, int row, int col)   {
+int scrc_put_char (Display *disp, char c, uint_t attr, int row, int col)   {
   int h = disp->rows;
   int w = disp->cols;
 
@@ -790,14 +796,14 @@ int scrc_put_char (Display *disp, char c, unsigned char attr, int row, int col) 
     col += disp->col - 1;
     if (visible (pb, row, col))    {
       int pb_offset = (row - 1)*pb->cols + col - 1;
-      scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
+      ::scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
     }
   }
   return 1;
 }
 
 //---------------------------------------------------------------------------
-int scrc_get_char (Display *disp, int row, int col, char* c, unsigned int* attr)  {
+int scrc_get_char (Display *disp, int row, int col, char* c, uint_t* attr)  {
   int h = disp->rows;
   int w = disp->cols;
 
@@ -812,22 +818,26 @@ int scrc_get_char (Display *disp, int row, int col, char* c, unsigned int* attr)
 
 //---------------------------------------------------------------------------
 int scrc_draw_char (Display *disp, Pasteboard *pb, int offset, 
-                    char c, unsigned char attr, Display *ddef, int row, int col)
+                    char c, uint_t attr, Display *ddef, int row, int col)
 {
-  char *m, *a, *mm, *aa;
+  char *m, *mm;
+  uint_t *a, *aa, def;
   Update *u;
-  int def;
 
   if (!pb) return 0;
 
-  /*  Check to use the default display attribute                 */
+  //  Check to use the default display attribute
   def = NORMAL;
   if (ddef) def = ddef->def_attr;
-  /*  Check occlusion of this position within the display        */
+
+  //  Check occlusion of this position within the display
   if (disp && scrc_occluded (disp, row, col)) return 0;
-  /*  Take care of multiple inversions                           */
-  attr = (~INVERSE & (def | attr)) | (INVERSE & (def ^ attr)) ;
-  /*  Further checks on the char itself                          */
+  //  Take care of multiple inversions
+  attr = (~BOLD    & (def | attr)) | (BOLD    & (def ^ attr));
+  attr = (~INVERSE & (def | attr)) | (INVERSE & (def ^ attr));
+  attr = (~COLORS  & (def | attr)) | (COLORS  & (def^attr));
+
+  //  Further checks on the char itself
   if (!c) c = ' ';
   if (c == ' ')  {
 #ifdef USE_FONT_SUPP
@@ -855,16 +865,16 @@ int scrc_draw_char (Display *disp, Pasteboard *pb, int offset,
     if (*mm == c && *aa == attr) return 1;
     *mm = c;
     *aa = attr;
-    scrc_draw_char_on_pb (pb, c, attr, row, col);
+    ::scrc_draw_char_on_pb (pb, c, attr, row, col);
   }
   return 1;
 }
 
 //---------------------------------------------------------------------------
-int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   {
-  byte old = pb->old_attr;
-  int  old_set = old & FONTS;
-  int set     = attr & FONTS;
+int scrc_draw_char_on_pb (Pasteboard *pb, char c, uint_t attr, int row, int col)   {
+  uint_t old = pb->old_attr;
+  uint_t old_set = old  & FONTS;
+  uint_t set     = attr & FONTS;
   if (old_set != set)  {
     switch (set)  {
     case ASCII : toascii();
@@ -890,6 +900,12 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   
     else set = 0;
   }
   if (set)  {
+    if (set & RED)       fg_red();
+    if (set & GREEN)     fg_green();
+    if (set & YELLOW)    fg_yellow();
+    if (set & MAGENTA)   fg_magenta();
+    if (set & CYAN)      fg_cyan();
+    if (set & BLUE)      fg_blue();
     if (set & BOLD)      bold();
     if (set & UNDERLINE) underline();
     if (set & FLASH)     flash();
@@ -897,7 +913,7 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   
     old |= set;
   }
   if (row != pb->curs.row || col != pb->curs.col)
-    scrc_set_cursor_abs (pb, row, col);
+    ::scrc_set_cursor_abs (pb, row, col);
   scrc_putc (c, pb);
   pb->curs.col++;
   pb->old_attr = old;
@@ -906,7 +922,7 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   
 
 //---------------------------------------------------------------------------
 int scrc_set_cursor_abs (Pasteboard *pb, int row, int col)  {
-  cursor (pb, row, col);
+  cursor(pb, row, col);
   pb->curs.row = row;
   pb->curs.col = col;
   return 1;
@@ -926,23 +942,23 @@ int scrc_ring_bell (Display *d)  {
 //---------------------------------------------------------------------------
 int scrc_load_font (Pasteboard *pb, const char *name)   {
   char buf[80];
-  FILE* f = fopen (name, "r");
+  FILE* f = ::fopen (name, "r");
   if (!f) return 0;
-  scrc_fflush(pb);
-  while (fgets (buf, 80, f)) scrc_putes (buf, pb);
-  fclose(f);
+  ::scrc_fflush(pb);
+  while (fgets (buf, 80, f)) ::scrc_putes(buf, pb);
+  ::fclose(f);
   setfonts();
-  return scrc_fflush(pb);
+  return ::scrc_fflush(pb);
 }
 
 //---------------------------------------------------------------------------
 int scrc_resizing_display (Display *d)    {
   Pasteboard *pb = d->pb;
   pb->resizing = d;
-  scrc_paste_display (Resizing_text, pb, 2, 2);
-  scrc_paste_display (Resizing_display, pb, d->row, d->col);
+  ::scrc_paste_display (Resizing_text, pb, 2, 2);
+  ::scrc_paste_display (Resizing_display, pb, d->row, d->col);
   cursor_off();
-  return scrc_end_pasteboard_update (pb);
+  return ::scrc_end_pasteboard_update (pb);
 }
 
 
@@ -950,7 +966,7 @@ int scrc_resizing_display (Display *d)    {
 int scrc_action_resizing_display (Pasteboard *pb, int key)    {
   Display* d = pb->resizing;
   int done = 0, drow = 0, dcol = 0;
-  scrc_begin_pasteboard_update (pb);
+  ::scrc_begin_pasteboard_update (pb);
   switch (key)  {
   case MOVE_UP :
     if (Resizing_display->row > 1) drow = -1;
@@ -968,7 +984,7 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
   case KPD_NEXT :
     if (d->scroll)  {
       (*d->scroll)(key);
-      scrc_paste_display (Resizing_display, pb, d->row, d->col);
+      ::scrc_paste_display (Resizing_display, pb, d->row, d->col);
       dcol = 0;
       drow = 0;
     }
@@ -977,7 +993,7 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
     done = 1;
     break;
   }
-  if (!done) scrc_move_display (Resizing_display, pb, drow, dcol);
+  if (!done) ::scrc_move_display (Resizing_display, pb, drow, dcol);
   else  {
     pb->resizing = 0;
     scrc_unpaste_display (Resizing_display, pb);
@@ -1014,7 +1030,7 @@ int scrc_moving_display (Display *d)    {
 int scrc_action_moving_display (Pasteboard *pb, int key)    {
   Display *d = pb->moving;
   int done = 0, dcol = 0, drow = 0;
-  scrc_begin_pasteboard_update (pb);
+  ::scrc_begin_pasteboard_update (pb);
   switch (key)  {
   case MOVE_UP :
     if (Moving_display->row > 1) drow = -1;
@@ -1032,7 +1048,7 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
   case KPD_PREV :
     if (d->scroll)  {
       (*d->scroll)(key);
-      scrc_paste_display (Moving_display, pb, d->row, d->col);
+      ::scrc_paste_display (Moving_display, pb, d->row, d->col);
       dcol = 0;
       drow = 0;
     }
@@ -1042,12 +1058,12 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
     break;
   }
   if (!done)    {
-    scrc_move_display (Moving_display, pb, drow, dcol);
+    ::scrc_move_display (Moving_display, pb, drow, dcol);
   }
   else  {
     pb->moving = 0;
-    scrc_unpaste_display (Moving_display, pb);
-    scrc_unpaste_display (Moving_text, pb);
+    ::scrc_unpaste_display (Moving_display, pb);
+    ::scrc_unpaste_display (Moving_text, pb);
     cursor_on();
     if (key == KPD_PF3 || key == KPD_PF4) {
       drow = Moving_display->row - d->row;
@@ -1060,11 +1076,13 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
         if (d->drag)   {
           (*d->drag) (d, drow, dcol);
         }
-        else scrc_move_display (d, pb, drow, dcol);
+        else {
+	  scrc_move_display (d, pb, drow, dcol);
+	}
       }
     }
   }
-  scrc_end_pasteboard_update(pb);
+  ::scrc_end_pasteboard_update(pb);
   return (done);
 }
 
@@ -1073,7 +1091,7 @@ int scrc_fflush(Pasteboard *pb)    {
   if (pb->bufptr)  {
     char* buf = pb->bufout + pb->bufptr;
     *buf = 0;
-    scrc_fputs(pb);
+    ::scrc_fputs(pb);
     pb->bufptr = 0;
     *(pb->bufout) = 0;
   }
@@ -1101,9 +1119,9 @@ int scrc_restore_cursor(Pasteboard * /* pb */ , int* /* context */ )    {
   pb->curs.col = context[1];
   pb->old_attr = context[2];
 
-  if (pb->updating > 0) cursor (pb, pb->curs.row, pb->curs.col);
-  else
-  {
+  if (pb->updating > 0) cursor (pb, pb->curs.row, pb->curs.col) {
+  }
+  else  {
   scrc_putes ("8", pb);
   scrc_fflush (pb);
   }
@@ -1128,7 +1146,7 @@ int scrc_putes (const char* s, Pasteboard *pb)    {
   char *buf = pb->bufout + pb->bufptr;
   *buf = ESCAPE;
   pb->bufptr++;
-  return scrc_puts (s, pb);
+  return ::scrc_puts (s, pb);
 }
 
 //----------------------------------------------------------------------------
@@ -1136,7 +1154,7 @@ int scrc_puts (const char* s, Pasteboard *pb)   {
   char *buf = pb->bufout + pb->bufptr;
   ::strcpy (buf, s);
   pb->bufptr += strlen(s);
-  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
+  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
 
@@ -1145,31 +1163,21 @@ int scrc_puti (int i, Pasteboard *pb)   {
   char *buf = pb->bufout + pb->bufptr;
   *buf      = i;
   pb->bufptr ++;
-  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
+  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
 
-//#include "RTL/rtl.h"
-//static lib_rtl_lock_t s_lock = 0;
-bool s_locked = false;
 //----------------------------------------------------------------------------
 int scrc_begin_pasteboard_update (Pasteboard *pb)   {
-  //if ( 0 == s_lock ) {
-  //  lib_rtl_create_lock(0,&s_lock);
-  //}
   if (!pb) {
     return 0;
   }
   if (!pb->updating)  {
     Update* u = pb->upd;
-    int size = pb->rows * pb->cols;
-    memset (u->map,  ' ', size);
-    memset (u->attr, 0, size);
+    size_t size = pb->rows * pb->cols;
+    memset (u->map, SPACE, size);
     memset (u->mod_rows, 0, pb->rows);
-    //if ( !s_locked )  {
-    //  lib_rtl_lock(s_lock);
-    //  s_locked = true;
-    //}
+    for(size_t j=0; j<size; ++j) u->attr[j] = NORMAL;
   }
   pb->updating++;
   return 1;
@@ -1177,8 +1185,8 @@ int scrc_begin_pasteboard_update (Pasteboard *pb)   {
 
 //---------------------------------------------------------------------------
 int scrc_end_pasteboard_update (Pasteboard *pb)   {
-  char *m, *a, *last;
-  char *old_m, *old_a;
+  char *m, *old_m;
+  uint_t *a, *old_a, *last;
   int r, c;
   int cols;
   Update *u;
@@ -1217,7 +1225,7 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
           if (*a != *old_a || *m != *old_m) {
             *old_m = *m;
             *old_a = *a;
-            scrc_draw_char_on_pb (pb, *m, *a, r, c);
+            ::scrc_draw_char_on_pb (pb, *m, *a, r, c);
           }
         }
         m++;
@@ -1235,21 +1243,16 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
     }
   }
   cursor (pb, pb->curs.row, pb->curs.col);
-  scrc_fflush(pb);
-  //if ( s_locked ) {
-  //  s_locked = false;
-  //  lib_rtl_unlock(s_lock);
-  //}
+  ::scrc_fflush(pb);
   return 0;
 }
 
 //----------------------------------------------------------------------------
-int scrc_count_unmodified (char* attr, char* last)    {
+int scrc_count_unmodified (uint_t* attr, unsigned int* last)    {
   int count;
-  for (count = 0; attr<=last; (attr++, count++))  {
+  for (count = 0; attr<=last; ++attr, ++count)
     if (*attr & MODIFIED) break;
-  }
-  if (count < 7) for (--attr; count; attr--, count--) *attr |= MODIFIED;
+  if (count < 7) for (--attr; count; --attr, --count) *attr |= MODIFIED;
   else count--;
   return count;
 }
@@ -1260,9 +1263,9 @@ int cursor (Pasteboard *pb, int row, int col)   {
   *buf = ESCAPE;
   pb->bufptr++;
   buf = pb->bufout + pb->bufptr;
-  sprintf (buf, "[%d;%dH", row, col);
-  pb->bufptr += strlen(buf);
-  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
+  ::sprintf (buf, "[%d;%dH", row, col);
+  pb->bufptr += ::strlen(buf);
+  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
 
@@ -1272,9 +1275,9 @@ int scrc_set_scroll (Pasteboard *pb, int row1, int row2)    {
   *buf = ESCAPE;
   pb->bufptr++;
   buf = pb->bufout + pb->bufptr;
-  sprintf (buf, "[%d;%dr", row1, row2);
+  ::sprintf (buf, "[%d;%dr", row1, row2);
   pb->bufptr += strlen(buf);
-  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
+  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
 
