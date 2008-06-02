@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.31 2008-01-29 13:43:22 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.32 2008-06-02 13:00:18 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -235,6 +235,7 @@ StatusCode GetMCRichHitsAlg::execute()
         else
         {
           ++m_hitTally[rich];
+          if ( mchit->isSignal()         ) ++m_signalTally[rich];
           if ( mchit->gasQuartzCK()      ) ++m_gasQzHits[rich];
           if ( mchit->hpdQuartzCK()      ) ++m_hpdQzHits[rich];
           if ( mchit->nitrogenCK()       ) ++m_nitroHits[rich];
@@ -262,7 +263,7 @@ StatusCode GetMCRichHitsAlg::execute()
         }
         else
         {
-          ++m_radHits[rad];
+          if ( mchit->isSignal() ) ++m_radHits[rad];
           if ( Rich::Aerogel == rad )
           {
             ++m_aeroTileHits[mchit->aerogelTileID()];
@@ -313,102 +314,34 @@ StatusCode GetMCRichHitsAlg::execute()
 //=============================================================================
 StatusCode GetMCRichHitsAlg::finalize()
 {
-  const Rich::StatDivFunctor occ;
+  const Rich::StatDivFunctor occ("%7.2f +-%5.2f");
 
   info() << "Av. # Invalid RICH flags              = "
          << occ(m_invalidRichHits,m_nEvts)
          << endmsg;
 
-  info() << "Av. # MCRichHits              : Rich1 = "
-         << occ(m_hitTally[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
-         << endmsg;
+  printStat( "Av. # MCRichHits",              m_hitTally );
+  printStat( "Av. # Invalid radiator hits",   m_invalidRadHits );
+  printStat( "Av. # Signal Hits",             m_signalTally );
+  printStat( "Av. # Gas Quartz CK hits",      m_gasQzHits );
+  printStat( "Av. # HPD Quartz CK hits",      m_hpdQzHits ); 
+  printStat( "Av. # Nitrogen CK hits",        m_nitroHits );
+  printStat( "Av. # Aero Filter CK hits",     m_aeroFilterHits );
+  printStat( "Av. # Si back-scattering",      m_siBackScatt );
+  printStat( "Av. # Charged Track hits",      m_ctkHits );
+  printStat( "Av. # All HPD reflection hits", m_hpdReflHits );
+  printStat( "  Av. # QW/PC refl. hits",      m_hpdReflHitslQWPC );
+  printStat( "  Av. # Chromium refl. hits",   m_hpdReflHitslChr );
+  printStat( "  Av. # Air/QW refl. hits",     m_hpdReflHitsAirQW );
+  printStat( "  Av. # Air/PC refl. hits",     m_hpdReflHitsAirPC );
+  printStat( "  Av. # PC/QW refl. hits",      m_hpdReflHitsPCQW );
+  printStat( "  Av. # Silicon refl. hits",    m_hpdReflHitsSi );
+  printStat( "  Av. # Kovar refl. hits",      m_hpdReflHitsKovar );
+  printStat( "  Av. # Kapton refl. hits",     m_hpdReflHitsKapton );
 
-  info() << "Av. # Invalid radiator hits   : Rich1 = "
-         << occ(m_invalidRadHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_invalidRadHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Gas Quartz CK hits      : Rich1 = "
-         << occ(m_gasQzHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_gasQzHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "Av. # HPD Quartz CK hits      : Rich1 = "
-         << occ(m_hpdQzHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdQzHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "Av. # Nitrogen CK hits        : Rich1 = "
-         << occ(m_nitroHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_nitroHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "Av. # Aero Filter CK hits     : Rich1 = "
-         << occ(m_aeroFilterHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_aeroFilterHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Si back-scattering      : Rich1 = "
-         << occ(m_siBackScatt[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_siBackScatt[Rich::Rich2],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Charged Track hits      : Rich1 = "
-         << occ(m_ctkHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_ctkHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # All HPD reflection hits : Rich1 = "
-         << occ(m_hpdReflHits[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHits[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # QW/PC refl. hits      : Rich1 = "
-         << occ(m_hpdReflHitslQWPC[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitslQWPC[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Chromium refl. hits   : Rich1 = "
-         << occ(m_hpdReflHitslChr[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitslChr[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Air/QW refl. hits     : Rich1 = "
-         << occ(m_hpdReflHitsAirQW[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsAirQW[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Air/PC refl. hits     : Rich1 = "
-         << occ(m_hpdReflHitsAirPC[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsAirPC[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # PC/QW refl. hits      : Rich1 = "
-         << occ(m_hpdReflHitsPCQW[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsPCQW[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Silicon refl. hits    : Rich1 = "
-         << occ(m_hpdReflHitsSi[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsSi[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Kovar refl. hits      : Rich1 = "
-         << occ(m_hpdReflHitsKovar[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsKovar[Rich::Rich2],m_nEvts)
-         << endmsg;
-  info() << "  Av. # Kapton refl. hits     : Rich1 = "
-         << occ(m_hpdReflHitsKapton[Rich::Rich1],m_nEvts)
-         << " Rich2 = " << occ(m_hpdReflHitsKapton[Rich::Rich2],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Signal CK MCRichHits    : Aero  = "
-         << occ(m_radHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
-         << endmsg;
-
-  info() << "Av. # Rayleigh scattered hits : Aero  = "
-         << occ(m_scatHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " << occ(m_scatHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   << occ(m_scatHits[Rich::CF4],m_nEvts)
-         << endmsg;
-  info() << "Av. # MCParticle-less hits    : Aero  = "
-         << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
-         << " C4F10 = " << occ(m_nomcpHits[Rich::C4F10],m_nEvts)
-         << " CF4 = "   << occ(m_nomcpHits[Rich::CF4],m_nEvts)
-         << endmsg;
+  printStat( "Av. # Signal CK MCRichHits",    m_radHits );
+  printStat( "Av. # Rayleigh scattered hits", m_scatHits );
+  printStat( "Av. # MCParticle-less hits",    m_nomcpHits );
 
   // number of hits in each aerogel tile
   info() << "Av. # Aero hits per tile     :" << endreq;
@@ -416,12 +349,41 @@ StatusCode GetMCRichHitsAlg::finalize()
     Rich1AgelTile15CkvRadiatorNum-Rich1AgelTile0CkvRadiatorNum;
   for ( int iTile = 0; iTile <= maxTileID; ++iTile )
   {
-    info() << "          tile = "; if (iTile<10) { info() << " "; }
+    info() << "          tile = "; 
+    if (iTile<10) { info() << " "; }
     info() << iTile << " hits = "
            << occ(m_aeroTileHits[iTile],m_nEvts) << " / event" << endreq;
   }
 
-  return GetMCRichInfoBase::finalize();  // must be called after all other actions
+  return GetMCRichInfoBase::finalize();
+}
+
+void GetMCRichHitsAlg::printStat( std::string name, DMap & a )
+{
+  const Rich::StatDivFunctor    occ("%7.2f +-%5.2f");
+  const Rich::PoissonEffFunctor eff("%6.2f +-%4.2f");
+  name.resize(30,' ');
+  info() << name 
+         << ": Rich1 = " << occ(a[Rich::Rich1],m_nEvts)
+         << " (" << eff(a[Rich::Rich1],m_hitTally[Rich::Rich1]) << "%)"
+         << " Rich2 = "  << occ(a[Rich::Rich2],m_nEvts)
+         << " (" << eff(a[Rich::Rich2],m_hitTally[Rich::Rich2]) << "%)"
+         << endmsg;
+}
+
+void GetMCRichHitsAlg::printStat( std::string name, RMap & a )
+{
+  const Rich::StatDivFunctor    occ("%7.2f +-%5.2f");
+  const Rich::PoissonEffFunctor eff("%6.2f +-%4.2f");
+  name.resize(30,' ');
+  info() << name
+         << ": Aero  = " << occ(a[Rich::Aerogel],m_nEvts)
+         << " (" << eff(a[Rich::Aerogel],m_hitTally[Rich::Rich1]) << "%)"
+         << " C4F10 = "  << occ(a[Rich::C4F10],m_nEvts)
+         << " (" << eff(a[Rich::C4F10],m_hitTally[Rich::Rich1]) << "%)"
+         << " CF4 = "    << occ(a[Rich::CF4],m_nEvts)
+         << " (" << eff(a[Rich::CF4],m_hitTally[Rich::Rich2]) << "%)"
+         << endmsg;
 }
 
 //=============================================================================

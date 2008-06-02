@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.h,v 1.8 2008-01-29 13:43:22 jonrob Exp $
+// $Id: GetMCRichHitsAlg.h,v 1.9 2008-06-02 13:00:18 jonrob Exp $
 #ifndef SENSDET_GetMCRichHitsAlg_H
 #define SENSDET_GetMCRichHitsAlg_H 1
 
@@ -49,6 +49,8 @@ private:
 
   /// overall count hits in each RICH detector
   DMap m_hitTally;
+  /// overall count hits in each RICH detector
+  DMap m_signalTally;
 
   /// overall hit count in each radiator
   RMap m_radHits;
@@ -101,6 +103,14 @@ private:
 
   /// Pointers to RICH detector elements
   std::vector<const DeRich *> m_richDets;
+
+private:
+
+  /// Print a monitoring statistic
+  void printStat( std::string name, DMap & a );
+  
+  /// Print a monitoring statistic
+  void printStat( std::string name, RMap & a );
 
 };
 

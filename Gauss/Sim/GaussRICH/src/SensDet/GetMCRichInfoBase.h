@@ -1,4 +1,4 @@
-// $Id: GetMCRichInfoBase.h,v 1.3 2007-04-02 19:01:42 jonrob Exp $
+// $Id: GetMCRichInfoBase.h,v 1.4 2008-06-02 13:00:18 jonrob Exp $
 #ifndef SENSDET_GetMCRichInfoBase_H
 #define SENSDET_GetMCRichInfoBase_H 1
 
@@ -33,6 +33,7 @@
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichPoissonEffFunctor.h"
 
 // local
 #include "RichG4HitCollName.h"
