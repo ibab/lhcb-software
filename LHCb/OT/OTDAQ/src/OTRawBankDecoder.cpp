@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.13 2008-05-29 13:05:35 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.14 2008-06-02 13:45:19 smenzeme Exp $
 // Include files
 #include <algorithm>
 
@@ -240,7 +240,7 @@ StatusCode OTRawBankDecoder::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   // Setup incident services
-  incSvc()->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::BeginEvent );
   
   // Loading OT Geometry from XML
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
@@ -274,6 +274,7 @@ StatusCode OTRawBankDecoder::initialize()
 StatusCode OTRawBankDecoder::finalize()
 {
   if( m_detectordata ) {
+    m_detectordata->clearevent();
     delete m_detectordata ;
     m_detectordata=0;
   }
@@ -286,7 +287,7 @@ StatusCode OTRawBankDecoder::finalize()
 
 void OTRawBankDecoder::handle ( const Incident& incident )
 {
-  if ( IncidentType::EndEvent == incident.type() ) m_detectordata->clearevent() ;
+  if ( IncidentType::BeginEvent == incident.type() ) m_detectordata->clearevent() ;
 }
 
 
