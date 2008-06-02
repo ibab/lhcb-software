@@ -1,4 +1,4 @@
-// $Id: PatPV2D.cpp,v 1.2 2008-02-21 23:01:33 witekma Exp $
+// $Id: PatPV2D.cpp,v 1.3 2008-06-02 09:09:50 witekma Exp $
 // Include files
  
 // from Gaudi
@@ -109,7 +109,6 @@ StatusCode PatPV2D::execute() {
   std::vector<myVertex>::iterator itMyPv;
 
   // to aviod edge effects
-  double farZ =  (200. -20.)*Gaudi::Units::mm;
   double maxZ =  (200. -10.)*Gaudi::Units::mm;
 
   m_vclusters.clear();
@@ -119,7 +118,7 @@ StatusCode PatPV2D::execute() {
         m_inputTracks->end() != itT; itT++ ) {
     LHCb::Track* pTr2d = (*itT);
 
-    pTr2d->setFlag( LHCb::Track::Invalid, false );
+    if (pTr2d->checkFlag( LHCb::Track::Invalid)) continue;
 
     double zFirst  = pTr2d->firstState().z();
     double rFirst  = pTr2d->firstState().x();
@@ -135,9 +134,7 @@ StatusCode PatPV2D::execute() {
     double dr2ms   = ( addScat * (zFirst-z0) ) * ( addScat * (zFirst-z0) );
     d2r0 += dr2ms;
     // mark distant tracks as bad tracks to avoid edge effects
-    if( farZ < fabs(z0)) {
-      pTr2d->setFlag( LHCb::Track::Invalid, true );
-    } else if( maxZ > fabs(z0) ) {
+    if( maxZ > fabs(z0) ) {
       myTrack tmpTrack;
       tmpTrack.pTr2d     = pTr2d;
       tmpTrack.pvidx     = 0;

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !============================= PatPV v3r2 2008-02-22 =========================
+! 2008-06-02 - Mariusz Witek
+  - removed setting of Invalid flag for 2D tracks 
+
 ! 2008-02-21 - Mariusz Witek
   - added missing setTechnique(LHCb::RecVertex::Primary) in PatPV2D and PatPV3D
 
