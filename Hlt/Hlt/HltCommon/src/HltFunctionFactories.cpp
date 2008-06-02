@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.6 2008-06-02 19:57:57 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.7 2008-06-02 20:08:03 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -48,14 +48,20 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::MatchIDsFraction,zen::abs_max,LHCb::Track>("MatchIDsFraction");
   declare<Hlt::DoShareM3,zen::abs_max,LHCb::Track>("DoShareM3");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>("Calo2DChi2","HltRZVeloTCaloMatch");
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>("Calo3DChi2","HltVeloTCaloMatch");
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>("RZVeloTMatch","HltMatchTVeloTracks");
+  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+    ("Calo2DChi2","HltRZVeloTCaloMatch");
+
+  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+    ("Calo3DChi2","HltVeloTCaloMatch");
+  
+  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+    ("RZVeloTMatch","HltMatchTVeloTracks");
   
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
+
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
 
-//  declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
+  declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
 
   return sc;
 }
