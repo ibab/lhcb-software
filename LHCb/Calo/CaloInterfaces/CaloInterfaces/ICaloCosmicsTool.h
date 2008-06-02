@@ -1,18 +1,17 @@
-// $Id: ICaloCosmicsTool.h,v 1.1 2008-05-22 22:48:36 odescham Exp $
+// $Id: ICaloCosmicsTool.h,v 1.2 2008-06-02 11:00:26 cattanem Exp $
 #ifndef ICALOCOSMICSTOOL_H 
 #define ICALOCOSMICSTOOL_H 1
 
 // Include files
 // from STL
-#include <string>
+#include <utility>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-// from LHCb
-#include "Event/CaloAdc.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
-#include "CaloDet/DeCalorimeter.h"
+
+// forward declarations
+class DeCalorimeter;
 
 static const InterfaceID IID_ICaloCosmicsTool ( "ICaloCosmicsTool", 1, 0 );
 

@@ -1,17 +1,21 @@
-// $Id: ICaloCosmicsTrackTool.h,v 1.1 2008-05-22 22:48:36 odescham Exp $
+// $Id: ICaloCosmicsTrackTool.h,v 1.2 2008-06-02 11:00:26 cattanem Exp $
 #ifndef ICALOCOSMICSTRACKTOOL_H 
 #define ICALOCOSMICSTRACKTOOL_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-// from LHCb
-#include "CaloInterfaces/ICaloCosmicsTool.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "Event/Track.h"
+#include "GaudiKernel/Plane3DTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
+#include "GaudiKernel/Vector3DTypes.h"
+
+// forward declarations
+class ICaloCosmicsTool;
+namespace LHCb {
+  class Track;
+}
 
 static const InterfaceID IID_ICaloCosmicsTrackTool ( "ICaloCosmicsTrackTool", 1, 0 );
 

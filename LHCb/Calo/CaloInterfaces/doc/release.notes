@@ -1,15 +1,16 @@
-! $Id: release.notes,v 1.42 2008-05-22 22:48:36 odescham Exp $
+! $Id: release.notes,v 1.43 2008-06-02 11:00:26 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-
+!========================== CaloInterfaces v7r6 2008-06-02 ====================
+! 2008-06-02 - Marco Cattaneo
+ - Cleaned up includes of new interfaces
 
 ! 2008-05-22 - Deschamps Olivier
   - Add new interfaces for cosmics reconstruction tool:
 	ICaloCosmicsTool, ICaloCosmicsTrackTool
-
  
 !========================== CaloInterfaces v7r5 2008-04-22 ====================
 ! 2008-04-22 - Marco Cattaneo
