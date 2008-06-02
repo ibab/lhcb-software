@@ -16,5 +16,5 @@ importOptions('$GAUSSOPTS/lhcb-200802.opts')
 
 #--Application name and version
 ApplicationMgr( AppName    = 'Gauss',
-                AppVersion = 'v31r0' )
+                AppVersion = 'v31r1' )
 
