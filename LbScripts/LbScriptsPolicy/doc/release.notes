@@ -1,7 +1,13 @@
+2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/fragments/install_scripts_header:
+	* cmt/fragments/python_alias_header: added the removal of the execution flag on
+	linux of the ".bat" files.
+
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* cmt/fragments/python_alias_header: create the .bat file 
-	for the python alias even on Linux.
+	* cmt/fragments/python_alias_header: create the .bat file for the python alias
+	even on Linux.
 
 2008-05-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

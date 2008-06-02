@@ -23,6 +23,9 @@ $(install_scripts_dir) ::
 	     echo "Installing files from source $$src to $$dest"; \
 	     $(install_command) --exclude="*.py?" $$src $$dest ;\
 	     chmod -R +x $$dest ; \
+	     if [ -d $$dest/scripts ] ; then \
+	       chmod -R -x $$dest/scripts/*.bat ; \
+	     fi ; \
 	  else \
 	     echo "no source  $$src"; \
 	  fi; \

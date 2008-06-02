@@ -16,6 +16,7 @@ $(bat_file) :: $(py_file)
 	@if [ -e $(install_scripts_dir) ] ; then \
 	  echo "Creating $(bat_file) file" ; \
 	  echo "python %~d0%~p0\$(script).py %*" > $(bat_file) ; \
+	  chmod -x $(bat_file) ; \
 	fi
 
 ${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
