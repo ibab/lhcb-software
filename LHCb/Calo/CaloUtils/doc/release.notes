@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.101 2008-05-22 22:50:45 odescham Exp $
+! $Id: release.notes,v 1.102 2008-06-02 15:43:40 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-
+!========================== CaloUtils v8r0p1 2008-06-02 =======================
 ! 2008-05-22 - Olivier Deschamps
 - minor change in Calo2Dview (debug printout)
 
