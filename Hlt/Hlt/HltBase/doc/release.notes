@@ -14,6 +14,9 @@
    - adapt to m_monitor -> produceHistos()
    IANNSvc:
    - add some doxygen comments
+   ESequences: 
+   - zen::map is identical to std::transform, replace usage by std::transform
+   - implement zen::find in terms of std::find.
 
 
 !2008-05-30 - Gerhard Raven

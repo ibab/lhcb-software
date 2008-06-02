@@ -15,17 +15,6 @@
 namespace zen {
   
   //-------- sequences in interators ---------------------
-  template<class INPUT , class OUTPUT , class FUNCTOR>
-  inline OUTPUT map( INPUT begin , 
-                     const INPUT& end,
-                     FUNCTOR& funct,
-                     OUTPUT out   ) 
-  {
-    for( ; begin != end ; ++begin ) 
-    { *out = funct(**begin) ; ++out ;  }
-    return out ;
-  };
-  
 
   template<class INPUT , class OUTPUT , class FILTER>
   inline OUTPUT select( INPUT begin , 
@@ -34,7 +23,7 @@ namespace zen {
                         OUTPUT out )
   {
     for( ; begin != end ; ++begin ) 
-    {if( filter(**begin) ) { *out = *begin ; ++out ; } }
+    {if( filter(**begin) ) *(out++) = *begin ;  }
     return out ;
   };
   
@@ -43,10 +32,8 @@ namespace zen {
   {std::copy(c1.begin(),c1.end(),std::back_inserter(c2));}
 
   template <class INPUT, class OBJECT>
-  inline bool find(INPUT begin, const INPUT& end,const OBJECT& obj ) {
-    for ( ; begin!= end; ++begin) 
-      if ( (*begin) == obj) return true;
-    return false;
+  inline bool find(INPUT begin, INPUT end,const OBJECT& obj ) {
+    return std::find(begin,end,obj)!=end;
   }
   
   template <class INPUT> 
@@ -58,27 +45,13 @@ namespace zen {
 
   //--- sequences in containers ---------------------------
   
-  template <class INPUT, class OBJECT>
+  template <class INPUT,class OBJECT>
   inline bool extend(INPUT& cont, OBJECT& obj) {
     if (std::find(cont.begin(),cont.end(),obj) != cont.end()) return false;
     cont.push_back(obj);
     return true;
   }
   
-  template <class INPUT, class FUNCTION, class OUTPUT> 
-  inline  void map(const INPUT& ci, 
-                   const FUNCTION& fun, 
-                   OUTPUT& co) { 
-    zen::map(ci.begin(),ci.end(),fun,std::back_inserter(co));
-  }
-
-  template <class INPUT, class FILTER, class OUTPUT> 
-  void select(const INPUT& ci, 
-              const FILTER& fun, 
-              OUTPUT& co) {
-    zen::select(ci.begin(),ci.end(),fun,std::back_inserter(co));
-  }
-
   template <class CONTAINER, class OBJECT>
   inline bool find(const CONTAINER& cont, const OBJECT& obj ) {
     return zen::find(cont.begin(),cont.end(),obj);
