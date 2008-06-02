@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.64 2008-03-27 13:13:26 cattanem Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.65 2008-06-02 10:57:51 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -127,17 +127,17 @@ StatusCode ChargedProtoPAlg::initialize()
   }
   
   // disabled CALO warnings
-  if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS );
-  if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS );
-  if (!m_HcalPID) Warning( "HCAL PID has been disabled", StatusCode::SUCCESS );
-  if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS );
-  if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS );
+  if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_HcalPID) Warning( "HCAL PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable RICH warnings
-  if (!m_richPID)  Warning( "RICH PID has been disabled", StatusCode::SUCCESS );
+  if (!m_richPID)  Warning( "RICH PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable MUON warnings
-  if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS );
+  if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable VELO warnings
-  if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS );
+  if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
 
   // timing in debug mode only
   if (msgLevel(MSG::DEBUG)) 
@@ -187,7 +187,7 @@ StatusCode ChargedProtoPAlg::execute()
   {
     // get existing container, clear, and reuse
     Warning( "Existing ProtoParticle container at " + m_protoPath + 
-             " found -> Will replace", StatusCode::SUCCESS );
+             " found -> Will replace", StatusCode::SUCCESS ).ignore();
     m_protos = get<ProtoParticles>(m_protoPath);
     m_protos->clear();
   }
@@ -763,7 +763,7 @@ bool ChargedProtoPAlg::getRichData()
   // Do we have any RichPID results
   if ( !exist<RichPIDs>(m_richPath) )
   {
-    Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS );
+    Warning( "No RichPIDs at '"+m_richPath+"'", StatusCode::SUCCESS, 1 ).ignore();
     return false;
   }
 
@@ -796,7 +796,7 @@ bool ChargedProtoPAlg::getMuonData()
   // Do we have any MuonPID results
   if ( !exist<MuonPIDs>(m_muonPath) )
   {
-    Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS );
+    Warning( "No MuonPIDs at '"+m_muonPath+"'", StatusCode::SUCCESS ).ignore();
     return false;
   }
 
