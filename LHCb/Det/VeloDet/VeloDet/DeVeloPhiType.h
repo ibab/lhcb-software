@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.31 2008-04-14 15:42:21 krinnert Exp $
+// $Id: DeVeloPhiType.h,v 1.32 2008-06-02 08:37:39 krinnert Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -240,6 +240,18 @@ public:
     return phi; 
   }
   
+  /// The phi position of a strip at a given radius in the local frame
+  inline double phiOfStrip(unsigned int strip, double fraction, 
+                           const double radius) const {
+    double effectiveStrip=fraction+static_cast<double>(strip);
+    if (m_nbInner > strip) {
+      return (effectiveStrip*m_innerPitch) + phiOffset(radius);
+    } else {
+      effectiveStrip -= m_nbInner;
+      return (effectiveStrip*m_outerPitch) + phiOffset(radius);
+    }
+  }
+
   /// The angle of the strip wrt to the x axis in a rough global frame to mimic
   /// DeVelo v8r* and earlier verions
   inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction=0.) const{
@@ -306,18 +318,6 @@ public:
 protected:
 
 private:
-  /// The phi position of a strip at a given radius in the local frame
-  inline double phiOfStrip(unsigned int strip, double fraction, 
-                           const double radius) const {
-    double effectiveStrip=fraction+static_cast<double>(strip);
-    if (m_nbInner > strip) {
-      return (effectiveStrip*m_innerPitch) + phiOffset(radius);
-    } else {
-      effectiveStrip -= m_nbInner;
-      return (effectiveStrip*m_outerPitch) + phiOffset(radius);
-    }
-  }
-
   /// Returns the offset in phi for a given radius
   inline double phiOffset(double radius) const {
     if(m_middleRadius > radius){

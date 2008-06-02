@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.196 2008-04-15 06:17:18 cattanem Exp $
+! $Id: release.notes,v 1.197 2008-06-02 08:37:39 krinnert Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-06-02 - Kurt Rinnert
+ - made DeVeloPhiType::phiOfStrip() public again because it turned out this
+   was needed by some monitoring code.
 
 !======================== VeloDet v13r0 2008-04-16 ===========================
 ! 2008-04-14 - Kurt Rinnert
