@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TTStationHitManager
  *
- *  $Id: TTStationHitManager.h,v 1.15 2007-09-10 08:54:31 wouter Exp $
+ *  $Id: TTStationHitManager.h,v 1.16 2008-06-02 13:49:53 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -134,7 +134,7 @@ namespace Tf
     /// Handle method for incident service callbacks
     void handle ( const Incident& incident )
     {
-      if ( IncidentType::EndEvent == incident.type() ) clearHits() ;
+      if ( IncidentType::BeginEvent == incident.type() ) clearHits() ;
     }
 
   public:
@@ -482,7 +482,7 @@ namespace Tf
     if ( sc.isFailure() ) return sc;
 
     // set up to be told about each new event
-    incSvc()->addListener(this, IncidentType::EndEvent);
+    incSvc()->addListener(this, IncidentType::BeginEvent);
 
     // make sure we are ready for first event
     this->clearHits();

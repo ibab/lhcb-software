@@ -3,6 +3,9 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2008-06-02 - Stephanie Hansmann-Menzemer
+ - Move cleaning of hits from EndEvent to BeginEvent in
+   TStationHitManager, TTStationHitManger, VeloHitManager
 
 !============================ TfKernel v2r5 2008-05-29 =======================
 ! 2008-05-29 - Marco Cattaneo

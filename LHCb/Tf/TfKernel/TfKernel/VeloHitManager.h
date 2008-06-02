@@ -1,4 +1,4 @@
-// $Id: VeloHitManager.h,v 1.7 2008-02-14 16:17:00 cattanem Exp $
+// $Id: VeloHitManager.h,v 1.8 2008-06-02 13:49:53 smenzeme Exp $
 #ifndef INCLUDE_TF_VELOHITMANAGER_H
 #define INCLUDE_TF_VELOHITMANAGER_H 1
 
@@ -250,7 +250,7 @@ namespace Tf
     }
   
     // invalidate measurement cache at the end of each event
-    incSvc()->addListener(this, IncidentType::EndEvent);
+    incSvc()->addListener(this, IncidentType::BeginEvent);
 
     return sc;
   }
@@ -261,6 +261,8 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   StatusCode VeloHitManager<SENSORTYPE,HIT,NZONES>::finalize()
   {
+    clearHits();
+
     debug() << "==> Finalize" << endmsg;
 
 
@@ -332,7 +334,7 @@ namespace Tf
   template <typename SENSORTYPE, typename HIT, int NZONES>
   void VeloHitManager<SENSORTYPE,HIT,NZONES>::handle ( const Incident& incident )
   {
-    if ( IncidentType::EndEvent == incident.type() ){
+    if ( IncidentType::BeginEvent == incident.type() ){
       this->clearHits();
     }
   }
