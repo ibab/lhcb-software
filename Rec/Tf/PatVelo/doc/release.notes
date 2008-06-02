@@ -4,6 +4,11 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-06-01 - David Hutchcroft
+ - Changed PatVeloSpaceTool at request of Stephanie Hansmann-Menzemer
+   Now used as a private tool in PatVeloSpaceTracking and defaults to not
+   flagging clusters as used [apparently easier for HLT users to work with]
+
 !========================== PatVelo v3r6 2008-05-26 ==========================
 ! 2008-05-26 - Marco Cattaneo
  - Handle StatusCode checking in previous change

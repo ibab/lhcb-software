@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTool.cpp,v 1.13 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloSpaceTool.cpp,v 1.14 2008-06-02 09:33:49 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -36,7 +36,7 @@ namespace Tf {
     {
       declareInterface<ITracksFromTrack>(this);
       // normally want to only use clusters once
-      declareProperty("MarkClustersUsed", m_markClustersUsed = true);
+      declareProperty("MarkClustersUsed", m_markClustersUsed = false);
 
       declareProperty( "FractionFound"   , m_fractionFound    = 0.35      );
       declareProperty( "PhiAngularTol"   , m_phiAngularTol    = 0.005     );

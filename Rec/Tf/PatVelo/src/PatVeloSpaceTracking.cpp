@@ -1,4 +1,4 @@
-// $Id: PatVeloSpaceTracking.cpp,v 1.9 2008-05-26 07:24:30 cattanem Exp $
+// $Id: PatVeloSpaceTracking.cpp,v 1.10 2008-06-02 09:33:49 dhcroft Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -53,7 +53,8 @@ namespace Tf {
     if (m_trackSelectorName != "None")
       m_trackSelector = tool<ITrackSelector> ( m_trackSelectorName, this);
 
-    m_PatVeloSpaceTool = tool<ITracksFromTrack>("Tf::PatVeloSpaceTool",m_spaceToolName);
+    m_PatVeloSpaceTool = 
+      tool<ITracksFromTrack>("Tf::PatVeloSpaceTool",m_spaceToolName,this);
 
     info() << " TrackSelectorName " << m_trackSelectorName << endreq;
     info() << "      InputTracks  " << m_inputTracksLocation << endreq;
