@@ -160,10 +160,10 @@ namespace Al
 	  if( std::find(usedtracks.begin(), usedtracks.end(), *itrack) ==  usedtracks.end() )
 	    unusedtracks.push_back( *itrack ) ; 
 	tracks = unusedtracks ;
-      }
+      } 
     } else {
-      debug() << "Did not find enough tracks in vertex"
-	     << vertex.tracks().size() << " " << tracks.size() << endreq ;
+      warning() << "Did not find enough tracks in vertex"
+		<< vertex.tracks().size() << " " << tracks.size() << endreq ;
     }
     
     return rc ;
@@ -206,8 +206,10 @@ namespace Al
 	totalchisq += (*itrack)->chi2() ;
 	totalndof  += (*itrack)->nDoF() ;
       }
-      else
+      else {
+	warning() << "Extrapolation failed" << endreq ;
 	success = false ;
+      }
     }
     
     if(success) {
@@ -215,13 +217,15 @@ namespace Al
       LHCb::TrackStateVertex vertex ;
       for( Contributions::const_iterator i = states.begin() ; i!= states.end(); ++i)
 	vertex.addTrack( i->inputstate ) ;
-      vertex.fit() ;
+
+      LHCb::TrackStateVertex::FitStatus fitstatus = vertex.fit() ;
+
       double vchi2 = vertex.chi2() ; // cache it, because I know it is slow
       debug() << "Fitted vertex, chi2/dof=" << vchi2 << "/" << vertex.nDoF() << endreq ;
       debug() << "Vertex position orig/new="
 	      << vertexestimate << "/" << vertex.position() << endreq ;
-
-      if(vertex.fit() && vchi2 / vertex.nDoF() < m_chiSquarePerDofCut) {
+      
+      if(fitstatus == LHCb::TrackStateVertex::FitSuccess && vchi2 / vertex.nDoF() < m_chiSquarePerDofCut) {
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
@@ -229,7 +233,8 @@ namespace Al
 	debug() << "created the vertex: " << allnodes.size() << endreq ;
 
 	// calculate all new residuals and all correlations
-	for(size_t i = 0; i<states.size(); ++i) {
+	bool computationerror(false) ;
+	for(size_t i = 0; i<states.size() && !computationerror; ++i) {
 	  Gaudi::TrackVector    deltaState = vertex.state(i).stateVector() - vertex.inputState(i).stateVector() ;
 	  Gaudi::TrackSymMatrix deltaCov   = vertex.state(i).covariance()  - vertex.inputState(i).covariance() ;
 	  
@@ -247,18 +252,17 @@ namespace Al
 		states[i].trackresiduals->m_HCH.fast(irow,icol) + deltaHCH ;
 	      
 	      if( icol==irow &&  rc->m_HCH.fast(irow + ioffset, irow + ioffset) < 0 ) {
-		std::cout << "problem: "
+		warning() << "problem computing update of track errors"
 			  << states[i].trackresiduals->m_HCH.fast(irow,irow) << " "
-			  << deltaHCH << std::endl ;
-		std::cout << deltaCov << std::endl ;
-		std::cout << states[i].dResidualdState[irow-1] << std::endl ;
-		assert(0) ;
+			  << deltaHCH << std::endl 
+			  << deltaCov << endreq ;
+		computationerror = true ;
 	      }
 	    }
 	  }
 	  
 	  // now the correlations. this is the very time-consuming part
-	  for(size_t j =0; j<i; ++j) {
+	  for(size_t j =0; j<i && !computationerror; ++j) {
 	    size_t joffset = states[j].offset ;
 	    for(size_t irow = 1; irow<=states[i].trackresiduals->size(); ++irow) {
 	      // store this intermediate matrix too save some time
@@ -269,11 +273,19 @@ namespace Al
 	    }
 	  }
 	}
+	if(computationerror) {
+	  delete rc ;
+	  rc = 0 ;
+	  warning() << "VertexResidualTool::compute failed" << endreq ;
+	} 
+      } else {
+	warning() << "rejected vertex with chisqu/dof: "
+		  << vchi2 / vertex.nDoF() << endreq ;
       }
     }
     return rc ;
   }
-
+  
   StatusCode VertexResidualTool::extrapolate( const Al::TrackResiduals& track,
 					      double z,
 					      LHCb::State& state,
