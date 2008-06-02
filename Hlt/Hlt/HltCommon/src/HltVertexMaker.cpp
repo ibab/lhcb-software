@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.19 2008-05-15 08:56:55 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.20 2008-06-02 11:39:20 graven Exp $
 // Include files 
 
 
@@ -105,7 +105,7 @@ StatusCode HltVertexMaker::initialize() {
     
     m_tcounters.push_back(0);   
 
-    if (m_histogramUpdatePeriod>0) {
+    if (produceHistos()) {
       m_histos.push_back( initializeHisto(funname,0.,100.,100) );
     }
 
@@ -196,7 +196,7 @@ StatusCode HltVertexMaker::execute() {
         double val = (fun)(track1,track2);
         accepted = (fil)(val);
         verbose() << " value " << val << " accepted? " << accepted << endreq;
-        if (m_monitor) fillHisto(*m_histos[i],val,1.);
+        fillHisto(*m_histos[i],val,1.);
         if (!accepted) break;
         m_tcounters[i] += 1;
         m_vals.push_back(val);

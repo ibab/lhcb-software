@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.4 2008-05-15 08:56:55 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.5 2008-06-02 11:39:20 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,8 +28,6 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-  // declareCondition("MinPt",m_ptMin = 0.);
-  
   declareProperty("MinPt", m_PtMin = 0.1);
 
   m_maker = 0;

@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.3 2008-05-21 12:36:51 graven Exp $
+// $Id: HltTFilter.h,v 1.4 2008-06-02 11:39:20 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -59,7 +59,7 @@ public:
   typedef typename std::vector<T*>::iterator TContainerIterator;
 
   /// Standard constructor
-  HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName );
+  HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName, bool tesInput=false );
 
   virtual ~HltTFilter( );
 
@@ -67,11 +67,9 @@ public:
   virtual StatusCode execute   ();
   virtual StatusCode finalize  ();
 
-protected:
-
+private:
   bool m_tesInput;
 
-private:
   TSelection* m_tselinput;
   TSelection* m_tseloutput;
 

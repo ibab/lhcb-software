@@ -3,6 +3,14 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-06-02 - Gerhard Raven
+   Hlt{T,}Filters:
+   - adapt to m_monitor -> produceHistos()
+   - make tesInput a c'tor property instead of derived classes setting a
+     protected data member
+   - for VertexDimuonMass & VertexSumPT: forward to DimuonMass and SumPT
+   HltVertexMaker, L0Entry:
+   - adapt to m_monitor -> produceHistos()
 ! 2008-05-30 Gerhard Raven
   - HltFunctions: throw GaudiException instead of zen::invalid_key
 

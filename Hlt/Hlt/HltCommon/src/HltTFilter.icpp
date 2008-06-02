@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.6 2008-05-21 12:36:51 graven Exp $
+// $Id: HltTFilter.icpp,v 1.7 2008-06-02 11:39:20 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -18,12 +18,12 @@
 template <class T>
 HltTFilter<T>::HltTFilter( const std::string& name,
                            ISvcLocator* pSvcLocator,
-                           const std::string& factoryname)
+                           const std::string& factoryname,
+                           bool tesInput)
   : HltAlgorithm ( name , pSvcLocator )
   , m_functionFactoryName( factoryname )
+  , m_tesInput(tesInput)
 {
-  //  declareProperty("TESInput", m_tesInput = false);
-  m_tesInput = false;
   
   declareProperty("FunctionFactoryName", m_functionFactoryName);
   declareProperty("FilterDescriptor", m_filterDescriptor);
@@ -119,7 +119,7 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
   if (tf.operation != ">") tf.isMin = true;
   initializeCounter(tf.counter,tf.filtername);
   initializeCounter(tf.counterCandidates,tf.filtername+" candidates ");
-  if (m_histogramUpdatePeriod>0) {
+  if (produceHistos()) {
     tf.histovalues = initializeHisto(tf.functionname,0.,100.,100);
     tf.histobest  = initializeHisto(tf.functionname+"Best",0.,100.,100);
   }
@@ -152,12 +152,13 @@ StatusCode HltTFilter<T>::execute() {
   StatusCode sc= StatusCode::SUCCESS;
   debug() << "==> Execute" << endmsg;
 
+  // TODO: move this to baseclass....
   // if the input is not a HltSelection but a container in TES
   if (m_tesInput) {
     typedef KeyedContainer<T,Containers::HashMap> TESCONT;
     TESCONT* ttes = this->get<TESCONT>(m_inputSelectionName);
     m_tinput->clear();
-    zen::copy(*ttes,*m_tinput);
+    m_tinput->insert(m_tinput->end(),ttes->begin(),ttes->end());
   }
 
   // check size of the input container
@@ -167,7 +168,7 @@ StatusCode HltTFilter<T>::execute() {
   }
 
   // if no filters, copy input container
-  if (m_tfilters.empty()) zen::copy(*m_tinput,*m_toutput);
+  if (m_tfilters.empty()) *m_toutput = *m_tinput; // zen::copy(*m_tinput,*m_toutput);
 
   // loop in filters, and apply to the surviving objects
   size_t ncan = 0, i = 0;
@@ -175,40 +176,34 @@ StatusCode HltTFilter<T>::execute() {
        it != m_tfilters.end(); ++it, ++i) {
     
     TFilterData& tf = *(*it);
-    verbose() << " applying filter " << tf.filtername << endreq;
     
-    std::vector<T*>  ttemp;
-    if (i == 0) zen::copy(*m_tinput, ttemp);
-    else        zen::copy(*m_toutput,ttemp);
+    std::vector<T*>  ttemp( i==0 ? *m_tinput : *m_toutput );
 
+    verbose() << " applying filter " << tf.filtername << endreq;
     verbose() << " input objects " << ttemp.size() << endreq;
 
-    if (m_addInfo)
-      addInfo(ttemp,*tf.function,tf.infoID);
+    if (m_addInfo) addInfo(ttemp,*tf.function,tf.infoID);
 
     // debug and monitor
-    if ((m_debug || m_monitor) && m_addInfo) {
+    if ((m_debug || produceHistos()) && m_addInfo) {
       std::vector<double> vals = infos(ttemp,tf.infoID);
       double val = *( tf.isMin ? std::min_element(vals.begin(),vals.end()) 
                                : std::max_element(vals.begin(),vals.end()) );
       if (m_debug) {
         std::string name = tf.filtername+" : ";
-        for (std::vector< double>::iterator itv = vals.begin();
-             itv != vals.end(); ++itv)
-          debug() << *itv << ", ";
+        for(std::vector<double>::const_iterator i=vals.begin();i!=vals.end();++i)
+             debug() << *i << ", ";
         debug() << endreq; 
         debug() << " best " << val << endreq;
       }
-      if (m_monitor) {
         fillHisto(*tf.histovalues,vals,1.);
         fillHisto(*tf.histobest,val,1.);
       }
-    }
 
     // filter
+    
     m_toutput->clear();
-    verbose() << " applying filter " << tf.filtername << endreq;
-    zen::select(ttemp,*tf.filter,*m_toutput);
+    zen::select(ttemp.begin(),ttemp.end(),*tf.filter,std::back_inserter(*m_toutput));
 
     ncan = m_toutput->size();
     debug() << " filtered  " << ncan << endreq;
@@ -219,9 +214,6 @@ StatusCode HltTFilter<T>::execute() {
     increaseCounter(tf.counterCandidates,ncan);
 
   }
-  
-  // if (m_debug) printInfo(" filtered  ", *m_toutput);
-
   return sc;
 }
 

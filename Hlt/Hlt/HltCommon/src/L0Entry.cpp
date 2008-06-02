@@ -1,4 +1,4 @@
-// $Id: L0Entry.cpp,v 1.15 2008-05-15 08:56:55 graven Exp $
+// $Id: L0Entry.cpp,v 1.16 2008-06-02 11:39:20 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ StatusCode L0Entry::execute() {
 
   if (!m_l0Channels.empty()) {
 
-    if (m_monitor)
+    if (produceHistos())
       for (int i = 0; i<14; ++i)
         if (l0->channelDecision(i)) fillHisto(*m_histoL0, 1.*i , 1.);
     

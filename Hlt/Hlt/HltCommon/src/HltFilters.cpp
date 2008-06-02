@@ -32,17 +32,13 @@ DECLARE_ALGORITHM_FACTORY( HltTrackPrepare );
 
 HltTrackPrepare::HltTrackPrepare( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::Track>(name,pSvcLocator, "HltTrackFunctionFactory")
-{
-  m_tesInput = true;
-}
+  HltTFilter<LHCb::Track>(name,pSvcLocator, "HltTrackFunctionFactory",true)
+{ }
 
 
 DECLARE_ALGORITHM_FACTORY( HltVertexPrepare );
 
 HltVertexPrepare::HltVertexPrepare( const std::string& name, 
                                     ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory")
-{
-  m_tesInput = true;
-}
+  HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory",true)
+{ }

@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.3 2008-05-30 08:40:39 graven Exp $
+// $Id: HltFunctions.h,v 1.4 2008-06-02 11:39:20 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -170,7 +170,7 @@ namespace Hlt {
     explicit FunctionTool(ITOOL& tool) {_tool = &tool;}
     double operator() (const T& t1) const {
       if (!_tool) throw GaudiException(" null tool pointer","",StatusCode::FAILURE );
-      double value = _tool->function(t1);return value;
+      return _tool->function(t1);
     }
     zen::function<T>* clone() const {
       if (_tool) return new Hlt::FunctionTool<T,ITOOL>(*_tool);
@@ -295,10 +295,9 @@ namespace Hlt {
   public:
     explicit VertexDimuonMass() {}
     double operator() (const LHCb::RecVertex& vertex) const {
-      const LHCb::Track& track1 = *(vertex.tracks()[0]);
-      const LHCb::Track& track2 = *(vertex.tracks()[1]);
-      return HltUtils::invariantMass(track1,track2,
-                                     105.658369,105.658369);
+      const LHCb::Track& t1 = *(vertex.tracks()[0]);
+      const LHCb::Track& t2 = *(vertex.tracks()[1]);
+      return Hlt::DimuonMass()(t1,t2);
     }
     zen::function<LHCb::RecVertex>* clone() const
     {return new VertexDimuonMass();}
@@ -320,9 +319,10 @@ namespace Hlt {
   public:
     explicit VertexSumPT() {}
     double operator() (const LHCb::RecVertex& vertex) const {
-      double pt1 = vertex.tracks()[0]->pt();
-      double pt2 = vertex.tracks()[1]->pt();
-      return pt1+pt2;
+      Hlt::SumPT fun;
+      const LHCb::Track& t1 = *(vertex.tracks()[0]);
+      const LHCb::Track& t2 = *(vertex.tracks()[1]);
+      return Hlt::SumPT()(t1,t2);
     }
     zen::function<LHCb::RecVertex>* clone() const
     {return new VertexSumPT();}
