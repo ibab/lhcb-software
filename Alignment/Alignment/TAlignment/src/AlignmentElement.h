@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.12 2008-03-14 14:34:06 wouter Exp $
+// $Id: AlignmentElement.h,v 1.13 2008-06-02 09:07:29 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -142,6 +142,9 @@ public:
   /** Return all elements that are served by this alignment element */
   ElementContainer elementsInTree() const ;
   
+  /** return the current delta */
+  AlParameters currentDelta() const ;
+
   /** return the current delta (active parameters only) */
   AlParameters currentActiveDelta() const ;
 private:

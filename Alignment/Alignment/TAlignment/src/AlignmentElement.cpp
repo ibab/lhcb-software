@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.16 2008-04-15 19:27:10 janos Exp $
+// $Id: AlignmentElement.cpp,v 1.17 2008-06-02 09:07:29 wouter Exp $
 // Include files
 
 // from STD
@@ -12,6 +12,7 @@
 // from DetDesc
 #include "DetDesc/ParamException.h"
 #include "DetDesc/GeometryInfoException.h"
+#include "VeloDet/DeVeloRType.h"
 
 // from BOOST
 #include "boost/regex.hpp"
@@ -99,6 +100,13 @@ void AlignmentElement::initAlignmentFrame() {
     m_alignmentFrame = Gaudi::Transform3D(averageR) ;
   }
   m_jacobian = AlParameters::jacobian( m_alignmentFrame ) ;
+  
+  // This is a simple check for velo phi, just to make sure Jan separated them correctly:
+  if( m_elements.size()==1 && dynamic_cast<const DeVeloRType*>(m_elements.front()) &&
+      m_dofMask[AlDofMask::Rz] ) {
+    std::cout << "PROBLEM: You are aligning Rz for velo R module with name "
+	      << m_elements.front()->name() << std::endl ;
+  }
 }
 
 const std::string AlignmentElement::name() const {
@@ -141,7 +149,7 @@ const std::vector<double> AlignmentElement::deltaRotations() const {
   return averageDeltaRotations;
 }
 
-AlParameters AlignmentElement::currentActiveDelta() const {
+AlParameters AlignmentElement::currentDelta() const {
   double par[6] = {0,0,0,0,0,0} ;
   Gaudi::Transform3D alignmentFrameInv = alignmentFrame().Inverse() ;
   for (ElemIter ielem = m_elements.begin(); ielem != m_elements.end(); ++ielem) {
@@ -159,7 +167,12 @@ AlParameters AlignmentElement::currentActiveDelta() const {
     }
   }
   for(size_t i=0; i<6; ++i) par[i] /= m_elements.size() ;
-  return AlParameters(par,m_dofMask ) ;
+  return AlParameters(par) ;
+}
+
+AlParameters AlignmentElement::currentActiveDelta() const 
+{
+  return AlParameters(currentDelta().parameterArray(),m_dofMask ) ;
 }
 
 bool AlignmentElement::operator==(const DetectorElement* rhs) const {
