@@ -20,7 +20,7 @@ def _check_output_options_cb(option, opt_str, value, parser):
 
 class AllProjectsSetupScript(Script):
     _version = "fake version"
-    def _write_script(self,env,aliases=None):
+    def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
         close_output = False
         if self.options.output:
@@ -38,8 +38,6 @@ class AllProjectsSetupScript(Script):
             close_output = False
         # write the data
         self.output_file.write(env)
-        if aliases :
-            self.output_file.write(aliases)
         self.output_file.write("\n") # @todo: this may be avoided
         if close_output: 
             self.output_file.close()
@@ -69,11 +67,10 @@ class AllProjectsSetupScript(Script):
             value = p.ReleaseArea()
             ev[key] = value
         for p in project_list :
-            key = "setenv%s" % p.Name()
-            value = "setenvProject %s" % p.Name()
-            al[key] = value
-        self._write_script(ev.gen_script(opts.targetshell), 
-                           al.gen_script(opts.targetshell))
+            alist = p.Aliases()
+            for a in alist.keys():
+                al[a] = alist[a]
+        self._write_script(ev.gen_script(opts.targetshell)+al.gen_script(opts.targetshell))
         return 0
 
 if __name__ == '__main__':

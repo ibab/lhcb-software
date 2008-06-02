@@ -1,5 +1,4 @@
 
-
 set tmp2dffile = `AllProjectsSetup.py --shell=csh --mktemp ${*:q}`
 set AllProjectsSetupStatus = $?
 if ( ! $AllProjectsSetupStatus ) then

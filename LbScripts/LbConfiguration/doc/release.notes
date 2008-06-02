@@ -1,3 +1,15 @@
+2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/fragments/create_bat_aliases_header: New file. gmake .bat fragment.
+	* cmt/fragments/nmake/create_bat_aliases_header: New file. nmake .bat fragment.
+	* scripts/CreateBatAliases.py: New file. Script to generate the .bat aliases
+	files for the projects
+	* cmt/requirements: added local fragment to generate the .bat aliases for the
+	projects at build time.
+	* python/LbConfiguration/Project.py:
+	* scripts/AllProjectsSetup.py: Changed the _write_script method to generate the
+	whole script with only one dictionary argument.
+
 2008-05-28  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/AllProjectsSetup.py: added the generation of the setenv aliases

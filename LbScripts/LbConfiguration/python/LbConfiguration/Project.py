@@ -21,7 +21,10 @@ class ProjectConf(object):
         self._cmtextratags = []
         self._fullsize = 5000000
         self._steeringpackage = projectname + "Sys"
+        self._aliases = dict()
         self._applicationpackage = projectname
+        self._aliases["setenv%s" % projectname] = "setenvProject %s" % projectname
+        self._aliases["Setup%s" % projectname] = "SetupProject %s" % projectname
         if os.environ.has_key("LHCBRELEASES") :
             self._release_area = os.environ["LHCBRELEASES"]
         else :
@@ -50,6 +53,9 @@ class ProjectConf(object):
     def FullSize(self):
         """ returns the foreseen fullsize of a project release """
         return self._fullsize
+    def Aliases(self):
+        """ return the shell aliases of the project """
+        return self._aliases
     def setSteeringPackage(self, packname):
         """ set the name of the steering package for the build """
         self._steeringpackage = packname

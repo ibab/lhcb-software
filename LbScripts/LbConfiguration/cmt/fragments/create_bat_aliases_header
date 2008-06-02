@@ -1,0 +1,25 @@
+#-- start of create_bat_aliases_header ------
+# create bat files even on Linux
+
+installarea = ${CMTINSTALLAREA}
+install_scripts_dir = $(installarea)/scripts
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install ::
+	@if [ -e $(install_scripts_dir) ] ; then \
+	  echo "Creating bat alias files" ; \
+	  python $(install_scripts_dir)/CreateBatAliases.py -o $(install_scripts_dir) ; \
+	fi
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	echo "Remove bat files"
+	@rm -f $(install_scripts_dir)/*.bat
+
+#-- end of create_bat_aliases_header ------

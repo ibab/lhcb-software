@@ -11,6 +11,7 @@ apply_pattern source_shell_alias script=SetupProject
 apply_pattern source_shell_alias script=setenvProject
 
 apply_pattern python_alias script=LbShowProjectConf
+apply_pattern python_alias script=CreateBatAliases
 
 
 # give public (rl) access to the current directory
@@ -19,6 +20,11 @@ alias mkpublic "find . -type d -print -exec fs setacl {} system:anyuser rl \;"
 # remove public (l) access to the current directory
 alias mkprivate "find . -type d -print -exec fs setacl {} system:anyuser l \;"
 
+make_fragment create_bat_aliases -header=create_bat_aliases_header -dependencies
+
+document create_bat_aliases projectaliases
+macro_append projectaliases_dependencies " install_scripts "
+macro_append projectaliases_dependencies " LbConfiguration_python "
 
 cmtpath_pattern \
 	setup_script $(LBCONFIGURATIONROOT)/scripts/AllProjectsSetup

@@ -1,0 +1,22 @@
+#-- start of create_bat_aliases_header ------
+
+installarea = $(CMTINSTALLAREA)
+install_scripts_dir = $(installarea)\scripts
+
+${CONSTITUENT} :: ${CONSTITUENT}install
+
+install :: ${CONSTITUENT}install
+
+${CONSTITUENT}install ::
+	@if exist $(install_scripts_dir) echo python $(install_scripts_dir)\CreateBatAliases.py -o $(install_scripts_dir)
+
+${CONSTITUENT}clean :: ${CONSTITUENT}uninstall
+
+uninstall :: ${CONSTITUENT}uninstall
+
+${CONSTITUENT}uninstall ::
+	@del $(install_scripts_dir)\*.bat
+
+
+
+#-- end of create_bat_aliases_header ------
