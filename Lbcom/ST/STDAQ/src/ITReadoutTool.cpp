@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.6 2007-11-16 16:43:36 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.7 2008-06-02 09:35:49 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -42,15 +42,10 @@ StatusCode ITReadoutTool::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-   // Update Manager
-  IUpdateManagerSvc * ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
+  registerCondition(m_conditionLocation,
+                    &ITReadoutTool::createBoards );
 
-  ums->registerCondition( this, m_conditionLocation,
-                                &ITReadoutTool::createBoards );
-
-  // force first updates
-  sc = ums->update(this);
-  if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
+  if (runUpdate().isFailure()) return Error ( "Failed first UMS update for ITReadoutTool", sc );
 
   if (m_printMapping == true){
     printMapping();

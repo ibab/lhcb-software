@@ -1,8 +1,7 @@
-// $Id: TTReadoutTool.cpp,v 1.8 2008-05-12 13:08:36 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.9 2008-06-02 09:35:49 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // STDAQ
 #include "TTReadoutTool.h"
@@ -42,17 +41,10 @@ StatusCode TTReadoutTool::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-   // Update Manager
-  IUpdateManagerSvc * ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
-
-  ums->registerCondition( this, m_conditionLocation,
-                                &TTReadoutTool::createBoards );
-
-  // force first updates
-  sc = ums->update(this);
-  if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
+  registerCondition(m_conditionLocation,
+                    &TTReadoutTool::createBoards);
+  if (runUpdate().isFailure()) return Error ( "Failed first UMS update for readout tool", sc );
   
-
   if (m_printMapping == true){
     printMapping();
   }
