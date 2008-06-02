@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.7 2008-04-21 11:28:07 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.8 2008-06-02 19:23:09 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -108,7 +108,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       LHCb::Particle Jpsi(m_jPsiID);
       StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Jpsi,MuMuVertex);
       if (!scFit) {
-        Warning("Fit error");
+        Warning("Fit error").ignore();
         continue;
       }
       debug() << "Vertex fit at " << MuMuVertex.position()/cm
@@ -119,8 +119,8 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       plot(twoMu.M(),"SelDiMuChi2", "Selected DiMu mass",m_jPsiMass-m_jPsiMassWin,m_jPsiMass+m_jPsiMassWin);
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
       desktop()->keep(&Jpsi);
-      plotMuon(*imp,"Selected");
-      plotMuon(*imm,"Selected");
+      plotMuon(*imp,"Selected").ignore();
+      plotMuon(*imm,"Selected").ignore();
       ++m_nJPsis ;
     }
   }

@@ -27,7 +27,7 @@ Jpsi2MuMu.ParticleFilter.LoKi::Hybrid::FilterCriterion.Code = "PT>1000" ;
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_2.root";
 
-ApplicationMgr.EvtMax = 400  ;
+ApplicationMgr.EvtMax = 1000  ;
 EventSelector.FirstEvent = 0 ;
 
 // load input data 
