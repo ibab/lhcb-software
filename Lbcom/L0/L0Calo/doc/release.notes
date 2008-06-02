@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.102 2008-05-16 09:05:28 cattanem Exp $
+! $Id: release.notes,v 1.103 2008-06-02 15:57:02 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+!========================= L0Calo v9r13p1 2008-06-02 ======================
+! 2008-06-02 - Marco Cattaneo
+ - Fix trivial compilation warning
 
 !========================= L0Calo v9r13 2008-05-16 ========================
 ! 2008-05-16 - Patrick Robbe

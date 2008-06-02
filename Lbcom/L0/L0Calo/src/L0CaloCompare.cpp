@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.1 2008-04-14 07:46:45 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.2 2008-06-02 15:57:02 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -92,7 +92,7 @@ StatusCode L0CaloCompare::execute() {
     candidatesCheck = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_checkDataSuffix );
 
   }
-  if (m_fullMonitoring != true) { 
+  else { 
     debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix<<" as a reference"<< endreq;
     debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Default+m_checkDataSuffix<<" to be checked "<< endreq;
     candidatesRef = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix );
