@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.43 2008-01-22 13:34:27 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2008-06-02 07:48:07 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2008-06-02 - Malcolm John / Marco Clemencic
+ - Added '-' and ':' to the list of allowed characters that the ConditionParser
+   of the UpdateManagerSvc allows in the name of a condition (option
+   UpdateManagerSvc.ConditionsOverride).
 
 !========================= DetDescSvc v1r16 2008-01-22 ========================
 ! 2008-01-22 - Marco Cattaneo

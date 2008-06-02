@@ -159,8 +159,8 @@ namespace {
         cond(const_cast<ConditionGrammar &>(self).condition),
         condition_name(const_cast<ConditionGrammar &>(self).name)
       {
-        // an identifier is a sequence of alphanumeric characters + '/' + '_'
-        identifier = *(alnum_p | ch_p('/') | ch_p('_'));
+        // an identifier is a sequence of alphanumeric characters + '/' + '_' + '-'
+        identifier = *(alnum_p | ch_p('/') | ch_p('_') | ch_p('-') | ch_p(':'));
         
         // name of a parameter
         name = identifier[TempParameter::SetName(tmp)];
@@ -237,6 +237,7 @@ namespace {
 //======================================================================
 bool ConditionParser(const std::string &str, std::string &name, ParamValidDataObject &cond){
   ConditionGrammar g;
+  // TODO: improve error messages
   if ( parse(str.c_str(),g).full ){
     name = g.name;
     cond.update(g.condition);
