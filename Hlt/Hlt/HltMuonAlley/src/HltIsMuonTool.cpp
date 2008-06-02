@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.4 2008-05-28 10:09:30 asatta Exp $
+// $Id: HltIsMuonTool.cpp,v 1.5 2008-06-02 10:57:59 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -172,27 +172,28 @@ double  HltIsMuonTool::function(const Track& ctrack)
 } 
 
 bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
+ 
   
-  State* stato=NULL;
-  double x,y,z,dx,dy,dz;
   int region = tileMX.region();
 
+  double x,y,z,dx,dy,dz;
   m_iPosTool-> calcTilePos(tileMX,x, dx,y, dy,z, dz);  
-  stato=&(track->closestState(z));
-  float xpoint=stato->x();
-  float ypoint=stato->y();
-  float zpoint=stato->z();
-  float xslope=stato->slopes().x()/stato->slopes().z();
-  float yslope=stato->slopes().y()/stato->slopes().z();
-  float x_MX=xpoint+xslope*(z-zpoint);
-  float y_MX=ypoint+yslope*(z-zpoint); 
-  float ppoint=stato->p()/Gaudi::Units::GeV;
-  float x_window = (m_p1x[region]+m_p2x[region]*exp(-m_p3x[region]*ppoint))*dx;
-  float y_window = (m_p1y[region]+m_p2y[region]*exp(-m_p3y[region]*ppoint))*dy;
+
+  const State& stato=track->closestState(z);
+  double xslope=stato.slopes().x()/stato.slopes().z();
+  double yslope=stato.slopes().y()/stato.slopes().z();
+  double zpoint=stato.z();
+  double x_MX=stato.x()+xslope*(z-zpoint);
+  double y_MX=stato.y()+yslope*(z-zpoint); 
+  double ppoint=stato.p()/Gaudi::Units::GeV;
+  double x_window = (m_p1x[region]+m_p2x[region]*exp(-m_p3x[region]*ppoint))*dx;
+  double y_window = (m_p1y[region]+m_p2y[region]*exp(-m_p3y[region]*ppoint))*dy;
+
+  bool result = ((fabs(x_MX-x)<x_window)&&(fabs(y_MX-y)<y_window));
 
   debug()<<" station M"<< tileMX.station()+1 <<" "<< x_window <<" "<< x <<" "<< x_MX <<" "<< dx << endreq ;
   debug()<<"   region " <<          region+1 <<" "<< y_window <<" "<< y <<" "<< y_MX <<" "<< dy <<endreq;
-  if((fabs(x_MX-x)>x_window)||(fabs(y_MX-y)>y_window))  { debug() << "bad " << endreq; return false;}
-  debug() << "accepted" << endreq;
-  return true;
+  debug() << (result?"accepted":"bad") << endreq;
+
+  return result;
 }

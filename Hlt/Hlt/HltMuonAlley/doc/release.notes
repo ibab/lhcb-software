@@ -3,6 +3,9 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-06-02 - Gerhard Raven
+  - HltMatchTVeloTracks: explictly ignore implictly ignored StatusCode
+  - HltIsMuonTool: use double instead of float
 ! 2008-05-28 - Alessia Satta
   - Change in HltIsMuonTool to use directly the trigger part of muon data 
     format and not the offline. aim: get rid of MuonRec which is time 

@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.h,v 1.3 2008-05-22 13:39:55 graven Exp $
+// $Id: HltMatchTVeloTracks.h,v 1.4 2008-06-02 10:57:59 graven Exp $
 #ifndef HLTMUONALLEY_MATCHTVELOTRACKS_H 
 #define HLTMUONALLEY_MATCHTVELOTRACKS_H 1
 
@@ -47,7 +47,7 @@ public:
   
   double function(const LHCb::Track& velo, const LHCb::Track& ttrack) {
     double quality = 1e6;
-    StatusCode sc = match2dVelo(velo,ttrack,quality);
+    match2dVelo(velo,ttrack,quality).ignore();
     return quality;
   }
   

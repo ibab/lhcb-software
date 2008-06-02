@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.4 2008-05-22 13:39:55 graven Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.5 2008-06-02 10:57:59 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -207,6 +207,10 @@ StatusCode HltMatchTVeloTracks::match3dVelo(const LHCb::Track& veloTrack,
     double sigmaQOverP = 0; 
     StatusCode sc = m_fastPTool->calculate(&veloState, &TStateAtTheMiddle 
                                            ,qOverP, sigmaQOverP ,false );
+    if (sc.isFailure()) { 
+        error() << "failure of fast PT tool..." << endmsg;
+        return sc;
+    }
 
     debug() << "new p " << 1.0/qOverP << endmsg;
     
