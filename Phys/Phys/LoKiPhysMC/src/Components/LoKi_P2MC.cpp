@@ -1,15 +1,5 @@
-// $Id: LoKi_P2MC.cpp,v 1.6 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id: LoKi_P2MC.cpp,v 1.7 2008-06-02 09:59:31 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2007/02/24 18:28:03  ibelyaev
-//  remove code duplication, retag as v4r0
-//
-// Revision 1.4  2007/02/23 20:15:40  ibelyaev
-//  add 'on-demand' conversion of Linkers  into Relations
-//
-// ===========================================================================
 // Include files 
 // ===========================================================================
 // GaudiKernel

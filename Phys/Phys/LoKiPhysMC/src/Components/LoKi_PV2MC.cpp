@@ -1,4 +1,4 @@
-// $Id: LoKi_PV2MC.cpp,v 1.7 2008-05-19 06:46:13 cattanem Exp $
+// $Id: LoKi_PV2MC.cpp,v 1.8 2008-06-02 09:59:31 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -124,7 +124,7 @@ public:
     }
     return m_table1->direct() ;
     //
-  } ;
+  } 
   /** return a relation table for 
    *  (primary)LHCb::MCVertex --> LHCb::RecVertex relations
    *
@@ -146,8 +146,8 @@ public:
     }
     return m_table1->inverse() ;
     //
-  };
-    /** return a relation table for 
+  }
+  /** return a relation table for 
    *  LHCb::RecVertex ---> LHCb::GenCollision relations
    *
    *  @code
@@ -195,7 +195,7 @@ public:
     }
     return m_table2->direct() ;
     //
-  } ;
+  } 
   /** return a relation table for 
    *  LHCb::GenCollision --> LHCb::RecVertex relations
    *
@@ -217,8 +217,8 @@ public:
     }
     return m_table2->inverse() ;
     //
-  };
-    //
+  }
+  //
 public:  
   /// standard initialization of the tool 
   virtual StatusCode initialize () 
@@ -228,18 +228,19 @@ public:
     
     IIncidentSvc* isvc = incSvc() ;
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
-    isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
+    isvc -> addListener ( this , IncidentType::BeginEvent , 10 ) ;
     
     // load LoKi service 
     svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
     
     return StatusCode::SUCCESS ;
-  };
+  }
   /// handle new incident 
   virtual void handle ( const Incident& ) 
   { m_table1 = 0 ; m_table2 = 0 ; }
-  
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /** standart constructor 
    *  @param type tool type 
    *  @param name tool name 
@@ -262,10 +263,12 @@ protected:
     // 
     declareProperty  ( "LocationPV2PC"         , m_location1  ) ;
     declareProperty  ( "LocationPV2collision"  , m_location2  ) ;
-  };
+  }
   /// destructor (virual and protected)
-  virtual ~LoKi_PV2MC () {} ;
+  virtual ~LoKi_PV2MC () {} 
+  // ==========================================================================
 private:
+  // ==========================================================================
   // default constructor  is disabled 
   LoKi_PV2MC ()  ;
   // copy constructor     is disabled 
@@ -274,26 +277,25 @@ private:
   // assignement operator is disabled 
   LoKi_PV2MC& operator=
   ( const LoKi_PV2MC& ) ;
-  //
+  // ==========================================================================
 private:
+  // ==========================================================================
   // the actual interface class (not exported) 
   typedef const LHCb::Relations_::PV2MC2D        Table1;
   typedef const LHCb::Relations_::PV2Collision2D Table2;
   // the relation tables 
   mutable Table1* m_table1    ;
   mutable Table2* m_table2    ;
-  // 
+  // ========================================================================== 
 private:
+  // ==========================================================================
   // table location 
   std::string    m_location1 ;
   std::string    m_location2 ;
+  // ==========================================================================
 };
 // ============================================================================
-
-// ============================================================================
 DECLARE_TOOL_FACTORY( LoKi_PV2MC ) ;
-// ============================================================================
-
 // ============================================================================
 // The END
 // ============================================================================

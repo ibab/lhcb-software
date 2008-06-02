@@ -1,4 +1,4 @@
-// $Id: LoKi_HepMC2MC.cpp,v 1.8 2007-07-23 17:29:54 ibelyaev Exp $
+// $Id: LoKi_HepMC2MC.cpp,v 1.9 2008-06-02 09:54:46 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -96,7 +96,7 @@ public:
     }
     return m_table->direct() ;
     //
-  } ;
+  } 
   // ==========================================================================
   /** return a relation table for LHCb::MCParticle -> HepMC::GenParticle 
    *  relations 
@@ -133,7 +133,7 @@ public:
     }
     return m_table->inverse() ;
     //
-  };
+  }
   // ==========================================================================
 public:
   // ==========================================================================  
@@ -145,13 +145,13 @@ public:
     
     IIncidentSvc* isvc = incSvc() ;
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
-    isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
+    isvc -> addListener ( this , IncidentType::BeginEvent , 10 ) ;
     
     // load LoKi service 
     svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
     
     return StatusCode::SUCCESS ;
-  };
+  }
   // ==========================================================================
   /// handle new incident 
   virtual void handle ( const Incident& ) { m_table = 0 ; }
@@ -177,10 +177,10 @@ protected:
     declareInterface<IHepMC2MC>         ( this ) ; 
     // 
     declareProperty  ( "Location"    , m_location  ) ;
-  };
+  }
   // ==========================================================================
   /// destructor (virual and protected)
-  virtual ~LoKi_HepMC2MC () {} ;
+  virtual ~LoKi_HepMC2MC () {} 
   // ==========================================================================
 private:
   // default constructor  is disabled 

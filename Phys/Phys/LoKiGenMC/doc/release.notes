@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.25 2007-12-02 11:57:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.26 2008-06-02 09:54:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,16 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-02 - Vanya Belyaev
+
+ - Change the handled incidents from EndEvent to BeginEvent 
+
+ - cmt/requirements 
+
+    version increment to v7r1 
+
+
 
 !========================== LoKiGenMC v7r0 2007-12-02 =========================
 
@@ -389,6 +399,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.25  2007/12/02 11:57:06  ibelyaev
+!  v7r0: 'the powerful streamers'
+!
 ! Revision 1.24  2007/10/08 06:52:52  cattanem
 ! v6r1
 !

@@ -1,4 +1,5 @@
-// $Id: LoKi_MC2Collision.cpp,v 1.4 2007-07-23 17:29:54 ibelyaev Exp $
+
+// $Id: LoKi_MC2Collision.cpp,v 1.5 2008-06-02 09:54:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -106,7 +107,7 @@ public:
     
     IIncidentSvc* isvc = incSvc() ;
     Assert ( 0 != isvc , "IIncidentSvc* points to NULL" );
-    isvc -> addListener ( this , IncidentType::EndEvent , 10 ) ;
+    isvc -> addListener ( this , IncidentType::BeginEvent , 10 ) ;
     
     // load LoKi service 
     svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
