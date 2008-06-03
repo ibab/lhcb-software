@@ -31,7 +31,7 @@ class CreateBatAliasesScript(Script):
                 filename = os.path.join(opts.outputdir, "%s.bat" % a)
                 log.info("Writing %s : call %%~d0%%~p0\%s.bat %s" % (filename, cmd , args))
                 f = open(filename, "w")
-                f.write(r" call %%~d0%%~p0\%s.bat %s\n\n" % ( cmd , args))
+                f.write(" call %%~d0%%~p0\%s.bat %s\n\n" % ( cmd , args))
                 f.close()
         return 0
 

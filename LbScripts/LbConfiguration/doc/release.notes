@@ -1,3 +1,7 @@
+2008-06-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/CreateBatAliases.py: fixed carriage return in the generated files.
+
 2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/fragments/create_bat_aliases_header: New file. gmake .bat fragment.
