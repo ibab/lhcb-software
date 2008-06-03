@@ -595,6 +595,10 @@ VSOURCE        = LoKi.Vertices.SourceTES
 VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
 
+## Legacy stuff
+BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
+
+
 # =============================================================================
 if '__main__' == __name__ :
     for o in dir() : print o        

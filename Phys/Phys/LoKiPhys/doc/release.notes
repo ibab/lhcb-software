@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.59 2008-05-05 13:49:09 cattanem Exp $ 
+! $Id: release.notes,v 1.60 2008-06-03 14:07:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-03 - Vanya BELYAEV
+   
+ - LoKi/Legacy1.h, src/Legacy1.cpp
+   new files
+   add new legacy function for incorrect evaluation of "vertex separation 
+   significance" as a distance between vertices, divided by error.
+   The functor is required by Vava, and one has said that it is  useful 
+   for detailed comparison with DC04 selections. 
+   The symbol is defined as 
+   BPVVDS_LEGACY ( "BPV" stays here for "Best Primary Vertex" and 
+   "VDS" - "Vertex Distance Significance") 
+
+ - cmt/requirements 
+   version incremenet to v7r4 
+
 
 !========================== LoKiPhys v7r3 2008-05-05 ==========================
 ! 2008-05-04 - Vanya BELYAEV

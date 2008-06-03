@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.12 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.13 2008-06-03 14:07:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -29,6 +29,7 @@
 // ============================================================================
 #include "LoKi/ParticleContextCuts.h"
 #include "LoKi/VertexContextCuts.h"
+#include "LoKi/Legacy1.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
