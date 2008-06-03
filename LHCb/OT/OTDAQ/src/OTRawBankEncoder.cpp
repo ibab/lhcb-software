@@ -240,15 +240,6 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
       for ( OTDAQ::RawHitContainer::const_iterator it = rawHits.begin(); it != rawHits.end(); ++it ) 
         pipeToBuffer( *it, buffer );
   
-      // padding should not be necessary
-      size_t rest = buffer.size()%sizeof( int );
-      assert( rest == 0 );
-      
-      //   if ( rest != 0 ) 
-      //     buffer.resize(buffer.size() + ( sizeof(int) - rest) );
-      //   // copying
-      //   size_t rawbanksize = buffer.size()/sizeof(int);
-      
       m_rawBank.resize( buffer.size()/sizeof( int ) );
       std::memcpy( &( m_rawBank.front() ), &( buffer.front() ), buffer.size() );
       

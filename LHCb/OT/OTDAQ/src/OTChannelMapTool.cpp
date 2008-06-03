@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.2 2008-05-29 13:05:11 wouter Exp $
+// $Id: OTChannelMapTool.cpp,v 1.3 2008-06-03 14:13:53 wouter Exp $
 // Include files
 
 // Include files
@@ -161,11 +161,6 @@ unsigned char OTChannelMapTool::computeStrawV3( const OTDAQ::EModuleLayout& layo
   unsigned char tmpMono        = otis >= 2 ? 1 : 0 ;
   unsigned char tmpStrawInMono = tmpMono ? 2*NumStrawPerMono - channel : channel + 1 ;
   
-  if( !(tmpStrawInMono <= NumStrawPerMono ) ) {
-    std::cout << int(channel) << " " << int(tmpStrawInMono) << std::endl ;
-  }
-
-  assert(tmpStrawInMono <= NumStrawPerMono ) ;
   // depending on the type of module, we now correct this 'default'
   // numbering with rotation or mirror operations
   unsigned char rc(1) ;
