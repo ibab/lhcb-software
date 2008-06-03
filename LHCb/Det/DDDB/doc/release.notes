@@ -4,6 +4,11 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r7 2008-06-03 =============================
+! 2008-06-03 - Marco Cattaneo
+ - In LHCb-2008.py to change default tags to head-20080603.
+   Requires SQLDDDB >= v4r4
+
 !========================== DDDB v1r6 2008-05-16 =============================
 ! 2008-05-09 - Marco Cattaneo
  - Add LHCb-2008.py to describe default tags for real 2008 detector. Current 

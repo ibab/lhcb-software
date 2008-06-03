@@ -5,7 +5,7 @@ from Configurables import CondDBAccessSvc, MagneticFieldSvc
 import os
 
 # 2008 database tags
-tag = "head-20080516"
+tag = "head-20080603"
 CondDBAccessSvc("DDDB",DefaultTAG = tag)
 CondDBAccessSvc("LHCBCOND",DefaultTAG = tag)
 
