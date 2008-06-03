@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.3 2008-03-27 10:44:56 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.4 2008-06-03 13:21:58 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -49,6 +49,8 @@ public:
 protected:
   
 private:
+  bool isClone(const LHCb::Track& t1 , const LHCb::Track& t2);
+  
   //variables declared in job options
   double m_nSigmaX, m_nSigmaY, m_nSigmaTx, m_nSigmaTy ;
 
@@ -56,10 +58,10 @@ private:
   unsigned m_minHitsInOT;
 
   Tf::TStationHitManager <PatForwardHit> *  m_tHitManager;
-  
+
   IPatSeedingTool*  m_patSeedingTool;
   IL0ConfExtrapolator* m_l0ConfExtrapolator;
-
+ 
   //debug information
   L0ConfDataStore* m_DataStore;
 };

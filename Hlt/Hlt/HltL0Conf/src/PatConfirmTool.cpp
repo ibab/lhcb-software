@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.6 2008-03-27 10:44:59 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.7 2008-06-03 13:22:40 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -13,6 +13,7 @@
 // local
 #include "PatConfirmTool.h"
 #include "HltBase/ParabolaHypothesis.h"
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatConfirmTool
 //
@@ -72,8 +73,8 @@ StatusCode PatConfirmTool::initialize(){
   }
 
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
-  
-  return StatusCode::SUCCESS;
+
+  return sc;
 
 }
 
@@ -81,14 +82,21 @@ StatusCode PatConfirmTool::initialize(){
 StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Track*>& outputTracks ) 
 {
   if ( msgLevel(MSG::DEBUG) ) debug()<<"--> execute"<<endmsg;
+  StatusCode sc;
+  
   ChronoEntity tDecoding, tTracking;
+
+  std::vector<Track*> tmpTracks ;
+  
   if (m_debugMode) tDecoding.start();
 
   // Define track hypothesis from seed state (parabola model) and
   // decode IT and OT hits in search window
+  
   ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
   m_tHitManager->prepareHitsInWindow(tp);
 
+  
   if (m_debugMode) {
     tDecoding.stop();
     debug()<<"--> write dec time"<<endmsg;
@@ -129,7 +137,10 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     stateCov(2,2) *= m_nSigmaTx * m_nSigmaTx;
     stateCov(3,3) *= m_nSigmaTy * m_nSigmaTy;
     state.setCovariance(stateCov);
-    m_patSeedingTool->performTracking(outputTracks, &state);
+    sc=m_patSeedingTool->performTracking(tmpTracks, &state);
+    if(sc.isFailure())
+      if (msgLevel(MSG::DEBUG) ) debug() << "seeding failed!!"<<endmsg;
+    
   }
 
   if (m_debugMode) {
@@ -138,12 +149,43 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     if (msgLevel(MSG::DEBUG) ) {
       debug() << "tTracking.eTotalTime() "
               << tTracking.eTotalTime() + tDecoding.eTotalTime() << endreq;
-      debug() << "tracks found sofar in PatSearch Tool: " << outputTracks.size() << endreq;
+      debug() << "tracks found sofar in PatSearch Tool: " << tmpTracks.size() << endreq;
     }
   }
 
+  for( std::vector<LHCb::Track*>::iterator it1 = tmpTracks.begin(); 
+       it1 != tmpTracks.end() ; 
+       ++it1 ) {
+
+    bool saveTrack = true;
+    
+    for( LHCb::Tracks::iterator it2=outputTracks.begin();
+         it2!=outputTracks.end(); ++it2 ){
+      
+         if( isClone(*(*it1) , *(*it2) ) ) saveTrack = false;
+    }
+    if( saveTrack ){
+      outputTracks.push_back( (*it1)->clone() );
+      if(msgLevel(MSG::DEBUG)) 
+        debug()<<"keep track with pt(T): "<<(*it1)->pt() <<endmsg;
+    }
+    delete  *it1;
+  }
+  tmpTracks.clear();
+
   m_tHitManager->clearHits();
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
+/*
+ *  This small helper seaches for a track found twice
+ *  Faster than comparin id's is to check position in 
+ *  x to agree within 10 mu in T1 and T3
+ */
+bool PatConfirmTool::isClone(const LHCb::Track& t1 , const LHCb::Track& t2)
+{
+  if( fabs( t1.closestState(7800.).x()-t2.closestState(7800.).x() ) > 0.01 ) return false;
+  if( fabs( t1.closestState(9300.).x()-t2.closestState(9300.).x() ) > 0.01 ) return false;
+  return true;
+}

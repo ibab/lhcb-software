@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Johannes Albrecht
+ - src/PatConfirmTool: add function to remove duplicated tracks
+
 ! 2008-05-02 - Gerhard Raven
  - remove obsolete HltL0Conf_dll.cpp
 
