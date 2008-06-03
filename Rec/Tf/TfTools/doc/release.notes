@@ -3,11 +3,12 @@
 ! Responsible : Tracking 'A-Team' for the moment ... Then someone else.
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+!============================ TfTools v1r5 2008-06-03 ========================
 ! 2008-06-02 - Stephanie Hansmann-Menzemer
   - move cleaning of hits in event from BeginEvent instead of EndEvent
     for OTHitCreator.cpp and STHitCreator.cpp
 
-!============================ TfTools v1r5 2008-05-29 ========================
 ! 2008-05-29 - Marco Cattaneo
  - Fix doxygen warning
 
