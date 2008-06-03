@@ -1,8 +1,11 @@
-// $Id: CaloEnergyForTrack.cpp,v 1.2 2008-01-24 10:22:42 vegorych Exp $
+// $Id: CaloEnergyForTrack.cpp,v 1.3 2008-06-03 15:49:56 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2008/01/24 10:22:42  vegorych
+// _setProperty was removed, AddNeigbours warning was solved
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 //  
@@ -73,7 +76,7 @@ StatusCode CaloEnergyForTrack::initialize()
   if ( sc.isFailure() ) { return sc ; }
   if ( m_address.empty()  ) { return Error("Invalid 'DataAddress'"); }    
   IIncidentSvc* isvc = svc<IIncidentSvc>( "IncidentSvc" , true ) ;
-  isvc->addListener ( this , IncidentType::EndEvent ) ;
+  isvc->addListener ( this , IncidentType::BeginEvent ) ;
   //
   std::string det = detectorName() ;
   const long caloID = CaloCellCode::CaloNumFromName( det.c_str() ) ;
