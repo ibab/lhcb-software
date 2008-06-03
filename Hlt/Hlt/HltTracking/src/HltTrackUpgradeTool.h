@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.7 2008-05-11 10:03:22 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.8 2008-06-03 10:29:51 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -9,6 +9,7 @@
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrackUpgrade.h"
+#include "HltBase/HltBaseTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 
 /** @class HltTrackUpgradeTool HltTrackUpgradeTool.h
@@ -27,7 +28,7 @@
 
 static const InterfaceID IID_HltTrackUpgradeTool ( "HltTrackUpgradeTool",1,0 );
 
-class HltTrackUpgradeTool : public GaudiTool, virtual public ITrackUpgrade {
+class HltTrackUpgradeTool : public HltBaseTool, virtual public ITrackUpgrade {
 public: 
 
   // Return the interface ID

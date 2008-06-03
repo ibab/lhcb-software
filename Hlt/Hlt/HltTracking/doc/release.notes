@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2008-06-03 - Jose A. Hernando
+  - reparing tracking the tracking for the L0-confirmation. 
+
 ! 2008-05-30 - Jose A. Hernando
   - adaptations for the velo+calo match in the hadron alley
 
