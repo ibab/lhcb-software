@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.20 2007-12-03 13:49:32 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.21 2008-06-03 12:46:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -76,7 +76,9 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
   // find the data for the requested HPD ...
  
   /** @attention This implementation is not particulary efficient. 
-   *             Could maybe be improved if needed for speed reasons */
+   *             Could maybe be improved if needed for speed reasons.
+   *  @todo      Look into speeding this up if needed.
+   */
 
   const LHCb::RichSmartID::Vector * found_data = NULL;
 
@@ -89,14 +91,17 @@ RawBufferToSmartIDsTool::richSmartIDs( const LHCb::RichSmartID hpdID ) const
           iIn != (*iL1).second.end(); ++iIn )
     {
       // Find HPDInfo for given hpd ?
-      Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().find(hpdID);
-      // did we find the HPD ?
-      if ( iHPD != (*iIn).second.hpdData().end() )
+      // Loop over HPDs in this ingress
+      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
+            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
-        found_data = &((*iHPD).second.smartIDs());
-        break;
-      }
-    }
+        if ( hpdID == (*iHPD).second.hpdID() )
+        { 
+          found_data = &((*iHPD).second.smartIDs());
+          break;
+        }
+      } // loop over HPDs
+    } // loop over ingresses
     if ( found_data ) break;
   }
 

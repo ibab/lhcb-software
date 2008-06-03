@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.66 2008-05-08 12:24:13 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.67 2008-06-03 12:46:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -493,9 +493,6 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
         iDigit != smartIDs.end(); ++iDigit )
   {
 
-    // Get the HPD SmartID
-    const LHCb::RichSmartID hpdID = (*iDigit).hpdID();
-
     // Get Level 1 board number and input
     const Level1ID    L1ID    = m_richSys->level1ID       ( *iDigit );
     const Level1Input L1Input = m_richSys->level1InputNum ( *iDigit );
@@ -503,13 +500,13 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
     // Get reference to correct data group
     IngressMap & ingress   = L1Data  [ L1ID                ];
     IngressInfo & hpds     = ingress [ L1Input.ingressID() ];
-    HPDInfo & hpdInfo      = (hpds.hpdData())[hpdID];
+    HPDInfo & hpdInfo      = (hpds.hpdData())[L1Input];
 
     // Finally, insert this pixel into correct place
     hpdInfo.smartIDs().push_back( *iDigit );
 
-    // Set the HPD information (header/foot not needed here so not set)
-    hpdInfo.setInputNum( L1Input );
+    // Set the HPD information
+    hpdInfo.setHpdID( (*iDigit).hpdID() );
 
   }
 
@@ -555,7 +552,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
         for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
               iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
         {
-          ingressWord.setHPDActive( (*iHPD).second.inputNum().l1InputWithinIngress() );
+          ingressWord.setHPDActive( (*iHPD).first.l1InputWithinIngress() );
         }
         // fill header into raw data
         ingressWord.fillRAWBank(dataBank);
@@ -570,8 +567,8 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       for ( HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
             iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
       {
-        debug() << "   HPD " << (*iHPD).first << " creating HPD data block for "
-                << (*iHPD).second.smartIDs().size() << " hits" << endreq;
+        debug() << "   HPD " << (*iHPD).second.hpdID() << " L1input=" << (*iHPD).first 
+                << " Found " << (*iHPD).second.smartIDs().size() << " hits" << endreq;
         // Get raw data bank for this HPD, and fill into RAWBank
         const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
         if ( hpdData )
@@ -774,6 +771,21 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             Warning( mess.str(), StatusCode::SUCCESS, 1 );
           }
 
+          // Try to add a new HPDInfo to map
+          const Level1Input l1Input(ingressWord.ingressID(),*iHPD);
+          std::pair<HPDMap::iterator,bool> p
+            = ingressInfo.hpdData().insert( HPDMap::value_type(l1Input,
+                                                               HPDInfo(LHCb::RichSmartID(),
+                                                                       HPDInfo::Header(hpdBank->headerWords()),
+                                                                       HPDInfo::Footer(hpdBank->footerWords()) ) ) );
+          if ( !p.second )
+          {
+            std::ostringstream mess;
+            mess << "Found multiple data blocks L1=" << L1ID << " input=" << l1Input;
+            Warning( mess.str() );
+          }   
+          HPDInfo & hpdInfo = p.first->second;
+          
           // Only try and decode this HPD if ODIN test was OK
           if ( odinOK && !hpdIsSuppressed )
           {
@@ -797,19 +809,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               if ( msgLevel(MSG::DEBUG) )
                 debug() << "   Decoding HPD " << hpdID << endreq;
 
-              // Try to add a new HPDInfo to map
-              std::pair<HPDMap::iterator,bool> p
-                = ingressInfo.hpdData().insert( HPDMap::value_type(hpdID,
-                                                                   HPDInfo(Level1Input(ingressWord.ingressID(),*iHPD),
-                                                                           HPDInfo::Header(hpdBank->headerWords()),
-                                                                           HPDInfo::Footer(hpdBank->footerWords()) ) ) );
-              if ( !p.second && !m_useFakeHPDID )
-              {
-                std::ostringstream mess;
-                mess << "Found multiple data blocks for HPD " << hpdID;
-                Warning( mess.str() );
-              }
-              HPDInfo & hpdInfo = p.first->second;
+              // save HPD ID
+              hpdInfo.setHpdID(hpdID);
 
               // local hit count
               unsigned int hpdHitCount(0);
@@ -966,6 +967,9 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
     // Get data for this ingress
     IngressInfo & ingressInfo = ingressMap[ingressNum];
 
+    // Make up L1 input numbers
+    Level1Input l1Input(0);
+
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     long lineC(0);
@@ -982,7 +986,10 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
                                         m_richSys->richSmartID( hpdBank->level0ID() ) );
 
       // decode to smartIDs
-      LHCb::RichSmartID::Vector & newids = (ingressInfo.hpdData())[hpdID].smartIDs();
+      Rich::DAQ::HPDInfo & hpdInfo = (ingressInfo.hpdData())[ l1Input ];
+      hpdInfo.setHpdID(hpdID);
+      ++l1Input;
+      LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
       const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
 
       // Do data integrity checks
@@ -1102,6 +1109,9 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
     // Get data for this ingress
     IngressInfo & ingressInfo = ingressMap[ingressNum];
 
+    // Make up L1 input numbers
+    Level1Input l1Input(0);
+
     // Loop over bank, find headers and produce a data bank for each
     // Fill data into RichSmartIDs
     long lineC(0);
@@ -1172,7 +1182,10 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
                                           m_richSys->richSmartID( hpdBank->level0ID() ) );
 
         // Vector to decode into
-        LHCb::RichSmartID::Vector & newids = (ingressInfo.hpdData())[hpdID].smartIDs();
+        Rich::DAQ::HPDInfo & hpdInfo = (ingressInfo.hpdData())[ l1Input ];
+        hpdInfo.setHpdID(hpdID);
+        ++l1Input;
+        LHCb::RichSmartID::Vector & newids = hpdInfo.smartIDs();
 
         // get hit count
         const unsigned int hpdHitCount = hpdBank->fillRichSmartIDs( newids, hpdID );
