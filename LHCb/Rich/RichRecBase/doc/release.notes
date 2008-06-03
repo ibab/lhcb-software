@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Chris Jones
+ - Adapt to changes in RICH decoded data format
+
 !===================== RichRecBase v3r13 2008-05-15 ==========================
 ! 2008-05-14 - Chris Jones
  - Add some additional debug printout to track selector base class

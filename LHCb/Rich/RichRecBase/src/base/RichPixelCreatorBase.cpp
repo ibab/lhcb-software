@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.30 2008-05-06 15:31:12 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.31 2008-06-03 12:44:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -302,14 +302,14 @@ namespace Rich
               // NB : taking a copy of the smartIDs here since we might remove
               // some, and we cannot change the raw data from smartIDdecoder()
               LHCb::RichSmartID::Vector smartIDs = (*iHPD).second.smartIDs();
-              applyPixelSuppression( (*iHPD).first, smartIDs );
+              applyPixelSuppression( (*iHPD).second.hpdID(), smartIDs );
 
               // if any left, proceed and make pixels
               if ( !smartIDs.empty() )
               {
 
                 // which rich
-                const Rich::DetectorType rich = (*iHPD).first.rich();
+                const Rich::DetectorType rich = (*iHPD).second.hpdID().rich();
 
                 if ( m_noClusterFinding )
                 {
@@ -338,7 +338,7 @@ namespace Rich
                         iC != clusters->clusters().end(); ++iC )
                   {
 
-                    if ( m_clusterHits[(*iHPD).first.rich()] )
+                    if ( m_clusterHits[rich] )
                     {
                       // make a single pixel for this cluster
                       LHCb::RichRecPixel * pixel = buildPixel( (*iC)->pixels() );
