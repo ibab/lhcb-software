@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.16 2008-05-28 07:47:01 graven Exp $
+! $Id: release.notes,v 1.17 2008-06-03 06:49:59 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-06-03 - Patrick Koppenburg
+ - Remove _dll.cpp
+ - Increment to v2r4
 
 ! 2008-05-28 Gerhard Raven
  - changes to follow update of HltEvent: Selections uses strings, not ids anymore
