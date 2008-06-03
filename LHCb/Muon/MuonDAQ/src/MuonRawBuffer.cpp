@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.14 2008-05-28 10:02:38 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.15 2008-06-03 09:55:33 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -73,7 +73,7 @@ StatusCode MuonRawBuffer::initialize()
 
 void MuonRawBuffer::handle ( const Incident& incident )
 { 
-  if ( IncidentType::EndEvent == incident.type() ) clearData() ;
+  if ( IncidentType::BeginEvent == incident.type() ) clearData() ;
 }
 
 
@@ -159,7 +159,7 @@ StatusCode MuonRawBuffer::finalize() {
       
     }
   }
-  
+  clearData();  
   return GaudiTool::finalize() ;
 };
 
