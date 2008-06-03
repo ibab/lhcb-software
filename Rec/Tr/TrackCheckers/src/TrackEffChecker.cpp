@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.3 2007-09-11 14:45:58 mneedham Exp $
+// $Id: TrackEffChecker.cpp,v 1.4 2008-06-03 06:56:42 cattanem Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -7,11 +7,8 @@
 #include "Event/State.h"
 #include "Event/GhostTrackInfo.h"
 
-#include "GaudiKernel/PhysicalConstants.h"
-
-// gsl
-#include "gsl/gsl_math.h"
-
+// Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/AlgFactory.h"
 
