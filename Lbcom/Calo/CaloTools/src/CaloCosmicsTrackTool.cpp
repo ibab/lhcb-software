@@ -1,16 +1,20 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.3 2008-05-30 13:10:58 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.4 2008-06-03 06:15:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-#include "GaudiKernel/SystemOfUnits.h" 
+#include "GaudiKernel/PhysicalConstants.h" 
+
 // from LHCb
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
-//From LHCb
-#include "Event/ODIN.h" 
+#include "Event/ODIN.h"
+#include "Event/Track.h"
+#include "CaloDet/DeCalorimeter.h"
+#include "CaloInterfaces/ICaloCosmicsTool.h"
+
 // local
 #include "CaloCosmicsTrackTool.h"
 

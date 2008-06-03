@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.39 2008-05-30 13:10:58 odescham Exp $
+! $Id: release.notes,v 1.40 2008-06-03 06:15:20 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+!========================== CaloTools v5r1 2008-06-03 =========================
+! 2008-06-03 - Marco Cattaneo
+ - In CaloCosmicsTool.cpp: fix compiler warning, add missing include
+ - In CaloCosmicsTrackTool.cpp, CaloCosmicsTrackAlg.cpp: add missing includes
 
 ! 2008-05-29 - Deschamps Olivier
   - use dedicated TrackEvent/Track flags

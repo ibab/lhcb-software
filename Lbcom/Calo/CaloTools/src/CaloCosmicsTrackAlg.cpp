@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.2 2008-05-30 13:10:58 odescham Exp $
+// $Id: CaloCosmicsTrackAlg.cpp,v 1.3 2008-06-03 06:15:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,8 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
+#include "Event/Track.h"
+#include "CaloInterfaces/ICaloCosmicsTool.h"
 
 // local
 #include "CaloCosmicsTrackAlg.h"

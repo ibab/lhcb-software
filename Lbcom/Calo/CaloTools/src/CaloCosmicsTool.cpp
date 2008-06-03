@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.1 2008-05-22 22:47:59 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.2 2008-06-03 06:15:20 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
 #include "LHCbMath/GeomFun.h"
+#include "CaloDet/DeCalorimeter.h"
 
 // local
 #include "CaloCosmicsTool.h"
@@ -532,8 +533,8 @@ StatusCode CaloCosmicsTool::timing(){
     m_timed = true;
     double u = R / ( 1+ m_par[3]*sqrt(1-R*R));
     m_time = m_offset + m_par[0] + m_par[1]*R*R + m_par[2]/acos(-1.) * acos( u );
-    double d = -2*m_par[1] + m_par[2]/acos(-1.) 
-      * ( - 1/sqrt(1-u*u) * ( 1+ m_par[3]*sqrt(1-R*R) - R * 0.5 *  m_par[3] / sqrt(1-R*R)))*u*u/R/R;
+    //    double d = -2*m_par[1] + m_par[2]/acos(-1.) 
+    //      * ( - 1/sqrt(1-u*u) * ( 1+ m_par[3]*sqrt(1-R*R) - R * 0.5 *  m_par[3] / sqrt(1-R*R)))*u*u/R/R;
     //m_stime = d*d* m_Rmean2[m_maxLoc] + m_tRes*m_tRes;
   }
   return StatusCode::SUCCESS;
