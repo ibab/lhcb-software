@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-05-09 14:01:26 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-06-03 13:06:26 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -10,11 +10,11 @@ from Configurables import ( CondDBAccessSvc, MagneticFieldSvc )
 
 class LHCbApp(ConfigurableUser):
     __slots__ = {
-        "EvtMax":                -1 # Maximum number of events to process
-       ,"skipEvents":             0 # events to skip
-       ,"DDDBtag":    "DC06-latest" # geometry   database tag
-       ,"condDBtag":  "DC06-latest" # conditions database tag
-       ,"monitors"  :  []           # monitor actions
+        "EvtMax":                -1  # Maximum number of events to process
+       ,"skipEvents":             0  # events to skip
+       ,"DDDBtag":    "DC06-default" # geometry   database tag
+       ,"condDBtag":  "DC06-default" # conditions database tag
+       ,"monitors"  :  []            # monitor actions
         }
 
     def getProp(self,name):
@@ -29,16 +29,31 @@ class LHCbApp(ConfigurableUser):
     def defineDB(self):
         condDBtag = self.getProp("condDBtag")
         DDDBtag   = self.getProp("DDDBtag")
-        # For all DC06 cases, use latest DC06 tag
-        if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
-            importOptions( "$DDDBROOT/options/DC06.py" )
-        # For all 2008 cases, except DC06, use latest 2008 global tag
-        elif condDBtag.find("-2008") and DDDBtag.find("-2008") != -1 :
-            importOptions( "$DDDBROOT/options/LHCb-2008.py" )
-        else :
-            CondDBAccessSvc( "DDDB",     DefaultTAG = condDBtag )
+        if hasattr( MagneticFieldSvc(),"FieldMapFile" ):
+            mapFile = getattr( MagneticFieldSvc(),"FieldMapFile" )
+        else:
+            mapFile = "UNDEFINED"
+            
+        # If a default is requested, use it
+        if DDDBtag.find("-default") != -1 or condDBtag.find("-default") != -1:
+            if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
+                importOptions( "$DDDBROOT/options/DC06.py" )
+            elif condDBtag.find("2008") != -1 and DDDBtag.find("2008") != -1 :
+                importOptions( "$DDDBROOT/options/LHCb-2008.py" )
+            else :
+                raise RuntimeError("Invalid combination of default tags. CondDB: '%s' DDDB: '%s'"%(condDBtag,DDDBtag))
+            # reset the field map if it was already defined...
+            if mapFile.find("UNDEFINED") == -1:
+                MagneticFieldSvc().FieldMapFile = mapFile 
+
+        # Otherwise, take the tag supplied
+        if DDDBtag.find("-default") == -1:
+            CondDBAccessSvc( "DDDB",     DefaultTAG = DDDBtag )
+        if condDBtag.find("-default") == -1:
             CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
-            #-- Default field map set by Fieldmap package
+            
+        #-- Default field map set by Fieldmap package
+        if not hasattr( MagneticFieldSvc(),"FieldMapFile" ):
             MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAP']
 
     def defineEvents(self):
