@@ -1,0 +1,20 @@
+//---------------------------------------------------------------------------
+// Job options to copy one or more raw data input files onto an output file
+//---------------------------------------------------------------------------
+ApplicationMgr.HistogramPersistency = "NONE";
+EventSelector.PrintFreq = 1;
+
+// Set up the transient data store
+EventDataSvc.RootCLID    =    1;
+
+// Conversion service for Raw data
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+
+// Set up the output file (change MyCopy.mdf to name wanted for the file copy)
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer_2" };
+Writer_2.Connection       = "PFN:root:file:TheCopy.mdf";
+Writer_2.Compress         = 0;
+Writer_2.GenerateMD5      = true;
+
+// Input file to be copied. Change the file name to the file to be copied
+EventSelector.Input = { "DATA='file:TheOriginal.mdf' SVC='LHCb::MDFSelector'" };
