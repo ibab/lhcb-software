@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.14 2008-06-02 13:45:19 smenzeme Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.15 2008-06-03 13:15:14 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -14,12 +14,12 @@
 // Event
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
-#include "Event/OTRawHit.h"
+
+// OTDAQ
+#include "OTDAQ/RawEvent.h"
 
 // local
 #include "GolHeaderDC06.h"
-#include "GolHeaderV3.h"
-#include "OTSpecificHeader.h"
 
 //#include "Event/DataWord.h"
 
@@ -61,10 +61,6 @@ namespace OTRawBankDecoderHelpers
     size_t decodeDC06(double tdcconversion) ;
     size_t decodeV3(double tdcconversion) ;
     size_t decode(double tdcconversion) ;
-    LHCb::OTRawHitRange rawhits() const { 
-      return LHCb::OTRawHitRange( LHCb::OTRawHitContainer::const_iterator(reinterpret_cast<const LHCb::OTRawHit*>(m_data)),
-				  LHCb::OTRawHitContainer::const_iterator(reinterpret_cast<const LHCb::OTRawHit*>(m_data+m_size))) ; }
-    
   private:
     void addHit(unsigned short data, double tdcconversion) ;
    
@@ -95,7 +91,7 @@ namespace OTRawBankDecoderHelpers
   
   inline void Module::addHit(unsigned short data, double tdcconversion) 
   { 
-    LHCb::OTRawHit hit(data) ;
+    OTDAQ::RawHit hit(data) ;
     unsigned int straw = m_channelmap->straw( hit.channel() ) ;
     unsigned int tdctime = hit.time() ;
     LHCb::OTChannelID channelid(m_station,m_layer,m_quarter,m_module,straw,tdctime) ;
@@ -351,11 +347,11 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankver
   unsigned int station,layer,quarter,module,numhits,numgols(0) ;
   for( idata = begin ; idata < end; ++idata) {
     // decode the header
-    OTDAQ::GolHeaderV3 golHeader(*idata) ;
+    OTDAQ::GolHeader golHeader(*idata) ;
     // if there are no hits, issue a warning
     numhits = golHeader.numberOfHits() ;
     if( 0 == numhits ) {
-      warning() << "Found empty GOL header " << golHeader << endmsg ;
+      warning() << "Found empty GOL header " << golHeader << " " << *idata << endmsg ;
     } else {
       // Decode the GOL ID
       station = golHeader.station();
@@ -480,20 +476,60 @@ StatusCode OTRawBankDecoder::decode( LHCb::OTLiteTimeContainer& ottimes ) const
   return StatusCode::SUCCESS ;
 }
 
-StatusCode OTRawBankDecoder::decode( LHCb::OTRawHitContainer& rawhits ) const
+StatusCode OTRawBankDecoder::decode( OTDAQ::RawEvent& otrawevent ) const
 {
-  // decode all modules. keep track of total number of hits. we can
-  // actually get rid of this: decoding the gols should be enough.
-  size_t numhits(0) ;
-  for( OTRawBankDecoderHelpers::Module* imod = m_detectordata->begin(); 
-       imod != m_detectordata->end(); ++imod)
-    numhits += decodeModule( *imod ) ;
-  // reserve and copy
-  rawhits.clear() ;
-  rawhits.reserve( numhits ) ;
-  for( OTRawBankDecoderHelpers::Module* imod = m_detectordata->begin(); 
-       imod != m_detectordata->end(); ++imod)
-    rawhits.insert(rawhits.end(), imod->rawhits().begin(), imod->rawhits().end() ) ;
-  // We'll need some proper error handling.
-  return StatusCode::SUCCESS ;
+  // this needs to be merged with the code above. this only works for
+  // verison 3 banks. for now, let's keep it seperate, until we have a
+  // real solution.
+
+  // Retrieve the RawEvent:
+  RawEvent* event = get<RawEvent>(m_rawEventLocation);
+  // Get the buffers associated with OT
+  const std::vector<RawBank*>& banks = event->banks(RawBank::OT );
+ 
+  // Reserve space in the otbankcontainer
+  otrawevent.clear() ;
+  OTDAQ::RawEvent::RawBankContainer& otbankcontainer = otrawevent.banks() ;
+  otbankcontainer.reserve( banks.size() ) ;
+  // Now copy the information from all banks
+  bool decodingerror(false) ;
+  for (std::vector<RawBank*>::const_iterator  ibank = banks.begin();
+       ibank != banks.end() ; ++ibank) {
+    const unsigned int* idata = (*ibank)->data() ;
+    otbankcontainer.push_back( OTDAQ::RawBank( (*ibank)->version(), (*ibank)->size(),
+					       OTDAQ::OTSpecificHeader(*idata))) ;
+    OTDAQ::RawBank& otspecificbank = otbankcontainer.back() ;
+    otspecificbank.gols().reserve( otspecificbank.header().numberOfGOLs()) ;
+    
+    // The data starts at the next 4byte
+    const unsigned int* begin = idata + 1 ;
+    const unsigned int* end   = idata + (*ibank)->size()/4 ;
+    size_t numgols(0) ;
+    for( idata = begin ; idata < end; ++idata) {
+      // decode the header
+      OTDAQ::GolHeader golheader(*idata) ;
+      OTDAQ::Gol gol(golheader) ;
+      const OTDAQ::RawHit* firsthit = reinterpret_cast<const OTDAQ::RawHit*>(idata+1) ;
+      gol.hits().insert(gol.hits().end(),firsthit,firsthit+golheader.numberOfHits()) ;
+      otspecificbank.gols().push_back( gol ) ;
+      // increase the pointer with the gol size
+      idata += golheader.hitBufferSize() ;
+      ++numgols ;
+    }
+    
+    // check that everything is well aligned
+    if(idata != end) {
+      warning() << "GOL headers do not add up to buffer size. " << idata << " " << end << endreq ;
+      decodingerror = true ;
+    }
+    
+    // check that we have read the right number of GOLs
+    if( numgols != otspecificbank.header().numberOfGOLs() ) {
+      warning() << "Found " << otspecificbank.header().numberOfGOLs() << " in bank header, but read only " 
+		<< numgols << " from bank." << endmsg ;
+      decodingerror = true ;
+    }
+  }
+
+  return decodingerror ? StatusCode::FAILURE : StatusCode::SUCCESS ;
 }

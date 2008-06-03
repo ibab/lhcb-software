@@ -2,6 +2,11 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2008-06-02 - Wouter Hulsbergen
+ - removed routine causing problems on windows
+ - added data structures for decoded raw event
+ - added interface to decoded raw event in OTRawBankDecoder
+
 !======================= OTDAQ v6r0 2008-06-02 ======================
 ! 2008-06-02 - Stephanie Hansmann-Menzemer
  - move cleaning of det info from EndEvent to BeginEvent

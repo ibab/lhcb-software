@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.h,v 1.9 2008-05-29 13:05:35 wouter Exp $
+// $Id: OTRawBankDecoder.h,v 1.10 2008-06-03 13:15:14 wouter Exp $
 #ifndef OTRAWBANKDECODER_H
 #define OTRAWBANKDECODER_H 1
 
@@ -18,10 +18,11 @@ class IOTChannelMapTool ;
 namespace LHCb {
   class RawBank ;
 }
+
 namespace OTRawBankDecoderHelpers
 {
-  struct Detector ;
-  struct Module ;
+  class Detector ;
+  class Module ;
 }
 
 /** @class OTRawBankDecoder OTRawBankDecoder.h
@@ -67,8 +68,8 @@ public:
   /// Decode all modules
   StatusCode decode( LHCb::OTLiteTimeContainer& ottimes ) const ;
   
-  /// Decode all modules but retrieve as 'raw hits'
-  StatusCode decode( LHCb::OTRawHitContainer& othits ) const ;
+  /// Translate the raw bank in an ot-specific raw bank.
+  StatusCode decode( OTDAQ::RawEvent& otevent ) const ;
 
   /// Get the conversion factor
   double nsPerTdcCount() const { return m_nsPerTdcCount ; }
