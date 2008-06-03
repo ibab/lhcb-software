@@ -15,9 +15,9 @@
 
 // local
 #include "OTRawBankEncoder.h"
-#include "OTSpecificHeader.h"
-#include "GolHeaderV3.h"
-#include "Event/OTRawHit.h"
+#include "OTDAQ/OTSpecificHeader.h"
+#include "OTDAQ/GolHeader.h"
+#include "OTDAQ/RawHit.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTRawBankEncoder
@@ -36,7 +36,7 @@ namespace {
  };
 
  struct CompareChannel {
-   bool operator()( const LHCb::OTRawHit& lhs, const LHCb::OTRawHit& rhs ) {
+   bool operator()( const OTDAQ::RawHit& lhs, const OTDAQ::RawHit& rhs ) {
      return lhs.channel() < rhs.channel() ;
    }
  };
@@ -208,7 +208,7 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
       std::vector<LHCb::OTChannelID>::const_iterator firstChannel = (*gol).firstChannel();
       
       /// Create gol header.
-      pipeToBuffer( OTDAQ::GolHeaderV3( 0, 
+      pipeToBuffer( OTDAQ::GolHeader( 0, 
                                         firstChannel->station(), 
                                         firstChannel->layer()  ,
                                         firstChannel->quarter(),
@@ -217,7 +217,7 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
                                         gol->nChannels() ), buffer );
       
       /// tmp vector of raw hits
-      LHCb::OTRawHitContainer rawHits;
+      OTDAQ::RawHitContainer rawHits;
       rawHits.reserve( (*gol).nChannels() );
       for ( ; firstChannel != (*gol).lastChannel(); ++firstChannel ) {
         if ( isDebug ) debug() << " Gol ID  = " << gol->id()
@@ -228,16 +228,16 @@ const OTRawBankEncoder::OTRawBank& OTRawBankEncoder::createRawBank(const OTBank&
                                << " nHits   = " << gol->nChannels() << endmsg;
         
         size_t channel = m_channelmaptool->channel( (*firstChannel) ) ;
-        rawHits.push_back( LHCb::OTRawHit( 0, channel, firstChannel->tdcTime() ) );
+        rawHits.push_back( OTDAQ::RawHit( 0, channel, firstChannel->tdcTime() ) );
       }
       
       /// Sort according to channel in Tell1
       std::sort( rawHits.begin(), rawHits.end(), CompareChannel() );
       
       // add padding i.e. empty hit
-      if ( rawHits.size()%2 ) rawHits.push_back( LHCb::OTRawHit() );
+      if ( rawHits.size()%2 ) rawHits.push_back( OTDAQ::RawHit() );
       
-      for ( LHCb::OTRawHitContainer::const_iterator it = rawHits.begin(); it != rawHits.end(); ++it ) 
+      for ( OTDAQ::RawHitContainer::const_iterator it = rawHits.begin(); it != rawHits.end(); ++it ) 
         pipeToBuffer( *it, buffer );
   
       // padding should not be necessary
