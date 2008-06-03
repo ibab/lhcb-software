@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-06-03 - Gerhard Raven
- - Add FPESvc, which can configure the FPU to trap a specified set of
+ - Add FPEAuditor, which can configure the FPU to trap a specified set of
    Floating Point Exceptions, and generate a SIGFPE (which leads to Gaudi
    providing a traceback and aborting the job)
 
