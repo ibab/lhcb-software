@@ -4,7 +4,8 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!============================ TrackMonitors v1r1 2008-06-03 ==================
 ! 2008-05-30 - Wouter Hulsbergen
-- created new package
-- moved TrackMonitor from TrackChecker to this package
-- added TrackVertexMonitor algorithm
+ - created new package
+ - moved TrackMonitor from TrackChecker to this package
+ - added TrackVertexMonitor algorithm
