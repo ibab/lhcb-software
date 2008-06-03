@@ -1,4 +1,4 @@
-// $Id: Particles2.h,v 1.7 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Particles2.h,v 1.8 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES2_H 
 #define LOKI_PARTICLES2_H 1
@@ -203,7 +203,7 @@ namespace LoKi
      * 
      *  @see LoKi::Cuts::LT
      *
-     *  @autor Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2008-01-19
      */
     class LifetimeDistance 

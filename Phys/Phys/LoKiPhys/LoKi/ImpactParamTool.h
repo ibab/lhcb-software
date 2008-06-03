@@ -1,4 +1,4 @@
-// $Id: ImpactParamTool.h,v 1.8 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: ImpactParamTool.h,v 1.9 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_IMPACTPARAMTOOL_H 
 #define LOKI_IMPACTPARAMTOOL_H 1
@@ -48,7 +48,7 @@ namespace LoKi
      *  IDistanceCalculatro interface 
      *  @see IDistanceCalculator
      *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
-     *  @dte 2006-02-19
+     *  @date 2006-02-19
      */
     class ImpactParamTool : virtual public LoKi::AuxFunBase 
     {    

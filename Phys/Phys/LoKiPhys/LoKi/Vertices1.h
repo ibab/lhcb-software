@@ -1,4 +1,4 @@
-// $Id: Vertices1.h,v 1.10 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: Vertices1.h,v 1.11 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES1_H 
 #define LOKI_VERTICES1_H 1
@@ -65,14 +65,14 @@ namespace LoKi
       /// clone method (mandatory!)
       virtual VertexDistance* clone() const ;
       /** the only one essential method 
-       *  @param p pointer to the vertex 
+       *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /** the only one essential method 
-       *  @param p pointer to the vertex 
+       *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type         distance   ( argument v ) const ;
@@ -120,7 +120,7 @@ namespace LoKi
       /// clone method (mandatory!)
       virtual VertexSignedDistance* clone() const ;
       /** the only one essential method 
-       *  @param p pointer to the vertex 
+       *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       virtual result_type operator() ( argument v ) const ;
@@ -171,14 +171,14 @@ namespace LoKi
       /// clone method (mandatory!)
       virtual VertexChi2Distance* clone() const ;
       /** the only one essential method 
-       *  @param p pointer to the vertex 
+       *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
       /** the only one essential method 
-       *  @param p pointer to the vertex 
+       *  @param v pointer to the vertex 
        *  @return the estimate of the distance between vertex and the 'vertex'
        */
       result_type         chi2       ( argument v ) const ;

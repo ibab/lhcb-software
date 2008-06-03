@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2008-06-03 14:07:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.29 2008-06-03 15:47:08 cattanem Exp $ 
 # ============================================================================
 # Created    : 2006-02-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
@@ -31,8 +31,6 @@ apply_pattern    reflex_dictionary                                   \
 
 # =============== patterns ===================================================
 apply_pattern     linker_library library=LoKiPhys
-
-macro LoKiPhysDict_use_linkopts $(use_linkopts)
 
 apply_pattern application_path 
 

@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.25 2008-04-10 18:42:02 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.26 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -2162,7 +2162,7 @@ namespace LoKi
      *  @see LoKi::Particles::IsMuon
      *  
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @daet 2007-02-25
+     *  @date 2007-02-25
      */
     const LoKi::Particles::IsMuon                                   ISMUONPID ;
     // ========================================================================

@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.11 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: Child.h,v 1.12 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -122,7 +122,7 @@ namespace LoKi
     /** trivial function to access all children particles 
      *  @see LHCb::Particle::daughters
      *  @param particle pointer to particle 
-     *  @param return vector of children
+     *  @return vector of children
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */
@@ -136,7 +136,7 @@ namespace LoKi
      *  @see LHCb::Particle::daughters
      *  @param particle pointer to particle 
      *  @param level  the level
-     *  @param return vector of children at the given level 
+     *  @return vector of children at the given level 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */    
@@ -163,7 +163,7 @@ namespace LoKi
     // ========================================================================
     /** trivial function to access all descendants particles 
      *  @param particle pointer to particle 
-     *  @param return vector of descendants 
+     *  @return vector of descendants 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-06-04
      */

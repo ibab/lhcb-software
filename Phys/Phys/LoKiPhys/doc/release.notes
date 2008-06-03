@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.60 2008-06-03 14:07:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.61 2008-06-03 15:47:08 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r4 2008-06-03 ==========================
+! 2008-06-03 - Marco Cattaneo
+ - Remove obsolete macro from requirements
+ - Fix many doxygen warnings
+
 ! 2008-06-03 - Vanya BELYAEV
-   
  - LoKi/Legacy1.h, src/Legacy1.cpp
    new files
    add new legacy function for incorrect evaluation of "vertex separation 
@@ -19,7 +23,6 @@
 
  - cmt/requirements 
    version incremenet to v7r4 
-
 
 !========================== LoKiPhys v7r3 2008-05-05 ==========================
 ! 2008-05-04 - Vanya BELYAEV

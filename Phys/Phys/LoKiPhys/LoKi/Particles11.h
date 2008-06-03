@@ -1,4 +1,4 @@
-// $Id: Particles11.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles11.h,v 1.8 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES11_H 
 #define LOKI_PARTICLES11_H 1
@@ -77,7 +77,7 @@ namespace LoKi
       ( const LoKi::UniqueKeeper<LHCb::Particle>& p ) ;      
       /** templated constructor from sequence of particles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class PARTICLE>
       IsAParticle
@@ -144,7 +144,7 @@ namespace LoKi
       ( const LoKi::UniqueKeeper<LHCb::Particle>& p ) ;      
       /** templated constructor from sequence of particles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class PARTICLE>
       IsAParticleInTree
@@ -219,7 +219,7 @@ namespace LoKi
       ( const LoKi::UniqueKeeper<LHCb::Particle>& p ) ;      
       /** templated constructor from sequence of particles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class PARTICLE>
       IsAParticleFromTree

@@ -1,4 +1,4 @@
-// $Id: Particles14.h,v 1.5 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles14.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES14_H 
 #define LOKI_PARTICLES14_H 1
@@ -54,7 +54,7 @@ namespace LoKi
     public:
       /** constructor with daughter index (starts from 1).
        *  E.g. for 2-body decays it could be 1 or 2 
-       *  @param index of daughter particles
+       *  @param child index of daughter particles
        */
       DecayAngle ( size_t child ) ;
       /// copy constructor 

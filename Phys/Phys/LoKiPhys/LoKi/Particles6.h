@@ -1,4 +1,4 @@
-// $Id: Particles6.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles6.h,v 1.7 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES6_H 
 #define LOKI_PARTICLES6_H 1
@@ -110,7 +110,7 @@ namespace LoKi
     {
     public:
       /** constructor from the function and daughter index 
-       *  @param fun    the function to be used 
+       *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
        */
       ChildPredicate 
@@ -118,7 +118,7 @@ namespace LoKi
         const size_t                 index ) ;
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
-       *  @param fun    the function to be used 
+       *  @param cut    the function to be used 
        */
       ChildPredicate
       ( const size_t                 index ,

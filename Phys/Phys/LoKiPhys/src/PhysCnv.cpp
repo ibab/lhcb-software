@@ -1,4 +1,4 @@
-// $Id: PhysCnv.cpp,v 1.5 2007-07-23 17:35:56 ibelyaev Exp $
+// $Id: PhysCnv.cpp,v 1.6 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -37,7 +37,7 @@
 // ============================================================================
 /*  Trivial conversion function 
  *  @param vct vector of const particles 
- *  @param return vector of non-const particles 
+ *  @return vector of non-const particles 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-02-16 
  */

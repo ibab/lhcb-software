@@ -1,4 +1,4 @@
-// $Id: Particles10.h,v 1.7 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles10.h,v 1.8 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES10_H 
 #define LOKI_PARTICLES10_H 1
@@ -78,7 +78,7 @@ namespace LoKi
       HasTracksFromPV ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class VERTEX>
       HasTracksFromPV 
@@ -111,7 +111,7 @@ namespace LoKi
       size_t addVertex ( const LHCb::RecVertex*  vertex ) ;      
       /** add the sequence of vertices  
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        *  @return the actual number of tracks 
        */          
       template <class VERTEX>
@@ -194,7 +194,7 @@ namespace LoKi
       ( const LoKi::UniqueKeeper<LHCb::VertexBase>& pvs ) ;
       /** templated constructor from sequence of vertices 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class VERTEX>
       HasTracksInTreeFromPV 
@@ -229,7 +229,7 @@ namespace LoKi
       { return m_cut.addVertex ( vertex ) ; }
       /** add the sequence of vertices  
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        *  @return the actual number of tracks 
        */          
       template <class VERTEX>

@@ -1,4 +1,4 @@
-// $Id: PhysExtract.h,v 1.5 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: PhysExtract.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PHYSEXTRACT_H 
 #define LOKI_PHYSEXTRACT_H 1
@@ -484,9 +484,7 @@ namespace LoKi
      *
      *  @see LoKi::Cuts::ID 
      * 
-     *  @param particle input pointer to Particle object
      *  @param output   output iterator to container of pointer to Particle
-     *  @param cut      cut to used for particle extraction
      *  @return the updated position of output iterator 
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru

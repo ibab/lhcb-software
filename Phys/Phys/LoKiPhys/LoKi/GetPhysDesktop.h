@@ -1,4 +1,4 @@
-// $Id: GetPhysDesktop.h,v 1.1 2008-01-25 14:42:22 ibelyaev Exp $
+// $Id: GetPhysDesktop.h,v 1.2 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_GETPHYSDESKTOP_H 
 #define LOKI_GETPHYSDESKTOP_H 1
@@ -24,7 +24,7 @@ namespace LoKi
   IPhysDesktop* getPhysDesktop ( const DVAlgorithm* alg ) ;
   // ==========================================================================
   /** get the desktop from Algorithm Context Service 
-   *  @param  pointer to Algorithm Context Service  
+   *  @param  svc pointer to Algorithm Context Service  
    *  @return the pointer to desktop
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  date 2008-01-16

@@ -1,4 +1,4 @@
-// $Id: Particles20.h,v 1.5 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: Particles20.h,v 1.6 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES20_H 
 #define LOKI_PARTICLES20_H 1
@@ -317,7 +317,6 @@ namespace LoKi
       /** the constructor form the vertex selection functot and 
        *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
        *  @see DVAlgorithm::distanceCalculator 
-       *  @param 
        *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParDV  
@@ -326,7 +325,6 @@ namespace LoKi
       /** the constructor form the vertex selection functot and 
        *  the name/nickname of IDistanceCalculator tool from DVAlgorithm
        *  @see DVAlgorithm::distanceCalculator 
-       *  @param 
        *  @param geo the nickname (or type/name)  of IDistanceCalculator tool
        */
       MinImpParDV  

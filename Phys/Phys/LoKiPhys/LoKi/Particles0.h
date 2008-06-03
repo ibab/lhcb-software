@@ -1,4 +1,4 @@
-// $Id: Particles0.h,v 1.12 2007-11-28 14:39:29 ibelyaev Exp $
+// $Id: Particles0.h,v 1.13 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES0_H 
 #define LOKI_PARTICLES0_H 1
@@ -546,14 +546,14 @@ namespace LoKi
       ( const ParticleProperty& pp     ) ;
       /** constructor 
        *  @param name particle name 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc  LHCb::ParticleProperty service 
        */
       DeltaMass
       ( const std::string&      name   , 
         IParticlePropertySvc*   ppsvc  ) ;
       /** constructor 
        *  @param pid  particle ID 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMass
       ( const LHCb::ParticleID& pid    , 
@@ -614,14 +614,14 @@ namespace LoKi
       ( const ParticleProperty& pp     ) ;
       /** constructor 
        *  @param name particle name 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass 
       ( const std::string&      name   , 
         IParticlePropertySvc*   ppsvc  ) ;
       /** constructor 
        *  @param pid  particle ID 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMass
       ( const LHCb::ParticleID&       pid    , 
@@ -679,14 +679,14 @@ namespace LoKi
       ( const ParticleProperty& pp     );
       /** constructor 
        *  @param name particle name 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
       ( const std::string&      name   , 
         IParticlePropertySvc*   ppsvc  );      
       /** constructor 
        *  @param pid  particle ID 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       DeltaMeasuredMass 
       ( const LHCb::ParticleID&       pid    , 
@@ -749,14 +749,14 @@ namespace LoKi
       ( const ParticleProperty& pp     );
       /** constructor 
        *  @param name particle name 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc  LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass
       ( const std::string&      name   , 
         IParticlePropertySvc*   ppsvc  );      
       /** constructor 
        *  @param pid  particle ID 
-       *  @param svp  LHCb::ParticleProperty service 
+       *  @param ppsvc LHCb::ParticleProperty service 
        */
       AbsDeltaMeasuredMass 
       ( const LHCb::ParticleID&       pid    , 
@@ -820,14 +820,14 @@ namespace LoKi
       ( const ParticleProperty& pp     ) ;
       /** constructor 
        *  @param name particle name 
-       *  @param svp  ParticleProperty service 
+       *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
       ( const std::string&      name   , 
         IParticlePropertySvc*   ppsvc  ) ;
       /** constructor 
        *  @param pid  particle ID 
-       *  @param svp  ParticleProperty service 
+       *  @param ppsvc ParticleProperty service 
        */
       DeltaMeasuredMassChi2 
       ( const LHCb::ParticleID&       pid    , 

@@ -1,4 +1,4 @@
-// $Id: PhysCnv.h,v 1.6 2007-07-23 17:35:47 ibelyaev Exp $
+// $Id: PhysCnv.h,v 1.7 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PHYSCNV_H 
 #define LOKI_PHYSCNV_H 1
@@ -40,7 +40,7 @@ namespace LoKi
     // ========================================================================
     /** Trivial conversion function 
      *  @param vct vector of non-const particles 
-     *  @param return vector of const particles 
+     *  @return vector of const particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
@@ -52,7 +52,7 @@ namespace LoKi
     // ========================================================================    
     /** Trivial conversion function 
      *  @param vct vector of const particles 
-     *  @param return vector of non-const particles 
+     *  @return vector of non-const particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
@@ -62,7 +62,7 @@ namespace LoKi
     // ========================================================================
     /** Trivial conversion function 
      *  @param vct vector of const particles 
-     *  @param return vector of non-const particles 
+     *  @return vector of non-const particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
@@ -74,7 +74,7 @@ namespace LoKi
     // ========================================================================    
     /** Trivial conversion function 
      *  @param vct vector of const particles 
-     *  @param return vector of non-const particles 
+     *  @return vector of non-const particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
@@ -84,7 +84,7 @@ namespace LoKi
     // ========================================================================    
     /** Trivial conversion function 
      *  @param vct vector of non-const vertices 
-     *  @param return vector of const vertices 
+     *  @return vector of const vertices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */
@@ -96,7 +96,7 @@ namespace LoKi
     // ========================================================================    
     /** Trivial conversion function 
      *  @param vct vector of const vertices 
-     *  @param return vector of non-const vertices 
+     *  @return vector of non-const vertices 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-16 
      */

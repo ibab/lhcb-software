@@ -1,4 +1,4 @@
-// $Id: Particles8.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles8.h,v 1.7 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES8_H 
 #define LOKI_PARTICLES8_H 1
@@ -65,7 +65,7 @@ namespace LoKi
       HasProtos ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& ps ) ;
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class PROTO>
       HasProtos 
@@ -122,7 +122,7 @@ namespace LoKi
       ( const LoKi::UniqueKeeper<LHCb::ProtoParticle>& ps ) ;
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class PROTO>
       HasProtosInTree 

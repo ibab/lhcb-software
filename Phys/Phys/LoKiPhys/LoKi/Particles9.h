@@ -1,4 +1,4 @@
-// $Id: Particles9.h,v 1.6 2007-11-28 14:39:30 ibelyaev Exp $
+// $Id: Particles9.h,v 1.7 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES9_H 
 #define LOKI_PARTICLES9_H 1
@@ -68,7 +68,7 @@ namespace LoKi
       HasTracks ( const LoKi::UniqueKeeper<LHCb::Track>& ps ) ;
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class TRACK>
       HasTracks 
@@ -127,7 +127,7 @@ namespace LoKi
       HasTracksInTree ( const LoKi::UniqueKeeper<LHCb::Track>& ps ) ;
       /** templated constructor from sequence of ptoroparticles 
        *  @param first 'begin'-iterator of the sequence 
-       *  @param end   'end'-iterator of the sequence 
+       *  @param last  'end'-iterator of the sequence 
        */
       template <class TRACK>
       HasTracksInTree 

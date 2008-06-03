@@ -1,4 +1,4 @@
-// $Id: Particles3.h,v 1.8 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: Particles3.h,v 1.9 2008-06-03 15:47:08 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES3_H 
 #define LOKI_PARTICLES3_H 1
@@ -245,7 +245,7 @@ namespace LoKi
        *  from the sequence of "particles"
        *  @param first 'begin'-iterator for the sequence 
        *  @param last  'end'-iterator for the sequence
-       *  @param helper tool needed for evaluation
+       *  @param tool  helper tool needed for evaluation
        */
       template <class PARTICLE>
       MinClosestApproach 
@@ -258,7 +258,7 @@ namespace LoKi
       {} ;
       /** templated contructor 
        *  from the sequence of "particles"
-       *  @param helper tool needed for evaluation
+       *  @param tool  helper tool needed for evaluation
        *  @param first 'begin'-iterator for the sequence 
        *  @param last  'end'-iterator for the sequence
        */
