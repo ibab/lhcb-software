@@ -1,4 +1,4 @@
-// $Id: CaloExtraDigits.cpp,v 1.10 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloExtraDigits.cpp,v 1.11 2008-06-03 15:25:16 odescham Exp $
 // ============================================================================
 // Include files
 // STL 
@@ -112,7 +112,7 @@ StatusCode CaloExtraDigits::initialize ()
   Gaudi::XYZPoint center = geoinf->toGlobal( Gaudi::XYZPoint() );
   m_z = center.z() + m_det->zShowerMax ();
   //  subscribe the incidents 
-  incSvc()->addListener( this , IncidentType::EndEvent   , 10 );
+  //  incSvc()->addListener( this , IncidentType::EndEvent   , 10 );
   incSvc()->addListener( this , IncidentType::BeginEvent , 10 );
   
   // reset digits 

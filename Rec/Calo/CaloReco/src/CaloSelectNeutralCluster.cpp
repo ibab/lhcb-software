@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.7 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloSelectNeutralCluster.cpp,v 1.8 2008-06-03 15:25:16 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -77,7 +77,7 @@ CaloSelectNeutralCluster::initialize ()
   IIncidentSvc* iSvc = incSvc() ;
   if ( 0 == iSvc ) { return Error("IIncidentSvc* point to NULL!") ; }
   // 
-  iSvc -> addListener ( this , IncidentType::EndEvent   , 10 ) ;
+  iSvc -> addListener ( this , IncidentType::BeginEvent   , 10 ) ;
   
   return StatusCode::SUCCESS ;
 }; 
