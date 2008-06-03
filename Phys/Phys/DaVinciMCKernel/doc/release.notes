@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.37 2008-06-03 13:44:36 pkoppenb Exp $
+! $Id: release.notes,v 1.38 2008-06-03 15:24:15 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+!====================== DaVinciMCKernel v2r8 2008-06-03 =====================
+! 2008-06-03 - Marco Cattaneo
+ - Fix doxygen warnings
+ - Remove objectionable disclaimers
 
 ! 2008-06-03 - Patrick Koppenburg for Tom Blake
  - New version on IP2VV interfaces adding methods for the transversity basis.

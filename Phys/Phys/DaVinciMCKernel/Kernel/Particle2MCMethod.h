@@ -1,4 +1,4 @@
-// $Id: Particle2MCMethod.h,v 1.2 2007-11-16 09:13:08 jonrob Exp $
+// $Id: Particle2MCMethod.h,v 1.3 2008-06-03 15:24:15 cattanem Exp $
 #ifndef KERNEL_PARTICLE2MCMETHOD_H
 #define KERNEL_PARTICLE2MCMETHOD_H 1
 
@@ -12,9 +12,7 @@
  */
 namespace Particle2MCMethod {
 
-  /** @enum 
-   *
-   *  Enumeration for MC association method
+  /**  Enumeration for MC association method
    *
    *  @author Philippe CHARPENTIER
    *  @author Juan PALACIOS

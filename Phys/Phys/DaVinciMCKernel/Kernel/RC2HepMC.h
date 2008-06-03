@@ -1,11 +1,4 @@
-// $Id: RC2HepMC.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/10/04 12:07:45  ibelyaev
-//  add LHCb::Particle -> HepMC::GenParticle relations and maker
-//
+// $Id: RC2HepMC.h,v 1.2 2008-06-03 15:24:15 cattanem Exp $
 // ============================================================================
 #ifndef LOKIPHYSMC_RC2HEPMC_H 
 #define LOKIPHYSMC_RC2HEPMC_H 1
@@ -32,10 +25,6 @@ namespace LHCb  { class    Particle ; }
  *  contributions and advices from G.Raven, J.van Tilburg,
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement
- *  with the campain of Dr.O.Callot et al.:
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-09-26
  */
@@ -43,11 +32,6 @@ namespace LHCb  { class    Particle ; }
 
 namespace LHCb
 {
-  /** @namespace LHCb::Relations_
-   *  definition fo low-level classes used for relations
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date 2006-03-16
-   */
   namespace Relations_
   {
     /// the actual type for RC  -->   HepMC relations

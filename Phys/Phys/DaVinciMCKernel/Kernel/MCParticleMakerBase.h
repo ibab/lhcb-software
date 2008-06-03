@@ -1,14 +1,4 @@
-// $Id: MCParticleMakerBase.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
-// ============================================================================
-// CVS tag $NAme:$, version $Revision: 1.1.1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/10/04 11:58:30  ibelyaev
-//  add (optional, switched-off in default) relation tables
-//
-// Revision 1.1  2006/09/26 10:45:55  ibelyaev
-//  make MCParticleMakerBase vizible outside package
-//
+// $Id: MCParticleMakerBase.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
 // ============================================================================
 #ifndef DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 
 #define DAVINCIMCTOOLS_MCPARTICLEMAKERBASE_H 1

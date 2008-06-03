@@ -1,11 +1,4 @@
-// $Id: HepMC2MC.h,v 1.1.1.1 2006-10-11 13:35:09 jpalac Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1.1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2006/04/09 10:16:08  ibelyaev
-//  minor fixes
-//
+// $Id: HepMC2MC.h,v 1.2 2008-06-03 15:24:14 cattanem Exp $
 // ============================================================================
 #ifndef MCTOOLS_HEPMC2MC_H 
 #define MCTOOLS_HEPMC2MC_H 1
@@ -42,10 +35,6 @@ namespace LHCb { class MCParticle  ; }
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-01-23 

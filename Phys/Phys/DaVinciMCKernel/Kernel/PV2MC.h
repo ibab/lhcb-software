@@ -1,4 +1,4 @@
-// $Id: PV2MC.h,v 1.3 2007-03-02 13:26:58 cattanem Exp $
+// $Id: PV2MC.h,v 1.4 2008-06-03 15:24:14 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_PV2MC_H 
 #define KERNEL_PV2MC_H 1
@@ -26,10 +26,6 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
  *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
- *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18 
  */
@@ -38,7 +34,7 @@ namespace LHCb
 {
   namespace Relations_
   {
-    /// the actual type of "weight" (pair: /#of tracks + chi2)
+    /// the actual type of "weight" (pair: number of tracks + chi2)
     typedef std::pair<unsigned int,float>                    PV2MCWeight ;
     /// the actual type of PV   -> MC relations 
     typedef IRelationWeighted<LHCb::RecVertex,LHCb::MCVertex,PV2MCWeight> 

@@ -1,4 +1,4 @@
-// $Id: MC2Collision.h,v 1.2 2007-03-02 13:26:58 cattanem Exp $
+// $Id: MC2Collision.h,v 1.3 2008-06-03 15:24:14 cattanem Exp $
 // ============================================================================
 #ifndef KERNEL_MC2COLLISION_H 
 #define KERNEL_MC2COLLISION_H 1
@@ -35,10 +35,6 @@ template <class FROM, class TO> class IRelation;
  *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
  *  contributions and advices from G.Raven, J.van Tilburg, 
  *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *  By usage of this code one clearly states the disagreement 
- *  with the campain of Dr.O.Callot et al.: 
- *  "No Vanya's lines are allowed in LHCb/Gaudi software."
  *
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-03-18 
@@ -133,36 +129,6 @@ namespace MC2Collision
   collision 
   ( const LHCb::MCParticle*         particle , 
     const LHCb::MCVertex2Collision* table    ) ;
-
-  /** get the GenCollision object, associated with the given hit
-   *
-   *  @code 
-   *
-   *  // get the relation table
-   *  const LHCb::MCVertex2Collision* table = ... ;
-   * 
-   *  const LHCb::MCHit* hit = ... ;
-   *  
-   *  // get the GenCollision object:
-   *  const LHCb::GenCollision* c = collision ( hit , table ) ;
-   * 
-   *  @endcode
-   * 
-   *  @see LHCb::MCHit
-   *  @see LHCb::GenCollision
-   *  @see LHCb::MCVertex2Collision
-   *
-   *  @param hit    hit to be inspected 
-   *  @param table  information provider
-   *  @return the associated collision object 
-   *
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2006-03-18
-   */
-  const LHCb::GenCollision* 
-  collision 
-  ( const LHCb::MCHit*              hit    , 
-    const LHCb::MCVertex2Collision* table  ) ;
 
   /** get the GenCollision object, associated with the given hit
    *
@@ -326,7 +292,7 @@ namespace MC2Collision
   primaryVertex ( const LHCb::MCVertex* vertex ) ;
   /** Simple function wich returns the primary vertex for the given particle 
    *  
-   *  @param particle particle
+   *  @param hit particle
    *  @return the primary vertex 
    *
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
