@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Chris Jones
+ - Adapt to changes in decoded data format
+
 !======================= RichRecQC v2r18 2008-05-15 ==========================
 ! 2008-05-14 - Chris Jones
  - Add use of stereographic refit and isolated tracks to RichRecoQC

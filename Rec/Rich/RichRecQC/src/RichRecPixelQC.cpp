@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.19 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.20 2008-06-03 12:51:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -100,7 +100,7 @@ StatusCode PixelQC::execute()
       {
 
         // HPD ID
-        const LHCb::RichSmartID hpd = (*iHPD).first;
+        const LHCb::RichSmartID hpd = (*iHPD).second.hpdID();
         // Vector of SmartIDs
         const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
         // RICH

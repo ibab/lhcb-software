@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.6 2008-05-08 13:18:27 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.7 2008-06-03 12:51:03 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -99,7 +99,7 @@ StatusCode PixelRecoEffMonitor::execute()
             iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
         // HPD ID
-        const LHCb::RichSmartID hpd = (*iHPD).first;
+        const LHCb::RichSmartID hpd = (*iHPD).second.hpdID();
         // Vector of SmartIDs
         const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
         // Hardware ID

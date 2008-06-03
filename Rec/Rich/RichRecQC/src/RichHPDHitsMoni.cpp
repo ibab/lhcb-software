@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.6 2008-05-06 15:35:33 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.7 2008-06-03 12:51:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -79,7 +79,7 @@ StatusCode HPDHitsMoni::execute()
       {
 
         // HPD info
-        const LHCb::RichSmartID hpd     = (*iHPD).first;
+        const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
         const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
         const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
         const Rich::DetectorType rich   = hpd.rich();
