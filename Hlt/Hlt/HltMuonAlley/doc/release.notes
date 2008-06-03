@@ -3,6 +3,9 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+! 2008-06-03 - Sandra Amato
+  - HltIsMuonTool: updated default parameters
+                   include dp/p cut
 ! 2008-06-02 - Gerhard Raven
   - HltMatchTVeloTracks: explictly ignore implictly ignored StatusCode
   - HltIsMuonTool: use double instead of float

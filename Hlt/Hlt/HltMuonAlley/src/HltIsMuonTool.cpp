@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.5 2008-06-02 10:57:59 graven Exp $
+// $Id: HltIsMuonTool.cpp,v 1.6 2008-06-03 17:10:51 sandra Exp $
 // Include files 
 
 // from Gaudi
@@ -31,12 +31,13 @@ HltIsMuonTool::HltIsMuonTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
 // FOI parameters from off line   28/1/8
-  declareProperty( "par1x", m_p1x = boost::assign::list_of (6.5)(5.0)(3.0)(3.0));
-  declareProperty( "par2x", m_p2x = boost::assign::list_of (35.)(35.)(30.)(25.));
-  declareProperty( "par3x", m_p3x = boost::assign::list_of (.03)(.05)(.08)(.10));
-  declareProperty( "par1y", m_p1y = boost::assign::list_of (5.5)(4.0)(2.5)(2.5));
-  declareProperty( "par2y", m_p2y = boost::assign::list_of (35.)(35.)(25.)(25.));
-  declareProperty( "par3y", m_p3y = boost::assign::list_of (.07)(.17)(.17)(.22));
+  declareProperty( "par1x", m_p1x = boost::assign::list_of (12.)(17.)(6.0)(6.7));
+  declareProperty( "par2x", m_p2x = boost::assign::list_of (13.)(21.)(10.)(15.));
+  declareProperty( "par3x", m_p3x = boost::assign::list_of (.11)(.09)(.09)(.10));
+  declareProperty( "par1y", m_p1y = boost::assign::list_of (6.7)(9.0)(11.)(12.));
+  declareProperty( "par2y", m_p2y = boost::assign::list_of (3.4)(3.4)(3.5)(3.4));
+  declareProperty( "par3y", m_p3y = boost::assign::list_of (.02)(.02)(.02)(.02));
+
   declareProperty("UseFastDecoding", m_useFastDecoding = true );
   declareInterface<ITrackFunctionTool>(this);
 }
@@ -95,6 +96,24 @@ double  HltIsMuonTool::function(const Track& ctrack)
         if(!(tileM4.isValid())||!(isInFOI(track,tileM4))) return 0;
       }else if(tile.station()==2){
         tileM3=tile;
+        // This Checking should be moved to a filter
+        // Checking dP/P
+        float ptrack=ctrack.p(); 
+        float pL0 = l0Momentum(tileM3);
+        float dpop = (ptrack-pL0)/ptrack;
+        debug() << " pTt = " << ptrack << "  pL0 = " << pL0 << " dpop = " << dpop << endreq;
+        if(dpop<-2){
+          int region = tileM3.region();
+          if((region==0) && (ptrack < 60000)) return 0; 
+          if((region==1) && (ptrack < 30000)) return 0; 
+          if((region==2) && (ptrack < 15000)) return 0; 
+          if((region==3) && (ptrack <  7500)) return 0; 
+
+        }
+
+
+
+
         // M3 hit out of FOI or invalid
         if(!(tileM3.isValid())||!(isInFOI(track,tileM3))) return 0;
       }else if(tile.station()==1){
@@ -170,7 +189,7 @@ double  HltIsMuonTool::function(const Track& ctrack)
   // no muon hits
   return 0;
 } 
-
+//=====================================
 bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
  
   
@@ -197,3 +216,18 @@ bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
 
   return result;
 }
+//===================================
+float  HltIsMuonTool::l0Momentum(MuonTileID tileMX){
+  float pL0;
+  m_inputL0Muon=get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
+  std::vector<L0MuonCandidate*>::const_iterator itL0;
+  for (itL0=m_inputL0Muon->begin();itL0!=m_inputL0Muon->end();itL0++){
+     std::vector<MuonTileID> list_of_tile= (*itL0)->muonTileIDs(2);
+     MuonTileID l0tileM3=*(list_of_tile.begin());
+     if(l0tileM3==tileMX){
+        return pL0 = fabs((*itL0)->pt())/sin((*itL0)->theta());
+     }
+  }
+  return 0;
+} 
+
