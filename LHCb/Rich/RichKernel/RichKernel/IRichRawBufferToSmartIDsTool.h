@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.10 2007-11-27 12:19:59 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.11 2008-06-03 14:39:11 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -60,7 +60,7 @@ namespace Rich
       virtual const Rich::DAQ::L1Map & allRichSmartIDs() const = 0;
 
       /** Access the vector of RichSmartIDs for the given HPD identifier
-       *  @param[IN] hpdID The HPD identifier
+       *  @param[in] hpdID The HPD identifier
        *  @return The vector of hits (RichSmartIDs) for the given HPD
        */
       virtual const LHCb::RichSmartID::Vector& richSmartIDs( const LHCb::RichSmartID hpdID ) const = 0;

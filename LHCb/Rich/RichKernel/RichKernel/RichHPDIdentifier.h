@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHPDIdentifier
+/** @file RichHPDIdentifier.h
  *
  *  Header file for Rich::DAQ::HPDIdentifier
  *
  *  CVS Log :-
- *  $Id: RichHPDIdentifier.h,v 1.5 2008-02-06 10:45:56 jonrob Exp $
+ *  $Id: RichHPDIdentifier.h,v 1.6 2008-06-03 14:39:11 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   27/04/2007

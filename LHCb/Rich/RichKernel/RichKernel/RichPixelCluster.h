@@ -5,7 +5,7 @@
  *  Header file for pixel clustering class Rich::DAQ::PixelCluster
  *
  *  CVS Log :-
- *  $Id: RichPixelCluster.h,v 1.11 2008-02-15 18:09:21 jonrob Exp $
+ *  $Id: RichPixelCluster.h,v 1.12 2008-06-03 14:39:11 cattanem Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   02/02/2007
@@ -152,7 +152,7 @@ namespace Rich
     inline bool aliceMode() const { return m_aliceMode; }
 
     /** Set the mode (LHCb or ALICE)
-     *  @param Boolean indiciting if we are in ALICE(true) or LHCb(false) mode
+     *  @param mode Boolean indicating if we are in ALICE(true) or LHCb(false) mode
      */
     inline void setAliceMode( const bool mode ) { m_aliceMode = mode; }
 
