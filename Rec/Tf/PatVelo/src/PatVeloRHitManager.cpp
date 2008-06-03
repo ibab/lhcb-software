@@ -1,8 +1,6 @@
-// $Id: PatVeloRHitManager.cpp,v 1.2 2008-01-20 15:46:37 krinnert Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.3 2008-06-03 07:14:24 cattanem Exp $
 
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/IIncidentSvc.h"
 
 #include "PatVeloRHitManager.h"
 
