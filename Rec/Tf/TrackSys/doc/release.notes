@@ -4,8 +4,17 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+!============================ TrackSys v4r14 2008-06-03 ======================
+! 2008-06-03 - Marco Cattaneo
+ - Add TrackMonitors to requirements
+
 ! 2008-06-01 - David Hutchcroft
  - Added a line to set PatVeloSpaceTool to flag clusters as used, was default
+
+! 2008-02-27 - Wouter Hulsbergen
+ - In Fitting.opts:
+   . use default extrapolator also for seed, velo, velo-tt fits
+   . extrapolate also downstream tracks to beamline (for Ks)
 
 !============================ TrackSys v4r13 2008-01-28 ======================
 ! 2008-01-28 - Manuel Schiller

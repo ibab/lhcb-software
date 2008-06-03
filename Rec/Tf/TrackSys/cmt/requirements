@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v4r13
+version           v4r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -33,7 +33,8 @@ use   TrackMatching        v2r*    Tf
 
 use   TrackIdealPR         v2r*    Tr
 use   TrackAssociators     v2r*    Tr
-use   TrackCheckers        v3r*    Tr
+use   TrackCheckers        v4r*    Tr
+use   TrackMonitors        v1r*    Tr
 
 use   TrackPython          v3r*    Tr
 
