@@ -29,7 +29,7 @@ jpsi2mumu.OutputLevel = 3 ;
 
 GaudiSequencer("TutorialSeq").Members.append(jpsi2mumu)
 
-HistogramPersistencySvc().OutputFile = "DVHistos_1.root";
+HistogramPersistencySvc().OutputFile = "DVHistos_2.root";
 
 ApplicationMgr().EvtMax = 1000 ;
 

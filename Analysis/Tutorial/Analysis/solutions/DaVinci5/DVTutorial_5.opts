@@ -20,9 +20,6 @@ PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu
 
-//TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
-
-TutorialSeq.MeasureTime = true ;
 /*
 //
 // Optionally keep only true Bs daughters
@@ -51,6 +48,7 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 ApplicationMgr.EvtMax = 100 ;
+EventSelector.PrintFreq = 1 ;
 
 #include "$DAVINCITUTORIALDATA"
 //#include "options/Bs2Jpsiphi_mm_CERN.opts"

@@ -46,7 +46,7 @@ GaudiSequencer("TutorialSeq").Members.append(phi2kk)
 
 GaudiSequencer("TutorialSeq").IgnoreFilterPassed = True # get all phis
 
-HistogramPersistencySvc().OutputFile = "DVHistos_1.root";
+HistogramPersistencySvc().OutputFile = "DVHistos_3.root";
 
 ApplicationMgr().EvtMax = 1000 ;
 

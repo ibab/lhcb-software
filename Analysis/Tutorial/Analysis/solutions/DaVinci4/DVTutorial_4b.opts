@@ -48,7 +48,7 @@ TutorialSeq.IgnoreFilterPassed = true ; // get all Phis
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos_4b.root";
 
-ApplicationMgr.EvtMax = 900 ;
+ApplicationMgr.EvtMax = 1000 ;
 
 
 Bs2JpsiPhi.OutputLevel = 3 ;

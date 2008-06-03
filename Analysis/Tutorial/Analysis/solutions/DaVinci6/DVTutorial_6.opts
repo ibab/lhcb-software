@@ -5,6 +5,9 @@
  *  @author P. Koppenburg
  *  @date 2006-12-21
  */
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
 #include "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4.opts"
 
 // Checker
@@ -19,11 +22,10 @@ HistogramPersistencySvc.OutputFile = "DVHistos.root";
 // ntuple
 NTupleSvc.Output={"FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"};
 
-ApplicationMgr.EvtMax = 500 ;
+ApplicationMgr.EvtMax = 1000 ;
 
 #include "$DAVINCITUTORIALDATA"
 //#include "options/Bs2Jpsiphi_mm_CERN.opts"
-
 
 EventSelector.PrintFreq = 1 ;
 

@@ -9,6 +9,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-06-03 - Patrick Koppenburg
+ - Added python solutions for all problems
+ - DaVinci6 : Use HLT summary tool
+
+! 2008-06-03 - Patrick Koppenburg
  - Created solutions/DaVinci3/DVTutorial_3.py
  - Replaced all counter variables by counter("...")
  - Checked StatusCodes up to Tutorial 3.
