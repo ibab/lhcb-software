@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r16 2008-06-03 ======================
 ! 2008-06-02 - Patrick Koppenburg
  - ChargedProtoPAlg: ignore() StatusCode in Warning()
 
