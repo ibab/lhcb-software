@@ -3,10 +3,10 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r14 2008-06-03 ====================
 ! 2008-06-03 - Patrick Koppenburg for Tom Blake
  - New version on IP2VV interfaces adding methods for the transversity basis.
 
-!======================== DaVinciKernel v6r14 2008-05-29 ====================
 ! 2008-05-29 - Marco Cattaneo
  - Fix doxygen warnings
 
