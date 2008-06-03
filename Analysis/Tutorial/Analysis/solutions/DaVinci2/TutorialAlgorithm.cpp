@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.8 2008-06-02 19:23:09 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.9 2008-06-03 09:58:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,8 +27,6 @@ TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_jPsiID(0)
     , m_jPsiMass(0.)
-    , m_nJPsis(0)
-    , m_nEvents(0)
 {
   declareProperty("MassWindow", m_jPsiMassWin = 10.*GeV);
   declareProperty("MaxChi2",    m_jPsiChi2 = 1000.);
@@ -70,7 +68,7 @@ StatusCode TutorialAlgorithm::execute() {
   debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  ++m_nEvents;
+  counter("Events")++;
 
   // code goes here  
   LHCb::Particle::ConstVector muons = desktop()->particles(); // get particles
@@ -121,7 +119,7 @@ StatusCode TutorialAlgorithm::makeJpsi(const LHCb::Particle::ConstVector& muons)
       desktop()->keep(&Jpsi);
       plotMuon(*imp,"Selected").ignore();
       plotMuon(*imm,"Selected").ignore();
-      ++m_nJPsis ;
+      counter("J/psi's")++ ;
     }
   }
   return desktop()->saveDesktop() ;
@@ -175,7 +173,6 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
 StatusCode TutorialAlgorithm::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Found " << m_nJPsis << " J/psi in " << m_nEvents << " events" << endmsg;
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 } 

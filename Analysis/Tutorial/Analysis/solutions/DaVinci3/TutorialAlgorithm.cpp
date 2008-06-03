@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.7 2008-04-21 11:28:07 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.8 2008-06-03 09:58:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,8 +27,6 @@ TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_motherID(0)
     , m_motherMass(0.)
-    , m_nMothers(0)
-    , m_nEvents(0)
 {
   declareProperty("Particle",   m_motherName );
   declareProperty("MassWindow", m_motherMassWin = 10.*GeV);
@@ -71,7 +69,7 @@ StatusCode TutorialAlgorithm::execute() {
   debug() << "==> Execute" << endmsg;
   StatusCode sc = StatusCode::SUCCESS ;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  ++m_nEvents;
+  counter("Events")++;
 
   // code goes here  
   LHCb::Particle::ConstVector daughters = desktop()->particles(); // get particles
@@ -86,10 +84,9 @@ StatusCode TutorialAlgorithm::execute() {
 // makeMother
 //=============================================================================
 StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daughters){
-  StatusCode sc = StatusCode::SUCCESS ;
 
   LHCb::Particle::ConstVector DaPlus, DaMinus;
-  sc = particleFilter()->filterNegative(daughters,DaMinus);
+  StatusCode sc = particleFilter()->filterNegative(daughters,DaMinus);
   if (sc) sc = particleFilter()->filterPositive(daughters,DaPlus);
   if (!sc) {
     err() << "Error while filtering" << endmsg ;
@@ -111,7 +108,7 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       
       StatusCode scFit = vertexFitter()->fit(*(*imp),*(*imm),Mother,DaDaVertex);
       if (!scFit) {
-        Warning("Fit error");
+        Warning("Fit error",StatusCode::SUCCESS,1).ignore();
         continue;
       }
       debug() << "Vertex fit at " << DaDaVertex.position()/cm
@@ -124,11 +121,13 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
       setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
       desktop()->keep(&Mother);
       debug() << "Saved mother " << Mother.particleID().pid() << " to desktop" << endmsg ;
-      plotDaughter(*imp,"Selected");
-      plotDaughter(*imm,"Selected");
-      ++m_nMothers ;
+      sc = plotDaughter(*imp,"Selected");
+      if (sc) sc = plotDaughter(*imm,"Selected");
+      if (!sc) return sc;
+      counter("Mothers")++ ;
     }
   }
+  if (!sc) return sc ;
   return desktop()->saveDesktop() ; // save them all
 }
 //=============================================================================
@@ -136,11 +135,9 @@ StatusCode TutorialAlgorithm::makeMother(const LHCb::Particle::ConstVector& daug
 //=============================================================================
 StatusCode TutorialAlgorithm::loopOnDaughters(const LHCb::Particle::ConstVector& daughters)const {
 
-  StatusCode sc = StatusCode::SUCCESS ;
-
   for ( LHCb::Particle::ConstVector::const_iterator im =  daughters.begin() ;
         im != daughters.end() ; ++im ){
-    sc = plotDaughter(*im,"All");
+    StatusCode sc = plotDaughter(*im,"All");
     if (!sc) return sc;
   }
 
@@ -151,8 +148,6 @@ StatusCode TutorialAlgorithm::loopOnDaughters(const LHCb::Particle::ConstVector&
 //=============================================================================
 StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::string& head )const {
 
-  StatusCode sc = StatusCode::SUCCESS ;
-
   plot(da->p(),  head+"P", head+" Daughter P",  0., 50.*GeV);    // momentum
   plot(da->pt(), head+"Pt", head+" Daughter Pt", 0., 5.*GeV );  // Pt
   debug() << da->momentum() << endmsg ;
@@ -161,7 +156,7 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
         ipv != prims.end() ; ++ipv ){
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
-    sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);
+    StatusCode sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);
     if (sc){
       plot(IP, head+"IP", head+" Daughter IP", 0., 10.*mm);
       if (IPE>0.) plot(IP/IPE, head+"IPS",  head+" Daughter IP/error", 0., 10.);
@@ -177,7 +172,6 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
 StatusCode TutorialAlgorithm::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Found " << m_nMothers << " " << m_motherName << " in " << m_nEvents << " events" << endmsg;
 
   return DVAlgorithm::finalize(); //=== For DC04, return StatusCode::SUCCESS;
 } 

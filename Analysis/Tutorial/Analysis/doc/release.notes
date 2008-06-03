@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Patrick Koppenburg
+ - Created solutions/DaVinci3/DVTutorial_3.py
+ - Replaced all counter variables by counter("...")
+ - Checked StatusCodes up to Tutorial 3.
+
 ! 2008-06-02 - Patrick Koppenburg
  - Created solutions/DaVinci1/DVTutorial_1.py
  - Created solutions/DaVinci2/DVTutorial_2.py 

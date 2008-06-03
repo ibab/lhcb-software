@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.3 2006-11-20 11:34:16 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.4 2008-06-03 09:58:38 pkoppenb Exp $
 #ifndef TUTORIALALGORITHM_H 
 #define TUTORIALALGORITHM_H 1 
 
@@ -8,6 +8,9 @@
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
  *  
+ *  Solution of problem sheet 3 
+ *
+ *  https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial3
  *
  *  @author Patrick Koppenburg
  *  @date   2006-05-24
@@ -34,8 +37,6 @@ private:
   double m_motherChi2 ;    ///< Max Mother chi^2
   LHCb::ParticleID m_motherID ;         ///< Mother ID
   double m_motherMass ;    ///< Mother mass
-  int m_nMothers ;         ///< number of selected mothers
-  int m_nEvents ;        ///< number of events
   std::string m_motherName ; ///< Mother name
 
 
