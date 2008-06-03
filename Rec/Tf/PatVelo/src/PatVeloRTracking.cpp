@@ -1,4 +1,4 @@
-// $Id: PatVeloRTracking.cpp,v 1.4 2008-02-27 14:37:37 krinnert Exp $
+// $Id: PatVeloRTracking.cpp,v 1.5 2008-06-03 13:02:07 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -281,6 +281,10 @@ namespace Tf {
         rzTracks.end() != itRzt; ++itRzt ) {
       PatRZTrack* tr = &(*itRzt);
       if ( tr->valid() ) {
+
+	// tag all hits including those not yet tagged
+	tr->tagUsedCoords();
+
         LHCb::Track* track = new LHCb::Track(outputTracks->size());
 
         // set a type for the track
@@ -289,8 +293,8 @@ namespace Tf {
         track->setSpecific( tr->zone() );
 
         track->setFlag( LHCb::Track::Backward, tr->backward() );
-
-        double z = tr->meanZ();
+	
+	double z = tr->meanZ();
         Gaudi::TrackVector state;
         state[0] = tr->rPred(z);
         state[2] = tr->rSlope();

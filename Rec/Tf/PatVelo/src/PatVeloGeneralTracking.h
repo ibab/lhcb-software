@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.h,v 1.6 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloGeneralTracking.h,v 1.7 2008-06-03 13:02:07 dhcroft Exp $
 #ifndef TF_PATVELOGENERALTRACKING_H 
 #define TF_PATVELOGENERALTRACKING_H 1
 
@@ -60,8 +60,14 @@ namespace Tf {
           };
           /// check if either cluster is already used elsewhere
           inline bool used() const { 
-            return (m_rHit->hit()->isUsed() || m_phiHit->hit()->isUsed()); 
+            return (m_rHit->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ) || 
+		    m_phiHit->hit()->isUsedByAnyOtherThan(Tf::HitBase::UsedByVeloRZ)); 
           }
+	  inline void setUsedByGeneral() {
+	    m_rHit->hit()->setStatus(HitBase::UsedByVeloGeneral);
+	    m_phiHit->hit()->setStatus(HitBase::UsedByVeloGeneral);
+	  }
+
           // inline getters
           inline double x() const { return m_pos.x(); }
           inline double y() const { return m_pos.y(); }

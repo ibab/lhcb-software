@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.11 2008-06-01 17:32:05 mjohn Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.12 2008-06-03 13:02:07 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -314,8 +314,7 @@ sortAndKeepGoodTriplets(std::vector<PointsList> &triplets){
         !iT->points()[2]->used() ){
       // kill clusters for other tracks
       for ( unsigned int i = 0 ; i < 3 ; ++i ) {
-        iT->points()[i]->rHit()->hit()->setUsed(true);
-        iT->points()[i]->phiHit()->hit()->setUsed(true);
+        iT->points()[i]->setUsedByGeneral();
       }
     }else{
       iT->setValid(false);
