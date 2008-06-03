@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Chris Jones
+ - Make 'AbortEarly = true' the default option for IsolatedTrackTool
+
 !======================== RichRecTrackTools v1r4 2008-05-09 ==================
 
 ! 2008-05-09 - Chris Jones

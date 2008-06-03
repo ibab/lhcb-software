@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.4 2008-05-16 15:01:21 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.5 2008-06-03 12:54:54 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -62,10 +62,9 @@ IsolatedTrackTool::IsolatedTrackTool( const std::string& type,
   declareProperty( "NPhiRegions", m_nPhiRegions               = list_of  (8)   (8)  (8)   ); // Number of phi regions
   declareProperty( "MinSegPhotons", m_minSegPhotons           = list_of  (2)   (2)  (2)   );
 
-  declareProperty( "AbortEarly", m_abortEarly = false );
+  declareProperty( "AbortEarly", m_abortEarly = true );
 
 }
-
 
 //=============================================================================
 // Initialisation
