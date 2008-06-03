@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::DecodedData
  *
  *  CVS Log :-
- *  $Id: RichDecodedData.h,v 1.1 2007-04-23 12:44:04 jonrob Exp $
+ *  $Id: RichDecodedData.h,v 1.2 2008-06-03 12:43:47 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -46,26 +46,26 @@ namespace Rich
     public:
 
       /// Default Constructor
-      HPDInfo() : m_inputNum(0) { }
+      HPDInfo() { }
 
       /// Constructor from info
-      HPDInfo( const Level1Input      input,
-               const Header&          header,
-               const Footer&          footer )
-        : m_inputNum(input),
+      HPDInfo( const LHCb::RichSmartID&  input,
+               const Header&             header,
+               const Footer&             footer )
+        : m_hpdID(input),
           m_header(header),
           m_footer(footer)
       { }
 
       /// Access the Level1Input
-      inline const Level1Input& inputNum() const { return m_inputNum; }
+      inline const LHCb::RichSmartID& hpdID() const { return m_hpdID; }
       /// Access the Header words
       inline const Header& header() const { return m_header; }
       /// Access the Footer words
       inline const Footer& footer() const { return m_footer; }
 
       /// set the Level1Input
-      inline void setInputNum( const Level1Input& input ) { m_inputNum = input; }
+      inline void setHpdID( const LHCb::RichSmartID& input ) { m_hpdID = input; }
       /// Set the Header
       inline void setHeader( const Header & header ) { m_header = header; }
       /// Set the footer
@@ -78,7 +78,7 @@ namespace Rich
 
     private:
 
-      Level1Input m_inputNum;               ///< The L1 input number for this HPD
+      LHCb::RichSmartID m_hpdID;            ///< The RichSmartID for this HPD
       Header m_header;                      ///< The HPDHeader word
       Footer m_footer;                      ///< The HPDFooter word
       LHCb::RichSmartID::Vector m_smartIds; ///< The decoded pixels in this HPD
@@ -86,7 +86,8 @@ namespace Rich
     };
 
     /// Map for RICH HPD data, sorted by HPD number
-    typedef std::map< const LHCb::RichSmartID, HPDInfo >                   HPDMap;
+    typedef std::map< const Rich::DAQ::Level1Input, HPDInfo > HPDMap;
+    //typedef std::map< const LHCb::RichSmartID, HPDInfo > HPDMap;
 
     /** @class IngressInfo RichKernel/RichDAQDefinitions.h
      *  Information for each L1 ingress
