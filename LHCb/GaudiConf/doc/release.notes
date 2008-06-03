@@ -2,6 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r9 2008-06-03 ========================
+! 2008-06-03 - Marco Cattaneo
+ - Add MDFCopy.opts: example options for copying an MDF (raw data) file
+
 !======================== GaudiConf v10r8 2008-05-08 ========================
 ! 2008-05-08 - Marco Cattaneo
  - RawData.opts: remove redundant (obsolete) options
