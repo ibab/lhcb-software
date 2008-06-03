@@ -5,19 +5,25 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r7>2008-05-29 LHCbSys v23r7</A></H1><PRE>
+</PRE><H1><A NAME=v23r7>2008-06-02 LHCbSys v23r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 
-- Packages modified: KernelSys v7r5, LHCbMath v2r8, DetSys v12r1, DetDesc v18r5,
-    DetDescCnv v4r6, Magnet v3r9, MuonDet v8r0p1, OTDet v7r8, EventSys v23r4, 
-    L0Event v16r10, DAQSys v4r0, MuonDAQ v4r1, OTDAQ v6r0, STDet v4r1,
+- Packages modified: KernelSys v7r5, LHCbMath v2r8, DetSys v12r1, CaloDet v8r7, 
+    DetDesc v18r5, DetDescCnv v4r6, DetDescSvc v1r17, Magnet v3r9,
+    MuonDet v8r0p1, OTDet v7r8, EventSys v23r4, L0Event v16r10, TrackEvent v4r13,
+    DAQSys v4r0, CaloDAQ v4r5, MuonDAQ v4r1, OTDAQ v6r0, STDet v4r1,
+    VeloDet v13r1, CaloInterfaces v7r6, CaloUtils v8r0p1, 
     CondDBEntityResolver v4r1p1, DaVinciKernel v6r14, LoKiAlgo v7r4p1,
-    LoKiArrayFunctors v7r4, LoKiCore v7r3, MDF v3r9, TfKernel v2r5,
-    TrackInterfaces v3r15, TsaKernel v3r3
+    LoKiAlgoMC v7r1p1, LoKiArrayFunctors v7r4, LoKiCore v7r3, LoKiGenMC v7r1,
+    LoKiPhysMC v7r2, MDF v3r9, TfKernel v2r5, TrackInterfaces v3r15, 
+    TsaKernel v3r3
 
 - In LHCbMath v2r8
   . Add MD5.h src/MD5.cpp: class to compute an MD5 digest of strings, or objects
     which can be streamed into strings
+
+- In CaloDet v8r7
+  . Allow Readout channel re-mapping in FEB (mapping table from condDB >= v4r4)
 
 - In DetDesc v18r5
   . Add computation of mean excitation energy and density effect correction 
@@ -26,11 +32,16 @@ This version uses Gaudi v19r9 and LCG_54e.
 - In DetDescCnv v4r6
   . Add read in for mean excitation potential
 
+- In DetDescSvc v1r17
+  . Added '-' and ':' to the list of allowed characters that the ConditionParser
+    of the UpdateManagerSvc allows in the name of a condition (option
+    UpdateManagerSvc.ConditionsOverride).
+
 - In Magnet v3r9
   . Moved analytical parameterization files to FieldMap/cdf (from FieldMap v5r1)
 
-- In MuonDAQ v4r1, MuonDet v8r0p1
-  . Fix untested StatusCode
+- In VeloDet v13r1
+  . Made DeVeloPhiType::phiOfStrip() public
 
 - In L0Event v16r10
   . new object description : L0DUTrigger.xml  for  "sub-trigger"
@@ -44,6 +55,9 @@ This version uses Gaudi v19r9 and LCG_54e.
   . fix bug concerning the creation of compound data with operator "-" in
     xml/L0DUElementaryData.xml
   . fix bug in L0DUConfig::clearDataValue() [DO NOT reset the constant data]
+
+- In TrackEvent v4r13
+  . Add flags and enum values for Calo cosmics reconstruction 
 
 - In OTDAQ v6r0, OTDet v7r8, STDet v4r1
   . Removed float variables, changed them into double
@@ -61,6 +75,18 @@ This version uses Gaudi v19r9 and LCG_54e.
   . Added access to L0 event id in OTSpecific header
   . Fixed bug in decoding of hits in short modules
   . Added access function to list of raw hits
+  . In OTRawBankDecoder, move cleaning of det info from EndEvent to BeginEvent
+
+- In CaloDAQ v4r5
+  . reduce WARNING verbosity in CaloReadoutTool
+  . fix Missing banks summary in ReadoutStatus setting (CaloReadoutTool.cpp)
+
+- In CaloInterfaces v7r6
+  . Add new interfaces for cosmics reconstruction tool:
+    ICaloCosmicsTool, ICaloCosmicsTrackTool
+
+- In CaloUtils v8r0p1
+  . Minor change in Calo2Dview (debug printout)
 
 - In CondDBEntityResolver v4r1p1, LoKiCore v7r3
   . Fix trivial compilation warning
@@ -68,16 +94,19 @@ This version uses Gaudi v19r9 and LCG_54e.
 - In DaVinciKernel v6r14
   . Add the file GetDecay.cpp, adds methods lost in move of Decay to LHCbKernel
 
-- In LoKiAlgo v7r4p1, LoKiCore v7r3
+- In LoKiAlgo v7r4p1, LoKiAlgoMC v7r1p1, LoKiCore v7r3
   . Add hack to suppress _POSIX_C_SOURCE redefinition warning
 
 - In LoKiArrayFunctors v7r4
   . src/Components/TupleTool.cpp
-     a) fix a stupid errot/type for "initialize" 
+     a) fix a stupid error/typo for "initialize" 
      b) use the conventions proposed by Vava for the column name: "head+'_'+name"
 
 - In LoKiCore v7r3
   . In Primitives.h: fix typo (bug) in a constructor
+
+- In LoKiGenMC v7r1, LoKiPhysMC v7r2
+  . Change the handled incidents from EndEvent to BeginEvent 
 
 - In MDF v3r9
   . Improve error printouts in the event the raw bank structure is corrupted.
@@ -86,13 +115,24 @@ This version uses Gaudi v19r9 and LCG_54e.
 - In TfKernel v2r5, TsaKernel v3r3
   . Fix for float/double conversion issues in the rest of the tracking.
 
+- In TfKernel v2r5
+  . Move cleaning of hits from EndEvent to BeginEvent in
+    TStationHitManager, TTStationHitManger, VeloHitManager
+
 - In TrackInterfaces v3r15
   . Add IFunctionTool.h and ITrackMatch.h, previously in HltBase
   . In IFunctionTool.h rename IVertexFunctionTool to IRecVertexFunctionTool
   . Extended interface of ITrackVertexer
 
-- In DaVinciKernel v6r14, DetDesc v18r5, LHCbMath v2r8, LoKiArrayFunctors v7r4, 
-    LoKiCore v7r3, MDF v3r9, STDet v4r1
+- In TsaKernel v3r3
+  . Fix dictionary selection file
+
+- In MuonDAQ v4r1, MuonDet v8r0p1
+  . Fix untested StatusCode
+
+- In DaVinciKernel v6r14, DetDesc v18r5, DetDescSvc v1r17, LHCbMath v2r8,
+     LoKiAlgoMC v7r1p1, LoKiArrayFunctors v7r4, LoKiCore v7r3, LoKiGenMC v7r1,
+     LoKiPhysMC v7r2, MDF v3r9, STDet v4r1
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v23r6>2008-05-19 LHCbSys v23r6</A></H1><PRE>
