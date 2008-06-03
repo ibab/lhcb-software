@@ -1,8 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackCheckers
 ! Responsible : Edwin Bos
-! Purpose     : Package for track checking algorithms
+! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+
+!======================= TrackCheckers v4r0 2008-06-03 =======================
+! 2008-06-03 - Marco Cattaneo
+ - Fix doxygen warnings
+
+! 2008-06-03 - Wouter Hulsbergen
+ - Removed TrackMonitor (moved to new Tr/TrackMonitors package). This package
+   is now intended exclusively for checking algorithms requiring MC truth
 
 !======================= TrackCheckers v3r4p2 2008-04-23 =====================
 ! 2008-04-23 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.h,v 1.2 2007-07-05 16:12:31 mneedham Exp $
+// $Id: TrackEffChecker.h,v 1.3 2008-06-03 06:39:08 cattanem Exp $
 #ifndef TRACKEFFCHECKER_H
 #define TRACKEFFCHECKER_H 1
  
@@ -13,7 +13,7 @@ namespace LHCb{
   class MCParticle;
 }
 
-/** @class TrackEffChecker TrackEffChecker.h "TrackCheckers/TrackEffChecker"
+/** @class TrackEffChecker TrackEffChecker.h
  * 
  * Class for track monitoring
  *  @author M. Needham.

@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.2 2007-09-11 14:45:58 mneedham Exp $
+// $Id: TrackCheckerBase.h,v 1.3 2008-06-03 06:39:07 cattanem Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -114,7 +114,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   };
 
   /** link to truth 
-  * @param track
+  * @param  aTrack track
   * @return linked particle 
   */
   const LHCb::MCParticle* mcTruth(const LHCb::Track* aTrack) const;
@@ -158,7 +158,7 @@ class TrackCheckerBase : public GaudiHistoAlg {
   ITrackGhostClassification* ghostClassification() const;
 
   /** Is a b child ? ie has b quark somewhere in history
-  * @param MCParticle particle
+  * @param  mcPart MC particle
   * @return bool true/false 
   */ 
   bool bAncestor(const LHCb::MCParticle* mcPart) const;

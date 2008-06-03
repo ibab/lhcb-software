@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.h,v 1.2 2008-04-23 13:53:34 cattanem Exp $
+// $Id: TrackResChecker.h,v 1.3 2008-06-03 06:39:08 cattanem Exp $
 #ifndef TRACKRESCHECKER_H
 #define TRACKRESCHECKER_H 1
  
@@ -22,7 +22,7 @@ namespace LHCb{
   class OTMeasurement;
 }
 
-/** @class TrackEffChecker TrackEffChecker.h "TrackCheckers/TrackEffChecker"
+/** @class TrackResChecker TrackResChecker.h
  * 
  * Class for track monitoring
  *  @author M. Needham.
