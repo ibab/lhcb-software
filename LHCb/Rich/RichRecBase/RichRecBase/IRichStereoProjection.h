@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoProjection
  *
  *  CVS Log :-
- *  $Id: IRichStereoProjection.h,v 1.1 2007-09-04 16:04:45 jonrob Exp $
+ *  $Id: IRichStereoProjection.h,v 1.2 2008-06-03 15:02:55 cattanem Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   20/06/2007
@@ -56,7 +56,7 @@ namespace Rich
       /** Projects (RichRec) photons in the stereo plane perpendicular to the segment direction
        *
        *  @param[in] segment The RichRecSegment which photons have to be projected
-       *  @param[out] RichRecRing (free pointer) with usual info and (x,y) stereo plane projection in "ringPoints()" field
+       *  @param[out] recRing (free pointer) with usual info and (x,y) stereo plane projection in "ringPoints()" field
        *  @return status flag
        *  @retval 0 means abnormal termination
        *  @retval 1 means normal completion
@@ -66,7 +66,7 @@ namespace Rich
       /** Projects (RichRec) photons in the stereo plane perpendicular to the segment direction
        *
        *  @param[in] richRecPhotons vector of photons to be projected
-       *  @param[out] RichRecRing (free pointer) with usual info and (x,y) stereo plane projection in "ringPoints()" field
+       *  @param[out] recRing (free pointer) with usual info and (x,y) stereo plane projection in "ringPoints()" field
        *  @return status flag
        *  @retval 0 means abnormal termination
        *  @retval 1 means normal completion
@@ -76,7 +76,7 @@ namespace Rich
       /** Computes the average Cerenkov photons emission point in the radiator along a segment direction
        *
        *  @param[in] segment The RichRecSegment which photons have to be projected
-       *  @param[out] XYZ vector of the average point (global coordinates)
+       *  @param[out] avgPoint XYZ vector of the average point (global coordinates)
        *  @return status flag
        *  @retval 0 means abnormal termination
        *  @retval 1 means normal completion
@@ -86,7 +86,7 @@ namespace Rich
       /** Computes the average Cerenkov photons emission point in radiator (for a vector of photons associated to a segment)
        *
        *  @param[in] richRecPhotons vector of photons to be projected
-       *  @param[out] XYZ vector of the average point (global coordinates)
+       *  @param[out] avgPoint XYZ vector of the average point (global coordinates)
        *  @return status flag
        *  @retval 0 means abnormal termination
        *  @retval 1 means normal completion
@@ -96,7 +96,7 @@ namespace Rich
       /** Computes the rotation matrix from the global frame to the stereo frame (Z along segment direction)
        *
        *  @param[in] segment The RichRecSegment which photons have to be projected
-       *  @param[out] Rotation matrix from the global frame to the stereo frame (Z along segment direction)
+       *  @param[out] rot Rotation matrix from the global frame to the stereo frame (Z along segment direction)
        *  @return status flag
        *  @retval 0 means abnormal termination
        *  @retval 1 means normal completion

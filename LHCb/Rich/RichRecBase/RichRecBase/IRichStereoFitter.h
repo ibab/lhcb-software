@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : Rich::Rec::IStereoFitter
  *
  *  CVS Log :-
- *  $Id: IRichStereoFitter.h,v 1.5 2008-05-14 15:11:18 jonrob Exp $
+ *  $Id: IRichStereoFitter.h,v 1.6 2008-06-03 15:02:55 cattanem Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @author Chris Jones     Christopher.Rob.Jones@cern.ch
@@ -170,7 +170,7 @@ namespace Rich
       /** Projects (RichRecPhotons) photons in the stereo plane perpendicular to the
        *  segment direction vector.
        *
-       *  @param[in]  segment The RichRecSegment for which photons have to be fitted
+       *  @param[in]  richSegment The RichRecSegment for which photons have to be fitted
        *  @param[in]  config  The fit configuration
        *
        *  @return Fit result object
