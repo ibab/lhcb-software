@@ -87,7 +87,7 @@ class Environment:
         """
         Revert the changes on destruction.
         """
-        #print "Restoring the enviroment"
+        #print "Restoring the environment"
         self.restore()
 
     def gen_script(self,shell_type):
@@ -96,25 +96,25 @@ class Environment:
         """
         shells = [ 'csh', 'sh', 'bat' ]
         if shell_type not in shells:
-            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type, shells))
+            raise RuntimeError("Shell type '%s' unknown. Available: %s" % (shell_type, shells))
         out = ""
         for key in self.old_values:
             if key not in self.env:
                 # unset variable
                 if shell_type == 'csh':
-                    out += 'unsetenv %s\n'%key
+                    out += 'unsetenv %s\n' % key
                 elif shell_type == 'sh':
-                    out += 'unset %s\n'%key
+                    out += 'unset %s\n' % key
                 elif shell_type == 'bat':
-                    out += 'set %s=\n'%key
+                    out += 'set %s=\n' % key
             else:
                 # set variable
                 if shell_type == 'csh':
-                    out += 'setenv %s "%s"\n'%(key,self.env[key])
+                    out += 'setenv %s "%s"\n' % (key, self.env[key])
                 elif shell_type == 'sh':
-                    out += 'export %s="%s"\n'%(key,self.env[key])
+                    out += 'export %s="%s"\n' % (key, self.env[key])
                 elif shell_type == 'bat':
-                    out += 'set %s=%s\n'%(key,self.env[key])
+                    out += 'set %s=%s\n' % (key, self.env[key])
         return out
 
 
@@ -127,21 +127,21 @@ class Aliases(Environment) :
         """
         shells = [ 'csh', 'sh', 'bat' ]
         if shell_type not in shells:
-            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type, shells))
+            raise RuntimeError("Shell type '%s' unknown. Available: %s" % (shell_type, shells))
         out = ""
         for key in self.old_values:
             if key not in self.env:
                 # unset variable
                 if shell_type == 'csh':
-                    out += 'unalias %s\n'%key
+                    out += 'unalias %s\n' % key
                 elif shell_type == 'sh':
-                    out += 'unalias %s\n'%key
+                    out += 'unalias %s\n' % key
             else:
                 # set variable
                 if shell_type == 'csh':
-                    out += 'alias %s "%s"\n'%(key,self.env[key])
+                    out += 'alias %s "%s"\n' % (key, self.env[key])
                 elif shell_type == 'sh':
-                    out += 'alias %s="%s"\n'%(key,self.env[key])
+                    out += 'alias %s="%s"\n' % (key, self.env[key])
         return out
 
 _globalenv = Environment()
