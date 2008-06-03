@@ -4,6 +4,9 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-06-03 - Chris Jones
+ - Fix some valgrind warnings
+
 !======================= RichRecStereoTools v1r1 2008-05-15 ==================
 ! 2008-05-14 - Chris Jones
  - Suppress some Warning messages in the fitter sooner + set status to SUCCESS

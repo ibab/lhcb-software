@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.7 2008-05-14 15:10:04 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.8 2008-06-03 12:52:49 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -138,6 +138,16 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
   if ( NULL == richSegment ) return Result(Result::Failed);
 
   // initial internal values
+  //
+  m_chi2=1e33;
+  m_chi2Exp=-1;
+  m_prob=-1;
+  m_probExp=-1;
+  m_dof=-1;
+  m_Cerenkov=-1;
+  m_CerenkovErr=-1;
+  m_photonThcSigma=-1;
+  //
   m_chi2Prev=1e33;
   m_chi2ExpPrev=-1;
   m_probPrev=-1;
@@ -146,11 +156,11 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
   m_CerenkovPrev=-1;
   m_CerenkovErrPrev=-1;
   m_photonThcSigmaPrev=-1;
+  //
   m_origPhotInfo.clear();
 
   //basic track/segment info
-  const Gaudi::XYZVector VPTrk = richSegment->trackSegment().bestMomentum();
-  const double PTrk = VPTrk.R()/Gaudi::Units::GeV;
+  const double PTrk = richSegment->trackSegment().bestMomentum().R()/Gaudi::Units::GeV;
 
   //--------------Cerenkov angle and resolution (above threshold?)
   const double thcNominal = m_ckAngleTool->avgCherenkovTheta(richSegment,config.pidType);
@@ -303,13 +313,17 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
         //------------- begin fit steps
         //compute covariance matrix, solve chi2 equations, get the fitted solution
         bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
-        if(statusCovarianceMatrix = newCovarianceMatrix(recRing)) {
-          if(statusSolveChi2Eq = solveChi2Equations(recRing)) {
+        if(statusCovarianceMatrix = newCovarianceMatrix(recRing)) 
+        {
+          if(statusSolveChi2Eq = solveChi2Equations(recRing)) 
+          {
             statusTransferFit=transferFitSolution(recRing);
-            if(statusTransferFit) {
+            if(statusTransferFit) 
+            {
               diffChi2=m_chi2Prev-m_chi2;
               //--keep 'old solution' if necessary
-              if(diffChi2>0) {
+              if(diffChi2>0) 
+              {
                 for(int i=0;i<3;i++) m_solPrev[i]=m_sol[i];
                 m_chi2Prev=m_chi2;
                 m_chi2ExpPrev=m_chi2Exp;
