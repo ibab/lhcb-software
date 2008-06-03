@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::IsolatedTrackTool
  *
  *  CVS Log :-
- *  $Id: RichIsolatedTrackTool.cpp,v 1.5 2008-06-03 12:54:54 jonrob Exp $
+ *  $Id: RichIsolatedTrackTool.cpp,v 1.6 2008-06-03 13:26:06 jonrob Exp $
  *
  *  @author Susan Haines  Susan.Carol.Haines@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -131,7 +131,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   const Rich::RadiatorType rad  = segment->trackSegment().radiator();
   const Rich::DetectorType rich = segment->trackSegment().rich();
   if ( rad == Rich::Aerogel /* || rad == Rich::Rich1Gas */ ) 
-  { Warning("Not yet implemented for "+Rich::text(rad),StatusCode::SUCCESS); return false; }
+  { Warning("Not yet implemented for "+Rich::text(rad),StatusCode::SUCCESS,1); return false; }
 
   // Get a reference to the Geometrical track object.
   const RichTrackSegment & trackSeg = segment->trackSegment();
@@ -146,7 +146,7 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
   trackIsIsolated &= testCut( "RICH panel Y boundary", rad, fabs(exitPoint.y()) > m_sizeYexit[rad] );
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
 
-  //Cuts on exit momentum
+  // Cuts on exit momentum
   const double exitP = std::sqrt( exitMom.Mag2() );
   trackIsIsolated &= testCut( "Min Track exit momentum", rad, exitP > m_sizemomcut[rad]*Gaudi::Units::GeV );
   if ( !trackIsIsolated && m_abortEarly ) return trackIsIsolated;
@@ -170,10 +170,10 @@ bool IsolatedTrackTool::isIsolated( const LHCb::RichRecSegment * segment,
     // The radiator type.  Must be same as main segment
     if ( segment2->trackSegment().radiator() != rad ) { continue; }
 
-    //Track hit point (Ch ring centre)
+    // Track hit point (Ch ring centre)
     const Gaudi::XYZPoint & tkPtnLocal1 = segment2->pdPanelHitPointLocal();
 
-    //compare outer loop segment entry to all other segments and find separation
+    // Compare outer loop segment entry to all other segments and find separation
     const double Xdifsq      = std::pow( fabs(tkPtnLocal.x()-tkPtnLocal1.x()), 2 );
     const double Ydifsq      = std::pow( fabs(tkPtnLocal.y()-tkPtnLocal1.y()), 2 );
     const double centreXYdif = std::sqrt(Xdifsq+Ydifsq);
