@@ -4,7 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-!============================= PatPV v3r3 2008-06-03 =========================
+!============================= PatPV v3r3 2008-06-04 =========================
+! 2008-06-04 - Marco Cattaneo
+ - Fixed warning message
+
 ! 2008-06-02 - Mariusz Witek
   - removed setting of Invalid flag for 2D tracks 
 
