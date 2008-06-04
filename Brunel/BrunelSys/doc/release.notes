@@ -3,7 +3,7 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v32r7>2008-05-30 Brunel v32r7</A></H1><PRE>
+</PRE><H1><A NAME=v32r7>2008-06-04 Brunel v32r7</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18, Rec v5r6
  and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
 
@@ -14,6 +14,18 @@ from DC06
 
 - New features
   . Add ability to decode 2008 OT data format (OTDAQ v6r0)
+  . New attribute "mainOptions" in Brunel() configurable, to define top level
+    options file to include (default is $BRUNELOPTS/Brunel.opts)
+  . Add "FPE" as possible Brunel().monitor, to switch on floating point exception
+    checking (GaudiConf v10r9, LHCbAlgs v2r18)
+
+- New tuning
+  . Use default extrapolator also for seed, velo, velo-tt fits (TrackSys v4r14)
+  . Extrapolate also downstream tracks to beamline (for Ks) (TrackSys v4r14)
+  . Changed how PatVeloGeneralTracking uses R clusters only found on RZ tracks,
+    this has a 1% better efficiency for "Velo only" tracks (i.e. out of the
+    acceptance) and ~0.1% improvement for long tracks, but about a 0.1% higher
+    ghost rate. (PatVelo v3r6)
 
 - Bug fixes
   . Remove all float-double conversion warnings in tracking code, should improve
@@ -22,6 +34,7 @@ from DC06
      TfKernel v2r5, TsaKernel v3r3) 
   . Fixed bug preventing reconstruction with tilted Velo detectors
     (VeloTools v3r2)
+  . Fix wrong counter initialization in NeutralProtoPAlg (GlobalReco v6r16)
 
 </PRE><H1><A NAME=v32r6>2008-05-19 Brunel v32r6</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17, Rec v5r5

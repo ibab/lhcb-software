@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-05-09 14:51:06 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-06-04 16:12:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -23,6 +23,7 @@ class Brunel(ConfigurableUser):
        ,"expertHistos": False # set to True to write out expert histos
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  ""    # string used to build file names
+       ,"mainOptions" : '$BRUNELOPTS/Brunel.opts' # top level options to import
        ,"DDDBtag":  "DEFAULT" # geometry database tag
        ,"condDBtag":"DEFAULT" # conditions database tag
        ,"fieldOff":     False # set to True for magnetic field off data
@@ -177,7 +178,7 @@ class Brunel(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        importOptions('$BRUNELOPTS/Brunel.opts')
+        importOptions( self.getProp( "mainOptions" ) )
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
