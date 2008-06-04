@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use GaudiConf	         v10r8
+use GaudiConf	         v10r9
 use GaudiObjDesc         v11r2
 
 #                                         Maintainer
@@ -20,14 +20,14 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use L0MuonKernel          v7r4    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use ProcessorKernel       v5r1    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use Relations             v5r4    Kernel  # Ivan Belyaev
-use RichKernel            v7r11p1 Rich    # Chris Jones
+use RichKernel            v7r12   Rich    # Chris Jones
 
 # Detector description
 use DetSys                v12r1   Det     # Marco Cattaneo
 use BcmDet                v1r1    Det     # Magnus Lieng
 use CaloDet               v8r7    Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r1    Det     # Olivier Deschamps
-use DDDB                  v1r6    Det     # Marco Cattaneo
+use DDDB                  v1r7    Det     # Marco Cattaneo
 use DetCond               v11r11  Det     # Marco Clemencic
 use DetDesc               v18r5   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r6    Det     # Marco Clemencic, Juan Palacios
@@ -70,8 +70,8 @@ use CaloUtils             v8r0p1 Calo    # Olivier Deschamps
 use CondDBEntityResolver  v4r1p1 Tools   # Marco Clemencic
 use CondDBUI              v2r9   Tools   # Marco Clemencic
 use DaVinciKernel         v6r14  Phys    # Juan Palacios
-use DaVinciMCKernel       v2r7   Phys    # Juan Palacios
-use LHCbAlgs              v2r17  Kernel  # Marco Cattaneo
+use DaVinciMCKernel       v2r8   Phys    # Juan Palacios
+use LHCbAlgs              v2r18  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
 use LoKiAlgo              v7r4p1 Phys    # Ivan Belyaev
@@ -82,7 +82,7 @@ use LoKiGen               v7r3   Phys    # Ivan Belyaev
 use LoKiGenMC             v7r1   Phys    # Ivan Belyaev
 use LoKiMC                v7r3   Phys    # Ivan Belyaev
 use LoKiNumbers           v7r3   Phys    # Ivan Belyaev
-use LoKiPhys              v7r3   Phys    # Ivan Belyaev
+use LoKiPhys              v7r4   Phys    # Ivan Belyaev
 use LoKiPhysMC            v7r2   Phys    # Ivan Belyaev
 use L0Interfaces          v1r1   L0      # Olivier Deschamps
 use MCInterfaces          v1r5   Kernel  # Marco Cattaneo et al.
@@ -90,7 +90,7 @@ use MDF                   v3r9   DAQ     # Markus Frank
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
-use RichRecBase           v3r13  Rich    # Chris Jones
+use RichRecBase           v3r14  Rich    # Chris Jones
 use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r4   ST      # Matt Needham
 use Tell1Kernel           v1r3   DAQ     # Tomasz Szumlak
