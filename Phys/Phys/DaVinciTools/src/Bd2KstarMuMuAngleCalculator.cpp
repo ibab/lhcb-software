@@ -1,4 +1,4 @@
-// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.4 2008-02-20 20:42:07 pkoppenb Exp $
+// $Id: Bd2KstarMuMuAngleCalculator.cpp,v 1.5 2008-06-04 16:18:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -56,8 +56,9 @@ StatusCode Bd2KstarMuMuAngleCalculator::initialize() {
 
 
 
-StatusCode Bd2KstarMuMuAngleCalculator::calculateAngles( const LHCb::Particle* particle, double& thetal,
-                                                         double& thetak, double& phi )
+StatusCode Bd2KstarMuMuAngleCalculator::calculateAngles( 
+   const LHCb::Particle* particle, double& thetal, 
+   double& thetak, double& phi)
 {
 
   LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle) ; //->daughtersVector() ;
@@ -106,7 +107,61 @@ StatusCode Bd2KstarMuMuAngleCalculator::calculateAngles( const LHCb::Particle* p
   thetal = m_angle->calculatePolarAngle( particle->momentum(), 
                                          particleLepton1->momentum(),
                                          particleLepton2->momentum() );
+  
+  return StatusCode::SUCCESS ;
+}
 
+StatusCode Bd2KstarMuMuAngleCalculator::calculateTransversityAngles( 
+   const LHCb::Particle* particle,
+   double& Theta_tr, double& Phi_tr, double& Theta_V )
+{
+
+  LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle) ; //->daughtersVector() ;
+  int motherID = particle->particleID().pid();
+  
+  if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
+  
+  const LHCb::Particle* particleLepton1 = 0;
+  const LHCb::Particle* particleLepton2 = 0; 
+  const LHCb::Particle* particleKaon = 0;
+  const LHCb::Particle* particlePion = 0;
+  
+  LHCb::ParticleID id ;
+  
+  for ( LHCb::Particle::ConstVector::const_iterator idaughter = descendants.begin() ;
+        idaughter != descendants.end(); ++idaughter ){
+    
+    id = (*idaughter)->particleID() ;
+
+    if ( id.isLepton() ){
+      if ( motherID*id.pid() < 0 ) particleLepton1 = (*idaughter);
+      else particleLepton2 = (*idaughter);
+    }
+    
+    else if ( 321 == id.abspid() ) particleKaon = (*idaughter); 
+    else if ( 211 == id.abspid() ) particlePion = (*idaughter);
+  }
+  
+  if ( !particleKaon || !particleLepton1 || !particleLepton2 || !particlePion){
+    error() << "Could not find required particles !" << endmsg;
+    return StatusCode::FAILURE ;
+  }
+  
+  
+  Theta_tr = m_angle->calculateThetaTr( particleLepton1->momentum(), 
+                                        particleLepton2->momentum(),
+                                        particleKaon->momentum(),
+                                        particlePion->momentum() );
+  
+  Phi_tr = m_angle->calculatePhiTr( particleLepton1->momentum(), 
+                                    particleLepton2->momentum(),
+                                    particleKaon->momentum(),
+                                    particlePion->momentum() );
+  
+  Theta_V = m_angle->calculatePolarAngle( particle->momentum(),
+                                          particleKaon->momentum(),
+                                          particlePion->momentum() );
+  
       
   return StatusCode::SUCCESS ;
 }
@@ -117,8 +172,6 @@ double Bd2KstarMuMuAngleCalculator::calculatePhi( const LHCb::Particle* particle
 {
   LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle) ; //->daughtersVector() ;
   int motherID = particle->particleID().pid();
-  
-  if ( !(descendants.size() >= 4) ) return StatusCode::FAILURE;
   
   const LHCb::Particle* particleLepton1 = 0;
   const LHCb::Particle* particleLepton2 = 0; 
@@ -209,8 +262,128 @@ double Bd2KstarMuMuAngleCalculator::calculateThetaK( const LHCb::Particle* parti
   double thetak = m_angle->calculatePolarAngle( particle->momentum() , 
                                                 particleKaon->momentum(), 
                                                 particlePion->momentum() );  
-  return Gaudi::Units::pi - -thetak ;
+  return Gaudi::Units::pi - thetak ;
 }
 
 
+
+double Bd2KstarMuMuAngleCalculator::calculateTransThetaTr( 
+   const LHCb::Particle* particle ) 
+{
+
+   LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle); //->daughtersVector() ;
+   int motherID = particle->particleID().pid();
+  
+   const LHCb::Particle* particleLepton1 = 0;
+   const LHCb::Particle* particleLepton2 = 0; 
+   const LHCb::Particle* particleKaon = 0;
+   const LHCb::Particle* particlePion = 0;
+  
+   LHCb::ParticleID id ;
+  
+   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
+            descendants.begin() ;
+         idaughter != descendants.end(); ++idaughter ){
+    
+      id = (*idaughter)->particleID() ;
+
+      if ( id.isLepton() ){
+         if ( motherID*id.pid() < 0 ) particleLepton1 = (*idaughter);
+         else particleLepton2 = (*idaughter);
+      }
+      else if ( 321 == id.abspid() ) particleKaon = (*idaughter); 
+      else if ( 211 == id.abspid() ) particlePion = (*idaughter);
+   }
+  
+   if ( !particleKaon || !particleLepton1 || !particleLepton2 
+        || !particlePion){
+     Exception("Could not find required particles !");
+   }
+  
+  
+  double Theta_tr = m_angle->calculateThetaTr( particleLepton1->momentum(), 
+                                               particleLepton2->momentum(),
+                                               particleKaon->momentum(),
+                                               particlePion->momentum() );
+  
+  return Theta_tr;
+   
+}
+
+double Bd2KstarMuMuAngleCalculator::calculateTransPhiTr( 
+   const LHCb::Particle* particle ) 
+{
+
+   LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle); //->daughtersVector() ;
+   int motherID = particle->particleID().pid();
+   
+   const LHCb::Particle* particleLepton1 = 0;
+   const LHCb::Particle* particleLepton2 = 0; 
+   const LHCb::Particle* particleKaon = 0;
+   const LHCb::Particle* particlePion = 0;
+  
+   LHCb::ParticleID id ;
+  
+   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
+            descendants.begin() ;
+         idaughter != descendants.end(); ++idaughter ){
+    
+      id = (*idaughter)->particleID() ;
+
+      if ( id.isLepton() ){
+         if ( motherID*id.pid() < 0 ) particleLepton1 = (*idaughter);
+         else particleLepton2 = (*idaughter);
+      }
+      else if ( 321 == id.abspid() ) particleKaon = (*idaughter); 
+      else if ( 211 == id.abspid() ) particlePion = (*idaughter);
+   }
+  
+   if ( !particleKaon || !particleLepton1 || !particleLepton2 
+        || !particlePion){
+     Exception("Could not find required particles !");
+   }
+  
+  
+   double Phi_tr = m_angle->calculatePhiTr( particleLepton1->momentum(), 
+                                            particleLepton2->momentum(),
+                                            particleKaon->momentum(),
+                                            particlePion->momentum() );
+   
+  return Phi_tr;
+
+}
+
+double Bd2KstarMuMuAngleCalculator::calculateTransThetaV( 
+   const LHCb::Particle* particle ) 
+{
+
+   LHCb::Particle::ConstVector descendants = m_descendants->finalStates(particle); //->daughtersVector() ;
+   int motherID = particle->particleID().pid();
+  
+   const LHCb::Particle* particleKaon = 0;
+   const LHCb::Particle* particlePion = 0;
+  
+   LHCb::ParticleID id ;
+  
+   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
+            descendants.begin() ;
+         idaughter != descendants.end(); ++idaughter ){
+    
+      id = (*idaughter)->particleID() ;
+      
+      if ( 321 == id.abspid() ) particleKaon = (*idaughter); 
+      if ( 211 == id.abspid() ) particlePion = (*idaughter);
+   }
+  
+   if ( !particleKaon || !particlePion ){
+     Exception("Could not find required particles !");
+   }
+  
+   
+   double Theta_V = m_angle->calculatePolarAngle( particle->momentum(),
+                                                  particleKaon->momentum(),
+                                                  particlePion->momentum() );
+  
+   return Theta_V;
+}
 

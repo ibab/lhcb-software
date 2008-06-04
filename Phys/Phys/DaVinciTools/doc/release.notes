@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.328 2008-05-29 13:59:29 ibelyaev Exp $
+! $Id: release.notes,v 1.329 2008-06-04 16:18:14 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-06-04 - Patrick Koppenburg for Thomas Blake
+ - P2VV tools: new interface and Bs->j/psiPhi version.
 
 ! 2008-05-29 - Vanya BELYAEV
  - move (and rename) the temporary file TemporaryGetDecay.cpp into DaVinciKernel package
