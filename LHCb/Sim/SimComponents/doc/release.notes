@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2006-06-04 M Needham
+ - Protect division by zero in MCReconstructible
+
 !====================== SimComponents v2r9 2008-04-10 ========================
 ! 2008-04-10 - Juan PALACIOS
  - src/PrintMCDecayTreeAlg{.cpp, .h}

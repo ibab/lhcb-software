@@ -4,7 +4,7 @@
  *  Implementation file for class : MCReconstructible
  *
  *  CVS Log :-
- *  $Id: MCReconstructible.cpp,v 1.10 2007-10-30 15:17:07 mneedham Exp $
+ *  $Id: MCReconstructible.cpp,v 1.11 2008-06-04 09:52:48 mneedham Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 28/02/2007
@@ -22,6 +22,7 @@
 #include "Event/MCTrackGeomCriteria.h"
 
 #include <boost/assign/list_of.hpp> // for 'map_list_of()'
+#include "LHCbMath/LHCbMath.h"
 
 //-----------------------------------------------------------------------------
 
@@ -129,8 +130,12 @@ bool MCReconstructible::accept_neutral( const LHCb::MCParticle* mcPart ) const
   const double x  = mcPart->originVertex()->position().x();
   const double y  = mcPart->originVertex()->position().y();
   const double z  = mcPart->originVertex()->position().z();
-  const double sx = mcPart->momentum().px()/mcPart->momentum().pz();
-  const double sy = mcPart->momentum().py()/mcPart->momentum().pz();
+  double pz = mcPart->momentum().pz();
+  pz < 0 ? pz = std::min(pz, -LHCb::Math::lowTolerance) : 
+               pz = std::max(pz, LHCb::Math::lowTolerance);  
+  
+  const double sx = mcPart->momentum().px()/pz;
+  const double sy = mcPart->momentum().py()/pz;
   //debug() << "accepted " << x << " " << y << " " << z << " & " << sx << " " << sy << endmsg ;
 
   //  if( (mcPart->particleID().threeCharge()) == 0 ) {
