@@ -1,0 +1,223 @@
+//
+//from L0, fixes bug in newest release of L0CaloAlg
+//
+L0Calo.UsePSSPD = false;
+
+
+
+//---------------------------
+// HLT HadViaT Alley
+//--------------------------
+HltSummaryWriter.Save += {
+  "PV2D",
+  "L0TriggerHadron",
+  "Hlt1HadronViaTSingle",
+  "Hlt1HadronViaTDi"
+};
+
+// to declare as input for the OR of the muon alley
+HltAlleys.InputSelections += {
+  "Hlt1HadronViaTSingle",
+  "Hlt1HadronViaTDi"
+};
+
+HltHadViaTAlleySequence.MeasureTime = true;
+HltHadViaTAlleySequence.Members = {
+  "GaudiSequencer/HadViaTSingleSequence",
+  "GaudiSequencer/HadViaTDiHadronSequence",
+  "HltSelectionFilter/HadViaTTriggerAlleys"
+};
+HltHadViaTAlleySequence.ModeOr = true;
+HltHadViaTAlleySequence.ShortCircuit = false;
+HltHadViaTAlleySequence.MeasureTime = true;
+
+HadViaTTriggerAlleys.InputSelections = {
+  "Hlt1HadronViaTSingle",
+  "Hlt1HadronViaTDi"
+};
+
+//--------------------------
+// Single Hadron via T
+//---------------------------
+
+HadViaTSingleSequence.MeasureTime = true;
+HadViaTSingleSequence.Members = {
+  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/HadViaTPrepareMainHadron",
+  "HltTrackFilter/Hlt1HadronViaTSingle"
+};
+
+HadViaTPrepareMainHadron.MeasureTime = true;
+HadViaTPrepareMainHadron.Members = {
+  "GaudiSequencer/HltDecodeT",
+  "HltTrackUpgrade/HadL0TConf",
+  "HltTrackFilter/MyL0ConfPtCut",
+  "GaudiSequencer/HltRecoVeloRZSeq" ,
+  "HltTrackFilter/RZHadron",
+  "HltTrackUpgrade/VeloHadConf",
+  "HltTrackFilter/HadIPCut",
+  "HltTrackMatch/HadAndTVelo"
+
+};
+
+
+//--------------------------
+// DiHadron
+//---------------------------
+
+HadViaTDiHadronSequence.MeasureTime = true;
+HadViaTDiHadronSequence.Members = {
+  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/HadViaTPrepareMainHadron",
+  "GaudiSequencer/HadViaTPrepareDiHadron",
+  "HltVertexFilter/Hlt1HadronViaTDi"
+};
+
+HadViaTPrepareDiHadron.MeasureTime = true;
+HadViaTPrepareDiHadron.Members = {
+  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackFilter/HadViaTCompanionTFVelo",
+  "HltVertexMaker/HadViaTDiHadronVelo",
+  "HltVertexFilter/HadViaTDiHadronFVelo",
+  "HltVertexUpgrade/HadViaTDiHadronForward"
+};
+
+//-------------------------------------------
+// Single Trigger options
+//-------------------------------------------
+Hlt1HadronViaTSingle.InputSelection  = "HadAndTVelo";
+Hlt1HadronViaTSingle.FilterDescriptor = {"PT,>,5000."};
+Hlt1HadronViaTSingle.HistogramUpdatePeriod = 1;
+Hlt1HadronViaTSingle.HistoDescriptor = {
+  "PT":("PT",0.,6000.,100),
+  "PTBest":("PTBest",0.,6000.,100)
+};
+
+Hlt1HadronViaTDi.InputSelection = "HadViaTDiHadronForward";
+Hlt1HadronViaTDi.FilterDescriptor = {
+  "VertexMinPT,>,1000.",
+  "VertexPointing_PV2D,<,0.4"
+};
+Hlt1HadronViaTDi.HistogramUpdatePeriod = 1;
+Hlt1HadronViaTDi.HistoDescriptor = {
+  "VertexMinPT":("VertexMinPT",0.,6000.,100),
+  "VertexMinPTBest":("VertexMinPTBest",0.,6000.,100),
+  "VertexPointing_PV2D":("VertexPointing_PV2D",0.,1.,100),
+  "VertexPointing_PV2DBest":("VertexPointing_PV2DBest",0.,1.,100)
+};
+
+//-------------------------------------------------------------------------
+// HLT HadViaTAlley options
+//-------------------------------------------------------------------------
+
+//@ja TODO: this should be where the options for L0TriggerHadron are set ?
+L0TriggerHadron.CaloMakerTool="HadronSeedTool";
+ToolSvc.HadronSeedTool.decodeCalos=  false;
+
+
+HadL0TConf.InputSelection = "L0TriggerHadron";
+HadL0TConf.RecoName = "TConf";
+HadL0TConf.OutputLevel = 4;
+HadL0TConf.HltTrackUpgradeTool.L0ConfirmWithT.trackingTool = "PatConfirmTool";    
+HadL0TConf.HltTrackUpgradeTool.L0ConfirmWithT.particleType = 1;
+HadL0TConf.HistogramUpdatePeriod = 1;
+
+
+ToolSvc.PatConfirmTool.OutputLevel = 4;
+ToolSvc.PatConfirmTool.debugMode = false;
+ToolSvc.PatConfirmTool.nSigmaX = 3;
+ToolSvc.PatConfirmTool.nSigmaY = 4;
+ToolSvc.PatConfirmTool.nSigmaTx = 3;
+ToolSvc.PatConfirmTool.nSigmaTy = 4;
+ToolSvc.PatSeedingTool.zMagnet = 0.;
+ToolSvc.PatSeedingTool.MinMomentum = 10000.;
+
+MyL0ConfPtCut.InputSelection = "HadL0TConf";
+MyL0ConfPtCut.FilterDescriptor = {"ptAtOrigin,>,2500."};
+MyL0ConfPtCut.OutputLevel = 4;
+MyL0ConfPtCut.HistogramUpdatePeriod = 1;
+MyL0ConfPtCut.HistoDescriptor = {
+  "ptAtOrigin":("ptAtOrigin",0.,10000.,100),
+  "ptAtOriginBest":("ptAtOriginBest",0.,10000.,100) };
+
+
+//filter velo tracks which match to T segments
+RZHadron.InputSelection = "RZVelo";
+RZHadron.FilterDescriptor = {"RZVeloTMatch_MyL0ConfPtCut,<,80."};
+RZHadron.OutputLevel = 4;
+RZHadron.HistogramUpdatePeriod = 1;
+RZHadron.HistoDescriptor = {
+  "RZVeloTMatch_MyL0ConfPtCut":("RZVeloTMatch_MyL0ConfPtCut",0,100,100)
+};
+
+
+//do velo 3d tracking
+VeloHadConf.InputSelection = "RZHadron";
+VeloHadConf.RecoName = "Velo";
+VeloHadConf.OutputLevel = 4;
+
+HadIPCut.InputSelection =    "VeloHadConf";
+HadIPCut.FilterDescriptor = {"IP_PV2D,||>,0.1"};
+HadIPCut.OutputLevel = 4;
+HadIPCut.HistogramUpdatePeriod = 1;
+HadIPCut.HistoDescriptor = {
+  "IP_PV2D":("IP_PV2D",-3.,3.,200),
+  "IP_PV2DBest":("IP_PV2DBest",-3.,3.,200),
+ "Calo3DChi2_L0TriggerHadron":("Calo3DChi2_L0TriggerHadron",0.,50.,100),
+  "Calo3DChi2_L0TriggerHadronBest":("Calo3DChi2_L0TriggerHadronBest",0.,50.,100)
+};
+
+//match 3d velo to T segments
+HadAndTVelo.InputSelection =  "HadIPCut";
+HadAndTVelo.InputTracks2Name =  "MyL0ConfPtCut";
+HadAndTVelo.MatchName = "PatMatch";
+HadAndTVelo.OutputLevel = 4;
+HadAndTVelo.PatMatchTool.maxMatchChi2 = 2;
+HadAndTVelo.HistogramUpdatePeriod = 1;
+HadAndTVelo.HistoDescriptor = {
+  "IP_PV2D":("IP_PV2D",-3.,3.,200),
+  "IP_PV2DBest":("IP_PV2DBest",-3.,3.,200),
+  "PT":("PT",0.,6000.,100),
+  "PTBest":("PTBest",0.,6000.,100)   
+ };
+
+//-------------------------------------------
+// DiHadron Trigger
+//-------------------------------------------
+HadViaTCompanionTFVelo.InputSelection = "Velo";
+HadViaTCompanionTFVelo.FilterDescriptor = {
+  "IP_PV2D,||>,0.1",
+  "MatchIDsFraction_HadAndTVelo,<,0.9"
+};
+// HadCompanionTFVelo.OutputLevel = 3;
+HadViaTCompanionTFVelo.HistogramUpdatePeriod = 1;
+HadViaTCompanionTFVelo.HistoDescriptor = {
+  "IP_PV2D":("IP_PV2D",0.,3.,100),
+  "IP_PV2DBest":("IP_PV2DBest",0.,3.,100)
+};
+
+
+HadViaTDiHadronVelo.InputSelection = "HadAndTVelo";
+HadViaTDiHadronVelo.InputSelection2 = "HadViaTCompanionTFVelo";
+HadViaTDiHadronVelo.FilterDescriptor = { "DOCA,<,0.2"};
+HadViaTDiHadronVelo.HistoDescriptor = { 
+  "DOCA":("DOCA",0.,3.,100),
+  "DOCABest":("DOCABest",0.,3.,100)
+};
+
+HadViaTDiHadronFVelo.InputSelection = "HadViaTDiHadronVelo";
+HadViaTDiHadronFVelo.FilterDescriptor = { "VertexDz_PV2D,>,0."};
+HadViaTDiHadronFVelo.HistoDescriptor = {
+  "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100),
+  "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100)
+};
+
+HadViaTDiHadronForward.InputSelection = "HadViaTDiHadronFVelo";
+HadViaTDiHadronForward.RecoName = "Forward";
+
+
+
+
+
+
+
