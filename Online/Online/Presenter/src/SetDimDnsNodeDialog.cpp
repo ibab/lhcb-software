@@ -23,15 +23,15 @@ SetDimDnsNodeDialog::SetDimDnsNodeDialog(PresenterMainFrame* gui, int width,
 {
   SetCleanup(kDeepCleanup);
   Connect("CloseWindow()", "SetDimDnsNodeDialog", this, "DontCallClose()");
-  SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
-  build();
-  MapWindow();
+//  SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
+//  build();
+//  MapWindow();
   //fClient->WaitFor(this);
 }
 SetDimDnsNodeDialog::~SetDimDnsNodeDialog()
 {
-  if (IsZombie()) return;
-  Cleanup();
+//  if (IsZombie()) return;
+//  Cleanup();
 }
 void SetDimDnsNodeDialog::build()
 {

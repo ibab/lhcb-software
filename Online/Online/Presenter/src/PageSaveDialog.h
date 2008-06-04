@@ -11,7 +11,6 @@ class OnlineHistDB;
 class DbRootHist;
 class TGTextBuffer;
 class TGTextEntry;
-class std::vector;
 
 class PageSaveDialog : public TGTransientFrame
 {

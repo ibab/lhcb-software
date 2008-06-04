@@ -8,6 +8,5 @@
 #include "ReferencePicker.h"
 #include "PageSaveDialog.h"
 #include "HistoPropDialog.h"
-#include "SetDimDnsNodeDialog.h"
 
 #endif /*CINTBOOTSTRAP_H_*/
