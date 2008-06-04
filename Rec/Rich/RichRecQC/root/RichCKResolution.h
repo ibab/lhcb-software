@@ -1,4 +1,4 @@
-// $Id: RichCKResolution.h,v 1.2 2008-05-08 13:26:40 jonrob Exp $
+// $Id: RichCKResolution.h,v 1.3 2008-06-04 07:08:35 cattanem Exp $
 #ifndef MACROS_RICHCKRESOLUTION_H
 #define MACROS_RICHCKRESOLUTION_H 1
 
@@ -24,7 +24,7 @@ namespace Rich
 {
 
  //-----------------------------------------------------------------------------
-  /** @namespace PIDPerformance
+  /** @namespace CKResolution
    *
    *  General namespace for RICH ROOT utilities for Cherenkov angle resolution 
    *  studies

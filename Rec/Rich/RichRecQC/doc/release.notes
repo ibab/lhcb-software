@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r19 2008-06-04 ==========================
+! 2008-06-04 - Marco Cattaneo
+ - Fix doxygen warnings
+
 ! 2008-06-03 - Chris Jones
  - Adapt to changes in decoded data format
 
