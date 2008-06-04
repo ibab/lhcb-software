@@ -1,0 +1,9 @@
+// Options for enabling FPEAuditor
+
+ApplicationMgr.ExtSvc += { "AuditorSvc" };
+AuditorSvc.Auditors += { "FPEAuditor" };
+
+// .TrapOn takes a list of floating point exceptions 
+FPEAuditor.TrapOn = {"DivByZero" };
+//.ActivateAt takes a list of 'standard events', i.e. "Initialize","BeginRun", ... , "Finalize"
+FPEAuditor.ActivateAt = {"Execute" };

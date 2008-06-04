@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-06-03 13:06:26 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-06-04 06:41:53 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -72,6 +72,8 @@ class LHCbApp(ConfigurableUser):
     def defineMonitors(self):
         if "SC" in self.getProp("monitors"):
             ApplicationMgr().StatusCodeCheck = True
+        if "FPE" in self.getProp("monitors"):
+            importOptions( "$STDOPTS/FPEAudit.opts" )
 
     def applyConf(self):
         self.defineDB()

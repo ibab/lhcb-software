@@ -2,13 +2,15 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v10r9 2008-06-03 ========================
-! 2008-06-03 - Marco Cattaneo
+!======================== GaudiConf v10r9 2008-06-04 ========================
+! 2008-06-04 - Marco Cattaneo
  - Improved handling of CondDBtag and DDDBtag in LHCbApp configurable. Now,
    if the string contains "default" and one of "DC06" or "2008", the tags are
    taken from the corresponding DDDB/options defaults. Otherwise the tag is
    used as given.
  - Add MDFCopy.opts: example options for copying an MDF (raw data) file
+ - Add FPEAudit.opts: example options for Floating Point Exception auditor
+ - Add "FPE" as possible LHCbApp().monitor, includes FPAudit.opts
 
 !======================== GaudiConf v10r8 2008-05-08 ========================
 ! 2008-05-08 - Marco Cattaneo
