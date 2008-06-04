@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.105 2008-06-02 15:46:10 cattanem Exp $
+! $Id: release.notes,v 1.106 2008-06-04 10:00:35 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-06-04 - Olivier Deschamps 
+  - update readoutStatus
+
 
 !========================== L0DU v8r5 2008-06-02 =========================
 ! 2008-05-31 - Olivier Deschamps 

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.11 2008-06-04 00:23:59 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.12 2008-06-04 10:00:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -86,6 +86,11 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
 
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
+
+  // check whether error bank has been produce
+  const std::vector<LHCb::RawBank*>* errBanks = &rawEvt->banks(   LHCb::RawBank::L0DUError );
+  if( errBanks != 0 || errBanks->size() !=0 )m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::ErrorBank );
+
   
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
