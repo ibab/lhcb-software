@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.109 2008-06-03 15:25:16 odescham Exp $
+! $Id: release.notes,v 1.110 2008-06-04 08:07:28 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-! 2008-06-03 Olivier Deschamps
-- change incident type EndEvent to BeginEvent in CaloSelectNeutralCluster.cpp and CaloExtraDigits.cpp
+!========================== CaloReco v4r12 2008-06-04 ===================
+! 2008-06-04 - Marco Cattaneo
+ - Fix doxygen warning
 
+! 2008-06-03 Olivier Deschamps
+ - change incident type EndEvent to BeginEvent in CaloSelectNeutralCluster.cpp
+   and CaloExtraDigits.cpp
 
 !========================== CaloReco v4r11 2008-04-22 ===================
 ! 2008-04-22 - Marco Cattaneo

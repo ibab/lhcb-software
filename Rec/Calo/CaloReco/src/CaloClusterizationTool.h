@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.h,v 1.1 2008-04-21 13:53:18 vegorych Exp $
+// $Id: CaloClusterizationTool.h,v 1.2 2008-06-04 08:07:28 cattanem Exp $
 #ifndef CALOCLUSTERIZATIONTOOL_H 
 #define CALOCLUSRERIZATIONTOOL_H 1
 // ============================================================================
@@ -38,7 +38,7 @@
 // ============================================================================
 
 
-/** @class CellAutomaton CellAutomaton.h
+/** @class CaloClusterizationTool CaloClusterizationTool.h
  *  
  *
  *  @author Victor Egorychev
