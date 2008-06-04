@@ -1,4 +1,4 @@
-// $Id: P2VVAngleCalculator.h,v 1.1 2007-09-18 13:50:28 pkoppenb Exp $
+// $Id: P2VVAngleCalculator.h,v 1.2 2008-06-04 16:18:14 pkoppenb Exp $
 #ifndef B2LLXANGLETOOL_H 
 #define B2LLXANGLETOOL_H 1
 
@@ -14,7 +14,7 @@
  *  or IP2VVMCPartAngleCalculator instead.
  *
  *
- *  @author Thomas Blake
+ *  @author Thomas Blake, Greig Cowan
  *  @date   2007-08-22
  */
 
@@ -26,6 +26,7 @@ public:
                   const IInterface* parent);
 
   virtual ~P2VVAngleCalculator( ); ///< Destructor
+
   /// calculate the angle between two planes in the rest frame of the mother particle
   double calculatePlaneAngle( const Gaudi::LorentzVector&, const Gaudi::LorentzVector&,
                               const Gaudi::LorentzVector&, const Gaudi::LorentzVector&,
@@ -33,6 +34,19 @@ public:
   /// calculate the polar angle in the rest frame of the mother particle
   double calculatePolarAngle( const Gaudi::LorentzVector&, const Gaudi::LorentzVector&, 
                               const Gaudi::LorentzVector& );
+
+
+   
+   double calculateThetaTr( const Gaudi::LorentzVector&,
+                            const Gaudi::LorentzVector&, 
+                            const Gaudi::LorentzVector&,
+                            const Gaudi::LorentzVector& );
+  
+   double calculatePhiTr( const Gaudi::LorentzVector&, 
+                          const Gaudi::LorentzVector&, 
+                          const Gaudi::LorentzVector&, 
+                          const Gaudi::LorentzVector& );
+
 
 protected:
 

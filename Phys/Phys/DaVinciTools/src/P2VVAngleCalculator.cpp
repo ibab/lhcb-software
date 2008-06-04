@@ -1,4 +1,4 @@
-// $Id: P2VVAngleCalculator.cpp,v 1.2 2008-06-04 16:18:14 pkoppenb Exp $
+// $Id: P2VVAngleCalculator.cpp,v 1.3 2008-06-04 16:21:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ double P2VVAngleCalculator::calculatePolarAngle( const Gaudi::LorentzVector& par
   const Gaudi::XYZVector vecParticle = Gaudi::XYZVector(boostedParticle).unit();
   
   double cosTheta = vecParticle.Dot(vecAxis) ;
-  debug() << "Theta_hel " << acos(cosTheta) << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Theta_hel " << acos(cosTheta) << endmsg;
   return acos(cosTheta);
 }
 
@@ -89,7 +89,7 @@ double P2VVAngleCalculator::calculatePlaneAngle( const Gaudi::LorentzVector& par
   double sinPhi = ( el.Cross(ek) ).Dot( ez ) ;
   double phi    = acos( cosPhi ) ;  
 
-  debug() << "Phi_hel " << phi << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Phi_hel " << phi << endmsg;
   return ( sinPhi > 0.0 ? phi : -phi ) ;
 }
 
@@ -109,7 +109,7 @@ double P2VVAngleCalculator::calculateThetaTr( const Gaudi::LorentzVector& partic
    const Gaudi::LorentzVector particleFrame2 = particleC + particleD ;
    
    ROOT::Math::Boost boost( particleFrame1.BoostToCM() );
-   
+      
    const Gaudi::LorentzVector boostedAxis     = boost( particleFrame2 );
    const Gaudi::LorentzVector boostedParticleA = boost( particleA );
    const Gaudi::LorentzVector boostedParticleC = boost( particleC );
@@ -126,7 +126,7 @@ double P2VVAngleCalculator::calculateThetaTr( const Gaudi::LorentzVector& partic
    }
 
    double cosTheta_tr = vecPartA.Dot(vecZAxis) ;
-   debug() << "Theta_tr " << acos(cosTheta_tr) << endmsg;
+   if (msgLevel(MSG::DEBUG)) debug() << "Theta_tr " << acos(cosTheta_tr) << endmsg;
    
    return acos(cosTheta_tr);
    
@@ -170,7 +170,7 @@ double P2VVAngleCalculator::calculatePhiTr( const Gaudi::LorentzVector& particle
   if ( vecPartA.Dot( vecYAxis ) < 0 && vecPartA.Dot( vecXAxis ) < 0 ) 
      Phi_tr = Phi_tr - Gaudi::Units::pi;
 
-  debug() << "Phi_tr " << Phi_tr << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "Phi_tr " << Phi_tr << endmsg;
   return Phi_tr;
    
 }
