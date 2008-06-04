@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <ostream>
+#include <utility>
 #include "GaudiKernel/AudFactory.h"
 #include "GaudiKernel/Auditor.h"
 #include "GaudiKernel/GaudiException.h"
@@ -117,7 +118,7 @@ public:
     { 
       if ( std::find(m_when.begin(),m_when.end(),type)!=m_when.end() ) {
          bool veto = ( std::find(m_veto.begin(),m_veto.end(),s) != m_veto.end()) ;
-         m_guards.push_back( make_pair( s, new FPEGuard( m_mask.value(), veto) ) ); 
+		 m_guards.push_back( std::make_pair( s, new FPEGuard( m_mask.value(), veto) ) ); 
       }
     }
 
