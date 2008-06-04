@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.8 2008-06-03 12:52:49 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.9 2008-06-04 16:31:20 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -313,16 +313,16 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
         //------------- begin fit steps
         //compute covariance matrix, solve chi2 equations, get the fitted solution
         bool statusCovarianceMatrix, statusSolveChi2Eq, statusTransferFit;
-        if(statusCovarianceMatrix = newCovarianceMatrix(recRing)) 
+        if(statusCovarianceMatrix = newCovarianceMatrix(recRing))
         {
-          if(statusSolveChi2Eq = solveChi2Equations(recRing)) 
+          if(statusSolveChi2Eq = solveChi2Equations(recRing))
           {
             statusTransferFit=transferFitSolution(recRing);
-            if(statusTransferFit) 
+            if(statusTransferFit)
             {
               diffChi2=m_chi2Prev-m_chi2;
               //--keep 'old solution' if necessary
-              if(diffChi2>0) 
+              if(diffChi2>0)
               {
                 for(int i=0;i<3;i++) m_solPrev[i]=m_sol[i];
                 m_chi2Prev=m_chi2;
@@ -355,28 +355,28 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
                                         <<", ngoodPhot="<<ngoodPhot<<endreq;
         break;
       }
-      n_iter++;
+      ++n_iter;
     }
 
     //choose solution depending on chi2
     Result result(Result::Succeeded);
     if ( m_chi2Prev<m_chi2 )
     {
-      result.chi2=m_chi2Prev;
-      result.probChi2=m_probPrev;
-      result.ndof=m_dofPrev;
-      result.thcFit=m_CerenkovPrev;
-      result.thcFitErr=m_CerenkovErrPrev;
-      result.thphotErr=m_photonThcSigmaPrev;
+      result.chi2      = m_chi2Prev;
+      result.probChi2  = m_probPrev;
+      result.ndof      = m_dofPrev;
+      result.thcFit    = m_CerenkovPrev;
+      result.thcFitErr = m_CerenkovErrPrev;
+      result.thphotErr = m_photonThcSigmaPrev;
     }
     else
     {
-      result.chi2=m_chi2;
-      result.probChi2=m_prob;
-      result.ndof=m_dof;
-      result.thcFit=m_Cerenkov;
-      result.thcFitErr=m_CerenkovErr;
-      result.thphotErr=m_photonThcSigma;
+      result.chi2      = m_chi2;
+      result.probChi2  = m_prob;
+      result.ndof      = m_dof;
+      result.thcFit    = m_Cerenkov;
+      result.thcFitErr = m_CerenkovErr;
+      result.thphotErr = m_photonThcSigma;
     }
 
     //reset segment direction and photon angles to what they where at call time...
@@ -884,8 +884,8 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   }
 
   m_dof=recRing.ringPoints().size();
-  m_prob=Proba(m_chi2,m_dof);
-  m_probExp=Proba(m_chi2Exp,m_dof);
+  m_prob    = Proba(m_chi2,m_dof);
+  m_probExp = Proba(m_chi2Exp,m_dof);
 
   // Cerenkov Angle and its error
   double tgTheta=2*radiusFitted()/(1-m_sol[2]);
@@ -1016,23 +1016,20 @@ double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const
   return chi2;
 }
 
-
 //more utility functions
-double StereoFitter::radiusFitted() const {
-  if(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1>=0]) return(std::sqrt(m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1]));
-  else return(0);
-};
-
-double StereoFitter::XcenterFitted() const { return(m_sol[0]); };
-
-double StereoFitter::YcenterFitted() const { return(m_sol[1]); };
 
 double StereoFitter::Proba(double chi2,double ndl) const
 {
-  if(ndl>0 && chi2>=0) return gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0);
-  else return 0;
-}
+  static const double largest  = boost::numeric::bounds<float>::highest();
+  static const double smallest = boost::numeric::bounds<float>::smallest();
 
+  const double result = ( ndl>0 && chi2>=0 && (chi2/ndl)<50 ?
+                          gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0) : 0 );
+
+  return ( result > largest  ? largest  :
+           result < smallest ? smallest :
+           result );
+}
 
 // inversion of a 3 by 3 matrix ; successfull if returned bool is  = true
 // matrix is not necessarily symmetric ; tests OK

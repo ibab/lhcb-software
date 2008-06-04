@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.cpp,v 1.2 2008-05-08 13:21:32 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.cpp,v 1.3 2008-06-04 16:30:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,6 +86,11 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
 {
   if ( !photon->expPixelSignalPhots().dataIsValid(id) )
   {
+    using namespace boost::numeric;
+
+    // static variables
+    static const double maxSignal ( bounds<LHCb::RichRecPhoton::FloatType>::highest()  );
+    static const double minSignal ( bounds<LHCb::RichRecPhoton::FloatType>::smallest() );
 
     // Which detector
     const Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
@@ -95,7 +100,7 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
 
     // Compute the expected pixel contribution
     // See note LHCB/98-040 page 10 equation 16 for the details of where this comes from
-    const double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
+    double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
       ( ( signalProb(photon, id) *
           m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
         ( scatterProb(photon, id) *
@@ -103,6 +108,11 @@ PhotonSignalGaussProb::predictedPixelSignal( LHCb::RichRecPhoton * photon,
       4.0 * m_pixelArea / ( m_radiusCurv[det] * m_radiusCurv[det] *
                             (thetaReco>1e-10 ? thetaReco : 1e-10) );
 
+    // check for (over/under)flows
+    if      ( pixelSignal > maxSignal ) { pixelSignal = maxSignal; }
+    else if ( pixelSignal < minSignal ) { pixelSignal = minSignal; }
+
+    // save final result
     photon->setExpPixelSignalPhots( id, pixelSignal );
 
   }

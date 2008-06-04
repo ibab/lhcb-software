@@ -49,6 +49,10 @@
 #include "gsl/gsl_eigen.h"
 #include "gsl/gsl_sf_erf.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+
 namespace Rich
 {
   namespace Rec
@@ -182,12 +186,12 @@ namespace Rich
 
 
       //segment variables
-      mutable Gaudi::XYZVector   m_segEntryDir;    ///< Stored segment entry direction
+      mutable Gaudi::XYZVector   m_segEntryDir;  ///< Stored segment entry direction
       mutable Gaudi::XYZVector   m_segMidDir;    ///< Stored segment mid point direction
-      mutable Gaudi::XYZVector   m_segExitDir;    ///< Stored segment exit direction
-      mutable Gaudi::XYZPoint    m_segEntryPtn;    ///< Stored segment entry point
+      mutable Gaudi::XYZVector   m_segExitDir;   ///< Stored segment exit direction
+      mutable Gaudi::XYZPoint    m_segEntryPtn;  ///< Stored segment entry point
       mutable Gaudi::XYZPoint    m_segMidPtn;    ///< Stored segment mid point point
-      mutable Gaudi::XYZPoint    m_segExitPtn;    ///< Stored segment exit point
+      mutable Gaudi::XYZPoint    m_segExitPtn;   ///< Stored segment exit point
 
       //class global variables
       mutable double g_XCenterGuess, g_YCenterGuess;
@@ -243,6 +247,16 @@ namespace Rich
       bool invert3x3Matrix(double mat[3][3], double invMat[3][3]) const;
 
     };
+
+    inline double StereoFitter::XcenterFitted() const { return(m_sol[0]); }
+
+    inline double StereoFitter::YcenterFitted() const { return(m_sol[1]); }
+
+    inline double StereoFitter::radiusFitted() const
+    {
+      const double result = m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
+      return ( result>0 ? std::sqrt(result) : 0 );
+    }
 
   }
 }

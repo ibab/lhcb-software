@@ -5,7 +5,7 @@
  *  Implementation file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.4 2008-03-27 11:49:04 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.5 2008-06-04 16:32:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -282,8 +282,9 @@ TrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         newTrack->setCharge( trTrack->charge() );
 
         // clone variable
-        newTrack->setCloneDist( trTrack->info(LHCb::Track::CloneDist,9e90) );
-
+        newTrack->setCloneDist( trTrack->info(LHCb::Track::CloneDist,
+                                              boost::numeric::bounds<float>::highest()) );
+        
         // Set parent information
         newTrack->setParentTrack( trTrack );
 

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::PhotonSignalGaussProb
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalGaussProb.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonSignalGaussProb.h,v 1.2 2008-06-04 16:30:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,6 +30,10 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
+
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 
 namespace Rich
 {
@@ -62,7 +66,7 @@ namespace Rich
                              const IInterface* parent );
 
       /// Destructor
-      virtual ~PhotonSignalGaussProb(){}
+      virtual ~PhotonSignalGaussProb() {}
 
       // Initialize method
       StatusCode initialize();

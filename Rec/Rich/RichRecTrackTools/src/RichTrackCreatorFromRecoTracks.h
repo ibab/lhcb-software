@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::Rec::TrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.2 2008-03-27 11:49:04 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.3 2008-06-04 16:32:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,6 +30,10 @@
 
 // Event
 #include "Event/Track.h"
+
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
 
 namespace Rich
 {
