@@ -5,7 +5,7 @@
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.3 2008-04-03 11:26:18 cattanem Exp $
+ *  $Id: LHCbMath.h,v 1.4 2008-06-04 09:51:35 mneedham Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
@@ -37,29 +37,6 @@ namespace LHCb {
     static const double     sqrt_12 = 3.4641016151377546; // sqrt(12.)
     static const double inv_sqrt_12 = 0.2886751345948129; // 1./sqrt(12.)
     //--------------------------------------------------------------------------
- 
-    // ========================================================================
-    /** Round to nearest integer. Rounds half integers to nearest even integer.
-     *  @author Matt Needham 
-     */
-    inline int round(const double x)  {
-      int i;
-      if (x >= 0.0) {
-        i = int(x + 0.5);
-        if (x + 0.5 == double(i) && i & 1) --i;
-      }
-      else {
-        i = int(x - 0.5);
-        if (x - 0.5 == double(i) && i & 1) ++i;
-        
-      }
-      return i;
-    }
-
-    inline int round(const float x)  {
-      return LHCb::Math::round( double(x) );
-    }
-
     // ========================================================================
     /** @struct abs_less 
      *  comparison by absolute value 
@@ -204,6 +181,29 @@ namespace LHCb {
     private :
       float m_eps ;
     } ;
+
+   // ========================================================================
+    /** Round to nearest integer. Rounds half integers to nearest even integer.
+     *  @author Matt Needham 
+     */
+    inline int round(const double x)  {
+      int i;
+      LHCb::Math::Equal_To<double> equal_to(lowTolerance);
+      if (x >= 0.0) {
+        i = int(x + 0.5);
+        if (equal_to(x + 0.5, double(i)) && i & 1) --i;
+      }
+      else {
+        i = int(x - 0.5);
+        if (equal_to(x - 0.5 , double(i)) && i & 1) ++i;
+        
+      }
+      return i;
+    }
+
+    inline int round(const float x)  {
+      return LHCb::Math::round( double(x) );
+    }
   }
 };
 
