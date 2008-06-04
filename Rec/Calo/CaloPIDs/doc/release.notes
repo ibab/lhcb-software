@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.54 2008-06-03 15:49:56 odescham Exp $ 
+! $Id: release.notes,v 1.55 2008-06-04 08:28:35 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
-! 2008-06-03 Olivier Deschamps
-- change incident type EndEvent to BeginEvent in CaloEnergyForTrack.cpp
+!========================== CaloPIDs v4r11 2008-06-04 =========================
+! 2008-06-04 - Marco Cattaneo
+ - Fix doxygen warning
 
+! 2008-06-03 Olivier Deschamps
+ - change incident type EndEvent to BeginEvent in CaloEnergyForTrack.cpp
 
 !========================== CaloPIDs v4r10 2008-05-13 =========================
 ! 2008-05-13 Olivier Deschamps

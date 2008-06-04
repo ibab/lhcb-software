@@ -1,4 +1,4 @@
-// $Id: EcalChi22ID.cpp,v 1.4 2007-08-24 21:25:18 odescham Exp $
+// $Id: EcalChi22ID.cpp,v 1.5 2008-06-04 08:28:35 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,7 +7,7 @@
 #include "CaloChi22ID.h"
 #include "ToVector.h"
 // ============================================================================
-/** @class EcalChi22ID EcalChi22D.cpp
+/** @class EcalChi22ID EcalChi22ID.cpp
  *  The preconfigured instance of class CaloChi22ID 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  */
