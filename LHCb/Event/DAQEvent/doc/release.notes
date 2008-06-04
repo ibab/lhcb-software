@@ -5,9 +5,8 @@
 !----------------------------------------------------------------------
 
 ! 2008-04-09 - Olivier Deschamps
- - Add L0DUError in RawBank types enum
-
-
+ - Add 'L0DUError' in RawBank types enum
+ - Add 'ErrorBank' in RawBankReadoutStatus type
 
 !================ DAQEvent v7r10 2008-04-09 ===========================
 ! 2008-04-09 - Marco Clemencic
