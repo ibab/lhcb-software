@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.17 2008-05-28 20:10:34 janos Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.18 2008-06-04 15:17:17 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -64,7 +64,8 @@ StatusCode OTRandomDepositCreator::initialize()
   /// Random number from a flat distribution between 0 and 1
   /// for cross talk and double pulses
   sc = m_flat.initialize( randSvc() , Rndm::Flat( 0.0, 1.0) );
-  
+  if ( sc.isFailure() ) return Error( "Failed to initialize flat random number generator", sc );
+
   // Get OT geometry
   m_tracker   = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
   m_modules   = m_tracker->modules();
@@ -92,7 +93,7 @@ StatusCode OTRandomDepositCreator::initialize()
   release(readoutTool);
 
   /// Determine the number of noise hits to generate
-  m_nNoise = unsigned(m_nChannels*m_windowSize*m_noiseRate);
+  m_nNoise = unsigned( m_nChannels*m_windowSize*m_noiseRate );
 
   return StatusCode::SUCCESS;  
 }

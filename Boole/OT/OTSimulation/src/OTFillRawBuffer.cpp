@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.12 2008-05-28 20:05:04 janos Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.13 2008-06-04 15:17:17 janos Exp $
 // Include files 
 // from std
 #include <algorithm>
@@ -72,7 +72,8 @@ StatusCode OTFillRawBuffer::execute() {
                   std::back_inserter( channels ),
                   boost::lambda::bind( &LHCb::MCOTTime::channel, boost::lambda::_1) );
   
-  m_encoder->encodeChannels( channels );
-
+  StatusCode sc = m_encoder->encodeChannels( channels );
+  if ( sc.isFailure() ) Error( "Could not encode channels", sc );
+  
   return StatusCode::SUCCESS;
 }

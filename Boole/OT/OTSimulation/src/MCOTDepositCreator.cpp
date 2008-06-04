@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.26 2008-05-28 20:07:31 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.27 2008-06-04 15:17:17 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -111,10 +111,12 @@ StatusCode MCOTDepositCreator::initialize()
   /// Random number from a gauss distribution between 0 and 1
   /// for smearing
   sc = m_gauss.initialize( randSvc() , Rndm::Gauss( 0.0, 1.0) );
-
+  if ( sc.isFailure() ) return Error( "Failed to initialize Gaussian random number generator", sc );
+  
   /// Random number from a flat distribution between 0 and 1
   /// for cross talk and double pulses
   sc = m_flat.initialize( randSvc() , Rndm::Flat( 0.0, 1.0) );
+  if ( sc.isFailure() ) return Error( "Failed to initialize flat random number generator", sc );
 
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
