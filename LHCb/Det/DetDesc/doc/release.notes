@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.366 2008-06-04 14:23:39 mneedham Exp $ 
+! $Id: release.notes,v 1.367 2008-06-04 14:26:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r5 2008-06-04 ==============================
 ! 2008-06-04 M Needham
  - Clean up some == comparisions with doubles
 
-!====================== DetDesc v18r5 2008-05-20 ==============================
 ! 2008-05-20 - Marco Cattaneo
  - Fix doxygen warnings
  - Fix compilation warning in latest changes
