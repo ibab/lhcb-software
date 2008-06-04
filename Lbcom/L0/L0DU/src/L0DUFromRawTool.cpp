@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.10 2008-06-04 00:02:31 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.11 2008-06-04 00:23:59 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -201,7 +201,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   //---------------------------------------------------------
   else if(m_vsn == 1){  
 
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", m_data)<< endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", *m_data)<< endreq;
     // global header
     unsigned int itc      = (*m_data & 0x00000003)  >> 0;
     unsigned int iec      = (*m_data & 0x0000000C)  >> 2;
