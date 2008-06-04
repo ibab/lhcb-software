@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r7>2008-06-03 LHCbSys v23r7</A></H1><PRE>
+</PRE><H1><A NAME=v23r7>2008-06-04 LHCbSys v23r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 
 - Packages modified: GaudiConf v10r9, KernelSys v7r5, LHCbMath v2r8,
@@ -16,8 +16,8 @@ This version uses Gaudi v19r9 and LCG_54e.
     CaloUtils v8r0p1, CondDBEntityResolver v4r1p1, DaVinciKernel v6r14,
     DaVinciMCKernel v2r8, LHCbAlgs v2r18, LoKiAlgo v7r4p1, LoKiAlgoMC v7r1p1,
     LoKiArrayFunctors v7r4, LoKiCore v7r3, LoKiGenMC v7r1, LoKiPhys v7r4, 
-    LoKiPhysMC v7r2, MDF v3r9, RichRecBase v3r14, TfKernel v2r5,
-    TrackInterfaces v3r15, TsaKernel v3r3
+    LoKiPhysMC v7r2, MDF v3r9, RichRecBase v3r14, SimComponents v2rr10, 
+    TfKernel v2r5, TrackInterfaces v3r15, TsaKernel v3r3
 
 - In GaudiConf v10r9
   . Add MDFCopy.opts: example options for copying an MDF (raw data) file
@@ -29,6 +29,7 @@ This version uses Gaudi v19r9 and LCG_54e.
     used as given.
 
 - In LHCbMath v2r8
+  . Avoid a comparision of == of doubles in round function
   . Add MD5.h src/MD5.cpp: class to compute an MD5 digest of strings, or objects
     which can be streamed into strings
 
@@ -149,6 +150,9 @@ This version uses Gaudi v19r9 and LCG_54e.
 
 - In RichRecBase v3r14
   . Adapt to changes in RICH decoded data format
+
+- In SimComponents v2r10
+  . Protect division by zero in MCReconstructible
 
 - In TfKernel v2r5, TsaKernel v3r3
   . Fix for float/double conversion issues in the rest of the tracking.

@@ -91,7 +91,7 @@ use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r1   Tf      # Stephanie Hansmann-Menzemer
 use RecInterfaces         v1r0   Kernel  # Marco Cattaneo et al.
 use RichRecBase           v3r14  Rich    # Chris Jones
-use SimComponents         v2r9   Sim     # Gloria Corti, Marco Cattaneo
+use SimComponents         v2r10  Sim     # Gloria Corti, Marco Cattaneo
 use STKernel              v1r4   ST      # Matt Needham
 use Tell1Kernel           v1r3   DAQ     # Tomasz Szumlak
 use TfKernel              v2r5   Tf      # Stephanie Hansmann-Menzemer
