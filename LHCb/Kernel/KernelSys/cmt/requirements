@@ -10,4 +10,4 @@ use L0MuonKernel    v7r4    L0
 use MuonKernel      v4r0    Muon
 use ProcessorKernel v5r1    L0
 use Relations       v5r4    Kernel
-use RichKernel      v7r11p1 Rich
+use RichKernel      v7r12   Rich
