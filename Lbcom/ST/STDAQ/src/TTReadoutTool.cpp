@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.9 2008-06-02 09:35:49 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.10 2008-06-04 09:54:11 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -43,7 +43,8 @@ StatusCode TTReadoutTool::initialize() {
 
   registerCondition(m_conditionLocation,
                     &TTReadoutTool::createBoards);
-  if (runUpdate().isFailure()) return Error ( "Failed first UMS update for readout tool", sc );
+  sc = runUpdate(); // force update
+  if (sc.isFailure()) return Error ( "Failed first UMS update for readout tool", sc );
   
   if (m_printMapping == true){
     printMapping();

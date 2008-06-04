@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.8 2008-06-04 06:52:08 cattanem Exp $
+// $Id: ITReadoutTool.cpp,v 1.9 2008-06-04 09:54:11 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -43,8 +43,8 @@ StatusCode ITReadoutTool::initialize() {
 
   registerCondition(m_conditionLocation,
                     &ITReadoutTool::createBoards );
-
-  if (runUpdate().isFailure()) return Error ( "Failed first UMS update for ITReadoutTool", sc );
+  sc = runUpdate();
+  if (sc.isFailure()) return Error ( "Failed first UMS update for ITReadoutTool", sc );
 
   if (m_printMapping == true){
     printMapping();
