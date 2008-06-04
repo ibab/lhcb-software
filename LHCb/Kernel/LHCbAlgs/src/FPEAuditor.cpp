@@ -1,5 +1,7 @@
 #if defined(linux) && defined(__GNUC__)
 #include <fenv.h>
+#elif defined(_WIN32)
+#include <float.h>
 #endif
 
 #include <map>
@@ -12,90 +14,125 @@
 #include "GaudiKernel/MsgStream.h"
 #include "boost/assign/list_of.hpp"
 
-class FPEGuard {
-public: 
-    FPEGuard(std::vector<std::string>& masks,bool enableOnConstruction=false) 
-        : m_mask(0)
-        , m_prevMask( get() )
-    {
+
+class FPEMaskProperty {
+ public:
+    typedef SimpleProperty<std::vector<std::string> > property_type;
+     FPEMaskProperty() : m_mask(0) {
+        m_property.declareUpdateHandler(&FPEMaskProperty::updateHandler,this); 
+     }
+     int value() const { return m_mask;}
+     property_type& property() { return m_property; }
+     FPEMaskProperty& set(const std::vector<std::string>& s) { property().setValue(s); return *this; }
+ private:
+    void updateHandler(Property&) {
 #if defined(linux) && defined(__GNUC__)
-     static std::map<std::string,int> m = boost::assign::map_list_of
-                                    ( "DivByZero" , int(FE_DIVBYZERO) )
-                                    ( "Inexact"   , int(FE_INEXACT)   )
-                                    ( "Overflow"  , int(FE_OVERFLOW)  )
-                                    ( "Underflow" , int(FE_UNDERFLOW) )
-                                    ( "AllExcept" , int(FE_ALL_EXCEPT));
+         static std::map<std::string,int> m = boost::assign::map_list_of
+                                        ( "DivByZero" , int(FE_DIVBYZERO) )
+                                        ( "Inexact"   , int(FE_INEXACT)   )
+                                        ( "Overflow"  , int(FE_OVERFLOW)  )
+                                        ( "Underflow" , int(FE_UNDERFLOW) )
+                                        ( "AllExcept" , int(FE_ALL_EXCEPT));
 #elif defined(_WIN32)
-     static std::map<std::string,int> m = boost::assign::map_list_of
+         static std::map<std::string,int> m = boost::assign::map_list_of
                                     ( "DivByZero" , int(EM_ZERODIVIDE) )
                                     ( "Inexact"   , int(EM_INEXACT)   )
                                     ( "Overflow"  , int(EM_OVERFLOW)  )
                                     ( "Underflow" , int(EM_UNDERFLOW) )
                                     ( "AllExcept" , int(EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
 #else
-     static std::map<std::string,int> m;
+         static std::map<std::string,int> m;
 #endif
-
-     for (std::vector<std::string>::const_iterator i=masks.begin();
-          i!=masks.end(); ++i) {
-          std::map<std::string,int>::const_iterator j = m.find(*i);
-          if (j==m.end()) { 
-                throw GaudiException("FPEAuditor: unknown mask... ","",StatusCode::FAILURE);
-          }
-          m_mask |= j->second;
+         m_mask=0;
+         for (std::vector<std::string>::const_iterator i=m_property.value().begin();
+              i!=m_property.value().end(); ++i) {
+              std::map<std::string,int>::const_iterator j = m.find(*i);
+              if (j==m.end()) { 
+                    throw GaudiException("FPEMaskProperty: unknown mask... ","",StatusCode::FAILURE);
+              }
+              m_mask |= j->second;
+         }
      }
-     if (enableOnConstruction) enable();
-    }
-    ~FPEGuard() { disable(); }
 
+     property_type m_property;
+     int           m_mask;
+};
+
+class FPEGuard {
+public: 
 #if defined(linux) && defined(__GNUC__)
-    int get() { return fegetexcept(); }
-    void enable()  { feenableexcept( m_mask ); }
-    void disable() { feenableexcept( m_prevMask ); }
+    FPEGuard(int mask, bool reverse=false)
+    : m_mask(mask)
+    , m_initial( fegetexcept() )
+    , m_reverse(reverse)
+    { 
+      if (m_reverse) { fedisableexcept(m_mask); }
+      else           { feenableexcept(m_mask); }
+    }
+    ~FPEGuard() 
+    { 
+       fedisableexcept( ~m_initial);
+       feenableexcept(   m_initial);
+       if (fegetexcept()!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
+    }
 #elif defined(_WIN32)
-// Possible windows implementation, to be tested
-	#include <float.h>
-    int get() { return _control87(0,0); }
-    void enable()  { _control87( m_mask, MCW_EM ); }
-    void disable() { _control87( m_prevMask, MCW_EM ); }
+    FPEGuard(int mask, bool reverse=false)
+    : m_mask(mask)
+    , m_initial( _control87(0,0) )
+    , m_reverse(reverse)
+    { 
+      if (m_reverse) { _control87(~m_mask,MCW_EM); }
+      else           { _control87( m_mask,MCW_EM); }
+    }
+    ~FPEGuard() 
+    { 
+       _control87( m_initial, MCW_EM);
+       if (_control87(0,0)!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
+    }
 #else
-    int get() { throw GaudiException("FPE trapping not implemented..... ","",StatusCode::FAILURE); return 0;}
-    void enable()  { get(); }
-    void disable() { get(); }
+
+    FPEGuard(int mask, bool reverse=false)
+    { 
+      throw GaudiException("FPE trapping not implemented..... ","",StatusCode::FAILURE);
+    }
 #endif
 
 private:
     int m_mask;
-    int m_prevMask;
+    int m_initial;
+    bool m_reverse;
 };
 
 
 class FPEAuditor : public Auditor {
 public:
     FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator);
-    FPEAuditor::~FPEAuditor() { delete m_guard; m_guard = 0; }
+    FPEAuditor::~FPEAuditor() {  }
 
-    StatusCode FPEAuditor::initialize() { m_guard = new FPEGuard( m_mask ); return StatusCode::SUCCESS;}
-    StatusCode FPEAuditor::finalize() { delete m_guard; m_guard = 0;return StatusCode::SUCCESS; }
-
-
-
-    void before(StandardEventType type, INamedInterface*) { before(type);  }
-    void before(StandardEventType type, const std::string&) { before(type); }
-    void before(StandardEventType type) { std::ostringstream s; s << type; before(s.str()); }
-    void before(CustomEventType type, INamedInterface*) { before(type);  }
-    void before(CustomEventType type, const std::string&) { before(type); }
-    void before(CustomEventTypeRef type) {
-        if ( std::find(m_when.begin(),m_when.end(),type)!=m_when.end()) { m_guard->enable(); }
+    void before(StandardEventType type, INamedInterface* i) { before(type,i->name()); }
+    void before(CustomEventType   type, INamedInterface* i) { before(type,i->name()); }
+    void before(StandardEventType type, const std::string& s) 
+    {  std::ostringstream t; t << type;before(t.str(),s); }
+    void before(CustomEventType type, const std::string& s) 
+    { 
+      if ( std::find(m_when.begin(),m_when.end(),type)!=m_when.end() ) {
+         bool veto = ( std::find(m_veto.begin(),m_veto.end(),s) != m_veto.end()) ;
+         m_guards.push_back( make_pair( s, new FPEGuard( m_mask.value(), veto) ) ); 
+      }
     }
 
-    void after(StandardEventType type, INamedInterface*, const StatusCode&) { after(type); }
-    void after(StandardEventType type, const std::string&, const StatusCode&) { after(type); }
-    void after(StandardEventType type) { std::ostringstream s; s << type; after(s.str()); }
-    void after(CustomEventTypeRef type, INamedInterface*, const StatusCode&) { after(type); }
-    void after(CustomEventTypeRef type, const std::string&, const StatusCode&) { after(type); }
-    void after(CustomEventTypeRef type) {
-        if ( std::find(m_when.begin(),m_when.end(),type)!=m_when.end()) { m_guard->disable(); }
+    void after(StandardEventType type, INamedInterface* i, const StatusCode& sc) { after(type,i->name(),sc); }
+    void after(CustomEventTypeRef type, INamedInterface* i, const StatusCode& sc) { after(type,i->name(),sc); }
+    void after(StandardEventType type, const std::string& s, const StatusCode& sc) 
+    {  std::ostringstream t; t << type;after(t.str(),s,sc); }
+    void after(CustomEventTypeRef type, const std::string& s, const StatusCode&) 
+    { 
+     if ( std::find(m_when.begin(),m_when.end(),type)!=m_when.end() ) { 
+       std::pair<std::string,FPEGuard *>& p = m_guards.back();
+       if (p.first!=s) { throw GaudiException("FPEAuditor: inconsistent state...","",StatusCode::FAILURE); }
+       delete p.second;
+       m_guards.pop_back();
+     }
     }
 
 
@@ -114,27 +151,27 @@ public:
     void afterFinalize(INamedInterface *i, const StatusCode& s) { return after(IAuditor::Finalize,i,s); }
 
 private:
-    FPEGuard *m_guard;
+    std::vector<std::pair<std::string,FPEGuard*> > m_guards;
     mutable MsgStream m_log;
 
-    std::vector<std::string> m_mask,m_when;
+    FPEMaskProperty          m_mask;
+    std::vector<std::string> m_when,m_veto;
 };
 
 DECLARE_AUDITOR_FACTORY( FPEAuditor );
 
 FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   : Auditor ( name , pSvcLocator )
-  , m_guard(0)
   , m_log( msgSvc() , name )
 {
-    declareProperty("TrapOn", m_mask = boost::assign::list_of("DivByZero")
-                                                             ("Inexact")
-                                                             ("Overflow") );
+    declareProperty("TrapOn", m_mask.set(  boost::assign::list_of("DivByZero")
+                                                                 ("Inexact")
+                                                                 ("Overflow") ).property() );
     declareProperty("ActivateAt", m_when = boost::assign::list_of("Initialize")
                                                                  ("ReInitialize")
                                                                  ("Execute")
                                                                  ("BeginRun")
                                                                  ("EndRun")
                                                                  ("Finalize") );
-//TODO: add a DoNotActivateFor property to decide for which Algorithms not to enable..
+    declareProperty("DisableTrapFor", m_veto );
 }
