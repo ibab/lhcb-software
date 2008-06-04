@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.14 2008-05-20 15:41:17 cattanem Exp $
+// $Id: Element.cpp,v 1.15 2008-06-04 14:23:39 mneedham Exp $
 /// STL and STD 
 #include <math.h>
 #include <iostream>
@@ -7,7 +7,7 @@
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
 #include "GaudiKernel/cbrt.h"
-
+#include "LHCbMath/LHCbMath.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
 Element::Element( const std::string& name    , 
@@ -30,10 +30,13 @@ Element::Element( const std::string& name    ,
     , m_tsai    ()
     , m_symb ( symb )
 {
+
+  LHCb::Math::Equal_To<double> equal_to(LHCb::Math::lowTolerance);
+
   if( 0 < Z() ) { ComputeCoulombFactor  (); } 
   if( 0 < Z() ) { ComputeLradTsaiFactor (); }
-  if( 0 < Z() && I()==0 ) { ComputeMeanExcitationEnergy (); }
-  if( 0 < Z() && I()!=0 ) { ComputeDensityEffect (); }
+  if( 0 < Z() && equal_to(I(),0.0)) { ComputeMeanExcitationEnergy (); }
+  if( 0 < Z() && !equal_to(I(),0.0) ) { ComputeDensityEffect (); }
 };
 /////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
@@ -201,12 +204,16 @@ void  Element::ComputeRadiationLength(){
 
 
 void Element::ComputeMeanExcitationEnergy(){
-    if (I()==0) 
-	if (Z() > 13)
-	    m_Ieff = (12*Z()+7)*Gaudi::Units::eV;
-	else
-	    m_Ieff = (9.76*Z()+58.8*pow(Z(),-0.19))*Gaudi::Units::eV;
-  };
+  LHCb::Math::Equal_To<double> equal_to(LHCb::Math::lowTolerance);
+  if (equal_to(0.0, I())){ 
+    if (Z() > 13){
+      m_Ieff = (12*Z()+7)*Gaudi::Units::eV;
+    }
+    else{
+      m_Ieff = (9.76*Z()+58.8*pow(Z(),-0.19))*Gaudi::Units::eV;
+    }
+  }
+};
 
 void Element::ComputeDensityEffect(){
     

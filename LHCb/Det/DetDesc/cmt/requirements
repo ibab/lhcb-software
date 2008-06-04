@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.106 2008-05-20 15:41:17 cattanem Exp $ 
+# $Id: requirements,v 1.107 2008-06-04 14:23:39 mneedham Exp $ 
 # =============================================================================
 package       DetDesc
 version       v18r5
@@ -8,6 +8,7 @@ branches      DetDesc doc cmt src
 
 # =========== dependencies ====================================================
 use           LHCbKernel        v* Kernel
+use           LHCbMath          v* Kernel
 use           GaudiKernel       v*
 use           ROOT              v* LCG_Interfaces
 use           GSL               v* LCG_Interfaces 
