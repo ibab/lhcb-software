@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r6 2008-06-04 ====================
 ! 2008-06-04 - Manuel Tobias Schiller
  - PatSeedTool: various fixes to avoid dividing by zero (could and did happen
    when there were too few hits to determine fit parameters for the track
@@ -26,7 +27,6 @@
    - some checks skipping unneccessary stages for trigger applications to keep
      the high speed from previous versions
 
-!========================== PatAlgorithms v3r6 2008-05-29 ====================
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - removed all float variables, replaced them by doubles
 
