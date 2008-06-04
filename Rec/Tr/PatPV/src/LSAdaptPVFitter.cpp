@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.4 2008-06-04 13:07:11 cattanem Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.5 2008-06-04 13:12:15 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -149,7 +149,7 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
   }
 
   if (nbIter >= m_Iterations) {
-    Warning( "Reached max # iterations without convergence", StatusCode::SUCCESS ).ignore() 
+    Warning( "Reached max # iterations without convergence", StatusCode::SUCCESS ).ignore();
   }
 
   setChi2(vtx,pvTracks);
