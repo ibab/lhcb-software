@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.27 2008-06-04 11:50:15 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.28 2008-06-04 15:32:58 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -376,7 +376,7 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
     }
     if(m_isVerbose) verbose()<< "charge distributed: " << total <<endmsg;
     // normalize the charge each time (assume bigger than 1 electron!)
-    if(fabs(total) > 1.0){
+    if(fabs(total) > 1.e-8){
       double adjust=charge/total;
       for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
 	(*iPoint) *= adjust;
@@ -392,9 +392,11 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
   // if distributed charge not equal to charge taken from
   // a hit issue a warning
   if(fabs(totalCharge-charge)>1.e-6){
-    Warning("Normalization problems!");
-    info()<< "total charge after correction: " << totalCharge <<endmsg;
-    info()<< "total charge from a hit:" << charge <<endmsg;
+    Warning("Normalization problems, see debug for information!");
+    if(m_isDebug){
+      debug()<< "total charge after correction: " << totalCharge <<endmsg;
+      debug()<< "total charge from a hit:" << charge <<endmsg;
+    }
   }
   //
   return;
