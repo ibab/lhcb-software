@@ -4,12 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r18 2008-06-04 ==========================
 ! 2008-06-03 - Gerhard Raven
  - Add FPEAuditor, which can configure the FPU to trap a specified set of
    Floating Point Exceptions, and generate a SIGFPE (which leads to Gaudi
    providing a traceback and aborting the job)
 
-!======================== LHCbAlgs v2r17 2008-05-20==========================
+!======================== LHCbAlgs v2r17 2008-05-20 ==========================
 ! 2008-05-20 - Gerhard Raven
  - Abandon dispatching on types in DeterministicPrescaler
 
