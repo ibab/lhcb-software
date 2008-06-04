@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-04-09 - Olivier Deschamps
+ - Add L0DUError in RawBank types enum
+
+
+
 !================ DAQEvent v7r10 2008-04-09 ===========================
 ! 2008-04-09 - Marco Clemencic
  - Added the TAEWindow property (timeAlignmentEventWindow) to the ODIN class.
