@@ -959,9 +959,11 @@ StatusCode Align::updateConditions( std::vector<double> const_left, std::vector<
         }
         else {
           unsigned int pos1 = 2 + n_stat * d; // translations
+          int sign = 1;
+          if ( d == 1 ) sign = -1; // sign change for y rotation
           unsigned int pos2 = 2 + n_stat * (d + 3); //rotations
           translation[d] = const_box[ pos1 ];
-          rotation[d] = const_box[ pos2 ];
+          rotation[d] = sign * const_box[ pos2 ];
         }
       }
   

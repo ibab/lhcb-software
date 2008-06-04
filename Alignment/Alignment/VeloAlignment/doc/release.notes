@@ -2,6 +2,11 @@
 ! Responsible : Marco Gersabeck
 
 !=============================================================================
+! 04/06/2008 - Marco Gersabeck  ** v4r4 **
+
+  - Align.cpp: correct small bug in alignment constant output
+
+!=============================================================================
 ! 15/05/2008 - Marco Gersabeck  ** v4r3p1 **
 
   - TrackStore.cpp: adapt to new version of VeloDet:
