@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.1 2008-01-23 23:43:54 odescham Exp $
+// $Id: Calo2Dview.h,v 1.2 2008-06-04 16:18:23 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -47,17 +47,17 @@ protected:
   void reset(const HistoID unit,std::string title="");
   void resetTitle(const HistoID unit,std::string title);
   void getCaloParam(unsigned int calo);
-  void setThreshold(int threshold){m_threshold=threshold;};
+  void setThreshold(double threshold){m_threshold=threshold;};
   void setPinView(bool pin){m_pin=pin ;};
   void setActualSize(bool dim){m_dim=dim ;};
   void setL0ClusterView(bool l0){m_l0=l0 ;};
-  void setOffset(int offset){m_offset = offset;};
+  void setOffset(double offset){m_offset = offset;};
 
 
   // attributes
-  long m_threshold;
+  double  m_threshold;
   bool m_pin;
-  int  m_offset;
+  double  m_offset;
   bool m_dim;
   bool m_l0;
 

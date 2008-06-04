@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.7 2008-05-30 12:48:57 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.8 2008-06-04 16:18:23 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -31,9 +31,9 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_xsize(),
     m_ysize()
 {
-  declareProperty( "Threshold"     ,  m_threshold = -256 );
+  declareProperty( "Threshold"     ,  m_threshold = -256. );
   declareProperty( "PinView"       ,  m_pin  = false );
-  declareProperty( "Offset"        ,  m_offset  = 0 );
+  declareProperty( "Offset"        ,  m_offset  = 0.0 );
   declareProperty( "ActualSize"    ,  m_dim  = true );
   declareProperty( "L0ClusterView" ,  m_l0  = false );
 
