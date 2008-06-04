@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-06-04 - David Hutchcroft
+ - Fixed a divide by zero and sqrt(-N) problem when PrevPrev MCHits gave 
+   either zero or negative charge deposition
+
 !===================== VeloSimulation v3r1 2008-05-19 ======================
 ! 2008-05-19 - David Hutchcroft
  - Fixed MCHit linking to only link to main event container

@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.26 2008-05-19 10:29:23 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.27 2008-06-04 11:50:15 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -105,7 +105,6 @@ StatusCode VeloSim::initialize() {
   //
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
   m_isDebug   = msgLevel( MSG::DEBUG   );
   m_isVerbose = msgLevel( MSG::VERBOSE );
 
@@ -346,8 +345,8 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
     chargeEqual=m_chargeUniform*thickness/Gaudi::Units::micrometer;
     chargeEqual*=chargeTimeFactor(hit->time(),timeOffset,hit->entry().z());
     if(m_isVerbose) verbose() 
-      << "Charge equal after time correction of " << timeOffset
-      << " is " << charge << endmsg;
+      << "ChargeEqual equal after time correction of " << timeOffset
+      << " is " << chargeEqual << endmsg;
     if(chargeEqual>charge)  chargeEqual=charge;
   }else{
     // all of charge allocated equally to points
@@ -362,7 +361,7 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
   std::vector<double>::iterator iPoint;
   for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
     // gaussian fluctuations
-    if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(chargeEqualN);
+    if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(fabs(chargeEqualN));
     *iPoint = chargeEqualN+fluctuate;
     if(m_isVerbose) verbose()<< "charge for pt" << iPoint-Spoints.begin() 
 			     << " is " << *iPoint << endmsg;
@@ -376,10 +375,12 @@ void VeloSim::chargePerPoint(LHCb::MCHit* hit,
       total += (*iPoint);
     }
     if(m_isVerbose) verbose()<< "charge distributed: " << total <<endmsg;
-    // normalize the chrge each time
-    double adjust=charge/total;
-    for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
-      (*iPoint) *= adjust;
+    // normalize the charge each time (assume bigger than 1 electron!)
+    if(fabs(total) > 1.0){
+      double adjust=charge/total;
+      for (iPoint = Spoints.begin(); iPoint != Spoints.end(); ++iPoint){
+	(*iPoint) *= adjust;
+      }
     }
   }
   double totalCharge=0.;
