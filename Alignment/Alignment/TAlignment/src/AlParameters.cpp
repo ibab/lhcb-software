@@ -67,7 +67,7 @@ std::string AlParameters::parName(int parindex)
 
 static inline double signedroot(double root)
 {
-  return root >= 0 ? std::sqrt(root) : - std::sqrt(root) ;
+  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
 }
 
 std::ostream& AlParameters::fillStream(std::ostream& os) const 
