@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.9 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.10 2008-06-04 00:02:31 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -155,6 +155,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   if(m_vsn == 0){
     unsigned int word;
     word = *m_data;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", word)<< endreq;
     m_report.setDecision( (bool) (word & 0x1) );
     m_report.setChannelsDecisionSummary( word >> 1 );
     if( !nextData() )return false;
@@ -200,6 +201,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   //---------------------------------------------------------
   else if(m_vsn == 1){  
 
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", m_data)<< endreq;
     // global header
     unsigned int itc      = (*m_data & 0x00000003)  >> 0;
     unsigned int iec      = (*m_data & 0x0000000C)  >> 2;
@@ -674,6 +676,8 @@ bool L0DUFromRawTool::nextData(){
     Error("No more data in bank --> CORRUPTION",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
     return false;
+  }else{
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endreq;
   }
   return true;
 }
