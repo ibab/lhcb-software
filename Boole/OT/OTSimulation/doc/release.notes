@@ -2,10 +2,11 @@
 ! Package manager : Jan Amoraal
 !--------------------------------------------------------------------------
 
+!====================== OTSimulation v4r0 2008-06-04 ======================
 ! 2008-06-04 Jan Amoraal
- - Check status codes in MCOTDepositCreator, OTFillRawBuffer and OTRandomDepositCreator
+ - Check status codes in MCOTDepositCreator, OTFillRawBuffer and 
+   OTRandomDepositCreator
 
-!====================== OTSimulation v4r0 2008-05-29 ======================
 ! 2008-05-29 - Marco Cattaneo
  - Adapt to LHCbMath -> LHCb::Math namespace change
 
