@@ -4,7 +4,16 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
-!========================== PatVelo v3r6 2008-06-03 ==========================
+!========================== PatVelo v3r6 2008-06-04 ==========================
+! 2008-06-03 - David Hutchcroft
+ - All R clusters are now flagged as used in PatVeloRTracking, tweaked
+   PatVeloGeneralTracking to compensate. The change was to make the beam gas RZ
+   track searches running after PatVeloRTracking in the HLT easier
+ - Changed how PatVeloGeneralTracking uses R clusters only found on RZ tracks,
+   this has a 1% better efficiency for "Velo only" tracks (i.e. out of the
+   acceptance) and ~0.1% improvement for long tracks, but about a 0.1% higher
+   ghost rate.
+
 ! 2008-06-01 - David Hutchcroft
  - Changed PatVeloSpaceTool at request of Stephanie Hansmann-Menzemer
    Now used as a private tool in PatVeloSpaceTracking and defaults to not
