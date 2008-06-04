@@ -4,7 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
-!========================== MuonDAQ v4r1 2008-06-03 ==========================
+!========================== MuonDAQ v4r1 2008-06-04 ==========================
+! 2008-06-04 - Marco Cattaneo
+ - Fix the previous fix
+
 ! 2008-06--3 - Alessia Satta
  - move the reset of internal buffer from end event to begin event 
    to solve a problem with GaudiPython and to be similar to TES reset

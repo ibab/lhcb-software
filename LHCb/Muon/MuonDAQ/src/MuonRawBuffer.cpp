@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.15 2008-06-03 09:55:33 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.16 2008-06-04 13:59:22 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode MuonRawBuffer::initialize()
   if (!sc) return sc;
   m_muonDet=getDet<DeMuonDetector>(DeMuonLocation::Default);
   m_M1Tell1=(m_muonDet->getDAQInfo())->M1TellNumber(); 
-  incSvc()->addListener( this, IncidentType::EndEvent ); 
+  incSvc()->addListener( this, IncidentType::BeginEvent ); 
   for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
     m_counter_invalid_hit[i]=0;
     m_processed_bank[i]=0;
