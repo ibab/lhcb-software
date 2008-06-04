@@ -1,4 +1,4 @@
-// $Id: AlResiduals.h,v 1.2 2008-04-14 20:46:08 wouter Exp $
+// $Id: AlResiduals.h,v 1.3 2008-06-04 13:22:06 wouter Exp $
 #ifndef TRACKTOOLS_TrackResiduals_H 
 #define TRACKTOOLS_TrackResiduals_H 1
 
@@ -82,6 +82,8 @@ namespace Al
 			double vertexchi2, int vertexndof) 
       : Residuals(nodes,chi2,ndof),m_vertexchi2(vertexchi2),m_vertexndof(vertexndof) {}
     ~MultiTrackResiduals( ) {}; ///< Destructor
+    double vertexChi2() const { return m_vertexchi2 ; }
+    int    vertexNDoF() const { return m_vertexndof ; }
   private:
     friend class VertexResidualTool ;
     double m_vertexchi2 ;
