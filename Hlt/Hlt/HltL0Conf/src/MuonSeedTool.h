@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.h,v 1.2 2007-12-07 17:51:50 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.3 2008-06-04 06:43:26 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
@@ -42,6 +42,7 @@ public:
 private:
 
   bool m_debugMode;
+  bool m_useM1;
   
   std::vector<double> m_sigmaX2;
   std::vector<double> m_sigmaY2;

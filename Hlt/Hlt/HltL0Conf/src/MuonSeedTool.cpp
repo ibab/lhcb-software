@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.6 2008-03-20 11:42:01 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.7 2008-06-04 06:43:36 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,7 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
   declareInterface<IMuonSeedTool>(this);
 
   declareProperty("debugMode",m_debugMode = false );
+  declareProperty("useM1",m_useM1 = true );
 
   //resolution for track hypothesis taken from muon stations M1 and M2 
   declareProperty("sigmaX2", m_sigmaX2 = boost::assign::list_of(64.)(225.)(841.)(2916.) );
@@ -199,7 +200,9 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
       
     numberOfTiles++;
     MuonTileID mpad1 = *it;
-    if( mpad1.isValid() ){
+    if( mpad1.isValid() 
+        && 0 == mpad1.station() 
+        && m_useM1                 ){
       
       //positions in M1
       sc = m_iPosTool->calcTilePos( mpad1,x, dx,y, dy,z, dz );
