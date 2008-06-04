@@ -4,11 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!===================== VeloSimulation v3r2 2008-06-04 ======================
 ! 2008-06-04 - David Hutchcroft
  - Change the sensitivity and error serverity for the charge normalisation
    error.
 
-!===================== VeloSimulation v3r2 2008-06-04 ======================
 ! 2008-06-04 - David Hutchcroft
  - Fixed a divide by zero and sqrt(-N) problem when PrevPrev MCHits gave 
    either zero or negative charge deposition
