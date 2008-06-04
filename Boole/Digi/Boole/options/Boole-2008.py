@@ -1,12 +1,13 @@
 ##############################################################################
-# File for running Boole with latest supported 2008 gemoetry
+# File for running Boole with default 2008 geometry, as defined in
+#                                              $DDDBROOT/options/lhcb-2008.py
 # Syntax is:
 #   gaudirun.py Boole-2008.py <someDataFiles>.py
 ##############################################################################
 
 from Boole.Configuration import *
 
-Boole().DDDBtag     = "lhcb-2008"
+Boole().DDDBtag     = "2008-default"
 Boole().condDBtag   = "lhcb-2008"
 
 Boole().applyConf()

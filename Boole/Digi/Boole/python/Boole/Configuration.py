@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.9 2008-05-09 12:57:10 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-06-04 16:09:37 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -24,6 +24,7 @@ class Boole(ConfigurableUser):
        ,"writeL0Only":  False # set to True to write only L0 selected events
        ,"extendedDigi": False # set to True to add MCHits to .digi output file
        ,"expertHistos": False # set to True to write out expert histos
+       ,"mainOptions" : '$BOOLEOPTS/Boole.opts' # top level options to import
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  '00001820_00000001' # string used to build file names
        ,"DDDBtag":   "DEFAULT" # geometry database tag
@@ -184,7 +185,7 @@ class Boole(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        importOptions('$BOOLEOPTS/Boole.opts')
+        importOptions( self.getProp( "mainOptions" ) )
         self.defineDB()
         self.defineEvents()
         self.defineOptions()
