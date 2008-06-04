@@ -8,7 +8,7 @@ from subprocess import Popen, PIPE
 from shutil import copy, rmtree
 from time import time, sleep
 from math import sqrt
-
+from socket import gethostname
 
 class TimedJob(Thread):
     id = 0
@@ -38,7 +38,10 @@ class TimedJob(Thread):
         self._sourcefile = None
         self._status = 0
     def setOuputFile(self):
-        self._outfile = os.path.join(self._workdir,self._exename + ".log")
+        if not self._outdir :
+            self._outfile = os.path.join(self._workdir,self._exename + ".log")
+        else :
+            self._outfile = os.path.join(self._outdir, "%s_%s_%s.log" % (self._exename, self._id, gethostname()) )
     def setNumberOfEvents(self, nbevent):
         self._nbevent = nbevent
         f = open(self._optfile,"a")
@@ -202,8 +205,8 @@ def printResults(thread_list, nthr):
         
     
 
-def runBench(jobexe, joboptionfile, nbevent=None, nbthread=1, datasource=None, nbfiles=1):
-    job_threads = [ TimedJob(jobexe, joboptionfile, nbevent, x) for x in range(nbthread) ]
+def runBench(jobexe, joboptionfile, nbevent=None, nbthread=1, datasource=None, nbfiles=1, outputdir=None):
+    job_threads = [ TimedJob(jobexe, joboptionfile, nbevent, x, outputdir) for x in range(nbthread) ]
     if datasource is not None:
         for s in job_threads :
             s.setSourceFile(datasource, nbfiles)
@@ -241,7 +244,7 @@ def getNbProc():
 if __name__ == '__main__':
 
     usage = "%prog [options] exe optfile"
-    version = "$Id: Benchmark.py,v 1.3 2008-05-09 14:23:27 hmdegaud Exp $"
+    version = "$Id: Benchmark.py,v 1.4 2008-06-04 08:21:50 hmdegaud Exp $"
     
     parser = OptionParser(usage=usage, version=version)
     parser.set_defaults(nbevent=1)
@@ -254,7 +257,7 @@ if __name__ == '__main__':
                       type="int",
                       dest="nbthread",
                       help="Number of parallel threads")
-    parser.set_defaults(outputdir=".")
+    parser.set_defaults(outputdir=None)
     parser.add_option("-o", "--output-dir",
                       dest="outputdir",
                       help="results output directory")
@@ -277,5 +280,8 @@ if __name__ == '__main__':
     print "number of threads: %s" % options.nbthread
 
     
-    runBench(args[0], args[1], options.nbevent, options.nbthread, options.datasource, options.nbfiles)
+    runBench(args[0], args[1], 
+             options.nbevent, options.nbthread, 
+             options.datasource, options.nbfiles,
+             options.outputdir)
     

@@ -13,6 +13,7 @@ python install_project.py -p Gaudi -v v19r7 -b slc4_amd64_gcc34
 source scripts/ExtCMT.csh
 setenv PYTHONPATH ${LHCBPYTHON}:${PYTHONPATH}
 setenv CMTPROJECTPATH $LHCBPROJECTPATH
+setenv CMTCONFIG slc4_ia32_gcc34
 unsetenv CMTPATH
 source $LHCBSCRIPTS/setup_external.csh --lcg 54 Python
 
@@ -53,7 +54,7 @@ EOF
 #Benchmark -n 1000 -t 5 Gauss.exe $TMPDIR/run/BenchMark.opts
 #Benchmark -n 1000 -t 6 Gauss.exe $TMPDIR/run/BenchMark.opts
 #Benchmark -n 1000 -t 7 Gauss.exe $TMPDIR/run/BenchMark.opts
-Benchmark -n 500 Gauss.exe $TMPDIR/run/BenchMark.opts
+Benchmark -n 5 -t 1 -o /afs/cern.ch/user/h/hmd/scratch0/bench/rand Gauss.exe $TMPDIR/run/BenchMark.opts
 #Benchmark -n 1000 -t 9 Gauss.exe $TMPDIR/run/BenchMark.opts
 
 
