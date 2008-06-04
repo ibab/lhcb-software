@@ -7,3 +7,6 @@ AuditorSvc.Auditors += { "FPEAuditor" };
 FPEAuditor.TrapOn = {"DivByZero" };
 //.ActivateAt takes a list of 'standard events', i.e. "Initialize","BeginRun", ... , "Finalize"
 FPEAuditor.ActivateAt = {"Execute" };
+
+// You can also skip some algorithms:
+//FPEAuditor.DisableTrapFor = {"AnAlg","AnotherAlg" };
