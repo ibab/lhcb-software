@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.6 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.7 2008-06-04 15:33:48 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -32,7 +32,8 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 
   /** @class PatSeedingTool PatSeedingTool.h
    *
-   *  Pat Seeding tool. Used internally by Pat Seeding.
+   *  Pat Seeding tool. Used internally by Pat Seeding and for L0
+   *  confirmation in the HLT.
    *
    *  @author Olivier Callot
    *  @date   2006-10-13 Initial version
@@ -41,6 +42,9 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
    *          tracks, bug fixes
    *  @date   2008-05-03 added methods to cache region z at y = 0, dz/dy
    *  @date   2008-05-04 added convenience methods to access hit manager
+   *  @date   2008-06-04 fixes to avoid dividing by zero in initialize,
+   *          new passes to find more tracks in IT and OT (ideas due to Matt
+   *          Needham and Olivier Callot, respectively - thanks a lot!)
    */
 
   class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
@@ -57,9 +61,12 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
                     const std::string& name,
                     const IInterface* parent);
 
+    /// destructor
     virtual ~PatSeedingTool( );
 
+    /// initialize the tool for subsequent use
     virtual StatusCode initialize();
+    /// finalize the tool
     virtual StatusCode finalize();
 
     /** search for tracks in T stations using state from given tracks as seed,
@@ -93,6 +100,7 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     virtual unsigned prepareHits();
 
   protected:
+    /// helper for debugging printouts
     void debugFwdHit ( const PatFwdHit* coord, MsgStream& msg );
 
     /// add a track candidate to the pool if it is better than others in there
@@ -100,12 +108,12 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 	std::vector<PatSeedTrack>& pool);
 
     /// find candidates in xz projection in region reg, layer lay
-    void findXCandidates ( unsigned int lay, unsigned int reg,
+    void findXCandidates ( unsigned lay, unsigned reg,
 		    std::vector<PatSeedTrack>& pool,
 		    const LHCb::State* state );
 
     /// collect stereo hits compatible with track candidate in xz projection
-    void collectStereoHits ( PatSeedTrack& track, unsigned int typ,
+    void collectStereoHits ( PatSeedTrack& track, unsigned typ,
 		    PatFwdHits& stereo, const LHCb::State* state );
 
     /// search for cluster of stereo hits in projection plane
@@ -136,14 +144,16 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 		    std::vector<PatSeedTrack>& lowQualTracks,
 		    std::vector<PatSeedTrack*>& finalSelection,
 		    std::vector<LHCb::Track*>& outputTracks,
-		    const LHCb::State* state);
+		    const LHCb::State* state,
+		    bool OTonly = false);
 
     /// second stage: make tracks in one IT station, collect more OT/IT hits
     void collectITOT(
 		    std::vector<PatSeedTrack>& pool,
 		    std::vector<PatSeedTrack*>& finalSelection,
 		    std::vector<LHCb::Track*>& outputTracks,
-		    const LHCb::State* state);
+		    const LHCb::State* state,
+		    bool doOverlaps = false);
 
     /// third stage: pick good ones among low quality tracks from first stage
     void collectLowQualTracks(
@@ -216,7 +226,6 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     int m_timeStereo;
     int m_timeItOt;
     int m_timeLowQual;
-    int m_timeCleanup;
     bool m_useForward;
     std::vector<std::vector<LHCb::LHCbID> > m_foundIds;
 
@@ -268,6 +277,9 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
       Tf::RegionID::ITIndex::kNRegions;
     static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
     static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
+
+    static const int m_centralYOT = 50; // mm
+    static const int m_centralYIT = 4; // mm
 
     //----------------------------------------------------------------------
     // convenience functions
@@ -323,8 +335,10 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     inline void addNeighbour(PatSeedTrack& track, const PatFwdHit* hit,
 	HitRange::const_iterator& itH, const HitRange& range) const;
 
+    /// return expectation for most extreme values of slope ty for a given region
     inline void getTyLimits(unsigned reg, double& tymin, double& tymax) const;
 
+    /// combine two hits into a cluster by calculating the cluster position
     void combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,
 	double& x, double& z) const;
 

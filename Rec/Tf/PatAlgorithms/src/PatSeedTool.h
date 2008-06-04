@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.h,v 1.2 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatSeedTool.h,v 1.3 2008-06-04 15:33:48 mschille Exp $
 #ifndef PATSEEDTOOL_H
 #define PATSEEDTOOL_H 1
 
@@ -15,11 +15,14 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
 
 
   /** @class PatSeedTool PatSeedTool.h
-   *  Tool to fit the Pat Seeding tracks
+   *  Tool to fit the PatSeeding tracks
    *
    *  @author Olivier Callot
    *  @date   2006-10-23 Initial version
    *  @date   2007-08-20 Update for a-team framework 
+   *  @date   2008-06-04 protect against tracks with too few hits to solve
+   *          for fit parameters (i.e. protect against solving a linear system
+   *          represented by a singular matrix)
    */
 
   class PatSeedTool : public GaudiTool {
@@ -35,16 +38,28 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
 
     virtual ~PatSeedTool( ); ///< Destructor
 
+    /** fit a track
+     * @param track PatSeedTrack to fit
+     * @param maxChi2 outlier removal starts at maxChi2
+     * @param minPlanes track must have at least minPlanes layers
+     * @param xOnly ignore stereo part if true
+     * @param forceDebug force printing debugging information
+     * @return false if fit failed to satisfy criteria given by arguments, true otherwise
+     */
     bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) const;
 
   protected:
 
-    void fitXProjection( PatSeedTrack& track, bool forceDebug ) const;
-
+    /// do an initial fit in xz projection, fixing OT ambiguities if possible
     void fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
-    void fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug ) const;
+    /// do a fit in xz projection, return false if fewer than 3 x hits on track
+    bool fitXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
+    /// do a fit in yz projection, return false if fewer than 2 stereo hits on track
+    bool fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug ) const;
+
+    /// helper for debugging output
     void printTCoord( MsgStream& msg,
 	const PatSeedTrack& track, const PatFwdHit* hit ) const
     {

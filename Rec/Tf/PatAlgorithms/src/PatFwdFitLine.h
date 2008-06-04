@@ -1,9 +1,8 @@
-// $Id: PatFwdFitLine.h,v 1.1.1.1 2007-10-09 18:23:10 smenzeme Exp $
+// $Id: PatFwdFitLine.h,v 1.2 2008-06-04 15:33:48 mschille Exp $
 #ifndef PATFWDFITLINE_H
 #define PATFWDFITLINE_H 1
 
 // Include files
-
 
   /** @class PatFwdFitLine PatFwdFitLine.h
    *  Simple class to fit a line

@@ -4,18 +4,40 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-06-04 - Manuel Tobias Schiller
+ - PatSeedTool: various fixes to avoid dividing by zero (could and did happen
+   when there were too few hits to determine fit parameters for the track
+   model)
+ - PatSeedingTool:
+   - protect against a division by zero in initialize
+   - increase m_minMomentum to 500 MeV - very few tracks lost
+   - several adjustments triggered by the changes to PatSeedTool above
+   - several changes to improve efficiency:
+     - IT, per region: allow to form x candidates starting with all possible
+       combinations of x layers in the tree stations
+     - IT, per region: if few x hits are present in left/right boxes, we're
+       probably in the dead region between the two ladders, so restrict
+       stereo search as is already done for OT
+     - IT/OT: additional pass looking for tracks passing between different IT
+       regions and considering upper and lower OT halves for tracks near y=0,
+       also relax requirements on tracks slightly in this case
+     - OT, per region: additional pass for tracks at high fabs(y) where tracks
+       are almost straight - so we set m_initialArrow temporarily to zero
+   - some checks skipping unneccessary stages for trigger applications to keep
+     the high speed from previous versions
+
 !========================== PatAlgorithms v3r6 2008-05-29 ====================
 ! 2008-05-27 - Stephanie Hansmann-Menzemer
  - removed all float variables, replaced them by doubles
 
 ! 2008-05-23 - Johannes Albrecht
-	- PatMatchTool.cpp: set unused variable quality2 to 0 (needed for Hlt interface)
+   - PatMatchTool.cpp: set unused variable quality2 to 0 (needed for Hlt interface)
 
 ! 2008-05-22 - Marco Cattaneo
  - Get IMatchTool.h from TrackInterfaces
 
 ! 2008-05-21 - Johannes Albrecht
-	- PatMatchTool.h / .cpp: Add interface for implementation in Hlt
+   - PatMatchTool.h / .cpp: Add interface for implementation in Hlt
 
 ! 2008-05-21 - Manuel Tobias Schiller
  - PatSeedingTool: fixed a bug in the y window calculation used in L0
