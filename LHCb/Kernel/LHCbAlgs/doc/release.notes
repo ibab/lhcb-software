@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== LHCbAlgs v2r18 2008-06-04 ==========================
+! 2008-06-04 - Marco Cattaneo
+ - Add a windows implementation for FPEAuditor
+ 
 ! 2008-06-03 - Gerhard Raven
  - Add FPEAuditor, which can configure the FPU to trap a specified set of
    Floating Point Exceptions, and generate a SIGFPE (which leads to Gaudi

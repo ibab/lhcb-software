@@ -18,12 +18,24 @@ public:
         : m_mask(0)
         , m_prevMask( get() )
     {
+#if defined(linux) && defined(__GNUC__)
      static std::map<std::string,int> m = boost::assign::map_list_of
                                     ( "DivByZero" , int(FE_DIVBYZERO) )
                                     ( "Inexact"   , int(FE_INEXACT)   )
                                     ( "Overflow"  , int(FE_OVERFLOW)  )
                                     ( "Underflow" , int(FE_UNDERFLOW) )
                                     ( "AllExcept" , int(FE_ALL_EXCEPT));
+#elif defined(_WIN32)
+     static std::map<std::string,int> m = boost::assign::map_list_of
+                                    ( "DivByZero" , int(EM_ZERODIVIDE) )
+                                    ( "Inexact"   , int(EM_INEXACT)   )
+                                    ( "Overflow"  , int(EM_OVERFLOW)  )
+                                    ( "Underflow" , int(EM_UNDERFLOW) )
+                                    ( "AllExcept" , int(EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
+#else
+     static std::map<std::string,int> m;
+#endif
+
      for (std::vector<std::string>::const_iterator i=masks.begin();
           i!=masks.end(); ++i) {
           std::map<std::string,int>::const_iterator j = m.find(*i);
@@ -40,15 +52,13 @@ public:
     int get() { return fegetexcept(); }
     void enable()  { feenableexcept( m_mask ); }
     void disable() { feenableexcept( m_prevMask ); }
+#elif defined(_WIN32)
+// Possible windows implementation, to be tested
+	#include <float.h>
+    int get() { return _control87(0,0); }
+    void enable()  { _control87( m_mask, MCW_EM ); }
+    void disable() { _control87( m_prevMask, MCW_EM ); }
 #else
-// on windows, the following _might_ work:
-// #include <float.h>
-// unsigned int cw;
-// /* could use _controlfp */
-// cw = _control87(0,0) & MCW_EM;
-// cw &= ~(_EM_INVALID|_EM_ZERODIVIDE|_EM_OVERFLOW);
-// _control87(cw,MCW_EM);
-//
     int get() { throw GaudiException("FPE trapping not implemented..... ","",StatusCode::FAILURE); return 0;}
     void enable()  { get(); }
     void disable() { get(); }
@@ -126,5 +136,5 @@ FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
                                                                  ("BeginRun")
                                                                  ("EndRun")
                                                                  ("Finalize") );
-//TODO: at a DoNotActivateFor property to decide for which Algorithms not to enable..
+//TODO: add a DoNotActivateFor property to decide for which Algorithms not to enable..
 }
