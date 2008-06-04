@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.5 2008-05-29 21:52:16 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.6 2008-06-04 09:49:51 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -68,6 +68,7 @@ protected:
   DeCalorimeter*   m_calo;
   LHCb::RawBank::BankType m_packedType;
   LHCb::RawBank::BankType m_shortType;
+  LHCb::RawBank::BankType m_errorType;
   bool m_getRaw;
   std::string m_raw;
   bool m_extraHeader;

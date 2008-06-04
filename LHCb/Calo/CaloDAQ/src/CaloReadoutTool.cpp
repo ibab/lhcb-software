@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.29 2008-05-30 12:50:05 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.30 2008-06-04 09:49:51 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    if(m_first)info()<<"rawEvent not found at location '" << rootInTES() << m_raw <<endreq;
+    if(m_first)info()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" << rootInTES() << m_raw <<endreq;
     m_first=false;
     return false;
   }
@@ -86,7 +86,7 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
     }    
     
     if ( 0 == m_banks || 0 == m_banks->size() ){
-      Error("None of short and packed banks have been found ").ignore();
+      info() << "WARNING : None of short and packed banks have been found " << endreq;
       return false;
     }else{
       if( !m_packedIsDefault){      
@@ -105,6 +105,14 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
     }
   }
 
+
+  // check whether the associated Error Bank is present or not
+  const std::vector<LHCb::RawBank*>* errBanks= &rawEvt->banks(  m_errorType );
+  for( std::vector<LHCb::RawBank*>::const_iterator itB = errBanks->begin(); itB != errBanks->end() ; ++itB ) {
+    m_status.addStatus( (*itB)->sourceID() , LHCb::RawBankReadoutStatus::ErrorBank );
+  }
+
+  
   // check banks integrity
 
   std::vector<int> sources;

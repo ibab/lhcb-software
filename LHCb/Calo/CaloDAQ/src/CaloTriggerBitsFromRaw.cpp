@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.23 2008-04-04 13:50:37 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.24 2008-06-04 09:49:52 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -46,6 +46,7 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
   m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
   m_packedType = LHCb::RawBank::PrsPacked;
   m_shortType  = LHCb::RawBank::PrsTrig;
+  m_errorType = LHCb::RawBank::PrsPackedError;
 
   long nCells = m_calo->numberOfCells();
   (m_data.first).reserve( nCells );
@@ -277,7 +278,8 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
-        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
+        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Incomplete);
+        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted );
         return false;
       }
       prevCard = card;

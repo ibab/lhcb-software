@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.23 2008-04-04 13:50:37 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.24 2008-06-04 09:49:51 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -49,14 +49,17 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
     m_packedType = LHCb::RawBank::EcalPacked;
     m_shortType  = LHCb::RawBank::EcalE;
+    m_errorType = LHCb::RawBank::EcalPackedError;
   } else if ( "Hcal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
     m_packedType = LHCb::RawBank::HcalPacked;
     m_shortType  = LHCb::RawBank::HcalE;
+    m_errorType = LHCb::RawBank::HcalPackedError;
   } else if ( "Prs" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
     m_packedType = LHCb::RawBank::PrsPacked;
     m_shortType  = LHCb::RawBank::PrsE;
+    m_errorType = LHCb::RawBank::PrsPackedError;
   } else {
     error() << "Unknown detector name " << m_detectorName << endreq;
     return StatusCode::FAILURE;
@@ -309,7 +312,8 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
-        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
+        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Incomplete);
+        m_status.addStatus( sourceID,   LHCb::RawBankReadoutStatus::Corrupted );
         return false; 
       }
       prevCard = card;

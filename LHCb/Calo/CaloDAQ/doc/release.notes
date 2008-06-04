@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2008-06-04 - Olivier Deschamps
+ - check whether ErrorBank is present or not in CaloReadoutTool (RawBankReadoutStatus updated accordingly)
+
 !========================== CaloDAQ v4r5 2008-06-02 ==========================
 ! 2008-05-16 - Olivier Deschamps
  - reduce WARNING verbosity in CaloReadoutTool
