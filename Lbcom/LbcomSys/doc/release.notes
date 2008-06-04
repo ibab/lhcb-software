@@ -6,10 +6,18 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v6r18>2008-05-29 LbcomSys v6r18</A></H1><PRE>
+</PRE><H1><A NAME=v6r18>2008-06-04 LbcomSys v6r18</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7
 
-- Packages modified: L0DU v8r5, VeloDAQ v4r2, VeloTools v3r2
+- Packages modified: CaloTools v5r1, L0Calo v9r13p1, L0DU v8r5, RichDAQ v3r16, 
+    STDAQ v3r7, VeloDAQ v4r2, VeloSimulation v3r2, VeloTools v3r2
+
+- In CaloTools v5r1
+  . Add new tools and alg for cosmics track reconstruction in calorimeter : 
+	  CaloCosmicsTool, CaloCosmicsTrackTool, CaloCosmicsTrackAlg
+
+- In L0Calo v9r13p1
+  . Fix trivial compilation warning
 
 - In L0DU v8r5
   . add standard definition of sub-triggers in the configuration options files
@@ -21,9 +29,20 @@ This version uses Gaudi v19r9 and LHCb v23r7
     L0DUPattern.opts & L0DUPatternConfig.opts
   . rename L0.opts -> L0Emulator.opts to avoid confusion 
 
+- In RichDAQ v3r16
+  . Adapt to changes in decoded data format
+  . Save inhibited HPDs in decoded data
+
+- In STDAQ v3r7
+  . Use registerConditions from GaudiTool base class in readout tool
+
 - In VeloDAQ v4r2
   . Adapt VeloFull decoding to run without ODIN bank; this behaviour
     is controlable via options file 
+
+- In VeloSimulation v3r2
+  . Fixed a divide by zero and sqrt(-N) problem when PrevPrev MCHits gave 
+    either zero or negative charge deposition
 
 - In VeloTools v3r2
   . Fixed bug exposed when reconstructing in a non-ideal geometry
