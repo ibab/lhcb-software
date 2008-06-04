@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.40 2008-06-03 06:15:20 cattanem Exp $
+! $Id: release.notes,v 1.41 2008-06-04 15:34:12 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-06-04 - Deschamps Olivier
+  - tune the verbosity
 
 !========================== CaloTools v5r1 2008-06-03 =========================
 ! 2008-06-03 - Marco Cattaneo

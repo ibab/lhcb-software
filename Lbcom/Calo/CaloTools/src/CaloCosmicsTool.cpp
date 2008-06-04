@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.2 2008-06-03 06:15:20 cattanem Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.3 2008-06-04 15:34:12 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -241,10 +241,7 @@ StatusCode CaloCosmicsTool::getBanks(){
 
   // get rawBank from TES
   for(std::vector<std::string>::iterator islot = m_slots.begin(); islot != m_slots.end() ;  ++islot){
-    if(!m_daqs[*islot]->getBanks()){
-      Error( "The Ecal Readout tool cannot load the rawEvent for the time slot " + *islot + "  ==> STOP processing").ignore();
-      return StatusCode::FAILURE;
-    }
+    if(!m_daqs[*islot]->getBanks()) return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }
@@ -283,7 +280,7 @@ StatusCode CaloCosmicsTool::zSup(){
   debug() << "Zero suppression : " << m_zsupADCs.size() << " among " << adcs.size() << " digits " << endreq;
 
   if( m_zsupADCs.size() == 0){
-    Warning("No digit left after Zero-suppression").ignore();
+    info() << "No digit left after Zero-suppression" <<endreq;
     return StatusCode::FAILURE;
   }
   
@@ -329,7 +326,7 @@ StatusCode CaloCosmicsTool::fit2D(){
 
 
   if( sw<=0 ){
-    Error( "Weight = 0 - fit failed ").ignore();
+    info()<< "Weight = 0 - fit failed "<<endreq;
     return StatusCode::FAILURE;
   }
   else{
@@ -365,7 +362,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   }
   debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endreq;
   if(m_cosmicsADCs.size()== 0){
-    Error("Empty 2D segment - fit failed").ignore();
+    info()<< "Empty 2D segment - fit failed"<<endreq;
     return StatusCode::FAILURE;
   }
 
