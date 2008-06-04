@@ -2,12 +2,19 @@
 
 // to write in the summary
 HltSummaryWriter.Save += {
-  "MuonTriggerSingle",
-  "MuonTriggerSingleNoIP",
-  "MuonTriggerDiMuon",
-  "MuonTriggerIPDiMuon",
-  "MuonTriggerPureDiMuon",
-  "MuonTriggerPureIPDiMuon",
+  "Hlt1MuonSingle",
+  "Hlt1MuonSingleNoIP",
+  "Hlt1MuonDiMuonNoIP",
+  "Hlt1MuonDiMuonWithIP",
+  "Hlt1MuonDiMuon2L0NoIP",
+  "Hlt1MuonDiMuonMuonSegNoIP",
+  "Hlt1MuonDiMuon2L0WithIP",
+  "Hlt1MuonDiMuonMuonSegWithIP",  
+  "Hlt1MuonAlleys",
+  "Hlt1MuonSingleAlleys",
+  "Hlt1MuonDiMuonAlleys", 
+  "Hlt1MuonDiMuonAlleysNoIP",
+  "Hlt1MuonDiMuonAlleysWithIP",
   "MuonAndTVelo",
   "DiMuonAndTVelo",
   "MuonAndTVeloFromMuonSeg"
@@ -17,14 +24,14 @@ HltSummaryWriter.Save += {
 
 // to declare as input for the OR of the muon alley
 HltAlleys.InputSelections += {
-  "MuonTriggerSingle",
-  "MuonTriggerSingleNoIP",
-  "MuonTriggerPureDiMuon",
-  "MuonTriggerPureIPDiMuon",
-  "MuonTriggerIPDiMuon2L0",
-  "MuonTriggerDiMuon2L0",
-  "MuonTriggerIPDiMuonMuonSeg",
-  "MuonTriggerDiMuonMuonSeg"
+  "Hlt1MuonSingle",
+  "Hlt1MuonSingleNoIP",
+  "Hlt1MuonDiMuonNoIP",
+  "Hlt1MuonDiMuonWithIP",
+  "Hlt1MuonDiMuon2L0WithIP",
+  "Hlt1MuonDiMuon2L0NoIP",
+  "Hlt1MuonDiMuonMuonSegWithIP",
+  "Hlt1MuonDiMuonMuonSegNoIP"
 };
 
 
@@ -37,52 +44,52 @@ HltMuonAlleySequence.Members = {
   "GaudiSequencer/HltDiMuonFromMuonSegIP",
   "GaudiSequencer/HltDiMuonFromL0DiMuonNoIP",
   "GaudiSequencer/HltDiMuonFromL0DiMuonIP",
-  "HltSelectionFilter/HltMuonSingleAlleys",
-  "HltSelectionFilter/HltMuonAlleys",
-  "HltSelectionFilter/HltDiMuonAlleys",  
-  "HltSelectionFilter/HltDiMuonAlleysNoIP",
-  "HltSelectionFilter/HltDiMuonAlleysIP"
+  "HltSelectionFilter/Hlt1MuonSingleAlleys",
+  "HltSelectionFilter/Hlt1MuonAlleys",
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleys",  
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleysNoIP",
+  "HltSelectionFilter/Hlt1MuonDiMuonAlleysWithIP"
 };
 HltMuonAlleySequence.ModeOR=true;
 HltMuonAlleySequence.ShortCircuit=false;
 HltMuonAlleySequence.MeasureTime=true;
 
-HltMuonSingleAlleys.InputSelections = {
-  "MuonTriggerSingle",
-  "MuonTriggerSingleNoIP"
+Hlt1MuonSingleAlleys.InputSelections = {
+  "Hlt1MuonSingle",
+  "Hlt1MuonSingleNoIP"
 };
 
-HltMuonAlleys.InputSelections = {
-  "MuonTriggerSingle",
-  "MuonTriggerSingleNoIP",
-  "MuonTriggerPureDiMuon",
-  "MuonTriggerPureIPDiMuon",
-  "MuonTriggerIPDiMuon2L0",
-  "MuonTriggerDiMuon2L0",
-  "MuonTriggerIPDiMuonMuonSeg",
-  "MuonTriggerDiMuonMuonSeg"
+Hlt1MuonAlleys.InputSelections = {
+  "Hlt1MuonSingle",
+  "Hlt1MuonSingleNoIP",
+  "Hlt1MuonDiMuonNoIP",
+  "Hlt1MuonDiMuonWithIP",
+  "Hlt1MuonDiMuon2L0WithIP",
+  "Hlt1MuonDiMuon2L0NoIP",
+  "Hlt1MuonDiMuonMuonSegWithIP",
+  "Hlt1MuonDiMuonMuonSegNoIP"
 };
 
 
-HltDiMuonAlleys.InputSelections = {
-  "MuonTriggerPureDiMuon",
-  "MuonTriggerPureIPDiMuon",
-  "MuonTriggerIPDiMuon2L0",
-  "MuonTriggerDiMuon2L0",
-  "MuonTriggerIPDiMuonMuonSeg",
-  "MuonTriggerDiMuonMuonSeg"
+Hlt1MuonDiMuonAlleys.InputSelections = {
+  "Hlt1MuonDiMuonNoIP",
+  "Hlt1MuonDiMuonWithIP",
+  "Hlt1MuonDiMuon2L0WithIP",
+  "Hlt1MuonDiMuon2L0NoIP",
+  "Hlt1MuonDiMuonMuonSegWithIP",
+  "Hlt1MuonDiMuonMuonSegNoIP"
 };
 
-HltDiMuonAlleysNoIP.InputSelections = {
-  "MuonTriggerPureDiMuon",
-  "MuonTriggerDiMuon2L0",
-  "MuonTriggerDiMuonMuonSeg"
+Hlt1MuonDiMuonAlleysNoIP.InputSelections = {
+  "Hlt1MuonDiMuonNoIP",
+  "Hlt1MuonDiMuon2L0NoIP",
+  "Hlt1MuonDiMuonMuonSegNoIP"
 };
 
-HltDiMuonAlleysIP.InputSelections = {
-  "MuonTriggerPureIPDiMuon",
-  "MuonTriggerIPDiMuon2L0",
-  "MuonTriggerIPDiMuonMuonSeg"
+Hlt1MuonDiMuonAlleysWithIP.InputSelections = {
+  "Hlt1MuonDiMuonWithIP",
+  "Hlt1MuonDiMuon2L0WithIP",
+  "Hlt1MuonDiMuonMuonSegWithIP"
 };
 //-------------------------------
 //   SINGLE MUON ALLEY
@@ -90,26 +97,26 @@ HltDiMuonAlleysIP.InputSelections = {
 
 HltSingleMuonIPandPT.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
-  "HltTrackFilter/MuonTriggerSingle"
+  "HltTrackFilter/Hlt1MuonSingle"
  };
 
 HltSingleMuonNoIP.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
-  "HltTrackFilter/MuonTriggerSingleNoIP"
+  "HltTrackFilter/Hlt1MuonSingleNoIP"
 };
 
 
-MuonTriggerSingle.InputSelection ="MuonAndTVelo";
-MuonTriggerSingle.FilterDescriptor = {
+Hlt1MuonSingle.InputSelection ="MuonAndTVelo";
+Hlt1MuonSingle.FilterDescriptor = {
   "IP_PV2D,||[],0.08,30.",
   "PT,>,1300"
 };
-//MuonTriggerSingle.OutputLevel = 3;
+//Hlt1MuonSingle.OutputLevel = 3;
 
 
-MuonTriggerSingleNoIP.InputSelection ="MuonAndTVelo";
-MuonTriggerSingleNoIP.FilterDescriptor = {"PT,>,6000"};
-//MuonTriggerSingleNoIP.OutputLevel = 3;
+Hlt1MuonSingleNoIP.InputSelection ="MuonAndTVelo";
+Hlt1MuonSingleNoIP.FilterDescriptor = {"PT,>,6000"};
+//Hlt1MuonSingleNoIP.OutputLevel = 3;
 
 
 //---- L0 muon single preparation
@@ -162,7 +169,7 @@ VeloMuonConf.RecoName = "Velo";
 
 MuonAndTVelo.InputSelection =    "VeloMuonConf";
 MuonAndTVelo.InputSelection2 =  "L0MuonAndTConfirmed";
-MuonAndTVelo.MatchName = "VeloT";
+MuonAndTVelo.MatchName = "PatMatch";
 //MuonAndTVelo.OutputLevel = 3;
 
 
@@ -173,13 +180,13 @@ MuonAndTVelo.MatchName = "VeloT";
 HltDiMuonFromL0DiMuonNoIP.MeasureTime=true;
 HltDiMuonFromL0DiMuonNoIP.Members = {
   "GaudiSequencer/HltDiMuonFromL0DiMuonPreparation",
-  "HltVertexFilter/MuonTriggerPureDiMuon"
+  "HltVertexFilter/Hlt1MuonDiMuonNoIP"
 };
 
 HltDiMuonFromL0DiMuonIP.MeasureTime=true;
 HltDiMuonFromL0DiMuonIP.Members = {
   "GaudiSequencer/HltDiMuonFromL0DiMuonPreparation",
-  "HltVertexFilter/MuonTriggerPureIPDiMuon"
+  "HltVertexFilter/Hlt1MuonDiMuonWithIP"
 };
 
 HltDiMuonFromL0DiMuonPreparation.MeasureTime=true;
@@ -226,7 +233,7 @@ VeloDiMuonConf.RecoName = "Velo";
 
 DiMuonAndTVelo.InputSelection =    "VeloDiMuonConf";
 DiMuonAndTVelo.InputSelection2 =  "DiMuonAndTConfirmed";
-DiMuonAndTVelo.MatchName = "VeloT";
+DiMuonAndTVelo.MatchName = "PatMatch";
 //DiMuonAndTVelo.OutputLevel = 3;
 
 DiMuonAndTVeloVertices.InputSelection = "DiMuonAndTVelo";
@@ -238,16 +245,16 @@ PureL0Dimuons.FilterDescriptor   = {
   "VertexMatchIDsFraction_L0TriggerDiMuon,>,1.9"};
 //PureL0Dimuons.OutputLevel = 3;
 
-MuonTriggerPureDiMuon.InputSelection = "PureL0Dimuons";
-MuonTriggerPureDiMuon.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-//MuonTriggerPureDiMuon.OutputLevel = 3;
+Hlt1MuonDiMuonNoIP.InputSelection = "PureL0Dimuons";
+Hlt1MuonDiMuonNoIP.FilterDescriptor = {"VertexDimuonMass,>,2500."};
+//Hlt1MuonDiMuonNoIP.OutputLevel = 3;
 
-MuonTriggerPureIPDiMuon.InputSelection = "PureL0Dimuons";
-MuonTriggerPureIPDiMuon.FilterDescriptor = { 
+Hlt1MuonDiMuonWithIP.InputSelection = "PureL0Dimuons";
+Hlt1MuonDiMuonWithIP.FilterDescriptor = { 
   "VertexDimuonMass,>,500.",
-  "VertexMinIP_PV2D,||>,0.05"
+  "VertexMinIP_PV2D,||>,0.15"
 };
-//MuonTriggerPureIPDiMuon.OutputLevel = 3;
+//Hlt1MuonDiMuonWithIP.OutputLevel = 3;
 
 
 //-----------------------------------------------------
@@ -260,28 +267,28 @@ HltDiMuonFrom2L0IP.MeasureTime=true;
 HltDiMuonFrom2L0IP.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
   "HltVertexMaker/DimuonFromTwoL0",
-  "HltVertexFilter/MuonTriggerIPDiMuon2L0"
+  "HltVertexFilter/Hlt1MuonDiMuon2L0WithIP"
 };
 
 HltDiMuonFrom2L0NoIP.MeasureTime=true;
 HltDiMuonFrom2L0NoIP.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
   "HltVertexMaker/DimuonFromTwoL0",
-  "HltVertexFilter/MuonTriggerDiMuon2L0"
+  "HltVertexFilter/Hlt1MuonDiMuon2L0NoIP"
 };
 
 DimuonFromTwoL0.InputSelection = "MuonAndTVelo";
 DimuonFromTwoL0.FilterDescriptor = {"DOCA,<,0.5"};
 //DimuonFromTwoL0.OutputLevel = 3;
 
-MuonTriggerIPDiMuon2L0.InputSelection = "DimuonFromTwoL0";
-MuonTriggerIPDiMuon2L0.FilterDescriptor = {"VertexDimuonMass,>,500.",
-                                        "VertexMinIP_PV2D,||>,0.05"};
-//MuonTriggerIPDiMuon2L0.OutputLevel = 3;
+Hlt1MuonDiMuon2L0WithIP.InputSelection = "DimuonFromTwoL0";
+Hlt1MuonDiMuon2L0WithIP.FilterDescriptor = {"VertexDimuonMass,>,500.",
+                                        "VertexMinIP_PV2D,||>,0.15"};
+//Hlt1MuonDiMuon2L0WithIP.OutputLevel = 3;
 
-MuonTriggerDiMuon2L0.InputSelection = "DimuonFromTwoL0";
-MuonTriggerDiMuon2L0.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-//MuonTriggerDiMuon2L0.OutputLevel = 3;
+Hlt1MuonDiMuon2L0NoIP.InputSelection = "DimuonFromTwoL0";
+Hlt1MuonDiMuon2L0NoIP.FilterDescriptor = {"VertexDimuonMass,>,2500."};
+//Hlt1MuonDiMuon2L0NoIP.OutputLevel = 3;
 
 //-----------------------------------------------------
 // DIMUON ALLEY : from L0Muon + Muon Segment
@@ -292,7 +299,7 @@ HltDiMuonFromMuonSegIP.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
   "GaudiSequencer/HltMuonSegPreparation",
   "HltVertexMaker/DimuonFromOneL0MuonSeg",
-  "HltVertexFilter/MuonTriggerIPDiMuonMuonSeg"
+  "HltVertexFilter/Hlt1MuonDiMuonMuonSegWithIP"
 };
 
 HltDiMuonFromMuonSegNoIP.MeasureTime=true;
@@ -300,7 +307,7 @@ HltDiMuonFromMuonSegNoIP.Members = {
   "GaudiSequencer/HltL0SingleMuonPreparation",
   "GaudiSequencer/HltMuonSegPreparation",
   "HltVertexMaker/DimuonFromOneL0MuonSeg",
-  "HltVertexFilter/MuonTriggerDiMuonMuonSeg"
+  "HltVertexFilter/Hlt1MuonDiMuonMuonSegNoIP"
 };
 
 
@@ -328,7 +335,9 @@ MuonTrackRecForL0Single.DecodingFromCoord=true;
 
 FilteredMuonSegments.InputSelection = "Hlt/Track/MuonSegmentForL0Single";
 FilteredMuonSegments.FilterDescriptor = {
-  "DoShareM3_L0MuonConfirmedWithT,<,0.5"
+  //"DoShareM3_L0MuonConfirmedWithT,<,0.5"
+  //This is equivalent to not apply any filter
+  "DoShareM3_L0MuonConfirmedWithT,<,5.0"
 };
 //FilteredMuonSegments.OutputLevel = 3;
 
@@ -351,7 +360,7 @@ VeloMuonFromMuonSeg.RecoName = "Velo";
 
 MuonAndTVeloFromMuonSeg.InputSelection = "VeloMuonFromMuonSeg";
 MuonAndTVeloFromMuonSeg.InputSelection2 = "MuonTAndTConfirmed";
-MuonAndTVeloFromMuonSeg.MatchName = "VeloT";
+MuonAndTVeloFromMuonSeg.MatchName = "PatMatch";
 //MuonAndTVeloFromMuonSeg.OutputLevel = 3;
 
 
@@ -365,14 +374,14 @@ DimuonFromOneL0MuonSeg.DoMergeInputs = False;
 //DimuonFromOneL0MuonSeg.OutputLevel = 3;
 
 
-MuonTriggerIPDiMuonMuonSeg.InputSelection = "DimuonFromOneL0MuonSeg";
-MuonTriggerIPDiMuonMuonSeg.FilterDescriptor = {"VertexDimuonMass,>,500.",
-                                        "VertexMinIP_PV2D,||>,0.05"};
-//MuonTriggerIPDiMuonMuonSeg.OutputLevel = 3;
+Hlt1MuonDiMuonMuonSegWithIP.InputSelection = "DimuonFromOneL0MuonSeg";
+Hlt1MuonDiMuonMuonSegWithIP.FilterDescriptor = {"VertexDimuonMass,>,500.",
+                                        "VertexMinIP_PV2D,||>,0.15"};
+//Hlt1MuonDiMuonMuonSegWithIP.OutputLevel = 3;
 
-MuonTriggerDiMuonMuonSeg.InputSelection = "DimuonFromOneL0MuonSeg";
-MuonTriggerDiMuonMuonSeg.FilterDescriptor = {"VertexDimuonMass,>,2500."};
-//MuonTriggerDiMuonMuonSeg.OutputLevel = 3;									  
+Hlt1MuonDiMuonMuonSegNoIP.InputSelection = "DimuonFromOneL0MuonSeg";
+Hlt1MuonDiMuonMuonSegNoIP.FilterDescriptor = {"VertexDimuonMass,>,2500."};
+//Hlt1MuonDiMuonMuonSegNoIP.OutputLevel = 3;									  
 
 
 
