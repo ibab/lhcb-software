@@ -4,6 +4,7 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r18 2008-06-04 =====================
 ! 2008-06-03 - Chris Jones
  - Adapt to changes in decoded data format
 
