@@ -4,8 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r7 2008-06-04 =======================
 ! 2008-06-03 M Needham
- - Use registerConditiions from GaudiTool base class in readout tool
+ - Use registerConditions from GaudiTool base class in readout tool
 
 !=============================== STDAQ v3r6 2008-05-16 =======================
 ! 2008-05-16

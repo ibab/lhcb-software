@@ -1,8 +1,7 @@
-// $Id: ITReadoutTool.cpp,v 1.7 2008-06-02 09:35:49 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.8 2008-06-04 06:52:08 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // STDAQ
 #include "ITReadoutTool.h"
