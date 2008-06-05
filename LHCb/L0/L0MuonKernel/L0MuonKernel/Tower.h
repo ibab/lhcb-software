@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.15 2007-08-27 09:32:24 jucogan Exp $
+// $Id: Tower.h,v 1.16 2008-06-05 08:20:28 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -109,6 +109,9 @@ namespace L0Muon {
     void setIgnoreM1(bool ignoreM1){ 
       m_ignoreM1 = ignoreM1; 
     }
+    void setIgnoreM2(bool ignoreM2){ 
+      m_ignoreM2 = ignoreM2; 
+    }
           
     /// Draw tower
     void draw();
@@ -147,6 +150,7 @@ namespace L0Muon {
     float m_dpt;
     int m_nbits;
     bool m_ignoreM1; // Ignore M1 flag   
+    bool m_ignoreM2; // Ignore M2 flag   
     
     bool m_debug; // Debug flag
 

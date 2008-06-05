@@ -46,6 +46,9 @@ namespace L0Muon {
     /// Return the flag for searching candidates without M1 
     bool ignoreM1(){ return m_ignoreM1;} 
 
+    /// Return the flag for searching candidates without M2
+    bool ignoreM2(){ return m_ignoreM2;} 
+
     /// Return parameters for calculating pT
     std::vector<double> ptParameters(){ return m_ptparameters;}
 
@@ -62,6 +65,7 @@ namespace L0Muon {
     std::vector<int> m_xfoi;
     std::vector<int> m_yfoi;    
     bool m_ignoreM1;
+    bool m_ignoreM2;
     std::vector<double> m_ptparameters;
     int m_procVersion;
     bool m_zip;

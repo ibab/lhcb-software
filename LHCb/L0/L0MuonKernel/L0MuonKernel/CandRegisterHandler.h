@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.5 2007-08-27 09:32:23 jucogan Exp $
+// $Id: CandRegisterHandler.h,v 1.6 2008-06-05 08:20:28 jucogan Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -154,11 +154,18 @@ namespace L0Muon {
 
     PMuonCandidate getMuonCandidate(int icand);
 
-    int numberOfCandidates(){
+    int numberOfCandidates(bool useStatus=false){
       int ncand=0;
-      for (int icand=0; icand<2; icand++){
-        if (!isEmpty(icand)) ncand++;
+      if (!useStatus) {
+        for (int icand=0; icand<2; icand++){
+          if (!isEmpty(icand)) ncand++;
+        }
+      } else {
+        int status = getStatus();
+        ncand=status&0x3;
+        ncand = ncand>2 ? 2 : ncand;
       }
+      
       return ncand;
     }  
 

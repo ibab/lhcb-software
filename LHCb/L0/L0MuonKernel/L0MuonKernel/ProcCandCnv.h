@@ -13,6 +13,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "L0MuonKernel/ProcCandErrors.h"
 
 namespace L0Muon {
   
@@ -30,12 +31,18 @@ namespace L0Muon {
     ~ProcCandCnv();
 
     void release();
+//     void clearRef();
     
     std::vector<PMuonCandidate> muonCandidatesPU();
     std::vector<PMuonCandidate> muonCandidatesBCSU();
 
-    void decodeBank(std::vector<unsigned int> raw, int version);
-    std::vector<unsigned int> rawBank(int version, int ievt);
+    int decodeBank(const std::vector<unsigned int> & raw, int version);
+    int decodeBank_v1(const std::vector<unsigned int> &raw);
+    int decodeBank_v2(const std::vector<unsigned int> &raw);
+
+    int rawBank(std::vector<unsigned int> &raw, int version, int ievt);
+    int rawBank_v1(std::vector<unsigned int> &raw, int ievt);
+    int rawBank_v2(std::vector<unsigned int> &raw, int ievt);
     
     void dump(std::string tab=""){
       for (int ib=0; ib<12; ++ib) 
@@ -47,12 +54,30 @@ namespace L0Muon {
       }
     }
 
+    int ref_l0_B_Id() {return m_ref_l0_B_Id;}
+    int ref_l0EventNumber() {return m_ref_l0EventNumber;}
+
+    void submitL0_B_Id(int l0_B_Id){
+      if (m_ref_l0_B_Id==-1) m_ref_l0_B_Id=l0_B_Id;
+    }
+    
+    void submitL0EventNumber(int l0EventNumber){
+      if (m_ref_l0EventNumber==-1) m_ref_l0EventNumber=l0EventNumber;
+    }
+
+
   private:
+
     int m_quarter;
     // Input candidate registers from the PU Cnv (max=48)
     CandRegisterHandler m_candRegHandlerPU[12][4];
     // Input candidate registers from the BCSU Cnv (max=12)
     CandRegisterHandler m_candRegHandlerBCSU[12];
+
+    ProcCandErrors m_errors[12];
+
+    int m_ref_l0_B_Id;
+    int m_ref_l0EventNumber;
 
   };
 }; // namespace L0Muon

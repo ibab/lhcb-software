@@ -57,6 +57,12 @@ namespace L0Muon {
     int status_PU(int ib,int ipu){return m_candRegHandlerPU[ib][ipu].getStatus();}
 
     void decodeBank(const std::vector<unsigned int> &raw, int version, int &RefL0EventNumber, int &RefL0_B_Id);
+
+    std::vector<unsigned int> rawBankW(int version){
+      std::vector<unsigned int> raw;
+      rawBank(raw, version);
+      return raw;
+    }
     void rawBank(std::vector<unsigned int> &raw, int version);
 
     void dump(const std::vector<unsigned int> &raw);

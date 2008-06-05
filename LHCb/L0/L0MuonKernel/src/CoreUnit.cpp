@@ -29,7 +29,20 @@ bool L0Muon::CoreUnit::makePads() {
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
     
-    if (m_debug) std::cout << "*!! Core:makePads: register " << itr->name() << "is empty ?"<<itr->empty()<< std::endl;
+    if (m_debug) std::cout << "*!! Core:makePads: register " << itr->name() << " is empty ? "<<itr->empty()<< std::endl;
+
+    if (m_ignoreM1){
+      if (itr->name().find("M1") < itr->name().size()){
+        if (m_debug) std::cout << "*!! Core:makePads: ignoreM1 => skipping register " << itr->name()<< std::endl;
+        continue;
+      } 
+    }
+    if (m_ignoreM2){
+      if (itr->name().find("M2") < itr->name().size()){
+        if (m_debug) std::cout << "*!! Core:makePads: ignoreM2 => skipping register " << itr->name()<< std::endl;
+        continue;
+      } 
+    }
   
     // If the input register is not empty
     if ( ! itr->empty() ) {
@@ -230,7 +243,8 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
 
     // Loop over the tiles in M3 granularity 
     for ( ipM3gran = padsM3gran.begin(); ipM3gran != padsM3gran.end(); ipM3gran++ ) {
-      if (m_debug) std::cout << "*!! Core:makeTower ip->region pad in M3 granularity: " << (*ipM3gran).toString()<< std::endl;
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap ip->region pad in M3 granularity: " 
+                             << (*ipM3gran).toString()<< std::endl;
      
       // Coordinates in Pu's region
       if (ipreg>pureg) {
@@ -249,7 +263,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
             // Fill the map relating the local coordinates and the MuonTileID
             m_tower.setPadIdMap(sta, yx, *ip);
             
-            if (m_debug) std::cout << "*!! Core:makeTower UPPER region"
+            if (m_debug) std::cout << "*!! Core:initializeM1TowerMap UPPER region"
                                    << " sta= "<<sta
                                    << " nX= "<<nX<< " nY= "<<nY
                                    << " y= "<<yx.first<<",x="<<yx.second
@@ -273,7 +287,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
         // Fill the map relating the local coordinates and the MuonTileID
         m_tower.setPadIdMap(sta, yx, *ip);
 
-        if (m_debug) std::cout << "*!! Core:makeTower LOWER region" 
+        if (m_debug) std::cout << "*!! Core:initializeM1TowerMap LOWER region" 
                                << " sta= "<<sta
                                << " nX= "<<nX<< " nY= "<<nY
                                << " yx= "<<yx.first<<","<<yx.second
@@ -292,7 +306,7 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
         // Fill the map relating the local coordinates and the MuonTileID
         m_tower.setPadIdMap(sta, yx, *ip);
 
-        if (m_debug) std::cout << "*!! Core:makeTower SAME region"
+        if (m_debug) std::cout << "*!! Core:initializeM1TowerMap SAME region"
                                << " sta= "<<sta
                                << " nX= "<<ipM3gran->nX()<< " nY= "<<ipM3gran->nY()
                                << " yx= "<<yx.first<<","<<yx.second
@@ -311,8 +325,13 @@ void L0Muon::CoreUnit::initialize() {
   MuonTriggerUnit * pmuontrigger = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
 
   // Set the NO M1 flag
-  m_tower.setIgnoreM1(pmuontrigger->ignoreM1());
-  if (pmuontrigger->ignoreM1()==true) initializeM1TowerMap();
+  m_ignoreM1=pmuontrigger->ignoreM1();  
+  m_tower.setIgnoreM1(m_ignoreM1);
+  if (m_ignoreM1) initializeM1TowerMap();
+
+  // Set the NO M2 flag
+  m_ignoreM2=pmuontrigger->ignoreM2();
+  m_tower.setIgnoreM2(m_ignoreM2);
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 

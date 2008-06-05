@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.8 2006-08-22 13:27:12 jucogan Exp $
+// $Id: CoreUnit.h,v 1.9 2008-06-05 08:20:28 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -77,6 +77,10 @@ namespace L0Muon {
     Tower  m_tower;
     std::vector<LHCb::MuonTileID> m_pads;
     CandRegisterHandler m_candRegHandlerOut;
+
+    bool m_ignoreM1;
+    bool m_ignoreM2;
+    
   
   };
 

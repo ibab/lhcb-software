@@ -41,6 +41,7 @@ L0Muon::Tower::Tower() {
   }
 
   m_ignoreM1=false;
+  m_ignoreM2=false;
   m_debug = false;
 
 }
@@ -55,7 +56,7 @@ void L0Muon::Tower::reset() {
     for ( row = 0; row < 4+2*(m_maxYFoI[sta]); row++ ) {
       m_bittable[sta][row].reset();
     }
-    if (m_ignoreM1==false) m_idmap[sta].clear();
+    if ( (sta!=0 || m_ignoreM1==false) ) m_idmap[sta].clear();
   }
 }
 
@@ -98,6 +99,7 @@ LHCb::MuonTileID L0Muon::Tower::getPadIdMap(int sta, std::pair<int, int> XY)
   return m_idmap[sta].find(XY)->second ;
   
 }
+
 
 void L0Muon::Tower::draw() {
 
@@ -190,13 +192,21 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         // Flag candidate
         bool candFlag=true;
 
-        // Stations M4 and M5
+       // Stations M4 and M5
         for (sta=3; sta<5; sta++){
           if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
           if (m_debug) std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
           if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
           // Loop over rows     
           rowCentral = m_bittable[sta].begin()+rowseed+m_maxYFoI[sta];
+          if (m_debug) {  
+            std::cout <<"--- Tower::processTower:   bit set M"<<(sta+1)<< std::endl;
+            for (rowInd=rowCentral-m_yfoi[sta];
+                 rowInd<=rowCentral+m_yfoi[sta];
+                 rowInd++) {
+              std::cout <<"--- Tower::processTower:   "<<(*rowInd)<< std::endl;
+            }
+          }
           for (rowInd=rowCentral-m_yfoi[sta];
                rowInd<=rowCentral+m_yfoi[sta];
                rowInd++) {
@@ -225,52 +235,65 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         // Station M2
         LHCb::MuonTileID padM2;
         int offM2=0;
-        candFlag=false;
-        sta=1;
-        if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
-        rowCentral = m_bittable[sta].begin()+rowseed+m_maxYFoI[sta];
-        if (m_debug) std::cout <<"--- Tower::processTower:   full bitset size is "<<(*rowCentral).size()<< std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:   full bitset is "<<(*rowCentral)<< std::endl;
-        field = (*rowCentral)>>(colseed+m_maxXFoI[sta]-m_xfoi[sta]);
-        if (m_debug) std::cout <<"--- Tower::processTower:   shift is "<< colseed+m_maxXFoI[sta]-m_xfoi[sta]
-                               << " ( " <<colseed 
-                               <<" + "  <<m_maxXFoI[sta] 
-                               <<" - "  <<m_xfoi[sta] 
-                               <<" )"   << std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:   shifted >> field is "<<field<< std::endl;
-        field.resize(2*m_xfoi[sta]+1);
-        if (m_debug) std::cout <<"--- Tower::processTower:   new size is "<< 2*m_xfoi[sta]+1 << std::endl;
-        if (m_debug) std::cout <<"--- Tower::processTower:   resized field is "<<field<< std::endl;
-        // If a bit is set in the field
-        if (field.none()==false) {
-          colCentral = m_xfoi[sta];
-          // Loop over colums in the field 
-          for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
-            if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
-//             int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
-            int ipendulum = L0Muon::pendulumM2(icol, m_procVersion);
-            if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "<<ipendulum<< std::endl;
-            colInd=colCentral+ipendulum;
-            if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
-                                   <<m_xfoi[sta]+ipendulum<< std::endl;
-            if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns test= "
-                                   <<field.test(colInd)<< std::endl;
-            if (field.test(colInd)==true) {
-              offM2 = ipendulum;
-              std::pair<int,int> yxM2(rowseed,colseed+m_maxXFoI[sta]+ipendulum);
-              padM2 = getPadIdMap(sta, yxM2);
-              candFlag=true;
-              if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found yxM2 is "
-                                     <<yxM2.first<<","<<yxM2.second<< std::endl;
-              if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found mid is "
-                                     <<padM2.toString()<< std::endl;
-              break;
-            }
-          } // End of Loop over colums in the field 
-        } // End If a bit is set in the field
-        if (candFlag==false) continue; 
+        // If M2 is ignored
+        if (m_ignoreM2){
+          int ipendulum=0;
+          offM2 = ipendulum;
+          std::pair<int,int> yxM2(rowseed,colseed);
+          padM2 = getPadIdMap(2, yxM2); // Take the M3 pad (seed)
+          padM2.setStation(1);
+          candFlag=true;
+        }// End If M2 is ignored
+        // If M2 is used
+        else{ 
+          candFlag=false;
+          sta=1;
+          if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower: Max foi X,Y= "<<m_maxXFoI[sta]<<" , "<<m_maxYFoI[sta]<< std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
+          rowCentral = m_bittable[sta].begin()+rowseed+m_maxYFoI[sta];
+          if (m_debug) std::cout <<"--- Tower::processTower:   full bitset size is "<<(*rowCentral).size()<< std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower:   full bitset is "<<(*rowCentral)<< std::endl;
+          field = (*rowCentral)>>(colseed+m_maxXFoI[sta]-m_xfoi[sta]);
+          if (m_debug) std::cout <<"--- Tower::processTower:   shift is "<< colseed+m_maxXFoI[sta]-m_xfoi[sta]
+                                 << " ( " <<colseed 
+                                 <<" + "  <<m_maxXFoI[sta] 
+                                 <<" - "  <<m_xfoi[sta] 
+                                 <<" )"   << std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower:   shifted >> field is "<<field<< std::endl;
+          field.resize(2*m_xfoi[sta]+1);
+          if (m_debug) std::cout <<"--- Tower::processTower:   new size is "<< 2*m_xfoi[sta]+1 << std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower:   resized field is "<<field<< std::endl;
+          // If a bit is set in the field
+          if (field.none()==false) {
+            colCentral = m_xfoi[sta];
+            // Loop over colums in the field 
+            for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
+              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
+              //             int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+              int ipendulum = L0Muon::pendulumM2(icol, m_procVersion);
+              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "<<ipendulum<< std::endl;
+              colInd=colCentral+ipendulum;
+              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns bit is #= "
+                                     <<m_xfoi[sta]+ipendulum<< std::endl;
+              if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns test= "
+                                     <<field.test(colInd)<< std::endl;
+              if (field.test(colInd)==true) {
+                offM2 = ipendulum;
+                std::pair<int,int> yxM2(rowseed,colseed+m_maxXFoI[sta]+ipendulum);
+                padM2 = getPadIdMap(sta, yxM2);
+                candFlag=true;
+                if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found yxM2 is "
+                                       <<yxM2.first<<","<<yxM2.second<< std::endl;
+                if (m_debug) std::cout <<"--- Tower::processTower:     Bit ON found mid is "
+                                       <<padM2.toString()<< std::endl;
+                break;
+              }
+            } // End of Loop over colums in the field 
+          } // End If a bit is set in the field
+          if (candFlag==false) continue; 
+        }// End if M2 is used
+        
         // Conditions are fulfilled in M2; go on with search in M1
         if (m_debug) std::cout <<"--- Tower::processTower: M2 OK (offM2="<< offM2 << ")"<< std::endl;
 
@@ -283,14 +306,20 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
         if (m_debug) std::cout <<"--- Tower::processTower:     foi X,Y= "<<m_xfoi[sta]<<" , "<<m_yfoi[sta]<< std::endl;
         // Extrapolation in M1
         int signM2 =offM2>0 ? +1:-1;
-//         int extrapM1=signM2*L0Muon::ExtrapolationM1[signM2*offM2];
+        //         int extrapM1=signM2*L0Muon::ExtrapolationM1[signM2*offM2];
         int extrapM1=signM2*L0Muon::extrapolationM1(signM2*offM2,m_procVersion);
         if (m_debug) std::cout <<"--- Tower::processTower:   extrapM1= "<<extrapM1<< std::endl;
         // If M1 is ignored
         if (m_ignoreM1==true){  
           if (m_debug) std::cout <<"--- Tower::processTower:   M1 is ignored"<< std::endl;
-          std::pair<int,int> xyM1(colseed+m_maxXFoI[sta]+extrapM1,rowseed);
-          padM1 = getPadIdMap(sta, xyM1); // xyM1 not filled in idmap inside event. Initialize in CoreUnit
+//           std::pair<int,int> xyM1(colseed+m_maxXFoI[sta]+extrapM1,rowseed);
+//           padM1 = getPadIdMap(sta, xyM1); // xyM1 not filled in idmap inside event. Initialize in CoreUnit
+          std::pair<int,int> yxM1(rowseed,colseed+m_maxXFoI[sta]+extrapM1);
+          padM1 = getPadIdMap(sta, yxM1); // xyM1 not filled in idmap inside event. Initialize in CoreUnit
+          if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found yxM1 is "
+                                 <<yxM1.first<<","<<yxM1.second<< std::endl;
+          if (m_debug) std::cout <<"--- Tower::processTower:     forced Bit ON found mid is "
+                                 <<padM1.toString()<< std::endl;
           candFlag=true;
         } // End If M1 is ignored
         // If M1 is used
@@ -318,8 +347,8 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID
             // Loop over colums in the field 
             for (int icol=0; icol<2*m_xfoi[sta]+1;icol++){
               if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns icol= "<<icol<< std::endl;
-//               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
-//               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol)*int((icol+1)/2)); // start searching towards beam
+              //               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol+1)*int((icol+1)/2));
+              //               int ipendulum = (icol==0) ? 0 : int(pow(-1,icol)*int((icol+1)/2)); // start searching towards beam
               int ipendulum = L0Muon::pendulumM1(icol, m_procVersion);
               if (m_debug) std::cout <<"--- Tower::processTower:     inside loop over columns ipendulum= "
                                      <<ipendulum<< std::endl;
