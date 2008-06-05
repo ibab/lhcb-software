@@ -4,7 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
-!========================== PatAlgorithms v3r6 2008-06-04 ====================
+!========================== PatAlgorithms v3r6 2008-06-05 ====================
+! 2008-06-05 - Marco Cattaneo
+ - Remove unneccessary machine specific include (inexistent on Windows)
+
 ! 2008-06-04 - Manuel Tobias Schiller
  - PatSeedTool: various fixes to avoid dividing by zero (could and did happen
    when there were too few hits to determine fit parameters for the track

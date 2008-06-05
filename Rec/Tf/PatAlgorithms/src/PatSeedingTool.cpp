@@ -1,11 +1,9 @@
-// $Id: PatSeedingTool.cpp,v 1.14 2008-06-04 15:33:48 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.15 2008-06-05 06:24:50 cattanem Exp $
 // Include files
 
 #include <cmath>
 #include <algorithm>
 #include <functional>
-
-#include <fenv.h>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
