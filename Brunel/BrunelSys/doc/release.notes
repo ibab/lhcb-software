@@ -35,6 +35,10 @@ from DC06
   . Fixed bug preventing reconstruction with tilted Velo detectors
     (VeloTools v3r2)
   . Fix wrong counter initialization in NeutralProtoPAlg (GlobalReco v6r16)
+  . Fix floating point exceptions
+    (RichRecPhotonTools v1r4, RichRecStereoTools v1r2, RichRecTrackTools v1r5)
+  . Fix untested StatusCodes
+    (RichGlobalPID v3r9, RichRecTracktools v1r5)
 
 </PRE><H1><A NAME=v32r6>2008-05-19 Brunel v32r6</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17, Rec v5r5
