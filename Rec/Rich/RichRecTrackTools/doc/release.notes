@@ -4,10 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r5 2008-06-05 ==================
 ! 2008-06-05 - Chris Jones
  - Fix some unchecked StatusCodes
 
-!======================== RichRecTrackTools v1r5 2008-06-05 ==================
 ! 2008-06-04 - Chris Jones
  - Fixes for floating point exceptions caught using the new FPEAuditor
 
