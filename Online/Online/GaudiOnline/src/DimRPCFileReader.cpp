@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.5 2008-06-04 21:59:58 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.6 2008-06-05 09:42:15 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -52,7 +52,6 @@ StatusCode DimRPCFileReader::queryInterface(const InterfaceID& riid, void** ppIf
 /// IService implementation: initialize the service
 StatusCode DimRPCFileReader::initialize()   {
   StatusCode sc = OnlineService::initialize();
-
   if ( !sc.isSuccess() )     {
     return error("Failed to initialize service base class.");
   }
@@ -71,12 +70,9 @@ StatusCode DimRPCFileReader::initialize()   {
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
 
-  m_command = new Command();
-  m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
-  
   // Init the extra Services
-  m_rpc.first  = ::dis_add_service("RpcOut","C",0,0,publishEvents,(long) this);
-  m_rpc.second = ::dis_add_cmnd("RpcIn","C",cmndCallback,(long) this);
+  m_rpc.first  = ::dis_add_service("RpcOut","C",0,0,publishEvents,(long)this);
+  m_rpc.second = ::dis_add_cmnd("RpcIn","C",cmndCallback,(long)this);
   ::lib_rtl_lock(m_lock);
   return sc;
 }
@@ -99,34 +95,46 @@ StatusCode DimRPCFileReader::finalize()     {
 }
 
 void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
-  DimRPCFileReader* self=*(DimRPCFileReader**) tag;
-  std::string result=self->m_reply;
-  self->info(result);
-  *size = result.length()+1;
-  *buf = (void*)result.c_str();
-  return;
+  DimRPCFileReader* self=(DimRPCFileReader*) tag;
+  static const char* empty = "newFile/status=SUCCESS/000000-0000-0000-00000000/None";
+  if ( !(*first) )  {
+    std::stringstream s;
+    s << "newFile/status=SUCCESS/" << self->m_reply << "/" << self->m_evtCount << std::ends;
+    self->m_reply = s.str();
+    self->info(self->m_reply);
+    *size = self->m_reply.length()+1;
+    *buf = (void*)self->m_reply.c_str();
+    return;
+  }
+  *size = ::strlen(empty);
+  *buf  = (void*)empty;
 }
 
 void DimRPCFileReader::handleCommand(const char* address, int /* size */){
-  std::string in = address;
-  int sc=m_command->decodeCommand(in);
-  if (!sc){
-    info("Error decoding "+in);
-    return;
+  std::string in = address, cmd, file, fid, left;
+  size_t pos = in.find("/");
+  if ( pos != std::string::npos ){
+    cmd = in.substr(0,pos);
+    if( cmd == "newFile" )  {
+      left = in.substr(pos+1);
+      if ( (pos=left.find("/")) != std::string::npos ) {
+	file = left.substr(pos+1);
+	fid  = left.substr(0,pos);
+	info("newFile command: parameters: Filename:"+file+" FID: "+fid);
+	SmartIF<IProperty> prp(m_evtSelector);
+	if ( prp ) {
+	  prp->setProperty("Input","[ \"DATA='file://"+file+"' SVC='LHCb::MDFSelector'\" ]");
+	  prp->setProperty("PrintFreq","1");
+	  m_evtSelector->reinitialize();
+	  m_evtLoopMgr->reinitialize();
+	  m_reply = fid+"/"+RTL::processName()+"/";
+	  ::lib_rtl_unlock(m_lock);
+	  return;
+	}
+      }
+    }
   }
-  char infostring[200];
-  sprintf(infostring,"%s command: parameters: Filename: %s FID: %i", (m_command->data).name.c_str(), (m_command->data).file.c_str(), (m_command->data).fileID);
-  info(infostring);
-  SmartIF<IProperty> prp(m_evtSelector);
-  if ( prp ) {
-    prp->setProperty("Input","[ \"DATA='file://"+m_command->data.file+"' SVC='LHCb::MDFSelector'\" ]");
-    prp->setProperty("PrintFreq","1");
-    m_evtSelector->reinitialize();
-    m_evtLoopMgr->reinitialize();
-    m_fileID=m_command->data.fileID;
-    ::lib_rtl_unlock(m_lock);
-    return;
-  }
+  error("Unknown command:"+in);
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
@@ -150,32 +158,30 @@ StatusCode DimRPCFileReader::run()   {
     while(1) {
       m_receiveEvts = true;
       info ("Starting loop through events");
-      // ::dis_update_service(m_rpc.first);
+      ::dis_update_service(m_rpc.first);
       info("Locking event loop. Waiting for work....");
       ::lib_rtl_lock(m_lock);
       m_evtCount = 0;
-      m_reply=m_command->encodeResponse(1);
-      ::dis_update_service(m_rpc.first);
       // loop over the events
       while ( m_receiveEvts )   {
-        DataObject* pObj = 0;
-        StatusCode sc = ui->nextEvent(1);
-        if ( !sc.isSuccess() )  {
-          error("Failed to process event.");
-          break;
-        }
+	DataObject* pObj = 0;
+	StatusCode sc = ui->nextEvent(1);
+	if ( !sc.isSuccess() )  {
+	  error("Failed to process event.");
+	  break;
+	}
         if ( !m_dataSvc->findObject("/Event",pObj).isSuccess() )  {
           info("End of event input reached.");
           break;
         }
-        m_evtCount++;
+	m_evtCount++;
       }
-      m_reply=m_command->encodeResponse(2);      
       ::dis_update_service(m_rpc.first);
-      m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
+      m_reply = "";
       m_evtCount = 0;
     }
     return StatusCode::SUCCESS;
   }
   return error("Failed to access Application manager UI.");
 }
+

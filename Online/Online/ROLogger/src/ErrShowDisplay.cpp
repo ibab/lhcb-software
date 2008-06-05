@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.10 2008-05-28 16:05:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrShowDisplay.cpp,v 1.11 2008-06-05 09:42:15 frankb Exp $
 
 // Framework include files
 #include "ROLogger/ErrShowDisplay.h"
@@ -37,14 +37,15 @@ using namespace ROLogger;
 
 static const int   s_NumList[]  = {1,10,50,100,200,300,500,1000,5000,10000};
 static const char* s_SevList[]  = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
-static const char* s_PartList[] = {"TDET",
-				   "LHCb",
-				   "VELOA","VELOC","VELO",
-				   "TT","IT","ST",
-				   "OTA","OTC","OT",
-				   "RICH1","RICH2","RICH",
-				   "PRS","ECAL","HCAL","CALO",
-				   "MUONA","MUONC","MUON"
+static const char* s_PartList[] = {
+  "TDET",
+  "LHCb",
+  "VELOA","VELOC","VELO",
+  "TT","IT","ST",
+  "OTA","OTC","OT",
+  "RICH1","RICH2","RICH",
+  "PRS","ECAL","HCAL","CALO",
+  "MUONA","MUONC","MUON"
 };
 static const char* s_timeFmt = "%d-%b-%Y %H:%M:%S";
 
@@ -55,7 +56,7 @@ static void clean_str(char* n,size_t len)  {
 
 /// Standard constructor
 ErrShowDisplay::ErrShowDisplay(Interactor* parent, Interactor* msg, const std::string& part) 
-  : m_parent(parent), m_msg(msg), m_numMsg(200)
+: m_parent(parent), m_msg(msg), m_numMsg(200)
 {
   ::tzset();
   time_t tim = ::time(0);
@@ -133,18 +134,18 @@ void ErrShowDisplay::getFiles(Files& files)  {
       dirname += "/";
       ::sprintf(fmt,"%s_%%Y.%%m.%%d-%%H.%%M.%%S.log",m_name);
       while ((dp=readdir(dir)) != 0) {
-	time_t now = ::str2time(dp->d_name,fmt);
-	if ( now >= begin && now <= end ) {
-	  files.push_back(dirname+dp->d_name);
-	  ::upic_write_message2("Adding file:%s",files.back().c_str());
-	}
-	else if ( now < begin ) {
-	  first = dirname+dp->d_name;
-	}
+        time_t now = ::str2time(dp->d_name,fmt);
+        if ( now >= begin && now <= end ) {
+          files.push_back(dirname+dp->d_name);
+          ::upic_write_message2("Adding file:%s",files.back().c_str());
+        }
+        else if ( now < begin ) {
+          first = dirname+dp->d_name;
+        }
       }
       if ( !first.empty() ) {
-	::upic_write_message2("Adding first file:%s",first.c_str());
-	files.insert(files.begin(),first);
+        ::upic_write_message2("Adding first file:%s",first.c_str());
+        files.insert(files.begin(),first);
       }
       ::closedir(dir);
       return;
@@ -181,18 +182,18 @@ void ErrShowDisplay::processFile(const std::string& fname, FILE* output) {
       ::strncpy(&tim[5],text,12);
       time_t now = ::str2time(tim,"%Y %b%d-%H%M%S");
       if ( now >= begin && now <= end ) {
-	MessageLine line(text);
-	if ( f.acceptMessage(line) ) {
-	  if ( line.msgSeverity() >= sev ) {
-	    if ( output == 0 ) {
-	      ioc.send(m_msg,CMD_SHOW,new std::string(text));
-	    }
-	    else {
-	      ::fprintf(output,"%s\n",text);
-	    }
-	    continue;
-	  }
-	}
+        MessageLine line(text);
+        if ( f.acceptMessage(line) ) {
+          if ( line.msgSeverity() >= sev ) {
+            if ( output == 0 ) {
+              ioc.send(m_msg,CMD_SHOW,new std::string(text));
+            }
+            else {
+              ::fprintf(output,"%s\n",text);
+            }
+            continue;
+          }
+        }
       }
       // ::sprintf(text,"Rejected: %d %s %d %d",(int)now,tim,(int)begin,(int)end);
       // ioc.send(m_msg,CMD_SHOW,new std::string(text));
@@ -257,67 +258,66 @@ void ErrShowDisplay::handle(const Event& ev) {
   case IocEvent:
     //::upic_write_message2("Got IOC command: %d %p",ev.type,ev.data);
     switch(ev.type) {
-    case CMD_CLOSE:
-      ioc.send(m_parent,CMD_DELETE,this);
-      return;
-    case CMD_SHOW:
-      showFiles();
-      return;
-    case CMD_LOAD:
-      showMessages(0);
-      return;
-    case CMD_SAVE:
-      saveMessages();
-      return;
-    default:
-      break;
+      case CMD_CLOSE:
+        ioc.send(m_parent,CMD_DELETE,this);
+        return;
+      case CMD_SHOW:
+        showFiles();
+        return;
+      case CMD_LOAD:
+        showMessages(0);
+        return;
+      case CMD_SAVE:
+        saveMessages();
+        return;
+      default:
+        break;
     }
     break;
   case UpiEvent:
     switch(ev.command_id) {
-    case CMD_BACKSPACE:
-      ioc.send(this,CMD_CLOSE,this);
-      return;
-    case CMD_SHOW:
-    case CMD_LOAD:
-    case CMD_CLOSE:
-    case CMD_SAVE:
-      ioc.send(this,ev.command_id,this);
-      return;
-    case CMD_DIR:
-      clean_str(m_logDir,sizeof(m_logDir));
-      return;
-    case CMD_FILE:
-      clean_str(m_outFileName,sizeof(m_outFileName));
-      return;
-    case CMD_STOP:
-      m_endTime[20]=0;
-      return;
-    case CMD_START:
-      m_startTime[20]=0;
-      return;
-    case CMD_CONNECT:
-      clean_str(m_name,sizeof(m_name));
-      return;
-    case CMD_WILD_NODE:
-      clean_str(m_node,sizeof(m_node));
-      return;
-    case CMD_WILD_MESSAGE:
-      clean_str(m_message,sizeof(m_message));
-      return;
-    case CMD_WILD_PROCESS:
-      clean_str(m_process,sizeof(m_process));
-      return;
-    case CMD_WILD_COMPONENT:
-      clean_str(m_component,sizeof(m_component));
-      return;
-    case CMD_SEVERITY:
-      clean_str(m_severity,sizeof(m_severity));
-      return;
-
-      //ioc.send(m_msg,ev.command_id,new std::string(m_severity));
-    default:
-      break;
+  case CMD_BACKSPACE:
+    ioc.send(this,CMD_CLOSE,this);
+    return;
+  case CMD_SHOW:
+  case CMD_LOAD:
+  case CMD_CLOSE:
+  case CMD_SAVE:
+    ioc.send(this,ev.command_id,this);
+    return;
+  case CMD_DIR:
+    clean_str(m_logDir,sizeof(m_logDir));
+    return;
+  case CMD_FILE:
+    clean_str(m_outFileName,sizeof(m_outFileName));
+    return;
+  case CMD_STOP:
+    m_endTime[20]=0;
+    return;
+  case CMD_START:
+    m_startTime[20]=0;
+    return;
+  case CMD_CONNECT:
+    clean_str(m_name,sizeof(m_name));
+    return;
+  case CMD_WILD_NODE:
+    clean_str(m_node,sizeof(m_node));
+    return;
+  case CMD_WILD_MESSAGE:
+    clean_str(m_message,sizeof(m_message));
+    return;
+  case CMD_WILD_PROCESS:
+    clean_str(m_process,sizeof(m_process));
+    return;
+  case CMD_WILD_COMPONENT:
+    clean_str(m_component,sizeof(m_component));
+    return;
+  case CMD_SEVERITY:
+    clean_str(m_severity,sizeof(m_severity));
+    return;
+    //ioc.send(m_msg,ev.command_id,new std::string(m_severity));
+  default:
+    break;
     }
     break;
   default:  // Fall through: Handle request by client

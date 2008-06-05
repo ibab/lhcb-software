@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.8 2008-05-27 06:52:49 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.9 2008-06-05 09:42:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.8 2008-05-27 06:52:49 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.9 2008-06-05 09:42:15 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -27,8 +27,8 @@
 #include "ROLogger/Filter.h"
 #include "ROLoggerDefs.h"
 extern "C" {
-  #include "dic.h"
-  #include "dis.h"
+#include "dic.h"
+#include "dis.h"
 }
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
@@ -49,7 +49,7 @@ static std::string msg_src(const std::string& m) {
 
 /// Standard constructor
 MessageLogger::MessageLogger(int argc, char** argv) 
-  : m_severity(3), m_colors(true), m_historySize(0), m_wrapped(false)
+: m_severity(3), m_colors(true), m_historySize(0), m_wrapped(false)
 {
   std::string name;
   RTL::CLI cli(argc, argv, help_fun);
@@ -76,7 +76,7 @@ MessageLogger::MessageLogger(int argc, char** argv)
 
 /// Standard constructor, with initialisation
 MessageLogger::MessageLogger(int sev, bool disp, bool colors)
-  : m_severity(sev), m_colors(colors), m_display(disp), m_historySize(0), m_wrapped(false)
+: m_severity(sev), m_colors(colors), m_display(disp), m_historySize(0), m_wrapped(false)
 {
   m_output  = stdout;
   m_history.resize(m_historySize);
@@ -124,29 +124,29 @@ void MessageLogger::printMessage(const char* msg, bool crlf)  {
       bg_black();
       switch(sev)      {
       case 0:             /* No label - white     */
-	white();
-	break;
+        white();
+        break;
       case MessageLine::Msg_Verbose:   /* VERBOSE - blue       */
-	blue();
-	break;
+        blue();
+        break;
       case MessageLine::Msg_Debug:     /* DEBUG - green        */
-	green();
-	break;
+        green();
+        break;
       case MessageLine::Msg_Info:      /* INFO - white         */
-	white();
-	break;
+        white();
+        break;
       case MessageLine::Msg_Warning:   /* WARN - bold yellow   */
-	bold(); yellow();
-	break;
+        bold(); yellow();
+        break;
       case MessageLine::Msg_Error:     /* ERROR - bold red     */
-	bold(); red();
-	break;
+        bold(); red();
+        break;
       case MessageLine::Msg_Fatal:     /* FATAL - bold magenta */
-	bold(); magenta();
-	break;
+        bold(); magenta();
+        break;
       case MessageLine::Msg_Always:    /* ALWAYS - bold white  */
-	bold(); white();
-	break;
+        bold(); white();
+        break;
       } 
     }
     ::fprintf(m_output,msg);
@@ -197,15 +197,15 @@ void MessageLogger::printHistory(const std::string& pattern) {
       const std::string& m = *i;
       const std::string  src = msg_src(m);
       if ( !src.empty() ) {
-	if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
-	  if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
-	    int sev = MessageLine::msgSeverity(m.c_str());
-	    if ( sev >= m_severity ) {
-	      messages.push_back(m.c_str());
-	      ++match;
-	    }
-	  }
-	}
+        if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
+          if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
+            int sev = MessageLine::msgSeverity(m.c_str());
+            if ( sev >= m_severity ) {
+              messages.push_back(m.c_str());
+              ++match;
+            }
+          }
+        }
       }
     }
   }
@@ -215,11 +215,11 @@ void MessageLogger::printHistory(const std::string& pattern) {
     if ( !src.empty() ) {
       if ( ::strcase_match_wild(src.c_str(),node_pattern.c_str()) ) {
         if ( ::strcase_match_wild(m.c_str()+idq+1,msg_pattern.c_str()) ) {
-	  int sev = MessageLine::msgSeverity(m.c_str());
-	  if ( sev >= m_severity ) {
-	    messages.push_back(m.c_str());
-	    ++match;
-	  }
+          int sev = MessageLine::msgSeverity(m.c_str());
+          if ( sev >= m_severity ) {
+            messages.push_back(m.c_str());
+            ++match;
+          }
         }
       }
     }
@@ -227,8 +227,8 @@ void MessageLogger::printHistory(const std::string& pattern) {
   for(size_t n=messages.size(), j=n>numMsg ? n-numMsg : 0; j<n; ++j, ++displayed)  
     printMessage(messages[j], false);
   ::sprintf(text,"History>    [ALWAYS]  %d %s%s [%s]. %d %s %d messages replayed.",
-	    match,"messages matched the request:",node_pattern.c_str(),
-	    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
+    match,"messages matched the request:",node_pattern.c_str(),
+    msg_pattern.c_str(),(int)numMsg,"messages requested.",displayed);
   printMessage(text,true);
 }
 
@@ -244,25 +244,25 @@ void MessageLogger::summarizeHistory() {
     if ( !m.empty() ) {
       std::string src = msg_src(m);
       if ( !src.empty() ) {
-	DataMap::iterator i = data.find(src);
-	if ( i==data.end() ) data[src].resize(MessageLine::Msg_Always+1);
-	sev = MessageLine::msgSeverity(m.c_str());
-	data[src][sev]++;
-	num_msg++;
+        DataMap::iterator i = data.find(src);
+        if ( i==data.end() ) data[src].resize(MessageLine::Msg_Always+1);
+        sev = MessageLine::msgSeverity(m.c_str());
+        data[src][sev]++;
+        num_msg++;
       }
     }
   }
   for(DataMap::const_iterator j=data.begin(); j!=data.end();++j)  {
     const std::vector<int>& v = (*j).second;
     ::sprintf(text,"%s %-12s sent %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s msgs.",
-	      "Summary>    [ALWAYS]",(*j).first.c_str(),
-	      v[1], "VERBOSE",
-	      v[2], "DEBUG",
-	      v[3], "INFO",
-	      v[4], "WARNING",
-	      v[5], "ERROR",
-	      v[6], "FATAL",
-	      v[7], "ALWAYS");
+      "Summary>    [ALWAYS]",(*j).first.c_str(),
+      v[1], "VERBOSE",
+      v[2], "DEBUG",
+      v[3], "INFO",
+      v[4], "WARNING",
+      v[5], "ERROR",
+      v[6], "FATAL",
+      v[7], "ALWAYS");
     printMessage(text,true);
   }
   ::sprintf(text,"Summary>    [ALWAYS] Analysed a total of %d messages.",num_msg);
@@ -272,13 +272,13 @@ void MessageLogger::summarizeHistory() {
 std::string MessageLogger::getSummary() {
   char text[255];
   ::sprintf(text,"Total: %5d %s %6d %s %6d %s %5d %s %5d %s %4d %s and %4d %s Messages.",
-	    m_numMsg[1], "VERBOSE",
-	    m_numMsg[2], "DEBUG",
-	    m_numMsg[3], "INFO",
-	    m_numMsg[4], "WARNING",
-	    m_numMsg[5], "ERROR",
-	    m_numMsg[6], "FATAL",
-	    m_numMsg[7], "ALWAYS");
+    m_numMsg[1], "VERBOSE",
+    m_numMsg[2], "DEBUG",
+    m_numMsg[3], "INFO",
+    m_numMsg[4], "WARNING",
+    m_numMsg[5], "ERROR",
+    m_numMsg[6], "FATAL",
+    m_numMsg[7], "ALWAYS");
   return text;
 }
 
@@ -301,7 +301,7 @@ void MessageLogger::printHeader(const std::vector<std::string>& titles) {
       ::inverse();
       ::bold();
       ::memset(buffer,' ',cols);
-      buffer[cols-1] = 0;	
+      buffer[cols-1] = 0; 
       ::printf(buffer);
       ::printf("\n");
       for(std::vector<std::string>::const_iterator i=titles.begin();i!=titles.end();++i) {

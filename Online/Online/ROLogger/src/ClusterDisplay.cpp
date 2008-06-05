@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.4 2008-05-21 10:03:07 frankm Exp $
+// $Id: ClusterDisplay.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.4 2008-05-21 10:03:07 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -98,16 +98,16 @@ void ClusterDisplay::handle(const Event& ev) {
     if ( ev.menu_id == m_id ) {
       IocSensor& ioc = IocSensor::instance();
       if ( ev.command_id == CMD_CLOSE || ev.command_id == CMD_BACKSPACE )
-	ioc.send(m_parent,CMD_DELETE,this);
+      	ioc.send(m_parent,CMD_DELETE,this);
       else if ( ev.command_id == CMD_FARM_HISTORY )
-	for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i)
-	  showHistory((*i).c_str(),"*");
+	      for(Nodes::const_iterator i=m_nodes.begin();i!=m_nodes.end();++i)
+	        showHistory((*i).c_str(),"*");
       else if ( ev.command_id == CMD_WILD_NODE )
-	showHistory(m_wildNode,"*");
+	      showHistory(m_wildNode,"*");
       else if ( ev.command_id == CMD_WILD_MESSAGE )
-	showHistory(m_wildNode,m_wildMessage);
+	      showHistory(m_wildNode,m_wildMessage);
       else if ( ev.command_id > 0 && ev.command_id <= (int)m_nodes.size() )
-	showHistory(m_nodes[ev.command_id-1].c_str(),"*");
+	      showHistory(m_nodes[ev.command_id-1].c_str(),"*");
     }
     break;
   default:

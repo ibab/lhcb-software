@@ -47,8 +47,10 @@ using namespace SCR;
 #define crlf()             {scrc_puti(CARRIAGERETURN,pb);scrc_puti(LINEFEED, pb);}
 
 static Pasteboard *Paste = 0;
-static Display *Moving_display, *Moving_text;
-static Display *Resizing_display, *Resizing_text;
+static Display *Moving_display = 0;
+static Display *Moving_text = 0;
+static Display *Resizing_display = 0;
+static Display *Resizing_text = 0;
 int scr_ignore_input;
 typedef unsigned int uint_t;
 
@@ -75,10 +77,10 @@ int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, in
   }
   pb->rows = 24;
   pb->cols = 80;
-  scr_get_console_dimensions(&pb->rows,&pb->cols);
+  ::scrc_get_console_dimensions(&pb->rows,&pb->cols);
   *rows = pb->rows;
   *cols = pb->cols;
-  scrc_init_screen (pb, *rows, *cols);
+  ::scrc_init_screen (pb, *rows, *cols);
   int size = pb->rows * pb->cols;
 
   list_init (&pb->paste);
@@ -104,31 +106,31 @@ int scrc_create_pasteboard(Pasteboard** paste, const char* device, int* rows, in
 
   setansi();
   setfonts();
-  scrc_clear_screen(pb);
-  scrc_set_cursor_abs (pb, 1, 1);
-  scrc_fflush (pb);
+  ::scrc_clear_screen(pb);
+  ::scrc_set_cursor_abs (pb, 1, 1);
+  ::scrc_fflush (pb);
 
-  scrc_create_display (&Moving_display, 2, 2, FLASH, OFF, "");
-  scrc_put_chars (Moving_display, "\134/", NORMAL, 1, ON, 0);
-  scrc_put_chars (Moving_display, "/\134", NORMAL, 2, ON, 0);
+  ::scrc_create_display (&Moving_display, 2, 2, FLASH, OFF, "");
+  ::scrc_put_chars (Moving_display, "\134/", NORMAL, 1, ON, 0);
+  ::scrc_put_chars (Moving_display, "/\134", NORMAL, 2, ON, 0);
 
-  scrc_create_display (&Moving_text, 5, 30,                   INVERSE, ON, "");
-  scrc_put_chars (Moving_text, "    ^     :",                 NORMAL, 1, ON, 0);
-  scrc_put_chars (Moving_text, "  <- ->   : Move the display",NORMAL, 2, ON, 0);
-  scrc_put_chars (Moving_text, "    v     :",                 NORMAL, 3, ON, 0);
-  scrc_put_chars (Moving_text, "Prev Next : Change order",    NORMAL, 4, ON, 0);
-  scrc_put_chars (Moving_text, "   PF3    : Validate",        NORMAL, 5, ON, 0);
+  ::scrc_create_display (&Moving_text, 5, 30,                   INVERSE, ON, "");
+  ::scrc_put_chars (Moving_text, "    ^     :",                 NORMAL, 1, ON, 0);
+  ::scrc_put_chars (Moving_text, "  <- ->   : Move the display",NORMAL, 2, ON, 0);
+  ::scrc_put_chars (Moving_text, "    v     :",                 NORMAL, 3, ON, 0);
+  ::scrc_put_chars (Moving_text, "Prev Next : Change order",    NORMAL, 4, ON, 0);
+  ::scrc_put_chars (Moving_text, "   PF3    : Validate",        NORMAL, 5, ON, 0);
 
-  scrc_create_display (&Resizing_display, 2, 2, FLASH, OFF, "");
-  scrc_put_chars (Resizing_display, "/\134", NORMAL, 1, ON, 0);
-  scrc_put_chars (Resizing_display, "\134/", NORMAL, 2, ON, 0);
+  ::scrc_create_display (&Resizing_display, 2, 2, FLASH, OFF, "");
+  ::scrc_put_chars (Resizing_display, "/\134", NORMAL, 1, ON, 0);
+  ::scrc_put_chars (Resizing_display, "\134/", NORMAL, 2, ON, 0);
 
-  scrc_create_display (&Resizing_text, 5, 30, INVERSE, ON, "");
-  scrc_put_chars (Resizing_text, "    ^     :",                NORMAL, 1, ON, 0);
-  scrc_put_chars (Resizing_text, "  <- ->   : Change the size",NORMAL, 2, ON, 0);
-  scrc_put_chars (Resizing_text, "    v     :",                NORMAL, 3, ON, 0);
-  scrc_put_chars (Resizing_text, "Prev Next : Scroll",         NORMAL, 4, ON, 0);
-  scrc_put_chars (Resizing_text, "   PF4    : Validate",       NORMAL, 5, ON, 0);
+  ::scrc_create_display (&Resizing_text, 5, 30, INVERSE, ON, "");
+  ::scrc_put_chars (Resizing_text, "    ^     :",                NORMAL, 1, ON, 0);
+  ::scrc_put_chars (Resizing_text, "  <- ->   : Change the size",NORMAL, 2, ON, 0);
+  ::scrc_put_chars (Resizing_text, "    v     :",                NORMAL, 3, ON, 0);
+  ::scrc_put_chars (Resizing_text, "Prev Next : Scroll",         NORMAL, 4, ON, 0);
+  ::scrc_put_chars (Resizing_text, "   PF4    : Validate",       NORMAL, 5, ON, 0);
   *paste = pb;
   return 1;
 }
@@ -147,10 +149,10 @@ int scrc_memory_of_pasteboard (Pasteboard *pb)  {
 
   if (pb->device) memory += strlen(pb->device) + 1;
 
-  memory += scrc_memory_of_display (Moving_display) +
-    scrc_memory_of_display (Moving_text) +
-    scrc_memory_of_display (Resizing_display) +
-    scrc_memory_of_display (Resizing_text);
+  memory += ::scrc_memory_of_display (Moving_display) +
+    ::scrc_memory_of_display (Moving_text) +
+    ::scrc_memory_of_display (Resizing_display) +
+    ::scrc_memory_of_display (Resizing_text);
   return (memory);
 }
 
@@ -163,14 +165,14 @@ int scrc_get_pasteboard_infos (Pasteboard *pb, int* rows, int *cols)  {
 
 //---------------------------------------------------------------------------
 int scrc_change_pasteboard (Pasteboard *pb, int *prows, int *pcols)   {
-  scrc_clear_screen (pb);
+  ::scrc_clear_screen (pb);
 
   if (*pcols) pb->cols = *pcols;
   if (*prows) pb->rows = *prows;
   (pb->cols > 80) ? wide_screen() : narrow_screen();
 
-  /*  scrc_fflush(pb); */
-  scrc_change_pbd_characteristics (pb);
+  /*  ::scrc_fflush(pb); */
+  ::scrc_change_pbd_characteristics (pb);
 
   int size = pb->rows * pb->cols;
   Update* u = pb->upd;
@@ -201,7 +203,7 @@ int scrc_change_pasteboard (Pasteboard *pb, int *prows, int *pcols)   {
 int scrc_delete_pasteboard (Pasteboard *pb) {
   Paste_entry *d;
 
-  if (pb->updating > 0) scrc_end_pasteboard_update (pb);
+  if (pb->updating > 0) ::scrc_end_pasteboard_update (pb);
 
   while ((d = pb->paste.first))    {
     d->disp->paste = 0;
@@ -213,9 +215,8 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
   cursor (pb, pb->rows,1);
   crlf ();
   resetansi ();
-  scrc_fflush (pb);
-
-  scrc_delete_physical_pasteboard (pb);
+  ::scrc_fflush (pb);
+  ::scrc_delete_physical_pasteboard (pb);
 
   Update* u = pb->upd;
   free (u->map);
@@ -236,7 +237,7 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
 
 //---------------------------------------------------------------------------
 int scrc_delete_display (Display *d)    {
-  if (d->paste) scrc_unpaste_display (d, d->pb);
+  if (d->paste) ::scrc_unpaste_display (d, d->pb);
   free (d->map);
   free (d->attr);
   free (d);
@@ -245,7 +246,7 @@ int scrc_delete_display (Display *d)    {
 
 //---------------------------------------------------------------------------
 int scrc_clear_screen (Pasteboard *pb)    {
-  while (pb->updating > 0) scrc_end_pasteboard_update (pb);
+  while (pb->updating > 0) ::scrc_end_pasteboard_update (pb);
   pb->old_attr = 0;
   clear_screen ();
   Update *u = pb->old;
@@ -265,10 +266,10 @@ int scrc_clear_screen (Pasteboard *pb)    {
 
 //---------------------------------------------------------------------------
 int scrc_save_screen (Pasteboard *pb)   {
-  scrc_resetANSI ();
-  scrc_clear_screen (pb);
-  scrc_set_scroll (pb, 1, pb->rows-3);
-  scrc_fflush (pb);
+  ::scrc_resetANSI ();
+  ::scrc_clear_screen (pb);
+  ::scrc_set_scroll (pb, 1, pb->rows-3);
+  ::scrc_fflush (pb);
   scr_ignore_input = 1;
   //_ss_rel(0);
   return 1;
@@ -276,25 +277,25 @@ int scrc_save_screen (Pasteboard *pb)   {
 
 //---------------------------------------------------------------------------
 int scrc_restore_screen (Pasteboard *pb)      {
-  scrc_set_scroll (pb, 1, pb->rows);
+  ::scrc_set_scroll (pb, 1, pb->rows);
   setfonts();
-  scrc_setANSI();
-  scrc_repaint_screen (pb);
-  scr_ignore_input=0;
-  scrc_ast_keyboard(0);
-  scrc_save_screen_rearm();
+  ::scrc_setANSI();
+  ::scrc_repaint_screen (pb);
+  scr_ignore_input = 0;
+  ::scrc_ast_keyboard(0);
+  ::scrc_save_screen_rearm();
   return 1;
 }
 
 //---------------------------------------------------------------------------
 int scrc_repaint_screen (Pasteboard *pb)  {
-  scrc_clear_screen (pb);
-  scrc_begin_pasteboard_update(pb);
+  ::scrc_clear_screen (pb);
+  ::scrc_begin_pasteboard_update(pb);
   for(Paste_entry* d = pb->paste.first; d; d = d->next) {
     Display* dd = d->disp;
-    scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
+    ::scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
   }
-  scrc_end_pasteboard_update(pb);
+  ::scrc_end_pasteboard_update(pb);
   return 1;
 }
 
@@ -460,7 +461,7 @@ int scrc_bring_display_to_back (Display *disp, Pasteboard *pb)    {
 //---------------------------------------------------------------------------
 int scrc_move_display (Display *disp, Pasteboard *pb, int drow, int dcol) {
   level_up (pb);
-  scrc_undraw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
+  ::scrc_undraw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
   disp->row += drow;
   disp->col += dcol;
   ::scrc_draw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
@@ -655,7 +656,7 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
         if (belongs_to(dd, r, c))  {
           offset = (r - dd->row + 1)*(dd->cols + 2) + c - dd->col + 1;
           ::scrc_draw_char(disp, pb, pb_offset, *(dd->map + offset),
-			   *(dd->attr + offset), dd, r, c);
+            *(dd->attr + offset), dd, r, c);
           break;
         }
         d = d->prev;
@@ -686,17 +687,17 @@ int scrc_draw_box (Display *disp, uint_t attr)    {
   int r, c, offset;
   int r2 = disp->rows + 1;
   int c2 = disp->cols + 1;
-  char hb = scrc_horizontal_bar();
-  char vb = scrc_vertical_bar();
+  char hb = ::scrc_horizontal_bar();
+  char vb = ::scrc_vertical_bar();
 
   attr |= (GRAPHIC|disp->def_attr);
   //::fprintf(stdout,"(5-%p)%X-%X#\n",disp,disp->def_attr,attr);
 
-  ::scrc_put_char_all (disp, 0, scrc_top_left_corner(), attr, 0, 0);
+  ::scrc_put_char_all (disp, 0, ::scrc_top_left_corner(), attr, 0, 0);
   for (c = 1, offset = 1; c < c2; c++, offset++)  {
     ::scrc_put_char_all (disp, offset, hb, attr, 0, c);
   }
-  ::scrc_put_char_all (disp, offset, scrc_top_right_corner(), attr, 0, c);
+  ::scrc_put_char_all (disp, offset, ::scrc_top_right_corner(), attr, 0, c);
   offset++;
 
   for (r = 1; r < r2; r++)  {
@@ -706,11 +707,11 @@ int scrc_draw_box (Display *disp, uint_t attr)    {
     offset++;
   }
 
-  ::scrc_put_char_all (disp, offset, scrc_bottom_left_corner(), attr, r, 0);
+  ::scrc_put_char_all (disp, offset, ::scrc_bottom_left_corner(), attr, r, 0);
   offset++;
   for (c = 1; c < c2; c++, offset++)
     ::scrc_put_char_all (disp, offset, hb, attr, r, c);
-  ::scrc_put_char_all (disp, offset, scrc_bottom_right_corner(), attr, r, c);
+  ::scrc_put_char_all (disp, offset, ::scrc_bottom_right_corner(), attr, r, c);
   return 1;
 }
 
@@ -829,7 +830,7 @@ int scrc_draw_char (Display *disp, Pasteboard *pb, int offset,
   if (ddef) def = ddef->def_attr;
 
   //  Check occlusion of this position within the display
-  if (disp && scrc_occluded (disp, row, col)) return 0;
+  if (disp && ::scrc_occluded (disp, row, col)) return 0;
   //  Take care of multiple inversions
   attr = (~BOLD    & (def | attr)) | (BOLD    & (def ^ attr));
   attr = (~INVERSE & (def | attr)) | (INVERSE & (def ^ attr));
@@ -912,7 +913,7 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, uint_t attr, int row, int col)
   }
   if (row != pb->curs.row || col != pb->curs.col)
     ::scrc_set_cursor_abs (pb, row, col);
-  scrc_putc (c, pb);
+  ::scrc_putc (c, pb);
   pb->curs.col++;
   pb->old_attr = old;
   return 1;
@@ -928,7 +929,7 @@ int scrc_set_cursor_abs (Pasteboard *pb, int row, int col)  {
 //---------------------------------------------------------------------------
 int scrc_set_cursor (Display *disp, int row, int col)   {
   if (disp->paste)
-    scrc_set_cursor_abs (disp->pb, disp->row + row - 1, disp->col + col - 1);
+    ::scrc_set_cursor_abs (disp->pb, disp->row + row - 1, disp->col + col - 1);
   return 1;
 }
 //---------------------------------------------------------------------------
@@ -994,8 +995,8 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
   if (!done) ::scrc_move_display (Resizing_display, pb, drow, dcol);
   else  {
     pb->resizing = 0;
-    scrc_unpaste_display (Resizing_display, pb);
-    scrc_unpaste_display (Resizing_text, pb);
+    ::scrc_unpaste_display (Resizing_display, pb);
+    ::scrc_unpaste_display (Resizing_text, pb);
     cursor_on();
     if (key == KPD_PF4 || key == KPD_PF3 )
     {
@@ -1008,7 +1009,7 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
       }
     }
   }
-  scrc_end_pasteboard_update(pb);
+  ::scrc_end_pasteboard_update(pb);
   return (done);
 }
 
@@ -1017,10 +1018,10 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
 int scrc_moving_display (Display *d)    {
   Pasteboard *pb = d->pb;
   pb->moving = d;
-  scrc_paste_display (Moving_text, pb, pb->rows-5, 2);
-  scrc_paste_display (Moving_display, pb, d->row, d->col);
+  ::scrc_paste_display (Moving_text, pb, pb->rows-5, 2);
+  ::scrc_paste_display (Moving_display, pb, d->row, d->col);
   cursor_off();
-  return scrc_end_pasteboard_update (pb);
+  return ::scrc_end_pasteboard_update (pb);
 }
 
 
@@ -1075,8 +1076,8 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
           (*d->drag) (d, drow, dcol);
         }
         else {
-	  scrc_move_display (d, pb, drow, dcol);
-	}
+          ::scrc_move_display (d, pb, drow, dcol);
+        }
       }
     }
   }
@@ -1105,7 +1106,7 @@ int scrc_save_cursor(Pasteboard * /* pb */, int ** /* context */ )    {
   (*context)[1] = pb->curs.col;
   (*context)[2] = pb->old_attr;
 
-  if (pb->updating <= 0) scrc_putes ("7", pb);
+  if (pb->updating <= 0) ::scrc_putes ("7", pb);
   */
   return 1;
 }
@@ -1120,8 +1121,8 @@ int scrc_restore_cursor(Pasteboard * /* pb */ , int* /* context */ )    {
   if (pb->updating > 0) cursor (pb, pb->curs.row, pb->curs.col) {
   }
   else  {
-  scrc_putes ("8", pb);
-  scrc_fflush (pb);
+  ::scrc_putes ("8", pb);
+  ::scrc_fflush (pb);
   }
   free (context);
   */
@@ -1135,7 +1136,7 @@ int scrc_putc (char c, Pasteboard *pb)    {
   buf++;
   *buf = 0;
   pb->bufptr++;
-  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
+  if (pb->bufptr > pb->bufsize - BUFFER_GUARD) ::scrc_fflush (pb);
   return 1;
 }
 
@@ -1195,7 +1196,7 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   if (pb->updating == 0)
   {
   cursor (pb, pb->curs.row, pb->curs.col);
-  scrc_fflush(pb);
+  ::scrc_fflush(pb);
   return 0;
   }
   */
@@ -1288,5 +1289,130 @@ int scrc_cursor_on (Pasteboard *pb)   {
 //----------------------------------------------------------------------------
 int scrc_cursor_off (Pasteboard *pb)    {
   cursor_off();
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, unsigned int attr)  {
+  if (!disp || !rows || !cols) return 1;
+  int width = disp->cols + 2;
+  int offset = r1*width + c1;
+  int r2  = r1 + rows - 1;
+  int c2  = c1 + cols - 1;
+  attr |= disp->def_attr;
+  for (int r=r1; r<=r2; r++)  {
+    unsigned int *a = disp->attr + offset;
+    for (int c=c1; c<=c2; c++) *a++ = attr;
+    offset += width;
+  }
+  ::scrc_draw_block (disp, r1, r2, c1, c2);
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_insert_line (Display *disp, const char *str, unsigned int attr, int row, int scroll)   {
+  Pasteboard *pb = disp->pb;
+  int h = disp->rows;
+  int w = disp->cols;
+
+  if (row < 1 || row > h) return 0;
+  level_up (pb);
+  if (scroll == MOVE_UP)  {
+    if (row > 1)    {
+      int offset = 2 * (w + 2) + 1;
+      char* m = disp->map + offset;
+      unsigned int* a = disp->attr + offset;
+      for (int r = 1; r < row; r++, m += 2, a += 2)
+        for (int c = 1; c <= w; c++)
+          ::scrc_put_char (disp, *m++, *a++, r, c);
+    }
+  }
+  else  {
+    if (row < h)    {
+      int offset = (h-1) * (w + 2) + 1;
+      for (int r = h-1; r >= row; r--, offset -= w + 2)  {
+        char* m = disp->map + offset;
+        unsigned int* a = disp->attr + offset;
+        for (int c = 1; c <= w; c++)
+          ::scrc_put_char (disp, *m++, *a++, r+1, c);
+      }
+    }
+  }
+  ::scrc_put_chars (disp, str, attr, row, 1, 1);
+  level_down (pb);
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_insert_char (Display *disp, char ch, unsigned int attr, int row, int col)  {
+  Pasteboard *pb = disp->pb;
+  int h = disp->rows;
+  int w = disp->cols;
+  if (row < 1 || row > h || col < 1 || col > w) return 0;
+
+  level_up (pb);
+  if (row != h || col != w)  {
+    int offset = h * (w + 2) + w - 1;
+    char* m = disp->map + offset;
+    unsigned int* a = disp->attr + offset;
+    for (int r = h, c0 = 1; r >= row; r--)  {
+      if (r == row) c0 = col;
+      for (int c = w; c > c0; c--)
+        ::scrc_put_char (disp, *m--, *a--, r, c);
+      m -= 2;
+      a -= 2;
+      if (r != row) ::scrc_put_char (disp, *m--, *a--, r, c0);
+    }
+  }
+  ::scrc_put_char (disp, ch, attr, row, col);
+  level_down (pb);
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_delete_line (Display *disp, int row)   {
+  Pasteboard *pb = disp->pb;
+  int h = disp->rows;
+  int w = disp->cols;
+
+  if (row < 1 || row > h) return 0;
+  level_up (pb);
+  if (row < h)  {
+    int offset = (row + 1) * (w + 2) + 1;
+    char* m = disp->map + offset;
+    unsigned int* a = disp->attr + offset;
+    for (int r = row; r < h; r++, m+=2, a+=2)
+      for (int c = 1; c <= w; c++)
+        ::scrc_put_char (disp, *m++, *a++, r, c);
+  }
+  ::scrc_erase_line (disp, h);
+  level_down (pb);
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_delete_char (Display *disp, int row, int col)  {
+  Pasteboard *pb = disp->pb;
+  int h = disp->rows;
+  int w = disp->cols;
+
+  if (row < 1 || row > h) return 0;
+  if (col < 1 || col > w) return 0;
+  level_up (pb);
+  if (row != h || col != w)  {
+    int offset = row * (w + 2) + col + 1;
+    char* m = disp->map + offset;
+    unsigned int* a = disp->attr + offset;
+    for (int c, r = row; r <= h; r++)  {
+      for (c = col; c < w; c++)
+        ::scrc_put_char (disp, *m++, *a++, r, c);
+      m += 2;
+      a += 2;
+      if (r < h) ::scrc_put_char (disp, *m++, *a++, r, c);
+      col = 1;
+    }
+  }
+  ::scrc_put_char (disp, ' ', NORMAL, h, w);
+  level_down (pb);
   return 1;
 }

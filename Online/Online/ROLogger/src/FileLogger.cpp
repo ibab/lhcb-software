@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.4 2008-05-27 16:50:40 frankb Exp $
+// $Id: FileLogger.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.4 2008-05-27 16:50:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -138,89 +138,89 @@ void FileLogger::handle(const Event& ev) {
     m_msgSeverity[sizeof(m_msgSeverity)-1] = 0;
     if ( ::strchr(m_msgSeverity,' ')  ) *::strchr(m_msgSeverity,' ') = 0;
     switch(ev.command_id)  {
-    case UPI::UpiDisplay::CMD_CLOSE:
-      UpiSensor::instance().remove(this,m_id);
-      ::upic_delete_menu(m_id);
-      closeUPI();
-      return;
-    case CMD_SEVERITY:
-      ioc.send(this,ev.command_id,new std::string(m_msgSeverity));
-      return;
-    case CMD_CLOSE:
-      //UpiSensor::instance().remove(this,m_id);
-      //::upic_delete_menu(m_id);
-      //closeUPI();
-      m_quit->invoke();
-      return;
-    case CMD_START:
-      if ( m_connected )
-	::upic_replace_command(m_id,CMD_START,"Connect to messages","");
-      else
-	::upic_replace_command(m_id,CMD_START,"Disconnect from messages","");
-      m_connected = !m_connected;
-      return;
-    case CMD_CONNECT:
-      openOutput();
-      return;
-    case CMD_SHOW:
-      ::upic_write_message(getSummary().c_str(),"");
-      return;
+  case UPI::UpiDisplay::CMD_CLOSE:
+    UpiSensor::instance().remove(this,m_id);
+    ::upic_delete_menu(m_id);
+    closeUPI();
+    return;
+  case CMD_SEVERITY:
+    ioc.send(this,ev.command_id,new std::string(m_msgSeverity));
+    return;
+  case CMD_CLOSE:
+    //UpiSensor::instance().remove(this,m_id);
+    //::upic_delete_menu(m_id);
+    //closeUPI();
+    m_quit->invoke();
+    return;
+  case CMD_START:
+    if ( m_connected )
+      ::upic_replace_command(m_id,CMD_START,"Connect to messages","");
+    else
+      ::upic_replace_command(m_id,CMD_START,"Disconnect from messages","");
+    m_connected = !m_connected;
+    return;
+  case CMD_CONNECT:
+    openOutput();
+    return;
+  case CMD_SHOW:
+    ::upic_write_message(getSummary().c_str(),"");
+    return;
     }
     break;
   case IocEvent:
     switch(ev.type) {
-    case CMD_UPDATE: {
-      _SV v = m_farms;      
-      std::string tmp;
-      std::stringstream s;
-      if ( !m_storage.empty() ) v.push_back(m_storage);
-      if ( !m_monitoring.empty() ) v.push_back(m_monitoring);
-      tmp = "Farm content:";
-      for(_SV::const_iterator i=v.begin();i!=v.end();++i) {
-	const std::string& n = *i;
-	s << n << std::ends;
-	tmp += n;
-	tmp += " ";
-      }
-      s << std::ends;
-      ::upic_write_message(tmp.c_str(),"");
-      tmp = s.str();
-      removeAllServices();
-      handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
+  case CMD_UPDATE: {
+    _SV v = m_farms;      
+    std::string tmp;
+    std::stringstream s;
+    if ( !m_storage.empty() ) v.push_back(m_storage);
+    if ( !m_monitoring.empty() ) v.push_back(m_monitoring);
+    tmp = "Farm content:";
+    for(_SV::const_iterator i=v.begin();i!=v.end();++i) {
+      const std::string& n = *i;
+      s << n << std::ends;
+      tmp += n;
+      tmp += " ";
     }
+    s << std::ends;
+    ::upic_write_message(tmp.c_str(),"");
+    tmp = s.str();
+    removeAllServices();
+    handleMessages(tmp.c_str(),tmp.c_str()+tmp.length());
+                   }
+                   return;
+  case CMD_SEVERITY:
+    setMessageSeverity(m_msgSeverity);
+    delete data.str;
     return;
-    case CMD_SEVERITY:
-      setMessageSeverity(m_msgSeverity);
-      delete data.str;
-      return;
-    case CMD_UPDATE_NODES:
-      delete data.vec;
-      return;
-    case CMD_CONNECT_STORAGE:
-      m_storage = *data.str;
-      delete data.str;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_CONNECT_MONITORING:
-      m_monitoring = *data.str;
-      delete data.str;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_DISCONNECT_STORAGE:
-      m_storage = "";
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_DISCONNECT_MONITORING:
-      m_monitoring = "";
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_UPDATE_FARMS:
-      m_farms = *data.vec;
-      delete data.vec;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    default:
-      break;
+  case CMD_UPDATE_NODES:
+    delete data.vec;
+    return;
+  case CMD_CONNECT_STORAGE:
+    m_storage = *data.str;
+    delete data.str;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_CONNECT_MONITORING:
+    m_monitoring = *data.str;
+    delete data.str;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_DISCONNECT_STORAGE:
+    m_storage = "";
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_DISCONNECT_MONITORING:
+    m_monitoring = "";
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_UPDATE_FARMS:
+    m_farms = *data.vec;
+    delete data.vec;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  default:
+    break;
     }
     break;
   default:

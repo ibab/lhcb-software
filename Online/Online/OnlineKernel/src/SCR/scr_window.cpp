@@ -16,8 +16,7 @@ enum {
  
 typedef struct WINDOW_SYSTEM Window_system;
 
-struct WINDOW_SYSTEM
-{
+struct WINDOW_SYSTEM   {
   Screen      scr[SCREENS];
   Screen*     cur;
   Window*     dragged;
@@ -34,23 +33,25 @@ int scrc_memory_of_window (Window* w)  {
   for(Paste_entry *p = w->paste.first; p; p = p->next)
     memory += sizeof (Paste_entry);
   if (w->title) memory += scrc_memory_of_display (w->title);
-  return (memory);
+  return memory;
 }
 
+//----------------------------------------------------------------------------
 int scrc_memory_of_screen (Screen* s)    {
-  int memory = sizeof (Screen);
+  int memory = sizeof(Screen);
   for(Window* w = s->wind.first; w; w = w->next)
-    memory += scrc_memory_of_window (w);
-  return (memory);
+    memory += ::scrc_memory_of_window (w);
+  return memory;
 }
+
 //----------------------------------------------------------------------------
 static void fill_title_display (Window *w, Display *d)    {
   char *t;
-  scrc_put_chars (w->title, "", NORMAL, 1, 1, 1);
-  if (d && (t = scrc_get_title (d)))  {
+  ::scrc_put_chars(w->title, "", NORMAL, 1, 1, 1);
+  if (d && (t=::scrc_get_title (d)))  {
     int pos = w->width - strlen(t);
     pos = (pos <= 0)? 1 : pos/2 + 1;
-    scrc_put_chars (w->title, t, NORMAL, 1, pos, 0);
+    ::scrc_put_chars (w->title, t, NORMAL, 1, pos, 0);
   }
 }
 
@@ -60,9 +61,9 @@ int scrc_memory_of_windows()    {
   Screen *s;  
   int memory = sizeof (Window_system);
   for (i=0, s = &System.scr[0]; i<SCREENS; i++, s++)  {
-    memory += scrc_memory_of_screen (s);
+    memory += ::scrc_memory_of_screen (s);
   }
-  return (memory);
+  return memory;
 }
 
 //----------------------------------------------------------------------------
@@ -84,7 +85,7 @@ int scrc_init_windows(Pasteboard* pb, int rows, int cols)   {
   System.pb = pb;
   System.rows = rows;
   System.cols = cols;
-  scrc_set_configure_handler (pb, scrc_configure_windows);
+  ::scrc_set_configure_handler (pb, scrc_configure_windows);
   return 1;
 }  
 
@@ -120,8 +121,8 @@ Window* scrc_open_window (int type)   {
     }
     else col = 1;
     if (type == PULLDOWN_WINDOW)  {
-      scrc_create_display (&w->title, 1, w->width, INVERSE, OFF, 0);
-      scrc_paste_display (w->title, System.pb, row, col+1);
+      ::scrc_create_display (&w->title, 1, w->width, INVERSE, OFF, 0);
+      ::scrc_paste_display (w->title, System.pb, row, col+1);
       w->title->wind = w;
       w->on_screen = w->title;
     }
@@ -133,7 +134,7 @@ Window* scrc_open_window (int type)   {
 
 //----------------------------------------------------------------------------
 int scrc_move_window_to (Window *w, int row, int col)   {
-  return scrc_move_window (w, row - w->row, col - w->col);
+  return ::scrc_move_window (w, row - w->row, col - w->col);
 }
 
 //----------------------------------------------------------------------------
@@ -248,15 +249,14 @@ int scrc_put_display_on_window (Display *d, Window *w)    {
       if (old && old != d) scrc_unpaste_display (old, System.pb);
       if (d != old) scrc_paste_display (d, System.pb, w->row+1, w->col+1);
       w->on_screen = d;
-      return (1);
+      return 1;
     }
     else if (old == w->title && (!p->prev))    {
       fill_title_display (w, d);
     }
   }
-  return (0);
+  return 0;
 }
-
 
 //----------------------------------------------------------------------------
 int scrc_remove_display_from_window (Display *d, Window *w)   {
@@ -267,8 +267,7 @@ int scrc_remove_display_from_window (Display *d, Window *w)   {
   if (!p) return 0;
   if (d == w->on_screen)  {
     scrc_unpaste_display (d, System.pb);
-    if (w->title)
-    {
+    if (w->title)    {
       scrc_put_chars (w->title, "", NORMAL, 1, 1, 1);
       scrc_paste_display (w->title, System.pb, w->row, w->col+1);
       w->on_screen = w->title;
@@ -280,9 +279,8 @@ int scrc_remove_display_from_window (Display *d, Window *w)   {
   list_remove_entry (p);
   if (!w->paste.first) scrc_delete_window (w);
   d->wind = 0;
-  return (1);
+  return 1;
 }
-
 
 //----------------------------------------------------------------------------
 int scrc_delete_window (Window *w)    {
@@ -296,11 +294,10 @@ int scrc_delete_window (Window *w)    {
   return 1;
 }
 
-
 //----------------------------------------------------------------------------
 Display* scrc_get_window_display (Window *w)   {
   if (!w) return 0;
-  if (w->on_screen == w->title) return (0);
+  if (w->on_screen == w->title) return 0;
   return w->on_screen;
 }
 
@@ -308,25 +305,25 @@ Display* scrc_get_window_display (Window *w)   {
 int scrc_window_has_display (Window *w, Display* d)   {
   if (!w) return 0;
   for (Paste_entry *p = w->paste.first; p; p = p->next)  {
-    if (p->disp == d) return (1);
+    if (p->disp == d) return 1;
   }
-  return (0);
+  return 0;
 }
 
 //----------------------------------------------------------------------------
 Window *scrc_prev_window (Window *w)    {
-  if (!w) return 0;
-  while ((w = w->prev))  {
-    if (w->on_screen) return w;
+  if ( w )  {
+    while ((w = w->prev))
+      if (w->on_screen) return w;
   }
   return 0;
 }
 
 //----------------------------------------------------------------------------
 Window *scrc_next_window (Window *w)    {
-  if (!w) return 0;
-  while ((w = w->next))  {
-    if (w->on_screen) return w;
+  if ( w ) {
+    while ((w = w->next))
+      if (w->on_screen) return w;
   }
   return 0;
 }
@@ -384,8 +381,7 @@ int scrc_show_window (Window *w, Display *d)    {
     else if (w->col < 1)  {
       shift = 1 - w->col;
       ww = (Window*) w->father->last;
-      while (ww)
-      {
+      while (ww)   {
         scrc_move_window (ww, 0, shift);
         ww = ww->prev;
       }
@@ -397,7 +393,7 @@ int scrc_show_window (Window *w, Display *d)    {
     int row = w->row + 1;
     if (d == w->title) row--;
     d->wind = 0;
-    scrc_paste_display (d, System.pb, row, w->col+1);
+    ::scrc_paste_display (d, System.pb, row, w->col+1);
     d->wind = w;
     w->on_screen = d;
     w->iconified = OFF;
@@ -411,16 +407,15 @@ int scrc_show_window (Window *w, Display *d)    {
 //----------------------------------------------------------------------------
 int scrc_hide_screen (Screen *s)  {
   for (Window *w= s->wind.first; w; w = w->next)
-    scrc_hide_window (w);
+    ::scrc_hide_window (w);
   return 1;
 }
 
 //----------------------------------------------------------------------------
 int scrc_hide_window (Window *w)    {
-  Display *d = w->on_screen;
-  if (d)  {
-    scrc_unpaste_display (d, System.pb);
-    w->on_screen = (Display *) 0;
+  if (w->on_screen)  {
+    ::scrc_unpaste_display (w->on_screen, System.pb);
+    w->on_screen = 0;
   }
   return 1;
 }
@@ -428,26 +423,25 @@ int scrc_hide_window (Window *w)    {
 
 //----------------------------------------------------------------------------
 int scrc_moving_window (Window *w)    {
-  Display *d = w->on_screen;
-  if (!d) return 0;  
+  if (!w->on_screen) return 0;  
   System.dragged = w;
-  return scrc_moving_display (d);
+  return ::scrc_moving_display(w->on_screen);
 }
 
 //----------------------------------------------------------------------------
 int scrc_iconify_window (Window* w, flag mode)    {
   Display *d = w->on_screen;
-  switch (mode)  {
+  if ( d ) {
+    switch (mode)  {
     case ON :
-      if (d)    {
-        scrc_unpaste_display (d, System.pb);
-        if ((d = w->title)) scrc_unpaste_display (d, System.pb);
-        scrc_send_window_to_icon (w);
-      }
+      ::scrc_unpaste_display (d, System.pb);
+      if ((d = w->title)) ::scrc_unpaste_display (d, System.pb);
+      ::scrc_send_window_to_icon (w);
       break;
     case OFF :
-      if (d) scrc_show_window (w, d);
+      ::scrc_show_window (w, d);
       break;
+    }
   }
   w->iconified = mode;
   return 1;
@@ -469,7 +463,7 @@ void scrc_send_window_to_icon (Window* w)   {
   if (w->type != PULLDOWN_WINDOW) dcol++;
 
   for(Window* next=w->next; next; next = next->next)
-    scrc_move_window (next, 0, -dcol);
+    ::scrc_move_window (next, 0, -dcol);
 
-  if (first) scrc_show_window (first, first->on_screen);
+  if (first) ::scrc_show_window (first, first->on_screen);
 }

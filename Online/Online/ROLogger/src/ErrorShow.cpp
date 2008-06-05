@@ -1,4 +1,4 @@
-// $Id: ErrorShow.cpp,v 1.1 2008-05-27 06:53:13 frankb Exp $
+// $Id: ErrorShow.cpp,v 1.2 2008-06-05 09:42:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorShow.cpp,v 1.1 2008-05-27 06:53:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ErrorShow.cpp,v 1.2 2008-06-05 09:42:15 frankb Exp $
 
 // Framework include files
 #include <sstream>
@@ -56,14 +56,14 @@ void ErrorShow::handle(const Event& ev) {
   switch(ev.eventtype) {
   case IocEvent:
     switch(ev.type) {
-    case CMD_DELETE:
-      delete this;
-      return;
-    case CMD_CLOSE:
-      ::lib_rtl_sleep(5000);
+  case CMD_DELETE:
+    delete this;
+    return;
+  case CMD_CLOSE:
+    ::lib_rtl_sleep(5000);
     ::exit(2);
-    default:
-      break;
+  default:
+    break;
     }
     break;
   default:

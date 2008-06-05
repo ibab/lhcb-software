@@ -102,8 +102,8 @@ int MessageLine::severityLevel(const std::string& severity) {
 extern "C" int test_MessageLine(int,char**) {
   const char* lines[] = {
     "May08-133647[INFO] mona0803: Gaudi.exe(LHCb_MONA0803_MonEvents_00): StoreExplorerAlg: | | +--> /DAQ [Address: CLID=0x1 Type=0xa000000]  DataObject",
-    "May08-133709[DEBUG]mona0804: LogGaudiSrv(/mona0804/LogGaudiSrv): main(): -- MARK --",
-    "May08-133808[INFO] mona08: Hello"
+      "May08-133709[DEBUG]mona0804: LogGaudiSrv(/mona0804/LogGaudiSrv): main(): -- MARK --",
+      "May08-133808[INFO] mona08: Hello"
   };
   for(size_t i=0; i<sizeof(lines)/sizeof(lines[0]);++i) {
     MessageLine line(lines[i]);

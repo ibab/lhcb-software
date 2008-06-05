@@ -1,4 +1,4 @@
-// $Id: Win32Start.cpp,v 1.3 2008-05-28 16:05:05 frankb Exp $
+// $Id: Win32Start.cpp,v 1.4 2008-06-05 09:42:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.3 2008-05-28 16:05:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/Win32Start.cpp,v 1.4 2008-06-05 09:42:15 frankb Exp $
 
 #ifdef _WIN32
 #include <windows.h>
@@ -73,22 +73,24 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
 #ifdef _WIN32
   PROCESS_INFORMATION pi;
   ::memset( &pi, 0, sizeof(pi) );
-  ::SetEnvironmentVariable("UTGID",utgid.c_str());
+  if ( 0 == ::SetEnvironmentVariable("UTGID",utgid.c_str()) ) {
+    std::cout << "Failed to set environment: UTGID=" << utgid << std::endl;
+  }
   if( !::CreateProcess(NULL,    // No module name (use command line). 
-		       (char*)cmd.c_str(),         // Command line. 
-		       NULL,                       // Process handle not inheritable. 
-		       NULL,                       // Thread handle not inheritable. 
-		       FALSE,                      // Set handle inheritance to FALSE. 
-		       CREATE_NEW_CONSOLE,         // No creation flags. 
-		       NULL,                       // Use parent's environment block. 
-		       NULL,                       // Use parent's starting directory. 
-		       &si,                        // Pointer to STARTUPINFO structure.
-		       &pi )                       // Pointer to PROCESS_INFORMATION structure.
-      ) 
-    {
-      std::cout << "CreateProcess [" << utgid << "] " << cmd << " failed."  << std::endl;
-      ::exit(0);
-    }
+    (char*)cmd.c_str(),         // Command line. 
+    NULL,                       // Process handle not inheritable. 
+    NULL,                       // Thread handle not inheritable. 
+    FALSE,                      // Set handle inheritance to FALSE. 
+    CREATE_NEW_CONSOLE,         // No creation flags. 
+    NULL,                       // Use parent's environment block. 
+    NULL,                       // Use parent's starting directory. 
+    &si,                        // Pointer to STARTUPINFO structure.
+    &pi )                       // Pointer to PROCESS_INFORMATION structure.
+    ) 
+  {
+    std::cout << "CreateProcess [" << utgid << "] " << cmd << " failed."  << std::endl;
+    ::exit(0);
+  }
   // Close process and thread handles. 
   CloseHandle( pi.hProcess );
   CloseHandle( pi.hThread );
@@ -96,7 +98,7 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
   char txt[128];
   int font_height=13;
   int font_width=6;
-  std::string command = "xterm -ls -132 ";
+  std::string env, command = "xterm -ls -132 ";
   sprintf(txt,"-fn %dx%d -fb %dx%db ",font_width,font_height,font_width,font_height);
   command += txt;
   if ( si.dwFlags&STARTF_USESIZE && si.dwFlags&STARTF_USEPOSITION )
@@ -135,7 +137,11 @@ static void startTerminal(const std::string& utgid, const std::string& cmd, STAR
   }
   command += "&";
   // std::cout << command << std::endl;
-  system(command.c_str());
+  env = "UTGID="+utgid;
+  if ( 0 != ::putenv((char*)env.c_str()) ) {
+    std::cout << "Failed to set environment: UTGID=" << utgid << std::endl;
+  }
+  ::system(command.c_str());
 #endif
 }
 
@@ -146,7 +152,7 @@ static std::pair<int,int> getDesktopGeometry(const std::string& geometry) {
     if ( 0 != h )  {
       RECT rc;
       if ( 0 != ::GetWindowRect(h, &rc) )   {
-	return std::make_pair(rc.right,rc.bottom);
+        return std::make_pair(rc.right,rc.bottom);
       }
     }
 #endif
@@ -192,7 +198,7 @@ static void help()  {
     "   |         +--------------------------+--------------------+          |\n"
     "   |         bottom margin  [-bo]                                       |\n"
     "   +--------------------------------------------------------------------+\n"
-	    << std::endl;
+    << std::endl;
 }
 
 extern "C" int start_rologger_win32(int argc, char** argv)  {
@@ -240,7 +246,7 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
     ::sprintf(node,"%s",RTL::nodeNameShort().c_str());
 
     ::sprintf(title,"%s: Error Logger display",partition);
-    ::sprintf(utgid,"%s_ErrorLog_%d_display",node,pid);
+    ::sprintf(utgid,"%s_ErrLog_%d_display",node,pid);
     ::sprintf(comm, "%s  romon_logger -service=%s -col -buff=0 -disp",logger,utgid);
     si.lpTitle        = title;
     si.dwX            = left_margin;
@@ -254,8 +260,8 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
     startTerminal(utgid,comm,si);
 
     ::sprintf(title,"%s: Error Logger history",partition);
-    ::sprintf(utgid,"%s_ErrorLog_%d_history",node,pid);
-    ::sprintf(comm, "%s romon_logger -service=%s -col -buff=%d -disp",logger,utgid,hist_buff);
+    ::sprintf(utgid,"%s_ErrLog_%d_history",node,pid);
+    ::sprintf(comm, "%s romon_logger -service=%s -col -buff=%d",logger,utgid,hist_buff);
     si.lpTitle        = title;
     si.dwX            = left_margin;
     si.dwY            = dt_height-history_height+title_size;
@@ -268,7 +274,7 @@ extern "C" int start_rologger_win32(int argc, char** argv)  {
 
     ::lib_rtl_sleep(2000);
     ::sprintf(title,"%s: Error Logger control",partition);
-    ::sprintf(utgid,"%s_ErrorLog_%d",node,pid);
+    ::sprintf(utgid,"%s_ErrLog_%d",node,pid);
     ::sprintf(comm, "%s romon_display_server -service=%s",logger,partition);
     si.lpTitle        = title;
     si.dwX            = dt_width-ctrl_width+title_size;

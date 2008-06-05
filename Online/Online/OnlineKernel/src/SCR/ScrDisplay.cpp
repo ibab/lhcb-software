@@ -133,7 +133,7 @@ void ScrDisplay::begin_update()  {
 #if 0
   if ( m_pb ) {
     int rows=0, cols=0, r=0, c=0;
-    ::scr_get_console_dimensions(&rows,&cols);
+    ::scrc_get_console_dimensions(&rows,&cols);
     ::scrc_get_pasteboard_infos(m_pb,&r,&c);
     if ( rows != r || cols != c ) {
       ::scrc_change_pasteboard(m_pb,&rows,&cols);

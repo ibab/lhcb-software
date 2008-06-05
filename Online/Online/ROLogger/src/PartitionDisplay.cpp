@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.9 2008-05-27 18:42:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.10 2008-06-05 09:42:15 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -48,10 +48,10 @@ static std::string item_name(const std::string& svc_name) {
 static std::string setupParams(const std::string& name, bool val) {
   char text[132];
   ::sprintf(text,"%-12s %-10s  ^^^^     ^^^^^^^     ^^^^^^^^^",
-	    item_name(name).c_str(), val ? "[ENABLED]" : "[DISABLED]");
+    item_name(name).c_str(), val ? "[ENABLED]" : "[DISABLED]");
   ::upic_set_param(s_param_buff,1,"A4",s_show[0],0,0,s_show,1,1);
   ::upic_set_param(s_enableDisableResult,2,"A7",val?s_disable[0]:s_enable[0],
-		   0,0,val?s_disable:s_enable,1,1);
+    0,0,val?s_disable:s_enable,1,1);
   ::upic_set_param(s_param_buff,3,"A9",s_config[0],0,0,s_config,1,1);
   return text;
 }
@@ -145,58 +145,58 @@ void PartitionDisplay::handle(const Event& ev) {
   case IocEvent:
     //::upic_write_message2("Got IOC command: %d %p",ev.type,ev.data);
     switch(ev.type) {
-    case CMD_FILE:
-      m_menuCursor = CMD_FILE;
-      new ErrShowDisplay(this,m_msg, m_name);
-      return;
-    case CMD_UPDATE: 
-      {
-	_SV f = m_farms;
-	f.push_back(m_monitoring);
-	if ( !m_storage.empty() ) f.push_back(m_storage);
-	if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
-	::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
-	ioc.send(this,CMD_UPDATE_CLUSTERS,this);
-	ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
-	ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
-      }
-      return;
-    case CMD_UPDATE_NODES:
-      m_nodes = *(Nodes*)ev.data;
-      delete (Nodes*)ev.data;
-      ::upic_write_message2("Updating node content of %s [%ld nodes]",m_name.c_str(),m_nodes.size());
-      return;
-    case CMD_UPDATE_FARMS:
-      m_farms = *(Farms*)ev.data;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_CONNECT_MONITORING:
-      m_monitoring = *data.str;
-      delete data.str;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_DISCONNECT_MONITORING:
-      m_monitoring = "";
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_CONNECT_STORAGE:
-      m_storage = *data.str;
-      delete data.str;
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_DISCONNECT_STORAGE:
-      m_storage = "";
-      ioc.send(this,CMD_UPDATE,this);
-      return;
-    case CMD_UPDATE_CLUSTERS:
-      updateFarms();
-      return;
-    case CMD_DELETE:
-      upic_set_cursor(m_id,m_menuCursor,0);
-      delete (Interactor*)ev.data;
-      break;
-    default:
-      break;
+  case CMD_FILE:
+    m_menuCursor = CMD_FILE;
+    new ErrShowDisplay(this,m_msg, m_name);
+    return;
+  case CMD_UPDATE: 
+    {
+      _SV f = m_farms;
+      f.push_back(m_monitoring);
+      if ( !m_storage.empty() ) f.push_back(m_storage);
+      if ( !m_monitoring.empty() ) f.push_back(m_monitoring);
+      ::upic_write_message2("Updating farm content of %s [%ld nodes]",m_name.c_str(),f.size());
+      ioc.send(this,CMD_UPDATE_CLUSTERS,this);
+      ioc.send(m_msg,CMD_UPDATE_FARMS,new _SV(f));
+      ioc.send(m_history,CMD_UPDATE_FARMS,new _SV(f));
+    }
+    return;
+  case CMD_UPDATE_NODES:
+    m_nodes = *(Nodes*)ev.data;
+    delete (Nodes*)ev.data;
+    ::upic_write_message2("Updating node content of %s [%ld nodes]",m_name.c_str(),m_nodes.size());
+    return;
+  case CMD_UPDATE_FARMS:
+    m_farms = *(Farms*)ev.data;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_CONNECT_MONITORING:
+    m_monitoring = *data.str;
+    delete data.str;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_DISCONNECT_MONITORING:
+    m_monitoring = "";
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_CONNECT_STORAGE:
+    m_storage = *data.str;
+    delete data.str;
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_DISCONNECT_STORAGE:
+    m_storage = "";
+    ioc.send(this,CMD_UPDATE,this);
+    return;
+  case CMD_UPDATE_CLUSTERS:
+    updateFarms();
+    return;
+  case CMD_DELETE:
+    upic_set_cursor(m_id,m_menuCursor,0);
+    delete (Interactor*)ev.data;
+    break;
+  default:
+    break;
     }
     break;
   case UpiEvent:
@@ -210,57 +210,57 @@ void PartitionDisplay::handle(const Event& ev) {
     if ( ::strchr(m_msgSeverity,' ')  ) *::strchr(m_msgSeverity,' ') = 0;
     if ( ::strchr(m_histSeverity,' ') ) *::strchr(m_histSeverity,' ') = 0;
     switch(ev.command_id) {
-    case CMD_FILE:
-      ioc.send(this,CMD_FILE,this);
-      return;
-    case CMD_CLOSE:
-      ioc.send(m_parent,CMD_DELETE,this);
-      return;
-    case CMD_SUMM_HISTORY:
-      ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
-      return;
-    case CMD_WILD_NODE:
-      showHistory(m_wildNode,"*");
-      return;
-    case CMD_WILD_MESSAGE:
-      showHistory(m_wildNode,m_wildMessage);
-      return;
-    case CMD_EDIT:
-      new FilterDisplay(this,m_msg,m_history);
-      return;
-    case CMD_SEVERITY:
+  case CMD_FILE:
+    ioc.send(this,CMD_FILE,this);
+    return;
+  case CMD_CLOSE:
+    ioc.send(m_parent,CMD_DELETE,this);
+    return;
+  case CMD_SUMM_HISTORY:
+    ioc.send(m_history,CMD_SUMM_HISTORY,CMD_SUMM_HISTORY);
+    return;
+  case CMD_WILD_NODE:
+    showHistory(m_wildNode,"*");
+    return;
+  case CMD_WILD_MESSAGE:
+    showHistory(m_wildNode,m_wildMessage);
+    return;
+  case CMD_EDIT:
+    new FilterDisplay(this,m_msg,m_history);
+    return;
+  case CMD_SEVERITY:
+    switch(ev.param_id) {
+  case 1:
+    ioc.send(m_msg,ev.command_id,new std::string(m_msgSeverity));
+    return;
+  case 2:
+    ioc.send(m_history,ev.command_id,new std::string(m_histSeverity));
+    return;
+  default:
+    break;
+    }
+    break;
+  default:
+    if ( ev.command_id > 0 && ev.command_id <= (int)m_items.size() ) {
+      int val, cmd = ev.command_id;
       switch(ev.param_id) {
-      case 1:
-	ioc.send(m_msg,ev.command_id,new std::string(m_msgSeverity));
-	return;
-      case 2:
-	ioc.send(m_history,ev.command_id,new std::string(m_histSeverity));
-	return;
-      default:
-	break;
+  case 1:
+    showCluster(cmd);
+    break;
+  case 2:
+    upic_write_message2("Replace cmd %d",cmd);
+    val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
+    ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
+    ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
+    ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
+    break;
+  case 3:
+    ::upic_write_message("Configuration by menu not implemented...","");
+    break;
+  default:
+    break;
       }
-      break;
-    default:
-      if ( ev.command_id > 0 && ev.command_id <= (int)m_items.size() ) {
-	int val, cmd = ev.command_id;
-	switch(ev.param_id) {
-	case 1:
-	  showCluster(cmd);
-	  break;
-	case 2:
-	  upic_write_message2("Replace cmd %d",cmd);
-	  val = m_items[cmd].first = ::strcmp(s_enableDisableResult,s_enable[0])==0;
-	  ::upic_replace_param_line(m_id,cmd,setupParams(m_items[cmd].second,val).c_str(),"");
-	  ::upic_set_cursor(ev.menu_id,cmd,ev.param_id);
-	  ioc.send(m_msg,val ? CMD_DISCONNECT_CLUSTER : CMD_CONNECT_CLUSTER,new std::string(m_items[cmd].second));
-	  break;
-	case 3:
-	  ::upic_write_message("Configuration by menu not implemented...","");
-        break;
-	default:
-	  break;
-	}
-      }
+    }
     }
     break;
   default:  // Fall through: Handle request by client
