@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file PhotonSignalJeffreysErf.h
+/** @file RichPhotonSignalJeffreysErf.h
  *
  *  Header file for tool : Rich::Rec::PhotonSignalJeffreysErf
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalJeffreysErf.h,v 1.1.1.1 2007-11-26 17:25:46 jonrob Exp $
+ *  $Id: RichPhotonSignalJeffreysErf.h,v 1.2 2008-06-05 06:59:43 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
