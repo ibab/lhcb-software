@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.7 2008-06-05 11:12:07 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.8 2008-06-05 11:20:16 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -36,7 +36,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_evtSvc(0)
 {
   declareProperty("TCK2ConfigMap", m_tck2config);
-  declareProperty("initialTCK", m_initialTCK = TCK_t(1));
+  declareProperty("initialTCK", m_initialTCK = TCK_t(0));
 }
 //=============================================================================
 // Destructor
@@ -79,10 +79,8 @@ StatusCode HltConfigSvc::initialize() {
   // verify that tools do not change from one TCK to the next...
 
   // configure everyone from an a-priori specified TCK
-  if (m_initialTCK!=0) {
-     status = configure( m_initialTCK );
-     if (status.isSuccess()) m_configuredTCK = m_initialTCK;
-  }
+  status = configure( m_initialTCK );
+  if (status.isSuccess()) m_configuredTCK = m_initialTCK;
   return status;
 }
 

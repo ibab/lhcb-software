@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-06-05 - Gerhard Raven
+   - allow a TCK of 0 to be specified in HltConfigSvc...
 !2008-06-02 - Gerhard Raven
    Hlt{T,}Filters:
    - adapt to m_monitor -> produceHistos()
