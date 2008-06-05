@@ -1,4 +1,4 @@
-// $Id: PtTransporter.cpp,v 1.4 2008-05-22 09:55:17 cattanem Exp $
+// $Id: PtTransporter.cpp,v 1.5 2008-06-05 06:42:57 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ StatusCode PtTransporter::finalize()
   return GaudiTool::finalize();  // must be called after all other actions
 }
 
-double PtTransporter::ptAtOrigin(double zref, double xref, double yref,
+double PtTransporter::ptAtOrigin(double zref, double xref, double /* yref */,
                                  double tx, double ty, double p) const
 {
   // assume B field conserves magnitude of p, and assume that py is
