@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r9 2008-06-05 =======================
+! 2008-06-05 - Marco Cattaneo
+ - Fix a doxygen warning
+
 ! 2008-06-05 - Chris Jones
  - Fix some unchecked StatusCodes
 

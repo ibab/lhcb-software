@@ -1,11 +1,11 @@
 
 //--------------------------------------------------------------------------
-/** @file RichGlobalPIDTrackCreator.h
+/** @file IRichGlobalPIDTrackCreator.h
  *
  *  Interface Header file for RICH Global PID tool : Rich::Rec::GlobalPID::TrackCreator
  *
  *  CVS Log :-
- *  $Id: IRichGlobalPIDTrackCreator.h,v 1.1 2008-03-25 16:26:43 jonrob Exp $
+ *  $Id: IRichGlobalPIDTrackCreator.h,v 1.2 2008-06-05 12:48:50 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
