@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.41 2008-06-04 15:34:12 odescham Exp $
+! $Id: release.notes,v 1.42 2008-06-05 06:14:22 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloTools v5r1 2008-06-05 =========================
+! 2008-06-05 - Marco Cattaneo
+  - Fix acos() for windows (cannot take an int argument)
+  
 ! 2008-06-04 - Deschamps Olivier
   - tune the verbosity
 
-!========================== CaloTools v5r1 2008-06-03 =========================
 ! 2008-06-03 - Marco Cattaneo
  - In CaloCosmicsTool.cpp: fix compiler warning, add missing include
  - In CaloCosmicsTrackTool.cpp, CaloCosmicsTrackAlg.cpp: add missing includes

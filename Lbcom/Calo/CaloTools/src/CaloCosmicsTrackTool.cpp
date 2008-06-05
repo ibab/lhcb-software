@@ -1,5 +1,8 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.5 2008-06-04 15:34:12 odescham Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.6 2008-06-05 06:14:22 cattanem Exp $
 // Include files 
+
+// From std
+#include <math.h>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -207,7 +210,7 @@ StatusCode CaloCosmicsTrackTool::matching(){
   double s2Y = ecal()->referencePointVariance().Y()+ hcal()->referencePointVariance().Y();
   m_phi  = (dX != 0) ?    atan( dY/dX ) :  acos( 0. );  
   double d2 = (dX*dX+dY*dY);
-  m_sPhi = (d2 !=0) ? dY*dY/d2/d2*s2X + dX*dX/d2/d2*s2Y :  acos(-1)*acos(-1);
+  m_sPhi = (d2 !=0) ? dY*dY/d2/d2*s2X + dX*dX/d2/d2*s2Y :  acos(-1.)*acos(-1.);
 
   debug() << " Phi = " << m_phi << " +- " << m_sPhi << endreq;
   // Chi2 = (phi-phi_eca<l)^2/sig^2 + (phi-phi_hcal)^2/sig^2 
@@ -216,15 +219,15 @@ StatusCode CaloCosmicsTrackTool::matching(){
   double s2ePhi = ecal()->phiVariance();
   double s2hPhi = hcal()->phiVariance();
 
-  if(m_phi<0)m_phi += acos(-1);
-  if(ePhi<0)ePhi += acos(-1);
-  if(hPhi<0)hPhi += acos(-1);
+  if(m_phi<0)m_phi += acos(-1.);
+  if(ePhi<0)ePhi += acos(-1.);
+  if(hPhi<0)hPhi += acos(-1.);
 
   m_chi2 =  (m_phi-ePhi)*(m_phi-ePhi)/(s2ePhi+m_sPhi) + (m_phi-hPhi)*(m_phi-hPhi)/(s2hPhi+m_sPhi);
   m_chi2 /= 2.;
 
   //
-  if(m_dir == 1)m_phi -= acos(-1);
+  if(m_dir == 1)m_phi -= acos(-1.);
 
 
 
@@ -379,8 +382,8 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
   // Phi
   double tphi = m_ty/m_tx;
   m_phi = atan(tphi);
-  if(m_phi<0)m_phi += acos(-1);
-  if(m_dir == 1)m_phi -= acos(-1);
+  if(m_phi<0.)m_phi += acos(-1.);
+  if(m_dir == 1)m_phi -= acos(-1.);
   
   // Ecal reference
   double ex = x0 + m_tx *ecal()->referencePoint().Z();
