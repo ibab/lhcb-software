@@ -5,15 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r7>2008-06-04 RecSys v5r7</A></H1><PRE>
+</PRE><H1><A NAME=v5r7>2008-06-05 RecSys v5r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7.
 
 - Packages added:    TrackMonitors v1r1 - Track data quality (without MC truth)
 - Packages modified: CaloReco v4r12, CaloPIDs v4r11, GlobalReco v6r16,
-    PatAlgorithms v3r6, PatPV v3r3, PatVelo v3r6, RichRecMCTools v2r19,
-    RichRecMonitors v2r18, RichRecQC v2r19, RichRecStereoTools v1r2,
-    RichRecTrackTools v1r5, TfTools v1r5, TrackCheckers v4r0, 
-    TrackFitEvent v3r15, TrackTools v3r7, TrackSys v4r14
+    PatAlgorithms v3r6, PatPV v3r3, PatVelo v3r6, RichGlobalPID v3r9,
+    RichRecMCTools v2r19, RichRecMonitors v2r18, RichRecPhotonTools v1r4,
+    RichRecQC v2r19, RichRecStereoTools v1r2, RichRecTrackTools v1r5,
+    TfTools v1r5, TrackCheckers v4r0, TrackFitEvent v3r15, TrackTools v3r7, 
+    TrackSys v4r14
 
 - In CaloReco v4r12, CaloPIDs v4r11, TfTools v1r5
   . Move cleaning of private containers to BeginEvent instead of EndEvent
@@ -55,11 +56,17 @@ This version uses Gaudi v19r9 and LHCb v23r7.
     acceptance) and ~0.1% improvement for long tracks, but about a 0.1% higher
     ghost rate.
 
+- In RichGlobalPID v3r9, RichRecTracktools v1r5
+  . Fix untested StatusCodes
+
 - In RichRecMCTools v2r19
   . Reorganise Track -> MCParticle linkers handling to avoid memory corruptions.
 
 - In RichRecMonitors v2r18, RichRecQC v2r19
   . Adapt to changes in decoded data format
+
+- In RichRecPhotonTools v1r4, RichRecStereoTools v1r2, RichRecTrackTools v1r5
+  . Fixes for floating point exceptions caught using the new FPEAuditor
 
 - In RichRecStereoTools v1r2
   . Fix some valgrind warnings
@@ -89,8 +96,9 @@ This version uses Gaudi v19r9 and LHCb v23r7.
     o use default extrapolator also for seed, velo, velo-tt fits
     o extrapolate also downstream tracks to beamline (for Ks)
 
-- In CaloReco v4r12, CaloPIDs v4r11, GlobalReco v6r16, RichRecQC v2r19,
-     TfTools v1r5, TrackCheckers v4r0, TrackTools v3r7 
+- In CaloReco v4r12, CaloPIDs v4r11, GlobalReco v6r16, RichGlobalPID v3r9, 
+     RichRecPhotonTools v1r4, RichRecQC v2r19, TfTools v1r5, TrackCheckers v4r0,
+     TrackTools v3r7 
   . Fix doxygen warnings
 
 </PRE><H1><A NAME=v5r6>2008-05-19 RecSys v5r6</A></H1><PRE>
