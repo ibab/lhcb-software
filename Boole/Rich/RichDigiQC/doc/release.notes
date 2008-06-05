@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2008-06-05 - Chris Jones
+ - Adapt to changes in detector element locations in RichDet
+
 !======================== RichDigiQC v3r8 2008-02-02 ========================
 ! 2008-01-30 - Chris Jones
  - Extend digit monitor for new background types (HPD reflections and silicon
