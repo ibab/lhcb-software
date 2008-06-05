@@ -1,4 +1,4 @@
-#Mon Apr 21 01:04:41 2008
+#Wed Jun  4 18:52:34 2008
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
@@ -38,6 +38,7 @@ class PhysicalChannelsHist( ConfigurableAlgTool ) :
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'H2D' : False, # bool
     'HBX' : False, # bool
+    'HDT' : False, # bool
   }
   _propertyDocDct = { 
     'UseSequencialNumericAutoIDs' : """ Flag to allow users to switch back to the old style of creating numerical automatic IDs """,
@@ -261,6 +262,7 @@ class L0MuonMonitor( ConfigurableAlgorithm ) :
     'ExcludedBxs' : [  ], # list
     'ExclusiveBxs' : [  ], # list
     'TriggerType' : -1, # int
+    'MuonZS' : True, # bool
   }
   _propertyDocDct = { 
     'UseSequencialNumericAutoIDs' : """ Flag to allow users to switch back to the old style of creating numerical automatic IDs """,

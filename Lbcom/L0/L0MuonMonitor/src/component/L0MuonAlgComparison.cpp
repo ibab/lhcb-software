@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.2 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.3 2008-06-05 08:29:10 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -70,15 +70,18 @@ StatusCode L0MuonAlgComparison::execute() {
   
   sc = compare(LHCb::L0MuonCandidateLocation::Default);
   
-  if( msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) {
+  if( (msgLevel(MSG::INFO) && sc==StatusCode::FAILURE) || msgLevel(MSG::DEBUG) ) {
     info()<<"*** Dump Candidates **** TIME SLOT=0"<<endmsg;
     info()<<"-- Ctrl :"<<endmsg;
     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_1);
-    debug()<<"-- BCSU :"<<endmsg;
+    info()<<"-- BCSU (from CB):"<<endmsg;
     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_1);
-    debug()<<"-- PU :"<<endmsg;
+    info()<<"-- BCSU (from PB):"<<endmsg;
+    printCand(LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+ m_extension_0);
+    printCand(LHCb::L0MuonCandidateLocation::BCSU+"fromPB"+ m_extension_1);
+    info()<<"-- PU :"<<endmsg;
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
 

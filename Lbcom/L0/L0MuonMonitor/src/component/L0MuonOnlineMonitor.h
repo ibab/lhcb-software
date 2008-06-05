@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.h,v 1.2 2008-04-08 11:31:03 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.h,v 1.3 2008-06-05 08:29:10 jucogan Exp $
 #ifndef COMPONENT_L0MUONONLINEMONITOR_H 
 #define COMPONENT_L0MUONONLINEMONITOR_H 1
 
@@ -7,6 +7,7 @@
 #include "L0MuonMonitorBase.h"
 #include "LogicalPads2DMaps.h"
 #include "PhysicalChannelsHist.h"
+#include "InstantaneousRate.h"
 
 /** @class L0MuonOnlineMonitor L0MuonOnlineMonitor.h component/L0MuonOnlineMonitor.h
  *  
@@ -32,6 +33,7 @@ private:
 
   LogicalPads2DMaps*    m_padsMaps;
   PhysicalChannelsHist* m_channelHist;
+  InstantaneousRate *   m_rate;
 
   AIDA::IHistogram1D* m_decoding_status[4][3];
 

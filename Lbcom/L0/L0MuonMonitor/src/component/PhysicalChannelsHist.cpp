@@ -1,4 +1,4 @@
-// $Id: PhysicalChannelsHist.cpp,v 1.3 2008-05-06 12:19:27 jucogan Exp $
+// $Id: PhysicalChannelsHist.cpp,v 1.4 2008-06-05 08:29:10 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ PhysicalChannelsHist::PhysicalChannelsHist( const std::string& type,
 
   declareProperty("H2D", m_2D=false);
   declareProperty("HBX", m_BX=false);
+  declareProperty("HDT", m_DT=false);
   
   setLayouts();
   
@@ -83,6 +84,10 @@ void PhysicalChannelsHist::bookHistos(int quarter, int region, int station)
         AIDA::IHistogram2D * hBX = book2D(hname+"-VS-BX",hname+"-VS-BX",-0.5,nbins-0.5,nbins,-7.5,7.5,15);
         m_histBX[quarter][type][station][region]= hBX;
       }
+      if (m_DT){
+        AIDA::IHistogram2D * hDT = book2D(hname+"-wrt-Muon",hname+"-wrt-Muon",-0.5,nbins-0.5,nbins,-15.5,15.5,31);
+        m_histDT[quarter][type][station][region]= hDT;
+      }
     }
   }
 }
@@ -115,6 +120,41 @@ void PhysicalChannelsHist::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
           fill(m_hist[qua][type][sta][reg],ind,1);
           if (m_2D) fill(m_hist2D[qua][type][sta][reg],it_tiles->nX(),it_tiles->nY(),1);
           if (m_BX) fill(m_histBX[qua][type][sta][reg],ind,ts,1);
+        }
+      }
+    }
+}
+
+void PhysicalChannelsHist::fillHistos(const std::vector<std::pair<LHCb::MuonTileID, double > > &tiles)
+{
+  
+  if (!m_DT) return;
+  
+  std::vector<std::pair<LHCb::MuonTileID, double > >::const_iterator it_tiles;
+    for (it_tiles=tiles.begin();it_tiles<tiles.end();++it_tiles){
+      LHCb::MuonTileID tile=it_tiles->first;
+      int sta = tile.station();
+      int reg = tile.region();
+      MuonLayout lay = tile.layout();
+      for (L0MuonMonUtils::Channel_type type =L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
+        if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
+          int qua = tile.quarter();
+          if (m_hist[qua][type][sta][reg]==NULL) continue;
+          MuonLayout layOL = m_opt_link_layout.stationLayout(sta).regionLayout(reg);
+          LHCb::MuonTileID ol=tile.containerID(layOL);
+
+          int xgrid=lay.xGrid();
+          int ygrid=lay.yGrid();
+          int xOLgrid=layOL.xGrid();
+          int yOLgrid=layOL.yGrid();
+
+          int ipb=ol.nX()/xOLgrid+2*(ol.nY()/yOLgrid)-1;
+          int ind_ol=ipb*xOLgrid*yOLgrid+ol.localX(layOL)+ol.localY(layOL)*xOLgrid;
+          int ind_local=tile.localX(lay)%(xgrid/xOLgrid)+tile.localY(lay)%(ygrid/yOLgrid)*xgrid/xOLgrid;
+
+          int ind = ind_local+ind_ol*xgrid*ygrid/(xOLgrid*yOLgrid);
+
+          fill(m_histDT[qua][type][sta][reg],ind,it_tiles->second,1);
         }
       }
     }

@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.h,v 1.3 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.4 2008-06-05 08:29:10 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
@@ -29,9 +29,13 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+  StatusCode compareTiles(std::vector<std::pair<LHCb::MuonTileID,double > > & muontiles);
+  
 protected:
 
 private:
+
+  bool m_muonZS; 
 
   //  IEventTimeDecoder* m_odin;
 

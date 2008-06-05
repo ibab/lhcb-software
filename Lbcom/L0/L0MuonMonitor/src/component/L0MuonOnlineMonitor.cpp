@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.4 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.5 2008-06-05 08:29:10 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -56,8 +56,13 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   // Tools
   m_padsMaps =  tool<LogicalPads2DMaps>( "LogicalPads2DMaps" , "Pads" , this );
   m_channelHist = tool<PhysicalChannelsHist>( "PhysicalChannelsHist", "Channels", this);
+  m_rate = tool<InstantaneousRate>( "InstantaneousRate", "Run", this);
   
   setHistoDir("L0Muon/Online");
+
+  // Rate
+  m_rate->setHistoDir("L0Muon/Online");
+  m_rate->bookHistos();
 
   // Decoding
   std::string name;
@@ -130,6 +135,9 @@ StatusCode L0MuonOnlineMonitor::execute() {
 
   int ncand=0;
   int npad[L0MuonMonUtils::NStations]; for (int i=0; i<L0MuonMonUtils::NStations; ++i) npad[i]=0;
+
+  //Rate
+  m_rate->fillHistos();
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){

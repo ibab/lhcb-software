@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.2 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.3 2008-06-05 08:29:10 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,7 @@
 
 // local
 #include "L0MuonMonitorBase.h"
+#include "L0MuonMonUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0MuonMonitorBase
@@ -179,6 +180,20 @@ bool L0MuonMonitorBase::exclusiveBx() {
 
 bool L0MuonMonitorBase::selectedTrigger()
 {
+//   // Loop over time slots
+//   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
+
+//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
+//     debug()<<"RootInTes : "<<rootInTES()<<endmsg;
+    
+//     if (exist<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default )) {
+//       const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default );
+//       debug()<<"L0DU report'"<<(*l0)<<endmsg;
+//       } else {
+//       debug()<<"L0DU report not found"<<endmsg;
+//      }
+//   }
+  
   //  if (m_triggerType.size()==0) return true;
   if (m_triggerType<0) return true;
   
@@ -190,10 +205,12 @@ bool L0MuonMonitorBase::selectedTrigger()
 //     info()<<"selectedTrigger CaloCosmicsTrigger ? "<<trig<<endmsg;
 //     trig = l0->channelDecisionByName("MuonCosmicsTrigger");
 //     info()<<"selectedTrigger MuonCosmicsTrigger ? "<<trig<<endmsg;
-//     trig = l0->channelDecision(0);
-//     info()<<"selectedTrigger O ? "<<trig<<endmsg;
-//     trig = l0->channelDecision(1);
-//     info()<<"selectedTrigger 1 ? "<<trig<<endmsg;
+    if (msgLevel( MSG::DEBUG )) {
+      debug()<<"selectedTrigger O ? "<<l0->channelDecision(0)<<endmsg;
+      trig = l0->channelDecision(1);
+      debug()<<"selectedTrigger 1 ? "<<l0->channelDecision(1)<<endmsg;
+    }
+    
     trig = l0->channelDecision(m_triggerType);
   } else {
     error()<<"Can not access the L0DUReport @ "<<LHCb::L0DUReportLocation::Default<<endmsg;
