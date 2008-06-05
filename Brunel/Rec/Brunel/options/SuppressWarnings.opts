@@ -22,7 +22,7 @@ RiCKResMatchHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations fai
 RiCKResKsTkHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
 RiCKResVeloTTHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
 RiCKResSeedHighBeta.RichStereoFitter.OutputLevel = 5; // solveChi2Equations failed
-
+PatPVOffline.PVOfflineTool.LSAdaptPVFitter.OutputLevel = 5; // max iterations reached
 
 // Information to be kept
 BrunelInit.OutputLevel = 3;
