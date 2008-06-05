@@ -1,8 +1,11 @@
-!  $Id: release.notes,v 1.54 2008-05-13 10:02:21 cattanem Exp $
+!  $Id: release.notes,v 1.55 2008-06-05 08:28:27 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+! 2008-06-05 - Julien Cogan
+ - Decoding of bank version 2 !! NOT TESTED !!
+ - Possibility to run without M1 or M2
 !========================= L0Muon v7r8p1 2008-05-13 ======================
 ! 2008-05-13 - Julien Cogan
  - Add check for untested status codes in L0MuonAlg.

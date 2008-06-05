@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.9 2008-04-10 13:04:58 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.10 2008-06-05 08:28:27 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -40,8 +40,7 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   
   // Converters for the banks of the 2 TELL1s connected to the controller boards
   for (int i= 0; i<2; ++i) {
-    m_ctrlFinal[i] =  L0Muon::CtrlFinalCnv(i);
-    m_ctrlAll[i]   =  L0Muon::CtrlAllCnv(i);
+    m_ctrlCand[i]  =  L0Muon::CtrlCandCnv(i);
   }
   // Converters for the banks of the 4 TELL1s connected to the processing boards
   for (int i= 0; i<4; ++i) {
@@ -61,8 +60,8 @@ L0MuonOutputs::L0MuonOutputs( const std::string& type,
   m_averagePt =0.;
   m_averageCh=0.;
 
-  m_ctrlFinalFlag = true ;
-  m_ctrlAllFlag   = true ;
+  m_ctrlCandFlag = true ;
+  m_ctrlCandFlagBCSU   = true ;
   m_procCandFlag  = true ;
   m_procDataFlag  = true ;
 
@@ -76,21 +75,28 @@ L0MuonOutputs::~L0MuonOutputs() {}
  
 StatusCode L0MuonOutputs::decodeRawBanks(int mode){
 
-  m_ctrlFinalFlag = false ;
-  m_ctrlAllFlag = false ;
+  m_ctrlCandFlag = false ;
+  m_ctrlCandFlagBCSU = false ;
   m_procCandFlag = false ;
   m_procDataFlag = false ;
+  
+  m_l0EventNumber=-1;
+  m_l0_B_Id=-1;
 
   int rawBankSize = 0;
 
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   if( msgLevel(MSG::DEBUG) ) debug() << "decodeRawBanks:  ==> got rawEvt " << endmsg;
 
-  // L0Muon Banks
+  // ======================
+  //
+  // L0Muon(CtrlCand) Banks
+  //
+  // ======================
   const std::vector<LHCb::RawBank*>& banks = rawEvt->banks( LHCb::RawBank::L0Muon );
   if (banks.size()!=0) {
-    m_ctrlFinalFlag=true;
     for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
+      int ctrlCandF=0;
       int srcID = (*itBnk)->sourceID();
       int bankVersion  = (*itBnk)->version();
       std::vector<unsigned int> data;
@@ -102,48 +108,41 @@ StatusCode L0MuonOutputs::decodeRawBanks(int mode){
       for ( int k = 0; size > k; ++k ) {
         data.push_back( *body++ );
       }
-      // if DC06 
-      if (bankVersion==0) { 
+      if (bankVersion==0) { // DC06 
         if (srcID>0) continue;
         if (srcID==0) {
-          m_ctrlFinal[0].decodeBankDC06(data);
-          m_ctrlFinal[1].decodeBankDC06(data);
-          m_ctrlFinalFlag =true; 
-          break;
+          ctrlCandF=m_ctrlCand[0].decodeBankDC06(data,bankVersion);
+          ctrlCandF=m_ctrlCand[1].decodeBankDC06(data,bankVersion);
+          m_ctrlCandFlag=true;
+          break; // only 1 bank
         }
-      }// End if DC06
-      m_ctrlFinal[srcID].decodeBank(data,bankVersion);
+      }// End  DC06
+      if (bankVersion==1) 
+        ctrlCandF=m_ctrlCand[ctrlSourceID(srcID,bankVersion)].decodeBankFinalCandidates(data,bankVersion);
+      else if (bankVersion>1) {
+        L0Muon::CtrlCandCnv * ctrlCand=&m_ctrlCand[ctrlSourceID(srcID,bankVersion)];
+        ctrlCand->submitL0EventNumber(m_l0EventNumber);
+        ctrlCand->submitL0_B_Id(m_l0_B_Id);        
+        ctrlCandF=ctrlCand->decodeBank(data,bankVersion,mode);
+        m_l0EventNumber=ctrlCand->ref_l0EventNumber();
+        m_l0_B_Id=ctrlCand->ref_l0_B_Id();
+      }
+      if (ctrlCandF>0) m_ctrlCandFlag=true;
+      if (ctrlCandF>1) m_ctrlCandFlagBCSU=true;
     }
   }
 
-  if (mode>1) {
-    // L0MuonCtrlAll Banks
-    const std::vector<LHCb::RawBank*>& ctrlallbanks = rawEvt->banks( LHCb::RawBank::L0MuonCtrlAll );
-    if (ctrlallbanks.size()!=0) {
-      m_ctrlAllFlag =true; 
-      for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = ctrlallbanks.begin(); ctrlallbanks.end() != itBnk; ++itBnk ) {
-        int srcID = (*itBnk)->sourceID();
-        int bankVersion  = (*itBnk)->version();
-        std::vector<unsigned int> data;
-        unsigned int* body = (*itBnk)->data();
-        int size = (*itBnk)->size()/4;
-        if( msgLevel(MSG::DEBUG) ) debug() << "decodeRawBanks: L0MuonCtrlAll bank (version "<< bankVersion <<" ) found"
-                                           <<", sourceID is "<< srcID <<", size is "<< size <<endreq;
-        rawBankSize+=size;
-        for ( int k = 0; size > k; ++k ) {
-          data.push_back( *body++ );
-        }
-        m_ctrlAll[srcID].decodeBank(data,bankVersion);
-      }
-    }
-  }
-  
+  // ======================
+  //
+  // L0MuonProcCand Banks
+  //
+  // ======================
   if (mode>0) {
-    // L0MuonProcCand Banks
     const std::vector<LHCb::RawBank*>& proccandbanks = rawEvt->banks( LHCb::RawBank::L0MuonProcCand );
     if (proccandbanks.size()!=0) {
       m_procCandFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = proccandbanks.begin(); proccandbanks.end() != itBnk; ++itBnk ) {
+        int procCandF=0;
         int srcID = (*itBnk)->sourceID();
         int bankVersion  = (*itBnk)->version();
         std::vector<unsigned int> data;
@@ -155,17 +154,30 @@ StatusCode L0MuonOutputs::decodeRawBanks(int mode){
         for ( int k = 0; size > k; ++k ) {
           data.push_back( *body++ );
         }
-        m_procCand[srcID].decodeBank(data,bankVersion);
+        L0Muon::ProcCandCnv * procCand=&m_procCand[procSourceID(srcID,bankVersion)];
+        procCand->submitL0EventNumber(m_l0EventNumber);
+        procCand->submitL0_B_Id(m_l0_B_Id);        
+        procCandF=m_procCand[procSourceID(srcID,bankVersion)].decodeBank(data,bankVersion);
+        m_l0EventNumber=procCand->ref_l0EventNumber();
+        m_l0_B_Id=procCand->ref_l0_B_Id();
+        if( msgLevel(MSG::DEBUG) ) debug() << "decodeRawBanks:  Q"<<(procSourceID(srcID,bankVersion)+1)
+                                           << " # of PU candidates= "
+                                           <<m_procCand[procSourceID(srcID,bankVersion)].muonCandidatesPU()<<endreq;
       }    
     }
   }
   
+  // ======================
+  //
+  // L0MuonProcData Banks
+  //
+  // ======================
   if (mode>0) {
-    // L0MuonProcData Banks
     const std::vector<LHCb::RawBank*>& procdatabanks = rawEvt->banks( LHCb::RawBank::L0MuonProcData );
     if (procdatabanks.size()!=0) {
       m_procDataFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = procdatabanks.begin(); procdatabanks.end() != itBnk; ++itBnk ) {
+        int procData=0;
         int srcID = (*itBnk)->sourceID();
         int bankVersion  = (*itBnk)->version();
         std::vector<unsigned int> data;
@@ -179,7 +191,7 @@ StatusCode L0MuonOutputs::decodeRawBanks(int mode){
         }
         if( msgLevel(MSG::DEBUG) ) debug() << "decodeRawBanks: L0MuonProcData bank calling decoding of "
                                            << data.size()<<" words"<<endreq;
-        m_procData[srcID].decodeBank(data,bankVersion);
+        procData=m_procData[procSourceID(srcID,bankVersion)].decodeBank(data,bankVersion);
       }    
     }
   }
@@ -210,56 +222,82 @@ StatusCode L0MuonOutputs::writeRawBanks(int mode, int bankVersion){
   std::vector<unsigned int> data;
 
   // L0Muon DC06 (only 5 TELL1s where foreseen)
-  if (bankVersion==0) {
-    data = DC06RawBanks();
+  if (bankVersion==0) { // Bank version =0
+
+    data=DC06RawBanks();
     raw->addBank(0, LHCb::RawBank::L0Muon,0,data);
     rawBankSize += data.size();
     if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0Muon bank written (DC06) size is "<< data.size() <<endreq;
     ++m_rawBankNorm;
     m_rawBankSizeTot += rawBankSize;
     return StatusCode::SUCCESS;
-  }
- 
-  // L0Muon (always there - light, standard and debug modes)
-  for (int i= 0; i<2; ++i) {
-    data = m_ctrlFinal[i].rawBank(bankVersion,ievt);
-    raw->addBank(i, LHCb::RawBank::L0Muon,bankVersion,data);
-    if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0Muon bank written (version "<< bankVersion<<" ) size is "
-                                       << data.size() <<endreq;
-    rawBankSize += data.size();
-  }
 
-  // L0MuonProcCand (always there - light, standard and debug modes)
-  for (int i= 0; i<4; ++i) {
-    data = m_procCand[i].rawBank(bankVersion,ievt);
-    raw->addBank(i, LHCb::RawBank::L0MuonProcCand,bankVersion,data);
-    if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank written (version "<< bankVersion<<" ) size is "
-                                       << data.size() <<endreq;
-    rawBankSize += data.size();
-  }
+  } else if (bankVersion==1) {// Bank version =1 (2 banks where foreseen for the controller boards)
 
-  // L0MuonProcData (only for standard and debug modes)
-  if (mode>0) {
-    for (int i= 0; i<4; ++i) {
-      data = m_procData[i].rawBank(bankVersion,mode);
-      raw->addBank(i, LHCb::RawBank::L0MuonProcData,bankVersion,data);
-      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "<< bankVersion<<" ) size is "
-                                         << data.size() <<endreq;
-      rawBankSize += data.size();
-    }
-  } 
-
-  // L0MuonCtrlAll (debug mode only)
-  if (mode>1) {
+    // L0Muon(CtrlCand) (always there - light, standard and debug modes)
     for (int i= 0; i<2; ++i) {
-      data = m_ctrlAll[i].rawBank(bankVersion);
-      raw->addBank(i, LHCb::RawBank::L0MuonCtrlAll,bankVersion,data);
-      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonCtrlAll bank written (version "<< bankVersion<<" ) size is "
+      m_ctrlCand[i].rawBankFinalCandidates(data,ievt);
+      raw->addBank(i, LHCb::RawBank::L0Muon,bankVersion,data);
+      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0Muon bank written (version "<< bankVersion<<" ) size is "
                                          << data.size() <<endreq;
       rawBankSize += data.size();
     }
-  }
 
+    // L0MuonProcCand (always there - light, standard and debug modes)
+    for (int i= 0; i<4; ++i) {
+      m_procCand[i].rawBank(data,bankVersion,ievt);
+      raw->addBank(i, LHCb::RawBank::L0MuonProcCand,bankVersion,data);
+      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank written (version "<< bankVersion<<" ) size is "
+                                         << data.size() <<endreq;
+      rawBankSize += data.size();
+    }
+
+    // L0MuonProcData (only for standard and debug modes)
+    if (mode>0) {
+      for (int i= 0; i<4; ++i) {
+        m_procData[i].rawBank(data,bankVersion,mode);
+        raw->addBank(i, LHCb::RawBank::L0MuonProcData,bankVersion,data);
+        if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "<< bankVersion<<" ) size is "
+                                           << data.size() <<endreq;
+        rawBankSize += data.size();
+      }
+    } 
+
+    
+  } else { // Bank version >1
+
+    // L0Muon (always there - light, standard and debug modes)
+    for (int i= 0; i<2; ++i) {
+      m_ctrlCand[i].rawBank(data,bankVersion,mode,ievt);
+      raw->addBank(i, LHCb::RawBank::L0Muon,bankVersion,data);
+      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0Muon bank written (version "<< bankVersion<<" ) size is "
+                                         << data.size() <<endreq;
+      rawBankSize += data.size();
+    }
+
+    // L0MuonProcCand (always there - light, standard and debug modes)
+    for (int i= 0; i<4; ++i) {
+      m_procCand[i].rawBank(data,bankVersion,ievt);
+      raw->addBank(i, LHCb::RawBank::L0MuonProcCand,bankVersion,data);
+      if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank written (version "<< bankVersion<<" ) size is "
+                                         << data.size() <<endreq;
+      rawBankSize += data.size();
+    }
+
+    // L0MuonProcData (only for standard and debug modes)
+    if (mode>0) {
+      for (int i= 0; i<4; ++i) {
+        m_procData[i].rawBank(data,bankVersion,mode);
+        raw->addBank(i, LHCb::RawBank::L0MuonProcData,bankVersion,data);
+        if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "<< bankVersion<<" ) size is "
+                                           << data.size() <<endreq;
+        rawBankSize += data.size();
+      }
+    } 
+
+  }
+  
+  
   ++m_rawBankNorm;
   m_rawBankSizeTot += rawBankSize;
 
@@ -277,7 +315,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
   std::vector<L0Muon::PMuonCandidate>::iterator itcand;
   std::string location;
 
-  if (m_ctrlFinalFlag) {
+  if (m_ctrlCandFlag) {
     // Candidates selected by the controller boards
     // L0Muon (always there - light, standard and debug modes)
     location = LHCb::L0MuonCandidateLocation::Default + extension;
@@ -288,11 +326,11 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       debug() << "writeOnTES at "<< location << endreq;
     }
     for (int i= 0; i<2; ++i) {
-      cands = m_ctrlFinal[i].muonCandidates();
+      cands = m_ctrlCand[i].muonCandidates();
       nCandFinal+=cands.size();
       if( msgLevel(MSG::DEBUG) ) {
         debug() << "writeOnTES: side "<<i<< endreq;
-        m_ctrlFinal[i].dump("\t=> ");
+        m_ctrlCand[i].dump("\t=> ");
         debug() << "writeOnTES: => "<<cands.size()<<" candidates found"<< endreq;
       }
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
@@ -313,9 +351,9 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
     ++m_nCandFinalNorm;
   }
 
-  // Candidates selected by the BCSUs
-  if (m_ctrlAllFlag) {
-    location = LHCb::L0MuonCandidateLocation::BCSU + extension;
+  // Candidates selected by the BCSUs (seen by the controller boards)
+  if (m_ctrlCandFlagBCSU) {
+    location = LHCb::L0MuonCandidateLocation::BCSU +"fromCB"+ extension;
     LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
     put(pbcsucands , location );
     if (msgLevel( MSG::DEBUG )) {
@@ -323,7 +361,7 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       debug() << "writeOnTES at "<< location << endreq;
     }
     for (int i= 0; i<2; ++i) {
-      cands = m_ctrlAll[i].muonCandidates();
+      cands = m_ctrlCand[i].muonCandidatesBCSU();
       if (msgLevel( MSG::DEBUG )) {
         debug() << "writeOnTES: side "<<i<< endreq;
         debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
@@ -336,6 +374,29 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
     }
   }
 
+  // Candidates selected by the BCSUs (sent by the processing boards)
+  if (m_procCandFlag) {
+    location = LHCb::L0MuonCandidateLocation::BCSU +"fromPB"+ extension;
+    LHCb::L0MuonCandidates* ppucands = new LHCb::L0MuonCandidates();
+    put(ppucands , location );
+    if (msgLevel( MSG::DEBUG )) {
+      debug() << "writeOnTES -------------------------"<< endreq;
+      debug() << "writeOnTES at "<< location << endreq;
+    }
+    for (int i= 0; i<4; ++i) {      
+      cands = m_procCand[i].muonCandidatesBCSU();
+      if (msgLevel( MSG::DEBUG )) {
+        debug() << "writeOnTES: quarter "<<i<< endreq;
+        debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
+      }
+      for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
+        if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: PU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+        ppucands->insert(l0mcand);
+      }
+    }
+  }
+  
   // Candidates found by the PUs
   if (m_procCandFlag) {
     location = LHCb::L0MuonCandidateLocation::PU  + extension;
@@ -382,6 +443,12 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       }
     }
   }
+  
+//   location = LHCb::L0MuonInfoLocation::Default + extension;
+//   LHCb::L0MuonInfo* pl0minfo = new LHCb::L0MuonInfo();
+//   pl0minfo->setL0EventNumber(m_l0EventNumber);
+//   pl0minfo->setL0_B_Id(m_l0_B_Id);
+//   put(pl0minfo, location );
  
   return StatusCode::SUCCESS;
 }
@@ -401,8 +468,8 @@ StatusCode L0MuonOutputs::monitorBanks(){
     debug() << "monitorBanks -------------------------"<< endreq;
     for (int i= 0; i<2; ++i) {
       debug() << "monitorBanks: side "<<i<< endreq;
-      if (msgLevel( MSG::DEBUG )) m_ctrlFinal[i].dump("\t=> ");
-      cands = m_ctrlFinal[i].muonCandidates();
+      if (msgLevel( MSG::DEBUG )) m_ctrlCand[i].dump("\t=> ");
+      cands = m_ctrlCand[i].muonCandidates();
       nCandFinal+=cands.size();
       debug() << "monitorBanks: => "<<cands.size()<<" candidates found"<< endreq;
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
@@ -421,7 +488,7 @@ StatusCode L0MuonOutputs::monitorBanks(){
     debug() << "monitorBanks -------------------------"<< endreq;
     for (int i= 0; i<2; ++i) {
       debug() << "monitorBanks: side "<<i<< endreq;
-      cands = m_ctrlAll[i].muonCandidates();
+      cands = m_ctrlCand[i].muonCandidatesBCSU();
       debug() << "monitorBanks: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
         debug() << "monitorBanks:\n"<<(*itcand)->dump("\t=> ")<< endreq;
@@ -470,7 +537,7 @@ StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
   }
   
   for (int i= 0; i<2; ++i) {
-    std::vector<L0Muon::PMuonCandidate> cands = m_ctrlFinal[i].muonCandidates();
+    std::vector<L0Muon::PMuonCandidate> cands = m_ctrlCand[i].muonCandidates();
     for ( std::vector<L0Muon::PMuonCandidate>::iterator itcand = cands.begin();itcand!=cands.end();++itcand ) {      
       int quarter = (*itcand)->quarter();
       int addM3 = ((*itcand)->colM3()&0x3) + (((*itcand)->rowM3()<<5)&0x7C);
@@ -535,8 +602,7 @@ StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
 
 StatusCode L0MuonOutputs::releaseRegisters(){
 
-  for (int i= 0; i<2; ++i) m_ctrlFinal[i].release();
-  for (int i= 0; i<2; ++i) m_ctrlAll[i].release();
+  for (int i= 0; i<2; ++i) m_ctrlCand[i].release();
   for (int i= 0; i<4; ++i) m_procCand[i].release();
   for (int i= 0; i<4; ++i) m_procData[i].release();
 
@@ -567,7 +633,7 @@ std::vector<unsigned int> L0MuonOutputs::DC06RawBanks(){
   // [32- 8] : beginning of first candidate
   int ncandidates=0;
   for (int i= 0; i<2; ++i) {
-    ncandidates += m_ctrlFinal[i].muonCandidates().size();
+    ncandidates += m_ctrlCand[i].muonCandidates().size();
   }
   word=( (ncandidates<<4) & 0xF0);
 
@@ -576,7 +642,8 @@ std::vector<unsigned int> L0MuonOutputs::DC06RawBanks(){
   bool finished=false;
   // Loop over the 2 converters
   for (int i= 0; i<2; ++i) {
-    std::vector<unsigned int> cands = m_ctrlFinal[i].rawBankDC06();
+    std::vector<unsigned int> cands;
+    m_ctrlCand[i].rawBankDC06(cands);
     // Loop over the candidates
     for ( std::vector<unsigned int>::iterator itcand = cands.begin();itcand!=cands.end();++itcand ) {
       unsigned int shifted = ( ( (*itcand) <<     cursor   ) & 0xFFFFFFFF );

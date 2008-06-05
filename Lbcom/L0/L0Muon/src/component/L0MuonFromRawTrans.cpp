@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.10 2008-04-10 13:04:58 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.11 2008-06-05 08:28:27 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -59,7 +59,7 @@ StatusCode L0MuonFromRawTrans::initialize() {
   L0Muon::RegisterFactory::selectInstance(1);
   // Instanciate the MuonTrigger registers
   std::string xmlFileName = m_configfile;
-  info() <<  "Configuration file = " << xmlFileName << endmsg;
+  info() <<  "Configuration file is " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
 
   // Converters for the banks of the 2 TELL1s connected to the controller boards
@@ -114,7 +114,8 @@ StatusCode L0MuonFromRawTrans::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 
-  if (m_dumpError) {
+//   if (m_dumpError) {
+  if (1) {
     std::string errorCounters;
 
     errorCounters+="\n--- L0Muon decoding error summary\n";
@@ -179,7 +180,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
       if (srcID==0) {
         m_ctrlRaw[1].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ii= 0; ii<2; ++ii) {
             if (m_ctrlRaw[1].decodingError(ii)) {
               m_ctrlRaw[1].dump(data);
@@ -190,7 +191,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
       if (srcID==5) {
         m_ctrlRaw[0].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ii= 0; ii<2; ++ii) {
             if (m_ctrlRaw[0].decodingError(ii)) {
               m_ctrlRaw[0].dump(data);
@@ -201,7 +202,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
        if (srcID==3){
         m_procRaw[0].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
             if (m_procRaw[0].decodingError(ib)) {
               m_procRaw[0].dump(data);
@@ -212,7 +213,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
        if (srcID==4){
         m_procRaw[1].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
             if (m_procRaw[1].decodingError(ib)) {
               m_procRaw[1].dump(data);
@@ -223,8 +224,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
       if (srcID==2) {
         m_procRaw[2].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);      
-//         if (rootInTES()=="") m_procRaw[2].dump(data);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
             if (m_procRaw[2].decodingError(ib)) {
               m_procRaw[2].dump(data);
@@ -235,7 +235,7 @@ StatusCode L0MuonFromRawTrans::decodeRawBanks(){
       }
        if (srcID==1){
         m_procRaw[3].decodeBank(data,bankVersion,m_l0EventNumber,m_l0_B_Id);
-        if (msgLevel( MSG::VERBOSE )) {
+        if (m_dumpError) {
           for (int ib= 0; ib<12; ++ib) {
             if (m_procRaw[3].decodingError(ib)) {
               m_procRaw[3].dump(data);
@@ -261,7 +261,7 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
 
   bool quarter_in_error[4];
   for (int iq=0; iq<4; ++iq) quarter_in_error[iq]=false;
-  
+
   for (int i= 0; i<2; ++i) {// Loop over sides 
     if (!m_ctrlRaw[i].isActiv()) continue;
     for (int ii= 0; ii<2; ++ii) {// Loop over quarters in side
@@ -333,7 +333,7 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     }
   }
 
-  location = LHCb::L0MuonCandidateLocation::BCSU + extension;
+  location = LHCb::L0MuonCandidateLocation::BCSU +"fromCB"+ extension;
   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
   put(pbcsucands , location );
 //   if (msgLevel( MSG::DEBUG )) {
@@ -351,6 +351,27 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
 //       if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
       pbcsucands->insert(l0mcand);
+    }
+  }
+
+  location = LHCb::L0MuonCandidateLocation::BCSU+"fromPB"  + extension;
+  LHCb::L0MuonCandidates* pbcsu2cands = new LHCb::L0MuonCandidates();
+  put(pbcsu2cands , location );
+//   if (msgLevel( MSG::DEBUG )) {
+//     debug() << "writeOnTES -------------------------"<< endreq;
+//     debug() << "writeOnTES at "<< location << endreq;
+//   }
+  for (int i= 0; i<4; ++i) {      
+    if (!m_procRaw[i].isActiv()) continue;
+    cands = m_procRaw[i].muonCandidatesBCSU();
+//     if (msgLevel( MSG::DEBUG )) {
+//       debug() << "writeOnTES: quarter "<<i<< endreq;
+//       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (PU)"<< endreq;
+//     }
+    for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
+//       if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
+      LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      pbcsu2cands->insert(l0mcand);
     }
   }
 

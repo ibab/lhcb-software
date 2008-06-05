@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.11 2008-05-13 09:37:51 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.12 2008-06-05 08:28:27 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -65,6 +65,8 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("PtParameters"   , m_ptParameters); 
   declareProperty("ConfigFile"     , m_configfile);
   declareProperty("IgnoreM1"       , m_ignoreM1 = false );
+  declareProperty("IgnoreM2"       , m_ignoreM2 = false );
+  declareProperty("ForceM3"        , m_forceM3 = false );
 
   declareProperty("FoiXSize"       , m_foiXSize);
   declareProperty("FoiYSize"       , m_foiYSize);
@@ -343,6 +345,8 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
 
   properties["ignoreM1"]       = m_ignoreM1 ? L0Muon::Property("1") : L0Muon::Property("0");
 
+  properties["ignoreM2"]       = m_ignoreM2 ? L0Muon::Property("1") : L0Muon::Property("0");
+
   
   sprintf(buf,"%d",m_procVersion);
   prop=buf;
@@ -361,7 +365,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
 {
   StatusCode sc;
   //  debug() << "fillOLsfromDigits:  IN "<<endmsg;
-  
+
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   // Loop over time slots
@@ -438,12 +442,34 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  ddigits.size()= "<<ddigits.size()<<endmsg;
 
     std::vector<LHCb::MuonTileID>::const_iterator id;
+    for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
+      LHCb::MuonTileID mkey = *id;
+      if( msgLevel(MSG::DEBUG) ) {
+        debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+      }
+    }
+    
+     
+    if (m_forceM3) {// -- Force M3
+      if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  FORCING M3 TO 1 "<<endmsg;
+      std::vector<LHCb::MuonTileID> m3StripV=m_stripV.stationLayout(2).tiles(2); // stripV in M3 Q3
+      std::vector<LHCb::MuonTileID> m3StripH=m_stripH.stationLayout(2).tiles(2); // stripH in M3 Q3
+      std::vector<LHCb::MuonTileID>::iterator itstrip;
+      for (itstrip=m3StripV.begin();itstrip<m3StripV.end();++itstrip) itstrip->setStation(2); 
+      for (itstrip=m3StripH.begin();itstrip<m3StripH.end();++itstrip) itstrip->setStation(2); 
+      ddigits.insert(ddigits.begin(),m3StripV.begin(),m3StripV.end());
+      ddigits.insert(ddigits.begin(),m3StripH.begin(),m3StripH.end());
+      if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  ddigits.size()= "<<ddigits.size()<<endmsg;
+    }// -- force M3 done  
 
     for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
 
       LHCb::MuonTileID mkey = *id;
 
       //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+
+      if (m_ignoreM1 && mkey.station()==0) continue;
+      if (m_ignoreM2 && mkey.station()==1) continue;
 
       int sta = mkey.station(); 
       LHCb::MuonTileID olID = m_ollayout.contains(mkey);

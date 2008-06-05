@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.4 2008-01-04 11:57:05 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.5 2008-06-05 08:28:27 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -8,8 +8,7 @@
 
 #include "Event/L0MuonCandidate.h"
 
-#include "L0MuonKernel/CtrlFinalCnv.h"
-#include "L0MuonKernel/CtrlAllCnv.h"
+#include "L0MuonKernel/CtrlCandCnv.h"
 #include "L0MuonKernel/ProcCandCnv.h"
 #include "L0MuonKernel/ProcDataCnv.h"
 #include "L0MuonKernel/MuonCandidate.h"
@@ -58,17 +57,57 @@ protected:
 
 private:
 
+  enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
+  enum Sides {A=0,C,NSides};
+
+  int procSourceID(int srcID, int bankVersion)
+  {
+    switch(bankVersion) {
+    case 1:
+      return srcID;
+    case 2:
+      switch(srcID){
+      case 1:
+        return Q4;
+      case 2:
+        return Q3;
+      case 3:
+        return Q1;
+      case 4:
+        return Q2;
+      }
+    }
+    return 0;
+  }
+  int ctrlSourceID(int srcID, int bankVersion)
+  {
+    switch(bankVersion) {
+    case 1:
+      return srcID;
+    case 2:
+      switch(srcID){
+      case 0:
+        return C;
+      case 5:
+        return A;
+      }
+    }
+    return 0;
+  }
+
   std::vector<unsigned int> DC06RawBanks();
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand, int procVersion);
   
   /// Converters for the L0Muon banks
-  L0Muon::CtrlFinalCnv m_ctrlFinal[2];
-  L0Muon::CtrlAllCnv   m_ctrlAll[2];
+  L0Muon::CtrlCandCnv   m_ctrlCand[2];
   L0Muon::ProcCandCnv  m_procCand[4];
   L0Muon::ProcDataCnv  m_procData[4];
 
-  bool m_ctrlFinalFlag;
-  bool m_ctrlAllFlag;
+  int m_l0EventNumber;
+  int m_l0_B_Id;
+
+  bool m_ctrlCandFlag;
+  bool m_ctrlCandFlagBCSU;
   bool m_procCandFlag;
   bool m_procDataFlag;
 

@@ -48,7 +48,9 @@ private:
   std::vector<int> m_foiYSize;        // values of FoI's in Y
   std::vector<double> m_ptParameters; // Pt calculation parameters
   std::string  m_configfile;          // Config file name
-  bool m_ignoreM1;                    // Flag to use M1 or not (latter case not tested)
+  bool m_ignoreM1;                    // Flag to use M1 or not (not tested)
+  bool m_ignoreM2;                    // Flag to use M2 or not (not tested)
+  bool m_forceM3;                     // Flag to force M3 optical link content to 1
   bool m_debug;                       // Flag to turn on debug mode for L0MuonKernel
   
   // Algorithm's properties
