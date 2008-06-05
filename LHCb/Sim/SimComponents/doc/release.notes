@@ -5,7 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
-!====================== SimComponents v2r10 2008-06-04 =======================
+!====================== SimComponents v2r10 2008-06-05 =======================
+! 2008-06-05 - Marco Cattaneo
+ - Protect underflow in PackMCVertex and CompareMCVertex, due to crazy
+   vertex times in DC06 simulation
+
 ! 2006-06-04 M Needham
  - Protect division by zero in MCReconstructible
 

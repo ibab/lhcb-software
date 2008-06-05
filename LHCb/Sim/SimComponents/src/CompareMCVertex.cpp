@@ -1,5 +1,8 @@
-// $Id: CompareMCVertex.cpp,v 1.3 2008-02-08 08:32:54 cattanem Exp $
+// $Id: CompareMCVertex.cpp,v 1.4 2008-06-05 12:18:29 cattanem Exp $
 // Include files 
+
+// from STD
+#include <limits>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -53,6 +56,7 @@ StatusCode CompareMCVertex::execute() {
   while ( old->end() != itOld ) {
     LHCb::MCVertex* oVert = (*itOld++);
     LHCb::MCVertex* tVert = (*itTest++);
+    
     if ( oVert->key() != tVert->key() ) {
       warning() << "Wrong key : old " <<  oVert->key() << " test " << tVert->key() << endmsg;
     }
@@ -60,10 +64,22 @@ StatusCode CompareMCVertex::execute() {
     if ( 5.e-5 < fabs( oVert->position().x() - tVert->position().x() ) ) isOK = false;
     if ( 5.e-5 < fabs( oVert->position().y() - tVert->position().y() ) ) isOK = false;
     if ( 5.e-5 < fabs( oVert->position().z() - tVert->position().z() ) ) isOK = false;
-    if ( 1.e-3 < fabs( oVert->time() - tVert->time() ) ) isOK = false;
+    // Protect crazy vertex times in DC06 data. Test times should be OK after unpacking
+    double oldTime;
+    if( oVert->time() > 0. && oVert->time() < std::numeric_limits<float>::min() ) {
+      debug() << "time " << oVert->time() << " set to zero for vertex "
+                << oVert->key() << " of type " << oVert->type() << endmsg;
+      oldTime = 0;
+    }
+    else {
+      oldTime = oVert->time();
+    }
+    if ( 1.e-3 < fabs( oldTime - tVert->time() ) ) isOK = false;
+
     if ( oVert->type() != tVert->type() ) isOK = false;
 
     if ( oVert->mother()    != tVert->mother()    ) isOK = false;
+    if (isOK && msgLevel(MSG::VERBOSE)) verbose() << "diff mother OK" << endmsg;
     unsigned int kk;
     if ( oVert->products().size() != tVert->products().size() ) {
       isOK = false;
@@ -74,9 +90,13 @@ StatusCode CompareMCVertex::execute() {
         if ( dum != dum1 ) isOK = false;
       }
     }
-    if ( !isOK || MSG::VERBOSE >= msgLevel() ) {
-      if( !isOK ) Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details" ).ignore();
-      
+    if (isOK && msgLevel(MSG::VERBOSE)) verbose() << "diff products OK" << endmsg;
+    if ( !isOK || msgLevel(MSG::VERBOSE) ) {
+      if( !isOK ) {
+        Warning( "Packed MCVertex info truncated. Set DEBUG OutputLevel for details",
+                 StatusCode::SUCCESS, 0 ).ignore();
+        debug() << "Packed MCVertex info truncated" << endmsg;
+      }
       debug() << "=== MCVertex key " << oVert->key() << endmsg;
       debug() << format( "  old point %12.5f %12.5f %12.5f %12.4f %2d",
                         oVert->position().x(), oVert->position().y(),
