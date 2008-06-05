@@ -47,6 +47,7 @@ This version uses Gaudi v19r9 and LCG_54e.
 - In DetDesc v18r5
   . Add computation of mean excitation energy and density effect correction 
     parameters to elements and materials
+  . Clean up some == comparisions with doubles
 
 - In DetDescCnv v4r6
   . Add read in for mean excitation potential
@@ -153,6 +154,8 @@ This version uses Gaudi v19r9 and LCG_54e.
 
 - In SimComponents v2r10
   . Protect division by zero in MCReconstructible
+  . Protect underflow in PackMCVertex and CompareMCVertex, due to crazy
+    vertex times in DC06 simulation
 
 - In TfKernel v2r5, TsaKernel v3r3
   . Fix for float/double conversion issues in the rest of the tracking.
