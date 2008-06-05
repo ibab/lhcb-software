@@ -4,10 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+!======================= TrackCheckers v4r0 2008-06-05 =======================
 ! 2008-06-05 - Louis Nicolas
  - Added two more safety checks to protect against division by zero in TrackEffChecker
 
-!======================= TrackCheckers v4r0 2008-06-03 =======================
 ! 2008-06-04 M Needham
  - Protect division by zero in TrackEffChecker
 
