@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.16 2008-01-31 15:41:00 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.17 2008-06-05 09:51:16 jonrob Exp $
 
 // Units
 #include "GaudiKernel/SystemOfUnits.h"
@@ -51,7 +51,7 @@ StatusCode AlgMoni::initialize()
   acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
 
   // RichDet
-  m_richSys = getDet<DeRichSystem>( DeRichLocation::RichSystem );
+  m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // Retrieve particle property service
   IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
