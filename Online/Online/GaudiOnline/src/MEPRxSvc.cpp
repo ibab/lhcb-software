@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.63 2008-04-02 14:00:54 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.64 2008-06-05 19:01:59 niko Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -99,6 +99,7 @@ namespace LHCb  {
     int             m_seen[MAX_SRC]; 
     int             m_maxMsForGetSpace;
     bool            m_dry;
+    bool            m_wasIncomplete;
     MsgStream       m_log;
     DAQErrorEntry   m_eEntry[MAX_SRC];
     RawBank *m_rawBufHdr, *m_MDFBankHdr;  
@@ -196,6 +197,7 @@ MEPRx::MEPRx(const std::string &nam, MEPRxSvc *parent)
   m_MDFBankHdr->setVersion(DAQ_STATUS_BANK);
   m_MDFBankHdr->setSourceID(1024);
   m_MDFBankHdr->setMagic();
+  m_wasIncomplete = false;
 }
 
 MEPRx::~MEPRx()  {
@@ -229,19 +231,35 @@ int MEPRx::setupDAQErrorBankHdr() {
 } 
 
 void MEPRx::incompleteEvent() {
+  int i, nmiss = 0;
   MEPEVENT* e = (MEPEVENT*)event().data;
   m_parent->addIncompleteEvent();
-  m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
-	<< "  No packet from: ";
-  for (int i = 0; i < m_nSrc; ++i) 
-    if (!m_seen[i]) { 
-      m_log << HOSTNAME(i) << " "; 
-      m_parent->m_misPkt[i]++;
-    }
+  for (i = 0; i < m_nSrc; ++i) nmiss += (m_seen[i] ? 0 : 1); 
+  if (nmiss <= 5) {
+    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+	  << "  No packet from: ";
+    for (int i = 0; i < m_nSrc; ++i) 
+      if (!m_seen[i]) { 
+	m_log << HOSTNAME(i) << " "; 
+	m_parent->m_misPkt[i]++;
+      }
+  } else if ((m_nSrc - nmiss) < 5) {
+    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+	  << "  Only packets from: ";
+    for (int i = 0; i < m_nSrc; ++i) 
+      if (m_seen[i]) { 
+	m_log << HOSTNAME(i) << " "; 
+	m_parent->m_misPkt[i]++;
+      }
+  } else {
+    m_log << MSG::ERROR << "Incomplete Event #" << e->evID 
+	  << " More than 5 sources missing";
+  }
   m_log << endmsg;
   if (m_parent->m_dropIncompleteEvents) { // added on Kazu's demand
     m_eventType = EVENT_TYPE_ERROR;
   }  
+  m_wasIncomplete = true;
   return; // ????? Niko what's this ?
   u_int8_t *buf = (u_int8_t *)e->data + m_brx + 4 + IP_HEADER_LEN; 
   m_brx += createDAQErrorMEP(buf, m_pf) + IP_HEADER_LEN;
@@ -562,7 +580,10 @@ void MEPRxSvc::freeRx() {
     if (rc == MBM_NORMAL) {
       RTL::Lock lock2(m_freeDscLock);
       m_freeDsc.push_back(rx);
-      sendMEPReq(m_MEPsPerMEPReq);
+      if (rx->m_wasIncomplete)
+	rx->m_wasIncomplete = false;
+      else
+	sendMEPReq(m_MEPsPerMEPReq);
     }
     else if (rc != MBM_REQ_CANCEL) {
       error("timeout on getting space.");

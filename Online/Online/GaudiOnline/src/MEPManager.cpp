@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.18 2008-03-10 15:38:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.19 2008-06-05 19:01:59 niko Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -165,9 +165,12 @@ StatusCode LHCb::MEPManager::initialize()  {
 }
 
 StatusCode LHCb::MEPManager::finalize()  {
+  MsgStream log(msgSvc(), "MEPManager");
+  log << MSG::WARNING << "Excluding from buffers. No more buffer access possible." << endmsg;
   m_buffMap.clear();
-  if ( m_mepID )  {
+  if ( m_mepID != MEP_INV_DESC )  {
     mep_exclude(m_mepID);
+    m_mepID = MEP_INV_DESC;
   }
   for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
     if ( *i != MBM_INV_DESC ) ::mbm_exclude(*i);
@@ -179,7 +182,7 @@ StatusCode LHCb::MEPManager::finalize()  {
 /// Cancel connection to specified buffers
 StatusCode LHCb::MEPManager::cancel()  {
   if ( m_mepID != MEP_INV_DESC ) {
-    mep_cancel_request(m_mepID);
+    ::mep_cancel_request(m_mepID);
   }
   for(std::vector<BMID>::iterator i=m_bmIDs.begin(); i != m_bmIDs.end(); ++i)  {
     if ( *i != MBM_INV_DESC ) ::mbm_cancel_request(*i);

@@ -1,4 +1,5 @@
-// $Id: DimRPCFileReader.cpp,v 1.7 2008-06-05 19:01:59 niko Exp $
+#if 0
+// $Id: DimRPCFileReader.cpp,v 1.8 2008-06-05 19:04:55 niko Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -349,4 +350,5 @@ StatusCode DimRPCFileReader::run()   {
 //  Py_Finalize();
 //   return 1;
 // }
+#endif
 

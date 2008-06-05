@@ -12,10 +12,11 @@
 #include "CPP/IocSensor.h"
 #include "WT/wt_facilities.h"
 
-static    lib_rtl_lock_t  s_lock = 0;
-
-
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
+
+using namespace LHCb;
+
+static    lib_rtl_lock_t  s_lock = 0;
 
 int gauditask_task_lock() {
   return ::lib_rtl_lock(s_lock);
@@ -33,11 +34,14 @@ int gauditask_task_unlock() {
 
 // Static thread routine to execute a Gaudi runable
 static int execRunable(void* arg)  {
-  IRunable* runable = (IRunable*)arg;
-  return runable->run();
+  std::pair<IRunable*,GaudiTask*>* p = (std::pair<IRunable*,GaudiTask*>*)arg;
+  int ret = p->first->run();
+  p->second->setEventThread(false);
+  delete p;
+  return ret;
 }
 
-LHCb::GaudiTask::GaudiTask(IInterface*) 
+GaudiTask::GaudiTask(IInterface*) 
 : DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), m_nerr(0)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
@@ -47,9 +51,10 @@ LHCb::GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("OptionalOptions",m_optOptions  = "");
   propertyMgr().declareProperty("AutoStart",      m_autostart   = false);
   ::lib_rtl_create_lock(0,&s_lock);
+  m_eventThread = false;
 }
 
-LHCb::GaudiTask::~GaudiTask()  {
+GaudiTask::~GaudiTask()  {
   if ( m_msgSvc ) m_msgSvc->release();
   m_msgSvc = 0;
   if ( m_appMgr ) m_appMgr->release();
@@ -57,16 +62,16 @@ LHCb::GaudiTask::~GaudiTask()  {
   ::lib_rtl_delete_lock(s_lock);
 }
 
-void LHCb::GaudiTask::lock() {
+void GaudiTask::lock() {
   gauditask_task_lock();
 }
 
-void LHCb::GaudiTask::unlock() {
+void GaudiTask::unlock() {
   gauditask_task_unlock();
 }
 
 /// Run the complete job (from intialize to terminate)
-StatusCode LHCb::GaudiTask::run()  {
+StatusCode GaudiTask::run()  {
   SmartIF<IAppMgrUI> ui(Gaudi::createInstance("ApplicationMgr","ApplicationMgr","GaudiSvc"));
   if ( ui )  {
     SmartIF<IProperty> ip(ui);
@@ -100,19 +105,19 @@ StatusCode LHCb::GaudiTask::run()  {
   return DimTaskFSM::unload();
 }
 
-void LHCb::GaudiTask::output(int level, const char* s)  {
+void GaudiTask::output(int level, const char* s)  {
   MsgStream log(msgSvc(), name());
   log << MSG::Level(level) << s << endmsg;
 }
 
-StatusCode LHCb::GaudiTask::unload()  {
+StatusCode GaudiTask::unload()  {
   m_appMgr->finalize();
   m_appMgr->terminate();
   return DimTaskFSM::unload();
 }
 
 /// Access to message service object
-IMessageSvc* LHCb::GaudiTask::msgSvc()  {
+IMessageSvc* GaudiTask::msgSvc()  {
   if ( !m_msgSvc )  {
     if ( m_appMgr )  {
       SmartIF<ISvcLocator> loc(m_appMgr);
@@ -125,7 +130,7 @@ IMessageSvc* LHCb::GaudiTask::msgSvc()  {
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
-void LHCb::GaudiTask::handle(const Incident& inc)    {
+void GaudiTask::handle(const Incident& inc)    {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "Got incident:" << inc.source()
       << " of type " << inc.type() << endmsg;
@@ -137,7 +142,7 @@ void LHCb::GaudiTask::handle(const Incident& inc)    {
   }
 }
 
-StatusCode LHCb::GaudiTask::cancel()  {
+StatusCode GaudiTask::cancel()  {
   if ( m_incidentSvc )  {
     Incident incident(name(),"DAQ_CANCEL");
     m_incidentSvc->fireIncident(incident);
@@ -146,7 +151,7 @@ StatusCode LHCb::GaudiTask::cancel()  {
 }
 
 /// Set properties of application manager instance
-StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
+StatusCode GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   SmartIF<IProperty> ip(inst);
   if ( ip )  {
     ip->setProperty(StringProperty("AppName",""));
@@ -162,17 +167,19 @@ StatusCode LHCb::GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::GaudiTask::startRunable(IRunable* runable)   {
+StatusCode GaudiTask::startRunable(IRunable* runable)   {
   MsgStream log(msgSvc(), name());
-  int sc = lib_rtl_start_thread(execRunable, runable, &m_handle);
+  std::pair<IRunable*,GaudiTask*>* p = new std::pair<IRunable*,GaudiTask*>(runable,this);
+  int sc = lib_rtl_start_thread(execRunable, p, &m_handle);
   if ( lib_rtl_is_success(sc) )  {
+    m_eventThread = true;
     return StatusCode::SUCCESS;
   }
   log << MSG::ERROR << "Failed to spawn off execution thread." << endmsg;
   return StatusCode::FAILURE;
 }
 
-int LHCb::GaudiTask::configApplication()  {
+int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
   if ( 0 == m_subMgr )  {
@@ -182,6 +189,7 @@ int LHCb::GaudiTask::configApplication()  {
     log << MSG::INFO << "2nd. layer is already present - reusing instance" << endmsg;
   }
   if ( m_subMgr )  {
+    m_eventThread = false;
     Gaudi::setInstance(m_subMgr);
     StatusCode sc = setInstanceProperties(m_subMgr);
     if ( sc.isSuccess() )  {
@@ -203,7 +211,7 @@ int LHCb::GaudiTask::configApplication()  {
   return sc;
 }
 
-int LHCb::GaudiTask::initApplication()  {
+int GaudiTask::initApplication()  {
   MsgStream log(msgSvc(), name());
   if ( 0 != m_subMgr )  {
     std::string nam, runable_name, evtloop_name;
@@ -258,7 +266,7 @@ int LHCb::GaudiTask::initApplication()  {
   return 0;
 }
 
-int LHCb::GaudiTask::finalizeApplication()  {
+int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     if ( m_handle )  {
       ::lib_rtl_join_thread(m_handle);
@@ -282,7 +290,7 @@ int LHCb::GaudiTask::finalizeApplication()  {
   return 1;
 }
 
-int LHCb::GaudiTask::terminateApplication()  {
+int GaudiTask::terminateApplication()  {
   if ( m_subMgr )  {
     try {
       StatusCode sc = m_subMgr->terminate();
@@ -301,7 +309,7 @@ int LHCb::GaudiTask::terminateApplication()  {
   return 1;
 }
 
-StatusCode LHCb::GaudiTask::enable()  {
+StatusCode GaudiTask::enable()  {
   if ( m_incidentSvc )  {
     Incident incident(name(),"DAQ_ENABLE");
     m_incidentSvc->fireIncident(incident);
@@ -316,7 +324,7 @@ StatusCode LHCb::GaudiTask::enable()  {
   return DimTaskFSM::enable();
 }
 
-StatusCode LHCb::GaudiTask::nextEvent(int /* num_event */)  {
+StatusCode GaudiTask::nextEvent(int /* num_event */)  {
   if ( m_haveEventLoop )  {
     StatusCode sc = m_subMgr->nextEvent(1);
     if ( sc.isSuccess() )  {
