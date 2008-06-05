@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.5 2008-06-04 09:50:39 mneedham Exp $
+// $Id: TrackEffChecker.cpp,v 1.6 2008-06-05 09:26:48 lnicolas Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -93,12 +93,14 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
   counter("nGhost") += nGhost;
  
   // plot the event ghost rate
-  plot(nGhost/double(tracks->size()),"ghost rate", -0.01, 1.01, 51);
+  if (tracks->size() != 0)
+    plot(nGhost/double(tracks->size()),"ghost rate", -0.01, 1.01, 51);
   if (fullDetail() == true) {
     // ghost rate versus # interactions
     long nVert = visPrimVertTool()->countVertices();
-    if (tracks->size() != 0) plot2D(nVert,100*nGhost/double(tracks->size()), "ghost rate vs visible",
-           -0.5,20.5, -0.5, 100.5,21, 101);
+    if (tracks->size() != 0)
+      plot2D(nVert,100*nGhost/double(tracks->size()), "ghost rate vs visible",
+	     -0.5,20.5, -0.5, 100.5,21, 101);
   }
 }
 
@@ -128,12 +130,14 @@ void TrackEffChecker::effInfo(){
   counter("nFound") += nFound;
 
   // event efficiency 
-  if (nToFind !=0u) plot(nFound/double(nToFind),"eff", -0.01, 1.01, 51);
+  if (nToFind !=0u)
+    plot(nFound/double(nToFind),"eff", -0.01, 1.01, 51);
   if (fullDetail() == true) {
     // ghost rate versus # interactions
     long nVert = visPrimVertTool()->countVertices();
-    plot2D(nVert,100*nFound/double(nToFind), "eff vs visible",
-           -0.5,20.5, -0.5, 100.5,21, 101);
+    if (nToFind !=0u)
+      plot2D(nVert,100*nFound/double(nToFind), "eff vs visible",
+	     -0.5,20.5, -0.5, 100.5,21, 101);
   }
 }
 
