@@ -74,7 +74,7 @@ ApplicationMgr.StatusCodeCheck = true ;
 ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
 ApplicationMgr.AuditAlgorithms = 1;  
 AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
-ToolSvc.SequencerTimerTool.OutputLevel = 4;          
+ToolSvc.SequencerTimerTool.OutputLevel = 4;  // suppress SequencerTimerTool printout         
 /**
  * This suppresses print of DoD and initialisation
  */
