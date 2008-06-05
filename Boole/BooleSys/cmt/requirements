@@ -24,9 +24,9 @@ use MuonMoniDigi        v2r4    Muon  # Alessio Sarti
 use OTSimulation        v4r0    OT    # Jan Amoraal
 
 # Rich
-use RichDigiQC          v3r8    Rich  # Chris Jones
+use RichDigiQC          v3r9    Rich  # Chris Jones
 use RichMCAssociators   v2r5    Rich  # Chris Jones
-use RichReadout         v2r9    Rich  # Chris Jones
+use RichReadout         v2r10   Rich  # Chris Jones
 
 # Silicon Tracker
 use STDigiAlgorithms    v1r1    ST    # Matt Needham
