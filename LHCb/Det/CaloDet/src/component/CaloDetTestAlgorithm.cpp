@@ -1,8 +1,11 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.4 2007-12-05 16:36:20 odescham Exp $
+// $Id: CaloDetTestAlgorithm.cpp,v 1.5 2008-06-05 06:37:24 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2007/12/05 16:36:20  odescham
+// update CaloDetTestAlgorithm
+//
 // Revision 1.3  2006/12/14 10:48:18  ranjard
 // v8r0 - InstallArea and new Plugins
 //
@@ -88,7 +91,8 @@ StatusCode CaloDetTestAlgorithm::initialize()
 
 
   const DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
-
+  // Hack to fix compiler warning
+  debug() << "Detector element foung at " << calo << endmsg;
   
   return StatusCode::SUCCESS;
 };
