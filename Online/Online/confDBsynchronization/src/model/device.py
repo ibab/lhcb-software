@@ -1,3 +1,9 @@
+"""represents a generic device"""
+class GenericDevice(object):
+    def __init__(self):
+        pass
+
+"""class to keep the devices"""
 class Device(object):
     equipdb_devices = []
     confdb_devices = []

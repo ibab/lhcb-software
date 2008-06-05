@@ -3,7 +3,7 @@ import wx
 
 from worker.threads import EmptyThread, InsertThread, SynchronizeThread
 from spareWindow import SpareWindow
-
+from logwindow import SessionLogWindow, SummaryLogWindow
 from config import cDB_name, cDB_user, cDB_pass
 #from model.devices import Devices
 from model.device import Device
@@ -20,6 +20,8 @@ ID_TFCMUNIN01=150
 ID_UPDATE_VIEW=160
 
 ID_SUMMARY_LOG=170
+ID_SHOW_SUMMARY_LOG=171
+ID_SHOW_SESSION_LOG=172
 
 ID_SPARE_INSERT=300
 ID_SPARE_UPDATE=310
@@ -47,6 +49,8 @@ class MainWindow(wx.Frame):
         editmenu.Append(ID_UPDATE_VIEW, "&Update View", "Refresh the View")
         logmenu = wx.Menu()
         logmenu.Append(ID_SUMMARY_LOG, "&Create Summary Log", "Creates a log file with a summary of changes")
+        logmenu.Append(ID_SHOW_SESSION_LOG, "&Show last session-log", "Shows the latest session-log-file")
+        logmenu.Append(ID_SHOW_SUMMARY_LOG, "S&how last summary-log", "Shows the latest summary-log-file")
         sparemenu = wx.Menu()
         sparemenu.Append(ID_SPARE_INSERT, "&Insert new spares", "Imports new spares from equipdb to confdb")
         sparemenu.Append(ID_SPARE_UPDATE, "&Update spares", "Updates existing spares in confdb with data from equipdb")
@@ -69,6 +73,8 @@ class MainWindow(wx.Frame):
         #########################################
         #########################################
         wx.EVT_MENU(self, ID_SUMMARY_LOG, self.OnSummaryLog)
+        wx.EVT_MENU(self, ID_SHOW_SUMMARY_LOG, self.OnShowSummaryLog)
+        wx.EVT_MENU(self, ID_SHOW_SESSION_LOG, self.OnShowSessionLog)
         #########################################
         #########################################
         wx.EVT_MENU(self, ID_UPDATE_VIEW, self.OnUpdateView)
@@ -80,16 +86,16 @@ class MainWindow(wx.Frame):
         wx.EVT_MENU(self, ID_SPARE_DELETE, self.OnDeleteSpare)
         self.Show(True)
     def OnEmpty(self, e):
-        progressFrame = ProgressFrame(self, "Deleting all Devices...", "Please be patient", len(Device.equipdb_devices))
-        emptyThread = EmptyThread(self.controller.devices, progressFrame, self.controller)
+        progressFrame = ProgressFrame(self, "Deleting all Devices...", "Please be patient", len(self.controller.equipdb_system.getAllDevices()))
+        emptyThread = EmptyThread( progressFrame, self.controller)
         emptyThread.start()
     def OnInsert(self, e):
-        progressFrame = ProgressFrame(self, "Inserting new Devices...", "Please be patient", 2*(len(Device.new_devices)))
-        insertThread = InsertThread(self.controller.devices, progressFrame, self.controller)
+        progressFrame = ProgressFrame(self, "Inserting new Devices...", "Please be patient", 2*(len(self.controller.new_devices_without_dhcp.getAllDevices())+len(self.controller.new_devices_with_dhcp.getAllDevices())))
+        insertThread = InsertThread( progressFrame, self.controller)
         insertThread.start()
     def OnSynchronize(self, e):
-        progressFrame = ProgressFrame(self, "Synchronizing Devices...", "Please be patient", 2*(len(Device.changed_devices)))
-        synchronizeThread = SynchronizeThread(self.controller.devices, progressFrame, self.controller)
+        progressFrame = ProgressFrame(self, "Synchronizing Devices...", "Please be patient", 2*(len(self.controller.changed_location_system.getAllDevices())+len(self.controller.changed_dhcp_system.getAllDevices())))
+        synchronizeThread = SynchronizeThread(progressFrame, self.controller)
         synchronizeThread.start()
     def OnTFCMUNIN01(self, e):
         self.controller.devices.connect_masterhugins()
@@ -103,12 +109,12 @@ class MainWindow(wx.Frame):
     def OnExit(self,e):
         self.Close(True)
     def OnSummaryLog(self, e):
-        createLog(self.controller.devices)
+        createLog(self.controller)
         d= wx.MessageDialog( self, "The summary log file was successfully created","Log ", wx.OK)
         d.ShowModal()
         d.Destroy()
     def OnUpdateView(self, e):
-        self.controller.devices.update()
+        self.controller.collectData()
         self.controller.UpdateMainFrame()
     def OnInsertSpare(self, e):
         self.controller.spareDB.InsertNewSpares()
@@ -130,13 +136,17 @@ class MainWindow(wx.Frame):
         d.ShowModal()
         d.Destroy()
         self.controller.UpdateMainFrameSparePanel()
+    def OnShowSummaryLog(self, event):
+        logWindow = SummaryLogWindow(self)
+    def OnShowSessionLog(self, event):
+        logWindow = SessionLogWindow(self)
 
 class StatusPanel(wx.Panel):
     def __init__(self, parent, controller, id = wx.ID_ANY):
         wx.Panel.__init__(self, parent, id = wx.ID_ANY, size=(400, 139), pos=(0,0))
         self.parent = parent
         self.controller = controller
-        devices = self.controller.devices
+        #devices = self.controller.devices
         wx.StaticText(self, wx.ID_ANY, "New devices without DHCP Data:", pos=(10, 10))
         wx.StaticText(self, wx.ID_ANY, "New devices with DHCP Data:", pos=(10, 30))
         wx.StaticText(self, wx.ID_ANY, "New devices at all:", pos=(10, 50))
@@ -144,42 +154,42 @@ class StatusPanel(wx.Panel):
         wx.StaticText(self, wx.ID_ANY, "Devices up-to-date:", pos=(10, 90))
         wx.StaticText(self, wx.ID_ANY, "Devices at all:", pos=(10, 110))
         ##############################################################################
-        self.newDevicesWithoutDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_no_dhcp)), pos=(200, 10))
+        self.newDevicesWithoutDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.new_devices_without_dhcp.getAllDevices())), pos=(200, 10))
         self.newDevicesWithoutDHCPText.SetEditable(False)
-        self.newDevicesWithDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_with_dhcp)), pos=(200, 30))
+        self.newDevicesWithDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.new_devices_with_dhcp.getAllDevices())), pos=(200, 30))
         self.newDevicesWithDHCPText.SetEditable(False)
-        self.newDevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.new_devices_with_dhcp)+len(Device.new_devices_no_dhcp)), pos=(200, 50))
+        self.newDevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.new_devices_without_dhcp.getAllDevices())+len(self.controller.new_devices_with_dhcp.getAllDevices())), pos=(200, 50))
         self.newDevicesAtAllText.SetEditable(False)
-        self.DevicesWithNewDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.changed_devices)), pos=(200, 70))
+        self.DevicesWithNewDHCPText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.changed_location_system.getAllDevices())+len(self.controller.changed_dhcp_system.getAllDevices())), pos=(200, 70))
         self.DevicesWithNewDHCPText.SetEditable(False)
-        self.newDevicesUpToDatePText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.up_to_date_devices)), pos=(200, 90))
+        self.newDevicesUpToDatePText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.devices_up_to_date.getAllDevices())), pos=(200, 90))
         self.newDevicesUpToDatePText.SetEditable(False)
-        self.DevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(Device.equipdb_devices)), pos=(200, 110))
+        self.DevicesAtAllText = wx.TextCtrl(self, wx.ID_ANY, str(len(self.controller.equipdb_system.getAllDevices())), pos=(200, 110))
         self.DevicesAtAllText.SetEditable(False)
     def update(self):
-        devices = self.controller.devices
-        spareDB = self.controller.spareDB
-        self.newDevicesWithoutDHCPText.ChangeValue(str(len(Device.new_devices_no_dhcp)))
+        #devices = self.controller.devices
+        #spareDB = self.controller.spareDB
+        self.newDevicesWithoutDHCPText.ChangeValue(str(len(self.controller.new_devices_without_dhcp.getAllDevices())))
         self.newDevicesWithoutDHCPText.SetModified(True)
         self.newDevicesWithoutDHCPText.Refresh()
         self.newDevicesWithoutDHCPText.Update()
-        self.newDevicesWithDHCPText.ChangeValue(str(len(Device.new_devices_with_dhcp)))
+        self.newDevicesWithDHCPText.ChangeValue(str(len(self.controller.new_devices_with_dhcp.getAllDevices())))
         self.newDevicesWithDHCPText.SetModified(True)
         self.newDevicesWithDHCPText.Refresh()
         self.newDevicesWithDHCPText.Update()
-        self.newDevicesAtAllText.ChangeValue(str(len(Device.new_devices_with_dhcp)+len(Device.new_devices_no_dhcp)))
+        self.newDevicesAtAllText.ChangeValue(str(len(self.controller.new_devices_without_dhcp.getAllDevices())+len(self.controller.new_devices_with_dhcp.getAllDevices())))
         self.newDevicesAtAllText.SetModified(True)
         self.newDevicesAtAllText.Refresh()
         self.newDevicesAtAllText.Update()
-        self.DevicesWithNewDHCPText.ChangeValue(str(len(Device.changed_devices)))
+        self.DevicesWithNewDHCPText.ChangeValue(str(len(self.controller.changed_location_system.getAllDevices())+len(self.controller.changed_dhcp_system.getAllDevices())))
         self.DevicesWithNewDHCPText.SetModified(True)
         self.DevicesWithNewDHCPText.Refresh()
         self.DevicesWithNewDHCPText.Update()
-        self.newDevicesUpToDatePText.ChangeValue(str(len(Device.up_to_date_devices)))
+        self.newDevicesUpToDatePText.ChangeValue(str(len(self.controller.devices_up_to_date.getAllDevices())))
         self.newDevicesUpToDatePText.SetModified(True)
         self.newDevicesUpToDatePText.Refresh()
         self.newDevicesUpToDatePText.Update()
-        self.DevicesAtAllText.ChangeValue(str(len(Device.equipdb_devices)))
+        self.DevicesAtAllText.ChangeValue(str(len(self.controller.equipdb_system.getAllDevices())))
         self.DevicesAtAllText.SetModified(True)
         self.DevicesAtAllText.Refresh()
         self.DevicesAtAllText.Update()
@@ -209,7 +219,7 @@ class SparePanel(wx.Panel):
         self.UpToDateSparesText = wx.TextCtrl(self, wx.ID_ANY, str(uptodate_spares_count), pos=(200, 70))
         self.UpToDateSparesText.SetEditable(False)
     def update(self):
-        devices = self.controller.devices
+        #devices = self.controller.devices
         spareDB = self.controller.spareDB
         new_spares_count = len(spareDB.getNewSpares())
         print "new_spares_count: "+str(new_spares_count)

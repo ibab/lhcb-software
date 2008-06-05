@@ -25,8 +25,8 @@ def removedev(db,nam):
             print "ports for "+nam+" were not deleted! Reason: "+inst.__str__()
     db.DeleteFunctionalDevice(devid)
 
-def removeAllDevices(progressFrame = None, devices = None):
-    confDB = database.DataBase(cDB_name, cDB_user, cDB_pass)
+def removeAllDevices(controller, progressFrame = None):
+    confDB = controller.confDB
     #equipDB = database.database.EquipmentDB()
     #devices = Devices(confDB, equipDB)
     #devices.update()
@@ -41,12 +41,11 @@ def removeAllDevices(progressFrame = None, devices = None):
         for device in result:
             if progressFrame is not None:
                 progressFrame.update(i)
-            if devices is not None:
-                devices.log("removing "+upper(device[0]))
+                confDB.log("removing "+upper(device[0]))
             try:
                 removedev(db, upper(device[0]))
             except RuntimeError, inst:
-                devices.log("could not remove "+upper(device[0])+" "+inst.__str__())
+                confDB.log("could not remove "+upper(device[0])+" "+inst.__str__())
             i+=1
     database.disconnect(db)
     query = "delete from LHCb_microscopic_connectivity where author like 'DSONNICK'"

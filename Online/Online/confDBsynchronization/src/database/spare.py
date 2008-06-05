@@ -38,9 +38,10 @@ class Spare:
         print "spare.update end" 
 
 class SpareDB:
-    def __init__(self, confdb, equipdb):
+    def __init__(self, confdb, equipdb, logfile):
         self.confDB = confdb
         self.equipDB = equipdb
+        self.logfile = logfile
     """retruns a spare from coonfdb or None"""
     def getSpareConfDBByName(self, name):
         query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments FROM lhcb_hw_devices WHERE hwname='"+name+"'"
@@ -168,7 +169,7 @@ class SpareDB:
         result = confdb.executeSelectQuery(query)
         try:
             serialnb = result[0][0]
-            print "serila of "+hwname+" + "+serialnb
+            print "serial of "+hwname+" + "+serialnb
         except:
             print str(devicename)+" does not exist in lhcb_lg_devices"
             return
