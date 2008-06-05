@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.4 2008-05-08 13:28:21 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.5 2008-06-05 09:06:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -162,7 +162,7 @@ constructSegments( const ContainedObject * obj,
   const LHCb::Track * track = dynamic_cast<const LHCb::Track *>(obj);
   if ( !track )
   {
-    Warning("Input data object is not of type Track");
+    Warning("Input data object is not of type Track").ignore();
     return 0;
   }
   if ( msgLevel(MSG::VERBOSE) )
@@ -248,12 +248,12 @@ constructSegments( const ContainedObject * obj,
 
     // Clone entry state
     LHCb::State * entryPState = entryPStateRaw->clone();
-    if ( !entryPState ) { Warning("Failed to clone State"); continue; }
+    if ( !entryPState ) { Warning("Failed to clone State").ignore(); continue; }
 
     // Clone exit state (for aero use entrance point)
     LHCb::State * exitPState = ( Rich::Aerogel == rad ?
                                  entryPStateRaw->clone() : exitPStateRaw->clone() );
-    if ( !exitPState ) { Warning("Failed to clone State"); delete entryPState; continue; }
+    if ( !exitPState ) { Warning("Failed to clone State").ignore(); delete entryPState; continue; }
 
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -369,7 +369,7 @@ constructSegments( const ContainedObject * obj,
         // delete current exit state and replace with clone of raw entrance state
         delete exitPState;
         exitPState = entryPStateRaw->clone();
-        if ( !exitPState ) { Warning("Failed to clone State"); delete entryPState; continue; }
+        if ( !exitPState ) { Warning("Failed to clone State").ignore(); delete entryPState; continue; }
       }
 
       // make sure at current z positions
@@ -392,7 +392,7 @@ constructSegments( const ContainedObject * obj,
       // delete current entry state and replace with clone of raw entrance state
       delete entryPState;
       entryPState = exitPStateRaw->clone();
-      if ( !entryPState ) { Warning("Failed to clone State"); delete exitPState; continue; }
+      if ( !entryPState ) { Warning("Failed to clone State").ignore(); delete exitPState; continue; }
 
       // make sure at current z positions
       if (msgLevel(MSG::VERBOSE))
@@ -494,7 +494,7 @@ constructSegments( const ContainedObject * obj,
       delete entryPState;
       delete exitPState;
       Warning( "Entry state after exit state for " + Rich::text(rad) + " -> rejecting segment",
-               StatusCode::SUCCESS, 5 );
+               StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
     if ( (exitPState->z()-entryPState->z()) < m_minStateDiff[rad] )
@@ -502,7 +502,7 @@ constructSegments( const ContainedObject * obj,
       delete entryPState;
       delete exitPState;
       Warning( "Track states for " + Rich::text(rad) + " too close in z -> rejecting segment",
-               StatusCode::SUCCESS, 5 );
+               StatusCode::SUCCESS, 5 ).ignore();
       continue;
     }
 
@@ -609,7 +609,7 @@ constructSegments( const ContainedObject * obj,
     }
     catch ( const std::exception & excpt )
     {
-      Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" );
+      Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" ).ignore();
     }
 
     // Clean up cloned states
@@ -759,7 +759,7 @@ DetailedTrSegMakerFromRecoTracks::fixRich1GasEntryPoint( LHCb::State *& state,
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting Rich1Gas entry point" << endreq;
       const bool sc = moveState( state, aerogelExitPoint.z(), refState );
-      if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" );
+      if ( !sc ) Warning( "Problem correcting RICH1Gas entry point for aerogel" ).ignore();
     }
   }
 }
@@ -816,7 +816,7 @@ DetailedTrSegMakerFromRecoTracks::correctRadExitMirror( const DeRichRadiator* ra
     sc = sc && moveState( state, initialZ, refState );
   }
 
-  if ( !sc ) Warning( "Problem correcting segment exit to mirror intersection" );
+  if ( !sc ) Warning( "Problem correcting segment exit to mirror intersection" ).ignore();
 }
 //====================================================================================================
 
@@ -856,12 +856,12 @@ DetailedTrSegMakerFromRecoTracks::moveState( LHCb::State *& stateToMove,
       if ( backupExtrapolator()->propagate(*stateToMove,z) )
       {
         Warning("'"+m_trExt1Name+"' failed -> successfully reverted to '"+
-                m_trExt2Name+"'",StatusCode::SUCCESS);
+                m_trExt2Name+"'",StatusCode::SUCCESS).ignore();
       } else
       {
         // Both failed ...
         Warning("Failed to extrapolate state using either '"+
-                m_trExt1Name+"' or '"+m_trExt2Name+"'");
+                m_trExt1Name+"' or '"+m_trExt2Name+"'").ignore();
         return false;
       }
     }

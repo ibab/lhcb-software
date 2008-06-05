@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID tool : Rich::Rec::GlobalPID::LikelihoodTool
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.3 2008-04-16 17:33:13 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihoodTool.cpp,v 1.4 2008-06-05 09:06:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2008-03-01
@@ -189,7 +189,7 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
           std::ostringstream mess;
           mess << nChange << " track(s) changed hypothesis after LL minimisation "
                << nRetries << " -> Re-running";
-          Warning( mess.str(), StatusCode::SUCCESS, 3 );
+          Warning( mess.str(), StatusCode::SUCCESS, 3 ).ignore();
           // Rerun iterations
           if ( msgLevel(MSG::DEBUG) )
           { debug() << "Re-running event iteratons" << endreq; }
@@ -199,7 +199,8 @@ void LikelihoodTool::pids( const LHCb::RichGlobalPIDTrack::Vector & tracks ) con
 
         if ( nRetries == m_maxItRetries && nChange > 0 )
         {
-          Warning( "Maximum number of iteration re-tries reached", StatusCode::SUCCESS );
+          Warning( "Maximum number of iteration re-tries reached", 
+                   StatusCode::SUCCESS ).ignore();
         }
 
       } // retry while loop
@@ -284,7 +285,7 @@ unsigned int LikelihoodTool::doIterations() const
     if ( eventIteration > m_maxEventIterations )
     {
       Warning( "Taken more than max number of iterations -> quitting",
-               StatusCode::SUCCESS );
+               StatusCode::SUCCESS ).ignore();
       break;
     }
 

@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2008-06-05 - Chris Jones
+ - Fix some unchecked StatusCodes
+
 !======================= RichGlobalPID v3r8 2008-04-15 =======================
 ! 2008-03-25 - Chris Jones
  - Large reworking of Global PID package to allow for tool based track-by track
