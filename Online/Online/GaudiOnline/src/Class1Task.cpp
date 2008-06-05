@@ -1,14 +1,20 @@
 #include "GaudiOnline/Class1Task.h"
+#include "GaudiKernel/MsgStream.h"
 #include "CPP/IocSensor.h"
+#include "RTL/rtl.h"
+#include <signal.h>
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task)
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task);
+
+using namespace LHCb;
 
 /// Standard constructor
-LHCb::Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc) {
+Class1Task::Class1Task(IInterface* svc) : GaudiTask(svc) {
   IOCSENSOR.send(this, STARTUP_DONE);
 }
 
-StatusCode LHCb::Class1Task::configure()  {
+/// Callback on configure transition
+StatusCode Class1Task::configure()  {
   int result = configApplication();
   switch(result) {
   case 2:
@@ -28,18 +34,38 @@ StatusCode LHCb::Class1Task::configure()  {
   }
   return StatusCode::FAILURE;
 }
-    
-StatusCode LHCb::Class1Task::initialize()  {
-  DimTaskFSM::initialize();
-  return StatusCode::SUCCESS;
+
+/// Callback on start transition 
+StatusCode Class1Task::initialize()  {
+  return DimTaskFSM::initialize();
 }
 
-StatusCode LHCb::Class1Task::finalize()  {
-  return DimTaskFSM::finalize();
+/// Callback on stop transition
+StatusCode Class1Task::finalize()  {
+  m_continue = false;
+  return declareState(ST_STOPPED);
 }
 
-StatusCode LHCb::Class1Task::terminate()  {
-  cancel();
+extern "C" int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig);
+
+/// Callback on reset transition
+StatusCode Class1Task::terminate()  {
+  char txt[256];
+  for(int i=9999999; i>0; --i) {
+    if ( eventThread() ) ::lib_rtl_sleep(2000);
+    cancel();
+    if ( eventThread() )  {
+      if ( m_handle ) {
+	::sprintf(txt,"Kill runable thread to get out of event loop.");
+	output(MSG::WARNING,txt);
+	::lib_rtl_kill_thread(m_handle,SIGINT);
+      }
+      ::lib_rtl_sleep(500);
+    }
+    if ( !eventThread() ) break;
+    ::sprintf(txt,"Retry No. %d to cancel runable thread......",i);
+    output(MSG::WARNING,txt);
+  }
   int result = finalizeApplication();
   if (1 == result) {
     result = terminateApplication();
@@ -49,4 +75,11 @@ StatusCode LHCb::Class1Task::terminate()  {
   }
   declareState(ST_STOPPED);
   return StatusCode::FAILURE;
+}
+
+/// Callback on disable event processing
+StatusCode Class1Task::disable()  {
+  m_continue = false;
+  IOCSENSOR.send(this, FINALIZE);
+  return StatusCode::SUCCESS;
 }

@@ -49,6 +49,9 @@ namespace LHCb  {
     IMessageSvc*      m_msgSvc;
     /// Counter for consecutive errors during event processing
     int               m_nerr;
+    /// Flag to indicate if runable has stopped executing
+    bool              m_eventThread;
+
     /// Access to message service object
     IMessageSvc* msgSvc();
     /// Print overload
@@ -84,6 +87,11 @@ namespace LHCb  {
     virtual StatusCode enable();
     /// Callback to process event
     virtual StatusCode nextEvent(int num_event);
+    /// Access flag to indicate if runable has stopped executing
+    bool eventThread() const { return m_eventThread; }
+    /// Set flag to indicate if runable has stopped executing
+    void setEventThread(bool val)  { m_eventThread = val; }
+
     /// Lock task object
     static void lock();
     /// Unlock task object

@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.6 2008-06-05 09:42:15 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.7 2008-06-05 19:01:59 niko Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -10,6 +10,7 @@
 #include "OnlineKernel/RTL/rtl.h"
 
 extern "C" {
+#include "Python.h"
 #include "dim.h"
 #include "dis.h"
 }
@@ -52,6 +53,7 @@ StatusCode DimRPCFileReader::queryInterface(const InterfaceID& riid, void** ppIf
 /// IService implementation: initialize the service
 StatusCode DimRPCFileReader::initialize()   {
   StatusCode sc = OnlineService::initialize();
+
   if ( !sc.isSuccess() )     {
     return error("Failed to initialize service base class.");
   }
@@ -69,10 +71,10 @@ StatusCode DimRPCFileReader::initialize()   {
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
-
+  
   // Init the extra Services
-  m_rpc.first  = ::dis_add_service("RpcOut","C",0,0,publishEvents,(long)this);
-  m_rpc.second = ::dis_add_cmnd("RpcIn","C",cmndCallback,(long)this);
+  m_rpc.first  = ::dis_add_service("RpcOut","C",0,0,publishEvents,(long) this);
+  m_rpc.second = ::dis_add_cmnd("RpcIn","C",cmndCallback,(long) this);
   ::lib_rtl_lock(m_lock);
   return sc;
 }
@@ -95,45 +97,172 @@ StatusCode DimRPCFileReader::finalize()     {
 }
 
 void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
-  DimRPCFileReader* self=(DimRPCFileReader*) tag;
-  static const char* empty = "newFile/status=SUCCESS/000000-0000-0000-00000000/None";
-  if ( !(*first) )  {
-    std::stringstream s;
-    s << "newFile/status=SUCCESS/" << self->m_reply << "/" << self->m_evtCount << std::ends;
-    self->m_reply = s.str();
-    self->info(self->m_reply);
-    *size = self->m_reply.length()+1;
-    *buf = (void*)self->m_reply.c_str();
-    return;
-  }
-  *size = ::strlen(empty);
-  *buf  = (void*)empty;
-}
+  DimRPCFileReader* self=*(DimRPCFileReader**) tag;
 
-void DimRPCFileReader::handleCommand(const char* address, int /* size */){
-  std::string in = address, cmd, file, fid, left;
-  size_t pos = in.find("/");
-  if ( pos != std::string::npos ){
-    cmd = in.substr(0,pos);
-    if( cmd == "newFile" )  {
-      left = in.substr(pos+1);
-      if ( (pos=left.find("/")) != std::string::npos ) {
-	file = left.substr(pos+1);
-	fid  = left.substr(0,pos);
-	info("newFile command: parameters: Filename:"+file+" FID: "+fid);
-	SmartIF<IProperty> prp(m_evtSelector);
-	if ( prp ) {
-	  prp->setProperty("Input","[ \"DATA='file://"+file+"' SVC='LHCb::MDFSelector'\" ]");
-	  prp->setProperty("PrintFreq","1");
-	  m_evtSelector->reinitialize();
-	  m_evtLoopMgr->reinitialize();
-	  m_reply = fid+"/"+RTL::processName()+"/";
-	  ::lib_rtl_unlock(m_lock);
-	  return;
-	}
+  PyObject *pName, *pModule, *pEncode, *pValue; 
+  PyObject *pMsg, *pDict, *pArgs;
+  std::string result;
+  Py_Initialize();
+  pName = PyString_FromString("DEncode");
+  pModule = PyImport_Import(pName);
+  Py_DECREF(pName);
+  
+  if (pModule != NULL ) {
+    pEncode = PyObject_GetAttrString(pModule, "encode");
+    if (pEncode && PyCallable_Check(pEncode)) {
+      pArgs = PyTuple_New(1);
+      pDict= PyDict_New();
+      pMsg = PyList_New(3);
+      // PyDict_SetItem(pDict,PyString_FromString("clientName"),PyString_FromString(RTL::processName().c_str()));
+      // PyDict_SetItem(pDict,PyString_FromString("clientType"),PyString_FromString("Reader"));      
+      if (!(self->m_evtCount)){
+        PyList_SetItem(pMsg,0,PyString_FromString("goIdle"));
+        PyList_SetItem(pMsg,1,PyInt_FromLong(1));
+        PyList_SetItem(pMsg,2,pDict); 
+      } else {
+        PyDict_SetItem(pDict,PyString_FromString("nEvts"),PyInt_FromLong(self->m_evtCount));
+        PyDict_SetItem(pDict,PyString_FromString("fileID"),PyInt_FromLong(self->m_fileID));
+        PyList_SetItem(pMsg,0,PyString_FromString("newFileToRead"));
+        PyList_SetItem(pMsg,1,PyInt_FromLong(1));
+        PyList_SetItem(pMsg,2,pDict);
+      }
+      PyTuple_SetItem(pArgs,0,pMsg);
+      pValue = PyObject_CallObject(pEncode, pArgs);
+      Py_DECREF(pMsg);
+      Py_DECREF(pDict);
+      Py_DECREF(pArgs);
+      result="";
+      if (pValue != NULL) {
+        result = PyString_AsString(pValue);
+        Py_DECREF(pValue);
+      } else {
+        self->error("Call failed\n");
       }
     }
+    Py_XDECREF(pEncode);
+    Py_DECREF(pModule);
   }
+  Py_Finalize();
+  self->info(result);
+  *size = result.length()+1;
+  *buf = (void*)result.c_str();
+  return;
+}
+
+// void DimRPCFileReader::publishEvents(void* tag, void** buf, int* size, int* first)    {
+//   DimRPCFileReader* self=*(DimRPCFileReader**) tag;
+//  std::stringstream s;
+//  //   static const char* empty = "newFileToRead/status=SUCCESS/000000-0000-0000-00000000/None";
+//  //   if ( !(*first) )  {
+//  //  std::stringstream s;
+//  //     s << "newFileToRead/status=SUCCESS/" << self->m_reply << self->m_evtCount << std::ends;
+//  //     self->m_reply = s.str();
+//  //     self->info(self->m_reply);
+//  //     *size = self->m_reply.length()+1;
+//  //     *buf = (void*)self->m_reply.c_str();
+//  //     return;
+//  //   }
+//  //   *size = ::strlen(empty);
+//  //   *buf  = (void*)empty;
+//  if (!(self->m_evtCount)){
+//    s << "goIdle/status=SUCCESS/clientName:" << RTL::processName() << "/clientType:Reader" << std::ends;
+//  } else {
+//    s << "newFileToRead/status=SUCCESS/" << self->m_reply << "nEvts:"<<self->m_evtCount << std::ends;
+//  }
+//  self->m_reply = s.str();
+//   self->info(self->m_reply);
+//   *size = self->m_reply.length()+1;
+//   *buf = (void*)self->m_reply.c_str();
+//   return;
+// }
+
+// void DimRPCFileReader::handleCommand(const char* address, int /* size */){
+//   std::string in = address, cmd, file, fid, left;
+//   size_t pos = in.find("/");
+//   if ( pos != std::string::npos ){
+//     cmd = in.substr(0,pos);
+//     if( cmd == "newFileToRead" )  {
+//       left = in.substr(pos+1);
+//       if ( (pos=left.find("/")) != std::string::npos ) {
+//        file = left.substr(pos+1);
+//        fid  = left.substr(0,pos);
+//        info("newFileToRead command: parameters: Filename:"+file+" FID: "+fid);
+//        SmartIF<IProperty> prp(m_evtSelector);
+//        if ( prp ) {
+//          prp->setProperty("Input","[ \"DATA='file://"+file+"' SVC='LHCb::MDFSelector'\" ]");
+//          prp->setProperty("PrintFreq","1");
+//          m_evtSelector->reinitialize();
+//          m_evtLoopMgr->reinitialize();
+//          m_fileID=atoi(fid.c_str());
+//          m_reply = "fileID:"+fid+"/clientName:"+RTL::processName()+"/clientType:Reader/";
+//          ::lib_rtl_unlock(m_lock);
+//          return;
+//        }
+//       }
+//     }
+//   }
+//   error("Unknown command:"+in);
+// }
+
+void DimRPCFileReader::handleCommand(const char* address, int /* size */){
+  PyObject *pName, *pModule, *pDecode, *pValue; 
+  PyObject *pInput, *pLength, *pArgs, *pDict;
+  std::string in = address;
+  std::string cmd, file;
+  std::stringstream fileID;
+
+  Py_Initialize();
+  pName = PyString_FromString("DEncode");
+  pModule = PyImport_Import(pName);
+  Py_DECREF(pName);
+
+  if (pModule != NULL ) {
+    pDecode = PyObject_GetAttrString(pModule, "decode");
+    if (pDecode && PyCallable_Check(pDecode)) {
+      pArgs = PyTuple_New(1);
+      PyTuple_SetItem(pArgs,0,PyString_FromString(in.c_str()));
+      pValue = PyObject_CallObject(pDecode, pArgs);
+      if (pValue != NULL) {
+        pInput=PyTuple_GetItem(pValue,0);
+        pLength=PyTuple_GetItem(pValue,1);
+        if (PyInt_AsLong(pLength)==in.size()) {
+          cmd=PyString_AsString(PyList_GetItem(pInput,0));
+          pDict=PyList_GetItem(pInput,1);
+        } else {
+          error("Wrong message length!"); return;
+        }
+        Py_DECREF(pValue);
+        Py_DECREF(pInput);
+        Py_DECREF(pLength);
+      } else {
+        error("Decoding failed\n");
+      }
+      Py_DECREF(pArgs); 
+      Py_DECREF(pDecode); 
+    }
+    Py_DECREF(pModule); 
+  }
+  
+  if( cmd == "newFileToRead" )  {
+    file=PyString_AsString(PyDict_GetItemString(pDict,"file"));
+    m_fileID=PyLong_AsLong(PyDict_GetItemString(pDict,"fileID"));
+    char fileID[128];
+    sprintf(fileID,"%d",m_fileID);
+    info("newFileToRead command: parameters: Filename:"+file+" FID: "+fileID);
+    Py_Finalize();
+    SmartIF<IProperty> prp(m_evtSelector);
+    if ( prp ) {
+      prp->setProperty("Input","[ \"DATA='file://"+file+"' SVC='LHCb::MDFSelector'\" ]");
+      prp->setProperty("PrintFreq","1");
+      m_evtSelector->reinitialize();
+      m_evtLoopMgr->reinitialize();
+      ::lib_rtl_unlock(m_lock);
+      return;
+    }
+  }
+  Py_XDECREF(pDict);
+
+  Py_Finalize();
   error("Unknown command:"+in);
 }
 
@@ -164,17 +293,17 @@ StatusCode DimRPCFileReader::run()   {
       m_evtCount = 0;
       // loop over the events
       while ( m_receiveEvts )   {
-	DataObject* pObj = 0;
-	StatusCode sc = ui->nextEvent(1);
-	if ( !sc.isSuccess() )  {
-	  error("Failed to process event.");
-	  break;
-	}
+        DataObject* pObj = 0;
+        StatusCode sc = ui->nextEvent(1);
+        if ( !sc.isSuccess() )  {
+          error("Failed to process event.");
+          break;
+        }
         if ( !m_dataSvc->findObject("/Event",pObj).isSuccess() )  {
           info("End of event input reached.");
           break;
         }
-	m_evtCount++;
+        m_evtCount++;
       }
       ::dis_update_service(m_rpc.first);
       m_reply = "";
@@ -184,4 +313,40 @@ StatusCode DimRPCFileReader::run()   {
   }
   return error("Failed to access Application manager UI.");
 }
+
+// int DimRPCFileReader::sendData() {
+//  PyObject *pName, *pModule, *pEncode, *pValue; 
+//  PyObject *pMsg, *pDict, *pArgs;
+//  std::string result;
+//  Py_Initialize();
+//  pName = PyString_FromString("DEncode");
+//  pModule = PyImport_Import(pName);
+//   Py_DECREF(pName);
+//  
+//  if (pModule != NULL ) {
+//    pEncode = PyObject_GetAttrString(pModule, "encode");
+//    if (pEncode && PyCallable_Check(pEncode)) {
+//      pArgs = PyTuple_New(1);
+//      pMsg = PyList_New(3);
+//      pDict= PyDict_New();
+//      PyDict_SetItem(pDict,PyString_FromString("fileID"),PyInt_FromLong(1));
+//      PyList_SetItem(pMsg,0,PyString_FromString("commandName"));
+//      PyList_SetItem(pMsg,1,PyInt_FromLong(1));
+//      PyList_SetItem(pMsg,2,pDict); 
+//      PyTuple_SetItem(pArgs,0,pMsg);
+//      pValue = PyObject_CallObject(pEncode, pArgs);
+//      Py_DECREF(pMsg);
+//      Py_DECREF(pDict);
+//      Py_DECREF(pArgs);     
+//      if (pValue != NULL) {
+//        result = PyString_AsString(pValue);
+//        Py_DECREF(pValue);
+//      } else {fprintf(stderr,"Call failed\n");}
+//    }
+//    Py_XDECREF(pEncode);
+//     Py_DECREF(pModule);
+//  }
+//  Py_Finalize();
+//   return 1;
+// }
 

@@ -29,6 +29,8 @@ namespace LHCb {
     virtual StatusCode finalize();
     /// Callback on reset transition
     virtual StatusCode terminate();
+    /// Callback on disable event processing
+    virtual StatusCode disable();
   };
 }
 #endif // ONLINE_GAUDIONLINE_CLASS1TASK_H

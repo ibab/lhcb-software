@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.4 2008-06-05 09:42:15 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.5 2008-06-05 19:01:59 niko Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -54,6 +54,8 @@ namespace LHCb  {
     DIMRPC            m_rpc;
     /// Buffer with reply data after successful event processing.
     std::string       m_reply;
+    /// File ID info
+    int             m_fileID;
 
     /// Static DIM callback for command input
     static void cmndCallback(void* tag, void* address, int* size);
@@ -76,6 +78,8 @@ namespace LHCb  {
     void handle(const Incident& inc);
     /// IRunable implementation : Run the class implementation
     virtual StatusCode run();
+    /// Testing Python module
+    int sendData();
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_DIMRPCFILEREADER_H
