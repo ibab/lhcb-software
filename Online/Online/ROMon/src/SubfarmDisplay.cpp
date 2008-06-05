@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.3 2008-04-22 17:26:04 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.4 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.3 2008-04-22 17:26:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.4 2008-06-05 18:40:00 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -257,8 +257,9 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
 void SubfarmDisplay::showHeader(const Nodeset& ns)   {
   char b1[64], b2[64];
   Nodeset::TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&frst.first));
-  ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&last.first));
+  time_t t1 = frst.first, t2 = last.first;
+  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
+  ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
   draw_line_reverse("         HLT monitoring on %s   [%s]", ns.name, ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);

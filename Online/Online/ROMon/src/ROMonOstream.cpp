@@ -1,4 +1,4 @@
-// $Id: ROMonOstream.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Id: ROMonOstream.cpp,v 1.2 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonOstream.cpp,v 1.1 2008-02-01 17:41:46 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonOstream.cpp,v 1.2 2008-06-05 18:40:00 frankb Exp $
 
 #include <iomanip>
 #include <sys/timeb.h>
@@ -65,7 +65,8 @@ std::ostream& operator<<(std::ostream& os, const FSMTask& t) {
 
 std::ostream& operator<<(std::ostream& os, const Node& n) {
   char buff[64];
-  ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&n.time));
+  time_t tim = n.time;
+  ::strftime(buff,sizeof(buff),"%Y-%m-%d %H:%M:%S",::localtime(&tim));
   Node::Tasks*   t = n.tasks();
   Node::Buffers* b = n.buffers();
   os << "Node@"       << (void*)&n

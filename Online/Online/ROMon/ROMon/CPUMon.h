@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
+// $Id: CPUMon.h,v 1.4 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.3 2008-04-22 15:22:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.4 2008-06-05 18:40:00 frankb Exp $
 #ifndef ROMON_RUNDB_H
 #define ROMON_RUNDB_H 1
 
 // ++ include files
 #include <ctime>
 #include "ROMon/Collections.h"
+#include "RTL/Pack.h"
 
 /*
  *   ROMon namespace declaration
@@ -31,7 +32,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class CPU {
+  PACK_DATA(class) CPU {
   public:
     /// Clock speed [from cpu/info]
     float          clock;
@@ -69,7 +70,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class CPUset {
+  PACK_DATA(class) CPUset {
   public:
     typedef FixItems<CPU> Cores;
     /// Node name
@@ -98,7 +99,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class CPUfarm {
+  PACK_DATA(class) CPUfarm {
   public:
     typedef VarItems<CPUset> Nodes;
     typedef std::pair<time_t,unsigned int> TimeStamp;
@@ -131,7 +132,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class Process {
+  PACK_DATA(class) Process {
   public:
     /// Processes UTGID
     char           utgid[64];
@@ -167,7 +168,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class Procset {
+  PACK_DATA(class) Procset {
   public:
     typedef FixItems<Process> Processes;
     /// Node name
@@ -192,7 +193,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class ProcFarm {
+  PACK_DATA(class) ProcFarm {
   public:
     typedef VarItems<Procset> Nodes;
     typedef std::pair<time_t,unsigned int> TimeStamp;
@@ -232,5 +233,7 @@ namespace ROMon {
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
 }
+#include "RTL/Unpack.h"
+
 #endif /* ROMON_RUNDB_H */
 

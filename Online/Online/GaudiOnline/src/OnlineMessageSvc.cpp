@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.10 2007-03-06 16:00:10 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.11 2008-06-05 18:40:48 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -6,7 +6,7 @@
 #include "RTL/rtl.h"
 #include <sstream>
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineMessageSvc);
+//DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,OnlineMessageSvc);
 
 static IErrorLogger* s_logger = 0;
 void LHCb::OnlineMessageSvc::setErrorLogger(IErrorLogger* logger)  {
@@ -95,7 +95,8 @@ void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
   int lvl = msg.getType();
   if (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
   if ( reported && s_logger )  {
-    s_logger->report(msg.getType(), msg.getSource(), msg.getMessage());
+    //s_logger->report(msg.getType(), msg.getSource(), msg.getMessage());
+    this->report(msg.getType(), msg.getSource(), msg.getMessage());
   }
 }
 

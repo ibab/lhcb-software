@@ -4,6 +4,7 @@ ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
 MEPManager.Buffers                   = { "Events" };
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.PartitionBuffers          = true;
 EventSelector.Input                  = "Events";

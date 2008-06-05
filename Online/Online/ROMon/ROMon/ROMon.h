@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.7 2008-04-11 12:11:22 frankb Exp $
+// $Id: ROMon.h,v 1.8 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.7 2008-04-11 12:11:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.8 2008-06-05 18:40:00 frankb Exp $
 #ifndef ROMON_ROMON_H
 #define ROMON_ROMON_H 1
 
@@ -22,6 +22,7 @@
 #include "MBM/bmdef.h"
 #include "MBM/bmstruct.h"
 #include "ROMon/Collections.h"
+#include "RTL/Pack.h"
 
 /*
  *   ROMon namespace declaration
@@ -34,7 +35,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class MBMClient {
+  PACK_DATA(class) MBMClient {
   public:
     /// Object name
     char name[BM_USER_NAME_LEN];
@@ -59,7 +60,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class MBMBuffer {
+  PACK_DATA(class) MBMBuffer {
   public:
     typedef FixItems<MBMClient> Clients;
     typedef CONTROL Control;
@@ -82,7 +83,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class FSMTask {
+  PACK_DATA(class) FSMTask {
   public:
     /// Object name
     char name[BM_USER_NAME_LEN];
@@ -97,9 +98,9 @@ namespace ROMon {
     /// 1 Byte payload padding to ensure 32 bit alignment
     char __pad;
     /// Time stamp of last command issued
-    time_t lastCmd;
+    int  lastCmd;
     /// Time stamp of comamnd completion
-    time_t doneCmd;
+    int  doneCmd;
   public:    // Public data accessors
     /// Default constructor
     FSMTask();
@@ -120,7 +121,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class Node {
+  PACK_DATA(class) Node {
   public:
     typedef VarItems<MBMBuffer> Buffers;
     typedef FixItems<FSMTask>   Tasks;
@@ -135,7 +136,7 @@ namespace ROMon {
     /// Size of the FSM task list
     int  taskSize;
     /// Time stamp of the monitor snapshot [seconds since epoche]
-    time_t time;
+    int  time;
     /// Time stamp of the monitor snapshot [milli seconds]
     unsigned int millitm;
     /// Object name
@@ -160,10 +161,10 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  class Nodeset {
+  PACK_DATA(class) Nodeset {
   public:
     typedef VarItems<Node> Nodes;
-    typedef std::pair<time_t,unsigned int> TimeStamp;
+    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 2 };
     /// First word: Data type descriptor (MUST always be 2)
     int  type;
@@ -193,5 +194,7 @@ namespace ROMon {
     int type() { return this->ptr ? *(int*)this->ptr : -1; }
   };
 }
+#include "RTL/Unpack.h"
+
 #endif /* ROMON_ROMON_H */
 

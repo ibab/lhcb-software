@@ -1,4 +1,4 @@
-// $Id: Collections.h,v 1.2 2008-04-22 15:22:09 frankb Exp $
+// $Id: Collections.h,v 1.3 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,14 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.2 2008-04-22 15:22:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/Collections.h,v 1.3 2008-06-05 18:40:00 frankb Exp $
 #ifndef ROMON_COLLECTIONS_H
 #define ROMON_COLLECTIONS_H 1
 
 #include <iomanip>
 #include <iostream>
 #include "ROMon/Collections.h"
+#include "RTL/Pack.h"
 
 /*
  *   ROMon namespace declaration
@@ -31,7 +32,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  template <typename T> class FixItems {
+  template <typename T> PACK_DATA(class) FixItems {
   public:
     typedef T        item_type;
     typedef T*       pointer_type;
@@ -80,7 +81,7 @@ namespace ROMon {
    *
    * @author M.Frank
    */
-  template <typename T> class VarItems {
+  template <typename T> PACK_DATA(class) VarItems {
   public:
     typedef T        item_type;
     typedef T*       pointer_type;
@@ -202,6 +203,7 @@ std::ostream& operator<<(std::ostream& os, const ROMon::VarItems<T>& items) {
   return os;
 }
 
+#include "RTL/Unpack.h"
 
 #endif /* ROMON_COLLECTIONS_H */
 

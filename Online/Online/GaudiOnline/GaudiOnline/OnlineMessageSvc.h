@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.5 2007-03-06 16:00:10 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineMessageSvc.h,v 1.6 2008-06-05 18:40:48 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -28,7 +28,11 @@ namespace LHCb {
     *
     * Author:      B.Jost / M.Frank
     */
-  class OnlineMessageSvc : public Service, virtual public IMessageSvc { 
+  class OnlineMessageSvc 
+    : public Service, 
+    virtual public IMessageSvc,
+    virtual public IErrorLogger
+    { 
   public:
     typedef std::pair< std::string, std::ostream* > NamedStream;
     typedef std::multimap< int, NamedStream >       StreamMap;

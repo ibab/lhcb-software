@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.8 2008-06-05 18:40:00 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.7 2008-04-22 17:26:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.8 2008-06-05 18:40:00 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -263,8 +263,9 @@ void StorageDisplay::showBuffers(const Nodeset& ns) {
 void StorageDisplay::showHeader(const Nodeset& ns)   {
   char b1[64], b2[64];
   Nodeset::TimeStamp frst=ns.firstUpdate(), last=ns.lastUpdate();
-  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&frst.first));
-  ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&last.first));
+  time_t t1 = frst.first, t2 = last.first;
+  ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
+  ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
   draw_line_reverse("         Stream Monitor for partition %s on %s   [%s]",
 		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
