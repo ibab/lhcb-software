@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-06-05 - Gloria CORTI from Marco CLEMENCIC
+ - Put comment on separate line, otherwise gaudirun.py does not work, because
+   it ignores the options in following lines in particular 
+   "EventDataSvc.ForceLeaves         = true ;"
+   so that data cannot be written in TES
+
 ! 2008-06-02 - Gloria CORTI
  - New steering options to pick up latest version of geometry
    ( tag=head-20080516 ).

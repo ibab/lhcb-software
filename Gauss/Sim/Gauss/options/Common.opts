@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.27 2008-05-30 14:15:12 gcorti Exp $ 
+// $Id: Common.opts,v 1.28 2008-06-05 09:51:34 gcorti Exp $ 
 
 /** @file 
  * 
@@ -30,7 +30,8 @@ MessageSvc.OutputLevel         = 3;
 ToolSvc.EvtGenTool.OutputLevel = 4;
 SetDecayAlg.OutputLevel        = 4;
 MessageSvc.setWarning += { "XmlGenericCnv" };
-MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout
+// Longer "algorithm" identifier in printout
+MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";
 
 // Geometry setup always necessary
 #include "$DDDBROOT/options/DDDB.opts"

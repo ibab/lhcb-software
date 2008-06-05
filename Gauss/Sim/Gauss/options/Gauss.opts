@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.104 2008-05-08 20:21:52 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.105 2008-06-05 09:51:55 gcorti Exp $ 
 
 /** @file 
  * 
@@ -79,7 +79,8 @@ ApplicationMgr.EvtMax     = 2;
 GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 FileCatalog.Catalogs = { "xmlcatalog_file:NewCatalog.xml" };
 
-HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
+// Monitoring histos
+HistogramPersistencySvc.OutputFile = "GaussHistos.root";
 //NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
 
 //---------------------------------------------------------------------------
