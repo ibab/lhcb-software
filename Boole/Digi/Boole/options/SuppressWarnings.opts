@@ -8,7 +8,6 @@ ToolSvc.OutputLevel = 4;
 
 // "Known" errors
 BooleInit.BooleMemory.OutputLevel = 4; // Because BooleInit.OutputLevel = 3;
-CompareMCVertex.OutputLevel = 5;       // Due to crazy vertices produced by Gauss
 MCTTDepositCreator.OutputLevel = 5;    // Failed to find sensor
 MCITDepositCreator.OutputLevel = 5;    // Failed to find sensor
 

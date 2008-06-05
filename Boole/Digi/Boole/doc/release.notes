@@ -3,10 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v15r1>2008-06-03 Boole v15r1</A></H1><PRE>
+</PRE><H1><A NAME=v15r1>2008-06-05 Boole v15r1</A></H1><PRE>
  - In Boole.opts: in OTDigiSeq, call OTFillRawBuffer instead of OTFillRawEvent
  - In Configuration.py, Boole-Default.py: new attribute "mainOptions" to
    define top level options file to include (default is $BOOLEOPTS/Boole.opts)
+ - Update SuppressWarnings.opts
 
 </PRE><H1><A NAME=v15r0>2008-05-13 Boole v15r0</A></H1><PRE>
  - In BooleMoni.opts: remove monitoring of OTTimes, no longer created in Boole
