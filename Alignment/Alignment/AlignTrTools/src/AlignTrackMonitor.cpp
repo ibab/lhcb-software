@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.12 2008-05-21 10:59:26 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.13 2008-06-06 16:00:10 janos Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -192,11 +192,8 @@ StatusCode AlignTrackMonitor::execute ( ) {
     LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
     for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
       LHCb::Track& tr2 = **iTracks2;
-      if ( m_cloneFinder->areClones( aTrack, tr2 ) ) {
-        isAClone = true;
-        break;
-      }
-      
+      m_cloneFinder->areClones( aTrack, tr2, isAClone );
+      if ( isAClone ) break;
       // Compute ghost rate
       if ( (iTracks == m_tracks->begin()) && m_mcData )
         if ( isGhostTrack( &tr2 ) )
