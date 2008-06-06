@@ -1,12 +1,11 @@
 #! /usr/bin/env python
+# =============================================================================
+""" 
+@brief example of how to retrieve the HLT information from the summary
+@author Jose Angel Hernando
+"""
+# =============================================================================
 
-#==================================================
-#
-# example script of how to deal with the HLT summary
-#
-# python hltexamples.py
-#
-#==================================================
 
 import gaudimodule
 from math import *
@@ -33,6 +32,7 @@ TES = gaudi.evtsvc()
 
 def info(name):
     """ returns a function to retrieve the info from the object
+    @ param name of the quantity, i.e. 'InfoID/PT'
     """
     varname = name.split(",")[0]
     id = HLTSUM.confInt("InfoID/"+varname)
@@ -42,6 +42,7 @@ def info(name):
 
 def candidates(selection):
     """ return the candidates of a selection (tracks or vertices)
+    @ param name of the selection, i.e Hlt1HadronSingle
     """
     if (not HLTSUM.hasSelection(selection)): return None
     type = HLTSUM.confString(selection+"/SelectionType")
@@ -54,7 +55,6 @@ def candidates(selection):
 def l0():
     """ how to get the l0 decision?
         how to get the l0 decision per channel (i.e hadron high threshold)
-        hot to get the l0 decision per condition (i.e SPD multiplicity)
     """
     l0 = TES["Trig/L0/L0DUReport"]
     print " L0 decision ",l0.decision()
@@ -79,7 +79,7 @@ def hlt():
         how to get the selections that an event has passed?
     """
     print " HLT decision ", HLTSUM.decision()
-    names = ["HadL0Entry","HadPreTriggerSingle","HadTrigger"]
+    names = ["L0TriggerHadron","Hlt1HadronSingle","Hlt1HadronDi"]
     for name in names:
         print " \t",name," ? ",HLTSUM.selectionDecision(name)
 
@@ -90,6 +90,7 @@ def hlt():
 def hlt_selection_configuration(selection):
     """ how to get the filters applied in one selection?
         how to get the input selection used for a selection?
+        @ param name of the selection, i.e Hlt1HadronSingle 
     """
     filters = HLTSUM.confStringVector(selection+"/Filters")
     print " HLT ",selection ," Filters : "
@@ -98,9 +99,10 @@ def hlt_selection_configuration(selection):
     print " HLT ",selection ," Inputs : "
     for input in inputs: print " \t",input
 
-def hlt_candidates_info(selection = "HadPreTriggerSingle"):
+def hlt_candidates_info(selection = "Hlt1HadronSingle"):
     """ how to get the info of the candidates of a selection?
         i.e what is the PT value of the tracks of the HadPreTrigger selection?
+        @ param name of the selection, i.e Hlt1HadronSingle
     """
     print " HLT ",selection," ? ",HLTSUM.selectionDecision(selection)
     if (not HLTSUM.hasSelection(selection)): return
@@ -124,12 +126,12 @@ def run(n=10):
         l0()
         l0_candidates()
         hlt()
-        hlt_candidates_info("HadPreTriggerSingle")
-        hlt_candidates_info("HadTrigger")
+        hlt_candidates_info("Hlt1HadronSingle")
+        hlt_candidates_info("Hlt1HadronDi")
     print " *** configuration  *** "
-    hlt_selection_configuration("HadPreTriggerSingle")
-    hlt_selection_configuration("HadTrigger")
+    hlt_selection_configuration("Hlt1HadronSingle")
+    hlt_selection_configuration("Hlt1HadronDi")
 
 
-run(10)
-gaudi.finalize()
+#run(10)
+#gaudi.finalize()

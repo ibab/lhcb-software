@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-6-6 - Jose A. Hernando
+  - updating python/examples/hltexamples.py
+  - adding python/examples/hlttime.py to get the time and rate of an alley
+
 !========================== HltPython v1r5 2008-04-25 ===================
 Undocumented changes
 !========================== HltPython v1r4 2008-03-07 ===================

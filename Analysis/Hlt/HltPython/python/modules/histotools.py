@@ -111,6 +111,14 @@ def efficiencyVsRetention(signalHisto, allHisto , factorSignal = 1., factorAll =
    integrAll = map(lambda a:a*factorAll, getContents( integralHisto( allHisto) ))
    return easygraphs.graph( integrSignal, integrAll, **args)
    
+
+def setXLabels(histo,labels):
+   """ set labels (a list of strings)
+   as the labels of the x axis of the histogram
+   """
+   a = histo.GetXaxis()
+   for i in range(len(labels)):
+      a.SetBinLabel(i+1,labels[i])
    
 #---------------------------------------------------
 def histotoolsExample():

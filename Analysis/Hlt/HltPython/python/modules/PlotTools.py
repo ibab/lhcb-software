@@ -765,6 +765,18 @@ def plot(objs, extraopts=''):
 					leg.Draw()
 				except KeyError: # obj has no leg associated
 					pass
+
+
+		# obj == hprofile
+		if str(type(obj)).find('TP') != -1:
+			obj.Draw( drawopts[i] )
+			# if 'leg' opt, find and draw legend
+			if drawleg:
+				try:
+					leg = LEGENDICT[obj]
+					leg.Draw()
+				except KeyError: # obj has no leg associated
+					pass
 		
 		# obj == grapg	
 		elif type(obj) == TGraph:
