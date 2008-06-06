@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.4 2008-02-08 07:37:58 cattanem Exp $
+// $Id: TrackLikelihood.cpp,v 1.5 2008-06-06 11:39:49 lnicolas Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -93,7 +93,9 @@ StatusCode TrackLikelihood::initialize() {
 StatusCode TrackLikelihood::execute(LHCb::Track& aTrack) const{
 
   // chi^2 contribution
-  double lik = log(aTrack.probChi2())/m_chiWeight;
+  double lik = 0.0;
+  if ( aTrack.probChi2() < 1e-50 ) lik = -150.0;
+  else lik = log(aTrack.probChi2())/m_chiWeight;
 
   if (m_useVelo && aTrack.hasVelo()){
     lik += addVelo(aTrack);
@@ -163,7 +165,7 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   }
 
   // add term to lik
-  double prob1 = log(gsl_ran_binomial_pdf(nHigh, 0.955, veloRHits.size() + veloPhiHits.size()));
+  double prob1 = log(gsl_ran_binomial_pdf(nHigh, 0.99, veloRHits.size() + veloPhiHits.size()));
   double prob2 = log(gsl_ran_binomial_pdf(nHigh, 0.99, veloRHits.size() + veloPhiHits.size()));
   lik += gsl_max(prob1,prob2);
 
@@ -280,5 +282,6 @@ double TrackLikelihood::binomialTerm(const unsigned int& found,
     fnum *= double( n-i );
     fden *= double( i+1 );
   }
+
   return log( fnum/fden) + r*log(eff) + (n-r)*log(1 - eff);
 }
