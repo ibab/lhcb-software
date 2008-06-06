@@ -9,10 +9,10 @@
 //--------------------------
 HltSummaryWriter.Save += {"PhoL0Entry",
                           "PhoPreTrigger",
-                          "PhoTriggerPhoTrk"
+                          "Hlt1PhotonPhoTrk"
 };
 
-HltAlleys.InputSelections += {"PhoTriggerPhoTrk"};
+HltAlleys.InputSelections += {"Hlt1PhotonPhoTrk"};
 
 HltPhoAlleySequence.Members = {
   "L0Entry/PhoL0Entry",
@@ -25,7 +25,7 @@ HltPhoAlleySequence.Members = {
   "GaudiSequencer/HltDecodeTT",
   "HltTrackUpgrade/HltPhoRecoIPForward",
   "HltTrackFilter/PhoPreTrigger",
-  "HltVertexMaker/PhoTriggerPhoTrk"
+  "HltVertexMaker/Hlt1PhotonPhoTrk"
 };
 HltPhoAlleySequence.MeasureTime = true;
 
@@ -94,10 +94,10 @@ PhoPreTrigger.HistoDescriptor =  {
 PhoPreTrigger.OutputLevel = 3;
 
 
-// PhoTriggerPhoTrk:  Fake PhoPreTrigger-L0Pho vertices (there is no matching here!)
+// Hlt1PhotonPhoTrk:  Fake PhoPreTrigger-L0Pho vertices (there is no matching here!)
 
-PhoTriggerPhoTrk.InputSelection    = "PhoPreTrigger";
-PhoTriggerPhoTrk.InputSelection2   = "PhoTightL0Calos";
-PhoTriggerPhoTrk.OutputLevel = 3;
+Hlt1PhotonPhoTrk.InputSelection    = "PhoPreTrigger";
+Hlt1PhotonPhoTrk.InputSelection2   = "PhoTightL0Calos";
+Hlt1PhotonPhoTrk.OutputLevel = 3;
 
 

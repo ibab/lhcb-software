@@ -9,12 +9,12 @@
 //--------------------------
 HltSummaryWriter.Save += {"EleL0Entry",
                           "ElePreTriggerSingle",
-                          "EleTriggerSingle",
-                          "EleTriggerEleTrk"
+                          "Hlt1ElectronSingle",
+                          "Hlt1ElectronEleTrk"
 };
 
-HltAlleys.InputSelections += {"EleTriggerSingle",
-                              "EleTriggerEleTrk"
+HltAlleys.InputSelections += {"Hlt1ElectronSingle",
+                              "Hlt1ElectronEleTrk"
 };
 
 HltEleAlleySequence.Members = {
@@ -36,19 +36,19 @@ HltEleAlleySequence.MeasureTime = true;
 HltEleTriggers.ModeOr = true;
 HltEleTriggers.ShortCircuit = false;
 HltEleTriggers.MeasureTime = true;
-HltEleTriggers.Members += { "HltTrackFilter/EleTriggerSingle",
-                            "GaudiSequencer/EleTriggerEleTrkSeq"
+HltEleTriggers.Members += { "HltTrackFilter/Hlt1ElectronSingle",
+                            "GaudiSequencer/Hlt1ElectronEleTrkSeq"
 };
 
-EleTriggerEleTrkSeq.Members += { 
+Hlt1ElectronEleTrkSeq.Members += { 
                        "HltTrackUpgrade/HltRecoVelo",
                        "HltTrackFilter/EleCompanionTFVelo",
                        "HltTrackUpgrade/EleCompanionTRForward",
                        "HltTrackFilter/EleCompanionTFForward",
                        "HltVertexMaker/EleDiElectronVMaker",
-                       "HltVertexFilter/EleTriggerEleTrk"
+                       "HltVertexFilter/Hlt1ElectronEleTrk"
 };
-EleTriggerEleTrkSeq.MeasureTime = true;
+Hlt1ElectronEleTrkSeq.MeasureTime = true;
 
 
 
@@ -173,14 +173,14 @@ EleDiElectronVMaker.HistoDescriptor = {
 //
 // select vertices if Pt, poiting, and distance
 //
-EleTriggerEleTrk.InputSelection   = "EleDiElectronVMaker";
-EleTriggerEleTrk.OutputLevel = 3;
-EleTriggerEleTrk.FilterDescriptor = {
+Hlt1ElectronEleTrk.InputSelection   = "EleDiElectronVMaker";
+Hlt1ElectronEleTrk.OutputLevel = 3;
+Hlt1ElectronEleTrk.FilterDescriptor = {
   "VertexPointing_PV2D,<,0.5",
   "VertexDz_PV2D,>,0."
 };
-EleTriggerEleTrk.HistogramUpdatePeriod = 0;
-EleTriggerEleTrk.HistoDescriptor = {
+Hlt1ElectronEleTrk.HistogramUpdatePeriod = 0;
+Hlt1ElectronEleTrk.HistoDescriptor = {
   "VertexPointing"    : ("VertexPointing",0.,1.,100),
   "VertexPointingBest": ("VertexPointingBest",0.,1.,100),
   "VertexDz"          : ("VertexDz",-10.,50.,100),
@@ -190,13 +190,13 @@ EleTriggerEleTrk.HistoDescriptor = {
 //   TS-added compared to HadAlley:
 
 
-EleTriggerSingle.InputSelection  = "ElePreTriggerSingle";
-EleTriggerSingle.FilterDescriptor = {"PT,>,3000."};
-EleTriggerSingle.HistogramUpdatePeriod = 0;
-EleTriggerSingle.HistoDescriptor = {
+Hlt1ElectronSingle.InputSelection  = "ElePreTriggerSingle";
+Hlt1ElectronSingle.FilterDescriptor = {"PT,>,3000."};
+Hlt1ElectronSingle.HistogramUpdatePeriod = 0;
+Hlt1ElectronSingle.HistoDescriptor = {
   "PT"     : ("PT",0.,8000.,100),
   "PTBest" : ("PTBest",0.,8000.,100)};
-EleTriggerSingle.OutputLevel = 3;
+Hlt1ElectronSingle.OutputLevel = 3;
 
 
 
