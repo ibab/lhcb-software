@@ -1,4 +1,4 @@
-// $Id: PatVeloGeneralTracking.cpp,v 1.12 2008-06-03 13:02:07 dhcroft Exp $
+// $Id: PatVeloGeneralTracking.cpp,v 1.13 2008-06-06 12:38:53 dhcroft Exp $
 // Include files
 
 // from Gaudi
@@ -361,9 +361,9 @@ void Tf::PatVeloGeneralTracking::extendTrack(PointsList &trackPoints,
   for( iPCont = points.rbegin() ; iPCont != points.rend() ; ++iPCont ){
     if ( iPCont->first >= usedRSensor[0] ) continue;
     if( iPCont->second.empty() ) continue; // skip empty containers    
-    // skip sensors used already (should be in decending order in list)
-    if ( std::binary_search(usedRSensor.rbegin(), 
-          usedRSensor.rend(), iPCont->first ) ) continue;
+    // skip sensors used already 
+    if ( std::find(usedRSensor.begin(), 
+          usedRSensor.end(), iPCont->first ) != usedRSensor.end() ) continue;
     // predict the impact point
     double xPred = xFit.pred((iPCont->second.begin())->z());
     double xPredErr = 

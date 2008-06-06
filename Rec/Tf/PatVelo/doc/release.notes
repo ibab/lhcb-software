@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-06-06 - David Hutchcroft
+ - Fix for FPE problem in PatVeloGeneralTracking
+
 !========================== PatVelo v3r6 2008-06-04 ==========================
 ! 2008-06-03 - David Hutchcroft
  - All R clusters are now flagged as used in PatVeloRTracking, tweaked
