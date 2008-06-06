@@ -4,6 +4,12 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-06-06 - Antonis Papanestis
+ In DeRichHPDPanel:
+ - Added method to retrieve the local z offset of the detection plane.
+ - Removed method globalToPDPanel.
+ - fixed problem with local x/y offset. 
+
 ! 2008-05-07 - Chris Jones
  - Remove obsolete object locations in DeRichLocations.h
 

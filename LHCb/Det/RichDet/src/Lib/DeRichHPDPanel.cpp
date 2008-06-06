@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.66 2008-04-10 15:23:02 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.67 2008-06-06 16:09:24 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -617,12 +617,12 @@ DeRichHPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
   {
     const int sign = ( side == Rich::top ? -1 : 1 );
     x = localPoint.x();
-    y = localPoint.y()+sign*m_panelColumnSideEdge;
+    y = localPoint.y()+sign*localOffset();
   }
   else
   {
     const int sign = ( side == Rich::left ? -1 : 1 );
-    x = localPoint.x()+sign*m_panelColumnSideEdge;
+    x = localPoint.x()+sign*localOffset();
     y = localPoint.y();
   }
 

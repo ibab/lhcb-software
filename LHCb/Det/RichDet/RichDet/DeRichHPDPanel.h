@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.52 2008-02-15 09:55:02 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.53 2008-06-06 16:09:24 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -106,10 +106,14 @@ public:
    *
    * @return The offset for the globalToPanel method
    */
-  inline const double localOffset() const
-  {
-    return m_localOffset;
-  }
+  inline const double localOffset() const { return m_localOffset; }
+
+  /**
+   * Returns the Z coordinate of the detection plane in the local coordinate system.
+   *
+   * @return The detection plane Z coordinate (local system).
+   */
+  inline const double detectPlaneZcoord() const { return m_detPlaneZ; }
 
   /** @brief Converts a Gaudi::XYZPoint in global coordinates to a RichSmartID.
    *
@@ -197,7 +201,7 @@ public:
    *  @param[in] globalPoint The point in global coordinates
    *  @return Local (panel) point
    */
-  Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
+  //  Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
 
 
   /**
@@ -353,11 +357,11 @@ inline Gaudi::XYZPoint DeRichHPDPanel::detPointOnAnode( const LHCb::RichSmartID 
 //=========================================================================
 //  convert a point from the global to the panel coodinate system
 //=========================================================================
-inline Gaudi::XYZPoint DeRichHPDPanel::globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const
-{
-  const Gaudi::XYZPoint localPoint( geometry()->toLocal( globalPoint ) );
-  return Gaudi::XYZPoint( localPoint.x(), localPoint.y(), localPoint.z()-m_detPlaneZ );
-}
+// inline Gaudi::XYZPoint DeRichHPDPanel::globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const
+// {
+//   const Gaudi::XYZPoint localPoint( geometry()->toLocal( globalPoint ) );
+//   return Gaudi::XYZPoint( localPoint.x(), localPoint.y(), localPoint.z()-m_detPlaneZ );
+// }
 
 //=========================================================================
 //  convert a smartID to a point on the inside of the HPD window
