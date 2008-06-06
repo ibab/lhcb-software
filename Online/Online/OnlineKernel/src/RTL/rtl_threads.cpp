@@ -130,3 +130,15 @@ int lib_rtl_join_thread(lib_rtl_thread_t handle)   {
   return 0;
 }
 
+extern "C" int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig)  {
+  if ( handle )  {
+#ifdef USE_PTHREADS
+    ::pthread_kill(handle->handle, sig);
+#elif defined(_WIN32)
+#endif
+    return 1;
+  }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_delete_thread failed [Invalid Handle]");
+  return 0;
+}
+

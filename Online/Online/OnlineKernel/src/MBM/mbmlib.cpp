@@ -337,21 +337,21 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   ::sprintf(us->wes_flag, "bm_%s_WES_%d_%d", bm_name, us->uid, us->pid);
   ::sprintf(us->wev_flag, "bm_%s_WEV_%d_%d", bm_name, us->uid, us->pid);
   ::sprintf(us->wsp_flag, "bm_%s_WSP_%d_%d", bm_name, us->uid, us->pid);
-  lib_rtl_create_event(us->wes_flag, &bm->WES_event_flag);
-  lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
-  lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
+  ::lib_rtl_create_event(us->wes_flag, &bm->WES_event_flag);
+  ::lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
+  ::lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
 #else
-  lib_rtl_create_event2(&us->wes_handle, &bm->WES_event_flag);
-  lib_rtl_create_event2(&us->wev_handle, &bm->WEV_event_flag);
-  lib_rtl_create_event2(&us->wsp_handle, &bm->WSP_event_flag);
+  ::lib_rtl_create_event2(&us->wes_handle, &bm->WES_event_flag);
+  ::lib_rtl_create_event2(&us->wev_handle, &bm->WEV_event_flag);
+  ::lib_rtl_create_event2(&us->wsp_handle, &bm->WSP_event_flag);
 #endif
-  lib_rtl_create_event(0, &bm->WSPA_event_flag);
-  lib_rtl_create_event(0, &bm->WEVA_event_flag);
+  ::lib_rtl_create_event(0, &bm->WSPA_event_flag);
+  ::lib_rtl_create_event(0, &bm->WEVA_event_flag);
 
   if ( reference_count == 0 )  {
     desc_head  = new qentry_t(0,0);
-    lib_rtl_declare_exit (_mbm_shutdown, 0);
-    lib_rtl_declare_rundown(_mbm_shutdown,0);
+    ::lib_rtl_declare_exit (_mbm_shutdown, 0);
+    ::lib_rtl_declare_rundown(_mbm_shutdown,0);
   }
   insqhi (bm.get(), desc_head);
   reference_count++;
@@ -692,7 +692,9 @@ int mbm_cancel_request (BMID bm)   {
     if (us->c_state == S_wevent)    {
       _mbm_del_wev (bm, us);
       us->c_state = S_active;
-      ::lib_rtl_set_event(bm->WEV_event_flag);
+      if ( !lib_rtl_is_success(::lib_rtl_set_event(bm->WEV_event_flag)) ) {
+	::printf("mbm_cancel  ERROR   [WEV] Failed to set Wait event flag!\n");
+      }
     }
     if (us->p_state == S_wspace)    {
       _mbm_del_wsp (bm, us);
@@ -703,6 +705,32 @@ int mbm_cancel_request (BMID bm)   {
       _mbm_del_wes (bm, us);
       us->p_state = S_active;
       ::lib_rtl_set_event(bm->WES_event_flag);
+    }
+  }
+  return user.status();
+}
+
+int mbm_stop_producer(BMID bm)   {
+  UserLock user(bm, MBM_ILL_CONS);
+  USER* us = user.user();
+  if ( us )  {
+    _mbm_del_wsp (bm, us);
+    _mbm_del_wes (bm, us);
+    us->p_state = S_active;
+    ::lib_rtl_set_event(bm->WSP_event_flag);
+    ::lib_rtl_set_event(bm->WES_event_flag);
+  }
+  return user.status();
+}
+
+int mbm_stop_consumer(BMID bm)   {
+  UserLock user(bm, MBM_ILL_CONS);
+  USER* us = user.user();
+  if ( us )  {
+    _mbm_del_wev (bm, us);
+    us->c_state = S_active;
+    if ( !lib_rtl_is_success(::lib_rtl_set_event(bm->WEV_event_flag)) ) {
+      ::printf("mbm_cancel  ERROR   [WEV] Failed to set Wait event flag!\n");
     }
   }
   return user.status();

@@ -51,11 +51,11 @@ extern "C" int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig);
 /// Callback on reset transition
 StatusCode Class1Task::terminate()  {
   char txt[256];
-  for(int i=9999999; i>0; --i) {
-    if ( eventThread() ) ::lib_rtl_sleep(2000);
+  for(int i=0; i<999999; ++i) {
+    if ( eventThread() ) ::lib_rtl_sleep(4000);
     cancel();
     if ( eventThread() )  {
-      if ( m_handle ) {
+      if ( m_handle && i>2 ) {
 	::sprintf(txt,"Kill runable thread to get out of event loop.");
 	output(MSG::WARNING,txt);
 	::lib_rtl_kill_thread(m_handle,SIGINT);

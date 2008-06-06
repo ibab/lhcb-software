@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.11 2008-06-05 18:40:48 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.12 2008-06-06 07:54:06 niko Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -94,7 +94,8 @@ void LHCb::OnlineMessageSvc::reportMessage(const Message& msg)  {
   bool reported = i_reportMessage(msg);
   int lvl = msg.getType();
   if (lvl >= MSG::NIL && lvl <= MSG::NUM_LEVELS) ++m_msgCount[lvl];
-  if ( reported && s_logger )  {
+  //if ( reported && s_logger )  {
+  if ( reported )  {
     //s_logger->report(msg.getType(), msg.getSource(), msg.getMessage());
     this->report(msg.getType(), msg.getSource(), msg.getMessage());
   }

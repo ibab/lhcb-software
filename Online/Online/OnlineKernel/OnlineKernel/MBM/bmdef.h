@@ -74,9 +74,9 @@ extern "C"  {
   // Not implemented: int  mbm_get_space  (BMID bm, int size, int** ptr);
   int  mbm_get_space_a(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
   int  mbm_declare_event(BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask, const char* dest,
-    void** free_add, int* free_size, int part_id);
-  int mbm_declare_event_and_send (BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask,
-                        const char* dest, void** free_add, int* free_size, int part_id);
+			 void** free_add, int* free_size, int part_id);
+  int  mbm_declare_event_and_send (BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask,
+				   const char* dest, void** free_add, int* free_size, int part_id);
   int  mbm_free_space  (BMID bm);
   int  mbm_send_space  (BMID bm);
   int  mbm_wait_space  (BMID bm);
@@ -85,6 +85,8 @@ extern "C"  {
   int  mbm_get_space_ast(void* par);
 
   int  mbm_cancel_request   (BMID bm);
+  int  mbm_stop_consumer    (BMID bm);
+  int  mbm_stop_producer    (BMID bm);
   int  mbm_grant_update     (BMID bm);
   int  mbm_events_actual    (BMID bm, int *events);
   int  mbm_events_produced  (BMID bm, int *events);

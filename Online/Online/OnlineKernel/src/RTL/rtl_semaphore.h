@@ -13,9 +13,9 @@ static inline sem_t *i_sem_open(const char *name, int oflag, int mode, int val) 
 }
 static inline int i_sem_wait(sem_t *sem) {
   int res = -1;
-  //do {
+  do {
     res = ::sem_wait(sem);
-    //} while ( res==-1 && errno==EINTR );
+  } while ( res==-1 && errno==EINTR );
   return res;
 }
 static inline int i_sem_trywait(sem_t *sem) {

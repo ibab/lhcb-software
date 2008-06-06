@@ -123,33 +123,33 @@ struct USER : public qentry_t  {
   int *we_size_add;              // size of waiting exent     
   int *we_evtype_add;            // evtype of waiting exent     
   TriggerMask *we_trmask_add;    // trmask of waiting exent     
-  int space_add;                 // address of allocated space    
-  int space_size;                // size in bytes       
-  int held_eid;                  // held event index       
-  int ev_produced;               // events produced counter     
-  int ev_actual;                 // events matching req        
-  int ev_seen;                   // # of events seen         
-  int ev_freed;                  // # of events freed         
-  int n_req;                     // number of requierements     
-  int c_partid;                  // Consumer partition ID
+  int   space_add;               // address of allocated space    
+  int   space_size;              // size in bytes       
+  int   held_eid;                // held event index       
+  int   ev_produced;             // events produced counter     
+  int   ev_actual;               // events matching req        
+  int   ev_seen;                 // # of events seen         
+  int   ev_freed;                // # of events freed         
+  int   n_req;                   // number of requierements     
+  int   c_partid;                // Consumer partition ID
   void* c_astpar;                // Consumer AST parameter
   void* p_astpar;                // Producer AST parameter
-  int reason;                    //
-  int sleep_calls;               // Number of times process had to wait
-  int get_ev_calls;            
-  int get_sp_calls;            
-  int get_wakeups;             
-  int get_asts_run;  
-  int free_calls;
-  int alloc_calls;
-  float  utime;
+  int   reason;                  //
+  int   sleep_calls;             // Number of times process had to wait
+  int   get_ev_calls;            
+  int   get_sp_calls;            
+  int   get_wakeups;             
+  int   get_asts_run;  
+  int   free_calls;
+  int   alloc_calls;
+  float utime;
   float stime;
-  int spare1;
-  REQ req[8];                    // 8 requirement maximum     
+  int   spare1;
+  REQ   req[8];                  // 8 requirement maximum     
 #ifdef _WIN32
-  char wes_flag[32];
-  char wev_flag[32];
-  char wsp_flag[32];
+  char  wes_flag[32];
+  char  wev_flag[32];
+  char  wsp_flag[32];
 #else
   // On linux, we can directly use semaphores in the user table.
   // This ensures that they are always present. The task calling mbm_include
