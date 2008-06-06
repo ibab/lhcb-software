@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-06-06 - Louis Nicolas
+ - Added safety check to avoid FPE in TrackKalmanFilter::updateResidual
+
 ! 2008-05-27 Wouter Hulsbergen
  - bug fix: don't remove outlier from track with 1 dof
  - added debug output

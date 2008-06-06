@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.59 2008-05-27 10:35:32 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.60 2008-06-06 10:30:00 lnicolas Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -593,8 +593,17 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
     const TrackVector& smoothedX    = node.state().stateVector() ;
     const TrackSymMatrix& smoothedC = node.state().covariance() ;
     node.setResidual( node.refResidual() + (H*(refX - smoothedX))(0)) ;
+    double V = node.errMeasure2();
+    double HCH = Similarity( H, smoothedC )(0,0);
     double sign = node.type()==LHCb::Node::HitOnTrack? -1 : 1 ;
-    node.setErrResidual( std::sqrt(node.errMeasure2() + sign * Similarity( H, smoothedC )(0,0)) ) ;
+    double R = V + sign * HCH;
+    if ( !(R>0) ) {
+      error() << "Non-positive variance for residual: "
+	      << node.measurement().type() << " " << V << " " << HCH << endmsg;
+      node.setErrResidual(0);
+    } else {
+      node.setErrResidual( std::sqrt( R ) ) ;
+    }
   } else {
     node.setResidual(0) ;
     node.setErrResidual(0) ;
