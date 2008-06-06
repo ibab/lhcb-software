@@ -60,10 +60,12 @@ namespace LHCb  {
     enum Transitions { 
       CONFIGURE=1, 
       INITIALIZE, 
+      START,
       ENABLE, 
       NEXTEVENT, 
       DISABLE, 
       PRESTOP, 
+      STOP,
       FINALIZE,
       TERMINATE,
       UNLOAD, 
@@ -153,12 +155,31 @@ namespace LHCb  {
     virtual const std::string& name() const        {    return m_name;      }
     /// IAppMgrUI overload: state name
     virtual const std::string& stateName() const   {    return m_stateName; }
+
     /// Startup done                                    (Offline    -> Inactive)
     virtual StatusCode startupDone();
     /// Configure application                           (Inactive   -> Configured)
     virtual StatusCode configure();
     /// Initialize the application                      (Configured -> Ready)
     virtual StatusCode initialize();
+    /// Reinitialize the application
+    virtual StatusCode reinitialize();
+
+    /// Start the application
+    virtual StatusCode start();
+    /// Restart the application
+    virtual StatusCode restart();
+    /// Stop the application
+    virtual StatusCode stop();
+
+#if 0
+    /// Access FSM state
+    virtual Gaudi::StateMachine::State getFSMState() const;
+    /// Access target FSM state
+    virtual Gaudi::StateMachine::State getTargetFSMState() const;
+
+#endif
+
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
     /// Process single event                            (Running    -> Running)

@@ -21,7 +21,9 @@
 #define ST_NAME_STOPPED     "READY"
 #define ST_NAME_RUNNING     "RUNNING"
 
-DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM)
+DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,DimTaskFSM);
+
+using namespace LHCb;
 
 template <class T,class Q> static inline StatusCode cast_success(T* p, void** q)  {
   *q = (Q*)p;
@@ -35,12 +37,12 @@ namespace  {
     *  @author M.Frank
     */
   class Command : public DimCommand  {
-    typedef LHCb::DimTaskFSM Target;
+    typedef DimTaskFSM Target;
     /// Command target
     Target* m_target;
   public:
     /// Constructor
-    Command(const std::string& nam, LHCb::DimTaskFSM* target) 
+    Command(const std::string& nam, DimTaskFSM* target) 
     : DimCommand(nam.c_str(), "C"), m_target(target) { }
     /// DimCommand overload: handle DIM commands
     virtual void commandHandler()   {
@@ -66,7 +68,7 @@ namespace  {
       else if ( cmd == "unload"     ) {
 	m_target->setTargetState(Target::ST_UNKNOWN);
         m_target->cancel();
-        IOCSENSOR.send(m_target, LHCb::DimTaskFSM::UNLOAD);
+        IOCSENSOR.send(m_target, DimTaskFSM::UNLOAD);
       }
       else   {
         m_target->declareState(Target::ST_ERROR);
@@ -80,7 +82,7 @@ namespace  {
   /// Static printer (RTL overload)
   static size_t printout(void* context, int level, const char* fmt, va_list args)  {
     std::string format = fmt;
-    LHCb::DimTaskFSM* p = (LHCb::DimTaskFSM*)context;
+    DimTaskFSM* p = (DimTaskFSM*)context;
     char buffer[2048];
     size_t len = ::vsnprintf(buffer, sizeof(buffer), format.substr(0,format.length()-1).c_str(), args);
     p->output(level, buffer);
@@ -88,7 +90,7 @@ namespace  {
   }
 }
 
-LHCb::DimTaskFSM::DimTaskFSM(IInterface*) 
+DimTaskFSM::DimTaskFSM(IInterface*) 
 : m_name("Exec"), m_stateName(ST_NAME_UNKNOWN), 
   m_haveEventLoop(false), m_refCount(1)
 {
@@ -109,7 +111,7 @@ LHCb::DimTaskFSM::DimTaskFSM(IInterface*)
   ::lib_rtl_install_printer(printout,this);
 }
 
-LHCb::DimTaskFSM::~DimTaskFSM()  {
+DimTaskFSM::~DimTaskFSM()  {
   delete m_fsmService;
   delete m_service;
   delete m_command;
@@ -120,13 +122,13 @@ LHCb::DimTaskFSM::~DimTaskFSM()  {
 }
 
 /// IInterface implementation: DimTaskFSM::addRef()
-unsigned long LHCb::DimTaskFSM::addRef() {
+unsigned long DimTaskFSM::addRef() {
   m_refCount++;
   return m_refCount;
 }
 
 /// IInterface implementation: DimTaskFSM::release()
-unsigned long LHCb::DimTaskFSM::release() {
+unsigned long DimTaskFSM::release() {
   long count = --m_refCount;
   if( count <= 0) {
     delete this;
@@ -134,8 +136,8 @@ unsigned long LHCb::DimTaskFSM::release() {
   return count;
 }
 
-/// IInterface implementation: LHCb::DimTaskFSM::queryInterface()
-StatusCode LHCb::DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf) {
+/// IInterface implementation: DimTaskFSM::queryInterface()
+StatusCode DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf) {
   if( iid == IID_IInterface )
     return cast_success<DimTaskFSM,IInterface>(this,ppvIf);
   else if( iid == IID_IRunable )
@@ -149,16 +151,16 @@ StatusCode LHCb::DimTaskFSM::queryInterface(const InterfaceID& iid,void** ppvIf)
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::run()  {
+StatusCode DimTaskFSM::run()  {
   IOCSENSOR.run();
   return StatusCode::SUCCESS;
 }
 
-void LHCb::DimTaskFSM::output(int /* level */, const char* s)  {
+void DimTaskFSM::output(int /* level */, const char* s)  {
   std::cout << s << std::endl;
 }
 
-StatusCode LHCb::DimTaskFSM::printErr(int flag, const char* format, ...)  {
+StatusCode DimTaskFSM::printErr(int flag, const char* format, ...)  {
   va_list args;
   char buffer[1024];
   sprintf(buffer,"Error: ");
@@ -176,7 +178,7 @@ StatusCode LHCb::DimTaskFSM::printErr(int flag, const char* format, ...)  {
 }
 
 /// Translate integer state to string name
-std::string LHCb::DimTaskFSM::stateName(int state) {
+std::string DimTaskFSM::stateName(int state) {
   switch(state) {
   case ST_NOT_READY:
     return ST_NAME_NOT_READY;
@@ -194,7 +196,7 @@ std::string LHCb::DimTaskFSM::stateName(int state) {
   }
 }
 
-StatusCode LHCb::DimTaskFSM::_declareState(const std::string& new_state)  {
+StatusCode DimTaskFSM::_declareState(const std::string& new_state)  {
   std::string old_state = m_stateName;
   m_stateName = new_state;
   output(MSG::DEBUG,std::string("Declare state:"+new_state).c_str());
@@ -208,7 +210,7 @@ StatusCode LHCb::DimTaskFSM::_declareState(const std::string& new_state)  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
+StatusCode DimTaskFSM::declareState(State new_state)  {
   m_monitor.state = new_state;
   switch(new_state)   {
     case ERROR:
@@ -230,7 +232,7 @@ StatusCode LHCb::DimTaskFSM::declareState(State new_state)  {
 }
 
 /// Declare FSM sub-state
-StatusCode LHCb::DimTaskFSM::declareSubState(SubState new_state)  {
+StatusCode DimTaskFSM::declareSubState(SubState new_state)  {
   m_monitor.metaState = new_state;
   switch(new_state)   {
     case SUCCESS_ACTION:
@@ -253,12 +255,12 @@ StatusCode LHCb::DimTaskFSM::declareSubState(SubState new_state)  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::cancel()  {
+StatusCode DimTaskFSM::cancel()  {
   // Todo:  Need to somehow issue MBM Cancel!
   return StatusCode::SUCCESS;
 }
 
-void LHCb::DimTaskFSM::handle(const Event& ev)  {
+void DimTaskFSM::handle(const Event& ev)  {
   if(ev.eventtype == IocEvent)  {
 #define _CASE(x)  case x: action = #x;
     const char* action = "UNKNOWN";
@@ -268,9 +270,11 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
         _CASE(UNLOAD)       sc=unload();                              break;
         _CASE(CONFIGURE)    sc=configure();                           break;
         _CASE(INITIALIZE)   sc=initialize();                          break;
+        _CASE(START)        sc=start();                               break;
         _CASE(ENABLE)       sc=enable();                              break;
         _CASE(DISABLE)      sc=disable();                             break;
         _CASE(NEXTEVENT)    sc=nextEvent(1);                          break;
+        _CASE(STOP)         sc=stop();                                break;
         _CASE(FINALIZE)     sc=finalize();                            break;
         _CASE(TERMINATE)    sc=terminate();                           break;
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
@@ -299,60 +303,97 @@ void LHCb::DimTaskFSM::handle(const Event& ev)  {
   printErr(0,"Got Unkown event request.");
 }
 
-StatusCode LHCb::DimTaskFSM::startupDone()  {
+StatusCode DimTaskFSM::startupDone()  {
   m_stateName = ST_NAME_NOT_READY;
   DimServer::start(m_procName.c_str());
   declareState(ST_NOT_READY);
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::configure()  {
+StatusCode DimTaskFSM::configure()  {
   return declareState(ST_READY);
 }
   
-StatusCode LHCb::DimTaskFSM::initialize()  {
+StatusCode DimTaskFSM::initialize()  {
+  IOCSENSOR.send(this, START);
+  return StatusCode::SUCCESS;
+}
+
+/// Reinitialize the application
+StatusCode DimTaskFSM::reinitialize()   {
+  return StatusCode::SUCCESS;
+}
+
+/// Start the application
+StatusCode DimTaskFSM::start()   {
   IOCSENSOR.send(this, ENABLE);
   return StatusCode::SUCCESS;
 }
+
+/// Restart the application
+StatusCode DimTaskFSM::restart()   {
+  IOCSENSOR.send(this, STOP);
+  IOCSENSOR.send(this, START);
+  return StatusCode::SUCCESS;
+}
+
+/// Stop the application
+StatusCode DimTaskFSM::stop()   {
+  return StatusCode::SUCCESS;
+}
+
+#if 0
+/// Access FSM state
+Gaudi::StateMachine::State DimTaskFSM::getFSMState() const {
+  return (Gaudi::StateMachine::State)0;
+}
+
+/// Access target FSM state
+Gaudi::StateMachine::State DimTaskFSM::getTargetFSMState() const {
+  return (Gaudi::StateMachine::State)0;
+}
+
+#endif
+
   
-StatusCode LHCb::DimTaskFSM::enable()  {
+StatusCode DimTaskFSM::enable()  {
   m_continue = true;
   IOCSENSOR.send(this, NEXTEVENT);
   return declareState(ST_RUNNING);
 }
 
-StatusCode LHCb::DimTaskFSM::rearm()  {
+StatusCode DimTaskFSM::rearm()  {
   if ( m_haveEventLoop ) IOCSENSOR.send(this, NEXTEVENT);
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::nextEvent(int /* num_event */)  {
+StatusCode DimTaskFSM::nextEvent(int /* num_event */)  {
   if ( m_continue )  {
     rearm();
   }
   return StatusCode::SUCCESS;
 }
   
-StatusCode LHCb::DimTaskFSM::disable()  {
+StatusCode DimTaskFSM::disable()  {
   m_continue = false;
   cancel();
   IOCSENSOR.send(this, FINALIZE);
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::finalize()  {
+StatusCode DimTaskFSM::finalize()  {
   m_continue = false;
   cancel();
   return declareState(ST_STOPPED);
 }
 
-StatusCode LHCb::DimTaskFSM::terminate()  {
+StatusCode DimTaskFSM::terminate()  {
   declareState(ST_NOT_READY);
   //IOCSENSOR.send(this,UNLOAD);
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DimTaskFSM::unload()  {
+StatusCode DimTaskFSM::unload()  {
   declareState(ST_UNKNOWN);
   ::lib_rtl_sleep(100);
   ::exit(0);
@@ -360,7 +401,7 @@ StatusCode LHCb::DimTaskFSM::unload()  {
 }
 
 /// Invoke transition to error state                ( ****      -> Error   )
-StatusCode LHCb::DimTaskFSM::error()  {
+StatusCode DimTaskFSM::error()  {
   m_continue = false;
   cancel();
   IOCSENSOR.send(this, ERROR);
