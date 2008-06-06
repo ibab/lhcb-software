@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.9 2008-06-05 09:42:15 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.10 2008-06-06 17:00:53 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.9 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.10 2008-06-06 17:00:53 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -171,8 +171,8 @@ void MessageLogger::updateHistory(const char* msg) {
 /// Print history records from stored memory
 void MessageLogger::printHistory(const std::string& pattern) {
   char text[132];
-  int  match = 0, displayed=0;
-  size_t numMsg = 999999999;
+  int  num=200, match = 0, displayed=0;
+  size_t numMsg = num;
 
   size_t idq, id1 = pattern.find("#Node:{"), id2 = pattern.find("#Msg:{"), id3 = pattern.find("#Num:{");
   std::string node_pattern = "*", msg_pattern = "*", tmp;
@@ -188,7 +188,9 @@ void MessageLogger::printHistory(const std::string& pattern) {
   if ( id3 != std::string::npos ) {
     idq = pattern.find("}",id3);
     std::string tmp = pattern.substr(id3+6,idq-id3-6);
-    ::sscanf(tmp.c_str(),"%d",&numMsg);
+    if ( 1 == ::sscanf(tmp.c_str(),"%d",&num) ) {
+      numMsg = num;
+    }
   }
   printHeader("Logger history of:"+node_pattern+" matching:"+msg_pattern);
   History::iterator i = m_histIter, n = m_histIter;

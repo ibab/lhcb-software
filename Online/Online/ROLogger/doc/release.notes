@@ -1,6 +1,10 @@
 Package: ROLogger
 Author:  Markus Frank
 
+
+!================== ROLogger v0r2 2008-05-01 =============================
+  First production version used in the Control room.
+
 !================== ROLogger v0r1 2008-05-01 =============================
 
   New Package.
