@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.3 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.4 2008-06-06 11:46:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -51,7 +51,7 @@ StatusCode L0DUFromRawAlg::initialize() {
   debug() << "==> Initialize" << endmsg;
   
   // get the decoding tool
-  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
+  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  );
 
   // init
   m_evt     = 0;

@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.3 2008-06-06 09:25:10 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.4 2008-06-06 11:46:42 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -69,5 +69,6 @@ private:
   bool m_full;
   int m_bin;
   std::vector<std::vector<std::string> > m_locs;
+  bool m_decode;
 };
 #endif // L0DURAWBANKMONITOR_H

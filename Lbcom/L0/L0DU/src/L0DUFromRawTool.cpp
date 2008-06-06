@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.13 2008-06-06 09:25:10 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.14 2008-06-06 11:46:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,8 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
   declareProperty( "ForceNonZeroSupMuons"    , m_muonNoZsup=false);        // WARNING : for experts only
-  declareProperty( "ForceTCK"                , m_force = -1);              // WARNING : for experts only
+  declareProperty( "ForceSummarySize"        , m_sumSize=-1);        // WARNING : for experts only
+  declareProperty( "ForceTCK"                , m_force = -1);        // WARNING : for experts only
 }
 //=============================================================================
 // Destructor
@@ -68,6 +69,13 @@ StatusCode L0DUFromRawTool::initialize(){
     warning() << " ========> WARNING : TCK WILL BE FORCED TO : " << format("0x%04X", m_force) 
               << " YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING " << endreq;
   }
+  if( m_sumSize >= 0 ){
+    warning() << " ========> WARNING : Number of summary report is FORCED TO : " << m_sumSize << endreq;
+  }
+  if( m_muonNoZsup ){
+    warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endreq;
+  }
+
   return sc;
 }
 
@@ -91,10 +99,13 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
 
   m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
 
-  // check whether error bank has been produce
+  // check whether error bank has been produced
   const std::vector<LHCb::RawBank*>* errBanks = &rawEvt->banks(   LHCb::RawBank::L0DUError );
-  if( errBanks != 0 || errBanks->size() !=0 )m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::ErrorBank );
-
+  if( errBanks != 0 && errBanks->size() !=0 ){
+    info() << "L0DUError bank has been found (size = " << errBanks->size() << " bytes)" << endreq;
+    m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::ErrorBank );
+  }
+  
   
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
@@ -234,6 +245,10 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     m_status              = (*m_data & 0x0000F000)  >> 12;
     m_tck                 = (*m_data & 0xFFFF0000)  >> 16;
 
+    if(m_sumSize >=0){
+      itc = m_sumSize;
+      iec = m_sumSize;
+    }
 
     if( m_force >= 0 ){
       std::stringstream msg("");
@@ -260,7 +275,9 @@ bool L0DUFromRawTool::decodeBank(int ibank){
       debug() << "   -> TCK = " << m_tck << " [" << format("0x%04X", m_tck) << "]"   <<endreq;
       debug() << "   -> L0DU Status : " << m_status  << " [" <<  format("0x%04X", m_status) << "]"   <<endreq;
       debug() << "   -> Firmware version : " << m_pgaVsn << " [" <<  format("0x%04X", m_pgaVsn) << "]" <<endreq;
-      debug() << "   -> Number of Condition & Channel summaries are : " << iec << " / " << itc << " respectively " <<endreq;
+      debug() << "   -> Number of Condition & Channel summaries are : " << iec << " / " << itc << " respectively " ;
+      if(m_sumSize>0) debug() << " (FORCED BY USER) " ;                        
+      debug() <<endreq;
     }
     
     //---------------------------------
@@ -281,7 +298,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     // PGA3-block header
     if( !nextData() )return false;
     
-    unsigned int pga3Status    = (*m_data & 0x001FFFFF ) >>  0;
+    unsigned long pga3Status    = (*m_data & 0x001FFFFF ) >>  0;
     m_bcid3                    = (*m_data & 0x0FE00000 ) >> 21;
     unsigned int  nmu          = (*m_data & 0xF0000000 ) >> 28;
     
@@ -424,7 +441,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     }else{
       info() << "   -> The PGA3 and PGA2 data are NOT aligned "  << endreq;
       if ( msgLevel( MSG::DEBUG) )
-        debug() << " BCIDs PGA2 (LSB)= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
+        debug() << " BCIDs PGA2(LSB)/PGA3= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
     }
     
     
@@ -726,7 +743,8 @@ void L0DUFromRawTool::encode(unsigned int data ,  const unsigned int base[L0DUBa
 bool L0DUFromRawTool::nextData(){
   if( NULL == ++m_data){
     Error("READOUTSTATUS : No more data in bank --> CORRUPTION",StatusCode::SUCCESS).ignore();
-    m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
+    m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted );
+    m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Incomplete);
     return false;
   }else{
     if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endreq;

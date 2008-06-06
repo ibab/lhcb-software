@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.107 2008-06-06 09:25:10 odescham Exp $
+! $Id: release.notes,v 1.108 2008-06-06 11:46:42 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
@@ -6,9 +6,10 @@
 ! 2008-06-04 - Olivier Deschamps 
   - tune verbosity in L0DUFromRawTool and Monitor algorithms
   - L0DUFromRawTool : 
-    - new properties : ForceTCK and ForceNonZeroSupMuons for expert usage only.
+    - new properties : ForceTCK, ForceSummarySize and ForceNonZeroSupMuons for expert usage only.
     - add missing m_report.setTCK( m_tck ) 
     - update ReadoutStatus in L0D   
+  - make L0DUFromRawTool a public tool in L0DUFromRawAlg and L0DURawBankMonitor
 
 ! 2008-06-04 - Olivier Deschamps 
   - update readoutStatus

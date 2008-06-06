@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.4 2008-06-06 09:25:10 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.5 2008-06-06 11:46:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,7 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "StatusMonitor"     , m_status = true);
   declareProperty( "FullMonitoring"    , m_full = false);
   declareProperty( "DataReBinFactor"   , m_bin = 1);
+  declareProperty( "DecodeBank"        , m_decode = true);
   declareProperty( "LocationsForEmulatorCheck"   , m_locs);
     
 
@@ -66,7 +67,7 @@ StatusCode L0DURawBankMonitor::initialize() {
 
 
   // get the tools
-  m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
+  m_fromRaw  = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool );
   m_condDB   = tool<IL0CondDBProvider>("L0CondDBProvider");
   m_odin     = tool<IEventTimeDecoder>("OdinTimeDecoder","OdinDecoder",this);
   m_emuTool  = tool<IL0DUEmulatorTool>(m_emulatorTool, m_emulatorTool,this);
@@ -94,11 +95,13 @@ StatusCode L0DURawBankMonitor::execute() {
   }
   
 
-
-  if(!m_fromRaw->decodeBank()){
-    Error("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
-    return StatusCode::SUCCESS;
-  } 
+  if(m_decode){
+    if(!m_fromRaw->decodeBank()){
+      Error("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
+      return StatusCode::SUCCESS;
+    } 
+  }
+  
 
   LHCb::L0DUReport report = m_fromRaw->report();
   
@@ -246,12 +249,15 @@ StatusCode L0DURawBankMonitor::execute() {
     }
     if( (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
-      info() << "L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "<< endreq;
+      info() << "L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
+             << (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second 
+             << endreq;
     }
 
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
-      info() << "L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "<< endreq;
+      info() << "L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
+             << odBX << "/" << m_fromRaw->bcid().first << endreq;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::Tell1 , 1 );
