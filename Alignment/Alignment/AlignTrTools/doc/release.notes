@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-06-06 - Jan Amoraal
+ - Fix to AlignTrackMonitor to reflect changes in clone finder tool interface
+
 ! 2008-05-27 - Marco Gersabeck
  - WriteAlignmentConditions: Added choice to select layers to be printed as needed by VELO. Default behaviour unchanged.
 
