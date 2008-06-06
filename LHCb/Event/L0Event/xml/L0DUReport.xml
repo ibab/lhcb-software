@@ -64,6 +64,8 @@
           m_decision=false;
           m_timingTriggerBit = false;
           m_forceBit = false;
+          m_tck = 0x0000;
+          m_configuration = NULL;
         </code>
       </method>
 

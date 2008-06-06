@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.98 2008-05-29 15:45:48 cattanem Exp $
+! $Id: release.notes,v 1.99 2008-06-06 11:46:21 odescham Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-06-06 - Olivier Deschamps
+ - L0DUReport.xml : fix in clear() method (clearing tck/configuration was missing)
+
 
 !======================== L0Event v16r10 2008-05-29 ==========================
 ! 2008-05-29 - Olivier Deschamps
