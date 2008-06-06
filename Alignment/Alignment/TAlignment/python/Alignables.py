@@ -12,7 +12,7 @@ class Alignables( list ):
         
         self.m_it         = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
         self.m_itStations = [ "/Station1", "/Station2", "/Station3" ]
-        self.m_itBoxes    = [ "/TopBox", "/BottomBox", "/LeftBox", "/RightBox" ]
+        self.m_itBoxes    = [ "/TopBox", "/BottomBox", "/ASideBox", "/CSideBox" ]
         self.m_itLayers   = [ "/LayerX1", "/LayerU", "/LayerV", "/LayerX2" ]
         self.m_itLadders  = [ "/Ladder1", "/Ladder2", "/Ladder3", "/Ladder4",
                               "/Ladder5", "/Ladder6", "/Ladder7" ]
@@ -128,28 +128,26 @@ class Alignables( list ):
 
     def ITBoxes( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_itStations ) ) :
-            for j in range( len( self.m_itBoxes ) ) :
-                elements.append( self.m_it + self.m_itStations[ i ] + self.m_itBoxes[ j ] )
+        for i in self.m_itStations :
+            for j in self.m_itBoxes :
+                elements.append( self.m_it + i + j )
         self.__append( elements, dofs )
         
     def ITLayers( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_itStations ) ) :
-            for j in range( len( self.m_itBoxes ) ) :
-                for k in range( len( self.m_itLayers ) ) :
-                    elements.append( self.m_it + self.m_itStations[ i ] + self.m_itBoxes[ j ] +
-                                     self.m_itLayers[ k ] )
+        for i in self.m_itStations :
+            for j in self.m_itBoxes :
+                for k in self.m_itLayers :
+                    elements.append( self.m_it + i + j + k )
         self.__append( elements, dofs )
         
     def ITLadders( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_itStations ) ) :
-            for j in range( len( self.m_itBoxes ) ) :
-                for k in range( len( self.m_itLayers ) ) :
-                    for l in range( len( self.m_itLadders ) ) :
-                        elements.append( self.m_it + self.m_itStations[ i ] + self.m_itBoxes[ j ] +
-                                         self.m_itLayers[ k ] + self.m_itLadders[ l ] )
+        for i in self.m_itStations :
+            for j in self.m_itBoxes :
+                for k in self.m_itLayers :
+                    for l in self.m_itLadders :
+                        elements.append( self.m_it + i + j + k + l )
         self.__append( elements, dofs )
 
 
@@ -159,37 +157,35 @@ class Alignables( list ):
     
     def OTStations( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_otStations ) ) :
-            elements.append( self.m_ot + self.m_otStations[ i ] )
+        for i in self.m_otStations :
+            elements.append( self.m_ot + i )
         self.__append( elements, dofs )
         
                 
     def OTLayers( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_otStations ) ) :
-            for j in range( len( self.m_otLayers ) ) :
-                elements.append( self.m_ot + self.m_otStations[ i ] + self.m_otLayers[ j ] )
+        for i in self.m_otStations :
+            for j in self.m_otLayers :
+                elements.append( self.m_ot + i + j )
         self.__append( elements, dofs )    
 
     def OTModules( self, dofs = "" ) :
         elements = []
         ## 3 Stations numbered from 1 to 3
-        for i in range( len( self.m_otStations ) ) :
+        for i in self.m_otStations :
             ## There are four layers X1, U, V and X2
-            for j in range( len( self.m_otLayers ) ) :
+            for j in self.m_otLayers :
                 ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
-                for k in range( len( self.m_otQuarters ) ) :
+                for k in self.m_otQuarters :
                     ## Nine modules numbered from 1 to 9
-                    for l in range( len( self.m_otModules ) ) :
-                        elements.append("Group : " + self.m_ot + self.m_otStations[ i ] +
-                                        self.m_otLayers[ j ] + self.m_otQuarters[ k ] +
-                                        self.m_otModules[ l ] )
+                    for l in self.m_otModules :
+                        elements.append( "Group : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
         
     def OTCFrames( self, dofs = "" ) :
         elements = []
-        for i in range( len( self.m_otStations ) ) :
-            station = self.m_ot + self.m_otStations[ i ]
+        for i in self.m_otStations :
+            station = self.m_ot + i
             ## C-side X1 and U
             elements.append( station + "/(X1|U)layer" + self.m_otQuarters[0] + "/Module.")
             ## C-side V and X2
