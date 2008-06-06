@@ -3,6 +3,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h"
+#include "HltBase/EParser.h"
 // #include "GaudiKernel/IIncidentListener.h"
 
 
@@ -189,11 +190,19 @@ std::vector<std::string> HltSummaryTool::confKeys() {
 
 template <typename T> 
 T confVal(const std::string& name, Hlt::Configuration& conf, T unknownValue = T())
-{ return conf.has_key(name) ? conf.retrieve<T>(name) : T(unknownValue) ; }
+{ 
+  // std::cout << " requested " << name << " has? " << conf.has_key(name) << std::endl;
+  return conf.has_key(name) ? conf.retrieve<T>(name) : T(unknownValue) ;
+}
 
 
 int HltSummaryTool::confInt(const std::string& name) {
-  return confVal<int>(name, hltConf(),-1);
+  if (hltConf().has_key(name)) return confVal(name,hltConf(),-1);
+  std::vector<std::string> cromos = EParser::parse(name,"/");
+  if (cromos.size() != 2) return -1;
+  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value(cromos[0],cromos[1]);
+  int val = i->second;
+  return val;
 }
 
 double HltSummaryTool::confDouble(const std::string& name) {

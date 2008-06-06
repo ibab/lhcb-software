@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!2008-06-06 - Jose A. Hernando
+   - reparing the HltSummaryTool that python/examples/hltexamples.py works again
 !2008-06-05 - Gerhard Raven
    - allow a TCK of 0 to be specified in HltConfigSvc...
 !2008-06-02 - Gerhard Raven
