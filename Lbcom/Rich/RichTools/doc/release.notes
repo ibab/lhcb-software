@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2008-06-06 - Antonis Papanestis
+ - Fixed inconsistency between globalToPDPanel and globalPosition methods
+
 !=========================== RichTools v2r20 2008-05-15 ======================
 ! 2008-05-14 - Chris Jones
  - Add default mapping for isolated track tool

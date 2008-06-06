@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.38 2008-06-06 12:10:45 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.39 2008-06-06 16:04:04 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -247,7 +247,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
       const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->geometry()->toLocal(globalPoint) );
       return Gaudi::XYZPoint( tempPoint.x(),
                               tempPoint.y() + m_photoDetPanels[Rich::Rich1][Rich::top]->localOffset(),
-                              0.0 );
+                              tempPoint.z() - m_photoDetPanels[Rich::Rich1][Rich::top]->detectPlaneZcoord() );
     }
     else
     {
@@ -255,7 +255,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
       const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->geometry()->toLocal( globalPoint ) );
       return Gaudi::XYZPoint( tempPoint.x(),
                               tempPoint.y() - m_photoDetPanels[Rich::Rich1][Rich::bottom]->localOffset(),
-                              0.0 );
+                              tempPoint.z() - m_photoDetPanels[Rich::Rich1][Rich::bottom]->detectPlaneZcoord() );
     }
   }
   else   // Rich2
@@ -266,7 +266,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
       const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->geometry()->toLocal(globalPoint) );
       return Gaudi::XYZPoint( tempPoint.x() + m_photoDetPanels[Rich::Rich2][Rich::left]->localOffset(),
                               tempPoint.y(),
-                              0.0 );
+                              tempPoint.z() - m_photoDetPanels[Rich::Rich2][Rich::left]->detectPlaneZcoord());
     }
     else
     {
@@ -274,7 +274,7 @@ Rich::SmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
       const Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->geometry()->toLocal(globalPoint) );
       return Gaudi::XYZPoint( tempPoint.x() - m_photoDetPanels[Rich::Rich2][Rich::right]->localOffset(),
                               tempPoint.y(),
-                              0.0 );
+                              tempPoint.z() - m_photoDetPanels[Rich::Rich2][Rich::right]->detectPlaneZcoord() );
     }
   }
 
@@ -342,7 +342,7 @@ Rich::SmartIDTool::pdPanelName( const Rich::DetectorType rich,
   static DetectorElement* deRich[Rich::NRiches] =
     { getDet<DetectorElement>(DeRichLocations::Rich1),
       getDet<DetectorElement>(DeRichLocations::Rich2) };
-  
+
   if ( deRich[rich]->exists("HPDPanelDetElemLocations") )
   {
     const std::vector< std::string > & locs
