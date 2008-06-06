@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.60 2008-06-06 10:30:00 lnicolas Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.61 2008-06-06 13:28:04 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -550,8 +550,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   TrackSymMatrix invR = R ;
   bool OK = invertMatrix( invR );
   if ( !OK ) {
-    error() << "unable to invert matrix in smoother" << invR << endreq ;
-    return StatusCode::FAILURE ;
+    debug() << "unable to invert matrix in smoother" << invR << endreq ;
+    return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,10);
   }
 
   TrackVector    smoothedX ;
@@ -578,6 +578,19 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
     ROOT::Math::AssignSym::Evaluate(smoothedC, -2 * K * predRevC) ;
     smoothedC += predRevC + ROOT::Math::Similarity(K,R) ;
   }
+
+  // this is the simplest check to see that things went really wrong
+  if(thisNode.hasMeasurement()) {
+    const TrackProjectionMatrix& H  = thisNode.projectionMatrix();
+    double V = thisNode.errMeasure2();
+    double HCH = Similarity( H, smoothedC )(0,0);
+    if( HCH > V ) {
+      debug() << "Severe problem after smoother: smoothed error larger than measurement error"
+	      << V << " " << HCH << " " <<  endreq ;
+      return Warning( "Smoothing error", StatusCode::FAILURE,10);
+    }
+  }
+  
   (thisNode.state()).setState( smoothedX );
   (thisNode.state()).setCovariance( smoothedC );
 
@@ -633,6 +646,7 @@ bool TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& matrix ) const
       matrix(j,k) *= scale[j] * scale[k] ;
   return OK ;
 }
+
 
 //=========================================================================
 

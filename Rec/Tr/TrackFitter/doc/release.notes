@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-06-06 - Wouter Hulsbergen
+ - fail fit if smoother fails to calculate reasonable error on residual
+
 ! 2008-06-06 - Louis Nicolas
  - Added safety check to avoid FPE in TrackKalmanFilter::updateResidual
 
