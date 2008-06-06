@@ -128,7 +128,7 @@ HltL0SingleMuonPreparation.Members = {
   "HltTrackFilter/L0MuonSingle",
   "GaudiSequencer/HltDecodeT",
   "HltTrackUpgrade/L0MuonConfirmedWithT" , 
-  "GaudiSequencer/MuonRecon",
+//  "GaudiSequencer/MuonRecon",
   "HltTrackFilter/L0MuonAndTConfirmed",
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackFilter/RZMuon",
@@ -136,7 +136,7 @@ HltL0SingleMuonPreparation.Members = {
   "HltTrackMatch/MuonAndTVelo"
 };
 
-MuonRecon.Members={"MuonRec"};
+//MuonRecon.Members={"MuonRec"};
 
 
 //--------------------------
@@ -170,6 +170,7 @@ VeloMuonConf.RecoName = "Velo";
 MuonAndTVelo.InputSelection =    "VeloMuonConf";
 MuonAndTVelo.InputSelection2 =  "L0MuonAndTConfirmed";
 MuonAndTVelo.MatchName = "PatMatch";
+MuonAndTVelo.PatMatchTool.maxMatchChi2 = 6;
 //MuonAndTVelo.OutputLevel = 3;
 
 
@@ -196,7 +197,7 @@ HltDiMuonFromL0DiMuonPreparation.Members = {
   "HltVertexToTracks/L0MuonDimuon",
   "GaudiSequencer/HltDecodeT",
   "HltTrackUpgrade/DiMuonConfirmedWithT",
-  "GaudiSequencer/MuonRecon", 
+//  "GaudiSequencer/MuonRecon", 
   "HltTrackFilter/DiMuonAndTConfirmed",
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackFilter/RZDiMuon",
@@ -234,6 +235,7 @@ VeloDiMuonConf.RecoName = "Velo";
 DiMuonAndTVelo.InputSelection =    "VeloDiMuonConf";
 DiMuonAndTVelo.InputSelection2 =  "DiMuonAndTConfirmed";
 DiMuonAndTVelo.MatchName = "PatMatch";
+DiMuonAndTVelo.PatMatchTool.maxMatchChi2 = 6;
 //DiMuonAndTVelo.OutputLevel = 3;
 
 DiMuonAndTVeloVertices.InputSelection = "DiMuonAndTVelo";
@@ -361,6 +363,7 @@ VeloMuonFromMuonSeg.RecoName = "Velo";
 MuonAndTVeloFromMuonSeg.InputSelection = "VeloMuonFromMuonSeg";
 MuonAndTVeloFromMuonSeg.InputSelection2 = "MuonTAndTConfirmed";
 MuonAndTVeloFromMuonSeg.MatchName = "PatMatch";
+MuonAndTVeloFromMuonSeg.PatMatchTool.maxMatchChi2 = 6;
 //MuonAndTVeloFromMuonSeg.OutputLevel = 3;
 
 
