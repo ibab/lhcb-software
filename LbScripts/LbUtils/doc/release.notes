@@ -1,3 +1,7 @@
+2008-06-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Cache.py: added static global instance and access function.
+
 2008-05-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Option.py: added the --long-help option. Now the --help option
