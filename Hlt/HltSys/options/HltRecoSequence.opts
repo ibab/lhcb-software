@@ -2,6 +2,7 @@
 // Definition of the reconstruction
 //-----------------------------
 
+HltRecoSequence.MeasureTime = true;
 HltRecoSequence.Members = {
   "GaudiSequencer/HltRecoVeloRZSeq",
   "HltTrackUpgrade/HltRecoVelo",
@@ -17,13 +18,11 @@ HltRecoVelo.InputSelection = "RZVelo";
 HltRecoVelo.OutputSelection = "Velo";
 HltRecoVelo.RecoName = "Velo";
 HltRecoVelo.HistogramUpdatePeriod = 0;
-HltRecoVelo.OutputLevel = 3;
 
 HltRecoForward.InputSelection = "Velo";
 HltRecoForward.OutputSelection = "Forward";
 HltRecoForward.RecoName = "Forward";
 HltRecoForward.HistogramUpdatePeriod = 0;
-HltRecoForward.OutputLevel = 3;
 
 
 // HltRecoVeloTT.OutputTracksName = "Hlt/Track/VeloTT";
@@ -48,6 +47,7 @@ HltRecoForward.OutputLevel = 3;
 
 // TODO: If unique decoding REC/HLT use same algo name
 //       or both REC/HLT use DecodeOnDemand
+HltRecoVeloRZSeq.MeasureTime = true;
 HltRecoVeloRZSeq.Members += { 
   "DecodeVeloRawBuffer", 
   "Tf::PatVeloRTracking/PatHltVeloRTracking",
@@ -57,24 +57,21 @@ HltRecoVeloRZSeq.Members += {
 };
 
 PatHltVeloRTracking.OutputTracksName = "Hlt/Track/RZVelo";
-PatHltVeloRTracking.OutputLevel = 3;
 
 PatHltPV2D.InputTracksName = "Hlt/Track/RZVelo";
 PatHltPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
-PatHltPV2D.OutputLevel = 3;
 
 HltPrepareRZVelo.InputSelection   = "Hlt/Track/RZVelo";
 HltPrepareRZVelo.AddInfo = false;
 HltPrepareRZVelo.FilterDescriptor = {"IsBackward,<,0.5"};
 HltPrepareRZVelo.OutputSelection     = "RZVelo";
-HltPrepareRZVelo.OutputLevel = 3;
 
 HltPreparePrimaryVertices.InputSelection = "Hlt/Vertex/PV2D";
 HltPreparePrimaryVertices.OutputSelection   = "PV2D";
-HltPreparePrimaryVertices.OutputLevel = 3;
 
 // 3D Velo tracking and PV
 //------------------------
+HltRecoVeloSeq.MeasureTime = true;
 HltRecoVeloSeq.Members += {
   "HltTrackUpgrade/HltRecoVelo",
   "PatPV3D/HltPatPV3D"
@@ -83,12 +80,14 @@ HltPatPV3D.InputTracksName = "Hlt/Track/Velo_Alleys";
 
 // Decode TT
 //-------------
+HltDecodeTT.MeasureTime = true;
 HltDecodeTT.Members += { 
   "RawBankToSTLiteClusterAlg/createTTLiteClusters"
 };
 
 // Decode T
 //--------------
+HltDecodeT.MeasureTime = true;
 HltDecodeT.Members += { 
   "RawBankToSTLiteClusterAlg/createITLiteClusters"
 };

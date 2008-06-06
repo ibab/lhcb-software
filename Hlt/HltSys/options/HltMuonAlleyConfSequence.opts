@@ -152,7 +152,7 @@ L0MuonSingle.FilterDescriptor = {"PT0,||>,1300"};
 
 L0MuonConfirmedWithT.InputSelection = "L0MuonSingle";
 L0MuonConfirmedWithT.RecoName = "TConf";
-L0MuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+// L0MuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
 //L0MuonConfirmedWithT.OutputLevel = 2;
  
 L0MuonAndTConfirmed.InputSelection = "L0MuonConfirmedWithT";
@@ -216,7 +216,7 @@ L0MuonDimuon.InputSelection ="L0TriggerDiMuon";
 
 DiMuonConfirmedWithT.InputSelection = "L0MuonDimuon";
 DiMuonConfirmedWithT.RecoName = "TConf";
-DiMuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+// DiMuonConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
 //DiMuonConfirmedWithT.OutputLevel = 2;
 
 DiMuonAndTConfirmed.InputSelection = "DiMuonConfirmedWithT";
@@ -343,7 +343,7 @@ FilteredMuonSegments.FilterDescriptor = {
 
 MuonTConfirmedWithT.InputSelection = "FilteredMuonSegments";
 MuonTConfirmedWithT.RecoName = "TConf";
-MuonTConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
+// MuonTConfirmedWithT.HltTrackUpgradeTool.DoTrackReco = false;
 //MuonTConfirmedWithT.OutputLevel = 2;
 
 MuonTAndTConfirmed.InputSelection = "MuonTConfirmedWithT";

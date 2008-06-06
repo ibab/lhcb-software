@@ -10,10 +10,10 @@
 //--------------------------
 HltSummaryWriter.Save += {"PV2D",
                           "L0TriggerMuon",
-                          "MuHadTrigger"
+                          "Hlt1MuTrack"
 };
 
-HltAlleys.InputSelections += {"MuHadTrigger"};
+HltAlleys.InputSelections += {"Hlt1MuTrack"};
 
 HltMuHadAlleySequence.Members = {
   "L0Entry/MuonEntry",
@@ -26,7 +26,7 @@ HltMuHadAlleySequence.Members = {
   "HltTrackUpgrade/MuHadCompanionTRForward",
   "HltTrackFilter/MuHadCompanionTFForward",
   "HltVertexMaker/MuHadVMaker",
-  "HltVertexFilter/MuHadTrigger"
+  "HltVertexFilter/Hlt1MuTrack"
 };
 HltMuHadAlleySequence.MeasureTime = true;
 
@@ -102,13 +102,13 @@ MuHadTVMaker.HistoDescriptor = {
 };
 
 // select vertices if Pt, poiting, and distance
-MuHadTrigger.InputSelection   = "MuHadVMaker";
-MuHadTrigger.OutputLevel = 3;
-MuHadTrigger.FilterDescriptor = {"VertexPointing_PV2D,<,0.4",
+Hlt1MuTrack.InputSelection   = "MuHadVMaker";
+Hlt1MuTrack.OutputLevel = 3;
+Hlt1MuTrack.FilterDescriptor = {"VertexPointing_PV2D,<,0.4",
                                  "VertexDz_PV2D,>,2."
 };
-MuHadTrigger.HistogramUpdatePeriod = 0;
-MuHadTrigger.HistoDescriptor = {
+Hlt1MuTrack.HistogramUpdatePeriod = 0;
+Hlt1MuTrack.HistoDescriptor = {
   "VertexPointing"     : ( "VertexPointing",0.,1.,100),
   "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100),
   "VertexDz"           : ( "VertexDz",-10.,50.,100),

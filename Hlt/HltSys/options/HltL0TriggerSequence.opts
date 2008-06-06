@@ -3,6 +3,9 @@
 //------------------------------------------------------------------------------------------------
 
 
+
+
+
 HltSummaryWriter.Save += {"L0TriggerElectron",
                           "L0TriggerPhoton",
                           "L0TriggerLocalPi0",
@@ -12,6 +15,7 @@ HltSummaryWriter.Save += {"L0TriggerElectron",
                           "L0TriggerDiMuon",
                           "L0TriggerMuonNoGlob"
 };
+
 
 HltL0TriggerSequence.Members = {
   "GaudiSequencer/PrepareL0TriggerElectronSeq",
@@ -49,6 +53,8 @@ PrepareL0TriggerGlobalPi0Seq.Members = {
   "HltL0CaloPrepare/L0TriggerGlobalPi0"
 };
 
+
+PrepareL0TriggerHadronSeq.MeasureTime = true;
 PrepareL0TriggerHadronSeq.Members = {
   "L0Entry/L0EntryTriggerHadron",
   "HltL0CaloPrepare/L0TriggerHadron"
@@ -78,6 +84,16 @@ PrepareL0TriggerMuonNoGlobSeq.Members = {
   //  "L0Muon2Tracks/L0TriggerMuonNoGlob"
   "HltL0MuonPrepare/L0TriggerMuonNoGlob"
 };
+
+// TODO
+//from L0, fixes bug in newest release of L0CaloAlg (HLT_v3r3) JAH & JA
+//
+L0Calo.UsePSSPD = false;
+
+// //@ja TODO: this should be where the options for L0TriggerHadron are set ?
+L0TriggerHadron.CaloMakerTool="HadronSeedTool";
+ToolSvc.HadronSeedTool.decodeCalos=  false;
+
 L0EntryTriggerElectron.L0ChannelsName = {"Electron"};
 L0EntryTriggerPhoton.L0ChannelsName = {"Photon"};
 L0EntryTriggerLocalPi0.L0ChannelsName = {"LocalPi0"};

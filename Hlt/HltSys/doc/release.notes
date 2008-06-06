@@ -5,6 +5,13 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+!2008-06-06 - Jose A. Hernando
+  - Hlt1HadronSequence.opts : default hadron sequence: via guided forward
+  - Hlt1HadronForwardSequence.opts: via forward
+	- Hlt1HadronViaTSequence.opts: via T, small update
+  - Do not confirm the muons if they are done (solved a bug)	
+  - Rename the HadMuTrigger by Hlt1MuTrack trigger (for Hugo and Antonio)
+
 !2008-06-04 - Johannes Albrecht
 	- Hlt1HadronViaTSequence.opts: add new options for Hadron alley via T
 
