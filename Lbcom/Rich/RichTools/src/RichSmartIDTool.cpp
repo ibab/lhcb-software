@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.37 2008-05-08 12:39:50 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.38 2008-06-06 12:10:45 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -181,7 +181,7 @@ Rich::SmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid,
   const StatusCode sc = globalPosition(id0,a) && globalPosition(id1,b);
 
   // return average position (i.e. HPD centre)
-  hpdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,
+  hpdPoint = Gaudi::XYZPoint( 0.5*(a.x()+b.x()),
                               0.5*(a.y()+b.y()),
                               0.5*(a.z()+b.z()) );
 
@@ -205,40 +205,15 @@ Rich::SmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
   {
     if (globalPoint.z() < 8000.0)
     {
-      // Rich1
-      if (globalPoint.y() > 0.0)
-      {
-        // top side
-        smartid.setRich(Rich::Rich1);
-        smartid.setPanel(Rich::top);
-        return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
-      }
-      else
-      {
-        // bottom side
-        smartid.setRich(Rich::Rich1);
-        smartid.setPanel(Rich::bottom);
-        return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->smartID(globalPoint, smartid) );
-      }
+      smartid.setRich  ( Rich::Rich1 );
+      smartid.setPanel ( globalPoint.y() > 0.0 ? Rich::top : Rich::bottom );
     }
     else
     {
-      // Rich2
-      if (globalPoint.x() > 0.0)
-      {
-        // left side
-        smartid.setRich(Rich::Rich2);
-        smartid.setPanel(Rich::left);
-        return ( m_photoDetPanels[Rich::Rich2][Rich::left]->smartID(globalPoint, smartid) );
-      }
-      else
-      {
-        // right side
-        smartid.setRich(Rich::Rich2);
-        smartid.setPanel(Rich::right);
-        return ( m_photoDetPanels[Rich::Rich2][Rich::right]->smartID(globalPoint, smartid) );
-      }
+      smartid.setRich  ( Rich::Rich2 );
+      smartid.setPanel ( globalPoint.x() > 0.0 ? Rich::left : Rich::right );
     }
+    return m_photoDetPanels[smartid.rich()][smartid.panel()]->smartID(globalPoint,smartid);
   }
 
   // Catch any GaudiExceptions thrown
