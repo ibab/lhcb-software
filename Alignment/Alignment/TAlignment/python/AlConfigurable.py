@@ -65,14 +65,6 @@ class AlConfigurable( ConfigurableUser ) :
         # TransportSvc needed by tracking
         ApplicationMgr().ExtSvc.append( TransportSvc() )
 
-        from Configurables import ( FPEAuditor )
-        ApplicationMgr().ExtSvc.append( "AuditorSvc" )
-        AuditorSvc().Auditors += [ "FPEAuditor" ]
-        # FPEAuditor().TrapOn = [ "DivByZero", "Inexact", "Invalid", "Overflow", "Underflow", "AllExcept" ]
-        FPEAuditor().TrapOn = [ "DivByZero", "Overflow", "Invalid" ]
-        FPEAuditor().ActivateAt = [ "Execute" ]
-        FPEAuditor().DisableTrapFor = [ "PatDownstream" ]
-
     def defineDB( self ) :
         from Configurables import MagneticFieldSvc
  
@@ -220,77 +212,6 @@ class AlConfigurable( ConfigurableUser ) :
 
             from Configurables import ( PatPVOffline )
             allConfigurables["RecoTrSeq"].Members.append( PatPVOffline() )
-
-            ## Add checking sequence
-#             patSequencer.Members.append( GaudiSequencer( "RecoCheckSeq", MeasureTime = True ) )
-#             from Configurables import ( UnpackMCParticle, UnpackMCVertex,
-#                                         TrackAssociator, PatLHCbID2MCParticle,
-#                                         PatTrack2MCParticle, PatChecker )
-#             allConfigurables["RecoCheckSeq"].Members.append( UnpackMCParticle() )
-#             allConfigurables["RecoCheckSeq"].Members.append( UnpackMCVertex() )
-#             allConfigurables["RecoCheckSeq"].Members.append( TrackAssociator() )
-#             allConfigurables["RecoCheckSeq"].Members.append( PatLHCbID2MCParticle() )
-#             allConfigurables["RecoCheckSeq"].Members.append( PatTrack2MCParticle() )
-#             allConfigurables["RecoCheckSeq"].Members.append( PatChecker() )
-
-#             ## Add some plots to the checking sequence
-#             from Configurables import ( TrackEffChecker, TrackResChecker,
-#                                         MCReconstructible, MCParticleSelector )
-#             matchRes = TrackResChecker( "MatchRes" )
-#             matchRes.TracksInContainer = "Rec/Track/Best"
-#             matchRes.FullDetail = True
-#             matchRes.addTool( MCReconstructible, name = "Selector" )
-#             matchRes.Selector.addTool( MCParticleSelector, name = "Selector" )
-#             matchRes.Selector.Selector.rejectElectrons = True
-#             matchRes.Selector.Selector.rejectInteractions = True
-#             matchRes.Selector.Selector.zInteraction = 9400.
-#             matchRes.SelectionCriteria = "ChargedLong"
-#             matchRes.PlotsByMeasType = True
-#             matchRes.CheckAmbiguity = True
-#             matchRes.HistoPrint = False
-#             allConfigurables["RecoCheckSeq"].Members.append( matchRes )
-
-#             matchEff = TrackEffChecker( "MatchEff" )
-#             matchEff.TracksInContainer = "Rec/Track/Match"
-#             matchEff.FullDetail = True
-#             matchEff.addTool( MCReconstructible, name = "Selector" )
-#             matchEff.Selector.addTool( MCParticleSelector, name = "Selector" )
-#             matchEff.Selector.Selector.rejectElectrons = True
-#             matchEff.Selector.Selector.rejectInteractions = True
-#             matchEff.Selector.Selector.zInteraction = 9400.
-#             matchEff.SelectionCriteria = "ChargedLong"
-#             matchEff.SplitByAlgorithm = True
-#             matchEff.GhostClassification = "LongGhostClassification"
-#             matchEff.HistoPrint = False
-#             allConfigurables["RecoCheckSeq"].Members.append( matchEff )
-
-#             seedRes = TrackResChecker( "SeedRes" )
-#             seedRes.TracksInContainer = "Rec/Track/Tsa"
-#             seedRes.FullDetail = True
-#             seedRes.addTool( MCReconstructible, name = "Selector" )
-#             seedRes.Selector.addTool( MCParticleSelector, name = "Selector" )
-#             seedRes.Selector.Selector.rejectElectrons = True
-#             seedRes.Selector.Selector.rejectInteractions = True
-#             seedRes.Selector.Selector.zInteraction = 9400.
-#             seedRes.SelectionCriteria = "ChargedLong"
-#             seedRes.PlotsByMeasType = True
-#             seedRes.CheckAmbiguity = True
-#             seedRes.HistoPrint = False
-#             allConfigurables["RecoCheckSeq"].Members.append( seedRes )
-            
-#             seedEff = TrackEffChecker( "SeedEff" )
-#             seedEff.TracksInContainer = "Rec/Track/Tsa"
-#             seedEff.FullDetail = True
-#             seedEff.addTool( MCReconstructible, name = "Selector" )
-#             seedEff.Selector.addTool( MCParticleSelector, name = "Selector" )
-#             seedEff.Selector.Selector.rejectElectrons = True
-#             seedEff.Selector.Selector.rejectInteractions = True
-#             seedEff.Selector.Selector.zInteraction = 9400.
-#             seedEff.SelectionCriteria = "ChargedLong"
-#             seedEff.SplitByAlgorithm = True
-#             seedEff.GhostClassification = "TTrackGhostClassification"
-#             seedEff.HistoPrint = False
-#             allConfigurables["RecoCheckSeq"].Members.append( seedEff )
 
             return patSequencer
         else :
