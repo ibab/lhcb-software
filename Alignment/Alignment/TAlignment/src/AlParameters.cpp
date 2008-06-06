@@ -255,5 +255,5 @@ double AlParameters::measurementCoordinateSigma(double weightR) const
   for(size_t iactive=0; iactive<dim(); ++iactive)  
     for(size_t jactive=0; jactive<dim(); ++jactive)  
       sum += m_covariance[iactive][jactive] *  m_weightmatrix[iactive][jactive] ;
-  return std::sqrt(sum/weightR) ;
+  return (sum/weightR)>0 ? std::sqrt(sum/weightR) : 0;
 }

@@ -2,17 +2,17 @@ from Gaudi.Configuration import *
 
 appName            = "BoxesAlignment"
 appVersion         = "test"
-nIter              = 1
-nEvents            = 20
+nIter              = 2
+nEvents            = 2000
 minNumHits         = 100
 useDrift           = False
 useCorr            = True
 applyMS            = True
-runFullPatRec      = False
-simplifiedGeom     = True
+runFullPatRec      = True
+simplifiedGeom     = False
 alignDoFs          = "TxTyRyRz"
 constraintStrategy = 1
-constraints        = [] # [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz", "Szx", "Szy", "Szz" ]
+constraints        = [ "Tx", "Ty" ] # [ "Tx", "Ty", "Tz", "Rx", "Ry", "Rz", "Szx", "Szy", "Szz" ]
 solver             = "DiagSolvTool"
 Misaligned         = 'none' # 'none', 'xml' or 'sqlite'
 CutStrategy        = 'none' # 'none', 'trackChi2' or 'fitMatchChi2'

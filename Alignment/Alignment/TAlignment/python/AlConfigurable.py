@@ -64,7 +64,15 @@ class AlConfigurable( ConfigurableUser ) :
         from Configurables import ( TransportSvc )
         # TransportSvc needed by tracking
         ApplicationMgr().ExtSvc.append( TransportSvc() )
-        
+
+        from Configurables import ( FPEAuditor )
+        ApplicationMgr().ExtSvc.append( "AuditorSvc" )
+        AuditorSvc().Auditors += [ "FPEAuditor" ]
+        # FPEAuditor().TrapOn = [ "DivByZero", "Inexact", "Invalid", "Overflow", "Underflow", "AllExcept" ]
+        FPEAuditor().TrapOn = [ "DivByZero", "Overflow", "Invalid" ]
+        FPEAuditor().ActivateAt = [ "Execute" ]
+        FPEAuditor().DisableTrapFor = [ "PatDownstream" ]
+
     def defineDB( self ) :
         from Configurables import MagneticFieldSvc
  
@@ -78,7 +86,6 @@ class AlConfigurable( ConfigurableUser ) :
         ## Always DC06 magnetic field for now....
         MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAPROOT']+'/cdf/field047.cdf'
 
-        #from Configurables import ( UpdateManagerSvc, CondDBAccessSvc, CondDBDispatcherSvc )
         ## No way to check whether conditions make sense
         ## Nor does UpdateManagerSvc throw FAILURE
         ## instead it gives a warning of unused conditions.
@@ -141,7 +148,6 @@ class AlConfigurable( ConfigurableUser ) :
             ## ST Decoding
             from Configurables import ( RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg, STOfflinePosition ) 
 
-            ## Following comes from $STTOOLSROOT/options/Brunel.opts
             itClusterPosition = STOfflinePosition( "ITClusterPosition",
                                                    OutputLevel = outputLevel )
             itClusterPosition.ErrorVec = [ 0.22, 0.11, 0.24, 0.20 ]
@@ -191,31 +197,101 @@ class AlConfigurable( ConfigurableUser ) :
             patSequencer.Members.append( TESCheck( Inputs = [ "Link/Rec/Track/Best" ] ) )
             patSequencer.Members.append( EventNodeKiller( Nodes = [ "Rec", "Raw", "Link/Rec" ] ) )
             
-            patSequencer.Members.append( GaudiSequencer( "RecoVELOSeq", MeasureTime = True ) )
-            patSequencer.Members.append( GaudiSequencer( "RecoTTSeq"  , MeasureTime = True ) )
-            patSequencer.Members.append( GaudiSequencer( "RecoITSeq"  , MeasureTime = True ) )
-            patSequencer.Members.append( GaudiSequencer( "RecoOTSeq"  , MeasureTime = True ) )
-            patSequencer.Members.append( GaudiSequencer( "RecoTrSeq"  , MeasureTime = True ) )
+            patSequencer.Members.append( GaudiSequencer( "RecoVELOSeq" , MeasureTime = True ) )
+            patSequencer.Members.append( GaudiSequencer( "RecoTTSeq"   , MeasureTime = True ) )
+            patSequencer.Members.append( GaudiSequencer( "RecoITSeq"   , MeasureTime = True ) )
+            patSequencer.Members.append( GaudiSequencer( "RecoOTSeq"   , MeasureTime = True ) )
+            patSequencer.Members.append( GaudiSequencer( "RecoTrSeq"   , MeasureTime = True ) )
             
             importOptions("$TALIGNMENTROOT/options/PatRecognition.opts")
 
             from Configurables import TrackRemoveDoubleHits
             if allConfigurables.get( "TrackForwardPatSeq" ):
                 trackFwdPatSeq = GaudiSequencer( "TrackForwardPatSeq" )
-                trackRemoveDoubleHitsFwd = TrackRemoveDoubleHits( "RemoveDoubleHitsFwd" )
+                trackRemoveDoubleHitsFwd = TrackRemoveDoubleHits( "FwdRemoveDoubleHits" )
                 trackRemoveDoubleHitsFwd.TracksLocation = "Rec/Track/Forward"
                 trackFwdPatSeq.Members.append( trackRemoveDoubleHitsFwd )
 
             if allConfigurables.get( "TrackMatchPatSeq" ):
                 trackMatchPatSeq = GaudiSequencer( "TrackMatchPatSeq" )
-                trackRemoveDoubleHitsMatch = TrackRemoveDoubleHits ( "RemoveDoubleHitsMatch" )
+                trackRemoveDoubleHitsMatch = TrackRemoveDoubleHits ( "MatchRemoveDoubleHits" )
                 trackRemoveDoubleHitsMatch.TracksLocation = "Rec/Track/Match"
                 trackMatchPatSeq.Members.append( trackRemoveDoubleHitsMatch )
 
             from Configurables import ( PatPVOffline )
-
             allConfigurables["RecoTrSeq"].Members.append( PatPVOffline() )
+
+            ## Add checking sequence
+#             patSequencer.Members.append( GaudiSequencer( "RecoCheckSeq", MeasureTime = True ) )
+#             from Configurables import ( UnpackMCParticle, UnpackMCVertex,
+#                                         TrackAssociator, PatLHCbID2MCParticle,
+#                                         PatTrack2MCParticle, PatChecker )
+#             allConfigurables["RecoCheckSeq"].Members.append( UnpackMCParticle() )
+#             allConfigurables["RecoCheckSeq"].Members.append( UnpackMCVertex() )
+#             allConfigurables["RecoCheckSeq"].Members.append( TrackAssociator() )
+#             allConfigurables["RecoCheckSeq"].Members.append( PatLHCbID2MCParticle() )
+#             allConfigurables["RecoCheckSeq"].Members.append( PatTrack2MCParticle() )
+#             allConfigurables["RecoCheckSeq"].Members.append( PatChecker() )
+
+#             ## Add some plots to the checking sequence
+#             from Configurables import ( TrackEffChecker, TrackResChecker,
+#                                         MCReconstructible, MCParticleSelector )
+#             matchRes = TrackResChecker( "MatchRes" )
+#             matchRes.TracksInContainer = "Rec/Track/Best"
+#             matchRes.FullDetail = True
+#             matchRes.addTool( MCReconstructible, name = "Selector" )
+#             matchRes.Selector.addTool( MCParticleSelector, name = "Selector" )
+#             matchRes.Selector.Selector.rejectElectrons = True
+#             matchRes.Selector.Selector.rejectInteractions = True
+#             matchRes.Selector.Selector.zInteraction = 9400.
+#             matchRes.SelectionCriteria = "ChargedLong"
+#             matchRes.PlotsByMeasType = True
+#             matchRes.CheckAmbiguity = True
+#             matchRes.HistoPrint = False
+#             allConfigurables["RecoCheckSeq"].Members.append( matchRes )
+
+#             matchEff = TrackEffChecker( "MatchEff" )
+#             matchEff.TracksInContainer = "Rec/Track/Match"
+#             matchEff.FullDetail = True
+#             matchEff.addTool( MCReconstructible, name = "Selector" )
+#             matchEff.Selector.addTool( MCParticleSelector, name = "Selector" )
+#             matchEff.Selector.Selector.rejectElectrons = True
+#             matchEff.Selector.Selector.rejectInteractions = True
+#             matchEff.Selector.Selector.zInteraction = 9400.
+#             matchEff.SelectionCriteria = "ChargedLong"
+#             matchEff.SplitByAlgorithm = True
+#             matchEff.GhostClassification = "LongGhostClassification"
+#             matchEff.HistoPrint = False
+#             allConfigurables["RecoCheckSeq"].Members.append( matchEff )
+
+#             seedRes = TrackResChecker( "SeedRes" )
+#             seedRes.TracksInContainer = "Rec/Track/Tsa"
+#             seedRes.FullDetail = True
+#             seedRes.addTool( MCReconstructible, name = "Selector" )
+#             seedRes.Selector.addTool( MCParticleSelector, name = "Selector" )
+#             seedRes.Selector.Selector.rejectElectrons = True
+#             seedRes.Selector.Selector.rejectInteractions = True
+#             seedRes.Selector.Selector.zInteraction = 9400.
+#             seedRes.SelectionCriteria = "ChargedLong"
+#             seedRes.PlotsByMeasType = True
+#             seedRes.CheckAmbiguity = True
+#             seedRes.HistoPrint = False
+#             allConfigurables["RecoCheckSeq"].Members.append( seedRes )
             
+#             seedEff = TrackEffChecker( "SeedEff" )
+#             seedEff.TracksInContainer = "Rec/Track/Tsa"
+#             seedEff.FullDetail = True
+#             seedEff.addTool( MCReconstructible, name = "Selector" )
+#             seedEff.Selector.addTool( MCParticleSelector, name = "Selector" )
+#             seedEff.Selector.Selector.rejectElectrons = True
+#             seedEff.Selector.Selector.rejectInteractions = True
+#             seedEff.Selector.Selector.zInteraction = 9400.
+#             seedEff.SelectionCriteria = "ChargedLong"
+#             seedEff.SplitByAlgorithm = True
+#             seedEff.GhostClassification = "TTrackGhostClassification"
+#             seedEff.HistoPrint = False
+#             allConfigurables["RecoCheckSeq"].Members.append( seedEff )
+
             return patSequencer
         else :
             if outputLevel == VERBOSE: print "VERBOSE: Pat Sequencer already defined!" 
@@ -264,7 +340,7 @@ class AlConfigurable( ConfigurableUser ) :
             alignAlg.UseWeightedAverageConstraint = self.getProp( "UseWeightedAverageConstraint" )
             alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
             alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
-
+            alignAlg.HistoPrint                   = False
 
             if self.getProp( "SolvTool" ) == "gslSolver" :
                 alignAlg.addTool( gslSVDsolver(), name = "MatrixSolverTool" )

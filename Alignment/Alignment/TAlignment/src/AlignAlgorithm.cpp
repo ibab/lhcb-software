@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.43 2008-06-02 09:08:58 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.44 2008-06-06 12:11:50 lnicolas Exp $
 // Include files
 // from std
 // #include <utility>
@@ -636,6 +636,11 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
 }
 
 
+static inline double signedroot(double root)
+{
+  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
+}
+
 void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const AlSymMat& covariance,
 					       size_t numConstraints, std::ostream& logmessage) const
 {
@@ -663,15 +668,10 @@ void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const Al
   AlVec x = (V * lambda) ; // This might need a minus sign ...
   double chisquare = (lambda * V * lambda) ;
   logmessage << "Canonical constraint values: " << std::endl ;
-  for (size_t i = 0u; i < numConstraints; ++i) logmessage << std::setw(5) << i << std::setw(12) << x[i] << " +/- " << std::sqrt( V[i][i] ) << std::endl ;
+  for (size_t i = 0u; i < numConstraints; ++i)
+    logmessage << std::setw(5) << i << std::setw(12) << x[i] << " +/- " << signedroot( V[i][i] ) << std::endl ;
   logmessage << "Canonical constraint chisquare: " << chisquare << std::endl ;
 }
-
-static inline double signedroot(double root)
-{
-  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
-}
-
 
 //=============================================================================
 //  Update

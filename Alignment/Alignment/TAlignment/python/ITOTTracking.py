@@ -8,7 +8,12 @@ trackThrough = "ALL"
 bField       = True
 
 ## OT traj projector (global) 
-trajOTProjector = TrajOTProjector( UseDrift = False )
+trajOTProjector = TrajOTProjector( UseDrift = True )
+
+from Configurables import ( TrackAssociator, UnpackMCParticle, UnpackMCVertex )
+AlConfigurable().filterSeq().Members.append( UnpackMCParticle() )
+AlConfigurable().filterSeq().Members.append( UnpackMCVertex() )
+AlConfigurable().filterSeq().Members.append( TrackAssociator( "Assoc2" ) )
 
 ## Track filter algorithm for alignment
 trackFilterAlg                           = TrackFilterAlg( "FilterTracks" )
@@ -63,6 +68,34 @@ trackChi2Cleaner.Selector.OutputLevel = WARNING
 if AlConfigurable().getProp( "Pat" ) == True:
     AlConfigurable().filterSeq().Members.append( trackChi2Cleaner )
 
+#     from Configurables import ( TrackEffChecker, TrackResChecker,
+#                                 MCReconstructible, MCParticleSelector )
+#     trackAssociator = TrackAssociator("Assoc",
+#                                       TracksInContainer = "Alignment/FilteredTracks")
+#     AlConfigurable().filterSeq().Members.append( trackAssociator )
+    
+#     trackResChecker = TrackResChecker("ResCheck",
+#                                       TracksInContainer = "Alignment/FilteredTracks",
+#                                       FullDetail = False)
+#     trackResChecker.addTool(MCReconstructible(), name = "Selector")
+#     trackResChecker.Selector.addTool(MCParticleSelector(rejectElectrons = True,
+#                                                         rejectInteractions = True,
+#                                                         zInteraction = 9400.),
+#                                      name = "Selector")
+#     trackResChecker.HistoPrint = False
+#     AlConfigurable().filterSeq().Members.append( trackResChecker )
+
+#     trackEffChecker = TrackEffChecker("EffCheck",
+#                                       TracksInContainer = "Alignment/FilteredTracks",
+#                                       FullDetail = False)
+#     trackEffChecker.addTool(MCReconstructible(), name = "Selector")
+#     trackEffChecker.Selector.addTool(MCParticleSelector(rejectElectrons = True,
+#                                                         rejectInteractions = True,
+#                                                         zInteraction = 9400.),
+#                                      name = "Selector")
+#     trackEffChecker.HistoPrint = False
+#     AlConfigurable().filterSeq().Members.append( trackEffChecker )
+
 # If the pattern recognition is not run, need to define the fit sequence.
 elif AlConfigurable().getProp( "Pat" ) == False:
     from Configurables import ( TrackEventFitter, TrackMasterFitter,
@@ -98,3 +131,33 @@ elif AlConfigurable().getProp( "Pat" ) == False:
     
     AlConfigurable().fitSeq().Members.append( trackFitAlg      )
     AlConfigurable().fitSeq().Members.append( trackChi2Cleaner )
+
+    # Add some checking histograms
+    from Configurables import (TrackEffChecker, TrackResChecker,
+                               MCReconstructible, MCParticleSelector )
+    
+    trackAssociator = TrackAssociator("Assoc",
+                                      TracksInContainer = "Alignment/AlignmentTracks")
+    AlConfigurable().fitSeq().Members.append( trackAssociator )
+    
+    trackResChecker = TrackResChecker("ResCheck",
+                                      TracksInContainer = "Alignment/AlignmentTracks",
+                                      FullDetail = False)
+    trackResChecker.addTool(MCReconstructible(), name = "Selector")
+    trackResChecker.Selector.addTool(MCParticleSelector(rejectElectrons = True,
+                                                        rejectInteractions = True,
+                                                        zInteraction = 9400.),
+                                     name = "Selector")
+    trackResChecker.HistoPrint = False
+    AlConfigurable().fitSeq().Members.append( trackResChecker )
+
+    trackEffChecker = TrackEffChecker("EffCheck",
+                                      TracksInContainer = "Alignment/AlignmentTracks",
+                                      FullDetail = False)
+    trackEffChecker.addTool(MCReconstructible(), name = "Selector")
+    trackEffChecker.Selector.addTool(MCParticleSelector(rejectElectrons = True,
+                                                        rejectInteractions = True,
+                                                        zInteraction = 9400.),
+                                     name = "Selector")
+    trackEffChecker.HistoPrint = False
+    AlConfigurable().fitSeq().Members.append( trackEffChecker )

@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-06-06 - Louis Nicolas
+ - added safety checks in AlParameters and AlignAlgorithm to avoid FPEs
+
 ! 2008-05-30 - Louis Nicolas
  - added TrackRemoveDoubleHits in Pat Rec sequence (AlConfigurable.py).
  - added fit sequence in case pat rec is not run (ITOTTracking.py).

@@ -122,7 +122,6 @@ class Alignables( list ):
     def TTHalfModules( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}", dofs )
 
-
     ## IT #################################################################################
     def IT( self, dofs = "" ) :
         self.__append( self.m_it, element )
