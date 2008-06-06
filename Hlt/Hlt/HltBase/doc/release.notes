@@ -3,6 +3,11 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!2008-06-06 - Jose A. Hernando
+   - more info on warning if there is no inputselection while required
+   - store the inputselections in the hltconf to see them in the HltSummaryTool
+   - comments for doxygen for the HltSummaryTool
+
 !2008-06-06 - Gerhard Raven
    - add PropertyConfigSvc and ConfigAccessSvc to dictionary
    - move forward declaration of operator<<(ostream&,const PropertyConfig&) 'up'

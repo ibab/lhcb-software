@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.33 2008-06-02 11:38:36 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.34 2008-06-06 12:53:01 hernando Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -106,7 +106,13 @@ void HltAlgorithm::saveConfiguration() {
 
   confregister("Algorithm",algoType+"/"+name(),         m_outputSelectionName.str());
   confregister("SelectionType",type,                    m_outputSelectionName.str());
-  confregister("InputSelections",m_inputSelectionsNames,m_outputSelectionName.str());
+  std::vector<std::string> inames;
+  for (std::vector<stringKey>::iterator it = m_inputSelectionsNames.begin(); 
+       it != m_inputSelectionsNames.end(); ++it) {
+    std::string st = it->str();
+    inames.push_back(st);
+  }
+  confregister("InputSelections",inames,m_outputSelectionName.str());
   verbose() << "Done saveConfigureation" << endmsg ;  
   info() << " HLT input selections " << m_inputSelectionsNames << endreq;
   info() << " HLT output selection " << m_outputSelection->id() << endreq;
@@ -192,7 +198,12 @@ bool HltAlgorithm::considerInputs()
   }
 
   if (!ok) {
-    warning() << " Empty input or false input selection " << endreq;
+    warning() << name() << " Empty input or false input selection!" << endreq;
+    for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
+       it != m_inputSelections.end(); ++it, ++i) 
+      warning() << " input selection " << (*it)->id()
+                << " decision " << (*it)->decision()
+                << " candidates " << (*it)->ncandidates() << endreq;      
     return StatusCode::FAILURE;
   }
   // verbose() << " consider inputs " << ok <<endreq;
@@ -225,7 +236,7 @@ void HltAlgorithm::setDecision() {
   increaseCounter(m_counterCandidates,nCandidates);
   bool accept = ( nCandidates >= m_minNCandidates );
 
-  if (accept) increaseCounter(m_counterAccepted);
+  // if (accept) increaseCounter(m_counterAccepted);
   if (accept) setDecision(true);
   // Assert( (accept || !m_filter) == filterPassed(), "filterPassed unexpected..");
 		  
@@ -235,7 +246,7 @@ void HltAlgorithm::setDecision() {
 void HltAlgorithm::setDecision(bool ok) {
   setFilterPassed(ok);
   m_outputSelection->setDecision(ok);
-  
+  if (ok) increaseCounter(m_counterAccepted);
   // verbose() << " decision " << filterPassed() 
   //        << " in selection " << m_outputSelection->decision() << endreq;
 }

@@ -1,6 +1,7 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
 
+#include "HltBase/IANNSvc.h"
 #include "HltBase/IHltConfSummaryTool.h"
 #include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/IMatchTVeloTracks.h"
@@ -15,6 +16,7 @@
 #include "HltBase/HltTypes.h"
 #include "LHCbMath/MD5.h"
 #include "HltBase/IConfigTreeEditor.h"
+#include "HltBase/stringKey.h"
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/IPropertyConfigSvc.h"
 #include "HltBase/IConfigAccessSvc.h"

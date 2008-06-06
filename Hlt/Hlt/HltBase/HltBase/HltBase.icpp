@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.9 2008-06-02 11:38:36 graven Exp $
+// $Id: HltBase.icpp,v 1.10 2008-06-06 12:53:01 hernando Exp $
 // Include files
 
 
@@ -7,6 +7,7 @@
 #include "Event/HltSummary.h"
 #include "Event/RecVertex.h"
 #include "HltBase/HltConfigurationHelper.h"
+// #include <boost/lexical_cast.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltBase
@@ -218,17 +219,17 @@ bool HltBase<EBASE>::validHltSelectionName(const stringKey& selname)
 template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
 {
-    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
-    EBASE::Assert( i, " request for unknown Info ID");
-    return i->second;
+  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
+  EBASE::Assert( i, " request for unknown Info ID");
+  return i->second;
 }
 
 template <class EBASE>
 std::string HltBase<EBASE>::hltInfoName(int id) 
 {
-    boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
-    EBASE::Assert( i, " request for unknown Info ID");
-    return i->first;
+  boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
+  EBASE::Assert( i, " request for unknown Info ID");
+  return i->first;
 }
 
 template <class EBASE>
