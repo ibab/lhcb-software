@@ -63,4 +63,4 @@ ostream& PropertyConfig::print(ostream& os) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const PropertyConfig& x) { return x.print(os);}
-std::istream& operator>>(std::istream& is, PropertyConfig& x)       { return x.read(is);}
+std::istream& operator>>(std::istream& is, PropertyConfig& x) { return x.read(is); }

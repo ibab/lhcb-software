@@ -9,6 +9,10 @@
 #include "GaudiKernel/IProperty.h"
 #include "LHCbMath/MD5.h"
 
+class PropertyConfig; 
+std::ostream& operator<<(std::ostream& os, const PropertyConfig& x);
+std::istream& operator>>(std::istream& is, PropertyConfig& x);
+
 class PropertyConfig {
 public:
     typedef Gaudi::Math::MD5 digest_type;
@@ -69,7 +73,5 @@ private:
     void initProperties( const IProperty& obj );
 };
 
-std::ostream& operator<<(std::ostream& os, const PropertyConfig& x);
-std::istream& operator>>(std::istream& is, PropertyConfig& x);
 
 #endif

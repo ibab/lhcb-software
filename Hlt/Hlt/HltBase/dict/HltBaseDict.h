@@ -15,6 +15,9 @@
 #include "HltBase/HltTypes.h"
 #include "LHCbMath/MD5.h"
 #include "HltBase/IConfigTreeEditor.h"
+#include "HltBase/PropertyConfig.h"
+#include "HltBase/IPropertyConfigSvc.h"
+#include "HltBase/IConfigAccessSvc.h"
 
 #include "GaudiAlg/ISequencerTimerTool.h"
 
