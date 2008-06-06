@@ -2,6 +2,12 @@
 ! Responsible : Marco Gersabeck
 
 !=============================================================================
+! 06/06/2008 - Marco Gersabeck  ** v4r5 **
+
+  - AlignSensors.cpp, TrackStore.cpp: re-introduce use of phiOfStrip as it became
+                                      public again.
+
+!=============================================================================
 ! 04/06/2008 - Marco Gersabeck  ** v4r4 **
 
   - Align.cpp: correct small bug in alignment constant output

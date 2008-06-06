@@ -195,7 +195,7 @@ StatusCode TrackStore::TransformTrack(LHCb::Track* ftrack, VeloTrack& atrack, do
 	{
 	  phiDet=my_velo->phiSensor(VeloClus->channelID().sensor());
 
-	  clust_meas = phiDet->idealPhi(cl_str,interStripFr,rstate);        
+	  clust_meas = phiDet->phiOfStrip(cl_str,interStripFr,rstate);        
 
 	  station = station-64;  // Phi stations are numbered from 64 to 95
 	  hits[station]      += 10;
