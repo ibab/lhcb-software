@@ -19,47 +19,51 @@
 
 namespace FPE {
 #if defined(linux) && defined(__GNUC__)
-    int get()             { return fegetexcept(); }
-    int disable(int mask) { return fedisableexcept(mask); }
-    int enable(int mask) { 
+    typedef int mask_type;
+    mask_type disable(mask_type mask) { return fedisableexcept(mask); }
+    mask_type enable(mask_type mask)  { 
         feclearexcept(mask); // remove any 'stale' exceptions before switching on trapping
                              // otherwise we immediately trigger an exception...
         return feenableexcept(mask); 
     }
-    static std::map<std::string,int>& map() {
-         static std::map<std::string,int> m = boost::assign::map_list_of
-                                        ( "Inexact"   , int(FE_INEXACT)  )
-                                        ( "DivByZero" , int(FE_DIVBYZERO))
-                                        ( "Underflow" , int(FE_UNDERFLOW))
-                                        ( "Overflow"  , int(FE_OVERFLOW) )
-                                        ( "Invalid"   , int(FE_INVALID)  )
-                                        ( "AllExcept" , int(FE_ALL_EXCEPT));
+    static std::map<std::string,mask_type>& map() {
+         static std::map<std::string,mask_type> m = boost::assign::map_list_of
+                   ( "Inexact"   , mask_type(FE_INEXACT)  )
+                   ( "DivByZero" , mask_type(FE_DIVBYZERO))
+                   ( "Underflow" , mask_type(FE_UNDERFLOW))
+                   ( "Overflow"  , mask_type(FE_OVERFLOW) )
+                   ( "Invalid"   , mask_type(FE_INVALID)  )
+                   ( "AllExcept" , mask_type(FE_ALL_EXCEPT));
           return m;
     }
 #elif defined(_WIN32)
-    int get()             { return _control87(0,0); }
-    int disable(int mask) { return _control87(~mask,MCW_EM); }
-    int enable(int mask)  { return _control87(mask,MCW_EM); }
-    static std::map<std::string,int>& map() {
-         static std::map<std::string,int> m = boost::assign::map_list_of
-                                    ( "Inexact"   , int(EM_INEXACT)   )
-                                    ( "DivByZero" , int(EM_ZERODIVIDE) )
-                                    ( "Underflow" , int(EM_UNDERFLOW) )
-                                    ( "Overflow"  , int(EM_OVERFLOW)  )
-                                    ( "Invalid"   , int(EM_INVALID)  )
-                                    ( "AllExcept" , int(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
+    typedef unsigned int mask_type;
+    // VS8
+    // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
+    // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
+    // VS7
+    mask_type disable(mask_type mask) { return _controlfp(~mask,_MCW_EM);}
+    mask_type enable(mask_type mask)  { return _controlfp( mask,_MCW_EM);}
+    static std::map<std::string,mask_type>& map() {
+         static std::map<std::string,mask_type> m = boost::assign::map_list_of
+                   ( "Inexact"   , mask_type(EM_INEXACT)   )
+                   ( "DivByZero" , mask_type(EM_ZERODIVIDE))
+                   ( "Underflow" , mask_type(EM_UNDERFLOW) )
+                   ( "Overflow"  , mask_type(EM_OVERFLOW)  )
+                   ( "Invalid"   , mask_type(EM_INVALID)   )
+                   ( "AllExcept" , mask_type(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
          return m;
     }
 #else
-    int get() { 
+    typedef int mask_type;
+    mask_type disable(mask_type) { 
       throw GaudiException("FPE trapping not implemented..... ","",StatusCode::FAILURE);
-      return 0;
+      return 0; 
     }
-    int disable(int) { get(); return 0;}
-    int enable(int) { get(); return 0; }
-    static std::map<std::string,int>& map() {
-         static std::map<std::string,int> m;
-         get();
+    mask_type enable(mask_type) { return disable(); }
+    static std::map<std::string,mask_type>& map() {
+         static std::map<std::string,mask_type> m;
+         disable();
          return m;
     }
 #endif
@@ -68,25 +72,19 @@ namespace FPE {
 
 class FPEGuard {
 public: 
-    FPEGuard(int mask, bool reverse=false)
-    : m_mask(mask)
-    , m_initial( FPE::get() )
-    , m_reverse(reverse)
-    { 
-      if (m_reverse) { FPE::disable(m_mask); }
-      else           { FPE::enable(m_mask); }
-    }
+    FPEGuard(FPE::mask_type mask, bool reverse=false)
+    : m_initial( reverse ? FPE::disable(mask) : FPE::enable(mask) )
+    { }
+
     ~FPEGuard() 
     { 
-       FPE::disable(  ~m_initial);
-       FPE::enable(    m_initial);
-       if (FPE::get()!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
+       FPE::disable( ~m_initial );
+       FPE::mask_type mask = FPE::enable( m_initial );
+       if (mask!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
     }
 
 private:
-    int m_mask;
-    int m_initial;
-    bool m_reverse;
+    FPE::mask_type m_initial;
 };
 
 
@@ -96,7 +94,7 @@ class FPEMaskProperty {
 
      FPEMaskProperty() : m_mask(0) 
      { m_property.declareUpdateHandler(&FPEMaskProperty::updateHandler,this); }
-     int value() const { return m_mask;}
+     FPE::mask_type value() const { return m_mask;}
      property_type& property() { return m_property; }
      FPEMaskProperty& set(const std::vector<std::string>& s) 
      { property().setValue(s); return *this; }
@@ -105,7 +103,7 @@ class FPEMaskProperty {
          m_mask=0;
          for (std::vector<std::string>::const_iterator i=m_property.value().begin();
               i!=m_property.value().end(); ++i) {
-              std::map<std::string,int>::const_iterator j = FPE::map().find(*i);
+              std::map<std::string,FPE::mask_type>::const_iterator j = FPE::map().find(*i);
               if (j==FPE::map().end()) { 
                     throw GaudiException("FPEMaskProperty: unknown mask... ","",StatusCode::FAILURE);
               }
@@ -113,8 +111,8 @@ class FPEMaskProperty {
          }
      }
 
-     property_type m_property;
-     int           m_mask;
+     property_type   m_property;
+     FPE::mask_type  m_mask;
 };
 
 

@@ -11,6 +11,7 @@
       switched on -- and hence produce a confusing traceback)
    o  put platform dependent code together in a single place...
    o  add "Invalid" to possible checks (oops, forgot about that one)
+   o  simplify FPEGuard, deal with type differences between linux & win32
 
 !======================== LHCbAlgs v2r18 2008-06-04 ==========================
 ! 2008-06-04 - Gerhard Raven
