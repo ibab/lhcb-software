@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.3 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.4 2008-06-06 09:25:10 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -242,39 +242,44 @@ StatusCode L0DURawBankMonitor::execute() {
     fill( histo1D(HistoID("Status/Summary/1")), -1. , 1 ); // counter
     if(0 < inputStatus){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::InputData  , 1 );
-      Warning("L0DU bank monitor summary : -- input data error bit -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- input data error bit -- "<< endreq;
     }
     if( (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
-      Warning("L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "<< endreq;
     }
 
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
-      Warning("L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "<< endreq;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::Tell1 , 1 );
-      Warning("L0DU bank monitor summary : -- TELL1 error bit -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- TELL1 error bit -- "<< endreq;
     } 
     if( (m_fromRaw->status() & 0x2) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::DeMux , 1 );
-      Warning("L0DU bank monitor summary : -- DeMultiplexer error bit -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- DeMultiplexer error bit -- "<< endreq;
     }
     if( (m_fromRaw->status() & 0x4) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::TLK   , 1 );
-      Warning("L0DU bank monitor summary : -- TLK error bit -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- TLK error bit -- "<< endreq;
     }
     
     if( (m_fromRaw->status() & 0x8) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
-      Warning("L0DU bank monitor summary : -- Idle link error bit -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- Idle link error bit -- "<< endreq;
     }
     if( !check ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::EmulatorCheck , 1 );
-      Warning("L0DU bank monitor summary : -- Emulator check error -- ",StatusCode::SUCCESS).ignore();
+      info() << "L0DU bank monitor summary : -- Emulator check error -- "<< endreq;
 
     }    
+    if( NULL == config ){
+      fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::UnknownTCK , 1 );
+      info() << "L0DU bank monitor summary : -- unknown TCK error -- "<< endreq;
+    }
+
   }
 
 

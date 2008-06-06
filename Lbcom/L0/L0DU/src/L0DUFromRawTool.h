@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.5 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.6 2008-06-06 09:25:10 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -60,6 +60,8 @@ private:
   std::string m_rawLocation;
   std::string m_emulatorType;
   std::string m_configName;
+  bool m_muonNoZsup;
+  int m_force;
 
 
   IL0DUConfigProvider*   m_confTool;

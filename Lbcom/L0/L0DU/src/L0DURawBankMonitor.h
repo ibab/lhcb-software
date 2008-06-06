@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.2 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.3 2008-06-06 09:25:10 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -27,8 +27,8 @@ namespace L0DUBase{
                BxPGAShift    = 4,
                BxOdinShift   = 5,
                InputData     = 6,
-               EmulatorCheck = 7
-
+               EmulatorCheck = 7,
+               UnknownTCK    = 8,
     };
   }
 }

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.12 2008-06-04 10:00:35 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.13 2008-06-06 09:25:10 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,9 +32,11 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
 {
   declareInterface<IL0DUFromRawTool>(this);
   
-  declareProperty( "RawLocation"        , m_rawLocation = LHCb::RawEventLocation::Default   );
-  declareProperty( "EmulatorTool"   , m_emulatorType="L0DUEmulatorTool");
+  declareProperty( "RawLocation"             , m_rawLocation = LHCb::RawEventLocation::Default   );
+  declareProperty( "EmulatorTool"            , m_emulatorType="L0DUEmulatorTool");
   declareProperty( "L0DUConfigProviderName"  , m_configName="L0DUConfig");
+  declareProperty( "ForceNonZeroSupMuons"    , m_muonNoZsup=false);        // WARNING : for experts only
+  declareProperty( "ForceTCK"                , m_force = -1);              // WARNING : for experts only
 }
 //=============================================================================
 // Destructor
@@ -62,8 +64,10 @@ StatusCode L0DUFromRawTool::initialize(){
     m_processorDatas->insert( temp );
   }
 
-  
-
+  if( m_force >= 0 ){
+    warning() << " ========> WARNING : TCK WILL BE FORCED TO : " << format("0x%04X", m_force) 
+              << " YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING " << endreq;
+  }
   return sc;
 }
 
@@ -94,14 +98,13 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
-    Error("No L0DU bank found in rawEvent",StatusCode::SUCCESS).ignore();
+    info() << "READOUTSTATUS : no L0DU bank found in rawEvent" << endreq;
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }
   if( 1 != m_banks->size() ){
     std::stringstream msg("");
-    msg << "More than one L0DU bank has been found in the RawEvent ("  << m_banks->size() <<")";
-    Warning(msg.str() , StatusCode::SUCCESS).ignore();
+    info() << "READOUSTATUS : more than one L0DU bank has been found in the RawEvent ("  << m_banks->size() <<")" << endreq;
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::NonUnique);
   }  
   return true;
@@ -158,6 +161,22 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   // Version 0 : preliminary version used for DC06 simulated data
   //--------------------------------------------------------------
   if(m_vsn == 0){
+    
+    if( m_force >= 0 ){
+      std::stringstream msg("");
+      msg << " TCK IS FORCED TO BE " << format("0x%04X", m_force);
+      if( m_force != (int) m_tck){
+        msg << " INCONSISTENT with assumed TCK for bank version 0 : " << format("0x%04X", m_tck) ;
+        Warning( msg.str() , StatusCode::SUCCESS).ignore();
+      }else{
+        msg << " consistent with assumed TCK : " << format("0x%04X", m_tck) ;
+        debug() << msg.str() << endreq;
+      }
+      m_tck = (unsigned int) m_force;    
+    }    
+    
+    m_report.setTck( m_tck );
+
     unsigned int word;
     word = *m_data;
     if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", word)<< endreq;
@@ -190,13 +209,14 @@ bool L0DUFromRawTool::decodeBank(int ibank){
       info() << "L0DU bank version = 0 --> the TCK value is forced to " << tck.str() << endreq;
     } 
     if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endreq;
+
     config = m_confTool->config( m_tck );
 
     if( NULL == config){
       std::stringstream tck("");
-      tck << " Unable to load the configuration for tck = " 
-          <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport";      
+      tck << "Unable to load the configuration for tck = " <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport" ;
       Warning(tck.str(), StatusCode::SUCCESS).ignore();
+      m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Unknown);      
     }else{      
       m_report.setConfiguration(config);
     }    
@@ -213,11 +233,27 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     m_pgaVsn              = (*m_data & 0x00000FF0)  >> 4;
     m_status              = (*m_data & 0x0000F000)  >> 12;
     m_tck                 = (*m_data & 0xFFFF0000)  >> 16;
+
+
+    if( m_force >= 0 ){
+      std::stringstream msg("");
+      msg << " TCK IS FORCED TO BE " << format("0x%04X", m_force);
+      if( m_force != (int) m_tck){
+        msg << " INCONSISTENT with TCK in data : " << format("0x%04X", m_tck) ;
+        Warning( msg.str() , StatusCode::SUCCESS).ignore();
+      }else{
+        msg << " consistent with TCK in data : " << format("0x%04X", m_tck) ;
+        debug() << msg.str() << endreq;
+      }
+      m_tck = (unsigned int) m_force;    
+    }
     
-    if( 0x1 && m_status)m_roStatus.addStatus( m_source ,
-                                              LHCb::RawBankReadoutStatus::Tell1Error || LHCb::RawBankReadoutStatus::Tell1Sync);
-
-
+    m_report.setTck( m_tck );
+    
+    if( 0x1 && m_status){
+      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Error );
+      m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Tell1Sync );
+    }
 
     if ( msgLevel( MSG::DEBUG) ){
       debug() << "-- Global header " << endreq;
@@ -233,7 +269,8 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     config = m_confTool->config( m_tck);
     if( NULL == config){
       std::stringstream tck("");
-      tck << " Unable to load the configuration for tck = " <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport";      
+      m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Unknown);      
+      tck << " Unable to load the configuration for tck = " <<  format("0x%04X", m_tck) << " --> Incomplete L0DUReport" ;
       Warning(tck.str(), StatusCode::SUCCESS).ignore();
     }else{
       m_report.setConfiguration(config);
@@ -248,6 +285,16 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     m_bcid3                    = (*m_data & 0x0FE00000 ) >> 21;
     unsigned int  nmu          = (*m_data & 0xF0000000 ) >> 28;
     
+    if(m_muonNoZsup){
+      std::stringstream msg("");
+      if( 8 != nmu ){
+        msg << "READOUTSTATUS : muons are supposed to be NON 0-suppressed but the bank content indicates " 
+            << nmu << " muons only (will assume 8 muons for decoding)";
+        m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted);      
+        Warning(msg.str() , StatusCode::SUCCESS).ignore();
+      }
+      nmu = 8;
+    }
     
     m_dataMap["MuonCU0(Status)"] = (pga3Status >> 0) & 0xF;
     m_dataMap["MuonCU1(Status)"] = (pga3Status >> 4) & 0xF;
@@ -261,7 +308,9 @@ bool L0DUFromRawTool::decodeBank(int ibank){
       debug() << "-- PGA3 header -------------------------- "  << endreq;
       debug() << "   -> BCID : " <<  m_bcid3  <<  " [" << format("0x%04X",  m_bcid3) << "]"   <<endreq;
       debug() << "   -> Processors status : "  << pga3Status  <<  " [" << format("0x%04X",  pga3Status) << "]"   <<endreq;
-      debug() << "   -> Number of L0Muon in bank (0-sup) : " << nmu     << endreq;
+      debug() << "   -> Number of L0Muon in bank (0-sup) : " << nmu     ;
+      if( m_muonNoZsup ) debug() << " (FORCED TO BE NON ZeroSuppressed BY USER) " ;
+      debug() << endreq;
       debug() << "   -> PGA3 block expected size : "<< pga3Size  << " (bytes) " <<endreq;
     }
     
@@ -360,7 +409,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
                                           << " matches the actual bank size ________________ <** OK **> " <<endreq;
     }else{
       std::stringstream msg("");
-      msg << "   -> The total expected size "  
+      msg << "READOUTSTATUS : the total expected size "  
           << " does NOT match the bank size __________________  <** POSSIBLE DATA CORRUPTION **>";
       if ( msgLevel( MSG::DEBUG) )
         debug() << " Expected size : " << allSize << " Actual size : " << m_size << " DO NOT MATCH" << endreq;
@@ -373,11 +422,9 @@ bool L0DUFromRawTool::decodeBank(int ibank){
         << "   -> The PGA3 and PGA2 data are aligned _____________________________________ <** OK **> " 
         << endreq;
     }else{
-      std::stringstream msg("");
-      msg <<"   -> The PGA3 and PGA2 data are NOT aligned " ;
+      info() << "   -> The PGA3 and PGA2 data are NOT aligned "  << endreq;
       if ( msgLevel( MSG::DEBUG) )
         debug() << " BCIDs PGA2 (LSB)= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
-      Error(msg.str(), StatusCode::SUCCESS).ignore();
     }
     
     
@@ -678,7 +725,7 @@ void L0DUFromRawTool::encode(unsigned int data ,  const unsigned int base[L0DUBa
 
 bool L0DUFromRawTool::nextData(){
   if( NULL == ++m_data){
-    Error("No more data in bank --> CORRUPTION",StatusCode::SUCCESS).ignore();
+    Error("READOUTSTATUS : No more data in bank --> CORRUPTION",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted || LHCb::RawBankReadoutStatus::Incomplete);
     return false;
   }else{
