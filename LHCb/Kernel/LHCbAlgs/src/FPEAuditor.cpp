@@ -46,12 +46,14 @@ namespace FPE {
                                     ( "DivByZero" , int(EM_ZERODIVIDE) )
                                     ( "Underflow" , int(EM_UNDERFLOW) )
                                     ( "Overflow"  , int(EM_OVERFLOW)  )
-                                    ( "AllExcept" , int(EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
+                                    ( "Invalid"   , int(EM_INVALID)  )
+                                    ( "AllExcept" , int(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
          return m;
     }
 #else
     int get() { 
       throw GaudiException("FPE trapping not implemented..... ","",StatusCode::FAILURE);
+      return 0;
     }
     int disable(int) { get(); return 0;}
     int enable(int) { get(); return 0; }
@@ -76,7 +78,7 @@ public:
     }
     ~FPEGuard() 
     { 
-       FPE::disable( ~m_initial);
+       FPE::disable(  ~m_initial);
        FPE::enable(    m_initial);
        if (FPE::get()!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
     }
@@ -192,7 +194,7 @@ FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   , m_log( msgSvc() , name )
 {
     declareProperty("TrapOn", m_mask.set(  boost::assign::list_of("DivByZero")
-                                                                 ("Inexact")
+                                                                 ("Invalid")
                                                                  ("Overflow") ).property() );
     declareProperty("ActivateAt", m_when = boost::assign::list_of("Initialize")
                                                                  ("ReInitialize")
