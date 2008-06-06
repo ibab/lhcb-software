@@ -10,7 +10,7 @@ Purpose: LHCb High Level Trigger packages.
   - Hlt1HadronForwardSequence.opts: via forward
 	- Hlt1HadronViaTSequence.opts: via T, small update
   - Do not confirm the muons if they are done (solved a bug)	
-  - Rename the HadMuTrigger by Hlt1MuTrack trigger (for Hugo and Antonio)
+  - Hlt1MuTrackSequence - latest opts from Antonio
 
 !2008-06-04 - Johannes Albrecht
 	- Hlt1HadronViaTSequence.opts: add new options for Hadron alley via T

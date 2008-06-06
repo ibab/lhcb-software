@@ -1,0 +1,120 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+
+//#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+
+//---------------------------
+// HLT MuTrack Alley
+//--------------------------
+HltSummaryWriter.Save += {"PV2D",
+                          "L0TriggerMuon",
+                          "MuTrackMuonTF", //filtered muons
+                          "Hlt1MuTrack" //filtered vertices
+
+};
+HltAlleys.InputSelections += {"Hlt1MuTrack"};
+
+
+HltMuHadAlleySequence.Members = {
+  "L0Entry/MuTrackL0Entry",
+  "HltSelectionFilter/MuTrackEntry",  //L0 + muon confirmation 
+  "HltTrackFilter/MuTrackMuonTF",     //IP and pT muon track filter
+  "HltTrackUpgrade/HltRecoVelo",      // Velo reco  
+  "HltTrackFilter/MuTrackVeloCompanionTF",  //IP and DOCA filter for velo tracks
+  "HltVertexMaker/MuTrackVeloVMaker",           //make vertices from muon forward + velo track (+DOCA filter again?)
+  "HltVertexFilter/MuTrackVeloVFilter",       //DZ vertex filter    
+  "GaudiSequencer/HltDecodeT",         // T stations reco  
+  "HltVertexUpgrade/MuTrackCompanionUpgrade", // companion track => forward
+  "HltVertexFilter/Hlt1MuTrack"             // final trigger: companion track pT and vertex pointing
+};
+HltMuTrack.MeasureTime = true;
+
+//-------------------------------------------------------------------------
+// HLT MuTrack Alley options
+//-------------------------------------------------------------------------
+
+
+// L0 entry: single muon
+MuTrackL0Entry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
+MuTrackL0Entry.OutputLevel=3;
+
+// HLT entry: some L0 confirmed muon, from single muon alley;
+MuTrackEntry.InputSelections = {"MuonAndTVelo"};
+
+// Select Muons with IP and pT
+MuTrackMuonTF.InputSelection  = "MuonAndTVelo";
+MuTrackMuonTF.HistogramUpdatePeriod = 0;
+MuTrackMuonTF.FilterDescriptor = {"PT,>,1000.",
+                                  "IP_PV2D,||[],0.025,99999999."
+};
+MuTrackMuonTF.HistoDescriptor = {
+  "PT"     : ( "PT",0.,6000.,400),
+  "PTBest" : ( "PTBest",0.,6000.,400),
+  "IP"     : ( "IP",-1.,3.,400),
+  "IPBest" : ( "IPBest",-1.,3.,400) 
+};
+MuTrackMuonTF.OutputLevel = 3;
+
+// Select Velo tracks with an IP and DOCA
+
+MuTrackVeloCompanionTF.InputSelection  = "Velo";
+MuTrackVeloCompanionTF.HistogramUpdatePeriod = 0;
+MuTrackVeloCompanionTF.FilterDescriptor = {"IP_PV2D,||[],0.1,99999999.",
+                                           "DOCA_MuTrackMuonTF,<,0.3"
+
+//MuTrackVeloCompanionTF.FilterDescriptor = {"IP_PV2D,||[],0.,99999999.",
+//                                           "DOCA_MuTrackMuonTF,<,99999999."
+};
+MuTrackVeloCompanionTF.HistoDescriptor = { 
+  "IP"         : ( "IP",-1.,3.,400),
+  "IPBest"     : ( "IPBest",-1.,3.,400)
+};
+MuTrackVeloCompanionTF.OutputLevel = 3;
+
+
+// Make vertices with the velo companion tracks and filter with DOCA and DZ 
+MuTrackVeloVMaker.InputSelection    = "MuTrackMuonTF";
+MuTrackVeloVMaker.InputSelection2   = "MuTrackVeloCompanionTF";
+MuTrackVeloVMaker.FilterDescriptor = {"DOCA,<,0.3"
+};
+MuTrackVeloVMaker.HistogramUpdatePeriod = 0;
+//MuTrackVeloVMaker.HistoDescriptor = {  
+//  "DOCA" : ("DOCA",100,0.,1.),
+//  "DOCABest" : ( "DOCABest",100,0.,0.5)
+//};
+MuTrackVeloVMaker.OutputLevel = 3;
+
+
+MuTrackVeloVFilter.InputSelection  = "MuTrackVeloVMaker";
+MuTrackVeloVFilter.HistogramUpdatePeriod = 0;
+MuTrackVeloVFilter.FilterDescriptor = {"VertexDz_PV2D,>,1.5"
+//MuTrackVeloVFilter.FilterDescriptor = {"VertexDz_PV2D,>,-99999999."
+};
+MuTrackVeloVFilter.HistoDescriptor = {
+  "VertexDz_PV2D":("VertexDz_PV2D",-10.,50.,100),
+  "VertexDz_PV2DBest":("VertexDz_PV2D",-10.,50.,100)
+};
+MuTrackVeloVFilter.OutputLevel = 3;
+
+MuTrackCompanionUpgrade.InputSelection = "MuTrackVeloVFilter";
+MuTrackCompanionUpgrade.RecoName = "Forward";
+
+
+// select vertices if Pt and poiting
+Hlt1MuTrack.InputSelection   = "MuTrackCompanionUpgrade";
+Hlt1MuTrack.OutputLevel = 3;
+Hlt1MuTrack.FilterDescriptor = {"VertexMinPT,>,600.",
+                                   //"VertexMinPT,>,0.",
+                                   "VertexPointing_PV2D,<,1."
+};
+Hlt1MuTrack.HistogramUpdatePeriod = 0;
+Hlt1MuTrack.HistoDescriptor = {
+  "VertexMinPT" : ("VertexMinPT",0.,6000.,100),
+  "VertexMinPTBest" : ("VertexMinPTBest",0.,6000.,100),
+  "VertexPointing"     : ( "VertexPointing",0.,1.,100),
+  "VertexPointingBest" : ( "VertexPointingBest",0.,1.,100)
+};
+
+
