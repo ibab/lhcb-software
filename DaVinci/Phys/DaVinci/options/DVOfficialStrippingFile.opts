@@ -36,5 +36,5 @@ ApplicationMgr.OutStream = { "Sequencer/SeqWriteTag" } ;
 /*
  *  One could also write a DST
  */
-ApplicationMgr.OutStream += { "DSTOR" } ; 
+// ApplicationMgr.OutStream += { "DSTOR" } ; 
 

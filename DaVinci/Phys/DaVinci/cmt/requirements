@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.379 2008-06-06 11:27:40 pkoppenb Exp $
+# $Id: requirements,v 1.380 2008-06-06 11:28:15 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -10,9 +10,6 @@ version           v19r13
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src job options tests
-
-use Bu2LLK v* PhysSel
-
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
