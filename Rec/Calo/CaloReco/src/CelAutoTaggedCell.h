@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/30 09:42:06  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.4  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //
@@ -47,14 +50,14 @@ public:
 public:
   
   // Constructor
-  CelAutoTaggedCell ( const LHCb::CaloCellID& id = LHCb::CaloCellID()  )
+  /*  CelAutoTaggedCell ( const LHCb::CaloCellID& id = LHCb::CaloCellID()  )
     : m_tag      ( DefaultFlag )
     , m_status   ( NotTagged )
     , m_digit    ( 0 )
-  {}
+    {}*/
   
   // Destructor
-  ~CelAutoTaggedCell() {}
+  //  ~CelAutoTaggedCell() {}
   
   // Retrieve data 
   const LHCb::CaloDigit*  digit () const { return m_digit              ; }
