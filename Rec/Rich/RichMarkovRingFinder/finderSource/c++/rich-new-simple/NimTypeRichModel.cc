@@ -1,7 +1,6 @@
 
 #include "NimTypeRichModel.h"
 
-#include <unistd.h>
 #include <string>
 #include "EventDescription.h"
 #include "CircleParams.h"
