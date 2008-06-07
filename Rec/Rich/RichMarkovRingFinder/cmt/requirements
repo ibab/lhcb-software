@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.10 2008-06-07 16:10:17 jonrob Exp $
+# $Id: requirements,v 1.11 2008-06-07 16:16:16 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -51,5 +51,5 @@ apply_pattern component_library library=RichMarkovRingFinder
 private
 include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++
 # For test apps
-include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple
+#include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple
 #macro_append MarkovRingFinderTestlinkopts "" Linux " -lGL -lGLU "
