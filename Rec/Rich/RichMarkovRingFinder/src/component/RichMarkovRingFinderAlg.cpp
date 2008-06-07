@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.31 2008-06-07 16:09:43 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.32 2008-06-07 16:10:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -404,7 +404,7 @@ StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const
     ++nFile;
     // file name
     std::ostringstream filename;
-    filename << rich() << "-data" << nFile << ".txt";
+    filename << Rich::text(rich()) << "-data" << nFile << ".txt";
     // open file
     info() << "Creating data text file : " << filename.str() << endreq;
     std::ofstream file(filename.str().c_str(),std::ios::app);

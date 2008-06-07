@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.27 2008-06-07 16:09:43 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.28 2008-06-07 16:10:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -185,7 +185,11 @@ namespace Rich
       /// Default Constructor
       Rich2LeftPanelMarkovRingFinderAlg( const std::string& name,
                                          ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg(name,pSvcLocator,Rich::Rich2,Rich::left,Rich::Rich2Gas) { }
+        : RichMarkovRingFinderAlg( name,
+                                   pSvcLocator,
+                                   Rich::Rich2,
+                                   Rich::left,
+                                   Rich::Rich2Gas ) { }
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -201,7 +205,11 @@ namespace Rich
       /// Default Constructor
       Rich2RightPanelMarkovRingFinderAlg( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg(name,pSvcLocator,Rich::Rich2,Rich::right,Rich::Rich2Gas) { }
+        : RichMarkovRingFinderAlg( name,
+                                   pSvcLocator,
+                                   Rich::Rich2,
+                                   Rich::right,
+                                   Rich::Rich2Gas ) { }
     };
 
   }

@@ -1,11 +1,14 @@
 
 #include "CrudeSampler.h"
 #include "Utils/PressAnyKey.h"
-#include "urandom/seedCLHEPStaticEngine.h"
-#include "stringToNumber/stringToNumber.h"
+//#include "urandom/seedCLHEPStaticEngine.h"
+//#include "stringToNumber/stringToNumber.h"
 #include <stdlib.h> // for system
 #include <time.h>
 #include <sstream>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <set>
 #include "GenericRingFinder/GenericInferrer.h"
 #include "Constants.h"
@@ -24,9 +27,12 @@ int main(int nArgs, char * args[]) {
     GraphicsObjects::globalCanvas2 = new Canvas(nArgs, args, "Recent",400,400,420,50);
     GraphicsObjects::globalCanvas3 = new Canvas(nArgs, args, "Final",400,400,830,50);
 
-    GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter,false);
-    GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter,false);
-    GraphicsObjects::wc3 = new WarpableCanvas(*GraphicsObjects::globalCanvas3, Constants::viewRangeParameter,false);
+    //GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter,false);
+    //GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter,false);
+    //GraphicsObjects::wc3 = new WarpableCanvas(*GraphicsObjects::globalCanvas3, Constants::viewRangeParameter,false);
+    GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter);
+    GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter);
+    GraphicsObjects::wc3 = new WarpableCanvas(*GraphicsObjects::globalCanvas3, Constants::viewRangeParameter);
   } catch (...) {
     std::cerr << "There was some problem creating the canvasses -- aborting at " << __FILE__ << " " << __LINE__ << std::endl;
     return 2;
@@ -48,7 +54,8 @@ int main(int nArgs, char * args[]) {
       Data data;
       const bool randomData=false;
       if (randomData) {
-        long seed = seedCLHEPStaticEngine();
+        long seed = 123456789;
+        //long seed = seedCLHEPStaticEngine();
         //long seed = seedCLHEPStaticEngineWith(190040282);
         //long seed = seedCLHEPStaticEngineWith(218775376); // slow but right answer
         //long seed = seedCLHEPStaticEngineWith(428767025); // even slower but right answer
@@ -63,7 +70,9 @@ int main(int nArgs, char * args[]) {
         std::ostringstream file;
         static int iF(0);
         ++iF;
-        file << "DATA/Events/Rich2-data" << iF << ".txt";
+        static const char * env = getenv("RICHMFINDERDATALOCATION");
+        if ( env ) { file << env; } else { file << "DATA"; }
+        file << "/Events/Rich2-data" << iF << ".txt";
         try {
           data.setFromFile(file.str().c_str());
         }
@@ -75,10 +84,10 @@ int main(int nArgs, char * args[]) {
       };
 
 #ifdef LESTER_USE_GRAPHICSSS
-      GraphicsObjects::wc->clear();
-      Colour::kBlack().issue();
-      data.draw(*GraphicsObjects::wc);
-      GraphicsObjects::wc->update();
+      //GraphicsObjects::wc->clear();
+      //Colour::kBlack().issue();
+      //data.draw(*GraphicsObjects::wc);
+      //GraphicsObjects::wc->update();
 #endif
 
       // Convert data to the generic input format:
@@ -102,13 +111,13 @@ int main(int nArgs, char * args[]) {
       //c.configuration.clearAllparams();
 
       //c.configuration.setParam( "RunForFixedIterations", 1000 );
-      
+
       /*
-      c.configuration.setParam( "ScaleNumItsByHits", true );
-      c.configuration.setParam( "TargetIterations", 2000 );
-      c.configuration.setParam( "TargetHits", 250  );
-      c.configuration.setParam( "AbsMaxIts", 20000 );
-      c.configuration.setParam( "AbsMinIts", 400   );
+        c.configuration.setParam( "ScaleNumItsByHits", true );
+        c.configuration.setParam( "TargetIterations", 2000 );
+        c.configuration.setParam( "TargetHits", 250  );
+        c.configuration.setParam( "AbsMaxIts", 20000 );
+        c.configuration.setParam( "AbsMinIts", 400   );
       */
 
       boost::shared_ptr<GenRingF::GenericResults> outputP = c.fit(input);
@@ -137,6 +146,15 @@ int main(int nArgs, char * args[]) {
           std::cout << "     probabilityHitWasMadeByGivenCircle = " << prob << std::endl;
         }
       }
+
+#ifdef LESTER_USE_GRAPHICSSS
+      GraphicsObjects::wc->clear();
+      Colour::kBlack().issue();
+      //data.draw(*GraphicsObjects::wc);
+      data.draw(*GraphicsObjects::wc,true);
+      GraphicsObjects::wc->update();
+#endif
+
     }
 
   }
