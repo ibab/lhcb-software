@@ -56,12 +56,12 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 
     Lester::EventDescription currentPoint = initialPoint;
     double currentLogProb; // initialised in next statement
-    try 
+    try
     {
       currentLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(currentPoint, data);
       std::cout << "Current point has logProb " << currentLogProb << std::endl;
-    } 
-    catch (Lester::LogarithmicTools::LogOfZero &) 
+    }
+    catch (Lester::LogarithmicTools::LogOfZero &)
     {
       std::cout << "Initial point was not sufficiently good.  I refuse to carry on at line " << __LINE__ << " in " << __FILE__ << std::endl;
       throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
@@ -190,11 +190,11 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 
 }
 
-void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
-                             double & currentLogProb,
-                             Lester::ThreePointCircleProposerB & p,
-                             const Lester::NimTypeRichModel & ntrm,
-                             const Lester::Data & data)
+void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
+                               double & currentLogProb,
+                               Lester::ThreePointCircleProposerB & p,
+                               const Lester::NimTypeRichModel & ntrm,
+                               const Lester::Data & data )
 {
   data.doNothing();
 
@@ -203,17 +203,18 @@ void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
   const double remProb = 0.1;
   //const double jitProb = 1.-(insProb+remProb);
 
-  const double d = RandFlat::shoot();
+  const double           d = RandFlat::shoot();
+  std::cout << "  random d = " << d << std::endl;
   const bool proposeInsert = d<insProb;
   const bool proposeRemove = (proposeInsert?false:(d<insProb+remProb));
   const bool proposeJitter = !(proposeInsert||proposeRemove);
 
-
   Lester::EventDescription proposal = currentPoint;
-  double qReverseOverQForward = 1;
-  bool keepForSure=false;
+  double qReverseOverQForward       = 1;
+  bool keepForSure                  = false;
 
-  if (proposeInsert) {
+  if (proposeInsert)
+  {
     //std::cout << "Proposing insertion" << std::endl;
     // what shall we propose adding?
     const Lester::CircleParams & c = p.sample();
@@ -221,13 +222,18 @@ void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
     const double qForward = insProb*(p.probabilityOf(c));
     const double qReverse = remProb;
     qReverseOverQForward = qReverse/qForward;
-  } else if (proposeRemove) {
+  }
+  else if (proposeRemove)
+  {
     const unsigned int siz = currentPoint.circs.size();
-    if (siz==0) {
+    if (siz==0)
+    {
       //std::cout << "Proposing crummy removal" << std::endl;
       // leave as we are}
       keepForSure = true;
-    } else {
+    }
+    else
+    {
       //std::cout << "Proposing removal" << std::endl;
       const int toGo = RandFlat::shootInt(siz);
       proposal.circs[toGo] = proposal.circs[siz-1];
@@ -236,44 +242,57 @@ void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
       const double qReverse = insProb*p.probabilityOf(currentPoint.circs[toGo]);
       qReverseOverQForward = qReverse/qForward;
     };
-  } else {
+  }
+  else
+  {
     assert(proposeJitter);
     const unsigned int siz = currentPoint.circs.size();
-    if (siz==0) {
+    if (siz==0) 
+    {
       //std::cout << "Proposing crummy jitter" << std::endl;
       // leave as we are!
       keepForSure = true;
-    } else {
+    } 
+    else 
+    {
       //std::cout << "Proposing jitter" << std::endl;
       //qReverseOverQForward = 1;
       const int toJitter = RandFlat::shootInt(siz);
       proposal.circs[toJitter] = proposal.circs[toJitter].jitterSymm1();
-    };
-  };
+    }
+  }
 
   bool acceptedProposal = false;
-  try {
-    if (keepForSure) {
+  try 
+  {
+    if (keepForSure) 
+    {
       // do nothing -- treat as a failed proposal.
-    } else {
+    } 
+    else 
+    {
       const double proposedLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(proposal,data);
       const double rhoMax = std::exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
       acceptedProposal = Lester::lfin(rhoMax) && (RandFlat::shoot()<rhoMax);
 
-      if (acceptedProposal) {
+      if (acceptedProposal) 
+      {
         currentPoint = proposal;
         currentLogProb = proposedLogProb;
         //if (proposeJitter) {
         //  std::cout <<"Ooooh"<< std::endl;
         //  pressAnyKey();
         //};
-      };
-    };
-  } catch (...) {
+      }
+    }
+  } 
+  catch (...) 
+  {
     // infinitely unlikely point: Reject!
   };
 
-  if (acceptedProposal) {
+  if (acceptedProposal) 
+  {
 
     static unsigned int count=0;
 
