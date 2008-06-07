@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.8 2008-06-04 16:18:23 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.9 2008-06-07 01:31:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,13 +29,18 @@ Calo2Dview::Calo2Dview( const std::string& name,
     m_reg(),
     m_centre(),
     m_xsize(),
-    m_ysize()
+    m_ysize(),
+    m_threshold(-256.),
+    m_offset(0.0),
+    m_dim(true),
+    m_l0(false),
+    m_pin(false)
 {
-  declareProperty( "Threshold"     ,  m_threshold = -256. );
-  declareProperty( "PinView"       ,  m_pin  = false );
-  declareProperty( "Offset"        ,  m_offset  = 0.0 );
-  declareProperty( "ActualSize"    ,  m_dim  = true );
-  declareProperty( "L0ClusterView" ,  m_l0  = false );
+  declareProperty( "Threshold"     ,  m_threshold  );
+  declareProperty( "PinView"       ,  m_pin   );
+  declareProperty( "Offset"        ,  m_offset );
+  declareProperty( "ActualSize"    ,  m_dim );
+  declareProperty( "L0ClusterView" ,  m_l0  );
 
 
   setHistoDir( name );
@@ -87,10 +92,6 @@ StatusCode Calo2Dview::initialize() {
   m_regMap[0]    = 6;
   m_xsizeMap[0]   = m_caloMap[0]->cellSize( refSpd ) ;
   m_ysizeMap[0]  = m_xsizeMap[0] ;
-
-
-
-
 
   return StatusCode::SUCCESS;
 }
@@ -219,7 +220,9 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
   // threshold
   if( value < m_threshold){
-    if ( msgLevel(MSG::DEBUG) )debug() << "value = " << value << " < threshold = "<< m_threshold << endreq;
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "value = " << value << " < threshold = "<< m_threshold << endreq;
+    }
     return histo2D(unit);
   }
   
@@ -277,6 +280,9 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
           }
           double x = m_xsize *  ((double) iic+0.5 ) /(double) m_reg ;
           double y = m_ysize *  ((double) iir+0.5 ) /(double) m_reg ;
+          if ( msgLevel(MSG::VERBOSE) ){
+            verbose() << " FILLING " << x << " " << y << " " << value+m_offset << endreq;
+          }
           GaudiHistoAlg::fill( histo2D(unit) ,  x, y , value + m_offset);
         }
       }

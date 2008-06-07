@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.2 2008-06-04 16:18:23 odescham Exp $
+// $Id: Calo2Dview.h,v 1.3 2008-06-07 01:31:27 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -55,12 +55,18 @@ protected:
 
 
   // attributes
+  DeCalorimeter* m_calo;
+  int m_caloType;
+  unsigned int m_reg;
+  unsigned int m_centre;
+  double m_xsize;
+  double m_ysize;
   double  m_threshold;
-  bool m_pin;
   double  m_offset;
   bool m_dim;
   bool m_l0;
-
+  bool m_pin;
+ 
 private:
   std::map<int,DeCalorimeter*> m_caloMap;
   std::map<int,int> m_centreMap;
@@ -68,12 +74,6 @@ private:
   std::map<int,double> m_xsizeMap;
   std::map<int,double> m_ysizeMap;
   //
-  DeCalorimeter* m_calo;
-  int m_caloType;
-  unsigned int m_reg;
-  unsigned int m_centre;
-  double m_xsize;
-  double m_ysize;
   //
   std::map<HistoID,unsigned int> caloViewMap;
   
