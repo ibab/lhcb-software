@@ -13,7 +13,7 @@
 #include "Rich.h"
 #include "Utils/CheckForNan.h"
 
-CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm) 
+CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm)
   : m_ntrm(ntrm) {
 }
 
@@ -41,11 +41,11 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     };
 
     RectilinearCPQuantizer rcpq(ntrm);
-    Lester::ThreePointCircleProposerB p(data,
-                                        rcpq,
-                                        ntrm.circleMeanRadiusParameter*0.1,
-                                        ntrm.circleMeanRadiusParameter*0.1,
-					ntrm);
+    Lester::ThreePointCircleProposerB p ( data,
+                                          rcpq,
+                                          ntrm.circleMeanRadiusParameter*0.1,
+                                          ntrm.circleMeanRadiusParameter*0.1,
+                                          ntrm );
 
     Lester::EventDescription initialPoint;
 
@@ -56,10 +56,13 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 
     Lester::EventDescription currentPoint = initialPoint;
     double currentLogProb; // initialised in next statement
-    try {
+    try 
+    {
       currentLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(currentPoint, data);
-      //std::cout << "Current point has logProb " << currentLogProb << std::endl;
-    } catch (Lester::LogarithmicTools::LogOfZero &) {
+      std::cout << "Current point has logProb " << currentLogProb << std::endl;
+    } 
+    catch (Lester::LogarithmicTools::LogOfZero &) 
+    {
       std::cout << "Initial point was not sufficiently good.  I refuse to carry on at line " << __LINE__ << " in " << __FILE__ << std::endl;
       throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
     }
@@ -83,6 +86,7 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     // run options
     if ( configuration.hasParam("ScaleNumItsByHits") )
     {
+
       const double targetIts          = configuration.checkThenGetParam("TargetIterations");
       const double numHitsAtTargetIts = configuration.checkThenGetParam("TargetHits");
       const double absMaxIts          = configuration.checkThenGetParam("AbsMaxIts");
@@ -99,8 +103,9 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       unsigned int nIts = 0;
       while ( nIts < runIts )
       {
+        std::cout << "Iteration " << nIts << "/" << runIts << std::endl;
         ++nIts;
-        doTheWork(currentPoint,currentLogProb,p,ntrm,data);
+        doTheWork ( currentPoint, currentLogProb, p, ntrm, data );
       }
 
       // stop time
@@ -277,12 +282,12 @@ void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
     if (count==0) {
 
       if (GraphicsObjects::wc2) {
-	GraphicsObjects::wc2->clear();
-	Lester::Colour::kBlack().issue();
-	data.draw(*GraphicsObjects::wc2);
-	Lester::Colour::kRed().issue();
-	currentPoint.draw(*GraphicsObjects::wc2);
-	GraphicsObjects::wc2->update();
+        GraphicsObjects::wc2->clear();
+        Lester::Colour::kBlack().issue();
+        data.draw(*GraphicsObjects::wc2);
+        Lester::Colour::kRed().issue();
+        currentPoint.draw(*GraphicsObjects::wc2);
+        GraphicsObjects::wc2->update();
       }
       //std::cout << "Sample made and drawn" << std::endl;
       //pressAnyKey();
