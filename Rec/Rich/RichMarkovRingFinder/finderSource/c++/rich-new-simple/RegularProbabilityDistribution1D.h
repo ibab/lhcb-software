@@ -58,8 +58,10 @@ namespace Lester {
     void finishInitialisation() {
       assert(xVals.size()==pVals.size());
       if (xVals.size()<2) {
-        std::cout << "About to throw a benny" << std::endl;
-        throw NotEnoughData();
+        // CRJ : Cannot do this as it causes problems during CMT building
+        //std::cout << "About to throw a benny" << std::endl;
+        //throw NotEnoughData();
+        return;
       };
       //Check that the data really is "regular"
       minX=xVals[0];
