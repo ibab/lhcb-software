@@ -3,6 +3,7 @@
 #include "Utils/CannotConstructException.h"
 #include "Utils/PressAnyKey.h"
 #include "Utils/UpperGaussianDist.h"
+#include "Utils/CheckForNan.h"
 #include "GraphicsObjects.h"
 #include "ProbabilityUtils.h"
 #include "FiniteRelativeProbabilityChooser.h"
@@ -23,17 +24,18 @@ namespace Lester {
         // try again!
         ++failures;
         if (failures==1) {
-          std::cout << "WARNING: The situation with respect to very unlikely start points has caused an ineficiency in " << __PRETTY_FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << std::endl;
+          std::cout << "WARNING: The situation with respect to very unlikely start points has caused an ineficiency in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << std::endl;
         } else if (failures==5) {
-          std::cout << "SERIOUS WARNING: The situation with respect to very unlikely start points has causing a much larger problem in " << __PRETTY_FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!" <<  std::endl;
+          std::cout << "SERIOUS WARNING: The situation with respect to very unlikely start points has causing a much larger problem in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!" <<  std::endl;
         } else if (failures==100) {
-          std::cout << "FATAL ERROR: Program probably stuck in an infinite loop in " << __PRETTY_FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." <<  std::endl;
+          std::cout << "FATAL ERROR: Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." <<  std::endl;
         };
       };
     };
   };
 
-  CircleParams ThreePointCircleProposer::tryToSample() const {
+  CircleParams ThreePointCircleProposer::tryToSample() const 
+  {
     const int nDataPoints = m_data.hits.size();
     assert(nDataPoints>=3); // assured by our constructor!
 
@@ -41,7 +43,7 @@ namespace Lester {
     static bool first = true;
     if (first) {
       first = false;
-      std::cerr << __PRETTY_FUNCTION__ << " could be improved by seeding on a non-random point (" << __FILE__ << " " << __LINE__ <<")"<<std::endl;
+      std::cerr << __FUNCTION__ << " could be improved by seeding on a non-random point (" << __FILE__ << " " << __LINE__ <<")"<<std::endl;
     };
     const int a = RandFlat::shootInt(nDataPoints);
     assert(a>=0 && a<nDataPoints);
@@ -87,7 +89,7 @@ namespace Lester {
                 = m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
               //std::cerr << "LLOOM " << c<<" " <<prob_that_a_b_and_c_are_in_same_circle << " " << r << std::endl;
               frpc.addIndexAndProbability(c,prob_that_a_b_and_c_are_in_same_circle  /r /* CONTROVERSIAL FACTOR */);
-            } catch (CircleTheorems::RadiusIsInfinite rii) {
+            } catch (CircleTheorems::RadiusIsInfinite&) {
               // don't add the point to the frpc!
             };
           };
@@ -115,15 +117,15 @@ namespace Lester {
 
         return CircleParams(Small2Vector(smearedX,smearedY), smearedR);
 
-      } catch (CircleTheorems::PointAtInfinity pai) {
+      } catch (CircleTheorems::PointAtInfinity&) {
         std::cerr << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << std::endl;
         throw;
-      } catch (CircleTheorems::RadiusIsInfinite pai) {
+      } catch (CircleTheorems::RadiusIsInfinite&) {
         std::cerr << "CircleTheorems::RadiusIsInfinite problem at line " << __LINE__ << " of " << __FILE__ << std::endl;
         throw;
       };
 
-    } catch (FiniteRelativeProbabilityChooser<int>::NoSamplesPossible s) {
+    } catch (FiniteRelativeProbabilityChooser<int>::NoSamplesPossible&) {
       static bool first = true;
       if (first) {
         first = false;
@@ -268,7 +270,7 @@ namespace Lester {
         };
         //std::cout << "For part b frac is " << special << " / " << total << std::endl;
         const double frac = special/total;
-        if (!finite(frac)) {
+        if (!Lester::lfin(frac)) {
           // total is zero or close to zero
           return 0;
         };
@@ -290,7 +292,7 @@ namespace Lester {
               const double r = CircleTheorems::radiusOfCircleThrough(ha,hb,hc);
               prob_that_a_b_and_c_are_in_same_circle
                 = m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
-            } catch (CircleTheorems::RadiusIsInfinite rii) {
+            } catch (CircleTheorems::RadiusIsInfinite&) {
               prob_that_a_b_and_c_are_in_same_circle=0;
             };
 
@@ -302,7 +304,7 @@ namespace Lester {
         };
         //std::cout << "For part c frac is " << special << " / " << total << std::endl;
         const double frac = special/total;
-        if (!finite(frac)) {
+        if (!Lester::lfin(frac)) {
           // total is zero or close to zero
           return 0;
         };
@@ -329,7 +331,6 @@ namespace Lester {
       const Hit & ha = m_data.hits[a];
       const Hit & hb = m_data.hits[b];
       const Hit & hc = m_data.hits[c];
-
 
       // Finally, need to find out how likely the circle would be to have smeared to the current position!
       {
