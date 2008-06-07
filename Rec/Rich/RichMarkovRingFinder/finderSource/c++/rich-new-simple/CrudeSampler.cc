@@ -1,6 +1,8 @@
 
 #include "CrudeSampler.h"
 
+#include <ctime>
+
 #include "Data.h"
 #include "ThreePointCircleProposerB.h"
 #include "RectilinearCPQuantizer.h"
@@ -9,6 +11,7 @@
 #include "EventDescription.h"
 #include "CLHEP/Random/RandFlat.h"
 #include "Rich.h"
+#include "Utils/CheckForNan.h"
 
 CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm) 
   : m_ntrm(ntrm) {
@@ -249,8 +252,8 @@ void CrudeSampler::doTheWork(Lester::EventDescription & currentPoint,
       // do nothing -- treat as a failed proposal.
     } else {
       const double proposedLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(proposal,data);
-      const double rhoMax = exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
-      acceptedProposal = finite(rhoMax) && (RandFlat::shoot()<rhoMax);
+      const double rhoMax = std::exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
+      acceptedProposal = Lester::lfin(rhoMax) && (RandFlat::shoot()<rhoMax);
 
       if (acceptedProposal) {
         currentPoint = proposal;

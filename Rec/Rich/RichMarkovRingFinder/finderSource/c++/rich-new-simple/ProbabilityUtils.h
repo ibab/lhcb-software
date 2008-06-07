@@ -5,6 +5,8 @@
 //#include <gmpxx.h>
 #include <vector>
 #include <map>
+#include <cmath>
+#include <cassert>
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MathsConstants.h"
 
@@ -29,46 +31,14 @@ namespace Lester {
     //return ans;
     return cache[n];
   };
-  
-  /*
-  inline double oneOnNChooseSmall(const double n, const int r) {
-    // evaluates 1/(n choose r) assuming r is a "small" integer!
-    // if n<r it returns 0.
-    if (n<r) {
-      return 0;
-    };
-    double ans=1;
-    for (int i=0; i<r; ++i) {
-      const double ri = static_cast<double>(i);
-      ans *= (r-ri)/(n-ri);
-    };
-    return ans;
-    };
-  */
-  /*
- inline mpz_class nChooseSmall(const mpz_class & n, unsigned long int r) {
-    // evaluates (n choose r) assuming r is a "small" integer!
-    // if n<r it returns 0.
-    if (n<r) {
-      return mpz_class(0);
-    };
-    mpz_t nt;
-    mpz_init(nt);
-    mpz_set(nt, n.get_mpz_t());
-    mpz_t result;
-    mpz_init(result);
-    mpz_bin_ui(result, nt, r);
-    const mpz_class ans(result);
-    mpz_clear(result);
-    mpz_clear(nt);
-    return ans;
-  };
-*/
+ 
   inline double poissonProb(const int n, const double mu) {
     if (n<=40) {
-      return pow(mu,n)*exp(-mu)/factorial(n); 
+      return std::pow(mu,n)*std::exp(-mu)/factorial(n); 
     } else {
-      return (exp(n*log(mu)-mu-n*log(n)-0.5*log(n)+n)/sqrt(MathsConstants::twoPi)); // check!
+      const double logn = std::log((double)n);
+      return (std::exp((double)n*std::log(mu)-mu-n*logn - 
+                       0.5*logn+n)/std::sqrt(MathsConstants::twoPi)); // check!
     };
   };
 
@@ -77,7 +47,7 @@ namespace Lester {
 			     const double sig) {
     const double thing=(x-mu)/sig;
     const double thingSq=thing*thing;
-    return 1./(sqrt(MathsConstants::twoPi)*sig)*exp(-0.5*thingSq);
+    return 1./(std::sqrt(MathsConstants::twoPi)*sig)*std::exp(-0.5*thingSq);
   };
   inline std::vector<int> getSetOfMDifferentIntsFromN(const int n, const int m) {
     assert(n>=m);
@@ -115,12 +85,12 @@ namespace Lester {
 
   inline double exponentialProb(const double x,
 				const double mean) {
-    return (exp(-x/mean))/mean;
+    return (std::exp(-x/mean))/mean;
   };
   inline double exponentialProbAbove(const double x,
 				     const double mean) {
     //prob that var distrib expntly with mean mu is greater than x
-    return exp(-x/mean);
+    return std::exp(-x/mean);
   };
   inline double reciprocalSum(const int n) {
     // Could speed up // LESTER

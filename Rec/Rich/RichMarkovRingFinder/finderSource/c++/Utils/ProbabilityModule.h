@@ -3,10 +3,11 @@
 #define PROBABILITYMODULEH
 
 // fwd dec
-#include "Utils/ProbabilityModule.fwd" 
+#include "Utils/ProbabilityModule.fwd"
 
 // includes
 #include "Utils/LogarithmicTools.h"
+#include "Utils/CheckForNan.h"
 #include <iostream>
 
 // declaration
@@ -45,8 +46,8 @@ struct ProbabilityModule {
       throw Lester::LogarithmicTools::LogOfZero();
     };
     const double logProb = log(prob);
-    if (!finite(logProb)) {
-      throw Lester::LogarithmicTools::LogOfZero();      
+    if (!Lester::lfin(logProb)) {
+      throw Lester::LogarithmicTools::LogOfZero();
     };
     return logProb;
   };
@@ -56,8 +57,8 @@ struct ProbabilityModule {
       throw Lester::LogarithmicTools::LogOfZero();
     };
     const double logProb = log(prob);
-    if (!finite(logProb)) {
-      throw Lester::LogarithmicTools::LogOfZero();      
+    if (!Lester::lfin(logProb)) {
+      throw Lester::LogarithmicTools::LogOfZero();
     };
     return logProb;
   };
