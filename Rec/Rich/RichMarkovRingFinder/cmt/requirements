@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.9 2006-07-27 20:15:16 jonrob Exp $
+# $Id: requirements,v 1.10 2008-06-07 16:10:17 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -18,6 +18,7 @@ branches          cmt doc src
 #============================================================================
 set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
 set RICHMFINDERDATALOCATION $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/DATA
+#set LESTER_USE_GRAPHICS true
 
 #============================================================================
 # Usages
@@ -29,9 +30,17 @@ use CLHEP v* LCG_Interfaces  -no_auto_imports
 #============================================================================
 # Component library building rule
 #============================================================================
+library RichMarkovRingFinder -import=CLHEP \
+            ../src/component/*.cpp \
+            ../finderSource/c++/rich-new-simple/*.cc
 
-library RichMarkovRingFinder -import=CLHEP   ../src/component/*.cpp \
-                                     ../finderSource/c++/rich-new-simple/*.cc
+#============================================================================
+# Test applications
+#============================================================================
+#application MarkovRingFinderTest -import=CLHEP \
+# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/*.cc \
+# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/opengl/*.cc \
+# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/mainApps/jonescSampler.cc
 
 #============================================================================
 # define component library link options
@@ -39,6 +48,8 @@ library RichMarkovRingFinder -import=CLHEP   ../src/component/*.cpp \
 apply_pattern component_library library=RichMarkovRingFinder
 
 #============================================================================
-#private
+private
 include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++
-#apply_pattern    package_Cshlibflags
+# For test apps
+include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple
+#macro_append MarkovRingFinderTestlinkopts "" Linux " -lGL -lGLU "

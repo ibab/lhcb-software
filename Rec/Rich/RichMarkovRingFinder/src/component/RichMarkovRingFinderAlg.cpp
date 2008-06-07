@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.30 2008-05-23 14:19:36 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.31 2008-06-07 16:09:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -147,11 +147,9 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
     GenRingF::GenericInput input;
 
     // add hits
-    const StatusCode dataAddSc = addDataPoints(input);
-    if ( dataAddSc.isFailure() ) return dataAddSc;
-
-    if ( input.hits.size() < m_maxHitsEvent )
+    if ( addDataPoints(input) )
     {
+      // hit selection was OK, so do the ring finding
 
       // run the fit
       boost::shared_ptr<GenRingF::GenericResults> outputP = m_sampler->fit(input);
@@ -170,10 +168,6 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
       const StatusCode saveSc = saveRings(input,output);
       if ( saveSc.isFailure() ) return saveSc;
 
-    }
-    else
-    {
-      Warning( "Large event skipped", StatusCode::SUCCESS );
     }
 
   }
@@ -210,10 +204,11 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
   RichRecRings * bestrings = getRings( m_bestRingLocation     );
   RichRecRings * isorings  = getRings( m_isolatedRingLocation );
 
+  debug() << "Found " << output.rings.size() << " Markov ring candidates" << endreq;
+
   // loop over final rings
   for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
-        iRing != output.rings.end();
-        ++iRing )
+        iRing != output.rings.end(); ++iRing )
   {
     verbose() << "Considering Markov Ring : " << *iRing << endreq;
 
@@ -303,6 +298,10 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
 
   } // loop over rings
 
+  debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
+  debug() << " -> Saved " << bestrings->size() << " rings at " << m_bestRingLocation << endreq;
+  debug() << " -> Saved " << isorings->size() << " rings at " << m_isolatedRingLocation << endreq;
+
   return StatusCode::SUCCESS;
 }
 
@@ -337,22 +336,29 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
   }
 }
 
-StatusCode RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
+bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
 {
+  bool OK = true;
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
-  for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
+  if ( range.size() < m_maxHitsEvent )
   {
-    // get X and Y
-    const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
-    const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
-    verbose() << "Adding data point at " << X << "," << Y << endreq;
-    input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
+    for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
+    {
+      // get X and Y
+      const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+      const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+      verbose() << "Adding data point at " << X << "," << Y << endreq;
+      input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
+    }
+    debug() << "Selected " << input.hits.size() << " data points" << endreq;
   }
-
-  debug() << "Selected " << input.hits.size() << " data points" << endreq;
-
-  return StatusCode::SUCCESS;
+  else
+  {
+    Warning( "Large event skipped", StatusCode::SUCCESS );
+    OK = false;
+  }
+  return OK;
 }
 
 void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
@@ -365,7 +371,7 @@ void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
   {
     const double X( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
     const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
-    const Gaudi::XYZPoint pLocal ( X, Y, 0 );
+    const Gaudi::XYZPoint pLocal ( X, Y, 0*Gaudi::Units::cm );
     ring->ringPoints().push_back( RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,rich(),panel()),
                                                       pLocal,
                                                       RichSmartID(rich(),panel()),

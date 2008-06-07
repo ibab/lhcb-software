@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.26 2008-05-23 14:19:36 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.27 2008-06-07 16:09:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -102,7 +102,7 @@ namespace Rich
       LHCb::RichRecRings * getRings( const std::string & location ) const;
 
       /// Adds data points to the the ring finder input
-      StatusCode addDataPoints( GenRingF::GenericInput & input ) const;
+      bool addDataPoints( GenRingF::GenericInput & input ) const;
 
       /// Save rings to TES
       StatusCode saveRings( const GenRingF::GenericInput & input,
