@@ -103,9 +103,10 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       unsigned int nIts = 0;
       while ( nIts < runIts )
       {
-        std::cout << "Iteration " << nIts << "/" << runIts << std::endl;
         ++nIts;
+        //std::cout << "Iteration " << nIts << "/" << runIts << std::endl;
         doTheWork ( currentPoint, currentLogProb, p, ntrm, data );
+        //std::cout << "  -> " << currentPoint << " " << currentLogProb << std::endl;
       }
 
       // stop time
@@ -204,7 +205,6 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
   //const double jitProb = 1.-(insProb+remProb);
 
   const double           d = RandFlat::shoot();
-  std::cout << "  random d = " << d << std::endl;
   const bool proposeInsert = d<insProb;
   const bool proposeRemove = (proposeInsert?false:(d<insProb+remProb));
   const bool proposeJitter = !(proposeInsert||proposeRemove);
