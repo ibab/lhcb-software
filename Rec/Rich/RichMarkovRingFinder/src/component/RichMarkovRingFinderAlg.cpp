@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.37 2008-06-08 18:17:26 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.38 2008-06-08 20:06:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -155,15 +155,18 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
     GenRingF::GenericInput input;
 
     // add hits
-    if ( addDataPoints(input) )
+    const bool OK = addDataPoints(input);
+    if ( OK )
     {
       // hit selection was OK, so do the ring finding
 
       // run the fit
       boost::shared_ptr<GenRingF::GenericResults> outputP = m_sampler->fit(input);
       const GenRingF::GenericResults & output = *outputP;
-      debug() << "Markov fit took " << output.numIterations << " iterations in "
-              << output.timeTaken << " ms" << endreq;
+
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Markov fit took " << output.numIterations << " iterations in "
+                << output.timeTaken << " ms" << endreq;
 
       // some plots on fit stats
       plot1D( output.numIterations, "#iterations", 0, 15000 );
@@ -177,6 +180,8 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
       if ( saveSc.isFailure() ) return saveSc;
 
     }
+
+    counter("Processed Events") += (int)OK;
 
   }
   catch ( const std::exception & excpt )
@@ -218,7 +223,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
   for ( GenRingF::GenericResults::GenericRings::const_iterator iRing = output.rings.begin();
         iRing != output.rings.end(); ++iRing )
   {
-    verbose() << "Considering Markov Ring : " << *iRing << endreq;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Considering Markov Ring : " << *iRing << endreq;
 
     // Create a new Ring object
     RichRecRing * newRing = new RichRecRing();
@@ -234,20 +240,24 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
         ringHasHits = true;
         RichRecPixel * pix = richPixels()->object( (*iHit).index().value() );
         if ( !pix ) return Error( "Markov hit has bad pixel pointer" );
-        verbose() << "  -> Adding pixel " << pix->key() << " to ring" << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "  -> Adding pixel " << pix->key() << " to ring" << endreq;
         newRing->richRecPixels().push_back( RichRecPixelOnRing(pix,prob) );
       }
     }
     // are we going to keep this ring ?
     if ( newRing->richRecPixels().empty() )
     {
-      verbose() << " -> ring has no good hits -> rejecting" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> ring has no good hits -> rejecting" << endreq;
       delete newRing;
       continue;
     }
     else
     {
-      verbose() << " -> ring has " << newRing->richRecPixels().size() << " good hits -> keeping" << endreq;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> ring has " << newRing->richRecPixels().size()
+                  << " good hits -> keeping" << endreq;
 
       // insert in Gaudi container
       rings->insert( newRing );
@@ -290,7 +300,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       if ( newRing->richRecPixels().size() > m_minNumHitsBest &&
            avProb > m_minAvProbBest )
       {
-        verbose() << " -> Ring selected as a 'best' ring" << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Ring selected as a 'best' ring" << endreq;
         bestrings->insert( new RichRecRing(*newRing) );
       }
 
@@ -298,7 +309,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       if ( newRing->richRecPixels().size() > m_minNumHitsIsolated &&
            avProb > m_minAvProbIsolated )
       {
-        verbose() << " -> Ring selected as a 'isolated' ring" << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << " -> Ring selected as a 'isolated' ring" << endreq;
         isorings->insert( new RichRecRing(*newRing) );
       }
 
@@ -306,9 +318,12 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
 
   } // loop over rings
 
-  debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
-  debug() << " -> Saved " << bestrings->size() << " rings at " << m_bestRingLocation << endreq;
-  debug() << " -> Saved " << isorings->size() << " rings at " << m_isolatedRingLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << " -> Saved " << rings->size() << " rings at " << m_ringLocation << endreq;
+    debug() << " -> Saved " << bestrings->size() << " rings at " << m_bestRingLocation << endreq;
+    debug() << " -> Saved " << isorings->size() << " rings at " << m_isolatedRingLocation << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
