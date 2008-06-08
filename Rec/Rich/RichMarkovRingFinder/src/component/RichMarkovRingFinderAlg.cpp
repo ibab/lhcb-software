@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.43 2008-06-08 20:20:43 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.44 2008-06-08 23:22:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -361,30 +361,37 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
 
 bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
 {
-  bool OK = true;
+  bool OK = false;
   // Iterate over pixels
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
-  if ( range.size() < m_maxHitsEvent )
+  if ( range.size() > m_maxHitsEvent )
   {
+    std::ostringstream mess;
+    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
+         << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
+    Warning( mess.str(), StatusCode::SUCCESS, 3 );
+  }
+  else if ( range.size() < 3 )
+  {
+    Warning( "Too few hits to find any rings", StatusCode::SUCCESS, 3 );
+  }
+  else
+  {
+    OK = true;
     input.hits.reserve( range.size() );
     for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
       // get X and Y
       const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
       const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
-      verbose() << "Adding data point at " << X << "," << Y << endreq;
       input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Adding data point at " << X << "," << Y << endreq;
     }
-    debug() << "Selected " << input.hits.size() << " data points" << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Selected " << input.hits.size() << " data points" << endreq;
   }
-  else
-  {
-    std::ostringstream mess;
-    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
-         << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
-    Warning( mess.str(), StatusCode::SUCCESS, 3 );
-    OK = false;
-  }
+  
   return OK;
 }
 

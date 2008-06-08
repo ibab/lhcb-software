@@ -160,6 +160,10 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     return ansP;
 
   } 
+  catch ( const CouldNotFit & excpt )
+  {
+    throw excpt;
+  }
   catch ( const std::exception & excpt ) 
   {
     throw CouldNotFit( excpt.what() );
