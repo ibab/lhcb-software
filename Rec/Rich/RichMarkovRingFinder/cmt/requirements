@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.12 2008-06-07 21:09:18 jonrob Exp $
+# $Id: requirements,v 1.13 2008-06-08 11:38:33 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -24,24 +24,17 @@ set RICHMFINDERDATALOCATION $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-ne
 # Usages
 #============================================================================
 use   RichRecBase      v*    Rich
-use GSL                v*    LCG_Interfaces 
+use   GSL              v*    LCG_Interfaces 
 # Needs CLHEP for the moment. Need to decide how to remove this in the long run
-use CLHEP              v*    LCG_Interfaces  -no_auto_imports
+use   CLHEP            v*    LCG_Interfaces  -no_auto_imports
 
 #============================================================================
 # Component library building rule
 #============================================================================
 library RichMarkovRingFinder -import=CLHEP \
             ../src/component/*.cpp \
+            ../finderSource/c++/Utils/*.cc \
             ../finderSource/c++/rich-new-simple/*.cc
-
-#============================================================================
-# Test applications
-#============================================================================
-#application MarkovRingFinderTest -import=CLHEP \
-# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/*.cc \
-# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/opengl/*.cc \
-# $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple/mainApps/jonescSampler.cc
 
 #============================================================================
 # define component library link options
@@ -51,6 +44,3 @@ apply_pattern component_library library=RichMarkovRingFinder
 #============================================================================
 private
 include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++
-# For test apps
-#include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/rich-new-simple
-#macro_append MarkovRingFinderTestlinkopts "" Linux " -lGL -lGLU "

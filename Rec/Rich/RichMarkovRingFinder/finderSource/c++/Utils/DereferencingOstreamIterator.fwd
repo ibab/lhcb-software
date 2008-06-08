@@ -1,4 +1,0 @@
-
-template<class T, int N=0>
-class DereferencingOstreamIterator;
-
