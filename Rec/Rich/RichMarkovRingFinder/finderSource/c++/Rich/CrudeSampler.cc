@@ -34,11 +34,13 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     const Lester::NimTypeRichModel & ntrm = *m_ntrm;
 
     Lester::Data data;
+    data.hits.reserve( input.hits.size() );
     for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
          it != input.hits.end();
-         ++it) {
-      data.hits.push_back(Lester::Hit(it->x(), it->y()));
-    };
+         ++it) 
+    {
+      data.hits.push_back(Lester::Hit(it->x(),it->y()));
+    }
 
     RectilinearCPQuantizer rcpq(ntrm);
     Lester::ThreePointCircleProposerB p ( data,

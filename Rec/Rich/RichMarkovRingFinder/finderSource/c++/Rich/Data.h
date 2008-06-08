@@ -8,9 +8,11 @@
 #include "CircleParams.h"
 #include "NimTypeRichModel.fwd"
 
-namespace Lester {
-
-  class Data {
+namespace Lester 
+{
+  
+  class Data 
+  {
   public:
     typedef std::vector<Hit> Hits;
     void doNothing() const throw();
@@ -21,9 +23,8 @@ namespace Lester {
   public:
     Hits hits;
     void setFromFile(const std::string & file);
-    void jokeSetRandom(const NimTypeRichModel & ntrm); /* deprecated */
   };
-
+  
 }
 
 #endif

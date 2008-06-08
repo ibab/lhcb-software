@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.36 2008-06-08 16:05:28 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.37 2008-06-08 18:17:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -351,6 +351,7 @@ bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) co
   const IPixelCreator::PixelRange range = pixelCreator()->range( rich(), panel() );
   if ( range.size() < m_maxHitsEvent )
   {
+    input.hits.reserve( range.size() );
     for ( RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
       // get X and Y

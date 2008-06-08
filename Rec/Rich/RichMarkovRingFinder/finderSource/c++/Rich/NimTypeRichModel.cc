@@ -276,13 +276,15 @@ namespace Lester {
 
   // Were in CirclePriors ----------------------------
 
-  const char * NimTypeRichModel::getCacheLocation() const {
+  const std::string NimTypeRichModel::getCacheLocation() const 
+  {
     static const char * env = getenv("RICHMFINDERDATALOCATION");
     static const std::string loc = ( env ? std::string(env)+"/approxCoPointSep.cache" : "approxCoPointSep.cache" );
-    return loc.c_str();
+    return loc;
   }
 
-  double NimTypeRichModel::sampleFromCircleRadiusDistribution() const {
+  double NimTypeRichModel::sampleFromCircleRadiusDistribution() const 
+  {
     if (Constants::scenario == Constants::simpleModel) {
       return RandExponential::shoot(circleMeanRadiusParameter);
     } else if (Constants::scenario == Constants::rich2A) {
@@ -293,7 +295,8 @@ namespace Lester {
     };
   }
 
-  double NimTypeRichModel::priorProbabilityOfRadius(const double r) const {
+  double NimTypeRichModel::priorProbabilityOfRadius(const double r) const 
+  {
     if (Constants::scenario == Constants::simpleModel) {
       return exponentialProb(r,circleMeanRadiusParameter);
     } else if (Constants::scenario == Constants::rich2A) {
@@ -303,7 +306,8 @@ namespace Lester {
     };
   }
 
-  double NimTypeRichModel::sampleFromCircleRadiusDistributionAbove(const double r) const {
+  double NimTypeRichModel::sampleFromCircleRadiusDistributionAbove(const double r) const 
+  {
     if (Constants::scenario == Constants::simpleModel) {
       return r+RandExponential::shoot(circleMeanRadiusParameter);
     } else if (Constants::scenario == Constants::rich2A) {
@@ -349,7 +353,7 @@ namespace Lester {
     if (inner<=0) {
       return 0;
     };
-    const double ans = rSq/(deltaOnTwo*sqrt(inner));
+    const double ans = rSq/(deltaOnTwo*std::sqrt(inner));
     return ans;
   }
 
@@ -366,18 +370,22 @@ namespace Lester {
       const std::string filename ( getCacheLocation() );
       Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
       std::ifstream f(filename.c_str());
-      if (true/*FIX*/) 
+      if ( f.is_open() ) 
       {
-        double key,ans;
-        while (f>>key) 
+        double key(0),ans(0);
+        while ( f>>key ) 
         {
           f >> ans;
-          cache[key]=ans;
+          cache[key] = ans;
           Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
                                        << ans << " from file" << Lester::endmsg;
-        };
-      };
-    };
+        }
+      }
+      else
+      {
+        Lester::messHandle().error() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
+      }
+    }
 
     const double one = 1;
     const double tol = 0.02; // interpolate at 2% intervals
@@ -432,37 +440,50 @@ namespace Lester {
           try {
             const int warmUpSteps=10; // must be at least 2
             assert (warmUpSteps>=2);
-            for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n) {
+            for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n) 
+            {
               const double r = sampleFromCircleRadiusDistributionAbove(rmin);
               const double rSq = r*r;
               const double contrib = approxCoPointSepFunctionPart2(deltaOnTwo, rSq);
               lastAvg=avg;
               sum+= contrib;
               avg = sum/static_cast<double>(n);
-            };
+            }
             // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
             avg*=priorProbabilityOfRadiusAbove(rmin);
-          } catch (NimTypeRichModel::SampleIsImpossible&) {
+          } 
+          catch (NimTypeRichModel::SampleIsImpossible&) 
+          {
             Lester::messHandle().verbose() << " SampleIsImpossibleInCop at " <<deltaOnTwo<< Lester::endmsg;
             avg=0;
-          };
+          }
 
           cache[deltaOnTwo]=avg;
           {
             try
             {
               // need to add read/write idea here
-              std::ofstream cf(getCacheLocation(),std::ios::app);
-              if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg)) {
-                cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-              };
+              const std::string filename = getCacheLocation();
+              std::ofstream cf(filename.c_str(),std::ios::app);
+              if ( cf.is_open() )
+              {
+                if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg)) 
+                {
+                  cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
+                  Lester::messHandle().debug() << "Wrote approxCoPointSep[ " << deltaOnTwo <<" ] = " 
+                                               << avg << " to cache file" << Lester::endmsg;
+                }
+              }
+              else
+              {
+                Lester::messHandle().warning() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
+              }
             }
             catch ( const std::exception & expt )
             {
               Lester::messHandle().warning() << "Exception '" << expt.what()
                                              << "' caught writing to cache -> results not saved" << Lester::endmsg;
             }
-            Lester::messHandle().debug() << "Wrote approxCoPointSep[ "<<deltaOnTwo<<" ] = " << avg << " to cache file" << Lester::endmsg;
           };
           return avg;
         };
@@ -544,7 +565,7 @@ namespace Lester {
     // *   assumes circles are distributed evenly across space, so makes no use
     //     of any knowledge that could be gleaned from the distribution of centres.
     const double deltaSq = (a-b).mag2();
-    const double delta = sqrt(deltaSq);
+    const double delta = std::sqrt(deltaSq);
     const double deltaOnTwo = delta*0.5;
 
     const double mu // mean number of hits per unit length on circles

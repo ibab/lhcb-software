@@ -61,27 +61,18 @@ namespace Lester {
     double priorProbabilityOf(const CircleParams & cp) const;
     
     // were in CirclePriors ------------------------------------------
-    const char * getCacheLocation() const;
-    class SampleIsImpossible {
-    };
+    const std::string getCacheLocation() const;
+    class SampleIsImpossible { };
     double sampleFromCircleRadiusDistribution() const;
     double priorProbabilityOfRadius(const double r) const;
     double sampleFromCircleRadiusDistributionAbove(const double r) const;
     double priorProbabilityOfRadiusAbove(const double r) const;
     
-    /*
-    // I don't trust this function any more
-    static double priorProbabilityOfChordLengthGivenRadius(const double rho, const double r);
-    */
-    
-    /*
-    // I don't trust this function any more
-    static double PROPTO_priorProbabilityOfRadiusGivenChordLength(const double r, const double rho);
-    */
-    
     double sampleFromApproximateCoPointSeparationDistribution() const;
+
   private:
     double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
+
   private:
     double approxCoPointSepFunctionPart1(const double deltaOnTwo) const;
     
