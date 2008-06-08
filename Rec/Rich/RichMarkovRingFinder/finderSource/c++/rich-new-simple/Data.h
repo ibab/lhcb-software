@@ -1,13 +1,12 @@
 
-
 #ifndef LESTER_DATA_H
 #define LESTER_DATA_H
+
+#include <vector>
 
 #include "Hit.h"
 #include "CircleParams.h"
 #include "NimTypeRichModel.fwd"
-
-#include <vector>
 
 namespace Lester {
 
@@ -21,10 +20,6 @@ namespace Lester {
     Hits secretBg;
   public:
     Hits hits;
-#ifdef LESTER_USE_GRAPHICS
-    void draw(BasicCanvasInterface & canvas, const bool showTruth=false,
-              const double hitScaleFactor=1.0) const;
-#endif
     void setFromFile(const std::string & file);
     void jokeSetRandom(const NimTypeRichModel & ntrm); /* deprecated */
   };

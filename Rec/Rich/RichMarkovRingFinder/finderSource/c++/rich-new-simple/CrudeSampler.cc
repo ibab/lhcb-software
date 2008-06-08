@@ -6,23 +6,22 @@
 #include "Data.h"
 #include "ThreePointCircleProposerB.h"
 #include "RectilinearCPQuantizer.h"
-#include "GraphicsObjects.h"
 #include "NimTypeRichModel.h"
 #include "EventDescription.h"
 #include "CLHEP/Random/RandFlat.h"
-#include "Rich.h"
+//#include "Rich.h"
 #include "Utils/CheckForNan.h"
 
 CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm)
-  : m_ntrm(ntrm) {
+  : m_ntrm(ntrm) { }
+
+std::ostream & CrudeSampler::printMeTo(std::ostream & os) const 
+{
+  return os << "CrudeSampler[]";
 }
 
-std::ostream & CrudeSampler::printMeTo(std::ostream & os) const {
-  os << "CrudeSampler[]";
-  return os;
-}
-
-std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) {
+std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) 
+{
   return obj.printMeTo(os);
 }
 
@@ -66,19 +65,6 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       std::cout << "Initial point was not sufficiently good.  I refuse to carry on at line " << __LINE__ << " in " << __FILE__ << std::endl;
       throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
     }
-#ifdef LESTER_USE_GRAPHICS
-    // clear canvasses at start of fit!
-    if (GraphicsObjects::wc) {
-      GraphicsObjects::wc->clear();
-      data.draw(*GraphicsObjects::wc,true);
-      GraphicsObjects::wc->update();
-    }
-
-    if (GraphicsObjects::wc2) {
-      GraphicsObjects::wc2->clear();
-      GraphicsObjects::wc2->update();
-    }
-#endif
 
     boost::shared_ptr<GenRingF::GenericResults> ansP(new GenRingF::GenericResults);
     GenRingF::GenericResults & ans = *ansP;
@@ -167,18 +153,6 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     {
       throw CouldNotFit("Unspecified Fit Mode");
     }
-
-#ifdef LESTER_USE_GRAPHICS
-    // Show result of fit:
-    if (GraphicsObjects::wc3) {
-      GraphicsObjects::wc3->clear();
-      Lester::Colour::kBlack().issue();
-      data.draw(*GraphicsObjects::wc3);
-      Lester::Colour::kRed().issue();
-      currentPoint.draw(*GraphicsObjects::wc3);
-      GraphicsObjects::wc3->update();
-    }
-#endif
 
     currentPoint.fill(ans, input, m_ntrm);
     return ansP;
@@ -293,29 +267,7 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
 
   if (acceptedProposal) 
   {
-
     static unsigned int count=0;
-
-#ifdef LESTER_USE_GRAPHICS
-    // SHOW PROGRESS OF FIT EVERY SO OFTEN:
-    if (count==0) {
-
-      if (GraphicsObjects::wc2) {
-        GraphicsObjects::wc2->clear();
-        Lester::Colour::kBlack().issue();
-        data.draw(*GraphicsObjects::wc2);
-        Lester::Colour::kRed().issue();
-        currentPoint.draw(*GraphicsObjects::wc2);
-        GraphicsObjects::wc2->update();
-      }
-      //std::cout << "Sample made and drawn" << std::endl;
-      //pressAnyKey();
-      //const double prob = p.probabilityOf(c);
-      //std::cout << "Probability determined to be " << prob << std::endl;
-      //pressAnyKeyQQuit();
-    };
-#endif
-
     ++count;
     count %=30;
   };

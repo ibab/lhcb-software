@@ -12,7 +12,8 @@
 
 namespace Lester {
   
-  class EventDescription {
+  class EventDescription 
+  {
   public: // ?? not private ??
     typedef std::vector<CircleParams> Circs;
     Circs circs;
@@ -26,9 +27,6 @@ namespace Lester {
 	      const GenRingF::GenericInput & input,
 	      boost::shared_ptr<NimTypeRichModel> ntrm) const;
     std::ostream & printMeTo(std::ostream & os) const;
-#ifdef LESTER_USE_GRAPHICS
-    void draw(BasicCanvasInterface & canvas) const;
-#endif
   };
     
 }

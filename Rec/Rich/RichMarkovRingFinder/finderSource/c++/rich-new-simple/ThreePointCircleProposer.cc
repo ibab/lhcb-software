@@ -4,7 +4,6 @@
 #include "Utils/PressAnyKey.h"
 #include "Utils/UpperGaussianDist.h"
 #include "Utils/CheckForNan.h"
-#include "GraphicsObjects.h"
 #include "ProbabilityUtils.h"
 #include "FiniteRelativeProbabilityChooser.h"
 #include "CircleTheorems.h"
@@ -160,21 +159,6 @@ namespace Lester {
         numberOfWanderSigmaToSearch*=1.2;
       };
     };
-
-    // draw the hits we have selected to check things are working:
-#ifdef LESTER_USE_GRAPHICS
-    if (GraphicsObjects::globalCanvas && true) { // can remove this region if undesired
-      Data miniDataSet;
-      for (IndexSet::const_iterator it = nearbyHitIndices.begin();
-           it != nearbyHitIndices.end();
-           ++it) {
-        miniDataSet.hits.push_back(m_data.hits[*it]);
-      };
-      GraphicsObjects::globalCanvas->colour(Colour::kGreen());
-      miniDataSet.draw(*GraphicsObjects::globalCanvas,false,3.0);
-      GraphicsObjects::globalCanvas->update();
-    };
-#endif
 
     double ans = 0;
 

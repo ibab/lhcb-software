@@ -1,7 +1,6 @@
 #include "CircleParams.h"
 #include "Constants.h"
 #include "ProbabilityUtils.h"
-#include "GraphicsObjects.h"
 #include "GenericRingFinder/GenericRing.h"
 #include "CLHEP/Random/RandGauss.h"
 
@@ -33,9 +32,9 @@ namespace Lester {
   }
 
   /*
-  double CircleParams::mu() const {
+    double CircleParams::mu() const {
     return _mu;
-  }
+    }
   */
 
   double CircleParams::radius() const {
@@ -67,12 +66,6 @@ namespace Lester {
   std::ostream & CircleParams::printMeTo(std::ostream & os) const {
     return os << "CircleParams[cen="<<centre()<<", r="<<radius()/*<<", mu="<<mu()*/ <<"]";
   }
-
-#ifdef LESTER_USE_GRAPHICS
-  void CircleParams::draw(BasicCanvasInterface & canvas) const {
-    canvas.circle(centre().x(), centre().y(), radius());
-  }
-#endif
 
   CircleParams CircleParams::jitterSymm1() const {
     const Small2Vector newcen = centre()+Small2Vector(0.1*Constants::whiffWhaff*RandGauss::shoot(),0.1*Constants::whiffWhaff*RandGauss::shoot());
