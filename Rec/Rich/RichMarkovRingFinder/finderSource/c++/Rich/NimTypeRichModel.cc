@@ -373,7 +373,7 @@ namespace Lester {
         {
           f >> ans;
           cache[key]=ans;
-          Lester::messHandle().debug() << " -> Read approxCoPointSep [ " << key << " ] = "
+          Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
                                        << ans << " from file" << Lester::endmsg;
         };
       };
@@ -448,7 +448,6 @@ namespace Lester {
           };
 
           cache[deltaOnTwo]=avg;
-          Lester::messHandle().verbose() << "Calculated cop[ "<<deltaOnTwo<<" ] = " << avg << Lester::endmsg;
           {
             try
             {
@@ -463,6 +462,7 @@ namespace Lester {
               Lester::messHandle().warning() << "Exception '" << expt.what()
                                              << "' caught writing to cache -> results not saved" << Lester::endmsg;
             }
+            Lester::messHandle().debug() << "Wrote approxCoPointSep[ "<<deltaOnTwo<<" ] = " << avg << " to cache file" << Lester::endmsg;
           };
           return avg;
         };
