@@ -369,7 +369,9 @@ namespace Lester {
     return rho;
   }
 
-  double NimTypeRichModel::approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const {
+  double NimTypeRichModel::approxCoPointSepFunctionPart2(const double deltaOnTwo, 
+                                                         const double rSq) const 
+  {
     const double deltaOnTwoSq = deltaOnTwo*deltaOnTwo;
     const double inner = rSq - deltaOnTwoSq;
     if (inner<=0) {
@@ -379,23 +381,27 @@ namespace Lester {
     return ans;
   }
 
-  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const {
+  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const 
+  {
     // montecarlo answer and cache ...
     typedef std::map<double,double> Map;
     static Map cache;
-
-    static bool first=true;
-
-    if (first) {
+    
+    static bool first = true;
+    if (first) 
+    {
       first = false;
-
-      std::ifstream f(getCacheLocation());
-      if (true/*FIX*/) {
+      const std::string filename = getCacheLocation();
+      Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
+      std::ifstream f(filename);
+      if (true/*FIX*/) 
+      {
         double key,ans;
-        while (f>>key) {
-          f>>ans;
+        while (f>>key) 
+        {
+          f >> ans;
           cache[key]=ans;
-          Lester::messHandle().debug() << "Read approxCoPointSep [ " << key << " ] = "
+          Lester::messHandle().debug() << " -> Read approxCoPointSep [ " << key << " ] = "
                                        << ans << " from file" << Lester::endmsg;
         };
       };
