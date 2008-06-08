@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.28 2008-06-07 16:10:17 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.29 2008-06-08 12:54:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -38,10 +38,9 @@
 #include "GenericRingFinder/GenericInput.h"
 #include "GenericRingFinder/GenericInferrer.h"
 #include "GenericRingFinder/GenericResults.h"
-// do not want to do this really but need to for the moment
-#include "rich-new-simple/CrudeSampler.h"
-//#include "rich-new-simple/RichParams.h"
-#include "rich-new-simple/NimTypeRichModel.h"
+#include "Rich/CrudeSampler.h"
+#include "Rich/NimTypeRichModel.h"
+#include "Utils/MessageHandler.h"
 
 namespace Rich
 {
@@ -61,7 +60,8 @@ namespace Rich
      */
     //-----------------------------------------------------------------------
 
-    class RichMarkovRingFinderAlg : public RichRecHistoAlgBase
+    class RichMarkovRingFinderAlg : public RichRecHistoAlgBase,
+                                    virtual public Lester::IMessageHandler
     {
 
     public:
@@ -78,6 +78,12 @@ namespace Rich
       virtual StatusCode initialize();    ///< Algorithm initialization
       virtual StatusCode execute   ();    ///< Algorithm execution
       virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+    public: // lester messaging
+      
+      /// Handle a message of the given level
+      virtual void lesterMessage( const Lester::MessageLevel level,
+                                  const std::string & message ) const;
 
     protected:
 
@@ -173,23 +179,43 @@ namespace Rich
     };
 
     ///////////////////////////////////////////////////////////////////////////
-    /// @class  Rich2LeftPanelMarkovRingFinderAlg
-    /// @brief  Standalone ring finder for RICH2 left panel using Markov Chains
+    /// @class  Rich1TopPanelMarkovRingFinderAlg
+    /// @brief  Standalone ring finder for RICH1 gas top panel using Markov Chains
     ///
     /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
     /// @date   2003-12-02
     ///////////////////////////////////////////////////////////////////////////
-    class Rich2LeftPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    class Rich1TopPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
     {
     public:
       /// Default Constructor
-      Rich2LeftPanelMarkovRingFinderAlg( const std::string& name,
-                                         ISvcLocator* pSvcLocator )
+      Rich1TopPanelMarkovRingFinderAlg( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
         : RichMarkovRingFinderAlg( name,
                                    pSvcLocator,
-                                   Rich::Rich2,
-                                   Rich::left,
-                                   Rich::Rich2Gas ) { }
+                                   Rich::Rich1,
+                                   Rich::top,
+                                   Rich::Rich1Gas ) { }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// @class  Rich1BottomPanelMarkovRingFinderAlg
+    /// @brief  Standalone ring finder for RICH1 gas bottom panel using Markov Chains
+    ///
+    /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
+    /// @date   2003-12-02
+    ///////////////////////////////////////////////////////////////////////////
+    class Rich1BottomPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    {
+    public:
+      /// Default Constructor
+      Rich1BottomPanelMarkovRingFinderAlg( const std::string& name,
+                                           ISvcLocator* pSvcLocator )
+        : RichMarkovRingFinderAlg( name,
+                                   pSvcLocator,
+                                   Rich::Rich1,
+                                   Rich::bottom,
+                                   Rich::Rich1Gas ) { }
     };
 
     ///////////////////////////////////////////////////////////////////////////
@@ -209,6 +235,26 @@ namespace Rich
                                    pSvcLocator,
                                    Rich::Rich2,
                                    Rich::right,
+                                   Rich::Rich2Gas ) { }
+    };
+
+    ///////////////////////////////////////////////////////////////////////////
+    /// @class  Rich2LeftPanelMarkovRingFinderAlg
+    /// @brief  Standalone ring finder for RICH2 left panel using Markov Chains
+    ///
+    /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
+    /// @date   2003-12-02
+    ///////////////////////////////////////////////////////////////////////////
+    class Rich2LeftPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    {
+    public:
+      /// Default Constructor
+      Rich2LeftPanelMarkovRingFinderAlg( const std::string& name,
+                                         ISvcLocator* pSvcLocator )
+        : RichMarkovRingFinderAlg( name,
+                                   pSvcLocator,
+                                   Rich::Rich2,
+                                   Rich::left,
                                    Rich::Rich2Gas ) { }
     };
 

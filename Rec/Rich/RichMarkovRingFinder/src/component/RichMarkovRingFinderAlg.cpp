@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.32 2008-06-07 16:10:17 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.33 2008-06-08 12:54:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -19,9 +19,11 @@
 using namespace LHCb;
 using namespace Rich::Rec;
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( Rich2LeftPanelMarkovRingFinderAlg  );
-DECLARE_ALGORITHM_FACTORY( Rich2RightPanelMarkovRingFinderAlg );
+// Declaration of the Algorithm Factories
+DECLARE_ALGORITHM_FACTORY( Rich1TopPanelMarkovRingFinderAlg    );
+DECLARE_ALGORITHM_FACTORY( Rich1BottomPanelMarkovRingFinderAlg );
+DECLARE_ALGORITHM_FACTORY( Rich2LeftPanelMarkovRingFinderAlg   );
+DECLARE_ALGORITHM_FACTORY( Rich2RightPanelMarkovRingFinderAlg  );
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -74,6 +76,7 @@ StatusCode RichMarkovRingFinderAlg::initialize()
   m_sampler = new CrudeSampler(ntrm);
 
   // configure sampler
+  Lester::messHandle().declare(this); // set for messages
   m_sampler->configuration.clearAllparams();
   m_sampler->configuration.setParam( "ScaleNumItsByHits", true );
   m_sampler->configuration.setParam( "TargetIterations", 1000  );
@@ -142,6 +145,7 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
   // do the finding in a try block to catch exceptions that leak out
   try
   {
+    Lester::messHandle().declare(this); // set for messages
 
     // Create input data object
     GenRingF::GenericInput input;
@@ -393,6 +397,12 @@ void RichMarkovRingFinderAlg::matchSegment( LHCb::RichRecRing * /* ring */ ) con
     {
     }
   */
+}
+
+void RichMarkovRingFinderAlg::lesterMessage( const Lester::MessageLevel level,
+                                             const std::string & message ) const
+{
+  info() << message << endreq;
 }
 
 StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const

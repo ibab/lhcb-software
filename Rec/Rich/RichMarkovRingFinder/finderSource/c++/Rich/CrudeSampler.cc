@@ -9,7 +9,7 @@
 #include "NimTypeRichModel.h"
 #include "EventDescription.h"
 #include "CLHEP/Random/RandFlat.h"
-//#include "Rich.h"
+#include "Utils/MessageHandler.h"
 #include "Utils/CheckForNan.h"
 
 CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm)
@@ -30,6 +30,9 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
+    // test message
+    Lester::messHandle().message(Lester::INFO,"XXXXXXXXXXXXXXXXXXXXXXXXx");
+
     const Lester::NimTypeRichModel & ntrm = *m_ntrm;
 
     Lester::Data data;
