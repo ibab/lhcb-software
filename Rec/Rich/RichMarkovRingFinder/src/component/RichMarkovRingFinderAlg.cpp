@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.42 2008-06-08 20:17:52 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.43 2008-06-08 20:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -380,7 +380,7 @@ bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) co
   else
   {
     std::ostringstream mess;
-    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel()) 
+    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel())
          << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
     Warning( mess.str(), StatusCode::SUCCESS, 3 );
     OK = false;
@@ -391,19 +391,23 @@ bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) co
 void RichMarkovRingFinderAlg::buildRingPoints( RichRecRing * ring,
                                                const unsigned int nPoints ) const
 {
-  // NB : Much of this could be optimised and run in the initialisation
-  const double incr ( 2.0 * M_PI / static_cast<double>(nPoints) );
-  double angle(0);
-  for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
+  if ( nPoints>0 )
   {
-    const double X( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
-    const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
-    const Gaudi::XYZPoint pLocal ( X, Y, 0*Gaudi::Units::cm );
-    ring->ringPoints().push_back( RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,rich(),panel()),
-                                                      pLocal,
-                                                      RichSmartID(rich(),panel()),
-                                                      RichRecPointOnRing::InHPDTube ) // to be improved !! Temp hack to get these rings drawn. Need to fix properly here or update Vis/SoRichRec properly
-                                  );
+    // NB : Much of this could be optimised and run in the initialisation
+    const double incr ( 2.0 * M_PI / static_cast<double>(nPoints) );
+    double angle(0);
+    ring->ringPoints().reserve(nPoints);
+    for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
+    {
+      const double X( ring->centrePointLocal().x() + (sin(angle)*ring->radius())/m_scaleFactor);
+      const double Y( ring->centrePointLocal().y() + (cos(angle)*ring->radius())/m_scaleFactor);
+      const Gaudi::XYZPoint pLocal ( X, Y, 0*Gaudi::Units::cm );
+      ring->ringPoints().push_back( RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,rich(),panel()),
+                                                        pLocal,
+                                                        RichSmartID(rich(),panel()),
+                                                        RichRecPointOnRing::InHPDTube ) // to be improved !! Temp hack to get these rings drawn. Need to fix properly here or update Vis/SoRichRec properly
+                                    );
+    }
   }
   verbose() << " -> Added " << ring->ringPoints().size() << " space points to ring" << endreq;
 }
