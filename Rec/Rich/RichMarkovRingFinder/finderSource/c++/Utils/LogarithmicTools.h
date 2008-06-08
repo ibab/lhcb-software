@@ -11,14 +11,18 @@ namespace Lester {
 
   namespace LogarithmicTools {
 
-    class LogOfZero : public std::exception {
-      virtual const char * what() const throw() {
-        return "LogartthmicTools::LogOfZero";
+    class LogOfZero : public std::exception 
+    {
+      virtual const char * what() const throw() 
+      {
+        return "LogarithmicTools::LogOfZero";
       };
     };
-    class LogOfNegative : public std::exception {
-      virtual const char * what() const throw() {
-        return "LogartthmicTools::LogOfNegative";
+    class LogOfNegative : public std::exception 
+    {
+      virtual const char * what() const throw() 
+      {
+        return "LogarithmicTools::LogOfNegative";
       };
     };
 

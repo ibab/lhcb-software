@@ -1,4 +1,4 @@
-// $Id: GenericConfiguration.h,v 1.1 2006-08-04 20:52:45 jonrob Exp $
+// $Id: GenericConfiguration.h,v 1.2 2008-06-08 21:46:52 jonrob Exp $
 #ifndef GENERICRINGFINDER_GENERICCONFIGURATION_H
 #define GENERICRINGFINDER_GENERICCONFIGURATION_H 1
 
@@ -23,15 +23,16 @@ namespace GenRingF {
 
   public:
 
-    class BadConfiguration : public std::exception {
+    class BadConfiguration : public std::exception 
+    {
     public:
       BadConfiguration( const std::string & mess = "" )
-        : m_message(mess) { }
-      const char * what() const throw() {
-        const std::string m = "BadParameter["+m_message+"]";
-        return m.c_str();
-      };
-      virtual ~BadConfiguration() throw() {};
+        : m_message("BadParameter["+mess+"]") { }
+      const char * what() const throw() 
+      {
+        return m_message.c_str();
+      }
+      virtual ~BadConfiguration() throw() {}
     private:
       std::string m_message;
     };

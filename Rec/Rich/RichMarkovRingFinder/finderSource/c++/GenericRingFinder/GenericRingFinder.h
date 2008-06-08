@@ -25,11 +25,10 @@ namespace GenRingF
     {
     public:
       CouldNotFit( const std::string & mess = "Undefined Message" )
-        : m_message(mess) { }
+        : m_message( "CouldNotFit[ "+mess+" ]" ) { }
       const char * what() const throw() 
       {
-        const std::string m = "CouldNotFit[ "+m_message+" ]";
-        return m.c_str();
+        return m_message.c_str();
       }
       virtual ~CouldNotFit() throw() {}
     private:

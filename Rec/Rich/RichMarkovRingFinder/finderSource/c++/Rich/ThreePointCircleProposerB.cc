@@ -78,11 +78,12 @@ namespace Lester {
 
     //First choose a random hit as the initial seed.
     static bool first = true;
-    if (first) {
+    if (first) 
+    {
       first = false;
       Lester::messHandle().debug() << __FUNCTION__ << " could be improved by seeding on a non-random point (" 
                                    << __FILE__ << " " << __LINE__ <<")"<<Lester::endmsg;
-    };
+    }
     const int a = RandFlat::shootInt(nDataPoints);
     assert(a>=0 && a<nDataPoints);
     const Hit & ha = m_data.hits[a];
