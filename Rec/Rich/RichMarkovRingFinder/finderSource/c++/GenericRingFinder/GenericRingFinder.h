@@ -21,15 +21,17 @@ namespace GenRingF
   class GenericRingFinder
   {
   public:
-    class CouldNotFit : public std::exception {
+    class CouldNotFit : public std::exception 
+    {
     public:
-      CouldNotFit( const std::string & mess =  "ErDunno" )
+      CouldNotFit( const std::string & mess = "Undefined Message" )
         : m_message(mess) { }
-      const char * what() const throw() {
-        const std::string m = "CouldNotFit["+m_message+"]";
+      const char * what() const throw() 
+      {
+        const std::string m = "CouldNotFit[ "+m_message+" ]";
         return m.c_str();
-      };
-      virtual ~CouldNotFit() throw() {};
+      }
+      virtual ~CouldNotFit() throw() {}
     private:
       std::string m_message;
     };

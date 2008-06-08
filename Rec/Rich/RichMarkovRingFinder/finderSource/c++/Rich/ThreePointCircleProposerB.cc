@@ -312,10 +312,12 @@ namespace Lester {
     m_radiusSmearingWidth(radiusSmearingWidth),
     m_wanderWidthSq(circleCentreSmearingWidth*circleCentreSmearingWidth*2.0 + radiusSmearingWidth*radiusSmearingWidth),
     m_ntrm(ntrm),
-    m_centreCptSmearer(0,circleCentreSmearingWidth) {
-    if (m_data.hits.size() < 3) {
-      throw CannotConstructException("You need at least 3 hits to construct a ThreePointCircleProposerB!");
-    };
+    m_centreCptSmearer(0,circleCentreSmearingWidth) 
+  {
+    if (m_data.hits.size() < 3) 
+    {
+      throw CannotConstructException("You need at least three hits to construct a circle");
+    }
   }
 
 };

@@ -159,9 +159,13 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     currentPoint.fill(ans, input, m_ntrm);
     return ansP;
 
-  } catch ( const std::exception & excpt ) {
+  } 
+  catch ( const std::exception & excpt ) 
+  {
     throw CouldNotFit( excpt.what() );
-  } catch (...) {
+  } 
+  catch (...) 
+  {
     throw CouldNotFit( "An unknown exception occurred. Bad" );
   }
 

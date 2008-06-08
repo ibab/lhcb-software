@@ -23,21 +23,21 @@ namespace Lester {
         // try again!
         ++failures;
         if (failures==1) {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in " 
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in "
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
         } else if (failures==5) {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in " 
-                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ 
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in "
+                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__
                                          << " than previously thought possible.  Fix Immediately!" << Lester::endmsg;
         } else if (failures==100) {
-          Lester::messHandle().fatal() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in " 
+          Lester::messHandle().fatal() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in "
                                        << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." << Lester::endmsg;
         };
       };
     };
   };
 
-  CircleParams ThreePointCircleProposer::tryToSample() const 
+  CircleParams ThreePointCircleProposer::tryToSample() const
   {
     const int nDataPoints = m_data.hits.size();
     assert(nDataPoints>=3); // assured by our constructor!
@@ -128,7 +128,7 @@ namespace Lester {
       static bool first = true;
       if (first) {
         first = false;
-        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!" 
+        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!"
                                        << Lester::endmsg;
       };
       throw;
@@ -340,10 +340,12 @@ namespace Lester {
     m_radiusSmearingWidth(radiusSmearingWidth),
     m_wanderWidthSq(circleCentreSmearingWidth*circleCentreSmearingWidth*2.0 + radiusSmearingWidth*radiusSmearingWidth),
     m_ntrm(ntrm),
-    m_centreCptSmearer(0,circleCentreSmearingWidth) {
-    if (m_data.hits.size() < 3) {
-      throw CannotConstructException("You need at least 3 hits to construct a ThreePointCircleProposer!");
-    };
+    m_centreCptSmearer(0,circleCentreSmearingWidth)
+  {
+    if (m_data.hits.size() < 3)
+    {
+      throw CannotConstructException("You need at least three hits to construct a circle");
+    }
   }
 
 };

@@ -4,15 +4,17 @@
 #include <exception>
 #include <string>
 
-class StringException : public std::exception {
-  const std::string message;
+class StringException : public std::exception
+{
+private:
+  const std::string m_message;
 public:
-  StringException(const char * s) : message(s) {};
-  StringException(const std::string & s) : message(s) {};
-  virtual const char * what() const throw () {
-    return message.c_str();
-  };	
-  ~StringException() throw() {};
+  StringException(const std::string & s) : m_message(s) {};
+  virtual const char * what() const throw () 
+  {
+    return m_message.c_str();
+  }	
+  ~StringException() throw() {}
 };
 
 #endif

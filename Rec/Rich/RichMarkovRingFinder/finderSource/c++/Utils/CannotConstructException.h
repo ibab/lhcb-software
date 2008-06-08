@@ -3,9 +3,10 @@
 
 #include "Utils/StringException.h"
 
-struct CannotConstructException : public StringException {
-  CannotConstructException(const char * s) : StringException(s) {};
-  CannotConstructException(std::string & s) : StringException(s) {};
+class CannotConstructException : public StringException 
+{
+public:
+  CannotConstructException(const std::string & s) : StringException(s) {}
 };
 
 #endif
