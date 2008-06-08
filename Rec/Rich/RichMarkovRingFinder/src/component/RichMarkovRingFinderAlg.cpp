@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.35 2008-06-08 15:42:13 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.36 2008-06-08 16:05:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -95,8 +95,12 @@ StatusCode RichMarkovRingFinderAlg::initialize()
 //=============================================================================
 StatusCode RichMarkovRingFinderAlg::finalize()
 {
+  // Intercept any final messages
+  Lester::messHandle().declare(this);
   // cleanup
   if ( m_sampler ) { delete m_sampler; m_sampler = NULL; }
+  // stop receiving messages
+  Lester::messHandle().declare(NULL);
   // return
   return RichRecHistoAlgBase::finalize();
 }
