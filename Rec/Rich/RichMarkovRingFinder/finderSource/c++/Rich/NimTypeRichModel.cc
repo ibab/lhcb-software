@@ -379,7 +379,7 @@ namespace Lester {
       }
       else
       {
-        Lester::messHandle().error() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
+        Lester::messHandle().fatal() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
       }
     }
 
@@ -482,7 +482,8 @@ namespace Lester {
               }
               else
               {
-                Lester::messHandle().warning() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
+                Lester::messHandle().warning() << "Failed to open cache file '" << filename 
+                                               << "' for writting -> New cache values not saved." << Lester::endmsg;
               }
             }
             catch ( const std::exception & expt )
