@@ -8,54 +8,71 @@
 #include "FiniteRelativeProbabilityChooser.h"
 #include "CircleTheorems.h"
 #include "NimTypeRichModel.h"
+#include "GenericRingFinder/GenericRingFinder.h"
 #include <set>
 
 namespace Lester {
 
-  CircleParams ThreePointCircleProposerB::sample() const {
+  CircleParams ThreePointCircleProposerB::sample() const
+  {
     const CircleParams & ans = samplePrivate();
 
     // Quantise ans and cache!
     const QuantizedCircleParams & qcp = m_cpQuantizer.quantize(ans);
 
     const VisitCache::iterator it = m_visitCache.lower_bound(qcp);
-    if (it==m_visitCache.end()   ||   (qcp)<(it->first) ) {
+    if ( it==m_visitCache.end() || (qcp)<(it->first) ) 
+    {
       // we are not already in the map
       m_visitCache.insert(it, VisitCache::value_type(qcp,1));
-    } else {
+    } 
+    else 
+    {
       // we are already in the map
       assert(qcp == it->first);
       ++(it->second);
-    };
+    }
     return ans;
-  };
+  }
 
-  CircleParams ThreePointCircleProposerB::samplePrivate() const {
+  CircleParams ThreePointCircleProposerB::samplePrivate() const 
+  {
     unsigned long failures=0;
     CircleParams ans;
-    while(true) {
-      try {
+    while(true) 
+    {
+      try 
+      {
         ans = tryToSample();
         return ans;
-      } catch (...) {
+      } 
+      catch (...) 
+      {
         // try again!
         ++failures;
-        if (failures==1) {
+        if (failures==1) 
+        {
           Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in " 
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
-        } else if (failures==5) {
+        } 
+        else if (failures==5) 
+        {
           Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in " 
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!" 
                                          << Lester::endmsg;
-        } else if (failures==100) {
-          Lester::messHandle().error() << "FATAL ERROR: Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ 
-                                       << " in " << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." << Lester::endmsg;
-        };
-      };
-    };
+        } 
+        else if (failures==100) 
+        {
+          Lester::messHandle().warning() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ 
+                                         << " in " << __FILE__ << " -> aborting" << Lester::endmsg;
+          throw GenRingF::GenericRingFinder::CouldNotFit("Stuck in potential infinite loop -> abort");
+        }
+      }
+    }
   };
 
-  CircleParams ThreePointCircleProposerB::tryToSample() const {
+  CircleParams ThreePointCircleProposerB::tryToSample() const 
+  {
     const int nDataPoints = m_data.hits.size();
     assert(nDataPoints>=3); // assured by our constructor!
 

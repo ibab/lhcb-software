@@ -8,6 +8,7 @@
 #include "FiniteRelativeProbabilityChooser.h"
 #include "CircleTheorems.h"
 #include "NimTypeRichModel.h"
+#include "GenericRingFinder/GenericRingFinder.h"
 #include <set>
 
 namespace Lester {
@@ -15,27 +16,37 @@ namespace Lester {
   CircleParams ThreePointCircleProposer::sample() const {
     unsigned long failures=0;
     CircleParams ans;
-    while(true) {
-      try {
+    while(true) 
+    {
+      try 
+      {
         ans = tryToSample();
         return ans;
-      } catch (...) {
+      } 
+      catch (...) 
+      {
         // try again!
         ++failures;
-        if (failures==1) {
+        if (failures==1) 
+        {
           Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in "
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
-        } else if (failures==5) {
+        } 
+        else if (failures==5) 
+        {
           Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in "
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__
                                          << " than previously thought possible.  Fix Immediately!" << Lester::endmsg;
-        } else if (failures==100) {
-          Lester::messHandle().fatal() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in "
-                                       << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." << Lester::endmsg;
-        };
-      };
-    };
-  };
+        } 
+        else if (failures==100)
+        {
+          Lester::messHandle().warning() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ 
+                                         << " in " << __FILE__ << " -> aborting" << Lester::endmsg;
+          throw GenRingF::GenericRingFinder::CouldNotFit("Stuck in potential infinite loop -> abort");
+        }
+      }
+    }
+  }
 
   CircleParams ThreePointCircleProposer::tryToSample() const
   {
@@ -236,26 +247,30 @@ namespace Lester {
       {
         double total=0;
         double special=0;
-        for (int i=0; i<nDataPoints; ++i) {
+        for (int i=0; i<nDataPoints; ++i) 
+        {
           // We don't want to compute a distance to ourselves ...
-          if (i!=a) {
+          if (i!=a)
+          {
             const Hit & hb =  m_data.hits[i];
             const double prob_that_a_and_b_are_in_same_circle
               = m_ntrm.PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
             total += prob_that_a_and_b_are_in_same_circle;
-            if (i==b) {
+            if (i==b)
+            {
               special += prob_that_a_and_b_are_in_same_circle;
-            };
-          };
-        };
+            }
+          }
+        }
         //Lester::messHandle().debug() << "For part b frac is " << special << " / " << total << Lester::endmsg;
         const double frac = special/total;
-        if (!Lester::lfin(frac)) {
+        if (!Lester::lfin(frac))
+        {
           // total is zero or close to zero
           return 0;
-        };
+        }
         ans *= frac;
-      };
+      }
 
       const Hit & hb = m_data.hits[b];
 
@@ -263,31 +278,38 @@ namespace Lester {
       {
         double total=0;
         double special=0;
-        for (int i=0; i<nDataPoints; ++i) {
+        for (int i=0; i<nDataPoints; ++i) 
+        {
           // We don't want to compute a distance to the ones we already have ...
-          if (i!=a && i!=b) {
+          if (i!=a && i!=b)
+          {
             double prob_that_a_b_and_c_are_in_same_circle=0;
             const Hit & hc =  m_data.hits[i];
-            try {
+            try 
+            {
               const double r = CircleTheorems::radiusOfCircleThrough(ha,hb,hc);
               prob_that_a_b_and_c_are_in_same_circle
                 = m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
-            } catch (CircleTheorems::RadiusIsInfinite&) {
+            } 
+            catch (CircleTheorems::RadiusIsInfinite&) 
+            {
               prob_that_a_b_and_c_are_in_same_circle=0;
-            };
+            }
 
             total += prob_that_a_b_and_c_are_in_same_circle;
-            if (i==c) {
+            if (i==c) 
+            {
               special += prob_that_a_b_and_c_are_in_same_circle;
-            };
-          };
-        };
+            }
+          }
+        }
         //Lester::messHandle().debug() << "For part c frac is " << special << " / " << total << Lester::endmsg;
         const double frac = special/total;
-        if (!Lester::lfin(frac)) {
+        if (!Lester::lfin(frac)) 
+        {
           // total is zero or close to zero
           return 0;
-        };
+        }
         ans *= frac;
       };
 
@@ -323,13 +345,15 @@ namespace Lester {
         ans *= m_centreCptSmearer.probabilityOf(deltaCentre.x());
         ans *= m_centreCptSmearer.probabilityOf(deltaCentre.y());
         ans *=   ugdRadiusSmearer.probabilityOf(rrr            );
-      };
+      }
 
       return ans;
-    } catch (...) {
+    } 
+    catch (...) 
+    {
       return 0;
-    };
-  };
+    }
+  }
 
   ThreePointCircleProposer::ThreePointCircleProposer(const Data & d,
                                                      const double circleCentreSmearingWidth,
