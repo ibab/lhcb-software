@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.40 2008-06-08 20:13:02 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.41 2008-06-08 20:15:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -380,7 +380,7 @@ bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) co
   else
   {
     std::ostringstream mess;
-    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(panel()) 
+    mess << "# selected hits in " << Rich::text(rich()) << " " << Rich::text(rich(),panel()) 
          << " exceeded maximum of " << m_maxHitsEvent << " -> Processing aborted";
     Warning( mess.str(), StatusCode::SUCCESS );
     OK = false;
