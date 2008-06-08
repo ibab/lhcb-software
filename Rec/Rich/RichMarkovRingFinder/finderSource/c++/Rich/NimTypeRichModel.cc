@@ -132,16 +132,18 @@ namespace Lester {
     assert(Lester::lfin(logAns) && "step1" );
 
     //      ans *= factorial(n) // not needed as incorporated above
-    for (Data::Hits::const_iterator hit = d.hits.begin();
-         hit!=d.hits.end();
-         ++hit) {
+    for ( Data::Hits::const_iterator hit = d.hits.begin();
+          hit!=d.hits.end();
+          ++hit ) 
+    {
       const double p = singleHitProbabilityDistributionGivenEventDescription(*hit, rp);
       const double lp = log(p);
-      if (p==0 || !Lester::lfin(lp)) {
+      if (p==0 || !Lester::lfin(lp)) 
+      {
         throw Lester::LogarithmicTools::LogOfZero();
-      };
+      }
       logAns+=lp;
-    };
+    }
 
     // check how we are doing!
     assert(Lester::lfin(logAns) && "step2");
