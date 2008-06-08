@@ -52,8 +52,6 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     // Try to set it up as a "reasonable" blank slate from which to start the finder
     assert(initialPoint.circs.empty());
 
-    Lester::messHandle().debug() << "Created initial point " << initialPoint << Lester::endmsg;
-
     Lester::EventDescription currentPoint = initialPoint;
     double currentLogProb; // initialised in next statement
     try
@@ -271,5 +269,5 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     count %=30;
   };
 
-  Lester::messHandle().debug() << "CurrentPoint " << currentPoint << Lester::endmsg;
+  // Lester::messHandle().debug() << "CurrentPoint " << currentPoint << Lester::endmsg;
 }

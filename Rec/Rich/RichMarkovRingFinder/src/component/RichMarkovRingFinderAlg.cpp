@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.34 2008-06-08 13:04:27 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.35 2008-06-08 15:42:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -416,11 +416,11 @@ void RichMarkovRingFinderAlg::lesterMessage( const Lester::MessageLevel level,
   }
   else if ( Lester::WARNING == level )
   {
-    Warning( message );
+    Warning( message, StatusCode::SUCCESS, 3 );
   }
   else if ( Lester::ERROR == level )
   {
-    Error( message );
+    Error( message, StatusCode::FAILURE, 3 );
   }
   else if ( Lester::FATAL == level )
   {
