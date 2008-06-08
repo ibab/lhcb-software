@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.15 2008-06-08 12:02:39 jonrob Exp $
+# $Id: requirements,v 1.16 2008-06-08 19:03:21 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -17,7 +17,7 @@ branches          cmt doc src
 # Environment
 #============================================================================
 set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
-set RICHMFINDERDATALOCATION $(RICHMARKOVRINGFINDERROOT)/finderSource/c++/Rich/DATA
+set RICHMFINDERDATALOCATION $(RICHMARKOVRINGFINDERROOT)/DataFiles
 
 #============================================================================
 # Usages
