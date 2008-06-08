@@ -30,7 +30,6 @@ namespace Lester {
         throw LogOfNegative();
       };
       const double ans = std::log(x);
-      if ( Lester::linf(ans)!=0) std::cout << "XXXXX " << x << " " << Lester::linf(ans) << " " << ans << std::endl;
       if ( Lester::linf(ans) == -1 )
       {
         // negative infinity

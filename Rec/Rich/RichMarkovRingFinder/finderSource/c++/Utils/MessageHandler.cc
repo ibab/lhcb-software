@@ -1,4 +1,4 @@
-// $Id: MessageHandler.cc,v 1.2 2008-06-08 12:54:55 jonrob Exp $
+// $Id: MessageHandler.cc,v 1.3 2008-06-08 15:31:40 jonrob Exp $
 // Include files 
 
 #include <iostream>
@@ -29,12 +29,19 @@ std::string Lester::text( const Lester::MessageLevel level )
 void Lester::MessageHandler::message( const Lester::MessageLevel level,
                                       const std::string & message ) const
 {
-  if ( !m_handler )
+  if ( m_handler )
   {
-    std::cout << Lester::text(level) << message << std::endl;
+    m_handler->lesterMessage(level,message);
   }
   else
   {
-    m_handler->lesterMessage(level,message);
+    if ( (int)level >= (int)Lester::WARNING )
+    {
+      std::cerr << Lester::text(level) << message << std::endl;
+    }
+    else
+    {
+      std::cout << Lester::text(level) << message << std::endl;
+    }
   }
 }

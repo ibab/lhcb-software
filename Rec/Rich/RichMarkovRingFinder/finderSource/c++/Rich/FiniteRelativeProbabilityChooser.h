@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cassert>
 #include "CLHEP/Random/RandFlat.h"
+#include "Utils/MessageHandler.h"
 
 namespace Lester {
 
@@ -56,17 +57,9 @@ namespace Lester {
       };
     };
     Index sampleAnIndex() const {
-      //if (cache.empty()) {
-      //std::cerr<<"Oh dear .. sampled too early" << std::endl;
-      //throw NoSamplesPossible();
-      //};
       // If we got this far, we have at least one element!
       const double target = totalProb * RandFlat::shoot();
       const typename Map::const_iterator ge_target_it=cache.lower_bound(target);
-      //std::cerr << "FROOM " << cache.size() << " " << target << " " << totalProb << std::endl;
-      //std::cerr << "JOOM" << (--cache.end())->first << std::endl;
-      //std::cerr << "JOOM" << (--cache.end())->second << std::endl;
-      //assert(ge_target_it!=cache.end());
       if (cache.empty()) {
         throw NoSamplesPossible();
       };
@@ -80,7 +73,8 @@ namespace Lester {
       static bool first=true;
       if (first) {
         first = false;
-        std::cerr<<"FiniteRelativeProbabilityChooser::sampleAnIndexAbove is implemented horrendously and should only be used _if_at_all_ in caching functions!"<<std::endl;
+        Lester::messHandle().warning() << "FiniteRelativeProbabilityChooser::sampleAnIndexAbove is implemented horrendously and should only be used _if_at_all_ in caching functions!"
+                                       << Lester::endmsg;
       };
 #endif
       try {
@@ -90,12 +84,9 @@ namespace Lester {
         } else if (mi==index) {
           return index;
         };
-        // go for REALLY DUMB METHOD: sample till we get one above!
-        //std::cerr << "Taking ages ..." <<std::flush;
         while (true) {
           const Index i = sampleAnIndex();
           if (i>=index) {
-            //std::cerr << " ... done" << std::endl;
             return i;
           };
           // try again!
@@ -126,7 +117,7 @@ namespace Lester {
       for (typename Map::const_iterator it = cache.begin();
            it!=cache.end();
            ++it) {
-        i <<  "prob=" << it->first << " index=" << it->second << std::endl;
+        i <<  "[ prob=" << it->first << ",index=" << it->second << "],";
       };
     };
   };

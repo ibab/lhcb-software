@@ -9,42 +9,38 @@
 #include <cassert>
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MathsConstants.h"
+#include "Utils/MessageHandler.h"
 
 namespace Lester {
 
   inline double factorial(int n) {
     class FactorialOutOfRange {};
-    
+
     const int numberCached = 60;
     if (n<0 || n>=numberCached) {
       throw FactorialOutOfRange();
     };
-    
+
     static const double cache[numberCached]=
       {
 #include "factorialInitialiser.h"
       };
-    //    double ans=1;
-    //for (double i=2; i<=n; ++i) {
-    //  ans *= i;
-    //};
-    //return ans;
     return cache[n];
   };
- 
+
   inline double poissonProb(const int n, const double mu) {
     if (n<=40) {
-      return std::pow(mu,n)*std::exp(-mu)/factorial(n); 
+      return std::pow(mu,n)*std::exp(-mu)/factorial(n);
     } else {
       const double logn = std::log((double)n);
-      return (std::exp((double)n*std::log(mu)-mu-n*logn - 
+      return (std::exp((double)n*std::log(mu)-mu-n*logn -
                        0.5*logn+n)/std::sqrt(MathsConstants::twoPi)); // check!
     };
   };
 
   inline double gaussianProb(const double x,
-			     const double mu,
-			     const double sig) {
+                             const double mu,
+                             const double sig) {
     const double thing=(x-mu)/sig;
     const double thingSq=thing*thing;
     return 1./(std::sqrt(MathsConstants::twoPi)*sig)*std::exp(-0.5*thingSq);
@@ -67,16 +63,16 @@ namespace Lester {
       const Map::const_iterator it = contains.find(destination);
       const bool destinationIsOccupied = (it!=contains.end());
       if (destinationIsOccupied) {
-	const int thingAtDestination = it->second;
-	//Swap the two:
-	isAt[moving]=destination;
-	isAt[thingAtDestination]=presentPosition;
-	contains[destination]=moving;
-	contains[presentPosition]=thingAtDestination;
+        const int thingAtDestination = it->second;
+        //Swap the two:
+        isAt[moving]=destination;
+        isAt[thingAtDestination]=presentPosition;
+        contains[destination]=moving;
+        contains[presentPosition]=thingAtDestination;
       } else {
-	isAt[moving]=destination;
-	contains[destination]=moving;
-	contains.erase(presentPosition);
+        isAt[moving]=destination;
+        contains[destination]=moving;
+        contains.erase(presentPosition);
       };
     };
     assert(static_cast<int>(isAt.size())==m); //Still!
@@ -84,11 +80,11 @@ namespace Lester {
   };
 
   inline double exponentialProb(const double x,
-				const double mean) {
+                                const double mean) {
     return (std::exp(-x/mean))/mean;
   };
   inline double exponentialProbAbove(const double x,
-				     const double mean) {
+                                     const double mean) {
     //prob that var distrib expntly with mean mu is greater than x
     return std::exp(-x/mean);
   };
@@ -97,15 +93,15 @@ namespace Lester {
     if (n>=20&&n<40) {
       static bool first=true;
       if (first) {
-	std::cerr << "You should probably optimise reciprocalSum!" <<std::endl;
-	first=false;
+        Lester::messHandle().debug() << "You should probably optimise reciprocalSum!" <<Lester::endmsg;
+        first=false;
       };
     };
     if (n>=40) {
       static bool first=true;
       if (first) {
-	std::cerr << "You should DEFINITELY optimise reciprocalSum!" <<std::endl;
-	first=false;
+        Lester::messHandle().debug() << "You should DEFINITELY optimise reciprocalSum!" << Lester::endmsg;
+        first=false;
       };
     };
     double ans=1;
@@ -122,15 +118,15 @@ namespace Lester {
     if (n>=20&&n<40) {
       static bool first=true;
       if (first) {
-	std::cerr << "You should probably optimise reciprocalSqSum!" <<std::endl;
-	first=false;
+        Lester::messHandle().debug() << "You should probably optimise reciprocalSqSum!" <<Lester::endmsg;
+        first=false;
       };
     };
     if (n>=40) {
       static bool first=true;
       if (first) {
-	std::cerr << "You should DEFINITELY optimise reciprocalSqSum!" <<std::endl;
-	first=false;
+        Lester::messHandle().debug() << "You should DEFINITELY optimise reciprocalSqSum!" <<Lester::endmsg;
+        first=false;
       };
     };
     double ans=1;
@@ -155,7 +151,6 @@ namespace Lester {
       const double reciprocal=one/d;
       sum += reciprocal;
     };
-    //std::cerr << "oh dear failed because i="<<i<<" and ntot=" << nTot<< std::endl;
     assert(i<=nTot);
     return i;
   };
@@ -174,7 +169,7 @@ namespace Lester {
     assert(i<=nTot);
     return i;
   };
-  
+
 };
 
 #endif

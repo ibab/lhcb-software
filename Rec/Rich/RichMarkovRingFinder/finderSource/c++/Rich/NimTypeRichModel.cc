@@ -9,6 +9,7 @@
 #include "Utils/LogarithmicTools.h"
 #include "Utils/MathsConstants.h"
 #include "Utils/CheckForNan.h"
+#include "Utils/MessageHandler.h"
 #include "Constants.h"
 #include "CircleTheorems.h"
 #include "Small2Vector.h"
@@ -219,7 +220,7 @@ namespace Lester {
     double sigmaMu=0;
     for ( EventDescription::Circs::const_iterator it=ed.circs.begin();
           it!=ed.circs.end();
-          ++it ) 
+          ++it )
     {
       const double mu = meanNumberOfHitsMuExpectedOn(*it);
       sigmaMu+= mu;
@@ -241,7 +242,7 @@ namespace Lester {
     return backgroundMeanParameter;
   }
   /// don't confuse "meanNumberOfHitsMuExpectedFromBg()" with "meanNumberOfHitsMuExpectedFromBgGiven(const EventDescription & ed)" !
-  double NimTypeRichModel::meanNumberOfHitsMuExpectedFromBgGiven(const EventDescription & ed) const {
+  double NimTypeRichModel::meanNumberOfHitsMuExpectedFromBgGiven(const EventDescription &) const {
     //#warning "Should perhaps the bg mean be expected to be higher for events with lots of rings?  Or are these independent?  We assume independence here!"
     return meanNumberOfHitsMuExpectedFromBg();
   }
@@ -285,9 +286,7 @@ namespace Lester {
     if (Constants::scenario == Constants::simpleModel) {
       return RandExponential::shoot(circleMeanRadiusParameter);
     } else if (Constants::scenario == Constants::rich2A) {
-      //std::cerr<<"about to ... " << std::flush;
       const double ans = rich2AThetaSampler.sampleAnIndex();
-      //std::cerr<<"... done" << std::endl;
       return ans;
     } else {
       throw Constants::scenario;
@@ -396,7 +395,8 @@ namespace Lester {
         while (f>>key) {
           f>>ans;
           cache[key]=ans;
-          //std::cout << "Read approxCoPointSep [ " << key << " ] = " << ans << " from file" << std::endl;
+          Lester::messHandle().debug() << "Read approxCoPointSep [ " << key << " ] = "
+                                       << ans << " from file" << Lester::endmsg;
         };
       };
     };
@@ -416,7 +416,6 @@ namespace Lester {
         if (key == deltaOnTwo) {
           // we found an exact match
           const double ans = geRhoIt->second;
-          //std::cout<<"Cache-found-exact-match cop[ "<<key<<" ] = " << ans << " for cop["<<deltaOnTwo<<"]"<<std::endl;
           return ans;
         };
         if (geRhoIt->first <= deltaOnTwoMax ) {
@@ -466,12 +465,12 @@ namespace Lester {
             // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
             avg*=priorProbabilityOfRadiusAbove(rmin);
           } catch (NimTypeRichModel::SampleIsImpossible&) {
-            //std::cout << " SampleIsImpossibleInCop at " <<deltaOnTwo<< std::endl;
+            Lester::messHandle().verbose() << " SampleIsImpossibleInCop at " <<deltaOnTwo<< Lester::endmsg;
             avg=0;
           };
 
           cache[deltaOnTwo]=avg;
-          //std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
+          Lester::messHandle().verbose() << "Calculated cop[ "<<deltaOnTwo<<" ] = " << avg << Lester::endmsg;
           {
             try
             {
@@ -483,8 +482,8 @@ namespace Lester {
             }
             catch ( const std::exception & expt )
             {
-              std::cout << "Exception '" << expt.what() 
-                        << "' caught writing to cache -> results not saved" << std::endl;
+              Lester::messHandle().warning() << "Exception '" << expt.what()
+                                             << "' caught writing to cache -> results not saved" << Lester::endmsg;
             }
           };
           return avg;
@@ -493,7 +492,6 @@ namespace Lester {
         // serve from cache
         assert(index>=0 && index<static_cast<int>(possibilities.size()));
         const double ans = possibilities[index]->second;
-        //const double key=possibilities[index]->first; std::cout<<"Cache-found cop[ "<<key<<" ] = " << ans << " for cop["<<deltaOnTwo<<"]"<<std::endl;
         return ans;
       };
     };
@@ -551,7 +549,6 @@ namespace Lester {
     const double extraTerm = averageHitsTotal*(averageHitsTotal-one)*(averageHitsTotal-two);
 
     const double ans = one/(one+((extraTerm*aSig*modCross*(one-PS))/(two*aAllCubed*muCubed*rProb*rSq*PS)));
-    //std::cerr << (one-PS)/PS << " " << modCross/rSq << " " << extraTerm*aSig/(two*aAllCubed*muCubed*rProb) << " " << rProb << " ans " <<ans<<" "<<a<<" " <<b<<" " <<c<<std::endl;
     return ans;
   }
 
@@ -581,7 +578,7 @@ namespace Lester {
     static bool first = true;
     if (first) {
       first = false;
-      std::cerr << "Estimation of PS could be improved by looking at the present number of hits rather than using the average number, and by removing crude dependence on average radius etc.  This would be very important if the circle radius distribution became bimodal or hits per unit arc length came to depend upon r." << std::endl;
+      Lester::messHandle().debug() << "Estimation of PS could be improved by looking at the present number of hits rather than using the average number, and by removing crude dependence on average radius etc.  This would be very important if the circle radius distribution became bimodal or hits per unit arc length came to depend upon r." << Lester::endmsg;
       // for example, could base estimate on evidence of current fit!
     };
     const double one = 1;
@@ -599,8 +596,7 @@ namespace Lester {
     const double sepFun=approxCoPointSepFunctionPart1(deltaOnTwo);
     const double ans
       = one/(one+(one-PS)*extraTerm/(PS * averageAreaScale * muSq * sepFun));
-    //std::cerr << "jjj " << ans << " "<<(one-PS)/PS << " " << averageAreaScale * muSq << " " <<extraTerm<<" " <<sepFun << std::endl;
-
+    
     return ans;
   }
 
@@ -645,15 +641,13 @@ namespace Lester {
     //ans *= exp(n*log(mu)-mu);  /* times n! divided by n! */
     // SUPERSEDED BY NEXT LINE      ans *= poissonProb(ed.circs.size(),meanNumberOfRings);
     ans *= priorProbabilityOfNumberOfCircles(ed.circs.size());
-    //std::cout << "FLUM = " << RichPriors::priorProbabilityOfNumberOfCircles(ed.circs.size()) << std::endl;
     for (EventDescription::Circs::const_iterator it = ed.circs.begin();
          it!=ed.circs.end();
-         it++) 
+         it++)
     {
       const CircleParams & c = *it;
       const double contribution = priorProbabilityOf(c);
       ans *= contribution;
-      //std::cout << "GROM = " << contribution << std::endl;
     }
 
     // and now the part I left out for ages (by accident!) which ensures that we compare hypotheses with different numbers of circles on an equivalent footing.  This insertion is somewhat guessed, so would be a good idea to get a statistician to confirm what I am doing.

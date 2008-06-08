@@ -7,6 +7,7 @@
 #include <fstream>
 #include <cmath>
 #include "CLHEP/Random/RandFlat.h"
+#include "Utils/MessageHandler.h"
 
 namespace Lester {
 
@@ -59,7 +60,7 @@ namespace Lester {
       assert(xVals.size()==pVals.size());
       if (xVals.size()<2) {
         // CRJ : Cannot do this as it causes problems during CMT building
-        //std::cout << "About to throw a benny" << std::endl;
+        //Lester::messHandle().error( "About to throw a benny" );
         //throw NotEnoughData();
         return;
       };
@@ -78,7 +79,7 @@ namespace Lester {
     };
     void checkRegularity() const {
       if (xVals.size()<2) {
-        std::cout << "About to throw a benny" << std::endl;
+        Lester::messHandle().error( "About to throw a benny" );
         throw NotEnoughData();
       };
       const double tol = 0.0001;
@@ -88,7 +89,7 @@ namespace Lester {
         const double miniDeltaX = (*(xit+1))-(*xit);
         const double discrep = fabs((miniDeltaX-deltaX)/(miniDeltaX+deltaX));
         if (discrep>tol) {
-          std::cout << "About to throw a benny" << std::endl;
+          Lester::messHandle().error( "About to throw a benny" );
           throw DataNotRegular();
         };
       };
@@ -107,33 +108,25 @@ namespace Lester {
       totProb = 0;
     };
   private:
-    void addIndexAndProbability(const Index index, const double probability) {
+    void addIndexAndProbability( const Index index, 
+                                 const double probability ) 
+    {
       assert(probability>=0);
       xVals.push_back(index);
       pVals.push_back(probability);
       totProb += probability;
     };
   public:
-    inline double probabilityDensityOf(const Index index) const {
+    inline double probabilityDensityOf(const Index index) const 
+    {
       const int i = static_cast<int>((index - start)*sda);
-      //std::cout << index<< " " << start << " " << stop << " " <<sda<<" "<< i << std::endl;
-      if (i>=0 && i<static_cast<int>(pVals.size())) {
-        return pVals[i];
-      } else {
-        return 0;
-      };
-    };
+      //Lester::messHandle().verbose() << index<< " " << start << " " << stop << " " <<sda<<" "<< i << Lester::endmsg;
+      return ( i>=0 && i<static_cast<int>(pVals.size()) ? pVals[i] : 0 );
+    }
     inline double operator () (const Index index) const {
       return probabilityDensityOf(index);
     };
-    //private:
-    // void printMapTo(std::ostream & i) const {
-    //   for (typename Map::const_iterator it = cache.begin();
-    //    it!=cache.end();
-    //    ++it) {
-    // i <<  "prob=" << it->first << " index=" << it->second << std::endl;
-    //  };
-    //};
+
   };
 
 };

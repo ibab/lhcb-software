@@ -1,8 +1,8 @@
 
 #include "CircleTheorems.h"
-
 #include "Small2Vector.h"
 #include "Small3Vector.h"
+#include "Utils/MessageHandler.h"
 
 namespace Lester {
 
@@ -74,14 +74,14 @@ namespace Lester {
   }
 
   Small3Vector CircleTheorems::dumbCentreOfCircleThrough(const Small3Vector & a,
-                                                       const Small3Vector & b,
-                                                       const Small3Vector & c) {
+                                                         const Small3Vector & b,
+                                                         const Small3Vector & c) {
     return a*fDumb(a,b,c) + b*fDumb(b,c,a) + c*fDumb(c,a,b);
   }
 
   Small2Vector CircleTheorems::centreOfCircleThrough(const Small2Vector & a,
-                                                   const Small2Vector & b,
-                                                   const Small2Vector & c) {
+                                                     const Small2Vector & b,
+                                                     const Small2Vector & c) {
     const double aSq = a.mag2();
     const double bSq = b.mag2();
     const double cSq = c.mag2();
@@ -90,7 +90,6 @@ namespace Lester {
     const double denominator = fDenominator(a,b,c);
 
     if (denominator==0) {
-      //std::cerr << "Dumpolds drat" << std::endl;
       throw PointAtInfinity();
     };
 
@@ -103,7 +102,7 @@ namespace Lester {
     static bool first=true;
     if (first) {
       first = false;
-      std::cerr << "The method CircleTheorems::radiusOfCircleThrough(...) could be much improved!" << std::endl;
+      Lester::messHandle().debug() << "The method CircleTheorems::radiusOfCircleThrough(...) could be much improved!" << Lester::endmsg;
     };
     try {
       const Small2Vector centre = centreOfCircleThrough(a,b,c);

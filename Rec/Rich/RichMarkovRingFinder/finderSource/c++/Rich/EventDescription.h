@@ -11,8 +11,8 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Lester {
-  
-  class EventDescription 
+
+  class EventDescription
   {
   public: // ?? not private ??
     typedef std::vector<CircleParams> Circs;
@@ -24,13 +24,16 @@ namespace Lester {
     EventDescription(const GenRingF::GenericResults & results);
     /// The fill method fills the "GenRingF::GenericResults" structure with the rings which were found during the fitting procedure.
     void fill(GenRingF::GenericResults & results,
-	      const GenRingF::GenericInput & input,
-	      boost::shared_ptr<NimTypeRichModel> ntrm) const;
+              const GenRingF::GenericInput & input,
+              boost::shared_ptr<NimTypeRichModel> ntrm) const;
     std::ostream & printMeTo(std::ostream & os) const;
+    friend inline std::ostream & operator<<(std::ostream & os,
+                                            const Lester::EventDescription & rp)
+    {
+      return rp.printMeTo(os);
+    }
   };
-    
-}
 
-std::ostream & operator<<(std::ostream & os, const Lester::EventDescription & rp);
+}
 
 #endif

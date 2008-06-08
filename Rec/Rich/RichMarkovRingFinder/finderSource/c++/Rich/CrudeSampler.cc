@@ -30,8 +30,6 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
-    // test message
-    Lester::messHandle().message(Lester::INFO,"XXXXXXXXXXXXXXXXXXXXXXXXx");
 
     const Lester::NimTypeRichModel & ntrm = *m_ntrm;
 
@@ -54,18 +52,19 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     // Try to set it up as a "reasonable" blank slate from which to start the finder
     assert(initialPoint.circs.empty());
 
-    //std::cout << "Created initial point " << initialPoint << std::endl;
+    Lester::messHandle().debug() << "Created initial point " << initialPoint << Lester::endmsg;
 
     Lester::EventDescription currentPoint = initialPoint;
     double currentLogProb; // initialised in next statement
     try
     {
       currentLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(currentPoint, data);
-      std::cout << "Current point has logProb " << currentLogProb << std::endl;
+      Lester::messHandle().debug() << "Current point has logProb " << currentLogProb << Lester::endmsg;
     }
     catch (Lester::LogarithmicTools::LogOfZero &)
     {
-      std::cout << "Initial point was not sufficiently good.  I refuse to carry on at line " << __LINE__ << " in " << __FILE__ << std::endl;
+      Lester::messHandle().debug() << "Initial point was not sufficiently good.  I refuse to carry on at line " 
+                                   << __LINE__ << " in " << __FILE__ << Lester::endmsg;
       throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
     }
 
@@ -93,9 +92,9 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       while ( nIts < runIts )
       {
         ++nIts;
-        //std::cout << "Iteration " << nIts << "/" << runIts << std::endl;
+        Lester::messHandle().verbose() << "Iteration " << nIts << "/" << runIts << Lester::endmsg;
         doTheWork ( currentPoint, currentLogProb, p, ntrm, data );
-        //std::cout << "  -> " << currentPoint << " " << currentLogProb << std::endl;
+        Lester::messHandle().verbose() << "  -> " << currentPoint << " " << currentLogProb << Lester::endmsg;
       }
 
       // stop time
@@ -192,7 +191,7 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
 
   if (proposeInsert)
   {
-    //std::cout << "Proposing insertion" << std::endl;
+    Lester::messHandle().verbose("Proposing insertion");
     // what shall we propose adding?
     const Lester::CircleParams & c = p.sample();
     proposal.circs.push_back(c);
@@ -205,13 +204,13 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     const unsigned int siz = currentPoint.circs.size();
     if (siz==0)
     {
-      //std::cout << "Proposing crummy removal" << std::endl;
+      Lester::messHandle().verbose("Proposing crummy removal");
       // leave as we are}
       keepForSure = true;
     }
     else
     {
-      //std::cout << "Proposing removal" << std::endl;
+      Lester::messHandle().verbose("Proposing removal");
       const int toGo = RandFlat::shootInt(siz);
       proposal.circs[toGo] = proposal.circs[siz-1];
       proposal.circs.pop_back();
@@ -226,13 +225,13 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     const unsigned int siz = currentPoint.circs.size();
     if (siz==0) 
     {
-      //std::cout << "Proposing crummy jitter" << std::endl;
+      Lester::messHandle().verbose("Proposing crummy jitter");
       // leave as we are!
       keepForSure = true;
     } 
     else 
     {
-      //std::cout << "Proposing jitter" << std::endl;
+      Lester::messHandle().verbose("Proposing jitter");
       //qReverseOverQForward = 1;
       const int toJitter = RandFlat::shootInt(siz);
       proposal.circs[toJitter] = proposal.circs[toJitter].jitterSymm1();
@@ -256,10 +255,7 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
       {
         currentPoint = proposal;
         currentLogProb = proposedLogProb;
-        //if (proposeJitter) {
-        //  std::cout <<"Ooooh"<< std::endl;
-        //  pressAnyKey();
-        //};
+
       }
     }
   } 
@@ -275,5 +271,5 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     count %=30;
   };
 
-  //std::cout << "CurrentPoint " << currentPoint << std::endl;
+  Lester::messHandle().debug() << "CurrentPoint " << currentPoint << Lester::endmsg;
 }

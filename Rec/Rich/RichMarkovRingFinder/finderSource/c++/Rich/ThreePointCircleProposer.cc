@@ -1,9 +1,9 @@
 
 #include "ThreePointCircleProposer.h"
 #include "Utils/CannotConstructException.h"
-#include "Utils/PressAnyKey.h"
 #include "Utils/UpperGaussianDist.h"
 #include "Utils/CheckForNan.h"
+#include "Utils/MessageHandler.h"
 #include "ProbabilityUtils.h"
 #include "FiniteRelativeProbabilityChooser.h"
 #include "CircleTheorems.h"
@@ -23,11 +23,15 @@ namespace Lester {
         // try again!
         ++failures;
         if (failures==1) {
-          std::cout << "WARNING: The situation with respect to very unlikely start points has caused an ineficiency in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << std::endl;
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in " 
+                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
         } else if (failures==5) {
-          std::cout << "SERIOUS WARNING: The situation with respect to very unlikely start points has causing a much larger problem in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!" <<  std::endl;
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in " 
+                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ 
+                                         << " than previously thought possible.  Fix Immediately!" << Lester::endmsg;
         } else if (failures==100) {
-          std::cout << "FATAL ERROR: Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." <<  std::endl;
+          Lester::messHandle().fatal() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ << " in " 
+                                       << __FILE__ << ".  Am going to keep running in the hope that we escape this loop ... but I don't hold out much hope.  This is your fault for ignoring the previous two warnings." << Lester::endmsg;
         };
       };
     };
@@ -42,7 +46,8 @@ namespace Lester {
     static bool first = true;
     if (first) {
       first = false;
-      std::cerr << __FUNCTION__ << " could be improved by seeding on a non-random point (" << __FILE__ << " " << __LINE__ <<")"<<std::endl;
+      Lester::messHandle().debug() << __FUNCTION__ << " could be improved by seeding on a non-random point (" << __FILE__ << " " << __LINE__ <<")"
+                                   <<Lester::endmsg;
     };
     const int a = RandFlat::shootInt(nDataPoints);
     assert(a>=0 && a<nDataPoints);
@@ -59,15 +64,12 @@ namespace Lester {
             const Hit & hb =  m_data.hits[b];
             const double prob_that_a_and_b_are_in_same_circle
               = m_ntrm.PROPTO_priorProbabilityOfTwoPointsBeingOnACircle(ha,hb);
-            //std::cerr << "KOOM " << b<<" " <<prob_that_a_and_b_are_in_same_circle << std::endl;
             frpc.addIndexAndProbability(b,prob_that_a_and_b_are_in_same_circle);
           };
         };
       };
       // Now ready to select the second point!
-      //std::cerr<<"also about to ... " << std::flush;
       const int b = frpc.sampleAnIndex();
-      //std::cerr<<"... also done" << std::flush;
       assert(b!=a && b>=0 && b<nDataPoints);
       const Hit & hb =  m_data.hits[b];
 
@@ -86,7 +88,6 @@ namespace Lester {
 
               const double prob_that_a_b_and_c_are_in_same_circle
                 = m_ntrm.priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(ha,hb,hc,r);
-              //std::cerr << "LLOOM " << c<<" " <<prob_that_a_b_and_c_are_in_same_circle << " " << r << std::endl;
               frpc.addIndexAndProbability(c,prob_that_a_b_and_c_are_in_same_circle  /r /* CONTROVERSIAL FACTOR */);
             } catch (CircleTheorems::RadiusIsInfinite&) {
               // don't add the point to the frpc!
@@ -96,7 +97,6 @@ namespace Lester {
       };
       // Now ready to select the third and last point!
       const int c = frpc.sampleAnIndex();
-      //std::cout << "sdfsdfsdf " << nDataPoints << " a " << a << " b " << b << " c " <<c<< std::endl;
       assert(c!=a && c!=b && c>=0 && c<nDataPoints);
       const Hit & hc =  m_data.hits[c];
 
@@ -117,10 +117,10 @@ namespace Lester {
         return CircleParams(Small2Vector(smearedX,smearedY), smearedR);
 
       } catch (CircleTheorems::PointAtInfinity&) {
-        std::cerr << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << std::endl;
+        Lester::messHandle().error() << "CircleTheorems::PointAtInfinity problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
         throw;
       } catch (CircleTheorems::RadiusIsInfinite&) {
-        std::cerr << "CircleTheorems::RadiusIsInfinite problem at line " << __LINE__ << " of " << __FILE__ << std::endl;
+        Lester::messHandle().error() << "CircleTheorems::RadiusIsInfinite problem at line " << __LINE__ << " of " << __FILE__ << Lester::endmsg;
         throw;
       };
 
@@ -128,7 +128,8 @@ namespace Lester {
       static bool first = true;
       if (first) {
         first = false;
-        std::cerr << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!" << std::endl;
+        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!" 
+                                       << Lester::endmsg;
       };
       throw;
     };
@@ -147,7 +148,6 @@ namespace Lester {
     {
       double numberOfWanderSigmaToSearch = 3.0;
       while(nearbyHitIndices.size()<3) {
-        std::cout << "Pass with sigmas " << numberOfWanderSigmaToSearch << std::endl;
         const double numberOfWanderSigmaToSearchSq = numberOfWanderSigmaToSearch*numberOfWanderSigmaToSearch;
         const double maxPermittedDistanceSq = numberOfWanderSigmaToSearchSq*m_wanderWidthSq;
         for (int i=0; i<nDataPoints; ++i) {
@@ -210,10 +210,6 @@ namespace Lester {
     const Cache1::const_iterator it = m_cache1.find(h);
     if (it != m_cache1.end()) {
       const double p = it->second;
-      //const double check = probabilityOfBasingACircleOn(i1,i2,i3);
-      //if (p!=check) {
-      //std::cout << "Mooon " << p << " " << check << " " << (p-check)/check << " " << h << std::endl;
-      //};
       return p;
     } else {
       const double p = probabilityOfBasingACircleOn(i1,i2,i3);
@@ -252,7 +248,7 @@ namespace Lester {
             };
           };
         };
-        //std::cout << "For part b frac is " << special << " / " << total << std::endl;
+        //Lester::messHandle().debug() << "For part b frac is " << special << " / " << total << Lester::endmsg;
         const double frac = special/total;
         if (!Lester::lfin(frac)) {
           // total is zero or close to zero
@@ -286,7 +282,7 @@ namespace Lester {
             };
           };
         };
-        //std::cout << "For part c frac is " << special << " / " << total << std::endl;
+        //Lester::messHandle().debug() << "For part c frac is " << special << " / " << total << Lester::endmsg;
         const double frac = special/total;
         if (!Lester::lfin(frac)) {
           // total is zero or close to zero

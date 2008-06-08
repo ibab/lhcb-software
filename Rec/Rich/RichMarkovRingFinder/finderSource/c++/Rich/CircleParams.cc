@@ -3,6 +3,7 @@
 #include "ProbabilityUtils.h"
 #include "GenericRingFinder/GenericRing.h"
 #include "CLHEP/Random/RandGauss.h"
+#include "Utils/MessageHandler.h"
 
 namespace Lester {
 
@@ -24,18 +25,13 @@ namespace Lester {
   }
 
   void CircleParams::statusReport() {
-    assert(std::cout << "CircleParams reports " << _creationCount<< " constructions." << std::endl);
+    Lester::messHandle().debug() << "CircleParams reports " 
+                                 << _creationCount<< " constructions." << Lester::endmsg;
   }
 
   const Small2Vector & CircleParams::centre() const {
     return _centre;
   }
-
-  /*
-    double CircleParams::mu() const {
-    return _mu;
-    }
-  */
 
   double CircleParams::radius() const {
     return _radius;
@@ -63,11 +59,13 @@ namespace Lester {
     assert(++_creationCount);
   }
 
-  std::ostream & CircleParams::printMeTo(std::ostream & os) const {
+  std::ostream & CircleParams::printMeTo(std::ostream & os) const 
+  {
     return os << "CircleParams[cen="<<centre()<<", r="<<radius()/*<<", mu="<<mu()*/ <<"]";
   }
 
-  CircleParams CircleParams::jitterSymm1() const {
+  CircleParams CircleParams::jitterSymm1() const
+  {
     const Small2Vector newcen = centre()+Small2Vector(0.1*Constants::whiffWhaff*RandGauss::shoot(),0.1*Constants::whiffWhaff*RandGauss::shoot());
     const double trialnewrad = (radius()+0.1*Constants::whiffWhaff*RandGauss::shoot());
     const double newrad = ((trialnewrad>0)?trialnewrad:radius());
@@ -75,8 +73,3 @@ namespace Lester {
   }
 
 }
-
-std::ostream & operator<<(std::ostream & os, const Lester::CircleParams & cp) {
-  return cp.printMeTo(os);
-}
-

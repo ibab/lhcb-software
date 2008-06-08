@@ -23,8 +23,8 @@ namespace Lester {
       Index index;
       double probability;
       while (is>>index) {
-	is>>probability;
-	addIndexAndProbability(index,probability);
+        is>>probability;
+        addIndexAndProbability(index,probability);
       };
     };
     void clear() {
@@ -42,34 +42,35 @@ namespace Lester {
     };
     Index sampleAnIndex() const {
       if (cache.empty()) {
-	throw SampledTooEarly();
+        throw SampledTooEarly();
       };
       // If we got this far, we have at least one element!
       const double target = totalProb * RandFlat::shoot();
       typename Multimap::const_iterator it=cache.begin();
       double sumSoFar=0;
       while (true) {
-	sumSoFar += (it->first);
-	if (sumSoFar>=target) {
-	  return it->second;
-	};
-	++it;
-	if (it==cache.end()) {
-	  // might get here due to strange rounding errors ...
-	  // since eventuality is very unlikely, just return the 
-	  // most likely element ... it shouldn't 
-	  // perturb its probability much
-	  return cache.begin()->second;
-	};
+        sumSoFar += (it->first);
+        if (sumSoFar>=target) {
+          return it->second;
+        };
+        ++it;
+        if (it==cache.end()) {
+          // might get here due to strange rounding errors ...
+          // since eventuality is very unlikely, just return the
+          // most likely element ... it shouldn't
+          // perturb its probability much
+          return cache.begin()->second;
+        };
       };
     };
   private:
     void printMapTo(std::ostream & i) const {
-      for (typename Multimap::const_iterator it = cache.begin();
-	   it!=cache.end();
-	   ++it) {
-	i <<  "prob=" << it->first << " index=" << it->second << std::endl;
-      };
+      for ( typename Multimap::const_iterator it = cache.begin();
+            it!=cache.end();
+            ++it ) 
+      {
+        i <<  "[prob=" << it->first << ",index=" << it->second << "],";
+      }
     };
   };
 
