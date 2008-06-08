@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.33 2008-06-08 12:54:55 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.34 2008-06-08 13:04:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -177,7 +177,7 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
   }
   catch ( const std::exception & excpt )
   {
-    Warning( "Ring Finding Failed with message : " + std::string(excpt.what()),
+    Warning( "Ring finding FAILED with exception : " + std::string(excpt.what()),
              StatusCode::SUCCESS );
   }
 
@@ -402,7 +402,30 @@ void RichMarkovRingFinderAlg::matchSegment( LHCb::RichRecRing * /* ring */ ) con
 void RichMarkovRingFinderAlg::lesterMessage( const Lester::MessageLevel level,
                                              const std::string & message ) const
 {
-  info() << message << endreq;
+  if      ( Lester::VERBOSE == level )
+  {
+    verbose() << message << endreq;
+  }
+  else if ( Lester::DEBUG == level )
+  {
+    debug() << message << endreq;
+  }
+  else if ( Lester::INFO == level )
+  {
+    info() << message << endreq;
+  }
+  else if ( Lester::WARNING == level )
+  {
+    Warning( message );
+  }
+  else if ( Lester::ERROR == level )
+  {
+    Error( message );
+  }
+  else if ( Lester::FATAL == level )
+  {
+    Exception( message );
+  }
 }
 
 StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const
