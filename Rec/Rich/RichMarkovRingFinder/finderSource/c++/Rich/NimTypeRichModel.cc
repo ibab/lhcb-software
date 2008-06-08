@@ -329,36 +329,8 @@ namespace Lester {
     };
   }
 
-  /*
-  // I don't trust this function any more
-  double NimTypeRichModel::priorProbabilityOfChordLengthGivenRadius(const double rho, const double r) {
-  // Given that two points are on a circle of radius r, this function returns the prior probability(-desnity) that their chord separation is rho.
-  const double one = 1;
-  const double two = 2;
-  const double rhoOverTwo = rho/two;
-  const double rs4 = rhoOverTwo*rhoOverTwo;
-  const double under = r*r-rs4;
-  if (under<=0) {
-  return 0;
-  };
-  const double contrib = one/(MathsConstants::pi*sqrt(under));
-  return contrib;
-  };
-  */
-
-  /*
-  // I don't trust this function any more
-  double NimTypeRichModel::PROPTO_priorProbabilityOfRadiusGivenChordLength(const double r, const double rho) {
-  // Given that two points separated by rho are considered to be on
-  // a circle, this function returns a quantity PRORORTIONAL TO the prior probability(-density) that the circle that they are on has radius r.
-  const double ans
-  = priorProbabilityOfChordLengthGivenRadius(rho, r)
-  * priorProbabilityOfRadius(r); // By Bayes' thm
-  return ans;
-  };
-  */
-
-  double NimTypeRichModel::sampleFromApproximateCoPointSeparationDistribution() const {
+  double NimTypeRichModel::sampleFromApproximateCoPointSeparationDistribution() const 
+  {
     // CoPointSeparationDistribution is the distrib of
     // distances between two points on a random circle
     // Here we approximate it in the limit that the circles are whole and sharp
@@ -391,9 +363,9 @@ namespace Lester {
     if (first) 
     {
       first = false;
-      const std::string filename = getCacheLocation();
+      const std::string filename ( getCacheLocation() );
       Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
-      std::ifstream f(filename);
+      std::ifstream f(filename.c_str());
       if (true/*FIX*/) 
       {
         double key,ans;
