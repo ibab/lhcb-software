@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.29 2008-06-08 12:54:55 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.30 2008-06-08 20:06:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -174,7 +174,7 @@ namespace Rich
       unsigned int m_maxHitsEvent;
 
       /// data scale factor, to turn local coordinates into angles (in rad)
-      double m_scaleFactor ;
+      double m_scaleFactor;
 
     };
 
