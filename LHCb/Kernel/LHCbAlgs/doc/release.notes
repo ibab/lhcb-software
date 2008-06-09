@@ -4,6 +4,15 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-06-09 - Gerhard Raven
+ - more improvements to FPEAuditor: 
+   o fix chicken-and-egg problem when auditing initialize: 'after'
+     will get called for the IAuditerSvc implementation without 'before'
+   o split FPEGuard in dedicated header, to be moved 'upstream'
+   o put platform specific code in the FPE::details namespace,
+     renamve FPEGuard into FPE::Guard.
+   o add doxygen comments to FPE::Guard.
+
 ! 2008-06-06 - Gerhard Raven
  - general improvements to FPEAuditor: 
    o  clear exception flags before switching on trapping (otherwise, any
