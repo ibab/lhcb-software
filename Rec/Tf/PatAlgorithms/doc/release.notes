@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-06-09 - Olivier Callot
+ - Fix a possible divide-by-zero in PatDownstream, line 604.
+
 !========================== PatAlgorithms v3r6 2008-06-05 ====================
 ! 2008-06-05 - Marco Cattaneo
  - Remove unneccessary machine specific include (inexistent on Windows)

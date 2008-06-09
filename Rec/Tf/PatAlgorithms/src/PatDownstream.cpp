@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.3 2007-12-19 16:02:36 ocallot Exp $
+// $Id: PatDownstream.cpp,v 1.4 2008-06-09 07:54:46 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -666,9 +666,11 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
 
     if ( m_maxDistance < maxDist ) {
       track.hits().erase( worst );
-      again = true;
-      if ( m_printing ) info() << "   remove worst and retry" << endreq;
-      continue;
+      if ( 2 < track.hits().size() ) {
+        again = true;
+        if ( m_printing ) info() << "   remove worst and retry" << endreq;
+        continue;
+      }
     } 
     
     if ( m_printing ) {
