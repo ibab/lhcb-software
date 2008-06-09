@@ -8,7 +8,7 @@ class stringKey {
 
 public:
 
-    stringKey(const std::string& str) : m_str(str), m_hash( hasher(str) ) 
+    stringKey(const std::string& str) : m_str(str), m_hash( hash(str) ) 
     { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
 
     const std::string& str() const { return m_str.value();}
@@ -20,7 +20,7 @@ public:
     StringProperty& property() { return m_str; }
     void updateHandler(Property& prop) { 
         m_str = prop.toString();
-        m_hash = hasher(str());
+        m_hash = hash(str());
     }
 
     // transitional functionality -- to be deleted when no longer needed...
@@ -28,9 +28,9 @@ public:
     bool empty() const { return str().empty(); }
 
 private:
-    bool valid() const { return m_hash!=0 && !str().empty() && hasher(str())==m_hash; }
+    bool valid() const { return m_hash!=0 && !str().empty() && hash(str())==m_hash; }
+    static size_t hash(const std::string& s);
 
-    static boost::hash<std::string> hasher;
 
     StringProperty m_str;
     // note: NEVER use m_hash for anything stored in files, as it is NOT 

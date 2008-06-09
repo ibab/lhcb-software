@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!2008-06-09 - Gerhard Raven
+   - stringKey: move static data member out of header, replace by static function
+
 !========================== HltBase v4r3 2008-06-09 ===================
 !2008-06-06 - Jose A. Hernando
    - more info on warning if there is no inputselection while required
