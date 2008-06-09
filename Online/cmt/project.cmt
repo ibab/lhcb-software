@@ -1,6 +1,6 @@
 project ONLINE
 
-use LHCB LHCB_v23r6
+use LHCB LHCB_v23r7
 
 build_strategy with_installarea
 setup_strategy root

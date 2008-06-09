@@ -5,6 +5,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r10>2008-06-09 OnlineSys v4r10</A></H1><PRE>
+New version v4r10 built against LHCb v23r7.
+Changes and bug fixes in GaudiOnline, OnlineKernel, OnlineTasks, 
+Presenter, PyDIM, ROMon, ROLogger, and UPI.
+
 </PRE><H1><A NAME=v4r9>2008-03-20 OnlineSys v4r9</A></H1><PRE>
 New version v4r9 built against LHCb v23r6.
 Changes and bug fixes in confDB, DIM (v17r5), GaudiOnline, GaudiUPI,
