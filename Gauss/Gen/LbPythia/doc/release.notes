@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia v7r2 2008-06-09 ==========================
 ! 2008-05-06 - Vanya BELYAEV
  - LbPythia/PythiaProduction.h 
    src/Lib/PythiaProduction.cpp
