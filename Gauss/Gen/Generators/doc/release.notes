@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.123 2008-05-29 14:21:46 gcorti Exp $
+! $Id: release.notes,v 1.124 2008-06-09 16:46:45 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v8r1 2008-06-09 ===========================
 ! 2008-05-29 - Gloria CORTI
  - Modify code to pick Vector{3D,4D}Types, etc. from GaudiKernel since 
    LHCbDefinitions has been removed from GAUSS, given that the package 
