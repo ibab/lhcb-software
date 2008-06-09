@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.380 2008-06-06 11:28:15 pkoppenb Exp $
+# $Id: requirements,v 1.381 2008-06-09 15:51:04 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -66,3 +66,5 @@ alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"
 alias DaVinciTests "cmt qmtest_run"
 # for QMtest
 apply_pattern QMTest
+#
+apply_pattern GaudiApp
