@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.111 2008-05-29 15:35:40 cattanem Exp $
+! $Id: release.notes,v 1.112 2008-06-09 09:02:11 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2008-06-09 - Alessia Satta
+  - Fix for zero division
 
 !========================= MuonDet v8r0p1 2008-05-29 ========================
 ! 2008-05-29 - Alessia Satta

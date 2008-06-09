@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.12 2007-11-28 08:00:23 cattanem Exp $
+// $Id: MuonChamberGrid.cpp,v 1.13 2008-06-09 09:02:11 asatta Exp $
 // Include files 
 
 // local
@@ -66,12 +66,13 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
   std::vector<double> x_rdout;  
   std::vector<double> y_rdout;
   std::vector<float> myBoundary; myBoundary.resize(4);
+  double ParallelCutOff=0.0001;
 
   bool debug = false;
   bool parallelFlag = false; 
 
   double slopeY(0),intercept(0);
-  if(fabs(x_exit-x_enter)>0.001){
+  if(fabs(x_exit-x_enter)>ParallelCutOff){
     slopeY =(y_exit - y_enter)/(x_exit - x_enter);
     intercept = y_exit - slopeY * x_exit ;
   } else {
@@ -122,7 +123,7 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
     
     double tmpXLenght(0);
     for(inxLo = 0; inxLo < PhNx; inxLo++) {
-      if(x_enter - tmpXLenght > 0.0001) {
+      if(x_enter - tmpXLenght > ParallelCutOff) {
         tmpXLenght += x_rdout[inxLo];
         tmpNxChaEntry =  inxLo;
         //	tmpNxChaEntry =  inxLo+1;
@@ -132,7 +133,7 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
     }
     tmpXLenght = 0;
     for(inxLo = 0; inxLo < PhNx; inxLo++) {
-      if(x_exit - tmpXLenght > 0.0001) {
+      if(x_exit - tmpXLenght > ParallelCutOff) {
         tmpXLenght += x_rdout[inxLo];
         tmpNxChaExit =  inxLo;
         //	tmpNxChaExit =  inxLo+1;
@@ -214,7 +215,7 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
       double tmpYLenght(0);
       
       for(inyLo = 0; inyLo < PhNy; inyLo++) {
-        if(yBegin - tmpYLenght > 0.0001) {
+        if(yBegin - tmpYLenght > ParallelCutOff) {
           tmpYLenght += y_rdout[inyLo];
           //	  tmpYBegin =  inyLo+1;
           tmpYBegin =  inyLo;
@@ -224,7 +225,7 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
       }
       tmpYLenght = 0;
       for(inyLo = 0; inyLo < PhNy; inyLo++) {
-        if(yEnd - tmpYLenght > 0.0001) {
+        if(yEnd - tmpYLenght > ParallelCutOff) {
           tmpYLenght += y_rdout[inyLo];
           //	  tmpYEnd =  inyLo+1;
           tmpYEnd =  inyLo;
