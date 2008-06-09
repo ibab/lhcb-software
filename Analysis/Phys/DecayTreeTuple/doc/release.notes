@@ -4,6 +4,8 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+!===================== DecayTreeTuple v1r3 2008-06-09 =======================
+
 ! 2008-05-04 - V. Gligorov
  - TupleToolTrigger.{cpp,h}: Added options to allow users to save only the L0
    information, or only the HLT information. Default is to save all.
