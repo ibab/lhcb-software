@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichMarkovRingFinderMoni
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderMoni.h,v 1.20 2008-05-23 15:14:03 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.h,v 1.21 2008-06-09 15:02:36 shaines Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,7 +15,10 @@
 #ifndef RICHRECMONITOR_RichMarkovRingFinderMoni_H
 #define RICHRECMONITOR_RichMarkovRingFinderMoni_H 1
 
+//STD
 #include <sstream>
+
+#include <cmath>
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"
@@ -30,6 +33,8 @@
 #include "RichRecBase/IRichTrackSelector.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
+//#include "MCInterfaces/IRichMCTruthTool.h"//causes compile error
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 namespace Rich
 {
@@ -74,7 +79,33 @@ namespace Rich
         /// Track selector
         const ITrackSelector * m_trSelector;
 
-      };
+        mutable const Rich::Rec::MC::IMCTruthTool* m_richRecMCTruth;  ///< Pointer to RichRecMCTruthTool interface
+        //mutable const Rich::MC::IMCTruthTool* m_richMCTruth;  ///< Pointer to RichRecMCTruthTool interface
+
+ //          /// access RichMCTruthTool tool on demand
+//         const Rich::MC::IMCTruthTool * richMCTool() const
+//         {
+//           if ( !m_richMCTruth ) { acquireTool( "RichMCTruthTool", m_richMCTruth ); }
+//           return m_richMCTruth;
+//         }
+
+        /// access RichRecMCTruthTool tool on demand
+        const Rich::Rec::MC::IMCTruthTool * richRecMCTool() const
+        {
+          if ( !m_richRecMCTruth ) { acquireTool( "RichRecMCTruthTool", m_richRecMCTruth ); }
+          return m_richRecMCTruth;
+        }
+
+
+        /// Location of Rings in TES
+        std::string m_ringLoc;
+        
+        /// Minimum separation between ring centres
+        double m_sizesepcut;
+        double m_regionscale;
+
+
+        };
 
     }
   }
