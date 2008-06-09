@@ -5,6 +5,10 @@ with_versions = None
 for arg in sys.argv:
   if arg.upper()[:2]=='-V':
     with_versions = 1
+  if arg.upper()[:2]=='-H':
+    print 'usage: checkVersion [-version]'
+    print '    -version    use version directories in checkout (optional).'
+    sys.exit(0)
 
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
