@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/dict/PyInteractor.cpp,v 1.2 2008-06-09 08:53:26 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/dict/PyInteractor.cpp,v 1.3 2008-06-09 08:55:46 frankb Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -87,7 +87,7 @@ static void s_init() {
   static bool first = true;
   if ( first )  {
     first = false;
-    PyEval_InitThreads();
+    ::PyEval_InitThreads();
     s_mainThreadState = PyThreadState_Get();
   }
 }
@@ -100,8 +100,8 @@ CPP::PythonCall::PythonCall(PyObject* obj) : m_call(obj), m_type(&typeid(Unknown
 /// Cleanup and handler of pyuthon errors
 static void handlePythonError(PyThreadState* st)  {
   if ( PyErr_Occurred() )   {
-    PyErr_Print(); 
-    PyErr_Clear();
+    ::PyErr_Print(); 
+    ::PyErr_Clear();
   }
   if ( st )  {
     ::PyEval_ReleaseThread(st);
@@ -115,28 +115,28 @@ void CPP::PythonCall::operator()(const char* attr)  {
   PyThreadState* st = 0;
   try   {
     PyObject* r = 0;
-    st = PyThreadState_New(s_mainThreadState->interp);
-    PyEval_AcquireThread(st);
-    r = PyObject_CallMethod(m_call, (char*)attr, (char*)"");
+    st = ::PyThreadState_New(s_mainThreadState->interp);
+    ::PyEval_AcquireThread(st);
+    r = ::PyObject_CallMethod(m_call, (char*)attr, (char*)"");
     if ( r == 0 )  {
-      PyErr_Print(); 
-      PyErr_Clear();
-      PyEval_ReleaseThread(st);
+      ::PyErr_Print(); 
+      ::PyErr_Clear();
+      ::PyEval_ReleaseThread(st);
       // PyThreadState_Clear(st);
-      PyThreadState_Delete(st);
+      ::PyThreadState_Delete(st);
       return;
     }
     if( r == Py_None )  {
-      PyEval_ReleaseThread(st);
+      ::PyEval_ReleaseThread(st);
       // PyThreadState_Clear(st);
-      PyThreadState_Delete(st);
+      ::PyThreadState_Delete(st);
       return;
     }
     else if(r)  {
       Py_XDECREF( r ) ;
-      PyEval_ReleaseThread(st);
+      ::PyEval_ReleaseThread(st);
       // PyThreadState_Clear(st);
-      PyThreadState_Delete(st);
+      ::PyThreadState_Delete(st);
       return;
     }
   }
@@ -154,7 +154,7 @@ void CPP::PythonCall::operator()(const char* attr)  {
 
 /// Check for python attribute
 int CPP::PythonCall::hasAttr(const char* attr)  {
-  return PyObject_HasAttrString(m_call, (char*)attr);
+  return ::PyObject_HasAttrString(m_call, (char*)attr);
 }
 
 /// Execute any python attribute (if its a callback)
