@@ -5,6 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v23r8>2008-06-09 LHCbSys v23r8</A></H1><PRE>
+This version uses Gaudi v20r0 and LCG_55
+
+- Packages modified: DetDescSvc v2r0
+
+- In DetDescSvc v2r0
+  . Adapt to new state machine in Gaudi v20r0
+
 </PRE><H1><A NAME=v23r7>2008-06-04 LHCbSys v23r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
 
