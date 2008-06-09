@@ -38,6 +38,7 @@ extern "C" {
 }
 #include <vector>
 #include <string>
+#include "RTL/Pack.h"
 namespace Bits  {
   void dumpWords(const void* field, int len, std::vector<std::string>& words);
   template <int i> struct BitMask  {
@@ -108,6 +109,7 @@ namespace Bits  {
     }
   };
 }
+#include "RTL/Unpack.h"
 #endif
 
 #endif // BUFFERMANAGER_BITS_H

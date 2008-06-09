@@ -3,6 +3,7 @@
 */
 #ifndef __QUE_H__
 #define __QUE_H__
+#include "RTL/Pack.h"
 struct qentry {
 	struct qentry *next;
 	struct qentry *prev;
@@ -12,6 +13,7 @@ struct qentry {
 #endif
 };
 typedef qentry qentry_t;
+
 #ifdef __cplusplus
 #include <memory>
 extern "C" {
@@ -28,8 +30,11 @@ static inline bool lib_rtl_queue_success(int sc)  { return (sc > 0); }
 #else
 #define rtl_queue_success(sc)    ((sc) > 0 )
 #endif
+
 #define QUE_SUCCESS      1
 #define QUE_ONEENTQUE    2
 #define QUE_QUEISEMPTY   3
 #define QUE_QUEWASEMPTY -3
+
+#include "RTL/Unpack.h"
 #endif

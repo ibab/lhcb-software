@@ -11,6 +11,7 @@
 #ifndef _WIN32
   #include "semaphore.h"
 #endif
+#include "RTL/Pack.h"
 
 typedef Bits::BitMask<BM_MASK_SIZE> TriggerMask;
 typedef Bits::BitMask<BM_MASK_SIZE> UserMask;
@@ -59,7 +60,7 @@ namespace MBM  {
 
 struct REQ  {     //requirements structures xx bytes each   
   int           ev_type;     // event type
-  TriggerMask   tr_mask;     // event Mask
+  TriggerMask   tr_mask PACKED_DATA;     // event Mask
   UserMask      vt_mask;     // veto mask
   int           masktype;    // requirement type for trigger mask   
   int           user_type;   // Requirement Type (VIP/normal User)   
@@ -229,7 +230,7 @@ struct CONTROL  {
   int shift_p_Bit;        // Shifts per Bit to obtain size in bytes
   int bytes_p_Bit;        // Number of bytes per bit in bitmap.
   int spare1;
-};
+} PACKED_DATA;
 
 struct BUFFERS  {
   struct BUFF {
@@ -239,7 +240,7 @@ struct BUFFERS  {
   int   p_bmax;           // Maximum number of buffers
   int   nbuffer;          // Current number of buffers
   BUFF  buffers[1];       // Buffer descriptors
-};
+} PACKED_DATA;
 
 struct BMDESCRIPT : public qentry_t  {
   CONTROL*         ctrl;
@@ -286,4 +287,5 @@ struct BMDESCRIPT : public qentry_t  {
     return owner==-1 ? 0 : ctrl;
   }
 };
+#include "RTL/Unpack.h"
 #endif // _MBM_MBM_STRUCTS_H

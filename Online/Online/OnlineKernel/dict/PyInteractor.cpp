@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/dict/PyInteractor.cpp,v 1.1 2008-04-28 15:41:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineKernel/dict/PyInteractor.cpp,v 1.2 2008-06-09 08:53:26 frankb Exp $
 //  ====================================================================
 //  PythonCallback.h
 //  --------------------------------------------------------------------
@@ -14,6 +14,9 @@
 struct _object;
 typedef _object PyObject;
 #else
+#ifdef _POSIX_C_SOURCE  // Gets redefined in python.h
+#undef _POSIX_C_SOURCE
+#endif
 #include "Python.h"
 #define __COMPILE_PYTHON
 #endif
@@ -114,7 +117,7 @@ void CPP::PythonCall::operator()(const char* attr)  {
     PyObject* r = 0;
     st = PyThreadState_New(s_mainThreadState->interp);
     PyEval_AcquireThread(st);
-    r = PyObject_CallMethod(m_call, (char*)attr, "");
+    r = PyObject_CallMethod(m_call, (char*)attr, (char*)"");
     if ( r == 0 )  {
       PyErr_Print(); 
       PyErr_Clear();
@@ -167,7 +170,7 @@ void CPP::PythonCall::execVoid(const char* attr)  {
 void CPP::PythonCall::print(const char* attr)  {
   std::cout << "Test function - should not be called...." << type() << "[" << m_call << "] ";
   if ( m_call && attr )   {
-    std::cout << attr << ": " << hasAttr(attr);
+    std::cout << attr << ": " << hasAttr((char*)attr);
   }
   std::cout << std::endl;
 }
