@@ -16,3 +16,4 @@ use ExampleGaucho v*   Online
 use GaudiSvc      v* 
 use GaudiAlg      v* 
 use Writer        v*   Online
+use Saver         v*   Online

@@ -17,12 +17,13 @@ if test -n "$3" ; then
    export PARTNAME=$3
 fi
 
-echo UTGID ${UTGID}
+if test -n "$4" ; then 
+   export TOP=$4
+fi
+echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-echo $PARENT 
-
-cd /home/online/Online_v4r7/Online/OnlineTasks/v1r10/job
-#export DEBUGGING=YES
+cd /home/online/Online_v4r9/Online/OnlineTasks/v1r11/job
+export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
 while [ $# -ne 0 ]; do
@@ -30,14 +31,14 @@ while [ $# -ne 0 ]; do
 done
 
 export OPTIONS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Info.opts
-
+echo "options "${OPTIONS}
 #export SUBFARM=/group/online/dataflow/options/${PARENT}.opts
 # don't have write access to this directory
-export SUBFARM=../options/Adder${PARENT}.opts
+#export SUBFARM=../options/Adder${PARENT}.opts
 
 . ./setupOnline.sh
 
-if test -n "${PARTNAME}" ; then 
+if test -n "${TOP}" ; then 
   #top level adder for this partition
   export DIM_DNS_NODE=hlt01
   ${gaudi_exe3} -options=../options/Adder.opts -loop &  
@@ -49,7 +50,7 @@ fi
 
 echo DIM_DNS_NODE ${DIM_DNS_NODE}
 
-if test -z "${PARTNAME}" ; then
+if test -z "${TOP}" ; then
   #adder for this subfarm
   #if test -f ${SUBFARM} ; 
   #  then rm ${SUBFARM} ;

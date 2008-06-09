@@ -17,6 +17,6 @@ export USEROPTS=${HLTOPTS}/DummyRead${IS_TAE_RUN}.opts
 #     export USEROPTS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_${RUNTYPE}${IS_TAE_RUN}.opts;
 # fi
 
-echo "Useropts "$USEROPTS
+#echo "${UTGID} Script:  INFO  Useropts "$USEROPTS
 
-${CLASS1_TASK} -opt=$USEROPTS
+exec -a ${UTGID} ${CLASS1_TASK} -opt=$USEROPTS

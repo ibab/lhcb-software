@@ -5,3 +5,4 @@ ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 Runable.Wait                         = 1;
 ApplicationMgr.ExtSvc                = { };
 MessageSvc.OutputLevel               = 4;
+MessageSvc.fifoPath                  = "/tmp/logGaudi.fifo";

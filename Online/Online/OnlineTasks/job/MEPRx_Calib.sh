@@ -7,5 +7,4 @@ cd job
 
 export TELL1BOARDS=/group/online/dataflow/options/${PARTNAME}/${PARTNAME}_Tell1Boards.opts
 
-#exec -a ${UTGID} ${CLASS1_TASK} -opt=${HLTOPTS}/MEPRxSvc.opts
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${HLTOPTS}/Main.opts -opt=${HLTOPTS}/MEPRxSvc.opts
+${CLASS1_TASK} -opt=${HLTOPTS}/MEPRxSvc_Calib.opts

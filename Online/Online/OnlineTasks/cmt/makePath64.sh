@@ -10,12 +10,12 @@ export CMTPROJECTPATH=$LHCBPROJECTPATH
 echo "Create pathsetup using config '$CMTOPT'"
 export CMTCONFIG=$CMTOPT
 . ./setup.sh
-${CMTROOT}/mgr/cmt setup -sh > ../job/pathsetup
+${CMTROOT}/mgr/cmt setup -sh > ../job/pathsetup64
 
 echo "Create pathsetup_dbg using config '$CMTDEB'"
 export CMTCONFIG=$CMTDEB
 . ./setup.sh
-${CMTROOT}/mgr/cmt setup -sh > ../job/pathsetup_dbg
+${CMTROOT}/mgr/cmt setup -sh > ../job/pathsetup64_dbg
 
 export CMTCONFIG=$CMTOPT
 

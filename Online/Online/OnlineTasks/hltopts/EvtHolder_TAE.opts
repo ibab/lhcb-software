@@ -1,7 +1,7 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
-ApplicationMgr.OutputLevel = 3;
 ApplicationMgr.TopAlg  = { };
-GaudiExample.OutputLevel = 3;
-MessageSvc.OutputLevel  = 3;
-
+ApplicationMgr.OutputLevel = 3;
+GaudiExample.OutputLevel   = 3;
+MessageSvc.OutputLevel     = 4;
+MessageSvc.fifoPath        = "/tmp/logGaudi.fifo";

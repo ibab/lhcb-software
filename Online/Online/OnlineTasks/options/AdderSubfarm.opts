@@ -1,6 +1,7 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
-#include "$SUBFARM"
+//#include "$SUBFARM"
+#include "$OPTIONS"
 ApplicationMgr.ExtSvc = { "MonitorSvc" };
 
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
@@ -17,12 +18,18 @@ ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
 
 //from $SUBFARM
-Adder.nodenames=@Subfarm.Name;
-Adder.servername=@Subfarm.ServerName;
+//Adder.nodenames=@Subfarm.Name;
+//Adder.servername=@Subfarm.ServerName;
 
+//from $OPTIONS
+Adder.nodenames=@OnlineEnv.SubFarms;
+Adder.servername=@OnlineEnv.SubFarms;
 
 Adder.histogramname={"banktype*","eventsize*"};
 Adder.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
 Adder.taskname={"GauchoJob","GauchoJob"};
 Adder.refreshtime=20;
-Adder.dimclientdns=@Subfarm.ClientName;
+
+//Adder.dimclientdns=@Subfarm.ClientName;
+//from $OPTIONS
+Adder.dimclientdns=@OnlineEnv.SubFarms;

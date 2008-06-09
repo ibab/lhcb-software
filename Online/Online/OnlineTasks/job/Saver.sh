@@ -2,16 +2,21 @@
 #need to cd incase script is launched outside the taskmanager
 #get online version
 
-test -n "$1" ; export PARENT=$1
+test -n "$1" ; export PARENT=$( echo $1 | tr "[:upper:]" "[:lower:]" )
 
-test -n "$2" ; export UTGID=$2
+if test -n "$2" ; then 
+   export UTGID=$2
+fi   
 
 if test -n "$3" ; then 
    export PARTNAME=$3
-
 fi
+if test -n "$4" ; then 
+   export TOP=$4
+fi
+echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r7/Online/OnlineTasks/v1r10/job
+cd /home/online/Online_v4r8/Online/OnlineTasks/v1r11/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
@@ -21,9 +26,16 @@ done
 
 . ./setupOnline.sh 
 
-if test -n "$PARTNAME" 
+if test -n "${TOP} 
    then export DIM_DNS_NODE=hlt01;
 fi
 
-${gaudi_exe3} -options=../options/Saver.opts -loop &
 
+if [[ ${PARENT} == "hlta08" ]]
+  then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts -loop &
+  else 
+     if [[ ${PARENT} == "mona08" ]]
+       then ${gaudi_exe3} -options=../options/SaverMonitorfarm.opts -loop &
+       else ${gaudi_exe3} -options=../options/Saver.opts -loop &
+     fi 
+fi  

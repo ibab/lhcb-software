@@ -1,0 +1,17 @@
+// Job options file. Simple Online FM example
+//==============================================================
+
+ApplicationMgr.ExtSvc = { "MonitorSvc" };
+
+ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho","GaudiOnline"};
+ApplicationMgr.DLLs += {"FM"};
+
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.TopAlg  = { "FM" };
+
+
+ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";

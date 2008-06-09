@@ -1,5 +1,6 @@
 #include "$HLTOPTS/OnlineEnvironment.opts"
 MessageSvc.OutputLevel 		     = @OnlineEnv.OutputLevel;
+MessageSvc.LoggerOnly                = true;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.DLLs                  = { "OnlineDummyReader" };
@@ -20,9 +21,13 @@ ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
 SendSequence.Members                 = {"Prescaler/Prescaler", "LHCb::RawEvent2MBMMergerAlg/Output"};
 //Prescaler.PercentPass                = 100.;
 Prescaler.PercentPass                = @OnlineEnv.AcceptRate;
-Prescaler.OutputLevel                = 4;
+Prescaler.OutputLevel                = @OnlineEnv.OutputLevel;
+SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+EventSelector.OutputLevel            = @OnlineEnv.OutputLevel;
+EventLoopMgr.OutputLevel             = @OnlineEnv.OutputLevel;
+Runable.OutputLevel                  = @OnlineEnv.OutputLevel;
 Output.Buffer                        = "SEND";
 Output.DataType                      = 3;
 Output.InputDataType                 = 1;
 Output.Compress                      = 0;
-MessageSvc.OutputLevel               = 4;
