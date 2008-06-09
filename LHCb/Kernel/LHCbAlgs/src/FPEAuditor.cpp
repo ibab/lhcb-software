@@ -1,4 +1,4 @@
-#include "GaudiKernel/FPEGuard.h"
+#include "FPEGuard.h"
 #include <vector>
 #include <string>
 #include <utility>
