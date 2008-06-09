@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v13r5 2008-06-09 ========================
 ! 2008-05-28 - Gloria CORTI
  - Adapt to removal of package LHCbDefinitions: Point and Vector header files
    are taken from GaudiKernel.
