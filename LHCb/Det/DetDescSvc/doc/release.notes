@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.45 2008-06-02 11:30:58 cattanem Exp $ 
+! $Id: release.notes,v 1.46 2008-06-09 09:56:48 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+!========================= DetDescSvc v2r0 2008-06-09 =========================
+! 2008-06-09 - Marco Cattaneo
+ - Adapt to new state machine in Gaudi v20r0
 
 !========================= DetDescSvc v1r17 2008-06-02 ========================
 ! 2008-06-02 - Marco Cattaneo
