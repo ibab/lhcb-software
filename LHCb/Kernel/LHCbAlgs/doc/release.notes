@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-06-09 - Chris Jones
+ - Improve doxygen comments in FPE code + add a simple constructor
+
 ! 2008-06-09 - Gerhard Raven
  - more improvements to FPEAuditor: 
    o fix chicken-and-egg problem when auditing initialize: 'after'
