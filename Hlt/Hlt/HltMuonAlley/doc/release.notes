@@ -3,6 +3,8 @@
 ! Responsible : Sandra Amato & Alessia Satta
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
+
+!========================== HltMuonAlley v2r4 2008-06-09 ===================
 ! 2008-06-03 - Sandra Amato
   - HltIsMuonTool: updated default parameters
                    include dp/p cut

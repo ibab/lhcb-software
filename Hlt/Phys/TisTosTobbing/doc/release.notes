@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.17 2008-06-03 06:49:59 pkoppenb Exp $
+! $Id: release.notes,v 1.18 2008-06-09 16:22:29 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v2r4 2008-06-09 ===================
 ! 2008-06-03 - Patrick Koppenburg
  - Remove _dll.cpp
  - Increment to v2r4
