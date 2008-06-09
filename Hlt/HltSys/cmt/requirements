@@ -13,21 +13,21 @@ use HltHadAlley         v3r1    Hlt   # Jose Angel Hernando-Morata
 use HltPython	        v1r5    Hlt   # Jose Angel Hernando-Morata
 
 use HltMuon             v3r1    Hlt   # Alessia Satta          
-
 use HltMuonAlley        v2r3    Hlt   # Sandra Amato 
-
-use HltRecChecker	v1r5	Hlt   # Jose Angel Hernando-Morata
 use HltL0Conf           v2r0    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r0    Hlt   # Alessia Satta/Sandra Amato  
+
+use HltRecChecker	v1r5	Hlt   # Jose Angel Hernando-Morata
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
 use HltSelections       v7r1    Hlt   # Patrick Koppenburg
-use HltSelChecker       v6r2    Hlt   # Patrick Koppenburg
-
+use Fidel               v1r0    Phys   # Sara Furcas
 use HltKshort           v1r3    Hlt   # Jaap Panman
+
+use HltSelChecker       v6r2    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
@@ -36,8 +36,8 @@ use HltKshort           v1r3    Hlt   # Jaap Panman
 use HltBase             v4r2   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
-# use TisTosTobbing       v2r3   Phys   # Tomasz Skwarnicki  
-use Fidel               v1r0   Phys   # Sara Furcas
+use TisTosTobbing       v2r4   Phys   # Tomasz Skwarnicki  
+
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
