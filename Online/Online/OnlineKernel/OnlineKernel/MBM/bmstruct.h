@@ -146,11 +146,10 @@ struct USER : public qentry_t  {
   float stime;
   int   spare1;
   REQ   req[8];                  // 8 requirement maximum     
-#ifdef _WIN32
-  char  wes_flag[32];
-  char  wev_flag[32];
-  char  wsp_flag[32];
-#else
+  char  wes_flag[BM_USER_NAME_LEN];
+  char  wev_flag[BM_USER_NAME_LEN];
+  char  wsp_flag[BM_USER_NAME_LEN];
+#ifndef _WIN32
   // On linux, we can directly use semaphores in the user table.
   // This ensures that they are always present. The task calling mbm_include
   // initializes and destroys them.
