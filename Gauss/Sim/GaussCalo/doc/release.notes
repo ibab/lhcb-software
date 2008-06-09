@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.70 2008-05-30 13:51:07 gcorti Exp $
+! $Id: release.notes,v 1.71 2008-06-09 17:45:20 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -8,6 +8,7 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+!========================= GaussCalo v9r1 2008-06-09 ==========================
 ! 2008-05-29 - Gloria CORTI
  - Adapt to removal of LHCbDefinitions from GAUSS, header files are now from
    GaudiKernel
