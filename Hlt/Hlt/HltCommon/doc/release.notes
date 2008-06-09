@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v3r3 2008-06-09 ===================
 !2008-06-06 - Jose A. Hernando
    - reparing the HltSummaryTool that python/examples/hltexamples.py works again
 !2008-06-05 - Gerhard Raven
