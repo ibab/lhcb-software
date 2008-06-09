@@ -4,6 +4,14 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v4r1 2008-06-09 ===========================
+! 2008-06-09 - Gloria CORTI
+ - Add routine pyevwt.F over-writing the dummy routine in pythia_dummy library
+   and allowing re-weigth of cross sections for c-cbar mesons production. The
+   code was provided by Marianne BARGIOTTI.
+ - Use latest available versions of lhapdf 5.3.1, for which a build on
+   .cern.ch for tests exist for win32.
+
 ! 2008-05-23 - Patrick Robbe
  - add photos subdirectory to build a photosforgauss library containing
    FORTRAN overriden functions
