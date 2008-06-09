@@ -43,10 +43,10 @@ DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
 // Constructor
 //------------------------------------------------------------------------------
 UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
-  : GaudiAlgorithm(name, ploc) 
+  : GaudiAlgorithm(name, ploc), m_deltaTCycle(5)
 {
-   
-   
+   declareProperty("deltaTCycle", m_deltaTCycle);
+   m_generatedRunNumber = 0; // to test the run timer generator    
 }
 
 //------------------------------------------------------------------------------
@@ -67,8 +67,9 @@ StatusCode UpdateAndReset::initialize() {
     return StatusCode::FAILURE;
   }
 
-  m_deltaTCycle = 20.00 * 1000.00; // 10 seconds expresed in milliseconds
-  
+  m_runTestElapsedTime = 0.0;
+  m_deltaTCycle = m_deltaTCycle * 1000.00; // 10 seconds expresed in milliseconds
+  m_deltaTRunTest = 4 * m_deltaTCycle;
   // Assign the MonRate information
   // We publish the delayed values because we have the time of the last 
   // event in cycle when a cycle is finished then we have to publish the 
@@ -82,6 +83,8 @@ StatusCode UpdateAndReset::initialize() {
   
   m_cycleNumber = 0;
   m_cycleTimer.start();
+  
+  m_runTestTimer.start();
   
   // In the begining the delayed values are the same as the current values.
   m_runNumberDelayed = m_runNumber;
@@ -221,13 +224,13 @@ int UpdateAndReset::getRunNumber() {
 //  msg << MSG::WARNING<< "No ODIN Bank found. Can't update DIM services" <<endreq;
   msg << MSG::WARNING<< "For testing we generate a runNumber" <<endreq;
   
-  if (0 == m_countExecutes) m_generatedRunNumber = 0;
-  else {
-    div_t divresult = div (m_countExecutes, 40);
-    if( 0 == divresult.rem) { 
-      msg << MSG::WARNING<< "Changing run number" <<endreq;
-      m_generatedRunNumber++;
-    }
+  
+  m_runTestElapsedTime = m_runTestTimer.stop();
+  if (m_runTestElapsedTime > m_deltaTRunTest){
+     msg << MSG::WARNING<< "Changing run number" <<endreq;  
+     m_generatedRunNumber++; 
+     m_runTestElapsedTime = 0;
+     m_runTestTimer.start();
   }
   
   return m_generatedRunNumber;

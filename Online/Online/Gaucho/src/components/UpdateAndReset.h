@@ -47,6 +47,10 @@ private:
   GauchoTimer m_cycleTimer;
   double m_deltaTCycle;
   
+  double m_runTestElapsedTime;
+  GauchoTimer m_runTestTimer;
+  double m_deltaTRunTest;
+  
 };  
 
 #endif  // GAUCHO_UPDATEANDRESET_H

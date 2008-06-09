@@ -42,7 +42,7 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl): 
   Service(name, sl), m_refreshTime(10) 
 { 
-  declareProperty("refreshtime",m_refreshTime);
+  declareProperty("refreshtime", m_refreshTime);
 }
 
 
@@ -182,10 +182,15 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,int
 void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void* var,
                              int size, const std::string& desc, const IInterface* owner) 
 {
-  //m_dimeng->declSvc(dimName, format, var, size );
-  MonString* monString = new MonString(msgSvc(),"MonitorSvc");
-  //monString->setValue(var);
-  declareInfoMonObject(name, monString, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::ERROR << "Trying to use an Obsolete declare info for structure which is incompatible with MonObjects" << endreq;
+  msg << MSG::ERROR << "name=" << name << endreq;
+  msg << MSG::ERROR << "format=" << format << endreq;
+  msg << MSG::ERROR << "var=" << var << endreq;
+  msg << MSG::ERROR << "size=" << size << endreq;
+  msg << MSG::ERROR << "desc=" << desc << endreq;
+  msg << MSG::ERROR << "ownerName=" << infoOwnerName( owner ) << endreq;
+    
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
