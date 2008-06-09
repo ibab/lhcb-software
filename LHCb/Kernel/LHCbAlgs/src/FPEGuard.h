@@ -13,20 +13,21 @@
 #include "boost/assign/list_of.hpp"
 
 
-namespace FPE { 
-    
-    
+namespace FPE {
+
+
 namespace detail {
     /// This namespace contains machine & libc specific code
     /// required to implement the functionality used by FPEGuard
     /// Do not use directly.... if you do, you are on your own....
 #if defined(linux) && defined(__GNUC__)
+    static const bool has_working_implementation = true;
     typedef int mask_type;
     mask_type disable(mask_type mask) { return fedisableexcept(mask); }
-    mask_type enable(mask_type mask)  { 
+    mask_type enable(mask_type mask)  {
         feclearexcept(mask); // remove any 'stale' exceptions before switching on trapping
                              // otherwise we immediately trigger an exception...
-        return feenableexcept(mask); 
+        return feenableexcept(mask);
     }
     const std::map<std::string,mask_type>& map() {
          static std::map<std::string,mask_type> m = boost::assign::map_list_of
@@ -39,6 +40,7 @@ namespace detail {
           return m;
     }
 #elif defined(_WIN32)
+    static const bool has_working_implementation = true;
     typedef unsigned int mask_type;
     // VS8
     // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
@@ -57,12 +59,10 @@ namespace detail {
          return m;
     }
 #else
+    static const bool has_working_implementation = false;
     typedef int mask_type;
-    mask_type disable(mask_type) { 
-      std::cerr << "Warning: FPE trapping requested, but not available on this architecture... " << std::endl;
-      return 0; 
-    }
-    mask_type enable(mask_type) { return disable(); }
+    mask_type disable(mask_type) { return 0; }
+    mask_type enable(mask_type) { return 0; }
     const std::map<std::string,mask_type>& map() {
          static std::map<std::string,mask_type> m;
          return m;
@@ -72,41 +72,45 @@ namespace detail {
 
 
 class Guard {
-public: 
+public:
     /// export the type of the FPE mask
     typedef FPE::detail::mask_type mask_type;
+    /// export whether a working implementation exists.
+    /// In case it doesn't, the code (silently!) defaults
+    /// to no-operation.
+    static const bool has_working_implementation = FPE::detail::has_working_implementation;
 
-    /// create a guard which, depending on the value of 'disable', 
+    /// create a guard which, depending on the value of 'disable',
     /// enables (disables) the trapping of Floating Point Exceptions
-    /// (i.e. the generation of a SIGFPE signel) according to the 
+    /// (i.e. the generation of a SIGFPE signel) according to the
     /// specified mask, for the duration of lifetime of the guard.
-    /// The destructor will restore the state at the time of the 
+    /// The destructor will restore the state at the time of the
     /// creation of the guard.
-    /// 
+    ///
     /// Note: to create a (valid) mask, use FPE::Guard::mask
     Guard(mask_type mask, bool disable=false)
     : m_initial( disable ? FPE::detail::disable(mask) : FPE::detail::enable(mask) )
     { }
 
-    ~Guard() 
-    { 
+    ~Guard()
+    {
        //TODO: in disable mode, report which FPE happened between c'tor and d'tor.
        FPE::detail::disable( ~m_initial );
        mask_type mask = FPE::detail::enable( m_initial );
        if (mask!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
     }
 
-    /// 'mask' will convert a range of strings (i.e. Iter::value_type 
+    /// 'mask' will convert a range of strings (i.e. Iter::value_type
     /// must be of type std::string) into the corresponding mask to be used
-    /// to enable (or disable) FPE trapping by the FPEGuard.
-    /// Valid strings are typically "Inexact","DivByZero","Underflow","OverFlow","Invalid"
+    /// to enable (or disable) FPE trapping by the FPE::Guard.
+    /// Valid strings are "Inexact","DivByZero","Underflow","OverFlow","Invalid"
     /// and the catch-all "AllExcept".
     template <typename Iter>
     static mask_type mask(Iter begin, Iter end) {
          mask_type m=0;
          for (;begin!=end;++begin) {
               std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(*begin);
-              if (j==FPE::detail::map().end()) { 
+              if (j==FPE::detail::map().end()) {
                     throw GaudiException("FPE::mask: unknown mask... ",*begin,StatusCode::FAILURE);
               }
               m |= j->second;

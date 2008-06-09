@@ -12,6 +12,9 @@
    o put platform specific code in the FPE::details namespace,
      renamve FPEGuard into FPE::Guard.
    o add doxygen comments to FPE::Guard.
+   o change in behaviour: when using the Auditor on a platform without
+     support, it will throw an exception. However, when using the Guard
+     on an unsupported platform, it becomes a no-op.
 
 ! 2008-06-06 - Gerhard Raven
  - general improvements to FPEAuditor: 

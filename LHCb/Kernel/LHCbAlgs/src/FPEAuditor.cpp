@@ -13,11 +13,11 @@ class FPEMaskProperty {
  public:
     typedef SimpleProperty<std::vector<std::string> > property_type;
 
-     FPEMaskProperty() : m_mask(0) 
+     FPEMaskProperty() : m_mask(0)
      { m_property.declareUpdateHandler(&FPEMaskProperty::updateHandler,this); }
      FPE::Guard::mask_type value() const { return m_mask;}
      property_type& property() { return m_property; }
-     FPEMaskProperty& set(const std::vector<std::string>& s) 
+     FPEMaskProperty& set(const std::vector<std::string>& s)
      { property().setValue(s); return *this; }
  private:
     void updateHandler(Property&) {
@@ -43,26 +43,26 @@ public:
 
     void before(StandardEventType type, INamedInterface* i) { before(type,i->name()); }
     void before(CustomEventTypeRef   type, INamedInterface* i) { before(type,i->name()); }
-    void before(StandardEventType type, const std::string& s) 
+    void before(StandardEventType type, const std::string& s)
     {  std::ostringstream t; t << type;before(t.str(),s); }
-    void before(CustomEventTypeRef eventType, const std::string& s) 
-    { 
+    void before(CustomEventTypeRef eventType, const std::string& s)
+    {
       if ( activeAt(eventType) ) {
          bool veto = ( std::find(m_veto.begin(),m_veto.end(),s) != m_veto.end()) ;
-		 m_guards.push_back( std::make_pair( s, new FPE::Guard( m_mask.value(), veto) ) ); 
+		 m_guards.push_back( std::make_pair( s, new FPE::Guard( m_mask.value(), veto) ) );
       }
     }
 
-    void after(StandardEventType type, INamedInterface* i, const StatusCode& sc) 
+    void after(StandardEventType type, INamedInterface* i, const StatusCode& sc)
     {  std::ostringstream t; t << type;after(t.str(),i,sc); }
-    void after(CustomEventTypeRef type, INamedInterface* i, const StatusCode& sc) 
+    void after(CustomEventTypeRef type, INamedInterface* i, const StatusCode& sc)
     {  if(!beforeCannotHaveBeenCalled(type,i)) after(type,i->name(),sc); }
-    void after(StandardEventType type, const std::string& s, const StatusCode& sc) 
+    void after(StandardEventType type, const std::string& s, const StatusCode& sc)
     {  std::ostringstream t; t << type;after(t.str(),s,sc); }
-    void after(CustomEventTypeRef eventType, const std::string& s, const StatusCode&) 
-    { 
+    void after(CustomEventTypeRef eventType, const std::string& s, const StatusCode&)
+    {
      if ( activeAt(eventType) ) {
-       if (m_guards.empty()) { 
+       if (m_guards.empty()) {
         throw GaudiException("FPEAuditor: inbalance of before/after calls...","",StatusCode::FAILURE);
        }
        std::pair<std::string,FPE::Guard *>& p = m_guards.back();
@@ -92,10 +92,10 @@ private:
     bool beforeCannotHaveBeenCalled(CustomEventType type, INamedInterface *i) {
         // auditing starts 'after' AuditorSvc::initialize has been called
         // but, at that time, the matching 'before' hasn't been called (since
-        // we were not yet activated!), so there is no state to restore, i.e. 
+        // we were not yet activated!), so there is no state to restore, i.e.
         // m_guards is empty. So we make an exception to the rule that m_guards
         // cannot be empty for that particular corner case by ignoring the 'after'
-        // call (which is the right thing to do ;-)... 
+        // call (which is the right thing to do ;-)...
         return (m_guards.empty() && type == "Initialize" && SmartIF<IAuditorSvc>(i).isValid());
     }
 
@@ -114,6 +114,9 @@ FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   : Auditor ( name , pSvcLocator )
   , m_log( msgSvc() , name )
 {
+    if (!FPE::Guard::has_working_implementation) { // note: this is a compile-time constant...
+        throw GaudiException("FPEAuditor: no FPE trapping support on this architecture...","",StatusCode::FAILURE);
+    }
     declareProperty("TrapOn", m_mask.set(  boost::assign::list_of("DivByZero")
                                                                  ("Invalid")
                                                                  ("Overflow") ).property() );
