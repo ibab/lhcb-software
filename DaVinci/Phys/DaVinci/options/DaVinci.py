@@ -4,7 +4,5 @@
 #
 from Gaudi.Configuration import *
 
-importOptions('../options/DaVinci.opts')
+importOptions('$DAVINCIROOT/options/DaVinci.opts')
 
-ApplicationMgr( AppName    = 'DaVinci',
-                AppVersion = 'v19r8' )
