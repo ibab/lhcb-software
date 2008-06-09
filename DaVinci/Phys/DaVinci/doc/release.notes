@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.219 2008-06-02 06:51:45 pkoppenb Exp $
+! $Id: release.notes,v 1.220 2008-06-09 15:52:59 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,11 +9,24 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v19r13 2008-06-09 ===================
+
+! 2008-06-09 - Juan PALACIOS
+ - job/DaVinci_Ganga.py
+  . set DaVinciVersion to 'v19r13'
+
+! 2008-06-09 - Juan PALACIOS
+ - cmt/requirements
+  . Add apply_pattern GaudiApp
+ - options/DaVinci.py
+  . Add absolute path to DaVinci.opts.
+  . Remove obsolete line.
+
 ! 2008-06-02 - Patrick Koppenburg
  - Use Fieldmap v5r0 which gives access to measured field
 
 ! 2008-05-14 - Patrick Koppenburg
- - Set version v19r13 in DaVinci_Ganga.py
+ - Set version v19r12 in DaVinci_Ganga.py
 
 !========================== DaVinci v19r11p1 2008-03-17 =================
 
