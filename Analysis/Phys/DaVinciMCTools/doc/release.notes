@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.217 2008-06-04 16:17:29 pkoppenb Exp $
+! $Id: release.notes,v 1.218 2008-06-09 15:12:30 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r13 2008-06-09 ==================
 
 ! 2008-06-04 - Patrick Koppenburg for Thomas Blake
  - P2VV tools: new interface and Bs->j/psiPhi version.
