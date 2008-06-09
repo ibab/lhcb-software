@@ -4,6 +4,7 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+!========================== Fidel v1r0 2008-06-09 ===================
 ! 2008-05-14 - Patrick Koppenburg
  - Removed temporary Fidel_new and replaced Fidel by it.
 
