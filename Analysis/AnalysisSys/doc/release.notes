@@ -3,6 +3,84 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v1r13>2008-06-09 Analysis v1r13 - June 2008 software week tutorial version</A></H1><PRE>
+
+ - Uses LHCb v23r7 and Gaudi v19r9
+
+#######################################MM######################################
+#                                  ANALYSIS v1r13                             #
+###############################################################################
+##################################### PHYS ####################################
+
+!========================== DaVinciMCTools v9r13 2008-06-09 ==================
+
+! 2008-06-04 - Patrick Koppenburg for Thomas Blake
+ - P2VV tools: new interface and Bs->j/psiPhi version.
+
+temporary tag :  v9r12p1
+! 2008-05-27 - Patrick Koppenburg
+ - TrueMCFilterCriterion : use Incident Service to find new events, not pointer
+   to MC Particles container.
+
+!========================== DaVinciUser v8r4p2 2008-05-14 =================
+! 2008-05-14 - Patrick Koppenburg
+ - Undo the wrong commits by Sara Furcas.
+ - Increment to v8r4p2 and tag. This version is identical to v8r4p1, 
+   no need to release.
+
+! 2008-05-13 - Sara Furcas
+  - second import : 2 algorithms to select and to save the B candidate
+
+!===================== DecayTreeTuple v1r3 2008-06-09 =======================
+
+! 2008-05-04 - V. Gligorov
+ - TupleToolTrigger.{cpp,h}: Added options to allow users to save only the L0
+   information, or only the HLT information. Default is to save all.
+
+! 2008-04-28 - Patrick Koppenburg for Mitesh Patel
+ - TupleToolVtxIsolation: new tool for isolation
+ - Increment to v1r3
+
+##################################### PHYSSEL #################################
+
+!========================= PhysSelSys v10r10 2008-06-09 ====================
+
+! 2008-06-09 - Juan PALACIOS
+ - cmt/requirements
+  . Use B2D0X v1r14 and increase version to v10r10
+
+!========================== B2D0X v1r14 2008-06-09 ==================
+
+! 2008-05-19 - Sean Brisbane
+ - Added DVDC06SelBu2D0K_D02KsPiPi.opts to do full offline selection for this channel (currently as MakeResonances)
+
+! 2008-05-16 - Patrick Spradlin
+ - restored TightD02KPiPi0ForB2D0K reconstruction to PreselBu2D0K_D02KPiPi0.opts
+####################################### TOOLS #################################
+
+!======================== Stripping v6r5 2008-06-09 =====================
+
+! 2008-06-06 - Patrick Koppenburg
+ - Do not check correct syntax for version numbers. It kills the nightly build.
+ - Increment to v6r5
+
+############################ EXAMPLES AND TUTORIALS ###########################
+
+!===================== Tutorial/Analysis v7r2 2008-06-04 ======================
+
+! 2008-06-03 - Patrick Koppenburg
+ - Added python solutions for all problems
+ - DaVinci6 : Use HLT summary tool
+
+! 2008-06-03 - Patrick Koppenburg
+ - Created solutions/DaVinci3/DVTutorial_3.py
+ - Replaced all counter variables by counter("...")
+ - Checked StatusCodes up to Tutorial 3.
+
+! 2008-06-02 - Patrick Koppenburg
+ - Created solutions/DaVinci1/DVTutorial_1.py
+ - Created solutions/DaVinci2/DVTutorial_2.py 
+ - Increment to v7r2
 </PRE><H1><A NAME=v1r12>2008-04-24 Analysis v1r12 - CCRC striping version</A></H1><PRE>
 
  - Uses LHCb v23r5 and Gaudi v19r9
@@ -13,6 +91,7 @@ Purpose     : LHCb analysis packages
 #                                  ANALYSIS v1r12                             #
 ###############################################################################
 ##################################### PHYS ####################################
+
 !========================== CommonParticles v3r12 2008-04-24 ==================
 
 ! 2008-04-11 - Patrick Koppenburg
