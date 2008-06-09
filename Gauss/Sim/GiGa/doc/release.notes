@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.121 2008-05-30 13:24:54 gcorti Exp $
+! $Id: release.notes,v 1.122 2008-06-09 17:26:58 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r2 2008-06-09 ===============================
 ! 2008-05-30 - Gloria CORTI
  - Adapt to change introduced by patch #1757 stopping execution when loop in
    use of services by removing retrieval of GiGa in itialization but doing it
