@@ -57,10 +57,10 @@ namespace MBM  {
 //                511 [Shift_p_Bit=9]
 //#define Bytes_p_Bit  ((1<<Shift_p_Bit)-1)
 
-struct REQ  {                //requirements structures xx bytes each   
-  int           ev_type;     // event type         
-  TriggerMask   tr_mask;     // event Mask         
-  UserMask      vt_mask;     // veto mask         
+struct REQ  {     //requirements structures xx bytes each   
+  int           ev_type;     // event type
+  TriggerMask   tr_mask;     // event Mask
+  UserMask      vt_mask;     // veto mask
   int           masktype;    // requirement type for trigger mask   
   int           user_type;   // Requirement Type (VIP/normal User)   
   int           freqmode;    // requirement mode       
@@ -149,7 +149,11 @@ struct USER : public qentry_t  {
   char  wes_flag[BM_USER_NAME_LEN];
   char  wev_flag[BM_USER_NAME_LEN];
   char  wsp_flag[BM_USER_NAME_LEN];
-#ifndef _WIN32
+#ifdef _WIN32
+  int   wev_handle[8]; // Same size as sem_t !
+  int   wsp_handle[8]; // Same size as sem_t !
+  int   wes_handle[8]; // Same size as sem_t !
+#else
   // On linux, we can directly use semaphores in the user table.
   // This ensures that they are always present. The task calling mbm_include
   // initializes and destroys them.
@@ -157,6 +161,7 @@ struct USER : public qentry_t  {
   sem_t wsp_handle;
   sem_t wes_handle;
 #endif
+  char  __spare[32];
   inline bool isValid()   const  {
     if ( block_id == int(MBM::BID_USER) )   {
       return true;
@@ -188,7 +193,8 @@ struct EVENT : public qentry_t {
   TriggerMask tr_mask;    // Trigger Mask
   int ev_add;             // Event pointer
   int ev_size;            // Event size
-  int count;
+  int count;              //
+  int spare[4];           //
   inline bool isValid()   const  {
     if ( block_id == int(MBM::BID_EVENT) )   {
       return true;
