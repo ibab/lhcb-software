@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.14 2008-06-06 11:46:42 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.15 2008-06-09 15:25:14 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -620,7 +620,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
 const unsigned int L0DUFromRawTool::data(std::string name){
   std::map<std::string, unsigned int>::iterator it = m_dataMap.find(name);
   if(m_dataMap.end() == it){
-    warning() << " Requested data " << name  << " is unknown " << endreq;
+    info() << " Requested data " << name  << " is unknown " << endreq;
     return 0;
   }
   return (*it).second;
