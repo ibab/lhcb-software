@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltPython v1r6 2008-06-09 ===================
+! 2008-6-10 - Xabier Cid
+  - update hadHLTPies
+
 ! 2008-6-6 - Jose A. Hernando
   - updating python/examples/hltexamples.py
   - adding python/examples/hlttime.py to get the time and rate of an alley
