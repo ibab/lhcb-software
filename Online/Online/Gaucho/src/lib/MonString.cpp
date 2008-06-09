@@ -23,10 +23,13 @@ void MonString::load(boost::archive::binary_iarchive  & ar, const unsigned int v
 }
 
 void MonString::combine(MonObject * monString){
+  MsgStream msg = createMsgStream();
   if (monString->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monString->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monString->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monString->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonString*) monString);
@@ -36,10 +39,10 @@ void MonString::copyFrom(MonObject * monString){
   if (monString->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monString->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonString *mo = (MonString*)monString;
+  m_endOfRun = mo->endOfRun();
   (*m_string) = mo->value();
   m_comments = mo->comments();
 }
@@ -54,6 +57,6 @@ void MonString::print(){
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " value=" << (*m_string) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 
 }

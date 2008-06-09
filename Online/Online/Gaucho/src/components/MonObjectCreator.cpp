@@ -17,6 +17,7 @@
 #include "Gaucho/MonStatEntity.h"
 #include "Gaucho/MonVectorI.h"
 #include "Gaucho/MonVectorD.h"
+#include "Gaucho/MonRate.h"
 
 MonObjectCreator::MonObjectCreator()
 {
@@ -47,6 +48,7 @@ MonObject* MonObjectCreator::createMonObject(const std::string &monObjectTypeNam
   if (monObjectTypeName == s_monStatEntity) monObject = new MonStatEntity(msgSvc, source);
   if (monObjectTypeName == s_monVectorI) monObject = new MonVectorI(msgSvc, source);
   if (monObjectTypeName == s_monVectorD) monObject = new MonVectorD(msgSvc, source);
+  if (monObjectTypeName == s_monRate) monObject = new MonRate(msgSvc, source);
   return monObject;
 }
 

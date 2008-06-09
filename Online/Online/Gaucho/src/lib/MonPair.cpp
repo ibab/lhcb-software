@@ -25,10 +25,13 @@ void MonPair::load(boost::archive::binary_iarchive  & ar, const unsigned int ver
 }
 
 void MonPair::combine(MonObject * monPair){
+  MsgStream msg = createMsgStream();
   if (monPair->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monPair->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monPair->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monPair->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonPair*) monPair);
@@ -42,10 +45,10 @@ void MonPair::copyFrom(MonObject * monPair){
   if (monPair->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monPair->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonPair *mo = (MonPair*)monPair;
+  m_endOfRun = mo->endOfRun();
   m_pair.first = (mo->value()).first;
   m_pair.second = (mo->value()).second;
   m_comments = mo->comments();
@@ -64,6 +67,6 @@ void MonPair::print(){
   msgStream << MSG::INFO << "   first =  "<<m_pair.first << endreq;
   msgStream << MSG::INFO << "   second =  "<<m_pair.second << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 
 }

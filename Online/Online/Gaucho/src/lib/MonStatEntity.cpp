@@ -54,10 +54,13 @@ void MonStatEntity::load2(boost::archive::binary_iarchive  & ar)
 }
   
 void MonStatEntity::combine(MonObject* S){
+  MsgStream msg = createMsgStream();
   if (S->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<S->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<S->typeName() << " failed." << endreq;
+    return;
+  }
+  if (S->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add( ((MonStatEntity&)*S));
@@ -67,10 +70,10 @@ void MonStatEntity::copyFrom(MonObject * S){
   if (S->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<S->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonStatEntity *mo = (MonStatEntity*)S;
+  m_endOfRun = mo->endOfRun();
   m_sumX=mo->sumY();
   m_sumXw2=mo->sumYw2();
   m_sumY=mo->sumY();
@@ -125,7 +128,7 @@ void MonStatEntity::print(){
   msgStream << MSG::INFO<<"   max="<<max() << endreq;
   msgStream << MSG::INFO<<"   events="<<m_events << endreq;
   msgStream << MSG::INFO<< "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }
 
 

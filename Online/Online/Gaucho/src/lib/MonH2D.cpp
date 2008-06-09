@@ -13,17 +13,23 @@ MonObject(msgSvc, source, version)
 }
   
 MonH2D::~MonH2D(){
-  MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+//   MsgStream msgStream = createMsgStream();
+//   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
   delete binCont;
-  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+//   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   delete binErr;
-  msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  delete binLabelX;
-  msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  delete binLabelY;
-  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+//   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
+  if (bBinLabelX) delete binLabelX;
+//   msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
+  if (bBinLabelY) delete binLabelY;
+//   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   delete m_fSumw2;
+// BUGG...I dont know yet why I can't do it..
+//   if (m_hist!=0) {
+//     msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
+//     delete m_hist; m_hist = 0;
+//   }
+  
 }
 
 void MonH2D::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
@@ -159,7 +165,6 @@ void MonH2D::save3(boost::archive::binary_oarchive  & ar){
   }
 }
 
-
 void MonH2D::setHist(TH2D * tH2D){
   m_hist = tH2D;
   splitObject();
@@ -171,6 +176,8 @@ TH2D* MonH2D::hist(){
 }
 void MonH2D::createObject(std::string name){
   if (!isLoaded) return;
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
   m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
@@ -188,7 +195,7 @@ void MonH2D::loadObject(){
   if (!objectCreated) {
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;  
   }
   m_hist->Reset();
@@ -317,13 +324,15 @@ void MonH2D::splitObject(){
 }
 
 void MonH2D::combine(MonObject * H){
+  MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-
+  if (H->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    return;
+  }
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -342,16 +351,15 @@ void MonH2D::combine(MonObject * H){
   if (sTitle !=  HH->sTitle) matchParam = false;
 
   if (!matchParam){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
-    msgStream <<MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
-    msgStream <<MSG::ERROR<<"  nbinsy ="<<nbinsy << "; HH->nbinsy="<<HH->nbinsy << endreq;
-    msgStream <<MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
-    msgStream <<MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax<<endreq;;
-    msgStream <<MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
-    msgStream <<MSG::ERROR<<"  Ymax ="<<Ymax << "; HH->Ymax="<<HH->Ymax<<endreq;;
-    msgStream <<MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle<<std::endl;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
+    msg <<MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
+    msg <<MSG::ERROR<<"  nbinsy ="<<nbinsy << "; HH->nbinsy="<<HH->nbinsy << endreq;
+    msg <<MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
+    msg <<MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax<<endreq;;
+    msg <<MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
+    msg <<MSG::ERROR<<"  Ymax ="<<Ymax << "; HH->Ymax="<<HH->Ymax<<endreq;;
+    msg <<MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle<<std::endl;
+    
     return;
   }
 
@@ -381,12 +389,11 @@ void MonH2D::copyFrom(MonObject * H){
     MsgStream msgStream = createMsgStream();
   if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
 
   MonH2D *HH = (MonH2D*)H;
-
+  m_endOfRun = HH->endOfRun();
   m_comments=HH->comments();
 
   nbinsx = HH->nbinsx;
@@ -396,6 +403,7 @@ void MonH2D::copyFrom(MonObject * H){
   Ymin = HH->Ymin;
   Ymax = HH->Ymax;
   nEntries = HH->nEntries;
+  sName = HH->sName;
   sTitle = HH->sTitle;
   
   binCont = new double[(nbinsx+2)*(nbinsy+2)];
@@ -452,13 +460,17 @@ void MonH2D::reset(){
   if (!isLoaded){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to reset unloaded MonObject " << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;
   }
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = 0;
     binErr[i] = 0; 
+  }
+  
+  for (int i=0 ; i < m_fSumSize; ++i) {
+    m_fSumw2[i] = 0;
   }
   
   nEntries = 0;
@@ -526,5 +538,5 @@ void MonH2D::print(){
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

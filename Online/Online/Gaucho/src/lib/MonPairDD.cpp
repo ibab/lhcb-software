@@ -25,10 +25,13 @@ void MonPairDD::load(boost::archive::binary_iarchive  & ar, const unsigned int v
 }
 
 void MonPairDD::combine(MonObject * monPairDD){
+  MsgStream msg = createMsgStream();
   if (monPairDD->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monPairDD->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monPairDD->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monPairDD->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonPairDD*) monPairDD);
@@ -42,10 +45,10 @@ void MonPairDD::copyFrom(MonObject * monPairDD){
   if (monPairDD->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<< monPairDD->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonPairDD *mo = (MonPairDD*)monPairDD;
+  m_endOfRun = mo->endOfRun();
   (*m_pair).first = (mo->value()).first;
   (*m_pair).second = (mo->value()).second;
   m_comments = mo->comments();
@@ -64,6 +67,6 @@ void MonPairDD::print(){
   msgStream << MSG::INFO << "   first =  "<<(*m_pair).first << endreq;
   msgStream << MSG::INFO << "   second =  "<<(*m_pair).second << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 
 }

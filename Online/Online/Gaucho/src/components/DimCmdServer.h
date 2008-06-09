@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.3 2008-03-28 10:59:12 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.4 2008-06-09 13:40:20 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
@@ -6,7 +6,7 @@
 #include "dic.hxx"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IAxis.h"
-#include "GaudiKernel/IMonitorSvc.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -39,7 +39,7 @@ private:
   IMessageSvc* m_msgsvc;
   IHistogram* myhisto;
   DataObject* mydataobject;
-  IMonitorSvc* m_publishsvc;
+  IGauchoMonitorSvc* m_publishsvc;
  
 };
 

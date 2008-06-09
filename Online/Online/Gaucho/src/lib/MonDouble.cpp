@@ -24,10 +24,13 @@ void MonDouble::load(boost::archive::binary_iarchive  & ar, const unsigned int v
 }
 
 void MonDouble::combine(MonObject * monDouble){
+  MsgStream msg= createMsgStream();
   if (monDouble->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monDouble->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monDouble->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monDouble->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonDouble*) monDouble);
@@ -38,10 +41,10 @@ void MonDouble::copyFrom(MonObject * monDouble){
   if (monDouble->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monDouble->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonDouble *mo = (MonDouble*)monDouble;
+  m_endOfRun = mo->endOfRun();
   (*m_double) = mo->value();
   m_comments = mo->comments();
 }
@@ -56,5 +59,5 @@ void MonDouble::print(){
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " value=" << (*m_double) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

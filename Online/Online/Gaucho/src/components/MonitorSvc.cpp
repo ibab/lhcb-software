@@ -22,6 +22,8 @@
 #include "Gaucho/MonH2F.h"
 #include "Gaucho/MonVectorI.h"
 #include "Gaucho/MonVectorD.h"
+#include "Gaucho/MonRate.h"
+#include "MonTimer.h"
 #include "MonitorSvc.h"
 #include "DimPropServer.h"
 #include "DimCmdServer.h"
@@ -37,12 +39,15 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 //extern const InterfaceID IID_IPublish;
 
 // Constructor
-MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl)
-  : Service(name, sl), m_refreshTime(5) {
-//    declareProperty("refreshtime",m_refreshTime);
+MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl): 
+  Service(name, sl), m_refreshTime(10) 
+{ 
+  declareProperty("refreshtime",m_refreshTime);
 }
 
-//!destructor
+
+MonitorSvc::~MonitorSvc() {
+}
 
 //Query interfaces of Interface
 // @param riid       ID of Interface to be retrieved
@@ -51,6 +56,9 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
   if(IID_IMonitorSvc == riid) {
     *ppvIF = dynamic_cast<IMonitorSvc*> (this);
   } 
+  else if (IID_IGauchoMonitorSvc == riid) {
+    *ppvIF = dynamic_cast<IGauchoMonitorSvc*> (this);
+  }
   else {
     return Service::queryInterface(riid, ppvIF);
   }
@@ -69,28 +77,41 @@ StatusCode MonitorSvc::initialize() {
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
   msg << MSG::INFO << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
-
   m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
-  msg << MSG::DEBUG << "DimPropServer created with name " << m_utgid << endreq;
+  msg << MSG::INFO << "DimPropServer created with name " << m_utgid << endreq;
 
   m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator());
-  msg << MSG::DEBUG << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
-
-  setTimerElapsed(false);   
-  m_dimtimer = new MonTimer(m_refreshTime, serviceLocator(), this);
-  msg << MSG::DEBUG << "MonTimer created. Services will be updated every " << m_refreshTime << " seconds" << endreq;
+  msg << MSG::INFO << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
+ 
+   
+/*  msg << MSG::INFO << "Getting the IGauchoMonitorSvc Interface " << endreq;   
+  StatusCode sc = serviceLocator()->service("MonitorSvc", m_gauchoMonitorSvc, true );
+  if( sc.isSuccess() ) msg << MSG::INFO << "Found the IGauchoMonitorSvc interface" << endreq; 	
+  else msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;*/
+   
+  msg << MSG::INFO << "Creating Timer" << endreq;
+  setTimerElapsed(false);
+  m_monTimer = new MonTimer(m_refreshTime, serviceLocator(), this);
+  msg << MSG::INFO << "MonTimer created. Services will be updated every " << m_refreshTime << " seconds" << endreq;
   return StatusCode::SUCCESS;
 }
 
 
 StatusCode MonitorSvc::finalize() {
-  MsgStream msg(msgSvc(),"MonitorSvc");
   
-  m_InfoNamesMap.clear();
-  delete m_dimcmdsvr;
-  delete m_dimtimer;
-  delete m_dimpropsvr;
+  //dim_lock();
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::INFO << "MonitorSvc Destructor" << endreq;
+//  m_InfoNamesMap.clear();
+  msg << MSG::INFO << "delete m_dimcmdsvr" << endreq;
+  delete m_dimcmdsvr;  m_dimcmdsvr = 0;
+  msg << MSG::INFO << "delete m_monTimer" << endreq;
+  delete m_monTimer; m_monTimer = 0;
+  msg << MSG::INFO << "delete m_dimpropsvr" << endreq;
+  delete m_dimpropsvr; m_dimpropsvr = 0;
+  //dim_unlock();
   msg << MSG::INFO << "finalized successfully" << endreq;
+  //this->~MonitorSvc();
   return StatusCode::SUCCESS;
 }
 
@@ -122,6 +143,13 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
   monDouble->setValue(var);
   declareInfoMonObject(name, monDouble, desc, owner);
 }
+void MonitorSvc::declareInfo(const std::string& name, const float& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MonFloat* monFloat = new MonFloat(msgSvc(),"MonitorSvc");
+  monFloat->setValue(var);
+  declareInfoMonObject(name, monFloat, desc, owner);
+}
 void MonitorSvc::declareInfo(const std::string& name, const std::string& var, 
                              const std::string& desc, const IInterface* owner) 
 {
@@ -136,7 +164,20 @@ void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,dou
   monPair->setValue(var);
   declareInfoMonObject(name, monPair, desc, owner);
 }
-
+void MonitorSvc::declareInfo(const std::string& name, const std::pair<int,int>& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MonPairII* monPair = new MonPairII(msgSvc(),"MonitorSvc");
+  monPair->setValue(var);
+  declareInfoMonObject(name, monPair, desc, owner);
+}
+void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,int>& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MonPairDI* monPair = new MonPairDI(msgSvc(),"MonitorSvc");
+  monPair->setValue(var);
+  declareInfoMonObject(name, monPair, desc, owner);
+}
 
 void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void* var,
                              int size, const std::string& desc, const IInterface* owner) 
@@ -171,42 +212,55 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 
 void MonitorSvc::declareInfo(const std::string& name, 
                              const MonObject* var, 
-			     const std::string& desc, 
-			     const IInterface* owner) 
+                             const std::string& desc, 
+                             const IInterface* owner) 
 {
-	MonObject *tmpvar = const_cast<MonObject *>(var);
-  	declareInfoMonObject(name, tmpvar, desc, owner);
+//  MsgStream msg(msgSvc(),"MonitorSvc");
+//  msg << MSG::DEBUG << "declareInfo MONOBJECT" << endreq;
+  MonObject *tmpvar = const_cast<MonObject *>(var);
+  if (s_monRate == tmpvar->typeName()){
+    MonRate* monRate = (MonRate*) tmpvar;
+    monRate->declareComplement(m_runNumber, m_cycleNumber, m_timeFirstEvInRun, m_timeLastEvInCycle);
+  }
+  declareInfoMonObject(name, tmpvar, desc, owner);
 }
+
+void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle){
+  m_runNumber = &runNumber;
+  m_cycleNumber = &cycleNumber;
+  m_timeFirstEvInRun = &timeFirstEvInRun;
+  m_timeLastEvInCycle = &timeLastEvInCycle;
+}  
 
 void MonitorSvc::declareInfoMonObject(const std::string& name, 
                              MonObject* var, 
-			     const std::string& desc, 
-			     const IInterface* owner) 
+                             const std::string& desc, 
+                             const IInterface* owner) 
 {
-	MsgStream msg(msgSvc(),"MonitorSvc");
-	m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-	std::string ownerName = infoOwnerName( owner );
-	if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
-		std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
-		if( p.second) msg << MSG::INFO << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
-		else { // Insertion failed: Name already exists
-			msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
-			return;
-		}
-	}
-	else { // Create a new set for this algo and insert name
-		m_InfoNamesMap[owner]=std::set<std::string>();
-		m_InfoNamesMap[owner].insert(name);
-	}
-
-	std::string dimName = name;
-	if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-
-	msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-	
-	var->setComments(desc);
-	declServiceMonObject(dimName, var);
-
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  //msg << MSG::DEBUG << "declareInfoMonObject: " << endreq;
+  m_InfoNamesMapIt = m_InfoNamesMap.find(owner);
+  std::string ownerName = infoOwnerName(owner);
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end()) {
+    std::pair<std::set<std::string>::iterator,bool> p = (*m_InfoNamesMapIt).second.insert(name);
+    if( p.second) msg << MSG::INFO << "Declaring info: Owner: " << ownerName << " Name: " << name << endreq;
+    else { // Insertion failed: Name already exists
+      msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  
+  std::string dimName = name;
+  if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
+  
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  
+  var->setComments(desc);
+  declServiceMonObject(dimName, var);
 }
 
 void MonitorSvc::undeclareInfo( const std::string& name, 
@@ -330,10 +384,10 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
   }
 }
 
-void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner
-                               )
+void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
+  msg << MSG::INFO << " inside updateAll" << endreq;
   if( 0!=owner ){
     std::string ownerName = infoOwnerName( owner );
     std::set<std::string> * infoNamesSet = getInfos( owner );
@@ -380,16 +434,26 @@ void MonitorSvc::resetHistos( const IInterface* owner ) {
    DimRpcInfo rpc(ownerName.c_str(),"");
    rpc.setData("resethistos");
  }
+ else{ // Null pointer. reset for all owners
+    for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
+        m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
+      resetHistos(m_InfoNamesMapIt->first);
+ }
+ 
 }
 
 void MonitorSvc::setTimerElapsed(bool elapsed) {
  m_TimerElapsed=elapsed; 
 }
 
-bool MonitorSvc::getTimerElapsed() {
+bool MonitorSvc::getTimerElapsed() const {
     return m_TimerElapsed;  
 }
 
+//void setTimeFirstEvElapsed(time_t time) {
+//  m_time = time;
+//}
+  
 void MonitorSvc::declServiceMonObject(std::string infoName, const MonObject* monObject){
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::string typeName = monObject->typeName();
@@ -402,16 +466,17 @@ void MonitorSvc::declServiceMonObject(std::string infoName, const MonObject* mon
   if (p.second) {
 
     MonObject* monObjectAux = const_cast<MonObject *>(monObject);
+    //monObjectAux->print();
     std::stringstream ss; 
     boost::archive::binary_oarchive oa(ss);
     monObjectAux->save(oa, 0);
     int size = ss.str().length();
+    msg << MSG::DEBUG << " size = " << size << endreq;
     m_dimMonObjects[infoName]=new DimServiceMonObject(dimSvcName, monObjectAux, size);
 
     msg << MSG::DEBUG << "New DimMonObject: " + dimSvcName << endreq;
   }
   else msg << MSG::ERROR << "Already existing DimMonObject: " + dimSvcName << endreq;
-
 }
 
 void MonitorSvc::undeclServiceMonObject(std::string infoName){
@@ -443,3 +508,4 @@ void MonitorSvc::updateServiceMonObject(std::string infoName, bool endOfRun){
   }
   msg << MSG::WARNING << "updateSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
 }
+

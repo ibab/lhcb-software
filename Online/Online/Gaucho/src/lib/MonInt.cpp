@@ -26,10 +26,13 @@ void MonInt::load(boost::archive::binary_iarchive  & ar, const unsigned int vers
 }
 
 void MonInt::combine(MonObject * monInt){
+  MsgStream msg = createMsgStream();
   if (monInt->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monInt->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monInt->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monInt->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonInt*) monInt);
@@ -40,10 +43,10 @@ void MonInt::copyFrom(MonObject * monInt){
   if (monInt->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monInt->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonInt *mo = (MonInt*)monInt;
+  m_endOfRun = mo->endOfRun();
   (*m_int) = mo->value();
   m_comments = mo->comments();
 }
@@ -58,5 +61,5 @@ void MonInt::print(){
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " value=" << (*m_int) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

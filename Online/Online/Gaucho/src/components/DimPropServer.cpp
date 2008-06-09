@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.3 2008-03-28 10:59:12 evh Exp $
+// $Id: DimPropServer.cpp,v 1.4 2008-06-09 13:40:20 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -24,6 +24,7 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IHistogramSvc.h"
 //#include "AIDA/IHistogram1D.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "AIDA/IAxis.h"
 
@@ -39,7 +40,8 @@ namespace wins {
 //EDS =EventDataService but used as generic name for anything on store
 IHistogramSvc* EDS=0; 
 IService* m_EDS;
-IMonitorSvc* m_publishsvc;
+IGauchoMonitorSvc* m_publishsvc;
+
 
 DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) : 
   DimRpc(name.c_str(),"C", "C") {

@@ -38,16 +38,17 @@ void MonVectorI::load(boost::archive::binary_iarchive  & ar, const unsigned int 
 }
 
 void MonVectorI::combine(MonObject * monObject){
+  MsgStream msg = createMsgStream();
   if (monObject->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monObject->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monObject->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monObject->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   if (((MonVectorI*)monObject)->value().size() != this->value().size()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine vectors with size "<<this->value().size() <<" and "<< ((MonVectorI*)monObject)->value().size() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine vectors with size "<<this->value().size() <<" and "<< ((MonVectorI*)monObject)->value().size() << " failed." << endreq;
     return;
   }
   add((MonVectorI*) monObject);
@@ -61,10 +62,10 @@ void MonVectorI::copyFrom(MonObject * monObject){
   if (monObject->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monObject->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonVectorI *mo = (MonVectorI*) monObject;
+  m_endOfRun = mo->endOfRun();
   (*m_vect) = mo->value();
   m_comments = mo->comments();
 }
@@ -90,7 +91,7 @@ void MonVectorI::print(){
     msgStream << MSG::INFO << " value = "<< (*it) << endreq;
   }
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }
 
 

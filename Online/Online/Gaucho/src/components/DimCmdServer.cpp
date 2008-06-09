@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.3 2008-03-28 10:59:12 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.4 2008-06-09 13:40:20 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -124,7 +124,8 @@ void DimCmdServer::commandHandler() {
         log << MSG::INFO << "Histogram retrieved id: " << nextcommand << endreq;
         // now subscribe to it
         log << MSG::INFO << "Subscribing to service "<< nextcommand << endreq;
-        m_publishsvc->declareInfo(nextcommand,myhisto,myhisto->title(),HDS);
+        
+        ((IMonitorSvc*) m_publishsvc)->declareInfo(nextcommand,myhisto,myhisto->title(),HDS);
       }
       else {
         log << MSG::INFO << "Problem retrieving histogram "

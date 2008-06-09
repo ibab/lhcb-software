@@ -13,17 +13,23 @@ MonObject(msgSvc, source, version)
 }
 
 MonProfile::~MonProfile(){
-  MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+//   MsgStream msgStream = createMsgStream();
+//   msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
   delete binCont;
-  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+//   msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   delete binErr;
-  msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  delete binLabelX;
-  msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  delete binLabelY;
-  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+//   msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
+  if (bBinLabelX) delete binLabelX;
+//   msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
+  if (bBinLabelY) delete binLabelY;
+//   msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   delete m_fSumw2;
+// BUGG...I dont know yet why I can't do it..  
+/*  if (m_profile!=0) {
+    msgStream <<MSG::DEBUG<<"deleting m_profile" << endreq;
+    delete m_profile; m_profile = 0;
+  }*/
+  
 }
 
 void MonProfile::setAidaProfile(AIDA::IProfile1D* iProfile1D){
@@ -178,6 +184,8 @@ TProfile* MonProfile::profile(){
 }
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
   m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
   objectCreated = true;
 }
@@ -195,7 +203,7 @@ void MonProfile::loadObject(){
   if (!objectCreated) {
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;  
   }
   m_profile->Reset();
@@ -328,13 +336,15 @@ void MonProfile::splitObject(){
 }
 
 void MonProfile::combine(MonObject * H){
+  MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-
+//  if (H->endOfRun() != this->endOfRun()){
+ //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+ //   return;
+ // }
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -352,15 +362,13 @@ void MonProfile::combine(MonObject * H){
   if (sTitle !=  HH->sTitle) matchParam = false;
 
   if (!matchParam){
-    MsgStream msgStream = createMsgStream();
-    msgStream << MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
-    msgStream << MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
-    msgStream << MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin << endreq;
-    msgStream << MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax << endreq;
-    msgStream << MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Ymin="<<HH->Xmin << endreq;
-    msgStream << MSG::ERROR<<"  Ymax ="<<Xmax << "; HH->Ymax="<<HH->Xmax << endreq;
-    msgStream << MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle << endreq;
-    doOutputMsgStream(msgStream);
+    msg << MSG::ERROR<<"Trying to combine uncompatible MonObjects" << endreq;
+    msg << MSG::ERROR<<"  nbinsx ="<<nbinsx << "; HH->nbinsx="<<HH->nbinsx << endreq;
+    msg << MSG::ERROR<<"  Xmin ="<<Xmin << "; HH->Xmin="<<HH->Xmin << endreq;
+    msg << MSG::ERROR<<"  Xmax ="<<Xmax << "; HH->Xmax="<<HH->Xmax << endreq;
+    msg << MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Ymin="<<HH->Xmin << endreq;
+    msg << MSG::ERROR<<"  Ymax ="<<Xmax << "; HH->Ymax="<<HH->Xmax << endreq;
+    msg << MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle << endreq;
     return;
   }
 
@@ -374,21 +382,21 @@ void MonProfile::combine(MonObject * H){
 }
 
 void MonProfile::copyFrom(MonObject * H){
+  MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
 
   MonProfile *HH = (MonProfile*)H;
-
+  m_endOfRun = HH->endOfRun();
   nbinsx = HH->nbinsx;
   Xmin = HH->Xmin;
   Xmax = HH->Xmax;
   Ymin = HH->Ymin;
   Ymax = HH->Ymax;
   nEntries = HH->nEntries;
+  sName = HH->sName;
   sTitle = HH->sTitle;
 
   binCont = new double[(nbinsx+2)];
@@ -451,7 +459,7 @@ void MonProfile::reset(){
   if (!isLoaded){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to reset unloaded MonObject" << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;
   }
 
@@ -461,6 +469,10 @@ void MonProfile::reset(){
     binEntries[i] = 0; 
   }
 
+  for (int i=0 ; i < m_fSumSize; ++i) {
+    m_fSumw2[i] = 0;
+  }
+  
   nEntries = 0;
 }
 
@@ -530,5 +542,5 @@ void MonProfile::print(){
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

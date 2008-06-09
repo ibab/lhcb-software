@@ -28,7 +28,7 @@ MonStatEntity(msgSvc, source, 0)
   if (m_data == NULL) {
     MsgStream msgStream = createMsgStream();
     msgStream << MSG::ERROR << "Out of memory" << endreq;
-    doOutputMsgStream(msgStream);
+    
 
   }
   reset();
@@ -79,10 +79,14 @@ void MonHitMap2D::load2(boost::archive::binary_iarchive  & ar)
 }
 
 void MonHitMap2D::combine(MonObject * H){
+  MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream << MSG::ERROR << "Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed."<<endreq; 
-    doOutputMsgStream(msgStream);
+    msg << MSG::ERROR << "Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed."<<endreq; 
+    return;
+  }
+  if (H->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    return;
   }
   addHitMap(((MonHitMap2D&)*H));
 }
@@ -91,11 +95,11 @@ void MonHitMap2D::copyFrom(MonObject * monHitMap2D){
   if (monHitMap2D->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monHitMap2D->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonStatEntity::copyFrom(monHitMap2D);
   MonHitMap2D *mo = (MonHitMap2D*) monHitMap2D;
+  m_endOfRun = mo->endOfRun();
   if (m_chan == mo->channels())
     for (unsigned int i = 0; i < m_chan; ++i) m_data[i] = mo->data(i);
   m_comments = mo->comments();
@@ -149,6 +153,6 @@ void MonHitMap2D::print(){
   }
   msgStream << "\n";
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }
 

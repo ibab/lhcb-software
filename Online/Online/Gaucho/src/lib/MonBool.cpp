@@ -23,23 +23,27 @@ void MonBool::load(boost::archive::binary_iarchive  & ar, const unsigned int ver
 }
 
 void MonBool::combine(MonObject * monBool){
+  MsgStream msg = createMsgStream();
   if (monBool->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monBool->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monBool->typeName() << " failed." << endreq;
     return;
   }
+  if (monBool->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    return;
+  }
+  
   add((MonBool*) monBool);
 }
 
 void MonBool::copyFrom(MonObject * monBool){
+  MsgStream msg = createMsgStream();
   if (monBool->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monBool->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monBool->typeName() << " failed." << endreq;
     return;
   }
   MonBool *mo = (MonBool*)monBool;
+  m_endOfRun = mo->endOfRun();
   (*m_bool) = mo->value();
   m_comments = mo->comments();
 }
@@ -54,5 +58,5 @@ void MonBool::print(){
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " value=" << (*m_bool) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

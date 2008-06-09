@@ -4,8 +4,6 @@
 #include "Gaucho/MonObject.h"
 #include "TH1D.h"
 #include "AIDA/IHistogram1D.h"
-#include <boost/serialization/list.hpp>
-
 
 class FriendOfTH1D: public TH1D{
  public:
@@ -13,12 +11,14 @@ class FriendOfTH1D: public TH1D{
 };
 
 class MonH1D: public MonObject {
+  friend class boost::serialization::access;
 
 protected:
   TH1D* m_hist;
   AIDA::IHistogram1D* m_aidaHist;
 
 public:
+
   BOOST_SERIALIZATION_SPLIT_MEMBER()
 
   MonH1D(IMessageSvc* msgSvc, const std::string& source, int version=0);
@@ -58,6 +58,7 @@ public:
   double Xmax;
   int nEntries;
 
+  std::wstring sTeste;
   std::string sName;
   std::string sTitle;
 
@@ -82,6 +83,8 @@ public:
   bool isLoaded;
   bool objectCreated;
   /**********/
+
+  
 
 };
 

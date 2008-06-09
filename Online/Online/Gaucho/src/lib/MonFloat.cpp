@@ -23,10 +23,13 @@ void MonFloat::load(boost::archive::binary_iarchive  & ar, const unsigned int ve
 }
 
 void MonFloat::combine(MonObject * monFloat){
+  MsgStream msg = createMsgStream();
   if (monFloat->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monFloat->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<monFloat->typeName() << " failed." << endreq;
+    return;
+  }
+  if (monFloat->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add((MonFloat*) monFloat);
@@ -37,10 +40,10 @@ void MonFloat::copyFrom(MonObject * monFloat){
   if (monFloat->typeName() != this->typeName()){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<monFloat->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
   MonFloat *mo = (MonFloat*)monFloat;
+  m_endOfRun = mo->endOfRun();
   (*m_float) = mo->value();
   m_comments = mo->comments();
 }
@@ -55,5 +58,5 @@ void MonFloat::print(){
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " value=" << (*m_float) << endreq;
   msgStream << MSG::INFO << "*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

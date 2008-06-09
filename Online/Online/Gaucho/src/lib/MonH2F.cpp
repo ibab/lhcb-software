@@ -13,17 +13,23 @@ MonObject(msgSvc, source, version)
 }
   
 MonH2F::~MonH2F(){
-  MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
+//   MsgStream msgStream = createMsgStream();
+  //msgStream <<MSG::DEBUG<<"deleting binCont" << endreq;
   delete binCont;
-  msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
+  //msgStream <<MSG::DEBUG<<"deleting binErr" << endreq;
   delete binErr;
-  msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
-  delete binLabelX;
-  msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
-  delete binLabelY;
-  msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
+  //msgStream <<MSG::DEBUG<<"deleting binLabelX" << endreq;
+  if (bBinLabelX) delete binLabelX;
+  //msgStream <<MSG::DEBUG<<"deleting binLabelY" << endreq;
+  if (bBinLabelY) delete binLabelY;
+  //msgStream <<MSG::DEBUG<<"deleting m_fSumw2" << endreq;
   delete m_fSumw2;
+  // BUGG...I dont know yet why I can't do it..
+/*  if (m_hist!=0) {
+    msgStream <<MSG::DEBUG<<"deleting m_hist" << endreq;
+    delete m_hist; m_hist = 0;
+  }*/
+  
 }
 
 void MonH2F::setAidaHisto(AIDA::IHistogram2D* iHistogram2D){
@@ -170,6 +176,8 @@ TH2F* MonH2F::hist(){
 }
 void MonH2F::createObject(std::string name){
   if (!isLoaded) return;
+  MsgStream msgStream = createMsgStream();
+  msgStream <<MSG::DEBUG<<"Creating TH2F " << name << endreq;
   m_hist = new TH2F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }
@@ -187,7 +195,7 @@ void MonH2F::loadObject(){
   if (!objectCreated) {
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;
   }
   m_hist->Reset();
@@ -316,13 +324,15 @@ void MonH2F::splitObject(){
 }
 
 void MonH2F::combine(MonObject * H){
+  MsgStream msg = createMsgStream();
   if (H->typeName() != this->typeName()){
-    MsgStream msgStream = createMsgStream();
-    msgStream <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
+    msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-
+//  if (H->endOfRun() != this->endOfRun()){
+ //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+  //  return;
+ // }
   if (!isLoaded){
     copyFrom(H);
     return;
@@ -350,7 +360,7 @@ void MonH2F::combine(MonObject * H){
     msgStream <<MSG::ERROR<<"  Ymin ="<<Xmin << "; HH->Xmin="<<HH->Xmin<<endreq;;
     msgStream <<MSG::ERROR<<"  Ymax ="<<Ymax << "; HH->Ymax="<<HH->Ymax<<endreq;;
     msgStream <<MSG::ERROR<<"  sTitle ="<<sTitle << "; HH->sTitle="<<HH->sTitle<<std::endl;
-    doOutputMsgStream(msgStream);
+    
     return;
   }
 
@@ -380,12 +390,11 @@ void MonH2F::copyFrom(MonObject * H){
     MsgStream msgStream = createMsgStream();
   if (H->typeName() != this->typeName()){
     msgStream <<MSG::ERROR<<"Trying to copy "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
-    doOutputMsgStream(msgStream);
     return;
   }
 
   MonH2F *HH = (MonH2F*)H;
-
+  m_endOfRun = HH->endOfRun();
   m_comments=HH->comments();
 
   nbinsx = HH->nbinsx;
@@ -395,6 +404,7 @@ void MonH2F::copyFrom(MonObject * H){
   Ymin = HH->Ymin;
   Ymax = HH->Ymax;
   nEntries = HH->nEntries;
+  sName = HH->sName;
   sTitle = HH->sTitle;
 
   binCont = new float[(nbinsx+2)*(nbinsy+2)];
@@ -451,13 +461,17 @@ void MonH2F::reset(){
   if (!isLoaded){
     MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Trying to reset unloaded MonObject " << endreq;
-    doOutputMsgStream(msgStream);
+    
     return;
   }
 
   for (int i = 0; i < (nbinsx+2)*(nbinsy+2) ; ++i){
     binCont[i] = 0;
     binErr[i] = 0; 
+  }
+  
+  for (int i=0 ; i < m_fSumSize; ++i) {
+    m_fSumw2[i] = 0;
   }
   
   nEntries = 0;
@@ -525,5 +539,5 @@ void MonH2F::print(){
   }
   msgStream << endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }

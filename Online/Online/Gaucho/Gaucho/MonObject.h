@@ -1,9 +1,9 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.3 2008-05-05 14:16:45 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.4 2008-06-09 13:40:20 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
 // Include files
-#include <string>
+// #include <string>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
@@ -13,6 +13,14 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
+#include <boost/serialization/base_object.hpp>
+// boost v 1.35.00 ??
+// #include <boost/serialization/list.hpp>
+#include <boost/serialization/utility.hpp>
+#include <boost/serialization/string.hpp>
+// #include <boost/serialization/version.hpp>
+#include <boost/serialization/split_member.hpp>
+// #include <boost/serialization/list.hpp>
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include <pthread.h>
@@ -46,6 +54,7 @@
   static const std::string s_monStatEntity("MonStatEntity");
   static const std::string s_monVectorI("MonVectorI");
   static const std::string s_monVectorD("MonVectorD");
+  static const std::string s_monRate("MonRate");
 
   static const std::string s_pfixMonObject("MonObj");
   static const std::string s_pfixMonH1F("MonH1F");
@@ -66,6 +75,7 @@
   static const std::string s_pfixMonStatEntity("MonSE");
   static const std::string s_pfixMonVectorI("MonVI");
   static const std::string s_pfixMonVectorD("MonVD");
+  static const std::string s_pfixMonRate("MonR");
 
 class MonObject{
 
@@ -120,7 +130,7 @@ protected:
   std::string   m_source;
   std::string   m_name;
   MsgStream createMsgStream();
-  void doOutputMsgStream(MsgStream &msg);
+
 private:
   pthread_mutex_t  m_mtx;
 

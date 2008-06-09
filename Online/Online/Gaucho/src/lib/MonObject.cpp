@@ -1,8 +1,7 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.3 2008-05-06 11:45:06 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.4 2008-06-09 13:40:21 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
-
 
 MonObject::MonObject(IMessageSvc* msgSvc, const std::string& source, int version)
 {
@@ -49,7 +48,7 @@ void MonObject::combine(MonObject* monObject) {
 void MonObject::subtract(){
   MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "MonObject::subtract";
-  doOutputMsgStream(msgStream);
+  
 }
 void MonObject::print(){
   MsgStream msgStream = createMsgStream();
@@ -59,7 +58,7 @@ void MonObject::print(){
   msgStream <<MSG::INFO << " version:"<< version()<<endreq;
   msgStream <<MSG::INFO << " comments:"<< comments()<<endreq;
   msgStream <<MSG::INFO<<"*************************************"<<endreq;
-  doOutputMsgStream(msgStream);
+  
 }
 
 void MonObject::copyFrom(MonObject* monObject){
@@ -75,13 +74,6 @@ void MonObject::unlock(){
 }
 
 MsgStream MonObject::createMsgStream(){
-  MsgStream mes(m_msgSvc, m_source + ":" + m_typeName);
-  return mes;
-}
-
-void MonObject::doOutputMsgStream(MsgStream &mes){
-//   if (0==m_msgSvc) {
-//     mes.activate();
-//     mes.doOutput();
-//   }
+  MsgStream msg(m_msgSvc, m_source + ":" + m_typeName);
+  return msg;
 }

@@ -2,17 +2,16 @@
 #define GAUDIKERNEL_MONITORSVC_H
 
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/IMonitorSvc.h"
+#include "Gaucho/IGauchoMonitorSvc.h"
 #include <string>
 #include <map>
 #include <set>
-#include "MonTimer.h"
-
 
 // Forward declarations
 class ISvcLocator;
 class DimPropServer;
 class DimCmdServer;
+class MonObject;
 class MonTimer;
 class DimServiceMonObject;
 
@@ -20,7 +19,7 @@ namespace AIDA { class IBaseHistogram; }
 //class MonObjects;
 /** @class MonitorSvc MonitorSvc.h GaudiKernel/MonitorSvc.h
     
-This class implements the IMonitorSvc interface, and publishes Gaudi variables
+This class implements the IGauchoMonitorSvc interface, and publishes Gaudi variables
 to outside monitoring processes with Dim.
 
 An internal DimEngine is used for this purpose. A DimPropServer is started 
@@ -33,10 +32,10 @@ the value of the property.
 @author Juan Otalora Goicochea 2007/11/20: MonObjects
 */
 
-class MonitorSvc : public Service, virtual public IMonitorSvc {
+class MonitorSvc : public Service, virtual public IMonitorSvc, public IGauchoMonitorSvc {
 public:
   MonitorSvc(const std::string& name, ISvcLocator* sl);
-  virtual ~MonitorSvc() {}
+  virtual ~MonitorSvc();
   //IInterface pure virtual member functions
   StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
   // Service pure virtual member functions
@@ -58,9 +57,15 @@ public:
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const double& var, 
                    const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const float& var, 
+                   const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const std::string& var, 
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const std::pair<double,double>&var,
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const std::pair<int,int>&var,
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const std::pair<double,int>&var,
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                    const std::string& desc, const IInterface* owner) ;
@@ -92,11 +97,13 @@ public:
   /** Update all monitoring information
       @param owner Owner identifier of the monitoring information
   */
-  void updateAll( bool endOfRun ,  const IInterface* owner) ;
-  void resetHistos( const IInterface* owner ) ;
+  void updateAll( bool endOfRun , const IInterface* owner = 0) ;
+  void resetHistos( const IInterface* owner = 0 ) ;
 
   void setTimerElapsed(bool timerelapsed);
-  bool getTimerElapsed();
+  void setTimeFirstEvElapsed(time_t time);
+  bool getTimerElapsed() const;
+  
   bool m_TimerElapsed;
 
   /** Get the names for all declared monitoring informations for a given
@@ -133,9 +140,19 @@ private:
   void updateServiceMonObject(std::string infoName, bool endOfRun);
 
   
-  MonTimer* m_dimtimer;
+  //MonTimerAsync* m_monTimerAsync;
+  MonTimer* m_monTimer;
+ // IGauchoMonitorSvc *m_gauchoMonitorSvc;
   int m_refreshTime;
   std::string infoOwnerName( const IInterface* owner );
+  
+  // MonRate information
+  int    *m_runNumber;       // Maybe we have to use double
+  int    *m_cycleNumber;
+  longlong *m_timeFirstEvInRun;
+  longlong *m_timeLastEvInCycle; // Maybe we have to use double, have to check serialization
+  
+  void declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle);  
 };
 
 #endif // GAUDIKERNEL_MONITORSVC_H

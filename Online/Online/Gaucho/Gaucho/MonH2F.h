@@ -19,7 +19,7 @@ protected:
   AIDA::IHistogram2D* m_aidaHist;
 
 public:
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
+  //BOOST_SERIALIZATION_SPLIT_MEMBER()
 
   MonH2F(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonH2F();

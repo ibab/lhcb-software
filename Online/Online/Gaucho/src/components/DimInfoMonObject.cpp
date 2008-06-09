@@ -20,6 +20,7 @@
 #include "Gaucho/MonStatEntity.h"
 #include "Gaucho/MonVectorI.h"
 #include "Gaucho/MonVectorD.h"
+#include "Gaucho/MonRate.h"
 
 #include <iostream>
 #include <string>
@@ -119,6 +120,7 @@ void DimInfoMonObject::createMonObject(){
   if (monObjectTypeName == s_monStatEntity) m_monObject = new MonStatEntity(m_msgSvc, m_source);
   if (monObjectTypeName == s_monVectorI) m_monObject = new MonVectorI(m_msgSvc, m_source);
   if (monObjectTypeName == s_monVectorD) m_monObject = new MonVectorD(m_msgSvc, m_source);
+  if (monObjectTypeName == s_monRate) m_monObject = new MonRate(m_msgSvc, m_source);
   
   std::stringstream is2;
   is2.rdbuf()->pubsetbuf(c, m_StringSize);
