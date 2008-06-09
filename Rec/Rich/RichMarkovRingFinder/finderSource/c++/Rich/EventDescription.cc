@@ -6,7 +6,8 @@
 #include "Rich2Inferrer.h"
 #include "NimTypeRichModel.h"
 
-namespace Lester {
+namespace Lester
+{
 
   /// The fill method fills the "GenRingF::GenericResults" structure with the rings which were found during the fitting procedure.
   void EventDescription::fill(GenRingF::GenericResults & results,
@@ -29,7 +30,7 @@ namespace Lester {
   EventDescription::EventDescription(const GenRingF::GenericResults & results) {
     for ( GenRingF::GenericResults::GenericRings::const_iterator it = results.rings.begin();
           it!=results.rings.end();
-          ++it ) 
+          ++it )
     {
       circs.push_back(CircleParams(Small2Vector(it->x(), it->y()), it->radius()));
     }
@@ -39,12 +40,12 @@ namespace Lester {
     //Beware! This default description is pathalogical! (partly on purpose)
   }
 
-  std::ostream & EventDescription::printMeTo(std::ostream & os) const 
+  std::ostream & EventDescription::printMeTo(std::ostream & os) const
   {
     int i=0;
     os << "EventDescription[ ";
     for ( Circs::const_iterator it = circs.begin();
-          it != circs.end(); ++it, ++i ) 
+          it != circs.end(); ++it, ++i )
     {
       os << " circ-" << i << "=" << *it;
     }

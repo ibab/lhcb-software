@@ -5,7 +5,8 @@
 #include "CLHEP/Random/RandGauss.h"
 #include "Utils/MessageHandler.h"
 
-namespace Lester {
+namespace Lester 
+{
 
   int CircleParams::_creationCount = 0;
 

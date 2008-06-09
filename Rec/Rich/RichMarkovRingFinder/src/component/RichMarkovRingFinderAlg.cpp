@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.44 2008-06-08 23:22:01 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.45 2008-06-09 12:38:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -73,7 +73,7 @@ StatusCode RichMarkovRingFinderAlg::initialize()
 
   // make a new sampler ( should use a factory here )
   boost::shared_ptr<Lester::NimTypeRichModel> ntrm(new Lester::NimTypeRichModel);
-  m_sampler = new CrudeSampler(ntrm);
+  m_sampler = new Lester::CrudeSampler(ntrm);
 
   // configure sampler
   Lester::messHandle().declare(this); // set for messages
@@ -186,7 +186,7 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
   }
   catch ( const std::exception & excpt )
   {
-    Warning( "Ring finding FAILED with exception : " + std::string(excpt.what()),
+    Warning( "Ring finding FAILED : " + std::string(excpt.what()),
              StatusCode::SUCCESS );
   }
 

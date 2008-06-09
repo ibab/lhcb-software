@@ -5,14 +5,15 @@
 #include "Small2Vector.fwd"
 #include "Small3Vector.fwd"
 
-namespace Lester {
+namespace Lester 
+{
 
-  class CircleTheorems {
+  class CircleTheorems 
+  {
+  
   public:
-    class PointAtInfinity {
-    };
-    class RadiusIsInfinite {
-    };
+    class PointAtInfinity  { };
+    class RadiusIsInfinite { };
 
     /// Returns would-be z-cpt of cross product if the 2-vecs
     /// were extended to 3-vecs

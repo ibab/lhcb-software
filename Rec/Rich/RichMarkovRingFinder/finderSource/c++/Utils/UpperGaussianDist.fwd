@@ -1,4 +1,5 @@
 
-class UpperGaussianDist;
+namespace Lester { class UpperGaussianDist; }
+
 
 

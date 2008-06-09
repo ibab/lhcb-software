@@ -4,7 +4,8 @@
 
 #include "MarkovChainSampler/Ntuple.h"
 
-namespace Lester {
+namespace Lester 
+{
   
   class SugraParams :
     public Ntuple<5,double> {

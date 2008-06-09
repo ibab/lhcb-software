@@ -6,7 +6,8 @@
 #include <iostream>
 #include "CLHEP/Random/RandFlat.h"
 
-namespace Lester {
+namespace Lester
+{
 
   template <class Index>
   class DominantFiniteRelativeProbabilityChooser {
@@ -67,7 +68,7 @@ namespace Lester {
     void printMapTo(std::ostream & i) const {
       for ( typename Multimap::const_iterator it = cache.begin();
             it!=cache.end();
-            ++it ) 
+            ++it )
       {
         i <<  "[prob=" << it->first << ",index=" << it->second << "],";
       }

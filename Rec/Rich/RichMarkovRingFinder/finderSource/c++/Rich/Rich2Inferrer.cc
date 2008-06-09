@@ -9,12 +9,13 @@
 #include "Hit.h"
 #include "CircleParams.h"
 
-namespace Lester {
+namespace Lester
+{
 
   /// Return probablility hit was made by the given circle
-  double 
+  double
   Rich2Inferrer::probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
-                                                    const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const 
+                                                    const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const
   {
     //const QueriedHits::const_iterator setIt = queriedHits.find(hIt);
     //const bool haveAlreadyProcessedThisHit = (setIt != queriedHits.end());
@@ -36,9 +37,9 @@ namespace Lester {
   }
 
   /// Probability hit was made by no known circles
-  double 
+  double
   Rich2Inferrer::
-  probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const 
+  probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const
   {
     return probabilityHitWasMadeByGivenCircle(hIt, m_circs.end());
   }
@@ -91,7 +92,7 @@ namespace Lester {
     // now normalise the new map
     for ( QueryMap::iterator it = newPartOfQueryMap.begin();
           it!=newPartOfQueryMap.end();
-          ++it ) 
+          ++it )
     {
       (*it).second /= total;
     }

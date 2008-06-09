@@ -5,10 +5,11 @@
 #include "SugraParams.h"
 #include "MarkovChainSampler/Space.h"
 
-namespace Lester {
-
-  class SugraSpace : 
-    public Space<SugraPoint> {
+namespace Lester 
+{
+  
+  class SugraSpace : public Space<SugraPoint>
+  {
   public: 
   };
 

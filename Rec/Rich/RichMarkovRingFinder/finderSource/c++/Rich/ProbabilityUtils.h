@@ -11,7 +11,8 @@
 #include "Utils/MathsConstants.h"
 #include "Utils/MessageHandler.h"
 
-namespace Lester {
+namespace Lester 
+{
 
   inline double factorial(int n) {
     class FactorialOutOfRange {};

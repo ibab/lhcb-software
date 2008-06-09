@@ -1,3 +1,3 @@
 
-class RectilinearCPQuantizer;
+namespace Lester { class RectilinearCPQuantizer; }
 

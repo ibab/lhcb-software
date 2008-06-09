@@ -9,7 +9,8 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
 
-namespace Lester {
+namespace Lester 
+{
 
   template <class Index>
   class RegularProbabilityDistribution1D {

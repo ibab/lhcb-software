@@ -1,4 +1,5 @@
 
 template<class TypeToBecomeVectorified>
-class VectorSpaceObject;
+namespace Lester { class VectorSpaceObject; }
+
 

@@ -8,6 +8,9 @@
 // includes
 #include <iostream>
 
+namespace Lester
+{
+
 // declaration
 /// This class will only make sense or be decoded by a given CPQuantizer.
 class QuantizedCircleParams {
@@ -54,12 +57,14 @@ public:
   std::ostream & printMeTo(std::ostream & os) const {
     os << "QuantizedCircleParams[]";
     return os;
-  };
+  }
+  friend inline std::ostream & operator<<(std::ostream & os, 
+                                          const QuantizedCircleParams & obj) {
+    return obj.printMeTo(os);
+  }
 };
 
-inline std::ostream & operator<<(std::ostream & os, const QuantizedCircleParams & obj) {
-  return obj.printMeTo(os);
-};
+}
 
 #endif
 

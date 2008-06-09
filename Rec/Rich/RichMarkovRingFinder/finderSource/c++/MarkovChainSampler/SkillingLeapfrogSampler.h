@@ -10,7 +10,8 @@
 #include <list>
 #include <vector>
 
-namespace Lester {
+namespace Lester 
+{
 
   template <class PointType>
   class SkillingLeapfrogSampler :
@@ -120,8 +121,8 @@ namespace Lester {
         // a very unlikely point, so stick with current point!
 
       } catch(...) {
-        Lester::messHandle().warning() << "WARNING !!!! " << __FILE__ << " " << __LINE__ 
-                                       << " has detected a throw during moveToNextState() which was NOT of type LogarithmicTools::LogOfZero, which is the type you should be throwing if the point is infinitely unlikely.  I am going to veto this point, but FIX THE BUG!!!" 
+        Lester::messHandle().warning() << "WARNING !!!! " << __FILE__ << " " << __LINE__
+                                       << " has detected a throw during moveToNextState() which was NOT of type LogarithmicTools::LogOfZero, which is the type you should be throwing if the point is infinitely unlikely.  I am going to veto this point, but FIX THE BUG!!!"
                                        << Lester::endmsg;
 
       };

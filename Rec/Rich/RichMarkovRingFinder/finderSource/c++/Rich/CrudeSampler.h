@@ -15,23 +15,27 @@
 #include "boost/shared_ptr.hpp"
 #include "Data.fwd"
 
-// declaration
-class CrudeSampler : public GenRingF::GenericRingFinder {
-private:
-  boost::shared_ptr<Lester::NimTypeRichModel> m_ntrm;
-public:
-  CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm);
-  virtual boost::shared_ptr<GenRingF::GenericResults> fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
-  std::ostream & printMeTo(std::ostream & os) const;
-private:
-  void doTheWork( Lester::EventDescription & currentPoint,
-                  double & currentLogProb,
-                  Lester::ThreePointCircleProposerB & p,
-                  const Lester::NimTypeRichModel & ntrm,
-                  const Lester::Data & data);
-};
+namespace Lester
+{
 
-std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj);
+  // declaration
+  class CrudeSampler : public GenRingF::GenericRingFinder {
+  private:
+    boost::shared_ptr<Lester::NimTypeRichModel> m_ntrm;
+  public:
+    CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm);
+    virtual boost::shared_ptr<GenRingF::GenericResults> fit(const GenRingF::GenericInput & input) throw (CouldNotFit);
+    std::ostream & printMeTo(std::ostream & os) const;
+    friend std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj);
+  private:
+    void doTheWork( Lester::EventDescription & currentPoint,
+                    double & currentLogProb,
+                    Lester::ThreePointCircleProposerB & p,
+                    const Lester::NimTypeRichModel & ntrm,
+                    const Lester::Data & data);
+  };
+
+}
 
 #endif
 

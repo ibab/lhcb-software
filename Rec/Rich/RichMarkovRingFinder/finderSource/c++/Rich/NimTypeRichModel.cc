@@ -20,7 +20,8 @@
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandFlat.h"
 
-namespace Lester {
+namespace Lester
+{
 
 #define USE_2006_VALS 1
   /// #define USE_NIM_VALS 1
@@ -134,11 +135,11 @@ namespace Lester {
     //      ans *= factorial(n) // not needed as incorporated above
     for ( Data::Hits::const_iterator hit = d.hits.begin();
           hit!=d.hits.end();
-          ++hit ) 
+          ++hit )
     {
       const double p = singleHitProbabilityDistributionGivenEventDescription(*hit, rp);
       const double lp = log(p);
-      if (p==0 || !Lester::lfin(lp)) 
+      if (p==0 || !Lester::lfin(lp))
       {
         throw Lester::LogarithmicTools::LogOfZero();
       }
@@ -153,41 +154,47 @@ namespace Lester {
 
   // were in RichPriors.h: ------------------------------------------------------------
 
-  int NimTypeRichModel::sampleFromNumberOfCirclesDistribution() const {
+  int NimTypeRichModel::sampleFromNumberOfCirclesDistribution() const
+  {
     return RandPoisson::shoot(meanNumberOfRings);
-  };
-  double NimTypeRichModel::priorProbabilityOfNumberOfCircles(const int n) const {
+  }
+  double NimTypeRichModel::priorProbabilityOfNumberOfCircles(const int n) const
+  {
     return poissonProb(n, meanNumberOfRings);
-  };
+  }
 
-
-  int NimTypeRichModel::sampleFromNumberOfHitsDueToCircle(const CircleParams & cp) const {
+  int NimTypeRichModel::sampleFromNumberOfHitsDueToCircle(const CircleParams & cp) const
+  {
     return RandPoisson::shoot(meanNumberOfHitsMuExpectedOn(cp));
-  };
+  }
   // probability counterpart not yet implemented
 
-  int NimTypeRichModel::sampleFromNumberOfHitsDueToBackground() const {
+  int NimTypeRichModel::sampleFromNumberOfHitsDueToBackground() const
+  {
     return RandPoisson::shoot(meanNumberOfHitsMuExpectedFromBg());
-  };
+  }
   // probability counterpart not yet implemented
 
-  Hit NimTypeRichModel::sampleHitDueToBackground() const {
+  Hit NimTypeRichModel::sampleHitDueToBackground() const
+  {
     const double x = RandGauss::shoot(0,backgroundRadius);
     const double y = RandGauss::shoot(0,backgroundRadius);
     return Hit(x,y);
-  };
-  double NimTypeRichModel::priorProbabilityOfHitDueToBackground(const Small2Vector & p) const {
+  }
+
+  double NimTypeRichModel::priorProbabilityOfHitDueToBackground(const Small2Vector & p) const 
+  {
     const double sigSq = backgroundRadius*backgroundRadius;
     const double rSqOnSigSq = p.mag2()/sigSq;
     const double half = 0.5;
     const double one = 1;
     const double ans = (one/(MathsConstants::twoPi*sigSq))*exp(-half*rSqOnSigSq);
     return ans;
-  };
+  }
 
 
-
-  Hit NimTypeRichModel::sampleHitDueToCircle(const CircleParams & c) const {
+  Hit NimTypeRichModel::sampleHitDueToCircle(const CircleParams & c) const 
+  {
     const double theta=RandFlat::shoot(0.,MathsConstants::twoPi);
     const double r0=c.radius();
     const double epsilon=circleProbabilityDistributionEpsilonParameter;
@@ -197,8 +204,7 @@ namespace Lester {
     const double rWobbled = exp(t);
     const double x=rWobbled*cos(theta)+c.centre().x();
     const double y=rWobbled*sin(theta)+c.centre().y();
-    const Hit ans(x,y);
-    return ans;
+    return Hit(x,y);
   };
   double NimTypeRichModel::priorProbabilityOfHitDueToCircle(const Small2Vector & p, const CircleParams & cp) const {
     const double alpha = circleProbabilityDistributionAlphaParameter;
@@ -215,9 +221,10 @@ namespace Lester {
     return ans;
   };
 
-  double NimTypeRichModel::singleHitProbabilityDistributionGivenEventDescription(const Hit & hit,
-                                                                                 // given
-                                                                                 const EventDescription & ed) const {
+  double 
+  NimTypeRichModel::singleHitProbabilityDistributionGivenEventDescription(const Hit & hit,
+                                                                          const EventDescription & ed) const
+  {
     double ans=0;
     double sigmaMu=0;
     for ( EventDescription::Circs::const_iterator it=ed.circs.begin();
@@ -278,14 +285,14 @@ namespace Lester {
 
   // Were in CirclePriors ----------------------------
 
-  const std::string NimTypeRichModel::getCacheLocation() const 
+  const std::string NimTypeRichModel::getCacheLocation() const
   {
     static const char * env = getenv("RICHMFINDERDATALOCATION");
     static const std::string loc = ( env ? std::string(env)+"/approxCoPointSep.cache" : "approxCoPointSep.cache" );
     return loc;
   }
 
-  double NimTypeRichModel::sampleFromCircleRadiusDistribution() const 
+  double NimTypeRichModel::sampleFromCircleRadiusDistribution() const
   {
     if (Constants::scenario == Constants::simpleModel) {
       return RandExponential::shoot(circleMeanRadiusParameter);
@@ -297,7 +304,7 @@ namespace Lester {
     };
   }
 
-  double NimTypeRichModel::priorProbabilityOfRadius(const double r) const 
+  double NimTypeRichModel::priorProbabilityOfRadius(const double r) const
   {
     if (Constants::scenario == Constants::simpleModel) {
       return exponentialProb(r,circleMeanRadiusParameter);
@@ -308,7 +315,7 @@ namespace Lester {
     };
   }
 
-  double NimTypeRichModel::sampleFromCircleRadiusDistributionAbove(const double r) const 
+  double NimTypeRichModel::sampleFromCircleRadiusDistributionAbove(const double r) const
   {
     if (Constants::scenario == Constants::simpleModel) {
       return r+RandExponential::shoot(circleMeanRadiusParameter);
@@ -335,7 +342,7 @@ namespace Lester {
     };
   }
 
-  double NimTypeRichModel::sampleFromApproximateCoPointSeparationDistribution() const 
+  double NimTypeRichModel::sampleFromApproximateCoPointSeparationDistribution() const
   {
     // CoPointSeparationDistribution is the distrib of
     // distances between two points on a random circle
@@ -347,31 +354,31 @@ namespace Lester {
     return rho;
   }
 
-  double NimTypeRichModel::approxCoPointSepFunctionPart2(const double deltaOnTwo, 
-                                                         const double rSq) const 
+  double NimTypeRichModel::approxCoPointSepFunctionPart2(const double deltaOnTwo,
+                                                         const double rSq) const
   {
     const double deltaOnTwoSq = deltaOnTwo*deltaOnTwo;
     const double inner = rSq - deltaOnTwoSq;
     return ( inner<=0 ? 0 : rSq/(deltaOnTwo*std::sqrt(inner)) );
   }
 
-  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const 
+  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
   {
     // montecarlo answer and cache ...
     typedef std::map<double,double> Map;
     static Map cache;
-    
+
     static bool first = true;
-    if (first) 
+    if (first)
     {
       first = false;
       const std::string filename ( getCacheLocation() );
       Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
       std::ifstream f(filename.c_str());
-      if ( f.is_open() ) 
+      if ( f.is_open() )
       {
         double key(0),ans(0);
-        while ( f>>key ) 
+        while ( f>>key )
         {
           f >> ans;
           cache[key] = ans;
@@ -397,20 +404,20 @@ namespace Lester {
       Map::const_iterator geRhoIt = cache.lower_bound(deltaOnTwo);
       if (geRhoIt!=cache.end()) {
         const double key=geRhoIt->first;
-        if (key == deltaOnTwo) 
+        if (key == deltaOnTwo)
         {
           // we found an exact match
           return geRhoIt->second;
         }
-        if (geRhoIt->first <= deltaOnTwoMax ) 
+        if (geRhoIt->first <= deltaOnTwoMax )
         {
           possibilities.push_back(geRhoIt);
         }
       }
-      if (geRhoIt!=cache.begin()) 
+      if (geRhoIt!=cache.begin())
       {
         --geRhoIt;
-        if (geRhoIt->first>=deltaOnTwoMin) 
+        if (geRhoIt->first>=deltaOnTwoMin)
         {
           possibilities.push_back(geRhoIt);
         }
@@ -419,24 +426,24 @@ namespace Lester {
 
     {
       int tindex=-1;
-      if (possibilities.size()==1) 
+      if (possibilities.size()==1)
       {
         tindex=0;
-      } 
-      else if (possibilities.size()==2) 
+      }
+      else if (possibilities.size()==2)
       {
-        if (fabs(possibilities[0]->first-deltaOnTwo)<fabs(possibilities[1]->first-deltaOnTwo)) 
+        if (fabs(possibilities[0]->first-deltaOnTwo)<fabs(possibilities[1]->first-deltaOnTwo))
         {
           tindex=0;
-        } 
-        else 
+        }
+        else
         {
           tindex=1;
         }
       }
 
       const int index=tindex;
-      if (index==-1) 
+      if (index==-1)
       {
         //calculate and cache!
         int n=0;
@@ -448,7 +455,7 @@ namespace Lester {
           try {
             const int warmUpSteps=10; // must be at least 2
             assert (warmUpSteps>=2);
-            for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n) 
+            for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n)
             {
               const double r = sampleFromCircleRadiusDistributionAbove(rmin);
               const double rSq = r*r;
@@ -459,8 +466,8 @@ namespace Lester {
             }
             // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
             avg*=priorProbabilityOfRadiusAbove(rmin);
-          } 
-          catch (NimTypeRichModel::SampleIsImpossible&) 
+          }
+          catch (NimTypeRichModel::SampleIsImpossible&)
           {
             Lester::messHandle().verbose() << " SampleIsImpossibleInCop at " <<deltaOnTwo<< Lester::endmsg;
             avg=0;
@@ -475,16 +482,16 @@ namespace Lester {
               std::ofstream cf(filename.c_str(),std::ios::app);
               if ( cf.is_open() )
               {
-                if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg)) 
+                if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
                 {
                   cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-                  Lester::messHandle().debug() << "Wrote approxCoPointSep[ " << deltaOnTwo <<" ] = " 
+                  Lester::messHandle().debug() << "Wrote approxCoPointSep[ " << deltaOnTwo <<" ] = "
                                                << avg << " to cache file" << Lester::endmsg;
                 }
               }
               else
               {
-                Lester::messHandle().warning() << "Failed to open cache file '" << filename 
+                Lester::messHandle().warning() << "Failed to open cache file '" << filename
                                                << "' for writting -> New cache values not saved." << Lester::endmsg;
               }
             }
@@ -496,8 +503,8 @@ namespace Lester {
           }
           return avg;
         }
-      } 
-      else 
+      }
+      else
       {
         // serve from cache
         assert(index>=0 && index<static_cast<int>(possibilities.size()));
@@ -512,13 +519,13 @@ namespace Lester {
    const Small2Vector & b,
    const Small2Vector & c) const
   {
-    try 
+    try
     {
       const double r = CircleTheorems::radiusOfCircleThrough(a,b,c);
       const double ans = priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(a,b,c,r);
       return ans;
-    } 
-    catch (CircleTheorems::RadiusIsInfinite&) 
+    }
+    catch (CircleTheorems::RadiusIsInfinite&)
     {
       return 0;
     }
@@ -528,7 +535,7 @@ namespace Lester {
   (const Small2Vector & a,
    const Small2Vector & b,
    const Small2Vector & c,
-   const double r) const 
+   const double r) const
   {
     const double one = 1;
     const double averageHitsFromACircle = MathsConstants::pi * circleMeanRadiusParameter * circleHitsPerUnitLengthParameter;
@@ -569,7 +576,7 @@ namespace Lester {
 
   double NimTypeRichModel::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle
   (const Small2Vector & a,
-   const Small2Vector & b) const 
+   const Small2Vector & b) const
   {
     // See sheets one two and three stapled into lab book 5 at 19/11/2003
     // Assumptions:
@@ -582,7 +589,7 @@ namespace Lester {
     // *   assumes circles are distributed evenly across space, so makes no use
     //     of any knowledge that could be gleaned from the distribution of centres.
     const double deltaSq = (a-b).mag2();
-    const double delta = std::sqrt(deltaSq);
+    const double delta   = std::sqrt(deltaSq);
     const double deltaOnTwo = delta*0.5;
 
     const double mu // mean number of hits per unit length on circles
@@ -592,11 +599,12 @@ namespace Lester {
     const double averageAreaScale = areaScaleForEverything*areaScaleForEverything / areaScaleForSignal;
 
     static bool first = true;
-    if (first) {
+    if (first) 
+    {
       first = false;
       Lester::messHandle().debug() << "Estimation of PS could be improved by looking at the present number of hits rather than using the average number, and by removing crude dependence on average radius etc.  This would be very important if the circle radius distribution became bimodal or hits per unit arc length came to depend upon r." << Lester::endmsg;
       // for example, could base estimate on evidence of current fit!
-    };
+    }
     const double one = 1;
     //const double two = 2;
     const double averageHitsFromACircle = MathsConstants::pi * circleMeanRadiusParameter * circleHitsPerUnitLengthParameter;
@@ -609,20 +617,19 @@ namespace Lester {
 
     const double extraTerm = averageHitsTotal*(averageHitsTotal-one);
 
-    const double sepFun=approxCoPointSepFunctionPart1(deltaOnTwo);
+    const double sepFun    = approxCoPointSepFunctionPart1(deltaOnTwo);
     const double ans
       = one/(one+(one-PS)*extraTerm/(PS * averageAreaScale * muSq * sepFun));
-    
+
     return ans;
   }
 
-
-  Small2Vector NimTypeRichModel::sampleFromCircleCentreDistribution() const 
+  Small2Vector NimTypeRichModel::sampleFromCircleCentreDistribution() const
   {
     return Small2Vector(RandGauss::shoot(circleCenXMean,circleCenXSig),
                         RandGauss::shoot(circleCenYMean,circleCenYSig));
   }
-  double NimTypeRichModel::priorProbabilityOfCentre(const Small2Vector & cent) const 
+  double NimTypeRichModel::priorProbabilityOfCentre(const Small2Vector & cent) const
   {
     return
       gaussianProb(cent.x(), circleCenXMean, circleCenXSig)*
@@ -631,7 +638,7 @@ namespace Lester {
 
   // were in EventDescription.h --------------------------------------------------------
 
-  EventDescription NimTypeRichModel::sampleAnEventDescriptionFromPrior() const 
+  EventDescription NimTypeRichModel::sampleAnEventDescriptionFromPrior() const
   {
     EventDescription ans;
     assert(ans.circs.empty());
@@ -641,7 +648,7 @@ namespace Lester {
     };
     return ans;
   }
-  double NimTypeRichModel::priorProbabilityOf(const EventDescription & ed) const 
+  double NimTypeRichModel::priorProbabilityOf(const EventDescription & ed) const
   {
     //#warning "Need to treat meanBackground correctly!"
     double ans = 1;

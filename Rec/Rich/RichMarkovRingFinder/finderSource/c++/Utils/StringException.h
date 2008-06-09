@@ -4,17 +4,22 @@
 #include <exception>
 #include <string>
 
-class StringException : public std::exception
+namespace Lester
 {
-private:
-  const std::string m_message;
-public:
-  StringException(const std::string & s) : m_message(s) {};
-  virtual const char * what() const throw ()
+
+  class StringException : public std::exception
   {
-    return m_message.c_str();
-  }
-  ~StringException() throw() {}
-};
+  private:
+    const std::string m_message; ///< The message
+  public:
+    StringException(const std::string & s) : m_message(s) {};
+    virtual const char * what() const throw ()
+    {
+      return m_message.c_str();
+    }
+    ~StringException() throw() {}
+  };
+
+}
 
 #endif

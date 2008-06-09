@@ -3,10 +3,15 @@
 
 #include "Utils/StringException.h"
 
-class CannotConstructException : public StringException 
+namespace Lester
 {
-public:
-  CannotConstructException(const std::string & s) : StringException(s) {}
-};
+
+  class CannotConstructException : public StringException
+  {
+  public:
+    CannotConstructException(const std::string & s) : StringException(s) {}
+  };
+
+}
 
 #endif

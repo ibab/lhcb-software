@@ -6,9 +6,11 @@
 
 #include "Utils/MathsConstants.h"
 
-namespace Lester {
-  namespace Constants {
-    
+namespace Lester
+{
+  namespace Constants
+  {
+
     const bool warpedView=true;
     typedef enum { simpleModel, hardModel, rich1A, rich2A } Scenario;
     const Scenario scenario = rich2A;
@@ -23,4 +25,5 @@ namespace Lester {
 
   }
 }
+
 #endif

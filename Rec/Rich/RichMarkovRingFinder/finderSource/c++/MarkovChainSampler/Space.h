@@ -2,13 +2,16 @@
 #ifndef LESTER_SPACE_H
 #define LESTER_SPACE_H
 
-namespace Lester {
+namespace Lester 
+{
 
   template <typename ThePointType>
-  class Space {
+  class Space 
+  {
   public:
     typedef ThePointType PointType;
-    virtual bool contains(const PointType & point) const { 
+    virtual bool contains(const PointType & point) const 
+    { 
       return true; // Default implementation! 
     };
   };

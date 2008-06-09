@@ -8,10 +8,10 @@
 #include "CircleParams.h"
 #include "NimTypeRichModel.fwd"
 
-namespace Lester 
+namespace Lester
 {
-  
-  class Data 
+
+  class Data
   {
   public:
     typedef std::vector<Hit> Hits;
@@ -24,7 +24,7 @@ namespace Lester
     Hits hits;
     void setFromFile(const std::string & file);
   };
-  
+
 }
 
 #endif

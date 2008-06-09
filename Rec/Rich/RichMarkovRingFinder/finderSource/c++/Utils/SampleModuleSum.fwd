@@ -1,4 +1,4 @@
 
 template<class SampleType>
-struct SampleModuleSum;
+namespace Lester { struct SampleModuleSum; }
 

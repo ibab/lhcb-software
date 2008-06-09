@@ -3,17 +3,20 @@
 #define SAMPLEMODULEH
 
 // fwd dec
-#include "Utils/SampleModule.fwd" 
+#include "Utils/SampleModule.fwd"
 
-// includes
+namespace Lester
+{
 
-// declaration
-template<class SampleType>
-struct SampleModule {
-  virtual ~SampleModule() {};
-  virtual SampleType sample() const = 0;
-};
+  // declaration
+  template<class SampleType>
+  struct SampleModule 
+  {
+    virtual ~SampleModule() {};
+    virtual SampleType sample() const = 0;
+  };
 
+}
 
 #endif
 

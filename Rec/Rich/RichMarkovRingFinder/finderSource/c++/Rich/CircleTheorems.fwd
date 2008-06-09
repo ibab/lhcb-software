@@ -1,8 +1,4 @@
 
-namespace Lester {
-  
-  class CircleTheorems;
-
-}
+namespace Lester { class CircleTheorems; }
 
 

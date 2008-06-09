@@ -1,3 +1,4 @@
 
-struct NormalDistribution;
+namespace Lester { struct NormalDistribution; }
+
 

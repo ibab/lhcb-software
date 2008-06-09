@@ -1,4 +1,2 @@
 
-namespace Lester {
-   class Rich2Inferrer;
-}
+namespace Lester { class Rich2Inferrer; }

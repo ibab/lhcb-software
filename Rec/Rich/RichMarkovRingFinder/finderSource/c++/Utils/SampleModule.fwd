@@ -1,4 +1,6 @@
 
-template<class SampleType>
-struct SampleModule;
-
+namespace Lester 
+{ 
+  template<class SampleType>
+  struct SampleModule; 
+}

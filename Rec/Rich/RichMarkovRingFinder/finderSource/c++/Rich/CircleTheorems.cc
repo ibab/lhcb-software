@@ -4,7 +4,8 @@
 #include "Small3Vector.h"
 #include "Utils/MessageHandler.h"
 
-namespace Lester {
+namespace Lester 
+{
 
   double CircleTheorems::twoVectorCross(const Small2Vector & a,
                                         const Small2Vector & b) {

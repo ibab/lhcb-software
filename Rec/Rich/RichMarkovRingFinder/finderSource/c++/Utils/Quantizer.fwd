@@ -1,4 +1,6 @@
 
-template<class Unquantized, class Quantized>
-class Quantizer;
-
+namespace Lester 
+{ 
+  template<class Unquantized, class Quantized>
+  class Quantizer; 
+}

@@ -11,7 +11,8 @@
 #include "GenericRingFinder/GenericRingFinder.h"
 #include <set>
 
-namespace Lester {
+namespace Lester
+{
 
   CircleParams ThreePointCircleProposerB::sample() const
   {
@@ -21,12 +22,12 @@ namespace Lester {
     const QuantizedCircleParams & qcp = m_cpQuantizer.quantize(ans);
 
     const VisitCache::iterator it = m_visitCache.lower_bound(qcp);
-    if ( it==m_visitCache.end() || (qcp)<(it->first) ) 
+    if ( it==m_visitCache.end() || (qcp)<(it->first) )
     {
       // we are not already in the map
       m_visitCache.insert(it, VisitCache::value_type(qcp,1));
-    } 
-    else 
+    }
+    else
     {
       // we are already in the map
       assert(qcp == it->first);
@@ -35,35 +36,35 @@ namespace Lester {
     return ans;
   }
 
-  CircleParams ThreePointCircleProposerB::samplePrivate() const 
+  CircleParams ThreePointCircleProposerB::samplePrivate() const
   {
     unsigned long failures=0;
     CircleParams ans;
-    while(true) 
+    while(true)
     {
-      try 
+      try
       {
         ans = tryToSample();
         return ans;
-      } 
-      catch (...) 
+      }
+      catch (...)
       {
         // try again!
         ++failures;
-        if (failures==1) 
+        if (failures==1)
         {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in " 
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has caused an ineficiency in "
                                          << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << Lester::endmsg;
-        } 
-        else if (failures==5) 
+        }
+        else if (failures==5)
         {
-          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in " 
-                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!" 
+          Lester::messHandle().warning() << "The situation with respect to very unlikely start points has causing a much larger problem in "
+                                         << __FUNCTION__ << " at line " << __LINE__ << " in " << __FILE__ << " than previously thought possible.  Fix Immediately!"
                                          << Lester::endmsg;
-        } 
-        else if (failures==100) 
+        }
+        else if (failures==100)
         {
-          Lester::messHandle().warning() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__ 
+          Lester::messHandle().warning() << "Program probably stuck in an infinite loop in " << __FUNCTION__ << " at line " << __LINE__
                                          << " in " << __FILE__ << " -> aborting" << Lester::endmsg;
           throw GenRingF::GenericRingFinder::CouldNotFit("Stuck in potential infinite loop -> abort");
         }
@@ -71,17 +72,17 @@ namespace Lester {
     }
   };
 
-  CircleParams ThreePointCircleProposerB::tryToSample() const 
+  CircleParams ThreePointCircleProposerB::tryToSample() const
   {
     const int nDataPoints = m_data.hits.size();
     assert(nDataPoints>=3); // assured by our constructor!
 
     //First choose a random hit as the initial seed.
     static bool first = true;
-    if (first) 
+    if (first)
     {
       first = false;
-      Lester::messHandle().debug() << __FUNCTION__ << " could be improved by seeding on a non-random point (" 
+      Lester::messHandle().debug() << __FUNCTION__ << " could be improved by seeding on a non-random point ("
                                    << __FILE__ << " " << __LINE__ <<")"<<Lester::endmsg;
     }
     const int a = RandFlat::shootInt(nDataPoints);
@@ -163,7 +164,7 @@ namespace Lester {
       static bool first = true;
       if (first) {
         first = false;
-        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!" 
+        Lester::messHandle().warning() << "The throw/catch situation w.r.t very unlikely start points is handled very badly at present ... please fix!"
                                        << Lester::endmsg;
       };
       throw;
@@ -191,7 +192,7 @@ namespace Lester {
 
   double ThreePointCircleProposerB::CACHED_probabilityOfBasingACircleOn(const int i1,
                                                                         const int i2,
-                                                                        const int i3) const 
+                                                                        const int i3) const
   {
     const HitIndexTriple h(i1,i2,i3);
     const Cache1::const_iterator it = m_cache1.find(h);
@@ -330,9 +331,9 @@ namespace Lester {
     m_radiusSmearingWidth(radiusSmearingWidth),
     m_wanderWidthSq(circleCentreSmearingWidth*circleCentreSmearingWidth*2.0 + radiusSmearingWidth*radiusSmearingWidth),
     m_ntrm(ntrm),
-    m_centreCptSmearer(0,circleCentreSmearingWidth) 
+    m_centreCptSmearer(0,circleCentreSmearingWidth)
   {
-    if (m_data.hits.size() < 3) 
+    if (m_data.hits.size() < 3)
     {
       throw CannotConstructException("You need at least three hits to construct a circle");
     }

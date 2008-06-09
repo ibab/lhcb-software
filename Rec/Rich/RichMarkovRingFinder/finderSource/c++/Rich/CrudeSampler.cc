@@ -12,6 +12,8 @@
 #include "Utils/MessageHandler.h"
 #include "Utils/CheckForNan.h"
 
+using namespace Lester;
+
 CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm)
   : m_ntrm(ntrm) { }
 

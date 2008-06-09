@@ -1,3 +1,2 @@
 
-class QuantizedCircleParams;
-
+namespace Lester { class QuantizedCircleParams; }

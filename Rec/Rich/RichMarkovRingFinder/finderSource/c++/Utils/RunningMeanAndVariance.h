@@ -1,8 +1,6 @@
 #ifndef LESTER_RUNNING_MEAN_AND_VARIANCE_H
 #define LESTER_RUNNING_MEAN_AND_VARIANCE_H
 
-
-
 namespace Lester {
 
   struct RunningMeanAndVariance {
@@ -36,6 +34,5 @@ namespace Lester {
   };
 
 }
-
 
 #endif

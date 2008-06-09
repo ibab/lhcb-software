@@ -1,7 +1,2 @@
 
-namespace Lester {
-
-  class Hit;
-
-}
-
+namespace Lester { class Hit; }

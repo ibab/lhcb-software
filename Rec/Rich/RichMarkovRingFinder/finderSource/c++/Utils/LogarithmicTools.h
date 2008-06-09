@@ -7,20 +7,22 @@
 #include <exception>
 #include "Utils/CheckForNan.h"
 
-namespace Lester {
+namespace Lester
+{
 
-  namespace LogarithmicTools {
+  namespace LogarithmicTools
+  {
 
-    class LogOfZero : public std::exception 
+    class LogOfZero : public std::exception
     {
-      virtual const char * what() const throw() 
+      virtual const char * what() const throw()
       {
         return "LogarithmicTools::LogOfZero";
       };
     };
-    class LogOfNegative : public std::exception 
+    class LogOfNegative : public std::exception
     {
-      virtual const char * what() const throw() 
+      virtual const char * what() const throw()
       {
         return "LogarithmicTools::LogOfNegative";
       };

@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.30 2008-06-08 20:06:36 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.31 2008-06-09 12:38:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -141,7 +141,7 @@ namespace Rich
       const Rich::RadiatorType m_rad;   ///< Which RICH radiator
 
       /// Pointer to the sampler (ring finder)
-      CrudeSampler * m_sampler;
+      Lester::CrudeSampler * m_sampler;
 
       /// Location of all output rings in TES
       std::string m_ringLocation;

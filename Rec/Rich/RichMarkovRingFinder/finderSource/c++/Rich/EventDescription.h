@@ -10,7 +10,8 @@
 #include "NimTypeRichModel.fwd"
 #include <boost/shared_ptr.hpp>
 
-namespace Lester {
+namespace Lester 
+{
 
   class EventDescription
   {
