@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.9 2008-06-07 01:31:27 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.10 2008-06-09 09:48:43 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -229,11 +229,11 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
 
   // check the cellID is consistent with the calo
   if(caloViewMap[unit] !=  calo){
-    warning() << "Cannot put the  " 
-              << CaloCellCode::CaloNameFromNum(calo) 
-              << " CaloCellID " << id << " in the "
-              << CaloCellCode::CaloNameFromNum( caloViewMap[unit] ) 
-              << " view " << unit << endreq;
+    info() << "Cannot put the  " 
+           << CaloCellCode::CaloNameFromNum(calo) 
+           << " CaloCellID " << id << " in the "
+           << CaloCellCode::CaloNameFromNum( caloViewMap[unit] ) 
+           << " view " << unit << endreq;
     return histo2D(unit);
   }
   // get calo parameters
@@ -319,11 +319,11 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
   
   // check the cellID is consistent with the calo
   if(caloViewMap[(HistoID)lun.str()] !=  id.calo() ){
-    warning() << "Cannot put the  " 
-              << CaloCellCode::CaloNameFromNum(id.calo() ) 
-              << " CaloCellID " << id << " in the "
-              << CaloCellCode::CaloNameFromNum( caloViewMap[(HistoID) lun.str() ] ) 
-              << " view " << lun.str() << endreq;
+    info() << "Cannot put the  " 
+           << CaloCellCode::CaloNameFromNum(id.calo() ) 
+           << " CaloCellID " << id << " in the "
+           << CaloCellCode::CaloNameFromNum( caloViewMap[(HistoID) lun.str() ] ) 
+           << " view " << lun.str() << endreq;
     return histo2D( (HistoID) lun.str());
   }
 
