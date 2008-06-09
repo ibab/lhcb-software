@@ -335,22 +335,10 @@ static PyObject *dim_buf_to_list(const char *schema, const char *buf,
 	} else goto short_buffer;
       break;
     case _DIM_STRING:
-      if (mult == MUL_INFINITE)  
+      if (mult == MUL_INFINITE)
 	mult = (len - n) / _DIM_CHAR_LEN;
-      if ((unsigned int)(n + mult) <= len) { // ugly
-	int p=mult-1;
-	while (p && buf[n+p] == '\0')
-	  --p;
-	tmp = PyString_FromStringAndSize(&buf[n], p+1);
-	n += mult;
-      } else {
-	int p=len-n-1;
-	/* goto short_buffer; */
-	while (p && buf[p] == '\0')
-	  --p;
-	tmp = PyString_FromStringAndSize(&buf[n], p+1);
-	n = len;
-      }
+      tmp = PyString_FromStringAndSize(&buf[n], mult);
+      n += mult;
       PyList_Append(list, tmp);
       break;
     case _DIM_SHORT:
