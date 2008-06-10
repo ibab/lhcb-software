@@ -3,6 +3,9 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2008-06-10 - Gerhard Raven
+ - add FPEGuard to Kernel: allows to enable/disable trapping of floating
+   point exceptions
 
 !===================== LHCbKernel v8r4 2008-05-05 ========================
 ! 2008-05-05 - Gerhard Raven
