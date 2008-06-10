@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.2 2008-02-08 21:20:39 frankm Exp $
+// $Id: ROMonDisplay.h,v 1.3 2008-06-10 18:20:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.2 2008-02-08 21:20:39 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.3 2008-06-10 18:20:19 frankb Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
 // Framework includes
 #include "RTL/rtl.h"
 #include "SCR/ScrDisplay.h"
+#define MBM_IMPLEMENTATION
+#include "ROMon/ROMon.h"
 
 /*
  *   ROMon namespace declaration
@@ -36,6 +38,8 @@ namespace ROMon {
    */
   class ROMonDisplay : public ScrDisplay  {
   public:
+    typedef Nodeset::Nodes Nodes;
+
     struct Descriptor {
       size_t length;
       size_t actual;
