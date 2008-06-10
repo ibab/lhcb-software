@@ -1,5 +1,8 @@
 #include "$GAUDIONLINEROOT/options/DiskWR.opts"
 ApplicationMgr.TopAlg               += {"removeFileID"};
+ApplicationMgr.TopAlg               += {"StoreExplorerAlg"};
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1;
 ApplicationMgr.HistogramPersistency  = "NONE";
 MEPManager.Buffers                   = { "RECV" };
 MEPManager.PartitionBuffers          = false;
@@ -8,4 +11,4 @@ EventSelector.Input                  = "RECV";
 Writer.Compress                      = 0;
 Writer.InputDataType                 = 1;
 Writer.DataType                      = 2;
-Writer.Connection                    = "file://recOutput.dat";
+Writer.Connection                    = "file://test.dst";

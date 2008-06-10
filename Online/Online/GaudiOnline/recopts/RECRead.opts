@@ -1,10 +1,11 @@
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-ApplicationMgr.HistogramPersistency  = "NONE";
+// ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.TopAlg               += { "StoreExplorerAlg" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
+
 EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 EventPersistencySvc.CnvServices     += { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
@@ -17,7 +18,6 @@ MEPManager.PartitionID               = @OnlineEnv.PartitionID;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.Buffers                   = { "Events", "SEND" };
 MEPManager.PartitionBuffers          = false;
-//
 ApplicationMgr.TopAlg               += { "LHCb::RawEvent2MBMMergerAlg/RECOutput"};
 RECOutput.Buffer                     = "SEND";
 RECOutput.DataType                   = 1;
