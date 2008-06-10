@@ -1,7 +1,6 @@
 
 #include "NimTypeRichModel.h"
 
-#include <string>
 #include "EventDescription.h"
 #include "CircleParams.h"
 #include "Hit.h"
@@ -98,8 +97,10 @@ namespace Lester
   }
 
 
-  double NimTypeRichModel::totalLogProbOfDataGivenEventDescription(const Data & d,
-                                                                   /*Given*/ const EventDescription & rp) const {
+  double
+  NimTypeRichModel::totalLogProbOfDataGivenEventDescription(const Data & d,
+                                                            const EventDescription & rp) const
+  {
     double logAns=0;
 
     // expected number of total hits:
@@ -114,31 +115,41 @@ namespace Lester
     //      ans *= factorial(n)
     // which occurs in the next block to account for a combinatorial factor for the hit probabilities that are about to arrive, so to save time I combine the two factors together into
     const bool muIsTooSmall=!(Lester::lfin(log(mu)));
-    if (mu==0 && n>0) {
+    if ( mu==0 && n>0 )
+    {
       throw Lester::LogarithmicTools::LogOfZero();// infintely unlikely!
-    } else if (mu==0 && n==0) {
+    }
+    else if (mu==0 && n==0)
+    {
       logAns+=0; //ans *= 1;
-    } else if (muIsTooSmall) {
+    }
+    else if (muIsTooSmall)
+    {
       // what about numerical issues related to taking log of mu when mu is small.
-      if (n==0) {
+      if ( n==0 )
+      {
         logAns -= mu; //ans *= exp(-mu);
-      } else {
+      }
+      else
+      {
         throw Lester::LogarithmicTools::LogOfZero();// infintely unlikely!
-      };
-    } else {
+      }
+    }
+    else
+    {
       logAns+= (n*log(mu)-mu); //ans *= exp(n*log(mu)-mu);
     }
 
     // check how we are doing!
-    assert(Lester::lfin(logAns) && "step1" );
+    assert( Lester::lfin(logAns) && "step1" );
 
     //      ans *= factorial(n) // not needed as incorporated above
     for ( Data::Hits::const_iterator hit = d.hits.begin();
           hit!=d.hits.end();
           ++hit )
     {
-      const double p = singleHitProbabilityDistributionGivenEventDescription(*hit, rp);
-      const double lp = log(p);
+      const double p  = singleHitProbabilityDistributionGivenEventDescription(*hit, rp);
+      const double lp = std::log(p);
       if (p==0 || !Lester::lfin(lp))
       {
         throw Lester::LogarithmicTools::LogOfZero();
@@ -158,6 +169,7 @@ namespace Lester
   {
     return RandPoisson::shoot(meanNumberOfRings);
   }
+
   double NimTypeRichModel::priorProbabilityOfNumberOfCircles(const int n) const
   {
     return poissonProb(n, meanNumberOfRings);
@@ -182,7 +194,7 @@ namespace Lester
     return Hit(x,y);
   }
 
-  double NimTypeRichModel::priorProbabilityOfHitDueToBackground(const Small2Vector & p) const 
+  double NimTypeRichModel::priorProbabilityOfHitDueToBackground(const Small2Vector & p) const
   {
     const double sigSq = backgroundRadius*backgroundRadius;
     const double rSqOnSigSq = p.mag2()/sigSq;
@@ -192,8 +204,7 @@ namespace Lester
     return ans;
   }
 
-
-  Hit NimTypeRichModel::sampleHitDueToCircle(const CircleParams & c) const 
+  Hit NimTypeRichModel::sampleHitDueToCircle(const CircleParams & c) const
   {
     const double theta=RandFlat::shoot(0.,MathsConstants::twoPi);
     const double r0=c.radius();
@@ -222,7 +233,7 @@ namespace Lester
     return ans;
   }
 
-  double 
+  double
   NimTypeRichModel::singleHitProbabilityDistributionGivenEventDescription(const Hit & hit,
                                                                           const EventDescription & ed) const
   {
@@ -281,8 +292,6 @@ namespace Lester
     const double ans = part1*part2;
     return ans;
   }
-
-
 
   // Were in CirclePriors ----------------------------
 
@@ -363,35 +372,32 @@ namespace Lester
     return ( inner<=0 ? 0 : rSq/(deltaOnTwo*std::sqrt(inner)) );
   }
 
-  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
+  void NimTypeRichModel::readCacheFromFile()
   {
-    // montecarlo answer and cache ...
-    typedef std::map<double,double> Map;
-    static Map cache;
-
-    static bool first = true;
-    if (first)
+    m_cache.clear();
+    const std::string filename ( getCacheLocation() );
+    Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
+    std::ifstream f(filename.c_str());
+    if ( f.is_open() )
     {
-      first = false;
-      const std::string filename ( getCacheLocation() );
-      Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
-      std::ifstream f(filename.c_str());
-      if ( f.is_open() )
+      double key(0),ans(0);
+      while ( f>>key )
       {
-        double key(0),ans(0);
-        while ( f>>key )
-        {
-          f >> ans;
-          cache[key] = ans;
-          Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
-                                       << ans << " from file" << Lester::endmsg;
-        }
-      }
-      else
-      {
-        Lester::messHandle().fatal() << "Failed to open cache file '" << filename << "'" << Lester::endmsg;
+        f >> ans;
+        m_cache[key] = ans;
+        Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
+                                     << ans << " from file" << Lester::endmsg;
       }
     }
+    else
+    {
+      Lester::messHandle().error() << "Failed to open cache file '" << filename
+                                   << "' -> Will re-calculate from scratch (SLOW)" << Lester::endmsg;
+    }
+  }
+
+  double NimTypeRichModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
+  {
 
     const double one = 1;
     const double tol = 0.02; // interpolate at 2% intervals
@@ -399,11 +405,12 @@ namespace Lester
     const double deltaOnTwoMax = deltaOnTwo*(one+tol);
     const double deltaOnTwoMin = deltaOnTwo/(one+tol);
 
-    typedef std::vector<Map::const_iterator> Possibilities;
+    typedef std::vector<CacheMap::const_iterator> Possibilities;
     Possibilities possibilities;
     {
-      Map::const_iterator geRhoIt = cache.lower_bound(deltaOnTwo);
-      if (geRhoIt!=cache.end()) {
+      CacheMap::const_iterator geRhoIt = m_cache.lower_bound(deltaOnTwo);
+      if ( geRhoIt != m_cache.end() )
+      {
         const double key=geRhoIt->first;
         if (key == deltaOnTwo)
         {
@@ -415,7 +422,7 @@ namespace Lester
           possibilities.push_back(geRhoIt);
         }
       }
-      if (geRhoIt!=cache.begin())
+      if ( geRhoIt != m_cache.begin() )
       {
         --geRhoIt;
         if (geRhoIt->first>=deltaOnTwoMin)
@@ -443,7 +450,7 @@ namespace Lester
         }
       }
 
-      const int index=tindex;
+      const int index = tindex;
       if (index==-1)
       {
         //calculate and cache!
@@ -474,34 +481,37 @@ namespace Lester
             avg=0;
           }
 
-          cache[deltaOnTwo]=avg;
+          // Save this result to the cache map
+          Lester::messHandle().debug() << "Computed approxCoPointSep[ " << deltaOnTwo <<" ] = "
+                                       << avg << Lester::endmsg;
+          m_cache[deltaOnTwo] = avg;
+
+          try
           {
-            try
+            // need to add read/write idea here
+            const std::string filename = getCacheLocation();
+            std::ofstream cf(filename.c_str(),std::ios::app);
+            if ( cf.is_open() )
             {
-              // need to add read/write idea here
-              const std::string filename = getCacheLocation();
-              std::ofstream cf(filename.c_str(),std::ios::app);
-              if ( cf.is_open() )
+              if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
               {
-                if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
-                {
-                  cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-                  Lester::messHandle().debug() << "Wrote approxCoPointSep[ " << deltaOnTwo <<" ] = "
-                                               << avg << " to cache file" << Lester::endmsg;
-                }
-              }
-              else
-              {
-                Lester::messHandle().warning() << "Failed to open cache file '" << filename
-                                               << "' for writting -> New cache values not saved." << Lester::endmsg;
+                cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
+                Lester::messHandle().debug() << "  -> Wrote to cache file" << Lester::endmsg;
               }
             }
-            catch ( const std::exception & expt )
+            else
             {
-              Lester::messHandle().warning() << "Exception '" << expt.what()
-                                             << "' caught writing to cache -> results not saved" << Lester::endmsg;
+              Lester::messHandle().warning() << "Failed to open cache file '" << filename
+                                             << "' for writting -> New cache values not saved." << Lester::endmsg;
             }
           }
+          catch ( const std::exception & expt )
+          {
+            Lester::messHandle().warning() << "Exception '" << expt.what()
+                                           << "' caught writing to cache -> results not saved" << Lester::endmsg;
+          }
+
+          // return the new result
           return avg;
         }
       }
@@ -600,7 +610,7 @@ namespace Lester
     const double averageAreaScale = areaScaleForEverything*areaScaleForEverything / areaScaleForSignal;
 
     static bool first = true;
-    if (first) 
+    if (first)
     {
       first = false;
       Lester::messHandle().debug() << "Estimation of PS could be improved by looking at the present number of hits rather than using the average number, and by removing crude dependence on average radius etc.  This would be very important if the circle radius distribution became bimodal or hits per unit arc length came to depend upon r." << Lester::endmsg;

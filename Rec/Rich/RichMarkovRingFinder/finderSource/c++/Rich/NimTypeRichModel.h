@@ -3,10 +3,12 @@
 #define LESTER_NIMTYPERICHMODEL_H
 
 // fwd dec
-#include "NimTypeRichModel.fwd" 
+#include "NimTypeRichModel.fwd"
 
 // includes
 #include <iostream>
+#include <string>
+#include <map>
 #include "EventDescription.fwd"
 #include "Data.fwd"
 #include "CircleParams.fwd"
@@ -16,19 +18,23 @@
 namespace Lester {
 
   // declaration
-  class NimTypeRichModel {
+  class NimTypeRichModel
+  {
+
   public:
-    NimTypeRichModel() {};
+
+    /// Default constructor
+    NimTypeRichModel() { readCacheFromFile(); }
 
     // was in Rich.h -------------------------------------------------------------------
 
     double totalLogProbOfEventDescriptionGivenData(const EventDescription & rp,
-						   /*Given*/ const Data & d) const;
+                                                   const Data & d) const;
     double totalLogProbOfDataGivenEventDescription(const Data & d,
-						   /*Given*/ const EventDescription & rp) const;
+                                                   const EventDescription & rp) const;
 
     // were in RichPriors.h: ------------------------------------------------------------
- 
+
     int sampleFromNumberOfCirclesDistribution() const;
     double priorProbabilityOfNumberOfCircles(const int n) const;
 
@@ -43,23 +49,23 @@ namespace Lester {
 
     Hit sampleHitDueToCircle(const CircleParams & c) const;
     double priorProbabilityOfHitDueToCircle(const Small2Vector & p, const CircleParams & cp) const;
- 
+
     // sampling counterpart not yet implemented
     double singleHitProbabilityDistributionGivenEventDescription(const Hit & h,
-								 // given
-								 const EventDescription & ed) const;
-      
+                                                                 // given
+                                                                 const EventDescription & ed) const;
+
 
     // were in CircleParams.h --------------------------------------------------------------
-    
-    /// assume number of hits appearing on ring is poisson.  Determine the mean of that poisson dist, given a CircleParams. 
+
+    /// assume number of hits appearing on ring is poisson.  Determine the mean of that poisson dist, given a CircleParams.
     double meanNumberOfHitsMuExpectedOn(const CircleParams & cp) const;
     double meanNumberOfHitsMuExpectedFromBg() const;
     double meanNumberOfHitsMuExpectedFromBgGiven(const EventDescription & ed) const;
     double meanNumberOfHitsMuExpectedGiven(const EventDescription & ed) const;
     CircleParams sampleCircle() const;
     double priorProbabilityOf(const CircleParams & cp) const;
-    
+
     // were in CirclePriors ------------------------------------------
     const std::string getCacheLocation() const;
     class SampleIsImpossible { };
@@ -67,31 +73,41 @@ namespace Lester {
     double priorProbabilityOfRadius(const double r) const;
     double sampleFromCircleRadiusDistributionAbove(const double r) const;
     double priorProbabilityOfRadiusAbove(const double r) const;
-    
+
     double sampleFromApproximateCoPointSeparationDistribution() const;
 
   private:
-    double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
+
+    typedef std::map<double,double> CacheMap;
+    mutable CacheMap m_cache;
 
   private:
+
+    void readCacheFromFile();
+
+    double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
+
     double approxCoPointSepFunctionPart1(const double deltaOnTwo) const;
-    
+
   public:
+
     double priorProbabilityOfThreePointsBeingOnACircle
     (const Small2Vector & a,
      const Small2Vector & b,
      const Small2Vector & c) const;
+
     double priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius
     (const Small2Vector & a,
      const Small2Vector & b,
      const Small2Vector & c,
      const double r) const;
-    
+
   public:
+
     double PROPTO_priorProbabilityOfTwoPointsBeingOnACircle
     (const Small2Vector & a,
      const Small2Vector & b) const;
-    
+
     Small2Vector sampleFromCircleCentreDistribution() const;
     double priorProbabilityOfCentre(const Small2Vector & cent) const;
 
@@ -102,6 +118,7 @@ namespace Lester {
 
     // were in Constants.h --------------------------------------------------------------
   private:
+
     static const double backgroundRadius;
     static const int    meanNumberOfRings;
     static const double circleHitsPerUnitLengthParameter;
