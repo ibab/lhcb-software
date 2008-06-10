@@ -25,14 +25,15 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
                    m_SecondaryVertexToolName = "SVertexTool" );
 
   declareProperty( "CombTech",     m_CombinationTechnique = "Probability" );
-  declareProperty( "AverageOmega", m_AverageOmega         = 0.45 );
+  declareProperty( "AverageOmega", m_AverageOmega         = 0.41 );
+
   declareProperty( "PowerK",       m_PowerK               = 0.35 );
   declareProperty( "MinimumCharge",m_MinimumCharge        = 0.15 );
-  declareProperty( "P0",           m_P0                   = 5.280128e-01 );
-  declareProperty( "P1",           m_P1                   =-2.464036e-01 );
-  declareProperty( "Gt075",        m_P2                   = 0.35 );
-  declareProperty( "TracksEq2",    m_wSameSign2           = 0.465074 );
-  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.404992 );
+  declareProperty( "P0",           m_P0                   = 5.259631e-01 );
+  declareProperty( "P1",           m_P1                   =-3.256825e-01 );
+  declareProperty( "Gt075",        m_Gt075                = 0.35 );
+  declareProperty( "TracksEq2",    m_wSameSign2           = 0.420701 );
+  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.352641 );
 
   declareProperty( "ProbMin",      m_ProbMin              = 0.52);
 
@@ -79,20 +80,20 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   //if a particle appears twice in vtags and the same was used
   //for the inclusive vertexing than skip
   Particle::ConstVector::const_iterator ip, jp, kp;
-  for( ip = vtags.begin(); ip != vtags.end(); ip++) {
-    const ProtoParticle* proto = (*ip)->proto();
-    for( jp=ip+1; jp!=vtags.end(); jp++) {
-      if( (*ip) == (*jp) ) { //ip is a tagger
-	debug()<<"found a used tagger"<<(*ip)->pt()<<endreq;
-	for( kp=Pfit.begin(); kp!=Pfit.end(); kp++) {
-	  if( proto == (*kp)->proto() ) {//ip is in SV
-	    debug()<<"Secondary Vertex uses OS tagger. Skip."<<endreq;
-	    return tVch;
-	  }
-	}
-      }
-    }
-  }
+//   for( ip = vtags.begin(); ip != vtags.end(); ip++) {
+//     const ProtoParticle* proto = (*ip)->proto();
+//     for( jp=ip+1; jp!=vtags.end(); jp++) {
+//       if( (*ip) == (*jp) ) { //ip is a tagger
+// 	debug()<<"found a used tagger"<<(*ip)->pt()<<endreq;
+// 	for( kp=Pfit.begin(); kp!=Pfit.end(); kp++) {
+// 	  if( proto == (*kp)->proto() ) {//ip is in SV
+// 	    debug()<<"Secondary Vertex uses OS tagger. Skip."<<endreq;
+// 	    return tVch;
+// 	  }
+// 	}
+//       }
+//     }
+//   }
 
   //calculate vertex charge
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
@@ -106,16 +107,14 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   //calculate omega
   double omega = m_AverageOmega;
   if(m_CombinationTechnique == "Probability") {
-    if( fabs(Vch)<0.75 ) 
-      omega = m_P0 + m_P1*fabs(Vch) ;
-    if( fabs(Vch)>0.75 ) omega = m_P2;
+    if( fabs(Vch)<0.75 ) omega = m_P0 + m_P1*fabs(Vch) ;
+    if( fabs(Vch)>0.75 ) omega = m_Gt075;
     if( fabs(Vch)>0.99 ) { // tracks have all the same charge
       if(Pfit.size()==2) omega = m_wSameSign2;
       if(Pfit.size() >2) omega = m_wSameSignMoreThan2;
     }
   }
 
-  verbose()<<"B pt= "<< AXB0->pt() <<endreq;
   debug() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
           <<" omega= "<< omega <<endreq;
 

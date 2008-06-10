@@ -1,5 +1,5 @@
-#ifndef NNNNkaon
-#define NNNNkaon
+#ifndef NNkaon_h
+#define NNkaon_h
 
 class NNkaon { 
 public:
@@ -11,48 +11,55 @@ private:
    double input1;
    double input2;
    double input3;
-   double neuron0xa7cd198();
-   double neuron0xa7d31d8();
-   double neuron0xa7d3330();
-   double neuron0xa7d0d20();
-   double neuron0xa7f0de0();
-   double neuron0xa7f0fd8();
-   double neuron0xa7d8418();
-   double neuron0xa7d8610();
-   double neuron0xa7d04c0();
-   double neuron0xa7d0740();
-   double neuron0xa7d0e98();
-   double synapse0xa7f0f38();
-   double synapse0xa7f0f60();
-   double synapse0xa7f0f88();
-   double synapse0xa7f0fb0();
-   double synapse0xa7cd2f0();
-   double synapse0xa7d3488();
-   double synapse0xa7d34b0();
-   double synapse0xa7d0f90();
-   double synapse0xa7d8570();
-   double synapse0xa7d8598();
-   double synapse0xa7d85c0();
-   double synapse0xa7d85e8();
-   double synapse0xa7d1000();
-   double synapse0xa7d8740();
-   double synapse0xa7d0470();
-   double synapse0xa7d0498();
-   double synapse0xa7d0618();
-   double synapse0xa7d06c8();
-   double synapse0xa7d06f0();
-   double synapse0xa7d0718();
-   double synapse0xa7fc4f8();
-   double synapse0xa7fc520();
-   double synapse0xa7fc548();
-   double synapse0xa7fc570();
-   double synapse0xa7fc628();
-   double synapse0xa7fc650();
-   double synapse0xa7fc678();
-   double synapse0xa7fc6a0();
-   double synapse0xa7fc6c8();
-   double synapse0xa7fc6f0();
+   double neuron0x8b73c40();
+   double neuron0x8b73e18();
+   double neuron0x8bdee20();
+   double neuron0x8bdf018();
+   double input0x8bdf330();
+   double neuron0x8bdf330();
+   double input0x8a6ccb0();
+   double neuron0x8a6ccb0();
+   double input0x8a6cf28();
+   double neuron0x8a6cf28();
+   double input0x8a6d1a0();
+   double neuron0x8a6d1a0();
+   double input0x8a6d418();
+   double neuron0x8a6d418();
+   double input0x8a6d738();
+   double neuron0x8a6d738();
+   double input0x8bdf210();
+   double neuron0x8bdf210();
+   double synapse0x85b52a8();
+   double synapse0x8bdf4c0();
+   double synapse0x8bdf4e8();
+   double synapse0x8bdf510();
+   double synapse0x8a6ce88();
+   double synapse0x8a6ceb0();
+   double synapse0x8a6ced8();
+   double synapse0x8a6cf00();
+   double synapse0x8a6d100();
+   double synapse0x8a6d128();
+   double synapse0x8a6d150();
+   double synapse0x8a6d178();
+   double synapse0x8a6d378();
+   double synapse0x8a6d3a0();
+   double synapse0x8a6d3c8();
+   double synapse0x8a6d3f0();
+   double synapse0x8a6d610();
+   double synapse0x8a6d6c0();
+   double synapse0x8a6d6e8();
+   double synapse0x8a6d710();
+   double synapse0x8a6d8e8();
+   double synapse0x8a6d910();
+   double synapse0x8a6d938();
+   double synapse0x8a6d960();
+   double synapse0x8a6d9d0();
+   double synapse0x8a6d9f8();
+   double synapse0x8a6da20();
+   double synapse0x8a6da48();
+   double synapse0x8a6da70();
+   double synapse0x8a6da98();
 };
 
-#endif
+#endif // NNkaon_h
 

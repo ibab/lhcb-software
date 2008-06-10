@@ -1,4 +1,4 @@
-// $Id: TaggerPionSameTool.h,v 1.7 2007-03-01 20:59:23 musy Exp $
+// $Id: TaggerPionSameTool.h,v 1.8 2008-06-10 19:01:00 musy Exp $
 #ifndef USER_TAGGERPIONSAMETOOL_H 
 #define USER_TAGGERPIONSAMETOOL_H 1
 
@@ -56,6 +56,10 @@ private:
   double m_dQcut_extra_pionS;
   double m_AverageOmega;
   double m_ProbMin, m_lcs_cut;
+  double m_ghost_cut;
+  double m_PionSame_PIDNoK_cut;
+  double m_PionSame_PIDNoP_cut;
+
 };
 //===============================================================//
 #endif // USER_TAGGERPIONSAMETOOL_H

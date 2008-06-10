@@ -1,5 +1,5 @@
-#ifndef NNNNele
-#define NNNNele
+#ifndef NNele_h
+#define NNele_h
 
 class NNele { 
 public:
@@ -11,48 +11,55 @@ private:
    double input1;
    double input2;
    double input3;
-   double neuron0xba2a9b8();
-   double neuron0xba309f8();
-   double neuron0xba30b50();
-   double neuron0xba2e540();
-   double neuron0xba4e600();
-   double neuron0xba4e7f8();
-   double neuron0xba35c38();
-   double neuron0xba35e30();
-   double neuron0xba2dce0();
-   double neuron0xba2df60();
-   double neuron0xba2e6b8();
-   double synapse0xba4e758();
-   double synapse0xba4e780();
-   double synapse0xba4e7a8();
-   double synapse0xba4e7d0();
-   double synapse0xba2ab10();
-   double synapse0xba30ca8();
-   double synapse0xba30cd0();
-   double synapse0xba2e7b0();
-   double synapse0xba35d90();
-   double synapse0xba35db8();
-   double synapse0xba35de0();
-   double synapse0xba35e08();
-   double synapse0xba2e820();
-   double synapse0xba35f60();
-   double synapse0xba2dc90();
-   double synapse0xba2dcb8();
-   double synapse0xba2de38();
-   double synapse0xba2dee8();
-   double synapse0xba2df10();
-   double synapse0xba2df38();
-   double synapse0xba59d18();
-   double synapse0xba59d40();
-   double synapse0xba59d68();
-   double synapse0xba59d90();
-   double synapse0xba59e48();
-   double synapse0xba59e70();
-   double synapse0xba59e98();
-   double synapse0xba59ec0();
-   double synapse0xba59ee8();
-   double synapse0xba59f10();
+   double neuron0x8614940();
+   double neuron0x8614ad0();
+   double neuron0x8614ca8();
+   double neuron0x8614ea0();
+   double input0x86151b8();
+   double neuron0x86151b8();
+   double input0x86153c0();
+   double neuron0x86153c0();
+   double input0x8615638();
+   double neuron0x8615638();
+   double input0x86158b0();
+   double neuron0x86158b0();
+   double input0x8615b28();
+   double neuron0x8615b28();
+   double input0x8615e48();
+   double neuron0x8615e48();
+   double input0x860fb40();
+   double neuron0x860fb40();
+   double synapse0x8614908();
+   double synapse0x8615348();
+   double synapse0x8615370();
+   double synapse0x8615398();
+   double synapse0x8615598();
+   double synapse0x86155c0();
+   double synapse0x86155e8();
+   double synapse0x8615610();
+   double synapse0x8615810();
+   double synapse0x8615838();
+   double synapse0x8615860();
+   double synapse0x8615888();
+   double synapse0x8615a88();
+   double synapse0x8615ab0();
+   double synapse0x8615ad8();
+   double synapse0x8615b00();
+   double synapse0x8615d20();
+   double synapse0x8615dd0();
+   double synapse0x8615df8();
+   double synapse0x8615e20();
+   double synapse0x8615f68();
+   double synapse0x860fac8();
+   double synapse0x860faf0();
+   double synapse0x860fb18();
+   double synapse0x860fd38();
+   double synapse0x860fd60();
+   double synapse0x860fd88();
+   double synapse0x860fdb0();
+   double synapse0x860fdd8();
+   double synapse0x860fe00();
 };
 
-#endif
+#endif // NNele_h
 

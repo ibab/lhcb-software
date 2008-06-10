@@ -28,8 +28,14 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_IPs_cut",m_IPs_cut_pionS = 3.0 );
   declareProperty( "PionS_LCS_cut",   m_lcs_cut       = 3.0 );
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS   = 3.0 *GeV);
-  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS  = 1.0 *GeV);
-  declareProperty( "AverageOmega", m_AverageOmega     = 0.44 );
+  declareProperty( "PionSame_dQ_extra_cut", m_dQcut_extra_pionS = 1.5 *GeV);
+  declareProperty( "AverageOmega",    m_AverageOmega  = 0.41 );
+
+  declareProperty( "Pion_ghost_cut", m_ghost_cut = -25.0);
+  declareProperty( "PionSame_PIDNoK_cut",m_PionSame_PIDNoK_cut= 5.0);
+  declareProperty( "PionSame_PIDNoP_cut",m_PionSame_PIDNoP_cut= 10.0);
+
+
   m_nnet = 0;
   m_util = 0;
 }
@@ -69,7 +75,15 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   double ptmaxpS = -99.0;
   Particle::ConstVector::const_iterator ipart, jpart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
+
     if( (*ipart)->particleID().abspid() != 211 ) continue;
+    bool pidpass=false;
+    double PIDk= (*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
+    double PIDp=( *ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 );
+    if( PIDk==0 ) pidpass=true;
+    if( PIDk!=0 ) if(PIDk < m_PionSame_PIDNoK_cut &&
+		     PIDp < m_PionSame_PIDNoP_cut) pidpass=true;
+    if(!pidpass) continue;
 
     double Pt = (*ipart)->pt();
     double P  = (*ipart)->p();
@@ -91,6 +105,9 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut ) continue;
     if( track->type() != Track::Long ) continue;
+
+    double tsa = track->info(Track::Likelihood, 9999.);
+    if(tsa < m_ghost_cut) continue;
 
     if( Pt < ptmaxpS ) continue;
 
@@ -131,21 +148,17 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       if(!iperr) IPT = ip/iperr;
     } else IPT = -1000.; 
 
-    std::vector<double> inputs(12);
-    inputs.at(0) = B0p;
-    inputs.at(1) = B0the;
-    inputs.at(2) = m_util->countTracks(vtags);
-    inputs.at(3) = 100;
-    inputs.at(4) = ipionS->p()/GeV;
-    inputs.at(5) = ipionS->pt()/GeV;
-    inputs.at(6) = IP/IPerr;
-    inputs.at(7) = IPT;
-    inputs.at(8) = 0.;
-    inputs.at(9) = deta;
-    inputs.at(10)= dphi;
-    inputs.at(11)= dQ;
-    
-    pn = m_nnet->MLPpS( inputs );
+    std::vector<double> NNinputs(8);
+    NNinputs.at(0) = m_util->countTracks(vtags);
+    NNinputs.at(1) = AXB0->p()/GeV;
+    NNinputs.at(2) = ipionS->p()/GeV;
+    NNinputs.at(3) = ipionS->pt()/GeV;
+    NNinputs.at(4) = IP/IPerr;
+    NNinputs.at(5) = deta;
+    NNinputs.at(6) = dphi;
+    NNinputs.at(7) = dQ;
+
+    pn = m_nnet->MLPpS( NNinputs );
 
     if( pn < m_ProbMin ) return tpionS;
   }

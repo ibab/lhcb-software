@@ -4,6 +4,13 @@
 //##############################################################
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+#include "$HLTSYSROOT/options/L0.opts"
+#include "$HLTSYSROOT/options/Hlt.opts"
+//#include "$HLTSYSROOT/options/HltSelections.opts"
+
+#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
+
 #pragma print on
 //--------
 
@@ -46,14 +53,15 @@ BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 //---------------------------------------------------------------
-// Example input data 
+// Example input data BRUNEL v31
 //---------------------------------------------------------------
-//EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001668/DST/0000/00001668_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" };//bdjpsikshort
-EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001515/DST/0000/00001515_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//bsdspi
+EventSelector.Input = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002042/DST/0000/00002042_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+}; //bsjpsiphi v31
 //---------------------------------------------------------------

@@ -29,7 +29,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.4 *GeV);
   declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 4.0 );
-  declareProperty( "AverageOmega",    m_AverageOmega = 0.34 );
+  declareProperty( "AverageOmega",    m_AverageOmega = 0.356 );
   m_nnet = 0;
   m_util = 0;
 }
@@ -112,36 +112,31 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    double IP, IPerr, ip, iperr, IPT=0.;
-    double B0p = ptotB.P()/GeV;
+    double IP, IPerr;
+    double B0the= ptotB.Theta();
+    double B0phi= ptotB.Phi();
     double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
     double deta= log(tan(B0the/2.))-log(tan(ang/2.));
     double dphi= std::min(fabs(ikaonS->momentum().Phi()-B0phi), 
                           6.283-fabs(ikaonS->momentum().Phi()-B0phi));
     double dQ  = ((ptotB+ikaonS->momentum()).M() - B0mass)/GeV;
     m_util->calcIP(ikaonS, RecVert, IP, IPerr);
-    if(SecVert) {
-      m_util->calcIP(ikaonS, SecVert, ip, iperr);
-      if(!iperr) IPT = ip/iperr;
-    } else IPT = -1000.; 
+//     if(SecVert) {
+//       m_util->calcIP(ikaonS, SecVert, ip, iperr);
+//       if(!iperr) IPT = ip/iperr;
+//     } else IPT = -1000.; 
 
-    //all NNets have same inputs here, so dont change
-    //the structure. Just add variables, if needed.
-    std::vector<double> inputs(12);
-    inputs.at(0) = B0p;
-    inputs.at(1) = B0the;
-    inputs.at(2) = m_util->countTracks(vtags);
-    inputs.at(3) = 100;//tampering placeholder
-    inputs.at(4) = ikaonS->p()/GeV;
-    inputs.at(5) = ikaonS->pt()/GeV;
-    inputs.at(6) = IP/IPerr;
-    inputs.at(7) = IPT;
-    inputs.at(8) = 0.;
-    inputs.at(9) = deta;
-    inputs.at(10)= dphi;
-    inputs.at(11)= dQ;    
-   
-    pn = m_nnet->MLPkS( inputs );
+    std::vector<double> NNinputs(8);
+    NNinputs.at(0) = m_util->countTracks(vtags);
+    NNinputs.at(1) = AXB0->pt()/GeV;;
+    NNinputs.at(2) = ikaonS->p()/GeV;
+    NNinputs.at(3) = ikaonS->pt()/GeV;
+    NNinputs.at(4) = IP/IPerr;
+    NNinputs.at(5) = deta;
+    NNinputs.at(6) = dphi;
+    NNinputs.at(7) = dQ;
+
+    pn = m_nnet->MLPkS( NNinputs );
 
   }
 

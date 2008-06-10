@@ -36,11 +36,11 @@ ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";
 ToolSvc.BTaggingTool.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.ExclusiveSelection=false;
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.Muon.Selection = {
-  "RequiresDet='MUON' CombDLL(mu-pi)>'-5.0'" } ;
+  "RequiresDet='MUON' CombDLL(mu-pi)>'0.0'" } ;
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.Electron.Selection = {
-  "RequiresDet='CALO' CombDLL(e-pi)>'2.0' " } ;
+  "RequiresDet='CALO' CombDLL(e-pi)>'5.0' " } ;
 ToolSvc.BTaggingTool.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {
-  "RequiresDet='RICH' CombDLL(k-pi)>'3.0' CombDLL(k-p)>'-4.0'" };
+  "RequiresDet='RICH' CombDLL(k-pi)>'8.0' CombDLL(k-p)>'-4.0'" };
 
 //--------------
 // output levels

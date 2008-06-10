@@ -96,28 +96,22 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   //calculate omega
   double pn = 1 - m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    Gaudi::LorentzVector ptotB = AXB0->momentum();
-    double B0the  = ptotB.Theta();
-    double B0p    = ptotB.P()/GeV;
-    double IP, IPerr, ip, iperr, IPT=0.;
 
+    double IP, IPerr;
     m_util->calcIP(imuon, RecVert, IP, IPerr); //calculate IP
-    if(SecVert) {
-      m_util->calcIP(imuon, SecVert, ip, iperr); //calculate IPT
-      if(!iperr) IPT = ip/iperr;
-    } else IPT = -1000.; 
+//     if(SecVert) {
+//       m_util->calcIP(imuon, SecVert, ip, iperr); //calculate IPT
+//       if(!iperr) IPT = ip/iperr;
+//     } else IPT = -1000.; 
 
-    std::vector<double> inputs(8);
-    inputs.at(0) = B0p;
-    inputs.at(1) = B0the;
-    inputs.at(2) = m_util->countTracks(vtags);
-    inputs.at(3) = 100;
-    inputs.at(4) = imuon->p()/GeV;
-    inputs.at(5) = imuon->pt()/GeV;
-    inputs.at(6) = IP/IPerr;
-    inputs.at(7) = IPT;
-    
-    pn = m_nnet->MLPm( inputs );
+    std::vector<double> NNinputs(5);
+    NNinputs.at(0) = m_util->countTracks(vtags);
+    NNinputs.at(1) = AXB0->pt()/GeV;;
+    NNinputs.at(2) = imuon->p()/GeV;
+    NNinputs.at(3) = imuon->pt()/GeV;
+    NNinputs.at(4) = IP/IPerr;
+   
+    pn = m_nnet->MLPm( NNinputs );
 
   }
 

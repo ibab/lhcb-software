@@ -27,7 +27,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareProperty( "CombineTaggersName",
                    m_CombineTaggersName = "CombineTaggersProbability" );
-  declareProperty( "UseVtxChargeWithOS", m_UseVtxOnlyWithoutOS = true );
+  declareProperty( "UseVtxChargeWithoutOS", m_UseVtxOnlyWithoutOS = false );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin    = 0.012 );
@@ -63,8 +63,8 @@ StatusCode BTaggingTool::initialize() {
   }
   m_physd->imposeOutputLocation(m_outputLocation);
 
-  // Register to the Incident service to be notified at the end of one event
-  incSvc()->addListener( this, IncidentType::EndEvent, 100 );
+  // Register to the Incident service to be notified 
+  incSvc()->addListener( this, IncidentType::EndEvent );
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
   if( ! m_util ) {

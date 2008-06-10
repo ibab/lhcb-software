@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.7 2007-03-01 20:59:23 musy Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.8 2008-06-10 19:01:00 musy Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -52,6 +52,8 @@ private:
   double m_lcs_kl, m_lcs_ku;
   double m_IP_kl, m_IP_ku;
   double m_AverageOmega;
+  double m_PIDkp_extracut;
+  double m_ghost_cut;
 
 };
 

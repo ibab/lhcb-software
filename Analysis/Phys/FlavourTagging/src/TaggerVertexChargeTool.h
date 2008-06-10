@@ -1,4 +1,4 @@
-// $Id: TaggerVertexChargeTool.h,v 1.5 2007-06-21 10:03:17 musy Exp $
+// $Id: TaggerVertexChargeTool.h,v 1.6 2008-06-10 19:01:00 musy Exp $
 #ifndef USER_TAGGERVERTEXCHARGETOOL_H 
 #define USER_TAGGERVERTEXCHARGETOOL_H 1
 
@@ -43,7 +43,7 @@ private:
   std::string m_SecondaryVertexToolName;
 
   std::string m_CombinationTechnique;
-  double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_P2;
+  double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_Gt075;
   double m_wSameSign2, m_wSameSignMoreThan2;
   double m_ProbMin;
 

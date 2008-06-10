@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.11 2007-04-26 13:00:22 cattanem Exp $
+// $Id: TaggerElectronTool.h,v 1.12 2008-06-10 19:01:00 musy Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -54,6 +54,7 @@ private:
   double m_VeloChMax;
   double m_EoverP, m_lcs_cut_ele;  
   double m_AverageOmega;
+  double m_ghost_cut_ele;
 
 };
 

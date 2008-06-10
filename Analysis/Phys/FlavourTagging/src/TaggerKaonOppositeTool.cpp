@@ -22,16 +22,19 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.5 *GeV );
-  declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 3.0 *GeV );
+  declareProperty( "Kaon_Pt_cut",   m_Pt_cut_kaon        = 0.6 *GeV );
+  declareProperty( "Kaon_P_cut",    m_P_cut_kaon         = 4.0 *GeV );
   declareProperty( "Kaon_IP_cut",   m_IP_cut_kaon        = 3.5 );
 
   declareProperty( "Kaon_LongTrack_LCS_cut",    m_lcs_kl = 2.5 );
-  declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 5.0 );
+  declareProperty( "Kaon_upstreamTrack_LCS_cut",m_lcs_ku = 2.0 );
 
-  declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 2.0 );
-  declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 2.0 );
-  declareProperty( "AverageOmega", m_AverageOmega = 0.355 );
+  declareProperty( "Kaon_PIDkp_extracut", m_PIDkp_extracut= -1.0 );
+  declareProperty( "Kaon_ghost_cut",      m_ghost_cut     =-20.0 );
+
+  declareProperty( "Kaon_LongTrack_IP_cut",     m_IP_kl  = 999.0 );
+  declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 999.0 );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.344 );
   m_nnet = 0;
   m_util = 0;
 }
@@ -71,6 +74,14 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
+
+    if((*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 )
+       - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
+	< m_PIDkp_extracut ) continue;
+
+    double tsa= (*ipart)->proto()->track()->info(Track::Likelihood, 9999.);
+    if(tsa < m_ghost_cut) continue;
+
     double Pt = (*ipart)->pt();
     if( Pt < m_Pt_cut_kaon )  continue;
     double P = (*ipart)->p();
@@ -105,28 +116,22 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    Gaudi::LorentzVector ptotB = AXB0->momentum();
-    double B0the  = ptotB.Theta();
-    double B0p    = ptotB.P()/GeV;
-    double IP, IPerr, ip, iperr, IPT=0.;
 
+    double IP, IPerr;
     m_util->calcIP(ikaon, RecVert, IP, IPerr);
-    if(SecVert) {
-      m_util->calcIP(ikaon, SecVert, ip, iperr);
-      if(!iperr) IPT = ip/iperr;
-    } else IPT = -1000.; 
+//     if(SecVert) {
+//       m_util->calcIP(ikaon, SecVert, ip, iperr);
+//       if(!iperr) IPT = ip/iperr;
+//     } else IPT = -1000.; 
 
-    std::vector<double> inputs(8);
-    inputs.at(0) = B0p;
-    inputs.at(1) = B0the;
-    inputs.at(2) = m_util->countTracks(vtags);
-    inputs.at(3) = 100;
-    inputs.at(4) = ikaon->p()/GeV;
-    inputs.at(5) = ikaon->pt()/GeV;
-    inputs.at(6) = IP/IPerr;
-    inputs.at(7) = IPT;
-    
-    pn = m_nnet->MLPk( inputs );
+    std::vector<double> NNinputs(5);
+    NNinputs.at(0) = m_util->countTracks(vtags);
+    NNinputs.at(1) = AXB0->pt()/GeV;;
+    NNinputs.at(2) = ikaon->p()/GeV;
+    NNinputs.at(3) = ikaon->pt()/GeV;
+    NNinputs.at(4) = IP/IPerr;
+   
+    pn = m_nnet->MLPk( NNinputs );
 
   }
 

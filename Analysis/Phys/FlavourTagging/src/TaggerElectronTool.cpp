@@ -23,12 +23,13 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_v1" );
-  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.2 * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 5.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 4.0 );
+  declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 4.0 * GeV );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 3.0 );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -25.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.8 );
-  declareProperty( "EoverP",       m_EoverP     = 0.92 );
+  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.7 );
+  declareProperty( "EoverP",       m_EoverP     = 0.90 );
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
   m_util = 0;
@@ -85,7 +86,11 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
     if( lcs > m_lcs_cut_ele ) continue;
-    if(track->type() != Track::Long) continue;
+    if(track->type() != Track::Long 
+       && track->type() != Track::Upstream) continue;
+
+    double tsa = track->info(Track::Likelihood, 9999.);
+    if(tsa < m_ghost_cut_ele) continue;
 
     double eOverP  = -999;
     if( m_electron->set(*ipart) ) { 
@@ -110,27 +115,22 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   //calculate omega
   double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
-    Gaudi::LorentzVector ptotB = AXB0->momentum();
-    double B0the  = ptotB.Theta();
-    double B0p    = ptotB.P()/GeV;
-    double IP, IPerr, ip, iperr, IPT=0.;
 
+    double IP, IPerr;
     m_util->calcIP(iele, RecVert, IP, IPerr);
-    if(SecVert) {
-      m_util->calcIP(iele, SecVert, ip, iperr);
-      if(!iperr) IPT = ip/iperr;
-    } else IPT = -1000.; 
-    std::vector<double> inputs(8);
-    inputs.at(0) = B0p;
-    inputs.at(1) = B0the;
-    inputs.at(2) = m_util->countTracks(vtags);
-    inputs.at(3) = 100;
-    inputs.at(4) = iele->p()/GeV;
-    inputs.at(5) = iele->pt()/GeV;
-    inputs.at(6) = IP/IPerr;
-    inputs.at(7) = IPT;
+//     if(SecVert) {
+//       m_util->calcIP(iele, SecVert, ip, iperr);
+//       if(!iperr) IPT = ip/iperr;
+//     } else IPT = -1000.; 
+
+    std::vector<double> NNinputs(5);
+    NNinputs.at(0) = m_util->countTracks(vtags);
+    NNinputs.at(1) = AXB0->pt()/GeV;;
+    NNinputs.at(2) = iele->p()/GeV;
+    NNinputs.at(3) = iele->pt()/GeV;
+    NNinputs.at(4) = IP/IPerr;
     
-    pn = m_nnet->MLPe( inputs );
+    pn = m_nnet->MLPe( NNinputs );
 
   }
 
