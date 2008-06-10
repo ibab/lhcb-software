@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.5 2008-06-05 19:01:59 niko Exp $
+// $Id: DimRPCFileReader.h,v 1.6 2008-06-10 12:36:13 apuignav Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -8,12 +8,15 @@
 #include "GaudiOnline/OnlineService.h"
 #include "OnlineKernel/RTL/rtl.h"
 #include <GaudiKernel/IEventProcessor.h>
+#include "DimRPCFileReaderCommand.h"
+# include <time.h>
 
 // Forward declarations
 class IIncidentSvc;
 class IDataProvider;
 class IEvtSelector;
 class IEventProcessor;
+class Command;
 
 /*
  *   LHCb namespace declaration
@@ -52,17 +55,23 @@ namespace LHCb  {
     void*             m_lock;
     /// DIM RPC handles
     DIMRPC            m_rpc;
-    /// Buffer with reply data after successful event processing.
+    /// Command class
+    Command*          m_command;
+    /// Buffer with reply data after successful event processing
     std::string       m_reply;
     /// File ID info
     int             m_fileID;
-
     /// Static DIM callback for command input
     static void cmndCallback(void* tag, void* address, int* size);
     /// Service for publishing info on read events
     static void publishEvents(void* tag, void** buf, int* size, int* first);
     void handleCommand(const char* address, int size);
-
+    /// Timer for testing purposes
+    time_t m_timerStartPrep;
+    time_t m_timerStartProc;
+    time_t m_timerStopPrep;
+    time_t m_timerStopProc;
+    
   public:
     /// Standard Constructor
     DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc);
@@ -78,8 +87,6 @@ namespace LHCb  {
     void handle(const Incident& inc);
     /// IRunable implementation : Run the class implementation
     virtual StatusCode run();
-    /// Testing Python module
-    int sendData();
   };
 }      // End namespace LHCb
 #endif // GAUDIONLINE_DIMRPCFILEREADER_H
