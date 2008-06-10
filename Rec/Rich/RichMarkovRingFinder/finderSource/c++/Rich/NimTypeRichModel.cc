@@ -205,7 +205,8 @@ namespace Lester
     const double x=rWobbled*cos(theta)+c.centre().x();
     const double y=rWobbled*sin(theta)+c.centre().y();
     return Hit(x,y);
-  };
+  }
+
   double NimTypeRichModel::priorProbabilityOfHitDueToCircle(const Small2Vector & p, const CircleParams & cp) const {
     const double alpha = circleProbabilityDistributionAlphaParameter;
     const double alphaSq = alpha*alpha;
@@ -219,7 +220,7 @@ namespace Lester
     const double substituteForPow = ( alpha==2 ? 1 : std::pow(r/r0,alpha-two) );
     const double ans = 1./(MathsConstants::twoPi)/sqrt(MathsConstants::twoPi*epsSq)*substituteForPow*exp(-0.5*(logsq/epsSq + alphaSq*epsSq  )) / (r*r);
     return ans;
-  };
+  }
 
   double 
   NimTypeRichModel::singleHitProbabilityDistributionGivenEventDescription(const Hit & hit,
