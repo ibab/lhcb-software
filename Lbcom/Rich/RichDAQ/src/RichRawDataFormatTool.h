@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.28 2007-12-12 13:58:00 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.29 2008-06-10 16:17:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -274,6 +274,12 @@ namespace Rich
 
       /// Map of the number of time each L1 board ID is found per event (debugging variable)
       mutable Rich::Map<Rich::DAQ::Level1ID,unsigned int> m_l1IdsDecoded;
+
+      /** Turn on/off detailed error messages.
+       *
+       *  VERY verbose in case of frequent errors
+       */
+      bool m_verboseErrors;
 
     };
 

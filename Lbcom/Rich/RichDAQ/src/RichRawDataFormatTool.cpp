@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.67 2008-06-03 12:46:57 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.68 2008-06-10 16:17:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -56,13 +56,14 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "PrintSummary",       m_summary   = true );
   declareProperty( "MaxHPDOccupancy",    m_maxHPDOc );
   declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
-  declareProperty( "UseZeroSuppression", m_zeroSupp           = true );
+  declareProperty( "UseZeroSuppression", m_zeroSupp           = true  );
   declareProperty( "UseExtendedFormat",  m_extendedFormat     = false );
   declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = false );
-  declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true );
-  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true );
-  declareProperty( "CheckBXIDs",         m_checkBxIDs         = true );
+  declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true  );
+  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true  );
+  declareProperty( "CheckBXIDs",         m_checkBxIDs         = true  );
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false );
+  declareProperty( "VerboseErrors",      m_verboseErrors      = false );
 }
 
 // Destructor
@@ -800,7 +801,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             }
             catch ( const GaudiException & expt )
             {
-              Error( expt.message() );
+              Error( expt.message() ).ignore();
             }
             // If the HPD smartID was successfully found, continue with decoding
             if ( hpdID.isValid() )
@@ -824,7 +825,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               if ( !OK )
               {
                 std::ostringstream mess;
-                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = " << ingressWord.eventID()
+                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = " 
+                     << ingressWord.eventID()
                      << " HPDHeader = " << hpdBank->eventID();
                 Error( mess.str() );
               }
@@ -836,7 +838,13 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
                 // Do data integrity checks
                 OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
-                if ( !OK ) Warning( "HPD data block failed integrity check" );
+                if ( !OK ) 
+                {
+                  std::ostringstream mess;
+                  mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
+                       << " data block failed integrity check";
+                  Error( mess.str() );
+                }
 
                 if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
                 {
@@ -870,7 +878,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                 }
 
               }
-              else
+              else if ( m_verboseErrors )
               {
                 // decoding error ....
                 error() << "Error in decoding -> Data is rejected for HPD " << hpdID << endreq;
@@ -1025,7 +1033,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
         }
 
       }
-      else
+      else if ( m_verboseErrors )
       {
         // decoding error ....
         error() << "Corruption in decoding -> Data is rejected for HPD " << hpdID << endreq;
@@ -1274,7 +1282,7 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
            << " '" << expt.message() << "'";
       Error( mess.str() );
       // dump the full bank
-      dumpRawBank( *bank, error() );
+      if ( m_verboseErrors ) dumpRawBank( *bank, error() );
     }
   }
 
