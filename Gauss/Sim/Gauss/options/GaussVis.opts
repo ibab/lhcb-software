@@ -1,4 +1,4 @@
-// $Id: GaussVis.opts,v 1.11 2008-05-08 20:29:29 gcorti Exp $ 
+// $Id: GaussVis.opts,v 1.12 2008-06-10 18:50:12 gcorti Exp $ 
 
 /** @file 
  *  The base configuration file to run Gauss exceutable with 
@@ -10,7 +10,10 @@
  *  @date 2008-04-29
  */
 
-#include "$GAUSSOPTS/lhcb-200802.opts"
+#include "$GAUSSOPTS/lhcb-2008.opts"
+//#include "$GAUSSOPTS/BCMSimulation.opts"
+//#include "$GAUSSOPTS/BeamScintillators.opts"
+
 
 #include "$PARTICLEGUNSROOT/options/ParticleGun.opts"
 

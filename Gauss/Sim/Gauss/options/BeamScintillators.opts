@@ -1,4 +1,4 @@
-// $Id: BeamScintillators.opts,v 1.1 2008-05-08 20:32:19 gcorti Exp $
+// $Id: BeamScintillators.opts,v 1.2 2008-06-10 18:50:04 gcorti Exp $
 
 /** @file
  *
@@ -10,16 +10,10 @@
  */
 
 // Switch on geometry upstream and scintillator planes
-Geo.StreamItems += {"/dd/Structure/LHCb/UpstreamRegion" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BlockWallBefMag" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/GValve" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane1" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane2" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeBeforeVelo" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeSupportBeforeVelo" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeMobileSupport" };
+Geo.StreamItems += {"/dd/Structure/LHCb/UpstreamRegion/BlockWallUpstr" };
 Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/PipeJunctionBeforeVelo" };
-Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BcmUp" };  
+Geo.StreamItems += { "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo" };  
+
 
 
 // Retrieve hits from Scintillator planes
@@ -27,8 +21,8 @@ DetectorsHits.Members += { "GetTrackerHitsAlg/GetScintillatorHits"};
 GetScintillatorHits.CollectionName = "VPlaneSDet/Hits";
 GetScintillatorHits.MCHitsLocation = "/Event/MC/Scintillators/Hits";
 GetScintillatorHits.Detectors = { 
-  "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane1", 
-  "/dd/Structure/LHCb/BeforeMagnetRegion/VPlane2" 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/VPlane1", 
+  "/dd/Structure/LHCb/BeforeMagnetRegion/BeforeVelo/VPlane2" 
 };
 GetScintillatorHits.ExtendedInfo = true;
 
