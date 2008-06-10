@@ -64,7 +64,7 @@ namespace FPE {
     // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
     // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
     // VS7
-    mask_type get() { asm volatile("fwait");  return _controlfp(0,0); }
+    mask_type get() { __asm fwait;  return _controlfp(0,0); }
     mask_type disable(mask_type mask) { return _controlfp(~mask,_MCW_EM);}
     mask_type enable(mask_type mask)  { return _controlfp( mask,_MCW_EM);}
     const std::map<std::string,mask_type>& map() {
@@ -140,7 +140,9 @@ namespace FPE {
      */
     Guard( mask_type mask,
            bool disable   = false )
-      : m_initial( disable ? FPE::detail::disable(mask) : FPE::detail::enable(mask) )
+      : m_initial( disable ? 
+                   FPE::detail::disable(mask) : 
+                   FPE::detail::enable(mask)  )
     { }
 
     /** Default Constructor. Activates protection for all known exceptions
