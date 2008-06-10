@@ -36,11 +36,14 @@ namespace FPE {
 #if defined(linux) && defined(__GNUC__)
     static const bool has_working_implementation = true;
     typedef int mask_type;
-    mask_type disable(mask_type mask) { return fedisableexcept(mask); }
+    // make sure the FPU has caught up by explicitly issueing an fwait...
+    mask_type get()  { asm volatile("fwait"); return fegetexcept() & FE_ALL_EXCEPT; }
+    mask_type disable(mask_type mask) { return fedisableexcept( mask & FE_ALL_EXCEPT ); }
     mask_type enable(mask_type mask)  {
+      mask &= FE_ALL_EXCEPT ;
       feclearexcept(mask); // remove any 'stale' exceptions before switching on trapping
-      // otherwise we immediately trigger an exception...
-      return feenableexcept(mask);
+                           // otherwise we immediately trigger an exception...
+      return feenableexcept(mask) & FE_ALL_EXCEPT;
     }
     const std::map<std::string,mask_type>& map() {
       static std::map<std::string,mask_type> m = boost::assign::map_list_of
@@ -61,6 +64,7 @@ namespace FPE {
     // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
     // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
     // VS7
+    mask_type get() { asm volatile("fwait");  return _controlfp(0,0); }
     mask_type disable(mask_type mask) { return _controlfp(~mask,_MCW_EM);}
     mask_type enable(mask_type mask)  { return _controlfp( mask,_MCW_EM);}
     const std::map<std::string,mask_type>& map() {
@@ -78,6 +82,7 @@ namespace FPE {
 #else
     static const bool has_working_implementation = false;
     typedef int mask_type;
+    mask_type get() { return 0; }
     mask_type disable(mask_type) { return 0; }
     mask_type enable(mask_type) { return 0; }
     const std::map<std::string,mask_type>& map() {
@@ -112,8 +117,8 @@ namespace FPE {
    *  FPE::Guard::mask_type mask = FPE::Guard::mask( vec.begin(), vec.end() );
    *  bool disable = true;
    *  FPE::Guard guard( mask , disable );
-   *  @endcode 
-   * 
+   *  @endcode
+   *
    *  @author Gerhard Raven
    *  @date   09/06/2008
    */
@@ -131,30 +136,35 @@ namespace FPE {
      *  @attention Note: to create a (valid) mask, use FPE::Guard::mask
      *
      *  @param The mask of exceptions to guard against
-     *  @param disable Disable or enable the given exceptions 
+     *  @param disable Disable or enable the given exceptions
      */
-    Guard( mask_type mask, 
+    Guard( mask_type mask,
            bool disable   = false )
       : m_initial( disable ? FPE::detail::disable(mask) : FPE::detail::enable(mask) )
     { }
 
     /** Default Constructor. Activates protection for all known exceptions
      *
-     *  @param disable Disable or enable the given exceptions 
+     *  @param disable Disable or enable the given exceptions
      */
     explicit Guard( bool disable = false )
-      : m_initial( disable ? 
-                   FPE::detail::disable ( FPE::detail::s_default_guard_mask ) : 
+      : m_initial( disable ?
+                   FPE::detail::disable ( FPE::detail::s_default_guard_mask ) :
                    FPE::detail::enable  ( FPE::detail::s_default_guard_mask ) )
     { }
-    
+
     /// Destructor. Returns system to the same state as before the object was constructed
     ~Guard()
     {
       //TODO: in disable mode, report which FPE happened between c'tor and d'tor.
       FPE::detail::disable( ~m_initial );
       mask_type mask = FPE::detail::enable( m_initial );
-      if (mask!=m_initial) { throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE); }
+      if (mask!=m_initial) {  // retry once, in case the FPU is a bit behind... yes, that happens
+          mask = FPE::detail::get();
+          if (mask!=m_initial) {
+            throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE);
+          }
+      }
     }
 
     /**  Convert a range of strings (i.e. Iter::value_type

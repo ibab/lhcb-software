@@ -3,6 +3,10 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+! 2008-06-10 - Gerhard Raven
+ - FPE::Guard: take into account that the FPU might not yet have completed
+   its transition when checking for restoration of the initial state. Add
+   an explicit 'fwait' in that case, and check again.
 
 ! 2008-06-09 - Chris Jones
  - Improve doxygen comments in FPE code + add a simple constructor
