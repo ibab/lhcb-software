@@ -4,7 +4,13 @@
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
-!========================= BcmMoniSim v1r0 2008-02-15 =========================
+!======================== BcmMoniSim v1r1 2008-06-10 ========================
+! 2008-06-10 - Gloria CORTI
+ - Adapt options to new path in detector element upstream of VELO for
+   geometry head-20080516
+
+!======================== BcmMoniSim v1r0 2008-02-15 ========================
 ! 2008-02-15 - Magnus Lieng
  - Created a new package BcmMoniSim.
 
+!============================================================================
