@@ -8,7 +8,10 @@
 
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt.opts"
-#include "$HLTSYSROOT/options/HltSelections.opts"
+//#include "$HLTSYSROOT/options/HltSelections.opts"
+
+#include "$DAVINCIROOT/options/DaVinciMainSeqFixes.opts"
+
 #pragma print on
 
 ///example Bd Channel Selection ----------------------------------
@@ -48,6 +51,9 @@
 ///or Cheated Selection ------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
 BTaggingAnalysis.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+// ToolSvc.BTaggingTool.OutputLevel = 2;
+// BTagging.OutputLevel             = 2;
+// BTaggingChecker.OutputLevel      = 2;
 
 ///---------------------------------------------------------------
 ///               BTaggingAnalysis
@@ -73,5 +79,7 @@ HistogramPersistencySvc.OutputFile = "histos.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='analysis.root' TYP='ROOT' OPT='NEW'"};
 
-EventSelector.Input = { "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-lumi2/00001513/DST/0000/00001513_00000012_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" }; //bskk
+EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002042/DST/0000/00002042_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //bsjpsiphi v31
+
+//EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002037/DST/0000/00002037_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; // bdpipi v31
 //##############################################################

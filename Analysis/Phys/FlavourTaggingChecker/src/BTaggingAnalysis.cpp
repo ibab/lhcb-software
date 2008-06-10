@@ -33,9 +33,7 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   declareProperty( "SecondaryVertexType", m_SVtype    = "SVertexTool" );
   declareProperty( "TagOutputLocation", m_TagLocation = FlavourTagLocation::Default );
   declareProperty( "AssociatorInputData", m_setInputData );
-
   declareProperty( "UseMCTrueFlavour", m_UseMCTrueFlavour = true );
-
   declareProperty( "RequireTrigger",     m_requireTrigger = true );
 
   declareProperty( "IPPU_cut",     m_IPPU_cut    = 3.0 );
@@ -187,37 +185,38 @@ StatusCode BTaggingAnalysis::initialize() {
 
     //particles
     nt->addItem ("N",     m_N, 0, 200 ); //limit
-    nt->addIndexedItem ("ID",     m_N, m_ID);
-    nt->addIndexedItem ("P",      m_N, m_P);
-    nt->addIndexedItem ("Pt",     m_N, m_Pt);
-    nt->addIndexedItem ("phi",    m_N, m_phi);
-    nt->addIndexedItem ("ch",     m_N, m_ch);
-    nt->addIndexedItem ("ip",     m_N, m_IP);
-    nt->addIndexedItem ("iperr",  m_N, m_IPerr);
-    nt->addIndexedItem ("ipPU",   m_N, m_IPPU);
-    nt->addIndexedItem ("trtyp",  m_N, m_trtyp);
-    nt->addIndexedItem ("lcs",    m_N, m_lcs);
-    nt->addIndexedItem ("distPhi",m_N, m_distphi);
-    nt->addIndexedItem ("veloch", m_N, m_veloch);
-    nt->addIndexedItem ("EOverP", m_N, m_EOverP);
-    nt->addIndexedItem ("PIDe",   m_N, m_PIDe);
-    nt->addIndexedItem ("PIDm",   m_N, m_PIDm);
-    nt->addIndexedItem ("PIDk",   m_N, m_PIDk);
-    nt->addIndexedItem ("PIDp",   m_N, m_PIDp);
-    nt->addIndexedItem ("PIDfl",  m_N, m_PIDfl);
-    nt->addIndexedItem ("RichPID",m_N, m_RichPID);
-    nt->addIndexedItem ("IPT"    ,m_N, m_IPT);
-    nt->addIndexedItem ("MCID",   m_N, m_MCID);
-    nt->addIndexedItem ("MCP",    m_N, m_MCP);
-    nt->addIndexedItem ("MCPt",   m_N, m_MCPt);
-    nt->addIndexedItem ("MCphi"  ,m_N, m_MCphi);
-    nt->addIndexedItem ("MCz"    ,m_N, m_MCz);
-    nt->addIndexedItem ("mothID" ,m_N, m_mothID);
-    nt->addIndexedItem ("ancID"  ,m_N, m_ancID);
-    nt->addIndexedItem ("bFlag"  ,m_N, m_bFlag);
-    nt->addIndexedItem ("xFlag"  ,m_N, m_xFlag);
-    nt->addIndexedItem ("vFlag",  m_N, m_vFlag);
- 
+    nt->addItem ("ID",     m_N, m_ID);
+    nt->addItem ("P",      m_N, m_P);
+    nt->addItem ("Pt",     m_N, m_Pt);
+    nt->addItem ("phi",    m_N, m_phi);
+    nt->addItem ("ch",     m_N, m_ch);
+    nt->addItem ("ip",     m_N, m_IP);
+    nt->addItem ("iperr",  m_N, m_IPerr);
+    nt->addItem ("ipPU",   m_N, m_IPPU);
+    nt->addItem ("trtyp",  m_N, m_trtyp);
+    nt->addItem ("lcs",    m_N, m_lcs);
+    nt->addItem ("tsal",   m_N, m_tsal);
+    nt->addItem ("distPhi",m_N, m_distphi);
+    nt->addItem ("veloch", m_N, m_veloch);
+    nt->addItem ("EOverP", m_N, m_EOverP);
+    nt->addItem ("PIDe",   m_N, m_PIDe);
+    nt->addItem ("PIDm",   m_N, m_PIDm);
+    nt->addItem ("PIDk",   m_N, m_PIDk);
+    nt->addItem ("PIDp",   m_N, m_PIDp);
+    nt->addItem ("PIDfl",  m_N, m_PIDfl);
+    nt->addItem ("RichPID",m_N, m_RichPID);
+    nt->addItem ("IPT"    ,m_N, m_IPT);
+    nt->addItem ("MCID",   m_N, m_MCID);
+    nt->addItem ("MCP",    m_N, m_MCP);
+    nt->addItem ("MCPt",   m_N, m_MCPt);
+    nt->addItem ("MCphi"  ,m_N, m_MCphi);
+    nt->addItem ("MCz"    ,m_N, m_MCz);
+    nt->addItem ("mothID" ,m_N, m_mothID);
+    nt->addItem ("ancID"  ,m_N, m_ancID);
+    nt->addItem ("bFlag"  ,m_N, m_bFlag);
+    nt->addItem ("xFlag"  ,m_N, m_xFlag);
+    nt->addItem ("vFlag",  m_N, m_vFlag);
+
     //Particles FITTED
     nt->addItem ("SVx",      m_SVx);
     nt->addItem ("SVy",      m_SVy);
@@ -346,6 +345,17 @@ StatusCode BTaggingAnalysis::execute() {
 	  << "  daughters, B-Mass=" << BSmass 
 	  << "  pT="<<AXBS->pt()/Gaudi::Units::GeV<< endreq;
 
+//   int numfigli=axdaugh.size();
+//   if(numfigli>0) info()<<"figli "<< axdaugh.at(0)->particleID().pid();
+//   if(numfigli>1) info()<<" , "<< axdaugh.at(1)->particleID().pid();
+//   if(numfigli>2) info()<<" , "<< axdaugh.at(2)->particleID().pid();
+//   if(numfigli>3) info()<<" , "<< axdaugh.at(3)->particleID().pid();
+//   if(numfigli>4) info()<<" , "<< axdaugh.at(4)->particleID().pid();
+//   if(numfigli>5) info()<<" , "<< axdaugh.at(5)->particleID().pid();
+//   if(numfigli>6) info()<<" , "<< axdaugh.at(6)->particleID().pid();
+//   info()<<endreq;
+
+
   //TIS TOS ----------------------------------------
   m_L0TisTos  = 0;
   m_HltTisTos = 0;
@@ -380,7 +390,7 @@ StatusCode BTaggingAnalysis::execute() {
     m_sPt[m_M]  = (*ip)->pt()/Gaudi::Units::GeV;
     m_sPhi[m_M] = (*ip)->momentum().Phi();
     m_sMass[m_M]= (*ip)->momentum().M() /Gaudi::Units::GeV;
-    debug() << "daughter ID="<< m_sID[m_M] <<"  P="<<m_sP[m_M]<<endreq;
+    //info()<<m_M<< ".  Daughter ID="<< m_sID[m_M] <<"  Mass="<<m_sMass[m_M]<<endreq;
 
     const Vertex* endv = (*ip)->endVertex();
     if(endv){
@@ -545,7 +555,7 @@ StatusCode BTaggingAnalysis::execute() {
     if( (*ip)->p()  > 200000 ) continue;
     if( (*ip)->pt() >  10000 ) continue;
     if( m_util->isinTree(*ip, axdaugh, distphi) ) continue ; 
-    if( distphi < m_distphi_cut ) continue;
+    //if( distphi < m_distphi_cut ) continue;
 
     //calculate the min IP wrt all pileup vtxs
     double ippu, ippuerr;
@@ -610,6 +620,8 @@ StatusCode BTaggingAnalysis::execute() {
 
     m_util->isinTree( axp, axdaugh, distphi );
 
+    m_tsal[m_N]   = track->info(Track::Likelihood, 9999.);
+
     //calculate signed IP wrt RecVert
     double IP, IPerr;
     if(!(axp->particleID().hasBottom())) m_util->calcIP(axp, RecVert, IP, IPerr);
@@ -639,7 +651,7 @@ StatusCode BTaggingAnalysis::execute() {
     m_IPPU[m_N]  = IPPU;
     m_lcs[m_N]   = lcs;
     m_distphi[m_N]= distphi;
-
+    
     // electrons
     m_PIDe[m_N] = proto->info( ProtoParticle::CombDLLe, -1000.0 );
 
@@ -687,7 +699,7 @@ StatusCode BTaggingAnalysis::execute() {
     for(kp = Pfit.begin(); kp != Pfit.end(); kp++) {
       if( axp == *kp ) {m_vFlag[m_N] = 1; break;}
     }
-  
+ 
     //-------------------------------------------------------
     debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
     debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
@@ -706,13 +718,16 @@ StatusCode BTaggingAnalysis::execute() {
     m_ancID[m_N] = 0;
     m_bFlag[m_N] = 0;
     m_xFlag[m_N] = 0;
+    long   MCID  = 0;
 
     const MCParticle* mcp = m_linkLinks->first( axp );
     if( mcp ) {
-      m_MCID[m_N]   = mcp->particleID().pid();
+
       m_MCP[m_N]    = mcp->momentum().P()/Gaudi::Units::GeV;
       m_MCPt[m_N]   = mcp->pt()/Gaudi::Units::GeV;
       m_MCphi[m_N]  = mcp->momentum().phi();
+
+      MCID  =  mcp->particleID().pid();
 
       const MCParticle* mother = mcp->mother();
       if(mother) {
@@ -732,11 +747,14 @@ StatusCode BTaggingAnalysis::execute() {
                   <<" P="<< mcp->momentum().P() << endreq;
         }
       }
+      m_MCID[m_N] = MCID;
 
       if(BS) m_xFlag[m_N] = m_util->comes_from_excitedB(BS, mcp);
       if(m_xFlag[m_N]) debug()<<" comes_from_excitedB="<< m_xFlag[m_N] << endreq;
 
     }//if( mcp )
+    // info()<<m_N<< ".  ID="<< m_ID[m_N] <<"  MCID="<<m_MCID[m_M]<<endreq;
+    //info()<<m_N<< ")  ID="<< ID <<"  MCID="<<MCID<<endreq;
 
     //---------------
     if(m_N<199) m_N++;

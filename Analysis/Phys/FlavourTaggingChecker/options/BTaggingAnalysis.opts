@@ -10,7 +10,14 @@ ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
 ApplicationMgr.DLLs   += { "DaVinciMCTools" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MySeqTag" };
 MySeqTag.Members      += { "FilterToFixOppositeBFractions" };
+
+MySeqTag.Members      += { "TrackAddLikelihood" };
+MySeqTag.Members      += { "NeuralNetTmva" };
+
 MySeqTag.Members      += { "BTaggingAnalysis" };
+
+#include "$NNTOOLSROOT/options/NeuralNetTmva.opts"
+TrackAddLikelihood.TrackMatching_likTool.otEff   = 0.9;
 FilterToFixOppositeBFractions.ActivateCorrection = true;
 
 ///---------------------------------------------------------------

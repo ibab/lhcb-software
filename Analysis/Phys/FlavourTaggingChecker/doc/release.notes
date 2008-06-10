@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.32 2008-04-24 14:51:09 jpalac Exp $
+! $Id: release.notes,v 1.33 2008-06-10 19:06:57 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-06-10 - Marco Musy
+ - revision and retuning for Brunel v31 data
+ - Increment to v3r0
 
 !===================== FlavourTaggingChecker v2r7 2008-04-24 ===============
 
