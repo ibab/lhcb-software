@@ -1,4 +1,4 @@
-// $Id: DimCmdServer.cpp,v 1.5 2008-06-09 15:06:06 evh Exp $
+// $Id: DimCmdServer.cpp,v 1.6 2008-06-10 12:27:52 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -28,7 +28,7 @@
 
 //HDS =HistogramDataService but used as generic name for anything on store
 static IHistogramSvc* HDS = 0; 
-static IService* m_HDS = 0;
+//static IService* m_HDS = 0;
 static char *nextcommand = 0;
 
 DimCmdServer::DimCmdServer(std::string name, ISvcLocator* svclocator) : 

@@ -108,16 +108,26 @@ StatusCode UpdateAndReset::execute() {
   
   msg << MSG::DEBUG << "*****************************************************************************" << endreq;
   msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
+  msg << MSG::DEBUG << "********************************************************************" << endreq;
+  msg << MSG::DEBUG << "The delayed values published in MonRate are:" << endreq;
+  msg << MSG::DEBUG << "m_runNumberDelayed = " << m_runNumberDelayed << endreq;
+  msg << MSG::DEBUG << "m_cycleNumberDelayed = " << m_cycleNumberDelayed << endreq;
+  msg << MSG::DEBUG << "m_timeFirstEvInRunDelayed = " << m_timeFirstEvInRunDelayed << endreq;
+  msg << MSG::DEBUG << "m_timeLastEvInCycleDelayed = " << m_timeLastEvInCycleDelayed << endreq;
+  msg << MSG::DEBUG << "********************************************************************" << endreq;
+  msg << MSG::DEBUG << "The values are:" << endreq;
+  msg << MSG::DEBUG << "m_runNumber = " << m_runNumber << endreq;
+  msg << MSG::DEBUG << "m_cycleNumber = " << m_cycleNumber << endreq;
+  msg << MSG::DEBUG << "m_timeFirstEvInRun = " << m_timeFirstEvInRun << endreq;
+  msg << MSG::DEBUG << "m_timeLastEvInCycle (This is not true)= " << m_timeLastEvInCycle << endreq;
+  msg << MSG::DEBUG << "********************************************************************" << endreq;
   
+    
   int currentRunNumber;
   
   currentRunNumber = getRunNumber();
   
   msg << MSG::INFO << " The current runNumber is " << currentRunNumber  << endreq; 
-  msg << MSG::INFO << " The last runNumber was " << m_runNumber << endreq; 
-  msg << MSG::INFO << " The last cycleNumber was " << m_cycleNumber << endreq; 
-  msg << MSG::INFO << " The last timeFirstEvInRun was" << m_timeFirstEvInRun << endreq; 
-  msg << MSG::INFO << " The last m_timeLastEvInCycleDelayed was " << m_timeLastEvInCycleDelayed << endreq; 
 
   //m_cycleNumber = m_countExecutes;
   
@@ -176,9 +186,11 @@ StatusCode UpdateAndReset::execute() {
        // The cycleNumber has changed...
        // Then we set the MonRate parameters  
        // (delayed parameters) with the old values 
+       m_runNumberDelayed = m_runNumber;
        m_cycleNumberDelayed = m_cycleNumber;
+       m_timeFirstEvInRunDelayed = m_timeFirstEvInRun;
        m_timeLastEvInCycleDelayed = GauchoTimer::currentTime();
-     
+       
        msg << MSG::DEBUG << "**********************************************************************" << endreq;
        msg << MSG::DEBUG << "Because the Cycle Number changed we publish the old values for MonRate" << endreq;
        msg << MSG::DEBUG << "m_cycleNumberDelayed = " << m_cycleNumberDelayed << endreq;
