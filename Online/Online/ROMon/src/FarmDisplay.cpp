@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.2 2008-06-10 18:33:35 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.3 2008-06-10 18:40:07 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.2 2008-06-10 18:33:35 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.3 2008-06-10 18:40:07 frankb Exp $
 
 #include "ROMon/FarmDisplay.h"
 #include "CPP/IocSensor.h"
@@ -77,11 +77,12 @@ FarmSubDisplay::~FarmSubDisplay() {
 }
 
 void FarmSubDisplay::init(bool bad) {
-  int col = bad ? INVERSE|RED : NORMAL;
+  int col = bad ? INVERSE|RED : BOLD;
   char txt[128];
   ::sprintf(txt,"%-4s%9s %3s%8s %2s%4s%6s%4s",
 	    "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
+  //::scrc_put_chars(m_display,txt,col,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
   ::scrc_put_chars(m_display," ",col,3,1,1);
   ::scrc_put_chars(m_display," ",col,4,1,1);
@@ -243,7 +244,7 @@ void FarmSubDisplay::update(const Nodeset& ns) {
   else {
     ::scrc_set_border(m_display,title,NORMAL);
     ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
-    ::scrc_put_chars(m_display,"No Errors",NORMAL,4,20,1);
+    ::scrc_put_chars(m_display,"No obvious Errors detected....",NORMAL|INVERSE|GREEN,4,1,1);
   }
   m_evtBuilt = evt_built;
   m_evtMoore = evt_moore;
