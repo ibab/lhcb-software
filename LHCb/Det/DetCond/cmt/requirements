@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.83 2008-05-19 09:08:21 cattanem Exp $
+# $Id: requirements,v 1.84 2008-06-10 16:47:23 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v11r11
@@ -12,7 +12,6 @@ use           GaudiAlg          v*
 use           COOL              v*      LCG_Interfaces
 use           CORAL             v*      LCG_Interfaces
 use           Boost             v*      LCG_Interfaces
-use           SEAL              v*      LCG_Interfaces
 use           rx                v*      LCG_Interfaces
 use           DetDesc           v*      Det
 
@@ -24,7 +23,10 @@ apply_pattern	install_more_includes more=DetCond
 
 #==============================================================================
 # Needed to resolve references to CoolApplication
-apply_tag   NEEDS_COOL_FACTORY
+#macro_append COOL_applibs '-llcg_RelationalCool '  \
+#      WIN32          'lcg_RelationalCool.lib '
+#apply_tag   NEEDS_COOL_FACTORY
+macro_append COOL_linkopts ' -llcg_CoolApplication '
 apply_tag   NEEDS_CORAL_BASE
 
 # =============== LCG Dictionary ==============================================

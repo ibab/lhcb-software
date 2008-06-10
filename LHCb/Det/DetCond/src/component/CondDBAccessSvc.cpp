@@ -1,12 +1,9 @@
-// $Id: CondDBAccessSvc.cpp,v 1.50 2008-05-19 08:13:39 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.51 2008-06-10 16:47:23 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
 //#include <ctime>
 
-
-// needed to sleep between retrials
-#include "SealBase/TimeInfo.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -48,6 +45,8 @@ namespace {
                       << e.what() << endmsg;
   }
 }
+
+#include "Sleep.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBAccessSvc
@@ -283,7 +282,7 @@ StatusCode CondDBAccessSvc::i_validateDefaultTag() {
   while (!sc.isSuccess() && (trials_to_go > 0)){
     log << MSG::INFO << "TAG \"" << tag() << "\" not ready, I try again in " << m_checkTagTimeOut << "s. "
         << trials_to_go << " trials left." << endmsg;
-    seal::TimeInfo::sleep(m_checkTagTimeOut);
+    Sleep(m_checkTagTimeOut);
     sc = i_checkTag();
     --trials_to_go;
   }

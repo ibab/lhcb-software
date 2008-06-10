@@ -1,10 +1,7 @@
-// $Id: COOLConfSvc.cpp,v 1.3 2008-04-24 12:41:30 hmdegaud Exp $
+// $Id: COOLConfSvc.cpp,v 1.4 2008-06-10 16:47:23 marcocle Exp $
 
 // Include files
-#include "SealKernel/Context.h"
-#include "SealKernel/ComponentLoader.h"
-
-#include "RelationalAccess/IConnectionService.h"
+#include "RelationalAccess/ConnectionService.h"
 #include "RelationalAccess/IConnectionServiceConfiguration.h"
 #include "RelationalAccess/IReplicaSortingAlgorithm.h"
 #include "RelationalAccess/IDatabaseServiceDescription.h"
@@ -170,7 +167,7 @@ DECLARE_SERVICE_FACTORY(COOLConfSvc)
 // Standard constructor, initializes variables
 //=============================================================================
 COOLConfSvc::COOLConfSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_coolApplication(0)
+  Service(name,svcloc),m_coolApplication(0),m_replicaSortAlg(0)
 {
   declareProperty("UseLFCReplicaSvc", m_useLFCReplicaSvc = false );
   declareProperty("LocalSite", m_localSite = "",
@@ -197,8 +194,8 @@ cool::IDatabaseSvc& COOLConfSvc::databaseSvc() {
 //=============================================================================
 // Access to SEAL Context
 //=============================================================================
-seal::Context* COOLConfSvc::context() {
-  return coolApplication()->context();
+coral::IConnectionService& COOLConfSvc::connectionSvc() {
+  return coolApplication()->connectionSvc();
 }
 
 //=============================================================================
@@ -226,25 +223,20 @@ StatusCode COOLConfSvc::initialize(){
 
   log << MSG::DEBUG << "Initialize" << endmsg;
 
-  if ( !m_coolApplication ) {
+  if ( ! m_coolApplication.get() ) {
 
     log << MSG::DEBUG << "Initializing COOL Application" << endmsg;
-    m_coolApplication = new cool::Application();
-
-    seal::Handle<seal::ComponentLoader> loader = 
-      m_coolApplication->context()->component<seal::ComponentLoader>();
+    m_coolApplication.reset(new cool::Application);
 
     log << MSG::DEBUG << "Getting CORAL Connection Service configurator" << endmsg;
-
-    loader->load( "CORAL/Services/ConnectionService" );
-    std::vector< seal::IHandle< coral::IConnectionService > > loadedServices;
-    m_coolApplication->context()->query( loadedServices );
-    coral::IConnectionServiceConfiguration &connSvcConf = loadedServices.front()->configuration();
+    coral::IConnectionServiceConfiguration &connSvcConf =
+      m_coolApplication->connectionSvc().configuration();
 
     if ( m_useLFCReplicaSvc ) {
 
-      log << MSG::INFO << "Loading CORAL LFCReplicaService" << endmsg;
-      loader->load( "CORAL/Services/LFCReplicaService" );
+      log << MSG::INFO << "Using CORAL LFCReplicaService" << endmsg;
+      connSvcConf.setLookupService( "CORAL/Services/LFCReplicaService" );
+      connSvcConf.setAuthenticationService( "CORAL/Services/LFCReplicaService" );
       
       if ( m_localSite.empty() ) {
         // if we didn't get a site from options, we try the environment var DIRACSITE
@@ -260,7 +252,8 @@ StatusCode COOLConfSvc::initialize(){
       }
       log << MSG::INFO << "Using '" << m_localSite << "' as preferred site" << endmsg;
       
-      connSvcConf.setReplicaSortingAlgorithm(new ReplicaSortAlg(m_localSite,msgSvc()));
+      m_replicaSortAlg.reset(new ReplicaSortAlg(m_localSite,msgSvc()));
+      connSvcConf.setReplicaSortingAlgorithm(*m_replicaSortAlg);
     }
 
     if ( ! m_coralConnCleanUp ) {
@@ -290,9 +283,7 @@ StatusCode COOLConfSvc::initialize(){
 StatusCode COOLConfSvc::finalize(){
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalize" << endmsg;
-  if (m_coolApplication) {
-    delete m_coolApplication;
-    m_coolApplication = 0;
-  }
+  m_coolApplication.release();
+  m_replicaSortAlg.release();
   return Service::finalize();
 }

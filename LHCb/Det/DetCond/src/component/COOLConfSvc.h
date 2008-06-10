@@ -1,4 +1,4 @@
-// $Id: COOLConfSvc.h,v 1.2 2008-04-24 07:46:05 marcocle Exp $
+// $Id: COOLConfSvc.h,v 1.3 2008-06-10 16:47:23 marcocle Exp $
 #ifndef COMPONENT_COOLCONFSVC_H 
 #define COMPONENT_COOLCONFSVC_H 1
 
@@ -13,6 +13,9 @@ template <class TYPE> class SvcFactory;
 namespace cool {
   class Application;
   class RecordSpecification;
+}
+namespace coral {
+  class IReplicaSortingAlgorithm;
 }
 
 /** @class COOLConfSvc COOLConfSvc.h
@@ -41,8 +44,8 @@ public:
   virtual StatusCode finalize();
 
   // --------- ICOOLConfSvc implementation
-  /// Access to the SEAL context holding COOL and CORAL (if needed).
-  virtual seal::Context *context();
+  /// Access to the CORAL connection service used by COOL (if needed).
+  virtual coral::IConnectionService& connectionSvc();
   
   /// Get the COOL Database service (used to connect to the databases).
   virtual cool::IDatabaseSvc& databaseSvc();
@@ -56,15 +59,17 @@ protected:
 private:
   
   inline cool::Application *coolApplication(){
-    if (!m_coolApplication)
+    if (!m_coolApplication.get())
       throw GaudiException("Attempt to access COOL instance before initialization",
                            "(COOLConfSvc)" + name() + "::coolApplication",
                            StatusCode::FAILURE);
-    return m_coolApplication;
+    return m_coolApplication.get();
   }
   
   /// Pointer to a shared instance of the COOL Application
-  cool::Application *m_coolApplication;
+  std::auto_ptr<cool::Application> m_coolApplication;
+  
+  std::auto_ptr<coral::IReplicaSortingAlgorithm> m_replicaSortAlg; 
 
   /// Flag to turn off/on the CORAL LFCReplicaService (option UseLFCReplicaSvc, default = false).
   /// Setting this option works only if it is set for the first COOLConfSvc initialized
