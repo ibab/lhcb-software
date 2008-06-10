@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.18 2008-06-09 09:56:48 cattanem Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.19 2008-06-10 06:53:52 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -224,7 +224,7 @@ IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 }
 void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf,
                                            BasePtrSetter *ptr_dest){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
 
@@ -314,7 +314,7 @@ void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObj
   m_head_until = 0;
 }
 void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
   MsgStream log(msgSvc(),name());
@@ -355,7 +355,7 @@ StatusCode UpdateManagerSvc::newEvent(){
   return StatusCode::FAILURE;
 }
 StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::newEvent",StatusCode::FAILURE);
   }
 
@@ -428,7 +428,7 @@ StatusCode UpdateManagerSvc::newEvent(const Gaudi::Time &evtTime){
   return sc;
 }
 StatusCode UpdateManagerSvc::i_update(void *instance){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::update",StatusCode::FAILURE);
   }
 
@@ -463,7 +463,7 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
   return StatusCode::FAILURE;
 }
 void UpdateManagerSvc::i_invalidate(void *instance){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service not initialized","UpdateManagerSvc::invalidate",StatusCode::FAILURE);
   }
 
@@ -558,7 +558,7 @@ void UpdateManagerSvc::unlink(Item *parent, Item *child){
 }
 
 void UpdateManagerSvc::i_unregister(void *instance){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     // un-registration is allowed after service finalize (no-op).
     if ( m_outputLevel <= MSG::VERBOSE ) {
       MsgStream log(msgSvc(),name());
@@ -600,7 +600,7 @@ void UpdateManagerSvc::i_unregister(void *instance){
 }
 
 void UpdateManagerSvc::dump(){
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::dump",StatusCode::FAILURE);
   }
   
@@ -702,7 +702,7 @@ void UpdateManagerSvc::dump(){
 
 
 void UpdateManagerSvc::purge() {
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::purge",StatusCode::FAILURE);
   }
 
@@ -742,7 +742,7 @@ void UpdateManagerSvc::purge() {
 //=========================================================================
 bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, Gaudi::Time &until,
                                    bool path_to_db) {
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
 
@@ -761,7 +761,7 @@ bool UpdateManagerSvc::getValidity(const std::string path, Gaudi::Time& since, G
 //=========================================================================
 void UpdateManagerSvc::setValidity(const std::string path, const Gaudi::Time& since, const Gaudi::Time &until,
                                    bool path_to_db) {
-  if ( getFSMState() < Gaudi::StateMachine::INITIALIZED ){
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ){
     throw GaudiException("Service offline","UpdateManagerSvc::registerCondition",StatusCode::FAILURE);
   }
 
