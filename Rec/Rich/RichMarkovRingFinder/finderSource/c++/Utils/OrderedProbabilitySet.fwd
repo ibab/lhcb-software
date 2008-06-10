@@ -1,3 +1,6 @@
 
-template<class T, class Less = std::less<T> >
-namespace Lester { class OrderedProbabilitySet; }
+namespace Lester 
+{ 
+ template<class T, class Less = std::less<T> >
+ class OrderedProbabilitySet; 
+}

@@ -61,9 +61,9 @@ namespace Lester
     const Hit hit(*hIt);
     QueryMap newPartOfQueryMap;
     double total = 0;
-    for(CircleIterator cIt = m_circs.begin();
-        cIt != m_circs.end();
-        ++cIt) {
+    for ( CircleIterator cIt = m_circs.begin();
+          cIt != m_circs.end(); ++cIt ) 
+    {
       const CircleParams circle(*cIt);
       const double probPart1 = m_ntrm->priorProbabilityOfHitDueToCircle(hit, circle);
       const double probPart2 = 1;// FIX GEOMETRICAL ACCEPTANCE! LESTER:  const double probPart2 = circle.meanNumberOfHitsGeometricallyCorrected();
