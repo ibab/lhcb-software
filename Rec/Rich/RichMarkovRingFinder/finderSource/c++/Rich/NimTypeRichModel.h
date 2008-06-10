@@ -83,7 +83,11 @@ namespace Lester {
 
   private:
 
+    /// Read the cache fill into the internal map
     void readCacheFromFile();
+
+    /// Compute and fill cache
+    double fillCache(const double deltaOnTwo) const;
 
     double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
 

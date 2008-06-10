@@ -401,128 +401,132 @@ namespace Lester
 
     const double one = 1;
     const double tol = 0.02; // interpolate at 2% intervals
-    const double convergenceTol=0.0000001; // evaluate to appro 1% acc
     const double deltaOnTwoMax = deltaOnTwo*(one+tol);
     const double deltaOnTwoMin = deltaOnTwo/(one+tol);
 
     typedef std::vector<CacheMap::const_iterator> Possibilities;
     Possibilities possibilities;
+
+    CacheMap::const_iterator geRhoIt = m_cache.lower_bound(deltaOnTwo);
+    if ( geRhoIt != m_cache.end() )
     {
-      CacheMap::const_iterator geRhoIt = m_cache.lower_bound(deltaOnTwo);
-      if ( geRhoIt != m_cache.end() )
+      const double key=geRhoIt->first;
+      if (key == deltaOnTwo)
       {
-        const double key=geRhoIt->first;
-        if (key == deltaOnTwo)
-        {
-          // we found an exact match
-          return geRhoIt->second;
-        }
-        if (geRhoIt->first <= deltaOnTwoMax )
-        {
-          possibilities.push_back(geRhoIt);
-        }
+        // we found an exact match
+        return geRhoIt->second;
       }
-      if ( geRhoIt != m_cache.begin() )
+      if (geRhoIt->first <= deltaOnTwoMax )
       {
-        --geRhoIt;
-        if (geRhoIt->first>=deltaOnTwoMin)
-        {
-          possibilities.push_back(geRhoIt);
-        }
+        possibilities.push_back(geRhoIt);
+      }
+    }
+    if ( geRhoIt != m_cache.begin() )
+    {
+      --geRhoIt;
+      if (geRhoIt->first>=deltaOnTwoMin)
+      {
+        possibilities.push_back(geRhoIt);
       }
     }
 
+    int tindex=-1;
+    if (possibilities.size()==1)
     {
-      int tindex=-1;
-      if (possibilities.size()==1)
+      tindex=0;
+    }
+    else if (possibilities.size()==2)
+    {
+      if (fabs(possibilities[0]->first-deltaOnTwo)<fabs(possibilities[1]->first-deltaOnTwo))
       {
         tindex=0;
       }
-      else if (possibilities.size()==2)
+      else
       {
-        if (fabs(possibilities[0]->first-deltaOnTwo)<fabs(possibilities[1]->first-deltaOnTwo))
-        {
-          tindex=0;
-        }
-        else
-        {
-          tindex=1;
-        }
+        tindex=1;
       }
+    }
 
-      const int index = tindex;
-      if (index==-1)
+    double ans(0);
+    if (tindex==-1)
+    {
+      ans = fillCache(deltaOnTwo);
+    }
+    else
+    {
+      // serve from cache
+      assert(tindex>=0 && tindex<static_cast<int>(possibilities.size()));
+      ans = possibilities[tindex]->second;
+    }
+
+    return ans;
+  }
+
+  double NimTypeRichModel::fillCache(const double deltaOnTwo) const
+  {
+    //calculate and cache!
+    const double convergenceTol=0.0000001; // evaluate to appro 1% acc
+    int n=0;
+    double sum=0;
+    double avg=0;
+    double lastAvg=0;
+    const double rmin=deltaOnTwo;
+
+    try 
+    {
+      const int warmUpSteps=10; // must be at least 2
+      assert (warmUpSteps>=2);
+      for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n)
       {
-        //calculate and cache!
-        int n=0;
-        double sum=0;
-        double avg=0;
-        double lastAvg=0;
-        const double rmin=deltaOnTwo;
+        const double r = sampleFromCircleRadiusDistributionAbove(rmin);
+        const double rSq = r*r;
+        const double contrib = approxCoPointSepFunctionPart2(deltaOnTwo, rSq);
+        lastAvg=avg;
+        sum+= contrib;
+        avg = sum/static_cast<double>(n);
+      }
+      // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
+      avg*=priorProbabilityOfRadiusAbove(rmin);
+    }
+    catch (NimTypeRichModel::SampleIsImpossible&)
+    {
+      Lester::messHandle().verbose() << " SampleIsImpossibleInCop at " <<deltaOnTwo<< Lester::endmsg;
+      avg=0;
+    }
+
+    // Save this result to the cache map
+    Lester::messHandle().debug() << "Computed approxCoPointSep[ " << deltaOnTwo <<" ] = "
+                                 << avg << Lester::endmsg;
+    m_cache[deltaOnTwo] = avg;
+
+    try
+    {
+      // need to add read/write idea here
+      const std::string filename = getCacheLocation();
+      std::ofstream cf(filename.c_str(),std::ios::app);
+      if ( cf.is_open() )
+      {
+        if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
         {
-          try {
-            const int warmUpSteps=10; // must be at least 2
-            assert (warmUpSteps>=2);
-            for (; n<warmUpSteps || (n>=warmUpSteps && fabs((avg-lastAvg)/(avg+lastAvg))>convergenceTol  ); ++n)
-            {
-              const double r = sampleFromCircleRadiusDistributionAbove(rmin);
-              const double rSq = r*r;
-              const double contrib = approxCoPointSepFunctionPart2(deltaOnTwo, rSq);
-              lastAvg=avg;
-              sum+= contrib;
-              avg = sum/static_cast<double>(n);
-            }
-            // the answer should now be in avg, all bar the accounting for the rmin parameter used above ...
-            avg*=priorProbabilityOfRadiusAbove(rmin);
-          }
-          catch (NimTypeRichModel::SampleIsImpossible&)
-          {
-            Lester::messHandle().verbose() << " SampleIsImpossibleInCop at " <<deltaOnTwo<< Lester::endmsg;
-            avg=0;
-          }
-
-          // Save this result to the cache map
-          Lester::messHandle().debug() << "Computed approxCoPointSep[ " << deltaOnTwo <<" ] = "
-                                       << avg << Lester::endmsg;
-          m_cache[deltaOnTwo] = avg;
-
-          try
-          {
-            // need to add read/write idea here
-            const std::string filename = getCacheLocation();
-            std::ofstream cf(filename.c_str(),std::ios::app);
-            if ( cf.is_open() )
-            {
-              if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
-              {
-                cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-                Lester::messHandle().debug() << "  -> Wrote to cache file" << Lester::endmsg;
-              }
-            }
-            else
-            {
-              Lester::messHandle().warning() << "Failed to open cache file '" << filename
-                                             << "' for writting -> New cache values not saved." << Lester::endmsg;
-            }
-          }
-          catch ( const std::exception & expt )
-          {
-            Lester::messHandle().warning() << "Exception '" << expt.what()
-                                           << "' caught writing to cache -> results not saved" << Lester::endmsg;
-          }
-
-          // return the new result
-          return avg;
+          cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
+          Lester::messHandle().debug() << "  -> Wrote to cache file" << Lester::endmsg;
         }
       }
       else
       {
-        // serve from cache
-        assert(index>=0 && index<static_cast<int>(possibilities.size()));
-        const double ans = possibilities[index]->second;
-        return ans;
+        Lester::messHandle().warning() << "Failed to open cache file '" << filename
+                                       << "' for writting -> New cache values not saved." << Lester::endmsg;
       }
     }
+    catch ( const std::exception & expt )
+    {
+      Lester::messHandle().warning() << "Exception '" << expt.what()
+                                     << "' caught writing to cache -> results not saved" << Lester::endmsg;
+    }
+
+    // return the new result
+    return avg;
+
   }
 
   double NimTypeRichModel::priorProbabilityOfThreePointsBeingOnACircle
