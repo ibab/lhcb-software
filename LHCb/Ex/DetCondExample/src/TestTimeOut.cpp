@@ -1,4 +1,4 @@
-// $Id: TestTimeOut.cpp,v 1.4 2007-02-05 19:05:13 marcocle Exp $
+// $Id: TestTimeOut.cpp,v 1.5 2008-06-10 16:42:17 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
 
-#include "SealBase/TimeInfo.h"
+#include "Sleep.h"
 
 // local
 #include "TestTimeOut.h"
@@ -54,7 +54,7 @@ StatusCode TestTimeOut::execute() {
 
   debug() << "==> Execute" << endmsg;
   info() << "Sleeping ..." << endmsg;
-  seal::TimeInfo::sleep(m_sleepTime);
+  Sleep(m_sleepTime);
   info() << "Try to access the db..." << endmsg;
   DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
   
