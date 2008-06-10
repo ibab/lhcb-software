@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.1 2008-06-10 18:20:19 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.2 2008-06-10 18:33:35 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.1 2008-06-10 18:20:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.2 2008-06-10 18:33:35 frankb Exp $
 
 #include "ROMon/FarmDisplay.h"
 #include "CPP/IocSensor.h"
@@ -192,12 +192,12 @@ void FarmSubDisplay::update(const Nodeset& ns) {
   ::strftime(b1,sizeof(b1),"%H:%M:%S",::localtime(&t1));
   ::sprintf(title,"  %s %s  ",m_title.c_str(),b1);
   if ( time(0)-t1 > UPDATE_TIME_MAX ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::sprintf(txt," No update information available");
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( fslots[0] < SLOTS_MIN || fslots[1] < SLOTS_MIN || fslots[2] < SLOTS_MIN ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::sprintf(txt," SLOTS at limit:");
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
@@ -207,7 +207,7 @@ void FarmSubDisplay::update(const Nodeset& ns) {
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( fspace[0] < SPACE_MIN || fspace[1] < SPACE_MIN || fspace[2] < SPACE_MIN  ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::sprintf(txt," SPACE at limit:");
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
@@ -217,33 +217,33 @@ void FarmSubDisplay::update(const Nodeset& ns) {
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
   else if ( evt_built <= m_evtBuilt && evt_prod[0] > m_totBuilt ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::scrc_put_chars(m_display," Some MEPRx(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
   else if ( inuse && evt_built <= m_evtBuilt && evt_prod[0] == m_totBuilt ) {
-    ::scrc_set_border(m_display,title,BOLD);
+    ::scrc_set_border(m_display,title,NORMAL);
     ::scrc_put_chars(m_display," No DAQ activity visible.",BOLD|RED,4,1,1);
   }
   else if ( evt_moore <= m_evtMoore && evt_prod[1] > m_totMoore ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::scrc_put_chars(m_display," Some MOORE(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
   else if ( inuse && evt_moore <= m_evtMoore && evt_prod[1] == m_totMoore ) {
-    ::scrc_set_border(m_display,title,BOLD);
+    ::scrc_set_border(m_display,title,NORMAL);
     ::scrc_put_chars(m_display," No HLT activity visible.",BOLD|RED,4,1,1);
   }
   else if ( evt_sent <= m_evtSent && evt_prod[2] > m_totSent ) {
-    ::scrc_set_border(m_display,title,BOLD|INVERSE|RED);
+    ::scrc_set_border(m_display,title,INVERSE|RED);
     ::scrc_put_chars(m_display," Some Sender(s) stuck.",BOLD|RED|INVERSE,4,1,1);
   }
   else if ( inuse && evt_sent <= m_evtSent && evt_prod[0] == m_totSent ) {
-    ::scrc_set_border(m_display,title,BOLD);
+    ::scrc_set_border(m_display,title,NORMAL);
     ::scrc_put_chars(m_display," No STORAGE activity visible.",BOLD|RED,4,1,1);
   }
   else {
+    ::scrc_set_border(m_display,title,NORMAL);
     ::scrc_put_chars(m_display,"",NORMAL,4,1,1);
     ::scrc_put_chars(m_display,"No Errors",NORMAL,4,20,1);
-    ::scrc_set_border(m_display,title,BOLD);
   }
   m_evtBuilt = evt_built;
   m_evtMoore = evt_moore;
@@ -448,7 +448,7 @@ void FarmDisplay::connect(const std::vector<std::string>& farms) {
     delete (*k).second;
   m_farmDisplays = copy;
 
-  int subdisp_height = 4;
+  int subdisp_height = 5;
   int subdisp_width  = 48;
   int total_height   = 5;
   int total_width    = 3;
