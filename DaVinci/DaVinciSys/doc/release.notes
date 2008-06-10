@@ -7,6 +7,7 @@ Purpose     : LHCb analysis program
 Based on Phys v6r13, Analysis v1r13, Rec v5r7, HLT v3r3, Lbcom v6r18, LHCb v23r7, Gaudi v19r9, LCGCMT 54e
 
  - Minor changes and bug fixes in Phys and Analysis.
+ - Changes to HLT, see http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/hlt/
  - Fix python jobs for Ganga and gaudirun.py
 
 </PRE><H1><A NAME=v19r12>2008-04-25 DaVinci v19r12. CCRC stripping version.</A></H1><PRE>
