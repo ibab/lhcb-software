@@ -1,8 +1,4 @@
-// $Id: G4Neutralino.h,v 1.2 2008-05-30 13:47:03 gcorti Exp $
-
-// Each class inheriting from G4VMeson
-// corresponds to a particle type; one and only one
-// instance for each class is guaranteed.
+// $Id: G4Neutralino.h,v 1.3 2008-06-10 17:07:49 gcorti Exp $
 
 #ifndef G4Neutralino_h
 #define G4Neutralino_h 1 
@@ -18,27 +14,14 @@
 class G4Neutralino : public G4ParticleDefinition
 {
  private:
-   static G4Neutralino theNeutralino;
-
- private: // constructors are hide as private  
-   G4Neutralino(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable
-   );
+  static G4Neutralino * theInstance ;
+  G4Neutralino( ) { }
+  ~G4Neutralino( ) { }
 
  public:
-   virtual ~G4Neutralino(){}
-
+   static G4Neutralino* Definition();
    static G4Neutralino* NeutralinoDefinition();
    static G4Neutralino* Neutralino();
-
 };
 
 #endif

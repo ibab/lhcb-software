@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !====================== GaussPhysics v5r2 2008-06-09 =========================
+! 2008-06-10 - Gloria CORTI for Neal GUEISSAZ
+ - Versions of G4Neutralino comaptible with Geant4 8.3 and put it back in
+   library
+   . G4Neutralino.{h,cpp} 
+
 ! 2008-05-30 - Gloria CORTI
  - Fix problem with compilation of G4Neutralino due to removal of G4VMeson
    class from Geant4 8, but temporarly exclude it from library because of
