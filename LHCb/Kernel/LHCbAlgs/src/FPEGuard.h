@@ -159,11 +159,9 @@ namespace FPE {
       //TODO: in disable mode, report which FPE happened between c'tor and d'tor.
       FPE::detail::disable( ~m_initial );
       mask_type mask = FPE::detail::enable( m_initial );
-      if (mask!=m_initial) {  // retry once, in case the FPU is a bit behind... yes, that happens
-          mask = FPE::detail::get();
-          if (mask!=m_initial) {
-            throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE);
-          }
+      // retry once, in case the FPU is a bit behind... yes, that happens
+      if (mask!=m_initial && FPE::detail::get()!=m_initial) { 
+          throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE);
       }
     }
 
