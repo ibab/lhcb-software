@@ -95,7 +95,7 @@ namespace FPE {
 
   } // namespace detail
 
-  /** @class Guard GaudiKernel/FPEGuard.h
+  /** @class Guard FPEGuard.h GaudiKernel/FPEGuard.h
    *
    *  Create a guard which, depending on the value of 'disable',
    *  enables (disables) the trapping of Floating Point Exceptions
@@ -106,18 +106,34 @@ namespace FPE {
    *
    *  Example usage :-
    *  @code
-   *  // You pass a range of strings to FPE::Guard::mask, and assign the result
+   *
+   *  // Create a mask and Guard for a single exception type
+   *  FPE::Guard guard( FPE::Guard::mask("Invalid") );
+   *
+   *  // Pass a range of strings to FPE::Guard::mask and assign the result
    *  // to a FPE::Guard::mask_type, i.e:
-   *  std::vector<std::string> vec = ..... ; // create a vector of valid names, such as 'Invalid', 'Overflow', etc
+   *  // create a vector of valid names, such as 'Invalid', 'Overflow', etc
+   *  std::vector<std::string> vec = ..... ;
    *  FPE::Guard::mask_type mask = FPE::Guard::mask( vec.begin(), vec.end() );
    *  FPE::Guard guard( mask );
    *
-   *  // To switch of all known exceptions
-   *  std::vector<std::string> vec = boost::assign::list_of( "AllExcept" );
-   *  FPE::Guard::mask_type mask = FPE::Guard::mask( vec.begin(), vec.end() );
-   *  bool disable = true;
-   *  FPE::Guard guard( mask , disable );
+   *  // The Default Guard enables all known exceptions
+   *  // This is the simpliest use case
+   *  FPE::Guard guard;
+   *
+   *  // To disable instead of enable expections, pass disable=true
+   *  FPE::Guard guard( true );
+   *
    *  @endcode
+   *
+   *  @attention The methods FPE::Guard::mask(...) are non-trivial (map lookup).
+   *             Thus you should avoid calling these too frequently in local scopes.
+   *             If needed create the mask once and cache, or use the default
+   *             FPE::Guard constructor.
+   *
+   *  @attention Usage of this Guard is only intended in cases where it is impossible
+   *             to fix problems properly, such as exceptions from externals libraries
+   *             like GSL or CLHEP. It should not be used to mask problems in your code ;)
    *
    *  @author Gerhard Raven
    *  @date   09/06/2008
@@ -135,8 +151,8 @@ namespace FPE {
      *
      *  @attention Note: to create a (valid) mask, use FPE::Guard::mask
      *
-     *  @param The mask of exceptions to guard against
-     *  @param disable Disable or enable the given exceptions
+     *  @param mask    The mask of exceptions to activate/deactive
+     *  @param disable Disable or enable the given FPE exceptions
      */
     Guard( mask_type mask,
            bool disable   = false )
@@ -145,9 +161,10 @@ namespace FPE {
                    FPE::detail::enable(mask)  )
     { }
 
-    /** Default Constructor. Activates protection for all known exceptions
+    /** Default Constructor. Activates/Deactivate all known FPE exceptions.
      *
-     *  @param disable Disable or enable the given exceptions
+     *  @param disable Disable(true) or enable(false) all known FPE exceptions
+     *                 (default is to enable exceptions).
      */
     explicit Guard( bool disable = false )
       : m_initial( disable ?
@@ -163,7 +180,7 @@ namespace FPE {
       mask_type mask = FPE::detail::enable( m_initial );
       // retry once, in case the FPU is a bit behind... yes, that happens
       if (mask!=m_initial && FPE::detail::get()!=m_initial) { 
-          throw GaudiException("oops -- FPEGuard failed to restore initial state","",StatusCode::FAILURE);
+          throw GaudiException("oops -- Guard failed to restore initial state","FPE::Guard",StatusCode::FAILURE);
       }
     }
 
@@ -177,18 +194,13 @@ namespace FPE {
      *   @param begin Begin iterator
      *   @param end   End iterator
      *
-     *   @return The exeption mask for the given list of exception strings
+     *   @return The exception mask for the given list of exception strings
      */
     template <typename Iter>
-    static mask_type mask(Iter begin, Iter end) {
-      mask_type m=0;
-      for (;begin!=end;++begin) {
-        std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(*begin);
-        if (j==FPE::detail::map().end()) {
-          throw GaudiException("FPE::mask: unknown mask... ",*begin,StatusCode::FAILURE);
-        }
-        m |= j->second;
-      }
+    static mask_type mask(Iter begin, Iter end)
+    {
+      mask_type m = 0;
+      for (;begin!=end;++begin) { m |= mask(*begin); }
       return m;
     }
 
@@ -200,16 +212,20 @@ namespace FPE {
      *
      *   @param excpt The exception type
      *
-     *   @return The exeption mask for the given exception string
+     *   @return The exception mask for the given exception string
      */
     static mask_type mask( const std::string & excpt )
     {
-      const std::vector<std::string> excpts(1,excpt);
-      return mask( excpts.begin(), excpts.end() );
+      std::map<std::string,mask_type>::const_iterator j = FPE::detail::map().find(excpt);
+      if ( FPE::detail::map().end() == j )
+      {
+        throw GaudiException("FPE::Guard::mask : Unknown mask...",excpt,StatusCode::FAILURE);
+      }
+      return j->second;
     }
 
   private:
-    mask_type m_initial; ///< Saved mask
+    mask_type m_initial; ///< Saved previous mask value
   };
 
 } // namespace FPE

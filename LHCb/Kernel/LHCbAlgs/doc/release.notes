@@ -3,6 +3,11 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
+
+! 2008-06-10 - Chris Jones
+ - Add method FPE::Guard::mask_type mask( const std::string & excpt )
+ - Final improvements to doxygen comments
+
 ! 2008-06-10 - Gerhard Raven
  - FPE::Guard: take into account that the FPU might not yet have completed
    its transition when checking for restoration of the initial state. Add
