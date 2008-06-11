@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.47 2008-06-11 09:31:30 shaines Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.48 2008-06-11 09:40:22 shaines Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -241,8 +241,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       if ( prob > m_minAssProb )
       {
         GenRingF::GenericRing ring = *iRing;
-        const double RingCentreLocalx = ring.x();
-        const double RingCentreLocaly = ring.y();
+        const double RingCentreLocalx = ring.x()/ m_scaleFactor;
+        const double RingCentreLocaly = ring.y()/ m_scaleFactor;
         
         RichRecPixel * pix = richPixels()->object( (*iHit).index().value() );
         if ( !pix ) return Error( "Markov hit has bad pixel pointer" );
