@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.132 2008-06-11 05:39:14 cattanem Exp $
+# $Id: release.notes,v 1.133 2008-06-11 05:42:27 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -7,7 +7,7 @@
 
 !===================== Det/DetCond v12r0 2008-06-10 ==========================
 ! 2008-06-10 - Marco Clemencic
- - Adapted to the new SEAL-less COOL and CORAL. Needs Gaudi v20
+ - Adapted to the new SEAL-less COOL and CORAL. Needs LCG_55 (Gaudi v20r0)
 
 !===================== Det/DetCond v11r11 2008-05-19 =========================
 ! 2008-05-19 - Marco Clemencic
