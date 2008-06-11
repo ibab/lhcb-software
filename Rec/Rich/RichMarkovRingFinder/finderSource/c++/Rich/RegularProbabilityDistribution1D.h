@@ -8,23 +8,35 @@
 #include <cmath>
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
+#include "Utils/StringException.h"
 
-namespace Lester 
+namespace Lester
 {
 
   template <class Index>
-  class RegularProbabilityDistribution1D {
+  class RegularProbabilityDistribution1D
+  {
+
   public:
-    class EvaluatedTooEarly {
+
+    class EvaluatedTooEarly : public StringException
+    {
+    public:
+      EvaluatedTooEarly() : StringException("EvaluatedTooEarly") { }
     };
-    class NotEnoughData : public std::exception {
-      const char * what() const throw () {
-        return "Not Enough Data";
-      }
+    class NotEnoughData     : public StringException
+    {
+    public:
+      NotEnoughData() :  StringException("Not Enough Data Points") { }
     };
-    class DataNotRegular {
+    class DataNotRegular    : public StringException
+    {
+    public:
+      DataNotRegular() : StringException("Data not regular") { }
     };
+
   private:
+
     Index minX;
     Index maxX;
     Index deltaX;
@@ -37,34 +49,42 @@ namespace Lester
     typedef std::vector<double> PVals;
     XVals xVals;
     PVals pVals;
+
   public:
-    RegularProbabilityDistribution1D() : totProb(0) {
-    };
-    RegularProbabilityDistribution1D(std::string fileName) : totProb(0) {
+
+    RegularProbabilityDistribution1D() : totProb(0) { }
+    RegularProbabilityDistribution1D(const std::string & fileName) : totProb(0)
+    {
       std::ifstream f(fileName.c_str());
       readFromStream(f);
-    };
-    RegularProbabilityDistribution1D(std::istream & is) : totProb(0) {
+    }
+    RegularProbabilityDistribution1D(std::istream & is) : totProb(0)
+    {
       readFromStream(is);
-    };
+    }
+
   private:
-    void readFromStream(std::istream & is) {
-      Index index;
-      double probability;
-      while (is>>index) {
+
+    void readFromStream(std::istream & is)
+    {
+      Index index(0);
+      double probability(0);
+      while (is>>index) 
+      {
         is>>probability;
         addIndexAndProbability(index,probability);
       };
       finishInitialisation();
-    };
-    void finishInitialisation() {
+    }
+
+    void finishInitialisation()
+    {
       assert(xVals.size()==pVals.size());
-      if (xVals.size()<2) {
-        // CRJ : Cannot do this as it causes problems during CMT building
-        //Lester::messHandle().error( "About to throw a benny" );
-        //throw NotEnoughData();
+      if (xVals.size()<2)
+      {
+        throw NotEnoughData();
         return;
-      };
+      }
       //Check that the data really is "regular"
       minX=xVals[0];
       maxX=(*(xVals.end()-1));
@@ -77,59 +97,73 @@ namespace Lester
       stop = maxX + deltaX*0.5;
       sda = static_cast<double>(xVals.size())/(stop-start);
       normalise();
-    };
-    void checkRegularity() const {
-      if (xVals.size()<2) {
-        Lester::messHandle().error( "About to throw a benny" );
+    }
+
+    void checkRegularity() const
+    {
+      if (xVals.size()<2)
+      {
         throw NotEnoughData();
-      };
+      }
       const double tol = 0.0001;
-      for (typename XVals::const_iterator xit = xVals.begin();
-           xit+1 != xVals.end();
-           ++xit) {
+      for ( typename XVals::const_iterator xit = xVals.begin();
+            xit+1 != xVals.end();
+            ++xit )
+      {
         const double miniDeltaX = (*(xit+1))-(*xit);
         const double discrep = fabs((miniDeltaX-deltaX)/(miniDeltaX+deltaX));
-        if (discrep>tol) {
-          Lester::messHandle().error( "About to throw a benny" );
+        if (discrep>tol)
+        {
           throw DataNotRegular();
-        };
-      };
-    };
-    void normalise() {
+        }
+      }
+    }
+
+    void normalise()
+    {
       const double totArea = totProb * deltaX;
-      for (PVals::iterator pit = pVals.begin(); pit != pVals.end(); ++pit) {
+      for (PVals::iterator pit = pVals.begin(); pit != pVals.end(); ++pit)
+      {
         (*pit)/=totArea;
-      };
+      }
       // now totArea will be one!
-    };
-    void clear() {
+    }
+
+    void clear()
+    {
       // Resets everything
       xVals.clear();
       pVals.clear();
       totProb = 0;
-    };
+    }
+
   private:
-    void addIndexAndProbability( const Index index, 
-                                 const double probability ) 
+
+    void addIndexAndProbability( const Index index,
+                                 const double probability )
     {
       assert(probability>=0);
       xVals.push_back(index);
       pVals.push_back(probability);
       totProb += probability;
-    };
+    }
+
   public:
-    inline double probabilityDensityOf(const Index index) const 
+
+    inline double probabilityDensityOf(const Index index) const
     {
       const int i = static_cast<int>((index - start)*sda);
       //Lester::messHandle().verbose() << index<< " " << start << " " << stop << " " <<sda<<" "<< i << Lester::endmsg;
       return ( i>=0 && i<static_cast<int>(pVals.size()) ? pVals[i] : 0 );
     }
-    inline double operator () (const Index index) const {
+
+    inline double operator () (const Index index) const 
+    {
       return probabilityDensityOf(index);
-    };
+    }
 
   };
 
-};
+}
 
 #endif
