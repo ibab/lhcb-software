@@ -9,6 +9,10 @@
 #include "Hit.h"
 #include "CircleParams.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+
 namespace Lester
 {
 
@@ -57,12 +61,13 @@ namespace Lester
     //#warning "The inferrer will be wrong in what it says about the probabilities of hits coming from BG versus non-BG."
   }
 
-  void Rich2Inferrer::cacheAnswersForAllCirclesWRTHit(const HitIterator & hIt) const {
+  void Rich2Inferrer::cacheAnswersForAllCirclesWRTHit(const HitIterator & hIt) const
+  {
     const Hit hit(*hIt);
     QueryMap newPartOfQueryMap;
     double total = 0;
     for ( CircleIterator cIt = m_circs.begin();
-          cIt != m_circs.end(); ++cIt ) 
+          cIt != m_circs.end(); ++cIt )
     {
       const CircleParams circle(*cIt);
       const double probPart1 = m_ntrm->priorProbabilityOfHitDueToCircle(hit, circle);
@@ -76,25 +81,36 @@ namespace Lester
       // (normalise later below!)
     }
 
-    {
-      // correct for the presence of background
-      const double probPart1 = m_ntrm->priorProbabilityOfHitDueToBackground(hit);
-      const double probPart2 = m_meanBackground;
-      const double proportionalToProb = probPart1 * probPart2;
-      total += proportionalToProb;
+    // correct for the presence of background
+    const double probPart1 = m_ntrm->priorProbabilityOfHitDueToBackground(hit);
+    const double probPart2 = m_meanBackground;
+    const double proportionalToProb = probPart1 * probPart2;
+    total += proportionalToProb;
 
-      const QueryPair newQueryPair(hIt, m_circs.end());
-      // add "initial un-normalised estimate" for background to map:
-      newPartOfQueryMap[newQueryPair]=proportionalToProb;
-      // (normalise later below!)
-    }
+    const QueryPair newQueryPair(hIt, m_circs.end());
+    // add "initial un-normalised estimate" for background to map:
+    newPartOfQueryMap[newQueryPair]=proportionalToProb;
+    // (normalise later below!)
 
     // now normalise the new map
-    for ( QueryMap::iterator it = newPartOfQueryMap.begin();
-          it!=newPartOfQueryMap.end();
-          ++it )
+    const double min_value = boost::numeric::bounds<double>::smallest();
+    if ( total>0 )
     {
-      (*it).second /= total;
+      for ( QueryMap::iterator it = newPartOfQueryMap.begin();
+            it!=newPartOfQueryMap.end();
+            ++it )
+      {
+        // This is horrid, but avoids FPE underflows ...
+        if ( (*it).second>0 && 
+             std::log((*it).second)-std::log(total) < std::log(min_value) )
+        {
+          (*it).second = min_value;  
+        }
+        else
+        {
+          (*it).second /= total;
+        }
+      }
     }
 
     // finally add this query map to the end of the existing map:

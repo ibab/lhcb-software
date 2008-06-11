@@ -66,8 +66,8 @@ namespace Lester
 #endif
 
   //Add/Subtract 5 to allow for tolerance in calculations
-  const double NimTypeRichModel::s_max_exponent = std::log(boost::numeric::bounds<double>::highest())  - 5.0;
-  const double NimTypeRichModel::s_min_exponent = std::log(boost::numeric::bounds<double>::smallest()) + 5.0;
+  const double NimTypeRichModel::s_max_exponent = std::log(boost::numeric::bounds<double>::highest())  - 6.0;
+  const double NimTypeRichModel::s_min_exponent = std::log(boost::numeric::bounds<double>::smallest()) + 6.0;
 
   // END OF CONSTANTS -------------------------------------------------------------------
 
