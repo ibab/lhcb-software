@@ -23,8 +23,12 @@ namespace Lester {
 
   public:
 
-    /// Default constructor
-    NimTypeRichModel() { readCacheFromFile(); }
+    /// Default constructor (reads cache file)
+    NimTypeRichModel() 
+    { 
+      m_cacheLocation = getCacheLocation();
+      readCacheFromFile(); 
+    }
 
     // was in Rich.h -------------------------------------------------------------------
 
@@ -67,7 +71,6 @@ namespace Lester {
     double priorProbabilityOf(const CircleParams & cp) const;
 
     // were in CirclePriors ------------------------------------------
-    const std::string getCacheLocation() const;
     class SampleIsImpossible { };
     double sampleFromCircleRadiusDistribution() const;
     double priorProbabilityOfRadius(const double r) const;
@@ -80,6 +83,7 @@ namespace Lester {
 
     typedef std::map<double,double> CacheMap;
     mutable CacheMap m_cache;
+    std::string m_cacheLocation;
 
   private:
 
@@ -92,6 +96,8 @@ namespace Lester {
     double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
 
     double approxCoPointSepFunctionPart1(const double deltaOnTwo) const;
+
+    std::string getCacheLocation() const;
 
   public:
 

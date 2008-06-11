@@ -8,14 +8,13 @@
 
 namespace Lester 
 {
-
   typedef FiniteRelativeProbabilityChooser<double> Rich2AThetaSampler;
   typedef RegularProbabilityDistribution1D<double> Rich2AThetaDistribtion;
   typedef ProbabilityAbove<double>                 Rich2AProbabilityThetaAbove;
 
-  extern const Rich2AThetaSampler          rich2AThetaSampler;
-  extern const Rich2AThetaDistribtion      rich2AThetaDistribution;
-  extern const Rich2AProbabilityThetaAbove rich2AProbabilityThetaAbove;
+  const Rich2AThetaSampler&          rich2AThetaSampler();
+  const Rich2AThetaDistribtion&      rich2AThetaDistribution();
+  const Rich2AProbabilityThetaAbove& rich2AProbabilityThetaAbove();
 }
 
 #endif

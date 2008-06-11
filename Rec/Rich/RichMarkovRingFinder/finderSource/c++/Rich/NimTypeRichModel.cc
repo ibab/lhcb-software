@@ -278,78 +278,102 @@ namespace Lester
     return ans;
   }
 
-  CircleParams NimTypeRichModel::sampleCircle() const {
+  CircleParams NimTypeRichModel::sampleCircle() const 
+  {
     return CircleParams(sampleFromCircleCentreDistribution(),
                         sampleFromCircleRadiusDistribution());
   }
-  double NimTypeRichModel::priorProbabilityOf(const CircleParams & cp) const {
-    const Small2Vector c=cp.centre();
+  
+  double NimTypeRichModel::priorProbabilityOf(const CircleParams & cp) const 
+  {
+    const Small2Vector& c = cp.centre();
     const double r=cp.radius();
-    const double part1 =
-      priorProbabilityOfCentre(c);
-    const double part2 =
-      priorProbabilityOfRadius(r);
+    const double part1 = priorProbabilityOfCentre(c);
+    const double part2 = priorProbabilityOfRadius(r);
     const double ans = part1*part2;
     return ans;
   }
 
   // Were in CirclePriors ----------------------------
 
-  const std::string NimTypeRichModel::getCacheLocation() const
+  std::string NimTypeRichModel::getCacheLocation() const
   {
-    static const char * env = getenv("RICHMFINDERDATALOCATION");
-    static const std::string loc = ( env ? std::string(env)+"/approxCoPointSep.cache" : "approxCoPointSep.cache" );
-    return loc;
+    const char * env = getenv("RICHMFINDERDATALOCATION");
+    const std::string senv( env ? std::string(env)+"/" : "" ); 
+    return ( senv + "approxCoPointSep.cache" );
   }
 
   double NimTypeRichModel::sampleFromCircleRadiusDistribution() const
   {
-    if (Constants::scenario == Constants::simpleModel) {
+    if (Constants::scenario == Constants::simpleModel) 
+    {
       return RandExponential::shoot(circleMeanRadiusParameter);
-    } else if (Constants::scenario == Constants::rich2A) {
-      const double ans = rich2AThetaSampler.sampleAnIndex();
+    } 
+    else if (Constants::scenario == Constants::rich2A) 
+    {
+      const double ans = rich2AThetaSampler().sampleAnIndex();
       return ans;
-    } else {
+    } 
+    else 
+    {
       throw Constants::scenario;
-    };
+    }
   }
 
   double NimTypeRichModel::priorProbabilityOfRadius(const double r) const
   {
-    if (Constants::scenario == Constants::simpleModel) {
+    if (Constants::scenario == Constants::simpleModel) 
+    {
       return exponentialProb(r,circleMeanRadiusParameter);
-    } else if (Constants::scenario == Constants::rich2A) {
-      return rich2AThetaDistribution(r);
-    } else {
+    } 
+    else if (Constants::scenario == Constants::rich2A) 
+    {
+      return rich2AThetaDistribution()(r);
+    }
+    else 
+    {
       throw Constants::scenario;
-    };
+    }
   }
 
   double NimTypeRichModel::sampleFromCircleRadiusDistributionAbove(const double r) const
   {
-    if (Constants::scenario == Constants::simpleModel) {
+    if (Constants::scenario == Constants::simpleModel) 
+    {
       return r+RandExponential::shoot(circleMeanRadiusParameter);
-    } else if (Constants::scenario == Constants::rich2A) {
-      try {
-        const double ans = rich2AThetaSampler.sampleAnIndexAbove(r);
-        return ans;
-      } catch ( Rich2AThetaSampler::NoSamplesPossible & ) {
+    }
+    else if ( Constants::scenario == Constants::rich2A ) 
+    {
+      try 
+      {
+        return rich2AThetaSampler().sampleAnIndexAbove(r);
+      } 
+      catch ( Rich2AThetaSampler::NoSamplesPossible & )
+      {
         throw SampleIsImpossible();
-      };
-    } else {
+      }
+    } 
+    else
+    {
       throw Constants::scenario;
-    };
+    }
   }
 
-  double NimTypeRichModel::priorProbabilityOfRadiusAbove(const double r) const {
-    if (Constants::scenario == Constants::simpleModel) {
+  double NimTypeRichModel::priorProbabilityOfRadiusAbove(const double r) const
+  {
+    if (Constants::scenario == Constants::simpleModel)
+    {
       return exponentialProbAbove(r,circleMeanRadiusParameter);
-    } else if (Constants::scenario == Constants::rich2A) {
+    } 
+    else if (Constants::scenario == Constants::rich2A) 
+    {
       // was return 1 in "not-so-bad" version of program!
-      return rich2AProbabilityThetaAbove(r);
-    } else {
+      return rich2AProbabilityThetaAbove()(r);
+    } 
+    else
+    {
       throw Constants::scenario;
-    };
+    }
   }
 
   double NimTypeRichModel::sampleFromApproximateCoPointSeparationDistribution() const
@@ -375,9 +399,8 @@ namespace Lester
   void NimTypeRichModel::readCacheFromFile()
   {
     m_cache.clear();
-    const std::string filename ( getCacheLocation() );
-    Lester::messHandle().info() << "Opening cache file '" << filename << "'" << Lester::endmsg;
-    std::ifstream f(filename.c_str());
+    Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'" << Lester::endmsg;
+    std::ifstream f(m_cacheLocation.c_str());
     if ( f.is_open() )
     {
       double key(0),ans(0);
@@ -391,7 +414,7 @@ namespace Lester
     }
     else
     {
-      Lester::messHandle().error() << "Failed to open cache file '" << filename
+      Lester::messHandle().error() << "Failed to open cache file '" << m_cacheLocation
                                    << "' -> Will re-calculate from scratch (SLOW)" << Lester::endmsg;
     }
   }
@@ -502,8 +525,7 @@ namespace Lester
     try
     {
       // need to add read/write idea here
-      const std::string filename = getCacheLocation();
-      std::ofstream cf(filename.c_str(),std::ios::app);
+      std::ofstream cf(m_cacheLocation.c_str(),std::ios::app);
       if ( cf.is_open() )
       {
         if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
@@ -514,7 +536,7 @@ namespace Lester
       }
       else
       {
-        Lester::messHandle().warning() << "Failed to open cache file '" << filename
+        Lester::messHandle().warning() << "Failed to open cache file '" << m_cacheLocation
                                        << "' for writting -> New cache values not saved." << Lester::endmsg;
       }
     }

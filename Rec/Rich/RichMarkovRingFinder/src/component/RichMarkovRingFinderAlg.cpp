@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.45 2008-06-09 12:38:03 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.46 2008-06-11 00:17:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -71,12 +71,14 @@ StatusCode RichMarkovRingFinderAlg::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle     );
   acquireTool( "RichSmartIDTool",    m_smartIDTool );
 
+  // Intercept initialisation messages from MC code
+  Lester::messHandle().declare(this);
+
   // make a new sampler ( should use a factory here )
   boost::shared_ptr<Lester::NimTypeRichModel> ntrm(new Lester::NimTypeRichModel);
   m_sampler = new Lester::CrudeSampler(ntrm);
 
   // configure sampler
-  Lester::messHandle().declare(this); // set for messages
   m_sampler->configuration.clearAllparams();
   m_sampler->configuration.setParam( "ScaleNumItsByHits", true );
   m_sampler->configuration.setParam( "TargetIterations", 1000  );
