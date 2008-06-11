@@ -6,6 +6,8 @@
  *  Job options for Gauss to produce events with evolving survey geometry
  *  as available in corresponding "head" tag of DDDB
  *
+ *  @author G.Corti
+ *  @date   2008-06-10
  */
 
 //--------------------------------------------------------------------------
