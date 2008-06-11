@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.221 2008-06-11 10:20:14 jpalac Exp $
+ $Id: release.notes,v 1.222 2008-06-11 10:21:01 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,7 +9,7 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v19r13 2008-06-09 ===================
+!========================== DaVinci v19r13 2008-06-11 ===================
 
 ! 2008-06-11 - Juan PALACIOS
  - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
