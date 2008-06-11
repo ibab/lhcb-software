@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.68 2008-06-10 16:17:33 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.69 2008-06-11 09:10:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -747,7 +747,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
         std::ostringstream mess;
         mess << "L1 board " << L1ID << " : Ingress " << ingressWord
              << " is suppressed : " << inputs.size() << " Active HPDs";
-        Warning( mess.str(), 1 );
+        Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
       }
       else
       {

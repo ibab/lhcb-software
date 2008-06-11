@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.21 2007-04-23 12:58:44 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.22 2008-06-11 09:10:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -80,6 +80,10 @@ StatusCode RawBufferToRichDigitsAlg::execute()
         for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
               iHPD != (*iIn).second.hpdData().end(); ++iHPD )
         {
+          // Valid HPD ID
+          if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+          // inhibited HPD ?
+          if ( (*iHPD).second.header().inhibit() ) { continue; }
           // Loop over RichSmartIDs in this HPD
           for ( LHCb::RichSmartID::Vector::const_iterator iID = (*iHPD).second.smartIDs().begin();
                 iID != (*iHPD).second.smartIDs().end(); ++iID )

@@ -5,7 +5,7 @@
  * Implementation file for class : RichHighOccHPDSuppressionTool
  *
  * CVS Log :-
- * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.18 2008-05-08 12:24:13 jonrob Exp $
+ * $Id: RichHighOccHPDSuppressionTool.cpp,v 1.19 2008-06-11 09:10:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -58,8 +58,8 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // check config is OK
-  if ( m_whichRICH != "RICH1andRICH2" && 
-       m_whichRICH != "RICH1"         && 
+  if ( m_whichRICH != "RICH1andRICH2" &&
+       m_whichRICH != "RICH1"         &&
        m_whichRICH != "RICH2"           )
   {
     return Error( "Badly formed RICH type : "+m_whichRICH );
@@ -167,9 +167,11 @@ StatusCode HighOccHPDSuppressionTool::initOccMap( const Rich::DetectorType rich 
   return StatusCode::SUCCESS;
 }
 
-double 
+double
 HighOccHPDSuppressionTool::averageOccupancy( const LHCb::RichSmartID hpdID ) const
 {
+  // valid HPD ID
+  if ( !hpdID.isValid() ) return 0;
   // Get occupancy HPD data
   const HPDData & data = hpdData(hpdID);
   // return the average occupancy
@@ -181,59 +183,62 @@ HighOccHPDSuppressionTool::
 applyPixelSuppression( const LHCb::RichSmartID hpdID,
                        LHCb::RichSmartID::Vector & smartIDs ) const
 {
+  // default is no suppression
+  bool suppress = false;
 
-  // Get occupancy HPD data
-  HPDData & data = hpdData(hpdID);
-
-  // Occupancy for this HPD in current event
-  const unsigned int occ = smartIDs.size();
-
-  // default is below threshold
-  bool suppress       = false;
-
-  bool incrementCount = false;
-  if      ( data.fillCount() <  m_minFills )
+  // valid HPDID
+  if ( hpdID.isValid() )
   {
-    // Not yet enough sampling data, so just update
-    data.avOcc() += occ;
-    incrementCount = true;
-  }
-  else if ( m_useRunAv )
-  {
-    if ( data.fillCount() == m_minFills )
+
+    // Get occupancy HPD data
+    HPDData & data = hpdData(hpdID);
+
+    // Occupancy for this HPD in current event
+    const unsigned int occ = smartIDs.size();
+
+    bool incrementCount = false;
+    if      ( data.fillCount() <  m_minFills )
     {
-      // Now enough data so update and normalise
+      // Not yet enough sampling data, so just update
       data.avOcc() += occ;
-      data.avOcc() /= (1+m_minFills);
+      incrementCount = true;
     }
-    else
+    else if ( m_useRunAv )
     {
-      // update running average occ for this HPD
-      data.avOcc() = ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
+      if ( data.fillCount() == m_minFills )
+      {
+        // Now enough data so update and normalise
+        data.avOcc() += occ;
+        data.avOcc() /= (1+m_minFills);
+      }
+      else
+      {
+        // update running average occ for this HPD
+        data.avOcc() = ( (m_memory*data.avOcc()) + occ ) / ( m_memory+1 ) ;
+      }
+      incrementCount = true;
     }
-    incrementCount = true;
-  }
 
-  // is this HPD suppressed
-  suppress = ( data.fillCount() >= m_minFills &&
-               (occ > m_overallMax || occ > data.avOcc()*m_scale) );
-  if ( suppress )
-  {
-    // Print message
-    if ( m_sumPrint )
+    // is this HPD suppressed
+    suppress = ( data.fillCount() >= m_minFills &&
+                 (occ > m_overallMax || occ > data.avOcc()*m_scale) );
+    if ( suppress )
     {
-      std::ostringstream hpd;
-      hpd << hpdID;
-      Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
+      // Print message
+      if ( m_sumPrint )
+      {
+        std::ostringstream hpd;
+        hpd << hpdID;
+        Warning( "Fully suppressed     HPD "+hpd.str(), StatusCode::SUCCESS, 10 );
+      }
+      // clear vector (i.e. actually do the suppression)
+      smartIDs.clear();
     }
-    // clear vector (i.e. actually do the suppression)
-    smartIDs.clear();
+
+    // increment count for this HPD
+    if ( incrementCount ) { ++(data.fillCount()); }
+
   }
-
-  // increment count for this HPD
-  if ( incrementCount ) { ++(data.fillCount()); }
-
-  // verbose() << hpdID << " Occ = " << data.avOcc() << " Fills = " << data.fillCount() << endreq;
 
   // return status
   return suppress;
