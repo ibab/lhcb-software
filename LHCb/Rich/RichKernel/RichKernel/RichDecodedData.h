@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::DecodedData
  *
  *  CVS Log :-
- *  $Id: RichDecodedData.h,v 1.2 2008-06-03 12:43:47 jonrob Exp $
+ *  $Id: RichDecodedData.h,v 1.3 2008-06-11 09:07:11 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -57,7 +57,12 @@ namespace Rich
           m_footer(footer)
       { }
 
-      /// Access the Level1Input
+      /**  Access the HPD ID (LHCb::RichSmartID) for this HPD
+       *   @attention It is possible this HPDID is invalid (for instance
+       *              if the L0ID->RichSmartID database lookup failed.
+       *              Users show check for validity using the method
+       *              RichSmartID::isvalid()
+       */
       inline const LHCb::RichSmartID& hpdID() const { return m_hpdID; }
       /// Access the Header words
       inline const Header& header() const { return m_header; }
