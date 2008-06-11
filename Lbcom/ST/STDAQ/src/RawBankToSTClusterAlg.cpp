@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.21 2008-05-16 07:29:14 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.22 2008-06-11 14:48:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -44,7 +44,6 @@ STDecodingBaseAlg (name , pSvcLocator){
  // Standard constructor, initializes variables
   declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
   declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
-  declareProperty("createSummary", m_createSummary = true);
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -94,20 +93,35 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
                                               STClusters* clusCont ) const{
 
   // create Clusters from this type 
-  unsigned int pcn = STDAQ::inValidPcn; // not allowed
   bool pcnSync = true;
   std::vector<unsigned int> bankList;
 
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
+
+  if ( readoutTool()->nBoard() != tBanks.size() ){
+    counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
+    if (tBanks.size() == 0) ++counter("no banks found");
+  } 
+
+  // vote on the pcns
+  const unsigned int pcn = pcnVote(tBanks);
+  if (pcn == STDAQ::inValidPcn) {
+    counter("skipped Banks") += tBanks.size();
+    return Warning("PCN vote failed", StatusCode::SUCCESS);
+  }
+    
   std::vector<RawBank* >::const_iterator iterBank;
   // loop over the banks of this type..
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
+
+    ++counter("found Banks");    
 
     // get the board and data
     const STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
     if (!aBoard){
       // not a valid IT
       Warning("Invalid source ID --> skip bank",StatusCode::SUCCESS); 
+      ++counter("skipped Banks");
       continue;
     }
 
@@ -117,24 +131,18 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     const unsigned int version = (*iterBank)->version();
     
     if (decoder.hasError() == true){
-      if (m_createSummary) bankList.push_back((*iterBank)->sourceID());
+      bankList.push_back((*iterBank)->sourceID());
       Warning("bank has errors - skip bank", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
       continue;
     }
 
-    if (m_createSummary){
-      unsigned bankpcn = decoder.header().pcn();
-      if (pcn == STDAQ::inValidPcn){
-        pcn = bankpcn;
-      }
-      else {
-        if (pcn != bankpcn) {
-          pcnSync = false;
-          Warning("PCNs out of sync", StatusCode::SUCCESS);
-          continue; 
-	}
-      }
-    } // create summary
+    const unsigned bankpcn = decoder.header().pcn();
+    if (pcn != bankpcn){
+      Warning("PCNs out of sync", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
+      continue; 
+    }
 
     // iterator over the data....
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
@@ -143,6 +151,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
                                     iterDecoder->second,clusCont,version);
       if (sc.isFailure()) {
         Warning("Error decoding ADCs", StatusCode::SUCCESS);
+        ++counter("skipped Banks");
         continue;
       }
     } // iterDecoder
@@ -152,13 +161,13 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       debug() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       Warning("Inconsistant byte count", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
       continue;
     }
   } // iterBank
    
-  if (m_createSummary) {
-    createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList);
-  }
+
+  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList);
 
   return StatusCode::SUCCESS;
 

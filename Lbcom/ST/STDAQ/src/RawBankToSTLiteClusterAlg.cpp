@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.14 2008-05-16 08:55:02 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.15 2008-06-11 14:48:03 mneedham Exp $
 
 
 #include <algorithm>
@@ -88,15 +88,30 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   STLiteCluster::STLiteClusters* fCont = new STLiteCluster::STLiteClusters();
   fCont->reserve(5000);  
   put(fCont, m_clusterLocation);
- 
+
+  if ( readoutTool()->nBoard() != tBanks.size() ){
+    counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
+    if (tBanks.size() == 0) ++counter("no banks found");
+  } 
+
+  const unsigned int pcn = pcnVote(tBanks);
+  if (pcn == STDAQ::inValidPcn) {
+    counter("skipped Banks") += tBanks.size();
+    return Warning("PCN vote failed", StatusCode::SUCCESS);
+  }
+  
   // loop over the banks of this type..
   std::vector<RawBank* >::const_iterator iterBank =  tBanks.begin();
   for (; iterBank != tBanks.end() ; ++iterBank){
+
+    ++counter("found Banks");
 
     // get the board and data
     STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
     if (!aBoard){
       Warning("Invalid source ID --> skip bank", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
+      continue;
     } 
  
     // make a SmartBank of shorts...
@@ -105,7 +120,15 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
     // get number of clusters..
     if (decoder.hasError() == true){
       Warning("bank has errors - skip", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
       continue;
+    }
+
+    const unsigned bankpcn = decoder.header().pcn();
+    if (pcn != bankpcn){
+      Warning("PCNs out of sync", StatusCode::SUCCESS);
+      ++counter("skipped Banks");
+      continue; 
     }
 
     const int version = (*iterBank)->version();

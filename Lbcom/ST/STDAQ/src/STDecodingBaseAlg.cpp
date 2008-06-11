@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.5 2008-05-06 14:40:39 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.6 2008-06-11 14:48:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -20,7 +20,7 @@
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQGeneral.h"
 #include "SiDAQ/SiHeaderWord.h"
-
+#include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 
 #include "STDet/DeSTDetector.h"
@@ -80,3 +80,39 @@ void STDecodingBaseAlg::createSummaryBlock(const unsigned int nclus, const unsig
   STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList);   
   put(sum, m_summaryLocation);
 }
+
+unsigned int STDecodingBaseAlg::pcnVote(const std::vector<RawBank* >& banks) const{
+
+  // make a majority vote to get the correct PCN in the event
+  std::map<unsigned int, unsigned int> pcns;
+  std::vector<RawBank*>::const_iterator iterBank = banks.begin();
+  for (iterBank = banks.begin(); iterBank != banks.end() ; ++iterBank){
+    STDecoder decoder((*iterBank)->data());    
+    pcns[(decoder.header().pcn())] += 1;
+   } // iterBank
+
+  unsigned int majorityVote = STDAQ::inValidPcn;
+  unsigned int maxValue = 0;
+  std::map<unsigned int, unsigned int>::iterator iter = pcns.begin();
+  for (; iter != pcns.end() ; ++iter){
+    if (iter->second > maxValue){
+      majorityVote = iter->first;
+      maxValue = iter->second;
+    }
+  } // iter
+
+  return majorityVote;
+}
+
+
+StatusCode STDecodingBaseAlg::finalize() {
+
+  const double failed = counter("skipped Banks").flag();
+  const double processed = counter("found Banks").flag();  
+  const double eff = 1.0 - (failed/processed); 
+
+  info() << "Successfully processed " << 100* eff << " %"  << endmsg;
+    
+  return GaudiAlgorithm::finalize();
+}
+

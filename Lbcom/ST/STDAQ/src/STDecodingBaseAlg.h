@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.3 2008-05-06 14:40:39 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.4 2008-06-11 14:48:03 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -39,6 +39,8 @@ public:
   virtual ~STDecodingBaseAlg( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+   
+  virtual StatusCode finalize();
 
 protected:
 
@@ -53,8 +55,9 @@ protected:
  void createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
                          const bool pcnsync, const std::vector<unsigned int>& bankList) const;
 
- bool m_createSummary;
- 
+ unsigned int pcnVote(const std::vector<LHCb::RawBank* >& banks) const;
+
+
 private:
 
   /// bank type
@@ -65,6 +68,7 @@ private:
   ISTReadoutTool* m_readoutTool;
   DeSTDetector* m_tracker;
  
+
 };
 
 inline ISTReadoutTool* STDecodingBaseAlg::readoutTool() const{
