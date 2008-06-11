@@ -1,11 +1,11 @@
-// $Id: PatPV2D.h,v 1.1.1.1 2007-10-09 18:46:14 smenzeme Exp $
+// $Id: PatPV2D.h,v 1.2 2008-06-11 19:28:25 witekma Exp $
 #ifndef PATPV2D_H 
 #define PATPV2D_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "PVSeedTool.h"
+#include "IPVSeeding.h"
 
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -81,9 +81,7 @@ private:
   LHCb::Tracks*  m_inputTracks;    ///< Pointer to the SpaceVelo tracks
   LHCb::RecVertices* m_outputVertices; ///< Pointer to the 3D vertices
  
-  PVSeedTool* m_pvSeedTool;
-
-  std::vector<vtxCluster> m_vclusters;
+  IPVSeeding* m_pvSeedTool;
 
   std::string m_inputTracksName;
   std::string m_outputVerticesName;

@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.h,v 1.3 2007-12-04 14:11:17 cattanem Exp $
+// $Id: PVOfflineTool.h,v 1.4 2008-06-11 19:28:24 witekma Exp $
 #ifndef PVOFFLINETOOL_H 
 #define PVOFFLINETOOL_H 1
 // Include files:
@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiTool.h"
 // Interfaces
 #include "TrackInterfaces/IPVOfflineTool.h"
 #include "IPVFitter.h"
-#include "PVSeedTool.h"
+#include "IPVSeeding.h"
 // Track info
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
@@ -59,10 +59,11 @@ private:
   std::string m_outputVertices;
   // Tools
   IPVFitter* m_pvfit;                // PV fitting tool
-  PVSeedTool* m_pvSeedTool;              // Seeding tool
+  IPVSeeding* m_pvSeedTool;              // Seeding tool
   // Member functions
   std::vector<std::string> m_inputTracks;
   std::string m_pvFitterName;
+  std::string m_pvSeedingName;
 
   StatusCode matchVtxByTracks(const LHCb::RecVertex& invtx,  
 			      std::vector<LHCb::RecVertex>& outvtxvec, 
@@ -71,7 +72,7 @@ private:
   void readTracks( std::vector<const LHCb::Track*>& rtracks);
 
   void getSeeds(std::vector<const LHCb::Track*>& rtracks, 
-                std::vector<double>& zseeds);
+                std::vector<Gaudi::XYZPoint>& seeds);
 
   void removeTracksByLHCbIDs(std::vector<const LHCb::Track*>& tracks, 
 		             std::vector<const LHCb::Track*>& tracks2remove);
@@ -82,7 +83,7 @@ private:
   void removeTracksUsedByVertex(std::vector<const LHCb::Track*>& tracks,
 				LHCb::RecVertex& rvtx);
 
-  void storeDummyVertices(std::vector<double>& zseeds,
+  void storeDummyVertices(std::vector<Gaudi::XYZPoint>& zseeds,
 			  std::vector<const LHCb::Track*> rtracks, 
 			  std::vector<LHCb::RecVertex>& outvtx);
 

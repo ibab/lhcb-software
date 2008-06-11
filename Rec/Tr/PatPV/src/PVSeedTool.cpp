@@ -1,4 +1,4 @@
-// $Id: PVSeedTool.cpp,v 1.1.1.1 2007-10-09 18:46:14 smenzeme Exp $
+// $Id: PVSeedTool.cpp,v 1.2 2008-06-11 19:28:25 witekma Exp $
 // Include files 
 
 // STL
@@ -37,7 +37,7 @@ PVSeedTool::PVSeedTool( const std::string& type,
                     const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
-  declareInterface<PVSeedTool>(this);
+  declareInterface<IPVSeeding>(this);
   declareProperty( "x0MS",                         m_x0MS          =  0.01          );
 
   // steering parameters for merging procedure
@@ -71,6 +71,49 @@ PVSeedTool::PVSeedTool( const std::string& type,
 // Destructor
 //=============================================================================
 PVSeedTool::~PVSeedTool() {}; 
+
+
+//=============================================================================
+// getSeeds
+//=============================================================================
+void PVSeedTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds) {
+
+  if(inputTracks.size() < 3 ) return; 
+
+  std::vector<vtxCluster> vclusters;
+  std::vector<double> zseeds;
+
+  std::vector<const LHCb::Track*>::iterator it;
+  for ( it = inputTracks.begin(); it != inputTracks.end(); it++ ) {
+    const LHCb::Track* ptr = (*it);
+
+    double sigsq; 
+    double zclu;
+
+    if ( ptr->type() == LHCb::Track::VeloR) {
+      zclu = ptr->firstState().z() - ptr->firstState().x()/ptr->firstState().tx();
+      errorForPVSeedFinding(ptr->firstState().tx(), 0.0, sigsq);
+    }
+    else {
+      zclu = zCloseBeam(ptr); 
+      errorForPVSeedFinding(ptr->firstState().tx(), ptr->firstState().ty(),sigsq);
+    }
+    vtxCluster clu;
+    clu.z = zclu;
+    clu.sigsq = sigsq;
+    clu.sigsqmin = clu.sigsq;
+    clu.ntracks = 1;
+    vclusters.push_back(clu);
+  } 
+
+  findClusters(vclusters,zseeds);
+
+  for ( std::vector<double>::iterator iz =  zseeds.begin(); iz != zseeds.end(); iz++ ) {
+    Gaudi::XYZPoint ep(0., 0., *iz);
+    seeds.push_back(ep);
+  }
+
+}
 
 
 void PVSeedTool::findClusters(std::vector<vtxCluster>& vclus, 
@@ -267,4 +310,20 @@ void PVSeedTool::print_clusters(std::vector<vtxCluster*>& pvclus) {
   }
 
 }
+
+double PVSeedTool::zCloseBeam(const LHCb::Track* track){
+   
+
+  Gaudi::XYZVector unitVect;
+  unitVect = track->firstState().slopes().Unit();
+  LHCb::State& stateG = track->firstState(); 
+
+  double zclose = stateG.z() - unitVect.z() * 
+         (unitVect.x() * stateG.x() + unitVect.y() * stateG.y()) /
+         (1.0 - pow(unitVect.z(),2)); 
+
+  return zclose;
+
+}
+
 //=============================================================================

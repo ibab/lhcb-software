@@ -1,4 +1,4 @@
-// $Id: PatPV2D.cpp,v 1.3 2008-06-02 09:09:50 witekma Exp $
+// $Id: PatPV2D.cpp,v 1.4 2008-06-11 19:28:25 witekma Exp $
 // Include files
  
 // from Gaudi
@@ -79,12 +79,11 @@ StatusCode PatPV2D::initialize() {
   };
 
   // Access PVSeedTool
-  m_pvSeedTool = tool<PVSeedTool>( "PVSeedTool", this );
+  m_pvSeedTool = tool<IPVSeeding>( "PVSeedTool", this );
   if( !m_pvSeedTool ) {
     err() << "Unable to retrieve the PVSeedTool" << endmsg;
     return  StatusCode::FAILURE;
   }
-  m_vclusters.reserve(500);
 
   return StatusCode::SUCCESS;
 };
@@ -111,7 +110,7 @@ StatusCode PatPV2D::execute() {
   // to aviod edge effects
   double maxZ =  (200. -10.)*Gaudi::Units::mm;
 
-  m_vclusters.clear();
+  std::vector<const LHCb::Track*> seedTracks;
 
   // select 2d tracks and fill local bookkeeping table
   for ( std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin();
@@ -150,29 +149,24 @@ StatusCode PatPV2D::execute() {
       tmpTrack.backward  = pTr2d->checkFlag( LHCb::Track::Backward);
       myTracks.push_back(tmpTrack);
 
-      double sigsq;
-      // use standard errors for seeding
-      m_pvSeedTool->errorForPVSeedFinding(trFirst, 0.0, sigsq);
-
-      vtxCluster clu;
-      clu.z = z0;
-      clu.sigsq = sigsq;
-      clu.sigsqmin = clu.sigsq;
-      clu.ntracks = 1;
-      m_vclusters.push_back(clu);
+      seedTracks.push_back(pTr2d);
     }
   }
 
   /////////////////////////////////
-  // Get zseeds of PV candidates //
+  // Get seeds of PV candidates //
   /////////////////////////////////
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << m_vclusters.size() << " 2D tracks used for seeding" << endmsg;
+    debug() << seedTracks.size() << " 2D tracks used for seeding" << endmsg;
   }
   
+  std::vector<Gaudi::XYZPoint> seeds;
+  m_pvSeedTool->getSeeds(seedTracks ,seeds);
   std::vector<double> zseeds;
-  m_pvSeedTool->findClusters(m_vclusters,zseeds);
+  for (std::vector<Gaudi::XYZPoint>::iterator its = seeds.begin(); its != seeds.end(); its++) {
+    zseeds.push_back(its->Z());
+  }
 
   if ( msgLevel( MSG::DEBUG ) ) {
     debug() << zseeds.size() << " z seeds found: " << zseeds << endmsg;

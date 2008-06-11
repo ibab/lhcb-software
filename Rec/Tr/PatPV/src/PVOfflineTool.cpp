@@ -1,4 +1,4 @@
-// $Id: PVOfflineTool.cpp,v 1.2 2007-12-04 11:13:06 witekma Exp $
+// $Id: PVOfflineTool.cpp,v 1.3 2008-06-11 19:28:24 witekma Exp $
 // Include files:
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -26,6 +26,7 @@ PVOfflineTool::PVOfflineTool(const std::string& type,
   declareProperty("SaveSeedsAsPV", m_saveSeedsAsPV = false);
   declareProperty("InputTracks",   m_inputTracks);
   declareProperty("PVFitterName",  m_pvFitterName = "LSAdaptPVFitter");
+  declareProperty("PVSeedingName", m_pvSeedingName = "PVSeedTool");
 }
 
 //=========================================================================
@@ -42,9 +43,9 @@ StatusCode PVOfflineTool::initialize()
     return  StatusCode::FAILURE;
   }
   // Access PVSeedTool
-  m_pvSeedTool = tool<PVSeedTool>("PVSeedTool",this);
+  m_pvSeedTool = tool<IPVSeeding>(m_pvSeedingName,this);
   if(!m_pvSeedTool) {
-    err() << "Unable to retrieve the PVSeedTool" << endmsg;
+    err() << "Unable to retrieve the PV seeding tool " << m_pvSeedingName << endmsg;
     return  StatusCode::FAILURE;
   }
   // Input tracks
@@ -151,21 +152,21 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
   std::vector<const LHCb::Track*> rtracks;
   rtracks = tracks2use;
 
-  std::vector<double> zseeds;
-  getSeeds(tracks2use, zseeds);  
+  std::vector<Gaudi::XYZPoint> seeds;
+  m_pvSeedTool->getSeeds(tracks2use, seeds);  
 
   // monitor quality of zseeds. Save them as fake PVs.
   if(m_saveSeedsAsPV) {
-    storeDummyVertices(zseeds, rtracks, outvtxvec);
+    storeDummyVertices(seeds, rtracks, outvtxvec);
     return StatusCode::SUCCESS;
   }
 
   // reconstruct vertices
-  std::vector<double>::iterator iz;
-  for (iz = zseeds.begin(); iz != zseeds.end(); iz++) {
+  std::vector<Gaudi::XYZPoint>::iterator is;
+  for (is = seeds.begin(); is != seeds.end(); is++) {
     LHCb::RecVertex recvtx;
-    Gaudi::XYZPoint xyz(0. ,0. ,*iz);
-    StatusCode scvfit = m_pvfit->fitVertex( xyz, rtracks, recvtx );
+    //    Gaudi::XYZPoint *pxyz = &is;
+    StatusCode scvfit = m_pvfit->fitVertex( *is, rtracks, recvtx );
     if(scvfit == StatusCode::SUCCESS) {
       outvtxvec.push_back(recvtx);
       removeTracksUsedByVertex(rtracks, recvtx);
@@ -173,38 +174,6 @@ StatusCode PVOfflineTool::reconstructMultiPVFromTracks(
   }
   return StatusCode::SUCCESS;
 }
-
-
-
-//=============================================================================
-// seeding
-//=============================================================================
-void PVOfflineTool::getSeeds(std::vector<const LHCb::Track*>& rtracks, 
-			     std::vector<double>& zseeds)
-{
-
-  std::vector<vtxCluster> vclusters;
-
-  zseeds.clear();
-
-  std::vector<const LHCb::Track*>::iterator it;
-  for (it = rtracks.begin(); it != rtracks.end(); it++) {    
-    const LHCb::Track* ptr = *it;
-    double zclu = zCloseBeam(ptr); 
-    double sigsq; 
-    m_pvSeedTool->errorForPVSeedFinding(ptr->firstState().tx(),
-                                        ptr->firstState().ty(),sigsq);
-    vtxCluster clu;
-    clu.z = zclu;
-    clu.sigsq = sigsq;
-    clu.sigsqmin = clu.sigsq;
-    clu.ntracks = 1;
-    vclusters.push_back(clu);
-  } 
-
-  m_pvSeedTool->findClusters(vclusters,zseeds);
-
-};
 
 
 //=============================================================================
@@ -350,15 +319,14 @@ void PVOfflineTool::removeTracksUsedByVertex(std::vector<const LHCb::Track*>& tr
 //=============================================================================
 // Store dummy vertices
 //=============================================================================
-void PVOfflineTool::storeDummyVertices(std::vector<double>& zseeds,
+void PVOfflineTool::storeDummyVertices(std::vector<Gaudi::XYZPoint>& seeds,
                                        std::vector<const LHCb::Track*> rtracks, 
                                        std::vector<LHCb::RecVertex>& outvtxvec)
 {
-  std::vector<double>::iterator itzseed;
-  for (itzseed = zseeds.begin(); itzseed != zseeds.end(); itzseed++) {
+  std::vector<Gaudi::XYZPoint>::iterator itseed;
+  for (itseed = seeds.begin(); itseed != seeds.end(); itseed++) {
     LHCb::RecVertex tVertex;
-    Gaudi::XYZPoint xyz(0.0,0.0,*itzseed);
-    tVertex.setPosition( xyz );
+    tVertex.setPosition( *itseed );
     Gaudi::SymMatrix3x3 errMat;
     for(int i = 0; i < 3; i++) {
       for(int j = 0; j < 3; j++) {
@@ -373,7 +341,7 @@ void PVOfflineTool::storeDummyVertices(std::vector<double>& zseeds,
     for(it = rtracks.begin(); rtracks.end() != it; it++) {
       const LHCb::Track * ptr = (*it);
       double zc = zCloseBeam(ptr);
-      if(fabs(zc - *itzseed) < 3.0 * Gaudi::Units::mm) {
+      if(fabs(zc - itseed->Z()) < 3.0 * Gaudi::Units::mm) {
         tVertex. addToTracks(ptr);
       }
     }

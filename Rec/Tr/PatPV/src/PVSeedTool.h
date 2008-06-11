@@ -1,12 +1,12 @@
-// $Id: PVSeedTool.h,v 1.1.1.1 2007-10-09 18:46:14 smenzeme Exp $
+// $Id: PVSeedTool.h,v 1.2 2008-06-11 19:28:25 witekma Exp $
 #ifndef PATPV_PVSEEDTOOL_H 
 #define PATPV_PVSEEDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-
-static const InterfaceID IID_PVSeedTool ( "PVSeedTool", 1, 0 );
+#include "IPVSeeding.h"            // Interface
+#include "Event/Track.h"
 
 
 // auxiliary class for searching of clusters of tracks
@@ -51,26 +51,26 @@ public:
  *  @author Mariusz Witek
  *  @date   2005-11-19
  */
-class PVSeedTool : public GaudiTool {
+class PVSeedTool : public GaudiTool, virtual public IPVSeeding {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_PVSeedTool; }
 
   /// Standard constructor
   PVSeedTool( const std::string& type, 
-            const std::string& name,
-            const IInterface* parent);
+              const std::string& name,
+              const IInterface* parent);
 
   virtual ~PVSeedTool( ); ///< Destructor
 
-  void findClusters(std::vector<vtxCluster>& vclus, std::vector<double>& zclusters);
-  void errorForPVSeedFinding(double tx, double ty, double &sigzaq);
-  
+  void getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::vector<Gaudi::XYZPoint>& seeds);  
 
 protected:
 
 private:
+
+  void findClusters(std::vector<vtxCluster>& vclus, std::vector<double>& zclusters);
+  void errorForPVSeedFinding(double tx, double ty, double &sigzaq);
+
+  double zCloseBeam(const LHCb::Track* track);
   void print_clusters(std::vector<vtxCluster*>& pvclus);
 
   std::vector<pair_to_merge*> m_pvecp2m;

@@ -1,4 +1,4 @@
-// $Id: LSAdaptPVFitter.cpp,v 1.5 2008-06-04 13:12:15 cattanem Exp $
+// $Id: LSAdaptPVFitter.cpp,v 1.6 2008-06-11 19:28:24 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -149,7 +149,8 @@ StatusCode LSAdaptPVFitter::fit(LHCb::RecVertex& vtx,
   }
 
   if (nbIter >= m_Iterations) {
-    Warning( "Reached max # iterations without convergence", StatusCode::SUCCESS ).ignore();
+    warning() << " Reached max # iterations without convergence " 
+              << nbIter << endreq;
   }
 
   setChi2(vtx,pvTracks);
@@ -460,7 +461,7 @@ void LSAdaptPVFitter::setChi2(LHCb::RecVertex& vtx,
 //=============================================================================
 // Get Tukey's weight
 //=============================================================================
-double LSAdaptPVFitter::getTukeyWeight(double& trchi2,int& iter)
+double LSAdaptPVFitter::getTukeyWeight(double trchi2, int iter)
 {
   double ctrv = 9. - 3. * iter;
   if (ctrv < 3.) ctrv = 3.;
