@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.31 2008-06-09 12:38:03 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.32 2008-06-11 09:31:36 shaines Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -176,6 +176,10 @@ namespace Rich
       /// data scale factor, to turn local coordinates into angles (in rad)
       double m_scaleFactor;
 
+      /// Maximum distance from Markov ring centre of a pixel to be considered as associated to that ring
+      double m_maxPixelSep;
+
+      
     };
 
     ///////////////////////////////////////////////////////////////////////////

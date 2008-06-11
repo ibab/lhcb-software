@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.46 2008-06-11 00:17:55 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.47 2008-06-11 09:31:30 shaines Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -52,6 +52,7 @@ RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
   declareProperty( "MinAvProbIsolatedRings",  m_minAvProbIsolated  = 0.8 );
   declareProperty( "MaxHitsInEvent",      m_maxHitsEvent = 300 );
   declareProperty( "ScaleFactor",         m_scaleFactor    = 0.030/128.0 );
+  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep = 260);
 }
 
 //=============================================================================
@@ -239,12 +240,28 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       const double prob = output.inferrer->probabilityHitWasMadeByGivenCircle(iHit,iRing);
       if ( prob > m_minAssProb )
       {
-        ringHasHits = true;
+        GenRingF::GenericRing ring = *iRing;
+        const double RingCentreLocalx = ring.x();
+        const double RingCentreLocaly = ring.y();
+        
         RichRecPixel * pix = richPixels()->object( (*iHit).index().value() );
         if ( !pix ) return Error( "Markov hit has bad pixel pointer" );
+        const Gaudi::XYZPoint & PixelPtnLocal = pix -> localPosition();
+        
+        const double Xsegringsep      = std::pow( fabs(RingCentreLocalx-PixelPtnLocal.x()), 2 );
+        const double Ysegringsep      = std::pow( fabs(RingCentreLocaly-PixelPtnLocal.y()), 2 );
+        const double pixelSep     = std::sqrt(Xsegringsep+Ysegringsep);
+
+
+        if (pixelSep > m_maxPixelSep) continue;//next pixel
+        
+        ringHasHits = true;
+        //RichRecPixel * pix = richPixels()->object( (*iHit).index().value() );
+        //if ( !pix ) return Error( "Markov hit has bad pixel pointer" );
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "  -> Adding pixel " << pix->key() << " to ring" << endreq;
         newRing->richRecPixels().push_back( RichRecPixelOnRing(pix,prob) );
+        
       }
     }
     // are we going to keep this ring ?
