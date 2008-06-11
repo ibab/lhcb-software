@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !============================= PatPV v3r3 2008-06-04 =========================
+! 2008-06-02 - Mariusz Witek
+  - new functionality and package structure change: 
+  - PV off-axis reconstruction 
+  - Seeding interface introduced IPVSeeding.h
+  - PVSeed3DTool.cpp - new (second) seeding for off-axis PVs 
+  - LSAdaptPV3DFitter - new PV fitting algorithm for PatPV3D
+  - PatPV3D - new algorithm. Uses PVOfflineTool
+
 ! 2008-06-04 - Marco Cattaneo
  - Fixed warning message
 
