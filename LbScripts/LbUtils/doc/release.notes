@@ -1,3 +1,8 @@
+2008-06-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Log.py: added the --silent option which shows only the CRITICAL
+	message.
+
 2008-06-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Cache.py: added static global instance and access function.
