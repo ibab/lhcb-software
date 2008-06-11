@@ -8,43 +8,57 @@
 #include <cassert>
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
+#include "Utils/StringException.h"
 
 namespace Lester {
 
   template <class Index>
-  class FiniteRelativeProbabilityChooser {
+  class FiniteRelativeProbabilityChooser
+  {
   public:
-    class NoSamplesPossible {
-    };
-    class NoMaxExists {
-    };
+    class NoSamplesPossible { };
+    class NoMaxExists { };
   private:
     double totalProb;
     typedef std::map<double, Index> Map; // Want it to store biggest probabilities first  We are choosing this direction for speed of sampling not for mathematical accuraccy in summing!
     Map cache;
   public:
-    FiniteRelativeProbabilityChooser() : totalProb(0), cache() {
-    };
-    FiniteRelativeProbabilityChooser(std::string fileName) : totalProb(0), cache() {
-      std::ifstream f(fileName.c_str());
-      readMoreFromStream(f);
-    };
-    FiniteRelativeProbabilityChooser(std::istream & is) : totalProb(0), cache() {
-      readMoreFromStream(is);
-    };
-    void readMoreFromStream(std::istream & is) {
-      Index index;
-      double probability;
-      while (is>>index) {
-        is>>probability;
-        addIndexAndProbability(index,probability);
-      };
-    };
-    void clear() {
+    FiniteRelativeProbabilityChooser() : totalProb(0), cache() { }
+    FiniteRelativeProbabilityChooser(const std::string & fileName) : totalProb(0), cache()
+    {
+      readFromFile(fileName);
+    }
+
+  public:
+
+    void readFromFile(const std::string & fileName)
+    {
+      std::ifstream is(fileName.c_str());
+      if ( is.is_open() )
+      {
+        Index index;
+        double probability;
+        while (is>>index)
+        {
+          is>>probability;
+          addIndexAndProbability(index,probability);
+        }
+      }
+      else
+      {
+        Lester::messHandle().error() << "FiniteRelativeProbabilityChooser : Failed to open data file '"
+                                     << fileName << "'"
+                                     << Lester::endmsg;
+      }
+    }
+
+    void clear() 
+    {
       // Resets everything
       cache.clear();
       totalProb=0;
-    };
+    }
+
     void addIndexAndProbability(const Index index, const double probability) {
       assert(probability>=0);
       const double oldTotalProb = totalProb;

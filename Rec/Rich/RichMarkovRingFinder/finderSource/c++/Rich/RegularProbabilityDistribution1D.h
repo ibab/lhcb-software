@@ -19,11 +19,6 @@ namespace Lester
 
   public:
 
-    class EvaluatedTooEarly : public StringException
-    {
-    public:
-      EvaluatedTooEarly() : StringException("EvaluatedTooEarly") { }
-    };
     class NotEnoughData     : public StringException
     {
     public:
@@ -55,25 +50,32 @@ namespace Lester
     RegularProbabilityDistribution1D() : totProb(0) { }
     RegularProbabilityDistribution1D(const std::string & fileName) : totProb(0)
     {
-      std::ifstream f(fileName.c_str());
-      readFromStream(f);
-    }
-    RegularProbabilityDistribution1D(std::istream & is) : totProb(0)
-    {
-      readFromStream(is);
+      readFromFile(fileName);
     }
 
   private:
 
-    void readFromStream(std::istream & is)
+    void readFromFile(const std::string & fileName)
     {
-      Index index(0);
-      double probability(0);
-      while (is>>index) 
+      std::ifstream is(fileName.c_str());
+      if ( is.is_open() )
       {
-        is>>probability;
-        addIndexAndProbability(index,probability);
-      };
+        Lester::messHandle().info() << "Reading data file '" << fileName << "'"
+                                    << Lester::endmsg;
+        Index index(0);
+        double probability(0);
+        while (is>>index)
+        {
+          is>>probability;
+          addIndexAndProbability(index,probability);
+        }
+      }
+      else
+      {
+        Lester::messHandle().error() << "RegularProbabilityDistribution1D : Failed to open data file '"
+                                     << fileName << "'"
+                                     << Lester::endmsg;
+      }
       finishInitialisation();
     }
 
@@ -157,7 +159,7 @@ namespace Lester
       return ( i>=0 && i<static_cast<int>(pVals.size()) ? pVals[i] : 0 );
     }
 
-    inline double operator () (const Index index) const 
+    inline double operator () (const Index index) const
     {
       return probabilityDensityOf(index);
     }

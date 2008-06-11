@@ -13,80 +13,89 @@ namespace Lester {
   private:
     mutable bool changed;
     mutable double totalProb;
-    
+
     typedef std::map<Index, double> Multimap;
     mutable Multimap cache;
     typedef std::map<Index,double, std::greater_equal<Index> > InputMap;
     mutable InputMap inputMap;
   public:
-    ProbabilityAbove() : changed(true), totalProb(0), cache(), inputMap() {
-    };
-    ProbabilityAbove(const std::string s) : changed(true), totalProb(0), cache(), inputMap() {
-      std::ifstream f(s.c_str());
-      readAllFrom(f);
-    };
-    ProbabilityAbove(std::istream & is) : changed(true), totalProb(0), cache(), inputMap() {
-      readAllFrom(is);
-    };
+    ProbabilityAbove() : changed(true), totalProb(0), cache(), inputMap() { }
+    ProbabilityAbove(const std::string & fileName) : changed(true), totalProb(0), cache(), inputMap()
+    {
+      readAllFrom(fileName);
+    }
   private:
-    void readAllFrom(std::istream & is) {
-      Index index;
-      double probability;
-      while (is>>index) {
-	is>>probability;
-	addIndexAndProbability(index,probability);
-      };
-    };
+    void readAllFrom(const std::string & fileName)
+    {
+      std::ifstream is(fileName.c_str());
+      if ( is.is_open() )
+      {
+        Index index;
+        double probability;
+        while (is>>index)
+        {
+          is>>probability;
+          addIndexAndProbability(index,probability);
+        }
+      }
+      else
+      {
+        Lester::messHandle().error() << "ProbabilityAbove : Failed to open data file '"
+                                     << fileName << "'"
+                                     << Lester::endmsg;
+      }
+    }
   public:
-    void clear() {
+    void clear()
+    {
       // Resets everything
       changed=true;
       cache.clear();
       inputMap.clear();
       totalProb=0;
     };
-    inline double operator() (const Index index) const {
+    inline double operator() (const Index index) const
+    {
       return probabilityAbove(index);
-    };
-    inline double probabilityAbove(const Index index) const {
+    }
+    inline double probabilityAbove(const Index index) const
+    {
       buildCumulativeCache();
       typename Multimap::const_iterator ge_it = cache.lower_bound(index);
-      if (ge_it==cache.end()) {
-	return 0;
-      } else {
-	return ge_it->second;
-      };
-    };
+      return ( ge_it==cache.end() ? 0 :ge_it->second );
+    }
   private:
-    inline void buildCumulativeCache() const {
+    inline void buildCumulativeCache() const
+    {
       // only need to do something if inputMap has changed:
-      if (changed) {
-	// input map should already be sorted by Index ... hopefully with largest index first!
-	
-	cache.clear();
+      if (changed)
+      {
+        // input map should already be sorted by Index ... hopefully with largest index first!
 
-	double tp=0;
-	for (typename InputMap::const_iterator it = inputMap.begin();
-	     it!=inputMap.end();
-	     ++it) {
-	  const Index index = it->first;
-	  const double prob = it->second;
-	  tp += prob;
-	  assert(cache.find(index)==cache.end());
-	  cache[index]=tp/totalProb;
-	};
+        cache.clear();
 
-	changed=false;
+        double tp=0;
+        for (typename InputMap::const_iterator it = inputMap.begin();
+             it!=inputMap.end();
+             ++it) {
+          const Index index = it->first;
+          const double prob = it->second;
+          tp += prob;
+          assert(cache.find(index)==cache.end());
+          cache[index]=tp/totalProb;
+        };
+
+        changed=false;
       };
     };
     void addIndexAndProbability(const Index index, const double probability) {
       const typename InputMap::iterator it = inputMap.find(index);
       if (it==inputMap.end()) {
-	// new entry
-	inputMap[index]=probability;
+        // new entry
+        inputMap[index]=probability;
       } else {
-	// add to existing entry;
-	(it->second) += probability;
+        // add to existing entry;
+        (it->second) += probability;
       };
       totalProb+=probability;
       changed=true;
