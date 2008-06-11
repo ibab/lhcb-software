@@ -4,6 +4,16 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2008-06-11 - Vanya  BELYAEV
+
+ - dict/LoKiNumbers.xml
+   fix the warning form Reflex 
+
+ - cmt/requirements 
+   version incrment to v7r3p1 
+
+
+
 ! =========================== LoKiNumbers v7r3 2008-04-10 =====================
 ! 2008-04-09 - Vanya BELYAEV 
  - dic/LoKiNumbersDict.h

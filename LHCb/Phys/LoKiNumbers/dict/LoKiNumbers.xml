@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.3 2008-03-30 13:40:40 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.4 2008-06-11 12:02:06 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -37,8 +37,6 @@
   <class name = "std::unary_function<const std::vector<double>,double>"               />
   <class name = "std::unary_function<const std::vector<double>,bool>"                 />
   <class name = "std::unary_function<const std::vector<double>,std::vector<double> >" />
-  <class pattern = "std::unary_function<const std::vector<*>,std::vector<*> >" />
-  <class name = "std::unary_function<const std::vector<double>,bool>" />
-
+  <class pattern = "std::unary_function<const std::vector<double>,std::vector<*> >" />
 
 </lcgdict>
