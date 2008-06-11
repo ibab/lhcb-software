@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.7 2008-06-03 12:51:50 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.8 2008-06-11 09:14:41 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -77,6 +77,10 @@ StatusCode HPDHitsMoni::execute()
       for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
             iHPD != (*iIn).second.hpdData().end(); ++iHPD )
       {
+        // Valid HPD ID
+        if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+        // inhibited HPD ?
+        if ( (*iHPD).second.header().inhibit() ) { continue; }
 
         // HPD info
         const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
@@ -92,6 +96,10 @@ StatusCode HPDHitsMoni::execute()
         HPD1 << "Number hits in HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
         HPD2 << "Hit Map for HPD " << hpd << " L0ID=" << l0ID << " hardID=" << hardID;
 
+        // Alice or LHCb mode ? Use to define number of pixel rows
+        const int nPixRows = ( (*iHPD).second.header().aliceMode() ? 
+                               Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
+
         plot1D( rawIDs.size(),
                 hid(rich,"NumHits/"+(std::string)l0ID), HPD1.str(),
                 -0.5,100.5,101 );
@@ -100,11 +108,18 @@ StatusCode HPDHitsMoni::execute()
         for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
               iR != rawIDs.end(); ++iR )
         {
+          
+          // compute overall pixel row (alice or LHCb mode)
+          const int row = ( (*iHPD).second.header().aliceMode() ? 
+                            (*iR).pixelRow()*Rich::DAQ::NumAlicePixelsPerLHCbPixel + (*iR).pixelSubRow() :
+                            (*iR).pixelRow() );
 
           // fill plot
-          plot2D( (*iR).pixelCol(), (*iR).pixelRow(),
+          plot2D( (*iR).pixelCol(), row,
                   hid(rich,"HitMaps/"+(std::string)l0ID), HPD2.str(),
-                  -0.5,31.5,-0.5,31.5,32,32 );
+                  -0.5,Rich::DAQ::NumPixelColumns-0.5,
+                  -0.5,nPixRows-0.5,
+                  Rich::DAQ::NumPixelColumns,nPixRows );
 
         } // raw channel ids
 

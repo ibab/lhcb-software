@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-06-11 - Chris Jones
+ - Add protection against invalid HPD IDs in the decoded data.
+
 !======================= RichRecQC v2r19 2008-06-04 ==========================
 ! 2008-06-04 - Marco Cattaneo
  - Fix doxygen warnings

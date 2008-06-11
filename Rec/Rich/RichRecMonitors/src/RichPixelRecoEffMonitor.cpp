@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelRecoEffMonitor
  *
- *  $Id: RichPixelRecoEffMonitor.cpp,v 1.7 2008-06-03 12:51:03 jonrob Exp $
+ *  $Id: RichPixelRecoEffMonitor.cpp,v 1.8 2008-06-11 09:13:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -97,7 +97,12 @@ StatusCode PixelRecoEffMonitor::execute()
       // Loop over HPDs in this ingress
       for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
             iHPD != (*iIn).second.hpdData().end(); ++iHPD )
-      {
+      {      
+        // Valid HPD ID
+        if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+        // inhibited HPD ?
+        if ( (*iHPD).second.header().inhibit() ) { continue; }
+        
         // HPD ID
         const LHCb::RichSmartID hpd = (*iHPD).second.hpdID();
         // Vector of SmartIDs
