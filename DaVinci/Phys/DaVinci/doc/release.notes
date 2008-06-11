@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.220 2008-06-09 15:52:59 jpalac Exp $
+ $Id: release.notes,v 1.221 2008-06-11 10:20:14 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,15 @@
 !-----------------------------------------------------------------------------
 
 !========================== DaVinci v19r13 2008-06-09 ===================
+
+! 2008-06-11 - Juan PALACIOS
+ - tests/qmtest/davinci.qms/preselections.qms/test_bbstripping.qmt
+   tests/qmtest/davinci.qms/preselections.qms/test_bd2dstarpi.qmt
+   tests/qmtest/davinci.qms/preselections.qms/test_bd2kstarmumu.qmt
+   tests/qmtest/davinci.qms/preselections.qms/test_bu2d0k_d02kspipi.qmt
+   tests/qmtest/davinci.qms/preselections.qms/test_bu2eek.qmt
+  . Change correlation tables to reflect changes in NoPIDsParticleMaker
+
 
 ! 2008-06-09 - Juan PALACIOS
  - job/DaVinci_Ganga.py
