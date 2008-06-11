@@ -1,18 +1,14 @@
 /** @file 
  * 
  *  Options to run EvtGen as Stand alone 
- *  In Gauss.opts uncomment the include of this file and 
- *  comment the lines: 
- *  ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation"};
- *  #include "GAUSSOPTS/Simulation.opts"
+ *  use it togheter with GenStandAlone when running only generator phase
  *
  *  @author P.Robbe
  *  @author G.Corti
  *  @date   2006-07-28
+ *  @date   2008-07-28
  *  
  */
-
-#include "$STDOPTS/GenContent.opts"
 
 Generation.SampleGenerationTool = "StandAloneDecayTool";
 Generation.StandAloneDecayTool.ProductionTool = "PythiaProduction";
