@@ -24,11 +24,7 @@ namespace Lester {
   public:
 
     /// Default constructor (reads cache file)
-    NimTypeRichModel() 
-    { 
-      m_cacheLocation = getCacheLocation();
-      readCacheFromFile(); 
-    }
+    NimTypeRichModel();
 
     // was in Rich.h -------------------------------------------------------------------
 
@@ -144,6 +140,10 @@ namespace Lester {
     static const double backgroundMeanParameter; /// should be the poisson mean number of hits from BG given nothing else, but the whole treatment of BG hits should change in the near future.
   public:
     static const double circleMeanRadiusParameter; /// should be the mean radius of rich-rings.  Is often used also to set a length scale for CPQuantization.
+
+    static const double s_max_exponent;
+    static const double s_min_exponent;
+
   };
 
 }

@@ -36,6 +36,9 @@ namespace Lester {
       std::ifstream is(fileName.c_str());
       if ( is.is_open() )
       {
+        Lester::messHandle().debug() << "FiniteRelativeProbabilityChooser : Reading data file '"
+                                     << fileName << "'"
+                                     << Lester::endmsg;
         Index index;
         double probability;
         while (is>>index)
@@ -52,25 +55,29 @@ namespace Lester {
       }
     }
 
-    void clear() 
+    void clear()
     {
       // Resets everything
       cache.clear();
       totalProb=0;
     }
 
-    void addIndexAndProbability(const Index index, const double probability) {
+    void addIndexAndProbability(const Index index, const double probability)
+    {
       assert(probability>=0);
       const double oldTotalProb = totalProb;
       totalProb+=probability;
-      if (oldTotalProb!=totalProb) {
+      if (oldTotalProb!=totalProb)
+      {
         // We can resolve the new probability from the old one so
         const typename Map::value_type v(totalProb, index);
         const typename Map::iterator hint = cache.end();
         cache.insert(hint, v);
-      };
-    };
-    Index sampleAnIndex() const {
+      }
+    }
+
+    Index sampleAnIndex() const
+    {
       // If we got this far, we have at least one element!
       const double target = totalProb * RandFlat::shoot();
       const typename Map::const_iterator ge_target_it=cache.lower_bound(target);

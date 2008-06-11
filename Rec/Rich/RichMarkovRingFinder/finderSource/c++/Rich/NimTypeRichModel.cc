@@ -19,6 +19,10 @@
 #include "CLHEP/Random/RandPoisson.h"
 #include "CLHEP/Random/RandFlat.h"
 
+// boost
+#include "boost/numeric/conversion/bounds.hpp"
+#include "boost/limits.hpp"
+
 namespace Lester
 {
 
@@ -60,14 +64,28 @@ namespace Lester
   const double NimTypeRichModel::areaScaleForSignal = MathsConstants::pi*circleCenXSig*circleCenYSig;
   const double NimTypeRichModel::areaScaleForEverything = areaScaleForSignal; // since the signal and background distributions more-or-less over the same area
 #endif
+
+  //Add/Subtract 5 to allow for tolerance in calculations
+  const double NimTypeRichModel::s_max_exponent = std::log(boost::numeric::bounds<double>::highest())  - 5.0;
+  const double NimTypeRichModel::s_min_exponent = std::log(boost::numeric::bounds<double>::smallest()) + 5.0;
+
   // END OF CONSTANTS -------------------------------------------------------------------
 
+  NimTypeRichModel::NimTypeRichModel()
+  { 
+    // read cache
+    m_cacheLocation = getCacheLocation();
+    readCacheFromFile(); 
+    // instanciate statics
+    rich2AThetaSampler();
+    rich2AThetaDistribution();
+    rich2AProbabilityThetaAbove();
+  }
 
-
-  // was in Rich.h -------------------------------------------------------------------
-
-  /// Guarantees to either return a "reasonable" logProb or else throw Lester::LogarithmicTools::LogOfZero()
-  double NimTypeRichModel::totalLogProbOfEventDescriptionGivenData(const EventDescription & rp, /*Given*/ const Data & d) const {
+  // Guarantees to either return a "reasonable" logProb or else throw Lester::LogarithmicTools::LogOfZero()
+  double NimTypeRichModel::totalLogProbOfEventDescriptionGivenData(const EventDescription & rp,
+                                                                   const Data & d) const 
+  {
 
     /* The general idea is to calculate the result by Bayes' Theorem:
      *
@@ -90,8 +108,7 @@ namespace Lester
       };
       logAns+=lpep;
       assert(Lester::lfin(logAns) && "step3");
-
-    };
+    }
 
     return logAns;
   }
@@ -206,30 +223,44 @@ namespace Lester
 
   Hit NimTypeRichModel::sampleHitDueToCircle(const CircleParams & c) const
   {
-    const double theta=RandFlat::shoot(0.,MathsConstants::twoPi);
-    const double r0=c.radius();
-    const double epsilon=circleProbabilityDistributionEpsilonParameter;
+    const double theta    = RandFlat::shoot(0.,MathsConstants::twoPi);
+    const double r0       = c.radius();
+    const double epsilon  = circleProbabilityDistributionEpsilonParameter;
     // the maths of the next bit depends on alpha being 2 (seelab book 5) so:
     assert (circleProbabilityDistributionAlphaParameter==2);
-    const double t = RandGauss::shoot(log(r0),epsilon);
-    const double rWobbled = exp(t);
-    const double x=rWobbled*cos(theta)+c.centre().x();
-    const double y=rWobbled*sin(theta)+c.centre().y();
+    const double t        = RandGauss::shoot(log(r0),epsilon);
+    const double rWobbled = std::exp(t);
+    const double x        = rWobbled*std::cos(theta)+c.centre().x();
+    const double y        = rWobbled*std::sin(theta)+c.centre().y();
     return Hit(x,y);
   }
 
-  double NimTypeRichModel::priorProbabilityOfHitDueToCircle(const Small2Vector & p, const CircleParams & cp) const {
-    const double alpha = circleProbabilityDistributionAlphaParameter;
+  double 
+  NimTypeRichModel::priorProbabilityOfHitDueToCircle ( const Small2Vector & p, 
+                                                       const CircleParams & cp ) const 
+  {
+    const double alpha   = circleProbabilityDistributionAlphaParameter;
     const double alphaSq = alpha*alpha;
     const double epsilon = circleProbabilityDistributionEpsilonParameter;
-    const double epsSq = epsilon*epsilon;
-    const double r     = (p-cp.centre()).mag();
-    const double r0    = cp.radius();
-    const double logg  = std::log(r/r0);
-    const double logsq = logg*logg;
-    const double two = 2;
-    const double substituteForPow = ( alpha==2 ? 1 : std::pow(r/r0,alpha-two) );
-    const double ans = 1./(MathsConstants::twoPi)/sqrt(MathsConstants::twoPi*epsSq)*substituteForPow*exp(-0.5*(logsq/epsSq + alphaSq*epsSq  )) / (r*r);
+    const double epsSq   = epsilon*epsilon;
+    const double r       = (p-cp.centre()).mag();
+    const double r0      = cp.radius();
+    //std::cout << "A " << r << " " << r0 << std::endl;
+    const double logg    = std::log(r/r0);
+    const double logsq   = logg*logg;
+    const double substituteForPow = ( alpha==2 ? 1 : std::pow(r/r0,alpha-2.0) );
+    //std::cout << "B " << epsilon << " " << epsSq << " " << logsq << " " << alphaSq << " " << r << " " 
+    //          << substituteForPow << std::endl;
+    const double moo      = -0.5*(logsq/epsSq+alphaSq*epsSq);
+    //std::cout << "C " << moo << " " << s_max_exponent << " " << s_min_exponent << std::endl;
+    const double exponent = ( moo < s_min_exponent ? std::exp(s_min_exponent) :
+                              moo > s_max_exponent ? std::exp(s_max_exponent) :
+                              std::exp(moo) );
+    //std::cout << "D " << exponent << std::endl;
+    const double baa = exponent/(r*r);
+    //std::cout << "E " << baa << std::endl;
+    const double ans = ( 1.0/(MathsConstants::twoPi)/std::sqrt(MathsConstants::twoPi)*epsilon*substituteForPow*baa );
+    //std::cout << "F " << ans << std::endl;
     return ans;
   }
 
@@ -240,16 +271,15 @@ namespace Lester
     double ans=0;
     double sigmaMu=0;
     for ( EventDescription::Circs::const_iterator it=ed.circs.begin();
-          it!=ed.circs.end();
-          ++it )
+          it!=ed.circs.end(); ++it )
     {
       const double mu = meanNumberOfHitsMuExpectedOn(*it);
       sigmaMu+= mu;
       ans += mu*priorProbabilityOfHitDueToCircle(hit,*it);
     }
     sigmaMu += meanNumberOfHitsMuExpectedFromBgGiven(ed);
-    ans += meanNumberOfHitsMuExpectedFromBgGiven(ed)*priorProbabilityOfHitDueToBackground(hit);
-    return ( ans/sigmaMu );
+    ans     += meanNumberOfHitsMuExpectedFromBgGiven(ed)*priorProbabilityOfHitDueToBackground(hit);
+    return ( sigmaMu>0 ? ans/sigmaMu : 0 );
   }
 
   // were in CircleParams.h --------------------------------------------------------------
@@ -271,9 +301,10 @@ namespace Lester
     double ans=0;
     for (EventDescription::Circs::const_iterator it=ed.circs.begin();
          it!=ed.circs.end();
-         ++it) {
+         ++it) 
+    {
       ans += meanNumberOfHitsMuExpectedOn(*it);
-    };
+    }
     ans += meanNumberOfHitsMuExpectedFromBgGiven(ed);
     return ans;
   }
@@ -551,16 +582,15 @@ namespace Lester
 
   }
 
-  double NimTypeRichModel::priorProbabilityOfThreePointsBeingOnACircle
-  (const Small2Vector & a,
-   const Small2Vector & b,
-   const Small2Vector & c) const
+  double 
+  NimTypeRichModel::priorProbabilityOfThreePointsBeingOnACircle ( const Small2Vector & a,
+                                                                  const Small2Vector & b,
+                                                                  const Small2Vector & c ) const
   {
     try
     {
       const double r = CircleTheorems::radiusOfCircleThrough(a,b,c);
-      const double ans = priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(a,b,c,r);
-      return ans;
+      return priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius(a,b,c,r);
     }
     catch (CircleTheorems::RadiusIsInfinite&)
     {
@@ -568,52 +598,46 @@ namespace Lester
     }
   }
 
-  double NimTypeRichModel::priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius
-  (const Small2Vector & a,
-   const Small2Vector & b,
-   const Small2Vector & c,
-   const double r) const
+  double 
+  NimTypeRichModel::priorProbabilityOfThreePointsBeingOnACircleWithKnownCircumradius( const Small2Vector & a,
+                                                                                      const Small2Vector & b,
+                                                                                      const Small2Vector & c,
+                                                                                      const double r ) const
   {
-    const double one = 1;
-    const double averageHitsFromACircle = MathsConstants::pi * circleMeanRadiusParameter * circleHitsPerUnitLengthParameter;
-    const double averageHitsFromCircles = averageHitsFromACircle * meanNumberOfRings;
-    const double averageHitsFromBg = backgroundMeanParameter;
-    const double averageHitsTotal = averageHitsFromCircles+averageHitsFromBg;
-    const double signalPurity = averageHitsFromCircles/(averageHitsTotal);
-    const double signalPurityCubed = signalPurity*signalPurity*signalPurity;
-    const double nC = meanNumberOfRings;
-    const double nCSq = nC*nC;
-    const double PS = signalPurityCubed/nCSq;
-    const double mu // mean number of hits per unit length on circles
-      = circleHitsPerUnitLengthParameter;
-    const double muCubed = mu*mu*mu;
-
-    const double aAll = areaScaleForEverything;
-    const double aSig = areaScaleForSignal;
-    const double aAllCubed = aAll*aAll*aAll;
-    const double two=2;
-    //const double three=3;
-    const double rSq=r*r;
-
     const double rProb = priorProbabilityOfRadius(r);
+    if ( !(rProb>0) ) return 0;
 
-    //const Small3Vector a3(a);
-    //const Small3Vector b3(b);
-    //const Small3Vector c3(c);
-    const double modCross
-      = fabs(CircleTheorems::twoVectorCross(a,b)
-             + CircleTheorems::twoVectorCross(b,c)
-             + CircleTheorems::twoVectorCross(c,a));
+    const double averageHitsFromACircle = 
+      ( MathsConstants::pi * circleMeanRadiusParameter * circleHitsPerUnitLengthParameter );
+    const double averageHitsFromCircles = averageHitsFromACircle * meanNumberOfRings;
+    const double averageHitsFromBg      = backgroundMeanParameter;
+    const double averageHitsTotal       = averageHitsFromCircles+averageHitsFromBg;
+    const double signalPurity           = ( averageHitsTotal>0 ? averageHitsFromCircles/averageHitsTotal : 0 );
+    const double signalPurityCubed      = signalPurity*signalPurity*signalPurity;
+    const double nC                     = meanNumberOfRings;
 
-    const double extraTerm = averageHitsTotal*(averageHitsTotal-one)*(averageHitsTotal-two);
+    const double PS                     = ( nC>0 ? signalPurityCubed/(nC*nC) : 0 );
+    // mean number of hits per unit length on circles
+    const double mu                     = circleHitsPerUnitLengthParameter;
 
-    const double ans = one/(one+((extraTerm*aSig*modCross*(one-PS))/(two*aAllCubed*muCubed*rProb*rSq*PS)));
+    const double aAll      = areaScaleForEverything;
+    const double aSig      = areaScaleForSignal;
+    const double aAllCubed = aAll*aAll*aAll;
+    const double rSq       = r*r;
+
+    const double modCross = fabs( CircleTheorems::twoVectorCross(a,b) +
+                                  CircleTheorems::twoVectorCross(b,c) +
+                                  CircleTheorems::twoVectorCross(c,a) );
+
+    const double extraTerm = averageHitsTotal*(averageHitsTotal-1.0)*(averageHitsTotal-2.0);
+
+    const double ans = 1.0/(1.0+((extraTerm*aSig*modCross*(1.0-PS))/(2.0*aAllCubed*mu*mu*mu*rProb*rSq*PS)));
     return ans;
   }
 
-  double NimTypeRichModel::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle
-  (const Small2Vector & a,
-   const Small2Vector & b) const
+  double 
+  NimTypeRichModel::PROPTO_priorProbabilityOfTwoPointsBeingOnACircle( const Small2Vector & a,
+                                                                      const Small2Vector & b ) const
   {
     // See sheets one two and three stapled into lab book 5 at 19/11/2003
     // Assumptions:
@@ -625,38 +649,35 @@ namespace Lester
     // Bad points:
     // *   assumes circles are distributed evenly across space, so makes no use
     //     of any knowledge that could be gleaned from the distribution of centres.
-    const double deltaSq = (a-b).mag2();
-    const double delta   = std::sqrt(deltaSq);
-    const double deltaOnTwo = delta*0.5;
+    const double delta      = std::sqrt( (a-b).mag2() );
+    const double deltaOnTwo = delta / 2.0;
+    
+    const double sepFun     = approxCoPointSepFunctionPart1(deltaOnTwo);
+    if ( !(sepFun>0) ) return 0;
 
-    const double mu // mean number of hits per unit length on circles
-      = circleHitsPerUnitLengthParameter;
+    // mean number of hits per unit length on circles
+    const double mu   = circleHitsPerUnitLengthParameter;
     const double muSq = mu*mu;
 
     const double averageAreaScale = areaScaleForEverything*areaScaleForEverything / areaScaleForSignal;
 
-    static bool first = true;
-    if (first)
-    {
-      first = false;
-      Lester::messHandle().debug() << "Estimation of PS could be improved by looking at the present number of hits rather than using the average number, and by removing crude dependence on average radius etc.  This would be very important if the circle radius distribution became bimodal or hits per unit arc length came to depend upon r." << Lester::endmsg;
-      // for example, could base estimate on evidence of current fit!
-    }
-    const double one = 1;
-    //const double two = 2;
+    // Estimation of PS could be improved by looking at the present number of hits rather 
+    // than using the average number, and by removing crude dependence on average radius etc. 
+    // This would be very important if the circle radius distribution became bimodal or hits 
+    // per unit arc length came to depend upon r." << Lester::endmsg;
+    // for example, could base estimate on evidence of current fit!
+
     const double averageHitsFromACircle = MathsConstants::pi * circleMeanRadiusParameter * circleHitsPerUnitLengthParameter;
     const double averageHitsFromCircles = averageHitsFromACircle * meanNumberOfRings;
-    const double averageHitsFromBg = backgroundMeanParameter;
-    const double averageHitsTotal=averageHitsFromCircles+averageHitsFromBg;
-    const double signalPurity = averageHitsFromCircles/(averageHitsTotal);
-    const double signalPuritySq = signalPurity*signalPurity;
-    const double PS = signalPuritySq/meanNumberOfRings;
+    const double averageHitsFromBg      = backgroundMeanParameter;
+    const double averageHitsTotal       = averageHitsFromCircles+averageHitsFromBg;
+    const double signalPurity           = ( averageHitsTotal>0 ? averageHitsFromCircles/averageHitsTotal : 0 );
+    const double signalPuritySq         = signalPurity*signalPurity;
+    const double PS                     = ( meanNumberOfRings>0 ? signalPuritySq/meanNumberOfRings : 0 );
 
-    const double extraTerm = averageHitsTotal*(averageHitsTotal-one);
-
-    const double sepFun    = approxCoPointSepFunctionPart1(deltaOnTwo);
-    const double ans
-      = one/(one+(one-PS)*extraTerm/(PS * averageAreaScale * muSq * sepFun));
+    const double extraTerm = averageHitsTotal*(averageHitsTotal-1.0);
+    const double fiddle    = PS * averageAreaScale * muSq * sepFun;
+    const double ans       = 1.0/(1.0+(1.0-PS)*extraTerm/fiddle);
 
     return ans;
   }
@@ -666,6 +687,7 @@ namespace Lester
     return Small2Vector(RandGauss::shoot(circleCenXMean,circleCenXSig),
                         RandGauss::shoot(circleCenYMean,circleCenYSig));
   }
+
   double NimTypeRichModel::priorProbabilityOfCentre(const Small2Vector & cent) const
   {
     return
@@ -678,13 +700,15 @@ namespace Lester
   EventDescription NimTypeRichModel::sampleAnEventDescriptionFromPrior() const
   {
     EventDescription ans;
-    assert(ans.circs.empty());
     const int n=sampleFromNumberOfCirclesDistribution();
-    for (int i=0; i<n; i++) {
+    ans.circs.reserve(n);
+    for ( int i=0; i<n; ++i ) 
+    {
       ans.circs.push_back(sampleCircle());
-    };
+    }
     return ans;
   }
+
   double NimTypeRichModel::priorProbabilityOf(const EventDescription & ed) const
   {
     //#warning "Need to treat meanBackground correctly!"
@@ -705,21 +729,19 @@ namespace Lester
     //ans *= exp(n*log(mu)-mu);  /* times n! divided by n! */
     // SUPERSEDED BY NEXT LINE      ans *= poissonProb(ed.circs.size(),meanNumberOfRings);
     ans *= priorProbabilityOfNumberOfCircles(ed.circs.size());
-    for (EventDescription::Circs::const_iterator it = ed.circs.begin();
-         it!=ed.circs.end();
-         it++)
+    for ( EventDescription::Circs::const_iterator it = ed.circs.begin();
+          it!=ed.circs.end(); ++it )
     {
       const CircleParams & c = *it;
       const double contribution = priorProbabilityOf(c);
       ans *= contribution;
     }
-
+    
     // and now the part I left out for ages (by accident!) which ensures that we compare hypotheses with different numbers of circles on an equivalent footing.  This insertion is somewhat guessed, so would be a good idea to get a statistician to confirm what I am doing.
 
     // Basically, for every circle I multiply the prior by one over the expectation (under the circles prior) of the circles prior itself!
 
-    const double two = 2;
-    const double strangeFactor = (two*MathsConstants::sqrtPi);
+    const double strangeFactor = (2.0*MathsConstants::sqrtPi);
 
     const double oneOnCharacteristicAreaForCentresWandering = strangeFactor*strangeFactor*(circleCenXSig*circleCenYSig);
     const double oneOnCharacteristicLengthForRadiiWandering = strangeFactor*(circleRadiusSigmaAboutMean);

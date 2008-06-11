@@ -60,7 +60,8 @@ namespace Lester
       std::ifstream is(fileName.c_str());
       if ( is.is_open() )
       {
-        Lester::messHandle().info() << "Reading data file '" << fileName << "'"
+        Lester::messHandle().debug() << "RegularProbabilityDistribution1D : Reading data file '" 
+                                     << fileName << "'"
                                     << Lester::endmsg;
         Index index(0);
         double probability(0);
