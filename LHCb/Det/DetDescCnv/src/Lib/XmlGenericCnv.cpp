@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.20 2007-11-09 17:05:34 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.21 2008-06-11 08:18:50 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -491,6 +491,11 @@ XmlGenericCnv::createAddressForHref (std::string href,
     log << MSG::VERBOSE << "path expanded to " << href << std::endl;    
   }
   
+  // The URL can be of the format
+  // "<protocol>://<path>[#object_name]"
+  // or
+  // "conddb:<path>[:channel_id][#object_name]"
+  
   // Is it a CondDB address ?
   bool condDB = m_have_CONDDB_StorageType && (0==href.find("conddb:/"));
   if (condDB) {
@@ -555,7 +560,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
       // builds the location of the file
       location = href.substr(0, poundPosition);
     }
-    else { // if there is no '#' we use the file name (/path/to/file.xml -> /path/to/file.xml#file.xml)
+    else { // if there is no '#' we use the file name (/path/to/file.xml -> /path/to/file.xml#file)
       location = href;
       std::string::size_type pos = href.find_last_of('/');
       if ( pos == href.npos ) {
@@ -564,6 +569,10 @@ XmlGenericCnv::createAddressForHref (std::string href,
       }
       else {
         entryName = "/" + href.substr(pos + 1);
+      }
+      // strip the ".xml" from an entry name.
+      if ( entryName.size() > 4 && entryName.substr(entryName.size()-4) == ".xml" ) {
+        entryName = entryName.substr(0,entryName.size()-4);
       }
     }
     
@@ -597,8 +606,16 @@ XmlGenericCnv::createAddressForHref (std::string href,
                                ) && location[1] == ':'
                               )
                           );
-      // consider conddb URLs as absolute paths
-      bool is_url = location.find("conddb:") == 0;
+      // consider conddb or other URLs as absolute paths
+      bool is_url = false;
+      std::string::size_type p = location.find(':');
+      if ( std::string::npos != p ) {
+        is_url =
+          // check for "://"
+          (location[p+1] == '/' && location[p+2] == '/')
+          // check for "conddb:"
+          || (location.substr(0,7) == "conddb:");
+      }
       if ( (!is_abs_path) && (!is_url) ) {
         if ( parent->ipar()[0] == 0) {
           // The address points to a file

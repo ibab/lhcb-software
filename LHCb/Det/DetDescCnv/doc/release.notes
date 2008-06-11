@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2008-06-11 - Marco Clemencic
+ - Modified the XmlGenericCnv to allow generic URLs in the href attributes (like
+   "http://" etc.). 
+
 !================ DetDescCnv v4r6 2008-05-20 ==================================
 ! 2008-05-20 - Stephanie Hansmann-Menzemer
  - Add read in for mean excitation potential
