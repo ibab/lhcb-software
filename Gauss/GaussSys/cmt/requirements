@@ -36,7 +36,7 @@ use ${LbPythia8_use}
 #OFF use ${BcVegPy_use}
 #OFF use ${LbBcVegPy_use}
 use ${LbHerwig_use}
-#OFF use ${LbHidValley_use}
+use ${LbHidValley_use}
 use ${LbHijing_use}
 #
 use LbMIB               v2r2      Gen
@@ -65,7 +65,7 @@ use GaussMonitor	v5r1	  Sim
 use CaloMoniSim         v3r1p1    Calo
 use VeloGauss           v2r3      Velo
 use MuonMoniSim         v2r3      Muon
-use BcmMoniSim          v1r0      Bcm
+use BcmMoniSim          v1r1      Bcm
 
 # GMDL
 #use GDML                v1r240p0  Sim

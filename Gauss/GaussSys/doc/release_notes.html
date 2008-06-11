@@ -3,8 +3,249 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v31r1">2008-06-11 - GaussSys v31r1</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support only latest geometry tag
+   head-20060516. Remove LHCbDefinitions.
+    </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r6 (and Gaudi v19r9)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.1 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r2 (based on geant4.8.3.patch02)
+   <b>DecFiles v14r4</b>, ParamFiles v7r1 
+   DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   <b>pythia8 107.1</b></A></H3>
+<H3><A NAME="Details">
+   Development version.
+   Partially built on Win32, temporarly swith off all generators to test
+   new builds by LCG.
+   Put back LbHidValley in project, but not in application.
+   Provide python steerings (lhcb-2008.py) for gaudirun.py
+</A></H3>
+
+!======================== Gauss v31r1 2008-06-11 =============================
+! 2008-06-11 - Gloria CORTI
+ - Introduce generic example for generator and simulation phase stand-alone
+   with latest DB tags
+   . lhcb-2008-{GenPhase,SimPhase}.opts
+ - Modify generator and simulation stand alone options to be used as modifier
+   options for standard one
+   . GenStandAlone.opts
+   . GaussSimPhase.opts
+ - Modify EvtGenAlone.opts to be used in combination with GenStandAlone.opts
+   . EvtGenAlone.opts
+
+! 2008-06-10 - Gloria CORTI
+ - Adapt to changes in geometry structure upstream of Velo and downstream of
+   muon system for BCM simulation and BeamScintillators
+   . BCMSimulation.opts
+   . BeamScintillators.opts
+ - Pick latest geometry options
+   . GaussVis.opts
+ - Remove "older" geometry no longer working
+   . lhcb-200801.{py,opts}
+   . lhcb-200802.{py,opts}
+   . lhcb-200802-{BOff,450GeV-OpenVelo-BOff,SimPhase}.opts
+ - Introduce generic example for BOff and collisions at 450 GeV with Velo
+   open and magnetic field off
+   . lhcb-2008-{BOff,450GeV-OpenVelo-BOff}.opts
+
+! 2008-06-05 - Gloria CORTI from Marco CLEMENCIC
+ - Put comment on separate line, otherwise gaudirun.py does not work, because
+   it ignores the options in following lines in particular
+   "EventDataSvc.ForceLeaves         = true ;"
+   so that data cannot be written in TES
+
+! 2008-06-02 - Gloria CORTI
+ - New steering options to pick up latest version of geometry
+   ( tag=head-20080516 ).
+   . options/lhcb-2008.{opts,py}
+
+! 2008-05-30 - Gloria CORTI
+ - Use latest version of FieldMap DB (v5r0) with measured field
+ - Use latest version of DecFiles (v14r4) with new event types
+ - Use latest version of MIBData (v2r0) with beam gas in LSS sources and
+   compatible with both 32-bit and 64-bit
+ - Use ParticleTable with corrected PDG for D(2S), D*(2640) and Lambda_c(2625)
+   . options/Common.opts
+ - Introduce options to run with measured magnetic field map
+   . options/MeasuredFieldMap.opts
+ - Move in item list the "RIchHpdSurfaces" after "RICH2Surfaces" otherwise
+   simulation does NOT work with latest geometry
+   . options/SimGeometry.opts
+
+!================== LHCbDefinitions REMOVED: use GaudiKernel ================= 
+
+!========================== GENSER v4r1 2008-06-09 ===========================
+! 2008-06-09 - Gloria CORTI
+ - Add routine pyevwt.F over-writing the dummy routine in pythia_dummy library
+   and allowing re-weigth of cross sections for c-cbar mesons production. The
+   code was provided by Marianne BARGIOTTI.
+ - Use latest available versions of lhapdf 5.3.1, for which a build on
+   .cern.ch for tests exist for win32.
+
+! 2008-05-23 - Patrick Robbe
+ - add photos subdirectory to build a photosforgauss library containing
+   FORTRAN overriden functions
+
+!====================== Generators v8r1 2008-06-09 ===========================
+! 2008-05-29 - Gloria CORTI
+ - Modify code to pick Vector{3D,4D}Types, etc. from GaudiKernel since
+   LHCbDefinitions has been removed from GAUSS, given that the package
+   will no longer be used with Gauss DC06.
+   . Generators/IBeamTool.h
+   . src/component/BiasedBB.cpp
+   . src/component/DaughtersInLHCb.{h,cpp}
+   . src/component/EvtGenDecay.h
+   . src/component/FlatZSmearVertex.cpp
+   . src/component/ListOfDaughtersInLHCb.{h,cpp}
+   . src/component/SelectedDaughterInLHCb.{h,cpp}
+   . src/component/SignalForcedFragmentation.{h,cpp}
+   . src/component/UniformSmearVertex.cpp
+
+! 2008-05-23 - Patrick Robbe
+ - Move Photos fortran files to GENSER
+ - Remove unnecessary LHAPDF routines
+
+!========================= LbPythia v7r2 2008-06-09 ==========================
+! 2008-05-06 - Vanya BELYAEV
+ - LbPythia/PythiaProduction.h
+   src/Lib/PythiaProduction.cpp
+   - add new boolean property "ValidateHEPEVT" (the default value s false)
+   If this property is activated the conversion policy
+     "set_trust_both_mothers_and_daughters( true )" for HEPEVT -> HepMC
+   is activated. Such trick is *MANDATORY* for "Hidden Valley" production..
+
+!========================= LbHidValley v2r1 2008-06-10 ========================
+! 2008-05-06 - Vanya BELYAEV
+ - clear *_load* and *_dll* files.
+ - cmt/requirement 
+    uncoment the component library 
+    version increment to v2r1 
+ 
+!=========================== LbMIB v2r2 2008-05-05 ===========================
+! 2008-05-05 - Magnus Lieng
+ - Fixed binary data format to be compatible with both 32 and 64bit platforms
+   . CollimatorSource.h
+
+! 2008-04-28 - Magnus Lieng
+ - ASCII input files for TCT background and Beam-Gas background is located on
+   Castor at /castor/cern.ch/lhcb/background/LHC/2006_Collimators and
+   2008_BeamGas.
+ - Added python modules
+   . plotter.py
+   . gasmap.py
+ - Added python script for analyzing ASCII input files.
+   . mibplotter.py
+ - Added python script to translate and rescale Beam-Gas mars files to LbMIB
+   format. Gas density maps is located in folder 'data'. Beam-Gas mars files
+   can be found on Castor at /castor/cern.ch/lhcb/background/LHC/mars.
+   . beamgas2mib.py
+   . beamgas2mib_opts.py
+ - Added options for Beam Gas files
+   . MIB-BeamGasStartupNoShield.opts
+
+!======================= ParticleGuns v5r0 2008-06-09 =======================
+! 2008-06-09 - Patrick ROBBE
+ - Add example options for generation of a resonance particle gun
+   . options/UpsilonGun.opts
+
+! 2008-05-29 - Gloria CORTI
+ - Adapt to having removed LHCbDefinitions and picking vectors definitions
+   from GaudiKernel
+   . src/FlatSmearVertex.cpp
+
+! 2008-05-19 - Patrick Robbe
+ - Restructure ParticleGuns package to use tools:
+   . ParticleGuns/IParticleGunTool.h is the abstract interface of the tool
+     used to generate particle guns.
+   . ParticleGun.cpp is the main algorithm steering the generation of particle
+     guns (similar to Generation.cpp in the Generators package) and which
+     calls the "ParticleGun" tool.
+   . Existing particle gun codes have been migrated to the new structure
+     and job options in the options directory have been also modified to
+     take into account the new syntax.
+   . FlatNParticles: new tool of type "PileUpTool" to generate a random
+     number of particles, with flat distribution between a min and a max
+     value. To be called by the new ParticleGun algorithm.
+   . FlatSmearVertex: new tool of type "VertexSmearingTool" to generate
+     random position of the vertex of the particle gun with a flat distribution
+     within limits in x, y, z.
+
+!======================= GiGa v19r2 2008-06-09 ===============================
+! 2008-05-30 - Gloria CORTI
+ - Adapt to change introduced by patch #1757 stopping execution when loop in
+   use of services by removing retrieval of GiGa in itialization but doing it
+   when it is used the first time.
+   . GiGa/GiGaBase.h
+   . src/Lib/GiGaBase.cpp
+
+!========================= GiGaCnv v18r5 2008-06-09 ==========================
+! 2008-05-30 - Gloria CORTI
+ - Adapt to change introduced by patch #1757 stopping execution when loop in
+   use of services by removing retrieval of GiGa in itialization but doing it
+   when it is used the first time.
+   . GiGaCnv/GiGaCnvSvcBase.h
+   . src/Lib/GiGaCnvSvcBase.cpp
+
+!======================== GaussTools v13r5 2008-06-09 ========================
+! 2008-05-28 - Gloria CORTI
+ - Adapt to removal of package LHCbDefinitions: Point and Vector header files
+   are taken from GaudiKernel.
+   . src/Components/GiGaMagFieldGlobal.cpp
+
+!========================= GaussRICH v8r2 2008-06-09 =========================
+! 2008-06-02 - Chris Jones
+ - Improve a little the summary printout from GetMCRichHitsAlg
+
+! 2008-05-30 - Gloria CORTI
+ - Adapt to removal of LHCbDefinitions from GAUSS. The header files are
+   now taken from GaudiKernel.
+   . src/Analysis/RichG4CkvRecon.{h,cpp}
+   . src/RichAnalysis/RichG4HitCoordResult.h
+   . src/RichAnalysis/RichG4ReconFlatMirr.{h,cpp}
+   . src/RichAnalysis/RichG4ReconHpd.{h,cpp}
+   . src/RichAnalysis/RichG4ReconTransformHpd.{h,cpp}
+   . src/RichAnalysis/RichG4TransformPhDet.{h,cpp}
+
+!========================= GaussCalo v9r1 2008-06-09 ==========================
+! 2008-05-29 - Gloria CORTI
+ - Adapt to removal of LHCbDefinitions from GAUSS, header files are now from
+   GaudiKernel
+   . src/CaloSensDet.cpp
+   . src/EcalSensDet.{h,cpp}
+   . src/HcalSensDet.cpp
+
+!====================== GaussPhysics v5r2 2008-06-09 =========================
+! 2008-06-10 - Gloria CORTI for Neal GUEISSAZ
+ - Versions of G4Neutralino comaptible with Geant4 8.3 and put it back in
+   library
+   . G4Neutralino.{h,cpp}
+
+! 2008-05-30 - Gloria CORTI
+ - Fix problem with compilation of G4Neutralino due to removal of G4VMeson
+   class from Geant4 8, but temporarly exclude it from library because of
+   other bug in compilation
+
+!========================== VeloGauss v2r3 2008-06-09 ========================
+! 2008-05-30 - Gloria CORTI
+ - Adapt to removal of LHCbDefinitions from GAUSS. Now take the header files
+   from GaudiKernel
+   . src/VeloGaussMoni.cpp
+
+!===================== == BcmDet REMOVED: Now in LHCb ========================
+
+!======================== BcmMoniSim v1r1 2008-06-10 =========================
+! 2008-06-10 - Gloria CORTI
+ - Adapt options to new path in detector element upstream of VELO for
+   geometry head-20080516
+
+
 !=============================================================================
-</PRE><H1><A NAME="v31r0">2008-03-20 - GaussSys v31r0</A></H1><PRE>
+</PRE><H1><A NAME="v31r0">2008-05-08 - GaussSys v31r0</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. DC06 geometry no longer supported
     </A></H2>
 <H3><A NAME="Use">This version uses:
