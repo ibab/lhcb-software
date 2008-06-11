@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.3 2008-06-11 14:36:06 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -8,6 +8,7 @@
 #include <map>
 #include "boost/optional.hpp"
 #include "HltBase/IConfigAccessSvc.h"
+#include "DetCond/ICOOLConfSvc.h"
 // from Gaudi
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
@@ -50,6 +51,9 @@ private:
   MsgStream& error() const { return msg(MSG::ERROR); }
   MsgStream& fatal() const { return msg(MSG::FATAL); }
   MsgStream& always() const { return msg(MSG::ALWAYS); }
+
+  template <typename T> boost::optional<T>      ConfigDBAccessSvc::read(const typename T::digest_type&);
+  template <typename T> typename T::digest_type ConfigDBAccessSvc::write(const T& );
   
 
   StatusCode openConnection();
@@ -58,6 +62,8 @@ private:
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_connection;
   coral::ISessionProxy*                m_session;
+  ICOOLConfSvc*                        m_coolConfSvc;
+  bool                                 m_readOnly;
   bool                                 m_createSchema;
 
 };

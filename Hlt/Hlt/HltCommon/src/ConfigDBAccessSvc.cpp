@@ -7,11 +7,12 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-
-#include "PluginManager/PluginManager.h"
+#define DETCOND_BEFORE_V12R0
+#ifdef  DETCOND_BEFORE_V12R0
 #include "SealKernel/Context.h"
-#include "SealKernel/ComponentLoader.h"
-#include "SealKernel/MessageStream.h"
+#endif
+
+
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/ISessionProxy.h"
 #include "RelationalAccess/ITransaction.h"
@@ -63,8 +64,10 @@ DECLARE_SERVICE_FACTORY(ConfigDBAccessSvc)
 //=============================================================================
 ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
+  ,m_coolConfSvc(0)
 {
   declareProperty("Connection", m_connection = "sqlite_file:/tmp/config.db");
+  declareProperty("ReadOnly", m_readOnly = true );
   declareProperty("CreateSchema", m_createSchema = false);
 }
 
@@ -95,6 +98,8 @@ StatusCode ConfigDBAccessSvc::initialize() {
   if ( !sc.isSuccess() )   return sc;
   sc = setProperties();
   if ( !sc.isSuccess() )   return sc;
+
+
   sc = openConnection();
   if ( !sc.isSuccess() )   return sc;
   if ( m_createSchema )  sc = createSchema();
@@ -106,10 +111,9 @@ StatusCode ConfigDBAccessSvc::initialize() {
 //=============================================================================
 StatusCode ConfigDBAccessSvc::finalize() {
   info() << "Finalize" << endmsg;
-  // TODO close connection if still open...
-  //TODO: add idle-time thread, and see how long has passed since we
-  //      last committed a transaction... (and close the connection if
-  //      too long)
+  if (m_coolConfSvc) { 
+    m_coolConfSvc->release(); m_coolConfSvc=0;
+  }
   return Service::finalize();
 }
 
@@ -124,64 +128,116 @@ namespace {
         private:
             coral::ITransaction& m_trans;
     };
+
+    template <typename T> struct table_traits;
+
+    template <>
+    struct table_traits<PropertyConfig> {
+        static const std::string& tableName() {
+            static std::string s("PropertyConfigs"); return s; 
+        }
+        static void read(const coral::AttributeList& row, PropertyConfig& x) {
+            std::stringstream ss;
+            ss << "Name: " << row["Name"].data<std::string>() << '\n';
+            ss << "Kind: " << row["Kind"].data<std::string>() << '\n';
+            ss << "Type: " << row["Type"].data<std::string>() << '\n';
+            ss << "Properties: [\n" << row["Properties"].data<std::string>() << "]\n";
+            ss >> x;
+        }
+        static void write(const PropertyConfig& config, coral::AttributeList& row)  {
+            row["Name"]          .setValue<std::string>( config.name());
+            row["Kind"]          .setValue<std::string>( config.kind());
+            row["Type"]          .setValue<std::string>( config.type());
+            const PropertyConfig::Properties&  props = config.properties();
+            row["Properties"]    .setValue<std::string>( join( props.begin(),props.end() ) );
+        }
+        static void addSchema(coral::TableDescription& table) {
+            table.insertColumn( "Name",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               128, false );
+            table.setNotNullConstraint( "Name" );
+
+            table.insertColumn( "Type",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               128, false );
+            table.setNotNullConstraint( "Type" );
+
+            table.insertColumn( "Kind",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               32, false );
+            table.setNotNullConstraint( "Kind" );
+
+            table.insertColumn( "Properties",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               1024, false );
+
+        }
+    };
+
+    template <>
+    struct table_traits<ConfigTreeNode> {
+        static const std::string& tableName() {
+            static std::string s("ConfigTreeNodes"); return s; 
+        }
+        static void read(const coral::AttributeList& row, ConfigTreeNode& x) {
+            std::stringstream ss;
+            ss << "Label: " << row["Label"].data<std::string>() << '\n';
+            ss << "Leaf: "  << row["Leaf"].data<std::string>() << '\n';
+            ss << "Nodes: [\n" << row["Nodes"].data<std::string>() << "]\n";
+            ss >> x;
+        }
+        static void write(const ConfigTreeNode& config, coral::AttributeList& row) {
+            row["Label"]         .setValue<std::string>( config.label() );
+            row["Leaf"]          .setValue<std::string>( config.leaf().str() );
+            const ConfigTreeNode::NodeRefs&  nodes = config.nodes();
+            row["Nodes"]         .setValue<std::string>( join( nodes.begin(),nodes.end(),to_str<ConfigTreeNode::digest_type>() ) );
+        }
+        static void addSchema(coral::TableDescription& table) {
+            table.insertColumn( "Label",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               128 );
+
+            table.insertColumn( "Leaf",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               32 );
+        //    table.setNotNullConstraint( "Leaf" );
+
+            table.insertColumn( "Nodes",
+                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                               1024,
+                               false );
+        }
+    };
+
 };
 
-// read a single config
-boost::optional<PropertyConfig> 
-ConfigDBAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) {
+template <typename T>
+boost::optional<T> 
+ConfigDBAccessSvc::read(const typename T::digest_type& ref) {
     Transaction transaction(*m_session,true);
     coral::AttributeList condData;
     condData.extend<std::string>("ref");
     condData["ref"].setValue<std::string>(ref.str());
-    coral::IQuery* q = m_session->nominalSchema().tableHandle( "PropertyConfigs" ).newQuery();
+    coral::IQuery* q = m_session->nominalSchema().tableHandle( table_traits<T>::tableName() ).newQuery();
     q->setCondition( std::string(" id = :ref "), condData);
     q->limitReturnedRows(1); // we know we only get zero or one matches
     coral::ICursor& c = q->execute();
-    PropertyConfig x;
+    T x;
     size_t  nrow(0);
     while ( c.next() ) {
-        std::stringstream ss;
-        ss << "Name: " << c.currentRow()["Name"].data<std::string>() << '\n';
-        ss << "Kind: " << c.currentRow()["Kind"].data<std::string>() << '\n';
-        ss << "Type: " << c.currentRow()["Type"].data<std::string>() << '\n';
-        ss << "Properties: [\n" << c.currentRow()["Properties"].data<std::string>() << "]\n";
-        ss >> x;
+        table_traits<T>::read(c.currentRow(),x);
         ++nrow;
     }
-    return nrow==1 ? x : boost::optional<PropertyConfig>();
-}
-
-// read a single node
-boost::optional<ConfigTreeNode> 
-ConfigDBAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) {
-    Transaction transaction(*m_session,true);
-    coral::AttributeList condData;
-    condData.extend<std::string>("ref");
-    condData["ref"].setValue<std::string>(ref.str());
-    coral::IQuery* q = m_session->nominalSchema().tableHandle( "ConfigTreeNodes" ).newQuery();
-    q->setCondition( std::string(" id = :ref "), condData);
-    q->limitReturnedRows(1); // we know we only get zero or one matches
-    coral::ICursor& c = q->execute();
-    ConfigTreeNode x;
-    size_t  nrow(0);
-    while ( c.next() ) {
-        std::stringstream ss;
-        ss << "Label: " << c.currentRow()["Label"].data<std::string>() << '\n';
-        ss << "Leaf: " << c.currentRow()["Leaf"].data<std::string>() << '\n';
-        ss << "Nodes: [\n" << c.currentRow()["Nodes"].data<std::string>() << "]\n";
-        ss >> x;
-        ++nrow;
-    }
-    return nrow==1 ? x : boost::optional<ConfigTreeNode>();
+    return nrow==1 ? x : boost::optional<T>();
 }
 
 
-
-PropertyConfig::digest_type
-ConfigDBAccessSvc::writePropertyConfig(const PropertyConfig& config) {
+template <typename T>
+typename T::digest_type
+ConfigDBAccessSvc::write(const T& config) {
     // first check whether it is not already there!
-    PropertyConfig::digest_type id = config.digest();
-    boost::optional<PropertyConfig> present = readPropertyConfig(id);
+    typename T::digest_type id = config.digest();
+    boost::optional<T> present = read<T>(id);
     if (present) {
         assert(present.get() == config);
         return id;
@@ -189,15 +245,11 @@ ConfigDBAccessSvc::writePropertyConfig(const PropertyConfig& config) {
 
     coral::ITransaction& trans = m_session->transaction();
     trans.start(false);
-    coral::ITable& ctable = m_session->nominalSchema().tableHandle( "PropertyConfigs" );
+    coral::ITable& ctable = m_session->nominalSchema().tableHandle( table_traits<T>::tableName() );
     coral::AttributeList row;
     ctable.dataEditor().rowBuffer(row);
     row["id"]            .setValue<std::string>( id.str() );
-    row["Name"]          .setValue<std::string>( config.name());
-    row["Kind"]          .setValue<std::string>( config.kind());
-    row["Type"]          .setValue<std::string>( config.type());
-    const PropertyConfig::Properties&  props = config.properties();
-    row["Properties"]    .setValue<std::string>( join( props.begin(),props.end() ) );
+    table_traits<T>::write(config,row);
     row["InsertionTime"] .setValue<coral::TimeStamp>( coral::TimeStamp::now() ); 
     ctable.dataEditor().insertRow( row );
 
@@ -205,32 +257,22 @@ ConfigDBAccessSvc::writePropertyConfig(const PropertyConfig& config) {
     return id;
 }
 
-ConfigTreeNode::digest_type
-ConfigDBAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
-    // first check whether it is not already there!
-    ConfigTreeNode::digest_type id = config.digest();
-    boost::optional<ConfigTreeNode> present = readConfigTreeNode(id);
-    if (present) {
-        assert(present.get() == config);
-        return id;
-    } 
+boost::optional<PropertyConfig>  
+ConfigDBAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref)
+{ return read<PropertyConfig>(ref); }
 
-    coral::ITransaction& trans = m_session->transaction();
-    trans.start(false);
-    coral::ITable& ctable = m_session->nominalSchema().tableHandle( "ConfigTreeNodes" );
-    coral::AttributeList row;
-    ctable.dataEditor().rowBuffer(row);
-    row["id"]            .setValue<std::string>( id.str() );
-    row["Label"]         .setValue<std::string>( config.label() );
-    row["Leaf"]          .setValue<std::string>( config.leaf().str() );
-    const ConfigTreeNode::NodeRefs&  nodes = config.nodes();
-    row["Nodes"]         .setValue<std::string>( join( nodes.begin(),nodes.end(),to_str<ConfigTreeNode::digest_type>() ) );
-    row["InsertionTime"] .setValue<coral::TimeStamp>( coral::TimeStamp::now() ); 
-    ctable.dataEditor().insertRow( row );
+PropertyConfig::digest_type     
+ConfigDBAccessSvc::writePropertyConfig(const PropertyConfig& config)
+{ return write<PropertyConfig>(config); }
 
-    trans.commit();
-    return id;
-}
+boost::optional<ConfigTreeNode>  
+ConfigDBAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref)
+{ return read<ConfigTreeNode>(ref); }
+
+ConfigTreeNode::digest_type     
+ConfigDBAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config)
+{ return write<ConfigTreeNode>(config); }
+
 
 MsgStream& ConfigDBAccessSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
@@ -242,7 +284,7 @@ StatusCode ConfigDBAccessSvc::createSchema() {
     Transaction transaction(*m_session,false);
 
     coral::TableDescription propertyConfigTable( "Table_PropertyConfig" );
-    propertyConfigTable.setName( "PropertyConfigs" );
+    propertyConfigTable.setName( table_traits<PropertyConfig>::tableName() );
     // Define primary key
     propertyConfigTable.insertColumn( "id",
                                coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
@@ -250,28 +292,7 @@ StatusCode ConfigDBAccessSvc::createSchema() {
     propertyConfigTable.setPrimaryKey( "id" );
     propertyConfigTable.setNotNullConstraint( "id" );
 
-    propertyConfigTable.insertColumn( "Name",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               128,
-                               false );
-    propertyConfigTable.setNotNullConstraint( "Name" );
-
-    propertyConfigTable.insertColumn( "Type",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               128,
-                               false );
-    propertyConfigTable.setNotNullConstraint( "Type" );
-
-    propertyConfigTable.insertColumn( "Kind",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               32,
-                               false );
-    propertyConfigTable.setNotNullConstraint( "Kind" );
-
-    propertyConfigTable.insertColumn( "Properties",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               1024,
-                               false );
+    table_traits<PropertyConfig>::addSchema(propertyConfigTable);
 
     propertyConfigTable.insertColumn( "InsertionTime",
                                coral::AttributeSpecification::typeNameForId( typeid(coral::TimeStamp) )
@@ -285,7 +306,7 @@ StatusCode ConfigDBAccessSvc::createSchema() {
 
 
     coral::TableDescription configTreeNodeTable( "Table_ConfigTreeNode" );
-    configTreeNodeTable.setName( "ConfigTreeNodes" );
+    configTreeNodeTable.setName( table_traits<ConfigTreeNode>::tableName() );
     // Define primary key
     configTreeNodeTable.insertColumn( "id",
                                coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
@@ -293,19 +314,8 @@ StatusCode ConfigDBAccessSvc::createSchema() {
     configTreeNodeTable.setPrimaryKey( "id" );
     configTreeNodeTable.setNotNullConstraint( "id" );
 
-    configTreeNodeTable.insertColumn( "Label",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               128 );
+    table_traits<ConfigTreeNode>::addSchema(configTreeNodeTable);
 
-    configTreeNodeTable.insertColumn( "Leaf",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               32 );
-    configTreeNodeTable.setNotNullConstraint( "Leaf" );
-
-    configTreeNodeTable.insertColumn( "Nodes",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               1024,
-                               false );
     configTreeNodeTable.insertColumn( "InsertionTime",
                                coral::AttributeSpecification::typeNameForId( typeid(coral::TimeStamp) )
                                );
@@ -315,28 +325,23 @@ StatusCode ConfigDBAccessSvc::createSchema() {
     m_session->nominalSchema().dropIfExistsTable( configTreeNodeTable.name() );
     table = m_session->nominalSchema().createTable( configTreeNodeTable );
     table.privilegeManager().grantToPublic( coral::ITablePrivilegeManager::Select );
-
-
     return StatusCode::SUCCESS;
 }
 
 StatusCode ConfigDBAccessSvc::openConnection() {
-   always() << " opening connection!!! " << endmsg;
-   seal::Handle<seal::Context> m_context = new seal::Context() ;
-   seal::PluginManager* pm = seal::PluginManager::get();
-   pm->initialise();
-   seal::Handle<seal::ComponentLoader> loader = new seal::ComponentLoader( m_context.get() );
-   loader->load("SEAL/Services/MessageService");
-   std::vector< seal::Handle<seal::IMessageService> > v_msgSvc;
-   m_context->query( v_msgSvc );
-   if ( ! v_msgSvc.empty() ) {
-        seal::Handle<seal::IMessageService>& msgSvc = v_msgSvc.front();
-        msgSvc->setOutputLevel( seal::Msg::Info ); //FIXME: reduce outputlevel...
-   }
-   loader->load("CORAL/Services/ConnectionService");
-   seal::IHandle<coral::IConnectionService> iHandle =
-      m_context->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" );
+  if (m_coolConfSvc==0) {
+    StatusCode sc = service("COOLConfSvc",m_coolConfSvc);
+    if ( !sc.isSuccess() )   return sc;
+  }
 
-   m_session = iHandle->connect(m_connection, coral::Update );
+#ifdef DETCOND_BEFORE_V12R0
+  seal::IHandle<coral::IConnectionService> iHandle =
+     m_coolConfSvc->context()->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" );
+
+   m_session = iHandle->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+#else
+
+   m_session = m_coolConfSvc->connectionSvc()->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+#endif
    return StatusCode::SUCCESS;
 }

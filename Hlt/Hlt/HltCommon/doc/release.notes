@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-06-11 - Gerhard Raven
+  - simplify ConfigDBAccessSvc, remove direct dependencies on SEAL.
+
 !========================== HltCommon v3r3 2008-06-09 ===================
 !2008-06-06 - Jose A. Hernando
    - reparing the HltSummaryTool that python/examples/hltexamples.py works again

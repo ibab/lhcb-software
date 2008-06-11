@@ -25,11 +25,8 @@ use TrackInterfaces     v*    Tr
 
 use Boost        v*   LCG_Interfaces
 
-
 #### for CORAL access
-use           CORAL             v*      LCG_Interfaces
-use           SEAL              v*      LCG_Interfaces
-apply_tag   NEEDS_CORAL_BASE
+use           DetCond             v*      Det
 
 
 #============================================================================
