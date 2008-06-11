@@ -1,5 +1,5 @@
 //#printOptions 
-// $Id: GaussSimPhase.opts,v 1.1 2006-05-30 12:09:13 gcorti Exp $ 
+// $Id: GaussSimPhase.opts,v 1.2 2008-06-11 16:06:50 gcorti Exp $ 
 
 /** @file 
  * 
@@ -7,37 +7,17 @@
  *  from a file.
  *  This file defines, sequences and configures the algorithms to be executed
  *
+ *  @author G.Corti
+ *  @date   2006-05-30
+ *  @date   2008-06-10
  */
 
 #include "$GAUSSOPTS/Common.opts"    // Necessary for any Gauss executable
 
 //---------------------------------------------------------------------------
-// Phases to be executed
+// Switch off generator phases
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
-
-//---------------------------------------------------------------------------
-// Initialization
-//---------------------------------------------------------------------------
-Simulation.Members        = { "SimInit/GaussSim" };
-EventClockSvc.StartTime   = 0;
-EventClockSvc.TimeStep    = 25*ns;
-
-//---------------------------------------------------------------------------
-// Simulation phase: configuration for full detector simulation,
-//                   see there to with modified setup or with special
-//                   simulation conditions
-//---------------------------------------------------------------------------
-#include "$GAUSSOPTS/Simulation.opts" 
-Simulation.MeasureTime = true;
-
-//---------------------------------------------------------------------------
-// Monitor sub-phase
-//---------------------------------------------------------------------------
-Simulation.Members      += { "GaudiSequencer/SimMonitor" };
-#include "$GAUSSOPTS/Monitor.opts"
-//#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
-SimMonitor.MeasureTime = true;
+Gauss.Members         -= { "GaudiSequencer/Generator"  };
 
 //---------------------------------------------------------------------------
 // Must read events (overwrite property of no events input set for
@@ -45,21 +25,6 @@ SimMonitor.MeasureTime = true;
 //---------------------------------------------------------------------------
 ApplicationMgr.EvtSel = "";
 EventDataSvc.RootCLID = 1;
-
-//---------------------------------------------------------------------------
-// Write an output file (contents listed in GaussTape.opts)
-//---------------------------------------------------------------------------
-ApplicationMgr.OutStream +=  { "GaussTape" };
-
-//---------------------------------------------------------------------------
-// Add here any job specific options, to over-ride previously defined options
-//---------------------------------------------------------------------------
-//MessageSvc.OutputLevel    = 3;
-
-//---------------------------------------------------------------------------
-// Number of events to process
-//---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 5;
 
 //---------------------------------------------------------------------------
 // Input file
@@ -72,8 +37,4 @@ EventSelector.Input   = {
 // Output files. 
 //---------------------------------------------------------------------------
 GaussTape.Output = "DATAFILE='PFN:GaussSim.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
-
-HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
-//NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
 
