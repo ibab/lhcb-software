@@ -5,6 +5,17 @@
 !-----------------------------------------------------------------------------
 
 !======================== Gauss v31r1 2008-06-11 =============================
+! 2008-06-11 - Gloria CORTI
+ - Introduce generic example for generator and simulation phase stand-alone
+   with latest DB tags
+   . lhcb-2008-{GenPhase,SimPhase}.opts
+ - Modify generator and simulation stand alone options to be used as modifier
+   options for standard one
+   . GenStandAlone.opts
+   . GaussSimPhase.opts
+ - Modify EvtGenAlone.opts to be used in combination with GenStandAlone.opts
+   . EvtGenAlone.opts
+
 ! 2008-06-10 - Gloria CORTI
  - Adapt to changes in geometry structure upstream of Velo and downstream of
    muon system for BCM simulation and BeamScintillators
@@ -15,6 +26,10 @@
  - Remove "older" geometry no longer working 
    . lhcb-200801.{py,opts}
    . lhcb-200802.{py,opts}
+   . lhcb-200802-{BOff,450GeV-OpenVelo-BOff,SimPhase}.opts
+ - Introduce generic example for BOff and collisions at 450 GeV with Velo
+   open and magnetic field off
+   . lhcb-2008-{BOff,450GeV-OpenVelo-BOff}.opts
 
 ! 2008-06-05 - Gloria CORTI from Marco CLEMENCIC
  - Put comment on separate line, otherwise gaudirun.py does not work, because
