@@ -101,13 +101,12 @@ namespace Lester
     // SECOND PART IS prior:
     // ---------- totalLogProbOfEventDescription ----------------------------------------
     {
-      const double pep=priorProbabilityOf(rp);
+      const double pep  = priorProbabilityOf(rp);
+      if ( !(0<pep) )            throw Lester::LogarithmicTools::LogOfZero();
       const double lpep = std::log(pep);
-      if (pep==0 || !Lester::lfin(lpep)) {
-        throw Lester::LogarithmicTools::LogOfZero();
-      };
-      logAns+=lpep;
-      assert(Lester::lfin(logAns) && "step3");
+      if ( !Lester::lfin(lpep) ) throw Lester::LogarithmicTools::LogOfZero();
+      logAns += lpep;
+      //assert(Lester::lfin(logAns) && "step3");
     }
 
     return logAns;
@@ -624,7 +623,9 @@ namespace Lester
 
     const double extraTerm = averageHitsTotal*(averageHitsTotal-1.0)*(averageHitsTotal-2.0);
 
-    const double ans = 1.0/(1.0+((extraTerm*aSig*modCross*(1.0-PS))/(2.0*aAllCubed*mu*mu*mu*rProb*rSq*PS)));
+    const double bot = 2.0*aAllCubed*mu*mu*mu*rProb*rSq*PS;
+
+    const double ans = 1.0/(1.0+((extraTerm*aSig*modCross*(1.0-PS))/bot));
     return ans;
   }
 

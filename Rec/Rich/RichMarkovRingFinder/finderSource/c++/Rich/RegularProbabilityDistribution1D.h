@@ -125,7 +125,7 @@ namespace Lester
     void normalise()
     {
       const double totArea = totProb * deltaX;
-      for (PVals::iterator pit = pVals.begin(); pit != pVals.end(); ++pit)
+      for ( PVals::iterator pit = pVals.begin(); pit != pVals.end(); ++pit )
       {
         (*pit)/=totArea;
       }
@@ -155,9 +155,8 @@ namespace Lester
 
     inline double probabilityDensityOf(const Index index) const
     {
-      const int i = static_cast<int>((index - start)*sda);
-      //Lester::messHandle().verbose() << index<< " " << start << " " << stop << " " <<sda<<" "<< i << Lester::endmsg;
-      return ( i>=0 && i<static_cast<int>(pVals.size()) ? pVals[i] : 0 );
+      const unsigned int i = static_cast<unsigned int>((index-start)*sda);
+      return ( i<pVals.size() ? pVals[i] : 0 );
     }
 
     inline double operator () (const Index index) const
