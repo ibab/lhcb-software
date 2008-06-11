@@ -1,14 +1,15 @@
-# $Id: release.notes,v 1.131 2008-06-10 16:47:23 marcocle Exp $
+# $Id: release.notes,v 1.132 2008-06-11 05:39:14 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-!===================== Det/DetCond v11r11 2008-06-10 =========================
+!===================== Det/DetCond v12r0 2008-06-10 ==========================
 ! 2008-06-10 - Marco Clemencic
- - Adapted to the new SEAL-less COOL and CORAL.
+ - Adapted to the new SEAL-less COOL and CORAL. Needs Gaudi v20
 
+!===================== Det/DetCond v11r11 2008-05-19 =========================
 ! 2008-05-19 - Marco Clemencic
  - Added the possibility of direct mapping between the hierarchy of the COOL
    database and the transient store one.
