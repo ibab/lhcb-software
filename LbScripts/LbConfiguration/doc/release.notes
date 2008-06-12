@@ -1,6 +1,12 @@
+2008-06-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: added a hack for temporary directories with '+++'
+	inside (they confused a regular expression).
+	* tests/SetupProjectTest.py: minor update.
+
 2008-06-03  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/CreateBatAliases.py: fixed carriage return in the generated files.
+        * scripts/CreateBatAliases.py: fixed carriage return in the generated files.
 
 2008-06-02  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
