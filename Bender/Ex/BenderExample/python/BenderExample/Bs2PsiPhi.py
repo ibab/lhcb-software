@@ -27,7 +27,8 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 ## import everything form bender 
-from Bender.All import * 
+from Bender.All                import *
+from GaudiKernel.SystemOfUnits import GeV
 # =============================================================================
 ## Simple class for Bs -> Jpsi Phi selection 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -88,10 +89,11 @@ class Bs2PsiPhi(AlgoMC) :
         self.select ( "K+"  , kaons , 0 < Q )
         self.select ( "K-"  , kaons , 0 > Q )
         
+        nt1 = self.nTuple ( "NTuple for dimuons")
         ## make a loop over all dimuons
         dimuon = self.loop ( "mu+ mu-" , "J/psi(1S)" )
         for mm in dimuon :
-            m12  = mm.mass(1,2) / 1000
+            m12  = mm.mass(1,2) / GeV
             if 3.5 < m12 or 2.5 > m12  : continue
             chi2 = VCHI2( mm )
             if 0 > chi2  or 100 < chi2 : continue
@@ -100,14 +102,26 @@ class Bs2PsiPhi(AlgoMC) :
             self.plot ( m12 , " mu mu  mass ", 2.5 , 3.5 )
             mu1 = mm(1)
             mu2 = mm(2)
-            if mcMu(mu1) and mcMu(mu2) and mcPsi( mm ) :
+
+            mc1True = mcMu ( mu1 )
+            mc2True = mcMu ( mu2 )
+            mcTrue  = mcPsi( mm  ) 
+            if mc1True and mc2True and mcTrue :
                 self.plot ( m12 , " mu mu  mass ", 2.5 , 3.5 )
+                
+            nt1.column ( 'p'   , P ( mm ) / GeV  )
+            nt1.column ( 'm'   , M ( mm ) / GeV  )
+            nt1.column ( 'mc1' , mc1True )
+            nt1.column ( 'mc2' , mc2True )
+            nt1.column ( 'mc'  , mcTrue  )
+            nt1.write  () 
             mm.save("psi")
 
         ## get all selected psis 
         psi = self.selected("psi")
         if psi.empty() : return self.Warning ( "No RC-psi" , SUCCESS) # RETURN 
         
+        nt2 = self.nTuple ( "NTuple for dikaons")
         ## loop over all dikaons 
         dikaon = self.loop( "K+ K-" , "phi(1020)" )
         for phi in dikaon :
@@ -121,9 +135,21 @@ class Bs2PsiPhi(AlgoMC) :
             self.plot ( mass , "K+K- mass chi2<49  " , 1. , 1.1 )
             k1 = phi(1)
             k2 = phi(2)
-            if mcK(k1) and mcK(k2) and mcPhi(phi) : 
-                self.plot ( mass , "K+K- mass mctruth  " , 1. , 1.1 ) 
-                phi.save("phi")
+
+            mc1True = mcK   ( k1  ) 
+            mc2True = mcK   ( k2  ) 
+            mcTrue  = mcPhi ( phi )
+            
+            if mc1True and mc2True and mcTrue : 
+                self.plot ( mass , "K+K- mass mctruth  " , 1. , 1.1 )
+                
+            nt2.column ( 'p'   , P ( phi ) / GeV  )
+            nt2.column ( 'm'   , M ( phi ) / GeV  )
+            nt2.column ( 'mc1' , mc1True )
+            nt2.column ( 'mc2' , mc2True )
+            nt2.column ( 'mc'  , mcTrue  )
+            nt2.write  () 
+            phi.save("phi")
                 
         phi = self.selected("phi")
         if phi.empty() : return self.Warning ( "No RC-phi" , SUCCESS) # RETURN         
@@ -179,17 +205,27 @@ def configure ( **args ) :
     import data_Bs2Jpsiphi_mm as input 
     
     ## read external configuration files
-    gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
-        
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
+    from Configurables import NTupleSvc
+    NTupleSvc( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi.root' TYPE='ROOT' OPT='NEW'"] ) 
+
+
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr()
+    
     ## create local algorithm:
     alg = Bs2PsiPhi()
 
     ## print histos 
     alg.HistoPrint = True
-
+    alg.NTupleLUN = "PsiPhi"
+             
+               
+    ## get the application manager (create if needed)
+    gaudi = appMgr()
+    
     ## if runs locally at CERN lxplus 
     gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
 
@@ -221,7 +257,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(5000)
+    run(500)
 
 
 # =============================================================================

@@ -1,5 +1,5 @@
 
-# $Id: requirements,v 1.42 2008-05-21 09:36:40 ibelyaev Exp $ 
+# $Id: requirements,v 1.43 2008-06-12 10:54:03 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -19,13 +19,7 @@ set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs
 # ============== dependencies ================================================
 use              Bender       v* Phys 
 
-# ============== nesessary paths =============================================
-path_remove      PYTHONPATH       "BenderExample" 
-path_prepend     PYTHONPATH       "$(BENDEREXAMPLEPYTHON)"
-
-
 # ============== patterns =====================================================
-apply_pattern    application_path 
 apply_pattern    install_python_modules 
 
 # ============================================================================

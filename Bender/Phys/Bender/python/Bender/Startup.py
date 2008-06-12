@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py,v 1.1 2007-08-17 15:16:27 ibelyaev Exp $ 
+# $Id: Startup.py,v 1.2 2008-06-12 10:54:21 ibelyaev Exp $ 
 # =============================================================================
-## The trivial startup sctript frp python Bender session
+## The trivial startup sctript for python Bender session
 #
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -22,27 +22,45 @@
 #  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
 #  @date   2006-10-08
 # =============================================================================
-""" This is a trivial startup script for python Bender session """
+"""
+This is a trivial startup script for python Bender session
+"""
 # =============================================================================
 __author__ = 'Vanya BELYAEV belyaev@physics.syr.edu'
 # =============================================================================
 
 
+print ' STARTUP (1) '
+
 try:
+
+    print ' STARTUP (2) '
     import os
-    ## define the name of the history file 
-    __history__ = os.environ['PWD'] + os.sep + '.BenderHistory'
+    print ' STARTUP (3) '
+    ## define the name of the history file
+    dr = os.environ.get('PWD',None)
+    if not dr : dr = '.'
+    __history__ = dr + os.sep + '.BenderHistory'
+    print ' STARTUP (4) ', __history__
     
     def _rename_ ( file , app ) :
+        print ' STARTUP (5.1) '
         if os.path.exists( file + app ) :
+            print ' STARTUP (5.2) '
             _rename_  ( file + app , app  )
+        print ' STARTUP (5.3) '
         if os.path.exists( file )       :
+            print ' STARTUP (5.4) '
             os.rename ( file , file + app )
+        print ' STARTUP (5.5) '
 
+    print ' STARTUP (5) '
         
     ## remove/backup the previous history file
     _rename_ ( __history__ , '.OLD' )
-    
+
+    print ' STARTUP (6) '
+
     ## line completer 
     import rlcompleter
     import readline
@@ -55,8 +73,6 @@ try:
 except :
     pass
 
-# =============================================================================
-# The END 
 # =============================================================================
 # The END 
 # =============================================================================

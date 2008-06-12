@@ -26,8 +26,11 @@ The simple Bender-based example plot dikaon mass peak with MC-truth
 # =============================================================================
 __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
-## import everything form bender 
-from Bender.MainMC import * 
+## import everything form bender
+from Bender.MainMC import *
+
+
+
 # =============================================================================
 ## Simple class for access MC-truth 
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -89,15 +92,15 @@ def configure ( **args ) :
     Configure the job
     """
     
+    ## read the external configuration files
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
+    
+    gaudi = appMgr() 
+    
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
-    
-    ## read external configruation files
-    gaudi.config (
-        files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
-  
+
     ## create local algorithm:
     alg = PhiMC()
     
@@ -128,12 +131,12 @@ if __name__ == '__main__' :
 
     ## make printout of the own documentations 
     print __doc__
-    
+
     ## configure the job:
     configure()
 
     ## run the job
-    gaudi.run(5000)
+    run(100)
     
 
 # =============================================================================

@@ -20,7 +20,9 @@
 #  @date   2004-07-11
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
-""" This is a major Python Module for Bender application """
+"""
+This is a major Python Module for Bender application
+"""
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
@@ -30,31 +32,29 @@ import os
 try:
     ## try to get the startup script from ebvironment 
     startup = os.environ.get('PYTHONSTARTUP',None)
+
+    print 'I AM HERE 1 '
+    
     ## use the default startup script
     if not startup :
+        print 'I AM HERE 2 '
         startup = os.sep + 'Bender' + os.sep + 'Startup.py'
-        startup = os.environ['BENDERPYTHON'] + startup 
-    if os.path.exists( startup ) : execfile( startup )    
+        bp = os.environ.get('BENDERPYTHON',None)
+        if bp : startup = bp + startup
+        else  : startup = 'Startup.py'
+    
+    if os.path.exists( startup ) :
+        print 'I AM HERE 4 '
+        execfile( startup )
+    else :
+        print ' IMPORT '
+        import Bender.Startup
+        
+    print 'I AM HERE 5 '
+
 except:
     pass
 
-import sets
-
-## get the application maner  
-from GaudiPython import AppMgr
-
-## get the global namespace
-from GaudiPython import gbl as cpp 
-
-## create Gaudi application manager (if not done yet)  
-gaudi  = AppMgr() 
-
-## use some shortcuts 
-appMgr = gaudi     #
-g      = gaudi     # for 'backward compatibility'
-
-## declare LoKi-service ( needed for many algorithms and functions) 
-if not "LoKiSvc" in gaudi.ExtSvc : gaudi.ExtSvc += [ "LoKiSvc" ]
 
 
 ## massive imports of everything 
@@ -76,28 +76,46 @@ LHCb   = cpp.LHCb
 Gaudi  = cpp.Gaudi
 
 _SC=cpp.StatusCode
-SUCCESS = _SC(_SC.SUCCESS)
-FAILURE = _SC(_SC.FAILURE)
+SUCCESS = _SC(_SC.SUCCESS,True)
+FAILURE = _SC(_SC.FAILURE,True)
 
 _SE = cpp.StatEntity
 _iadd_old_ = _SE.__iadd__
-def _iadd_new_ (s,v) : _iadd_old_(s,float(v))
+def _iadd_new_ (s,v) :
+    return _iadd_old_(s,float(v))
 _SE.__iadd__ = _iadd_new_
+
+
+from Gaudi.Configuration import importOptions
+
+## Get the application manager 
+def appMgr( *varg , **kwarg ) :
+    """
+    Get the application manager 
+    """
+    import GaudiPython.Bindings
+    _g = GaudiPython.Bindings._gaudi
+    if not _g : _g = GaudiPython.Bindings.AppMgr( *varg , **kwarg )
+    if not 'LoKiSvc' in _g.ExtSvc : _g.ExtSvc += [ 'LoKiSvc']
+    return _g
 
 # =============================================================================
 ## run events 
-def run (n) :
+def run ( n = -1 ) :
     """
     Run gaudi
 
     >>> run(50)
     
     """
-    return gaudi.run ( n )
+    ## get the application manager
+    _g = appMgr() 
+    return _g.run ( n )
 
 # =============================================================================
 ## Welcome message:
 Bender.Welcome.instance()
+
 
 if __name__ == '__main__' :
     print __doc__

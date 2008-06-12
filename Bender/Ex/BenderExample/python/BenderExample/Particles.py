@@ -85,12 +85,13 @@ def configure ( **args ) :
     import data_Bs2Jpsiphi_mm as input 
 
     ## read external configruation files
-    gaudi.config (
-        files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardPions.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardKaons.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardPions.opts')
+    importOptions('$COMMONPARTICLESROOT/options/StandardMuons.opts')
+
+    ## get (createed if needed) the actual application manager
+    gaudi = appMgr()
     
     ## create local algorithm:
     alg = Particles()
@@ -126,7 +127,7 @@ if __name__ == '__main__' :
     configure()
     
     ## run the job
-    gaudi.run(50)
+    run(50)
     
 # =============================================================================
 # The END 

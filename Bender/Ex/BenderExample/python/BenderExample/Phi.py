@@ -28,6 +28,14 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
+
+SE = cpp.StatEntity
+_se_pr = getattr( SE , 'print' )
+SE.__print__ = _se_pr
+SE.__repr__ = SE.toString
+SE.__str__ = SE.toString
+
+
 # =============================================================================
 ## Simple class to plot dikaon mass peak
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -64,24 +72,30 @@ class Phi(Algo) :
             if 0 > chi2 or 49 < chi2 : continue
             self.plot( M(phi)/1000 , "K+K- mass chi2<49  " , 1. , 1.1 ) 
             
-        self.setFilterPassed( True ) 
+        self.setFilterPassed( True )
+
+        se = self.counter("counter")
+
+        se += 10.0
+        print se.toString() 
+        
         return SUCCESS
-    
+
 # =============================================================================
 ## configure the job
 def configure () :
     """
     Configure the job
     """
+
+    importOptions ('$DAVINCIROOT/options/DaVinciCommon.opts')
+    importOptions ('$COMMONPARTICLESROOT/options/StandardKaons.opts') 
         
     ## get the input data
     import data_Bs2Jpsiphi_mm as input 
 
-    ## read external configuration files
-    gaudi.config (
-        files   = [ 
-        '$DAVINCIROOT/options/DaVinciCommon.opts'           ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] ) 
+    ## get the actual application manager (create if needed)
+    gaudi = appMgr() 
     
     ## create local algorithm:
     alg = Phi()
@@ -114,7 +128,7 @@ if __name__ == '__main__' :
     configure()
     
     ## run the job
-    gaudi.run(5000)
+    run(500)
 
     
 # =============================================================================
