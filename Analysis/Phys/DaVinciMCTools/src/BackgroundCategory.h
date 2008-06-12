@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.22 2008-04-20 14:54:58 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.23 2008-06-12 09:49:14 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -75,7 +75,7 @@ protected:
 
 private:
 
-  MCParticleVector associate_particles_in_decay(ParticleVector);
+  MCParticleVector associate_particles_in_decay(ParticleVector, const LHCb::Particle*);
   MCParticleVector get_mc_mothers(MCParticleVector);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const LHCb::MCParticle*);
   const LHCb::MCParticle* get_top_mother_of_MCParticle(const LHCb::MCParticle*);
