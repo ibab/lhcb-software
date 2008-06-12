@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v4r0 2008-06-12 ===================
+!2008-06-12 - Gerhard Raven
+  - prepare a version of ConfigDBAccessSvc removing ALL dependencies on SEAL,
+    and tag v4r0 for the nightly builds.
+
 !2008-06-11 - Gerhard Raven
   - simplify ConfigDBAccessSvc, remove direct dependencies on SEAL.
 

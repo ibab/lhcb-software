@@ -7,12 +7,6 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-#define DETCOND_BEFORE_V12R0
-#ifdef  DETCOND_BEFORE_V12R0
-#include "SealKernel/Context.h"
-#endif
-
-
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/ISessionProxy.h"
 #include "RelationalAccess/ITransaction.h"
@@ -53,71 +47,7 @@ namespace {
        }
        return out;
     }
-}
 
-// Factory implementation
-DECLARE_SERVICE_FACTORY(ConfigDBAccessSvc)
-
-
-//=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
-  : Service ( name , pSvcLocator )
-  ,m_coolConfSvc(0)
-{
-  declareProperty("Connection", m_connection = "sqlite_file:/tmp/config.db");
-  declareProperty("ReadOnly", m_readOnly = true );
-  declareProperty("CreateSchema", m_createSchema = false);
-}
-
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigDBAccessSvc::~ConfigDBAccessSvc() {}
-
-//=============================================================================
-// queryInterface
-//=============================================================================
-StatusCode ConfigDBAccessSvc::queryInterface(const InterfaceID& IID,
-                                             void** iface) {
-  if ( IConfigAccessSvc::interfaceID().versionMatch(IID) )   {
-    *iface = (IConfigAccessSvc*)this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return Service::queryInterface(IID,iface);
-}
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode ConfigDBAccessSvc::initialize() {
-  info() << "Initialize" << endmsg;
-  StatusCode sc = Service::initialize();
-  if ( !sc.isSuccess() )   return sc;
-  sc = setProperties();
-  if ( !sc.isSuccess() )   return sc;
-
-
-  sc = openConnection();
-  if ( !sc.isSuccess() )   return sc;
-  if ( m_createSchema )  sc = createSchema();
-  return sc;
-}
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode ConfigDBAccessSvc::finalize() {
-  info() << "Finalize" << endmsg;
-  if (m_coolConfSvc) { 
-    m_coolConfSvc->release(); m_coolConfSvc=0;
-  }
-  return Service::finalize();
-}
-
-namespace {
     class Transaction {
         public:
             Transaction(coral::ISessionProxy& session,bool readonly=true) : m_trans(session.transaction()) { 
@@ -208,8 +138,71 @@ namespace {
                                false );
         }
     };
+}
 
-};
+// Factory implementation
+DECLARE_SERVICE_FACTORY(ConfigDBAccessSvc)
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
+  : Service ( name , pSvcLocator )
+  ,m_coolConfSvc(0)
+{
+  declareProperty("Connection", m_connection = "sqlite_file:/tmp/config.db");
+  declareProperty("ReadOnly", m_readOnly = true );
+  declareProperty("CreateSchema", m_createSchema = false);
+}
+
+//=============================================================================
+// Destructor
+//=============================================================================
+ConfigDBAccessSvc::~ConfigDBAccessSvc() {}
+
+//=============================================================================
+// queryInterface
+//=============================================================================
+StatusCode ConfigDBAccessSvc::queryInterface(const InterfaceID& IID,
+                                             void** iface) {
+  if ( IConfigAccessSvc::interfaceID().versionMatch(IID) )   {
+    *iface = (IConfigAccessSvc*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return Service::queryInterface(IID,iface);
+}
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode ConfigDBAccessSvc::initialize() {
+  info() << "Initialize" << endmsg;
+  StatusCode sc = Service::initialize();
+  if ( !sc.isSuccess() )   return sc;
+  sc = setProperties();
+  if ( !sc.isSuccess() )   return sc;
+  sc = openConnection();
+  if ( !sc.isSuccess() )   return sc;
+  if ( m_createSchema )  {
+    Transaction transaction(*m_session,false);
+    createTable<PropertyConfig>();
+    createTable<ConfigTreeNode>();
+  }
+  return sc;
+}
+
+//=============================================================================
+// Finalization
+//=============================================================================
+StatusCode ConfigDBAccessSvc::finalize() {
+  info() << "Finalize" << endmsg;
+  if (m_coolConfSvc) { 
+    m_coolConfSvc->release(); m_coolConfSvc=0;
+  }
+  return Service::finalize();
+}
 
 template <typename T>
 boost::optional<T> 
@@ -280,52 +273,22 @@ MsgStream& ConfigDBAccessSvc::msg(MSG::Level level) const {
 }
 
 
-StatusCode ConfigDBAccessSvc::createSchema() {
-    Transaction transaction(*m_session,false);
-
-    coral::TableDescription propertyConfigTable( "Table_PropertyConfig" );
-    propertyConfigTable.setName( table_traits<PropertyConfig>::tableName() );
-    // Define primary key
-    propertyConfigTable.insertColumn( "id",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               32 );
-    propertyConfigTable.setPrimaryKey( "id" );
-    propertyConfigTable.setNotNullConstraint( "id" );
-
-    table_traits<PropertyConfig>::addSchema(propertyConfigTable);
-
-    propertyConfigTable.insertColumn( "InsertionTime",
-                               coral::AttributeSpecification::typeNameForId( typeid(coral::TimeStamp) )
-                               );
-
-    // Create the actual table
-    m_session->nominalSchema().dropIfExistsTable( propertyConfigTable.name() );
-    coral::ITable& table = m_session->nominalSchema().createTable( propertyConfigTable );
+template <typename T>
+void ConfigDBAccessSvc::createTableSchema() {
+    coral::TableDescription table( std::string("Table_")+ table_traits<T>::tableName() );
+    table.setName( table_traits<T>::tableName() );
+    table.insertColumn( "id", 
+                        coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
+                        32 );
+    table.setPrimaryKey( "id" );
+    table.setNotNullConstraint( "id" );
+    table_traits<T>::addSchema(table);
+    table.insertColumn( "InsertionTime",
+                        coral::AttributeSpecification::typeNameForId( typeid(coral::TimeStamp) ));
+    // (re)create the table
+    m_session->nominalSchema().dropIfExistsTable( table.name() );
+    coral::ITable& table = m_session->nominalSchema().createTable( table );
     table.privilegeManager().grantToPublic( coral::ITablePrivilegeManager::Select );
-
-
-
-    coral::TableDescription configTreeNodeTable( "Table_ConfigTreeNode" );
-    configTreeNodeTable.setName( table_traits<ConfigTreeNode>::tableName() );
-    // Define primary key
-    configTreeNodeTable.insertColumn( "id",
-                               coral::AttributeSpecification::typeNameForId( typeid(std::string) ),
-                               32 );
-    configTreeNodeTable.setPrimaryKey( "id" );
-    configTreeNodeTable.setNotNullConstraint( "id" );
-
-    table_traits<ConfigTreeNode>::addSchema(configTreeNodeTable);
-
-    configTreeNodeTable.insertColumn( "InsertionTime",
-                               coral::AttributeSpecification::typeNameForId( typeid(coral::TimeStamp) )
-                               );
-
-
-    // Create the actual table
-    m_session->nominalSchema().dropIfExistsTable( configTreeNodeTable.name() );
-    table = m_session->nominalSchema().createTable( configTreeNodeTable );
-    table.privilegeManager().grantToPublic( coral::ITablePrivilegeManager::Select );
-    return StatusCode::SUCCESS;
 }
 
 StatusCode ConfigDBAccessSvc::openConnection() {
@@ -334,14 +297,6 @@ StatusCode ConfigDBAccessSvc::openConnection() {
     if ( !sc.isSuccess() )   return sc;
   }
 
-#ifdef DETCOND_BEFORE_V12R0
-  seal::IHandle<coral::IConnectionService> iHandle =
-     m_coolConfSvc->context()->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" );
-
-   m_session = iHandle->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
-#else
-
    m_session = m_coolConfSvc->connectionSvc()->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
-#endif
    return StatusCode::SUCCESS;
 }
