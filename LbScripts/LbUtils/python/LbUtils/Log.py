@@ -36,21 +36,20 @@ def addDefaultLogger(parser, format=None):
                       action="callback",
                       callback=setLogLevelCallBack, 
                       dest="loglevel",
-                      help="silent mode")
+                      help="silent mode. Only CRITICALS")
     grp.add_option("-q", "--quiet",
                       action="callback",
                       callback=setLogLevelCallBack, 
                       dest="loglevel",
-                      help="quiet mode")
+                      help="quiet mode. Only ERRORS and CRITICALS")
     grp.add_option("-v", "--verbose",
                       action="callback", 
                       callback=setLogLevelCallBack, 
                       dest="loglevel",
-                      help="verbose mode [default: %default]")
-    parser.set_defaults(debug=False)
+                      help="verbose mode [default: %default]. Everything down to INFOS")
     grp.add_option("--debug",
                       action="callback",
                       callback=setLogLevelCallBack,
                       dest="loglevel",
-                      help="debug mode")
+                      help="debug mode. Everything")
     return log
