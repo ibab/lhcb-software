@@ -1,13 +1,97 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.29 2008-04-30 10:40:05 ibelyaev Exp $
+! $Id: release.notes,v 1.30 2008-06-12 13:30:37 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.29 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.30 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v8r3 2008-06-12 ============================
+
+! 2008-06-12 - Vanya BELYAEV
+
+ - new version based on DaVinci v19r13 
+
+   This is the first version of Bender, which is "Configurables-aware" 
+   (many thanks to Jan Aamoral for stimulating questions and solutions)
+
+   Now few important clashes with Configurables are removed and Configurables 
+   *could* be used with Bender. Importans sequence for end-uses:
+
+   The module Bender.Main does *NOT* contain anymore the symbol "gaudi" 
+   (the instance of AppMgr). This symbol needs to be created explicitly 
+   in user script/module *AFTER* all explicit manipulations with Configurables.
+
+   *IMPORTANT*: 
+     All actions with Configurables are defined *ONLY BEFORE* the 
+     instantiation of Application Manager.
+
+   
+   Typical and Recommended structure of Bender module is :
+
+ 
+## import everything from some Bender-module
+
+from Bender.Main import *
+
+## define the class (algorithm)
+
+class MyAlg( Algo ) : ...
+
+
+## the configuration part of the module:
+
+def configure() :
+
+      ## deal with configurables:
+
+      ## 1) import the external configuration
+      importOptions ( file1 )
+      ...
+      importOptions ( fileN )
+
+      ## 2) import some important configurables
+      form Gaudi.Configuration import NTupleSvc, HistogramPessistencySvc
+
+      ## 3) use configurables 
+      NTupleSvc ( Output = [ " MYLUN DATAFILE='MyTuples.root' OPT='NEW' TYP='ROOT'" ] )
+      HistogramPersistencySvc ( OutputFile = "MyHistos.root" ) 
+ 
+      ## instantiate the Application manager
+      gaudi = appMgr()
+
+      ## create & configure own algorithm
+      alg = MyAlg( ... )
+      alg.Property1 = ...
+      alg.Property2 = ...
+      alg.NTupleLUN = "MYLUN"
+
+      ## add algorithm to the list of top-level algorithms
+      gaudi.addAlgorithm( alg )
+  
+      ...
+
+
+## job steering
+
+if '__main__' == __name__ :
+
+        ## configure the job
+        configure()
+
+        ## run the job
+        run ( 100 )
+ 
+
+Please note the order in which the manipulation with Configurables and 
+instantiation of Application Manager is performed. Also note that Bender.Main 
+now defined the function "run", which allows to about the explicit 
+import of symbol "gaudi".
+
+ 
 
 ! ==================== Phys/Bender v8r2 2008-04-30 ============================
 
