@@ -1,4 +1,4 @@
-// $Id: MCChild.h,v 1.4 2008-05-04 15:23:29 ibelyaev Exp $
+// $Id: MCChild.h,v 1.5 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCCHILD_H 
 #define LOKI_MCCHILD_H 1
@@ -35,7 +35,7 @@ namespace LoKi
      *
      *  @see LHCb::MCParticle
      *  @see LHCb::MCVertex::isDecay
-     *  @param  particle (const) pointer to mother particle 
+     *  @param  mother  (const) pointer to mother particle 
      *  @param  index    index   index of the child particle 
      *  @return daughter particle with given index 
      *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu

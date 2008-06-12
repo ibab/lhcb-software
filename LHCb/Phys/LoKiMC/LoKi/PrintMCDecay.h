@@ -1,4 +1,4 @@
-// $Id: PrintMCDecay.h,v 1.8 2008-05-05 13:43:54 cattanem Exp $
+// $Id: PrintMCDecay.h,v 1.9 2008-06-12 08:16:49 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_PRINTMCDECAY_H 
 #define LOKI_PRINTMCDECAY_H 1
@@ -54,6 +54,8 @@ namespace LoKi
      *  @param particle pointer to MCParticle to be printed 
      *  @param stream   stream to be used 
      *  @param cut      condition 
+     *  @param decayOnly consider only decay products 
+     *  @param level the printout depth 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
@@ -78,7 +80,8 @@ namespace LoKi
      *  @endcode 
      *
      *  @param particle pointer to MCParticle to be printed 
-     *  @param stream   stream to be used 
+     *  @param stream   stream to be used  
+     *  @param decayOnly consider only decay products 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
@@ -101,6 +104,8 @@ namespace LoKi
      *  @param particle pointer to MCParticle to be printed 
      *  @param stream   stream to be used 
      *  @param cut      condition 
+     *  @param decayOnly consider only decay products 
+     *  @param level the printout depth 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
@@ -126,6 +131,7 @@ namespace LoKi
      *
      *  @param particle pointer to MCParticle to be printed 
      *  @param stream   stream to be used 
+     *  @param decayOnly consider only decay products 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */
@@ -147,6 +153,8 @@ namespace LoKi
      *
      *  @param particle pointer to MCParticle to be printed 
      *  @param cut      condition 
+     *  @param decayOnly consider only decay products 
+     *  @param level the printout depth 
      *  @param blank    to be printed instead of cutted particles 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
@@ -170,6 +178,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @param particle pointer to MCParticle to be printed 
+     *  @param decayOnly consider only decay products 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-01-18
      */

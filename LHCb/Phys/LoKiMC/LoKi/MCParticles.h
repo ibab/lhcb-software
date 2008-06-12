@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.15 2007-11-28 14:13:59 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.16 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -643,12 +643,12 @@ namespace LoKi
     {
     public:
       /** constructor 
-       *  @param fun predicate to be evaluated 
+       *  @param cut predicate to be evaluated 
        *  @param val value to be returned for 'invalid' mother 
        */
       MCMotherPredicate
       ( const LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate& cut   , 
-        const bool                                      val   ) ;
+        const bool                                                     val   ) ;
       /// copy constructor 
       MCMotherPredicate 
       ( const MCMotherPredicate&                  right ) ;
@@ -683,11 +683,11 @@ namespace LoKi
        */
       IsParticle( const LHCb::MCParticle* object ) ;
       /** constructor from range of particles 
-       *  @param range range of object to be compared 
+       *  @param obj range of object to be compared 
        */
       IsParticle( const LoKi::MCTypes::MCRange& obj ) ;
       /** constructor from range of particles 
-       *  @param range range object to be compared 
+       *  @param obj range object to be compared 
        */
       IsParticle( const LoKi::MCTypes::MCRange::Base& obj ) ;
       /** templated constructor
@@ -700,7 +700,7 @@ namespace LoKi
         OBJECT end   ) 
         : LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate() 
         , m_objects ( begin , end ) 
-      {};
+      {}
       /** copy constructor
        *  @param right  object to be copied 
        */
@@ -1086,8 +1086,7 @@ namespace LoKi
     public  :
       /** constructor from vertex funtion 
        *  @param vfunc vertex function 
-       *  @param err1  value to be returned 
-       *         for invalid argument or 
+       *  @param err  value to be returned for invalid argument
        */
       MCVertexFunAdapter 
       ( const LoKi::MCTypes::MCVFunc& vfunc            , 
@@ -1381,7 +1380,7 @@ namespace LoKi
     {
     public:
       /** constructor from the function and daughter index 
-       *  @param fun    the function to be used 
+       *  @param cut    the function to be used 
        *  @param index  the index of daughter particle
        *  @param bad    the return valeu for invalid particle 
        */
@@ -1391,7 +1390,7 @@ namespace LoKi
         const bool                   bad = false ) ;
       /** constructor from the function and daughter index 
        *  @param index  the index of daughter particle
-       *  @param fun    the function to be used 
+       *  @param cut    the function to be used 
        *  @param bad    the return valeu for invalid particle 
        */
       ChildPredicate
@@ -1480,6 +1479,7 @@ namespace LoKi
     public:
       /** standard constructor 
        *  @param cut cut to be applied 
+       *  @param decayOnly search only within decay products 
        */
       NinTree  ( const LoKi::MCTypes::MCCuts& cut                , 
                  const bool                   decayOnly = false  ) ;
@@ -1524,7 +1524,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       SumTree
@@ -1535,7 +1535,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       SumTree
@@ -1586,7 +1586,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MultTree
@@ -1597,7 +1597,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MultTree
@@ -1647,7 +1647,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MinTree
@@ -1659,7 +1659,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MinTree
@@ -1710,7 +1710,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MaxTree
@@ -1722,7 +1722,7 @@ namespace LoKi
       /** standard constructor 
        *  @param fun the function to be evaluated 
        *  @param cut cut to be applied 
-       *  @param decayObnly flag to traverse only decay tree 
+       *  @param decayOnly flag to traverse only decay tree 
        *  @param res initial value 
        */
       MaxTree

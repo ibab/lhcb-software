@@ -1,4 +1,4 @@
-// $Id: MCVertexCuts.h,v 1.9 2008-05-05 13:43:54 cattanem Exp $
+// $Id: MCVertexCuts.h,v 1.10 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCVERTEXCUTS_H 
 #define LOKI_MCVERTEXCUTS_H 1
@@ -119,7 +119,7 @@ namespace LoKi
      */
     const LoKi::Valid<const LHCb::MCVertex*>                    MCVVALID ;
     // ========================================================================
-    /** @var MCVFOT
+    /** @var MCVTOF
      *  the time of flight for  MC vertex ( MCVertex::timeOfFlight )
      * 
      *  @code

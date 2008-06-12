@@ -1,4 +1,4 @@
-// $Id: MCAlgs.h,v 1.9 2007-08-11 20:19:58 ibelyaev Exp $
+// $Id: MCAlgs.h,v 1.10 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCALGS_H 
 #define LOKI_MCALGS_H 1
@@ -41,7 +41,7 @@ namespace LoKi
   namespace MCAlgs 
   { 
     // ========================================================================
-    /** the trivial algorithm to count the number of MC particles
+    /*  the trivial algorithm to count the number of MC particles
      *  in the tree, which satisfy the certain criteria 
      *
      *  @param   first  'begin'-iterator for the sequence 
@@ -59,7 +59,7 @@ namespace LoKi
       const PREDICATE& predicate  , 
       const bool       decayOnly  ) ;
     // ========================================================================
-    /** the trivial algorithm to find the MC particles
+    /*  the trivial algorithm to find the MC particles
      *  in the tree, which satisfy the certain criteria 
      *
      *  @param   first  'begin'-iterator for the sequence 
@@ -77,7 +77,7 @@ namespace LoKi
       const PREDICATE& predicate , 
       const bool       decayOnly ) ;
     // ========================================================================
-    /** The trivial algorithm which scans the decay 
+    /*  The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  minimal value for some functions for
      *  particles which satisfy the certain criteria 
@@ -102,7 +102,7 @@ namespace LoKi
       RESULT                         minval    , 
       const bool                     decayOnly ) ;
     // ========================================================================
-    /** The trivial algorithm which scans the decay 
+    /*  The trivial algorithm which scans the decay 
      *  tree of the particle and searches for the the 
      *  maximal value for some functions for
      *  particles which satisfy the certain criteria 
@@ -127,10 +127,11 @@ namespace LoKi
       RESULT                         maxval    , 
       const bool                     decayOnly ) ;
     // ========================================================================
-    /** The trivial algorithm which scans the decay tree   
+    /*  The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
-     *  @param p      pointer to the particle 
+     *  @param first  begin-iterator for sequence of particles
+     *  @param last   end-iterator for sequence of particles
      *  @param fun    functionto be accumulated 
      *  @param cut    the criteria
      *  @param result accumulation result 
@@ -170,7 +171,8 @@ namespace LoKi
      *
      *  @param   vertex pointer to MC vertex 
      *  @param   predicate criteria 
-     *  @return  number of aprticles which satisfy the criteria
+     *  @param   decayOnly search only for particles from decays
+     *  @return  number of particles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
      */
@@ -208,6 +210,7 @@ namespace LoKi
      *
      *  @param   particle pointer to MC particle  
      *  @param   predicate criteria 
+     *  @param   decayOnly search only for decay products 
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
@@ -252,6 +255,7 @@ namespace LoKi
      *
      *  @param   particle pointer to MC particle  
      *  @param   predicate criteria 
+     *  @param   decayOnly search only within decay products 
      *  @return  number of aprticles which satisfy the criteria
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
@@ -343,6 +347,7 @@ namespace LoKi
      *  @param   first  'begin'-iterator for the sequence 
      *  @param   last   'end'-iterator for the sequence 
      *  @param   predicate criteria 
+     *  @param   decayOnly search only within decay products 
      *  @return  true of tehre exist at least one particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-09
@@ -371,7 +376,7 @@ namespace LoKi
      *  @param fun      function to be evaluated 
      *  @param cut      the criteria
      *  @param minval   minimal value 
-     *  @param  decyaOnly flag to indicate seach through the decays products only
+     *  @param decayOnly flag to indicate seach through the decays products only
      *  @return updated minimal value 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -406,7 +411,7 @@ namespace LoKi
      *  minimal value for some functions for
      *  particles which satisfy the certain criteria 
      *
-     *  @param particle the particle  
+     *  @param vertex   the vertex 
      *  @param fun      function to be evaluated 
      *  @param cut      the criteria
      *  @param minval   minimal value 
@@ -479,7 +484,7 @@ namespace LoKi
      *  @param fun      function to be evaluated 
      *  @param cut      the criteria
      *  @param maxval   maximal value 
-     *  @param  decyaOnly flag to indicate seach through the decays products only
+     *  @param decayOnly flag to indicate seach through the decays products only
      *  @return updated maximal value 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -514,7 +519,7 @@ namespace LoKi
      *  maximal value for some functions for
      *  particles which satisfy the certain criteria 
      *
-     *  @param particle the particle  
+     *  @param vertex   the vertex 
      *  @param fun      function to be evaluated 
      *  @param cut      the criteria
      *  @param minval   maximal value 
@@ -618,12 +623,12 @@ namespace LoKi
     /** The trivial algorithm which scans the decay tree   
      *  and accumulates the value for some function for 
      *  the MC particles which satisfies the certain criteria 
-     *  @param veretx pointer to the vertex 
+     *  @param vertex pointer to the vertex 
      *  @param fun    functionto be accumulated 
      *  @param cut    the criteria
      *  @param result accumulation result 
      *  @param binop  binary operations used for accumulation 
-     *  @param decayOnly the flag to indicat search only for decays 
+     *  @param decayOnly the flag to indicate search only for decays 
      *  @return updated accumulation result  
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu

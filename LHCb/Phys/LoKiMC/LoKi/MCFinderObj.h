@@ -1,4 +1,4 @@
-// $Id: MCFinderObj.h,v 1.12 2008-05-05 13:43:53 cattanem Exp $
+// $Id: MCFinderObj.h,v 1.13 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCFINDEROBJ_H 
 #define LOKI_MCFINDEROBJ_H 1
@@ -169,19 +169,9 @@ namespace LoKi
     ( const std::string&                   decay     , 
       const LHCb::MCParticle::ConstVector& particles ) const ;    
     /** find MC decays.
-     *  
-     *  It is just a short cut for very convenient and simple DecayFinder 
-     *  tool by Olivier Dormond   
-     *
-     *  @code 
-     *
-     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
-     *  
-     *  @endcode 
-     * 
      *  @see DecayFinder  
      *  @param decay   decay   formula 
-     *  @param address location of container of MC particle
+     *  @param range   the source of the particles 
      *  @return range of found MC decays 
      */
     LoKi::Types::MCRange findDecays 
@@ -194,19 +184,10 @@ namespace LoKi
     ( const std::string& decay , 
       const LoKi::UniqueKeeper<LHCb::MCParticle>& range ) const ;
     /** find MC decays.
-     *  
-     *  It is just a short cut for very convinient and simple DecayFinder 
-     *  tool by Olivier Dormond   
-     *
-     *  @code 
-     *
-     *  MCPRange range = findDecays ( "B0 -> (J/psi(1S) -> mu+ mu-) KS0" );
-     *  
-     *  @endcode 
-     * 
      *  @see DecayFinder  
      *  @param decay   decay   formula 
-     *  @param address location of container of MC particle
+     *  @param first   begin-iterator of the sequence 
+     *  @param last    end-iterator of the sequence 
      *  @return range of found MC decays 
      */
     template <class MCPARTICLE>

@@ -1,4 +1,4 @@
-// $Id: MCExtract.h,v 1.8 2007-08-13 10:49:21 ibelyaev Exp $
+// $Id: MCExtract.h,v 1.9 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXTRACT_H 
 #define LOKI_EXTRACT_H 1
@@ -80,6 +80,8 @@ namespace LoKi
      *
      *  @param particle input pointer to MCParticle object
      *  @param output   output iterator to container of pointer to MCParticle
+     *  @param cut the predicate 
+     *  @param decayOnly flag to indicate the search only within decay products 
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@iep.ru
      *  @date 2003-02-07
@@ -209,6 +211,7 @@ namespace LoKi
      *
      *  @param particle pointer to the particle 
      *  @param output   output iterator 
+     *  @param decayOnly search only for "decays"
      *  @return the updated position of the output iterator 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08
@@ -257,6 +260,7 @@ namespace LoKi
      *
      *  @param particle pointer to the particle 
      *  @param output   output iterator 
+     *  @param decayOnly search only for particles in "decays"
      *  @return the updated position of the output iterator 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2006-02-08

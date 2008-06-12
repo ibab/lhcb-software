@@ -1,4 +1,4 @@
-// $Id: BuildMCTrees.h,v 1.6 2007-07-23 17:27:30 ibelyaev Exp $
+// $Id: BuildMCTrees.h,v 1.7 2008-06-12 08:16:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_BUILDMCTREES_H 
 #define LOKI_BUILDMCTREES_H 1
@@ -55,7 +55,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @param first begin of flat sequence of MCParticles 
-     *  @param last   end    of flat sequence  of MCParticles 
+     *  @param last  end    of flat sequence  of MCParticles 
      *  @param output output iterator 
      *  @return iterator for  sequence of trees 
      */
@@ -101,7 +101,7 @@ namespace LoKi
      *  @endcode 
      *
      *  @param first begin of flat sequence of MCParticles 
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param last  end   of flat sequence  of MCParticles 
      *  @return iterator for  sequence of trees 
      */
     template <class MCPARTICLE>
@@ -138,8 +138,7 @@ namespace LoKi
      *
      *  @endcode 
      *
-     *  @param input input conmtainer of MCParticles  
-     *  @param end   end   of flat sequence  of MCParticles 
+     *  @param input input container of MCParticles  
      *  @return container of MCtrees  
      */
     LHCb::MCParticle::Vector
