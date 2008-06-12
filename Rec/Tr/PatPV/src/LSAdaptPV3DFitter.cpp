@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.1 2008-06-11 19:28:24 witekma Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.2 2008-06-12 09:33:17 witekma Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -24,9 +24,9 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
   // Number of iterations
   declareProperty("Iterations", m_Iterations = 20);
   // Maximum IP of a track to accept track
-  declareProperty("maxIP2PV", m_maxIP2PV = 2.0 * Gaudi::Units::mm);
+  declareProperty("maxIP2PV", m_maxIP2PV = 5.0 * Gaudi::Units::mm);
   // Fit convergence condition 
-  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.0005 * Gaudi::Units::mm);
+  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00001);
 
