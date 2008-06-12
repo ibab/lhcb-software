@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.3 2008-05-20 16:38:17 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.4 2008-06-12 08:42:44 marcocle Exp $"
         
 ########################################################################
 # Utility classes
@@ -890,7 +890,8 @@ class SetupProject:
         output_lines = []
         error = []
         if os.sep != '\\':
-            set_path_re = re.compile('^(.*PATH.*)%(path)s[^%(sep)s]*%(sep)s(.*)$'%{'path':root_dir,'sep':os.pathsep})
+            set_path_re = re.compile(('^(.*PATH.*)%(path)s[^%(sep)s]*%(sep)s(.*)$'%{'path':root_dir,'sep':os.pathsep})
+                                     .replace('+','\\+')) # MCl: hack to work around a problem with some temporary dirs
         else:
             set_path_re = re.compile(('^(.*PATH=)(?:%(path)s[^%(sep)s]*%(sep)s)+(.*)$'%{'path':root_dir,'sep':os.pathsep})
                                      .replace(os.sep,'\\\\'))
