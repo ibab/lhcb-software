@@ -1,0 +1,14 @@
+// options for reconstruction all PV including displaced PVs
+
+// using PatPV3D algorithm and SpaceVelo tracks
+ApplicationMgr.TopAlg += { "PatPV3D/PVDisplaced" };
+PVDisplaced.PVOfflineTool.InputTracks = {"Rec/Track/Velo"};
+PVDisplaced.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter";
+PVDisplaced.PVOfflineTool.PVSeedingName = "PVSeed3DTool";
+PVDisplaced.OutputVerticesName = "Rec/Vertices/myPVs";
+
+//  using PatPVOffline algorithm and Best tracks
+//  ApplicationMgr.TopAlg += { "PatPVOffline/PVDisplacedOff" };
+//  PVDisplacedOff.PVOfflineTool.PVSeedingName = "PVSeed3DTool";
+//  PVDisplacedOff.OutputVerticesName = "Rec/Vertices/myPVsOff";
+
