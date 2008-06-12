@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
 """
-'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
+'Solution'-file for 'RCRaons.py' example (Bender Tutorial)
 """ 
 # =============================================================================
 # @file
 #
-# "Solution"-file for 'RCMCselect.py' example (Bender Tutorial)
+# "Solution"-file for 'RCKaons.py' example (Bender Tutorial)
 #
 # @author Vanya BELYAEV ibelyaev@physics.syr.edu
 # @date   2004-10-12
@@ -96,14 +96,21 @@ def configure() :
     configure the job
     """
 
-    import BenderTutor.data_tutorial as data 
 
-    gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'           ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
+    ## get some expernal configuration
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' ) 
+    importOptions ('$COMMONPARTICLESROOT/options/StandardKaons.opts')
+    
+    ## configure histograms & n-tuples 
+    from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc 
+    NTupleSvc ( Output = [ "PHI DATAFILE='HandsOn4.root' OPT='NEW' TYP='ROOT'" ] )
+    HistogramPersistencySvc ( OutputFile = 'HandsOn4_histos.root' )
+    
+    ## get/create application manager
+    gaudi = appMgr() 
     
     ## modify/update the configuration:
-
+    
     ## 1) create the algorithm
     alg = RCKaons( 'RCKaons' )
     
@@ -118,23 +125,14 @@ def configure() :
         'Phys/StdTightMuons' 
         ]
     
-    ## configure the histograms:
-    hsvc = gaudi.service('HistogramPersistencySvc')
-    hsvc.OutputFile =  'HandsOn4_histos.root' 
-    
-    ## configure the N-Tuples:
-    ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "MC DATAFILE='HandsOn4.root' OPT='NEW' TYP='ROOT'" ]     
-        
     ## configure own algorithm 
     alg.PP2MCs = ['Relations/Rec/ProtoP/Charged'] # only charged 
-    alg.NTupleLUN = 'MC'
+    alg.NTupleLUN = 'PHI'
     
     # redefine input files 
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
-    
-    ## redefine input files 
     evtSel.open( data.FILEs ) 
 
     return SUCCESS
@@ -149,7 +147,7 @@ if __name__ == '__main__' :
     configure()
     
     # event loop 
-    gaudi.run(500)
+    run(500)
 
 # =============================================================================
 # The END 

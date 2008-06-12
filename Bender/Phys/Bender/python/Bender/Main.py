@@ -30,28 +30,20 @@ __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 import os 
 
 try:
-    ## try to get the startup script from ebvironment 
+    ## try to get the startup script from environment 
     startup = os.environ.get('PYTHONSTARTUP',None)
-
-    print 'I AM HERE 1 '
-    
     ## use the default startup script
     if not startup :
-        print 'I AM HERE 2 '
         startup = os.sep + 'Bender' + os.sep + 'Startup.py'
         bp = os.environ.get('BENDERPYTHON',None)
         if bp : startup = bp + startup
         else  : startup = 'Startup.py'
     
     if os.path.exists( startup ) :
-        print 'I AM HERE 4 '
         execfile( startup )
     else :
-        print ' IMPORT '
         import Bender.Startup
         
-    print 'I AM HERE 5 '
-
 except:
     pass
 
@@ -84,7 +76,7 @@ _iadd_old_ = _SE.__iadd__
 def _iadd_new_ (s,v) :
     return _iadd_old_(s,float(v))
 _SE.__iadd__ = _iadd_new_
-
+_SE.__str__  = _SE.toString 
 
 from Gaudi.Configuration import importOptions
 

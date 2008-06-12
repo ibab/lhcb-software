@@ -99,15 +99,19 @@ def configure() :
     The Job configuration
     """ 
     
-    import BenderTutor.data_tutorial as data 
+    ## get some external configuration 
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' ) 
+    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' ) 
+    importOptions ( '$COMMONPARTICLESROOT/options/StandardMuons.opts' )
+    
+    from Gaudi.Configuration import HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'RCselect_histos.root' ) 
 
-    gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ,
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts' ] )
+
+    ## get/create application manager
+    gaudi = appMgr() 
     
     # modify/update the configuration:
-    
         
     # 1) create the algorithm
     alg = RCSelect( 'RCSelect' )
@@ -122,11 +126,8 @@ def configure() :
         'Phys/StdTightKaons' , 
         'Phys/StdTightMuons' ]
     
-    ## configure the histograms:
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'RCSelect_histos.root'
-    
     # redefine input files 
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 20
     evtSel.open( data.FILEs ) 
@@ -142,7 +143,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(5000)
+    run(5000)
 
 # =============================================================================
 # The END 

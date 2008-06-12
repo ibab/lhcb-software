@@ -8,7 +8,7 @@
 #
 # "Solution"-file for 'Hands-On 2' example (Bender Tutorial)
 #
-# @author Vanya BELYAEV  ibelyaev@physics.syr.edu
+# @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
 # @date   2004-10-12
 # =============================================================================
 __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
@@ -53,7 +53,10 @@ def configure() :
     import BenderTutor.data_tutorial as data 
     
     ## general configuration :
-    gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
+
+    ## get/create the application manager
+    gaudi = appMgr() 
     
     ## modify/update the configuration:
     
@@ -83,7 +86,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(500)
+    run(500)
 
 # =============================================================================
 # The END 

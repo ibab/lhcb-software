@@ -36,8 +36,7 @@ class MCKaons(AlgoMC) :
         ## retrive (book-on-demand) N-tuple objects 
         tup = self.nTuple( 'My N-Tuple' )
         for K in kaons :            
-            print ' Kaon: %s PT=%s MeV' % (
-                LoKi.Particles.nameFromPID( K.particleID() ) , K.momentum().pt() ) 
+            print ' Kaon: %s PT=%s MeV' % ( K.name() , K.momentum().pt() ) 
             
             tup.column ( 'P'  , MCP ( K ) / 1000 )
             tup.column ( 'PT' , MCPT( K ) / 1000 )
@@ -64,33 +63,31 @@ def configure() :
     """
     Configure the job
     """ 
-    import BenderTutor.data_tutorial as data 
+
+    ## read some external configuration 
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts')
+
+    ## configure histograms & n-tuples 
+    from Gaudi.Configuration import NTupleSvc
+    NTupleSvc ( Output = [ "MCK DATAFILE='HandsOn3.root' OPT='NEW' TYP='ROOT'" ] )
     
-    gaudi.config ( files =
-                   [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
-    
+    ## get/create application manager
+    gaudi = appMgr() 
+
     # modify/update the configuration:
     
     ## 1) create the algorithm
     alg = MCKaons( 'MCKaons' )
     
+    ## configure own algorithm 
+    alg.NTupleLUN = 'MCK'
+    alg.PP2MCs = []
+    
     ## 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms( [alg ])
     
-
-    ## configure the histograms:
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'HandOn3_histos.root'
-    
-    ## configure the N-Tuples:
-    ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "MC DATAFILE='HandsOn3.root' OPT='NEW' TYP='ROOT'" ]     
-
-    ## configure own algorithm 
-    alg.NTupleLUN = 'MC'
-    alg.PP2MCs = []
-        
     ## redefine input files 
+    import BenderTutor.data_tutorial as data     
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
     evtSel.open( data.FILEs ) 
@@ -107,7 +104,7 @@ if __name__ == '__main__' :
     configure()
     
     ## event loop 
-    gaudi.run(500)
+    run(500)
 # =============================================================================
 
 

@@ -19,16 +19,18 @@ def configure() :
     """
     This is the configuration method for module Minimalistic_1.py
     """
-    import BenderTutor.data_tutorial as data
     
     ## get the confgigurtaion for *.opts file
-    gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
+    importOptions( '$DAVINCIROOT/options/DaVinci.opts') 
+
+    ## get/create application manager
+    gaudi = appMgr() 
     
     ## define input files 
+    import BenderTutor.data_tutorial as data
     evtSel = gaudi.evtSel()
-    
     evtSel.open( data.FILEs ) 
-  
+    
     return SUCCESS
 
 # =============================================================================
@@ -39,7 +41,7 @@ if __name__ == '__main__' :
     configure()
     
     # event loop 
-    gaudi.run(50)
+    run(50)
     
 # ======================================================-======================
 # The END 

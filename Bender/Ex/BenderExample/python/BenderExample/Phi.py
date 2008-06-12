@@ -29,13 +29,6 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 ## import everything form bender 
 from Bender.Main import * 
 
-SE = cpp.StatEntity
-_se_pr = getattr( SE , 'print' )
-SE.__print__ = _se_pr
-SE.__repr__ = SE.toString
-SE.__str__ = SE.toString
-
-
 # =============================================================================
 ## Simple class to plot dikaon mass peak
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -74,11 +67,6 @@ class Phi(Algo) :
             
         self.setFilterPassed( True )
 
-        se = self.counter("counter")
-
-        se += 10.0
-        print se.toString() 
-        
         return SUCCESS
 
 # =============================================================================

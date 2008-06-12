@@ -1,11 +1,28 @@
 <PRE>
-! $Id: release.notes,v 1.15 2008-04-30 10:48:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.16 2008-06-12 12:47:15 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 </PRE>
+
+<H1>
+<A NAME=v8r3>2008-06-12 Bender v8r3 based on the DaVinci v19r13 </A>
+</H1>	
+
+<PRE>		
+This version is based on DaVinci v19r13.
+Some usage of "Configurables" is introduced.
+
+Important:
+
+The module Bender.Main does *NOT* define anymore the symbol gaudi.
+One needs to instantiate it explicitly: "gaudi = appMgr() " 
+
+
+</PRE>
+
 
 <H1>
 <A NAME=v8r2>2008-04-30 Bender v8r2 based on the DaVinci v19r12 </A>

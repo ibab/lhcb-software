@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2008-04-30 10:46:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.8 2008-06-12 12:43:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,14 @@
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 ! Purpose     : Start-Up tutorial for Bender 
 ! -----------------------------------------------------------------------------
+
+! ======================== BenderTutor v8r3 2008-06-12 ========================
+
+! 2008-06-12 - Vanya BELYAEV
+
+ - update for Bender v8r3 
+ - use "importOptions"
+ 
 
 ! ======================== BenderTutor v8r2 2008-04-30 ========================
 
@@ -51,6 +59,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.7  2008/04/30 10:46:52  ibelyaev
+!  v8r2: new version, based on DaVinci v19r12
+!
 ! Revision 1.6  2008/03/15 13:35:37  ibelyaev
 !  prepare v8r1
 !

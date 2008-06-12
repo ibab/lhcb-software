@@ -43,9 +43,12 @@ class HelloWorld(Algo):
 ## The configuration of the job
 def configure() :
     
-    import BenderTutor.data_tutorial as data 
 
-    gaudi.config( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
+    ## get some external configuration
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+
+    ## get/create application manager
+    gaudi = appMgr() 
     
     # modify/update the configuration:
     
@@ -57,6 +60,7 @@ def configure() :
     gaudi.setAlgorithms( [ alg ] )
     
     ## redefine input files 
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.open( data.FILEs ) 
     
@@ -71,7 +75,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(50)
+    run(50)
         
 # =============================================================================
 # The END

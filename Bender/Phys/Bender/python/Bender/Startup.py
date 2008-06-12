@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Startup.py,v 1.2 2008-06-12 10:54:21 ibelyaev Exp $ 
+# $Id: Startup.py,v 1.3 2008-06-12 12:44:07 ibelyaev Exp $ 
 # =============================================================================
 ## The trivial startup sctript for python Bender session
 #
@@ -29,37 +29,18 @@ This is a trivial startup script for python Bender session
 __author__ = 'Vanya BELYAEV belyaev@physics.syr.edu'
 # =============================================================================
 
-
-print ' STARTUP (1) '
-
 try:
 
-    print ' STARTUP (2) '
     import os
-    print ' STARTUP (3) '
     ## define the name of the history file
-    dr = os.environ.get('PWD',None)
-    if not dr : dr = '.'
-    __history__ = dr + os.sep + '.BenderHistory'
-    print ' STARTUP (4) ', __history__
+    __history__ = os.path.curdir + os.sep + '.BenderHistory'
     
     def _rename_ ( file , app ) :
-        print ' STARTUP (5.1) '
-        if os.path.exists( file + app ) :
-            print ' STARTUP (5.2) '
-            _rename_  ( file + app , app  )
-        print ' STARTUP (5.3) '
-        if os.path.exists( file )       :
-            print ' STARTUP (5.4) '
-            os.rename ( file , file + app )
-        print ' STARTUP (5.5) '
+        if os.path.exists ( file + app ) :   _rename_ ( file + app ,        app )
+        if os.path.exists ( file       ) : os.rename  ( file       , file + app )
 
-    print ' STARTUP (5) '
-        
     ## remove/backup the previous history file
     _rename_ ( __history__ , '.OLD' )
-
-    print ' STARTUP (6) '
 
     ## line completer 
     import rlcompleter
@@ -67,8 +48,14 @@ try:
     readline.parse_and_bind("tab: complete")
     
     ## write history at the end 
+    def _prnt_() :
+        print 'BENDER history file: %s' % __history__
+        
     import atexit
-    atexit.register( readline.write_history_file , __history__ )
+    atexit.register ( readline.write_history_file , __history__ )
+    atexit.register ( _prnt_ )
+
+    _prnt_() 
     
 except :
     pass

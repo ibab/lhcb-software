@@ -115,13 +115,16 @@ def configure() :
     Job configuration
     """
     
-    import BenderTutor.data_tutorial as data 
 
-    gaudi.config ( files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' , 
-        '$COMMONPARTICLESROOT/options/StandardMuons.opts'
-        ] )
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' )
+    importOptions ( '$COMMONPARTICLESROOT/options/StandardMuons.opts' )
+
+    from Gaudi.Configuration import HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'RCMCselect_histos.root' ) 
+
+    ## get/create application manager
+    gaudi = appMgr() 
     
     # modify/update the configuration:
     # 1) create the algorithm
@@ -137,19 +140,11 @@ def configure() :
         'Phys/StdTightMuons'
         ]
     
-    ## configure the histograms: 
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'RCMCselect_histos.root'
-    
-    ## configure the N-Tuples:
-    ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "RCMC DATAFILE='RCMCselect.root' OPT='NEW' TYP='ROOT'" ]
-    
     ## configure the desktop:
     alg.PP2MCs = ['Relations/Rec/ProtoP/Charged']
-    alg.NTupleLUN = 'RCMC'
      
     ## define the proper input data:
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 20
     evtSel.open( data.FILEs ) 
@@ -164,7 +159,7 @@ if __name__ == '__main__' :
     ## job configuration
     configure()
     ## event loop 
-    gaudi.run(2000)
+    run(2000)
 
 # =============================================================================
 # The END 

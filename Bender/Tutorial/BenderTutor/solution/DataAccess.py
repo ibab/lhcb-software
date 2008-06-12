@@ -52,8 +52,8 @@ class GetData(Algo):
         for mcp in mcps :
             if i >= 5 : break
             print " MCParticle name is '%s' " % mcp.name()            
-            print ' The decay chain is  (decay only)   : ', mcp.decay ( True  ) 
-            print ' The decay chain is  (+inetratcions : ', mcp.decay ( False ) 
+            print ' The decay chain is  (decay only)    : ', mcp.decay ( True  ) 
+            print ' The decay chain is  (+interactions) : ', mcp.decay ( False ) 
             print ' MCParticle info: ', `mcp`
             i +=1 
             
@@ -70,7 +70,10 @@ def configure( **args ) :
     import BenderTutor.data_tutorial as data 
     
     ## general configuration :
-    gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+
+    ## get/create Application Manager
+    gaudi = appMgr()
     
     # modify/update the configuration:
     
@@ -102,7 +105,7 @@ if __name__ == '__main__' :
     configure()
     
     ## event loop 
-    gaudi.run(5)
+    run(10)
     
 # =============================================================================
 # The END

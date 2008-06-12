@@ -1,17 +1,21 @@
-# $Id: Minimalistic_0.py,v 1.7 2008-03-15 13:35:38 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.8 2008-06-12 12:43:58 ibelyaev Exp $
 # =============================================================================
 
 
 # =============================================================================
 from Bender.Main import *
 
-import BenderTutor.data_tutorial as data 
 
-gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
+importOptions( '$DAVINCIROOT/options/DaVinci.opts')
+
+## get or create application manager 
+gaudi = appMgr() 
+
 
 ## define input files 
-evtSel = gaudi.evtSel()
+import BenderTutor.data_tutorial as data 
 
+evtSel = gaudi.evtSel()
 evtSel.open( data.FILEs ) 
 
 ## run DaVinci 

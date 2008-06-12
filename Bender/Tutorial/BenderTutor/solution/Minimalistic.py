@@ -20,12 +20,15 @@ def configure() :
     """
     The  basic configuration method
     """
-    import BenderTutor.data_tutorial as data 
 
     ## get the confgigurtaion for *.opts file
-    gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
+    importOptions ( '$DAVINCIROOT/options/DaVinci.opts' )
+
+    ## get/create application manager
+    gaudi = appMgr() 
 
     ## define input files 
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()    
     evtSel.open( data.FILEs ) 
         
@@ -41,7 +44,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    g.run(100)
+    run(100)
 
 # =============================================================================
 # The END

@@ -58,10 +58,13 @@ def configure() :
     """
     The configuration of the job
     """
-    import BenderTutor.data_tutorial as data 
-    
-    gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts' ] )
-    
+
+    ## get some external configuration 
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+
+    ## get/create application manager
+    gaudi = appMgr() 
+   
     # modify/update the configuration:
     
     ## 1) create the algorithm
@@ -71,10 +74,10 @@ def configure() :
     gaudi.setAlgorithms( [ alg ] )
     
     ## redefine input files 
+    import BenderTutor.data_tutorial as data 
     evtSel = gaudi.evtSel()
     evtSel.open( data.FILEs ) 
     evtSel.PrintFreq = 10
-
     
     return SUCCESS
 # =============================================================================
@@ -87,7 +90,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(100)
+    run(100)
 
 # =============================================================================
 # The END 

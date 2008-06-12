@@ -47,14 +47,11 @@ def configure ( **args ) :
     Configure the job
     """
 
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-
     ## read external configruation files
-    gaudi.config (
-        files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'      ,
-        '$DAVINCIROOT/options/DaVinciTestData.opts'    ] )
+    importOptions('$DAVINCIROOT/options/DaVinciCommon.opts') 
+
+    ## get or create Algorithm manager
+    gaudi = appMgr()
     
     ## create local algorithm:
     hello = HelloWorld('Hello')
@@ -63,6 +60,7 @@ def configure ( **args ) :
     gaudi.setAlgorithms ( hello )
     
     ## get input data 
+    import data_Bs2Jpsiphi_mm as input 
     evtSel = gaudi.evtSel()    
     evtSel.open ( input.FILEs ) 
     evtSel.PrintFreq = 1    
@@ -80,7 +78,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(50)
+    run(50)
     
 
 # =============================================================================

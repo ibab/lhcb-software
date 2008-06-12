@@ -51,8 +51,11 @@ def configure() :
     import BenderTutor.data_tutorial as data 
     
     ## general configuration :
-    gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
-     
+    importOptions( '$DAVINCIROOT/options/DaVinciCommon.opts') 
+
+    ## get/create the application manager
+    gaudi = appMgr()
+    
     ## modify/update the configuration:
     
     ## 1) create the algorithm
@@ -78,7 +81,7 @@ if __name__ == '__main__' :
     configure()
     
     ## event loop 
-    gaudi.run(10)
+    run(10)
 
 # =============================================================================
 # The END

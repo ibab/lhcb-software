@@ -74,29 +74,29 @@ def configure() :
     Configure the job
     """
     
-    import BenderTutor.data_tutorial as data
+    ## read some external configuration 
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' ) 
     
-    gaudi.config ( files = ['$DAVINCIROOT/options/DaVinciCommon.opts'] )
-    
+    ## configure histograms & n-tuples 
+    from Gaudi.Configuration import NTupleSvc,HistogramPersistencySvc 
+    NTupleSvc ( Output = [ "MC DATAFILE='MCTrees.root' OPT='NEW' TYP='ROOT'" ] )
+    HistogramPersistencySvc ( OutputFile = 'MCTrees_histos.root' )
+
+    ## get/create application manager
+    gaudi = appMgr() 
+
     # 1) create the algorithm
     alg = MCTrees( 'McTree' )
     
     # 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms ( [ alg ] ) 
 
-    # configure the histograms 
-    hps = gaudi.service('HistogramPersistencySvc')
-    hps.OutputFile = 'MCTrees_histos.root'
-    
-    # configure the N-Tuples:
-    ntsvc = gaudi.ntuplesvc()
-    ntsvc.Output = [ "MC DATAFILE='MCTrees.root' OPT='NEW' TYP='ROOT'" ]     
-    
     # configure my own algorithm
     alg.NTupleLUN = 'MC'
     alg.PP2MCs = []
     
     ## redefine input files 
+    import BenderTutor.data_tutorial as data    
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
     evtSel.open( data.FILEs ) 
@@ -112,7 +112,7 @@ if __name__ == '__main__' :
     configure()
 
     ## event loop 
-    gaudi.run(100)
+    run(100)
 
 # =============================================================================
 # The END 
