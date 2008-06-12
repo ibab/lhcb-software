@@ -2,7 +2,7 @@ import sys, os, time, gaudiweb
 
 # Standard global variables
 gaudi_app       = None
-basePath        = os.environ['DATAMGMTSVCROOT']
+basePath        = os.environ['ONLINEKERNELROOT']
 default_users = [ ('administrator', 'admin'), ('frankm', 'hallo'), ('LHCb', 'CKM-best')
         ]
 servicePort = 8081
@@ -305,7 +305,7 @@ class DataManagementServices:
   # ===============================================================
   def startServer(self):
     if ( self.server is None):
-      self.server = gaudiweb.DataManagementServer(self.port, 0)
+      self.server = gaudiweb.DataManagementServer(self.port, None, 0)
       #manager_servlet = gaudiweb.ManagementServlet('Manager')
       #manager_servlet.addUsers(self.users)
       #self.server.registerServlet('Manager', manager_servlet)
@@ -337,9 +337,9 @@ class DataManagementServices:
     if ( 0 == self.fileServer):
       self.fileServer = 1
       server = self.startServer()
-      server.registerMountpoint('html',   basePath+os.sep+'html')
+      #server.registerMountpoint('html',   basePath+os.sep+'html')
       server.registerMountpoint('images', basePath+os.sep+'images')
-      server.servlets['html'].useCache(1)
+      #server.servlets['html'].useCache(1)
       server.servlets['images'].useCache(1)
       favicon_servlet = gaudiweb.FavIconServer(basePath+os.sep+'images'+os.sep+'favicon.ico')
       self.server.registerServlet('favicon.ico', favicon_servlet)
