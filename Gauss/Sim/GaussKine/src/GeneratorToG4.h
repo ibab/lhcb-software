@@ -1,14 +1,16 @@
-// $Id: GeneratorToG4.h,v 1.1.1.1 2006-01-31 11:03:51 gcorti Exp $
+// $Id: GeneratorToG4.h,v 1.2 2008-06-12 18:45:16 robbep Exp $
 #ifndef GENERATORTOG4_H 
 #define GENERATORTOG4_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // Forward declarations
 class IGiGaSvc;
 class G4PrimaryParticle;
+class IParticlePropertySvc ;
 
 /** @class GeneratorToG4 GeneratorToG4.h
  *  Algorithm to fill Geant4 Primary from HepMCEvents as filled by
@@ -46,6 +48,8 @@ private:
   IGiGaSvc*          m_gigaSvc;          ///< Pointer to GiGa Service
 
   std::string        m_location;         ///< Location in TES of input HepMC events
-  
+
+  Rndm::Numbers m_rand ;  
+  IParticlePropertySvc * m_pSvc ;
 };
 #endif // GENERATORTOG4_H
