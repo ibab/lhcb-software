@@ -12,6 +12,9 @@ Purpose: LHCb High Level Trigger packages.
  . Systematically used in HLT2.  
 
 !========================== HltSys v3r3 2008-06-09 ===================
+!2008-06-12 - Mariusz Witek
+  - Modified PatPV3D options in HltRecoSequence due to PatPV changes
+
 !2008-06-06 - Sandra Amato
   - HltMuonAlleyConfSequence.opts: remove MuonRec algo, Apply tighter
     cut on Chi2 of PatMatch tool
