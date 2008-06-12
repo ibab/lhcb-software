@@ -1,11 +1,11 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.2 2008-04-28 16:21:31 frankb Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.3 2008-06-12 11:46:54 jost Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "GaudiOnline/RawBankSizeMonitor.h"
+#include "RawBankSizeMonitor.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RawBankSizeMonitor
@@ -14,9 +14,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,RawBankSizeMonitor);
+DECLARE_ALGORITHM_FACTORY( RawBankSizeMonitor );
 
-using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -32,7 +31,8 @@ RawBankSizeMonitor::RawBankSizeMonitor( const std::string& name,
    declareProperty( "Profile"     , m_prof=true);
 
    // default bank types list == all banks !
-   for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++){
+   for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
+   {
      std::string bname = LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i );
      m_bankNames.push_back( bname );
    }
@@ -46,7 +46,8 @@ RawBankSizeMonitor::~RawBankSizeMonitor() {}
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RawBankSizeMonitor::initialize() {
+StatusCode RawBankSizeMonitor::initialize() 
+{
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
@@ -54,11 +55,14 @@ StatusCode RawBankSizeMonitor::initialize() {
 
 
   // convert bankNames to bankTypes
-  for(std::vector<std::string>::iterator it = m_bankNames.begin();it!=m_bankNames.end();it++){
+  for(std::vector<std::string>::iterator it = m_bankNames.begin();it!=m_bankNames.end();it++)
+  {
     bool found = false;
-    for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++){
+    for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
+    {
       std::string bname = LHCb::RawBank::typeName( (LHCb::RawBank::BankType) i );
-      if( bname == *it){
+      if( bname == *it)
+      {
         found = true;
         m_bankTypes.push_back( (LHCb::RawBank::BankType) i );        
       }
@@ -72,19 +76,24 @@ StatusCode RawBankSizeMonitor::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RawBankSizeMonitor::execute() {
+StatusCode RawBankSizeMonitor::execute() 
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   
   // get RawEvent
-  if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) ){
+  if( exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default ) )
+  {
     m_rawEvt= get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
-  }else  {
+  }
+  else  
+  {
     Warning( "rawEvent not found at location '" + rootInTES() + LHCb::RawEventLocation::Default ).ignore();
     return StatusCode::SUCCESS;
   }
   // Loop over banks
-  for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++){
+  for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
+  {
     
     std::string bname = LHCb::RawBank::typeName( *it );
     
@@ -95,24 +104,32 @@ StatusCode RawBankSizeMonitor::execute() {
     
     const std::vector<LHCb::RawBank*>* banks= &m_rawEvt->banks(  *it );
     std::map<int,int> size;
+    int bsize=0;
+//    size.clear();
     int s_min = 9999;
     int s_max = -1;
+    int totsize = 0;
     
-    for(std::vector<LHCb::RawBank*>::const_iterator ib = banks->begin();ib!=banks->end();ib++){      
+    for(std::vector<LHCb::RawBank*>::const_iterator ib = banks->begin();ib!=banks->end();ib++)
+    {
       int source   = (*ib)->sourceID();
       if( s_min > source )s_min=source;
       if( s_max < source )s_max=source;
       size[source] = (*ib)->size();
+      bsize += (*ib)->size();
     }
-
+    totsize += bsize;
     for(std::vector<LHCb::RawBank*>::const_iterator ib = banks->begin();ib!=banks->end();ib++)
-    {      
-      if(m_prof){
+    {
+
+      if(m_prof)
+      {
         profile1D( (double) (*ib)->sourceID() , (double) (*ib)->size()
-                   , (int) (*ib)->type()
-                   , (*ib)->typeName( (*ib)->type()) + " bank size (bytes) as a function of sourceID (profile)"
+                   , (*ib)->typeName( (*ib)->type()) + " sourceID (profile) [Bytes]"
                    , s_min , s_max+1, s_max-s_min+1);
-      }else{
+      }
+      else
+      {
         plot2D( (double) (*ib)->sourceID() , (double) (*ib)->size()
                 , (int) (*ib)->type()
                 , (*ib)->typeName( (*ib)->type()) + " bank size (bytes) as a function of sourceID"
@@ -120,6 +137,10 @@ StatusCode RawBankSizeMonitor::execute() {
                 , 0. , (double) max 
                 , s_max-s_min+1 , m_bin);
       } 
+    }
+    if (!banks->empty())
+    {
+      plot1D((double)bsize,bname+" Size in Bytes",0.0,10000.0,100);
     }
   }
   return StatusCode::SUCCESS;
@@ -129,7 +150,8 @@ StatusCode RawBankSizeMonitor::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RawBankSizeMonitor::finalize() {
+StatusCode RawBankSizeMonitor::finalize() 
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
