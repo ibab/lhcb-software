@@ -1,9 +1,9 @@
-// $Id: CondDBEntityResolverSvc.cpp,v 1.10 2008-05-28 15:03:20 cattanem Exp $
+// $Id: CondDBEntityResolver.cpp,v 1.1 2008-06-12 18:44:18 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/ToolFactory.h"
 
 #include "GaudiKernel/Time.h"
 #include "GaudiKernel/GaudiException.h"
@@ -19,7 +19,7 @@
 #include "CoolKernel/RecordException.h"
 
 // local
-#include "CondDBEntityResolverSvc.h"
+#include "CondDBEntityResolver.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBEntityResolverSvc
@@ -28,31 +28,38 @@
 //-----------------------------------------------------------------------------
 
 // Factory implementation
-DECLARE_SERVICE_FACTORY(CondDBEntityResolverSvc)
+DECLARE_TOOL_FACTORY(CondDBEntityResolver)
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-CondDBEntityResolverSvc::CondDBEntityResolverSvc( const std::string& name, ISvcLocator* svc ):
-                                                  Service(name,svc),
-                                                  m_condDBReader(0),
-                                                  m_detDataSvc(0) {
+CondDBEntityResolver::CondDBEntityResolver( const std::string& type, 
+                                            const std::string& name,
+                                            const IInterface* parent ):
+  AlgTool(type,name,parent),
+  m_condDBReader(0),
+  m_detDataSvc(0)
+{
 
+  declareInterface<IXmlEntityResolver>(this);
+  declareInterface<IFileAccess>(this);
+  
   declareProperty("DetDataSvc", m_detDataSvcName = "DetDataSvc/DetectorDataSvc");
   declareProperty("CondDBReader", m_condDBReaderName = "CondDBCnvSvc");
-
+  
+  m_protocols.push_back("conddb");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBEntityResolverSvc::~CondDBEntityResolverSvc() {}; 
+CondDBEntityResolver::~CondDBEntityResolver() {}; 
 
 
 //=========================================================================
 //  Initialize the service
 //=========================================================================
-StatusCode CondDBEntityResolverSvc::initialize ( ) {
-  StatusCode sc = Service::initialize();
+StatusCode CondDBEntityResolver::initialize ( ) {
+  StatusCode sc = AlgTool::initialize();
   if ( ! sc.isSuccess() ) return sc;
 
   MsgStream log(msgSvc(), name() );
@@ -76,7 +83,7 @@ StatusCode CondDBEntityResolverSvc::initialize ( ) {
 //=========================================================================
 //  Finalize the service
 //=========================================================================
-StatusCode CondDBEntityResolverSvc::finalize ( ) {
+StatusCode CondDBEntityResolver::finalize ( ) {
   
   if ( m_condDBReader ) {
     m_condDBReader->release();
@@ -90,33 +97,20 @@ StatusCode CondDBEntityResolverSvc::finalize ( ) {
   // Finalize the Xerces-C++ XML subsystem
   xercesc::XMLPlatformUtils::Terminate();
 
-  return Service::finalize();
-}
-
-//=========================================================================
-//  Query the interfaces of the object
-//=========================================================================
-StatusCode CondDBEntityResolverSvc::queryInterface(const InterfaceID& riid,
-                                                   void** ppvUnknown){
-  if ( IID_IXmlEntityResolverSvc.versionMatch(riid) ) {
-    *ppvUnknown = (IXmlEntityResolverSvc*)this;
-    addRef();
-    return SUCCESS;
-  }
-  return Service::queryInterface(riid,ppvUnknown);
+  return AlgTool::finalize();
 }
 
 //=========================================================================
 //  Return a pointer to the actual implementation of a xercesc::EntityResolver
 //=========================================================================
-xercesc::EntityResolver *CondDBEntityResolverSvc::resolver() {
+xercesc::EntityResolver *CondDBEntityResolver::resolver() {
   return this;
 }
 
 //=========================================================================
 // Return the pointer to the CondDBReader (loading it if not yet done).
 //=========================================================================
-ICondDBReader *CondDBEntityResolverSvc::condDBReader() {
+ICondDBReader *CondDBEntityResolver::condDBReader() {
   if (!m_condDBReader) {
     StatusCode sc = service(m_condDBReaderName,m_condDBReader,true);
     if( !sc.isSuccess() ) {
@@ -132,7 +126,7 @@ ICondDBReader *CondDBEntityResolverSvc::condDBReader() {
 //=========================================================================
 // Return the pointer to the detector data service (loading it if not yet done).
 //=========================================================================
-IDetDataSvc *CondDBEntityResolverSvc::detDataSvc() {
+IDetDataSvc *CondDBEntityResolver::detDataSvc() {
   if (!m_detDataSvc) {
     StatusCode sc = service(m_detDataSvcName,m_detDataSvc,true);
     if( !sc.isSuccess() ) {
@@ -145,31 +139,21 @@ IDetDataSvc *CondDBEntityResolverSvc::detDataSvc() {
   }
   return m_detDataSvc;
 }
-
 //=========================================================================
-//  Create a Xerces-C input source based on the given systemId (publicId is ignored).
+// fill validity limits and data (str) with the content retrieved from the url
 //=========================================================================
-xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const, const XMLCh *const systemId) {
-
+StatusCode CondDBEntityResolver::i_getData(const std::string &url,
+                                           Gaudi::Time &since, Gaudi::Time &until,
+                                           std::string &str){
   MsgStream log(msgSvc(), name());
-  
-  std::string systemIdString;
-  
-  char *cString = xercesc::XMLString::transcode(systemId);
-  if (cString) {
-    systemIdString = cString;
-    xercesc::XMLString::release(&cString);
+
+  std::string path;
+  if (url.substr(0,7) == "conddb:") {
+    path = url.substr(7);
+  } else {
+    path = url;
   }
   
-  log << MSG::DEBUG << "systemId = \"" << systemIdString << "\"" << endmsg;
-  
-  if ( systemIdString.find("conddb:") != 0 ) {
-    // the string does not start with "conddb:", so I cannot handle it
-    log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
-    return NULL;
-  }
-  
-  std::string path(systemIdString,7,systemIdString.size());
   // extract the channel id
   cool::ChannelId channel = 0;
   size_t column_pos = path.find(":");
@@ -201,37 +185,86 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
   if ( detDataSvc()->validEventTime() ) {
     now =  detDataSvc()->eventTime();
   } else {
-    log << MSG::ERROR << "resolveEntity event time undefined" << endmsg;
-    return NULL;
+    log << MSG::ERROR << "event time undefined" << endmsg;
+    return StatusCode::FAILURE;
   }
 
   // outputs
   std::string descr;
   ICondDBReader::DataPtr data;
-  Gaudi::Time since, until;
   
-  StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel).isSuccess();
-
+  StatusCode sc = condDBReader()->getObject(path,now,data,descr,since,until,channel);
   if (sc.isSuccess()) {
     if ( data.get() == NULL ) {
-      throw GaudiException("Cannot find any data at " + systemIdString, name(), StatusCode::FAILURE);
+      log << MSG::ERROR << "Cannot find any data at " << url << endmsg;
+      return StatusCode::FAILURE;
     }
-
-    std::string xml_data;
     try {
-      xml_data = (*data)[data_field_name].data<std::string>();
+      // try to copy the data into the istringstream
+      str = (*data)[data_field_name].data<std::string>();
     } catch (cool::RecordSpecificationUnknownField &e) {
-      throw GaudiException(std::string("I cannot find the data inside COOL object: ") + e.what(), name(), StatusCode::FAILURE);
+      log << MSG::ERROR << "I cannot find the data inside COOL object: "
+          << e.what() << endmsg;
+      return StatusCode::FAILURE;
     }
+  }
+  return sc;
+}
+//=========================================================================
+//  Returns an input stream to read from the opened file.
+//=========================================================================
+std::auto_ptr<std::istream> CondDBEntityResolver::open(const std::string &url) {
+  MsgStream log(msgSvc(), name());
+
+  Gaudi::Time since, until;
+  std::string str;
+  StatusCode sc = i_getData(url,since,until,str);
+  if (sc.isFailure()){
+    throw GaudiException("Cannot open URL " + url, name(), StatusCode::FAILURE);
+  }
+  return std::auto_ptr<std::istream>(new std::istringstream(str));
+}
+//=========================================================================
+//  Returns the list of supported protocols.
+//=========================================================================
+const std::vector<std::string> &CondDBEntityResolver::protocols() const {
+  return m_protocols;
+}
+//=========================================================================
+//  Create a Xerces-C input source based on the given systemId (publicId is ignored).
+//=========================================================================
+xercesc::InputSource *CondDBEntityResolver::resolveEntity(const XMLCh *const, const XMLCh *const systemId) {
+
+  MsgStream log(msgSvc(), name());
+  
+  std::string systemIdString;
+  
+  char *cString = xercesc::XMLString::transcode(systemId);
+  if (cString) {
+    systemIdString = cString;
+    xercesc::XMLString::release(&cString);
+  }
+  
+  log << MSG::DEBUG << "systemId = \"" << systemIdString << "\"" << endmsg;
+  
+  if ( systemIdString.find("conddb:") != 0 ) {
+    // the string does not start with "conddb:", so I cannot handle it
+    log << MSG::VERBOSE << "Not a conddb URL" << endmsg;
+    // tell XercesC to use the default action
+    return NULL;
+  }
+
+  Gaudi::Time since, until;
+  std::string str;
+  StatusCode sc = i_getData(systemIdString,since,until,str);
+  
+  if (sc.isSuccess()) {
     // Create a copy of the string for the InputSource
-    unsigned int buff_size = xml_data.size();
+    
+    // fill the buffer
+    unsigned int buff_size = static_cast<unsigned int>(str.size());
     XMLByte* buff = new XMLByte[buff_size];
-    std::string::iterator chIt;
-    XMLByte* buff_ptr = buff;
-    for ( chIt = xml_data.begin(); chIt != xml_data.end(); ++chIt ){
-      *buff_ptr = *chIt;
-      ++buff_ptr;
-    }
+    std::copy(str.begin(),str.end(),buff);
     
     // Create the input source using the string
     ValidInputSource *inputSource = new ValidInputSource((XMLByte*) buff,
@@ -240,13 +273,12 @@ xercesc::InputSource *CondDBEntityResolverSvc::resolveEntity(const XMLCh *const,
                                                          true);
     inputSource->setSystemId(systemId);
     inputSource->setValidity(since, until);
-    
+
     // Done!
     return inputSource;
   }
-  
-  // tell Xerces to use the default action
+
+  // tell XercesC to use the default action
   return NULL;
 }
-
 //=============================================================================

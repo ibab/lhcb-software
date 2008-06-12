@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tools/CondDBEntityResolver
 ! Responsible : Marco Clemencic
-! Purpose     : Implement the IXmlEntityREsolver interface to be able to use
-!               CondDB URLs into xml documents
+! Purpose     : Implement the IXmlEntityResolver interface to be able to use
+!               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
+
+Needs Gaudi v20r0 and Tools/XmlTools v6r0
+! 2008-06-12 - Marco Clemencic
+ - Modified the CondDBEntityResolver to be a tool instead of a service and
+   extended it to implement the IFileAccess interface.
 
 !================ Tools/CondDBEntityResolver v4r1p1 2008-05-28 ===============
 ! 2008-05-28 - Marco Cattaneo
