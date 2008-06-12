@@ -5,7 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !============================= PatPV v3r3 2008-06-04 =========================
-! 2008-06-02 - Mariusz Witek
+! 2008-06-12 - Mariusz Witek
+  - adjusted default options for LSAdaptPV3DFitter 
+  - added example options for displaced vertices
+
+! 2008-06-11 - Mariusz Witek
   - new functionality and package structure change: 
   - PV off-axis reconstruction 
   - Seeding interface introduced IPVSeeding.h
