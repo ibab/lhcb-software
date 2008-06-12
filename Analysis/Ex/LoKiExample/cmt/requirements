@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.39 2008-04-24 08:41:23 pkoppenb Exp $ 
+# $Id: requirements,v 1.40 2008-06-12 10:44:01 ibelyaev Exp $ 
 # =============================================================================
 package         LoKiExample
-version         v7r3
+version         v7r4
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -15,6 +15,11 @@ use             Python      v* LCG_Interfaces -no_auto_imports
 use             LoKi        v* Phys
 use             HbookCnv    v* 
 use             LHCbMath    v* Kernel  
+
+# ============= environment =================================================== 
+set LOKIEXAMPLEDATA $(LOKIEXAMPLEROOT)/options/Bs2Jpsiphi_mm.opts \
+    CERN_DATA       $(LOKIEXAMPLEROOT)/options/Bs2Jpsiphi_mm_MCSELECTED.opts \
+    WIN32&LOCAL     $(LOKIEXAMPLEROOT)/options/Bs2Jpsiphi_mm_LOCAL.opts 
 
 
 # ============= constituents ==================================================

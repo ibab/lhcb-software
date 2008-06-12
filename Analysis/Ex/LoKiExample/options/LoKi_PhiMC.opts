@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_PhiMC.opts,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_PhiMC.opts,v 1.7 2008-06-12 10:44:01 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_PhiMC
@@ -35,26 +35,16 @@
 // ============================================================================
 ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
-//ApplicationMgr.ExtSvc += { "StagerSvc" } ;
-//StagerSvc.BlockSize    = 20 ;
-//StagerSvc.InitialStage = 5 ;
-// ============================================================================
 // Histograms & NTuples 
 // ============================================================================
-HistogramPersistencySvc.OutputFile = "PhiMC_histos.root" ;
-HbookHistSvc.PrintHistos = true ;
+HistogramPersistencySvc.OutputFile = "PhiMC_Histos.root" ;
 // ============================================================================
 // Input Data
 // ============================================================================
 #pragma print OFF 
-#include "$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm.opts"  
-FileCatalog.Catalogs = {
-  "xmlcatalog_file:NewCatalog.xml" ,
-  "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs2Jpsiphi_mm_CERN.xml"  
-} ;
+#include "$LOKIEXAMPLEDATA"
 #pragma print ON
 // ============================================================================
-
 
 ApplicationMgr.TopAlg           += { "LoKi_PhiMC/PhiMC"   } ;
 PhiMC.PhysDesktop.InputLocations = { "Phys/StdTightKaons" } ;
