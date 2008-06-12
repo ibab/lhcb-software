@@ -4,11 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
-!============================= PatPV v3r3 2008-06-04 =========================
 ! 2008-06-12 - Mariusz Witek
   - adjusted default options for LSAdaptPV3DFitter 
   - added example options for displaced vertices
-
 ! 2008-06-11 - Mariusz Witek
   - new functionality and package structure change: 
   - PV off-axis reconstruction 
@@ -17,6 +15,7 @@
   - LSAdaptPV3DFitter - new PV fitting algorithm for PatPV3D
   - PatPV3D - new algorithm. Uses PVOfflineTool
 
+!============================= PatPV v3r3 2008-06-04 =========================
 ! 2008-06-04 - Marco Cattaneo
  - Fixed warning message
 
