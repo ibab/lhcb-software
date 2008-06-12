@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # =============================================================================
 """
 This a template file for the Bender-based scriopt/module
@@ -11,21 +11,14 @@ This a template file for the Bender-based scriopt/module
 # =============================================================================
 __author__ = " Do not forget your name here "
 # =============================================================================
-
-
-# =============================================================================
 ## import all nesessary stuff from Bender
 from Bender.MainMC import * 
-# =============================================================================
-
-
 # =============================================================================
 ## @class Template
 class Tempate(AlgoMC) :
     """
     This is the template algorithm 
-    """
-        
+    """        
     ## standard constructor
     def __init__ ( self , name = 'Template' ) :
         """
@@ -49,19 +42,26 @@ def configure ( **args ) :
     Configure the job
     """
     
-    ## get the input data
-    import data_Bs2Jpsiphi_mm as input 
-    
-
     ## read external configruation files
-    gaudi.config (
-        files = [
-        '$DAVINCIROOT/options/DaVinciCommon.opts'         ,
-        '$COMMONPARTICLESROOT/options/StandardKaons.opts' ] )
+    importOptions ( '$DAVINCIROOT/options/DaVinciCommon.opts' )
+    importOptions ( '$COMMONPARTICLESROOT/options/StandardKaons.opts' )
 
+    from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
+    HistogramPersistencySvc ( OutputFile = 'TEMPLATE_histos.root' )
+    NTupleSvc ( Output = [ "FILE1 DATAFILE='TEMPLATE.root' OPT='NEW' TYP='ROOT'" ] )
+   
+    
+    ## get/create application manager
+    gaudi = appMgr() 
+    
+    
     #
     # perform some specific configuration 
     #
+
+    ## get the input data
+    import BenderExample.data_Bs2Jpsiphi_mm as input 
+    
 
     return SUCCESS
 
@@ -76,7 +76,7 @@ if __name__ == '__main__' :
     configure()
 
     ## run the job
-    gaudi.run(1000)
+    run(1000)
 
 # =============================================================================
 # The END 
