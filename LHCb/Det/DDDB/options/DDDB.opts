@@ -38,7 +38,7 @@ XmlCnvSvc.AllowGenericConversion = true;
 //----------------------------------------------------------------------------
 // Tell to the XmlParserSvc how to resolve entities in the CondDB
 //----------------------------------------------------------------------------
-XmlParserSvc.EntityResolverSvc = "CondDBEntityResolverSvc";
+XmlParserSvc.EntityResolver = "CondDBEntityResolver";
 
 //----------------------------------------------------------------------------
 // Access to ConditionsDB

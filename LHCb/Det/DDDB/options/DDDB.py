@@ -1,4 +1,4 @@
-# $Id: DDDB.py,v 1.1 2008-02-29 19:10:17 marcocle Exp $
+# $Id: DDDB.py,v 1.2 2008-06-12 18:44:36 marcocle Exp $
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -6,7 +6,7 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBDispatcherSvc, 
                             CondDBLayeringSvc, 
                             CondDBCnvSvc,
-                            CondDBEntityResolverSvc,
+                            CondDBEntityResolver,
                             XmlCnvSvc,
                             XmlParserSvc )
 
@@ -46,7 +46,7 @@ xmlParserSvc = XmlParserSvc(
                             
                             # Tell to the XmlParserSvc how to resolve entities
                             # in the CondDB
-                            EntityResolverSvc = CondDBEntityResolverSvc()
+                            EntityResolver = CondDBEntityResolver()
                             )
 
 ##########################################################################
