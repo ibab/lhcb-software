@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
   int windowWidth(1000);
   int windowHeight(600);
+  int titleFontSize(0);
 
   try {
     // cli
@@ -64,6 +65,8 @@ int main(int argc, char* argv[])
       ("reference-path,R", value<std::string>(), "relative reference path")
       ("saveset-path,S", value<std::string>(), "relative saveset path")
       ("config-file,C", value<std::string>(), "configuration file")
+      ("title-font-size,F", value<int>(&titleFontSize),
+       "title font size for plots")      
     ;
 
     // program argument -> histo list
@@ -190,6 +193,9 @@ int main(int argc, char* argv[])
         exit(EXIT_FAILURE);
       }
     }
+    if (startupSettings.count("title-font-size")) {
+      presenterMainFrame.setTitleFontSize(startupSettings["title-font-size"].as<int>());
+    }    
     if (startupSettings.count("startup-histograms")) {
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
     }
