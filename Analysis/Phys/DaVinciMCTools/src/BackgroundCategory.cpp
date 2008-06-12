@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.37 2008-06-12 09:49:11 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.38 2008-06-12 12:35:26 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -316,6 +316,8 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
 
     if (tempmother) tempmother = tempmother->mother();
     else return 0; //shouldn't happen!
+
+    if (!tempmother) return 0; //shouldn't happen!
 
     verbose() << "The current candidate for a common mother is " << tempmother << " and has PID " << tempmother->particleID().pid() << endmsg;
  
