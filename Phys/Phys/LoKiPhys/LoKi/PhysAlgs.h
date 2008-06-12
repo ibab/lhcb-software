@@ -1,4 +1,4 @@
-// $Id: PhysAlgs.h,v 1.6 2007-06-04 18:25:37 ibelyaev Exp $
+// $Id: PhysAlgs.h,v 1.7 2008-06-12 08:25:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSALGS_H 
 #define LOKI_PHYSALGS_H 1
@@ -307,6 +307,30 @@ namespace LoKi
       LHCb::Particle* final = 0 ;
       if ( 0 != result ) { final = const_cast<LHCb::Particle*> ( result ) ; }
       return final ;                                                // RETURN 
+    }
+    // ========================================================================
+    /** The trivial algorithm which searches for the  
+     *  particle in the decay tree, which satisfies 
+     *  the certain critetia 
+     *
+     *  @param p pointer to the particle 
+     *  @param cut the criteria 
+     *  @return true if there is such particle 
+     *
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2006-02-20
+     */
+    template <class PARTICLE, class PREDICATE>
+    inline bool  found  
+    ( PARTICLE         first ,
+      PARTICLE         last  , 
+      const PREDICATE& cut   ) 
+    {
+      for ( ; first != last ; ++first )
+      {
+        if ( LoKi::PhysAlgs::found ( *first , cut ) ) { return true ; } // RETURN
+      }
+      return false ;
     }
     // ========================================================================
   } // end of namespace LoKi::PhysAlgs 

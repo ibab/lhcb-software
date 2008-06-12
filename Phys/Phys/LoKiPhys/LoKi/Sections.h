@@ -1,4 +1,4 @@
-// $Id: Sections.h,v 1.1 2008-05-04 15:26:25 ibelyaev Exp $
+// $Id: Sections.h,v 1.2 2008-06-12 08:25:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SECTIONS_H 
 #define LOKI_SECTIONS_H 1
@@ -9,6 +9,10 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/Child.h"
+// ============================================================================
 /** @file
  *  Collection of varios functions related to the "sections" for 
  *  the certain graph/tree
@@ -17,7 +21,7 @@
  */
 namespace LoKi 
 {
-  namespace Decay 
+  namespace Decays 
   {
     // ========================================================================
     /// the actual type for the graph/tree section 
@@ -34,7 +38,7 @@ namespace LoKi
     size_t sections 
     ( const LHCb::Particle* particle , Sections& output ) ;
     // ========================================================================
-    /** simple function to extarct all section from the graph/tree 
+    /** simple function to extract all section from the graph/tree 
      *  @param particle the head of th egraph/tree 
      *  @return sice of the section container 
      */
@@ -42,6 +46,28 @@ namespace LoKi
     {
       Sections result ;
       sections ( particle , result ) ;
+      return result ;
+    }
+    // ========================================================================
+    /** get the most trivial section (daughters) 
+     *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-05-25
+     */ 
+    inline size_t section
+    ( const LHCb::Particle* particle , 
+      Section&              output   )
+    {
+      return LoKi::Child::daughters ( particle , output ) ; 
+    }
+    // ========================================================================
+    /** get the most trivial section (daughters) 
+     *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-05-25
+     */ 
+    inline Section section ( const LHCb::Particle* particle )  
+    {
+      Section result ;
+      section ( particle , result ) ;
       return result ;
     }
     // ========================================================================      

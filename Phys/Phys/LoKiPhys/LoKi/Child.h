@@ -1,4 +1,4 @@
-// $Id: Child.h,v 1.12 2008-06-03 15:47:08 cattanem Exp $
+// $Id: Child.h,v 1.13 2008-06-12 08:25:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CHILD_H 
 #define LOKI_CHILD_H 1
@@ -144,6 +144,24 @@ namespace LoKi
     children 
     ( const LHCb::Particle* particle , 
       const unsigned int    level    ) ;
+    // ========================================================================
+    /** get all daughters for the given Particle 
+     *  @param particle  particle  
+     *  @param output    the vector of daughetr particles 
+     *  @return the size of daughter vector 
+     *  @author Vanya BELYAEV ibelyaev@phsycis.syr.edu
+     *  @date 2007-06-02
+     */
+    inline size_t daughters 
+    ( const LHCb::Particle*        particle , 
+      LHCb::Particle::ConstVector& output   ) 
+    {
+      if ( 0 == particle ) { return 0 ; }
+      typedef SmartRefVector<LHCb::Particle> Daughters ;
+      const Daughters& daugs = particle->daughters() ;
+      output.insert ( output.end() , daugs.begin() , daugs.end() ) ;
+      return daugs.size () ;
+    }
     // ========================================================================
     /** trivial function to access all children particles at the given level 
      *  @attention: level 0 corresponds to the particle itself 
