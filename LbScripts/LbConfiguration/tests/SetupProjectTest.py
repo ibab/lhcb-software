@@ -113,7 +113,7 @@ class SetupProjectTestCase(unittest.TestCase):
         parse_opts = lambda opts: os.popen4('python -c "import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
         parse_opts_stdout = lambda opts: os.popen3('python -c "import SetupProject; SetupProject.SetupProject().parser.parse_args(args=%s)"'%opts)[1].read()
 
-        exp = 'usage: -c [options] '
+        exp = 'Usage: -c [options] '
         x = parse_opts(["-h"])
         self.assert_(x.startswith(exp))
 
