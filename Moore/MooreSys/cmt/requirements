@@ -1,12 +1,12 @@
 package MooreSys
-version v4r1
+version v4r2
 
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore  v4r1    Hlt
+use  Moore  v4r2    Hlt
 
 
 # Allow the generation of QMTest summary 

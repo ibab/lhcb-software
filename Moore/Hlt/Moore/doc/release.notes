@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+!========================== Moore v4r2 2008-06-12 ===================
+! 2008-06-12 - Patrick Koppenburg
+ - Added Moore.py
+ - FieldMapr v5r0
+
 </PRE><H1><A NAME=v4r1>2008-05-06 Moore v4r1</A></H1><PRE>
  - Based on Hlt v3r2 and Online v4r8. Separation of Hlt1 and Hlt2.
 

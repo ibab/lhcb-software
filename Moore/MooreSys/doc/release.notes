@@ -3,6 +3,12 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v4r2>2008-06-02 Moore v4r2</A></H1><PRE>
+ - Based on Hlt v3r3 and Online v4r10. 
+ - New IANNSvc 
+ - Used in Hlt2 throughout
+ - Many changes in alleys
+
 </PRE><H1><A NAME=v4r1>2008-05-06 Moore v4r1</A></H1><PRE>
  - Based on Hlt v3r2 and Online v4r8. Separation of Hlt1 and Hlt2.
 
