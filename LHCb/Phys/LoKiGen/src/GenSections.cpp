@@ -1,4 +1,4 @@
-// $Id: GenSections.cpp,v 1.1 2008-05-04 15:20:49 ibelyaev Exp $
+// $Id: GenSections.cpp,v 1.2 2008-06-12 08:19:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,14 +29,9 @@
  *  @return size of the section container 
  */
 // ============================================================================
-/*  simple function to extarct all section from the graph/tree 
- *  @param particle the head of th egraph/tree 
- *  @param output the sections of the graph/tree 
- *  @return size of the section container 
- */
-size_t LoKi::Decay::sections 
+size_t LoKi::Decays::sections 
 ( const HepMC::GenParticle* particle , 
-  LoKi::Decay::GenSections& output   ) 
+  LoKi::Decays::GenSections& output  ) 
 {
   // trivial case 1
   if ( 0 == particle )                   { return output.size() ; } // RETURN  
@@ -48,7 +43,7 @@ size_t LoKi::Decay::sections
   Daughters children ;
   LoKi::GenChild::daughters ( particle , children ) ;
   if ( children.empty() )                { return output.size () ; } // RETURN
-  // get all sections from daughetr particles:
+  // get all sections from daughter particles:
   typedef std::vector<GenSections>  SECTIONS ;
   SECTIONS all ( children.size() ) ;
   for ( size_t index = 0 ; index < children.size() ; ++index )

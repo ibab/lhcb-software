@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2008-05-05 09:53:35 cattanem Exp $ 
+! $Id: release.notes,v 1.50 2008-06-12 08:19:05 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,16 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-06-12 - Vanya BELYAEV
+ -  LoKi/GenDecays.h
+    src/LoKiGenDecays.cpp
+   
+     Implemenmtation of HepMC-trees (functors which acts on teh decay 
+    structure), needed for new (HepMC)DecayFinder 
+   
+ - cmt/requirements 
+    version incrmeent to v7r4 
 
 !============================ LoKiGen v7r3 2008-05-05 =========================
 ! 2008-05-05 - Marco Cattaneo

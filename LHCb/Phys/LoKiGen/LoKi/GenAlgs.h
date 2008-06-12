@@ -1,4 +1,4 @@
-// $Id: GenAlgs.h,v 1.11 2008-05-05 09:53:35 cattanem Exp $
+// $Id: GenAlgs.h,v 1.12 2008-06-12 08:19:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENALGS_H
 #define LOKI_GENALGS_H 1
@@ -8,6 +8,7 @@
 // STD & STL
 // ============================================================================
 #include <algorithm>
+#include <functional>
 // ============================================================================
 // LoKiCore
 // ============================================================================
@@ -43,7 +44,8 @@ namespace LoKi
    */
   namespace GenAlgs
   {   
-    template <class OBJECT,class PREDICATE>
+    template < class OBJECT    ,
+               class PREDICATE >
     inline size_t count_if
     ( OBJECT           first ,
       OBJECT           last  ,
@@ -305,7 +307,9 @@ namespace LoKi
     inline bool found
     ( const LHCb::HepMCEvent* event ,
       const PREDICATE&        cut   )
-    { return ( 0 == event ) ? false :  found ( event->pGenEvt() , cut ) ; } 
+    { 
+      return ( 0 == event ) ? false :  
+        LoKi::GenAlgs::found ( event->pGenEvt() , cut ) ; } 
     // ========================================================================
     /** useful helper function (a'la STL) to efficiently check the
      *  presence of at least one (HepMC) particle, which satisfies the
@@ -343,7 +347,7 @@ namespace LoKi
       if ( 0 == events ) { return false ; }
       for ( LHCb::HepMCEvents::const_iterator iev = events->begin() ;
             events->end() != iev ; ++iev )
-      { if ( found ( *iev , cut ) ) { return true ; } }
+      { if ( LoKi::GenAlgs::found ( *iev , cut ) ) { return true ; } }
       return false ;
     } 
     // ========================================================================
@@ -381,7 +385,8 @@ namespace LoKi
     {
       if ( cut ( particle ) ) { return true ; }
       if ( 0 != particle ) 
-      { return found ( particle->end_vertex() , cut , HepMC::descendants ) ; }
+      { return LoKi::GenAlgs::found 
+          ( particle->end_vertex() , cut , HepMC::descendants ) ; }
       return false ;
     }
     // ========================================================================
@@ -418,7 +423,11 @@ namespace LoKi
     ( OBJECT           first ,
       OBJECT           last  ,
       const PREDICATE& cut   )
-    { return LoKi::Algs::found ( first , last , cut ) ; }
+    { 
+      for ( ; first != last ; ++first ) 
+      { if ( found ( *first , cut ) ) { return true ; } }
+      return false ;
+    }
     // ========================================================================
     /** Simple algorithm for accumulation of
      *  the function value through the  HepMC graph
@@ -453,7 +462,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physucs.syr.edu
      *  @date 2006-02-09
      */
-    template <class RESULT, class FUNCTOR, class PREDICATE, class OPERATION>
+    template < class RESULT    , 
+               class FUNCTOR   , 
+               class PREDICATE , 
+               class OPERATION >
     inline RESULT accumulate
     ( const HepMC::GenEvent*       event     ,
       const FUNCTOR&               functor   ,
@@ -465,7 +477,20 @@ namespace LoKi
         ( event->particles_begin() , 
           event->particles_end  () , 
           functor , predicate , result , binop ) ;
-    } 
+    }
+    // ========================================================================
+    template < class RESULT    , 
+               class FUNCTOR   , 
+               class PREDICATE >
+    inline RESULT accumulate
+    ( const HepMC::GenEvent*       event     ,
+      const FUNCTOR&               functor   ,
+      const PREDICATE&             predicate ,
+      RESULT                       result    ) 
+    {
+      return accumulate 
+        ( event , functor , predicate , result , std::plus<RESULT>() ) ;
+    }
     // ========================================================================
     /** Simple algorithm for accumulation of
      *  the function value through the  HepMC graph
@@ -500,7 +525,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physucs.syr.edu
      *  @date 2006-02-09
      */
-    template <class RESULT, class FUNCTOR, class PREDICATE, class OPERATION>
+    template <class RESULT, 
+              class FUNCTOR, 
+              class PREDICATE, 
+              class OPERATION>
     inline RESULT accumulate
     ( const LHCb::HepMCEvent* event     ,
       const FUNCTOR&          functor   ,
@@ -510,6 +538,19 @@ namespace LoKi
     {
       return ( 0 == event ) ? result : LoKi::GenAlgs::accumulate 
         ( event->pGenEvt() , functor , predicate , result , binop ) ;
+    } 
+    // ========================================================================
+    template <class RESULT, 
+              class FUNCTOR, 
+              class PREDICATE>
+    inline RESULT accumulate
+    ( const LHCb::HepMCEvent* event     ,
+      const FUNCTOR&          functor   ,
+      const PREDICATE&        predicate ,
+      RESULT                  result    )
+    {
+      return accumulate 
+        ( event , functor , predicate , result , std::plus<RESULT>() ) ;
     } 
     // ========================================================================
     /** Simple algorithm for accumulation of
@@ -546,7 +587,10 @@ namespace LoKi
      *  @author Vanya BELYAEV ibelyaev@physucs.syr.edu
      *  @date 2006-02-09
      */
-    template <class RESULT, class FUNCTOR, class PREDICATE, class OPERATION>
+    template < class RESULT    , 
+               class FUNCTOR   , 
+               class PREDICATE , 
+               class OPERATION >
     inline RESULT accumulate
     ( const LHCb::HepMCEvents* events    ,
       const FUNCTOR&           functor   ,
@@ -561,6 +605,19 @@ namespace LoKi
       return result ;
     } 
     // ========================================================================
+    template < class RESULT    , 
+               class FUNCTOR   , 
+               class PREDICATE >
+    inline RESULT accumulate
+    ( const LHCb::HepMCEvents* events    ,
+      const FUNCTOR&           functor   ,
+      const PREDICATE&         predicate ,
+      RESULT                   result    )
+    {
+      return accumulate 
+        ( events , functor , predicate , result , std::plus<RESULT> () ) ;
+    } 
+    // ========================================================================
     /** simple function for accumulatio throught the HepMC-graph 
      *  @param vertex pointer to HepMC-graph
      *  @param functor    function to be accumulated 
@@ -571,7 +628,10 @@ namespace LoKi
      *  @return updated accumulation result 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
-    template <class RESULT, class FUNCTOR,class PREDICATE,class OPERATION>
+    template < class RESULT    , 
+               class FUNCTOR   ,
+               class PREDICATE ,
+               class OPERATION >
     inline RESULT accumulate 
     ( const HepMC::GenVertex*   vertex    , 
       const FUNCTOR&            functor   ,
@@ -588,6 +648,20 @@ namespace LoKi
           functor , predicate , result , binop ) ;
     }
     // ========================================================================
+    template < class RESULT    , 
+               class FUNCTOR   ,
+               class PREDICATE >
+    inline RESULT accumulate 
+    ( const HepMC::GenVertex*   vertex    , 
+      const FUNCTOR&            functor   ,
+      const PREDICATE&          predicate ,
+      RESULT                    result    , 
+      HepMC::IteratorRange      range     ) 
+    {
+      return accumulate 
+        ( vertex , functor , predicate , result , range , std::plus<RESULT>() ) ;
+    }
+    // ========================================================================
     /** simple function for accumulatio throught the decay tree of the particle
      *  @param particle the pointer to mother particle
      *  @param functor    function to be accumulated 
@@ -597,7 +671,10 @@ namespace LoKi
      *  @return updated accumulation result 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      */
-    template <class RESULT, class FUNCTOR,class PREDICATE,class OPERATION>
+    template < class RESULT    , 
+               class FUNCTOR   ,
+               class PREDICATE ,
+               class OPERATION >
     inline RESULT accumulate 
     ( const HepMC::GenParticle* particle  , 
       const FUNCTOR&            functor   ,
@@ -614,6 +691,19 @@ namespace LoKi
       if ( predicate ( particle ) ) 
       { result = binop ( result , functor ( particle ) ) ; }
       return result ;
+    }
+    // ========================================================================
+    template < class RESULT    , 
+               class FUNCTOR   ,
+               class PREDICATE >
+    inline RESULT accumulate 
+    ( const HepMC::GenParticle* particle  , 
+      const FUNCTOR&            functor   ,
+      const PREDICATE&          predicate ,
+      RESULT                    result    )
+    {
+      return accumulate
+        ( particle , functor , predicate , result , std::plus<RESULT> () ) ;
     }
     // ========================================================================
     /** simple function to extract the minimum value of certain function 

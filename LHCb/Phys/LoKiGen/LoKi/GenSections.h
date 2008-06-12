@@ -1,4 +1,4 @@
-// $Id: GenSections.h,v 1.1 2008-05-04 15:20:49 ibelyaev Exp $
+// $Id: GenSections.h,v 1.2 2008-06-12 08:19:05 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENSECTIONS_H 
 #define LOKI_GENSECTIONS_H 1
@@ -9,6 +9,10 @@
 // ============================================================================
 #include "Event/HepMCEvent.h"
 // ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/GenChild.h"
+// ============================================================================
 /** @file
  *  Collection of varios functions related to the "sections" for 
  *  the certain graph/tree
@@ -18,7 +22,7 @@
 // ============================================================================
 namespace LoKi 
 {
-  namespace Decay 
+  namespace Decays
   {
     // ========================================================================
     /// the actual type for the graph/tree section 
@@ -45,6 +49,31 @@ namespace LoKi
       sections ( particle , result ) ;
       return result ;
     }
+    // ========================================================================
+    /** get the most trivial section (daughters) 
+     *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-05-25
+     */ 
+    inline size_t section
+    ( const HepMC::GenParticle* particle , 
+      GenSection&               output   )
+    {
+      return LoKi::GenChild::daughters ( particle , output ) ; 
+    }
+    // ========================================================================
+    /** get the most trivial section (daughters) 
+     *  @author Vanya  BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date   2008-05-25
+     */ 
+    inline GenSection section ( const HepMC::GenParticle* particle )  
+    {
+      GenSection result ;
+      section ( particle , result ) ;
+      return result ;
+    }
+    // ========================================================================      
+ 
+
     // ========================================================================      
   } // end of namespace LoKi::Decay 
   // ==========================================================================
