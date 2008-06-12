@@ -1,9 +1,59 @@
-! $Id: release.notes,v 1.39 2008-05-29 15:23:42 cattanem Exp $ 
+! $Id: release.notes,v 1.40 2008-06-12 08:28:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-12 - Vanya BELYAEV
+ - LoKi/TupelDicts.h
+   src/TupleDicts.h
+   python/LoKiAlgo/fArrayP.py 
+   
+   Provide the way for efficient & friendly 
+   fill of variable-size array for N-tuples in python:
+
+
+    >>> tup = ...
+    >>> particles = ...            ## the range of particles 
+    
+    >>> tup.fArrayP ( 'p'  , P  ,  ## column name and functor 
+                      particles ,  ## source: the range of particles 
+                      'Length'  ,  ## the name of 'length' column
+                      100       )  ## maximal length 
+
+    or
+
+    >>> tup.fArrayP ( 'p'  , P  ,  ## the first  column name and functor 
+                      'pt' , PT ,  ## the second column name and functor 
+                      particles ,  ## source: the range of particles 
+                      'Length'  ,  ## the name of 'length' column
+                      100       )  ## maximal length 
+    
+    or
+
+    >>> tup.fArrayP ( 'p'  , P  ,  ## the first  column name and functor 
+                      'pt' , PT ,  ## the second column name and functor 
+                      'm'  , M  ,  ## the third  column name and functor 
+                      particles ,  ## source: the range of particles 
+                      'Length'  ,  ## the name of 'length' column
+                      100       )  ## maximal length 
+    
+    or
+
+    >>> tup.fArrayP ( 'p'  , P  ,  ## the first  column name and functor 
+                      'pt' , PT ,  ## the second column name and functor 
+                      'm'  , M  ,  ## the third  column name and functor 
+                      'pz' , PZ ,  ## the fourth column name and functor 
+                      particles ,  ## source: the range of particles 
+                      'Length'  ,  ## the name of 'length' column
+                      100       )  ## maximal length 
+                      
+
+ - cmt/requirements
+
+    version incremet to v7r5 
+
 
 !========================== LoKiAlgo v7r4p1 2008-05-28 ========================
 ! 2008-05-28 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: LoKiAlgoDict.h,v 1.5 2008-05-28 14:53:55 cattanem Exp $
+// $Id: LoKiAlgoDict.h,v 1.6 2008-06-12 08:28:54 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKICOREDICT_H 
 #define LOKI_LOKICOREDICT_H 1
@@ -18,6 +18,7 @@
 #endif
 // ============================================================================
 #include "LoKi/AlgoDecorator.h"
+#include "LoKi/TupleDicts.h"
 // ============================================================================
 // Stefan Roiser's trick to allow compilation on Win32
 // ============================================================================

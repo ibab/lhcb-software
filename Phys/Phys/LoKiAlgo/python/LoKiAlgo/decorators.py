@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: decorators.py,v 1.10 2008-03-15 11:52:17 ibelyaev Exp $ 
+# $Id: decorators.py,v 1.11 2008-06-12 08:28:54 ibelyaev Exp $ 
 # =============================================================================
 ## @file decorators.py LoKiAlgo/decorators.py
 #  The set of basic decorator for objects from LoKiAlgo library
@@ -413,6 +413,9 @@ def _decorateAlg ( alg ) :
 ## ============================================================================
 Algo = _decorateAlg ( 'LoKi::Algo' ) 
 
+
+## decorate N-tuples
+import LoKiAlgo.fArrayP
 
 _name = _LoKiPhys.__name__
 

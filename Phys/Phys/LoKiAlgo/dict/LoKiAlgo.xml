@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiAlgo.xml,v 1.6 2007-08-16 13:49:43 ibelyaev Exp $ 
+     * $Id: LoKiAlgo.xml,v 1.7 2008-06-12 08:28:54 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiAlgo package
@@ -31,6 +31,7 @@
   <function pattern = "LoKi::LoopChild::*"       />
   <function pattern = "LoKi::PrintLoop::*"       />
   <class    name    = "LoKi::Dicts::DictsLoop"   />
+  <class    name    = "LoKi::Dicts::TupleArray"  />
   
   <class name="LoKi::Interface<LoKi::LoopObj>"     />
   <class name="LoKi::Interface<LoKi::Algo>"        />
