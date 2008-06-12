@@ -1,9 +1,9 @@
-// $Id: XmlToolsDict.h,v 1.2 2007-03-02 16:08:47 cattanem Exp $
+// $Id: XmlToolsDict.h,v 1.3 2008-06-12 18:43:56 marcocle Exp $
 #ifndef DICT_XMLTOOLSDICT_H 
 #define DICT_XMLTOOLSDICT_H 1
 
 // Include files
-#include "XmlTools/IXmlEntityResolverSvc.h"
+#include "XmlTools/IXmlEntityResolver.h"
 #ifndef WIN32
 #include "XmlTools/IXmlParserSvc.h" // breaks gccxml on Windows
 #endif

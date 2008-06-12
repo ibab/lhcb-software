@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.15 2008-04-18 13:38:01 cattanem Exp $
+// $Id: XmlParserSvc.cpp,v 1.16 2008-06-12 18:43:56 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -12,8 +12,10 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IAlgTool.h"
 
-#include "XmlTools/IXmlEntityResolverSvc.h"
+#include "XmlTools/IXmlEntityResolver.h"
 #include "XmlTools/ValidInputSource.h"
 
 #include "XmlParserSvc.h"
@@ -29,7 +31,7 @@ DECLARE_SERVICE_FACTORY(XmlParserSvc)
 // Standard Constructor
 // ------------------------------------------------------------------------
 XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
-  Service (name, svc),m_parser(NULL),m_resolverSvc(NULL),m_detDataSvc(NULL) {
+  Service (name, svc),m_parser(NULL),m_resolver(NULL),m_detDataSvc(NULL),m_toolSvc(NULL) {
 
   // gets the maximum number of caches documents from the joboption file
   // by default, this is 10.
@@ -41,7 +43,8 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
   declareProperty ("CacheBehavior", m_cacheBehavior = 2);
   
   // Name of the xerces::EntityResolver provider
-  declareProperty ("EntityResolverSvc", m_resolverSvcName = "" );
+  declareProperty ("EntityResolver", m_resolverName = ""
+                   "Name of the tool provding the IXmlEntityResolver interface.");
   
   // Name of the xerces::EntityResolver provider
   declareProperty ("DetectorDataSvc", m_detDataSvcName = "DetectorDataSvc" );
@@ -86,14 +89,27 @@ StatusCode XmlParserSvc::initialize( ) {
     // asks the parser to avoid the creation of EntityReference nodes
     m_parser->setCreateEntityReferenceNodes (false);
     
-    if( ! m_resolverSvcName.empty() ) {    
-      sc = service(m_resolverSvcName,m_resolverSvc,true);
+    if( ! m_resolverName.empty() ) {
+      sc = service("ToolSvc",m_toolSvc,true);
       if (  !sc.isSuccess() ) {
-        log << MSG::ERROR << "Could not locate the IXmlEntityResolverSvc " << m_resolverSvcName << endmsg;
+        log << MSG::ERROR << "Could not locate the ToolSvc " << endmsg;
+        m_toolSvc = 0; // extra safety check
         return sc;
       }
-      m_parser->setEntityResolver(m_resolverSvc->resolver());
-      log << MSG::DEBUG << "using the xercesc::EntityResolver provided by " << m_resolverSvcName << endmsg;
+      sc = m_toolSvc->retrieveTool(m_resolverName,m_resolverTool,0,true);
+      if (  !sc.isSuccess() ) {
+        log << MSG::ERROR << "Could not locate the tool " << m_resolverName << endmsg;
+        m_resolverTool = 0; // extra safety check
+        return sc;
+      }
+      sc = m_resolverTool->queryInterface(IXmlEntityResolver::interfaceID(),pp_cast<void>(&m_resolver));
+      if (  !sc.isSuccess() ) {
+        log << MSG::ERROR << "Could not get the IXmlEntityResolver interface of" << m_resolverName << endmsg;
+        m_resolver = 0; // extra safety check
+        return sc;
+      }
+      m_parser->setEntityResolver(m_resolver->resolver());
+      log << MSG::DEBUG << "using the xercesc::EntityResolver provided by " << m_resolverName << endmsg;
     }
   } else {
     log << MSG::ERROR << "Could not create xercesc::XercesDOMParser" << endmsg;
@@ -114,9 +130,15 @@ StatusCode XmlParserSvc::finalize() {
     m_parser = 0;
   }
 
-  if (m_resolverSvc) {
-    m_resolverSvc->release();
-    m_resolverSvc = 0;
+  if (m_toolSvc) {
+    if (m_resolver) {
+      m_resolver->release();
+      m_resolver = 0;
+      m_toolSvc->releaseTool(m_resolverTool);
+      m_resolverTool = 0;
+    }
+    m_toolSvc->release();
+    m_toolSvc = 0;
   }
   
   if (m_detDataSvc) {
@@ -197,9 +219,9 @@ IOVDOMDocument* XmlParserSvc::parse (const char* fileName) {
       xercesc::DOMDocument *doc = NULL;
       std::auto_ptr<xercesc::InputSource> is;
       // If we have an entity resolver, we try to use it
-      if (m_resolverSvc){
+      if (m_resolver){
         XMLCh *sysId = xercesc::XMLString::transcode(fileName);
-        is = std::auto_ptr<xercesc::InputSource>(m_resolverSvc->resolver()->resolveEntity(NULL,sysId));
+        is = std::auto_ptr<xercesc::InputSource>(m_resolver->resolver()->resolveEntity(NULL,sysId));
         xercesc::XMLString::release(&sysId);
       }
       

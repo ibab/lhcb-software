@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.10 2008-04-10 11:52:03 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.11 2008-06-12 18:43:56 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -13,8 +13,10 @@
 #include "XmlTools/IXmlParserSvc.h"
 
 // Forward and external declarations
-class IXmlEntityResolverSvc;
+class IXmlEntityResolver;
 class IDetDataSvc;
+class IToolSvc;
+class IAlgTool;
 
 template <class TYPE> class SvcFactory;
 
@@ -208,17 +210,23 @@ private:
   /// The maximum number of cached documents
   unsigned int m_maxDocNbInCache;
 
-  /// Name of the service which will provide the xercesc::EntityResolver pointer (option "EntityResolverSvc").
-  std::string m_resolverSvcName;
+  /// Name of the service which will provide the xercesc::EntityResolver pointer (option "EntityResolver").
+  std::string m_resolverName;
 
-  /// Pointer to the IXmlEntityResolverSvc.
-  IXmlEntityResolverSvc *m_resolverSvc;
+  /// Pointer to the IXmlEntityResolver tool interface (for bookkeeping).
+  IAlgTool *m_resolverTool;
+  
+  /// Pointer to the IXmlEntityResolver.
+  IXmlEntityResolver *m_resolver;
 
   /// Name of the service which will provide the event time (option "DetectorDataSvc", default = "DetectorDataSvc").
   std::string m_detDataSvcName;
   
   /// Pointer to the detector data service
   IDetDataSvc *m_detDataSvc;
+  
+  /// Pointer to the ToolSvc.
+  IToolSvc *m_toolSvc;
   
 };
 

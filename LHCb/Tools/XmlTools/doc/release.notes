@@ -4,6 +4,10 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+! 2008-06-12 - Marco Clemencic
+ - Renamed the IXmlEntityResolverSvc to IXmlEntityResolver.
+   The code now requires that it is implemented by a tool and not a service.
+
 !======================== XmlTools v5r2 2008-04-10 ===========================
 ! 2008-04-10 - Marco Clemencic
  - Modified XmlParserSvc to load DetDescSvc when needed, not at initialization
