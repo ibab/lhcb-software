@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.69 2008-06-11 09:10:22 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.70 2008-06-12 14:02:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -37,14 +37,15 @@ namespace
 RawDataFormatTool::RawDataFormatTool( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichToolBase    ( type, name , parent ),
-    m_richSys       ( NULL                ),
-    m_rawEvent      ( NULL                ),
-    m_odin          ( NULL                ),
-    m_timeTool      ( NULL                ),
-    m_evtCount      ( 0                   ),
-    m_hasBeenCalled ( false               ),
-    m_maxHPDOc      ( 999999              )
+  : RichToolBase    ( type, name , parent  ),
+    m_richSys       ( NULL                 ),
+    m_rawEvent      ( NULL                 ),
+    m_odin          ( NULL                 ),
+    m_timeTool      ( NULL                 ),
+    m_evtCount      ( 0                    ),
+    m_hasBeenCalled ( false                ),
+    m_maxHPDOc      ( 999999               ),
+    m_richIsActive  ( Rich::NRiches, true  )
 {
   // interface
   declareInterface<IRawDataFormatTool>(this);
@@ -64,6 +65,7 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "CheckBXIDs",         m_checkBxIDs         = true  );
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false );
   declareProperty( "VerboseErrors",      m_verboseErrors      = false );
+  declareProperty( "ActiveRICHes",       m_richIsActive               );
 }
 
 // Destructor
@@ -78,6 +80,14 @@ StatusCode RawDataFormatTool::initialize()
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
+  // report inactive RICHes
+  if ( m_richIsActive.size() != Rich::NRiches ) 
+  { return Error( "Incorrectly configured active RICH options" ); }
+  if ( !m_richIsActive[Rich::Rich1] ) 
+  { Warning("Decoding for RICH1 disabled",StatusCode::SUCCESS).ignore(); }
+  if ( !m_richIsActive[Rich::Rich2] ) 
+  { Warning("Decoding for RICH2 disabled",StatusCode::SUCCESS).ignore(); }
+
   // if suppression is less than max possible number of (ALICE) hits, print a message.
   if ( m_maxHPDOc < BitsPerDataWord * MaxDataSizeALICE )
   {
@@ -86,10 +96,14 @@ StatusCode RawDataFormatTool::initialize()
 
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endreq;
 
-  if ( m_decodeUseOdin )       Warning( "ODIN integrity checks are enabled", StatusCode::SUCCESS );
-  if ( !m_checkDataIntegrity ) Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS );
-  if ( !m_checkEventsIDs )     Warning( "Header Event ID checks are disabled", StatusCode::SUCCESS );
-  if ( !m_checkBxIDs )         Warning( "Header BX ID checks are disabled", StatusCode::SUCCESS );
+  if ( m_decodeUseOdin )       
+    Warning( "ODIN integrity checks are enabled",      StatusCode::SUCCESS ).ignore();
+  if ( !m_checkDataIntegrity ) 
+    Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS ).ignore();
+  if ( !m_checkEventsIDs )     
+    Warning( "Header Event ID checks are disabled",    StatusCode::SUCCESS ).ignore();
+  if ( !m_checkBxIDs )         
+    Warning( "Header BX ID checks are disabled",       StatusCode::SUCCESS ).ignore();
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -102,12 +116,12 @@ StatusCode RawDataFormatTool::initialize()
 void RawDataFormatTool::handle ( const Incident& incident )
 {
   // Update prior to start of new event.
-  if ( IncidentType::BeginEvent == incident.type() )
+  if      ( IncidentType::BeginEvent == incident.type() )
   {
     InitEvent();
   }
   // End of event
-  else if ( IncidentType::EndEvent == incident.type() )
+  else if ( IncidentType::EndEvent   == incident.type() )
   {
     FinishEvent();
   }
@@ -568,7 +582,7 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
       for ( HPDMap::const_iterator iHPD = (*iIngress).second.hpdData().begin();
             iHPD != (*iIngress).second.hpdData().end(); ++iHPD )
       {
-        debug() << "   HPD " << (*iHPD).second.hpdID() << " L1input=" << (*iHPD).first 
+        debug() << "   HPD " << (*iHPD).second.hpdID() << " L1input=" << (*iHPD).first
                 << " Found " << (*iHPD).second.smartIDs().size() << " hits" << endreq;
         // Get raw data bank for this HPD, and fill into RAWBank
         const HPDDataBank * hpdData = createDataBank( (*iHPD).second.smartIDs(), version, odin() );
@@ -628,38 +642,57 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
                boost::lexical_cast<std::string>(bank.type()) );
   }
 
-  // if configured, dump raw event before decoding
-  if      ( msgLevel(MSG::VERBOSE) ) { dumpRawBank( bank, verbose() ); }
-  else if ( m_dumpBanks            ) { dumpRawBank( bank, info()    ); }
+  // Get L1 ID
+  const Level1ID L1ID ( bank.sourceID() );
 
-  // Get bank version
-  const BankVersion version = bankVersion( bank );
-
-  m_hasBeenCalled = true;
-  ++m_l1IdsDecoded[ Level1ID(bank.sourceID()) ];
-
-  // Now, delegate the work to a version of the decoding appropriate to the version
-
-  if ( version == LHCb5 ) // latest version
-  {
-    decodeToSmartIDs_2007(bank,decodedData);
-  }
-  else if ( version == LHCb3 || version == LHCb4 ) // RICH 2006 Testbeam
-  {
-    decodeToSmartIDs_2006TB(bank,decodedData);
-  }
-  else if ( version == LHCb0 ||
-            version == LHCb1 ||
-            version == LHCb2 )  // DC04 or DC06
-  {
-    decodeToSmartIDs_DC0406(bank,decodedData);
-  }
-  else // Some problem ...
+  // Is the RICH this L1 ID is for active ?
+  const Rich::DetectorType rich = m_richSys->richDetector(L1ID);
+  if ( rich == Rich::InvalidDetector )
   {
     std::ostringstream mess;
-    mess << "Unknown RICH L1 version number " << version;
-    Exception( mess.str() );
+    mess << "L1 bank " << L1ID << " has an invalid RICH detector mapping -> Bank skipped";
+    Warning( mess.str() ).ignore();
   }
+  else if ( m_richIsActive[rich] )
+  {
+
+    // if configured, dump raw event before decoding
+    if      ( msgLevel(MSG::VERBOSE) ) { dumpRawBank( bank, verbose() ); }
+    else if ( m_dumpBanks            ) { dumpRawBank( bank, info()    ); }
+
+    // Get bank version
+    const BankVersion version = bankVersion( bank );
+
+    // Flag tool as having been used this event
+    m_hasBeenCalled = true;
+
+    // Count decoded L1IDs
+    ++m_l1IdsDecoded[ L1ID ];
+
+    // Now, delegate the work to a version of the decoding appropriate to the version
+
+    if ( version == LHCb5 ) // latest version
+    {
+      decodeToSmartIDs_2007(bank,decodedData);
+    }
+    else if ( version == LHCb3 || version == LHCb4 ) // RICH 2006 Testbeam
+    {
+      decodeToSmartIDs_2006TB(bank,decodedData);
+    }
+    else if ( version == LHCb0 ||
+              version == LHCb1 ||
+              version == LHCb2 )  // DC04 or DC06
+    {
+      decodeToSmartIDs_DC0406(bank,decodedData);
+    }
+    else // Some problem ...
+    {
+      std::ostringstream mess;
+      mess << "Unknown RICH L1 version number " << version;
+      Exception( mess.str() );
+    }
+
+  } // active RICH
 
 }
 
@@ -716,7 +749,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       // Compare Ingress header to the ODIN
       if (  msgLevel(MSG::VERBOSE) )
       {
-        verbose() << "ODIN : EventNumber=" << odin()->eventNumber() 
+        verbose() << "ODIN : EventNumber=" << odin()->eventNumber()
                   << " BunchID=" << odin()->bunchId() << endreq;
       }
       const bool odinOK
@@ -784,9 +817,9 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
             std::ostringstream mess;
             mess << "Found multiple data blocks L1=" << L1ID << " input=" << l1Input;
             Warning( mess.str() );
-          }   
+          }
           HPDInfo & hpdInfo = p.first->second;
-          
+
           // Only try and decode this HPD if ODIN test was OK
           if ( odinOK && !hpdIsSuppressed )
           {
@@ -825,7 +858,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
               if ( !OK )
               {
                 std::ostringstream mess;
-                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = " 
+                mess << "EventID Mismatch : HPD " << hpdID << " L1IngressHeader = "
                      << ingressWord.eventID()
                      << " HPDHeader = " << hpdBank->eventID();
                 Error( mess.str() );
@@ -838,7 +871,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
 
                 // Do data integrity checks
                 OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
-                if ( !OK ) 
+                if ( !OK )
                 {
                   std::ostringstream mess;
                   mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
@@ -1327,7 +1360,7 @@ const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
     }
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Created " << dummyMap.size() 
+      debug() << "Created " << dummyMap.size()
               << " entries in empty L1 map : L1IDs = "
               << m_richSys->level1IDs() << endreq;
     }

@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.29 2008-06-10 16:17:33 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.30 2008-06-12 14:02:42 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -26,7 +26,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h" // due to forward declaration in GaudiTool
+#include "GaudiKernel/IIncidentSvc.h"
 
 // Base class
 #include "RichKernel/RichToolBase.h"
@@ -281,12 +281,15 @@ namespace Rich
        */
       bool m_verboseErrors;
 
+      /// Flag to turn on/off decoding of each RICH detector (default is both on)
+      std::vector<bool> m_richIsActive;
+
     };
 
     inline void RawDataFormatTool::InitEvent()
     {
-      m_rawEvent = NULL;
-      m_odin     = NULL;
+      m_rawEvent      = NULL;
+      m_odin          = NULL;
       m_hasBeenCalled = false;
     }
 
@@ -316,20 +319,20 @@ namespace Rich
       return m_rawEvent;
     }
 
-    inline const LHCb::ODIN * RawDataFormatTool::odin() const
-    {
-      if ( !m_odin )
-      {
-        timeTool()->getTime();
-        m_odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
-      }
-      return m_odin;
-    }
-
     inline const IEventTimeDecoder * RawDataFormatTool::timeTool() const
     {
       if (!m_timeTool) acquireTool( "OdinTimeDecoder", m_timeTool );
       return m_timeTool;
+    }
+
+    inline const LHCb::ODIN * RawDataFormatTool::odin() const
+    {
+      if ( !m_odin )
+      {
+        timeTool()->getTime(); // Needed to make sure ODIN object is in TES (Strange but true)
+        m_odin = get<LHCb::ODIN>( LHCb::ODINLocation::Default );
+      }
+      return m_odin;
     }
 
   }
