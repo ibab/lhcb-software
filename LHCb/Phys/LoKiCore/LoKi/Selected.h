@@ -1,4 +1,4 @@
-// $Id: Selected.h,v 1.7 2007-07-23 17:07:40 ibelyaev Exp $
+// $Id: Selected.h,v 1.8 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SELECTED_H 
 #define LOKI_SELECTED_H 1
@@ -64,7 +64,7 @@ namespace LoKi
     /// Standard constructor
     Selected_() : m_map() {}
     /// destructor 
-    virtual ~Selected_() { m_map.clear() ; } ;
+    virtual ~Selected_() { m_map.clear() ; } 
     /** get all particled tagged objects
      *  @param name  tag to be selected
      *  @return selected range of objects 
@@ -74,13 +74,13 @@ namespace LoKi
       const Container& cont = m_map( name );
       // return valid range 
       return Range( cont.begin() , cont.end() , name );
-    };
+    }
     /** get all particled tagged objects
      *  @param name  tag to be selected
      *  @return selected range of objects 
      */
     Range operator() ( const std::string& name ) const 
-    { return get( name ); };
+    { return get( name ); }
     /** add objects to the tagged container 
      *  @param name     tag for objects 
      *  @param storage  storage of objects 
@@ -91,7 +91,7 @@ namespace LoKi
     Range add( const std::string& name    , 
                const STORAGE&     storage , 
                const CUT&         cut     ) 
-    { return add( name , storage.begin() , storage.end() , cut ) ; };
+    { return add( name , storage.begin() , storage.end() , cut ) ; }
     /** add objects to the tagged container 
      *  @param name     tag for objects 
      *  @param first    begin of sequence of objects  
@@ -111,9 +111,10 @@ namespace LoKi
       LoKi::select( first , last  , std::back_inserter( cont ) , cut ) ;
       // return valid range 
       return Range( cont.begin() , cont.end() , name );      
-    };
+    }
     /** add the object to the tagged container 
-     *  @param name     tag for objects 
+     *  @param name   tag for objects 
+     *  @param object the object to be added      
      *  @return selected range of objects 
      */
     template <class OBJECT> 

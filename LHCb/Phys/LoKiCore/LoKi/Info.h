@@ -1,4 +1,4 @@
-// $Id: Info.h,v 1.3 2008-05-28 13:40:29 cattanem Exp $
+// $Id: Info.h,v 1.4 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_INFO_H 
 #define LOKI_INFO_H 1
@@ -282,8 +282,8 @@ namespace LoKi
      *  @endcode 
      *  
      *  @param  object object to be modified 
-     *  @param  key  the key
-     *  @param  val  the value associated with the key 
+     *  @param  key    the key
+     *  @param  value  the value associated with the key 
      *  @author Vanya BELAYEV ibelyaev@physics.syr.edu
      *  @date 2007-06-14 
      */

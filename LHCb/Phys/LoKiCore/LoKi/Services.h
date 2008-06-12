@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.7 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Services.h,v 1.8 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SERVICES_H 
 #define LOKI_SERVICES_H 1
@@ -69,6 +69,7 @@ namespace LoKi
     /** Print the error  message, return status code
      *  @param msg    error message 
      *  @param st     status code 
+     *  @param mx     the maximal number of prints 
      *  @return       status code 
      */
     StatusCode Error     
@@ -78,6 +79,7 @@ namespace LoKi
     /** Print the warning  message, return status code 
      *  @param msg    warning message 
      *  @param st     status code  
+     *  @param mx     the maximal number of prints 
      *  @return       status code 
      */
     StatusCode Warning   

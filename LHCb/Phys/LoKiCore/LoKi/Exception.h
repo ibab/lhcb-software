@@ -1,4 +1,4 @@
-// $Id: Exception.h,v 1.6 2007-08-11 20:17:00 ibelyaev Exp $
+// $Id: Exception.h,v 1.7 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_EXCEPTION_H 
 #define LOKI_EXCEPTION_H 1
@@ -37,19 +37,25 @@ namespace LoKi
   class Exception : public GaudiException
   {    
   public:    
+    // ========================================================================
     /** Constructor
      *  @param Message error message
-     *  @param Code status code 
+     *  @param Code status code
+     *  @param file file name 
+     *  @param line line number 
      */
     Exception
     ( const std::string&   Message                       , 
       const StatusCode &   Code    = StatusCode::FAILURE , 
       const std::string&   file    = ""                  , 
       const unsigned long& line    = 0                   ) ;
+    // ========================================================================
     /** Constructor 
      *  @param Message error message
      *  @param Code status code
      *  @param Exception "previous"  exception
+     *  @param file file name 
+     *  @param line line number 
      */
     Exception 
     ( const std::string&     Message         , 
@@ -57,16 +63,21 @@ namespace LoKi
       const GaudiException&  Exception       ,
       const std::string&     file       = "" , 
       const unsigned long&   line       = 0  ) ;
+    // ========================================================================
     /// virtual destructor 
     virtual ~Exception() throw() {} ;
+    // ========================================================================
     /** clone operation
      *  @see GaudiException
      *  @return the clone
      */
     virtual Exception* clone() const;
+    // ========================================================================
   private:
+    // ========================================================================
     /// the default constructor is disabled 
     Exception();
+    // ========================================================================
   }; // end of class Exception
 }// end of namespace  LooK
 // ============================================================================

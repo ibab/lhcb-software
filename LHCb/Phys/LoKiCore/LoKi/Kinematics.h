@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.12 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.13 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -214,6 +214,7 @@ namespace LoKi
      *
      *  @param  begin "begin"-iterator for the sequence of objects
      *  @param  end   "end"-iterator for the sequence of objects
+     *  @param  result the initial value 
      *  @return sum of 4-momenta of all particles 
      */
     template <class OBJECT>
@@ -259,6 +260,7 @@ namespace LoKi
      *  @param  first  "begin"-iterator for the sequence of objects
      *  @param  last   "end"-iterator for the sequence of objects
      *  @param  cut     the predicate 
+     *  @param  result  the initial value for result 
      *  @return sum of 4-momenta of all particles 
      */
     template <class OBJECT, class PREDICATE>

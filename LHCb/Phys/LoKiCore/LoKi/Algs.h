@@ -1,4 +1,4 @@
-// $Id: Algs.h,v 1.12 2008-05-28 13:40:29 cattanem Exp $
+// $Id: Algs.h,v 1.13 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -45,6 +45,7 @@ namespace LoKi
      *  @param last      'end'-iterator for the sequence
      *  @param functor   function to be evaluated 
      *  @param result    the initial value 
+     *  @param binop     the accumulation predicate 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-10
@@ -71,6 +72,7 @@ namespace LoKi
      *  @param functor   function to be evaluated 
      *  @param predicate the seelection criteria
      *  @param result    the initial value 
+     *  @param binop     the accumulation predicate 
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2006-02-10

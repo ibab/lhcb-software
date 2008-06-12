@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.8 2008-05-28 13:40:29 cattanem Exp $
+// $Id: Primitives.h,v 1.9 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -1684,16 +1684,20 @@ namespace LoKi
   class EqualToValue : public LoKi::Functor<TYPE,bool>
   {
   private:
+    // ========================================================================
     /// argument type
     typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
     /// result type 
     typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
     // constant type 
     typedef typename LoKi::Constant<TYPE,TYPE2>::T2 T2 ;
+    // ========================================================================
   public:
+    // ========================================================================
     /** constructor from the function and the value 
      *  @param fun the function
      *  @param val the reference value 
+     *  @param eps the relative precision
      */
     EqualToValue 
     ( const LoKi::Functor<TYPE,TYPE2>&  fun          , 
@@ -1704,9 +1708,11 @@ namespace LoKi
       , m_val ( val ) 
       , m_eps ( eps ) 
     {}
+    // ========================================================================
     /** constructor from the function and the value 
      *  @param fun the function
      *  @param val the reference value 
+     *  @param eps the relative precision
      */
     EqualToValue 
     ( T2 val , const LoKi::Functor<TYPE,TYPE2>&  fun , T2 eps = 1.0e-6 ) 
@@ -1715,6 +1721,7 @@ namespace LoKi
       , m_val ( val ) 
       , m_eps ( eps ) 
     {}
+    // ========================================================================
     /// copy constructor 
     EqualToValue 
     ( const EqualToValue& right )
@@ -1724,8 +1731,10 @@ namespace LoKi
       , m_val ( right.m_val )
       , m_eps ( right.m_eps )
     {}
+    // ========================================================================
     /// MANDATORY: virtual destructor 
     virtual ~EqualToValue(){} ;
+    // ========================================================================
     /// MANDATORY: clone method ("virtual construcor")
     virtual  EqualToValue* clone() const { return new EqualToValue(*this); }
     /// MANDATORY: the only one essential method :
@@ -1734,17 +1743,23 @@ namespace LoKi
     /// OPTIONAL: the specific printout 
     virtual std::ostream& fillStream ( std::ostream& s ) const 
     { return s << "(" << m_fun << "==" << m_val << ")" ; }
+    // ========================================================================
   public:
+    // ========================================================================
     inline result_type equal_to ( argument a ) const
     {
       //std::equal_to<TYPE2> cmp ;
       LHCb::Math::Equal_To<TYPE2> cmp ( m_eps ) ;
       return cmp ( m_fun.fun ( a ) , m_val ) ;
     }    
+    // ========================================================================
   public:
+    // ========================================================================
     const LoKi::Functor<TYPE,TYPE2>& fun () const { return m_fun.fun() ; }
     T2                               val () const { return m_val       ; }
+    // ========================================================================
   private:
+    // ========================================================================
     /// The default constructor is disabled 
     EqualToValue();
   private:
@@ -1774,6 +1789,7 @@ namespace LoKi
     /** constructor for the function and the value 
      *  @param fun the function
      *  @param val the reference value 
+     *  @param eps the relative precision 
      */
     NotEqualToValue
     ( const LoKi::Functor<TYPE,TYPE2>&  fun , T2 val , T2 eps = 1.e-6 ) 
@@ -1782,6 +1798,8 @@ namespace LoKi
     {}
     /** constructor from the function and the value 
      *  @param val the reference value 
+     *  @param fun the function
+     *  @param eps the relative precision 
      */
     NotEqualToValue
     ( T2 val , const LoKi::Functor<TYPE,TYPE2>&  fun , T2 eps = 1.e-6 ) 
@@ -1834,6 +1852,7 @@ namespace LoKi
     /** constructor 
      *  @param fun1 the first functor 
      *  @param fun2 the second functor 
+     *  @param cmp the comparison criteria
      */
     Compare ( const LoKi::Functor<TYPE,TYPE2>& fun1 , 
               const LoKi::Functor<TYPE,TYPE2>& fun2 ,              

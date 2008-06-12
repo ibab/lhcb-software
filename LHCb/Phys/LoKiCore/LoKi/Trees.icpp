@@ -1,0 +1,370 @@
+// $Id: Trees.icpp,v 1.1 2008-06-12 08:14:31 ibelyaev Exp $
+// ============================================================================
+#ifndef LOKI_DECAYTREES_ICPP 
+#define LOKI_DECAYTREES_ICPP 1
+// ============================================================================
+// Include files 
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/Trees.h"
+#include "LoKi/Nodes.h"
+// ============================================================================
+/** @file
+ *  The implementation fiel for the objects form the file Trees.h
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-05-07
+ */
+// ============================================================================
+// MARKED 
+// ============================================================================
+// constructor from the tree 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_ 
+( LoKi::Decays::iTree_<PARTICLE>& tree ) 
+  : LoKi::Decays::iTree_<PARTICLE>() 
+  , m_tree     ( tree ) 
+  , m_particle ( 0    ) 
+{}
+// ============================================================================
+// copy constructor (ignore the marked particle)
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_ 
+( const LoKi::Decays::Trees::Marked_<PARTICLE>& right ) 
+  : LoKi::Decays::iTree_<PARTICLE> ( right ) 
+  , m_tree ( right.m_tree ) 
+  , m_particle ( 0 ) 
+{}
+// ============================================================================
+// MANDATORY: the only one essential method:
+// ============================================================================
+template <class PARTICLE>
+inline bool LoKi::Decays::Trees::Marked_<PARTICLE>::operator() 
+  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+{
+  /// reset the particle 
+  m_particle = 0  ;
+  const bool result = m_tree.tree ( p ) ;
+  if ( result ) { m_particle = p ; }   // KEEP THE PARTICLE !!! 
+  return result ;
+}
+// ============================================================================
+// MANDATORY: the specific printout 
+// ============================================================================
+template <class PARTICLE>
+inline std::ostream& 
+LoKi::Decays::Trees::Marked_<PARTICLE>::fillStream ( std::ostream& s ) const 
+{ return s << " ^" << m_tree ; }
+// ============================================================================
+// Check the validity
+// ============================================================================ 
+template <class PARTICLE>
+inline bool 
+LoKi::Decays::Trees::Marked_<PARTICLE>::valid() const 
+{ return m_tree.tree().valid() ; }
+// ============================================================================
+// validate it
+// ============================================================================
+template <class PARTICLE>
+inline StatusCode
+LoKi::Decays::Trees::Marked_<PARTICLE>::validate
+( IParticlePropertySvc* svc ) const { return m_tree.tree().validate ( svc ) ; }
+// ============================================================================
+// reset the collection cache 
+// ============================================================================
+template <class PARTICLE>
+inline void 
+LoKi::Decays::Trees::Marked_<PARTICLE>::reset () const 
+{
+  // reset the own cache 
+  m_particle = 0 ; 
+  // reset the tree 
+  m_tree.reset() ;
+}
+// ============================================================================
+// collect the marked elements 
+// ============================================================================
+template <class PARTICLE>
+inline size_t 
+LoKi::Decays::Trees::Marked_<PARTICLE>::collect 
+( typename LoKi::Decays::iTree_<PARTICLE>::Collection& output ) const 
+{
+  if ( 0 != m_particle ) 
+  {
+    output.push_back ( m_particle ) ; 
+    return 1 + m_tree.collect ( output ) ;
+  }
+  return m_tree.collect ( output ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// _Tree_
+// ============================================================================
+// the source of IDs
+// ============================================================================
+template <class PARTICLE>
+inline size_t LoKi::Decays::Trees::_Tree_<PARTICLE>::getID() 
+{
+  static size_t s_ID = 0 ;
+  // reset it if it becomes too large: 
+  if ( s_ID == std::numeric_limits<size_t>::max() ) { s_ID = 0 ; }
+  return ++s_ID ;
+}
+// ============================================================================
+
+// ============================================================================
+// Op_
+// ============================================================================
+// constructor from two sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Op_<PARTICLE>::Op_ 
+( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
+  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
+  : LoKi::Decays::iTree_<PARTICLE> () 
+    , m_trees ()
+{
+  m_trees.push_back ( LoKi::Decays::Trees::_Tree_<PARTICLE> ( n1 ) ) ;
+  m_trees.push_back ( LoKi::Decays::Trees::_Tree_<PARTICLE> ( n2 ) ) ;
+}   
+// ============================================================================
+// constructor from list of sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Op_<PARTICLE>::Op_ 
+( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : LoKi::Decays::iTree_<PARTICLE> () 
+  , m_trees ( trees )
+{}
+// ============================================================================
+// MANDATORY: check the validness 
+// ============================================================================
+template <class PARTICLE>
+inline bool 
+LoKi::Decays::Trees::Op_<PARTICLE>::valid() const 
+{ return !m_trees.empty() && 
+    LoKi::Decays::valid ( m_trees.begin() , m_trees.end() ) ; }
+// ============================================================================
+// MANDATORY: the proper validation of the tree
+// ============================================================================
+template <class PARTICLE>
+inline StatusCode 
+LoKi::Decays::Trees::Op_<PARTICLE>::validate ( IParticlePropertySvc* svc ) const 
+{
+  if ( m_trees.empty() ) { return StatusCode::FAILURE ; }
+  return LoKi::Decays::validate 
+    ( m_trees.begin() , m_trees.end() , svc ) ;
+}
+// ============================================================================
+// MANDATORY: reset method 
+// ============================================================================
+template <class PARTICLE>
+inline void LoKi::Decays::Trees::Op_<PARTICLE>::i_reset() 
+{
+  std::for_each 
+    ( m_trees.begin () , 
+      m_trees.end   () , 
+      std::mem_fun(&LoKi::Decays::Trees::_Tree_<PARTICLE>::reset) );
+}
+// ============================================================================
+// MANDATORY: collect all marked elements 
+// ============================================================================
+template <class PARTICLE>
+inline size_t LoKi::Decays::Trees::Op_<PARTICLE>::collect 
+( typename LoKi::Decays::iTree_<PARTICLE>::Collection& o ) const 
+{
+  size_t size = 0 ;
+  for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
+        m_trees.end() != it ; ++it ) { size += it->collect ( 0 ) ; }
+  return size ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// Or_
+// ============================================================================
+// constructor from two sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Or_<PARTICLE>::Or_ 
+( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
+  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
+  : LoKi::Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
+{}
+// ============================================================================
+// constructor from list of sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Or_<PARTICLE>::Or_ 
+( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : LoKi::Decays::Trees::Op_<PARTICLE> ( trees )  
+{}
+// ============================================================================
+// MANDATORY: the specific printout 
+// ============================================================================
+template <class PARTICLE>
+inline std::ostream& 
+LoKi::Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const 
+{
+  s << " (";
+  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator 
+          tree = this->begin() ; this->end() != tree ; ++tree )
+  { 
+    if ( this->begin() != tree ) { s << "|" ; } 
+    s << (*tree) ;
+  }
+  return s << ") " ;
+}
+// ============================================================================
+// operator  |=
+// ============================================================================
+template <class PARTICLE>
+inline 
+LoKi::Decays::Trees::Or_<PARTICLE>& 
+LoKi::Decays::Trees::Or_<PARTICLE>::operator|= 
+( const LoKi::Decays::Trees::Or_<PARTICLE>& tree ) 
+{
+  this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
+  return  *this ;
+}
+// ============================================================================
+// operator  ()
+// ============================================================================
+template <class PARTICLE>
+inline bool 
+LoKi::Decays::Trees::Or_<PARTICLE>::operator()
+  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+{
+  /// reset the components 
+  this->i_reset () ;                                  // reset the components 
+  return this->end() != std::find ( this->begin() , this->end() , p ) ;
+}
+// ============================================================================
+
+
+// ============================================================================
+// And_
+// ============================================================================
+// constructor from two sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::And_<PARTICLE>::And_ 
+( const LoKi::Decays::iTree_<PARTICLE>& n1 , 
+  const LoKi::Decays::iTree_<PARTICLE>& n2 ) 
+  : LoKi::Decays::Trees::Op_<PARTICLE> ( n1 , n2 )  
+{}
+// ============================================================================
+// constructor from list of sub-trees 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::And_<PARTICLE>::And_ 
+( const typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees& trees ) 
+  : LoKi::Decays::Trees::Op_<PARTICLE> ( trees )  
+{}
+// ============================================================================
+// MANDATORY: the specific printout 
+// ============================================================================
+template <class PARTICLE>
+inline std::ostream& 
+LoKi::Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const 
+{
+  s << " (";
+  //
+  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator tree 
+          = this->begin() ; this->end() != tree ; ++tree )
+  { 
+    if ( this->begin() != tree ) { s << "&" ; } 
+    s << (*tree) ;
+  }
+  return s << ") " ;
+}
+// ============================================================================
+// operator  &=
+// ============================================================================
+template <class PARTICLE>
+inline 
+LoKi::Decays::Trees::And_<PARTICLE>& 
+LoKi::Decays::Trees::And_<PARTICLE>::operator&= 
+( const LoKi::Decays::Trees::And_<PARTICLE>& tree ) 
+{
+  this->trees().insert ( this->end() , tree.begin() , tree.end() ) ;
+  return  *this ;
+}
+// ============================================================================
+// operator  ()
+// ============================================================================
+template <class PARTICLE>
+inline bool 
+LoKi::Decays::Trees::And_<PARTICLE>::operator()
+  ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+{
+  /// reset the components 
+  this->i_reset () ;                                   // reset the components 
+  // 
+  for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator it 
+          = this->begin() ; this->end() != it ; ++it ) 
+  { if ( (*it)!= p ) { return false ; } }                // RETURN 
+  //                                                      
+  return true ;                                          // RETURN 
+}
+// ============================================================================
+
+// ============================================================================
+// NOT 
+// ============================================================================
+// constructor from the node 
+// ============================================================================
+template <class PARTICLE>
+inline LoKi::Decays::Trees::Not_<PARTICLE>::Not_
+( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
+  : LoKi::Decays::iTree_<PARTICLE> () 
+  , m_tree ( tree ) 
+{}
+// ============================================================================
+// MANDATORY: the specific printout 
+// ============================================================================
+template <class PARTICLE>
+inline std::ostream& 
+LoKi::Decays::Trees::Not_<PARTICLE>::fillStream( std::ostream& s ) const 
+{ 
+  return s << " !(" << m_tree << ") " ; 
+}
+// ============================================================================
+// MANDATORY: check the validness 
+// ============================================================================
+template <class PARTICLE>
+inline bool 
+LoKi::Decays::Trees::Not_<PARTICLE>::valid () const { return m_tree.valid() ; } 
+// ============================================================================
+// MANDATORY: the proper validation of the tree
+// ============================================================================
+template <class PARTICLE>
+inline StatusCode 
+LoKi::Decays::Trees::Not_<PARTICLE>::validate ( IParticlePropertySvc* svc ) const 
+{ return m_tree.validate ( svc ) ; }
+// ============================================================================
+// reset the cache 
+// ============================================================================
+template <class PARTICLE>
+inline void 
+LoKi::Decays::Trees::Not_<PARTICLE>::reset() { m_tree.reset() ; }
+// ============================================================================
+// MANDATORY: collect all marked elements 
+// ============================================================================
+template <class PARTICLE>
+inline size_t 
+LoKi::Decays::Trees::Not_<PARTICLE>::collect 
+( typename LoKi::Decays::iTree_<PARTICLE>::Collection& o ) const 
+{ return m_tree.collect ( o )  ; }
+
+// ============================================================================
+// The END
+// ============================================================================
+#endif // LOKI_DECAYTREES_H
+// ============================================================================

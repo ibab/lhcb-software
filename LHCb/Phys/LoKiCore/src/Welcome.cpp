@@ -1,4 +1,4 @@
-// $Id: Welcome.cpp,v 1.9 2007-08-15 13:44:02 ibelyaev Exp $
+// $Id: Welcome.cpp,v 1.10 2008-06-12 08:14:31 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -105,7 +105,7 @@ void LoKi::Welcome::welcome( std::ostream& stream ) const
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
   stream << boost::format ( m_fmt3 ) % 
-    "Author:  Vanya BELYAEV ibelyaev@physics.syr.edu" ;
+    "Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl " ;
   stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
   
   stream << boost::format ( m_fmt1 ) % m_str1 ;
@@ -280,7 +280,7 @@ void Bender::Welcome::welcome( std::ostream& stream ) const
   //
   stream << boost::format ( m_fmt1 ) % m_str1 ;
   stream << boost::format ( m_fmt3 ) % 
-    "Author:  Vanya BELYAEV ibelyaev@physics.syr.edu " ;
+    "Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl " ;
   stream << boost::format ( m_fmt1 ) % m_str1 << std::endl ;
   //
   stream << boost::format ( m_fmt1 ) % m_str1 ;
