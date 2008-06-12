@@ -1,4 +1,4 @@
-// $Id: CondDBReplayAlg.cpp,v 1.2 2008-06-10 16:47:23 marcocle Exp $
+// $Id: CondDBReplayAlg.cpp,v 1.3 2008-06-12 18:47:18 marcocle Exp $
 // Include files 
 
 // needed to sleep between two operations
@@ -124,7 +124,7 @@ StatusCode CondDBReplayAlg::execute() {
       double ns_to_sleep = (op->time.ns() - last_optime.ns()) // time between operations
         - (Gaudi::Time::current().ns() - last_time.ns()); // time wasted
 
-      if ( ns_to_sleep > 0 ) NanoSleep(ns_to_sleep);
+      if ( ns_to_sleep > 0 ) NanoSleep(static_cast<long long>(ns_to_sleep));
     }
 
     last_optime = op->time;
