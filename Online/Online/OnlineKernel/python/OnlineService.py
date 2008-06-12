@@ -337,9 +337,9 @@ class DataManagementServices:
     if ( 0 == self.fileServer):
       self.fileServer = 1
       server = self.startServer()
-      #server.registerMountpoint('html',   basePath+os.sep+'html')
+      server.registerMountpoint('html',   basePath+os.sep+'html')
       server.registerMountpoint('images', basePath+os.sep+'images')
-      #server.servlets['html'].useCache(1)
+      server.servlets['html'].useCache(1)
       server.servlets['images'].useCache(1)
       favicon_servlet = gaudiweb.FavIconServer(basePath+os.sep+'images'+os.sep+'favicon.ico')
       self.server.registerServlet('favicon.ico', favicon_servlet)
