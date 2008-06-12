@@ -1,11 +1,11 @@
-// $Id: RawBankSizeMonitor.cpp,v 1.3 2008-06-12 11:46:54 jost Exp $
+// $Id: RawBankSizeMonitor.cpp,v 1.4 2008-06-12 16:00:31 frankb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "RawBankSizeMonitor.h"
+#include "GaudiOnline/RawBankSizeMonitor.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RawBankSizeMonitor
@@ -14,8 +14,9 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RawBankSizeMonitor );
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LHCb,RawBankSizeMonitor );
 
+using namespace LHCb;
 
 //=============================================================================
 // Standard constructor, initializes variables
