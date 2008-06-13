@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.cpp,v 1.1 2008-06-13 12:46:14 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.cpp,v 1.2 2008-06-13 13:28:49 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -69,7 +69,8 @@ StatusCode TracklessRingFilterAlg::execute()
         iRing != inrings->end(); ++iRing )
   {
     // average ring hit prob
-    const double avProb = (*iRing)->averagePixelProb();
+    //const double avProb = (*iRing)->averagePixelProb();
+    const double avProb = avRingHitProb(*iRing);
     if ( avProb < m_minAvProb ) continue;
 
     // Number of pixels on the ring
@@ -81,4 +82,17 @@ StatusCode TracklessRingFilterAlg::execute()
   }
 
   return StatusCode::SUCCESS;
+}
+
+// (TEMPORARY UNTIL PART OF RICHRECRING)
+double
+TracklessRingFilterAlg::avRingHitProb( LHCb::RichRecRing * ring ) const
+{
+  double prob(0);
+  for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
+        iP != ring->richRecPixels().end(); ++iP )
+  {
+    prob += (*iP).associationProb();
+  }
+  return ( ring->richRecPixels().empty() ? 0 : prob/(double)ring->richRecPixels().size() );
 }
