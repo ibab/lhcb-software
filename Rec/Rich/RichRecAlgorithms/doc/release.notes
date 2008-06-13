@@ -4,6 +4,12 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2008-06-13 - Chris Jones
+ - Add some new algorithms for trackless rings
+  + Rich::Rec::TracklessRingFilterAlg : Filter rings using quality cuts
+  + Rich::Rec::TracklessRingIsolationAlg : Finds isolated trackless rings
+  + Rich::Rec::TracklessRingSegmentAssociationAlg : Associates rings to segments
+
 !===================== RichRecAlgorithms v2r10 2008-04-16 ====================
 ! 2008-04-16 - Chris Jones
  - Make the nickname of the PID tool in RichTrackPIDAlg a configurable option
