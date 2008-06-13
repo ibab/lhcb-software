@@ -16,6 +16,8 @@ from Configurables import TutorialChecker
 importOptions( "$HLTSYSROOT/options/L0.opts" )
 importOptions( "$HLTSYSROOT/options/Hlt.opts" )
 importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4.py" )
+# B tagging options
+importOptions( "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts" )
 #
 # Print Reconstructed Bs
 #

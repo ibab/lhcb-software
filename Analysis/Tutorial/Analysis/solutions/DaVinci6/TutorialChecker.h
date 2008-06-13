@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.h,v 1.6 2008-04-24 12:46:16 pkoppenb Exp $
+// $Id: TutorialChecker.h,v 1.7 2008-06-13 12:40:59 pkoppenb Exp $
 #ifndef TUTORIALCHECKER_H 
 #define TUTORIALCHECKER_H 1
 
@@ -15,6 +15,7 @@
  *  @author Patrick Koppenburg
  *  @date   2006-12-21
  */
+class IHltSummaryTool ;
 class TutorialChecker : public DVAlgorithm {
 public: 
   /// Standard constructor
@@ -38,5 +39,6 @@ private:
   
 private:
   IBackgroundCategory* m_background ;
+  IHltSummaryTool* m_summary ;
 };
 #endif // TUTORIALCHECKER_H

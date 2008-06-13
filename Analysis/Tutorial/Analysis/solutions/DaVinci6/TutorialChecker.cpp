@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.10 2008-04-24 12:46:16 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.11 2008-06-13 12:40:59 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -6,9 +6,9 @@
 
 // from LHCb
 #include "Event/HltSummary.h"
-#include "Event/HltEnums.h"
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"
+#include "Kernel/IHltSummaryTool.h"
 
 // local
 #include "TutorialChecker.h"
@@ -30,6 +30,7 @@ TutorialChecker::TutorialChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
   , m_background()
+    , m_summary()
 {
 }
 //=============================================================================
@@ -46,6 +47,7 @@ StatusCode TutorialChecker::initialize() {
   if ( sc.isFailure() ) return sc;
 
   m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
+  m_summary = tool<IHltSummaryTool>("HltSummaryTool");
 
   debug() << "==> Initialize" << endmsg;
 
@@ -191,20 +193,11 @@ StatusCode TutorialChecker::fillTagging(Tuple& tuple,const LHCb::Particle* b) {
 //============================================================================
 StatusCode TutorialChecker::fillTrigger(Tuple& tuple){
   debug() << "==> fillTrigger" << endmsg;
-  const LHCb::HltSummary* hlt = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);  
   LHCb::L0DUReport* l0  = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default); // not const beacuse of bug in L0Decision
-  debug() << "L0 decision is " << l0->decision() << ", HLT: " << hlt->decision() << endmsg ;
+  debug() << "L0 decision is " << l0->decision() << ", HLT: " << m_summary->decision() << endmsg ;
   tuple->column("L0",           l0->decision()); // total decision
-  tuple->column("Hlt",          hlt->decision()); // total decision
-  tuple->column("HltMuon",      hlt->checkDecisionType(LHCb::HltEnums::Muon));  
-  tuple->column("HltDiMuon",    hlt->checkDecisionType(LHCb::HltEnums::DiMuon));
-  tuple->column("HltJpsi",      hlt->checkDecisionType(LHCb::HltEnums::JPsi));
-  tuple->column("HltMuonHadron",hlt->checkDecisionType(LHCb::HltEnums::MuonHadron));
-  tuple->column("HltHadron",    hlt->checkDecisionType(LHCb::HltEnums::Hadron));
-  tuple->column("HltDiHadron",  hlt->checkDecisionType(LHCb::HltEnums::DiHadron));
-  tuple->column("HltElectron",  hlt->checkDecisionType(LHCb::HltEnums::Electron));
-  tuple->column("HltDiElectron",hlt->checkDecisionType(LHCb::HltEnums::DiElectron));
-  tuple->column("HltGamma",     hlt->checkDecisionType(LHCb::HltEnums::Gamma));
+  tuple->column("Hlt",          m_summary->decision()); // total decision
+  /// @todo add details from IANNSvc, once it's in LHCb and not in HLT anymore.
 
   return StatusCode::SUCCESS ;
 }
