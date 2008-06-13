@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.3 2008-06-11 14:36:06 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.4 2008-06-13 07:09:38 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -52,8 +52,9 @@ private:
   MsgStream& fatal() const { return msg(MSG::FATAL); }
   MsgStream& always() const { return msg(MSG::ALWAYS); }
 
-  template <typename T> boost::optional<T>      ConfigDBAccessSvc::read(const typename T::digest_type&);
-  template <typename T> typename T::digest_type ConfigDBAccessSvc::write(const T& );
+  template <typename T> boost::optional<T>      read(const typename T::digest_type&);
+  template <typename T> typename T::digest_type write(const T& );
+  template <typename T> void                    createTable();
   
 
   StatusCode openConnection();

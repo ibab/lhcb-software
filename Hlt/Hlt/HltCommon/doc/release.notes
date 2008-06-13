@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 !2008-06-12 - Gerhard Raven
+  - further cleanup of ConfigDBAccessSvc
+
+!2008-06-12 - Gerhard Raven
   - back out previous commit to remain compatible with Hlt v3r3, and DaVinci v19r13
     for the time being.  To be put back when next Gaudi release becomes available
 
