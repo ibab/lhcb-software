@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.28 2008-06-13 13:20:41 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.29 2008-06-13 13:35:20 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -58,15 +58,22 @@ StatusCode RichMarkovRingFinderMoni::execute()
   if ( !exist<LHCb::RichRecRings>(m_ringLoc) ) return StatusCode::SUCCESS;
   const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>( m_ringLoc );
 
+  // Rich Histo ID
+  const RichHistoID hid;
+
   // loop
   for ( LHCb::RichRecRings::const_iterator iR = rings->begin();
         iR != rings->end(); ++iR )
   {
     LHCb::RichRecRing * ring = *iR;
 
+    // Radiator info
+    const Rich::RadiatorType rad = ring->radiator();
+
     // Plot centre points of "isolated" rings
     const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
-    plot2D( RingCentreLocal.x(), RingCentreLocal.y(), "Ring centres",
+    plot2D( RingCentreLocal.x(), RingCentreLocal.y(),  
+            hid(rad,"ringCentres"), "Ring centres",
             -2*Gaudi::Units::m, 2*Gaudi::Units::m,
             -2*Gaudi::Units::m, 2*Gaudi::Units::m, 200, 200 );    
 
@@ -95,7 +102,8 @@ StatusCode RichMarkovRingFinderMoni::execute()
     const RichRecRing::FloatType rRadius = ring->radius();//RADIUS IN RADIANS!
 
     // Plot nearest segment Ch theta against ring radius (both in radians)
-    plot2D( rRadius, avChTheta, "MCChThetaVRingRadius",
+    plot2D( rRadius, avChTheta, hid(rad,"MCChThetaVRingRadius"),
+            "MCChThetaVRingRadius",
             0.015, 0.035,
             0.015, 0.035, 300, 300 );
 

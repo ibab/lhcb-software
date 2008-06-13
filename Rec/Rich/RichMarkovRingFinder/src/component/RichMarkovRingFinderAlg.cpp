@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.49 2008-06-13 12:44:13 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.50 2008-06-13 13:35:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -257,7 +257,7 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       // Set detector information
       newRing->setRich     ( rich()  );
       newRing->setPanel    ( panel() );
-      newRing->setRadiator ( rad()   );
+      //newRing->setRadiator ( rad()   ); // cann do this yet until new RichRecRing class is released
 
       // set ring type info
       newRing->setType      ( LHCb::RichRecRing::TracklessRing );
