@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2008-06-13 - Olivier Deschamps
+ - CaloZSupAlg : allow 2D suppression over calo area (as now 0-sup is software)
+
+
 ! 2008-06-04 - Olivier Deschamps
  - check whether ErrorBank is present or not in CaloReadoutTool (RawBankReadoutStatus updated accordingly)
 

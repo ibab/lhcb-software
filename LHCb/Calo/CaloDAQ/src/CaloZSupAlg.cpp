@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.9 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.10 2008-06-13 16:18:49 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -192,8 +192,8 @@ StatusCode CaloZSupAlg::execute() {
       
       caloFlags[index] = SeedFlag ;
       if( m_zsup2D ) {
-        CaloNeighbors::const_iterator neighbor =  m_calo->zsupNeighborCells( id ).begin() ;
-        while ( neighbor != m_calo->zsupNeighborCells( id ).end() ) {
+        CaloNeighbors::const_iterator neighbor =  m_calo->neighborCells( id ).begin() ;
+        while ( neighbor != m_calo->neighborCells( id ).end() ) {
           int neigh = m_calo->cellIndex(*neighbor);
           if( SeedFlag != caloFlags[neigh] ) {
             caloFlags[neigh] = NeighborFlag ;
