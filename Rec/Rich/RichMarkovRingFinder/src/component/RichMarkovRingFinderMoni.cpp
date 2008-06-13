@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.30 2008-06-13 13:39:41 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.31 2008-06-13 13:41:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -70,7 +70,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
     // Radiator info
     //const Rich::RadiatorType rad = ring->radiator(); 
     // Cannot do yet until RichRecRing is updated so hard code to RICH2 temporarily
-    const Rich::RadiatorType rad = Rich::Rich2;
+    const Rich::RadiatorType rad = Rich::Rich2Gas;
 
     // Plot centre points of "isolated" rings
     const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
