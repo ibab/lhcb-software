@@ -4,8 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+
 !2008-06-12 - Gerhard Raven
   - and back out again the SEAL-less changes for now...
+  - resurrect _ddl file
 
 !========================== HltCommon v4r0 2008-06-13 ===================
 !2008-06-12 - Gerhard Raven
