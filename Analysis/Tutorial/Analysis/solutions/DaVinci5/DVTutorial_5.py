@@ -9,11 +9,11 @@
 from os import environ
 import GaudiKernel.SystemOfUnits as Units 
 from Gaudi.Configuration import *
-from Configurables import CombineParticles, TutorialAlgorithm, PhysDesktop
+from Configurables import CombineParticles, PhysDesktop
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool
 from Configurables import PrintTree, PrintMCTree, PrintDecayTreeTool, PrintMCDecayTreeTool
 
-importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4.py" )
+importOptions( "$ANALYSISROOT/solutions/DaVinci4/DVTutorial_4b.py" )
 
 #
 # Print Reconstructed Bs
