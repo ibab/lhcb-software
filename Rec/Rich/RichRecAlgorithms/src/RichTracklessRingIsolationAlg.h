@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.1 2008-06-13 12:46:14 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.h,v 1.2 2008-06-13 13:20:27 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -26,6 +26,9 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
+
+// boost
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {
@@ -64,6 +67,9 @@ namespace Rich
 
       /// Output location in TES for rings
       std::string m_outputRings;
+        
+      /// Minimum separation between ring centres for each radiator
+      std::vector<double> m_sizesepcut;
 
     };
 

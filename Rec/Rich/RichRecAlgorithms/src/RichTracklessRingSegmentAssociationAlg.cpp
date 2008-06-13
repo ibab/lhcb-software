@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.1 2008-06-13 12:46:14 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.2 2008-06-13 13:20:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -59,7 +59,7 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
   typedef Rich::Map<LHCb::RichRecSegment*,SegRingPair> MatchMap;
   MatchMap mmap;
 
-  // Loop over the rings
+  // Loop over the rings to find associations
   for ( LHCb::RichRecRings::const_iterator iR = rings->begin();
         iR != rings->end(); ++iR )
   {
@@ -71,6 +71,9 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
 
     // Ring centre point
     const Gaudi::XYZPoint & ringPtnLocal = (*iR)->centrePointLocal();
+
+    // reset all segment associations to NULL
+    (*iR)->setRichRecSegment(NULL);
 
     // Loop over segments for this ring + radiator
     for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
