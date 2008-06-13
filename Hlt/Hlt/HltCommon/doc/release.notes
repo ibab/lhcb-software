@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v4r0 2008-06-13 ===================
+!2008-06-12 - Gerhard Raven
+  - prepare SEAL-less version
+
 !2008-06-12 - Gerhard Raven
   - further cleanup of ConfigDBAccessSvc
 
@@ -11,7 +15,6 @@
   - back out previous commit to remain compatible with Hlt v3r3, and DaVinci v19r13
     for the time being.  To be put back when next Gaudi release becomes available
 
-!========================== HltCommon v4r0 2008-06-12 ===================
 !2008-06-12 - Gerhard Raven
   - prepare a version of ConfigDBAccessSvc removing ALL dependencies on SEAL,
     and tag v4r0 for the nightly builds.
