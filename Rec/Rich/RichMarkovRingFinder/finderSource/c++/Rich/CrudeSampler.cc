@@ -94,9 +94,9 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       while ( nIts < runIts )
       {
         ++nIts;
-        Lester::messHandle().verbose() << "Iteration " << nIts << "/" << runIts << Lester::endmsg;
+        //Lester::messHandle().verbose() << "Iteration " << nIts << "/" << runIts << Lester::endmsg;
         doTheWork ( currentPoint, currentLogProb, p, ntrm, data );
-        Lester::messHandle().verbose() << "  -> " << currentPoint << " " << currentLogProb << Lester::endmsg;
+        //Lester::messHandle().verbose() << "  -> " << currentPoint << " " << currentLogProb << Lester::endmsg;
       }
 
       // stop time
@@ -201,7 +201,7 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
 
   if (proposeInsert)
   {
-    Lester::messHandle().verbose("Proposing insertion");
+    //Lester::messHandle().verbose("Proposing insertion");
     // what shall we propose adding?
     const Lester::CircleParams & c = p.sample();
     proposal.circs.push_back(c);
@@ -214,13 +214,13 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     const unsigned int siz = currentPoint.circs.size();
     if (siz==0)
     {
-      Lester::messHandle().verbose("Proposing crummy removal");
+      //Lester::messHandle().verbose("Proposing crummy removal");
       // leave as we are}
       keepForSure = true;
     }
     else
     {
-      Lester::messHandle().verbose("Proposing removal");
+      //Lester::messHandle().verbose("Proposing removal");
       const int toGo = RandFlat::shootInt(siz);
       proposal.circs[toGo] = proposal.circs[siz-1];
       proposal.circs.pop_back();
@@ -235,13 +235,13 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     const unsigned int siz = currentPoint.circs.size();
     if (siz==0) 
     {
-      Lester::messHandle().verbose("Proposing crummy jitter");
+      //Lester::messHandle().verbose("Proposing crummy jitter");
       // leave as we are!
       keepForSure = true;
     } 
     else 
     {
-      Lester::messHandle().verbose("Proposing jitter");
+      //Lester::messHandle().verbose("Proposing jitter");
       //qReverseOverQForward = 1;
       const int toJitter = RandFlat::shootInt(siz);
       proposal.circs[toJitter] = proposal.circs[toJitter].jitterSymm1();

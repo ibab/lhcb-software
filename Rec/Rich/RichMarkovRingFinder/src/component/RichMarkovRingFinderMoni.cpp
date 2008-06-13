@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.26 2008-06-10 23:11:38 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.27 2008-06-13 12:44:13 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -48,9 +48,9 @@ StatusCode RichMarkovRingFinderMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",       m_rayTrace          );
-  acquireTool( "RichSmartIDTool",      m_idTool,   0, true );
-  acquireTool( "TrackSelector",        m_trSelector, this  );
+  acquireTool( "RichRayTracing",    m_rayTrace          );
+  acquireTool( "RichSmartIDTool",   m_idTool,   0, true );
+  acquireTool( "TrackSelector",     m_trSelector, this  );
 
   return sc;
 }

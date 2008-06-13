@@ -15,7 +15,8 @@
 #include "Hit.fwd"
 #include "Small2Vector.fwd"
 
-namespace Lester {
+namespace Lester 
+{
 
   // declaration
   class NimTypeRichModel
