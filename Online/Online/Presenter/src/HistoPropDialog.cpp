@@ -92,36 +92,40 @@ void HistoPropDialog::build()
   TGCompositeFrame *fCompositeFrame649 = new TGCompositeFrame(fMainFrame648,
     664, 448, kVerticalFrame);
   fCompositeFrame649->SetLayoutBroken(true);
-  m_cancelButton = new TGTextButton(fCompositeFrame649,"Close");
+  m_cancelButton = new TGTextButton(fCompositeFrame649,"Default");
   m_cancelButton->SetTextJustify(36);
   m_cancelButton->Resize(92, 24);
   fCompositeFrame649->AddFrame(m_cancelButton,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                               new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                                 2, 2, 2, 2));
   m_cancelButton->MoveResize(536, 392, 92, 24);
-  m_cancelButton->Connect("Clicked()", "HistoPropDialog", this,
-    "CloseWindow()");
+  m_cancelButton->Connect("Clicked()", "HistoPropDialog",
+                          this, "CloseWindow()");
 
   // "Display Options" group frame
   TGGroupFrame *fGroupFrame651 = new TGGroupFrame(fCompositeFrame649,
-    "Display Options");
+                                                  "Display Options");
   fGroupFrame651->SetLayoutBroken(true);
   TGLabel* m_xLabelLabel = new TGLabel(fGroupFrame651,"X Label");
   m_xLabelLabel->SetTextJustify(36);
-  fGroupFrame651->AddFrame(m_xLabelLabel, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(m_xLabelLabel,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_xLabelLabel->MoveResize(16, 24, 57, 18);
   m_lineWidthComboBox = new TGLineWidthComboBox(fGroupFrame651, -1,
     kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
 
   fGroupFrame651->AddFrame(m_lineWidthComboBox,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
 
   m_lineWidthComboBox->MoveResize(112, 88, 102, 22);
 
   TGLabel* m_yLabelLabel = new TGLabel(fGroupFrame651,"Y Label");
   m_yLabelLabel->SetTextJustify(36);
-  fGroupFrame651->AddFrame(m_yLabelLabel, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(m_yLabelLabel,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_yLabelLabel->MoveResize(296, 24, 57, 18);
 
   m_yAxisLabelTextEntry = new TGTextEntry(fGroupFrame651,
@@ -137,52 +141,61 @@ void HistoPropDialog::build()
 
 
   // combo box
-  m_statOptionComboBox = new TGComboBox(fGroupFrame651,-1, kHorizontalFrame |
-    kSunkenFrame | kDoubleBorder | kOwnBackground);
+  m_statOptionComboBox = new TGComboBox(fGroupFrame651,-1,
+                                        kHorizontalFrame | kSunkenFrame |
+                                        kDoubleBorder | kOwnBackground);
   m_statOptionComboBox->AddEntry("none", 0);    
   m_statOptionComboBox->AddEntry("default", 1);
   m_statOptionComboBox->Resize(102, 22);
   m_statOptionComboBox->Select(0);
   fGroupFrame651->AddFrame(m_statOptionComboBox,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_statOptionComboBox->MoveResize(112, 56, 102, 22);
   TGLabel* fLabel677 = new TGLabel(fGroupFrame651, "Stats Option");
   fLabel677->SetTextJustify(36);
-  fGroupFrame651->AddFrame(fLabel677, new TGLayoutHints(kLHintsLeft
-    | kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(fLabel677,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   fLabel677->MoveResize(16, 56, 80, 18);
   TGLabel* fLabel678 = new TGLabel(fGroupFrame651,"Fill Style");
   fLabel678->SetTextJustify(36);
-  fGroupFrame651->AddFrame(fLabel678, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(fLabel678,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   fLabel678->MoveResize(224, 56, 57, 18);
 
   // combo box
   m_fillStylePatternSelector = new TGedPatternSelect(fGroupFrame651, 0, -1);
-  fGroupFrame651->AddFrame(m_fillStylePatternSelector, new TGLayoutHints(
-    kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(m_fillStylePatternSelector,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_fillStylePatternSelector->MoveResize(304, 56, 102, 22);
   TGLabel* fLabel697 = new TGLabel(fGroupFrame651,"Fill Colour");
   fLabel697->SetTextJustify(36);
-  fGroupFrame651->AddFrame(fLabel697, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(fLabel697,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   fLabel697->MoveResize(424, 56, 57, 18);
 
   // color select widget
   m_fillColourSelector = new TGColorSelect(fGroupFrame651, 0, -1);
 
-  fGroupFrame651->AddFrame(m_fillColourSelector, new TGLayoutHints(
-    kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(m_fillColourSelector,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_fillColourSelector->MoveResize(504, 56, 45, 23);
   TGLabel* fLabel699 = new TGLabel(fGroupFrame651,"Line Width");
   fLabel699->SetTextJustify(36);
-  fGroupFrame651->AddFrame(fLabel699, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(fLabel699,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   fLabel699->MoveResize(16, 88, 80, 18);
   TGLabel* fLabel700 = new TGLabel(fGroupFrame651,"Line Style");
   fLabel700->SetTextJustify(36);
-  fGroupFrame651->AddFrame(fLabel700, new TGLayoutHints(kLHintsLeft |
-    kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame651->AddFrame(fLabel700,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   fLabel700->MoveResize(216, 88, 80, 18);
 
   // combo box
@@ -315,53 +328,59 @@ void HistoPropDialog::build()
   m_2DRootDrawOptionComboBox->Resize(102, 22);
   m_2DRootDrawOptionComboBox->Select(4);
   fGroupFrame651->AddFrame(m_2DRootDrawOptionComboBox,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_2DRootDrawOptionComboBox->MoveResize(200, 164, 102, 22);
 
   m_xAxisLabelTextEntry = new TGTextEntry(fGroupFrame651,
-    new TGTextBuffer(15), -1);
+                                          new TGTextBuffer(15), -1);
   m_xAxisLabelTextEntry->SetMaxLength(255);
   m_xAxisLabelTextEntry->SetAlignment(kTextLeft);
   m_xAxisLabelTextEntry->SetText("");
   m_xAxisLabelTextEntry->Resize(184, m_xAxisLabelTextEntry->
     GetDefaultHeight());
   fGroupFrame651->AddFrame(m_xAxisLabelTextEntry,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
   m_xAxisLabelTextEntry->MoveResize(88, 24, 184, 22);
 
   fGroupFrame651->SetLayoutManager(new TGVerticalLayout(fGroupFrame651));
   fGroupFrame651->Resize(608, 232);
   fCompositeFrame649->AddFrame(fGroupFrame651,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                               new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                                 2, 2, 2, 2));
   fGroupFrame651->MoveResize(24, 152, 608, 232);
   TGTextButton *fTextButton760 = new TGTextButton(fCompositeFrame649,"OK");
   fTextButton760->SetTextJustify(36);
   fTextButton760->Resize(92, 24);
   fCompositeFrame649->AddFrame(fTextButton760,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                               new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                                 2, 2, 2, 2));
   fTextButton760->MoveResize(432, 392, 92, 24);
   fTextButton760->Connect("Clicked()", "HistoPropDialog", this, "ok()");
 
   // "Description" group frame
-  TGGroupFrame *fGroupFrame761 =
-    new TGGroupFrame(fCompositeFrame649,"Description");
+  TGGroupFrame *fGroupFrame761 = new TGGroupFrame(fCompositeFrame649,
+                                                  "Description");
   TGTextEdit *fTextEdit762 = new TGTextEdit(fGroupFrame761, 592, 104);
   //   fTextEdit762->LoadFile("TxtEdit1101");
-  fGroupFrame761->AddFrame(fTextEdit762, new TGLayoutHints(kLHintsLeft |
-     kLHintsTop, 2, 2, 2, 2));
+  fGroupFrame761->AddFrame(fTextEdit762,
+                           new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                             2, 2, 2, 2));
 
   fGroupFrame761->SetLayoutManager(new TGVerticalLayout(fGroupFrame761));
   fGroupFrame761->Resize(608, 140);
   fCompositeFrame649->AddFrame(fGroupFrame761,
-    new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
+                               new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                                 2, 2, 2, 2));
   fGroupFrame761->MoveResize(24, 16, 608, 140);
 
   fMainFrame648->AddFrame(fCompositeFrame649,
-    new TGLayoutHints(kLHintsExpandX | kLHintsExpandY));
+                          new TGLayoutHints(kLHintsExpandX | kLHintsExpandY));
   fCompositeFrame649->MoveResize(0, 0, 664, 448);
 
   AddFrame(fMainFrame648, new TGLayoutHints(kLHintsExpandX |
-    kLHintsExpandY));
+                                            kLHintsExpandY));
   fMainFrame648->MoveResize(0, 0, 646, 435);
 
   MapSubwindows();
