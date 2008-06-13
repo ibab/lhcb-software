@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-13 - Patrick Koppenburg
+ - Tutorial 4 : added a filter as testing
+
 !==================== Tutorial/Analysis v7r2p1 2008-06-13 =====================
 ! 2008-06-13 - Patrick Koppenburg
  - Minor typo in solutions fixed (python inconsistency, ignored by parser)
