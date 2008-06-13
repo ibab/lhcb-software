@@ -34,6 +34,6 @@ HistogramPersistencySvc().OutputFile = "DVHistos_2.root";
 ApplicationMgr().EvtMax = 1000 ;
 
 # load input data
-daVinciTutorialData = os.environ["DAVINCITUTORIALDATA"]
+daVinciTutorialData = environ["DAVINCITUTORIALDATA"]
 importOptions( daVinciTutorialData )
 ########################################################################

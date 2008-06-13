@@ -17,17 +17,18 @@ importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 #
 ApplicationMgr().TopAlg += [ "GaudiSequencer/TutorialSeq" ]
 #
-# J/spi->mumu selection
+# J/psi->mumu selection
 #
 GaudiSequencer("TutorialSeq").Members += [ "TutorialAlgorithm" ]
 TutorialAlgorithm().addTool( PhysDesktop() )
 TutorialAlgorithm().PhysDesktop.InputLocations = [ "Phys/StdLooseMuons" ]
 
-HistogramPersistencySvc().OutputFile = "DVHistos_1.root";
+HistogramPersistencySvc().OutputFile = "DVHistos_1.root"
 
-ApplicationMgr().EvtMax = 1000 ;
+ApplicationMgr().EvtMax = 1000 
 
 # load input data
-daVinciTutorialData = os.environ["DAVINCITUTORIALDATA"]
+daVinciTutorialData = environ["DAVINCITUTORIALDATA"]
 importOptions( daVinciTutorialData )
 ########################################################################
+

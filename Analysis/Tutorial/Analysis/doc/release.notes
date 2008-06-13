@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-13 - Patrick Koppenburg
+ - Minor typo in solutions fixed (python inconsistency, ignored by parser)
+ - Increment to v7r3
+
 !===================== Tutorial/Analysis v7r2 2008-06-04 ======================
 
 ! 2008-06-03 - Patrick Koppenburg
