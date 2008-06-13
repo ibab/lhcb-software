@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.2 2008-06-13 13:20:27 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.3 2008-06-13 13:35:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -80,8 +80,9 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
           iSeg != richSegments()->end(); ++iSeg )
     {
       // Only uses segments in correct RICH and for the same radiator
-      if ( det != (*iSeg)->trackSegment().rich()    ||
-           rad != (*iSeg)->trackSegment().radiator() ) continue;
+      if ( det != (*iSeg)->trackSegment().rich()
+           //|| rad != (*iSeg)->trackSegment().radiator()  // disable until new RichRecRing is released
+           ) continue;
 
       // Track hit point (if it were a photon) on detector plane, in local coords
       // (i.e. centre of Ch ring)
