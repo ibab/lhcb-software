@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.56 2008-06-14 23:26:11 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.57 2008-06-14 23:31:21 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -56,7 +56,7 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   declareProperty( "DumpDataToTextFile",   m_dumpText       = false  );
   declareProperty( "MinAssociationProb",   m_minAssProb       = 0.05 );
   declareProperty( "MaxHitsInEvent",       m_maxHitsEvent     = 300  );
-  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD       = 100  );
+  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD       = 50   );
   declareProperty( "ScaleFactor",          m_scaleFactor             );
   declareProperty( "MaxPixelDistFromRing", m_maxPixelSep      = 260  );
   declareProperty( "EnableFileCache",      m_enableFileCache  = true );
@@ -356,13 +356,15 @@ bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & i
     {
       // Is this HPD selected ?
       const unsigned int hitsInHPD = pixelCreator()->range( (*iPix)->hpd() ).size();
-      info() << "Found " << hitsInHPD << " hits in " << (*iPix)->hpd() << endreq;
-      // get X and Y
-      const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
-      const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
-      input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose() << "Adding data point at " << X << "," << Y << endreq;
+      if ( hitsInHPD < m_maxHitsHPD )
+      {
+        // get X and Y
+        const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+        const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+        input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
+        if ( msgLevel(MSG::VERBOSE) )
+          verbose() << "Adding data point at " << X << "," << Y << endreq;
+      }
     }
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Selected " << input.hits.size() << " data points for "
