@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.52 2008-06-14 14:20:15 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.53 2008-06-14 15:05:19 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -41,14 +41,23 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
     m_rad               ( rad   ),
     m_sampler           ( NULL  )
 {
+  // Set RICH / radiator specific parameters
+  if ( rich == Rich::Rich2 )
+  {
+    m_scaleFactor = 0.0283/128.0;
+  }
+  else
+  {
+    m_scaleFactor = 0.047/64.0;
+  }
+
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
-  declareProperty( "DumpDataToTextFile",   m_dumpText       = false );
-  declareProperty( "MinAssociationProb",   m_minAssProb     = 0.05  );
-  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent   = 300   );
-  //declareProperty( "ScaleFactor",         m_scaleFactor    = 0.030/128.0 );
-  declareProperty( "ScaleFactor",          m_scaleFactor    = 0.0283/128.0 );
-  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep   = 260   );
+  declareProperty( "DumpDataToTextFile",   m_dumpText       = false  );
+  declareProperty( "MinAssociationProb",   m_minAssProb     = 0.05   );
+  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent   = 300    );
+  declareProperty( "ScaleFactor",          m_scaleFactor             );
+  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep   = 260     );
   declareProperty( "EnableFileCache",      m_enableFileCache = false );
 }
 

@@ -9,14 +9,14 @@ namespace Lester
 
   void Rich2DataModel::initialise()
   {
-   // f(a,e) = page 81 Eq 3.6 http://doc.cern.ch/archive/electronic/cern/preprints/thesis/thesis-2005-058.pdf
+    // f(a,e) = page 81 Eq 3.6 http://doc.cern.ch/archive/electronic/cern/preprints/thesis/thesis-2005-058.pdf
 
     //circleMeanRadiusParameter  = 0.030; // old
     circleMeanRadiusParameter  = 0.0283; // new
 
     backgroundRadius        = circleMeanRadiusParameter*3.0;
     backgroundMeanParameter = 75;
-    meanNumberOfRings       = 7;
+    meanNumberOfRings       = 5;
     circleHitsPerUnitLengthParameter = 30.0/(MathsConstants::twoPi*circleMeanRadiusParameter);
     circleRadiusSigmaAboutMean       = circleMeanRadiusParameter*0.1;
     circleCenXMean          = 0.;
