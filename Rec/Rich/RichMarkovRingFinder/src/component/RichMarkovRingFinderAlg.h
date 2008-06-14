@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.33 2008-06-13 12:44:13 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.34 2008-06-14 09:15:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -38,8 +38,9 @@
 #include "GenericRingFinder/GenericInput.h"
 #include "GenericRingFinder/GenericInferrer.h"
 #include "GenericRingFinder/GenericResults.h"
-#include "Rich/CrudeSampler.h"
-#include "Rich/NimTypeRichModel.h"
+#include "Rich/RichSampler.h"
+#include "Rich/SamplerFactory.h"
+#include "Rich/Rich2DataModel.h"
 #include "Utils/MessageHandler.h"
 
 namespace Rich
@@ -60,6 +61,7 @@ namespace Rich
      */
     //-----------------------------------------------------------------------
 
+    template < class SAMPLER >
     class RichMarkovRingFinderAlg : public RichRecHistoAlgBase,
                                     virtual public Lester::IMessageHandler
     {
@@ -139,12 +141,12 @@ namespace Rich
       const Rich::RadiatorType m_rad;   ///< Which RICH radiator
 
       /// Pointer to the sampler (ring finder)
-      Lester::CrudeSampler * m_sampler;
+      SAMPLER * m_sampler;
 
       /// Location of all output rings in TES
       std::string m_ringLocation;
 
-      /// Job option to turn on dumping of data to text files, 
+      /// Job option to turn on dumping of data to text files,
       /// for standalone ring finder application
       bool m_dumpText;
 
@@ -162,6 +164,12 @@ namespace Rich
 
     };
 
+    /// The type of sampler for RICH2
+    typedef Lester::RichSampler<Lester::Rich2DataModel> Rich2Sampler;
+
+    /// The type of sampler for RICH1
+    typedef Lester::RichSampler<Lester::Rich2DataModel> Rich1Sampler;
+
     /**
      * @class  Rich1TopPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h
      * @brief  Standalone ring finder for RICH1 top panel using Markov Chains
@@ -169,14 +177,14 @@ namespace Rich
      * @author Chris Jones   Christopher.Rob.Jones@cern.ch
      * @date   2003-12-02
      */
-    class Rich1TopPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    class Rich1TopPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1Sampler>
     {
     public:
       /// Default Constructor
       Rich1TopPanelMarkovRingFinderAlg( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg( name, pSvcLocator,
-                                   Rich::Rich1, Rich::top, Rich::Rich1Gas )
+        : RichMarkovRingFinderAlg<Rich1Sampler>( name, pSvcLocator,
+                                                 Rich::Rich1, Rich::top, Rich::Rich1Gas )
       { }
     };
 
@@ -187,14 +195,14 @@ namespace Rich
      * @author Chris Jones   Christopher.Rob.Jones@cern.ch
      * @date   2003-12-02
      */
-    class Rich1BottomPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    class Rich1BottomPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1Sampler>
     {
     public:
       /// Default Constructor
       Rich1BottomPanelMarkovRingFinderAlg( const std::string& name,
                                            ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg( name, pSvcLocator,
-                                   Rich::Rich1, Rich::bottom, Rich::Rich1Gas )
+        : RichMarkovRingFinderAlg<Rich1Sampler>( name, pSvcLocator,
+                                                 Rich::Rich1, Rich::bottom, Rich::Rich1Gas )
       { }
     };
 
@@ -205,14 +213,14 @@ namespace Rich
      * @author Chris Jones   Christopher.Rob.Jones@cern.ch
      * @date   2003-12-02
      */
-    class Rich2RightPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    class Rich2RightPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2Sampler>
     {
     public:
       /// Default Constructor
       Rich2RightPanelMarkovRingFinderAlg( const std::string& name,
                                           ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg( name, pSvcLocator,
-                                   Rich::Rich2, Rich::right, Rich::Rich2Gas )
+        : RichMarkovRingFinderAlg<Rich2Sampler>( name, pSvcLocator,
+                                                 Rich::Rich2, Rich::right, Rich::Rich2Gas )
       { }
     };
 
@@ -223,14 +231,14 @@ namespace Rich
      * @author Chris Jones   Christopher.Rob.Jones@cern.ch
      * @date   2003-12-02
      */
-    class Rich2LeftPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg
+    class Rich2LeftPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2Sampler>
     {
     public:
       /// Default Constructor
       Rich2LeftPanelMarkovRingFinderAlg( const std::string& name,
                                          ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg( name, pSvcLocator,
-                                   Rich::Rich2, Rich::left, Rich::Rich2Gas )
+        : RichMarkovRingFinderAlg<Rich2Sampler>( name, pSvcLocator,
+                                                 Rich::Rich2, Rich::left, Rich::Rich2Gas )
       { }
     };
 

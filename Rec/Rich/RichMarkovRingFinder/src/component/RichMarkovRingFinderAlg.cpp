@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.50 2008-06-13 13:35:20 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.51 2008-06-14 09:15:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -27,11 +27,12 @@ DECLARE_ALGORITHM_FACTORY( Rich2RightPanelMarkovRingFinderAlg  );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
-                                                  ISvcLocator* pSvcLocator,
-                                                  const Rich::DetectorType rich,
-                                                  const Rich::Side         panel,
-                                                  const Rich::RadiatorType rad )
+template < class SAMPLER >
+RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& name,
+                                                           ISvcLocator* pSvcLocator,
+                                                           const Rich::DetectorType rich,
+                                                           const Rich::Side         panel,
+                                                           const Rich::RadiatorType rad )
   : RichRecHistoAlgBase ( name , pSvcLocator ),
     m_ckAngle           ( NULL  ),
     m_smartIDTool       ( NULL  ),
@@ -40,8 +41,8 @@ RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
     m_rad               ( rad   ),
     m_sampler           ( NULL  )
 {
-  declareProperty( "RingLocation",     
-                   m_ringLocation = LHCb::RichRecRingLocation::MarkovRings );
+  declareProperty( "RingLocation",
+                   m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "DumpDataToTextFile",  m_dumpText       = false );
   declareProperty( "MinAssociationProb",  m_minAssProb     = 0.05  );
   declareProperty( "MaxHitsInEvent",      m_maxHitsEvent   = 300   );
@@ -52,12 +53,14 @@ RichMarkovRingFinderAlg::RichMarkovRingFinderAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichMarkovRingFinderAlg::~RichMarkovRingFinderAlg() {};
+template < class SAMPLER >
+RichMarkovRingFinderAlg<SAMPLER>::~RichMarkovRingFinderAlg() { }
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RichMarkovRingFinderAlg::initialize()
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
 {
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -69,9 +72,8 @@ StatusCode RichMarkovRingFinderAlg::initialize()
   // Intercept initialisation messages from MC code
   Lester::messHandle().declare(this);
 
-  // make a new sampler ( should use a factory here )
-  boost::shared_ptr<Lester::NimTypeRichModel> ntrm(new Lester::NimTypeRichModel);
-  m_sampler = new Lester::CrudeSampler(ntrm);
+  // make a new sampler
+  m_sampler = Lester::getInstance<SAMPLER>();
 
   // configure sampler
   m_sampler->configuration.clearAllparams();
@@ -89,14 +91,9 @@ StatusCode RichMarkovRingFinderAlg::initialize()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichMarkovRingFinderAlg::finalize()
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::finalize()
 {
-  // Intercept any final messages
-  Lester::messHandle().declare(this);
-  // cleanup
-  if ( m_sampler ) { delete m_sampler; m_sampler = NULL; }
-  // stop receiving messages
-  Lester::messHandle().declare(NULL);
   // return
   return RichRecHistoAlgBase::finalize();
 }
@@ -104,7 +101,8 @@ StatusCode RichMarkovRingFinderAlg::finalize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RichMarkovRingFinderAlg::execute()
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::execute()
 {
   // make sure ring containers are always created
   getRings( m_ringLocation );
@@ -121,7 +119,8 @@ StatusCode RichMarkovRingFinderAlg::execute()
   return runRingFinder();
 }
 
-StatusCode RichMarkovRingFinderAlg::richInit()
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::richInit()
 {
   // Set Rich event status to OK for start of Markov processing
   richStatus()->setEventOK(true);
@@ -137,7 +136,8 @@ StatusCode RichMarkovRingFinderAlg::richInit()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichMarkovRingFinderAlg::runRingFinder()
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
 {
   // do the finding in a try block to catch exceptions that leak out
   try
@@ -186,8 +186,9 @@ StatusCode RichMarkovRingFinderAlg::runRingFinder()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & input,
-                                               const GenRingF::GenericResults & output ) const
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
+                                                        const GenRingF::GenericResults & output ) const
 {
 
   // load or create rings
@@ -257,7 +258,7 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
       // Set detector information
       newRing->setRich     ( rich()  );
       newRing->setPanel    ( panel() );
-      //newRing->setRadiator ( rad()   ); // cann do this yet until new RichRecRing class is released
+      newRing->setRadiator ( rad()   );
 
       // set ring type info
       newRing->setType      ( LHCb::RichRecRing::TracklessRing );
@@ -291,7 +292,8 @@ StatusCode RichMarkovRingFinderAlg::saveRings( const GenRingF::GenericInput & in
   return StatusCode::SUCCESS;
 }
 
-void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
+template < class SAMPLER >
+void RichMarkovRingFinderAlg<SAMPLER>::addRingToPixels( LHCb::RichRecRing * ring ) const
 {
   verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endreq;
   for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
@@ -309,7 +311,8 @@ void RichMarkovRingFinderAlg::addRingToPixels( LHCb::RichRecRing * ring ) const
   }
 }
 
-bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) const
+template < class SAMPLER >
+bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
 {
   bool OK = false;
   // Iterate over pixels
@@ -347,8 +350,9 @@ bool RichMarkovRingFinderAlg::addDataPoints( GenRingF::GenericInput & input ) co
   return OK;
 }
 
-void RichMarkovRingFinderAlg::buildRingPoints( LHCb::RichRecRing * ring,
-                                               const unsigned int nPoints ) const
+template < class SAMPLER >
+void RichMarkovRingFinderAlg<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring,
+                                                        const unsigned int nPoints ) const
 {
   if ( nPoints>0 )
   {
@@ -375,8 +379,9 @@ void RichMarkovRingFinderAlg::buildRingPoints( LHCb::RichRecRing * ring,
 }
 
 // Intrecepts messages from the 'Lester' code and sends them to gaudi
-void RichMarkovRingFinderAlg::lesterMessage( const Lester::MessageLevel level,
-                                             const std::string & message ) const
+template < class SAMPLER >
+void RichMarkovRingFinderAlg<SAMPLER>::lesterMessage( const Lester::MessageLevel level,
+                                                      const std::string & message ) const
 {
   if      ( Lester::VERBOSE == level )
   {
@@ -404,7 +409,8 @@ void RichMarkovRingFinderAlg::lesterMessage( const Lester::MessageLevel level,
   }
 }
 
-StatusCode RichMarkovRingFinderAlg::dumpToTextfile() const
+template < class SAMPLER >
+StatusCode RichMarkovRingFinderAlg<SAMPLER>::dumpToTextfile() const
 {
   if ( m_dumpText )
   {

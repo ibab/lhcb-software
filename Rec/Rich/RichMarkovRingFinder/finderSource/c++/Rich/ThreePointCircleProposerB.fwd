@@ -1,3 +1,7 @@
 
-namespace Lester { class ThreePointCircleProposerB; }
+namespace Lester 
+{ 
+ template < class DATAMODEL >
+ class ThreePointCircleProposerB; 
+}
 

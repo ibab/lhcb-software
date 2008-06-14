@@ -8,27 +8,33 @@
 // includes
 #include <iostream>
 #include "RegularCPQuantizer.h"
-#include "NimTypeRichModel.fwd"
 
 namespace Lester
 {
 
   // declaration
-  class RectilinearCPQuantizer : public RegularCPQuantizer 
+  class RectilinearCPQuantizer : public RegularCPQuantizer
   {
+
   public:
-    RectilinearCPQuantizer(const Lester::NimTypeRichModel & ntrm, 
-                           const double fractionOfMeanRadius=0.1);
-  private:
-    const double sx;
-    const double sy;
-    const double sr;
-    const double invBVol;
+
+    RectilinearCPQuantizer ( const double circleMeanRadiusParameter,
+                             const double fractionOfMeanRadius = 0.1 )
+      : sx(1.0/(fractionOfMeanRadius*circleMeanRadiusParameter)),
+        sy(1.0/(fractionOfMeanRadius*circleMeanRadiusParameter)),
+        sr(1.0/(fractionOfMeanRadius*circleMeanRadiusParameter)),
+        invBVol(sx*sy*sr) { }
+
   public:
-    /// implementation of oneof the pure virtual methods required by the base class:
+
+    /// implementation of one of the pure virtual methods required by the base class:
     double inverseBoxVolume() const { return invBVol; }
-    /// implementation of oneof the pure virtual methods required by the base class
+
+    /// implementation of one of the pure virtual methods required by the base class
     QuantizedCircleParams quantize(const Lester::CircleParams & cp) const;
+
+  public:
+
     std::ostream & printMeTo(std::ostream & os) const
     {
       return os << "RectilinearCPQuantizer[]";
@@ -38,6 +44,14 @@ namespace Lester
     {
       return obj.printMeTo(os);
     }
+
+  private:
+
+    const double sx;
+    const double sy;
+    const double sr;
+    const double invBVol;
+
   };
 
 }

@@ -5,7 +5,6 @@
 #include "GenericRingFinder/GenericInferrer.h"
 #include "GenericRingFinder/GenericInput.h"
 #include "GenericRingFinder/GenericResults.h"
-#include "NimTypeRichModel.h"
 #include "Hit.h"
 #include "CircleParams.h"
 
@@ -16,10 +15,14 @@
 namespace Lester
 {
 
-  /// Return probablility hit was made by the given circle
-  double
-  Rich2Inferrer::probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
-                                                    const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const
+  template < class DATAMODEL >
+  Rich2Inferrer<DATAMODEL>::~Rich2Inferrer() {}
+
+  // Return probablility hit was made by the given circle
+  template < class DATAMODEL >
+  double Rich2Inferrer<DATAMODEL>::
+  probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
+                                     const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const
   {
     //const QueriedHits::const_iterator setIt = queriedHits.find(hIt);
     //const bool haveAlreadyProcessedThisHit = (setIt != queriedHits.end());
@@ -40,28 +43,17 @@ namespace Lester
     }
   }
 
-  /// Probability hit was made by no known circles
-  double
-  Rich2Inferrer::
+  // Probability hit was made by no known circles
+  template < class DATAMODEL >
+  double Rich2Inferrer<DATAMODEL>::
   probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const
   {
     return probabilityHitWasMadeByGivenCircle(hIt, m_circs.end());
   }
 
-  Rich2Inferrer::~Rich2Inferrer() {}
-
-  Rich2Inferrer::Rich2Inferrer(const GenRingF::GenericInput & genInput,
-                               const boost::shared_ptr<const Lester::NimTypeRichModel> ntrm,
-                               const GenRingF::GenericResults::GenericRings & genRings /*,
-                                                                                         const double meanBackground*/) :
-    m_genInput(genInput),
-    m_ntrm(ntrm),
-    m_circs(genRings),
-    m_meanBackground(0) {
-    //#warning "The inferrer will be wrong in what it says about the probabilities of hits coming from BG versus non-BG."
-  }
-
-  void Rich2Inferrer::cacheAnswersForAllCirclesWRTHit(const HitIterator & hIt) const
+  template < class DATAMODEL >
+  void Rich2Inferrer<DATAMODEL>::
+  cacheAnswersForAllCirclesWRTHit(const HitIterator & hIt) const
   {
     const Hit hit(*hIt);
     QueryMap newPartOfQueryMap;
@@ -101,10 +93,10 @@ namespace Lester
             ++it )
       {
         // This is horrid, but avoids FPE underflows ...
-        if ( (*it).second>0 && 
+        if ( (*it).second>0 &&
              std::log((*it).second)-std::log(total) < std::log(min_value) )
         {
-          (*it).second = min_value;  
+          (*it).second = min_value;
         }
         else
         {
@@ -118,3 +110,9 @@ namespace Lester
   }
 
 }
+
+
+// Instanciate specific templates
+
+#include "Rich/Rich2DataModel.h"
+template class Lester::Rich2Inferrer<Lester::Rich2DataModel>;

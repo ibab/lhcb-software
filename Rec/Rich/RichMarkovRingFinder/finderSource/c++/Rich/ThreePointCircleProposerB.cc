@@ -7,14 +7,14 @@
 #include "ProbabilityUtils.h"
 #include "FiniteRelativeProbabilityChooser.h"
 #include "CircleTheorems.h"
-#include "NimTypeRichModel.h"
 #include "GenericRingFinder/GenericRingFinder.h"
 #include <set>
 
 namespace Lester
 {
 
-  CircleParams ThreePointCircleProposerB::sample() const
+  template < class DATAMODEL >
+  CircleParams ThreePointCircleProposerB<DATAMODEL>::sample() const
   {
     const CircleParams & ans = samplePrivate();
 
@@ -36,7 +36,8 @@ namespace Lester
     return ans;
   }
 
-  CircleParams ThreePointCircleProposerB::samplePrivate() const
+  template < class DATAMODEL >
+  CircleParams ThreePointCircleProposerB<DATAMODEL>::samplePrivate() const
   {
     unsigned long failures=0;
     CircleParams ans;
@@ -70,9 +71,10 @@ namespace Lester
         }
       }
     }
-  };
+  }
 
-  CircleParams ThreePointCircleProposerB::tryToSample() const
+  template < class DATAMODEL >
+  CircleParams ThreePointCircleProposerB<DATAMODEL>::tryToSample() const
   {
     const int nDataPoints = m_data.hits.size();
     assert(nDataPoints>=3); // assured by our constructor!
@@ -172,7 +174,8 @@ namespace Lester
 
   }
 
-  double ThreePointCircleProposerB::probabilityOf(const CircleParams & circleParams) const {
+  template < class DATAMODEL >
+  double ThreePointCircleProposerB<DATAMODEL>::probabilityOf(const CircleParams & circleParams) const {
 
     const QuantizedCircleParams & qcp = m_cpQuantizer.quantize(circleParams);
 
@@ -190,9 +193,11 @@ namespace Lester
     return ans;
   }
 
-  double ThreePointCircleProposerB::CACHED_probabilityOfBasingACircleOn(const int i1,
-                                                                        const int i2,
-                                                                        const int i3) const
+  template < class DATAMODEL >
+  double
+  ThreePointCircleProposerB<DATAMODEL>::CACHED_probabilityOfBasingACircleOn(const int i1,
+                                                                            const int i2,
+                                                                            const int i3) const
   {
     const HitIndexTriple h(i1,i2,i3);
     const Cache1::const_iterator it = m_cache1.find(h);
@@ -202,14 +207,16 @@ namespace Lester
     } else {
       p = probabilityOfBasingACircleOn(i1,i2,i3);
       m_cache1[h]=p;
-      //m_cache1.insert(std::pair<HitIndexTriple, double>(h,p));
     }
     return p;
   }
 
-  double ThreePointCircleProposerB::probabilityOfBasingACircleOn(const int a,
-                                                                 const int b,
-                                                                 const int c) const {
+  template < class DATAMODEL >
+  double
+  ThreePointCircleProposerB<DATAMODEL>::probabilityOfBasingACircleOn(const int a,
+                                                                     const int b,
+                                                                     const int c) const
+  {
     const int nDataPoints = m_data.hits.size();
 
     try {
@@ -284,13 +291,14 @@ namespace Lester
       return ans;
     } catch (...) {
       return 0;
-    };
-  };
+    }
+  }
 
-  double ThreePointCircleProposerB::probabilityOfBasingACircleOn(const int a,
-                                                                 const int b,
-                                                                 const int c,
-                                                                 const CircleParams & whatItSmearedTo) const {
+  template < class DATAMODEL >
+  double ThreePointCircleProposerB<DATAMODEL>::probabilityOfBasingACircleOn(const int a,
+                                                                            const int b,
+                                                                            const int c,
+                                                                            const CircleParams & whatItSmearedTo) const {
 
     try {
 
@@ -317,14 +325,15 @@ namespace Lester
       return ans;
     } catch (...) {
       return 0;
-    };
-  };
+    }
+  }
 
-  ThreePointCircleProposerB::ThreePointCircleProposerB(const Data & d,
-                                                       const RegularCPQuantizer & cpq,
-                                                       const double circleCentreSmearingWidth,
-                                                       const double radiusSmearingWidth,
-                                                       const NimTypeRichModel & ntrm):
+  template < class DATAMODEL >
+  ThreePointCircleProposerB<DATAMODEL>::ThreePointCircleProposerB(const Data & d,
+                                                                  const RegularCPQuantizer & cpq,
+                                                                  const double circleCentreSmearingWidth,
+                                                                  const double radiusSmearingWidth,
+                                                                  const DATAMODEL & ntrm):
     m_data(d),
     m_cpQuantizer(cpq),
     m_circleCentreSmearingWidth(circleCentreSmearingWidth),
@@ -339,4 +348,9 @@ namespace Lester
     }
   }
 
-};
+}
+
+// Instanciate specific templates
+
+#include "Rich/Rich2DataModel.h"
+template class Lester::ThreePointCircleProposerB<Lester::Rich2DataModel>;

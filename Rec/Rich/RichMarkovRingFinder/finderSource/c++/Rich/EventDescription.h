@@ -1,38 +1,59 @@
 
 #ifndef LESTER_EVENT_DESCRIPTION_H
-#define LESTER_EVENT_DESCRIPTION_H
+#define LESTER_EVENT_DESCRIPTION_H 1
 
 #include <iostream>
 #include <vector>
+
 #include "CircleParams.h"
-#include "GenericRingFinder/GenericResults.fwd"
-#include "GenericRingFinder/GenericInput.fwd"
-#include "NimTypeRichModel.fwd"
+#include "GenericRingFinder/GenericResults.h"
+#include "GenericRingFinder/GenericInput.h"
+
 #include <boost/shared_ptr.hpp>
 
-namespace Lester 
+namespace Lester
 {
 
   class EventDescription
   {
-  public: // ?? not private ??
+
+  public:
+
     typedef std::vector<CircleParams> Circs;
     Circs circs;
-    //static const bool backgroundIsVariable = false;
-    //double meanBackground;
+
   public:
-    EventDescription(); /// warning the default constructor will probably be pathological.
-    EventDescription(const GenRingF::GenericResults & results);
-    /// The fill method fills the "GenRingF::GenericResults" structure with the rings which were found during the fitting procedure.
-    void fill(GenRingF::GenericResults & results,
-              const GenRingF::GenericInput & input,
-              boost::shared_ptr<NimTypeRichModel> ntrm) const;
+
+    /// Default constructor
+    EventDescription() { }
+
+    /// Constructor from results
+    EventDescription( const GenRingF::GenericResults & results )
+    {
+      for ( GenRingF::GenericResults::GenericRings::const_iterator it = results.rings.begin();
+            it!=results.rings.end(); ++it )
+      {
+        circs.push_back(CircleParams(Small2Vector(it->x(), it->y()), it->radius()));
+      }
+    }
+
+    /** The fill method fills the "GenRingF::GenericResults" structure with
+     *  the rings which were found during the fitting procedure.
+     */
+    void fill ( GenRingF::GenericResults & results ) const;
+
+  public:
+
+    /// Print this object to ostream
     std::ostream & printMeTo(std::ostream & os) const;
-    friend inline std::ostream & operator<<(std::ostream & os,
-                                            const Lester::EventDescription & rp)
+
+    /// Overload ostream operator <<
+    friend inline std::ostream & operator<< ( std::ostream & os,
+                                              const Lester::EventDescription & rp)
     {
       return rp.printMeTo(os);
     }
+
   };
 
 }

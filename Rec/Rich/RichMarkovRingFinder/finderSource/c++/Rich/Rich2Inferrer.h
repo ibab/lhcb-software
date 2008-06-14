@@ -9,31 +9,45 @@
 #include "GenericRingFinder/GenericInferrer.h"
 #include "GenericRingFinder/GenericInput.fwd"
 #include "GenericRingFinder/GenericResults.fwd"
+
 #include "boost/shared_ptr.hpp"
-#include "NimTypeRichModel.fwd"
 
 namespace Lester
 {
 
-  // declaration
+  template < class DATAMODEL >
   class Rich2Inferrer : public GenRingF::GenericInferrer
   {
 
   public: // ----------- Things needed by GenRingF::GenericInferrer ---------
+
     /// Return probablility hit was made by the given circle
-    virtual double probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
-                                                      const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const;
+    virtual double
+    probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
+                                       const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const;
+
     /// Probability hit was made by no known circles
-    virtual double probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const;
+    virtual double
+    probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const;
+
+    /// Destructor
     virtual ~Rich2Inferrer();
 
   public: // ----------- Things we need ourselves to function ---------
+
+    // The inferrer will be wrong in what it says about the probabilities of hits coming from BG versus non-BG."
     Rich2Inferrer(const GenRingF::GenericInput & genInput,
-                  const boost::shared_ptr<const Lester::NimTypeRichModel> ntrm,
-                  const GenRingF::GenericResults::GenericRings & genRings);
+                  const boost::shared_ptr<const DATAMODEL> ntrm,
+                  const GenRingF::GenericResults::GenericRings & genRings)
+      : m_genInput(genInput),
+        m_ntrm(ntrm),
+        m_circs(genRings),
+        m_meanBackground(0) { }
+
   private:
+
     const GenRingF::GenericInput & m_genInput;
-    const boost::shared_ptr<const Lester::NimTypeRichModel> m_ntrm;
+    const boost::shared_ptr<const DATAMODEL> m_ntrm;
     const GenRingF::GenericResults::GenericRings & m_circs;
     const double m_meanBackground;
 

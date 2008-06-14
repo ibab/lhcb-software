@@ -6,7 +6,6 @@
 
 #include "Hit.h"
 #include "CircleParams.h"
-#include "NimTypeRichModel.fwd"
 
 namespace Lester
 {
@@ -15,14 +14,11 @@ namespace Lester
   {
   public:
     typedef std::vector<Hit> Hits;
+  public:
     void doNothing() const throw();
-  public: // should be private: but temporarily public for revision of NIM paper
-    typedef std::vector<CircleParams> Circs;
-    Circs secretCircs;
-    Hits secretBg;
+    void setFromFile(const std::string & file);
   public:
     Hits hits;
-    void setFromFile(const std::string & file);
   };
 
 }

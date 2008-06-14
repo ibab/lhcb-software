@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.31 2008-06-13 13:41:33 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.32 2008-06-14 09:15:04 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -28,7 +28,7 @@ RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator )
 {
-  declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings );
+  declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings+"All" );
 }
 
 // Destructor
@@ -68,9 +68,7 @@ StatusCode RichMarkovRingFinderMoni::execute()
     LHCb::RichRecRing * ring = *iR;
 
     // Radiator info
-    //const Rich::RadiatorType rad = ring->radiator(); 
-    // Cannot do yet until RichRecRing is updated so hard code to RICH2 temporarily
-    const Rich::RadiatorType rad = Rich::Rich2Gas;
+    const Rich::RadiatorType rad = ring->radiator(); 
 
     // Plot centre points of "isolated" rings
     const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();

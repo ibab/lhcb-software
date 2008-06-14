@@ -16,12 +16,12 @@
 namespace Lester
 {
 
+  template < class DATAMODEL >
   class ThreePointCircleProposer : public NewCircleProposer
   {
-    // ThreePointCircleProposer(const ThreePointCircleProposer & other) {};
-    // ThreePointCircleProposer & operator=(const ThreePointCircleProposer & other) { return *this; };
-    // virtual ~ThreePointCircleProposer() {};
+
   private:
+
     typedef std::map<HitIndexTriple, double> Cache1;
     mutable Cache1 m_cache1;
     const Data & m_data;
@@ -39,27 +39,31 @@ namespace Lester
     const double m_circleCentreSmearingWidth;
     const double m_radiusSmearingWidth;
     const double m_wanderWidthSq;
-    const NimTypeRichModel & m_ntrm;
+    const DATAMODEL & m_ntrm;
     const NormalDistribution m_centreCptSmearer;
+
   public:
+
     /// The circleCentreSmearingWidth is the width in x (and also in y) by which the circle centre will be smeared out before being returned by the sample method. "radiusSmearingWidth" has the same role. The "...Sq" terminator indicates the square of the quantity has been taken.
     ThreePointCircleProposer(const Data & d,
                              const double circleCentreSmearingWidthSq,
                              const double radiusSmearingWidthSq,
-                             const NimTypeRichModel & ntrm);
+                             const DATAMODEL & ntrm);
     std::ostream & printMeTo(std::ostream & os) const 
     {
       return os << "ThreePointCircleProposer[]";
     }
     friend inline std::ostream & operator<<(std::ostream & os, 
-                                            const Lester::ThreePointCircleProposer & obj)
+                                            const Lester::ThreePointCircleProposer<DATAMODEL> & obj)
     {
       return obj.printMeTo(os);
     }
+
     CircleParams sample() const;
     double probabilityOf(const CircleParams & circleParams) const;
+
   };
-};
+}
 
 #endif
 

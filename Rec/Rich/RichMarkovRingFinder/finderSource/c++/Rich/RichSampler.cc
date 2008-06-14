@@ -1,12 +1,11 @@
 
-#include "CrudeSampler.h"
+#include "RichSampler.h"
 
 #include <ctime>
 
 #include "Data.h"
 #include "ThreePointCircleProposerB.h"
 #include "RectilinearCPQuantizer.h"
-#include "NimTypeRichModel.h"
 #include "EventDescription.h"
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
@@ -14,42 +13,36 @@
 
 using namespace Lester;
 
-CrudeSampler::CrudeSampler(boost::shared_ptr<Lester::NimTypeRichModel> ntrm)
-  : m_ntrm(ntrm) { }
-
-std::ostream & CrudeSampler::printMeTo(std::ostream & os) const 
+template < class DATAMODEL >
+std::ostream & RichSampler<DATAMODEL>::printMeTo(std::ostream & os) const
 {
-  return os << "CrudeSampler[]";
+  return os << "RichSampler[]";
 }
 
-std::ostream & operator<<(std::ostream & os, const CrudeSampler & obj) 
-{
-  return obj.printMeTo(os);
-}
-
+template < class DATAMODEL >
 boost::shared_ptr<GenRingF::GenericResults>
-CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
+RichSampler<DATAMODEL>::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
   try
   {
 
-    const Lester::NimTypeRichModel & ntrm = *m_ntrm;
+    const DATAMODEL & ntrm = *m_ntrm;
 
     Lester::Data data;
     data.hits.reserve( input.hits.size() );
     for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
          it != input.hits.end();
-         ++it) 
+         ++it)
     {
       data.hits.push_back(Lester::Hit(it->x(),it->y()));
     }
 
-    RectilinearCPQuantizer rcpq(ntrm);
-    Lester::ThreePointCircleProposerB p ( data,
-                                          rcpq,
-                                          ntrm.circleMeanRadiusParameter*0.1,
-                                          ntrm.circleMeanRadiusParameter*0.1,
-                                          ntrm );
+    RectilinearCPQuantizer rcpq(ntrm.circleMeanRadiusParameter);
+    Lester::ThreePointCircleProposerB<DATAMODEL> p ( data,
+                                                     rcpq,
+                                                     ntrm.circleMeanRadiusParameter*0.1,
+                                                     ntrm.circleMeanRadiusParameter*0.1,
+                                                     ntrm );
 
     Lester::EventDescription initialPoint;
 
@@ -65,7 +58,7 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
     }
     catch (Lester::LogarithmicTools::LogOfZero &)
     {
-      Lester::messHandle().debug() << "Initial point was not sufficiently good.  I refuse to carry on at line " 
+      Lester::messHandle().debug() << "Initial point was not sufficiently good.  I refuse to carry on at line "
                                    << __LINE__ << " in " << __FILE__ << Lester::endmsg;
       throw CouldNotFit("The first point (i.e. the initial conditions) for the 'fit' was very bad.");
     }
@@ -158,30 +151,38 @@ CrudeSampler::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
       throw CouldNotFit("Unspecified Fit Mode");
     }
 
-    currentPoint.fill(ans, input, m_ntrm);
+    // Fill final rings
+    currentPoint.fill ( ans );
+
+    // create the inferrer
+    ans.inferrer =
+      boost::shared_ptr<GenRingF::GenericInferrer>( new Lester::Rich2Inferrer<DATAMODEL>(input,m_ntrm,ans.rings) );
+
+    // return fnal answers
     return ansP;
 
-  } 
+  }
   catch ( const CouldNotFit & excpt )
   {
     throw excpt;
   }
-  catch ( const std::exception & excpt ) 
+  catch ( const std::exception & excpt )
   {
     throw CouldNotFit( excpt.what() );
-  } 
-  catch (...) 
+  }
+  catch (...)
   {
     throw CouldNotFit( "An unknown exception occurred. Bad" );
   }
 
 }
 
-void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
-                               double & currentLogProb,
-                               Lester::ThreePointCircleProposerB & p,
-                               const Lester::NimTypeRichModel & ntrm,
-                               const Lester::Data & data )
+template < class DATAMODEL >
+void RichSampler<DATAMODEL>::doTheWork ( Lester::EventDescription & currentPoint,
+                                         double & currentLogProb,
+                                         Lester::ThreePointCircleProposerB<DATAMODEL> & p,
+                                         const DATAMODEL & ntrm,
+                                         const Lester::Data & data )
 {
   data.doNothing();
 
@@ -207,7 +208,7 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
     proposal.circs.push_back(c);
     const double qForward = insProb*(p.probabilityOf(c));
     const double qReverse = remProb;
-    qReverseOverQForward = qReverse/qForward;
+    qReverseOverQForward  = qReverse/qForward;
   }
   else if (proposeRemove)
   {
@@ -233,13 +234,13 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
   {
     assert(proposeJitter);
     const unsigned int siz = currentPoint.circs.size();
-    if (siz==0) 
+    if (siz==0)
     {
       //Lester::messHandle().verbose("Proposing crummy jitter");
       // leave as we are!
       keepForSure = true;
-    } 
-    else 
+    }
+    else
     {
       //Lester::messHandle().verbose("Proposing jitter");
       //qReverseOverQForward = 1;
@@ -249,32 +250,32 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
   }
 
   bool acceptedProposal = false;
-  try 
+  try
   {
-    if (keepForSure) 
+    if (keepForSure)
     {
       // do nothing -- treat as a failed proposal.
-    } 
-    else 
+    }
+    else
     {
       const double proposedLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(proposal,data);
       const double rhoMax = std::exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
       acceptedProposal = Lester::lfin(rhoMax) && (RandFlat::shoot()<rhoMax);
 
-      if (acceptedProposal) 
+      if (acceptedProposal)
       {
         currentPoint = proposal;
         currentLogProb = proposedLogProb;
 
       }
     }
-  } 
-  catch (...) 
+  }
+  catch (...)
   {
     // infinitely unlikely point: Reject!
   };
 
-  if (acceptedProposal) 
+  if (acceptedProposal)
   {
     static unsigned int count=0;
     ++count;
@@ -283,3 +284,8 @@ void CrudeSampler::doTheWork ( Lester::EventDescription & currentPoint,
 
   // Lester::messHandle().debug() << "CurrentPoint " << currentPoint << Lester::endmsg;
 }
+
+// Instanciate specific templates
+
+#include "Rich/Rich2DataModel.h"
+template class Lester::RichSampler<Lester::Rich2DataModel>;
