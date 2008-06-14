@@ -276,8 +276,10 @@ double RichDataModel::sampleFromApproximateCoPointSeparationDistribution() const
 
 void RichDataModel::readCacheFromFile()
 {
+  // if cache isn't empty, then it has already been read from file
+  if ( !m_cache.empty() ) return;
   m_cacheLocation = getCacheLocation();
-  if ( m_enableFileCache && m_cache.empty() )
+  if ( m_enableFileCache )
   {
     Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'"
                                 << Lester::endmsg;
