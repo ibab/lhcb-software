@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.15 2007-11-29 10:00:52 cattanem Exp $
+  * $Id: RichRecRing.xml,v 1.16 2008-06-14 10:39:46 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -113,6 +113,7 @@
                 type = "bitfield" >
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                                    length="1"  name="rich"  type="Rich::DetectorType" />
                 <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" length="1"  name="panel" type="Rich::Side"         />
+                <bitfield desc="The Rich radiator type"                                                                  length="2"  name="radiator" type="Rich::RadiatorType" />
                 <bitfield desc="The ring type"                                                                           length="4"  name="type"  type="LHCb::RichRecRing::RingType" />
                 <bitfield desc="The algorithm used to create this ring"                                                  length="4"  name="algorithm" type="LHCb::RichRecRing::RingAlgorithm" />
                 <bitfield desc="The total number of samples used when ray tracing the points for this ring"              length="10" name="nTotalPointSamples" type="unsigned int" />
@@ -149,6 +150,13 @@
   }
   return point;
                 </code>
+        </method>
+
+        <method 
+                const = "TRUE" 
+                type  = "double"
+                desc  = "Computes the average probability of all pixels associated to this ring" 
+                name  = "averagePixelProb" >
         </method>
 
 </class>

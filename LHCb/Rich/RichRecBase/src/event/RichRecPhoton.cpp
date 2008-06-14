@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichRecPhoton.cpp
  *
- *  Implementation file for class : RichRecPhoton
+ *  Implementation file for class : LHCb::RichRecPhoton
  *
  *  CVS Log :-
- *  $Id: RichRecPhoton.cpp,v 1.6 2006-01-23 14:08:55 jonrob Exp $
+ *  $Id: RichRecPhoton.cpp,v 1.7 2008-06-14 10:39:46 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
