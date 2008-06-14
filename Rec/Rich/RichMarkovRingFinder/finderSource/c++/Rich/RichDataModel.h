@@ -18,6 +18,9 @@
 #include "Rich/ProbabilityUtils.h"
 #include "Rich/CircleTheorems.h"
 
+// Gaudi (RichDet)
+#include "RichDet/Rich1DTabFunc.h"
+
 namespace Lester
 {
 
@@ -29,10 +32,12 @@ namespace Lester
 
     /// Default constructor (reads cache file)
     RichDataModel()
-      : m_enableFileCache(true),
+      : m_isInitialised(false),
+        m_enableFileCache(true),
         m_richThetaSampler(NULL),
         m_richThetaDistribution(NULL),
-        m_richProbabilityThetaAbove(NULL)
+        m_richProbabilityThetaAbove(NULL),
+        m_interp(NULL)
     { m_cache.clear(); }
 
     /// Destructor
@@ -87,6 +92,8 @@ namespace Lester
 
   private:
 
+    bool m_isInitialised;
+
     typedef std::map<double,double> CacheMap;
     mutable CacheMap m_cache;
     std::string m_cacheLocation;
@@ -111,6 +118,10 @@ namespace Lester
     double approxCoPointSepFunctionPart2(const double deltaOnTwo, const double rSq) const;
 
     double approxCoPointSepFunctionPart1(const double deltaOnTwo) const;
+
+    double approxCoPointSepFunctionPart1_CacheImp(const double deltaOnTwo) const;
+
+    //double approxCoPointSepFunctionPart1_InterpImp(const double deltaOnTwo) const;
 
     std::string getCacheLocation() const;
 
@@ -192,6 +203,11 @@ namespace Lester
   public:
 
     double circleMeanRadiusParameter; /// should be the mean radius of rich-rings.  Is often used also to set a length scale for CPQuantization.
+
+  private:
+
+    /// Interpolator for approxCoPointSepFunction
+    Rich::TabulatedFunction1D * m_interp;
 
   };
 
@@ -295,6 +311,15 @@ namespace Lester
     {
       return 0;
     }
+  }
+
+  inline double 
+  RichDataModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
+  {
+    // use the cache implementation
+    //return approxCoPointSepFunctionPart1_CacheImp(deltaOnTwo);
+    // Use the GSL based interpolator (requires full cache file)
+    return m_interp->value(deltaOnTwo);
   }
 
 }

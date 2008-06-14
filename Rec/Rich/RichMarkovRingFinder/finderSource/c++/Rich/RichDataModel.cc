@@ -36,15 +36,22 @@ namespace Lester
 
   void RichDataModel::initialise()
   {
-    // read cache
-    readCacheFromFile();
-    // Create Samplers etc.
-    m_richThetaSampler
-      = new RichThetaSampler          ( dataFilesDir()+"/"+m_thetaDataFile );
-    m_richThetaDistribution
-      = new RichThetaDistribution     ( dataFilesDir()+"/"+m_thetaDataFile );
-    m_richProbabilityThetaAbove
-      = new RichProbabilityThetaAbove ( dataFilesDir()+"/"+m_thetaDataFile );
+    if ( !m_isInitialised )
+    {
+      m_isInitialised = true;
+      // read cache
+      readCacheFromFile();
+      // Make interpolator
+      if ( !m_cache.empty() )
+      { m_interp = new Rich::TabulatedFunction1D(m_cache); }
+      // Create Samplers etc.
+      m_richThetaSampler
+        = new RichThetaSampler          ( dataFilesDir()+"/"+m_thetaDataFile );
+      m_richThetaDistribution
+        = new RichThetaDistribution     ( dataFilesDir()+"/"+m_thetaDataFile );
+      m_richProbabilityThetaAbove
+        = new RichProbabilityThetaAbove ( dataFilesDir()+"/"+m_thetaDataFile );
+    }
   }
 
   void RichDataModel::cleanUp()
@@ -55,6 +62,8 @@ namespace Lester
     m_richThetaDistribution = NULL;
     delete m_richProbabilityThetaAbove;
     m_richProbabilityThetaAbove = NULL;
+    delete m_interp;
+    m_interp = NULL;
   }
 
   // Guarantees to either return a "reasonable" logProb or else throw Lester::LogarithmicTools::LogOfZero()
@@ -308,7 +317,7 @@ void RichDataModel::readCacheFromFile()
   }
 }
 
-double RichDataModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
+double RichDataModel::approxCoPointSepFunctionPart1_CacheImp(const double deltaOnTwo) const
 {
 
   const double one = 1;
