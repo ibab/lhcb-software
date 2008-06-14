@@ -60,15 +60,18 @@ namespace Lester
       std::ifstream is(fileName.c_str());
       if ( is.is_open() )
       {
-        Lester::messHandle().debug() << "RegularProbabilityDistribution1D : Reading data file '" 
+        Lester::messHandle().debug() << "RegularProbabilityDistribution1D : Reading data file '"
                                      << fileName << "'"
-                                    << Lester::endmsg;
+                                     << Lester::endmsg;
         Index index(0);
         double probability(0);
         while (is>>index)
         {
           is>>probability;
           addIndexAndProbability(index,probability);
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "
+                                       << index << " " << probability
+                                       << Lester::endmsg;
         }
       }
       else
@@ -155,7 +158,7 @@ namespace Lester
 
     inline double probabilityDensityOf ( const Index index ) const
     {
-      const unsigned int i 
+      const unsigned int i
         = ( index>stop ? pVals.size() : static_cast<unsigned int>((index-start)*sda) );
       return ( i<pVals.size() ? pVals[i] : 0 );
     }

@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.51 2008-06-14 09:15:04 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.52 2008-06-14 14:20:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -43,11 +43,13 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
 {
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
-  declareProperty( "DumpDataToTextFile",  m_dumpText       = false );
-  declareProperty( "MinAssociationProb",  m_minAssProb     = 0.05  );
-  declareProperty( "MaxHitsInEvent",      m_maxHitsEvent   = 300   );
-  declareProperty( "ScaleFactor",         m_scaleFactor    = 0.030/128.0 );
+  declareProperty( "DumpDataToTextFile",   m_dumpText       = false );
+  declareProperty( "MinAssociationProb",   m_minAssProb     = 0.05  );
+  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent   = 300   );
+  //declareProperty( "ScaleFactor",         m_scaleFactor    = 0.030/128.0 );
+  declareProperty( "ScaleFactor",          m_scaleFactor    = 0.0283/128.0 );
   declareProperty( "MaxPixelDistFromRing", m_maxPixelSep   = 260   );
+  declareProperty( "EnableFileCache",      m_enableFileCache = false );
 }
 
 //=============================================================================
@@ -74,7 +76,6 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
 
   // make a new sampler
   m_sampler = Lester::getInstance<SAMPLER>();
-
   // configure sampler
   m_sampler->configuration.clearAllparams();
   m_sampler->configuration.setParam( "ScaleNumItsByHits", true );
@@ -82,6 +83,10 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
   m_sampler->configuration.setParam( "TargetHits",       250   );
   m_sampler->configuration.setParam( "AbsMaxIts",        20000 );
   m_sampler->configuration.setParam( "AbsMinIts",        400   );
+  m_sampler->configuration.setParam( "EnableFileCache", m_enableFileCache );
+  // initialise sampler
+  m_sampler->initialise();
+
   info() << "Markov Chain Configuration : " << rich() << " " << panel()
          << " " << m_sampler->configuration << endreq;
 

@@ -4,6 +4,7 @@
 
 // includes
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
 #include "Rich/EventDescription.fwd"
@@ -28,9 +29,11 @@ namespace Lester
 
     /// Default constructor (reads cache file)
     RichDataModel()
-      : m_richThetaSampler(NULL),
+      : m_enableFileCache(true),
+        m_richThetaSampler(NULL),
         m_richThetaDistribution(NULL),
-        m_richProbabilityThetaAbove(NULL) { }
+        m_richProbabilityThetaAbove(NULL)
+    { }
 
     /// Destructor
     ~RichDataModel() { cleanUp(); }
@@ -79,7 +82,7 @@ namespace Lester
 
   protected:
 
-    /// Setup the parameters each concrete implementation
+    /// Setup the parameters for each concrete implementation
     void initialise();
 
   private:
@@ -87,6 +90,15 @@ namespace Lester
     typedef std::map<double,double> CacheMap;
     mutable CacheMap m_cache;
     std::string m_cacheLocation;
+    bool m_enableFileCache;
+
+  public:
+
+    /// Set the option to turn on/off the file cache
+    inline void enableFileCache( const bool enable = true )
+    {
+      m_enableFileCache = enable;
+    }
 
   private:
 

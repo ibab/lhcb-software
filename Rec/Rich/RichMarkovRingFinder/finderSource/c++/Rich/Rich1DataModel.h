@@ -25,6 +25,9 @@ namespace Lester
     /// Default constructor
     Rich1DataModel();
 
+    /// Setup the parameters for each concrete implementation
+    void initialise();
+
   };
 
 }

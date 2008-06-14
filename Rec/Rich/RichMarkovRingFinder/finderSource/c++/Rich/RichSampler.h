@@ -33,6 +33,9 @@ namespace Lester
     /// Constructor
     RichSampler( ) : m_ntrm ( new DATAMODEL() ) { }
 
+    /// Initialise after setting configuration
+    void initialise();
+
     /// Run the ring finding on the given input data
     virtual boost::shared_ptr<GenRingF::GenericResults> 
     fit ( const GenRingF::GenericInput & input ) throw (CouldNotFit);

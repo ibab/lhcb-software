@@ -37,11 +37,11 @@ namespace Lester
     // read cache
     readCacheFromFile();
     // Create Samplers etc.
-    m_richThetaSampler      
+    m_richThetaSampler
       = new RichThetaSampler          ( dataFilesDir()+"/"+m_thetaDataFile );
-    m_richThetaDistribution 
+    m_richThetaDistribution
       = new RichThetaDistribution     ( dataFilesDir()+"/"+m_thetaDataFile );
-    m_richProbabilityThetaAbove 
+    m_richProbabilityThetaAbove
       = new RichProbabilityThetaAbove ( dataFilesDir()+"/"+m_thetaDataFile );
   }
 
@@ -265,10 +265,10 @@ double RichDataModel::sampleFromApproximateCoPointSeparationDistribution() const
   // CoPointSeparationDistribution is the distrib of
   // distances between two points on a random circle
   // Here we approximate it in the limit that the circles are whole and sharp
-  const double r = sampleFromCircleRadiusDistribution();
+  const double r     = sampleFromCircleRadiusDistribution();
   const double theta = RandFlat::shoot(MathsConstants::pi);
-  const double two = 2;
-  const double rho = r*sqrt(two-two*cos(theta));
+  const double two   = 2;
+  const double rho   = r*std::sqrt(two-two*cos(theta));
   return rho;
 }
 
@@ -276,23 +276,32 @@ void RichDataModel::readCacheFromFile()
 {
   m_cacheLocation = getCacheLocation();
   m_cache.clear();
-  Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'" << Lester::endmsg;
-  std::ifstream f(m_cacheLocation.c_str());
-  if ( f.is_open() )
+  if ( m_enableFileCache )
   {
-    double key(0),ans(0);
-    while ( f>>key )
+    Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'" 
+                                << Lester::endmsg;
+    std::ifstream f(m_cacheLocation.c_str());
+    if ( f.is_open() )
     {
-      f >> ans;
-      m_cache[key] = ans;
-      Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
-                                   << ans << " from file" << Lester::endmsg;
+      double key(0),ans(0);
+      while ( f>>key )
+      {
+        f >> ans;
+        m_cache[key] = ans;
+        Lester::messHandle().debug() << " -> Read approxCoPointSep[ " << key << " ] = "
+                                     << ans << " from file" << Lester::endmsg;
+      }
+    }
+    else
+    {
+      Lester::messHandle().error() << "Failed to open cache file '" << m_cacheLocation
+                                   << "' -> Will re-calculate from scratch (SLOW)" 
+                                   << Lester::endmsg;
     }
   }
   else
   {
-    Lester::messHandle().error() << "Failed to open cache file '" << m_cacheLocation
-                                 << "' -> Will re-calculate from scratch (SLOW)" << Lester::endmsg;
+    Lester::messHandle().warning() << "File Cache is DISABLED" << Lester::endmsg;
   }
 }
 
@@ -399,28 +408,31 @@ double RichDataModel::fillCache(const double deltaOnTwo) const
                                << avg << Lester::endmsg;
   m_cache[deltaOnTwo] = avg;
 
-  try
+  if ( m_enableFileCache )
   {
-    // need to add read/write idea here
-    std::ofstream cf(m_cacheLocation.c_str(),std::ios::app);
-    if ( cf.is_open() )
+    try
     {
-      if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
+      // need to add read/write idea here
+      std::ofstream cf(m_cacheLocation.c_str(),std::ios::app);
+      if ( cf.is_open() )
       {
-        cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
-        Lester::messHandle().debug() << "  -> Wrote to cache file" << Lester::endmsg;
+        if ( Lester::lfin(deltaOnTwo) && Lester::lfin(avg))
+        {
+          cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
+          Lester::messHandle().debug() << "  -> Wrote to cache file" << Lester::endmsg;
+        }
+      }
+      else
+      {
+        Lester::messHandle().warning() << "Failed to open cache file '" << m_cacheLocation
+                                       << "' for writting -> New cache values not saved." << Lester::endmsg;
       }
     }
-    else
+    catch ( const std::exception & expt )
     {
-      Lester::messHandle().warning() << "Failed to open cache file '" << m_cacheLocation
-                                     << "' for writting -> New cache values not saved." << Lester::endmsg;
+      Lester::messHandle().warning() << "Exception '" << expt.what()
+                                     << "' caught writing to cache -> results not saved" << Lester::endmsg;
     }
-  }
-  catch ( const std::exception & expt )
-  {
-    Lester::messHandle().warning() << "Exception '" << expt.what()
-                                   << "' caught writing to cache -> results not saved" << Lester::endmsg;
   }
 
   // return the new result

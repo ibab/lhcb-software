@@ -19,6 +19,13 @@ std::ostream & RichSampler<DATAMODEL>::printMeTo(std::ostream & os) const
 }
 
 template < class DATAMODEL >
+void RichSampler<DATAMODEL>::initialise()
+{
+  m_ntrm->enableFileCache(configuration.checkThenGetParam("EnableFileCache")>0);
+  m_ntrm->initialise();
+}
+
+template < class DATAMODEL >
 boost::shared_ptr<GenRingF::GenericResults>
 RichSampler<DATAMODEL>::fit(const GenRingF::GenericInput & input) throw (CouldNotFit)
 {
@@ -258,8 +265,8 @@ void RichSampler<DATAMODEL>::doTheWork ( Lester::EventDescription & currentPoint
     else
     {
       const double proposedLogProb = ntrm.totalLogProbOfEventDescriptionGivenData(proposal,data);
-      const double rhoMax = std::exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
-      acceptedProposal = Lester::lfin(rhoMax) && (RandFlat::shoot()<rhoMax);
+      const double rhoMax          = std::exp(proposedLogProb-currentLogProb) * qReverseOverQForward;
+      acceptedProposal             = Lester::lfin(rhoMax) && (RandFlat::shoot()<rhoMax);
 
       if (acceptedProposal)
       {

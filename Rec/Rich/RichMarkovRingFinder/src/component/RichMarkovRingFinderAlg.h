@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.35 2008-06-14 10:41:37 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.36 2008-06-14 14:20:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -162,6 +162,9 @@ namespace Rich
 
       /// Maximum distance from Markov ring centre of a pixel to be considered as associated to that ring
       double m_maxPixelSep;
+
+      /// Enable file cache in sampler
+      bool m_enableFileCache;
 
     };
 

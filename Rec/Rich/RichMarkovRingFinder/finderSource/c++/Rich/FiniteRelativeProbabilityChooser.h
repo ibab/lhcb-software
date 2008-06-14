@@ -41,10 +41,13 @@ namespace Lester {
                                      << Lester::endmsg;
         Index index;
         double probability;
-        while (is>>index)
+        while (is >> index)
         {
-          is>>probability;
+          is >> probability;
           addIndexAndProbability(index,probability);
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "  
+                                       << index << " " << probability
+                                       << Lester::endmsg;
         }
       }
       else

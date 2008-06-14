@@ -5,10 +5,11 @@
 namespace Lester
 {
 
-  Rich1DataModel::Rich1DataModel()
-    : RichDataModel()
+  Rich1DataModel::Rich1DataModel() : RichDataModel() { }
+
+  void Rich1DataModel::initialise()
   {
-    // f(a,e) = page 81 Eq 3.6 http://doc.cern.ch/archive/electronic/cern/preprints/thesis/thesis-2005-058.pdf
+   // f(a,e) = page 81 Eq 3.6 http://doc.cern.ch/archive/electronic/cern/preprints/thesis/thesis-2005-058.pdf
     backgroundRadius        = 0.030*3.0;
     backgroundMeanParameter = 75;
     meanNumberOfRings       = 5;
