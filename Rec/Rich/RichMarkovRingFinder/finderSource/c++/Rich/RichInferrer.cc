@@ -1,5 +1,5 @@
 
-#include "Rich2Inferrer.h"
+#include "RichInferrer.h"
 
 // includes
 #include "GenericRingFinder/GenericInferrer.h"
@@ -16,11 +16,11 @@ namespace Lester
 {
 
   template < class DATAMODEL >
-  Rich2Inferrer<DATAMODEL>::~Rich2Inferrer() {}
+  RichInferrer<DATAMODEL>::~RichInferrer() {}
 
   // Return probablility hit was made by the given circle
   template < class DATAMODEL >
-  double Rich2Inferrer<DATAMODEL>::
+  double RichInferrer<DATAMODEL>::
   probabilityHitWasMadeByGivenCircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt,
                                      const GenRingF::GenericResults::GenericRings::const_iterator & cIt) const
   {
@@ -45,14 +45,14 @@ namespace Lester
 
   // Probability hit was made by no known circles
   template < class DATAMODEL >
-  double Rich2Inferrer<DATAMODEL>::
+  double RichInferrer<DATAMODEL>::
   probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const
   {
     return probabilityHitWasMadeByGivenCircle(hIt, m_circs.end());
   }
 
   template < class DATAMODEL >
-  void Rich2Inferrer<DATAMODEL>::
+  void RichInferrer<DATAMODEL>::
   cacheAnswersForAllCirclesWRTHit(const HitIterator & hIt) const
   {
     const Hit hit(*hIt);
@@ -114,5 +114,8 @@ namespace Lester
 
 // Instanciate specific templates
 
+#include "Rich/Rich1DataModel.h"
+template class Lester::RichInferrer<Lester::Rich1DataModel>;
+
 #include "Rich/Rich2DataModel.h"
-template class Lester::Rich2Inferrer<Lester::Rich2DataModel>;
+template class Lester::RichInferrer<Lester::Rich2DataModel>;

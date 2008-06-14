@@ -1,6 +1,6 @@
 
-#ifndef LESTER_Rich2DataModel_H
-#define LESTER_Rich2DataModel_H
+#ifndef LESTER_Rich1DataModel_H
+#define LESTER_Rich1DataModel_H
 
 // includes
 #include <iostream>
@@ -17,13 +17,13 @@ namespace Lester
 {
 
   // declaration
-  class Rich2DataModel : public RichDataModel
+  class Rich1DataModel : public RichDataModel
   {
 
   public:
 
     /// Default constructor
-    Rich2DataModel();
+    Rich1DataModel();
 
   };
 

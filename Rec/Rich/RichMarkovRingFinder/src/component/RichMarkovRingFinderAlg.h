@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.34 2008-06-14 09:15:04 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.35 2008-06-14 10:41:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -40,6 +40,7 @@
 #include "GenericRingFinder/GenericResults.h"
 #include "Rich/RichSampler.h"
 #include "Rich/SamplerFactory.h"
+#include "Rich/Rich1DataModel.h"
 #include "Rich/Rich2DataModel.h"
 #include "Utils/MessageHandler.h"
 
@@ -164,11 +165,11 @@ namespace Rich
 
     };
 
+    /// The type of sampler for RICH1
+    typedef Lester::RichSampler<Lester::Rich1DataModel> Rich1Sampler;
+
     /// The type of sampler for RICH2
     typedef Lester::RichSampler<Lester::Rich2DataModel> Rich2Sampler;
-
-    /// The type of sampler for RICH1
-    typedef Lester::RichSampler<Lester::Rich2DataModel> Rich1Sampler;
 
     /**
      * @class  Rich1TopPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h

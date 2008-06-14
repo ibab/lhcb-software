@@ -136,6 +136,9 @@ namespace Lester
     /// Name of theta distribution data file
     std::string m_thetaDataFile;
 
+    /// Cache file name
+    std::string m_cacheDataFile;
+
   private:
 
     typedef FiniteRelativeProbabilityChooser<double> RichThetaSampler;

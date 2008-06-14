@@ -2,5 +2,5 @@
 namespace Lester 
 { 
  template < class DATAMODEL >
- class Rich2Inferrer; 
+ class RichInferrer; 
 }

@@ -4,13 +4,16 @@
 
 // includes
 #include <iostream>
+
 #include "GenericRingFinder/GenericRingFinder.h"
 #include "GenericRingFinder/GenericResults.fwd"
-#include "EventDescription.fwd"
-#include "ThreePointCircleProposerB.fwd"
+
+#include "Rich/EventDescription.fwd"
+#include "Rich/ThreePointCircleProposerB.fwd"
+#include "Rich/Data.fwd"
+#include "Rich/RichInferrer.h"
+
 #include "boost/shared_ptr.hpp"
-#include "Data.fwd"
-#include "Rich2Inferrer.h"
 
 namespace Lester
 {

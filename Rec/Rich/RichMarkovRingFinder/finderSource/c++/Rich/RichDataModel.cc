@@ -178,9 +178,8 @@ namespace Lester
 
   Hit RichDataModel::sampleHitDueToBackground() const
   {
-    const double x = RandGauss::shoot(0,backgroundRadius);
-    const double y = RandGauss::shoot(0,backgroundRadius);
-    return Hit(x,y);
+    return Hit ( RandGauss::shoot(0,backgroundRadius),
+                 RandGauss::shoot(0,backgroundRadius) );
   }
 
   Hit RichDataModel::sampleHitDueToCircle(const CircleParams & c) const
@@ -258,7 +257,7 @@ std::string RichDataModel::getCacheLocation() const
 {
   const char * env = getenv("RICHMFINDERDATALOCATION");
   const std::string senv( env ? std::string(env)+"/" : "" );
-  return ( senv + "approxCoPointSep.cache" );
+  return ( senv + m_cacheDataFile );
 }
 
 double RichDataModel::sampleFromApproximateCoPointSeparationDistribution() const

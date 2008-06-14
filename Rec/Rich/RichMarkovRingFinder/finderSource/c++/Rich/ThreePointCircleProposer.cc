@@ -385,5 +385,8 @@ namespace Lester
 
 // Instanciate specific templates
 
+#include "Rich/Rich1DataModel.h"
+template class Lester::ThreePointCircleProposer<Lester::Rich1DataModel>;
+
 #include "Rich/Rich2DataModel.h"
 template class Lester::ThreePointCircleProposer<Lester::Rich2DataModel>;

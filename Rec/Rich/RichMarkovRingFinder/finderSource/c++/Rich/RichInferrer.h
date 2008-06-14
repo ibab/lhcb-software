@@ -3,7 +3,7 @@
 #define LESTER_RICH2INFERRER_H
 
 // fwd dec
-#include "Rich2Inferrer.fwd"
+#include "RichInferrer.fwd"
 
 // includes
 #include "GenericRingFinder/GenericInferrer.h"
@@ -16,7 +16,7 @@ namespace Lester
 {
 
   template < class DATAMODEL >
-  class Rich2Inferrer : public GenRingF::GenericInferrer
+  class RichInferrer : public GenRingF::GenericInferrer
   {
 
   public: // ----------- Things needed by GenRingF::GenericInferrer ---------
@@ -31,14 +31,14 @@ namespace Lester
     probabilityHitWasMadeBySomethingOtherThanACircle(const GenRingF::GenericInput::GenericHits::const_iterator & hIt) const;
 
     /// Destructor
-    virtual ~Rich2Inferrer();
+    virtual ~RichInferrer();
 
   public: // ----------- Things we need ourselves to function ---------
 
     // The inferrer will be wrong in what it says about the probabilities of hits coming from BG versus non-BG."
-    Rich2Inferrer(const GenRingF::GenericInput & genInput,
-                  const boost::shared_ptr<const DATAMODEL> ntrm,
-                  const GenRingF::GenericResults::GenericRings & genRings)
+    RichInferrer(const GenRingF::GenericInput & genInput,
+                 const boost::shared_ptr<const DATAMODEL> ntrm,
+                 const GenRingF::GenericResults::GenericRings & genRings)
       : m_genInput(genInput),
         m_ntrm(ntrm),
         m_circs(genRings),

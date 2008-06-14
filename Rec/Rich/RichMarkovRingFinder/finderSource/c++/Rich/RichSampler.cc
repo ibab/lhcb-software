@@ -1,12 +1,11 @@
 
-#include "RichSampler.h"
-
 #include <ctime>
 
-#include "Data.h"
-#include "ThreePointCircleProposerB.h"
-#include "RectilinearCPQuantizer.h"
-#include "EventDescription.h"
+#include "Rich/RichSampler.h"
+#include "Rich/Data.h"
+#include "Rich/ThreePointCircleProposerB.h"
+#include "Rich/RectilinearCPQuantizer.h"
+#include "Rich/EventDescription.h"
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
 #include "Utils/CheckForNan.h"
@@ -156,7 +155,7 @@ RichSampler<DATAMODEL>::fit(const GenRingF::GenericInput & input) throw (CouldNo
 
     // create the inferrer
     ans.inferrer =
-      boost::shared_ptr<GenRingF::GenericInferrer>( new Lester::Rich2Inferrer<DATAMODEL>(input,m_ntrm,ans.rings) );
+      boost::shared_ptr<GenRingF::GenericInferrer>( new Lester::RichInferrer<DATAMODEL>(input,m_ntrm,ans.rings) );
 
     // return fnal answers
     return ansP;
@@ -286,6 +285,9 @@ void RichSampler<DATAMODEL>::doTheWork ( Lester::EventDescription & currentPoint
 }
 
 // Instanciate specific templates
+
+#include "Rich/Rich1DataModel.h"
+template class Lester::RichSampler<Lester::Rich1DataModel>;
 
 #include "Rich/Rich2DataModel.h"
 template class Lester::RichSampler<Lester::Rich2DataModel>;
