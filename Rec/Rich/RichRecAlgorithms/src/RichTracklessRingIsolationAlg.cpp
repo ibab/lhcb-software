@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.2 2008-06-13 13:20:27 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.cpp,v 1.3 2008-06-14 10:42:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -31,7 +31,7 @@ TracklessRingIsolationAlg( const std::string& name,
 {
   using namespace boost::assign;
   declareProperty( "InputRings",
-                   m_inputRings = LHCb::RichRecRingLocation::MarkovRings );
+                   m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "OutputRings",
                    m_outputRings = LHCb::RichRecRingLocation::MarkovRings+"Isolated" );
   declareProperty( "SizeSepCut", m_sizesepcut = list_of(260)(260)(260) );

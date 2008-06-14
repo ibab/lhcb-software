@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingFilterAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingFilterAlg.h,v 1.2 2008-06-13 13:28:49 jonrob Exp $
+ *  $Id: RichTracklessRingFilterAlg.h,v 1.3 2008-06-14 10:42:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -53,11 +53,6 @@ namespace Rich
 
       virtual StatusCode initialize(); ///< Algorithm initialisation
       virtual StatusCode execute();    ///< Algorithm execution
-
-    private:
-
-      /// Computes the average rings hit prob (TEMPORARY UNTIL PART OF RICHRECRING)
-      double avRingHitProb( LHCb::RichRecRing * ring ) const;
 
     private:
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTracklessRingSegmentAssociationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.3 2008-06-13 13:35:43 jonrob Exp $
+ *  $Id: RichTracklessRingSegmentAssociationAlg.cpp,v 1.4 2008-06-14 10:42:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -29,7 +29,7 @@ TracklessRingSegmentAssociationAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
-  declareProperty( "InputRings", m_inputRings = LHCb::RichRecRingLocation::MarkovRings );
+  declareProperty( "InputRings", m_inputRings = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "MaxDistance", m_maxDist   = 50*Gaudi::Units::mm );
 }
 
@@ -80,8 +80,8 @@ StatusCode TracklessRingSegmentAssociationAlg::execute()
           iSeg != richSegments()->end(); ++iSeg )
     {
       // Only uses segments in correct RICH and for the same radiator
-      if ( det != (*iSeg)->trackSegment().rich()
-           //|| rad != (*iSeg)->trackSegment().radiator()  // disable until new RichRecRing is released
+      if ( det != (*iSeg)->trackSegment().rich() ||
+           rad != (*iSeg)->trackSegment().radiator()
            ) continue;
 
       // Track hit point (if it were a photon) on detector plane, in local coords
