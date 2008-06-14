@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.57 2008-06-14 23:31:21 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.58 2008-06-14 23:39:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -364,6 +364,12 @@ bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & i
         input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Adding data point at " << X << "," << Y << endreq;
+      }
+      else
+      {
+        std::ostringstream mess;
+        mess << "Skipping hits in " << (*iPix)->hpd();
+        ++counter(mess.str());
       }
     }
     if ( msgLevel(MSG::DEBUG) )
