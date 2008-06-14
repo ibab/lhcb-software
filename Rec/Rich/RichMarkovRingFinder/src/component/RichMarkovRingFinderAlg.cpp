@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.53 2008-06-14 15:05:19 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.54 2008-06-14 16:10:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -58,7 +58,7 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   declareProperty( "MaxHitsInEvent",       m_maxHitsEvent   = 300    );
   declareProperty( "ScaleFactor",          m_scaleFactor             );
   declareProperty( "MaxPixelDistFromRing", m_maxPixelSep   = 260     );
-  declareProperty( "EnableFileCache",      m_enableFileCache = false );
+  declareProperty( "EnableFileCache",      m_enableFileCache = true  );
 }
 
 //=============================================================================

@@ -23,8 +23,10 @@ namespace Lester
 {
 
   // Add/Subtract 5 to allow for tolerance in calculations
-  const double RichDataModel::s_max_exponent = std::log(boost::numeric::bounds<double>::highest())  - 5.0;
-  const double RichDataModel::s_min_exponent = std::log(boost::numeric::bounds<double>::smallest()) + 5.0;
+  const double RichDataModel::s_max_exponent =
+    std::log(boost::numeric::bounds<double>::highest())  - 5.0;
+  const double RichDataModel::s_min_exponent =
+    std::log(boost::numeric::bounds<double>::smallest()) + 5.0;
 
   std::string RichDataModel::dataFilesDir()
   {
@@ -212,9 +214,9 @@ namespace Lester
     const double moo      = -0.5*(logsq/epsSq+alphaSq*epsSq);
     const double expon    = ( moo < s_min_exponent ? std::exp(s_min_exponent) :
                               moo > s_max_exponent ? std::exp(s_max_exponent) :
-      std::exp(moo) );
-  const double ans      = 1.0/(MathsConstants::twoPi)/std::sqrt(MathsConstants::twoPi*epsSq)*myPow*expon / (r*r);
-  return ans;
+                              std::exp(moo) );
+    const double ans      = 1.0/(MathsConstants::twoPi)/std::sqrt(MathsConstants::twoPi*epsSq)*myPow*expon / (r*r);
+    return ans;
 }
 
   double
@@ -278,7 +280,7 @@ void RichDataModel::readCacheFromFile()
   m_cache.clear();
   if ( m_enableFileCache )
   {
-    Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'" 
+    Lester::messHandle().info() << "Opening cache file '" << m_cacheLocation << "'"
                                 << Lester::endmsg;
     std::ifstream f(m_cacheLocation.c_str());
     if ( f.is_open() )
@@ -295,7 +297,7 @@ void RichDataModel::readCacheFromFile()
     else
     {
       Lester::messHandle().error() << "Failed to open cache file '" << m_cacheLocation
-                                   << "' -> Will re-calculate from scratch (SLOW)" 
+                                   << "' -> Will re-calculate from scratch (SLOW)"
                                    << Lester::endmsg;
     }
   }
@@ -425,13 +427,19 @@ double RichDataModel::fillCache(const double deltaOnTwo) const
       else
       {
         Lester::messHandle().warning() << "Failed to open cache file '" << m_cacheLocation
-                                       << "' for writting -> New cache values not saved." << Lester::endmsg;
+                                       << "' for writting -> New cache values not saved." 
+                                       << Lester::endmsg;
+        // disable file caching from now on
+        m_enableFileCache = false;
       }
     }
     catch ( const std::exception & expt )
     {
       Lester::messHandle().warning() << "Exception '" << expt.what()
-                                     << "' caught writing to cache -> results not saved" << Lester::endmsg;
+                                     << "' caught writing to cache -> results not saved" 
+                                     << Lester::endmsg;
+      // disable file caching from now on
+      m_enableFileCache = false;
     }
   }
 

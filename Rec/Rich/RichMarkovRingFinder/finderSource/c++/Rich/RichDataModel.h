@@ -90,7 +90,7 @@ namespace Lester
     typedef std::map<double,double> CacheMap;
     mutable CacheMap m_cache;
     std::string m_cacheLocation;
-    bool m_enableFileCache;
+    mutable bool m_enableFileCache;
 
   public:
 
