@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.36 2008-06-14 14:20:15 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.37 2008-06-14 23:26:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -157,14 +157,31 @@ namespace Rich
       /// Maximum number of hits to try ring finding with
       unsigned int m_maxHitsEvent;
 
+      /** Maximum number of hits per HPD to try ring finding with.
+       *  HPDs which exceed this are rejected */
+      unsigned int m_maxHitsHPD;
+
       /// data scale factor, to turn local coordinates into angles (in rad)
       double m_scaleFactor;
 
-      /// Maximum distance from Markov ring centre of a pixel to be considered as associated to that ring
+      /** Maximum distance from Markov ring centre of a pixel to be considered 
+       *  as associated to that ring */
       double m_maxPixelSep;
 
       /// Enable file cache in sampler
       bool m_enableFileCache;
+
+      /// TargetIterations
+      unsigned int m_TargetIterations;
+
+      /// TargetHits
+      unsigned int m_TargetHits;
+
+      /// AbsMaxIts
+      unsigned int m_AbsMaxIts;
+
+      /// AbsMinIts
+      unsigned int m_AbsMinIts;
 
     };
 

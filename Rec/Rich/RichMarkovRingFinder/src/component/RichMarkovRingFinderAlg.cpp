@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.55 2008-06-14 18:15:47 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.56 2008-06-14 23:26:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -50,15 +50,20 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   {
     m_scaleFactor = 0.047/64.0;
   }
-
+  // JOs
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "DumpDataToTextFile",   m_dumpText       = false  );
-  declareProperty( "MinAssociationProb",   m_minAssProb     = 0.05   );
-  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent   = 300    );
+  declareProperty( "MinAssociationProb",   m_minAssProb       = 0.05 );
+  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent     = 300  );
+  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD       = 100  );
   declareProperty( "ScaleFactor",          m_scaleFactor             );
-  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep   = 260     );
-  declareProperty( "EnableFileCache",      m_enableFileCache = true  );
+  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep      = 260  );
+  declareProperty( "EnableFileCache",      m_enableFileCache  = true );
+  declareProperty( "TargetIterations",     m_TargetIterations = 1500 );
+  declareProperty( "TargetHits",           m_TargetHits       = 250  );
+  declareProperty( "AbsMaxIts",            m_AbsMaxIts        = 20000);
+  declareProperty( "AbsMinIts",            m_AbsMinIts        = 500  );
 }
 
 //=============================================================================
@@ -89,11 +94,11 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
   // configure sampler
   m_sampler->configuration.clearAllparams();
   m_sampler->configuration.setParam( "ScaleNumItsByHits", true );
-  m_sampler->configuration.setParam( "TargetIterations", 1000  );
-  m_sampler->configuration.setParam( "TargetHits",       250   );
-  m_sampler->configuration.setParam( "AbsMaxIts",        20000 );
-  m_sampler->configuration.setParam( "AbsMinIts",        400   );
-  m_sampler->configuration.setParam( "EnableFileCache", m_enableFileCache );
+  m_sampler->configuration.setParam( "TargetIterations", m_TargetIterations );
+  m_sampler->configuration.setParam( "TargetHits",       m_TargetHits       );
+  m_sampler->configuration.setParam( "AbsMaxIts",        m_AbsMaxIts        );
+  m_sampler->configuration.setParam( "AbsMinIts",        m_AbsMinIts        );
+  m_sampler->configuration.setParam( "EnableFileCache",  m_enableFileCache  );
   // initialise sampler
   m_sampler->initialise();
 
@@ -349,6 +354,9 @@ bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & i
     input.hits.reserve( range.size() );
     for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
+      // Is this HPD selected ?
+      const unsigned int hitsInHPD = pixelCreator()->range( (*iPix)->hpd() ).size();
+      info() << "Found " << hitsInHPD << " hits in " << (*iPix)->hpd() << endreq;
       // get X and Y
       const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
       const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
