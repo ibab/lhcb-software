@@ -5,15 +5,15 @@
  *  Header file for utility class : Rich::TabulatedFunction1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.10 2007-12-04 13:22:36 jonrob Exp $
+ *  $Id: Rich1DTabFunc.h,v 1.11 2008-06-14 20:43:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
 //============================================================================
 
-#ifndef RICHKERNEL_RICH1DTABFUNC_H
-#define RICHKERNEL_RICH1DTABFUNC_H 1
+#ifndef RICHDET_RICH1DTABFUNC_H
+#define RICHDET_RICH1DTABFUNC_H 1
 
 #include <vector>
 #include <map>
@@ -28,7 +28,7 @@ namespace Rich
 {
 
   //============================================================================
-  /** @class Rich::TabulatedFunction1D Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
+  /** @class Rich::TabulatedFunction1D Rich1DTabFunc.h RichDet/Rich1DTabFunc.h
    *
    *  A class describing a function based on the interpolation of data points.
    *
@@ -420,4 +420,4 @@ namespace Rich
  *  @todo remove this typedef */
 typedef Rich::TabulatedFunction1D Rich1DTabFunc;
 
-#endif // RICHKERNEL_RICH1DTABFUNC_H
+#endif // RICHDET_RICH1DTABFUNC_H

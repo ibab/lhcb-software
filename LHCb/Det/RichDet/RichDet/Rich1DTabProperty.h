@@ -4,14 +4,14 @@
  *  Header file for utility class : Rich::TabulatedProperty1D
  *
  *  CVS Log :-
- *  $Id: Rich1DTabProperty.h,v 1.6 2007-03-02 14:26:57 jonrob Exp $
+ *  $Id: Rich1DTabProperty.h,v 1.7 2008-06-14 20:43:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
 
-#ifndef RICHKERNEL_RICH1DTABPROPERTY_H
-#define RICHKERNEL_RICH1DTABPROPERTY_H 1
+#ifndef RICHDET_RICH1DTABPROPERTY_H
+#define RICHDET_RICH1DTABPROPERTY_H 1
 
 // Base class
 #include "RichDet/Rich1DTabFunc.h"
@@ -25,7 +25,7 @@ class IUpdateManagerSvc;
 namespace Rich
 {
 
-  /** @class TabulatedProperty1D Rich1DTabProperty.h RichKernel/Rich1DTabProperty.h
+  /** @class TabulatedProperty1D Rich1DTabProperty.h RichDet/Rich1DTabProperty.h
    *
    *  A derived class from RichTabulatedFunction1D for tabulated properties
    *
@@ -110,4 +110,4 @@ namespace Rich
  *  @todo remove this typedef */
 typedef Rich::TabulatedProperty1D RichTabulatedProperty1D;
 
-#endif // RICHKERNEL_RICH1DTABPROPERTY_H
+#endif // RICHDET_RICH1DTABPROPERTY_H
