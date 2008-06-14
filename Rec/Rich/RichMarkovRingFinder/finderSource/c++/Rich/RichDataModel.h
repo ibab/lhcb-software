@@ -33,7 +33,7 @@ namespace Lester
         m_richThetaSampler(NULL),
         m_richThetaDistribution(NULL),
         m_richProbabilityThetaAbove(NULL)
-    { }
+    { m_cache.clear(); }
 
     /// Destructor
     ~RichDataModel() { cleanUp(); }

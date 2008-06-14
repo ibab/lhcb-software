@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.54 2008-06-14 16:10:14 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.55 2008-06-14 18:15:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -85,6 +85,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
 
   // make a new sampler
   m_sampler = Lester::getInstance<SAMPLER>();
+
   // configure sampler
   m_sampler->configuration.clearAllparams();
   m_sampler->configuration.setParam( "ScaleNumItsByHits", true );
