@@ -36,9 +36,8 @@ RichSampler<DATAMODEL>::fit(const GenRingF::GenericInput & input) throw (CouldNo
 
     Lester::Data data;
     data.hits.reserve( input.hits.size() );
-    for (GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
-         it != input.hits.end();
-         ++it)
+    for ( GenRingF::GenericInput::GenericHits::const_iterator it = input.hits.begin();
+          it != input.hits.end(); ++it )
     {
       data.hits.push_back(Lester::Hit(it->x(),it->y()));
     }
