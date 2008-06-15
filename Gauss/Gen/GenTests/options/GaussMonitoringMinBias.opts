@@ -1,4 +1,4 @@
-// $Id: GaussMonitoringMinBias.opts,v 1.1.1.1 2008-04-07 11:42:30 robbep Exp $ 
+// $Id: GaussMonitoringMinBias.opts,v 1.2 2008-06-15 15:43:03 robbep Exp $ 
 
 /** @file 
  * 
@@ -36,7 +36,7 @@ GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 ApplicationMgr.HistogramPersistency = "ROOT" ;
-HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "GaussHistos_30000000.root";  // Monitoring histos
 
 #include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 
