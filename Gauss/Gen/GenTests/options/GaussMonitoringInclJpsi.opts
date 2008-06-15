@@ -1,4 +1,4 @@
-// $Id: GaussMonitoringInclJpsi.opts,v 1.1.1.1 2008-04-07 11:42:30 robbep Exp $ 
+// $Id: GaussMonitoringInclJpsi.opts,v 1.2 2008-06-15 17:28:05 robbep Exp $ 
 
 /** @file 
  * 
@@ -13,7 +13,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
 Generator.Members         = { "GenInit/GaussGen" };
 
 GaussGen.FirstEventNumber = 1;
-GaussGen.RunNumber        = 1;
+GaussGen.RunNumber        =35;
 EventClockSvc.FakeEventTime.StartTime   = 0;
 EventClockSvc.FakeEventTime.TimeStep    = 25*ns;
 
