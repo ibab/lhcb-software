@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.62 2008-06-15 11:40:11 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.63 2008-06-15 11:56:26 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -58,7 +58,7 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
     m_scaleFactor      = 0.047/64.0; // CRJ : TO BE CHECKED
     m_minAssProb       = 0.05;
     m_maxHitsEvent     = 300;
-    m_maxHitsHPD       = 30; 
+    m_maxHitsHPD       = 30;
     m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
     m_TargetIterations = 1000;
     m_TargetHits       = 250;
@@ -79,6 +79,8 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   declareProperty( "TargetHits",           m_TargetHits        );
   declareProperty( "AbsMaxIts",            m_AbsMaxIts         );
   declareProperty( "AbsMinIts",            m_AbsMinIts         );
+  // Disable histograms by default
+  setProduceHistos( false );
 }
 
 //=============================================================================
@@ -203,11 +205,24 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
                 << output.timeTaken << " ms" << endreq;
 
       // some plots on fit stats
-      plot1D( output.numIterations, "#iterations", 0, 15000 );
-      plot1D( output.timeTaken,     "time(ms)", 0, 10000 );
-      plot2D( output.numIterations, output.timeTaken, "time(ms) V #iterations", 0, 15000, 0, 10000 );
-      plot2D( input.hits.size(), output.numIterations, "#iterations V #hits", 0, 1500, 0, 15000 );
-      plot2D( input.hits.size(), output.timeTaken, "time(ms) V #hits", 0, 1500, 0, 10000 );
+      if ( produceHistos() )
+      {
+        plot1D( output.numIterations, "#iterations",
+                m_AbsMinIts-0.5, m_AbsMaxIts+0.5, m_AbsMaxIts-m_AbsMinIts+1 );
+        plot1D( output.timeTaken,     "time(ms)", 0, 10000 );
+        plot2D( output.numIterations, output.timeTaken, "time(ms) V #iterations",
+                m_AbsMinIts-0.5, m_AbsMaxIts+0.5,
+                0, 10000,
+                m_AbsMaxIts-m_AbsMinIts+1, 100 );
+        plot2D( input.hits.size(), output.numIterations, "#iterations V #hits",
+                -0.5, m_maxHitsEvent+0.5,
+                m_AbsMinIts-0.5, m_AbsMaxIts+0.5,
+                m_maxHitsEvent+1, m_AbsMaxIts-m_AbsMinIts+1 );
+        plot2D( input.hits.size(), output.timeTaken, "time(ms) V #hits",
+                -0.5, m_maxHitsEvent+0.5,
+                0, 10000,
+                m_maxHitsEvent+1, 100 );
+      }
 
       // finalise the results as TES rings
       const StatusCode saveSc = saveRings(input,output);
