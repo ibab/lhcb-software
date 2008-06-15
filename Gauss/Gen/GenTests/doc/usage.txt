@@ -1,0 +1,6 @@
+List of reference histograms and log files (made with Gauss v26r1)
+
+/castor/cern.ch/user/r/robbep/GaussREF/GaussHistos_30000000.root
+/castor/cern.ch/user/r/robbep/GaussREF/GaussOutput_30000000.txt
+
+
