@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.65 2008-06-15 12:25:27 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.66 2008-06-15 12:27:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -207,8 +207,8 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
       // some plots on fit stats
       if ( produceHistos() )
       {
-        const double maxTime = 2000;
-        const double maxIts  = 2000;
+        const int maxTime = 2000;
+        const int maxIts  = 2000;
         plot1D( output.numIterations, "Number of iterations",
                 -0.5, maxIts+0.5, maxIts+1 );
         plot1D( output.timeTaken,     "Processin time(ms)", 0, maxTime );
