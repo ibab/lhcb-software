@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.63 2008-06-15 11:56:26 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.64 2008-06-15 12:02:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -207,21 +207,33 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
       // some plots on fit stats
       if ( produceHistos() )
       {
-        plot1D( output.numIterations, "#iterations",
+        plot1D( output.numIterations, "Number of iterations",
                 m_AbsMinIts-0.5, m_AbsMaxIts+0.5, m_AbsMaxIts-m_AbsMinIts+1 );
-        plot1D( output.timeTaken,     "time(ms)", 0, 10000 );
-        plot2D( output.numIterations, output.timeTaken, "time(ms) V #iterations",
+        plot1D( output.timeTaken,     "Processin time(ms)", 0, 10000 );
+
+        plot2D( output.numIterations, output.timeTaken, "time(ms) V #iterations | 2D",
                 m_AbsMinIts-0.5, m_AbsMaxIts+0.5,
                 0, 10000,
                 m_AbsMaxIts-m_AbsMinIts+1, 100 );
-        plot2D( input.hits.size(), output.numIterations, "#iterations V #hits",
+        profile1D( output.numIterations, output.timeTaken, "time(ms) V #iterations | Profile",
+                   m_AbsMinIts-0.5, m_AbsMaxIts+0.5,
+                   m_AbsMaxIts-m_AbsMinIts+1 );
+
+        plot2D( input.hits.size(), output.numIterations, "#iterations V #hits | 2D",
                 -0.5, m_maxHitsEvent+0.5,
                 m_AbsMinIts-0.5, m_AbsMaxIts+0.5,
                 m_maxHitsEvent+1, m_AbsMaxIts-m_AbsMinIts+1 );
-        plot2D( input.hits.size(), output.timeTaken, "time(ms) V #hits",
+        profile1D( input.hits.size(), output.numIterations, "#iterations V #hits | Profile",
+                   -0.5, m_maxHitsEvent+0.5,
+                   m_maxHitsEvent+1 );
+
+        plot2D( input.hits.size(), output.timeTaken, "time(ms) V #hits | 2D",
                 -0.5, m_maxHitsEvent+0.5,
                 0, 10000,
                 m_maxHitsEvent+1, 100 );
+        profile1D( input.hits.size(), output.timeTaken, "time(ms) V #hits | 2D",
+                   -0.5, m_maxHitsEvent+0.5,
+                   m_maxHitsEvent+1 );
       }
 
       // finalise the results as TES rings
