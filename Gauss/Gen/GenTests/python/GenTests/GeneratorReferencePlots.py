@@ -92,11 +92,15 @@ class GeneratorLogFile:
     return int(self.TotalAcceptedEvents)
   def signalProcessCrossSection(self):
   #### valid for J/psi (in general for all generation without CP mixture) 
+    if (self.TotalSignalProcessEvents==None):
+      return 0
     return float( float(self.TotalCrossSection) * int(self.TotalSignalProcessEvents) / int(self.TotalInteractions))
   def signalProcessFromBCrossSection(self):
   #### valid for J/psi (in general for all generation without CP mixture)
     return float( float(self.TotalCrossSection) * int(self.TotalSignalProcessFromBEvents) / int(self.TotalInteractions))
   def generatorLevelCutEfficiency(self):
+    if ( self.TotalEventsAfterCut == None or self.TotalZInvertedEvents == None or self.TotalSignalProcessEvents == None ):
+      return 0
     return float( ( int(self.TotalEventsAfterCut) - int(self.TotalZInvertedEvents) ) / float( self.TotalSignalProcessEvents) )
   def timePerEvent( self ):
     print self.TotalTime
@@ -120,7 +124,7 @@ class GeneratorHisto:
   def fileName(self):
     return self.FileName+".eps"
   def compFileName(self):
-    return "Comp"+self.FileName+".eps"    
+    return "Comp"+self.FileName+".jpg"    
     
   def plot(self):
     self.referenceHisto.GetXaxis().SetTitle( self.XTitle) 
@@ -135,7 +139,7 @@ class GeneratorHisto:
       gPad.SetLogy()
     else:
       gPad.SetLogy(0)
-    self.referenceHisto.Draw('') 
+    self.referenceHisto.DrawNormalized('') 
     self.canvas.Update()
     self.canvas.Print(self.refFileName())  
 #
@@ -151,11 +155,11 @@ class GeneratorHisto:
       gPad.SetLogy()
     else:
       gPad.SetLogy(0)
-    self.compHisto.Draw('') 
+    self.compHisto.DrawNormalized('') 
     self.canvas.Update()
     self.canvas.Print(self.fileName())            
 #
-    self.referenceHisto.Draw('SAME')
+    self.referenceHisto.DrawNormalized('SAME')
     self.canvas.Update()
     self.canvas.Print(self.compFileName())     
     
@@ -469,20 +473,20 @@ def main():
   if options.verbose:
     print "Compare with histogram file: " + options.HistoName
   aFile = TFile( options.HistoName ) 
-  Int = gDirectory.Get( 'GeneratorAnalysis/h150' )
-  PrimaryVtxX = gDirectory.Get( 'GeneratorAnalysis/h101' ) 
-  PrimaryVtxY = gDirectory.Get( 'GeneratorAnalysis/h102' ) 
-  PrimaryVtxZ = gDirectory.Get( 'GeneratorAnalysis/h103' ) 
-  Multiplicity = gDirectory.Get( 'GeneratorAnalysis/h201' ) 
-  Pseudorap = gDirectory.Get( 'GeneratorAnalysis/h202' ) 
-  Pt = gDirectory.Get( 'GeneratorAnalysis/h207' ) 
-  Process = gDirectory.Get( 'GeneratorAnalysis/h109' ) 
-  MultInLHCb = gDirectory.Get( 'GeneratorAnalysis/h301' ) 
-  PtInLHCb = gDirectory.Get( 'GeneratorAnalysis/h307' ) 
-  BHadFrac = gDirectory.Get( 'GeneratorAnalysis/h1000' ) 
-  BHadSpin = gDirectory.Get( 'GeneratorAnalysis/h1001' ) 
-  NeutralMultiplicity = gDirectory.Get( 'GeneratorAnalysis/h501' ) 
-  NeutralEnergy = gDirectory.Get( 'GeneratorAnalysis/h503' ) 
+  Int = gDirectory.Get( 'GeneratorAnalysis/150' )
+  PrimaryVtxX = gDirectory.Get( 'GeneratorAnalysis/101' ) 
+  PrimaryVtxY = gDirectory.Get( 'GeneratorAnalysis/102' ) 
+  PrimaryVtxZ = gDirectory.Get( 'GeneratorAnalysis/103' ) 
+  Multiplicity = gDirectory.Get( 'GeneratorAnalysis/201' ) 
+  Pseudorap = gDirectory.Get( 'GeneratorAnalysis/202' ) 
+  Pt = gDirectory.Get( 'GeneratorAnalysis/207' ) 
+  Process = gDirectory.Get( 'GeneratorAnalysis/109' ) 
+  MultInLHCb = gDirectory.Get( 'GeneratorAnalysis/301' ) 
+  PtInLHCb = gDirectory.Get( 'GeneratorAnalysis/307' ) 
+  BHadFrac = gDirectory.Get( 'GeneratorAnalysis/1000' ) 
+  BHadSpin = gDirectory.Get( 'GeneratorAnalysis/1001' ) 
+  NeutralMultiplicity = gDirectory.Get( 'GeneratorAnalysis/501' ) 
+  NeutralEnergy = gDirectory.Get( 'GeneratorAnalysis/503' ) 
   
   c1 = TCanvas( 'c1' , 'Gauss' , 200 , 10 , 800 , 800 ) 
   
@@ -545,14 +549,14 @@ def main():
   
   ####################################################################
   multiplicityInLHCbRefHist = GeneratorHisto( c1 , MultInLHCbREF , MultInLHCb ,
-    "N(charged particles)" , "N/5" , "Multiplicity of chargted particles in LHCb" ,
+    "N(charged particles)" , "N/5" , "Multiplicity of charged particles in LHCb" ,
     "MultiplicityInLHCb" , True )
   multiplicityInLHCbRefHist.plot()
   webPage.addPlot(multiplicityInLHCbRefHist)
   
   ####################################################################
   ptInLHCbRefHist = GeneratorHisto( c1 , PtInLHCbREF , PtInLHCb ,
-    "p_{T} (GeV/c)" , "N/40 MeV/c" , "p_{T} of chargted particles in LHCb" ,
+    "p_{T} (GeV/c)" , "N/40 MeV/c" , "p_{T} of charged particles in LHCb" ,
     "PtInLHCb" , True )
   ptInLHCbRefHist.plot()
   webPage.addPlot(ptInLHCbRefHist)
