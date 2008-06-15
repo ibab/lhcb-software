@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.61 2008-06-15 11:37:41 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.62 2008-06-15 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -34,7 +34,6 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
                                                            const Rich::Side         panel,
                                                            const Rich::RadiatorType rad )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
-    m_ckAngle           ( NULL  ),
     m_smartIDTool       ( NULL  ),
     m_rich              ( rich  ),
     m_panel             ( panel ),
@@ -98,7 +97,6 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle     );
   acquireTool( "RichSmartIDTool",    m_smartIDTool );
 
   // Intercept initialisation messages from MC code

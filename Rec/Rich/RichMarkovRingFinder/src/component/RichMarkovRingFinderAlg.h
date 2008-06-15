@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.37 2008-06-14 23:26:11 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.38 2008-06-15 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -27,7 +27,6 @@
 #include "RichRecBase/RichRecHistoAlgBase.h"
 
 // interfaces
-#include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
 // boost
@@ -134,7 +133,6 @@ namespace Rich
     private: // data
 
       // tool pointers
-      const ICherenkovAngle * m_ckAngle;  ///< Pointer to Cherenkov angle tool
       const ISmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
 
       const Rich::DetectorType m_rich;  ///< Which RICH Detector
