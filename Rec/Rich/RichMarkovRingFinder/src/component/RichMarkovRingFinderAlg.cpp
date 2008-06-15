@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.60 2008-06-15 11:17:34 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.61 2008-06-15 11:37:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -33,7 +33,7 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
                                                            const Rich::DetectorType rich,
                                                            const Rich::Side         panel,
                                                            const Rich::RadiatorType rad )
-  : RichRecHistoAlgBase ( name , pSvcLocator ),
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_ckAngle           ( NULL  ),
     m_smartIDTool       ( NULL  ),
     m_rich              ( rich  ),
@@ -41,29 +41,45 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
     m_rad               ( rad   ),
     m_sampler           ( NULL  )
 {
-  // Set RICH / radiator specific parameters
-  if ( rich == Rich::Rich2 )
+  // Set RICH specific parameters
+  if ( Rich::Rich2 == rich )
   {
-    m_scaleFactor = 0.0283/128.0;
+    m_scaleFactor      = 0.0283/128.0;
+    m_minAssProb       = 0.05;
+    m_maxHitsEvent     = 300;
+    m_maxHitsHPD       = 30;
+    m_maxPixelSep      = 260;
+    m_TargetIterations = 1000;
+    m_TargetHits       = 250;
+    m_AbsMaxIts        = 20000;
+    m_AbsMinIts        = 400;
   }
   else
   {
-    m_scaleFactor = 0.047/64.0;
+    m_scaleFactor      = 0.047/64.0; // CRJ : TO BE CHECKED
+    m_minAssProb       = 0.05;
+    m_maxHitsEvent     = 300;
+    m_maxHitsHPD       = 30; 
+    m_maxPixelSep      = 150; // CRJ : TO BE CHECKED
+    m_TargetIterations = 1000;
+    m_TargetHits       = 250;
+    m_AbsMaxIts        = 20000;
+    m_AbsMinIts        = 400;
   }
   // JOs
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
-  declareProperty( "DumpDataToTextFile",   m_dumpText       = false  );
-  declareProperty( "MinAssociationProb",   m_minAssProb       = 0.05 );
-  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent     = 300  );
-  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD       = 50   );
-  declareProperty( "ScaleFactor",          m_scaleFactor             );
-  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep      = 260  );
-  declareProperty( "EnableFileCache",      m_enableFileCache  = true );
-  declareProperty( "TargetIterations",     m_TargetIterations = 1000 );
-  declareProperty( "TargetHits",           m_TargetHits       = 250  );
-  declareProperty( "AbsMaxIts",            m_AbsMaxIts        = 20000);
-  declareProperty( "AbsMinIts",            m_AbsMinIts        = 400  );
+  declareProperty( "DumpDataToTextFile",   m_dumpText        = false );
+  declareProperty( "EnableFileCache",      m_enableFileCache = true  );
+  declareProperty( "MinAssociationProb",   m_minAssProb        );
+  declareProperty( "MaxHitsInEvent",       m_maxHitsEvent      );
+  declareProperty( "MaxHitsInHPD",         m_maxHitsHPD        );
+  declareProperty( "ScaleFactor",          m_scaleFactor       );
+  declareProperty( "MaxPixelDistFromRing", m_maxPixelSep       );
+  declareProperty( "TargetIterations",     m_TargetIterations  );
+  declareProperty( "TargetHits",           m_TargetHits        );
+  declareProperty( "AbsMaxIts",            m_AbsMaxIts         );
+  declareProperty( "AbsMinIts",            m_AbsMinIts         );
 }
 
 //=============================================================================
@@ -88,8 +104,11 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
   // Intercept initialisation messages from MC code
   Lester::messHandle().declare(this);
 
-  // make a new sampler
-  m_sampler = Lester::getInstance<SAMPLER>();
+  // Only allow one instance of each sampler type
+  // Note : with this method we should NOT delete the sampler when finishing
+  //m_sampler = Lester::getInstance<SAMPLER>();
+  // Each instance of this algorithm has its own sampler. Must delete when finished
+  m_sampler = new SAMPLER();
 
   // configure sampler
   m_sampler->configuration.clearAllparams();
@@ -99,6 +118,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
   m_sampler->configuration.setParam( "AbsMaxIts",        m_AbsMaxIts        );
   m_sampler->configuration.setParam( "AbsMinIts",        m_AbsMinIts        );
   m_sampler->configuration.setParam( "EnableFileCache",  m_enableFileCache  );
+
   // initialise sampler
   m_sampler->initialise();
 
@@ -114,6 +134,13 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
 template < class SAMPLER >
 StatusCode RichMarkovRingFinderAlg<SAMPLER>::finalize()
 {
+  // Intercept finalisation messages from MC code
+  Lester::messHandle().declare(this);
+  // clean up
+  delete m_sampler;
+  m_sampler = NULL;
+  // No longer want messages
+  Lester::messHandle().declare(NULL);
   // return
   return RichRecHistoAlgBase::finalize();
 }
