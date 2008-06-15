@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.58 2008-06-14 23:39:44 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.59 2008-06-15 11:16:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -148,10 +148,6 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::richInit()
   // Make sure RichRecPixels are available
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
   debug() << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
-
-  // Make sure RichRecTracks and RichRecSegments are available
-  if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
-  debug() << "Found " << richTracks()->size() << " RichRecTracks" << endreq;
 
   return StatusCode::SUCCESS;
 }
