@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v31r1   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v31r2   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: only a fraction available for release on Win32

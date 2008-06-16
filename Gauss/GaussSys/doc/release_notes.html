@@ -3,9 +3,40 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v31r2">2008-06-16 - GaussSys v31r2</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
+   head-20080603 and -head-20060516.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r7 (and Gaudi v19r9)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.1 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   Geant4 v83r2 (based on geant4.8.3.patch02)
+   <b>DecFiles v14r4</b>, ParamFiles v7r1 
+   DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
+<H3><A NAME="Exe">Used by GaussXXX executables:
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   <b>pythia8 107.1</b></A></H3>
+<H3><A NAME="Details">
+   Development version.
+   Partially built on Win32, all generators still not built on win to test
+   new builds by LCG.
+</A></H3>
+!======================== Gauss v31r2 2008-06-16 =============================
+! 2008-06-16 - Gloria CORTI
+ - Build with latest LHCb and geometry.
+   Use latest DDDB and LHCBCOND tags: head-20080603 (head-20080516 still works)
+   . lhcb-2008.opts
+ - Require top algorithm "Gauss" to be succesful to write event to tape. It
+   was "Simulation". This implies that a filter can also be put at generator
+   level for global events and is possible since introduction in v30r5 of
+   "Gauss" sequencer.
+
+!=============================================================================
 </PRE><H1><A NAME="v31r1">2008-06-11 - GaussSys v31r1</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support only latest geometry tag
-   head-20060516. Remove LHCbDefinitions.
+   head-20080516. Remove LHCbDefinitions.
     </A></H2>
 <H3><A NAME="Use">This version uses:
    <b>LHCb v23r6 (and Gaudi v19r9)</b>
