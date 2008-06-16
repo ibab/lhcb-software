@@ -38,7 +38,8 @@
       </constructor>
       <constructor argList='int id' 
                    initList = 'm_channelID(id)'
-                   desc='constructor with int'>
+                   desc='constructor with int'
+                   explicit = "TRUE" >
         <code></code>
       </constructor>
 

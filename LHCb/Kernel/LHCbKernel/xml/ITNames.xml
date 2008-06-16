@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='STKernel'>
+<!-- ****************************************************************
+     * ITNames                                                      *
+     ****************************************************************-->
+
+    <class
+      author="M Needham"
+      desc="" 
+      name="ITNames" 
+      virtual = "FALSE"
+    >   
+
+    <import name = "Kernel/STChannelID"/>
+
+       <enum
+        desc="Station names"
+        name="Station"
+        unknownValue="UnknownStation" 
+        strTypConv = "TRUE" 
+        value="UnknownStation=0, IT1 = 1, IT2 = 2, IT3 = 3"
+        access="PUBLIC"
+       />
+ 
+       <enum
+        desc="Box names"
+        name="Box"
+        strTypConv = "TRUE" 
+        unknownValue="UnknownBox" 
+        value="UnknownBox=0, ASide = 1, CSide = 2, Bottom = 3, Top = 4"
+        access="PUBLIC"
+       />
+
+       <enum
+        desc="Layer names"
+        name="Layer"
+        strTypConv = "TRUE" 
+        unknownValue="UnknownLayer" 
+        value="UnknownLayer=0, X1=1, U=2, V=3, X2=4"
+        access="PUBLIC"
+       /> 
+
+      <method 
+       name = "detector"
+       type = "std::string"
+       desc = "detector name"
+      >
+       <code> return "IT" ; </code>
+     </method>
+
+      <method
+        name = "StationToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "station string from id"
+       > 
+        <code> return StationToString(chan.station());</code>
+      </method>
+
+      <method
+        name = "BoxToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "box string from id"
+       > 
+        <code> return BoxToString(chan.detRegion());</code>
+      </method>
+
+      <method
+        name = "LayerToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "layer string from id"
+       > 
+        <code> return LayerToString(chan.layer());</code>
+      </method>
+
+      <method
+        name = "UniqueBoxToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique box string from id"
+       > 
+        <code> return StationToString(chan.station()) + 
+                      BoxToString(chan.detRegion());
+        </code>
+      </method>
+
+      <method
+        name = "UniqueLayerToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique layer string from id"
+       > 
+        <code> return StationToString(chan.station()) + 
+                      BoxToString(chan.detRegion()) +
+                      LayerToString(chan.layer());
+        </code>
+      </method>
+
+      <method
+        name = "UniqueSectorToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique sector string from id"> 
+
+      </method>
+
+    
+
+     </class>
+  </package>
+</gdd>

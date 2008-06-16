@@ -108,7 +108,7 @@ m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the VeloChannelID">
 	 <code>
-return ( isVelo() ? m_lhcbID &amp; IDMask : 0xF0000000);
+return ( isVelo() ? LHCb::VeloChannelID(m_lhcbID &amp; IDMask) : LHCb::VeloChannelID(0xF0000000));
          </code>
        </method>
 
@@ -158,7 +158,7 @@ m_lhcbID = (stType   &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the STChannelID">
 	 <code>
-return ( isST() ? (m_lhcbID &amp; IDMask ) : 0xF0000000);
+return ( isST() ? LHCb::STChannelID(m_lhcbID &amp; IDMask ) : LHCb::STChannelID(0xF0000000));
          </code>
        </method>
 
@@ -186,7 +186,7 @@ return (OT == detectorType());
          const = 'TRUE'
          desc="return the OTChannelID">
 	 <code>
-return (isOT() ? m_lhcbID &amp; IDMask : 0xF0000000 );
+return (isOT() ? LHCb::OTChannelID(m_lhcbID &amp; IDMask) : LHCb::OTChannelID(0xF0000000 ));
          </code>
        </method>
 

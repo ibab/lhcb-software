@@ -3,10 +3,15 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2008-06-16  M Needham
+ - Add TTNames.xml, ITNames.xml [turn STChannelID into 
+   readable names, provide some enums for parts of the detector]
+ - Make STChannelID constructor from int explicit
+ - Clean up some implicit conversions in LHCbID class
+
 ! 2008-06-10 - Gerhard Raven
  - add FPEGuard to Kernel: allows to enable/disable trapping of floating
    point exceptions
-
 !===================== LHCbKernel v8r4 2008-05-05 ========================
 ! 2008-05-05 - Gerhard Raven
  - add 'numberOfPieces' and 'print' to PiecewiseTrajectory

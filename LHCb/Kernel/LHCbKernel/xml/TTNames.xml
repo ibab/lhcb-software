@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='STKernel'>
+<!-- ****************************************************************
+     * ITNames                                                      *
+     ****************************************************************-->
+
+    <class
+      author="M Needham"
+      desc="" 
+      name="TTNames" 
+      virtual = "FALSE"
+    >   
+
+    <import name = "Kernel/STChannelID"/>
+
+       <enum
+        desc="Station names"
+        name="Station"
+        unknownValue="UnknownStation" 
+        strTypConv = "TRUE" 
+        value="UnknownStation=0, TTa = 1, TTb = 2"
+        access="PUBLIC"
+       />
+ 
+       <enum
+        desc="Region names"
+        name="detRegion"
+        strTypConv = "TRUE" 
+        unknownValue="UnknownRegion" 
+        value="UnknownRegion=0, RegionA=1, RegionB=2, RegionC=3"
+        access="PUBLIC"
+       />
+
+      <method 
+       name = "detector"
+       type = "std::string"
+       desc = "detector name"
+      >
+       <code> return "TT" ; </code>
+     </method>
+
+      <method
+        name = "StationToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "station string from id"
+       > 
+        <code> return StationToString(chan.station());</code>
+      </method>
+
+      <method
+        name = "UniqueRegionToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique box string from id"
+       > 
+        <code> return UniqueLayerToString(chan) + 
+                      detRegionToString(chan.detRegion());
+        </code>
+      </method>
+
+      <method
+        name = "UniqueLayerToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique layer string from id"
+       >
+      </method>
+
+      <method
+        name = "UniqueSectorToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "unique sector string from id"> 
+
+      </method>
+
+  
+     </class>
+  </package>
+</gdd>
