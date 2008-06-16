@@ -5,6 +5,7 @@
 #include "HistogramIdentifier.h"
 #include "OMAlib/OMAlib.h"
 #include "dic.hxx"
+#include "presenter.h"
 
 #include <TH1.h>
 #include <TPad.h>
@@ -26,7 +27,8 @@ class DbRootHist : public HistogramIdentifier
                int instance,
                OnlineHistDB* histogramDB,
                OMAlib* analysisLib,
-               OnlineHistogram* onlineHist);
+               OnlineHistogram* onlineHist,
+               pres::MsgLevel verbosity);
 
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
@@ -34,7 +36,7 @@ class DbRootHist : public HistogramIdentifier
     virtual ~DbRootHist();
 
 //    virtual bool setdbHist(OnlineHistogram*  oh);
-
+    void setVerbosity(const pres::MsgLevel & verbosity) { m_verbosity = verbosity; }
     // Binning is only known from DIM, so create ROOT histo with DIM
     void initHistogram();
 
@@ -50,11 +52,12 @@ class DbRootHist : public HistogramIdentifier
     void enableClear();
     void disableClear();
     void beEmptyHisto();
+    void beRegularHisto() { m_isEmptyHisto = false; }
     bool isEmptyHisto() { return m_isEmptyHisto; }
     bool isCleared() { return m_cleared; }
 
     std::string histoRootName() {return std::string(m_histoRootName.Data());}
-    std::string hstype() { return m_hstype; }
+//    std::string hstype() { return m_hstype; }
     int instance() { return m_instance; }
     void setDimServiceName(std::string newDimServiceName);
     bool isAnaHist() { return m_isAnaHist;}
@@ -121,8 +124,6 @@ class DbRootHist : public HistogramIdentifier
 
     // DIM regular time interval
     int  m_refreshTime;
-    // dimbuffer
-    float*  m_histoDimData;
     // overloaded from DimInfo
     // generated ROOT histo name for identification
     TString   m_histoRootName;
@@ -132,8 +133,8 @@ class DbRootHist : public HistogramIdentifier
 //    bool      m_toRefresh;
     // flag for clear/integrate
     bool  m_cleared;
-    std::string m_hstype;
-    std::string m_hname;
+//    std::string m_hstype;
+//    std::string m_hname;
     int m_instance;
     int m_waitTime;
     int m_msgBoxReturnCode;
@@ -150,6 +151,7 @@ class DbRootHist : public HistogramIdentifier
     std::string m_dataType;
     std::string m_dimServiceName;
     DimInfo* m_dimInfo;
+    pres::MsgLevel m_verbosity;
 
     void cleanAnaSources();
     void loadAnaSources();
