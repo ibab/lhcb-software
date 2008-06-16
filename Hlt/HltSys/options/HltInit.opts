@@ -27,29 +27,7 @@ HltANNSvc.SelectionID = {
     "CalEntry"                   :  400,
     "CalL0Conf"                  :  402,
     "CalPreTrigger"              :  404,
-    "CalTrigger"                 :  406,
-
-    "HltSelEntry"                : 1000,
-    "HltSelSingleMuon"           : 1001,
-    "HltSelUnbiasedDiMuon"       : 1002,
-    "HltSelBiasedDiMuon"         : 1003,
-    "HltSelDstar"                : 1004,
-    "HltSelB2DiMuon"             : 1005,
-    "HltSelB2DiElectron"         : 1006,
-    "HltSelBd2MuMuKstar"         : 1007,
-    "HltSelB2JpsiX_MuMu"         : 1008,
-    "HltSelBu2LLK"               : 1009,
-    "HltSelB2HH"                 : 1010,
-    "HltSelBd2DstarPi"           : 1011,
-    "HltSelBd2D0Kstar"           : 1012,
-    "HltSelBs2DsH"               : 1013,
-    "HltSelBs2PhiGamma"          : 1014,
-    "HltSelBs2PhiPhi"            : 1015,
-    "HltSelBs2DsDs"              : 1016,
-    "HltSelB2DstarMu"            : 1017,
-    "HltSelBd2PiPiPi"            : 1018,
-    "HltSelBu2D0K_KsHH"          : 1019,
-    "HltSelBd2D0Kstar_KsHH"      : 1020
+    "CalTrigger"                 :  406
 };
 
 HltANNSvc.InfoID = {
