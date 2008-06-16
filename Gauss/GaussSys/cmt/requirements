@@ -74,6 +74,9 @@ use BcmMoniSim          v1r1      Bcm
 # Visualization configuration
 use XmlVis              v1r5      Vis
 
+# Test packages for new releases or installations on new platforms
+use GenTests            v1r0      Gen
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
+
