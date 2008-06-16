@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.9 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeSTLayer.h,v 1.10 2008-06-16 14:24:03 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -80,9 +80,15 @@ public:
   */
   Gaudi::Plane3D plane() const; 
 
+  /** 
+  * Nickname for the layer
+  **/
+  const std::string& nickname() const;
+
 protected:
 
   Sectors m_sectors;
+  std::string m_nickname;
 
 private:
 
@@ -140,8 +146,9 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTLayer* aLayer )
 inline MsgStream& operator<<( MsgStream& os , const DeSTLayer* aLayer )
 { return aLayer->printOut( os ); }
 
-
-
+inline const std::string& DeSTLayer::nickname() const{
+  return m_nickname;
+}
 
 #endif // _DeSTLayer_H
 

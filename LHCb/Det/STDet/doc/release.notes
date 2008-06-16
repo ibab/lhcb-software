@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.132 2008-05-29 11:40:51 cattanem Exp $
+!$Id: release.notes,v 1.133 2008-06-16 14:24:03 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-06-16 M Needham
+ - Add nickname to detector elements
 
 !======================== STDet v4r1 2008-05-29 ==========================
 ! 2008-05-29 - Marco Cattaneo

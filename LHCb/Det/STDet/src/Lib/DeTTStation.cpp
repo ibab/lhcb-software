@@ -2,6 +2,7 @@
 #include "STDet/DeTTStation.h"
 #include "STDet/DeTTDetector.h"
 #include "STDet/DeTTLayer.h"
+#include "Kernel/TTNames.h"
 
 //STL
 #include <algorithm>
@@ -54,6 +55,7 @@ StatusCode DeTTStation::initialize() {
 
    STChannelID aChan(STChannelID::typeTT, this->id(),0,0,0,0);
    setElementID(aChan); 
+   m_nickname = TTNames().StationToString(aChan);
 
    // get the children 
    m_layers = getChildren<DeTTStation>();

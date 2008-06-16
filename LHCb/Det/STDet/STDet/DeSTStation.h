@@ -1,4 +1,4 @@
-// $Id: DeSTStation.h,v 1.3 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeSTStation.h,v 1.4 2008-06-16 14:24:03 mneedham Exp $
 #ifndef _DeSTStation_H_
 #define _DeSTStation_H_
 
@@ -59,9 +59,19 @@ public:
   */
   bool contains(const LHCb::STChannelID aChannel) const;
 
+  /** 
+  * Nickname for the station
+  **/
+  const std::string& nickname() const ;
+
+ protected:
+
+ std::string m_nickname; 
+
  private:
 
   unsigned int m_id;
+ 
 };
 
 inline unsigned int DeSTStation::id() const{
@@ -70,6 +80,10 @@ inline unsigned int DeSTStation::id() const{
 
 inline bool DeSTStation::contains(const LHCb::STChannelID aChannel) const{
   return elementID().station() == aChannel.station();
+}
+
+inline const std::string& DeSTStation::nickname() const{
+  return m_nickname;
 }
 
 /** ouput operator for class DeSTStation
@@ -90,5 +104,6 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTStation* aStation 
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTStation* aStation )
 { return aStation->printOut( os ); }
+
 
 #endif // _DeSTStation_H

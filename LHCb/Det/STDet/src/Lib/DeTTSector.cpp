@@ -4,6 +4,8 @@
 #include "STDet/DeSTSensor.h"
 #include "STDet/STDetFun.h"
 
+#include "Kernel/TTNames.h"
+
 /** @file DeTTSector.cpp
 *
 *  Implementation of class :  DeTTSector
@@ -81,6 +83,8 @@ StatusCode DeTTSector::initialize() {
                      parentID.detRegion(),  id(), 0);
     setElementID(chan);
 
+    m_nickname = TTNames().UniqueSectorToString(chan); 
+
     std::vector<DeTTSensor*> sensors = getChildren<DeTTSector>();
     std::sort(sensors.begin(),sensors.end(),STDetFun::SortByY());
     std::vector<DeTTSensor*>::iterator iterS = sensors.begin();  
@@ -105,6 +109,7 @@ StatusCode DeTTSector::initialize() {
   return StatusCode::SUCCESS;
 }
 
-inline unsigned int DeTTSector::prodID() const{
+unsigned int DeTTSector::prodID() const{
   return m_parent->prodID();
 }
+

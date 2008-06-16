@@ -14,6 +14,7 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include "Kernel/ITNames.h"
 
 using namespace LHCb;
 using namespace boost::lambda;
@@ -46,6 +47,7 @@ StatusCode DeITLayer::initialize() {
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(STChannelID::typeIT, parentID.station(), id(), parentID.detRegion(), 0, 0);
     setElementID(chan);
+    m_nickname = ITNames().UniqueLayerToString(chan);
     m_ladders = getChildren<DeITLayer>();
     flatten();
   }
@@ -76,5 +78,6 @@ void DeITLayer::flatten() {
    m_sectors.push_back(tSector);  
  } //sectors     
 
-
 }
+
+

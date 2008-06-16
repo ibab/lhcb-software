@@ -5,6 +5,7 @@
 
 #include "DetDesc/IGeometryInfo.h"
 
+#include "Kernel/TTNames.h"
 
 //STL
 #include <algorithm>
@@ -56,6 +57,7 @@ StatusCode DeTTLayer::initialize() {
     setElementID(chan);
     m_modules = getChildren<DeTTLayer>();
     flatten();
+    m_nickname = TTNames().UniqueLayerToString(chan);
   }
   return sc;
 }

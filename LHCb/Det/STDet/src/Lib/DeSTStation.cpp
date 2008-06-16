@@ -16,7 +16,6 @@ DeSTStation::DeSTStation( const std::string& name ) :
   DeSTBaseElement( name )
 { 
   // constructer 
-  //  m_id = (unsigned int)param<int>("stationID");
 }
 
 DeSTStation::~DeSTStation() {
@@ -42,7 +41,8 @@ StatusCode DeSTStation::initialize() {
 std::ostream& DeSTStation::printOut( std::ostream& os ) const{
 
   // stream to cout
-  os << " Station : "  << m_id 
+  os << " Station: "  << m_id << std::endl;
+  os   << " Nickname: " << m_nickname 
      << std::endl;
 
   return os;
@@ -51,8 +51,8 @@ std::ostream& DeSTStation::printOut( std::ostream& os ) const{
 MsgStream& DeSTStation::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Station : "  << m_id 
-     << endreq;
+  os << " Station : "  << m_id << endreq;
+  os   << " Nickname: " << m_nickname << endreq;
 
   return os;
 }

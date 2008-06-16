@@ -4,6 +4,8 @@
 #include "STDet/DeITLadder.h"
 #include "STDet/STDetFun.h"
 
+#include "Kernel/ITNames.h"
+
 /** @file DeITSector.cpp
 *
 *  Implementation of class :  DeITSector
@@ -48,6 +50,7 @@ StatusCode DeITSector::initialize() {
 
     STChannelID parentID = m_parent->elementID();
     setElementID(parentID);
+    m_nickname = ITNames().UniqueSectorToString(parentID);
 
     // build the id
     setID(parentID.sector());

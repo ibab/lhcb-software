@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.27 2008-05-29 11:40:51 cattanem Exp $
+// $Id: DeSTSector.h,v 1.28 2008-06-16 14:24:03 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -49,6 +49,9 @@ public:
     Open = 1,
     Short = 2, 
     Pinhole = 3,
+    ReadoutProblems = 4,
+    LowGain = 5, 
+    Noisy = 6,
     OtherFault = 9,
     Dead = 10
   };
@@ -236,6 +239,11 @@ public:
   bool globalInBondGap(const Gaudi::XYZPoint& point,
                        double tol = 0) const;
 
+  /**
+  * Nickname for the sensor 
+  **/
+  const std::string& nickname() const ; 
+
 protected:
 
   StatusCode registerConditionsCallbacks();
@@ -243,6 +251,7 @@ protected:
 
   Sensors m_sensors;
   double m_thickness;
+  std::string m_nickname;
 
 private:
 
@@ -281,7 +290,7 @@ private:
   mutable StatusMap m_stripStatus;
   std::string m_statusString;
   std::string m_versionString;
-
+ 
 };
 
 inline unsigned int DeSTSector::id() const{
@@ -350,7 +359,7 @@ inline void DeSTSector::trajectory(unsigned int strip,
                                    double& xAtYEq0, double& zAtYEq0,
                                    double& ybegin, double& yend) const
 {
-  double numstrips = offset + strip - m_firstStrip ;
+  const double numstrips = offset + strip - m_firstStrip ;
   dxdy    = m_dxdy ;
   dzdy    = m_dzdy ;
   xAtYEq0 = m_p0.x() + numstrips * m_dp0di.x() ;
@@ -455,6 +464,10 @@ inline std::ostream& operator<<( std::ostream& os , const DeSTSector* aSector )
  */
 inline MsgStream& operator<<( MsgStream& os , const DeSTSector* aSector )
 { return aSector->printOut( os ); }
+
+inline const std::string& DeSTSector::nickname() const{
+  return m_nickname;
+}
 
 #include "STDet/StatusMap.h"
  

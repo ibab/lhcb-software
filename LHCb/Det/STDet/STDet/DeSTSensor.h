@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.2 2008-05-29 11:40:51 cattanem Exp $
+// $Id: DeSTSensor.h,v 1.3 2008-06-16 14:24:03 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -147,7 +147,7 @@ public:
   * @return double activeWidth
   **/
   double activeWidth() const;
- 
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 

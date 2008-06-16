@@ -1,4 +1,4 @@
-// $Id: DeITBox.h,v 1.4 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeITBox.h,v 1.5 2008-06-16 14:24:03 mneedham Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_
 
@@ -86,12 +86,15 @@ public:
    /** print to msgstream */
    MsgStream& printOut( MsgStream& os) const;
 
+   /** Nickname for the box **/   
+   const std::string& nickname() const;
+
 private:
 
    Children m_layers;
    parent_type* m_parent;
    unsigned int m_id;
-
+   std::string m_nickname;
 };
 
 
@@ -131,8 +134,11 @@ inline std::ostream& operator<<( std::ostream& os , const DeITBox* aBox )
 inline MsgStream& operator<<( MsgStream& os , const DeITBox* aBox )
 { return aBox->printOut( os ); }
 
-#endif // _DeITBox_H
+inline const std::string& DeITBox::nickname() const{
+  return m_nickname;
+} 
 
+#endif // _DeITBox_H
 
 
 

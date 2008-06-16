@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.39 2008-05-09 07:36:09 cattanem Exp $
+// $Id: DeSTSector.cpp,v 1.40 2008-06-16 14:24:04 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -49,7 +49,8 @@ DeSTSector::~DeSTSector() {
 std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
   // stream to cout  
-  os << " Sector :  "  << name()
+  os << " Sector :  "  << name() << std::endl;
+  os   << " Nickname: " << m_nickname 
       << "\n ID " << id() 
       << "\n layer " << elementID().layer()
      << "\n type  " << type() 
@@ -65,7 +66,8 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 MsgStream& DeSTSector::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Sector : \n "  << name()
+  os << " Sector : \n "  << name() << std::endl;
+  os   << " Nickname: " << m_nickname 
      << "\n ID " << id() 
      << "type \n " << type() 
      << " pitch \n " << m_pitch 

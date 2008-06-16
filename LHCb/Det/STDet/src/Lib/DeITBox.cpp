@@ -1,6 +1,7 @@
 
 #include "STDet/DeITLayer.h"
 #include "STDet/DeITBox.h"
+#include "Kernel/ITNames.h"
 
 /** @file DeITBox.cpp
 *
@@ -50,6 +51,9 @@ StatusCode DeITBox::initialize() {
                      m_id, 0, 0);
     setElementID(chan);
     m_layers = getChildren<DeITBox>();
+
+    m_nickname = ITNames().UniqueBoxToString(chan);
+
   }
   return sc;
 }
@@ -59,6 +63,7 @@ std::ostream& DeITBox::printOut( std::ostream& os ) const{
   // stream to cout
   os << " Box : "  << name() 
      << " id " << id() 
+     << " nickname " << nickname()
      << std::endl;
 
   return os;
@@ -69,6 +74,7 @@ MsgStream& DeITBox::printOut( MsgStream& os ) const{
   // stream to Msg service
   os << " Box : "  << name() 
      << " id " << id() 
+     << " nickname " << nickname()  
      << std::endl;
 
   return os;

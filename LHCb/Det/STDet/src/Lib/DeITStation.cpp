@@ -3,6 +3,8 @@
 #include "STDet/DeITDetector.h"
 #include "STDet/DeITBox.h"
 
+#include "Kernel/ITNames.h"
+
 /** @file DeITStation.cpp
 *
 *  Implementation of class :  DeITStation
@@ -48,6 +50,7 @@ StatusCode DeITStation::initialize() {
     m_parent = getParent<DeITStation>();
     STChannelID aChan(STChannelID::typeIT,this->id(),0,0,0,0);
     setElementID(aChan); 
+    m_nickname = ITNames().StationToString(aChan);
     m_boxes = getChildren<DeITStation>(); 
   }
   return sc;
