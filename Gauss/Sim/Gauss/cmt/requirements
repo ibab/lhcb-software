@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v31r1
+version v31r2
 
 #============================================================================
 #-- Structure
@@ -121,8 +121,4 @@ path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/bin"
 #path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
-#-- Alias for exacutable have been removed: use instead script
-#    SetupProject Gauss <version>
-#   that includes the binary directory in the PATH so that you can type
-#    Gauss.exe 
 
