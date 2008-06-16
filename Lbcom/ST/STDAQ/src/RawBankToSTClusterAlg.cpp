@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.22 2008-06-11 14:48:03 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.23 2008-06-16 14:24:38 mneedham Exp $
 
 #include <algorithm>
 
@@ -26,6 +26,8 @@
 #include "Kernel/STDetSwitch.h"
 
 #include "STDet/DeSTDetector.h"
+
+#include "boost/lexical_cast.hpp"
 
 using namespace LHCb;
 
@@ -132,24 +134,32 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     
     if (decoder.hasError() == true){
       bankList.push_back((*iterBank)->sourceID());
-      Warning("bank has errors - skip bank", StatusCode::SUCCESS);
+      std::string errorBank = "bank has errors, skip sourceID "+
+	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+      Warning(errorBank, StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue;
     }
 
     const unsigned bankpcn = decoder.header().pcn();
     if (pcn != bankpcn){
-      Warning("PCNs out of sync", StatusCode::SUCCESS);
+      std::string errorBank = "PCNs out of sync, sourceID "+
+	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+      debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+      Warning(errorBank, StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue; 
     }
 
     // iterator over the data....
+    std::vector<TempCluster> vec; vec.reserve(128);
+    bool goodData = true;
     STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
     for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
       StatusCode sc = createCluster(iterDecoder->first,aBoard,
-                                    iterDecoder->second,clusCont,version);
+                                    iterDecoder->second,vec,version);
       if (sc.isFailure()) {
+        goodData = false;
         Warning("Error decoding ADCs", StatusCode::SUCCESS);
         ++counter("skipped Banks");
         continue;
@@ -158,15 +168,24 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     
 
     if (iterDecoder.bytesRead() != ((*iterBank)->size())){
+      goodData = false;
       debug() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       Warning("Inconsistant byte count", StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue;
     }
+
+    if (!goodData){
+      cleanup(vec);
+    }
+    else {
+      insertData(vec, clusCont);
+    }
+    vec.clear();
+
   } // iterBank
    
-
   createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList);
 
   return StatusCode::SUCCESS;
@@ -177,7 +196,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
                                                 const STTell1Board* aBoard,
                                                 const std::vector<SiADCWord>& 
                                                 adcValues,
-                                                STClusters* clusCont,
+                                                std::vector<TempCluster>& tempClusters,
                                                 const unsigned int version) const{
   // stream the neighbour sum
   std::vector<SiADCWord>::const_iterator iterADC = adcValues.begin();
@@ -230,16 +249,8 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
                                                                fracStrip),
                                         adcs,neighbour, aBoard->boardID().id());
 
-  // add to container
-  if (!clusCont->object(nearestChan)) {
-    clusCont->insert(newCluster,nearestChan);
-  }
-  else {
-    delete newCluster;
-    debug() << "Cluster already exists not inserted: " << nearestChan << endmsg;  
-    return Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
-  }
-
+  tempClusters.push_back(std::make_pair(newCluster,nearestChan));
+  
   return StatusCode::SUCCESS;
 }
 
@@ -258,6 +269,30 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 }
 
 
+void RawBankToSTClusterAlg::insertData(std::vector<TempCluster>& tempClusters, LHCb::STClusters* clusters) const{
+
+  std::vector<TempCluster>::iterator iter = tempClusters.begin();
+  for (; iter != tempClusters.end(); ++iter){
+    STCluster* clus = iter->first;
+    if (!clusters->object(iter->second)) {
+      clusters->insert(clus,iter->second);
+    }   
+    else {
+      delete clus; 
+      clus = 0;
+      debug() << "Cluster already exists not inserted: " << iter->second << endmsg;  
+      Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
+    }
+  } // iter
+}
+
+void RawBankToSTClusterAlg::cleanup(std::vector<TempCluster>& tempClusters) const{
+
+  std::vector<TempCluster>::const_iterator iter = tempClusters.begin();
+  for (; iter != tempClusters.end(); ++iter){
+    if (iter->first) delete iter->first;
+  }
+}
 
 
 

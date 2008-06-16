@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.15 2008-06-11 14:48:03 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.16 2008-06-16 14:24:38 mneedham Exp $
 
 
 #include <algorithm>
@@ -28,6 +28,8 @@
 #include "Kernel/STDataFunctor.h"
 
 #include "Kernel/FastClusterContainer.h"
+
+#include "boost/lexical_cast.hpp"
 
 using namespace LHCb;
 
@@ -119,14 +121,19 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
    
     // get number of clusters..
     if (decoder.hasError() == true){
-      Warning("bank has errors - skip", StatusCode::SUCCESS);
+      std::string errorBank = "bank has errors, skip, sourceID"+
+	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+      Warning(errorBank, StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue;
     }
 
     const unsigned bankpcn = decoder.header().pcn();
     if (pcn != bankpcn){
-      Warning("PCNs out of sync", StatusCode::SUCCESS);
+      std::string errorBank = "PCNs out of sync sourceID "+
+	boost::lexical_cast<std::string>((*iterBank)->sourceID());
+      debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
+      Warning(errorBank, StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue; 
     }

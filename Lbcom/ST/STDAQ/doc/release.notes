@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+
+! 2008-06-16 M Needham
+ - Further improvements in monitoring of decoding
+ - Further improvements in handling corrupted data
+
 ! 2008-06-10 M Needham
  - Improve decoding. Print out how many banks are decoded 
    correctly, how many are skipped, and how many are lost. 
