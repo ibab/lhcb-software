@@ -16,10 +16,11 @@
 #include "$GAUSSOPTS/Gauss.opts"
 
 //--------------------------------------------------------------------------
-// Geometry database dependent options
+// Geometry database dependent options: latest picked
+//                                      head-20080516 still works
 //--------------------------------------------------------------------------
-DDDB.DefaultTAG     = "head-20080516";
-LHCBCOND.DefaultTAG = "head-20080516";
+DDDB.DefaultTAG     = "head-20080603";
+LHCBCOND.DefaultTAG = "head-20080603";
 
 // Magnetic field: measured map
 #include "$GAUSSOPTS/MeasuredFieldMap.opts"
