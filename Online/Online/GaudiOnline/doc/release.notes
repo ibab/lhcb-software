@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2008-06-19 Markus Frank
+ - Implement possibility to use python job options in the second layer.
+
 ! 2008-05-19 Markus Frank
  - Allow for multi burst mode of event producer.
 

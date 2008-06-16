@@ -11,6 +11,13 @@
 #include "GaudiKernel/SmartIF.h"
 #include "CPP/IocSensor.h"
 #include "WT/wt_facilities.h"
+#include <fstream>
+
+#ifdef _POSIX_C_SOURCE
+#undef _POSIX_C_SOURCE
+#endif
+#include "Python.h"
+
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,GaudiTask)
 
@@ -32,6 +39,15 @@ int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
 }
 
+GaudiTask::PythonInterpreter::PythonInterpreter() {
+  ::Py_Initialize();
+}
+
+GaudiTask::PythonInterpreter::~PythonInterpreter() {
+  ::Py_Finalize();
+}
+
+
 // Static thread routine to execute a Gaudi runable
 static int execRunable(void* arg)  {
   std::pair<IRunable*,GaudiTask*>* p = (std::pair<IRunable*,GaudiTask*>*)arg;
@@ -52,6 +68,7 @@ GaudiTask::GaudiTask(IInterface*)
   propertyMgr().declareProperty("AutoStart",      m_autostart   = false);
   ::lib_rtl_create_lock(0,&s_lock);
   m_eventThread = false;
+  ::PyEval_InitThreads();
 }
 
 GaudiTask::~GaudiTask()  {
@@ -111,6 +128,7 @@ void GaudiTask::output(int level, const char* s)  {
 }
 
 StatusCode GaudiTask::unload()  {
+  m_python = std::auto_ptr<PythonInterpreter>(0);
   m_appMgr->finalize();
   m_appMgr->terminate();
   return DimTaskFSM::unload();
@@ -182,33 +200,28 @@ StatusCode GaudiTask::startRunable(IRunable* runable)   {
 int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
-  if ( 0 == m_subMgr )  {
-    m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
+  m_eventThread = false;
+  Gaudi::setInstance(m_subMgr);
+  switch(m_optOptions.find(".py")) {
+  case std::string::npos:
+    sc = configSubManager();
+    break;
+  default:
+    sc = configPythonSubManager();
+    break;
   }
-  else {
-    log << MSG::INFO << "2nd. layer is already present - reusing instance" << endmsg;
+  if ( sc.isSuccess() ) {
+    log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
+    return 1;
   }
-  if ( m_subMgr )  {
-    m_eventThread = false;
-    Gaudi::setInstance(m_subMgr);
-    StatusCode sc = setInstanceProperties(m_subMgr);
-    if ( sc.isSuccess() )  {
-      sc = m_subMgr->configure();
-      if ( sc.isSuccess() )  {
-        log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
-        return 1;
-      }
-      m_subMgr->terminate();
-      m_subMgr->release();
-      m_subMgr = 0;
-      // This means job options were not found - this is an error
-      log << MSG::ERROR << "Failed to configure 2nd. level. Bad options ?" << endmsg;
-      return 0;
-    }
-    log << MSG::ERROR << "Failed to configure 2nd. level." << endmsg;
-    return sc;
+  if ( m_subMgr ) {
+    m_subMgr->terminate();
+    m_subMgr->release();
+    m_subMgr = 0;
   }
-  return sc;
+  Gaudi::setInstance((IAppMgrUI*)0);
+  Gaudi::setInstance((ISvcLocator*)0);
+  return 0;
 }
 
 int GaudiTask::initApplication()  {
@@ -298,6 +311,7 @@ int GaudiTask::terminateApplication()  {
 	// Release is called by Gaudi::setInstance; danger of releasing twice?
 	// m_subMgr->release();
 	m_subMgr = 0;
+	m_python = std::auto_ptr<PythonInterpreter>(0);
 	Gaudi::setInstance(m_appMgr);
 	return 1;
       }
@@ -340,4 +354,56 @@ StatusCode GaudiTask::nextEvent(int /* num_event */)  {
     m_nerr++;
   }
   return DimTaskFSM::nextEvent(1);
+}
+
+/// Configure standard C++ second level application manager
+StatusCode GaudiTask::configSubManager() {
+  MsgStream log(msgSvc(), name());
+  if ( 0 == m_subMgr )  {
+    m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
+  }
+  else {
+    log << MSG::WARNING << "2nd. layer is already present - reusing instance" << endmsg;
+  }
+  StatusCode sc = setInstanceProperties(m_subMgr);
+  if ( sc.isSuccess() )  {
+    sc = m_subMgr->configure();
+    if ( sc.isSuccess() )  {
+      log << MSG::INFO << "2nd Level successfully configured." << endmsg;
+      return sc;
+    }
+    // This means job options were not found - this is an error
+    log << MSG::FATAL << "Failed to configure 2nd. level. Bad options ?" << endmsg;
+  }
+  return sc;
+}
+
+/// Configure Python based second level application manager
+StatusCode GaudiTask::configPythonSubManager() {
+  MsgStream log(msgSvc(), name());
+  std::ifstream file(m_optOptions.c_str());
+  std::stringstream str;
+  m_python = std::auto_ptr<PythonInterpreter>(new PythonInterpreter());
+  m_subMgr = 0;
+  if( file ) {
+    char ch;
+    while( file.get(ch) ) str.put(ch);
+    file.close();
+    std::string vsn = Py_GetVersion();
+    log << MSG::INFO << "Starting python initialization. Python version: [" << vsn << "]" << endmsg;
+    ::PyRun_SimpleString((char*)str.str().c_str());
+    if ( ::PyErr_Occurred() )   {
+      ::PyErr_Print(); 
+      ::PyErr_Clear();
+      log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
+      m_python = std::auto_ptr<PythonInterpreter>(0);
+      return StatusCode::FAILURE;
+    }
+    m_subMgr = Gaudi::createApplicationMgr("GaudiSvc", "ApplicationMgr");
+    log << MSG::ALWAYS << "Python initialization done." << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  log << MSG::FATAL << "Failed to invoke python startup script." << endmsg;
+  m_python = std::auto_ptr<PythonInterpreter>(0);
+  return StatusCode::FAILURE;
 }

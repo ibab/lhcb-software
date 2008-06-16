@@ -6,6 +6,9 @@
 #include "GaudiOnline/DimTaskFSM.h"
 #include "RTL/rtl.h"
 
+// C++ include files
+#include <memory>
+
 // Forward declarations:
 class IIncidentSvc;
 class IMessageSvc;
@@ -25,6 +28,12 @@ namespace LHCb  {
     */
   class GaudiTask : public DimTaskFSM, virtual public IIncidentListener  {
   protected:
+    struct PythonInterpreter {
+      PythonInterpreter();
+      ~PythonInterpreter();
+    };
+    /// Handle to python interpreter
+    std::auto_ptr<PythonInterpreter> m_python;
     /// Handle to second layer execution thread
     lib_rtl_thread_t  m_handle;
     /// Property: name of runable object
@@ -60,6 +69,11 @@ namespace LHCb  {
     StatusCode setInstanceProperties(IAppMgrUI* inst);
     /// Start 2nd layer runable
     StatusCode startRunable(IRunable* runable);
+
+    /// Configure standard C++ second level application manager
+    StatusCode configSubManager();
+    /// Configure Python based second level application manager
+    StatusCode configPythonSubManager();
 
     /// Internal helper: configure  application manager
     virtual int configApplication();

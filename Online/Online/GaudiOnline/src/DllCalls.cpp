@@ -74,23 +74,26 @@ extern "C" int OnlineStart(int argc, char** argv)  {
   return 0;
 }
 
+static void help_OnlineDeamon() {
+  std::cout << "usage: gentest.exe GaudiOnline.dll OnlineDeamon -option [-option]      " << std::endl; 
+  std::cout << "    Invoke a routine hosted in a DLL                                   " << std::endl;
+  std::cout << "                                                                       " << std::endl;
+  std::cout << "    -dll=<dll-name>     DLL hosting the routine to be called.          " << std::endl;
+  std::cout << "    -call=<call-name>   Name of the routine to be invoked.             " << std::endl;
+  std::cout << "                        signature: int (*action)(int argc, char** ergv)" << std::endl;
+  std::cout << "    -debug=yes          Invoke debugger at startup (WIN32)             " << std::endl;
+  std::cout << "    -args ....          Any option will be passes to <call-name>       " << std::endl;
+  std::cout << "    " << std::endl;
+}
+
 extern "C" int OnlineDeamon(int argc, char** argv)  {
   int result = 0;
-  RTL::CLI cli(argc, argv, help);
+  RTL::CLI cli(argc, argv, help_OnlineDeamon);
   std::string dll = "", call = "rtl_test_";
   std::vector<char*> arg;
   cli.getopt("dll",3,dll);
   cli.getopt("call",4,call);
   if ( cli.getopt("help",4)   != 0 )  {
-    std::cout << "usage: gentest.exe GaudiOnline.dll OnlineDeamon -option [-option]" << std::endl; 
-    std::cout << "    Invoke a routine hosted in a DLL                              " << std::endl;
-    std::cout << "                                                                  " << std::endl;
-    std::cout << "    -dll=<dll-name>          DLL hosting the routine to be called." << std::endl;
-    std::cout << "    -call=<call-name>        Name of the routine to be invoked." << std::endl;
-    std::cout << "                             signature: int (*action)(int argc, char** ergv)" << std::endl;
-    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
-    std::cout << "    -args ....               Any option will be passes to <call-name>" << std::endl;
-    std::cout << "    " << std::endl;
     return 1;
   }
   if ( cli.getopt("debug",5) != 0 ) {
@@ -126,6 +129,18 @@ extern "C" int OnlineDeamon(int argc, char** argv)  {
   return error("Invalid call. Usage is:\n    OnlineDeamon -dll=<name> -call=<name> [ -args <p1> ... <pn>]\n");
 }
 
+static void help_GaudiOnline() {
+  std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
+  std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
+  std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
+  std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
+  std::cout << "    -options=<file-name>     Job options file name" << std::endl;
+  std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
+  std::cout << "    -loop                      Set event loop flag." << std::endl;
+  std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
+  std::cout << "    " << std::endl;
+}
+
 extern "C" int GaudiOnline(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help);
   std::string runable = "AppMgrRunable";
@@ -134,25 +149,12 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   std::string opts    = "jobOptions.txt";
   bool autostart = cli.getopt("autostart",3) != 0;
   SmartIF<IProperty> p(Gaudi::createApplicationMgr());
+  if ( cli.getopt("help",4)  ) return 1;
+  if ( cli.getopt("debug",5) ) ::lib_rtl_start_debugger();
   if(cli.getopt("runable",6,runable)) p->setProperty(StringProperty("Runable",runable));
   if(cli.getopt("evtloop",6,evtloop)) p->setProperty(StringProperty("EventLoop",evtloop));
   if(cli.getopt("msgsvc", 6,msgsvc) ) p->setProperty(StringProperty("MessageSvcType",msgsvc));
   if(cli.getopt("options",6,opts)   ) p->setProperty(StringProperty("JobOptionsPath",opts));
-  if ( cli.getopt("help",4)   != 0 )  {
-    std::cout << "usage: gentest.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
-    std::cout << "    -runable=<class-name>    Name of the gaudi runable to be executed" << std::endl;
-    std::cout << "    -evtloop=<class-name>    Name of the event loop manager to be invoked" << std::endl;
-    std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
-    std::cout << "    -options=<file-name>     Job options file name" << std::endl;
-    std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
-    std::cout << "    -loop                      Set event loop flag." << std::endl;
-    std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
-    std::cout << "    " << std::endl;
-    return 1;
-  }
-  if ( cli.getopt("debug",5) != 0 )  {
-    ::lib_rtl_start_debugger();
-  }
   if ( p )  {
     size_t nargs = argc;
     char** args = argv;
@@ -205,8 +207,21 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   return fsm.run();
 }
 
+static void help_OnlineTask() {
+  std::cout << "usage: Gaudi.exe GaudiOnline.dll OnlineTask -option [-option]" << std::endl;
+  std::cout << "    -run[able]=<class-name>    Name of the gaudi runable to be executed" << std::endl;
+  std::cout << "    -evt[loop]=<class-name>    Name of the event loop manager to be invoked" << std::endl;
+  std::cout << "    -msg[svc]=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
+  std::cout << "    -mai[noptions]=<file-name> 1st job options file name (usually empty)" << std::endl;
+  std::cout << "    -opt[ions]=<file-name>     2nd level job options file name" << std::endl;
+  std::cout << "    -loop                      Set event loop flag." << std::endl;
+  std::cout << "    -debug=yes                 Invoke debugger at startup (WIN32 only)" << std::endl;
+  std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
+  std::cout << "    " << std::endl;
+}
+
 extern "C" int OnlineTask(int argc, char** argv)  {
-  RTL::CLI cli(argc, argv, help);
+  RTL::CLI cli(argc, argv, help_OnlineTask);
   std::string dll     = "";
   std::string type    = "LHCb::Class1Task";
   std::string runable = "LHCb::OnlineRunable/Runable";
@@ -214,22 +229,6 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   std::string msgsvc  = "MessageSvc";
   std::string opts    = "";
   std::string optopts = "";
-  if ( cli.getopt("help",4)   != 0 )  {
-    std::cout << "usage: Gaudi.exe GaudiOnline.dll GaudiOnline -option [-option]" << std::endl;
-    std::cout << "    -run[able]=<class-name>    Name of the gaudi runable to be executed" << std::endl;
-    std::cout << "    -evt[loop]=<class-name>    Name of the event loop manager to be invoked" << std::endl;
-    std::cout << "    -msg[svc]=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
-    std::cout << "    -mai[noptions]=<file-name> 1st job options file name (usually empty)" << std::endl;
-    std::cout << "    -opt[ions]=<file-name>     2nd level job options file name" << std::endl;
-    std::cout << "    -loop                      Set event loop flag." << std::endl;
-    std::cout << "    -debug=yes                 Invoke debugger at startup (WIN32)" << std::endl;
-    std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
-    std::cout << "    " << std::endl;
-    return 1;
-  }
-  else if ( cli.getopt("debug",5) != 0 )  {
-    ::lib_rtl_start_debugger();
-  }
   bool autostart = cli.getopt("autostart",3) != 0;
   bool evtLoop   = cli.getopt("loop",4) != 0;
   cli.getopt("dll",3,dll);
@@ -239,6 +238,8 @@ extern "C" int OnlineTask(int argc, char** argv)  {
   cli.getopt("msgsvc", 3,msgsvc);
   cli.getopt("mainoptions",3,opts);
   cli.getopt("options",3,optopts);
+  if ( cli.getopt("help",4) )    return 1;
+  if ( cli.getopt("debug",5) ) ::lib_rtl_start_debugger();
   SmartIF<IProperty> p(Gaudi::createInstance("",type,dll));
   if ( p )  {
     p->setProperty(StringProperty("JobOptionsPath",opts));

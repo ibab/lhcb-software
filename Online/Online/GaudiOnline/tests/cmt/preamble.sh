@@ -21,7 +21,7 @@ export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so Online
 export gaudi_exe2="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto "
 export gaudi_task="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe libGaudiOnline.so OnlineTask -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
 export MINITERM='xterm  -ls -132 -geometry 132x12 -title '
-export BIGTERM='xterm  -ls -132 -geometry 132x45 -title '
+export BIGTERM='xterm  -ls -132 -geometry 132x55 -title '
 export WIDETERM='xterm  -ls -132 -geometry 160x50 -title '
 #export MINITERM=echo
 #
