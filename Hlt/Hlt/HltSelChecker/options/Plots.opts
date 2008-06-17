@@ -30,3 +30,17 @@ HltSelB2MuMu.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs"
 HltSelDstar.HistoProduce = true ;
 HltSelDstar.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 HltSelDstar.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+
+
+HltSelD02KsPiPi_Ks2DD.HistoProduce = true ;
+HltSelD02KsPiPi_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+HltSelD02KsPiPi_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+
+HltSelD02KsKK_Ks2DD.HistoProduce = true ;
+HltSelD02KsKK_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+HltSelD02KsKK_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+
+
+HltSelBu2D0K_D02KsHH_Ks2DD.HistoProduce = true ;
+HltSelBu2D0K_D02KsHH_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+HltSelBu2D0K_D02KsHH_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;

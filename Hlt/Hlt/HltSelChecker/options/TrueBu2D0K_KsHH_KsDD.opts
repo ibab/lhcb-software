@@ -1,0 +1,74 @@
+/** @file TrueBu2D0K_KsHH.opts
+ *
+ *  Options for running HLT2 only on truth
+ *
+ *  @author S. Brisbane
+ *  @date 2008-06-16
+ */
+
+//--------------------------------------------------------------
+//
+// Truth filter for Bd -> D0 Inclusive sequence
+//
+
+
+PrintMCTree.ParticleNames = { "B+", "B-" } ;
+//Option to turn on Downstream reconstruction for every event (passing HLT1)
+///***************************************************//
+//SeqHlt2TruthFilter.Members += { ""};
+//SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
+//*****************************************************//
+//Default to run the whole truth sequence after the seeding and V0 construction
+SeqHltSeed2TruthFilter.Members += {"CheckSelResult/CheckHlt2VzeroDD" ,  "FilterDesktop/SelectTrueDecay"};
+CheckHlt2VzeroDD.Algorithms = {"HltKsDDParticles"};
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions", "Phys/HltKsDDParticles" } ;
+// @ ToDo
+//Find a way/Write an algorithm to clean the V0's since ideally it is the output V0s
+// and not the daughter pions that should be used as input to any selections
+
+SelectTrueDecay.Filter.Selections = { "K+ : TrueMCFilterCriterion/Bu2D0K_KsHH_KsDD",
+                                      "pi+ : TrueMCFilterCriterion/Bu2D0K_KsHH_KsDD"
+                                      //                                  ,    "KS0 :  TrueMCFilterCriterion/Bu2D0K_KsHH_KsDD_4KS0"
+,
+                                      //                                                                            "KS0 : KinFilterCriterion/KS0Kin"
+                                                                            "KS0 : TrueMCFilterCriterion/Bu2D0K_KsHH_KsDD"
+} ;
+
+SelectTrueDecay.Filter.KS0Kin.MinPt = 0.01*GeV;
+
+
+SelectTrueDecay.Filter.Bu2D0K_KsHH_KsDD.MCDecayFinder.Decay = "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
+SelectTrueDecay.Filter.Bu2D0K_KsHH_KsDD.ExpectSignal = true ;
+SelectTrueDecay.Filter.FilterByDescendents=true;
+
+// SeqHlt2TruthFilter.Members += { "PrintHeader/GotIt"};
+//
+// Dummy MakeResonances to check that all tracks are there
+//
+SeqHltSeed2TruthFilter.Members += { "MakeResonances/AllTrueBu2D0K_KsHH_KsDD"};
+AllTrueBu2D0K_KsHH_KsDD.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
+AllTrueBu2D0K_KsHH_KsDD.DecayDescriptor = "[B+ -> K+ pi- pi+ pi+ pi-]cc" ; // all particles need to be there
+HltSelectionsCorrs.Algorithms += {"AllTrueBu2D0K_KsHH_KsDD"};/*
+                                   *  Now for tracks
+                                   */
+SeqTrueSignalTracks.Members = { "FilterTrueTracks"};
+//Now need to do eg [comment this out for release]
+//HltSelBu2D0K_D02KsHH_Ks2DD.PhysDeskop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD", "HltSelD02KsPiPi_Ks2DD"};
+//HltSelD02KsPiPi_Ks2DD.PhysSesktop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD"};
+
+//Want seperate track location for the forward and seed tracks
+FilterTrueTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED"} ;
+FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
+FilterTrueTracks.OutputLevel = 3 ;
+
+//Now for the Seed tracks
+SeqTrueSignalSeedTracks.Members = { "FilterTrueTracks/FilterTrueSeedTracks" };
+FilterTrueSeedTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
+FilterTrueSeedTracks.TracksPath = { "Hlt/Track/SeedTT"} ;
+
+//Now change input to V0 particle making, requires:  
+//HltV0DD.InputTrackContainer = "Hlt/Track/SeedTTSignal";
+
+FilterTrueSeedTracks.OutputPath = "Hlt/Track/SeedTTSignal" ;
+FilterTrueSeedTracks.OutputLevel = 3 ;

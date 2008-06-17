@@ -35,7 +35,16 @@ CheckSignalMuons.Inputs = {"Hlt/Track/SignalMuons"};
 CheckSignalMuons.Stop = false ;
 HltSignalMuonAssociator.TracksInContainer = "Hlt/Track/SignalMuons" ;
 
+//Downstream selections
 
+HltV0DD.InputTrackContainer = "Hlt/Track/SeedTTSignal";
+SeqTrueSignalSeedTracks.Members+= { "GaudiSequencer/RedoDownstreamTrackAssoc"};
+RedoDownstreamTrackAssoc.Members += { "TESCheck/CheckDownstreamSignalTracks",
+              "TrackAssociator/HltSeedSignalTrackAssociator" };
+
+CheckDownstreamSignalTracks.Inputs = {"Hlt/Track/Signal"};
+CheckDownstreamSignalTracks.Stop = false ;
+HltSeedSignalTrackAssociator.TracksInContainer = "Hlt/Track/SeedTTSignal" ;
 /*
  * tests by Vava
 KillMyNodes.Members += {"TESCheck/DaVinciEvtCheck2",

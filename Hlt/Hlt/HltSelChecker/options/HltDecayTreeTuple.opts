@@ -24,19 +24,19 @@ ApplicationMgr.TopAlg += { "DecayTreeTuple/HltDecayTreeTuple" };
 // HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"; // needs to be configured
 
 HltDecayTreeTuple.ToolList += {  
-      "TupleToolTrigger"
-    , "TupleToolMCTruth"
-    , "TupleToolMCBackgroundInfo"
-    , "TupleToolGeometry"
-    , "TupleToolKinematic"
-    , "TupleToolPropertime"
-    , "TupleToolPrimaries"
-    , "TupleToolEventInfo"
-    , "LoKi::Hybrid::TupleTool/LoKiTool"
+     "TupleToolTrigger"
+      ,"TupleToolMCTruth"
+      , "TupleToolMCBackgroundInfo"
+      , "TupleToolGeometry"
+      , "TupleToolKinematic"
+      , "TupleToolPropertime"
+      , "TupleToolPrimaries"
+      , "TupleToolEventInfo"
+      , "LoKi::Hybrid::TupleTool/LoKiTool"
 };
 
 // Can be overwritten for special branches
-HltDecayTreeTuple.Branches = { };
+//HltDecayTreeTuple.Branches = { };
 
 /* testing
 HltDecayTreeTuple.TupleToolMCTruth.StoreKineticInfo = true;

@@ -13,6 +13,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v6r2 2008-06-09 ===================
+! 2008-06-30 - Sean Brisbane 
+ - Added asscociation for downstream tracks and truth filter for HltSelBu2D0K_D02KsPiPi_KsDD
+
 ! 2008-05-30 - Patrick Koppenburg
  - Do not use HltEnums anymore
 
