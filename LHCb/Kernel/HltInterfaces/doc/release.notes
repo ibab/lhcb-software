@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.1.1.1 2008-06-17 18:53:09 pkoppenb Exp $
+! $Id: release.notes,v 1.2 2008-06-17 21:41:36 pkoppenb Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 
 ! 2008-06-17 - Patrick Koppenburg
  - First import
+ - IANNSvc and IHltSummaryTool moved to here
 
 

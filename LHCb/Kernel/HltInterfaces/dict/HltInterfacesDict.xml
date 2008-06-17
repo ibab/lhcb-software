@@ -1,3 +1,4 @@
 <lcgdict>
   <class name = "IANNSvc"       />
+  <class name = "IHltSummaryTool"       />
 </lcgdict>
