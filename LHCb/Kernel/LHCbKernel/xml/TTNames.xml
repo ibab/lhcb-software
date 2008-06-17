@@ -29,7 +29,7 @@
         name="detRegion"
         strTypConv = "TRUE" 
         unknownValue="UnknownRegion" 
-        value="UnknownRegion=0, RegionA=1, RegionB=2, RegionC=3"
+        value="UnknownRegion=0, RegionC=1, RegionB=2, RegionA=3"
         access="PUBLIC"
        />
 

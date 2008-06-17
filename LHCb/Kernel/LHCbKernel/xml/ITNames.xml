@@ -29,7 +29,7 @@
         name="Box"
         strTypConv = "TRUE" 
         unknownValue="UnknownBox" 
-        value="UnknownBox=0, ASide = 1, CSide = 2, Bottom = 3, Top = 4"
+        value="UnknownBox=0, CSide = 1, ASide = 2, Bottom = 3, Top = 4"
         access="PUBLIC"
        />
 

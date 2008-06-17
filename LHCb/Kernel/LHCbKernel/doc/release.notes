@@ -3,6 +3,10 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+
+! 2008-06-17 M Needham
+ - Bug fix in region numbering in ITNames/TTNames
+
 ! 2008-06-16  M Needham
  - Add TTNames.xml, ITNames.xml [turn STChannelID into 
    readable names, provide some enums for parts of the detector]
