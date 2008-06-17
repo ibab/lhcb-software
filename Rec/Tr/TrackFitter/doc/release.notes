@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-06-17 - Louis Nicolas
+ - Added more safety checks in TrackMasterFitter
+ - Added minMomentumForELossCorr and maxMomentumForScattering variables in TrackMasterFitter
+
 ! 2008-06-06 - Wouter Hulsbergen
  - fail fit if smoother fails to calculate reasonable error on residual
 

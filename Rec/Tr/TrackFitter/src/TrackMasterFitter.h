@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.15 2008-03-31 07:07:59 mneedham Exp $
+// $Id: TrackMasterFitter.h,v 1.16 2008-06-17 13:26:50 lnicolas Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -101,9 +101,11 @@ private:
   std::vector<double> m_errorP;     ///< Error on dp/p
   bool m_makeNodes;
   bool m_updateTransport ;          ///< Update the transport matrices between iterations
+  double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
   bool m_applyMaterialCorrections ; ///< Apply material corrections
 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
+  double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering
     
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;

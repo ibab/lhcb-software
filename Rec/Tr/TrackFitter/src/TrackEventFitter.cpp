@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.16 2008-01-17 16:03:35 wouter Exp $
+// $Id: TrackEventFitter.cpp,v 1.17 2008-06-17 13:26:50 lnicolas Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -9,6 +9,8 @@
 
 // local
 #include "TrackEventFitter.h"
+
+#include <fenv.h>
 
 using namespace LHCb;
 
@@ -50,6 +52,8 @@ StatusCode TrackEventFitter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+
+//   feenableexcept( FE_DIVBYZERO | FE_INVALID | FE_OVERFLOW /*|FE_INEXACT*/ );
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 

@@ -1,9 +1,12 @@
-// $Id: TrackMasterFitter.cpp,v 1.47 2008-05-27 10:38:56 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.48 2008-06-17 13:26:50 lnicolas Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+// from LHCb
+#include "LHCbMath/LHCbMath.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackManipulator.h"
@@ -63,11 +66,11 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
 
   declareProperty( "Extrapolator"        , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
-  declareProperty( "FitUpstream"         , m_upstream         =   true    );
-  declareProperty( "NumberFitIterations" , m_numFitIter       =     3     );
-  declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0   );
-  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   =     2     );
-  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true    );
+  declareProperty( "FitUpstream"         , m_upstream         = true        );
+  declareProperty( "NumberFitIterations" , m_numFitIter       = 3           );
+  declareProperty( "Chi2Outliers"        , m_chi2Outliers     = 9.0         );
+  declareProperty( "MaxNumberOutliers"   , m_numOutlierIter   = 2           );
+  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  = true        );
   declareProperty( "ZPositions"          , 
                    m_zPositions = boost::assign::list_of(StateParameters::ZBegRich1)
                                                         (StateParameters::ZEndRich1)
@@ -75,14 +78,16 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                                         (StateParameters::ZEndRich2));
   declareProperty( "ErrorX2"        , m_errorX2 = 10000.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorY2"        , m_errorY2 = 10000.0*Gaudi::Units::mm2 );
-  declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                  );
-  declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                  );
-  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001));
-  declareProperty( "MakeNodes"      , m_makeNodes = true                  );
-  declareProperty( "MaterialLocator", m_materialLocatorName="DetailedMaterialLocator") ;
-  declareProperty( "UpdateTransport", m_updateTransport=false) ;
-  declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections=true) ;
-  declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV);
+  declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                     );
+  declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                     );
+  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001) );
+  declareProperty( "MakeNodes"      , m_makeNodes = true                    );
+  declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
+  declareProperty( "UpdateTransport", m_updateTransport = false             );
+  declareProperty( "MinMomentumForTransport", m_minMomentumForELossCorr = 10.*Gaudi::Units::MeV );
+  declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
+  declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
+  declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
 }
 
 //=========================================================================
@@ -98,7 +103,7 @@ StatusCode TrackMasterFitter::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
-  
+
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
   m_trackNodeFitter   = tool<ITrackFitter>( "TrackKalmanFilter", "NodeFitter", this ) ;
   m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
@@ -642,7 +647,9 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       double tanth  = std::max(sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
-    
+
+    scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering );
+
     LHCb::TrackTraj tracktraj( nodes ) ;
     IMaterialLocator::Intersections intersections ;
     m_materialLocator->intersect( tracktraj, intersections ) ;
@@ -693,9 +700,14 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       }
       
       // correct for energy loss
-      double charge = statevector.qOverP() > 0 ? 1 :  -1 ;
-      double qopnew = 1/(1/statevector.qOverP() + charge * node->deltaEnergy()) ;
-      statevector.setQOverP( qopnew ) ;
+      double dE = node->deltaEnergy() ;
+      if ( fabs(statevector.qOverP()) > LHCb::Math::lowTolerance ) {
+	double charge = statevector.qOverP() > 0 ? 1 :  -1 ;
+	double momnew = std::max( m_minMomentumForELossCorr,
+				  fabs(1/statevector.qOverP()) + dE ) ;  
+	if ( fabs(momnew) > m_minMomentumForELossCorr )
+	  statevector.setQOverP(charge/momnew) ;
+      }
 
       // calculate the 'transport vector' (need to replace that)
       Gaudi::TrackVector tranportvec = statevector.parameters() - F * refvector->parameters() ;
