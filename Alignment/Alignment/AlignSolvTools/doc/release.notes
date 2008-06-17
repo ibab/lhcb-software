@@ -3,6 +3,10 @@
 !-----------------------------------------------------------------------------
 
 
+!=========================== AlignSolvTools v2r5 2008-06-17 ==================
+- J. Blouw: new tag for this package; some undocumented updates have been performed such that
+  the code compiles & links under windows. Tag used for alignment release v3r1.
+
 ! 2008-04-02 Adlene Hicheur
 ! Tagging the head as v2r3 to avoid conflicts with old v2r2
 
