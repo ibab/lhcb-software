@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.6 2008-06-05 09:26:48 lnicolas Exp $
+// $Id: TrackEffChecker.cpp,v 1.7 2008-06-17 13:46:35 lnicolas Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -208,15 +208,17 @@ StatusCode TrackEffChecker::finalize(){
   AIDA::IHistogram1D* hist = histo1D(histName);
   double eGhost = 0;
   if (hist != 0) eGhost = hist->mean();
-  const double tGhost = double(counter("nGhost").flag())
-                      /double(counter("nTrack").flag());
+  const double tGhost = counter("nTrack").flag() == 0 ? 0.0 :
+                        double(counter("nGhost").flag())
+                        /double(counter("nTrack").flag());
   
   // efficiency
   histName = "eff";
   hist = histo1D(histName);
   double eEff = 0;
   if (hist != 0) eEff = hist->mean();
-  const double tEff = double(counter("nFound").flag())
+  const double tEff = counter("nToFind").flag() == 0 ? 0.0 :
+                      double(counter("nFound").flag())
                       /double(counter("nToFind").flag());
 
   info() << "***Ghost Rate:" << tGhost <<"(Track weighted) " << 
