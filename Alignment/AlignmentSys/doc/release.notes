@@ -8,8 +8,13 @@ Purpose: LHCb Alignment packages.
 </PRE><H1><A NAME=v3r1>2008-06-17 AlignmentSys v3r1</A></H1><PRE>
 
 - Packages updated:
+		AlignmentInterfaces	v2r7
 			AlignTrTools	v3r6
 			TAlignment	v3r6
+			AlignSolvTools	v2r5
+
+- in AlignmentInterfaces:
+	-  update of ITAconfigtool to make it consistent with its implementation...
 
 - in AlignTrTools:
 	- Fix to AlignTrackMonitor to reflect changes in clone finder tool interface
@@ -19,7 +24,7 @@ Purpose: LHCb Alignment packages.
 	- AlignTrackMonitor and AlignSaveTuple: cleaned up a bit and added: 
 	  track eta, # IT clusters and # Velo clusters
 
-in TAlignment:
+- in TAlignment:
 	- added safety checks in AlParameters and AlignAlgorithm to avoid FPEs
 	- added TrackRemoveDoubleHits in Pat Rec sequence (AlConfigurable.py).
 	- added fit sequence in case pat rec is not run (ITOTTracking.py).
@@ -32,6 +37,9 @@ in TAlignment:
 	- added possibility to give a list of sub-detectors for which to write out 
 	  the conditions in AlConfigurable.py + some clean-up
 
+- in AlignSolvTools:
+	- Some undocumented updates have been performed such that the code 
+	  compiles & links under windows.
 
 
 </PRE><H1><A NAME=v3r0>2007-11-09 AlignmentSys v3r0</A></H1><PRE>
