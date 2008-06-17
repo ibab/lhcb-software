@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.21 2007-12-06 14:43:32 wouter Exp $
+// $Id: FitNode.cpp,v 1.22 2008-06-17 08:01:21 lnicolas Exp $
 // Include files
 
 // local
@@ -29,6 +29,7 @@ using namespace LHCb;
 /// Standard constructor, initializes variables
 FitNode::FitNode():
   Node(),
+  m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Up(0),
@@ -40,6 +41,7 @@ FitNode::FitNode():
 /// Constructor from a z position
 FitNode::FitNode( double zPos ):
   Node(zPos),
+  m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Up(0),
@@ -50,6 +52,7 @@ FitNode::FitNode( double zPos ):
 /// Constructor from a Measurement
 FitNode::FitNode(Measurement& aMeas):
   Node(&aMeas),
+  m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Up(0),
