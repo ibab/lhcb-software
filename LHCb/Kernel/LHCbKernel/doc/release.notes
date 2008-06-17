@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-06-17 - Patrick Koppenburg
+ - Moved IHltSummaryTool to HltInterfaces
+
 ! 2008-06-17 M Needham
  - Bug fix in region numbering in ITNames/TTNames
 
