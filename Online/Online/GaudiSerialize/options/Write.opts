@@ -1,44 +1,17 @@
-// $Id: Write.opts,v 1.1 2008-06-17 13:25:34 frankb Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
-// ============================================================================
-////////////////////////////////////////////////////////////////
-// Example options file.
-////////////////////////////////////////////////////////////////
-ApplicationMgr.OutStream  += { "RootDst"};
-ApplicationMgr.OutStream  += { "RootMini" };
-ApplicationMgr.TopAlg      = { "WriteAlg", "ReadAlg" };
+ApplicationMgr.TopAlg    += { "LHCb::RawEventTestCreator/RawEventGen"};
+#include "$MDFROOT/options/MDFCheck.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
 
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel     =  3;
-
-//--------------------------------------------------------------
-// Event related parameters
-//--------------------------------------------------------------
-ApplicationMgr.EvtMax    = 1000;
-ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
-ApplicationMgr.HistogramPersistency = "NONE";
-
-//--------------------------------------------------------------
-// Output Stream Options
-//--------------------------------------------------------------
-//
-//  Setup for ROOT I/O System
-//
-#include "GaudiPoolDbRoot.opts"
-//
-RootDst.ItemList = { "/Event#1"
-                     ,"/Event/Collision_0#999"
-                     ,"/Event/Collision_2#1"
-                     ,"/Event/MyTracks#1"
-};
-RootDst.ItemList   = { "/Event#999" } ;
-RootDst.Output     = "DATAFILE='PFN:POOLIO.dst'  TYP='POOL_ROOTTREE' OPT='RECREATE'";
-RootMini.ItemList  = { "/Event#1"   } ;
-RootMini.Output    = "DATAFILE='PFN:POOLIO.mdst' TYP='POOL_ROOTTREE' OPT='RECREATE'";
-
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:POOLIO.xml" } ;
-
-// ============================================================================
-// The END 
-// ============================================================================
+ApplicationMgr.HistogramPersistency  = "NONE";
+EventPersistencySvc.CnvServices += {"SerializeCnvSvc/SerializeCnvSvc"};
+SerializeCnvSvc.OutputLevel = 2;
+ApplicationMgr.OutStream += { "Serial", "LHCb::MDFWriter/Writer"};
+Serial.ItemList           = { "/Event#999" } ;
+Serial.Output             = "DATAFILE='root.buffers' SVC='SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'";
+Writer.Connection         = "file://GaudiBanks.dat";
+Writer.Compress           = 0;
+Writer.ChecksumType       = 0;
+Writer.GenerateMD5        = true;
+Writer.BankLocation       = "/Event/GaudiSerialize/Banks";

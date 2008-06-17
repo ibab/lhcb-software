@@ -1,51 +1,9 @@
-// $Id: Read.opts,v 1.1 2008-06-17 13:25:34 frankb Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, verison $Revision: 1.1 $
-// ============================================================================
-////////////////////////////////////////////////////////////////
-// Example options file.
-////////////////////////////////////////////////////////////////
-//
-ApplicationMgr.TopAlg      = { "ReadAlg" };
-ApplicationMgr.HistogramPersistency = "NONE";
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-ApplicationMgr.EvtMax      = 50;
-EventSelector.OutputLevel  = 3;
-EventSelector.PrintFreq    = 50;
-EventSelector.FirstEvent   = 1;
-//--------------------------------------------------------------
-//
-//  Setup for ROOT I/O System
-//
-#include "GaudiPoolDbRoot.opts"
-PoolDbCacheSvc.OutputLevel = 4;
-//--------------------------------------------------------------
-// Input File
-//--------------------------------------------------------------
-EventSelector.Input  = { "DATAFILE='PFN:POOLIO.dst'  TYP='POOL_ROOT' OPT='READ'" };
-ReadAlg.OutputLevel  = 4;
+#include "$MDFROOT/options/MDFCheck.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+EventPersistencySvc.CnvServices     += {"SerializeCnvSvc/SerializeCnvSvc"};
+EventSelector.Input                  = {
+  "DATA='file://GaudiBanks.dat' SVC='LHCb::MDFSelector'"
+};
 
-PoolDbCacheSvc.Catalog += { "xmlcatalog_file:POOLIO.xml" } ;
-
-//StoreExplorerAlg.Load=1;
-//StoreExplorerAlg.PrintFreq=1.0;
-//StoreExplorerAlg.PrintMissing=1;
-//StoreExplorerAlg.AccessForeign=1;
-
-EventPersistencySvc.CnvServices += {"SerializeCnvSvc/SerializeCnvSvc"};
-SerializeCnvSvc.OutputLevel = 2;
-
-Serial.ItemList   = { "/Event#999" } ;
-Serial.Output     = "DATAFILE='root.buffers' SVC='SerializeCnvSvc/SerializeCnvSvc' OPT='RECREATE'";
-ApplicationMgr.OutStream  += { "Serial"};
-EventDataSvc.ForceLeaves  = 1;
-EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
-
-// To create a MDF file using the MDF writer:
-ApplicationMgr.OutStream += { "LHCb::MDFWriter/Writer" };
-Writer.Connection       = "file://GaudiBanks.dat";
-Writer.Compress         = 0;
-Writer.ChecksumType     = 0;
-Writer.GenerateMD5      = true;
-Writer.BankLocation 		= "/Event/GaudiSerialize/Banks";
-
+ReadAlg.OutputLevel  = 3;

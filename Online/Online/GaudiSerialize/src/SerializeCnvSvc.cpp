@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.1 2008-06-17 13:23:14 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.2 2008-06-17 14:34:16 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -217,16 +217,12 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
   try  {
     if ( doCommit )    {
       MsgStream log(msgSvc(), name());
-      log << MSG::INFO << "Serializing " << dsn << " with " << m_objects.size() << " objects." << endmsg;
+      log << MSG::DEBUG << "Serializing " << dsn << " with " << m_objects.size() << " objects." << endmsg;
       map<string, TClass*> classes;
       int ObjObjCounter=1;
-      TNamed parent("GaudiSerialize","GaudiSerialize");
       RawEvent* raw = new RawEvent();
       for(Objects::iterator i=m_objects.begin(); i != m_objects.end(); ++i)      {    
         TBufferFile rawBuffer(TBuffer::kWrite,256*1024);
-	rawBuffer.SetParent(&parent);
-	TObject* pf=rawBuffer.GetParent();
-	log<<"coses de parents: "<<pf->GetName()<<endmsg;
 	DataObject* pObj = (*i);
 	DataObjectPush p(pObj);
 
@@ -234,18 +230,16 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	TClass* cl;
 	const type_info& objClass = typeid(*pObj);
 	string objClassName = System::typeinfoName(objClass);
-	if (classes[objClassName])
-	  {
-	    log << MSG::DEBUG << "Class "<<objClassName<<" already mapped"<<endmsg;
-	    cl=classes[objClassName];
-	  }
-	else
-	  {
-	    log << MSG::DEBUG << "Looking for class "<<objClassName<<" in gROOT"<<endmsg;
-	    const char* clName = objClassName.c_str();
-	    cl = gROOT->GetClass(clName);
-	    classes[objClassName]=cl;
-	  }
+	if (classes[objClassName])   {
+	  log << MSG::VERBOSE << "Class "<<objClassName<<" already mapped"<<endmsg;
+	  cl=classes[objClassName];
+	}
+	else	  {
+	  log << MSG::VERBOSE << "Looking for class "<<objClassName<<" in gROOT"<<endmsg;
+	  const char* clName = objClassName.c_str();
+	  cl = gROOT->GetClass(clName);
+	  classes[objClassName]=cl;
+	}
 	if (cl==0){
 	  log<<MSG::ERROR<<"No valid class found!"<<endmsg;
 	  log<<MSG::ERROR<<"     Class Name: "<<objClassName<<endmsg;    
