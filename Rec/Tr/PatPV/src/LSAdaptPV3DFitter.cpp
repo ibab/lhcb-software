@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.2 2008-06-12 09:33:17 witekma Exp $
+// $Id: LSAdaptPV3DFitter.cpp,v 1.3 2008-06-17 18:01:50 pkoppenb Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
@@ -64,8 +64,6 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 {
 
   
-  StatusCode sc = StatusCode::SUCCESS;
-
   Gaudi::XYZPoint xyzvtx = seedPoint;
   // prepare tracks
   m_pvTracks.clear();

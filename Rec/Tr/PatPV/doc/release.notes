@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2008-06-17 - Patrick Koppenburg
+ - Removed unnecessary unchecked StatusCode.
+
 ! 2008-06-12 - Mariusz Witek
   - adjusted default options for LSAdaptPV3DFitter 
   - added example options for displaced vertices
