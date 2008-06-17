@@ -1,0 +1,44 @@
+#============================================================================
+# Created    : 2008-06-17
+# Maintainer : Gerhard Raven
+#============================================================================
+package           HltInterfaces
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc dict Kernel src
+
+# Used packages
+#============================================================================
+
+use GaudiKernel         v*
+use Boost               v*   LCG_Interfaces
+
+# include directory
+#=========================================================================
+apply_pattern 	install_more_includes more=HltInterfaces
+
+#============================================================================
+# library building rule
+#============================================================================
+library          HltInterfaces    ../src/*.cpp
+
+#============================================================================
+# define linker library link options
+#============================================================================
+apply_pattern    linker_library library=HltInterfaces
+
+#============================================================================
+# make LCG dictionary for the interfaces
+#============================================================================
+apply_pattern    reflex_dictionary                                 \
+                 dictionary=HltInterfaces                                \
+                 headerfiles=$(HLTINTERFACESROOT)/dict/HltInterfacesDict.h     \
+                 selectionfile=$(HLTINTERFACESROOT)/dict/HltInterfacesDict.xml \
+                 options="-U__MINGW32__"
+
+# Hack for cmt v1r19 bug to link dictionary on windows
+macro HltInterfacesDict_use_linkopts $(use_linkopts)
+
+macro_append Boost_linkopts $(Boost_linkopts_regex)
