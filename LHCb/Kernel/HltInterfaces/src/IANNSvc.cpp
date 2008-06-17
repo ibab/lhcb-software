@@ -1,4 +1,4 @@
-#include "HltBase/IANNSvc.h"
+#include "Kernel/IANNSvc.h"
 
 /// Return the interface ID
 const InterfaceID& IANNSvc::interfaceID() { 
