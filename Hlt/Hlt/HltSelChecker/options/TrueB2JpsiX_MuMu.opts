@@ -21,7 +21,7 @@ SelectTrueDecay.Filter.B2JpsiX_MuMu.ExpectSignal = true ;
 SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2JpsiX_MuMu"};
 AllTrueB2JpsiX_MuMu.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2JpsiX_MuMu.DecayDescriptor = "J/psi(1S) -> mu- mu+" ; // all particles need to be there
-HltSelectionsCorrs.Algorithms += { "AllTrueB2JpsiX_MuMu" };
+Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2JpsiX_MuMu" };
 /* 
  * Check also for muon-L0's. 
  * This is a little complicated...

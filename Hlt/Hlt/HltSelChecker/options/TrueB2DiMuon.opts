@@ -20,7 +20,7 @@ SelectTrueDecay.Filter.B2DiMuon.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, 
 SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2DiMuon"};
 AllTrueB2DiMuon.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2DiMuon.DecayDescriptor = "J/psi(1S) -> mu- mu+" ; // all particles need to be there
-HltSelectionsCorrs.Algorithms += { "AllTrueB2DiMuon" };
+Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2DiMuon" };
 /* 
  * Check also for muon-L0's. 
  * This is a little complicated...

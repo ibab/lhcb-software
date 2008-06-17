@@ -12,10 +12,13 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v6r2 2008-06-09 ===================
-! 2008-06-30 - Sean Brisbane 
+! 2008-06-17 - Patrick Koppenburg
+ - Renamed Hlt to Hlt2
+
+! 2008-06-17 - Sean Brisbane 
  - Added asscociation for downstream tracks and truth filter for HltSelBu2D0K_D02KsPiPi_KsDD
 
+!========================== HltSelChecker v6r2 2008-06-09 ===================
 ! 2008-05-30 - Patrick Koppenburg
  - Do not use HltEnums anymore
 

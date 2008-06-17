@@ -1,4 +1,4 @@
-/** @file DVTestHltBd2D0Kstar.opts
+/** @file DVTestHlt2Bd2D0Kstar.opts
  *
  *  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  *
@@ -10,12 +10,12 @@
 // Preselection
 //
 #include "$B2D0XROOT/options/DVPreselBd2D0Kst_D02HH.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
+Hlt2SelectionsCorrs.Algorithms += { "PreselBd2D0Kst_D02HH" };
 PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -37,7 +37,7 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2D0Kstar"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBd2D0Kstar"};
 HltDecayTreeTuple.Decay = "[B0 -> (^D0 -> ^K- ^pi+) (K*(892)0 -> ^K+ ^pi-)]cc";
 //
 // Options

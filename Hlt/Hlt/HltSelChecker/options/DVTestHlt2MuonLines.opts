@@ -1,4 +1,4 @@
-/** @file DVTestHltBd2MuMuKstar.opts
+/** @file DVTestHlt2Bd2MuMuKstar.opts
  *
  *  Test file for HLT Bd->MuMuK* selection
  *
@@ -9,7 +9,7 @@
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -60,7 +60,7 @@ EventSelector.PrintFreq = 100 ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelUnbiasedDiMuon"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelUnbiasedDiMuon"};
 HltDecayTreeTuple.Decay = "J/psi(1S) => ^mu+ ^mu-";
 // special for head
 //HltDecayTreeTuple.Branches = {

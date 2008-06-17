@@ -1,4 +1,4 @@
-/** @file DVTestHltB2HH.opts
+/** @file DVTestHlt2B2HH.opts
  *
  *  Test file for HLT B->hh selection
  *
@@ -10,11 +10,11 @@
 // Preselection
 //
 #include "$B2UDSROOT/options/DVPreselB2HH.opts"
-HltSelectionsCorrs.Algorithms += { "PreselB2HH" };
+Hlt2SelectionsCorrs.Algorithms += { "PreselB2HH" };
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -36,7 +36,7 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2HH"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelB2HH"};
 HltDecayTreeTuple.Decay = "B0 -> ^pi+ ^pi-";
 //
 // Options
@@ -53,5 +53,5 @@ ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
 
 // ApplicationMgr.TopAlg += { "PrintTree" };
-PrintTree.PhysDesktop.InputLocations = { "Phys/HltSelB2HH" };
+PrintTree.PhysDesktop.InputLocations = { "Phys/Hlt2SelB2HH" };
 

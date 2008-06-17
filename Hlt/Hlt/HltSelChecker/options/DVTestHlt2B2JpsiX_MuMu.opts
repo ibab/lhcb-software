@@ -1,22 +1,21 @@
-/** @file DVTestHltBu2MuMuK.opts
+/** @file DVTestHlt2B2JpsiX_MuMu.opts
  *
- *  Test file for HLT Bu->MuMuK* selection
+ *  Test file for HLT B -> J/psi(MuMu) X selection
  *
  *  @author P. Koppenburg
- *  @date 2007-07-23
+ *  @date 2007-07-20
  */
 //--------------------------------------------------------------
 //
 // Preselection
 //
-#include "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBu2LLK" };
-PrintDiLeptonForPreselBu2LLK.OutputLevel = 3 ;
-PrintPreselBu2LLK.OutputLevel = 3 ;
+#include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
+Hlt2SelectionsCorrs.Algorithms += { "PreselHeavyDimuon" };
+PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -24,7 +23,7 @@ PrintPreselBu2LLK.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBu2LLK.opts"
+#include "$HLTSELCHECKERROOT/options/TrueB2JpsiX_MuMu.opts"
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
@@ -38,19 +37,17 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBu2LLK"};
-HltDecayTreeTuple.Decay = "[B+ -> (^J/psi(1S) => ^mu+ ^mu-) ^K+ ]cc";
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelB2JpsiX_MuMu"};
+HltDecayTreeTuple.Decay = "J/psi(1S) -> ^mu+ ^mu-" ;
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bu2Kmumu-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
-
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bs2psiphi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2MuMuK.root' TYP='ROOT' OPT='NEW'" ] ;
-
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2JpsiX_MuMu.root' TYP='ROOT' OPT='NEW'" ] ;
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;

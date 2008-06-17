@@ -48,13 +48,13 @@ SelectTrueDecay.Filter.FilterByDescendents=true;
 SeqHltSeed2TruthFilter.Members += { "MakeResonances/AllTrueBu2D0K_KsHH_KsDD"};
 AllTrueBu2D0K_KsHH_KsDD.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueBu2D0K_KsHH_KsDD.DecayDescriptor = "[B+ -> K+ pi- pi+ pi+ pi-]cc" ; // all particles need to be there
-HltSelectionsCorrs.Algorithms += {"AllTrueBu2D0K_KsHH_KsDD"};/*
+Hlt2SelectionsCorrs.Algorithms += {"AllTrueBu2D0K_KsHH_KsDD"};/*
                                    *  Now for tracks
                                    */
 SeqTrueSignalTracks.Members = { "FilterTrueTracks"};
 //Now need to do eg [comment this out for release]
-//HltSelBu2D0K_D02KsHH_Ks2DD.PhysDeskop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD", "HltSelD02KsPiPi_Ks2DD"};
-//HltSelD02KsPiPi_Ks2DD.PhysSesktop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD"};
+//Hlt2SelBu2D0K_D02KsHH_Ks2DD.PhysDeskop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD", "Hlt2SelD02KsPiPi_Ks2DD"};
+//Hlt2SelD02KsPiPi_Ks2DD.PhysSesktop.InputLocations = {"AllTrueBu2D0K_KsHH_KsDD"};
 
 //Want seperate track location for the forward and seed tracks
 FilterTrueTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;

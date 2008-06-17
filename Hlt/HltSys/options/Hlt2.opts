@@ -42,17 +42,16 @@ Hlt2.Members += { "GaudiSequencer/SeqHlt2TruthFilter" } ;
 // Standard HLT Particles
 //---------------------------------------------------------------------
 // just initialisation
-#include "$HLTSELECTIONSROOT/options/HltShared.opts"
+#include "$HLTSELECTIONSROOT/options/Hlt2Shared.opts"
 //---------------------------------------------------------------------
 // Final selections
 //---------------------------------------------------------------------
-#include "$HLTSELECTIONSROOT/options/HltSelections.opts"
+#include "$HLTSELECTIONSROOT/options/Hlt2Selections.opts"
 
 //--------------------------------------------------------------------
 // Decision
 //--------------------------------------------------------------------
-Hlt2.Members += { "HltSelectionsDecision" } ;
-//HltSelectionsDecision.OutputLevel = 2 ;
+Hlt2.Members += { "HltSelectionsDecision/Hlt2Decision" } ;
 
 //-------------------------------------------------------------------
 // True MC matching (DoD Svc)

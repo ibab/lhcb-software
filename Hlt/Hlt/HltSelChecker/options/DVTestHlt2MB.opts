@@ -1,4 +1,4 @@
-/** @file DVTestHltMB.opts
+/** @file DVTestHlt2MB.opts
  *
  *  Test file for HLT selection
  *
@@ -9,7 +9,7 @@
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //

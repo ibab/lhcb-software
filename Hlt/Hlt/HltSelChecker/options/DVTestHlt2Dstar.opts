@@ -1,4 +1,4 @@
-/** @file DVTestHltDstar.opts
+/** @file DVTestHlt2Dstar.opts
  *
  *  Test file for HLT D*->D0(hh)pi selection
  *
@@ -10,11 +10,11 @@
 // Preselection
 //
 #include "$B2DSTARXROOT/options/DVPreselDstarNoPID.opts"
-HltSelectionsCorrs.Algorithms += { "DVPreselDstarNoPID" };
+Hlt2SelectionsCorrs.Algorithms += { "DVPreselDstarNoPID" };
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -36,7 +36,7 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
 // Tuple tool
 //
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelDstar"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelDstar"};
 HltDecayTreeTuple.Decay = "[D*(2010)+ -> (^D0 -> ^K+ ^pi-) ^pi+]cc"; // only Cabibbo-faoured ? 
 
 EventSelector.Input   = {

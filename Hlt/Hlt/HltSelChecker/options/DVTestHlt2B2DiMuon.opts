@@ -1,4 +1,4 @@
-/** @file DVTestHltB2DiMuon.opts
+/** @file DVTestHlt2B2DiMuon.opts
  *
  *  Test file for HLT B -> mu mu X selection
  *
@@ -10,12 +10,12 @@
 // Preselection
 //
 #include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
-HltSelectionsCorrs.Algorithms += { "PreselHeavyDimuon" };
+Hlt2SelectionsCorrs.Algorithms += { "PreselHeavyDimuon" };
 PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -33,7 +33,7 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2DiMuon"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelB2DiMuon"};
 HltDecayTreeTuple.Decay = "J/psi(1S) -> ^mu+ ^mu-";
 //
 // Overwrite input - uncomment to run HLT on true signal only

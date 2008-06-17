@@ -1,20 +1,22 @@
-/** @file DVTestHltBs2DsH.opts
+/** @file DVTestHlt2Bu2LLK.opts
  *
- *  Test file for HLT Bs->Ds(KKpi)(K,pi) selection
+ *  Test file for HLT Bu->LLK* selection
  *
  *  @author P. Koppenburg
- *  @date 2007-07-20
+ *  @date 2007-07-23
  */
 //--------------------------------------------------------------
 //
 // Preselection
 //
-#include "$B2DSXROOT/options/DVPreselBs2DsH.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBs2DsH" };
+#include "$B2DILEPTONROOT/options/DVPreselBu2LLK.opts"
+Hlt2SelectionsCorrs.Algorithms += { "PreselBu2LLK" };
+PrintDiLeptonForPreselBu2LLK.OutputLevel = 3 ;
+PrintPreselBu2LLK.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -22,7 +24,7 @@ HltSelectionsCorrs.Algorithms += { "PreselBs2DsH" };
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBs2DsH.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBu2LLK.opts"
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
@@ -32,23 +34,21 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
 // Overwrite input - uncomment to run HLT on true signal only
 //
 // #include "$HLTSELCHECKERROOT/options/OverwriteWithTruth.opts"
-//
-// Decay Tree Tuple
-//
+/**
+ * Tuple
+ */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBs2DsH"};
-HltDecayTreeTuple.Decay = "[B_s0 -> (^D_s- => ^K+ ^K- ^pi- ) ^pi+ ]cc"; 
-//
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBu2LLK"};
+HltDecayTreeTuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc";//
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2Dspi-Decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bu2Kee-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bs2DsH.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2eeK.root' TYP='ROOT' OPT='NEW'" ] ;
 
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
-

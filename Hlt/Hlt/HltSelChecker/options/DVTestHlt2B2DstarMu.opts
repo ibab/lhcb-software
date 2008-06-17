@@ -1,4 +1,4 @@
-/** @file DVTestHltB2DstarMu.opts
+/** @file DVTestHlt2B2DstarMu.opts
  *
  *  Test file for HLT D*->D0(hh)pi selection
  *
@@ -10,11 +10,11 @@
 // Preselection
 //
 #include "$B2DSTARXROOT/options/DVPreselBd2DstarMu.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBd2DstarMu" };
+Hlt2SelectionsCorrs.Algorithms += { "PreselBd2DstarMu" };
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -32,7 +32,7 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2DstarMu"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelB2DstarMu"};
 HltDecayTreeTuple.Decay = "[B0 -> ^mu+ (^D*(2010)- -> ^pi-  (^D~0 -> ^K+ ^pi-))]cc";
 //
 // Options

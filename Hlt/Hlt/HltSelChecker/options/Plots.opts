@@ -11,36 +11,36 @@
 /*
  * FilterDesktop
  */
-HltSelB2DiElectron.HistoProduce = true ;
-HltSelB2DiElectron.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-HltSelB2DiElectron.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2DiElectron.HistoProduce = true ;
+Hlt2SelB2DiElectron.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2DiElectron.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 
-HltSelB2DiMuon.HistoProduce = true ;
-HltSelB2DiMuon.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-HltSelB2DiMuon.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2DiMuon.HistoProduce = true ;
+Hlt2SelB2DiMuon.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2DiMuon.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 
-HltSelB2JpsiX.HistoProduce = true ;
-HltSelB2JpsiX.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-HltSelB2JpsiX.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2JpsiX.HistoProduce = true ;
+Hlt2SelB2JpsiX.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2JpsiX.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 
-HltSelB2MuMu.HistoProduce = true ;
-HltSelB2MuMu.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-HltSelB2MuMu.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2MuMu.HistoProduce = true ;
+Hlt2SelB2MuMu.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelB2MuMu.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 
-HltSelDstar.HistoProduce = true ;
-HltSelDstar.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-HltSelDstar.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-
-HltSelD02KsPiPi_Ks2DD.HistoProduce = true ;
-HltSelD02KsPiPi_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-HltSelD02KsPiPi_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
-
-HltSelD02KsKK_Ks2DD.HistoProduce = true ;
-HltSelD02KsKK_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-HltSelD02KsKK_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+Hlt2SelDstar.HistoProduce = true ;
+Hlt2SelDstar.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
+Hlt2SelDstar.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
 
 
-HltSelBu2D0K_D02KsHH_Ks2DD.HistoProduce = true ;
-HltSelBu2D0K_D02KsHH_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-HltSelBu2D0K_D02KsHH_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+Hlt2SelD02KsPiPi_Ks2DD.HistoProduce = true ;
+Hlt2SelD02KsPiPi_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+Hlt2SelD02KsPiPi_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+
+Hlt2SelD02KsKK_Ks2DD.HistoProduce = true ;
+Hlt2SelD02KsKK_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+Hlt2SelD02KsKK_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+
+
+Hlt2SelBu2D0K_D02KsHH_Ks2DD.HistoProduce = true ;
+Hlt2SelBu2D0K_D02KsHH_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
+Hlt2SelBu2D0K_D02KsHH_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;

@@ -23,7 +23,7 @@ SelectTrueDecay.Filter.B2HH.ExpectSignal = true ;
 SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2HH"};
 AllTrueB2HH.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2HH.DecayDescriptor = "B0 -> pi+ pi-" ; // always for B -> hh with pions
-HltSelectionsCorrs.Algorithms += { "AllTrueB2HH" };
+Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2HH" };
 
 /*
  *  Now for tracks

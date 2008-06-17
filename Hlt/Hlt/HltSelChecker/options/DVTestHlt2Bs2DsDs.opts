@@ -1,6 +1,6 @@
-/** @file DVTestHltB2JpsiX_MuMu.opts
+/** @file DVTestHlt2Bs2DsDs.opts
  *
- *  Test file for HLT B -> J/psi(MuMu) X selection
+ *  Test file for HLT Bs->Ds(KKpi)Ds(KKpi) selection
  *
  *  @author P. Koppenburg
  *  @date 2007-07-20
@@ -9,13 +9,13 @@
 //
 // Preselection
 //
-#include "$CCBARROOT/options/DVPreselHeavyDimuon.opts"
-HltSelectionsCorrs.Algorithms += { "PreselHeavyDimuon" };
-PrintPreselHeavyDimuon.OutputLevel = 3 ;
+#include "$B2DSXROOT/options/DVPreselBs2DsDs.opts"
+Hlt2SelectionsCorrs.Algorithms += { "PreselBs2DsDs" };
+PrintPreselBs2DsDs.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -23,7 +23,7 @@ PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueB2JpsiX_MuMu.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBs2DsDs.opts"
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
@@ -37,17 +37,20 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelB2JpsiX_MuMu"};
-HltDecayTreeTuple.Decay = "J/psi(1S) -> ^mu+ ^mu-" ;
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBs2DsDs"};
+HltDecayTreeTuple.Decay = "[B_s0 -> (D_s+ -> ^K+ ^K- ^pi+ ) (D_s- => ^K+ ^K- ^pi- )]cc";
 //
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/Bs2psiphi-decprodcut-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2DsDs-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
+
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2JpsiX_MuMu.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bs2DsDs.root' TYP='ROOT' OPT='NEW'" ] ;
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;
+EventSelector.PrintFreq = 1 ;
+

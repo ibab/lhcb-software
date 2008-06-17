@@ -1,21 +1,21 @@
-/** @file DVTestHltBs2DsDs.opts
+/** @file DVTestHlt2Bu2D0K_KsHH.opts
  *
- *  Test file for HLT Bs->Ds(KKpi)Ds(KKpi) selection
+ *  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  *
  *  @author P. Koppenburg
- *  @date 2007-07-20
+ *  @date 2007-07-25
  */
 //--------------------------------------------------------------
 //
 // Preselection
 //
-#include "$B2DSXROOT/options/DVPreselBs2DsDs.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBs2DsDs" };
-PrintPreselBs2DsDs.OutputLevel = 3 ;
+#include "$B2D0XROOT/options/DVPreselBu2D0K_D02KsPiPi.opts"
+Hlt2SelectionsCorrs.Algorithms += { "PreselBu2D0K_D02KsPiPi" };
+PrintPreselBu2D0K_D02KsHH.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -23,7 +23,7 @@ PrintPreselBs2DsDs.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBs2DsDs.opts"
+#include "$HLTSELCHECKERROOT/options/TrueBu2D0K_KsHH.opts"
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
@@ -37,20 +37,19 @@ SeqHlt2TruthFilter.IgnoreFilterPassed = true ;
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBs2DsDs"};
-HltDecayTreeTuple.Decay = "[B_s0 -> (D_s+ -> ^K+ ^K- ^pi+ ) (D_s- => ^K+ ^K- ^pi- )]cc";
-//
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBu2D0K_KsHH"};
+HltDecayTreeTuple.Decay = "[B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc";//
 // Options
 //
 EventSelector.Input   = {
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2DsDs-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
+  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bu2KD-KSPiPi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
-
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bs2DsDs.root' TYP='ROOT' OPT='NEW'" ] ;
-ApplicationMgr.EvtMax = -1 ;
-EventSelector.FirstEvent = 1 ;
-EventSelector.PrintFreq = 1 ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2D0K_KsHH.root' TYP='ROOT' OPT='NEW'" ] ;
 
+
+ApplicationMgr.EvtMax = -1 ;
+//EventSelector.FirstEvent = 815 ;
+EventSelector.PrintFreq = 1 ;

@@ -1,5 +1,5 @@
 package HltSys
-version v3r3
+version v3r4
 
 branches cmt doc options
 
@@ -38,7 +38,8 @@ use HltBase             v4r3   Hlt    # Jose Angel Hernando-Morata
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r4   Phys   # Tomasz Skwarnicki  
 
-
+# TMP
+use PatPV v3r4 Tr 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 

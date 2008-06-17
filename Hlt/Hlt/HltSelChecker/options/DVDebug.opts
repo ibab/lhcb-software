@@ -12,9 +12,9 @@ PrintMCTree.ParticleNames = { "B0", "B~0", "B_s0", "B_s~0", "B+", "B-" } ;   // 
 /*
  * type - change here
  */
-#include "$HLTSELCHECKERROOT/options/DVTestHltB2DstarMu.opts"
+#include "$HLTSELCHECKERROOT/options/DVTestHlt2B2DstarMu.opts"
 // events to debug
 ApplicationMgr.EvtMax = 10 ;
 EventSelector.FirstEvent = 1 ;
 
-HltSelectionsDecision.OutputLevel = 1 ;
+Hlt2SelectionsDecision.OutputLevel = 1 ;

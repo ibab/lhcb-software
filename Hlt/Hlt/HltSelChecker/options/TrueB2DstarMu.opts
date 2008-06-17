@@ -27,7 +27,7 @@ SelectTrueDecay.Filter.B2DstarMu.ExpectSignal = true ;
 SeqHlt2TruthFilter.Members += { "MakeResonances/AllTrueB2DstarMu"};
 AllTrueB2DstarMu.PhysDesktop.InputLocations = {"Phys/SelectTrueDecay"};
 AllTrueB2DstarMu.DecayDescriptor = "[B0 -> mu+ pi- pi- K+]cc" ; // all particles need to be there
-HltSelectionsCorrs.Algorithms += { "AllTrueB2DstarMu" };
+Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2DstarMu" };
 
 /*
  *  Now for tracks

@@ -1,4 +1,4 @@
-/** @file DVTestHltBd2MuMuKstar.opts
+/** @file DVTestHlt2Bd2MuMuKstar.opts
  *
  *  Test file for HLT Bd->MuMuK* selection
  *
@@ -10,11 +10,11 @@
 // Preselection
 //
 #include "$B2DILEPTONROOT/options/DVPreselBd2KstarMuMu.opts"
-HltSelectionsCorrs.Algorithms += { "PreselBd2KstarMuMu" };
+Hlt2SelectionsCorrs.Algorithms += { "PreselBd2KstarMuMu" };
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
 //
 // Plots
 //
@@ -48,7 +48,7 @@ EventSelector.FirstEvent = 1 ;
 EventSelector.PrintFreq = 1 ;
 
 // ApplicationMgr.TopAlg += { "PrintTree", "PrintMCTree" };
-PrintTree.PhysDesktop.InputLocations = { "Phys/HltSharedDiMuon" };
+PrintTree.PhysDesktop.InputLocations = { "Phys/Hlt2SharedDiMuon" };
 PrintMCTree.ParticleNames = { "B0", "B~0" };
 // HltAlleyMuons.OutputLevel = 1 ;
 // HltForwardMuons.OutputLevel = 1 ;
@@ -56,7 +56,7 @@ PrintMCTree.ParticleNames = { "B0", "B~0" };
  * Tuple
  */
 #include "$HLTSELCHECKERROOT/options/HltDecayTreeTuple.opts"
-HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/HltSelBd2MuMuKstar"};
+HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBd2MuMuKstar"};
 HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc";
 // special for head
 HltDecayTreeTuple.Branches = {
