@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+2008-06-17 - Louis Nicolas
+ - LongTrackReferenceCreator: Changed default extrapolator to TrackMasterExtrapolator
+ - StateSimpleBetheBlochEnergyCorrectionTool: added safety checks
+
 2008-06-06 - Louis Nicolas
  - TrackLikelihood: added a safety check to avoid FPE in initialisation of "lik"
 

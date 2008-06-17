@@ -1,4 +1,4 @@
-// $Id: LongTrackReferenceCreator.cpp,v 1.18 2007-11-30 15:18:06 wouter Exp $
+// $Id: LongTrackReferenceCreator.cpp,v 1.19 2008-06-17 15:10:32 lnicolas Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -54,7 +54,7 @@ StatusCode LongTrackReferenceCreator::initialize()
   }
   
   // extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>("TrackFastParabolicExtrapolator");
+  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator");
   
   return StatusCode::SUCCESS;
 };
