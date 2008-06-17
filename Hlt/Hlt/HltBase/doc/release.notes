@@ -6,6 +6,8 @@
 
 ! 2008-06-17 - Patrick Koppenburg
  - Moved IANNSvc to HltInterfaces
+ - Made comments in IHltConfSummaryTool undesrtandable by doxygen
+ - Increment to v4r4
 
 !========================== HltBase v4r3 2008-06-09 ===================
 !2008-06-09 - Gerhard Raven
