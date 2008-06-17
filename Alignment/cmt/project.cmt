@@ -1,7 +1,7 @@
 project ALIGNMENT
 
-use LBCOM LBCOM_v6r16
-use REC   REC_v5r5
+use LBCOM LBCOM_v6r18
+use REC   REC_v5r7
 
 build_strategy	with_installarea
 setup_strategy	root
