@@ -13,6 +13,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-06-17 - Patrick Koppenburg
+ - Moved IANNSvc to HltInterfaces
+
+! 2008-06-17 - Patrick Koppenburg
  - Renamed Hlt to Hlt2
 
 ! 2008-06-17 - Sean Brisbane 

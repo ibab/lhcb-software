@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.9 2008-05-30 17:16:04 pkoppenb Exp $
+ // $Id: HltBackgroundCategory.cpp,v 1.10 2008-06-17 19:12:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,7 +14,7 @@
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
 
-#include "HltBase/IANNSvc.h"
+#include "Kernel/IANNSvc.h"
 
 // local
 #include "HltBackgroundCategory.h"

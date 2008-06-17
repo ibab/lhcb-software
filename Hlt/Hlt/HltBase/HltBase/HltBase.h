@@ -1,11 +1,11 @@
-// $Id: HltBase.h,v 1.9 2008-06-06 12:53:01 hernando Exp $
+// $Id: HltBase.h,v 1.10 2008-06-17 19:09:10 pkoppenb Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
 // Include files
 
 #include "GaudiAlg/GaudiHistoAlg.h"
-#include "HltBase/IANNSvc.h"
+#include "Kernel/IANNSvc.h"
 #include "HltBase/HltTypes.h"
 
 /** @class HltBase

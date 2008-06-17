@@ -1,9 +1,9 @@
-// $Id: ANNSvc.h,v 1.7 2008-05-14 13:10:50 graven Exp $
+// $Id: ANNSvc.h,v 1.8 2008-06-17 19:09:10 pkoppenb Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
 // Include files
-#include "HltBase/IANNSvc.h"
+#include "Kernel/IANNSvc.h"
 #include "GaudiKernel/VectorMap.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"

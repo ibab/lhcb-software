@@ -1,7 +1,6 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
 
-#include "HltBase/IANNSvc.h"
 #include "HltBase/IHltConfSummaryTool.h"
 #include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/IMatchTVeloTracks.h"

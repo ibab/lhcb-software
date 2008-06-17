@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2008-05-15 12:55:46 pkoppenb Exp $
+# $Id: requirements,v 1.37 2008-06-17 19:12:34 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 
@@ -14,7 +14,7 @@ branches          cmt doc options
 use DaVinciKernel   v* Phys
 use DaVinciMCKernel v* Phys
 use HltEvent        v* Event
-use HltBase         v* Hlt
+use HltInterfaces   v* Kernel
 
 # Component library building rule
 #============================================================================
