@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.2 2008-06-17 14:34:16 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.3 2008-06-17 14:41:13 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -20,27 +20,19 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiSerialize/SerializeCnvSvc.h"
 #include "GaudiSerialize/SerializeAddress.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
-#include <iostream>
-#include <fstream>  
-#include <iomanip>
-#include <map>
 #include "MDF/RawDataAddress.h"
-#include "MDF/RawEventPrintout.h"
 #include "MDF/RawEventHelpers.h"
 
 // ROOT include files
 #include "TROOT.h"
-#include "TInterpreter.h"
 #include "TClass.h"
+#include "TInterpreter.h"
 #include "TBufferFile.h"
-#include "TStreamerInfo.h"
 
 using ROOT::Reflex::PluginService;
 using namespace std;
@@ -252,7 +244,7 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
 	rawBuffer.WriteString(cl->GetName());
 	cl->Streamer(pObj,rawBuffer);
         
-	LinkManager* linkMgr=pObj->linkMgr();
+	LinkManager* linkMgr = pObj->linkMgr();
 	int numLinks = linkMgr->size();
         rawBuffer << numLinks;
 	for (int it = 0; it != numLinks; it++)        {
