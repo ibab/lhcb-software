@@ -1,0 +1,13 @@
+<lcgdict>
+<!--  Add here other classes for dictionary generation
+  <class name="std::vector<pool::Token*>"/>
+  <class name="PoolDbLinkManager"/>
+  <class name="PoolDbTokenWrap"         id="E8424A1B-6A9E-49D3-8659-1FA2253FC899"/>
+  <class name="PoolDbNTupleDescriptor"  id="0BD23B36-EB47-4DB2-BB52-F30B32A9BAE5"/>
+-->
+  <class name="std::vector<std::string>"/>
+  <class name="std::vector<DataObject*>"/>
+  <class name="std::pair<std::string,DataObject*>"/>
+  <class name="std::vector<std::pair<std::string,DataObject*> >"/>
+</lcgdict>
+
