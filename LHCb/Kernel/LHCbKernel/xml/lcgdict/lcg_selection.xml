@@ -30,7 +30,6 @@
   <class name = "IEventTimeDecoder"    />
   <class name = "IEvtTypeSvc"          />
   <class name = "IGenericTool"         />
-  <class name = "IHltSummaryTool"      />
   <class name = "IInAcceptance"        />
   <class name = "IMCVeloFEType"        />
   <class name = "INormalizeTool"       />

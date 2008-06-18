@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-06-18 - Patrick Koppenburg
+ - Corrected xml file accordingly
+
 ! 2008-06-17 - Patrick Koppenburg
  - Moved IHltSummaryTool to HltInterfaces
 
