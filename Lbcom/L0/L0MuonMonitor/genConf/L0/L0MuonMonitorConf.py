@@ -1,4 +1,4 @@
-#Wed Jun  4 18:52:34 2008
+#Wed Jun 11 15:13:15 2008
 """Automatically generated. DO NOT EDIT please"""
 from GaudiKernel.Proxy.Configurable import *
 
@@ -17,13 +17,13 @@ class PhysicalChannelsHist( ConfigurableAlgTool ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -31,9 +31,9 @@ class PhysicalChannelsHist( ConfigurableAlgTool ) :
     'HistoDir' : 'AlgTool', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'H2D' : False, # bool
@@ -84,13 +84,13 @@ class LogicalPads2DMaps( ConfigurableAlgTool ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -98,9 +98,9 @@ class LogicalPads2DMaps( ConfigurableAlgTool ) :
     'HistoDir' : 'AlgTool', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
   }
@@ -155,14 +155,14 @@ class L0MuonOnlineMonitor( ConfigurableAlgorithm ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'RegisterForContextService' : True, # bool
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -170,9 +170,9 @@ class L0MuonOnlineMonitor( ConfigurableAlgorithm ) :
     'HistoDir' : 'DefaultName', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'TimeSlots' : [ -7 , -6 , -5 , -4 , -3 , -2 , -1 , 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 ], # list
@@ -235,14 +235,14 @@ class L0MuonMonitor( ConfigurableAlgorithm ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'RegisterForContextService' : True, # bool
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -250,9 +250,9 @@ class L0MuonMonitor( ConfigurableAlgorithm ) :
     'HistoDir' : 'DefaultName', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'TimeSlots' : [ -7 , -6 , -5 , -4 , -3 , -2 , -1 , 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 ], # list
@@ -316,14 +316,14 @@ class L0MuonAlgComparison( ConfigurableAlgorithm ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'RegisterForContextService' : True, # bool
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -331,9 +331,9 @@ class L0MuonAlgComparison( ConfigurableAlgorithm ) :
     'HistoDir' : 'DefaultName', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'TimeSlots' : [ -7 , -6 , -5 , -4 , -3 , -2 , -1 , 0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 ], # list
@@ -391,13 +391,13 @@ class InstantaneousRate( ConfigurableAlgTool ) :
     'RootInTES' : '', # str
     'RootOnTES' : '', # str
     'GlobalTimeOffset' : 0.0, # float
-    'StatTableHeader' : '     Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
-    'RegularRowFormat' : ' %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
-    'EfficiencyRowFormat' : '*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.7g| +- %|-#9.7g|)%%|   -------   |   -------   |', # str
+    'StatTableHeader' : ' |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |', # str
+    'RegularRowFormat' : ' | %|-15.15s|%|17t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |', # str
+    'EfficiencyRowFormat' : ' |*%|-15.15s|%|17t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |', # str
     'UseEfficiencyRowFormat' : True, # bool
     'ContextService' : 'AlgContextSvc', # str
     'HistoProduce' : True, # bool
-    'HistoPrint' : False, # bool
+    'HistoPrint' : True, # bool
     'HistoCheckForNaN' : True, # bool
     'HistoSplitDir' : False, # bool
     'HistoOffSet' : 0, # int
@@ -405,9 +405,9 @@ class InstantaneousRate( ConfigurableAlgTool ) :
     'HistoDir' : 'AlgTool', # str
     'FullDetail' : False, # bool
     'MonitorHistograms' : True, # bool
-    'FormatFor1DHistoTable' : '| %2$-30.30s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
-    'ShortFormatFor1DHistoTable' : ' | %1$-15.15s %2%', # str
-    'HeaderFor1DHistoTable' : '|   Title                        |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
+    'FormatFor1DHistoTable' : '| %2$-45.45s | %3$=7d |%8$11.5g | %10$-11.5g|%12$11.5g |%14$11.5g |', # str
+    'ShortFormatFor1DHistoTable' : ' | %1$-25.25s %2%', # str
+    'HeaderFor1DHistoTable' : '|   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |', # str
     'UseSequencialNumericAutoIDs' : False, # bool
     'AutoStringIDPurgeMap' : { '/' : '=SLASH=' }, # list
     'MaxRate' : 5.0, # float
