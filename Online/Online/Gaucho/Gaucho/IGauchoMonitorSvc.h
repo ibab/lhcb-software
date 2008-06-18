@@ -1,4 +1,4 @@
-// $Id: IGauchoMonitorSvc.h,v 1.2 2008-06-10 12:27:52 evh Exp $
+// $Id: IGauchoMonitorSvc.h,v 1.3 2008-06-18 08:49:29 evh Exp $
 #ifndef KERNEL_IGAUCHOMONITORSVC_H 
 #define KERNEL_IGAUCHOMONITORSVC_H 1
 
@@ -26,28 +26,29 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IGauchoMonitorSvc; }
   
-  virtual void declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) = 0;
+/*  virtual void declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const int&  var, const  std::string& desc,  const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const long&  var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const double& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const std::string& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const std::pair<double,double>& var, const std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, const  std::string& desc, const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const std::string& format, const void * var, int size, const std::string& desc, const IInterface* owner) = 0;
+  virtual void declareInfo(const std::string& name, const std::string& format, const void * var, int size, const std::string& desc, const IInterface* owner) = 0;*/
   
-  virtual void declareInfo(const std::string& name, const MonObject* var, const  std::string& desc, const IInterface* owner) = 0;
+/*  virtual void declareInfo(const std::string& name, const MonObject* var, const  std::string& desc, const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const float&  var, const  std::string& desc,  const IInterface* owner) = 0;
   virtual void declareInfo(const std::string& name, const std::pair<int,int>& var, const std::string& desc, const IInterface* owner) = 0;
-  virtual void declareInfo(const std::string& name, const std::pair<double,int>& var, const std::string& desc, const IInterface* owner) = 0;
+  virtual void declareInfo(const std::string& name, const std::pair<double,int>& var, const std::string& desc, const IInterface* owner) = 0;*/
   
   virtual void updateSvc( const std::string& name, bool endOfRun=false, const IInterface* owner = 0 ) = 0;
   virtual void updateAll( bool endOfRun=false , const IInterface* owner = 0) = 0;
   virtual void resetHistos( const IInterface* owner = 0 ) = 0; 
 
-  virtual void setTimerElapsed(bool timerelapsed) = 0;
-  virtual bool getTimerElapsed() const = 0;
+//   virtual void setTimerElapsed(bool timerelapsed) = 0;
+//   virtual bool getTimerElapsed() const = 0;
 
   virtual void declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle) = 0;
   
 };
 #endif // KERNEL_IGAUCHOMONITORSVC_H
+

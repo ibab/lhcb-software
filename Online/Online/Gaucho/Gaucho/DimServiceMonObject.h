@@ -9,26 +9,20 @@
 
 //  Author: jotalo, 22/10/2007
 class MonObject;
-class DimServiceMonObject : public DimService {
+class DimServiceMonObject {
 
 private:
-  int           m_size;
   void*         m_data;
   MonObject*    m_monObject;
   std::string   m_svcName;
   std::stringstream m_ss;
-  bool          m_enableHandler;
+  DimService    *m_dimService;
 
 public: 
-  DimServiceMonObject(std::string svcName, MonObject *monObject, int size);
+  DimServiceMonObject(std::string svcName, MonObject *monObject);
   virtual ~DimServiceMonObject();
   
-  void enableHandler(){m_enableHandler = true;}
-  void disableHandler(){m_enableHandler = false;}
-  
-  void serviceHandler();
-  
-  void updateService(bool endOfRun);
+  void updateServiceMonObject(bool endOfRun);
   void setDataFromMonObject();
   MonObject* monObject(){return m_monObject;};
 };
