@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.34 2008-06-13 12:40:59 pkoppenb Exp $ 
+# $Id: requirements,v 1.35 2008-06-18 07:45:36 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.34 $
+# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.35 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
@@ -18,8 +18,9 @@ branches          cmt doc src options solutions exercises
 # ============================================================================
 use DaVinciKernel       v*  Phys
 use DaVinciMCKernel     v* Phys
-use HltEvent            v* Event
+#use HltEvent            v* Event
 use L0Event             v* Event
+use HltInterfaces       v* Kernel
 
 set DAVINCITUTORIALDATA $(ANALYSISROOT)/options/Bs2Jpsiphi_mm_Grid.opts \
     CERN_DATA           $(ANALYSISROOT)/options/Bs2Jpsiphi_mm_CERN.opts \

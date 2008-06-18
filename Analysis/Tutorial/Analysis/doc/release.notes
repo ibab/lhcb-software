@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 - Patrick Koppenburg
+ - Depend on HltInterfaces
+
 ! 2008-06-13 - Patrick Koppenburg
  - Tutorial 4 : added a filter as testing
 

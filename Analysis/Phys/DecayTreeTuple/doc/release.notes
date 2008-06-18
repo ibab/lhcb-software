@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 - Patrick Koppenburg
+ - Depend on HltInterfaces
+ - Increment to v1r4
+
 !===================== DecayTreeTuple v1r3 2008-06-09 =======================
 
 ! 2008-05-04 - V. Gligorov
