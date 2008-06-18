@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.50 2008-06-18 09:19:14 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.51 2008-06-18 09:26:15 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -1107,7 +1107,8 @@ void L0CaloAlg::sumHcalData( ) {
                 << format( " adc %3d card%3d row%3d col%3d, down%3d left%3d corner%3d", 
                            adc, card, row, col, down, left, corner ) << endreq;
     }
-    
+
+    m_hcalFe[card].addEt( col , row , adc ) ;    
     if ( (0 == row) && (0 <= down) ) {
       if ( ( ( m_hcal -> cardFirstColumn( card ) + col ) >=
              m_hcal -> cardFirstValidColumn( down ) ) &&
