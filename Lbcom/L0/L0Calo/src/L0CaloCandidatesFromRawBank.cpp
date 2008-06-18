@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.11 2008-04-10 19:20:11 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.12 2008-06-18 09:11:57 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -69,7 +69,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
                                                        const int version){
 
   if ( msgLevel( MSG::DEBUG ) ) 
-    debug() << "L0CaloCandidatesFromRawBank ... entering conversion" << endreq;
+    debug() << "L0CaloCandidatesFromRawBank ... entering conversion" 
+	    << " for version " << version << endreq;
   
   // Assume that full path (including rootInTES) is given in nameInTES etc.
   LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
@@ -99,6 +100,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
               << " size " << bankSize << " words " << endreq ;
     while ( 0 < bankSize-- ){
       int cand = (*ptData++);
+      unsigned short mask  = ( cand & 0x10000000 ) >> 28 ;
+      if ( 1 == mask ) continue ;
       unsigned short type  = ( cand & 0x0F000000 ) >> 24 ;
       unsigned short slave = ( cand & 0x60000000 ) >> 29 ;
       unsigned short io    = ( cand & 0x80000000 ) >> 31 ;
@@ -141,7 +144,7 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           }
         } else {
           if ( m_doDebugDecoding ) { 
-            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
                                                    sumEt , sumEt * m_etScale , 
                                                    dummy , 0. );
             outFull -> add( myL0Cand );
@@ -199,12 +202,17 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           center.SetX( center.x() + tol );
           center.SetY( center.y() + tol );
         } else {
-          debug() << "Non valid CELL Id" << endreq ;
-          LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
-          center = det->cellCenter( tmp );
-          tol    = det->cellSize( tmp ) * .5;
-          center.SetX( center.x() - tol );
-          center.SetY( center.y() - tol );
+          if ( 0 == version ) { 
+            debug() << "Non valid CELL Id" << endreq ;
+            LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
+            center = det->cellCenter( tmp );
+            tol    = det->cellSize( tmp ) * .5;
+            center.SetX( center.x() - tol );
+            center.SetY( center.y() - tol );
+          } else {
+            warning() << "Non valid CELL Id. RAW = " << std::hex << cand << endreq ;
+            continue ;
+          }
         }
         int et = cand & 0xFF;
         
@@ -338,6 +346,9 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES( std::vector<std::vector<u
           out -> add( bestCand[ type ] ) ;
         }
       } else {
+	if ( msgLevel( MSG::DEBUG ) ) 
+	  debug() << "out bestCand type = " << type << " " << *bestCand[type]
+		  << endreq;
         out -> add( bestCand[ type ] ) ;
       }
     }
