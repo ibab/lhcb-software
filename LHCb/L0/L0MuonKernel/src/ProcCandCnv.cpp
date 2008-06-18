@@ -156,13 +156,13 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
   // Clear the registers first
   release();
 
-  std::cout.setf(std::ios::uppercase) ;
-  std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
-  for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
-    std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
-  }
-  std::cout<<std::dec;
-  std::cout.unsetf(std::ios::uppercase);
+//   std::cout.setf(std::ios::uppercase) ;
+//   std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
+//   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
+//     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
+//   }
+//   std::cout<<std::dec;
+//   std::cout.unsetf(std::ios::uppercase);
 
 
   int iwd = 0; 

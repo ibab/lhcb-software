@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.cpp,v 1.4 2007-08-27 09:32:26 jucogan Exp $
+// $Id: MuonCandidate.cpp,v 1.5 2008-06-18 12:17:17 jucogan Exp $
 
 #include <cmath>
 #include <vector>
@@ -33,40 +33,48 @@ L0Muon::MuonCandidate::MuonCandidate(const MuonCandidate& cand) {
 
 
 std::string L0Muon::MuonCandidate::dump(std::string tab){
-  std::string cand="";
-  std::string sbuf;
-  char buf[16];
+//   std::string cand="";
+//   std::string sbuf;
+//   char buf[16];
 
-  cand += tab+"|----- CAND -------|\n";
-  sprintf(buf,"%4d",m_quarter );
-  sbuf = buf;
-  cand +=   tab+"|   quarter = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_board   );
-  sbuf = buf;
-  cand +=   tab+"|   board   = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_pu      );
-  sbuf = buf;
-  cand +=   tab+"|   pu      = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_colM3   );
-  sbuf = buf;
-  cand +=   tab+"|   colM3   = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_rowM3   );
-  sbuf = buf;
-  cand +=   tab+"|   rowM3   = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_offM2   );
-  sbuf = buf;
-  cand +=   tab+"|   offM2   = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_offM1   );
-  sbuf = buf;
-  cand +=   tab+"|   offM1   = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_pT      );
-  sbuf = buf;
-  cand +=   tab+"|   pt      = " + sbuf +" |\n";
-  sprintf(buf,"%4d",m_charge  );
-  sbuf = buf;
-  cand +=   tab+"|   charge  = " + sbuf +" |\n";
-  cand += tab+"|------------------|\n";
+//   cand += tab+"|----- CAND -------|\n";
+//   sprintf(buf,"%4d",m_quarter );
+//   sbuf = buf;
+//   cand +=   tab+"|   quarter = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_board   );
+//   sbuf = buf;
+//   cand +=   tab+"|   board   = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_pu      );
+//   sbuf = buf;
+//   cand +=   tab+"|   pu      = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_colM3   );
+//   sbuf = buf;
+//   cand +=   tab+"|   colM3   = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_rowM3   );
+//   sbuf = buf;
+//   cand +=   tab+"|   rowM3   = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_offM2   );
+//   sbuf = buf;
+//   cand +=   tab+"|   offM2   = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_offM1   );
+//   sbuf = buf;
+//   cand +=   tab+"|   offM1   = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_pT      );
+//   sbuf = buf;
+//   cand +=   tab+"|   pt      = " + sbuf +" |\n";
+//   sprintf(buf,"%4d",m_charge  );
+//   sbuf = buf;
+//   cand +=   tab+"|   charge  = " + sbuf +" |\n";
+//   cand += tab+"|------------------|\n";
   
+  char buf[128];
+  std::string sign="+";
+  if (m_charge==0) sign="-";
+  std::cout<<sign<<std::endl;
+  sprintf(buf,"Cand Q%1d PB%02d PU%1d - M3: col=%2d row=%1d - M2 off=%3d - M1 off=%3d - PT=%1s%3d",
+          (m_quarter+1),m_board,m_pu,m_colM3,m_rowM3,m_offM2,m_offM1,sign.c_str(),m_pT );
+  std::string cand = buf;
+
   return cand;
   
 }

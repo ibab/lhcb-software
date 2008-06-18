@@ -5,6 +5,8 @@
 
 #include "L0MuonKernel/BankUtilities.h"
 
+#define _DET_SPEC_HEADER_ 0
+
 /**
    Constructor.
 */
@@ -97,10 +99,14 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   std::cout<<std::dec;
   std::cout.unsetf(std::ios::uppercase);
 
+#if _DET_SPEC_HEADER_==1
   int header = raw[0];
   unsigned int nPart2words = (header & 0x3FFF)/4; // in words of 32 bytes
-
   int iwd = 1;
+#else
+  int iwd=0;
+  unsigned int nPart2words = 62;
+#endif
   // First part of the bank
   for (int iq = 0; iq <2 ; iq++) { // Loop over quarters (1st part)
     unsigned int empty=0;

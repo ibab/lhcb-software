@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.2 2008-01-30 09:37:53 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.3 2008-06-18 12:17:17 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -102,9 +102,10 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
       std::vector<LHCb::MuonTileID> lpads =  padM2ID.layout().tilesInRegion(padM2ID,padM2ID.region());
       if (lpads.size()!=1) {
         std::cout<<" M2 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
-        std::cout<<" padM2ID= "<<padM2ID.toString()<< "lpads.size()= "<<lpads.size()<<std::endl;
+        std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
+        std::cout<<"   * col/row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<std::endl;
+        std::cout<<"   * padM2ID= "<<padM2ID.toString()<< " lpads.size()= "<<lpads.size()<<std::endl;
         return tiles;
-     
       }
       padM2ID = lpads[0];
     } else {
@@ -137,11 +138,18 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
       std::vector<LHCb::MuonTileID> lpads =  padM1ID.layout().tilesInRegion(padM1ID,padM1ID.region());
       if (lpads.size()==0) {
         std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER ANY PAD IN UPPER REGION"<<std::endl;
-        std::cout <<"  \t=>padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+        std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
+        std::cout<<"   * col /row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<"offM1= "<<offM1<<std::endl;
+        std::cout<<"   * padM2ID= "<<padM2ID.toString()<< std::endl;
+        std::cout <<"  * padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+        return tiles;
       } else {
         if (lpads.size()>1) {
           std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
-          std::cout <<"  \t=>padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+          std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
+          std::cout<<"   * col /row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<"offM1= "<<offM1<<std::endl;
+          std::cout<<"   * padM2ID= "<<padM2ID.toString()<< std::endl;
+          std::cout <<"  * padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
         }
         padM1ID = lpads[0];
       }
