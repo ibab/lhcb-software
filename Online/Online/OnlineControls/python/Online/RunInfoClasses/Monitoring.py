@@ -37,7 +37,7 @@ class Monitoring(General):
 
         @return reference to initialized object
     """
-    General.__init__(self,manager,name)
+    General.__init__(self,manager,name,complete=1)
     self.storage = storage
     self.streamManager = stream
     #print '+++++++++++++',self.streamManager.name()

@@ -88,7 +88,7 @@ class General:
       @version 1.0
   """
   # ===========================================================================
-  def __init__(self, manager, name):
+  def __init__(self, manager, name, complete=1,postfix='_RunInfo'):
     """ Default constructor
         @param  manager       Reference to PVSS ControlManager
         @param  name          Detector/Partition name of the RunInfo datapoint
@@ -97,11 +97,9 @@ class General:
     """
     self.manager     = manager
     self.name        = name
+    self.postfix     = postfix
     self.devMgr      = self.manager.deviceMgr()
     self.reader      = self.manager.devReader()
-    self.runTyp      = self.dp('general.runType')
-    self.partID      = self.dp('general.activePartId')
-    self.partition   = self.dp('general.partName')
 
     self.outputLvl   = None
     self.acceptFrac  = None
@@ -111,10 +109,10 @@ class General:
     dpn = self.manager.name()+':'+self.name+'_RunInfo.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
-    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.acceptRate'
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.general.acceptRate'
     if self.devMgr.exists(dpn):
       self.acceptFrac = self.dp('general.acceptRate')
-    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.TAE'
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.general.TAE'
     if self.devMgr.exists(dpn):
       self.tae = self.dp('general.TAE')
     dpn = self.manager.name()+':'+self.name+'_RunInfo.Storage.storeSlice'
@@ -124,13 +122,48 @@ class General:
     if self.devMgr.exists(dpn):
       self.monSlice = self.dp('MonFarm.monSlice')
 
+    if self.outputLvl is not None:
+      self.reader.add(self.outputLvl)
+    if self.acceptFrac is not None:
+      self.reader.add(self.acceptFrac)
+    if self.tae is not None:
+      self.reader.add(self.tae)
+
+    if complete:
+      self.addBasic()
+      self.addStorage()
+      self.addMonitoring()
+      self.addSubdetectors()
+      self.addHLT()      
+
+  # ===========================================================================
+  def addBasic(self):
+    "Add Basic datapoints information to availible information."
+    self.runTyp      = self.dp('general.runType')
+    self.partID      = self.dp('general.activePartId')
+    self.partition   = self.dp('general.partName')
+    # General run info 
+    self.reader.add(self.runTyp)
+    self.reader.add(self.partID)
+    self.reader.add(self.partition)
+    
+  # ===========================================================================
+  def addHLT(self):
+    "Add HLT information to availible information."
+    self.subFarms    = self.dp('HLTFarm.subFarms')
     self.nSubFarm    = self.dp('HLTFarm.nSubFarms')
-    self.storageDir  = self.dp('Storage.dataDirectory')
-    self.storeFlag   = self.dp('Storage.storeFlag')
-    self.rcvInfra    = self.dp('Storage.recvInfrastructure')
-    self.strInfra    = self.dp('Storage.streamInfrastructure')
-    self.streams     = self.dp('Storage.streamTypes')
-    self.strMult     = self.dp('Storage.streamMultiplicity')
+    self.reader.add(self.subFarms)
+    self.reader.add(self.nSubFarm)
+
+  # ===========================================================================
+  def addSubdetectors(self):
+    "Add subdetector information to availible information."
+    self.tell1Boards = self.dp('SubDetectors.tell1List')
+    self.reader.add(self.tell1Boards)
+
+  # ===========================================================================
+  def addMonitoring(self):
+    "Add Monitoring information to availible information."
 
     self.monFlag     = self.dp('MonFarm.monFlag')
     self.monTypes    = self.dp('MonFarm.monTypes')
@@ -177,9 +210,29 @@ class General:
     self.reader.add(self.tell1Boards)    
 
   # ===========================================================================
+  def addStorage(self):
+    "Add Storage information to availible information."
+    self.storeFlag   = self.dp('Storage.storeFlag')
+    self.storageDir  = self.dp('Storage.dataDirectory')
+    self.rcvStrategy = self.dp('Storage.recvStrategy')
+    self.rcvInfra    = self.dp('Storage.recvInfrastructure')
+    self.strStrategy = self.dp('Storage.strmStrategy')
+    self.strInfra    = self.dp('Storage.streamInfrastructure')
+    self.streams     = self.dp('Storage.streamTypes')
+    self.strMult     = self.dp('Storage.streamMultiplicity')
+    self.reader.add(self.storageDir)
+    self.reader.add(self.storeFlag)
+    self.reader.add(self.rcvStrategy)
+    self.reader.add(self.rcvInfra)
+    self.reader.add(self.strStrategy)
+    self.reader.add(self.streams)
+    self.reader.add(self.strMult)
+    self.reader.add(self.strInfra)
+    
+  # ===========================================================================
   def dp(self,name):
     "Access internal datapoint of the datapoint structure."
-    return DataPoint(self.manager,DataPoint.original(self.name+'_RunInfo.'+name))
+    return DataPoint(self.manager,DataPoint.original(self.name+self.postfix+'.'+name))
 
   # ===========================================================================
   def _setDataItem(self, datapoint, save=None):
@@ -214,34 +267,39 @@ class General:
     if wr.execute(0,1) is not None:
       return self
     return None
-
+  
   # ===========================================================================
   def showGeneral(self):
     "Show all information from the RunInfo structure."
-    log('Run type:                    '+str(self.runTyp.data))
-    log('Partition ID                 '+str(self.partID.data))
-    if self.storeFlag>0:
-      log('Data storage is enabled')
-      for i in xrange(len(self.streams.data)):
-        fmt = 'Data stream:                 %-20s with multiplicity:%d'
-        log(fmt%(self.streams.data[i],self.strMult.data[i]))
-    s = 'Receive infrastructure:      '
-    for i in xrange(len(self.recvInfra.data)):
-      s = s + self.recvInfra.data[i]
-    log(s)
-    if self.storeFlag>0:
-      s = 'Streaming infrastructure:    '
-      for i in xrange(len(self.recvInfra.data)):
-        s = s + self.recvInfra.data[i]
+    if hasattr(self,'runTyp'):
+      log('Run type:                    '+str(self.runTyp.data))
+    if hasattr(self,'partID'):
+      log('Partition ID                 '+str(self.partID.data))
+    if hasattr(self,'partition'):
+      log('Partition Name               '+str(self.partition.data))
+    if hasattr(self,'storeFlag'):
+      if self.storeFlag>0:
+        log('Data storage is enabled')
+        for i in xrange(len(self.streams.data)):
+          fmt = 'Data stream:                 %-20s with multiplicity:%d'
+          log(fmt%(self.streams.data[i],self.strMult.data[i]))
+      s = 'Receive infrastructure:      '
+      for i in xrange(len(self.rcvInfra.data)):
+        s = s + self.rcvInfra.data[i]
       log(s)
+      if self.storeFlag>0:
+        s = 'Streaming infrastructure:    '
+        for i in xrange(len(self.rcvInfra.data)):
+          s = s + self.rcvInfra.data[i]
+        log(s)
 
   # ===========================================================================
   def show(self):
     "Show all information from the Storage structure."
     if self.load():
-      self.showStreams()
-      self.showMonitors()
-      self.showTell1Boards()
+      if hasattr(self,'storeFlag'):   self.showStreams()
+      if hasattr(self,'monFlag'):     self.showMonitors()
+      if hasattr(self,'tell1Boards'): self.showTell1Boards()
       self.showGeneral()
       return
     error('Failed to load RunInfo for partition:'+self.name)

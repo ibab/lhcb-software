@@ -139,13 +139,23 @@ def install():
     execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+projectName()+"""')";""")
     print 'Executing final PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallStorage2.cpp')
-  elif projectName()=='RECMON':
+  elif projectName()=="RECSTORAGE":
     print 'Executing PVSS setup controller for project '+projectName()
-    execCmd(pvssCTRL()+'InstallReco.cpp')
+    #execCmd(pvssCTRL()+'InstallStorage.cpp')
     print 'Executing python setup....'
-    execCmd("""python -c "import Online.Reco.FarmInstaller as IM; IM.install('Reco','"""+projectName()+"""')";""")
+    #execCmd("""python -c "import Online.Streaming.StorageInstaller as IM; IM.install('Storage','"""+projectName()+"""')";""")
     print 'Executing final PVSS setup controller for project '+projectName()
-    execCmd(pvssCTRL()+'InstallReco2.cpp')
+    execCmd(pvssCTRL()+'InstallRecStorage2.cpp')
+  elif projectName()[:6]=='RECMON' or projectName()[:6]=='RECHLT':
+    print 'Executing PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'InstallSubFarm.cpp')
+    print 'Executing python setup....'
+    execCmd("""python -c "import Online.ProcessorFarm.FarmInstaller as IM; IM.installSubFarm('Reco','"""+projectName()+"""')";""")
+    print 'Executing final PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'InstallSubFarm2.cpp')
+  elif projectName()=='RECFARM':
+    print 'Executing PVSS setup controller for project '+projectName()
+    execCmd(pvssCTRL()+'InstallFarm.cpp')
   elif projectName()[:4]=='RECO':
     print 'Executing PVSS setup controller for project '+projectName()
     execCmd(pvssCTRL()+'InstallReco.cpp')

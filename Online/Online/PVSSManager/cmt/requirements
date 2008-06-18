@@ -15,5 +15,6 @@ set PVSS00api "$(PVSSMANAGERROOT)/$(CMTCONFIG)/PVSS00api.exe"
 private
 macro_remove cppflags "-W "
 macro_append PVSS00api_cppflags " -m32 " WIN32 ""
-macro_append PVSS00apilinkopts  " -m32  $(PVSS_link) " WIN32 ""
-macro_append PVSS00api_dependencies " PVSSManager "
+macro_append PVSS00apilinkopts " -m32  $(PVSS_link) " WIN32 ""
+macro_append  PVSS00api_dependencies    " PVSSManager "
+

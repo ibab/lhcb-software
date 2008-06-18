@@ -34,7 +34,8 @@ class StorageInfo(General):
 
         @return reference to initialized object
     """
-    General.__init__(self,manager,name,complete=1)
+    General.__init__(self,manager,name,complete=None)
+    self.addStorage()
   # ===========================================================================
   def doStreaming(self):
     "Access to the use-flag"
@@ -69,7 +70,7 @@ class StorageInfo(General):
     recvSenders = []
     recvInfrastructure = []
     dataSources = []
-    opt = '/'+dimDns+'/'+partition.manager.name()+'/'+partition.name+'/'
+    opt = '/'+dimDns+'/'+partition.manager.name()+'/'
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
     cl2 = '/Class2'+opt

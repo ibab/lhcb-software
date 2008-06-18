@@ -56,6 +56,7 @@ def runStorage(name='Storage',sim=None):
 
    Arguments:
    @param name        System name
+   @param mgr         PVSS controls manager
    @param sim         List of stream slices for task simulation simulated
 
    @author M.Frank
@@ -64,9 +65,8 @@ def runStorage(name='Storage',sim=None):
   import Online.AllocatorControl    as Control
   import Online.Streaming.Allocator as StreamAllocator
   import Online.JobOptions.OptionsWriter as JobOptions
-
-  info     = RI.StorageInfoCreator()
   mgr      = _mgr(Params.storage_system_name)
+  info     = RI.StorageInfoCreator()
   streamer = StreamAllocator.Allocator(mgr,name,info)
   writer   = JobOptions.StorageOptionsWriter(mgr,name,info)
   ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
@@ -150,7 +150,9 @@ def execute(args):
 
   if len(sim)==0: sim=None
 
-  if typ == 'Storage':
+  if typ == 'RecStorage':
+    function = runRecStorage
+  elif typ == 'Storage':
     function = runStorage
     #res = runStorage(sim=sim)
   elif typ == 'Monitoring':

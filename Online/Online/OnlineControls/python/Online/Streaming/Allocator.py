@@ -315,7 +315,7 @@ class FSMmanip:
           del unused_tasks[n][0]
           #print 'Task:',len(used_tasks[n]),task
         else:
-          error(self.name+': No task slots for Class 1 present!',timestamp=1)
+          error(self.name+': No task slots present!',timestamp=1)
           if not unused_tasks.has_key(n):
             error(self.name+': Key '+str(n)+' canot be found.',timestamp=1)
           else:

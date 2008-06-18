@@ -1,10 +1,11 @@
 import platform
 
 # LHCb wide general ECS system name
-lbecs_system_name   = 'LBECS'
-jobopts_system_name = 'LBECS'
-storage_system_name = 'STORAGE'
-monitor_system_name = 'MONITORING'
+lbecs_system_name      = 'LBECS'
+jobopts_system_name    = 'LBECS'
+storage_system_name    = 'STORAGE'
+recstorage_system_name = 'RECSTORAGE'
+monitor_system_name    = 'MONITORING'
 
 def jobOptionsSystemName():  return jobopts_system_name
 #def jobOptionsSystemName():  return "TEST";
