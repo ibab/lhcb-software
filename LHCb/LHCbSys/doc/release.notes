@@ -5,9 +5,10 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v23r8>2008-06-09 LHCbSys v23r8</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2008-06-18 LHCbSys v24r0</A></H1><PRE>
 This version uses Gaudi v20r0 and LCG_55
 
+- Packages added:    HltInterfaces v1r0 - Interfaces for Hlt tools
 - Packages modified: DetDescSvc v2r0
 
 - In DetDescSvc v2r0
