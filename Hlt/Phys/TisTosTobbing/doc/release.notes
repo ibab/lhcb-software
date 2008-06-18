@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.21 2008-06-18 07:37:21 pkoppenb Exp $
+! $Id: release.notes,v 1.22 2008-06-18 07:42:26 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+! 2008-06-18 - Patrick Koppenburg
+ - IANNSvc moved to Kernel/
+ - Increment to v2r6
 
 !========================== TisTosTobbing v2r5 2008-06-18 ===================
 ! 2008-06-18 - Patrick Koppenburg

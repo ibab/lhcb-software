@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.4 2008-06-18 01:18:31 tskwarni Exp $
+// $Id: TriggerTisTos.h,v 1.5 2008-06-18 07:42:26 pkoppenb Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -8,7 +8,7 @@
 #include "Kernel/ITriggerTisTos.h"            // Interface
 
 #include "TriggerSelectionTisTos.h"
-#include "HltBase/IANNSvc.h"
+#include "Kernel/IANNSvc.h"
 
 namespace LHCb {
   class HltSummary;
