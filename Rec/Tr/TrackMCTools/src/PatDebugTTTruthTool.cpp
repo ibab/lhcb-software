@@ -1,4 +1,4 @@
-// $Id: PatDebugTTTruthTool.cpp,v 1.2 2007-10-23 14:56:06 cattanem Exp $
+// $Id: PatDebugTTTruthTool.cpp,v 1.3 2008-06-18 07:40:07 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,8 @@
 #include "Event/MCParticle.h"
 #include "Event/STCluster.h"
 #include "Event/Track.h"
+
+#include "STDet/DeSTDetector.h"
 
 // local
 #include "PatDebugTTTruthTool.h"
@@ -35,6 +37,18 @@ PatDebugTTTruthTool::PatDebugTTTruthTool( const std::string& type,
   declareInterface<IPatDebugTTTool>(this);
 
 }
+
+
+StatusCode PatDebugTTTruthTool::initialize()
+{
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return Error("Failed to initialize", sc);
+
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::TT);
+
+  return sc;
+}
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -67,12 +81,13 @@ void PatDebugTTTruthTool::debugTTClusterOnTrack (  const LHCb::Track* track,
         LHCb::STChannelID id = hit->hit()->lhcbID().stID();
         bool found = false;
         for( unsigned int kk = 0; hit->hit()->sthit()->cluster().pseudoSize() > kk; ++kk ) {
-          LHCb::MCParticle* clusPart = itLink.first( id );
+	  LHCb::MCParticle* clusPart = 0;
+          if ( id != LHCb::STChannelID(0)) clusPart = itLink.first( id );
           while ( 0 != clusPart ) {
             if ( clusPart->key() == part->key() ) found = true;
             clusPart = itLink.next();
           }
-          id = id+1;
+          id = m_tracker->nextRight(id);
         }
         if ( found ) {
           double xCoord = hit->hit()->x() ;
@@ -99,7 +114,8 @@ void PatDebugTTTruthTool::debugTTCluster( MsgStream& msg, const PatTTHit* hit ) 
   LHCb::STChannelID id = hit->hit()->lhcbID().stID();
   int lastKey = -1;
   for( unsigned int kk = 0; hit->hit()->sthit()->cluster().pseudoSize() > kk; ++kk ) {
-    LHCb::MCParticle* part = itLink.first( id );
+    LHCb::MCParticle* part = 0;
+    if (id != LHCb::STChannelID(0)) part = itLink.first( id );
     while ( 0 != part ) {
       if ( lastKey != part->key() ) {
         lastKey = part->key();
@@ -107,7 +123,7 @@ void PatDebugTTTruthTool::debugTTCluster( MsgStream& msg, const PatTTHit* hit ) 
       }
       part = itLink.next();
     }
-    id = id+1;
+    id = m_tracker->nextRight(id);
   }
 }
 

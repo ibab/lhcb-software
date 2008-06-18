@@ -1,4 +1,4 @@
-// $Id: PatDebugTTTruthTool.h,v 1.2 2007-10-23 14:56:07 cattanem Exp $
+// $Id: PatDebugTTTruthTool.h,v 1.3 2008-06-18 07:40:07 mneedham Exp $
 #ifndef PATDEBUGTTTRUTHTOOL_H 
 #define PATDEBUGTTTRUTHTOOL_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/IPatDebugTTTool.h"            // Interface
 
+class DeSTDetector;
 
 /** @class PatDebugTTTruthTool PatDebugTTTruthTool.h
  *  
@@ -23,6 +24,8 @@ public:
 
   virtual ~PatDebugTTTruthTool( ); ///< Destructor
 
+  virtual StatusCode initialize(); /// initialize
+
   virtual void debugTTClusterOnTrack( const LHCb::Track* track, 
                                       const PatTTHits::const_iterator beginCoord,
                                       const PatTTHits::const_iterator endCoord   );
@@ -32,6 +35,8 @@ public:
 protected:
 
 private:
+
+  DeSTDetector* m_tracker;
 
 };
 #endif // PATDEBUGTTTRUTHTOOL_H

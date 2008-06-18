@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 M Needham
+ - Fix implicit conversions
+
 !======================= TrackMCTools v2r17 2008-02-06 =======================
 ! 2008-02-04 M Needham
   - Modifications in ghost classification tools to make them work better on DST:
