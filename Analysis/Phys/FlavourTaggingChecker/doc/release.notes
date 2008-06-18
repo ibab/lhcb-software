@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.33 2008-06-10 19:06:57 musy Exp $
+! $Id: release.notes,v 1.34 2008-06-18 07:06:57 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2008-06-18 - Patrick Koppenburg
+ - Depend on new package HltInterfaces
 
 ! 2008-06-10 - Marco Musy
  - revision and retuning for Brunel v31 data

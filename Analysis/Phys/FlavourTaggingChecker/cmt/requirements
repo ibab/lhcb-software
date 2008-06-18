@@ -19,6 +19,7 @@ set FLAVOURTAGGINGCHECKEROPTS ${FLAVOURTAGGINGCHECKERROOT}/options
 use DaVinciKernel   v*  Phys
 use DaVinciMCTools  v*  Phys
 use MCInterfaces    v*  Kernel
+use HltInterfaces   v*  Kernel
 
 # Component library building rule
 #============================================================================
