@@ -1,4 +1,4 @@
- // $Id: HltBackgroundCategory.cpp,v 1.10 2008-06-17 19:12:34 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.11 2008-06-18 14:01:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,6 @@ HltBackgroundCategory::HltBackgroundCategory( const std::string& name,
   ,   m_algoCorr()
     , m_print()
     , m_printMC()
-    , m_linker()
 {
   declareProperty("PrintTree",m_printTree=false );
   declareProperty("FillAll",m_fillAll=false );
@@ -65,7 +64,6 @@ StatusCode HltBackgroundCategory::initialize() {
   if (m_printTree ){
     m_print       = tool<IPrintDecayTreeTool>("PrintDecayTreeTool",this);
     m_printMC     = tool<IPrintMCDecayTreeTool>("PrintMCDecayTreeTool",this);
-    m_linker      = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   }
   
   const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
@@ -103,12 +101,14 @@ StatusCode HltBackgroundCategory::execute() {
   if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
 
   std::vector<std::string> sels =  m_summaryTool->selections() ;
+  Particle2MCLinker* linker  = 0 ;
+  if (m_printTree) linker = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   
   for ( std::vector<std::string>::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
 
     if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " 
-                                          << svc<IANNSvc>("HltANNSvc")->value("SelectionID",*is)->first  
+                                          << svc<IANNSvc>("HltANNSvc")->value("Hlt2SelectionID",*is)->first  
                                           <<  " says " << m_summaryTool->decision() 
                                           << " has selection : " 
                                           << m_summaryTool->hasSelection(*is) 
@@ -154,7 +154,7 @@ StatusCode HltBackgroundCategory::execute() {
       }
       
       if ( m_printTree ){
-        m_print->printTree(*ip,m_linker);
+        m_print->printTree(*ip,linker);
         if (0!=m_bkg->origin(*ip)) m_printMC->printTree(m_bkg->origin(*ip));
       }
       
@@ -177,7 +177,8 @@ StatusCode HltBackgroundCategory::execute() {
     if (msgLevel(MSG::DEBUG)) debug() << "End for " << *is << endmsg ;
     if (!m_algoCorr->endEvent()) return StatusCode::FAILURE ;
   }
-
+  if (0!=linker) delete linker ;
+  
   return  StatusCode::SUCCESS ;
 }
 
