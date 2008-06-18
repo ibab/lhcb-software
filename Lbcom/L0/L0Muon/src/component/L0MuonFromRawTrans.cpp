@@ -1,4 +1,4 @@
-// $Id: L0MuonFromRawTrans.cpp,v 1.11 2008-06-05 08:28:27 jucogan Exp $
+// $Id: L0MuonFromRawTrans.cpp,v 1.12 2008-06-18 12:21:24 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -308,6 +308,9 @@ StatusCode L0MuonFromRawTrans::dumpErrors()
 
 StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension){
 
+  int static ievt=0;
+  ++ievt;
+  
   std::vector<L0Muon::PMuonCandidate> cands ;
   std::vector<L0Muon::PMuonCandidate>::iterator itcand;
 
@@ -329,9 +332,14 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
 //       if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      if (l0mcand==NULL) {
+        if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: ctrl side "<<i
+                                          <<" count# "<<ievt<<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        continue;
+      }
       pl0mcands->insert(l0mcand);
     }
-  }
+  } 
 
   location = LHCb::L0MuonCandidateLocation::BCSU +"fromCB"+ extension;
   LHCb::L0MuonCandidates* pbcsucands = new LHCb::L0MuonCandidates();
@@ -340,9 +348,9 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
 //     debug() << "writeOnTES -------------------------"<< endreq;
 //     debug() << "writeOnTES at "<< location << endreq;
 //   }
-  for (int i= 0; i<4; ++i) {
-    if (!m_procRaw[i].isActiv()) continue;
-    cands = m_procRaw[i].muonCandidatesBCSU();
+  for (int i= 0; i<2; ++i) {
+    if (!m_ctrlRaw[i].isActiv()) continue;
+    cands = m_ctrlRaw[i].muonCandidatesBCSU();
 //     if (msgLevel( MSG::DEBUG )) {
 //       debug() << "writeOnTES: side "<<i<< endreq;
 //       debug() << "writeOnTES: => "<<cands.size()<<" candidates found (BCSU)"<< endreq;
@@ -350,6 +358,11 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
 //       if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      if (l0mcand==NULL) {
+        if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: ctrl side "<<i
+                                          <<" count# "<<ievt<<" BCSU from CB\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        continue;
+      }
       pbcsucands->insert(l0mcand);
     }
   }
@@ -371,6 +384,11 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
 //       if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      if (l0mcand==NULL) {
+        if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)
+                                          <<" count# "<<ievt<<" BCSU from PB\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        continue;
+      }
       pbcsu2cands->insert(l0mcand);
     }
   }
@@ -392,6 +410,11 @@ StatusCode L0MuonFromRawTrans::writeOnTES(int procVersion, std::string extension
     for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
 //       if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
       LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+      if (l0mcand==NULL) {
+        if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)
+                                          <<" count# "<<ievt<<" PU\n"<<(*itcand)->dump("\t=> ")<< endreq;
+        continue;
+      }
       ppucands->insert(l0mcand);
     }
   }
@@ -489,6 +512,11 @@ LHCb::L0MuonCandidate* L0MuonFromRawTrans::l0muoncandidate(L0Muon::PMuonCandidat
   std::vector<LHCb::MuonTileID> pads = L0Muon::add2pads(cand->quarter(),cand->board(),cand->pu(),
                                                         cand->colM3(),cand->rowM3(), cand->offM2(),cand->offM1(),
                                                         procVersion,debug);
+  if (pads.size()==0) {
+    error()<<"wrong address for candidate "<<endmsg;
+    return NULL;
+  }
+  
   std::vector<double> kine = L0Muon::kine(pads[0],pads[1],procVersion,debug);
 //   debug()<<"l0muoncandidate Seed"<<pads[2].toString()<<" M2: "<<pads[1].toString()<<" M1: "<<pads[0].toString()<< endreq;
   LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads,cand->pT());

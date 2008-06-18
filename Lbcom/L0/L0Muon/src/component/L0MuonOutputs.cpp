@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.10 2008-06-05 08:28:27 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.11 2008-06-18 12:21:24 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -339,6 +339,11 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
         double pt = l0mcand->pt();
         sumPt += fabs(pt);
         sumCh += (pt>0. ? +1 : -1);      
+        if (l0mcand==NULL) {
+          if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: ctrl side "<<i
+                                            <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+          continue;
+        }
         pl0mcands->insert(l0mcand);
       }
     }
@@ -369,6 +374,11 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
         if( msgLevel(MSG::DEBUG) ) debug() << "writeOnTES: BCSU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+        if (l0mcand==NULL) {
+          if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: ctrl side "<<i<<" BCSU from CB"
+                                            <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+          continue;
+        }
         pbcsucands->insert(l0mcand);
       }
     }
@@ -392,6 +402,11 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
         if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: PU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+        if (l0mcand==NULL) {
+          if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<"BCSU from PB"
+                                            <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+          continue;
+        }
         ppucands->insert(l0mcand);
       }
     }
@@ -415,6 +430,11 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
         if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES: PU candidate\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
+        if (l0mcand==NULL) {
+          if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: proc Q"<<(i+1)<<"PU"
+                                            <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
+          continue;
+        }
         ppucands->insert(l0mcand);
       }
     }
@@ -676,6 +696,10 @@ LHCb::L0MuonCandidate* L0MuonOutputs::l0muoncandidate(L0Muon::PMuonCandidate can
   std::vector<LHCb::MuonTileID> pads = L0Muon::add2pads(cand->quarter(),cand->board(),cand->pu(),
                                                         cand->colM3(),cand->rowM3(), cand->offM2(),cand->offM1(),
                                                         procVersion,debug);
+  if (pads.size()==0) {
+    error()<<"wrong address for candidate "<<endmsg;
+    return NULL;
+  }
   std::vector<double> kine = L0Muon::kine(pads[0],pads[1],procVersion,debug);
   LHCb::L0MuonCandidate *pl0muoncandidate = new LHCb::L0MuonCandidate(kine[0], kine[1], kine[2], pads,cand->pT());
   return pl0muoncandidate;

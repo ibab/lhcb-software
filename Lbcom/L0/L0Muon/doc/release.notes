@@ -1,8 +1,10 @@
-!  $Id: release.notes,v 1.55 2008-06-05 08:28:27 jucogan Exp $
+!  $Id: release.notes,v 1.56 2008-06-18 12:21:24 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+! 2008-06-18 - Julien Cogan
+ - bug fixes and updates
 ! 2008-06-05 - Julien Cogan
  - Decoding of bank version 2 !! NOT TESTED !!
  - Possibility to run without M1 or M2
