@@ -13,15 +13,7 @@ use Boost v* LCG_Interfaces
 use OnlineHistDB v* Online
 use OnlineKernel v* Online
 
-# use DAQEvent v* Event
-
-macro Boost_config_version "1.35.0"
-macro Boost_file_version "1_35"
-#macro Boost_linkopts_regex " -lboost_regex-gcc34-mt"
-#macro Boost_linkopts_filesystem " -lboost_filesystem-gcc34"
-
-# macro_append Boost_linkopts " -lstdc++ -lboost_serialization-gcc34-mt "
-macro_append Boost_linkopts " -lboost_thread-gcc34-mt -lboost_serialization-gcc34-mt -lboost_date_time-gcc34-mt "
+macro_append Boost_linkopts " -lboost_serialization-gcc34-mt"
 macro_append ROOT_linkopts ' -lHist'
 
 apply_pattern install_more_includes more=Gaucho
@@ -35,12 +27,4 @@ apply_pattern component_library library="Gaucho"
 apply_pattern linker_library library="GauchoLib" 
 apply_pattern generate_rootmap library=Gaucho
 
-# macro_append Boost_linkopts ' -lboost_regex-gcc-mt ' \
-#         ROOT_GE_5_15&Linux ' -lboost_regex-$(Boost_compiler_version)-mt ' \
-#        ROOT_GE_5_15&Darwin ' -lboost_regex-mt-$(Boost_file_version) ' \
-#                     Darwin ' -lboost_regex-$(Boost_file_version) ' \
-#                     WIN32  ' boost_regex-vc71-mt-$(Boost_file_version).lib '
-
-macro_append  Gaucho_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
-macro_append  GauchoLib_shlibflags ' -lpthread -lrt -lcurses ' WIN32 ' '
 
