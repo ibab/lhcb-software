@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.11 2008-06-18 14:01:22 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.12 2008-06-18 19:23:03 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
