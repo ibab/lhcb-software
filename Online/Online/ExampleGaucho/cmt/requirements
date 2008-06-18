@@ -27,7 +27,7 @@ use GaudiUtils v*
 library          ExampleGaucho  ../src/*.cpp
 
 private
-macro_append ExampleGaucho_shlibflags "-lboost_serialization-gcc"
+macro_append ExampleGaucho_shlibflags "-lGaucho"
 
 
 #============================================================================
