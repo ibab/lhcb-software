@@ -3,3 +3,4 @@
 killall Ctest.exe
 killall CCPCtest.exe
 killall DNS.exe
+killall dns.exe
