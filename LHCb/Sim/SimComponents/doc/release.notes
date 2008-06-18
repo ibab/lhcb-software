@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 - Patrick Koppenburg
+ - Fixed doxygen for MCDecayFinder
+
 !====================== SimComponents v2r10 2008-06-05 =======================
 ! 2008-06-05 - Marco Cattaneo
  - Protect underflow in PackMCVertex and CompareMCVertex, due to crazy

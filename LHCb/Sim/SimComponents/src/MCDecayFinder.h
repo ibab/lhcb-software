@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.5 2007-08-20 09:12:12 pkoppenb Exp $
+// $Id: MCDecayFinder.h,v 1.6 2008-06-18 09:28:33 pkoppenb Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -28,57 +28,79 @@ struct yy_buffer_state;
  *  (almost) any set of decay.
  *
  *  The description is made of 'particle' and 'decay'.
+ * 
  *  A 'particle' is one of:
+ *
  *  - a particle name as known by the ParticlePropertySvc,
- *  - a set of 'particle's expressed like this: "{A, B, C}",
- *  - a set of 'particle's or their charge conjugate, expressed as "[A,B,C]cc",
- *  - a 'particle' with it's oscillation flag set ("[A]os"),
- *  - a 'wildcard', any particle with some quarks inside is expressed as "<Xq>"
- *    with up to tree quarks in place of "q". Quarks are u,d,c,s,t,b,u~,d~,...
+ *
+ *  - a set of 'particle's expressed like this: <c>"{A, B, C}"</c>,
+ *
+ *  - a set of 'particle's or their charge conjugate, expressed as <c>"[A,B,C]cc"</c>,
+ *
+ *  - a 'particle' with it's oscillation flag set (<c>"[A]os"</c>),
+ *
+ *  - a 'wildcard', any particle with some quarks inside is expressed as <c>"<Xq>"</c>
+ *    with up to tree quarks in place of <c>"q"</c>. Quarks are u,d,c,s,t,b,u~,d~,...
  *    A simple '?' is also a wildcard matching any single particle,
+ *
  *  a 'decay' is one of:
- *  - an optional "(" and a 'particle' and the matching ")" if needed,
- *  - a "(", a 'particle', one of "->" or "=>", a blank separated list of decay,
- *    an optional "..." and a ")", e.g. "(B0 -> pi+ pi-)",
- *  - a "pp" one of "->" or "=>" and a blank separated list of decay.
- *  Note: the "()" are not needed around the first decay so the previous exemple
- *        could simply be written "B0 -> pi+ pi-" but they are mandatory for
- *        subdecay like "B0 -> (J/psi(1S) -> mu+ mu-) KS0".
+ *
+ *  - an optional <c>"("</c> and a 'particle' and the matching <c>")"</c> if needed,
+ *
+ *  - a <c>"("</c>, a 'particle', one of <c>"->"</c> or <c>"=>"</c>, a blank separated list of decay,
+ *    an optional <c>"..."</c> and a <c>")"</c>, e.g. <c>"(B0 -> pi+ pi-)"</c>,
+ *
+ *  - a <c>"pp"</c> one of <c>"->"</c> or <c>"=>"</c> and a blank separated list of decay.
+ *
+ *  Note: the <c>"()"</c> are not needed around the first decay so the previous exemple
+ *        could simply be written <c>"B0 -> pi+ pi-"</c> but they are mandatory for
+ *        subdecay like <c>"B0 -> (J/psi(1S) -> mu+ mu-) KS0"</c>.
+ *
  *  Note: If you want to find a stable particle you must explicily request that
  *        it decay to nothing but the arrow has to be dropped. So this looks
- *        like "B0 -> D_s- (K+)", here the D_s- can decay to whatever but
+ *        like <c>"B0 -> D_s- (K+)"</c>, here the D_s- can decay to whatever but
  *        the K+ must not decay. NB: Right now secondary interaction are seen
  *        as decay!
- *  Note: "->" means "decay to" and
- *        "=>" means "decay to .... with some resonnances in the middle".
+ *
+ *  Note: <c>"->"</c> means <c>"decay to"</c> and
+ *        <c>"=>"</c> means "decay to .... with some resonnances in the middle".
  *        So if you want to catch B0 to D_s- K+ with any D*_s in beetween you
- *        simply write "B0 => D_s- K+ ...". NB: The "..." is here to catch any
+ *        simply write <c>"B0 => D_s- K+ ..."</c>. NB: The <c>"..."</c> is here to catch any
  *        number of particles of any kind so you get the products of the D*_s-.
- *  Note: "pp" stands for "proton - proton collision". The decay products will
- *        be matched against the particles with no mother. An implicit "..." is
+ *
+ *  Note: <c>"pp"</c> stands for "proton - proton collision"</c>. The decay products will
+ *        be matched against the particles with no mother. An implicit <c>"..."</c> is
  *        appended. Only the boolean information for that kind of find can be
  *        used, the returned particle is set (MCParticle *)1 in case of match
  *        NULL otherwise.
+ *
  *  Note: alternate decays can be specified by puting them in a comma seperated
- *        list surrounded by braces (e.g. "B0 -> pi+ pi- , B0 -> K+ pi-").
+ *        list surrounded by braces (e.g. <c>"B0 -> pi+ pi- , B0 -> K+ pi-"</c>).
+ *
  *  Note: the charge conjugate operator can also be applied to a set of decay
- *        (e.g. "[B0 -> K+ pi-]cc" == "B0 -> K+ pi- , B0~ -> K- pi+" (Please
+ *        (e.g. <c>"[B0 -> K+ pi-]cc"</c> == <c>"B0 -> K+ pi- , B0~ -> K- pi+"</c> (Please
  *        note the B0 turned into a B0~)).
+ *
  *  Note: alternate set of daughters can also be specified by putting the sets
  *        in a comma seperated list surrounded by braces (e.g.
- *        "B0 -> {pi+ pi-, K+ pi-, K- pi+, K+ K-}"). If one of the alternate
+ *        <c>"B0 -> {pi+ pi-, K+ pi-, K- pi+, K+ K-}"</c>). If one of the alternate
  *        set has only one daughter, DO NOT put it first in the list has it
  *        will not be able to parse the decay correctly (it will fail indeed).
+ *
  *  Note: you can also use the charge conjugate operator on the daughters set.
+ *
  *  Note: you can even mix the []cc and the {}.
  * 
  * Extracting particles from the decay:
+ *
  * - It is possible to extract all particle in the decay tree which match a
  *   given id by preceeding the description with the list of particle you want
  *   to be extracted (cc, os, nos operator applies here too) terminated by a
- *   collon (e.g. "pi+ : B0 -> pi+ pi-").
+ *   colon (e.g. <c>"pi+ : B0 -> pi+ pi-"</c>).
+ *
  * - Precise particle inside the decay tree can also be flagged for extraction
- *   by preceeding them with a '^' (like "B0 -> (^J/psi(1S) -> mu+ mu-) KS0").
+ *   by preceeding them with a '^' (like <c>"B0 -> (^J/psi(1S) -> mu+ mu-) KS0"</c>).
+ *
  * You can then retrieve these particles with the MCDecayFinder::members
  * method.
  * 
