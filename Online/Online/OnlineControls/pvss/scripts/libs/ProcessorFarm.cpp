@@ -89,6 +89,7 @@ int ProcessorFarm_createTree(string stream,string farm,int numSlice,int numTasks
   DebugN(stream+" Farm:"+farm+" No.Slices:"+numSlice+" No.Tasks per Node:"+numTasks);
   names = dpNames(stream+"_"+farm+".Nodes","FarmSubInfo");
   dynAppend(sets,farm);
+  DebugN("Subfarms: ["+stream+"_"+farm+".Nodes] "+names);
   for(int i=1, n=dynlen(names); i<=n; ++i)  {
     dpGet(names[i],set);
     for(int j=1, m=dynlen(set); j<=m; ++j)
@@ -184,8 +185,9 @@ int ProcessorFarm_installDataTypes()  {
   names[13] = makeDynString ("","","streamTypes","");
   names[14] = makeDynString ("","","streamMultiplicity","");
   names[15] = makeDynString ("","","strmStrategy","");
-  names[16] = makeDynString ("","Control","","");
-  names[17] = makeDynString ("","","Infrastructure","");
+  names[16] = makeDynString ("","","dataDirectory","");
+  names[17] = makeDynString ("","Control","","");
+  names[18] = makeDynString ("","","Infrastructure","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRING,0,0);
   types[3]  = makeDynInt (0,DPEL_STRUCT,0,0);
@@ -201,25 +203,50 @@ int ProcessorFarm_installDataTypes()  {
   types[13] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   types[14] = makeDynInt (0,0,DPEL_DYN_INT,0);
   types[15] = makeDynInt (0,0,DPEL_INT,0);
-  types[16] = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[17] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[16] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[17] = makeDynInt (0,DPEL_STRUCT,0,0);
+  types[18] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   ctrlUtils_installDataType(names,types);
   names[1]  = makeDynString ("FarmRunInfo","","","");
   names[2]  = makeDynString ("","general","","");
   names[3]  = makeDynString ("","","partName","");
   names[4]  = makeDynString ("","","partId","");
   names[5]  = makeDynString ("","","activePartId","");
-  names[6]  = makeDynString ("","HLTFarm","","");
-  names[7]  = makeDynString ("","","nSubFarms","");
-  names[8]  = makeDynString ("","","subFarms","");
+  names[6]  = makeDynString ("","","runType","");
+  names[7]  = makeDynString ("","HLTFarm","","");
+  names[8]  = makeDynString ("","","nSubFarms","");
+  names[9]  = makeDynString ("","","subFarms","");
+  names[10] = makeDynString ("","","nodeList","");
+  names[11] = makeDynString ("","Storage","","");
+  names[12] = makeDynString ("","","storeFlag","");
+  names[13] = makeDynString ("","","dataDirectory","");
+  names[14] = makeDynString ("","","fileName","");
+  names[15] = makeDynString ("","","recvStrategy","");
+  names[16] = makeDynString ("","","recvInfraStructure","");
+  names[17] = makeDynString ("","","strmStrategy","");
+  names[18] = makeDynString ("","","streamInfrastructure","");
+  names[19] = makeDynString ("","","streamMultiplicity","");
+  names[20] = makeDynString ("","","streamTypes","");
   types[1]  = makeDynInt (DPEL_STRUCT,0,0,0);
   types[2]  = makeDynInt (0,DPEL_STRUCT,0,0);
   types[3]  = makeDynInt (0,0,DPEL_STRING,0,0);
   types[4]  = makeDynInt (0,0,DPEL_INT,0,0);
   types[5]  = makeDynInt (0,0,DPEL_INT,0,0);
-  types[6]  = makeDynInt (0,DPEL_STRUCT,0,0);
-  types[7]  = makeDynInt (0,0,DPEL_INT,0);
-  types[8]  = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[6]  = makeDynInt (0,0,DPEL_STRING,0,0);
+  types[7]  = makeDynInt (0,DPEL_STRUCT,0,0);
+  types[8]  = makeDynInt (0,0,DPEL_INT,0);
+  types[9]  = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[10] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[11] = makeDynInt (0,DPEL_STRUCT,0,0);
+  types[12] = makeDynInt (0,0,DPEL_INT,0);
+  types[13] = makeDynInt (0,0,DPEL_STRING,0);
+  types[14] = makeDynInt (0,0,DPEL_STRING,0);
+  types[15] = makeDynInt (0,0,DPEL_INT,0);
+  types[16] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[17] = makeDynInt (0,0,DPEL_INT,0);
+  types[18] = makeDynInt (0,0,DPEL_DYN_STRING,0);
+  types[19] = makeDynInt (0,0,DPEL_DYN_INT,0);
+  types[20] = makeDynInt (0,0,DPEL_DYN_STRING,0);
   ctrlUtils_installDataType(names,types);
   return 1;
 }
@@ -270,12 +297,20 @@ void ProcessorFarmAlloc_CheckAllocPanel(string dp, string value)  {
 
 //=============================================================================
 void ProcessorFarmAlloc_startAllocPanel(string farm, string partition)  {
+  dyn_string items = dpNames("*:"+farm,"FarmSubInfo");
   string info, sys = strtoupper(partition), sysId = getSystemId(sys+":");
-  if ( getSystemId(sys+":") < 0 )  {
+  if ( dynlen(items)>0 )  {
+    info = items[1];
+  }
+  else if ( getSystemId(sys+":") > 0 )  {
+    info = sys+":"+farm;
+  }
+  else if ( getSystemId(sys+":") < 0 )  {
     sys = getSystemName();
     sys = substr(sys,0,strlen(sys)-1);
+    info = sys+":"+farm;
   }
-  info = sys+":"+farm;
+  DebugN("ProcessorFarmAlloc_startAllocPanel> DP is:"+info);
   m_Ok.visible = 0;
   m_Cancel.visible = 0;
   m_farmName.text = farm;

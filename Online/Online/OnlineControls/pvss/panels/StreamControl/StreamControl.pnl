@@ -87,9 +87,16 @@ void StreamControlPanel_initPartitionDisplay(string stream)  {
 }
 
 main()  {
-  string stream = substr($1,4);
-  string dp = stream+\"Alloc.State\";
-  string sysdp = strtoupper(stream)+\":\"+dp;
+  string stream, dp, sysdp, sys=getSystemName();
+  //if ( sys == \"MONITORING:\" )
+  //  stream = \"Monitoring\";
+  //else if ( sys == \"STORAGE:\" )
+  //  stream = \"Storage\";
+  //else
+  stream = substr($1,4);
+  dp = stream+\"Alloc.State\";
+  sysdp = strtoupper(stream)+\":\"+dp;
+  DebugN(\"SystemName:\"+getSystemName());
   //DebugN(\"1:\",$1,\"2:\",$2,\"Stream:\",stream,\"DP:\",dp,\"SysDP:\",sysdp);
   m_sysName.text = stream;
   m_sysName.backCol = \"_Transparent\";

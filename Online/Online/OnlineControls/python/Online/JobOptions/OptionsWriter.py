@@ -221,6 +221,7 @@ class OptionsWriter(Control.AllocatorClient):
           opts.add('HostType',       self.hostType)
           opts.add('HostTypes',     [self.hostType])
           opts.add('TaskType',       task.name)
+          opts.add('OutputLevel',    self.run.outputLevel())
           oloc = self.run.storageDir.data+'/lhcb/data/'+time.strftime('%Y')+'/RAW/'+partition+'/'+rt
           opts.add('OutputLocation', oloc)
         else: opts.add('// ---------------- NO partition information')
@@ -251,6 +252,9 @@ class OptionsWriter(Control.AllocatorClient):
           opts.add('//\n// ---------------- Task specific information:')
           opts.add(task.options.data)
         else: opts.add('// ---------------- NO task specific information')
+        if task.defaults.data:
+          opts.add('MessageSvc.OutputLevel     = @OnlineEnv.OutputLevel;')
+          opts.add('MessageSvc.fifoPath        = @OnlineEnv.LogFifoName;')
         if not self.writeOptions(opts,activity,task):
           return None
       if len(tasks)==0:
@@ -320,6 +324,7 @@ class HLTOptionsWriter(OptionsWriter):
         opts.add('Activity',       run_type)
         opts.add('SubFarms',       farm_names)
         opts.add('OutputLevel',    self.run.outputLevel())
+        opts.add('MessageSvc.OutputLevel     = '+str(self.run.outputLevel())+';\n')
         if self.run.acceptRate() is None:
           print 'Rate is None!!!!!'
         opts.add('AcceptRate',     self.run.acceptRate())
@@ -397,7 +402,15 @@ class StreamingOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def additionalOptions(self, activity, task):
-    return {'HostName':'@HostName@', 'ProcessName':'@ProcessName@', 'ProcessNickName':'@ProcessNickName@', 'ProcessType':'@ProcessType@'}
+    return {'HostName':       '@HostName@',
+            'ProcessName':    '@ProcessName@',
+            'ProcessNickName':'@ProcessNickName@',
+            'ProcessType':    '@ProcessType@',
+            'ProcessClass':   '@ProcessClass@',
+            'DimDnsNode':     '@DimDnsNode@',
+            'SystemName':     '@SystemName@',
+            'LogFifoName':    '@LogFifoName@'
+            }
 
   # ===========================================================================
   def getTaskTypes(self, activity_name):
@@ -413,14 +426,21 @@ class StreamingOptionsWriter(OptionsWriter):
     for i in self.taskList:
       it = i.split('/')
       items = it[:-1]
+      
       eval_item = eval(it[-1])
       if task.name == items[3]:
         done = done+1
+        sys_nam = items[6].upper()
+        slice_nam = items[7]
         options = opts.value
         options = options.replace('@HostName@',items[0])
         options = options.replace('@ProcessName@',items[1])
         options = options.replace('@ProcessNickName@',items[2])
         options = options.replace('@ProcessType@',items[3])
+        options = options.replace('@ProcessClass@',items[4])
+        options = options.replace('@DimDnsNode@',items[5].upper())
+        options = options.replace('@SystemName@',sys_nam)
+        options = options.replace('@LogFifoName@','/tmp/'+slice_nam+'.fifo')
         if isinstance(eval_item,list) or isinstance(eval_item,tuple):
           s = ''
           s0 = ''

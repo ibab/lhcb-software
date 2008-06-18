@@ -63,7 +63,7 @@ class Monitoring(General):
     monNodes    = partition.streamNodesFromSlots()
     relayNodes  = partition.recvNodesFromSlots()
     dimDns      = self.manager.hostName()
-    opt = '/'+dimDns+'/'+partition.manager.name()+'/'
+    opt = '/'+dimDns+'/'+partition.manager.name()+'/'+partition.name+'/'
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
     cl2 = '/Class2'+opt
@@ -80,15 +80,16 @@ class Monitoring(General):
           # Check if the detector is in the readout
           partID = self.partID.data
           detector = task.getDetector()
-          if detector=='ANY' or self.isDetectorInReadout(detector):
+          det_used = self.isDetectorInReadout(detector)
+          if detector.upper()=='ANY' or det_used is not None:
             monStreams.add(self.monStreams.data[j])
             streams.append([typ,self.monStreams.data[j],i])
-            if detector=='ANY':
-              log('USE  monitoring task:'+typ+' [Task started for all detectors]')
+            if detector.upper()=='ANY':
+              log('USE  monitoring task:%-16s [Task started for all detectors]'%(typ,))
             else:
-              log('USE  monitoring task:'+typ+' [Detector '+detector+' is in the readout]')
+              log('USE  monitoring task:%-16s [Detector %-8s is in the readout]:%s'%(typ,detector,str(det_used)))
           else:
-            log('SKIP monitoring task:'+typ+' [Detector '+detector+' is NOT in the readout]')
+            log('SKIP monitoring task:%-16s [Detector %-8s is NOT in the readout]'%(typ,detector,))
         else:
           error('The task '+typ+' is not defined in the job options database. Failed to define monitoring streams.')
           return None
@@ -137,7 +138,7 @@ class Monitoring(General):
 
     storageSenders = []
     storageSenderTypes = {}
-    stor_opt = '/Class2/'+dimDns+'/'+self.streamManager.name()+'/'
+    stor_opt = '/Class2/'+dimDns+'/'+self.streamManager.name()+'/'+part.name+'/'
     for i in monStreams:
       storageSenderTypes[i] = []
       # Define the sender tasks on the storage layer

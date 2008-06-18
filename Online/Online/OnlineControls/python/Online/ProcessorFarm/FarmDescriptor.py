@@ -1,5 +1,7 @@
+import Online.RunInfoClasses.General
 import Online.AllocatorControl, Online.DatapointLoader, Online.Utils, Online.PVSS, Online.PVSSSystems
 from   Online.Streaming.Allocator import FSMmanip as FSMmanip
+DP     = Online.PVSS.DataPoint
 std    = Online.PVSS.gbl.std
 log    = Online.Utils.log
 error  = Online.Utils.error
@@ -45,7 +47,7 @@ class FarmSlice(Online.DatapointLoader.DatapointLoader):
     return self
 
 # =============================================================================
-class FarmRunInfo(Online.DatapointLoader.DatapointLoader):
+class FarmRunInfo(Online.RunInfoClasses.General.General):
   """ @class FarmActivity
   
 
@@ -60,63 +62,94 @@ class FarmRunInfo(Online.DatapointLoader.DatapointLoader):
 
         @return reference to initialized object
     """
-    Online.DatapointLoader.DatapointLoader.__init__(self,manager,name)
-    self.dpName        = self.name
-    self.runType       = self.dp('general.runType')
-    self.partitionName = self.dp('general.partName')
-    self.partitionID   = self.dp('general.activePartId')
-    self.nSubFarm      = self.dp('HLTFarm.nSubFarms')
-    self.subfarms      = self.dp('HLTFarm.subFarms')
-    self.addDp(self.reader)
-
-  # ===========================================================================
-  def addDp(self,deviceIO):
-    "Add all datapoints to deviceIO object"
-    deviceIO.add(self.runType)
-    deviceIO.add(self.partitionName)
-    deviceIO.add(self.partitionID)
-    deviceIO.add(self.nSubFarm)
-    deviceIO.add(self.subfarms)
-    return self
+    Online.RunInfoClasses.General.General.__init__(self,manager,name,complete=None,postfix='')
+    self.addStorage()
 
   # ===========================================================================
   def copyTo(self,to):
-    to.runType.data       = self.runType.data
-    to.partitionName.data = self.partitionName.data
-    to.partitionID.data   = self.partitionID.data
-    to.nSubFarm.data      = self.nSubFarm.data
-    to.subfarms.data      = self.subfarms.data
+    "INCOMPLETE!"
+    if hasattr(self,'runTyp') and hasattr(to,'runTyp'):
+      to.runTyp.data        = self.runTyp.data
+      to.partition.data     = self.partition.data
+      to.partID.data   = self.partID.data
+    if hasattr(self,'nSubFarm'):
+      to.nSubFarm.data    = self.nSubFarm.data
+      to.subFarms.data    = self.subFarms.data
+    if hasattr(self,'storeFlag'):
+      to.storeFlag.data   = self.storeFlag.data
+      to.storageDir.data  = self.storageDir.data
+      to.rcvStrategy.data = self.rcvStrategy.data
+      to.rcvInfra.data    = self.rcvInfra.data
+      to.strStrategy.data = self.strStrategy.data
+      to.strInfra.data    = self.strInfra.data
+      to.streams.data     = self.streams.data
+      to.strMult.data     = self.strMult.data
     return self
     
   # ===========================================================================
   def copyFrom(self,fr):
-    self.runType.data       = fr.runType.data
-    self.partitionName.data = fr.partitionName.data
-    self.partitionID.data   = fr.partitionID.data
-    self.nSubFarm.data      = fr.nSubFarm.data
-    self.subfarms.data      = fr.subfarms.data
+    "INCOMPLETE!"
+    if hasattr(self,'runTyp') and hasattr(fr,'runTyp'):
+      self.runTyp.data        = fr.runTyp.data
+      self.partition.data     = fr.partition.data
+      self.partID.data        = fr.partID.data
+    if hasattr(self,'nSubFarm') and hasattr(fr,'nSubFarm'):
+      self.nSubFarm.data    = fr.nSubFarm.data
+      self.subFarms.data    = fr.subFarms.data
+    if hasattr(self,'storeFlag'):
+      print self.name,'COPY STORAGE INFO....'
+      self.storeFlag.data   = fr.storeFlag.data
+      self.storageDir.data  = fr.storageDir.data
+      self.rcvStrategy.data = fr.rcvStrategy.data
+      self.rcvInfra.data    = fr.rcvInfra.data
+      self.strStrategy.data = fr.strStrategy.data
+      self.strInfra.data    = fr.strInfra.data
+      self.streams.data     = fr.streams.data
+      self.strMult.data     = fr.strMult.data
+    return self
+  
+  # ===========================================================================
+  def addDp(self,deviceIO):
+    "Add all datapoints to deviceIO object"
+    if hasattr(self,'runTyp'):
+      deviceIO.add(self.runTyp)
+      deviceIO.add(self.partition)
+      deviceIO.add(self.partID)
+    if hasattr(self,'nSubFarm'):
+      deviceIO.add(self.nSubFarm)
+      deviceIO.add(self.subFarms)
+    if hasattr(self,'storeFlag'):
+      deviceIO.add(self.storeFlag)
+      deviceIO.add(self.storageDir)
+      deviceIO.add(self.rcvStrategy)
+      deviceIO.add(self.rcvInfra)
+      deviceIO.add(self.strStrategy)
+      deviceIO.add(self.strInfra)
+      deviceIO.add(self.streams)
+      deviceIO.add(self.strMult)
+      print 'MULT:',self.strMult.data,self.strMult.name()
     return self
     
   # ===========================================================================
   def reset(self):
-    self.runType.data       = ''
-    self.partitionName.data = ''
-    self.partitionID.data   = 0
-    self.nSubFarm.data      = 0
-    self.subfarms.data      = std.vector('std::string')()
+    if hasattr(self,'runTyp'):
+      self.runTyp.data          = ''
+      self.partition.data       = ''
+      self.partID.data     = 0
+    if hasattr(self,'nSubFarm'):
+      self.nSubFarm.data      = 0
+      self.subFarms.data.clear()
+    if hasattr(self,'storeFlag'):
+      self.storeFlag.data     = 1
+      self.storageDir.data    = ''
+      self.rcvStrategy.data = 0
+      self.rcvInfra.data.clear()
+      self.strStrategy.data = 0
+      self.strInfra.data.clear()
+      self.streams.data.clear()
+      self.strMult.data.clear()
     return self
-    
-  # ===========================================================================
-  def show(self):
-    "Show activity information"
-    if self.load():
-      log('Partition information: '+self.name,timestamp=1,with_trailer=1,with_header=1)
-      log('    Partition name:    '+self.partitionName.data,timestamp=1)
-      log('    Partition ID:      '+str(self.partitionID.data),timestamp=1)
-      log('    Run/activity type: '+self.runType.data,timestamp=1)
-      log('    Number of subfarms:'+str(self.nSubFarm.data),timestamp=1)
-      log('    Subfarms:          '+str([i for i in self.subfarms.data]),timestamp=1)
-
+ 
 # =============================================================================
 class FarmActivity(Online.DatapointLoader.DatapointLoader):
   """ @class FarmActivity
@@ -240,18 +273,27 @@ class FarmDescriptor(Online.DatapointLoader.DatapointLoader):
         f = self.inUse.data[i]
         n = self.subfarms.data[i]
         if len(f)==0 and got<nf:
-          dpv.push_back(self.dp2(self.name+'_'+n,'UsedBy'))
+          farm_name = n.split('/')[0]
+          farm_sys  = n.split('/')[1]
+          farm_mgr  = Online.PVSSSystems.controlsMgr(farm_sys)
+          dpv.clear()
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.UsedBy')))
           dpv.back().data = partition
-          dpv.push_back(self.dp2(self.name+'_'+n,'RunInfo'))
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.RunInfo')))
           dpv.back().data = runinfo_dp
-          dpv.push_back(self.dp2(self.name+'_'+n,'Activity'))
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.Activity')))
           dpv.back().data = activity
+          wr = farm_mgr.devWriter()
+          wr.add(dpv)
+          if wr.execute() is None:
+            self.error('Failed to write datapoints for farm:'+farm_name)
           used.push_back(partition)
-          farms.push_back(n)
+          farms.push_back(farm_name)
           got = got + 1
         else:
           used.push_back(f)
       if got==nf:
+        dpv.clear()
         if len(runinfo_dp)>0:
           #dpv.push_back(self.dp2(runinfo_dp,'general.partName'))
           #dpv.back().data = partition
@@ -288,14 +330,23 @@ class FarmDescriptor(Online.DatapointLoader.DatapointLoader):
         f = self.inUse.data[i]
         if f==partition:
           res.push_back('')
-          dpv.push_back(self.dp2(self.name+'_'+n,'UsedBy'))
+          farm_name = n.split('/')[0]
+          farm_sys  = n.split('/')[1]
+          farm_mgr  = Online.PVSSSystems.controlsMgr(farm_sys)
+          dpv.clear()
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.UsedBy')))
           dpv.back().data = ''
-          dpv.push_back(self.dp2(self.name+'_'+n,'RunInfo'))
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.RunInfo')))
           dpv.back().data = ''
-          dpv.push_back(self.dp2(self.name+'_'+n,'Activity'))
+          dpv.push_back(DP(farm_mgr,DP.original(self.name+'_'+farm_name+'.Activity')))
           dpv.back().data = ''
+          wr = farm_mgr.devWriter()
+          wr.add(dpv)
+          if wr.execute() is None:
+            self.error('Failed to write datapoints for farm:'+farm_name)
         else:
           res.push_back(f)
+      dpv.clear()
       if len(runinfo_dp)>0:
         #dpv.push_back(self.dp2(runinfo_dp,'general.partName'))
         #dpv.back().data = ''
@@ -402,14 +453,24 @@ class SubFarmDescriptor(Online.DatapointLoader.DatapointLoader):
           s = ''
   # ===========================================================================
   def defineTasks(self):
-    sys,act = self.setup.data.split(':')
+    items = self.setup.data.split(':')
+    print 'Definetasks:',self.setup.name(),self.setup.data,items,len(items)
+    if len(items)>1:
+      sys = items[0]
+      act = items[1]
+    elif len(items)==1:
+      sys = self.manager.name()
+      act = items[0]
+    else:
+      error('Invalid run information content in setup datapoint:'+self.setup.name()+': '+self.setup.data,timestamp=1)
+      return None
     mgr = Online.PVSSSystems.controlsMgr(sys)
     activity = FarmActivity(mgr,act).load()
     if activity:
       tasks = []
-      sfn   = self.subfarmName()
       nodes = self.processors()
       sys   = self.manager.name()
+      sfn   = self.manager.hostName().upper()
       part  = activity.activityName.data
       #
       # node/task-name/short-name/task-type/class/dim-dns/partition/sub-farm
@@ -482,6 +543,11 @@ class SubFarmConfigurator(Online.AllocatorControl.AllocatorClient,Online.Datapoi
             items = t.split('/')
             if not used_tasks.has_key(items[0]): used_tasks[items[0]] = []
             used_tasks[items[0]].append(items)
+          #for key in used_tasks.keys():
+          #  print key, len(used_tasks[key]),used_tasks[key]
+          #print used_tasks
+          #print 'Slots:',slots
+          sfDesc.show()
           fsm_manip.disableTasks(slots)
           slots = fsm_manip.allocateProcesses(used_tasks,slots)
           if slots is None:
@@ -510,11 +576,12 @@ class FarmConfigurator(FarmDescriptor):
         @param  name          Name of the control datapoint
         @return reference to initialized object
     """
-    FarmDescriptor.__init__(self,manager,'Trigger')
+    print 'FarmConfigurator',name
+    FarmDescriptor.__init__(self,manager,name)
     #Online.DatapointLoader.DatapointLoader.__init__(self,manager,name)
     self.typeMgr = self.manager.typeMgr()
-    setup = 'RECO'
     setup = 'ONLINE'
+    setup = 'RECO'
     if setup=='RECO':
       self.allocatePartition = self.allocRecoPartition
       self.getPartition      = self.getRecoPartition
@@ -523,6 +590,8 @@ class FarmConfigurator(FarmDescriptor):
       self.runInfo_type      = self.typeMgr.type('RunFarmInfo')
       self.runinfos = Online.PVSS.DpVectorActor(self.manager)
       self.runinfos.lookupOriginal(self.name+'_Farm??.general.partName',self.runInfo_type)
+      for i in self.runinfos.container:
+        print 'RunInfo:',i.name()
     else:
       self.allocatePartition = self.allocateSlice
       self.getPartition      = self.getSlice
@@ -533,9 +602,6 @@ class FarmConfigurator(FarmDescriptor):
     
     self.writer   = self.manager.devWriter()
     self.fsm_typ  = self.typeMgr.type('_FwFsmDevice')
-    subinfo_typ = self.typeMgr.type('FarmSubInfo')
-    self.allsubfarms = Online.PVSS.DpVectorActor(self.manager)
-    self.allsubfarms.lookupOriginal(self.name+'_*.UsedBy',subinfo_typ)
 
   # ===========================================================================
   def freeSlice(self,context,rundp_name,partition):
@@ -617,7 +683,19 @@ class FarmConfigurator(FarmDescriptor):
 
   # ===========================================================================
   def loadRecoRunInfo(self,manager,dp):
-    return FarmRunInfo(manager,dp).load()
+    info = FarmRunInfo(manager,dp)
+    info.addBasic()
+    info.addHLT()
+    if info.load():
+      activity_name = self.manager.dpSysElementName(dp)
+      activity_info = FarmRunInfo(self.manager,info.runTyp.data).load()
+      info.copyFrom(activity_info)
+      wr = self.manager.devWriter()
+      info.addDp(wr)
+      if wr.execute() is None:
+        return None
+      info.show()
+    return info
   
   # ===========================================================================
   def getRecoPartition(self,rundp_name,partition):
@@ -632,11 +710,28 @@ class FarmConfigurator(FarmDescriptor):
   # ===========================================================================
   def freeRecoPartition(self,name,rundp_name,partition):
     print 'freePartition:',name,rundp_name,partition
-    pass
+    res = self.getPartition(rundp_name,partition)
+    if res is not None:
+      wr = None
+      #for i in self.runinfos.container:
+      #  if i.data==partition:
+      #    i.data = ''
+      #    if wr is None: wr=self.manager.devWriter()
+      #    wr.add(i)
+      if wr: wr.execute()
+    return None
 
   # ===========================================================================
   def allocRecoPartition(self,rundp_name,partition):
     res = self.getPartition(rundp_name,partition)
+    if res is None:
+      for i in self.runinfos.container:
+        if len(i.data)==0:
+          wr = self.manager.devWriter()
+          i.data = partition
+          wr.add(i)
+          wr.execute()
+          return (i.name()[:i.name().find('.')],i)
     return res
 
   # ===========================================================================
@@ -657,15 +752,22 @@ class FarmConfigurator(FarmDescriptor):
   def configureFSM(self,farm_name,partition,action):
     #Trigger_Farm00|Trigger_HLT000|Trigger_HLT000.mode.enabled 1
     #Trigger_Farm00|FSM_SLice_FWDM.fsm.sendCommand             DISABLE/DEVICE=TRIGGER_HLT000::TRIGGER_HLT000
-    rdr = self.manager.devReader()
-    rdr.add(self.allsubfarms.container)
-    if rdr.execute():
+
+    if self.load():
       dpv   = Online.PVSS.DataPointVector()
-      for i in self.allsubfarms.container:
-        sys = self.manager.dpSystemName(i.name())
-        elt = self.manager.dpElementName(i.name())
+      for i in self.subfarms.data:
+        n = i.split('/')[0]
+        sys = i.split('/')[1]
+        mgr = Online.PVSSSystems.controlsMgr(sys)
+        rdr = mgr.devReader()
+        dp = DP(mgr,DP.original(self.name+'_'+n+'.UsedBy'))
+        rdr.add(dp)
+        if rdr.execute() is None:
+          log('ConfigureFSM Failed to read datapoint:'+dp.name(),timestamp=1)
+          
+        elt = mgr.dpElementName(dp.name())
         dpv.push_back(self.dp2(farm_name+'|'+elt+'|'+elt,'mode.enabled'))
-        if i.data==partition and action=='ENABLE':
+        if dp.data==partition and action=='ENABLE':
           dpv.back().data = 1
           cmd = 'ENABLE/DEVICE(S)='+elt+'::'+elt
           if debug: log('ConfigureFSM [INCLUDED]:'+farm_name+' '+elt+' '+dpv.back().name(),timestamp=1)
@@ -691,12 +793,11 @@ class FarmConfigurator(FarmDescriptor):
       run_info = self.loadRunInfo(self.manager,name)
       if run_info:
         numSF = run_info.nSubFarm.data
-        activity = run_info.runType.data
+        activity = run_info.runTyp.data
         if FarmDescriptor.allocate(self,partition,numSF,activity,name):
-          run_info.show()
           if self.configureFSM(name,partition,'ENABLE'):
             return 'SUCCESS'
-          return self.error('Failed to configure subfarm FSMs for partitionn:'+partition,timestamp=1)
+          return self.error('Failed to configure subfarm FSMs for partition:'+partition,timestamp=1)
         return self.error('Failed to load run-type for partition:'+partition,timestamp=1)
       return self.error('Failed to allocate subfarms for partition:'+partition,timestamp=1)
     return self.error('Failed to access run info for partition:'+partition,timestamp=1)

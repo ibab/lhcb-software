@@ -29,7 +29,7 @@ EMPTY = std.vector('std::string')()
 # =============================================================================
 def printTasks(msg,tasks):
   for i in tasks:
-    node,name,short,type,clazz,dns,sys,vals = i.split('/')
+    node,name,short,type,clazz,dns,sys,sl,vals = i.split('/')
     v = eval(vals)
     fm = ' %6s:%-35s %-16s %%s'
     fmt = fm%(clazz,name,msg)
@@ -76,21 +76,21 @@ def showStorage(partition,extended=None):
     printSlots(recvNodes,'   1st. layer nodes in use['+str(len(recvNodes))+']:',99,10)
     log('   1st layer slices allocated:%d'%len(partition.recvSlices()))
     for i in xrange(len(partition.dataSources())):
-      node,task,nick,type,clazz,dns,sys,farm = partition.dataSources()[i].split('/')
+      node,task,nick,type,clazz,dns,sys,sl,farm = partition.dataSources()[i].split('/')
       slot = partition.recvSlice(i)
       log('     Farm:%-8s [%s,%s] sends to %-14s using slot:%s'%(eval(farm)[0],type,clazz,task,slot))
     for i in xrange(len(partition.recvReceivers())):
-      node,task,nick,type,clazz,dns,sys,farm = partition.recvReceiver(i).split('/')
+      node,task,nick,type,clazz,dns,sys,sl,farm = partition.recvReceiver(i).split('/')
       slot = partition.recvSlice(i)
       log('     Farm:%-8s [%s,%s] sends to %-14s using slot:%s'%(eval(farm)[0],type,clazz,task,slot))
     log('   1st. Layer senders:')
     for i in partition.recvSenders():
-      node,task,nick,type,clazz,dns,sys,t = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,t = i.split('/')
       tnode,target = eval(t)[0]
       log('     %-38s on %-10s sends %-12s to %-36s on %s'%(task+'/'+clazz,node,type,target,tnode))
     log('   Infrastructure Tasks:')
     for i in partition.recvInfrastructure():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s as %s'%(task+'/'+clazz,node,type))
 
     log('')
@@ -98,7 +98,7 @@ def showStorage(partition,extended=None):
     log('   2nd Layer slices allocated:%d'%len(partition.streamSlices()))
     log('   Receiver Tasks:')
     for i in partition.streamReceivers():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       opt = eval(opt)
       for i in xrange(len(opt)):
         if i == 0:
@@ -107,11 +107,11 @@ def showStorage(partition,extended=None):
           log('     %-38s    %-12s         %-10s       %s'%('','','',str(opt[i])))
     log('   Streaming Tasks:')
     for i in partition.streamSenders():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s of type:%-10s streams:%s'%(task+'/'+clazz,node,type,eval(opt)[0]))
     log('   Infrastructure Tasks:')
     for i in partition.streamInfrastructure():
-      node,task,nick,type,clazz,dns,sys,opt = i.split('/')
+      node,task,nick,type,clazz,dns,sys,sl,opt = i.split('/')
       log('     %-38s on %-12s as %s'%(task+'/'+clazz,node,type))
     return
   log('-> Partition:'+name+' is FREE.')
@@ -199,6 +199,8 @@ class PartitionInfo:
     """ Default constructor
         @param  manager       Reference to PVSS ControlManager
         @param  name          Name of the Streaming Partition datapoint
+                              Note: This is the name of the slice - not the name
+                              of the detector partition
 
         @return reference to initialized object
     """

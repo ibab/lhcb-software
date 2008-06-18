@@ -77,6 +77,7 @@ class FSMmanip:
     self.setupTask         = self._setupTask
     self.configureTask     = self._configureTask
     self.allocateProcesses = self._allocateProcesses
+    #print '+++++++++++++++++++++++ NAME:',self.name
     for i in xrange(self.names.container.size()):
       nam = self.names.container[i].name()
       node = nam[nam.find(':')+1:]
@@ -379,10 +380,17 @@ class FSMmanip:
     dimdns  = task[5]
     type    = task[3]
     clazz   = task[4]
+    slice   = task[7]
     script,account,detector = self.startupInfo(type)
     if len(account) == 0: account = 'online'
     opts    = self.optionsFile(utgid,type)
-    cmd = sysname+'#-e -o -c -u '+utgid+' -n '+account+\
+    fifo = '/tmp/logSrv.fifo'
+    # cmd = sysname+'#-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo '+\
+    fifo = '/tmp/'+slice+'.fifo'
+    #cmd = sysname+'#-e -o'+\
+    cmd = sysname+'#-E '+fifo+' -O '+fifo+\
+          ' -c -u '+utgid+' -n '+account+\
+          ' -D LOGFIFO='+fifo+\
           ' -D TASKTYPE='+type+\
           ' -D TASKCLASS='+clazz+\
           ' -D PARTITION='+self.info.detectorName()

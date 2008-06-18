@@ -60,7 +60,7 @@ def _getDetectorsInReadout(partid):
   """
   dets = []
   for name,id in _detectors.items():
-    if ( (partid&id)==id ):
+    if ( (partid&id)!=0 ):
       #print 'Detector '+name+' is in RO',id,partid,(partid&id)
       dets.append((name,id,))
     #else:
@@ -72,10 +72,9 @@ def _isDetectorInReadout(partid, name):
   """Retrieve information if a given subdetector is participating in the readout
      corresponding to a given active partition identifier.
   """
-  for n,id in _detectors.items():
-    if ( (partid&id)==id and name==n):
-      return (n,id,)
-    elif ( (partid&id) != 0 ):
+  if _detectors.has_key(name):
+    id = _detectors[name]
+    if ( (partid&id) != 0 ):
       return (name,id,)
   return None
   
@@ -107,6 +106,8 @@ class General:
     self.outputLvl   = None
     self.acceptFrac  = None
     self.tae         = None
+    self.storeSlice  = None
+    self.monSlice    = None
     dpn = self.manager.name()+':'+self.name+'_RunInfo.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
@@ -116,6 +117,12 @@ class General:
     dpn = self.manager.name()+':'+self.name+'_RunInfo.general.TAE'
     if self.devMgr.exists(dpn):
       self.tae = self.dp('general.TAE')
+    dpn = self.manager.name()+':'+self.name+'_RunInfo.Storage.storeSlice'
+    if self.devMgr.exists(dpn):
+      self.storeSlice = self.dp('Storage.storeSlice')
+    dpn = self.manager.name()+':'+self.name+'_RunInfo.MonFarm.monSlice'
+    if self.devMgr.exists(dpn):
+      self.monSlice = self.dp('MonFarm.monSlice')
 
     self.nSubFarm    = self.dp('HLTFarm.nSubFarms')
     self.storageDir  = self.dp('Storage.dataDirectory')
@@ -155,6 +162,8 @@ class General:
     self.reader.add(self.strMult)
     self.reader.add(self.rcvInfra)
     self.reader.add(self.strInfra)
+    if self.storeSlice is not None:
+      self.reader.add(self.storeSlice)
     # Monitoring information
     self.reader.add(self.monFlag)
     self.reader.add(self.monTypes)
@@ -162,6 +171,8 @@ class General:
     self.reader.add(self.monStreams)
     self.reader.add(self.monInfra)
     self.reader.add(self.relayInfra)
+    if self.monSlice is not None:
+      self.reader.add(self.monSlice)
     # Subdetector information
     self.reader.add(self.tell1Boards)    
 
@@ -284,7 +295,8 @@ class General:
        corresponding to a given active partition identifier.
     """
     if self.partID.data is None: self.load()
-    return _isDetectorInReadout(self.partID.data,name)
+    res = _isDetectorInReadout(self.partID.data,name)
+    return res
   
   # ===========================================================================
   def setPartitionID(self,partID,save=0):
@@ -330,6 +342,22 @@ class General:
       return int(self.tae.data)
     return 0
 
+  # ===========================================================================
+  def storageSlice(self):
+    "Access storage slice name from run info."
+    if self.storeSlice:
+      if self.storeSlice.data is None: self.load()
+      return self.storeSlice.data
+    return None
+  
+  # ===========================================================================
+  def monitoringSlice(self):
+    "Access monitoring slice name from run info."
+    if self.monSlice:
+      if self.monSlice.data is None: self.load()
+      return self.monSlice.data
+    return None
+  
 # =============================================================================
 def create(rundp_name):
     items = rundp_name.split(':')

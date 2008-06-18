@@ -33,6 +33,18 @@ class Installer(Online.InstallerBase.InstallerBase):
     self.typeMgr          = self.manager.typeMgr()
     self.devMgr           = self.manager.deviceMgr()
 
+
+  # ===========================================================================
+  def createSubFarmControls(self):
+    sf  = self.subFarms
+    typ = self.typeMgr.type('StreamControl')
+    for k,n in sf.items():
+      nam = self.name+'_'+k+'Alloc'
+      dev = self.devMgr.createDevice(nam,typ,1)
+      if dev.get() is None:
+        warning('Failed to create farm control "'+nam+'"',timestamp=1)
+    return self
+
   # ===========================================================================
   def create(self):
     sf  = self.subFarms
@@ -52,6 +64,12 @@ class Installer(Online.InstallerBase.InstallerBase):
     self.set('SubFarms',sf.keys())
     self.set('InUse',['' for i in xrange(len(sf))])
     self.set('State','NOT_READY')
+    return self.write(prefix='FarmInstaller('+self.name+'): ')
+    
+  # ===========================================================================
+  def createSubFarms(self):
+    sf  = self.subFarms
+    mgr = self.manager
     typ = self.typeMgr.type('FarmSubInfo')
     v = std.vector('std::string')()
     for k,n in sf.items():
@@ -61,7 +79,7 @@ class Installer(Online.InstallerBase.InstallerBase):
         warning('Failed to create subfarm device "'+nam+'"',timestamp=1)
       log('Accessing subfarm device '+nam,timestamp=1)
       self.name = nam
-      self.set('Name',k)
+      self.set('Name',nam)
       for i in xrange(len(n[0])):
         v.push_back(n[0][i]+'/'+str(n[1][i]))
       self.set('Nodes',v)
@@ -141,17 +159,30 @@ class Installer(Online.InstallerBase.InstallerBase):
     return self
 
 # =============================================================================
-def install(name=FarmSetup.Name,system=FarmSetup.pvss_system):
+def installFarm(name=FarmSetup.Name,system=FarmSetup.pvss_system):
   inst = Installer(Online.PVSSSystems.controlsMgr(system),name)
   inst.create()
+  # inst.createSubFarms()
   inst.createSlices()
   inst.createPartitions()
   inst.createActivity('REPRO_1')
   inst.createActivity('REPRO_2')
   inst.createActivity('REPRO_3')
-  inst.createFMC()
-  #inst.createIO()
+  # inst.createFMC()
+  # inst.createIO()
   return inst.manager
+
+# =============================================================================
+def installSubFarm(name=FarmSetup.Name,system=FarmSetup.pvss_system):
+  inst = Installer(Online.PVSSSystems.controlsMgr(system),name)
+  inst.createSubFarmControls()
+  inst.createSubFarms()
+  inst.createFMC()
+  return inst.manager
+
+# =============================================================================
+def install(name=FarmSetup.Name,system=FarmSetup.pvss_system):
+  return installFarm(name,system)
 
 # =============================================================================
 if __name__ == "__main__":

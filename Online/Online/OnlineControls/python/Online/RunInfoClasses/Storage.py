@@ -69,7 +69,7 @@ class StorageInfo(General):
     recvSenders = []
     recvInfrastructure = []
     dataSources = []
-    opt = '/'+dimDns+'/'+partition.manager.name()+'/'
+    opt = '/'+dimDns+'/'+partition.manager.name()+'/'+partition.name+'/'
     cl0 = '/Class0'+opt
     cl1 = '/Class1'+opt
     cl2 = '/Class2'+opt

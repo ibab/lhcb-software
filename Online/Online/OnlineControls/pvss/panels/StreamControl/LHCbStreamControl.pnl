@@ -1,0 +1,50 @@
+V 10
+1
+LANG:1 19 LHCb Stream Control
+PANEL,-1 -1 480 980 N "_3DFace" 0
+"main()  {
+  addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamControl.pnl\",\"StorageAlloc\",
+            makeDynString(\"$1:DataStorage\"),0,20,0,0,0);
+  addSymbol(myModuleName(),myPanelName(),\"StreamControl/StreamControl.pnl\",\"MonitoringAlloc\",
+            makeDynString(\"$1:DataMonitoring\"),0,400,0,0,0);
+}" 0
+ E E E E 1 -1 -1 0  -1 -1
+""0  1
+E E 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 0 
+0
+LAYER, 1 
+1
+LANG:1 0 
+0
+LAYER, 2 
+1
+LANG:1 0 
+0
+LAYER, 3 
+1
+LANG:1 0 
+0
+LAYER, 4 
+1
+LANG:1 0 
+0
+LAYER, 5 
+1
+LANG:1 0 
+0
+LAYER, 6 
+1
+LANG:1 0 
+0
+LAYER, 7 
+1
+LANG:1 0 
+0
+0

@@ -122,6 +122,8 @@ int StreamTaskMgr_uninstall()  {
   ctrlUtils_uninstallDataType("FSM_DimTask",true);
   ctrlUtils_uninstallDataType("StreamControl",true);
   ctrlUtils_uninstallDataType("StreamPartition",true);
+  ctrlUtils_uninstallDataType("StreamConfigurator",true);
+  ctrlUtils_uninstallDataType("StreamTaskCreator",true);
 }
 //=============================================================================
 int StreamTaskMgr_connectTaskManager(string stream)  {

@@ -11,25 +11,30 @@ PANEL,-1 -1 404 354 N "_3DFace" 3
 void FarmAllocationPanel_updatePartitionDisplay(string stream)  {
   dyn_string cols = makeDynString(\"Slice\",\"Used\",\"Activity\",\"Farm Name\");
   dyn_dyn_string rcvSlots, strmSlots, rcvNodes, strmNodes;
-  dyn_string items, names, activities, runinfo;
-  dyn_string used;
+  dyn_string used, names, activities, runinfo;
   int pos1, pos2, stat = -1, res = -1;
-  items = dpNames(stream+\"_HLT???.UsedBy\",\"FarmSubInfo\");
-  DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream+\" Len:\"+dynlen(items));
-  if ( dynlen(items)<=0 )   {
-    res = dpGet(dpNames(stream+\"_HLT???.UsedBy\"),used);
-    if ( 0 == res ) res = dpGet(dpNames(stream+\"_HLT???.Name\"),names);
+  string nam, val1, val2, val3, val4, match=\"*:\"+stream+\"_*\"; // stream+\"_HLT???\";
+  dyn_string items = dpNames(match+\".UsedBy\",\"FarmSubInfo\");
+  //DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream+\" Len:\"+dynlen(items)+\" \"+items);
+  if ( dynlen(items)>0 )   {
+    for(int i=1; i<=dynlen(items); i++) {
+      nam = dpSubStr(items[i],DPSUB_SYS)+dpSubStr(items[i],DPSUB_DP);
+      //DebugN(\"Datapoint element:\"+nam);
+      res = dpGet(nam+\".UsedBy\",val1,
+                  nam+\".Name\",val2,
+                  nam+\".Activity\",val3,
+                  nam+\".RunInfo\",val4);
+      dynAppend(used,val1);
+      dynAppend(names,val2);
+      dynAppend(activities,val3);
+      dynAppend(runinfo,val4);
+    }
   }
-  else {
-    res = dpGet(items,used);
-    if ( 0 == res ) res = dpGet(dpNames(stream+\"_HLT???.Name\",\"FarmSubInfo\"),names,
-                                dpNames(stream+\"_HLT???.Activity\",\"FarmSubInfo\"),activities,
-                                dpNames(stream+\"_HLT???.RunInfo\",\"FarmSubInfo\"),runinfo);
-  }
-  DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream);
+  //DebugN(\"FarmAllocationPanel_updatePartitionDisplay> Read data from \"+stream+\" Res=\"+res+\" Used:\"+used,\"Names:\"+names);
   if ( 0 == res )  {
     string a1, a2;
     for(int i=1; i<=dynlen(used); i++) {
+      DebugN(\"Free:\"+names[i],used[i],activities[i],runinfo[i]);
       if ( strlen(used[i])>0 )  {
         a1 = activities[i];
         a2 = runinfo[i];
@@ -62,11 +67,12 @@ void FarmAllocationPanel_updatePartitionDisplay(string stream)  {
 }
 
 void FarmAllocationPanel_initPartitionDisplay(string stream)  {
+  string match=\"*:\"+stream+\"_*\"; // stream+\"_HLT???\";
   dyn_string cols = makeDynString(\"Slice\",\"Used\",\"Activity\",\"Farm Name\");
-  dyn_string values = dpNames(stream+\"_HLT???.UsedBy\",\"FarmSubInfo\");
+  dyn_string values = dpNames(match+\".UsedBy\",\"FarmSubInfo\");
   string font = \"Arial,8,-1,5,50,0,0,0,0,0\";
   if ( dynlen(values)<=0 )   {
-    values = dpNames(stream+\"_HLT???.UsedBy\");
+    values = dpNames(match+\".UsedBy\");
     m_table.enabled = 0;
   }
   m_table.font = font;

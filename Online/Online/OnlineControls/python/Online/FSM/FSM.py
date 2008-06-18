@@ -22,11 +22,13 @@ def log(msg):
 def dummy_call(type, transition):
   return 1
 
+#-------------------------------------------------------------------------------
 class Transition:
   """
         FSM transition object
         @author M.Frank
   """
+  #-----------------------------------------------------------------------------
   def __init__(self, fr, to, pre_action=dummy_call, action=dummy_call, post_action=dummy_call):
     """ Default constructor
         @param fr          Initial state
@@ -41,6 +43,7 @@ class Transition:
     self.action     = action
     self.postAction = post_action
 
+  #-----------------------------------------------------------------------------
   def _check(self,status,m,s1,s2):
     """ Transition execution method """
     if ( status ):
@@ -49,18 +52,22 @@ class Transition:
       m.informListeners(s2,self)
     return status
 
+  #-----------------------------------------------------------------------------
   def _action(self, machine):
     """ Action executor """
     return self._check(self.action(ACTION,self),machine,DONE_ACTION,FAILED_ACTION)
 
+  #-----------------------------------------------------------------------------
   def _preAction(self,machine):
     """ Pre-Action executor """
     return self._check(self.preAction(PREACTION,self),machine,DONE_PREACTION,FAILED_PREACTION)
 
+  #-----------------------------------------------------------------------------
   def _postAction(self,machine):
     """ Post-Action executor """
     return self._check(self.postAction(POSTACTION,self),machine,DONE_POSTACTION,FAILED_POSTACTION)
   
+  #-----------------------------------------------------------------------------
   def __str__(self):
     s = ("%-16s -> %-16s")%(self.fr.name,self.to.name)
     if ( self.preAction ):
@@ -77,12 +84,14 @@ class Transition:
       s = s + 'N'
     return s
 
+#-------------------------------------------------------------------------------
 class State:
   """
         FSM state object
 
         @author M.Frank
   """
+  #-----------------------------------------------------------------------------
   def __init__(self, name):
     """ Default constructor
         @param  name       State name
@@ -91,6 +100,7 @@ class State:
     self.transitions = {}
     log('Created state:%s'%name)
 
+  #-----------------------------------------------------------------------------
   def findTransition(self, to):
     """ Find output transition from this state.
         @param to    Output state (name/State object)
@@ -106,6 +116,7 @@ class State:
             return t
     return None
 
+  #-----------------------------------------------------------------------------
   def addTransition(self, to, pre_action, action, post_action):
     """ Add new output transition
         @param to          Target state
@@ -118,15 +129,19 @@ class State:
       self.transitions[to.name] = t
       return t
     return None
+
+  #-----------------------------------------------------------------------------
   def __str__(self):
     s = self.name + ':' + str(self.transitions)
     return s
 
+#-------------------------------------------------------------------------------
 class Machine:
   """
         Main FSM machine object
         @author M.Frank
   """
+  #-----------------------------------------------------------------------------
   def __init__(self, init_state=None):
     self.queue        = []
     self.states       = {}
@@ -139,6 +154,7 @@ class Machine:
     if ( init_state ):
       self.setInitialState(self.state(init_state,1))
 
+  #-----------------------------------------------------------------------------
   def state(self, name, create=None):
     if isinstance(name, str):
       if ( not(self.states.has_key(name)) and (create is not None) ):
@@ -149,10 +165,12 @@ class Machine:
       return self.state(name.name,create)
     return None
 
+  #-----------------------------------------------------------------------------
   def informListeners(self, type, transition):
     for l in self.listeners:
       l.notify(type, transition)
 
+  #-----------------------------------------------------------------------------
   def invokeTransition(self, tr):
     if ( tr ):
       try:
@@ -173,10 +191,12 @@ class Machine:
       print X
     return 0
 
+  #-----------------------------------------------------------------------------
   def cancel(self):
     self.queue = []
     return 1
             
+  #-----------------------------------------------------------------------------
   def start(self):
     """ Start working down the transition queue.
         @return StatusCode indicating success (1) or failure (0).
@@ -202,6 +222,7 @@ class Machine:
       return r
     return 0
     
+  #-----------------------------------------------------------------------------
   def isRunning(self):
     """ Check if task is running """
     if ( self.currentState ):
@@ -209,11 +230,13 @@ class Machine:
         return self.currentState.name != self.initialState.name
     return false
 
+  #-----------------------------------------------------------------------------
   def setInitialState(self, baseState ):
     """ Set Initial state of the FSM machine.
     """
     self.initialState = self.currentState = self.targetState = self.state(baseState, 1)
 
+  #-----------------------------------------------------------------------------
   def setCurrentState(self, state ):
     """ Set the current state of the machine.
         @param    state  Name of the current state
@@ -226,6 +249,7 @@ class Machine:
       return 1
     return 0
 
+  #-----------------------------------------------------------------------------
   def findTransition(self, fr, to):
     """ Access any Transition by name 
         @param fr      Name of the starting state
@@ -247,6 +271,7 @@ class Machine:
     log('findTransition: %s'%str(None))
     return None
 
+  #-----------------------------------------------------------------------------
   def addTransition(self, fr, to, pre_action=dummy_call, action=dummy_call, post_action=dummy_call):
     """ Add Transition to finite state diagram.
         @param fr          Initial state
@@ -264,6 +289,7 @@ class Machine:
     self.transitions.append(t)
     return t
 
+  #-----------------------------------------------------------------------------
   def queueTransition( self, tname ):
     """ Queue new Transition by the name of the next state.
         @return StatusCode indicating success (1) or failure (0).
@@ -278,12 +304,14 @@ class Machine:
       return 1
     return 0
   
+#-------------------------------------------------------------------------------
 class ControlPage:    
   """
         Graphics control object of a FSM machine object
 
         @author M.Frank
   """
+  #-----------------------------------------------------------------------------
   def __init__(self, parent, name, machine):
     """ Default constructor
         @param  parent     Parent wx widget
@@ -311,6 +339,7 @@ class ControlPage:
     self.tools[1][0].Show(1)
     self.placeButtons()
 
+  #-----------------------------------------------------------------------------
   def placeButtons(self):
     import wx
     i = 2
@@ -324,6 +353,7 @@ class ControlPage:
       i = i + 1
     self.parent.Layout()      
   #
+  #-----------------------------------------------------------------------------
   def fsm_handler(self):
     try:
       self.machine.start()
@@ -334,6 +364,7 @@ class ControlPage:
       wx.LogMessage('Unknown exception during request processing')
       return
       
+  #-----------------------------------------------------------------------------
   def OnClick(self, event):
     import wx, threading
     data   = None
@@ -367,6 +398,7 @@ class ControlPage:
         wx.LogMessage('Unknown exception during request processing')
         return
   """
+  #-----------------------------------------------------------------------------
   def notify(self, type, transition):
     import wx
     if type == START:

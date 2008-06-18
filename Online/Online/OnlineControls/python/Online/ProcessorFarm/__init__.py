@@ -21,15 +21,55 @@ def _dbg(val):
   import Online.PVSS as PVSS;
   PVSS.setDebug(val);
 
+  
+def runTheStorage(name,mgr,sim):
+  """
+  Execute Storage system streaming component to
+   - allocate execution slots and
+   - write job options.
+
+   Arguments:
+   @param name        System name
+   @param mgr         PVSS controls manager
+   @param sim         List of stream slices for task simulation simulated
+
+   @author M.Frank
+  """
+  import Online.RunInfoClasses.Storage as RI
+  import Online.AllocatorControl    as Control
+  import Online.Streaming.Allocator as StreamAllocator
+  # import Online.JobOptions.OptionsWriter as JobOptions
+
+  info     = RI.StorageInfoCreator()
+  streamer = StreamAllocator.Allocator(mgr,name,info)
+  #writer   = JobOptions.StorageOptionsWriter(mgr,name,info)
+  #ctrl = Control.Control(mgr,name,'Alloc',[streamer,writer]).run()
+  ctrl = Control.Control(mgr,name,'Alloc',[streamer]).run()
+  return (ctrl,run(name,mgr,sim))
+
+def runStorage(project,name='Storage',sim=None):
+  return runTheStorage(name,_mgr(Params.recstorage_system_name),sim)
+
 def runSubfarm(project,name):
   """
    Arguments:
    @param name        System name
    @author M.Frank
   """
+  import Online.PVSS as PVSS;
   import Online.AllocatorControl as Control
   import Online.ProcessorFarm.FarmDescriptor as Farm
   mgr = _mgr(project)
+  if name=='Unknown':
+    rdr = mgr.devReader()
+    actor = PVSS.DpVectorActor(mgr)
+    typ   = mgr.typeMgr().type('FarmSubInfo')
+    actor.lookupOriginal('*.Name',typ)
+    if len(actor.container)>0:
+      rdr.add(actor.container)
+      if rdr.execute():
+        name = actor.container[0].data
+  print '---> Starting controller for subfarm:',name
   items = name.split('_')
   subfarm = Farm.SubFarmConfigurator(mgr,name)
   ctrl = Control.Control(mgr,name,'Alloc',[subfarm]).run()
@@ -41,9 +81,21 @@ def runFarm(project,name):
    @param name        System name
    @author M.Frank
   """
+  import Online.PVSS as PVSS;
   import Online.AllocatorControl as Control
   import Online.ProcessorFarm.FarmDescriptor as Farm
   mgr  = _mgr(project)
+  if name=='Unknown':
+    rdr = mgr.devReader()
+    actor = PVSS.DpVectorActor(mgr)
+    typ   = mgr.typeMgr().type('FarmInfo')
+    actor.lookupOriginal('*.Name',typ)
+    if len(actor.container)>0:
+      rdr.add(actor.container)
+      if rdr.execute():
+        name = actor.container[0].data
+  print '---> Starting controller for farm:',name
+
   farm = Farm.FarmConfigurator(mgr,name)
   ctrl = Control.Control(mgr,name,'Alloc',[farm]).run()
   return (ctrl,mgr)
@@ -79,9 +131,13 @@ def execute(args):
     else:
       print 'Ignored option ',args[i]
 
-  if typ == 'Subfarm':
+  if typ == 'Storage':
+    function = runStorage
+  elif typ == 'Subfarm':
+    if nam is None: nam = 'Unknown'
     function = runSubfarm
   elif typ == 'Farm':
+    if nam is None: nam = 'Unknown'
     function = runFarm
   elif function is None:
     print 'Unknown action requested.'
