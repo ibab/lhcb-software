@@ -14,7 +14,7 @@ Hlt2SelectionsCorrs.Algorithms += { "PreselBs2MuMu" };
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
 //
 // Plots
 //

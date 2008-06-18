@@ -16,7 +16,7 @@ PrintPreselBu2LLK.OutputLevel = 3 ;
 //
 // Hlt test
 //
-#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
 //
 // Plots
 //

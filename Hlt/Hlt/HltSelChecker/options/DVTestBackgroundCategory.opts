@@ -5,7 +5,7 @@
  *  @date 2006-02-01
  */
 //--------------------------------------------------------------
-#include "$HLTSELECTIONSROOT/options/DVTestHlt2.opts"
+#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
 
 ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; 
 HltBackgroundCategory.PrintTree = true ;
