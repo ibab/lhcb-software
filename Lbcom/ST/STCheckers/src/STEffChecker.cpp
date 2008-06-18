@@ -1,4 +1,4 @@
-// $Id: STEffChecker.cpp,v 1.8 2008-04-18 08:33:24 cattanem Exp $
+// $Id: STEffChecker.cpp,v 1.9 2008-06-18 07:40:39 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -251,7 +251,7 @@ void STEffChecker::layerEff(const MCParticle* aParticle)
     std::vector<MCHit*> layerHits;  
     while (iterHit != hits.end()){
       MCHit* aHit = const_cast<MCHit*>( iterHit->to() );
-      STChannelID hitChan = aHit->sensDetID();
+      STChannelID hitChan = STChannelID(aHit->sensDetID());
       if( uniqueHistoID( hitChan ) == uniqueHistoID((*iterLayer)->elementID()) && isInside(*iterLayer,aHit) == true)
         layerHits.push_back(aHit);
       ++iterHit;
