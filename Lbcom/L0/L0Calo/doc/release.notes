@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.103 2008-06-02 15:57:02 cattanem Exp $
+! $Id: release.notes,v 1.104 2008-06-18 09:22:24 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-06-18 - Patrick Robbe
+ - src/L0CaloCandidatesFromRawBank: skip candidates which are flagged
+   as masked in the L0Calo TELL1
+ - src/L0CaloAlg:
+   . add the possibility to create LUT for the TVB, which will be loaded
+     in the real electronics
+   . use left address instead of right address for the global pi0 
+ - src/DumpL0CaloBanks: new algorithm to dump the content of the L0Calo
+   banks for debugging
 
 !========================= L0Calo v9r13p1 2008-06-02 ======================
 ! 2008-06-02 - Marco Cattaneo
