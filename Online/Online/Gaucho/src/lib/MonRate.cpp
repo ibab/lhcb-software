@@ -86,9 +86,9 @@ void MonRate::copyFrom(MonObject * monObject){
 }
 
 void MonRate::reset(){
-  
-  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
-    (*m_counterMapIt->second) = 0;
+//TODO How reset counters ?
+//  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
+//    (*m_counterMapIt->second) = 0;
   
   (*m_timeFirstEvInRun) = 0; // This is a Time may be we have to let it with the last value 
   (*m_timeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
@@ -117,6 +117,8 @@ void MonRate::print(){
   
   for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
     msgStream << MSG::INFO << " counter: "<<  m_counterMapIt->first << ", value: " << (*m_counterMapIt->second) << endreq;
+  
+  msgStream << MSG::INFO << "*************************************"<<endreq;
   
   msgStream << MSG::INFO << " timeFirstEvInRun: "<<  timeFirstEvInRun() << endreq;
   msgStream << MSG::INFO << " timeLastEvInCycle: "<<  timeLastEvInCycle() << endreq;
