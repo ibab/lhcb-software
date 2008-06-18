@@ -31,16 +31,18 @@ macro LbBcVegPy_use     "LbBcVegPy    v1r5    Gen"  WIN32 ""
 macro LbHerwig_use      "LbHerwig     v5r2    Gen"  WIN32 ""     
 macro LbHidValley_use   "LbHidValley  v2r1    Gen"  WIN32 ""
 macro LbHijing_use      "LbHijing     v3r2    Gen"  WIN32 ""
-use ${LbPythia8_use}
 #OFF use ${LbAlpGen_use}
 #OFF use ${BcVegPy_use}
 #OFF use ${LbBcVegPy_use}
-use ${LbHerwig_use}
 #OFF use ${LbHidValley_use}
+use ${LbPythia8_use}
+use ${LbHerwig_use}
 use ${LbHijing_use}
 #
 use LbMIB               v2r2      Gen
-use ParticleGuns	v5r0      Gen
+# temporarly switch it off on Win32
+macro ParticleGuns_use  "ParticleGuns v5r1    Gen"  WIN32 ""
+use ${ParticleGuns_use}
 
 # Simulation basic packages
 use GiGa        	v19r2	  Sim     
