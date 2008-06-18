@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.h,v 1.2 2008-02-18 14:32:03 pkoppenb Exp $
+// $Id: HltBackgroundCategory.h,v 1.3 2008-06-18 19:12:55 pkoppenb Exp $
 #ifndef HLTBACKGROUNDCATEGORY_H 
 #define HLTBACKGROUNDCATEGORY_H 1
 
@@ -49,7 +49,6 @@ private:
   IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
   IPrintDecayTreeTool* m_print ;        ///< print Particles
   IPrintMCDecayTreeTool* m_printMC ;    ///< print MCParticles
-  Particle2MCLinker* m_linker ;
   
 };
 #endif // HLTBACKGROUNDCATEGORY_H
