@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.6 2008-03-20 14:10:31 evh Exp $
+// $Id: GaudiExample.cpp,v 1.7 2008-06-18 08:45:09 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -100,9 +100,20 @@ StatusCode GaudiExample::initialize() {
   
   declareInfo("position",position,"xy position (pair of doubles)");
   
-  // MonitorSvc has no declareInfo methods for some MonObjects. 
-  // They can be published as below for MonStatEntity, MonVectorI and MonVectorD
-  declareInfo("xyStatistics", &statEntity, "xy statistics (StatEntity)");
+  // IMonitorSvc has no declareInfo methods for MonObjects. 
+  // But we publish MonObjects using the obsolete declareInfo for void *
+  // notice that the second and four arguments are redundant
+  
+  declareInfo("xyStatistics", "", &statEntity, 0, "xy statistics (StatEntity)");
+  monVectorInt.setValue(m_vectInt);
+  declareInfo("vectorInts", "", &monVectorInt, 0, "std::vector of ints"); 
+  monVectorDouble.setValue(m_vectDouble);
+  declareInfo("vectorDoubles",  "", &monVectorDouble, 0, "std::vector of doubles");
+  
+  // This is only for counters which will be monitorated as rates
+  // Obs: the description should be "COUNTER_TO_RATE"
+  declareInfo("count1", count_rate_1, "COUNTER_TO_RATE");
+  declareInfo("count2", count_rate_2, "COUNTER_TO_RATE");  declareInfo("xyStatistics", &statEntity, "xy statistics (StatEntity)");
   
   monVectorInt.setValue(m_vectInt);
   declareInfo("vectorInts",   &monVectorInt,"std::vector of ints");
@@ -283,6 +294,8 @@ StatusCode GaudiExample::execute() {
   //  delay
   mysleep(sleepTime);
   
+  count_rate_1 = counter1;
+  count_rate_2 = counter2;
   return StatusCode::SUCCESS;
 }
 
