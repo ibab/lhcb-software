@@ -12,6 +12,7 @@ Purpose: LHCb Alignment packages.
 			AlignTrTools	v3r6
 			TAlignment	v3r6
 			AlignSolvTools	v2r5
+                        Escher		v2r4
 
 - in AlignmentInterfaces:
 	-  update of ITAconfigtool to make it consistent with its implementation...
@@ -40,6 +41,10 @@ Purpose: LHCb Alignment packages.
 - in AlignSolvTools:
 	- Some undocumented updates have been performed such that the code 
 	  compiles & links under windows.
+
+- in Escher:
+	- Repaired Escher.opts, v200601.opts, and requirements for use of VeloAlignment
+	- Adapted VeloAlignment.opts to new WriteAlignmentConditions functionality
 
 
 </PRE><H1><A NAME=v3r0>2007-11-09 AlignmentSys v3r0</A></H1><PRE>
