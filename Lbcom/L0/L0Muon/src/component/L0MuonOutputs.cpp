@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.11 2008-06-18 12:21:24 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.12 2008-06-18 12:46:18 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -336,14 +336,14 @@ StatusCode L0MuonOutputs::writeOnTES(int procVersion, std::string extension){
       for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
         if (msgLevel( MSG::DEBUG )) debug() << "writeOnTES:\n"<<(*itcand)->dump("\t=> ")<< endreq;
         LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand,procVersion);
-        double pt = l0mcand->pt();
-        sumPt += fabs(pt);
-        sumCh += (pt>0. ? +1 : -1);      
         if (l0mcand==NULL) {
           if (msgLevel( MSG::ERROR)) error()<<"writeOnTES: ctrl side "<<i
                                             <<"\n"<<(*itcand)->dump("\t=> ")<< endreq;
           continue;
         }
+        double pt = l0mcand->pt();
+        sumPt += fabs(pt);
+        sumCh += (pt>0. ? +1 : -1);      
         pl0mcands->insert(l0mcand);
       }
     }
