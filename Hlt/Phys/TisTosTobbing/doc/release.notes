@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.20 2008-06-18 07:30:19 pkoppenb Exp $
+! $Id: release.notes,v 1.21 2008-06-18 07:37:21 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
@@ -7,10 +7,7 @@
 
 !========================== TisTosTobbing v2r5 2008-06-18 ===================
 ! 2008-06-18 - Patrick Koppenburg
- - Tag as v2r5. Use this version for DaVinci v19r13. Do
-   
-   getpack Phys/TisTosTobbing v2r4 v2r5
-
+ - Tag as v2r5. Use this version for DaVinci v19r13.
  - Restore _dll.cpp
 
 ! 2008-06-18 Tomasz Skwarnicki
