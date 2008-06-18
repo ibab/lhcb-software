@@ -2,25 +2,7 @@
 #include "Gaucho/MonObject.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/MsgStream.h"
-#include "Gaucho/MonH1F.h"
-#include "Gaucho/MonH1D.h"
-#include "Gaucho/MonH2F.h"
-#include "Gaucho/MonH2D.h"
-#include "Gaucho/MonBool.h"
-#include "Gaucho/MonInt.h"
-#include "Gaucho/MonLong.h"
-#include "Gaucho/MonFloat.h"
-#include "Gaucho/MonString.h"
-#include "Gaucho/MonDouble.h"
-#include "Gaucho/MonPairDD.h"
-#include "Gaucho/MonPairII.h"
-#include "Gaucho/MonPairDI.h"
-#include "Gaucho/MonProfile.h"
-#include "Gaucho/MonHitMap2D.h"
-#include "Gaucho/MonStatEntity.h"
-#include "Gaucho/MonVectorI.h"
-#include "Gaucho/MonVectorD.h"
-#include "Gaucho/MonRate.h"
+#include "Gaucho/MonObjectCreator.h"
 
 #include <iostream>
 #include <string>
@@ -100,27 +82,7 @@ void DimInfoMonObject::createMonObject(){
   if (m_monObject) {delete m_monObject; m_monObject = 0;}  
   
   //msg << MSG::DEBUG << "creating MonObject" << endreq;
-  if (monObjectTypeName == s_monObject) m_monObject = new MonObject(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monObject) m_monObject = new MonObject(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monH1F) m_monObject = new MonH1F(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monH1D) m_monObject = new MonH1D(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monH2F) m_monObject = new MonH2F(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monH2D) m_monObject = new MonH2D(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monProfile) m_monObject = new MonProfile(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monInt) m_monObject = new MonInt(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monDouble) m_monObject = new MonDouble(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monFloat) m_monObject = new MonFloat(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monString) m_monObject = new MonString(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monLong) m_monObject = new MonLong(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monBool) m_monObject = new MonBool(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monPairDD) m_monObject = new MonPairDD(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monPairII) m_monObject = new MonPairII(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monPairDI) m_monObject = new MonPairDI(m_msgSvc, m_source);
-  //  if (monObjectTypeName == s_monHitMap2D) m_monObject = new MonHitMap2D(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monStatEntity) m_monObject = new MonStatEntity(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monVectorI) m_monObject = new MonVectorI(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monVectorD) m_monObject = new MonVectorD(m_msgSvc, m_source);
-  if (monObjectTypeName == s_monRate) m_monObject = new MonRate(m_msgSvc, m_source);
+  m_monObject = MonObjectCreator::createMonObject(monObjectTypeName, m_msgSvc, m_source);
   
   std::stringstream is2;
   is2.rdbuf()->pubsetbuf(c, m_StringSize);

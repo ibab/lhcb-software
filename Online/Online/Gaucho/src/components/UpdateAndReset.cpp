@@ -46,7 +46,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc), m_deltaTCycle(5)
 {
    declareProperty("deltaTCycle", m_deltaTCycle);
-   m_generatedRunNumber = 0; // to test the run timer generator    
+   m_generatedRunNumber = 0; 
 }
 
 //------------------------------------------------------------------------------
@@ -68,34 +68,32 @@ StatusCode UpdateAndReset::initialize() {
   }
 
   m_runTestElapsedTime = 0.0;
-  m_deltaTCycle = m_deltaTCycle * 1000.00; // 10 seconds expresed in milliseconds
   m_deltaTRunTest = 4 * m_deltaTCycle;
+  
   // Assign the MonRate information
   // We publish the delayed values because we have the time of the last 
   // event in cycle when a cycle is finished then we have to publish the 
   // information delayed in one cycle. 
-  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumberDelayed, m_cycleNumberDelayed, m_timeFirstEvInRunDelayed, m_timeLastEvInCycleDelayed);
 
-  m_runNumber = getRunNumber();
-  
-  m_timeFirstEvInRun = GauchoTimer::currentTime();
-  m_timeLastEvInCycle = GauchoTimer::currentTime(); // initialization ...
-  
-  m_cycleNumber = 0;
-  m_cycleTimer.start();
-  
   m_runTestTimer.start();
+  m_runNumber = getRunNumber();
+  m_cycleNumber = 0;
+
+  m_timeFirstEvInRun = GauchoTimer::currentTime();
+
+  m_runTestTimer.start(); // This is timer to generate runNumbers
   
   // In the begining the delayed values are the same as the current values.
   m_runNumberDelayed = m_runNumber;
   m_cycleNumberDelayed = m_cycleNumber;
   m_timeFirstEvInRunDelayed = m_timeFirstEvInRun;
-  m_timeLastEvInCycleDelayed = m_timeLastEvInCycle;
+  m_timeLastEvInCycleDelayed = GauchoTimer::currentTime(); // initialization ...
   
-  msg << MSG::INFO << " The run number is " << m_runNumber << endreq;
-  msg << MSG::INFO << " The m_cycleNumber number is " << m_runNumber << endreq;   
+  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumberDelayed, m_cycleNumberDelayed, m_timeFirstEvInRunDelayed, m_timeLastEvInCycleDelayed);
   
   m_countExecutes = 0;
+  
+  start(m_deltaTCycle);
   
   return StatusCode::SUCCESS;
 }
@@ -115,95 +113,21 @@ StatusCode UpdateAndReset::execute() {
   msg << MSG::DEBUG << "m_timeFirstEvInRunDelayed = " << m_timeFirstEvInRunDelayed << endreq;
   msg << MSG::DEBUG << "m_timeLastEvInCycleDelayed = " << m_timeLastEvInCycleDelayed << endreq;
   msg << MSG::DEBUG << "********************************************************************" << endreq;
-  msg << MSG::DEBUG << "The values are:" << endreq;
+  msg << MSG::DEBUG << "The Current values are:" << endreq;
   msg << MSG::DEBUG << "m_runNumber = " << m_runNumber << endreq;
   msg << MSG::DEBUG << "m_cycleNumber = " << m_cycleNumber << endreq;
   msg << MSG::DEBUG << "m_timeFirstEvInRun = " << m_timeFirstEvInRun << endreq;
-  msg << MSG::DEBUG << "m_timeLastEvInCycle (This is not true)= " << m_timeLastEvInCycle << endreq;
+  msg << MSG::DEBUG << "m_timeLastEvInCycle = We don't have yet this value" << endreq;
   msg << MSG::DEBUG << "********************************************************************" << endreq;
   
-    
-  int currentRunNumber;
-  
-  currentRunNumber = getRunNumber();
+  int currentRunNumber = getRunNumber();
   
   msg << MSG::INFO << " The current runNumber is " << currentRunNumber  << endreq; 
 
-  //m_cycleNumber = m_countExecutes;
-  
-  if (currentRunNumber != m_runNumber)
+  if (currentRunNumber != m_runNumber) 
   {
-     //fast or other run change update immediately and reset
      msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq; 
-     m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
-     m_pGauchoMonitorSvc->resetHistos();
-     
-     // The runNumber has changed...
-     // Then we set the MonRate parameters  
-     // (delayed parameters) with the old values 
-     m_runNumberDelayed = m_runNumber;
-     m_cycleNumberDelayed = m_cycleNumber;
-     m_timeFirstEvInRunDelayed = m_timeFirstEvInRun;
-     m_timeLastEvInCycleDelayed = GauchoTimer::currentTime();
-     
-     msg << MSG::DEBUG << "********************************************************************" << endreq;
-     msg << MSG::DEBUG << "Because the Run Number changed we publish the old values for MonRate" << endreq;
-     msg << MSG::DEBUG << "m_runNumberDelayed = " << m_runNumberDelayed << endreq;
-     msg << MSG::DEBUG << "m_cycleNumberDelayed = " << m_cycleNumberDelayed << endreq;
-     msg << MSG::DEBUG << "m_timeFirstEvInRunDelayed = " << m_timeFirstEvInRunDelayed << endreq;
-     msg << MSG::DEBUG << "m_timeLastEvInCycleDelayed = " << m_timeLastEvInCycleDelayed << endreq;
-     msg << MSG::DEBUG << "********************************************************************" << endreq;
-     
-     // Then we set the current parameters whit the new values
-     m_runNumber = currentRunNumber;
-     m_cycleNumber = 0;
-     m_timeFirstEvInRun = GauchoTimer::currentTime();
-     //m_timeLastEvInCycle = ??? // we dont have this value yet
-     
-     // We reset the cycle timer
-     m_cycleTimer.start();
-  }
-  else 
-  {
-     //check if update flag is set update if so
-     if (m_pGauchoMonitorSvc->getTimerElapsed()) {
-       msg << MSG::INFO << " The Timer elapsed is TRUE then we updateAll(false)" << endreq;
-       m_pGauchoMonitorSvc->updateAll(false); //the first parameter is the endOfRun flag
-     }
-     else msg << MSG::INFO << " The Timer elapsed is FALSE" << endreq;
-  
-     m_cycleElapsedTime = m_cycleTimer.stop();
-     msg << MSG::DEBUG << "*****************************************************" << endreq;
-     msg << MSG::DEBUG << "Verifying the time elapsed in cycle " << endreq;
-     msg << MSG::DEBUG << "m_cycleElapsedTime = " << m_cycleElapsedTime << endreq;
-     msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << endreq;
-     msg << MSG::DEBUG << "*****************************************************" << endreq;
-     
-     // if the cycle time elapsed is greater that 
-     // the deltaTCycle we change the cycleNumber
-     if (m_cycleElapsedTime > m_deltaTCycle ) {
-       msg << MSG::DEBUG << "m_cycleElapsedTime > m_deltaTCycle, then we change the cycleNumber" << endreq;
-       // The cycleNumber has changed...
-       // Then we set the MonRate parameters  
-       // (delayed parameters) with the old values 
-       m_runNumberDelayed = m_runNumber;
-       m_cycleNumberDelayed = m_cycleNumber;
-       m_timeFirstEvInRunDelayed = m_timeFirstEvInRun;
-       m_timeLastEvInCycleDelayed = GauchoTimer::currentTime();
-       
-       msg << MSG::DEBUG << "**********************************************************************" << endreq;
-       msg << MSG::DEBUG << "Because the Cycle Number changed we publish the old values for MonRate" << endreq;
-       msg << MSG::DEBUG << "m_cycleNumberDelayed = " << m_cycleNumberDelayed << endreq;
-       msg << MSG::DEBUG << "m_timeLastEvInCycleDelayed = " << m_timeLastEvInCycleDelayed << endreq;
-       msg << MSG::DEBUG << "**********************************************************************" << endreq;
-     
-     // Then we set the current parameters whit the new values
-       m_cycleNumber++;
-       //m_timeLastEvInCycle = ??? // we dont have this value yet
-     
-       // We reset the cycle timer
-       m_cycleTimer.start();
-     }
+     changeCycle(true, currentRunNumber);
   }
   
   msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
@@ -215,7 +139,7 @@ StatusCode UpdateAndReset::execute() {
 
 //------------------------------------------------------------------------------
 StatusCode UpdateAndReset::finalize() {
-  //------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << "finalizing...." << endreq;
 
@@ -233,13 +157,12 @@ int UpdateAndReset::getRunNumber() {
     return odin->runNumber();
   }
   
-//  msg << MSG::WARNING<< "No ODIN Bank found. Can't update DIM services" <<endreq;
-  msg << MSG::WARNING<< "For testing we generate a runNumber" <<endreq;
-  
+  msg << MSG::WARNING<< "No ODIN Bank found. We don't get the runNumber" <<endreq;
+  msg << MSG::INFO<< "For testing we generate a runNumber" <<endreq;
   
   m_runTestElapsedTime = m_runTestTimer.stop();
-  if (m_runTestElapsedTime > m_deltaTRunTest){
-     msg << MSG::WARNING<< "Changing run number" <<endreq;  
+  if (m_runTestElapsedTime > 1000*m_deltaTRunTest){
+     msg << MSG::INFO<< "Changing run number becase timer elapsed (" << m_runTestElapsedTime << ") is greather than m_deltaTRunTest (" << 1000*m_deltaTRunTest<< ") " <<endreq;  
      m_generatedRunNumber++; 
      m_runTestElapsedTime = 0;
      m_runTestTimer.start();
@@ -247,3 +170,55 @@ int UpdateAndReset::getRunNumber() {
   
   return m_generatedRunNumber;
 }
+
+void UpdateAndReset::timerHandler()
+{       	 
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+  msg << MSG::DEBUG << "********************Inside timerHandler*******************************" << endreq;
+  changeCycle(false, 0);
+  msg << MSG::DEBUG << "***********************End timerHandler*******************************" << endreq;
+  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+}
+
+void UpdateAndReset::changeCycle(bool isRunNumberChanged, int currentRunNumber) {
+  MsgStream msg( msgSvc(), name() );
+  
+  // We change the cycle number 
+  // We set the MonRate parameters  
+  // (delayed parameters) with the old values 
+  std::string changed = "Cycle";
+  if (isRunNumberChanged) {
+    m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
+    m_pGauchoMonitorSvc->resetHistos();
+    changed = "Run";
+  }
+  else{
+    m_pGauchoMonitorSvc->updateAll(false);
+  }
+  
+  m_runNumberDelayed = m_runNumber;
+  m_cycleNumberDelayed = m_cycleNumber;
+  m_timeFirstEvInRunDelayed = m_timeFirstEvInRun;
+  m_timeLastEvInCycleDelayed = GauchoTimer::currentTime();
+  
+  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+  msg << MSG::DEBUG << changed <<" Number changed, then Publish the old values for MonRate" << endreq;
+  msg << MSG::DEBUG << "m_runNumberDelayed = " << m_runNumberDelayed << endreq;
+  msg << MSG::DEBUG << "m_cycleNumberDelayed = " << m_cycleNumberDelayed << endreq;
+  msg << MSG::DEBUG << "m_timeFirstEvInRunDelayed = " << m_timeFirstEvInRunDelayed << endreq;
+  msg << MSG::DEBUG << "m_timeLastEvInCycleDelayed = " << m_timeLastEvInCycleDelayed << endreq;
+  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+     
+  m_cycleNumber++;
+  
+  if  (isRunNumberChanged) {
+    m_runNumber = currentRunNumber;
+    m_cycleNumber = 0;
+    m_timeFirstEvInRun = GauchoTimer::currentTime();
+  }
+
+  stop();
+  start(m_deltaTCycle);
+}
+

@@ -5,33 +5,34 @@
 #include <string>
 #include <sstream>
 
-DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObject, int size) : DimService(svcName.c_str(),"C",m_data,size), m_data(0) {
-
+DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObject)
+{
   m_monObject = monObject;
   m_svcName = svcName;
-  enableHandler();
-  setDataFromMonObject();
+  
+  m_ss.str("");
+  boost::archive::binary_oarchive m_oa(m_ss);
+  m_monObject->save(m_oa, m_monObject->version());
+  m_data = const_cast<void *>((const void*)m_ss.str().data());
+  m_dimService = new DimService(svcName.c_str(), "", m_data, m_ss.str().length());
+  m_dimService->setData(m_data, m_ss.str().length());
 }
 
 DimServiceMonObject::~DimServiceMonObject() {
 
 }
 
-void DimServiceMonObject::updateService(bool endOfRun) {
-  m_monObject->setEndOfRun(endOfRun);
-  DimService::updateService();
-}
-
-void DimServiceMonObject::serviceHandler() {
-  if (!m_enableHandler) return;
-  setDataFromMonObject();
-  return;
+void DimServiceMonObject::updateServiceMonObject(bool endOfRun) {
+   m_monObject->setEndOfRun(endOfRun);
+   setDataFromMonObject();
 }
 
 void DimServiceMonObject::setDataFromMonObject() {
   m_ss.str("");
-  boost::archive::binary_oarchive oa(m_ss);
-  m_monObject->save(oa, m_monObject->version());
-  setData(const_cast<void *>((const void*)m_ss.str().c_str()), m_ss.str().length());
+  boost::archive::binary_oarchive m_oa(m_ss);
+  m_monObject->save(m_oa, m_monObject->version());
+  m_data = const_cast<void *>((const void*)m_ss.str().data());
+  m_dimService->setData(m_data, m_ss.str().length());
+  //DimService::updateService(); // why it doesnt work
 }
 

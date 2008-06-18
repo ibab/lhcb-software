@@ -8,10 +8,9 @@
 #include "GaudiKernel/Property.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GauchoTimer.h"
+#include "dis.hxx"
 
-
-
-class UpdateAndReset : public GaudiAlgorithm {
+class UpdateAndReset : public GaudiAlgorithm, public DimTimer {
 public:
    /// Constructor of this form must be provided
    UpdateAndReset(const std::string& name, ISvcLocator* pSvcLocator); 
@@ -20,14 +19,15 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-  
   int getRunNumber();
+  
+  void timerHandler();
+  
+  void changeCycle(bool isRunNumberChanged, int currentRunNumber);
   
 private:
   
   int m_generatedRunNumber;
-  
-  bool m_timerElapsed;
   int m_countExecutes;
 
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
@@ -36,16 +36,13 @@ private:
   int    m_runNumber;       // Maybe we have to use double
   int    m_cycleNumber;
   longlong m_timeFirstEvInRun;
-  longlong m_timeLastEvInCycle; // Maybe we have to use double, have to check serialization
   
   int    m_runNumberDelayed;       // Maybe we have to use double
   int    m_cycleNumberDelayed;
   longlong m_timeFirstEvInRunDelayed;
   longlong m_timeLastEvInCycleDelayed; // Maybe we have to use double, have to check serialization
   
-  double m_cycleElapsedTime;
-  GauchoTimer m_cycleTimer;
-  double m_deltaTCycle;
+  int m_deltaTCycle;
   
   double m_runTestElapsedTime;
   GauchoTimer m_runTestTimer;
@@ -54,3 +51,5 @@ private:
 };  
 
 #endif  // GAUCHO_UPDATEANDRESET_H
+
+
