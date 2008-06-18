@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.1.1.1 2008-02-15 13:18:48 cattanem Exp $
+// $Id: STDigitCreator.cpp,v 1.2 2008-06-18 07:41:04 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -226,7 +226,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
     STChannelID leftChan = aSector->nextLeft((*curDigit)->channelID());
 
     // Don't add left neighbour if this neighbour is already hit
-    STChannelID prevDigitChan = 0u;
+    STChannelID prevDigitChan(0u);
     if (curDigit != digitsCont->begin()){
       STDigits::iterator prevDigit = curDigit;
       --prevDigit;
@@ -240,7 +240,7 @@ void STDigitCreator::addNeighbours(STDigits* digitsCont) const
     STChannelID rightChan = aSector->nextRight((*curDigit)->channelID());
 
     // Don't add right neighbour if this neighbour is already hit
-    STChannelID nextDigitChan = 0u;
+    STChannelID nextDigitChan(0u);
     STDigits::iterator nextDigit = curDigit;
     ++nextDigit;
     if ((nextDigit != digitsCont->end())){

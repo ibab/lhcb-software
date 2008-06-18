@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 M Needham
+ - Fix implicit conversions
+
 !========================= STDigiAlgorithms v1r1 2008-05-09 ==================
 ! 2008-05-09 - Marco Cattaneo
  - Fix untested StatusCodes
