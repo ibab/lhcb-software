@@ -1,4 +1,4 @@
-// $Id: SiHeaderWord.h,v 1.6 2006-02-23 10:36:10 mneedham Exp $
+// $Id: SiHeaderWord.h,v 1.7 2008-06-18 15:37:49 mneedham Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
 
@@ -75,7 +75,7 @@ public:
 
 private:
 
-  enum bits {clusterBits = 0, pcnBits = 16, errorBits = 25};
+  enum bits {clusterBits = 0, pcnBits = 16, errorBits = 24};
   enum masks {clusterMask = 0x00ffff , pcnMask =  0xff0000, errorMask = 0x1000000}; 
 
   unsigned int m_value;
