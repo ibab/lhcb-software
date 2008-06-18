@@ -1,9 +1,10 @@
-// $Id: L0CaloAlg.cpp,v 1.49 2008-04-10 19:18:05 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.50 2008-06-18 09:19:14 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "DetDesc/Condition.h"
 
+#include <fstream>
 
 /// CaloKernel
 #include "CaloKernel/CaloException.h"
@@ -32,6 +33,7 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("StoreInBuffer"   , m_storeFlag      = true ) ;
   declareProperty("UsePSSPD"        , m_usePsSpd       = true ) ;
   declareProperty("AddECALToHCAL"   , m_addEcalToHcal  = true ) ;
+  declareProperty("CreateHCALLut"   , m_createHCALLut  = false ) ;
 };
 
 
@@ -177,7 +179,10 @@ StatusCode L0CaloAlg::initialize() {
     }
     debug() << endreq;
   }
-
+  
+  
+  if ( m_createHCALLut ) createHCALLut( ) ;
+  
   // Initialize the PreShower validation mask: 1 or 2 bits, no more
 
   m_validPrs[0]  = 0;
@@ -269,6 +274,7 @@ StatusCode L0CaloAlg::execute() {
     int etMax   = m_ecalFe[eCard].etMax()  ;
     int etTot   = m_ecalFe[eCard].etTot()  ;
     LHCb::CaloCellID ID = m_ecalFe[eCard].cellIdMax() ;
+
     std::string particle = "";
     int numVal = m_ecalFe[eCard].validationNumber();
 
@@ -353,10 +359,11 @@ StatusCode L0CaloAlg::execute() {
            ( 1 < abs( diffCol )      )   ) {
         if ( pi0Global.et() < etMaxTot ) {
           particle += " pi0G";
-          pi0Global.setCandidate( etMaxTot, ID );
+          pi0Global.setCandidate( etMaxTot, ID2 );
         }
+
         if ( allPi0Global[numVal].et() < etMaxTot ) {
-          allPi0Global[numVal].setCandidate( etMaxTot, ID );
+          allPi0Global[numVal].setCandidate( etMaxTot, ID2 );
         }
       }          
     }
@@ -406,19 +413,20 @@ StatusCode L0CaloAlg::execute() {
     std::string particle = "";
     particle += " hadron";
 
-    for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
-      eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
-      if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
-        if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
-          maxEcalEt = m_ecalFe[eCard].etMax();
+    if ( m_addEcalToHcal ) {
+      for ( eLink=0; eLink < m_hcalFe[hCard].numberOfEcalCards() ; ++eLink) {
+        eCard = m_hcalFe[hCard].ecalCardNumber( eLink );
+        if ( m_ecalFe[eCard].match_included( hCol, hRow ) ) {
+          if ( m_ecalFe[eCard].etMax() > maxEcalEt ) {
+            maxEcalEt = m_ecalFe[eCard].etMax();
+          }
         }
       }
-    }
-    
+    }    
 //    int etMax = m_hcalFe[hCard].addEcalEt( maxEcalEt );   // Add ECAL to HCAL
     
     int etMax = m_hcalFe[hCard].etMax() + maxEcalEt ;   // Add ECAL to HCAL 
-    sumEt  += etMax ;
+    sumEt += etMax ;
     if(  hadron.et() < etMax ) {
       cardMax = hCard;
       hadron.setCandidate( etMax, m_hcalFe[hCard].cellIdMax() );
@@ -578,7 +586,9 @@ StatusCode L0CaloAlg::execute() {
     int sumEtMaxPerCard = 0;
     for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
       if (etMaxEcalPerValNum[ii] > -1 ) {
-        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        int et( 0 ) ;
+        if ( m_addEcalToHcal ) et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        else et = m_hcalFe[hCard].etMax() ;
         if (iSlave1 > nbSlave1SEL ) 
           info()<<" !!!! iSlave1= "<<iSlave1<<" nbSlave1SEL= "
                 <<nbSlave1SEL<< endmsg;
@@ -638,7 +648,10 @@ StatusCode L0CaloAlg::execute() {
     int sumEtMaxPerCard = 0;
     for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
       if (etMaxEcalPerValNum[ii] > -1 ) {
-        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        int et( 0 )  ;
+        if ( m_addEcalToHcal ) et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        else et = m_hcalFe[hCard].etMax() ;
+        
         if (iSlave2 > nbSlave2SEL ) 
           info()<<"!!!! iSlave2= "<<iSlave2<<" nbSlave2SEL= "
                 <<nbSlave2SEL<< endmsg;
@@ -695,7 +708,9 @@ StatusCode L0CaloAlg::execute() {
     int sumEtMaxPerCard = 0;
     for ( int ii=0 ; m_nbValidation> ii ; ii++ ){
       if (etMaxEcalPerValNum[ii] > -1 ) {
-        int et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        int et( 0 ) ;
+        if ( m_addEcalToHcal ) et = m_hcalFe[hCard].etMax() + etMaxEcalPerValNum[ii] ; 
+        else et = m_hcalFe[hCard].etMax() ;
         if (iMaster > nbMasterSEL ) 
           info()<<"!!!! iMaster= "<<iMaster<<" nbMasterSEL= "
                 <<nbMasterSEL<< endmsg;
@@ -956,7 +971,7 @@ StatusCode L0CaloAlg::execute() {
   if (outputSumEtMaster > 16383 ) outputSumEtMaster = 16383 ;
   saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::SumEt,
                   outputSumEtMaster , 1 );
-
+                  
   //---------------------------------------------------------------------------
   //End of the HCAL part 
   //---------------------------------------------------------------------------
@@ -1077,7 +1092,7 @@ void L0CaloAlg::sumHcalData( ) {
         adcs.end() != itAdc; ++itAdc ) {
     LHCb::CaloCellID id = (*itAdc).cellID();
     int adc = (*itAdc).adc();
-
+    
     // Get digits. Sum in front-end cards.
     // Adds to the (possible) neighboring cards if at the border (row/col = 0)
     // and if the card has neighboring cards
@@ -1093,25 +1108,22 @@ void L0CaloAlg::sumHcalData( ) {
                            adc, card, row, col, down, left, corner ) << endreq;
     }
     
-    
-    m_hcalFe[card].addEt( col, row, adc);
     if ( (0 == row) && (0 <= down) ) {
       if ( ( ( m_hcal -> cardFirstColumn( card ) + col ) >=
              m_hcal -> cardFirstValidColumn( down ) ) &&
            ( ( m_hcal -> cardFirstColumn( card ) + col ) <=
              m_hcal -> cardLastValidColumn( down ) ) ) 
-        m_hcalFe[down].addEt  ( col,          nRowCaloCard, adc);
+          m_hcalFe[down].addEt  ( col,          nRowCaloCard, adc); 
     }
     if ( (0 == col) && (0 <= left) ) {
       if ( ( ( m_hcal -> cardFirstRow( card ) + row ) >=
              m_hcal -> cardFirstValidRow( left ) ) && 
            ( ( m_hcal -> cardFirstRow( card ) + row ) <=
              m_hcal -> cardLastValidRow( left ) ) ) 
-        m_hcalFe[left].addEt  ( nColCaloCard, row,          adc) ;
+          m_hcalFe[left].addEt  ( nColCaloCard, row,          adc) ;
     }
-    if ( (0 == col) && (0 == row) && (0 <= corner)) {
-      m_hcalFe[corner].addEt( nColCaloCard, nRowCaloCard, adc) ;
-    }
+    if ( (0 == col) && (0 == row) && (0 <= corner)) 
+          m_hcalFe[corner].addEt( nColCaloCard, nRowCaloCard, adc) ;
   }
 }
 
@@ -1308,3 +1320,103 @@ void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
 };
 
 //=========================================================================
+// Create HCAL LUT
+//=========================================================================
+void L0CaloAlg::createHCALLut( ) {  
+  std::map< int , std::vector< int > > validMap ;
+  validMap[ 0 ].push_back(0) ; validMap[ 0 ].push_back(1) ; validMap[ 0 ].push_back(2) ; validMap[ 0 ].push_back(3) ;
+  validMap[ 1 ].push_back(4) ; validMap[ 1 ].push_back(5) ; validMap[ 1 ].push_back(6) ; validMap[ 1 ].push_back(-1) ;
+  validMap[ 2 ].push_back(0) ; validMap[ 2 ].push_back(1) ; validMap[ 2 ].push_back(2) ; validMap[ 2 ].push_back(3) ;
+  validMap[ 3 ].push_back(4) ; validMap[ 3 ].push_back(5) ; validMap[ 3 ].push_back(6) ; validMap[ 3 ].push_back(-1) ;
+  validMap[ 4 ].push_back(7) ; validMap[ 4 ].push_back(8) ; validMap[ 4 ].push_back(11) ; validMap[ 4 ].push_back(18) ;
+  validMap[ 5 ].push_back(17) ; validMap[ 5 ].push_back(24) ; validMap[ 5 ].push_back(9) ; validMap[ 5 ].push_back(10) ;
+  validMap[ 6 ].push_back(12) ; validMap[ 6 ].push_back(13) ; validMap[ 6 ].push_back(14) ; validMap[ 6 ].push_back(-1) ;
+  validMap[ 7 ].push_back(15) ; validMap[ 7 ].push_back(16) ; validMap[ 7 ].push_back(19) ; validMap[ 7 ].push_back(-1) ;
+  validMap[ 8 ].push_back(12) ; validMap[ 8 ].push_back(13) ; validMap[ 8 ].push_back(14) ; validMap[ 8 ].push_back(-1) ;
+  validMap[ 9 ].push_back(15) ; validMap[ 9 ].push_back(16) ; validMap[ 9 ].push_back(-1) ; validMap[ 9 ].push_back(23) ;
+  validMap[ 10 ].push_back(20) ; validMap[ 10 ].push_back(-1) ; validMap[ 10 ].push_back(-1) ; validMap[ 10 ].push_back(-1) ;
+  validMap[ 11 ].push_back(22) ; validMap[ 11 ].push_back(21) ; validMap[ 11 ].push_back(-1) ; validMap[ 11 ].push_back(-1) ;
+  validMap[ 12 ].push_back(20) ; validMap[ 12 ].push_back(21) ; validMap[ 12 ].push_back(-1) ; validMap[ 12 ].push_back(-1) ;
+  validMap[ 13 ].push_back(22) ; validMap[ 13 ].push_back(-1) ; validMap[ 13 ].push_back(-1) ; validMap[ 13 ].push_back(-1) ;
+  validMap[ 14 ].push_back(27) ; validMap[ 14 ].push_back(-1) ; validMap[ 14 ].push_back(-1) ; validMap[ 14 ].push_back(-1) ;
+  validMap[ 15 ].push_back(29) ; validMap[ 15 ].push_back(28) ; validMap[ 15 ].push_back(-1) ; validMap[ 15 ].push_back(-1) ;
+  validMap[ 16 ].push_back(27) ; validMap[ 16 ].push_back(28) ; validMap[ 16 ].push_back(-1) ; validMap[ 16 ].push_back(-1) ;
+  validMap[ 17 ].push_back(29) ; validMap[ 17 ].push_back(-1) ; validMap[ 17 ].push_back(-1) ; validMap[ 17 ].push_back(-1) ;
+  validMap[ 18 ].push_back(26) ; validMap[ 18 ].push_back(33) ; validMap[ 18 ].push_back(34) ; validMap[ 18 ].push_back(-1) ;
+  validMap[ 19 ].push_back(35) ; validMap[ 19 ].push_back(36) ; validMap[ 19 ].push_back(37) ; validMap[ 19 ].push_back(-1) ;
+  validMap[ 20 ].push_back(-1) ; validMap[ 20 ].push_back(33) ; validMap[ 20 ].push_back(34) ; validMap[ 20 ].push_back(30) ;
+  validMap[ 21 ].push_back(35) ; validMap[ 21 ].push_back(36) ; validMap[ 21 ].push_back(37) ; validMap[ 21 ].push_back(-1) ;
+  validMap[ 22 ].push_back(39) ; validMap[ 22 ].push_back(40) ; validMap[ 22 ].push_back(25) ; validMap[ 22 ].push_back(32) ;
+  validMap[ 23 ].push_back(31) ; validMap[ 23 ].push_back(38) ; validMap[ 23 ].push_back(41) ; validMap[ 23 ].push_back(42) ;
+  validMap[ 24 ].push_back(43) ; validMap[ 24 ].push_back(44) ; validMap[ 24 ].push_back(45) ; validMap[ 24 ].push_back(46) ;
+  validMap[ 25 ].push_back(47) ; validMap[ 25 ].push_back(48) ; validMap[ 25 ].push_back(49) ; validMap[ 25 ].push_back(-1) ;
+  validMap[ 26 ].push_back(43) ; validMap[ 26 ].push_back(44) ; validMap[ 26 ].push_back(45) ; validMap[ 26 ].push_back(46) ;
+  validMap[ 27 ].push_back(47) ; validMap[ 27 ].push_back(48) ; validMap[ 27 ].push_back(49) ; validMap[ 27 ].push_back(-1) ;    
+        
+  for ( int valid = 0 ; valid < 28 ; ++valid ) {
+    for ( int input = 0 ; input < 4 ; ++input ) {
+      std::ostringstream fileNameStr ;
+      fileNameStr << "Valid_" << valid << "_HCAL" << input << ".txt" ;
+      std::string fileName = fileNameStr.str() ; 
+      std::ofstream theFile( fileName.c_str() ) ;
+      theFile << "Valid " << valid << " LUT for HCAL" << input << std::endl ;
+      if ( -1 == (validMap[ valid ])[ input ] ) {
+        for ( int ecalCard = 0 ; ecalCard < 8 ; ++ecalCard ) {
+          for ( int ecalAdd = 0 ; ecalAdd < 32 ; ++ecalAdd ) {
+            for ( int hcalAdd = 0 ; hcalAdd < 32 ; ++hcalAdd ) {
+               theFile << "0 " ;                
+            }
+            theFile << std::endl ;
+          }
+          theFile << "--------------------------------------------------------" << std::endl ;
+        }
+      } else { 
+        for ( int ecalCard = 0 ; ecalCard < 8 ; ++ecalCard ) {
+          // Find the corresponding ECAL card number:
+          int theCard = -1 ;
+          for ( int eCard=0 ;  m_ecal->nCards() > eCard; ++eCard ) {
+            if ( ( m_ecalFe[eCard].validationNumber() == valid ) && ( m_ecal->cardSlot( eCard ) % 8 == ecalCard ) ) {
+              theCard = eCard ;
+              break ;
+            }
+          } 
+          
+          // No card connected to this input --> all zeros
+          if ( theCard == -1 ) {
+            for ( int ecalAdd = 0 ; ecalAdd < 32 ; ++ecalAdd ) {
+              for ( int hcalAdd = 0 ; hcalAdd < 32 ; ++hcalAdd ) {
+                theFile << "0 " ;                
+              }
+              theFile << std::endl ;
+            }
+          } else {
+            // Check if this board is in front of the HCAL board
+            if ( m_ecalFe[theCard].hcalCard() == (validMap[ valid ])[input] ) {
+              for ( int ecalAdd = 0 ; ecalAdd < 32 ; ++ecalAdd ) {
+                for ( int hcalAdd = 0 ; hcalAdd < 32 ; ++hcalAdd ) {
+                
+                  m_ecalFe[theCard].reset() ;
+                  m_ecalFe[theCard].addEt( 1 + ecalAdd % 8 , 1 + (int) ecalAdd / 8 , 1 ) ;
+                  theFile << m_ecalFe[theCard].match_included( hcalAdd % 8 , (int) hcalAdd / 8 ) << " " ;                
+                  
+                }
+                theFile << std::endl ;
+              }              
+            } else {
+              for ( int ecalAdd = 0 ; ecalAdd < 32 ; ++ecalAdd ) {
+                for ( int hcalAdd = 0 ; hcalAdd < 32 ; ++hcalAdd ) {
+                  theFile << "0 " ;                
+                }
+                theFile << std::endl ;
+              }         
+            }
+          }
+    
+          // Print separator         
+          theFile << "--------------------------------------------------------" << std::endl ;         
+        }
+      } 
+      theFile.close() ;
+    }
+  }
+}  

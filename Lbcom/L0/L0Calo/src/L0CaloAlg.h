@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.26 2008-04-10 19:18:06 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.27 2008-06-18 09:19:14 robbep Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -106,6 +106,7 @@ private:
   std::string m_nameOfOutputDataContainer ;   ///< of the output container.
   bool        m_usePsSpd                  ;   ///< use Ps/Spd in validation
   bool        m_addEcalToHcal             ;   ///< Use ECAL in Validation
+  bool        m_createHCALLut             ;   ///< Create HCAL LUT Files for validation boards (Set by options)
   
 // Local variables
 
@@ -138,5 +139,8 @@ private:
   LHCb::Calo::PrsSpdFiredCells m_PrsSpdIds;
   
   int m_bankVersion ; ///< Version of the bank to simulate
+  
+  /// Utility function to create HCAL LUT for validation from geometry
+  void createHCALLut( ) ;
 };
 #endif //   L0CALO_L0CALOALG_H
