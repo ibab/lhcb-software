@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.5 2008-01-22 11:31:53 hernando Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.6 2008-06-18 01:18:31 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -8,7 +8,7 @@
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 
 #include "CaloInterfaces/ITrack2Calo.h"
-#include "HltBase/HltConfigurationHelper.h"
+#include "HltBase/HltTypes.h"
 #include "HltBase/HltBaseTool.h"
 #include "Event/Track.h"
 
@@ -194,10 +194,12 @@ private:
   /// Ecal detector geometry
   DeCalorimeter* m_ecalDeCal;
 
-  /// Location of Muon Tracks holding muon hits
+  /// Location of Muon Tracks holding muon hits for protoparticles
   std::string m_MuonTracksLocation;
   /// Extracted muon track container 
   LHCb::Tracks* m_muonTracks;
+  /// flag to disable muon hits if muon tracks cannot be found
+  bool m_muonsOff;  
   
   /// Location of Hlt Summary
   std::string m_HltSummaryLocation;

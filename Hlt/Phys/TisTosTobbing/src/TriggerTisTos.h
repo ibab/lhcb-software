@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.3 2007-09-03 15:35:09 pkoppenb Exp $
+// $Id: TriggerTisTos.h,v 1.4 2008-06-18 01:18:31 tskwarni Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -8,7 +8,7 @@
 #include "Kernel/ITriggerTisTos.h"            // Interface
 
 #include "TriggerSelectionTisTos.h"
-#include "HltBase/HltConfigurationHelper.h"
+#include "HltBase/IANNSvc.h"
 
 namespace LHCb {
   class HltSummary;
@@ -103,7 +103,9 @@ protected:
 private:
 
   /// obtain Alley Exit selection names from HltConfiguration
-  void getAlleyExitSelections();  
+  void getAlleyExitSelections();
+  /// obtain all known trigger names
+  void getTriggerNames();
 
   /// check this input selection (and its inputs) and update tis,tos (previousTis,previousTos - status of tis,tos search)
   void recursiveInputTriggerTisTos( const std::string & selName,  bool & tis,  bool & tos, bool previousTis, bool previousTos);
@@ -121,6 +123,12 @@ private:
 
   /// names of alley exit selection from HltConfiguration
   std::vector< std::string > m_alleyExitSelections;
+  /// all known trigger names 
+  std::vector< std::string > m_triggerNames;
+
+
+  /// HltANNSvc for valid trigger names
+  IANNSvc* m_hltANNSvc;  
 
 };
 #endif // TRIGGERTISTOS_H

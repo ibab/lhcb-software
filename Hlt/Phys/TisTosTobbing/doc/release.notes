@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.18 2008-06-09 16:22:29 pkoppenb Exp $
+! $Id: release.notes,v 1.19 2008-06-18 01:18:31 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-06-18 Tomasz Skwarnicki
+ - introduce use of HltANNSvc to fix problems in the previous release
+ - fix old bug for TisTossing muon triggers if Tracks were used 
+   instead of Particles to define off-line signal
 
 !========================== TisTosTobbing v2r4 2008-06-09 ===================
 ! 2008-06-03 - Patrick Koppenburg

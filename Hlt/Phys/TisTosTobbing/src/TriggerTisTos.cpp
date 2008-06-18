@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.3 2008-02-05 01:52:24 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.4 2008-06-18 01:18:31 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -9,10 +9,7 @@
 #include "TriggerTisTos.h"
 
 #include "HltBase/HltUtils.h"
-#include "HltBase/HltTypes.h"
 #include "Event/HltSummary.h"
-#include "HltBase/HltConfigurationHelper.h"
-#include "Event/Track.h"
 #include "Event/Particle.h"
 
 
@@ -47,6 +44,7 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
 
   m_error_count=0;
 
+  m_hltANNSvc = 0;
 }
 //=============================================================================
 // Destructor
@@ -61,6 +59,8 @@ StatusCode TriggerTisTos::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+
+  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
 
   setOfflineInput();
   setTriggerInput();
@@ -119,9 +119,54 @@ void TriggerTisTos::getAlleyExitSelections()
   }
 }
 
+void TriggerTisTos::getTriggerNames()
+{
+  // done before ?
+  if( m_triggerNames.size() !=0 ){ return; }
+
+  // use HltANNSvc to get Hlt1, then Hlt2 names
+  std::vector<IANNSvc::minor_value_type> selIDs = m_hltANNSvc->items("SelectionID");
+  for(std::vector<IANNSvc::minor_value_type>::const_iterator i =
+          selIDs.begin(); i!=selIDs.end(); ++i) {
+    if( find( m_triggerNames.begin(), m_triggerNames.end(), i->first )
+            == m_triggerNames.end() ){
+          m_triggerNames.push_back(i->first);
+    }
+  }
+  {    
+  std::vector<IANNSvc::minor_value_type> selIDs2 = m_hltANNSvc->items("Hlt2SelectionID");
+  for(std::vector<IANNSvc::minor_value_type>::const_iterator i =
+          selIDs2.begin(); i!=selIDs2.end(); ++i) {
+    if( find( m_triggerNames.begin(), m_triggerNames.end(), i->first )
+            == m_triggerNames.end() ){
+          m_triggerNames.push_back(i->first);
+    }
+  }
+  }
+
+  // for now also add any trigger-names which appear to have input selections in hltConf
+  getHltSummary();
+  const std::vector< std::string > keys = m_hltconf->keys();
+  for( std::vector< std::string >::const_iterator ikey=keys.begin();ikey!=keys.end();++ikey){
+    std::string::size_type ll = ikey->find("/InputSelections");
+    if(  ll!=std::string::npos ){
+      std::string selName( *ikey, 0, ll );
+      if( find( m_triggerNames.begin(), m_triggerNames.end(),selName )
+            == m_triggerNames.end() ){
+          m_triggerNames.push_back(selName);
+      }
+    }
+  }  
+  
+  if( m_triggerNames.size()==0 ){
+    warning() << "No known trigger names found" << endmsg;
+  }
+  
+}
 void TriggerTisTos::refreshTriggerStructure()
 {
   m_alleyExitSelections.clear();
+  m_triggerNames.clear();  
 }
 
 void TriggerTisTos::setTriggerInput()
@@ -144,19 +189,14 @@ void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWild
       }
     }
   } else {
-    getHltSummary();
-    const std::vector< std::string > keys = m_hltconf->keys();
-    for( std::vector< std::string >::const_iterator ikey=keys.begin();ikey!=keys.end();++ikey){
-      std::string::size_type ll = ikey->find("SelectionID");
-      if(  ll!=std::string::npos ){
-        const std::string selName( ikey->substr( ikey->find("/")+1 ) );
-        if( wildcmp( selectionNameWithWildChar.c_str(),selName.c_str()) ){ 
-          if( find( m_triggerInput_Selections.begin(), m_triggerInput_Selections.end(), selName ) 
+    getTriggerNames();
+    for( std::vector< std::string >::const_iterator inpt=m_triggerNames.begin();inpt!=m_triggerNames.end();++inpt){
+        if( wildcmp( selectionNameWithWildChar.c_str(), inpt->c_str()) ){ 
+          if( find( m_triggerInput_Selections.begin(), m_triggerInput_Selections.end(), *inpt ) 
               == m_triggerInput_Selections.end() ){
-            m_triggerInput_Selections.push_back(selName);
+            m_triggerInput_Selections.push_back(*inpt);
           }
         }
-      }
     }
   }
   if( m_triggerInput_Selections.size()==sizeAtEntrance ){
