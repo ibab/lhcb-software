@@ -1,8 +1,8 @@
 // Millepede configuration:
 // T-station configuring tool
-ToolSvc.Derivatives.OutputLevel = 3;
-ToolSvc.TAConfig.OutputLevel = 3;
-ToolSvc.TAConfig.Centipede.OutputLevel = 3;
+ToolSvc.Derivatives.OutputLevel = 4;
+ToolSvc.TAConfig.OutputLevel = 5;
+ToolSvc.TAConfig.Centipede.OutputLevel = 4;
 ToolSvc.TAConfig.Velo_left_modules  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 ToolSvc.TAConfig.Velo_right_modules = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
@@ -10,22 +10,8 @@ ToolSvc.TAConfig.PenaltyTerms       = {30.0,30.0,30.0,30.0,30.0,30.0};
 ToolSvc.TAConfig.Degrees_of_Freedom = {1,0,0,1,1,1};
 ToolSvc.TAConfig.nTrackModelParameters = 4;
 ToolSvc.TAConfig.Fix_alignable_objects = true;
-ToolSvc.TAConfig.Constrain_OT = {
-       "X_S1_L1_Q0_M0"
-//     , "Y_S1_L1_Q0_M0"
-//     , "Z_S1_L1_Q0_M0"
-//     , "a_S1_L1_Q0_M0"
-//     , "b_S1_L1_Q0_M0"
-//     , "c_S1_L1_Q0_M0"
-     , "X_S1_L2_Q0_M0"
-     , "X_S3_L3_Q0_M0"
-     , "X_S3_L4_Q0_M0"
-//     , "Z_S3_L4_Q0_M0"      
-//     , "a_S3_L4_Q0_M0"
-//     , "b_S3_L4_Q0_M0"
-     , "c_S3_L4_Q0_M0"
-
-};
+// OT constraints
+#include "$ESCHEROPTS/OT_layer.opts"
 // IT constraints
 #include "$ESCHEROPTS/IT.opts"
 

@@ -50,7 +50,7 @@ HistogramPersistencySvc.OutputFile = "Escher.root";  // Monitoring histos
 //  "xmlcatalog_file:$ESCHERROOT/job/MyCatalog.xml"
 //};
 EventSelector.Input   = {
-"DATAFILE='PFN:/work/blouw/cmtuser/Brunel_v32r3p1/Rec/Brunel/v32r3p1/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/castor/cern.ch/user/j/jblouw/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"

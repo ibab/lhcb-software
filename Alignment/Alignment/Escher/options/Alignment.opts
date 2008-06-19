@@ -119,10 +119,10 @@ AlignmentSeq.MeasureTime = true;
 EscherMainSeq.Members += {"GaudiSequencer/ClosedASeq"};
 ClosedASeq.Members += {"GAlign/Align"};
 Align.OutputLevel = 3;
-Align.Detectors = {"IT"};
-//Align.Detectors += {"OT"};
+//Align.Detectors = {"IT"};
+Align.Detectors += {"OT"};
 //Align.Detectors = {"Muon"};
 //Align.InputContainer = "/Event/Rec/Muon/MuonsTrackForAlignment";
-Align.InputContainer = "Alignment/ITTracks";
-//Align.InputContainer = "Rec/Track/Best";
+//Align.InputContainer = "Alignment/ITTracks";
+Align.InputContainer = "Rec/Track/Best";
 #include "$ESCHERROOT/options/TAlignment.opts"
