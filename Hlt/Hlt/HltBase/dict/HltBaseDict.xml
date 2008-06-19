@@ -8,6 +8,7 @@
   <class name = "IVertexFunctionFactory" />
   <class name = "ITrackBiFunctionFactory" />
   <class name = "IL0Value" />
+  <class name = "ITrackView"       />
   <class name = "ITrackUpgrade" />
   <class name = "Hlt::Configuration" />
   <class name = "Hlt::TrackFunction" />
