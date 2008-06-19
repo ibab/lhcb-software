@@ -1,17 +1,13 @@
-// $Id: Fidel.cpp,v 1.4 2008-06-11 13:03:58 hmdegaud Exp $ // Include files
+// $Id: Fidel.cpp,v 1.5 2008-06-19 17:37:44 sfurcas Exp $ // Include files
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
-
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
-
 // from Event
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
-
 // from DaVinci
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IRelatedPV.h"
-
 #include "Event/HltSummary.h"
 #include "Event/HltEnums.h"
 #include "Event/L0DUReport.h"
@@ -42,19 +38,20 @@ Fidel::Fidel( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
   
 {
-  declareProperty("minMass", m_minMass = 5000); 
+  declareProperty("minMass", m_minMass = 4000); 
   declareProperty("maxMass", m_maxMass = 7000);  
   declareProperty("minPt",   m_minPt = -999);
+  declareProperty("minP",    m_minP = -999);
   declareProperty("maxChi2", m_maxChi2 = -999);
   declareProperty("maxPointing",m_maxPointing = -999);  
   declareProperty("pid",m_pid = 511);
   declareProperty("maxIps",m_maxIps = -999);
-  declareProperty("maxDist",m_maxDist = -999);
   declareProperty("minCts",m_minCts = -999);  
   declareProperty("minProb",m_minProb = -999);
+  declareProperty("minFsB1",m_minFsB1 = -999);
+  declareProperty("minFsB2",m_minFsB2 = -999);
   declareProperty("inputParticles",m_inputParticles = 1000);
   declareProperty("basicparticle",m_basicparticle = false);
-  declareProperty("fillTupla",m_fillTupla = false );
   declareProperty("checkQ",m_checkQ = true );
   declareProperty("checkB",m_checkB = true );
   declareProperty("checkL",m_checkL = true );
@@ -86,7 +83,7 @@ StatusCode Fidel::initialize() {
   debug()<<"*************FIDEL CUTS************  "<<endmsg;
   debug()<<"minMass  "<<m_minMass<<", maxMass  "<<m_maxMass<<" MeV"<<endmsg;
   debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
-  debug()<<"max distance between 2 secondary Vtx "<<m_maxDist<<" mm, pointing "<<m_maxPointing<<" rad"<<endmsg;
+  debug()<<"pointing "<<m_maxPointing<<" rad"<<endmsg;
   
   m_relatedPV = tool<IRelatedPV>("RelatedPV",this );
   if (!m_relatedPV) {
@@ -122,11 +119,12 @@ StatusCode Fidel::execute() {
   double impCand=0;double iperr=0;
   double dist_B=0; double errdist_B=0; double fs_B=0;
   double distB=0; double errdistB=0; double fsB=0;
-  double distB1=-9; double errdistB1=-9;
-  double distB2=-9; double errdistB2=-9;
+  double distB1=-9; double errdistB1=-9;double FsB1=-999;
+  double distB2=-9; double errdistB2=-9;double FsB2=-999;
   double angleP=0;
   double Pchi2=0;
-
+  
+  
   LHCb::Vertex BCandVertex; 
 
 
@@ -171,6 +169,8 @@ StatusCode Fidel::execute() {
       //***************//
       if(Cand1Cand2Comb.mass()< m_minMass || Cand1Cand2Comb.mass()>m_maxMass )continue;
       if(Cand1Cand2Comb.Pt()<m_minPt)continue;
+      if(Cand1Cand2Comb.P()<m_minP)continue;
+      
       if(checkOverlap()->foundOverlap(*ip1,*ip2))continue;
       
       if(!m_basicparticle && (*ip1)->isBasicParticle() && (*ip2)->isBasicParticle())continue;
@@ -181,10 +181,13 @@ StatusCode Fidel::execute() {
       LHCb::ParticleID m_MothID(pid);      
       LHCb::Particle BCand(m_MothID);
       
-      StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);
-      
-      const LHCb::VertexBase* bestPV  = m_relatedPV->bestPV(&BCand);//BCand
-      
+      StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);      
+      if(!fit) {      
+        Warning("Fit error");
+        continue;        
+      }
+
+      const LHCb::VertexBase* bestPV  = m_relatedPV->bestPV(&BCand);
       Gaudi::XYZPoint Origin = bestPV->position();
         
       StatusCode sc = geomDispCalculator()->calcImpactPar(BCand,*bestPV,impCand,iperr);
@@ -200,6 +203,16 @@ StatusCode Fidel::execute() {
       StatusCode scB1 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
       //flight distance Projected B - Res 2
       StatusCode scB2 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
+
+      if(scB1)FsB1 = distB1/errdistB1;
+      else{
+        FsB1=-999; 
+      }
+      if(scB2)FsB2 = distB2/errdistB2;
+      else{
+        FsB2=-999; 
+      }
+      
 
       //pointing
       Gaudi::XYZPoint x = BCandVertex.position();
@@ -224,10 +237,13 @@ StatusCode Fidel::execute() {
       if(m_minCts>-999.0 && fs_B<m_minCts)continue;
       if(m_minProb>-999.0 && Pchi2<m_minProb)continue;
 
+      if(FsB1>-999 && FsB1<m_minFsB1)continue;
+      if(FsB2>-999 && FsB2<m_minFsB2)continue;
+
+
       desktop()->keep(&BCand); 
       setFilterPassed(true);
       sc = StatusCode::SUCCESS;
-      
 
     }//ip2
   }//ip1

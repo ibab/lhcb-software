@@ -1,4 +1,4 @@
-// $Id: FidelTuple.cpp,v 1.1 2008-05-13 14:30:22 sfurcas Exp $
+// $Id: FidelTuple.cpp,v 1.2 2008-06-19 17:37:44 sfurcas Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,8 @@
 #include "Kernel/IRelatedPV.h"
 
 #include "gsl/gsl_cdf.h"
+
+
 
 using namespace LHCb;
 using namespace Gaudi::Units;
@@ -62,6 +64,9 @@ StatusCode FidelTuple::initialize() {
   
   m_pLinker = new Particle2MCLinker(this,Particle2MCMethod::Chi2,"");
 
+  m_TriggerTisTosTool = tool<ITriggerTisTos>("TriggerTisTos",this);
+  
+
   return StatusCode::SUCCESS;
 }
 
@@ -103,7 +108,7 @@ StatusCode FidelTuple::execute() {
   double chi2perdof_tr1=-11;  
   double chi2perdof_tr2=-11;
   double Fd1XY;double Fd2XY;
-  
+  double mass=-99;double pt=-99;double p=-99;
 
   std::vector<double> v_mass,v_pt,v_p,v_mass1,v_mass2;
   std::vector<double> v_fs_B,v_angleP,v_ips; 
@@ -145,7 +150,6 @@ StatusCode FidelTuple::execute() {
   LHCb::Particle::ConstVector  Bcands;
   StatusCode scB = particleFilter() -> filterByPID(parts,Bcands,511,true);
 
-
   for ( LHCb::Particle::ConstVector::const_iterator b = Bcands.begin();b != Bcands.end() ; ++b){
 
     if(Bcands.size()>100)continue;
@@ -168,10 +172,86 @@ StatusCode FidelTuple::execute() {
     if((*b)->endVertex()!=NULL)v_chi2.push_back( (*b)->endVertex()->chi2() );
     if((*b)->endVertex()!=NULL)v_ndof.push_back( (*b)->endVertex()->nDoF() );    
     
-    v_mass.push_back( (*b)->momentum().mass() );
-    v_pt.push_back( (*b)->pt() );
-    v_p.push_back( (*b)-> p() );
+    mass=(*b)->momentum().mass();
+    pt= (*b)->pt();
+    p= (*b)->p();
+
     
+    v_mass.push_back(mass);
+    v_pt.push_back(pt);
+    v_p.push_back(p);
+
+    
+    //info()<<"Evento "<<Evt<<" Massa "<< mass<<" pt "<<pt<<" Hlt "<<hlt->decision()<<endmsg;
+    
+
+    //*************** HLT ALLEYS ***************//
+    bool decisionHltAlleys,alleysTis,alleysTos,alleysTob;
+    m_TriggerTisTosTool->setOfflineInput(**b);
+    m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys,alleysTis,alleysTos);    
+    alleysTob=decisionHltAlleys && !alleysTis && !alleysTos;
+
+    std::vector<std::string> alleysPass = m_TriggerTisTosTool->triggerSelectionNames("*",
+                                                                                     ITriggerTisTos::kAlleyExitsOnly,
+                                                                                     ITriggerTisTos::kTrueRequired, 
+                                                                                     ITriggerTisTos::kAnything,
+                                                                                     ITriggerTisTos::kAnything);
+    std::vector<std::string> selPass = m_TriggerTisTosTool->triggerSelectionNames("HltSel*",
+                                                                                  ITriggerTisTos::kAllTriggerSelections,
+                                                                                  ITriggerTisTos::kTrueRequired, 
+                                                                                  ITriggerTisTos::kAnything,
+                                                                                  ITriggerTisTos::kAnything);
+
+    debug()<< "TIS : "<<alleysTis<<"  TOS : "<< alleysTos<<" Decision Hlt : "<<decisionHltAlleys<<endmsg;
+    debug()<< " alley --> "<< alleysPass<<endmsg;
+    debug()<< " Selections Hlt--> "<< selPass<<endmsg;
+
+    if(decisionHltAlleys){
+      MyTupla->column("decisionHltAlleys",decisionHltAlleys);
+      MyTupla->column("AlleyTis",alleysTis); 
+      MyTupla->column("AlleyTos",alleysTos);
+      MyTupla->column("AlleyTob",alleysTob);
+    }
+    else{
+      MyTupla->column("decisionHltAlleys",decisionHltAlleys);
+      MyTupla->column("AlleyTis",-1); 
+      MyTupla->column("AlleyTos",-1);
+      MyTupla->column("AlleyTob",-1);
+    }
+    
+    // Hlt SelB Info
+    bool decisionSelB,tisSelB,tosSelB;
+    m_TriggerTisTosTool->triggerTisTos("HltSel*",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
+    debug() << "      Hlt SelB TIS= " << tisSelB << " TOS=" << tosSelB << endmsg;
+    bool tobSelB = decisionSelB && !tisSelB && !tosSelB;
+    
+    if( tisSelB ){
+      debug() << "          Hlt SelB TIS selections= "<<
+        m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
+                                                    ITriggerTisTos::kTrueRequired,
+                                                    ITriggerTisTos::kAnything ) <<endmsg;
+    }
+    if( tosSelB ){
+      debug()<< "          Hlt SelB TOS selections= "<<
+        m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
+                                                    ITriggerTisTos::kAnything,
+                                                    ITriggerTisTos::kTrueRequired ) <<endmsg;
+    }
+    
+
+    if(decisionSelB){
+      MyTupla->column("decisionSelB",decisionSelB);
+      MyTupla->column("SelTis",tisSelB); 
+      MyTupla->column("SelTos",tosSelB);
+      MyTupla->column("SelTob",tobSelB);
+    }
+    else{
+      MyTupla->column("decisionSelB",decisionSelB);
+      MyTupla->column("SelTis",-1); 
+      MyTupla->column("SelTos",-1);
+      MyTupla->column("SelTob",-1);
+    }
+   //**************************************************************
     
     if((*b)->endVertex()!=NULL){
       chi2=(*b)->endVertex()->chi2();    
@@ -488,73 +568,73 @@ StatusCode FidelTuple::execute() {
 
   MyTupla->column("NumberBcand",Bcands.size());
   
-  MyTupla->farray("Bmass",v_mass,"NB",200);
-  MyTupla->farray("pt_b",v_pt,"NB",200);
-  MyTupla->farray("p_b",v_p,"NB",200);
-  MyTupla->farray("BVtxChi2",v_chi2,"NB",200);
-  MyTupla->farray("BVtxNdof",v_ndof,"NB",200);
-  MyTupla->farray("Pchi2",Pchi2,"NB",200);
-  MyTupla->farray("Ip_b",v_impCand,"NB",200);
-  MyTupla->farray("Ipe_b",v_imperr,"NB",200);
-  MyTupla->farray("Ips_b",v_ips,"NB",200);
-  MyTupla->farray("Fd_b",v_dist_B,"NB",200);//fd proj
-  MyTupla->farray("FdErr_b",v_errdist_B,"NB",200);
-  MyTupla->farray("Fs_b",v_fs_B,"NB",200);
-  MyTupla->farray("FdBPVxy",v_FdBPVxy,"NB",200);
+  MyTupla->farray("Bmass",v_mass,"NB",500);
+  MyTupla->farray("pt_b",v_pt,"NB",500);
+  MyTupla->farray("p_b",v_p,"NB",500);
+  MyTupla->farray("BVtxChi2",v_chi2,"NB",500);
+  MyTupla->farray("BVtxNdof",v_ndof,"NB",500);
+  MyTupla->farray("Pchi2",Pchi2,"NB",500);
+  MyTupla->farray("Ip_b",v_impCand,"NB",500);
+  MyTupla->farray("Ipe_b",v_imperr,"NB",500);
+  MyTupla->farray("Ips_b",v_ips,"NB",500);
+  MyTupla->farray("Fd_b",v_dist_B,"NB",500);//fd proj
+  MyTupla->farray("FdErr_b",v_errdist_B,"NB",500);
+  MyTupla->farray("Fs_b",v_fs_B,"NB",500);
+  MyTupla->farray("FdBPVxy",v_FdBPVxy,"NB",500);
   
-  MyTupla->farray("Fdb",v_distB,"NB",200);//fd sign
-  MyTupla->farray("FdErr",v_errdistB,"NB",200);
-  MyTupla->farray("Fs",v_fsB,"NB",200);
+  MyTupla->farray("Fdb",v_distB,"NB",500);//fd sign
+  MyTupla->farray("FdErr",v_errdistB,"NB",500);
+  MyTupla->farray("Fs",v_fsB,"NB",500);
   
-  MyTupla->farray("pointing",v_angleP,"NB",200);
-  MyTupla->farray("MCB",v_MCB,"NB",200);
+  MyTupla->farray("pointing",v_angleP,"NB",500);
+  MyTupla->farray("MCB",v_MCB,"NB",500);
   
-  MyTupla->farray("ID1",v_ID1,"NB",200);
-  MyTupla->farray("ID2",v_ID2,"NB",200);
-  MyTupla->farray("mass1",v_mass1,"NB",200);
-  MyTupla->farray("mass2",v_mass2,"NB",200);    
-  MyTupla->farray("pt1",v_pt1,"NB",200);
-  MyTupla->farray("pt2",v_pt2,"NB",200);
-  MyTupla->farray("MCID1",v_MCID1,"NB",200);
-  MyTupla->farray("MCID2",v_MCID2,"NB",200);    
-  MyTupla->farray("Fs1",v_fs1,"NB",200);//proj 1-PV
-  MyTupla->farray("Fs2",v_fs2,"NB",200);
-  MyTupla->farray("Fd1",v_dist1,"NB",200);
-  MyTupla->farray("Fd2",v_dist2,"NB",200);
+  MyTupla->farray("ID1",v_ID1,"NB",500);
+  MyTupla->farray("ID2",v_ID2,"NB",500);
+  MyTupla->farray("mass1",v_mass1,"NB",500);
+  MyTupla->farray("mass2",v_mass2,"NB",500);    
+  MyTupla->farray("pt1",v_pt1,"NB",500);
+  MyTupla->farray("pt2",v_pt2,"NB",500);
+  MyTupla->farray("MCID1",v_MCID1,"NB",500);
+  MyTupla->farray("MCID2",v_MCID2,"NB",500);    
+  MyTupla->farray("Fs1",v_fs1,"NB",500);//proj 1-PV
+  MyTupla->farray("Fs2",v_fs2,"NB",500);
+  MyTupla->farray("Fd1",v_dist1,"NB",500);
+  MyTupla->farray("Fd2",v_dist2,"NB",500);
 
-  MyTupla->farray("ProbChi2_tr1",v_ProbChi2_tr1,"NB",200);
-  MyTupla->farray("chi2_tr1",v_chi2_tr1,"NB",200);
-  MyTupla->farray("ProbChi2_tr2",v_ProbChi2_tr2,"NB",200);
-  MyTupla->farray("chi2_tr2",v_chi2_tr2,"NB",200);
-  MyTupla->farray("ndof_tr1",v_ndof_tr1,"NB",200); 
-  MyTupla->farray("ndof_tr2",v_ndof_tr2,"NB",200);
+  MyTupla->farray("ProbChi2_tr1",v_ProbChi2_tr1,"NB",500);
+  MyTupla->farray("chi2_tr1",v_chi2_tr1,"NB",500);
+  MyTupla->farray("ProbChi2_tr2",v_ProbChi2_tr2,"NB",500);
+  MyTupla->farray("chi2_tr2",v_chi2_tr2,"NB",500);
+  MyTupla->farray("ndof_tr1",v_ndof_tr1,"NB",500); 
+  MyTupla->farray("ndof_tr2",v_ndof_tr2,"NB",500);
   
-  MyTupla->farray("FsB1",v_fsB1,"NB",200);//proj 1-B
-  MyTupla->farray("FsB2",v_fsB2,"NB",200);
-  MyTupla->farray("FdB1",v_distB1,"NB",200);
-  MyTupla->farray("FdB2",v_distB2,"NB",200);
-  MyTupla->farray("ErrFdB1",v_errdistB1,"NB",200);
-  MyTupla->farray("ErrFdB2",v_errdistB2,"NB",200);
+  MyTupla->farray("FsB1",v_fsB1,"NB",500);//proj 1-B
+  MyTupla->farray("FsB2",v_fsB2,"NB",500);
+  MyTupla->farray("FdB1",v_distB1,"NB",500);
+  MyTupla->farray("FdB2",v_distB2,"NB",500);
+  MyTupla->farray("ErrFdB1",v_errdistB1,"NB",500);
+  MyTupla->farray("ErrFdB2",v_errdistB2,"NB",500);
 
-  MyTupla->farray("Fd1s",v_sig1,"NB",200);//signed PV-Res
-  MyTupla->farray("Fd2s",v_sig2,"NB",200);
-  MyTupla->farray("Fs1s",v_fsS1,"NB",200);
-  MyTupla->farray("Fs2s",v_fsS2,"NB",200);
-  MyTupla->farray("ErrFd1s",v_errsig1,"NB",200);
-  MyTupla->farray("ErrFd2s",v_errsig2,"NB",200);
+  MyTupla->farray("Fd1s",v_sig1,"NB",500);//signed PV-Res
+  MyTupla->farray("Fd2s",v_sig2,"NB",500);
+  MyTupla->farray("Fs1s",v_fsS1,"NB",500);
+  MyTupla->farray("Fs2s",v_fsS2,"NB",500);
+  MyTupla->farray("ErrFd1s",v_errsig1,"NB",500);
+  MyTupla->farray("ErrFd2s",v_errsig2,"NB",500);
 
-  MyTupla->farray("Fd1XY",v_Fd1XY,"NB",200);// rispetto al vertice della B
-  MyTupla->farray("Fd2XY",v_Fd2XY,"NB",200);
+  MyTupla->farray("Fd1XY",v_Fd1XY,"NB",500);// rispetto al vertice della B
+  MyTupla->farray("Fd2XY",v_Fd2XY,"NB",500);
 
-  MyTupla->farray("Ips1",v_ips1,"NB",200);
-  MyTupla->farray("Ips2",v_ips2,"NB",200);  
-  MyTupla->farray("Ip1",v_imp1,"NB",200);
-  MyTupla->farray("Ip2",v_imp2,"NB",200);
+  MyTupla->farray("Ips1",v_ips1,"NB",500);
+  MyTupla->farray("Ips2",v_ips2,"NB",500);  
+  MyTupla->farray("Ip1",v_imp1,"NB",500);
+  MyTupla->farray("Ip2",v_imp2,"NB",500);
 
-  MyTupla->farray("Chi2_1",v_chi2_1,"NB",200);
-  MyTupla->farray("Ndof_1",v_ndof_1,"NB",200);
-  MyTupla->farray("Chi2_2",v_chi2_2,"NB",200);
-  MyTupla->farray("Ndof_2",v_ndof_2,"NB",200);
+  MyTupla->farray("Chi2_1",v_chi2_1,"NB",500);
+  MyTupla->farray("Ndof_1",v_ndof_1,"NB",500);
+  MyTupla->farray("Chi2_2",v_chi2_2,"NB",500);
+  MyTupla->farray("Ndof_2",v_ndof_2,"NB",500);
   
   MyTupla->write();    
     

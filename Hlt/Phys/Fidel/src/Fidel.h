@@ -1,4 +1,5 @@
-// $Id: Fidel.h,v 1.3 2008-05-14 09:12:22 pkoppenb Exp $
+// $Id: Fidel.h,v 1.4 2008-06-19 17:37:44 sfurcas Exp $
+// $Id: Fidel.h,v 1.4 2008-06-19 17:37:44 sfurcas Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -34,15 +35,14 @@ protected:
 private:
   
   double     m_minPt;
+  double     m_minP;
   double     m_minMass;
   double     m_maxMass;
   double     m_inputParticles;
   double     m_maxPointing;
   double     m_maxChi2;
-  bool       m_fillTupla;
   bool       m_basicparticle;
   double     m_maxIps;
-  double     m_maxDist; 
   bool       m_checkQ;
   int        m_minQ; 
   int        m_maxQ;
@@ -57,9 +57,10 @@ private:
   double     m_minCts;  
   bool       m_muonReq;
   double     m_minProb;
+  double     m_minFsB1;
+  double     m_minFsB2;
   
   
-  //  Particle2MCLinker*   m_pLinker;
   IRelatedPV*        m_relatedPV;
   
   

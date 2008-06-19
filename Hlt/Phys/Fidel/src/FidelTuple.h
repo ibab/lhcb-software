@@ -1,4 +1,4 @@
-// $Id: FidelTuple.h,v 1.1 2008-05-13 14:30:22 sfurcas Exp $
+// $Id: FidelTuple.h,v 1.2 2008-06-19 17:37:44 sfurcas Exp $
 #ifndef FIDELTUPLE_H 
 #define FIDELTUPLE_H 1
 
@@ -6,6 +6,7 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/ITriggerTisTos.h"
 
 class IRelatedPV;
 
@@ -30,8 +31,10 @@ public:
 protected:
 
 private:
- Particle2MCLinker*   m_pLinker;
-IRelatedPV* m_relatedPV;
+  Particle2MCLinker*   m_pLinker;
+  IRelatedPV* m_relatedPV;
+
+  ITriggerTisTos* m_TriggerTisTosTool;
 
 };
 #endif // FIDELTUPLE_H
