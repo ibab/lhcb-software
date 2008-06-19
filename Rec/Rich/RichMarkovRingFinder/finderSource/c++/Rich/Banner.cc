@@ -2,7 +2,7 @@
 #include "Banner.h"
 #include "Utils/MessageHandler.h"
 
-static Lester::Banner mandatory;
+//static Lester::Banner mandatory;
 
 namespace Lester
 {
