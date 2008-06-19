@@ -71,7 +71,7 @@ use CondDBEntityResolver  v4r1p1 Tools   # Marco Clemencic
 use CondDBUI              v2r9   Tools   # Marco Clemencic
 use DaVinciKernel         v6r14  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r8   Phys    # Juan Palacios
-use HltInterfaces         v1r0   Hlt     # Patrick Koppenburg
+use HltInterfaces         v1r0   Kernel  # Patrick Koppenburg
 use LHCbAlgs              v2r18  Kernel  # Marco Cattaneo
 use LinkerInstances       v3r4   Event   # Thomas Ruf
 use LoKi                  v7r0   Phys    # Ivan Belyaev
