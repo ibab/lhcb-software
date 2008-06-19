@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-06-19 - Chris Jones
+ - Improve a little the doxygen comments on example usage of the FPE::Guard
+
 ! 2008-06-18 - Patrick Koppenburg
  - Corrected xml file accordingly
 

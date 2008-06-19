@@ -95,12 +95,14 @@ namespace FPE {
 
   } // namespace detail
 
-  /** @class Guard FPEGuard.h GaudiKernel/FPEGuard.h
+  /** @class Guard FPEGuard.h LHCbKernel/FPEGuard.h
    *
-   *  Create a guard which, depending on the value of 'disable',
+   *  Create a guard which, depending on the value of the 'disable'
+   *  constructor argument,
    *  enables (disables) the trapping of Floating Point Exceptions
-   *  (i.e. the generation of a SIGFPE signel) according to the
+   *  (i.e. the generation of a SIGFPE signal) according to the
    *  specified mask, for the duration of lifetime of the guard.
+   *
    *  The destructor will restore the state at the time of the
    *  creation of the guard.
    *
@@ -108,6 +110,8 @@ namespace FPE {
    *  @code
    *
    *  // Create a mask and Guard for a single exception type
+   *  // For the lifetime of the guard object an FPE will be thrown
+   *  // for any 'Invalid' floating point errors.
    *  FPE::Guard guard( FPE::Guard::mask("Invalid") );
    *
    *  // Pass a range of strings to FPE::Guard::mask and assign the result
@@ -124,16 +128,28 @@ namespace FPE {
    *  // To disable instead of enable expections, pass disable=true
    *  FPE::Guard guard( true );
    *
+   *  // Usage of this Guard is only intended in cases where it is impossible
+   *  // to fix problems properly, such as exceptions from externals libraries
+   *  // like GSL or CLHEP. It should not be used to mask problems in your code ;)
+   *
+   *  // You should also minimise the lifetime of the guard as much as possible, 
+   *  // for instance by using a localised scope around the problematic call, e.g.
+   *  double result(0);
+   *  {
+   *    FPE::Guard guard;
+   *    result = problematic_external_library_method();
+   *  }
+   *  // or by using new/delete
+   *  FPE::Guard * guard = new FPE::Guard();
+   *  double result = problematic_external_library_method();
+   *  delete guard;
+   *
    *  @endcode
    *
    *  @attention The methods FPE::Guard::mask(...) are non-trivial (map lookup).
    *             Thus you should avoid calling these too frequently in local scopes.
    *             If needed create the mask once and cache, or use the default
    *             FPE::Guard constructor.
-   *
-   *  @attention Usage of this Guard is only intended in cases where it is impossible
-   *             to fix problems properly, such as exceptions from externals libraries
-   *             like GSL or CLHEP. It should not be used to mask problems in your code ;)
    *
    *  @author Gerhard Raven
    *  @date   09/06/2008
