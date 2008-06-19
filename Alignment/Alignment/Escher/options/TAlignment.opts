@@ -7,13 +7,13 @@ ToolSvc.TAConfig.Velo_left_modules  = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ToolSvc.TAConfig.Velo_right_modules = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 
 ToolSvc.TAConfig.PenaltyTerms       = {30.0,30.0,30.0,30.0,30.0,30.0};
-ToolSvc.TAConfig.Degrees_of_Freedom = {1,0,0,1,1,1};
+ToolSvc.TAConfig.Degrees_of_Freedom = {1,0,0,0,0,0};
 ToolSvc.TAConfig.nTrackModelParameters = 4;
 ToolSvc.TAConfig.Fix_alignable_objects = true;
 // OT constraints
 #include "$ESCHEROPTS/OT_layer.opts"
 // IT constraints
-#include "$ESCHEROPTS/IT.opts"
+//#include "$ESCHEROPTS/IT.opts"
 
 ToolSvc.TAConfig.MillepedeTool = "Centipede";
 ToolSvc.TAConfig.Chi_sq_factor = 5000.0;

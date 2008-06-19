@@ -22,9 +22,9 @@ align = GaudiPython.Helper.algorithm( gaudi._algmgr,  'Align')
 # change some properties in choosen options files
 gaudi.config( files = [ '../options/v200601.opts',
                         '../options/Alignment.opts'],
-              options = [ 'ApplicationMgr.EvtMax = 70', #should be the same as 'events_maxIter' !
-                          'Align.evtsPerRun = 70',  #should be the same as 'EvtMax' !
-                          'Align.MaxIterations = 1'] )
+              options = [ 'ApplicationMgr.EvtMax = 1000', #should be the same as 'events_maxIter' !
+                          'Align.evtsPerRun = 1000',  #should be the same as 'EvtMax' !
+                          'Align.MaxIterations = 3'] )
 
 # get some properties...
 # max no events for one detector alignment
