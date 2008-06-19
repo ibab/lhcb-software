@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-06-18 M Needham
+ - Clean up of STErrorDecoding
+
+! 2008-06-18 M Needham
+ - Add possibility to create clusters from banks with errors in decoding (default is to skip)
 
 ! 2008-06-16 M Needham
  - Further improvements in monitoring of decoding

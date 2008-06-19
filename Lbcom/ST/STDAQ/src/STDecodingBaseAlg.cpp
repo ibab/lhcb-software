@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.6 2008-06-11 14:48:03 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.7 2008-06-19 15:55:49 mneedham Exp $
 
 #include <algorithm>
 
@@ -43,6 +43,7 @@ GaudiAlgorithm (name , pSvcLocator){
  declareProperty("readoutTool", m_readoutToolName = "TTReadoutTool");     
  declareProperty("detType", m_detType = "TT" );
  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
+ declareProperty("skipBanksWithErrors", m_skipErrors = false );
 }
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {

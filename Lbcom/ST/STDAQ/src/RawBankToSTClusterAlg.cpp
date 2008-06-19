@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.23 2008-06-16 14:24:38 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.24 2008-06-19 15:55:49 mneedham Exp $
 
 #include <algorithm>
 
@@ -107,7 +107,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   // vote on the pcns
   const unsigned int pcn = pcnVote(tBanks);
-  if (pcn == STDAQ::inValidPcn) {
+  if (pcn == STDAQ::inValidPcn && !m_skipErrors) {
     counter("skipped Banks") += tBanks.size();
     return Warning("PCN vote failed", StatusCode::SUCCESS);
   }
@@ -116,11 +116,13 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   // loop over the banks of this type..
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
 
-    ++counter("found Banks");    
+    ++counter("found Banks");
+    std::string foundBanks = "source id" +  boost::lexical_cast<std::string>((*iterBank)->sourceID());    
+    ++counter(foundBanks);
 
     // get the board and data
     const STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
-    if (!aBoard){
+    if (!aBoard && !m_skipErrors){
       // not a valid IT
       Warning("Invalid source ID --> skip bank",StatusCode::SUCCESS); 
       ++counter("skipped Banks");
@@ -132,7 +134,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // get verion of the bank
     const unsigned int version = (*iterBank)->version();
     
-    if (decoder.hasError() == true){
+    if (decoder.hasError() == true && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
       std::string errorBank = "bank has errors, skip sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
@@ -142,7 +144,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     }
 
     const unsigned bankpcn = decoder.header().pcn();
-    if (pcn != bankpcn){
+    if (pcn != bankpcn && !m_skipErrors){
       std::string errorBank = "PCNs out of sync, sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
       debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
@@ -176,7 +178,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
       continue;
     }
 
-    if (!goodData){
+    if (!goodData && !m_skipErrors){
       cleanup(vec);
     }
     else {

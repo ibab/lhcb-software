@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.4 2008-06-11 14:48:03 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.5 2008-06-19 15:55:49 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -57,7 +57,8 @@ protected:
 
  unsigned int pcnVote(const std::vector<LHCb::RawBank* >& banks) const;
 
-
+ bool m_skipErrors;
+ 
 private:
 
   /// bank type

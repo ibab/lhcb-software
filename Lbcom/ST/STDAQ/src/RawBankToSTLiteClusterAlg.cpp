@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.16 2008-06-16 14:24:38 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.17 2008-06-19 15:55:49 mneedham Exp $
 
 
 #include <algorithm>
@@ -110,7 +110,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 
     // get the board and data
     STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
-    if (!aBoard){
+    if (!aBoard && !m_skipErrors){
       Warning("Invalid source ID --> skip bank", StatusCode::SUCCESS);
       ++counter("skipped Banks");
       continue;
@@ -120,7 +120,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
     STDecoder decoder((*iterBank)->data());
    
     // get number of clusters..
-    if (decoder.hasError() == true){
+    if (decoder.hasError() == true && !m_skipErrors){
       std::string errorBank = "bank has errors, skip, sourceID"+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
       Warning(errorBank, StatusCode::SUCCESS);
@@ -129,7 +129,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
     }
 
     const unsigned bankpcn = decoder.header().pcn();
-    if (pcn != bankpcn){
+    if (pcn != bankpcn && !m_skipErrors){
       std::string errorBank = "PCNs out of sync sourceID "+
 	boost::lexical_cast<std::string>((*iterBank)->sourceID());
       debug() << "Expected " << pcn << " found " << bankpcn << endmsg;
