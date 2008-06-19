@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.5 2008-05-23 09:11:27 szumlat Exp $
+! $Id: release.notes,v 1.6 2008-06-19 15:54:20 mneedham Exp $
 ! Package     : STOnline
 ! Responsible : Mathias Knecht
+
+
+! 2008-06-18 M Needham
+ - Clean up of STTELL1BoardErrorBank class
 
 ! 2008-05-23 T Szumlak
  -Retag for joint Velo+ST Vetra release 

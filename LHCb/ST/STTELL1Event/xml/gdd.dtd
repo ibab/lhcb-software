@@ -9,7 +9,7 @@
 <!ATTLIST import
         name             CDATA                             #REQUIRED
         std              (TRUE | FALSE)                    "FALSE"
-        soft             (TRUE | FALSE)                    "FALSE"
+        soft             (TRUE | FALSE | FORWARDONLY)      "FALSE"
         namespace        CDATA                             #IMPLIED
 >
 
@@ -67,6 +67,7 @@
         value            CDATA                             #IMPLIED
         strTypConv       (TRUE | FALSE )                   "FALSE"
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
+        unknownValue     CDATA                             "Unknown"
 >
 <!ELEMENT enumval EMPTY>
 <!ATTLIST enumval
@@ -188,7 +189,11 @@
 >
 <!ENTITY StlVector '<template name="vector" t1="THIS"/>'
 >
+<!ENTITY StlConstVector '<template name="vector" t1="const THIS"/>'
+>
 <!ENTITY StlPtrVector '<template name="vector" t1="THIS*"/>'
+>
+<!ENTITY StlConstPtrVector '<template name="vector" t1="const THIS*"/>'
 >
 <!ENTITY DataObject '<template name="SmartRef"/>
         <template name="SmartRefVector"/>'

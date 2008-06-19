@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='STTELL1Event'>
+  <!-- location = address in TES -->
+  <!-- classId = identifier -->
+   
+    <class name='STTELL1BoardErrorBank'
+	   id='9010' 
+	   author='Mathias Knecht' 
+	   desc='Error Bank from a Tell1 board'
+           serializers = 'FALSE'>
+      <base name='KeyedObject&lt; int &gt; '/>  
+      <location name="TTErrorTELL1"   place="Raw/TT/ErrorTELL1"   />
+      <location name="ITErrorTELL1"   place="Raw/IT/ErrorTELL1"   />
+      
+      &KeyedContainer;
+      
+      <import name='Event/STTELL1Error' />
+     
+      
+      <typedef desc = "Vector of STTELL1Error typedef"
+       type =  "std::vector&lt;LHCb::STTELL1Error*&gt;"
+       def = "Errors"
+       access = "PUBLIC " />
+        
+       
+ <!--  
+      <constructor
+        desc = 'constructor with arguments'
+        argList = 'Data data'
+        initList = 'm_data(data)'>
+      </constructor> -->
+
+  
+      <destructor desc = 'destructor' virtual = 'TRUE'>
+       <code>
+ LHCb::STTELL1BoardErrorBank::Errors::iterator iter = m_errorInfo.begin();
+ for (; iter != m_errorInfo.end() ; ++iter ){
+   if (*iter != 0) delete *iter;
+ } // iter
+ m_errorInfo.clear();
+       </code>
+      </destructor>
+       
+       <attribute 
+       name="errorInfo" 
+       type="std::vector &lt;  LHCb::STTELL1Error* &gt;"
+       desc= "Vector of 4 Error Info (1 per PP)"
+       setMeth = "FALSE"
+       transient = "TRUE"
+       nonconstaccessor = "TRUE"
+       />
+   
+
+      <method type = "void"
+              name = "addToErrorInfo"
+              desc = "add to error vector"
+              argList = "STTELL1Error* value"
+      >
+      <code>
+      m_errorInfo.push_back(value);
+      </code>
+      </method>
+     
+      <method type = 'unsigned int'
+      	      name = 'Tell1ID'
+	      desc = 'Returns the Tell1D id'
+	      const = 'TRUE'> 
+      <code>  return key();
+      </code>
+      </method>
+      
+    
+
+    </class>   
+ 
+  </package>
+</gdd>
