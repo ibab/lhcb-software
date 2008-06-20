@@ -3,7 +3,7 @@
 # Maintainer : Maria del Carmen Barandela
 #============================================================================
 package           CondDBServer
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -48,7 +48,7 @@ application          condDBServer    ../src/*.cpp
 #============================================================================
 apply_pattern    application_path
 
-set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
+#set TNS_ADMIN $(CONDDBSERVERROOT)/cmt
 set CORAL_DBLOOKUP_PATH $(CONDDBSERVERROOT)/cmt
 set CORAL_AUTH_PATH     $(HOME)/private
 

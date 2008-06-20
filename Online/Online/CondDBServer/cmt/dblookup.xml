@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<servicelist>
+
+  <logicalservice name="CondDB">
+    <service name="oracle://CONDDB_RAC/lhcb_conddb" accessMode="readonly" authentication="password" />
+  </logicalservice>
+
+  <logicalservice name="CondDBOnline">
+    <service name="oracle://CONDDB_RAC/lhcb_online_conddb" accessMode="update" authentication="password" />
+  </logicalservice>
+
+  <logicalservice name="CondDBPrivate">
+    <service name="oracle://CONDDB_RAC/conddb_private_admin" accessMode="update" authentication="password" />
+  </logicalservice>
+
+  <logicalservice name="CondDBOnlineTest">
+    <service name="oracle://CONDITIONSDB/condb_admin" accessMode="update" authentication="password" />
+  </logicalservice>
+
+</servicelist>
