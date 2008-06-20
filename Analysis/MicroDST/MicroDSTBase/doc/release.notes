@@ -1,10 +1,16 @@
-!$Id: release.notes,v 1.10 2008-04-24 15:30:47 jpalac Exp $
+!$Id: release.notes,v 1.11 2008-06-20 07:59:55 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2008-06-20 - Juan PALACIOS
+ - src/Lib/MicroDSTTool.cpp
+  . Remove DECLARE_TOOL_FACTORY
+ - cmt/requirements
+  . Increase version to v1r1p1
 
 !====================== MicroDSTBase v1r1 2008-04-24 =======================
 
