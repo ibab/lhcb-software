@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.67 2008-06-20 09:54:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.68 2008-06-20 10:31:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -48,10 +48,14 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
     m_maxPixelSep      = 260;
-    m_TargetIterations = 1000;
-    m_TargetHits       = 250;
+    //m_TargetIterations = 1000;
+    //m_TargetHits       = 250;
+    //m_AbsMaxIts        = 20000;
+    //m_AbsMinIts        = 400;
+    m_TargetIterations = 2000;
+    m_TargetHits       = 500;
     m_AbsMaxIts        = 20000;
-    m_AbsMinIts        = 400;
+    m_AbsMinIts        = 800;
   }
   else
   {
@@ -292,7 +296,8 @@ StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
 
         LHCb::RichRecPixel * pix = richPixels()->object( (*iHit).index().value() );
         if ( !pix ) return Error( "Markov hit has bad pixel pointer" );
-        const Gaudi::XYZPoint & PixelPtnLocal = pix->radCorrLocalPositions().position(rad());
+        //const Gaudi::XYZPoint & PixelPtnLocal = pix->radCorrLocalPositions().position(rad());
+        const Gaudi::XYZPoint & PixelPtnLocal = pix->localPosition();
 
         const double Xsegringsep  = std::pow( fabs(RingCentreLocalx-PixelPtnLocal.x()), 2 );
         const double Ysegringsep  = std::pow( fabs(RingCentreLocaly-PixelPtnLocal.y()), 2 );
@@ -409,8 +414,10 @@ bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
       if ( hitsInHPD < m_maxHitsHPD )
       {
         // get X and Y
-        const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
-        const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+        //const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+        //const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+        const double X ( m_scaleFactor * (*iPix)->localPosition().x() );
+        const double Y ( m_scaleFactor * (*iPix)->localPosition().y() );
         input.hits.push_back( GenRingF::GenericHit( GenRingF::GenericHitIndex((*iPix)->key()), X, Y ) );
         if ( msgLevel(MSG::VERBOSE) )
           verbose() << "Adding data point at " << X << "," << Y << endreq;
@@ -509,8 +516,10 @@ StatusCode AlgBase<SAMPLER>::dumpToTextfile() const
     for ( LHCb::RichRecPixels::const_iterator iPix = range.begin(); iPix != range.end(); ++iPix )
     {
       // get X and Y
-      const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
-      const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+      //const double X ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).x() );
+      //const double Y ( m_scaleFactor * (*iPix)->radCorrLocalPositions().position(rad()).y() );
+      const double X ( m_scaleFactor * (*iPix)->localPosition().x() );
+      const double Y ( m_scaleFactor * (*iPix)->localPosition().y() );
       file << X << " " << Y << std::endl;
     }
   }
