@@ -1,0 +1,2 @@
+/Online  CondDBOnline(owner)/ONLINE
+/Private CondDBPrivate(owner)/PRIVATE
