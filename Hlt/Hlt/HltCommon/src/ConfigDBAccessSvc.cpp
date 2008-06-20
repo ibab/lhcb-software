@@ -7,8 +7,6 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-#include "SealKernel/Context.h"
-
 
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/ISessionProxy.h"
@@ -307,9 +305,10 @@ StatusCode ConfigDBAccessSvc::openConnection() {
     if ( !sc.isSuccess() )   return sc;
   }
 
-  seal::IHandle<coral::IConnectionService> iHandle =
-     m_coolConfSvc->context()->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" );
-
-   m_session = iHandle->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+  m_session = m_coolConfSvc->connectionSvc().connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+//  seal::IHandle<coral::IConnectionService> iHandle =
+//     m_coolConfSvc->context()->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" );
+//
+//   m_session = iHandle->connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
    return StatusCode::SUCCESS;
 }

@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-06-12 - Gerhard Raven
+  - Another shot at SEAL-less version
 
 !2008-06-12 - Gerhard Raven
   - and back out again the SEAL-less changes for now...
