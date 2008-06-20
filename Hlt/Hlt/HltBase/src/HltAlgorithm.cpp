@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.34 2008-06-06 12:53:01 hernando Exp $
+// $Id: HltAlgorithm.cpp,v 1.35 2008-06-20 19:14:49 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -95,11 +95,11 @@ void HltAlgorithm::saveConfiguration() {
 
   Assert(m_outputSelection != 0," No output Selection");
 
-  std::string type =
-     ( m_outputSelection->classID() == LHCb::Track::classID())    ?   "Track" :
-       m_outputSelection->classID() == LHCb::RecVertex::classID() ?  "Vertex" :
-       m_outputSelection->classID() == LHCb::Particle::classID() ?  "Particle":
-                                                                    "unknown" ;
+  CLID clID = m_outputSelection->classID();
+  std::string type = ( clID == LHCb::Track::classID()     ?  "Track"    :
+                       clID == LHCb::RecVertex::classID() ?  "Vertex"   :
+                       clID == LHCb::Particle::classID()  ?  "Particle" :
+                                                             "unknown" );
   verbose() << "Type : " << type << endmsg ;
   
   std::string algoType =  System::typeinfoName(typeid(*this));
@@ -291,7 +291,6 @@ void HltAlgorithm::setInputSelection(Hlt::Selection& sel) {
 
 void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
   Assert(m_outputSelectionName == sel->id(), "inconsistent selection vs selectionName!");
-  m_outputSelectionName = sel->id();
   Assert( 0 != sel,"setOutputSelection() no output selection");
   if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
   if (!useTES()) {
