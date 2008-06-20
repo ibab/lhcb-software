@@ -1,3 +1,12 @@
+2008-06-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/fixWinCVSRoot.py: New file.
+	* tests/testFixCVSRoot.py: New file.
+	* python/LbUtils/CVS.py: added a script to change ":keserver:" into ":ext:" in
+	the local CVS Root files. This script is intended for windows use since the
+	kserver method is not supported by its CVS client.
+	* tests/testemp.py: added test on temporary directory destruction
+
 2008-06-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Log.py: fixed the default values for the logging

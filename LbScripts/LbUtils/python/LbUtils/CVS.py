@@ -1,6 +1,8 @@
 
 import os
 from subprocess import Popen, PIPE
+import logging
+import shutil
 
 class Module(object):
     def __init__(self, name=None):
@@ -50,4 +52,47 @@ class Repository(Root):
         super(Repository, self).__init__(fullname)
     def setDirectory(self, dirname):
         pass
-            
+
+
+def fixRootFile(directory, fromtxt, totxt, dryrun=False):
+    log = logging.getLogger()
+    rootfile = os.path.join(directory, "CVS", "Root")
+    if os.path.exists(rootfile):
+        infile = open(rootfile,"r")
+        incont = infile.read()
+        infile.close() 
+        if incont.find(fromtxt) == -1 :
+            log.info("No \"%s\" string in %s" % (fromtxt, rootfile)) 
+        else :
+            log.info("Changing \"%s\" to \"%s\" in %s", fromtxt, totxt, rootfile)
+            if dryrun == False :
+                newrootfile = rootfile + ".new"
+                outfile = open(newrootfile, "w")
+                outfile.write(incont.replace(fromtxt,totxt))
+                outfile.close()
+                log.debug("Written %s file" % newrootfile)
+                bakrootfile = rootfile + ".bak"
+                shutil.move(rootfile, bakrootfile)
+                log.debug("Moved %s to %s" % (rootfile, bakrootfile))
+                shutil.move(newrootfile, rootfile)
+                log.debug("Moved %s to %s" % (newrootfile, rootfile))
+            else :
+                log.debug("previous change simulated")
+                    
+    else :
+        log.warning("%s file doesn't exist" % rootfile)
+        return 1
+
+def fixRoot(basedirectory, fromtxt, totxt, recursive=False, dryrun=False):
+    if recursive == False :
+        rc = fixRootFile(basedirectory, fromtxt, totxt, dryrun)
+    else :
+        rc = 0
+        for root, dirs, files in os.walk(basedirectory):
+            if 'CVS' in dirs:
+                dirs.remove('CVS')  # don't visit CVS directories
+                if os.path.exists(os.path.join(root, "CVS", "Root")) :
+                    rc = fixRootFile(root, fromtxt, totxt, dryrun)
+    
+    return rc
+    
