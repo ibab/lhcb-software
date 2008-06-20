@@ -8,6 +8,9 @@
  - add IHltDataSvc 
 
 ! 2008-06-19 - Jose A. Hernando
+ - extending ITrackUpgrade interface for drawing in Panoramix
+
+! 2008-06-19 - Jose A. Hernando
  - add ITrackView interface for drawing the guided reconstruction
 
 ! 2008-06-17 - Patrick Koppenburg
