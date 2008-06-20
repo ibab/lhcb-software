@@ -1,4 +1,4 @@
-// $Id: Vertices0.h,v 1.8 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: Vertices0.h,v 1.9 2008-06-20 10:05:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTICES0_H 
 #define LOKI_VERTICES0_H 1
@@ -92,12 +92,43 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::VertexBase*>::Function
     {      
     public:
+      /// MANDATORY: virtual destructor 
+      virtual ~VertexChi2() {}
       /// MANDATORY: clone method ("virtual constructor")
       virtual VertexChi2* clone() const ;
       /// MANDATORY: the only one essential method 
       virtual result_type operator() ( argument v ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      double chi2( const LHCb::VertexBase& v ) const { return v.chi2() ; }
+    };
+    // ========================================================================    
+    /** @class VertexChi2
+     *  evaluator of the Chi2 of the vertex  
+     *  
+     *  It relies on the method LHCb::VertexBase::chi2
+     *
+     *  @see LoKi::Cuts::VCHI2PDOF
+     *  @see LHCb::VertexBase 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date   2008-06-20
+     */
+    class VertexChi2PerDoF : public VertexChi2 
+    {      
+    public:
+      /// MANDATORY: virtual destructor 
+      virtual ~VertexChi2PerDoF() {}
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual VertexChi2PerDoF* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument v ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+    public:
+      double chi2PerDoF( const LHCb::VertexBase& v ) const 
+      { return v.chi2() / v.nDoF()  ; }
     };
     // ========================================================================
     /** @class VertexDoF

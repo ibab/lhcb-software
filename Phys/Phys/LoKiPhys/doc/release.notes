@@ -1,16 +1,27 @@
-! $Id: release.notes,v 1.62 2008-06-12 08:25:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.63 2008-06-20 10:05:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2008-06-20 - Vanya BELYAEV 
+ - add new function 
+    LoKi::Vertices::VertexChi2PerDoF 
+  for evaluation on of chi2/nDoF 
+  C++ symbol VCHI2PDOF and python symbol VCHI2PDOF are introudes
+  
+   As concern "CombineParticles" it 
+   helps to substitute "VSAFPS(VCHI2/VDOF)" with "VFASPF(VCHI2PDOF)"
+   and saves one virtual call
+ 
+
 ! 2008-06-12 - Vanya BELYAEV
 
  - LoKi/Decays.h
    src/Decays.h
 
-    Implementation of "trees" (functors which acts on teh decay structure),
+    Implementation of "trees" (functors which acts on the decay structure),
     needed for new implementation of DecayFinders
 
  - cmt/requirements 

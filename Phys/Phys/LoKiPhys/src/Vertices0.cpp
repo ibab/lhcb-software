@@ -1,4 +1,4 @@
-// $Id: Vertices0.cpp,v 1.10 2008-03-30 13:43:37 ibelyaev Exp $
+// $Id: Vertices0.cpp,v 1.11 2008-06-20 10:05:59 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -102,15 +102,34 @@ LoKi::Vertices::VertexChi2::result_type
 LoKi::Vertices::VertexChi2::operator() 
   ( LoKi::Vertices::VertexChi2::argument v ) const 
 {
-  if ( 0 != v ) { return v -> chi2 () ; }                    // RETURN 
+  if ( 0 != v ) { return chi2 ( *v ) ; }                    // RETURN 
   Error ( " Invalid Vertex, return 'InvalidChi2'" ) ;
   return LoKi::Constants::InvalidChi2 ;                      // RETURN 
 }
+
 // ============================================================================
 std::ostream& 
 LoKi::Vertices::VertexChi2::fillStream
 ( std::ostream& s ) const 
 { return s << "VCHI2" ; }
+// ============================================================================
+LoKi::Vertices::VertexChi2PerDoF* 
+LoKi::Vertices::VertexChi2PerDoF::clone() const 
+{ return new VertexChi2PerDoF( *this ) ; }
+// ============================================================================
+LoKi::Vertices::VertexChi2PerDoF::result_type 
+LoKi::Vertices::VertexChi2PerDoF::operator() 
+  ( LoKi::Vertices::VertexChi2PerDoF::argument v ) const 
+{
+  if ( 0 != v ) { return chi2PerDoF ( *v ) ; }                    // RETURN 
+  Error ( " Invalid Vertex, return 'InvalidChi2'" ) ;
+  return LoKi::Constants::InvalidChi2 ;                      // RETURN 
+}
+// ============================================================================
+std::ostream& 
+LoKi::Vertices::VertexChi2PerDoF::fillStream
+( std::ostream& s ) const 
+{ return s << "VCHI2PDOF" ; }
 // ============================================================================
 LoKi::Vertices::VertexDoF* 
 LoKi::Vertices::VertexDoF::clone() const 

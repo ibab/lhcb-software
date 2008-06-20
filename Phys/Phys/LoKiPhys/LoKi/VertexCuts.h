@@ -1,4 +1,4 @@
-// $Id: VertexCuts.h,v 1.10 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: VertexCuts.h,v 1.11 2008-06-20 10:05:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_VERTEXCUTS_H 
 #define LOKI_VERTEXCUTS_H 1
@@ -221,6 +221,26 @@ namespace LoKi
      *  @date   2002-07-15
      */  
     const LoKi::Vertices::VertexChi2                            VCHI2 ;
+    // ========================================================================
+    /** @var VCHI2PDOF
+     *  evaluator of the Chi2 of the vertex  per Degree of Freedom
+     *  
+     *  It relies on the methods LHCb::VertexBase::chi2 and LHCb::VertexBase::nDoF
+     *
+     *  @code 
+     *  
+     *  const LHCb::VertexBase* v = .. ;
+     *  const double chi2PerDoF = VCHI2PDOF ( v ) ;
+     *
+     *  @endcode
+     * 
+     *  @see LoKi::Vertices::VertexChi2PerDoF
+     *  @see LHCb::VertexBase 
+     *
+     *  @author Vanya Belyaev Ivan.Belyaev@nikhef.nl
+     *  @date   2008-06-20
+     */  
+    const LoKi::Vertices::VertexChi2PerDoF                          VCHI2PDOF ;
     // ========================================================================
     /** @var VDOF
      *  evaluator of the number of degrees of freedom for the vertex 
