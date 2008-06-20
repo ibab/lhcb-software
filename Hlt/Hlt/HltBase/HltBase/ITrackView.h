@@ -1,4 +1,4 @@
-// $Id: ITrackView.h,v 1.1 2008-06-19 09:26:53 hernando Exp $
+// $Id: ITrackView.h,v 1.2 2008-06-20 09:53:16 hernando Exp $
 #ifndef HLTBASE_ITRACKVIEW_H 
 #define HLTBASE_ITRACKVIEW_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 #include "TfKernel/TStationHitManager.h"
-#include "Event/LHCbID.h"
+#include "Kernel/LHCbID.h"
 
 static const InterfaceID IID_ITrackView ( "ITrackView", 1, 0 );
 
