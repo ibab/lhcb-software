@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.8 2008-05-15 08:56:57 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.9 2008-06-20 17:23:25 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -88,9 +88,9 @@ StatusCode HltVertexUpgrade::execute() {
       printInfo(" seed2 ", seed2);
     }
     std::vector<LHCb::Track*> tracks1, tracks2;
-    sc = m_tool->upgrade(seed1,tracks1);
+    sc = m_tool->iupgrade(seed1,tracks1);
     if (sc.isFailure()) return sc;
-    sc = m_tool->upgrade(seed2,tracks2);
+    sc = m_tool->iupgrade(seed2,tracks2);
     if (sc.isFailure()) return sc;
     if (tracks1.empty() || tracks2.empty() ) continue;
     debug() << " creating a vertex " << endreq;

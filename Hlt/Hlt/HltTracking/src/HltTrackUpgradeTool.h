@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.8 2008-06-03 10:29:51 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.9 2008-06-20 17:23:25 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -9,8 +9,10 @@
 #include "HltBase/HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/ITrackUpgrade.h"
+#include "HltBase/ITrackView.h"
 #include "HltBase/HltBaseTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
+#include "HltBase/EParser.h"
 
 /** @class HltTrackUpgradeTool HltTrackUpgradeTool.h
  *  
@@ -43,21 +45,40 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
 
+  std::vector<std::string> recos();
+
   StatusCode setReco(const std::string& name);
 
+  std::string reco() 
+  {return m_recoName;}
+  
   void beginExecute();
 
   // this method is save, it takes care of the memory
   StatusCode upgrade(std::vector<LHCb::Track*>& itracks,
                      std::vector<LHCb::Track*>& otracks);
 
-  // this method is unsave, it does not take care of the memory
-  // for every event you should do first beginExecute()!
+  // this method is save, it takes care of the memory
   StatusCode upgrade(LHCb::Track& seed,
                      std::vector<LHCb::Track*>& track);
 
+  // this method is unsave, it does not take care of the memory
+  StatusCode iupgrade(LHCb::Track& seed,
+                      std::vector<LHCb::Track*>& track);
+
+  
+  Tf::IStationSelector& view(const LHCb::Track& seed)
+  {Assert(0,"view() method no implemented yet!");
+  }
+  
+  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed)
+  {Assert(0,"lhcbIDsInView() method no implemented yet!");}
+
 private:
+
   void recoConfiguration();
+
+  void toolConfigure();
 
   bool isReco(const LHCb::Track& seed);
   
@@ -92,18 +113,17 @@ private:
   bool m_orderByPt;
   bool m_doTrackReco;
 
-
-
   ISequencerTimerTool* m_timer;
   int m_timerTool;
   zen::dictionary m_recoConf;
 
   LHCb::Tracks* m_otracks;
 
-  ITracksFromTrack* m_tool;
+  ITracksFromTrack* m_tool;  
+  std::map<std::string,ITracksFromTrack*> m_toolsmap;
 
-
-
-
+  ITrackView* m_viewTool;
+  std::map<std::string,ITrackView*> m_viewsmap;
+  
 };
 #endif // HLTTRACKING_H
