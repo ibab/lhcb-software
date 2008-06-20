@@ -1,8 +1,8 @@
-// $Id: MicroDSTTool.cpp,v 1.3 2008-04-04 11:56:12 jpalac Exp $
+// $Id: MicroDSTTool.cpp,v 1.4 2008-06-20 07:59:35 jpalac Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+//#include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "MicroDST/MicroDSTTool.h"
@@ -12,10 +12,6 @@
 //
 // 2007-12-04 : Juan PALACIOS
 //-----------------------------------------------------------------------------
-
-// Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( MicroDSTTool );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
