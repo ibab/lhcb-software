@@ -1,4 +1,4 @@
-// $Id: STTell1Core.h,v 1.1 2008-02-26 13:04:05 akeune Exp $
+// $Id: STTell1Core.h,v 1.2 2008-06-20 12:27:06 akeune Exp $
 #ifndef STTELL1CORE_H 
 #define STTELL1CORE_H 1
 
@@ -30,7 +30,7 @@ namespace STTELL1{
     SECTORS=48,
     ALINKS=96,
     PP_MAX_CLUSTERS=255,
-    HEADER_CORRECTIONS=2
+    HEADER_CORRECTIONS=4
   };
 
   // as defined in tell1lib: st/st_offline.h
