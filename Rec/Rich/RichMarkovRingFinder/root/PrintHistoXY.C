@@ -8,11 +8,11 @@
 #include "TFile.h"
 #include "TAxis.h"
 
-/// Simple ROOT macro for producing the theta distribution text files
+/// Simple ROOT macro for producing the theta distribution maps
 /// needed by the Markov ring finder.
-/// 
+///
 /// Usage is simply :-
-/// 
+///
 /// > .L PrintHistoXY.C+
 /// > Markov::PrintRich1GasCKTheta("rich.histos.root");
 /// > Markov::PrintRich2GasCKTheta("rich.histos.root");
@@ -39,7 +39,7 @@ namespace Markov
       {
         const Double_t x = xAxis->GetBinCenter(binx);
         const Double_t y = histo->GetBinContent(binx);
-        file << std::setprecision(10) << x << " " << y << std::endl;
+        file << std::setprecision(10) << "( " << x << " , " << y << " )" << std::endl;
       }
 
     }
@@ -61,17 +61,25 @@ namespace Markov
   void PrintRich2GasCKTheta( std::string & filename )
   {
     TFile * file = TFile::Open(filename.c_str());
-    TH1F  * h    = loadHist( file, "RICH/RiRecPhotAngLongTkMoni/Rich2Gas/ckThetaTrue" );
-    PrintHisto(h,"rich2_thetaDist.txt");
-    file->Close();
+    if ( file )
+    {
+      TH1F  * h    = loadHist( file, "RICH/RiRecPhotAngLongTkMoni/Rich2Gas/ckThetaTrue" );
+      PrintHisto(h,"rich2_thetaDist.txt");
+      file->Close();
+    }
+    else { std::cerr << "Failed to open " << filename << std::endl; }
   }
 
   void PrintRich1GasCKTheta( std::string & filename )
   {
     TFile * file = TFile::Open(filename.c_str());
-    TH1F  * h    = loadHist( file, "RICH/RiRecPhotAngLongTkMoni/Rich1Gas/ckThetaTrue" );
-    PrintHisto(h,"rich1_thetaDist.txt");
-    file->Close();
+    if ( file )
+    {
+      TH1F  * h    = loadHist( file, "RICH/RiRecPhotAngLongTkMoni/Rich1Gas/ckThetaTrue" );
+      PrintHisto(h,"rich1_thetaDist.txt");
+      file->Close();
+    }
+    else { std::cerr << "Failed to open " << filename << std::endl; }
   }
 
 }

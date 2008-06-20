@@ -45,12 +45,13 @@ namespace Lester
       if ( !m_cache.empty() )
       { m_interp = new Rich::TabulatedFunction1D(m_cache); }
       // Create Samplers etc.
-      m_richThetaSampler
-        = new RichThetaSampler          ( dataFilesDir()+"/"+m_thetaDataFile );
-      m_richThetaDistribution
-        = new RichThetaDistribution     ( dataFilesDir()+"/"+m_thetaDataFile );
-      m_richProbabilityThetaAbove
-        = new RichProbabilityThetaAbove ( dataFilesDir()+"/"+m_thetaDataFile );
+      //m_richThetaSampler          = new RichThetaSampler          ( dataFilesDir()+"/"+m_thetaDataFile );
+      //m_richThetaDistribution     = new RichThetaDistribution     ( dataFilesDir()+"/"+m_thetaDataFile );
+      //m_richProbabilityThetaAbove = new RichProbabilityThetaAbove ( dataFilesDir()+"/"+m_thetaDataFile );
+      const CKThetaMap & ckmap = Lester::getInstance<Lester::DefaultDataMaps>()->ckThetaMap(m_rad);
+      m_richThetaSampler          = new RichThetaSampler          ( ckmap );
+      m_richThetaDistribution     = new RichThetaDistribution     ( ckmap );
+      m_richProbabilityThetaAbove = new RichProbabilityThetaAbove ( ckmap );
     }
   }
 
@@ -64,6 +65,16 @@ namespace Lester
     m_richProbabilityThetaAbove = NULL;
     delete m_interp;
     m_interp = NULL;
+  }
+
+  void RichDataModel::printCache()
+  {
+    for ( CacheMap::const_iterator iM = m_cache.begin();
+          iM != m_cache.end(); ++iM )
+    {
+      Lester::messHandle().info() << "( " << iM->first << " , " << iM->second << " )"
+                                  << Lester::endmsg;
+    }
   }
 
   // Guarantees to either return a "reasonable" logProb or else throw Lester::LogarithmicTools::LogOfZero()
@@ -285,7 +296,7 @@ double RichDataModel::sampleFromApproximateCoPointSeparationDistribution() const
 
 void RichDataModel::readCacheFromFile()
 {
-  // if cache isn't empty, then it has already been read from file
+  // if cache isn't empty, then it has already been setup
   if ( !m_cache.empty() ) return;
   m_cacheLocation = getCacheLocation();
   if ( m_enableFileCache )
@@ -311,9 +322,17 @@ void RichDataModel::readCacheFromFile()
                                    << Lester::endmsg;
     }
   }
+  else if ( !m_startWithEmptyCache )
+  {
+    Lester::messHandle().info() << "Using default cache file" << Lester::endmsg;
+    m_cache = Lester::getInstance<Lester::DefaultDataMaps>()->coPointMap(m_rad);
+    for ( CacheMap::const_iterator iM = m_cache.begin(); iM != m_cache.end(); ++iM )
+    { Lester::messHandle().debug() << " -> ( " << iM->first << " , " << iM->second << " )"
+                                   << Lester::endmsg; }
+  }
   else
   {
-    Lester::messHandle().warning() << "File Cache is DISABLED" << Lester::endmsg;
+    Lester::messHandle().warning() << "Cache is DISABLED -> Starting afresh" << Lester::endmsg;
   }
 }
 

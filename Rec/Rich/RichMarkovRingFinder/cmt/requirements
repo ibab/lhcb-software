@@ -2,7 +2,7 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.17 2008-06-08 19:28:03 jonrob Exp $
+# $Id: requirements,v 1.18 2008-06-20 09:54:22 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -32,8 +32,9 @@ use   CLHEP            v*    LCG_Interfaces  -no_auto_imports
 #============================================================================
 library RichMarkovRingFinder -import=CLHEP \
             ../src/component/*.cpp \
-            ../finderSource/c++/Utils/*.cc \
-            ../finderSource/c++/Rich/*.cc
+            ../src/misc/Utils/*.cc \
+            ../src/misc/Rich/*.cc  \
+            ../src/misc/Rich/*.cpp
 
 #============================================================================
 # define component library link options
@@ -42,4 +43,4 @@ apply_pattern component_library library=RichMarkovRingFinder
 
 #============================================================================
 private
-include_dirs $(RICHMARKOVRINGFINDERROOT)/finderSource/c++
+include_dirs $(RICHMARKOVRINGFINDERROOT)/src/misc

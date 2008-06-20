@@ -18,21 +18,53 @@ namespace Lester {
   public:
     class NoSamplesPossible { };
     class NoMaxExists { };
+
   private:
+
     double totalProb;
     typedef std::map<double, Index> Map; // Want it to store biggest probabilities first  We are choosing this direction for speed of sampling not for mathematical accuraccy in summing!
     Map cache;
+
   public:
+
     FiniteRelativeProbabilityChooser() : totalProb(0), cache() { }
     FiniteRelativeProbabilityChooser(const std::string & fileName) : totalProb(0), cache()
     {
       readFromFile(fileName);
     }
+    FiniteRelativeProbabilityChooser( const Map& mmap ) : totalProb(0), cache()
+    {
+      readFromMap(mmap);
+    }
 
-  public:
+  private:
+
+    void readFromMap( const Map& mmap )
+    {
+      this->clear();
+      if ( !mmap.empty() )
+      {
+        Lester::messHandle().debug() << "FiniteRelativeProbabilityChooser : Reading data map"
+                                     << Lester::endmsg;
+        for ( typename Map::const_iterator iM = mmap.begin(); iM != mmap.end(); ++iM )
+        {
+          const Index index        = iM->first;
+          const double probability = iM->second;
+          addIndexAndProbability(index,probability);
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "
+                                       << index << " " << probability
+                                       << Lester::endmsg;
+        }
+      }
+      else
+      {
+        Lester::messHandle().warning() << "Input map is empty" << Lester::endmsg;
+      }
+    }
 
     void readFromFile(const std::string & fileName)
     {
+      this->clear();
       std::ifstream is(fileName.c_str());
       if ( is.is_open() )
       {
@@ -45,7 +77,7 @@ namespace Lester {
         {
           is >> probability;
           addIndexAndProbability(index,probability);
-          Lester::messHandle().debug() << " -> Read data point (x,y) : "  
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "
                                        << index << " " << probability
                                        << Lester::endmsg;
         }
@@ -58,12 +90,16 @@ namespace Lester {
       }
     }
 
+  public:
+
     void clear()
     {
       // Resets everything
       cache.clear();
       totalProb=0;
     }
+
+  public:
 
     void addIndexAndProbability(const Index index, const double probability)
     {
@@ -78,6 +114,8 @@ namespace Lester {
         cache.insert(hint, v);
       }
     }
+
+  public:
 
     Index sampleAnIndex() const
     {

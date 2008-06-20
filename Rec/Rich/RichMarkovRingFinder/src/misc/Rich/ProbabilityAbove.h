@@ -25,12 +25,42 @@ namespace Lester
   public:
 
     ProbabilityAbove() : changed(true), totalProb(0), cache(), inputMap() { }
-    ProbabilityAbove(const std::string & fileName) : changed(true), totalProb(0), cache(), inputMap()
+    ProbabilityAbove(const std::string & fileName)
+      : changed(true), totalProb(0), cache(), inputMap()
     {
       readAllFrom(fileName);
     }
+    ProbabilityAbove(const std::map<Index,double>& mmap)
+      : changed(true), totalProb(0), cache(), inputMap()
+    {
+      readFromMap(mmap);
+    }
 
   private:
+
+    void readFromMap( const std::map<Index,double>& mmap )
+    {
+      this->clear();
+      if ( !mmap.empty() )
+      {
+        Lester::messHandle().debug() << "ProbabilityAbove : Reading data map"
+                                     << Lester::endmsg;
+        for ( typename std::map<Index,double>::const_iterator iM = mmap.begin(); 
+              iM != mmap.end(); ++iM )
+        {
+          const Index index        = iM->first;
+          const double probability = iM->second;
+          addIndexAndProbability(index,probability);
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "
+                                       << index << " " << probability
+                                       << Lester::endmsg;
+        }
+      }
+      else
+      {
+        Lester::messHandle().warning() << "Input map is empty" << Lester::endmsg;
+      }
+    }
 
     void readAllFrom(const std::string & fileName)
     {
@@ -77,7 +107,7 @@ namespace Lester
     {
       buildCumulativeCache();
       typename Multimap::const_iterator ge_it = cache.lower_bound(index);
-      return ( ge_it==cache.end() ? 0 :ge_it->second );
+      return ( ge_it==cache.end() ? 0 : ge_it->second );
     }
 
   private:

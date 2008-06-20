@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.66 2008-06-15 12:27:12 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.67 2008-06-20 09:54:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -16,23 +16,23 @@
 #include "RichMarkovRingFinderAlg.h"
 
 // namespaces
-using namespace Rich::Rec;
+using namespace Rich::Rec::MarkovRingFinder;
 
 // Declaration of the Algorithm Factories
-DECLARE_ALGORITHM_FACTORY( Rich1TopPanelMarkovRingFinderAlg    );
-DECLARE_ALGORITHM_FACTORY( Rich1BottomPanelMarkovRingFinderAlg );
-DECLARE_ALGORITHM_FACTORY( Rich2LeftPanelMarkovRingFinderAlg   );
-DECLARE_ALGORITHM_FACTORY( Rich2RightPanelMarkovRingFinderAlg  );
+DECLARE_ALGORITHM_FACTORY( Rich1TopPanel    );
+DECLARE_ALGORITHM_FACTORY( Rich1BottomPanel );
+DECLARE_ALGORITHM_FACTORY( Rich2LeftPanel   );
+DECLARE_ALGORITHM_FACTORY( Rich2RightPanel  );
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 template < class SAMPLER >
-RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& name,
-                                                           ISvcLocator* pSvcLocator,
-                                                           const Rich::DetectorType rich,
-                                                           const Rich::Side         panel,
-                                                           const Rich::RadiatorType rad )
+AlgBase<SAMPLER>::AlgBase( const std::string& name,
+                           ISvcLocator* pSvcLocator,
+                           const Rich::DetectorType rich,
+                           const Rich::Side         panel,
+                           const Rich::RadiatorType rad )
   : RichRecHistoAlgBase ( name, pSvcLocator ),
     m_smartIDTool       ( NULL  ),
     m_rich              ( rich  ),
@@ -69,7 +69,7 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   declareProperty( "RingLocation",
                    m_ringLocation = LHCb::RichRecRingLocation::MarkovRings+"All" );
   declareProperty( "DumpDataToTextFile",   m_dumpText        = false );
-  declareProperty( "EnableFileCache",      m_enableFileCache = true  );
+  declareProperty( "EnableFileCache",      m_enableFileCache = false );
   declareProperty( "MinAssociationProb",   m_minAssProb        );
   declareProperty( "MaxHitsInEvent",       m_maxHitsEvent      );
   declareProperty( "MaxHitsInHPD",         m_maxHitsHPD        );
@@ -81,19 +81,23 @@ RichMarkovRingFinderAlg<SAMPLER>::RichMarkovRingFinderAlg( const std::string& na
   declareProperty( "AbsMinIts",            m_AbsMinIts         );
   // Disable histograms by default
   setProduceHistos( false );
+  // data maps
+  //declareProperty( "ApproxCoPointMap",     
+  //m_coPointMap = DefaultDataMaps::defaultCoPointMap(rad);
+  //);
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
 template < class SAMPLER >
-RichMarkovRingFinderAlg<SAMPLER>::~RichMarkovRingFinderAlg() { }
+AlgBase<SAMPLER>::~AlgBase() { }
 
 //=============================================================================
 // Initialization
 //=============================================================================
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
+StatusCode AlgBase<SAMPLER>::initialize()
 {
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
@@ -132,7 +136,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::initialize()
 //  Finalize
 //=============================================================================
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::finalize()
+StatusCode AlgBase<SAMPLER>::finalize()
 {
   // Intercept finalisation messages from MC code
   Lester::messHandle().declare(this);
@@ -149,7 +153,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::finalize()
 // Main execution
 //=============================================================================
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::execute()
+StatusCode AlgBase<SAMPLER>::execute()
 {
   // make sure ring containers are always created
   getRings( m_ringLocation );
@@ -167,7 +171,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::execute()
 }
 
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::richInit()
+StatusCode AlgBase<SAMPLER>::richInit()
 {
   // Set Rich event status to OK for start of Markov processing
   richStatus()->setEventOK(true);
@@ -180,7 +184,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::richInit()
 }
 
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
+StatusCode AlgBase<SAMPLER>::runRingFinder()
 {
   // do the finding in a try block to catch exceptions that leak out
   try
@@ -253,8 +257,8 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::runRingFinder()
 }
 
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
-                                                        const GenRingF::GenericResults & output ) const
+StatusCode AlgBase<SAMPLER>::saveRings( const GenRingF::GenericInput & input,
+                                        const GenRingF::GenericResults & output ) const
 {
 
   // load or create rings
@@ -359,7 +363,7 @@ StatusCode RichMarkovRingFinderAlg<SAMPLER>::saveRings( const GenRingF::GenericI
 }
 
 template < class SAMPLER >
-void RichMarkovRingFinderAlg<SAMPLER>::addRingToPixels( LHCb::RichRecRing * ring ) const
+void AlgBase<SAMPLER>::addRingToPixels( LHCb::RichRecRing * ring ) const
 {
   verbose() << " -> Adding reference to ring " << ring->key() << " to pixels" << endreq;
   for ( LHCb::RichRecPixelOnRing::Vector::iterator iP = ring->richRecPixels().begin();
@@ -378,7 +382,7 @@ void RichMarkovRingFinderAlg<SAMPLER>::addRingToPixels( LHCb::RichRecRing * ring
 }
 
 template < class SAMPLER >
-bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
+bool AlgBase<SAMPLER>::addDataPoints( GenRingF::GenericInput & input ) const
 {
   bool OK = false;
   // Iterate over pixels
@@ -428,8 +432,8 @@ bool RichMarkovRingFinderAlg<SAMPLER>::addDataPoints( GenRingF::GenericInput & i
 }
 
 template < class SAMPLER >
-void RichMarkovRingFinderAlg<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring,
-                                                        const unsigned int nPoints ) const
+void AlgBase<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring,
+                                        const unsigned int nPoints ) const
 {
   if ( nPoints>0 )
   {
@@ -457,8 +461,8 @@ void RichMarkovRingFinderAlg<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring
 
 // Intrecepts messages from the 'Lester' code and sends them to gaudi
 template < class SAMPLER >
-void RichMarkovRingFinderAlg<SAMPLER>::lesterMessage( const Lester::MessageLevel level,
-                                                      const std::string & message ) const
+void AlgBase<SAMPLER>::lesterMessage( const Lester::MessageLevel level,
+                                      const std::string & message ) const
 {
   if      ( Lester::VERBOSE == level )
   {
@@ -487,7 +491,7 @@ void RichMarkovRingFinderAlg<SAMPLER>::lesterMessage( const Lester::MessageLevel
 }
 
 template < class SAMPLER >
-StatusCode RichMarkovRingFinderAlg<SAMPLER>::dumpToTextfile() const
+StatusCode AlgBase<SAMPLER>::dumpToTextfile() const
 {
   if ( m_dumpText )
   {

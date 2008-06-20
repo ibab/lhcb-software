@@ -1,4 +1,4 @@
-// $Id: OstreamUtils.h,v 1.2 2008-06-09 12:38:03 jonrob Exp $
+// $Id: OstreamUtils.h,v 1.1 2008-06-20 09:54:23 jonrob Exp $
 #ifndef GENERICRINGFINDER_OSTREAMUTILS_H 
 #define GENERICRINGFINDER_OSTREAMUTILS_H 1
 

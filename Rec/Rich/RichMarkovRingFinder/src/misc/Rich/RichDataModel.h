@@ -17,6 +17,8 @@
 #include "Rich/ProbabilityAbove.h"
 #include "Rich/ProbabilityUtils.h"
 #include "Rich/CircleTheorems.h"
+#include "Rich/SamplerFactory.h"
+#include "Rich/DefaultDataMaps.h"
 
 // Gaudi (RichDet)
 #include "RichDet/Rich1DTabFunc.h"
@@ -30,18 +32,33 @@ namespace Lester
 
   public:
 
-    /// Default constructor (reads cache file)
+    /// Approx co point cache
+    typedef std::map<double,double> CacheMap;
+
+    /// CK theta distribution map
+    typedef std::map<double,double> CKThetaMap;
+
+  public:
+
+    /// Default constructor (reads from data files)
     RichDataModel()
-      : m_isInitialised(false),
-        m_enableFileCache(true),
-        m_richThetaSampler(NULL),
-        m_richThetaDistribution(NULL),
-        m_richProbabilityThetaAbove(NULL),
-        m_interp(NULL)
+      : m_isInitialised             (false),
+        m_enableFileCache           (false),
+        m_startWithEmptyCache       (false),
+        m_richThetaSampler          (NULL),
+        m_richThetaDistribution     (NULL),
+        m_richProbabilityThetaAbove (NULL),
+        m_interp                    (NULL)
     { m_cache.clear(); }
 
     /// Destructor
-    ~RichDataModel() { cleanUp(); }
+    ~RichDataModel() 
+    {
+      // Print final map values to a boost formated statement ?
+      printCache();
+      // cleanup
+      cleanUp(); 
+    }
 
     double totalLogProbOfEventDescriptionGivenData(const EventDescription & rp,
                                                    const Data & d) const;
@@ -92,12 +109,16 @@ namespace Lester
 
   private:
 
-    bool m_isInitialised;
-
-    typedef std::map<double,double> CacheMap;
+    bool m_isInitialised; ///< Flag to indicate if initialise() has been called or not
     mutable CacheMap m_cache;
     std::string m_cacheLocation;
     mutable bool m_enableFileCache;
+    bool m_startWithEmptyCache;
+
+  protected:
+
+    /// The radiator type
+    Rich::RadiatorType m_rad;
 
   public:
 
@@ -111,6 +132,9 @@ namespace Lester
 
     /// Read the cache fill into the internal map
     void readCacheFromFile();
+
+    /// Print the cache file
+    void printCache();
 
     /// Compute and fill cache
     double fillCache(const double deltaOnTwo) const;
@@ -316,10 +340,8 @@ namespace Lester
   inline double 
   RichDataModel::approxCoPointSepFunctionPart1(const double deltaOnTwo) const
   {
-    // use the cache implementation
-    //return approxCoPointSepFunctionPart1_CacheImp(deltaOnTwo);
-    // Use the GSL based interpolator (requires full cache file)
-    return m_interp->value(deltaOnTwo);
+    return ( !m_enableFileCache ? m_interp->value(deltaOnTwo) :
+             approxCoPointSepFunctionPart1_CacheImp(deltaOnTwo) );
   }
 
 }

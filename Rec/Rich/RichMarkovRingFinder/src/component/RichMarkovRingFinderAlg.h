@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichMarkovRingFinderAlg.h
  *
- *  Header file for algorithm : RichMarkovRingFinderAlg
+ *  Header file for Markov Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.38 2008-06-15 11:40:11 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.39 2008-06-20 09:54:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -18,6 +18,7 @@
 // STD
 #include <sstream>
 #include <fstream>
+#include <map>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -42,225 +43,229 @@
 #include "Rich/Rich1DataModel.h"
 #include "Rich/Rich2DataModel.h"
 #include "Utils/MessageHandler.h"
+#include "Rich/DefaultDataMaps.h"
 
 namespace Rich
 {
   namespace Rec
   {
-
-    //-----------------------------------------------------------------------
-    /** @class RichMarkovRingFinderAlg RichMarkovRingFinderAlg.h
-     *
-     *  Trackless ring finder using a Markov Chaion Monte Carlo method
-     *
-     *  Uses the "Ring Finding Library" developed by C.G.Lester
-     *  (lester@hep.phy.cam.ac.uk)
-     *
-     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     *  @date   2005-08-09
-     */
-    //-----------------------------------------------------------------------
-
-    template < class SAMPLER >
-    class RichMarkovRingFinderAlg : public RichRecHistoAlgBase,
-                                    virtual public Lester::IMessageHandler
+    namespace MarkovRingFinder
     {
 
-    public:
+      //-----------------------------------------------------------------------
+      /** @class AlgBase RichMarkovRingFinderAlg.h
+       *
+       *  Trackless ring finder using a Markov Chain Monte Carlo method
+       *
+       *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       *  @date   2005-08-09
+       */
+      //-----------------------------------------------------------------------
 
-      /// Standard constructor
-      RichMarkovRingFinderAlg( const std::string& name,
-                               ISvcLocator* pSvcLocator,
-                               const Rich::DetectorType rich,
-                               const Rich::Side panel,
-                               const Rich::RadiatorType rad );
-
-      virtual ~RichMarkovRingFinderAlg( ); ///< Destructor
-
-      virtual StatusCode initialize();    ///< Algorithm initialization
-      virtual StatusCode execute   ();    ///< Algorithm execution
-      virtual StatusCode finalize  ();    ///< Algorithm finalization
-
-    public: // lester messaging
-
-      /// Intrecepts messages from the 'Lester' code and sends them to
-      /// the standard Gaudi messaging system
-      virtual void lesterMessage( const Lester::MessageLevel level,
-                                  const std::string & message ) const;
-
-    protected:
-
-      /// Returns the RICH Detector
-      inline const Rich::DetectorType rich() const { return m_rich; }
-
-      /// Returns the RICH panel
-      inline const Rich::Side panel() const { return m_panel; }
-
-      /// Returns the RICH radiator
-      inline const Rich::RadiatorType rad() const { return m_rad; }
-
-    private: // methods
-
-      /// General RICH reco initialisations
-      StatusCode richInit();
-
-      /// Run the ring finder
-      StatusCode runRingFinder();
-
-      /// Get rings at given location
-      inline LHCb::RichRecRings * getRings( const std::string & location ) const
+      template < class SAMPLER >
+      class AlgBase : public RichRecHistoAlgBase,
+                      virtual public Lester::IMessageHandler
       {
-        return getOrCreate<LHCb::RichRecRings,LHCb::RichRecRings>(location);
-      }
 
-      /// Adds data points to the the ring finder input
-      bool addDataPoints( GenRingF::GenericInput & input ) const;
+      public:
 
-      /// Save rings to TES
-      StatusCode saveRings( const GenRingF::GenericInput & input,
-                            const GenRingF::GenericResults & output ) const;
+        /// Standard constructor
+        AlgBase( const std::string& name,
+                 ISvcLocator* pSvcLocator,
+                 const Rich::DetectorType rich,
+                 const Rich::Side panel,
+                 const Rich::RadiatorType rad );
 
-      /// Fill the ring points in the final reconstructed rings
-      void buildRingPoints( LHCb::RichRecRing * ring,
-                            const unsigned int nPoints = 100 ) const;
+        virtual ~AlgBase( ); ///< Destructor
 
-      /// Add references to given ring to associated pixels
-      void addRingToPixels( LHCb::RichRecRing * ring ) const;
+        virtual StatusCode initialize();    ///< Algorithm initialization
+        virtual StatusCode execute   ();    ///< Algorithm execution
+        virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-      /// Create data text files for standalone ring finder
-      StatusCode dumpToTextfile() const;
+      public: // lester messaging
 
-    private: // data
+        /// Intrecepts messages from the 'Lester' code and sends them to
+        /// the standard Gaudi messaging system
+        virtual void lesterMessage( const Lester::MessageLevel level,
+                                    const std::string & message ) const;
 
-      // tool pointers
-      const ISmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
+      protected:
 
-      const Rich::DetectorType m_rich;  ///< Which RICH Detector
-      const Rich::Side         m_panel; ///< Which RICH Panel
-      const Rich::RadiatorType m_rad;   ///< Which RICH radiator
+        /// Returns the RICH Detector
+        inline const Rich::DetectorType rich() const { return m_rich; }
 
-      /// Pointer to the sampler (ring finder)
-      SAMPLER * m_sampler;
+        /// Returns the RICH panel
+        inline const Rich::Side panel() const { return m_panel; }
 
-      /// Location of all output rings in TES
-      std::string m_ringLocation;
+        /// Returns the RICH radiator
+        inline const Rich::RadiatorType rad() const { return m_rad; }
 
-      /// Job option to turn on dumping of data to text files,
-      /// for standalone ring finder application
-      bool m_dumpText;
+      private: // methods
 
-      /// Min probability to associate a pixel to a ring
-      double m_minAssProb;
+        /// General RICH reco initialisations
+        StatusCode richInit();
 
-      /// Maximum number of hits to try ring finding with
-      unsigned int m_maxHitsEvent;
+        /// Run the ring finder
+        StatusCode runRingFinder();
 
-      /** Maximum number of hits per HPD to try ring finding with.
-       *  HPDs which exceed this are rejected */
-      unsigned int m_maxHitsHPD;
+        /// Get rings at given location
+        inline LHCb::RichRecRings * getRings( const std::string & location ) const
+        {
+          return getOrCreate<LHCb::RichRecRings,LHCb::RichRecRings>(location);
+        }
 
-      /// data scale factor, to turn local coordinates into angles (in rad)
-      double m_scaleFactor;
+        /// Adds data points to the the ring finder input
+        bool addDataPoints( GenRingF::GenericInput & input ) const;
 
-      /** Maximum distance from Markov ring centre of a pixel to be considered 
-       *  as associated to that ring */
-      double m_maxPixelSep;
+        /// Save rings to TES
+        StatusCode saveRings( const GenRingF::GenericInput & input,
+                              const GenRingF::GenericResults & output ) const;
 
-      /// Enable file cache in sampler
-      bool m_enableFileCache;
+        /// Fill the ring points in the final reconstructed rings
+        void buildRingPoints( LHCb::RichRecRing * ring,
+                              const unsigned int nPoints = 100 ) const;
 
-      /// TargetIterations
-      unsigned int m_TargetIterations;
+        /// Add references to given ring to associated pixels
+        void addRingToPixels( LHCb::RichRecRing * ring ) const;
 
-      /// TargetHits
-      unsigned int m_TargetHits;
+        /// Create data text files for standalone ring finder
+        StatusCode dumpToTextfile() const;
 
-      /// AbsMaxIts
-      unsigned int m_AbsMaxIts;
+      private: // data
 
-      /// AbsMinIts
-      unsigned int m_AbsMinIts;
+        // tool pointers
+        const ISmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
 
-    };
+        const Rich::DetectorType m_rich;  ///< Which RICH Detector
+        const Rich::Side         m_panel; ///< Which RICH Panel
+        const Rich::RadiatorType m_rad;   ///< Which RICH radiator
 
-    /// The type of sampler for RICH1
-    typedef Lester::RichSampler<Lester::Rich1DataModel> Rich1Sampler;
+        /// Pointer to the sampler (ring finder)
+        SAMPLER * m_sampler;
 
-    /// The type of sampler for RICH2
-    typedef Lester::RichSampler<Lester::Rich2DataModel> Rich2Sampler;
+        /// Location of all output rings in TES
+        std::string m_ringLocation;
 
-    /**
-     * @class  Rich1TopPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h
-     * @brief  Standalone ring finder for RICH1 top panel using Markov Chains
-     *
-     * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     * @date   2003-12-02
-     */
-    class Rich1TopPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1Sampler>
-    {
-    public:
-      /// Default Constructor
-      Rich1TopPanelMarkovRingFinderAlg( const std::string& name,
-                                        ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg<Rich1Sampler>( name, pSvcLocator,
-                                                 Rich::Rich1, Rich::top, Rich::Rich1Gas )
-      { }
-    };
+        /// Job option to turn on dumping of data to text files,
+        /// for standalone ring finder application
+        bool m_dumpText;
 
-    /**
-     * @class  Rich1BottomPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h
-     * @brief  Standalone ring finder for RICH1 bottom panel using Markov Chains
-     *
-     * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     * @date   2003-12-02
-     */
-    class Rich1BottomPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1Sampler>
-    {
-    public:
-      /// Default Constructor
-      Rich1BottomPanelMarkovRingFinderAlg( const std::string& name,
-                                           ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg<Rich1Sampler>( name, pSvcLocator,
-                                                 Rich::Rich1, Rich::bottom, Rich::Rich1Gas )
-      { }
-    };
+        /// Min probability to associate a pixel to a ring
+        double m_minAssProb;
 
-    /**
-     * @class  Rich2RightPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h
-     * @brief  Standalone ring finder for RICH2 right panel using Markov Chains
-     *
-     * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     * @date   2003-12-02
-     */
-    class Rich2RightPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2Sampler>
-    {
-    public:
-      /// Default Constructor
-      Rich2RightPanelMarkovRingFinderAlg( const std::string& name,
-                                          ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg<Rich2Sampler>( name, pSvcLocator,
-                                                 Rich::Rich2, Rich::right, Rich::Rich2Gas )
-      { }
-    };
+        /// Maximum number of hits to try ring finding with
+        unsigned int m_maxHitsEvent;
 
-    /**
-     * @class  Rich2LeftPanelMarkovRingFinderAlg RichMarkovRingFinderAlg.h
-     * @brief  Standalone ring finder for RICH2 left panel using Markov Chains
-     *
-     * @author Chris Jones   Christopher.Rob.Jones@cern.ch
-     * @date   2003-12-02
-     */
-    class Rich2LeftPanelMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2Sampler>
-    {
-    public:
-      /// Default Constructor
-      Rich2LeftPanelMarkovRingFinderAlg( const std::string& name,
-                                         ISvcLocator* pSvcLocator )
-        : RichMarkovRingFinderAlg<Rich2Sampler>( name, pSvcLocator,
-                                                 Rich::Rich2, Rich::left, Rich::Rich2Gas )
-      { }
-    };
+        /** Maximum number of hits per HPD to try ring finding with.
+         *  HPDs which exceed this are rejected */
+        unsigned int m_maxHitsHPD;
 
+        /// data scale factor, to turn local coordinates into angles (in rad)
+        double m_scaleFactor;
+
+        /** Maximum distance from Markov ring centre of a pixel to be considered
+         *  as associated to that ring */
+        double m_maxPixelSep;
+
+        /// Enable file cache in sampler
+        bool m_enableFileCache;
+
+        /// TargetIterations
+        unsigned int m_TargetIterations;
+
+        /// TargetHits
+        unsigned int m_TargetHits;
+
+        /// AbsMaxIts
+        unsigned int m_AbsMaxIts;
+
+        /// AbsMinIts
+        unsigned int m_AbsMinIts;
+
+        /// Approx Co Point Map
+        //std::map<double,double> m_coPointMap;
+
+      };
+
+      /// The type of sampler for RICH1
+      typedef Lester::RichSampler<Lester::Rich1DataModel> Rich1Sampler;
+
+      /// The type of sampler for RICH2
+      typedef Lester::RichSampler<Lester::Rich2DataModel> Rich2Sampler;
+
+      /**
+       * @class  Rich1TopPanel RichMarkovRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 top panel using Markov Chains
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   2003-12-02
+       */
+      class Rich1TopPanel : public AlgBase<Rich1Sampler>
+      {
+      public:
+        /// Default Constructor
+        Rich1TopPanel( const std::string& name,
+                       ISvcLocator* pSvcLocator )
+          : AlgBase<Rich1Sampler>( name, pSvcLocator,
+                                   Rich::Rich1, Rich::top, Rich::Rich1Gas )
+        { }
+      };
+
+      /**
+       * @class  Rich1BottomPanel RichMarkovRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH1 bottom panel using Markov Chains
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   2003-12-02
+       */
+      class Rich1BottomPanel : public AlgBase<Rich1Sampler>
+      {
+      public:
+        /// Default Constructor
+        Rich1BottomPanel( const std::string& name,
+                          ISvcLocator* pSvcLocator )
+          : AlgBase<Rich1Sampler>( name, pSvcLocator,
+                                   Rich::Rich1, Rich::bottom, Rich::Rich1Gas )
+        { }
+      };
+
+      /**
+       * @class  Rich2RightPanel RichMarkovRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH2 right panel using Markov Chains
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   2003-12-02
+       */
+      class Rich2RightPanel : public AlgBase<Rich2Sampler>
+      {
+      public:
+        /// Default Constructor
+        Rich2RightPanel( const std::string& name,
+                         ISvcLocator* pSvcLocator )
+          : AlgBase<Rich2Sampler>( name, pSvcLocator,
+                                   Rich::Rich2, Rich::right, Rich::Rich2Gas )
+        { }
+      };
+
+      /**
+       * @class  Rich2LeftPanel RichMarkovRingFinderAlg.h
+       * @brief  Standalone ring finder for RICH2 left panel using Markov Chains
+       *
+       * @author Chris Jones   Christopher.Rob.Jones@cern.ch
+       * @date   2003-12-02
+       */
+      class Rich2LeftPanel : public AlgBase<Rich2Sampler>
+      {
+      public:
+        /// Default Constructor
+        Rich2LeftPanel( const std::string& name,
+                        ISvcLocator* pSvcLocator )
+          : AlgBase<Rich2Sampler>( name, pSvcLocator,
+                                   Rich::Rich2, Rich::left, Rich::Rich2Gas )
+        { }
+      };
+
+    }
   }
 }
 

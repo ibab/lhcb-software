@@ -1,4 +1,4 @@
-// $Id: CheckForNan.h,v 1.1 2008-06-07 19:31:02 jonrob Exp $
+// $Id: CheckForNan.h,v 1.1 2008-06-20 09:54:23 jonrob Exp $
 // ============================================================================
 #ifndef UTILS_CHECKFORNAN_H 
 #define UTILS_CHECKFORNAN_H 1

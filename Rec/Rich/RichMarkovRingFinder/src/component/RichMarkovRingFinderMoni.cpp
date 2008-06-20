@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichMarkovRingFinderMoni
  *
- *  $Id: RichMarkovRingFinderMoni.cpp,v 1.32 2008-06-14 09:15:04 jonrob Exp $
+ *  $Id: RichMarkovRingFinderMoni.cpp,v 1.33 2008-06-20 09:54:22 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,26 +16,26 @@
 
 // namespace
 using namespace LHCb;
-using namespace Rich::Rec::MC;
+using namespace Rich::Rec::MarkovRingFinder::MC;
 
 //---------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RichMarkovRingFinderMoni );
+DECLARE_ALGORITHM_FACTORY( Moni );
 
 // Standard constructor, initializes variables
-RichMarkovRingFinderMoni::RichMarkovRingFinderMoni( const std::string& name,
-                                                    ISvcLocator* pSvcLocator )
+Moni::Moni( const std::string& name,
+            ISvcLocator* pSvcLocator )
   : RichRecHistoAlgBase ( name, pSvcLocator )
 {
   declareProperty( "RingLocation", m_ringLoc = LHCb::RichRecRingLocation::MarkovRings+"All" );
 }
 
 // Destructor
-RichMarkovRingFinderMoni::~RichMarkovRingFinderMoni() {};
+Moni::~Moni() {};
 
 //  Initialize
-StatusCode RichMarkovRingFinderMoni::initialize()
+StatusCode Moni::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -47,7 +47,7 @@ StatusCode RichMarkovRingFinderMoni::initialize()
 }
 
 // Main execution
-StatusCode RichMarkovRingFinderMoni::execute()
+StatusCode Moni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -68,14 +68,14 @@ StatusCode RichMarkovRingFinderMoni::execute()
     LHCb::RichRecRing * ring = *iR;
 
     // Radiator info
-    const Rich::RadiatorType rad = ring->radiator(); 
+    const Rich::RadiatorType rad = ring->radiator();
 
     // Plot centre points of "isolated" rings
     const Gaudi::XYZPoint & RingCentreLocal = (*iR)->centrePointLocal();
-    plot2D( RingCentreLocal.x(), RingCentreLocal.y(),  
+    plot2D( RingCentreLocal.x(), RingCentreLocal.y(),
             hid(rad,"ringCentres"), "Ring centres",
             -2*Gaudi::Units::m, 2*Gaudi::Units::m,
-            -2*Gaudi::Units::m, 2*Gaudi::Units::m, 200, 200 );    
+            -2*Gaudi::Units::m, 2*Gaudi::Units::m, 200, 200 );
 
     // Ring radius
     //const LHCb::RichRecRing::FloatType ringRadius = ring->radius();//RADIUS IN RADIANS!

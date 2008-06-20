@@ -1,4 +1,4 @@
-// $Id: GenericConfiguration.h,v 1.2 2008-06-08 21:46:52 jonrob Exp $
+// $Id: GenericConfiguration.h,v 1.1 2008-06-20 09:54:22 jonrob Exp $
 #ifndef GENERICRINGFINDER_GENERICCONFIGURATION_H
 #define GENERICRINGFINDER_GENERICCONFIGURATION_H 1
 

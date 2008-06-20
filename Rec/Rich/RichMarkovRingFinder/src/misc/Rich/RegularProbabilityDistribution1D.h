@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <map>
 #include "CLHEP/Random/RandFlat.h"
 #include "Utils/MessageHandler.h"
 #include "Utils/StringException.h"
@@ -30,6 +31,8 @@ namespace Lester
       DataNotRegular() : StringException("Data not regular") { }
     };
 
+    typedef std::map<double,double> Map;
+
   private:
 
     Index minX;
@@ -52,8 +55,36 @@ namespace Lester
     {
       readFromFile(fileName);
     }
+    RegularProbabilityDistribution1D(const Map& mmap) : totProb(0)
+    {
+      readFromMap(mmap);
+    }
 
   private:
+
+    void readFromMap( const Map& mmap )
+    {
+      this->clear();
+      if ( !mmap.empty() )
+      {
+        Lester::messHandle().debug() << "RegularProbabilityDistribution1D : Reading data map"
+                                     << Lester::endmsg;
+        for ( typename Map::const_iterator iM = mmap.begin(); iM != mmap.end(); ++iM )
+        {
+          const Index index        = iM->first;
+          const double probability = iM->second;
+          addIndexAndProbability(index,probability);
+          Lester::messHandle().debug() << " -> Read data point (x,y) : "
+                                       << index << " " << probability
+                                       << Lester::endmsg;
+        }
+      }
+      else
+      { 
+        Lester::messHandle().warning() << "Input map is empty" << Lester::endmsg;
+      }
+      finishInitialisation();
+    }
 
     void readFromFile(const std::string & fileName)
     {
