@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.182 2008-06-23 12:33:46 jonrob Exp $
+! $Id: release.notes,v 1.183 2008-06-23 12:36:59 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
 ! 2008-06-23 - Chris Jones
- - Extend the L)Header words to allow full decoding of the information
+ - Extend the L0Header words to allow full decoding of the information
    contained in the various bits.
 
 !====================== RichKernel v7r12 2008-06-03 ==================
