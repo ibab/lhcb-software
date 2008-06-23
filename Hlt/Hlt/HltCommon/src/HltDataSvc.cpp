@@ -101,8 +101,8 @@ IDataProviderSvc& HltDataSvc::evtSvc() const {
 StatusCode 
 HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool useTES) {
 //@TODO: record dependency of id on parent
-    if (parent==0) std::cout << "don't have parent..." << std::endl;
-    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
+//    if (parent==0) std::cout << "don't have parent..." << std::endl;
+//    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
     typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
     std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
     if (p.first!=p.second) return StatusCode::FAILURE; // already there...
