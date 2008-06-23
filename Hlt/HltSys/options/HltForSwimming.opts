@@ -27,10 +27,6 @@ Hlt.ShortCircuit = false;
  * init the HLT sequencer
  */
 Hlt.Members += { "GaudiSequencer/HltInitSequence" };
-HltInitSequence.Members = {"HltInit"};
-
-// now use the updated L0 channel configuration
-// HltInit.TCKName = "UpdatedL0";
 
 /**
  * the Alleys sequencer
