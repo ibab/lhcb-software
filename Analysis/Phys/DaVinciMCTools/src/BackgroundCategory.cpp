@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.38 2008-06-12 12:35:26 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.39 2008-06-23 18:09:25 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -419,6 +419,17 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
   //The big "what is it?" switch. hopefully commented enough downstairs. For additional help with what 
   //all the categories mean, please visit IBackgroundCategory.h 
 {
+
+  m_pCPPAsct = new ProtoParticle2MCLinker( this,
+                                           Particle2MCMethod::ChargedPP,
+                                           std::vector<std::string>(1,"") );
+  m_pNPPAsct = new ProtoParticle2MCLinker( this,
+                                           Particle2MCMethod::NeutralPP,
+                                           std::vector<std::string>(1,"") );
+  m_pChi2PPAsct = new Particle2MCLinker( this,
+                                         Particle2MCMethod::Composite,
+                                         std::vector<std::string>(1,"") );
+
   m_commonMother = 0;
   //First of all, we use Patrick's tool to get all the particles in the decay tree
   verbose() << "About to start processing the categorisation tree for a " << 
@@ -1250,7 +1261,7 @@ StatusCode BackgroundCategory::initialize(){
   sc = service("ParticlePropertySvc", m_ppSvc);
   if (!sc) return sc;
 
-  m_pCPPAsct = new ProtoParticle2MCLinker( this, 
+  /*m_pCPPAsct = new ProtoParticle2MCLinker( this, 
                                            Particle2MCMethod::ChargedPP, 
                                            std::vector<std::string>(1,"") );
   m_pNPPAsct = new ProtoParticle2MCLinker( this, 
@@ -1260,7 +1271,7 @@ StatusCode BackgroundCategory::initialize(){
   //m_pNPPAsct = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   m_pChi2PPAsct = new Particle2MCLinker( this, 
                                          Particle2MCMethod::Composite,
-                                         std::vector<std::string>(1,"") );
+                                         std::vector<std::string>(1,"") );*/
 
   //m_pCPPAsct = new Particle2MCLinker( this, "ChargedPP2MC", "/MyChargedPP2MC", "");
   //m_pNPPAsct = new Particle2MCLinker( this, "NeutralPP2MC", "/MyNeutralPP2MC", "");

@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.219 2008-06-12 09:50:25 gligorov Exp $
+! $Id: release.notes,v 1.220 2008-06-23 18:09:35 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
 !========================== DaVinciMCTools v9r13 2008-06-09 ==================
+
+! 2008-06-23 - V. Gligorov
+ - src/BackgroundCategory.{cpp,h}
+    Fixed use of associators to avoid possible memory leaks.
 
 ! 2008-06-12 - V. Gligorov
  - src/BackgroundCategory.{cpp,h}
