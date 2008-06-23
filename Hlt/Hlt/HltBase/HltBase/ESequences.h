@@ -47,11 +47,6 @@ namespace zen {
     return true;
   }
   
-  template <class CONTAINER, class OBJECT>
-  inline bool find(const CONTAINER& cont, const OBJECT& obj ) {
-    return zen::find(cont.begin(),cont.end(),obj);
-  }
-  
   template <class INPUT>
   inline size_t count(const INPUT& c1, const INPUT& c2) 
   {return zen::count(c1.begin(),c1.end(),c2.begin(),c2.end());}

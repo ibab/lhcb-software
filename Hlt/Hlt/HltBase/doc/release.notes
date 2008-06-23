@@ -12,6 +12,7 @@
  - extend IHltDataSvc: allow it to know whom it is talking to...
  - switch over to use of IHltDataSvc instead of HltData
  - remove stale includes in HltBase.icpp
+ - remove unused HltConfigurationHelper
 
 ! 2008-06-20 - Gerhard Raven
  - add IHltDataSvc 
