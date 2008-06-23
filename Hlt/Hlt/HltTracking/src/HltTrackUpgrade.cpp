@@ -1,11 +1,10 @@
-// $Id: HltTrackUpgrade.cpp,v 1.8 2008-05-15 08:56:57 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.9 2008-06-23 12:22:28 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 
 // local
 #include "HltTrackUpgrade.h"
-#include "HltBase/HltConfigurationHelper.h"
 
 using namespace LHCb;
 

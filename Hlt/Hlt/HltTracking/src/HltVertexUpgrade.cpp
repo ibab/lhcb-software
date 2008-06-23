@@ -1,11 +1,10 @@
-// $Id: HltVertexUpgrade.cpp,v 1.9 2008-06-20 17:23:25 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.10 2008-06-23 12:22:28 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
 
 // local
 #include "HltVertexUpgrade.h"
-#include "HltBase/HltConfigurationHelper.h"
 
 using namespace LHCb;
 

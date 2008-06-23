@@ -6,9 +6,11 @@
 
 ! 2008-06-23 - Gerhard Raven
   - remove commented out code in HltTrackUpgrade
+  - remove unused include of HltConfigurationHelper.h
 
 ! 2008-06-20 - Jose A. Hernando
-  - extending HltTrackUpgrade tool to cope with new functionality to be use in Panoramix
+  - extending HltTrackUpgrade tool to cope with new functionality to be used
+    in Panoramix
 
 !========================== HltTracking v3r3 2008-06-09 ===================
 ! 2008-06-03 - Jose A. Hernando

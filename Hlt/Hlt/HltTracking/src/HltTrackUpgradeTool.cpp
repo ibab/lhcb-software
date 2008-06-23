@@ -1,11 +1,10 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.19 2008-06-20 17:23:25 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.20 2008-06-23 12:22:28 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
 #include "Event/HltEnums.h"
-#include "HltBase/HltConfigurationHelper.h"
 #include "HltBase/ESequences.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 #include "GaudiKernel/Property.h"
