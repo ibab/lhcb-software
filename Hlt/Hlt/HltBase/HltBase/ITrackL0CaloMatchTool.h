@@ -1,4 +1,4 @@
-// $Id: ITrackL0CaloMatchTool.h,v 1.3 2007-02-15 09:18:14 cattanem Exp $
+// $Id: ITrackL0CaloMatchTool.h,v 1.4 2008-06-23 07:25:09 graven Exp $
 #ifndef HLTBASE_ITRACKL0CALOMATCHTOOL_H 
 #define HLTBASE_ITRACKL0CALOMATCHTOOL_H 1
 
@@ -32,10 +32,6 @@ public:
   
   virtual double match(const LHCb::Track& track, 
                        const LHCb::L0CaloCandidate& calo) = 0;
-
-protected:
-
-private:
 
 };
 #endif // HLTBASE_ITRACKL0CALOMATCHTOOL_H
