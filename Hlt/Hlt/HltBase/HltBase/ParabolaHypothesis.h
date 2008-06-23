@@ -17,22 +17,22 @@
 class ParabolaHypothesis : virtual public Tf::IStationSelector {
 public: 
   /// Standard constructor
-  ParabolaHypothesis( float my , float cy , float ax , float bx , float cx,
-                      float dx, float dy ) :
+  ParabolaHypothesis( double my , double cy , double ax , double bx , double cx,
+                      double dx, double dy ) :
 	  m_y(my), m_cy(cy), m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_dy(dy)
   { }
 
   Tf::XYSearchWindow searchWindow(double zz) const
   {
-    float z = zz;
-    float y = m_y * z + m_cy;
-    float x = (m_ax * z + m_bx) * z + m_cx;
+    double z = zz;
+    double y =               m_y * z + m_cy;
+    double x = (m_ax * z + m_bx) * z + m_cx;
     return Tf::XYSearchWindow(x - m_dx, x + m_dx, y - m_dy, y + m_dy);
   }
 
 private:
-  float m_y, m_cy;
-  float m_ax, m_bx, m_cx;
-  float m_dx, m_dy;
+  double       m_y,  m_cy;
+  double m_ax, m_bx, m_cx;
+  double m_dx, m_dy;
 };
 #endif // PARABOLAHYPOTHESIS_H

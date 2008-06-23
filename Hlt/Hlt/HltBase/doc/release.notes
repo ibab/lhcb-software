@@ -7,6 +7,7 @@
 ! 2008-06-23 - Gerhard Raven
  - remove commented out code in HltUtils.h
  - remove unneeded lines in ITrackL0CaloMatchTool.h
+ - make all internal variables in ParabolaHypothesis double instead of float
 
 ! 2008-06-20 - Gerhard Raven
  - add IHltDataSvc 
