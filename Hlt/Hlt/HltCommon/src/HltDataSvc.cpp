@@ -1,13 +1,24 @@
 #include "HltDataSvc.h"
 #include "Event/HltSummary.h"
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/DataSvc.h"
+// #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h" 
+#include "GaudiKernel/IAlgorithm.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/construct.hpp"
 
 // Declaration of the Service Factory
-DECLARE_SERVICE_FACTORY( DataSvc );
+// DECLARE_SERVICE_FACTORY( DataSvc );
+
+
+///////////TODO:
+/////////// if input selection is from TES, copy into 'private' container
+/////////// when to trigger? Needs support from algorithm... -- return callback
+/////////// on register to trigger update, require algo to use callback...
+/////////// i.e. this needs a handshake between algorithm and service....
+/// usecase: see HltCommon/src/HltTFilter, the 'prepare' variant...
 
 // Declaration of the Service Factory
 DECLARE_SERVICE_FACTORY( HltDataSvc );
@@ -18,13 +29,10 @@ DECLARE_SERVICE_FACTORY( HltDataSvc );
 HltDataSvc::HltDataSvc( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
-  , m_hltMan(0)
-  , m_hltSvc(0)
   , m_evtSvc(0)
   , m_hltConf(0)
 {
-  declareProperty("HltConfigurationLocation", m_hltConfigurationLocation = 
-                         LHCb::HltSummaryLocation::Default+"/Configuration");
+    declareProperty("OutputPrefix" ,m_TESOutputPrefix = "Hlt/Selection");
 }
 
 //=============================================================================
@@ -32,7 +40,10 @@ HltDataSvc::HltDataSvc( const std::string& name,
 //=============================================================================
 HltDataSvc::~HltDataSvc()
 {
-
+ std::for_each( m_ownedSelections.begin(),
+                m_ownedSelections.end(),
+                boost::lambda::delete_ptr() );
+ m_ownedSelections.clear();
 }
 
 //=============================================================================
@@ -51,29 +62,12 @@ StatusCode HltDataSvc::queryInterface(const InterfaceID& IID,
 
 
 StatusCode HltDataSvc::initialize() {
-//TODO: don't put Hlt::Configuration into DataSvc...
   info() << "Initialize" << endmsg;
   StatusCode status = Service::initialize();
   if ( !status.isSuccess() )   return status;
   // create the Hlt Data Svc
-  if (!m_hltMan) {
-    std::string name = "DataSvc/HltSvc";
-    debug() << " creating hltSvc " << name << endreq;
-    status = serviceLocator()->service(name,m_hltMan,true);
-    if ( status.isFailure() ) return status; 
-  } else {
-    status = m_hltMan->clearStore();
-    if ( status.isFailure() ) return status; 
-  }
-  if (!m_hltMan) fatal() << " not able to create HltSvc " << endreq;
-  info() << " created HltSvc " << endreq;
-  status = m_hltMan->setRoot("/Event", new DataObject());
-  if (status.isFailure()) return status;
+  m_hltConf.reset( new Hlt::Configuration() );
   
-  status = hltSvc().registerObject( "/Event/"+hltConfigurationLocation(), new Hlt::Configuration() );
-  if (status.isFailure()) return status;
-  info() << " stored Hlt::Configuration in HltSvc at " << hltConfigurationLocation() << endreq;
-
   // get incident Svc...
   IIncidentSvc*                incidentSvc(0);     ///<
   if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
@@ -87,26 +81,11 @@ StatusCode HltDataSvc::initialize() {
 
 StatusCode HltDataSvc::finalize() {
   StatusCode status = Service::finalize();
-  if (m_hltMan) {
-    status = m_hltMan->clearStore();  // this deletes HLTData and HLTConf...
-    if (status.isFailure()) return status;
-    m_hltMan->release();
-    m_hltMan=0;
-  }
+  m_hltConf.reset( (Hlt::Configuration*)0 );
   if (m_evtSvc) { m_evtSvc->release(); m_evtSvc=0; }
-  if (m_hltSvc) { m_hltSvc->release(); m_hltSvc=0; }
   return status;
 }
 
-IDataProviderSvc& HltDataSvc::hltSvc() const {
-  if (m_hltSvc == 0) {
-    StatusCode sc = serviceLocator()->service("HltSvc", m_hltSvc);
-    if (sc.isFailure() || m_hltSvc == 0) { 
-        throw GaudiException( name()+"::hltSvc() no HltDataSvc","",StatusCode::FAILURE);
-    }
-  }
-  return *m_hltSvc;
-}
 
 IDataProviderSvc& HltDataSvc::evtSvc() const {
   if (m_evtSvc == 0) {
@@ -120,11 +99,20 @@ IDataProviderSvc& HltDataSvc::evtSvc() const {
 
 
 StatusCode 
-HltDataSvc::addSelection(Hlt::Selection* sel) {
+HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool useTES) {
+//@TODO: record dependency of id on parent
+    if (parent==0) std::cout << "don't have parent..." << std::endl;
+    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
     typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
     std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
     if (p.first!=p.second) return StatusCode::FAILURE; // already there...
     m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
+    if (useTES) {
+        StatusCode sc = evtSvc().registerObject(m_TESOutputPrefix + "/" + sel->id().str(),sel);
+        if (sc.isFailure()) return sc;
+    } else {
+        m_ownedSelections.push_back(sel);
+    }
     return StatusCode::SUCCESS;
 }
 
@@ -135,7 +123,10 @@ HltDataSvc::hasSelection(const stringKey& id) const {
     
 
 Hlt::Selection& 
-HltDataSvc::selection(const stringKey& id) {
+HltDataSvc::selection(const stringKey& id,IAlgorithm* parent) {
+//@TODO: record dependency of parent on id
+    //if (parent==0) std::cout << "don't have parent..." << std::endl;
+    // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
     // don't use hasSelection here to avoid doing 'find' twice...
     std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
     if (i == m_mapselections.end()) throw GaudiException( name()+"::selection() not present ",id.str(),StatusCode::FAILURE);
@@ -144,6 +135,7 @@ HltDataSvc::selection(const stringKey& id) {
 
 void 
 HltDataSvc::clean() {
+    // shouldn't we re-register TES based selections in the TES???
     for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
                                                         i != m_mapselections.end(); ++i)
         i->second->clean();
@@ -166,17 +158,14 @@ HltDataSvc::resetData() {
 
 Hlt::Configuration& 
 HltDataSvc::config() {
-    if (m_hltConf != 0) return *m_hltConf;
-    std::string loca = "/Event/"+m_hltConfigurationLocation;
-    SmartDataPtr<Hlt::Configuration> obj(&hltSvc(),loca);
-    m_hltConf = obj;
-    if ( m_hltConf == 0) { 
+    if ( m_hltConf.get() == 0) { 
         throw GaudiException( name()+"::config() no Hlt::Configuration","",StatusCode::FAILURE);
     }
     return *m_hltConf;
 };
 
 void HltDataSvc::handle( const Incident& ) {
+    // what to do with selections in TES???
     clean();
 };
 

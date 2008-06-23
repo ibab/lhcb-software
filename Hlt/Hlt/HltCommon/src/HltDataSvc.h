@@ -26,9 +26,9 @@ public:
                                     void** ppvUnknown) ;
 
     void resetData();
-    StatusCode addSelection(Hlt::Selection* sel);
+    StatusCode addSelection(Hlt::Selection* sel,IAlgorithm *parent,bool useTES=false);
     bool hasSelection(const stringKey& id) const;
-    Hlt::Selection& selection(const stringKey& id);
+    Hlt::Selection& selection(const stringKey& id,IAlgorithm* parent);
     std::vector<stringKey> selectionKeys();
     void clean();
 
@@ -47,18 +47,17 @@ private:
   MsgStream& always() const { return msg(MSG::ALWAYS); }
 
   mutable std::auto_ptr<MsgStream>     m_msg;
-  IDataProviderSvc& hltSvc() const;
   IDataProviderSvc& evtSvc() const;
   //
-  // return the location of the data
-  const std::string& hltConfigurationLocation() const {return m_hltConfigurationLocation;}
 
-     IDataManagerSvc* m_hltMan;
-     mutable IDataProviderSvc* m_hltSvc;
-     mutable IDataProviderSvc* m_evtSvc;
-     Hlt::Configuration*        m_hltConf;
-     std::string m_hltConfigurationLocation;
+  mutable IDataProviderSvc* m_evtSvc;
+  std::auto_ptr<Hlt::Configuration> m_hltConf;
 
-    std::map<stringKey,Hlt::Selection*> m_mapselections; //owner of HltSelection
+  std::string                         m_TESOutputPrefix;
+  std::map<stringKey,Hlt::Selection*> m_mapselections;
+  std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
+
+//  std::multimap<Hlt::Selection*,IAlgorithm*> m_users;     // which algorithms use a given selection?
+//  std::map<Hlt::Selection*,IAlgorithm*>      m_producers; // which algorithm produced a given selection?
 };
 #endif

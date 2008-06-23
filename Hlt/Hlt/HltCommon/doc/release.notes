@@ -4,8 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-06-23 - Gerhard Raven
+  - simplify & extend HltDataSvc
+
 !2008-06-20 - Gerhard Raven
-  - add implementation of IHltDataSvc
+  - add implementation of IHltDataSvc: HltDataSvc
 
 !2008-06-12 - Gerhard Raven
   - Another shot at SEAL-less version
