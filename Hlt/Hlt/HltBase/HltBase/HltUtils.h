@@ -165,36 +165,3 @@ namespace HltUtils
 };
 
 #endif 
-
-// namespace HltFuntors {
-  
-//   template <class Arg, class Res>
-//   struct UniFunctor : public unary_function<Arg,Res> {
-//     typedef Res (*PtrFun) (const Arg&) const;
-//   protected:
-//     PtrFun m_fun;
-//   public:
-//     explicit UniFun(PtrFun fun): m_fun(fun){};
-//     Res operator() (const Arg& a) const 
-//     {return (*m_fun) (a);}
-//   };
-
-//   template <class Arg1, class Arg2, class Res>
-//   struct BiFunctor : public binary_function<Arg1,Arg2,Res> {
-//     typedef Res (*PtrFun) (const Arg1&, const Arg2&) const;
-//   protected:
-//     PtrFun m_fun;
-//   public:
-//     explicit UniFun(PtrFun fun): m_fun(fun){};
-//     Res operator() (const Arg1& a1, const Arg& a2) const 
-//     {return (*m_fun) (a);}
-//   };
-  
-//   typedef BiFunctor<double,TVertex,Track> BiFunctorVertexTrack;
-  
-// };
-
-
-
-
-
