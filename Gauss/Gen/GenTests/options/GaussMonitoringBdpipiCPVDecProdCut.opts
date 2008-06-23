@@ -1,4 +1,4 @@
-// $Id: GaussMonitoringBdpipiCPVDecProdCut.opts,v 1.1 2008-06-15 17:28:47 robbep Exp $ 
+// $Id: GaussMonitoringBdpipiCPVDecProdCut.opts,v 1.2 2008-06-23 18:16:13 robbep Exp $ 
 
 /** @file 
  * 
@@ -13,7 +13,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
 Generator.Members         = { "GenInit/GaussGen" };
 
 GaussGen.FirstEventNumber = 133 ;
-GaussGen.RunNumber        = 145 ;
+GaussGen.RunNumber        = 14521 ;
 EventClockSvc.FakeEventTime.StartTime   = 0;
 EventClockSvc.FakeEventTime.TimeStep    = 25*ns;
 
@@ -33,7 +33,6 @@ GenMonitor.Members += { "GeneratorAnalysis" } ;
 GeneratorAnalysis.NeutralParticleHistos = true ;
 
 GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
-PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 ApplicationMgr.HistogramPersistency = "ROOT" ;
 HistogramPersistencySvc.OutputFile = "GaussHistos_11102013.root";  // Monitoring histos
