@@ -6,6 +6,7 @@
 #include "HltData.h"
 #include "HltTypes.h"
 #include <vector>
+class IAlgorithm;
 
 class IHltDataSvc : virtual public INamedInterface {
 
@@ -22,9 +23,9 @@ public:
     //       get access to everything, the latter inheriting from the former...
     //@TODO: extend the query capabilities: who uses what as input, who produced which output..
     //@TODO: move the {register,retrieve}{,T}selection overhere...
-    virtual StatusCode addSelection(Hlt::Selection* sel) = 0;
+    virtual StatusCode addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool useTES=false) = 0;
     virtual bool hasSelection(const stringKey& id) const = 0;
-    virtual Hlt::Selection& selection(const stringKey& id) =0;
+    virtual Hlt::Selection& selection(const stringKey& id,IAlgorithm* parent) =0;
     virtual std::vector<stringKey> selectionKeys() = 0;
     virtual void clean() =0;
 
