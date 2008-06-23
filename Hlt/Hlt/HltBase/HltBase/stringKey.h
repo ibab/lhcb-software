@@ -1,7 +1,6 @@
 #ifndef STRINGKEY_H
 #define STRINGKEY_H 1
 #include <cassert>
-#include <boost/functional/hash.hpp>
 #include "GaudiKernel/Property.h"
 
 class stringKey {
@@ -15,7 +14,7 @@ public:
     bool operator==(const stringKey& rhs) const ;
     bool operator!=(const stringKey& rhs) const ;
     bool operator<(const stringKey& rhs) const ;
-    std::ostream& print(std::ostream & o ) const ;
+    std::ostream& print(std::ostream& o ) const ;
 
     StringProperty& property() { return m_str; }
     void updateHandler(Property& prop) { 

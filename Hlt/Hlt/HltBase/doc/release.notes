@@ -8,6 +8,7 @@
  - remove commented out code in HltUtils.h
  - remove unneeded lines in ITrackL0CaloMatchTool.h
  - make all internal variables in ParabolaHypothesis double instead of float
+ - remove unneeded includes in stringKey
 
 ! 2008-06-20 - Gerhard Raven
  - add IHltDataSvc 
