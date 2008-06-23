@@ -29,6 +29,9 @@
   <class name    = "Rich::DAQ::HPDInfo"                  />
   <class name    = "Rich::DAQ::HPDInfo::Header"          />
   <class name    = "Rich::DAQ::HPDInfo::Footer"          />
+  <class name    = "Rich::DAQ::L0Header"                 />
+  <class name    = "Rich::DAQ::L0Header::Word0"          />
+  <class name    = "Rich::DAQ::L0Header::Word1"          />
   <class name    = "Rich::DAQ::HPDMap"                   />
   <class name    = "Rich::DAQ::IngressInfo"              />
   <class name    = "Rich::DAQ::IngressMap"               />

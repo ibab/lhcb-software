@@ -10,6 +10,7 @@
 #include "RichKernel/RichObjPtn.h"
 #include "RichKernel/RichSmartIDCnv.h"
 #include "RichKernel/RichHPDIdentifier.h"
+#include "RichKernel/RichDAQL0Header.h"
 
 // Interfaces
 #include "RichKernel/IRichDetParameters.h"
