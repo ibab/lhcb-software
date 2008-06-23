@@ -69,3 +69,6 @@ set CORAL_AUTH_PATH     $(HOME)/private
 #path_prepend LD_LIBRARY_PATH "$(DIM_home)/bin" WIN32 ""
 #path_remove  PATH "/DIM/" WIN32 "\DIM\"
 #path_prepend PATH "$(DIM_home)\bin"
+
+action startServer 'condDBServer.exe $(CONDDBSERVERROOT)/cmt/partitions.txt'
+macro_remove cmt_actions_constituents 'startServer'
