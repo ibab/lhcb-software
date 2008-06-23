@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.h,v 1.3 2008-01-22 10:04:25 hernando Exp $
+// $Id: HltTrackUpgrade.h,v 1.4 2008-06-23 07:31:57 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -32,21 +32,14 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
   
   void saveConfiguration();
 
-protected:
 
   std::string m_recoName;
-
   HltTrackUpgradeTool* m_tool;
 
-protected:
-
-  // already in HltAlgorithm 
-  // Hlt::TrackSelection* m_inputTracks;
-  // Hlt::TrackSelection* m_outputTracks;
 
 };
 #endif // HLTTRACKING_H

@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-06-23 - Gerhard Raven
+  - remove commented out code in HltTrackUpgrade
+
 ! 2008-06-20 - Jose A. Hernando
   - extending HltTrackUpgrade tool to cope with new functionality to be use in Panoramix
 
