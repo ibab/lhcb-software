@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.10 2008-06-06 12:53:01 hernando Exp $
+// $Id: HltBase.icpp,v 1.11 2008-06-23 11:22:20 graven Exp $
 // Include files
 
 
@@ -16,20 +16,12 @@
 //-----------------------------------------------------------------------------
 
 template <class EBASE>
-void HltBase<EBASE>::create() {
+void HltBase<EBASE>::hltBaseConstructor() {
   
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
-  EBASE::declareProperty("HltDataLocation", 
-                         m_hltDataLocation = 
-                         LHCb::HltSummaryLocation::Default+"/Data");
-  EBASE::declareProperty("HltConfigurationLocation", 
-                         m_hltConfigurationLocation = 
-                         LHCb::HltSummaryLocation::Default+"/Configuration");
 
+  m_dataSvc = 0;
   m_TES = false;
-  m_hltSvc  = 0;
-  m_hltData = 0;
-  m_hltConf = 0;
 }
 
 template <class EBASE>
@@ -47,13 +39,12 @@ StatusCode HltBase<EBASE>::initialize() {
   initializeHistosFromDescriptor();
 
   return StatusCode::SUCCESS;
-
 }
 
 template <class EBASE>
 StatusCode HltBase<EBASE>::finalize() {  
   if (m_hltANNSvc) { m_hltANNSvc->release(); m_hltANNSvc=0;}
-  if (m_hltSvc)    { m_hltSvc->release(); m_hltSvc=0;}
+  if (m_dataSvc)   { m_dataSvc->release(); m_dataSvc=0;}
   EBASE::debug() << "==> Finalize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::finalize"<< endreq;
   return EBASE::finalize();
 }  
@@ -138,7 +129,7 @@ void HltBase<EBASE>::fillHisto( Hlt::Histo& histo,
   if (EBASE::produceHistos()) 
       for (std::vector<double>::const_iterator it = x.begin(); 
                                                it != x.end(); ++it)
-    EBASE::fill( &histo, (*it), weight);
+         EBASE::fill( &histo, *it, weight);
 }
 
 //FIXME: don't use member data of Hlt::Counter directly...
@@ -165,13 +156,14 @@ void HltBase<EBASE>::increaseCounter( Hlt::Counter& count,
 }
 
 template <class EBASE>
-IDataProviderSvc& HltBase<EBASE>::hltSvc() const {
-  if (m_hltSvc == 0) {
-  StatusCode sc = EBASE::serviceLocator()->service("HltSvc", m_hltSvc);
-    EBASE::Assert( sc.isSuccess() && m_hltSvc != 0, " hltSvc() no HltDataSvc");
+IHltDataSvc& HltBase<EBASE>::dataSvc() const {
+  if (m_dataSvc == 0) {
+    StatusCode sc = EBASE::serviceLocator()->service("HltDataSvc", m_dataSvc);
+    EBASE::Assert( sc.isSuccess() && m_dataSvc != 0, " dataSvc() no HltDataSvc");
   }
-  return *m_hltSvc;
+  return *m_dataSvc;
 }
+
 
 template <class EBASE>
 IANNSvc& HltBase<EBASE>::annSvc() const {
@@ -180,32 +172,6 @@ IANNSvc& HltBase<EBASE>::annSvc() const {
     EBASE::Assert( sc.isSuccess() && m_hltANNSvc != 0, " no HltANNSvc??");
   }
   return *m_hltANNSvc;
-}
-
-template <class EBASE>
-Hlt::Data& HltBase<EBASE>::hltData() 
-{
-  if (m_hltData != 0) return *m_hltData;
-
-  SmartDataPtr<Hlt::Data> obj(m_TES ? EBASE::evtSvc() 
-                                    : &hltSvc() ,
-                              "/Event/"+m_hltDataLocation);
-  m_hltData = obj;
-  EBASE::Assert( m_hltData != 0, " hltData() no Hlt::Data");
-  return *m_hltData;
-}
-
-
-
-template <class EBASE>
-Hlt::Configuration& HltBase<EBASE>::hltConf() 
-{
-  if (m_hltConf != 0) return *m_hltConf;
-  std::string loca = "/Event/"+m_hltConfigurationLocation;
-  SmartDataPtr<Hlt::Configuration> obj(&hltSvc(),loca); 
-  m_hltConf = obj;
-  EBASE::Assert( m_hltConf != 0, " hltConf() no Hlt::Configuration");
-  return *m_hltConf;
 }
 
 
@@ -238,7 +204,7 @@ void HltBase<EBASE>::printInfo(const std::string& title,
   EBASE::info() << title << " track  " << track.key() 
                 << " slopes " << track.slopes()  
                 << " pt " << track.pt() 
-                << " qop " << track.firstState().qOverP()
+                << " q/p " << track.firstState().qOverP()
                 << " ids " << track.lhcbIDs().size() 
                 << " states " << track.states().size()
                 << endreq;
@@ -258,9 +224,9 @@ template<class EBASE>
 void HltBase<EBASE>::printInfo(const std::string& title,
                                const GaudiUtils::VectorMap<int,double>& vmap) {
   EBASE::info() << title;
-  for (GaudiUtils::VectorMap<int,double>::const_iterator it = vmap.begin(); 
-       it != vmap.end(); it++)
-    EBASE::info() << hltInfoName(it->first) << " = " 
-                  << it->second << "; \t";
+  for (GaudiUtils::VectorMap<int,double>::const_iterator i = vmap.begin(); 
+       i != vmap.end(); ++i)
+    EBASE::info() << hltInfoName(i->first) << " = " 
+                  << i->second << "; \t";
   EBASE::info() << endreq;
 }

@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.4 2008-06-02 19:57:57 graven Exp $
+// $Id: HltSelectionToTES.cpp,v 1.5 2008-06-23 11:22:58 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -39,9 +39,9 @@ HltSelectionToTES::HltSelectionToTES( const std::string& name,
 {
   declareProperty("CopyAll",m_copyAll = false);
   declareProperty("Copy", m_AselectionNames);
-  declareProperty("m_trackLocation", 
+  declareProperty("OutputTrackLocationPrefix", 
                   m_trackLocation = "Hlt/Selection/Track/");
-  declareProperty("m_vertexLocation", 
+  declareProperty("OutputVertexLocationPrefix", 
                   m_vertexLocation = "Hlt/Selection/Vertex/");
 
 }
@@ -60,9 +60,9 @@ StatusCode HltSelectionToTES::initialize() {
   
   m_selectionIDs.clear();
   if (m_copyAll) {
-    const std::vector<Hlt::Selection*>& selections = hltData().selections();      
-    for (std::vector<Hlt::Selection*>::const_iterator i  = selections.begin(); 
-         i != selections.end(); ++i) m_selectionIDs.push_back((*i)->id());
+    std::vector<stringKey> selections = dataSvc().selectionKeys();      
+    for (std::vector<stringKey>::const_iterator i  = selections.begin(); 
+         i != selections.end(); ++i) m_selectionIDs.push_back(i->str());
   } else {
     std::vector<std::string> cromos = m_AselectionNames.value();
     for (std::vector<std::string>::iterator it = cromos.begin();
@@ -78,7 +78,7 @@ StatusCode HltSelectionToTES::initialize() {
   
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    info() << " copy selection " << it->str() << " into TES "  << endreq;
+    info() << " will copy selection " << it->str() << " into TES "  << endreq;
   }
   
   return sc;
@@ -94,19 +94,19 @@ StatusCode HltSelectionToTES::execute() {
   
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    if (!hltData().hasSelection(*it)) {
+    if (!dataSvc().hasSelection(*it)) {
       warning() << " no hlt selection to put in TES " << it->str() << endreq;
       continue;
     } 
-    Hlt::Selection& sel = hltData().selection(*it);
+    Hlt::Selection& sel = dataSvc().selection(*it,this);
     if (sel.classID() == LHCb::Track::classID()) {
       LHCb::Tracks* tracks = 
-          sel.decision() ? copy<LHCb::Tracks>(hltData().selection(*it))
+          sel.decision() ? copy<LHCb::Tracks>(dataSvc().selection(*it,this))
                          : new LHCb::Tracks();
       put(tracks,m_trackLocation+it->str());
     } else if (sel.classID() == LHCb::RecVertex::classID()) {
       LHCb::RecVertices* vertices = 
-          sel.decision() ? copy<LHCb::RecVertices>(hltData().selection(*it))
+          sel.decision() ? copy<LHCb::RecVertices>(dataSvc().selection(*it,this))
                          : new LHCb::RecVertices();
       put(vertices,m_vertexLocation+it->str());
     }
@@ -115,12 +115,3 @@ StatusCode HltSelectionToTES::execute() {
   return sc;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSelectionToTES::finalize() {
-  debug() << "==> Finalize" << endmsg;
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================

@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.h,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSelectionToTES.h,v 1.3 2008-06-23 11:22:58 graven Exp $
 #ifndef HLTCOMMON_HLTSELECTIONTOTES_H 
 #define HLTCOMMON_HLTSELECTIONTOTES_H 1
 
@@ -22,7 +22,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

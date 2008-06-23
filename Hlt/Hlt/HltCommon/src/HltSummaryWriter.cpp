@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.10 2008-05-21 12:42:16 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.11 2008-06-23 11:22:58 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -44,9 +44,7 @@ StatusCode HltSummaryWriter::initialize() {
 
   m_selectionIDs.clear();
   if (m_saveAll) {
-    const std::vector<Hlt::Selection*>& selections = hltData().selections();      
-    for (std::vector<Hlt::Selection*>::const_iterator i  = selections.begin(); 
-         i!= selections.end(); ++i)  m_selectionIDs.push_back((*i)->id());
+    m_selectionIDs = dataSvc().selectionKeys();      
   } else {
     std::vector<std::string> cromos = m_AselectionNames.value();
     for (std::vector<std::string>::iterator it = cromos.begin();
@@ -81,8 +79,8 @@ StatusCode HltSummaryWriter::execute() {
 
   for (std::vector<stringKey>::iterator it = m_selectionIDs.begin();
        it != m_selectionIDs.end(); ++it) {
-    if (hltData().hasSelection(*it)) {
-      if (hltData().selection(*it).decision()) writeSelection(*summary,*it);
+    if (dataSvc().hasSelection(*it)) {
+      if (dataSvc().selection(*it,this).decision()) writeSelection(*summary,*it);
     } else {
       std::string comment = " No selection in HLT " + it->str();
       Warning(comment,1);
@@ -95,7 +93,7 @@ StatusCode HltSummaryWriter::execute() {
 
 void HltSummaryWriter::writeSelection(HltSummary& summary, const stringKey& id) {
 
-  Hlt::Selection& sel = hltData().selection(id);
+  Hlt::Selection& sel = dataSvc().selection(id,this);
   HltSelectionSummary& sum   = summary.selectionSummary(id.str());
   if (sel.classID() == LHCb::Track::classID()) {
     Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);

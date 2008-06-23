@@ -6,6 +6,7 @@
 
 !2008-06-23 - Gerhard Raven
   - simplify & extend HltDataSvc
+  - use HltDataSvc instead of HltData
 
 !2008-06-20 - Gerhard Raven
   - add implementation of IHltDataSvc: HltDataSvc

@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.10 2008-06-17 19:09:10 pkoppenb Exp $
+// $Id: HltBase.h,v 1.11 2008-06-23 11:22:20 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -6,6 +6,7 @@
 
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Kernel/IANNSvc.h"
+#include "HltBase/IHltDataSvc.h"
 #include "HltBase/HltTypes.h"
 
 /** @class HltBase
@@ -26,6 +27,8 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
+
+
 
 namespace Hlt {
   class  Counter {
@@ -59,19 +62,8 @@ public:
   // initialize
   virtual StatusCode initialize();
 
-  // execute
-//  virtual StatusCode execute() {return StatusCode::SUCCESS;}
-  
   // finalize
   virtual StatusCode finalize();
-
-private:  
-  // delegate constructor
-  virtual void create();
-
-private: 
-  // Property to rebook histogram from options
-  SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
 protected:
 
@@ -90,8 +82,6 @@ protected:
   void fillHisto( Hlt::Histo& histo, const std::vector<double>& x, 
                   double weight );
 
-protected:
-
   // initialize counter
   void initializeCounter( Hlt::Counter& counter, 
                           const std::string& name );
@@ -109,8 +99,6 @@ protected:
   // print average number of candidates
   void infoCandidates( int nTotCandidates, int  nTotEvts, 
                        const std::string& comment );
-
-protected:
 
   // initialize the Msg service (set internal bool variables m_debug, etc)
   void initializeMsg();
@@ -134,18 +122,6 @@ protected:
   void printInfo(const std::string& title,
                  const GaudiUtils::VectorMap<int,double>& info);
 
-protected:
-
-  // bool about the msg level
-  bool m_verbose;
-  bool m_debug;
-  bool m_info;
-  bool m_warning;
-  bool m_error;
-  bool m_fatal;
-
-protected:
-  
   // register a value with a root/key into the hlt configuration
   template <class T>
   void confregister(const std::string& key, const T& value, 
@@ -158,23 +134,17 @@ protected:
       BASE::debug() << " HLT [" << mykey << "] = " << value << endreq;    
   }
 
-protected:
-
-  // returns the hlt service
-  IDataProviderSvc& hltSvc() const;
+  IHltDataSvc& dataSvc() const;
   IANNSvc&          annSvc() const;
 
   // returns true if we use the TES to store the HltSelection
   bool useTES() {return m_TES;}
 
   // reset the hltData pointer (for the useTES() mode) 
-  void resetHltData() {m_hltData = 0;}
-
-  // returns the Hlt::Data (container of all Hlt::Selections)
-  Hlt::Data& hltData();
+  void resetHltData() { dataSvc().resetData(); }
 
   // returns the hlt configuration
-  Hlt::Configuration& hltConf();
+  Hlt::Configuration& hltConf() { return dataSvc().config(); }
   
   // returns true if this selection name is valid
   bool validHltSelectionName(const stringKey& name);
@@ -182,39 +152,36 @@ protected:
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);
 
+private:
   // returns the ID of the extraInfo by name
   std::string hltInfoName(int id);
 
-  // return the location of the data
-  const std::string& hltDataLocation() 
-  {return m_hltDataLocation;}
+protected:
 
-  // return the location of the data
-  const std::string& hltConfigurationLocation() 
-  {return m_hltConfigurationLocation;}
+  // bool about the msg level
+  bool m_verbose;
+  bool m_debug;
+  bool m_info;
+  bool m_warning;
+  bool m_error;
+  bool m_fatal;
+
+private:  
+  // delegate constructor
+  virtual void hltBaseConstructor();
 
 private:
+  // Property to rebook histogram from options
+  SimpleProperty< std::map<std::string, Gaudi::Histo1DDef> > m_histoDescriptor;
 
   // hlt data provided service
-  mutable IDataProviderSvc* m_hltSvc;
+  mutable IHltDataSvc* m_dataSvc;
 
   // assigned names and numbers service...
   mutable IANNSvc *m_hltANNSvc;
 
   // if selection selections will be stored/retrieved from TES
   bool m_TES;
-
-  // location of the data summary
-  std::string m_hltDataLocation;
-
-  // pointer to the hlt data
-  Hlt::Data* m_hltData;
-
-  // location of the data summary
-  std::string m_hltConfigurationLocation;
-  
-  // hlt configuration
-  Hlt::Configuration* m_hltConf;
 
 };
 #endif // HLTBASE_HLTBASE_H

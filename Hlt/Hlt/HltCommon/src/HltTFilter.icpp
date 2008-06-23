@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.8 2008-06-02 19:57:57 graven Exp $
+// $Id: HltTFilter.icpp,v 1.9 2008-06-23 11:22:58 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -72,7 +72,7 @@ StatusCode HltTFilter<T>::initialize() {
        it != cromos.end(); it++) addTFilterData(*it);
 
   // output
-  if (!m_outputSelectionName.empty()) {
+  if (!outputSelectionName().empty()) {
     m_tseloutput = &(registerTSelection<T>());
     m_toutput = m_tseloutput;
   }
