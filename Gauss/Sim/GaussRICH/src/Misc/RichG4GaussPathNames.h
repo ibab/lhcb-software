@@ -129,10 +129,8 @@ static const G4String Rich2CF4MatName=
 static const G4String Rich1PhysVolGeomName ="/dd/Geometry/LHCb/BeforeMagnetRegion/lvBeforeMagnetRegion#pvRich1Master";
 static const G4String Rich2PhysVolGeomName ="/dd/Geometry/LHCb/AfterMagnetRegion/lvAfterMagnetRegion#pvRich2Master";
 
-static const G4String Rich1DeStructurePathName = DeRichLocation::Rich1 ;
-static const G4String Rich2DeStructurePathName = DeRichLocation::Rich2 ;
-//static const G4String Rich1PhysVolDeName = DeRichLocation::Rich1 ;
-//static const G4String Rich2PhysVolDeName = DeRichLocation::Rich2 ;
+static const G4String Rich1DeStructurePathName = DeRichLocations::Rich1 ;
+static const G4String Rich2DeStructurePathName = DeRichLocations::Rich2 ;
 
 static const G4String RichHpdQwDeSubPathName="/Rich1FirstHpdQW";
 static const G4String RichHpdPaCathDeSubPathname="/Rich1FirstHpdPhCathode";

@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.33 2008-06-02 14:21:56 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.34 2008-06-24 15:56:35 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -49,8 +49,8 @@ StatusCode GetMCRichHitsAlg::initialize()
   if ( sc.isFailure() ) return sc;
 
   // Get RichDet objects
-  m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
-  m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
+  m_richDets[Rich::Rich1] = getDet<DeRich>( DeRichLocations::Rich1 );
+  m_richDets[Rich::Rich2] = getDet<DeRich>( DeRichLocations::Rich2 );
 
   return sc;
 }

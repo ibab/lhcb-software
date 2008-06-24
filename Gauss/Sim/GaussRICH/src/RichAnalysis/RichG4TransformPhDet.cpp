@@ -1,4 +1,4 @@
-// $Id: RichG4TransformPhDet.cpp,v 1.4 2008-05-30 13:43:23 gcorti Exp $
+// $Id: RichG4TransformPhDet.cpp,v 1.5 2008-06-24 15:56:35 jonrob Exp $
 // Include files 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -80,12 +80,12 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
  if(aRichDetNum == 0 ) {
 
     SmartDataPtr<DetectorElement> Rich1DE(detSvc,
-                                          DeRichLocation::Rich1);
+                                          DeRichLocations::Rich1);
 
     if( !Rich1DE ){
 
       RichG4TransformPhDetlog << MSG::ERROR
-                                 << "Can't retrieve " << DeRichLocation::Rich1
+                                 << "Can't retrieve " << DeRichLocations::Rich1
                                  << " for RichG4TransformPhDet"
                                  << endreq;
 
@@ -182,12 +182,12 @@ RichG4TransformPhDet::RichG4TransformPhDet(int aRichDetNum , int aSectorNum) {
      }else if( aRichDetNum == 1){
 
        SmartDataPtr<DetectorElement> Rich2DE(detSvc,
-                                          DeRichLocation::Rich2);
+                                          DeRichLocations::Rich2);
 
        if( !Rich2DE ){
 
          RichG4TransformPhDetlog << MSG::ERROR
-                                 << "Can't retrieve " << DeRichLocation::Rich2
+                                 << "Can't retrieve " << DeRichLocations::Rich2
                                  << " for RichG4TransformPhDet"
                                  << endreq;
 

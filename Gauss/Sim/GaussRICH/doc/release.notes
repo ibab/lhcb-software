@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2008-06-24 - Chris Jones
+ - Adapt to change in RichDet detector element locations
+
 !========================= GaussRICH v8r2 2008-06-09 =========================
 ! 2008-06-02 - Chris Jones
  - Improve a little the summary printout from GetMCRichHitsAlg
