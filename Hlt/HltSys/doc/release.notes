@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-06-24 - Jose A. Hernando
+ - use Hlt1/Track/Velo and Hlt1/Track/Forward for the Hlt2
+
 ! 2008-06-23 - Gerhard Raven
  - Remove HltInit, which is obsoleted by the switch from HltData to IHltDataSvc
 

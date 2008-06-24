@@ -19,7 +19,7 @@ SeqHlt2Charged.IgnoreFilterPassed = false ;
  */
 SeqHlt2Charged.Members += {
   "TrackEventCloneKiller/HltFullRecoTEMPORARYCloneKiller"} ;
-HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt/Track/Forward_Alleys" };
+HltFullRecoTEMPORARYCloneKiller.TracksInContainers = { "Hlt1/Track/Forward" };
 HltFullRecoTEMPORARYCloneKiller.TracksOutContainer = "Hlt/Track/ForwardCLEANED" ;
 HltFullRecoTEMPORARYCloneKiller.SkipSameContainerTracks = false ;
 HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;

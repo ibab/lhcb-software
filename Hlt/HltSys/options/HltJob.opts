@@ -20,6 +20,8 @@
 
 #include "$HLTSYSROOT/options/L0.opts"
 #include "$HLTSYSROOT/options/Hlt1.opts"
+ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoSequence"};
+// #include "$HLTSYSROOT/options/Hlt2.opts"
 
 
 //

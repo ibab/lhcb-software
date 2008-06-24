@@ -76,7 +76,7 @@ HltRecoVeloSeq.Members += {
   "HltTrackUpgrade/HltRecoVelo",
   "PatPV3D/HltPatPV3D"
 };
-HltPatPV3D.PVOfflineTool.InputTracks = {"Hlt/Track/Velo_Alleys"};
+HltPatPV3D.PVOfflineTool.InputTracks = {"Hlt1/Track/Velo"};
 HltPatPV3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter";
 
 
