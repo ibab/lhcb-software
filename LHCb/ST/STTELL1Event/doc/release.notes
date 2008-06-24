@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.7 2008-06-24 06:27:01 mneedham Exp $
+! $Id: release.notes,v 1.8 2008-06-24 14:16:21 mneedham Exp $
 ! Package     : STOnline
 ! Responsible : Mathias Knecht
+
+! 2008-06-24 M Needham
+ - Add missing .cpp
 
 ! 2008-06-26 M. Needham
   - Add print functions to error classes
