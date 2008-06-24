@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.15 2008-03-25 16:48:55 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.16 2008-06-24 11:17:19 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -37,7 +37,7 @@ CherenkovAngleMonitor::CherenkovAngleMonitor( const std::string& name,
   // min beta
   declareProperty( "MinBeta",     m_minBeta   = 0.999 );
   // number of bins
-  declareProperty( "NumberBins1D",  m_nBins1D = 200 );
+  declareProperty( "NumberBins1D",  m_nBins1D = 100 );
   declareProperty( "NumberBins2D",  m_nBins2D = 100 );
   // # CK phi regions
   declareProperty( "NumPhiRegions", m_nPhiRegions = 4 );
@@ -174,6 +174,8 @@ StatusCode CherenkovAngleMonitor::execute()
         {
 
           // CK angles for true photons
+          plot1D( thetaRec, hid(rad,"ckThetaTrue"), "Reconstructed Cherenkov theta : true",
+                  minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
           plot1D( thetaRec, hid(rad,mcType,"ckThetaTrue"), "Reconstructed Cherenkov theta : true",
                   minCkTheta[rad], maxCkTheta[rad], m_nBins1D );
           plot1D( thetaExpTrue, hid(rad,"ckThetaExpTrue"), "Expected Cherenkov theta : true",
