@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.68 2008-06-20 10:31:07 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.69 2008-06-24 16:38:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -48,14 +48,14 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
     m_maxHitsEvent     = 300;
     m_maxHitsHPD       = 30;
     m_maxPixelSep      = 260;
-    //m_TargetIterations = 1000;
-    //m_TargetHits       = 250;
-    //m_AbsMaxIts        = 20000;
-    //m_AbsMinIts        = 400;
-    m_TargetIterations = 2000;
-    m_TargetHits       = 500;
+    m_TargetIterations = 1000;
+    m_TargetHits       = 250;
     m_AbsMaxIts        = 20000;
-    m_AbsMinIts        = 800;
+    m_AbsMinIts        = 400;
+    //m_TargetIterations = 2000;
+    //m_TargetHits       = 500;
+    //m_AbsMaxIts        = 20000;
+    //m_AbsMinIts        = 800;
   }
   else
   {
