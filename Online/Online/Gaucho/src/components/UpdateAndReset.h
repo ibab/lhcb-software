@@ -19,31 +19,38 @@ public:
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-  int getRunNumber();
+  //int getRunNumber();
   
   void timerHandler();
   
-  void changeCycle(bool isRunNumberChanged, int currentRunNumber);
+  //void changeCycle(bool isRunNumberChanged, int currentRunNumber);
+  //void getCycleNumber(std::string deltaTCycle);
+
+  int retrieveRunNumber();
+  int retrieveCycleNumber();
+  
+  int cycleNumber(longlong currentTime);
+  
+  longlong timeNextUpdate(longlong currentTime);
+  void updateData(bool isRunNumberChanged);
   
 private:
   
-  int m_generatedRunNumber;
-  int m_countExecutes;
-
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
-  
-  // MonRate information
-  int    m_runNumber;       // Maybe we have to use double
-  int    m_cycleNumber;
-  longlong m_timeFirstEvInRun;
-  
-  int    m_runNumberDelayed;       // Maybe we have to use double
-  int    m_cycleNumberDelayed;
-  longlong m_timeFirstEvInRunDelayed;
-  longlong m_timeLastEvInCycleDelayed; // Maybe we have to use double, have to check serialization
   
   int m_deltaTCycle;
   
+  // MonRate information
+  int m_runNumber;  
+  int m_cycleNumber;
+  longlong m_timeStart;
+  longlong m_timeFirstEvInRun;
+  longlong m_timeLastEvInCycle;
+  longlong m_timeTrueLastEvInCycle;
+  
+  // For Testing RunNumber generator
+  int m_generatedRunNumber;
+  int m_countExecutes;
   double m_runTestElapsedTime;
   GauchoTimer m_runTestTimer;
   double m_deltaTRunTest;

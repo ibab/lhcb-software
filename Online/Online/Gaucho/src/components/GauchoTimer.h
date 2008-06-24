@@ -47,6 +47,14 @@ public:
   
   static longlong currentTime() {return System::currentTime( System::milliSec );}
   static longlong cpuTime() {return System::cpuTime( System::milliSec );}
+  
+  
+  static longlong cycleNumber(int deltaTCycle) {
+    longlong time = GauchoTimer::currentTime();
+    longlong cycleNumber  = time/(deltaTCycle*1000);
+    return cycleNumber;
+  }
+  
 
 };
 

@@ -124,6 +124,8 @@ private:
 
   // MonObjetc to convert conters in rates  
   MonRate  *m_monRate;
+  bool m_monRateDeclared;
+  
 public:    
    void declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle);  
 };

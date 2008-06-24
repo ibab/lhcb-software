@@ -86,9 +86,8 @@ StatusCode MonitorSvc::initialize() {
   msg << MSG::DEBUG << "Declaring MonRate Information" << endreq;
   
   m_monRate = new MonRate(msgSvc(), "MonitorSvc", 0);
+  m_monRateDeclared = false;
   
-  declareInfoMonObject("monRate", m_monRate, "MonRate Description", this);
-   
   return StatusCode::SUCCESS;
 }
 
@@ -140,8 +139,12 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
 void MonitorSvc::declareInfo(const std::string& name, const double& var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  if ("COUNTER_TO_RATE" == desc){
-    m_monRate->addCounter(name, var);
+  if (name.find("COUNTER_TO_RATE") != std::string::npos) {
+    std::string newName = name;
+    newName.erase(0, 16);
+    newName.erase(newName.size() - 1, 1);
+    if (!m_monRateDeclared) declareInfoMonObject("monRate", m_monRate, "MonRate Description", this);
+    m_monRate->addCounter(newName, desc, var);
     return;
   } 
   
