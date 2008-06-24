@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.38 2008-05-14 09:57:42 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.39 2008-06-24 11:19:57 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -115,7 +115,7 @@ StatusCode RecoQC::execute()
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // segment momentum
-    const double pTot = sqrt(segment->trackSegment().bestMomentum().Mag2());
+    const double pTot = std::sqrt(segment->trackSegment().bestMomentum().Mag2());
 
     double thetaExpTrue(0.0), resExpTrue(0.0);
     Rich::ParticleIDType mcType = Rich::Pion; // If MC not available, assume pion
