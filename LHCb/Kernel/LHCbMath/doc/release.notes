@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-06-24 Juan PALACIOS
+ - cmt/requirements
+  . Remove LHCbMath from PYTHONPATH and add apply_pattern install_python_modules
+! 2008-06-24 Juan PALACIOS
  - add dict/LHCbMath.h, LHCbMath.xml
   . Python dictionaries for some Line types and GeomFun free functions.
  - add python/LHCbMath.py
