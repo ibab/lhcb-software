@@ -325,10 +325,10 @@ class DataManagementServices:
 
   # ===============================================================
   def run(self):
-    import xmlrpclib
+    #import xmlrpclib
     self.server.welcome()
-    gaudiweb.log('===     running with SLOW XML parser (Expat error)')
-    xmlrpclib.ExpatParser = None
+    #gaudiweb.log('===     running with SLOW XML parser (Expat error)')
+    #xmlrpclib.ExpatParser = None
     self.server.serve_forever()
     sys.exit(0)
 

@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.5 2008-03-04 15:51:57 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.6 2008-06-24 15:13:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,13 +11,15 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.5 2008-03-04 15:51:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.6 2008-06-24 15:13:19 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
 
 // Framework include files
 #include "RTL/Lock.h"
+#include "CPP/IocSensor.h"
+
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/ROMonDisplay.h"
@@ -31,6 +33,12 @@ char* ROMonDisplay::Descriptor::reserve(size_t siz) {
     pointer = (char*)::malloc(length=siz);
   }
   return pointer;
+}
+
+/// Initializing constructor
+ROMonDisplay::ROMonDisplay(int width, int height)
+: ScrDisplay(width,height), m_svcID(0), m_delay(1000), m_lock(0)
+{
 }
 
 /// Standard constructor
@@ -56,14 +64,18 @@ void ROMonDisplay::initialize()   {
 
 /// Finalize data access
 void ROMonDisplay::finalize()   {
-  if ( m_svcID != 0 ) {
-    ::dic_release_service(m_svcID);
-    m_svcID = 0;
+  try {
+    if ( m_svcID != 0 ) {
+      ::dic_release_service(m_svcID);
+      m_svcID = 0;
+    }
+    if ( m_lock ) {
+      ::lib_rtl_cancel_lock(m_lock);
+      ::lib_rtl_delete_lock(m_lock);
+      m_lock = 0;
+    }
   }
-  if ( m_lock ) {
-    ::lib_rtl_cancel_lock(m_lock);
-    ::lib_rtl_delete_lock(m_lock);
-    m_lock = 0;
+  catch(...) {
   }
 }
 
@@ -97,8 +109,23 @@ void ROMonDisplay::updateDisplay(const Node& /* ns */)   {
 /// Run the interrupt loop
 void ROMonDisplay::run()   {
   while(1) {
-    update();
+    IocSensor::instance().send(this,CMD_UPDATEDISPLAY,this);
     ::lib_rtl_sleep(m_delay);
+  }
+}
+
+/// Interactor overload: Display callback handler
+void ROMonDisplay::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case TimeEvent:
+    if ( ev.timer_data == (void*)CMD_UPDATEDISPLAY ) 
+      update();
+    break;
+  case IocEvent:
+    if ( ev.type == CMD_UPDATEDISPLAY ) 
+      update();
+  default:
+    break;
   }
 }
 

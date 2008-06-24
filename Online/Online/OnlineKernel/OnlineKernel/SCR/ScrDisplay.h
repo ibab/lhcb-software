@@ -29,20 +29,31 @@ class ScrDisplay : public MonitorDisplay     {
   Area             m_area;
   void print_char(int x, int y, int attr, int val);
  public:
+  /// Set global pasteborard area
+  static void setPasteboard(SCR::Pasteboard* pasteboard);
+  /// Set global border types
+  static void setBorder(int border);
   /// Access to SCR Pasteboard
   SCR::Pasteboard* pasteboard() const;
-  SCR::Display* display() const       { return m_display;                    }
+  /// Access to SCR display structure
+  SCR::Display* display() const               { return m_display;                    }
+  /// Display Area
   const Area& area() const                    { return m_area;                       }
   /// Access to the display width in fixed size characters
   virtual size_t width() const                { return m_area.width;                 }
   /// Access to the display height in fixed size characters
   virtual size_t height() const               { return m_area.height;                }
+  /// Access to next line pointer
+  size_t nextLine()                           { return ++m_currLine;                 }
+  /// Access in write mode to display position
+  Position& position()                        { return m_position;                   }
 
  public:
   /// Setup display window
   virtual void setup_window();
   /// Default Constructor with display sizes
   virtual void setup_window(const Position& pos, const Area& a, const std::string& title="");
+  /// Create subdisplay
   MonitorDisplay* createSubDisplay(const Position& pos, const Area& a, const std::string& title="");
   /// Reset display window
   virtual void reset_window();
@@ -68,6 +79,6 @@ class ScrDisplay : public MonitorDisplay     {
   /// Default Constructor with display sizes
   ScrDisplay(int width, int height);
   /// Default destructor
-  virtual ~ScrDisplay() {}
+  virtual ~ScrDisplay();
 };
 #endif // ONLINEKERNEL_SCR_SCRDISPLAY_H

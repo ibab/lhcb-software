@@ -779,8 +779,7 @@ int scrc_put_char_all (Display *disp, int offset, char c, uint_t attr, int row, 
 
 //---------------------------------------------------------------------------
 int scrc_put_char (Display *disp, char c, uint_t attr, int row, int col)   {
-  int h = disp->rows;
-  int w = disp->cols;
+  int h = disp->rows, w = disp->cols;
 
   if (row < 0 || row > h+1 || col < 0 || col > w+1) return 0;
 
@@ -803,11 +802,9 @@ int scrc_put_char (Display *disp, char c, uint_t attr, int row, int col)   {
 
 //---------------------------------------------------------------------------
 int scrc_get_char (Display *disp, int row, int col, char* c, uint_t* attr)  {
-  int h = disp->rows;
-  int w = disp->cols;
+  int h = disp->rows, w = disp->cols;
 
   if (row > h+1 || col > w+1) return 0;
-
   w += 2;
   int offset = row*w + col;
   *c = *(disp->map  + offset);

@@ -1,0 +1,57 @@
+<!--
+
+This help file has 4 section:
+farm:     to be displayed when only the small subfarm monitors are present.
+subfarm:  to be displayed when the big subfarm monitor is present.
+node:     to be displayed when the MBM monitor is present.
+common:   displayed always at the end of the specific help.
+
+the first line is always displayed as a title in bold
+-->
+
+<farm>
+Farm display
+
+The farm display shows all subfarms in the system. This are either all (startup flag -all) or 
+all subfarms of one partition.
+
+To see the subfarm content move with the cursor arrows to the specified subfarm and hit <ENTER> 
+(or <KPD-ENTER>). Then the subfarm display will open.
+
+The display of each subfarm shows in the upper line the basic summary of the event processing 
+buffers MEP,EVENT and SEND. The lower line displays the minimum numbers found.
+If, for one reason or another a node is stuck, these numbers will not change anymore and the 
+box should become red.
+</farm>
+
+<subfarm>
+Subfarm display
+
+The subfarm display shows all nodes and tasks executing in one subfarm.
+The top display shows the buffer status on all nodes.
+The middle display shows all known MOORE tasks and their event consumption.
+The three lower displays show the status of the event builder tasks, the producers 
+and the data senders to the storage cluster.
+You can move with the arrow keys of the keyboard to select a given node and invoke the
+buffer manager monitor if you type KPD-PERIOD (".")
+
+</subfarm>
+
+<node>
+MBM buffer dispay for a single node
+
+On a single node all processes and their event consumoption from the buffer managers are displayed.
+Nothing more to say. If you don't understand this display you are hopeless anyway. 
+
+</node>
+
+<common>
+
+
+-- To select a subfarm use the arrow keys
+-- To invoke/hide the help display type CTRL-H or h or H.
+-- To exit the application         type CTRL-E or E
+-- To show the subfarm menu        type ENTER or KPD-ENTER
+-- To show the MBM monitor         type KPD-PERIOD or .
+   (needs the sunfarm display be present)
+</common>

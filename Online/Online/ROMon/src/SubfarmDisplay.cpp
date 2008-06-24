@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.4 2008-06-05 18:40:00 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.5 2008-06-24 15:13:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.4 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.5 2008-06-24 15:13:19 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -22,6 +22,7 @@
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 #include "ROMon/SubfarmDisplay.h"
+#include "dic.hxx"
 
 using namespace ROMon;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
@@ -65,7 +66,19 @@ static void help() {
 }
 
 /// Standard constructor
+SubfarmDisplay::SubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv)
+: ROMonDisplay(width, height)
+{
+  m_position = Position(posx,posy);
+  init(argc, argv);
+}
+
+/// Standard constructor
 SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
+  init(argc, argv);
+}
+
+void SubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   int hdr_height, nodes_height, moores_height;
   cli.getopt("headerheight",  1, hdr_height    =   5);
@@ -77,16 +90,25 @@ SubfarmDisplay::SubfarmDisplay(int argc, char** argv)   {
   setup_window();
   int width    = m_area.width;
   int eb_width = width/3;
-  m_nodes    = createSubDisplay(Position(0,hdr_height),                   Area(width,nodes_height),"Node Information");
-  m_moores   = createSubDisplay(Position(0,m_nodes->bottom()-1),          Area(width,moores_height),"Moore Processes");
-  m_builders = createSubDisplay(Position(0,m_moores->bottom()-1),         Area(eb_width,m_area.height-m_moores->bottom()+1),"Event builders");
-  m_holders  = createSubDisplay(Position(eb_width,m_moores->bottom()-1),  Area(eb_width,m_area.height-m_moores->bottom()+1),"Event Producers");
-  m_senders  = createSubDisplay(Position(2*eb_width,m_moores->bottom()-1),Area(width-2*eb_width,m_area.height-m_moores->bottom()+1),"Event Senders");
+  int posx     = m_position.x-2;
+  int posy     = m_position.y-2;
+  m_nodes      = createSubDisplay(Position(posx,posy+hdr_height),              Area(width,nodes_height),"Node Information");
+  m_moores     = createSubDisplay(Position(posx,m_nodes->bottom()),          Area(width,moores_height),"Moore Processes");
+  m_builders   = createSubDisplay(Position(posx,m_moores->bottom()),         Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event builders");
+  m_holders    = createSubDisplay(Position(posx+eb_width,m_moores->bottom()),Area(eb_width,posy+m_area.height-m_moores->bottom()),"Event Producers");
+  m_senders    = createSubDisplay(Position(posx+2*eb_width,m_moores->bottom()),Area(width-2*eb_width,posy+m_area.height-m_moores->bottom()),"Event Senders");
   end_update();
 }
 
 /// Standard destructor
 SubfarmDisplay::~SubfarmDisplay()  {
+  begin_update();
+  delete m_nodes;
+  delete m_moores;
+  delete m_builders;
+  delete m_holders;
+  delete m_senders;
+  end_update();
 }
 
 /// Display the node information
@@ -264,6 +286,25 @@ void SubfarmDisplay::showHeader(const Nodeset& ns)   {
   draw_line_reverse("         HLT monitoring on %s   [%s]", ns.name, ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
+
+
+/// Number of nodes in the dataset
+size_t SubfarmDisplay::numNodes()  {
+  size_t n = 0;
+  const Nodeset* ns = data().data<const Nodeset>();
+  if ( ns ) {
+    ::dim_lock();
+    switch(ns->type)  {
+    case Nodeset::TYPE:
+      n = ns->nodes.size();
+    default:
+      break;
+    }
+    ::dim_unlock();
+  }
+  return n;
+}
+
 
 /// Update all displays
 void SubfarmDisplay::updateDisplay(const Nodeset& ns)   {

@@ -29,6 +29,8 @@ static int  Last_key_stroke = -1;
 static int (*User_ast) () = 0;
 static int (*User_mouse_handler)(int,int) = 0;
 static int (*User_configure_handler)(int,int) = 0;
+typedef void (*Key_Handler)(char);
+Key_Handler User_Basic_Key_Handler = 0;
 
 extern int scr_ignore_input;
 static const char* s_termType = ::getenv("TERM");
@@ -87,7 +89,7 @@ void scrc_setANSI()   {
 
 int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */);
 //----------------------------------------------------------------------------
-int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
+int scrc_rearm_keyboard (unsigned int /* fac */, void* par)   {
   if (Armed) return 0;
   Armed = 1;  
 #if _OSK
@@ -98,22 +100,28 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   _ss_ssig(0,Insignal);
 #else 
   typedef int (*_F)(void*);
-  IOPortManager(0).addEx(0, ::fileno(stdin), scrc_ast_keyboard, 0);
+  IOPortManager(0).addEx(0, ::fileno(stdin), scrc_ast_keyboard, par);
 #endif
   return WT_SUCCESS;
 }
 
 //----------------------------------------------------------------------------
-int scrc_ast_keyboard (void*)   {
+int scrc_ast_keyboard (void* par)   {
   if (scr_ignore_input == 0)  {
-    ::wtc_insert (WT_FACILITY_KEYBOARD);
+    ::wtc_insert (WT_FACILITY_KEYBOARD, par);
     if (User_ast) (* User_ast) ();
   }
   return WT_SUCCESS;
 }
 
 //----------------------------------------------------------------------------
-int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
+int scrc_set_user_key_handler(Key_Handler handler) {
+  User_Basic_Key_Handler = handler;
+  return 1;
+}
+
+//----------------------------------------------------------------------------
+int scrc_handler_keyboard (unsigned int fac, void* par)  {
   int status = 0;
   do  {
     int fd = ::fileno(stdin);
@@ -121,6 +129,7 @@ int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
     if ( status>0 )  {
       IOPortManager::getChar(fd, &Last_char);
       if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,fac,Last_char,Last_char);
+      if ( User_Basic_Key_Handler ) (*User_Basic_Key_Handler)(Last_char);
       if (Key_ptr >= KEY_BUF_SIZE) status = 0;
       else if (Last_char)      {
         Key_buffer[Key_ptr] = Last_char;
@@ -132,21 +141,21 @@ int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
           Key_buffer[Key_ptr] = 0;          
           if (Kbd->moving)          {
             if (::scrc_action_moving_display (Kbd, Last_key_stroke)) {
-              ::wtc_insert_head (WT_FACILITY_SCR);  
+              ::wtc_insert_head (WT_FACILITY_SCR, par);  
             }
             else
               Last_key_stroke = -1;
           }
           else if (Kbd->resizing)          {
             if (::scrc_action_resizing_display (Kbd, Last_key_stroke)) {
-              ::wtc_insert_head (WT_FACILITY_SCR);
+              ::wtc_insert_head (WT_FACILITY_SCR, par);
             }
             else
               Last_key_stroke = -1;
           }
           else {
             //printf("%08X\n",Last_key_stroke);
-            ::wtc_insert_head (WT_FACILITY_SCR);
+            ::wtc_insert_head (WT_FACILITY_SCR, par);
           }
         }
       }
@@ -169,8 +178,8 @@ int scrc_init_screen (Pasteboard *pb, int rows, int cols)   {
   if (!Kbd)  {
     Kbd = pb;
     ::wtc_init();
-    ::wtc_subscribe (WT_FACILITY_KEYBOARD, scrc_rearm_keyboard, scrc_handler_keyboard);
-    ::wtc_subscribe (WT_FACILITY_SCR, scrc_rearm, (wt_callback_t)0);
+    ::wtc_subscribe (WT_FACILITY_KEYBOARD, scrc_rearm_keyboard, scrc_handler_keyboard, pb);
+    ::wtc_subscribe (WT_FACILITY_SCR, scrc_rearm, (wt_callback_t)0, pb);
   }
   return 1;
 }
@@ -402,7 +411,7 @@ int scrc_fputs (Pasteboard *pb)   {
   return ::write(1,pb->bufout, ::strlen(pb->bufout));
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_get_console_dimensions(int* rows, int* cols)  {
 #ifdef __linux
   int fd = ::fileno(stdin);
@@ -433,11 +442,11 @@ int scrc_get_console_dimensions(int* rows, int* cols)  {
 //---------------------------------------------------------------------------
 int scrc_check_key_buffer (char *buffer)
 //---------------------------------------------------------------------------
-/* This function checks the buffer for a valid escape sequence or a normal   */
-/* key stroke.                                                               */
-/*  If a valid key sequence is found, the corresponding code is returned.    */
-/*  INVALID may be returned.                                                 */
-/*  (-1)    is returned if the escape sequence is incomplete.                */
+// This function checks the buffer for a valid escape sequence or a normal   
+// key stroke.                                                               
+//  If a valid key sequence is found, the corresponding code is returned.    
+//  INVALID may be returned.                                                 
+//  (-1)    is returned if the escape sequence is incomplete.                
 //---------------------------------------------------------------------------
 {
   int b;
@@ -452,279 +461,107 @@ int scrc_check_key_buffer (char *buffer)
   case 0x9b:
     buffer++;
     switch (*buffer)  {
-  case 'D': _RET(MOVE_LEFT,b,*buffer);
-  case 'B': _RET(MOVE_DOWN,b,*buffer);
-  case 'A': _RET(MOVE_UP,b,*buffer);
-  case 'C': _RET(MOVE_RIGHT,b,*buffer);
-  case '1':
-    buffer++;
-    switch (c = *buffer)  {
-  case '~' : _RET(KPD_FIND,b,*buffer);
-  case '7' :
-  case '8' :
-  case '9' :
-    buffer++;
-    switch (*buffer)  {
-  case '~' :
-    switch (c) {
-  case '7' : _RET(F6,b,*buffer);
-  case '8' : _RET(F7,b,*buffer);
-  case '9' : _RET(F8,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case '2':
-    buffer++;
-    switch (c = *buffer)  {
-  case '~' : _RET(KPD_INSERT,b,*buffer);
-  case '0' :
-  case '1' :
-  case '3' :
-  case '4' :
-  case '5' :
-  case '6' :
-  case '8' :
-  case '9' :
-    buffer++;
-    switch (*buffer) {
-  case '~' :
-    switch (c) {
-  case '0' : _RET(F9,b,*buffer);
-  case '1' : _RET(F10,b,*buffer);
-  case '3' : _RET(F11,b,*buffer);
-  case '4' : _RET(F12,b,*buffer);
-  case '5' : _RET(F13,b,*buffer);
-  case '6' : _RET(F14,b,*buffer);
-  case '8' : _RET(F15,b,*buffer);
-  case '9' : _RET(F16,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case '3':
-    buffer++;
-    switch (c = *buffer)  {
-  case '~': _RET(KPD_REMOVE,b,*buffer);
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-    buffer++;
-    switch (*buffer)  {
-  case '~':
-    switch (c) {
-  case '1': _RET(F17,b,*buffer);
-  case '2': _RET(F18,b,*buffer);
-  case '3': _RET(F19,b,*buffer);
-  case '4': _RET(F20,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case '4':
-    buffer++;
-    switch (c = *buffer) {
-  case '~' : _RET(KPD_SELECT,b,*buffer);
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case '5':
-    buffer++;
-    switch (c = *buffer) {
-  case '~' : _RET(KPD_PREV,b,*buffer);
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case '6':
-    buffer++;
-    switch (c = *buffer) {
-  case '~' : _RET(KPD_NEXT,b,*buffer);
-  case 0 : _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case 0:
-    _RET(UNKNOWN,b,*buffer);
-    break;
-    }
-    break;
-  case 0x8f :
-    buffer++;
-    switch (*buffer) {
-  case 'l': _RET(PAGE_DOWN,b,*buffer);
-  case 'm': _RET(PAGE_UP,b,*buffer);
-  case 'n': _RET(KPD_PERIOD,b,*buffer);
-  case 'p': _RET(KPD_0,b,*buffer);
-  case 'q': _RET(KPD_1,b,*buffer);
-  case 'r': _RET(KPD_2,b,*buffer);
-  case 's': _RET(KPD_3,b,*buffer);
-  case 't': _RET(KPD_4,b,*buffer);
-  case 'u': _RET(KPD_5,b,*buffer);
-  case 'v': _RET(KPD_6,b,*buffer);
-  case 'w': _RET(KPD_7,b,*buffer);
-  case 'x': _RET(KPD_8,b,*buffer);
-  case 'y': _RET(KPD_9,b,*buffer);
-  case 'M': _RET(KPD_ENTER,b,*buffer);
-  case 'P': _RET(KPD_PF1,b,*buffer);
-  case 'Q': _RET(KPD_PF2,b,*buffer);
-  case 'R': _RET(KPD_PF3,b,*buffer);
-  case 'S': _RET(KPD_PF4,b,*buffer);
-  case 0: _RET(UNKNOWN,b,*buffer);
-    }
-    break;
-  case 0x1b :
-    buffer++;
-    switch (*buffer)
-    {
-    case '[':
+    case 'D': _RET(MOVE_LEFT,b,*buffer);
+    case 'B': _RET(MOVE_DOWN,b,*buffer);
+    case 'A': _RET(MOVE_UP,b,*buffer);
+    case 'C': _RET(MOVE_RIGHT,b,*buffer);
+    case '1':
       buffer++;
-      switch (*buffer)
-      {
-      case 'D': _RET(MOVE_LEFT,b,*buffer);
-      case 'B': _RET(MOVE_DOWN,b,*buffer);
-      case 'A': _RET(MOVE_UP,b,*buffer);
-      case 'C': _RET(MOVE_RIGHT,b,*buffer);
-      case '1':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : _RET(KPD_FIND,b,*buffer);
-        case '7' :
-        case '8' :
-        case '9' :
-          buffer++;
-          switch (*buffer)  {
-        case '~' :
-          switch (c)  {
-        case '7' : _RET(F6,b,*buffer);
-        case '8' : _RET(F7,b,*buffer);
-        case '9' : _RET(F8,b,*buffer);
-          }
-        case 0 : _RET(UNKNOWN,b,*buffer);
-          }
-          break;
-        case 0 : _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case '2':
-        buffer++;
-        switch (c = *buffer)  {
-      case '~': _RET(KPD_INSERT,b,*buffer);
-      case '0':
-      case '1':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '8':
-      case '9':
-        buffer++;
-        switch (*buffer)  {
-      case '~':
-        switch (c)   {
-      case '0' : _RET(F9,b,*buffer);
-      case '1' : _RET(F10,b,*buffer);
-      case '3' : _RET(F11,b,*buffer);
-      case '4' : _RET(F12,b,*buffer);
-      case '5' : _RET(F13,b,*buffer);
-      case '6' : _RET(F14,b,*buffer);
-      case '8' : _RET(F15,b,*buffer);
-      case '9' : _RET(F16,b,*buffer);
-        }
-        break;
-      case 0: _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case 0: _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case '3':
-        buffer++;
-        switch (c = *buffer)  {
-      case '~': _RET(KPD_PERIOD,b,*buffer);
-        //case '~': _RET(KPD_REMOVE,b,*buffer);
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-        buffer++;
-        switch (*buffer) {
-      case '~':
-        switch (c)  {
-      case '1': _RET(F17,b,*buffer);
-      case '2': _RET(F18,b,*buffer);
-      case '3': _RET(F19,b,*buffer);
-      case '4': _RET(F20,b,*buffer);
-        }
-        break;
-      case 0: _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case 0: _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case '4':
-        buffer++;
-        switch(c = *buffer) {
-      case '~': _RET(KPD_SELECT,b,*buffer);
-      case 0:   _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case '5':
-        buffer++;
-        switch (c = *buffer)  {
-      case '~': _RET(KPD_PREV,b,*buffer);
-      case 0:   _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case '6':
-        buffer++;
-        switch (c = *buffer)
-        {
-        case '~' : _RET(KPD_NEXT,b,*buffer);
-        case 0 : _RET(UNKNOWN,b,*buffer);
-        }
-        break;
-      case 0 :
-        _RET(UNKNOWN,b,*buffer);
-        break;
+      switch (c = *buffer)  {
+      case '~' : _RET(KPD_FIND,b,*buffer);
+      case '7' :
+      case '8' :
+      case '9' :
+	buffer++;
+	switch (*buffer)  {
+	case '~' :
+	  switch (c) {
+	  case '7' : _RET(F6,b,*buffer);
+	  case '8' : _RET(F7,b,*buffer);
+	  case '9' : _RET(F8,b,*buffer);
+	  }
+	  break;
+	case 0 : _RET(UNKNOWN,b,*buffer);
+	}
+	break;
+      case 0 : _RET(UNKNOWN,b,*buffer);
       }
       break;
-    case 'O':
+    case '2':
       buffer++;
-      switch (*buffer)
-      {
-      case 'l': _RET(PAGE_DOWN,b,*buffer);
-      case 'm': _RET(PAGE_UP,b,*buffer);
-      case 'n': _RET(KPD_PERIOD,b,*buffer);
-      case 'p': _RET(KPD_0,b,*buffer);
-      case 'q': _RET(KPD_1,b,*buffer);
-      case 'r': _RET(KPD_2,b,*buffer);
-      case 's': _RET(KPD_3,b,*buffer);
-      case 't': _RET(KPD_4,b,*buffer);
-      case 'u': _RET(KPD_5,b,*buffer);
-      case 'v': _RET(KPD_6,b,*buffer);
-      case 'w': _RET(KPD_7,b,*buffer);
-      case 'x': _RET(KPD_8,b,*buffer);
-      case 'y': _RET(KPD_9,b,*buffer);
-      case 'M': _RET(KPD_ENTER,b,*buffer);
-      case 'P': _RET(KPD_PF1,b,*buffer);
-      case 'Q': _RET(KPD_PF2,b,*buffer);
-      case 'R': _RET(KPD_PF3,b,*buffer);
-      case 'S': _RET(KPD_PF4,b,*buffer);
-      case 0 :  _RET(UNKNOWN,b,*buffer);
+      switch (c = *buffer)  {
+      case '~' : _RET(KPD_INSERT,b,*buffer);
+      case '0' :
+      case '1' :
+      case '3' :
+      case '4' :
+      case '5' :
+      case '6' :
+      case '8' :
+      case '9' :
+	buffer++;
+	switch (*buffer) {
+	case '~' :
+	  switch (c) {
+	  case '0' : _RET(F9,b,*buffer);
+	  case '1' : _RET(F10,b,*buffer);
+	  case '3' : _RET(F11,b,*buffer);
+	  case '4' : _RET(F12,b,*buffer);
+	  case '5' : _RET(F13,b,*buffer);
+	  case '6' : _RET(F14,b,*buffer);
+	  case '8' : _RET(F15,b,*buffer);
+	  case '9' : _RET(F16,b,*buffer);
+	  }
+	  break;
+	case 0 : _RET(UNKNOWN,b,*buffer);
+	}
+	break;
+      case 0 : _RET(UNKNOWN,b,*buffer);
+      }
+      break;
+    case '3':
+      buffer++;
+      switch (c = *buffer)  {
+      case '~': _RET(KPD_REMOVE,b,*buffer);
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+	buffer++;
+	switch (*buffer)  {
+	case '~':
+	  switch (c) {
+	  case '1': _RET(F17,b,*buffer);
+	  case '2': _RET(F18,b,*buffer);
+	  case '3': _RET(F19,b,*buffer);
+	  case '4': _RET(F20,b,*buffer);
+	  }
+	  break;
+	case 0 : _RET(UNKNOWN,b,*buffer);
+	}
+	break;
+      case 0 : _RET(UNKNOWN,b,*buffer);
+      }
+      break;
+    case '4':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : _RET(KPD_SELECT,b,*buffer);
+      case 0 : _RET(UNKNOWN,b,*buffer);
+      }
+      break;
+    case '5':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : _RET(KPD_PREV,b,*buffer);
+      case 0 : _RET(UNKNOWN,b,*buffer);
+      }
+      break;
+    case '6':
+      buffer++;
+      switch (c = *buffer) {
+      case '~' : _RET(KPD_NEXT,b,*buffer);
+      case 0 : _RET(UNKNOWN,b,*buffer);
       }
       break;
     case 0:
@@ -732,50 +569,226 @@ int scrc_check_key_buffer (char *buffer)
       break;
     }
     break;
+  case 0x8f :
+    buffer++;
+    switch (*buffer) {
+    case 'l': _RET(PAGE_DOWN,b,*buffer);
+    case 'm': _RET(PAGE_UP,b,*buffer);
+    case 'n': _RET(KPD_PERIOD,b,*buffer);
+    case 'p': _RET(KPD_0,b,*buffer);
+    case 'q': _RET(KPD_1,b,*buffer);
+    case 'r': _RET(KPD_2,b,*buffer);
+    case 's': _RET(KPD_3,b,*buffer);
+    case 't': _RET(KPD_4,b,*buffer);
+    case 'u': _RET(KPD_5,b,*buffer);
+    case 'v': _RET(KPD_6,b,*buffer);
+    case 'w': _RET(KPD_7,b,*buffer);
+    case 'x': _RET(KPD_8,b,*buffer);
+    case 'y': _RET(KPD_9,b,*buffer);
+    case 'M': _RET(KPD_ENTER,b,*buffer);
+    case 'P': _RET(KPD_PF1,b,*buffer);
+    case 'Q': _RET(KPD_PF2,b,*buffer);
+    case 'R': _RET(KPD_PF3,b,*buffer);
+    case 'S': _RET(KPD_PF4,b,*buffer);
+    case 0: _RET(UNKNOWN,b,*buffer);
+    }
+    break;
+  case 0x1b :
+    buffer++;
+    switch (*buffer)
+      {
+      case '[':
+	buffer++;
+	switch (*buffer)
+	  {
+	  case 'D': _RET(MOVE_LEFT,b,*buffer);
+	  case 'B': _RET(MOVE_DOWN,b,*buffer);
+	  case 'A': _RET(MOVE_UP,b,*buffer);
+	  case 'C': _RET(MOVE_RIGHT,b,*buffer);
+	  case '1':
+	    buffer++;
+	    switch (c = *buffer)
+	      {
+	      case '~' : _RET(KPD_FIND,b,*buffer);
+	      case '7' :
+	      case '8' :
+	      case '9' :
+		buffer++;
+		switch (*buffer)  {
+		case '~' :
+		  switch (c)  {
+		  case '7' : _RET(F6,b,*buffer);
+		  case '8' : _RET(F7,b,*buffer);
+		  case '9' : _RET(F8,b,*buffer);
+		  }
+		case 0 : _RET(UNKNOWN,b,*buffer);
+		}
+		break;
+	      case 0 : _RET(UNKNOWN,b,*buffer);
+	      }
+	    break;
+	  case '2':
+	    buffer++;
+	    switch (c = *buffer)  {
+	    case '~': _RET(KPD_INSERT,b,*buffer);
+	    case '0':
+	    case '1':
+	    case '3':
+	    case '4':
+	    case '5':
+	    case '6':
+	    case '8':
+	    case '9':
+	      buffer++;
+	      switch (*buffer)  {
+	      case '~':
+		switch (c)   {
+		case '0' : _RET(F9,b,*buffer);
+		case '1' : _RET(F10,b,*buffer);
+		case '3' : _RET(F11,b,*buffer);
+		case '4' : _RET(F12,b,*buffer);
+		case '5' : _RET(F13,b,*buffer);
+		case '6' : _RET(F14,b,*buffer);
+		case '8' : _RET(F15,b,*buffer);
+		case '9' : _RET(F16,b,*buffer);
+		}
+		break;
+	      case 0: _RET(UNKNOWN,b,*buffer);
+	      }
+	      break;
+	    case 0: _RET(UNKNOWN,b,*buffer);
+	    }
+	    break;
+	  case '3':
+	    buffer++;
+	    switch (c = *buffer)  {
+	    case '~': _RET(KPD_PERIOD,b,*buffer);
+	      //case '~': _RET(KPD_REMOVE,b,*buffer);
+	    case '1':
+	    case '2':
+	    case '3':
+	    case '4':
+	      buffer++;
+	      switch (*buffer) {
+	      case '~':
+		switch (c)  {
+		case '1': _RET(F17,b,*buffer);
+		case '2': _RET(F18,b,*buffer);
+		case '3': _RET(F19,b,*buffer);
+		case '4': _RET(F20,b,*buffer);
+		}
+		break;
+	      case 0: _RET(UNKNOWN,b,*buffer);
+	      }
+	      break;
+	    case 0: _RET(UNKNOWN,b,*buffer);
+	    }
+	    break;
+	  case '4':
+	    buffer++;
+	    switch(c = *buffer) {
+	    case '~': _RET(KPD_SELECT,b,*buffer);
+	    case 0:   _RET(UNKNOWN,b,*buffer);
+	    }
+	    break;
+	  case '5':
+	    buffer++;
+	    switch (c = *buffer)  {
+	      //case '~': _RET(KPD_PREV,b,*buffer);
+	    case '~': _RET(PAGE_UP,b,*buffer);
+	    case 0:   _RET(UNKNOWN,b,*buffer);
+	    }
+	    break;
+	  case '6':
+	    buffer++;
+	    switch (c = *buffer)
+	      {
+		//case '~' : _RET(KPD_NEXT,b,*buffer);
+	      case '~' : _RET(PAGE_DOWN,b,*buffer);
+	      case 0   : _RET(UNKNOWN,b,*buffer);
+	      }
+	    break;
+	  case 0 :
+	    _RET(UNKNOWN,b,*buffer);
+	    break;
+	  }
+	break;
+      case 'O':  // Typically KPD Numlock ON
+	buffer++;
+	switch (*buffer)
+	  {
+	  case 'l': _RET(PAGE_DOWN,b,*buffer);
+	  case 'n': _RET(KPD_PERIOD,b,*buffer);
+	  case 'o': _RET(KPD_PF2,b,*buffer);
+	  case 'j': _RET(KPD_PF3,b,*buffer);
+	  case 'm': _RET(KPD_PF4,b,*buffer);
+	  case 'p': _RET(KPD_0,b,*buffer);
+	  case 'q': _RET(KPD_1,b,*buffer);
+	  case 'r': _RET(KPD_2,b,*buffer);
+	  case 's': _RET(KPD_3,b,*buffer);
+	  case 't': _RET(KPD_4,b,*buffer);
+	  case 'u': _RET(KPD_5,b,*buffer);
+	  case 'v': _RET(KPD_6,b,*buffer);
+	  case 'w': _RET(KPD_7,b,*buffer);
+	  case 'x': _RET(KPD_8,b,*buffer);
+	  case 'y': _RET(KPD_9,b,*buffer);
+	  case 'M': _RET(KPD_ENTER,b,*buffer);
+	  case 'P': _RET(KPD_PF1,b,*buffer);
+	  case 'Q': _RET(KPD_PF2,b,*buffer);
+	  case 'R': _RET(KPD_PF3,b,*buffer);
+	  case 'S': _RET(KPD_PF4,b,*buffer);
+	  case 0 :  _RET(UNKNOWN,b,*buffer);
+	  }
+	break;
+      case 0:
+	_RET(UNKNOWN,b,*buffer);
+	break;
+      }
+    break;
   case 0x7f :
     _RET(DELETE_KEY,b,*buffer);
 
   default:
 #ifdef _WIN32
     switch(b)  {
-  case 13:    _RET2(RETURN_KEY,b);
-  case 16:    _RET2(KEY_SHIFT,b);
-  case 17:
-    buffer++;
-    if ( *buffer >= 'A' && *buffer <= 26 )
-      return *buffer - 'A' + CTRL_A;
-    _RET2(KEY_CTRL,b);
-  case 33:    _RET2(KPD_PREV,b);  // PAGE_UP
-  case 34:    _RET2(KPD_NEXT,b);  // PAGE_DOWN
-  case 35:    _RET2(PAGE_DOWN,b); // END
-  case 36:    _RET2(PAGE_UP,b);   // HOME
-  case 37:    _RET2(MOVE_LEFT,b);
-  case 38:    _RET2(MOVE_UP,b);
-  case 39:    _RET2(MOVE_RIGHT,b);
-  case 40:    _RET2(MOVE_DOWN,b);
-    //case 45:   _RET2(INSERT,b);
-  case 123:  _RET2(BACK_SPACE,b);
-    // ? case 115:  _RET2(KPD_PF4,b);
+    case 13:    _RET2(RETURN_KEY,b);
+    case 16:    _RET2(KEY_SHIFT,b);
+    case 17:
+      buffer++;
+      if ( *buffer >= 'A' && *buffer <= 26 )
+	return *buffer - 'A' + CTRL_A;
+      _RET2(KEY_CTRL,b);
+    case 33:    _RET2(KPD_PREV,b);  // PAGE_UP
+    case 34:    _RET2(KPD_NEXT,b);  // PAGE_DOWN
+    case 35:    _RET2(PAGE_DOWN,b); // END
+    case 36:    _RET2(PAGE_UP,b);   // HOME
+    case 37:    _RET2(MOVE_LEFT,b);
+    case 38:    _RET2(MOVE_UP,b);
+    case 39:    _RET2(MOVE_RIGHT,b);
+    case 40:    _RET2(MOVE_DOWN,b);
+      //case 45:   _RET2(INSERT,b);
+    case 123:  _RET2(BACK_SPACE,b);
+      // ? case 115:  _RET2(KPD_PF4,b);
 
-  case 46:    _RET2(KPD_PERIOD,b); //_RET22(DELETE_KEY,b); // UPI Needs period!
-  case 112:   _RET2(DELETE_KEY,b);
-  case 144:   _RET2(KPD_PF1,b);
-  case 111:   _RET2(KPD_PF2,b);
-  case 106:   _RET2(KPD_PF3,b);
-  case 109:   _RET2(KPD_PF4,b);
-  case 110:   _RET2(KPD_PERIOD,b);
-  case 96:    _RET2(KPD_0,b);
-  case 97:    _RET2(KPD_1,b);
-  case 98:    _RET2(KPD_2,b);
-  case 99:    _RET2(KPD_3,b);
-  case 100:   _RET2(KPD_4,b);
-  case 101:   _RET2(KPD_5,b);
-  case 102:   _RET2(KPD_6,b);
-  case 103:   _RET2(KPD_7,b);
-  case 104:   _RET2(KPD_8,b);
-  case 105:   _RET2(KPD_9,b);
-  default:
-    break;
+    case 46:    _RET2(KPD_PERIOD,b); //_RET22(DELETE_KEY,b); // UPI Needs period!
+    case 112:   _RET2(DELETE_KEY,b);
+    case 144:   _RET2(KPD_PF1,b);
+    case 111:   _RET2(KPD_PF2,b);
+    case 106:   _RET2(KPD_PF3,b);
+    case 109:   _RET2(KPD_PF4,b);
+    case 110:   _RET2(KPD_PERIOD,b);
+    case 96:    _RET2(KPD_0,b);
+    case 97:    _RET2(KPD_1,b);
+    case 98:    _RET2(KPD_2,b);
+    case 99:    _RET2(KPD_3,b);
+    case 100:   _RET2(KPD_4,b);
+    case 101:   _RET2(KPD_5,b);
+    case 102:   _RET2(KPD_6,b);
+    case 103:   _RET2(KPD_7,b);
+    case 104:   _RET2(KPD_8,b);
+    case 105:   _RET2(KPD_9,b);
+    default:
+      break;
     }
 #endif
     if (b < 0x20) { _RET2(INVALID+b,b); }
@@ -783,12 +796,12 @@ int scrc_check_key_buffer (char *buffer)
   }
   _RET2(INVALID,INVALID);
 }
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_wait (Display *disp)   {
   return ::scrc_read_keyboard(disp, 1);
 }
 
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_read_keyboard (Display * /*disp */, int wait)  {
   int status, sub_status;
   unsigned int event;
@@ -817,7 +830,7 @@ int scrc_read (Display *disp, unsigned char *buffer, int wait)      {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_test_input ()    {
   ::scrc_rearm (0,0);
   if(_p)::printf("scrc_test_input\n");
@@ -830,9 +843,9 @@ int scrc_get_smgid (Pasteboard *pb)   {
 }
 
 //----------------------------------------------------------------------------
-int scrc_enable_unsolicited_input (Pasteboard* /* pb */, int (* ast)())   {
+int scrc_enable_unsolicited_input (Pasteboard* pb, int (* ast)())   {
   User_ast = ast;
-  ::wtc_subscribe (WT_FACILITY_KEYBOARD, scrc_rearm_keyboard, scrc_handler_keyboard);
+  ::wtc_subscribe (WT_FACILITY_KEYBOARD, scrc_rearm_keyboard, scrc_handler_keyboard, pb);
   ::scrc_rearm_keyboard (WT_FACILITY_KEYBOARD,0);
   return 1;
 }

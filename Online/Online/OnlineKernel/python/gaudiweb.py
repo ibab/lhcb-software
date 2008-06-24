@@ -1,6 +1,6 @@
-import socket, threading, xmlrpclib, urllib, time, sys, os
+import cgi, socket, threading, xmlrpclib, urllib, time, sys, os
 
-import SocketServer, BaseHTTPServer
+import StringIO, SocketServer, BaseHTTPServer
 
 logPrefix     = ''
 logHeader     = '+----------------------------------------------------------------------------------------------------'
@@ -269,20 +269,60 @@ class Service:
     path = self.mount() + fname
     obj = None
     try:
+      if os.path.isdir(path):
+        return None
       if ( mime_type is None ):
         mime_type = self.getMimeType(path)
       if mime_type.startswith('text/'):
-          mode = 'r'
+        mode = 'r'
       else:
-          mode = 'rb'
+        mode = 'rb'
       fp  = open(path, mode)
       buf = fp.read()
       fp.close()
       obj = (req_path, path, mime_type, os.stat(path)[6], buf)
     except Exception, X:
-      log(['Error reading file:'+req_path,str(X)],0,0)
+      log(['Service: Error reading file:'+req_path,str(X)],0,0)
       raise X
     return obj
+
+  #===============================================================================
+  def readDirectory(self, fname, req_path):
+    """Helper to produce a directory listing (absent index.html).
+    
+    Return value is either a file object, or None (indicating an
+    error).  In either case, the headers are sent, making the
+    interface the same as for send_head().
+    
+    """
+    path = self.mount()+fname
+    try:
+      list = os.listdir(path)
+    except os.error:
+      self.send_error(404, "No permission to list directory")
+      return None
+    list.sort(key=lambda a: a.lower())
+    f = StringIO.StringIO()
+    f.write("<title>Directory listing for %s</title>\n" % req_path)
+    f.write("<h2>Directory listing for %s</h2>\n" % req_path)
+    f.write("<hr>\n<ul>\n")
+    for name in list:
+      fullname = os.path.join(path, name)
+      displayname = name
+      linkname = req_path+os.sep+name
+      # Append / for directories or @ for symbolic links
+      if os.path.isdir(fullname):
+        displayname = name + "/"
+        linkname = linkname
+      if os.path.islink(fullname):
+        displayname = name + "@"
+        # Note: a link to a directory displays with @ and links with /
+      f.write('<li><a href="%s">%s</a>\n'
+              % (urllib.quote(linkname), cgi.escape(displayname)))
+    f.write("</ul>\n<hr>\n")
+    length = f.tell()
+    f.seek(0)
+    return (req_path, path, 'text/html', os.stat(path)[6], f.read())
 
   #===============================================================================
   def makeWebFile(self, obj):
@@ -412,6 +452,8 @@ class FileServlet(Service):
     if ( cache_only is None ):
       try:
         obj = self.readFile(req_path[len(self.m_name)+1:], req_path)
+        if obj is None:
+          obj = self.readDirectory(req_path[len(self.m_name)+1:], req_path)
         if ( self.m_cache ):
           self.m_cachedFiles[req_path] = obj
         return obj
@@ -719,6 +761,7 @@ class ManagementServlet(Service):
           buf = '<html><head><title>Gaudi RPC/Web Portal</title>'
           buf = buf + '</head><body>'
           buf = buf + '<H1>The server process exited gracefully.</H1>'
+          buf = buf + '<IMG border=0 src=\"/images/lhcblogo.gif\">'
           buf = buf + '</body></html>'
           return self.makeWebFile((req_path, self.name(), 'text/html', len(buf), buf))
         elif ( args.has_key('-type')):
@@ -788,9 +831,10 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     """
     info = sys.exc_info()
     result = '<H1>'+msg+'</H1><UL>'
-    lns=self.format_exception(info[0],info[1],info[2])
-    for line in lns:
-      result = result + '<LI>'+line+'</LI>'
+    if info is not None and info[0] is not None:
+      lns=self.format_exception(info[0],info[1],info[2])
+      for line in lns:
+        result = result + '<LI>'+line+'</LI>'
     result = result + '</UL>'
     return result
 
@@ -964,6 +1008,7 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
          @version  1.0
          @date     30/06/2002
     """
+    import rfc822
     type = 'text/html'
     if ( self.server.servlets.has_key(self.mount)):
       target = self.server.servlets[self.mount]
@@ -997,6 +1042,9 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
       # got a valid response
       self.send_response(200)
+      #expiration = rfc822.formatdate(time.time()+15)
+      #self.send_header('Expires', expiration)
+      self.send_header('Cache-Control','max-age=15')
       self.send_header('Content-type', type)
       self.send_header('Content-length', response_len)
       self.end_headers()
@@ -1133,10 +1181,10 @@ class DataManagementHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     msg = msg + '<H1>Python setup:</H1>'
     for a in sys.modules:
       msg = msg + '  ' + str(a)
-    msg = msg + '<H1>Environment:</H1><table cellspacing="10" sellpadding="3"><tr><th>Name</th><th>Value</th></tr>'
-    for a in os.environ.keys():
-      msg = msg + '<TR><TD>'+str(a)+'</TD><TD>'+str(os.environ[a])+'</TD></TR>'
-    msg = msg + '</table>'
+    #msg = msg + '<H1>Environment:</H1><table cellspacing="10" sellpadding="3"><tr><th>Name</th><th>Value</th></tr>'
+    #for a in os.environ.keys():
+    #  msg = msg + '<TR><TD>'+str(a)+'</TD><TD>'+str(os.environ[a])+'</TD></TR>'
+    #msg = msg + '</table>'
     msg = msg + '</body></html>'
 
     self.log_error("code %d, message %s", code, message)
@@ -1200,6 +1248,8 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
     if ( nam is None ): 
       nam = socket.gethostname()
     self.node = socket.gethostbyaddr(nam)
+    if self.node[0].find('.') < 0:
+      self.node = (self.node[0]+'.lbdaq.cern.ch',self.node[1],self.node[2])
     #BaseHTTPServer.HTTPServer.__init__(self, ('', port), DataManagementHandler)
     SocketServer.ThreadingTCPServer.__init__(self, ('', port), DataManagementHandler)
 
@@ -1349,29 +1399,32 @@ class DataManagementServer(SocketServer.ThreadingTCPServer):
   def stopServing(self):
     log(['Server was requested to stop execution....'])
     self.continue_handling = 0
-    self.server_close()
     return self
 
   def serve_forever(self):
     """Handle one request at a time until doomsday."""
     #log(['Starting message pump.....'])
-    while (self.continue_handling == 1):
+    val = self.continue_handling
+    while (val == 1):
       self.handle_request()
+      val = self.continue_handling
+    self.server_close()
     log(['Stopped message pump.....'])
 
   def handle_error(self, request, client_address):
     """Handle an error gracefully.  May be overridden.
 
-    The default is to print a traceback and continue.
+       The default is to print a traceback and continue.
 
     """
     import traceback
     log(['Exception happened during processing of request from '+str(client_address)],1,0)
     etype, value, tb = sys.exc_info()
-    lines = traceback.format_exception_only(etype, value)
-    for line in lines[:-1]:
-      log([line], 0, 0)
-        
+    if etype is not None:
+      lines = traceback.format_exception_only(etype, value)
+      for line in lines[:-1]:
+        log([line], 0, 0)
+
 if ( __name__ == "__main__"):
   opt = '..'
   if ( len(sys.argv) > 1):

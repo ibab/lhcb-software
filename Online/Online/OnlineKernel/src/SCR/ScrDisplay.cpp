@@ -24,6 +24,19 @@ static const int RIGHT_LOW_EDGE = scrc_bottom_right_corner();
 static const int LEFT_UP_EDGE   = scrc_top_left_corner();
 static const int RIGHT_UP_EDGE  = scrc_top_right_corner();
 
+static int s_border = 0;
+
+/// Set global pasteborard area
+void ScrDisplay::setPasteboard(Pasteboard* pasteboard) {
+  pb = pasteboard;
+}
+
+/// Set global border type
+void ScrDisplay::setBorder(int b) {
+  s_border = b;
+}
+
+/// Access to SCR Pasteboard
 Pasteboard* ScrDisplay::pasteboard() const {
   return pb;
 }
@@ -34,14 +47,14 @@ void ScrDisplay::print_char(int x, int y, int attr, int val) {
 
 void ScrDisplay::setup_window() {
   //::scrc_create_pasteboard (&pb, device, &pb_rows, &pb_cols);
-  int w = 0, h = 0;
   if ( 0 == pb ) {
+    int w = 0, h = 0;
     ::scrc_create_pasteboard (&pb, 0, &h, &w);
     m_area.width  = w-2;
     m_area.height = h-2;
-    m_pb = pb;
   }
-  ::scrc_create_display (&m_display, m_area.height, m_area.width, NORMAL, ON, m_title.c_str());
+  m_pb = pb;
+  ::scrc_create_display (&m_display, m_area.height, m_area.width, NORMAL|s_border, ON, m_title.c_str());
   ::scrc_paste_display (m_display, pb, m_position.y, m_position.x);
   //::scrc_end_pasteboard_update (pb);
   //::scrc_fflush (pb);
@@ -146,7 +159,7 @@ void ScrDisplay::begin_update()  {
 }
 
 void ScrDisplay::end_update() { 
-  while(m_currLine<size_t(m_area.height-1)) {
+  while(m_currLine<=size_t(m_area.height)) {
     draw_line_normal("");
   }
   m_currLine++;
@@ -166,6 +179,20 @@ ScrDisplay::ScrDisplay() : MonitorDisplay(), m_pb(0)  {
   m_area.height = 0;
   m_area.width =  0;
   m_currLine = 1;
+}
+
+/// Default destructor
+ScrDisplay::~ScrDisplay() {
+  if ( pb ) {
+    ::scrc_begin_pasteboard_update(pb);
+    if ( m_display )  {
+      ::scrc_unpaste_display(m_display, pb);
+      ::scrc_delete_display(m_display);
+    }
+    ::scrc_end_pasteboard_update(pb);
+  }
+  m_display = 0;
+  m_pb = 0;
 }
 
 extern "C" int scr_ascii(int /* argc */, char** /* argv */) {

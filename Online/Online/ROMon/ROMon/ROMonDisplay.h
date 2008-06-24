@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.h,v 1.3 2008-06-10 18:20:19 frankb Exp $
+// $Id: ROMonDisplay.h,v 1.4 2008-06-24 15:13:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,13 +12,16 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.3 2008-06-10 18:20:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonDisplay.h,v 1.4 2008-06-24 15:13:19 frankb Exp $
 #ifndef ROMON_ROMONDISPLAY_H
 #define ROMON_ROMONDISPLAY_H 1
 
 // Framework includes
 #include "RTL/rtl.h"
+#include "CPP/Event.h"
+#include "CPP/Interactor.h"
 #include "SCR/ScrDisplay.h"
+
 #define MBM_IMPLEMENTATION
 #include "ROMon/ROMon.h"
 
@@ -36,9 +39,11 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class ROMonDisplay : public ScrDisplay  {
+  class ROMonDisplay : public ScrDisplay, public Interactor  {
+
   public:
     typedef Nodeset::Nodes Nodes;
+    enum { CMD_UPDATEDISPLAY = 1000 };
 
     struct Descriptor {
       size_t length;
@@ -61,9 +66,14 @@ namespace ROMon {
     lib_rtl_lock_t m_lock;
     /// Variable size data buffer
     Descriptor     m_data;
+
   public:
+    /// Initializing constructor
+    ROMonDisplay(int width, int height);
+
     /// Standard constructor
     ROMonDisplay();
+
     /// Standard destructor
     virtual ~ROMonDisplay();
 
@@ -93,6 +103,9 @@ namespace ROMon {
 
     /// Run the interrupt loop
     virtual void run();
+
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
 
     /// DimInfoHandler overload
     static void infoHandler(void* tag, void* address, int* size);

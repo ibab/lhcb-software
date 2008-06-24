@@ -32,7 +32,9 @@ class MonitorDisplay {
   Interactor*        m_client;
   /// Currentl ine when drawing display
   size_t             m_currLine;
+  /// Display position in global window (if applicable)
   Position           m_position;
+  /// Display title
   std::string        m_title;
 
  public:

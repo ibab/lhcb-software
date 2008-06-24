@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.h,v 1.1 2008-02-11 20:00:43 frankm Exp $
+// $Id: SubfarmDisplay.h,v 1.2 2008-06-24 15:13:19 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.1 2008-02-11 20:00:43 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/SubfarmDisplay.h,v 1.2 2008-06-24 15:13:19 frankb Exp $
 #ifndef ROMON_SUBFARMDISPLAY_H
 #define ROMON_SUBFARMDISPLAY_H 1
 
@@ -48,12 +48,20 @@ namespace ROMon {
     /// Reference to the display showing the event sender tasks
     MonitorDisplay* m_senders;
 
+    /// Initialize window
+    void init(int argc, char** arv);
   public:
+    /// Initializing constructor
+    SubfarmDisplay(int width, int height, int posx, int posy, int argc, char** argv);
+
     /// Standard constructor
     SubfarmDisplay(int argc, char** argv);
 
     /// Standard destructor
     virtual ~SubfarmDisplay();
+
+    /// Number of nodes in the dataset
+    size_t numNodes();
 
     /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);
