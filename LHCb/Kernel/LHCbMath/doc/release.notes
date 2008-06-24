@@ -6,6 +6,16 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 Juan PALACIOS
+ - add dict/LHCbMath.h, LHCbMath.xml
+  . Python dictionaries for some Line types and GeomFun free functions.
+ - add python/LHCbMath.py
+  . Python module to ease the use of Lines and GeomFun free functions.
+ - cmt/requirements
+  . Increase version to v2r9
+  . Add LHCbMath to PYTHONPATH
+  . Make linker library from src/*.cpp files
+
 !========================= LHCbMath v2r8 2008-06-04 ==========================
 ! 2008-06-04 M Needham
  - Avoid a comparision of == of doubles in round function
