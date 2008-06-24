@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.9 2008-06-11 16:38:51 gcorti Exp $ 
+! $Id: release.notes,v 1.10 2008-06-24 10:49:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -18,6 +18,14 @@
 !  program will gradually correct these issues."
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-06-24 - Vanya BELYAEV
+
+ - some minor almost decorative fixes: 
+      - force the verification of HEPEVT structure 
+      - force the specific printout from UPINIT and UPEVNT 
+ - cmt/requirements 
+   version increment to v2r2 
 
 !========================= LbHidValley v2r1 2008-06-10 ========================
 ! 2008-05-06 - Vanya BELYAEV

@@ -1,4 +1,4 @@
-// $Id: HidValleyProduction.cpp,v 1.2 2008-05-06 14:53:44 ibelyaev Exp $
+// $Id: HidValleyProduction.cpp,v 1.3 2008-06-24 10:49:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,8 +36,8 @@
 #include "LbHidValley/HidValley.h"
 // ============================================================================
 /** @class HidValleyProduction
- *  the first attempt to perforem the Hidden Valley production 
- *  embedded into Gauss.
+ *  the first attempt to perform 
+ *  the Hidden Valley production embedded into Gauss.
  *  @author Vanya BELYAEV  ibelyaev@physics.syr.edu
  *  @date 2006-10-20
  */
@@ -67,6 +67,7 @@ protected:
     PythiaProduction::m_defaultSettings.clear() ;
     /// postpone the PyInit initialization 
     setProperty ( "PostponePyInit" , true ) ;
+    setProperty ( "ValidateHEPEVT" , true ) ;
   } 
   /// virtual and protected desctructor 
   virtual ~HidValleyProduction() {}
@@ -114,6 +115,8 @@ StatusCode HidValleyProduction::initialize()
   }  
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
+
+  Pythia::SetUserProcess ( 4 ) ;
   
   return StatusCode::SUCCESS ;
 } 

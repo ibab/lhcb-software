@@ -1,8 +1,11 @@
-C $Id: hvevent.F,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $
+C $Id: hvevent.F,v 1.3 2008-06-24 10:49:13 ibelyaev Exp $
 C ======================================================================
-C CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+C CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 C ======================================================================
 C $Log: not supported by cvs2svn $
+C Revision 1.2  2006/11/30 12:37:01  ibelyaev
+C  v1r1: veryfy all opts-files and selection
+C
 C Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
 C New package: "Hidden Valley" production 
 C 
@@ -64,7 +67,7 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
         WRITE(*,*)'HVEVENT: error from HVSTEP1'
         GO TO 999
       ENDIF 
-      
+
 C - Set up "brute-force" low-mass q-qbar system and hadronize it.
 C...Process the event to extract vpions, combine them with STAGE 1
 C... initial stage and fake neutrinos into a consistent parton-level
