@@ -2,11 +2,11 @@
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
 #============================================================================
-# $Id: requirements,v 1.40 2008-05-09 07:55:26 cattanem Exp $
+# $Id: requirements,v 1.41 2008-06-24 10:41:06 jonrob Exp $
 #============================================================================
 
 package RichTools
-version v2r20
+version v2r21
 
 # ================ structure ================================================
 branches src cmt doc
