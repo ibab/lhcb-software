@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.17 2007-09-14 15:28:17 wouter Exp $
+// $Id: SolidBase.h,v 1.18 2008-06-24 13:25:03 jonrob Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -283,21 +283,14 @@ protected:
   ( const aPointA& p1            , 
     const aPointB& p2            , 
     const double      tolerance ) const 
-  { 
-    const double zmin =             zMin() - tolerance ;
-    if( p1.z() < zmin   && p2.z() < zmin   ) { return true ; }
-    const double zmax =             zMax() + tolerance ;
-    if( p1.z() > zmax   && p2.z() > zmax   ) { return true ; }
-    const double xmin =             xMin() - tolerance ;
-    if( p1.x() < xmin   && p2.x() < xmin   ) { return true ; }
-    const double xmax =             xMax() + tolerance ;
-    if( p1.x() > xmax   && p2.x() > xmax   ) { return true ; }
-    const double ymin =             yMin() - tolerance ;
-    if( p1.y() < ymin   && p2.y() < ymin   ) { return true ; }
-    const double ymax =             yMax() + tolerance ;
-    if( p1.y() > ymax   && p2.y() > ymax   ) { return true ; }
-    //
-    return  false ;
+  {  
+    return 
+      ( (p1.z() < zMin()-tolerance && p2.z() < zMin()-tolerance) ||
+        (p1.z() > zMax()+tolerance && p2.z() > zMax()+tolerance) ||
+        (p1.x() < xMin()-tolerance && p2.x() < xMin()-tolerance) ||
+        (p1.x() > xMax()+tolerance && p2.x() > xMax()+tolerance) ||
+        (p1.y() < yMin()-tolerance && p2.y() < yMin()-tolerance) ||
+        (p1.y() > yMax()+tolerance && p2.y() > yMax()+tolerance) );
   };
 
   /** Fast check if the segment of the line between two points 
@@ -374,12 +367,10 @@ protected:
     const double vv   = v.mag2 ()           ;
     const double pv   = p.Dot  ( v )        ;
     const double rmax = rMax() + tolerance  ;
-    if( rmax <= 0              ) { return false ; }
     const double dd   = rmax * rmax         ;
-    if( 0 == vv && pp > dd     ) { return false ; }
-    if( pp - pv * pv / vv > dd ) { return false ; }
-    //
-    return true ;
+    return ( rmax > 0                       && 
+             !(0 == vv && pp > dd)          &&
+             !( (vv*pp) - (pv*pv) > vv*dd ) );
   };
   
   /** Fast check if the line cross the surface of bounding cylinder 
@@ -398,12 +389,10 @@ protected:
     const double vv     = v.perp2 ()                  ;
     const double pv     = p.Dot ( v ) - p.z() * v.z() ;
     const double rhomax = rhoMax() + tolerance  ;
-    if( rhomax <= 0            ) { return false ; }
     const double dd     = rhomax * rhomax     ;
-    if( 0 == vv && pp > dd     ) { return false ; }
-    if( pp - pv * pv / vv > dd ) { return false ; }
-    //
-    return true ;
+    return ( rhomax > 0                     &&
+             !( 0 == vv && pp > dd )        &&
+             !( (vv*pp) - (pv*pv) > vv*dd ) );
   };
 
 protected:
