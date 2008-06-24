@@ -4,6 +4,7 @@
 // Include files
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/RndmGenerators.h"
 // boost
 #include "boost/lexical_cast.hpp"
 #include<time.h>
@@ -25,7 +26,7 @@ class MonVectorD;
 class GaudiExample : public GaudiHistoAlg {
 public:
   /// Constructor of this form must be provided
-  GaudiExample(const std::string& name, ISvcLocator* pSvcLocator); 
+  GaudiExample(const std::string& name, ISvcLocator* pSvcLocator);
   
   /// Three mandatory member functions of any algorithm
   StatusCode initialize();
@@ -39,8 +40,10 @@ private:
   double efficiency1;
   float  efficiency2;
   
-  std::pair<int,int>  index;
   std::pair<double,double> position;
+  
+  // it does't work because they are not defined in IMonitorSvc
+  std::pair<int,int>  index;
   std::pair<double,int>  ix;
   
   char* oldStatus;
@@ -57,6 +60,8 @@ private:
   
   time_t time_old,time_new;
   
+  // new MonObjects into rates test
+  
   MonStatEntity statEntity;
   
   MonVectorI monVectorInt;
@@ -65,10 +70,10 @@ private:
   MonVectorD monVectorDouble;
   std::vector<double> m_vectDouble;
   
-    // counters into rates test
+  // counters into rates test
   double count_rate_1;
   double count_rate_2;
-  
+    
   int nbinEntries;
   double sumOfWeights;
   double sumOfSquaredWeights;

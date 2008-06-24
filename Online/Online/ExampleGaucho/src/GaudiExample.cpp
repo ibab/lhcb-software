@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.7 2008-06-18 08:45:09 evh Exp $
+// $Id: GaudiExample.cpp,v 1.8 2008-06-24 12:38:39 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -39,8 +39,9 @@ DECLARE_ALGORITHM_FACTORY(GaudiExample)
       ,statEntity(msgSvc(), name,0) 
       ,monVectorInt(msgSvc(), name,0)
       ,monVectorDouble(msgSvc(), name,0)
-{
-  declareProperty  ("SleepTime",sleepTime=5); // Sleeping time between events, in seconds
+      
+{  
+  declareProperty("SleepTime",sleepTime=1); // Sleeping time between events, in seconds
 }
 
 //------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ StatusCode GaudiExample::initialize() {
   MsgStream msg(msgSvc(), name());
   
   sc = service("HistogramDataSvc", m_histosvc, true );
-  if( !sc.isSuccess() )   {
+  if( !sc.isSuccess() ){
     msg << MSG::FATAL << "Unable to locate HistogramSvc" << endreq;
     return sc;
   }
@@ -79,6 +80,7 @@ StatusCode GaudiExample::initialize() {
   msg << MSG::INFO << "Declaring infos to be published" << endreq;
   
   declareInfo("counter1",counter1,"All events");
+  
   declareInfo("counter2",counter2,"Event of type 1");
   
   // msg << MSG::INFO << "Test: Try to publish info with a name already used. Not possible" << endreq;
@@ -94,16 +96,16 @@ StatusCode GaudiExample::initialize() {
   
   declareInfo("efficiency2",efficiency2,"Time rate 1-2");
   
+  // It doesn't work because there are not pairs II nor pairs DI in IMonitorSvc 
+  // The IMonitorSvc Interface Misunderstand and declare this two pairs as DD
   declareInfo("index",index,"ij indices (pair of ints)");
-  
   declareInfo("ix",ix,"i -> x map (pair of double-int)");
   
   declareInfo("position",position,"xy position (pair of doubles)");
   
   // IMonitorSvc has no declareInfo methods for MonObjects. 
   // But we publish MonObjects using the obsolete declareInfo for void *
-  // notice that the second and four arguments are redundant
-  
+  // notice that the second and four arguments are obsoletes
   declareInfo("xyStatistics", "", &statEntity, 0, "xy statistics (StatEntity)");
   monVectorInt.setValue(m_vectInt);
   declareInfo("vectorInts", "", &monVectorInt, 0, "std::vector of ints"); 
@@ -112,13 +114,9 @@ StatusCode GaudiExample::initialize() {
   
   // This is only for counters which will be monitorated as rates
   // Obs: the description should be "COUNTER_TO_RATE"
-  declareInfo("count1", count_rate_1, "COUNTER_TO_RATE");
-  declareInfo("count2", count_rate_2, "COUNTER_TO_RATE");  declareInfo("xyStatistics", &statEntity, "xy statistics (StatEntity)");
-  
-  monVectorInt.setValue(m_vectInt);
-  declareInfo("vectorInts",   &monVectorInt,"std::vector of ints");
-  monVectorDouble.setValue(m_vectDouble);
-  declareInfo("vectorDoubles",&monVectorDouble,"std::vector of doubles");
+  declareInfo("COUNTER_TO_RATE[count1]", count_rate_1, "Counter number 1");
+  declareInfo("COUNTER_TO_RATE[count2]", count_rate_2, "Counter number 2");
+ // declareInfo("count2", count_rate_2);
   
   // For histograms, either declare explicitly here using  histosvc, or 
   // use plot methods from class GaudiHistos in GaudiExample::execute(), see my1Dhisto1 below
@@ -153,7 +151,8 @@ StatusCode GaudiExample::initialize() {
 StatusCode GaudiExample::execute() {
   //------------------------------------------------------------------------------
   MsgStream         msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "executing...." << endreq;
+  msg << MSG::DEBUG << "******************************************" << endreq;
+  msg << MSG::DEBUG << "execute method...." << endreq;
   
   int eventtype;
   counter1++;
@@ -197,12 +196,12 @@ StatusCode GaudiExample::execute() {
     
     IHistogram1D * my1Dhisto1 = plot1D(eventtype,Histo1Da_ID,Histo1Da_Title,0.5, 5.5,5);
     
-    msg << MSG::DEBUG << Histo1Da_ID << ": Bin entries: " << my1Dhisto1->binEntries(AIDA::IAxis::UNDERFLOW_BIN) << " -";
+/*    msg << MSG::DEBUG << Histo1Da_ID << ": Bin entries: " << my1Dhisto1->binEntries(AIDA::IAxis::UNDERFLOW_BIN) << " -";
     for(int ixBin=0; ixBin<my1Dhisto1->axis().bins();++ixBin)  msg << MSG::DEBUG << " " <<  my1Dhisto1->binEntries(ixBin);
     msg << MSG::DEBUG << " - " <<  my1Dhisto1->binEntries(AIDA::IAxis::OVERFLOW_BIN) ;
     msg << MSG::DEBUG << " errors: "  << my1Dhisto1->binError(AIDA::IAxis::UNDERFLOW_BIN) << " -";
     for(int ixBin=0; ixBin<my1Dhisto1->axis().bins();++ixBin)  msg << MSG::DEBUG << " " << my1Dhisto1->binError(ixBin);
-    msg << MSG::DEBUG << "  - " <<  my1Dhisto1->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
+    msg << MSG::DEBUG << "  - " <<  my1Dhisto1->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;*/
     
     double mass; 
     if(1 == eventtype)      mass = random2();
@@ -216,38 +215,38 @@ StatusCode GaudiExample::execute() {
     IHistogram2D * my2Dhisto = plot2D(position.first, position.second, 
                                       Histo2D_ID, Histo2D_Title, 0., 400., 0., 300., 10, 10);
     IProfile1D * my1Dhprof = profile1D(position.first, position.second, 
-                                       HistoProf_ID, HistoProf_Title, 0., 400., 10);
+                                     HistoProf_ID, HistoProf_Title, 0., 400., 10);
     
     // Debug info:
-    msg << MSG::DEBUG << Histo1Db_ID << " All entries: " << my1Dhisto2->allEntries() << " mean: " << my1Dhisto2->mean() 
+/*    msg << MSG::DEBUG << Histo1Db_ID << " All entries: " << my1Dhisto2->allEntries() << " mean: " << my1Dhisto2->mean() 
         << " rms: " << my1Dhisto2->rms() << endreq;
     msg << MSG::DEBUG << Histo2D_ID << " All entries: " << my2Dhisto->allEntries() << " meanX: " << my2Dhisto->meanX() 
         << " rmsX: " << my2Dhisto->rmsX() << " meanY: " << my2Dhisto->meanY() << " rmsY: " << my2Dhisto->rmsY() << endreq;
     msg << MSG::DEBUG << HistoProf_ID << " All entries: " << my1Dhprof->allEntries() << " mean: " << my1Dhprof->mean() 
-        << " rms: " << my1Dhprof->rms() << endreq;
+        << " rms: " << my1Dhprof->rms() << endreq;*/
     
     // Track calculations for bin 3 in last my1Dhprof:
     int ixBin=3;
     if (int(position.first/400*10) == ixBin ){
       sumOfWeights += position.second;
       sumOfSquaredWeights += position.second*position.second;
-      msg << MSG::DEBUG << HistoProf_ID  << ": all entries: " << counter1 << " x: " << position.first
+/*      msg << MSG::DEBUG << HistoProf_ID  << ": all entries: " << counter1 << " x: " << position.first
           << " y: " << position.second <<  " bin: " << ixBin << " binEntries: " << nbinEntries 
           << " sumOfWeights: " << sumOfWeights << " sumOfSquaredWeights: " << sumOfSquaredWeights << endreq;
       msg << MSG::DEBUG << HistoProf_ID  << ": ixBin " << ixBin << " entries " << my1Dhprof->binEntries(ixBin)
           << " mean " << my1Dhprof->binHeight(ixBin) << " rms " << my1Dhprof->binRms(ixBin)
-          << " error " << my1Dhprof->binError(ixBin) << endreq;
+          << " error " << my1Dhprof->binError(ixBin) << endreq;*/
     }
   }
-  
+ 
   // (Track only last loop step above):
   if(1 == eventtype) counter2++;
   efficiency1= float(counter2)/counter1;
   effHisto->fill(efficiency1);
-  msg << MSG::DEBUG << "Event: " << counter1 << " counter2: " << counter2 
+/*  msg << MSG::DEBUG << "Event: " << counter1 << " counter2: " << counter2 
       << " efficiency1: " << efficiency1 << " effHisto content: ";
   for(int i=0; i<= effHisto->axis().bins();++i){ msg << MSG::DEBUG << effHisto->binEntries(i) << " ";}
-  msg << MSG::DEBUG <<  endreq;
+  msg << MSG::DEBUG<<  endreq;*/
   
   status="Normal";
   
@@ -274,9 +273,9 @@ StatusCode GaudiExample::execute() {
   int nD=(int)random4();
   m_vectDouble.clear();
   for(int i=0;i<nD;++i)m_vectDouble.push_back(random1()*100);
-  msg << MSG::DEBUG << "Filled a vector of doubles with " << m_vectDouble.size() << " elements: ";
+/*  msg << MSG::DEBUG << "Filled a vector of doubles with " << m_vectDouble.size() << " elements: ";
   for(std::vector<double>::iterator iD=m_vectDouble.begin();iD != m_vectDouble.end();++iD) msg << MSG::DEBUG << *iD << " ";
-  msg << MSG::DEBUG << endreq;
+  msg << MSG::DEBUG << endreq;*/
   monVectorDouble.setValue(m_vectDouble);
   // Print content from monVectorDouble  to check
   if(MSG::DEBUG == msgSvc()->outputLevel(name())) monVectorDouble.print();
@@ -284,9 +283,9 @@ StatusCode GaudiExample::execute() {
   int nI=(int)random4();
   m_vectInt.clear();
   for(int i=0;i<nI;++i)m_vectInt.push_back((int)(random1()*50));
-  msg << MSG::DEBUG << "Filled a vector of integers with " << m_vectInt.size() << " elements: ";  
+/*  msg << MSG::INFO << "Filled a vector of integers with " << m_vectInt.size() << " elements: ";  
   for(std::vector<int>::iterator iI=m_vectInt.begin();iI != m_vectInt.end();++iI) msg << MSG::DEBUG << *iI << " ";
-  msg << MSG::DEBUG << endreq;
+  msg << MSG::INFO << endreq;*/
   monVectorInt.setValue(m_vectInt);
   // Print content from monVectorInt to check
   if(MSG::DEBUG == msgSvc()->outputLevel(name())) monVectorInt.print();
@@ -294,8 +293,11 @@ StatusCode GaudiExample::execute() {
   //  delay
   mysleep(sleepTime);
   
+  msg << MSG::DEBUG << "******************************************" << endreq;
+  
   count_rate_1 = counter1;
   count_rate_2 = counter2;
+    
   return StatusCode::SUCCESS;
 }
 
@@ -307,7 +309,7 @@ StatusCode GaudiExample::finalize() {
   msg << MSG::INFO << "finalizing...." << endreq;
   
   // Print the final contents of the Profile1D histogram
-  AIDA::IProfile1D* my1Dhprof = profile1D (std::string("Profile  histo of y(x)"));
+  AIDA::IProfile1D* my1Dhprof = profile1D(std::string("Profile  histo of y(x)"));
   msg << MSG::DEBUG << "GaudiExample: final contents of the Profile1D histogram my1Dhprof:" << endreq;
   msg << MSG::DEBUG << "ixBin " << "UNDERFLOW" << " entries " << my1Dhprof->binEntries(AIDA::IAxis::UNDERFLOW_BIN) 
       << " mean " << my1Dhprof->binHeight(AIDA::IAxis::UNDERFLOW_BIN) 
@@ -321,9 +323,9 @@ StatusCode GaudiExample::finalize() {
         << " error " << my1Dhprof->binError(ixBin) << endreq;
   }
   
-  msg << MSG::DEBUG << "ixBin " << "OVERFLOW" << " entries " << my1Dhprof->binEntries(AIDA::IAxis::OVERFLOW_BIN)
-      << " mean " << my1Dhprof->binHeight(AIDA::IAxis::OVERFLOW_BIN) 
-      << " rms " << my1Dhprof->binRms(AIDA::IAxis::OVERFLOW_BIN)
-      << " error " << my1Dhprof->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
+   msg << MSG::DEBUG << "ixBin " << "OVERFLOW" << " entries " << my1Dhprof->binEntries(AIDA::IAxis::OVERFLOW_BIN)
+       << " mean " << my1Dhprof->binHeight(AIDA::IAxis::OVERFLOW_BIN) 
+       << " rms " << my1Dhprof->binRms(AIDA::IAxis::OVERFLOW_BIN)
+       << " error " << my1Dhprof->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
   return StatusCode::SUCCESS;
 }
