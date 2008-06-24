@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.381 2008-06-09 15:51:04 jpalac Exp $
+# $Id: requirements,v 1.382 2008-06-24 11:12:28 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v19r13
+version           v19r14
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -62,7 +62,8 @@ application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
 apply_pattern application_path 
 
 # define aliases
-alias DaVinci "${DAVINCIROOT}/${BINDIR}/DaVinci.exe"
+alias DaVinci gaudirun.py
+
 alias DaVinciTests "cmt qmtest_run"
 # for QMtest
 apply_pattern QMTest
