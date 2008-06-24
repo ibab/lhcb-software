@@ -1,7 +1,6 @@
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichMarkovRingFinder
 ! Responsible : Chris Jones
-! Responsible : Andy Buckley (andy@insectnation.org)
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
