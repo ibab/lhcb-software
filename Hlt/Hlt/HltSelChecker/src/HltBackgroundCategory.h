@@ -1,10 +1,10 @@
-// $Id: HltBackgroundCategory.h,v 1.3 2008-06-18 19:12:55 pkoppenb Exp $
+// $Id: HltBackgroundCategory.h,v 1.4 2008-06-24 11:05:59 pkoppenb Exp $
 #ifndef HLTBACKGROUNDCATEGORY_H 
 #define HLTBACKGROUNDCATEGORY_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Hlt2StatisticsBase.h"
 
 
 /** @class HltBackgroundCategory HltBackgroundCategory.h
@@ -18,17 +18,17 @@
  *  If option "FillAll" is set to true, all categories are taken. But there's still only
  *  one endResult per selection and event.
  *
- * Option PrintTree allows to print the tree of the candidate and the mc particle is applicable.
+ *  Option PrintTree allows to print the tree of the candidate and the MC 
+ *  particle is applicable.
  *
  *  @author Patrick Koppenburg
  *  @date   2008-02-04
  */
-class IHltSummaryTool ;
-class IBackgroundCategory ;
 class IPrintDecayTreeTool ;
 class IPrintMCDecayTreeTool ;
+class IBackgroundCategory ;
 
-class HltBackgroundCategory : public GaudiAlgorithm {
+class HltBackgroundCategory : public Hlt2StatisticsBase {
 public: 
   /// Standard constructor
   HltBackgroundCategory( const std::string& name, ISvcLocator* pSvcLocator );
@@ -44,9 +44,7 @@ protected:
 private:
   bool m_printTree ;               ///< print tree
   bool m_fillAll ;                  ///< fill all candidates, not only best
-  IHltSummaryTool* m_summaryTool ; ///< HLT summary tool
   IBackgroundCategory* m_bkg     ; //< Background category tool
-  IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
   IPrintDecayTreeTool* m_print ;        ///< print Particles
   IPrintMCDecayTreeTool* m_printMC ;    ///< print MCParticles
   

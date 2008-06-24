@@ -1,19 +1,15 @@
-// $Id: HltBackgroundCategory.cpp,v 1.12 2008-06-18 19:23:03 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.13 2008-06-24 11:05:59 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // LHCb
-#include "Event/Particle.h"
-#include "Kernel/IHltSummaryTool.h"
 #include "Event/HltSummary.h"
 #include "Kernel/IBackgroundCategory.h"
-#include "Kernel/IAlgorithmCorrelations.h"            // Interface
 #include "Kernel/IPrintDecayTreeTool.h"            // Interface
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
 #include "Kernel/Particle2MCLinker.h"
-
 #include "Kernel/IANNSvc.h"
 
 // local
@@ -34,10 +30,8 @@ DECLARE_ALGORITHM_FACTORY( HltBackgroundCategory );
 //=============================================================================
 HltBackgroundCategory::HltBackgroundCategory( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-  ,   m_summaryTool()
+  : Hlt2StatisticsBase ( name , pSvcLocator )
   ,   m_bkg()
-  ,   m_algoCorr()
     , m_print()
     , m_printMC()
 {
@@ -53,14 +47,12 @@ HltBackgroundCategory::~HltBackgroundCategory() {}
 // Initialization
 //=============================================================================
 StatusCode HltBackgroundCategory::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = Hlt2StatisticsBase::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by Hlt2StatisticsBase
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  m_summaryTool = tool<IHltSummaryTool>("HltSummaryTool",this);
   m_bkg         = tool<IBackgroundCategory>("BackgroundCategory",this);
-  m_algoCorr    = tool<IAlgorithmCorrelations>("AlgorithmCorrelations",this);
   if (m_printTree ){
     m_print       = tool<IPrintDecayTreeTool>("PrintDecayTreeTool",this);
     m_printMC     = tool<IPrintMCDecayTreeTool>("PrintMCDecayTreeTool",this);
@@ -68,25 +60,16 @@ StatusCode HltBackgroundCategory::initialize() {
   
   const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
 
-  std::vector<std::string> cats ;
+  strings cats ;
   for ( std::map<int, std::string>::const_iterator i = catMap.begin() ; 
         i!= catMap.end() ; ++i) {
     verbose() << "Looking at " << i->first << " " << i->second << endmsg ;
     cats.push_back(i->second);
   }
 
-  IANNSvc *ann = svc<IANNSvc>("HltANNSvc");
-  std::vector<IANNSvc::minor_value_type> selections2 = ann->items("Hlt2SelectionID");
-  std::vector<std::string> selections ;
-
-  for (std::vector<IANNSvc::minor_value_type>::const_iterator i =
-         selections2.begin(); i!=selections2.end(); ++i) {
-    selections.push_back(i->first) ;
-  }
-  
   sc =  m_algoCorr->algorithms(cats);
   if (!sc) return sc;
-  sc =  m_algoCorr->algorithmsRow(selections);
+  sc =  m_algoCorr->algorithmsRow(getSelections());
 
   return sc;
 }
@@ -100,11 +83,11 @@ StatusCode HltBackgroundCategory::execute() {
 
   if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
 
-  std::vector<std::string> sels =  m_summaryTool->selections() ;
+  strings sels =  m_summaryTool->selections() ;
   Particle2MCLinker* linker  = 0 ;
   if (m_printTree) linker = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   
-  for ( std::vector<std::string>::const_iterator is = sels.begin() ; 
+  for ( strings::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
 
     if (msgLevel(MSG::VERBOSE)) verbose() << *is <<  " " 
@@ -114,31 +97,23 @@ StatusCode HltBackgroundCategory::execute() {
                                           << m_summaryTool->hasSelection(*is) 
                                           << " summary : " 
                                           << m_summaryTool->summary().hasSelectionSummary(*is) << endmsg ;
-    if (!m_summaryTool->selectionDecision(*is)) continue ;
-    if (!m_summaryTool->hasSelection(*is)) continue ;  // ???
+    if (!m_summaryTool->selectionDecision(*is)) Exception("selectionDecision false for "+*is);
+    if (!m_summaryTool->hasSelection(*is)) Exception("hasSelection false for "+*is);
      
-    const LHCb::HltSelectionSummary& sum = m_summaryTool->summary().selectionSummary(*is); // waiting for Particles method
-
-    /// @todo does not work yet
-    /*
     if (msgLevel(MSG::VERBOSE)) verbose() << *is << " found " 
                                       << m_summaryTool->selectionParticles(*is).size() 
                                       << " Particles" << endmsg ;
     if ( m_summaryTool->selectionParticles(*is).empty()) continue ;
-    std::vector< LHCb::Particle * > parts =  m_summaryTool->selectionParticles(*is);
-    */
+    const LHCb::Particle::ConstVector  parts =  m_summaryTool->selectionParticles(*is);
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << *is << " gets " 
-                                          << sum.particles().size() << " particles" << endmsg ;
-    
-    
-    const SmartRefVector<LHCb::Particle>&  parts = sum.particles() ;
-
-    if (parts.empty()) continue ;
+    if (parts.empty()) {
+      err() << "Selection " << *is << " found no particles" << endmsg  ;
+      continue ;
+    }
 
     IBackgroundCategory::categories mincat = IBackgroundCategory::LastGlobal ;
     const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
-    for ( SmartRefVector<LHCb::Particle>::const_iterator ip =  
+    for ( LHCb::Particle::ConstVector::const_iterator ip =  
             parts.begin() ; ip != parts.end() ; ++ip){
       
       // bkg category
@@ -170,7 +145,8 @@ StatusCode HltBackgroundCategory::execute() {
     if (!m_fillAll){
       if ( mincat == IBackgroundCategory::LastGlobal ) mincat = IBackgroundCategory::Undefined ;
       std::map<int, std::string>::const_iterator scat = catMap.find(mincat) ;
-      if (msgLevel(MSG::DEBUG)) debug() << "Best category is " << (*scat).second << " for " << *is << endmsg ;
+      if (msgLevel(MSG::DEBUG)) debug() << "Best category is " << (*scat).second 
+                                        << " for " << *is << endmsg ;
       if (!m_algoCorr->fillResult((*scat).second, true )) return StatusCode::FAILURE;
     }  
     if (!m_algoCorr->fillResult(*is, true )) return StatusCode::FAILURE; 
@@ -188,13 +164,7 @@ StatusCode HltBackgroundCategory::execute() {
 StatusCode HltBackgroundCategory::finalize() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
-  StatusCode sc = StatusCode::SUCCESS ;
-  sc = m_algoCorr->printTable() ;
-  if (!sc) return sc;
-  //  sc = m_algoCorr->printList() ;
-  //  if (!sc) return sc;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return Hlt2StatisticsBase::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

@@ -12,6 +12,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 - Patrick Koppenburg
+ - New algorithm Hlt2Statistics printing a table with b content and 
+	number of PVs. 	
+ - New options options/DVTestStatistics.py to test it
+ - New algorithm base class Hlt2StatisticsBase 
+ - Use Hlt2StatisticsBase in HltBackgroundCategory
+ - increment to v6r3
+
 ! 2008-06-17 - Patrick Koppenburg
  - Moved IANNSvc to HltInterfaces
 
