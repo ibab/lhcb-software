@@ -23,7 +23,7 @@ RhoEtaPhiPointF   = Math.RhoEtaPhiPointF
 RhoZPhiVectorF    = Math.RhoZPhiVectorF
 RhoZPhiPointF     = Math.RhoZPhiPointF
 #
-Line = GaudiPython.gbl.Gaudi.Line
+Line = GaudiPython.gbl.Gaudi.Math.Line
 XYZLine        = Line(XYZPoint, XYZVector)
 Polar3DLine    = Line(Polar3DPoint, Polar3DVector)
 RhoEtaPhiLine  = Line(RhoEtaPhiPoint, RhoEtaPhiVector)
