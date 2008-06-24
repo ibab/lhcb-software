@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.8 2008-06-24 14:16:21 mneedham Exp $
+! $Id: release.notes,v 1.9 2008-06-24 15:09:59 mneedham Exp $
 ! Package     : STOnline
 ! Responsible : Mathias Knecht
+
+! 2008-06-24 M Needham
+ - Changes in printout code 
 
 ! 2008-06-24 M Needham
  - Add missing .cpp
