@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Juan PALACIOS -->
+<!--- Created : 2008-06-20 -->
+<lcgdict>
+  <class name = "Gaudi::XYZLine"/>
+  <class name = "Gaudi::Polar3DLine"/>
+  <class name = "Gaudi::RhoEtaPhiLine"/>
+  <class name = "Gaudi::RhoZPhiLine"/>
+  <class name = "Gaudi::XYZLineF"/>
+  <class name = "Gaudi::Polar3DLineF"/>
+  <class name = "Gaudi::RhoEtaPhiLineF"/>
+  <class name = "Gaudi::RhoZPhiLineF"/>
+  <class name = "Gaudi::Math::Dummy"/>
+  <class name = "Gaudi::Math::XYZGeomFun"/>
+</lcgdict>
