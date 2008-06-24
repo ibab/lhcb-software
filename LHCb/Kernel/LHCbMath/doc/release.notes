@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 - Juan PALACIOS
+ - LHCbMath/Line.h
+ - LHCbMath/LineTypes.h
+ - dict/LHCbMathDict.h
+ - dict/LHCbMathDict.xml
+  . Put everything directly under the Gaudi:: namespace under Gaudi::Math::
+ - python/LHCbMath.py
+  . Adapt to changes above.
+
 ! 2008-06-24 Juan PALACIOS
  - cmt/requirements
   . Remove LHCbMath from PYTHONPATH and add apply_pattern install_python_modules
