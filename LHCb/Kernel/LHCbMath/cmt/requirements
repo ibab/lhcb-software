@@ -20,7 +20,10 @@ use ROOT            v*      LCG_Interfaces
 use Boost           v*      LCG_Interfaces
 use GSL             v*      LCG_Interfaces
 use GaudiPython     v*
+
 apply_pattern install_more_includes more=LHCbMath
+
+apply_pattern install_python_modules
 
 macro_append ROOT_linkopts " -lMathCore " \
              WIN32 " libMathCore.lib "
@@ -39,8 +42,4 @@ apply_pattern reflex_dictionary                               \
 #============================================================================
 macro LHCbMath_use_linkopts $(use_linkopts)
 #============================================================================
-path_remove  PYTHONPATH "/GaudiPython/" WIN32 "\GaudiPython\"
-path_prepend PYTHONPATH "$(GAUDIPYTHONROOT)/python"
-path_remove  PYTHONPATH "/LHCbMath/" WIN32 "\LHCbMath\"
-path_append  PYTHONPATH "$(LHCBMATHROOT)/python"
-#============================================================================
+
