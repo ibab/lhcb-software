@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-06-24 - Marco Clemencic
+ - Fixed the reference file for the test daqevent.basictest.
+
 !================ DAQEvent v7r11 2008-06-09 ===========================
 ! 2008-04-09 - Olivier Deschamps
  - Add 'L0DUError' in RawBank types enum

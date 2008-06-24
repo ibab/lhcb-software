@@ -356,6 +356,6 @@ RawEventDump         INFO   [40, 0, 3, cbcb] Data follows...
 RawEventDump         INFO    ... [7b5] [cafeacdc] [17] [1] [1] [440b1] [e73f4b05] [aabbbbbb] [11cf0123] [1234567] 
 RawEventDump         INFO   
 EventLoopMgr         INFO Histograms converted successfully according to request.
-ToolSvc.finalize()   INFO Removing all tools created by ToolSvc
+ToolSvc              INFO Removing all tools created by ToolSvc
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
