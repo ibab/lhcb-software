@@ -1,19 +1,22 @@
-// $Id: GiGaPhysUnknownParticles.cpp,v 1.1 2008-04-26 22:00:45 robbep Exp $
+// $Id: GiGaPhysUnknownParticles.cpp,v 1.2 2008-06-24 10:29:45 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // G4 
 #include "G4UnknownParticle.hh"
 #include "G4ProcessManager.hh"
+#include "G4ParticleTable.hh"
 
 // local
 #include "G4BcMesonMinus.h"
 #include "G4BcMesonPlus.h"
 #include "G4AntiLambdabZero.h"
 #include "G4LambdabZero.h"
+//
 #include "GiGaPhysUnknownParticles.h"
 
 //-----------------------------------------------------------------------------
@@ -30,7 +33,8 @@ GiGaPhysUnknownParticles::GiGaPhysUnknownParticles
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysConstructorBase( type , name , parent ) { }
+  : GiGaPhysConstructorBase( type , name , parent ) 
+{ }
 
 //=============================================================================
 // Destructor
@@ -46,7 +50,8 @@ void GiGaPhysUnknownParticles::ConstructParticle()
   G4BcMesonPlus::BcMesonPlusDefinition() ;  
   G4AntiLambdabZero::AntiLambdabZeroDefinition();
   G4LambdabZero::LambdabZeroDefinition();
-  G4UnknownParticle::UnknownParticleDefinition();
+  
+  G4UnknownParticle::UnknownParticleDefinition();  
 }
 
 //=============================================================================

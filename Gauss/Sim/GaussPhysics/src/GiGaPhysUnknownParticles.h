@@ -3,12 +3,13 @@
 #define    GAUSSPHYS_GIGAPHYSUNKNOWNPARTICLES_H 1 
 // ============================================================================
 // include files 
-
+// ============================================================================
 // GiGa 
+// ============================================================================
 #include "GiGa/GiGaPhysConstructorBase.h"
 #include "G4Decay.hh"
 #include "G4UnknownDecay.hh"
-
+// ============================================================================
 // forward declarations 
 template <class TYPE> class GiGaFactory;
 
@@ -32,8 +33,10 @@ public:
   void ConstructProcess  ();
   
 private:
+  
   G4Decay m_decayProcess ;
   G4UnknownDecay m_unknownDecay ;
+  
 };
 // ============================================================================
 
