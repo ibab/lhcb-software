@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.69 2008-06-24 16:38:07 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.70 2008-06-24 17:49:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -86,9 +86,8 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
   // Disable histograms by default
   setProduceHistos( false );
   // data maps
-  //declareProperty( "ApproxCoPointMap",     
-  //m_coPointMap = DefaultDataMaps::defaultCoPointMap(rad);
-  //);
+  // cannot do this until Gaudi allows properties of type std::map<double,double>
+  //declareProperty( "ApproxCoPointMap", m_coPointMap );
 }
 
 //=============================================================================

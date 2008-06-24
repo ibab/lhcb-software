@@ -5,7 +5,7 @@
  *  Header file for Markov Ring finder algorithms
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.h,v 1.39 2008-06-20 09:54:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.40 2008-06-24 17:49:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -183,7 +183,7 @@ namespace Rich
         unsigned int m_AbsMinIts;
 
         /// Approx Co Point Map
-        //std::map<double,double> m_coPointMap;
+        std::map<double,double> m_coPointMap;
 
       };
 
