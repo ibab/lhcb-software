@@ -1,4 +1,0 @@
-
-// algorithm monitor
-BrunelMoniRICHSeq.Members += { "RichMarkovRingFinderMoni/RichRingFinderMoni" };
-RichRingFinderMoni.RingHitMatchFractionCutoff = 0.7;

@@ -1,3 +1,0 @@
-
-// algorithm monitor
-ApplicationMgr.TopAlg += { "RichMarkovRingFinderMoni/RichRingFinderMoni" };
