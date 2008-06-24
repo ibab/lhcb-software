@@ -1,12 +1,14 @@
-// $Id: PythiaProduction.h,v 1.9 2008-05-06 14:50:40 ibelyaev Exp $
+// $Id: PythiaProduction.h,v 1.10 2008-06-24 10:38:30 ibelyaev Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
-
+// ============================================================================
 // Include files
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/IProductionTool.h"
-
+// ============================================================================
 // Forward declaration
 class IBeamTool ;
 
@@ -138,6 +140,11 @@ private:
   // ==========================================================================
   /// boolean flag to force the valiadation of IO_HEPEVT 
   bool m_validate_HEPEVT ; // force the valiadation of IO_HEPEVT 
+  // ==========================================================================
+  /// the file to dump the HEPEVT incinsistencies 
+  std::string   m_inconsistencies ; // the file to dump the HEPEVT incinsistencies 
+  // ==========================================================================
+  std::ostream* m_HEPEVT_errors ;
   // ==========================================================================
 };
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H

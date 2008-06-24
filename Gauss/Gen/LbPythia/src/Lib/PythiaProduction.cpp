@@ -1,6 +1,8 @@
-// $Id: PythiaProduction.cpp,v 1.6 2008-05-06 14:50:40 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.7 2008-06-24 10:38:30 ibelyaev Exp $
 
 // Include files
+// STD * STL 
+#include <fstream> 
 
 // local
 #include "LbPythia/Pythia.h"
@@ -84,8 +86,10 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_pdtlist    (   ) , 
     m_widthLimit ( 1.5e-6 * GeV ) 
   /// boolean flag to force the valiadation of IO_HEPEVT 
-    , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
-  
+  , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
+  /// the file to dump the HEPEVT inconsistencies 
+  , m_inconsistencies ( "HEPEVT_inconsistencies.out" ) 
+  , m_HEPEVT_errors ( 0 ) 
 {
   declareInterface< IProductionTool >( this ) ;
   declareProperty( "Commands" , m_commandVector ) ;
@@ -99,6 +103,11 @@ PythiaProduction::PythiaProduction( const std::string& type,
     ( "ValidateHEPEVT"  , 
       m_validate_HEPEVT ,
       "The flag to force the validation (mother&daughter) of HEPEVT" ) ;
+  
+  declareProperty 
+    ( "Inconsistencies" , 
+      m_inconsistencies , 
+      "The file to dump HEPEVT inconsinstencies" ) ;
   
   // Set the default settings for Pythia here:
   m_defaultSettings.clear() ;
@@ -432,6 +441,9 @@ void PythiaProduction::hardProcessInfo( LHCb::GenCollision * theCollision ) {
 //=============================================================================
 StatusCode PythiaProduction::finalize( ) {
   Pythia::PyStat( m_finalizationListingLevel ) ;  
+  
+  if ( 0 != m_HEPEVT_errors ) 
+  { delete m_HEPEVT_errors ; m_HEPEVT_errors = 0 ; }
   
   return GaudiTool::finalize( ) ;
 }  
@@ -882,11 +894,34 @@ StatusCode PythiaProduction::toHepMC
   
   // Convert event in HepMC Format
   HepMC::IO_HEPEVT theHepIO ;
-
   
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 
-  { theHepIO.set_trust_both_mothers_and_daughters( true ) ; }
+  { 
+    theHepIO.set_trust_both_mothers_and_daughters ( true ) ;
+    theHepIO.set_trust_mothers_before_daughters   ( true ) ;
+    theHepIO.set_print_inconsistency_errors       ( true );
+    
+    if ( !m_inconsistencies.empty() && 0 == m_HEPEVT_errors )
+    { m_HEPEVT_errors = new std::ofstream ( m_inconsistencies.c_str() ) ; }
+    
+    MsgStream& log = warning() ;
+    
+    if ( 0 != m_HEPEVT_errors ) 
+    {
+      if ( !HepMC::HEPEVT_Wrapper::check_hepevt_consistency ( *m_HEPEVT_errors ) )
+      { Warning ( "Inconsistencies in HEPEVT structure are found" ) ; }   
+    }
+    else 
+    {
+      MsgStream& log = warning() ;
+      if ( !HepMC::HEPEVT_Wrapper::check_hepevt_consistency ( log.stream() ) )
+      {
+        log << endreq ;
+        Warning ( "Inconsistencies in HEPEVT structure are found" ) ; 
+      } 
+    }
+  }
   
   if ( ! theHepIO.fill_next_event( theEvent ) )
     return Error( "Could not fill HepMC event" ) ;

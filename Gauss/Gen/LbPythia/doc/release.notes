@@ -4,6 +4,19 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 - Vanya  BELYAEV
+
+ - PythiaProduction
+    add new property "Inconsistencies", 
+    it is a name of the file where to dump HEPEVT inconsistencies, 
+    detected if the property "ValidateHEPEVT" is activated
+    For empty file name, inconsistencies are dumped on the 
+    WARNING 
+    
+ - cmt/requirements 
+    version increment to v7r3 
+
+
 !========================= LbPythia v7r2 2008-06-09 ==========================
 ! 2008-05-06 - Vanya BELYAEV
  - LbPythia/PythiaProduction.h 
