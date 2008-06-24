@@ -6,9 +6,9 @@ ApplicationMgr.DLLs += { "FlavourTagging" };
 //----------------------------------------------------------------------
 
 //inclusive secondary vtx type
-ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexTool";//"TDR" type
-//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
-//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
+ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexTool"; 
+//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexNNTool"; //higher effic.
+//ToolSvc.BTaggingTool.TaggerVertexChargeTool.SecondaryVertexName= "SVertexABTool"; //two output vtxs
 
 //combination method of taggers based on probabilities from NNet
 ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";
@@ -16,7 +16,7 @@ ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersProbability";
 //ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersTDR";
 
 //force average estimates for omega of taggers
-//ToolSvc.BTaggingTool.TaggerMuonTool.CombTech = "none"; //defaut="NNet"
+//ToolSvc.BTaggingTool.TaggerMuonTool.CombTech = "none"; 
 //ToolSvc.BTaggingTool.TaggerMuonTool.AverageOmega = 0.33;
 
 //Choose neural net (comment these for new one). 

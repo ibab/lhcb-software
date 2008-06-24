@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.115 2008-06-10 19:01:00 musy Exp $
+! $Id: release.notes,v 1.116 2008-06-24 08:18:54 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2008-06-24 - Patrick Koppenburg
+ - Change a few options formatting to avoid confusing gaudi v19 with gaudirun.py
 
 ! 2008-06-10 - Marco Musy
  - Complete revision and retuning for Brunel v31 data
