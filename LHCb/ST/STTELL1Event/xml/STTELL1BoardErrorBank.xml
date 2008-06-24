@@ -72,7 +72,17 @@
       </code>
       </method>
       
-    
+
+    <method 
+        name    = "fillStream" 
+        desc    = "Print out of error information"
+        type    = "std::ostream&amp;" 
+        virtual = "FALSE" 
+        const   = "TRUE">
+        <arg 
+         type = "std::ostream" 
+         name = "s"/>
+      </method>	    
 
     </class>   
  
