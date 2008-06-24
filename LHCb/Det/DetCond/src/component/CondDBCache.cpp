@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.8 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.9 2008-06-24 09:41:54 marcocle Exp $
 // Include files 
 
 
@@ -15,7 +15,7 @@
 // Standard constructor, initializes variables
 //=============================================================================
 CondDBCache::CondDBCache(const MsgStream& log, size_t highLvl, size_t lowLvl):
-  m_highLvl(highLvl),m_lowLvl(lowLvl),m_level(0),m_log(log),m_lastRequestedTime(0)
+  m_highLvl(highLvl),m_lowLvl(lowLvl),m_level(0),m_log(log),m_lastRequestedTime(0),m_checkLastReqTime(true)
 {
   if ( highLvl == 0 ) {
     m_log << MSG::WARNING << "High level == 0 : forced to 100" << endmsg;
@@ -116,8 +116,11 @@ bool CondDBCache::addFolderSet(const std::string &path, const std::string &descr
 bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
                             const cool::IRecord& rec, const cool::ChannelId &channel, IOVType *iov_before) {
   // new objects cannot be already valid. check it!
-  if ( m_lastRequestedTime != 0 && ( since <= m_lastRequestedTime && m_lastRequestedTime < until ) ) {
-    m_log << MSG::WARNING << "New item IOV is compatible with last requested time: I cannot add it" << endmsg;
+  if ( IOVCheck() && (m_lastRequestedTime != 0)
+       && ( since <= m_lastRequestedTime && m_lastRequestedTime < until ) ) {
+    m_log << MSG::WARNING
+          << "New item IOV is compatible with last requested time:"
+          << " not allowed to avoid inconsistencies" << endmsg;
     return false;
   }
   // increment object count and check the limit

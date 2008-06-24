@@ -1,9 +1,13 @@
-# $Id: release.notes,v 1.133 2008-06-11 05:42:27 cattanem Exp $
+# $Id: release.notes,v 1.134 2008-06-24 09:41:53 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-06-24 - Marco Clemencic
+ - Fixed a bug in the direct mapping between the hierarchy of the COOL
+   database and the transient store one.
 
 !===================== Det/DetCond v12r0 2008-06-10 ==========================
 ! 2008-06-10 - Marco Clemencic

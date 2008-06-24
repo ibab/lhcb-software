@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.51 2008-06-10 16:47:23 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.52 2008-06-24 09:41:54 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -1139,5 +1139,11 @@ void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path)
   // Put the data in the cache
   if ( ! m_cache->hasPath(path) )
     cacheAddXMLFolder(path);
+  
+  // This is needed because we cannot add objects valid for the current event
+  // to the cache using the ICondDBAccessSvc API. 
+  bool check_enabled = m_cache->setIOVCheck(false);
   cacheAddXMLData(path,Gaudi::Time::epoch(),Gaudi::Time::max(),xml.str(),0).ignore();
+  m_cache->setIOVCheck(check_enabled);
+
 }

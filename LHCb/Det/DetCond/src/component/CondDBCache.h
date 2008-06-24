@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.7 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBCache.h,v 1.8 2008-06-24 09:41:54 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -104,7 +104,20 @@ public:
   bool hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const;
 
   void dump();
-  
+
+  /// Set the flag to enable the check that the inserted IOVs are not compatible with the latest
+  /// requested time (needed to avoid that the cache is modified for the current event).
+  /// @return previous value
+  bool setIOVCheck(bool enable) 
+  {
+    bool old = m_checkLastReqTime;
+    m_checkLastReqTime = enable;
+    return old;
+  }
+
+  /// Tell if the check on inserted IOVs is enabled.
+  bool IOVCheck() { return m_checkLastReqTime; }
+
 protected:
 
 private:
@@ -211,6 +224,8 @@ private:
   MsgStream m_log;
 
   cool::ValidityKey m_lastRequestedTime;
+  bool m_checkLastReqTime;
+  
 };
 
 inline size_t CondDBCache::size() const {
