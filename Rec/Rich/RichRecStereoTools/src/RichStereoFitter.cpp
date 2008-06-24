@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.9 2008-06-04 16:31:20 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.10 2008-06-24 11:24:25 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -17,6 +17,7 @@
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "boost/assign/list_of.hpp"
 
 // namespaces
 using namespace LHCb;
@@ -229,13 +230,14 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       //------------------Select good photons for ring stereo fit
       RichRecRing recRing;
 
-      if(n_iter==0) {   //first iteration
+      if ( n_iter == 0 )
+      {   //first iteration
 
         //global renormalization of individual photon variance
         m_newErrorPerPhotonSelect*=std::pow(m_globGammmaNorm[richRadiator],2);
 
         //-------------select photons using thetaC cut (iteration 0)
-        const RichRecSegment::Photons &photons=richSegment->richRecPhotons();     //segment photon candidates
+        const RichRecSegment::Photons &photons = richSegment->richRecPhotons(); // segment photon candidates
         for ( RichRecSegment::Photons::const_iterator iPhot=photons.begin();
               iPhot != photons.end(); ++iPhot)
         {
@@ -247,19 +249,24 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
         }
         const int ngoodPhot = goodPhotons.size();
         debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
-        //stereo projection
-        m_stereoProj->Project(goodPhotons,recRing);
 
-        //compute initial (iteration 0) radius guestimation
-        double radiusSquareGuess(0);
-        for ( int iphot=0;iphot<ngoodPhot; ++iphot )
+        m_RadiusGuess = 0;
+        if ( ngoodPhot > 0 )
         {
-          Gaudi::XYZPoint vphot=recRing.ringPoints()[iphot].localPosition();
-          radiusSquareGuess+=(vphot.X()-g_XCenterGuess)*(vphot.X()-g_XCenterGuess);
-          radiusSquareGuess+=(vphot.Y()-g_YCenterGuess)*(vphot.Y()-g_YCenterGuess);
+
+          //stereo projection
+          m_stereoProj->Project(goodPhotons,recRing);
+
+          //compute initial (iteration 0) radius guestimation
+          for ( int iphot=0;iphot<ngoodPhot; ++iphot )
+          {
+            const Gaudi::XYZPoint & vphot = recRing.ringPoints()[iphot].localPosition();
+            m_RadiusGuess += ( (vphot.X()-g_XCenterGuess)*(vphot.X()-g_XCenterGuess) +
+                               (vphot.Y()-g_YCenterGuess)*(vphot.Y()-g_YCenterGuess) );
+          }
+          m_RadiusGuess = std::sqrt(m_RadiusGuess/ngoodPhot);
+
         }
-        radiusSquareGuess/=ngoodPhot;
-        m_RadiusGuess=std::sqrt(radiusSquareGuess);
 
       }
       else
@@ -284,23 +291,21 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
 
         //-------------select photons using distance in stereo plane (iteration > 0)
         //adapt nsigma cut (in radius) to small radii and/or big errors...
-        double NsigRcut;
-        double RadiusErrorPhot = std::sqrt(m_newErrorPerPhotonSelect);
-        if((radiusFitted()-m_nSigmaCut*RadiusErrorPhot)<0) NsigRcut=fabs(radiusFitted()/RadiusErrorPhot);
-        else NsigRcut=m_nSigmaCut;
+        const double RadiusErrorPhot = std::sqrt(m_newErrorPerPhotonSelect);
+        const double NsigRcut = ( (radiusFitted()-m_nSigmaCut*RadiusErrorPhot) < 0 ? 
+                                  fabs(radiusFitted()/RadiusErrorPhot) : m_nSigmaCut );
         m_RadiusGuess=radiusFitted();     //refresh radius estimation
 
         int index=0;
         RichRecPhoton::ConstVector goodPhotonsTmp;
         for(RichRecPhoton::ConstVector::iterator iPhot = goodPhotons.begin();
-            iPhot != goodPhotons.end(); ++iPhot)
+            iPhot != goodPhotons.end(); ++iPhot, ++index )
         {
-          double xphot=recRing.ringPoints()[index].localPosition().X();
-          double yphot=recRing.ringPoints()[index].localPosition().Y();
-          double sep = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
+          const double xphot = recRing.ringPoints()[index].localPosition().X();
+          const double yphot = recRing.ringPoints()[index].localPosition().Y();
+          const double sep   = radiusFitted()-std::sqrt(std::pow(xphot-XcenterFitted(),2) + std::pow(yphot-YcenterFitted(),2));
           debug() << "fabs(sep)=" << fabs(sep) << "  ;    NsigRcut*RadiusErrorPhot=" << NsigRcut*RadiusErrorPhot << endreq;
           if(fabs(sep)<NsigRcut*RadiusErrorPhot) goodPhotonsTmp.push_back(*iPhot);
-          index++;
         }
         goodPhotons = goodPhotonsTmp;
       }
@@ -308,7 +313,9 @@ StereoFitter::Fit( LHCb::RichRecSegment *richSegment,
       //filter according to number of photons
       int ngoodPhot=goodPhotons.size();
       debug() << "goodPhotons.size() = " << goodPhotons.size() << endreq;
-      if(ngoodPhot>=config.minRingPhotons && ngoodPhot<s_NmaxFitPhot) {
+      if ( ngoodPhot >= config.minRingPhotons &&
+           ngoodPhot <  s_NmaxFitPhot )
+      {
 
         //------------- begin fit steps
         //compute covariance matrix, solve chi2 equations, get the fitted solution
@@ -838,7 +845,7 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
 
   //fabs not needed because matrix should be positive definite
   if(det < 1.0e-17) {
-    Warning( "solveChi2Equations : Fit failed : |M| too small", StatusCode::SUCCESS, 3 );
+    Warning( "solveChi2Equations : Fit failed : |M| too small", StatusCode::SUCCESS, 3 ).ignore();
     return false;
   }
 
@@ -861,9 +868,13 @@ bool StereoFitter::solveChi2Equations(RichRecRing &recRing) const {
 int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
 
   //transfer of parameter errors
-  double err_R;
-  double radius2=m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
-  err_R=m_errPar[2][2];
+  const double radius2 = radiusFittedSquare();
+  if ( !(radius2>0) )
+  {
+    Warning( "transferFitSolution : radius^2 <= 0 !!", StatusCode::SUCCESS, 3 ).ignore();
+    return 0;
+  }
+  double err_R   = m_errPar[2][2];
   err_R+=4*m_sol[0]*m_sol[0]*m_errPar[0][0];
   err_R+=4*m_sol[1]*m_sol[1]*m_errPar[1][1];
   err_R+=4*m_sol[0]*m_errPar[0][2];
@@ -873,36 +884,35 @@ int StereoFitter::transferFitSolution(RichRecRing &recRing) const {
   m_err_R=std::sqrt(err_R);
 
   //statistical info
-  double radiusSquareFitted=m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
-  m_chi2=chiSquare(recRing,radiusSquareFitted);
-  m_chi2Exp=chiSquare(recRing, m_radiusSquaredPid);
+  m_chi2    = chiSquare(recRing, radius2);
+  m_chi2Exp = chiSquare(recRing, m_radiusSquaredPid);
 
   if ( m_chi2<0 || m_chi2Exp<0 )
   {   //bad chi2 //####DBL
-    Warning( "transferFitSolution : Poor fit Chi^2", StatusCode::SUCCESS, 3 );
-    return(0);
+    Warning( "transferFitSolution : Poor fit Chi^2", StatusCode::SUCCESS, 3 ).ignore();
+    return 0;
   }
 
-  m_dof=recRing.ringPoints().size();
+  m_dof     = recRing.ringPoints().size();
   m_prob    = Proba(m_chi2,m_dof);
   m_probExp = Proba(m_chi2Exp,m_dof);
 
-  // Cerenkov Angle and its error
-  double tgTheta=2*radiusFitted()/(1-m_sol[2]);
-  double Theta_Crk=atan(tgTheta);
-  m_Cerenkov=Theta_Crk;
+  const double fitRadius = radiusFitted();
 
-  double UnPlusTg2 = 1+tgTheta*tgTheta;
-  double cf_a = 2*m_sol[0]/radiusFitted()/(1-m_sol[2]);
-  double cf_b = 2*m_sol[1]/radiusFitted()/(1-m_sol[2]);
-  double cf_S = (1-2*radiusFitted()*radiusFitted()/(1-m_sol[2]));
-  cf_S *= 1/radiusFitted()/(1-m_sol[2]);
+  // Cerenkov Angle and its error
+  const double tgTheta = 2*fitRadius/(1-m_sol[2]);
+  m_Cerenkov           = std::atan(tgTheta);
+  const double UnPlusTg2 = 1 + tgTheta*tgTheta;
+  const double cf_a      = 2*m_sol[0] / fitRadius / (1-m_sol[2]);
+  const double cf_b      = 2*m_sol[1] / fitRadius / (1-m_sol[2]);
+  const double cf_S      = ( (1-2*fitRadius*fitRadius/(1-m_sol[2]))
+                             * (1/fitRadius/(1-m_sol[2])) );
   double errTheta=cf_S*cf_S*m_errPar[2][2]+cf_a*cf_a*m_errPar[0][0]+cf_b*cf_b*m_errPar[1][1];
   errTheta+=2*cf_S*cf_a*m_errPar[0][2]+2*cf_S*cf_b*m_errPar[1][2]+2*cf_a*cf_b*m_errPar[0][1];
   errTheta=std::sqrt(errTheta)/UnPlusTg2;
   m_CerenkovErr=errTheta;
 
-  return(1);
+  return 1;
 }
 
 
@@ -914,11 +924,11 @@ void StereoFitter::updateSegmentDirection( RichRecSegment *richSegment,
                                            double Ycenter) const
 {
   //form rotation transformation to update segment directions
-  Gaudi::XYZVector newDir(Xcenter, Ycenter, 1);
-  double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
-  Gaudi::XYZVector axis = newDir.Cross( Gaudi::XYZVector(0,0,1) );
-  Gaudi::AxisAngle axisangle(axis, angle);
-  Gaudi::Transform3D trans(axisangle);
+  const Gaudi::XYZVector newDir(Xcenter, Ycenter, 1);
+  const double angle = ROOT::Math::VectorUtil::Angle( newDir, Gaudi::XYZVector(0,0,1) );
+  const Gaudi::XYZVector axis = newDir.Cross( Gaudi::XYZVector(0,0,1) );
+  const Gaudi::AxisAngle axisangle(axis, angle);
+  const Gaudi::Transform3D trans(axisangle);
 
   // Update tracking information using average photon emission point
   Gaudi::XYZPoint avgEpoint;
@@ -950,7 +960,7 @@ void StereoFitter::updateAllPhotonAngles(RichRecSegment *richSegment,
                                               gPhot.CherenkovPhi() );
 
     // Update angles using updated segment
-    double thetaC, phiC;
+    double thetaC(0), phiC(0);
     richSegment->trackSegment().angleToDirection( photonDir, thetaC, phiC );
     gPhot.setCherenkovTheta(thetaC);
     gPhot.setCherenkovPhi(phiC);
@@ -986,32 +996,32 @@ void StereoFitter::resetSegmentAndPhotons( RichRecSegment *richSegment,
 }
 
 
-double StereoFitter::chiSquare(RichRecRing &recRing, double radiusSquare) const
+double StereoFitter::chiSquare(RichRecRing &recRing,
+                               double radiusSquare) const
 {
-  std::vector<double> func;
-  func.clear();
+  const int nphot = recRing.ringPoints().size();
+  std::vector<double> func(nphot);
 
   double xc=m_sol[0];
   double yc=m_sol[1];
 
-  int nphot=recRing.ringPoints().size();
-  for(int i=0;i<nphot;i++) {
-    double xp = recRing.ringPoints()[i].localPosition().X();
-    double yp = recRing.ringPoints()[i].localPosition().Y();
-    double ff = (xp-xc)*(xp-xc) + (yp-yc)*(yp-yc) - radiusSquare;
-    func.push_back(ff);
+  for(int i=0;i<nphot;i++)
+  {
+    const double xp = recRing.ringPoints()[i].localPosition().X();
+    const double yp = recRing.ringPoints()[i].localPosition().Y();
+    func[i]         = (xp-xc)*(xp-xc) + (yp-yc)*(yp-yc) - radiusSquare;
   }
 
   double chi2(0);
-  for(int i=0;i<nphot;i++) for(int j=0;j<nphot;j++) chi2+=func[i]*func[j]*m_invCov[i][j];
+  for(int i=0;i<nphot;i++) for(int j=0;j<nphot;j++) chi2 += func[i]*func[j]*m_invCov[i][j];
 
-  double det=m_err_x2*m_err_y2-std::pow(m_err_xy,2);
+  double det = m_err_x2*m_err_y2-std::pow(m_err_xy,2);
   if(det<1e-18) det=1e-18;
-  double uu = (m_sol[0]*m_sol[0]*m_err_y2 + m_sol[1]*m_sol[1]*m_err_x2-2*m_sol[0]*m_sol[1]*m_err_xy)/det;
+  const double uu = (m_sol[0]*m_sol[0]*m_err_y2 + m_sol[1]*m_sol[1]*m_err_x2-2*m_sol[0]*m_sol[1]*m_err_xy)/det;
   chi2 += uu;
 
-  double den=(m_var_beta+m_var_index)/4 ;
-  chi2+=(m_sol[2]-m_radiusSquaredPid)*(m_sol[2]-m_radiusSquaredPid)/den;
+  const double den=(m_var_beta+m_var_index)/4 ;
+  chi2 += (m_sol[2]-m_radiusSquaredPid)*(m_sol[2]-m_radiusSquaredPid)/den;
 
   return chi2;
 }
@@ -1023,17 +1033,23 @@ double StereoFitter::Proba(double chi2,double ndl) const
   static const double largest  = boost::numeric::bounds<float>::highest();
   static const double smallest = boost::numeric::bounds<float>::smallest();
 
-  const double result = ( ndl>0 && chi2>=0 && (chi2/ndl)<50 ?
-                          gsl_sf_gamma_inc_Q(ndl/2.0,chi2/2.0) : 0 );
+  // CRJ : Need to protect against float point exceptions from GSL
+  //FPE::Guard guard(true);
 
-  return ( result > largest  ? largest  :
-           result < smallest ? smallest :
-           result );
+  // Call GSL
+  gsl_sf_result result;
+  const int status = gsl_sf_gamma_inc_Q_e(ndl/2.0,chi2/2.0,&result);
+  return ( status != GSL_SUCCESS ? 0       :
+           result.val > largest  ? largest :
+           result.val < smallest ? 0       :
+           result.val );
 }
 
 // inversion of a 3 by 3 matrix ; successfull if returned bool is  = true
 // matrix is not necessarily symmetric ; tests OK
-bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const {
+bool StereoFitter::invert3x3Matrix ( double mat   [3][3],
+                                     double invMat[3][3]) const
+{
 
   invMat[0][0]=mat[1][1]*mat[2][2]-mat[1][2]*mat[2][1];
   invMat[1][0]=mat[1][2]*mat[2][0]-mat[1][0]*mat[2][2];
@@ -1052,13 +1068,16 @@ bool StereoFitter::invert3x3Matrix(double mat[3][3], double invMat[3][3]) const 
   det+=mat[1][0]*invMat[0][1];
   det+=mat[2][0]*invMat[0][2];
 
-  if(fabs(det)<1.0e-15) {
-    Warning( "invert3x3Matrix : Fit failed : |M| too small", StatusCode::SUCCESS, 3 );
+  if(fabs(det)<1.0e-15)
+  {
+    Warning( "invert3x3Matrix : Fit failed : |M| too small", StatusCode::SUCCESS, 3 ).ignore();
     return false;
   }
 
   // the inverse matrix
-  for(int i=0;i<3;++i) for(int j=0;j<3;++j) invMat[i][j]/=det;
+  for ( int i=0; i<3; ++i ) { for ( int j=0; j<3; ++j ) { invMat[i][j] /= det; } }
+
+  // return all OK
   return true;
 }
 

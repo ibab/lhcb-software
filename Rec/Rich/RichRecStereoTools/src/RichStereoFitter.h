@@ -37,13 +37,13 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
+//#include "Kernel/FPEGuard.h"
 
 //Direct Root Math include
-#include "Math/GenVector/VectorUtil.h"   //For various basic vector routines  (angle, etc.)
+#include "Math/GenVector/VectorUtil.h" // For various basic vector routines  (angle, etc.)
 
 //GSL math library
 #include "gsl/gsl_sf_gamma.h"
-
 //in order to look at eigenvalues (test when using track info's)
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_eigen.h"
@@ -242,6 +242,7 @@ namespace Rich
       double Proba(double chi2,double ndl) const;
 
       double radiusFitted() const;
+      double radiusFittedSquare() const;
       double XcenterFitted() const;
       double YcenterFitted() const;
       bool invert3x3Matrix(double mat[3][3], double invMat[3][3]) const;
@@ -252,10 +253,15 @@ namespace Rich
 
     inline double StereoFitter::YcenterFitted() const { return(m_sol[1]); }
 
-    inline double StereoFitter::radiusFitted() const
+    inline double StereoFitter::radiusFittedSquare() const
     {
       const double result = m_sol[2]+m_sol[0]*m_sol[0]+m_sol[1]*m_sol[1];
-      return ( result>0 ? std::sqrt(result) : 0 );
+      return ( result>0 ? result : 0 );
+    }
+
+    inline double StereoFitter::radiusFitted() const
+    {
+      return std::sqrt(radiusFittedSquare());
     }
 
   }

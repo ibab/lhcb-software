@@ -4,6 +4,10 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 - Chris Jones
+ - Implement a better solution to the FPE's issued by GSL, using the new 
+   FPE::Guard class.
+
 !======================= RichRecStereoTools v1r2 2008-06-05 ==================
 ! 2008-06-04 - Chris Jones
  - Fixes for floating point exceptions caught using the new FPEAuditor
