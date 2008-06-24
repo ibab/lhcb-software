@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::RichDAQL0Header
  *
  *  CVS Log :-
- *  $Id: RichDAQL0Header.h,v 1.2 2008-06-23 12:33:46 jonrob Exp $
+ *  $Id: RichDAQL0Header.h,v 1.3 2008-06-24 10:34:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   23/01/2007
@@ -29,7 +29,9 @@ namespace Rich
     //=============================================================================================
     /** @class L0Header RichDAQL0Header.h RichKernel/RichDAQL0Header.h
      *
-     *  The overall L0 header. Documentation of the data format is available here
+     *  The overall RICH L0 header for each HPD. 
+     *  
+     *  Documentation of the data format is available here
      *
      *  https://edms.cern.ch/document/696530
      *
@@ -144,44 +146,44 @@ namespace Rich
         inline LongType data() const { return m_data; }
 
         // bit packing info
-        //-----------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------
       private:
 
         // Define the number of bits for each field
-        static const ShortType BitsL0ID           = 11;  ///< Number of bits for the Level0 ID
-        static const ShortType BitsNWordsBIDFIF   = 4;   ///< Number of bits for the # words in BID FIF()
-        static const ShortType BitsBIDFIFEmpty    = 1;   ///< Number of bits for BID FIF() empty flag
-        static const ShortType BitsBIDFIFFull     = 1;   ///< Number of bits for BID FIF() full flag
-        static const ShortType BitsTestPat        = 1;   ///< Number of bits for test pattern flag
-        static const ShortType BitsCalibEvent     = 1;   ///< Number of bits for calibration event flag
-        static const ShortType BitsRunMode        = 1;   ///< Number of bits for run mode (0=LHCb 1=ALICE)
-        static const ShortType BitsOtherGOLStatus = 1;   ///< Number of bits for the status of the other GOL
-        static const ShortType BitsParityBit      = 1;   ///< Number of bits for the parity flag (bits 0-20)
+        static const ShortType BitsL0ID            = 11;  ///< Number of bits for the Level0 ID
+        static const ShortType BitsNWordsBIDFIF    = 4;   ///< Number of bits for the # words in BID FIF()
+        static const ShortType BitsBIDFIFEmpty     = 1;   ///< Number of bits for BID FIF() empty flag
+        static const ShortType BitsBIDFIFFull      = 1;   ///< Number of bits for BID FIF() full flag
+        static const ShortType BitsTestPat         = 1;   ///< Number of bits for test pattern flag
+        static const ShortType BitsCalibEvent      = 1;   ///< Number of bits for calibration event flag
+        static const ShortType BitsRunMode         = 1;   ///< Number of bits for run mode (0=LHCb 1=ALICE)
+        static const ShortType BitsOtherGOLStatus  = 1;   ///< Number of bits for the status of the other GOL
+        static const ShortType BitsParityBit       = 1;   ///< Number of bits for the parity flag (bits 0-20)
 
         // Create the shift registers
-        static const ShortType ShiftL0ID          = 0;
-        static const ShortType ShiftNWordsBIDFIF  = ShiftL0ID + BitsL0ID;
-        static const ShortType ShiftBIDFIFEmpty   = ShiftNWordsBIDFIF + BitsNWordsBIDFIF;
-        static const ShortType ShiftBIDFIFFull    = ShiftBIDFIFEmpty + BitsBIDFIFEmpty;
-        static const ShortType ShiftTestPat       = ShiftBIDFIFFull + BitsBIDFIFFull;
-        static const ShortType ShiftCalibEvent    = ShiftTestPat + BitsTestPat;
-        static const ShortType ShiftRunMode       = ShiftCalibEvent + BitsCalibEvent;
-        static const ShortType ShiftOtherGOLStatus= ShiftRunMode + BitsRunMode;
-        static const ShortType ShiftUnusedBits1   = 10;
-        static const ShortType ShiftParityBit     = ShiftOtherGOLStatus + BitsOtherGOLStatus + ShiftUnusedBits1;
+        static const ShortType ShiftL0ID           = 0;
+        static const ShortType ShiftNWordsBIDFIF   = ShiftL0ID + BitsL0ID;
+        static const ShortType ShiftBIDFIFEmpty    = ShiftNWordsBIDFIF + BitsNWordsBIDFIF;
+        static const ShortType ShiftBIDFIFFull     = ShiftBIDFIFEmpty + BitsBIDFIFEmpty;
+        static const ShortType ShiftTestPat        = ShiftBIDFIFFull + BitsBIDFIFFull;
+        static const ShortType ShiftCalibEvent     = ShiftTestPat + BitsTestPat;
+        static const ShortType ShiftRunMode        = ShiftCalibEvent + BitsCalibEvent;
+        static const ShortType ShiftOtherGOLStatus = ShiftRunMode + BitsRunMode;
+        static const ShortType ShiftUnusedBits1    = 10;
+        static const ShortType ShiftParityBit      = ShiftOtherGOLStatus + BitsOtherGOLStatus + ShiftUnusedBits1;
 
         // Create the Masks
-        static const LongType MaskL0ID            = ((1 << BitsL0ID)-1)           << ShiftL0ID;
-        static const LongType MaskNWordsBIDFIF    = ((1 << BitsNWordsBIDFIF)-1)   << ShiftNWordsBIDFIF;
-        static const LongType MaskBIDFIFEmpty     = ((1 << BitsBIDFIFEmpty)-1)    << ShiftBIDFIFEmpty;
-        static const LongType MaskBIDFIFFull      = ((1 << BitsBIDFIFFull)-1)     << ShiftBIDFIFFull;
-        static const LongType MaskTestPat         = ((1 << BitsTestPat)-1)        << ShiftTestPat;
-        static const LongType MaskCalibEvent      = ((1 << BitsCalibEvent)-1)     << ShiftCalibEvent;
-        static const LongType MaskRunMode         = ((1 << BitsRunMode)-1)        << ShiftRunMode;
-        static const LongType MaskOtherGOLStatus  = ((1 << BitsOtherGOLStatus)-1) << ShiftOtherGOLStatus;
-        static const LongType MaskParityBit       = ((1 << BitsParityBit)-1)      << ShiftParityBit;
+        static const LongType MaskL0ID             = ((1 << BitsL0ID)-1)           << ShiftL0ID;
+        static const LongType MaskNWordsBIDFIF     = ((1 << BitsNWordsBIDFIF)-1)   << ShiftNWordsBIDFIF;
+        static const LongType MaskBIDFIFEmpty      = ((1 << BitsBIDFIFEmpty)-1)    << ShiftBIDFIFEmpty;
+        static const LongType MaskBIDFIFFull       = ((1 << BitsBIDFIFFull)-1)     << ShiftBIDFIFFull;
+        static const LongType MaskTestPat          = ((1 << BitsTestPat)-1)        << ShiftTestPat;
+        static const LongType MaskCalibEvent       = ((1 << BitsCalibEvent)-1)     << ShiftCalibEvent;
+        static const LongType MaskRunMode          = ((1 << BitsRunMode)-1)        << ShiftRunMode;
+        static const LongType MaskOtherGOLStatus   = ((1 << BitsOtherGOLStatus)-1) << ShiftOtherGOLStatus;
+        static const LongType MaskParityBit        = ((1 << BitsParityBit)-1)      << ShiftParityBit;
 
-        //-----------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------
 
       public:
 
@@ -276,18 +278,18 @@ namespace Rich
       ~L0Header( ) { }
 
       /// Retrieve the first word
-      inline Word0 word0() const { return m_word0; }
+      inline const Word0& word0() const { return m_word0; }
 
       /// Retrieve the second word
-      inline Word1 word1() const { return m_word1; }
+      inline const Word1& word1() const { return m_word1; }
 
     public:
 
       /// Write this header to a RAWBank
       inline void fillRAWBank( RAWBank & bank ) const
       {
-        bank.push_back( this->word0().data() );
-        bank.push_back( this->word1().data() );
+        bank.push_back( word0().data() );
+        bank.push_back( word1().data() );
       }
 
     public:
