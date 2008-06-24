@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussMonitor
-version           v5r1
+version           v5r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,6 +16,9 @@ branches          cmt doc src options
 #============================================================================
 use   GenEvent        v*      Event
 use   MCInterfaces    v*      Kernel
+use   LoKiGen         v*      Phys 
+use   LoKiMC          v*      Phys 
+
 
 # Component library building rule
 #============================================================================
