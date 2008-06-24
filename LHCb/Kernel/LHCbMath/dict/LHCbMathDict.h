@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.1 2008-06-24 08:12:05 jpalac Exp $
+// $Id: LHCbMathDict.h,v 1.2 2008-06-24 12:24:27 jpalac Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -40,21 +40,17 @@ namespace
   {
     __Instantiations();
 
-    Gaudi::XYZLine       __lineXYZ;
-    Gaudi::Polar3DLine   __linePolar3D;
-    Gaudi::RhoEtaPhiLine __lineRhoEtaPhi;
-    Gaudi::RhoZPhiLine   __lineRhoZPhi;
+    Gaudi::Math::XYZLine       __lineXYZ;
+    Gaudi::Math::Polar3DLine   __linePolar3D;
+    Gaudi::Math::RhoEtaPhiLine __lineRhoEtaPhi;
+    Gaudi::Math::RhoZPhiLine   __lineRhoZPhi;
 
-    Gaudi::XYZLineF       __lineXYZF;
-    Gaudi::Polar3DLineF   __linePolar3DF;
-    Gaudi::RhoEtaPhiLineF __lineRhoEtaPhiF;
-    Gaudi::RhoZPhiLineF   __lineRhoZPhiF;
+    Gaudi::Math::XYZLineF       __lineXYZF;
+    Gaudi::Math::Polar3DLineF   __linePolar3DF;
+    Gaudi::Math::RhoEtaPhiLineF __lineRhoEtaPhiF;
+    Gaudi::Math::RhoZPhiLineF   __lineRhoZPhiF;
 
     Gaudi::Math::XYZGeomFun __geomFunXYZ;
-
-    //    double 
-    //    Gaudi::Math::intersection<Gaudi::XYZPoint,Gaudi::XYZLine>(const Gaudi::XYZPoint& point,
-    //                                                              const Gaudi::XYZLine line);
     
   };
 }

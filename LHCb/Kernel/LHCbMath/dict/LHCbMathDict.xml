@@ -3,14 +3,14 @@
 <!--- Author  : Juan PALACIOS -->
 <!--- Created : 2008-06-20 -->
 <lcgdict>
-  <class name = "Gaudi::XYZLine"/>
-  <class name = "Gaudi::Polar3DLine"/>
-  <class name = "Gaudi::RhoEtaPhiLine"/>
-  <class name = "Gaudi::RhoZPhiLine"/>
-  <class name = "Gaudi::XYZLineF"/>
-  <class name = "Gaudi::Polar3DLineF"/>
-  <class name = "Gaudi::RhoEtaPhiLineF"/>
-  <class name = "Gaudi::RhoZPhiLineF"/>
-  <class name = "Gaudi::Math::Dummy"/>
+  <class name = "Gaudi::Math::XYZLine"/>
+  <class name = "Gaudi::Math::Polar3DLine"/>
+  <class name = "Gaudi::Math::RhoEtaPhiLine"/>
+  <class name = "Gaudi::Math::RhoZPhiLine"/>
+  <class name = "Gaudi::Math::XYZLineF"/>
+  <class name = "Gaudi::Math::Polar3DLineF"/>
+  <class name = "Gaudi::Math::RhoEtaPhiLineF"/>
+  <class name = "Gaudi::Math::RhoZPhiLineF"/>
+  <class name = "Gaudi::Math::Math::Dummy"/>
   <class name = "Gaudi::Math::XYZGeomFun"/>
 </lcgdict>
