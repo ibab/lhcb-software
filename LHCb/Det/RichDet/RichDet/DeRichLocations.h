@@ -1,4 +1,4 @@
-// $Id: DeRichLocations.h,v 1.3 2008-05-07 16:28:56 jonrob Exp $
+// $Id: DeRichLocations.h,v 1.4 2008-06-24 09:12:35 jonrob Exp $
 #ifndef RICHDET_DERICHHPDPANELLOCATIONS_H
 #define RICHDET_DERICHHPDPANELLOCATIONS_H 1
 
@@ -14,10 +14,9 @@
  */
 namespace DeRichLocations
 {
-  /// DeRich location
+
   /// Rich1 location in transient detector store
   static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
-
   /// Rich2 location in transient detector store
   static const std::string& Rich2 = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
 
@@ -58,7 +57,9 @@ namespace DeRichLocations
   /// Rich1 Beampipe location in TDS
   static const std::string& Rich1BeamPipe = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Rich1BeamPipe";
   /// Rich2 Beampipe location in TDS
-  static const std::string& Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";}
+  static const std::string& Rich2BeamPipe = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/Rich2BeamPipe";
+
+}
 
 // ************************************************************************************************************
 
