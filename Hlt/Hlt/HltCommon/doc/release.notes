@@ -5,7 +5,7 @@
 !----------------------------------------------------------------------------
 
 !2008-06-25 - Gerhard Raven
-  - remove stale code in HltSummaryTool
+  - remove stale code in HltSummaryTool, stale include from HltL0{Calo,Muon}Prepare
 
 !2008-06-23 - Gerhard Raven
   - simplify & extend HltDataSvc

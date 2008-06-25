@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.5 2008-06-02 11:39:20 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.6 2008-06-25 20:11:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,6 @@
 
 // local
 #include "HltL0MuonPrepare.h"
-#include "Event/HltEnums.h"
-//#include "Event/HltSummaryFunctor.h"
 
 using namespace LHCb;
 

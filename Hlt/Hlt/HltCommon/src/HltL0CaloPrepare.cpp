@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.5 2008-05-22 14:15:29 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.6 2008-06-25 20:11:02 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,6 @@
 
 // local
 #include "HltL0CaloPrepare.h"
-#include "Event/HltEnums.h"
 
 using namespace LHCb;
 
