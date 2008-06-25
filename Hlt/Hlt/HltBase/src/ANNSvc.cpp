@@ -126,6 +126,11 @@ StatusCode ANNSvc::queryInterface(const InterfaceID& riid,
         addRef();
         return SUCCESS;
     }
+    if ( IANSvc::interfaceID().versionMatch(riid) )   {
+        *ppvUnknown = (IANSvc*)this;
+        addRef();
+        return SUCCESS;
+    }
     return Service::queryInterface(riid,ppvUnknown);
 }
 
