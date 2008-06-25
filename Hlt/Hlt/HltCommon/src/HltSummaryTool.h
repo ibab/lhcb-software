@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.11 2008-06-06 12:54:36 hernando Exp $
+// $Id: HltSummaryTool.h,v 1.12 2008-06-25 20:06:33 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -20,9 +20,9 @@
  *  @date   2007-02-08
  */
 class HltSummaryTool : public HltBaseTool
-                       , virtual public IIncidentListener
-                       , virtual public IHltConfSummaryTool
-                       , virtual public IHltSummaryTool
+                     , virtual public IIncidentListener
+                     , virtual public IHltConfSummaryTool
+                     , virtual public IHltSummaryTool
 {
 public:
   
@@ -111,12 +111,5 @@ private:
   std::string m_hltSummaryLocation;
   LHCb::HltSummary* m_summary;
 
-  int id(const std::string& name) const {
-     return annSvc().value("SelectionID",name)->second;
-  }
-  std::string name(int id) const {
-     return annSvc().value("SelectionID",id)->first;
-  }
-  
 };
 #endif // HLTCOMMON_HLTSUMMARYTOOL_H
