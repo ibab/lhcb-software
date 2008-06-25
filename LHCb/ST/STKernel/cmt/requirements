@@ -1,5 +1,5 @@
 package STKernel 
-version v1r4
+version v1r5
 
 use GaudiKernel v*
 use LHCbKernel  v* Kernel
