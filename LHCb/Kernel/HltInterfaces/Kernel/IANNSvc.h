@@ -1,4 +1,4 @@
-// $Id: IANNSvc.h,v 1.1.1.1 2008-06-17 18:53:09 pkoppenb Exp $
+// $Id: IANNSvc.h,v 1.2 2008-06-25 14:14:17 graven Exp $
 #ifndef IANNSVC_H 
 #define IANNSVC_H 1
 
@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include "GaudiKernel/INamedInterface.h"
+#include "Kernel/IANSvc.h"
 #include "boost/optional.hpp"
 
 
@@ -34,14 +34,14 @@
  */
 
 
-class IANNSvc : virtual public INamedInterface  {
+class IANNSvc : virtual public IANSvc  {
 public:
   /// Return the interface ID
   static const InterfaceID& interfaceID();
   virtual ~IANNSvc();
 
-  typedef std::string                                 major_key_type;
-  typedef std::string                                 minor_key_type;
+  typedef IANSvc::major_key_type                      major_key_type;
+  typedef IANSvc::minor_key_type                      minor_key_type;
   typedef int                                         minor_mapped_type;
   typedef std::pair<minor_key_type,minor_mapped_type> minor_value_type;
 

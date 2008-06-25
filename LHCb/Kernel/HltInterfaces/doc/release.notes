@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.2 2008-06-17 21:41:36 pkoppenb Exp $
+! $Id: release.notes,v 1.3 2008-06-25 14:14:17 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 
+! 2008-06-25 - Gerhard Raven
+ - Add IANSvc, a restricted version of IANNSvc: only access keys, not values;
+   IANNSvc, as extension, inherits from IANSvc.
+   
 ! 2008-06-17 - Patrick Koppenburg
  - First import
  - IANNSvc and IHltSummaryTool moved to here
