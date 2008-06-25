@@ -1,4 +1,4 @@
-// $Id: Hlt2StatisticsBase.cpp,v 1.1 2008-06-24 11:05:59 pkoppenb Exp $
+// $Id: Hlt2StatisticsBase.cpp,v 1.2 2008-06-25 15:03:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@ Hlt2StatisticsBase::Hlt2StatisticsBase( const std::string& name,
   ,   m_summaryTool()
   ,   m_algoCorr()
 {
-
+  declareProperty( "Hlt2SelectionID", m_hlt2SelectionID = "Hlt2SelectionID");
 }
 //=============================================================================
 // Destructor
@@ -53,17 +53,7 @@ StatusCode Hlt2StatisticsBase::initialize() {
 //  get selections
 //=========================================================================
 strings Hlt2StatisticsBase::getSelections( ) const {
-  IANNSvc *ann = svc<IANNSvc>("HltANNSvc");
-  std::vector<IANNSvc::minor_value_type> selections2 = ann->items("Hlt2SelectionID");
-  strings selections ;
-
-  for (std::vector<IANNSvc::minor_value_type>::const_iterator i =
-         selections2.begin(); i!=selections2.end(); ++i) {
-    selections.push_back(i->first) ;
-  }
-  
-  return selections ;
-  
+  return svc<IANNSvc>("HltANNSvc")->keys(m_hlt2SelectionID);
 }
 //=============================================================================
 //  Finalize

@@ -2,45 +2,8 @@
  *
  *  Options to switch on plotting for HLT selections
  *
- *  @todo : Use LoKi::Hybrid::PlotTool
- *
  *  @author P. Koppenburg
  *  @date 2007-05-06
  */
 //--------------------------------------------------------------
-/*
- * FilterDesktop
- */
-Hlt2SelB2DiElectron.HistoProduce = true ;
-Hlt2SelB2DiElectron.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-Hlt2SelB2DiElectron.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-Hlt2SelB2DiMuon.HistoProduce = true ;
-Hlt2SelB2DiMuon.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-Hlt2SelB2DiMuon.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-Hlt2SelB2JpsiX.HistoProduce = true ;
-Hlt2SelB2JpsiX.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-Hlt2SelB2JpsiX.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-Hlt2SelB2MuMu.HistoProduce = true ;
-Hlt2SelB2MuMu.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-Hlt2SelB2MuMu.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-Hlt2SelDstar.HistoProduce = true ;
-Hlt2SelDstar.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-Hlt2SelDstar.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs", "FS" } ;
-
-
-Hlt2SelD02KsPiPi_Ks2DD.HistoProduce = true ;
-Hlt2SelD02KsPiPi_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-Hlt2SelD02KsPiPi_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
-
-Hlt2SelD02KsKK_Ks2DD.HistoProduce = true ;
-Hlt2SelD02KsKK_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-Hlt2SelD02KsKK_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
-
-
-Hlt2SelBu2D0K_D02KsHH_Ks2DD.HistoProduce = true ;
-Hlt2SelBu2D0K_D02KsHH_Ks2DD.InputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs","FS" } ;
-Hlt2SelBu2D0K_D02KsHH_Ks2DD.OutputPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IP", "IPs" , "FS" } ;
+#include "$HLTSELECTIONSROOT/options/HltMonitorPlots.opts"

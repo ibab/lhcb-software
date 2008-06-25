@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Patrick Koppenburg
+ - Use ANNSvc::keys method
+
 ! 2008-06-24 - Patrick Koppenburg
  - New algorithm Hlt2Statistics printing a table with b content and 
 	number of PVs. 	

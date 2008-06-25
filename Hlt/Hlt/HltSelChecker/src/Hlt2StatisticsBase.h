@@ -1,4 +1,4 @@
-// $Id: Hlt2StatisticsBase.h,v 1.1 2008-06-24 11:05:59 pkoppenb Exp $
+// $Id: Hlt2StatisticsBase.h,v 1.2 2008-06-25 15:03:38 pkoppenb Exp $
 #ifndef HLT2STATISTICSBASE_H 
 #define HLT2STATISTICSBASE_H 1
 
@@ -33,6 +33,8 @@ protected:
   strings getSelections() const ;
 
 private:
+  std::string m_hlt2SelectionID ; ///< majore key in ANNSvc
+  
 
 };
 #endif // HLT2STATISTICSBASE_H
