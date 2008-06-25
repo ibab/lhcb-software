@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.4 2008-06-24 15:13:19 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.5 2008-06-25 10:19:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.4 2008-06-24 15:13:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.5 2008-06-25 10:19:12 frankb Exp $
 
 #include "ROMon/SubfarmDisplay.h"
 #include "ROMon/FarmDisplay.h"
@@ -58,6 +58,9 @@ typedef Node::Tasks                  Tasks;
 #define SPACE_MIN  .1
 // Max. 15 seconds without update allowed
 #define UPDATE_TIME_MAX 15
+
+typedef std::vector<std::string> StringV;
+
 
 Position s_cursor(2,20);
 static FarmDisplay* s_fd = 0;
@@ -246,7 +249,7 @@ void FarmSubDisplay::update(const Nodeset& ns) {
     if ( fslots[0] < SLOTS_MIN ) ::strcat(txt,"MEP ");
     if ( fslots[1] < SLOTS_MIN ) ::strcat(txt,"EVENT ");
     if ( fslots[2] < SLOTS_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",bad_nodes.size());
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
     ::strcat(txt,text);
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
@@ -256,7 +259,7 @@ void FarmSubDisplay::update(const Nodeset& ns) {
     if ( fspace[0] < SPACE_MIN ) ::strcat(txt,"MEP ");
     if ( fspace[1] < SPACE_MIN ) ::strcat(txt,"EVENT ");
     if ( fspace[2] < SPACE_MIN ) ::strcat(txt,"RES/SEND ");
-    ::sprintf(text,"[%d nodes]",bad_nodes.size());
+    ::sprintf(text,"[%d nodes]",int(bad_nodes.size()));
     ::strcat(txt,text);
     ::scrc_put_chars(m_display,txt,BOLD|RED|INVERSE,4,1,1);
   }
@@ -331,11 +334,17 @@ PartitionListener::~PartitionListener() {
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
   std::string svc;
-  std::auto_ptr<std::vector<std::string> > f(new std::vector<std::string>());
+  std::auto_ptr<StringV > f(new StringV());
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(data);
   f->push_back("HLTA08");
+  for(StringV::iterator i=f->begin(); i != f->end(); ++i) {
+    std::string& s = *i;
+    for(size_t j=0; j<s.length(); ++j) {
+      s[j] = ::tolower(s[j]);
+    }
+  }
   IocSensor::instance().send(h->m_parent,CMD_CONNECT,f.release());
 }
 
@@ -480,7 +489,7 @@ void FarmDisplay::showHelp() {
     const size_t np = std::string::npos;
     const char* env = ::getenv("ROMONROOT");
     std::string buff, stop, tag = env ? env : "../doc";
-    std::vector<std::string> lines;
+    StringV lines;
     std::ifstream in((tag+"/farmMon.hlp").c_str());
 
     ::scrc_create_display(&m_helpDisplay,45,130,NORMAL,ON,"Help window");
@@ -495,18 +504,17 @@ void FarmDisplay::showHelp() {
     ::scrc_put_chars(m_helpDisplay,"Hit CTRL-H to hide the display",BOLD,2,2,1);
     for(size_t i=0,line=3; i<lines.size();++i) {
       const std::string& s = lines[i];
-      isHeader = false;
-      if ( use ) {
-	::scrc_put_chars(m_helpDisplay,s.c_str(),isHeader ? BOLD: NORMAL,++line,2,1);
-	isHeader = false;
-      }
       if ( !use && (s.find(tag) != np || s.find("<common>") != np) ) {
 	isHeader = true;
 	use = true;
 	continue;
       }
-      if ( s.find(stop) != np || s.find("</common>") != np ) {
+      if ( use && (s.find(stop) != np || s.find("</common>") != np) ) {
 	use = false;
+      }
+      if ( use ) {
+	::scrc_put_chars(m_helpDisplay,s.c_str(),isHeader ? BOLD: NORMAL,++line,2,1);
+	isHeader = false;
       }
     }
     ::scrc_paste_display(m_helpDisplay,m_pasteboard,15,25);
@@ -534,7 +542,7 @@ void FarmDisplay::updateMBM(int which) {
   std::string nam;
   char txt[1024], name[128];
   Nodes::const_iterator n;
-  std::vector<std::string> lines;
+  StringV lines;
   const Nodeset* ns = 0;
   if ( 0 == m_subfarmDisplay ) {
     return;
@@ -573,7 +581,7 @@ void FarmDisplay::updateMBM(int which) {
   if ( line > 1 ) {
     ::sprintf(txt,"%-20s%5s%6s  %6s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
     ::scrc_put_chars(m_mbmDisplay,txt,INVERSE,++line,1,0);
-    ::scrc_put_chars(m_mbmDisplay,txt,INVERSE,line,1+m_mbmDisplay->cols/2,1);
+    ::scrc_put_chars(m_mbmDisplay,txt,INVERSE,line,3+m_mbmDisplay->cols/2,1);
   }
   else {
     ::sprintf(txt,"Unknown Node. No buffers found.");
@@ -603,7 +611,7 @@ void FarmDisplay::updateMBM(int which) {
       break;
     }
   }
-  for(std::vector<std::string>::const_iterator j,i=lines.begin(); i!=lines.end(); ++i) {
+  for(StringV::const_iterator j,i=lines.begin(); i!=lines.end(); ++i) {
     j = i;
     if ( ++j != lines.end() ) {
       ::sprintf(name,"%%-%ds  %%-%ds",m_mbmDisplay->cols/2,m_mbmDisplay->cols/2);
@@ -857,9 +865,9 @@ void FarmDisplay::handle(const Event& ev) {
       delete (std::string*)ev.data;
       return;
     case CMD_CONNECT:
-      m_farms = *(std::vector<std::string>*)ev.data;
+      m_farms = *(StringV*)ev.data;
       connect(m_farms);
-      delete (std::vector<std::string>*)ev.data;
+      delete (StringV*)ev.data;
       return;
     case CMD_CHECK:
       ::dim_lock();

@@ -9,6 +9,16 @@ common:   displayed always at the end of the specific help.
 the first line is always displayed as a title in bold
 -->
 
+<common>
+Note: Help is context sensitive
+
+You receive different help content depending on the current window:
+-- Help on subfarm summary window
+-- Help on expanded subfarm summary
+-- Help on MBM buffer monitor of a single node.
+
+</common>
+
 <farm>
 Farm display
 
@@ -22,10 +32,13 @@ The display of each subfarm shows in the upper line the basic summary of the eve
 buffers MEP,EVENT and SEND. The lower line displays the minimum numbers found.
 If, for one reason or another a node is stuck, these numbers will not change anymore and the 
 box should become red.
+
+
+
 </farm>
 
 <subfarm>
-Subfarm display
+Extended subfarm display
 
 The subfarm display shows all nodes and tasks executing in one subfarm.
 The top display shows the buffer status on all nodes.
@@ -34,6 +47,7 @@ The three lower displays show the status of the event builder tasks, the produce
 and the data senders to the storage cluster.
 You can move with the arrow keys of the keyboard to select a given node and invoke the
 buffer manager monitor if you type KPD-PERIOD (".")
+
 
 </subfarm>
 
@@ -46,7 +60,7 @@ Nothing more to say. If you don't understand this display you are hopeless anywa
 </node>
 
 <common>
-
+Common keyboard commands:
 
 -- To select a subfarm use the arrow keys
 -- To invoke/hide the help display type CTRL-H or h or H.
