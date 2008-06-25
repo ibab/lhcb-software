@@ -16,7 +16,7 @@
 #include "Event/RawBank.h"
 
 #include "Kernel/STTell1ID.h"
-#include "STDAQGeneral.h"
+#include "Kernel/STRawBankMap.h"
 
 DECLARE_ALGORITHM_FACTORY( STRawBankMonitor );
 
@@ -114,7 +114,7 @@ StatusCode STRawBankMonitor::configureBankType(){
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_bankType = STDAQGeneral::stringToRawBankType(m_type);
+  m_bankType = STRawBankMap::stringToType(m_type);
   if (m_bankType == RawBank::Velo){
     sc = StatusCode::FAILURE;
   }

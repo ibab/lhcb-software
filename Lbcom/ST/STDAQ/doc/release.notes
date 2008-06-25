@@ -4,8 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-06-24 M. Needham
+ - Move STErrorDecoding to this package.
+ - Move STRawBankMap to STKernel
+
 ! 2008-06-18 M Needham
- - Clean up of STErrorDecoding
+ - Clean up of error handling 
 
 ! 2008-06-18 M Needham
  - Add possibility to create clusters from banks with errors in decoding (default is to skip)

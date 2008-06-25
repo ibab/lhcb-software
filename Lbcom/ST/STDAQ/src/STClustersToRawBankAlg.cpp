@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.8 2007-11-16 16:43:36 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.9 2008-06-25 06:55:14 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,7 +6,7 @@
 // STDAQ
 #include "STClustersToRawBankAlg.h"
 #include "STBoardToBankMap.h"
-#include "STDAQGeneral.h"
+#include "Kernel/STRawBankMap.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1ID.h"
 
@@ -119,7 +119,7 @@ StatusCode STClustersToRawBankAlg::configureBankType(){
   // configure the type of bank to write (TT or IT)
   StatusCode sc = StatusCode::SUCCESS;
 
-  m_bankType = STDAQGeneral::stringToRawBankType(m_detType);
+  m_bankType = STRawBankMap::stringToType(m_detType);
   if (m_bankType == RawBank::Velo){
     sc = StatusCode::FAILURE;
   }

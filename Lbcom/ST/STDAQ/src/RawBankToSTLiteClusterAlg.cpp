@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.17 2008-06-19 15:55:49 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.18 2008-06-25 06:55:14 mneedham Exp $
 
 
 #include <algorithm>
@@ -18,7 +18,6 @@
 
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
-#include "STDAQGeneral.h"
 
 #include "Kernel/STDAQDefinitions.h"
 

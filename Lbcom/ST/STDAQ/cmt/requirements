@@ -1,5 +1,5 @@
 package STDAQ
-version v3r7
+version v3r8
 
 branches cmt doc src options
 include_path none
@@ -8,6 +8,7 @@ include_path none
 use STDet        v*  Det
 use STKernel     v*  ST
 use DigiEvent    v*  Event
+use STTELL1Event v*  ST 
 use DAQEvent     v*  Event
 use LHCbKernel   v*  Kernel
 use SiDAQ        v*  Si

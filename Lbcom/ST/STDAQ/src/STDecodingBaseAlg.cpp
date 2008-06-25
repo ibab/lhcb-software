@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.7 2008-06-19 15:55:49 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.8 2008-06-25 06:55:15 mneedham Exp $
 
 #include <algorithm>
 
@@ -18,7 +18,7 @@
 #include "Kernel/STTell1ID.h"
 
 #include "SiDAQ/SiADCWord.h"
-#include "STDAQGeneral.h"
+#include "Kernel/STRawBankMap.h"
 #include "SiDAQ/SiHeaderWord.h"
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
@@ -65,7 +65,7 @@ StatusCode STDecodingBaseAlg::initialize() {
   m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
    
   // bank type
-  m_bankType =  STDAQGeneral::stringToRawBankType(m_detType);
+  m_bankType =  STRawBankMap::stringToType(m_detType);
 
   // tracker
   m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));

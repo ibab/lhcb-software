@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.24 2008-06-19 15:55:49 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.25 2008-06-25 06:55:14 mneedham Exp $
 
 #include <algorithm>
 
@@ -20,7 +20,6 @@
 #include "Kernel/STFun.h"
 
 #include "SiDAQ/SiADCWord.h"
-#include "STDAQGeneral.h"
 
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
