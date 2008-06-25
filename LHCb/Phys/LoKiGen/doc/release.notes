@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2008-06-12 08:19:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.51 2008-06-25 10:05:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,11 +14,26 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2008-06-25 - Vanya BELYAEV
+
+ - src/GenParticles.cpp
+
+    suppress "empty vertices list"-error message for FromHepMCTree 
+
+
+! 2008-06-24 - Vanya BELYAEV
+ - LoKi/CmtBarCode.h
+ 
+    - new utility LoKi::GenParticles::CmpBarCode 
+      to compare HepMC::GenParticle by barcode 
+    - new typedef for the std::set of particles using CmtBarCode 
+      as the ordering criteria 
+
 ! 2008-06-12 - Vanya BELYAEV
  -  LoKi/GenDecays.h
     src/LoKiGenDecays.cpp
-   
-     Implemenmtation of HepMC-trees (functors which acts on teh decay 
+    
+    Implemenmtation of HepMC-trees (functors which acts on the decay 
     structure), needed for new (HepMC)DecayFinder 
    
  - cmt/requirements 

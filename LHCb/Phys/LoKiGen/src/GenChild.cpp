@@ -1,4 +1,4 @@
-// $Id: GenChild.cpp,v 1.3 2008-05-04 15:20:49 ibelyaev Exp $
+// $Id: GenChild.cpp,v 1.4 2008-06-25 10:05:45 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -78,11 +78,30 @@ size_t LoKi::GenChild::particles
   const HepMC::IteratorRange              range  , 
   std::vector<const HepMC::GenParticle*>& output ) 
 {
+  if ( !output.empty() ) { output.clear()       ; }
+  if ( 0 == vertex     ) { return output.size() ; }
+  LoKi::GenTypes::GenSet gset ;
+  particles ( vertex , range , gset ) ;
+  output.insert ( gset.begin() , gset.end() ) ;
+  return output.size() ;                
+}
+// ============================================================================
+/*  get all particles form the given vertex form the given range 
+ *  @see HepMC::GenVertex::particles_begin
+ *  @see HepMC::GenVertex::particles_end
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-05-26
+ */
+// ============================================================================
+size_t LoKi::GenChild::particles 
+( const HepMC::GenVertex*                 vertex , 
+  const HepMC::IteratorRange              range  , 
+  LoKi::GenTypes::GenSet&                 output ) 
+{
   if ( !output.empty() ) { output.clear() ; }
   if ( 0 == vertex ) { return output.size() ; }
   HepMC::GenVertex* _v = const_cast<HepMC::GenVertex*> ( vertex ) ;
-  output.insert ( output.end() , 
-                  _v -> particles_begin ( range ) , 
+  output.insert ( _v -> particles_begin ( range ) , 
                   _v -> particles_end   ( range ) ) ;
   return output.size() ;                
 }
@@ -169,7 +188,21 @@ size_t LoKi::GenChild::daughters
   return daughters ( particle -> end_vertex() , output ) ;
 }
 // ============================================================================
-/*  get all "ancestors" particles form the givel particlle 
+/*  get all "children" particles form the given particle 
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @date   2007-05-26
+ */    
+// ============================================================================
+size_t LoKi::GenChild::daughters 
+( const HepMC::GenParticle* particle , 
+  LoKi::GenTypes::GenSet&   output   ) 
+{
+  if ( !output.empty() ) { output.clear() ; }
+  if ( 0 == particle   ) { return output.size() ; }  // RETURN
+  return daughters ( particle -> end_vertex() , output ) ;
+}
+// ============================================================================
+/*  get all "ancestors" particles from the given particle 
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date   2007-05-26
  */    

@@ -1,4 +1,4 @@
-// $Id: GenParticles.cpp,v 1.16 2007-11-28 14:08:30 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.17 2008-06-25 10:05:45 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -712,7 +712,7 @@ LoKi::GenParticles::FromHepMCTree::operator()
   } 
   if ( m_vertices.empty() ) 
   {
-    Error ( " empty list of vertices , return 'false' " ) ;
+    // Error ( " empty list of vertices , return 'false' " ) ;
     return false ;                                                  // RETURN 
   }
   // loop over vertices 

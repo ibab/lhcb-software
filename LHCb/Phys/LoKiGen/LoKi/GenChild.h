@@ -1,4 +1,4 @@
-// $Id: GenChild.h,v 1.5 2008-05-05 09:53:35 cattanem Exp $
+// $Id: GenChild.h,v 1.6 2008-06-25 10:05:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENCHILD_H 
 #define LOKI_GENCHILD_H 1
@@ -10,6 +10,10 @@
 #include "HepMC/GenParticle.h"
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenEvent.h"
+// ============================================================================
+// LoKi
+// ============================================================================
+#include "LoKi/CmpBarCode.h"
 // ============================================================================
 namespace LoKi
 {
@@ -143,7 +147,7 @@ namespace LoKi
     std::vector<const HepMC::GenVertex*> 
     vertices_all ( const HepMC::GenEvent* event )  ;
     // ========================================================================
-    /** get all particles form the given vertex form the given range 
+    /** get all particles from the given vertex from the given range 
      *  @see HepMC::GenVertex::particles_begin
      *  @see HepMC::GenVertex::particles_end
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -153,6 +157,17 @@ namespace LoKi
     ( const HepMC::GenVertex*                 vertex , 
       const HepMC::IteratorRange              range  , 
       std::vector<const HepMC::GenParticle*>& output ) ;
+    // ========================================================================
+    /** get all particles from the given vertex from the given range 
+     *  @see HepMC::GenVertex::particles_begin
+     *  @see HepMC::GenVertex::particles_end
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */
+    size_t particles 
+    ( const HepMC::GenVertex*                 vertex , 
+      const HepMC::IteratorRange              range  , 
+      LoKi::GenTypes::GenSet&                 output ) ;
     // ========================================================================
     /** get all particles form the given vertex form the given range 
      *  @see HepMC::GenVertex::particles_begin
@@ -166,9 +181,10 @@ namespace LoKi
     ( const HepMC::GenVertex*    vertex , 
       const HepMC::IteratorRange range  ) 
     {
-      std::vector<const HepMC::GenParticle*> result ;
+      LoKi::GenTypes::GenSet result ;
       particles ( vertex , range , result ) ;
-      return result ;
+      return std::vector<const HepMC::GenParticle*> 
+        ( result.begin() , result.end() ) ; 
     }
     // ========================================================================
     /** get all "parents" particles form the given vertxex
@@ -181,7 +197,7 @@ namespace LoKi
     parents  ( const HepMC::GenVertex*    vertex ) 
     { return particles ( vertex , HepMC::parents ) ; }
     // ========================================================================
-    /** get all "children" particles form the given vertex
+    /** get all "daughter" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
@@ -190,13 +206,30 @@ namespace LoKi
       std::vector<const HepMC::GenParticle*>& output )
     { return particles ( vertex , HepMC::children , output ) ; }
     // ========================================================================
-    /** get all "children" particles form the given particle 
+    /** get all "daughter" particles form the given vertex
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    inline size_t daughters 
+    ( const HepMC::GenVertex*  vertex , 
+      LoKi::GenTypes::GenSet&  output )
+    { return particles ( vertex , HepMC::children , output ) ; }
+    // ========================================================================
+    /** get all "daughter" particles form the given particle 
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
     size_t daughters 
-    ( const HepMC::GenParticle*               vertex , 
-      std::vector<const HepMC::GenParticle*>& output ) ;
+    ( const HepMC::GenParticle*               particle , 
+      std::vector<const HepMC::GenParticle*>& output   ) ;
+    // ========================================================================
+    /** get all "daughter" particles form the given particle 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date   2007-05-26
+     */    
+    size_t daughters 
+    ( const HepMC::GenParticle* particle , 
+      LoKi::GenTypes::GenSet&   output   ) ;
     // ========================================================================
     /** get all "children" particles form the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -261,7 +294,7 @@ namespace LoKi
     std::vector<const HepMC::GenParticle*> 
     descendants ( const HepMC::GenParticle* particle ) ;
     // ========================================================================
-    /** get all "relatives" particles form the given vertex
+    /** get all "relatives" particles from the given vertex
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date   2007-05-26
      */    
