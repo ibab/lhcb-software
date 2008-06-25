@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.29 2008-06-12 10:44:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2008-06-25 17:31:26 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.29 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.30 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-25 - Vanya BELYAEV
+
+ - add the example CheckMC_Bs2PsiPhi    for Juan 
+   add the example LoKi_Bs2PsiPhi_HepMC for Tristan 
+
 
 ! 2008-06-12 - Vanya BELYAEV
 
