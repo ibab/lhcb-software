@@ -35,6 +35,7 @@ EventLoopMgr      WARNING No events will be processed from external input.
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
 DAQEventTests::...   INFO  ======== ODIN data ========
 { runNumber :	1973
 eventType :	44252
@@ -52,6 +53,7 @@ bunchCurrent :	17
 version :	3
 calibrationStep :	51966
 triggerConfigurationKey :	19088743
+timeAlignmentEventWindow :	0
  }
 RawEventDump         INFO 9 banks of type 2: [size, source, version, magic]
 RawEventDump         INFO   [32, 0, 1, cbcb] Data follows...
@@ -355,6 +357,7 @@ RawEventDump         INFO 1 banks of type 16: [size, source, version, magic]
 RawEventDump         INFO   [40, 0, 3, cbcb] Data follows...
 RawEventDump         INFO    ... [7b5] [cafeacdc] [17] [1] [1] [440b1] [e73f4b05] [aabbbbbb] [11cf0123] [1234567] 
 RawEventDump         INFO   
+ApplicationMgr       INFO Application Manager Stopped successfully
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
 ApplicationMgr       INFO Application Manager Finalized successfully
