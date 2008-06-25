@@ -1,4 +1,4 @@
-// $Id: FidelTuple.cpp,v 1.2 2008-06-19 17:37:44 sfurcas Exp $
+// $Id: FidelTuple.cpp,v 1.3 2008-06-25 15:29:28 sfurcas Exp $
 // Include files 
 
 // from Gaudi
@@ -84,6 +84,7 @@ StatusCode FidelTuple::execute() {
         
   LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
   long Level0decision = report->decision();
+
   const LHCb::HltSummary* hlt = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);
 
   double distB,errdistB,fsB;//signed Fd-Fs B-PV
@@ -157,6 +158,10 @@ StatusCode FidelTuple::execute() {
     
     MyTupla->column("evt",Evt);
     MyTupla->column("L0",Level0decision);
+    MyTupla->column("L0Hadron",report->channelDecisionByName("Hadron"));
+    MyTupla->column("L0Muon",report->channelDecisionByName("Muon"));
+    MyTupla->column("L0DiMuon",report->channelDecisionByName("DiMuon"));
+    MyTupla->column("L0MuonNoGlob",report->channelDecisionByName("MuonNoGlob"));
     MyTupla->column("Hlt",          hlt->decision());
     MyTupla->column("HltMuon",      hlt->checkDecisionType(LHCb::HltEnums::Muon));  
     MyTupla->column("HltDiMuon",    hlt->checkDecisionType(LHCb::HltEnums::DiMuon));
@@ -181,9 +186,24 @@ StatusCode FidelTuple::execute() {
     v_pt.push_back(pt);
     v_p.push_back(p);
 
+
     
-    //info()<<"Evento "<<Evt<<" Massa "<< mass<<" pt "<<pt<<" Hlt "<<hlt->decision()<<endmsg;
+    // L0 Info *********************************//
     
+    bool decisionL0,tisL0,tosL0;
+    m_TriggerTisTosTool->triggerTisTos(**b,"L0Trigger*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
+    
+    if( decisionL0 ){
+      MyTupla->column("decisionL0Alleys",decisionL0);
+      MyTupla->column("AlleyTisL0",tisL0); 
+      MyTupla->column("AlleyTosL0",tosL0);
+    }
+    
+    else{
+      MyTupla->column("decisionL0Alleys",decisionL0);
+      MyTupla->column("AlleyTisL0",-1); 
+      MyTupla->column("AlleyTosL0",-1);
+    }
 
     //*************** HLT ALLEYS ***************//
     bool decisionHltAlleys,alleysTis,alleysTos,alleysTob;
@@ -191,21 +211,9 @@ StatusCode FidelTuple::execute() {
     m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys,alleysTis,alleysTos);    
     alleysTob=decisionHltAlleys && !alleysTis && !alleysTos;
 
-    std::vector<std::string> alleysPass = m_TriggerTisTosTool->triggerSelectionNames("*",
-                                                                                     ITriggerTisTos::kAlleyExitsOnly,
-                                                                                     ITriggerTisTos::kTrueRequired, 
-                                                                                     ITriggerTisTos::kAnything,
-                                                                                     ITriggerTisTos::kAnything);
-    std::vector<std::string> selPass = m_TriggerTisTosTool->triggerSelectionNames("HltSel*",
-                                                                                  ITriggerTisTos::kAllTriggerSelections,
-                                                                                  ITriggerTisTos::kTrueRequired, 
-                                                                                  ITriggerTisTos::kAnything,
-                                                                                  ITriggerTisTos::kAnything);
-
-    debug()<< "TIS : "<<alleysTis<<"  TOS : "<< alleysTos<<" Decision Hlt : "<<decisionHltAlleys<<endmsg;
-    debug()<< " alley --> "<< alleysPass<<endmsg;
-    debug()<< " Selections Hlt--> "<< selPass<<endmsg;
-
+    debug() << "      Hlt ALLEY decision = " <<decisionHltAlleys <<"  TIS alley = " << alleysTis << 
+      " TOS alley =" << alleysTos << endmsg;
+    
     if(decisionHltAlleys){
       MyTupla->column("decisionHltAlleys",decisionHltAlleys);
       MyTupla->column("AlleyTis",alleysTis); 
@@ -219,26 +227,14 @@ StatusCode FidelTuple::execute() {
       MyTupla->column("AlleyTob",-1);
     }
     
-    // Hlt SelB Info
+    //**************** Hlt SelB Info******************//
     bool decisionSelB,tisSelB,tosSelB;
     m_TriggerTisTosTool->triggerTisTos("HltSel*",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
-    debug() << "      Hlt SelB TIS= " << tisSelB << " TOS=" << tosSelB << endmsg;
+    debug() << "      Hlt SelB decision = " <<decisionSelB <<"  TIS= " << tisSelB << " TOS=" << tosSelB << endmsg;
     bool tobSelB = decisionSelB && !tisSelB && !tosSelB;
     
-    if( tisSelB ){
-      debug() << "          Hlt SelB TIS selections= "<<
-        m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                    ITriggerTisTos::kTrueRequired,
-                                                    ITriggerTisTos::kAnything ) <<endmsg;
-    }
-    if( tosSelB ){
-      debug()<< "          Hlt SelB TOS selections= "<<
-        m_TriggerTisTosTool->triggerSelectionNames( ITriggerTisTos::kAnything, 
-                                                    ITriggerTisTos::kAnything,
-                                                    ITriggerTisTos::kTrueRequired ) <<endmsg;
-    }
-    
 
+    
     if(decisionSelB){
       MyTupla->column("decisionSelB",decisionSelB);
       MyTupla->column("SelTis",tisSelB); 
@@ -251,7 +247,7 @@ StatusCode FidelTuple::execute() {
       MyTupla->column("SelTos",-1);
       MyTupla->column("SelTob",-1);
     }
-   //**************************************************************
+    //**************************************************************
     
     if((*b)->endVertex()!=NULL){
       chi2=(*b)->endVertex()->chi2();    
