@@ -19,7 +19,7 @@ namespace Tf
      *  @author M.Needham
      *  @date   31/05/2004
      */
-    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line3D;
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line3D;
 
     /// Create a Line3D from a point line and z reference point
     Line3D createLine3D(const Tsa::Line& xLine, const Tsa::Line& yLine, const double zRef);
