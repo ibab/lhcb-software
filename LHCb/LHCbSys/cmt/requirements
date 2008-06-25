@@ -56,6 +56,7 @@ use PhysEvent             v11r6   Event   # Patrick Koppenburg, Juan Palacios
 use RecEvent              v2r12   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v4r13   Event   # Matt Needham
 use VeloEvent             v16r4   Event   # Tomasz Szumlak, Chris Parkes
+use STTell1Event          v1r2    ST      # Matt Needham
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v4r0    DAQ     # Marco Cattaneo
