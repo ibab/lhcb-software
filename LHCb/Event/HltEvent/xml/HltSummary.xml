@@ -175,6 +175,7 @@
      </method>
     </class>
     
+<!-- HltSelectionSummary Class -->
 
     <class
       name        = 'HltSelectionSummary'
@@ -184,22 +185,6 @@
       <import name='GaudiKernel/VectorMap' />
       <import name='Event/Particle' />
       <import name="vector" std="TRUE"/>
-
-      <attribute
-        type = 'bitfield'
-        name = 'pattern'
-        desc = 'trigger pattern'
-	init = '0'
-	access = 'PROTECTED' >
-	<bitfield
-	  type = 'LHCb::Hlt::HltDecisionType'
-	  name = 'decisionType'
-	  length = '20'
-	  desc = 'trigger decision type: muon, dimuon, etc'
-	  setMeth = 'FALSE'
-	  getMeth = 'FALSE'
-	  checkMeth = 'FALSE' /> 
-      </attribute>
 
       <relation
         type      = 'LHCb::Particle'
@@ -217,57 +202,28 @@
         access    = 'PROTECTED' 
       />
 
+      <attribute
+        type      = 'bool'
+        name      = 'decision'
+        desc      = 'decision for this selection'
+        />
 
       <attribute
-        type      = 'std::vector&lt; int &gt;'
-        name      = 'inputSelectionsIDs'
-        desc      = 'list of IDs of the input selections'
-        access    = 'PROTECTED' />
-
-      <method
-	type = 'bool'
-	name = 'decision'
-	desc = 'returns the trigger decision'
-	const = 'TRUE' >
-	<code>
-return checkDecisionType(1);
-	</code>
-      </method>
-
-      <method
-	name = 'setDecision'
-	desc = 'returns the trigger decision'
-	argList = 'bool decision' >
-	<code>
-setDecisionType(1,decision);
-	</code>
-      </method>
+        type      = 'std::string'
+        name      = 'decisionType'
+        desc      = 'decision type for this selection. See also IANNSvc.'
+        />
       
       <method
 	name    = 'setDecisionType'
-	argList = 'unsigned int decisionType, bool ok'
-	desc    = 'Update the decisionType (see the DecisionTypes enum)'>
+	argList = 'std::string decisionType, bool ok'
+	desc    = 'Update the decisionType and the decision'>
 	<code>
-unsigned int val = (((unsigned int) decisionType) &lt;&lt; decisionTypeBits) &amp; decisionTypeMask;
-if (ok) m_pattern |= val;
-else m_pattern &amp;= ~val;
-if (ok &amp;&amp; (decisionType != 1) ) setDecision(ok);
+setDecisionType(decisionType);
+if (ok) setDecision(ok);
         </code>
       </method>
 
-      <method
-	type    = 'bool'
-	name    = 'checkDecisionType'
-        argList = 'unsigned int decisionType'
-        desc    = 'Check the status of the decisionType (see the DecisionTypes enum)'
-        const   = 'TRUE'>
-        <code>
-unsigned int val = ((unsigned int) decisionType &lt;&lt; decisionTypeBits);  
-bool ok = (0 != ( m_pattern &amp; decisionTypeMask &amp; val ));
-return ok;
-        </code>
-      </method>
-      
       <method
         name    = 'addParticle'
         desc    = 'Add a Particle to the list of saved Particle'>

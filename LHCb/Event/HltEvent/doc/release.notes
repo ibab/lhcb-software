@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Patrick Koppenburg
+ - HltSelectionSummary : make it very simple: a string, a bool, the candidates.
+
 ! 2008-06-24 - Patrick Koppenburg
  - Removed all Hlt2 enums
 
