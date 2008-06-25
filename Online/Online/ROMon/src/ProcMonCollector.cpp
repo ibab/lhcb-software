@@ -1,4 +1,4 @@
-// $Id: ProcMonCollector.cpp,v 1.1 2008-04-22 15:22:28 frankb Exp $
+// $Id: ProcMonCollector.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.1 2008-04-22 15:22:28 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -43,6 +43,8 @@ ProcMonCollector::ProcMonCollector(int argc, char** argv)
   m_info.setVerbose(m_verbose);
   m_ntasks.setUpdateHandler(this);
   m_info.setUpdateHandler(this);
+  m_ntasks.start();
+  m_info.start();
 }
 
 /// Help printout in case of -h /? or wrong arguments

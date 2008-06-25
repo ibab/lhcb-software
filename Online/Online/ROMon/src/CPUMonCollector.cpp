@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.cpp,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Id: CPUMonCollector.cpp,v 1.3 2008-06-25 22:53:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.3 2008-06-25 22:53:23 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "ROMon/CPUMon.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/CPUMonCollector.h"
+#include "dic.hxx"
 
 #include "ROMonDefs.h"
 using namespace ROMon;
@@ -47,6 +48,10 @@ CPUMonCollector::CPUMonCollector(int argc, char** argv)
   m_ncpu.setUpdateHandler(this);
   m_info.setUpdateHandler(this);
   m_stat.setUpdateHandler(this);
+  m_ncpu.setType(ONCE_ONLY);
+  m_ncpu.start();
+  m_info.start();
+  m_stat.start();
 }
 
 /// Help printout in case of -h /? or wrong arguments

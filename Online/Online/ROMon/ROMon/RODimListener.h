@@ -1,4 +1,4 @@
-// $Id: RODimListener.h,v 1.2 2008-04-11 12:11:22 frankb Exp $
+// $Id: RODimListener.h,v 1.3 2008-06-25 22:53:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.2 2008-04-11 12:11:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RODimListener.h,v 1.3 2008-06-25 22:53:23 frankb Exp $
 #ifndef ROMON_ROMONDIMLISTENER_H
 #define ROMON_ROMONDIMLISTENER_H 1
 
@@ -81,6 +81,10 @@ namespace ROMon {
     RODimListener(bool verb);
     /// Standard destructor
     virtual ~RODimListener();
+    /// Start listening
+    void start();
+    /// Stop listening
+    void stop();
     /// Access to client information
     const Clients& clients() const        {  return m_clients; }
     /// Change verbose flag

@@ -1,4 +1,4 @@
-// $Id: ROMonTaskCollector.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
+// $Id: ROMonTaskCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonTaskCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
 
 // Framework includes
 #include "dic.hxx"
@@ -31,6 +31,7 @@ ROMonTaskCollector::ROMonTaskCollector(int argc, char** argv)
 : ROMonGblBuffer(argc,argv,ROMonTaskCollector::help), m_mbmInfo(0), m_fsmInfo()
 {
   m_fsmInfo.setVerbose(m_verbose);
+  m_fsmInfo.start();
 }
 
 /// Help printout in case of -h /? or wrong arguments

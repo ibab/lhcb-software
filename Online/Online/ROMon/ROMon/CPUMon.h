@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.4 2008-06-05 18:40:00 frankb Exp $
+// $Id: CPUMon.h,v 1.5 2008-06-25 22:53:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.4 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.5 2008-06-25 22:53:23 frankb Exp $
 #ifndef ROMON_RUNDB_H
 #define ROMON_RUNDB_H 1
 
@@ -80,7 +80,7 @@ namespace ROMon {
     /// Context switch rate in [Hz] [from cpu/stat]
     float  ctxtRate;
     /// Time stamp of last information update
-    time_t time;
+    int time;
     /// Time stamp of the monitor snapshot [milli seconds]
     unsigned int millitm;
     /// Variable size array of node items
@@ -102,14 +102,14 @@ namespace ROMon {
   PACK_DATA(class) CPUfarm {
   public:
     typedef VarItems<CPUset> Nodes;
-    typedef std::pair<time_t,unsigned int> TimeStamp;
+    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 4 };
     /// First word: Data type descriptor (MUST always be 4)
     int   type;
     /// Total size of the node information
     int  totalSize;
     /// Date of last update
-    time_t time;
+    int time;
     /// Farm name
     char  name[32];
     /// Variable size array of node items
@@ -174,7 +174,7 @@ namespace ROMon {
     /// Node name
     char   name[32];
     /// Time stamp of last information update
-    time_t time;
+    int time;
     /// Time stamp of the monitor snapshot [milli seconds]
     unsigned int millitm;
     /// Variable size array of node items
@@ -196,14 +196,14 @@ namespace ROMon {
   PACK_DATA(class) ProcFarm {
   public:
     typedef VarItems<Procset> Nodes;
-    typedef std::pair<time_t,unsigned int> TimeStamp;
+    typedef std::pair<int,unsigned int> TimeStamp;
     enum { TYPE = 5 };
     /// First word: Data type descriptor (MUST always be 5)
     int   type;
     /// Total size of the node information
     int  totalSize;
     /// Date of last update
-    time_t time;
+    int time;
     /// Farm name
     char  name[32];
     /// Variable size array of node items

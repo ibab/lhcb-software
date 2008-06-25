@@ -1,4 +1,4 @@
-// $Id: ROMonNodeCollector.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Id: ROMonNodeCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.2 2008-03-05 07:40:20 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -37,6 +37,7 @@ ROMonNodeCollector::ROMonNodeCollector(int argc, char** argv)
   cli.getopt("match",3,match);
   m_info.setMatch(match);
   m_info.setVerbose(m_verbose);
+  m_info.start();
 }
 
 /// Help printout in case of -h /? or wrong arguments

@@ -1,13 +1,4 @@
-<!--
-
-This help file has 4 section:
-farm:     to be displayed when only the small subfarm monitors are present.
-subfarm:  to be displayed when the big subfarm monitor is present.
-node:     to be displayed when the MBM monitor is present.
-common:   displayed always at the end of the specific help.
-
-the first line is always displayed as a title in bold
--->
+<farmMon>
 
 <common>
 Note: Help is context sensitive
@@ -16,6 +7,8 @@ You receive different help content depending on the current window:
 -- Help on subfarm summary window
 -- Help on expanded subfarm summary
 -- Help on MBM buffer monitor of a single node.
+-- Help on DAQ processes executing on a given node
+-- Help on the CPU content of a given subfarm.
 
 </common>
 
@@ -51,13 +44,32 @@ buffer manager monitor if you type KPD-PERIOD (".")
 
 </subfarm>
 
-<node>
+<mbm>
 MBM buffer dispay for a single node
 
 On a single node all processes and their event consumoption from the buffer managers are displayed.
+This menu can only be invoked from the extended subfarm display;
 Nothing more to say. If you don't understand this display you are hopeless anyway. 
 
-</node>
+</mbm>
+
+<procs>
+Process display for a single node
+
+All DAQ related tasks are shown in this display. DAQ related are all processes started with a unique UTGID.
+This menu can only be invoked from the extended subfarm display;
+Nothing more to say.
+
+</procs>
+
+<cpu>
+CPU display for a processor farm
+
+Lists all CPU boxes and the corresponding cores running.
+This menu can only be invoked from the extended subfarm display;
+Nothing more to say.
+
+</cpu>
 
 <common>
 Common keyboard commands:
@@ -66,6 +78,12 @@ Common keyboard commands:
 -- To invoke/hide the help display type CTRL-H or h or H.
 -- To exit the application         type CTRL-E or E
 -- To show the subfarm menu        type ENTER or KPD-ENTER
+
+To be invoked from the extended subfarm display:
 -- To show the MBM monitor         type KPD-PERIOD or .
-   (needs the sunfarm display be present)
+-- To show the CPU monitor         type c or C
+-- To show the process monitor     type CTRL-P or p or P
+
 </common>
+
+</farmMon>
