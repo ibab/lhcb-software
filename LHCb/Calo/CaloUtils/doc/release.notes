@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.103 2008-06-04 16:18:23 odescham Exp $
+! $Id: release.notes,v 1.104 2008-06-25 09:26:02 jpalac Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2008-06-25 - Juan Palacios
+ - CaloUtils/CaloTrackTool.h
+  . Change Gaudi::Line for Gaudi::Math::Line
+ - cmt/requirements
+  . Increase version to v8r1
 
 ! 2008-06-06 - Olivier Deschamps
 - threshold and offset as double in Calo2DView
