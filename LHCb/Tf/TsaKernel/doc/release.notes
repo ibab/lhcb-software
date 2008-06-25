@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Juan PALACIOS
+ - TsaKernel/Line3D.h
+  . Change Gaudi::Line for Gaudi::Math::Line
+ - cmt/requirements
+  . Increase version to v3r4
+
 !======================= TsaKernel v3r3 2008-06-02 ==========================
 ! 2008-06-02 - Marco Cattaneo
  - Fix dictionary selection file
