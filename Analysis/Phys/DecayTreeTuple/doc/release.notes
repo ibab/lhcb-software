@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Patrick Koppenburg
+ - TupleToolTrigger : Use IANNSvc
+ - Increment to v1r4
+
 ! 2008-06-23 - V. Gligorov
  - Fixed use of associators in TupleToolMCTruth
 

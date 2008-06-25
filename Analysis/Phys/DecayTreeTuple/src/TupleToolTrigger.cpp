@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.4 2008-05-04 18:53:45 gligorov Exp $
+// $Id: TupleToolTrigger.cpp,v 1.5 2008-06-25 12:18:26 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,9 +8,8 @@
 #include "TupleToolTrigger.h"
 
 #include "Event/L0DUReport.h"
-//#include "Event/HltSummary.h"
-#include "Event/HltEnums.h"
 #include "Kernel/IHltSummaryTool.h"
+#include "Kernel/IANNSvc.h"
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
@@ -36,11 +35,14 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   , m_summaryTool(0)
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty( "VerboseL0",         m_verboseL0=false );
-  declareProperty( "VerboseAlleys",     m_verboseAlleys=false );
-  declareProperty( "VerboseSelections", m_verboseSelections=false );
+  declareProperty( "VerboseL0",   m_verboseL0=false );
+  declareProperty( "VerboseHlt1", m_verboseHlt1=false );
+  declareProperty( "VerboseHlt2", m_verboseHlt2=false );
   declareProperty( "FillL0", m_fillL0=true );
-  declareProperty( "FillHlt", m_fillHLT=false );
+  declareProperty( "FillHlt", m_fillHlt=true );
+  declareProperty( "Hlt1MajorKey", m_hlt1MajorKey = "Hlt1SelectionID"); 
+  declareProperty( "Hlt2MajorKey", m_hlt2MajorKey = "Hlt2SelectionID");
+
 }
 
 //=========================================================================
@@ -60,7 +62,7 @@ StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
   
   if (m_fillL0)
   	if (!fillL0(tuple)) return StatusCode::FAILURE ;
-  if (m_fillHLT)
+  if (m_fillHlt)
   	if (!fillHlt(tuple)) return StatusCode::FAILURE ;
   return StatusCode::SUCCESS;
 }
@@ -77,8 +79,7 @@ StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple ) {
         if ( ! tuple->column( "L0_"+(*it).first , 
                               report->channelDecision( ((*it).second)->id() )))
           return StatusCode::FAILURE;
-        if (msgLevel(MSG::VERBOSE)) 
-          if (msgLevel(MSG::VERBOSE)) verbose() << (*it).first << " : " 
+        if (msgLevel(MSG::VERBOSE)) verbose() << (*it).first << " : " 
                     << report->channelDecision( ((*it).second)->id() ) << endreq;
       } 
     }
@@ -91,30 +92,24 @@ StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple ) {
 }
 //=============================================================================
 StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
-  // HLT
+  // Hlt
 
   if( !tuple->column( "HltDecision", m_summaryTool->decision() )) return StatusCode::FAILURE;
 
-  /// @todo need to add more granularity in the alleys. 
+  StatusCode sc = StatusCode::SUCCESS ;
 
-  if ( m_verboseAlleys){
-    std::vector<std::string> sels = m_summaryTool->confStringVector("HltAlleys/InputSelections");
-    
-    for ( std::vector<std::string>::const_iterator i = sels.begin() ; i!=sels.end() ; ++i){
-      if ( ! tuple->column( "Hlt"+(*i), m_summaryTool->selectionDecision(*i) ) ) return StatusCode::FAILURE;
-      if (msgLevel(MSG::VERBOSE)) verbose() << *i << " says " << m_summaryTool->selectionDecision(*i) << endmsg ;
-    }
-  }
-  
-  if ( m_verboseSelections){
-    for ( int i = LHCb::HltEnums::HltSelEntry ; i!= LHCb::HltEnums::HltSelLastSelection ; ++i){
-      std::string s = LHCb::HltEnums::HltSelectionSummaryEnumToString(i) ;
-      if ( ! tuple->column( s, m_summaryTool->selectionDecision(s) ) ) 
-        return StatusCode::FAILURE;
-      if (msgLevel(MSG::VERBOSE)) verbose() << s << " says " 
-                                            << m_summaryTool->selectionDecision(s) << endmsg ; 
-    } 
+  if ( m_verboseHlt1)        sc = fillHlt(tuple,m_hlt1MajorKey);
+  if ( sc && m_verboseHlt2 ) sc = fillHlt(tuple,m_hlt2MajorKey);
+  return sc ;
+}
+//============================================================================
+StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & major ) {
+  std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->names(major);
+  for (std::vector<std::string>::const_iterator s = names.begin() ; s!=names.end() ; ++s){
+    if ( ! tuple->column(*s, m_summaryTool->selectionDecision(*s) ) ) 
+      return StatusCode::FAILURE;
+    if (msgLevel(MSG::VERBOSE)) verbose() << major << " :: " << *s << " says " 
+                                          << m_summaryTool->selectionDecision(*s) << endmsg ; 
   }
   return StatusCode::SUCCESS;
 }
-
