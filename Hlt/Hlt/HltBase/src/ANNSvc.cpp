@@ -6,7 +6,6 @@
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
 
-
 using std::map;
 using std::vector;
 using std::string;
@@ -189,12 +188,23 @@ ANNSvc::value(const IANNSvc::major_key_type& major, int minor) const {
     return x;
 }
 
+std::vector<IANNSvc::minor_key_type> 
+ANNSvc::keys(const IANNSvc::major_key_type& major) const {
+    std::vector<IANNSvc::minor_value_type> i = items(major);
+    std::vector<IANNSvc::minor_key_type>  k; k.reserve(i.size());
+    std::transform(i.begin(),
+                   i.end(),
+                   std::back_inserter(k),
+                   bl::bind(&IANNSvc::minor_value_type::first,bl::_1));
+    return k;
+}
 
 std::vector<IANNSvc::minor_value_type> 
 ANNSvc::items(const IANNSvc::major_key_type& major) const {
     std::vector<IANNSvc::minor_value_type>  r;
     maps_type::const_iterator i = m_maps.find(major);
     if (i!=m_maps.end())  {
+        r.reserve( i->second->mapping().size() );
         r.insert( r.end(), i->second->mapping().begin(), 
                            i->second->mapping().end() );
     }
@@ -203,7 +213,7 @@ ANNSvc::items(const IANNSvc::major_key_type& major) const {
 
 std::vector<IANNSvc::major_key_type> 
 ANNSvc::majors() const {
-    std::vector< major_key_type > r;
+    std::vector< major_key_type > r; r.reserve(m_maps.size());
     std::transform( m_maps.begin(), 
                     m_maps.end(),
                     std::back_inserter(r), 

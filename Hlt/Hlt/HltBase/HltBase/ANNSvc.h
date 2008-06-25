@@ -1,4 +1,4 @@
-// $Id: ANNSvc.h,v 1.8 2008-06-17 19:09:10 pkoppenb Exp $
+// $Id: ANNSvc.h,v 1.9 2008-06-25 14:12:02 graven Exp $
 #ifndef ANNSVC_H  
 #define ANNSVC_H 1
 
@@ -38,6 +38,7 @@ public:
 
   bool                           hasMajor(const major_key_type& major) const;
 
+  std::vector<minor_key_type>    keys(const major_key_type& major) const;
   std::vector<minor_value_type>  items(const major_key_type& major) const;
   std::vector<major_key_type>    majors() const;
 
