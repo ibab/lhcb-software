@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.5 2008-06-25 12:18:26 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.6 2008-06-25 14:38:45 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -104,7 +104,7 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
 }
 //============================================================================
 StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & major ) {
-  std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->names(major);
+  std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(major);
   for (std::vector<std::string>::const_iterator s = names.begin() ; s!=names.end() ; ++s){
     if ( ! tuple->column(*s, m_summaryTool->selectionDecision(*s) ) ) 
       return StatusCode::FAILURE;
