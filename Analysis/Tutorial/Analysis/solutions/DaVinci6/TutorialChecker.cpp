@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.11 2008-06-13 12:40:59 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.12 2008-06-25 17:28:02 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "Event/RecHeader.h"
 #include "Event/L0DUReport.h"
 #include "Kernel/IHltSummaryTool.h"
+#include "Kernel/IANNSvc.h"
 
 // local
 #include "TutorialChecker.h"
@@ -197,8 +198,16 @@ StatusCode TutorialChecker::fillTrigger(Tuple& tuple){
   debug() << "L0 decision is " << l0->decision() << ", HLT: " << m_summary->decision() << endmsg ;
   tuple->column("L0",           l0->decision()); // total decision
   tuple->column("Hlt",          m_summary->decision()); // total decision
-  /// @todo add details from IANNSvc, once it's in LHCb and not in HLT anymore.
 
+  std::string major = "Hlt2SelectionID" ; // but it could be Hlt1...
+
+  std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(major);
+  for (std::vector<std::string>::const_iterator s = names.begin() ; s!=names.end() ; ++s){
+    if ( ! tuple->column(*s, m_summary->selectionDecision(*s) ) ) 
+      return StatusCode::FAILURE;
+    if (msgLevel(MSG::VERBOSE)) verbose() << major << " :: " << *s << " says " 
+                                          << m_summary->selectionDecision(*s) << endmsg ; 
+  }
   return StatusCode::SUCCESS ;
 }
 //============================================================================

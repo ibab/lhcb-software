@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Patrick Koppenburg
+ - Use IANNSvc
+
 ! 2008-06-18 - Patrick Koppenburg
  - Depend on HltInterfaces
 
