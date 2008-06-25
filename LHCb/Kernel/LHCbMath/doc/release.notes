@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-06-25 - Juan PALACIOS
+ - cmt/requirements
+  . Change version to v3r0 since namespace changes are not backwards 
+    compatible.
+
 ! 2008-06-24 - Juan PALACIOS
  - LHCbMath/Line.h
  - LHCbMath/LineTypes.h
