@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.30 2007-09-07 13:24:53 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.31 2008-06-25 08:55:45 jpalac Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -172,7 +172,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
     bool samePlane = std::abs(enP.z()-exP.z()) < m_cellRadius;
     if (!samePlane) { // Track in cell
       /// Track
-      Gaudi::XYZLine track(enP, (exP-enP).Unit());
+      Gaudi::Math::XYZLine track(enP, (exP-enP).Unit());
       /// Now let's get a list of possible hit straws
       Straws straws; 
       findStraws(enP, exP, straws);
@@ -180,7 +180,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
       const double z = 0.5*m_zPitch;
       Gaudi::XYZPoint wB(0.0, m_yMinLocal, -z);
       Gaudi::XYZPoint wT(0.0, m_yMaxLocal, -z);
-      Gaudi::XYZLine wire;
+      Gaudi::Math::XYZLine wire;
       /// Are the wire and track parallel
       bool notParallel = true;
       Gaudi::XYZPoint mu;
@@ -199,7 +199,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
         x = localUOfStraw(straw);
         wB.SetX(x);
         wT.SetX(x); 
-        wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
+        wire = Gaudi::Math::XYZLine(wB, (wT-wB).Unit());
         notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
         if (notParallel) {
           dist = driftDistance(lambda-mu);
@@ -218,7 +218,7 @@ void DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
         x = localUOfStraw(straw);
         wB.SetX(x);
         wT.SetX(x);
-        wire = Gaudi::XYZLine(wB, (wT-wB).Unit());
+        wire = Gaudi::Math::XYZLine(wB, (wT-wB).Unit());
         notParallel = Gaudi::Math::closestPoints(wire, track, mu, lambda);
         if (notParallel) {
           dist = driftDistance(lambda-mu);
