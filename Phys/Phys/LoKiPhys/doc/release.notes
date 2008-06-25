@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.63 2008-06-20 10:05:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.64 2008-06-25 10:09:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-25 - Vanya BELYAEV
+ - src/PhysSources.cpp
+
+   LoKi::*::*Sources : 
+     suppress warning messages for the used used DVAlgorithms.
+     use "alg->debug()" instead 
+     (thanks to Alison Bates & Patrick Koppenburg for spotting 
+      the problem and providing the idea for solution)
+
 
 ! 2008-06-20 - Vanya BELYAEV 
  - add new function 

@@ -1,4 +1,4 @@
-// $Id: PhysSources.cpp,v 1.2 2008-02-21 20:23:42 ibelyaev Exp $
+// $Id: PhysSources.cpp,v 1.3 2008-06-25 10:09:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -274,9 +274,15 @@ LoKi::Particles::SourceDesktop::operator() () const
       Gaudi::Utils::getDVAlgorithm ( svcs.contextSvc() ) ;
     if ( 0 != alg ) 
     {
-      Warning 
-        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" , 
-          StatusCode::SUCCESS ) ;
+      if ( alg->msgLevel( MSG::DEBUG) ) 
+      { 
+        alg->debug() 
+          << objType() << "('" << (*this) << "')"
+          << " : Use DVAlgorithm('" 
+          << alg->name() 
+          << "') to access IPhysDesktop"
+          << endreq ;
+      }
       m_desktop = alg->desktop() ; 
     }
     Assert ( m_desktop.validPointer ( )               ,
@@ -595,9 +601,15 @@ LoKi::Vertices::SourceDesktop::operator() () const
       Gaudi::Utils::getDVAlgorithm ( svcs.contextSvc() ) ;
     if ( 0 != alg ) 
     {
-      Warning 
-        ( "Use DVAlgorithm('" + alg->name() + "') to access IPhysDeskop" , 
-          StatusCode::SUCCESS ) ;
+      if ( alg->msgLevel( MSG::DEBUG) ) 
+      { 
+        alg->debug() 
+          << objType() << "('" << (*this) << "')"
+          << " : Use DVAlgorithm('" 
+          << alg->name() 
+          << "') to access IPhysDesktop"
+          << endreq ;
+      }
       m_desktop = alg->desktop() ; 
     }
     Assert ( m_desktop.validPointer ( )               ,
