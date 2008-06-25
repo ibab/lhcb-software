@@ -1,7 +1,7 @@
 
 ApplicationMgr.ExtSvc += { "HltANNSvc" };
 
-HltANNSvc.SelectionID = {
+HltANNSvc.Hlt1SelectionID = {
     "MuonEntry"                  :  100,
     "DiMuonEntry"                :  101,
     "MuonL0Conf"                 :  102,

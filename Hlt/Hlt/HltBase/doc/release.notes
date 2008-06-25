@@ -6,6 +6,7 @@
 ! 2008-06-25 - Gerhard Raven
  - extend ANNSvc to allow one to get the list of keys of a major, i.e. no numbers,
    just names.
+ - replace use of SelectionID by Hlt1SelectionID
 
 ! 2008-06-23 - Gerhard Raven
  - remove commented out code in HltUtils.h

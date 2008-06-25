@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.12 2008-06-23 12:36:05 graven Exp $
+// $Id: HltBase.icpp,v 1.13 2008-06-25 20:14:25 graven Exp $
 // Include files
 
 
@@ -30,7 +30,7 @@ StatusCode HltBase<EBASE>::initialize() {
   EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endreq;
   StatusCode sc = EBASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
+
   if (!EBASE::service( "HltANNSvc", m_hltANNSvc).isSuccess()) return StatusCode::FAILURE;
   
   initializeMsg();
@@ -145,7 +145,7 @@ void HltBase<EBASE>::initializeCounter (Hlt::Counter& counter,
 
 template <class EBASE>
 void HltBase<EBASE>::increaseCounter( Hlt::Counter& count, 
-                                           int increase) {
+                                      int increase) {
   count.m_counter =  count.m_counter + increase;
   EBASE::verbose() << " counter " << count.m_name 
                    << " = " << count.m_counter << endreq;;
@@ -177,7 +177,7 @@ template <class EBASE>
 bool HltBase<EBASE>::validHltSelectionName(const stringKey& selname) 
 {
     // use optional<int> automatic conversion to bool...
-  return annSvc().value("SelectionID",selname.str());
+  return annSvc().value("Hlt1SelectionID",selname.str());
 }
 
 template <class EBASE>

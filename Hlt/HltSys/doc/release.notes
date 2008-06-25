@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+! 2008-06-25 - Gerhard Raven
+ - Renamed SelectionID to Hlt1SelectionID
+
 ! 2008-06-24 - Jose A. Hernando
  - use Hlt1/Track/Velo and Hlt1/Track/Forward for the Hlt2
 
