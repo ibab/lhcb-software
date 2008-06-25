@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.8 2008-05-13 12:26:10 odescham Exp $
+// $Id: CaloTrackTool.h,v 1.9 2008-06-25 09:24:51 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -54,7 +54,7 @@ namespace Calo
   {
   public:
     typedef std::vector<LHCb::Track::Types>               TrackTypes ;
-    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line       ;
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line ;
   public:
     /// initialize the tool 
     virtual StatusCode initialize () ;
