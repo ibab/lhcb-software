@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.43 2008-06-02 11:56:38 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2008-06-25 17:27:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-25 - Vanya BELYAEV
+ - update the components
+ - cmt/release.notes 
+    version inrment to v7r3
 
 !========================== LoKiPhysMC v7r2 2008-06-02 ========================
 ! 2008-06-02 - Marco Cattaneo

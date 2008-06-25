@@ -1,4 +1,4 @@
-// $Id: LoKi_HepMCParticleMaker.cpp,v 1.12 2007-11-28 14:54:10 ibelyaev Exp $
+// $Id: HepMCParticleMaker.cpp,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -44,169 +44,183 @@
 // ============================================================================
 #include "Kernel/MCParticleMakerBase.h"
 // ============================================================================
-/** @class LoKi_HepMCParticleMaker LoKi_HepMCParticleMaker.cpp
- *
- *  Simple class to create the LHCb::Particle objects 
- *  ("recontructed particles") 
- *  from HepMC::GenParticles ("generator particles") 
- *
- *  @see MCParticleMakerBase 
- *
- *  @attention for default configuration, 
- *    the smearing of 4-momentum and position is disabled 
- *
- *  This file is a part of LoKi project - 
- *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
- *
- *  The package has been designed with the kind help from
- *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
- *  contributions and advices from G.Raven, J.van Tilburg, 
- *  A.Golutvin, P.Koppenburg have been used in the design.
- *
- *
- *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
- *  @date 2006-09-25
- */
-// ============================================================================
-class LoKi_HepMCParticleMaker 
-  : public         MCParticleMakerBase
-  , public virtual  IParticleMaker 
+namespace LoKi 
 {
-  /// friend factory for instantiation 
-  friend class ToolFactory<LoKi_HepMCParticleMaker> ;
-public:
-  /// standard initialization of the tool
-  StatusCode initialize() ;
-  /// create the particles 
-  StatusCode makeParticles 
-  ( LHCb::Particle::ConstVector& particles ) ;
-public:
-  /// use the particle ?
-  bool use ( const HepMC::GenParticle* p ) const ;
-protected:
-  /// standard constructor
-  LoKi_HepMCParticleMaker 
-  ( const std::string& type   , ///< tool type ??? 
-    const std::string& name   , ///< tool name 
-    const IInterface*  parent ) 
-    //
-    : MCParticleMakerBase ( type , name , parent ) 
-    //
-    , m_addresses ( 1 , LHCb::HepMCEventLocation::Default )
-    //
-    , m_particles () 
-    , m_mothers   () 
-    //
-    , m_ids  ( LoKi::Cuts::GNONE ) 
-    , m_moms ( LoKi::Cuts::GALL  ) 
-    // 
-    , m_charged    ( LoKi::Cuts::GALL ) 
-    , m_gamma      ( LoKi::Cuts::GALL ) 
-    , m_chargedcut ( LoKi::Cuts::GALL ) 
-    , m_gammacut   ( LoKi::Cuts::GALL ) 
-    //
-    , m_minPtGamma (  150.0 * Gaudi::Units::MeV ) 
-    , m_minThetaGamma  ( ( 32.0 * Gaudi::Units::cm    ) / 
-                         ( 12.4 * Gaudi::Units::meter ) ) 
-    , m_maxThetaXGamma ( (  4.0 * Gaudi::Units::meter ) / 
-                         ( 12.4 * Gaudi::Units::meter ) ) 
-    , m_maxThetaYGamma ( (  3.0 * Gaudi::Units::meter ) / 
-                         ( 12.4 * Gaudi::Units::meter ) )
-    //
-    , m_minPCharged     (   3 * Gaudi::Units::GeV  )
-    , m_minPtCharged    (  10 * Gaudi::Units::MeV  )
-    , m_minThetaCharged (  10 * Gaudi::Units::mrad ) 
-    , m_maxThetaCharged ( 250 * Gaudi::Units::mrad )
-    //
-    , m_maxZproduction   ( 50 * Gaudi::Units::cm ) 
-    , m_maxRhoProduction (  5 * Gaudi::Units::cm ) 
-    , m_minZend          ( 50 * Gaudi::Units::cm ) 
+  // ==========================================================================
+  /** @class HepMCParticleMaker
+   *
+   *  Simple class to create the LHCb::Particle objects 
+   *  ("recontructed particles") 
+   *  from HepMC::GenParticles ("generator particles") 
+   *
+   *  @see MCParticleMakerBase 
+   *
+   *  @attention for default configuration, 
+   *    the smearing of 4-momentum and position is disabled 
+   *
+   *  This file is a part of LoKi project - 
+   *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
+   *
+   *  The package has been designed with the kind help from
+   *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas, 
+   *  contributions and advices from G.Raven, J.van Tilburg, 
+   *  A.Golutvin, P.Koppenburg have been used in the design.
+   *
+   *
+   *  @author Vanya BELYAEV ibelyaev@physcis.syr.edu
+   *  @date 2006-09-25
+   */
+  // ==========================================================================
+  class HepMCParticleMaker 
+    : public         MCParticleMakerBase
+    , public virtual  IParticleMaker 
   {
+    // ========================================================================
+    /// friend factory for instantiation 
+    friend class ToolFactory<LoKi::HepMCParticleMaker> ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// standard initialization of the tool
+    StatusCode initialize() ;
+    /// create the particles 
+    StatusCode makeParticles 
+    ( LHCb::Particle::ConstVector& particles ) ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// use the particle ?
+    bool use ( const HepMC::GenParticle* p ) const ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// standard constructor
+    HepMCParticleMaker 
+    ( const std::string& type   , ///< tool type ??? 
+      const std::string& name   , ///< tool name 
+      const IInterface*  parent ) 
+      //
+      : MCParticleMakerBase ( type , name , parent ) 
+      //
+      , m_addresses ( 1 , LHCb::HepMCEventLocation::Default )
+      //
+      , m_particles () 
+      , m_mothers   () 
+      //
+      , m_ids  ( LoKi::Cuts::GNONE ) 
+      , m_moms ( LoKi::Cuts::GALL  ) 
+      // 
+      , m_charged    ( LoKi::Cuts::GALL ) 
+      , m_gamma      ( LoKi::Cuts::GALL ) 
+      , m_chargedcut ( LoKi::Cuts::GALL ) 
+      , m_gammacut   ( LoKi::Cuts::GALL ) 
+      //
+      , m_minPtGamma     (  150.0 * Gaudi::Units::MeV     ) 
+      , m_minThetaGamma  ( ( 32.0 * Gaudi::Units::cm    ) / 
+                           ( 12.4 * Gaudi::Units::meter ) )
+      , m_maxThetaXGamma ( (  4.0 * Gaudi::Units::meter ) / 
+                             ( 12.4 * Gaudi::Units::meter ) ) 
+      , m_maxThetaYGamma ( (  3.0 * Gaudi::Units::meter ) / 
+                             ( 12.4 * Gaudi::Units::meter ) )
+      //
+      , m_minPCharged     (   3 * Gaudi::Units::GeV  )
+      , m_minPtCharged    (  10 * Gaudi::Units::MeV  )
+      , m_minThetaCharged (  10 * Gaudi::Units::mrad ) 
+      , m_maxThetaCharged ( 250 * Gaudi::Units::mrad )
+      //
+      , m_maxZproduction   ( 50 * Gaudi::Units::cm ) 
+      , m_maxRhoProduction (  5 * Gaudi::Units::cm ) 
+      , m_minZend          ( 50 * Gaudi::Units::cm ) 
+    {
+      //
+      declareInterface<IParticleMaker>(this);
+      //
+      declareProperty ( "Inputs"           , m_addresses        ) ;    
+      //
+      m_particles.push_back ( "e+"  ) ;
+      m_particles.push_back ( "mu+" ) ;
+      m_particles.push_back ( "pi+" ) ;
+      m_particles.push_back ( "K+"  ) ;
+      m_particles.push_back ( "p+"  ) ;
+      
+      declareProperty ( "Particles"        , m_particles        ) ;
+      declareProperty ( "From"             , m_mothers          ) ;
+      //
+      declareProperty ( "MinPtGamma"       , m_minPtGamma       ) ;
+      declareProperty ( "MinThetaGamma"    , m_minThetaGamma    ) ;
+      declareProperty ( "MaxThetaXGamma"   , m_maxThetaXGamma   ) ;
+      declareProperty ( "MaxThetaYGamma"   , m_maxThetaYGamma   ) ;
+      //
+      declareProperty ( "MinPCharged"      , m_minPCharged      ) ;
+      declareProperty ( "MinPtCharged"     , m_minPtCharged     ) ;
+      declareProperty ( "MinThetaCharged"  , m_minThetaCharged  ) ;
+      declareProperty ( "MaxThetaCharged"  , m_maxThetaCharged  ) ;
+      //
+      declareProperty ( "MaxZProduction"   , m_maxZproduction   ) ;
+      declareProperty ( "MaxRhoProduction" , m_maxRhoProduction ) ;
+      declareProperty ( "MinZend"          , m_minZend          ) ;
+      // 
+      setProperty     ( "SmearParticle"    , false ) ;
+    } 
+    /// virtual protected destructor 
+  virtual ~HepMCParticleMaker() {} 
+    // ========================================================================
+  private:
+    // ========================================================================
+    // default constructor is disabled 
+    HepMCParticleMaker() ;
+    // copy constructor is disabled 
+    HepMCParticleMaker( const HepMCParticleMaker& ) ;
+    // assignement operator is disabled 
+    HepMCParticleMaker& operator=( const HepMCParticleMaker& ) ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /// fill particle from generator particle 
+    StatusCode fillParticle 
+    ( const HepMC::GenParticle* gen ,
+      LHCb::Particle*           rcp ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    typedef std::vector<std::string> Addresses ;
     //
-    declareInterface<IParticleMaker>(this);
+    Addresses           m_addresses         ;
+    Gaudi::SymMatrix7x7 m_covariance        ;
+    typedef std::vector<std::string> IDs    ;
+    IDs                 m_particles         ;
+    IDs                 m_mothers           ;
     //
-    declareProperty ( "Inputs"           , m_addresses        ) ;    
+    LoKi::Types::GCut   m_ids               ;
+    LoKi::Types::GCut   m_moms              ;
     //
-    m_particles.push_back ( "e+"  ) ;
-    m_particles.push_back ( "mu+" ) ;
-    m_particles.push_back ( "pi+" ) ;
-    m_particles.push_back ( "K+"  ) ;
-    m_particles.push_back ( "p+"  ) ;
-    
-    declareProperty ( "Particles"        , m_particles        ) ;
-    declareProperty ( "From"             , m_mothers          ) ;
+    LoKi::Types::GCut   m_charged           ;
+    LoKi::Types::GCut   m_gamma             ;
+    LoKi::Types::GCut   m_chargedcut        ;
+    LoKi::Types::GCut   m_gammacut          ;
     //
-    declareProperty ( "MinPtGamma"       , m_minPtGamma       ) ;
-    declareProperty ( "MinThetaGamma"    , m_minThetaGamma    ) ;
-    declareProperty ( "MaxThetaXGamma"   , m_maxThetaXGamma   ) ;
-    declareProperty ( "MaxThetaYGamma"   , m_maxThetaYGamma   ) ;
+    double              m_minPtGamma        ;
+    double              m_minThetaGamma     ;
+    double              m_maxThetaXGamma    ;
+    double              m_maxThetaYGamma    ;
     //
-    declareProperty ( "MinPCharged"      , m_minPCharged      ) ;
-    declareProperty ( "MinPtCharged"     , m_minPtCharged     ) ;
-    declareProperty ( "MinThetaCharged"  , m_minThetaCharged  ) ;
-    declareProperty ( "MaxThetaCharged"  , m_maxThetaCharged  ) ;
+    double              m_minPCharged       ;
+    double              m_minPtCharged      ;
+    double              m_minThetaCharged   ;
+    double              m_maxThetaCharged   ;
     //
-    declareProperty ( "MaxZProduction"   , m_maxZproduction   ) ;
-    declareProperty ( "MaxRhoProduction" , m_maxRhoProduction ) ;
-    declareProperty ( "MinZend"          , m_minZend          ) ;
-    // 
-    setProperty     ( "SmearParticle"    , "False"            ) ;
-
-  } 
-  /// virtual protected destructor 
-  virtual ~LoKi_HepMCParticleMaker() {} 
-private:
-  // default constructor is disabled 
-  LoKi_HepMCParticleMaker() ;
-  // copy constructor is disabled 
-  LoKi_HepMCParticleMaker( const LoKi_HepMCParticleMaker& ) ;
-  // assignement operator is disabled 
-  LoKi_HepMCParticleMaker& operator=( const LoKi_HepMCParticleMaker& ) ;
-protected:
-  /// fill particle from generator particle 
-  StatusCode fillParticle 
-  ( const HepMC::GenParticle* gen ,
-    LHCb::Particle*           rcp ) ;
-private:
-  typedef std::vector<std::string> Addresses ;
-  //
-  Addresses           m_addresses         ;
-  Gaudi::SymMatrix7x7 m_covariance        ;
-  typedef std::vector<std::string> IDs    ;
-  IDs                 m_particles         ;
-  IDs                 m_mothers           ;
-  //
-  LoKi::Types::GCut   m_ids               ;
-  LoKi::Types::GCut   m_moms              ;
-  //
-  LoKi::Types::GCut   m_charged           ;
-  LoKi::Types::GCut   m_gamma             ;
-  LoKi::Types::GCut   m_chargedcut        ;
-  LoKi::Types::GCut   m_gammacut          ;
-  //
-  double              m_minPtGamma        ;
-  double              m_minThetaGamma     ;
-  double              m_maxThetaXGamma    ;
-  double              m_maxThetaYGamma    ;
-  //
-  double              m_minPCharged       ;
-  double              m_minPtCharged      ;
-  double              m_minThetaCharged   ;
-  double              m_maxThetaCharged   ;
-  //
-  double              m_maxZproduction    ;
-  double              m_maxRhoProduction  ;
-  double              m_minZend           ;
-  //
-};
-// ============================================================================
-/// Declaration of the Tool Factory
-// ===========================================================================
-DECLARE_TOOL_FACTORY(LoKi_HepMCParticleMaker);
+    double              m_maxZproduction    ;
+    double              m_maxRhoProduction  ;
+    double              m_minZend           ;
+    //
+    // ========================================================================
+  };
+  // ==========================================================================
+} // end of namespace LoKi 
 // ============================================================================
 // standard initialization of the tool 
 // ============================================================================
-StatusCode LoKi_HepMCParticleMaker::initialize() 
+StatusCode LoKi::HepMCParticleMaker::initialize() 
 {
   StatusCode sc = MCParticleMakerBase::initialize() ;
 
@@ -282,12 +296,13 @@ StatusCode LoKi_HepMCParticleMaker::initialize()
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   class UseIt
     : public LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate
   {
   public:
     /// constructor
-    UseIt( const LoKi_HepMCParticleMaker* maker ) 
+    UseIt( const LoKi::HepMCParticleMaker* maker ) 
       : LoKi::BasicFunctors<const HepMC::GenParticle*>::Predicate () 
       , m_maker ( maker ) 
     {}
@@ -309,17 +324,18 @@ namespace
   private:
     UseIt();
   private:
-    LoKi::Interface<LoKi_HepMCParticleMaker> m_maker ;
+    LoKi::Interface<LoKi::HepMCParticleMaker> m_maker ;
   } ;
+  // ==========================================================================
 }
 // ============================================================================
 #define INHERITS(T1,T2) \
      (Relations::IsConvertible<const T1*,const T2*>::value && \
      !Relations::IsConvertible<const T1*,const void*>::same)
 // ============================================================================
-/// create the particles 
+// create the particles 
 // ============================================================================
-StatusCode LoKi_HepMCParticleMaker::makeParticles 
+StatusCode LoKi::HepMCParticleMaker::makeParticles 
 ( LHCb::Particle::ConstVector& particles ) 
 {
   // avoid long names 
@@ -413,7 +429,9 @@ StatusCode LoKi_HepMCParticleMaker::makeParticles
   return StatusCode::SUCCESS ;
 } 
 // ============================================================================
-StatusCode LoKi_HepMCParticleMaker::fillParticle 
+// Fill the particle 
+// ============================================================================
+StatusCode LoKi::HepMCParticleMaker::fillParticle 
 ( const HepMC::GenParticle* gen ,
   LHCb::Particle*           rcp ) 
 {
@@ -433,9 +451,9 @@ StatusCode LoKi_HepMCParticleMaker::fillParticle
     ( mom , point ,  LHCb::ParticleID( gen->pdg_id() ) , m_covariance , *rcp ) ;
 }
 // ============================================================================
-/// use the particle?
+// use the particle?
 // ============================================================================
-bool LoKi_HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const 
+bool LoKi::HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const 
 {
   using namespace LoKi::Cuts  ;
   using namespace LoKi::Types ;
@@ -451,7 +469,7 @@ bool LoKi_HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   }
   const Gaudi::XYZPoint p0 (  v0->point3d() ) ;
   // check for production vertex 
-  if ( 0 < m_maxZproduction   && fabs( p0.Z() ) > m_maxZproduction    ) 
+  if ( 0 < m_maxZproduction   && std::fabs( p0.Z() ) > m_maxZproduction    ) 
   { return false ; }
   if ( 0 < m_maxRhoProduction && p0.Rho()       > m_maxRhoProduction  ) 
   { return false ; }
@@ -470,6 +488,9 @@ bool LoKi_HepMCParticleMaker::use ( const HepMC::GenParticle* p ) const
   // other particles 
   return true ;
 }
+// ============================================================================
+/// Declaration of the Tool Factory
+DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,HepMCParticleMaker);
 // ============================================================================
 // The END 
 // ============================================================================

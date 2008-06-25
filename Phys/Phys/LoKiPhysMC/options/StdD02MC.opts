@@ -1,8 +1,4 @@
-// $Id: StdD02MC.opts,v 1.1 2007-02-23 20:15:39 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Id: StdD02MC.opts,v 1.2 2008-06-25 17:27:39 ibelyaev Exp $ 
 // ============================================================================
 /** @file
  *
@@ -24,9 +20,6 @@
 // ============================================================================
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 // ============================================================================
-ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiPhysMC" } ;
-ApplicationMgr.ExtSvc += { "LoKiSvc"  } ;
-// ============================================================================
 // Deal with standard pions 
 // ============================================================================
 #include "$COMMONPARTICLESROOT/options/StandardD0.opts"
@@ -35,24 +28,16 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"  } ;
 // ============================================================================
 DataOnDemandSvc.AlgMap +=  {
   // Relation table for all standard pions  COMPOSITE 
-  "Relations/Phys/StdD0/Composite"   : "LoKi_P2MC/StdD02MCComposite"      
+  "Relations/Phys/StdD0/Composite"   : "LoKi::P2MC/StdD02MCComposite"      
 } ;
 // ============================================================================
 // Relation table for all standard pions  CHI2 
 // ============================================================================
 StdD02MCComposite.Inputs =  { 
-  //"Phys/StdLooseD02KPiPiPiCA"  ,
-  //"Phys/StdLooseD02KKPiPiNoCC" ,
-  //"Phys/StdLooseD02KsPiPi"     ,       
-  //"Phys/StdLooseD02KsKK"       ,       
-  //"Phys/StdLooseD02KK"         ,       
-  //"Phys/StdLooseD02PiPi"       ,       
   "Phys/StdLooseD02KPi"       
 } ;
 StdD02MCComposite.Method = @Particle2MCMethod.Composite     ;
 StdD02MCComposite.Output = "Relations/Phys/StdD0/Composite" ;
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

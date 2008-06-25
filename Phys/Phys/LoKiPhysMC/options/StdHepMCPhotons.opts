@@ -1,6 +1,4 @@
-// $Id: StdHepMCPhotons.opts,v 1.1 2006-11-12 14:58:51 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.1 $
+// $Id: StdHepMCPhotons.opts,v 1.2 2008-06-25 17:27:39 ibelyaev Exp $ 
 // ============================================================================
 /** @file
  *  The configuration file to load "on-demand" "standard" photons , 
@@ -26,33 +24,18 @@
  *  @date 2006-09-26
  */
 // ============================================================================
-/// load proper libraries 
-// ============================================================================
-ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiGenMC", "LoKiPhysMC" } ;
-// ============================================================================
-/// load the service 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc" } ;
-// ============================================================================
-/// configure Data-On-Demand service 
+// configure Data-On-Demand service 
 // ============================================================================
 DataOnDemandSvc.AlgMap += {
   'Phys/StdHepMCPhotons/Particles' : 'PreLoadParticles/StdHepMCPhotons' ,
   'Phys/StdHepMCPhotons/Vertices'  : 'PreLoadParticles/StdHepMCPhotons' 
 } ;
 // ============================================================================
-/// configure the algorithm itself 
-// ============================================================================
 StdHepMCPhotons.PhysDesktop.ParticleMakerType      = 
-"LoKi_HepMCParticleMaker/HepMCMaker";
+"LoKi::HepMCParticleMaker/HepMCMaker";
 StdHepMCPhotons.PhysDesktop.HepMCMaker.Particles   = { "gamma" } ;
 StdHepMCPhotons.PhysDesktop.HepMCMaker.OutputTable = 
 "Relations/Phys/StdHepMCPhotons2HepMC" ;
-// ============================================================================
-
-
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 // The END 
 // ============================================================================

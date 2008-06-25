@@ -1,4 +1,4 @@
-// $Id: DumpHepMC.cpp,v 1.2 2008-06-02 11:56:39 cattanem Exp $
+// $Id: DumpHepMC.cpp,v 1.3 2008-06-25 17:27:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -153,10 +153,6 @@ StatusCode LoKi::DumpHepMC::execute()
   //
   return StatusCode::SUCCESS ;
 } ;
-// ============================================================================
-
-
-
 // ============================================================================
 /// Declaration of the Algorithm Factory
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,DumpHepMC)

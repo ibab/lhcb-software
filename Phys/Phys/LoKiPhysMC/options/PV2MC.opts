@@ -1,6 +1,4 @@
-// $Id: PV2MC.opts,v 1.3 2006-11-12 14:58:51 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// $Id: PV2MC.opts,v 1.4 2008-06-25 17:27:39 ibelyaev Exp $
 // ============================================================================
 /** @file
  *
@@ -37,22 +35,12 @@
  *  @date 2006-02-08
  */
 // ============================================================================
-/// load nesessary libraries 
-// ============================================================================
-ApplicationMgr.DLLs   += { "LoKiPhysMC"      , "LoKiCore" } ;
-// ============================================================================
-/// take care about mandatory services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" , "LoKiSvc"  } ;
-// ============================================================================
-/// configure the Data-On-Demand Service 
+// configure the Data-On-Demand Service 
 // ============================================================================
 DataOnDemandSvc.AlgMap += { 
-  'Relations/Rec/Vertex/Primary'           : 'LoKi_PV2MCAlg/PV2MCAlg' ,
-  'Relations/Rec/Vertex/Primary2Collision' : 'LoKi_PV2MCAlg/PV2MCAlg' 
+  'Relations/Rec/Vertex/Primary'           : 'LoKi::PV2MCAlg/PV2MCAlg' ,
+  'Relations/Rec/Vertex/Primary2Collision' : 'LoKi::PV2MCAlg/PV2MCAlg' 
 } ;
-// ============================================================================
-// $Log: not supported by cvs2svn $
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: LoKi_PV2MCAlg.cpp,v 1.8 2007-11-05 14:41:01 ibelyaev Exp $
+// $Id: PV2MCAlg.cpp,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,7 +41,7 @@
 // ============================================================================
 /** @file
  *
- *  Implementation file for class LoKi_HepMC2MCAlg
+ *  Implementation file for class LoKi::PV2MCAlg
  *
  *  This file is a part of LoKi project - 
  *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -55,93 +55,103 @@
  *  @date 2006-03-19 
  */
 // ============================================================================
-/** @class LoKi_PV2MCAlg
- *
- *  helper algorthm to build LHCb::PrimVertex <---> LHCb::MCVertex relations 
- *  
- *  It associates the LHCb::PrimVertex "vP" to (primary)LHCb::MCVertex 
- *  with the weight, which is a pair of
- *    - number of true MC tracks from the given collision 
- *      used in the reconstruction of primary vertex
- *    - chi2 of the distance in between recontricted and MC vertices 
- *
- *  @see LHCb::MCVertex
- *  @see LHCb::PrimVertex
- *  @see LHCb::PV2MC
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
- *  @date 2005-07-13
- */
-// ============================================================================
-class LoKi_PV2MCAlg
-  : public GaudiAlgorithm 
+namespace LoKi 
 {
-  friend class AlgFactory<LoKi_PV2MCAlg>;
-public:
-  /// initialization of the algorithm
-  virtual StatusCode intialize () 
-  {
-    StatusCode sc = GaudiAlgorithm::initialize() ;
-    if ( sc.isFailure() ) { return sc ; }
-    // load LoKi service 
-    svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
-    return StatusCode::SUCCESS ;
-  } ;
- /// execution of the algorithm
-  virtual StatusCode execute() ;
-protected:
-  /**standard constructor 
-   * @param name algorithm instance name 
-   * @param pSvc pointer to Service Locator 
+  /** @class PV2MCAlg
+   *
+   *  helper algorthm to build LHCb::PrimVertex <---> LHCb::MCVertex relations 
+   *  
+   *  It associates the LHCb::PrimVertex "vP" to (primary)LHCb::MCVertex 
+   *  with the weight, which is a pair of
+   *    - number of true MC tracks from the given collision 
+   *      used in the reconstruction of primary vertex
+   *    - chi2 of the distance in between recontricted and MC vertices 
+   *
+   *  @see LHCb::MCVertex
+   *  @see LHCb::PrimVertex
+   *  @see LHCb::PV2MC
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
+   *  @date 2005-07-13
    */
-  LoKi_PV2MCAlg 
-  ( const std::string& name , 
-    ISvcLocator*       pSvc ) 
-    : GaudiAlgorithm ( name , pSvc )
-    , m_primaries    ( LHCb::RecVertexLocation::      Primary )
-    , m_vertices     ( LHCb::MCVertexLocation::       Default )
-    , m_collision    ( LHCb::MC2CollisionLocation::   Default )
-    , m_track2MC     ( "Relations/" + LHCb::TrackLocation::Default )
-    , m_output1      ( LHCb::PV2MCLocation::          Default ) 
-    , m_output2      ( LHCb::PV2CollisionLocation::   Default ) 
+  // ==========================================================================
+  class PV2MCAlg : public GaudiAlgorithm 
   {
-    declareProperty ( "Primaries"           , m_primaries ) ;
-    declareProperty ( "MCVertices"          , m_vertices  ) ;
-    declareProperty ( "MC2Collision"        , m_collision ) ;
-    declareProperty ( "Track2MC"            , m_track2MC  ) ;
-    declareProperty ( "OutputPV2MC"         , m_output1   ) ;
-    declareProperty ( "OutputPV2Collision"  , m_output2   ) ;
-    //
-    setProperty     ( "StatPrint"    , "true"      ) ;
-    //
+    // ========================================================================
+    /// the friend factory for instantiation 
+    friend class AlgFactory<PV2MCAlg>;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// initialization of the algorithm
+    virtual StatusCode intialize () 
+    {
+      StatusCode sc = GaudiAlgorithm::initialize() ;
+      if ( sc.isFailure() ) { return sc ; }
+      // load LoKi service 
+      svc<LoKi::ILoKiSvc>( "LoKiSvc" ) ;
+      return StatusCode::SUCCESS ;
+    } 
+    /// execution of the algorithm
+    virtual StatusCode execute() ;
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /**standard constructor 
+     * @param name algorithm instance name 
+     * @param pSvc pointer to Service Locator 
+     */
+    PV2MCAlg 
+    ( const std::string& name , 
+      ISvcLocator*       pSvc ) 
+      : GaudiAlgorithm ( name , pSvc )
+      , m_primaries    ( LHCb::RecVertexLocation::      Primary )
+      , m_vertices     ( LHCb::MCVertexLocation::       Default )
+      , m_collision    ( LHCb::MC2CollisionLocation::   Default )
+      , m_track2MC     ( "Relations/" + LHCb::TrackLocation::Default )
+      , m_output1      ( LHCb::PV2MCLocation::          Default ) 
+      , m_output2      ( LHCb::PV2CollisionLocation::   Default ) 
+    {
+      declareProperty ( "Primaries"           , m_primaries ) ;
+      declareProperty ( "MCVertices"          , m_vertices  ) ;
+      declareProperty ( "MC2Collision"        , m_collision ) ;
+      declareProperty ( "Track2MC"            , m_track2MC  ) ;
+      declareProperty ( "OutputPV2MC"         , m_output1   ) ;
+      declareProperty ( "OutputPV2Collision"  , m_output2   ) ;
+      //
+      setProperty     ( "StatPrint"    , "true"      ) ;
+      //
+    }
+    // destructor, virtual and protected 
+    virtual ~PV2MCAlg() {} ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    // default constructor is disabled 
+    PV2MCAlg            () ;
+    // copy constructor is disabled 
+    PV2MCAlg            ( const PV2MCAlg& ) ;
+    // assignement operator is disabled 
+    PV2MCAlg& operator= ( const PV2MCAlg& ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    // TES address of primary vertices
+    std::string  m_primaries ; ///< TES address of primary vertices
+    // TES address of MC  vertices
+    std::string  m_vertices  ; ///< TES address of MC vertices
+    // TES address of MC->Collision links
+    std::string  m_collision ; ///< TES address of MC->Collision links
+    // TES address of Track->MC links
+    std::string  m_track2MC  ; ///< TES address of Track->MC links
+    // TES location of output relation table 
+    std::string  m_output1   ; ///< TES location of output relation table 
+    // TES location of output relation table 
+    std::string  m_output2   ; ///< TES location of output relation table 
+    // ========================================================================
   };
-  // destructor, virtual and protected 
-  virtual ~LoKi_PV2MCAlg() {} ;
-private:
-  // default constructor is disabled 
-  LoKi_PV2MCAlg            () ;
-  // copy constructor is disabled 
-  LoKi_PV2MCAlg            ( const LoKi_PV2MCAlg& ) ;
-  // assignement operator is disabled 
-  LoKi_PV2MCAlg& operator= ( const LoKi_PV2MCAlg& ) ;
-private:
-  // TES address of primary vertices
-  std::string  m_primaries ; ///< TES address of primary vertices
-  // TES address of MC  vertices
-  std::string  m_vertices  ; ///< TES address of MC vertices
-  // TES address of MC->Collision links
-  std::string  m_collision ; ///< TES address of MC->Collision links
-  // TES address of Track->MC links
-  std::string  m_track2MC  ; ///< TES address of Track->MC links
-  // TES location of output relation table 
-  std::string  m_output1   ; ///< TES location of output relation table 
-  // TES location of output relation table 
-  std::string  m_output2   ; ///< TES location of output relation table 
-};
+} // end of namespace LoKi
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( LoKi_PV2MCAlg ) ;
-// ============================================================================
-
 namespace 
 {
   /// the actual type of relation table in TES
@@ -150,13 +160,11 @@ namespace
   /// the actual type of relation table in TES
   typedef LHCb::RelationWeighted2D
   <LHCb::RecVertex,LHCb::GenCollision,LHCb::PV2MCWeight> Table2 ;
-} ;
+}
 // ============================================================================
-
+// execution of the algorithm
 // ============================================================================
-/// execution of the algorithm
-// ============================================================================
-StatusCode LoKi_PV2MCAlg::execute() 
+StatusCode LoKi::PV2MCAlg::execute() 
 { 
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
@@ -169,7 +177,7 @@ StatusCode LoKi_PV2MCAlg::execute()
   Table2* table2 = new Table2() ;
   put ( table1 , m_output1 ) ;
   put ( table2 , m_output2 ) ;
-            
+  
   // get the primary vertices from TES
   const LHCb::RecVertices* primaries = get<LHCb::RecVertices>( m_primaries ) ;
   if ( 0 == primaries ) { return StatusCode::FAILURE ; }         // RETURN 
@@ -292,10 +300,9 @@ StatusCode LoKi_PV2MCAlg::execute()
   }
   
   return StatusCode::SUCCESS ;
-} ;
-
-
-
+} 
+// ============================================================================
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(LoKi,PV2MCAlg) ;
 // ============================================================================
 // The END
 // ============================================================================

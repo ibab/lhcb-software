@@ -1,6 +1,4 @@
-// $Id: StdHepMCElectrons.opts,v 1.2 2006-11-12 14:58:51 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ,version $Revision: 1.2 $
+// $Id: StdHepMCElectrons.opts,v 1.3 2008-06-25 17:27:39 ibelyaev Exp $ 
 // ============================================================================
 /** @file
  *  The configuration file to load "on-demand" "standard" charged electrons, 
@@ -24,27 +22,16 @@
  *  @date 2006-09-26
  */
 // ============================================================================
-
-
-ApplicationMgr.DLLs   += { "LoKiCore" , "LoKiGenMC", "LoKiPhysMC" } ;
-ApplicationMgr.ExtSvc += { "LoKiSvc" } ;
-
 DataOnDemandSvc.AlgMap += {
   'Phys/StdHepMCElectrons/Particles' : 'PreLoadParticles/StdHepMCElectrons' ,
   'Phys/StdHepMCElectrons/Vertices'  : 'PreLoadParticles/StdHepMCElectrons' 
-  } ;
-
+} ;
+// ============================================================================
 StdHepMCElectrons.PhysDesktop.ParticleMakerType      = 
-"LoKi_HepMCParticleMaker/HepMCMaker";
+"LoKi::HepMCParticleMaker/HepMCMaker";
 StdHepMCElectrons.PhysDesktop.HepMCMaker.Particles   = { "e+" } ;
 StdHepMCElectrons.PhysDesktop.HepMCMaker.OutputTable = 
 "Relations/Phys/StdHepMCElectrons2HepMC" ;
-
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/10/04 12:07:45  ibelyaev
-//  add LHCb::Particle -> HepMC::GenParticle relations and maker
-// 
 // ============================================================================
 // The END 
 // ============================================================================

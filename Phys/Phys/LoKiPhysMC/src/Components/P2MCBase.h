@@ -1,14 +1,7 @@
-// $Id: P2MC.h,v 1.2 2007-04-16 16:16:48 pkoppenb Exp $
+// $Id: P2MCBase.h,v 1.1 2008-06-25 17:27:39 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2007/02/24 18:28:03  ibelyaev
-//  remove code duplication, retag as v4r0
-// 
-// ============================================================================
-#ifndef LOKIPHYSMC_P2MC_H 
-#define LOKIPHYSMC_P2MC_H 1
+#ifndef LOKIPHYSMC_P2MCBASE_H 
+#define LOKIPHYSMC_P2MCBASE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
@@ -38,7 +31,8 @@
 // ===========================================================================
 namespace LoKi 
 {
-  /** @class P2MC P2MC.h Components/P2MC.h
+  // =========================================================================
+  /** @class P2MCBase
    *
    *  Helper base class for decoding of Linkers into Relation Tables 
    *
@@ -53,39 +47,53 @@ namespace LoKi
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-02-24
    */
-  class P2MC : public GaudiAlgorithm 
+  class P2MCBase : public GaudiAlgorithm 
   {
   public:
+    // ========================================================================
+    // the linker from Orsay 
     typedef Object2MCLinker<LHCb::Particle> MCLinker ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// initialize the algorithm 
     virtual StatusCode initialize () ;
     /// finalize   the algorithm 
     virtual StatusCode finalize   () ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// standard constructor 
-    P2MC
+    P2MCBase
     ( const std::string& name , 
       ISvcLocator*       pSvc ) ;
     /// virtual destructor 
-    virtual ~P2MC() ;
+    virtual ~P2MCBase() ;
+    // ========================================================================
   public:
+    // ========================================================================
     // handler for inputs 
     void inputsHandler ( Property& ) ; ///< handler for inputs 
     // handler for method 
     void methodHandler ( Property& ) ; ///< handler for method 
+    // ========================================================================
   private:
+    // ========================================================================
     // default constructor is disabled 
-    P2MC () ;
+    P2MCBase () ;
     // copy  constructor is disabled 
-    P2MC ( const P2MC& );
+    P2MCBase ( const P2MCBase& );
     // assignement operator is disabled 
-    P2MC& operator=( const P2MC& );
+    P2MCBase& operator=( const P2MCBase& );
+    // ========================================================================
   protected:
+    // ========================================================================
     /// copy links from linker to relation table 
     template <class TABLE>
     inline StatusCode fillTable ( TABLE* table ) ;  
+    // ========================================================================
   protected:
+    // ========================================================================
     typedef std::vector<std::string> Addresses ;
     // list of inputs 
     SimpleProperty<Addresses> m_inputs  ; ///< list of inputs
@@ -94,9 +102,10 @@ namespace LoKi
     // output table 
     std::string               m_output  ; ///<  output Relation table 
     // linker object
-    MCLinker*                 m_linker  ; ///< linker object
-  } ;
-  
+    MCLinker*                 m_linker  ; ///< linker object 
+    // ========================================================================
+ } ;
+  // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
 #define INHERITS(T1,T2) \
@@ -107,14 +116,22 @@ namespace LoKi
 // ============================================================================
 namespace 
 {
-  template <class TABLE,bool> struct _iGet ;
-
-  template <class TABLE,bool> struct _iGet 
+  // ==========================================================================
+  /// just the forward decalrations 
+  template <class TABLE,bool> 
+  struct _iGet ;
+  // ==========================================================================
+  /** @struct _iGet
+   *  The helper structure to copy the information from linker 
+   *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+   */
+  template <class TABLE,bool> 
+  struct _iGet 
   {
     void copy 
-    ( LoKi::P2MC::MCLinker* linker   , 
-      const LHCb::Particle* particle , 
-      TABLE*                table    ) const 
+    ( LoKi::P2MCBase::MCLinker* linker   , 
+      const LHCb::Particle*     particle , 
+      TABLE*                    table    ) const 
     {
       if ( 0 == linker || 0 == table ) { return ; }
       double weight = 0.0 ;
@@ -126,13 +143,15 @@ namespace
       }
     }
   } ;
+  // ==========================================================================
+  /// dispatch for non-weighted relations 
   template <class TABLE> 
   struct _iGet<TABLE,false> 
   {
     void copy 
-    ( LoKi::P2MC::MCLinker* linker   , 
-      const LHCb::Particle* particle ,
-      TABLE*                table    ) const 
+    ( LoKi::P2MCBase::MCLinker* linker   , 
+      const LHCb::Particle*     particle ,
+      TABLE*                    table    ) const 
     {
       if ( 0 == linker || 0 == table ) { return ; }
       const LHCb::MCParticle* mc = linker->first ( particle ) ;
@@ -143,16 +162,21 @@ namespace
       }
     }
   } ;
+  // ===========================================================================
+  /** @struct iGet 
+   *  The actual helper structure to copy the information from linker 
+   *  @author Vanya BELYAEV Ivan.BElyaev@nikhef.nl
+   */
   template <class TABLE> 
   struct iGet : public _iGet<TABLE,INHERITS(TABLE,IRelationWeightedBase)>
   {} ;
-  
+  // ==========================================================================
 } // end of anonymous namespace 
 // ============================================================================
 /// copy links from linker to relation table 
 // ============================================================================
 template <class TABLE>
-inline StatusCode LoKi::P2MC::fillTable ( TABLE* table ) 
+inline StatusCode LoKi::P2MCBase::fillTable ( TABLE* table ) 
 {
   Assert ( 0 != table , "Invalid Relation Table" ) ;
   // create linker if needed 
@@ -205,9 +229,7 @@ inline StatusCode LoKi::P2MC::fillTable ( TABLE* table )
   }
   //
   return StatusCode::SUCCESS;
-} ;
-
-
+} 
 // ============================================================================
 // The END 
 // ============================================================================
