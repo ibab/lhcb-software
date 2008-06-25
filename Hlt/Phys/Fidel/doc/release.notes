@@ -3,6 +3,14 @@
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+!========================== Fidel v1r1 2008-06-26 ===================
+! 2008-06-26
+ - Removed print in FidelTuple
+
+! 2008-06-19
+ - Added in FidelTuple some entries Tis Tos Tool
+
+
 
 !========================== Fidel v1r0 2008-06-09 ===================
 ! 2008-05-14 - Patrick Koppenburg
