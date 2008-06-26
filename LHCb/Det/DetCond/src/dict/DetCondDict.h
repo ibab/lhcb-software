@@ -1,4 +1,4 @@
-// $Id: DetCondDict.h,v 1.5 2007-12-20 15:48:51 marcocle Exp $
+// $Id: DetCondDict.h,v 1.6 2008-06-26 16:58:15 marcocle Exp $
 // ============================================================================
 #ifndef DETCOND_DETCONDDICT_H 
 #define DETCOND_DETCONDDICT_H 1
@@ -21,6 +21,12 @@
 #include "DetCond/ICondDBEditor.h"
 #include "DetCond/ICondDBReader.h"
 #include "DetCond/ICOOLConfSvc.h"
+// ============================================================================
+// CORAL (not available through PyCool) 
+// ============================================================================
+#include "RelationalAccess/ConnectionService.h"
+#include "RelationalAccess/IConnectionServiceConfiguration.h"
+#include "RelationalAccess/IReplicaSortingAlgorithm.h"
 // ============================================================================
 #endif // DETCOND_DETCONDDICT_H
 // ============================================================================

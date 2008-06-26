@@ -1,11 +1,11 @@
-# $Id: release.notes,v 1.135 2008-06-26 14:22:45 marcocle Exp $
+# $Id: release.notes,v 1.136 2008-06-26 16:58:15 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-! 2008-06-24 - Marco Clemencic
+! 2008-06-26 - Marco Clemencic
  - Improved direct mapping between the COOL hierarchy and the transient store
    one:
    - direct mapping enabled by default (can be turned off via options to improve
@@ -17,6 +17,8 @@
    - added tests for foreseen use-cases
    - the code to generate the XML catalog has been moved to a separate file to
      be shared among the implementations of ICondDBReader
+ - Added dictionaries for few CORAL interfaces that are not available through
+   COOL.
 
 ! 2008-06-24 - Marco Clemencic
  - Fixed a bug in the direct mapping between the hierarchy of the COOL
