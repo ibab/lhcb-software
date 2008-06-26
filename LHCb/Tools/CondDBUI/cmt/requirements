@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.29 2008-04-18 07:06:26 cattanem Exp $
+# $Id: requirements,v 1.30 2008-06-26 17:00:10 marcocle Exp $
 package CondDBUI
 
-version v2r9
+version v2r10
 
 branches python scripts cmt
 #ignore_pattern package_stamps
