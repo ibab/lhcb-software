@@ -5,11 +5,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v24r0>2008-06-25 LHCbSys v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2008-06-26 LHCbSys v24r0</A></H1><PRE>
 This version uses Gaudi v20r0 and LCG_55
 
 - Packages added:    HltInterfaces v1r0 - Interfaces for Hlt tools
-                     STTell1Event  v1r2 - ST Raw Bank descriptions
+                     STTELL1Event  v1r2 - ST Raw Bank descriptions
 - Packages modified: DetDescSvc v2r0
 
 - In DetDescSvc v2r0
