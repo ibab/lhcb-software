@@ -1,21 +1,10 @@
-// $Id: LoKi_Phi_Makers.cpp,v 1.3 2007-04-20 11:20:34 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2007/04/16 16:16:53  pkoppenb
-// removed polemic comment
-//
-// Revision 1.1  2007/04/04 12:16:40  ibelyaev
-//  v5r2: update
-// 
+// $Id: LoKi_Phi_Makers.cpp,v 1.4 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *  
@@ -33,9 +22,8 @@
  *  @date 2007-03-26
  */
 // ============================================================================
-LOKI_ALGORITHM(LoKi_Phi_Makers)
+LOKI_ALGORITHM(Phi_Makers)
 {
-  using namespace LoKi ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
   //
@@ -53,10 +41,7 @@ LOKI_ALGORITHM(LoKi_Phi_Makers)
   
   return  SUCCESS ;                                          // RETURN
   
-} ;
-
-
-
+}
 // ============================================================================
-/// The END 
+// The END 
 // ============================================================================

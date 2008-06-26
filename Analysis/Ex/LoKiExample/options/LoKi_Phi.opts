@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Phi.opts,v 1.7 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_Phi.opts,v 1.8 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi
@@ -31,16 +31,12 @@
 #include "$COMMONPARTICLESROOT/options/StandardKaons.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 // Histograms 
 // ============================================================================
 HistogramPersistencySvc.OutputFile = "Phi_Histos.root" ;
 
 
-ApplicationMgr.TopAlg         += { "LoKi_Phi/Phi" } ;
+ApplicationMgr.TopAlg         += { "LoKi::Phi/Phi" } ;
 Phi.PhysDesktop.InputLocations = { "Phys/StdTightKaons" } ;
 
 ApplicationMgr.EvtMax   = 1000 ;

@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Tracks.opts,v 1.4 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_Tracks.opts,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Tracks
@@ -29,10 +29,6 @@
 #pragma print OFF 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print ON
-// ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 // ============================================================================
 //ApplicationMgr.ExtSvc += { "StagerSvc" } ;
 //StagerSvc.BlockSize    = 20 ;

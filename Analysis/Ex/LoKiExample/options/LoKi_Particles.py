@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_Particles.py,v 1.1 2008-06-12 10:44:01 ibelyaev Exp $ 
+# $Id: LoKi_Particles.py,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_Particles example
@@ -23,7 +23,7 @@
 import os 
 from  Gaudi.Configuration import * 
 from  Configurables import PhysDesktop
-from  Configurables import LoKi_Particles as Particles
+from  Configurables import LoKi__SelectParticles as Particles
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$COMMONPARTICLESROOT/options/StandardKaons.opts" )

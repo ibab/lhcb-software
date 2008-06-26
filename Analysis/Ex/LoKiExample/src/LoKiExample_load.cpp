@@ -1,12 +1,4 @@
-// $Id: LoKiExample_load.cpp,v 1.12 2007-04-16 16:16:53 pkoppenb Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.11  2007/04/04 12:16:39  ibelyaev
-//  v5r2: update
-//
-//
+// $Id: LoKiExample_load.cpp,v 1.13 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -28,18 +20,7 @@
  *  @date 2003-02-24
  */
 // ============================================================================
-DECLARE_FACTORY_ENTRIES( LoKiExample ) 
-{
-  
-  DECLARE_ALGORITHM( LoKi_MCMuon          ) ;
-  DECLARE_ALGORITHM( LoKi_Phi             ) ;
-  DECLARE_ALGORITHM( LoKi_PhiMC           ) ;
-  DECLARE_ALGORITHM( LoKi_Hybrid          ) ;
-  DECLARE_ALGORITHM( LoKi_Particles       ) ;
-  DECLARE_ALGORITHM( LoKi_HelloWorld      ) ;
-  DECLARE_ALGORITHM( LoKi_Bs2PsiPhi       ) ;
-  
-};
+DECLARE_FACTORY_ENTRIES( LoKiExample ) {};
 
 // ============================================================================
 // The END 

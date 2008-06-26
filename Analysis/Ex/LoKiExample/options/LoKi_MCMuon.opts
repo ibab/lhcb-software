@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_MCMuon.opts,v 1.7 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_MCMuon.opts,v 1.8 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_MCMuon
@@ -43,9 +43,9 @@ NTupleSvc.Output += {"MCMU DATAFILE='MCMuon_Tuples.root' TYP='ROOT' OPT='NEW'"} 
 #pragma print ON
 // ============================================================================
 
-ApplicationMgr.TopAlg            += { "LoKi_MCMuon/MCMuon"  } ;
-MCMuon.PhysDesktop.InputLocations = { "Phys/StdTightMuons"  } ;
-MCMuon.PP2MCs            = { "Relations/Rec/ProtoP/Charged" } ;
+ApplicationMgr.TopAlg            += { "LoKi::MCMuon/MCMuon"  } ;
+MCMuon.PhysDesktop.InputLocations = { "Phys/StdTightMuons"   } ;
+MCMuon.PP2MCs            = { "Relations/Rec/ProtoP/Charged"  } ;
 MCMuon.NTupleLUN = "MCMU" ;
 
 ApplicationMgr.EvtMax = 1000 ;

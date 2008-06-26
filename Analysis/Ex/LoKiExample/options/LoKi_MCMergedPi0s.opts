@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_MCMergedPi0s.opts,v 1.4 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_MCMergedPi0s.opts,v 1.5 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_MCMergedPi0s
@@ -30,10 +30,6 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 //ApplicationMgr.ExtSvc += { "StagerSvc" } ;
 //StagerSvc.BlockSize    = 20 ;
 //StagerSvc.InitialStage = 5 ;
@@ -56,7 +52,7 @@ FileCatalog.Catalogs = {
 // ============================================================================
 
 
-ApplicationMgr.TopAlg = { "LoKi_MCMergedPi0s/MCPi0s" } ;
+ApplicationMgr.TopAlg = { "LoKi::MCMergedPi0s/MCPi0s" } ;
 MCPi0s.PP2MCs = {} ;
 
 ApplicationMgr.EvtMax   = 1000 ;

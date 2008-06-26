@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Particles.opts,v 1.7 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_Particles.opts,v 1.8 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi
@@ -39,7 +39,7 @@
 #pragma print ON
 // ============================================================================
 
-ApplicationMgr.TopAlg += { "LoKi_Particles/Particles" } ;
+ApplicationMgr.TopAlg += { "LoKi::SelectParticles/Particles" } ;
 Particles.PhysDesktop.InputLocations =  { 
   "Phys/StdTightMuons" ,  
   "Phys/StdTightKaons" 

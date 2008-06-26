@@ -1,4 +1,4 @@
-// $Id: CheckMC_Bs2PsiPhi.cpp,v 1.1 2008-06-25 17:31:26 ibelyaev Exp $
+// $Id: CheckMC_Bs2PsiPhi.cpp,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,7 +22,7 @@
  *  @date 2006-03-22
  */
 // ============================================================================
-LOKI_MCALGORITHM(CheckMC_Bs2PsiPhi)
+LOKI_MCALGORITHM ( CheckMC_Bs2PsiPhi )
 {
   // avoid long names
   using namespace LoKi        ;
@@ -36,15 +36,15 @@ LOKI_MCALGORITHM(CheckMC_Bs2PsiPhi)
   
   // get true Bs 
   MCRange mcbs  = finder->findDecays 
-    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } { , gamma} { , gamma }) (  phi(1020) ->  K+  K- { , gamma } { , gamma} { , gamma } { , gamma } ) { , gamma } { , gamma } { , gamma } { , gamma }]cc" ) ;
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
   MCRange mcpsi = finder->findDecays 
-    ( "[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } { , gamma} { , gamma }) (  phi(1020) ->  K+  K- { , gamma } { , gamma} { , gamma } { , gamma } ) { , gamma } { , gamma } { , gamma } { , gamma }]cc" ) ;
+    ( "[ B_s0 -> ( ^J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
   MCRange mcphi = finder->findDecays
-    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } { , gamma} { , gamma }) ( ^phi(1020) ->  K+  K- { , gamma } { , gamma} { , gamma } { , gamma } ) { , gamma } { , gamma } { , gamma } { , gamma }]cc" ) ;
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) ( ^phi(1020) ->  K+  K- ) ]cc" ) ;
   MCRange mcmu  = finder->findDecays
-    ( "[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- { , gamma } { , gamma } { , gamma} { , gamma }) (  phi(1020) ->  K+  K- { , gamma } { , gamma} { , gamma } { , gamma } ) { , gamma } { , gamma } { , gamma } { , gamma }]cc" ) ;
+    ( "[ B_s0 -> (  J/psi(1S) -> ^mu+ ^mu- { , gamma } { , gamma } ) (  phi(1020) ->  K+  K- ) ]cc" ) ;
   MCRange mck   = finder->findDecays
-    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } { , gamma} { , gamma }) (  phi(1020) -> ^K+ ^K- { , gamma } { , gamma} { , gamma } { , gamma } ) { , gamma } { , gamma } { , gamma } { , gamma }]cc" ) ;
+    ( "[ B_s0 -> (  J/psi(1S) ->  mu+  mu- { , gamma } { , gamma } ) (  phi(1020) -> ^K+ ^K- ) ]cc" ) ;
   
   if ( mcbs  .empty() ) { return Warning ( "No MC-Bs  is found!" , SUCCESS ) ; } 
   if ( mcpsi .empty() ) { return Warning ( "No MC-psi is found!" , SUCCESS ) ; } 
@@ -152,10 +152,8 @@ LOKI_MCALGORITHM(CheckMC_Bs2PsiPhi)
     
   }
   
-  
   return SUCCESS ;                                             // RETURN 
-} ;
-
+}
 // ============================================================================
 // The END 
 // ============================================================================

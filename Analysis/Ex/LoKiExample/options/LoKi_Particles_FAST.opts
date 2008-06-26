@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Particles_FAST.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_Particles_FAST.opts,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi
@@ -36,7 +36,7 @@
 // ============================================================================
 
 
-ApplicationMgr.TopAlg = { "LoKi_Particles/Particles" } ;
+ApplicationMgr.TopAlg = { "LoKi::SelectParticles/Particles" } ;
 
 ApplicationMgr.EvtMax   = 100 ;
 EventSelector.PrintFreq =  10 ;

@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe 
 // ============================================================================
-// $Id: LoKi_HelloWorld.opts,v 1.6 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_HelloWorld.opts,v 1.7 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_HelloWorld
@@ -30,10 +30,6 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 // Input Data
 // ============================================================================
 #pragma print OFF 
@@ -41,7 +37,7 @@ ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
 #pragma print ON
 // ============================================================================
 
-ApplicationMgr.TopAlg  = { "LoKi_HelloWorld/Hello"   } ;
+ApplicationMgr.TopAlg  = { "LoKi::HelloWorld/Hello"   } ;
 
 ApplicationMgr.EvtMax   = 20 ;
 EventSelector.PrintFreq =  1 ;

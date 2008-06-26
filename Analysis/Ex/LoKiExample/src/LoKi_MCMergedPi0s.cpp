@@ -1,4 +1,4 @@
-// $Id: LoKi_MCMergedPi0s.cpp,v 1.5 2007-08-15 11:03:14 ibelyaev Exp $
+// $Id: LoKi_MCMergedPi0s.cpp,v 1.6 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -36,7 +36,7 @@
  *  @date 2007-03-26
  */
 // ============================================================================
-LOKI_MCALGORITHM(LoKi_MCMergedPi0s)
+LOKI_MCALGORITHM(MCMergedPi0s)
 {
   using namespace LoKi ;
   using namespace LoKi::Types ;

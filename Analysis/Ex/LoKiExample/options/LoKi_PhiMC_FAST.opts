@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_PhiMC_FAST.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_PhiMC_FAST.opts,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_PhiMC
@@ -35,7 +35,7 @@
 #pragma print ON
 // ============================================================================
 
-ApplicationMgr.TopAlg = { "LoKi_PhiMC/PhiMC"   } ;
+ApplicationMgr.TopAlg = { "LoKi::PhiMC/PhiMC"   } ;
 
 ApplicationMgr.EvtMax   = 5000 ;
 EventSelector.PrintFreq =  100 ;

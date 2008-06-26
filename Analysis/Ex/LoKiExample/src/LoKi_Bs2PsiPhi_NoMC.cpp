@@ -1,4 +1,4 @@
-// $Id: LoKi_Bs2PsiPhi_NoMC.cpp,v 1.1 2008-06-25 17:31:26 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi_NoMC.cpp,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,7 +22,7 @@
  *  @date 2006-03-22
  */
 // ============================================================================
-LOKI_ALGORITHM(LoKi_Bs2PsiPhi_NoMC)
+LOKI_ALGORITHM(Bs2PsiPhi_NoMC)
 {
     // avoid long names
   using namespace LoKi        ;

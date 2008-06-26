@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_PhiMC.py,v 1.1 2008-06-12 10:44:01 ibelyaev Exp $ 
+# $Id: LoKi_PhiMC.py,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_PhiMC example
@@ -23,7 +23,7 @@
 import os 
 from  Gaudi.Configuration import * 
 from  Configurables import PhysDesktop
-from  Configurables import LoKi_PhiMC as PhiMC
+from  Configurables import LoKi__PhiMC as PhiMC
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$COMMONPARTICLESROOT/options/StandardKaons.opts" )

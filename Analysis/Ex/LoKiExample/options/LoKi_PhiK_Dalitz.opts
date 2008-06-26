@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_PhiK_Dalitz.opts,v 1.4 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_PhiK_Dalitz.opts,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi
@@ -32,10 +32,6 @@
 #include "$COMMONPARTICLESROOT/options/StandardPhotons.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 //ApplicationMgr.ExtSvc += { "StagerSvc" } ;
 //StagerSvc.BlockSize    = 20 ;
 //StagerSvc.InitialStage = 5 ;
@@ -63,8 +59,8 @@ FileCatalog.Catalogs = {
 
 
 // Use Generator Particles with no cuts:
-DaVinciMainSeq.Members            += { "LoKi_PhiK_Dalitz/DalitzMC1" } ;
-DalitzMC1.PhysDesktop.ParticleMakerType =  "LoKi_HepMCParticleMaker/HepMCMaker" ;
+DaVinciMainSeq.Members            += { "LoKi::PhiK_Dalitz/DalitzMC1" } ;
+DalitzMC1.PhysDesktop.ParticleMakerType =  "LoKi::HepMCParticleMaker/HepMCMaker" ;
 DalitzMC1.PhysDesktop.HepMCMaker.Particles = {"K+","gamma"} ; // only true HepMC kaons and photons
 DalitzMC1.PhysDesktop.HepMCMaker.From = {"phi(1020)","B+","B-"} ;  // only from B+/- or phi decays
 DalitzMC1.PhysDesktop.HepMCMaker.SmearParticle   =  false ;   // get true 4-momenta
@@ -79,7 +75,7 @@ DalitzMC1.PhysDesktop.HepMCMaker.MaxThetaYGamma  = 100000   ; // NO cut
 DalitzMC1.NTupleLUN = "PHIKMC1" ;
 
 // Use Generator Particles with some "aceptance" cuts and 4-momenta smeared:
-DaVinciMainSeq.Members            += { "LoKi_PhiK_Dalitz/DalitzMC2" } ;
+DaVinciMainSeq.Members            += { "LoKi::PhiK_Dalitz/DalitzMC2" } ;
 DalitzMC2.PhysDesktop.ParticleMakerType =  "LoKi_HepMCParticleMaker/HepMCMaker" ;
 DalitzMC2.PhysDesktop.HepMCMaker.Particles = {"K+","gamma"} ; // only true HepMC kaons and photons
 DalitzMC2.PhysDesktop.HepMCMaker.From = {"phi(1020)","B+","B-"} ;  // only from B+/- or phi decays

@@ -1,22 +1,10 @@
-// $Id: LoKi_HelloWorld.cpp,v 1.4 2007-04-20 11:20:33 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/04/16 16:16:53  pkoppenb
-// removed polemic comment
-//
-// Revision 1.2  2007/04/04 12:16:39  ibelyaev
-//  v5r2: update
-//
-//
+// $Id: LoKi_HelloWorld.cpp,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/LoKi.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *
@@ -33,7 +21,7 @@
  *  @date 2007-03-22
  */
 // ============================================================================
-LOKI_ALGORITHM(LoKi_HelloWorld)
+LOKI_ALGORITHM(HelloWorld)
 {
   info() << "Hello,World!" << endreq ;
   

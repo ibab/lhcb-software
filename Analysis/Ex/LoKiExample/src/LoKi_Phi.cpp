@@ -1,24 +1,10 @@
-// $Id: LoKi_Phi.cpp,v 1.4 2007-04-20 11:20:33 cattanem Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2007/04/16 16:16:53  pkoppenb
-// removed polemic comment
-//
-// Revision 1.2  2007/04/04 12:16:40  ibelyaev
-//  v5r2: update
-//
-// Revision 1.1  2007/03/22 18:33:38  ibelyaev
-//  v5r2
-//
+// $Id: LoKi_Phi.cpp,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi 
 // ============================================================================
 #include "LoKi/LoKi.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file 
  *  Simple algorithm to polot dikaon invarinat mass 
@@ -35,10 +21,9 @@
  *  @date 2007-03-22
  */
 // ============================================================================
-LOKI_ALGORITHM(LoKi_Phi)
+LOKI_ALGORITHM(Phi)
 {
   // avoid long names
-  using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
 

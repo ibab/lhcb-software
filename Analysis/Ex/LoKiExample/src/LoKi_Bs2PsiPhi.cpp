@@ -1,4 +1,4 @@
-// $Id: LoKi_Bs2PsiPhi.cpp,v 1.6 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi.cpp,v 1.7 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,7 +22,7 @@
  *  @date 2006-03-22
  */
 // ============================================================================
-LOKI_MCALGORITHM(LoKi_Bs2PsiPhi)
+LOKI_MCALGORITHM(Bs2PsiPhi)
 {
     // avoid long names
   using namespace LoKi        ;

@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe 
 // ============================================================================
-// $Id: LoKi_HelloWorld_FAST.opts,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_HelloWorld_FAST.opts,v 1.2 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_HelloWorld
@@ -34,7 +34,7 @@
 #pragma print ON
 // ============================================================================
 
-ApplicationMgr.TopAlg  = { "LoKi_HelloWorld/Hello"   } ;
+ApplicationMgr.TopAlg  = { "LoKi::HelloWorld/Hello"   } ;
 
 ApplicationMgr.EvtMax   = 20 ;
 EventSelector.PrintFreq =  1 ;

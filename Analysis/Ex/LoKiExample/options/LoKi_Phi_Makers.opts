@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Phi_Makers.opts,v 1.4 2008-02-19 17:24:40 ibelyaev Exp $
+// $Id: LoKi_Phi_Makers.opts,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Phi_Makers
@@ -33,10 +33,6 @@
 #include "$LOKIPHYSMCROOT/options/StdHepMCKaons.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 //ApplicationMgr.ExtSvc += { "StagerSvc" } ;
 //StagerSvc.BlockSize    = 20 ;
 //StagerSvc.InitialStage = 5 ;
@@ -60,8 +56,8 @@ FileCatalog.Catalogs = {
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA1" } ;
 
-SeqA1.Members                    = { "LoKi_Phi_Makers/A1"} ;
-A1.PhysDesktop.ParticleMakerType =   "LoKi_HepMCParticleMaker/HepMCMaker" ;
+SeqA1.Members                    = { "LoKi::Phi_Makers/A1"} ;
+A1.PhysDesktop.ParticleMakerType =   "LoKi::HepMCParticleMaker/HepMCMaker" ;
 A1.PhysDesktop.HepMCMaker.Particles = {"K+"} ;         // only true HepMC kaons
 A1.PhysDesktop.HepMCMaker.From      = {"phi(1020)"} ;  // only from phi decays
 A1.PhysDesktop.HepMCMaker.SmearParticle   =  false ;   // get true 4-momenta
@@ -72,16 +68,16 @@ A1.PhysDesktop.HepMCMaker.MaxThetaCharged = 100000   ; // NO cut
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA2" } ;
 
-SeqA2.Members                    = { "LoKi_Phi_Makers/A2"} ;
-A2.PhysDesktop.ParticleMakerType =   "LoKi_HepMCParticleMaker/HepMCMaker" ;
+SeqA2.Members                    = { "LoKi::Phi_Makers/A2"} ;
+A2.PhysDesktop.ParticleMakerType =   "LoKi::HepMCParticleMaker/HepMCMaker" ;
 A2.PhysDesktop.HepMCMaker.Particles = {"K+"} ;         // only true HepMC kaons
 A2.PhysDesktop.HepMCMaker.From      = {"phi(1020)"} ;  // only from phi decays
 A2.PhysDesktop.HepMCMaker.SmearParticle   =  false ;   // get true 4-momenta
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA3" } ;
 
-SeqA3.Members                    = { "LoKi_Phi_Makers/A3"} ;
-A3.PhysDesktop.ParticleMakerType =   "LoKi_HepMCParticleMaker/HepMCMaker" ;
+SeqA3.Members                    = { "LoKi::Phi_Makers/A3"} ;
+A3.PhysDesktop.ParticleMakerType =   "LoKi::HepMCParticleMaker/HepMCMaker" ;
 A3.PhysDesktop.HepMCMaker.Particles = {"K+"} ;         // only true HepMC kaons
 A3.PhysDesktop.HepMCMaker.From      = {"phi(1020)"} ;  // only from phi decays
 A3.PhysDesktop.HepMCMaker.SmearParticle   =   true ;   // get true 4-momenta
@@ -89,37 +85,37 @@ A3.PhysDesktop.HepMCMaker.SmearParticle   =   true ;   // get true 4-momenta
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA4" } ;
 
-SeqA4.Members                    = { "LoKi_Phi_Makers/A4"} ;
-A4.PhysDesktop.ParticleMakerType =   "LoKi_HepMCParticleMaker/HepMCMaker" ;
+SeqA4.Members                    = { "LoKi::Phi_Makers/A4"} ;
+A4.PhysDesktop.ParticleMakerType =   "LoKi::HepMCParticleMaker/HepMCMaker" ;
 A4.PhysDesktop.HepMCMaker.Particles = {"K+"} ;         // only true HepMC kaons
 A4.PhysDesktop.HepMCMaker.SmearParticle   =   true ;   // get true 4-momenta
 
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA5" } ;
 
-SeqA5.Members                    = { "LoKi_Phi_Makers/A5"} ;
+SeqA5.Members                    = { "LoKi::Phi_Makers/A5"} ;
 A5.PhysDesktop.InputLocations    = { "Phys/StdHepMCKaons"} ;
 
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA6" } ;
 
-SeqA6.Members                    = { "LoKi_Phi_Makers/A6"} ;
+SeqA6.Members                    = { "LoKi::Phi_Makers/A6"} ;
 A6.PhysDesktop.InputLocations    = { "Phys/StdMCKaons"} ;
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA7" } ;
 
-SeqA7.Members                    = { "LoKi_Phi_Makers/A7"} ;
+SeqA7.Members                    = { "LoKi::Phi_Makers/A7"} ;
 A7.PhysDesktop.InputLocations    = { "Phys/StdNoPIDsKaons"} ;
 
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA8" } ;
 
-SeqA8.Members                    = { "LoKi_Phi_Makers/A8"} ;
+SeqA8.Members                    = { "LoKi::Phi_Makers/A8"} ;
 A8.PhysDesktop.InputLocations    = { "Phys/StdLooseKaons"} ;
 
 ApplicationMgr.TopAlg           += { "GaudiSequencer/SeqA9" } ;
 
-SeqA9.Members                    = { "LoKi_Phi_Makers/A9"} ;
+SeqA9.Members                    = { "LoKi::Phi_Makers/A9"} ;
 A9.PhysDesktop.InputLocations    = { "Phys/StdTightKaons"} ;
 
 

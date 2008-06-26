@@ -1,4 +1,4 @@
-// $Id: LoKi_MCSelect.cpp,v 1.1 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_MCSelect.cpp,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include file 
 // ============================================================================
@@ -14,9 +14,8 @@
  *  @2008-02-27
  */
 // ============================================================================
-LOKI_MCALGORITHM(LoKi_MCSelect)
+LOKI_MCALGORITHM(MCSelect)
 {
-  using namespace LoKi        ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
   // 

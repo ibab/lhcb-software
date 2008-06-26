@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_Bs2PsiPhi_HepMC.py,v 1.1 2008-06-25 17:31:26 ibelyaev Exp $ 
+# $Id: LoKi_Bs2PsiPhi_HepMC.py,v 1.2 2008-06-26 14:33:18 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_Bs2PsiPhi example
@@ -23,7 +23,7 @@
 import os 
 from  Gaudi.Configuration import * 
 from  Configurables import PhysDesktop
-from  Configurables import LoKi_Bs2PsiPhi_NoMC      as PsiPhi
+from  Configurables import LoKi__Bs2PsiPhi_NoMC     as PsiPhi
 from  Configurables import LoKi__HepMCParticleMaker as HepMCMaker
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )

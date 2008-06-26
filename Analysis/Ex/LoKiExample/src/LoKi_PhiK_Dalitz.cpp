@@ -1,4 +1,4 @@
-// $Id: LoKi_PhiK_Dalitz.cpp,v 1.5 2007-12-11 11:49:11 ibelyaev Exp $
+// $Id: LoKi_PhiK_Dalitz.cpp,v 1.6 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,7 +6,6 @@
 // ============================================================================
 #include "LoKi/LoKi.h"
 #include "LoKi/PhysKinematics.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
 // ============================================================================
 /** @file
  *  Siple algoroithm to make dalits plots from B+ -> pphi K+ gamma decays
@@ -23,9 +22,8 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date  2007-03-22
  */
-LOKI_MCALGORITHM(LoKi_PhiK_Dalitz)
+LOKI_MCALGORITHM(PhiK_Dalitz)
 {
-  using namespace LoKi ;
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
   using namespace LoKi::Kinematics ;

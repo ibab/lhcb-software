@@ -1,4 +1,4 @@
-// $Id: LoKi_MCMuon.cpp,v 1.7 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_MCMuon.cpp,v 1.8 2008-06-26 14:33:19 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -21,9 +21,8 @@
  *  @date   2003-03-27 
  */
 // ============================================================================
-LOKI_MCALGORITHM( LoKi_MCMuon ) 
+LOKI_MCALGORITHM( MCMuon ) 
 {
-  using namespace LoKi ;
   using namespace LoKi::Cuts ;
   using namespace LoKi::Types ;
   

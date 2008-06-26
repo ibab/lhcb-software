@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Bs2PsiPhi.opts,v 1.7 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi.opts,v 1.8 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Bs2PsiPhi
@@ -42,7 +42,7 @@ HistogramPersistencySvc.OutputFile = "PsiPhi_Histos.root" ;
 #include "$LOKIEXAMPLEDATA"  
 #pragma print ON
 // ============================================================================
-ApplicationMgr.TopAlg += { "LoKi_Bs2PsiPhi/PsiPhi" } ;
+ApplicationMgr.TopAlg += { "LoKi::Bs2PsiPhi/PsiPhi" } ;
 PsiPhi.PhysDesktop.InputLocations =  { 
   "Phys/StdTightMuons" , 
   "Phys/StdTightKaons" 

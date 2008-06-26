@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Fitters.opts,v 1.2 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: LoKi_Fitters.opts,v 1.3 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Fitters
@@ -46,7 +46,7 @@ HistogramPersistencySvc.OutputFile = "Fitters_Histos.root" ;
 #pragma print ON 
 // ============================================================================
 
-ApplicationMgr.TopAlg += { "LoKi_Fitters/Fitter1" } ;
+ApplicationMgr.TopAlg += { "LoKi::Fitters/Fitter1" } ;
 Fitter1.PhysDesktop.InputLocations =  { 
   "Phys/StdTightMuons" , 
   "Phys/StdTightKaons" 
@@ -58,7 +58,7 @@ Fitter1.ParticleReFitters =
     'mass'      : 'LoKi::MassFitter/MASS'       ,
     'direction' : 'LoKi::DirectionFitter'        } ;
 
-// ApplicationMgr.TopAlg += { "LoKi_Fitters/Fitter2" } ;
+// ApplicationMgr.TopAlg += { "LoKi::Fitters/Fitter2" } ;
 Fitter2.PhysDesktop.InputLocations =  { 
   "Phys/StdTightMuons" , 
   "Phys/StdTightKaons" 

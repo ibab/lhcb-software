@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: CheckMC_Bs2PsiPhi.py,v 1.1 2008-06-25 17:31:26 ibelyaev Exp $ 
+# $Id: CheckMC_Bs2PsiPhi.py,v 1.2 2008-06-26 14:33:18 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run CheckMC_Bs2PsiPhi example
@@ -23,8 +23,8 @@
 import os 
 from  Gaudi.Configuration import * 
 from  Configurables import PhysDesktop
-from  Configurables import LoKi_Bs2PsiPhi    as PsiPhi
-from  Configurables import CheckMC_Bs2PsiPhi as CheckMC
+from  Configurables import LoKi__Bs2PsiPhi         as PsiPhi
+from  Configurables import LoKi__CheckMC_Bs2PsiPhi as CheckMC
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$COMMONPARTICLESROOT/options/StandardKaons.opts" )

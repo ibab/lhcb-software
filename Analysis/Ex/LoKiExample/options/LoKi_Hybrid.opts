@@ -1,6 +1,6 @@
 #!/usr/bin/env DaVinci.exe
 // ============================================================================
-// $Id: LoKi_Hybrid.opts,v 1.7 2008-03-12 17:14:49 ibelyaev Exp $
+// $Id: LoKi_Hybrid.opts,v 1.8 2008-06-26 14:33:18 ibelyaev Exp $
 // ============================================================================
 /** @file
  *  Configuration file to run LoKi-based algorithm LoKi_Hybrid
@@ -33,10 +33,6 @@
 #include "$COMMONPARTICLESROOT/options/StandardMuons.opts"
 #pragma print ON
 // ============================================================================
-// Needed Services 
-// ============================================================================
-ApplicationMgr.ExtSvc += { "LoKiSvc"   } ;   ///<  MANDATORY!!!
-// ============================================================================
 //ApplicationMgr.ExtSvc += { "StagerSvc" } ;
 //StagerSvc.BlockSize    = 20 ;
 //StagerSvc.InitialStage = 5 ;
@@ -53,7 +49,7 @@ FileCatalog.Catalogs = {
 // ============================================================================
 
 
-ApplicationMgr.TopAlg           += { "LoKi_Hybrid/Hybrid"   } ;
+ApplicationMgr.TopAlg           += { "LoKi::TestHybrid/Hybrid"   } ;
 Hybrid.PhysDesktop.InputLocations = { 
   "Phys/StdLooseMuons" , 
   "Phys/StdLooseKaons" , 
