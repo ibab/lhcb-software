@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.3 2008-06-04 15:34:12 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.4 2008-06-26 12:50:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -337,7 +337,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   // best phi = swa/sw (assuming the 2D line passing through the highest deposit)
   double norm = sqrt(1.+tan(swa/sw)*tan(swa/sw));
   Gaudi::XYZVector vec(1./norm, tan(swa/sw)/norm , 0.);   
-  Gaudi::XYZLine   line(ref, vec);
+  Gaudi::Math::XYZLine   line(ref, vec);
   debug() << "Line parameters " << vec.X() << " " << vec.Y() << " " << vec.Z() << endreq;
   // Collect data along the 2D cosmics line (+- tolerance)
   double x   = 0;
@@ -350,7 +350,7 @@ StatusCode CaloCosmicsTool::fit2D(){
     double sx2  = size*size/12;
     Gaudi::XYZPoint pos = m_calo->cellCenter( cell );
     pos.SetZ( ref.Z() );
-    double ip = Gaudi::Math::impactParameter<Gaudi::XYZPoint, Gaudi::XYZLine>(pos, line)/size;
+    double ip = Gaudi::Math::impactParameter<Gaudi::XYZPoint, Gaudi::Math::XYZLine>(pos, line)/size;
     debug() << "--> " << cell << " ip = " << ip << " x = "<<  pos.X() << " y = " << pos.Y() << " z=  " << pos.Z() << endreq;
     if(fabs(ip) < m_tol){
       m_cosmicsADCs.push_back( *id );

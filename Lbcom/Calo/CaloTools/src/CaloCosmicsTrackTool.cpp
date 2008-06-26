@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackTool.cpp,v 1.6 2008-06-05 06:14:22 cattanem Exp $
+// $Id: CaloCosmicsTrackTool.cpp,v 1.7 2008-06-26 12:50:19 jpalac Exp $
 // Include files 
 
 // From std
@@ -310,17 +310,17 @@ StatusCode CaloCosmicsTrackTool::fit3D(){
 
   /*
   // @TODO TAKE THE TRAJECTORY.vs.ACCEPTANCE INTO ACCOUNT 
-  Gaudi::XYZLine   line(eP, hP-eP); // 3D line
+  Gaudi::Math::XYZLine   line(eP, hP-eP); // 3D line
   // if the 3D line is in the whole Ecal acceptance add Ecal middle and front plane points
   Gaudi::XYZPoint  point; 
   double mu; 
-  Gaudi::Math::intersection<Gaudi::XYZLine,Gaudi::Plane3D>(line,frontEcal,point,mu); 
+  Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,frontEcal,point,mu); 
   if( ecal()()->det()->geometry()->isInside(point) ){ 
     debug() << " cosmics cross the whole Ecal" << endreq; 
     const LHCb::CaloCellID id =  ecal()->det()->Cell( point ); 
     points.push_back( std::make_pair(eM, Gaudi::XYZPoint(eMsig,eMsig,0.)));
   } 
-  Gaudi::Math::intersection<Gaudi::XYZLine,Gaudi::Plane3D>(line,backHcal,point,mu); 
+  Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,backHcal,point,mu); 
   if( hcal()()->det()->geometry()->isInside(point) ){ 
     debug() << " cosmics cross the whole Hcal" << endreq; 
     const LHCb::CaloCellID id =  hcal()->det()->Cell( point ); 
@@ -573,9 +573,9 @@ StatusCode CaloCosmicsTrackTool::propagate(double z){
 StatusCode CaloCosmicsTrackTool::propagate(Gaudi::Plane3D plane){
   Gaudi::XYZPoint  ref = m_refPoint[m_ref];
   Gaudi::XYZVector vec = slopes()/slopes().R();
-  Gaudi::XYZLine   line(ref, vec);
+  Gaudi::Math::XYZLine   line(ref, vec);
   Gaudi::XYZPoint  point;
   double mu;
-  Gaudi::Math::intersection<Gaudi::XYZLine,Gaudi::Plane3D>(line,plane,point,mu);
+  Gaudi::Math::intersection<Gaudi::Math::XYZLine,Gaudi::Plane3D>(line,plane,point,mu);
   return propagate( point.Z() );
 }

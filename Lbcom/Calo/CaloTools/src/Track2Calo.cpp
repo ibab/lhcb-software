@@ -1,4 +1,4 @@
-// $Id: Track2Calo.cpp,v 1.1.1.1 2008-05-08 09:09:02 cattanem Exp $
+// $Id: Track2Calo.cpp,v 1.2 2008-06-26 12:50:19 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -129,7 +129,7 @@ LHCb::State Track2Calo::closestState(double x, double y,LHCb::ParticleID pid){
   ROOT::Math::Plane3D frontPlane = m_calo->plane( CaloPlane::Front );
 
   // Define calo line (from transversal barycenter) and track line in Ecal
-  typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
+  typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
   Gaudi::XYZVector normal = frontPlane.Normal();
   double zEcal = ( -normal.X()*x -normal.Y()*y - frontPlane.HesseDistance() )/normal.Z(); // tilt
   Gaudi::XYZPoint point( x , y , zEcal );
