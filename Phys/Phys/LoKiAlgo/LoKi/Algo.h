@@ -1,4 +1,4 @@
-// $Id: Algo.h,v 1.16 2008-05-28 14:53:55 cattanem Exp $
+// $Id: Algo.h,v 1.17 2008-06-26 14:28:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGO_H 
 #define LOKI_ALGO_H 1
@@ -1175,28 +1175,31 @@ namespace LoKi
  *  @date   2003-01-18
  */
 // ============================================================================
-#define LOKI_ALGORITHM_BODY( ALGNAME )                                         \
-class ALGNAME : public LoKi::Algo                                              \
-{                                                                              \
-  /** friend factory for instantiation      */                                 \
-  friend class AlgFactory<ALGNAME>        ;                                    \
-public:                                                                        \
-  /** standard method for event analysis    */                                 \
-  virtual StatusCode analyse  ()          ;                                    \
-protected:                                                                     \
-  /** standard constructor                  */                                 \
-  ALGNAME( const std::string& name ,                                           \
-             ISvcLocator*       svc  )    ;                                    \
-  /** virtual destructor                    */                                 \
-  virtual ~ALGNAME ()                   ;                                      \
-private:                                                                       \
-  /** default constructor  is private       */                                 \
-  ALGNAME             ()                  ;                                    \
-  /** copy constructor     is private       */                                 \
-  ALGNAME             ( const ALGNAME & ) ;                                    \
-  /** assignement operator is private       */                                 \
-  ALGNAME & operator= ( const ALGNAME & ) ;                                    \
-};
+#define LOKI_ALGORITHM_BODY( ALGNAME )                                        \
+namespace LoKi                                                                \
+{                                                                             \
+  class ALGNAME : public LoKi::Algo                                           \
+  {                                                                           \
+    /** friend factory for instantiation      */                              \
+    friend class AlgFactory<LoKi::ALGNAME>  ;                                 \
+  public:                                                                     \
+    /** standard method for event analysis    */                              \
+    virtual StatusCode analyse  ()          ;                                 \
+  protected:                                                                  \
+    /** standard constructor                  */                              \
+    ALGNAME( const std::string& name ,                                        \
+               ISvcLocator*       svc  )    ;                                 \
+    /** virtual destructor                    */                              \
+    virtual ~ALGNAME ()                   ;                                   \
+  private:                                                                    \
+    /** default constructor  is private       */                              \
+    ALGNAME             ()                  ;                                 \
+    /** copy constructor     is private       */                              \
+    ALGNAME             ( const ALGNAME & ) ;                                 \
+    /** assignement operator is private       */                              \
+    ALGNAME & operator= ( const ALGNAME & ) ;                                 \
+  };                                                                          \
+} // end of namespace LoKi 
 // ============================================================================
 /** @def LOKI_ALGORITHM_IMPLEMENT 
  *
@@ -1210,9 +1213,10 @@ private:                                                                       \
  *  LOKI_ALGORITHM_BODY_IMPLEMENT( BdJPsiPhiAlg );
  *
  *  /// standard LoKi method for event analysis
- *  StatusCode BdJPsiPhiAlg::analyse() {
+ *  StatusCode LoKi::BdJPsiPhiAlg::analyse() 
+ *  {
  *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
- *  };
+ *   }
  *
  *  @endcode 
  *
@@ -1221,15 +1225,17 @@ private:                                                                       \
  *  This macro could be easily combined with LOKI_ALGORITHM_BODY macro
  *
  *  @code 
+ *
  *  #include "LoKi/Macros.h"
  *  
  *  LOKI_ALGORITHM_BODY           ( BdJPsiPhiAlg ) ;
  *  LOKI_ALGORITHM_IMPLEMENTATION ( BdJPsiPhiAlg ) ;
  *
  *  /// standard LoKi method for event analysis
- *  StatusCode BdJPsiPhiAlg::analyse() {
+ *  StatusCode LoKi::BdJPsiPhiAlg::analyse() 
+ *  {
  *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
- *  };
+ *  }
  *
  *  @endcode 
  *  
@@ -1240,17 +1246,17 @@ private:                                                                       \
 /* ======================================================================== */ \
 /** Declaration of the Algorithm Factory                                    */ \
 /* ======================================================================== */ \
-DECLARE_ALGORITHM_FACTORY( ALGNAME ) ;                                         \
+DECLARE_NAMESPACE_ALGORITHM_FACTORY( LoKi , ALGNAME ) ;                        \
 /* ======================================================================== */ \
 /** Standard constructor                                                    */ \
 /* ======================================================================== */ \
-ALGNAME::ALGNAME ( const std::string& name  ,                             \
-                   ISvcLocator*       svc   )                             \
+LoKi::ALGNAME::ALGNAME ( const std::string& name  ,                            \
+                         ISvcLocator*       svc   )                            \
 : LoKi::Algo( name , svc ) {} ; /* constructor for base class */               \
 /* ======================================================================== */ \
 /** destructor (empty)                                                      */ \
 /* ======================================================================== */ \
-ALGNAME ::~ALGNAME () {};
+LoKi::ALGNAME ::~ALGNAME () {};
 // ============================================================================
 /** @def LOKI_ALGORITHM_FULLIMPLEMENT 
  *
@@ -1265,9 +1271,10 @@ ALGNAME ::~ALGNAME () {};
  *  LOKI_ALGORITHM_FULLIMPLEMENT( BdJPsiPhiAlg );
  *
  *  /// standard LoKi method for event analysis
- *  StatusCode BdJPsiPhiAlg::analyse() {
+ *  StatusCode LoKi::BdJPsiPhiAlg::analyse() 
+ *  {
  *    return Print("analyse() method is invoked ", StatusCode::SUCCESS ); 
- *  };
+ *  }
  *
  *  @endcode 
  *
@@ -1287,7 +1294,7 @@ ALGNAME ::~ALGNAME () {};
  *  
  *  @code 
  *  
- *  #include "Loki/Macros.h"
+ *  #include "LoKi/Macros.h"
  *  
  *  LOKI_ALGORITHM( MyAlg )
  *  {
@@ -1298,7 +1305,7 @@ ALGNAME ::~ALGNAME () {};
  *    /// some implementation of algorithm
  * 
  *   return StatusCode::SUCCESS ;
- *  };
+ *  }
  *
  *  @endcode 
  *  
@@ -1309,7 +1316,7 @@ ALGNAME ::~ALGNAME () {};
 // ============================================================================
 #define LOKI_ALGORITHM(   ALGNAME   )              \
         LOKI_ALGORITHM_FULLIMPLEMENT ( ALGNAME ) ; \
-        StatusCode ALGNAME::analyse()                      
+        StatusCode LoKi::ALGNAME::analyse()                      
 // ============================================================================
 
 
