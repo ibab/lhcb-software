@@ -20,7 +20,7 @@ from ROOT import *
 # Set the alleys to monitor, the entry point,
 # Save all the HLT selections in the HltSummary
 
-DEBUG = True
+DEBUG = False
 NEVENTS = 10000
 
 ALLEYS = ["HadronSingle","HadronDi"]
