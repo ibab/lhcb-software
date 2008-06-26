@@ -1,4 +1,4 @@
-// $Id: GenChild.cpp,v 1.4 2008-06-25 10:05:45 ibelyaev Exp $
+// $Id: GenChild.cpp,v 1.5 2008-06-26 12:09:06 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -82,7 +82,7 @@ size_t LoKi::GenChild::particles
   if ( 0 == vertex     ) { return output.size() ; }
   LoKi::GenTypes::GenSet gset ;
   particles ( vertex , range , gset ) ;
-  output.insert ( gset.begin() , gset.end() ) ;
+  output.insert ( output.end() , gset.begin() , gset.end() ) ;
   return output.size() ;                
 }
 // ============================================================================

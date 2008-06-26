@@ -1,4 +1,4 @@
-// $Id: CmpBarCode.h,v 1.1 2008-06-25 10:05:45 ibelyaev Exp $
+// $Id: CmpBarCode.h,v 1.2 2008-06-26 12:09:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CMPBARCODE_H 
 #define LOKI_CMPBARCODE_H 1
@@ -25,7 +25,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date   2008-06-24
      */
-    struct CompareBarCode 
+    struct CmpBarCode 
       : public std::binary_function<const HepMC::GenParticle*,
                                     const HepMC::GenParticle*,bool>
     {
