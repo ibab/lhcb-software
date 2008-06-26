@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-6-26 - Jose A. Hernando
+  - remove obsolete examples for the hadron alley
+  - add hltconf in modules, to get a list of algorithms and properties for a given alley
+  - add hlttime in examples, to monitor the rate, and time of an alley
+
 !========================== HltPython v1r6 2008-06-09 ===================
 ! 2008-6-10 - Xabier Cid
   - update hadHLTPies
