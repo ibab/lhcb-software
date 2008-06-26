@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.14 2008-03-30 17:55:52 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.15 2008-06-26 12:09:52 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -387,7 +387,7 @@ protected:
     , m_contextSvc   (  0 ) 
     , m_incidentSvc  (  0 ) 
     , m_reporter     (  0 )
-    , m_reporterName ( "LoKi::Reporter/ERROR")
+    , m_reporterName ( "LoKi::Reporter/REPORT")
     , m_event        ( -1 )
     //
   { 
