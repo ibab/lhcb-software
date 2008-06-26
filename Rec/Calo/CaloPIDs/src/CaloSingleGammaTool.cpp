@@ -1,4 +1,4 @@
-// $Id: CaloSingleGammaTool.cpp,v 1.2 2007-03-02 15:22:07 cattanem Exp $
+// $Id: CaloSingleGammaTool.cpp,v 1.3 2008-06-26 13:07:04 jpalac Exp $
 // ===========================================================================
 // Include files
 // GaudiKernel
@@ -155,7 +155,7 @@ double CaloSingleGammaTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
     if(m_extrapolation) {
       const Gaudi::XYZVector direction = position - m_vertex;
-      typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
+      typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
       const LineType line =  LineType(m_vertex ,direction );
       double mu=0;
             

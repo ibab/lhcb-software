@@ -366,7 +366,7 @@ double CaloPhotonEstimatorTool::likelihood(const LHCb::CaloHypo* hypo )  const
   }
   else {
     const Gaudi::XYZVector direction = position - m_vertex;
-    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>  LineType ;
     const LineType line =  LineType(m_vertex , direction );
     double mu=0;
 

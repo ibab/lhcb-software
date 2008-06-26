@@ -1,4 +1,4 @@
-// $Id: Linear.h,v 1.3 2007-03-02 15:22:08 cattanem Exp $
+// $Id: Linear.h,v 1.4 2008-06-26 13:07:04 jpalac Exp $
 // ============================================================================
 #ifndef CALOPIDS_LINEAR_H 
 #define CALOPIDS_LINEAR_H 1
@@ -119,7 +119,7 @@ namespace Utils
     ( LHCb::State&          state , 
       const Gaudi::Plane3D& plane ) 
     {
-      typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line ;
+      typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line ;
       // construct the line form the state 
       const Line line = Line( state.position() , state.slopes () ) ;
       Gaudi::XYZPoint point ;
