@@ -1,4 +1,4 @@
-// $Id: LoKiJetParticleMaker.cpp,v 1.3 2007-12-10 15:38:23 ibelyaev Exp $
+// $Id: LoKiJetParticleMaker.cpp,v 1.4 2008-06-26 13:21:57 ibelyaev Exp $
 // ============================================================================
 // include files  
 // ============================================================================
@@ -34,9 +34,12 @@ namespace LoKi
     : public virtual IParticleMaker 
     , public              GaudiTool 
   {
+    // ========================================================================
     /// friend class for instantiation
     friend class ToolFactory<LoKi::JetParticleMaker> ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// make the particles 
     virtual StatusCode makeParticles ( LHCb::Particle::ConstVector& particles ) ;
     /// initialize the tool 
@@ -50,7 +53,9 @@ namespace LoKi
       if ( m_inputs.empty() ) { Warning ( "No input locations are specified!" ) ; }
       return StatusCode::SUCCESS ;
     }
+    // ========================================================================
   protected:
+    // ========================================================================
     /// The standard constructor
     JetParticleMaker
     ( const std::string& type   , 
@@ -69,14 +74,18 @@ namespace LoKi
     }
     /// virtual and protected destructor 
     virtual ~JetParticleMaker() {}  
+    // ========================================================================
   private:
+    // ========================================================================
     // the default contructor is disabled 
     JetParticleMaker() ; ///< no default contstructor 
     // the copy contructor is disabled 
     JetParticleMaker( const JetParticleMaker&) ; ///< no copy contstructor 
     // the assignement operator is disabled 
     JetParticleMaker& operator=( const JetParticleMaker&) ; ///< no assignement
+    // ========================================================================
   private:
+    // ========================================================================
     // the jet maker name 
     std::string      m_jetMakerName ; ///< the jet-maker name 
     // the jet maker itself 
@@ -84,6 +93,7 @@ namespace LoKi
     typedef std::vector<std::string>  Inputs ;
     // input locations 
     Inputs         m_inputs ; ///< the input locations 
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi 
@@ -115,7 +125,6 @@ StatusCode LoKi::JetParticleMaker::makeParticles
   
   // empty container of conmstituents? 
   if ( inputs.empty() ) { Warning ( "Empty container of input particles ") ; }
-
   
   // prepare the container for output jets 
   IJetMaker::Jets jets ;

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.9 2007-12-10 15:38:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.10 2008-06-26 13:21:57 ibelyaev Exp $ 
 # =============================================================================
 # Created    : 2006-09-06
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LoKiJets
-version           v4r0
+version           v4r1
 
 # =============== structure ===================================================
 branches          cmt doc options src

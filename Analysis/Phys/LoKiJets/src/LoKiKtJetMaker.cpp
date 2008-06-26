@@ -1,4 +1,4 @@
-// $Id: LoKiKtJetMaker.cpp,v 1.11 2007-12-18 10:23:23 pkoppenb Exp $
+// $Id: LoKiKtJetMaker.cpp,v 1.12 2008-06-26 13:21:57 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -31,6 +31,10 @@ namespace LoKi
    *  The most trivial, Kt-Jet based  implementtaion of interface IJetMaker 
    *  @see IJetMaker 
    *
+   *  @warning This class will be removed rather soon, 
+   *           use class LoKi::FastJetMaker or LoKi::FastJetMAkerWithArea
+   *        
+   *
    *  This file is a part of LoKi project - 
    *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
    *
@@ -46,9 +50,12 @@ namespace LoKi
     : public virtual IJetMaker
     , public         GaudiTool
   {
+    // ========================================================================
     // the friend factory fo instantiation 
     friend class ToolFactory<LoKi::KtJetMaker> ;
+    // ========================================================================
   public:
+    // ========================================================================
     /** The main method: jet-finding procedure 
      * 
      *  @code 
@@ -99,6 +106,7 @@ namespace LoKi
     ( const IJetMaker::Input& input , IJetMaker::Jets& jets ) const ;
     // ========================================================================
   protected:  
+    // ========================================================================
     /** the standard constructor
      * 
      *  @todo The default values for configuration parameters 
@@ -154,7 +162,9 @@ namespace LoKi
     } 
     /// destructor
     virtual ~KtJetMaker( ){}
+    // ========================================================================
   public:
+    // ========================================================================
     /** standard initialization of the tool
      *  @return status code 
      */
@@ -162,6 +172,8 @@ namespace LoKi
     {
       StatusCode sc = GaudiTool::initialize() ;
       if ( sc.isFailure() ) { return sc ; }
+      //
+      Warning ( "This class is obsolete!" ) ;
       //
       if ( 4 != m_type      ) 
       { Warning ( "The 'type' is different from 'PP' [4] "  ) ; }
@@ -174,29 +186,34 @@ namespace LoKi
       //
       return StatusCode::SUCCESS ;
     } ;
+    // ========================================================================
   private:
+    // ========================================================================
     // the default constructor is disabled 
     KtJetMaker () ;
     // the copy constructor is disabled 
     KtJetMaker ( const  KtJetMaker& )  ;
     // the assignement operator is disabled
     KtJetMaker& operator=( const  KtJetMaker& )  ;
+    // ========================================================================
   private:  
-    // proposed jet ID 
-    int    m_jetID     ; ///< proposed jet ID
-    // KtEvent flag 
-    int    m_type      ; ///< KtEvent flag/mode
-    // Angular distance scheme  
-    int    m_angle     ; ///< angular distance scheme
-    // Recombination scheme  
-    int    m_recom     ; ///< recombination scheme
-    // R-parameter 
-    double m_r         ; ///< R-parameters
-    // jet sorting criteria 
-    int    m_sort      ; ///< jet sorting criteria
-    // combiner 
+    // ========================================================================
+    /// proposed jet ID 
+    int    m_jetID     ; // proposed jet ID
+    /// KtEvent flag 
+    int    m_type      ; // KtEvent flag/mode
+    /// Angular distance scheme  
+    int    m_angle     ; // angular distance scheme
+    /// Recombination scheme  
+    int    m_recom     ; // recombination scheme
+    /// R-parameter 
+    double m_r         ; // R-parameters
+    /// jet sorting criteria 
+    int    m_sort      ; // jet sorting criteria
+    /// combiner 
     std::string                m_combinerName ;
-    mutable IParticleCombiner* m_combiner ; ///< combiner to be used 
+    mutable IParticleCombiner* m_combiner ; // combiner to be used 
+    // ========================================================================
   };
   // ==========================================================================
 } // End of namespace LoKi

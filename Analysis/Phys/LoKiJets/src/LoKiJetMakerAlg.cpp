@@ -1,4 +1,4 @@
-// $Id: LoKiJetMakerAlg.cpp,v 1.3 2007-12-10 15:38:23 ibelyaev Exp $
+// $Id: LoKiJetMakerAlg.cpp,v 1.4 2008-06-26 13:21:57 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,8 +38,12 @@ namespace LoKi
    */
   class JetMaker : public LoKi::Algo  
   {
+    // ========================================================================
+    /// the friend factory for instantiation 
     friend class AlgFactory<LoKi::JetMaker> ;
+    // ========================================================================
   protected:  
+    // ========================================================================    
     /** Standard constructor
      *  @param name instance name 
      *  @param pSvc pointer to Service Locator 
@@ -49,34 +53,43 @@ namespace LoKi
       ISvcLocator*       pSvc ) 
       : LoKi::Algo ( name , pSvc )
       // 
-      , m_makerName ( "LoKi::KtJetMaker"   )
+      , m_makerName ( "LoKi::FastJetMaker"   )
       , m_maker     ( 0   )
     { 
+      // 
       declareProperty 
         ( "JetMaker"  , 
           m_makerName , 
           "Type type/name of jet-maker tool (IJetMaker interface)") ;  
+      //
     }
     /// destructor
     virtual ~JetMaker( ){}
+    // ========================================================================    
   public:
+    // ========================================================================    
     /** standard execution of the algorithm 
      *  @see LoKi::Algo 
      *  @return status code 
      */
     virtual StatusCode analyse   () ;
+    // ========================================================================    
   private:
+    // ========================================================================    
     // the default constructor is disabled 
     JetMaker () ;
     // the copy constructor is disabled 
     JetMaker ( const JetMaker& )  ;
     // the assignement operator is disabled 
     JetMaker& operator=( const  JetMaker& )  ;
+    // ========================================================================    
   private:  
-    // maker name
-    std::string      m_makerName ; ///< jet maker name  
-    // maker
-    const IJetMaker* m_maker     ; ///< jet maker to be used 
+    // ========================================================================    
+    /// maker name
+    std::string      m_makerName ; // jet maker name  
+    /// maker
+    const IJetMaker* m_maker     ; // jet maker to be used 
+    // ========================================================================    
   };
   // ==========================================================================
 } // end of namespace LoKi 
