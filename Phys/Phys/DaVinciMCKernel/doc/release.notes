@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.38 2008-06-03 15:24:15 cattanem Exp $
+! $Id: release.notes,v 1.39 2008-06-26 23:48:25 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== DaVinciMCKernel v2r8 2008-06-03 =====================
+! 2008-06-26 - V. Gligorov
+ - Added interface for new DaVinci Associators wrapper tool,
+   IDaVinciAssociatorsWrapper.h 
+
 ! 2008-06-03 - Marco Cattaneo
  - Fix doxygen warnings
  - Remove objectionable disclaimers
