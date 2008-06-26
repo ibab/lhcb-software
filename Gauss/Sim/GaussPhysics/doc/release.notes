@@ -4,14 +4,19 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-! 2008-06-24 - Vanya BELYAEV
+!====================== GaussPhysics v6r0 2008-06-27 =========================
+! 2008-06-17 - Gloria CORTI
+ - Adapt to change in name of EM physics list for non default one introduced
+   in Geant4 v90r2 (see geant4 release notes
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+   G4EmStandardPhysics71 --> G4EmStandardPhysics_option1
+   G4EmStandardPhysics72 --> G4EmStandardPhysics_option2
+   . GaussPhysics_load.cpp
 
+!! 2008-06-24 - Vanya BELYAEV
  - src/G4Higgses.h, G4Higgses.cpp
-
     add the descriptions of Higgses:  H_10, H_20 and H_30  
-
   IMPORTANT:
-    
     The static function Definition() *DOES* not create the objects!
     To creat ethe obkect one need to use the statci functions  
     G4H_10::Create, 
@@ -21,9 +26,7 @@
     The functions takes care about the proper setting of
     all parameters needed for Geat4 (essentially longlived/shortlived) 
     flags 
-
         P.S.: there is no ugly reinterpret_cast.
-
     if ( 0 == G4H_10::Definition() ) 
     {
       const double mass = 120 * Gaudi::Units::GeV ;
@@ -31,23 +34,15 @@
       G4H_10::Create ( mass , ctau ) ; 
     }
     Assert ( 0 != G4H_10::Definition() , "No valid definition for H_10") ;
-
-  
  - src/GiGaHiggsParticles.cpp
- 
     New "physics constructor", which takes care about the creation 
     of proper "H_10", "H_20" and "H_30" particles.
     The particle properties are taked from Particle Property 
     Service.
- 
     For usage one needs to add this constructor/list into the 
     modular physics list:
-
-   
       GiGa.ModularPL.PhysicsConstructors += [ "GiGaHiggsParticles" ] ;
-
     It also dumps (@ MSG::INFO) the properties of created higgses. e.g.:
-    
 --- G4ParticleDefinition ---
  Particle Name : H_20
  PDG particle code : 35 [PDG anti-particle code: 35]
@@ -65,7 +60,6 @@
  Particle type : higgs [higgs]
  ShortLived : ON
 Decay Table is not defined !!
-
 --- G4ParticleDefinition ---
  Particle Name : H_30
  PDG particle code : 36 [PDG anti-particle code: 36]
@@ -82,11 +76,6 @@ Decay Table is not defined !!
  Lepton number : 0 Baryon number : 0
  Particle type : higgs [higgs]
 Decay Table is not defined !!
-
-
- - cmt/requirements 
-
-     version increment to v5r3 
 
 !====================== GaussPhysics v5r2 2008-06-09 =========================
 ! 2008-06-10 - Gloria CORTI for Neal GUEISSAZ

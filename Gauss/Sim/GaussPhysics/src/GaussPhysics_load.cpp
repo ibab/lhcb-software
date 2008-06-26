@@ -1,4 +1,4 @@
-// $Id: GaussPhysics_load.cpp,v 1.14 2008-05-07 08:34:30 gcorti Exp $
+// $Id: GaussPhysics_load.cpp,v 1.15 2008-06-26 18:02:59 gcorti Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -17,8 +17,8 @@
 #include "G4DecayPhysics.hh"
 
 #// EM physics 
-#include "G4EmStandardPhysics71.hh"
-#include "G4EmStandardPhysics72.hh"
+#include "G4EmStandardPhysics_option1.hh"
+#include "G4EmStandardPhysics_option2.hh"
 #include "G4EmStandardPhysics.hh"
 #include "G4EmExtraPhysics.hh"
 
@@ -44,10 +44,10 @@
 typedef GiGaExtPhysics< G4DecayPhysics > DecayFactory;
 DECLARE_TOOL_FACTORY( DecayFactory );
 
-typedef GiGaExtPhysics< G4EmStandardPhysics71 > EmStd71PhysFactory;
-DECLARE_TOOL_FACTORY( EmStd71PhysFactory );
-typedef GiGaExtPhysics< G4EmStandardPhysics72 > EmStd72PhysFactory;
-DECLARE_TOOL_FACTORY( EmStd72PhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics_option1 > EmStdOpt1PhysFactory;
+DECLARE_TOOL_FACTORY( EmStdOpt1PhysFactory );
+typedef GiGaExtPhysics< G4EmStandardPhysics_option2 > EmStdOpt2PhysFactory;
+DECLARE_TOOL_FACTORY( EmStdOpt2PhysFactory );
 typedef GiGaExtPhysics< G4EmStandardPhysics > EmStdPhysFactory;
 DECLARE_TOOL_FACTORY( EmStdPhysFactory );
 
