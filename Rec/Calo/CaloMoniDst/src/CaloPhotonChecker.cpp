@@ -357,7 +357,7 @@ StatusCode CaloPhotonChecker::execute()
 
   m_nEvents++;
   
-  typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
+  typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
 
 
   // get MC photons
