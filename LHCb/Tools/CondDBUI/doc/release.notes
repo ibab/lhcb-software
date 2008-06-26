@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.78 2008-04-18 07:06:26 cattanem Exp $
+! $Id: release.notes,v 1.79 2008-06-26 16:56:22 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2008-06-26 - Marco Clemencic
+ - Adapted to work with the new SEAL-less COOL and CORAL too.
+   (Only for the LFCReplicaService)
 
 !===================== Tools/CondDBUI v2r9 2008-04-18 =========================
 ! 2008-04-17 - Marco Clemencic
