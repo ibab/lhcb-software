@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.42 2008-06-05 06:14:22 cattanem Exp $
+! $Id: release.notes,v 1.43 2008-06-26 12:50:45 jpalac Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r2
+ - src/CaloCosmicsTool.cpp
+ - src/CaloCosmicsTrackTool.cpp
+ - src/Track2Calo.cpp
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
 
 !========================== CaloTools v5r1 2008-06-05 =========================
 ! 2008-06-05 - Marco Cattaneo
