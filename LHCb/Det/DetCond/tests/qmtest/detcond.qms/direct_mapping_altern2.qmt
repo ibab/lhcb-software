@@ -1,0 +1,25 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>../scripts/direct_mapping_test.py</text></argument>
+<argument name="args"><set><text>2</text></set></argument>
+<argument name="prerequisites"><set>
+  <tuple><text>detcond.direct_mapping_base</text><enumeral>PASS</enumeral></tuple>
+</set></argument>
+<argument name="validator"><text>
+reference_block = '''
+=== Begin Nodes ===
+/dd
+/dd/AutoMap
+/dd/AutoMap/FolderSet1
+/dd/AutoMap/FolderSet1/Object1
+/dd/AutoMap/FolderSet2
+/dd/AutoMap/FolderSet2/Object1
+/dd/AutoMap/FolderSet2/Object2
+/dd/AutoMap/FolderSet3
+/dd/AutoMap/FolderSet3/Object1
+/dd/AutoMap/FolderSet3/Object2
+=== End Nodes ===
+'''
+findReferenceBlock(reference_block, stdout, result, causes)
+</text></argument>
+</extension>

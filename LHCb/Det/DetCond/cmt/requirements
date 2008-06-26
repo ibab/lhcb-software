@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.85 2008-06-11 05:39:14 cattanem Exp $
+# $Id: requirements,v 1.86 2008-06-26 14:28:52 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v12r0
@@ -54,5 +54,15 @@ macro_append DetCond_use_linkopts " $(Boost_linkopts_thread) $(Boost_linkopts_fi
 macro_append DetCond_use_linkopts " -lboost_date_time-$(Boost_compiler_version)-mt " \
         Darwin                    " -lboost_date_time-mt-$(Boost_file_version) " \
         WIN32                     "   boost_date_time-vc71-mt-$(Boost_file_version).lib "
+
+apply_pattern QMTest
+# =====================================
+# Packages needed for tests 
+macro DetCond_use_CondDBUI "" QMTest "CondDBUI v* Tools"
+use $(DetCond_use_CondDBUI)
+
+macro DetCond_use_DDDB "" QMTest "DDDB v* Det"
+use $(DetCond_use_DDDB)
+# =====================================
 
 end_private
