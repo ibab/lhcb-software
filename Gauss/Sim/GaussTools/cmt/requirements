@@ -3,7 +3,7 @@
 # Maintainer : Gloria CORTI
 #============================================================================
 package GaussTools
-version v13r5
+version v14r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,7 +16,7 @@ use               SimSvc        v*     Sim
  
 # Include directories
 #============================================================================
-apply_pattern install_more_includes more=GaussTools
+apply_pattern     install_more_includes   more=GaussTools
 
 # Linker library building rule
 #============================================================================
@@ -34,10 +34,11 @@ apply_pattern     linker_library    library=GaussToolsLib
 # special linking with minimal G4RunManager to build genConf (necessary due
 # to G4 User Actions requiring it to exist and have physic list assigned to it)
 #============================================================================
+# creates the helper library: must be public
+apply_pattern     genconf_helper_lib  src=genConf/*.cpp
+
+# uses the helper library from the package where it has
+# been created: here it is the same package. Must be private
 private
-library GenConfForG4UAction genConf/*.cpp
-macro_append GaussTools_dependencies " GenConfForG4UAction "
-macro_prepend genconfig_cmd "LD_PRELOAD=$(library_prefix)GenConfForG4UAction.$(shlibsuffix) " \
-      Darwin "DYLD_INSERT_LIBRARIES="$(GaussTools_root)/$(tag)/lib/libGenConfForG4UAction.$(shlibsuffix) " \
-      WIN32 ""
-macro GenConfForG4UAction_shlibflags "$(GenConfForG4UAction_use_linkopts)"
+apply_pattern use_genconf_helper_lib pkg=GaussTools
+

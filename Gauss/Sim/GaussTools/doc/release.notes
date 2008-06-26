@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v14r0 2008-06-26 ========================
+! 2008-06-26 - Gloria CORTI
+ - Use new patterns in Gaudi v19r9 to create genConf helper library for
+   G4 User Actions (see 2007-11-30).
+   . cmt/requirements
+
 !======================== GaussTools v13r5 2008-06-09 ========================
 ! 2008-05-28 - Gloria CORTI
  - Adapt to removal of package LHCbDefinitions: Point and Vector header files
