@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.5 2008-04-24 13:29:33 jpalac Exp $ 
+! $Id: release.notes,v 1.6 2008-06-26 13:31:36 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r2
+ - src/DistanceCalculatorBase.h
+  . Change all Gaudi::Line for Gaudi::Math::Line (adapting to 
+    Kernel/LHCbMath v3)
 ! =========================== LoKiFitters v1r1 2008-04-24 =====================
 
 ! 2008-04-04 - Vanya BELYAEV
