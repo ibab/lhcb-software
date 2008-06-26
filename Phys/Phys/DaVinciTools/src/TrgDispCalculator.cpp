@@ -1,4 +1,4 @@
-// $Id: TrgDispCalculator.cpp,v 1.13 2008-02-28 13:52:51 pkoppenb Exp $
+// $Id: TrgDispCalculator.cpp,v 1.14 2008-06-26 13:54:27 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -211,7 +211,7 @@ StatusCode TrgDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
                                              double& dist, 
                                              double& distErr ) const {
  
-  typedef Gaudi::Line<Gaudi::XYZPoint, Gaudi::XYZVector> XYZLine;
+  typedef Gaudi::Math::Line<Gaudi::XYZPoint, Gaudi::XYZVector> XYZLine;
 
   const XYZLine part0(particle1.referencePoint(), 
                       particle1.momentum().Vect().unit());

@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.23 2008-01-21 12:26:30 pkoppenb Exp $
+// $Id: GeomDispCalculator.cpp,v 1.24 2008-06-26 13:54:27 jpalac Exp $
 
 // Include files
 
@@ -153,7 +153,7 @@ Gaudi::Vector9 GeomDispCalculator::totalDeriv(const LHCb::Particle& particle,
   const Gaudi::XYZVector derivPoint = pUnit.Cross(ipUnit);
   const Gaudi::XYZVector derivVtx = -1*derivPoint;
   const Gaudi::XYZVector derivP = (ipUnit.Cross(displ) - 
-                             ipUnit.Dot(ipVector)*pUnit) / pmag; 
+                                   ipUnit.Dot(ipVector)*pUnit) / pmag; 
 
   return Gaudi::Vector9(derivPoint.x(), derivPoint.y(), derivPoint.z(), 
                         derivP.x(),     derivP.y(),     derivP.z(),
@@ -196,17 +196,17 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
   Gaudi::SymMatrix9x9  errMatrix;
   calcImpactPar( particle, vertex, ip, ipErr, ipVector, errMatrix);
 
-// Now calculate the error for each component
+  // Now calculate the error for each component
 
-// First for ip_x:
+  // First for ip_x:
   const Gaudi::XYZVector vX(1.,0.,0);
   const double errX = calcErrComponent(vX, particle, vertex, errMatrix);
 
-// Now for ip_y:
+  // Now for ip_y:
   const Gaudi::XYZVector vY(0.,1.,0);
   const double errY = calcErrComponent(vY, particle, vertex, errMatrix);
 
-// Now for ip_z:
+  // Now for ip_z:
   const Gaudi::XYZVector vZ(0.,0,1.);
   const double errZ = calcErrComponent(vZ, particle, vertex, errMatrix);
 
@@ -234,8 +234,8 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
   // measured point closer to the 3D point.
   LHCb::Particle transParticle;
   const StatusCode sctrans = m_pTransporter->transport(&particle,
-                                                 position.z(),
-                                                 transParticle);
+                                                       position.z(),
+                                                       transParticle);
   if ( !sctrans.isSuccess() ) {
     if ( msgLevel(MSG::DEBUG)) debug() << "Transporter failed" << endmsg;
     return sctrans;
@@ -243,7 +243,7 @@ StatusCode GeomDispCalculator::calcImpactPar( const LHCb::Particle& particle,
 
   Gaudi::SymMatrix3x3 posError;
   return calcImpactPar(transParticle, position, posError, 
-                      ip, ipErr, ipVector, errMatrix);
+                       ip, ipErr, ipVector, errMatrix);
 
 }
 //==================================================================
@@ -283,10 +283,10 @@ StatusCode GeomDispCalculator::calcCloseAppr( const LHCb::Particle& particle1,
               << particle2.momentum().Vect() << endmsg ;
   }
 
-  const Gaudi::XYZLine part0(particle1.referencePoint(), 
-                             particle1.momentum().Vect());
-  const Gaudi::XYZLine part1(particle2.referencePoint(), 
-                             particle2.momentum().Vect());
+  const Gaudi::Math::XYZLine part0(particle1.referencePoint(), 
+                                   particle1.momentum().Vect());
+  const Gaudi::Math::XYZLine part1(particle2.referencePoint(), 
+                                   particle2.momentum().Vect());
 
   dist = Gaudi::Math::distance(part0, part1);
 
@@ -349,7 +349,7 @@ StatusCode GeomDispCalculator::calcVertexDis( const LHCb::VertexBase& vertex1,
   errMatrix.Place_at(vertex2.covMatrix(),3,3);
   const Gaudi::XYZVector u = diff.Unit();
   const Gaudi::Vector6 derivDist( u.x(),  u.y(),  u.z(),
-                                 -u.x(), -u.y(), -u.z() );
+                                  -u.x(), -u.y(), -u.z() );
 
   distErr = sqrt(std::fabs(ROOT::Math::Dot(derivDist,errMatrix*derivDist)));
   
@@ -417,24 +417,24 @@ double GeomDispCalculator::calcErrComponent(const Gaudi::XYZVector& vProj,
   const Gaudi::XYZVector derivP     = displ*(-scale/pmag) + v_tmp;
 
   const Gaudi::Vector9 derivTot(derivPoint.x(), derivPoint.y(), derivPoint.z(),
-                                    derivP.x(),     derivP.y(),     derivP.z(),
-                                  derivVtx.x(),   derivVtx.y(),   derivVtx.z());
+                                derivP.x(),     derivP.y(),     derivP.z(),
+                                derivVtx.x(),   derivVtx.y(),   derivVtx.z());
 
   return sqrt(std::fabs(ROOT::Math::Dot(derivTot,errMtx*derivTot) ) );
 
 }
 
 //=============================================================================
-void GeomDispCalculator::calcDerivVectors(const Gaudi::XYZLine& part0,
-                                          const Gaudi::XYZLine& part1,
+void GeomDispCalculator::calcDerivVectors(const Gaudi::Math::XYZLine& part0,
+                                          const Gaudi::Math::XYZLine& part1,
                                           Gaudi::XYZVector& u,
                                           Gaudi::XYZVector& u1,
                                           Gaudi::XYZVector& u2) const 
 {
 
   const Gaudi::XYZVector disp = part0.beginPoint() - part1.beginPoint();
-  const Gaudi::XYZLine::Vector mom0 = part0.direction();
-  const Gaudi::XYZLine::Vector mom1 = part1.direction();
+  const Gaudi::Math::XYZLine::Vector mom0 = part0.direction();
+  const Gaudi::Math::XYZLine::Vector mom1 = part1.direction();
   Gaudi::XYZVector perpDirection = mom0.Cross( mom1 );  
   const bool parallel = std::fabs(perpDirection.mag2()) < 1e-20;
   

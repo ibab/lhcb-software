@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.12 2008-01-21 12:26:30 pkoppenb Exp $
+// $Id: GeomDispCalculator.h,v 1.13 2008-06-26 13:54:27 jpalac Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -13,7 +13,7 @@
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "LHCbMath/Line.h"
+#include "LHCbMath/LineTypes.h"
 // from DaVinciKernel
 #include "Kernel/IGeomDispCalculator.h"
 
@@ -25,18 +25,10 @@ class IParticleTransporter;
  *
  * @author Miriam Gandelman
  * @date 20/03/2002 
-*/
-
-/// @todo move Line typedef to LHCbDefinitions once GeomFun implementation
-///       stops depending on Kernel/Vector3DTypes.h
-namespace Gaudi
-{
-  typedef Gaudi::Line<Gaudi::XYZPoint, Gaudi::XYZVector> XYZLine;
-}
-
+ */
 
 class GeomDispCalculator : public GaudiTool,
-                   virtual public IGeomDispCalculator {
+                           virtual public IGeomDispCalculator {
 
 public:
 
@@ -126,8 +118,8 @@ private:
                        Gaudi::SymMatrix9x9& errMatrix) const;
 
 
-  void calcDerivVectors(const Gaudi::XYZLine& part0,
-                        const Gaudi::XYZLine& part1,
+  void calcDerivVectors(const Gaudi::Math::XYZLine& part0,
+                        const Gaudi::Math::XYZLine& part1,
                         Gaudi::XYZVector& u,
                         Gaudi::XYZVector& u1,
                         Gaudi::XYZVector& u2) const;
