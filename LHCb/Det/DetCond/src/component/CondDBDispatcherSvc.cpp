@@ -1,12 +1,14 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.6 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.7 2008-06-26 14:22:45 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/Time.h"
 
 // local
 #include "CondDBDispatcherSvc.h"
+#include "CondDBCommon.h"
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBDispatcherSvc)
@@ -27,6 +29,10 @@ CondDBDispatcherSvc::CondDBDispatcherSvc( const std::string& name, ISvcLocator* 
 {
   declareProperty("MainAccessSvc", m_mainAccessSvcName = "CondDBAccessSvc" );
   declareProperty("Alternatives",  m_alternativesDeclaration               );
+
+  declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
+                  "Allow direct mapping from CondDB structure to"
+                  " transient store.");
 }
 
 //=============================================================================
@@ -125,7 +131,7 @@ StatusCode CondDBDispatcherSvc::finalize(){
 //=========================================================================
 //  find the appropriate alternative
 //=========================================================================
-ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
+ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) const {
   MsgStream log(msgSvc(), name() );
 
   log << MSG::VERBOSE << "Get alternative DB for '" << path << "'" << endmsg;
@@ -135,11 +141,15 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
   }
   
   // loop over alternatives
-  std::map<std::string,ICondDBReader*>::reverse_iterator alt;
+  std::map<std::string,ICondDBReader*>::const_reverse_iterator alt;
   for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
     if ( m_outputLevel <= MSG::VERBOSE ) {
       log << MSG::VERBOSE << "Comparing with " << alt->first << endmsg;
     }
+    // FIXME: (MCl) wrong logic
+    //     path=/Conditions/Velo/AlignmentCatalog.xml
+    //     alt.=/Conditions/Velo/Alignment
+    //     Should not match
     if ( ( path.size() >= alt->first.size() ) &&
          ( path.substr(0,alt->first.size()) == alt->first ) ){
       if ( m_outputLevel <= MSG::VERBOSE ) {
@@ -164,19 +174,104 @@ ICondDBReader *CondDBDispatcherSvc::alternativeFor(const std::string &path) {
 StatusCode CondDBDispatcherSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel) {
-  return alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
+  StatusCode sc;
+  if (m_xmlDirectMapping && isFolderSet(path)) {
+    descr = "Catalog generated automatically by " + name();
+    since = Gaudi::Time::epoch();
+    until = Gaudi::Time::max();
+    sc = CondDB::generateXMLCatalog(this,path,data);
+  } else {
+    sc = alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
+  }
+  return sc;
 }
 StatusCode CondDBDispatcherSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel) {
-  return alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
+  StatusCode sc;
+  if (m_xmlDirectMapping && isFolderSet(path)) {
+    descr = "Catalog generated automatically by " + name();
+    since = Gaudi::Time::epoch();
+    until = Gaudi::Time::max();
+    sc = CondDB::generateXMLCatalog(this,path,data);
+  } else {
+    sc = alternativeFor(path)->getObject(path,when,data,descr,since,until,channel);
+  }
+  return sc;
 }
 
 //=========================================================================
 //  get the list of child nodes of a folderset
 //=========================================================================
 StatusCode CondDBDispatcherSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
-  return alternativeFor(path)->getChildNodes(path,node_names);
+  return getChildNodes(path,node_names,node_names);
+}
+
+//=========================================================================
+//  get the list of child nodes of a folderset
+//=========================================================================
+StatusCode CondDBDispatcherSvc::getChildNodes (const std::string &path,
+                                               std::vector<std::string> &folders,
+                                               std::vector<std::string> &foldersets) {
+  // clear the destination vectors
+  folders.clear();
+  foldersets.clear();
+  
+  // Get the folders and foldersets from the dedicated alternative
+  std::vector<std::string> tmpv1,tmpv2;
+  StatusCode sc = alternativeFor(path)->getChildNodes(path,tmpv1,tmpv2);
+  if (sc.isFailure()) return sc;
+  
+  // Find alternatives for subfolders of the path.
+  std::map<std::string,ICondDBReader*>::reverse_iterator alt;
+  std::string::size_type path_size = path.size();
+  for ( alt = m_alternatives.rbegin(); alt != m_alternatives.rend(); ++alt ) {
+    // check if the path for the alternative is a subfolder of the required path
+    // i.e. alt->first should be = path + '/' + extra
+    if ( ( alt->first.size() > (path_size+1) ) && // it must be long enough
+         ( alt->first[path_size] == '/' ) &&
+         ( alt->first.substr(0,path_size) == path ) ){
+      // take the name of the child folder[set] implied by the alternative
+      // i.e. substring from after (path+'/') to the next '/'
+      std::string sub = alt->first.substr(path_size+1,
+                                          alt->first.find('/',path_size+1)-(path_size+1));
+      if (std::find(tmpv1.begin(),tmpv1.end(),sub) == tmpv1.end() &&
+          std::find(tmpv2.begin(),tmpv2.end(),sub) == tmpv2.end()){
+        // this subnode is an addition due to the alternative
+        // let's check the type
+        if (alt->second->isFolder(path+'/'+sub))
+          tmpv1.push_back(sub); // folder
+        else
+          tmpv2.push_back(sub); // folderset
+      }
+    }
+  }
+  
+  // copy the temporary vectors to the output ones 
+  folders = tmpv1;
+  foldersets = tmpv2;
+  return sc;
+}
+
+//=========================================================================
+// Tells if the path is available in the database.
+//=========================================================================
+bool CondDBDispatcherSvc::exists(const std::string &path) {
+  return alternativeFor(path)->exists(path);
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folder.
+//=========================================================================
+bool CondDBDispatcherSvc::isFolder(const std::string &path) {
+  return alternativeFor(path)->isFolder(path);
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folderset.
+//=========================================================================
+bool CondDBDispatcherSvc::isFolderSet(const std::string &path) {
+  return alternativeFor(path)->isFolderSet(path);
 }
 
 //=========================================================================

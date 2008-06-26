@@ -1,12 +1,14 @@
-// $Id: CondDBLayeringSvc.cpp,v 1.4 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBLayeringSvc.cpp,v 1.5 2008-06-26 14:22:45 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/Time.h"
 
 // local
 #include "CondDBLayeringSvc.h"
+#include "CondDBCommon.h"
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBLayeringSvc)
@@ -24,6 +26,10 @@ CondDBLayeringSvc::CondDBLayeringSvc( const std::string& name, ISvcLocator* svcl
   Service(name,svcloc) {
   
   declareProperty("Layers",  m_layersNames );
+
+  declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
+                  "Allow direct mapping from CondDB structure to"
+                  " transient store.");
 
 }
 //=============================================================================
@@ -101,23 +107,43 @@ StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::T
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, cool::ChannelId channel)
 {
-  std::vector<ICondDBReader*>::iterator layer;
-  bool found_object = false;
-  for ( layer = m_layers.begin(); layer != m_layers.end() && ! found_object; ++layer ) {
-    found_object = (*layer)->getObject(path,when,data,descr,since,until,channel).isSuccess();
+  StatusCode sc;
+  if (m_xmlDirectMapping && isFolderSet(path)) {
+    descr = "Catalog generated automatically by " + name();
+    since = Gaudi::Time::epoch();
+    until = Gaudi::Time::max();
+    sc = CondDB::generateXMLCatalog(this,path,data);
+  } else {
+    std::vector<ICondDBReader*>::iterator layer;
+    sc = StatusCode::FAILURE;
+    for ( layer = m_layers.begin();
+          layer != m_layers.end() && sc.isFailure();
+          ++layer ) {
+      sc = (*layer)->getObject(path,when,data,descr,since,until,channel);
+    }
   }
-  return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return sc;
 }
 StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::Time &when,
                                            DataPtr &data,
                                            std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel)
 {
-  std::vector<ICondDBReader*>::iterator layer;
-  bool found_object = false;
-  for ( layer = m_layers.begin(); layer != m_layers.end() && ! found_object; ++layer ) {
-    found_object = (*layer)->getObject(path,when,data,descr,since,until,channel).isSuccess();
+  StatusCode sc;
+  if (m_xmlDirectMapping && isFolderSet(path)) {
+    descr = "Catalog generated automatically by " + name();
+    since = Gaudi::Time::epoch();
+    until = Gaudi::Time::max();
+    sc = CondDB::generateXMLCatalog(this,path,data);
+  } else {
+    std::vector<ICondDBReader*>::iterator layer;
+    sc = StatusCode::FAILURE;
+    for ( layer = m_layers.begin();
+          layer != m_layers.end() && sc.isFailure();
+          ++layer ) {
+      sc = (*layer)->getObject(path,when,data,descr,since,until,channel);
+    }
   }
-  return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return sc;
 }
 
 //=========================================================================
@@ -125,13 +151,79 @@ StatusCode CondDBLayeringSvc::getObject (const std::string &path, const Gaudi::T
 //=========================================================================
 StatusCode CondDBLayeringSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names)
 {
-  std::vector<ICondDBReader*>::iterator layer;
-  bool found_folderset = false;
-  for ( layer = m_layers.begin(); layer != m_layers.end() && ! found_folderset; ++layer ) {
-    found_folderset = (*layer)->getChildNodes(path,node_names).isSuccess();
-  }
-  return (found_folderset) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return getChildNodes(path,node_names,node_names);
 }
+
+namespace {
+  // helper function
+  template <class Input, class Output>
+  void merge(const Input &i, Output &o){
+    typename Input::const_iterator it;
+    for (it = i.begin(); it != i.end(); ++it){
+      if (std::find(o.begin(),o.end(),*it)==o.end()) {
+        o.push_back(*it);
+      }
+    }
+  }
+}
+//=========================================================================
+//  get the list of child nodes of a folderset
+//=========================================================================
+StatusCode CondDBLayeringSvc::getChildNodes (const std::string &path,
+                                             std::vector<std::string> &folders,
+                                             std::vector<std::string> &foldersets)
+{
+  // clear the destination vectors
+  folders.clear();
+  foldersets.clear();
+  
+  // Get the folders and foldersets from the dedicated alternative
+  std::vector<std::string> tmpv1,tmpv2;
+  StatusCode sc = StatusCode::FAILURE;
+  std::vector<ICondDBReader*>::iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    if ((*layer)->getChildNodes(path,tmpv1,tmpv2).isSuccess()){
+      // we consider it a success if it worked at least for one of the layers
+      sc = StatusCode::SUCCESS;
+      merge(tmpv1,folders);
+      merge(tmpv2,foldersets);
+    }
+  }
+  return sc;
+}
+//=========================================================================
+// Tells if the path is available in the database.
+//=========================================================================
+bool CondDBLayeringSvc::exists(const std::string &path) {
+  std::vector<ICondDBReader*>::const_iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    if ((*layer)->exists(path)) return true;
+  }
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folder.
+//=========================================================================
+bool CondDBLayeringSvc::isFolder(const std::string &path) {
+  std::vector<ICondDBReader*>::const_iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    if ((*layer)->exists(path)) return (*layer)->isFolder(path);
+  }
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folderset.
+//=========================================================================
+bool CondDBLayeringSvc::isFolderSet(const std::string &path) {
+  std::vector<ICondDBReader*>::const_iterator layer;
+  for ( layer = m_layers.begin(); layer != m_layers.end(); ++layer ) {
+    if ((*layer)->exists(path)) return (*layer)->isFolderSet(path);
+  }
+  return false;
+}
+
 
 //=========================================================================
 // Collect the list of used tags and databases

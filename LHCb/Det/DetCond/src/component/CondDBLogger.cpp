@@ -1,4 +1,4 @@
-// $Id: CondDBLogger.cpp,v 1.2 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBLogger.cpp,v 1.3 2008-06-26 14:22:45 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -161,10 +161,65 @@ StatusCode CondDBLogger::getChildNodes (const std::string &path, std::vector<std
   if ( m_loggedReader ) {
     (*m_logFile) << "GCH: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
     StatusCode sc = m_loggedReader->getChildNodes(path,node_names);
-    (*m_logFile) << sc << path << std::endl;
+    (*m_logFile) << sc << std::endl;
     return sc;
   }
   return StatusCode::FAILURE;
+}
+
+//=========================================================================
+//  get the list of child nodes of a folderset
+//=========================================================================
+StatusCode CondDBLogger::getChildNodes (const std::string &path,
+                                        std::vector<std::string> &folders,
+                                        std::vector<std::string> &foldersets)
+{
+  if ( m_loggedReader ) {
+    (*m_logFile) << "GCH: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
+    StatusCode sc = m_loggedReader->getChildNodes(path,folders,foldersets);
+    (*m_logFile) << sc << std::endl;
+    return sc;
+  }
+  return StatusCode::FAILURE;
+}
+
+//=========================================================================
+// Tells if the path is available in the database.
+//=========================================================================
+bool CondDBLogger::exists(const std::string &path) {
+  if ( m_loggedReader ) {
+    (*m_logFile) << "XST: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
+    bool out = m_loggedReader->exists(path);
+    (*m_logFile) << out << std::endl;
+    return out;
+  }
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folder.
+//=========================================================================
+bool CondDBLogger::isFolder(const std::string &path) {
+  if ( m_loggedReader ) {
+    (*m_logFile) << "IFL: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
+    bool out = m_loggedReader->isFolder(path);
+    (*m_logFile) << out << std::endl;
+    return out;
+  }
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folderset.
+//=========================================================================
+bool CondDBLogger::isFolderSet(const std::string &path) {
+  if ( m_loggedReader ) {
+    (*m_logFile) << "IFS: " << Gaudi::Time::current().ns() << " " << path <<  " " << std::flush;
+    bool out = m_loggedReader->isFolderSet(path);
+    (*m_logFile) << out << std::endl;
+    return out;
+  }
+  return false;
 }
 
 //=========================================================================

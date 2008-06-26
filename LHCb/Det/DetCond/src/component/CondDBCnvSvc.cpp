@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.14 2008-01-26 15:47:46 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.15 2008-06-26 14:22:45 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -157,6 +157,34 @@ StatusCode CondDBCnvSvc::getObject (const std::string &path, const Gaudi::Time &
 StatusCode CondDBCnvSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names)
 {
   return m_dbReader->getChildNodes(path,node_names);
+}
+
+StatusCode CondDBCnvSvc::getChildNodes (const std::string &path,
+                                        std::vector<std::string> &folders,
+                                        std::vector<std::string> &foldersets)
+{
+  return m_dbReader->getChildNodes(path,folders,foldersets);
+}
+
+//=========================================================================
+// Tells if the path is available in the database.
+//=========================================================================
+bool CondDBCnvSvc::exists(const std::string &path) {
+  return m_dbReader->exists(path);
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folder.
+//=========================================================================
+bool CondDBCnvSvc::isFolder(const std::string &path) {
+  return m_dbReader->isFolder(path);
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folderset.
+//=========================================================================
+bool CondDBCnvSvc::isFolderSet(const std::string &path) {
+  return m_dbReader->isFolder(path);
 }
 
 void CondDBCnvSvc::defaultTags( std::vector<LHCb::CondDBNameTagPair>& tags) const

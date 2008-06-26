@@ -1,9 +1,22 @@
-# $Id: release.notes,v 1.134 2008-06-24 09:41:53 marcocle Exp $
+# $Id: release.notes,v 1.135 2008-06-26 14:22:45 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-06-24 - Marco Clemencic
+ - Improved direct mapping between the COOL hierarchy and the transient store
+   one:
+   - direct mapping enabled by default (can be turned off via options to improve
+     the performances of CondDBLayeringSvc and CondDBDispatcherSvc)
+   - correct mapping in CondDBDispatcherSvc and CondDBLayeringSvc:
+     - CondDBDispatcherSvc: add entries implied by alternatives
+     - CondDBLayeringSvc: expose all the possible entries
+   - modified ICondDBReader (needed for a generic implementation of the mapping)
+   - added tests for foreseen use-cases
+   - the code to generate the XML catalog has been moved to a separate file to
+     be shared among the implementations of ICondDBReader
 
 ! 2008-06-24 - Marco Clemencic
  - Fixed a bug in the direct mapping between the hierarchy of the COOL

@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.8 2008-06-24 09:41:54 marcocle Exp $
+// $Id: CondDBCache.h,v 1.9 2008-06-26 14:22:45 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -82,6 +82,8 @@ public:
   
   void getSubNodes(const std::string &path, std::vector<std::string> &node_names);
 
+  void getSubNodes(const std::string &path, std::vector<std::string> &folders, std::vector<std::string> &foldersets);
+
   /// Remove all entries from the cache;
   inline void clear() {m_cache.clear();}
   
@@ -97,10 +99,20 @@ public:
   
   void clean_up();
 
-  /// Check if the given path is present in the cash.
+  /// Check if the given path is present in the cache.
   inline bool hasPath(const std::string &path) const { return m_cache.count(path); }
   
-  /// Check if the given path,time pair is present in the cash.
+  /// Check if the path is a folderset.
+  inline bool isFolderSet(const std::string &path) const {
+    return hasPath(path) && (m_cache.find(path)->second.spec.get() == 0);
+  }
+
+  /// Check if the path is a folderset.
+  inline bool isFolder(const std::string &path) const {
+    return hasPath(path) && (m_cache.find(path)->second.spec.get() != 0);
+  }
+  
+  /// Check if the given path,time pair is present in the cache.
   bool hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const;
 
   void dump();

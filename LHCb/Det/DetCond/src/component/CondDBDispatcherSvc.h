@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.5 2008-01-26 15:47:46 marcocle Exp $
+// $Id: CondDBDispatcherSvc.h,v 1.6 2008-06-26 14:22:45 marcocle Exp $
 #ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
@@ -49,6 +49,20 @@ public:
   /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
 
+  /// Retrieve the names of the children nodes of a FolderSet divided in folders and foldersets.
+  virtual StatusCode getChildNodes (const std::string &path,
+                                    std::vector<std::string> &folders,
+                                    std::vector<std::string> &foldersets);
+
+  /// Tells if the path is available in the database.
+  virtual bool exists(const std::string &path);
+  
+  /// Tells if the path (if it exists) is a folder.
+  virtual bool isFolder(const std::string &path);
+  
+  /// Tells if the path (if it exists) is a folderset.
+  virtual bool isFolderSet(const std::string &path);
+
   // --------- ICondDBInfo implementation
 
   /** Get the current default database tags
@@ -66,7 +80,7 @@ protected:
 
 private:
 
-  ICondDBReader *alternativeFor(const std::string &path);
+  ICondDBReader *alternativeFor(const std::string &path) const;
 
   // -------------------- Data Members
 
@@ -84,6 +98,10 @@ private:
   /// Container fo the alternatives.
   std::map<std::string,ICondDBReader*> m_alternatives;
 
+  /// Enable/disable direct mapping from the database structure to the transient
+  /// store using XML persistency format (enabled by default).
+  bool m_xmlDirectMapping;
+  
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<CondDBDispatcherSvc>;
 

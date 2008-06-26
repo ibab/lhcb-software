@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.52 2008-06-24 09:41:54 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.53 2008-06-26 14:22:45 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -33,6 +33,8 @@
 #include "CondDBAccessSvc.h"
 #include "CondDBCache.h"
 
+#include "CondDBCommon.h"
+
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBAccessSvc)
 
@@ -53,9 +55,6 @@ namespace {
 //
 // 2005-01-11 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
-
-// ==== Static data members
-std::auto_ptr<cool::RecordSpecification> CondDBAccessSvc::s_XMLstorageSpec(NULL);
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -81,15 +80,9 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   declareProperty("ConnectionTimeOut", m_connectionTimeOut = 120 );
   
   declareProperty("LazyConnect",      m_lazyConnect      = true  );
-  declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = false,
-                  "(experimental) Allow direct mapping from CondDB structure to"
+  declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
+                  "Allow direct mapping from CondDB structure to"
                   " transient store.");
-  
-  if ( s_XMLstorageSpec.get() == NULL){
-    // attribute list spec template
-    s_XMLstorageSpec = std::auto_ptr<cool::RecordSpecification>(new cool::RecordSpecification());
-    s_XMLstorageSpec->extend("data", cool::StorageType::String16M);
-  }
 }
 //=============================================================================
 // Destructor
@@ -401,7 +394,7 @@ StatusCode CondDBAccessSvc::createNode(const std::string &path,
         cool::FolderSpecification spec((vers == SINGLE)
                                        ?cool::FolderVersioning::SINGLE_VERSION
                                        :cool::FolderVersioning::MULTI_VERSION,
-                                       *s_XMLstorageSpec);
+                                       CondDB::getXMLStorageSpec());
         
         // append to the description the storage type
         std::ostringstream _descr;
@@ -886,6 +879,63 @@ StatusCode CondDBAccessSvc::i_getObject(const std::string &path, const Gaudi::Ti
 //=========================================================================
 //
 //=========================================================================
+StatusCode CondDBAccessSvc::getChildNodes (const std::string &path,
+                                           std::vector<std::string> &folders,
+                                           std::vector<std::string> &foldersets) {
+  MsgStream log(msgSvc(),name());
+  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
+
+  folders.clear();
+  foldersets.clear();
+  
+  try {
+
+    if (!m_noDB) { // If I have the DB I always use it!
+      DataBaseOperationLock dbLock(this);
+      if (database()->existsFolderSet(path)) {
+        log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
+        
+        cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
+
+        std::vector<std::string> fldr_names = folderSet->listFolders();
+        std::vector<std::string> fldrset_names = folderSet->listFolderSets();
+
+        for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
+          log << MSG::DEBUG << *f << endmsg;
+          folders.push_back(f->substr(f->rfind('/')+1));
+        }
+        for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
+          log << MSG::DEBUG << *f << endmsg;
+          foldersets.push_back(f->substr(f->rfind('/')+1));
+        }
+
+        log << MSG::DEBUG << "got " << folders.size() << " sub folders" << endmsg;
+        log << MSG::DEBUG << "got " << foldersets.size() << " sub foldersets" << endmsg;
+      } else {
+        // cannot get the sub-nodes of a folder!
+        return StatusCode::FAILURE;
+      }
+    } else if (m_useCache) {
+      // if no db, but cache, let's assume we know everything is in there
+      m_cache->getSubNodes(path,folders,foldersets);
+    } else {
+      // no cache and no db
+      return StatusCode::FAILURE;
+    }
+  } catch ( cool::FolderNotFound /*&e*/) {
+    //log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  } catch (coral::Exception &e) {
+    report_exception(log,"got CORAL exception",e);
+  }
+  return StatusCode::SUCCESS;
+
+  
+}
+
+//=========================================================================
+//
+//=========================================================================
 StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
 
   MsgStream log(msgSvc(),name());
@@ -907,11 +957,11 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
 
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
-          node_names.push_back(f->substr(f->rfind('/')));
+          node_names.push_back(f->substr(f->rfind('/')+1));
         }
         for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
-          node_names.push_back(f->substr(f->rfind('/')));
+          node_names.push_back(f->substr(f->rfind('/')+1));
         }
 
         log << MSG::DEBUG << "got " << node_names.size() << " sub folders" << endmsg;
@@ -934,6 +984,75 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
   }
   return StatusCode::SUCCESS;
 
+}
+
+//=========================================================================
+// Tells if the path is available in the database.
+//=========================================================================
+bool CondDBAccessSvc::exists(const std::string &path) {
+  
+  try {
+
+    if (!m_noDB) { // If I have the DB I always use it!
+      DataBaseOperationLock dbLock(this);
+      return database()->existsFolderSet(path) || database()->existsFolder(path);
+    } else if (m_useCache) {
+      // if no db, but cache, let's assume we know everything is in there
+      return m_cache->hasPath(path);
+    }
+    
+  } catch (coral::Exception &e) {
+    MsgStream log(msgSvc(),name());
+    report_exception(log,"got CORAL exception",e);
+  }
+  // if we do not have neither DB nor cache, or we got an exception
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folder.
+//=========================================================================
+bool CondDBAccessSvc::isFolder(const std::string &path) {
+  
+  try {
+
+    if (!m_noDB) { // If I have the DB I always use it!
+      DataBaseOperationLock dbLock(this);
+      return database()->existsFolder(path);
+    } else if (m_useCache) {
+      // if no db, but cache, let's assume we know everything is in there
+      return m_cache->isFolder(path);
+    }
+    
+  } catch (coral::Exception &e) {
+    MsgStream log(msgSvc(),name());
+    report_exception(log,"got CORAL exception",e);
+  }
+  // if we do not have neither DB nor cache, or we got an exception
+  return false;
+}
+
+//=========================================================================
+// Tells if the path (if it exists) is a folderset.
+//=========================================================================
+bool CondDBAccessSvc::isFolderSet(const std::string &path) {
+  
+  try {
+
+    if (!m_noDB) { // If I have the DB I always use it!
+      DataBaseOperationLock dbLock(this);
+      return database()->existsFolderSet(path);
+    } else if (m_useCache) {
+      // if no db, but cache, let's assume we know everything is in there
+      return m_cache->isFolderSet(path);
+    }
+    
+  } catch (coral::Exception &e) {
+    MsgStream log(msgSvc(),name());
+    report_exception(log,"got CORAL exception",e);
+  }
+  // if we do not have neither DB nor cache, or we got an exception
+  return false;
 }
 
 //=========================================================================
@@ -1008,7 +1127,7 @@ StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std
 StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
   std::ostringstream _descr;
   _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
-  return cacheAddFolder(path,_descr.str(),*s_XMLstorageSpec);
+  return cacheAddFolder(path,_descr.str(),CondDB::getXMLStorageSpec());
 }
 
 //=========================================================================
@@ -1045,7 +1164,7 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const Gaudi:
 StatusCode CondDBAccessSvc::cacheAddXMLData(const std::string &path, const Gaudi::Time &since, const Gaudi::Time &until,
                                             const std::string &data, cool::ChannelId channel) {
   /// @todo this is affected by the evolution in COOL API
-  cool::Record payload(*s_XMLstorageSpec);
+  cool::Record payload(CondDB::getXMLStorageSpec());
   payload["data"].setValue<cool::String16M>(data);
   return cacheAddObject(path,since,until,payload,channel);
 }
@@ -1089,16 +1208,6 @@ void CondDBAccessSvc::dumpCache() const {
 //
 //=========================================================================
 void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path){
-  // Get the names of sub-folders and sub-foldersets
-  std::vector<std::string> fldr_names, fldrset_names;
-  {
-    // Get the child nodes.
-    DataBaseOperationLock dbLock(this);
-    cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
-    fldr_names = folderSet->listFolders();
-    fldrset_names = folderSet->listFolderSets();
-  }
-  
   // Use the name of the folderset as catalog name.
   std::string::size_type pos = path.rfind('/');
   if ( std::string::npos == pos ) {
@@ -1107,34 +1216,13 @@ void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path)
     ++pos;
   }
   std::string folderset_name = path.substr(pos);
-  std::string object_name;
+
+  // Get the names of sub-folders and sub-foldersets
+  std::vector<std::string> fldr_names, fldrset_names;
+  getChildNodes(path, fldr_names, fldrset_names).ignore();
   
-  std::ostringstream xml; // buffer for the XML
-  // XML header, root element and catalog initial tag
-  xml << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
-      << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">"
-      << "<DDDB><catalog name=\"" << folderset_name << "\">";
-  // sub-folders are considered as container of conditions
-  for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
-    pos = f->rfind('/');
-    (std::string::npos == pos) ? pos = 0 : ++pos;
-    object_name = f->substr(pos);
-    xml << "<conditionref href=\"" << folderset_name << '/' << object_name;
-    // If the folder has a ".xml" extension, we remove it for the actual object
-    // name
-    if (object_name.substr(object_name.size()-4) == ".xml"){
-      xml << "#" << object_name.substr(0,object_name.size()-4);
-    }
-    xml << "\"/>";
-  }
-  // sub-foldersets are considered as catalogs
-  for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
-    pos = f->rfind('/');
-    (std::string::npos == pos) ? pos = 0 : ++pos;
-    xml << "<catalogref href=\"" << folderset_name << '/' << f->substr(pos) << "\"/>";
-  }
-  // catalog and root element final tag
-  xml << "</catalog></DDDB>";
+  std::string xml;
+  CondDB::generateXMLCatalog(folderset_name,fldr_names,fldrset_names,xml);
   
   // Put the data in the cache
   if ( ! m_cache->hasPath(path) )
@@ -1143,7 +1231,7 @@ void CondDBAccessSvc::i_generateXMLCatalogFromFolderset(const std::string &path)
   // This is needed because we cannot add objects valid for the current event
   // to the cache using the ICondDBAccessSvc API. 
   bool check_enabled = m_cache->setIOVCheck(false);
-  cacheAddXMLData(path,Gaudi::Time::epoch(),Gaudi::Time::max(),xml.str(),0).ignore();
+  cacheAddXMLData(path,Gaudi::Time::epoch(),Gaudi::Time::max(),xml,0).ignore();
   m_cache->setIOVCheck(check_enabled);
 
 }

@@ -1,4 +1,4 @@
-// $Id: ICondDBReader.h,v 1.4 2008-01-26 16:28:14 marcocle Exp $
+// $Id: ICondDBReader.h,v 1.5 2008-06-26 14:22:45 marcocle Exp $
 #ifndef DETCOND_ICONDDBREADER_H 
 #define DETCOND_ICONDDBREADER_H 1
 
@@ -25,7 +25,7 @@ namespace cool {
   class IRecord;
 }
 
-static const InterfaceID IID_ICondDBReader ( "ICondDBReader", 1, 0 );
+static const InterfaceID IID_ICondDBReader ( "ICondDBReader", 1, 1 );
 
 /** @class ICondDBReader ICondDBReader.h DetCond/ICondDBReader.h
  *  
@@ -54,9 +54,23 @@ public:
                                 DataPtr &data,
                                 std::string &descr, Gaudi::Time &since, Gaudi::Time &until, const std::string &channel) = 0;
 
-    /// Retrieve the names of the children nodes of a FolderSet.
+  /// Retrieve the names of the children nodes of a FolderSet.
   virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names) = 0;
 
+  /// Retrieve the names of the children nodes of a FolderSet divided in folders and foldersets.
+  virtual StatusCode getChildNodes (const std::string &path,
+                                    std::vector<std::string> &folders,
+                                    std::vector<std::string> &foldersets) = 0;
+
+  /// Tells if the path is available in the database.
+  virtual bool exists(const std::string &path) = 0;
+  
+  /// Tells if the path (if it exists) is a folder.
+  virtual bool isFolder(const std::string &path) = 0;
+  
+  /// Tells if the path (if it exists) is a folderset.
+  virtual bool isFolderSet(const std::string &path) = 0;
+  
 protected:
 
 private:
