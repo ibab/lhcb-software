@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.17 2008-04-23 13:55:19 cattanem Exp $ 
+! $Id: release.notes,v 1.18 2008-06-26 13:13:35 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r1
+ - src/CaloPhotonChecker.cpp
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
 
 !========================== CaloMoniDst v3r0p2 2008-04-23 ===================
 ! 2008-04-23 - Marco Cattaneo
