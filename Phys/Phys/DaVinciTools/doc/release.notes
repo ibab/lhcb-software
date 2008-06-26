@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.330 2008-06-09 14:25:45 jpalac Exp $
+! $Id: release.notes,v 1.331 2008-06-26 13:54:41 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v16r2
+ - src/GeomDispCalculator{.cpp, .h}
+ - src/TrgDispCalculator.cpp
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
 
 !======================== DaVinciTools v16r1 2008-06-09 =====================
 
