@@ -4,6 +4,12 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!======================= GiGaVisUI v5r0 2008-06-26 ===========================
+! 2008-06-17 - Gloria CORTI
+ - Remove G4GAGTree as graphic system as it is no longer available in 
+   Geant4 v90r2 (see g4 release notes:
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+
 !======================= GiGaVisUI v4r0 2007-03-16 ===========================
 ! 2007-01-12 - Gloria Corti
  - Remove making public includes directory that does not exist

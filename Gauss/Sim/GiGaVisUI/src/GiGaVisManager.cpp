@@ -1,12 +1,10 @@
-// $Id: GiGaVisManager.cpp,v 1.5 2007-01-12 15:48:37 ranjard Exp $
+// $Id: GiGaVisManager.cpp,v 1.6 2008-06-26 11:40:34 gcorti Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h"
-// from GiGa 
-//#include "GiGa/GiGaMACROs.h"
 
 // local
 #include "GiGaVisManager.h"
@@ -16,7 +14,6 @@
 // Not needing external packages or libraries...
 #include "G4ASCIITree.hh"
 #include "G4DAWNFILE.hh"
-#include "G4GAGTree.hh"
 #include "G4RayTracer.hh"
 #include "G4VRML1File.hh"
 #include "G4VRML2File.hh"
@@ -78,7 +75,6 @@ namespace GiGaVisManagerLocal
     {
       // Graphics Systems not needing external packages or libraries...
       RegisterGraphicsSystem (new G4ASCIITree);
-      RegisterGraphicsSystem (new G4GAGTree);
       RegisterGraphicsSystem (new G4DAWNFILE);
       RegisterGraphicsSystem (new G4RayTracer);
       RegisterGraphicsSystem (new G4VRML1File);
