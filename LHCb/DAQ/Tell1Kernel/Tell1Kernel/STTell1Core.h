@@ -1,4 +1,4 @@
-// $Id: STTell1Core.h,v 1.2 2008-06-20 12:27:06 akeune Exp $
+// $Id: STTell1Core.h,v 1.3 2008-06-26 07:20:15 akeune Exp $
 #ifndef STTELL1CORE_H 
 #define STTELL1CORE_H 1
 
@@ -30,7 +30,8 @@ namespace STTELL1{
     SECTORS=48,
     ALINKS=96,
     PP_MAX_CLUSTERS=255,
-    HEADER_CORRECTIONS=4
+    HEADER_CORRECTIONS=4,
+    HEADER_THRESHOLDS=2
   };
 
   // as defined in tell1lib: st/st_offline.h
@@ -77,7 +78,7 @@ namespace STTELL1{
   typedef std::map<unsigned int,LinkVec> LinkMap;
   
   // header correction values
-  typedef u_int32_t HeaderThreshold [HEADER_CORRECTIONS];
+  typedef u_int32_t HeaderThreshold [HEADER_THRESHOLDS];
   typedef std::vector<u_int32_t> HeaderThresholdVec;
   typedef std::map<unsigned int,HeaderThresholdVec> HeaderThresholdMap;
   typedef std::vector<u_int32_t>::iterator HeaderThresholdIT;
