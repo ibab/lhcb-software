@@ -26,7 +26,7 @@ LHCb::MC::MCTrackGeomCriteria::FunctionMap::FunctionMap(){
   // constructer
   m_mapping = 
       boost::assign::map_list_of("hasVeloAndT",&MCTrackInfo::hasVeloAndT)
-                         ("hasTT",&MCTrackInfo::hasVelo)
+                         ("hasTT",&MCTrackInfo::hasTT)
                          ("hasT",&MCTrackInfo::hasT)
                          ("hasVelo",&MCTrackInfo::hasVelo)
                          ("hasVeloR",&MCTrackInfo::hasVeloR)
@@ -43,7 +43,7 @@ LHCb::MC::MCTrackGeomCriteria::FunctionMap::FunctionMap(){
                          ("hasT2",&MCTrackInfo::hasT2)
                          ("hasT3",&MCTrackInfo::hasT3)
                          ("accVeloAndT",&MCTrackInfo::accVeloAndT)
-                         ("accTT",&MCTrackInfo::accVelo)
+                         ("accTT",&MCTrackInfo::accTT)
                          ("accT",&MCTrackInfo::accT)
                          ("accVelo",&MCTrackInfo::accVelo)
                          ("accVeloR",&MCTrackInfo::accVeloR)
