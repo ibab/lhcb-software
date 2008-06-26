@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.55 2008-06-04 08:28:35 cattanem Exp $ 
+! $Id: release.notes,v 1.56 2008-06-26 13:07:16 jpalac Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r12
+ - src/CaloPhotonEstimatorTool.cpp
+ - src/CaloSingleGammaTool.cpp
+ - src/Linear.h
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
 
 !========================== CaloPIDs v4r11 2008-06-04 =========================
 ! 2008-06-04 - Marco Cattaneo
