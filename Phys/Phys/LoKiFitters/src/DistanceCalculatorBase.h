@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.2 2008-04-04 08:58:28 ibelyaev Exp $
+// $Id: DistanceCalculatorBase.h,v 1.3 2008-06-26 13:31:11 jpalac Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1
@@ -45,7 +45,7 @@ namespace LoKi
   public:
     // ========================================================================
     /// get the actual type of the line  
-    typedef Gaudi::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line_ ;
+    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line_ ;
     // ========================================================================
   public:
     // ========================================================================
