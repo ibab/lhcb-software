@@ -4,6 +4,16 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v9r0 2008-06-26 =========================
+! 2008-06-26 - Gloria CORTI
+ - Adapt to change in Geant4 v92r0 (9.0.p02) where kCarTolerance is no
+   longer available and has to be replaced by GetSurfaceTolerance() method
+   of G4GeometryTolerance (see geant4 release notes
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+   . src/PhysProcess/RichHpdPhotoElectricEffect.cpp
+   . src/srcG4/RichG4OpBoundaryProcess.cc
+ - Use pattern from Gaudi v19r9 for genConf helper library
+
 ! 2008-06-24 - Chris Jones
  - Adapt to change in RichDet detector element locations
 

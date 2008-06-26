@@ -61,6 +61,7 @@
 #include "RichG4OpBoundaryProcess.hh"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichG4GaussPathNames.h"
+#include "G4GeometryTolerance.hh"
 
 #include "GaussTools/GaussTrackInformation.h"
 #include "RichInfo.h"
@@ -145,6 +146,10 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 	        return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 	}
 
+  //GC kCarTolerance removed from G4 9.0, class G4GeometryTolerance to
+  //   be used instead so add the following line. kCarTolerance can be
+  //   adjusted before setting up the geometry
+  G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
 	if (aTrack.GetStepLength()<=kCarTolerance/2){
 	        theStatus = StepTooSmall;
 	        return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
@@ -594,6 +599,7 @@ void RichG4OpBoundaryProcess::DielectricDielectric(const G4Track& aTrack,
 	   G4double EdotN = OldPolarization * theFacetNormal;
 
 	   cost1 = - PdotN;
+     G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
 	   if (std::abs(cost1) < 1.0-kCarTolerance){
 	      sint1 = std::sqrt(1.-cost1*cost1);
 	      sint2 = sint1*Rindex1/Rindex2;     // *** Snell's Law ***

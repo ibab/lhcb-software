@@ -5,6 +5,7 @@
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessVector.hh"
 #include "G4ProcessManager.hh"
+#include "G4GeometryTolerance.hh"
 
 #include "CLHEP/Units/PhysicalConstants.h"
 #include <math.h>
@@ -113,6 +114,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
 
   }
 
+  //GC kCarTolerance removed from G4 9.0, class G4GeometryTolerance to
+  //   be used instead so add the following line. kCarTolerance can be
+  //   adjusted before setting up the geometry
+  G4double kCarTolerance = G4GeometryTolerance::GetInstance()->GetSurfaceTolerance();
   if (aTrack.GetStepLength()<=kCarTolerance/2) {
     //  G4cout<<"Too small step length at hpd  ph cathode boundary "
     //     <<aTrack.GetStepLength()<<G4endl;
