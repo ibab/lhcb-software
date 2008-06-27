@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-06-27 - Patrick Koppenburg
+ - DecayTreeTuple : Use HLT context.
+
 ! 2008-06-25 - Patrick Koppenburg
  - Use ANNSvc::keys method
 

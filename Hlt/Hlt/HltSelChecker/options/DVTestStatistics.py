@@ -20,7 +20,7 @@ importOptions("$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts")
 # importOptions("$HLTSELECTIONSROOT/options/MinimumBiasRaw.opts")
 # importOptions("$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts")
 
-ApplicationMgr().EvtMax = 1000000
+ApplicationMgr().EvtMax = 1000
 
 EventSelector().PrintFreq = 100 
 

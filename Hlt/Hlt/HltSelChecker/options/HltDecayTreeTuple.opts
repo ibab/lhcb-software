@@ -19,6 +19,7 @@
  *  @date 20080-03-07
  */
 ApplicationMgr.TopAlg += { "DecayTreeTuple/HltDecayTreeTuple" };
+HltDecayTreeTuple.Context = "HLT" ;
 // HltDecayTreeTuple.PhysDesktop.InputLocations = {"Phys/Hlt2SelBd2MuMuKstar"}; // needs to be configured
 
 // HltDecayTreeTuple.Decay = "[B0 -> (^J/psi(1S) => ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"; // needs to be configured
