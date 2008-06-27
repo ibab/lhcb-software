@@ -21,8 +21,105 @@
                    initList = 'm_word0(word0), m_word1(word1), m_word2(word2),
                               m_word3(word3) , m_word4(word4), m_word5(0),
                               m_word6(0), m_word7(0), m_word8(0), m_word9(0),
-                              m_word10(0), m_word11(0), m_word12(0), m_word13(0)'>
+                              m_word10(0), m_word11(0), m_word12(0), m_word13(0), m_badLinks()'>
    </constructor>
+
+
+  <enum access = 'PUBLIC'
+    name = 'FailureMode' 
+    desc = 'enumerate failure modes' 
+    value = 'kNone = 0,  kOptLinkDisabled = 1 , kTlkLinkLoss = 2,  
+             kOptLinkNoClock  = 3, kSyncRAMFull = 4, kSyncEvtSize =5, 
+             kOptLinkNoEvent  =6 , kPseudoHeader = 7, kWrongPCN = 8'
+    unknownValue = 'kNone'
+    strTypConv = 'TRUE'>
+  </enum>
+
+
+   <enum access = 'PRIVATE'
+     name = 'Tell1Const'
+     desc = 'few useful constants'
+     value = 'nPort = 4, nBeetle = 6'
+    >
+     </enum>
+
+  <typedef
+     type   = "GaudiUtils::VectorMap&lt;unsigned int, LHCb::STTELL1Error::FailureMode &gt;"
+     def    = "FailureInfo"
+     desc   = "Vector of arx [ each 32 channels] with failure "
+     access = "PRIVATE" 
+  />
+
+  <method
+     name    = "addLinkInfo"
+     desc    = "Add information on a link"
+     argList = "const unsigned int key, const LHCb::STTELL1Error::FailureMode&amp; mode "
+      type    = "bool"
+   />
+
+   <method
+     name    = "linkInfo"
+     desc    = "Extract the information associated with the specified key"
+        argList = "const unsigned int beetle, 
+                   const unsigned int port, 
+                   const unsigned int pcn"
+        const   = "TRUE"
+        type    = "LHCb::STTELL1Error::FailureMode"
+    />
+
+ 
+  <method
+     name    = "badLink"
+     desc    = "link is bad for some reason"
+        argList = "const unsigned int beetle, 
+                   const unsigned int port, 
+                   const unsigned int pcn"
+        const   = "TRUE"
+        type    = "bool"
+    />
+
+   <method
+     name    = "linkID"
+     desc    = "link identifier 0 - 23 "
+        argList = "const unsigned int beetle, 
+                   const unsigned int port "
+        const   = "TRUE"
+        type    = "unsigned int"
+        access = "PRIVATE"
+    >
+    <code> return (4 * beetle + port);  </code>
+   </method>
+
+
+  <method
+    name = "flagBadLinks"
+    desc = "flag bad links"
+    argList = "const unsigned int link, const LHCb::STTELL1Error::FailureMode&amp;  mode"
+    access = "PRIVATE"
+  >
+  <code> 
+ const unsigned int start = linkID(link,0u);
+ for (unsigned int i  = start; i &lt; start + 4; ++i) {
+   addLinkInfo(i, mode);
+ }
+    </code >
+  </method>
+ 
+  <method
+     name    = "findPCN"
+     desc    = "find pcn for value for this beetle"
+        argList = "const unsigned int beetle" 
+        const   = "TRUE"
+        type    = "unsigned int"
+    />
+
+
+    <method
+       name = "fillErrorInfo"
+       desc = 'fill error information map'
+       type = "void"
+       access = "PRIVATE"
+    />
 
       <attribute
        type    = 'bitfield'
@@ -554,6 +651,14 @@
          checkMeth = 'FALSE' /> 	
 	</attribute>
 
+   <attribute
+     name    = "badLinks"
+     desc    = "list of links with failures"
+     type    = "FailureInfo"
+     getMeth = "FALSE"
+     setMeth = "FALSE"
+     access  = "PRIVATE" />
+
      <method 
      name = 'hasErrorInfo' 
      desc = 'bank has optional error words'
@@ -622,9 +727,16 @@
  m_word7 = w3;
  m_word8 = w4;
  m_word9 = w5;
+ fillErrorInfo(); // fill the map
        </code>
     </method>
 
+    <method
+     name = 'pcnVote'
+     desc = 'majority vote on pcn'
+     type = 'unsigned int'
+     const = "TRUE">
+    </method>
 
      <method 
         name    = "fillStream" 

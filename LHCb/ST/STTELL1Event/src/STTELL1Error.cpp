@@ -1,6 +1,7 @@
 
 #include "Event/STTELL1Error.h"
 #include <bitset>
+#include <map>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STTELL1Error
@@ -64,6 +65,134 @@ std::ostream& LHCb::STTELL1Error::fillStream(std::ostream& s) const
   if (hasPed() == true) {
     s << "Pedestal bank length: " << PedBankLength() << std::endl;
   }
- 
+
+  s << "Summary info " << std::endl;
+  const unsigned pcn = pcnVote();
+  s << "majority PCN vote: " << pcn << std::endl;
+  for (unsigned int iLink = 0u; iLink < nBeetle ; ++iLink){
+    for (unsigned int iPort = 0u; iPort < nPort ; ++iPort){
+      s << "Beetle:"  << iLink << " Port "<<  iPort << "Status: " <<linkInfo(iLink, iPort , pcn) << std::endl;
+    } // port
+  } // link
+
   return s << "################################################" << std::endl;
 }
+
+bool LHCb::STTELL1Error::badLink ( const unsigned int beetle,
+                                   const unsigned int port, 
+                                   const unsigned int testpcn ) const{
+
+  const unsigned int key = linkID(beetle,port);
+  LHCb::STTELL1Error::FailureInfo::iterator i = m_badLinks.find( key ) ; 
+  if (m_badLinks.end() != i) {
+    return true; 
+  }
+
+  // we have to look at the pcn if the bit is set 
+  const unsigned int pcn = findPCN(beetle);
+  return (pcn != testpcn ? true : false); 
+}
+
+bool  LHCb::STTELL1Error::addLinkInfo (const unsigned int key,  
+                                   const LHCb::STTELL1Error::FailureMode& mode ) { 
+  return m_badLinks.insert( key , mode ).second ;
+}
+
+LHCb::STTELL1Error::FailureMode LHCb::STTELL1Error::linkInfo(const unsigned int beetle, 
+                                                             const unsigned int port, 
+                                                             const unsigned int testpcn) const
+{
+
+  const unsigned int key = linkID(beetle,port);
+  LHCb::STTELL1Error::FailureInfo::iterator i = m_badLinks.find( key ) ;
+  if (m_badLinks.end() !=i) { 
+    return i->second;
+  }
+
+  // we have to look at the pcn
+  const unsigned int pcn = findPCN(beetle);
+  return (pcn != testpcn ? STTELL1Error::kWrongPCN : STTELL1Error::kNone); 
+}
+
+unsigned int LHCb::STTELL1Error::findPCN(const unsigned int beetle) const{
+
+  // get the pcn for a given beetle
+    switch (beetle) {
+      case 0: return pcnBeetle0();
+      case 1: return pcnBeetle1();
+      case 2: return pcnBeetle2();
+      case 3: return pcnBeetle3();
+      case 4: return pcnBeetle2();
+      case 5: return pcnBeetle3();
+      default : return 200u; // 
+    }
+
+    return 200u;
+}
+
+
+void LHCb::STTELL1Error::fillErrorInfo() {
+
+  for (unsigned int iLink = 0; iLink < nBeetle ; ++iLink){
+    if ( OptLnkDisable() >> iLink & 1 ) {
+      flagBadLinks(iLink,kOptLinkDisabled);      
+    }   
+    else  if ( tlkLnkLoss() >> iLink & 1 ) {
+      flagBadLinks(iLink, kTlkLinkLoss);      
+    }   
+    else if (OptLnkNoEvt() >> iLink & 1) {
+      flagBadLinks(iLink, kOptLinkNoEvent);
+     } 
+    else if (SyncRAMFull() >> iLink & 1) {
+      flagBadLinks(iLink, kSyncRAMFull);
+    }
+    else if (SyncEvtSizeError() >> iLink & 1) {
+      flagBadLinks(iLink, kSyncEvtSize);
+    }
+    else if (OptLnkNoClock() >> iLink & 1){
+      flagBadLinks(iLink, kOptLinkNoClock);
+    }
+    else {
+      // pseudo error = 1 word per port
+      for (unsigned int iPort = 0 ; iPort < nPort; ++iPort ){
+	const unsigned int link = linkID(iLink,iPort);
+        addLinkInfo(link, kPseudoHeader); 
+      } // iport 
+    } // if
+  } // iOLink  
+
+}
+
+
+unsigned int LHCb::STTELL1Error::pcnVote() const{
+
+  std::map<unsigned int, unsigned int> pcns;
+  for (unsigned int iLink = 0; iLink < nBeetle ; ++iLink){
+    unsigned int iPort = 0;
+    bool good = true;
+    while (iPort < nPort && good){
+      const unsigned int key = linkID(iLink,iPort);       
+      LHCb::STTELL1Error::FailureInfo::iterator i = m_badLinks.find( key ) ;
+      if (i != m_badLinks.end()) good = false; 
+      ++iPort;
+    }  // port
+    if (good == true){
+      // we are allowed to vote [the US system]
+      pcns[findPCN(iLink)] += 1;     
+    }
+  }  // link
+
+  // find the best
+  unsigned int majorityVote = 200;
+  unsigned int maxValue = 0;
+  std::map<unsigned int, unsigned int>::iterator iter = pcns.begin();
+  for (; iter != pcns.end() ; ++iter){
+    if (iter->second > maxValue){
+      majorityVote = iter->first;
+      maxValue = iter->second;
+    }
+  } // iter
+
+  return majorityVote;
+}
+

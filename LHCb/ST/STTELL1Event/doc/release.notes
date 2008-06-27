@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.9 2008-06-24 15:09:59 mneedham Exp $
-! Package     : STOnline
+! $Id: release.notes,v 1.10 2008-06-27 12:08:28 mneedham Exp $
+! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
+
+! 2008-06-27 M Needham
+ - Add summary info map to STTELL1Error
+ - Add majority voting for the PCN in STTELL1Error
+ - Tidy up some constants in STTELL1Error
+ - Improve printout in STTELL1Error  
 
 ! 2008-06-24 M Needham
  - Changes in printout code 
