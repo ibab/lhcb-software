@@ -1,4 +1,4 @@
-// $Id: DaVinciMCKernelDict.h,v 1.5 2008-02-14 07:20:22 cattanem Exp $
+// $Id: DaVinciMCKernelDict.h,v 1.6 2008-06-27 13:00:49 jpalac Exp $
 #ifndef DICT_DAVINCIMCKERNELDICT_H 
 #define DICT_DAVINCIMCKERNELDICT_H 1
 
@@ -15,6 +15,7 @@
 // ============================================================================
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/ICheatedLifetimeFitter.h"
+#include "Kernel/IDaVinciAssociatorsWrapper.h"
 #include "Kernel/IFilterMCParticles.h"
 #include "Kernel/IHepMC2MC.h"
 #include "Kernel/IMCParticleArrayFilter.h"

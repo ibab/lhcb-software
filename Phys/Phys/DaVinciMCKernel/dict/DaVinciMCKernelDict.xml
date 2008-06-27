@@ -3,6 +3,7 @@
 <!-- DaVinciMCKernel -->
   <class name = "IBackgroundCategory"/>
   <class name = "ICheatedLifetimeFitter"/>
+  <class name = "IDaVinciAssociatorsWrapper"/>
   <class name = "IFilterMCParticles"/>
   <class name = "IHepMC2MC"/>
   <class name = "IMCParticleArrayFilter"/>
