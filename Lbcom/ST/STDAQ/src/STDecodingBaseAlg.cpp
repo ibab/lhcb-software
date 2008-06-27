@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.8 2008-06-25 06:55:15 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.9 2008-06-27 12:09:59 mneedham Exp $
 
 #include <algorithm>
 
@@ -89,7 +89,8 @@ unsigned int STDecodingBaseAlg::pcnVote(const std::vector<RawBank* >& banks) con
   std::vector<RawBank*>::const_iterator iterBank = banks.begin();
   for (iterBank = banks.begin(); iterBank != banks.end() ; ++iterBank){
     STDecoder decoder((*iterBank)->data());    
-    pcns[(decoder.header().pcn())] += 1;
+    // only the good are allowed to vote [the US system..]
+    if (decoder.header().hasError() == false) pcns[(decoder.header().pcn())] += 1;
    } // iterBank
 
   unsigned int majorityVote = STDAQ::inValidPcn;

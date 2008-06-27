@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.25 2008-06-25 06:55:14 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.26 2008-06-27 12:09:59 mneedham Exp $
 
 #include <algorithm>
 
@@ -161,20 +161,19 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
                                     iterDecoder->second,vec,version);
       if (sc.isFailure()) {
         goodData = false;
-        Warning("Error decoding ADCs", StatusCode::SUCCESS);
         ++counter("skipped Banks");
-        continue;
-      }
+        break;
+      } // of 
     } // iterDecoder
     
 
-    if (iterDecoder.bytesRead() != ((*iterBank)->size())){
+    // final check that we read the total number of bytes in the bank
+    if (goodData && iterDecoder.bytesRead() != ((*iterBank)->size())){
       goodData = false;
-      debug() << "Inconsistant byte count Read: "  << iterDecoder.bytesRead()
+      debug () << "Inconsistant byte count " << aBoard->boardID() << " Read: "  << iterDecoder.bytesRead()
                 << " Expected: " << (*iterBank)->size() << " " << (*iterBank)->sourceID()<< endmsg;
       Warning("Inconsistant byte count", StatusCode::SUCCESS);
       ++counter("skipped Banks");
-      continue;
     }
 
     if (!goodData && !m_skipErrors){
@@ -208,9 +207,10 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     
   // make some consistancy checks
   if ((adcValues.size() - 1u  < aWord.pseudoSize())) {
-    debug() << "adc values do not match ! " << adcValues.size()-1 << " "
-              << aWord.pseudoSize() << " chan "
+    warning() << "adc values do not match ! " << adcValues.size()-1 << " "
+              << aWord.pseudoSize() << " offline chan "
               << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
+              << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
               << endmsg ;
     return Warning("ADC values do not match", StatusCode::FAILURE);
   }
