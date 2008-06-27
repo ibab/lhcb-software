@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.10 2008-06-23 12:22:28 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.11 2008-06-27 16:34:08 hernando Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -101,6 +101,7 @@ StatusCode HltVertexUpgrade::execute() {
         Track& track2 = *(*t2);
         RecVertex* sv = new RecVertex();
         _makeVertex(track1,track2,*sv);
+        sv->setExtraInfo(vseed.extraInfo());
         overtices->insert(sv);
         m_outputVertices->push_back(sv);
         debug() << " created vertex " << endreq;

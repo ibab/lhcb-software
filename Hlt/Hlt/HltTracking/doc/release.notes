@@ -4,6 +4,10 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2008-06-27 - Jose A. Hernando
+  - rename PatMatch to VeloT, and VeloT to VeloTDist in HltTrackMatch
+  - transfer info in the VertexUpgrade and in the TrackMatch
+
 ! 2008-06-23 - Gerhard Raven
   - remove commented out code in HltTrackUpgrade
   - remove unused include of HltConfigurationHelper.h

@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.7 2008-05-21 12:24:07 albrecht Exp $
+// $Id: HltTrackMatch.cpp,v 1.8 2008-06-27 16:34:08 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 // local
 #include "HltTrackMatch.h"
 #include "Event/HltEnums.h"
+#include "HltBase/HltUtils.h"
 
 using namespace LHCb;
 
@@ -76,28 +77,31 @@ void HltTrackMatch::recoConfiguration() {
   m_recoConf.add("VeloCalo/RecoID", (int) 100); //TODO
   m_recoConf.add("VeloCalo/TransferIDs",true);
   m_recoConf.add("VeloCalo/TransferAncestor",true);
+  m_recoConf.add("VeloCalo/TransferInfo",false);
   m_recoConf.add("VeloCalo/TrackType", (int) LHCb::Track::Velo);
-  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt/Track/VeloCalo/Alleys"));
+  m_recoConf.add("VeloCalo/TESOutput", std::string("Hlt/Track/VeloCalo"));
   m_recoConf.add("VeloCalo/Quality",std::string("VeloCalo3DChi2"));
   m_recoConf.add("VeloCalo/Quality2",std::string(""));
   
-  m_recoConf.add("VeloT/Tool",std::string("HltMatchTVeloTracks"));
-  m_recoConf.add("VeloT/RecoID", (int) 101); //TODO
+  m_recoConf.add("VeloTDist/Tool",std::string("HltMatchTVeloTracks"));
+  m_recoConf.add("VeloTDist/RecoID", (int) 101); //TODO
+  m_recoConf.add("VeloTDist/TransferIDs",true);
+  m_recoConf.add("VeloTDist/TransferAncestor",true);
+  m_recoConf.add("VeloTDist/TransferInfo",false);
+  m_recoConf.add("VeloTDist/TrackType", (int) LHCb::Track::Long);
+  m_recoConf.add("VeloTDist/TESOutput", std::string("Hlt/Track/VeloTDist"));
+  m_recoConf.add("VeloTDist/Quality",std::string("deltaX"));
+  m_recoConf.add("VeloTDist/Quality2",std::string("deltaY"));
+
+  m_recoConf.add("VeloT/Tool",std::string("PatMatchTool"));
+  m_recoConf.add("VeloT/RecoID", (int) 102); //TODO
   m_recoConf.add("VeloT/TransferIDs",true);
   m_recoConf.add("VeloT/TransferAncestor",true);
+  m_recoConf.add("VeloT/TransferInfo",true);
   m_recoConf.add("VeloT/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Velo/VeloT/Alleys"));
-  m_recoConf.add("VeloT/Quality",std::string("deltaX"));
-  m_recoConf.add("VeloT/Quality2",std::string("deltaY"));
-
-  m_recoConf.add("PatMatch/Tool",std::string("PatMatchTool"));
-  m_recoConf.add("PatMatch/RecoID", (int) 102); //TODO
-  m_recoConf.add("PatMatch/TransferIDs",true);
-  m_recoConf.add("PatMatch/TransferAncestor",true);
-  m_recoConf.add("PatMatch/TrackType", (int) LHCb::Track::Long);
-  m_recoConf.add("PatMatch/TESOutput", std::string("Hlt/PatMatch")); //TODO
-  m_recoConf.add("PatMatch/Quality",std::string("chi2_PatMatch"));
-  m_recoConf.add("PatMatch/Quality2",std::string(""));
+  m_recoConf.add("VeloT/TESOutput", std::string("Hlt/Track/VeloT")); //TODO
+  m_recoConf.add("VeloT/Quality",std::string("chi2_PatMatch"));
+  m_recoConf.add("VeloT/Quality2",std::string(""));
 }
 
 
@@ -115,6 +119,8 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
   m_transferIDs = m_recoConf.retrieve<bool>(m_matchName+"/TransferIDs");
   m_transferAncestor = 
     m_recoConf.retrieve<bool>(m_matchName+"/TransferAncestor");
+  m_transferInfo = 
+    m_recoConf.retrieve<bool>(m_matchName+"/TransferInfo");
 
   m_qualityName = 
     m_recoConf.retrieve<std::string>(m_matchName+"/Quality");
@@ -186,6 +192,10 @@ StatusCode HltTrackMatch::execute() {
         LHCb::Track* track3 = otrack.clone();
         if (m_qualityID != 0) track3->addInfo(m_qualityID,quality);
         if (m_quality2ID != 0) track3->addInfo(m_quality2ID,quality2);
+        if (m_transferInfo) {
+          Hlt::MergeInfo(track1,*track3);
+          Hlt::MergeInfo(track2,*track3);
+        }  
         otracks->insert( track3 );
         m_outputTracks->push_back( track3);
       }

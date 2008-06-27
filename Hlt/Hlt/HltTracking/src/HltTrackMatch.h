@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.h,v 1.2 2008-05-22 13:49:03 graven Exp $
+// $Id: HltTrackMatch.h,v 1.3 2008-06-27 16:34:08 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKMATCH_H 
 #define HLTTRACKING_HLTTRACKMATCH_H 1
 
@@ -72,7 +72,7 @@ protected:
   bool m_owner;
   int m_trackType;
 
-  bool m_transferExtraInfo;
+  bool m_transferInfo;
   bool m_transferIDs;
   bool m_transferAncestor;
 
