@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.h,v 1.4 2008-03-31 07:13:28 mneedham Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.h,v 1.5 2008-06-27 07:12:22 lnicolas Exp $
 #ifndef TRACKTOOLS_STATESIMPLEBETHEBLOCHENERGYCORRECTIONTOOL_H 
 #define TRACKTOOLS_STATESIMPLEBETHEBLOCHENERGYCORRECTIONTOOL_H 1
 
@@ -45,8 +45,9 @@ protected:
   
 private:
   // Job options
-  double m_energyLossCorr; ///< tunable energy loss correction
-  double m_maxEnergyLoss;  ///< maximum energy loss in dE/dx correction
+  double m_energyLossCorr;               ///< tunable energy loss correction
+  double m_maxEnergyLoss;                ///< maximum energy loss in dE/dx correction
+  double m_minMomentumAfterEnergyCorr;   ///< minimum momentum after dE/dx correction
   
 };
 #endif // TRACKTOOLS_STATESIMPLEBETHEBLOChENERGYCORRECTIONTOOL_H

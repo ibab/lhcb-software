@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.5 2008-06-17 15:10:32 lnicolas Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.6 2008-06-27 07:12:22 lnicolas Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -37,8 +37,9 @@ StateSimpleBetheBlochEnergyCorrectionTool::StateSimpleBetheBlochEnergyCorrection
 {
   declareInterface<IStateCorrectionTool>(this);
   
-  declareProperty( "EnergyLossFactor",  m_energyLossCorr = 354.1 * MeV*mm2/mole );
-  declareProperty( "MaximumEnergyLoss", m_maxEnergyLoss  = 100. * MeV           );
+  declareProperty( "EnergyLossFactor",           m_energyLossCorr = 354.1 * MeV*mm2/mole );
+  declareProperty( "MaximumEnergyLoss",          m_maxEnergyLoss  = 100. * MeV           );
+  declareProperty( "MinMomentumAfterEnergyCorr", m_minMomentumAfterEnergyCorr = 10.*MeV  );
 }
 
 //=============================================================================
@@ -59,15 +60,17 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
   // apply correction - note for now only correct the state vector
   Gaudi::TrackVector& tX = state.stateVector();
 
-  double qOverP;
-  tX[4] < 0 ? qOverP = GSL_MIN(tX[4], LHCb::Math::looseTolerance ) :
-              qOverP = GSL_MAX(tX[4], LHCb::Math::looseTolerance);  
-  
-  double newP;
-  qOverP > 0.0 ? newP = GSL_MAX(1.0/qOverP + bbLoss, LHCb::Math::looseTolerance) :
-                 newP = GSL_MIN(1.0/qOverP - bbLoss, LHCb::Math::looseTolerance);
+  double minMomentumForEnergyCorrection = 10*Gaudi::Units::MeV;
 
-  tX[4] = 1/newP;
+  double qOverP = 0.0;
+  tX[4] < 0.0 ? qOverP = GSL_MIN(tX[4], -LHCb::Math::lowTolerance) :
+                qOverP = GSL_MAX(tX[4], LHCb::Math::lowTolerance);  
+  
+  double newP = 0.0;
+  qOverP < 0.0 ? newP = GSL_MIN(1.0/qOverP - bbLoss, -m_minMomentumAfterEnergyCorr) :
+                 newP = GSL_MAX(1.0/qOverP + bbLoss, m_minMomentumAfterEnergyCorr);
+
+  newP = 1.0/newP;
 }
 
 //=============================================================================
