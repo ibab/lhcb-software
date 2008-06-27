@@ -50,7 +50,8 @@ EventSelector.Input   = {
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                            
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2D0K_KsHH.root' TYP='ROOT' OPT='NEW'" ] ;
+NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2D0K_KsHH_KsDD.root' TYP='ROOT' OPT='NEW'" ] ;
+HistogramPersistencySvc.OutputFile = "DVHlt2-Bu2D0K_KsHH_KsDD.root";
 
 
 ApplicationMgr.EvtMax = -1 ;

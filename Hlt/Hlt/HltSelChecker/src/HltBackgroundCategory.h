@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.h,v 1.4 2008-06-24 11:05:59 pkoppenb Exp $
+// $Id: HltBackgroundCategory.h,v 1.5 2008-06-27 16:56:55 pkoppenb Exp $
 #ifndef HLTBACKGROUNDCATEGORY_H 
 #define HLTBACKGROUNDCATEGORY_H 1
 
@@ -27,6 +27,7 @@
 class IPrintDecayTreeTool ;
 class IPrintMCDecayTreeTool ;
 class IBackgroundCategory ;
+class IDaVinciAssociatorsWrapper ;
 
 class HltBackgroundCategory : public Hlt2StatisticsBase {
 public: 
@@ -47,6 +48,7 @@ private:
   IBackgroundCategory* m_bkg     ; //< Background category tool
   IPrintDecayTreeTool* m_print ;        ///< print Particles
   IPrintMCDecayTreeTool* m_printMC ;    ///< print MCParticles
+  IDaVinciAssociatorsWrapper* m_linker ; ///< wrapper for DaVinciAssociator
   
 };
 #endif // HLTBACKGROUNDCATEGORY_H

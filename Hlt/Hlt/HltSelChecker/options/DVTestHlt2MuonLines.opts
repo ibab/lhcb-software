@@ -48,14 +48,6 @@ HltBd2MuMuKstarChecker.Context = "HLT" ;
 OfflineChecker.OutputLevel = 3 ;
 //OfflineChecker.DoPrint = true ;
 
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
-ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Muons.root' TYP='ROOT' OPT='NEW'" ] ;
-ApplicationMgr.EvtMax = 10000 ;
-EventSelector.FirstEvent = 1 ;
-EventSelector.PrintFreq = 100 ;
-
-
 /**
  * Tuple
  */

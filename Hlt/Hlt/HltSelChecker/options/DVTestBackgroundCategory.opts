@@ -27,7 +27,7 @@ MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 #include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
 //#include "$HLTSELECTIONSROOT/options/MinimumBiasRaw.opts"
 //#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
-ApplicationMgr.EvtMax = 1000 ;
+ApplicationMgr.EvtMax = 10000 ;
 EventSelector.PrintFreq = 100 ;
 
 

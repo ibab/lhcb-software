@@ -48,6 +48,7 @@ MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ] ;                             //GP: (45,1)
 NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-B2HH.root' TYP='ROOT' OPT='NEW'" ] ;//GP: (46,1)
+HistogramPersistencySvc.OutputFile = "DVHlt2-B2HH.root";
 
 ApplicationMgr.EvtMax = -1 ;
 EventSelector.FirstEvent = 1 ;

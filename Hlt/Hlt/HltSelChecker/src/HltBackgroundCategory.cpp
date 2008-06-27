@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.13 2008-06-24 11:05:59 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.14 2008-06-27 16:56:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,8 +9,8 @@
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IPrintDecayTreeTool.h"            // Interface
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
-#include "Kernel/Particle2MCLinker.h"
 #include "Kernel/IANNSvc.h"
+#include "Kernel/IDaVinciAssociatorsWrapper.h"
 
 // local
 #include "HltBackgroundCategory.h"
@@ -31,9 +31,10 @@ DECLARE_ALGORITHM_FACTORY( HltBackgroundCategory );
 HltBackgroundCategory::HltBackgroundCategory( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : Hlt2StatisticsBase ( name , pSvcLocator )
-  ,   m_bkg()
+    , m_bkg()
     , m_print()
     , m_printMC()
+    , m_linker()
 {
   declareProperty("PrintTree",m_printTree=false );
   declareProperty("FillAll",m_fillAll=false );
@@ -56,6 +57,7 @@ StatusCode HltBackgroundCategory::initialize() {
   if (m_printTree ){
     m_print       = tool<IPrintDecayTreeTool>("PrintDecayTreeTool",this);
     m_printMC     = tool<IPrintMCDecayTreeTool>("PrintMCDecayTreeTool",this);
+    m_linker      = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper",this);
   }
   
   const std::map<int,std::string>& catMap = m_bkg->getCategoryMap() ;
@@ -83,9 +85,11 @@ StatusCode HltBackgroundCategory::execute() {
 
   if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
 
+  Particle2MCLinker* linker = 0;
+
   strings sels =  m_summaryTool->selections() ;
-  Particle2MCLinker* linker  = 0 ;
-  if (m_printTree) linker = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
+  if (m_printTree) linker = m_linker->linker("Particle2MCLinks", 
+                                             std::vector<std::string>(1,"") );
   
   for ( strings::const_iterator is = sels.begin() ; 
         is!=sels.end() ; ++is){
@@ -153,7 +157,6 @@ StatusCode HltBackgroundCategory::execute() {
     if (msgLevel(MSG::DEBUG)) debug() << "End for " << *is << endmsg ;
     if (!m_algoCorr->endEvent()) return StatusCode::FAILURE ;
   }
-  if (0!=linker) delete linker ;
   
   return  StatusCode::SUCCESS ;
 }
