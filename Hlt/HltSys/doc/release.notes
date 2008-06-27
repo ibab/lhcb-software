@@ -10,6 +10,7 @@ Purpose: LHCb High Level Trigger packages.
  - HltRecoSequence has now the guide (Hlt1) and full (Hlt1,Hlt2) reconstruction
  - changed muon,hadron,ele,photon,muhad alleys to use Hlt1 reconstruction
  - hadron alley uses now hlt1,hlt2 reco
+ - change the name of the mathing: VeloT->VeloTDist, PatMatch ->VeloT 
 
 ! 2008-06-25 - Gerhard Raven
  - Renamed SelectionID to Hlt1SelectionID

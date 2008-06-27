@@ -169,7 +169,7 @@ VeloMuonConf.RecoName = "Velo";
 
 MuonAndTVelo.InputSelection =    "VeloMuonConf";
 MuonAndTVelo.InputSelection2 =  "L0MuonAndTConfirmed";
-MuonAndTVelo.MatchName = "PatMatch";
+MuonAndTVelo.MatchName = "VeloT";
 MuonAndTVelo.PatMatchTool.maxMatchChi2 = 6;
 //MuonAndTVelo.OutputLevel = 3;
 
@@ -234,7 +234,7 @@ VeloDiMuonConf.RecoName = "Velo";
 
 DiMuonAndTVelo.InputSelection =    "VeloDiMuonConf";
 DiMuonAndTVelo.InputSelection2 =  "DiMuonAndTConfirmed";
-DiMuonAndTVelo.MatchName = "PatMatch";
+DiMuonAndTVelo.MatchName = "VeloT";
 DiMuonAndTVelo.PatMatchTool.maxMatchChi2 = 6;
 //DiMuonAndTVelo.OutputLevel = 3;
 
@@ -362,7 +362,7 @@ VeloMuonFromMuonSeg.RecoName = "Velo";
 
 MuonAndTVeloFromMuonSeg.InputSelection = "VeloMuonFromMuonSeg";
 MuonAndTVeloFromMuonSeg.InputSelection2 = "MuonTAndTConfirmed";
-MuonAndTVeloFromMuonSeg.MatchName = "PatMatch";
+MuonAndTVeloFromMuonSeg.MatchName = "VeloT";
 MuonAndTVeloFromMuonSeg.PatMatchTool.maxMatchChi2 = 6;
 //MuonAndTVeloFromMuonSeg.OutputLevel = 3;
 
