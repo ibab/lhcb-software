@@ -11,7 +11,7 @@ HltSummaryWriter.Save += { "MuonPreTriggerSingle",
 
 HltMuonAlley.Members = {   "L0Entry/L0MuonEntry",
                            "L0MuonCandidatesFromRaw",
-                           "GaudiSequencer/HltRecoVeloRZSeq",
+                           "GaudiSequencer/Hlt1RecoRZVeloSequence",
                            "MatchPatVeloRL0",
                            "HltMuonRec",
                            "MatchPatVeloRMuonHits",

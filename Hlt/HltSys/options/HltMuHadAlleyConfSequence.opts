@@ -20,7 +20,7 @@ HltMuHadAlleySequence.Members = {
   "HltSelectionFilter/MuHadEntry",
   "HltTrackFilter/MuHadMuonTF",
   // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
-  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/MuHadCompanionTFVelo",
   "GaudiSequencer/HltDecodeT",
   "HltTrackUpgrade/MuHadCompanionTRForward",

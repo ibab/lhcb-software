@@ -29,7 +29,7 @@ HltHadAlleySequence.OutputLevel = 3;
 
 HadPrepareMainHadron.MeasureTime = true;
 HadPrepareMainHadron.Members = {
-  "GaudiSequencer/HltRecoVeloRZSeq" ,
+  "GaudiSequencer/Hlt1RecoRZVeloSequence" ,
   "HltTrackFromParticle/GetBdaughterTracks",
   "HltSelectTracksForSwimming/SelectBtracks",
   "HltMoveVerticesForSwimming/SwimPVS",
@@ -56,7 +56,7 @@ HadAlleys.OutputLevel = 3;
 
 HadDiHadronSeq.MeasureTime = true;
 HadDiHadronSeq.Members = {
-  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackUpgrade/Hlt1RecoVelo",
   "HltSelectTracksForSwimming/SelectBtracksForCompanion",
   "HltTrackFilter/HadCompanionTFVelo",
   "HltVertexMaker/HadDiHadronVelo",

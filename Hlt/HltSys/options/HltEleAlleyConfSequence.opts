@@ -19,7 +19,7 @@ HltAlleys.InputSelections += {"Hlt1ElectronSingle",
 
 HltEleAlleySequence.Members = {
   "L0Entry/EleL0Entry",
-  "GaudiSequencer/HltRecoVeloRZSeq",
+  "GaudiSequencer/Hlt1RecoRZVeloSequence",
   //                       "HltPrepareL0Calos/EleL0Prepare",
   "GaudiSequencer/DVHltEleAlley",
   "HltTrackFilter/EleSingleTFRZVelo",
@@ -41,7 +41,7 @@ HltEleTriggers.Members += { "HltTrackFilter/Hlt1ElectronSingle",
 };
 
 Hlt1ElectronEleTrkSeq.Members += { 
-                       "HltTrackUpgrade/HltRecoVelo",
+                       "HltTrackUpgrade/Hlt1RecoVelo",
                        "HltTrackFilter/EleCompanionTFVelo",
                        "HltTrackUpgrade/EleCompanionTRForward",
                        "HltTrackFilter/EleCompanionTFForward",

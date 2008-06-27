@@ -44,7 +44,7 @@ Hlt1HadronForwardSingleSequence.Members = {
 
 Hlt1HadronForwardSinglePrepare.MeasureTime = true;
 Hlt1HadronForwardSinglePrepare.Members = {
-  "GaudiSequencer/HltRecoVeloRZSeq" ,
+  "GaudiSequencer/Hlt1RecoRZVeloSequence" ,
   "HltTrackFilter/Hlt1HadronForwardSingleTFRZVelo",
   "HltTrackUpgrade/Hlt1HadronForwardSingleTUVelo",
   "HltTrackFilter/Hlt1HadronForwardSingleTFVelo",
@@ -69,7 +69,7 @@ Hlt1HadronForwardDiPrepare.MeasureTime = true;
 Hlt1HadronForwardDiPrepare.Members = {
   "GaudiSequencer/Hlt1HadronForwardSinglePrepare",
   "HltTrackFilter/Hlt1HadronForwardDiTFForward",
-  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/Hlt1HadronForwardDiTFVelo",
   "HltVertexMaker/Hlt1HadronForwardDiVMVelo",
   "HltVertexFilter/Hlt1HadronForwardDiVFVelo",

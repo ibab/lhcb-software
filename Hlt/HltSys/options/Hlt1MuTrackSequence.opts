@@ -21,7 +21,7 @@ HltMuHadAlleySequence.Members = {
   "L0Entry/MuTrackL0Entry",
   "HltSelectionFilter/MuTrackEntry",  //L0 + muon confirmation 
   "HltTrackFilter/MuTrackMuonTF",     //IP and pT muon track filter
-  "HltTrackUpgrade/HltRecoVelo",      // Velo reco  
+  "HltTrackUpgrade/Hlt1RecoVelo",      // Velo reco  
   "HltTrackFilter/MuTrackVeloCompanionTF",  //IP and DOCA filter for velo tracks
   "HltVertexMaker/MuTrackVeloVMaker",           //make vertices from muon forward + velo track (+DOCA filter again?)
   "HltVertexFilter/MuTrackVeloVFilter",       //DZ vertex filter    

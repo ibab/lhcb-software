@@ -2,14 +2,14 @@
 //  HLT Calo Alley
 //----------------------------
 HltCaloAlley.Members += {  "L0Entry/L0CaloEntry",
-                           "HltSequencer/HltRecoVeloRZSeq",
+                           "HltSequencer/Hlt1RecoRZVeloSequence",
                            "HltTrackIPSelection/HltTrack2DIPSelection",
                            "HltTrackUpgrade/HltHadRecoIPVelo",
                            "HltTrackIPSelection/HltTrack3DIPPreSelection",
                            "HltSequencer/HltDecodeTT",
                            "HltTrackUpgrade/HltHadRecoIPVeloTT",
                            "HltCaloPreTrigger/HltCaloPreTrigger0",
-                           "HltSequencer/HltRecoVeloSeq",
+                           "HltSequencer/Hlt1RecoVeloSeq",
                            "HltTrackIPSelection/HltTrack3DIPSelection",
                            "HltSequencer/HltDecodeT",
                            "HltTrackUpgrade/HltHadRecoIPForward",

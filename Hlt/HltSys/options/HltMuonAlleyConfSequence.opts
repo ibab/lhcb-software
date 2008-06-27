@@ -130,7 +130,7 @@ HltL0SingleMuonPreparation.Members = {
   "HltTrackUpgrade/L0MuonConfirmedWithT" , 
 //  "GaudiSequencer/MuonRecon",
   "HltTrackFilter/L0MuonAndTConfirmed",
-  "GaudiSequencer/HltRecoVeloRZSeq",
+  "GaudiSequencer/Hlt1RecoRZVeloSequence",
   "HltTrackFilter/RZMuon",
   "HltTrackUpgrade/VeloMuonConf",
   "HltTrackMatch/MuonAndTVelo"
@@ -199,7 +199,7 @@ HltDiMuonFromL0DiMuonPreparation.Members = {
   "HltTrackUpgrade/DiMuonConfirmedWithT",
 //  "GaudiSequencer/MuonRecon", 
   "HltTrackFilter/DiMuonAndTConfirmed",
-  "GaudiSequencer/HltRecoVeloRZSeq",
+  "GaudiSequencer/Hlt1RecoRZVeloSequence",
   "HltTrackFilter/RZDiMuon",
   "HltTrackUpgrade/VeloDiMuonConf",
   "HltTrackMatch/DiMuonAndTVelo",

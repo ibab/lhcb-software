@@ -17,7 +17,7 @@ HltAlleys.InputSelections += {"Hlt1PhotonPhoTrk"};
 HltPhoAlleySequence.Members = {
   "L0Entry/PhoL0Entry",
   "HltL0CaloPrepare/PhoTightL0Calos",
-  "GaudiSequencer/HltRecoVeloRZSeq",
+  "GaudiSequencer/Hlt1RecoRZVeloSequence",
   "HltTrackFilter/HltPho2DIPSelection",
   "HltTrackUpgrade/HltPhoRecoIPVelo",
   "HltTrackFilter/HltPho3DIPSelection",

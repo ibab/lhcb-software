@@ -6,21 +6,22 @@
 HltSummaryWriter.Save += {
   "PV2D",
   "L0TriggerHadron",
-  "Hlt1HadronSingle",
-  "Hlt1HadronDi"
+  "Hlt1HadronSingleDecision",
+  "Hlt1HadronDiDecision"
 };
 
 // to declare as input for the OR of the muon alley
 HltAlleys.InputSelections += {
-  "Hlt1HadronSingle",
-  "Hlt1HadronDi"
+  "Hlt1HadronSingleDecision",
+  "Hlt1HadronDiDecision"
 };
 
-Hlt1HadronSequence.MeasureTime = true;
+
 Hlt1HadronSequence.Members = {
   "GaudiSequencer/Hlt1HadronSingleSequence",
   "GaudiSequencer/Hlt1HadronDiSequence",
-  "HltSelectionFilter/Hlt1Hadron"
+  "HltSelectionFilter/Hlt1Hadron",
+  "HltSelectionFilter/Hlt1HadronDecision"
 };
 Hlt1HadronSequence.ModeOr = true;
 Hlt1HadronSequence.ShortCircuit = false;
@@ -31,6 +32,11 @@ Hlt1Hadron.InputSelections = {
   "Hlt1HadronDi"
 };
 
+Hlt1HadronDecision.InputSelections = {
+  "Hlt1HadronSingleDecision",
+  "Hlt1HadronDiDecision"
+};
+
 //--------------------------
 // Single Hadron
 //---------------------------
@@ -39,12 +45,14 @@ Hlt1HadronSingleSequence.MeasureTime = true;
 Hlt1HadronSingleSequence.Members = {
   "GaudiSequencer/PrepareL0TriggerHadronSeq",
   "GaudiSequencer/Hlt1HadronSinglePrepare",
-  "HltTrackFilter/Hlt1HadronSingle"
+  "HltTrackFilter/Hlt1HadronSingle",
+  "GaudiSequencer/HltRecoSequence",
+  "HltTrackFilter/Hlt1HadronSingleDecision"
 };
 
 Hlt1HadronSinglePrepare.MeasureTime = true;
 Hlt1HadronSinglePrepare.Members = {
-  "GaudiSequencer/HltRecoVeloRZSeq" ,
+  "GaudiSequencer/Hlt1RecoRZVeloSequence" ,
   "HltTrackFilter/Hlt1HadronSingleTFRZVelo",
   "HltTrackUpgrade/Hlt1HadronSingleTUVelo",
   "HltTrackFilter/Hlt1HadronSingleTFVelo",
@@ -63,14 +71,18 @@ Hlt1HadronDiSequence.MeasureTime = true;
 Hlt1HadronDiSequence.Members = {
   "GaudiSequencer/PrepareL0TriggerHadronSeq",
   "GaudiSequencer/Hlt1HadronDiPrepare",
-  "HltVertexFilter/Hlt1HadronDi"
+  "HltVertexFilter/Hlt1HadronDi",
+  "GaudiSequencer/HltRecoSequence",
+  "HltTrackFilter/Hlt1HadronDiTFForward1",
+  "HltVertexMaker/Hlt1HadronDiVMForward1",
+  "HltVertexFilter/Hlt1HadronDiDecision"
 };
 
 Hlt1HadronDiPrepare.MeasureTime = true;
 Hlt1HadronDiPrepare.Members = {
   "GaudiSequencer/Hlt1HadronSinglePrepare",
   "HltTrackFilter/Hlt1HadronDiTFForward",
-  "HltTrackUpgrade/HltRecoVelo",
+  "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/Hlt1HadronDiTFVelo",
   "HltVertexMaker/Hlt1HadronDiVMVelo",
   "HltVertexFilter/Hlt1HadronDiVFVelo",
@@ -83,25 +95,35 @@ Hlt1HadronDiPrepare.Members = {
 
 Hlt1HadronSingle.InputSelection  = "Hlt1HadronSingleTUGuidedForward";
 Hlt1HadronSingle.FilterDescriptor = {"PT,>,5000."};
-// Hlt1HadronSingle.HistogramUpdatePeriod = 0;
-// Hlt1HadronSingle.HistoDescriptor = {
-//   "PT":("PT",0.,6000.,100),
-//   "PTBest":("PTBest",0.,6000.,100)
-// };
 
+
+Hlt1HadronSingleDecision.InputSelection = "Forward1";
+Hlt1HadronSingleDecision.FilterDescriptor = {
+  "MatchIDsFraction_Hlt1HadronSingle,>,0.75",
+  "IP_PV2D,||>,0.1",
+  "PT,>,6000."};
+
+///------------
 
 Hlt1HadronDi.InputSelection = "Hlt1HadronDiVUForward";
 Hlt1HadronDi.FilterDescriptor = {
   "VertexMinPT,>,1000.",
   "VertexPointing_PV2D,<,0.4"
 };
-// Hlt1HadronDiHadron.HistogramUpdatePeriod = 0;
-// Hlt1HadronDiHadron.HistoDescriptor = {
-//   "VertexMinPT":("VertexMinPT",0.,6000.,100),
-//   "VertexMinPTBest":("VertexMinPTBest",0.,6000.,100),
-//   "VertexPointing_PV2D":("VertexPointing_PV2D",0.,1.,100),
-//   "VertexPointing_PV2DBest":("VertexPointing_PV2DBest",0.,1.,100)
-// };
+
+Hlt1HadronDiTFForward1.InputSelection = "Forward1";
+Hlt1HadronDiTFForward1.FilterDescriptor = {"IP_PV2D,||>,0.1",
+                                           "PT,>,1000."};
+
+Hlt1HadronDiVMForward1.InputSelection = "Hlt1HadronDiTFForward1";
+Hlt1HadronDiVMForward1.FilterDescriptor = {"DOCA,<,0.2"};
+
+Hlt1HadronDiDecision.InputSelection = "Hlt1HadronDiVMForward1";
+Hlt1HadronDiDecision.FilterDescriptor = {
+  "VertexMaxPT,>,2500.",
+  "VertexPointing_PV2D,<,0.4",
+  "VertexMatchIDsFraction_Hlt1HadronDi,>,1.5"
+};
 
 //-------------------------------------------------------------------------
 // HLT HadAlley options
