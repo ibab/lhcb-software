@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.7 2008-06-27 09:42:40 pkoppenb Exp $
+// $Id: HltIsMuonTool.cpp,v 1.8 2008-06-27 11:04:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -197,7 +197,7 @@ bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
 
   double x,y,z,dx,dy,dz;
   StatusCode sc = m_iPosTool-> calcTilePos(tileMX,x, dx,y, dy,z, dz);  
-  if (sc) {
+  if (!sc) {
     Warning("Failure from Pos Tool");
     return false ;
   }
