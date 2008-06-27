@@ -1,4 +1,4 @@
-// $Id: PhysList-QGSP.opts,v 1.2 2008-05-08 20:26:56 gcorti Exp $ 
+// $Id: PhysList-QGSP.opts,v 1.3 2008-06-27 13:13:08 gcorti Exp $ 
 
 /** @file 
  * 
@@ -23,8 +23,8 @@
 //    replace with one of the commented lines for a different physics list
 GiGa.ModularPL.PhysicsConstructors += {
 //   "GiGaExtPhysics<G4EmStandardPhysics>/EmPhysics" };   // default G4 8.2.p01
-  "GiGaExtPhysics<G4EmStandardPhysics71>/EmFastPhysics" };  // without step limit
-//   "GiGaExtPhysics<G4EmStandardPhysics72>/EmOpt2Physics" }; // with sub cut off
+  "GiGaExtPhysics<G4EmStandardPhysics_option1>/EmOpt1Physics" };  // without step limit
+//   "GiGaExtPhysics<G4EmStandardPhysics_option2>/EmOpt2Physics" }; // with sub cut off
 
 // == EM physics: Synchroton Radiation & gamma,electron-nuclear Physics
 GiGa.ModularPL.PhysicsConstructors += { 
