@@ -2,6 +2,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2008-06-26 - Anne Keune
+ - Include second order header corrections
+
 !====================== Tell1Kernel v1r3 2008-04-29 ======================
 !2008-04-28 - Tomasz Szumlak
  - Add stuff that helps to run Vetra (Velo part) with condition DB
