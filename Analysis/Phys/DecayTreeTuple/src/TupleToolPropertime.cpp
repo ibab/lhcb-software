@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPropertime.cpp,v 1.2 2008-06-27 14:34:55 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -95,9 +95,8 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
   double chi2 = -100;
   StatusCode sc = m_fit->fit ( *originVtx, *P , pt, ept, chi2 );
 
-  if( sc ){}// I'm happy
-  else {
-    Warning("The propertime fit failed");
+  if( !sc ){
+    Warning("The propertime fit failed").ignore();
     pt   = -100;
     ept  = -100;
     chi2 = -100;

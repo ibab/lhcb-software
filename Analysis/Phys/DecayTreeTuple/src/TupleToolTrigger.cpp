@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.6 2008-06-25 14:38:45 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.7 2008-06-27 14:34:55 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -94,7 +94,9 @@ StatusCode TupleToolTrigger::fillL0( Tuples::Tuple& tuple ) {
 StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple ) {
   // Hlt
 
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Looking for decision" << endmsg ;
   if( !tuple->column( "HltDecision", m_summaryTool->decision() )) return StatusCode::FAILURE;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Decision " << m_summaryTool->decision() << endmsg ;
 
   StatusCode sc = StatusCode::SUCCESS ;
 
