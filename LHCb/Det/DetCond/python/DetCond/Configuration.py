@@ -1,13 +1,14 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-03-03 11:34:37 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-06-27 17:00:41 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
 from Configurables import ( CondDBAccessSvc, 
                             CondDBDispatcherSvc, 
                             CondDBLayeringSvc, 
+                            CondDBTimeSwitchSvc, 
                             CondDBCnvSvc,
                             CondDBSQLiteCopyAccSvc,
                             CondDBLogger )
@@ -19,6 +20,14 @@ __all__ += [ "CondDBAccessSvc",
              "CondDBDispatcherSvc", "CondDBLayeringSvc",
              "CondDBSQLiteCopyAccSvc", "CondDBLogger",
              "CondDBCnvSvc" ]
+
+# List of known implementations of ICondDBReader (str is used for backward compatibility)
+__CondDBReaders__ = [ CondDBAccessSvc,
+                      CondDBDispatcherSvc,
+                      CondDBLayeringSvc,
+                      CondDBTimeSwitchSvc,
+                      CondDBSQLiteCopyAccSvc,
+                      str ]
 
 def _assertConfig(funcname):
     """
@@ -35,11 +44,7 @@ def addCondDBLayer(accessSvc):
     addCondDBLayer(myDB)
     """
     # Check for supported types
-    if type(accessSvc) not in [ CondDBAccessSvc,
-                                CondDBDispatcherSvc, 
-                                CondDBLayeringSvc,
-                                CondDBSQLiteCopyAccSvc,
-                                str ]:
+    if type(accessSvc) not in __CondDBReaders__:
         raise TypeError("addCondDBLayer does not support '%s'"%accessSvc.__class__.__name__)
     
     # Check for basic configuration 
@@ -71,11 +76,7 @@ def addCondDBAlternative(accessSvc,path):
     addCondDBAlternative(myDB,"/Conditions/MyDetector/Alignment")
     """
     # Check for supported types
-    if type(accessSvc) not in [ CondDBAccessSvc,
-                                CondDBDispatcherSvc, 
-                                CondDBLayeringSvc,
-                                CondDBSQLiteCopyAccSvc,
-                                str ]:
+    if type(accessSvc) not in __CondDBReaders__:
         raise TypeError("addCondDBAlternative does not support '%s'"%accessSvc.__class__.__name__)
     
     if type(accessSvc) is str:

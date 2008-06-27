@@ -1,0 +1,63 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import (EventClockSvc, FakeEventTime)
+
+importOptions("$DDDBROOT/options/DDDB.py")
+ecs = EventClockSvc()
+ecs.addTool(FakeEventTime,"EventTimeDecoder")
+ecs.EventTimeDecoder.StartTime = 5
+ecs.EventTimeDecoder.TimeStep = 10
+
+from DetCond.Configuration import (CondDBAccessSvc,CondDBCnvSvc,
+                                   CondDBTimeSwitchSvc,
+                                   addCondDBLayer)
+
+DBs = []
+for i in [0,3]:
+    data = { "name": "TESTDB%d"%i }
+    DBs.append(CondDBAccessSvc(data["name"],
+                               ConnectionString="sqlite_file:../data/%(name)s.db/%(name)s"%data,
+                               EnableXMLDirectMapping = True))
+readers = []
+for i in range(len(DBs)):
+    readers.append("'%s':(%d,%d)"%(DBs[i].getFullName(),i*10,(i+1)*10))
+CondDBTimeSwitchSvc(Readers = readers)
+CondDBCnvSvc(CondDBReader = CondDBTimeSwitchSvc(Readers = readers))
+
+from Configurables import DetCondTest__TestConditionAlg
+alg = DetCondTest__TestConditionAlg()
+alg.Conditions = ["/dd/AutoMap/FolderSet1/Object1"]
+ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 2)
+#MessageSvc(OutputLevel = 1)
+
+</text></argument>
+<!-- <argument name="validator"><text>
+reference_block = '''
+TESTDB0              INFO Connected to database "sqlite_file:../data/TESTDB0.db/TESTDB0"
+TESTDB0              INFO Using TAG ""
+DetCondTest::Te...   INFO Requested Conditions:
+--- /dd/AutoMap/FolderSet1/Object1
+DataObject at 0x1afe130
+Validity: 0.0 -> 0.00000001
+(int) Data = 1
+
+
+TESTDB3              INFO Connected to database "sqlite_file:../data/TESTDB3.db/TESTDB3"
+TESTDB3              INFO Using TAG ""
+DetCondTest::Te...   INFO Requested Conditions:
+--- /dd/AutoMap/FolderSet1/Object1
+DataObject at 0x1afe130
+Validity: 0.00000001 -> 0.00000002
+(int) Data = 2
+
+
+'''
+findReferenceBlock(reference_block, stdout, result, causes, signature_offset=0, signature=None)
+</text></argument> -->
+</extension>

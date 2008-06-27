@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.86 2008-06-26 14:28:52 marcocle Exp $
+# $Id: requirements,v 1.87 2008-06-27 17:00:41 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v12r0
@@ -38,7 +38,7 @@ apply_pattern     reflex_dictionary                                     \
 
 # =========== constituents =====================================================
 library       DetCondLib        Lib/*.cpp
-library       DetCond           component/*.cpp
+library       DetCond           component/*.cpp ../tests/src/*.cpp
 
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library library=DetCond 

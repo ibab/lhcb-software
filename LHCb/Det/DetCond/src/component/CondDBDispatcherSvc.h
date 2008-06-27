@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.6 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBDispatcherSvc.h,v 1.7 2008-06-27 17:00:41 marcocle Exp $
 #ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
@@ -91,6 +91,10 @@ private:
   /// Property CondDBDispatcherSvc.Alternatives: list of alternative Access Services in the form of
   /// "/path/for/alternative=ServiceType/ServiceName".
   std::vector<std::string> m_alternativesDeclaration;
+  
+  /// Property CondDBDispatcherSvc.AlternativesMap: list of alternative Access Services in the form of
+  /// "/path/for/alternative=ServiceType/ServiceName".
+  std::map<std::string,std::string> m_alternativesDeclarationMap;
   
   /// Pointer to the main access service.
   ICondDBReader* m_mainDB;
