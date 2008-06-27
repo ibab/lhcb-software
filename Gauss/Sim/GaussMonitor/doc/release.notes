@@ -4,11 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v5r2 2008-06-27 =========================
 ! 2008-06-24 - Vanya BELYAEV
- - new algorithms to perform the checks for particle lifetiems both on HepMC and MC levels 
-
+ - new algorithms to perform the checks for particle lifetiems both on HepMC
+	 and MC levels 
    New files :
-
    (1) src/CheckLifeTime.h, src/CheckLifeTime.cpp
        the base class   
    (2) src/CheckLifeTimeHepMC.cpp
@@ -17,16 +17,11 @@
        the concrete algorithm for checking lifetiem of MC particles 
    (4) src/LifeTime.h
        the common helper utilities 
-
   The algorithms has property "Particles"
-
   The typical usesage: 
-
    SimMonitor.Members += [ "GaussMonitor::CheckLifeTimeMC/MCLifeTime" ];
    GenMonitor.Members += [ "GaussMonitor::CheckLifeTimeHepMC/HepMCLifeTime" ];
-
   The typical printout:
-  
 MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'B0'        Actual is 0.489439+-0.049298(0.45982) Nominal is 0.46048 [mm] 
 MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'B+'        Actual is 0.528686+-0.054560(0.47250) Nominal is 0.50095 [mm] 
 MCLifeTime                 INFO  <0.5 sigma deviation in lifetime for 'B_s0'      Actual is 0.471664+-0.100333(0.45978) Nominal is 0.43799 [mm] 
@@ -37,7 +32,6 @@ MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'D_s+'    
 MCLifeTime              WARNING  >1   sigma deviation in lifetime for 'Lambda_c+' Actual is 0.077262+-0.013329(0.05655) Nominal is 0.05979 [mm] 
 
  histos:
-
 MCLifeTime              SUCCESS List of booked 1D histograms in directory         "MC/MCLifeTime" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
  | LifeTime B+               | "LifeTime B+"                                 |    75   |    0.52869 | 0.47251    |     1.3752 |     1.8131 |
@@ -51,7 +45,6 @@ MCLifeTime              SUCCESS List of booked 1D histograms in directory       
  | LifeTime B0               | "LifeTime B0"                                 |    87   |    0.48944 | 0.45983    |     1.2403 |     1.0644 |
 
  counters:
-
 MCLifeTime              SUCCESS Number of counters : 9
  |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "LifeTime B+"  |        75 |   39.65142 |    0.52869 |    0.47251 |    0.021626 |      2.3047 |
@@ -63,10 +56,6 @@ MCLifeTime              SUCCESS Number of counters : 9
  | "LifeTime D_s+"|        39 |   5.201792 |    0.13338 |    0.16712 |   0.0051624 |      1.0061 |
  | "LifeTime Lambd|        15 |   4.232776 |    0.28219 |    0.23105 |   0.0054285 |     0.82772 |
  | "LifeTime Lambd|        18 |   1.390719 |   0.077262 |   0.056554 |  0.00010981 |     0.22518 |
-
-
- - cmt/requirements 
-    version increment to v5r2 
 
 !====================== GaussMonitor v5r1 2008-05-07 =========================
 ! 2008-05-07 - Gloria CORTI
