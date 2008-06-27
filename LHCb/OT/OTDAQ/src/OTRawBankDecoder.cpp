@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.15 2008-06-03 13:15:14 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.16 2008-06-27 08:41:18 wouter Exp $
 // Include files
 #include <algorithm>
 
@@ -44,7 +44,8 @@ namespace OTRawBankDecoderHelpers
   class Module
   {
   public:
-    Module() : m_detelement(0), m_isdecoded(false), m_size(0), m_data(0) { m_ottimes.reserve(16) ; }
+    Module() : m_detelement(0), m_isdecoded(false), m_size(0), m_data(0),
+	m_bankversion(OTBankVersion::UNDEFINED) { m_ottimes.reserve(16) ; }
     void clearevent() { m_isdecoded=false ; m_size=0; m_data=0 ; m_ottimes.clear() ; }
     void setData( unsigned int size, const unsigned short* data, int bankversion) { 
       m_size = size ;  m_data = data ; m_bankversion = bankversion ; }
