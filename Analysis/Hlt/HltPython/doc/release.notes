@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-6-27 - Gabriel Guerrer
+  - add AlgoTools to modules. Methods for printing Gaudi sequencer hierarchy + algorithm properties
+
 ! 2008-6-26 - Jose A. Hernando
   - remove obsolete examples for the hadron alley
   - add hltconf in modules, to get a list of algorithms and properties for a given alley
