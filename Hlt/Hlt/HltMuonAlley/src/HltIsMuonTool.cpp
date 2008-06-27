@@ -1,4 +1,4 @@
-// $Id: HltIsMuonTool.cpp,v 1.6 2008-06-03 17:10:51 sandra Exp $
+// $Id: HltIsMuonTool.cpp,v 1.7 2008-06-27 09:42:40 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -54,9 +54,9 @@ StatusCode HltIsMuonTool::initialize() {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel (MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
   m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
-  if(!m_iPosTool)debug()<<"error retrieving the pos tool "<<endreq;
+  if(!m_iPosTool)if (msgLevel (MSG::DEBUG)) debug()<<"error retrieving the pos tool "<<endreq;
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
   if(!m_muonBuffer)info()<<"error retrieving the decoding tool "<<endreq;
 
@@ -101,7 +101,7 @@ double  HltIsMuonTool::function(const Track& ctrack)
         float ptrack=ctrack.p(); 
         float pL0 = l0Momentum(tileM3);
         float dpop = (ptrack-pL0)/ptrack;
-        debug() << " pTt = " << ptrack << "  pL0 = " << pL0 << " dpop = " << dpop << endreq;
+        if (msgLevel (MSG::DEBUG)) debug() << " pTt = " << ptrack << "  pL0 = " << pL0 << " dpop = " << dpop << endreq;
         if(dpop<-2){
           int region = tileM3.region();
           if((region==0) && (ptrack < 60000)) return 0; 
@@ -144,7 +144,7 @@ double  HltIsMuonTool::function(const Track& ctrack)
     for ( iCoord = coords->end() -1 ; iCoord >= coords->begin() ; iCoord-- ){
       int region = (*iCoord)->key().region();
       int station = (*iCoord)->key().station();
-      debug()<<station<<" "<<region<<endreq;
+      if (msgLevel (MSG::DEBUG)) debug()<<station<<" "<<region<<endreq;
       //if(region!=0 && (*iCoord)->uncrossed())continue;
       if(station==4){
         if(inFOIM5) continue;
@@ -196,8 +196,11 @@ bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
   int region = tileMX.region();
 
   double x,y,z,dx,dy,dz;
-  m_iPosTool-> calcTilePos(tileMX,x, dx,y, dy,z, dz);  
-
+  StatusCode sc = m_iPosTool-> calcTilePos(tileMX,x, dx,y, dy,z, dz);  
+  if (sc) {
+    Warning("Failure from Pos Tool");
+    return false ;
+  }
   const State& stato=track->closestState(z);
   double xslope=stato.slopes().x()/stato.slopes().z();
   double yslope=stato.slopes().y()/stato.slopes().z();
@@ -210,10 +213,12 @@ bool  HltIsMuonTool::isInFOI(Track* track, MuonTileID tileMX){
 
   bool result = ((fabs(x_MX-x)<x_window)&&(fabs(y_MX-y)<y_window));
 
-  debug()<<" station M"<< tileMX.station()+1 <<" "<< x_window <<" "<< x <<" "<< x_MX <<" "<< dx << endreq ;
-  debug()<<"   region " <<          region+1 <<" "<< y_window <<" "<< y <<" "<< y_MX <<" "<< dy <<endreq;
-  debug() << (result?"accepted":"bad") << endreq;
-
+  if (msgLevel (MSG::DEBUG)) {
+    debug()<<" station M"<< tileMX.station()+1 <<" "<< x_window <<" "<< x <<" "<< x_MX <<" "<< dx << endreq ;
+    debug()<<"   region " <<          region+1 <<" "<< y_window <<" "<< y <<" "<< y_MX <<" "<< dy <<endreq;
+    debug() << (result?"accepted":"bad") << endreq;
+  }
+  
   return result;
 }
 //===================================
