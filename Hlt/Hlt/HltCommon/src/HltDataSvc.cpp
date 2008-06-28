@@ -99,7 +99,7 @@ IDataProviderSvc& HltDataSvc::evtSvc() const {
 
 
 StatusCode 
-HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool useTES) {
+HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* /*parent*/,bool useTES) {
 //@TODO: record dependency of id on parent
 //    if (parent==0) std::cout << "don't have parent..." << std::endl;
 //    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
@@ -123,7 +123,7 @@ HltDataSvc::hasSelection(const stringKey& id) const {
     
 
 Hlt::Selection& 
-HltDataSvc::selection(const stringKey& id,IAlgorithm* parent) {
+HltDataSvc::selection(const stringKey& id,IAlgorithm* /*parent*/) {
 //@TODO: record dependency of parent on id
     //if (parent==0) std::cout << "don't have parent..." << std::endl;
     // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
