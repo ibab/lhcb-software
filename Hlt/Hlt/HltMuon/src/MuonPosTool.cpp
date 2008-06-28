@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.cpp,v 1.4 2008-05-03 15:26:06 graven Exp $
+// $Id: MuonPosTool.cpp,v 1.5 2008-06-28 09:23:30 graven Exp $
 // Include files 
 #include "boost/assign/list_of.hpp"
 
@@ -102,7 +102,7 @@ StatusCode MuonPosTool::initialize() {
 StatusCode MuonPosTool::calcTilePos(const LHCb::MuonTileID& tile, 
                                     double& x, double& deltax,
                                     double& y, double& deltay,
-                                    double& z, double& deltaz)
+                                    double& z, double& /*deltaz*/)
 {
      
   int station=tile.station();
