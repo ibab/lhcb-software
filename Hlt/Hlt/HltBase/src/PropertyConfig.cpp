@@ -18,8 +18,8 @@ istream& PropertyConfig::read(istream& is) {
     boost::regex name("^Name: (.*)$"),
                  type("^Type: (.*)$"),
                  kind("^Kind: (.*)$"),
-                 propstart("^Properties: \\\[$"),
-                 propend("^\\\]$"),
+                 propstart("^Properties: \\[$"),
+                 propend("^\\]$"),
                  property("^ ?'([^']+)':(.*)$"),
                  ignore("^$");
     while (!is.eof()) {

@@ -8,8 +8,8 @@ using Gaudi::Math::MD5;
 istream& ConfigTreeNode::read(istream& is) {
     bool parsing_nodes = false;
     boost::regex leaf("^Leaf: ([a-fA-F0-9]{32})$"),
-                 nodestart("^Nodes: \\\[$"),
-                 nodeend("^\\\]$"),
+                 nodestart("^Nodes: \\[$"),
+                 nodeend("^\\]$"),
                  node("^ ?([a-fA-F0-9]{32})$"),
                  label("^Label: (.*)$"),
                  ignore("^$");
@@ -52,5 +52,5 @@ ostream& ConfigTreeNode::print(ostream& os) const {
 
 ConfigTreeNode::digest_type ConfigTreeNode::digest() const { return digest_type::compute(*this); }
 
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os);}
-std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is);}
+std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
+std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is); }
