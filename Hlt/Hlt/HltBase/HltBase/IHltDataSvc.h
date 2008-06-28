@@ -3,7 +3,7 @@
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/StatusCode.h"
 #include "HltBase/stringKey.h"
-#include "HltData.h"
+#include "HltBase/HltSelection.h"
 #include "HltTypes.h"
 #include <vector>
 class IAlgorithm;

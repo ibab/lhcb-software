@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-06-28 - Gerhard Raven
+ - fix genreflex warnings
+ - rename HltData.h into HltSelection.h to match contents
+
 ! 2008-06-25 - Gerhard Raven
  - extend ANNSvc to allow one to get the list of keys of a major, i.e. no numbers,
    just names.
