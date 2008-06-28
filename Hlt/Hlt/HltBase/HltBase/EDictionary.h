@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <iostream>
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/StatusCode.h"
 #include "boost/any.hpp"
