@@ -3,6 +3,221 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v32r2">2008-06-29 - GaussSys v32r2</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
+   head-20080603 and head-20060516.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r7 (and Gaudi v19r9)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.1 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   <b>Geant4 v90r2 (based on geant4.9.0.p02)</b>
+   DecFiles v14r4, ParamFiles v7r1 
+   DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   pythia8 107.1</A></H3>
+<H3><A NAME="Details">
+   Development version.
+   Partially built on Win32, all generators still not built on win to test
+   new builds by LCG. Temporarly switch off also ParticleGuns since it now
+   uses Generators.
+   Almost identical to Gauss v31r2 (but for additions) but based on different
+   version of Geant4 (9.0.p02).
+</A></H3>
+
+!======================== Gauss v32r2 2008-06-29 =============================
+! 2008-06-29 - Gloria CORTI for Magnus LIENG
+ - Fix name of algorithm for BCM monitoring to agree to what in included
+   options from BcmMoniSim
+   . BCMSimulation.opts
+
+! 2008-06-27 - Gloria CORTI
+ - Use Geant4Files for G4 9.0
+   . requirements
+ - Adapt options to changes in name of Geant4 physics for EM physics
+   . PhysList-{LHEP,QGSP}.opts
+ - Increase version number to v32r2
+   . requirements, lhcb-2008.py, Gauss_Ganga.py
+
+!======================= ParticleGuns v5r1 2008-06-26 =======================
+! 2008-06-12 - Patrick Robbe
+ - Add optical photon particle gun for RICH
+ - Add Gaussian theta angle distribution around axis possibility for
+   particle gun tool
+
+!======================= GiGaVisUI v5r0 2008-06-26 ===========================
+! 2008-06-17 - Gloria CORTI
+ - Remove G4GAGTree as graphic system as it is no longer available in
+   Geant4 v90r2 (see g4 release notes:
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+
+!========================= GaussKine v2r1 2008-06-27 =========================
+! 2008-06-12 - Patrick Robbe
+ - Add the modifications for optical photon particle gun in GeneratorToG4
+
+!======================== GaussTools v14r0 2008-06-26 ========================
+! 2008-06-26 - Gloria CORTI
+ - Use new patterns in Gaudi v19r9 to create genConf helper library for
+   G4 User Actions (see 2007-11-30).
+   . cmt/requirements
+
+!========================= GaussRICH v9r0 2008-06-26 =========================
+! 2008-06-26 - Gloria CORTI
+ - Adapt to change in Geant4 v92r0 (9.0.p02) where kCarTolerance is no
+   longer available and has to be replaced by GetSurfaceTolerance() method
+   of G4GeometryTolerance (see geant4 release notes
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+   . src/PhysProcess/RichHpdPhotoElectricEffect.cpp
+   . src/srcG4/RichG4OpBoundaryProcess.cc
+ - Use pattern from Gaudi v19r9 for genConf helper library
+
+! 2008-06-24 - Chris Jones
+ - Adapt to change in RichDet detector element locations
+
+!====================== GaussPhysics v6r0 2008-06-27 =========================
+! 2008-06-17 - Gloria CORTI
+ - Adapt to change in name of EM physics list for non default one introduced
+   in Geant4 v90r2 (see geant4 release notes
+   http://geant4.web.cern.ch/geant4/support/ReleaseNotes4.9.0.html)
+   G4EmStandardPhysics71 --> G4EmStandardPhysics_option1
+   G4EmStandardPhysics72 --> G4EmStandardPhysics_option2
+   . GaussPhysics_load.cpp
+
+!! 2008-06-24 - Vanya BELYAEV
+ - src/G4Higgses.h, G4Higgses.cpp
+    add the descriptions of Higgses:  H_10, H_20 and H_30
+  IMPORTANT:
+    The static function Definition() *DOES* not create the objects!
+    To creat ethe obkect one need to use the statci functions
+    G4H_10::Create,
+    G4H_20::Create and G4H_30::Create
+    For these function one must to specify the
+    lifetime (c*tau) and mass of the particle.
+    The functions takes care about the proper setting of
+    all parameters needed for Geat4 (essentially longlived/shortlived)
+    flags
+        P.S.: there is no ugly reinterpret_cast.
+    if ( 0 == G4H_10::Definition() )
+    {
+      const double mass = 120 * Gaudi::Units::GeV ;
+      const double ctau = 20  * Gaudi::Units::mm  ;
+      G4H_10::Create ( mass , ctau ) ;
+    }
+    Assert ( 0 != G4H_10::Definition() , "No valid definition for H_10") ;
+ - src/GiGaHiggsParticles.cpp
+    New "physics constructor", which takes care about the creation
+    of proper "H_10", "H_20" and "H_30" particles.
+    The particle properties are taked from Particle Property
+    Service.
+    For usage one needs to add this constructor/list into the
+    modular physics list:
+      GiGa.ModularPL.PhysicsConstructors += [ "GiGaHiggsParticles" ] ;
+    It also dumps (@ MSG::INFO) the properties of created higgses. e.g.:
+--- G4ParticleDefinition ---
+ Particle Name : H_20
+ PDG particle code : 35 [PDG anti-particle code: 35]
+ Mass [GeV/c2] : 180     Width : 7.00226
+ Lifetime [nsec] : 9.4e-17
+ Charge [e]: 0
+ Spin : 0/2
+ Parity : -1
+ Charge conjugation : 1
+ Isospin : (I,Iz): (0/2 , 0/2 )
+ GParity : -1
+ Quark contents     (d,u,s,c,b,t) : 0, 0, 0, 0, 0, 0
+ AntiQuark contents               : 0, 0, 0, 0, 0, 0
+ Lepton number : 0 Baryon number : 0
+ Particle type : higgs [higgs]
+ ShortLived : ON
+Decay Table is not defined !!
+--- G4ParticleDefinition ---
+ Particle Name : H_30
+ PDG particle code : 36 [PDG anti-particle code: 36]
+ Mass [GeV/c2] : 50     Width : 6.58212e-14
+ Lifetime [nsec] : 0.01
+ Charge [e]: 0
+ Spin : 0/2
+ Parity : 1
+ Charge conjugation : 1
+ Isospin : (I,Iz): (0/2 , 0/2 )
+ GParity : -1
+ Quark contents     (d,u,s,c,b,t) : 0, 0, 0, 0, 0, 0
+ AntiQuark contents               : 0, 0, 0, 0, 0, 0
+ Lepton number : 0 Baryon number : 0
+ Particle type : higgs [higgs]
+Decay Table is not defined !!
+
+!====================== GaussMonitor v5r2 2008-06-27 =========================
+! 2008-06-24 - Vanya BELYAEV
+ - new algorithms to perform the checks for particle lifetiems both on HepMC
+         and MC levels
+   New files :
+   (1) src/CheckLifeTime.h, src/CheckLifeTime.cpp
+       the base class
+   (2) src/CheckLifeTimeHepMC.cpp
+       the concrete algorithm for checking lifetiem of HepMC particles
+   (3) src/CheckLifeTimeMC.cpp
+       the concrete algorithm for checking lifetiem of MC particles
+   (4) src/LifeTime.h
+       the common helper utilities
+  The algorithms has property "Particles"
+  The typical usesage:
+   SimMonitor.Members += [ "GaussMonitor::CheckLifeTimeMC/MCLifeTime" ];
+   GenMonitor.Members += [ "GaussMonitor::CheckLifeTimeHepMC/HepMCLifeTime" ];
+  The typical printout:
+MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'B0'        Actual is 0.489439+-0.049298(0.45982) Nominal is 0.46048 [mm]
+MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'B+'        Actual is 0.528686+-0.054560(0.47250) Nominal is 0.50095 [mm]
+MCLifeTime                 INFO  <0.5 sigma deviation in lifetime for 'B_s0'      Actual is 0.471664+-0.100333(0.45978) Nominal is 0.43799 [mm]
+MCLifeTime              WARNING  >1   sigma deviation in lifetime for 'Lambda_b0' Actual is 0.282185+-0.059657(0.23105) Nominal is 0.36844 [mm]
+MCLifeTime              WARNING  >1   sigma deviation in lifetime for 'D0'        Actual is 0.143134+-0.011404(0.13151) Nominal is 0.12340 [mm]
+MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'D+'        Actual is 0.295561+-0.035003(0.26194) Nominal is 0.31521 [mm]
+MCLifeTime                 INFO  >0.5 sigma deviation in lifetime for 'D_s+'      Actual is 0.133379+-0.026760(0.16712) Nominal is 0.14704 [mm]
+MCLifeTime              WARNING  >1   sigma deviation in lifetime for 'Lambda_c+' Actual is 0.077262+-0.013329(0.05655) Nominal is 0.05979 [mm]
+
+ histos:
+MCLifeTime              SUCCESS List of booked 1D histograms in directory         "MC/MCLifeTime" :- | ID                        |   Title                                       |    #    |     Mean
+|    RMS     |  Skewness  |  Kurtosis  |
+ | LifeTime B+               | "LifeTime B+"                                 |    75   |    0.52869
+| 0.47251    |     1.3752 |     1.8131 |
+ | LifeTime D+               | "LifeTime D+"                                 |    56   |    0.29556
+| 0.26194    |     1.2438 |     1.1996 |
+ | LifeTime Lambda_b0        | "LifeTime Lambda_b0"                          |    15   |    0.28219
+| 0.23105    |    0.76436 |   -0.24491 |
+ | LifeTime Lambda_c+        | "LifeTime Lambda_c+"                          |    18   |   0.077262
+| 0.056554   |    0.82634 |    0.22073 |
+ | LifeTime B_s0             | "LifeTime B_s0"                               |    21   |    0.47166
+| 0.45979    |     1.3353 |    0.94287 |
+ | LifeTime B_c+             | "LifeTime B_c+"                               |    0    |          0
+| 0          |        nan |        nan |
+ | LifeTime D_s+             | "LifeTime D_s+"                               |    39   |    0.13338
+| 0.16712    |      3.592 |     15.729 |
+ | LifeTime D0               | "LifeTime D0"                                 |   133   |    0.14313
+| 0.13152    |     1.4295 |     1.5341 |
+ | LifeTime B0               | "LifeTime B0"                                 |    87   |    0.48944
+| 0.45983    |     1.2403 |     1.0644 |
+
+ counters:
+MCLifeTime              SUCCESS Number of counters : 9
+ |    Counter     |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "LifeTime B+"  |        75 |   39.65142 |    0.52869 |    0.47251 |    0.021626 |      2.3047 |
+ | "LifeTime B0"  |        87 |   42.58121 |    0.48944 |    0.45983 |   0.0016786 |      1.9720 |
+ | "LifeTime B_c+"|         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+ | "LifeTime B_s0"|        21 |   9.904944 |    0.47166 |    0.45979 |    0.031394 |      1.6468 |
+ | "LifeTime D+"  |        56 |   16.55143 |    0.29556 |    0.26194 |   0.0073296 |      1.1662 |
+ | "LifeTime D0"  |       133 |   19.03681 |    0.14313 |    0.13152 |  0.00044534 |     0.59080 |
+ | "LifeTime D_s+"|        39 |   5.201792 |    0.13338 |    0.16712 |   0.0051624 |      1.0061 |
+ | "LifeTime Lambd|        15 |   4.232776 |    0.28219 |    0.23105 |   0.0054285 |     0.82772 |
+ | "LifeTime Lambd|        18 |   1.390719 |   0.077262 |   0.056554 |  0.00010981 |     0.22518 |
+
+!========================= GenTests v1r1 2008-06-29 ==========================
+! 2008-06-29 - Gloria CORTI
+ - Increase version and follow template for requirements
+
+! 2008-06-23 - Patrick Robbe
+ - Add script to produce the test jobs via Ganga
+
+!=============================================================================
 </PRE><H1><A NAME="v31r2">2008-06-16 - GaussSys v31r2</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
    head-20080603 and -head-20060516.
@@ -14,10 +229,9 @@ Purpose: LHCb Simulation program
    Geant4 v83r2 (based on geant4.8.3.patch02)
    <b>DecFiles v14r4</b>, ParamFiles v7r1 
    DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
-<H3><A NAME="Exe">Used by GaussXXX executables:
    herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
-   <b>pythia8 107.1</b></A></H3>
+   pythia8 107.1<</A></H3>
 <H3><A NAME="Details">
    Development version.
    Partially built on Win32, all generators still not built on win to test
@@ -54,10 +268,9 @@ Purpose: LHCb Simulation program
    Geant4 v83r2 (based on geant4.8.3.patch02)
    <b>DecFiles v14r4</b>, ParamFiles v7r1 
    DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
-<H3><A NAME="Exe">Used by GaussXXX executables:
    herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
    hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
-   <b>pythia8 107.1</b></A></H3>
+   pythia8 107.1</A></H3>
 <H3><A NAME="Details">
    Development version.
    Partially built on Win32, temporarly swith off all generators to test
