@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v32r2 2008-06-29 =============================
 ! 2008-06-29 - Gloria CORTI for Magnus LIENG
  - Fix name of algorithm for BCM monitoring to agree to what in included
    options from BcmMoniSim
