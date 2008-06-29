@@ -41,10 +41,10 @@ MuTrackL0Entry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
 MuTrackL0Entry.OutputLevel=3;
 
 // HLT entry: some L0 confirmed muon, from single muon alley;
-MuTrackEntry.InputSelections = {"MuonAndTVelo"};
+MuTrackEntry.InputSelections = {"Hlt1MuonSingleTMVeloT"};
 
 // Select Muons with IP and pT
-MuTrackMuonTF.InputSelection  = "MuonAndTVelo";
+MuTrackMuonTF.InputSelection  = "Hlt1MuonSingleTMVeloT";
 MuTrackMuonTF.HistogramUpdatePeriod = 0;
 MuTrackMuonTF.FilterDescriptor = {"PT,>,1000.",
                                   "IP_PV2D,||[],0.025,99999999."

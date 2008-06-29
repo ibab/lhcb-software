@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-06-29 - Sandra Amato
+ - HltMuonAlleyConfSequence.opts - Change all the names of algorithms to follow conventions
+ - changed  MuonAndTVelo to Hlt1MuonSingleTMVeloT in
+   Hlt1MuTrackSequence.opts, HltMuHadAlleyConfSequence.opts, HltProtoParticles.opts
 
 ! 2008-06-27 - Gerhard Raven
  - add missing InfoID <-> name entries explicitly to HltInit.opts
