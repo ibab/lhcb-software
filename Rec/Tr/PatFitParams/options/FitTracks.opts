@@ -43,12 +43,6 @@ EventSelector.PrintFreq  = 10;
 KsFitParams.zMagnetParams = { 5372.42, -3372.25, 370.484 };
 KsFitParams.momentumParams = { 1226.32, 479.859, 2859.75 };
 
-
-SeedFitParams.sagitaParams = { -0.00204497, 0.0426763 };
-SeedFitParams.momentumParams = { 0.0241056, -0.520262, 680.082 };
-SeedFitParams.zMagnetParams = { 5373.86, -3283.82, 379.141 };
-
-
 FwdFitParams.ZVelo      = 1640 ;
 FwdFitParams.ZReference = 8520 ;
 FwdFitParams.zMagnetParams = { 5199.31, 334.725, -1283.86, 9.59486e-06, -413.281 };

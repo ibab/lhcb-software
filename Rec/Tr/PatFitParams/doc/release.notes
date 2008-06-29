@@ -4,6 +4,10 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2008-06-29 - Manuel Tobias Schiller
+ - update to bring SeedFitParams back in sync with the parameters actually
+   used in PatSeeding
+
 !======================== PatFitParams v3r1 2008-01-28 =======================
 ! 2008-01-28 - Marco Cattaneo
  - Update options for Gaudi v19r7

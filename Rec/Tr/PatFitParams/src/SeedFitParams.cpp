@@ -1,4 +1,4 @@
-// $Id: SeedFitParams.cpp,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
+// $Id: SeedFitParams.cpp,v 1.2 2008-06-29 21:54:49 mschille Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,11 @@
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/MCHit.h"
+
+#include "Event/StateParameters.h"
+
+#include <boost/assign/list_of.hpp>
+#include <boost/array.hpp>
 
 // local
 #include "SeedFitParams.h"
@@ -31,12 +36,20 @@ SeedFitParams::SeedFitParams( const std::string& name,
   : GaudiTupleAlg ( name , pSvcLocator )
 {
   declareProperty( "TupleName",          m_tupleName  = "Track" );
-  declareProperty( "ZRef",               m_zRef       = 8520.0 * Gaudi::Units::mm );
-  declareProperty( "ZSeed",              m_zSeed      = 9410.0 * Gaudi::Units::mm );
+  declareProperty( "ZRef",               m_zRef       = StateParameters::ZMidT );
+  declareProperty( "ZSeed",              m_zSeed      = StateParameters::ZEndT );
   declareProperty( "ZTT",                m_zTT        = 2485.0 * Gaudi::Units::mm );
-  declareProperty( "sagitaParams",       m_sagParams  );
-  declareProperty( "momentumParams",     m_momParams  );
-  declareProperty( "zMagnetParams",      m_zMagParams );
+
+  // these are the "tunables" for PatSeeding
+  // for many of these parameters, PatSeeding only takes the first one
+  // while we fit for several to disentangle dependencies which would
+  // move the values we'd obtain away from their "best" value
+  declareProperty( "InitialArrow",       m_initialArrowParams  = boost::assign::list_of(4.21826e-09)(-8.93796e-08)(0.372981) );
+  declareProperty( "MomentumScaleParams",     m_momentumScaleParams  = boost::assign::list_of(40.3751)(1163.24)(-682850) );
+  declareProperty( "zMagnetParams",      m_zMagParams = boost::assign::list_of(5372.27)(-3111.41)(384.74) );
+
+  declareProperty( "dRatioParams",      m_dRatio = boost::assign::list_of(-3.77e-4)(4.7) );
+  declareProperty( "yCorrection", m_yCorrection = boost::assign::list_of(1.25e-14) );
  
   m_nEvent = 0;
   m_nTrack = 0;
@@ -55,9 +68,12 @@ StatusCode SeedFitParams::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_sagPar.init( "sagita"   , m_sagParams );
-  m_momPar.init( "momentum" , m_momParams );
+  m_initialArrowPar.init( "InitialArrow"   , m_initialArrowParams );
+  m_momentumScalePar.init( "momentum" , m_momentumScaleParams );
   m_zMagPar.init( "zMagnet"  , m_zMagParams );
+
+  m_dRatioPar.init( "dRatio", m_dRatio );
+  m_yCorrectionPar.init( "yCorrection", m_yCorrection );
 
   m_fitTool = tool<FitTool>( "FitTool" );
 
@@ -90,8 +106,6 @@ StatusCode SeedFitParams::execute() {
   const LHCb::MCVertex* vOrigin;
   SmartRefVector<LHCb::MCVertex> vDecay;
   
-  
-  
   for ( pItr = partCtnr->begin(); partCtnr->end() != pItr; pItr++ ) {
     part = *pItr;
     if ( 0 == trackInfo.fullInfo( part ) ) continue;
@@ -111,7 +125,7 @@ StatusCode SeedFitParams::execute() {
     SmartRefVector<LHCb::MCVertex> endV = part->endVertices();
     for ( SmartRefVector<LHCb::MCVertex>::const_iterator itV = endV.begin() ;
           endV.end() != itV; itV++ ) {
-      if ( (*itV)->position().z() > 9500. ) continue;
+      if ( (*itV)->position().z() > StateParameters::ZEndT ) continue;
       hasInteractionVertex = true;
     }
     if ( hasInteractionVertex ) continue;
@@ -173,12 +187,12 @@ StatusCode SeedFitParams::execute() {
     m_fitTool->fitCubic( trHits, 0, m_zRef, ax, bx, cx, dx );
     m_fitTool->fitLine ( trHits, 1, m_zRef, ay, by );
 
-    m_momPar.setFun( 0, 1. );
-    m_momPar.setFun( 1, by * by );
-    m_momPar.setFun( 2, fabs(cx) );
+    m_momentumScalePar.setFun( 0, 1. );
+    m_momentumScalePar.setFun( 1, by * by );
+    m_momentumScalePar.setFun( 2, fabs(cx) );
 
-    double dp = cx * momentum - m_momPar.sum();
-    m_momPar.addEvent( dp );
+    double dp = 1. / (cx * momentum) - m_momentumScalePar.sum();
+    m_momentumScalePar.addEvent( dp );
 
     if ( msgLevel( MSG::DEBUG ) ) {
       debug() << format( "p %7.3f, N%4d, ax%8.2f bx%8.2f cx%8.2f dp%10.4f",
@@ -186,12 +200,25 @@ StatusCode SeedFitParams::execute() {
                          ax, 1.e3*bx, 1.e6*cx, dp ) << endreq;
     }    
 
-    m_sagPar.setFun( 0, 1. );
-    m_sagPar.setFun( 1, by*by );
-    m_sagPar.setFun( 2, cx*cx );
-    double xAtZero = ax - bx * m_zRef;
-    double dSag = cx * 700. * 700. / xAtZero - m_sagPar.sum();
-    m_sagPar.addEvent( dSag );
+    // work out intercept point of line joining T1 and T3 with z = 0
+    const double dzT1 = StateParameters::ZBegT - m_zRef;
+    const double dzT3 = StateParameters::ZEndT - m_zRef;
+    const double xT1 = ((dx * dzT1 + cx) * dzT1 + bx) * dzT1 + ax;
+    const double xT3 = ((dx * dzT3 + cx) * dzT3 + bx) * dzT3 + ax;
+    const double tx13 = (xT3 - xT1) / (dzT3 - dzT1);
+    const double xAtZero = ax - tx13 * m_zRef;
+    // initial arrow depends in y and cx in T, so we determine it as
+    // InitialArrow(by) = InitialArrow[0] + InitialArrow[1] * by * by
+    // 		+ InitialArrow[2] * cx * cx
+    m_initialArrowPar.setFun( 0, 1. );
+    m_initialArrowPar.setFun( 1, by*by );
+    m_initialArrowPar.setFun( 2, cx*cx );
+    double dSag = 0.;
+    if (1. < fabs(xAtZero)) {
+      dSag = -cx / xAtZero - m_initialArrowPar.sum();
+      m_initialArrowPar.addEvent( dSag );
+    }
+
 
     double axt, bxt, cxt, ayt, byt, zMagnet, zEst;
     if ( 2 < ttHits.size() ) {
@@ -210,6 +237,7 @@ StatusCode SeedFitParams::execute() {
       m_zMagPar.setFun( 2, bx*bx );
       zEst = m_zMagPar.sum();
       if ( fabs( zMagnet-zEst) < 100. ) m_zMagPar.addEvent( zMagnet-zEst );
+
     } else {
       zMagnet = 0.;
       zEst = 0.;
@@ -218,6 +246,22 @@ StatusCode SeedFitParams::execute() {
       ayt = 0.;
       byt = 0.;
     }
+
+    m_dRatioPar.setFun(0, 1.0);
+    m_dRatioPar.setFun(1, fabs(cx));
+    if (fabs(cx) > 1e-10 && fabs(dx) > 1e-15)
+      m_dRatioPar.addEvent(dx / cx - m_dRatioPar.sum());
+
+    // check if we can improve pointing constraint in y
+    // use only tracks which do not point to the origin too well, for those
+    // with fabs(y(y=0)) < 40 cm, the correction is small anyway, so we avoid
+    // to pollute our statistics with them (if the correction is slightly
+    // off for the well pointing tracks, they will still point rather well if
+    // we under- or overcorrect a little)
+    const double y0 = ay - by * m_zRef;
+    m_yCorrectionPar.setFun(0, 1.0);
+    if (400. < fabs(y0))
+      m_yCorrectionPar.addEvent(fabs((by * by * cx * cx) / y0) - m_yCorrectionPar.sum());
       
     tTrack->column( "ax", ax );
     tTrack->column( "bx", bx );
@@ -256,14 +300,20 @@ StatusCode SeedFitParams::finalize() {
   msg << "============================================" << endreq;
   msg << "  Processed " << m_nEvent << " events and " << m_nTrack << " tracks. " << endreq;
   msg << "============================================" << endreq;
-  m_sagPar.updateParameters( msg );
-  m_momPar.updateParameters(  msg );
+  m_initialArrowPar.updateParameters( msg );
+  m_momentumScalePar.updateParameters(  msg );
   m_zMagPar.updateParameters(  msg );
 
+  m_dRatioPar.updateParameters(  msg );
+  m_yCorrectionPar.updateParameters(  msg );
+
   std::cout << std::endl;
-  m_sagPar.printParams( name() );
-  m_momPar.printParams( name() );
+  m_initialArrowPar.printParams( name() );
+  m_momentumScalePar.printParams( name() );
   m_zMagPar.printParams( name() );
+
+  m_dRatioPar.printParams( name() );
+  m_yCorrectionPar.printParams( name() );
   std::cout << std::endl;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions
