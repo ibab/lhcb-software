@@ -1,4 +1,4 @@
-// $Id: PatSeedTrack.cpp,v 1.2 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatSeedTrack.cpp,v 1.3 2008-06-29 21:52:07 mschille Exp $
 // Include files
 
 // local
@@ -58,7 +58,7 @@ PatSeedTrack::PatSeedTrack( PatFwdHit* c0, PatFwdHit* c1, PatFwdHit* c2, PatFwdH
   //== solve with c0 and c3 only
 
   // arrow is m_cx * dz^2 for nominal distance between stations.
-  double curvature = - arrow / ( 700*700.);
+  double curvature = - arrow;
   double dz0 = c0->z() - zRef;
   double curv0 = curvature * ( 1. + dRatio * dz0 ) * dz0 * dz0;
   double a0 =  1. + curv0;

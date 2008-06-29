@@ -4,6 +4,28 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-06-29 - Manuel Tobias Schiller
+ - PatSeedingTool:
+   - tuning for new field map, now used per default
+   - added new tuning for old field map, see
+     options/PatSeedingTool-field047.opts
+   - fixed a bug in the code calculating cluster positions, we now really do
+     it the "Kisel" way (apart from the fact that we protect against division
+     by 0, see below)
+     we now use x_clus = (r_2 * x_1 + r_1 * x_2) / (r_1 + r_2), z_clus is done
+     in the same way; to avoid divisions by zero, we take
+       r_i = sqrt( (drift radius for hit i)^2 + measurement variance)
+     i.e. the model is almost linear in r_drift, and it degenerates into the
+     arithmetic mean of the wire positions if we run without using drift time
+     information
+   - made new option-controllable parameter OTNHitsLowThresh which gives the
+     threshold below which OT only tracks have to satisfy stricter criteria
+     (nicer than a literal 17 in the code)
+   - add options to extract T station part of Forward tracks and add resulting
+     tracks to output container (in addition to ignoring hits used by
+     PatForward which was possible already previously)
+ - PatSeedTrack: changes to follow new parametrisation in PatSeedingTool
+
 ! 2008-06-09 - Olivier Callot
  - Fix a possible divide-by-zero in PatDownstream, line 604.
 

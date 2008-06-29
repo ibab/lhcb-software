@@ -1,0 +1,5 @@
+PatSeeding.PatSeedingTool.InitialArrow = 4.21826e-09;
+PatSeeding.PatSeedingTool.MomentumScale = 40.3751;
+PatSeeding.PatSeedingTool.zMagnet = 5372.1;
+PatSeeding.PatSeedingTool.dRatio = -3.81831e-4;
+PatSeeding.PatSeedingTool.yCorrection = 8.6746e-15;

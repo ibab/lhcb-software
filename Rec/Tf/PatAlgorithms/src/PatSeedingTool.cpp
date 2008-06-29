@@ -1,9 +1,11 @@
-// $Id: PatSeedingTool.cpp,v 1.15 2008-06-05 06:24:50 cattanem Exp $
+// $Id: PatSeedingTool.cpp,v 1.16 2008-06-29 21:52:07 mschille Exp $
 // Include files
 
 #include <cmath>
 #include <algorithm>
 #include <functional>
+
+#include <fenv.h>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -56,9 +58,9 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   // track model
   //------------------------------------------------------------------------
-  declareProperty( "dRatio",			m_dRatio		= -0.377e-3                );
-  declareProperty( "InitialArrow",		m_initialArrow		= 0.0022                   );
-  declareProperty( "MomentumScale",		m_momentumScale		=   40.			   );
+  declareProperty( "dRatio",			m_dRatio		= -3.2265e-4);
+  declareProperty( "InitialArrow",		m_initialArrow		= 4.25307e-09);
+  declareProperty( "MomentumScale",		m_momentumScale		= 44.1416);
   declareProperty( "zReference",		m_zReference		=  StateParameters::ZMidT);
 
   //------------------------------------------------------------------------
@@ -68,7 +70,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MinMomentum",		m_minMomentum		=  500. * Gaudi::Units::MeV );
   declareProperty( "CurveTol",			m_curveTol		=    5. * Gaudi::Units::mm );
   // center of magnet compatibility
-  declareProperty( "zMagnet",			m_zMagnet		= 5300. * Gaudi::Units::mm );
+  declareProperty( "zMagnet",			m_zMagnet		= 5383.17 * Gaudi::Units::mm );
   declareProperty( "xMagTol",			m_xMagTol		= 2000. * Gaudi::Units::mm );
   // window to collect hits from
   declareProperty( "TolCollectOT",		m_tolCollectOT		=    3. * Gaudi::Units::mm );
@@ -88,7 +90,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MaxRangeOT",		m_maxRangeOT		=  150. * Gaudi::Units::mm );
   declareProperty( "MaxRangeIT",		m_maxRangeIT		=   50. * Gaudi::Units::mm );
   // pointing criterium in y
-  declareProperty( "yCorrection",		m_yCorrection		= .8e14 * Gaudi::Units::mm );
+  declareProperty( "yCorrection",		m_yCorrection		= 4.73385e-15);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
   declareProperty( "MaxYAtOriginLowQual",	m_maxYAtOriginLowQual	= 1500. * Gaudi::Units::mm );
 
@@ -108,6 +110,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MaxTrackChi2LowMult",	m_maxTrackChi2LowMult	=    5.			   );
   declareProperty( "MinTotalPlanes",		m_minTotalPlanes	=   10                     );
   declareProperty( "MaxMisses",			m_maxMisses		=    1			   );
+  declareProperty( "OTNHitsLowThresh",		m_otNHitsLowThresh	=   17			   );
 
   //------------------------------------------------------------------------
   // final track selection
@@ -127,6 +130,25 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "FastMomentumToolName",	m_fastMomentumToolName	= "FastMomentumEstimate" );
   declareProperty( "ZOutput",			m_zOutputs		=
 		  boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT));
+
+  //------------------------------------------------------------------------
+  // options concerning copying the T station part of forward tracks
+  //------------------------------------------------------------------------
+  // should we copy T station part of forward tracks (default: no)
+  declareProperty( "UseForwardTracks",		m_useForwardTracks	= false       );
+  // maximal difference in track parameters for two tracks to be considered clones
+  declareProperty( "ForwardCloneMaxXDist",	m_forwardCloneMaxXDist	=   10.0 * Gaudi::Units::mm );
+  declareProperty( "ForwardCloneMaxYDist",	m_forwardCloneMaxYDist	=   50.0 * Gaudi::Units::mm );
+  declareProperty( "ForwardCloneMaxTXDist",	m_forwardCloneMaxTXDist	=    0.005 );
+  // if clones defined in the sense above share more than a fraction of
+  // ForwardCloneMaxSharedof hits, only the longer track survives
+  declareProperty( "ForwardCloneMaxShared",	m_forwardCloneMaxShared = 0.3);
+  // if clones defined in the sense above share less than above fraction
+  // of hits, this property determines if they will be merged into a single
+  // T station track (as PatForward is tuned for efficiency, T station track
+  // segments contain about 5% clones which are due to a T station track
+  // being "split" to match several Velo tracks)
+  declareProperty( "ForwardCloneMergeSeg",	m_forwardCloneMergeSeg	= true );
 
   //------------------------------------------------------------------------
   // anything that doesn't fit above
@@ -157,13 +179,13 @@ StatusCode PatSeedingTool::initialize() {
   m_seedTool = tool<PatSeedTool>( "PatSeedTool" );
   m_fastMomentumTool = tool<IFastMomentumEstimate>( m_fastMomentumToolName );
 
-  //== Max impact: first term is due to arrow ->curvature by / (700 mm)^2 then momentum to impact at z=0
+  //== Max impact: first term is due to arrow ->curvature by / (mm)^2 then momentum to impact at z=0
   //== second term is decay of Ks: 210 MeV Pt, 2000 mm decay distance.
   // protect against division by near-zero
   if (1e-42 > fabs(m_minMomentum) || 1e-42 > fabs(m_momentumScale) ||
       1e-42 > fabs(m_initialArrow)) m_maxImpact = HUGE_VAL;
   else m_maxImpact =
-    700. * 700. / ( m_momentumScale * m_initialArrow * m_minMomentum ) +
+    1. / ( m_momentumScale * m_initialArrow * m_minMomentum ) +
       2000. * 210. / m_minMomentum;
 
   if ( m_measureTime ) {
@@ -173,7 +195,8 @@ StatusCode PatSeedingTool::initialize() {
     // add a dummy timer entry
     m_timer->addTimer(name());
     m_timer->increaseIndent();
-    m_timeInit      = m_timer->addTimer( "Use Fwd + Tsa tracks" );
+    m_timeInit      = m_timer->addTimer( "prepare hits" );
+    m_timeReuseTracks=m_timer->addTimer( "reuse tracks" );
     m_timePerRegion = m_timer->addTimer( "find all regions" );
     m_timeX         = m_timer->addTimer( "find X projections" );
     m_timeStereo    = m_timer->addTimer( "find stereo" );
@@ -330,6 +353,10 @@ StatusCode PatSeedingTool::performTracking(
 		std::vector<LHCb::Track*>& outputTracks,
 		const LHCb::State* state )
 {
+  // if we are to extract the seed part from Forward tracks, do so now
+  if (m_useForwardTracks)
+    processForwardTracks(m_inputTracksName, outputTracks);
+
   std::vector<PatSeedTrack>::iterator itS;
   // the idea is to have two memory pools which grow when needed:
   //
@@ -517,7 +544,7 @@ void PatSeedingTool::collectPerRegion(
 	  continue;
 	}
 	double yAtOrigin = y0;
-	double yCorr     = m_yCorrection * sl * sl * track.curvature() * track.curvature();
+	double yCorr     = sl * sl * track.curvature() * track.curvature() / m_yCorrection;
 	if ( sl > 0 ) yAtOrigin = y0 - yCorr;
 	else yAtOrigin = y0 + yCorr;
 
@@ -573,7 +600,7 @@ void PatSeedingTool::collectPerRegion(
 	}
 
 	if ( isRegionOT(reg) &&
-	    17 > track.nCoords() &&
+	    m_otNHitsLowThresh > track.nCoords() &&
 	    2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
 	  if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
 	    << track.nCoords() << " coordinates" << endreq;
@@ -589,7 +616,7 @@ void PatSeedingTool::collectPerRegion(
 	if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
 	  << ", nPlanes = " << track.nPlanes() << endreq;
 	if ( isRegionOT(reg) &&   // OT
-	    17 > track.nCoords() &&  // short track -> not too many neighbours
+	    m_otNHitsLowThresh > track.nCoords() &&  // short track -> not too many neighbours
 	    2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
 	  if ( m_printing ) {
 	    info()  << "Too many on side " << track.nbOnSide() << " with only "
@@ -649,7 +676,7 @@ void PatSeedingTool::collectITOT(
       for ( HitRange::const_iterator itH0 = rangeH0.begin();
 	  rangeH0.end() != itH0; ++itH0 ) {
 	PatFwdHit* hit0 = *itH0;
-	if ( 0 != state) {
+	if ( 0 != state ) {
 	  if ( x0Max < hit0->hit()->xAtYEq0() ) break;
 	  if ( x0Min > hit0->hit()->xAtYEq0() ) continue;
 	}
@@ -985,7 +1012,7 @@ void PatSeedingTool::collectLowQualTracks(
 
     // check that pointing constraint still holds
     double yAtOrigin = y0;
-    double yCorr     = m_yCorrection * sl * sl * track.curvature() * track.curvature();
+    double yCorr     = sl * sl * track.curvature() * track.curvature() / m_yCorrection;
     if ( sl > 0 ) yAtOrigin = y0 - yCorr;
     else yAtOrigin = y0 + yCorr;
     if ( m_maxYAtOriginLowQual < fabs(yAtOrigin) ) continue;
@@ -1024,7 +1051,7 @@ void PatSeedingTool::collectLowQualTracks(
       }
     }
 
-    if ( isOT && 17 > track.nCoords() &&
+    if ( isOT && m_otNHitsLowThresh > track.nCoords() &&
 	2 * (track.nCoords()-track.nPlanes()+1) < track.nbOnSide() ) {
       if ( m_printing ) info()  << "Too many on side " << track.nbOnSide() << " with only "
 	      << track.nCoords() << " coordinates" << endreq;
@@ -1037,7 +1064,7 @@ void PatSeedingTool::collectLowQualTracks(
 	
     if ( m_printing ) info() << "After fit status "<< ok << " chi2 " << track.chi2()
 	    << ", nPlanes = " << track.nPlanes() << endreq;
-    if ( isOT && 17 > track.nCoords() &&  // OT short track -> not too many neighbours
+    if ( isOT && m_otNHitsLowThresh > track.nCoords() &&  // OT short track -> not too many neighbours
 	2 * (track.nCoords() - track.nPlanes() +1 ) < track.nbOnSide() ) {
       if ( m_printing ) {
         info()  << "Too many on side " << track.nbOnSide() << " with only "
@@ -1108,7 +1135,7 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track,
   cov(3,3) = m_stateErrorTY2;
   cov(4,4) = sigmaQOverP * sigmaQOverP;
 
-  for ( unsigned i = 0; i < m_zOutputs.size(); i++ ) {
+  for ( unsigned i = 0; i < m_zOutputs.size(); ++i ) {
 	  z = m_zOutputs[i];
 	  temp.setX(track.xAtZ(z));
 	  temp.setY(track.yAtZ(z));
@@ -1420,7 +1447,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       // work out intercept
       double intercept =  x0 - z0 * slope;
       // and use it to correct for curvature in prediction of x1
-      double x1Pred = x0 + dz * slope + m_initialArrow * intercept;
+      double x1Pred = x0 + dz * (slope + m_initialArrow * intercept * dz);
       x1Min += x1Pred - m_curveTol;
       x1Max += x1Pred + m_curveTol;
       // if we know more because we have a state, make use of that knowledge
@@ -1970,71 +1997,124 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
 }
 
 //=========================================================================
-//  Extract the seed part from tracks, and store them
+//  Extract the seed part from forward tracks, and store them
 //=========================================================================
-void PatSeedingTool::processTracks ( std::string location, std::vector<LHCb::Track*>& outputTracks ) {
-  if ( !exist<LHCb::Tracks>( location ) ) return;
+// logic:
+// for all forward tracks
+//   - extract T station part
+//   - if T station part is not clone of other tracks found so far
+//      - produce new track using T station hit content
+//   - if is clone (clone definition is based on track parameters here):
+//     - if many shared hits with a track found previously, keep longer one
+//     - if track parameters are very similar, but few shared hits,
+//       assume that we found different segments of same track, so
+//       add missing hits to existing track
+void PatSeedingTool::processForwardTracks ( const std::string& location,
+    std::vector<LHCb::Track*>& outputTracks ) const
+{
+  if ( m_measureTime ) m_timer->start(m_timeReuseTracks);
+  if ( !exist<LHCb::Tracks>( location ) ) {
+    if ( m_measureTime ) m_timer->stop(m_timeReuseTracks);
+    return;
+  }
 
-  LHCb::Tracks::iterator itT;
+  LHCb::Tracks::const_iterator itT;
   LHCb::Tracks* inputTracks  = get<LHCb::Tracks>( location );
+  outputTracks.reserve(outputTracks.size() + inputTracks->size());
+  std::vector<LHCb::LHCbID> ids;
+  ids.reserve(64);
+  // loop over input tracks
   for ( itT = inputTracks->begin(); inputTracks->end() != itT;  ++itT ) {
-    //== Keep only ST and OT ids.
-    std::vector<LHCb::LHCbID> ids;
-    for ( std::vector<LHCb::LHCbID>::const_iterator itId = (*itT)->lhcbIDs().begin();
-          (*itT)->lhcbIDs().end() != itId; ++itId ) {
-      if ( (*itId).isVelo() ) continue;
-      if ( (*itId).isTT()   ) continue;
-      ids.push_back( *itId );
-    }
+    const LHCb::Track* track = *itT;
+    ids.clear();
+    // copy the LHCbIDs which are either IT or OT hits
+    const std::vector<LHCb::LHCbID>& allids = track->lhcbIDs();
+    std::remove_copy_if( allids.begin(), allids.end(),
+	std::back_inserter(ids), std::not1(isTStation()));
     //== Check for clone, i.e. similar list of Ids.
     bool match = false;
-    unsigned maxMissed = int( (1.-m_commonXFraction) * ids.size() );
+    const LHCb::State& state = track->closestState(m_zReference);
+    // loop over output tracks to compare with current input track
+    for ( std::vector<LHCb::Track*>::iterator itS = outputTracks.begin();
+	outputTracks.end() != itS; ++itS) {
+      const LHCb::Track* track2 = (*itS);
+      const LHCb::State& state2 = track2->closestState(m_zReference);
+      // if the tracks are too far apart, they can not be clones
+      if (m_forwardCloneMaxXDist < fabs(state.x() - state2.x())) continue;
+      if (m_forwardCloneMaxYDist < fabs(state.y() - state2.y())) continue;
+      if (m_forwardCloneMaxTXDist < fabs(state.tx() - state2.tx())) continue;
+      // (no separate cut on ty due to strong correlation of y and ty)
 
-    std::vector<std::vector<LHCb::LHCbID> >::const_iterator itList;
-    for ( itList = m_foundIds.begin(); m_foundIds.end() != itList; ++itList ) {
-      unsigned nCommon = 0;
-      unsigned nMissed = 0;
-      for ( std::vector<LHCb::LHCbID>::const_iterator it1 = (*itList).begin();
-            (*itList).end() != it1; ++it1 ) {
-        bool found = false;
-        for ( std::vector<LHCb::LHCbID>::const_iterator it2 = ids.begin();
-              ids.end() != it2; ++it2 ) {
-          if ( *it1 == *it2 ) {
-            ++nCommon;
-            found = true;
-            break;
-          }
-        }
-        if ( !found ) {
-          --maxMissed;
-          if ( nMissed > maxMissed ) break;  // too many missed so far ->abort the comparison.
-        }
+      // ok, tracks are close in terms of track parameters, so compare
+      // on id level
+      const std::vector<LHCb::LHCbID>& ids2 = track2->lhcbIDs();
+      const double maxCommon = m_forwardCloneMaxShared *
+	double(std::min(ids.size(), ids2.size()));
+      const double maxMissed = (1. - m_forwardCloneMaxShared) *
+	double(std::min(ids.size(), ids2.size()));
+      for (std::vector<LHCb::LHCbID>::const_iterator itH = ids.begin();
+	  ids.end() != itH; ++itH ) {
+	unsigned nCommon = 0;
+	unsigned nMissed = 0;
+	if (ids2.end() == std::find(ids2.begin(), ids2.end(), *itH)) {
+	  // if too many missed, abort the comparison.
+	  if ( ++nMissed > maxMissed ) break;
+	} else {
+	  // if too many in common already, stop early as well
+	  if ( ++nCommon > maxCommon ) {
+	    match = true;
+	    break;
+	  }
+	}
+      } // loop over ids
+      // did we find a clone in terms of hits, or are the two tracks merely
+      // segments with very few shared hits?
+      if (match) {
+	// ids and ids2 have more than m_maxUsedFractPerRegion common hits
+	// if we already found the longer one of both, we keep it
+	if (ids2.size() >= ids.size()) break;
+	// otherwise, we reset the flag stating that we found a clone and
+	// erase the short version from our output (and add the longer
+	// version to the output below)
+	match = false;
+	delete *itS; // avoid creating a memory leak
+	outputTracks.erase(itS); // and erase the pointer
+	break;
+      } else if (m_forwardCloneMergeSeg) {
+	// id lists are not similar but track parameters are, so just combine
+	// hits from both tracks
+	match = true;
+	for (std::vector<LHCb::LHCbID>::const_iterator itH = ids.begin();
+	    ids.end() != itH; ++itH ) {
+	  if (ids2.end() == std::find(ids2.begin(), ids2.end(), *itH))
+	    (*itS)->addToLhcbIDs(*itH);
+	}
+	(*itS)->addToAncestors(track);
+	break;
       }
-      if ( nCommon > m_commonXFraction * ids.size() ) {
-        match = true;
-        break;
-      }
-    }
-    if ( match ) continue;
-    m_foundIds.push_back( ids );
+    } // loop over output tracks
+    // if the track in inputTracks matched one already found, we skip it
+    if (match) continue;
 
+    // build a track from the T station part and store it in outputTracks
     LHCb::Track* out = new LHCb::Track();
-    out->addToAncestors( *itT );
+    out->addToAncestors( track );
     out->setType( LHCb::Track::Ttrack );
     out->setHistory( LHCb::Track::PatSeeding );
     out->setPatRecStatus( LHCb::Track::PatRecIDs );
     out->setLhcbIDs( ids );
-    LHCb::State& state = (*itT)->stateAt(  LHCb::State::AtT );
-    out->addToStates( state );
+    for ( unsigned i = 0; i < m_zOutputs.size(); i++ )
+      out->addToStates( track->closestState(m_zOutputs[i]) );
     outputTracks.push_back( out );
-  }
+  } // loop over input tracks
+  if ( m_measureTime ) m_timer->stop(m_timeReuseTracks);
 }
 
 //=============================================================================
 StatusCode PatSeedingTool::tracksFromTrack(const LHCb::Track& seed, 
                                            std::vector<LHCb::Track*>& tracks ){ 
   // now that we have the possibility to use the state inside this algorithm,
-  // we use the state clostest to the middle of the T stations available on
+  // we use the state closest to the middle of the T stations available on
   // the track
   // - Manuel 01-28-2008
   return performTracking(tracks, &(seed.closestState(StateParameters::ZMidT)));

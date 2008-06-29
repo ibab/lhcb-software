@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.7 2008-06-04 15:33:48 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.8 2008-06-29 21:52:07 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -125,7 +125,8 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     /// convert a seed track to an LHCb track, estimating momentum
     void storeTrack( PatSeedTrack& track, std::vector<LHCb::Track*>& outputTracks );
 
-    void processTracks( std::string name, std::vector<LHCb::Track*>& outputTracks );
+    void processForwardTracks( const std::string& location,
+	std::vector<LHCb::Track*>& outputTracks ) const;
 
     /// check if the hit pointed to by it is isolated in the range range
     bool isIsolated(HitRange::const_iterator it, const HitRange& range);
@@ -221,13 +222,14 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     bool m_measureTime;
     ISequencerTimerTool* m_timer;
     int m_timeInit;
+    int m_timeReuseTracks;
     int m_timePerRegion;
     int m_timeX;
     int m_timeStereo;
     int m_timeItOt;
     int m_timeLowQual;
     bool m_useForward;
-    std::vector<std::vector<LHCb::LHCbID> > m_foundIds;
+    bool m_useForwardTracks;
 
     bool m_printing;
 
@@ -270,6 +272,16 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 
     // cut on drift radius
     std::vector<double> m_driftRadiusRange;
+    // threshold below which an OT track is considered to have few hits, thus
+    // having to satisfy stricter criteria
+    int m_otNHitsLowThresh;
+
+    // clone killing among forward tracks
+    double m_forwardCloneMaxXDist;
+    double m_forwardCloneMaxYDist;
+    double m_forwardCloneMaxTXDist;
+    double m_forwardCloneMaxShared;
+    bool m_forwardCloneMergeSeg;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
@@ -278,6 +290,9 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     static const unsigned int m_nOTReg = Tf::RegionID::OTIndex::kNRegions;
     static const unsigned int m_nITReg = Tf::RegionID::ITIndex::kNRegions;
 
+    // constants roughly defining the extension of the inefficient area in
+    // IT and OT due to gap between ladders/division of OT modules into
+    // lower and upper half
     static const int m_centralYOT = 50; // mm
     static const int m_centralYIT = 4; // mm
 
@@ -342,6 +357,10 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     void combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,
 	double& x, double& z) const;
 
+    struct isTStation : std::unary_function<const LHCb::LHCbID, bool> {
+      bool operator()(const LHCb::LHCbID id) const
+      { return id.isIT() || id.isOT(); }
+    };
 };
 
 inline void PatSeedingTool::restoreCoordinate(PatFwdHit* hit) const
@@ -374,10 +393,10 @@ inline void PatSeedingTool::addNeighbour(PatSeedTrack& track,
 inline void PatSeedingTool::getTyLimits(unsigned reg,
     double& tymin, double& tymax) const
 {
-  static const double tylimits[m_nReg] = { -0.4, 0.1, 0., 0., 0., 0. };
-  tymin = tylimits[reg];
-  tymax = tylimits[reg ^ 1];
-  if (1 == reg) tymin *= -1., tymax *= -1.;
+  static const double tylimitslo[m_nReg] = { -0.33, -0.01, -0.01, -0.01, -0.04, 0.01 };
+  static const double tylimitshi[m_nReg] = {  0.01,  0.33,  0.01,  0.01, -0.01, 0.04 };
+  tymin = tylimitslo[reg];
+  tymax = tylimitshi[reg];
 }
 
 void PatSeedingTool::combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,
@@ -386,15 +405,22 @@ void PatSeedingTool::combineCluster(const PatFwdHit* h1, const PatFwdHit* h2,
   const Tf::OTHit* otHit1 = h1->hit()->othit();
   const Tf::OTHit* otHit2 = h2->hit()->othit();
   if (0 != otHit1 && 0 != otHit2) {
-    double r1 = otHit1->untruncatedDriftDistance(0.);
-    double r2 = otHit2->untruncatedDriftDistance(0.);
-    r1 *= r1; r2 *= r2;
-    r1 += h1->hit()->variance(); r2 += h2->hit()->variance();
-    x = h1->hit()->xAtYEq0() / r1 + h2->hit()->xAtYEq0() / r2;
-    z = h1->hit()->zAtYEq0() / r1 + h2->hit()->zAtYEq0() / r2;
-    r1 = 1. / r1 + 1. / r2;
-    x /= r1;
-    z /= r1;
+    // form a weighted sum of wire positions to determine the cluster
+    // position (this degenerates to the arithmetic mean if we run without
+    // drift time information)
+    // to make sure that the weighting procedure does not diverge by accident,
+    // we add the measurement variance to the squared drift radius, and take
+    // the square of this expression to obtain the weights
+    const double r1 = std::sqrt(otHit1->variance() +
+	otHit1->untruncatedDriftDistance(0.) *
+	otHit1->untruncatedDriftDistance(0.));
+    const double r2 = std::sqrt(otHit2->variance() +
+	otHit2->untruncatedDriftDistance(0.) *
+	otHit2->untruncatedDriftDistance(0.));
+    // the cluster position should be closer to the hit with the smaller
+    // drift radius
+    x = (h1->hit()->xAtYEq0() * r2 + h2->hit()->xAtYEq0() * r1) / (r1 + r2);
+    z = (h1->hit()->zAtYEq0() * r2 + h2->hit()->zAtYEq0() * r1) / (r1 + r2);
   } else {
     x = 0.5 * (h1->hit()->xAtYEq0() + h2->hit()->xAtYEq0());
     z = 0.5 * (h1->hit()->zAtYEq0() + h2->hit()->zAtYEq0());
