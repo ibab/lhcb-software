@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.4 2008-06-23 18:16:13 robbep Exp $
+! $Id: release.notes,v 1.5 2008-06-29 14:47:44 gcorti Exp $
 ! Package     : GenTests
 ! Responsible : Patrick ROBBE
 ! Purpose     : Package holding options and scripts to run generator level
 !               tests with Gauss
 !=============================================================================
+
+!========================= GenTests v1r1 2008-06-29 ==========================
+! 2008-06-29 - Gloria CORTI
+ - Increase version and follow template for requirements
 
 ! 2008-06-23 - Patrick Robbe
  - Add script to produce the test jobs via Ganga
