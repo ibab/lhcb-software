@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.9 2008-06-27 12:09:59 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.10 2008-06-29 09:39:21 mneedham Exp $
 
 #include <algorithm>
 
@@ -16,12 +16,13 @@
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
-
 #include "SiDAQ/SiADCWord.h"
 #include "Kernel/STRawBankMap.h"
-#include "SiDAQ/SiHeaderWord.h"
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
+
+#include "SiDAQ/SiHeaderWord.h"
+
 
 #include "STDet/DeSTDetector.h"
 
@@ -106,6 +107,53 @@ unsigned int STDecodingBaseAlg::pcnVote(const std::vector<RawBank* >& banks) con
   return majorityVote;
 }
 
+bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Board* aBoard, 
+                                           const unsigned int bankSize, const int version) const{
+
+  // check the consistancy of the data
+
+  bool ok = true;
+
+  STDecoder::posadc_iterator iterDecoder = decoder.posAdcBegin();
+  for ( ;iterDecoder != decoder.posAdcEnd(); ++iterDecoder){
+
+    const STClusterWord aWord = iterDecoder->first;
+
+    // make some consistancy checks
+    if ((iterDecoder->second.size() - 1u  < aWord.pseudoSize())) {
+      unsigned int fracStrip = aWord.fracStripBits();
+      debug() << "adc values do not match ! " << iterDecoder->second.size()-1u << " "
+              << aWord.pseudoSize() << " offline chan "
+              << aBoard->DAQToOffline(aWord.channelID(),fracStrip,version) 
+              << " source ID  " << aBoard->boardID()  <<  " chan "  << aWord.channelID()   
+              << endmsg ;
+      Warning("ADC values do not match", StatusCode::FAILURE);
+      ok = false;
+      break;
+    }
+
+    // decode the channel
+    if (aBoard->validChannel(aWord.channelID()) == false){
+      debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
+      Warning("Invalid tell1 channel", StatusCode::SUCCESS); 
+      ok = false;
+      break;
+    }
+
+  } // loop clusters
+
+  // final check that we read the total number of bytes in the bank
+  if (ok && (unsigned int)iterDecoder.bytesRead() != bankSize){
+    ok = false;
+    debug() << "Inconsistant byte count " << aBoard->boardID() << " Read: "  << iterDecoder.bytesRead()
+                << " Expected: " << bankSize << endmsg;
+    Warning("Inconsistant byte count", StatusCode::SUCCESS);
+  }
+
+  if (!ok) ++counter("skipped Banks");
+ 
+  return ok;
+}
 
 StatusCode STDecodingBaseAlg::finalize() {
 

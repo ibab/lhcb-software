@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.8 2008-06-16 14:24:38 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.9 2008-06-29 09:39:21 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -47,13 +47,10 @@ private:
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt, LHCb::STClusters* digitCont ) const;
 
 
-  typedef std::pair<LHCb::STCluster*, LHCb::STChannelID> TempCluster;
-
   StatusCode createCluster(const STClusterWord& aWord,
                            const STTell1Board* aBoard,
                            const std::vector<SiADCWord>& adcValues,
-		 	   std::vector<TempCluster>& tempClusters,
-			   const unsigned int version) const;
+			   const unsigned int version, LHCb::STClusters* clusCont) const;
  
   double mean(const std::vector<SiADCWord>& adcValues) const;
    
@@ -61,9 +58,6 @@ private:
 				       const LHCb::STChannelID chan,
 				       const unsigned int fracStrip) const;
 
-  void insertData(std::vector<TempCluster>& tempClusters, LHCb::STClusters* clusters) const;
-   
-  void cleanup(std::vector<TempCluster>& tempClusters) const;
     
   double stripFraction(const double interStripPos) const;
 

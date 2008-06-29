@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.5 2008-06-19 15:55:49 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.6 2008-06-29 09:39:21 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -23,11 +23,13 @@
 #include "Event/ByteStream.h"
 
 #include "Kernel/STClusterWord.h"
+#include "Kernel/STDecoder.h"
 
 #include <string>
 
 class ISTReadoutTool;
 class DeSTDetector;
+class STTell1Board;
 
 class STDecodingBaseAlg : public GaudiAlgorithm {
 
@@ -56,6 +58,9 @@ protected:
                          const bool pcnsync, const std::vector<unsigned int>& bankList) const;
 
  unsigned int pcnVote(const std::vector<LHCb::RawBank* >& banks) const;
+
+ bool checkDataIntegrity(STDecoder& decoder, const STTell1Board* aBoard, 
+                         const unsigned int bankSize, const int version) const;
 
  bool m_skipErrors;
  

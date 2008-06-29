@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2007-06-29 M Needham
+ - Check data integrity before decoding into clusters in lite and full
+   decoding
+
 ! 2008-06-27 M Needham
  - Only count boards without error in majority PCN vote in ZS decoding
  - More consistant counting of errors in cluster decoding  
