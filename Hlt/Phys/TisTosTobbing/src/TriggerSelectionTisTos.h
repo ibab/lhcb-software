@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.6 2008-06-18 01:18:31 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.7 2008-06-29 06:50:20 graven Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -8,7 +8,6 @@
 #include "Kernel/ITriggerSelectionTisTos.h"            // Interface
 
 #include "CaloInterfaces/ITrack2Calo.h"
-#include "HltBase/HltTypes.h"
 #include "HltBase/HltBaseTool.h"
 #include "Event/Track.h"
 
