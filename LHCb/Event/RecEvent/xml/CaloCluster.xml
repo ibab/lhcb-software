@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloCluster.xml,v 1.4 2008-02-27 10:42:30 jonrob Exp $
+  * $Id: CaloCluster.xml,v 1.5 2008-06-30 15:40:57 odescham Exp $
   *****************************************************************************
   * XML-description of CaloCluster class                                      *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -36,6 +36,10 @@
 <location name = "Ecal"      place = "Rec/Calo/EcalClusters"      />
 <location name = "Hcal"      place = "Rec/Calo/HcalClusters"      />
 <location name = "EcalSplit" place = "Rec/Calo/EcalSplitClusters" />
+<location name = "DefaultHlt"   place = "Hlt/Calo/Clusters"          />
+<location name = "EcalHlt"      place = "Hlt/Calo/EcalClusters"      />
+<location name = "HcalHlt"      place = "Hlt/Calo/HcalClusters"      />
+<location name = "EcalSplitHlt" place = "Hlt/Calo/EcalSplitClusters" />
 
 <typedef
  def    = "Base"

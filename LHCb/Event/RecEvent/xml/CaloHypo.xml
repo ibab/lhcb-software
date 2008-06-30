@@ -5,7 +5,7 @@
 <gdd>
   <package name="RecEvent">
 <!-- **************************************************************************
-  * $Id: CaloHypo.xml,v 1.4 2006-06-27 16:20:53 odescham Exp $
+  * $Id: CaloHypo.xml,v 1.5 2008-06-30 15:40:57 odescham Exp $
   *****************************************************************************
   * XML-description of CaloHypo class                                         *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -34,6 +34,11 @@
 <location name = "Electrons"    place = "Rec/Calo/Electrons"    />
 <location name = "MergedPi0s"   place = "Rec/Calo/MergedPi0s"   />
 <location name = "SplitPhotons" place = "Rec/Calo/SplitPhotons" />
+<location name = "DefaultHlt"      place = "Hlt/Calo/Hypos"        />
+<location name = "PhotonsHlt"      place = "Hlt/Calo/Photons"      />
+<location name = "ElectronsHlt"    place = "Hlt/Calo/Electrons"    />
+<location name = "MergedPi0sHlt"   place = "Hlt/Calo/MergedPi0s"   />
+<location name = "SplitPhotonsHlt" place = "Hlt/Calo/SplitPhotons" />
   
 <typedef
  def    = "Base"

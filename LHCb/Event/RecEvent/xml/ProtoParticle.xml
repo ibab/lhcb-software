@@ -124,6 +124,11 @@
         place="Hlt/ProtoP/Charged"
        />
 
+       <location
+        name="HltNeutrals"
+        place="Hlt/ProtoP/Neutrals"
+       />
+
        <relation
         name="calo"
         desc="References to possible calorimeter results"

@@ -1,9 +1,14 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.95 2008-05-07 06:20:18 cattanem Exp $
+! $Id: release.notes,v 1.96 2008-06-30 15:40:57 odescham Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+          
+! 2008-06-27 Olivier Deschamps
+ - Add default locations for CaloCluster and CaloHypo within HLT processing
+
 
 !========================= RecEvent v2r12 2008-05-05 =========================
 ! 2008-05-05 M Needham
