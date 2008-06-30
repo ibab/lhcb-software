@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.5 2007-08-24 21:25:18 odescham Exp $
+// $Id: BremPIDeAlg.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.4  2007/05/26 17:13:45  vegorych
 // new PIDs from DC06 and BremPID added
 //
@@ -39,8 +42,16 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
-    _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
+    if( "HLT" == context() ){
+      _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2Hlt  ) ;
+      _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDeHlt  ) ;
+    }
+    else{
+      _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
+      _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
+    }
+    
+
     _setProperty ( "nVlong" , Gaudi::Utils::toString( 200 ) );
     _setProperty ( "nVvelo" , Gaudi::Utils::toString( 200 ) );
     _setProperty ( "nVupstr" , Gaudi::Utils::toString( 200 ) );

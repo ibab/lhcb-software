@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.h,v 1.6 2006-05-30 09:42:06 odescham Exp $
+// $Id: CaloSinglePhotonAlg.h,v 1.7 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/05/30 09:42:06  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.5  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //

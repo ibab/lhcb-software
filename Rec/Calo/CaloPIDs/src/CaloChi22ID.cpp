@@ -1,8 +1,11 @@
-// $Id: CaloChi22ID.cpp,v 1.2 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloChi22ID.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.1  2006/06/18 18:35:27  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -39,6 +42,12 @@ CaloChi22ID::CaloChi22ID( const std::string& name,
   declareProperty ( "Input"  , m_input  ) ;
   declareProperty ( "Output" , m_output ) ;
   declareProperty ( "CutOff" , m_large  ) ;
+
+  if( "HLT" == context() ){
+    m_tracks.clear();
+    //    m_tracks.push_back(  "Hlt/Track/ForwardCLEANED" );
+    m_tracks.push_back(  LHCb::TrackLocation::HltForward );
+  }
 } ;
 // ============================================================================
 /// algorithm execution 

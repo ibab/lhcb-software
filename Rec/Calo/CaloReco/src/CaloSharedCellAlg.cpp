@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.6 2007-08-24 21:24:20 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.7 2008-06-30 15:36:33 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -48,8 +48,8 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
     , m_useDistance   ( false )
     , m_showerSizes   ()
     , m_outputData    ()
-    , m_inputData (LHCb::CaloClusterLocation::Ecal)
-    , m_detData  (DeCalorimeterLocation::Ecal)
+    , m_inputData ()
+    , m_detData  ()
 
 {
   m_showerSizes.push_back( 0.1090 * 121.50 * Gaudi::Units::mm );
@@ -63,6 +63,22 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
   declareProperty ( "InputData"         , m_inputData     ) ;  
   declareProperty ( "OutputData"        , m_outputData     ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
+
+
+  // set default data as a function of detector
+  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+  std::string det = name.substr( index, 4 ); 
+  if(det == "Ecal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
+    m_detData   = DeCalorimeterLocation::Ecal;
+  }
+  else if(det == "Hcal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
+    m_detData   = DeCalorimeterLocation::Hcal;
+  }
+
 
 };
 

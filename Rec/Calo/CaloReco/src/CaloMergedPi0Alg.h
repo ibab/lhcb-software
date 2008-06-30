@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.h,v 1.6 2006-10-13 21:39:46 odescham Exp $
+// $Id: CaloMergedPi0Alg.h,v 1.7 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/10/13 21:39:46  odescham
+// Setup CaloReco on-Demand
+//
 // Revision 1.5  2006/05/30 09:42:03  odescham
 // first release of the CaloReco migration
 //

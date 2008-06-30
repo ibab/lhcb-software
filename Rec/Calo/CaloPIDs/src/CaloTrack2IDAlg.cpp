@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloTrack2IDAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -56,6 +56,12 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
                     ( LHCb::Track::Long       ,
                       LHCb::Track::Downstream ,
                       LHCb::Track::Ttrack     ) ) ;
+
+  if( "HLT" == context() ){
+    m_inputs.clear();
+    //    m_inputs.push_back( "Hlt/Track/ForwardCLEANED" );
+    m_inputs.push_back(  LHCb::TrackLocation::HltForward );
+  }
 } ;
 // ============================================================================
 /// standard algorithm initilization
@@ -101,6 +107,8 @@ StatusCode CaloTrack2IDAlg::execute ()
   for ( Inputs::const_iterator input = m_inputs.begin() ;
         m_inputs.end() != input ; ++input ) 
   {
+
+    if( !exist<Tracks>( *input ) )continue;
     const Tracks* tracks = get<Tracks>( *input ) ;
     // loop over all tracks 
     for ( Tracks::const_iterator itrack = tracks->begin() ; 

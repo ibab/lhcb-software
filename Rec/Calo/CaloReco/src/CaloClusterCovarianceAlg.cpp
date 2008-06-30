@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.7 2007-08-24 21:24:20 odescham Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.8 2008-06-30 15:36:33 odescham Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -45,22 +45,22 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
 ( const std::string& name,
   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm        ( name , pSvcLocator            ) 
-  , m_copy               ( false                         )
-  , m_a                  ( 0.10                          )
-  , m_gainErr            ( 0.01                          )
-  , m_noiseIn            ( 1.30                          ) 
-  , m_noiseCo            ( 0.30                          )
-  , m_taggerType         ( "SubClusterSelector3x3"       )
-  , m_taggerName         ( ""                            )
-  , m_tagger             ( 0                             )
-  , m_covType            ( "ClusterCovarianceMatrixTool" )
-  , m_covName            ( "EcalCovarTool"               )
-  , m_cov                ( 0                             ) 
-  , m_spreadType         ( "ClusterSpreadTool"           )
-  , m_spreadName         ( "EcalSpreadTool"              )
-  , m_spread             ( 0                             )
-  , m_inputData (LHCb::CaloClusterLocation::Ecal)
-  , m_detData  (DeCalorimeterLocation::Ecal)
+    , m_copy               ( false                         )
+    , m_a                  ( 0.10                          )
+    , m_gainErr            ( 0.01                          )
+    , m_noiseIn            ( 1.30                          ) 
+    , m_noiseCo            ( 0.30                          )
+    , m_taggerType         ( "SubClusterSelector3x3"       )
+    , m_taggerName         ( ""                            )
+    , m_tagger             ( 0                             )
+    , m_covType            ( "ClusterCovarianceMatrixTool" )
+    , m_covName            ( "EcalCovarTool"               )
+    , m_cov                ( 0                             ) 
+    , m_spreadType         ( "ClusterSpreadTool"           )
+    , m_spreadName         ( "EcalSpreadTool"              )
+    , m_spread             ( 0                             )
+    , m_inputData ( )
+    , m_detData  ( )
 {
   declareProperty( "Resolution"       , m_a            ) ;
   declareProperty( "GainError"        , m_gainErr      ) ;
@@ -79,6 +79,19 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   declareProperty ( "OutputData"      , m_outputData   ) ;  
   declareProperty ( "Detector"        , m_detData     ) ;  
 
+  // set default data as a function of detector
+  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+  std::string det = name.substr( index, 4 ); 
+  if(det == "Ecal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
+    m_detData   = DeCalorimeterLocation::Ecal;
+  }
+  else if(det == "Hcal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
+    m_detData   = DeCalorimeterLocation::Hcal;
+  }
 
 };
 // ===========================================================================

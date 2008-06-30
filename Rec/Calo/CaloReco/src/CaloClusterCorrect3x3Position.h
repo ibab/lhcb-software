@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.h,v 1.4 2006-05-30 09:42:01 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.h,v 1.5 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -76,7 +76,6 @@ protected:
   CellMatrix3x3 m_cell3x3 ;
   CellNeighbour m_neighbour;
   std::string m_inputData ;
-  std::string m_outputData;
   std::string m_detData   ;
 };
 

@@ -1,4 +1,4 @@
-// $Id: CaloChi22ID.h,v 1.3 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloChi22ID.h,v 1.4 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOCHI22ID_H 
 #define CALOPIDS_CALOCHI22ID_H 1
@@ -117,6 +117,7 @@ inline StatusCode CaloChi22ID::doTheJob
   for ( Inputs::const_iterator i = m_tracks.begin() ; 
         m_tracks.end() != i ; ++i ) 
   {
+    if( !exist<LHCb::Track::Container>( *i )) continue;
     const LHCb::Track::Container* tracks = get<LHCb::Track::Container>(*i) ;
     StatusCode sc = doTheJob ( tracks , input , output ) ;
     if(sc.isFailure())return sc;

@@ -1,4 +1,4 @@
-// $Id: Track2EcalEAlg.cpp,v 1.3 2007-08-24 21:25:19 odescham Exp $
+// $Id: Track2EcalEAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -23,8 +23,13 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrack2IDAlg( name , pSvc ) 
   {
-    _setProperty ( "Output" , LHCb::CaloIdLocation::EcalE  ) ;
-    _setProperty ( "Filter" , LHCb::CaloIdLocation::InEcal ) ;
+    if("HLT"==context() ){
+      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalEHlt   ) ;
+      _setProperty ( "Filter" , LHCb::CaloIdLocation::InEcalHlt  ) ;
+    }else{
+      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalE   ) ;
+      _setProperty ( "Filter" , LHCb::CaloIdLocation::InEcal  ) ;
+    }
     _setProperty ( "Tool"   , "EcalEnergyForTrack/EcalE:PUBLIC"  ) ;
   } ;
   /// virtual protected destructor 

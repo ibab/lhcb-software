@@ -107,6 +107,10 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
   declareProperty("ShapSpdBackground",m_backgrShapeSpdData);
 
   declareProperty("Extrapolation"    ,m_extrapol);
+
+
+  if("HLT"==context())m_tableLocation = LHCb::CaloIdLocation::ClusterMatchHlt;  
+
 }
 // ============================================================================
 /** destructor, virtual and protected

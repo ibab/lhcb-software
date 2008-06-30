@@ -1,8 +1,11 @@
-// $Id: EcalPIDeAlg.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
+// $Id: EcalPIDeAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.2  2006/11/06 11:05:24  vegorych
 //  New PID tuning for DC06
 //
@@ -33,8 +36,14 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    _setProperty ( "Input"  , LHCb::CaloIdLocation::EcalChi2  ) ;
-    _setProperty ( "Output" , LHCb::CaloIdLocation::EcalPIDe  ) ;
+    if("HLT"==context()){
+      _setProperty ( "Input"  , LHCb::CaloIdLocation::EcalChi2Hlt  ) ;
+      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalPIDeHlt  ) ;
+    }else{
+      _setProperty ( "Input"  , LHCb::CaloIdLocation::EcalChi2  ) ;
+      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalPIDe  ) ;
+    }
+    
     _setProperty ( "nVlong" ,   Gaudi::Utils::toString( 2500 ) );
     _setProperty ( "nVdown" ,   Gaudi::Utils::toString( 2500 ) );
     _setProperty ( "nVTtrack" , Gaudi::Utils::toString( 2500 ) );

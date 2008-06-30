@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.8 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.9 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -50,13 +50,26 @@ CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position
 ( const std::string& name    ,
   ISvcLocator*       svcloc  )
   : GaudiAlgorithm ( name , svcloc ) 
-  ,m_inputData    ( LHCb::CaloClusterLocation::   Ecal       ) 
-  ,m_outputData   ( LHCb::CaloHypoLocation::      MergedPi0s ) 
-  ,m_detData      ( DeCalorimeterLocation:: Ecal       ) 
+  ,m_inputData    ( ) 
+  ,m_detData      ( ) 
 {
   declareProperty ( "InputData"         , m_inputData     ) ;  
-  declareProperty ( "OutputData"        , m_outputData     ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
+
+
+  // set default data as a function of detector
+  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+  std::string det = name.substr( index, 4 ); 
+  if(det == "Ecal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
+    m_detData   = DeCalorimeterLocation::Ecal;
+  }
+  else if(det == "Hcal"){
+    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
+      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
+    m_detData   = DeCalorimeterLocation::Hcal;
+  }
 };
 
 // ============================================================================

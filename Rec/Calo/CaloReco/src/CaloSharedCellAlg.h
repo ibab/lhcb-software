@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.h,v 1.5 2006-05-30 09:42:05 odescham Exp $
+// $Id: CaloSharedCellAlg.h,v 1.6 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/05/30 09:42:05  odescham
+// first release of the CaloReco migration
+//
 // Revision 1.4  2005/11/07 12:12:43  odescham
 // v3r0 : adapt to the new Track Event Model
 //

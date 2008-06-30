@@ -1,6 +1,6 @@
-// $Id: ToString.h,v 1.2 2006-07-19 07:32:57 cattanem Exp $
+// $Id: ToString.h,v 1.3 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 #ifndef CALOPIDS_TOSTRING_H 
 #define CALOPIDS_TOSTRING_H 1

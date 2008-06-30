@@ -1,8 +1,11 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.5 2006-06-14 16:49:22 odescham Exp $
+// $Id: CaloSelectNeutralCluster.h,v 1.6 2008-06-30 15:36:33 odescham Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2006/06/14 16:49:22  odescham
+// 2nd step of the migration towards DC06
+//
 // Revision 1.4  2006/05/30 09:42:05  odescham
 // first release of the CaloReco migration
 //

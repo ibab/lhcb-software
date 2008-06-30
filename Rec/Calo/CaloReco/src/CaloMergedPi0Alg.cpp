@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.20 2007-12-19 16:48:20 odescham Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.21 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -77,7 +77,7 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , TrShInn_spd ()
   , SPar ()
   //
-    , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
+  , m_eT_Cut  ( -100 * Gaudi::Units::GeV )
   , m_mX_Iter ( 16         )
 {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
@@ -113,6 +113,16 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "OutputData"        , m_outputData   ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
+
+
+  if("HLT"==context()){
+    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
+    m_outputData = LHCb::CaloHypoLocation::MergedPi0sHlt;
+    m_nameOfSplitPhotons = LHCb::CaloHypoLocation::SplitPhotonsHlt;
+    m_nameOfSplitClusters = LHCb::CaloClusterLocation::EcalSplitHlt;
+  }
+  
+
 };
 
 // ============================================================================

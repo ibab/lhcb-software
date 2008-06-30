@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.10 2006-11-28 13:15:17 cattanem Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.11 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -92,6 +92,12 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   declareProperty ( "InputData"         , m_inputData     ) ;  
   declareProperty ( "OutputData"        , m_outputData     ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
+
+  if("HLT"==context()){
+    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
+    m_outputData= LHCb::CaloHypoLocation::PhotonsHlt;
+}
+  
 };
 // ============================================================================
 

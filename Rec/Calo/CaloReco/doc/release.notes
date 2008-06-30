@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.111 2008-06-06 07:52:41 vegorych Exp $
+! $Id: release.notes,v 1.112 2008-06-30 15:36:33 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+
+! 2008-06-27 - Olivier Deschamps
+ - use default HLT locations for the HLT context in all algorithm/tool
+ - Set default location to run the clusterisation sequence on Hcal (depends on the instance name)
+ - new options : HltCaloSeq with setting to run the Reco/PID within HLT framework
 
 !========================== CaloReco v4r13 2008-06-04 ===================
 ! 2008-06-06 - Victor Egorychev

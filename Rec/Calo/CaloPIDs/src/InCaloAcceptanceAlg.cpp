@@ -1,8 +1,11 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.2 2007-08-24 21:25:18 odescham Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.1  2006/06/18 18:35:29  ibelyaev
 //  the firstcommmit for DC06 branch
 // 
@@ -45,6 +48,16 @@ InCaloAcceptanceAlg::InCaloAcceptanceAlg
   declareProperty ( "Tool"        , m_toolName ) ;
   //
   _setProperty     ( "StatPrint"   , "false"    ) ;
+
+
+  if( "HLT" == context() ){
+    m_inputs.clear();
+    m_inputs.push_back(  LHCb::TrackLocation::HltForward );
+    //m_inputs.push_back( "Hlt/Track/ForwardCLEANED" );
+  }
+  
+
+
 };
 // ============================================================================
 /// algorithm initialization 
@@ -88,6 +101,8 @@ StatusCode InCaloAcceptanceAlg::execute()
   for ( Inputs::const_iterator input = m_inputs.begin() ; 
         m_inputs.end() != input ; ++input ) 
   {
+
+    if( !exist<Tracks>( *input ) )continue;
     const Tracks* tracks = get<Tracks> ( *input ) ;
     // loop over all tracks in the container 
     for ( Tracks::const_iterator itrack = tracks->begin() ; 
@@ -102,6 +117,7 @@ StatusCode InCaloAcceptanceAlg::execute()
       table -> i_push ( track , result ) ;   // ATTENTION: i-push is used 
     }
   } ;
+  if ( 0 == nTracks ) { Warning("No good tracks have been selected") ; }
   // MANDATORY: i_sort after i_push
   table -> i_sort () ;
   

@@ -1,8 +1,11 @@
-// $Id: BremMatchAlg.cpp,v 1.6 2008-05-13 12:25:51 odescham Exp $
+// $Id: BremMatchAlg.cpp,v 1.7 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/05/13 12:25:51  odescham
+// restore _setProperty()
+//
 // Revision 1.5  2008/01/24 10:22:42  vegorych
 // _setProperty was removed, AddNeigbours warning was solved
 //
@@ -57,12 +60,21 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrackMatchAlg ( name , pSvc ) 
   {
-    Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Photons     ) ;
-    //
-    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-    _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
+    if( "HLT" == context() ){
+      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::PhotonsHlt   ) ;
+      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+      _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatchHlt  ) ;
+      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBremHlt     ) ;
+    }
+    else{
+      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Photons     ) ;
+      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+      _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
+      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
+    }
+    
+
     _setProperty ( "Tool"      , "CaloBremMatch/BremMatch:PUBLIC"    ) ;
-    _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
     setProperty ( "Threshold" , 10000                               ).ignore() ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>

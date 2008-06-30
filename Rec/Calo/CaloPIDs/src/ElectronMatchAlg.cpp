@@ -1,8 +1,11 @@
-// $Id: ElectronMatchAlg.cpp,v 1.3 2007-08-24 21:25:18 odescham Exp $
+// $Id: ElectronMatchAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.2  2006/06/20 18:17:48  odescham
 // minor update to please ChargedProtoPAlg
 //
@@ -49,12 +52,22 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrackMatchAlg ( name , pSvc ) 
   {    
-    Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Electrons   ) ;
-    //
-    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-    _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatch ) ;
+
+    if( "HLT"==context() ){
+      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::ElectronsHlt    ) ;
+      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )      ) ;
+      _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatchHlt ) ;
+      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcalHlt        ) ;
+   }else{
+      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Electrons   ) ;
+      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+      _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatch ) ;
+      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal        ) ;
+   }
+
+    
+
     _setProperty ( "Tool"      , "CaloElectronMatch/ElectronMatch:PUBLIC") ;
-    _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal        ) ;
     _setProperty ( "Threshold" , "10000"                             ) ;
     // track types:
     _setProperty ( "AcceptedType" , Gaudi::Utils::toString<int>

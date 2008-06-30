@@ -1,4 +1,4 @@
-// $Id: CaloSelectNeutralCluster.cpp,v 1.8 2008-06-03 15:25:16 odescham Exp $
+// $Id: CaloSelectNeutralCluster.cpp,v 1.9 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -48,6 +48,9 @@ CaloSelectNeutralCluster::CaloSelectNeutralCluster
   //
   declareProperty ("Table"      , m_tableLocation ) ;
   declareProperty ("Cut"        , m_chi2cut       ) ;
+
+  if("HLT"==context())m_tableLocation=LHCb::CaloIdLocation::ClusterMatchHlt;
+  
 };
 // ============================================================================
 

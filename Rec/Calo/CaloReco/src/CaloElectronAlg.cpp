@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.11 2006-11-28 13:15:16 cattanem Exp $
+// $Id: CaloElectronAlg.cpp,v 1.12 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -65,6 +65,11 @@ CaloElectronAlg::CaloElectronAlg
   declareProperty ( "InputData"        , m_inputData             ) ;  
   declareProperty ( "OutputData"       , m_outputData            ) ;  
   declareProperty ( "Detector"         , m_detData               ) ;  
+
+  if("HLT"==context()){
+    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
+    m_outputData= LHCb::CaloHypoLocation::ElectronsHlt;
+ }  
 };
 // ============================================================================
 

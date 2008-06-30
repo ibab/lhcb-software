@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.5 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloID2DLL.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2007/08/24 21:25:18  odescham
+// fix uncheck. StatusCodes
+//
 // Revision 1.4  2006/11/27 15:48:09  vegorych
 // warning VERY PRELIMINARY was removed
 //

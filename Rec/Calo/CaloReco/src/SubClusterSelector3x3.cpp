@@ -1,4 +1,4 @@
-// $Id: SubClusterSelector3x3.cpp,v 1.4 2006-11-28 13:15:17 cattanem Exp $
+// $Id: SubClusterSelector3x3.cpp,v 1.5 2008-06-30 15:36:33 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchAlg.cpp,v 1.1 2006-06-18 18:35:28 ibelyaev Exp $
+// $Id: CaloTrackMatchAlg.cpp,v 1.2 2008-06-30 15:37:34 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2006/06/18 18:35:28  ibelyaev
+//  the firstcommmit for DC06 branch
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -38,6 +41,12 @@ CaloTrackMatchAlg::CaloTrackMatchAlg
   declareProperty ( "Tool"      , m_toolName  ) ;
   declareProperty ( "Filter"    , m_filter    ) ;
   declareProperty ( "Threshold" , m_threshold ) ;
+
+  if( "HLT" == context() ){
+    m_tracks.clear();
+    //m_tracks.push_back( "Hlt/Track/ForwardCLEANED" );
+    m_tracks.push_back(  LHCb::TrackLocation::HltForward );
+  }  
 }
 // ============================================================================
 /// standard algorithm itinialization
