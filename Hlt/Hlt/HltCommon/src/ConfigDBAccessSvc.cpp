@@ -7,7 +7,7 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-#define GR_USE_SEAL
+// #define GR_USE_SEAL
 #ifdef GR_USE_SEAL
 #include "SealKernel/Context.h"
 #endif
