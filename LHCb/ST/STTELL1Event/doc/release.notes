@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.10 2008-06-27 12:08:28 mneedham Exp $
+! $Id: release.notes,v 1.11 2008-06-30 20:13:24 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
+!-----------------------------------------------------------------------------
+
+!======================== STTELL1Event v1r2 2008-06-30 =======================
+! 2008-06-30 - Marco Cattaneo
+ - Add a cmt/version.cmt file to make cmt happy when running without
+   version directory (otherwise it thinks the version is 'STTELL1Event')
 
 ! 2008-06-27 M Needham
  - Add summary info map to STTELL1Error
