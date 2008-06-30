@@ -1,4 +1,4 @@
-// $Id: ConfigStackAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: ConfigStackAccessSvc.h,v 1.3 2008-06-30 08:56:53 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -32,15 +32,17 @@ public:
   ConfigStackAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~ConfigStackAccessSvc( );     ///< Destructor
 
-  virtual StatusCode queryInterface(const InterfaceID& , void** );
-  virtual StatusCode initialize();    ///< Service initialization
+  StatusCode queryInterface(const InterfaceID& , void** );
+  StatusCode initialize();    ///< Service initialization
 
-  virtual boost::optional<PropertyConfig> readPropertyConfig(const PropertyConfig::digest_type& ref);
-  virtual PropertyConfig::digest_type    writePropertyConfig(const PropertyConfig& config);
+  boost::optional<PropertyConfig> readPropertyConfig(const PropertyConfig::digest_type& ref);
+  PropertyConfig::digest_type    writePropertyConfig(const PropertyConfig& config);
 
-  virtual boost::optional<ConfigTreeNode> readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
-  virtual ConfigTreeNode::digest_type    writeConfigTreeNode(const ConfigTreeNode& edge);
+  boost::optional<ConfigTreeNode> readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
+  ConfigTreeNode::digest_type    writeConfigTreeNode(const ConfigTreeNode& edge);
 
+  boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&);
+  ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&);
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
   MsgStream& debug() const { return msg(MSG::DEBUG); }

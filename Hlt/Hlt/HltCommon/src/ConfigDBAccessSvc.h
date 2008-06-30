@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.4 2008-06-13 07:09:38 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.5 2008-06-30 08:56:53 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -42,6 +42,9 @@ public:
   boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
   ConfigTreeNode::digest_type     writeConfigTreeNode(const ConfigTreeNode& config);
 
+  boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&);
+  ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&);
+
 private:
   MsgStream& msg(MSG::Level level) const;
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
@@ -52,11 +55,12 @@ private:
   MsgStream& fatal() const { return msg(MSG::FATAL); }
   MsgStream& always() const { return msg(MSG::ALWAYS); }
 
-  template <typename T> boost::optional<T>      read(const typename T::digest_type&);
-  template <typename T> typename T::digest_type write(const T& );
-  template <typename T> void                    createTable();
-  
+  template <typename T> struct table_traits;
 
+  template <typename T> boost::optional<T>                 read(const typename table_traits<T>::key_type&);
+  template <typename T> typename table_traits<T>::key_type write(const T& );
+  template <typename T> void                               createTable();
+  
   StatusCode openConnection();
   StatusCode createSchema();
 

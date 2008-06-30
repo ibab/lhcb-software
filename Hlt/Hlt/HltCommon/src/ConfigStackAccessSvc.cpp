@@ -98,8 +98,30 @@ ConfigStackAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
     return id;
 }
 
+boost::optional<ConfigTreeNode>  
+ConfigStackAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
+    boost::optional<ConfigTreeNode> x;
+    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
+                                                  i!=m_svcs.end()&&!x;
+                                                  ++i)  {
+         x = (*i)->readConfigTreeNodeAlias(alias);
+         debug() << "read of " << alias 
+                 << " from " << (*i)->name() 
+                 << ": " << (!x?"failed":"OK") << endmsg;
+    }
+    return x;
 
+}
 
+ConfigTreeNodeAlias::alias_type 
+ConfigStackAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
+    ConfigTreeNodeAlias::alias_type id = m_svcs.front()->writeConfigTreeNodeAlias(alias);
+    debug() << "write of " << alias
+            << " to " << m_svcs.front()->name() 
+            << ": " << (id.invalid()?"failed":"OK") << endmsg;
+    return id;
+
+}
 
 MsgStream& ConfigStackAccessSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));

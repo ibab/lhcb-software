@@ -5,6 +5,7 @@
 #include "boost/filesystem/path.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/filesystem/operations.hpp"
+#include "boost/filesystem/convenience.hpp"
 namespace fs = boost::filesystem;
 
 
@@ -59,7 +60,6 @@ StatusCode ConfigFileAccessSvc::finalize() {
   return Service::finalize();
 }
 
-
 fs::path 
 ConfigFileAccessSvc::propertyConfigPath( const PropertyConfig::digest_type& digest ) const {
      std::string sref=digest.str();
@@ -70,6 +70,14 @@ fs::path
 ConfigFileAccessSvc::configTreeNodePath( const ConfigTreeNode::digest_type& digest)  const{
      std::string sref=digest.str();
      return fs::path(m_dir) / "ConfigTreeNodes" / sref.substr(0,2) / sref;
+}
+
+fs::path 
+ConfigFileAccessSvc::configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const {
+     std::string major = alias.major();
+     std::string minor = alias.str();
+     minor.erase(0,major.size()+1);
+     return fs::path(m_dir) / "Aliases" / major / minor ;
 }
 
 boost::optional<PropertyConfig> 
@@ -98,6 +106,20 @@ ConfigFileAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) 
    return c;
 }
 
+boost::optional<ConfigTreeNode>  
+ConfigFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
+   fs::path fnam = configTreeNodeAliasPath(alias);
+   if (!fs::exists(fnam)) {
+        error() << "file " << fnam.string() << " does not exist" << endmsg;
+        return boost::optional<ConfigTreeNode>();
+   }
+   ConfigTreeNodeAlias c;
+   fs::ifstream s( fnam );
+   s >> c;
+
+   return readConfigTreeNode(c.ref());
+}
+
 PropertyConfig::digest_type
 ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
 
@@ -105,7 +127,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
 
    fs::path fnam = propertyConfigPath(digest);
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !fs::create_directory(fdir)) {
+   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return PropertyConfig::digest_type::createInvalid();
    }
@@ -131,7 +153,7 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
 
    fs::path fnam = configTreeNodePath(digest);
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !fs::create_directory(fdir)) {
+   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return ConfigTreeNode::digest_type::createInvalid();
    }
@@ -148,6 +170,39 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
             error() << " TreeNode already exists, but contents are different..." << endmsg;
             return ConfigTreeNode::digest_type::createInvalid();
     }
+}
+
+ConfigTreeNodeAlias::alias_type 
+ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
+   // verify that we're pointing at something existing
+   if ( !readConfigTreeNode(alias.ref()) ) {
+            error() << " Alias points at non-existing entry " << alias.ref() << "... refusing to create." << endmsg;
+            return ConfigTreeNodeAlias::alias_type();
+   }
+   // now write alias...
+   fs::path fnam = configTreeNodeAliasPath(alias.alias());
+   fs::path fdir = fnam.branch_path();
+   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
+            error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
+            return ConfigTreeNodeAlias::alias_type();
+   }
+   if (!fs::exists(fnam)) {
+            fs::ofstream s( fnam );
+            s << alias.ref();
+            info() << " created " << fnam.string() << endmsg;
+            return alias.alias();
+   } else {
+   //@TODO: decide policy: in which cases do we allow overwrites of existing labels?
+   // (eg. TCK aliases: no!, tags: maybe... , toplevel: impossible by construction )
+   // that policy should be common to all implementations, so move to a mix-in class,
+   // or into ConfigTreeNodeAlias itself
+            std::string x;
+            fs::ifstream s( fnam );
+            s >> x;
+            if ( ConfigTreeNodeAlias::digest_type::createFromStringRep(x)==alias.ref() ) return alias.alias();
+            error() << " Alias already exists, but contents differ... refusing to change" << endmsg;
+            return ConfigTreeNodeAlias::alias_type();
+   }
 }
 
 MsgStream& ConfigFileAccessSvc::msg(MSG::Level level) const {

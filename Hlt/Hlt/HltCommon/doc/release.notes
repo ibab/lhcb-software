@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-06-30 - Gerhard Raven
+  - implement configuration aliases in all IConfigAccessSvc implementations
+  - write toplevel alias when generating configurations in HltGenConfig
+
 !2008-06-25 - Gerhard Raven
   - remove stale code in HltSummaryTool, stale include from HltL0{Calo,Muon}Prepare
   - HltANNSvc: replace SelectionID by Hlt1SelectionID

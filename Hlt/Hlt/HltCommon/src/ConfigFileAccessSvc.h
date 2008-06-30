@@ -1,4 +1,4 @@
-// $Id: ConfigFileAccessSvc.h,v 1.2 2008-02-13 14:55:22 graven Exp $
+// $Id: ConfigFileAccessSvc.h,v 1.3 2008-06-30 08:56:53 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -27,16 +27,19 @@ public:
   ConfigFileAccessSvc(const std::string& name, ISvcLocator* pSvcLocator);
   virtual ~ConfigFileAccessSvc( );     ///< Destructor
 
-  virtual StatusCode queryInterface(const InterfaceID& , void** );
+  StatusCode queryInterface(const InterfaceID& , void** );
 
-  virtual StatusCode initialize();    ///< Service initialization
-  virtual StatusCode finalize();      ///< Service initialization
+  StatusCode initialize();    ///< Service initialization
+  StatusCode finalize();      ///< Service initialization
 
   boost::optional<PropertyConfig>  readPropertyConfig(const PropertyConfig::digest_type& ref);
   PropertyConfig::digest_type      writePropertyConfig(const PropertyConfig& config);
 
   boost::optional<ConfigTreeNode>  readConfigTreeNode(const ConfigTreeNode::digest_type& ref);
   ConfigTreeNode::digest_type      writeConfigTreeNode(const ConfigTreeNode& config);
+
+  boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&);
+  ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&);
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
   MsgStream& debug() const { return msg(MSG::DEBUG); }
@@ -51,6 +54,7 @@ private:
 
   boost::filesystem::path propertyConfigPath( const PropertyConfig::digest_type& digest ) const;
   boost::filesystem::path configTreeNodePath( const ConfigTreeNode::digest_type& digest ) const;
+  boost::filesystem::path configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const;
 
   MsgStream& msg(MSG::Level level) const;
 };
