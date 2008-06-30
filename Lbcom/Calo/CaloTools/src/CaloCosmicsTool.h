@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.h,v 1.1 2008-05-22 22:47:59 odescham Exp $
+// $Id: CaloCosmicsTool.h,v 1.2 2008-06-30 08:32:18 odescham Exp $
 #ifndef CALOCOSMICSTOOL_H 
 #define CALOCOSMICSTOOL_H 1
 
@@ -46,7 +46,8 @@ public:
   StatusCode tupling(unsigned int unit);
   bool tracked(){return m_tracked;}  
   bool timed(){return m_timed;}
- 
+  const double kernel(){return m_kernel;};
+  
  
 protected:
 
@@ -90,6 +91,7 @@ private:
   std::string m_det;                                // detector name
   std::string m_readoutTool;                       // Name of the readout tool
   std::vector<std::string> m_seq;                  // sequence of time-slots to be used for trajectory computation
+  std::vector<std::string> m_kern;                  // sequence of time-slots to be removed from kernel 
   std::map<std::string, std::vector<std::string> > m_asy;    // pairs of time-slots to be used for asymmetry computation
   //
   long m_zSup   ;   
@@ -106,5 +108,6 @@ private:
   bool m_tuple;
   int m_maxAdc;
   bool m_full;
+  double m_kernel;
 };
 #endif // CALOCOSMICSTOOL_H

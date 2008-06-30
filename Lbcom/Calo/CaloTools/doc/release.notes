@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.43 2008-06-26 12:50:45 jpalac Exp $
+! $Id: release.notes,v 1.44 2008-06-30 08:32:18 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-06-30 - Olivier Deschamps
+ - add asymmetry monitoring in CaloCosmicsTrackAlg
+ - add 'kernel' variable computation in CaloCosmicsTool 
+
 
 ! 2008-06-26 - Juan PALACIOS
  - cmt/requirements

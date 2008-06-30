@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.4 2008-06-26 12:50:19 jpalac Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.5 2008-06-30 08:32:18 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,8 @@ CaloCosmicsTool::CaloCosmicsTool( const std::string& type,
   declareProperty( "ReadoutTool"        , m_readoutTool  = "CaloDataProvider" ); // Name of calo bank decoding tool
   declareProperty( "TrajectorySlots"    , m_seq);     // Vector of time-slots to be used for trajectory 
   declareProperty( "AsymmetrySlots"     , m_asy);     // Pair of time-slots to be used for asymmetry 
+  declareProperty( "RemoveSlotForKernel", m_kern);     // Vector of time-slots to be used for trajectory 
+
   // Cosmics track reconstruction
   declareProperty( "ZeroSuppression"    , m_zSup=0);     // Zero suppression threshold for hits ADC (sum over BX)
   declareProperty( "MaxSuppression"     , m_zInf=99999); // Remove largest ADC
@@ -60,6 +62,10 @@ CaloCosmicsTool::CaloCosmicsTool( const std::string& type,
   m_seq.push_back("Prev1"); 
   m_seq.push_back("T0"); 
   m_seq.push_back("Next1");
+
+  m_kern.push_back("T0");
+  
+
 
   // default asymmetry (first-second)/(first+second)
   std::vector<std::string> prevT0;
@@ -209,7 +215,7 @@ StatusCode CaloCosmicsTool::processing(){
     m_slotSum[id]   = -999.;
     m_td[id] = -999.;
   }
-  
+  m_kernel = -1.;
 
   // 1) get banks
   if( getBanks().isFailure() )return StatusCode::FAILURE;
@@ -336,7 +342,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   // Built the 2D line
   // best phi = swa/sw (assuming the 2D line passing through the highest deposit)
   double norm = sqrt(1.+tan(swa/sw)*tan(swa/sw));
-  Gaudi::XYZVector vec(1./norm, tan(swa/sw)/norm , 0.);   
+  Gaudi::XYZVector vec(1./norm, tan(swa/sw)/norm , 0.);
   Gaudi::Math::XYZLine   line(ref, vec);
   debug() << "Line parameters " << vec.X() << " " << vec.Y() << " " << vec.Z() << endreq;
   // Collect data along the 2D cosmics line (+- tolerance)
@@ -344,6 +350,7 @@ StatusCode CaloCosmicsTool::fit2D(){
   double y   = 0;
   double ssx2= 0;
   m_adcSum = 0;
+  double kernel = 0.;
   for(std::vector<LHCb::CaloAdc>::iterator id =m_zsupADCs.begin(); id != m_zsupADCs.end(); ++id){
     LHCb::CaloCellID cell = (*id).cellID();
     double size = m_calo->cellSize( cell );
@@ -355,11 +362,18 @@ StatusCode CaloCosmicsTool::fit2D(){
     if(fabs(ip) < m_tol){
       m_cosmicsADCs.push_back( *id );
       m_adcSum += (*id).adc();
+      kernel+= (*id).adc();
+      for(std::vector<std::string>::iterator ik = m_kern.begin();ik!=m_kern.end();++ik){
+        kernel -= m_daqs[*ik]->adc( cell );
+      }    
       x += pos.X();
       y += pos.Y();
       ssx2 += sx2;
     }
   }
+  m_kernel = kernel / (double) m_adcSum;
+  
+
   debug() << " m_cosmicsADCs.size() " << m_cosmicsADCs.size() << endreq;
   if(m_cosmicsADCs.size()== 0){
     info()<< "Empty 2D segment - fit failed"<<endreq;
