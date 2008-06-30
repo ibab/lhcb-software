@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.35 2008-06-30 12:39:15 cattanem Exp $ 
+! $Id: release.notes,v 1.36 2008-06-30 13:23:50 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -11,6 +11,8 @@
 ! 2008-06-30 - Marco Cattaneo
  - In requirements, do not build .exe application (can use gaudirun.py) and
    removed obsolete PYTHONPATH directives
+ - In VolumeCheck.py, replace initialization to use importOptions, for ease of
+   maintenance
 
 ! 2008-06-12 - Marco Clemencic
  - Added a QMTest-based test for LoadDDDB.
