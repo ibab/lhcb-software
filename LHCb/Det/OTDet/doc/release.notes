@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.104 2008-06-25 08:56:06 jpalac Exp $
+! $Id: release.notes,v 1.105 2008-06-30 14:37:26 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
 
+!========================== OTDet v7r9 2008-06-30 =========================
 ! 2008-06-25 - Juan PALACIOS
  - src/Lib/DeOTModule.cpp
   . Change all Gaudi::XYZLine for Gaudi::Math::XYZLine
