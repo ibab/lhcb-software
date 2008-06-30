@@ -1,4 +1,4 @@
-// $Id: IMuonRawBuffer.h,v 1.8 2008-05-28 10:02:38 asatta Exp $
+// $Id: IMuonRawBuffer.h,v 1.9 2008-06-30 11:43:46 asatta Exp $
 #ifndef MUONDAQ_IMUONRAWBUFFER_H 
 #define MUONDAQ_IMUONRAWBUFFER_H 1
 
@@ -10,6 +10,7 @@
 #include "Event/RawEvent.h"
 #include "Event/MuonPPEventInfo.h"
 #include "Event/MuonODEData.h"
+#include "Event/MuonTell1Header.h"
 #include <vector>
 #include <utility>
 
@@ -40,6 +41,15 @@ public:
   virtual StatusCode getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& tile)=0;
   virtual StatusCode getTileAndTDC(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode getPads(const LHCb::RawBank* r,std::vector<LHCb::MuonTileID>& pads)=0;
+
+  virtual MuonTell1Header getHeader(const LHCb::RawBank* r)=0;
+  virtual std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders(LHCb::RawEvent* raw)=0;
+  virtual  std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders()=0;
+
+
+
+
+
   virtual StatusCode getNZSupp(const LHCb::RawBank* r,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & tileAndTDC)=0;
   virtual StatusCode dumpNZSupp(const LHCb::RawBank* r,unsigned int 
 ode_num)=0;

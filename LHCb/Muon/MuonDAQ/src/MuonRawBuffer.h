@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.9 2008-05-28 10:02:38 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.10 2008-06-30 11:43:46 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -63,9 +63,10 @@ public:
   unsigned int BXCounter(unsigned int tell1Number);
   bool PPReachedHitLimit(unsigned int Tell1Number,int pp_num);
   bool LinkReachedHitLimit(unsigned int Tell1Number,int link_num);
-
-
-
+  MuonTell1Header getHeader(const LHCb::RawBank* r);
+  std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders(LHCb::RawEvent* raw);
+  std::vector<std::pair<MuonTell1Header, unsigned int> > getHeaders();
+  
   
 protected:
 
@@ -93,7 +94,8 @@ private:
   mutable std::vector<LHCb::MuonTileID> m_padStorage[MuonDAQHelper_maxTell1Number];
   bool m_padAlreadyDecoded[MuonDAQHelper_maxTell1Number];
   bool m_ODEAlreadyDecoded[MuonDAQHelper_maxTell1Number];
-  
+
+  //mutable MuonTell1Header m_Tell1Header[[MuonDAQHelper_maxTell1Number];
   mutable MuonODEData m_ODEData[MuonDAQHelper_maxTell1Number*24];
   mutable MuonPPEventInfo m_PPEventInfo[MuonDAQHelper_maxTell1Number*4];
                                         

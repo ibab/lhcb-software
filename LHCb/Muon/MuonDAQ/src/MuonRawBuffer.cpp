@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.16 2008-06-04 13:59:22 cattanem Exp $
+// $Id: MuonRawBuffer.cpp,v 1.17 2008-06-30 11:43:46 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -89,6 +89,8 @@ void MuonRawBuffer::clearData(){
     m_eventHeader[i]=0;    
     for(int j=0;j<24;j++)m_hitNumInLink[i*24+j]=0;
     for(int j=0;j<4;j++)m_hitNumInLink[i*4+j]=0;    
+    // m_tell1Header[i].setWord(0);
+    
   }
   for (unsigned int i=0;i<MuonDAQHelper_maxODENumber;i++){
     m_ODEData[i].resetODEData();    
@@ -340,7 +342,7 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
     }
     for(int k=0;k<2*skip;k++){      
       if(k==1)m_eventHeader[tell1Number]=*it;    
-      //      if(k==1)info()<<tell1Number<<" "<<((*it)&(0xFF))<<endreq;
+            //if(k==1)info()<<tell1Number<<" "<<((*it)&(0xFF))<<" "<<(((*it)&(0xFF00))>>8)<<endreq;
       
       it++;
     }
@@ -1112,6 +1114,55 @@ StatusCode MuonRawBuffer::getPads( int tell1)
   }
   return StatusCode::SUCCESS;
 
+}
+
+
+MuonTell1Header MuonRawBuffer::getHeader(const LHCb::RawBank* r)
+{
+  StatusCode sc=DecodeData(r);
+  if(sc.isFailure()){
+    MuonTell1Header tellHeader;
+    
+    return  tellHeader;
+  }else{
+    unsigned int tell1Number=(r)->sourceID();
+    MuonTell1Header tellHeader(m_eventHeader[tell1Number]);
+    
+    return   tellHeader;
+    
+  }  
+}
+
+std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders(LHCb::RawEvent* raw)
+{
+  std::vector<std::pair<MuonTell1Header, unsigned int> > return_value;
+  
+
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;  
+ 
+  //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+    MuonTell1Header header=getHeader(*itB);
+    std::pair<MuonTell1Header, unsigned int> pair_data;
+    pair_data.first=header;
+    unsigned int tell1Number=(*itB)->sourceID();
+    pair_data.second=tell1Number;
+    return_value.push_back(pair_data);
+    
+  }
+  return  return_value;
+  
+}
+
+
+
+std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders()
+{
+  LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
+  std::vector<std::pair<MuonTell1Header, unsigned int> > return_value=getHeaders(raw);
+  
+  return return_value;
 }
 
 
