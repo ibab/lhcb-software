@@ -3,6 +3,11 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!====================== L0Interfaces v1r1p1 2008-06-30 ========================
+! 2008-06-30 - Marco Cattaneo
+ - Add a cmt/version.cmt file to make cmt happy when running without
+   version directory (otherwise it thinks the version is 'L0Interfaces')
+
 !====================== L0Interfaces v1r1 2008-03-29 ==========================
 ! 2008-03-25 - Olivier Deschamps 
   - IL0DUEmulatorTool : 
