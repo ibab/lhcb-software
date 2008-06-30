@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.4 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.5 2008-06-30 08:20:16 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -252,8 +252,8 @@ StatusCode L0DUEmulatorTool::processing(){
 }
 //===========================================================================================================
 const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
-  m_report.setConfiguration(m_config);
   m_report.clear();
+  m_report.setConfiguration(m_config);
   
   if( !m_config->emulated() ){
     error() << " Report is requested but the emulator has not been processed ... return empty report" << endreq;
