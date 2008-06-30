@@ -1,4 +1,5 @@
 <lcgdict>
   <class name = "IANNSvc"       />
+  <class name = "IANSvc"        />
   <class name = "IHltSummaryTool"       />
 </lcgdict>
