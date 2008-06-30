@@ -3,7 +3,7 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           LinkerEvent
-version           v3r4
+version           v3r5
 
 branches          cmt doc src Event Linker xml
 
@@ -17,7 +17,7 @@ end_private
 # Produce Header-Files and from XML description
 #============================================================================
 apply_pattern god_headers files=../xml/*.xml
-install_more_includes more=Event offset=Linker
+apply_pattern install_more_includes more=Event offset=Linker
 
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
