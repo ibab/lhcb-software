@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.29 2008-06-12 18:42:57 marcocle Exp $
+# $Id: requirements,v 1.30 2008-06-30 12:39:14 cattanem Exp $
 # =============================================================================
 # Created    : 2002-05-25
 # Maintainer : Vanya Belyaev ibelyaev@physics.syr.edu
 # =============================================================================
 package           DetDescChecks
-version           v4r6
+version           v4r7
 
 # =============== structure ===================================================
 branches          cmt doc src options python
@@ -22,14 +22,6 @@ library           DetDescChecks   *.cpp -import=AIDA
 # =============== patterns ====================================================
 apply_pattern     component_library library=DetDescChecks 
 
-# =============================================================================
-# Build an application
-# =============================================================================
-application       DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
-
-path_remove  PYTHONPATH "DetDescChecks"
-path_prepend PYTHONPATH "$(DETDESCCHECKSROOT)/python"
-
 private
 
 ## XML files based detector description
@@ -43,8 +35,6 @@ use               GaudiConf   v*
 use               GaudiSvc    v*
 use               GaudiPython v* -no_auto_imports
 use               DetDescCnv  v* Det
-macro DetDescCheck_linkopts "$(application_linkopts)"
-apply_pattern     application_path
 
 apply_pattern QMTest
 # =============================================================================
