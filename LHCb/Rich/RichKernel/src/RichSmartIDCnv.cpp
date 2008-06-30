@@ -5,10 +5,11 @@
  *  Implementation file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.cpp,v 1.3 2008-02-22 10:56:00 jonrob Exp $
+ *  $Id: RichSmartIDCnv.cpp,v 1.4 2008-06-30 12:28:23 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
+ *  @edits: Young Min Kim (s0679231@sms.ed.ac.uk) on 13/06/2008
  */
 //--------------------------------------------------------------------------------
 
@@ -35,10 +36,9 @@ unsigned int Rich::SmartIDGlobalOrdering::_panelHPDColOffset() const
 // Returns the 'global' HPD column number
 int Rich::SmartIDGlobalOrdering::_hpdCol() const
 {
-  return ( Rich::Rich2 == smartID().rich() ?
-           ( _panelHPDColOffset() + smartID().hpdCol() ) :
-           ( _panelHPDColOffset() + _nHPDCols() - 1 - smartID().hpdCol() )
-           );
+  return ( ( Rich::Rich1 == smartID().rich() && Rich::top == smartID().panel() ) ?
+           ( _panelHPDColOffset() + _nHPDCols() - 1 - smartID().hpdCol() ) :
+           ( _panelHPDColOffset() + smartID().hpdCol() ) );
 }
 
 // Returns the maximum 'global' pixel x-coordinate

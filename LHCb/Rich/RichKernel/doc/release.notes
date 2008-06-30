@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.183 2008-06-23 12:36:59 jonrob Exp $
+! $Id: release.notes,v 1.184 2008-06-30 12:28:23 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-06-30 - Chris Jones
+ - Update RichSmartIDCnv for RICH1 (Young Min Kim)
 
 ! 2008-06-23 - Chris Jones
  - Extend the L0Header words to allow full decoding of the information

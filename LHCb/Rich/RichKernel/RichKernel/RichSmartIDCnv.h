@@ -5,10 +5,11 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.4 2008-02-22 10:56:00 jonrob Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.5 2008-06-30 12:28:23 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
+ *  @edits: Young Min Kim (s0679231@sms.ed.ac.uk) on 13/06/2008
  */
 //-----------------------------------------------------------------------------
 
@@ -133,7 +134,12 @@ namespace Rich
     int _pixelRowNum() const;
 
     /// Returns the 'global' HPD number in a RICH column
-    inline int _numInCol() const { return _nHPDsPerCol() - 1 - smartID().hpdNumInCol(); }
+    inline int _numInCol() const
+    {
+      return ( ( Rich::Rich1 == smartID().rich() && Rich::bottom == smartID().panel() ) ?
+               ( smartID().hpdNumInCol() ) :
+               ( _nHPDsPerCol() - 1 - smartID().hpdNumInCol() ) );
+    }
 
     /// Returns the 'global' HPD column number
     int _hpdCol() const;
@@ -184,7 +190,17 @@ namespace Rich
      */
     inline double globalHpdNumInColOffset() const
     {
-      return (smartID().hpdCol()%2) * ( Rich::Rich2 == smartID().rich() ? 0.5 : -0.5 );
+      double Offset;
+      if ( Rich::Rich1 == smartID().rich() && Rich::bottom == smartID().panel() )
+      {
+        Offset = ((smartID().hpdCol()+1)%2) * 0.5;
+      }
+      else
+      {
+        Offset = (smartID().hpdCol()%2) * 0.5;
+      }
+      
+      return Offset;
     }
 
     /// Returns a 'global' HPD column number
