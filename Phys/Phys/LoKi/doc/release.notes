@@ -1,14 +1,13 @@
-! $Id: release.notes,v 1.17 2008-06-12 08:30:38 ibelyaev Exp $ 
+! $Id: release.notes,v 1.18 2008-06-30 19:34:42 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKi
 ! Responsible : Vanya BELYAEV
-! Purpose     : The suit for the whole  LoKi project 
+! Purpose     : The suite for the whole  LoKi project 
 ! -----------------------------------------------------------------------------
 
+!=========================== LoKi v7r1 2008-06-30 =============================
 ! 2008-06-12 - Ivan BELYAEV
-
  - LoKi/LoKi.h
-
     remove the duplicated coumentation for namespaces 
     and therefore fix many Doxygen Warnings.
 
@@ -16,7 +15,6 @@
     version increment to v7r1 
 
 !=========================== LoKi v7r0 2007-12-09 =============================
-
 ! 2007-12-09 - Vanya BELYAEV
  - polishing for v7r0
 
@@ -94,6 +92,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.17  2008/06/12 08:30:38  ibelyaev
+!  remove extra doxygen documentation
+!
 ! Revision 1.16  2007/12/09 19:19:48  ibelyaev
 !  prepare for v7r0
 !
