@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.64 2008-06-25 10:09:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.65 2008-06-30 19:47:12 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhys v7r5 2008-06-30 ==========================
 ! 2008-06-25 - Vanya BELYAEV
  - src/PhysSources.cpp
 
@@ -34,10 +35,8 @@
     Implementation of "trees" (functors which acts on the decay structure),
     needed for new implementation of DecayFinders
 
- - cmt/requirements 
-   
+ - cmt/requirements    
      version increment to v7r5 
-
 
 !========================== LoKiPhys v7r4 2008-06-03 ==========================
 ! 2008-06-03 - Marco Cattaneo
