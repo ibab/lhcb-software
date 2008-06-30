@@ -1,10 +1,11 @@
-// $Id: AlignMuonRec.h,v 1.2 2007-12-10 15:08:37 spozzi Exp $
+// $Id: AlignMuonRec.h,v 1.3 2008-06-30 17:20:28 spozzi Exp $
 #ifndef ALIGNMUONREC_H 
 #define ALIGNMUONREC_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+//#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 //#include "GaudiAlg/GaudiTupleAlg.h" //add sim 09.02.07
 
@@ -26,6 +27,11 @@
 //#include "HltBase/HltAlgorithm.h"
 //#include "HltBase/HltFunctions.h"
 
+// from AIDA Histogramming  //MB
+#include "AIDA/IHistogram1D.h"  //MB
+#include "AIDA/IHistogram2D.h"  //MB
+
+
 /** @class AlignMuonRec AlignMuonRec.h
  *  
  *
@@ -33,7 +39,8 @@
  *  @date   2004-10-06
  */
 //class AlignMuonRec : public GaudiAlgorithm
-class AlignMuonRec : public GaudiAlgorithm {
+class AlignMuonRec : public GaudiHistoAlg {
+  //class AlignMuonRec : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   AlignMuonRec( const std::string& name, ISvcLocator* pSvcLocator );
@@ -91,7 +98,10 @@ private:
   bool m_measureTime;  
   bool m_cloneKiller;
   bool m_Bfield;
-  
+  bool m_m1Station;
+  double m_matchChisq;
+
+
 //  bool m_storeTracks;
   bool m_padM5;
   bool m_padM4;
@@ -100,10 +110,21 @@ private:
   bool m_decodingFromCoord;
   std::string m_outputMuonTracksName;
   std::string m_outputMuonTracksForAlignmentName;
+  std::string m_extrapolatorName;
+  bool m_Histo;
+  ITrackExtrapolator* m_extrapolator; ///< extrapolator
 
+  double PADsizeX[4];
+  double PADsizeY[4];  
+  
   // counters
   int m_countEvents;
   int m_countMuCandidates;
   
+  AIDA::IHistogram1D *m_Chi2match, *m_tx, *m_ty, *m_p, *m_states, *m_nMuonTrack, *m_nMuonTrackNoClone,
+    *m_nMuonTrackMatch;
+  AIDA::IHistogram2D *m_Mfirst,*m_hitM;
+  AIDA::IHistogram2D *m_resx[5][4], *m_resy[5][4];
+  //AIDA::IHistogram2D *m_resx[5];
 };
 #endif // ALIGNMUONREC_H

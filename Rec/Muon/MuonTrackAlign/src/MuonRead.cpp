@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.6 2008-04-10 17:52:16 asatta Exp $
+// $Id: MuonRead.cpp,v 1.7 2008-06-30 17:20:28 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode MuonRead::initialize() {
   debug() << "==> Initialize" << endmsg;
   m_muonDet=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
   m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer");
-  if(!m_muonBuffer) info()<<"error retrieving MuonRawBuffer "<<endreq;
+  if (!m_muonBuffer) info()<<"error retrieving MuonRawBuffer "<<endreq;
 
 
   return StatusCode::SUCCESS;
@@ -72,7 +72,7 @@ StatusCode MuonRead::execute() {
 
   
   StatusCode sc=m_muonBuffer->getTile(m_muonDigit);  //return a vector of MuonTileID
-  if(sc.isFailure())return sc;
+  if (sc.isFailure())return sc;
   LHCb::Tracks::const_iterator it;
 
   for(it=muonTracks->begin();it!=muonTracks->end();it++){
@@ -93,13 +93,15 @@ StatusCode MuonRead::execute() {
 
     // loop over track nodes const std::vector<LHCb::Node*>
     const std::vector<LHCb::Node*>& nodes = (*it)->nodes() ; 
-    for( std::vector<LHCb::Node*>::const_iterator inode = nodes.begin(); inode != nodes.end() ; ++inode) {
+    int m = 1;
+    
+    for ( std::vector<LHCb::Node*>::const_iterator inode = nodes.begin(); inode != nodes.end() ; ++inode) {
       debug()<<" node information "<< (*inode)->z();
       
-      if( (*inode)->z() > 11900 && (*inode)->type()!=LHCb::Node::Outlier  ) {
+      if ( (*inode)->z() > 11900 && (*inode)->type()!=LHCb::Node::Outlier  ) {
         debug() << " ----  in the Muon detector "<< endreq;
         const LHCb::State& state =(*inode)->state();
-
+	
         Fx.push_back(state.x());
         Fy.push_back(state.y());
         Fz.push_back(state.z());
@@ -117,33 +119,38 @@ StatusCode MuonRead::execute() {
         residual.push_back((*inode)->residual());
         residualerr.push_back(sqrt((*inode)->errResidual2())) ;
         measurementerr.push_back(sqrt((*inode)->errMeasure2())) ;
-      } else   debug() << " ---!!!!  not in the Muon detector"<<endreq;
+        m++;
+        
+      }      
     }
-    debug()<< " Nodes in the muon detector with residuals "<< residual.size()<<endreq;
+    if (m<=30){
+      
+      Simone->farray("Fx",Fx.begin(),Fx.end(),"Nnode",30);   // 30 is the maximum number of pads per track allowed
+      Simone->farray("Fy",Fy.begin(),Fy.end(),"Nnode",30);
+      Simone->farray("Fz",Fz.begin(),Fz.end(),"Nnode",30);
+      Simone->farray("Fdx",Fdx.begin(),Fdx.end(),"Nnode",30);
+      Simone->farray("Fdy",Fdy.begin(),Fdy.end(),"Nnode",30);
+      Simone->farray("Ftx",Ftx.begin(),Ftx.end(),"Nnode",30);
+      Simone->farray("Fty",Fty.begin(),Fty.end(),"Nnode",30);
+      Simone->farray("Fdtx",Fdtx.begin(),Fdtx.end(),"Nnode",30);
+      Simone->farray("Fdty",Fdty.begin(),Fdty.end(),"Nnode",30);
+      Simone->farray("Fp",Fp.begin(),Fp.end(),"Nnode",30);
+      
+      Simone->farray("nodez",nodez.begin(),nodez.end(),"Nnode",30);
+      Simone->farray("Fres",residual.begin(),residual.end(),"Nnode",30);
+      Simone->farray("Freserr",residualerr.begin(),residualerr.end(),"Nnode",30);
+      Simone->farray("Fmeaserr",measurementerr.begin(),measurementerr.end(),"Nnode",30);
+      
+      
+      Simone->fill("Fchi2",Fchi2);  
+      Simone->fill("ndof",float((*it)->nDoF())) ;
+      Simone->fill("status",float((*it)->fitStatus())) ;
+    } else info() << "More than 30 pads per track" << endreq;
+
+    int p = 1;
     
-    Simone->farray("Fx",Fx.begin(),Fx.end(),"Nnode",10);   // 10 is the maximum number of pads per track allowed
-    Simone->farray("Fy",Fy.begin(),Fy.end(),"Nnode",10);
-    Simone->farray("Fz",Fz.begin(),Fz.end(),"Nnode",10);
-    Simone->farray("Fdx",Fdx.begin(),Fdx.end(),"Nnode",10);
-    Simone->farray("Fdy",Fdy.begin(),Fdy.end(),"Nnode",10);
-    Simone->farray("Ftx",Ftx.begin(),Ftx.end(),"Nnode",10);
-    Simone->farray("Fty",Fty.begin(),Fty.end(),"Nnode",10);
-    Simone->farray("Fdtx",Fdtx.begin(),Fdtx.end(),"Nnode",10);
-    Simone->farray("Fdty",Fdty.begin(),Fdty.end(),"Nnode",10);
-    Simone->farray("Fp",Fp.begin(),Fp.end(),"Nnode",10);
-
-    Simone->farray("nodez",nodez.begin(),nodez.end(),"Nnode",10);
-    Simone->farray("Fres",residual.begin(),residual.end(),"Nnode",10);
-    Simone->farray("Freserr",residualerr.begin(),residualerr.end(),"Nnode",10);
-    Simone->farray("Fmeaserr",measurementerr.begin(),measurementerr.end(),"Nnode",10);
-
-
-    Simone->fill("Fchi2",Fchi2);  
-    Simone->fill("ndof",float((*it)->nDoF())) ;
-    Simone->fill("status",float((*it)->fitStatus())) ;
-
-    for(itTile=list_of_tile.begin();itTile!=list_of_tile.end();itTile++){
-      if((*itTile).isMuon()==true) {
+    for (itTile=list_of_tile.begin();itTile!=list_of_tile.end();itTile++){
+      if ((*itTile).isMuon() == true) {
         LHCb::MuonTileID tile = itTile->muonID();
         std::vector<DeMuonChamber*> vchambers;
 
@@ -162,18 +169,21 @@ StatusCode MuonRead::execute() {
         Vdxm.push_back(dx);
         Vdym.push_back(dy);
         Vdzm.push_back(dz);
-        region.push_back(float(tile.region()));
-        station.push_back(float(tile.station()));
+        region.push_back(double(tile.region()));
+        station.push_back(double(tile.station()));
+        p++;
         
         LHCb::MCParticle* pp=NULL;
         searchNature(tile,pp);
-        if(pp!=NULL){
+        if (pp!=NULL){
           debug() << "MC particle linked to tile " << pp->particleID().pid() << endreq;
           MCID.push_back(double(pp->particleID().pid()));
-          if(pp->mother()!=0) {
+          if (pp->mother()!=0) {
             debug() << " found a mother "<<endreq;  
             MCmothID.push_back(double(pp->mother()->particleID().pid()));
-          }
+          } else {
+	    MCmothID.push_back(0);
+	  }
           
           MCp.push_back(pp->p());
           debug() << "MCParticle momentum "<<pp->momentum()<<endreq;
@@ -183,82 +193,95 @@ StatusCode MuonRead::execute() {
           MCVx.push_back(pp->originVertex()->position().x());
           MCVy.push_back(pp->originVertex()->position().y());
           MCVz.push_back(pp->originVertex()->position().z());
-        }else debug() << " No MC particle linked to tile" << endreq;
+        } else {
+	  debug() << " No MC particle linked to tile" << endreq;
+	  
+	  MCp.push_back(0);
+	  MCtx.push_back(0);
+	  MCty.push_back(0);
+	  MCVx.push_back(0);
+	  MCVy.push_back(0);
+	  MCVz.push_back(0);
+	  
+        }
+        
       } else   debug()<<" this LHCbID is not a MuonTile "<<endreq;
       
     }
     
+    if (p<=30){
+      
+      Simone->farray("x",Vxm.begin(),Vxm.end(),"Npad",30);
+      Simone->farray("y",Vym.begin(),Vym.end(),"Npad",30);
+      Simone->farray("z",Vzm.begin(),Vzm.end(),"Npad",30);
+      Simone->farray("dx",Vdxm.begin(),Vdxm.end(),"Npad",30);
+      Simone->farray("dy",Vdym.begin(),Vdym.end(),"Npad",30);
+      Simone->farray("dz",Vdzm.begin(),Vdzm.end(),"Npad",30);
+      Simone->farray("station",station.begin(),station.end(),"Npad",30);
+      Simone->farray("R",region.begin(),region.end(),"Npad",30);
+      Simone->farray("NCh",Chamber.begin(),Chamber.end(),"Npad",30);
+      Simone->farray("MCID",MCID.begin(),MCID.end(),"Npad",30);
+      Simone->farray("MCmothID",MCmothID.begin(),MCmothID.end(),"Npad",30);
+      Simone->farray("MCtx",MCtx.begin(),MCtx.end(),"Npad",30);
+      Simone->farray("MCty",MCty.begin(),MCty.end(),"Npad",30);
+      Simone->farray("MCp",MCp.begin(),MCp.end(),"Npad",30);
+      Simone->farray("MCVx",MCVx.begin(),MCVx.end(),"Npad",30);
+      Simone->farray("MCVy",MCVy.begin(),MCVy.end(),"Npad",30);
+      Simone->farray("MCVz",MCVz.begin(),MCVz.end(),"Npad",30);
+    }
+    
 
-    Simone->farray("x",Vxm.begin(),Vxm.end(),"Npad",10);
-    Simone->farray("y",Vym.begin(),Vym.end(),"Npad",10);
-    Simone->farray("z",Vzm.begin(),Vzm.end(),"Npad",10);
-    Simone->farray("dx",Vdxm.begin(),Vdxm.end(),"Npad",10);
-    Simone->farray("dy",Vdym.begin(),Vdym.end(),"Npad",10);
-    Simone->farray("dz",Vdzm.begin(),Vdzm.end(),"Npad",10);
-    Simone->farray("station",station.begin(),station.end(),"Npad",10);
-    Simone->farray("R",region.begin(),region.end(),"Npad",10);
-    Simone->farray("NCh",Chamber.begin(),Chamber.end(),"Npad",10);
-    Simone->farray("MCID",MCID.begin(),MCID.end(),"Npad",10);
-    Simone->farray("MCmothID",MCmothID.begin(),MCmothID.end(),"Npad",10);
-    Simone->farray("MCtx",MCtx.begin(),MCtx.end(),"Npad",10);
-    Simone->farray("MCty",MCty.begin(),MCty.end(),"Npad",10);
-    Simone->farray("MCp",MCp.begin(),MCp.end(),"Npad",10);
-    Simone->farray("MCVx",MCVx.begin(),MCVx.end(),"Npad",10);
-    Simone->farray("MCVy",MCVy.begin(),MCVy.end(),"Npad",10);
-    Simone->farray("MCVz",MCVz.begin(),MCVz.end(),"Npad",10);
-   
-
-    float x_hit[5]={0,0,0,0,0},y_hit[5]={0,0,0,0,0},z_hit[5] ={0,0,0,0,0};
-    float tx_hit[5]={0,0,0,0,0},ty_hit[5]={0,0,0,0,0};
-    int counter[5]={0,0,0,0,0}; 
-    int iMS =0;
-
+    float x_hit[5] = {0,0,0,0,0}, y_hit[5] = {0,0,0,0,0}, z_hit[5] = {0,0,0,0,0};
+    float tx_hit[5] = {0,0,0,0,0}, ty_hit[5] = {0,0,0,0,0};
+    int counter[5] = {0,0,0,0,0}; 
+    int iMS = 0;
+    
     LHCb::MCHits* muonhits = get< LHCb::MCHits > (LHCb::MCHitLocation::Muon );
 
-    if(muonhits!=NULL){
-      for( LHCb::MCHits::const_iterator iMc = muonhits->begin(); iMc != muonhits->end(); ++iMc ) {
-        if((*iMc)->mcParticle()!=NULL){
-          if(abs((*iMc)->mcParticle()->particleID().pid())==13) {
+    if (muonhits!=NULL){
+      for ( LHCb::MCHits::const_iterator iMc = muonhits->begin(); iMc != muonhits->end(); ++iMc ) {
+        if ((*iMc)->mcParticle()!=NULL){
+          if (abs((*iMc)->mcParticle()->particleID().pid())==13) {
             
-            if((*iMc)->midPoint().z()>10000 && (*iMc)->midPoint().z()<14000) iMS=0;
-            if((*iMc)->midPoint().z()>15000 && (*iMc)->midPoint().z()<16000) iMS=1;
-            if((*iMc)->midPoint().z()>16000 && (*iMc)->midPoint().z()<17000) iMS=2;
-            if((*iMc)->midPoint().z()>17000 && (*iMc)->midPoint().z()<18000) iMS=3;
-            if((*iMc)->midPoint().z()>18000 && (*iMc)->midPoint().z()<20000) iMS=4;
-            if(iMS<0||iMS>4) continue;
+            if ((*iMc)->midPoint().z()>10000 && (*iMc)->midPoint().z()<14000) iMS=0;
+            if ((*iMc)->midPoint().z()>15000 && (*iMc)->midPoint().z()<16000) iMS=1;
+            if ((*iMc)->midPoint().z()>16000 && (*iMc)->midPoint().z()<17000) iMS=2;
+            if ((*iMc)->midPoint().z()>17000 && (*iMc)->midPoint().z()<18000) iMS=3;
+            if ((*iMc)->midPoint().z()>18000 && (*iMc)->midPoint().z()<20000) iMS=4;
+            if (iMS<0||iMS>4) continue;
         
-            x_hit[iMS] +=   (*iMc)->midPoint().x();
-            y_hit[iMS] +=   (*iMc)->midPoint().y();
-            z_hit[iMS] +=   (*iMc)->midPoint().z();
-            tx_hit[iMS] =   (*iMc)->dxdz(); 
-            ty_hit[iMS] =   (*iMc)->dydz();
+            x_hit[iMS] += (*iMc)->midPoint().x();
+            y_hit[iMS] += (*iMc)->midPoint().y();
+            z_hit[iMS] += (*iMc)->midPoint().z();
+            tx_hit[iMS] = (*iMc)->dxdz(); 
+            ty_hit[iMS] = (*iMc)->dydz();
             
             counter[iMS]++;
           }
         }
       }
       
-      for(int iMS=0;iMS<5;iMS++){
-        if(counter[iMS]>0){
+      for (int iMS=0;iMS<5;iMS++){
+        if (counter[iMS]>0){
           x_hit[iMS] /=counter[iMS]; 
           y_hit[iMS] /=counter[iMS]; 
           z_hit[iMS] /=counter[iMS]; 
         }
       }
     
-
-    Simone->array("x_hit",x_hit,5);
-    Simone->array("y_hit",y_hit,5);
-    Simone->array("z_hit",z_hit,5);
-    Simone->array("tx_hit",tx_hit,5);
-    Simone->array("ty_hit",ty_hit,5);
+      
+      Simone->array("x_hit",x_hit,5);
+      Simone->array("y_hit",y_hit,5);
+      Simone->array("z_hit",z_hit,5);
+      Simone->array("tx_hit",tx_hit,5);
+      Simone->array("ty_hit",ty_hit,5);
     }
 
     Simone->write();
-    debug()<<" The muon track has "<<
-      list_of_tile.size()<<" Tiles and "<<  nodes.size()<<" nodes "<< endreq;
+    debug()<<" The muon track has "
+	   << list_of_tile.size()<<" Tiles and "<<  nodes.size()<<" nodes "<< endreq;
   }
- 
+  
   return StatusCode::SUCCESS;
 }
 
@@ -268,8 +291,8 @@ StatusCode MuonRead::execute() {
 StatusCode MuonRead::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  
+  return GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -277,13 +300,13 @@ StatusCode MuonRead::finalize() {
 StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
 {
   pp=NULL;
-
+  
   //  unsigned int station=tile.station();
   //  unsigned int region=tile.region();
-
+  
   LinkedTo<LHCb::MCParticle,LHCb::MuonDigit>
     myLink( eventSvc(), msgSvc(),LHCb::MuonDigitLocation::MuonDigit);
-  if(myLink.notFound()) debug()<<" my link not found "<<endmsg;
+  if (myLink.notFound()) debug()<<" my link not found "<<endmsg;
 
   debug()<<" my link found "<<endmsg;
   std::vector<LHCb::MuonTileID>::iterator iDigit;
@@ -293,26 +316,26 @@ StatusCode MuonRead::searchNature(LHCb::MuonTileID tile,LHCb::MCParticle*& pp)
   bool first=true;
   bool second=false;
 
-  for(iDigit = m_muonDigit.begin(); iDigit != m_muonDigit.end(); iDigit++){
+  for (iDigit = m_muonDigit.begin(); iDigit != m_muonDigit.end(); iDigit++){
     LHCb::MuonTileID digitile=(*iDigit);
-    if((digitile.intercept(tile)).isValid()){
+    if ((digitile.intercept(tile)).isValid()){
       debug()<<" find the digit corresponding to tile "<<first<<endreq;
        pp = myLink.first( digitile );   
-       if(first){
+       if (first){
          ppfirst=pp;
          first=false;
-       }else{
+       } else {
          second=true;
-         if(pp!=NULL&&pp==ppfirst)  return StatusCode::SUCCESS;
+         if (pp!=NULL&&pp==ppfirst)  return StatusCode::SUCCESS;
        }
-    }else{
+    } else {
       debug()<<"digitile.intercept(tile)) is NOT Valid"<<endreq;
     }
     
-
+    
   }
-  if(!second){
-    if(ppfirst!=NULL){
+  if (!second){
+    if (ppfirst!=NULL){
       pp=ppfirst;
       return StatusCode::SUCCESS;
     }

@@ -1,4 +1,4 @@
-// $Id: AlignMuonStationRec.h,v 1.3 2008-02-19 15:55:12 spozzi Exp $
+// $Id: AlignMuonStationRec.h,v 1.4 2008-06-30 17:20:28 spozzi Exp $
 #ifndef ALIGNMUONSTATIONREC_H 
 #define ALIGNMUONSTATIONREC_H 1
 
@@ -107,25 +107,23 @@ public:
      }
    }
    
-   
-   double pad_x[5][4]={{10., 20., 40., 80.}, 
-                       {6.3, 12.5, 25., 50.},
-                       {6.7, 13.5,  27., 54.},
-                       {29.,  58., 116., 231.},
-                       {31.,  62., 124., 248.}};
-   
-   double pad_y[5][4]={{25.,50. ,100. , 200.},
-                        {31., 63., 125., 250.},
-                        {34., 68., 135., 270.}, 
-                        {36., 73., 145., 290.},
-                        {39., 77., 155., 309.}};
+   double pad_x[5][4] ={{10.1667,20.1667 ,40.333, 80.6667},
+			{6.41667, 12.75,  25.5, 51.},
+			{6.91667, 13.75,  27.5, 55.},
+			{29.6667,  59., 118., 236.},
+			{31.6667,  63., 126., 252}};
+   double pad_y[5][4] ={{24.7586,49.7584 ,99.7581 , 199.757},
+			{31.3585, 62.9583, 126.158, 252.557},
+			{33.8585, 67., 136.158, 272.557}, 
+			{36.3585, 72.9583, 146.158, 292.557},
+			{38.8585, 77.9582, 156.158, 312.557}};
    
    if(candidate!=NULL){
      int Pcounter =0;
      
      Vec_candidate.push_back(*candidate);
-     //     return;   // Remove if you want to add neighbour pads to the track
-
+    //     return;   // Uncomment if you don't want to add neighbour pads to the track
+     
      
      for(int region=0;region<4;region++){
        for ( std::vector<AlignMuonPoint>::iterator itP = m_region[region]->points().begin();
@@ -143,11 +141,8 @@ public:
 	   Vec_candidate.push_back((*itP));
            
          }
-	 
        }
-       
      }
-
    }
    
    return; 
