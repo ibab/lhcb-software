@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.6 2008-05-28 10:02:23 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.7 2008-06-30 11:40:52 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -7,6 +7,7 @@
 // local
 #include "MuonDet/MuonDAQHelper.h"
 #include "SortTileInTU.h"
+#include "SortPairTileInTU.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDAQHelper
 //
@@ -610,6 +611,8 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
         SmartDataPtr<MuonODEBoard>  ode(m_detSvc,ODEpath);
         //build LUT with ode ID --> MuonTileID
         unsigned int region=ode->region();
+        MuonTSMap*  FirstTSMap=NULL;
+        
         for(int TS=0;TS<ode->getTSNumber();TS++){
           std::string  TSPath= cablingBasePath+
             ode->getTSName(TS);
@@ -622,8 +625,13 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
           unsigned int digitOffSetY=0;
           SmartDataPtr<MuonTSMap>  TSMap(m_detSvc,TSPath);
           //debug()<<"trigger sector "<<TSPath<<endreq;
-
+          if(TS==0){
+            FirstTSMap=static_cast<MuonTSMap*>( TSMap);
+            
+          }
+          
           std::vector<LHCb::MuonTileID> digitInTS;   
+          std::vector<LHCb::MuonTileID> wrongdigitInTS;   
           for(int i=0;i<TSMap->numberOfOutputSignal();i++){
             //msg<<MSG::INFO<<"cabling base 2 "<<cablingBasePath<<endreq;
             unsigned int layout=TSMap->layoutOutputChannel(i);
@@ -637,11 +645,19 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
             MuonTileID muontile(station,lay,region,
                                 quadrant,digitX,digitY);
             digitInTS.push_back(muontile);
+
+            unsigned int wrongDigitX=abs(digitOffSetX)+FirstTSMap->gridXOutputChannel(i);
+            unsigned int wrongDigitY=abs(digitOffSetY)+FirstTSMap->gridYOutputChannel(i);
+            
+            MuonTileID wrongmuontile(station,lay,region,
+                                quadrant,wrongDigitX,wrongDigitY);
+            wrongdigitInTS.push_back(wrongmuontile);
+
           }
           std::vector<LHCb::MuonTileID> crossAddressDC06
             =DoPadDC06(digitInTS,TSMap);
           std::vector<LHCb::MuonTileID> crossAddressV1
-            =DoPadV1(digitInTS,TSMap);
+            =DoPadV1(digitInTS,wrongdigitInTS,TSMap);
           std::vector<LHCb::MuonTileID>::iterator itPad;
           for(itPad=crossAddressDC06.begin();itPad<crossAddressDC06.end();
               itPad++){
@@ -773,11 +789,14 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadDC06(std::vector<
 };
 
 
-std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<
-                                                   LHCb::MuonTileID> digit,
-                                                   MuonTSMap* TS){
-  
+std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<LHCb::
+                                                     MuonTileID> digit,
+                                                     std::vector<LHCb::
+                                                     MuonTileID> wrongdigit,
+                                                     MuonTSMap* TS){
+  MsgStream log(m_msgSvc, "MuonDAQHelper");
   std::vector<LHCb::MuonTileID> list_of_pads;
+  std::vector<LHCb::MuonTileID> wrong_list_of_pads;
   
   
   
@@ -785,6 +804,14 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<
   std::vector<LHCb::MuonTileID>::iterator it;
   std::vector<LHCb::MuonTileID>::iterator ittwo;
   int index=0;
+  int station=digit.begin()->station();
+  int region=digit.begin()->region();
+  bool wrongFirmware=false;
+  if(station==3&&region==0)wrongFirmware=true;
+  if(station==4&&region==0)wrongFirmware=true;
+  log<<MSG::DEBUG<<" st reg wrong "<<station<<" "<<region<<" "<<
+    wrongFirmware<<endreq;
+  
   if(TS->numberOfLayout()==2){
     for(it=digit.begin();it<digit.end();it++){
       for(ittwo=it+1;ittwo<digit.end();ittwo++){ 
@@ -796,14 +823,47 @@ std::vector<LHCb::MuonTileID> MuonDAQHelper::DoPadV1(std::vector<
       }
     }      
   }else{
+    if(wrongFirmware)ittwo=wrongdigit.begin();
     for(it=digit.begin();it<digit.end();it++,index++){      
-      list_of_pads.push_back(*it);      
+      list_of_pads.push_back(*it);    
+      if(wrongFirmware){
+        
+        wrong_list_of_pads.push_back(*ittwo);  
+        ittwo++;
+      }
     }
   }
   
   
-  
-  std::stable_sort(list_of_pads.begin(),list_of_pads.end(),SortTileInTU());
+  if(!wrongFirmware){
+    std::stable_sort(list_of_pads.begin(),list_of_pads.end(),SortTileInTU());
+  }else if(wrongFirmware){
+    std::vector<std::pair<LHCb::MuonTileID,LHCb::MuonTileID> > doubleList;
+    ittwo= wrong_list_of_pads.begin();
+    
+    for(it=list_of_pads.begin();it<list_of_pads.end();it++){
+      std::pair<LHCb::MuonTileID,LHCb::MuonTileID> tilePair;
+      tilePair.first=*ittwo;
+      tilePair.second=*it;
+      doubleList.push_back(tilePair);
+      
+      ittwo++;
+      
+    }
+    std::stable_sort(doubleList.begin(),doubleList.end(),SortPairTileInTU());
+    list_of_pads.clear();
+    log<<MSG::DEBUG<<" after reordering "<<endreq;
+    
+    std::vector<std::pair<LHCb::MuonTileID,LHCb::MuonTileID> >::iterator iPair;
+    for(iPair=doubleList.begin();iPair!=doubleList.end();iPair++){
+      std::pair<LHCb::MuonTileID,LHCb::MuonTileID> tilePair=*iPair;
+      log<<MSG::DEBUG<<tilePair.second<<endreq;
+      
+      list_of_pads.push_back(tilePair.second);
+      
+    }
+    
+  }
   
   
   return list_of_pads;

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.113 2008-06-30 11:40:52 asatta Exp $
+! $Id: release.notes,v 1.114 2008-06-30 11:45:30 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2008-06-30 - Alessia Satta
+  - Fix for Tell1 firmware limitation when >1 TsMap in ODE
+
 ! 2008-06-09 - Alessia Satta
   - Fix for zero division
 
