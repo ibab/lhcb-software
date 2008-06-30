@@ -1,18 +1,17 @@
-! $Id: release.notes,v 1.41 2008-06-26 14:28:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.42 2008-06-30 19:36:35 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgo
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : LoKi-algorithm related stuff 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgo v7r5 2008-06-30 ==========================
 ! 2008-06-26 - Vanya BELYAEV
-
  - From now, the macro LOKI_ALGORITHM put the algorithm 
 	 into LoKi namespace 
 
    Therefore the algorithm LOKI_ALGORITHM( AAA ) appears as 
 	  C++ type: LoKi::AAA 
-
 
 ! 2008-06-12 - Vanya BELYAEV
  - LoKi/TupelDicts.h
@@ -60,9 +59,7 @@
                       
 
  - cmt/requirements
-
     version incremet to v7r5 
-
 
 !========================== LoKiAlgo v7r4p1 2008-05-28 ========================
 ! 2008-05-28 - Marco Cattaneo
