@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.15 2008-04-23 07:59:38 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.16 2008-06-30 15:39:27 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -65,6 +65,15 @@ NeutralProtoPAlg::NeutralProtoPAlg( const std::string& name,
   declareProperty( "SpdPrsIDName"   , m_spdprsName   ) ;
   declareProperty( "PhotonIDType"   , m_photonIDType ) ;
   declareProperty( "PhotonIDName"   , m_photonIDName ) ;
+
+  if("HLT"==context() || "Hlt"==context()){
+    m_matchLocation = LHCb::CaloIdLocation::ClusterMatchHlt;
+    m_hyposLocations.clear();
+    m_hyposLocations.push_back( LHCb::CaloHypoLocation::PhotonsHlt      );
+    m_hyposLocations.push_back( LHCb::CaloHypoLocation::SplitPhotonsHlt );
+    m_hyposLocations.push_back( LHCb::CaloHypoLocation::MergedPi0sHlt   );
+    m_protoLocation = LHCb::ProtoParticleLocation::HltNeutrals;
+  }
 }
 //=============================================================================
 // Destructor

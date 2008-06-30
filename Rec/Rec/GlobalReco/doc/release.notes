@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
+! 2008-06-27 - Olivier Deschamps
+   - ChargedProtoPAlg and NeutralProtoPAlg : add HLT context for Calo
+
+
+
 !========================== GlobalReco v6r16 2008-06-03 ======================
 ! 2008-06-02 - Patrick Koppenburg
  - ChargedProtoPAlg: ignore() StatusCode in Warning()

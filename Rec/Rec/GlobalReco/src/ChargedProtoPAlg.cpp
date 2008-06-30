@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.65 2008-06-02 10:57:51 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.66 2008-06-30 15:39:27 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -76,6 +76,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_tracksPath = LHCb::TrackLocation::HltForward;
     m_muonPath   = LHCb::MuonPIDLocation::Hlt;
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+    
   }
 
   // Input data
@@ -824,15 +825,39 @@ bool ChargedProtoPAlg::getMuonData()
 bool ChargedProtoPAlg::getEcalData()
 {
   using namespace LHCb::Calo2Track;
+  
+  bool sc1=false;
+  bool sc2=false;
+  bool sc3=false;
+  bool sc4=false;
+  bool sc5=false;
+  bool sc6=false;
+  bool sc7=false;
+  bool sc8=false;
+  
+  if("HLT"==context() || "Hlt" == context()){
+    sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcalHlt);
+    sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatchHlt);
+    sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatchHlt);
+    sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2Hlt);
+    sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalEHlt);
+    sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2Hlt);
+    sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDeHlt);
+    sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmuHlt);
+  }
+  else{
+    sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcal);
+    sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatch);
+    sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatch);
+    sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2);
+    sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalE);
+    sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2);
+    sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
+    sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
+  }
+  
 
-  const bool sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcal);
-  const bool sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatch);
-  const bool sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatch);
-  const bool sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2);
-  const bool sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalE);
-  const bool sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2);
-  const bool sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
-  const bool sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
+
   const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
   if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endreq;
 
@@ -846,12 +871,24 @@ bool ChargedProtoPAlg::getBremData()
 {
   using namespace LHCb::Calo2Track;
 
-  const bool sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBrem);
-  const bool sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatch);
-  const bool sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2);
-  const bool sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDe);
-  const bool sc  = sc1 && sc2 && sc3 && sc4;
+  bool sc1=false;
+  bool sc2=false;
+  bool sc3=false;
+  bool sc4=false;
+  if("HLT"==context() || "Hlt" == context()){
+    sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBremHlt);
+    sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatchHlt);
+    sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2Hlt);
+    sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDeHlt);
+  }
+  else{ 
+    sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBrem);
+    sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatch);
+    sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2);
+    sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDe);
+  }
 
+  bool sc  = sc1 && sc2 && sc3 && sc4;
   if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endreq;
 
   return sc;
@@ -864,8 +901,17 @@ bool ChargedProtoPAlg::getSpdData()
 {
   using namespace LHCb::Calo2Track;
 
-  const bool sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpd);
-  const bool sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdE);
+  bool sc1=false;
+  bool sc2=false;
+  if("HLT"==context() || "Hlt" == context()){
+    sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpdHlt);
+    sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdEHlt);
+  }
+  else{
+    sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpd);
+    sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdE);
+  }
+  
   const bool sc  = sc1 && sc2;
 
   if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endreq;
@@ -880,9 +926,21 @@ bool ChargedProtoPAlg::getPrsData()
 {
   using namespace LHCb::Calo2Track;
 
-  const bool sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrs);
-  const bool sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsE);
-  const bool sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
+  bool sc1=false;
+  bool sc2=false;
+  bool sc3=false;
+  if("HLT"==context() || "Hlt" == context()){
+    sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrsHlt);
+    sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsEHlt);
+    sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDeHlt);
+  }
+  else{
+    sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrs);
+    sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsE);
+    sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
+  }
+  
+
   const bool sc  = sc1 && sc2 && sc3;
 
   if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endreq;
@@ -897,10 +955,24 @@ bool ChargedProtoPAlg::getHcalData()
 {
   using namespace LHCb::Calo2Track;
 
-  const bool sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcal);
-  const bool sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalE);
-  const bool sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDe);
-  const bool sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmu);
+  bool sc1=false;
+  bool sc2=false;
+  bool sc3=false;
+  bool sc4=false;
+  if("HLT"==context() || "Hlt" == context()){
+    sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcalHlt);
+    sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalEHlt);
+    sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDeHlt);
+    sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmuHlt);
+  }
+  else{
+    sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcal);
+    sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalE);
+    sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDe);
+    sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmu);
+  }
+  
+
   const bool sc  = sc1 && sc2 && sc3 && sc4;
 
   if ( sc ) debug() << "HCAL PID SUCCESSFULLY LOADED" << endreq;
