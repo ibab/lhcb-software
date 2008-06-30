@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.20 2008-04-28 14:32:39 akozlins Exp $
+// $Id: CaloDigitAlg.cpp,v 1.21 2008-06-30 15:51:51 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -91,7 +91,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     if ( "TAE" == context() ) {
       prevRoot = "Prev1/";
     } else {
-      prevRoot = "Prev";
+      prevRoot = "Prev/";
     }
   } else if ( "Next1/" == rootInTES() ) {
     prevRoot = "";
