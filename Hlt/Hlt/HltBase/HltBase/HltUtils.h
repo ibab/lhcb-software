@@ -28,6 +28,15 @@ namespace Hlt {
    */
   void TrackMerge(const LHCb::Track& track, LHCb::Track& otrack);
   
+  template <class T>
+  void MergeInfo(const T& input, T& output) 
+  {
+    const GaudiUtils::VectorMap<int,double>& info = input.extraInfo();
+    GaudiUtils::VectorMap<int,double>::const_iterator it = info.begin();
+    for (; it != info.end(); ++it)
+      output.addInfo(it->first,it->second);
+  }
+
   /* It fills the vertex using the 2 tracks
    *
    */

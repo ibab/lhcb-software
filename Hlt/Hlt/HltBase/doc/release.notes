@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2008-06-30 - Jose A. Hernando
+ - merge info method in HltUtils
+
 ! 2008-06-30 - Gerhard Raven
  - extend IConfigAccessSvc to allow aliases
 
