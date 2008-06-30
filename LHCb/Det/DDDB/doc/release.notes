@@ -4,10 +4,16 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-Needs Tools/CondDBEntityResolver v5r0 (Gaudi v20r0)
+!========================== DDDB v1r8 2008-06-30 =============================
+! 2008-06-30 - Marco Cattaneo
+ - In DDDB.py, DDDB.opts: suppress pointless warning from COOL_2_5_0
+ - In DC06.py, LHCb-2008.py: Do not expand environment variable in options, 
+                             breaks on grid. Needs Gaudi v20r1
+
 ! 2008-06-12 - Marco Clemencic
  - The name of the component to be passed to XmlParserSvc.EntityResolver has
    changed from CondDBEntityResolverSvc to CondDBEntityResolver.
+   Needs Tools/CondDBEntityResolver v5r0 (Gaudi v20r0)
 
 !========================== DDDB v1r7 2008-06-03 =============================
 ! 2008-06-03 - Marco Cattaneo

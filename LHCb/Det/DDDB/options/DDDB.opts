@@ -55,3 +55,6 @@ CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
 // Technology dependent options
 //----------------------------------------------------------------------------
 #include "$SQLDDDBROOT/options/SQLDDDB.opts"
+
+//Suppress pointless warning from COOL_2_5_0
+MessageSvc.setError += { "RelationalDatabase" }

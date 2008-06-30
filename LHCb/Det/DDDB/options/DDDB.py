@@ -1,4 +1,4 @@
-# $Id: DDDB.py,v 1.2 2008-06-12 18:44:36 marcocle Exp $
+# $Id: DDDB.py,v 1.3 2008-06-30 10:14:03 cattanem Exp $
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -93,3 +93,6 @@ condDBCnvSvc = CondDBCnvSvc( CondDBReader = mainReader )
 # Technology dependent options
 ##########################################################################
 importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+
+# Suppress pointless warning from COOL_2_5_0
+MessageSvc().setError.append("RelationalDatabase")
