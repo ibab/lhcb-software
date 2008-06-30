@@ -3,6 +3,10 @@
 !-------------------------------------------------------------------------
 
 !====================== Tell1Kernel v1r4 2008-06-30 ======================
+! 2008-06-30 - Marco Cattaneo
+ - Add a cmt/version.cmt file to make cmt happy when running without
+   version directory (otherwise it thinks the version is 'Tell1Kernel')
+
 ! 2008-06-26 - Anne Keune
  - Include second order header corrections
 
