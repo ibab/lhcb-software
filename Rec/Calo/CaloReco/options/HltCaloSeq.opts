@@ -1,0 +1,30 @@
+//============================================================
+// Run the CaloReco + CaloPIDs sequence within the HLT context
+//============================================================
+
+
+
+//ApplicationMgr.TopAlg += {"GaudiSequencer/RecoCaloSeq"};
+
+RecoCALOSeq.Context = "HLT";
+#include "$CALORECOOPTS/Brunel.opts"
+
+
+// Overwrite some default offline settings with HLT special settings
+PhotonFromMergedRec.InputData= "Hlt/Calo/SplitPhotons";
+ToolSvc.NeutralCluster.Table = "Hlt/Calo/ClusterMatch";
+ToolSvc.ChargedCluster.Table = "Hlt/Calo/ClusterMatch";
+ToolSvc.PhotonPID.TableLocation = "Hlt/Calo/ClusterMatch";
+MergedPi0Rec.CreateSplitClustersOnly = false; 
+
+#include "$CALOPIDSROOT/options/PhotonPDF.opts"
+
+//RecoCALOSeq.OutputLevel = 1;
+//HltNeutralProtoPAlg.OutputLevel=1;
+//SinglePhotonRec.OutputLevel=1;
+//ElectronRec.OutputLevel=1;
+//ClusterMatch.OutputLevel=1;
+//HltPhotons.OutputLevel = 1;
+//HltResolvedPi0s.OutputLevel = 1;
+//HltMergedPi0s.OutputLevel = 1;
+//HltElectrons.OutputLevel = 1;
