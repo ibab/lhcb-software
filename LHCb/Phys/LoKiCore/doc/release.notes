@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.91 2008-06-26 12:09:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.92 2008-06-30 19:40:20 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,14 +15,13 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v7r4 2008-06-30 ========================
 ! 2008-06-26 - Vanya BELYAEV
-
  - src/Components/LoKiSvc.cpp
    change the default name for defautl reporter from 
    "LoKiSvc.ERROR" to "LoKiSvc.REPORT"
 
 ! 2008-06-12 - Vanya BELYAEV
-
  - add new classes, needed for implementation of variosu decay-finders
    in paricular "nodes" (small fuctors, which act on LHCb::ParticleID objects)
    and the interface for "trees" (the functors which acts on decay trees)
@@ -40,7 +39,6 @@
  - fix many Doxygen warnings (many thanks to Marco Cattaneo)
 
  - cmt/requirements 
-
     version increment to v7r4 
 
 ! =========================== LoKiCore v7r3 2008-05-29 ========================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.52 2008-06-26 12:09:06 ibelyaev Exp $ 
+! $Id: release.notes,v 1.53 2008-06-30 19:42:01 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -14,23 +14,17 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!============================ LoKiGen v7r4 2008-06-30 =========================
 ! 2008-06-26 - Vanya BELYAEV
-
  - LoKi/CmpBarCode.h & src/GenChild.cpp
-
      fix some compilation problmes 
 
-
 ! 2008-06-25 - Vanya BELYAEV
-
  - src/GenParticles.cpp
-
     suppress "empty vertices list"-error message for FromHepMCTree 
 
-
 ! 2008-06-24 - Vanya BELYAEV
- - LoKi/CmtBarCode.h
- 
+ - LoKi/CmtBarCode.h 
     - new utility LoKi::GenParticles::CmpBarCode 
       to compare HepMC::GenParticle by barcode 
     - new typedef for the std::set of particles using CmtBarCode 
