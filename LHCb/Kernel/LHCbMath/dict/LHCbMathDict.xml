@@ -11,6 +11,5 @@
   <class name = "Gaudi::Math::Polar3DLineF"/>
   <class name = "Gaudi::Math::RhoEtaPhiLineF"/>
   <class name = "Gaudi::Math::RhoZPhiLineF"/>
-  <class name = "Gaudi::Math::Math::Dummy"/>
   <class name = "Gaudi::Math::XYZGeomFun"/>
 </lcgdict>
