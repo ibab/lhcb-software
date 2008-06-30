@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.11 2008-06-23 11:22:20 graven Exp $
+// $Id: HltBase.h,v 1.12 2008-06-30 08:58:15 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -135,7 +135,7 @@ protected:
   }
 
   IHltDataSvc& dataSvc() const;
-  IANNSvc&          annSvc() const;
+  IANNSvc&     annSvc() const;
 
   // returns true if we use the TES to store the HltSelection
   bool useTES() {return m_TES;}

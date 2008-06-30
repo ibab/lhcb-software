@@ -1,4 +1,4 @@
-// $Id: IBiFunctionFactory.h,v 1.2 2008-06-02 11:38:36 graven Exp $
+// $Id: IBiFunctionFactory.h,v 1.3 2008-06-30 08:58:15 graven Exp $
 #ifndef HLTBASE_IBIFUNCTIONFACTORY_H 
 #define HLTBASE_IBIFUNCTIONFACTORY_H 1
 
@@ -31,7 +31,7 @@ public:
                        const std::string& value="") = 0;
 
   virtual zen::bifunction<T1,T2>* function(const std::string& functioname) = 0;
-  virtual zen::bifilter<T1,T2>* filter(const std::string& filtername) = 0;
+  virtual zen::bifilter<T1,T2>*   filter(const std::string& filtername) = 0;
 
 };
 #endif // HLTBASE_IBiFUNCTIONSFACTORY_H

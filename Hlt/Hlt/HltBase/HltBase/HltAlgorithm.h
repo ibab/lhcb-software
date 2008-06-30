@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.27 2008-06-23 11:22:20 graven Exp $
+// $Id: HltAlgorithm.h,v 1.28 2008-06-30 08:58:15 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -156,7 +156,7 @@ protected:
 
   // names of the extra input selections (option)
   StringArrayProperty m_extraInputSelectionsNames;
-  
+ 
 private:
   // name of the output selection
  stringKey m_outputSelectionName;

@@ -1,4 +1,4 @@
-// $Id: IConfigAccessSvc.h,v 1.3 2008-02-13 14:52:30 graven Exp $
+// $Id: IConfigAccessSvc.h,v 1.4 2008-06-30 08:58:15 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -8,7 +8,7 @@
 #include "boost/optional.hpp"
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/ConfigTreeNode.h"
-
+#include "HltBase/ConfigTreeNodeAlias.h"
 
 /** @class IConfigAccessSvc IConfigAccessSvc.h
  *  
@@ -39,5 +39,13 @@ public:
   // read & write ConfigTree instances: edges (aka nodes) in the configuration graph
   virtual boost::optional<ConfigTreeNode> readConfigTreeNode(const ConfigTreeNode::digest_type& ref) = 0;
   virtual ConfigTreeNode::digest_type    writeConfigTreeNode(const ConfigTreeNode& edge) = 0;
+  //
+  // read & write ConfigTreeAlias instances: allow entry into the graph by 'name' (i.e. alias)
+  // note that it is not guaranteed that this mapping is, in general, immutable... 
+  // (except, by policy, such as for TCK aliases!)
+  // If you need something which is by construction immutable, use the digest instead!
+  virtual boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias)=0;
+  virtual ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) = 0;
+
 };
 #endif // ICONFIGACCESSSVC_H

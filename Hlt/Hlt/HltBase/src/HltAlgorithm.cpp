@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.36 2008-06-23 11:22:20 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.37 2008-06-30 08:58:15 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -129,7 +129,7 @@ void HltAlgorithm::saveConfiguration() {
 StatusCode HltAlgorithm::sysExecute() {
 
   StatusCode sc = StatusCode::SUCCESS;
-  
+
   bool restore=false;
   if (produceHistos()&&m_histogramUpdatePeriod>0 && (m_counterEntries % m_histogramUpdatePeriod !=0))  {
       // switch of histogramming for this event only
@@ -144,8 +144,8 @@ StatusCode HltAlgorithm::sysExecute() {
   if (sc.isFailure()) return sc;
   
   sc = endExecute();
-  
-      // restore original setting of produceHistos...
+
+  // restore original setting of produceHistos...
   if (restore) setProduceHistos(true) ;
   
   return sc;
