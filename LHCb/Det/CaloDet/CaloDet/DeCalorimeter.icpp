@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.icpp,v 1.4 2007-03-01 11:29:49 cattanem Exp $ 
+// $Id: DeCalorimeter.icpp,v 1.5 2008-06-30 16:46:04 odescham Exp $ 
 // ============================================================================
 #ifndef    CALODET_DECALORIMETER_ICPP
 #define    CALODET_DECALORIMETER_ICPP 1 
@@ -15,6 +15,7 @@
 // ============================================================================ 
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
+#include "CaloDet/DeSubSubCalorimeter.h"
 // ============================================================================ 
 #include "GaudiKernel/System.h"
 
@@ -58,33 +59,28 @@ DeCalorimeter::Cell_
   Assert ( 0 != geo , " Unable to extract IGeometryInfo* " ) ;
   if ( !geo->isInside( globalPoint ) ) { return 0 ; }             // RETURN 
   // find subcalorimeter
-  typedef SubCalos::const_iterator _IT ;
-  _IT begin = subCalos().begin () ;
-  _IT end   = subCalos().end   () ;
-  for ( _IT isub = begin ; end != isub ; ++isub ) 
-  {
-    const DeSubCalorimeter* subCalorimeter = *isub ;
-    const IGeometryInfo*    subCalGeo      = subCalorimeter->geometry() ;
-    if ( subCalGeo->isInside( globalPoint ) ) 
-    {
+
+  for(SubCalos::const_iterator is = subCalos().begin() ; is != subCalos().end() ; ++is ){
+    const IGeometryInfo* subGeo = (*is)->geometry() ;
+    if ( !subGeo->isInside( globalPoint ) ) continue;
+    int side = (*is)->side();
+    SubSubCalos subSubCalos = (*is)->subSubCalos();
+    for(SubSubCalos::iterator iss = subSubCalos.begin(); iss != subSubCalos.end() ; ++iss){
+      const IGeometryInfo* subSubGeo = (*iss)->geometry() ;
+      if ( !subSubGeo->isInside( globalPoint ) ) continue;
+      Gaudi::XYZPoint localPoint ( subSubGeo->toLocal ( globalPoint ) );
       //
-      const unsigned int Area     = isub - begin   ;
-      const double       CellSize = subCalorimeter->size() ;
+      double xOffset  = -side * (*iss)->xSize()/2.;
+      double cellSize = (*iss)->cellSize();
+      const int Column = (int) ( (localPoint.x()-xOffset) / cellSize + m_firstRowUp ) ;
+      const int Row    = (int) ( localPoint.y()           / cellSize + m_firstRowUp ) ;
       //
-      Gaudi::XYZPoint localPoint ( subCalGeo->toLocal ( globalPoint ) );
-      //
-      const int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
-      const int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
-      //
+      int Area = (*iss)->area();
       return &m_cells[LHCb::CaloCellID( m_caloIndex, Area , Row , Column ) ] ;
     }
-  }
+  }  
   return 0 ;
 } ;
 // ============================================================================
-
-// ============================================================================ 
-// The END 
-// ============================================================================ 
 #endif  // CALODET_DECALORIMETER_ICPP
 // ============================================================================

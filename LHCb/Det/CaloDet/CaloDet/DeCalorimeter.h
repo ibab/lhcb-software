@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.h,v 1.32 2007-12-03 16:22:41 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.33 2008-06-30 16:46:04 odescham Exp $ 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -29,9 +29,10 @@
 #include "CaloDet/CaloLed.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
 
-/// forwad declarations
+/// forward declarations
 class MsgStream        ;
 class DeSubCalorimeter ;
+class DeSubSubCalorimeter ;
 
 
 namespace CaloPlane
@@ -63,6 +64,7 @@ class DeCalorimeter: public DetectorElement
 {
 public:
   typedef std::vector<const DeSubCalorimeter*>  SubCalos  ;
+  typedef std::vector<const DeSubSubCalorimeter*>  SubSubCalos  ;
 protected:
   typedef std::vector<DeSubCalorimeter*>        SubCalos_ ;
 public:
@@ -345,7 +347,7 @@ private:
   
   SubCalos   m_subCalos  ;
   SubCalos_  m_subCalos_ ;
-
+  int m_codingBit;
   
 } ;
 

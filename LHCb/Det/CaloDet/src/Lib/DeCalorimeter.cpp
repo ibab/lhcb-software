@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.46 2008-05-29 21:42:41 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.47 2008-06-30 16:46:04 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -24,6 +24,7 @@
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
+#include "CaloDet/DeSubSubCalorimeter.h"
 // ============================================================================
 
 // ============================================================================
@@ -91,16 +92,19 @@ StatusCode DeCalorimeter::initialize()
   /// initialize the base 
   StatusCode sc = DetectorElement::initialize();
   if ( sc.isFailure() ) { return sc ; }  
-  MsgStream msg( msgSvc(), name() );
+
+  // naming
+  int index =  CaloCellCode::CaloNumFromName( name() );
+  std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+  MsgStream msg( msgSvc(), myName );
   msg << MSG::DEBUG << "'INITIALIZE DeCalorimeter "<< name() <<endreq;
 
   {
+    
     // collect the sub-calorimeters
-    typedef IDetectorElement::IDEContainer::iterator _IT ;
-    _IT begin = childBegin () ;
-    _IT end   = childEnd   () ;
-    for ( _IT ichild = begin ; end != ichild ; ++ichild ) 
-    {
+    IDetectorElement::IDEContainer& subdets = childIDetectorElements();
+    msg << " Number of subCalorimeter " << subdets.size() << endreq;
+    for(IDetectorElement::IDEContainer::iterator ichild = subdets.begin() ; ichild != subdets.end() ; ++ichild){
       IDetectorElement* child = *ichild ;
       if ( 0 == child ) { continue ; }
       DeSubCalorimeter* sub = dynamic_cast<DeSubCalorimeter*> ( child ) ;
@@ -144,9 +148,6 @@ StatusCode DeCalorimeter::initialize()
   //== Get other information from the condition database
   Condition* gain = condition( "Gain" );
   if ( 0 == gain ) {
-    int index =  CaloCellCode::CaloNumFromName( name() );
-    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
-    MsgStream msg( msgSvc(), myName );
     msg << MSG::ERROR << "'Gain' condition not found" << endreq;
     return StatusCode::FAILURE;
   }
@@ -160,9 +161,6 @@ StatusCode DeCalorimeter::initialize()
 
   Condition* reco = condition( "Reco" );
   if ( 0 == reco ) {
-    int index =  CaloCellCode::CaloNumFromName( name() );
-    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
-    MsgStream msg( msgSvc(), myName );
     msg << MSG::ERROR << "'Reco' condition not found" << endreq;
     return StatusCode::FAILURE;
   }
@@ -171,15 +169,13 @@ StatusCode DeCalorimeter::initialize()
 
   Condition* hardware = condition( "Hardware" );
   if ( 0 == hardware ) {
-    int index =  CaloCellCode::CaloNumFromName( name() );
-    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
-    MsgStream msg( msgSvc(), myName );
     msg << MSG::ERROR << "'Hardware' condition not found" << endreq;
     return StatusCode::FAILURE;
   }
 
   setAdcMax ( hardware->paramAsInt   ( "AdcMax"        ) ) ;
-  setCoding ( hardware->paramAsInt   ( "CodingBit"     ) );
+  m_codingBit = hardware->paramAsInt   ( "CodingBit"     );
+  setCoding ( m_codingBit );
   m_centralHoleX = hardware->paramAsInt("centralHoleX");
   m_centralHoleY = hardware->paramAsInt("centralHoleY");
   
@@ -204,8 +200,7 @@ StatusCode DeCalorimeter::initialize()
 // ============================================================================
 /// Return a reference (tilted) plane
 // ============================================================================
-Gaudi::Plane3D DeCalorimeter::plane( const double dz) const 
-{
+Gaudi::Plane3D DeCalorimeter::plane( const double dz) const{
   const IGeometryInfo* geometry = this->geometry() ;
   Gaudi::XYZPoint local(0. , 0. , dz);
   if ( fabs(dz-m_zOffset) > m_zSize/2. ) {  
@@ -242,69 +237,73 @@ StatusCode DeCalorimeter::buildCells( ) {
 
   std::vector<double> cellSize;
 
-  // ** loop over all subparts of calorimeter
-
-  for( IDetectorElement::IDEContainer::iterator child = childBegin() ;
-       childEnd() != child ; ++child ) {
-    
-    // ** get subpart of type DeSubCalorimeter
-    
-    DeSubCalorimeter* subCalorimeter = 0 ;
-    try       { subCalorimeter = dynamic_cast<DeSubCalorimeter*>(*child); }
-    catch(...){ continue ; }
-    Assert( 0 != subCalorimeter ,
-            " Unable to extract DeSubCalorimeter* object! ");
-
-    unsigned int Area     = child - childBegin()           ;
-    while( cellSize.size() <= Area ) { cellSize.push_back(0) ; } ;
-    cellSize[ Area ] = subCalorimeter->size() ;
-
-    IGeometryInfo* geoData = subCalorimeter->geometry() ;
-    Assert( 0 != geoData        , " Unable to extract IGeometryInfo* !"  );
-    const ILVolume* lv = geoData->lvolume();
-    Assert( 0 != lv             , " Unable to extract ILVolume* !"       );
-
-    Gaudi::XYZPoint pointLocal(0,0,0), pointGlobal(0,0,0);
-    pointLocal.SetZ( zShowerMax() );
-
-
-    // ** The center of each cell is specified by step of one cell
-    // ** in the local frame. One has to convert to the global frame
-
-    for( int Row = 0 ; m_maxRowCol >= Row    ; ++Row    ) {
-      pointLocal.SetY( m_YToXSizeRatio * cellSize[Area] * (Row-m_centerRowCol));
-
-      for( int Column = 0; m_maxRowCol >= Column ; ++Column )  {
-        pointLocal.SetX( cellSize[ Area ] * ( Column - m_centerRowCol ) ) ;
-
-        if( !lv->isInside( pointLocal ) ) {  continue ; }
-
-        // Mask the non connected calorimeter cells.
-        // Should be only for central part, but is OK also for middle and
-        // outer as the hole is quite small...
-
-        if ( ( m_centralHoleX > fabs(Column - m_centerRowCol) ) &&
-             ( m_centralHoleY > fabs(Row    - m_centerRowCol) ) ) {
-          continue;
-        }
-
-        LHCb::CaloCellID id( m_caloIndex, Area , Row , Column ) ;
-        m_cells.addEntry( CellParam(id) , id );  // store the new cell
+  //  loop over sub-calo (calo halves)
+  for(SubCalos::iterator is = m_subCalos.begin() ; is != m_subCalos.end() ; ++is ){
+    msg << MSG::DEBUG << " SubCalos :  Side " << (*is)->sideName() << " | #areas " << (*is)->subSubCalos().size() << endreq;
+    int side = (*is)->side();
+    // loop over sub-sub-calo (calo areas)
+    SubSubCalos subSubCalos = (*is)->subSubCalos();
+    for(SubSubCalos::iterator iss = subSubCalos.begin(); iss != subSubCalos.end() ; ++iss){
+      unsigned int Area = (*iss)->area();
+      double xOffset = -side * (*iss)->xSize()/2.;
+      msg << MSG::DEBUG<< "SubSubCalo : Area " << Area 
+          << " | cellSize : " << (*iss)->cellSize() 
+          << " | local center X-offset: " << xOffset 
+          << endreq; 
+      while( cellSize.size() <= Area ) { cellSize.push_back(0) ; } ;
+      cellSize[Area]   = (*iss)->cellSize();
+      
+      // get geo data
+      const IGeometryInfo* geoData = (*iss)->geometry() ;
+      Assert( 0 != geoData        , " Unable to extract IGeometryInfo* !"  );
+      const ILVolume* lv = geoData->lvolume();
+      Assert( 0 != lv             , " Unable to extract ILVolume* !"       );
+      //
+      Gaudi::XYZPoint pointLocal(0,0,0), pointGlobal(0,0,0);
+      pointLocal.SetZ( zShowerMax() );      
+        
+      // ** The center of each cell is specified by step of one cell
+      // ** in the local frame. One has to convert to the global frame
 
 
-        pointGlobal = geoData->toGlobal( pointLocal );
-        m_cells[id].setCenterSize( pointGlobal , cellSize[ Area ] ) ;
-        m_cells[id].setValid( true );
+      //
+      for( int Row = 0 ; m_maxRowCol >= Row    ; ++Row    ) {
+        pointLocal.SetY( m_YToXSizeRatio * cellSize[Area] * (Row-m_centerRowCol));
+        for( int Column = 0; m_maxRowCol >= Column ; ++Column )  {
+
+          pointLocal.SetX( cellSize[Area] * ( Column - m_centerRowCol ) + xOffset) ;
 
 
-        double gain = ( maxEtInCenter() / m_cells[id].sine() ) + maxEtSlope();
-        gain        = gain / (double) adcMax() ;
-        m_cells[id].setGain( gain ) ;
-        ++nbCells;
 
-      } /// end of loop over rows
-    } /// end of loop over columns
-  } /// end of loop over sub calorimeters
+          if( !lv->isInside( pointLocal ) ) {  continue ; }
+
+          // Mask the non connected calorimeter cells.
+          // Should be only for central part, but is OK also for middle and
+          // outer as the hole is quite small...
+          if ( ( m_centralHoleX > fabs(Column - m_centerRowCol) ) &&
+               ( m_centralHoleY > fabs(Row    - m_centerRowCol) ) ) {
+            continue;
+          }
+
+          LHCb::CaloCellID id( m_caloIndex, Area , Row , Column ) ;
+          m_cells.addEntry( CellParam(id) , id );  // store the new cell
+
+          pointGlobal = geoData->toGlobal( pointLocal );
+
+          m_cells[id].setCenterSize( pointGlobal , cellSize[Area] ) ;
+          m_cells[id].setValid( true );
+
+          double gain = ( maxEtInCenter() / m_cells[id].sine() ) + maxEtSlope();
+          gain        = gain / (double) adcMax() ;
+          m_cells[id].setGain( gain ) ;
+          ++nbCells;
+          
+        }  // loop over columns
+      }  // loop over rows  
+    } // loop over half-areas
+  } // loop over half-calos
+  
+
 
   // ** Compute neighboring cells
 
@@ -401,11 +400,22 @@ StatusCode DeCalorimeter::buildCells( ) {
 
   m_initialized = true ;
 
-  msg << MSG::DEBUG << "Initialized, index = " << m_caloIndex << ", "
-      << nbCells    << " cells." << endreq;
-
+  msg << MSG::DEBUG << "Initialized  " << CaloCellCode::CaloNameFromNum( m_caloIndex ) << ", "
+      << nbCells    << " channels." << endreq;
+  // Verbosity
+  msg << MSG::VERBOSE << " ----------- List of " << CaloCellCode::CaloNameFromNum( m_caloIndex ) 
+      << " channels " << " ----------- " << endreq;
+  long k = 1;
+  for( CaloVector<CellParam>::iterator ic = m_cells.begin() ;m_cells.end() != ic ; ++ic ) {
+    msg << k << " : " << (*ic).cellID() << "  position : (" << (*ic).x() << "," << (*ic).y() << "," << (*ic).z() 
+        << ") "<< " #neighb " << (*ic).neighbors().size() << " | ";
+    if( k%2 == 0) msg << MSG::VERBOSE <<endreq;  
+    k++;
+  } 
+  msg << MSG::VERBOSE << endreq; 
+  
   return StatusCode::SUCCESS;
-};
+}; 
 
 //----------------------------------------------------------------------------
 // ** Return the cell at the specified position
