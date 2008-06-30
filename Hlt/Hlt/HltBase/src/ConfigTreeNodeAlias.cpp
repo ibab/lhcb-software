@@ -14,6 +14,11 @@ std::string ConfigTreeNodeAlias::alias_type::major() const {
     return m_alias.substr(0,i);
 }
 
+bool ConfigTreeNodeAlias::alias_type::valid() const { 
+//@TODO: require we start with 'TCK/','TOPLEVEL/', or 'TAG/'
+    return !m_alias.empty(); 
+}
+
 std::ostream& ConfigTreeNodeAlias::alias_type::print(std::ostream& os) const {
     return os << m_alias;
 }

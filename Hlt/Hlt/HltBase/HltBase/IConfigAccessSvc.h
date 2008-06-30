@@ -1,4 +1,4 @@
-// $Id: IConfigAccessSvc.h,v 1.4 2008-06-30 08:58:15 graven Exp $
+// $Id: IConfigAccessSvc.h,v 1.5 2008-06-30 14:42:57 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -42,10 +42,14 @@ public:
   //
   // read & write ConfigTreeAlias instances: allow entry into the graph by 'name' (i.e. alias)
   // note that it is not guaranteed that this mapping is, in general, immutable... 
-  // (except, by policy, such as for TCK aliases!)
+  // (except, by policy, such as for TCK aliases!, and, by construction, TOPLEVEL aliases!)
   // If you need something which is by construction immutable, use the digest instead!
-  virtual boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias)=0;
+  virtual boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) = 0;
   virtual ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) = 0;
+
+  // introspection: list all aliases in some 'major' category (TCK, TOPLEVEL, TAG)
+  // precondition: alias.major() + '/' == alias.str() (? or sould we allow matches more specific than major?)
+  virtual std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias) = 0;
 
 };
 #endif // ICONFIGACCESSSVC_H

@@ -21,8 +21,8 @@ public:
        alias_type  operator/ (const std::string& x) { return alias_type( *this ) /= x ; }
        alias_type& operator/=(const std::string& x) { m_alias += "/" ; m_alias+=x; return *this; }
        alias_type& operator=(const std::string& x)  { m_alias = x ; return *this; }
-       std::string major() const;
-       bool valid() const { return !m_alias.empty(); }
+       std::string major() const; // the part upto (not includng) the first '/'
+       bool valid() const;
        bool invalid() const { return !valid(); }
        bool operator==(const alias_type& rhs) const { return m_alias == rhs.m_alias; }
        std::ostream& print(std::ostream& os) const;
@@ -44,18 +44,16 @@ public:
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
-    bool operator==(const ConfigTreeNodeAlias& rhs) const {
-        return m_ref == rhs.m_ref && m_alias == rhs.m_alias;
-    }
+    bool operator!=(const ConfigTreeNodeAlias& rhs) const { return !operator==(rhs); }
+    bool operator==(const ConfigTreeNodeAlias& rhs) const { return m_ref == rhs.m_ref && m_alias == rhs.m_alias; }
 
-    const digest_type& ref() const   { return m_ref; }  // value
-    const alias_type& alias() const { return m_alias; } // key
+    const digest_type& ref()   const { return m_ref; }   // value
+    const alias_type&  alias() const { return m_alias; } // key
 
 private:
 
     ConfigTreeNodeAlias(const digest_type& ref, const alias_type& alias)
-      : m_ref(ref), m_alias(alias)
-    { }
+      : m_ref(ref), m_alias(alias) { }
 
     digest_type     m_ref;
     alias_type      m_alias;

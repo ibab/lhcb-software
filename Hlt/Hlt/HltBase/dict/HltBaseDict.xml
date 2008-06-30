@@ -26,4 +26,8 @@
   <class name = "IConfigAccessSvc" />
   <class name = "IConfigTreeEditor" />
   <class name = "IPropertyConfigSvc" />
+  <class name = "PropertyConfig" />
+  <class name = "ConfigTreeNode" />
+  <class name = "ConfigTreeNodeAlias" />
+  <class name = "ConfigTreeNodeAlias::alias_type" />
 </lcgdict>
