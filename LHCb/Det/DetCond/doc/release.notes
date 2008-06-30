@@ -1,10 +1,11 @@
-# $Id: release.notes,v 1.137 2008-06-27 17:00:41 marcocle Exp $
+# $Id: release.notes,v 1.138 2008-06-30 14:07:10 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r0 2008-06-30 ==========================
 ! 2008-06-27 - Marco Clemencic
  - Introduced the ICondDBReader implementation CondDBTimeSwitch.
    - it allows to use different partitions for different IOVs
@@ -30,7 +31,6 @@
  - Fixed a bug in the direct mapping between the hierarchy of the COOL
    database and the transient store one.
 
-!===================== Det/DetCond v12r0 2008-06-10 ==========================
 ! 2008-06-10 - Marco Clemencic
  - Adapted to the new SEAL-less COOL and CORAL. Needs LCG_55 (Gaudi v20r0)
 
