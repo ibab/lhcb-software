@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.105 2008-06-30 08:36:27 odescham Exp $
+! $Id: release.notes,v 1.106 2008-06-30 11:41:08 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r1 2008-06-30 =========================
 ! 2008-06-27 - Olivier Deschamps
  - Calo2Track.h : add default locations for PID object within Hlt processing
- - CaloTrackAlg : select tracks with fit status =  Track::FitStatusUnknown  in Hlt context
-
+ - CaloTrackAlg : select tracks with fit status =  Track::FitStatusUnknown
+                  in Hlt context
 
 ! 2008-06-25 - Juan Palacios
  - CaloUtils/CaloTrackTool.h
