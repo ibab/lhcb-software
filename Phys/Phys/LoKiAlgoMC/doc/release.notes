@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.21 2008-06-26 14:31:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.22 2008-06-30 19:38:27 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiAlgoMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiAlgoMC v7r2 2008-06-30 ========================
 ! 2008-06-26 - Vanya BELYAEV
-
  - from now LOKI_MCALGORITHM puts the algorithm into namespace LoKi 
  - cmt/requirements 
     version increment to v7r2 
