@@ -1,8 +1,9 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.6 2008-06-25 20:11:02 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.7 2008-06-30 09:50:44 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include <algorithm>
 
 // local
 #include "HltL0MuonPrepare.h"
@@ -97,33 +98,31 @@ StatusCode HltL0MuonPrepare::finalize() {
   return HltAlgorithm::finalize();  
 }
 
+namespace {
+    class isInMuonStation : public std::unary_function<bool,LHCb::LHCbID> {
+    public:
+       isInMuonStation(unsigned int station) : m_station (station) {}
+       bool operator()(const LHCb::LHCbID& id) { return id.isMuon() && id.muonID().station()==m_station; }
+    private:
+       unsigned int m_station;
+    };
+}
+
 //=============================================================================
 bool HltL0MuonPrepare::checkClone(L0MuonCandidate* muon)
 {
-  std::vector<MuonTileID> list_of_tileM1= muon->muonTileIDs(0);
-  MuonTileID tileM1=*(list_of_tileM1.begin());
+  const MuonTileID& tileM1 = muon->muonTileIDs(0).front();
+  const MuonTileID& tileM2 = muon->muonTileIDs(1).front();
 
-  std::vector<MuonTileID> list_of_tileM2= muon->muonTileIDs(1);
-  MuonTileID tileM2=*(list_of_tileM2.begin());
-  for( std::vector<Track*>::const_iterator pItr=m_outputTracks->begin();
-            pItr<m_outputTracks->end();pItr++){
-    std::vector< LHCb::LHCbID > list_lhcb=      (*pItr)->lhcbIDs();
-    MuonTileID oldTileM1;
-    MuonTileID oldTileM2;
+  for( std::vector<Track*>::const_iterator t = m_outputTracks->begin();
+                                           t!= m_outputTracks->end(); ++t) {
+    const std::vector< LHCb::LHCbID >& ids= (*t)->lhcbIDs();
 
-    for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-      if(iM1->isMuon() && iM1->muonID().station()==0) {
-          oldTileM1=iM1->muonID();
-          break;
-        }
-      }
-    for(std::vector< LHCb::LHCbID >::iterator iM1=list_lhcb.begin();iM1<list_lhcb.end();iM1++){
-      if(iM1->isMuon() && iM1->muonID().station()==1){
-          oldTileM2=iM1->muonID();
-          break;
-        }
-      }
-    if(oldTileM1.isValid()&&oldTileM1==tileM1&&oldTileM2.isValid()&&oldTileM2==tileM2)return true;
+    std::vector<LHCb::LHCbID>::const_iterator oldTileM1 = std::find_if( ids.begin(), ids.end(), isInMuonStation(0));
+    if (oldTileM1 == ids.end() || !(*oldTileM1 == tileM1) ) continue; // not found, or no match...
+
+    std::vector<LHCb::LHCbID>::const_iterator oldTileM2 = std::find_if( ids.begin(), ids.end(), isInMuonStation(1));
+    if (oldTileM2 != ids.end() &&   *oldTileM2 == tileM2 ) return true; // found, and match...
   }
   return false;
 }
