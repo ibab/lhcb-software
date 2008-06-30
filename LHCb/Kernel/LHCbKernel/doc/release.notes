@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v8r5 2008-06-30 ========================
 ! 2008-06-19 - Chris Jones
  - Improve a little the doxygen comments on example usage of the FPE::Guard
 
@@ -25,6 +26,7 @@
 ! 2008-06-10 - Gerhard Raven
  - add FPEGuard to Kernel: allows to enable/disable trapping of floating
    point exceptions
+
 !===================== LHCbKernel v8r4 2008-05-05 ========================
 ! 2008-05-05 - Gerhard Raven
  - add 'numberOfPieces' and 'print' to PiecewiseTrajectory
