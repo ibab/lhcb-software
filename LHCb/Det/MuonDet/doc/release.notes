@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.112 2008-06-09 09:02:11 asatta Exp $
+! $Id: release.notes,v 1.113 2008-06-30 11:40:52 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
@@ -8,6 +8,9 @@
 !========================= MuonDet v8r0p1 2008-05-29 ========================
 ! 2008-05-29 - Alessia Satta
  - Fix untested Status Code
+
+! 2008-04-16 - Alessia Satta
+ - Fix for limit in Tell1 firmware to copre with ODE with more than 1 TS map
 
 !========================= MuonDet v8r0 2008-04-16 ==========================
 ! 2008-04-16 - Alessia Satta

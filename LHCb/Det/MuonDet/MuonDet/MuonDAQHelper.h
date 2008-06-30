@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.4 2008-04-16 08:28:16 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.5 2008-06-30 11:40:52 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -42,8 +42,11 @@ public:
   
   std::vector<LHCb::MuonTileID> DoPadDC06(std::vector<LHCb::MuonTileID> digit,
                                                    MuonTSMap* TS);
+//  std::vector<LHCb::MuonTileID> DoPadV1(std::vector<LHCb::MuonTileID> 
+//digit,                                                   MuonTSMap* TS);
   std::vector<LHCb::MuonTileID> DoPadV1(std::vector<LHCb::MuonTileID> digit,
-                                                   MuonTSMap* TS);
+                                        std::vector<LHCb::MuonTileID> 
+                                          wrongdigit,MuonTSMap* TS);
   LHCb::MuonTileID getADDInLink(unsigned int Tell1_num, long link_num,long ch);
   LHCb::MuonTileID getADDInODE(long ODE_num, long ch);
   LHCb::MuonTileID getADDInODENoHole(long ODE_num, long ch);
