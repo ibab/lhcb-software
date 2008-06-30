@@ -1,4 +1,4 @@
-// $Id: CaloTrackAlg.cpp,v 1.8 2008-05-13 12:26:11 odescham Exp $
+// $Id: CaloTrackAlg.cpp,v 1.9 2008-06-30 08:36:27 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -32,6 +32,10 @@ CaloTrackAlg::CaloTrackAlg
   if(!sc.isSuccess())warning() <<" TrackUse::declareProperties  FAILED" << endreq;
   //
   _setProperty ( "CheckTracks" , "true" ) ;
+  std::vector<int> stat;
+  stat.push_back( LHCb::Track::Fitted);
+  if( "HLT" == context() )stat.push_back( LHCb::Track::FitStatusUnknown);
+  setProperty ( "AcceptedFitStatus" , stat).ignore();
 } ;
 // ============================================================================
 /// destructor

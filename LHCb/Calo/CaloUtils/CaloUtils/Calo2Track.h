@@ -1,4 +1,4 @@
-// $Id: Calo2Track.h,v 1.4 2006-06-21 21:38:45 odescham Exp $
+// $Id: Calo2Track.h,v 1.5 2008-06-30 08:36:27 odescham Exp $
 #ifndef CALO2TRACK_H 
 #define CALO2TRACK_H 1
 
@@ -47,6 +47,35 @@ namespace LHCb {
     const std::string HcalPIDe      = "Rec/Calo/HcalPIDe";
     const std::string EcalPIDmu     = "Rec/Calo/EcalPIDmu";
     const std::string HcalPIDmu     = "Rec/Calo/HcalPIDmu";
+
+    // =================== Hlt locations ============== 
+
+    // Calo-Track matching tables   : IRelationWeighted< CaloCluster/Hypo , Track , float > 
+    const std::string ClusterMatchHlt  = "Hlt/Calo/ClusterMatch";
+    const std::string PhotonMatchHlt   = "Hlt/Calo/PhotonMatch";
+    const std::string BremMatchHlt     = "Hlt/Calo/BremMatch";
+    const std::string ElectronMatchHlt = "Hlt/Calo/ElectronMatch";
+    // Acceptance tables       : IRelation< Track , bool  >
+    const std::string InSpdHlt        =  "Hlt/Calo/InAccSpd";
+    const std::string InPrsHlt         =  "Hlt/Calo/InAccPrs";
+    const std::string InBremHlt        =  "Hlt/Calo/InAccBrem";
+    const std::string InEcalHlt        =  "Hlt/Calo/InAccEcal";
+    const std::string InHcalHlt        =  "Hlt/Calo/InAccHcal";
+    // Intermediate estimators : IRelation< Track , float >   
+    const std::string SpdEHlt          = "Hlt/Calo/SpdE";
+    const std::string PrsEHlt         = "Hlt/Calo/PrsE";
+    const std::string EcalEHlt         = "Hlt/Calo/EcalE";
+    const std::string HcalEHlt         = "Hlt/Calo/HcalE";
+    const std::string EcalChi2Hlt      = "Hlt/Calo/EcalChi2";
+    const std::string BremChi2Hlt      = "Hlt/Calo/BremChi2";
+    const std::string ClusChi2Hlt      = "Hlt/Calo/ClusChi2";
+    // CaloPID DLLs            : IRelation< Track , float >   
+    const std::string PrsPIDeHlt       = "Hlt/Calo/PrsPIDe";
+    const std::string EcalPIDeHlt      = "Hlt/Calo/EcalPIDe";
+    const std::string BremPIDeHlt      = "Hlt/Calo/BremPIDe";
+    const std::string HcalPIDeHlt      = "Hlt/Calo/HcalPIDe";
+    const std::string EcalPIDmuHlt     = "Hlt/Calo/EcalPIDmu";
+    const std::string HcalPIDmuHlt     = "Hlt/Calo/HcalPIDmu";
   };
   namespace Calo2Track {
     typedef IRelationWeighted< LHCb::CaloCluster , LHCb::Track , float >             IClusTrTable;
