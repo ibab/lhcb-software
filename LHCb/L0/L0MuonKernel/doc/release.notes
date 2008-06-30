@@ -4,11 +4,18 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-06-30 - Marco Cattaneo
+ - Add a cmt/version.cmt file to make cmt happy when running without
+   version directory (otherwise it thinks the version is 'L0MuonKernel')
+ - Increment version to v7r5
+
 ! 2008-06-18 - Julien Cogan
  - Bug fix and improvements
+
 ! 2008-06-05 - Julien Cogan
  - Decoding of the bank version 2 without Zero suppression
  - Possibility to run witout M1 or M2 
+
 !============================ L0MuonKernel v7r4 2008-04-11 ============== 
 ! 2008-04-11 - Julien Cogan
  - Upgrade in the decoding of the transparent mode 'a la RICH'
