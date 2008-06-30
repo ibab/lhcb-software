@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r10p1 2008-06-30 =====================
 ! 2008-06-18 - Patrick Koppenburg
  - Fixed doxygen for MCDecayFinder
 
