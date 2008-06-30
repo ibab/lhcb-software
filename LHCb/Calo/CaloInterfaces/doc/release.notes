@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.43 2008-06-02 11:00:26 cattanem Exp $
+! $Id: release.notes,v 1.44 2008-06-30 08:34:30 odescham Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+
+! 2008-06-30 - Olivier Deschamps 
+ - add virtual kernel() in ICaloCosmicsTool 
+ - increment release number (1.1) in ICaloCosmicsTool
+
 
 !========================== CaloInterfaces v7r6 2008-06-02 ====================
 ! 2008-06-02 - Marco Cattaneo

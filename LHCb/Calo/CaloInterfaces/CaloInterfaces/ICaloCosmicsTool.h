@@ -1,4 +1,4 @@
-// $Id: ICaloCosmicsTool.h,v 1.2 2008-06-02 11:00:26 cattanem Exp $
+// $Id: ICaloCosmicsTool.h,v 1.3 2008-06-30 08:34:30 odescham Exp $
 #ifndef ICALOCOSMICSTOOL_H 
 #define ICALOCOSMICSTOOL_H 1
 
@@ -13,7 +13,7 @@
 // forward declarations
 class DeCalorimeter;
 
-static const InterfaceID IID_ICaloCosmicsTool ( "ICaloCosmicsTool", 1, 0 );
+static const InterfaceID IID_ICaloCosmicsTool ( "ICaloCosmicsTool", 1, 1 );
 
 /** @class ICaloCosmicsTool ICaloCosmicsTool.h
  *  
@@ -46,6 +46,7 @@ public:
   virtual StatusCode tupling(unsigned int unit)=0;
   virtual bool tracked()=0;
   virtual bool timed()=0;
+  virtual const double kernel()=0;
  
 
 protected:
