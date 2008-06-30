@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.99 2008-06-06 11:46:21 odescham Exp $
+! $Id: release.notes,v 1.100 2008-06-30 16:09:31 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
+!======================== L0Event v16r11 2008-06-30 ==========================
+! 2008-06-30 - Marco Cattaneo
+ - Add a dummy cmt/version.cmt file to make cmt happy when running without
+   version directory (otherwise it thinks the version is 'L0Event')
+
 ! 2008-06-06 - Olivier Deschamps
  - L0DUReport.xml : fix in clear() method (clearing tck/configuration was missing)
-
 
 !======================== L0Event v16r10 2008-05-29 ==========================
 ! 2008-05-29 - Olivier Deschamps
