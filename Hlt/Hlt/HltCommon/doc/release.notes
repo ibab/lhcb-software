@@ -7,6 +7,7 @@
 !2008-06-30 - Gerhard Raven
   - implement configuration aliases in all IConfigAccessSvc implementations
   - write toplevel alias when generating configurations in HltGenConfig
+  - implement browsing of aliases
   - STL-ify HltL0MuonPrepare::checkClone
 
 !2008-06-25 - Gerhard Raven

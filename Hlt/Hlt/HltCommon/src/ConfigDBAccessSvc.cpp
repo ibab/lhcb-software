@@ -7,7 +7,7 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-// #define GR_USE_SEAL
+#define GR_USE_SEAL
 #ifdef GR_USE_SEAL
 #include "SealKernel/Context.h"
 #endif
@@ -75,13 +75,14 @@ struct ConfigDBAccessSvc::table_traits<PropertyConfig> {
 
     static key_type key(const PropertyConfig& x) { return x.digest(); }
 
-    static void read(const coral::AttributeList& row, PropertyConfig& x) {
+    static PropertyConfig& read(const coral::AttributeList& row, PropertyConfig& x) {
         std::stringstream ss;
         ss << "Name: " << row["Name"].data<std::string>() << '\n';
         ss << "Kind: " << row["Kind"].data<std::string>() << '\n';
         ss << "Type: " << row["Type"].data<std::string>() << '\n';
         ss << "Properties: [\n" << row["Properties"].data<std::string>() << "]\n";
         ss >> x;
+        return x;
     }
     static void write(const key_type& key, coral::AttributeList& row)  {
         row["id"]            .setValue<std::string>( key.str() );
@@ -130,12 +131,13 @@ struct ConfigDBAccessSvc::table_traits<ConfigTreeNode> {
     typedef ConfigTreeNode::digest_type key_type;
     static key_type key(const ConfigTreeNode& x) { return x.digest(); }
 
-    static void read(const coral::AttributeList& row, ConfigTreeNode& x) {
+    static ConfigTreeNode& read(const coral::AttributeList& row, ConfigTreeNode& x) {
         std::stringstream ss;
         ss << "Label: " << row["Label"].data<std::string>() << '\n';
         ss << "Leaf: "  << row["Leaf"].data<std::string>() << '\n';
         ss << "Nodes: [\n" << row["Nodes"].data<std::string>() << "]\n";
         ss >> x;
+        return x;
     }
     static void write(const key_type& key, coral::AttributeList& row)  {
         row["id"]            .setValue<std::string>( key.str() );
@@ -176,12 +178,13 @@ struct ConfigDBAccessSvc::table_traits<ConfigTreeNodeAlias> {
     static const std::string& keyName() { static std::string k("Alias"); return k; }
     typedef ConfigTreeNodeAlias::alias_type key_type;
     static key_type key(const ConfigTreeNodeAlias& x) { return x.alias(); }
-    static void read(const coral::AttributeList& row, ConfigTreeNodeAlias& x) {
+    static ConfigTreeNodeAlias& read(const coral::AttributeList& row, ConfigTreeNodeAlias& x) {
         std::stringstream ss;
         ss << "Ref: "    << row["Ref"]  .data<std::string>() << '\n';
         ss << "Alias: "  << row["Alias"].data<std::string>() << '\n';
         // major is 'just' there to allow searches on type... eg. 'gimme all TCKs'
         ss >> x;
+        return x;
     }
     static void write(const key_type& key, coral::AttributeList& row) {
         row["Alias"]       .setValue<std::string>( key.str() );
@@ -298,6 +301,23 @@ ConfigDBAccessSvc::read(const typename table_traits<T>::key_type& key) {
     return nrow==1 ? x : boost::optional<T>();
 }
 
+std::vector<ConfigTreeNodeAlias>
+ConfigDBAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& key) {
+    Transaction transaction(*m_session,true);
+    coral::AttributeList condData;
+    condData.extend<std::string>("key");
+    condData["key"].setValue<std::string>(key.major());
+    coral::IQuery* q = m_session->nominalSchema().tableHandle( table_traits<ConfigTreeNodeAlias>::tableName() ).newQuery();
+    q->setCondition( "Major = :key", condData);
+    coral::ICursor& c = q->execute();
+    std::vector<ConfigTreeNodeAlias> vec;
+    while ( c.next() ) {
+        ConfigTreeNodeAlias x;
+        table_traits<ConfigTreeNodeAlias>::read(c.currentRow(),x);
+        vec.push_back(x);
+    }
+    return vec;
+}
 
 template <typename T>
 typename ConfigDBAccessSvc::table_traits<T>::key_type

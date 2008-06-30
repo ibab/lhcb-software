@@ -205,6 +205,35 @@ ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) 
    }
 }
 
+std::vector<ConfigTreeNodeAlias>
+ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias) 
+{
+    std::vector<ConfigTreeNodeAlias> x;
+  
+    // use std::list as iterators are not invalidated when extending list...
+    std::list<fs::path> dirs; dirs.push_back( fs::path(m_dir) / alias.major() );
+     
+    for (std::list<fs::path>::const_iterator dir  = dirs.begin(); dir!=dirs.end(); ++dir ) { 
+
+        if ( !fs::exists( *dir) ) continue; //@todo: add warning about this...
+
+        fs::directory_iterator end; // default construction yields past-the-end
+        for ( fs::directory_iterator i( *dir ); i!= end; ++i) {
+            if ( fs::is_directory(i->status()) ) {
+              // push back on stack of directories...
+              dirs.push_back(*i);
+            } else {
+              ConfigTreeNodeAlias alias;
+              fs::ifstream s( *i );
+              s >> alias;
+              debug() << " found " << alias << endmsg;
+              x.push_back(alias);
+            }
+        }
+    }
+    return x;
+}
+
 MsgStream& ConfigFileAccessSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
      return *m_msg << level;

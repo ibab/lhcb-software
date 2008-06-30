@@ -1,4 +1,4 @@
-// $Id: ConfigStackAccessSvc.h,v 1.3 2008-06-30 08:56:53 graven Exp $
+// $Id: ConfigStackAccessSvc.h,v 1.4 2008-06-30 14:43:57 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -43,6 +43,9 @@ public:
 
   boost::optional<ConfigTreeNode>  readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type&);
   ConfigTreeNodeAlias::alias_type writeConfigTreeNodeAlias(const ConfigTreeNodeAlias&);
+
+  std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias);
+
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
   MsgStream& debug() const { return msg(MSG::DEBUG); }
