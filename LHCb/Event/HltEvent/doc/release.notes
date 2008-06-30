@@ -4,6 +4,7 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r10 2008-06-30 ==========================
 ! 2008-06-25 - Patrick Koppenburg
  - HltSelectionSummary : make it very simple: a string, a bool, the candidates.
 
