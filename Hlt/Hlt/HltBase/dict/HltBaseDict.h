@@ -15,6 +15,8 @@
 #include "HltBase/HltTypes.h"
 #include "LHCbMath/MD5.h"
 #include "HltBase/IConfigTreeEditor.h"
+#include "HltBase/ConfigTreeNodeAlias.h"
+#include "HltBase/ConfigTreeNode.h"
 #include "HltBase/stringKey.h"
 #include "HltBase/PropertyConfig.h"
 #include "HltBase/IPropertyConfigSvc.h"
@@ -29,6 +31,7 @@ namespace {
     Hlt::Configuration py_hlt_00;
     zen::IntRelation py_hlt_05; 
     Hlt::IntRelation py_hlt_06;
+    std::vector<ConfigTreeNodeAlias> py_hlt_07;
     _hltbase_instantiations(){}
   };  
 }

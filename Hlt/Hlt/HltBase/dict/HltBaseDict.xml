@@ -29,5 +29,6 @@
   <class name = "PropertyConfig" />
   <class name = "ConfigTreeNode" />
   <class name = "ConfigTreeNodeAlias" />
+  <class name = "std::vector<ConfigTreeNodeAlias>" />
   <class name = "ConfigTreeNodeAlias::alias_type" />
 </lcgdict>

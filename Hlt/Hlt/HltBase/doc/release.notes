@@ -10,6 +10,7 @@
 ! 2008-06-30 - Gerhard Raven
  - extend IConfigAccessSvc to allow aliases
  - add functionality to browse aliases
+ - add vector<ConfigTreeNodeAlias> to dictionary
 
 ! 2008-06-28 - Gerhard Raven
  - fix genreflex warnings
