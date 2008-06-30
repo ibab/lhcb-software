@@ -1,4 +1,4 @@
-// $Id: PatCounter.cpp,v 1.3 2008-06-01 17:28:53 mjohn Exp $
+// $Id: PatCounter.cpp,v 1.4 2008-06-30 12:37:20 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -94,24 +94,30 @@ void PatCounter::initEvent ( ) {
     if ( (*itT)->checkFlag( LHCb::Track::Invalid ) ) continue;
     Range range = table->relations( *itT );
     if ( range.empty() ){
-      if( 3==(*itT)->history())m_nbGhostSpc++;
-      if(13==(*itT)->history())m_nbGhostGrl++;
-      if(12==(*itT)->history())m_nbGhostGen++;
-      if(14==(*itT)->history())m_nbGhostOpn++;
       m_nbGhost++;
+      if(3==m_selectId){
+        if( 3==(*itT)->history())m_nbGhostSpc++;
+        if(13==(*itT)->history())m_nbGhostGrl++;
+        if(12==(*itT)->history())m_nbGhostGen++;
+        if(14==(*itT)->history())m_nbGhostOpn++;
+      }
     }
-    if( 3==(*itT)->history())m_totTrackSpc++;
-    if(13==(*itT)->history())m_totTrackGrl++;
-    if(12==(*itT)->history())m_totTrackGen++;
-    if(14==(*itT)->history())m_totTrackOpn++;
     m_totTrack++;
     nbTracks++;
+    if(3==m_selectId){
+      if( 3==(*itT)->history())m_totTrackSpc++;
+      if(13==(*itT)->history())m_totTrackGrl++;
+      if(12==(*itT)->history())m_totTrackGen++;
+      if(14==(*itT)->history())m_totTrackOpn++;
+    }
   }
   m_totGhost += m_nbGhost;
-  m_totGhostSpc += m_nbGhostSpc;
-  m_totGhostGrl += m_nbGhostGrl;
-  m_totGhostGen += m_nbGhostGen;
-  m_totGhostOpn += m_nbGhostOpn;
+  if(3==m_selectId){
+    m_totGhostSpc += m_nbGhostSpc;
+    m_totGhostGrl += m_nbGhostGrl;
+    m_totGhostGen += m_nbGhostGen;
+    m_totGhostOpn += m_nbGhostOpn;
+  }
   double fracGhost = 0.;
   if ( 0 < nbTracks ) fracGhost = double(m_nbGhost) / nbTracks;
   m_fracGhost += fracGhost;
@@ -230,24 +236,21 @@ int PatCounter::count( const LHCb::MCParticle* part, std::vector<bool> flags,
 void PatCounter::printStatistics ( ) {
   if ( 0 == m_totTrack ) return;
 
-
-
-  info() << "**** Space "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
-                                    m_totTrackSpc, m_totGhostSpc, 100.*double(m_totGhostSpc)/double(m_totTrackSpc) ) << endreq;
-  info() << "**** Genrl "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
-                                    m_totTrackGrl, m_totGhostGrl, 100.*double(m_totGhostGrl)/double(m_totTrackGrl) ) << endreq;
-  info() << "**** Genric"<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
-                                    m_totTrackGen, m_totGhostGen, 100.*double(m_totGhostGen)/double(m_totTrackGen) ) << endreq;
-  info() << "**** Open  "<< format( " : %8d tracks including %8d ghosts [%5.1f %%]  ****",
-                                    m_totTrackOpn, m_totGhostOpn, 100.*double(m_totGhostOpn)/double(m_totTrackOpn) ) << endreq;
-
-
-
   double totT = m_totTrack + 0.00000000001;
   double frac = 100. * double( m_totGhost ) / totT;
   info() << "**** " << m_container
          << format( " : %8d tracks including %8d ghosts [%5.1f %%] Event average %5.1f %% ****",
                     m_totTrack, m_totGhost, frac, 100. * m_fracGhost / m_nEvent ) << endreq;
+
+  if(m_totTrackSpc>0) info() << format( "                      %8d by \'RZ/Space\' PR %8d ghosts [%5.1f %%]",
+                      m_totTrackSpc, m_totGhostSpc, 100.*double(m_totGhostSpc)/double(m_totTrackSpc) ) << endreq;
+  if(m_totTrackGrl>0) info() << format( "                      %8d by \'General\'  PR %8d ghosts [%5.1f %%]",
+                      m_totTrackGrl, m_totGhostGrl, 100.*double(m_totGhostGrl)/double(m_totTrackGrl) ) << endreq;
+  if(m_totTrackGen>0) info() << format( "                      %8d by \'Generic\'  PR %8d ghosts [%5.1f %%]",
+                      m_totTrackGen, m_totGhostGen, 100.*double(m_totGhostGen)/double(m_totTrackGen) ) << endreq;
+  if(m_totTrackOpn>0) info() << format( "                      %8d by \'Open\'     PR %8d ghosts [%5.1f %%]",
+                      m_totTrackOpn, m_totGhostOpn, 100.*double(m_totGhostOpn)/double(m_totTrackOpn) ) << endreq;
+
   for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {
     if ( 0 == m_wanted[kk] ) continue;
     frac = 100. * double( m_counted[kk] ) / double( m_wanted[kk] );

@@ -1,4 +1,4 @@
-// $Id: PatChecker.cpp,v 1.3 2008-06-01 17:28:53 mjohn Exp $
+// $Id: PatChecker.cpp,v 1.4 2008-06-30 12:37:20 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -33,10 +33,8 @@ PatChecker::PatChecker( const std::string& name,
   declareProperty( "CheckMissedSeed",      m_checkMissedSeed       = false );
   declareProperty( "CheckMissedDownstream",m_checkMissedDownstream = false );
   declareProperty( "CheckMatchNotForward", m_checkMatchNotForward  = false );
-
-  declareProperty( "VeloTrackLocation", veloSpaceName = LHCb::TrackLocation::Velo);
-
   declareProperty( "MeasureTime",          m_measureTime           = false );
+  declareProperty( "VeloTrackLocation",    veloSpaceName = LHCb::TrackLocation::Velo);
 }
 //=============================================================================
 // Destructor
@@ -53,12 +51,11 @@ StatusCode PatChecker::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   std::string veloRzName    =  LHCb::TrackLocation::RZVelo;
-  //std::string veloSpaceName =  LHCb::TrackLocation::Velo;
   std::string veloTTName    =  LHCb::TrackLocation::VeloTT;
   std::string forwardName   =  LHCb::TrackLocation::Forward;
   if ( "Hlt" == context() ) {
     veloRzName    = LHCb::TrackLocation::HltRZVelo;
-    //veloSpaceName = LHCb::TrackLocation::HltVelo;
+    veloSpaceName = LHCb::TrackLocation::HltVelo;
     veloTTName    = LHCb::TrackLocation::HltVeloTT;
     forwardName   = LHCb::TrackLocation::HltForward;
   }
@@ -149,16 +146,16 @@ StatusCode PatChecker::initialize() {
   m_best->addSelection( "        long" );
   m_best->addSelection( "long > 5 GeV" );
 
-  //m_allCounters.push_back( m_veloRz     );
+  m_allCounters.push_back( m_veloRz     );
   m_allCounters.push_back( m_veloSpace  );
-  //m_allCounters.push_back( m_veloTT     );
-  //m_allCounters.push_back( m_forward );
-  //m_allCounters.push_back( m_tsa    );
-  //m_allCounters.push_back( m_tTrack );
-  //m_allCounters.push_back( m_match );
-  //m_allCounters.push_back( m_downst  );
-  //m_allCounters.push_back( m_kSNew  );
-  //m_allCounters.push_back( m_best  );
+  m_allCounters.push_back( m_veloTT     );
+  m_allCounters.push_back( m_forward );
+  m_allCounters.push_back( m_tsa    );
+  m_allCounters.push_back( m_tTrack );
+  m_allCounters.push_back( m_match );
+  m_allCounters.push_back( m_downst  );
+  m_allCounters.push_back( m_kSNew  );
+  m_allCounters.push_back( m_best  );
 
   m_ttForward = tool<PatTTCounter>( "PatTTCounter", "TTForward", this );
   m_ttForward->setContainer( forwardName );
@@ -182,9 +179,9 @@ StatusCode PatChecker::initialize() {
   m_ttDownst->addSelection( "   pi<-Ks<-B" );
   m_ttDownst->addSelection( " and > 5 GeV" );
 
-  //m_allTTCounters.push_back( m_ttForward );
-  //m_allTTCounters.push_back( m_ttMatch   );
-  //m_allTTCounters.push_back( m_ttDownst  );
+  m_allTTCounters.push_back( m_ttForward );
+  m_allTTCounters.push_back( m_ttMatch   );
+  m_allTTCounters.push_back( m_ttDownst  );
 
   if ( m_measureTime ) {
     m_timer = tool<ISequencerTimerTool>( "SequencerTimerTool" );
@@ -210,8 +207,6 @@ StatusCode PatChecker::execute() {
         m_allCounters.end() != itC; ++itC ) {
     (*itC)->initEvent();
   }
-
-  return StatusCode::SUCCESS;//mj
 
   for ( std::vector<PatTTCounter*>::iterator itCt = m_allTTCounters.begin();
         m_allTTCounters.end() != itCt; ++itCt ) {

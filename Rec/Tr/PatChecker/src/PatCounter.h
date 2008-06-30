@@ -1,4 +1,4 @@
-// $Id: PatCounter.h,v 1.2 2008-06-01 17:28:53 mjohn Exp $
+// $Id: PatCounter.h,v 1.3 2008-06-30 12:37:20 mjohn Exp $
 #ifndef PATCOUNTER_H 
 #define PATCOUNTER_H 1
 
@@ -69,22 +69,22 @@ static const InterfaceID IID_PatCounter ( "PatCounter", 1, 0 );
     // Event variables  
     int m_nbTrack;                 ///< Tracks for this event
     int m_nbGhost;                 ///< Ghosts for this event
-    int m_nbGhostSpc;                 ///< Ghosts for this event
-    int m_nbGhostGen;                 ///< Ghosts for this event
-    int m_nbGhostGrl;                 ///< Ghosts for this event
-    int m_nbGhostOpn;                 ///< Ghosts for this event
+    int m_nbGhostSpc;              ///< Ghosts from 'Space' PR
+    int m_nbGhostGen;              ///< Ghosts from 'Generic' PR
+    int m_nbGhostGrl;              ///< Ghosts form 'General' PR
+    int m_nbGhostOpn;              ///< Ghosts from 'Open' PR
     
     // total variables
-    int m_totTrackSpc;                ///< Total number of tracks processed
-    int m_totTrackGrl;                ///< Total number of tracks processed
-    int m_totTrackGen;                ///< Total number of tracks processed
-    int m_totTrackOpn;                ///< Total number of tracks processed
+    int m_totTrackSpc;             ///< Total number of tracks (Space)
+    int m_totTrackGrl;             ///< Total number of tracks (General)
+    int m_totTrackGen;             ///< Total number of tracks (Generic)
+    int m_totTrackOpn;             ///< Total number of tracks (Open)
     int m_totTrack;                ///< Total number of tracks processed
     int m_totGhost;                ///< Total number of ghosts
-    int m_totGhostSpc;                ///< Total number of ghosts
-    int m_totGhostGrl;                ///< Total number of ghosts
-    int m_totGhostGen;                ///< Total number of ghosts
-    int m_totGhostOpn;                ///< Total number of ghosts
+    int m_totGhostSpc;             ///< Total number of ghosts (Space)
+    int m_totGhostGrl;             ///< Total number of ghosts (General)
+    int m_totGhostGen;             ///< Total number of ghosts (Generic)
+    int m_totGhostOpn;             ///< Total number of ghosts (Open)
     double m_fracGhost;
     double m_nEvent;
     

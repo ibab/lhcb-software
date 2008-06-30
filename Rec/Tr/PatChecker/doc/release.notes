@@ -4,6 +4,9 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2008-06-30 - Malcolm John
+ - In the case of VELO tracks, provides a breakdown of PR performance per algorithm
+
 !========================== PatChecker v3r2 2008-04-04 =======================
 ! 2008-04-04 - Marco Cattaneo
  - Adapt to new OT linkers produced by Boole v15r0 (backward compatible change)
