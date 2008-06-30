@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v11r2
+version v11r2p1
 
 include_path none
 macro xmlsrc "xml"
@@ -23,4 +23,4 @@ pattern god_headers \
    macro_append <package>_dependencies <package>Obj2Doth
 
 use Python v* LCG_Interfaces
-
+use GaudiPolicy v*

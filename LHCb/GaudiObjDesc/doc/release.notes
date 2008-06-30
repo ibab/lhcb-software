@@ -4,6 +4,10 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+!======================== GaudiObjDesc v11r2p1 2008-06-30 ====================
+! 2008-06-30 - Marco Cattaneo
+ - Add dependency on GaudiPolicy to allow running of QMTest macros
+
 !======================== GaudiObjDesc v11r2 2008-03-03 ======================
 ! 2008-03-03 - Stefan for Brett Viren
  - Fixed bug 33839: genClasses::reset() fix for multiple classes in one XML file
