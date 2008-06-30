@@ -17,4 +17,4 @@ use OTDet               v7r9    Det
 use RichDet             v10r12  Det
 use STDet               v4r2    Det
 use VeloDet             v13r1   Det
-use XmlTools            v5r2    Tools
+use XmlTools            v6r0    Tools
