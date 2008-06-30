@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+
+!========================== MuonDAQ v4r2 2008-06-30 ==========================
 ! 2008-06-30 - Alessia Satta
  - Add Tell1 header decoding  
 
