@@ -2,6 +2,7 @@ Package         : SiDAQ
 Package manager : Matt Needham
 !-----------------------------------------------------------------------
 
+!========================== SiDAQ v2r1 2008-06-30 ========================
 ! 2008-06-17 M Needham
  - Bug fix in SiHeaderWord decoding
 
