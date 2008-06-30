@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.6 2008-06-04 06:41:53 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-06-30 11:23:50 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -54,7 +54,7 @@ class LHCbApp(ConfigurableUser):
             
         #-- Default field map set by Fieldmap package
         if not hasattr( MagneticFieldSvc(),"FieldMapFile" ):
-            MagneticFieldSvc().FieldMapFile = os.environ['FIELDMAP']
+            MagneticFieldSvc().FieldMapFile = "$FIELDMAP"
 
     def defineEvents(self):
         skipEvents = self.getProp("skipEvents")

@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r10 2008-06-30 =======================
+! 2008-06-30 - Marco Cattaneo
+ - In Configuration.py, do not evaluate $FIELDMAP environment variable, must be
+   done at runtime to work on the grid
+
 !======================== GaudiConf v10r9 2008-06-04 ========================
 ! 2008-06-04 - Marco Cattaneo
  - Improved handling of CondDBtag and DDDBtag in LHCbApp configurable. Now,
