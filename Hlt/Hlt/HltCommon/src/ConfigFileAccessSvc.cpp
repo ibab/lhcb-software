@@ -1,5 +1,6 @@
 #include "ConfigFileAccessSvc.h"
 #include <sstream>
+#include <string>
 
 #include "boost/lexical_cast.hpp"
 #include "boost/filesystem/path.hpp"
@@ -211,7 +212,8 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
     std::vector<ConfigTreeNodeAlias> x;
   
     // use std::list as iterators are not invalidated when extending list...
-    std::list<fs::path> dirs; dirs.push_back( fs::path(m_dir) / alias.major() );
+    fs::path basedir = fs::path(m_dir) / "Aliases" ;
+    std::list<fs::path> dirs; dirs.push_back( basedir / alias.major() );
      
     for (std::list<fs::path>::const_iterator dir  = dirs.begin(); dir!=dirs.end(); ++dir ) { 
 
@@ -222,12 +224,19 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
             if ( fs::is_directory(i->status()) ) {
               // push back on stack of directories...
               dirs.push_back(*i);
+              debug() << " configTreeNodeAliases: adding dir " << *i << endmsg;
             } else {
-              ConfigTreeNodeAlias alias;
+              debug() << " configTreeNodeAliases: adding file " << *i << endmsg;
+              std::string ref;
               fs::ifstream s( *i );
-              s >> alias;
-              debug() << " found " << alias << endmsg;
-              x.push_back(alias);
+              s >> ref;
+              std::string alias = i->string().substr( basedir.string().size() );
+              std::stringstream str; 
+              str << "Ref: " << ref << '\n' << "Alias: " << alias << std::endl;
+              ConfigTreeNodeAlias a;
+              str >> a;
+              debug() << " configTreeNodeAliases: content:" << a << endmsg;
+              x.push_back(a);
             }
         }
     }
