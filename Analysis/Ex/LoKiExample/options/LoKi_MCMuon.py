@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_MCMuon.py,v 1.2 2008-06-26 14:33:18 ibelyaev Exp $ 
+# $Id: LoKi_MCMuon.py,v 1.3 2008-07-01 11:12:10 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_MCMuon example
@@ -23,13 +23,13 @@
 import os 
 from  Gaudi.Configuration import * 
 from  Configurables import PhysDesktop
-from  Configurables import LoKi__MCMuon as MCMuon
+from  Configurables import LoKi__MCMuons as MCMuons
 
 importOptions( "$DAVINCIROOT/options/DaVinciCommon.opts" )
 importOptions( "$COMMONPARTICLESROOT/options/StandardMuons.opts" )
 
 ## configure our own algorithm: 
-alg = MCMuon('MCMuon')
+alg = MCMuons('MCMuon')
 alg.addTool ( PhysDesktop() )
 alg.PhysDesktop.InputLocations = ['Phys/StdTightMuons']
 alg.NTupleLUN = "MCMU"
