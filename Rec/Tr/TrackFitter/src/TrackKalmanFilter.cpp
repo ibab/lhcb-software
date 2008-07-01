@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.61 2008-06-06 13:28:04 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.62 2008-07-01 14:43:28 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -100,7 +100,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     // Prediction step (not for first node)
     if( iNode != nodes.begin() ) {
       sc = predict( node, state );
-      if ( sc.isFailure() ) return Warning( "Fit failure: unable to predict node", StatusCode::FAILURE,1 );
+      if ( sc.isFailure() ) return Warning( "Fit failure: unable to predict node", StatusCode::FAILURE, 0 );
     }
     
     // save predicted state
@@ -111,11 +111,11 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     if ( node.hasMeasurement() ) {
       // Project the reference (only in the forward filter)
       sc = projectReference( node );
-      if ( sc.isFailure() ) return Warning( "Fit Failure: unable to project reference", StatusCode::FAILURE,1 );
+      if ( sc.isFailure() ) return Warning( "Fit Failure: unable to project reference", StatusCode::FAILURE, 0 );
 
       // Filter step
       sc = filter( node, state );
-      if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 1 );
+      if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 0 );
 
       // add the chisquare
       chisq += node.chi2();
@@ -149,7 +149,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     // Loop over the nodes in the revers order (should be sorted) 
     NodeRange::reverse_iterator irNode = rbegin ;
     NodeRange::reverse_iterator irPrevNode = irNode;
-    if ( irNode == rend ) return Warning( "Fit failure: zero nodes left" ,StatusCode::FAILURE,  1);
+    if ( irNode == rend ) return Warning( "Fit failure: zero nodes left" ,StatusCode::FAILURE, 0);
     while ( irNode != rend ) {
       FitNode& node     = dynamic_cast<FitNode&>(**irNode);
       FitNode& prevNode = dynamic_cast<FitNode&>(**irPrevNode);
@@ -158,7 +158,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
       if ( irPrevNode != irNode ) { // No prediction needed for 1st node
         sc = predictReverseFit( prevNode, node, state );
         if ( sc.isFailure() ) 
-          return Warning( "Fit failure unable to predict (reverse fit) node",StatusCode::FAILURE, 1 );
+          return Warning( "Fit failure unable to predict (reverse fit) node",StatusCode::FAILURE, 0);
       }
 
       // save predicted state
@@ -189,7 +189,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 	    node.setState( state );
 	  } else {
 	    sc = biSmooth( node, upstream );
-	    if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 1 );
+	    if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 0 );
 	  }
 	}
       }
@@ -215,7 +215,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
       FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
       // Smoother step
       sc = smooth( thisNode, prevNode, upstream );
-      if ( sc.isFailure() ) return Warning( "Fit failure: unable to smooth node!", StatusCode::FAILURE,1 );
+      if ( sc.isFailure() ) return Warning( "Fit failure: unable to smooth node!", StatusCode::FAILURE, 0 );
       ++ithisNode;
       ++iPrevNode;
     }
@@ -238,7 +238,7 @@ StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID )
   
   // The seed covariance comes from the first node
   NodeContainer nodes = track.nodes() ;
-  if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,1 );
+  if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
   
   TrackSymMatrix seedCov = nodes.front()->state().covariance() ;
   bool upstream = nodes.front()->z() > nodes.back()->z() ;
@@ -373,19 +373,22 @@ StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
   // if the reference is not set, issue an error
   StatusCode sc = StatusCode::SUCCESS;
   if( !node.refIsSet() ) {
-    error() << "Node without reference. " << node.measurement().type() << endmsg ;
     sc = StatusCode::FAILURE ;
+    Warning( "Node without reference", sc, 0 ).ignore();
+    debug() << "Node without reference. " << node.measurement().type() << endmsg;
   } else {
     // project the reference state
     Measurement& meas = node.measurement();
     ITrackProjector *proj = m_projectorSelector->projector(meas);
     if ( proj==0 ) {
-      error() << "could not get projector for measurement" << endreq ;
       sc = StatusCode::FAILURE ;
+      Warning( "Could not get projector for measurement", sc, 0 ).ignore();
+      debug() << "could not get projector for measurement" << endmsg ;
     } else {
       sc = proj -> project(node.refVector(), meas );
       if ( sc.isFailure() ) {
-        error() << "unable to project this statevector: " << node.refVector() << endreq ;
+        Warning( "unable to project statevector", sc, 0 ).ignore();
+        debug() << "unable to project this statevector: " << node.refVector() << endmsg ;
       } else {
         node.setProjectionMatrix( proj->projectionMatrix() );
         node.setRefResidual( proj -> residual() ) ;
@@ -404,7 +407,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   // check z position
   Measurement& meas = node.measurement();
   if ( fabs(meas.z() - state.z()) > TrackParameters::propagationTolerance ) {
-    Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 1 );
+    Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 0 ).ignore();
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
   }
@@ -516,7 +519,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
          << thisNode.z() << " thisNodeC = " << thisNodeC;
-    Warning("Problems in smoothing",StatusCode::FAILURE,1);
+    Warning("Problems in smoothing",StatusCode::FAILURE,0).ignore();
     return failure( mess.str() );
   }
 
@@ -529,7 +532,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     const double errRes2 = thisNode.errResidual2() - 
       Matrix1x1(Similarity( H, covUpDate ))(0,0);
     if ( errRes2 < 0.) {
-      return Warning( "Negative residual error in smoother!", StatusCode::SUCCESS, 1 );
+      return Warning( "Negative residual error in smoother!", StatusCode::SUCCESS, 0 );
     }
     thisNode.setErrResidual( sqrt(errRes2) );
   }
@@ -551,7 +554,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   bool OK = invertMatrix( invR );
   if ( !OK ) {
     debug() << "unable to invert matrix in smoother" << invR << endreq ;
-    return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,10);
+    return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,0);
   }
 
   TrackVector    smoothedX ;
@@ -587,7 +590,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
     if( HCH > V ) {
       debug() << "Severe problem after smoother: smoothed error larger than measurement error"
 	      << V << " " << HCH << " " <<  endreq ;
-      return Warning( "Smoothing error", StatusCode::FAILURE,10);
+      return Warning( "Smoothing error", StatusCode::FAILURE, 0 );
     }
   }
   
@@ -611,7 +614,8 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
     double sign = node.type()==LHCb::Node::HitOnTrack? -1 : 1 ;
     double R = V + sign * HCH;
     if ( !(R>0) ) {
-      error() << "Non-positive variance for residual: "
+      Warning( "Non-positive variance for residual", StatusCode::SUCCESS, 0 ).ignore();
+      debug() << "Non-positive variance for residual: "
 	      << node.measurement().type() << " " << V << " " << HCH << endmsg;
       node.setErrResidual(0);
     } else {

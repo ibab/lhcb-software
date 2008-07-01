@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-07-01 - Marco Cattaneo
+ - In TrackKalmanFilter, downgrade Errors to Warnings, reduce verbosity (now
+   Warnings only printed once, more info available in debug() )
+
 ! 2008-06-17 - Louis Nicolas
  - Added more safety checks in TrackMasterFitter
  - Added minMomentumForELossCorr and maxMomentumForScattering variables in TrackMasterFitter
