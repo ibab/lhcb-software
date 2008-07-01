@@ -4,10 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-! 2008-07-19 M Needham
+!===================== LHCbKernel v8r5 2008-07-01 ========================
+! 2008-07-01 M Needham
  - Changes in ITNames/TTNames for windows 
 
-!===================== LHCbKernel v8r5 2008-06-30 ========================
 ! 2008-06-19 - Chris Jones
  - Improve a little the doxygen comments on example usage of the FPE::Guard
 
