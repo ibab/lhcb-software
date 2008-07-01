@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.3 2008-06-25 13:31:26 jpalac Exp $
+// $Id: LHCbMathDict.h,v 1.4 2008-07-01 15:18:11 cattanem Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -13,6 +13,7 @@
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
+
 namespace Gaudi
 {
   namespace Math 
@@ -110,7 +111,6 @@ namespace Gaudi
   
 }
 
-
 namespace
 {
 
@@ -118,6 +118,7 @@ namespace
   {
     __Instantiations();
 
+#ifndef WIN32 // FIXME: Does not compile on Windows
     Gaudi::Math::XYZLine       __lineXYZ;
     Gaudi::Math::Polar3DLine   __linePolar3D;
     Gaudi::Math::RhoEtaPhiLine __lineRhoEtaPhi;
@@ -127,9 +128,8 @@ namespace
     Gaudi::Math::Polar3DLineF   __linePolar3DF;
     Gaudi::Math::RhoEtaPhiLineF __lineRhoEtaPhiF;
     Gaudi::Math::RhoZPhiLineF   __lineRhoZPhiF;
-
+#endif // WIN32
     Gaudi::Math::XYZGeomFun __geomFunXYZ;
-    
   };
 }
 

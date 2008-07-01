@@ -6,7 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
-!========================= LHCbMath v3r0 2008-06-30 ==========================
+!========================= LHCbMath v3r0 2008-07-01 ==========================
+! 2008-07-01 - Marco Cattaneo
+ - On Windows, disable some dictionaries that do not compile
+  
 ! 2008-06-30 - Marco Cattaneo
  - Removed  <class name = "Gaudi::Math::Math::Dummy"/> from selection file
 
