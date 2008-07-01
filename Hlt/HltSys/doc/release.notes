@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+! 2008-07-01 - Gerhard Raven
+ - clean up Hlt1SelectionID & InfoID in HltInit.opts
+
 ! 2008-07-01 - Tomasz Skwarnicki
  - to complete transition to new name conventions, renamed selections in:
  Hlt1HadronSequence.opts, Hlt1MuTrackSequence.opts HltEleAlleyConfSequence.opts, HltL0TriggerSequence.opts
