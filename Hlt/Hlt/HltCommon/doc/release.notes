@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-07-01 - Gerhard Raven
+  - fix unchecked StatusCode in HltL0CaloPrepare
+
 !2008-06-30 - Gerhard Raven
   - implement configuration aliases in all IConfigAccessSvc implementations
   - write toplevel alias when generating configurations in HltGenConfig

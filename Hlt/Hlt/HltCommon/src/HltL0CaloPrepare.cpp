@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.6 2008-06-25 20:11:02 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.7 2008-07-01 20:04:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,6 @@ StatusCode HltL0CaloPrepare::initialize() {
 //=============================================================================
 StatusCode HltL0CaloPrepare::execute() {
 
-  StatusCode sc = StatusCode::SUCCESS;
 
   // get calo candidates
   L0CaloCandidates* calos = get<L0CaloCandidates>(m_caloCandidatesLocation);
@@ -82,9 +81,12 @@ StatusCode HltL0CaloPrepare::execute() {
     const L0CaloCandidate& calo = **it;
     if (calo.type() == m_caloType && calo.et() >= m_minEt) {
         Track* tcalo = new Track();
-        if (m_caloMaker) m_caloMaker->makeTrack(calo,*tcalo);
-        else             makeTrack(calo,*tcalo);
+        if (m_caloMaker) {
+            StatusCode sc = m_caloMaker->makeTrack(calo,*tcalo);
+            if (sc.isFailure()) return sc;
+        } else                           makeTrack(calo,*tcalo);
         addExtras(calo,*tcalo);
+        //TODO: pushes both into IHltDataSvc (m_outputTracks) and into TES (output)
         output->insert(tcalo);
         m_outputTracks->push_back(tcalo);
     }
@@ -94,7 +96,7 @@ StatusCode HltL0CaloPrepare::execute() {
           << " candidates " << m_outputSelection->ncandidates() << endreq;
   if (m_debug) printInfo(" Calos ",*m_outputTracks);
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -112,7 +114,7 @@ void HltL0CaloPrepare::makeTrack(const L0CaloCandidate& calo,
   double y      = calo.position().y();
   double z      = calo.position().z();
   double ex     = calo.posTol()*(4./sqrt(12.0));
-  double ey     = calo.posTol()*(4./sqrt(12.0));
+  double ey     = ex;
   double et     = calo.et();
 
   double sintheta = sqrt(x*x + y*y)/(sqrt(x*x + y*y + z*z));
@@ -123,7 +125,7 @@ void HltL0CaloPrepare::makeTrack(const L0CaloCandidate& calo,
 
   State state;
   state.setLocation(State::MidHCal);
-  state.setState(x,y,z,ex,ey,1./e);
+  state.setState(x,y,z,ex,ey,1./e); // ??? slopeX = ex, slopY = ey ???
   track.addToStates(state);
   
 }
@@ -132,15 +134,15 @@ void HltL0CaloPrepare::addExtras(const L0CaloCandidate& calo,
                                   LHCb::Track& track) {
 
   double ex     = calo.posTol()*(4./sqrt(12.0));
-  double ey     = calo.posTol()*(4./sqrt(12.0));
+  double ey     = ex;
 
   const std::vector<State*>& states = track.states();
   for (std::vector<State*>::const_iterator it = states.begin();
        it != states.end(); ++it) {
     State& state = *(*it);
     if (state.location() == State::MidHCal){
-      state.setTx(ex);
-      state.setTy(ey);
+      state.setTx(ex); // ???
+      state.setTy(ey); // ???
       debug() << " changed slopes! " << state.slopes() << endreq;
     }
   }
