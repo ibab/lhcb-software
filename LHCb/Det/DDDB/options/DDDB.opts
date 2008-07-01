@@ -57,4 +57,4 @@ CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
 #include "$SQLDDDBROOT/options/SQLDDDB.opts"
 
 //Suppress pointless warning from COOL_2_5_0
-MessageSvc.setError += { "RelationalDatabase" }
+MessageSvc.setError += { "RelationalDatabase" };
