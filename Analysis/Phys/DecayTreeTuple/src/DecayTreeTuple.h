@@ -1,4 +1,4 @@
-// $Id: DecayTreeTuple.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: DecayTreeTuple.h,v 1.2 2008-07-01 14:50:02 pkoppenb Exp $
 #ifndef JBOREL_DECAYTREETUPLE_H
 #define JBOREL_DECAYTREETUPLE_H 1
 
@@ -79,7 +79,7 @@ class IEventTupleTool;
  * good occasion to remind you the DecayFinder syntax):
  *
  * \verbatim
- MyGaudiSequencer.Member = {"DecayTreeTuple/Dtt"};
+ MyGaudiSequencer.Members = {"DecayTreeTuple/Dtt"};
  Dtt.Decay = "[[B_s0]cc -> (^D_s- => ^K+ ^K- ^pi-) {^pi+, ^K+}]cc";
  Dtt.Branches = {
     "bachelor" : " [[B_s0]cc -> D_s- {^pi+, ^K+}]cc "
