@@ -4,14 +4,18 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
-2008-06-27 - Louis Nicolas
- - Important bug fix in StateSimpleBetheBlochEnergyCorrectionTool. The previous correction was causing some tracks to have huge chi2/dof.
+! 2008-07-01 - Marco Cattaneo
+ - Fix compilation warning (comment unused variable)
 
-2008-06-17 - Louis Nicolas, Matt Needham
+! 2008-06-27 - Louis Nicolas
+ - Important bug fix in StateSimpleBetheBlochEnergyCorrectionTool.
+   The previous correction was causing some tracks to have huge chi2/dof.
+
+! 2008-06-17 - Louis Nicolas, Matt Needham
  - LongTrackReferenceCreator: Changed default extrapolator to TrackMasterExtrapolator
  - StateSimpleBetheBlochEnergyCorrectionTool: added safety checks
 
-2008-06-06 - Louis Nicolas
+! 2008-06-06 - Louis Nicolas
  - TrackLikelihood: added a safety check to avoid FPE in initialisation of "lik"
 
 !======================== TrackTools v3r7 2008-06-05 ========================

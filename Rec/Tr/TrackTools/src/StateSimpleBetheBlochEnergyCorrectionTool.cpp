@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.6 2008-06-27 07:12:22 lnicolas Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.7 2008-07-01 14:28:21 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -60,7 +60,7 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
   // apply correction - note for now only correct the state vector
   Gaudi::TrackVector& tX = state.stateVector();
 
-  double minMomentumForEnergyCorrection = 10*Gaudi::Units::MeV;
+  //  double minMomentumForEnergyCorrection = 10*Gaudi::Units::MeV;
 
   double qOverP = 0.0;
   tX[4] < 0.0 ? qOverP = GSL_MIN(tX[4], -LHCb::Math::lowTolerance) :
