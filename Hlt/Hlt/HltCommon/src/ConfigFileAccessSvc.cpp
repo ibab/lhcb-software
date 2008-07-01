@@ -230,7 +230,7 @@ ConfigFileAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type
               std::string ref;
               fs::ifstream s( *i );
               s >> ref;
-              std::string alias = i->string().substr( basedir.string().size() );
+              std::string alias = i->string().substr( basedir.string().size()+1 );
               std::stringstream str; 
               str << "Ref: " << ref << '\n' << "Alias: " << alias << std::endl;
               ConfigTreeNodeAlias a;
