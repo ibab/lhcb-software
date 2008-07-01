@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.71 2008-05-09 08:36:36 cattanem Exp $
+# $Id: requirements,v 1.72 2008-07-01 08:54:03 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -34,7 +34,6 @@ use RichRecMonitors     v2r*    Rich
 # MC packages
 use RichRecMCTools      v2r*   Rich
 
-# dev packages
 # Ring finder
-#use RichMarkovRingFinder  v2r*   Rich
+use RichMarkovRingFinder  v2r*   Rich
 
