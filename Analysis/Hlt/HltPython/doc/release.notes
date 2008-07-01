@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-1 - Gabriel Guerrer
+  - replaced PlotTools and PyTree by propper commented and exemplified files. PyTree also had
+    some internal changes which made it's use more simple
+
 ! 2008-6-27 - Gabriel Guerrer
   - add AlgoTools to modules. Methods for printing Gaudi sequencer hierarchy + algorithm properties
 

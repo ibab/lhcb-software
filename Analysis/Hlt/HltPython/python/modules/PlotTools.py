@@ -1,85 +1,30 @@
-###################################################################################
+# =============================================================================
+""" 
+@namespace PlotTools
+@brief 
+From disk to screen in 3 movements:
+	
+	1) Define your plotting style
+				
+	2) Produce histograms/graphs from a Tree file with class PlotVar/PlotVar2d
+				
+	3) Display them with the plot() method
+
+	+ extra tools
+
+See PlotToolsExample() for examples on how to use this module.
+
+@author Gabriel Guerrer - Gabriel.Guerrer@cern.ch
+@date 15/08/07
 """
- PlotTools - 	From disk to screen in 3 movements:
-				
-				1) Define your plotting style
-				
-				2) Produce histograms/graphs from a Tree file with class PlotVar/PlotVar2d
-				
-				3) Display them with the plot() method
-
-				+ extra tools
-
-	Usage example:
-	
-	# first load signal tree and set style
-	fs=TFile('decay.root','READ')
-	ts=fs.Get('t;1')
-	ts.SetNameTitle('decay','B -> decay')
-	lstyle(ts, 'black', 2)
-	
-	# then load mbias tree for same selection
-	fb=TFile('mbias.root','READ')
-	tb=fb.Get('t;1')
-	tb.SetNameTitle('mbias','mbias')
-	lstyle(tb, 'red', 2, 'dash3')
-
-	# define variables to be studied
-	l0hdec = 	PlotVar('l0hdec', 2, 0, 2)
-	pt = 		PlotVar('pt', 40, 0, 15000, '>')
-	ip = 		PlotVar('ip', 40, 0, 3, '<')
-	dalitz = 	PlotVar2d('s13:s23', 0, 30, 0, 30)
-	
-	# set signal tree as active and create histograms/graphs
-	# they will inherit the parent tree style
-	setree(ts)
-	
-	hs1 = l0hdec()
-	hs2 = pt('l0hdec == 1')
-	hs3 = pt.eff()	
-	hs4 = ip('l0hdec == 1')	
-	hs5 = ip.eff()	
-	gs1 = dalitz('l0hdec == 1')
-	gs2 = dalitz('l0hdec == 1 && pt > 1000')
-	gs3 = dalitz('l0hdec == 1 && ip > .1')
-	
-	# set mbias tree as active
-	setree(tb)
-	
-	hb1 = l0hdec()
-	hb2 = pt('l0hdec == 1')
-	hb3 = pt.eff()	
-	hb4 = ip('l0hdec == 1')	
-	hb5 = ip.eff()	
-	
-	# make a efficiency x retention graph
-	effret = hs2g(hs3, hb3 )
-	
-	# create a legend and link to histograms 
-	leg = getleg([ts, tb]) # will use tree title
-	leg2objs(leg, [hs2, hs3, hs4, hs5])
-	
-	# create canvas, displaying them on screen
-	# log scale, grids, drawing options and custom pad division can be set with extra options to pad
-	# its possible to display signal and mbias histos in the same pad
-	# plot will display legends associated to an object with leg2obj() if option leg is passed
-	canv1 = plot( [hs1, hs2, hs3, hs4, hs5], 'c:2-3, 1:gx, 2:ly, 5:gx, 5:gy' )
-	canv2 = plot( [gs1, gs2, gs3], '2:LEGO, 3:BOX' )
-	canv3 = plot( [[hs2, hb2], [hs3, hb3], [hs4, hb4], [hs5, hb5], effret ], 'leg' )
-	
-	# write canvas to a single ps file
-	writeplots([can1, canv2, canv3], 'file.ps')
-
-
-Gabriel Guerrer - 15/08/07
-"""
-###################################################################################	
+# =============================================================================
 
 from ROOT import TCanvas, TLegend, THStack
 from ROOT import TGraph, TH1I, TH1F, TH1D
 from ROOT import TTree, TCut
 from ROOT import gROOT, gStyle, gDirectory
 from array import array
+from random import *
 
 #---------------------------------------------------
 # Dictionaries
@@ -176,15 +121,19 @@ gStyle.SetHistFillColor(COLOR['white'])
 gStyle.SetHistMinimumZero(1) # y minimum always 0
 
 # stats style
-gStyle.SetStatFontSize(.07)
+gStyle.SetStatFontSize(.04)
 gStyle.SetStatTextColor(COLOR['black'])
 gStyle.SetStatColor(COLOR['white']) 
+#gStyle.SetStatStyle(0) # 0 to view data behind box 
 gStyle.SetStatX(.97) # end position x
 gStyle.SetStatY(.97) # end position y
 gStyle.SetStatW(.2)
 gStyle.SetStatH(.1)
 gStyle.SetStatBorderSize(1)
 gStyle.SetOptStat(111111) # to display under/overflows
+
+# Fit stats
+gStyle.SetOptFit(1) # show fit results
 
 # title style
 gStyle.SetTitleFontSize(.08)
@@ -218,11 +167,13 @@ gStyle.SetLegendBorderSize(1)
 # methods
 def lstyle(obj, lcolor, lwidth=1, lstyle=LINESTYLE['solid']):
 	"""
-	Set line style, where obj = TH*, TTree, TGraph. 
+	Set line style	
+	Tree style is inherited by histograms produced with geth(), fillh() and PlotVar methods
 	
-	Tree style is inherited by histograms produced with geth(), fillh() and PlotVar methods.
-	
-	Color and style may be passed as int or str (to be converted using the respective dictionary).
+	@param obj TH*, TTree, TGraph
+	@param lcolor line color - may be passed as int or str (to be converted using the respective dictionary)
+	@param lwidth line width
+	@param lstyle line style - may be passed as int or str (to be converted using the respective dictionary)
 	"""
 	
 	obj.SetLineWidth(lwidth)
@@ -234,11 +185,12 @@ def lstyle(obj, lcolor, lwidth=1, lstyle=LINESTYLE['solid']):
 #---------------------------------------------------
 def fstyle(obj, fcolor, fstyle=FILLSTYLE['solid']):	
 	"""
-	Set fill style, where obj = TH*, TTree, TGraph. 
+	Set fill style, where obj = TH*, TTree, TGraph	
+	Tree style is inherited by histograms produced with geth(), fillh() and PlotVar methods
 	
-	Tree style is inherited by histograms produced with geth(), fillh() and PlotVar methods.
-	
-	Color and style may be passed as int or str (to be converted using the respective dictionary).
+	@param obj TH*, TTree, TGraph
+	@param fcolor fill color - may be passed as int or str (to be converted using the respective dictionary)
+	@param fstyle fill style - may be passed as int or str (to be converted using the respective dictionary)
 	"""
 	
 	if isinstance(fcolor, int): 	obj.SetFillColor(fcolor)
@@ -256,8 +208,10 @@ ACTIVETREE = None
 #---------------------------------------------------
 def setree(tree):
 	"""
-	Sets the current Tree that will create PlotVar histos/graphs.
-	Must be set before any PlotVar call. 
+	Sets the current Tree that will create PlotVar histos/graphs
+	Must be set before any PlotVar call
+	
+	@param tree active tree
 	"""
 	
 	global ACTIVETREE
@@ -266,7 +220,9 @@ def setree(tree):
 #---------------------------------------------------	
 def checktree(tree):
 	"""
-	Checks if any tree was set with setree().
+	Checks if any tree was set with setree()
+	
+	@param tree active tree
 	"""
 
 	if isinstance(tree, TTree):
@@ -279,12 +235,12 @@ def checktree(tree):
 class PlotVar:
 	"""
 	Produce 1d histograms from a Tree branch. Conditions/cuts may be applied.
-	The correspondent Tree must be set wit setree() before any call.
+	The correspondent Tree must be set wit setree() before any call
 	
-	The histogram is created with the () operator. 
-	It's also possible to obtain an efficiency histogram with eff() method.
+	The histogram is created with the () operator
+	It's also possible to obtain an efficiency histogram with eff() method
 	 
-	Deals with under/overflows.
+	Deals with under/overflows
 	"""
 	
 	name = ''
@@ -300,14 +256,15 @@ class PlotVar:
 	#---------------------------------------------------	
 	def __init__(self, name, nbins, lo, hi, op='>', condition='', cutat=0):
 		""" 
-		Create a PlotVar instance.
+		Create a PlotVar instance
 		
-		name		- Tree branch name to be plotted
-		npoints		- number of bins
-		lo, hi		- range
-		op			- '>' or '<', used in eff() method
-		condition	- optional, Tree cut condition
-		cutat 		- optional, later drawing methods may place a market at cutat value
+		@param name Tree branch name to be plotted
+		@param nbins number of bins
+		@param lo lower range
+		@param hi higher range
+		@param op '>' or '<', used in eff() method
+		@param condition optional, Tree cut condition
+		@param cutat optional, later drawing methods may place a market at cutat value
 		"""
 		
 		# initialize members
@@ -320,22 +277,22 @@ class PlotVar:
 		self.cutat = cutat
 		
 	#---------------------------------------------------
-	def __call__(self, cut='', opt=''):		
+	def __call__(self, cut='', opt='', nevents=1000000000):		
 		"""
-		Return an histogram from the active tree with cuts and options.
-		The histogram style is inherited from the active tree.
+		Return an histogram from the active tree with cuts and options
+		The histogram style is inherited from the active tree
 		"""
 		
 		t = ACTIVETREE
 		if checktree(t):
 			# create histogram
-			his = TH1D( self.name, self.name, self.nbins , self.lo, self.hi )
+			his = TH1D( self.name[0]+str(int(random()*10000)), self.name, self.nbins , self.lo, self.hi )
 			
 			#define cuts
 			cuts = sumcuts(cut, self.condition)
 			
 			# fill histogram
-			fillh(t, his, self.name, cuts, opt)
+			fillh(t, his, self.name, cuts, opt, nevents)
 			
 			# add to parent
 			self.histos.append( his )
@@ -345,7 +302,7 @@ class PlotVar:
 	#---------------------------------------------------
 	def eff(self, op=0, cut='', opt='', norm=0):
 		"""
-		Returns the efficiency histogram. For more details see effint() documentation.
+		Returns the efficiency histogram. For more details see effint() documentation
 		"""
 		
 		# if no specific op passed, use the default one
@@ -371,10 +328,10 @@ class PlotVar:
 #---------------------------------------------------
 class PlotVar2d:
 	"""
-	Produce histograms from 2d Tree branches. Conditions/cuts may be applied.
-	The correspondent Tree must be set wit setree() before any call.
+	Produce histograms from 2d Tree branches. Conditions/cuts may be applied
+	The correspondent Tree must be set wit setree() before any call
 	
-	The histogram is created with the () operator. 
+	The histogram is created with the () operator
 	"""
 	
 	names = ''
@@ -389,11 +346,14 @@ class PlotVar2d:
 	#---------------------------------------------------	
 	def __init__(self, names, xlo, xhi, ylo, yhi, condition=''):
 		""" 
-		Create a PlotVar2d instance.
+		Create a PlotVar2d instance
 		
-		names				- Tree branch names to be plotted, ex.: 'x:y'
-		xlo, xhi, ylo, yhi 	- x,y ranges
-		condition			- optional, Tree cut condition
+		@param names Tree branch names to be plotted
+		@param xlo X axis lower range
+		@param xhi X axis higher range
+		@param ylo Y axis lower range
+		@param yhi Y axis higher range
+		@param condition optional, Tree cut condition
 		"""
 		
 		# initialize members
@@ -407,8 +367,8 @@ class PlotVar2d:
 	#---------------------------------------------------
 	def __call__(self, cut='', opt=''):		
 		"""
-		Return a histo from the active tree with cuts and options.
-		The histo style is inherited from the active tree.
+		Return a histo from the active tree with cuts and options
+		The histo style is inherited from the active tree
 		"""
 		
 		t = ACTIVETREE
@@ -428,19 +388,19 @@ class PlotVar2d:
 # Tree utils
 #---------------------------------------------------
 
-def geth(t, var, cut='', opt=''):
+def geth(t, var, cut='', opt='', nevents=1000000000):
 	"""
-	Return the histogram produced with t.Project(h,'var',cut, opt). 
-	If var == 1d (2d) , type(h) == TH1D (TH2F).
+	Return the histogram produced with t.Project(h,'var',cut, opt)
+	If var == 1d (2d) , type(h) == TH1D (TH2F)
 	
-	Histo name is set to var. Title is var + {cuts}. 
-	X,Y labels are set with x,y var names.
+	Histo name is set to var. Title is var + {cuts}.
+	X,Y labels are set with x,y var names
 	
-	histo inherits t style.
+	histo inherits t style
 	"""
 	
 	#get the histo
-	t.Project('htemp', var, cut, opt)
+	t.Project('htemp', var, cut, opt, nevents)
 	h = gDirectory.Get('htemp')			
 	
 	# set name, title
@@ -467,18 +427,18 @@ def geth(t, var, cut='', opt=''):
 	
 	return h
 #---------------------------------------------------
-def fillh(t, h, var, cut='', opt=''):
+def fillh(t, h, var, cut='', opt='', nevents=1000000000):
 	"""
-	Fill h histogram with t.Draw('var',cut, opt). 
+	Fill h histogram with t.Draw('var',cut, opt)
 	
-	h name is set to var. Title is var + {cuts}. 
-	X,Y labels are set with x,y var names.
+	h name is set to var. Title is var + {cuts} 
+	X,Y labels are set with x,y var names
 	
-	h inherits t style.
+	h inherits t style
 	"""
 	
 	# fill the histogram
-	t.Project(h.GetName(), var, cut, opt)	
+	t.Project(h.GetName(), var, cut, opt, nevents)	
 	
 	# set name, title
 	if cut != '':
@@ -508,13 +468,13 @@ def fillh(t, h, var, cut='', opt=''):
 
 def effint(h, op, norm=0):	
 	"""
-	Returns the efficiency histogram, which is calculated in h bins, counting events forward(op='>') or backward(op='<').	
-	By default the normalization is the total number of events (taking into account under/overflows).
-	But it's also possible to force a normalization with norm parameter.
+	Returns the efficiency histogram, which is calculated in h bins, counting events forward(op='>') or backward(op='<')
+	By default the normalization is the total number of events (taking into account under/overflows)
+	But it's also possible to force a normalization with norm parameter
 	
-	Name(Title) is set to h name + '_eff' (name + ' eff ' + op).
+	Name(Title) is set to h name + '_eff' (name + ' eff ' + op)
 	
-	heff inherits h style.
+	heff inherits h style
 	"""
 	
 	# get heff and set name
@@ -555,11 +515,11 @@ def effint(h, op, norm=0):
 #---------------------------------------------------
 def hs2g(h1, h2):
 	"""
-	Takes two histograms defined in the same range and with same binning to produce a graph.
+	Takes two histograms defined in the same range and with same binning to produce a graph
 	Each bin is translated in a point (x,y), where x = h1.GetBinContent(bin) and
-	y = h2.GetBinContent(bin).
+	y = h2.GetBinContent(bin)
 	
-	Example of usage: create efficiency x retention graphs.
+	Example of usage: create efficiency x retention graphs
 	"""
 	
 	# checks for same range and binning
@@ -604,7 +564,7 @@ def hs2g(h1, h2):
 
 def sumcuts(a, b):
 	"""
-	Sum cuts a and b, placing && when a or b are not empty strings.
+	Sum cuts a and b, placing && when a or b are not empty strings
 	"""
 	cuts = TCut(a)
 	cuts += TCut(b)
@@ -613,7 +573,7 @@ def sumcuts(a, b):
 #---------------------------------------------------
 def closeall():
 	"""
-	Close all open canvas.
+	Close all open canvas
 	"""
 	cs = gROOT.GetListOfCanvases()
 	for c in cs:
@@ -622,7 +582,7 @@ def closeall():
 #---------------------------------------------------
 def writeplots(canvs, outputfile): 	
 	"""
-	Write a list of canvas in PS format to outupfile.
+	Write a list of canvas in PS format to outupfile
 	"""
 	
 	canvs[0].Print(outputfile+'[')
@@ -637,7 +597,7 @@ LEGENDICT = {}
 
 def leg2objs(leg, objs):
 	"""
-	Link legend to list of objects. plot() method will draw linked legends with extraopt 'leg'.
+	Link legend to list of objects. plot() method will draw linked legends with extraopt 'leg'
 	"""
 	
 	global LEGENDICT
@@ -647,7 +607,7 @@ def leg2objs(leg, objs):
 #---------------------------------------------------
 def getleg( trees, drawopt='l', fillcolor=COLOR['white']):
 	"""
-	Produces a legend given a list of trees. Uses tree title as legend string. 
+	Produces a legend given a list of trees. Uses tree title as legend string
 	
 	Possible drawopt: 'l' - line, 'p' - marker, 'f' - filled box, 'ep' - marker with vertical error bar
 	"""
@@ -660,24 +620,26 @@ def getleg( trees, drawopt='l', fillcolor=COLOR['white']):
 #---------------------------------------------------
 def plot(objs, extraopts=''):
 	"""
-	Display objs on screen, returning the correspondent canvas.
-	Canvas division is automatically done using the CANVASDIV dictionary.
+	Display objs on screen, returning the correspondent canvas
+	Canvas division is automatically done using the CANVASDIV dictionary
 	
-	objs - 	list of histos/graphs, ex.: [h1, h2, g1, g2] (if h1==0, place an empty pad)
+	@param objs 
+			list of histos/graphs, ex.: [h1, h2, g1, g2] (if h1==0, place an empty pad)
 			or list of lists, which will be drawn in the same canvas.
 			ex.: [[h1, h2], h3] or [[g1, g2], h1]
 			
-	extraopts - 'c: 1-2' force canvas division
-				'i: lx(ly)' log scale in x(y) in pad i
-				'i: gx(gy)' grid in x(y) in pad i
- 				'i: LEGO' drawopts in pad i
-				'leg': draw legends liked with leg2objs()
+	@param extraopts 
+			'c: 1-2' force canvas division
+			'i: lx(ly)' log scale in x(y) in pad i
+			'i: gx(gy)' grid in x(y) in pad i
+ 			'i: LEGO' drawopts in pad i
+			'leg': draw legends liked with leg2objs()
 	"""
 
 	#---------------------------------------------------
 	def processopts(extraopts, npads):
 		"""
-		Process plot extra options.
+		Process plot extra options
 		"""	
 		
 		canvasdiv = CANVASDIV[npads]
@@ -716,7 +678,7 @@ def plot(objs, extraopts=''):
 	#---------------------------------------------------	
 	def applypadopts(pad, padopts):
 		"""
-		Apply pad options.
+		Apply pad options
 		"""
 		
 		if padopts.find('lx') != -1:
@@ -765,18 +727,6 @@ def plot(objs, extraopts=''):
 					leg.Draw()
 				except KeyError: # obj has no leg associated
 					pass
-
-
-		# obj == hprofile
-		if str(type(obj)).find('TP') != -1:
-			obj.Draw( drawopts[i] )
-			# if 'leg' opt, find and draw legend
-			if drawleg:
-				try:
-					leg = LEGENDICT[obj]
-					leg.Draw()
-				except KeyError: # obj has no leg associated
-					pass
 		
 		# obj == grapg	
 		elif type(obj) == TGraph:
@@ -796,7 +746,7 @@ def plot(objs, extraopts=''):
 				for j in objrange[1:]:
 					obj[j].Draw()
 											
-			# obj == [[histo]]
+			# obj == [[histo]] or generic
 			else:
 		
 				# histograms on same pad
@@ -821,5 +771,82 @@ def plot(objs, extraopts=''):
 				# append stack in canvas, otherwise deleted				
 				c.STACKS.append(stack)	
 				
+		# obj == generic, suports Draw
+		else:
+			obj.Draw( drawopts[i] )
+			# if 'leg' opt, find and draw legend
+			if drawleg:
+				try:
+					leg = LEGENDICT[obj]
+					leg.Draw()
+				except KeyError: # obj has no leg associated
+					pass			
+				
 		i+=1
 	return c
+
+
+#-----------------------------------------------
+# Example
+#-----------------------------------------------		
+
+def PlotToolsExample():
+	"""
+	"""
+
+	from PyTree import PyTree
+	from ROOT import TF1
+
+	# fisrt create and fill trees with some data
+	npoints = 1000
+	fgaussig = TF1('fgaussig','TMath::Gaus(x,0,1)',-5,5)
+	tsig = PyTree('tsig', 'signal tree')
+	tsig.book('x/F')
+	for i in range(npoints):
+		tsig.set('x', fgaussig.GetRandom() )
+		tsig.fill()
+		
+	fgausbkg = TF1('fgausbkg','TMath::Gaus(x,1,1)',-5,5)
+	tbkg = PyTree('tbkg', 'background tree')
+	tbkg.book('x/F')
+	for i in range(npoints):
+		tbkg.set('x', fgausbkg.GetRandom() )
+		tbkg.fill()
+		
+		
+	# set style
+	lstyle(tsig, 'black', 2)
+	lstyle(tbkg, 'red', 2, 'dash3')
+
+	# define variables to be studied
+	x = PlotVar('x', 50, -5, 5)
+	
+	# set signal tree as active and create histograms/graphs
+	# they will inherit the parent tree style
+	setree(tsig)	
+	hsig = x()
+	hsigeff = x.eff()
+	
+	setree(tbkg)
+	hbkg = x()
+	hsigbkg = x.eff()
+	
+	# make a efficiency x retention graph
+	effret = hs2g(hsig, hbkg )
+	
+	# create a legend and link to histograms 
+	leg = getleg([tsig, tbkg]) # will use tree title
+	leg2objs(leg, [hsig, hbkg])
+	
+	# create canvas, displaying them on screen
+	# log scale, grids, drawing options and custom pad division can be set with extra options to pad
+	# its possible to display signal and mbias histos in the same pad
+	# plot will display legends associated to an object with leg2obj() if option leg is passed
+	canv1 = plot( [hsig, hbkg, hsigeff, hsigbkg] )
+	canv2 = plot( [[hsig, hbkg], [hsigeff, hsigbkg]], 'leg' )
+	
+	# write canvas to a single ps file
+	canvs = [canv1, canv2]
+	writeplots(canvs, 'PlotToolsExample.ps')
+	
+	return canvs
