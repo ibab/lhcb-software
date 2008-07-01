@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.7 2008-05-13 11:52:20 cattanem Exp $
+// $Id: STReadoutTool.cpp,v 1.8 2008-07-01 10:10:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -14,6 +14,8 @@
 
 // IT
 #include "Kernel/STChannelID.h"
+
+#include "STDet/DeSTDetector.h"
 
 using namespace LHCb;
 
@@ -56,6 +58,9 @@ StatusCode STReadoutTool::initialize() {
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
   }
+
+  // tracker
+  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
 
   return StatusCode::SUCCESS;
 }
@@ -176,3 +181,17 @@ void STReadoutTool::printMapping() const{
 }
 
 
+StatusCode STReadoutTool::validate() const{
+
+  // validate the map - every sector must go somewhere !
+  bool valid = true;
+  const DeSTDetector::Sectors& dSectors = m_tracker->sectors(); 
+  DeSTDetector::Sectors::const_iterator iter = dSectors.begin();
+  for (; iter != dSectors.end() && valid; ++iter) {
+    STChannelID chan = (*iter)->elementID();
+    STDAQ::chanPair chanPair = offlineChanToDAQ(chan,0.0);
+    if (chanPair.first == STTell1ID(STTell1ID::nullBoard)) valid = false; 
+  } // iter 
+  
+  return valid;
+}

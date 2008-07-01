@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.6 2008-06-29 09:39:21 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.7 2008-07-01 10:10:06 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -28,7 +28,6 @@
 #include <string>
 
 class ISTReadoutTool;
-class DeSTDetector;
 class STTell1Board;
 
 class STDecodingBaseAlg : public GaudiAlgorithm {
@@ -50,8 +49,6 @@ protected:
 
  LHCb::RawBank::BankType bankType() const;
 
- DeSTDetector* tracker() const;
-
  std::string detType() const;
 
  void createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
@@ -72,8 +69,6 @@ private:
   LHCb::RawBank::BankType m_bankType;
   std::string m_readoutToolName;
   ISTReadoutTool* m_readoutTool;
-  DeSTDetector* m_tracker;
- 
 
 };
 
@@ -83,10 +78,6 @@ inline ISTReadoutTool* STDecodingBaseAlg::readoutTool() const{
 
 inline LHCb::RawBank::BankType STDecodingBaseAlg::bankType() const {
   return m_bankType;
-}
-
-inline DeSTDetector* STDecodingBaseAlg::tracker() const{
-  return m_tracker;
 }
 
 inline std::string STDecodingBaseAlg::detType() const{

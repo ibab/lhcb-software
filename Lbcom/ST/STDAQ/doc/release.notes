@@ -4,7 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2007-06-29 M Needham
+! 2008-07-01 M Needham
+  - Move check of validity of channel id in decoding
+  - Check is now made by checking readout map makes sense compared to geometry
+ 
+! 2008-06-29 M Needham
  - Check data integrity before decoding into clusters in lite and full
    decoding
 

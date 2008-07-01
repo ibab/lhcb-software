@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.27 2008-06-29 09:39:21 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.28 2008-07-01 10:10:06 mneedham Exp $
 
 #include <algorithm>
 
@@ -24,7 +24,6 @@
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 
-#include "STDet/DeSTDetector.h"
 
 #include "boost/lexical_cast.hpp"
 
@@ -154,7 +153,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     }
 
     // check the integrity of the bank --> always skip if not ok
-    if (checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , version) == false) {
+    if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , version) == false) {
       bankList.push_back((*iterBank)->sourceID());
       continue;
     }

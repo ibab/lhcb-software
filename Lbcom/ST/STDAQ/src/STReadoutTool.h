@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.4 2008-02-14 10:02:24 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.5 2008-07-01 10:10:06 mneedham Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -24,6 +24,8 @@
  *  @author M.Needham
  *  @date   13/3/2002
 */
+
+class DeSTDetector;
 
 class STReadoutTool: public GaudiTool, virtual public ISTReadoutTool{
 
@@ -70,6 +72,8 @@ protected:
   void clear();
 
   void printMapping() const;
+
+  StatusCode validate() const;
   
   unsigned int m_hybridsPerBoard;
   unsigned int m_nBoard;
@@ -77,6 +81,8 @@ protected:
   std::vector<unsigned int> m_firstBoardInRegion;
 
   bool m_printMapping;
+  DeSTDetector* m_tracker;
+  std::string m_detType;
 
 };
 

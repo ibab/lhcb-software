@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.10 2008-06-04 09:54:11 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.11 2008-07-01 10:10:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -21,7 +21,7 @@ DECLARE_TOOL_FACTORY( TTReadoutTool );
 TTReadoutTool::TTReadoutTool(const std::string& type,
                             const std::string& name,
                             const IInterface* parent):
-  STReadoutTool( type, name, parent )
+  STReadoutTool( type, name, parent) 
 {
   // constructer
 
@@ -30,6 +30,8 @@ TTReadoutTool::TTReadoutTool(const std::string& type,
 
   // need a line here to get the interface correct !!!!
   declareInterface<ISTReadoutTool>(this);
+
+  m_detType = "TT";
 
 }
 
@@ -105,6 +107,12 @@ StatusCode TTReadoutTool::createBoards() {
 
    } // boards per region
   } // iterS
+
+  // validate the mapping --> all sectors should go somewhere !
+  StatusCode sc = validate();
+  if (sc.isFailure() ){
+    return Error("Failed to validate mapping",StatusCode::FAILURE);
+  }
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.9 2008-06-04 09:54:11 mneedham Exp $
+// $Id: ITReadoutTool.cpp,v 1.10 2008-07-01 10:10:06 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -22,6 +22,7 @@ ITReadoutTool::ITReadoutTool(const std::string& type,
                             const std::string& name,
                             const IInterface* parent):
   STReadoutTool( type, name, parent )
+  // m_detType("IT")
 {
   // constructer
 
@@ -30,6 +31,8 @@ ITReadoutTool::ITReadoutTool(const std::string& type,
 
   // need a line here to get the interface correct !!!!
   declareInterface<ISTReadoutTool>(this);
+
+  m_detType = "IT";
 
 }
 
@@ -106,6 +109,14 @@ StatusCode ITReadoutTool::createBoards() {
 
    } // boards per region
   } // iterS
+
+  
+  // validate the mapping --> all sectors should go somewhere !
+  StatusCode sc = validate();
+  if (sc.isFailure() ){
+    return Error("Failed to validate mapping",StatusCode::FAILURE);
+  }
+
   return StatusCode::SUCCESS;
 }
 

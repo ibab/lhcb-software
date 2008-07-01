@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.10 2008-06-29 09:39:21 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.11 2008-07-01 10:10:06 mneedham Exp $
 
 #include <algorithm>
 
@@ -67,10 +67,6 @@ StatusCode STDecodingBaseAlg::initialize() {
    
   // bank type
   m_bankType =  STRawBankMap::stringToType(m_detType);
-
-  // tracker
-  m_tracker = getDet<DeSTDetector>(DeSTDetLocation::location(m_detType));
-
 
   return StatusCode::SUCCESS;
 }
