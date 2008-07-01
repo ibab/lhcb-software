@@ -13,7 +13,6 @@
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/ERelations.h"
 #include "HltBase/HltTypes.h"
-#include "LHCbMath/MD5.h"
 #include "HltBase/IConfigTreeEditor.h"
 #include "HltBase/ConfigTreeNodeAlias.h"
 #include "HltBase/ConfigTreeNode.h"
@@ -26,7 +25,7 @@
 
 namespace {
   
-  struct _hltbase_instantiations 
+  struct _hltbase_instantiations  
   {
     Hlt::Configuration py_hlt_00;
     zen::IntRelation py_hlt_05; 

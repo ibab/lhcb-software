@@ -22,7 +22,6 @@
   <class name = "Hlt::TrackSelection" />
   <class name = "Hlt::VertexSelection" />
   <class name = "ISequencerTimerTool" />
-  <class name = "Gaudi::Math::MD5" />
   <class name = "IConfigAccessSvc" />
   <class name = "IConfigTreeEditor" />
   <class name = "IPropertyConfigSvc" />

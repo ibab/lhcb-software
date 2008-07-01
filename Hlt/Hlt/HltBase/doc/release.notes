@@ -3,6 +3,8 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-07-01 - Gerhard Raven
+ - remove MD5 from dict -- this is now also done in LHCbMath
 
 ! 2008-06-30 - Jose A. Hernando
  - merge info method in HltUtils
