@@ -10,6 +10,7 @@
 ! 2008-06-12 - Mariusz Witek
   - adjusted default options for LSAdaptPV3DFitter 
   - added example options for displaced vertices
+
 ! 2008-06-11 - Mariusz Witek
   - new functionality and package structure change: 
   - PV off-axis reconstruction 
@@ -17,6 +18,7 @@
   - PVSeed3DTool.cpp - new (second) seeding for off-axis PVs 
   - LSAdaptPV3DFitter - new PV fitting algorithm for PatPV3D
   - PatPV3D - new algorithm. Uses PVOfflineTool
+  See <a href="http://indico.cern.ch/materialDisplay.py?contribId=46&sessionId=20&materialId=slides&confId=33862">presentation</a> at tracking and alignment workshop, 2008-06-11
 
 !============================= PatPV v3r3 2008-06-04 =========================
 ! 2008-06-04 - Marco Cattaneo
