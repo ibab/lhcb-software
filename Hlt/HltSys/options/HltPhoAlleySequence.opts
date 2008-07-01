@@ -7,27 +7,26 @@
 //---------------------------
 // HLT Pho Alley
 //--------------------------
-HltSummaryWriter.Save += {"PhoL0Entry",
-                          "PhoPreTrigger",
-                          "Hlt1PhotonPhoTrk"
+HltSummaryWriter.Save += {"L0PhotonDecision",
+                          "Hlt1PhotonPhoTrkDecision"
 };
 
-HltAlleys.InputSelections += {"Hlt1PhotonPhoTrk"};
+HltAlleys.InputSelections += {"Hlt1PhotonPhoTrkDecision"};
 
-HltPhoAlleySequence.Members = {
-  "L0Entry/PhoL0Entry",
-  "HltL0CaloPrepare/PhoTightL0Calos",
+Hlt1PhoAlleySequence.Members = {
+  "GaudiSequencer/PrepareL0PhotonDecisionSeq",
+  "HltL0CaloPrepare/Hlt1PhoTightL0Calos",
   "GaudiSequencer/Hlt1RecoRZVeloSequence",
-  "HltTrackFilter/HltPho2DIPSelection",
-  "HltTrackUpgrade/HltPhoRecoIPVelo",
-  "HltTrackFilter/HltPho3DIPSelection",
+  "HltTrackFilter/Hlt1PhoTFRZVelo",
+  "HltTrackUpgrade/Hlt1PhoTUVelo",
+  "HltTrackFilter/Hlt1PhoTFVelo",
   "GaudiSequencer/HltDecodeT",
   "GaudiSequencer/HltDecodeTT",
-  "HltTrackUpgrade/HltPhoRecoIPForward",
-  "HltTrackFilter/PhoPreTrigger",
-  "HltVertexMaker/Hlt1PhotonPhoTrk"
+  "HltTrackUpgrade/Hlt1PhoTUForward",
+  "HltTrackFilter/Hlt1PhoTFForward",
+  "HltVertexMaker/Hlt1PhotonPhoTrkDecision"
 };
-HltPhoAlleySequence.MeasureTime = true;
+Hlt1PhoAlleySequence.MeasureTime = true;
 
 
 
@@ -36,68 +35,63 @@ HltPhoAlleySequence.MeasureTime = true;
 // HLT PhoAlley options (CaloAlleySequence cuts)
 //-------------------------------------------------------------------------
 
-//
-// Enter if there is a L0 photon
-//
-PhoL0Entry.L0ChannelsName = {"Photon"};
-PhoL0Entry.OutputLevel = 3;
 
 
-PhoTightL0Calos.InputSelection   = "L0TriggerPhoton";
-PhoTightL0Calos.CaloType = 1;  // photon !
-PhoTightL0Calos.MinEt = 2890.0;   // this trigger threshold; tighter than L0 threshold
-PhoTightL0Calos.OutputLevel = 3;
+Hlt1PhoTightL0Calos.InputSelection   = "L0PhotonDecision";
+Hlt1PhoTightL0Calos.CaloType = 1;  // photon !
+Hlt1PhoTightL0Calos.MinEt = 2890.0;   // this trigger threshold; tighter than L0 threshold
+Hlt1PhoTightL0Calos.OutputLevel = 3;
 
 
 //    2D IP selection
 
 
-HltPho2DIPSelection.InputSelection     = "RZVelo";
+Hlt1PhoTFRZVelo.InputSelection     = "RZVelo";
 //  fake dependence (no matching)
-HltPho2DIPSelection.FilterDescriptor = {"rIP_PV2D,||[],0.10,3.0"};
-HltPho2DIPSelection.HistogramUpdatePeriod = 0;
-HltPho2DIPSelection.HistoDescriptor = {
+Hlt1PhoTFRZVelo.FilterDescriptor = {"rIP_PV2D,||[],0.10,3.0"};
+Hlt1PhoTFRZVelo.HistogramUpdatePeriod = 0;
+Hlt1PhoTFRZVelo.HistoDescriptor = {
   "rIP" : ("rIP",-1.,3.,400),
   "rIPBest" : ("rIPBest",-1.,3.,400)};
-HltPho2DIPSelection.OutputLevel = 3;
+Hlt1PhoTFRZVelo.OutputLevel = 3;
 
 //  Velo Reco
 
-HltPhoRecoIPVelo.InputSelection = "HltPho2DIPSelection";
-HltPhoRecoIPVelo.RecoName = "Velo";
+Hlt1PhoTUVelo.InputSelection = "Hlt1PhoTFRZVelo";
+Hlt1PhoTUVelo.RecoName = "Velo";
 
 //    3D IP selection
 
 
-HltPho3DIPSelection.InputSelection     = "HltPhoRecoIPVelo";
-HltPho3DIPSelection.FilterDescriptor = {"IP_PV2D,||[],0.15,3.0"};
-HltPho3DIPSelection.HistogramUpdatePeriod = 0;
-HltPho3DIPSelection.HistoDescriptor = {
+Hlt1PhoTFVelo.InputSelection     = "Hlt1PhoTUVelo";
+Hlt1PhoTFVelo.FilterDescriptor = {"IP_PV2D,||[],0.15,3.0"};
+Hlt1PhoTFVelo.HistogramUpdatePeriod = 0;
+Hlt1PhoTFVelo.HistoDescriptor = {
   "IP" : ("IP",-1.,3.,400),
   "IPBest" : ("IPBest",-1.,3.,400)
 };
-HltPho3DIPSelection.OutputLevel = 3;
+Hlt1PhoTFVelo.OutputLevel = 3;
 
 //  Forward 
 
-HltPhoRecoIPForward.InputSelection = "HltPho3DIPSelection";
-HltPhoRecoIPForward.RecoName = "Forward";
+Hlt1PhoTUForward.InputSelection = "Hlt1PhoTFVelo";
+Hlt1PhoTUForward.RecoName = "Forward";
 //  Pt cut (call it pretrigger sice couldn't implement veloTT)
 
-PhoPreTrigger.InputSelection     = "HltPhoRecoIPForward";
-PhoPreTrigger.FilterDescriptor = {"PT,>,1274."};
-PhoPreTrigger.HistogramUpdatePeriod = 0;
-PhoPreTrigger.HistoDescriptor =  { 
+Hlt1PhoTFForward.InputSelection     = "Hlt1PhoTUForward";
+Hlt1PhoTFForward.FilterDescriptor = {"PT,>,1274."};
+Hlt1PhoTFForward.HistogramUpdatePeriod = 0;
+Hlt1PhoTFForward.HistoDescriptor =  { 
   "PT"     : ("PT",0.,8000.,100),
   "PTBest" : ("PTBest",0.,8000.,100)
 };
-PhoPreTrigger.OutputLevel = 3;
+Hlt1PhoTFForward.OutputLevel = 3;
 
 
-// Hlt1PhotonPhoTrk:  Fake PhoPreTrigger-L0Pho vertices (there is no matching here!)
+// Hlt1PhotonPhoTrkDecision:  Fake Hlt1PhoTFForward-L0Pho vertices (there is no matching here!)
 
-Hlt1PhotonPhoTrk.InputSelection    = "PhoPreTrigger";
-Hlt1PhotonPhoTrk.InputSelection2   = "PhoTightL0Calos";
-Hlt1PhotonPhoTrk.OutputLevel = 3;
+Hlt1PhotonPhoTrkDecision.InputSelection    = "Hlt1PhoTFForward";
+Hlt1PhotonPhoTrkDecision.InputSelection2   = "Hlt1PhoTightL0Calos";
+Hlt1PhotonPhoTrkDecision.OutputLevel = 3;
 
 

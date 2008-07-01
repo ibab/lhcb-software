@@ -5,7 +5,7 @@
 //--------------------------
 HltSummaryWriter.Save += {
   "PV2D",
-  "L0TriggerHadron",
+  "L0HadronDecision",
   "Hlt1HadronSingleDecision",
   "Hlt1HadronDiDecision"
 };
@@ -20,19 +20,19 @@ HltAlleys.InputSelections += {
 Hlt1HadronSequence.Members = {
   "GaudiSequencer/Hlt1HadronSingleSequence",
   "GaudiSequencer/Hlt1HadronDiSequence",
-  "HltSelectionFilter/Hlt1Hadron",
-  "HltSelectionFilter/Hlt1HadronDecision"
+  "HltSelectionFilter/Hlt1HadronSF",
+  "HltSelectionFilter/Hlt1HadronAlleysSF"
 };
 Hlt1HadronSequence.ModeOr = true;
 Hlt1HadronSequence.ShortCircuit = false;
 Hlt1HadronSequence.MeasureTime = true;
 
-Hlt1Hadron.InputSelections = {
+Hlt1HadronSF.InputSelections = {
   "Hlt1HadronSingle",
   "Hlt1HadronDi"
 };
 
-Hlt1HadronDecision.InputSelections = {
+Hlt1HadronAlleysSF.InputSelections = {
   "Hlt1HadronSingleDecision",
   "Hlt1HadronDiDecision"
 };
@@ -43,7 +43,7 @@ Hlt1HadronDecision.InputSelections = {
 
 Hlt1HadronSingleSequence.MeasureTime = true;
 Hlt1HadronSingleSequence.Members = {
-  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronSinglePrepare",
   "HltTrackFilter/Hlt1HadronSingle",
   "GaudiSequencer/HltRecoSequence",
@@ -69,7 +69,7 @@ Hlt1HadronSinglePrepare.Members = {
 
 Hlt1HadronDiSequence.MeasureTime = true;
 Hlt1HadronDiSequence.Members = {
-  "GaudiSequencer/PrepareL0TriggerHadronSeq",
+  "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronDiPrepare",
   "HltVertexFilter/Hlt1HadronDi",
   "GaudiSequencer/HltRecoSequence",
@@ -131,11 +131,11 @@ Hlt1HadronDiDecision.FilterDescriptor = {
 
 
 Hlt1HadronSingleTFRZVelo.InputSelection = "RZVelo";
-Hlt1HadronSingleTFRZVelo.FilterDescriptor = {"Calo2DChi2_L0TriggerHadron,<,4"};
+Hlt1HadronSingleTFRZVelo.FilterDescriptor = {"Calo2DChi2_L0HadronDecision,<,4"};
 // Hlt1HadronSingleTFRZVelo.HistogramUpdatePeriod = 1;
 // Hlt1HadronSingleTFRZVelo.HistoDescriptor = {
-//    "Calo2DChi2_L0TriggerHadron":("Calo2DChi2_L0TriggerHadron",0.,100.,20),
-//    "Calo2DChi2_L0TriggerHadronBest":("Calo2DChi2_L0TriggerHadronBest",0.,100.,20)
+//    "Calo2DChi2_L0HadronDecision":("Calo2DChi2_L0HadronDecision",0.,100.,20),
+//    "Calo2DChi2_L0HadronDecisionBest":("Calo2DChi2_L0HadronDecisionBest",0.,100.,20)
 // };
 
 Hlt1HadronSingleTUVelo.InputSelection = "Hlt1HadronSingleTFRZVelo";
@@ -145,18 +145,18 @@ Hlt1HadronSingleTUVelo.RecoName = "Velo";
 Hlt1HadronSingleTFVelo.InputSelection = "Hlt1HadronSingleTUVelo";
 Hlt1HadronSingleTFVelo.FilterDescriptor = {
   "IP_PV2D,||>,0.1",
-  "Calo3DChi2_L0TriggerHadron,<,4"
+  "Calo3DChi2_L0HadronDecision,<,4"
 };
 // Hlt1HadronSingleTFVelo.HistogramUpdatePeriod = 0;
 // Hlt1HadronSingleTFVelo.HistoDescriptor = {
 //   "IP_PV2D":("IP_PV2D",-0.1,3.,100),
 //   "IP_PV2DBest":("IP_PV2DBest",-0.1,3.,100),
-//   "Calo3DChi2_L0TriggerHadron":("Calo3DChi2_L0TriggerHadron",-0.1,50.,100),
-//   "Calo3DChi2_L0TriggerHadronBest":("Calo3DChi2_L0TriggerHadronBest",-0.1,50.,100)
+//   "Calo3DChi2_L0HadronDecision":("Calo3DChi2_L0HadronDecision",-0.1,50.,100),
+//   "Calo3DChi2_L0HadronDecisionBest":("Calo3DChi2_L0HadronDecisionBest",-0.1,50.,100)
 // };
 
 Hlt1HadronSingleTMVeloCalo.InputSelection = "Hlt1HadronSingleTFVelo";
-Hlt1HadronSingleTMVeloCalo.InputSelection2 = "L0TriggerHadron";
+Hlt1HadronSingleTMVeloCalo.InputSelection2 = "L0HadronDecision";
 Hlt1HadronSingleTMVeloCalo.MatchName = "VeloCalo";
 Hlt1HadronSingleTMVeloCalo.MaxQuality = 4.;
 // Hlt1HadronSingleTMVeloCalo.HistogramUpdatePeriod = 0;

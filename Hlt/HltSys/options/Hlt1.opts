@@ -27,10 +27,10 @@ HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
 HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1HadronSequence" };
 #include "$HLTSYSROOT/options/Hlt1HadronSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltEleAlleySequence" };
+HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 #include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltPhoAlleySequence" };
+HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
 HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };

@@ -7,48 +7,46 @@
 //---------------------------
 // HLT Ele Alley
 //--------------------------
-HltSummaryWriter.Save += {"EleL0Entry",
-                          "ElePreTriggerSingle",
-                          "Hlt1ElectronSingle",
-                          "Hlt1ElectronEleTrk"
+HltSummaryWriter.Save += {"L0ElectronDecision",
+                          "Hlt1ElectronSingleDecision",
+                          "Hlt1ElectronEleTrkDecision"
 };
 
-HltAlleys.InputSelections += {"Hlt1ElectronSingle",
-                              "Hlt1ElectronEleTrk"
+HltAlleys.InputSelections += {"Hlt1ElectronSingleDecision",
+                              "Hlt1ElectronEleTrkDecision"
 };
 
-HltEleAlleySequence.Members = {
-  "L0Entry/EleL0Entry",
+Hlt1EleAlleySequence.Members = {
+  "GaudiSequencer/PrepareL0ElectronDecisionSeq", 
   "GaudiSequencer/Hlt1RecoRZVeloSequence",
-  //                       "HltPrepareL0Calos/EleL0Prepare",
-  "GaudiSequencer/DVHltEleAlley",
-  "HltTrackFilter/EleSingleTFRZVelo",
-  "HltTrackUpgrade/EleSingleTRVelo",
-  "HltTrackFilter/EleSingleTFVelo",
+  //  "GaudiSequencer/DVHlt1EleAlley",
+  "HltTrackFilter/Hlt1EleSingleTFRZVelo",
+  "HltTrackUpgrade/Hlt1EleSingleTUVelo",
+  "HltTrackFilter/Hlt1EleSingleTFVelo",
   "GaudiSequencer/HltDecodeT",
   "GaudiSequencer/HltDecodeTT",
-  "HltTrackUpgrade/EleSingleTRForward",
-  "HltTrackFilter/ElePreTriggerSingle",
-  "GaudiSequencer/HltEleTriggers"
+  "HltTrackUpgrade/Hlt1EleSingleTUForward",
+  "HltTrackFilter/Hlt1EleTFForward",
+  "GaudiSequencer/Hlt1EleTriggers"
 };
-HltEleAlleySequence.MeasureTime = true;
+Hlt1EleAlleySequence.MeasureTime = true;
 
-HltEleTriggers.ModeOr = true;
-HltEleTriggers.ShortCircuit = false;
-HltEleTriggers.MeasureTime = true;
-HltEleTriggers.Members += { "HltTrackFilter/Hlt1ElectronSingle",
-                            "GaudiSequencer/Hlt1ElectronEleTrkSeq"
+Hlt1EleTriggers.ModeOr = true;
+Hlt1EleTriggers.ShortCircuit = false;
+Hlt1EleTriggers.MeasureTime = true;
+Hlt1EleTriggers.Members += { "HltTrackFilter/Hlt1ElectronSingleDecision",
+                            "GaudiSequencer/Hlt1ElectronEleTrkDecisionSeq"
 };
 
-Hlt1ElectronEleTrkSeq.Members += { 
+Hlt1ElectronEleTrkDecisionSeq.Members += { 
                        "HltTrackUpgrade/Hlt1RecoVelo",
-                       "HltTrackFilter/EleCompanionTFVelo",
-                       "HltTrackUpgrade/EleCompanionTRForward",
-                       "HltTrackFilter/EleCompanionTFForward",
-                       "HltVertexMaker/EleDiElectronVMaker",
-                       "HltVertexFilter/Hlt1ElectronEleTrk"
+                       "HltTrackFilter/Hlt1EleCompanionTFVelo",
+                       "HltTrackUpgrade/Hlt1EleCompanionTUForward",
+                       "HltTrackFilter/Hlt1EleCompanionTFForward",
+                       "HltVertexMaker/Hlt1EleDiElectronVM",
+                       "HltVertexFilter/Hlt1ElectronEleTrkDecision"
 };
-Hlt1ElectronEleTrkSeq.MeasureTime = true;
+Hlt1ElectronEleTrkDecisionSeq.MeasureTime = true;
 
 
 
@@ -57,115 +55,109 @@ Hlt1ElectronEleTrkSeq.MeasureTime = true;
 //-------------------------------------------------------------------------
 
 
-//
-// Enter if there is a L0Electron yes
-//
-EleL0Entry.L0ChannelsName = {"Electron"};
-EleL0Entry.OutputLevel = 3;
-
 
 //
 // select RZVelo tracks with an IP and matched to L0Calo
 //
-EleSingleTFRZVelo.InputSelection     = "RZVelo";
-EleSingleTFRZVelo.FilterDescriptor = {
-  "Calo2DChi2_L0TriggerElectron,<,4."
+Hlt1EleSingleTFRZVelo.InputSelection     = "RZVelo";
+Hlt1EleSingleTFRZVelo.FilterDescriptor = {
+  "Calo2DChi2_L0ElectronDecision,<,4."
 };
-EleSingleTFRZVelo.HistogramUpdatePeriod = 0;
-EleSingleTFRZVelo.HistoDescriptor = {  
+Hlt1EleSingleTFRZVelo.HistogramUpdatePeriod = 0;
+Hlt1EleSingleTFRZVelo.HistoDescriptor = {  
   "Calo2DChi2"     : ("Calo2DChi2",0.,20.,100),
   "Calo2DChi2Best" : ("Calo2DChi2Best",0.,20.,100) 
 };
-EleSingleTFRZVelo.OutputLevel = 3;
+Hlt1EleSingleTFRZVelo.OutputLevel = 3;
 
 //
 // Velo reconstruction of selected RZVelo
 //
-EleSingleTRVelo.InputSelection  = "EleSingleTFRZVelo";
-EleSingleTRVelo.RecoName = "Velo";
-EleSingleTRVelo.OutputLevel = 3;
+Hlt1EleSingleTUVelo.InputSelection  = "Hlt1EleSingleTFRZVelo";
+Hlt1EleSingleTUVelo.RecoName = "Velo";
+Hlt1EleSingleTUVelo.OutputLevel = 3;
 
 //
 // Select Velo tracks with an IP and matched to L0Calo
 //
-EleSingleTFVelo.InputSelection  = "EleSingleTRVelo";
-EleSingleTFVelo.HistogramUpdatePeriod = 0;
-EleSingleTFVelo.FilterDescriptor = {
+Hlt1EleSingleTFVelo.InputSelection  = "Hlt1EleSingleTUVelo";
+Hlt1EleSingleTFVelo.HistogramUpdatePeriod = 0;
+Hlt1EleSingleTFVelo.FilterDescriptor = {
   "IP_PV2D,||[],0.1,3.",
-  "Calo3DChi2_L0TriggerElectron,<,4."
+  "Calo3DChi2_L0ElectronDecision,<,4."
 };
-EleSingleTFVelo.HistoDescriptor = {
+Hlt1EleSingleTFVelo.HistoDescriptor = {
   "IP" :           ("IP",-1.,3.,400),
   "IPBest" :       ("IPBest",-1.,3.,400),
   "Calo3DChi2":    ("Calo3DChi2",0.,20.,100),
   "Calo3DChi2Best":("Calo3DChi2Best",0.,20.,100)
 };
-EleSingleTFVelo.OutputLevel = 3;
+Hlt1EleSingleTFVelo.OutputLevel = 3;
 
 //
 // Make forward the selected velo tracks
 //
-EleSingleTRForward.InputSelection  = "EleSingleTFVelo";
-EleSingleTRForward.RecoName = "Forward";
-EleSingleTRForward.OutputLevel = 3;
+Hlt1EleSingleTUForward.InputSelection  = "Hlt1EleSingleTFVelo";
+Hlt1EleSingleTUForward.RecoName = "Forward";
+Hlt1EleSingleTUForward.OutputLevel = 3;
 
 //
 // Select forward track with a given Pt
 //
-ElePreTriggerSingle.InputSelection  = "EleSingleTRForward";
-ElePreTriggerSingle.FilterDescriptor = {"PT,>,1300."};
-ElePreTriggerSingle.HistogramUpdatePeriod = 0;
-ElePreTriggerSingle.HistoDescriptor = {
+Hlt1EleTFForward.InputSelection  = "Hlt1EleSingleTUForward";
+Hlt1EleTFForward.FilterDescriptor = {"PT,>,1300."};
+Hlt1EleTFForward.HistogramUpdatePeriod = 0;
+Hlt1EleTFForward.HistoDescriptor = {
   "PT"     : ("PT",0.,6000.,100),
   "PTBest" : ("PTBest",0.,6000.,100)
 };
-ElePreTriggerSingle.OutputLevel = 3;
+Hlt1EleTFForward.OutputLevel = 3;
 
 //
 // select velo tracks as companions 
 //
-EleCompanionTFVelo.InputSelection     = "Velo";
-EleCompanionTFVelo.InputSelection2    = "PV2D";
-EleCompanionTFVelo.HistogramUpdatePeriod = 0;
-EleCompanionTFVelo.FilterDescriptor = {
+Hlt1EleCompanionTFVelo.InputSelection     = "Velo";
+Hlt1EleCompanionTFVelo.InputSelection2    = "PV2D";
+Hlt1EleCompanionTFVelo.HistogramUpdatePeriod = 0;
+Hlt1EleCompanionTFVelo.FilterDescriptor = {
   "IP_PV2D,||[],0.1,3.",
-  "DOCA_ElePreTriggerSingle,<,0.2"
+  "DOCA_Hlt1EleTFForward,<,0.2"
 };
-EleCompanionTFVelo.HistoDescriptor = {
+Hlt1EleCompanionTFVelo.HistoDescriptor = {
   "IP":       ( "IP",-1.,.3,600),
   "IPBest":   ( "IPBest",-1.,3.,600),
   "DOCA":     ( "DOCA",0.,1.,100),
   "DOCABest": ( "DOCABest",0.,1.,100)
 };
-EleCompanionTFVelo.OutputLevel = 3;
+Hlt1EleCompanionTFVelo.OutputLevel = 3;
 
 //
 // Do forward the companion tracks
 //
-EleCompanionTRForward.InputSelection  = "EleCompanionTFVelo";
-EleCompanionTRForward.RecoName = "Forward";
-EleCompanionTRForward.OutputLevel = 3;
+Hlt1EleCompanionTUForward.InputSelection  = "Hlt1EleCompanionTFVelo";
+Hlt1EleCompanionTUForward.RecoName = "Forward";
+Hlt1EleCompanionTUForward.OutputLevel = 3;
 
 //
 // Select companion tracks if they have a fiven Pt
 //
-EleCompanionTFForward.InputSelection = "EleCompanionTRForward";
-EleCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
-EleCompanionTFForward.HistogramUpdatePeriod = 0;
-EleCompanionTFForward.HistoDescriptor = {
+Hlt1EleCompanionTFForward.InputSelection = "Hlt1EleCompanionTUForward";
+Hlt1EleCompanionTFForward.FilterDescriptor = {"PT,>,1000."};
+Hlt1EleCompanionTFForward.HistogramUpdatePeriod = 0;
+Hlt1EleCompanionTFForward.HistoDescriptor = {
   "PT"     : ("PT",0.,8000.,100),
   "PTBest" : ("PTBest",0.,8000.,100)};
-EleCompanionTFForward.OutputLevel = 3;
+Hlt1EleCompanionTFForward.OutputLevel = 3;
 
 //
 // Make vertices with the forward companion tracks 
 //
-EleDiElectronVMaker.InputSelection    = "ElePreTriggerSingle";
-EleDiElectronVMaker.InputSelection2   = "EleCompanionTFForward";
-EleDiElectronVMaker.OutputLevel = 3;
-EleDiElectronVMaker.FilterDescriptor = {"DOCA,<,0.2"};
-EleDiElectronVMaker.HistogramUpdatePeriod = 0;
-EleDiElectronVMaker.HistoDescriptor = { 
+Hlt1EleDiElectronVM.InputSelection    = "Hlt1EleTFForward";
+Hlt1EleDiElectronVM.InputSelection2   = "Hlt1EleCompanionTFForward";
+Hlt1EleDiElectronVM.OutputLevel = 3;
+Hlt1EleDiElectronVM.FilterDescriptor = {"DOCA,<,0.2"};
+Hlt1EleDiElectronVM.HistogramUpdatePeriod = 0;
+Hlt1EleDiElectronVM.HistoDescriptor = { 
   "DOCA" :     ("DOCA",0.,1.,100),
   "DOCABest" : ("DOCABest",0.,0.5,100)
 };
@@ -173,14 +165,14 @@ EleDiElectronVMaker.HistoDescriptor = {
 //
 // select vertices if Pt, poiting, and distance
 //
-Hlt1ElectronEleTrk.InputSelection   = "EleDiElectronVMaker";
-Hlt1ElectronEleTrk.OutputLevel = 3;
-Hlt1ElectronEleTrk.FilterDescriptor = {
+Hlt1ElectronEleTrkDecision.InputSelection   = "Hlt1EleDiElectronVM";
+Hlt1ElectronEleTrkDecision.OutputLevel = 3;
+Hlt1ElectronEleTrkDecision.FilterDescriptor = {
   "VertexPointing_PV2D,<,0.5",
   "VertexDz_PV2D,>,0."
 };
-Hlt1ElectronEleTrk.HistogramUpdatePeriod = 0;
-Hlt1ElectronEleTrk.HistoDescriptor = {
+Hlt1ElectronEleTrkDecision.HistogramUpdatePeriod = 0;
+Hlt1ElectronEleTrkDecision.HistoDescriptor = {
   "VertexPointing"    : ("VertexPointing",0.,1.,100),
   "VertexPointingBest": ("VertexPointingBest",0.,1.,100),
   "VertexDz"          : ("VertexDz",-10.,50.,100),
@@ -190,13 +182,13 @@ Hlt1ElectronEleTrk.HistoDescriptor = {
 //   TS-added compared to HadAlley:
 
 
-Hlt1ElectronSingle.InputSelection  = "ElePreTriggerSingle";
-Hlt1ElectronSingle.FilterDescriptor = {"PT,>,3000."};
-Hlt1ElectronSingle.HistogramUpdatePeriod = 0;
-Hlt1ElectronSingle.HistoDescriptor = {
+Hlt1ElectronSingleDecision.InputSelection  = "Hlt1EleTFForward";
+Hlt1ElectronSingleDecision.FilterDescriptor = {"PT,>,3000."};
+Hlt1ElectronSingleDecision.HistogramUpdatePeriod = 0;
+Hlt1ElectronSingleDecision.HistoDescriptor = {
   "PT"     : ("PT",0.,8000.,100),
   "PTBest" : ("PTBest",0.,8000.,100)};
-Hlt1ElectronSingle.OutputLevel = 3;
+Hlt1ElectronSingleDecision.OutputLevel = 3;
 
 
 

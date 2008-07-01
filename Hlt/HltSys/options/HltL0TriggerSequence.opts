@@ -6,83 +6,90 @@
 
 
 
-HltSummaryWriter.Save += {"L0TriggerElectron",
-                          "L0TriggerPhoton",
-                          "L0TriggerLocalPi0",
-                          "L0TriggerGlobalPi0",
-                          "L0TriggerHadron",
-                          "L0TriggerMuon",
-                          "L0TriggerDiMuon",
-                          "L0TriggerMuonNoGlob"
+HltSummaryWriter.Save += {"L0ElectronDecision",
+                          "L0PhotonDecision",
+                          "L0LocalPi0Decision",
+                          "L0GlobalPi0Decision",
+                          "L0HadronDecision",
+                          "L0MuonDecision",
+                          "L0DiMuonDecision",
+                          "L0MuonNoGlobDecision"
 };
 
 
 HltL0TriggerSequence.Members = {
-  "GaudiSequencer/PrepareL0TriggerElectronSeq",
-  "GaudiSequencer/PrepareL0TriggerPhotonSeq",
-  "GaudiSequencer/PrepareL0TriggerLocalPi0Seq",
-  "GaudiSequencer/PrepareL0TriggerGlobalPi0Seq",
-  "GaudiSequencer/PrepareL0TriggerHadronSeq" ,
+  "GaudiSequencer/PrepareL0ElectronDecisionSeq",
+  "GaudiSequencer/PrepareL0PhotonDecisionSeq",
+  "GaudiSequencer/PrepareL0LocalPi0DecisionSeq",
+  "GaudiSequencer/PrepareL0GlobalPi0DecisionSeq",
+  "GaudiSequencer/PrepareL0HadronDecisionSeq" ,
   "GaudiSequencer/PrepareL0AllMuonsSeq" , 
-  "GaudiSequencer/PrepareL0TriggerMuonSeq",
-  "GaudiSequencer/PrepareL0TriggerDiMuonSeq",
-  "GaudiSequencer/PrepareL0TriggerMuonNoGlobSeq"
+  "GaudiSequencer/PrepareL0MuonORMuonNoGlobSeq" , 
+  "GaudiSequencer/PrepareL0MuonDecisionSeq",
+  "GaudiSequencer/PrepareL0DiMuonDecisionSeq",
+  "GaudiSequencer/PrepareL0MuonNoGlobDecisionSeq"
 };
 HltL0TriggerSequence.ModeOr = true;
 HltL0TriggerSequence.ShortCircuit = false;
 HltL0TriggerSequence.MeasureTime = true;
 
 
-PrepareL0TriggerElectronSeq.Members = {
-  "L0Entry/L0EntryTriggerElectron",
-  "HltL0CaloPrepare/L0TriggerElectron"
+PrepareL0ElectronDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0Electron",
+  "HltL0CaloPrepare/L0ElectronDecision"
 };
 
-PrepareL0TriggerPhotonSeq.Members = {
-  "L0Entry/L0EntryTriggerPhoton",
-  "HltL0CaloPrepare/L0TriggerPhoton"
+PrepareL0PhotonDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0Photon",
+  "HltL0CaloPrepare/L0PhotonDecision"
 };
 
-PrepareL0TriggerLocalPi0Seq.Members = {
-  "L0Entry/L0EntryTriggerLocalPi0",
-  "HltL0CaloPrepare/L0TriggerLocalPi0"
+PrepareL0LocalPi0DecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0LocalPi0",
+  "HltL0CaloPrepare/L0LocalPi0Decision"
 };
 
-PrepareL0TriggerGlobalPi0Seq.Members = {
-  "L0Entry/L0EntryTriggerGlobalPi0",
-  "HltL0CaloPrepare/L0TriggerGlobalPi0"
+PrepareL0GlobalPi0DecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0GlobalPi0",
+  "HltL0CaloPrepare/L0GlobalPi0Decision"
 };
 
 
-PrepareL0TriggerHadronSeq.MeasureTime = true;
-PrepareL0TriggerHadronSeq.Members = {
-  "L0Entry/L0EntryTriggerHadron",
-  "HltL0CaloPrepare/L0TriggerHadron"
+PrepareL0HadronDecisionSeq.MeasureTime = true;
+PrepareL0HadronDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0Hadron",
+  "HltL0CaloPrepare/L0HadronDecision"
 };
 
 
 PrepareL0AllMuonsSeq.Members = {
-  "L0Entry/L0EntryAllMuons"
+  "HltL0Filter/Hlt1L0AllMuons"
   ,"HltL0MuonPrepare/L0AllMuons" 
   //  ,  "L0MuonCandidatesFromRaw" // removed following a change in L0Muon v7r3
 };
 
-PrepareL0TriggerMuonSeq.Members = {
-  "L0Entry/L0EntryTriggerMuon",
-  //  "L0Muon2Tracks/L0TriggerMuon"
-  "HltL0MuonPrepare/L0TriggerMuon"
+PrepareL0MuonORMuonNoGlobSeq.Members = {
+  "HltL0Filter/Hlt1L0MuonORMuonNoGlob"
+  ,"HltL0MuonPrepare/L0MuonORMuonNoGlob" 
 };
 
-PrepareL0TriggerDiMuonSeq.Members = {
-  "L0Entry/L0EntryTriggerDiMuon",
-  //  "L0Muon2Tracks/L0TriggerDiMuon"
-  "HltVertexMaker/L0TriggerDiMuon"
+
+
+  "GaudiSequencer/PrepareL0MuonORMuonNoGlobSeq" , 
+
+PrepareL0MuonDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0Muon",
+  "HltL0MuonPrepare/L0MuonDecision"
 };
 
-PrepareL0TriggerMuonNoGlobSeq.Members = {
-  "L0Entry/L0EntryTriggerMuonNoGlob",
-  //  "L0Muon2Tracks/L0TriggerMuonNoGlob"
-  "HltL0MuonPrepare/L0TriggerMuonNoGlob"
+PrepareL0DiMuonDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0DiMuon",
+  "HltVertexMaker/L0DiMuonDecision"
+};
+
+PrepareL0MuonNoGlobDecisionSeq.Members = {
+  "HltL0Filter/Hlt1L0MuonNoGlob",
+  "HltL0MuonPrepare/L0MuonNoGlobDecision"
 };
 
 // TODO
@@ -90,65 +97,63 @@ PrepareL0TriggerMuonNoGlobSeq.Members = {
 //
 L0Calo.UsePSSPD = false;
 
-// //@ja TODO: this should be where the options for L0TriggerHadron are set ?
-L0TriggerHadron.CaloMakerTool="HadronSeedTool";
+// //@ja TODO: this should be where the options for L0HadronDecision are set ?
+L0HadronDecision.CaloMakerTool="HadronSeedTool";
 ToolSvc.HadronSeedTool.decodeCalos=  false;
 
-L0EntryTriggerElectron.L0ChannelsName = {"Electron"};
-L0EntryTriggerPhoton.L0ChannelsName = {"Photon"};
-L0EntryTriggerLocalPi0.L0ChannelsName = {"LocalPi0"};
-L0EntryTriggerGlobalPi0.L0ChannelsName = {"GlobalPi0"};
-L0EntryTriggerHadron.L0ChannelsName = {"Hadron"};
-L0EntryAllMuons.L0ChannelsName = {"Muon","DiMuon","MuonNoGlob"};
-L0EntryTriggerMuon.L0ChannelsName = {"Muon"};
-L0EntryTriggerDiMuon.L0ChannelsName = {"DiMuon"};
-L0EntryTriggerMuonNoGlob.L0ChannelsName = {"MuonNoGlob"};
+Hlt1L0Electron.L0Channels = {"Electron"};
+Hlt1L0Photon.L0Channels = {"Photon"};
+Hlt1L0LocalPi0.L0Channels = {"LocalPi0"};
+Hlt1L0GlobalPi0.L0Channels = {"GlobalPi0"};
+Hlt1L0Hadron.L0Channels = {"Hadron"};
+Hlt1L0AllMuons.L0Channels = {"Muon","DiMuon","MuonNoGlob"};
+Hlt1L0MuonORMuonNoGlob.L0Channels = {"Muon","MuonNoGlob"};
+Hlt1L0Muon.L0Channels = {"Muon"};
+Hlt1L0DiMuon.L0Channels = {"DiMuon"};
+Hlt1L0MuonNoGlob.L0Channels = {"MuonNoGlob"};
 
-L0EntryTriggerElectron.OutputLevel = 3;
-L0EntryTriggerPhoton.OutputLevel = 3;
-L0EntryTriggerLocalPi0.OutputLevel = 3;
-L0EntryTriggerGlobalPi0.OutputLevel = 3;
-L0EntryTriggerHadron.OutputLevel = 3;
-L0EntryAllMuons.OutputLevel = 3;
-L0EntryTriggerMuon.OutputLevel = 3;
-L0EntryTriggerDiMuon.OutputLevel = 3;
-L0EntryTriggerMuonNoGlob.OutputLevel = 3;
+Hlt1L0Electron.OutputLevel = 3;
+Hlt1L0Photon.OutputLevel = 3;
+Hlt1L0LocalPi0.OutputLevel = 3;
+Hlt1L0GlobalPi0.OutputLevel = 3;
+Hlt1L0Hadron.OutputLevel = 3;
+Hlt1L0AllMuons.OutputLevel = 3;
+Hlt1L0AllMuons.OutputLevel = 3;
+Hlt1L0MuonORMuonNoGlob.OutputLevel = 3;
+Hlt1L0DiMuon.OutputLevel = 3;
+Hlt1L0MuonNoGlob.OutputLevel = 3;
 
 // see L0DUBase::Fiber::Type
-L0TriggerElectron.CaloType = 0;  // electron 
-L0TriggerPhoton.CaloType = 1;  // photon 
-L0TriggerHadron.CaloType = 2;  // hadron
-L0TriggerLocalPi0.CaloType = 3;  // localPi0
-L0TriggerGlobalPi0.CaloType = 4;  // globalPi0
+L0ElectronDecision.CaloType = 0;  // electron 
+L0PhotonDecision.CaloType = 1;  // photon 
+L0HadronDecision.CaloType = 2;  // hadron
+L0LocalPi0Decision.CaloType = 3;  // localPi0
+L0GlobalPi0Decision.CaloType = 4;  // globalPi0
 
-//L0TriggerMuon.L0MuonType="single";
-//L0TriggerDiMuon.L0MuonType="dimuon";
-//L0TriggerMuonNoGlob.L0MuonType="single";
 
-L0TriggerElectron.MinEt = 2600.0; 
-L0TriggerPhoton.MinEt = 2300.0; 
-L0TriggerHadron.MinEt = 3500.0;
-L0TriggerLocalPi0.MinEt = 4300.0;
-L0TriggerGlobalPi0.MinEt = 3700.0;
+L0ElectronDecision.MinEt = 2600.0; 
+L0PhotonDecision.MinEt = 2300.0; 
+L0HadronDecision.MinEt = 3500.0;
+L0LocalPi0Decision.MinEt = 4300.0;
+L0GlobalPi0Decision.MinEt = 3700.0;
 
-//L0TriggerMuon.L0MuonThresold=1300.0;
-//L0TriggerDiMuon.L0MuonThresold=1500.0;
-//L0TriggerMuonNoGlob.L0MuonThresold=1500.0;
-L0TriggerMuon.MinPt=1300.0;
-L0TriggerMuonNoGlob.MinPt=1500.0;
+L0MuonDecision.MinPt=1300.0;
+L0MuonNoGlobDecision.MinPt=1500.0;
 L0AllMuons.MinPt=0.1;
-L0TriggerDiMuon.InputSelection    = "L0AllMuons";
-L0TriggerDiMuon.FilterDescriptor = {"SumPT,>,1500."};
+L0MuonORMuonNoGlob.MinPt=1.3;
+L0DiMuonDecision.InputSelection    = "L0AllMuons";
+L0DiMuonDecision.FilterDescriptor = {"SumPT,>,1500."};
 
-L0TriggerElectron.OutputLevel = 3;
-L0TriggerPhoton.OutputLevel = 3;
-L0TriggerLocalPi0.OutputLevel = 3;
-L0TriggerGlobalPi0.OutputLevel = 3;
-L0TriggerHadron.OutputLevel = 3;
-L0TriggerMuon.OutputLevel = 3;
-L0TriggerDiMuon.OutputLevel = 3;
-L0TriggerMuonNoGlob.OutputLevel = 3;
+L0ElectronDecision.OutputLevel = 3;
+L0PhotonDecision.OutputLevel = 3;
+L0LocalPi0Decision.OutputLevel = 3;
+L0GlobalPi0Decision.OutputLevel = 3;
+L0HadronDecision.OutputLevel = 3;
+L0MuonDecision.OutputLevel = 3;
+L0DiMuonDecision.OutputLevel = 3;
+L0MuonNoGlobDecision.OutputLevel = 3;
 L0AllMuons.OutputLevel = 3;
+L0MuonORMuonNoGlob.OutputLevel = 3;
 
 
 
