@@ -2,6 +2,10 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v6r0p1 2008-06-30 =====================
+! 2008-06-27 - Wouter Hulsbergen
+ - Fixed an uninitialized variable
+
 !======================= OTDAQ v6r0 2008-06-03 =======================
 ! 2008-06-03 - Wouter Hulsbergen
  - removed routine causing problems on windows
