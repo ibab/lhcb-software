@@ -174,9 +174,17 @@ class GeneratorWebPage:
     self.supPlots = dict()
   def setVersions(self,V,RV,P,RPV):
     self.version = V
+    if V == None:
+      self.version = 'v31r1'
     self.refVersion = RV
+    if RV == None:
+      self.refVersion = 'v26r1'
     self.pythiaVersion = P 
+    if P == None:
+      self.pythiaVersion = '6.416'
     self.refPythiaVersion = RPV
+    if RPV == None:
+      self.refPythiaVersion = '6.325'
   def setEventType(self,E):
     self.eventType = E
   def addQuantity(self,N,R,C):
