@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-07-01 - Patrick Koppenburg
+ - Hlt2Statistics : better quark count
+
 ! 2008-06-27 - Patrick Koppenburg
  - DecayTreeTuple : Use HLT context.
 

@@ -1,10 +1,11 @@
-// $Id: Hlt2Statistics.cpp,v 1.1 2008-06-24 11:05:59 pkoppenb Exp $
+// $Id: Hlt2Statistics.cpp,v 1.2 2008-07-01 16:48:41 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/GenHeader.h" 
+#include "Kernel/ParticleID.h" 
 // local
 #include "Hlt2Statistics.h"
 
@@ -90,10 +91,20 @@ StatusCode Hlt2Statistics::execute() {
     if (0==*ic) Exception("Null event pointer");
     for ( HepMC::GenEvent::particle_const_iterator p = gene->pGenEvt()->particles_begin();
           p != gene->pGenEvt()->particles_end();   ++p ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Gen particle " << (*p)->pdg_id() << endmsg ;
-      if ( abs((*p)->pdg_id())==4) if (!m_algoCorr->fillResult("c", true )) return StatusCode::FAILURE;
-      if ( abs((*p)->pdg_id())==5) if (!m_algoCorr->fillResult("b", true )) return StatusCode::FAILURE;
-      if ( abs((*p)->pdg_id())==6) if (!m_algoCorr->fillResult("t", true )) return StatusCode::FAILURE;
+      LHCb::ParticleID pid( (*p)->pdg_id()) ;     
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Gen particle " << (*p)->pdg_id() << " "
+                                            << pid.hasQuark(LHCb::ParticleID::bottom)
+                                            << " " << pid.hasQuark(LHCb::ParticleID::charm) << endmsg ;      
+      if (pid.hasQuark(LHCb::ParticleID::top)) {
+        if (!m_algoCorr->fillResult("t", true ) ) return StatusCode::FAILURE;
+        break ;
+      } else if (pid.hasQuark(LHCb::ParticleID::bottom)) {
+        if (!m_algoCorr->fillResult("b", true )) return StatusCode::FAILURE;
+      } else if (pid.hasQuark(LHCb::ParticleID::charm)) {
+        if (!m_algoCorr->fillResult("c", true )) return StatusCode::FAILURE;
+      } else if (pid.hasQuark(LHCb::ParticleID::strange)){
+        if (!m_algoCorr->fillResult("s", true )) return StatusCode::FAILURE;
+      }
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "Process type is " << (*ic)->processType() << endmsg ;
   }
