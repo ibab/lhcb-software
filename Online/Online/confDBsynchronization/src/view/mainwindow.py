@@ -125,6 +125,7 @@ class MainWindow(wx.Frame):
     def OnSwapSpare(self, e):
         spareWindow = SpareWindow(self, self.controller)
         spareWindow.setDevices(self.controller.confDB.getAllDevices())
+        #TODO: all devices instead of spares?
         spareWindow.setSpares(self.controller.spareDB.getSparesInConfDBAsString())
         spareWindow.update()
         spareWindow.Show(True)
