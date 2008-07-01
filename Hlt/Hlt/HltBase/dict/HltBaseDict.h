@@ -32,6 +32,8 @@ namespace {
     zen::IntRelation py_hlt_05; 
     Hlt::IntRelation py_hlt_06;
     std::vector<ConfigTreeNodeAlias> py_hlt_07;
+    boost::optional<ConfigTreeNode> py_hlt_08;
+    boost::optional<PropertyConfig> py_hlt_09;
     _hltbase_instantiations(){}
   };  
 }
