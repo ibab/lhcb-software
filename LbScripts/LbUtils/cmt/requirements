@@ -4,6 +4,6 @@ version v1r1
 use LbScriptsPolicy v*
 
 apply_pattern python_alias script=showCMTProjects
-apply_pattern python_alias script=fixWinCVSRoot.py
+apply_pattern python_alias script=fixWinCVSRoot
 
 
