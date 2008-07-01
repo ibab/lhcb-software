@@ -5,7 +5,7 @@
 #include <TPRegexp.h>
 #include <TString.h>
 
-static const std::string s_presenterVersion("v0r9");
+static const std::string s_presenterVersion("v0r10");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_groupdir("GROUPDIR");
 
@@ -50,9 +50,15 @@ namespace pres
 
   static const bool s_withHistograms    = true;
   static const bool s_withoutHistograms = false;
+  
+  static const bool s_withTree          = true;
+  static const bool s_withoutTree       = false;
 
   static const bool s_checkTreeItems    = true;
   static const bool s_uncheckTreeItems  = false;
+  
+  static const bool s_timeInterval    = true;
+  static const bool s_runInterval     = false;  
 
   // Conventions (see HistogramIdentifier for parsing)
   static const std::string s_H1D("H1D");
@@ -68,6 +74,7 @@ namespace pres
   static const std::string s_SET("SET");
   static const std::string s_LEVEL("LEVEL");
   static const std::string s_setSwitch("_$");
+  static const std::string s_underscrore("_"); // also for DB folders...
   static const std::string s_slash("/"); // also for DB folders...
   // boost::filesystem::slash
 
@@ -107,8 +114,13 @@ namespace pres
 //  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1005
 //  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1006
 //  H1D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloDecoderMonitoring/L0CaloDecoderMonitoring/1007
-  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$");
 
+// I guess TPRegexp wrapper is buggy: other pcre-s can match the pattern below (-1 match is OK):
+//  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+// so let's process the UTGID separately:
+// TODO: make this lazier...
+  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUTGIDRegexp("^([^/_]+)_([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_fileDateRegexp("(.*)-(\\d{8}T\\d{6})\\.root$");
 
   // Tunables:
@@ -127,6 +139,7 @@ namespace pres
   static const TString s_lbora01("lbora01:1528/HISTOGRAMDB");
   static const TString s_oradev10("oradev10.cern.ch:10520/D10");
   static const TString s_histdb("HISTDB");
+  static const TString s_lhcbPartionName("LHCb");
 
   static const std::string s_rootFileExtension(".root");
   static const std::string s_savesetToken("-");
@@ -136,6 +149,7 @@ namespace pres
   static const std::string s_NoReference("NOREF");
   static const std::string s_NoNormalization("NONE");
   
+  static const std::string s_Now("Now");
   static const std::string s_startupFile("startupFile");
 }
 #endif /*PRESENTER_H_*/
