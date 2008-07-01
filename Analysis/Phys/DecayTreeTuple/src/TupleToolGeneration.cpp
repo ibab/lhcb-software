@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.cpp,v 1.2 2008-07-01 15:13:00 pkoppenb Exp $
+// $Id: TupleToolGeneration.cpp,v 1.3 2008-07-01 15:49:31 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,6 +8,7 @@
 #include "TupleToolGeneration.h"
 
 #include "Event/GenHeader.h" 
+#include "Kernel/ParticleID.h" 
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/ITupleTool.h"
@@ -66,17 +67,17 @@ StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
     const LHCb::HepMCEvent* gene = (*ic)->event() ;
     if (0==*ic) Exception("Null event pointer");
     processType.push_back((*ic)->processType());
-    unsigned int hq = 0 ;
+    unsigned int hq = 2 ;
     for ( HepMC::GenEvent::particle_const_iterator p = gene->pGenEvt()->particles_begin();
           p != gene->pGenEvt()->particles_end();   ++p ) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Gen particle " << (*p)->pdg_id() << endmsg ;
-      for ( unsigned int q = 6 ; q!=0 ; q--){
-        if (  abs((*p)->pdg_id())==q) {
-          if (q>hq) hq = q ;
-          break ;
-        }
-      }
-      if (hq==6) break ; // top heaviest
+      LHCb::ParticleID pid( (*p)->pdg_id()) ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Gen particle " << (*p)->pdg_id() << " " 
+                                            << pid.hasQuark(LHCb::ParticleID::bottom)  
+                                            << " " << pid.hasQuark(LHCb::ParticleID::charm) << endmsg ;
+      if ((hq<LHCb::ParticleID::top) &&  pid.hasQuark(LHCb::ParticleID::top)) { hq = LHCb::ParticleID::top; break ;}
+      else if ((hq<LHCb::ParticleID::bottom) &&  pid.hasQuark(LHCb::ParticleID::bottom)) hq = LHCb::ParticleID::bottom;
+      else if ((hq<LHCb::ParticleID::charm) &&  pid.hasQuark(LHCb::ParticleID::charm)) hq = LHCb::ParticleID::charm;
+      else if ((hq<LHCb::ParticleID::strange) &&  pid.hasQuark(LHCb::ParticleID::strange)) hq = LHCb::ParticleID::strange;
     }
     heaviestQuark.push_back(hq);
     if ( hq > hqEvent) hqEvent = hq ;
