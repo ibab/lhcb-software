@@ -5,7 +5,7 @@
 !----------------------------------------------------------------------------
 
 !2008-07-01 - Gerhard Raven
-  - fix unchecked StatusCode in HltL0CaloPrepare
+  - fix unchecked StatusCode in HltL0CaloPrepare, HltSummaryWriter
 
 !2008-06-30 - Gerhard Raven
   - implement configuration aliases in all IConfigAccessSvc implementations

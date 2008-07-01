@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.11 2008-06-23 11:22:58 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.12 2008-07-01 20:26:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -82,8 +82,7 @@ StatusCode HltSummaryWriter::execute() {
     if (dataSvc().hasSelection(*it)) {
       if (dataSvc().selection(*it,this).decision()) writeSelection(*summary,*it);
     } else {
-      std::string comment = " No selection in HLT " + it->str();
-      Warning(comment,1);
+      error() << " no such selection : " << *it << endmsg;
     }
   }
 
@@ -98,11 +97,11 @@ void HltSummaryWriter::writeSelection(HltSummary& summary, const stringKey& id) 
   if (sel.classID() == LHCb::Track::classID()) {
     Hlt::TrackSelection& tsel = dynamic_cast<Hlt::TrackSelection&>(sel);
     for (Hlt::TrackSelection::iterator it = tsel.begin(); it != tsel.end();
-         ++it) sum.addData(*(*it));
+         ++it) sum.addData(**it);
   } else if (sel.classID() == LHCb::RecVertex::classID()) {
     Hlt::VertexSelection& tsel = dynamic_cast<Hlt::VertexSelection&>(sel);
     for (Hlt::VertexSelection::iterator it = tsel.begin(); it != tsel.end();
-         ++it) sum.addData(*(*it));
+         ++it) sum.addData(**it);
   }
   sum.setDecision(true);
 
