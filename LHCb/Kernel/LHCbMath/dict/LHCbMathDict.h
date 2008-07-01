@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.4 2008-07-01 15:18:11 cattanem Exp $
+// $Id: LHCbMathDict.h,v 1.5 2008-07-01 16:07:12 graven Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -13,6 +13,8 @@
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/LineTypes.h"
 #include "GaudiKernel/Plane3DTypes.h"
+#include "LHCbMath/MD5.h"
+#include <vector>
 
 namespace Gaudi
 {
@@ -130,6 +132,10 @@ namespace
     Gaudi::Math::RhoZPhiLineF   __lineRhoZPhiF;
 #endif // WIN32
     Gaudi::Math::XYZGeomFun __geomFunXYZ;
+
+    Gaudi::Math::MD5       __mathMD5;
+    std::vector<Gaudi::Math::MD5>       __stdvector_mathMD5;
+    
   };
 }
 

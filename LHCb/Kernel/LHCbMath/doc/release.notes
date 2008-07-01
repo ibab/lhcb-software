@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-07-01 - Gerhard Raven
+ - add MD5 and vector<MD5> to the dictionary
+ - Add default c'tor of MD5 which is required if you want a vector<MD5> in
+   a dictionary...
+
 !========================= LHCbMath v3r0 2008-07-01 ==========================
 ! 2008-07-01 - Marco Cattaneo
  - On Windows, disable some dictionaries that do not compile

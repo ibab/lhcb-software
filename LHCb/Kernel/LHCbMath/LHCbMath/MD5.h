@@ -25,8 +25,8 @@ namespace Gaudi
            typedef boost::uint8_t value_type[16];
 
            /// create an (recognizable!) invalid digest...
-           static MD5 createInvalid() 
-           { value_type x; memset(x,0u,sizeof(x)); return MD5(x); }
+           MD5() { memset(m_value,0u,sizeof(m_value)); }
+           static MD5 createInvalid() {  return MD5(); }
 
            /// compute MD5 digest for the specified string
            static MD5 compute(const std::string& s);
