@@ -56,8 +56,10 @@
         argList = "LHCb::STChannelID chan"
         desc = "unique box string from id"
        > 
-        <code> return UniqueLayerToString(chan) + 
-                      detRegionToString(chan.detRegion());
+        <code> 
+         std::string temp = UniqueLayerToString(chan); 
+         temp += detRegionToString(chan.detRegion());
+         return temp;
         </code>
       </method>
 

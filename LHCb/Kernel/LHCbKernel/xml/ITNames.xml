@@ -83,8 +83,9 @@
         argList = "LHCb::STChannelID chan"
         desc = "unique box string from id"
        > 
-        <code> return StationToString(chan.station()) + 
-                      BoxToString(chan.detRegion());
+        <code> std::string temp = StationToString(chan.station()); 
+               temp += BoxToString(chan.detRegion());
+               return temp;
         </code>
       </method>
 
@@ -94,9 +95,12 @@
         argList = "LHCb::STChannelID chan"
         desc = "unique layer string from id"
        > 
-        <code> return StationToString(chan.station()) + 
-                      BoxToString(chan.detRegion()) +
-                      LayerToString(chan.layer());
+        <code> 
+
+        std::string temp = StationToString(chan.station()); 
+        temp += BoxToString(chan.detRegion());
+        temp+= LayerToString(chan.layer());
+        return temp;
         </code>
       </method>
 
