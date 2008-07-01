@@ -1,4 +1,4 @@
-// $Id: GaussMonitoringBuD0hKpicocktail.opts,v 1.2 2008-06-23 18:16:13 robbep Exp $ 
+// $Id: GaussMonitoringBuD0hKpicocktail.opts,v 1.3 2008-07-01 14:14:18 robbep Exp $ 
 
 /** @file 
  * 
@@ -41,5 +41,5 @@ HistogramPersistencySvc.OutputFile = "GaussHistos_12463010.root";  // Monitoring
 Generation.PileUpTool = "FixedNInteractions" ;
 Generation.FixedNInteractions.NInteractions = 1 ;
 
-Generation.SignalPlain.PythiaProduction.Commands +=
+Generation.SignalRepeatedHadronization.PythiaProduction.Commands +=
 { "pydat1 mstu 12 1" } ;
