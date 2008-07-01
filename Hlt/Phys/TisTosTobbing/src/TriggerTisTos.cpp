@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.4 2008-06-18 01:18:31 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.5 2008-07-01 01:44:49 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -60,7 +60,7 @@ StatusCode TriggerTisTos::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
+  m_hltANNSvc = svc<IANSvc>("HltANNSvc");
 
   setOfflineInput();
   setTriggerInput();
@@ -83,8 +83,48 @@ void TriggerTisTos::getAlleyExitSelections()
   // done before ?
   if( m_alleyExitSelections.size() !=0 ){ return; }
   getHltSummary();
-  // given by input selections of "HltAlleys" if exists ...
-  m_alleyExitSelections = inputTriggerSelectionNames("HltAlleys");
+  // find matches to "Hlt1*Decision" in HltANNSvc 
+  std::vector<std::string> hlt1selIDs = m_hltANNSvc->keys("Hlt1SelectionID");
+  const std::string legalHlt1Triggers("Hlt1*Decision");  
+  for(std::vector<std::string>::const_iterator i =
+          hlt1selIDs.begin(); i!=hlt1selIDs.end(); ++i) {
+    if( wildcmp( legalHlt1Triggers.c_str(),i->c_str() ) ){      
+      if( find( m_alleyExitSelections.begin(), m_alleyExitSelections.end(), *i )
+            == m_alleyExitSelections.end() ){
+          m_alleyExitSelections.push_back(*i);
+      }
+    }
+  }    
+  // it can also be given by input selections of "HltAlleys" if exists ...
+  std::vector<std::string> hltAlleys = inputTriggerSelectionNames("HltAlleys");
+  if( hltAlleys.size() ){
+    // failed to find them using name method?
+    if( m_alleyExitSelections.size()==0 ){
+      m_alleyExitSelections = hltAlleys;
+      return;
+    }    
+    // check for consistency; report warnings
+    for(std::vector<std::string>::const_iterator i =
+          m_alleyExitSelections.begin(); i!=m_alleyExitSelections.end(); ++i) {
+      if( find( hltAlleys.begin(), hltAlleys.end(), *i )
+            == hltAlleys.end() ){
+        warning() << " Hlt1 Decision <" << *i << "> found in HltANNSvc but not in <HltAlleys> - kept " << endmsg;
+      }
+    }    
+    for( std::vector<std::string>::const_iterator j =
+          hltAlleys.begin(); j!=hltAlleys.end(); ++j) {
+      if( find( m_alleyExitSelections.begin(), m_alleyExitSelections.end(), *j )
+            == m_alleyExitSelections.end() ){
+        if( find( hlt1selIDs.begin(), hlt1selIDs.end(), *j )
+            == hlt1selIDs.end() ){
+          warning() << " Hlt1 Selection <" << *j << "> found in <HltAlleys> but not in HltANNSvc - ignored " << endmsg;        
+        } else {
+          warning() << " Hlt1 Selection <" << *j << "> found in <HltAlleys> has illegal name - added " << endmsg;
+          m_alleyExitSelections.push_back(*j);
+        }
+      }
+    }
+  }  
   if( m_alleyExitSelections.size() !=0 ){ return; }
   // ... use old algorithm otherwise 
   // exit selection has InputSelection's but is not an InputSelection to anything 
@@ -125,21 +165,21 @@ void TriggerTisTos::getTriggerNames()
   if( m_triggerNames.size() !=0 ){ return; }
 
   // use HltANNSvc to get Hlt1, then Hlt2 names
-  std::vector<IANNSvc::minor_value_type> selIDs = m_hltANNSvc->items("SelectionID");
-  for(std::vector<IANNSvc::minor_value_type>::const_iterator i =
+  std::vector<std::string> selIDs = m_hltANNSvc->keys("Hlt1SelectionID");
+  for(std::vector<std::string>::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
-    if( find( m_triggerNames.begin(), m_triggerNames.end(), i->first )
+    if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
             == m_triggerNames.end() ){
-          m_triggerNames.push_back(i->first);
+          m_triggerNames.push_back(*i);
     }
   }
   {    
-  std::vector<IANNSvc::minor_value_type> selIDs2 = m_hltANNSvc->items("Hlt2SelectionID");
-  for(std::vector<IANNSvc::minor_value_type>::const_iterator i =
+  std::vector<std::string> selIDs2 = m_hltANNSvc->keys("Hlt2SelectionID");
+  for(std::vector<std::string>::const_iterator i =
           selIDs2.begin(); i!=selIDs2.end(); ++i) {
-    if( find( m_triggerNames.begin(), m_triggerNames.end(), i->first )
+    if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
             == m_triggerNames.end() ){
-          m_triggerNames.push_back(i->first);
+          m_triggerNames.push_back(*i);
     }
   }
   }

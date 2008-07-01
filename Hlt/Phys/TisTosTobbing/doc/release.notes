@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.22 2008-06-18 07:42:26 pkoppenb Exp $
+! $Id: release.notes,v 1.23 2008-07-01 01:44:49 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-07-01 - Tomasz Skwarnicki
+ - adopt to changes in HltANNSvc
+ - make use of new trigger selection name conventions
 
 ! 2008-06-18 - Patrick Koppenburg
  - IANNSvc moved to Kernel/
