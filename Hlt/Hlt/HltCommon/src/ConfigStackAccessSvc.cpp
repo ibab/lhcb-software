@@ -46,7 +46,9 @@ StatusCode ConfigStackAccessSvc::initialize() {
     if (!status.isSuccess()) return status;
     for (std::vector<std::string>::const_iterator i = s_svcs.begin(); i!=s_svcs.end() ; ++i) {
         IConfigAccessSvc *svc(0);
+        info() << " requesting service " << *i << endmsg;
         status = service(*i,svc);
+        info() << " requested service " << *i << " : " << status << endmsg;
         if (!status.isSuccess()) return status;
         assert(svc!=0);
         m_svcs.push_back(svc);
@@ -106,16 +108,16 @@ ConfigStackAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_typ
                 std::find_if( vec.begin(), vec.end(), 
                               bl::bind(&ConfigTreeNodeAlias::alias,bl::_1)==i->alias());
                // check consistency if duplication
-            if (j!=x.end()) {
+            if (j!=vec.end()) {
                 if ( *j != *i) {
                      warning() << "inconsistent alias in stack (" << *i
-                               << ") -- using earlier definition: " << *j
+                               << ") -- continuing to use earlier definition: " << *j
                                << endmsg;
                 } else { } // consistent... skip
 
                 continue; // don't push this!!!
             }
-            vec.push_back(*j);
+            vec.push_back(*i);
          }
     }
     return vec;
