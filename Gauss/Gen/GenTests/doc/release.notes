@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.5 2008-06-29 14:47:44 gcorti Exp $
+! $Id: release.notes,v 1.6 2008-07-01 08:19:11 robbep Exp $
 ! Package     : GenTests
 ! Responsible : Patrick ROBBE
 ! Purpose     : Package holding options and scripts to run generator level
 !               tests with Gauss
 !=============================================================================
+
+! 2008-07-01 - Patrick Robbe
+ - Remove bad PDG id code from list of particles in Inclusive D 
+   production
+ - Increase version in requirements
 
 !========================= GenTests v1r1 2008-06-29 ==========================
 ! 2008-06-29 - Gloria CORTI
