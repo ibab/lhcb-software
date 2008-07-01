@@ -20,7 +20,7 @@
  #
 
 from Gaudi.Configuration import *
-from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva
+from Configurables import DecayTreeTuple, PhysDesktop, NeuralNetTmva, EventTuple
 
 importOptions( "$B2DILEPTONROOT/options/DVDC06SelBu2eeK.opts" )
 
@@ -48,6 +48,14 @@ tuple.PhysDesktop.InputLocations = ["Phys/DC06SelBu2eeK"]
 tuple.Decay = "[B+ -> (^J/psi(1S) => ^e+ ^e-) ^K+]cc"
 
 ApplicationMgr().TopAlg += [ tuple ]
+
+# another Tuple with only event-stuff
+evtTuple = EventTuple()
+evtTuple..ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
+ApplicationMgr().TopAlg += [ evtTuple ]
+
+
+
 ApplicationMgr().EvtMax = 1000 
 
 NTupleSvc().Output = ["FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"]

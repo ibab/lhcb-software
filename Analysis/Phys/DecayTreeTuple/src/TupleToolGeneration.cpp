@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.cpp,v 1.1 2008-07-01 14:50:02 pkoppenb Exp $
+// $Id: TupleToolGeneration.cpp,v 1.2 2008-07-01 15:13:00 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -84,9 +84,9 @@ StatusCode TupleToolGeneration::fill( Tuples::Tuple& tuple ) {
   }
   
   bool test = true;
-  test &= tuple->farray( "processType" ,  processType , "Collisions" , 20 );
-  test &= tuple->farray( "heaviestQuark", heaviestQuark, "Collisions" , 20 );
-  test &= tuple->column("heaviestQuarkInEvent" , hqEvent );
+  test &= tuple->farray( "ProcessType" ,  processType , "Collisions" , 20 );
+  test &= tuple->farray( "HeaviestQuark", heaviestQuark, "Collisions" , 20 );
+  test &= tuple->column( "HeaviestQuarkInEvent" , hqEvent );
 
   return StatusCode(test);
 }

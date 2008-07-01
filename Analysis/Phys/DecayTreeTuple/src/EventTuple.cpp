@@ -1,4 +1,4 @@
-// $Id: EventTuple.cpp,v 1.1 2008-07-01 14:50:02 pkoppenb Exp $
+// $Id: EventTuple.cpp,v 1.2 2008-07-01 15:13:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@ EventTuple::EventTuple( const std::string& name,
 {
   m_toolList.push_back( "TupleToolEventInfo" );
   declareProperty("ToolList", m_toolList );
-  declareProperty( "TupleName", m_tupleName="DecayTree" );
+  declareProperty( "TupleName", m_tupleName="EventTuple" );
  }
 //=============================================================================
 // Destructor
@@ -45,7 +45,7 @@ StatusCode EventTuple::initialize() {
 
   info() << "Tools to be used : " ;
   for (std::vector<std::string>::const_iterator s = m_toolList.begin() ; s!=m_toolList.end() ; ++s){
-    m_tools.push_back(tool<IEventTupleTool>(*s));
+    m_tools.push_back(tool<IEventTupleTool>(*s,this));
     info() << *s << ", " ;
   }
   info() << endmsg ;
@@ -60,7 +60,7 @@ StatusCode EventTuple::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  Tuple tuple = nTuple( m_tupleName, m_tupleName );
+  Tuple tuple = nTuple( m_tupleName );
   
   StatusCode sc = StatusCode::SUCCESS ;
   for ( std::vector<IEventTupleTool*>::iterator i = m_tools.begin() ; i!= m_tools.end() ; ++i){

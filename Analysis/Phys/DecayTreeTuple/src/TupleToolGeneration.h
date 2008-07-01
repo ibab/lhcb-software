@@ -1,4 +1,4 @@
-// $Id: TupleToolGeneration.h,v 1.1 2008-07-01 14:50:02 pkoppenb Exp $
+// $Id: TupleToolGeneration.h,v 1.2 2008-07-01 15:13:00 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGENERATION_H
 #define JBOREL_TUPLETOOLGENERATION_H 1
 
@@ -14,8 +14,10 @@ class ITupleTool;
  * \brief b quark content and number of pp interactions for DecayTreeTuple
  *
  * Tuple columns:
- * - b-content, c-content, t-content
- * - ppColl : number of pp colliosns 
+ * - Collisions
+ * - HeaviestQuark in collision
+ * - ProcessType in collision
+ * - HeaviestQuarkInEvent 
  *
  * Only data that can be extracted without accessing Sm/MCParticles to be added here
  *
