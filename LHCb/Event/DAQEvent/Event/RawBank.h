@@ -1,4 +1,3 @@
-
 #ifndef DAQEVENT_RAWBANK_H
 #define DAQEVENT_RAWBANK_H 1
 
@@ -105,6 +104,7 @@ namespace LHCb
                    MuonError,       // 50
                    TestDet,         // 51
                    L0DUError,       // 52
+                   HltRoutingBits,  // 53
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
