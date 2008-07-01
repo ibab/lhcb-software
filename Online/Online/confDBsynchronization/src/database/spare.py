@@ -108,6 +108,7 @@ class SpareDB:
         db = database.connect()
         new_spares = self.getNewSpares()
         for spare in new_spares:
+            self.logfile.write("inserting spare "+str(spare)+" into confdb")
             spare.insert(db)
         database.disconnect(db)
         print "SpareDB.InsertNewSpares end"
@@ -116,6 +117,7 @@ class SpareDB:
         print "SpareDB.UpdateSpares start"
         new_spares = self.getChangedSpares()
         for spare in new_spares:
+            self.logfile.write("updating spare "+str(spare)+" in confdb")
             spare.update(self.confDB)
         print "SpareDB.UpdateSpares end"
     """deletes a spare"""
@@ -128,8 +130,10 @@ class SpareDB:
             db = database.connect()
             disconnect = True # shall disonnect after finishing work
         try:
+            self.logfile.write("deleting spare "+str(spare)+" from confdb")
             db.DeleteHWDevice(spare.serialnb)
         except:
+            self.logfile.write("error deleting spare "+str(spare)+" from confdb")
             print "error deleting :"+str(spare)
         if disconnect:
             database.disconnect(db)
@@ -154,8 +158,10 @@ class SpareDB:
         db = database.connect()
         for spare in spares:
             try:
+                self.logfile.write("deleting spare "+str(spare)+" from confdb")
                 db.DeleteHWDevice(spare.serialnb)
             except:
+                self.logfile.write("error deleting spare "+str(spare)+" from confdb")
                 print "error deleting :"+str(spare)
         database.disconnect(db)
         print "SpareDB.DeleteSpare end"
@@ -192,10 +198,13 @@ class SpareDB:
         newSpare = Spare(hwname, str(device_result[0][0]), str(device_result[0][1]), str(device_result[0][2]), str(location), str(device_result[0][4]))
         print newSpare
         #delete spare
+        self.logfile.write("deleting "+str(spare)+" from confdb")
         self.DeleteSpare(spare, db)
         #delete device
+        self.logfile.write("deleting "+str(hwname)+" from confdb")
         removedev(db, hwname)
         #insert device as spare
+        self.logfile.write("inserting "+str(newSpare)+" into confdb")
         newSpare.insert(db)
         #insert spare as device
         device = None
@@ -213,10 +222,13 @@ class SpareDB:
             device = Hugin(subsystems[getDetector(hwname)] ,modulenumber,dhcp.getMACByIPName(spare.hwname), dhcp.getIPByIPName(spare.hwname), spare.responsible, spare.serialnb, spare.location)
         else:
             print "Error: Unknown Moduletyp for " + hwname
+        self.logfile.write("inserting"+str(device)+" into confdb")
         device.insert(db, 1, 1)
         if device.CIPadd is None or device.CMACadd is None or dhcp is None:
-            print "Error inserting insports for "+hwname+" Reason: no ipaddress"
+            self.logfile.write("Error inserting insports for "+str(hwname)+" Reason: no ipaddress")
+            print "Error inserting insports for "+str(hwname)+" Reason: no ipaddress"
         else:
+            self.logfile.write("inserting ports for "+str(device)+" into confdb")
             device.insports(db)
         database.disconnect(db)
         print "SpareDB.replaceDevice end"
