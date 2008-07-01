@@ -10,7 +10,7 @@
 //--------------------------
 HltSummaryWriter.Save += {"PV2D",
                           "L0MuonDecision",
-                          "MuTrackMuonTF", //filtered muons
+                          "Hlt1MuTrackMuonTF", //filtered muons
                           "Hlt1MuTrackDecision" //filtered vertices
 
 };
