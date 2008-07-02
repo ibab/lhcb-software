@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-2 - Hugo Ruiz
+   - dsttools: corrected namespace
+
 ! 2008-7-2 - Jose A. Hernando
    - hltalleymonitor.py replaces hlttime.py to do the internal monitoring of the alley
 

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # =============================================================================
-""" @namespace desktop
+""" @namespace dsttools
 @brief Shortcuts for options for dst writting
 
 @author Hugo Ruiz hugo.ruiz@cern.ch
