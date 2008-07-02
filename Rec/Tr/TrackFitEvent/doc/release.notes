@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r16 2008-07-02 ===================
 ! 2008-06-17 - Louis Nicolas
  - Added initialization of deltaEnergy variable to 0 in FitNode
 
