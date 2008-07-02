@@ -1,4 +1,4 @@
-// $Id: PartitionListener.h,v 1.3 2008-05-22 06:32:29 frankm Exp $
+// $Id: PartitionListener.h,v 1.4 2008-07-02 16:18:33 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.3 2008-05-22 06:32:29 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/PartitionListener.h,v 1.4 2008-07-02 16:18:33 frankb Exp $
 #ifndef ROLOGGER_PARTITIONLISTENER_H
 #define ROLOGGER_PARTITIONLISTENER_H
 
@@ -45,6 +45,8 @@ namespace ROLogger {
     PartitionListener(Interactor* parent,const std::string& name);
     /// Standard destructor
     virtual ~PartitionListener();
+    /// Access name
+    const std::string& name() const {   return m_name; }
     /// DIM command service callback
     static void subFarmHandler(void* tag, void* address, int* size);
     /// DIM command service callback
