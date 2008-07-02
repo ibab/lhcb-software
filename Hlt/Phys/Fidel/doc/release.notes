@@ -3,7 +3,7 @@
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
-!========================== Fidel v1r1 2008-06-26 ===================
+
 ! 2008-07-02 - Sara Furcas
  - TightRes replaced by Hlt2Tight2Body
  - Modified options file for 2 body selection: cuts replaced with LoKi::Hybrid::FilterCriterion 
@@ -14,6 +14,9 @@
 
 ! 2008-06-19 - Sara Furcas
  - Added in FidelTuple some entries Tis Tos Tool
+
+
+!========================== Fidel v1r1 2008-06-19 ===================
 
 
 
