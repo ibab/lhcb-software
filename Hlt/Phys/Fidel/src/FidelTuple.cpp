@@ -1,4 +1,4 @@
-// $Id: FidelTuple.cpp,v 1.3 2008-06-25 15:29:28 sfurcas Exp $
+// $Id: FidelTuple.cpp,v 1.4 2008-07-02 13:06:34 sfurcas Exp $
 // Include files 
 
 // from Gaudi
@@ -188,65 +188,65 @@ StatusCode FidelTuple::execute() {
 
 
     
-    // L0 Info *********************************//
+//     // L0 Info *********************************//
     
-    bool decisionL0,tisL0,tosL0;
-    m_TriggerTisTosTool->triggerTisTos(**b,"L0Trigger*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
+//     bool decisionL0,tisL0,tosL0;
+//     m_TriggerTisTosTool->triggerTisTos(**b,"L0Trigger*",decisionL0,tisL0,tosL0, ITriggerTisTos::kAllTriggerSelections);
     
-    if( decisionL0 ){
-      MyTupla->column("decisionL0Alleys",decisionL0);
-      MyTupla->column("AlleyTisL0",tisL0); 
-      MyTupla->column("AlleyTosL0",tosL0);
-    }
+//     if( decisionL0 ){
+//       MyTupla->column("decisionL0Alleys",decisionL0);
+//       MyTupla->column("AlleyTisL0",tisL0); 
+//       MyTupla->column("AlleyTosL0",tosL0);
+//     }
     
-    else{
-      MyTupla->column("decisionL0Alleys",decisionL0);
-      MyTupla->column("AlleyTisL0",-1); 
-      MyTupla->column("AlleyTosL0",-1);
-    }
+//     else{
+//       MyTupla->column("decisionL0Alleys",decisionL0);
+//       MyTupla->column("AlleyTisL0",-1); 
+//       MyTupla->column("AlleyTosL0",-1);
+//     }
 
-    //*************** HLT ALLEYS ***************//
-    bool decisionHltAlleys,alleysTis,alleysTos,alleysTob;
-    m_TriggerTisTosTool->setOfflineInput(**b);
-    m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys,alleysTis,alleysTos);    
-    alleysTob=decisionHltAlleys && !alleysTis && !alleysTos;
+//     //*************** HLT ALLEYS ***************//
+//     bool decisionHltAlleys,alleysTis,alleysTos,alleysTob;
+//     m_TriggerTisTosTool->setOfflineInput(**b);
+//     m_TriggerTisTosTool->triggerTisTos("*",decisionHltAlleys,alleysTis,alleysTos);    
+//     alleysTob=decisionHltAlleys && !alleysTis && !alleysTos;
 
-    debug() << "      Hlt ALLEY decision = " <<decisionHltAlleys <<"  TIS alley = " << alleysTis << 
-      " TOS alley =" << alleysTos << endmsg;
+//     debug() << "      Hlt ALLEY decision = " <<decisionHltAlleys <<"  TIS alley = " << alleysTis << 
+//       " TOS alley =" << alleysTos << endmsg;
     
-    if(decisionHltAlleys){
-      MyTupla->column("decisionHltAlleys",decisionHltAlleys);
-      MyTupla->column("AlleyTis",alleysTis); 
-      MyTupla->column("AlleyTos",alleysTos);
-      MyTupla->column("AlleyTob",alleysTob);
-    }
-    else{
-      MyTupla->column("decisionHltAlleys",decisionHltAlleys);
-      MyTupla->column("AlleyTis",-1); 
-      MyTupla->column("AlleyTos",-1);
-      MyTupla->column("AlleyTob",-1);
-    }
+//     if(decisionHltAlleys){
+//       MyTupla->column("decisionHltAlleys",decisionHltAlleys);
+//       MyTupla->column("AlleyTis",alleysTis); 
+//       MyTupla->column("AlleyTos",alleysTos);
+//       MyTupla->column("AlleyTob",alleysTob);
+//     }
+//     else{
+//       MyTupla->column("decisionHltAlleys",decisionHltAlleys);
+//       MyTupla->column("AlleyTis",-1); 
+//       MyTupla->column("AlleyTos",-1);
+//       MyTupla->column("AlleyTob",-1);
+//     }
     
-    //**************** Hlt SelB Info******************//
-    bool decisionSelB,tisSelB,tosSelB;
-    m_TriggerTisTosTool->triggerTisTos("HltSel*",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
-    debug() << "      Hlt SelB decision = " <<decisionSelB <<"  TIS= " << tisSelB << " TOS=" << tosSelB << endmsg;
-    bool tobSelB = decisionSelB && !tisSelB && !tosSelB;
+//     //**************** Hlt SelB Info******************//
+//     bool decisionSelB,tisSelB,tosSelB;
+//     m_TriggerTisTosTool->triggerTisTos("HltSel*",decisionSelB,tisSelB,tosSelB, ITriggerTisTos::kAllTriggerSelections);
+//     debug() << "      Hlt SelB decision = " <<decisionSelB <<"  TIS= " << tisSelB << " TOS=" << tosSelB << endmsg;
+//     bool tobSelB = decisionSelB && !tisSelB && !tosSelB;
     
 
     
-    if(decisionSelB){
-      MyTupla->column("decisionSelB",decisionSelB);
-      MyTupla->column("SelTis",tisSelB); 
-      MyTupla->column("SelTos",tosSelB);
-      MyTupla->column("SelTob",tobSelB);
-    }
-    else{
-      MyTupla->column("decisionSelB",decisionSelB);
-      MyTupla->column("SelTis",-1); 
-      MyTupla->column("SelTos",-1);
-      MyTupla->column("SelTob",-1);
-    }
+//     if(decisionSelB){
+//       MyTupla->column("decisionSelB",decisionSelB);
+//       MyTupla->column("SelTis",tisSelB); 
+//       MyTupla->column("SelTos",tosSelB);
+//       MyTupla->column("SelTob",tobSelB);
+//     }
+//     else{
+//       MyTupla->column("decisionSelB",decisionSelB);
+//       MyTupla->column("SelTis",-1); 
+//       MyTupla->column("SelTos",-1);
+//       MyTupla->column("SelTob",-1);
+//     }
     //**************************************************************
     
     if((*b)->endVertex()!=NULL){

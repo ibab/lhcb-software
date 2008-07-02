@@ -4,10 +4,14 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 !========================== Fidel v1r1 2008-06-26 ===================
-! 2008-06-26
+! 2008-07-02 - Sara Furcas
+ - Modified options file for 2 body selection: cuts replaced with LoKi::Hybrid::FilterCriterion 
+ - Tis Tos Tool doesn't work with DaVinci v19r13
+
+! 2008-06-26 - Sara Furcas
  - Removed print in FidelTuple
 
-! 2008-06-19
+! 2008-06-19 - Sara Furcas
  - Added in FidelTuple some entries Tis Tos Tool
 
 
