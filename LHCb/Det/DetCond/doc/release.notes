@@ -1,17 +1,17 @@
-# $Id: release.notes,v 1.139 2008-07-02 12:43:03 marcocle Exp $
+# $Id: release.notes,v 1.140 2008-07-02 12:59:24 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!===================== Det/DetCond v12r0 2008-06-30 ==========================
 ! 2008-07-02 - Marco Clemencic
- - Introduced a work-around fro COOL bug #38422, which was preventing the usage
+ - Introduced a work-around for COOL bug #38422, which was preventing the usage
    of local tags as overlays.
  - Removed a left-over in the requirements file needed for some tests.
    (It was breaking compilation on win32)
 
-!===================== Det/DetCond v12r0 2008-06-30 ==========================
 ! 2008-06-27 - Marco Clemencic
  - Introduced the ICondDBReader implementation CondDBTimeSwitch.
    - it allows to use different partitions for different IOVs
