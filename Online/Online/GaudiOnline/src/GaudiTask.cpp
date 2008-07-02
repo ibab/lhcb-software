@@ -39,6 +39,18 @@ int gauditask_task_unlock() {
   return ::lib_rtl_unlock(s_lock);
 }
 
+static std::string loadScript(const std::string& fname) {
+  std::ifstream file(fname.c_str());
+  std::stringstream str;
+  if( file ) {
+    char ch;
+    while( file.get(ch) ) str.put(ch);
+    file.close();
+    return str.str();
+  }
+  return "";
+}
+
 GaudiTask::PythonInterpreter::PythonInterpreter() {
   ::Py_Initialize();
 }
@@ -197,19 +209,16 @@ StatusCode GaudiTask::startRunable(IRunable* runable)   {
   return StatusCode::FAILURE;
 }
 
+/// Configure second layer application manager for GAUDI Application
 int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
   m_eventThread = false;
   Gaudi::setInstance(m_subMgr);
-  switch(m_optOptions.find(".py")) {
-  case std::string::npos:
+  if (m_optOptions.find(".opts") != std::string::npos)
     sc = configSubManager();
-    break;
-  default:
+  else
     sc = configPythonSubManager();
-    break;
-  }
   if ( sc.isSuccess() ) {
     log << MSG::INFO << "2nd Level successfully configured." << endmsg;	
     return 1;
@@ -224,6 +233,7 @@ int GaudiTask::configApplication()  {
   return 0;
 }
 
+/// Initialize second layer application manager for GAUDI Application
 int GaudiTask::initApplication()  {
   MsgStream log(msgSvc(), name());
   if ( 0 != m_subMgr )  {
@@ -279,6 +289,7 @@ int GaudiTask::initApplication()  {
   return 0;
 }
 
+/// Finalize second layer application manager for GAUDI Application
 int GaudiTask::finalizeApplication()  {
   if ( m_subMgr )  {
     if ( m_handle )  {
@@ -303,6 +314,7 @@ int GaudiTask::finalizeApplication()  {
   return 1;
 }
 
+/// Terminate second layer application manager for GAUDI Application
 int GaudiTask::terminateApplication()  {
   if ( m_subMgr )  {
     try {
@@ -381,17 +393,15 @@ StatusCode GaudiTask::configSubManager() {
 /// Configure Python based second level application manager
 StatusCode GaudiTask::configPythonSubManager() {
   MsgStream log(msgSvc(), name());
-  std::ifstream file(m_optOptions.c_str());
-  std::stringstream str;
   m_python = std::auto_ptr<PythonInterpreter>(new PythonInterpreter());
   m_subMgr = 0;
-  if( file ) {
-    char ch;
-    while( file.get(ch) ) str.put(ch);
-    file.close();
+  log << MSG::DEBUG << "Python setup:" << m_optOptions << endmsg;
+  std::string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0) 
+    ? m_optOptions.substr(8) : loadScript(m_optOptions);
+  if( !cmd.empty() ) {
     std::string vsn = Py_GetVersion();
     log << MSG::INFO << "Starting python initialization. Python version: [" << vsn << "]" << endmsg;
-    ::PyRun_SimpleString((char*)str.str().c_str());
+    ::PyRun_SimpleString((char*)cmd.c_str());
     if ( ::PyErr_Occurred() )   {
       ::PyErr_Print(); 
       ::PyErr_Clear();

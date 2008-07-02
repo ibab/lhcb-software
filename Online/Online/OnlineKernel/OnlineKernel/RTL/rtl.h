@@ -128,6 +128,8 @@ extern "C" {
   int lib_rtl_join_thread(lib_rtl_thread_t handle);
   /// Suspend executing thread from execution
   int lib_rtl_suspend_thread(lib_rtl_thread_t handle);
+  /// Send signal to thread
+  int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig);
 
   /// Create named lock. if the lock_name is 0 the lock is priovate to the currect process.
   int lib_rtl_create_lock (__CXX_CONST char* lock_name, lib_rtl_lock_t* lock_handle);
