@@ -45,6 +45,8 @@ class OnlineHistDB;
 class OnlineHistogram;
 class OMAlib;
 class Archive;
+class IntervalPicker;
+class TDatime;
 
 class PresenterMainFrame : public TGMainFrame
 {
@@ -89,7 +91,8 @@ class PresenterMainFrame : public TGMainFrame
       M_AddDimToDB_COMMAND,
       M_AddDimToPage_COMMAND,
       M_AddDBHistoToPage_COMMAND,
-      SET_DIM_SRC_COMMAND,
+      M_SetDimSourceFromTree,
+      M_SetDimSourceFromQuickButton,
       M_DimCollapseAllChildren_COMMAND,
       M_DeleteDBHisto_COMMAND,
       M_DBHistoCollapseAllChildren_COMMAND,
@@ -102,9 +105,14 @@ class PresenterMainFrame : public TGMainFrame
       M_DeleteFolder_COMMAND,
       M_LAST_1_HOURS,
       M_LAST_8_HOURS,
-      M_File,
-      M_File_Dlg,
-      M_IntervalPicker
+      M_Last_File,
+      M_File_Picker,
+      M_Last_Interval,
+      M_IntervalPicker,
+      M_UtgidPicker,
+      M_RefreshKnownUTGIDs,
+      M_Previous_Interval,
+      M_Next_Interval
     };
 
     struct obsolete_BulkHistoOptions {
@@ -128,14 +136,18 @@ class PresenterMainFrame : public TGMainFrame
 
     void setPresenterMode(const pres::PresenterMode & presenterMode);
     void setDatabaseMode(const pres::DatabaseMode & databaseMode);
+    void setHistoryMode(bool mode) { m_historyMode = mode; }
     pres::DatabaseMode databaseMode() { return m_databaseMode; }
     void setVerbosity(const pres::MsgLevel & verbosity);
+    void setTitleFontSize(int fontSize);
     pres::MsgLevel verbosity() const { return m_verbosity; }
     void setDimDnsNode(const std::string & dimDnsNode) {
       m_dimDnsNode = dimDnsNode;
     };
     void setArchiveRoot(const std::string & archiveRoot);
-    Archive* archive() const { return m_archive; }    
+    Archive* archive() const { return m_archive; }
+    IntervalPicker* intervalPicker() const { return m_intervalPicker; }
+    
     void setReferencePath(const std::string & referencePath);
     void setSavesetPath(const std::string & savesetPath);
 
@@ -155,6 +167,8 @@ class PresenterMainFrame : public TGMainFrame
     void startPageRefresh();
     void stopPageRefresh();
     void clearHistos();
+    void nextInterval();
+    void previousInterval();
     void refreshPage();
     void refreshClock();
     void listFromHistogramDB(TGListTree* listView,
@@ -202,7 +216,8 @@ class PresenterMainFrame : public TGMainFrame
 
     void refreshHistoDBListTree();
     void refreshPagesDBListTree();
-    void refreshDimSvcListTree();
+    void refreshDimSvcList(bool withTree);
+    void refreshUtgidSelectorPopupMenu();
     void hideDBTools();
     void showDBTools(pres::DatabaseMode databasePermissions);
     void reconfigureGUI();
@@ -239,7 +254,7 @@ class PresenterMainFrame : public TGMainFrame
     void addDimSvcToHistoDB();
     void addDimSvcToPage();
     void addDbHistoToPage();
-    void setHistogramDimSource();
+    void setHistogramDimSource(bool tree);
     void dimCollapseAllChildren();
 
     void setHistogramPropertiesInDB();
@@ -255,6 +270,8 @@ class PresenterMainFrame : public TGMainFrame
     void toggleReferenceOverlay();
     void paintHist(DbRootHist* histogram);
 
+    std::string assembleCurrentDimServiceName(OnlineHistogram* OnlineHistogram);
+
     void removeHistogramsFromPage();
     void EventInfo(int event, int px, int py, TObject *selected);
 
@@ -263,6 +280,11 @@ class PresenterMainFrame : public TGMainFrame
 
     TCanvas* editorCanvas;
     TRootEmbeddedCanvas* editorEmbCanvas;
+    
+    TDatime* currentTime;
+    std::string global_timePoint;
+    std::string global_pastDuration;
+    std::string global_stepSize;
 
     std::vector<DbRootHist*>  dbHistosOnPage;
     std::vector<DbRootHist*>::iterator  dbHistosOnPageIt;
@@ -270,20 +292,23 @@ class PresenterMainFrame : public TGMainFrame
   private:
 
     pres::MsgLevel    m_verbosity;
+    bool              m_historyMode;
     std::string       m_dimDnsNode;
+    std::string       m_currentPartition;
     std::string       m_archiveRoot;
     std::string       m_referencePath;
     std::string       m_savesetPath;
     std::string       m_savesetFileName;
     DimBrowser*       m_dimBrowser;
     Archive*          m_archive;
+    IntervalPicker*   m_intervalPicker;
     pres::PresenterMode m_presenterMode;
     pres::DatabaseMode  m_databaseMode;
     TTimer*           m_pageRefreshTimer;
     TTimer*           m_clockTimer;
     bool              m_clearedHistos;
     bool              m_referencesOverlayed;
-    bool              m_pageRefresh;
+    bool              m_refreshingPage;
     OnlineHistDB*     m_histogramDB;
     OMAlib*           m_analysisLib;
     int               m_msgBoxReturnCode;
@@ -357,6 +382,8 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_startRefreshButton;
     TGPictureButton*  m_stopRefreshButton;
     TGPictureButton*  m_clearHistoButton;
+    TGPictureButton*  m_previousIntervalButton;
+    TGPictureButton*  m_nextIntervalButton;
     TGPictureButton*  m_inspectHistoButton;
     TGPictureButton*  m_editHistoButton;
     TGPictureButton*  m_autoCanvasLayoutButton;
@@ -365,6 +392,8 @@ class PresenterMainFrame : public TGMainFrame
     TGPictureButton*  m_pickReferenceHistoButton;
     TGSplitButton*    m_historyIntervalQuickButton;
     TGPopupMenu*      m_presetTimePopupMenu;
+    TGSplitButton*    m_utgidSelectorQuickButton;
+    TGPopupMenu*      m_utgidSelectorPopupMenu;
 
 
     //  TGButton*         m_quitButton;
@@ -445,9 +474,16 @@ class PresenterMainFrame : public TGMainFrame
 
     std::vector<std::string>      m_knownDimServices;
     std::vector<std::string>::const_iterator m_knownDimServicesIt;
+    
+    std::vector<std::string>      m_candidateDimServices;
+    std::vector<std::string>::const_iterator m_candidateDimServicesIt;
 
     std::vector<OnlineHistogram*>      m_onlineHistosOnPage;
     std::vector<OnlineHistogram*>::const_iterator m_onlineHistosOnPageIt;
+
+    TList*  m_knownPartitionList;
+    TList*  m_knownMonitoringNodeList;
+    TList*  m_knownInstanceNumberList;
 
     ClassDef(PresenterMainFrame, 0) // main editor window
 };

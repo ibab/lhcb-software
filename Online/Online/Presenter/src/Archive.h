@@ -42,13 +42,21 @@ public:
   void setVerbosity(const pres::MsgLevel & verbosity) { m_verbosity = verbosity; }
   void setAnalysisLib(OMAlib* analib) { m_analysisLib = analib; }
   void refreshDirectory(const DirectoryType & directoryType);
-  void closeRootFiles();
-  std::string Archive::referenceFilePath(DbRootHist* histogram);  
+  void closeRootFiles();  
   void fillHistogram(DbRootHist* histogram,
                      const std::string & timePoint,
                      const std::string & pastDuration);
   TH1* referenceHistogram(const std::string & referenceDbEntry);
   void saveAsReferenceHistogram(DbRootHist* histogram);
+  std::string createIsoTimeString(int& year, int& month, int& day,
+                                  int& hour, int& min, int& sec);
+  std::string createIsoTimeString(const tm &pt_tm);                                  
+  std::string timeDiff(const std::string & startTimeIsoString,
+                       const std::string & endTimeIsoString);
+  std::string addIsoTimeDate(const std::string & startTimeIsoString,
+                             const std::string & deltaTimeString);
+  std::string substractIsoTimeDate(const std::string & startTimeIsoString,
+                                   const std::string & deltaTimeString);                      
 //  void deleteReferenceHistogram(TH1* reference); 
 private:
   PresenterMainFrame* m_mainFrame;

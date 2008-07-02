@@ -20,6 +20,7 @@ using namespace pres;
 using namespace std;
 using namespace boost::filesystem;
 using namespace boost::posix_time;
+using namespace boost::gregorian;
 
 Archive::Archive(PresenterMainFrame* gui,
                  const std::string & archiveRoot,
@@ -33,6 +34,11 @@ Archive::Archive(PresenterMainFrame* gui,
   m_analysisLib(NULL),
   m_msgBoxReturnCode(0)
 {
+  if (m_verbosity >= Verbose) {
+    std::cout << "m_archiveRoot " << m_archiveRoot
+              << "m_referencePath " << m_referencePath
+              << "m_savesetPath " << m_savesetPath << std::endl;
+  }
 }
 Archive::~Archive()
 {
@@ -40,40 +46,50 @@ Archive::~Archive()
 void Archive::setArchiveRoot(const std::string & archiveRoot)
 {
   m_archiveRoot = path(archiveRoot);
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive m_archiveRoot " << m_archiveRoot << std::endl;
+  }  
 }
 void Archive::setSavesetPath(const std::string & savesetPath)
 {
   m_savesetPath = path(savesetPath);
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive m_savesetPath " << m_savesetPath << std::endl;
+  }  
 }
 void Archive::setReferencePath(const std::string & referencePath)
 {
   m_referencePath = path(referencePath);
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive m_referencePath " << m_referencePath << std::endl;
+  }  
 }
 void Archive::refreshDirectory(const DirectoryType & directoryType)
 {
   switch (directoryType) {
     case Savesets:
+      // std::cout << "m_savesetPath " << m_savesetPath <<std::endl;
       m_foundSavesets = listDirectory(m_savesetPath);
       break;
     case References:
+      // std::cout << "m_referencePath " << m_referencePath <<std::endl;    
       m_foundReferences = listDirectory(m_referencePath);
       break;
     default:
       break;
   }
 }
-std::string Archive::referenceFilePath(DbRootHist* /*histogram*/)
-{
-  return string("");
-}
 void Archive::fillHistogram(DbRootHist* histogram,
                             const std::string & timePoint,
                             const std::string & pastDuration)
 {
   if (m_verbosity >= Debug) {
-    std::cout << "Histogram to seek: " << histogram->identifier() << std::endl;
+    std::cout << "Histogram to seek: " << histogram->identifier()
+              << " timePoint " << timePoint
+              << " pastDuration " << pastDuration << std::endl;
   }
   if ( ! (histogram->isAnaHist()) ) {
+    histogram->beRegularHisto();
     std::vector<path> foundRootFiles;
     if (s_startupFile == timePoint) {
       path filePath(pastDuration);
@@ -85,7 +101,7 @@ void Archive::fillHistogram(DbRootHist* histogram,
         } 
       }
     } else {
-      foundRootFiles = findSavesets(histogram->taskName(),
+      foundRootFiles = findSavesets((histogram->onlineHistogram())->task(),
                                     timePoint,
                                     pastDuration);
     } 
@@ -160,13 +176,19 @@ void Archive::fillHistogram(DbRootHist* histogram,
                      (m_analysisLib->getAlg(histogram->creationAlgorithm()));
       if (creator && sourcesOk) {
         histogram->rootHistogram = creator->exec(&sources,
-                                      histogram->anaParameters(),
-                                      histogram->identifier(),
-                                      histogram->onlineHistogram()->htitle(),
-                                      histogram->rootHistogram);
+                                                 histogram->anaParameters(),
+                                                 histogram->identifier(),
+                                                 histogram->onlineHistogram()->htitle(),
+                                                 histogram->isEmptyHisto() ? NULL : histogram->rootHistogram);
+        histogram->beRegularHisto();
+      }
+      else {
+        histogram->beEmptyHisto(); 
       }
     }
-    if (! (histogram->rootHistogram) ) { histogram->beEmptyHisto(); }
+    if (! (histogram->rootHistogram) ) { 
+      histogram->beEmptyHisto(); 
+    }
   }
   histogram->setTH1FromDB();
 }
@@ -210,10 +232,66 @@ path Archive::findFile(const path & dirPath, const string & fileName)
   }
   return foundFile;
 }
+std::string Archive::createIsoTimeString(int& year, int& month, int& day,
+                                         int& hour, int& min, int& sec)
+{
+  std::stringstream isoTimeStringStream;
+  isoTimeStringStream << std::setfill('0') << std::setw(4) << year <<
+                         std::setfill('0') << std::setw(2) << month <<
+                         std::setfill('0') << std::setw(2) << day << "T" <<
+                         std::setfill('0') << std::setw(2) << hour <<
+                         std::setfill('0') << std::setw(2) << min <<
+                         std::setfill('0') << std::setw(2) << sec; 
+  return isoTimeStringStream.str();
+}
+std::string Archive::createIsoTimeString(const tm &pt_tm)
+{
+  Int_t year, month, day, hour, min, sec;
+  year = pt_tm.tm_year + 1900;
+  month = pt_tm.tm_mon + 1; // http://xkcd.com/163/
+  day = pt_tm.tm_mday;
+  hour = pt_tm.tm_hour;
+  min = pt_tm.tm_min;
+  sec = pt_tm.tm_sec;
+  return createIsoTimeString(year, month, day, hour, min, sec); 
+}
+std::string Archive::timeDiff(const std::string & startTimeIsoString,
+                              const std::string & endTimeIsoString)
+{
+  ptime startTime(from_iso_string(startTimeIsoString));
+  ptime endTime(from_iso_string(endTimeIsoString));
+  time_duration diff= endTime - startTime;
+  return to_simple_string(diff);
+}
+std::string Archive::addIsoTimeDate(const std::string & startTimeIsoString,
+                                    const std::string & deltaTimeString)
+{
+  ptime startTime(from_iso_string((startTimeIsoString)));
+  time_duration diffTime(duration_from_string((deltaTimeString)));
+
+  ptime newPTime = startTime + diffTime;
+
+  return createIsoTimeString(to_tm(newPTime)); //to_iso_string(newTime);
+}
+std::string Archive::substractIsoTimeDate(const std::string & startTimeIsoString,
+                                          const std::string & deltaTimeString)
+{
+  ptime startTime(from_iso_string((startTimeIsoString)));
+  time_duration diffTime(duration_from_string((deltaTimeString)));
+
+  ptime newPTime = startTime - diffTime;
+  
+  return createIsoTimeString(to_tm(newPTime)); //to_iso_string(newTime);
+}
 std::vector<path> Archive::findSavesets(const std::string & taskname,
                                         const std::string & endTimeIsoString,
                                         const std::string & durationTimeString)
 {
+  if (m_verbosity >= Verbose) {
+    std::cout << "Archive::findSavesets: " << taskname
+              << " timePoint " << endTimeIsoString
+              << " pastDuration " << durationTimeString << std::endl;
+  }
   std::vector<path> foundRootFiles;
   ptime endTime;
   if ("Now" == endTimeIsoString) {
