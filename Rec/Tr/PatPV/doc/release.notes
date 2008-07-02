@@ -4,6 +4,7 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+!============================= PatPV v3r4 2008-07-02 =========================
 ! 2008-06-17 - Patrick Koppenburg
  - Removed unnecessary unchecked StatusCode.
 
