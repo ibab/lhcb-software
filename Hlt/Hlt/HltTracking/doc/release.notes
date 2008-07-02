@@ -4,7 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 ! 2008-07-02 - Gerhard Raven
-  - fix two unchecked StatusCodes
+  - fix three unchecked StatusCodes, reduce three times the same compiler 
+    warning to one...
 
 ! 2008-06-27 - Jose A. Hernando
   - rename PatMatch to VeloT, and VeloT to VeloTDist in HltTrackMatch

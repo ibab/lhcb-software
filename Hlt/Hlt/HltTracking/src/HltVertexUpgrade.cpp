@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.11 2008-06-27 16:34:08 hernando Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.12 2008-07-02 19:32:02 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -55,7 +55,8 @@ StatusCode HltVertexUpgrade::initialize() {
   if (!m_tool) 
     fatal() << " not able to retrieve upgrade track tool " << endreq;
   
-  m_tool->setReco(m_recoName);
+  sc = m_tool->setReco(m_recoName);
+  if ( sc.isFailure() ) return sc;
 
   saveConfiguration();
 

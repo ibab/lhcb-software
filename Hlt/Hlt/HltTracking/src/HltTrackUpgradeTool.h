@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.9 2008-06-20 17:23:25 hernando Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.10 2008-07-02 19:32:02 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -67,12 +67,9 @@ public:
                       std::vector<LHCb::Track*>& track);
 
   
-  Tf::IStationSelector& view(const LHCb::Track& seed)
-  {Assert(0,"view() method no implemented yet!");
-  }
+  Tf::IStationSelector& view(const LHCb::Track& seed);
   
-  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed)
-  {Assert(0,"lhcbIDsInView() method no implemented yet!");}
+  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed);
 
 private:
 
