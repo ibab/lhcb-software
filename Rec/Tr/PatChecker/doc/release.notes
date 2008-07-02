@@ -4,6 +4,7 @@
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatChecker v3r3 2008-07-02 =======================
 ! 2008-06-30 - Malcolm John
  - In the case of VELO tracks, provides a breakdown of PR performance per algorithm
 
