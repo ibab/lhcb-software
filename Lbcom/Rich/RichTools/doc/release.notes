@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r21 2008-07-02 ======================
 ! 2008-06-06 - Antonis Papanestis
  - Fixed inconsistency between globalToPDPanel and globalPosition methods
 
