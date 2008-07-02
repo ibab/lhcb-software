@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.9 2008-06-23 12:22:28 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.10 2008-07-02 19:25:18 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -43,10 +43,9 @@ StatusCode HltTrackUpgrade::initialize() {
   m_outputTracks = &(registerTSelection<LHCb::Track>());
 
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
-  if (!m_tool) 
-    fatal() << " not able to retrieve upgrade track tool " << endreq;
   
-  m_tool->setReco(m_recoName);
+  sc = m_tool->setReco(m_recoName);
+  if (sc.isFailure()) return sc;
 
   saveConfiguration();
   return sc;
@@ -78,5 +77,5 @@ void HltTrackUpgrade::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
 
   confregister("RecoName",m_recoName);
-  info() << " HLT Recostruction " << m_recoName << endreq;
+  info() << " HLT Reconstruction " << m_recoName << endreq;
 }
