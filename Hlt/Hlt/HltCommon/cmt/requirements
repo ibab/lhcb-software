@@ -16,6 +16,7 @@ use GaudiAlg            v*
 
 use HltEvent            v*    Event
 use L0Event		v*    Event
+use DAQEvent		v*    Event
 use TrackEvent          v*    Event
 
 use HltBase             v*    Hlt

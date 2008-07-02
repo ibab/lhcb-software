@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-07-02 - Gerhard Raven
+  - add HltRawBankFilter: filters on the presence of a given set of RawBank types.
+
 !2008-07-01 - Gerhard Raven
   - fix unchecked StatusCode in HltL0CaloPrepare, HltSummaryWriter
 
