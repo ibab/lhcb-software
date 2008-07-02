@@ -4,6 +4,17 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r10 2008-06-17 =============
+! 2008-06-17
++ Quick partition selector with autodiscovery
++ Dynamic DIM service address for histograms
++ Navigation in History mode through time
+
+!============ Presenter v0r9 2008-06-05 =============
+! 2008-06-05
++ resume refresh when switching pages
++ filter DIM services remotely (~faster DIM tree refresh)
+
 !============ Presenter v0r9 2008-05-23 =============
 ! 2008-05-23
 o use ROOT "thermic" coulour palette instead of custom
