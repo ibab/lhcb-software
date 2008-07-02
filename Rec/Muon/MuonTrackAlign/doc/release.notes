@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.9 2008-04-11 09:57:39 cattanem Exp $
+! $Id: release.notes,v 1.10 2008-07-02 12:09:28 spozzi Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+!=================== MuonTrackAlign v1r4 2008-06-30 ==================
+! 2008-06-30 - Silvia Pozzi
+ - Added the long track state errors to the match chi^2 
+ - Added some monitoring histograms
 
 !=================== MuonTrackAlign v1r3 2008-04-11 ==================
 ! 2008-04-11 - Marco Cattaneo
