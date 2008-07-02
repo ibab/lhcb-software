@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r11 2008-07-02 ==========================
 ! 2008-07-01 - Chris Jones
  - Add RichMarkovRingFinder package to list of CMT usages
 
