@@ -113,6 +113,7 @@ struct Display    {
   int    (*scroll)(int);
   int    (*resize)(Display*, int, int);
   int    (*drag)(Display*, int, int);
+  void*  param;
 };
 
 struct Update    {

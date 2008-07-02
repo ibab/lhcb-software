@@ -338,6 +338,7 @@ int scrc_create_display (Display** disp, int rows, int cols, uint_t attr, flag b
     d->height = rows - 2;
     d->width  = cols - 2;
   } 
+  d->param = 0;
   *disp = d;
   return 1;
 }
