@@ -46,7 +46,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   }
   h->held = 0;
 #if defined(USE_PTHREADS)
-  int sc = 0;
+  int sc = 1;
   h->handle = h->name[0] ? ::i_sem_open(h->name, O_CREAT|O_EXCL, 0666, 1) : &h->handle2;
   if (h->name[0] && !h->handle) {
     h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
@@ -55,6 +55,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
       // ::perror("SEVERE: sem_open: ");
       return 0;
     }
+    sc = 0;
   }
   else if ( h->name[0] ) {
     created = true;
@@ -62,12 +63,16 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
     nn += mutex_name;
     int ret = ::chmod(nn.c_str(),0666);
     if ( 0 != ret ) ::perror("SEVERE: chmod.");
+    sc = 0;
   }
-  if ( h->handle ) {
-    sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);
-  }
-  else if ( h->name[0] ) {
-    h->handle = ::i_sem_open(h->name, O_CREAT, 0666, 1);
+  else  {
+    sc = ::sem_init(h->handle, h->name[0] ? 1 : 0, 1);
+    if ( sc != 0 ) {
+      sc = errno;
+      ::sem_destroy(h->handle);
+      h->handle = 0;
+      errno = sc;
+    }
   }
   if ( sc != 0 )  {
     h->handle = 0;

@@ -84,9 +84,11 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     int ret = ::chmod(nn.c_str(),0666);
     if ( 0 != ret ) ::perror("SEVERE: chmod.");
   }
-  int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
-  if ( sc != 0 )  {
-    h->handle = 0;
+  else {
+    int sc = ::sem_init(h->handle, 0, 1);
+    if ( sc != 0 )  {
+      h->handle = 0;
+    }
   }
 #elif defined(_WIN32)
   h->handle = ::CreateEvent(0,TRUE,FALSE,name ? h->name : 0);

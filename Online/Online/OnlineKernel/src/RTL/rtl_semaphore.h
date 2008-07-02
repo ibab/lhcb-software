@@ -6,9 +6,9 @@
 
 static inline sem_t *i_sem_open(const char *name, int oflag, int mode, int val) {
   sem_t* h = SEM_FAILED;
-  //do {
+  do {
     h = ::sem_open(name,oflag,mode,val);
-    //} while ( h==SEM_FAILED && errno==EINTR );
+  } while ( h==SEM_FAILED && errno==EINTR );
   return h;
 }
 static inline int i_sem_wait(sem_t *sem) {

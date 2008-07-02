@@ -275,31 +275,37 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   _mbm_wes_ast_add  = _mbm_wes_ast;
   std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
   if ( !bm.get() )  {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections:%s.",bm_name);
+    //::fprintf(stdout,"Cannot map memory sections:%s.",bm_name);
+    //::fflush(stdout);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections of %s for %s.",bm_name,name);
     return MBM_INV_DESC;
   }
 
-  if ( !bm->lockid )  {
-    ::strcpy(bm->mutexName,"BM_");
-    ::strcat(bm->mutexName,bm->bm_name);
-    status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
-    if (!lib_rtl_is_success(status))    {
-      lib_rtl_signal_message(LIB_RTL_OS,
-              "Failed to create lock %s for %s.",
-              bm->mutexName,bm_name);
-      _mbm_unmap_sections(bm.get());
-      return MBM_INV_DESC;
-    }
+  ::strcpy(bm->mutexName,"BM_");
+  ::strcat(bm->mutexName,bm->bm_name);
+  status = ::lib_rtl_create_lock(bm->mutexName, &bm->lockid);
+  if (!lib_rtl_is_success(status))    {
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to create lock %s of %s for %s.",
+			     bm->mutexName,bm_name,name);
+    //::fprintf(stdout,"Failed to create lock %s for %s.",bm->mutexName,bm_name);
+    //::fflush(stdout);
+    _mbm_unmap_sections(bm.get());
+    return MBM_INV_DESC;
   }
   status = _mbm_lock_tables(bm.get());
   if (!lib_rtl_is_success(status))  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Failed to lock tables for %s.",bm_name);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to lock tables of %s for %s.",bm_name,name);
+    //::fprintf(stdout,"Failed to lock tables for %s.",bm_name);
+    //::fflush(stdout);
     _mbm_unmap_sections(bm.get());
     _mbm_unlock_tables(bm.get());
     return MBM_INV_DESC;
   }
   USER* us = _mbm_ualloc (bm.get());  // find free user slot
   if (us == 0)  {
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Failed to allocate user slot of %s for %s.",bm_name,name);
+    //::fprintf(stdout,"Failed to allocate user slot for %s: %s.",bm_name,name);
+    //::fflush(stdout);
     _mbm_unlock_tables(bm.get());
     errno = MBM_NO_FREE_US;
     return MBM_INV_DESC;
@@ -333,6 +339,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   bm->ctrl->i_users++;
 
   // Activate this user
+#define _WIN32 1
 #ifdef _WIN32
   ::sprintf(us->wes_flag, "bm_%s_WES_%d_%d", bm_name, us->uid, us->pid);
   ::sprintf(us->wev_flag, "bm_%s_WEV_%d_%d", bm_name, us->uid, us->pid);
@@ -489,8 +496,9 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype,
   if ( us )  {
     TriggerMask* mask = (TriggerMask*)trmask;
     if (us->c_state == S_wevent)    {
-      lib_rtl_signal_message(0,"Too many calls to mbm_get_event_a");
-      return MBM_NORMAL;
+      ::lib_rtl_signal_message(0,"Too many calls to mbm_get_event_a");
+      //return MBM_NORMAL;
+      return MBM_NO_EVENT;
     }
     if (us->held_eid != EVTID_NONE)    {
       _mbm_rel_event(bm, us);
@@ -512,7 +520,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype,
       us->c_astpar      = astpar;
       us->reason        = BM_K_INT_EVENT;
       us->get_wakeups++;
-      lib_rtl_set_event(bm->WEV_event_flag);
+      ::lib_rtl_set_event(bm->WEV_event_flag);
       return MBM_NORMAL;
     }
     // add wait event queue
@@ -853,8 +861,9 @@ int _mbm_get_ev(BMID bm, USER* u)  {
 
 // add user in wait_event queue
 int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, 
-     int part_id, RTL_ast_t astadd, void* astpar)  {
-  static int calls = 0;
+		 int part_id, RTL_ast_t astadd, void* astpar)  
+{
+  static int calls  = 0;
   us->c_state       = S_wevent;
   us->c_partid      = part_id;
   us->we_ptr_add    = ptr;
@@ -875,7 +884,7 @@ int _mbm_del_wev (BMID /* bm */, USER* u) {
   static int calls = 0;
   if ( u->c_state != S_wevent )  {
     lib_rtl_signal_message(0,"INCONSISTENCY: Delete user from WEV queue "
-                            "without state S_wevent");
+			   "without state S_wevent");
   }
   _mbm_printf("WEV DEL> %d\n",calls++);
   u->c_state = S_wevent_ast_queued;
@@ -1844,51 +1853,61 @@ int _mbm_delete_lock(BMID bm)    {
 int _mbm_map_sections(BMID bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;
-  sprintf(text, "bm_ctrl_%s", bm->bm_name);
+  ::sprintf(text, "bm_ctrl_%s", bm->bm_name);
   int len, status  = ::lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
                            bm_name,status);
+    //::fprintf(stdout,"Error mapping control section for %s.Status=%d",bm_name,status);
+    //::fflush(stdout);
     return MBM_ERROR;
   }
   bm->ctrl = (CONTROL*)bm->ctrl_add->address;
-  sprintf(text, "bm_event_%s",  bm_name);
+  ::sprintf(text, "bm_event_%s",  bm_name);
   len = sizeof(EVENTDesc)+(bm->ctrl->p_emax-1)*sizeof(EVENT);
   status  = ::lib_rtl_map_section(text, len, &bm->event_add);
   if (!lib_rtl_is_success(status))  {
-    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
-                           bm_name,status);
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
+			     bm_name,status);
+    //::fprintf(stdout,"Error mapping event section for %s.Status=%d",bm_name,status);
+    //::fflush(stdout);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
   bm->evDesc = (EVENTDesc*)bm->event_add->address;
   bm->event  = &bm->evDesc->events[0];
-  sprintf(text, "bm_user_%s",   bm_name);
+  ::sprintf(text, "bm_user_%s",   bm_name);
   len = sizeof(USERDesc)+(bm->ctrl->p_umax-1)*sizeof(USER);
   status  = ::lib_rtl_map_section(text, len, &bm->user_add);
   if (!lib_rtl_is_success(status))  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
-                           bm_name,status);
+			     bm_name,status);
+    //::fprintf(stdout,"Error mapping user section for %s.Status=%d",bm_name,status);
+    //::fflush(stdout);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
   bm->usDesc = (USERDesc*)bm->user_add->address;
   bm->user   = &bm->usDesc->users[0];
-  sprintf(text, "bm_bitmap_%s", bm_name);
+  ::sprintf(text, "bm_bitmap_%s", bm_name);
   len = bm->ctrl->bm_size>>3;
   status  = ::lib_rtl_map_section(text, len, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
-                           bm_name,status);
+			     bm_name,status);
+    //::fprintf(stdout,"Error mapping bit-map section for %s.Status=%d",bm_name,status);
+    //::fflush(stdout);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
   bm->bitmap = (char*)bm->bitm_add->address;
-  sprintf(text, "bm_buffer_%s", bm_name);
+  ::sprintf(text, "bm_buffer_%s", bm_name);
   status  = ::lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
   if (!lib_rtl_is_success(status))  {
     ::lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for %s. Status=%d",
-                           bm_name,status);
+			     bm_name,status);
+    //::fprintf(stdout,"Error mapping buffer section for %s.Status=%d",bm_name,status);
+    //::fflush(stdout);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
