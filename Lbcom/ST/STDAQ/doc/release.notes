@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r8 2008-07-02 =======================
 ! 2008-07-01 M Needham
   - Move check of validity of channel id in decoding
   - Check is now made by checking readout map makes sense compared to geometry
@@ -34,8 +35,7 @@
  - Improve decoding. Print out how many banks are decoded 
    correctly, how many are skipped, and how many are lost. 
    
-
-=============================== STDAQ v3r7 2008-06-04 =======================
+!=============================== STDAQ v3r7 2008-06-04 =======================
 ! 2008-06-03 M Needham
  - Use registerConditions from GaudiTool base class in readout tool
 
