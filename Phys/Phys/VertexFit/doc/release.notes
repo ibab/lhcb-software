@@ -1,8 +1,19 @@
-! $Id: release.notes,v 1.138 2008-05-30 17:44:29 pkoppenb Exp $
+! $Id: release.notes,v 1.139 2008-07-02 13:27:52 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-07-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r2
+ * These changes need Phys/DaVinciKernel v6r15 or hiigher.
+ - src/AdaptivePVReFitter.cpp
+ - src/AdaptivePVReFitter.h
+ - src/PVReFitter.cpp
+ - src/PVReFitter.h
+  . Make all methods const. 
+  . Make first argument of IPVReFitter::remove a const LHCb::Particle*
 
 ! 2008-05-30 - Patrick Koppenburg
  - TrgVertexFitter : Check StatusCodes
