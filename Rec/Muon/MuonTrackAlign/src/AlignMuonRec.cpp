@@ -1,6 +1,6 @@
 ////////// Brunel v32r7 ///////////////
 
-// $Id: AlignMuonRec.cpp,v 1.6 2008-06-30 17:20:28 spozzi Exp $
+// $Id: AlignMuonRec.cpp,v 1.7 2008-07-02 09:16:26 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -606,7 +606,6 @@ StatusCode AlignMuonRec::detectClone()
   
   std::vector<AlignMuonTrack>::iterator itMuonTrackFirst;
   std::vector<AlignMuonTrack>::iterator itMuonTrackSecond;
-  bool sameM2, sameM3,sameM4, sameM5;
   bool sameM[5];
   for(itMuonTrackFirst=m_muonTracks.begin(); itMuonTrackFirst<m_muonTracks.end(); itMuonTrackFirst++){
     for(itMuonTrackSecond=itMuonTrackFirst+1; itMuonTrackSecond<m_muonTracks.end(); itMuonTrackSecond++){
