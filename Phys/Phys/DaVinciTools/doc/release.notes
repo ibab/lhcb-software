@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.331 2008-06-26 13:54:41 jpalac Exp $
+! $Id: release.notes,v 1.332 2008-07-02 10:46:40 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-07-02 - Patrick Koppenburg
+ - CombienParticles : some more printout
 
 ! 2008-06-26 - Juan PALACIOS
  - cmt/requirements

@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.16 2008-05-05 11:47:09 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.17 2008-07-02 10:46:40 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -363,6 +363,11 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   // get the particles from the Desktop
   const LHCb::Particle::ConstVector& particles = desktop()->particles () ;
+  if (msgLevel(MSG::VERBOSE)){
+    for ( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); i!=particles.end();++i)
+      verbose() << "Input :  " << (*i)->key() << " " << (*i)->particleID().pid() << " " 
+                << (*i)->momentum() << endmsg ;
+  }
   
   // (pre)select all daughters:
   Selected daughters ;
@@ -372,9 +377,14 @@ StatusCode CombineParticles::execute    ()  // standard execution
       ( idau->m_name       , 
         particles.begin () , 
         particles.end   () , 
-        LoKi::Particles::Identifier() == idau->m_pid && idau->m_cut  ) ; 
+        LoKi::Particles::Identifier() == idau->m_pid && idau->m_cut  ) ;
     // some statistics:
     counter( "# " + r.name () ) += r.size() ;
+    if (msgLevel(MSG::VERBOSE)){
+      for ( Selected::Range::const_iterator i = r.begin(); i!=r.end();++i)
+        verbose() << "Select: " << (*i)->key() << " " << (*i)->particleID().pid() << " "
+                  << (*i)->momentum() << endmsg ;
+    }
     // make plots ? 
     if ( 0 != m_daughtersPlots ) 
     {
@@ -418,11 +428,23 @@ StatusCode CombineParticles::execute    ()  // standard execution
 
       loop.current ( combination.begin() ) ;
 
-      if (checkOverlap()->foundOverlap(combination)) continue ;
+      if (msgLevel(MSG::VERBOSE)){
+        for ( LHCb::Particle::ConstVector::const_iterator i = combination.begin(); i!=combination.end();++i)
+          verbose() << "New Com: " << (*i)->key() << " " << (*i)->particleID().pid() << " "
+                    << (*i)->momentum() << endmsg ; 
+      }
+      if (checkOverlap()->foundOverlap(combination)) {
+        if (msgLevel(MSG::VERBOSE)) verbose() << "    Overlap!" << endmsg ;
+        continue ;
+      } 
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    No Overlap" << endmsg ;
 
       // here we have the combination and can apply the cut:
       
-      if ( !m_acut ( combination ) )  { continue ; }               // CONTINUE      
+      if ( !m_acut ( combination ) )  { 
+        if (msgLevel(MSG::VERBOSE)) verbose() << "    Failed Cut!" << endmsg ;
+        continue ; }               // CONTINUE      
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    Good combination" << endmsg ;
       
       // here we can create the particle (and the vertex)
       
@@ -437,6 +459,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
         continue ;                                                 // CONTINUE 
       }
       
+      if (msgLevel(MSG::VERBOSE)) verbose() << "    Passed fit" << endmsg ;
       if ( 0 != m_combinationPlots ) 
       {
         StatusCode sc = m_combinationPlots->fillPlots ( &mother ) ;
