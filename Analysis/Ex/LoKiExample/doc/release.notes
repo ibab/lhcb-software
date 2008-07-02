@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.30 2008-06-25 17:31:26 ibelyaev Exp $ 
+! $Id: release.notes,v 1.31 2008-07-02 14:18:53 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.30 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.31 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-02 - Vanya BELYAEV
+ - src/LoKi_IPCheck.cpp
+   options/LoKi_IPCheck.py 
+   options/IP.py 
+
+     new example whcih allows to test "in-plane" and "out-of-plane"
+     impact parameters 
+
+
 
 ! 2008-06-25 - Vanya BELYAEV
 
