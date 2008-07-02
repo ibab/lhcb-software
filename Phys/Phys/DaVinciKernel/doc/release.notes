@@ -3,6 +3,13 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-07-02 - Juan PALACIOS
+ - Kernel/IPVReFitter.h
+  . Make all methods const.
+  . Make first argument of IPVReFitter::remove a const LHCb::Particle*
+ - cmt/requirements
+  . Increase version to v6r15
+
 !======================== DaVinciKernel v6r14 2008-06-03 ====================
 ! 2008-06-03 - Patrick Koppenburg for Tom Blake
  - New version on IP2VV interfaces adding methods for the transversity basis.
