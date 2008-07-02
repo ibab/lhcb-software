@@ -14,6 +14,7 @@ class TGTab;
 class TGCompositeFrame;
 class TGHorizontalFrame;
 class TGNumberEntry;
+class TGComboBox;
 
 class IntervalPicker : public TGTransientFrame
 {
@@ -26,6 +27,9 @@ public:
   // Slots
   void lastMinutesRadioButtonToggled(bool on);
   void timeIntervalRadioButtonToggled(bool on);
+  void lastRunRadioButtonToggled(bool on);
+  void lastFillRadioButtonToggled(bool on);
+  void runFillIntervalRadioButtonToggled(bool on);
   void nowButton();
   void ok();
   
@@ -60,6 +64,19 @@ private:
   TGLabel*            m_timeLabel;
   TGLabel*            m_dateLabel;
   TGRadioButton*      m_timeIntervalRadioButton;
+  TGRadioButton*      m_lastRunRadioButton;
+  TGLabel*            m_lastRunLabel;
+  TGNumberEntry*      m_lastRunNumberEntry;
+  TGRadioButton*      m_lastFillRadioButton;
+  TGNumberEntry*      m_lastFillNumberEntry;
+  TGLabel*            m_lastFillLabel;
+  TGRadioButton*      m_runFillIntervalRadioButton;
+  TGComboBox*         m_runFillIntervalComboBox;
+  TGNumberEntry*      m_runFillIntervalFromNumberEntry;
+  TGLabel*            m_runFillIntervalToLabel;
+  TGNumberEntry*      m_runFillIntervalToNumberEntry;
+  TGComboBox*         m_runFillStepSizeComboBox;
+  TGNumberEntry*      m_runFillStepSizeNumberEntry;
   TGCompositeFrame*   m_runFillTabCompositeFrame;
 
 ClassDef(IntervalPicker, 0) 

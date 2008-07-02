@@ -51,6 +51,6 @@ application presenter " $(PRESENTERROOT)/$(tag)/dict/*.cpp \
                                      DbRootHist.cpp HistogramIdentifier.cpp \
                                      ReferencePicker.cpp IntervalPicker.cpp \
                                      LoginDialog.cpp HistoPropDialog.cpp Archive.cpp \
-                                     PageSaveDialog.cpp \
+                                     RuinDB.cpp PageSaveDialog.cpp \
                                      PresenterMainFrame.cpp presenter.cpp "
 macro_append presenter_dependencies " cintBootstrap "
