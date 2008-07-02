@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.21 2008-07-02 19:32:02 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.22 2008-07-02 19:49:18 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -233,7 +233,10 @@ StatusCode HltTrackUpgradeTool::upgrade(std::vector<Track*>& itracks,
   std::vector<LHCb::Track*> tracks;
   for (std::vector<Track*>::iterator it = itracks.begin();
        it != itracks.end(); ++it) {
-    iupgrade(**it,tracks);
+    sc = iupgrade(**it,tracks);
+    if (sc.isFailure()) {
+        warning() << " failed to upgrade... " << endmsg;
+    }
     otracks.insert(otracks.end(),tracks.begin(),tracks.end());
   }
   if (m_orderByPt)
