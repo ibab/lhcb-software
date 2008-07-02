@@ -1,18 +1,14 @@
 # =============================================================================
 """ 
 @namespace PlotTools
+
 @brief 
-From disk to screen in 3 movements:
-	
+	From disk to screen in 3 movements
 	1) Define your plotting style
-				
 	2) Produce histograms/graphs from a Tree file with class PlotVar/PlotVar2d
-				
 	3) Display them with the plot() method
-
 	+ extra tools
-
-See PlotToolsExample() for examples on how to use this module.
+	See PlotToolsExample() for examples on how to use this module.
 
 @author Gabriel Guerrer - Gabriel.Guerrer@cern.ch
 @date 15/08/07
@@ -24,7 +20,7 @@ from ROOT import TGraph, TH1I, TH1F, TH1D
 from ROOT import TTree, TCut
 from ROOT import gROOT, gStyle, gDirectory
 from array import array
-from random import *
+import random
 
 #---------------------------------------------------
 # Dictionaries
@@ -237,7 +233,7 @@ class PlotVar:
 	Produce 1d histograms from a Tree branch. Conditions/cuts may be applied.
 	The correspondent Tree must be set wit setree() before any call
 	
-	The histogram is created with the () operator
+	The histogram is created with the () operator.
 	It's also possible to obtain an efficiency histogram with eff() method
 	 
 	Deals with under/overflows
@@ -286,7 +282,7 @@ class PlotVar:
 		t = ACTIVETREE
 		if checktree(t):
 			# create histogram
-			his = TH1D( self.name[0]+str(int(random()*10000)), self.name, self.nbins , self.lo, self.hi )
+			his = TH1D( self.name[0]+str(int(random.random()*10000)), self.name, self.nbins , self.lo, self.hi )
 			
 			#define cuts
 			cuts = sumcuts(cut, self.condition)
