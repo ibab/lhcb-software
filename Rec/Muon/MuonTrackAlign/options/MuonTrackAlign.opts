@@ -12,16 +12,21 @@ RecoMUON.OutputLevel = 5;
 AlignMuonRec.BField = true;
 AlignMuonRec.CloneKiller=true;
 AlignMuonRec.OutputLevel = 5;
+AlignMuonRec.MatchChisq   = 40.;
+AlignMuonRec.M1Station   = true;
+AlignMuonRec.Extrapolator.ApplyMultScattCorr = true;
+AlignMuonRec.Extrapolator.OutputLevel = 5;
 
 //===============================
 // To fill the ntuple add "ProcessPhase/Align" between  "ProcessPhase/Check" and  
-// "ProcessPhase/Output" in BrunelSequencer.Members in $BRUNLEOPTS/Brunel.opts and 
-// uncomment the following lines
+// "ProcessPhase/Output" in BrunelSequencer.Members in $BRUNLEOPTS/Brunel.opts,
+// add Align.DetectorList += {"Muon"}; after the end of "BrunelSequencer.Members"
+// and uncomment the following lines
 
-// AlignMuonSeq.Members += {"MuonRead" };
-// AlignMuonSeq.OutputLevel = 5;
-// MuonRead.MuonTracksName = "/Event/Rec/Muon/MuonsTrackForAlignment"; 
-// MuonRead.OutputLevel = 5;
+AlignMuonSeq.Members += {"MuonRead" };
+AlignMuonSeq.OutputLevel = 5;
+MuonRead.MuonTracksName = "/Event/Rec/Muon/MuonsTrackForAlignment"; 
+MuonRead.OutputLevel = 5;
 
 //===============================
 // To store the states after the track fit in the dst file substitue this line
@@ -33,7 +38,7 @@ AlignMuonRec.OutputLevel = 5;
 // MuonTrackToDST.StoreAllStates = true;
 // MuonTrackToDST.OutputLevel = 5;
 
-// and add "MuonTrackFitter" in the DstWriter.RequireAlgs
+// and add "MuonTrackFitter" in the DstWriter.RequireAlgs in $BRUNLEOPTS/Brunel.opts
 
 //============================================
 //This is needed to fit the Muon Tracks
