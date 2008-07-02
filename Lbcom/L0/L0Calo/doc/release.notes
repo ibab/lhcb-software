@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.104 2008-06-18 09:22:24 robbep Exp $
+! $Id: release.notes,v 1.105 2008-07-02 16:22:19 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r14 2008-07-02 ========================
 ! 2008-06-18 - Patrick Robbe
  - src/L0CaloCandidatesFromRawBank: skip candidates which are flagged
    as masked in the L0Calo TELL1
