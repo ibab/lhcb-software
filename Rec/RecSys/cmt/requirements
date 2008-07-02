@@ -13,31 +13,31 @@ use RecCheckers         v1r0p1  Rec   # Marco Cattaneo
 use RecUtils            v1r5    Rec   # Juan Palacios, Patrick Koppenburg
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v3r0p2  Calo  # Olivier Deschamps
-use CaloPIDs            v4r11   Calo  # Victor Egorychev, Vanya Belyaev
-use CaloReco            v4r12   Calo  # Olivier Deschamps
+use CaloMoniDst         v3r1    Calo  # Olivier Deschamps
+use CaloPIDs            v4r12   Calo  # Victor Egorychev, Vanya Belyaev
+use CaloReco            v4r13   Calo  # Olivier Deschamps
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
-use PatChecker          v3r2    Tr    # Olivier Callot, David Hutchcroft
-use PatFitParams        v3r1    Tr    # Olivier Callot
+use PatChecker          v3r3    Tr    # Olivier Callot, David Hutchcroft
+use PatFitParams        v3r2    Tr    # Olivier Callot
 use TrackAssociators    v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers       v4r0    Tr    # Eduardo Rodrigues
+use TrackCheckers       v4r1    Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r18   Tr    # Eduardo Rodrigues
-use TrackFitEvent       v3r15   Tr    # Eduardo Rodrigues
-use TrackFitter         v2r24   Tr    # Eduardo Rodrigues
+use TrackFitEvent       v3r16   Tr    # Eduardo Rodrigues
+use TrackFitter         v2r25   Tr    # Eduardo Rodrigues
 use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r17   Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r18   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackMonitors       v1r1    Tr    # Wouter Hulsbergen, Stephanie Menzemer
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackTools          v3r7    Tr    # Eduardo Rodrigues
+use TrackTools          v3r8    Tr    # Eduardo Rodrigues
 use TrackUtils          v1r20   Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TrackSys            v4r14   Tf    # Eduardo Rodrigues
 use NNTools             v1r2p1  Tr    # Adrian Perieanu
-use PatAlgorithms       v3r6    Tf    # Stephanie Hansmann-Menzemer
-use PatVelo             v3r6    Tf    # David Hutchcroft
+use PatAlgorithms       v3r7    Tf    # Stephanie Hansmann-Menzemer
+use PatVelo             v3r7    Tf    # David Hutchcroft
 use PatVeloTT           v3r1    Tf    # Mariusz Witek
 use TfTools             v1r5    Tf    # Stephanie Hansmann-Menzemer
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
@@ -45,13 +45,13 @@ use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
 use TsaAlgorithms       v3r3    Tf    # Matt Needham
 
 # Primary Vertex Finder
-use PatPV               v3r3    Tr   # Mariusz Witek
+use PatPV               v3r4    Tr   # Mariusz Witek
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker      v2r2    Muon  # Erica Polycarpo, Miriam Gandelman
-use MuonTrackAlign      v1r3    Muon  # Silvia Pozzi
+use MuonTrackAlign      v1r4    Muon  # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
@@ -61,19 +61,19 @@ use RichHLTSys          v3r3    Rich  # Chris Jones
 use RichLocalPID        v3r5    Rich  # Chris Jones
 use RichMarkovRingFinder v2r0   Rich  # Chris Jones
 use RichPIDMerge	v2r5    Rich  # Chris Jones
-use RichRecAlgorithms   v2r10   Rich  # Chris Jones
+use RichRecAlgorithms   v2r11   Rich  # Chris Jones
 use RichRecMCAlgorithms v1r1    Rich  # Chris Jones
 use RichRecMCTools      v2r19   Rich  # Chris Jones
-use RichRecMonitors     v2r18   Rich  # Chris Jones
+use RichRecMonitors     v2r19   Rich  # Chris Jones
 use RichRecPhotonTools  v1r4    Rich  # Chris Jones
-use RichRecQC           v2r19   Rich  # Chris Jones
-use RichRecStereoTools  v1r2    Rich  # Chris Jones
-use RichRecSys          v3r10   Rich  # Chris Jones
+use RichRecQC           v2r20   Rich  # Chris Jones
+use RichRecStereoTools  v1r3    Rich  # Chris Jones
+use RichRecSys          v3r11   Rich  # Chris Jones
 use RichRecTools        v4r4    Rich  # Chris Jones
 use RichRecTrackTools   v1r5    Rich  # Chris Jones
 
 # Global reco
-use GlobalReco          v6r16   Rec   # Chris Jones
+use GlobalReco          v6r17   Rec   # Chris Jones
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
