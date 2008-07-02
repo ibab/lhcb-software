@@ -74,9 +74,6 @@ PrepareL0MuonORMuonNoGlobSeq.Members = {
 };
 
 
-
-  "GaudiSequencer/PrepareL0MuonORMuonNoGlobSeq" , 
-
 PrepareL0MuonDecisionSeq.Members = {
   "HltL0Filter/Hlt1L0Muon",
   "HltL0MuonPrepare/L0MuonDecision"
