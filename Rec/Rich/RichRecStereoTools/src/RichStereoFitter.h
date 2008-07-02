@@ -17,6 +17,8 @@
 // from Gaudi
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // base classes
 #include "RichRecBase/RichRecToolBase.h"
@@ -37,14 +39,13 @@
 
 // Kernel
 #include "RichKernel/RichMap.h"
-//#include "Kernel/FPEGuard.h"
+#include "Kernel/FPEGuard.h"
 
 //Direct Root Math include
 #include "Math/GenVector/VectorUtil.h" // For various basic vector routines  (angle, etc.)
 
 //GSL math library
 #include "gsl/gsl_sf_gamma.h"
-//in order to look at eigenvalues (test when using track info's)
 #include "gsl/gsl_math.h"
 #include "gsl/gsl_eigen.h"
 #include "gsl/gsl_sf_erf.h"
@@ -52,6 +53,7 @@
 // boost
 #include "boost/numeric/conversion/bounds.hpp"
 #include "boost/limits.hpp"
+#include "boost/assign/list_of.hpp"
 
 namespace Rich
 {

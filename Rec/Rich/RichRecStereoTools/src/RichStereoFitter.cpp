@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.11 2008-07-02 09:35:38 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.12 2008-07-02 09:40:02 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -13,11 +13,6 @@
 
 // local
 #include "RichStereoFitter.h"
-
-// Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/PhysicalConstants.h"
-#include "boost/assign/list_of.hpp"
 
 // namespaces
 using namespace LHCb;
