@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Id: FMCMonListener.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FMCMonListener.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -28,7 +28,7 @@ using namespace ROMon;
 
 /// Standard constructor
 FMCMonListener::FMCMonListener(bool verbose) 
-  : RODimListener(verbose), m_type(MONITORED)
+  : RODimListener(verbose)
 {
 }
 
@@ -51,15 +51,13 @@ void FMCMonListener::addHandler(const std::string& node,const std::string& svc) 
   dim_lock();
   Clients::iterator i=m_clients.find(node);
   if ( i == m_clients.end() )  {
-    for(Match::const_iterator j=m_match.begin(); j!=m_match.end();++j) {
-      if ( ::str_match_wild(svc.c_str(), (*j).first.c_str()) )  {
-	Item* itm = Item::create<Descriptor>(this);
-	std::string nam = svc + "/" + (*j).second;
-	m_clients[node] = itm;
-	itm->id = ::dic_info_service((char*)nam.c_str(),m_type,0,0,0,infoHandler,(long)itm,0,0);
-	if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
-			       << nam << "@" << node << " id=" << itm->id << std::endl;
-      }
+    if ( ::str_match_wild(svc.c_str(),m_match.c_str()) )  {
+      Item* itm = Item::create<Descriptor>(this);
+      std::string nam = svc + "/" + m_item;
+      m_clients[node] = itm;
+      itm->id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)itm,0,0);
+      if ( m_verbose ) log() << "[FMCMonListener] Create DimInfo:" 
+			     << nam << "@" << node << " id=" << itm->id << std::endl;
     }
   }
   dim_unlock();

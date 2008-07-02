@@ -1,4 +1,4 @@
-// $Id: ROMonNodeCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
+// $Id: ROMonNodeCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.3 2008-06-25 22:51:50 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonNodeCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -59,8 +59,7 @@ int ROMonNodeCollector::monitor() {
 	Nodeset::Nodes& nodes = n->reset()->nodes;
 	Nodeset::Nodes::iterator it = nodes.reset();
 	const Clients& cl = m_info.clients();
-	::strncpy(n->name,RTL::nodeName().c_str(),sizeof(n->name));
-	n->name[sizeof(n->name)-1] = 0;
+	ro_get_node_name(n->name,sizeof(n->name));
 	n->type = Nodeset::TYPE;
 	if ( ((char*)it) > gbl.str+m_section_size ) {
 	  log() << "Global section memory too small.....exiting" << std::endl;

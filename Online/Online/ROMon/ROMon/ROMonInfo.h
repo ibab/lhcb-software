@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Id: ROMonInfo.h,v 1.2 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,12 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonInfo.h,v 1.1 2008-02-01 17:41:45 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMonInfo.h,v 1.2 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_ROMONINFO_H
 #define ROMON_ROMONINFO_H 1
 
 // C++ include files
 #include <string>
+#include <vector>
 
 /*
  *   ROMon namespace declaration
@@ -34,10 +35,11 @@ namespace ROMon {
    */
   class ROMonInfo  {
   protected:
+    typedef std::vector<RODimListener*> Servers;
     /// DIM info identifier
     unsigned int      m_info;
     /// Reference to parent/owner object
-    RODimListener*    m_server;
+    Servers           m_servers;
 
     /// Extract node/service name from DNS info
     void getServiceNode(char* s, std::string& svc, std::string& node)  const;
@@ -52,6 +54,8 @@ namespace ROMon {
 
     /// Standard constructor
     ROMonInfo(RODimListener* s);
+    /// Standard constructor
+    ROMonInfo(const Servers& s);
     /// Standard destructor
     virtual ~ROMonInfo();
   };

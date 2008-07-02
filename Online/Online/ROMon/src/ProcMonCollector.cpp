@@ -1,4 +1,4 @@
-// $Id: ProcMonCollector.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Id: ProcMonCollector.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -66,8 +66,7 @@ int ProcMonCollector::monitor() {
         ProcFarm::Nodes& nodes = f->reset()->nodes;
         const Clients& cl_ntasks = m_ntasks.clients();
         const Clients& cl_info = m_info.clients();
-        ::strncpy(f->name,RTL::nodeName().c_str(),sizeof(f->name));
-        f->name[sizeof(f->name)-1] = 0;
+	ro_get_node_name(f->name,sizeof(f->name));
         f->type = ProcFarm::TYPE;
         f->time = ::time(0);
         dim_lock();

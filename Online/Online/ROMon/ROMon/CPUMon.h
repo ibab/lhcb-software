@@ -1,4 +1,4 @@
-// $Id: CPUMon.h,v 1.5 2008-06-25 22:53:23 frankb Exp $
+// $Id: CPUMon.h,v 1.6 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.5 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMon.h,v 1.6 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_RUNDB_H
 #define ROMON_RUNDB_H 1
 
@@ -25,6 +25,8 @@
  *   ROMon namespace declaration
  */
 namespace ROMon {
+
+  void ro_get_node_name(char* name, size_t len);
 
   /**@class CPU CPUInfo.h ROMon/CPUInfo.h
    *

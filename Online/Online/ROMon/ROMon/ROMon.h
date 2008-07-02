@@ -1,4 +1,4 @@
-// $Id: ROMon.h,v 1.8 2008-06-05 18:40:00 frankb Exp $
+// $Id: ROMon.h,v 1.9 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.8 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/ROMon.h,v 1.9 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_ROMON_H
 #define ROMON_ROMON_H 1
 
@@ -28,6 +28,8 @@
  *   ROMon namespace declaration
  */
 namespace ROMon {
+
+  void ro_get_node_name(char* name, size_t len);
 
   /**@class MBMClient ROMon.h ROMon/ROMon.h
    *

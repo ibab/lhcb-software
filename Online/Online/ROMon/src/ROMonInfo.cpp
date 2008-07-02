@@ -1,4 +1,4 @@
-// $Id: ROMonInfo.cpp,v 1.2 2008-04-28 15:16:40 frankb Exp $
+// $Id: ROMonInfo.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.2 2008-04-28 15:16:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonInfo.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 
 // Framework include files
 #include "dic.hxx"
@@ -24,7 +24,14 @@
 using namespace ROMon;
 
 /// Standard constructor
-ROMonInfo::ROMonInfo(RODimListener* s) : m_server(s) {
+ROMonInfo::ROMonInfo(RODimListener* s) {
+  if ( s ) m_servers.push_back(s);
+  m_info = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
+}
+
+/// Standard constructor
+ROMonInfo::ROMonInfo(const Servers& s)  {
+  m_servers = s;
   m_info = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,infoHandler,(long)this,0,0);
 }
 
@@ -46,12 +53,14 @@ void ROMonInfo::getServiceNode(char* s, std::string& svc, std::string& node) con
 
 /// Add handler for a given message source
 void ROMonInfo::addHandler(const std::string& node, const std::string& svc) {
-  if ( m_server ) m_server->addHandler(node,svc);
+  for(Servers::iterator i=m_servers.begin(); i!=m_servers.end();++i)
+    (*i)->addHandler(node,svc);
 }
 
 /// Remove handler for a given message source
 void ROMonInfo::removeHandler(const std::string& node, const std::string& svc) {
-  if ( m_server ) m_server->removeHandler(node,svc);
+  for(Servers::iterator i=m_servers.begin(); i!=m_servers.end();++i)
+    (*i)->removeHandler(node,svc);
 }
 
 /// DimInfo overload to process messages

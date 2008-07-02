@@ -1,4 +1,4 @@
-// $Id: SubfarmDisplay.cpp,v 1.5 2008-06-24 15:13:19 frankb Exp $
+// $Id: SubfarmDisplay.cpp,v 1.6 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.5 2008-06-24 15:13:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/SubfarmDisplay.cpp,v 1.6 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -115,11 +115,11 @@ SubfarmDisplay::~SubfarmDisplay()  {
 void SubfarmDisplay::showNodes(const Nodeset& ns)  {
   MonitorDisplay* disp = m_nodes;
   char* p;
-  const char* fmt = " %-12s%5d %12d%6d%6d %12d%11d%6d%6d %12d%6d%6d %12d";
+  const char* fmt = " %-12s%5d %12d%6d%7d %12d%11d%6d%7d %12d%6d%7d %12d";
   int mep_tot[3] = {0,0,0}, evt_tot[3] = {0,0,0}, res_tot[3] = {0,0,0}, accept_tot=0, cons_tot=0, ntsk_tot=0;
 
-  disp->draw_line_reverse("                     --------- MEP --------   ------------- EVENT -------------   ------- RESULT -------");
-  disp->draw_line_bold(   " Node        Tasks     Produced Slots Space     Produced   Consumed Slots Space     Produced Slots Space     Accepted");
+  disp->draw_line_reverse("                     --------- MEP ---------   ------------- EVENT --------------   ------- RESULT --------");
+  disp->draw_line_bold(   " Node        Tasks     Produced Slots  Space     Produced   Consumed Slots  Space     Produced Slots  Space     Accepted");
 
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     int mep_info[3] = {0,0,0}, evt_info[3] = {0,0,0}, res_info[3] = {0,0,0}, out=0, consumed=0, ntsk=0;
@@ -146,7 +146,8 @@ void SubfarmDisplay::showNodes(const Nodeset& ns)  {
 	    }
 	    break;
 	  case MOORE_TASK:
-	    if(b==EVT_BUFFER)  {
+	    //  Normal  and        TAE event processing
+	    if(b==EVT_BUFFER || b==MEP_BUFFER)  {
 	      consumed += (*ic).events;
 	      cons_tot += (*ic).events;
 	    }
@@ -215,31 +216,32 @@ void SubfarmDisplay::showTasks(const Nodeset& ns) {
 	  ++p;
 	  switch(*p) {
 	  case SENDER_TASK:
-	    if ( b == RES_BUFFER || b== SND_BUFFER ) {
+	    if ( b==RES_BUFFER || b==SND_BUFFER ) {
 	      m_senders->draw_line_normal( " %-12s %9d%5d %3s        ",nam.c_str(),cl.events,c.i_events,sstat[size_t(cl.state)]);
 	    }
 	    break;
 	  case 'E':
-	    if ( b == MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
+	    if ( b==MEP_BUFFER && strncmp(p,"EvtHolder",9)==0) {
 	      // m_holders->draw_line_normal( " %-12s %9d        ",nam.c_str(),cl.events);
 	    }
-	    else if ( b == MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
+	    else if ( b==MEP_BUFFER && strncmp(p,"EvtProd",7)==0) {
 	      prod_name = nam;
 	      prod.in += cl.events;
 	      prod.st_in = cl.state;
 	    }
-	    else if ( b == EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
+	    else if ( b==EVT_BUFFER && strncmp(p,"EvtProd",7)==0) {
 	      prod_name = nam;
 	      prod.out += cl.events;
 	      prod.st_out = cl.state;
 	    }
 	    break;
 	  case MOORE_TASK:
-	    if ( b == EVT_BUFFER ) {
+	    //  Normal  and        TAE event processing
+	    if ( b==EVT_BUFFER || b==MEP_BUFFER )  {
 	      moores[nam].in += cl.events;
 	      moores[nam].st_in = cl.state;
 	    }
-	    else if ( b == RES_BUFFER || b == SND_BUFFER ) {
+	    else if ( b==RES_BUFFER || b==SND_BUFFER ) {
 	      moores[nam].out += cl.events;
 	      moores[nam].st_out = cl.state;
 	    }

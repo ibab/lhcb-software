@@ -7,6 +7,13 @@
 
 using namespace ROMon;
 
+void ROMon::ro_get_node_name(char* name, size_t len) {
+  ::strncpy(name,RTL::nodeName().c_str(),len);
+  char* p = ::strchr(name,'.');
+  if ( p ) *p = 0;
+  name[len] = 0;
+}
+
 MBMBuffer* MBMBuffer::reset() {
   ::memset(this,0,sizeof(MBMBuffer));  
   return this;

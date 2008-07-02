@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.3 2008-06-25 22:53:08 frankb Exp $
+// $Id: FarmDisplay.h,v 1.4 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.3 2008-06-25 22:53:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.4 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -250,7 +250,7 @@ namespace ROMon {
     /// Cursor position in sub display array
     size_t             m_posCursor;
     size_t             m_subPosCursor;
-
+    int                m_anchorX, m_anchorY;
     /// Keyboard rearm action
     static int key_rearm (unsigned int fac, void* param);
     /// Keyboard action

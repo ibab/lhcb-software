@@ -1,4 +1,4 @@
-// $Id: FMCMonListener.h,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Id: FMCMonListener.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FMCMonListener.h,v 1.2 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FMCMonListener.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_FMCMONLISTENER_H
 #define ROMON_FMCMONLISTENER_H 1
 
@@ -41,22 +41,22 @@ namespace ROMon {
       void release() { if ( data ) ::free(data); data = 0; }
     };
   protected:
-    typedef std::vector<std::pair<std::string,std::string> > Match;
     /// String matching of services
-    Match m_match;
-    int     m_type;
+    std::string m_match;
+    std::string m_item;
   public:
     /// Standard constructor
     FMCMonListener(bool verbose=false);
     /// Standard destructor
     virtual ~FMCMonListener();
-    /// Change monitoring type
-    void setType(int val)                 {  m_type = val;    }
-    /// Access monitoring type
-    int type() const                      {  return m_type;   }    
     /// Change service name matching string
-    void addMatch(const std::string& val, const std::string& item) 
-    {  m_match.push_back(std::pair<std::string,std::string>(val,item));  }
+    void setMatch(const std::string& val) {  m_match = val;    }
+    /// Access service name match
+    const std::string& match() const      {  return m_match;   }    
+    /// Change service name item string
+    void setItem(const std::string& val)  {  m_item = val;     }
+    /// Access service name item
+    const std::string& item() const       {  return m_item;    }
     /// Add handler for a given message source
     virtual void addHandler(const std::string& node,const std::string& svc);
     /// Remove handler for a given message source

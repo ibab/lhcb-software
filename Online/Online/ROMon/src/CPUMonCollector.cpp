@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.cpp,v 1.3 2008-06-25 22:53:23 frankb Exp $
+// $Id: CPUMonCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.3 2008-06-25 22:53:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUMonCollector.cpp,v 1.4 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -21,9 +21,9 @@
 #include "RTL/rtl.h"
 #include "RTL/Lock.h"
 #include "ROMon/CPUMon.h"
+#include "ROMon/ROMonInfo.h"
 #include "ROMon/CPUMonOstream.h"
 #include "ROMon/CPUMonCollector.h"
-#include "dic.hxx"
 
 #include "ROMonDefs.h"
 using namespace ROMon;
@@ -36,7 +36,7 @@ CPUMonCollector::CPUMonCollector(int argc, char** argv)
   RTL::CLI cli(argc, argv, CPUMonCollector::help);
   cli.getopt("match",3,match);
   m_verbose = true;
-  m_ncpu.setMatch(match+"/cpu/info");
+  m_ncpu.setMatch(match+"/cpu/stat");
   m_ncpu.setItem("cpuN");
   m_ncpu.setVerbose(m_verbose);
   m_info.setMatch(match+"/cpu/info");
@@ -48,10 +48,11 @@ CPUMonCollector::CPUMonCollector(int argc, char** argv)
   m_ncpu.setUpdateHandler(this);
   m_info.setUpdateHandler(this);
   m_stat.setUpdateHandler(this);
-  m_ncpu.setType(ONCE_ONLY);
-  m_ncpu.start();
-  m_info.start();
-  m_stat.start();
+  std::vector<RODimListener*> servers;
+  servers.push_back(&m_ncpu);
+  servers.push_back(&m_info);
+  servers.push_back(&m_stat);
+  m_dns = new ROMonInfo(servers);
 }
 
 /// Help printout in case of -h /? or wrong arguments
@@ -73,9 +74,8 @@ int CPUMonCollector::monitor() {
 	CPUfarm::Nodes& nodes = f->reset()->nodes;
 	const Clients& cl_ncpu = m_ncpu.clients();
 	const Clients& cl_stat = m_stat.clients();
-	const Clients& cl_info = m_info.clients();
-	::strncpy(f->name,RTL::nodeName().c_str(),sizeof(f->name));
-	f->name[sizeof(f->name)-1] = 0;
+	//const Clients& cl_info = m_info.clients();
+	ro_get_node_name(f->name,sizeof(f->name));
 	f->type = CPUfarm::TYPE;
 	f->time = ::time(0);
 	dim_lock();
@@ -84,24 +84,28 @@ int CPUMonCollector::monitor() {
 	for(Clients::const_iterator ic = cl_ncpu.begin(); ic != cl_ncpu.end(); ++ic) {
 	  const std::string& node = (*ic).first;
 	  Clients::const_iterator is = cl_stat.find(node);
-	  Clients::const_iterator ii = cl_info.find(node);
-	  if ( is != cl_stat.end() && ii != cl_info.end() ) {
+	  //  Clients::const_iterator ii = cl_info.find(node);
+	  //  if ( is != cl_stat.end() && ii != cl_info.end() ) {
+	  if ( is != cl_stat.end() ) {
+	  {
 	    typedef FMCMonListener::Descriptor DSC;
-	    DSC* dsc_info = (*ii).second->data<DSC>();
+	    //DSC* dsc_info = (*ii).second->data<DSC>();
 	    DSC* dsc_stat = (*is).second->data<DSC>();
 	    const float* ds = (float*)dsc_stat->data;
-	    const char*  di = dsc_info->data;
+	    //const char*  di = dsc_info->data;
 	    if ( ((char*)it) > gbl.str+m_section_size ) {
 	      log() << "Global section memory too small.....exiting" << std::endl;
 	      break;
 	    }
 	    ::strncpy((*it).name,node.c_str(),sizeof((*it).name));
 	    (*it).name[sizeof((*it).name)-1] = 0;
-	    ::strncpy((*it).family,di,sizeof((*it).family));
+	    ::strncpy((*it).family,"",sizeof((*it).family));
+	    //::strncpy((*it).family,di,sizeof((*it).family));
 	    (*it).family[sizeof((*it).family)-1] = 0;
 	    (*it).ctxtRate = ds[0];
 	    (*it).time     = dsc_stat->time;
-	    (*it).millitm  = dsc_info->millitm;
+	    (*it).millitm  = 0; //dsc_info->millitm;
+	    /*
 	    if ( (*ic).second->data<DSC>()->data ) {
 	      int ncpu = *(int*)(*ic).second->data<DSC>()->data;
 	      if ( ncpu < 64 ) { // Must be reasonable
@@ -129,6 +133,7 @@ int CPUMonCollector::monitor() {
 		  corIt = (*it).cores.add(corIt);
 		}
 	      }
+	    */
 	    }
 	    it = nodes.add(it);
 	  }

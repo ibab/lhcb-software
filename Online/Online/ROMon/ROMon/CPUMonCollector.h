@@ -1,4 +1,4 @@
-// $Id: CPUMonCollector.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Id: CPUMonCollector.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonCollector.h,v 1.2 2008-04-21 17:36:02 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/CPUMonCollector.h,v 1.3 2008-07-02 14:55:09 frankb Exp $
 #ifndef ROMON_CPUMONCOLLECTOR_H
 #define ROMON_CPUMONCOLLECTOR_H 1
 
@@ -36,6 +36,7 @@ namespace ROMon {
     FMCMonListener m_ncpu;
     FMCMonListener m_info;
     FMCMonListener m_stat;
+    ROMonInfo*     m_dns;
     bool           m_needUpdate;
   public:
     /// Standard constructor

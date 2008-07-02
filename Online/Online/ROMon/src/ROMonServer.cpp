@@ -1,4 +1,4 @@
-// $Id: ROMonServer.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
+// $Id: ROMonServer.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.2 2008-03-05 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonServer.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
 
 // C++ include files
 #include "sys/timeb.h"
@@ -46,8 +46,7 @@ int ROMonServer::handle(void* buff, size_t /* len */)  {
   n->reset();
   n->time = tm.time;
   n->millitm = tm.millitm;
-  ::strncpy(n->name,RTL::nodeName().c_str(),sizeof(n->name));
-  n->name[sizeof(n->name)-1] = 0;
+  ro_get_node_name(n->name,sizeof(n->name));
   Node::Buffers* b = n->buffers();
   Node::Buffers::iterator mbm = b->reset();
 
