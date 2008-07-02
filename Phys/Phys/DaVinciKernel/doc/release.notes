@@ -3,6 +3,7 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v6r15 2008-07-02 ====================
 ! 2008-07-02 - Juan PALACIOS
  - Kernel/IPVReFitter.h
   . Make all methods const.
