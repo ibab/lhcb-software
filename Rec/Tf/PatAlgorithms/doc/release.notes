@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r7 2008-07-02 ====================
 ! 2008-06-29 - Manuel Tobias Schiller
  - PatSeedingTool:
    - tuning for new field map, now used per default
