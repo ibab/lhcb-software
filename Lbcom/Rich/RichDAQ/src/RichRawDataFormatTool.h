@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.30 2008-06-12 14:02:42 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.31 2008-07-02 12:28:18 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -283,6 +283,10 @@ namespace Rich
 
       /// Flag to turn on/off decoding of each RICH detector (default is both on)
       std::vector<bool> m_richIsActive;
+
+      /** Flag to turn on/off the purging off data from HPDs that fail the data 
+       *  integrity checks (default is on) */
+      bool m_purgeHPDsFailIntegrity;
 
     };
 

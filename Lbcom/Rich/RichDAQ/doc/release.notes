@@ -4,16 +4,20 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-07-02 - Chris Jones
+ - Purge the hits from the decoded data structure for HPDs which fail the 
+   data integrity checks.
+
 !========================== RichDAQ v3r17 2008-07-02 =========================
 ! 2008-06-11 - Chris Jones
- - Add protection against invalid HPDIDs, which are now possible given the fact
-   that the decoded data includes suppressed HPDs and those for which the
+ - Add protection against invalid HPD IDs, which are now possible given the 
+   fact that the decoded data includes suppressed HPDs and those for which the
    L0ID -> RichSmartID database lookup failed.
  - Add new option to completely disable decoding in a either RICH detector.
 
 ! 2008-06-10 - Chris Jones
- - Suppress over excess error messages in the case of inhibited or invalid HPDs.
-   An option now exists to turn these back on for debugging etc.
+ - Suppress over excessive error messages in the case of inhibited or invalid 
+   HPDs. An option now exists to turn these back on for debugging etc.
 
 !========================== RichDAQ v3r16 2008-06-04 =========================
 ! 2008-06-03 - Chris Jones

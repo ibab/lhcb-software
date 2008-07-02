@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.70 2008-06-12 14:02:42 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.71 2008-07-02 12:28:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -66,6 +66,7 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
   declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false );
   declareProperty( "VerboseErrors",      m_verboseErrors      = false );
   declareProperty( "ActiveRICHes",       m_richIsActive               );
+  declareProperty( "PurgeHPDsFailIntegrityTest", m_purgeHPDsFailIntegrity = true );
 }
 
 // Destructor
@@ -877,6 +878,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                   mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
                        << " data block failed integrity check";
                   Error( mess.str() );
+                  if ( m_purgeHPDsFailIntegrity ) { newids.clear(); }
                 }
 
                 if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )
@@ -1035,7 +1037,6 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
 
       // Do data integrity checks
       const bool OK = ( !m_checkDataIntegrity || hpdBank->checkDataIntegrity(newids,warning()) );
-
       if ( !OK || msgLevel(MSG::VERBOSE) )
       {
         // printout decoded RichSmartIDs
@@ -1046,6 +1047,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
           verbose() << "   " << *iID << endreq;
         }
       }
+      if ( !OK && m_purgeHPDsFailIntegrity ) { newids.clear(); }
 
       // is data OK
       if ( OK )
