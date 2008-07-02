@@ -4,6 +4,7 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v2r19 2008-07-02 =====================
 ! 2008-06-11 - Chris Jones
  - Add protection against invalid HPD IDs in the decoded data.
 
