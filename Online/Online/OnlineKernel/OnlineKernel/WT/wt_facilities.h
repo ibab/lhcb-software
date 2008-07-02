@@ -70,4 +70,5 @@
 #define WT_FACILITY_FBSR         100    /* Fastbus Service Requests   */
 #define WT_FACILITY_DIM_EVENT    110    /* Event ready from DIM       */
 #define WT_FACILITY_PVSS         111    /* Event from PVSS            */
+#define WT_FACILITY_SCR_MOUSE    112    /* Mouse events from SCR      */
 #endif /* WT_WT_FACILITIES_H  */
