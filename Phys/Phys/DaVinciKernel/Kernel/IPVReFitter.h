@@ -26,14 +26,10 @@ public:
 
  
   /// refit PV
-  virtual StatusCode reFit(LHCb::VertexBase* ) = 0;
+  virtual StatusCode reFit(LHCb::VertexBase*) const = 0;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(LHCb::Particle*,  LHCb::VertexBase*) = 0;
- 
-protected:
-
-private:
+  virtual StatusCode remove(const LHCb::Particle*,  LHCb::VertexBase*) const = 0;
 
 };
 #endif // KERNEL_IPVREFITTER_H
