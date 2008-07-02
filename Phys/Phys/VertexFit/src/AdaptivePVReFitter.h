@@ -31,24 +31,27 @@ class AdaptivePVReFitter : public GaudiTool, virtual public IPVReFitter {
 public: 
   /// Standard constructor
   AdaptivePVReFitter( const std::string& type, 
-              const std::string& name,
-              const IInterface* parent);
+                      const std::string& name,
+                      const IInterface* parent);
   
   StatusCode initialize();
 
   /// refit PV
-  virtual StatusCode reFit(LHCb::VertexBase* );
+  virtual StatusCode reFit(LHCb::VertexBase* PV) const;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(LHCb::Particle*,  LHCb::VertexBase*);
+  virtual StatusCode remove(const LHCb::Particle* part,  
+                            LHCb::VertexBase* PV) const;
 
   virtual ~AdaptivePVReFitter( ); ///< Destructor
 
 private:
 
-  StatusCode fitPV(LHCb::RecVertex*, std::vector<PVFitTrack> &);
-  void getFinalTracks(LHCb::Particle*, LHCb::Track::ConstVector &);
-  double getNewWeight(double&, int&);
+  StatusCode fitPV(LHCb::RecVertex* PV, 
+                   std::vector<PVFitTrack>& fittracks) const;
+  void getFinalTracks(const LHCb::Particle*, 
+                      LHCb::Track::ConstVector& tracks) const;
+  double getNewWeight(double&, int&) const;
 
 private:
       

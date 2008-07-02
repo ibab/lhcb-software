@@ -27,8 +27,8 @@ DECLARE_TOOL_FACTORY(AdaptivePVReFitter);
 // Standard constructor, initializes variables
 //=============================================================================
 AdaptivePVReFitter::AdaptivePVReFitter( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                                        const std::string& name,
+                                        const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IPVReFitter>(this);
@@ -73,7 +73,7 @@ StatusCode AdaptivePVReFitter::initialize(){
 //=============================================================================
 // refit PV
 //=============================================================================
-StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) {
+StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   debug() <<"Now reFit PV"<< endreq;
 
@@ -106,7 +106,8 @@ StatusCode AdaptivePVReFitter::reFit(LHCb::VertexBase* PV) {
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
 //=============================================================================
-StatusCode AdaptivePVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV) {
+StatusCode AdaptivePVReFitter::remove(const LHCb::Particle* part,  
+                                      LHCb::VertexBase* PV) const {
 
   debug() <<"Now remove and reFit "<< endreq;
 
@@ -148,7 +149,7 @@ StatusCode AdaptivePVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* P
 // fit PV from a vector of tracks
 //=============================================================================
 StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV, 
-                             std::vector<PVFitTrack>& fittracks) {
+                                     std::vector<PVFitTrack>& fittracks) const {
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
@@ -460,8 +461,8 @@ StatusCode AdaptivePVReFitter::fitPV(LHCb::RecVertex* PV,
 //=============================================================================
 // get final tracks of a particle
 //=============================================================================
-void AdaptivePVReFitter::getFinalTracks(LHCb::Particle* part, 
-                                std::vector<const LHCb::Track*> & tracks)
+void AdaptivePVReFitter::getFinalTracks(const LHCb::Particle* part,
+                                        LHCb::Track::ConstVector& tracks) const
 {
   const LHCb::ProtoParticle*   proto  = part->proto() ;
 
@@ -482,7 +483,7 @@ void AdaptivePVReFitter::getFinalTracks(LHCb::Particle* part,
 // compute new weight
 //=============================================================================
 
-double AdaptivePVReFitter::getNewWeight(double& x, int& i)
+double AdaptivePVReFitter::getNewWeight(double& x, int& i) const
 {
   double T;
   int tsize = m_temperatures.size();

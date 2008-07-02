@@ -36,23 +36,26 @@ public:
   StatusCode initialize();
 
   /// refit PV
-  virtual StatusCode reFit(LHCb::VertexBase* );
+  virtual StatusCode reFit(LHCb::VertexBase* PV) const ;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(LHCb::Particle*,  LHCb::VertexBase*);
+  virtual StatusCode remove(const LHCb::Particle* part,  
+                            LHCb::VertexBase* PV) const ;
 
   virtual ~PVReFitter( ); ///< Destructor
 
 private:
   
-  StatusCode fitPV(LHCb::RecVertex*, LHCb::Track::Vector & );
-  void getFinalTracks(LHCb::Particle*, LHCb::Track::ConstVector &);
+  StatusCode fitPV(LHCb::RecVertex* PV, 
+                   LHCb::Track::Vector& tracks) const;
+  void getFinalTracks(const LHCb::Particle* part, 
+                      LHCb::Track::ConstVector& tracks) const;
   StatusCode seedPV(LHCb::RecVertex*,
                     LHCb::Track*, 
-                    LHCb::Track* );
+                    LHCb::Track* ) const;
   StatusCode  addTr(LHCb::RecVertex*,
-                    LHCb::Track* );
-  LHCb::State stateAtFirstMeas(LHCb::Track*);
+                    LHCb::Track* ) const;
+  LHCb::State stateAtFirstMeas(LHCb::Track*) const;
 
 private:
       

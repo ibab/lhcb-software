@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.10 2008-03-31 15:24:32 xieyu Exp $
+// $Id: PVReFitter.cpp,v 1.11 2008-07-02 13:27:24 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -28,8 +28,8 @@ DECLARE_TOOL_FACTORY(PVReFitter);
 // Standard constructor, initializes variables
 //=============================================================================
 PVReFitter::PVReFitter( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                        const std::string& name,
+                        const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IPVReFitter>(this);
@@ -65,7 +65,7 @@ StatusCode PVReFitter::initialize(){
 //=============================================================================
 // refit PV
 //=============================================================================
-StatusCode PVReFitter::reFit(LHCb::VertexBase* PV) {
+StatusCode PVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   debug() <<"Now reFit PV"<< endreq;
 
@@ -100,7 +100,8 @@ StatusCode PVReFitter::reFit(LHCb::VertexBase* PV) {
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
 //=============================================================================
-StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV) {
+StatusCode PVReFitter::remove(const LHCb::Particle* part,  
+                              LHCb::VertexBase* PV) const {
 
   debug() <<"Now remove and reFit "<< endreq;
 
@@ -143,7 +144,7 @@ StatusCode PVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV) {
 // fit PV from a vector of tracks
 //=============================================================================
 StatusCode PVReFitter::fitPV(LHCb::RecVertex* PV, 
-                             std::vector<LHCb::Track*> & tracks) {
+                             LHCb::Track::Vector& tracks) const {
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
@@ -188,8 +189,8 @@ StatusCode PVReFitter::fitPV(LHCb::RecVertex* PV,
 //=============================================================================
 // get final tracks of a particle
 //=============================================================================
-void PVReFitter::getFinalTracks(LHCb::Particle* part, 
-                                std::vector<const LHCb::Track*> & tracks)
+void PVReFitter::getFinalTracks(const LHCb::Particle* part, 
+                                LHCb::Track::ConstVector& tracks) const
 {
   const LHCb::ProtoParticle*   proto  = part->proto() ;
 
@@ -212,7 +213,7 @@ void PVReFitter::getFinalTracks(LHCb::Particle* part,
 
 StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
                               LHCb::Track* tr1,
-                              LHCb::Track* tr2)
+                              LHCb::Track* tr2) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -469,7 +470,7 @@ StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
 //=============================================================================
 
 StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
-                              LHCb::Track* tr)
+                              LHCb::Track* tr) const
 {
   StatusCode sc= StatusCode::SUCCESS;
 
@@ -621,7 +622,7 @@ StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
 //=============================================================================
 // state at first measurement
 //=============================================================================
-LHCb::State PVReFitter::stateAtFirstMeas(LHCb::Track* tr)
+LHCb::State PVReFitter::stateAtFirstMeas(LHCb::Track* tr) const
 {
 
   double veloFirstZ;
