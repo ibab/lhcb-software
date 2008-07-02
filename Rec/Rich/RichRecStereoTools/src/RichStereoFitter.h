@@ -1,9 +1,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichStereoFitter.h
  *
- *  Header file for tool : RichStereoFitter
+ *  Header file for tool : Rich::Rec::StereoFitter
  *
  *  CVS Log :-
+ *  $Id: RichStereoFitter.h,v 1.10 2008-07-02 09:43:23 jonrob Exp $
  *
  *  @author Luigi Delbuono  delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -11,8 +12,8 @@
 //-----------------------------------------------------------------------------
 
 // RichStereoFitter
-#ifndef RICHRECTOOLS_RICHSTEREOFITTER_H
-#define RICHRECTOOLS_RICHSTEREOFITTER_H 1
+#ifndef RICHRECSTEREOTOOLS_RICHSTEREOFITTER_H
+#define RICHRECSTEREOTOOLS_RICHSTEREOFITTER_H 1
 
 // from Gaudi
 #include "GaudiKernel/ParticleProperty.h"
@@ -269,4 +270,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECTOOLS_RICHSTEREOFITTER_H
+#endif // RICHRECSTEREOTOOLS_RICHSTEREOFITTER_H
