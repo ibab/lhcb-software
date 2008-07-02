@@ -4,6 +4,9 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-2 - Jose A. Hernando
+   - hltalleymonitor.py replaces hlttime.py to do the internal monitoring of the alley
+
 ! 2008-7-1 - Gabriel Guerrer
   - replaced PlotTools and PyTree by propper commented and exemplified files. PyTree also had
     some internal changes which made it's use more simple
