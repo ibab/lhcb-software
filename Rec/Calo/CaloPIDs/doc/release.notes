@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.57 2008-06-30 15:37:34 odescham Exp $ 
+! $Id: release.notes,v 1.58 2008-07-02 13:30:14 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================== CaloPIDs v4r12 2008-07-02 =========================
 ! 2008-06-27 - Olivier Deschamps
  - CaloTrackMatchAlg and inCaloAcceptanceAlg : protect against empty track container
  - use default HLT locations for the HLT context in all algorithm/tool
