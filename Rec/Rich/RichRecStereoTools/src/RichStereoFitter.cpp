@@ -4,7 +4,7 @@
  *  Implementation file for tool : RichStereoFitter
  *
  *  CVS Log :-
- *  $Id: RichStereoFitter.cpp,v 1.10 2008-06-24 11:24:25 jonrob Exp $
+ *  $Id: RichStereoFitter.cpp,v 1.11 2008-07-02 09:35:38 jonrob Exp $
  *
  *  @author Luigi Delbuono   delbuono@in2p3.fr
  *  @date   27/06/2007
@@ -1034,7 +1034,7 @@ double StereoFitter::Proba(double chi2,double ndl) const
   static const double smallest = boost::numeric::bounds<float>::smallest();
 
   // CRJ : Need to protect against float point exceptions from GSL
-  //FPE::Guard guard(true);
+  FPE::Guard guard(true);
 
   // Call GSL
   gsl_sf_result result;
