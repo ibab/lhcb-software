@@ -4,6 +4,7 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r11 2008-07-02 ====================
 ! 2008-06-13 - Chris Jones
  - Add some new algorithms for trackless rings
   + Rich::Rec::TracklessRingFilterAlg : Filter rings using quality cuts
