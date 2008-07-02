@@ -70,7 +70,7 @@ use CaloInterfaces        v7r7   Calo    # Olivier Deschamps
 use CaloUtils             v8r1   Calo    # Olivier Deschamps
 use CondDBEntityResolver  v5r0   Tools   # Marco Clemencic
 use CondDBUI              v2r10  Tools   # Marco Clemencic
-use DaVinciKernel         v6r14  Phys    # Juan Palacios
+use DaVinciKernel         v6r15  Phys    # Juan Palacios
 use DaVinciMCKernel       v2r9   Phys    # Juan Palacios
 use HltInterfaces         v1r0   Kernel  # Patrick Koppenburg
 use LHCbAlgs              v2r19  Kernel  # Marco Cattaneo
