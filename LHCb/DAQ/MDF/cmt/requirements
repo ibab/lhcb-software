@@ -14,9 +14,10 @@ apply_pattern install_more_includes more=MDF
 library MDF *.cpp -import=DAQEvent -import=ROOT
 #
 macro_append MDF_shlibflags ' ' WIN32 ' $(DAQEvent_linkopts) '
+apply_pattern ld_library_path
 apply_pattern linker_library library=MDF
 apply_pattern generate_rootmap library=MDF
-apply_pattern ld_library_path
+apply_pattern generate_configurables library=MDF
 
 # define macro if someone needs to use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'
