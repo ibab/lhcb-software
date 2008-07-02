@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.138 2008-06-30 14:07:10 cattanem Exp $
+# $Id: release.notes,v 1.139 2008-07-02 12:43:03 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-07-02 - Marco Clemencic
+ - Introduced a work-around fro COOL bug #38422, which was preventing the usage
+   of local tags as overlays.
+ - Removed a left-over in the requirements file needed for some tests.
+   (It was breaking compilation on win32)
 
 !===================== Det/DetCond v12r0 2008-06-30 ==========================
 ! 2008-06-27 - Marco Clemencic
