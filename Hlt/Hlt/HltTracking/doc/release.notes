@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2008-07-02 - Gerhard Raven
+  - fix unchecked StatusCode
 
 ! 2008-06-27 - Jose A. Hernando
   - rename PatMatch to VeloT, and VeloT to VeloTDist in HltTrackMatch

@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.8 2008-06-27 16:34:08 hernando Exp $
+// $Id: HltTrackMatch.cpp,v 1.9 2008-07-02 19:15:23 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -64,7 +64,8 @@ StatusCode HltTrackMatch::initialize() {
   
   recoConfiguration();
   
-  setReco(m_matchName);
+  sc = setReco(m_matchName);
+  if ( sc.isFailure() ) return sc;
   
   saveConfiguration();
 
@@ -144,7 +145,6 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
           << endreq;
   
   m_tool = tool<ITrackMatch>(toolName,this);
-  Assert(m_tool," setReco() not able to create tool "+toolName);
 
   return StatusCode::SUCCESS;
 }
