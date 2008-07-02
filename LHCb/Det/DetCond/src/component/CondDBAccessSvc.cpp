@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.53 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.54 2008-07-02 12:42:29 marcocle Exp $
 // Include files
 #include <sstream>
 //#include <cstdlib>
@@ -26,6 +26,8 @@
 
 #include "CoralBase/AttributeList.h"
 #include "CoralBase/Exception.h"
+// FIXME: Needed because of COOL bug #38422
+#include "CoralBase/AttributeException.h"
 
 #include "DetCond/ICOOLConfSvc.h"
 
@@ -335,6 +337,8 @@ StatusCode CondDBAccessSvc::i_checkTag(const std::string &tag) const {
       try {
         m_rootFolderSet->resolveTag(tag);
       } catch (cool::NodeRelationNotFound) {
+        // to be ignored: it means that the tag exists, but somewhere else.
+      } catch (coral::AttributeException) { // FIXME: COOL bug #38422
         // to be ignored: it means that the tag exists, but somewhere else.
       }
       log << MSG::VERBOSE << "\"" << tag << "\" found: OK" << endmsg;
@@ -824,6 +828,10 @@ StatusCode CondDBAccessSvc::i_getObjectFromDB(const std::string &path, const coo
     //log << MSG::DEBUG << e << endmsg;
     return StatusCode::FAILURE;
   } catch (cool::NodeRelationNotFound) {
+    // to be ignored: it means that the tag exists, but it is not in the
+    // node '/'.
+    return StatusCode::FAILURE;
+  } catch (coral::AttributeException) { // FIXME: COOL bug #38422
     // to be ignored: it means that the tag exists, but it is not in the
     // node '/'.
     return StatusCode::FAILURE;
