@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r17 2008-07-02 =========================
 ! 2008-06-11 - Chris Jones
  - Add protection against invalid HPDIDs, which are now possible given the fact
    that the decoded data includes suppressed HPDs and those for which the
