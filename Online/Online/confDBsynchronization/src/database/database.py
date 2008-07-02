@@ -1,11 +1,11 @@
-from cdbutils import *
+#from cdbutils import subsystems
 from config import eDB_name, eDB_user, eDB_pass, dhcp_file, dhcp_flags
 from config import cDB_name, cDB_user, cDB_pass
 import cx_Oracle
+from confDBpython import CONFDB
 from utilities import getModuleType
 from utilities import getDetector
 from model.DHCP import DHCP
-from spare import Spare
 from model.system import System
 from model.Hugin import Hugin
 from model.Tell1 import Tell1
@@ -13,6 +13,48 @@ from model.UKL1 import UKL1
 from string import upper, lower, split, replace
 import wx
 from re import compile
+
+class Subsystem:
+    def __init__(self,sys,pat,rne,start,midfix=""):
+        self.ippatt = pat
+        self.system=sys
+        self.NetClass=rne
+        self.midfix=midfix
+        self.start=start
+
+CTRLsubnet="255.252.0.0"
+RNsubnet="255.255.255.0"
+systems=["","RICH2","HCAL","ECAL","L0MUON","TFC","L0CALO","TRG","PRS","MUON","MUON_A",
+"MUON_C","TT","VELO","VELO_A","VELO_C","OT","OT_A","OT_C","IT","TDET","PUS"]
+
+rich2 = Subsystem("RICH2","r2",1, 0)
+hcal = Subsystem("HCAL","hc",2, 0)
+ecal=Subsystem("ECAL","ec",3, 0)
+mutq = Subsystem("L0MUON","tmu",4, 0, "q")
+tfc = Subsystem("TFC", "tfc", 5, 0)
+tcal=Subsystem("L0CALO","tca",6, 0)
+trg=Subsystem("TRG", "trg", 7, 0)
+prs = Subsystem("PRS","ps",8, 0)
+muon_a=Subsystem("MUON_A","mu",9, 0, "a")
+muon_c=Subsystem("MUON_C","mu",9,0,"c")
+tt  = Subsystem("TT","tt",10,0)
+velo_a = Subsystem("VELO_A","ve",11,0,"a")
+velo_c = Subsystem("VELO_C","ve",11,50,"c")
+ot_a = Subsystem("OT_A","ot",12,0,"a")
+it = Subsystem("IT","it",13,0)
+rich1 = Subsystem("RICH1","r1",14,0)
+ot_c = Subsystem("OT_C","ot",16,0,"c")
+dum = Subsystem("DUM", "dum", 17,0)
+tdet = Subsystem("TDET","dum",20,0)
+pus = Subsystem("PUS","pu",21,0)
+
+subsystems = {"ecal" : ecal, "tcal" : tcal, "muon_a" : muon_a, "muon_c" : muon_c ,"ot_a" : ot_a,
+              "ot_c" : ot_c, "mutq" : mutq, "velo_a" : velo_a, "velo_c" : velo_c, "prs" : prs,
+              "tt" : tt, "rich1" : rich1, "rich2" : rich2, "hcal" : hcal, "it" : it,
+              "pus" : pus, "tdet" : tdet, "tfc" : tfc, "DUM" : dum, 
+              "UNKNOWN" : ecal, "UNKNOWN_DETECTOR" : ecal}
+from spare import Spare
+
 """discconnecting using confDBpython"""
 def disconnect(db):
     db.DBDeconnexion()
@@ -32,9 +74,15 @@ class DataBase:
     def getConnection(self):
         return self.connection
     """executing an insert or update query with following commit"""
-    def executeQuery(self, query):
+    def executeQuery(self, query, commit = True):
         cursor = self.connection.cursor()
         cursor.execute(query)
+        if commit:
+            cursor.execute("commit")
+        cursor.close()
+    """sends a commit"""
+    def commit(self, query):
+        cursor = self.connection.cursor()
         cursor.execute("commit")
         cursor.close()
     """doing a select query which will not modify data in the database and returning the result"""
@@ -299,6 +347,19 @@ class ConfigurationDB(DataBase):
                     self.log("connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport)
                 except RuntimeError, inst:
                     self.log("error connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport+" "+inst.__str__())
+    """swaps the data of two devices"""
+    def swapDevices(self, device1, device2):
+        print "Database.swapDevice() start"
+        #case1: swap spare with spare
+        #case2: swap spare with device (reuse spare.replaceDevice
+        #case3: swap device with device
+        #TODO: swap devices in confpdb
+        #check if device 1 exists
+        #check if device 2 exists
+        #update data of device 1
+        #update data of device 2
+        #commit
+        print "Database.swapDevice() end"
 
 
 """class to access the equipment oracle database"""
@@ -306,6 +367,12 @@ class EquipmentDB(DataBase):
     def __init__(self, logfile,name = eDB_name, user = eDB_user, password = eDB_pass):
         DataBase.__init__(self, name, user, password, logfile)
         self.dhcp = DHCP(dhcp_file, dhcp_flags)
+        self.board_columns = ("name", "height", "power_dissipation", "orientation", 
+                              "crate_side", "position", "responsible", "power_consumption", 
+                              "type", "label", "label_det", "item_id", "weight", "slots", 
+                              "approved", "system", "subsystem", 
+                              "position_x","position_y","position_z",
+                              "users","last_change")
     """returns a list of all devices (hugin, tell1 or UKL1)"""
     def getAllDevices(self):
         query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' order by name"
@@ -339,3 +406,25 @@ class EquipmentDB(DataBase):
         for device in devices:
             system.addDevice(device) #will manage the subsystems automatically
         return system
+    """swaps the data of two devices
+        Return:
+            True if swap succeed
+            False if swap was not successful
+    """
+    def swapDevices(self, device1, device2):
+        print "EquipmentDB.swapDevice() start"
+        #TODO: swap devices in euqipdb
+        #check if device1 and device2 exist
+        for device in (device1, device2):
+            query = "SELECT "
+            for column in self.board_columns:
+                query += str(column)+", "
+            query = query[:-2]+" FROM board WHERE item_id = '"+str(device.sn)+"'"
+            result = self.executeSelectQuery(query)
+            if len(result) == 0:
+                return False #device does not exist
+        for device in (device1, device2):
+            for data in result[0]:
+                print data
+        #self.commit()
+        print "EquipmentDB.swapDevice() end"

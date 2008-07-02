@@ -1,6 +1,6 @@
 import database
 from string import upper
-from model.devices import Devices
+#from model.devices import Devices
 from config import cDB_name, cDB_user, cDB_pass
 
 def removedev(db,nam):

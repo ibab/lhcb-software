@@ -37,10 +37,10 @@ class MainWindow(wx.Frame):
         self.sparePanel = SparePanel(self, controller)
         self.controller = controller
         filemenu= wx.Menu()
-        filemenu.Append(ID_EMPTY, "&Empty ConfDB Database"," Deletes all devices and their connections from the Configuration Database")
+        filemenu.Append(ID_EMPTY, "&Delete all devices in ConfDB"," Deletes all devices and their connections from the Configuration Database")
         filemenu.Append(ID_INSERT, "&Insert New Devices"," Insert new devices from equipment database into configuration database")
-        filemenu.Append(ID_SYNCHRONIZE, "&Synchronize"," Updates existing devices in configuration database")
-        filemenu.Append(ID_TFCMUNIN01, "&Connect to TFCMUNIN01"," Connects all the hugin01 with TFCMUNIN01")
+        filemenu.Append(ID_SYNCHRONIZE, "&Update ConfDB"," Updates existing devices in configuration database")
+        filemenu.Append(ID_TFCMUNIN01, "&Connect devices to TFCMUNIN01"," Connects all the hugin01 with TFCMUNIN01")
         filemenu.AppendSeparator()
         filemenu.Append(ID_ABOUT, "&About"," Information about this program")
         filemenu.AppendSeparator()

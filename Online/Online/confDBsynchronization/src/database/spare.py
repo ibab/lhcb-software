@@ -1,15 +1,20 @@
+from database import subsystems
 import database
 from emptydatabase import removedev
 from utilities import getModuleType, getDetector
-from cdbutils import subsystems, Tell1, UKL1, Hugin
+from model.Hugin import Hugin
+from model.Tell1 import Tell1
+from model.UKL1 import UKL1
 
 class Spare:
     def __init__(self, hwname, hwtype, serialnb, responsible, location, comments):
         self.hwname = hwname
         self.hwtype = hwtype
         self.serialnb = serialnb
+        self.sn = self.serialnb
         self.responsible = responsible
         self.location = location
+        self.loca = self.location
         self.comments = comments
     def __cmp__(self, other):
         if (self.hwname == other.hwname and
