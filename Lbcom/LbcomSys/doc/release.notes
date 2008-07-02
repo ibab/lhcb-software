@@ -6,6 +6,12 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r19>2008-07-02 LbcomSys v6r19</A></H1><PRE>
+This version uses Gaudi v20r1 and LHCb v24r0
+
+- Packages modified: CaloTools v5r2, L0DU v8r6, RichDAQ v3r17, RichTools v2r21,
+    STCheckers v2r6, STDAQ v3r8
+
 </PRE><H1><A NAME=v6r18>2008-06-04 LbcomSys v6r18</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7
 
