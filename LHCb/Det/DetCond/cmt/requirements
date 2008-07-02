@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.87 2008-06-27 17:00:41 marcocle Exp $
+# $Id: requirements,v 1.88 2008-07-02 12:42:47 marcocle Exp $
 # =============================================================================
 package       DetCond
 version       v12r0
@@ -22,11 +22,8 @@ use           LHCbKernel        v*      Kernel
 apply_pattern	install_more_includes more=DetCond
 
 #==============================================================================
-# Needed to resolve references to CoolApplication
-#macro_append COOL_applibs '-llcg_RelationalCool '  \
-#      WIN32          'lcg_RelationalCool.lib '
-#apply_tag   NEEDS_COOL_FACTORY
-macro_append COOL_linkopts ' -llcg_CoolApplication '
+# Needed to resolve external symbols
+apply_tag   NEEDS_COOL_FACTORY
 apply_tag   NEEDS_CORAL_BASE
 
 # =============== LCG Dictionary ==============================================
