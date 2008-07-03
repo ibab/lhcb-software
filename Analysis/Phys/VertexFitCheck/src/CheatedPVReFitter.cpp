@@ -1,4 +1,4 @@
-// $Id: CheatedPVReFitter.cpp,v 1.2 2007-11-13 15:00:16 xieyu Exp $
+// $Id: CheatedPVReFitter.cpp,v 1.3 2008-07-03 12:25:06 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -34,8 +34,8 @@ DECLARE_TOOL_FACTORY(CheatedPVReFitter);
 // Standard constructor, initializes variables
 //=============================================================================
 CheatedPVReFitter::CheatedPVReFitter( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                                      const std::string& name,
+                                      const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IPVReFitter>(this);
@@ -71,7 +71,7 @@ StatusCode CheatedPVReFitter::initialize(){
 //=============================================================================
 // refit PV
 //=============================================================================
-StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) {
+StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) const {
 
   debug() <<"Now reFit PV"<< endreq;
 
@@ -121,7 +121,7 @@ StatusCode CheatedPVReFitter::reFit(LHCb::VertexBase* PV) {
 //=============================================================================
 // remove track used for a LHCb::Particle and refit PV
 //=============================================================================
-StatusCode CheatedPVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV) {
+StatusCode CheatedPVReFitter::remove(const LHCb::Particle* part,  LHCb::VertexBase* PV) const {
 
   warning() <<"remove method not implemented! "<< endreq;
 
@@ -134,7 +134,7 @@ StatusCode CheatedPVReFitter::remove(LHCb::Particle* part,  LHCb::VertexBase* PV
 // fit PV from a vector of tracks
 //=============================================================================
 StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV, 
-                             std::vector<LHCb::Track*> & tracks) {
+                             std::vector<LHCb::Track*> & tracks) const {
   StatusCode sc = StatusCode::SUCCESS;
 
   debug() <<"Now entering fitPV!"<<endreq;
@@ -180,7 +180,7 @@ StatusCode CheatedPVReFitter::fitPV(LHCb::RecVertex* PV,
 // get final tracks of a particle
 //=============================================================================
 void CheatedPVReFitter::getFinalTracks(LHCb::Particle* part, 
-                                std::vector<const LHCb::Track*> & tracks)
+                                       LHCb::Track::ConstVector& tracks) const
 {
   const LHCb::ProtoParticle*   proto  = part->proto() ;
 
@@ -202,8 +202,8 @@ void CheatedPVReFitter::getFinalTracks(LHCb::Particle* part,
 //=============================================================================
 
 StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
-                              LHCb::Track* tr1,
-                              LHCb::Track* tr2)
+                                     LHCb::Track* tr1,
+                                     LHCb::Track* tr2) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -460,7 +460,7 @@ StatusCode CheatedPVReFitter::seedPV(LHCb::RecVertex* PV,
 //=============================================================================
 
 StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
-                              LHCb::Track* tr)
+                                     LHCb::Track* tr) const
 {
   StatusCode sc= StatusCode::SUCCESS;
 
@@ -612,7 +612,7 @@ StatusCode  CheatedPVReFitter::addTr(LHCb::RecVertex* PV,
 //=============================================================================
 // state at first measurement
 //=============================================================================
-LHCb::State CheatedPVReFitter::stateAtFirstMeas(LHCb::Track* tr)
+LHCb::State CheatedPVReFitter::stateAtFirstMeas(LHCb::Track* tr) const
 {
 
   double veloFirstZ;
@@ -630,7 +630,7 @@ LHCb::State CheatedPVReFitter::stateAtFirstMeas(LHCb::Track* tr)
   return state;
 }
 
-StatusCode CheatedPVReFitter::kalman_remove(LHCb::RecVertex* PV, LHCb::Track* tr)
+StatusCode CheatedPVReFitter::kalman_remove(LHCb::RecVertex* PV, LHCb::Track* tr) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -693,7 +693,7 @@ StatusCode CheatedPVReFitter::kalman_remove(LHCb::RecVertex* PV, LHCb::Track* tr
 //  associate a reconstructed PV to a MCVertex
 //=============================================================================
 
-const LHCb::MCVertex* CheatedPVReFitter::PV2MCVertex(const LHCb::RecVertex* pv )
+const LHCb::MCVertex* CheatedPVReFitter::PV2MCVertex(const LHCb::RecVertex* pv ) const
 {
   int max=0;
   const LHCb::MCVertex* best=0;
@@ -719,7 +719,7 @@ const LHCb::MCVertex* CheatedPVReFitter::PV2MCVertex(const LHCb::RecVertex* pv )
 }
 
 int CheatedPVReFitter::countMatchedPVTrks(const RecVertex* pv,
-                                  const LHCb::MCVertex* mcPV)
+                                          const LHCb::MCVertex* mcPV) const
 {
   int count=0;
   if(!mcPV) return count;

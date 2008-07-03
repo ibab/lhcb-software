@@ -32,32 +32,36 @@ class CheatedPVReFitter : public GaudiTool, virtual public IPVReFitter {
 public: 
   /// Standard constructor
   CheatedPVReFitter( const std::string& type, 
-              const std::string& name,
-              const IInterface* parent);
+                     const std::string& name,
+                     const IInterface* parent);
   
   StatusCode initialize();
 
   /// refit PV
-  virtual StatusCode reFit(LHCb::VertexBase* );
+  virtual StatusCode reFit(LHCb::VertexBase* ) const;
 
   /// remove track used for a (B) LHCb::Particle and refit PV
-  virtual StatusCode remove(LHCb::Particle*,  LHCb::VertexBase*);
+  virtual StatusCode remove(const LHCb::Particle*,  LHCb::VertexBase*) const;
 
   virtual ~CheatedPVReFitter( ); ///< Destructor
 
 private:
   
-  StatusCode fitPV(LHCb::RecVertex*, LHCb::Track::Vector & );
-  void getFinalTracks(LHCb::Particle*, LHCb::Track::ConstVector &);
+  StatusCode fitPV(LHCb::RecVertex*, 
+                   LHCb::Track::Vector & ) const;
+  void getFinalTracks(LHCb::Particle*, 
+                      LHCb::Track::ConstVector &) const;
   StatusCode seedPV(LHCb::RecVertex*,
                     LHCb::Track*, 
-                    LHCb::Track* );
+                    LHCb::Track* ) const;
   StatusCode  addTr(LHCb::RecVertex*,
-                    LHCb::Track* );
-  LHCb::State stateAtFirstMeas(LHCb::Track*);
-  StatusCode kalman_remove(LHCb::RecVertex*, LHCb::Track*);
-  const LHCb::MCVertex* PV2MCVertex(const LHCb::RecVertex* pv);
-  int countMatchedPVTrks(const LHCb::RecVertex* pv,  const LHCb::MCVertex* mcPV);
+                    LHCb::Track* ) const;
+  LHCb::State stateAtFirstMeas(LHCb::Track*) const;
+  StatusCode kalman_remove(LHCb::RecVertex*, 
+                           LHCb::Track*) const;
+  const LHCb::MCVertex* PV2MCVertex(const LHCb::RecVertex* pv) const;
+  int countMatchedPVTrks(const LHCb::RecVertex* pv,  
+                         const LHCb::MCVertex* mcPV) const;
 
 private:
       
