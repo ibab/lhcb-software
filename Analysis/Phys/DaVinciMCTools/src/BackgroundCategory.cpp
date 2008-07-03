@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.39 2008-06-23 18:09:25 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.40 2008-07-03 13:49:14 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,9 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_ppSvc(0)
   , m_particleDescendants(0)
+  , m_linkerTool_cPP(0)
+  , m_linkerTool_nPP(0)
+  , m_linkerTool_Composite(0)
   //, m_pCPPAsct(0)
   //, m_pNPPAsct(0)
   //, m_pChi2PPAsct(0)
@@ -420,15 +423,26 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
   //all the categories mean, please visit IBackgroundCategory.h 
 {
 
-  m_pCPPAsct = new ProtoParticle2MCLinker( this,
-                                           Particle2MCMethod::ChargedPP,
-                                           std::vector<std::string>(1,"") );
-  m_pNPPAsct = new ProtoParticle2MCLinker( this,
-                                           Particle2MCMethod::NeutralPP,
-                                           std::vector<std::string>(1,"") );
-  m_pChi2PPAsct = new Particle2MCLinker( this,
-                                         Particle2MCMethod::Composite,
-                                         std::vector<std::string>(1,"") );
+  verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
+
+  m_pCPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_cPP->linker("ChargedPP2MC",std::vector<std::string>(1,""));
+                 //new ProtoParticle2MCLinker( this,
+                 //                          Particle2MCMethod::ChargedPP,
+                   //                        std::vector<std::string>(1,"") );
+  m_pNPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_nPP->linker("NeutralPP2MC",std::vector<std::string>(1,""));
+                 //new ProtoParticle2MCLinker( this,
+                 //                          Particle2MCMethod::NeutralPP,
+                   //                        std::vector<std::string>(1,"") );
+  m_pChi2PPAsct = m_linkerTool_Composite->linker("CompositeParticle2MCLinks",std::vector<std::string>(1,""));
+                    //new Particle2MCLinker( this,
+                    //                     Particle2MCMethod::Composite,
+                      //                   std::vector<std::string>(1,"") );
+
+  verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
+
+  if (m_pCPPAsct == NULL || m_pNPPAsct == NULL || m_pChi2PPAsct == NULL) {
+    err() << "Something failed when making the associators. Bye!" << endmsg;
+  }
 
   m_commonMother = 0;
   //First of all, we use Patrick's tool to get all the particles in the decay tree
@@ -1240,10 +1254,6 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 //=============================================================================
 StatusCode BackgroundCategory::finalize(){
 
-  if( NULL != m_pCPPAsct ) delete m_pCPPAsct;
-  if( NULL != m_pNPPAsct ) delete m_pNPPAsct;
-  if( NULL != m_pChi2PPAsct ) delete m_pChi2PPAsct;
-
   StatusCode sc = GaudiTool::finalize();
   if (!sc) return sc;
   return StatusCode::SUCCESS;
@@ -1267,20 +1277,14 @@ StatusCode BackgroundCategory::initialize(){
   m_pNPPAsct = new ProtoParticle2MCLinker( this, 
                                            Particle2MCMethod::NeutralPP,
                                            std::vector<std::string>(1,"") );
-  //m_pCPPAsct = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
-  //m_pNPPAsct = new Particle2MCLinker( this, Particle2MCMethod::Links, "");
   m_pChi2PPAsct = new Particle2MCLinker( this, 
                                          Particle2MCMethod::Composite,
                                          std::vector<std::string>(1,"") );*/
 
-  //m_pCPPAsct = new Particle2MCLinker( this, "ChargedPP2MC", "/MyChargedPP2MC", "");
-  //m_pNPPAsct = new Particle2MCLinker( this, "NeutralPP2MC", "/MyNeutralPP2MC", "");
-  //m_pChi2PPAsct = new Particle2MCLinker( this, "CompositeParticle2MCLinks", "/MyCompositeParticle2MCLinks","");
-
-  //m_pCPPAsct = tool<ProtoParticle2MCAsct::IAsct>("ProtoParticle2MCAsct","ChargedPP2MCAsct",this);
-  //m_pNPPAsct = tool<ProtoParticle2MCAsct::IAsct>("ProtoParticle2MCAsct","NeutralPP2MCAsct",this);
-  //m_pChi2PPAsct = tool<Particle2MCWithChi2Asct::IAsct>("Particle2MCWithChi2Asct","Particle2MCWithChi2",this);
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
+  m_linkerTool_cPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_cPP",this);
+  m_linkerTool_nPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_nPP",this);
+  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_Composite",this);
 
   verbose() << "Done initializing" << endmsg ;
  

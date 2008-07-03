@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.23 2008-06-12 09:49:14 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.24 2008-07-03 13:49:18 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -9,6 +9,7 @@
 //#include "Event/Collision.h"
 #include "Kernel/IBackgroundCategory.h"          // Interface
 #include "Kernel/IParticleDescendants.h"
+#include "Kernel/IDaVinciAssociatorsWrapper.h"
 //#include "Kernel/ProtoParticle2MCAsct.h"
 //#include "Kernel/Particle2MCWithChi2Asct.h"
 #include "Kernel/Particle2MCLinker.h"
@@ -101,17 +102,18 @@ private:
   int areAnyFinalStateParticlesFromAPrimaryVertex(/*MCParticleVector,*/MCParticleVector);
 
 private:
-  //typedef std::vector<MCParticle*> MCParticleVector;
   IParticlePropertySvc* m_ppSvc;
   IParticleDescendants* m_particleDescendants;
-  ProtoParticle2MCLinker* m_pCPPAsct; //ProtoParticle2MCAsct::IAsct* m_pCPPAsct;
-  ProtoParticle2MCLinker* m_pNPPAsct; //ProtoParticle2MCAsct::IAsct* m_pNPPAsct;
-  //Particle2MCLinker* m_pCPPAsct;
-  //Particle2MCLinker* m_pNPPAsct;
-  Particle2MCLinker* m_pChi2PPAsct; //Particle2MCWithChi2Asct::IAsct* m_pChi2PPAsct;
+  IDaVinciAssociatorsWrapper* m_linkerTool_cPP;
+  IDaVinciAssociatorsWrapper* m_linkerTool_nPP;
+  IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
+  ProtoParticle2MCLinker* m_pCPPAsct; 
+  ProtoParticle2MCLinker* m_pNPPAsct;
+  Particle2MCLinker* m_pChi2PPAsct; 
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
 
+  
   int m_inclusiveDecay; //are we studying an inclusive decay?
   int m_semileptonicDecay; //are we studying a semileptnoic decay?
   int m_numNeutrinos; //How many neutrinos expected in our decay chain?
