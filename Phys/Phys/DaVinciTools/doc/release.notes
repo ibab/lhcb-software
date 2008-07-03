@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.333 2008-07-03 09:34:46 pkoppenb Exp $
+! $Id: release.notes,v 1.334 2008-07-03 13:30:00 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!======================== DaVinciTools v16r2 2008-07-03 =====================
 
 ! 2008-07-03 - Patrick Koppenburg
  - Moved FilterDesktop from DaVinciFilter
