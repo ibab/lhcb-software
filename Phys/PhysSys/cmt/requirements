@@ -9,7 +9,6 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  DaVinciFilter      	v6r8     Phys   # Juan Palacios
 use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
 use  DaVinciTools       	v16r2    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios

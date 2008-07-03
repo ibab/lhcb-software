@@ -3,6 +3,9 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+! 2008-07-03 - Patrick Koppenburg
+ - DaVinciFilter moved to Analysis
+
 </PRE><H1><A NAME=v6r13>2008-06-09 Phys v6r13 - Version for June 2008 software week tutorials</A></H1><PRE>
 
 - Based on LHCb v23r7 and Gaudi v19r9
