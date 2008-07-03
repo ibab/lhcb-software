@@ -4,6 +4,9 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-07-03 - Patrick Koppenburg for Tom Blake
+ - P2VV : allow to choose calcualtor tool (Calculator options) and angular basis.
+
 ! 2008-07-01 - Patrick Koppenburg
  - New algorithm EventTuple which only fills event-variables
  - New tool TupleToolgeneration reading GenHeader

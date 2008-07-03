@@ -1,4 +1,4 @@
-// $Id: TupleToolP2VV.h,v 1.1 2007-12-18 18:12:26 pkoppenb Exp $
+// $Id: TupleToolP2VV.h,v 1.2 2008-07-03 13:59:46 pkoppenb Exp $
 #ifndef TUPLETOOLP2VV_H 
 #define TUPLETOOLP2VV_H 1
 
@@ -14,7 +14,11 @@
  * - head_ThetaK : angle of the K+ wrt B in dilepton frame
  * - head_Phi : angle of the K* and LL decay planes in dilepton frame
  *
- *  @author Patrick Koppenburg
+ * - head_Theta_tr : angle of the L+ wrt z-axis in dilepton frame
+ * - head_Phi_tr : azimutal angle of the L+ in dilepton frame
+ * - head_Theta_phi_tr : polar angle between the x'-axis and the decaying K+ in the dikaon frame
+ * 
+ *  @author Patrick Koppenburg, Greig Cowan
  *  @date   2007-12-18
  */
 class IP2VVPartAngleCalculator;
@@ -38,7 +42,11 @@ public:
 protected:
   
 private:
-  IP2VVPartAngleCalculator*   m_pB2LLKstar;
+   std::string m_calculator; ///< Name of tool that you want to use to calculate the angles
+   bool m_helicity;   ///< Write Helicity angles to tuple
+   bool m_trans;      ///< Write Transversity angles to tuple
 
+   IP2VVPartAngleCalculator*   m_angleTool;
+   
 };
 #endif // TUPLETOOLP2VV_H

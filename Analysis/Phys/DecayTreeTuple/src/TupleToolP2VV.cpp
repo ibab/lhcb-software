@@ -1,4 +1,4 @@
-// $Id: TupleToolP2VV.cpp,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
+// $Id: TupleToolP2VV.cpp,v 1.3 2008-07-03 13:59:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,7 @@
 // Implementation file for class : TupleToolP2VV
 //
 // 2007-12-18 : Patrick Koppenburg
+// 2008-06-02 : Greig Cowan
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -30,10 +31,12 @@ TupleToolP2VV::TupleToolP2VV( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
-, m_pB2LLKstar()
+, m_angleTool()
 {
   declareInterface<IParticleTupleTool>(this);
-
+  declareProperty( "Calculator", m_calculator = "Bd2KstarMuMuAngleCalculator" );
+  declareProperty( "FillTransversity", m_trans = true );
+  declareProperty( "FillHelicity", m_helicity = true );
 }
 //=============================================================================
 // Destructor
@@ -47,8 +50,11 @@ TupleToolP2VV::~TupleToolP2VV() {}
 //=========================================================================
 StatusCode TupleToolP2VV::initialize( ) {
   StatusCode sc = GaudiTool::initialize();
+
+  debug() << "m_calc " << m_calculator << endmsg;
+  
   if (!sc) return sc;
-  m_pB2LLKstar  = tool<IP2VVPartAngleCalculator>("Bd2KstarMuMuAngleCalculator",this);
+  m_angleTool  = tool<IP2VVPartAngleCalculator>(m_calculator,this);
   return sc;
 }
 
@@ -61,15 +67,46 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
 				   , Tuples::Tuple& tuple ){
   bool test = true;
   if( P ){
-    double thetaL, thetaK, phi ;
-    StatusCode sc = m_pB2LLKstar->calculateAngles( P, thetaL, thetaK, phi );
-    if (msgLevel(MSG::DEBUG)) debug() << "Three angles are theta_L : " 
-                                      << thetaL << " K: " << thetaK
-                                      << " phi: " << phi << endmsg ;
-    if ( !sc ) return sc;
-    test &= tuple->column( head+"_ThetaL", thetaL );
-    test &= tuple->column( head+"_ThetaK", thetaK );
-    test &= tuple->column( head+"_Phi",    phi  );
+    
+    if ( m_helicity ){
+      double thetaL, thetaK, phi;
+      
+      
+      StatusCode sc_hel = m_angleTool->calculateAngles( P, thetaL, thetaK, phi);
+      
+      if (msgLevel(MSG::DEBUG)) debug() << "Three helicity angles are theta_L : " 
+					<< thetaL 
+					<< " K: "<< thetaK
+					<< " phi: " << phi << endmsg ;
+      
+      
+      if ( !sc_hel ) return sc_hel;
+      test &= tuple->column( head+"_ThetaL", thetaL );
+      test &= tuple->column( head+"_ThetaK", thetaK );
+      test &= tuple->column( head+"_Phi",    phi  );
+    }
+    
+    if ( m_trans ){
+      double Theta_tr, Phi_tr, Theta_V ;
+      
+      StatusCode sc_tr = m_angleTool->calculateTransversityAngles( P, 
+								   Theta_tr, 
+								   Phi_tr, 
+								   Theta_V );
+      
+      if (msgLevel(MSG::DEBUG)) debug() << "Three transversity angles are Theta_tr : " 
+					<< Theta_tr 
+					<< " Phi_tr: " << Phi_tr
+					<< " Theta_phi_tr: " << Theta_V 
+					<< endmsg ;
+      
+      
+      
+      if ( !sc_tr ) return sc_tr;
+      test &= tuple->column( head+"_ThetaTr", Theta_tr );
+      test &= tuple->column( head+"_PhiTr", Phi_tr );
+      test &= tuple->column( head+"_ThetaVtr", Theta_V  );
+    }
   } else {
     return StatusCode::FAILURE;
   }
