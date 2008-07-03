@@ -10,9 +10,10 @@ from model.system import System
 from model.Hugin import Hugin
 from model.Tell1 import Tell1
 from model.UKL1 import UKL1
+from model.spare import Spare
 from string import upper, lower, split, replace
 import wx
-from re import compile
+from re import compile, sub
 
 class Subsystem:
     def __init__(self,sys,pat,rne,start,midfix=""):
@@ -53,7 +54,7 @@ subsystems = {"ecal" : ecal, "tcal" : tcal, "muon_a" : muon_a, "muon_c" : muon_c
               "tt" : tt, "rich1" : rich1, "rich2" : rich2, "hcal" : hcal, "it" : it,
               "pus" : pus, "tdet" : tdet, "tfc" : tfc, "DUM" : dum, 
               "UNKNOWN" : ecal, "UNKNOWN_DETECTOR" : ecal}
-from spare import Spare
+
 
 """discconnecting using confDBpython"""
 def disconnect(db):
@@ -68,8 +69,11 @@ def connect(name = cDB_name, user = cDB_user, password = cDB_pass):
 """class to access an oracle database"""
 class DataBase:
     def __init__(self, name, user, password, logfile):
+        print "DataBase.__init__() start"
         self.connection = cx_Oracle.connect(user, password, name)
+        print "DataBase.__init__(): connection created"
         self.logfile = logfile
+        print "DataBase.__init__() end"
     """returns the connection"""
     def getConnection(self):
         return self.connection
@@ -350,21 +354,101 @@ class ConfigurationDB(DataBase):
     """swaps the data of two devices"""
     def swapDevices(self, device1, device2):
         print "Database.swapDevice() start"
-        #case1: swap spare with spare
-        #case2: swap spare with device (reuse spare.replaceDevice
-        #case3: swap device with device
-        #TODO: swap devices in confpdb
-        #check if device 1 exists
-        #check if device 2 exists
-        #update data of device 1
-        #update data of device 2
-        #commit
+        swap_device_device_query = """
+        DECLARE
+            location1 lhcb_lg_devices.location%TYPE;
+            location2 lhcb_lg_devices.location%TYPE;
+            devicename1 lhcb_lg_devices.devicename%TYPE;
+            devicename2 lhcb_lg_devices.devicename%TYPE;
+            serialnb1 lhcb_lg_devices.serialnb%TYPE;
+            serialnb2 lhcb_lg_devices.serialnb%TYPE;
+        BEGIN
+            SELECT devicename, location, serialnb INTO devicename1, location1, serialnb1 FROM lhcb_lg_devices WHERE serialnb = 'SERIALNUMBER1';
+            SELECT devicename, location, serialnb INTO devicename2, location2, serialnb2 FROM lhcb_lg_devices WHERE serialnb = 'SERIALNUMBER2';
+            UPDATE lhcb_lg_devices SET location = location2||'UNI' WHERE serialnb = serialnb1;
+            UPDATE lhcb_lg_devices SET location = location1||'UNI' WHERE serialnb = serialnb2;
+            UPDATE lhcb_lg_devices SET location = location2 WHERE serialnb = serialnb1;
+            UPDATE lhcb_lg_devices SET location = location1 WHERE serialnb = serialnb2;
+            COMMIT;
+        END;"""
+        swap_spare_spare_query = """
+        DECLARE
+            location1 lhcb_hw_devices.location%TYPE;
+            location2 lhcb_hw_devices.location%TYPE;
+            serialnb1 lhcb_hw_devices.serialnb%TYPE;
+            serialnb2 lhcb_hw_devices.serialnb%TYPE;
+        BEGIN
+            SELECT location, serialnb INTO location1, serialnb1 FROM lhcb_hw_devices WHERE serialnb = 'SERIALNUMBER1';
+            SELECT location, serialnb INTO location2, serialnb2 FROM lhcb_hw_devices WHERE serialnb = 'SERIALNUMBER2';
+            UPDATE lhcb_hw_devices SET location = location2 WHERE serialnb = serialnb1;
+            UPDATE lhcb_hw_devices SET location = location1 WHERE serialnb = serialnb2;
+            COMMIT;
+        END;"""
+        swap_spare_device_query = """
+        DECLARE
+            devicename2 lhcb_lg_devices.devicename%TYPE;
+            hwname1 lhcb_hw_devices.hwname%TYPE;
+            serialnb1 lhcb_lg_devices.serialnb%TYPE;
+            serialnb2 lhcb_lg_devices.serialnb%TYPE;
+            location1 lhcb_hw_devices.location%TYPE;
+            location2 lhcb_hw_devices.location%TYPE;
+        BEGIN
+            SELECT hwname, location, serialnb INTO hwname1, location1, serialnb1 FROM lhcb_hw_devices WHERE serialnb = 'SERIALNUMBER1';
+            SELECT devicename, location, serialnb INTO devicename2, location2, serialnb2 FROM lhcb_lg_devices WHERE serialnb = 'SERIALNUMBER2';
+            UPDATE lhcb_lg_devices SET location = location1 WHERE serialnb = serialnb2;
+            UPDATE lhcb_hw_devices SET location = location2 WHERE serialnb = serialnb1;
+            COMMIT;
+        END;"""
+        """case 1: swapping two devices"""
+        if self.isDevice(device1) and self.isDevice(device2):
+            swap_device_device_query = sub("SERIALNUMBER1", device1.sn, swap_device_device_query)
+            swap_device_device_query = sub("SERIALNUMBER2", device2.sn, swap_device_device_query)
+            #print swap_device_device_query
+            try:
+                self.executeQuery(swap_device_device_query)
+                return True
+            except:
+                return False
+        """case 2: swapping device and spare"""
+        if (self.isDevice(device1) and self.isSpare(device2)) or (self.isDevice(device2) and self.isSpare(device1)):
+            if self.isDevice(device1):
+                sn_device = device1.sn
+                sn_spare = device2.sn
+            else:
+                sn_device = device2.sn
+                sn_spare = device1.sn
+            swap_spare_device_query = sub("SERIALNUMBER1", sn_spare, swap_spare_device_query)
+            swap_spare_device_query = sub("SERIALNUMBER2", sn_device, swap_spare_device_query)
+            try:
+                self.executeQuery(swap_spare_device_query)
+                return True
+            except:
+                return False
+        """case 3: swapping two spares"""
+        if self.isSpare(device1) and self.isSpare(device2):
+            swap_spare_spare_query = sub("SERIALNUMBER1", device1.sn, swap_spare_spare_query)
+            swap_spare_spare_query = sub("SERIALNUMBER2", device2.sn, swap_spare_spare_query)
+            #print swap_spare_spare_query
+            try:
+                self.executeQuery(swap_spare_spare_query)
+                return True
+            except:
+                return False
+        print "can only swap devices of type Hugin, UKL1, Tell1 and Spare"
+        return False
         print "Database.swapDevice() end"
+    """checks if a device is hugin, ukl1 or Tell"""
+    def isDevice(self, device):
+        return device.typ == "hugin" or device.typ == "ukl1" or device.typ == "tell"
+    """checks if a device is a spare"""
+    def isSpare(self, device):
+        return device.typ == "spare"
 
 
 """class to access the equipment oracle database"""
 class EquipmentDB(DataBase):
     def __init__(self, logfile,name = eDB_name, user = eDB_user, password = eDB_pass):
+        print "EquipmentDB.__init__() start"
         DataBase.__init__(self, name, user, password, logfile)
         self.dhcp = DHCP(dhcp_file, dhcp_flags)
         self.board_columns = ("name", "height", "power_dissipation", "orientation", 
@@ -373,6 +457,7 @@ class EquipmentDB(DataBase):
                               "approved", "system", "subsystem", 
                               "position_x","position_y","position_z",
                               "users","last_change")
+        print "EquipmentDB.__init__() end"
     """returns a list of all devices (hugin, tell1 or UKL1)"""
     def getAllDevices(self):
         query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' order by name"
@@ -393,7 +478,7 @@ class EquipmentDB(DataBase):
                 pass#print "Warning: ", module[0], module[1], module[2], module[3], module[4], " is not a known module type and will be ignored!"
         return result
     def getAllSpares(self):
-        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and name like '%Spare%' order by name"
+        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and name like '%Spare%' or name like '%spare%' order by name"
         spares = self.executeSelectQuery(query)
         result = []
         for spare in spares:
@@ -413,18 +498,33 @@ class EquipmentDB(DataBase):
     """
     def swapDevices(self, device1, device2):
         print "EquipmentDB.swapDevice() start"
-        #TODO: swap devices in euqipdb
-        #check if device1 and device2 exist
-        for device in (device1, device2):
-            query = "SELECT "
-            for column in self.board_columns:
-                query += str(column)+", "
-            query = query[:-2]+" FROM board WHERE item_id = '"+str(device.sn)+"'"
-            result = self.executeSelectQuery(query)
-            if len(result) == 0:
-                return False #device does not exist
-        for device in (device1, device2):
-            for data in result[0]:
-                print data
-        #self.commit()
+        if device1 is None or device2 is None:
+            print "device1 or device2 is None, swap failed!"
+            return False
+        print "swap requested for "+str(device1.devicename)+" and "+str(device2.devicename)
+        if device1.devicename == device2.devicename:
+            print "cannot swap 2 identical devices, stopping swap!"
+            return False
+        swap_query = """
+        DECLARE
+            location1 board.label%TYPE;
+            location2 board.label%TYPE;
+            item_id1 board.item_id%TYPE;
+            item_id2 board.item_id%TYPE;
+        BEGIN
+            SELECT label, item_id INTO location1, item_id1 FROM board WHERE item_id = 'SERIALNUMBER1';
+            SELECT label, item_id INTO location2, item_id2 FROM board WHERE item_id = 'SERIALNUMBER2';
+            UPDATE board SET label = location2||'UNIQUE' WHERE item_id = item_id1;
+            UPDATE board SET label = location1||'UNIQUE' WHERE item_id = item_id2;
+            UPDATE board SET label = location2 WHERE item_id = item_id1;
+            UPDATE board SET label = location1 WHERE item_id = item_id2;
+            COMMIT;
+        END;"""
+        swap_query = sub("SERIALNUMBER1", device1.sn, swap_query)
+        swap_query= sub("SERIALNUMBER2", device2.sn, swap_query)
+        try:
+            self.executeQuery(swap_query)
+            return True
+        except:
+            return False
         print "EquipmentDB.swapDevice() end"

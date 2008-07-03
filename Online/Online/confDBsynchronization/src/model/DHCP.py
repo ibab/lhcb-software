@@ -10,6 +10,7 @@ class DHCP:
     You can define the columns just in case the dhcp file changes
     """ 
     def __init__(self, file, flags, name_index = 0, location_index = 1, ip_index = 2, mac_index = 3, serial_index = 6):
+        print "DHCP.__init__() start"
         self.file = file
         self.flags = flags
         self.name_index = name_index
@@ -19,6 +20,7 @@ class DHCP:
         self.serial_index = serial_index
         self.csv_file_name = self.file.replace("txt", "csv")
         self.transformFile()
+        print "DHCP.__init__() end"
     def getMACByIPName(self, name):
         for row in csv.reader(open(self.csv_file_name, self.flags)):
             if(row != None and len(row) >= 4):

@@ -10,10 +10,11 @@ def swapDeviceAndDevice(confDB, equipDB):
         if device.typ == "hugin":
             if hugin1 is None:
                 hugin1 = device
-                print "hugin1 = "+str(device.devicename)
+                print "hugin1 = "+str(hugin1.devicename)
+                continue
             else:
                 hugin2 = device
-                print "hugin2 = "+str(device.devicename)
+                print "hugin2 = "+str(hugin2.devicename)
                 break #hugins found, now lets test
     print "hugins found, swapping hugins"
     if hugin1 is not None and hugin2 is not None:
