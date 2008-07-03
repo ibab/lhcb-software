@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.139 2008-07-02 13:27:52 jpalac Exp $
+! $Id: release.notes,v 1.140 2008-07-03 14:56:30 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2008-07-03 - Juan PALACIOS
+ - Add src/PVReFitterAlg.cpp, src/PVReFitterAlg.h
+   . Simple GaudiAlgorithm that takes some particles, their related primary 
+     vertices, and refits the vertices excluding the tracks coming from the 
+     particle's decay. It also creates a relations table associating each 
+     particle to its corresponding new vertex.
+   . As yet COMPLETELY UNTESTED!
 
 ! 2008-07-02 - Juan PALACIOS
  - cmt/requirements
