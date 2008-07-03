@@ -1,10 +1,8 @@
-! $Id: release.notes,v 1.221 2008-06-26 23:47:06 gligorov Exp $
+! $Id: release.notes,v 1.222 2008-07-03 08:23:51 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
-
-!========================== DaVinciMCTools v9r13 2008-06-09 ==================
 
 ! 2008-06-26 - V. Gligorov
  - Added DaVinciAssociatorsWrapper.{h,cpp}, a wrapper for the DaVinci associators
@@ -18,6 +16,8 @@
 ! 2008-06-12 - V. Gligorov
  - src/BackgroundCategory.{cpp,h}
     Fixed occasional segfault.  
+
+!========================== DaVinciMCTools v9r13 2008-06-09 ==================
 
 ! 2008-06-04 - Patrick Koppenburg for Thomas Blake
  - P2VV tools: new interface and Bs->j/psiPhi version.
