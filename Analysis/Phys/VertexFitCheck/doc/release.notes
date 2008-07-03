@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.13 2008-03-06 14:55:57 jpalac Exp $
+!$Id: release.notes,v 1.14 2008-07-03 12:25:22 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2008-07-03 - Juan PALACIOS
+ - src/CheatedPVReFitter.cpp, src/CheatedPVReFitter.h
+  . Put const where necessary to adapt to new IPVReFitter interface.
+  . Make all methods const 'cause they have no reason not to be.
 
 !===================== VertexFitCheck v1r2p1 2008-03-06 ====================
 
