@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.7 2008-06-18 01:18:31 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.8 2008-07-03 14:12:20 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -47,6 +47,9 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
  
   declareProperty("OfflineMuonTrackLocation",
                   m_MuonTracksLocation = LHCb::TrackLocation::Muon);
+ 
+  declareProperty("HltOfflineMuonTrackLocation",
+                  m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
  
   declareProperty("TOSFracVelo", m_TOSFrac[kVelo] = 0.7 );
   declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
@@ -301,7 +304,7 @@ void TriggerSelectionTisTos::vertexListTISTOS(const std::vector<RecVertex*> & on
 //=============================================================================  
 void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Particle> & onparticles,
                                  const ClassifiedHits offidlist[],
-                                 bool& TIS,bool& TOS) const
+                                 bool& TIS,bool& TOS) 
 {
     TIS=false;TOS=false;
 
@@ -312,32 +315,96 @@ void TriggerSelectionTisTos::particleListTISTOS(const SmartRefVector<LHCb::Parti
       for(std::vector<const LHCb::Particle*>::const_iterator pfp =fdaughters.begin(); pfp!=fdaughters.end(); ++pfp){
         const ProtoParticle* pp = (*pfp)->proto();
         if( 0!=pp ){
+          Track onlineT;          
           const Track* onit=pp->track();
           if( 0!=onit ){
-            const Track& ontrack = *onit;
-            double overlap[nHitTypes];
-            matchIDs(ontrack,offidlist,overlap);
-            if( m_muonsOff ){ overlap[kMuon]=2.0; }
-            if( thisTOS ){
-               // effectively .and. requirement between all types
-               int nonTrivial=0;
-               for( int hitType=0; hitType!=nHitTypes; ++hitType ){
-                  thisTOS= overlap[hitType] >= m_TOSFrac[hitType];
-                  if( !thisTOS )break;
-                  if( overlap[hitType]<1.1 )++nonTrivial;  
-               }
-               thisTOS = thisTOS && (nonTrivial>0);
-            }
-            if( thisTIS ){ 
-               // effectively .and. requirement between all types
-               for( int hitType=0; hitType!=nHitTypes; ++hitType ){
-                  thisTIS= (overlap[hitType] > 1.1) || ( overlap[hitType]<=m_TISFrac[hitType] );
-                  if( !thisTIS )break;
-               }
-            }
-            // don't waste time checking more tracks if not-TIS and not-TOS already
-            if( (!thisTIS) && (!thisTOS) ){ break; }
+            onlineT.copy(*onit);
           }
+          
+          // Ecal via CaloHypo
+          if( ( m_TOSFrac[kEcal] > 0.0 ) && ( m_TISFrac[kEcal] < 1.0 ) ){
+            const SmartRefVector< LHCb::CaloHypo > &caloVec = pp->calo();
+            if( caloVec.size() > 0 ){
+              const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
+              LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
+              if( 0!=onit ){
+                if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+                  centerCell  = (*(hypo->clusters().begin()))->seed();
+                }
+              } else {
+                if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+                  centerCell  = (*(hypo->clusters().begin()))->seed();
+                } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+                  // Split Photons
+                  const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
+                  const LHCb::CaloHypo* g1 = *(hypos.begin() );
+                  centerCell  = (*(g1->clusters().begin()))->seed();
+                  const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+                  centerCell1 = (*(g2->clusters().begin()))->seed();
+                }        
+              }
+      
+              if( !(centerCell == dummyCell) ){
+                onlineT.addToLhcbIDs(centerCell);
+              }
+            }
+          }
+          
+
+
+          // add muon hits only if needed 
+          if( ( m_TOSFrac[kMuon] > 0.0 ) && ( m_TISFrac[kMuon] < 1.0 ) ){
+            if( m_HLTmuonTracks==0 ){ 
+              if( exist<LHCb::Tracks>(m_HltMuonTracksLocation) ){
+                m_HLTmuonTracks = get<LHCb::Tracks>(m_HltMuonTracksLocation);
+              } else {
+                if( m_warning_count++ < 10 ){
+                  warning() << " No HLT muon tracks at " << m_HltMuonTracksLocation 
+                            << " thus, muon hits will be missing on trigger particles. " << endmsg;
+                  if( m_warning_count==10 ){
+                    warning() << " The above warning was printed for the last time " << endmsg;
+                  }
+                }
+              }
+            }
+            if( m_HLTmuonTracks != 0 ){
+              const LHCb::MuonPID* muid = pp->muonPID();
+              if( muid!=0 ){
+                if( muid->IsMuon() ){
+                  const Track* mu= m_HLTmuonTracks->object(onit->key());
+                  if( mu!=0 ){                                                                   
+                    const std::vector<LHCbID>& ids = mu->lhcbIDs();
+                    for( std::vector<LHCbID>::const_iterator i=ids.begin(); i!=ids.end(); ++i){
+                      onlineT.addToLhcbIDs(*i);
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          double overlap[nHitTypes];
+          matchIDs(onlineT,offidlist,overlap);
+          if( m_muonsOff ){ overlap[kMuon]=2.0; }
+          if( thisTOS ){
+            // effectively .and. requirement between all types
+            int nonTrivial=0;
+            for( int hitType=0; hitType!=nHitTypes; ++hitType ){
+              thisTOS= overlap[hitType] >= m_TOSFrac[hitType];
+              if( !thisTOS )break;
+              if( overlap[hitType]<1.1 )++nonTrivial;  
+            }
+            thisTOS = thisTOS && (nonTrivial>0);
+          }
+          if( thisTIS ){ 
+            // effectively .and. requirement between all types
+            for( int hitType=0; hitType!=nHitTypes; ++hitType ){
+              thisTIS= (overlap[hitType] > 1.1) || ( overlap[hitType]<=m_TISFrac[hitType] );
+              if( !thisTIS )break;
+            }
+          }
+          // don't waste time checking more tracks if not-TIS and not-TOS already
+          if( (!thisTIS) && (!thisTOS) ){ break; }
         }
       }
       if( !TOS ){ TOS=thisTOS; }
@@ -378,6 +445,7 @@ void TriggerSelectionTisTos::setOfflineInput( )
   m_ecalDeCal = 0;
 
   m_muonTracks = 0;
+  m_HLTmuonTracks = 0;
   m_muonsOff = false;
 
   m_summary = 0;

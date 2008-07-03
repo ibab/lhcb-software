@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.7 2008-06-29 06:50:20 graven Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.8 2008-07-03 14:12:20 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -129,7 +129,7 @@ public:
   /// return TIS,TOS for a vector of (trigger) Particles with respect to a set of @c ClasssifiedHits (here from Offline Input)
   void particleListTISTOS(const SmartRefVector<LHCb::Particle> & onparticles,
                           const ClassifiedHits offidlist[],
-                          bool& TIS,bool& TOS) const;
+                          bool& TIS,bool& TOS);
 
   /// for given particle returns descendent daughters (of any generation) which have no daughters themselves 
   static std::vector<const LHCb::Particle*> finalStateParticles(const LHCb::Particle* particle);
@@ -195,8 +195,10 @@ private:
 
   /// Location of Muon Tracks holding muon hits for protoparticles
   std::string m_MuonTracksLocation;
+  std::string m_HltMuonTracksLocation;
   /// Extracted muon track container 
   LHCb::Tracks* m_muonTracks;
+  LHCb::Tracks* m_HLTmuonTracks;
   /// flag to disable muon hits if muon tracks cannot be found
   bool m_muonsOff;  
   

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.23 2008-07-01 01:44:49 tskwarni Exp $
+! $Id: release.notes,v 1.24 2008-07-03 14:12:20 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2008-07-03 - Tomasz Skwarnicki
+ - support for Ecal and Muon hits for Hlt2 particles
 
 ! 2008-07-01 - Tomasz Skwarnicki
  - adopt to changes in HltANNSvc
