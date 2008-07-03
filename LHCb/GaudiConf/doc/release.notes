@@ -2,7 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-!======================== GaudiConf v10r10 2008-06-30 =======================
+!======================== GaudiConf v10r10 2008-07-03 =======================
+! 2008-07-03 - Marco Cattaneo
+ - In Configuration.py, add support for SIMCOND, initialize TES
+
 ! 2008-06-30 - Marco Cattaneo
  - In Configuration.py, do not evaluate $FIELDMAP environment variable, must be
    done at runtime to work on the grid

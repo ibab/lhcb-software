@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-06-30 11:23:50 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-07-03 14:36:06 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -51,12 +51,18 @@ class LHCbApp(ConfigurableUser):
             CondDBAccessSvc( "DDDB",     DefaultTAG = DDDBtag )
         if condDBtag.find("-default") == -1:
             CondDBAccessSvc( "LHCBCOND", DefaultTAG = condDBtag )
+            CondDBAccessSvc( "SIMCOND",  DefaultTAG = condDBtag )
             
         #-- Default field map set by Fieldmap package
         if not hasattr( MagneticFieldSvc(),"FieldMapFile" ):
             MagneticFieldSvc().FieldMapFile = "$FIELDMAP"
 
     def defineEvents(self):
+        # Set up transient store and data on demand service
+        EventDataSvc( ForceLeaves        = True,
+                      RootCLID           =    1,
+                      EnableFaultHandler = True )
+
         skipEvents = self.getProp("skipEvents")
         if skipEvents > 0 :
             if hasattr(EventSelector(),"FirstEvent"):

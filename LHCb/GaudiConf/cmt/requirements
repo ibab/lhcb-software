@@ -4,7 +4,7 @@ version v10r10
 branches doc cmt options python src
 include_path none
 
-use GaudiPolicy v*
+use GaudiPolicy v*  
 
 ignore_pattern package_stamps
 
