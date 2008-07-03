@@ -6,6 +6,10 @@
 
 !====================== Magnet v3r8 2008-07-03 ===============================
 ! 2008-07-03 - Adlene Hicheur
+ - Fixes to read conditions correctly.
+
+!====================== Magnet v3r8 2008-07-03 ===============================
+! 2008-07-03 - Adlene Hicheur
  - Add prototype for reading conditions (current + polarity)
 
 !====================== Magnet v3r8 2008-05-26 ===============================

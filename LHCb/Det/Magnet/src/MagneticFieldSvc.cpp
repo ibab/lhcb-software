@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.29 2008-07-03 10:35:16 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.30 2008-07-03 14:37:02 ahicheur Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -31,7 +31,9 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 // Standard constructor, initializes variables
 //=============================================================================
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
-            ISvcLocator* svc ) : Service( name, svc )
+                                    ISvcLocator* svc ) : Service( name, svc ),
+                                                         m_condition(0),
+                                                         m_updMgrSvc(0)
 {
 
 
@@ -49,8 +51,9 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
   declareProperty( "UseRealMap", m_useRealMap = false);
   //Nominal magnet current in A
-  declareProperty( "MagnetCurrent", m_nominalCurrent = 5850);
-  declareProperty( "CondPath", m_condPath = "/dd/Conditions/Online/LHCb/Magnet/");
+  declareProperty( "NominalCurrent", m_nominalCurrent = 5850);
+  declareProperty( "CondPath", m_condPath = "/dd/Conditions/Online/LHCb/Magnet/Measured",
+                   "Path to the magnetic field condition in the transient store");
   
   
 }
@@ -66,6 +69,7 @@ MagneticFieldSvc::~MagneticFieldSvc()
 //=============================================================================
 StatusCode MagneticFieldSvc::initialize()
 {
+  
   MsgStream log(msgSvc(), name());
   StatusCode status = Service::initialize();
   if( status.isFailure() ) return status;
@@ -96,7 +100,7 @@ StatusCode MagneticFieldSvc::initialize()
       m_max_FL[iC] = m_min_FL[iC]+( m_Nxyz[iC]-1 )* m_Dxyz[iC];
     } // iC
     
-    return status;
+    //    return status;
   }
   else {
     log << MSG::DEBUG << "Magnetic field parse failed" << endreq;
@@ -104,19 +108,33 @@ StatusCode MagneticFieldSvc::initialize()
   }
 
   //retrieve current from conditions, set the scale factor:
+  status = service("UpdateManagerSvc",m_updMgrSvc);
+  if ( status.isFailure() ) {
+    log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
+    return status;
+  }
 
   //  std::string mypath = m_condPath + "Set";
   //  updMgrSvc()->registerCondition(this,mypath,&MagneticFieldSvc::i_updateScaling,m_condition);
-  std::string mypath = m_condPath + "Measured";
-  MyupdMgrSvc->registerCondition(this,mypath,&MagneticFieldSvc::i_updateScaling,m_condition);
+  m_updMgrSvc->registerCondition(this,m_condPath,&MagneticFieldSvc::i_updateScaling,m_condition);
 
-  if( fabs(m_scaleFactor-1.) > 1e-6 ) {
-    log << MSG::WARNING << "Field map will be scaled by a factor = "
-        << m_scaleFactor << endmsg;
+  return m_updMgrSvc->update(this);
+
+}
+
+//=========================================================================
+// Finalize 
+//=========================================================================
+StatusCode MagneticFieldSvc::finalize ( ) {
+  
+  if (m_updMgrSvc) {
+    m_updMgrSvc->unregister(this);
+    m_updMgrSvc->release();
+    m_updMgrSvc = 0;
   }
+  
 
-return MyupdMgrSvc->update(this);
-
+  return Service::finalize();
 }
 
 //=============================================================================
@@ -202,6 +220,7 @@ StatusCode MagneticFieldSvc::parseFile() {
     m_Nxyz[2] = atoi( sGeom[5].c_str() );
     m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
     
+    m_Q.clear();
     m_Q.reserve(npar - 7);
     // Number of lines with data to be read
     long int nlines = ( npar - 7 ) / 3;
@@ -313,6 +332,7 @@ for(int ifile=0;ifile<4;ifile++) {
     m_Nxyz[2] = atoi( sGeom[5].c_str() );
     m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
     
+    m_Q_quadr[ifile].clear();
     m_Q_quadr[ifile].reserve(npar - 7);
     // Number of lines with data to be read
     long int nlines = ( npar - 7 ) / 3;
@@ -363,7 +383,6 @@ for(int ifile=0;ifile<4;ifile++) {
  
   return sc;
 }
-
 
 //=============================================================================
 // FieldVector: find the magnetic field value at a given point in space
@@ -533,12 +552,17 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 
 StatusCode MagneticFieldSvc::i_updateScaling() 
 {
-MsgStream log(msgSvc(), name());
+  MsgStream log(msgSvc(), name());
   m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent*m_condition->param<int>("Polarity");
-
-log << MSG::INFO << "*** Print Magnet conditions *** " << endreq;
-log << MSG::INFO << "Current: "<< m_condition->param<double>("Current") <<endreq;
-log << MSG::INFO << "Polarity: "<< m_condition->param<int>("Polarity") <<endreq;  
+  
+  log << MSG::INFO << "*** Print Magnet conditions *** " << endreq;
+  log << MSG::INFO << "Current: "<< m_condition->param<double>("Current") <<endreq;
+  log << MSG::INFO << "Polarity: "<< m_condition->param<int>("Polarity") <<endreq;  
+ 
+  if( fabs(m_scaleFactor-1.) > 1e-6 ) {
+    log << MSG::WARNING << "Field map will be scaled by a factor = "
+        << m_scaleFactor << endmsg;
+  }
   
   return StatusCode::SUCCESS; 
   

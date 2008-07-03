@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.17 2008-07-03 10:35:16 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.18 2008-07-03 14:37:03 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -41,6 +41,9 @@ public:
 
   /// Initialise the service (Inherited Service overrides) 
   virtual StatusCode initialize();
+  
+  /// Finalize the service (Inherited Service overrides) 
+  virtual StatusCode finalize();
   
   /** Query the available interfaces.
    * @param riid Requested interface ID
@@ -90,7 +93,7 @@ private:
   double              m_nominalCurrent; ///< To set up the running magnet current for rescaling
   std::string m_condPath; ///< Path to access the field conditions from the database.
   Condition *m_condition; ///< Access the conditions
-  IUpdateManagerSvc * MyupdMgrSvc;
+  IUpdateManagerSvc * m_updMgrSvc;
    
 
 };
