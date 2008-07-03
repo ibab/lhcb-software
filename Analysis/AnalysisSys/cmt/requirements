@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.53 2008-07-03 08:36:17 pkoppenb Exp $
+# $Id: requirements,v 1.54 2008-07-03 09:30:57 pkoppenb Exp $
 package AnalysisSys
 version v1r14
 
@@ -10,11 +10,12 @@ branches doc cmt
 #===================================================================
 use  CommonParticles            v3r12    Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r0     Phys   # Marco Musy
+use  DaVinciFilter              v6r8     Phys   # Patrick Koppenburg - deprecated
 
 ####################################################################
 use  DaVinciMCTools     	v9r14    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p4   Phys   # Philippe Charpentier
-use  VertexFitCheck             v1r2p1   Phys   # Yuehong Xie
+# use  VertexFitCheck             v1r2p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v3r0     Phys   # Marco Musy
 use  DaVinciUser      	        v8r4p2   Phys   # Juan Palacios
