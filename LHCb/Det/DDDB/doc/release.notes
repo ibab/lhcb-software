@@ -4,7 +4,13 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
-!========================== DDDB v1r8 2008-06-30 =============================
+!========================== DDDB v1r8 2008-07-03 =============================
+! 2008-07-03 - Marco Cattaneo
+ - In DDDB.py, LHCb-2008.py: add support for SIMCOND
+ - In LHCb-2008.py: get fieldMap options from UserRealMap.py
+                    (needs Det/Magnet v3r10) 
+                    change default tag to head-20080702 (from SQLDDDB v4r5)
+
 ! 2008-06-30 - Marco Cattaneo
  - In DDDB.py, DDDB.opts: suppress pointless warning from COOL_2_5_0
  - In DC06.py, LHCb-2008.py: Do not expand environment variable in options, 

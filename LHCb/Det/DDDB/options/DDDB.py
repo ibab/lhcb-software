@@ -1,4 +1,4 @@
-# $Id: DDDB.py,v 1.3 2008-06-30 10:14:03 cattanem Exp $
+
 __author__ = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -69,25 +69,28 @@ SIMCOND  = CondDBAccessSvc("SIMCOND")
 
 # Standard configurations
 #  - Reconstruction / analisys
-mainReader = CondDBDispatcherSvc("MainCondDBReader",
-                                 MainAccessSvc = DDDB,
-                                 Alternatives = [
-                                    "/Conditions=" + LHCBCOND.getFullName(),
-                                    # Not yet available
-                                    # "/Online=" + ONLINE.getFullName()
-                                 ]
-                                 )
+CondDBDispatcherSvc("MainCondDBReader",
+                     MainAccessSvc = DDDB,
+                     Alternatives = [
+                       "/Conditions=" + LHCBCOND.getFullName(),
+                       # Not yet available
+                       # "/Conditions/Online=" + ONLINE.getFullName()
+                       ]
+                    )
 
 #  - Simulation
-simReader = CondDBDispatcherSvc("SimulationCondDBReader",
-                                 MainAccessSvc = DDDB,
-                                 Alternatives = [
-                                    "/Conditions=" + SIMCOND.getFullName(),
-                                    "/Online="     + SIMCOND.getFullName()
-                                 ]
-                                 )
+CondDBDispatcherSvc("SimulationCondDBReader",
+                    MainAccessSvc = DDDB,
+                    Alternatives = [
+                      "/Conditions=" + SIMCOND.getFullName()
+                      ]
+                    )
 
-condDBCnvSvc = CondDBCnvSvc( CondDBReader = mainReader )
+# Default is real data
+CondDBCnvSvc( CondDBReader = allConfigurables["MainCondDBReader"] )
+
+# Use this for simulated data
+#CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
 
 ##########################################################################
 # Technology dependent options
