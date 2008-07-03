@@ -3,8 +3,71 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v6r14>2008-07-03 Phys v6r14 - First version with LHCb v24 series</A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v6r14                                 #
+###############################################################################
+
 ! 2008-07-03 - Patrick Koppenburg
  - DaVinciFilter moved to Analysis
+
+!======================== DaVinciTools v16r2 2008-07-03 =====================
+
+! 2008-07-03 - Patrick Koppenburg
+ - Moved FilterDesktop from DaVinciFilter
+
+! 2008-07-02 - Patrick Koppenburg
+ - CombienParticles : some more printout
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v16r2
+ - src/GeomDispCalculator{.cpp, .h}
+ - src/TrgDispCalculator.cpp
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
+
+!======================== ParticleMaker v4r1 2008-07-03 ===================
+
+! 2008-05-30 - Patrick Koppenburg
+ - Check StatsuCodes
+
+! 2008-04-29 - Patrick Koppenburg
+ - CombienParticleMaker : less verbose in intialize()
+
+!========================== VertexFit v5r2 2008-07-03 ===================
+
+! 2008-07-03 - Juan PALACIOS
+ - Add src/PVReFitterAlg.cpp, src/PVReFitterAlg.h
+   . Simple GaudiAlgorithm that takes some particles, their related primary 
+     vertices, and refits the vertices excluding the tracks coming from the 
+     particle's decay. It also creates a relations table associating each 
+     particle to its corresponding new vertex.
+   . As yet COMPLETELY UNTESTED!
+
+! 2008-07-02 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v5r2
+ * These changes need Phys/DaVinciKernel v6r15 or hiigher.
+ - src/AdaptivePVReFitter.cpp
+ - src/AdaptivePVReFitter.h
+ - src/PVReFitter.cpp
+ - src/PVReFitter.h
+  . Make all methods const. 
+  . Make first argument of IPVReFitter::remove a const LHCb::Particle*
+
+! 2008-05-30 - Patrick Koppenburg
+ - TrgVertexFitter : Check StatusCodes
+
+! =========================== LoKiFitters v1r2 2008-07-03 =====================
+
+! 2008-06-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r2
+ - src/DistanceCalculatorBase.h
+  . Change all Gaudi::Line for Gaudi::Math::Line (adapting to 
+    Kernel/LHCbMath v3)
 
 </PRE><H1><A NAME=v6r13>2008-06-09 Phys v6r13 - Version for June 2008 software week tutorials</A></H1><PRE>
 
