@@ -1,4 +1,4 @@
-// $Id: IL0DUFromRawTool.h,v 1.2 2007-10-31 16:42:21 odescham Exp $
+// $Id: IL0DUFromRawTool.h,v 1.3 2008-07-03 18:32:34 odescham Exp $
 #ifndef IL0DUFROMRAWTOOL_H 
 #define IL0DUFROMRAWTOOL_H 1
 
@@ -12,7 +12,7 @@
 #include "Event/L0DUReport.h"
 #include "Event/L0ProcessorData.h"
 
-static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 0 );
+static const InterfaceID IID_IL0DUFromRawTool ( "IL0DUFromRawTool", 1, 1 );
 
 /** @class IL0DUFromRawTool IL0DUFromRawTool.h
  *  
@@ -40,6 +40,7 @@ public:
   virtual LHCb::L0DUReport report()=0;
   virtual LHCb::L0ProcessorDatas* L0ProcessorDatas()=0;
   virtual const unsigned int size()=0;
+  virtual const unsigned long roStatus()=0;
   
 
 protected:
