@@ -11,7 +11,7 @@ use DetCond             v12r0   Det
 use DetDesc             v18r6   Det
 use DetDescCnv          v4r7    Det
 use DetDescSvc          v2r0    Det
-use Magnet              v3r9    Det
+use Magnet              v3r10   Det
 use MuonDet             v8r1    Det
 use OTDet               v7r9    Det
 use RichDet             v10r12  Det
