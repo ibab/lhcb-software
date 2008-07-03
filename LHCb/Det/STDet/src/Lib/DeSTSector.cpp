@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.40 2008-06-16 14:24:04 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.41 2008-07-03 09:48:20 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -106,7 +106,7 @@ StatusCode DeSTSector::initialize() {
  
     if (m_versionString != "DC06"){
       StatusCode sc = registerCondition(this,m_statusString,
-                                        &DeSTSector::updateStatusCondition);
+                                        &DeSTSector::updateStatusCondition,true);
       if (sc.isFailure() ){
         msg << MSG::ERROR << "Failed to register status conditions" << endreq;
         return StatusCode::FAILURE; 

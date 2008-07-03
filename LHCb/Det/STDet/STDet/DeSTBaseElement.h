@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.13 2008-05-29 11:40:51 cattanem Exp $
+// $Id: DeSTBaseElement.h,v 1.14 2008-07-03 09:48:20 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -193,16 +193,20 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, Object
  StatusCode sc = StatusCode::SUCCESS;
 
  try { 
-   if (forceUpdate) updMgrSvc()->invalidate(this);
+   //   if (forceUpdate) updMgrSvc()->invalidate(this);
    msg << MSG::DEBUG << "Registering conditions" << endmsg;
    updMgrSvc()->registerCondition(caller,object,mf);
    msg << MSG::DEBUG << "Start first update" << endmsg;
-   sc = updMgrSvc()->update(caller);
-   if (sc.isFailure()){
-     msg << MSG::WARNING << "failed to update detector element " << endmsg;
+   if (forceUpdate){
+       sc = updMgrSvc()->update(caller);
+       if (sc.isFailure()){
+       msg << MSG::WARNING << "failed to update detector element " << endmsg;
+     }
    }
  } 
- catch (DetectorElementException &e) {
+ catch (DetectorElementException &e) 
+{
+   msg << MSG::ERROR << " Failed to update condition:" << caller->name() << endmsg;  
    msg << MSG::ERROR << e << endmsg;
    return StatusCode::FAILURE;
  }
@@ -218,17 +222,20 @@ inline StatusCode DeSTBaseElement::registerCondition(CallerClass* caller, const 
  StatusCode sc = StatusCode::SUCCESS;
 
  try { 
-   if (forceUpdate) updMgrSvc()->invalidate(this);
+   //if (forceUpdate) updMgrSvc()->invalidate(this);
    msg << MSG::DEBUG << "Registering " << conditionName << " condition" << endmsg;
    updMgrSvc()->registerCondition(caller,condition(conditionName).path(),mf);
    msg << MSG::DEBUG << "Start first update" << endmsg;
-   sc = updMgrSvc()->update(caller);
-   if (sc.isFailure()){
-     msg << MSG::WARNING << "failed to update detector element " <<  condition(conditionName).path() << endmsg;
+   if (forceUpdate){
+      sc = updMgrSvc()->update(caller);
+      if (sc.isFailure()){
+       msg << MSG::WARNING << "failed to update detector element " <<  condition(conditionName).path() << endmsg;
+      }
    }
  } 
  catch (DetectorElementException &e) {
-   msg << MSG::ERROR << e << endmsg;
+   msg << MSG::ERROR << " Failed to update condition:" << conditionName  << " " << caller->name() << endmsg;  
+   msg << MSG::ERROR << "Message is " << e << endmsg;
    return StatusCode::FAILURE;
  }
  return sc;

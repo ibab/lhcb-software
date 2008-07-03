@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.1 2008-03-14 18:26:41 mneedham Exp $
+// $Id: DeSTSensor.cpp,v 1.2 2008-07-03 09:48:20 mneedham Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -243,7 +243,7 @@ StatusCode DeSTSensor::registerConditionsCallbacks(){
   // initialize method
   MsgStream msg(msgSvc(), name() );
 
-  StatusCode sc = registerCondition(this,this->geometry(),&DeSTSensor::cacheInfo);
+  StatusCode sc = registerCondition(this,this->geometry(),&DeSTSensor::cacheInfo, true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register geometry conditions" << endreq;
     return StatusCode::FAILURE; 

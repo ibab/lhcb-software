@@ -36,7 +36,7 @@ StatusCode DeSTBaseElement::initialize() {
   }
  
   // cache trajectories
-  sc = registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint,false);
+  sc = registerCondition(this,this->geometry(),&DeSTBaseElement::cachePoint,true);
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to register conditions" << endreq;
     return StatusCode::FAILURE; 
