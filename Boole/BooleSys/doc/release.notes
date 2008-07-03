@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
+This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19
+ and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r1
+
 </PRE><H1><A NAME=v15r1>2008-06-03 Boole v15r1</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18
  and DDDB v1r* (SQLDDDB v4r4 or greater), ParamFiles v7r1, FieldMap v5r1
