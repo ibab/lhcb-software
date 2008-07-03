@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r7 2008-07-02 ====================
 ! 2008-07-02 - Manuel Tobias Schiller
  - PatSeedingTool: added code to deal better with cosmics, specifically:
    - strategy is to seed cosmics with the OT, then pick up IT hits which
@@ -22,7 +23,6 @@
    not well tuned yet (especially IT: nothing done/seen so far)
  - removed superfluous include file (fenv.h)
 
-!========================== PatAlgorithms v3r7 2008-07-02 ====================
 ! 2008-06-29 - Manuel Tobias Schiller
  - PatSeedingTool:
    - tuning for new field map, now used per default
