@@ -3,6 +3,7 @@
 //  geometry lhcb-200601 (DC06)                                              //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
 //---------------------------------------------------------------------------
 // Uncomment one or more of following lines for optional behaviour

@@ -4,7 +4,8 @@
 //
 // This file defines, sequences and configures the algorithms to be executed
 //==============================================================
-#include "$STDOPTS/LHCbApplication.opts"
+
+#units "$STDOPTS/units.opts"
 
 // POOL Persistency
 #include "$STDOPTS/DigiDicts.opts"

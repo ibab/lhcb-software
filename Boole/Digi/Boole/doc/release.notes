@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
+ - Update 2008-Files.py with latest test file from Gauss v31r2
+ - Fix default condDBtag in Boole-2008.py
+ - Remove include of LHCbApplication.opts from Boole.opts, to allow usage of
+   .py version in configurable. Added instead to DC06 *.opts files
+ - In Configurable, add support for SIMCOND, which is now used by default
+   except for DC06 geometries, only existing in LHCBCOND
+
 </PRE><H1><A NAME=v15r1>2008-06-05 Boole v15r1</A></H1><PRE>
  - In Boole.opts: in OTDigiSeq, call OTFillRawBuffer instead of OTFillRawEvent
  - In Configuration.py, Boole-Default.py: new attribute "mainOptions" to

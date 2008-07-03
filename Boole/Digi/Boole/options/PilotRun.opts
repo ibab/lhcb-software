@@ -3,6 +3,7 @@
 //  geometry lhcb-200601 pilot run conditions (field off, no spillover)      //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BOOLEOPTS/Boole.opts"              // Generic options for all jobs
 ApplicationMgr.OutStream += { "DigiWriter" }; // Comment to switch off output
 InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Remove spillover

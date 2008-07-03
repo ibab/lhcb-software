@@ -1,13 +1,13 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-06-04 16:09:37 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-07-03 16:03:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import ( CondDBAccessSvc, MagneticFieldSvc,
+from Configurables import ( CondDBCnvSvc, MagneticFieldSvc,
                             MCSTDepositCreator, MuonDigitToRawBuffer ) 
 import GaudiKernel.ProcessJobOptions
 
@@ -67,7 +67,7 @@ class Boole(ConfigurableUser):
 
         # Special options for 2008 data processing
         if condDBtag.find("-2008") != -1 and DDDBtag.find("-2008") != -1 :
-          MuonDigitToRawBuffer().VType = 2 # New RawBank type
+            MuonDigitToRawBuffer().VType = 2 # New RawBank type
           
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
@@ -185,6 +185,7 @@ class Boole(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
+        importOptions( "$DDDBROOT/options/DDDB.py" )
         importOptions( self.getProp( "mainOptions" ) )
         self.defineDB()
         self.defineEvents()
@@ -193,3 +194,6 @@ class Boole(ConfigurableUser):
         self.defineOutput()
         self.defineMonitors()
         LHCbApp().applyConf()
+        # Use SIMCOND if not DC06
+        if LHCbApp().getProp("condDBtag").find("DC06") == -1:
+            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
