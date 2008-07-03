@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.14 2008-07-03 12:25:22 jpalac Exp $
+!$Id: release.notes,v 1.15 2008-07-03 12:31:53 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
@@ -9,6 +9,8 @@
  - src/CheatedPVReFitter.cpp, src/CheatedPVReFitter.h
   . Put const where necessary to adapt to new IPVReFitter interface.
   . Make all methods const 'cause they have no reason not to be.
+ - cmt/requirements
+  . Increase version to v1r3
 
 !===================== VertexFitCheck v1r2p1 2008-03-06 ====================
 
