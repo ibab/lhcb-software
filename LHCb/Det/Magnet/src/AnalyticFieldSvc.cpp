@@ -92,7 +92,7 @@ StatusCode AnalyticFieldSvc::initialize()
   status = GetParam();
   if ( status.isSuccess() ) {
     log << MSG::DEBUG << "B maps read successfully" << endreq;
-    DebugMaps();
+    //    DebugMaps();
     return status;
   }
   else {
