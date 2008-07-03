@@ -709,7 +709,7 @@ double AnalyticFieldSvc::EvaluateField(MagVec&  pos, MagMat& bmap) const{
      double term = bmap[i][3];
     for (j = 0; j < 3; j++) {
       // Evaluate the polynomial in the jth variable.
-      int power = bmap[i][j]; 
+      int power = (int)bmap[i][j]; 
       double p1 = 1, p2 = 0, p3 = 0, r = 0;
       double v =  1 + 2. / (bmap[1][j] - bmap[0][j]) * (pos[j] - bmap[1][j]);
       // what is the power to use!
