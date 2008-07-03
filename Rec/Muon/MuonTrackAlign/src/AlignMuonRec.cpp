@@ -1,6 +1,6 @@
 ////////// Brunel v32r7 ///////////////
 
-// $Id: AlignMuonRec.cpp,v 1.7 2008-07-02 09:16:26 spozzi Exp $
+// $Id: AlignMuonRec.cpp,v 1.8 2008-07-03 17:01:48 spozzi Exp $
 // Include files 
 
 // from Gaudi
@@ -462,17 +462,17 @@ StatusCode AlignMuonRec::finalize() {
 StatusCode AlignMuonRec::muonSearch() {
   m_muonTracks.clear();
   
-  std::vector<AlignMuonPoint>::iterator itM5, itM5n, itM5m, CT_itM5, itCT_M5points;
-  std::vector< AlignMuonPoint > 	CT_points[5], points[5];
+  std::vector<AlignMuonPoint>::iterator itM5, itM5m, CT_itM5, itM5n, itCT_M5points;
+  std::vector< AlignMuonPoint > 	CT_Points[5], Points[5];
   
   for (unsigned int region=0;region<m_nRegion;region++){
     AlignMuonRegion* thisRegion = m_station[4].region(region);
     for(itM5=thisRegion->points().begin(); itM5<thisRegion->points().end(); itM5++){	
-      points[4].push_back(*itM5);
+      Points[4].push_back(*itM5);
     }
   }
   
-  for(itM5m = points[4].begin(); itM5m<points[4].end(); itM5m++){
+  for( itM5m = Points[4].begin(); itM5m<Points[4].end(); itM5m++){
     
     std::vector<AlignMuonPoint> CandidateM5;
     CandidateM5.push_back((*itM5m));
@@ -482,7 +482,7 @@ StatusCode AlignMuonRec::muonSearch() {
 	
     bool CT_flag = true;
     
-    for(CT_itM5 = CT_points[4].begin(); CT_itM5<CT_points[4].end(); CT_itM5++){
+    for( CT_itM5 = CT_Points[4].begin(); CT_itM5<CT_Points[4].end(); CT_itM5++){
       info() <<" Hit already used for another seed"<<endreq;
       if ((*CT_itM5).tile()==(*itM5m).tile()) CT_flag = false;
     }
@@ -493,13 +493,13 @@ StatusCode AlignMuonRec::muonSearch() {
     float M5y = (*itM5m).y();
     float n = 1;
     
-    for(itM5n = itM5m+1; itM5n < points[4].end(); itM5n++){
+    for( itM5n = itM5m+1; itM5n < Points[4].end(); itM5n++){
       if(fabs((*itM5m).x()-(*itM5n).x())<0.55*(PADsizeX[(*itM5m).tile().region()]+PADsizeX[(*itM5n).tile().region()])
          && fabs((*itM5m).y()-(*itM5n).y())<0.55*(PADsizeY[(*itM5m).tile().region()]+PADsizeY[(*itM5n).tile().region()])){
 	M5x+=(*itM5n).x();
 	M5y+=(*itM5n).y();
 	n++;
-        CT_points[4].push_back(*itM5n);
+        CT_Points[4].push_back(*itM5n);
 	CT_M5points.push_back(*itM5n); 
         CandidateM5.push_back((*itM5n));
       }
@@ -592,6 +592,7 @@ StatusCode AlignMuonRec::muonSearch() {
       muon.setPoint(2,CandidateM3);
       muon.setPoint(3,CandidateM4);
       muon.setPoint(4,CandidateM5);
+     
       m_muonTracks.push_back(muon);      
   }
  
@@ -612,23 +613,28 @@ StatusCode AlignMuonRec::detectClone()
       
       int Msamepoints[5];
       for (int i=1; i<4; i++) { // look only in M2,M3,M4
-	sameM[i]=false;
-	std::vector<AlignMuonPoint>::iterator iFirstMpoint;
-	std::vector<AlignMuonPoint>::iterator iSecondMpoint;
+	sameM[i]=false;	
+       
 	Msamepoints[i]=0;
-	for(iFirstMpoint = itMuonTrackFirst->points(i).begin();
-	    iFirstMpoint < itMuonTrackFirst->points(i).end(); iFirstMpoint++){
-	  for(iSecondMpoint = itMuonTrackSecond->points(i).begin();
-	      iSecondMpoint < itMuonTrackSecond->points(i).end(); iSecondMpoint++){
-	    if(iFirstMpoint->tile() == iSecondMpoint->tile()) Msamepoints[i]++;	    
+
+	std::vector<AlignMuonPoint> FirstMpoint = itMuonTrackFirst->points(i);
+	for(std::vector<AlignMuonPoint>::iterator iFirstMpoint = FirstMpoint.begin();
+	    iFirstMpoint < FirstMpoint.end(); iFirstMpoint++){
+	  std::vector<AlignMuonPoint> SecondMpoint = itMuonTrackSecond->points(i);
+	  for(std::vector<AlignMuonPoint>::iterator iSecondMpoint = SecondMpoint.begin();
+	      iSecondMpoint < SecondMpoint.end(); iSecondMpoint++){
+	    
+	    if(iFirstMpoint->tile().key() == iSecondMpoint->tile().key() ) {
+	      Msamepoints[i]++;	    
+	    }
 	  }
 	}
 	
 	if(Msamepoints[i]>0) sameM[i] = true;
-	
       }
       
       if(sameM[1]&&sameM[2]&&sameM[3]){
+	
 	
 	double x_extra5=-(itMuonTrackFirst->point(2).x()-itMuonTrackFirst->point(3).x())+itMuonTrackFirst->point(3).x();
 	double y_extra5=itMuonTrackFirst->point(3).y()*18800.0/17600.0;
@@ -636,8 +642,10 @@ StatusCode AlignMuonRec::detectClone()
 	double distdue=sqrt(pow((itMuonTrackSecond->point(4).x()-x_extra5),2)+pow((itMuonTrackSecond->point(4).y()-y_extra5),2));
 	if(distuno>distdue){
 	  itMuonTrackFirst->setClone();
+	  debug()<< " Clone First track "<<endreq;
 	}else{
 	  itMuonTrackSecond->setClone();
+	  debug()<< " Clone Second track "<<endreq;
 	}
       }
     }
@@ -660,14 +668,18 @@ StatusCode AlignMuonRec::strongCloneKiller()
       int Msamepoints[5];
       for (int i=1; i<3; i++) { // look only in M2,M3
 	sameM[i]=false;
-	std::vector<AlignMuonPoint>::iterator iFirstMpoint;
-	std::vector<AlignMuonPoint>::iterator iSecondMpoint;
+
 	Msamepoints[i]=0;
-	for(iFirstMpoint = itMuonTrackFirst->points(i).begin();
-	    iFirstMpoint < itMuonTrackFirst->points(i).end(); iFirstMpoint++){
-	  for(iSecondMpoint = itMuonTrackSecond->points(i).begin();
-	      iSecondMpoint < itMuonTrackSecond->points(i).end(); iSecondMpoint++){
-	    if(iFirstMpoint->tile() == iSecondMpoint->tile()) Msamepoints[i]++;	    
+
+	std::vector<AlignMuonPoint> FirstMpoint = itMuonTrackFirst->points(i);
+	for(std::vector<AlignMuonPoint>::iterator iFirstMpoint = FirstMpoint.begin();
+	    iFirstMpoint < FirstMpoint.end(); iFirstMpoint++){
+	  std::vector<AlignMuonPoint> SecondMpoint = itMuonTrackSecond->points(i);
+	  for(std::vector<AlignMuonPoint>::iterator iSecondMpoint = SecondMpoint.begin();
+	      iSecondMpoint < SecondMpoint.end(); iSecondMpoint++){
+	    if(iFirstMpoint->tile().key() == iSecondMpoint->tile().key()) {
+	      Msamepoints[i]++;	    
+	    }
 	  }
 	}
 	
