@@ -7,37 +7,38 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltCommon           v3r3    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v3r3    Hlt   # Jose Angel Hernando-Morata
-use HltHadAlley         v3r2    Hlt   # Jose Angel Hernando-Morata
-use HltPython	        v1r6    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v3r4    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v3r4    Hlt   # Jose Angel Hernando-Morata
+use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
-use HltMuon             v3r2    Hlt   # Alessia Satta          
-use HltMuonAlley        v2r4    Hlt   # Sandra Amato 
-use HltL0Conf           v2r1    Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r1    Hlt   # Alessia Satta/Sandra Amato  
+use HltMuon             v3r3    Hlt   # Alessia Satta          
+use HltMuonAlley        v2r4p1  Hlt   # Sandra Amato 
+use HltL0Conf           v2r1p1  Hlt   # Johannes Albrecht
+use HltL0MuonConf       v3r2    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltRecChecker	v1r6	Hlt   # Jose Angel Hernando-Morata
+
+# And now for something completely different
+use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v7r1    Hlt   # Patrick Koppenburg
-use Fidel               v1r0    Phys   # Sara Furcas
-use HltKshort           v1r3    Hlt   # Jaap Panman
+use HltSelections       v7r2    Hlt   # Patrick Koppenburg
+use Fidel               v1r1    Phys   # Sara Furcas
+use HltKshort           v1r4    Hlt   # Jaap Panman
 
-use HltSelChecker       v6r2    Hlt   # Patrick Koppenburg
+use HltSelChecker       v6r3    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use HltBase             v4r3   Hlt    # Jose Angel Hernando-Morata
+use HltBase             v4r4   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
-use TisTosTobbing       v2r4   Phys   # Tomasz Skwarnicki  
-
+use TisTosTobbing       v2r6   Phys   # Tomasz Skwarnicki  
 
 
 # Allow the generation of QMTest summary 
