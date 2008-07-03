@@ -32,24 +32,25 @@
 
       <constructor
         desc     = "Default constructor"
-        initList = "Base ( 0x0000   )  , m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
+        initList = "Base ( 0x0000   ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
         > <code/></constructor>
 
       <constructor
         desc     = "non-default constructor"
         argList  = "long tck "
-        initList = "Base ( tck ) , m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
+        initList = "Base ( tck ), m_recipe(), m_definition(),m_data(),m_conditions(),m_channels(),m_triggers()"
         > <code/> </constructor>
 
 
       <constructor 
         desc     = "Copy Constructor" 
         argList  = "LHCb::L0DUConfig rh"
-        initList = "Base(rh.key() ), m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() )
+        initList = "Base(rh.key() ), m_recipe(rh.recipe()),m_definition(rh.definition() ), m_data(rh.data() ), m_conditions (rh.conditions() )
         , m_channels(rh.channels() ),m_triggers(rh.triggers() )"
         > <code/> </constructor>
 
 
+      <attribute name = "recipe" desc = " L0DU Channel recipe name"  type = "std::string"/>
       <attribute name = "definition" desc = " L0DU Channel key definition"  type = "std::string"/>
       <attribute name = "data" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryData::Map" nonconstaccessor='TRUE' />
       <attribute name = "conditions" desc = " L0DU Elementary condition" type = "LHCb::L0DUElementaryCondition::Map"  nonconstaccessor='TRUE'/>

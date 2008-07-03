@@ -1,4 +1,4 @@
-// $Id: L0DUConfig.cpp,v 1.3 2008-05-29 14:10:07 odescham Exp $
+// $Id: L0DUConfig.cpp,v 1.4 2008-07-03 18:31:46 odescham Exp $
 // Include files 
 #include <utility>
 #include <string>
@@ -36,6 +36,7 @@ std::string LHCb::L0DUConfig::summary(){
   s << " " << std::endl
     << " <-----  L0DUConfig (" << key()   << " ) " << " --------------->" <<std::endl
     << "   Decision : " << emulatedDecision() << std::endl
+    << "   Recipe name : '" << m_recipe << "'" << std::endl
     << "   Algorithm description : " << m_definition << std::endl
     << oscond.str()
     << " ======= Trigger Sets "
@@ -67,6 +68,7 @@ std::string LHCb::L0DUConfig::description(){
 
   s << " " << std::endl
     << " <-----  L0DUConfig (" << key()   << " ) " << " --------------->" <<std::endl
+    << "   Recipe name : '" << m_recipe << "'" <<std::endl
     << "   Description : " << m_definition << std::endl
     << oscond.str()
     << " ======= Trigger Sets "
