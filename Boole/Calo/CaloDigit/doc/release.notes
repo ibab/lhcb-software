@@ -4,15 +4,14 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r6 2008-07-03 ==========================
 ! 2008-06-30 - Olivier Deschamps for Miriam Calvo
   - fix bug in CalODigitAlg : missing "/" in "Prev/" prefix -> no spillover correction
-
 
 ! 2008-06-30 - Olivier Deschamps for Sasha  Akozlin
  - implement realistic Ecal Cockroft-Walton noise in CaloDigitAlg
  - fully incoherent noise description as a sum of gaussian (can be set by options)
  - can be swith on/off via options
-
 
 !======================== CaloDigit v2r5 2007-12-11 ==========================
 ! 2007-12-10 - Olivier Deschamps
