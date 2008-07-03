@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.15 2008-06-09 15:25:14 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.16 2008-07-03 18:33:11 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -38,6 +38,7 @@ L0DUFromRawTool::L0DUFromRawTool( const std::string& type,
   declareProperty( "ForceNonZeroSupMuons"    , m_muonNoZsup=false);        // WARNING : for experts only
   declareProperty( "ForceSummarySize"        , m_sumSize=-1);        // WARNING : for experts only
   declareProperty( "ForceTCK"                , m_force = -1);        // WARNING : for experts only
+  declareProperty( "FullWarning"             , m_warn = false);
 }
 //=============================================================================
 // Destructor
@@ -76,9 +77,19 @@ StatusCode L0DUFromRawTool::initialize(){
     warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endreq;
   }
 
+
+  
+
   return sc;
 }
 
+
+// ---------------------------------------------
+bool L0DUFromRawTool::decodeBank(int ibank){
+  bool ok = decoding(ibank);
+  putStatusOnTES();
+  return ok;
+}
 
 // ---------------------------------------------
 bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
@@ -87,9 +98,12 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   LHCb::RawEvent* rawEvt = NULL ;
 
 
+  m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
+  m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::OK);
 
   if( !exist<LHCb::RawEvent>( m_rawLocation ) ){
     warning() << "rawEvent not found at location '" << rootInTES() + m_rawLocation << "'" << endmsg;
+    m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }      
   
@@ -97,32 +111,31 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   m_banks= &rawEvt->banks(   LHCb::RawBank::L0DU );
 
 
-  m_roStatus = LHCb::RawBankReadoutStatus( LHCb::RawBank::L0DU );
-
   // check whether error bank has been produced
   const std::vector<LHCb::RawBank*>* errBanks = &rawEvt->banks(   LHCb::RawBank::L0DUError );
   if( errBanks != 0 && errBanks->size() !=0 ){
-    info() << "L0DUError bank has been found (size = " << errBanks->size() << " bytes)" << endreq;
+    if(m_warn)Warning("L0DUError bank has been found ...",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0, LHCb::RawBankReadoutStatus::ErrorBank );
   }
   
   
   debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
-    info() << "READOUTSTATUS : no L0DU bank found in rawEvent" << endreq;
+    if(m_warn)Warning("READOUTSTATUS : no L0DU bank found in rawEvent",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }
   if( 1 != m_banks->size() ){
     std::stringstream msg("");
-    info() << "READOUSTATUS : more than one L0DU bank has been found in the RawEvent ("  << m_banks->size() <<")" << endreq;
+    if(m_warn)Warning("READOUSTATUS : more than one L0DU bank has been found in the RawEvent",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::NonUnique);
   }  
   return true;
 } 
 
 
-bool L0DUFromRawTool::decodeBank(int ibank){
+
+bool L0DUFromRawTool::decoding(int ibank){
 
 
   // ------------------------
@@ -143,7 +156,8 @@ bool L0DUFromRawTool::decodeBank(int ibank){
   std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
   LHCb::RawBank* bank = *itB+ibank;  
   if(NULL == bank){
-    Error("Bank point to NULL ").ignore();
+    Error("Bank point to NULL ",StatusCode::SUCCESS).ignore();
+    m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
     return false;
   }
 
@@ -217,7 +231,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
       m_warning = false;
       std::stringstream tck("");
       tck << format("0x%04X", m_tck);
-      info() << "L0DU bank version = 0 --> the TCK value is forced to " << tck.str() << endreq;
+      if(m_warning)Warning("L0DU bank version = 0 --> the TCK value is forced to " + tck.str(),StatusCode::SUCCESS).ignore();
     } 
     if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endreq;
 
@@ -439,7 +453,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
         << "   -> The PGA3 and PGA2 data are aligned _____________________________________ <** OK **> " 
         << endreq;
     }else{
-      info() << "   -> The PGA3 and PGA2 data are NOT aligned "  << endreq;
+      if(m_warn)Warning("   -> The PGA3 and PGA2 data are NOT aligned ",StatusCode::SUCCESS).ignore();
       if ( msgLevel( MSG::DEBUG) )
         debug() << " BCIDs PGA2(LSB)/PGA3= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
     }
@@ -604,14 +618,13 @@ bool L0DUFromRawTool::decodeBank(int ibank){
     //---------------------------------------------------------
     
   }  else{
-    Error(" Unknown bank version ").ignore();
+    Error(" Unknown bank version ",StatusCode::SUCCESS).ignore();
     if ( msgLevel( MSG::DEBUG) )debug() << " Unknown bank version : " << m_vsn << endreq;
+    m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted);
     return false;
   }
 
 
-  // put status on TES
-  putStatusOnTES();
   
   return true;
 }
@@ -620,7 +633,7 @@ bool L0DUFromRawTool::decodeBank(int ibank){
 const unsigned int L0DUFromRawTool::data(std::string name){
   std::map<std::string, unsigned int>::iterator it = m_dataMap.find(name);
   if(m_dataMap.end() == it){
-    info() << " Requested data " << name  << " is unknown " << endreq;
+    if(m_warn)Warning("Warning: Requested data '" + name  + "' is unknown ",StatusCode::SUCCESS).ignore();
     return 0;
   }
   return (*it).second;

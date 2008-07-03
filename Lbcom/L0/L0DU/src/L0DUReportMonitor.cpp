@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.11 2008-05-31 11:58:58 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.12 2008-07-03 18:33:11 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -95,7 +95,7 @@ StatusCode L0DUReportMonitor::execute() {
 
 
   if(config == NULL){
-    Error("L0DUConfig for tck = " + ttck.str() + " has not been registered -> cannot monitor the report").ignore();
+    Error("NULL L0DUConfig of unknown  tck = " + ttck.str() + " -> cannot monitor the report").ignore();
     return StatusCode::SUCCESS;
   }
   

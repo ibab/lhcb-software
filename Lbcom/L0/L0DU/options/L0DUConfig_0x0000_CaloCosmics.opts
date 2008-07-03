@@ -8,7 +8,7 @@ ToolSvc.L0DUConfig.TCK_0x0000.Description =" TCK = 0x0000 Calo Cosmics Trigger (
 // Elementary Conditions  
 ToolSvc.L0DUConfig.TCK_0x0000.Conditions = { 
   { "name=[Electron]" , "data=[Electron(Et)]"  , "comparator=[>]" , "threshold=[20]"   },  
-  { "name=[Hadron]"   , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[3]"   },
+  { "name=[Hadron]"   , "data=[Hadron(Et)]"    , "comparator=[>]" , "threshold=[5]"   },
   { "name=[Muon]"     , "data=[Muon1(Pt)]"     , "comparator=[>]" , "threshold=[0]"   }
 };
 //------------------
@@ -17,9 +17,6 @@ ToolSvc.L0DUConfig.TCK_0x0000.Channels ={
   {"name=[CaloCosmics]"       , "rate==[100]", "conditions= [Electron] && [Hadron]   "},
   {"name=[MuonCosmics]"       , "rate==[100]", "conditions= [Muon]"}
 };
-
-
-
 
 ToolSvc.L0DUConfig.TCK_0x0000.Triggers +={ 
   {"name=[L0Calo]"     , "channels=[CaloCosmics]"},

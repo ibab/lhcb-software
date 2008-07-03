@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.5 2008-06-06 11:46:42 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.6 2008-07-03 18:33:11 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -38,7 +38,8 @@ L0DURawBankMonitor::L0DURawBankMonitor( const std::string& name,
   declareProperty( "DataReBinFactor"   , m_bin = 1);
   declareProperty( "DecodeBank"        , m_decode = true);
   declareProperty( "LocationsForEmulatorCheck"   , m_locs);
-    
+  declareProperty( "FullWarning"       , m_warn = false);
+  
 
   setHistoDir( name );
 }
@@ -91,15 +92,26 @@ StatusCode L0DURawBankMonitor::execute() {
     LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     odBX = odin->bunchId();
   }else{
-    Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ).ignore();
+    Warning( "Emtpy location for ODIN '"+ LHCb::ODINLocation::Default +"'" ,StatusCode::SUCCESS).ignore();
+  }
+
+
+  
+  bool ok ;
+  if(m_decode){
+    ok = m_fromRaw->decodeBank();
+  }else{
+    bool ko = 
+      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Corrupted  )  ||
+      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Missing    )  ||
+      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Incomplete )  ||
+      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Empty      )  ;
+      ok = !ko;
   }
   
-
-  if(m_decode){
-    if(!m_fromRaw->decodeBank()){
-      Error("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
-      return StatusCode::SUCCESS;
-    } 
+  if(!ok){
+    Error("Readout error : unable to monitor the L0DU rawBank", StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
+    return StatusCode::SUCCESS;
   }
   
 
@@ -211,7 +223,8 @@ StatusCode L0DURawBankMonitor::execute() {
     if( NULL == config){
       std::stringstream ttck("");
       ttck << format("0x%04X", report.tck() ) ;
-      Warning("L0DUConfig for tck = " + ttck.str() + " has not been registered -> cannot perform the emulator check").ignore();
+      Warning("L0DUConfig for tck = " + ttck.str() + " has not been registered -> cannot perform the emulator check"
+              ,StatusCode::SUCCESS).ignore();
     }else{
       std::stringstream local("");
       local << LHCb::L0ProcessorDataLocation::L0DU;
@@ -231,7 +244,7 @@ StatusCode L0DURawBankMonitor::execute() {
         if(m_emuTool->process(config , dataLocs ).isSuccess()){
           check = emulatorCheck( config, k , " from  " + loc.str() ) && check;
         }else{
-          Warning("Cannot run the emulator for L0ProcessorData location(s) : " + loc.str() ).ignore();
+          Warning("Cannot run the emulator for L0ProcessorData location(s) : " + loc.str() ,StatusCode::SUCCESS).ignore();
         }        
       }
       // reset processor data from L0DU location when changed
@@ -241,51 +254,52 @@ StatusCode L0DURawBankMonitor::execute() {
       }
     }    
     
+
     // L0DU Error summary
     fill( histo1D(HistoID("Status/Summary/1")), -1. , 1 ); // counter
     if(0 < inputStatus){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::InputData  , 1 );
-      info() << "L0DU bank monitor summary : -- input data error bit -- "<< endreq;
+      if(m_warn)Warning(" Status::Warning : L0DU bank monitor summary : -- input data error bit -- "
+                        ,StatusCode::SUCCESS).ignore();
     }
     if( (0x7F & m_fromRaw->bcid().first) != m_fromRaw->bcid().second){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
-      info() << "L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
-             << (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second 
-             << endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
+                        ,StatusCode::SUCCESS).ignore();
+      debug() << "BCID L0DU/PGA3 : " <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endreq;
     }
-
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
-      info() << "L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
-             << odBX << "/" << m_fromRaw->bcid().first << endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
+                        ,StatusCode::SUCCESS).ignore();
+      debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endreq;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::Tell1 , 1 );
-      info() << "L0DU bank monitor summary : -- TELL1 error bit -- "<< endreq;
-    } 
+      if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- TELL1 error bit -- ",StatusCode::SUCCESS).ignore();
+    }
     if( (m_fromRaw->status() & 0x2) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::DeMux , 1 );
-      info() << "L0DU bank monitor summary : -- DeMultiplexer error bit -- "<< endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- DeMultiplexer error bit -- "
+                        ,StatusCode::SUCCESS).ignore();
     }
     if( (m_fromRaw->status() & 0x4) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::TLK   , 1 );
-      info() << "L0DU bank monitor summary : -- TLK error bit -- "<< endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- TLK error bit -- ",StatusCode::SUCCESS).ignore();
     }
-    
     if( (m_fromRaw->status() & 0x8) ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::IdleLink , 1 );
-      info() << "L0DU bank monitor summary : -- Idle link error bit -- "<< endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- Idle link error bit -- ",StatusCode::SUCCESS).ignore();
     }
     if( !check ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::EmulatorCheck , 1 );
-      info() << "L0DU bank monitor summary : -- Emulator check error -- "<< endreq;
+      if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- Emulator check error -- ",StatusCode::SUCCESS).ignore();
 
     }    
     if( NULL == config ){
       fill( histo1D(HistoID("Status/Summary/1")), L0DUBase::L0DUError::UnknownTCK , 1 );
-      info() << "L0DU bank monitor summary : -- unknown TCK error -- "<< endreq;
+      if(m_warn)Warning("Status::Warning  : L0DU bank monitor summary : -- unknown TCK -- ",StatusCode::SUCCESS).ignore();
     }
-
   }
 
 
@@ -393,7 +407,7 @@ void L0DURawBankMonitor::bookHistos() {
 
 bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::string txt) {
   if( NULL == config){
-    Warning("L0DUConfig config point to NULL").ignore();
+    Warning("L0DUConfig config point to NULL",StatusCode::SUCCESS).ignore();
     return false;
   }
   bool check = true;

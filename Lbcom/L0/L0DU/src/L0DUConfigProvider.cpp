@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.7 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.8 2008-07-03 18:33:11 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -45,6 +45,7 @@ L0DUConfigProvider::L0DUConfigProvider( const std::string& type,
   declareProperty( "Triggers"                , m_triggers );
   // for options defined configuration
   declareProperty( "Description"             , m_def     = "NO DESCRIPTION");  
+  declareProperty( "Name"                    , m_recipe  = "");  
   declareProperty( "Separators"              , m_sepMap);
 
 
@@ -181,6 +182,15 @@ StatusCode L0DUConfigProvider::initialize(){
     return StatusCode::FAILURE; 
   }
   m_config->setDefinition( m_def);
+
+  if(m_recipe == ""){
+    std::stringstream recipe("");
+    recipe << "L0-Algo-TCK=" <<  format("0x%04X" , m_tckopts ) ;    
+    m_config->setRecipe( recipe.str() );
+  }else{
+    m_config->setRecipe( m_recipe );
+  }
+  
 
   //=====================================
   m_config->setData( m_dataMap );

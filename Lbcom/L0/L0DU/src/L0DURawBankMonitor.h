@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.4 2008-06-06 11:46:42 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.5 2008-07-03 18:33:11 odescham Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -8,6 +8,7 @@
 #include "L0Interfaces/IL0CondDBProvider.h"
 #include "L0Interfaces/IL0DUEmulatorTool.h"
 #include "Kernel/IEventTimeDecoder.h"
+#include "Event/RawBankReadoutStatus.h"
 // Base class
 #include "CaloUtils/Calo2Dview.h"
 
@@ -70,5 +71,6 @@ private:
   int m_bin;
   std::vector<std::vector<std::string> > m_locs;
   bool m_decode;
+  bool m_warn;
 };
 #endif // L0DURAWBANKMONITOR_H

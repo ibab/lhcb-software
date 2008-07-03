@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.3 2008-05-29 14:01:15 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.4 2008-07-03 18:33:11 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -93,6 +93,8 @@ private:
   std::vector<std::string> m_comparators;
   std::vector<std::pair<std::string, unsigned int> > m_operators;
 
+  std::string m_def;
+  std::string m_recipe;
   
   std::map<std::string,std::string> m_sepMap;
   std::pair <std::string,std::string> m_separators;
@@ -101,7 +103,5 @@ private:
   std::vector<std::string> m_chanFlags;
   std::vector<std::string> m_trigFlags;
   
-  
-  std::string m_def;
 };
 #endif // L0DUCONFIGPROVIDER_H

@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.7 2008-06-06 11:46:42 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.8 2008-07-03 18:33:11 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -41,6 +41,7 @@ public:
   const unsigned int muonCleaningPattern(){  return m_muCleanPattern; }
   const unsigned int status(){  return m_status; }
   const unsigned int size(){return m_size;  }
+  const unsigned long roStatus(){return m_roStatus.status();  }
   
     
   LHCb::L0DUReport report(){return m_report;}
@@ -50,6 +51,7 @@ public:
 protected:
 
 private:
+  bool decoding(int ibank);
   bool getL0DUBanksFromRaw();
   void encode(unsigned int data ,  const unsigned int base[L0DUBase::Index::Size]);
   void fillProcessorData();
@@ -92,5 +94,6 @@ private:
   //
   unsigned int* m_data;
   unsigned int  m_source;
+  bool m_warn;
 };
 #endif // L0DUFROMRAWTOOL_H

@@ -3,7 +3,7 @@ L0DU.TCK = "0xFFFF";  // This is the default for Emulation/Simulation
 
 
 // PREDEFINED L0DU CONFIGURATION (L0DUMultiConfigProvider tool)
-//ToolSvc.L0DUConfig.Preload = true; // preload all config during initialisation or get on-Demand (default)
+ToolSvc.L0DUConfig.Preload = true; // preload all config during initialisation or get on-Demand (default)
 #pragma print off
 #include "$L0DUROOT/options/L0DUConfig_0xFFFF_alg1_set0_lumi2.opts"  // 2007 tuning - L0-stripping production  (L0DUbank vsn =1) 
 #include "$L0DUROOT/options/L0DUConfig_0xDC06_alg0_set0_lumi2.opts"  // DC04/DC06 tuning - DC06 production (L0DU bank vsn = 0)
@@ -14,4 +14,8 @@ L0DU.TCK = "0xFFFF";  // This is the default for Emulation/Simulation
 #include "$L0DUROOT/options/L0DUConfig_0xFFFA_alg0_set1_lumi5.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 #include "$L0DUROOT/options/L0DUConfig_0xFFF9_alg0_set1_lumi6.opts"  // RTTC'06 tuning  -  no DC06-compatible production so far
 #include "$L0DUROOT/options/L0DUConfig_0x0000_CaloCosmics.opts"
+
+
+#include "$L0DUROOT/options/L0DUConfig_0x000X.opts"
+#include "$L0DUROOT/options/L0DUConfig_0xDEBX.opts"
 

@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.110 2008-07-02 12:04:31 cattanem Exp $
+! $Id: release.notes,v 1.111 2008-07-03 18:33:11 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
- 
+
+! 2008-07-02 - Olivier Deschamps 
+ - add protection against missing bank in L0DURawBankMonitor
+ - fix problem with ReadoutStatus in L0DUFromRaw
+ - tune the warning verbosity 
+
 !========================== L0DU v8r6 2008-07-02 =========================
 ! 2008-06-30 - Olivier Deschamps 
  - fix in L0DUEmulatorTool (clear before setting configuration not after !)
