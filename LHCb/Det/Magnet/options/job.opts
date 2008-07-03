@@ -1,7 +1,14 @@
+#include "$DDDBROOT/options/DC06.opts"
+#include "$DDDBROOT/options/DDDB.opts"
 //##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-
+//Uncomment for AnalyticFieldSvc testing
+//ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "AnalyticFieldSvc/MagneticFieldSvc" };
+// Old way to call AnalyticFieldSvc
+//ApplicationMgr.ExtSvc += { "AnalyticFieldSvc" };
+//ApplicationMgr.ExtSvc += { "ChronoStatSvc" };
 //#pragma print on
 //AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 //NameAuditor.Enable   = false;
@@ -26,15 +33,14 @@ MessageSvc.OutputLevel        = 3;
 
 //--------------------------------------------------------------
 // Event related parameters
-//--------------------------------------------------------------
+//-------------------------------------------------------------
 ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 
 //--------------------------------------------------------------
 // Algorithms Private Options
 //--------------------------------------------------------------
-MagFieldReader.OutputLevel = 2;
-//For Bdl testing:
+//MagFieldReader.OutputLevel = 2;
 //MagFieldReader.TestFieldInt= true;
 //MagFieldReader.NInt = 10000;
 //MagFieldReader.Xmin=0.0*mm;
@@ -44,23 +50,37 @@ MagFieldReader.OutputLevel = 2;
 //MagFieldReader.Zmin=-500.0*mm;
 //MagFieldReader.Zmax=14000.0*mm;
 //MagFieldReader.Step=50.0*mm;
+//Obsolete ===> Uncomment to test AnalyticFieldSvc:
+//MagFieldReader.FieldSvcName="AnalyticFieldSvc";
 // Pick up default field map as defined in FieldMap package
 MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
-// Uncomment to switch to real map, set up one file for each quadrant:
+//MagneticFieldSvc.FieldMapFile = "$HOME/w0/field048.c1.vp.cdf";
+//MagneticFieldSvc.FieldMapFile = "gridmap_nomag7-8y30.txt";
+//MagneticFieldSvc.FieldMapFile = "field048.c1.vp.cdf";
+// Switch to real map, set up one file for each quadrant
 //MagneticFieldSvc.UseRealMap     = true;
-//MagneticFieldSvc.FieldMapFileQ1 = "$FIELDMAPROOT/cdf/field048.c1.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ2 = "$FIELDMAPROOT/cdf/field048.c2.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ3 = "$FIELDMAPROOT/cdf/field048.c3.vp.cdf";
-//MagneticFieldSvc.FieldMapFileQ4 = "$FIELDMAPROOT/cdf/field048.c4.vp.cdf";
-
+//MagneticFieldSvc.FieldMapFileQ1 = "$HOME/w0/field048.c1.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ2 = "$HOME/w0/field048.c2.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ3 = "$HOME/w0/field048.c3.vp.cdf";
+//MagneticFieldSvc.FieldMapFileQ4 = "$HOME/w0/field048.c4.vp.cdf";
+//MagneticFieldSvc.FieldMapFile = "/afs/cern.ch/user/a/ahicheur/w0/bfieldvalid/gridmap20.txt";
+//MagneticFieldSvc.FieldMapFile = "/afs/cern.ch/user/a/ahicheur/bfield/LHCb_v22r3/Det/Magnet/v3r5/cmt/gridmap5.txt";
 //Uncomment for AnalyticFieldSvc testing
 //ApplicationMgr.ExtSvc -= { "MagneticFieldSvc" };
 //ApplicationMgr.ExtSvc += { "AnalyticFieldSvc/MagneticFieldSvc" };
-//MagneticFieldSvc.BxMapFile="$FIELDMAPROOT/cmt/Bx_parameterization.cdf";
-//MagneticFieldSvc.ByMapFile="$FIELDMAPROOT/cmt/By_parameterization.cdf";
-//MagneticFieldSvc.BzMapFile="$FIELDMAPROOT/cmt/Bz_parameterization.cdf";
-
-
+//MagneticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
+//MagneticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
+//MagneticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
+//AnalyticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Files_Service/Bx_parameterization_new2corr.cdf";
+//AnalyticFieldSvc.ByMapFile="$MAGNETROOT/cmt/Files_Service/By_parameterization_new6corr.cdf";
+//AnalyticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Files_Service/Bz_parameterization_new2corr.cdf";
+//MagneticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Files_Service/Bx_parameterization_new2corr.cdf";
+//MagneticFieldSvc.ByMapFile="$MAGNETROOT/cmt/Files_Service/By_parameterization_new2corr_mai_V3.cdf";
+//MagneticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Files_Service/Bz_parameterization_new2corr.cdf";
+// Old way to call AnalyticFieldSvc
+//AnalyticFieldSvc.BxMapFile="$MAGNETROOT/cmt/Bx_parameterization.cdf";
+//AnalyticFieldSvc.ByMapFile="$MAGNETROOT/cmt/By_parameterization.cdf";
+//AnalyticFieldSvc.BzMapFile="$MAGNETROOT/cmt/Bz_parameterization.cdf";
 // Set zero field
 //MagneticFieldSvc.UseConstantField = true;
 

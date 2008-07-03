@@ -4,6 +4,10 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r8 2008-07-03 ===============================
+! 2008-07-03 - Adlene Hicheur
+ - Add prototype for reading conditions (current + polarity)
+
 !====================== Magnet v3r8 2008-05-26 ===============================
 ! 2008-05-22 - Adlene Hicheur
  - Moved analytical parameterization files to FieldMap/cdf (from FieldMap v5r1)

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.16 2008-05-08 16:28:56 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.17 2008-07-03 10:35:16 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -7,6 +7,8 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "DetDesc/Condition.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -66,6 +68,9 @@ private:
 
   StatusCode parseFile( );       ///< Reads the field map from file 
   StatusCode parseRealFiles( );  ///< Reads the real field map from files 
+  StatusCode i_updateScaling(); ///< Reads current and polarity from conditions
+  
+
   
   std::string m_filename;        ///< Magnetic field file name
   std::string m_qfilename[4];    ///< True Magnetic field file names (one for each quadrant
@@ -82,10 +87,12 @@ private:
   std::vector<double> m_constFieldVector; ///< Option for constant field value
   double              m_scaleFactor;      ///< Option for field scaling factor
   bool                m_useRealMap; ///< To use the real map for data
-  double              m_current; ///< To set up the running magnet current for rescaling
-  std::string m_condpath; ///< Path to access the field conditions from the database.
-  
+  double              m_nominalCurrent; ///< To set up the running magnet current for rescaling
+  std::string m_condPath; ///< Path to access the field conditions from the database.
+  Condition *m_condition; ///< Access the conditions
+  IUpdateManagerSvc * MyupdMgrSvc;
    
+
 };
 
 #endif  // MAGNETICFIELDSVC_H
