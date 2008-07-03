@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.80 2008-05-30 17:44:52 pkoppenb Exp $ 
+! $Id: release.notes,v 1.81 2008-07-03 13:32:32 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios
 !==============================================================================
+
+!======================== ParticleMaker v4r1 2008-07-03 ===================
 
 ! 2008-05-30 - Patrick Koppenburg
  - Check StatsuCodes
