@@ -1,0 +1,25 @@
+// no magnetic field
+#include "$PATALGORITHMSROOT/options/PatSeedingTool-FieldOff.opts"
+// relax requirements on number of hits/planes
+// (this may need tweaking if some C frames are in "open" position)
+PatSeeding.PatSeedingTool.MinXPlanes = 4;
+PatSeeding.PatSeedingTool.MinTotalPlanes = 8;
+PatSeeding.PatSeedingTool.OTNHitsLowThresh = 9;
+PatSeeding.PatSeedingTool.MaxMisses = 2;
+// relax pointing requirement (no PV for cosmics!)
+PatSeeding.PatSeedingTool.MaxYAtOrigin = 4e5;
+PatSeeding.PatSeedingTool.MaxYAtOriginLowQual = 8e5;
+PatSeeding.PatSeedingTool.xMagTol = 4e5;
+PatSeeding.PatSeedingTool.MinMomentum = 1e-4; // pointing requirement in disguise!
+// cosmic reconstruction
+PatSeeding.PatSeedingTool.Cosmics = true;
+// detector not yet aligned - chi^2 should not contribute to track quality
+PatSeeding.PatSeedingTool.QualityWeights        = { 1.0, 0.0 };
+
+// depending on misalignments/usage of IT, one may need to tweak
+// the chi^2 cuts and/or CurveTol, TolCollect{IT,OT} or MaxRange{IT,OT}
+// (this is not an exhaustive list, it is just meant as a hint where to
+// look)
+
+// switch off drift times for the pattern recognition
+ToolSvc.OTHitCreator.NoDriftTimes = true;

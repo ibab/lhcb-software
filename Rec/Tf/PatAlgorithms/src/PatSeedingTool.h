@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.8 2008-06-29 21:52:07 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.9 2008-07-03 00:03:58 mschille Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -117,7 +117,9 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
 		    PatFwdHits& stereo, const LHCb::State* state );
 
     /// search for cluster of stereo hits in projection plane
-    bool findBestRange ( unsigned reg, int minNbPlanes, PatFwdHits& stereo );
+    bool findBestRange ( unsigned reg, int minNbPlanes, PatFwdHits& stereo ) const;
+    /// search for cluster of stereo hits in projection plane (for cosmics only)
+    bool findBestRangeCosmics ( unsigned reg, int minNbPlanes, PatFwdHits& stereo ) const;
 
     /// fit a line to the hits found by findBestRange
     bool fitLineInY ( PatFwdHits& stereo, double& y0, double& sl );
@@ -282,6 +284,8 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
     double m_forwardCloneMaxTXDist;
     double m_forwardCloneMaxShared;
     bool m_forwardCloneMergeSeg;
+
+    bool m_cosmics;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;
