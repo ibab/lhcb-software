@@ -22,7 +22,7 @@
       
       <typedef desc = "Vector of STTELL1Error typedef"
        type =  "std::vector&lt;LHCb::STTELL1Error*&gt;"
-       def = "Errors"
+       def = "ErrorVector"
        access = "PUBLIC " />
         
        
@@ -36,7 +36,7 @@
   
       <destructor desc = 'destructor' virtual = 'TRUE'>
        <code>
- LHCb::STTELL1BoardErrorBank::Errors::iterator iter = m_errorInfo.begin();
+ LHCb::STTELL1BoardErrorBank::ErrorVector::iterator iter = m_errorInfo.begin();
  for (; iter != m_errorInfo.end() ; ++iter ){
    if (*iter != 0) delete *iter;
  } // iter

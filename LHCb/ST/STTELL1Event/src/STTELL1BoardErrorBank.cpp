@@ -12,7 +12,7 @@ std::ostream& LHCb::STTELL1BoardErrorBank::fillStream(std::ostream& s) const
 {
   s  << "################################################" << std::endl;
   s << "Error bank for TELL1 board source "  << key();
-  LHCb::STTELL1BoardErrorBank::Errors::const_iterator iter = m_errorInfo.begin();
+  LHCb::STTELL1BoardErrorBank::ErrorVector::const_iterator iter = m_errorInfo.begin();
   for(; iter != m_errorInfo.end(); ++iter){
     s << *iter << std::endl;
   } // iter 
