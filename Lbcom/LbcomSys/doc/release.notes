@@ -12,6 +12,66 @@ This version uses Gaudi v20r1 and LHCb v24r0
 - Packages modified: CaloTools v5r2, L0Calo v9r14, L0DU v8r6, RichDAQ v3r17,
     RichTools v2r21, STCheckers v2r6, STDAQ v3r8, VeloSimulation v3r3
 
+- In CaloTools v5r2
+  . Add asymmetry monitoring in CaloCosmicsTrackAlg
+  . Add 'kernel' variable computation in CaloCosmicsTool 
+  . Change all Gaudi::XYZLine and Gaudi::Line for Gaudi::Math::XYZLine and
+    Gaudi::Math::XYZLine respectively (adapting to Kernel/LHCbMath v3)
+
+- In L0Calo v9r14
+  . src/L0CaloCandidatesFromRawBank: skip candidates which are flagged
+    as masked in the L0Calo TELL1
+  . src/L0CaloAlg:
+    o add the possibility to create LUT for the TVB, which will be loaded
+      in the real electronics
+    o use left address instead of right address for the global pi0 
+  . src/DumpL0CaloBanks: new algorithm to dump the content of the L0Calo
+    banks for debugging
+
+- In L0DU v8r6
+  . Fix in L0DUEmulatorTool (clear before setting configuration not after !)
+  . Tune verbosity in L0DUFromRawTool and Monitor algorithms
+  . L0DUFromRawTool : 
+    o new properties : ForceTCK, ForceSummarySize and ForceNonZeroSupMuons
+    o add missing m_report.setTCK( m_tck ) 
+    o update ReadoutStatus in L0D   
+  . make L0DUFromRawTool a public tool in L0DUFromRawAlg and L0DURawBankMonitor
+
+- In RichDAQ v3r17
+  . Purge the hits from the decoded data structure for HPDs which fail the 
+    data integrity checks.
+  . Add protection against invalid HPD IDs, which are now possible given the 
+    fact that the decoded data includes suppressed HPDs and those for which the
+    L0ID -> RichSmartID database lookup failed.
+  . Add new option to completely disable decoding in a either RICH detector.
+  . Suppress over excessive error messages in the case of inhibited or invalid 
+    HPDs. An option now exists to turn these back on for debugging etc.
+
+- In RichTools v2r21
+  . Fixed inconsistency between globalToPDPanel and globalPosition methods
+
+- In STCheckers v2r6
+  . Fix implicit conversions (follows changes in LHCbKernel v8r5)
+
+- In STDAQ v3r8
+  . Move check of validity of channel id in decoding
+  . Check is now made by checking readout map makes sense compared to geometry
+  . Check data integrity before decoding into clusters in lite and full decoding
+  . Only count boards without error in majority PCN vote in ZS decoding
+  . More consistant counting of errors in cluster decoding  
+  . Move STErrorDecoding to this package.
+  . Move STRawBankMap to STKernel
+  . Clean up of error handling 
+  . Add possibility to create clusters from banks with errors in decoding
+   (default is to skip)
+  . Further improvements in monitoring of decoding
+  . Further improvements in handling corrupted data
+  . Print out how many banks are decoded correctly, how many are skipped, and
+    how many are lost. 
+
+- In VeloSimulation v3r3
+  . Added an FPE protection wrapper to gsl_sf_erf_Q to remove FPE when audited
+
 </PRE><H1><A NAME=v6r18>2008-06-04 LbcomSys v6r18</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7
 
