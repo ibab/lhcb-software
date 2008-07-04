@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.22 2008-07-02 19:49:18 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.23 2008-07-04 07:56:53 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -371,10 +371,10 @@ void HltTrackUpgradeTool::addIDs(const Track& seed, Track& track) {
     track.addToLhcbIDs(*it);
 }
 
-Tf::IStationSelector& HltTrackUpgradeTool::view(const LHCb::Track& seed)
+Tf::IStationSelector& HltTrackUpgradeTool::view(const LHCb::Track& )
 {Assert(0,"view() method no implemented yet!");
 }
   
-std::vector<LHCb::LHCbID> HltTrackUpgradeTool::lhcbIDsInView(const LHCb::Track& seed)
+std::vector<LHCb::LHCbID> HltTrackUpgradeTool::lhcbIDsInView(const LHCb::Track& )
 { Assert(0,"lhcbIDsInView() method no implemented yet!");
 }
