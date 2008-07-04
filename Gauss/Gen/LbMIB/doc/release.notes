@@ -5,6 +5,11 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v2r3 2008-07-04 ===========================
+! 2008-07-04 - Magnus Lieng
+ - Fixed compatability issue with Windows. 'inttypes.h' no longer used.
+   . CollimatorSource.h
+
 !=========================== LbMIB v2r2 2008-05-05 ===========================
 ! 2008-05-05 - Magnus Lieng
  - Fixed binary data format to be compatible with both 32 and 64bit platforms
