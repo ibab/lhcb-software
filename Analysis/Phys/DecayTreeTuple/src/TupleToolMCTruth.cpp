@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.6 2008-06-23 18:10:33 gligorov Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.7 2008-07-04 21:41:10 gligorov Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -34,11 +34,14 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
   , m_pLink(0)
   , m_pComp(0)
   , m_pChi2(0)
+  , m_linkerTool_Links(0)
+  , m_linkerTool_Chi2(0)
+  , m_linkerTool_Composite(0)
 {
   declareInterface<IParticleTupleTool>(this);
   
   // Associator input location. Empty should be fine for most of the case
-  declareProperty( "InputLocations", m_assocInputs );
+  declareProperty( "InputLocations", m_assocInputs = std::vector<std::string>(1,"") );
 
   // Use the chi2 associator instead of the link and composite associator
   declareProperty( "UseChi2Method", m_useChi2Method=false );
@@ -61,28 +64,9 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 StatusCode TupleToolMCTruth::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  /*if( !m_assocInputs.empty() ){
-    if( !m_useChi2Method ){
-      m_pLink = new Particle2MCLinker( this, Particle2MCMethod::Links, m_assocInputs );
-      m_pComp = new Particle2MCLinker( this, Particle2MCMethod::Composite, m_assocInputs );
-    } else {
-      m_pChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2, m_assocInputs );
-    }
-    return StatusCode::SUCCESS;
-  }
-
-  if( ! m_useChi2Method ){
-    m_pLink = new Particle2MCLinker( this, 
-                                     Particle2MCMethod::Links, 
-                                     std::vector<std::string>(1,"") );
-    m_pComp = new Particle2MCLinker( this, 
-                                     Particle2MCMethod::Composite, 
-                                     std::vector<std::string>(1,"") );
-  } else {
-    m_pChi2 = new Particle2MCLinker( this, 
-                                     Particle2MCMethod::Chi2,
-                                     std::vector<std::string>(1,""));
-  }*/
+  m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
+  m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
+  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
   
   return StatusCode::SUCCESS;
 }
@@ -92,28 +76,9 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 				 , const std::string& head
 				 , Tuples::Tuple& tuple ){
 
-  if( !m_assocInputs.empty() ){
-    if( !m_useChi2Method ){
-      m_pLink = new Particle2MCLinker( this, Particle2MCMethod::Links, m_assocInputs );
-      m_pComp = new Particle2MCLinker( this, Particle2MCMethod::Composite, m_assocInputs );
-    } else {
-      m_pChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2, m_assocInputs );
-    }
-    return StatusCode::SUCCESS;
-  }
-
-  if( ! m_useChi2Method ){
-    m_pLink = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Links,
-                                     std::vector<std::string>(1,"") );
-    m_pComp = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Composite,
-                                     std::vector<std::string>(1,"") );
-  } else {
-    m_pChi2 = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Chi2,
-                                     std::vector<std::string>(1,""));
-  }
+  m_pLink = m_linkerTool_Links->linker(Particle2MCMethod::Links,m_assocInputs); 
+  m_pComp = m_linkerTool_Composite->linker(Particle2MCMethod::Composite,m_assocInputs);
+  m_pChi2 = m_linkerTool_Chi2->linker(Particle2MCMethod::Chi2,m_assocInputs);
 
   Assert( ( !m_useChi2Method && m_pLink && m_pComp ) 
 	  ||
@@ -180,10 +145,6 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 
   if( m_storePT )
     test &= tuple->column( head + "_TRUETAU", mcTau );
-
-  if (m_pLink) delete m_pLink;
-  if (m_pComp) delete m_pComp;
-  if (m_pChi2) delete m_pChi2;
 
   return StatusCode(test);
 }

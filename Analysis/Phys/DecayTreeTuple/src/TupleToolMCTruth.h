@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolMCTruth.h,v 1.2 2008-07-04 21:41:10 gligorov Exp $
 #ifndef JBOREL_TUPLETOOLMCTRUTH_H
 #define JBOREL_TUPLETOOLMCTRUTH_H 1
 
@@ -9,6 +9,7 @@
 
 //struct Particle2MCLinker;
 #include "Kernel/Particle2MCLinker.h"
+#include "Kernel/IDaVinciAssociatorsWrapper.h"
 /** @class TupleToolMCTruth TupleToolMCTruth.h jborel/TupleToolMCTruth.h
  *
  * \brief Fill MC truth info if a link is present
@@ -62,6 +63,10 @@ private:
   Particle2MCLinker *m_pLink;
   Particle2MCLinker *m_pComp;
   Particle2MCLinker *m_pChi2;
+
+  IDaVinciAssociatorsWrapper* m_linkerTool_Links;
+  IDaVinciAssociatorsWrapper* m_linkerTool_Chi2;
+  IDaVinciAssociatorsWrapper* m_linkerTool_Composite;
 
   std::vector<std::string> m_assocInputs;
   bool m_useChi2Method; //!< Use the chi2 associator instead of the link and composite associator
