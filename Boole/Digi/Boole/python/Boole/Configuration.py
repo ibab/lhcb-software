@@ -1,10 +1,9 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.11 2008-07-03 16:03:32 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2008-07-04 09:25:17 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import ( CondDBCnvSvc, MagneticFieldSvc,
