@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.28 2008-06-04 15:32:58 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.29 2008-07-04 09:46:05 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -7,9 +7,6 @@
 // Mathcore
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
-
-// GSL
-#include "gsl/gsl_sf_erf.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -137,7 +134,7 @@ StatusCode VeloSim::initialize() {
   // convert threshold into electrons
   m_threshold = m_thresholdADC*m_electronsPerADC;
   // precalulate the probability of adding noise to a strip
-  m_noiseTailProb = gsl_sf_erf_Q(m_threshold/ 
+  m_noiseTailProb = safe_gsl_sf_erf_Q(m_threshold/ 
 		      (m_averageStripNoise*m_noiseScale*m_electronsPerADC));
   info() <<"Probability to add noise to empty strips " << m_noiseTailProb
 	 << endmsg;
@@ -496,8 +493,8 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
 	<< diffuseSigma << " base " << m_baseDiffuseSigma
 	<< " zdiff " << ZDiffuse <<endmsg;
       //
-      double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
-      double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
+      double prob1= safe_gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
+      double prob2= safe_gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
       //
       if(m_isVerbose) verbose() << " prob1+2 " <<  prob1 
 				<< " " << prob2 <<endmsg;

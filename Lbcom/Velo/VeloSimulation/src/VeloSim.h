@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.13 2008-05-19 10:29:23 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.14 2008-07-04 09:46:05 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -10,6 +10,11 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Point3DTypes.h"
+
+// GSL
+#include "gsl/gsl_sf_erf.h"
+// and FPE gaurd to protect this
+#include "Kernel/FPEGuard.h"
 
 // from Velo
 #include "Event/MCVeloFE.h"
@@ -49,6 +54,15 @@ private:
 /// test if MCVeloFE charge is below m_threshold
   inline bool isLess(LHCb::MCVeloFE* fe) const  {
     return ( (fe->charge()<m_threshold)?true:false );
+  }
+
+  ///protected gsl_erf_sf_q against FPE: integral of normal dist from arg->inf.
+  double safe_gsl_sf_erf_Q(double const &arg) const {
+    // remove underflows by ignoring results different from 0 or 1 by < 1e-100
+    if(fabs(arg)>30.) return (arg>0. ? 0. : 1.);
+    // turn off the inexact FPE (always goes off for this function)
+    FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
+    return gsl_sf_erf_Q(arg);
   }
 
   /// process requested simulation steps

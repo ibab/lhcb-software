@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-04 - David Hutchcroft
+ - Added an FPE protection wrapper to gsl_sf_erf_Q to remove FPE when audited
+   Code caused inexact and underflow FPEs but was working correctly
+
 !===================== VeloSimulation v3r2 2008-06-04 ======================
 ! 2008-06-04 - David Hutchcroft
  - Change the sensitivity and error serverity for the charge normalisation
