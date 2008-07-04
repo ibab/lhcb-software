@@ -21,7 +21,7 @@ use DIM               v17r5    Online
 use ExampleGaucho     v2r5     Online
 use Gaucho            v5r6     Online
 ### Obsolete: use GauchoJob         v3r1     Online
-use GaudiOnline       v2r17    Online
+use GaudiOnline       v2r18    Online
 use GaudiUPI          v1r8     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
@@ -29,15 +29,15 @@ use MBMDump           v1r8     Online
 use OMAlib            v1r1     Online
 use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v4r9     Online
-use OnlineKernel      v1r17    Online
-use OnlineTasks       v1r12    Online
+use OnlineKernel      v1r18    Online
+use OnlineTasks       v1r13    Online
 use Presenter         v0r10    Online
 ### PVSS Distribution only: use PVSS              v1r0    Online
 ### PVSS Distribution only: use PVSSInterface     v1r0    Online
 ### PVSS Distribution only: use PVSSManager       v1r0    Online
 use PyDIM             v2r5     Online
-use ROMon             v1r4     Online
-use ROLogger          v0r2     Online
+use ROMon             v1r5     Online
+use ROLogger          v0r3     Online
 ### Obsolete: use RunDatabase       v1r2     Online
 use Saver             v1r5     Online
 use UPI               v1r10    Online
