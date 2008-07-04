@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.13 2008-06-25 20:14:25 graven Exp $
+// $Id: HltBase.icpp,v 1.14 2008-07-04 08:07:12 graven Exp $
 // Include files
 
 
@@ -19,7 +19,6 @@ void HltBase<EBASE>::hltBaseConstructor() {
   EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
 
   m_dataSvc = 0;
-  m_TES = false;
 }
 
 template <class EBASE>
@@ -172,13 +171,6 @@ IANNSvc& HltBase<EBASE>::annSvc() const {
   return *m_hltANNSvc;
 }
 
-
-template <class EBASE>
-bool HltBase<EBASE>::validHltSelectionName(const stringKey& selname) 
-{
-    // use optional<int> automatic conversion to bool...
-  return annSvc().value("Hlt1SelectionID",selname.str());
-}
 
 template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 

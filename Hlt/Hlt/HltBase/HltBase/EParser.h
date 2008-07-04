@@ -1,4 +1,4 @@
-// $Id: EParser.h,v 1.2 2008-01-25 12:18:50 graven Exp $
+// $Id: EParser.h,v 1.3 2008-07-04 08:07:12 graven Exp $
 #ifndef HLTBASE_EPARSER_H 
 #define HLTBASE_EPARSER_H 1
 
@@ -20,7 +20,7 @@ namespace EParser
   
   bool parseFilter(const std::string& decriptor,
                    std::string& namefilter, std::string& mode,
-                   float& x0, float& xf);
+                   double& x0, double& xf);
 
 };
 #endif // HLTBASE_PARSERDESCRIPTOR_H

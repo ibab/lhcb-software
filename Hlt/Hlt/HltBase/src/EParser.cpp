@@ -21,14 +21,14 @@ std::vector<std::string> EParser::parse(const std::string& descriptor,
 
 bool EParser::parseFilter(const std::string& descriptor,
                           std::string& title, std::string& mode,
-                          float& x0, float& xf)
+                          double& x0, double& xf)
 { 
   std::vector<std::string> gens = EParser::parse(descriptor,",");
   unsigned int nsize = gens.size();
   if (nsize<3) return false;
   title = gens[0];
   mode = gens[1];
-  x0 = boost::lexical_cast<float>(gens[2]);
-  if (nsize >3) xf = boost::lexical_cast<float>(gens[3]); 
+  x0 = boost::lexical_cast<double>(gens[2]);
+  if (nsize >3) xf = boost::lexical_cast<double>(gens[3]); 
   return true;
 }

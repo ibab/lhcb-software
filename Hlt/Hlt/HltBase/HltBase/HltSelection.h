@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.1 2008-06-28 08:16:18 graven Exp $
+// $Id: HltSelection.h,v 1.2 2008-07-04 08:07:12 graven Exp $
 #ifndef HLTBASE_HLTDATA_H 
 #define HLTBASE_HLTDATA_H 1
 
@@ -15,72 +15,60 @@ namespace LHCb
 
 namespace Hlt 
 {
-  class Object: public DataObject {
-    Object(){}
-    virtual ~Object() {}
-    
-    virtual CLID classID() {return DataObject::clID();}
-    
-    virtual ContainedObject& object() 
-    {return *m_obj;}
-    
-    virtual const ContainedObject& object() const
-    {return *m_obj;}
-    
-    virtual std::vector<Object*>& ancestors() 
-    {return m_ancestors;}
-    
-    virtual const std::vector<Object*>& ancestors() const 
-    {return m_ancestors;}
-    
-  protected:
-    ContainedObject* m_obj;
-    std::vector<Hlt::Object*> m_ancestors;
-  };
-  
-  
   class Selection : public ContainedObject, public DataObject {
   public:
-    Selection(const stringKey& id):m_id(id) {}
+    Selection(const stringKey& id) : m_id(id) {}
     virtual ~Selection() {}
 
-  public:
-
     const stringKey& id() const {return m_id;}
-    void setDecision(bool value) {m_decision = value;}
-    bool decision() const {return m_decision;}
-    virtual CLID classID() const {return DataObject::clID();}
-    virtual size_t ncandidates() const {return 0;}
-    virtual void clean() {m_decision = false;}    
-    const std::vector<Hlt::Object*>& objects() const 
-    {return m_objects;}
-    
-    virtual std::vector<Hlt::Object*>& objects() 
-    {return m_objects;}
-    
-    const std::vector<stringKey>& inputSelectionsIDs() const
-    {return m_inputSelectionsIDs;}    
+    const std::vector<stringKey>& inputSelectionsIDs() const {return m_inputSelectionsIDs;}    
     
     template <typename I> // I is assumed to be iterator over a range of Selection*
     void addInputSelectionIDs(I i, I end) {
         while (i!=end) m_inputSelectionsIDs.push_back( (*i++)->id() );
     }
 
+    void setDecision(bool value) {m_decision = value;}
+    bool decision() const {return m_decision;}
+
+    virtual CLID classID() const {return DataObject::clID();}
+    virtual size_t ncandidates() const {return 0;}
+    virtual void clean() {m_decision = false;}    
+
   private:
-    std::vector<Hlt::Object*> m_objects;
     std::vector<stringKey> m_inputSelectionsIDs;
     stringKey m_id;
     bool m_decision;
   };
   
-  template <class T>
-  class TSelection : public std::vector<T*>, public Selection {
+  template <typename T>
+  class TSelection : public Selection {
   public:
+    typedef std::vector<T*>                       container_type;
+
     TSelection(const stringKey& id) : Selection(id) {}
     virtual ~TSelection() {}
+
     CLID classID() const { return T::classID(); }
-    size_t ncandidates() const {return this->size();}
-    void clean() { Selection::clean(); this->clear();}
+    size_t ncandidates() const  {return m_candidates.size();}
+    void clean() { Selection::clean(); m_candidates.clear();}
+
+    // forward container functionality..
+    typedef typename container_type::iterator       iterator;
+    typedef typename container_type::value_type      value_type;
+    typedef typename container_type::size_type       size_type;
+    typedef typename container_type::const_iterator const_iterator;
+    typedef typename container_type::const_reference const_reference;
+    const_iterator begin() const { return m_candidates.begin(); }
+    const_iterator end() const { return m_candidates.end(); }
+    iterator begin() { return m_candidates.begin(); }
+    iterator end()   { return m_candidates.end(); }
+    void push_back(T* t) { m_candidates.push_back(t); }
+    size_type size() const { return m_candidates.size(); }
+    bool empty() const { return m_candidates.empty(); }
+    template <typename ITER> void insert(iterator i, ITER begin, ITER end) { m_candidates.insert(i,begin,end); }
+  private:
+    container_type m_candidates; //@TODO do we own them? -- no, our owner owns them!
   };
   
   typedef TSelection<LHCb::Track>      TrackSelection;

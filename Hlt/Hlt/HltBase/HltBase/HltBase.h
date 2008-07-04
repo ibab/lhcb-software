@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.12 2008-06-30 08:58:15 graven Exp $
+// $Id: HltBase.h,v 1.13 2008-07-04 08:07:12 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -137,18 +137,12 @@ protected:
   IHltDataSvc& dataSvc() const;
   IANNSvc&     annSvc() const;
 
-  // returns true if we use the TES to store the HltSelection
-  bool useTES() {return m_TES;}
-
   // reset the hltData pointer (for the useTES() mode) 
   void resetHltData() { dataSvc().resetData(); }
 
   // returns the hlt configuration
   Hlt::Configuration& hltConf() { return dataSvc().config(); }
   
-  // returns true if this selection name is valid
-  bool validHltSelectionName(const stringKey& name);
-
   // returns the ID of the extraInfo by name
   int hltInfoID(const std::string& name);
 
@@ -179,9 +173,6 @@ private:
 
   // assigned names and numbers service...
   mutable IANNSvc *m_hltANNSvc;
-
-  // if selection selections will be stored/retrieved from TES
-  bool m_TES;
 
 };
 #endif // HLTBASE_HLTBASE_H

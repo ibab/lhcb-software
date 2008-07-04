@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.37 2008-06-30 08:58:15 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.38 2008-07-04 08:07:12 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
@@ -16,6 +16,8 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : HltBaseAlg ( name , pSvcLocator )
   , m_outputSelectionName(name)
+  , m_outputSelection(0)
+  , m_outputHisto(0)
   , m_inputTracks(0)
   , m_inputTracks2(0)
   , m_inputVertices(0)
@@ -32,19 +34,16 @@ HltAlgorithm::HltAlgorithm( const std::string& name,
 
   declareProperty("InputSelection",  m_inputSelectionName );
   declareProperty("InputSelection2", m_inputSelection2Name );
-  declareProperty("InputSelections", m_extraInputSelectionsNames);
   declareProperty("OutputSelection", m_outputSelectionName.property(), "The location the output is written to");
-//                                     ->declareUpdateHandler( stringKey::updateHandler, &m_outputSelectionName );
 
   m_inputSelections.clear();
-  m_outputSelection = 0;
 
 
 }
 
 HltAlgorithm::~HltAlgorithm()
 {
-  if (!useTES()) delete m_outputSelection;
+  delete m_outputSelection;
 } 
 
 
@@ -120,9 +119,8 @@ void HltAlgorithm::saveConfiguration() {
 
   confregister("InputSelections",inames,m_outputSelection->id().str());
   verbose() << "Done saveConfigureation" << endmsg ;  
-  info() << " HLT input selections " << inames << endreq;
-  info() << " HLT input selections " << m_outputSelection->inputSelectionsIDs() << endreq;
-  info() << " HLT output selection " << m_outputSelection->id() << endreq;
+  info() << " HLT flow: " << m_outputSelection->inputSelectionsIDs() 
+         << " --> "       << m_outputSelection->id() << endreq;
 }
 
 
@@ -162,16 +160,6 @@ StatusCode HltAlgorithm::beginExecute() {
   increaseCounter( m_counterEntries );
 
   
-  
-  if (useTES()) {
-    debug() << " cleaning from the TES " << endreq;
-    resetHltData();
-    m_inputSelections.clear();
-    m_outputSelection = 0;
-    return StatusCode::SUCCESS;
-  }
-
-  // do work if we not use the TES for selections
   Assert( m_outputSelection != 0," beginExecute() no output selection !");
   m_outputSelection->clean();
   bool ok = considerInputs();
@@ -299,14 +287,39 @@ void HltAlgorithm::setInputSelection(Hlt::Selection& sel) {
   debug() << " Input selection " << sel.id() << endreq;
 }
 
+
+Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
+    Assert(!selname.empty()," retrieveSelection() no selection name");
+    debug() << " retrieveSelection " << selname << endreq;
+    if (!dataSvc().hasSelection(selname)) {
+      error() << " unknown selection " << selname << endreq;
+      Assert(0," retrieveSelection, unknown selection!");
+    }
+    Hlt::Selection& sel = dataSvc().selection(selname,this);
+    setInputSelection(sel);
+    debug() << " retrieved selection " << sel.id() << endreq;    
+    return sel;
+}
+
+Hlt::Selection& HltAlgorithm::registerSelection() {
+    Assert( ! m_outputSelectionName.empty(), " registerSelection(): no output name???");
+    debug() << " registerSelection " << m_outputSelectionName << endreq;
+    Hlt::Selection* sel = new Hlt::Selection(m_outputSelectionName);
+    StatusCode sc = dataSvc().addSelection(sel,this,false);
+    if ( sc.isFailure()) {
+       throw GaudiException("Failed to add Selection",m_outputSelectionName.str(),StatusCode::FAILURE);
+    }
+    setOutputSelection(sel);
+    debug() << " registered selection " << m_outputSelectionName << endreq;
+    return *sel;
+}
+  
 void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
   Assert(m_outputSelectionName == sel->id(), "inconsistent selection vs selectionName!");
   Assert( 0 != sel,"setOutputSelection() no output selection");
   if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
-  if (!useTES()) {
     Assert(m_outputSelection == 0, " setOutputSelection() already set output selection!");    
     m_outputSelection = sel;
     sel->addInputSelectionIDs( m_inputSelections.begin(), m_inputSelections.end() );
-  }
   debug() << " Output selection " << sel->id() << endreq;
 }

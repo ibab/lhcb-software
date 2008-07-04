@@ -3,6 +3,23 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2008-07-04 - Gerhard Raven
+ - EFunctions: 
+      o use covariant return types on clone
+      o use auto_ptr for memory managenemt
+      o write explicit copy-c'tor 
+      o binding is now against a container, instead of the
+        containers value_type, so that we don't assume the
+        container is a vector
+  - EParser: replace float by double
+  - HltAlgorithm:
+      o move some code from header to .cpp file
+      o removeInputSelections property, validHltSelectionName member function
+  - HltSelection:
+      o remove unused Hlt::Object
+      o replace inheritance of TSelection from std::vector by containment
+
+
 ! 2008-07-01 - Gerhard Raven
  - remove MD5 from dict -- this is now also done in LHCbMath
 

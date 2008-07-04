@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.28 2008-06-30 08:58:15 graven Exp $
+// $Id: HltAlgorithm.h,v 1.29 2008-07-04 08:07:12 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -82,18 +82,7 @@ protected:
 public:
   //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
-  Hlt::Selection& retrieveSelection(const stringKey& selname) {
-    Assert(!selname.empty()," retrieveSelection() no selection name");
-    debug() << " retrieveSelection " << selname << endreq;
-    if (!validHltSelectionName(selname)) {
-      error() << " No valid selection name " << selname << endreq;
-      Assert(0," retrieveSelection, no valid name!");
-    }
-    Hlt::Selection& sel = dataSvc().selection(selname,this);
-    setInputSelection(sel);
-    debug() << " retrieved selection " << sel.id() << endreq;    
-    return sel;
-  }
+  Hlt::Selection& retrieveSelection(const stringKey& selname);
 
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
@@ -103,27 +92,17 @@ public:
     return dynamic_cast<Hlt::TSelection<T>&>(retrieveSelection(selname));
   }
 
+  // register an output selection of no candidates
+  Hlt::Selection& registerSelection();
 
-  // register a selection of no candidates
-  Hlt::Selection& registerSelection() {
-    debug() << " registerSelection " << m_outputSelectionName << endreq;
-    Hlt::Selection* sel = new Hlt::Selection(m_outputSelectionName);
-    StatusCode sc = dataSvc().addSelection(sel,this,useTES());
-    if ( sc.isFailure()) {
-       throw GaudiException("Failed to add Selection",m_outputSelectionName.str(),StatusCode::FAILURE);
-    }
-    setOutputSelection(sel);
-    debug() << " registered selection " << m_outputSelectionName << endreq;
-    return *sel;
-  }
-  
-  // register a selection with candidates of T type (i.e Track)
+  // register an output selection with candidates of T type (i.e Track)
   template <class T>
   Hlt::TSelection<T>& registerTSelection()
   {
+    Assert( ! m_outputSelectionName.empty(), " registerTSelection(): no output name???");
     debug() << " registerTSelection " << m_outputSelectionName << endreq;
     Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(m_outputSelectionName);
-    StatusCode sc = dataSvc().addSelection(tsel,this,useTES());
+    StatusCode sc = dataSvc().addSelection(tsel,this,false);
     if (sc.isFailure()) {
        throw GaudiException("Failed to add Selection",m_outputSelectionName.str(),StatusCode::FAILURE);
     }
@@ -154,9 +133,6 @@ protected:
   // name of the 2nd input selection (option)
   std::string m_inputSelection2Name;
 
-  // names of the extra input selections (option)
-  StringArrayProperty m_extraInputSelectionsNames;
- 
 private:
   // name of the output selection
  stringKey m_outputSelectionName;
