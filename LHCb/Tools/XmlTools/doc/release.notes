@@ -4,7 +4,10 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
-!======================== XmlTools v6r0 2008-06-30 ===========================
+!======================== XmlTools v6r0 2008-07-04 ===========================
+! 2008-07-04 - Marco Cattaneo
+ - Fix untested StatusCode
+
 ! 2008-06-12 - Marco Clemencic
  - Renamed the IXmlEntityResolverSvc to IXmlEntityResolver.
    The code now requires that it is implemented by a tool and not a service.

@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.16 2008-06-12 18:43:56 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.17 2008-07-04 07:34:29 cattanem Exp $
 
 // Include Files
 #include <limits.h>
@@ -134,7 +134,7 @@ StatusCode XmlParserSvc::finalize() {
     if (m_resolver) {
       m_resolver->release();
       m_resolver = 0;
-      m_toolSvc->releaseTool(m_resolverTool);
+      m_toolSvc->releaseTool(m_resolverTool).ignore();
       m_resolverTool = 0;
     }
     m_toolSvc->release();
