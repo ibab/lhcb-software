@@ -1,6 +1,6 @@
 // 
 // MEPRxSvc.opts
-// $Id: MEPRxSvc.opts,v 1.5 2008-06-09 09:02:52 niko Exp $
+// $Id: MEPRxSvc.opts,v 1.6 2008-07-04 08:00:45 frankb Exp $
 // Sample options for the eventbuilder service MEPRxSvc
 // niko.neufeld@cern.ch
 #include "$HLTOPTS/OnlineEnvironment.opts"
@@ -28,3 +28,4 @@ Runable.sockBuf          = 30000000; // this must be supported by the kernel!
 Runable.refCount         = 2;
 Runable.RTTCCompat       = false;       // for RTTC backward compatibility
 #include "$HLTOPTS/EBSetup.opts"
+HistogramPersistencySvc.OutputLevel  = 5;

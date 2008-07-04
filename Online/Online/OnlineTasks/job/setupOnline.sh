@@ -103,4 +103,4 @@ export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=${HLTOPTS}/Mai
 export CLASS0_TASK="${gaudi_exe} -tasktype=LHCb::Class0Task -opt=${GAUDIONLINEROOT}/options/Daemon.opts"
 
 export gaudi_exe3="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline"  
-
+export gaudi_exe4="/usr/bin/valgrind --tool=callgrind --log-file=SaverCallTrace.log $GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline"  

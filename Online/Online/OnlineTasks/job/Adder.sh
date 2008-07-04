@@ -22,7 +22,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r9/Online/OnlineTasks/v1r11/job
+cd /home/online/Online_v4r10/Online/OnlineTasks/v1r12/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts

@@ -16,7 +16,7 @@ if test -n "$4" ; then
 fi
 echo UTGID ${UTGID} PARENT ${PARENT} PARTNAME ${PARTNAME}
 
-cd /home/online/Online_v4r8/Online/OnlineTasks/v1r11/job
+cd /home/online/Online_v4r10/Online/OnlineTasks/v1r12/job
 export DEBUGGING=YES
 
 # remove the args because they interfere with the cmt scripts
@@ -26,16 +26,15 @@ done
 
 . ./setupOnline.sh 
 
-if test -n "${TOP} 
+if test -n "${TOP}" 
    then export DIM_DNS_NODE=hlt01;
 fi
 
-
-if [[ ${PARENT} == "hlta08" ]]
+if [[ ${PARENT} == "cald07" ]]
   then ${gaudi_exe3} -options=../options/SaverCalibrationfarm.opts -loop &
   else 
      if [[ ${PARENT} == "mona08" ]]
-       then ${gaudi_exe3} -options=../options/SaverMonitorfarm.opts -loop &
+       then ${gaudi_exe4} -options=../options/SaverMonitorfarm.opts -loop &
        else ${gaudi_exe3} -options=../options/Saver.opts -loop &
      fi 
 fi  

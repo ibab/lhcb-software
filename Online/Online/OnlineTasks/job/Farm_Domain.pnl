@@ -1,0 +1,445 @@
+V 10
+1
+LANG:1 18 Monitoring Control
+PANEL,-1 -1 704 682 N "_3DFace" 1
+"$2"
+"main()
+{ 
+  //assume max of MAX_NUM_PART partitions and MAX_NUM_NODES per subfarm
+  string dp,val,val2,tmp;
+  int status,index;
+  fwCU_getDp($2,dp);
+  if (dp==\"\") sys=\"HLT:\";
+  else sys=fwFsm_getSystem(dp)+\":\";  
+
+  dyn_int SubFarmsStates;
+  dyn_string PartitionNames,SubFarms;
+  dyn_string Messages;
+  Messages=makeDynString(\"is down.\",\"is up but DNS is down.\",\"is up, DNS also up, but TMSRV down\");
+
+  dpGet(sys+\"farmAlloc.SubFarmsStates\",SubFarmsStates);
+  dpGet(sys+\"farmAlloc.PartitionNames\",PartitionNames);
+ 
+  Table.columnEditable(2, TRUE); 
+  Table.columnEditable(3, TRUE);
+  
+
+  for (int i=1; i<=MAX_NUM_FARM; i++) {
+    val=\"none\";val2=\"none\";
+    if (i>dynlen(SubFarmsStates)) {
+    }   
+    else {     
+       if (SubFarmsStates[i]==-1) { 
+         // -1=> farm not allocated, it can be removed
+        // DebugN(\"i \"+i+\" initialize: subfarm not allocated, setting Remove to False \");    
+         setValue(\"Table\", \"cellValueRC\", i-1, \"Remove\", FALSE);
+       }
+       if (SubFarmsStates[i]==-2) {
+         // -2=> farm available, it can be included
+         //DebugN(\"i \"+i+\" initialize: subfarm available, setting Insert to False \");    
+         setValue(\"Table\", \"cellValueRC\", i-1, \"Insert\", FALSE);
+       }
+     }   
+   getValue(\"Table\",\"cellValueRC\",i-1,\"Remove\", val);
+   getValue(\"Table\",\"cellValueRC\",i-1,\"Insert\", val2);
+   //DebugN(\"i \"+i+\" initialize: remove \"+val+\" insert \"+val2);     
+  } 
+
+  dpGet(sys+\"farmAlloc.SubFarms\",SubFarms);
+  for (int i=1; i<=dynlen(SubFarms); i++) {
+    dpGet(sys+\"node\"+SubFarms[i]+\".status\",status);
+    index=status+1;
+    if (status<3) {
+    //  text.text(\"Subfarm \"+SubFarms[i]+\" \"+Messages[index]); 
+      setValue(\"Message\",\"appendItem\",\"Subfarm \"+SubFarms[i]+\" \"+Messages[index],\"bottomPos\",0);      
+    }  
+    for (int j=1;j<=MAX_NUM_NODES;j++) {
+       dpGet(sys+\"node\"+SubFarms[i]+\"0\"+j+\".status\",status);
+       if (status<3) {
+         index=status+1;
+          //text.text(\"Subfarm \"+SubFarms[i]+\"0\"+j+\" \"+Messages[index]); 
+          setValue(\"Message\",\"appendItem\",\"Subfarm \"+SubFarms[i]+\"0\"+j+\" \"+Messages[index],\"bottomPos\",0);
+          tmp=\"Subfarm \"+SubFarms[i]+\"0\"+j+\" \"+Messages[index];
+          DebugN(tmp);
+        }
+     }   
+  }
+}
+
+" 0
+ E E E E 1 -1 -1 0  0 0
+""0  1
+E "
+  int MAX_NUM_FARM = 27;
+  int MAX_NUM_NODES = 4;
+  string sys;
+" 0
+ 2
+"CBRef" "1"
+"EClose" E
+""
+DISPLAY_LAYER, 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0
+LAYER, 0 
+1
+LANG:1 6 Layer1
+2 47
+"Text3"
+""
+1 42 160 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+ E E
+42 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+"main()
+{
+
+}" 0
+ E 0 1 1 0 1 E U  0 E 44 162 45 182
+0 2 0 "0s" 0 0 0 192 0 0  44 162 1
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+1
+LANG:1 0 
+25 49
+"Table"
+""
+1 -273.0470588235293 -252.96 E E E 1 E 1 E N "_WindowText" E N {255,255,255} E E
+ E E
+43 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+ 18 118 435.9999999999999 566
+"//dyn_string dpes;
+
+main()
+{  
+  dyn_string(subfarms);
+  setValue(\"Table\",\"deleteAllLines\");   
+  dpConnect(\"updatetableint\",sys+\"farmAlloc.SubFarms\",sys+\"farmAlloc.PartitionNames\");
+  dpGet(sys+\"farmAlloc.SubFarms\",subfarms);
+  for (int j=1;j<=dynlen(subfarms);j++) {
+    dpConnect(\"setcellcolour\",sys+\"node\"+subfarms[j]+\".status\",sys+\"farmAlloc.SubFarms\");
+  }  
+}    
+      
+updatetableint(string dp, dyn_string value, string dp2, dyn_string partitionNames)
+{
+  for (int i=1;i<=dynlen(value);i++) { 
+    setValue(\"Table\",\"updateLine\",1,\"PropName\",value[i],\"countername\",partitionNames[i]);
+ }
+}
+
+setcellcolour(string dp, int value,string dp2,dyn_string subfarms) {
+    dyn_string split;
+    string host,colour;
+    split=strsplit(dp,\".\");
+    host=split[1];
+    split=strsplit(host,\":\");
+    host=split[2];
+    colour=\"white\";
+    if (value==0) colour=\"red\";
+    if (value==1) colour=\"FwAlarmErrorAck\";
+    if (value==2) colour=\"yellow\";
+    if (value==3) colour=\"green\";
+  //  DebugN(\"host \"+host+\" value \"+value+\" subfarms \"+subfarms);
+    for (int i=1;i<=dynlen(subfarms);i++) {
+      if (host==\"node\"+subfarms[i]) {
+     //   DebugN(\"host \"+sys+subfarms[i]+\" colour \"+colour);
+        setValue(\"Table\",\"cellBackColRC\",i-1,\"PropName\",colour);}
+    }
+  }    
+
+  " 0
+E 1 0 1 4 1 "PropName" 9 1 0 "s" 1
+LANG:1 4 Farm
+E
+1
+LANG:1 0 
+
+115 "countername" 11 1 0 "s" 1
+LANG:1 34 Dynamically allocated to partition
+E
+1
+LANG:1 0 
+
+130 "Remove" 6 1 0 "s" 1
+LANG:1 6 Remove
+E
+1
+LANG:1 0 
+
+75 "Insert" 6 1 0 "s" 1
+LANG:1 6 Insert
+E
+1
+LANG:1 0 
+
+75 
+26 26 "" 1 1
+LANG:1 2 #1
+8 30
+1
+LANG:1 84 -*-Arial-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,404,0,0,0,0,0,0,0,0,Arial
+0 ""
+0 1 1 1 7
+1 0
+2 54
+"PRIMITIVE_TEXT3"
+""
+1 22 2 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+50 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 22 2 136 18
+0 2 2 "0s" 0 0 0 192 0 0  22 2 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 19 Status of subfarms:
+13 111
+"PUSH_BUTTON1"
+""
+1 280 590 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+ E E
+156 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 82 -*-Sans-*-r-normal-*-13-*-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 278 588 402 616
+
+T 
+1
+LANG:1 13 REFRESH/DO IT
+"main()
+{
+    //assume max of MAX_NUM_PART partitions   
+  dyn_int SubFarmsStates;
+  dyn_string PartitionNames,SubFarms;
+ 
+
+  bool val;bool val2;
+  
+
+  dpGet(sys+\"farmAlloc.SubFarmsStates\",SubFarmsStates);
+  dpGet(sys+\"farmAlloc.PartitionNames\",PartitionNames);
+  //DebugN(\"partitionnames \"+PartitionNames);
+  dpGet(sys+\"farmAlloc.SubFarms\",SubFarms);
+ 
+  for (int i=1; i<=MAX_NUM_FARM; i++) {
+    val=FALSE;val2=FALSE;
+    if (i<=dynlen(SubFarmsStates)) {
+       getValue(\"Table\", \"cellValueRC\", i-1, \"Remove\", val);
+    //   DebugTN(\"val \"+val+\"SubFarmsStates[\"+i+\"]\"+SubFarmsStates[i]);
+       if(val == TRUE) {
+         if (SubFarmsStates[i]==-1) {         
+            SubFarmsStates[i]=-2;
+            PartitionNames[i]=\"Removed from pool\";
+            setValue(\"Table\", \"cellValueRC\", i-1, \"Remove\", \"\"); 
+            setValue(\"Table\", \"cellValueRC\", i-1, \"Insert\", FALSE);   
+         }
+         else {
+           DebugTN(\"Subfarm \"+SubFarms[i]+\" in use or already removed.\"); 
+           text.text(\"Subfarm \"+SubFarms[i]+\" in use or already removed.\"); 
+         }
+       }
+       getValue(\"Table\", \"cellValueRC\", i-1, \"Insert\", val2);
+     //  DebugTN(\"val2 \"+val2+\"SubFarmsStates[\"+i+\"]\"+SubFarmsStates[i]);
+       if(val2 == TRUE) {
+         SubFarmsStates[i]=-1;
+         PartitionNames[i]=\"none\";
+         setValue(\"Table\", \"cellValueRC\", i-1, \"Insert\", \"\"); 
+         setValue(\"Table\", \"cellValueRC\", i-1, \"Remove\", FALSE);             
+       } 
+     }  
+  }   
+//  DebugTN(sys+\"farmAlloc.SubFarmsStates= \"+SubFarmsStates);
+//  DebugTN(sys+\"farmAlloc.PartitionNames= \"+PartitionNames); 
+  dpSet(sys+\"farmAlloc.SubFarmsStates\",SubFarmsStates);
+  dpSet(sys+\"farmAlloc.PartitionNames\",PartitionNames);
+ 
+}" 0
+ E E E
+29 132
+"text"
+""
+1 20 630 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+197 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+ 20 630 434.9999999999999 659
+15 PVSS.TextEdit.1
+5
+0 "TextChanged" "()"
+""
+0 "ReturnPressed" "()"
+""
+0 "ModificationChanged" "(bool mod)"
+""
+0 "Clicked" "(int para, int pos)"
+""
+0 "CursorPositionChanged" "(int para, int pos)"
+""
+E2 134
+"PRIMITIVE_TEXT4"
+""
+1 20 40 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+199 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 20 40 462 57
+0 2 2 "0s" 0 0 0 192 0 0  20 40 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 60 N.B: HLTA06, HLTA07, HLTE03, HLTE07, HLTE08, HLTE09, HLTE11 
+2 135
+"PRIMITIVE_TEXT5"
+""
+1 20 70 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+200 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  1 E 20 70 314 87
+0 2 2 "0s" 0 0 0 192 0 0  20 70 1
+1
+LANG:1 82 -*-Sans-*-r-normal-*-14-*-100-100-*-*-iso8859-1|-14,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+1
+LANG:1 48 are "old" subfarms (32 bit). Do not insert them.
+25 138
+"legend"
+""
+1 438 122 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+203 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 83 -*-Sans-*-r-normal-*-*-100-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+ 435.9999999999999 120 683 215
+"main()
+{
+    string colour;
+    setValue(\"legend\",\"updateLine\",1,\"colour\",\"red\",\"hostup\",\"down\",\"dnsup\",\"down\",\"tmsrvup\",\"down\");
+    setValue(\"legend\",\"updateLine\",1,\"colour\",\"orange\",\"hostup\",\"up\",\"dnsup\",\"down\",\"tmsrvup\",\"down\");
+    setValue(\"legend\",\"updateLine\",1,\"colour\",\"yellow\",\"hostup\",\"up\",\"dnsup\",\"up\",\"tmsrvup\",\"down\");
+    setValue(\"legend\",\"updateLine\",1,\"colour\",\"green\",\"hostup\",\"up\",\"dnsup\",\"up\",\"tmsrvup\",\"up\");  
+    colour=\"red\";
+    setValue(\"legend\",\"cellBackColRC\",0,\"colour\",colour);
+    colour=\"FwAlarmErrorAck\";
+    setValue(\"legend\",\"cellBackColRC\",1,\"colour\",colour);    
+    colour=\"yellow\";
+    setValue(\"legend\",\"cellBackColRC\",2,\"colour\",colour);  
+    colour=\"green\";
+    setValue(\"legend\",\"cellBackColRC\",3,\"colour\",colour);  
+}" 0
+E 1 0 1 4 0 "colour" 6 1 1 "s" 1
+LANG:1 6 colour
+E
+1
+LANG:1 0 
+
+60 "hostup" 6 1 1 "s" 1
+LANG:1 7 host up
+E
+1
+LANG:1 0 
+
+60 "dnsup" 6 1 1 "s" 1
+LANG:1 6 dns up
+E
+1
+LANG:1 0 
+
+60 "tmsrvup" 6 1 1 "s" 1
+LANG:1 8 tmsrv up
+E
+1
+LANG:1 0 
+
+60 
+16 16 10 10
+1
+LANG:1 83 -*-Sans-*-r-normal-*-*-100-100-100-*-*-iso8859-1|-13,0,0,0,505,0,0,0,0,0,0,0,0,Sans
+0 ""
+0 1 1 1 7
+1 0
+0
+LAYER, 1 
+1
+LANG:1 6 Layer2
+0
+LAYER, 2 
+1
+LANG:1 6 Layer3
+0
+LAYER, 3 
+1
+LANG:1 6 Layer4
+0
+LAYER, 4 
+1
+LANG:1 6 Layer5
+0
+LAYER, 5 
+1
+LANG:1 6 Layer6
+0
+LAYER, 6 
+1
+LANG:1 6 Layer7
+0
+LAYER, 7 
+1
+LANG:1 6 Layer8
+0
+0
