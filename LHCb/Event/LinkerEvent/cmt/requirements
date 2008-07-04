@@ -9,9 +9,9 @@ branches          cmt doc src Event Linker xml
 
 # Used packages.
 #============================================================================
-use LHCbKernel	v*	Kernel	
+use LHCbKernel  v*  Kernel	
 private
-use GaudiObjDesc v* -no_auto_imports
+use GaudiObjDesc  v*   -no_auto_imports
 end_private
 
 # Produce Header-Files and from XML description

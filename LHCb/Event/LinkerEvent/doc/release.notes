@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!======================= LinkerEvent v3r5 2008-07-04 =========================
+! 2008-06-30 - Marco Cattaneo
+ - Add a missing apply_pattern
+
 !======================= LinkerEvent v3r4 2008-04-04 =========================
 ! 2008-03-14 - Olivier Callot
  - Fixed in LinkedFrom the test to not test the classID if the first template 
