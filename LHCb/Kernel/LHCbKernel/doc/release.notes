@@ -4,7 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
-!===================== LHCbKernel v8r5 2008-07-01 ========================
+!===================== LHCbKernel v8r5 2008-07-04 ========================
+! 2008-07-04 Marco Cattaneo
+ - Remove FPEGuard implementation for Windows (always throws exceptions!)
+ - Fix dummy FPEGuard implementation to accept standard exception types
+ 
 ! 2008-07-01 M Needham
  - Changes in ITNames/TTNames for windows 
 
