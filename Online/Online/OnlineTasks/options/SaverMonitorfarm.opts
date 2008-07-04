@@ -1,28 +1,40 @@
-// Job options file. Simple Online Saver example
-//==============================================================
+ApplicationMgr.Dlls                 += { "Gaucho" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.ExtSvc               += { "MonitorSvc/MonitorSvc", "LHCb::SaverSvc/Saver" };
+//ApplicationMgr.ExtSvc               += { "LHCb::SaverSvc/Saver" };
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+#include "$ONLINETASKS/options/MessageSvc.opts"
 
-ApplicationMgr.ExtSvc = { "MonitorSvc" };
-
-ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho","GaudiOnline"};
-ApplicationMgr.DLLs += {"Saver"};
-
-AuditorSvc.Auditors = { "ChronoAuditor" };
-
-ApplicationMgr.TopAlg  = { "Saver" };
-
-
-Saver.OutputLevel = 1;
-
-ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
-ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
-
-Saver.nodename="MONA08";
+Saver.OutputLevel = 3;
 //Saver.histogramname={"1Da*","2D*","1Db*","Prof*"};
 //Saver.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
-Saver.histogramname={"banktype*","eventsize*"};
-Saver.algorithmname={"OnlineDummyReader","OnlineDummyReader"};
+
+// Works only for 1 single task !!!!
+
+// Node name match
+Saver.nodenames={"$DIM_DNS_NODE"};
+
+// This is the task name that publishes the histograms
+// Best approximation: partition name
+//Saver.taskname     = @OnlineEnv.PartitionName;
+
+// for tests, point it elsewhere
+Saver.taskname       = "RICH2";
+Saver.savecycletime  = 300;
+
+// Output directory
+Saver.savedir      = "/group/online/Histograms/Savesets";
+// this is where the task publishes to.....
+Saver.dimclientdns = @OnlineEnv.DimDnsNode;
+
+//                  H  /Task             /Algorithm/Histogram name
+// Histogram name: "H1D/MONA08_CaloDAQMon/EcalCalib/EcalCalib/Summary/Pedestal/2"
+//
+//Saver.histogramname={"RICH/ComMon/ALL-*","RICH/ComMon/HitPerHardID*","RICH/ComMon/R*","RICH/DAQMon/Error*","RICH/DAQMon/HitPerHardID*","PixelCount*","R*"};
+//Saver.algorithmname={"ComMon","ComMon","ComMon","DAQMon","DAQMon","HitMapMon","HitMapMon"};
 //Saver.histogramname={"EcalCalib/Summary/Pedestal/2","EcalCalib/Summary/Pedestal/1","EcalCalib/Summary/Pedestal/3"};
 //Saver.algorithmname={"EcalCalib","EcalCalib","EcalCalib"};
-Saver.dimclientdns="MONA08";
-Saver.taskname="GauchoJob";
-Saver.savedir="/group/online/Histograms/Savesets";
+
