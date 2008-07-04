@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.13 2007-02-22 13:30:24 robbep Exp $
+// $Id: Inclusive.cpp,v 1.14 2008-07-04 08:51:29 robbep Exp $
 // Include files 
 
 // local
@@ -79,10 +79,13 @@ StatusCode Inclusive::initialize( ) {
   
   for ( it = m_pids.begin() ; it != m_pids.end() ; ++it ) {
     ParticleProperty * prop = ppSvc -> findByStdHepID( *it ) ;
-    info() << prop -> particle() << " " ;
-    
-    if ( LHCb::ParticleID( prop -> pdgID() ).hasBottom() ) bottom = true ;
-    else if ( LHCb::ParticleID( prop -> pdgID() ).hasCharm()  ) charm  = true ;
+    if ( 0 == prop ) 
+      warning() << "PDG Code " << (*it) << " does not exist." << endreq ;
+    else {
+      info() << prop -> particle() << " " ;      
+      if ( LHCb::ParticleID( prop -> pdgID() ).hasBottom() ) bottom = true ;
+      else if ( LHCb::ParticleID( prop -> pdgID() ).hasCharm()  ) charm  = true ;
+    }
   }
 
   if ( bottom && ! charm ) m_lightestQuark = LHCb::ParticleID::bottom ;
