@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.2 2008-05-28 18:53:30 graven Exp $
+// $Id: HltConfigSvc.h,v 1.3 2008-07-04 12:45:33 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -6,6 +6,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
@@ -43,10 +45,23 @@ private:
   TCK_t                        m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
 
-  // resolve TCK -> toplevel config ID, then call matching method with ID
-  StatusCode configure(const TCK_t& tck) const;
-  StatusCode reconfigure(const TCK_t& tck) const;
-  bool loadConfig(const TCK_t& tck);
+  // resolve TCK -> toplevel config ID, then call method with ID
+  template <typename RET, typename FUN>
+  RET forward(const TCK_t& tck,const FUN& fun) const;
+
+  StatusCode configure(const TCK_t& tck) const {
+    typedef StatusCode (PropertyConfigSvc::*fun_t)(const ConfigTreeNode::digest_type&) const;
+    fun_t f = &PropertyConfigSvc::configure;
+    return forward<StatusCode>(tck,boost::lambda::bind(f,this,boost::lambda::_1));
+  }
+  StatusCode reconfigure(const TCK_t& tck) const {
+    return forward<StatusCode>(tck,boost::lambda::bind(&PropertyConfigSvc::reconfigure,this,boost::lambda::_1)); 
+  }
+  bool loadConfig(const TCK_t& tck) {
+    return forward<bool>(tck,boost::lambda::bind(&PropertyConfigSvc::loadConfig,this,boost::lambda::_1)); 
+  }
+
+  ConfigTreeNode::digest_type tck2config(const TCK_t& tk) const;
 
 };
 #endif // HLTCONFIGSVC_H

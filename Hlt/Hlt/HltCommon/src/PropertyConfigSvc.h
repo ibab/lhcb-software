@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.5 2008-05-22 14:15:29 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.6 2008-07-04 12:45:33 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -57,7 +57,6 @@ public:
 
   virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const;
   virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const;
-protected:
   // helper functions
 
   bool loadConfig(const ConfigTreeNode::digest_type& nodeRef);
@@ -70,8 +69,11 @@ protected:
   StatusCode reconfigure(const ConfigTreeNode::digest_type& top) const; 
 
 
+protected:
   // check validity of given config
   bool validateConfig(const PropertyConfig::digest_type& ref) const;
+
+  IConfigAccessSvc* cas() const { return m_accessSvc;}
 
 
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }

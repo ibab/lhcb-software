@@ -5,6 +5,12 @@
 !----------------------------------------------------------------------------
 
 !2008-07-04 - Gerhard Raven
+  - TCK -> config ID mapping is now functional: can be obtained from database,
+    and is used by HltConfigSvc, unless a TCK entry is (first) found in the 
+    joboptions
+  - clean up of ConfigStackAccessSvc
+   
+!2008-07-04 - Gerhard Raven
   - binders now bind against containers-of-items instead of items, and enforce the
     container to be std::vector<item*> -- update FunctionFactories accordingly
   - replace all floats by double

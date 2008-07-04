@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.10 2008-07-04 08:07:41 graven Exp $
+// $Id: HltTFilter.icpp,v 1.11 2008-07-04 12:45:33 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -60,7 +60,7 @@ StatusCode HltTFilter<T>::initialize() {
        it != cromos.end(); it++) addTFilterData(*it);
 
   // output
-    m_tseloutput = &(registerTSelection<T>());
+  m_tseloutput = &(registerTSelection<T>());
   
   // save configuration
   saveConfiguration();
@@ -97,7 +97,7 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
   initializeCounter(tf.counterCandidates,tf.filtername+" candidates ");
   if (produceHistos()) {
     tf.histovalues = initializeHisto(tf.functionname,       0.,100.,100);
-    tf.histobest  = initializeHisto(tf.functionname+"Best",0.,100.,100);
+    tf.histobest   = initializeHisto(tf.functionname+"Best",0.,100.,100);
   }
   debug() << " filtername " << tf.filtername
           << " function " << tf.function.get()
@@ -171,7 +171,7 @@ StatusCode HltTFilter<T>::execute() {
       for (typename std::vector<T*>::const_iterator i = ttemp.begin(); i != ttemp.end(); ++i) 
             vals.push_back( (*i)->info(tf.infoID,1e6));
       double val = *( tf.isMin() ? std::min_element(vals.begin(),vals.end()) 
-                               : std::max_element(vals.begin(),vals.end()) );
+                                 : std::max_element(vals.begin(),vals.end()) );
       if (m_debug) {
         std::string name = tf.filtername+" : ";
         for(std::vector<double>::const_iterator i=vals.begin();i!=vals.end();++i)
@@ -217,4 +217,3 @@ StatusCode HltTFilter<T>::finalize() {
 
   return sc;
 }
-

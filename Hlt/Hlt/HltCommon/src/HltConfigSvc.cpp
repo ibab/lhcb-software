@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.8 2008-06-05 11:20:16 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.9 2008-07-04 12:45:33 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -86,44 +86,46 @@ StatusCode HltConfigSvc::initialize() {
 
 
 //=============================================================================
-// Configure
+// Perform mapping from TCK to onfiguration ID
 //=============================================================================
-StatusCode 
-HltConfigSvc::configure(const TCK_t& tck) const {
+ConfigTreeNode::digest_type 
+HltConfigSvc::tck2config(const TCK_t& tck) const {
+    ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
     TCKMap_t::const_iterator i = m_tck2config.find(lexical_cast<string>(tck));
-    if (i == m_tck2config.end()) {
-        error() << " could not resolve " << tck << " to a configID " << endl;
-        return StatusCode::FAILURE;
+    if (i != m_tck2config.end()) {
+        ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
+        debug() << " TCK " << lexical_cast<string>(tck) << " mapped (by explicit option) to " << id << endmsg;
+        return id;
     }
-    debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << i->second << endmsg;
-    info() << "Invoking PropertyConfigSvc::configure" << endmsg;
-    return PropertyConfigSvc::configure( ConfigTreeNode::digest_type::createFromStringRep(i->second) );
+    
+    
+    //@TODO: need to adopt PropertyConfigSvc to allow approaching it with an alias in addition
+    //       to giving it a ref...
+    // until that time, we need access to the IConfigAccessSvc of the parent to make
+    // sure we are consistent...
+
+    ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") + lexical_cast<string>(tck) );
+    boost::optional<ConfigTreeNode> n = cas()->readConfigTreeNodeAlias( alias );
+    if (!n) {
+        error() << "Could not resolve TCK " << lexical_cast<string>(tck) << " : no alias found " << endmsg;
+        return id;
+    }
+    id = n->digest(); // need a digest, not an object itself... 
+         
+    debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << id << endmsg;
+    return id;
 }
 
 //=============================================================================
-// Reconfigure
+// Generic forwarding of TCK request to config ID requests...
 //=============================================================================
-StatusCode 
-HltConfigSvc::reconfigure(const TCK_t& tck) const {
-    TCKMap_t::const_iterator i = m_tck2config.find(lexical_cast<string>(tck));
-    if (i == m_tck2config.end()) {
+template <typename RET, typename FUN>
+RET HltConfigSvc::forward(const TCK_t& tck,const FUN& fun) const {
+    ConfigTreeNode::digest_type id = tck2config(tck);
+    if (!id.valid()) {
         error() << " could not resolve " << tck << " to a configID " << endl;
-        return StatusCode::FAILURE;
     }
-    return PropertyConfigSvc::reconfigure( ConfigTreeNode::digest_type::createFromStringRep( i->second) );
-}
-
-//=============================================================================
-// populate cache with this configuration
-//=============================================================================
-bool 
-HltConfigSvc::loadConfig(const TCK_t& tck) {
-    TCKMap_t::const_iterator i = m_tck2config.find(lexical_cast<string>(tck));
-    if (i == m_tck2config.end()) {
-        error() << " could not resolve " << tck << " to a configID " << endl;
-        return StatusCode::FAILURE;
-    }
-    return PropertyConfigSvc::loadConfig( ConfigTreeNode::digest_type::createFromStringRep(i->second) );
+    return fun( id ); 
 }
 
 //=============================================================================

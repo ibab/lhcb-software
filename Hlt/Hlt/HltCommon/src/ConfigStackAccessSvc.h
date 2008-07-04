@@ -1,4 +1,4 @@
-// $Id: ConfigStackAccessSvc.h,v 1.4 2008-06-30 14:43:57 graven Exp $
+// $Id: ConfigStackAccessSvc.h,v 1.5 2008-07-04 12:45:33 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 #include "boost/optional.hpp"
+#include "boost/ptr_container/ptr_vector.hpp"
 // from Gaudi
 #include "HltBase/IConfigAccessSvc.h"
 #include "GaudiKernel/Service.h"
@@ -34,6 +35,7 @@ public:
 
   StatusCode queryInterface(const InterfaceID& , void** );
   StatusCode initialize();    ///< Service initialization
+  StatusCode finalize();    ///< Service finalization
 
   boost::optional<PropertyConfig> readPropertyConfig(const PropertyConfig::digest_type& ref);
   PropertyConfig::digest_type    writePropertyConfig(const PropertyConfig& config);
@@ -56,7 +58,7 @@ private:
   MsgStream& always() const { return msg(MSG::ALWAYS); }
   
   std::vector<std::string>             s_svcs;
-  std::vector<IConfigAccessSvc*>       m_svcs;
+  boost::ptr_vector<IConfigAccessSvc>  m_svcs;
   mutable std::auto_ptr<MsgStream>     m_msg;
   MsgStream& msg(MSG::Level level) const;
 };

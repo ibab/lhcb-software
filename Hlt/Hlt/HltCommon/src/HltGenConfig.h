@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.6 2008-06-30 08:56:53 graven Exp $
+// $Id: HltGenConfig.h,v 1.7 2008-07-04 12:45:33 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -48,8 +48,8 @@ private:
   StatusCode                generateConfig() const;
   
   ConfigTreeNode::digest_type generateConfig(const INamedInterface& obj) const;
-  template <typename COMP, typename I, typename R>
-  std::vector<ConfigTreeNode::digest_type> getDependencies(I begin, I end, R resolver) const;
+  template <typename COMP, typename I, typename R, typename INS>
+  StatusCode getDependencies(I begin, I end, R resolver, INS inserter) const;
 
   // keep track of whom uses which tools
   typedef std::multimap<std::string,const IAlgTool*> Map_t;

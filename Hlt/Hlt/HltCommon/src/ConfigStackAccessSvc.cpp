@@ -2,6 +2,7 @@
 #include "boost/assign/list_of.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include "boost/ref.hpp"
 #include "GaudiKernel/SvcFactory.h"
 
 namespace bl=boost::lambda;
@@ -41,7 +42,7 @@ StatusCode ConfigStackAccessSvc::queryInterface(const InterfaceID& riid,
 // Initialization
 //=============================================================================
 StatusCode ConfigStackAccessSvc::initialize() {
-    info() << "Initialize" << endmsg;
+    debug() << "Initialize" << endmsg;
     StatusCode status = Service::initialize();
     if (!status.isSuccess()) return status;
     for (std::vector<std::string>::const_iterator i = s_svcs.begin(); i!=s_svcs.end() ; ++i) {
@@ -53,18 +54,31 @@ StatusCode ConfigStackAccessSvc::initialize() {
         assert(svc!=0);
         m_svcs.push_back(svc);
     }
+    if (m_svcs.empty()) { 
+        error() << "must specify at least one service in ConfigAccessSvcs..." << endmsg;
+        return StatusCode::FAILURE;
+    }
     return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Finalization
+//=============================================================================
+StatusCode ConfigStackAccessSvc::finalize() {
+    for (boost::ptr_vector<IConfigAccessSvc>::iterator i =m_svcs.begin();
+                                                       i!=m_svcs.end();
+                                                       ++i) i->release();
+    return Service::finalize();
 }
 
 boost::optional<PropertyConfig> 
 ConfigStackAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) {
     boost::optional<PropertyConfig> x;
-    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
-                                                  i!=m_svcs.end()&&!x;
-                                                  ++i)  {
-        x = (*i)->readPropertyConfig(ref);
+    for (boost::ptr_vector<IConfigAccessSvc>::iterator i =m_svcs.begin();
+                                                       i!=m_svcs.end()&&!x;
+                                                       ++i)  {
+        x = i->readPropertyConfig(ref);
         debug() << "read of " << ref 
-                << " from " << (*i)->name() 
+                << " from " << i->name() 
                 << ": " << (!x?"failed":"OK") << endmsg;
     }
     return x;
@@ -72,9 +86,9 @@ ConfigStackAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref)
 
 PropertyConfig::digest_type
 ConfigStackAccessSvc::writePropertyConfig(const PropertyConfig& config) {
-    PropertyConfig::digest_type id = m_svcs.front()->writePropertyConfig(config);
+    PropertyConfig::digest_type id = m_svcs.front().writePropertyConfig(config);
     debug() << "write of " << config.name() 
-            << " to " << m_svcs.front()->name() 
+            << " to " << m_svcs.front().name() 
             << ": " << (id.invalid()?"failed":"OK") << endmsg;
     return id;
 }
@@ -83,12 +97,12 @@ ConfigStackAccessSvc::writePropertyConfig(const PropertyConfig& config) {
 boost::optional<ConfigTreeNode> 
 ConfigStackAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) {
     boost::optional<ConfigTreeNode> x;
-    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
-                                                  i!=m_svcs.end()&&!x;
-                                                  ++i)  {
-         x = (*i)->readConfigTreeNode(ref);
+    for (boost::ptr_vector<IConfigAccessSvc>::iterator i =m_svcs.begin();
+                                                       i!=m_svcs.end()&&!x;
+                                                       ++i)  {
+         x = i->readConfigTreeNode(ref);
          debug() << "read of " << ref 
-                 << " from " << (*i)->name() 
+                 << " from " << i->name() 
                  << ": " << (!x?"failed":"OK") << endmsg;
     }
     return x;
@@ -98,26 +112,21 @@ ConfigStackAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref)
 std::vector<ConfigTreeNodeAlias> 
 ConfigStackAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias) {
     std::vector<ConfigTreeNodeAlias> vec;
-    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
-                                                  i!=m_svcs.end();
-                                                  ++i)  {
-         std::vector<ConfigTreeNodeAlias> x = (*i)->configTreeNodeAliases(alias);
-         // merge, killing overlaps, checking for consistency...
+    for (boost::ptr_vector<IConfigAccessSvc>::iterator i =m_svcs.begin();
+                                                       i!=m_svcs.end();
+                                                       ++i)  {
+         std::vector<ConfigTreeNodeAlias> x = i->configTreeNodeAliases(alias);
          for (std::vector<ConfigTreeNodeAlias>::const_iterator i = x.begin(); i!= x.end(); ++i) {
             std::vector<ConfigTreeNodeAlias>::const_iterator j = 
                 std::find_if( vec.begin(), vec.end(), 
                               bl::bind(&ConfigTreeNodeAlias::alias,bl::_1)==i->alias());
-               // check consistency if duplication
-            if (j!=vec.end()) {
-                if ( *j != *i) {
-                     warning() << "inconsistent alias in stack (" << *i
-                               << ") -- continuing to use earlier definition: " << *j
-                               << endmsg;
-                } else { } // consistent... skip
-
-                continue; // don't push this!!!
+            if (j==vec.end()) {     // this is a new one!
+                vec.push_back(*i); 
+            } else if ( *j != *i) { // check for consistency if duplication
+                warning() << "inconsistent alias in stack (" << *i
+                          << ") -- continuing to use earlier definition: " << *j
+                          << endmsg;
             }
-            vec.push_back(*i);
          }
     }
     return vec;
@@ -125,9 +134,9 @@ ConfigStackAccessSvc::configTreeNodeAliases(const ConfigTreeNodeAlias::alias_typ
 
 ConfigTreeNode::digest_type
 ConfigStackAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
-    ConfigTreeNode::digest_type id = m_svcs.front()->writeConfigTreeNode(config);
+    ConfigTreeNode::digest_type id = m_svcs.front().writeConfigTreeNode(config);
     debug() << "write of " << config
-            << " to " << m_svcs.front()->name() 
+            << " to " << m_svcs.front().name() 
             << ": " << (id.invalid()?"failed":"OK") << endmsg;
     return id;
 }
@@ -135,12 +144,12 @@ ConfigStackAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
 boost::optional<ConfigTreeNode>  
 ConfigStackAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
     boost::optional<ConfigTreeNode> x;
-    for (std::vector<IConfigAccessSvc*>::iterator i =m_svcs.begin();
-                                                  i!=m_svcs.end()&&!x;
-                                                  ++i)  {
-         x = (*i)->readConfigTreeNodeAlias(alias);
+    for (boost::ptr_vector<IConfigAccessSvc>::iterator i =m_svcs.begin();
+                                                       i!=m_svcs.end()&&!x;
+                                                       ++i)  {
+         x = i->readConfigTreeNodeAlias(alias);
          debug() << "read of " << alias 
-                 << " from " << (*i)->name() 
+                 << " from " << i->name() 
                  << ": " << (!x?"failed":"OK") << endmsg;
     }
     return x;
@@ -148,9 +157,9 @@ ConfigStackAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_t
 
 ConfigTreeNodeAlias::alias_type 
 ConfigStackAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
-    ConfigTreeNodeAlias::alias_type id = m_svcs.front()->writeConfigTreeNodeAlias(alias);
+    ConfigTreeNodeAlias::alias_type id = m_svcs.begin()->writeConfigTreeNodeAlias(alias);
     debug() << "write of " << alias
-            << " to " << m_svcs.front()->name() 
+            << " to " << m_svcs.front().name() 
             << ": " << (id.invalid()?"failed":"OK") << endmsg;
     return id;
 }

@@ -22,6 +22,12 @@
 ///////////  alternative: register ourselves as auditor (for parent algo only?)
 /// usecase: see HltCommon/src/HltTFilter, the 'prepare' variant...
 
+///////////TODO: once an algorithm has registered an output, don't allow it to
+///////////      pick up another input, nor to register another output
+///////////TODO; verify that the output for a given algorithm has all inputs for
+///////////      that algorithm registered in the selection (and nothing more/less)
+///////////TODO: don't allow changes after first beginEvent...
+
 // Declaration of the Service Factory
 DECLARE_SERVICE_FACTORY( HltDataSvc );
 
@@ -139,7 +145,6 @@ HltDataSvc::selection(const stringKey& id,IAlgorithm* /*parent*/) {
 
 void 
 HltDataSvc::clean() {
-    // shouldn't we re-register TES based selections in the TES???
     for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
                                                         i != m_mapselections.end(); ++i)
         i->second->clean();

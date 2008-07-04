@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.9 2008-06-02 19:57:57 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.10 2008-07-04 12:45:33 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -33,6 +33,14 @@ namespace lam = boost::lambda;
 // Declaration of the Algorithm Factory
 DECLARE_SERVICE_FACTORY( PropertyConfigSvc );
 
+
+//@TODO: keep track of what we pushed for whom, (and when...)
+//       we know which kind, so when 'reconfiguring', could issue 'setProperties'
+//       of the relevant component... (need to pick up component, which depends on
+//       'kind', and issue call to setProperties, which also depends on 'kind', as
+//       components don't share an interface for that... (even though all kinds 
+//       derive from the IProperty interface! -- but still there is a difference
+//       in how to pick up the components depending on their kind...)
 namespace {
 
     class property2jos {
@@ -57,11 +65,46 @@ namespace {
                                lam::bind(&Property::name,lam::_1)==name);
                return i==m_properties->end() ? 0 : *i;
             }
-            IJobOptionsSvc*                     m_jos;
+            IJobOptionsSvc*                m_jos;
             string                         m_name;
             const vector<const Property*> *m_properties;
             ostream                       *m_out;
     };
+
+
+    template <typename T> struct IFace;
+    template <> struct IFace<Service> {   typedef IService   type; };
+    template <> struct IFace<Algorithm> { typedef IAlgorithm type; };
+//    template <> struct IFace<AlgTool> {   typedef IAlgTool   type; };
+//    template <> struct IFace<Auditor> {   typedef IAuditor   type; };
+
+    template <typename COMP, typename R, typename F>
+    StatusCode invoke( R resolve, F fun ) {
+        typename IFace<COMP>::type* icomp(0);
+        StatusCode s = resolve(icomp);
+        if (s.isFailure()) return s;
+        COMP* comp = dynamic_cast<COMP*>(icomp); assert(comp!=0);
+        return fun(comp);
+    }
+
+#if 0
+
+StatusCode invokeSetup(const PropertyConfig& conf) {
+    if (conf.kind() == "IAlgorithm")  
+        return invoke<Algorithm>( bl::bind( &IAlgManager::getAlgorithm, m_appMgr, conf.name(), bl::_1 ),
+                                  bl::bind( &Algorithm::setProperties, bl::_1 ) );
+    else if (conf.kind() == "IService") 
+        return invoke<Service>(   bl::bind( (getService_t)&ISvcLocator::getService, serviceLocator(), conf.name(), bl::_1 ),
+                                  bl::bind( &Service::setProperties, bl::_1 ) );
+    //else if (conf.kind() == "IAlgTool") return invoke<AlgTool>( bl::bind( ??? , ??, conf.name(), bl::_1 ),
+    //                                                   ( bl::bind( &AlgTool::setProperties, bl::_1 )
+    else {
+            huh?
+    }
+    return StatusCode::FAILURE;
+}
+
+#endif
 }
 
 //=============================================================================
@@ -126,7 +169,10 @@ StatusCode PropertyConfigSvc::initialize() {
   for (vector<string>::const_iterator i = m_prefetch.begin(); i!=m_prefetch.end(); ++i ) {
      ConfigTreeNode::digest_type digest = ConfigTreeNode::digest_type::createFromStringRep(*i);
      assert( digest.str() == *i) ;
-     loadConfig( digest );
+     if (!loadConfig( digest )) {
+        error() << " failed to load " << digest << endmsg; 
+        return StatusCode::FAILURE;
+     }
      if (m_createGraphVizFile) createGraphVizFile(digest, digest.str()); 
   } 
   return status;
@@ -199,9 +245,7 @@ PropertyConfigSvc::collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) c
         for (ConfigTreeNode::NodeRefs::const_iterator j=nodeRefs.begin();j!=nodeRefs.end();++j) {
             //FIXME: this is not going to be very fast, as it going to 
             // make this operation quadratic...
-            if (find(nrefs.begin(),nrefs.end(),*j)==nrefs.end()) {
-               nrefs.push_back(*j);
-            }
+            if (find(nrefs.begin(),nrefs.end(),*j)==nrefs.end()) nrefs.push_back(*j);
         }
         ++i;
     }
@@ -214,14 +258,12 @@ PropertyConfigSvc::collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) c
 {
      Tree2LeafMap_t::const_iterator i = m_leavesInTree.find(nodeRef);
      if (i!=m_leavesInTree.end()) return i->second;
-     list<ConfigTreeNode::digest_type> nodeRefs = collectNodeRefs(nodeRef);
+     list<ConfigTreeNode::digest_type>   nodeRefs = collectNodeRefs(nodeRef);
      vector<PropertyConfig::digest_type> leafRefs;
      for (list<ConfigTreeNode::digest_type>::const_iterator i=nodeRefs.begin();i!=nodeRefs.end();++i) {
         const ConfigTreeNode *node = resolveConfigTreeNode(*i);
         PropertyConfig::digest_type leafRef = node->leaf();
-        if (!leafRef.invalid()) {
-            leafRefs.push_back(leafRef);
-        }
+        if (!leafRef.invalid()) leafRefs.push_back(leafRef);
      }
      pair<Tree2LeafMap_t::iterator,bool> rv = m_leavesInTree.insert( make_pair(nodeRef, leafRefs) );
      return rv.first->second;
@@ -230,6 +272,7 @@ PropertyConfigSvc::collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) c
 bool 
 PropertyConfigSvc::loadConfig(const ConfigTreeNode::digest_type& nodeRef) 
 {
+     if (!nodeRef.valid()) return false;
      info() << "loading config " << nodeRef.str() << endmsg;
      const vector<PropertyConfig::digest_type>& list = collectLeafRefs(nodeRef);
      for (vector<PropertyConfig::digest_type>::const_iterator i = list.begin();i!=list.end();++i) {
@@ -265,13 +308,15 @@ PropertyConfigSvc::configure(const PropertyConfig& config) const
 
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID) const {
+    if (!configID.valid()) { return StatusCode::FAILURE; }
+
     setTopAlgs(configID);
 
     const vector<PropertyConfig::digest_type>& configs = collectLeafRefs(configID);
     for (vector<PropertyConfig::digest_type>::const_iterator i = configs.begin(); i!=configs.end();++i) {
         const PropertyConfig *config = resolvePropertyConfig(*i);
         if (config==0) return StatusCode::FAILURE;
-        StatusCode sc = configure(*config);
+        StatusCode sc = configure(*config); //@TODO: verify if different from current config, only push if different
         if (sc.isFailure()) return sc;
     }
     return StatusCode::SUCCESS;
@@ -358,14 +403,12 @@ PropertyConfigSvc::findServicesAndTopAlgorithms(const ConfigTreeNode::digest_typ
 
 StatusCode 
 PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
-
     // Obtain the IProperty of the ApplicationMgr
     SmartIF<IProperty> appProps(serviceLocator());
     StringArrayProperty topAlgs("TopAlg",std::vector<std::string>());
     if ( appProps->getProperty(&topAlgs).isFailure() ) {
         error() << " problem getting StringArrayProperty \"TopAlg\"" << endmsg;
     }
-
     debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
 
     vector<PropertyConfig::digest_type> ids;
@@ -388,6 +431,9 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
     // is already present, we push everyone 'up to' this algo just in front
     // of it. Next we repeat until done, checking that the next requested algo is not 
     // already in the current list prior to the point we're at...
+    //@TODO: this doesn't work if topAlgs change on a TCK change: the old ones not
+    //       present in the new one will stay..
+
 
     std::list<std::string> merge(topAlgs.value().begin(),topAlgs.value().end());
 
@@ -419,12 +465,21 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     StatusCode sc = configure(top);
     if (!sc.isSuccess()) return sc;
 
+        //@TODO: restart doesn't call setProperties -- need to make sure
+        //       we call setProperties of those algorithms/services/tools which
+        //       for which we have pushed things into the jos...
+
+//    GAUDI v20rx...
+//    m_appMgrUI->restart();
+
+
     vector<IService*>   svcs;
     vector<IAlgorithm*> algs;
     sc = findServicesAndTopAlgorithms(top,svcs,algs);
     if (!sc.isSuccess()) return sc;
     // and make sure everyone goes back to the JobOptionsSvc
     // to pick them up! i.e. call reinitialize for everyone...
+    //@TODO: with Gaudi v20, invoke restart on the appMgr...
     for (vector<IService*>::iterator i = svcs.begin(); i!=svcs.end()&&sc.isSuccess(); ++i) {
        debug() << " invoking sysReinitialize for service " << (*i)->name() << endmsg;
        sc = (*i)->sysReinitialize();

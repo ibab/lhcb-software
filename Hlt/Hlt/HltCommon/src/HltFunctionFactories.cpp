@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.9 2008-07-04 08:07:41 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.10 2008-07-04 12:45:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -53,10 +53,10 @@ StatusCode HltTrackFunctionFactory::initialize() {
 
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Calo3DChi2","HltVeloTCaloMatch");
-  
+
   declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("RZVeloTMatch","HltMatchTVeloTracks");
-  
+
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
 
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
