@@ -33,6 +33,8 @@ typedef enum {
 	WAITING_CMND_ANSWER, DELETED
 } PENDING_STATES;
 
+#define BAD_CONN_TIMEOUT 10
+
 typedef struct dic_serv {
 	struct dic_serv *next;
 	struct dic_serv *prev;
@@ -60,9 +62,18 @@ typedef struct dic_serv {
     int tid;
 } DIC_SERVICE;
 
+typedef struct bad_conn {
+	struct bad_conn *next;
+	struct bad_conn *prev;
+	DIC_CONNECTION conn;
+	int n_retries;
+	int retrying;
+} DIC_BAD_CONNECTION;
+
 static DIC_SERVICE *Service_pend_head = 0;
 static DIC_SERVICE *Cmnd_head = 0;
 static DIC_SERVICE *Current_server = 0;
+static DIC_BAD_CONNECTION *Bad_connection_head = 0;
 static int Dic_timer_q = 0;
 static int Dns_dic_conn_id = 0;
 static TIMR_ENT *Dns_dic_timr = NULL;
@@ -96,6 +107,7 @@ _DIM_PROTO( void modify_service, (DIC_SERVICE *servp, int timeout,
 				  long tag, int *fill_addr, int fill_size, int stamped) );
 _DIM_PROTO( DIC_SERVICE *locate_command, (char *serv_name) );
 _DIM_PROTO( DIC_SERVICE *locate_pending, (char *serv_name) );
+_DIM_PROTO( DIC_BAD_CONNECTION *locate_bad, (char *node, char *task, int port) );
 _DIM_PROTO( void service_tmout,      (int serv_id) );
 _DIM_PROTO( static void request_dns_info,      (int retry) );
 _DIM_PROTO( static int handle_dns_info,      (DNS_DIC_PACKET *) );
@@ -1266,6 +1278,25 @@ register char *serv_name;
 	return((DIC_SERVICE *)0);
 }
 
+DIC_BAD_CONNECTION *locate_bad(char *node, char *task, int port)
+{
+	DIC_BAD_CONNECTION *bad_connp;
+
+	if(!Bad_connection_head)
+		return((DIC_BAD_CONNECTION *)0);
+	bad_connp = Bad_connection_head;
+	while( (bad_connp = (DIC_BAD_CONNECTION *) dll_get_next(
+						(DLL *) Bad_connection_head,
+						(DLL *) bad_connp)) )
+	{
+		if((!strcmp(bad_connp->conn.node_name, node)) &&
+			(!strcmp(bad_connp->conn.task_name, task)) &&
+			(bad_connp->conn.port == port) )
+		return(bad_connp);
+	}
+	return((DIC_BAD_CONNECTION *)0);
+}
+
 static void request_dns_info(id)
 int id;
 {
@@ -1381,8 +1412,13 @@ DNS_DIC_PACKET *packet;
 	DIC_DNS_PACKET dic_dns_packet;
 	register DIC_DNS_PACKET *dic_dns_p = &dic_dns_packet;
 	SERVICE_REQ *serv_reqp;
+	DIC_BAD_CONNECTION *bad_connp;
+	int retrying = 0;
+	int tmout;
 	int send_service_command();
 	int find_connection();
+	void move_to_bad_service();
+	void retry_bad_connection();
 
 	service_id = vtohl(packet->service_id);
 
@@ -1466,6 +1502,11 @@ DNS_DIC_PACKET *packet;
 #endif
 	if( !(conn_id = find_connection(node_name, task_name, port)) ) 
 	{
+	  bad_connp = locate_bad(node_name, task_name, port);
+	  if(bad_connp)
+		  retrying = bad_connp->retrying;
+	  if((!bad_connp) || (retrying))
+	  {	
 		if( (conn_id = dna_open_client(node_info, task_name, port,
 					      protocol, recv_rout, error_handler)) )
 		{
@@ -1501,14 +1542,54 @@ DNS_DIC_PACKET *packet;
 						malloc(sizeof(DIC_SERVICE));
 			dll_init( (DLL *) dic_connp->service_head);
 			((DIC_SERVICE *)(dic_connp->service_head))->serv_id = 0;
+			if(retrying)
+			{
+				dll_remove((DLL *)bad_connp->conn.service_head);
+				free(bad_connp->conn.service_head);
+				dll_remove((DLL *)bad_connp);
+				free(bad_connp);
+			}
 		} 
 		else 
-		{       
-			if(( servp->type == COMMAND )||( servp->type == ONCE_ONLY ))
+		{
+			if(!retrying)
 			{
+				if( !Bad_connection_head )
+				{
+					Bad_connection_head = (DIC_BAD_CONNECTION *) malloc(sizeof(DIC_BAD_CONNECTION));
+					dll_init( (DLL *) Bad_connection_head );
+					Bad_connection_head->conn.service_head = 0;
+				}
+				bad_connp = (DIC_BAD_CONNECTION *) malloc(sizeof(DIC_BAD_CONNECTION));
+				bad_connp->n_retries = 0;
+				bad_connp->conn.service_head = malloc(sizeof(DIC_SERVICE));
+				dll_init( (DLL *) bad_connp->conn.service_head);
+
+				dll_insert_queue( (DLL *) Bad_connection_head, (DLL *) bad_connp );
+				if(Debug_on)
+				{
+					dim_print_date_time();
+					printf(" - Failed connecting to Server %s on node %s port %d\n",
+						task_name, node_name, port);
+					fflush(stdout);
+				}
 				service_tmout( servp->serv_id );
-				return(0);
 			}
+			bad_connp->n_retries++;
+			bad_connp->retrying = 0;
+			strncpy( bad_connp->conn.node_name, node_name, MAX_NODE_NAME); 
+			strncpy( bad_connp->conn.task_name, task_name, MAX_TASK_NAME);
+			bad_connp->conn.port = port;
+			tmout = BAD_CONN_TIMEOUT * bad_connp->n_retries;
+			if(tmout > 120)
+				tmout = 120;
+			dtq_start_timer(tmout, retry_bad_connection, (long)bad_connp);
+			if(( servp->type == COMMAND )||( servp->type == ONCE_ONLY ))
+				return(0);
+			move_to_bad_service(servp, bad_connp);
+/*			
+			((DIC_SERVICE *)(dic_connp->service_head))->serv_id = 0;
+
 			servp = Service_pend_head;
 			while( (servp = (DIC_SERVICE *) dll_get_next(
 						(DLL *) Service_pend_head,
@@ -1521,8 +1602,19 @@ DNS_DIC_PACKET *packet;
 			dna_close( Dns_dic_conn_id );
 			Dns_dic_conn_id = 0;
 			request_dns_info(0);
+*/
 			return(0);
 		}
+	  }
+	  else
+	  {
+			if(!retrying)
+				service_tmout( servp->serv_id );
+			if(( servp->type == COMMAND )||( servp->type == ONCE_ONLY ))
+				return(0);
+			move_to_bad_service(servp, bad_connp);
+			return(0);
+	  }
 	}
 	strcpy(servp->def, packet->service_def);
 	get_format_data(format, servp->format_data, servp->def);
@@ -1541,6 +1633,31 @@ DNS_DIC_PACKET *packet;
 	return(1);
 }
 
+void retry_bad_connection(DIC_BAD_CONNECTION *bad_connp)
+{
+DIC_SERVICE *servp, *auxp;
+int found = 0;
+void move_to_notok_service();
+
+	if(!bad_connp)
+		return;
+	servp = (DIC_SERVICE *)bad_connp->conn.service_head;
+	while( (servp = (DIC_SERVICE *) dll_get_next(
+					(DLL *) bad_connp->conn.service_head,
+				 	(DLL *) servp)) )
+	{
+		servp->pending = WAITING_DNS_UP;
+		servp->conn_id = 0;
+		auxp = servp->prev;
+		move_to_notok_service( servp );
+		servp = auxp;
+		found = 1;
+	}
+	bad_connp->retrying = 1;
+	if(found)
+		request_dns_info(0);
+}
+
 void move_to_ok_service( servp, conn_id )
 register DIC_SERVICE *servp;
 int conn_id;
@@ -1553,6 +1670,15 @@ int conn_id;
 		dll_insert_queue( (DLL *) Dic_conns[conn_id].service_head,
 			  (DLL *) servp );
 	}
+}
+
+void move_to_bad_service( servp, bad_connp)
+register DIC_SERVICE *servp;
+DIC_BAD_CONNECTION *bad_connp;
+{
+	servp->pending = WAITING_DNS_UP;
+	dll_remove( (DLL *) servp );
+	dll_insert_queue( (DLL *) bad_connp->conn.service_head, (DLL *) servp );
 }
 
 void move_to_cmnd_service( servp )

@@ -85,6 +85,7 @@ static struct sockaddr_in DIM_sockname;
 #endif
 
 static int DIM_IO_path[2] = {0,0};
+static int DIM_IO_Done = 0;
 static int DIM_IO_valid = 1;
 
 static int Write_timeout = 5;
@@ -283,8 +284,9 @@ int conn_id;
 	{
 #ifdef WIN32
 		DIM_IO_valid = 0;
-//		ret = connect(DIM_IO_path[0], (struct sockaddr*)&DIM_sockname, sizeof(DIM_sockname));
-
+/*
+		ret = connect(DIM_IO_path[0], (struct sockaddr*)&DIM_sockname, sizeof(DIM_sockname));
+*/
 		closesock(DIM_IO_path[0]);
 		DIM_IO_path[0] = 0;
 		if( (DIM_IO_path[0] = socket(AF_INET, SOCK_STREAM, 0)) == -1 ) 
@@ -300,7 +302,13 @@ int conn_id;
 		DIM_IO_valid = 1;
 #else
 		if(DIM_IO_path[1])
-			write(DIM_IO_path[1], &flags, 4);
+		{
+			if(!DIM_IO_Done)
+			{
+				DIM_IO_Done = 1;
+				write(DIM_IO_path[1], &flags, 4);
+			}
+		}
 #endif
 	}
 #ifndef WIN32
@@ -666,14 +674,17 @@ void tcpip_task( void *dummy)
 		if(ret > 0)
 		{
 			if(FD_ISSET(DIM_IO_path[0], pfds) )
-			  {
+			{
 #ifndef WIN32
 				read(DIM_IO_path[0], &data, 4);
+				DIM_IO_Done = 0;
 #endif
 				FD_CLR( (unsigned)DIM_IO_path[0], pfds );
-			  }
+			}
+/*
 			{
-			  /*			DISABLE_AST */
+			DISABLE_AST
+*/
 			while( (ret = fds_get_entry( &rfds, &conn_id )) > 0 ) 
 			{
 				if( Net_conns[conn_id].reading )
@@ -698,8 +709,10 @@ void tcpip_task( void *dummy)
 				}
 				FD_CLR( (unsigned)Net_conns[conn_id].channel, &rfds );
 			}
-			/*			ENABLE_AST */
+/*
+			ENABLE_AST
 			}
+*/
 #ifndef WIN32
 			return;
 #endif

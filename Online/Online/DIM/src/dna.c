@@ -46,11 +46,11 @@ _DIM_PROTO( static void save_node_task, (int conn_id, DNA_NET *buffer) );
 /*
  * Routines common to Server and Client
  */
-
+/*
 static int Prev_packet[3];
 static int Prev_buffer[3];
 static int Prev_conn_id = 0;
-
+*/
 static int is_header( conn_id )
 int conn_id;
 {
@@ -142,6 +142,7 @@ register int size;
 		buff = (char *) dna_connp->curr_buffer;
   		if(size < next_size) 
 		{
+/*
 			Prev_conn_id = conn_id;
 	  		Prev_packet[0] = ((int *)dna_connp->curr_buffer)[0];
 			Prev_packet[1] = ((int *)dna_connp->curr_buffer)[1];
@@ -149,6 +150,7 @@ register int size;
 			Prev_buffer[0] = dna_connp->buffer[0];
 			Prev_buffer[1] = dna_connp->buffer[1];
 			Prev_buffer[2] = dna_connp->buffer[2];
+*/
 			read_size = ((next_size - size) > MAX_IO_DATA) ?
 				MAX_IO_DATA : next_size - size;
 			dna_connp->curr_size -= size;
@@ -197,6 +199,7 @@ register int size;
 			default:
 				break;
 		}
+/*
 		if(dna_connp->buffer)
 		{
 			Prev_conn_id = conn_id;
@@ -207,6 +210,7 @@ register int size;
 			Prev_buffer[1] = dna_connp->buffer[1];
 			Prev_buffer[2] = dna_connp->buffer[2];
 		}
+*/
 	} 
 	else 
 	{

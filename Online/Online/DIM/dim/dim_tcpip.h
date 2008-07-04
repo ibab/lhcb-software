@@ -8,7 +8,7 @@
 #define FD_SETSIZE      8192
 #else
 #ifdef linux
-
+#ifndef NOMORECONNS
 /* CG: Copied here bits/typesizes.h */
 #ifndef	_BITS_TYPESIZES_H
 #define	_BITS_TYPESIZES_H	1
@@ -88,6 +88,7 @@ typedef int __kernel_key_t;
 
 #endif /* _LINUX_POSIX_TYPES_H */
 
+#endif /* NOMORECONNS */
 #endif /* linux */
 
 #endif

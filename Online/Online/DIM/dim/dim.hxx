@@ -25,7 +25,7 @@ public:
 	DimTimer();
 	DimTimer(int time);
 	virtual ~DimTimer();
-	void start(int time);
+	int start(int time);
 	int stop();
 	int fired() { return firedFlag;}; 
 	void clear() { firedFlag = 0;};

@@ -553,7 +553,9 @@ int conn_id;
 			set_in_error(conn_id);
 			return;
 		}
+/*
 		Dns_conns[conn_id].validity = -Dns_conns[conn_id].validity;
+*/
 	}
 	time_diff = time(NULL) - Dns_conns[conn_id].validity;
 	if(time_diff > (int)(WATCHDOG_TMOUT_MAX*1.2))
@@ -561,6 +563,13 @@ int conn_id;
 		/* send register signal */
 		dis_packet.type = htovl(DNS_DIS_REGISTER);
 		dis_packet.size = htovl(DNS_DIS_HEADER);
+		if(Debug)
+		{
+			dim_print_date_time();
+			printf(" Conn %3d : Server %s@%s Registration Requested\n",
+				conn_id, Net_conns[conn_id].task, Net_conns[conn_id].node);
+			fflush(stdout);
+		}
 		if( !dna_write(conn_id, &dis_packet, DNS_DIS_HEADER) )
 		{
 			dim_print_date_time();
@@ -1275,7 +1284,9 @@ int *first_time;
 	*size = strlen(info_buffer)+1;
 }
 
-int main()
+int main(argc,argv)
+int argc;
+char **argv;
 {
 	int i, protocol, dns_port;
 	int *bufp;
@@ -1285,6 +1296,16 @@ int main()
 	char node[MAX_NAME];
 	void service_init();
 	
+	if(argc > 1)
+	{
+		if(!strcmp(argv[1],"-d"))
+			set_debug_on();
+		else
+		{
+			printf("Parameters: -d	Debug On\n");
+			exit(0);
+		}
+	}
 	dim_init();
 	conn_arr_create( SRC_DNS );
 	service_init();

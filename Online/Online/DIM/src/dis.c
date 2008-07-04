@@ -201,9 +201,17 @@ long tag;
 	strncpy( new_serv->name, name, MAX_NAME );
 	if(type != (char *)0)
 	{
+		if (strlen(type) >= MAX_NAME)
+		{
+			strcpy(str,"Format String Too Long: ");
+			strcat(str,name);
+			error_handler(0, DIM_ERROR, DIMSVCFORMT, str);
+			free(new_serv);
+			return((unsigned) 0);
+		}
 		if (! get_format_data(new_serv->format_data, type))
 		{
-			strcpy(str,"Bad Format: ");
+			strcpy(str,"Bad Format String: ");
 			strcat(str,name);
 			error_handler(0, DIM_ERROR, DIMSVCFORMT, str);
 			free(new_serv);

@@ -667,14 +667,17 @@ XmString xms;
         XmStringFree ( xms );
         XtAddCallback ( bt, XmNactivateCallback, (XtCallbackProc)dns_control, 
 			(XtPointer)4 );
-
+	/* kill
 	create_separator(mn);
+	*/
 	/*
         bt = XtVaCreateManagedWidget ( "W_MenuSep",
             xmSeparatorGadgetClass, mn,
             NULL);
 	*/
+	/* kill
         xms = create_str ("Kill DIM Servers");
+	*/
 	/*
         bt = XtVaCreateManagedWidget ( "C_MenuButtonKill",
             xmPushButtonWidgetClass, mn,
@@ -686,6 +689,7 @@ XmString xms;
         XmStringFree ( xma );
         XtAddCallback ( bt, XmNactivateCallback, (XtCallbackProc)dns_control_callback, "kill" );
 	*/
+	/* kill
         bt = XmCreatePushButton ( mn, "button", NULL, 0 );
         XtVaSetValues( bt,
             XmNlabelString, xms,
@@ -695,7 +699,7 @@ XmString xms;
         XmStringFree ( xms );
         XtAddCallback ( bt, XmNactivateCallback, (XtCallbackProc)dns_control, 
 			(XtPointer)3 );
-
+	*/
 	/*
     util_recolor ( XtParent(mn) );
 	*/
@@ -1015,9 +1019,9 @@ unsigned long	*reason;
 void get_server_node()
 {
 Widget id,sel_id;
-int i, n_nodes;
-char nodes_str[MAX_NODE_NAME*MAX_CONNS];
-char *ptr, *node;
+int i, j, n_nodes, curr_index;
+char nodes_str[MAX_NODE_NAME*MAX_CONNS], max_str[MAX_NODE_NAME];
+char *ptr, *nodeptrs[MAX_CONNS], *curr_str, *sptr;
 int get_nodes();
 
 	sel_id = put_selection(DID_SEL_NODE,"Node Selection");
@@ -1029,6 +1033,36 @@ int get_nodes();
 	XmListDeleteAllItems(id);
 	n_nodes = get_nodes(nodes_str);
 	ptr = nodes_str;
+
+	for(i=0;i<n_nodes;i++)
+	{
+		nodeptrs[i] = ptr;
+		sptr = ptr;
+		ptr = strchr(ptr,'\n');
+		for(j = 0; j < strlen(sptr); j++)
+		  sptr[j] = tolower(sptr[j]);
+		*ptr++ = '\0';
+	}
+	strcpy(max_str,"zzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+	for(i=0;i<n_nodes; i++)
+	{
+	  curr_str = max_str;
+	  for(j=0;j<n_nodes; j++)
+	  {
+	    sptr = nodeptrs[j];
+	    if(!sptr)
+	      continue;
+	    
+	    if(strcmp(sptr,curr_str) < 0)
+	    {
+	      curr_str = sptr;
+	      curr_index = j;
+	    }
+	  }
+	  nodeptrs[curr_index] = 0;
+	  XmListAddItem(id,create_str(curr_str),i+1);
+	}
+	/*
 	for(i=0;i<n_nodes;i++)
 	{
 		node = ptr;
@@ -1036,6 +1070,7 @@ int get_nodes();
 		*ptr++ = '\0';
 		XmListAddItem(id,create_str(node),i+1);
 	}
+	*/
 	set_something(id,XmNlistItemCount,i);
 	set_something(id,XmNlistVisibleItemCount,(i < 8) ? i : 8);
 }	
@@ -2403,10 +2438,11 @@ void update_show_servers(tag, reason)
 {
 DNS_SERVER_INFO *server_ptr;
 DNS_SERVICE_INFO *service_ptr;
-int j, found, n_done = 0;
+int i, j, found, n_done = 0;
 Widget w, create_button();
 SERVER *servp, *prevp;
 static int old_n_services = 0;
+char node[MAX_NODE_NAME], par[MAX_NODE_NAME], *ptr;
 void remove_button();
 void remove_all_buttons();
 void put_label();
@@ -2482,11 +2518,25 @@ void put_label();
 					n_done++;
 					break;
 				case 0 :
-					if(!strcmp(server_ptr->node, Curr_view_opt_par))
-					  {
+				  strcpy(node, server_ptr->node);
+				  strcpy(par, Curr_view_opt_par);
+				  ptr = strchr(node, '.');
+				  if(ptr)
+				    *ptr = '\0';
+				  ptr = strchr(par,'.');
+				  if(ptr)
+				    *ptr = '\0';
+				  ptr = node;
+				  for(i = 0; i < strlen(ptr); i++)
+				    ptr[i] = tolower(ptr[i]);
+				  ptr = par;
+				  for(i = 0; i < strlen(ptr); i++)
+				    ptr[i] = tolower(ptr[i]);
+					 if(!strcmp(/*server_ptr->*/node, /*Curr_view_opt_*/par))
+					{
 						servp->button_id = create_button(/*server_ptr->task*/servp->name, servp);
 						n_done++;
-					  }
+					}
 					break;
 				case 2 :
 					found = 0;

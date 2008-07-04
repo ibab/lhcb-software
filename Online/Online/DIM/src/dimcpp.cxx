@@ -24,11 +24,14 @@ static void timer_user_routine(void *tp)
 }
 }
 
-void DimTimer::start(int time)
+int DimTimer::start(int time)
 {
+	if(runningFlag)
+		return 0;
 	runningFlag = 1;
 	firedFlag = 0;
 	dtq_start_timer(time, timer_user_routine, this);
+	return 1;
 }
 
 int DimTimer::stop() 
@@ -46,6 +49,8 @@ DimTimer::DimTimer()
 	
 DimTimer::DimTimer(int time)
 { 
+	firedFlag = 0;
+	runningFlag = 0; 
 	start(time);
 }
 

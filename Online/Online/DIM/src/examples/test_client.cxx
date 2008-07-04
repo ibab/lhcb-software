@@ -54,10 +54,12 @@ int main()
 //	DimClient::addErrorHandler(errHandler);
 	n = br.getServices("*");
 	cout << "found " << n << " services" << endl; 
+	
 	while((type = br.getNextService(ptr, ptr1))!= 0)
 	{
 		cout << "type = " << type << " - " << ptr << " " << ptr1 << endl;
 	}
+	
 	br.getServers();
 	while(br.getNextServer(server, ptr1))
 	{
@@ -70,9 +72,11 @@ int main()
 		cout << ptr << " @ " << ptr1 << endl;
 	}
 	DimInfo servint("TEST/INTVAL",-1); 
+	
 	while(1)
 	{
 		sleep(10);
+		
 		cout << "Current INTVAL : " << servint.getInt() << endl;
 		DimClient::sendCommand("TEST/CMND","UPDATE_STRVAL");
 	}
