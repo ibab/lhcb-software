@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-04 M Needham
+ - Minor changes - move some code to base class/change some printouts
+
 !=============================== STDAQ v3r8 2008-07-02 =======================
 ! 2008-07-01 M Needham
   - Move check of validity of channel id in decoding

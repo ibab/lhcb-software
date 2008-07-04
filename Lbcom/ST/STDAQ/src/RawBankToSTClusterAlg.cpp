@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.28 2008-07-01 10:10:06 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.29 2008-07-04 15:52:21 mneedham Exp $
 
 #include <algorithm>
 
@@ -42,8 +42,8 @@ RawBankToSTClusterAlg::RawBankToSTClusterAlg( const std::string& name,
 STDecodingBaseAlg (name , pSvcLocator){
  
  // Standard constructor, initializes variables
-  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters); 
-  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
+  declareProperty("clusterLocation", m_clusterLocation = STClusterLocation::TTClusters);
+  declareProperty("BankType", m_bankTypeString = "TT");
 }
 
 RawBankToSTClusterAlg::~RawBankToSTClusterAlg() {
@@ -100,13 +100,17 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   if ( readoutTool()->nBoard() != tBanks.size() ){
     counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
-    if (tBanks.size() == 0) ++counter("no banks found");
+    if (tBanks.size() == 0) {
+      ++counter("no banks found");
+      return StatusCode::SUCCESS;
+    }
   } 
 
   // vote on the pcns
   const unsigned int pcn = pcnVote(tBanks);
   if (pcn == STDAQ::inValidPcn && !m_skipErrors) {
     counter("skipped Banks") += tBanks.size();
+    warning() << "PCN vote failed with " << tBanks.size() << endmsg; 
     return Warning("PCN vote failed", StatusCode::SUCCESS);
   }
     
@@ -239,5 +243,19 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
   } // i                                                                                        
   return (sum/totCharge);
 }
+
+
+
+StatusCode RawBankToSTClusterAlg::finalize() {
+
+  const double failed = counter("skipped Banks").flag();
+  const double processed = counter("found Banks").flag();  
+  const double eff = 1.0 - (failed/processed); 
+
+  info() << "Successfully processed " << 100* eff << " %"  << endmsg;
+    
+  return STDecodingBaseAlg::finalize();
+}
+
 
 

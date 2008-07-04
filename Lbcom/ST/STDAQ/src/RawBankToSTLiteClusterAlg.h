@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.h,v 1.8 2008-05-16 07:29:14 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.h,v 1.9 2008-07-04 15:52:21 mneedham Exp $
 #ifndef RAWBANKTOSTLITECLUSTERALG_H 
 #define RAWBANKTOSTLITECLUSTERALG_H 1
 
@@ -41,15 +41,13 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();    ///< Algorithm execution
-
+  virtual StatusCode finalize(); ///< finalize
 
 private:
 
   // create Clusters from this type
   StatusCode decodeBanks(LHCb::RawEvent* rawEvt) const;
 
-  /// Output location for STClusters
-  std::string m_rawEventLocation;
 
   std::string m_clusterLocation;  
   

@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.h,v 1.9 2008-06-29 09:39:21 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.h,v 1.10 2008-07-04 15:52:21 mneedham Exp $
 #ifndef RAWBANKTOSTCLUSTERALG_H 
 #define RAWBANKTOSTCLUSTERALG_H 1
 
@@ -41,6 +41,8 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute();    ///< Algorithm execution
+  virtual StatusCode finalize(); ///< finalize
+
 
 private:
 
@@ -66,7 +68,6 @@ private:
 
   unsigned int m_nBits; 
 
-  std::string m_rawEventLocation;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.20 2008-07-01 10:10:06 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.21 2008-07-04 15:52:21 mneedham Exp $
 
 
 #include <algorithm>
@@ -47,7 +47,7 @@ STDecodingBaseAlg (name , pSvcLocator){
 
  // Standard constructor, initializes variables
   declareProperty( "clusterLocation", m_clusterLocation = STLiteClusterLocation::TTClusters);
-  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default); 
+  declareProperty("BankType", m_bankTypeString = "TT");
 }
 
 RawBankToSTLiteClusterAlg::~RawBankToSTLiteClusterAlg() {
@@ -73,6 +73,8 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
   // Retrieve the RawEvent:
   RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
 
+  std::cout << " retrieve from " << name()<< "  " << m_rawEventLocation;
+
   // decode banks
   StatusCode sc = decodeBanks(rawEvt);   
   if (sc.isFailure()){
@@ -90,9 +92,13 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   fCont->reserve(5000);  
   put(fCont, m_clusterLocation);
 
+
   if ( readoutTool()->nBoard() != tBanks.size() ){
     counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
-    if (tBanks.size() == 0) ++counter("no banks found");
+    if (tBanks.size() == 0) {
+      ++counter("no banks found");
+      return StatusCode::SUCCESS;
+    }
   } 
 
   const unsigned int pcn = pcnVote(tBanks);
@@ -177,5 +183,14 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 }
 
 
+StatusCode RawBankToSTLiteClusterAlg::finalize() {
 
+  const double failed = counter("skipped Banks").flag();
+  const double processed = counter("found Banks").flag();  
+  const double eff = 1.0 - (failed/processed); 
+
+  info() << "Successfully processed " << 100* eff << " %"  << endmsg;
+    
+  return STDecodingBaseAlg::finalize();
+}
 

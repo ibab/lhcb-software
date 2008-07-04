@@ -1,4 +1,4 @@
-// $Id: STErrorDecoding.cpp,v 1.1 2008-06-25 06:55:15 mneedham Exp $
+// $Id: STErrorDecoding.cpp,v 1.2 2008-07-04 15:52:22 mneedham Exp $
 // Include files 
 
 
@@ -43,13 +43,11 @@ DECLARE_ALGORITHM_FACTORY( STErrorDecoding );
 //=============================================================================
 STErrorDecoding::STErrorDecoding( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ){
+  : STDecodingBaseAlg ( name , pSvcLocator ){
  
   declareProperty("PrintErrorInfo", m_PrintErrorInfo = false);  
   declareProperty("OutputLocation",m_outputLocation=STTELL1BoardErrorBankLocation::TTErrorTELL1 );
-  declareProperty("ErrorLocation",m_ErrorLocation=STTELL1ErrorLocation::TTError );
-  declareProperty("DetType", m_detType = "TT");   
-  declareProperty("BankType", m_typeString = "TTError"); 
+  declareProperty("BankType", m_bankTypeString = "TTError"); 
 }
 //=============================================================================
 // Destructor
@@ -61,20 +59,13 @@ STErrorDecoding::~STErrorDecoding() {}
 //=============================================================================
 StatusCode STErrorDecoding::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize();
+  StatusCode sc = STDecodingBaseAlg::initialize();
   if ( sc.isFailure() ) return sc; 
 
   debug() << "==> Initialize" << endmsg;
    
   // output location
-  STDetSwitch::flip(m_detType,m_outputLocation);
-  STDetSwitch::flip(m_detType,m_ErrorLocation);
-  STDetSwitch::flip(m_detType, m_typeString); 
-  m_bankType = STRawBankMap::stringToType(m_typeString);
-  if (m_bankType ==  LHCb::RawBank::Velo){
-   fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
-   return StatusCode::FAILURE; 
-  } 
+  STDetSwitch::flip(detType(),m_outputLocation);
  
   return StatusCode::SUCCESS;
 }
@@ -92,7 +83,7 @@ StatusCode STErrorDecoding::execute() {
  const int L0EvtID = odin->eventNumber(); 
 
  // Pick up ITError bank 
- const std::vector<LHCb::RawBank*>& itf = raw->banks(LHCb::RawBank::BankType(m_bankType)); 
+ const std::vector<LHCb::RawBank*>& itf = raw->banks(LHCb::RawBank::BankType(bankType())); 
  
  if (itf.size() == 0u){
    debug() <<"event has no error banks " << endmsg;
@@ -107,7 +98,7 @@ StatusCode STErrorDecoding::execute() {
  
  put(outputErrors, m_outputLocation);
 
- debug() << "Starting to decode " << itf.size() << m_detType <<"Error bank(s)" <<  endmsg;
+ debug() << "Starting to decode " << itf.size() << detType() <<"Error bank(s)" <<  endmsg;
   
  for( std::vector<LHCb::RawBank*>::const_iterator itB = itf.begin(); itB != itf.end(); ++itB ) {
 
@@ -132,7 +123,7 @@ StatusCode STErrorDecoding::execute() {
      continue;
    }
 
-   debug() << "Decoding bank number of type "<< m_detType << "Error (TELL1 ID: " <<  (*itB)->sourceID() 
+   debug() << "Decoding bank number of type "<< detType() << "Error (TELL1 ID: " <<  (*itB)->sourceID() 
            << ", Size: " <<  (*itB)->size() << " bytes)" << endmsg;
 
        

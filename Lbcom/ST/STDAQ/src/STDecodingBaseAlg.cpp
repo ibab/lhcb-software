@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.11 2008-07-01 10:10:06 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.12 2008-07-04 15:52:21 mneedham Exp $
 
 #include <algorithm>
 
@@ -45,6 +45,7 @@ GaudiAlgorithm (name , pSvcLocator){
  declareProperty("detType", m_detType = "TT" );
  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
+ declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
 }
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {
@@ -61,12 +62,17 @@ StatusCode STDecodingBaseAlg::initialize() {
 
   STDetSwitch::flip(m_detType,m_readoutToolName);
   STDetSwitch::flip(m_detType,m_summaryLocation);
+  STDetSwitch::flip(m_detType,m_bankTypeString);
   
   // readout tool
   m_readoutTool = tool<ISTReadoutTool>(m_readoutToolName,m_readoutToolName);
    
   // bank type
-  m_bankType =  STRawBankMap::stringToType(m_detType);
+  m_bankType =  STRawBankMap::stringToType(m_bankTypeString);
+  if (m_bankType ==  LHCb::RawBank::Velo){
+   fatal() << "Wrong detector type: only IT or TT !"<< endmsg;
+   return StatusCode::FAILURE; 
+  } 
 
   return StatusCode::SUCCESS;
 }
@@ -152,12 +158,6 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
 }
 
 StatusCode STDecodingBaseAlg::finalize() {
-
-  const double failed = counter("skipped Banks").flag();
-  const double processed = counter("found Banks").flag();  
-  const double eff = 1.0 - (failed/processed); 
-
-  info() << "Successfully processed " << 100* eff << " %"  << endmsg;
     
   return GaudiAlgorithm::finalize();
 }

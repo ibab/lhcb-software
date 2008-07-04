@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.7 2008-07-01 10:10:06 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.8 2008-07-04 15:52:22 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -60,11 +60,14 @@ protected:
                          const unsigned int bankSize, const int version) const;
 
  bool m_skipErrors;
- 
+ std::string m_bankTypeString;
+ std::string m_rawEventLocation;
+
 private:
 
   /// bank type
   std::string m_detType;
+ 
   std::string m_summaryLocation;
   LHCb::RawBank::BankType m_bankType;
   std::string m_readoutToolName;
