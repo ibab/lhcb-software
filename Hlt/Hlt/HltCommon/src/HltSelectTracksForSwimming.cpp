@@ -1,4 +1,4 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.3 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputTracks->clear();
+  m_outputTracks->clean();
 
   //Lets see what we just did, for debug
   if (m_debug) {

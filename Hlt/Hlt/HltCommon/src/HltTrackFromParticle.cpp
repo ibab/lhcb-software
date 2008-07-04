@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.6 2008-06-02 19:57:57 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.7 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,7 @@ StatusCode HltTrackFromParticle::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputTracks->clear();
+  m_outputTracks->clean();
 //  std::for_each( boost::iterator::make_indirect_iterator(pars->begin()),
 //                 boost::iterator::make_indirect_iterator(pars->end()),
 //                 boost::bind(&HltTrackFromParticle::loadParticle,this,_1));

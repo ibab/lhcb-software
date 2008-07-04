@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.9 2008-06-23 11:22:58 graven Exp $
+// $Id: HltTFilter.icpp,v 1.10 2008-07-04 08:07:41 graven Exp $
 // Include files
 
 #include "HltBase/EDictionary.h"
@@ -14,7 +14,6 @@
 // 2007-03-22 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-
 template <class T>
 HltTFilter<T>::HltTFilter( const std::string& name,
                            ISvcLocator* pSvcLocator,
@@ -22,24 +21,18 @@ HltTFilter<T>::HltTFilter( const std::string& name,
                            bool tesInput)
   : HltAlgorithm ( name , pSvcLocator )
   , m_tesInput(tesInput)
+  , m_tselinput(0)
+  , m_tseloutput(0)
   , m_functionFactoryName( factoryname )
 {
-  
   declareProperty("FunctionFactoryName", m_functionFactoryName);
   declareProperty("FilterDescriptor", m_filterDescriptor);
   declareProperty("AddInfo", m_addInfo = true);
-
-  m_tselinput = 0;
-  m_tseloutput = 0;
-  
-  m_tinput = 0;
-  m_toutput = 0;
-
 }
 
 template <class T>
 HltTFilter<T>::~HltTFilter() {
-  if (m_tesInput) delete m_tinput;
+  if (m_tesInput) delete m_tselinput;
   // TODO delete m_tfilters!!
 }
 
@@ -48,36 +41,26 @@ StatusCode HltTFilter<T>::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize();
 
-  // inputs
-  if (m_tesInput) m_considerInputs = false;
-  
+  // input
   if (!m_tesInput) {
     debug() << "Selection from HltData " << endreq;
     m_tselinput = &(retrieveTSelection<T>(m_inputSelectionName));
-    m_tinput = m_tselinput;
   } else {
+    m_considerInputs = false;
     debug() << "Data from TES " << endreq;
-    m_tinput = new std::vector<T*>();
+    m_tselinput = new TSelection(m_inputSelectionName);
   }
-  
-  Assert( 0 != m_tinput," initialize() no input ");
   
   // filters
   m_factory = tool< IFunctionFactory<T> >(m_functionFactoryName,this);
-  Assert( 0 != m_factory," initialize() no factory " + m_functionFactoryName);
-  m_factory->command("AddInfo", m_addInfo?"true":"false");
+  m_factory->command("AddInfo", m_addInfo? "true" : "false" ); //@TODO: avoid global state to make config switches easier...
   
   const std::vector<std::string>& cromos = m_filterDescriptor.value();
   for (std::vector<std::string>::const_iterator it = cromos.begin();       
        it != cromos.end(); it++) addTFilterData(*it);
 
   // output
-  if (!outputSelectionName().empty()) {
     m_tseloutput = &(registerTSelection<T>());
-    m_toutput = m_tseloutput;
-  }
-  
-  Assert( 0 != m_toutput, " initialize() no output");
   
   // save configuration
   saveConfiguration();
@@ -97,30 +80,23 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
           << " operation " << tf.operation
           << " range " << tf.minvalue 
           << ", " << tf.maxvalue <<endreq;
-  if (!ok)
-    error() << " can not create TFilter "<< descriptor << endreq;
 
-  std::vector<std::string> cromos = EParser::parse(tf.functionname,"_");
-  if (cromos.size() == 2) {
-    tf.input2 = cromos[1];
-    debug() << " bind function against input " << tf.input2 << endreq;
-    //TODO pass this on explicitly into the factory, as map 'label' -> selection
-    //i.e. _here_ is where we interpret the 'label'...
-    retrieveSelection(tf.input2);
+  if (!ok) {
+    error() << " can not create TFilter "<< descriptor << endreq;
+    return ok;
   }
+
   tf.function.reset( m_factory->function(tf.functionname) );
   Assert( 0 != tf.function.get(),
           " addTFilterData() function no created"+tf.functionname);
   tf.filter.reset(  m_factory->filter(tf.filtername) );
   Assert( 0 != tf.filter.get(),
           " addTFilterData() filter no created"+tf.filtername);
-  tf.infoID = 0;
-  if (m_addInfo) tf.infoID = hltInfoID(tf.functionname);
-  if (tf.operation != ">") tf.isMin = true;
-  initializeCounter(tf.counter,tf.filtername);
+  tf.infoID = ( m_addInfo ? hltInfoID(tf.functionname) : 0 );
+  initializeCounter(tf.counter,          tf.filtername);
   initializeCounter(tf.counterCandidates,tf.filtername+" candidates ");
   if (produceHistos()) {
-    tf.histovalues = initializeHisto(tf.functionname,0.,100.,100);
+    tf.histovalues = initializeHisto(tf.functionname,       0.,100.,100);
     tf.histobest  = initializeHisto(tf.functionname+"Best",0.,100.,100);
   }
   debug() << " filtername " << tf.filtername
@@ -157,18 +133,18 @@ StatusCode HltTFilter<T>::execute() {
   if (m_tesInput) {
     typedef KeyedContainer<T,Containers::HashMap> TESCONT;
     TESCONT* ttes = this->get<TESCONT>(m_inputSelectionName);
-    m_tinput->clear();
-    m_tinput->insert(m_tinput->end(),ttes->begin(),ttes->end());
+    m_tselinput->clean();
+    m_tselinput->insert(m_tselinput->end(),ttes->begin(),ttes->end());
   }
 
   // check size of the input container
-  if (m_tinput->empty()) {
-    debug() << " No data in TES " << m_inputSelectionName << endreq;    
+  if (m_tselinput->empty()) {
+    debug() << " No data " << m_inputSelectionName << endreq;    
     return sc;
   }
 
   // if no filters, copy input container
-  if (m_tfilters.empty()) *m_toutput = *m_tinput; // zen::copy(*m_tinput,*m_toutput);
+  if (m_tfilters.empty()) *m_tseloutput = *m_tselinput;
 
   // loop in filters, and apply to the surviving objects
   size_t ncan = 0, i = 0;
@@ -177,17 +153,24 @@ StatusCode HltTFilter<T>::execute() {
     
     TFilterData& tf = *(*it);
     
-    std::vector<T*>  ttemp( i==0 ? *m_tinput : *m_toutput );
+    std::vector<T*>  ttemp( i==0 ? m_tselinput->begin() : m_tseloutput->begin(),
+                            i==0 ? m_tselinput->end()   : m_tseloutput->end());
 
     verbose() << " applying filter " << tf.filtername << endreq;
     verbose() << " input objects " << ttemp.size() << endreq;
 
-    if (m_addInfo) addInfo(ttemp,*tf.function,tf.infoID);
+    if (m_addInfo) {
+      for (typename std::vector<T*>::const_iterator i = ttemp.begin(); i != ttemp.end(); ++i) {
+        (*i)->addInfo(tf.infoID,(*tf.function)(**i));
+      }
+    }
 
     // debug and monitor
     if ((m_debug || produceHistos()) && m_addInfo) {
-      std::vector<double> vals = infos(ttemp,tf.infoID);
-      double val = *( tf.isMin ? std::min_element(vals.begin(),vals.end()) 
+      std::vector<double> vals; vals.reserve(ttemp.size());
+      for (typename std::vector<T*>::const_iterator i = ttemp.begin(); i != ttemp.end(); ++i) 
+            vals.push_back( (*i)->info(tf.infoID,1e6));
+      double val = *( tf.isMin() ? std::min_element(vals.begin(),vals.end()) 
                                : std::max_element(vals.begin(),vals.end()) );
       if (m_debug) {
         std::string name = tf.filtername+" : ";
@@ -202,10 +185,10 @@ StatusCode HltTFilter<T>::execute() {
 
     // filter
     
-    m_toutput->clear();
-    zen::select(ttemp.begin(),ttemp.end(),*tf.filter,std::back_inserter(*m_toutput));
+    m_tseloutput->clean();
+    zen::select(ttemp.begin(),ttemp.end(),*tf.filter,std::back_inserter(*m_tseloutput));
 
-    ncan = m_toutput->size();
+    ncan = m_tseloutput->size();
     debug() << " filtered  " << ncan << endreq;
     
     // continue or break
@@ -235,24 +218,3 @@ StatusCode HltTFilter<T>::finalize() {
   return sc;
 }
 
-
-template <class T>
-void HltTFilter<T>::addInfo(TContainer& cont, TFunction& fun, int infoID) {
-  debug() << " adding info " <<infoID << " fun " << &fun 
-          << " at nobjs " <<cont.size() << endreq;
-  for (TContainerIterator it = cont.begin(); it != cont.end(); ++it) {
-    T& t = *(*it);
-    double d = fun(t);
-    verbose() << " computed Info " << d << endreq;
-    t.addInfo(infoID,d);
-  }
-}
-
-
-template <class T>
-std::vector<double> HltTFilter<T>::infos(TContainer& cont, int infoID) {
-  std::vector<double> values;
-  for (TContainerIterator it = cont.begin(); it != cont.end(); ++it) 
-    values.push_back( (*it)->info(infoID,1e6));
-  return values;
-}

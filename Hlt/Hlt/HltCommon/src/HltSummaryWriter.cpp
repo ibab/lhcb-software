@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.12 2008-07-01 20:26:56 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.13 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -50,8 +50,8 @@ StatusCode HltSummaryWriter::initialize() {
     for (std::vector<std::string>::iterator it = cromos.begin();
          it != cromos.end(); ++it) {
       stringKey name(*it);
-      if (!validHltSelectionName(name)) {
-        error() << " Not valid selection name " << name << endreq;
+      if (!dataSvc().hasSelection(name)) {
+        error() << " Selection unknown to IHltDataSvc: " << name << endreq;
       } else {
         m_selectionIDs.push_back(name);
       }

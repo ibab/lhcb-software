@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.20 2008-06-02 11:39:20 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.21 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 
@@ -82,8 +82,8 @@ StatusCode HltVertexMaker::initialize() {
     std::string filtername = *it;
     std::string funname = "";
     std::string mode = "";
-    float x0 = -1.e6;
-    float xf =  1.e6;
+    double x0 = -1.e6;
+    double xf =  1.e6;
     bool ok = EParser::parseFilter(filtername,funname,mode,x0,xf);
     Assert(ok," initialize() not able to parse filtername "+filtername);
     
@@ -216,11 +216,9 @@ StatusCode HltVertexMaker::execute() {
         verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
         sv->addInfo(m_filterIDs[i],m_vals[i]);
       }
-      if (m_debug)
-        printInfo(" make vertex ",*sv);
+      if (m_debug) printInfo(" make vertex ",*sv);
     } // loop on tracks2
   } // loop on tracks1
-  
   return StatusCode::SUCCESS;  
 }
 

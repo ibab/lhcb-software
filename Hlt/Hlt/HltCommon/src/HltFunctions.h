@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.4 2008-06-02 11:39:20 graven Exp $
+// $Id: HltFunctions.h,v 1.5 2008-07-04 08:07:41 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -375,7 +375,7 @@ namespace Hlt {
   template <class T>
   zen::filter<T>* makeFilter(const zen::function<T>& fun,
                               const std::string& mode, 
-                              float x0, float xf) {
+                             double x0, double xf) {
     if (mode == "<") return (fun < x0).clone();
     else if (mode == ">") return (fun > x0).clone();
     else if (mode == "=") return (fun == x0).clone();

@@ -1,4 +1,4 @@
-// $Id: HltSelectionToTES.cpp,v 1.5 2008-06-23 11:22:58 graven Exp $
+// $Id: HltSelectionToTES.cpp,v 1.6 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -68,7 +68,7 @@ StatusCode HltSelectionToTES::initialize() {
     for (std::vector<std::string>::iterator it = cromos.begin();
          it != cromos.end(); ++it) {
       stringKey name(*it);
-      if (!validHltSelectionName(name)) {
+      if (!dataSvc().hasSelection(name)) {
         error() << " Not a valid selection name " << name << endreq;
       } else {
         m_selectionIDs.push_back(name);

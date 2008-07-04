@@ -1,4 +1,4 @@
-// $Id: HltRawBankFilter.cpp,v 1.1 2008-07-02 14:21:14 graven Exp $
+// $Id: HltRawBankFilter.cpp,v 1.2 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -76,6 +76,8 @@ StatusCode HltRawBankFilter::initialize() {
 StatusCode HltRawBankFilter::execute() {
   RawEvent *evt = get<RawEvent>(m_rawEventLocation);
   bool pass = true;
+  //TODO: we require the 'AND' of the entire list -- maybe add 
+  //      the option to require an 'OR' ?
   for (BankTypeList::iter_type i=m_rawBanks.begin();  i!= m_rawBanks.end() && pass; ++i) 
         pass = !( evt->banks(*i).empty() );
   setDecision(pass);

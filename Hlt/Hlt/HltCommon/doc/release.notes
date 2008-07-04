@@ -4,6 +4,17 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-07-04 - Gerhard Raven
+  - binders now bind against containers-of-items instead of items, and enforce the
+    container to be std::vector<item*> -- update FunctionFactories accordingly
+  - replace all floats by double
+  - call 'clean' on Selections instead of 'clear'
+  - move InputSelections property from HltAlgorithm to the only sub-class that uses
+    it: HltSelectionFilter
+  - replace checking on known selectionname by checking on the presence of the
+    selection
+  - use Selections instead of vectors in HltTFilter
+
 !2008-07-02 - Gerhard Raven
   - add HltRawBankFilter: filters on the presence of a given set of RawBank types.
 

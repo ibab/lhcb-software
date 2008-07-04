@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.7 2008-06-30 09:50:44 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.8 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -26,10 +26,9 @@ DECLARE_ALGORITHM_FACTORY( HltL0MuonPrepare );
 HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_maker(0)
 {
   declareProperty("MinPt", m_PtMin = 0.1);
-
-  m_maker = 0;
 }
 //=============================================================================
 // Destructor
@@ -47,8 +46,6 @@ StatusCode HltL0MuonPrepare::initialize() {
   m_outputTracks = &(registerTSelection<LHCb::Track>());
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
-  if (!m_maker)
-    error() << " not able to create maker muon tracks tool " << endreq;
 
   saveConfiguration();
 
@@ -78,6 +75,8 @@ StatusCode HltL0MuonPrepare::execute() {
     if (isClone) continue;
     Track* track = new Track();
     sc = m_maker->makeTrack(l0muon,*track);
+    //TODO: pushes both into IHltDataSvc (m_outputTracks) and into TES (muons)
+    //      this should be possible to do through the IHltDataSvc...
     muons->insert(track);
     m_outputTracks->push_back(track);
   }

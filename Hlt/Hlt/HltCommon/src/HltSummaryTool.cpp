@@ -81,8 +81,6 @@ bool HltSummaryTool::decisionType(const std::string& name) {
 }
 
 bool HltSummaryTool::hasSelection(const std::string& name) {
-  if (!validHltSelectionName(name))
-    error() << " No valid selection name " << name << endreq;
   return getSummary().hasSelectionSummary(name);
 }
 
@@ -177,8 +175,6 @@ bool HltSummaryTool::isInSelection(const std::string& name,
 }
 
 bool HltSummaryTool::checkSelection(const std::string& name) {
-  if (!validHltSelectionName(name))
-    error() << " No valid selection name " << name << endreq;  
   bool ok =  getSummary().hasSelectionSummary(name);
   if (!ok && msgLevel(MSG::DEBUG)) debug() << " no selection in summary " << name << endreq;
   return ok;

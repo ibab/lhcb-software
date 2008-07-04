@@ -1,4 +1,4 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.3 2008-05-15 08:56:55 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.4 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -72,11 +72,10 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputVertices->clear();
+  m_outputVertices->clean();
 
   //Lets see what we just did, for debug
   if (m_debug) {
-
         debug() << "Printing out the input vertices" << endmsg;
         for (iV = (*m_inputVertices).begin(); iV != (*m_inputVertices).end(); ++iV) {
 

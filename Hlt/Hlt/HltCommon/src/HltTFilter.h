@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.4 2008-06-02 11:39:20 graven Exp $
+// $Id: HltTFilter.h,v 1.5 2008-07-04 08:07:41 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -37,9 +37,9 @@ namespace Hlt {
     Hlt::Counter counter;
     Hlt::Counter counterCandidates;
     std::string operation;
-    float minvalue;
-    float maxvalue;
-    bool isMin;
+    double minvalue;
+    double maxvalue;
+    bool isMin() const { return operation!=">"; }
     Hlt::Histo* histovalues;
     Hlt::Histo* histobest;
   };  
@@ -48,16 +48,6 @@ namespace Hlt {
 template <class T>
 class HltTFilter : public HltAlgorithm {
 public: 
-
-  typedef typename Hlt::TSelection<T> TSelection;
-  typedef typename Hlt::TFilterData<T> TFilterData;
-  typedef typename std::vector<TFilterData*>::iterator TFilterDataIterator;
-  typedef typename zen::function<T> TFunction;
-  typedef typename zen::filter<T> TFilter;
-  //  typedef typename IFunctionFactory<T> ITFactory;
-  typedef typename std::vector<T*> TContainer;
-  typedef typename std::vector<T*>::iterator TContainerIterator;
-
   /// Standard constructor
   HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName, bool tesInput=false );
 
@@ -68,40 +58,28 @@ public:
   virtual StatusCode finalize  ();
 
 private:
+  typedef typename Hlt::TSelection<T> TSelection;
+  typedef typename Hlt::TFilterData<T> TFilterData;
+  typedef typename std::vector<TFilterData*>::iterator TFilterDataIterator;
+  typedef typename zen::function<T> TFunction;
+  typedef typename zen::filter<T> TFilter;
+  //typedef typename std::vector<T*> TContainer;
+  //typedef typename std::vector<T*>::iterator TContainerIterator;
+
+  virtual void saveConfiguration();  
+  bool addTFilterData(const std::string& filtername);
+
+
   bool m_tesInput;
+  bool m_addInfo;
 
   TSelection* m_tselinput;
   TSelection* m_tseloutput;
 
-  virtual void saveConfiguration();  
-
-private:
-
   StringArrayProperty m_filterDescriptor;
-
-  bool m_addInfo;
-
-  void setInput(std::vector<T*>& cont)  {m_tinput = &cont;}
-  void setOutput(std::vector<T*>& cont) {m_toutput = &cont;}
-
-  std::vector<T*>* m_tinput;
-  std::vector<T*>* m_toutput;
-
   std::vector< TFilterData* > m_tfilters;
-
-private:
 
   std::string m_functionFactoryName;
   IFunctionFactory<T>* m_factory;
-
-private:
-
-  bool addTFilterData(const std::string& filtername);
-
-  void addInfo(TContainer& cont, TFunction& fun, int infoID);
-  
-  std::vector<double> infos(TContainer& cont, int infoID);
-  
-
 };
 #endif // HLTTRACKFILTER_H

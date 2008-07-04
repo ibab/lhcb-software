@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.6 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,7 @@ HltSelectionFilter::HltSelectionFilter( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
+  declareProperty("InputSelections", m_extraInputSelectionsNames);
 }
 //=============================================================================
 // Destructor

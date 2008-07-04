@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.h,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSelectionFilter.h,v 1.3 2008-07-04 08:07:41 graven Exp $
 #ifndef HLTCOMMON_HLTSELECTIONFILTER_H 
 #define HLTCOMMON_HLTSELECTIONFILTER_H 1
 
@@ -34,6 +34,8 @@ public:
 private:
 
   std::vector<int> m_scounters;
+
+  StringArrayProperty m_extraInputSelectionsNames;
 
   Hlt::TSelection<Hlt::Selection>* m_outputSelections;
 

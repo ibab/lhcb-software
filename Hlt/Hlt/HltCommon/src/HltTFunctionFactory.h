@@ -1,9 +1,11 @@
-// $Id: HltTFunctionFactory.h,v 1.2 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.3 2008-07-04 08:07:41 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
 // Include files
 #include <cassert>
+#include "boost/type_traits/remove_pointer.hpp"
+
 // from Gaudi
 #include "HltBase/HltBaseTool.h"
 #include "HltBase/HltAlgorithm.h"
@@ -49,19 +51,23 @@ namespace Hlt {
     HltBaseTool* m_base;
   };
 
-  template <class T1, class T2> 
+  template <class T1, class T2Selection> 
   class TFunctionCreator : public IFunctionCreator<T1> {
   public:
     typedef typename zen::function<T1> TFunction;
+    typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
     typedef typename zen::bifunction<T1,T2> BiFunction;
-    typedef typename Hlt::TSelection<T2> T2Selection;
-    typedef typename zen::binder_function<T1,T2> BinderFunction;
     typedef zen::bifilter<double,double> Comparator;
 
     TFunctionCreator(const BiFunction& bifun, const Comparator& com, bool mBinderKey = false)
         : m_bifunction( bifun.clone() )
         , m_comparator( com.clone() )
         , m_binderKey(mBinderKey)
+    { }
+    TFunctionCreator(const TFunctionCreator<T1,T2Selection>& rhs)
+        : m_bifunction( rhs.m_bifunction->clone() )
+        , m_comparator( rhs.m_comparator->clone() )
+        , m_binderKey(  rhs.m_binderKey)
     { }
 
     virtual ~TFunctionCreator() {}
@@ -70,20 +76,19 @@ namespace Hlt {
       assert(algo!=0);
       algo->Assert(!name.empty(), "create() must have input name in binder function ");
       T2Selection& sel = algo->retrieveTSelection<T2>(name);
-      TFunction* fun = 0;
-      BinderFunction *bfun = new BinderFunction(*m_bifunction,sel,*m_comparator);
+      TFunction *fun(0);
+      typedef typename zen::binder_function<T1,T2Selection> BinderFunction;
+      BinderFunction* bfun = new BinderFunction(*m_bifunction,sel,*m_comparator);
       if (m_binderKey) {
-        fun = new zen::binder_by_key<T1,T2>(*bfun);
+        fun =  new zen::binder_by_key<T1,T2Selection>(*bfun) ;
         delete bfun;
-      } else {
-          fun = bfun;
+      } else{
+         fun=bfun;
       }
       return fun;
     }
   private:
    
-    // Copy c'tor NOT implemented... avoid compiler generated one..
-    TFunctionCreator(const TFunctionCreator<T1,T2>&) ;
 
     std::auto_ptr<BiFunction> m_bifunction;
     std::auto_ptr<Comparator> m_comparator;
@@ -107,8 +112,7 @@ public:
   virtual bool command(const std::string& command, const std::string& value = "");
 
   zen::function<T>* function(const std::string& funtionname);
-  
-  zen::filter<T>* filter(const std::string& filtername);
+  zen::filter<T>*   filter  (const std::string& filtername);
 
   virtual StatusCode initialize();
 
@@ -126,10 +130,10 @@ protected:
     declare(name, new Hlt::FunctionCreator<T>(FUNCTION(),this));
   }
   
-  template <class FUNCTION,class COMPARATOR,class T2>
+  template <class FUNCTION,class COMPARATOR,class T2Selection>
   void declare(const std::string& name) {
-    declare(name,       new Hlt::TFunctionCreator<T,T2>(FUNCTION(),COMPARATOR()));
-    declare(name+"Key", new Hlt::TFunctionCreator<T,T2>(FUNCTION(),COMPARATOR(),true));
+    declare(name,       new Hlt::TFunctionCreator<T,T2Selection>(FUNCTION(),COMPARATOR()));
+    declare(name+"Key", new Hlt::TFunctionCreator<T,T2Selection>(FUNCTION(),COMPARATOR(),true));
   }
   
   template <class INTERFACE>
@@ -139,11 +143,12 @@ protected:
   }
   
   
-  template <class INTERFACE,class COMPARATOR,class T2>
+  template <class INTERFACE,class COMPARATOR,class T2Selection>
   void declare(const std::string& name, const std::string& toolname) {
     INTERFACE* it = tool<INTERFACE>(toolname,this);
-    declare(name,       new Hlt::TFunctionCreator<T,T2>(Hlt::BiFunctionTool<T,T2,INTERFACE> (*it),COMPARATOR()));
-    declare(name+"Key", new Hlt::TFunctionCreator<T,T2>(Hlt::BiFunctionTool<T,T2,INTERFACE> (*it),COMPARATOR(),true));
+    typedef typename boost::remove_pointer<typename T2Selection::value_type>::type T2;
+    declare(name,       new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(*it),COMPARATOR()));
+    declare(name+"Key", new Hlt::TFunctionCreator<T,T2Selection>(Hlt::BiFunctionTool<T,T2,INTERFACE>(*it),COMPARATOR(),true));
   }
   
   

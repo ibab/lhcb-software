@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.8 2008-06-09 16:20:19 pkoppenb Exp $
+// $Id: HltFunctionFactories.cpp,v 1.9 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -41,28 +41,27 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::PT>("PT0");
   declare<Hlt::TrackFlag>("IsBackward");
 
-  declare<Hlt::rIP,zen::abs_min,LHCb::RecVertex>("rIP");
-  declare<Hlt::IP,zen::abs_min,LHCb::RecVertex>("IP");
+  declare<Hlt::rIP,zen::abs_min,Hlt::VertexSelection>("rIP");
+  declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("IP");
 
-  declare<Hlt::DOCA,zen::abs_min,LHCb::Track>("DOCA");
-  declare<Hlt::MatchIDsFraction,zen::abs_max,LHCb::Track>("MatchIDsFraction");
-  declare<Hlt::DoShareM3,zen::abs_max,LHCb::Track>("DoShareM3");
+  declare<Hlt::DOCA,zen::abs_min,Hlt::TrackSelection>("DOCA");
+  declare<Hlt::MatchIDsFraction,zen::abs_max,Hlt::TrackSelection>("MatchIDsFraction");
+  declare<Hlt::DoShareM3,zen::abs_max,Hlt::TrackSelection>("DoShareM3");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Calo2DChi2","HltRZVeloTCaloMatch");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("Calo3DChi2","HltVeloTCaloMatch");
   
-  declare<ITrackBiFunctionTool,zen::abs_min,LHCb::Track>
+  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection>
     ("RZVeloTMatch","HltMatchTVeloTracks");
   
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
 
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
 
-  // @todo restore
-  //  declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
+  declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
 
   return sc;
 }
@@ -87,10 +86,10 @@ StatusCode HltVertexFunctionFactory::initialize() {
 
   StatusCode sc = HltTFunctionFactory<LHCb::RecVertex>::initialize();
   
-  declare<Hlt::DZ,zen::abs_min,LHCb::RecVertex>("VertexDz");
-  declare<Hlt::FC,zen::abs_min,LHCb::RecVertex>("VertexPointing");
-  declare<Hlt::VertexMinIP,zen::abs_min,LHCb::RecVertex>("VertexMinIP");
-  declare<Hlt::VertexMatchIDsFraction,zen::abs_max,LHCb::RecVertex>("VertexMatchIDsFraction");
+  declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("VertexDz");
+  declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
+  declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("VertexMinIP");
+  declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
   
   declare<Hlt::VertexDimuonMass>("VertexDimuonMass");
   declare<Hlt::VertexSumPT>("VertexSumPT");

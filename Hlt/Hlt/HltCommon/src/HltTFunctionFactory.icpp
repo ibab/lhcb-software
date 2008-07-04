@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.icpp,v 1.6 2008-05-21 12:46:12 graven Exp $
+// $Id: HltTFunctionFactory.icpp,v 1.7 2008-07-04 08:07:41 graven Exp $
 // Include files
 
 #include "HltBase/EFunctions.h"
@@ -77,10 +77,9 @@ zen::function<T>* HltTFunctionFactory<T>::function(const std::string& fn) {
 template <class T>
 zen::filter<T>* HltTFunctionFactory<T>::filter(const std::string& name) {
   
-  std::string funname= "";
-  std::string mode= "";
-  float x0 = 0.;
-  float xf = 1e6;
+  std::string funname,mode;
+  double x0 = 0.;
+  double xf = 1e6;
   bool ok = EParser::parseFilter(name,funname,mode,x0,xf);
   Assert(ok, " filter() not able to parse filtername"+ name);
 
@@ -103,5 +102,4 @@ zen::filter<T>* HltTFunctionFactory<T>::filter(const std::string& name) {
   debug() << " created filter " << name << endreq;
   
   return filter;
-
 }

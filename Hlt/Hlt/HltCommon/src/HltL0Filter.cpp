@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.2 2008-05-22 14:03:35 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.3 2008-07-04 08:07:41 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,9 @@ StatusCode HltL0Filter::execute() {
 
   bool pass = l0->decision();
   if (msgLevel(MSG::DEBUG)) debug() << " L0 decision " << pass << endreq;
+
+  //TODO: right now we always require the 'or' of a set of channels, maybe
+  //      we should add the possibility of adding the 'and' of a set?
 
   //TODO CHECK: is it possible l0->decision is false, but a channel is true?
   //    if not, we can abandon anything with the global L0 negative here...

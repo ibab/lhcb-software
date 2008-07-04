@@ -8,6 +8,7 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/construct.hpp"
+#include <cassert>
 
 // Declaration of the Service Factory
 // DECLARE_SERVICE_FACTORY( DataSvc );
@@ -18,6 +19,7 @@
 /////////// when to trigger? Needs support from algorithm... -- return callback
 /////////// on register to trigger update, require algo to use callback...
 /////////// i.e. this needs a handshake between algorithm and service....
+///////////  alternative: register ourselves as auditor (for parent algo only?)
 /// usecase: see HltCommon/src/HltTFilter, the 'prepare' variant...
 
 // Declaration of the Service Factory
@@ -103,10 +105,12 @@ HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* /*parent*/,bool useTES)
 //@TODO: record dependency of id on parent
 //    if (parent==0) std::cout << "don't have parent..." << std::endl;
 //    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
+//@TODO: verify that is a valid name by going to the ANNSvc...
     typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
     std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
     if (p.first!=p.second) return StatusCode::FAILURE; // already there...
     m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
+    assert(!useTES);
     if (useTES) {
         StatusCode sc = evtSvc().registerObject(m_TESOutputPrefix + "/" + sel->id().str(),sel);
         if (sc.isFailure()) return sc;

@@ -7,7 +7,7 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-// #define GR_USE_SEAL
+#define GR_USE_SEAL
 #ifdef GR_USE_SEAL
 #include "SealKernel/Context.h"
 #endif
@@ -416,5 +416,6 @@ StatusCode ConfigDBAccessSvc::openConnection() {
   m_session = m_coolConfSvc->connectionSvc().
 #endif
                connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+   info() << "Connected to database \"" << m_connection << "\"" << endmsg;
    return StatusCode::SUCCESS;
 }
