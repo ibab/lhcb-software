@@ -3,7 +3,17 @@
 //-----------------------------
 
 HltRecoSequence.MeasureTime = true;
-HltRecoSequence.Members = {
+
+//-----------------------
+HltRecoSequence.Members = { 
+  "GaudiSequencer/HltTrackRecoSequence"
+  //,"GaudiSequencer/HltCaloRecoSequence"  // In HltChargedProtoPAlg for the time being
+};
+HltRecoSequence.IgnoreFilterPassed = true; // process both track and calo independantly
+
+
+//----------------------- HltTrack sequence
+HltTrackRecoSequence.Members = {
   "GaudiSequencer/HltRecoRZVeloSequence",
   "Tf::PatVeloSpaceTracking/HltRecoVelo",
   "HltTrackPrepare/HltPrepareVelo",
@@ -13,8 +23,13 @@ HltRecoSequence.Members = {
   "PatForward/HltRecoForward",
   "HltTrackPrepare/HltPrepareForward"
 };
+// --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
+HltCaloRecoSequence.Members = {"GaudiSequencer/RecoCALOSeq" };
+// Options for Calo reconstruction
+#include "$CALORECOROOT/options/HltCaloSeq.opts"
 
 
+//---------------------
 HltRecoRZVeloSequence.MeasureTime = true;
 HltRecoRZVeloSequence.Members = { 
   "DecodeVeloRawBuffer", 
@@ -52,6 +67,10 @@ HltPrepareVelo.OutputSelection = "Velo1";
 
 HltPrepareForward.InputSelection = "Hlt/Track/Forward";
 HltPrepareForward.OutputSelection = "Forward1";
+
+
+
+
 
 //------------------------------
 // Definition of the Hlt1 Reconstruction
