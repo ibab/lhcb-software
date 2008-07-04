@@ -13,7 +13,7 @@ from Boole.Configuration import *
 FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
 
 #-- Main ('signal') event input
-# Events from Gauss v31r2, DB tag head-2000603
+# Events from Gauss v31r2, DB tag head-20080603
 datasetName = '11144103-100ev-20080613'
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r2/" + datasetName + ".sim' TYP='POOL_ROOTTREE' OPT='READ'"]
 
