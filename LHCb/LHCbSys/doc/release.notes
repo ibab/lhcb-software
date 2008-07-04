@@ -5,15 +5,269 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v24r0>2008-06-26 LHCbSys v24r0</A></H1><PRE>
-This version uses Gaudi v20r0 and LCG_55
+</PRE><H1><A NAME=v24r0>2008-07-04 LHCbSys v24r0</A></H1><PRE>
+This version uses Gaudi v20r1 and LCG_55
 
 - Packages added:    HltInterfaces v1r0 - Interfaces for Hlt tools
                      STTELL1Event  v1r2 - ST Raw Bank descriptions
-- Packages modified: DetDescSvc v2r0
+- Packages modified: GaudiConf v10r10, GaudiObjDesc v11r2p1, KernelSys v8r0,
+    LHCbKernel v8r5, LHCbMath v3r0, RichKernel v7r13, DetSys v13r0, DDDB v1r8,
+    DetCond v12r0, DetDesc v18r6, DetDescCnv v4r7, DetDescSvc v2r0, Magnet v3r10,
+    MuonDet v8r1, OTDet v7r9, RichDet v10r12, STDet v4r2, XmlTools v6r0,
+    EventSys v24r5, DAQEvent v7r11p1, HltEvent v8r10, LinkerEvent v3r5,
+    L0Event v16r11, MCEvent v2r9, RecEvent v2r13, DAQSys v4r1, MuonDAQ v4r2,
+    OTDAQ v6r0p1, CaloDAQ v4r6, SiDAQ v2r1, CaloInterfaces v7r7, CaloUtils v8r1,
+    CondDBEntityResolver v5r0, CondDBUI v2r10, DaVinciKernel v6r15, 
+    DaVinciMCKernel v2r9, LHCbAlgs v2r19, LoKi v7r1, LoKiAlgo v7r5, 
+    LoKiAlgoMC v7r2, LoKiCore v7r4, LoKiGen v7r4, LoKiMC v7r4, 
+    LoKiNumbers v7r3p1, LoKiPhys v7r5, LoKiPhysMC v7r3, L0Interfaces v1r1p1,
+    MDF v3r10, RichRecBase v3r15, SimComponents v2r10p1, STKernel v1r5,
+    Tell1Kernel v1r4, DetDescChecks v4r7, DetCondExample v11r3
+
+- In GaudiConf v10r10
+  . In Configuration.py:
+    o Add support for SIMCOND
+    o Initialize TES (replaces similar options in LHCbApplication.opts)
+    o Do not evaluate $FIELDMAP environment variable, must be done at runtime
+      to work on the grid
+
+- In GaudiObjDesc v11r2p1
+  . Add dependency on GaudiPolicy to allow running of QMTest macros
+
+- In LHCbKernel v8r5
+  . Moved IHltSummaryTool to HltInterfaces
+  . Add TTNames.xml, ITNames.xml [turn STChannelID into readable names, 
+    provide some enums for parts of the detector]
+  . Make STChannelID constructor from int explicit
+  . Clean up some implicit conversions in LHCbID class
+  . Add FPEGuard: Allows to enable/disable trapping of floating point exceptions
+
+- In LHCbMath v3r0
+  . Add default c'tor of MD5 which is required if you want a vector<MD5> in
+    a dictionary...
+  . In Line.h, LineTypes.h: Change namespace from Gaudi:: to Gaudi::Math::
+  . Add Python dictionaries
+  . Add python/LHCbMath.py: Module to ease use of Lines & GeomFun free functions
+
+- In RichKernel v7r13
+  . Update RichSmartIDCnv for RICH1
+  . Extend the L0Header words to allow full decoding of the information
+    contained in the various bits.
+
+- In DDDB v1r8
+  . In DDDB.py, LHCb-2008.py: add support for SIMCOND
+  . In LHCb-2008.py: get fieldMap options from $MAGNETROOT/options/UserRealMap.py
+                     change default tag to head-20080702 (from SQLDDDB v4r5)
+  . In DC06.py, LHCb-2008.py: Do not expand environment variables in options
+  . The name of the component to be passed to XmlParserSvc.EntityResolver has
+    changed from CondDBEntityResolverSvc to CondDBEntityResolver.
+
+- In DetCond v12r0
+  . Introduced a work-around for COOL bug #38422, which was preventing the usage
+    of local tags as overlays.
+  . Introduced the ICondDBReader implementation CondDBTimeSwitch.
+    o it allows to use different partitions for different IOVs
+    o added a simple test for it (using a test algorithm added to the package:
+      DetCondTest::TestConditionAlg).
+  . Improved direct mapping between the COOL hierarchy and transient store one:
+    o direct mapping enabled by default (can be turned off via options to improve
+      the performances of CondDBLayeringSvc and CondDBDispatcherSvc)
+    o correct mapping in CondDBDispatcherSvc and CondDBLayeringSvc:
+      - CondDBDispatcherSvc: add entries implied by alternatives
+      - CondDBLayeringSvc: expose all the possible entries
+    o modified ICondDBReader (needed for a generic implementation of the mapping)
+    o added tests for foreseen use-cases
+    o the code to generate the XML catalog has been moved to a separate file to
+      be shared among the implementations of ICondDBReader
+  . Added dictionaries for few CORAL interfaces that are not available through
+    COOL.
+  . Fixed a bug in the direct mapping between the hierarchy of the COOL
+    database and the transient store one.
+  . Adapted to the new SEAL-less COOL and CORAL. Needs LCG_55 (Gaudi v20r0)
+
+- In DetDesc v18r6
+  . Fix division by zero errors in Solidbase.h 
+  . Remove some multiple return statements in SolidBase.h (prevents inlining).
+
+- In DetDescCnv v4r7
+  . Modified the XmlGenericCnv to allow generic URLs in the href attributes
+    (like "http://" etc.). 
 
 - In DetDescSvc v2r0
-  . Adapt to new state machine in Gaudi v20r0
+  . Adapt to new state machine in Gaudi v20
+
+- In Magnet v3r10
+  . Fix compilation warning
+  . Add options/RealMap.py (options to use measured field map)
+
+- In MuonDet v8r1
+  . Fix for Tell1 firmware limitation when >1 TsMap in ODE
+  . Fix for zero division
+
+- In OTDet v7r9
+  . Change all Gaudi::XYZLine for Gaudi::Math::XYZLine
+
+- In RichDet v10r12
+  . Added method to retrieve the local z offset of the detection plane.
+  . Removed method globalToPDPanel.
+  . fixed problem with local x/y offset. 
+  . Remove obsolete object locations in DeRichLocations.h
+
+- In STDet v4r2
+  . Add nickname to detector elements
+
+- In XmlTools v6r0
+  . Renamed the IXmlEntityResolverSvc to IXmlEntityResolver.
+    The code now requires that it is implemented by a tool and not a service.
+
+- In DAQEvent v7r11p1, v7r11
+  . Fixed the reference file for the test daqevent.basictest.
+  . Add 'L0DUError' in RawBank types enum
+  . Add 'ErrorBank' in RawBankReadoutStatus type
+
+- In HltEvent v8r10
+  . HltSelectionSummary : make it very simple: a string, a bool, the candidates.
+  . Removed all Hlt2 enums
+
+- In LinkerEvent v3r5
+  . Add a missing apply_pattern
+
+- In L0Event v16r11
+  . Add a dummy cmt/version.cmt file to make cmt happy when running without
+    version directory (otherwise it thinks the version is 'L0Event')
+  . L0DUReport.xml: fix clear() method (clearing tck/configuration was missing)
+
+- In MCEvent v2r9
+  . Bug fix in MCTrackGeomCriteria (hasTT, accTT functions were wrong)
+
+- In RecEvent v2r13
+  . Add default locations for CaloCluster and CaloHypo within HLT processing
+
+- In MuonDAQ v4r2
+  . Add Tell1 header decoding  
+
+- In OTDAQ v6r0p1
+  . Fixed an uninitialized variable
+
+- In CaloDAQ v4r6
+  . CaloZSupAlg : allow 2D suppression over calo area (as now 0-sup is software)
+  . Check whether ErrorBank is present or not in CaloReadoutTool
+    (RawBankReadoutStatus updated accordingly)
+
+- In SiDAQ v2r1
+  . Bug fix in SiHeaderWord decoding
+
+- In CaloInterfaces v7r7
+  . Add virtual kernel() in ICaloCosmicsTool interface
+
+- In CaloUtils v8r1
+  . Calo2Track.h : add default locations for PID object within Hlt processing
+  . CaloTrackAlg : select tracks with fit status =  Track::FitStatusUnknown
+                   in Hlt context
+  . Change Gaudi::Line for Gaudi::Math::Line
+  . Threshold and offset as double in Calo2DView
+
+- In CondDBEntityResolver v5r0
+  . Modified the CondDBEntityResolver to be a tool instead of a service and
+    extended it to implement the IFileAccess interface.
+
+- In CondDBUI v2r10
+  . Adapted to work with the new SEAL-less COOL and CORAL too.
+    (Only for the LFCReplicaService)
+
+- In DaVinciKernel v6r15
+  . In Kernel/IPVReFitter.h
+    o Make all methods const.
+    o Make first argument of IPVReFitter::remove a const LHCb::Particle*
+ 
+- In DaVinciMCKernel v2r9
+  . Added interface for new DaVinci Associators wrapper tool,
+    IDaVinciAssociatorsWrapper.h 
+
+- In LHCbAlgs v2r19
+  . Many improvements to FPEAuditor
+
+- In LoKi v7r1
+  . Remove duplicated documentation for namespaces, fixes many Doxygen Warnings.
+
+- In LoKiAlgo v7r5
+  . From now, the macro LOKI_ALGORITHM put the algorithm into LoKi namespace 
+    Therefore the algorithm LOKI_ALGORITHM( AAA ) appears as C++ type: LoKi::AAA 
+  . In LoKi/TupleDicts.h, src/TupleDicts.h, python/LoKiAlgo/fArrayP.py 
+    Provide way to fill variable-size array for N-tuples in python
+
+- In LoKiAlgoMC v7r2
+  . From now LOKI_MCALGORITHM puts the algorithm into namespace LoKi 
+
+- In LoKiCore v7r4
+  . Change the default name for reporter from "LoKiSvc.ERROR" to "LoKiSvc.REPORT"
+  . Add new classes, needed for implementation of various decay-finders
+    in particular "nodes" (small functors, which act on LHCb::ParticleID objects)
+    and the interface for "trees" (the functors which act on decay trees)
+  . Fix many Doxygen warnings 
+
+- In LoKiGen v7r4
+  . In LoKi/CmtBarCode.h 
+    o new utility LoKi::GenParticles::CmpBarCode 
+      to compare HepMC::GenParticle by barcode 
+    o new typedef for the std::set of particles using CmtBarCode 
+      as the ordering criteria 
+  . In LoKi/GenDecays.h, src/LoKiGenDecays.cpp
+    . Implementation of HepMC-trees (functors which acts on the decay 
+      structure), needed for new (HepMC)DecayFinder 
+
+- In LoKiMC v7r4
+  . Implement the MC-trees (functors which acts on the decay structure), 
+    needed for implementation of new (MC)DecayFinders
+  . Fix many Doxygen warnings
+ 
+- In LoKiNumbers v7r3p1
+  . In dict/LoKiNumbers.xml: fix a warning from Reflex 
+
+- In LoKiPhys v7r5
+  . In LoKi::*::*Sources:  suppress warning messages for the used DVAlgorithms,
+    use "alg->debug()" instead 
+  . add new function LoKi::Vertices::VertexChi2PerDoF for evaluation of chi2/nDoF
+    C++ symbol VCHI2PDOF and python symbol VCHI2PDOF are introuded
+  . LoKi/Decays.h, src/Decays.h
+    Implementation of "trees" (functors which acts on the decay structure),
+    needed for new implementation of DecayFinders
+
+- In LoKiPhysMC v7r3
+  . Update the components
+
+- In L0Interfaces v1r1p1
+  . Add a cmt/version.cmt file to make cmt happy when running without
+    version directory (otherwise it thinks the version is 'L0Interfaces')
+
+- In MDF v3r10
+  . Improve printout of corrupted records for MEP data.
+
+- In RichRecBase v3r15
+  . Add some new methods to RichRecRing (for trackless ring studies)
+  . Add protection in the pixel creator base class against invalid HPD IDs.
+
+- In SimComponents v2r10p1
+  . Fixed doxygen for MCDecayFinder
+
+- In STKernel v1r5
+  . Merge STTELL1Constants.h with STDAQDefinitions.h
+  . Move STRawBankMap code here from STOnline and STDAQ 
+
+- In Tell1Kernel v1r4
+  . Add a cmt/version.cmt file to make cmt happy when running without
+    version directory (otherwise it thinks the version is 'Tell1Kernel')
+  . Include second order header corrections
+
+- In DetDescChecks v4r7
+  . In requirements, do not build .exe application (can use gaudirun.py) and
+    removed obsolete PYTHONPATH directives
+  . In VolumeCheck.py, replace initialization to use importOptions, for ease of
+    maintenance
+  . Added a QMTest-based test for LoadDDDB.
+
+- In DetCondExample v11r3
+  . Removed dependency on SEAL
 
 </PRE><H1><A NAME=v23r7>2008-06-04 LHCbSys v23r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LCG_54e.
