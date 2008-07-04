@@ -342,20 +342,11 @@ StatusCode DimTaskFSM::stop()   {
   return StatusCode::SUCCESS;
 }
 
-#if 0
 /// Access FSM state
-Gaudi::StateMachine::State DimTaskFSM::getFSMState() const {
+Gaudi::StateMachine::State DimTaskFSM::FSMState() const {
   return (Gaudi::StateMachine::State)0;
 }
 
-/// Access target FSM state
-Gaudi::StateMachine::State DimTaskFSM::getTargetFSMState() const {
-  return (Gaudi::StateMachine::State)0;
-}
-
-#endif
-
-  
 StatusCode DimTaskFSM::enable()  {
   m_continue = true;
   IOCSENSOR.send(this, NEXTEVENT);

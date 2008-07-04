@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.3 2008-04-10 09:32:41 frankb Exp $
+// $Id: EventServerRunable.h,v 1.4 2008-07-04 09:49:40 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.3 2008-04-10 09:32:41 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.4 2008-07-04 09:49:40 frankb Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -105,7 +105,7 @@ namespace LHCb  {
     /// Callback to handle a new request of a client to receive a given event
     void handleEventRequest(DataTransfer::netentry_t* e, const DataTransfer::netheader_t& hdr);
     /// Rescan client tables, reformulate possibly pending requests and renew the request
-    void restart();
+    void restartRequests();
     /// Send event data to a list of waiting clients
     void sendEvent();
     /// Accessor the netplu object

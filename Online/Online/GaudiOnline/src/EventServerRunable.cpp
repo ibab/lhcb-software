@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.5 2008-05-21 09:51:50 frankm Exp $
+// $Id: EventServerRunable.cpp,v 1.6 2008-07-04 09:49:40 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.5 2008-05-21 09:51:50 frankm Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.6 2008-07-04 09:49:40 frankb Exp $
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -149,7 +149,7 @@ void EventServerRunable::removeTarget(const std::string& src)   {
     try {
       ::lib_rtl_lock(m_lock);
       m_recipients.erase(j);
-      restart();
+      restartRequests();
     }
     catch(...) {
       MsgStream log(msgSvc(),name());
@@ -171,7 +171,7 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
     try {
       ::lib_rtl_lock(m_lock);
       m_recipients[src] = std::make_pair(*r,e);
-      restart();
+      restartRequests();
     }
     catch(...) {
       MsgStream log(msgSvc(),name());
@@ -181,7 +181,7 @@ void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hd
   }
 }
 
-void EventServerRunable::restart()  {
+void EventServerRunable::restartRequests()  {
   MBM::Requirement old = m_request;
   for(int j=0; j<BM_MASK_SIZE;++j)  {
     m_request.trmask[j] = 0;
@@ -277,7 +277,7 @@ StatusCode EventServerRunable::run()   {
 	    }
             net_unlock(netPlug(),lock);
             lock = 0;
-            restart();
+            restartRequests();
             ::lib_rtl_unlock(m_lock);
           }
           catch(...)  {

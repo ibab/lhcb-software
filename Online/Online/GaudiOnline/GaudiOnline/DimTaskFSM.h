@@ -172,13 +172,8 @@ namespace LHCb  {
     /// Stop the application
     virtual StatusCode stop();
 
-#if 0
     /// Access FSM state
-    virtual Gaudi::StateMachine::State getFSMState() const;
-    /// Access target FSM state
-    virtual Gaudi::StateMachine::State getTargetFSMState() const;
-
-#endif
+    virtual Gaudi::StateMachine::State FSMState() const;
 
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
