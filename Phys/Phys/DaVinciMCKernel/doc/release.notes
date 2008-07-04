@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.42 2008-06-30 19:32:28 cattanem Exp $
+! $Id: release.notes,v 1.43 2008-07-04 21:40:30 gligorov Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2008-06-26 - V. Gligorov
+ - Updated IDaVinciAssociatorsWrapper.h to allow a default argument of 0 for
+   the container containg particle to be associated.  
 
 !====================== DaVinciMCKernel v2r9 2008-06-30 =====================
 ! 2008-06-27 - P. Koppenburg
