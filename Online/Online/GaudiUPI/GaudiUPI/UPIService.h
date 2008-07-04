@@ -1,7 +1,8 @@
 #ifndef GAUDIUPI_UPISERVICE_H
 #define GAUDIUPI_UPISERVICE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/UPIService.h,v 1.1 2006-10-25 09:30:46 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiUPI/GaudiUPI/UPIService.h,v 1.2 2008-07-04 09:37:36 frankb Exp $
 
+#include "GaudiKernel/StateMachine.h"
 #include "GaudiKernel/Service.h"
 #include "CPP/Interactor.h"
 
@@ -34,7 +35,7 @@ namespace Gaudi  {
     /// Show message in the message window
     void print(const char* fmt, ...);
     /// Update state on display
-    void updateState(const std::string& state);
+    void updateState(Gaudi::StateMachine::State state);
 
   public:
     /// Standard Constructor.

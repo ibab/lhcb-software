@@ -17,12 +17,12 @@
 
 namespace {
   static const char* serviceState(const IService* is)  {
-    switch(is->state())
+    switch(is->FSMState())
     {
-    case IService::OFFLINE:     return "OFFLINE";
-    case IService::CONFIGURED:  return "CONFIGURED";
-    case IService::FINALIZED:   return "FINALIZED";
-    case IService::INITIALIZED: return "INITIALIZED";
+    case Gaudi::StateMachine::OFFLINE:     return "OFFLINE";
+    case Gaudi::StateMachine::CONFIGURED:  return "CONFIGURED";
+    case Gaudi::StateMachine::RUNNING:     return "RUNNING";
+    case Gaudi::StateMachine::INITIALIZED: return "INITIALIZED";
     default:                    return "UNKNOWN";
     }
   }

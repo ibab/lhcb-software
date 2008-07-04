@@ -19,6 +19,9 @@
 #include "RTL/rtl.h"
 
 #include <cstdarg>
+#include <sstream>
+
+using namespace Gaudi::StateMachine;
 
 extern "C" void upic_write_message(const char*, const char*);
 
@@ -54,7 +57,7 @@ Gaudi::UPIService::UPIService( const std::string& nam, ISvcLocator* svc )
 Gaudi::UPIService::~UPIService() { 
   if ( name() != "DefaultName" ) {  // Does not work with genconf
     print("UPI Service destructed.");
-    updateState(m_appMgr->stateName());
+    updateState(m_appMgr->FSMState());
   }
 }
 
@@ -75,7 +78,7 @@ StatusCode Gaudi::UPIService::finalize() {
   StatusCode sc = Service::finalize();
   setNewChild(0);
   print("UPI Service finalized.");
-  updateState(m_appMgr->stateName());
+  updateState(m_appMgr->FSMState());
   delete m_window;
   m_window = 0;
   return sc;
@@ -98,19 +101,21 @@ void Gaudi::UPIService::showTopMenu()  {
   IOCSENSOR.send(this, CMD_UPDATE_STATE);
 }
 
-void Gaudi::UPIService::updateState(const std::string& state)  {
+void Gaudi::UPIService::updateState(Gaudi::StateMachine::State state)  {
   if ( m_window )  {
-    if ( state == "Finalized" )
+    if ( state == CONFIGURED )
       m_window->enableCMD(CMD_APPMGR_TERMINATE);
     else
       m_window->disableCMD(CMD_APPMGR_TERMINATE);
-    if ( state == "Offline" )
+    if ( state == OFFLINE )
       m_window->replCMD(CMD_APPMGR,     "Configure             ");
-    else if ( state == "Configured" )
+    else if ( state == CONFIGURED )
       m_window->replCMD(CMD_APPMGR,     "Initialize            ");
-    else if ( state == "Initialized" )
+    else if ( state == INITIALIZED )
+      m_window->replCMD(CMD_APPMGR,     "Start                 ");
+    else if ( state == RUNNING     )
       m_window->replCMD(CMD_APPMGR,     "Finalize              ");
-    else if ( state == "Finalized" )
+    else if ( state == CONFIGURED  )
       m_window->replCMD(CMD_APPMGR,     "Initialize            ");
   }
 }
@@ -136,7 +141,8 @@ void Gaudi::UPIService::print(const char* fmt, ...)   {
 /// Interactor overload: handle menu interupts
 void Gaudi::UPIService::handle (const Event& event)   {
   StatusCode sc = StatusCode::SUCCESS;
-  std::string to, state = m_appMgr->stateName();
+  std::string to;
+  Gaudi::StateMachine::State state = m_appMgr->FSMState();
   if ( event.eventtype == UpiEvent )  {
     switch ( event.eventtype )    
     {
@@ -144,27 +150,29 @@ void Gaudi::UPIService::handle (const Event& event)   {
       switch(event.command_id)  
       {
       case CMD_APPMGR:
-        if ( state == "Offline" )
+        if ( state == OFFLINE )
           sc = m_appMgr->configure(),  to = "Configured";
-        else if ( state == "Configured" )
+        else if ( state == CONFIGURED )
           sc = m_appMgr->initialize(), to = "Initialized";
-        else if ( state == "Initialized" )
+        else if ( state == INITIALIZED )
+          sc = m_appMgr->start(),      to = "Running";
+        else if ( state == RUNNING )
           sc = m_appMgr->finalize(),   to = "Finalized";
-        else if ( state == "Finalized" )
-          sc = m_appMgr->initialize(), to = "Initialized";
-        else if ( state == "Offline" )
+        else if ( state == OFFLINE )
           IOCSENSOR.send(this, CMD_TERMINATE);
         if ( !sc.isSuccess() )  {
-          print("Failed to initialize application manager transition from %s to %s",
-            state.c_str(), to.c_str());
+	  std::stringstream str;
+	  str << "Failed to initiate application manager transition from " << state << " to " << to << std::endl;
+          print(str.str().c_str());
         }
         IOCSENSOR.send(this, CMD_UPDATE_STATE);
         break;
       case CMD_APPMGR_TERMINATE:
         sc = m_appMgr->terminate(), to = "Offline";
         if ( !sc.isSuccess() )  {
-          print("Failed to initialize application manager transition from %s to %s",
-            state.c_str(), to.c_str());
+	  std::stringstream str;
+	  str << "Failed to initiate application manager transition from " << state << " to " << to << std::endl;
+          print(str.str().c_str());
         }
         IOCSENSOR.send(this, CMD_TERMINATE);
         break;
