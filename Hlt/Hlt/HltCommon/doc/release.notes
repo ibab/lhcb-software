@@ -10,6 +10,7 @@
     joboptions
   - clean up of ConfigStackAccessSvc
   - fix readback of aliases in ConfigFileAccessSvc
+  - allow to specify configurations to preload by TCK instead of by config ID
    
 !2008-07-04 - Gerhard Raven
   - binders now bind against containers-of-items instead of items, and enforce the

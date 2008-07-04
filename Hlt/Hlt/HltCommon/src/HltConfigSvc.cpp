@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.9 2008-07-04 12:45:33 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.10 2008-07-04 14:42:45 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -37,6 +37,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
 {
   declareProperty("TCK2ConfigMap", m_tck2config);
   declareProperty("initialTCK", m_initialTCK = TCK_t(0));
+  declareProperty("prefetchTCK", m_prefetchTCK);
 }
 //=============================================================================
 // Destructor
@@ -75,9 +76,14 @@ StatusCode HltConfigSvc::initialize() {
   incidentSvc->release();
 
   //TODO:
-  // pre-fetch all configurations needed for specified set of TCKs
   // verify that tools do not change from one TCK to the next...
-
+  for (vector<TCK_t>::const_iterator i = m_prefetchTCK.begin(); i!=m_prefetchTCK.end(); ++i ) {
+     info() << " loading TCK " << *i << endmsg; 
+     if (!loadConfig( lexical_cast<TCK_t>(*i) )) {
+        error() << " failed to load TCK " << *i << endmsg; 
+        return StatusCode::FAILURE;
+     }
+  }
   // configure everyone from an a-priori specified TCK
   status = configure( m_initialTCK );
   if (status.isSuccess()) m_configuredTCK = m_initialTCK;

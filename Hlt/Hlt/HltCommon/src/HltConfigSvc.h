@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.3 2008-07-04 12:45:33 graven Exp $
+// $Id: HltConfigSvc.h,v 1.4 2008-07-04 14:42:45 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -40,6 +40,7 @@ private:
   typedef unsigned int TCK_t ;
   typedef std::map<std::string,std::string> TCKMap_t;
 
+  std::vector<TCK_t>           m_prefetchTCK;     ///< which TCK to prefetch
   TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID
   TCK_t                        m_initialTCK;      ///< which TCK to start with...
   TCK_t                        m_configuredTCK;   ///< which TCK is currently in use?
