@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.7 2007-11-16 14:42:10 hernando Exp $
+// $Id: HltMuonRefine.cpp,v 1.8 2008-07-04 07:43:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -96,7 +96,7 @@ StatusCode HltMuonRefine::execute() {
 //std::string nameMuon=m_muonTracksContainer->name();
   setFilterPassed(false);
   m_inputL0Muon=get<L0MuonCandidates>(L0MuonCandidateLocation::Default );
-  m_outputTracks->clear();  
+  m_outputTracks->clean();  
 
   //  debug() << "Number of Long tracks in input: " << m_tracksInput->size() << " "<<m_inputLongTracksName<<endmsg;
   //debug() << "Number of Muon tracks in input: " << m_muonTracksContainer->size() <<endmsg;)
