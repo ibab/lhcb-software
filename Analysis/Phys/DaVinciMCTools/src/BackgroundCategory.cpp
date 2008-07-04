@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.40 2008-07-03 13:49:14 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.41 2008-07-04 21:43:17 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -425,18 +425,11 @@ IBackgroundCategory::categories BackgroundCategory::category(const LHCb::Particl
 
   verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
 
-  m_pCPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_cPP->linker("ChargedPP2MC",std::vector<std::string>(1,""));
-                 //new ProtoParticle2MCLinker( this,
-                 //                          Particle2MCMethod::ChargedPP,
-                   //                        std::vector<std::string>(1,"") );
-  m_pNPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_nPP->linker("NeutralPP2MC",std::vector<std::string>(1,""));
-                 //new ProtoParticle2MCLinker( this,
-                 //                          Particle2MCMethod::NeutralPP,
-                   //                        std::vector<std::string>(1,"") );
-  m_pChi2PPAsct = m_linkerTool_Composite->linker("CompositeParticle2MCLinks",std::vector<std::string>(1,""));
-                    //new Particle2MCLinker( this,
-                    //                     Particle2MCMethod::Composite,
-                      //                   std::vector<std::string>(1,"") );
+  m_pCPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_cPP->linker(Particle2MCMethod::ChargedPP);
+  
+  m_pNPPAsct = (ProtoParticle2MCLinker*) m_linkerTool_nPP->linker(Particle2MCMethod::NeutralPP);
+  
+  m_pChi2PPAsct = m_linkerTool_Composite->linker(Particle2MCMethod::Composite);
 
   verbose() << m_linkerTool_cPP << " " << m_linkerTool_nPP << " " << m_linkerTool_Composite << endmsg;
 
@@ -1270,16 +1263,6 @@ StatusCode BackgroundCategory::initialize(){
   m_ppSvc = 0;
   sc = service("ParticlePropertySvc", m_ppSvc);
   if (!sc) return sc;
-
-  /*m_pCPPAsct = new ProtoParticle2MCLinker( this, 
-                                           Particle2MCMethod::ChargedPP, 
-                                           std::vector<std::string>(1,"") );
-  m_pNPPAsct = new ProtoParticle2MCLinker( this, 
-                                           Particle2MCMethod::NeutralPP,
-                                           std::vector<std::string>(1,"") );
-  m_pChi2PPAsct = new Particle2MCLinker( this, 
-                                         Particle2MCMethod::Composite,
-                                         std::vector<std::string>(1,"") );*/
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
   m_linkerTool_cPP = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_CAT_cPP",this);

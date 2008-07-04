@@ -29,7 +29,9 @@ public:
   StatusCode initialize() ;
   StatusCode finalize() ;
 
-  Particle2MCLinker* linker(std::string, std::vector< std::string >) ; ///< returns a linker
+  Particle2MCLinker* linker(int, std::vector< std::string >
+//                            myLocations = std::vector<std::string>(1,"")
+                           ) ; ///< returns a linker
 
   //-------------------------------------------------------------
   virtual void handle(const Incident&); ///< clean desktop
@@ -37,7 +39,6 @@ public:
 private:
   
   Particle2MCLinker* m_linker ; ///< linker
-  std::string m_algType ; ///< Association method
   std::vector< std::string > m_locations ; ///< Locations for association
 };
 #endif // DAVINCIASSOCIATORSWRAPPER_H

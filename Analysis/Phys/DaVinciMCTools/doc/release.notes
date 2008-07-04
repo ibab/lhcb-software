@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.224 2008-07-03 16:32:00 jpalac Exp $
+! $Id: release.notes,v 1.225 2008-07-04 21:46:39 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-07-04 - V. Gligorov
+ - src/BackgroundCategory.{cpp,h}
+    Changed to use DaVinciAssociatorsWrapper.{h,cpp} with new interface.
+ - src/DaVinciAssociatorsWrapper.{h,cpp}
+    Changed to comply with new interface and implement default container
+    for associated particles when none is specified.
 
 !========================== DaVinciMCTools v9r14 2008-07-03 ==================
 

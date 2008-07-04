@@ -35,38 +35,26 @@ DaVinciAssociatorsWrapper::~DaVinciAssociatorsWrapper() {}
 //=============================================================================
 // Make & return the linker
 //============================================================================= 
-Particle2MCLinker* DaVinciAssociatorsWrapper::linker(std::string myAlgType, std::vector< std::string > myLocations) {
+Particle2MCLinker* DaVinciAssociatorsWrapper::linker( /*std::string*/ int myMethod, 
+                                                      std::vector<std::string> myLocations 
+                                                    ) {
   //If the linker already exists, just return a pointer to it
-  m_algType = myAlgType;
   m_locations = myLocations;
   if ( m_linker != NULL) return m_linker ;
-  if (m_algType == "") {
+  if ((myMethod <= Particle2MCMethod::No) || (myMethod >= Particle2MCMethod::Max)) {
     err() << "No linker type specified!" << endmsg ;
     return NULL ;
   }
-  //Otherwise create it with the required method
-  int method = -1 ;
-  for ( int i = Particle2MCMethod::No ; i<Particle2MCMethod::Max ; ++i){
-    verbose() << "Comparing " << i << " " << Particle2MCMethod::algType[i]
-              << " and " << m_algType << endmsg ;
-    if ( Particle2MCMethod::algType[i] == m_algType ) {
-      method = i ;
-      break ;
-    }
-  }
-  //If no valid method is specified, break
-  if (method < 0) {
-    err() << "Invalid method specified!" << endmsg ;
-    return NULL ;
-  }
+
   //Otherwise make the required linker 
-  info() << "Creating linker for " << m_algType ;
+  info() << "Creating linker for " << Particle2MCMethod::algType[myMethod] ;
   info() << " using locations " << m_locations ;
-  m_linker =  new Particle2MCLinker(this, method, m_locations);
+  m_linker =  new Particle2MCLinker(this, myMethod, m_locations);
   info() << endmsg ;
+
   //If something went wrong...
   if ( NULL == m_linker ){
-    err() << "Could not create linker " << m_algType << endmsg ;
+    err() << "Could not create linker " << Particle2MCMethod::algType[myMethod] << endmsg ;
     return NULL ;
   }
   return m_linker ; 
