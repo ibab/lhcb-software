@@ -9,6 +9,7 @@
     and is used by HltConfigSvc, unless a TCK entry is (first) found in the 
     joboptions
   - clean up of ConfigStackAccessSvc
+  - fix readback of aliases in ConfigFileAccessSvc
    
 !2008-07-04 - Gerhard Raven
   - binders now bind against containers-of-items instead of items, and enforce the

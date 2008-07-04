@@ -114,11 +114,15 @@ ConfigFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_ty
         error() << "file " << fnam.string() << " does not exist" << endmsg;
         return boost::optional<ConfigTreeNode>();
    }
-   ConfigTreeNodeAlias c;
+   std::string sref;
    fs::ifstream s( fnam );
-   s >> c;
-
-   return readConfigTreeNode(c.ref());
+   s >> sref;
+   ConfigTreeNode::digest_type ref = ConfigTreeNode::digest_type::createFromStringRep(sref);
+   if (!ref.valid()) {
+        error() << "content of " << fnam.string() << " not a valid ref" << endmsg;
+        return boost::optional<ConfigTreeNode>();
+   }
+   return readConfigTreeNode(ref);
 }
 
 PropertyConfig::digest_type
