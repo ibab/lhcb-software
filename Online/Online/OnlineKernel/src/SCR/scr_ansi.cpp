@@ -27,7 +27,7 @@ static char Key_buffer[KEY_BUF_SIZE+2] = "";
 static int  Key_ptr = 0;
 static int  Last_key_stroke = -1;
 static int (*User_ast) () = 0;
-static int (*User_mouse_handler)(int,int) = 0;
+static int (*User_mouse_handler)(Pasteboard*,int,int,int) = 0;
 static int (*User_configure_handler)(int,int) = 0;
 typedef void (*Key_Handler)(char);
 Key_Handler User_Basic_Key_Handler = 0;
@@ -130,6 +130,7 @@ int scrc_handler_keyboard (unsigned int fac, void* par)  {
       IOPortManager::getChar(fd, &Last_char);
       if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,fac,Last_char,Last_char);
       if ( User_Basic_Key_Handler ) (*User_Basic_Key_Handler)(Last_char);
+      if ( User_mouse_handler ) ::scrc_handle_mouse(Kbd,Last_char);
       if (Key_ptr >= KEY_BUF_SIZE) status = 0;
       else if (Last_char)      {
         Key_buffer[Key_ptr] = Last_char;
@@ -601,10 +602,10 @@ int scrc_check_key_buffer (char *buffer)
 	buffer++;
 	switch (*buffer)
 	  {
-	  case 'D': _RET(MOVE_LEFT,b,*buffer);
-	  case 'B': _RET(MOVE_DOWN,b,*buffer);
-	  case 'A': _RET(MOVE_UP,b,*buffer);
-	  case 'C': _RET(MOVE_RIGHT,b,*buffer);
+	  case 'A': _RET(MOVE_UP,b,*buffer);       // Arrow key UP
+	  case 'B': _RET(MOVE_DOWN,b,*buffer);     // Arrow key DOWN
+	  case 'C': _RET(MOVE_RIGHT,b,*buffer);    // Arrow key RIGHT
+	  case 'D': _RET(MOVE_LEFT,b,*buffer);     // Arrow key LEFT
 	  case '1':
 	    buffer++;
 	    switch (c = *buffer)
@@ -708,7 +709,7 @@ int scrc_check_key_buffer (char *buffer)
 	      case 0   : _RET(UNKNOWN,b,*buffer);
 	      }
 	    break;
-	  case 0 :
+	  case 0:
 	    _RET(UNKNOWN,b,*buffer);
 	    break;
 	  }
@@ -849,37 +850,55 @@ int scrc_enable_unsolicited_input (Pasteboard* pb, int (* ast)())   {
   ::scrc_rearm_keyboard (WT_FACILITY_KEYBOARD,0);
   return 1;
 }
-
 //----------------------------------------------------------------------------
 int scrc_disable_unsolicited_input (Pasteboard* /* pb */)   {
   ::wtc_remove (WT_FACILITY_KEYBOARD);
   return 1;
 }
-
 //----------------------------------------------------------------------------
 int scrc_change_pbd_characteristics (Pasteboard* /* pb */)  {
   return 1;
 }
-
 //----------------------------------------------------------------------------
 int scrc_delete_physical_pasteboard (Pasteboard* /* pb */)    {
   return 1;
 }
-
 //---------------------------------------------------------------------------
-void scrc_set_mouse_handler (Pasteboard* /* pb */, int (*handler)(int,int))  {
+void scrc_set_mouse_handler (Pasteboard* /* pb */, int (*handler)(Pasteboard*,int,int,int))  {
   User_mouse_handler = handler;
 }
-
+//---------------------------------------------------------------------------
+void scrc_enable_mouse(Pasteboard* pb) {
+  //::scrc_putes("[?1000h",pb); // Sends event on press & release
+  ::scrc_putes("[?9h",pb);
+}
+//---------------------------------------------------------------------------
+void scrc_disable_mouse(Pasteboard* pb) {
+  //::scrc_putes("[?10001",pb); // Stop sending event on press & release
+  ::scrc_putes("[?91",pb);
+}
+//---------------------------------------------------------------------------
+void scrc_handle_mouse(Pasteboard* pb, char key)  {
+  if ( User_mouse_handler )   {
+    static char mouse_data[6] = {0,0,0,0,0,0};
+    mouse_data[0] = mouse_data[1];
+    mouse_data[1] = mouse_data[2];
+    mouse_data[2] = mouse_data[3];
+    mouse_data[3] = mouse_data[4];
+    mouse_data[4] = mouse_data[5];
+    mouse_data[5] = key;
+    if ( mouse_data[0] == 0x1B && mouse_data[1] == '[' && mouse_data[2] == 'M' ) {
+      (*User_mouse_handler)(pb,mouse_data[3],mouse_data[4],mouse_data[5]);
+    }
+  }
+}
 //---------------------------------------------------------------------------
 void scrc_set_configure_handler (Pasteboard* /* pb */, int (*handler)(int,int))  {
   User_configure_handler = handler;
 }
-
 //---------------------------------------------------------------------------
 void scrc_iconify_display (Display* /* d */)    {
 }
-
 //---------------------------------------------------------------------------
 void scrc_uniconify_display (Display* /* d */)    {
 }

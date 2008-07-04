@@ -1,0 +1,123 @@
+// Framework include files
+#include "SCR/MouseSensor.h"
+#include "CPP/Interactor.h"
+#include "SCR/scr.h"
+#include "WT/wtdef.h"
+#include "CPP/Event.h"
+
+// System include files
+#include "sys/time.h"
+
+using namespace SCR;
+
+static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
+  static bool pressed = false;
+  static timeval click = {0,0};
+  timeval now, diff;
+  Event* ev;
+  ::gettimeofday(&now,0);
+  timersub(&now,&click,&diff);
+
+  ev = new Event(0,ScrMouseEvent);
+  new(ev->get<void>()) MouseEvent(key,x,y,~0x0);
+  ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
+  if ( diff.tv_sec==0 && diff.tv_usec<300000 && pressed ) {
+    ev = new Event(0,ScrMouseEvent);
+    new(ev->get<void>()) MouseEvent(key,x,y,diff.tv_usec);
+    ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
+    pressed = false;
+    click.tv_sec = 0;
+    click.tv_usec = 0;
+  }
+  else {
+    click = now;
+    pressed = true;
+  }
+  return 1;
+}
+
+/// Standard constructor
+MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int us) 
+: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), usec(us)
+{
+}
+
+/// Standard constructor
+MouseSensor::MouseSensor() : Sensor(WT_FACILITY_SCR_MOUSE,"ScrMouseSensor",true) {
+}
+
+/// Standard destructor
+MouseSensor::~MouseSensor() {
+}
+
+/// The MouseSensor is a singleton: Static instantiator
+MouseSensor& MouseSensor::instance()  {
+  static MouseSensor* sensor = new MouseSensor;
+  return *sensor;
+}
+
+/// Enable mouse handling
+void MouseSensor::start(Pasteboard* pb) {
+  if ( pb ) {
+    ::scrc_enable_mouse(pb);
+    ::scrc_set_mouse_handler(pb, scr_mouse_handler);
+    m_pasteboard = pb;
+  }
+}
+
+/// Enable mouse handling
+void MouseSensor::stop() {
+  if ( m_pasteboard ) {
+    ::scrc_disable_mouse(m_pasteboard);
+    ::scrc_set_mouse_handler(m_pasteboard, 0);
+    m_pasteboard = 0;
+  }
+}
+
+/// Sensor overload: Dispatch interrupts and deliver callbacks to clients
+void MouseSensor::dispatch( void* arg )  {
+  std::auto_ptr<Event> ev((Event*)arg);
+  if ( ev.get() ) {
+    MouseEvent* m = ev->get<MouseEvent>();
+    Display* display = ::scrc_display_at (m_pasteboard,m->y,m->x);
+    if ( display ) {
+      Clients::const_iterator i = m_clients.find(display);
+      if ( i != m_clients.end() ) {
+	const Targets& t = (*i).second;
+	for(Targets::const_iterator j=t.begin(); j!=t.end(); ++j) {
+	  (*j)->handle(*(ev.get()));
+	}
+      }
+    }
+  }
+}
+
+/// Subscribe Interactor target to display mouse-events
+void MouseSensor::add(Interactor* actor, void* display) {
+  if ( display ) {
+    m_clients[display].insert(actor);
+  }
+}
+
+/// Unsubscribe all Interactor targets from display mouse-events
+void MouseSensor::remove(void* display) {
+  remove((Interactor*)0, display);
+}
+
+/// Unsubscribe Interactor target from display mouse-events
+void MouseSensor::remove(Interactor* actor, void* display) {
+  Clients::iterator i = m_clients.find(display);
+  if ( i != m_clients.end() ) {
+    Targets& t = (*i).second;
+    if ( actor == 0 ) {
+      t.clear();
+    }
+    else {
+      for(Targets::iterator j=t.begin(); j!=t.end(); ++j) {
+	t.erase(j);
+	break;
+      }
+    }
+    if ( t.empty() ) m_clients.erase(i);
+  }
+}

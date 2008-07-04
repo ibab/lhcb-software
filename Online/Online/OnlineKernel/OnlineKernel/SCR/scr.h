@@ -160,7 +160,10 @@ int scrc_delete_char (SCR::Display *disp, int row, int col);
 void scrc_resetANSI();
 void scrc_setANSI();
 void scrc_set_configure_handler (SCR::Pasteboard* pb, int (*handler)(int,int));
-void scrc_set_mouse_handler (SCR::Pasteboard* pb, int (*handler)(int,int));
+void scrc_set_mouse_handler (SCR::Pasteboard* pb, int (*handler)(SCR::Pasteboard* pb, int,int,int));
+void scrc_handle_mouse(SCR::Pasteboard* pb, char key);
+void scrc_enable_mouse(SCR::Pasteboard* pb);
+void scrc_disable_mouse(SCR::Pasteboard* pb);
 
 int scrc_init_windows(SCR::Pasteboard* pb, int rows, int cols);
 SCR::Window* scrc_open_window (int type);

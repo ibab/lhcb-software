@@ -8,7 +8,8 @@ enum EventType {
   IocEvent,
   QioEvent,
   TkEvent,
-  PVSSEvent
+  PVSSEvent,
+  ScrMouseEvent
 };
 
 class Message;
@@ -52,6 +53,8 @@ public:
   int index() const               {  return index_id;                  }
   unsigned long timerID() const   {  return (unsigned long)timer_id;   }
   unsigned long timerData() const {  return (unsigned long)timer_data; }
+  template <typename T> T* get()  {  return (T*)&timer_id;             }
+  template <typename T> const T* get() const  {  return (T*)&timer_id; }
 private:
   friend class Sensor;
   friend class Interactor;
