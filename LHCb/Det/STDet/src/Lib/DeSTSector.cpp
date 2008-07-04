@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.41 2008-07-03 09:48:20 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.42 2008-07-04 08:04:57 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -157,18 +157,24 @@ std::auto_ptr<LHCb::Trajectory> DeSTSector::createTraj(const unsigned int strip,
     STTraj* traj = new STTraj(); 
     for (; iterS != theSensors.end(); ++iterS) {                
       std::auto_ptr<LHCb::Trajectory> sensTraj = (*iterS)->trajectory(strip,offset);
-      if (traj->numberOfPieces() != 0) {
-         // double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
-         //double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
-         //     if (d1 < d2) {
-        double mu = sensTraj->muEstimate(traj->endPoint());        
-        sensTraj->setRange(mu,sensTraj->endRange());              
-      } 
-      traj->append(sensTraj.release());          
- 	//} else {                                                           
-	//  double mu = sensTraj->muEstimate(traj->beginPoint());      
-	//	sensTraj->setRange(sensTraj->beginRange(),mu);             
-	//traj->prepend(sensTraj.release());                        
+      if (traj->numberOfPieces() == 0) {
+         traj->append(sensTraj.release());  
+      }
+      else {
+
+        double d1 = (sensTraj->beginPoint()-traj->endPoint()).mag2();      
+        double d2 = (sensTraj->endPoint()-traj->beginPoint()).mag2();      
+        if (d1 < d2) {
+          double mu = sensTraj->muEstimate(traj->endPoint());        
+          sensTraj->setRange(mu,sensTraj->endRange());               
+          traj->append(sensTraj.release());          
+ 	} 
+        else {                                                           
+	  double mu = sensTraj->muEstimate(traj->beginPoint());      
+	  sensTraj->setRange(sensTraj->beginRange(),mu);             
+	  traj->prepend(sensTraj.release());                        
+	}
+      }
     } // loop
     return std::auto_ptr<LHCb::Trajectory>(traj);
   } // if 

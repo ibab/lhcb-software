@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.135 2008-07-03 09:48:20 mneedham Exp $
+!$Id: release.notes,v 1.136 2008-07-04 08:04:57 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2006-07-04 M Needham
+ - Bug fix in trajectory
 
 ! 2008-07-3 M Needham
  - Change way interact with update service
