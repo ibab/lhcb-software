@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.124 2008-06-09 16:46:45 gcorti Exp $
+! $Id: release.notes,v 1.125 2008-07-04 08:49:32 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-07-04 - Patrick Robbe
+ - src/component/Inclusive.cpp: protect againts inexistent PDG Id for
+   inclusive production
 
 !====================== Generators v8r1 2008-06-09 ===========================
 ! 2008-05-29 - Gloria CORTI
