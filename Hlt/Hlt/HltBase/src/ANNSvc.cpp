@@ -62,10 +62,11 @@ bimap_t<KEY,VALUE>::bimap_t() {
 }
 
 template <typename KEY, typename VALUE>
-bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs) {
-    m_map      = rhs.m_map;
-    m_invmap   = rhs.m_invmap;
-    m_property = rhs.m_property;
+bimap_t<KEY,VALUE>::bimap_t(const bimap_t& rhs) 
+    : m_map(       rhs.m_map      )
+    , m_invmap(    rhs.m_invmap   )
+    , m_property(  rhs.m_property )
+{
     m_property.declareUpdateHandler(&bimap_t<KEY,VALUE>::updateHandler, this);
 }
 
