@@ -4,6 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/DstContent.opts"       // Define DST content
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
 #include "$BRUNELOPTS/BrunelMC.opts"         // Comment for real data
 //#include "$BRUNELOPTS/ExpertCheck.opts"    // Uncomment for expert check histos

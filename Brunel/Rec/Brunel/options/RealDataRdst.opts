@@ -3,6 +3,7 @@
 ///             Currently using DC06 geometry and conditions                ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
 #include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off rDST output

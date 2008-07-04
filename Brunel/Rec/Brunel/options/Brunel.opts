@@ -8,8 +8,7 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 
-// Standard LHCb application setup
-#include "$STDOPTS/LHCbApplication.opts"
+#units "$STDOPTS/units.opts"
 
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"

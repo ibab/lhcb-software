@@ -3,6 +3,7 @@
 ///   geometry lhcb-200601 (DC06). Produces rDST, use v200601.opts for DST  ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
 #include "$BRUNELOPTS/rDstContent.opts"      // Define rDST content
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off rDST output

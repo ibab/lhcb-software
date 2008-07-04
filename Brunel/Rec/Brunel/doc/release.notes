@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v32r8>2008-07-04 Brunel v32r8</A></H1><PRE>
+ - Add Brunel-2008.py and 2008-Files.py, example job for 2008 simulated data
+ - Remove include of LHCbApplication.opts from Brunel.opts, to allow usage of
+   .py version in configurable. Added instead to DC06 *.opts files
+ - In Configurable, add support for SIMCOND, which is now used by default for MC
+   data with 2008 geometries
+
 </PRE><H1><A NAME=v32r7>2008-06-05 Brunel v32r7</A></H1><PRE>
  - In Configuration.py, Brunel-Default.py: new attribute "mainOptions" to
    define top level options file to include (default is $BRUNELOPTS/Brunel.opts)

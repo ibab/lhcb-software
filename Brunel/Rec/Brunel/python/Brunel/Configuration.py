@@ -1,14 +1,13 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-06-04 16:12:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-07-04 09:26:21 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
-from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( ProcessPhase, CondDBAccessSvc, MagneticFieldSvc, ReadStripETC )
+from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc, ReadStripETC )
 
 class Brunel(ConfigurableUser):
 
@@ -178,6 +177,7 @@ class Brunel(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
+        importOptions( "$DDDBROOT/options/DDDB.py" )
         importOptions( self.getProp( "mainOptions" ) )
         self.defineGeometry()
         self.defineEvents()
@@ -186,3 +186,6 @@ class Brunel(ConfigurableUser):
         self.defineOutput()
         self.defineMonitors()
         LHCbApp().applyConf()
+        # Use SIMCOND for Simulation, if not DC06
+        if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
+            CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )

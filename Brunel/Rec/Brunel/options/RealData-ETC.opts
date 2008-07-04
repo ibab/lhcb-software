@@ -3,6 +3,7 @@
 ///              Currently using DC06 geometry and conditions               ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
+#include "$STDOPTS/LHCbApplication.opts"
 #include "$BRUNELOPTS/DstContent.opts"       // Define DST content
 #include "$BRUNELOPTS/Brunel.opts"           // Set up the processing sequences
 ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
