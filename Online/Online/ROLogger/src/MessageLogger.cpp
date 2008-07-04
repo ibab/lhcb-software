@@ -1,4 +1,4 @@
-// $Id: MessageLogger.cpp,v 1.10 2008-06-06 17:00:53 frankb Exp $
+// $Id: MessageLogger.cpp,v 1.11 2008-07-04 07:40:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.10 2008-06-06 17:00:53 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/MessageLogger.cpp,v 1.11 2008-07-04 07:40:21 frankb Exp $
 // Framework include files
 #include <cerrno>
 #include <cstdarg>
@@ -56,7 +56,8 @@ MessageLogger::MessageLogger(int argc, char** argv)
   cli.getopt("service",1,name);
   cli.getopt("buffer",1,m_historySize);
   m_colors  = cli.getopt("colors",1) != 0;
-  m_display = cli.getopt("display",1) != 0;
+  m_debug   = cli.getopt("debug",2) != 0;
+  m_display = cli.getopt("display",2) != 0;
   m_output  = stdout;
   m_numMsg.resize(MessageLine::Msg_Always+1);
   m_history.resize(m_historySize);
@@ -543,7 +544,7 @@ void MessageLogger::handleMessage(const char* msg) {
     if ( checkFilters(msg) ) {
       printMessage(msg,false);
     }
-    else {
+    else if ( m_debug ) {
       printMessage(" ---------------------------- IGNORED:",false);
       printMessage(msg,false);
     }

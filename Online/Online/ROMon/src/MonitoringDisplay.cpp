@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.9 2008-06-05 18:40:00 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.10 2008-07-04 07:40:21 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.9 2008-06-05 18:40:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.10 2008-07-04 07:40:21 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -271,7 +271,7 @@ void MonitoringDisplay::showHeader(const Nodeset& ns)   {
   ::strftime(b2,sizeof(b1),"%H:%M:%S",::localtime(&t2));
   draw_line_normal ("");
   draw_line_reverse("         Monitoring for partition %s on %s   [%s]",
-		    m_partName.c_str(), RTL::nodeName().c_str(), ::lib_rtl_timestr());    
+		    m_partName.c_str(), RTL::nodeNameShort().c_str(), ::lib_rtl_timestr());    
   draw_line_bold   ("         Information updates date between: %s.%03d and %s.%03d",b1,frst.second,b2,last.second);
 }
 

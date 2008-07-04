@@ -8,7 +8,7 @@
 using namespace ROMon;
 
 void ROMon::ro_get_node_name(char* name, size_t len) {
-  ::strncpy(name,RTL::nodeName().c_str(),len);
+  ::strncpy(name,RTL::nodeNameShort().c_str(),len);
   char* p = ::strchr(name,'.');
   if ( p ) *p = 0;
   name[len] = 0;
@@ -96,6 +96,6 @@ std::ostream& ROMon::log() {
 
 void ROMon::print_startup(const char* msg) {
   log() << ::lib_rtl_timestr() << "> Readout monitor " << msg << " started on " 
-	<< RTL::nodeName() << " as " << RTL::processName() << std::endl;
+	<< RTL::nodeNameShort() << " as " << RTL::processName() << std::endl;
 }
 

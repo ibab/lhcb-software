@@ -63,10 +63,18 @@ GaudiTask::PythonInterpreter::~PythonInterpreter() {
 // Static thread routine to execute a Gaudi runable
 static int execRunable(void* arg)  {
   std::pair<IRunable*,GaudiTask*>* p = (std::pair<IRunable*,GaudiTask*>*)arg;
-  int ret = p->first->run();
+  try {
+    int ret = p->first->run();
+    p->second->setEventThread(false);
+    delete p;
+    return ret;
+  }
+  catch(...) {
+    std::cout << "Exception while running main thread." << std::endl;
+  }
   p->second->setEventThread(false);
   delete p;
-  return ret;
+  return 0;
 }
 
 GaudiTask::GaudiTask(IInterface*) 
@@ -200,11 +208,12 @@ StatusCode GaudiTask::setInstanceProperties(IAppMgrUI* inst)  {
 StatusCode GaudiTask::startRunable(IRunable* runable)   {
   MsgStream log(msgSvc(), name());
   std::pair<IRunable*,GaudiTask*>* p = new std::pair<IRunable*,GaudiTask*>(runable,this);
+  m_eventThread = true;
   int sc = lib_rtl_start_thread(execRunable, p, &m_handle);
   if ( lib_rtl_is_success(sc) )  {
-    m_eventThread = true;
     return StatusCode::SUCCESS;
   }
+  m_eventThread = false;
   log << MSG::ERROR << "Failed to spawn off execution thread." << endmsg;
   return StatusCode::FAILURE;
 }

@@ -1,4 +1,4 @@
-// $Id: MessageLogger.h,v 1.7 2008-05-27 16:50:40 frankb Exp $
+// $Id: MessageLogger.h,v 1.8 2008-07-04 07:40:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.7 2008-05-27 16:50:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/MessageLogger.h,v 1.8 2008-07-04 07:40:21 frankb Exp $
 #ifndef ROLOGGER_MESSAGELOGGER_H
 #define ROLOGGER_MESSAGELOGGER_H
 
@@ -75,6 +75,8 @@ namespace ROLogger {
     History::iterator m_histIter;
     /// Flag if iterator wrapped
     bool              m_wrapped;
+    /// Flag to indicate debugging
+    bool              m_debug;
     /// Monitoring slice name
     std::string       m_monitoring;
     /// Storage slice name

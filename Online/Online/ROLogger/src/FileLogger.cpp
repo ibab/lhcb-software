@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
+// $Id: FileLogger.cpp,v 1.6 2008-07-04 07:40:21 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.5 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.6 2008-07-04 07:40:21 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -31,6 +31,10 @@ extern "C" {
 }
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
+#else
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #endif
 static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
 
@@ -99,13 +103,17 @@ FileLogger::~FileLogger()  {
 
 /// Open new output file
 FILE* FileLogger::openOutput() {
+  struct stat st;
   char txt[1024], tmbuff[64];
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
-  ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d-%H.%M.%S.log",now);
+  ::strftime(tmbuff,sizeof(tmbuff),"%Y.%m.%d.log",now);
   sprintf(txt,"%s_%s",m_outdir.c_str(),tmbuff);
   if ( m_output ) ::fclose(m_output);
-  m_output = ::fopen(txt,"w");
+  if ( ::stat(txt,&st) == 0 ) {
+    ::lib_rtl_output(LIB_RTL_INFO,"The output file: %s  exists already. Reconnecting.....",txt);
+  }
+  m_output = ::fopen(txt,"a+");
   if ( 0 == m_output ) {
     ::lib_rtl_output(LIB_RTL_INFO,"Cannot open output file: %s [%s]",txt,RTL::errorString());
   }
