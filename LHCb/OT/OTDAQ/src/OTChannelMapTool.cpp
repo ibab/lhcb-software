@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.4 2008-07-05 02:29:15 janos Exp $
+// $Id: OTChannelMapTool.cpp,v 1.5 2008-07-05 02:41:07 janos Exp $
 // Include files
 
 // Include files
@@ -247,11 +247,8 @@ void OTChannelMapTool::updateChannelMap() const
       for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan) 
 	module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
     } else {
-      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan) {
-        std::cout << "Channel =  " << ichan <<  " Straw = " << unsigned( computeStrawV3( it->first, ichan ) ) << std::endl;
+      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan)
         module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ; 
-      }
-      
     }
     
     // finally, fill the inverse table
