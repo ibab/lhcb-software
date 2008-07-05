@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.111 2008-07-03 18:33:11 odescham Exp $
+! $Id: release.notes,v 1.112 2008-07-05 22:39:19 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-07-05 - Olivier Deschamps
+ - add new TCKs in L0DUConfig_0x000X.opts (TCK=0x0001 -> 0x0007 : cosmics triggers as for july 2008 GCW)
 
 ! 2008-07-02 - Olivier Deschamps 
  - add protection against missing bank in L0DURawBankMonitor

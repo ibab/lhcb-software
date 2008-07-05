@@ -17,13 +17,13 @@ ToolSvc.L0DUConfig.TCK_0x0001.Conditions = {
 };
 
 ToolSvc.L0DUConfig.TCK_0x0001.Channels ={
-  { "name=[Calo]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" },
-  { "name=[Muon]" , "rate==[100]" , "conditions= [Muon1,Pt]" }
+  { "name=[CaloCosmics]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" },
+  { "name=[MuonCosmics]" , "rate==[100]" , "conditions= [Muon1,Pt]" }
 };
 
 ToolSvc.L0DUConfig.TCK_0x0001.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"},
-  {"name=[L0Muon]"     , "channels=[Muon]"}
+  {"name=[L0Calo]"     , "channels=[CaloCosmics]"},
+  {"name=[L0Muon]"     , "channels=[MuonCosmics]"}
 }; 
 
 //----------------------------------------------------//
@@ -37,10 +37,10 @@ ToolSvc.L0DUConfig.TCK_0x0002.Conditions = {
 { "name=[Hadron,Et]"   , "data=[Hadron(Et)]"   , "comparator=[>]" , "threshold=[5]"  }
 };
 ToolSvc.L0DUConfig.TCK_0x0002.Channels ={
-{ "name=[Calo]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" }
+{ "name=[CaloCosmics]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" }
 };
 ToolSvc.L0DUConfig.TCK_0x0002.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"}
+  {"name=[L0Calo]"     , "channels=[CaloCosmics]"}
 }; 
 
 
@@ -76,13 +76,13 @@ ToolSvc.L0DUConfig.TCK_0x0004.Conditions = {
   { "name=[Muon1,Pt]"    , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[0]"  }
 };
 ToolSvc.L0DUConfig.TCK_0x0004.Channels ={
-  { "name=[Calo]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" },
-  { "name=[Muon]" , "rate==[0.1]" , "conditions= [Muon1,Pt]" }
+  { "name=[CaloCosmics]" , "rate==[100]" , "conditions= [Electron,Et] && [Hadron,Et]" },
+  { "name=[MuonCosmics]" , "rate==[0.1]" , "conditions= [Muon1,Pt]" }
 };
 
 ToolSvc.L0DUConfig.TCK_0x0004.Triggers +={ 
-  {"name=[L0Calo]"     , "channels=[Calo]"},
-  {"name=[L0Muon]"     , "channels=[Muon]"}
+  {"name=[L0Calo]"     , "channels=[CaloCosmics]"},
+  {"name=[L0Muon]"     , "channels=[MuonCosmics]"}
 }; 
 
 
@@ -114,3 +114,32 @@ ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={
 }; 
 
 
+
+//----------------------------------------------------//
+//------------------------- TCK = 0x006
+//----------------------------------------------------//
+ToolSvc.L0DUConfig.registerTCK += {"0x0006"};
+//ToolSvc.L0DUConfig.TCK_0x0006.Name = "Cosmics_Spd";
+ToolSvc.L0DUConfig.TCK_0x0006.Description ="spdMult>1 ";
+ToolSvc.L0DUConfig.TCK_0x0006.Conditions = {
+ { "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[1]"   }
+};
+ToolSvc.L0DUConfig.TCK_0x0006.Channels ={
+{ "name=[Spd]" , "rate==[100]" , "conditions= [SpdMult]" }
+};
+  
+
+
+//----------------------------------------------------//
+//------------------------- TCK = 0x007
+//----------------------------------------------------//
+ToolSvc.L0DUConfig.registerTCK += {"0x0007"};
+//ToolSvc.L0DUConfig.TCK_0x0007.Name = "Cosmics_SpdMu";
+ToolSvc.L0DUConfig.TCK_0x0007.Description ="spdMult>1 and muon>0";
+ToolSvc.L0DUConfig.TCK_0x0007.Conditions = {
+ { "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[0]"   },
+ { "name=[Muon]"    , "data=[Muon1(Pt)]"    , "comparator=[>]" , "threshold=[0]"  }
+};
+ToolSvc.L0DUConfig.TCK_0x0007.Channels ={
+{ "name=[spd_and_mu]" , "rate==[100]" , "conditions= [SpdMult]      && [Muon]" }
+}; 
