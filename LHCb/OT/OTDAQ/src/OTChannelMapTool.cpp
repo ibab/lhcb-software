@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.5 2008-07-05 02:41:07 janos Exp $
+// $Id: OTChannelMapTool.cpp,v 1.6 2008-07-05 14:55:18 janos Exp $
 // Include files
 
 // Include files
@@ -165,27 +165,27 @@ unsigned char OTChannelMapTool::computeStrawV3( const OTDAQ::EModuleLayout& layo
   // numbering with rotation or mirror operations
   unsigned char rc(1) ;
   switch ( layout ) {
-    case EvenLayerPosY:
-    case EvenLayerPosYShort:
-      // All "oprations" are w.r.t. "regular"
-      // "regular" i.e. top half even layer
-      rc = (1 + tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
-      break;
-    case OddLayerPosY:
-    case OddLayerPosYShort: 
-      // rotated around y, i.e. top half odd layer
-      rc = (1 - tmpMono)*NumStrawPerMono + tmpStrawInMono ;
-      break ;
-    case OddLayerNegY:
-    case OddLayerNegYShort: 
-      // mirrored in x, i.e. botom half odd layer
-      rc = (2-tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
-      break ;
     case EvenLayerNegY:
     case EvenLayerNegYShort:
     case NumDefaultModuleLayouts:
-      // mirrored and rotated around y, i.e. bottom half even layer
+      // All "oprations" are w.r.t. "regular"
+      // "regular" i.e. bottom half even layer
       rc = tmpMono*NumStrawPerMono + tmpStrawInMono ;
+      break ;
+    case EvenLayerPosY:
+    case EvenLayerPosYShort:
+      // mirrored in X
+      rc = (1 + tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
+      break;
+    case OddLayerNegY:
+    case OddLayerNegYShort: 
+      // rotated around Y
+      rc = (2 - tmpMono)*NumStrawPerMono - tmpStrawInMono + 1 ;
+      break ;
+    case OddLayerPosY:
+    case OddLayerPosYShort:
+      // mirrored in X and rotated around Y ( monolayers are swapped )
+      rc = (1 - tmpMono)*NumStrawPerMono + tmpStrawInMono ;
       break ;
   }
 
