@@ -1,5 +1,5 @@
 package GaussSys
-version v32r2
+version v33r2
 
 branches cmt doc
 
@@ -8,15 +8,15 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v32r2   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v33r2   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: only a fraction available for release on Win32
 # but temporarly switch them off on Win32
 macro GENSER_use        "GENSER       v4r1    Gen"  WIN32 ""
 macro EvtGen_use        "EvtGen       v9r1    Gen"  WIN32 ""
-macro Generators_use    "Generators   v8r1    Gen"  WIN32 ""
-macro LbPythia_use      "LbPythia     v7r2    Gen"  WIN32 ""
+macro Generators_use    "Generators   v8r2    Gen"  WIN32 ""
+macro LbPythia_use      "LbPythia     v7r3    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
 use ${Generators_use}
@@ -39,7 +39,7 @@ use ${LbHerwig_use}
 use ${LbHijing_use}
 use ${LbPythia8_use}
 #
-use LbMIB               v2r2      Gen
+use LbMIB               v2r3      Gen
 # temporarly switch it off on Win32
 macro ParticleGuns_use  "ParticleGuns v5r1    Gen"  WIN32 ""
 use ${ParticleGuns_use}
@@ -77,7 +77,7 @@ use BcmMoniSim          v1r1      Bcm
 use XmlVis              v1r5      Vis
 
 # Test packages for new releases or installations on new platforms
-use GenTests            v1r1      Gen
+use GenTests            v1r2      Gen
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

@@ -3,6 +3,64 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v33r2">2008-07-06 - GaussSys v33r2</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
+   head-20080603 and head-20060516.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v23r7 (and Gaudi v19r9)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.1 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   <b>Geant4 v91r2 (based on geant4.9.1.p02)</b>
+   DecFiles v14r4, ParamFiles v7r1 
+   DDDB v1r*, FieldMap v5r0, XmlVis v1r5</A></H3>
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   pythia8 107.1</A></H3>
+<H3><A NAME="Details">
+   Development version.
+   Partially built on Win32, all generators still not built on win to test
+   new builds by LCG. Temporarly switch off also ParticleGuns since it now
+   uses Generators.
+   Almost identical to Gauss v32r2 (but for additions) but based on latest
+   version of Geant4 (9.1.p02).
+</A></H3>
+
+
+!======================== Gauss v33r2 2008-07-06 =============================
+! 2008-07-06 - Gloria CORTI
+ - Use Gean4Files for G4 9.1
+   . requirements
+
+!====================== Generators v8r2 2008-07-06 ===========================
+! 2008-07-04 - Patrick Robbe
+ - src/component/Inclusive.cpp: protect againts inexistent PDG Id for
+   inclusive production
+
+!========================= LbPythia v7r3 2008-07-06 ==========================
+! 2008-06-24 - Vanya  BELYAEV
+ - PythiaProduction
+    add new property "Inconsistencies",
+    it is a name of the file where to dump HEPEVT inconsistencies,
+    detected if the property "ValidateHEPEVT" is activated
+    For empty file name, inconsistencies are dumped on the
+    WARNING
+ - cmt/requirements
+    version increment to v7r3
+
+!=========================== LbMIB v2r3 2008-07-04 ===========================
+! 2008-07-04 - Magnus Lieng
+ - Fixed compatability issue with Windows. 'inttypes.h' no longer used.
+   . CollimatorSource.h
+
+!========================= GenTests v1r2 2008-07-06 ==========================
+! 2008-07-01 - Patrick Robbe
+ - Remove bad PDG id code from list of particles in Inclusive D
+   production
+ - Increase version in requirements
+ - Add script to produce web page : CheckAllHistograms.py
+
+!=============================================================================
 </PRE><H1><A NAME="v32r2">2008-06-29 - GaussSys v32r2</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
    head-20080603 and head-20060516.
