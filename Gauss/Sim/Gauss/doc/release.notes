@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v32r3 2008-07-06 =============================
+! 2008-07-06 - Gloria CORTI
+ - Use Gean4Files for G4 9.1
+   . requirements
+
 !======================== Gauss v32r2 2008-06-29 =============================
 ! 2008-06-29 - Gloria CORTI for Magnus LIENG
  - Fix name of algorithm for BCM monitoring to agree to what in included
