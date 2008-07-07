@@ -142,7 +142,7 @@ static void help_GaudiOnline() {
 }
 
 extern "C" int GaudiOnline(int argc, char** argv)  {
-  RTL::CLI cli(argc, argv, help);
+  RTL::CLI cli(argc, argv, help_GaudiOnline);
   std::string runable = "AppMgrRunable";
   std::string evtloop = "EventLoopMgr";
   std::string msgsvc  = "LHCb::DimMessageSvc";

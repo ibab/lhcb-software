@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.cpp,v 1.6 2008-07-04 09:49:40 frankb Exp $
+// $Id: EventServerRunable.cpp,v 1.7 2008-07-07 14:32:51 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,9 +13,8 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.6 2008-07-04 09:49:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/EventServerRunable.cpp,v 1.7 2008-07-07 14:32:51 frankb Exp $
 #include "GaudiKernel/Incident.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiOnline/EventServerRunable.h"
@@ -90,7 +89,6 @@ StatusCode EventServerRunable::initialize()   {
     return error("Failed to access Input buffer:"+m_input+".");
   }
   m_consumer = new MBM::Consumer((*i).second,RTL::processName(),m_mepMgr->partitionID());
-  // m_consumer->include();
   m_request.parse(m_req);
   m_consState = WAIT_REQ;
   std::string self = RTL::dataInterfaceName()+"::"+RTL::processName();
@@ -107,19 +105,23 @@ StatusCode EventServerRunable::finalize()     {
   if ( incidentSvc() )  {
     incidentSvc()->removeListener(this);
   }
-  m_recipients.clear();
-  if ( netPlug() )  {
-    net_unsubscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT);
-    net_close(netPlug());
-  }
-  m_netPlug = 0;
+  shutdownRequests();
   if ( m_consumer ) {
-    // m_consumer->exclude();
     delete m_consumer;
   }
   m_consumer = 0;
   releaseInterface(m_mepMgr);
   return OnlineService::finalize();
+}
+
+/// Shutdown all event requests from the network
+void EventServerRunable::shutdownRequests() {
+  if ( netPlug() )  {
+    net_unsubscribe(netPlug(),this,WT_FACILITY_CBMREQEVENT);
+    net_close(netPlug());
+  }
+  m_recipients.clear();
+  m_netPlug = 0;
 }
 
 /// Incident handler implemenentation: Inform that a new incident has occured
@@ -152,30 +154,27 @@ void EventServerRunable::removeTarget(const std::string& src)   {
       restartRequests();
     }
     catch(...) {
-      MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "Exception in removeTarget from " << src << endreq;
+      error("Exception in removeTarget from "+src);
     }
     ::lib_rtl_unlock(m_lock);
   }
 }
 
-    
+/// Handle request from new network data consumer
 void EventServerRunable::handleEventRequest(netentry_t* e, const netheader_t& hdr)   {
   char buff[2048];
   std::string src = hdr.name;
   MBM::Requirement* r = (MBM::Requirement*)buff;
   int sc = net_receive(netPlug(),e,buff);
   if ( sc == NET_SUCCESS )  {
-    // MsgStream log(msgSvc(),name());
-    // log << MSG::INFO << "Got event request from " << src << endreq;
+    //info("Got event request from "+src);
     try {
       ::lib_rtl_lock(m_lock);
       m_recipients[src] = std::make_pair(*r,e);
       restartRequests();
     }
     catch(...) {
-      MsgStream log(msgSvc(),name());
-      log << MSG::INFO << "Exception in handleEventRequest from " << src << endreq;
+      info("Exception in handleEventRequest from "+src);
     }
     ::lib_rtl_unlock(m_lock);
   }
@@ -229,8 +228,7 @@ void EventServerRunable::sendEvent()  {
             i = m_recipients.begin();
             continue;
           }
-	  MsgStream log(msgSvc(),name());
-	  log << MSG::ERROR << "Cannot Send event data to " << (*i).first << endreq;
+	  error("Cannot Send event data to "+(*i).first);
         }
       }
     }
@@ -238,7 +236,7 @@ void EventServerRunable::sendEvent()  {
   }
 }
 
-// IRunable implementation : Run the class implementation
+/// IRunable implementation : Run the class implementation
 StatusCode EventServerRunable::run()   {
   int sc;
   int printN = 0;
@@ -249,8 +247,7 @@ StatusCode EventServerRunable::run()   {
         ::lib_rtl_unlock(m_lock);
         ::lib_rtl_wait_for_event(m_suspend);
         if ( m_consState == DONE )  {
-	  MsgStream log(msgSvc(),name());
-	  log << MSG::INFO << "End of event requests reached. Stopping..." << endreq;
+	  info("End of event requests reached. Stopping...");
           return StatusCode::SUCCESS;
         }
         m_consState = WAIT_EVT;
@@ -272,8 +269,7 @@ StatusCode EventServerRunable::run()   {
             ::lib_rtl_lock(m_lock);
             sendEvent();
 	    if ( ((++printN)%m_printNum) == 0 ) {
-	      MsgStream log(msgSvc(),name());
-	      log << MSG::INFO << "Delivered " << printN << " events to clients." << endreq;
+	      info("Delivered %9d events to clients.",printN);
 	    }
             net_unlock(netPlug(),lock);
             lock = 0;
@@ -281,8 +277,7 @@ StatusCode EventServerRunable::run()   {
             ::lib_rtl_unlock(m_lock);
           }
           catch(...)  {
-	    MsgStream log(msgSvc(),name());
-	    log << MSG::INFO << "Exception...." << endreq;
+	    info("Exception....");
             if ( lock ) net_unlock(netPlug(),lock);
             ::lib_rtl_unlock(m_lock);
           }

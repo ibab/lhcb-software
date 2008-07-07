@@ -75,10 +75,16 @@ namespace LHCb  {
     /// Configure Python based second level application manager
     StatusCode configPythonSubManager();
 
+    /// Wait for runable thread to stop. If it does not, send kill signal
+    void stopRunable();
     /// Internal helper: configure  application manager
     virtual int configApplication();
     /// Internal helper: initialize application manager
     virtual int initApplication();
+    /// Internal helper: start application manager
+    virtual int startApplication();
+    /// Internal helper: stop application manager
+    virtual int stopApplication();
     /// Internal helper: finalize   application manager
     virtual int finalizeApplication();
     /// Internal helper: terminate  application manager

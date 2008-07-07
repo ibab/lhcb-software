@@ -339,6 +339,7 @@ StatusCode DimTaskFSM::restart()   {
 
 /// Stop the application
 StatusCode DimTaskFSM::stop()   {
+  IOCSENSOR.send(this, FINALIZE);
   return StatusCode::SUCCESS;
 }
 
@@ -368,7 +369,7 @@ StatusCode DimTaskFSM::nextEvent(int /* num_event */)  {
 StatusCode DimTaskFSM::disable()  {
   m_continue = false;
   cancel();
-  IOCSENSOR.send(this, FINALIZE);
+  IOCSENSOR.send(this, STOP);
   return StatusCode::SUCCESS;
 }
 
@@ -380,7 +381,6 @@ StatusCode DimTaskFSM::finalize()  {
 
 StatusCode DimTaskFSM::terminate()  {
   declareState(ST_NOT_READY);
-  //IOCSENSOR.send(this,UNLOAD);
   return StatusCode::SUCCESS;
 }
 

@@ -11,6 +11,8 @@
 #include "GaudiKernel/SmartIF.h"
 #include "CPP/IocSensor.h"
 #include "WT/wt_facilities.h"
+#include "RTL/rtl.h"
+#include <signal.h>
 #include <fstream>
 
 #ifdef _POSIX_C_SOURCE
@@ -149,6 +151,7 @@ void GaudiTask::output(int level, const char* s)  {
 
 StatusCode GaudiTask::unload()  {
   m_python = std::auto_ptr<PythonInterpreter>(0);
+  m_appMgr->stop();
   m_appMgr->finalize();
   m_appMgr->terminate();
   return DimTaskFSM::unload();
@@ -218,6 +221,26 @@ StatusCode GaudiTask::startRunable(IRunable* runable)   {
   return StatusCode::FAILURE;
 }
 
+/// Wait for runable thread to stop. If it does not, send kill signal
+void GaudiTask::stopRunable() {
+  char txt[256];
+  for(int i=0; i<999999; ++i) {
+    if ( eventThread() ) ::lib_rtl_sleep(4000);
+    cancel();
+    if ( eventThread() )  {
+      if ( m_handle && i>2 ) {
+	::sprintf(txt,"Kill runable thread to get out of event loop.");
+	output(MSG::WARNING,txt);
+	::lib_rtl_kill_thread(m_handle,SIGINT);
+      }
+      ::lib_rtl_sleep(500);
+    }
+    if ( !eventThread() ) break;
+    ::sprintf(txt,"Retry No. %d to cancel runable thread......",i);
+    output(MSG::WARNING,txt);
+  }
+}
+
 /// Configure second layer application manager for GAUDI Application
 int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
@@ -246,41 +269,19 @@ int GaudiTask::configApplication()  {
 int GaudiTask::initApplication()  {
   MsgStream log(msgSvc(), name());
   if ( 0 != m_subMgr )  {
-    std::string nam, runable_name, evtloop_name;
-    SmartIF<IProperty>   ip(m_subMgr);
     SmartIF<ISvcLocator> loc(m_subMgr);
     if ( 0 == m_handle )  {
       StatusCode sc = m_subMgr->initialize();
       if ( sc.isSuccess() )   {
         if ( loc )  {
-          if ( ip->getProperty("Runable",nam).isSuccess() )  {
-            size_t id1 = nam.find_first_of("\"");
-            size_t id2 = nam.find_last_of("\"");
-            runable_name = nam.substr(id1+1,id2-id1-1);
-            IRunable* runable = 0;
-            if ( loc->service(runable_name,runable).isSuccess() )  {
-              ip->getProperty("EventLoop",nam);
-              id1 = nam.find_first_of("\"");
-              id2 = nam.find_last_of("\"");
-              evtloop_name = nam.substr(id1+1,id2-id1-1);
-              ListItem itm(evtloop_name);
-              if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
-                m_incidentSvc->addListener(this,"DAQ_ERROR");
-                sc = startRunable(runable);
-                if ( sc.isSuccess() )  {
-                  return 1;
-                }
-                log << MSG::ERROR << "Failed to start runable." << endmsg;
-                return 0;
-              }
-              log << MSG::ERROR << "Failed to access incident service." << endmsg;
-              return 0;
-            }
-          }
-          log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
-          return 0;
+	  if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
+	    m_incidentSvc->addListener(this,"DAQ_ERROR");
+	    return 1;
+	  }
+	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
+	  return 0;
         }
-        log << MSG::ERROR << "Failed to service locator object" << endmsg;
+        log << MSG::ERROR << "Failed to access service locator object" << endmsg;
         return 0;
       }
       log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
@@ -292,14 +293,62 @@ int GaudiTask::initApplication()  {
     }
   }
   else  {
-    log << MSG::ERROR << "2nd. layer is not initialized...did you call configure?" << endmsg;
+    log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
+    return 0;
+  }
+  return 0;
+}
+
+/// Initialize second layer application manager for GAUDI Application
+int GaudiTask::startApplication()  {
+  MsgStream log(msgSvc(), name());
+  if ( 0 != m_subMgr )  {
+    std::string nam, runable_name;
+    SmartIF<IProperty>   ip(m_subMgr);
+    SmartIF<ISvcLocator> loc(m_subMgr);
+    if ( 0 == m_handle )  {
+      if ( ip && loc )  {
+	StatusCode sc = m_subMgr->start();
+	if ( sc.isSuccess() )   {
+	  if ( ip->getProperty("Runable",nam).isSuccess() )  {
+	    size_t id1 = nam.find_first_of("\"");
+	    size_t id2 = nam.find_last_of("\"");
+	    runable_name = nam.substr(id1+1,id2-id1-1);
+	    IRunable* runable = 0;
+	    if ( loc->service(runable_name,runable).isSuccess() )  {
+	      sc = startRunable(runable);
+	      if ( sc.isSuccess() )  {
+		return 1;
+	      }
+	      log << MSG::ERROR << "Failed to start runable." << endmsg;
+	      return 0;
+	    }
+	    log << MSG::ERROR << "Failed to access Runable:" << nam << endmsg;
+	    return 0;
+	  }
+	  log << MSG::ERROR << "Failed to start application manager" << endmsg;
+	  return 0;
+	}
+        log << MSG::ERROR << "Failed to access service locator object" << endmsg;
+        return 0;
+      }
+      log << MSG::ERROR << "Failed to initialize application manager" << endmsg;
+      return 0;
+    }
+    else  {
+      log << MSG::INFO << "2nd. layer is already executing" << endmsg;
+      return 3;
+    }
+  }
+  else  {
+    log << MSG::ERROR << "2nd. layer is not initialized...did you ever call configure?" << endmsg;
     return 0;
   }
   return 0;
 }
 
 /// Finalize second layer application manager for GAUDI Application
-int GaudiTask::finalizeApplication()  {
+int GaudiTask::stopApplication()  {
   if ( m_subMgr )  {
     if ( m_handle )  {
       ::lib_rtl_join_thread(m_handle);
@@ -307,10 +356,30 @@ int GaudiTask::finalizeApplication()  {
     }
     gauditask_task_lock();
     try {
-      if ( m_incidentSvc ) m_incidentSvc->release();
+      if ( m_incidentSvc ) {
+	m_incidentSvc->removeListener(this);
+	m_incidentSvc->release();
+      }
       m_incidentSvc= 0;
-      StatusCode sc = StatusCode::SUCCESS;
-      if ( m_subMgr ) sc = m_subMgr->finalize();
+      StatusCode sc = m_subMgr ? m_subMgr->stop() : StatusCode::SUCCESS;
+      if ( !sc.isSuccess() )   {
+	gauditask_task_unlock();
+	return 0;
+      }
+    }
+    catch(...) {
+    }
+    gauditask_task_unlock();
+  }
+  return 1;
+}
+
+/// Finalize second layer application manager for GAUDI Application
+int GaudiTask::finalizeApplication()  {
+  if ( m_subMgr )  {
+    try {
+      gauditask_task_lock();
+      StatusCode sc = m_subMgr ? m_subMgr->finalize() : StatusCode::SUCCESS;
       if ( !sc.isSuccess() )   {
 	gauditask_task_unlock();
 	return 0;

@@ -13,7 +13,10 @@ StatusCode LHCb::Class2Task::initialize()  {
   if ( result == 1 ) {
     result = initApplication();
     if ( result == 1 ) {
-      return DimTaskFSM::initialize();
+      result = startApplication();
+      if ( result == 1 ) {
+	return DimTaskFSM::initialize();
+      }
     }
   }
   declareState(ST_ERROR);
@@ -21,11 +24,14 @@ StatusCode LHCb::Class2Task::initialize()  {
 }
 
 StatusCode LHCb::Class2Task::finalize()  {
-  int result = finalizeApplication();
+  int result = stopApplication();
   if ( result == 1 ) {
-    result = terminateApplication();
+    result = finalizeApplication();
     if ( result == 1 ) {
-      return DimTaskFSM::finalize();
+      result = terminateApplication();
+      if ( result == 1 ) {
+	return DimTaskFSM::finalize();
+      }
     }
   }
   declareState(ST_STOPPED);

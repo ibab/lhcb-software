@@ -25,6 +25,10 @@ namespace LHCb {
     virtual StatusCode configure();
     /// Callback on start transition
     virtual StatusCode initialize();
+    /// Callback on start transition
+    virtual StatusCode start();
+    /// Callback on stop transition
+    virtual StatusCode stop();
     /// Callback on stop transition
     virtual StatusCode finalize();
     /// Callback on reset transition

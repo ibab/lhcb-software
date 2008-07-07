@@ -1,9 +1,10 @@
 #pragma print off
 #include "$GAUDIONLINEROOT/options/Main.opts"
 #include "$GAUDIONLINEROOT/options/OnlineEnvironment.opts"
-ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/OutputBuffer" };
-// ApplicationMgr.ExtSvc               += { "LHCb::MBMMonitorSvc/MBMCheck"  };
-OutputBuffer.InitFlags               = "-s=8096 -e=64 -u=64 -i=OUT -c";
-OutputBuffer.PartitionBuffers        = true;
-OutputBuffer.PartitionID             = @OnlineEnv.PartitionID;
-OutputBuffer.PartitionName           = @OnlineEnv.PartitionName;
+ApplicationMgr.ExtSvc        += { "LHCb::MEPManager/OutputBuffer" };
+// ApplicationMgr.ExtSvc     += { "LHCb::MBMMonitorSvc/MBMCheck"  };
+OutputBuffer.InitFlags        = "-s=8096 -e=64 -u=64 -i=OUT -c";
+OutputBuffer.PartitionBuffers = true;
+OutputBuffer.PartitionID      = @OnlineEnv.PartitionID;
+OutputBuffer.PartitionName    = @OnlineEnv.PartitionName;
+Runable.Wait                  = 3;  // 1 if daemon; 3 if in main

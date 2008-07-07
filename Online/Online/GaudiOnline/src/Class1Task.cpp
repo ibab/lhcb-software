@@ -1,8 +1,6 @@
 #include "GaudiOnline/Class1Task.h"
 #include "GaudiKernel/MsgStream.h"
 #include "CPP/IocSensor.h"
-#include "RTL/rtl.h"
-#include <signal.h>
 
 DECLARE_NAMESPACE_OBJECT_FACTORY(LHCb,Class1Task);
 
@@ -46,26 +44,36 @@ StatusCode Class1Task::finalize()  {
   return declareState(ST_STOPPED);
 }
 
-extern "C" int lib_rtl_kill_thread(lib_rtl_thread_t handle, int sig);
+/// Callback on configure transition
+StatusCode Class1Task::start()  {
+  int result = startApplication();
+  switch(result) {
+  case 2:
+    declareState(ST_READY);
+    return StatusCode::FAILURE;
+  case 1:
+    return DimTaskFSM::start();
+  case 0:
+  default:
+    declareState(ST_ERROR);
+    return StatusCode::FAILURE;
+  }
+}
+
+/// Callback on reset transition
+StatusCode Class1Task::stop()  {
+  stopRunable();
+  int result = stopApplication();
+  if (1 == result) {
+    return DimTaskFSM::stop();
+  }
+  declareState(ST_RUNNING);
+  return StatusCode::FAILURE;
+}
 
 /// Callback on reset transition
 StatusCode Class1Task::terminate()  {
-  char txt[256];
-  for(int i=0; i<999999; ++i) {
-    if ( eventThread() ) ::lib_rtl_sleep(4000);
-    cancel();
-    if ( eventThread() )  {
-      if ( m_handle && i>2 ) {
-	::sprintf(txt,"Kill runable thread to get out of event loop.");
-	output(MSG::WARNING,txt);
-	::lib_rtl_kill_thread(m_handle,SIGINT);
-      }
-      ::lib_rtl_sleep(500);
-    }
-    if ( !eventThread() ) break;
-    ::sprintf(txt,"Retry No. %d to cancel runable thread......",i);
-    output(MSG::WARNING,txt);
-  }
+  stopRunable();
   int result = finalizeApplication();
   if (1 == result) {
     result = terminateApplication();
@@ -80,6 +88,6 @@ StatusCode Class1Task::terminate()  {
 /// Callback on disable event processing
 StatusCode Class1Task::disable()  {
   m_continue = false;
-  IOCSENSOR.send(this, FINALIZE);
+  IOCSENSOR.send(this, STOP);
   return StatusCode::SUCCESS;
 }

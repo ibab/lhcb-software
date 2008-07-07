@@ -1,4 +1,4 @@
-// $Id: EventServerRunable.h,v 1.4 2008-07-04 09:49:40 frankb Exp $
+// $Id: EventServerRunable.h,v 1.5 2008-07-07 14:32:51 frankb Exp $
 //====================================================================
 //  EventServerRunable
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/12/2007
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.4 2008-07-04 09:49:40 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/EventServerRunable.h,v 1.5 2008-07-07 14:32:51 frankb Exp $
 #ifndef GAUDISVC_EVENTSERVERRUNABLE_H
 #define GAUDISVC_EVENTSERVERRUNABLE_H 1
 
@@ -40,7 +40,7 @@ namespace LHCb  {
 
   /** Class definition of EventServerRunable.
     *
-    * Runable to serv independent network clients with event
+    * Runable to serve independent network clients with event
     * data. requests are purely served on demand ie. each
     * client has to ask for every event to be processed.
     *
@@ -51,8 +51,10 @@ namespace LHCb  {
 
   protected:
     enum RunableStates { WAIT_REQ, WAIT_EVT, ACTION_EVT, DONE };
+    /// Request entry definition
+    typedef std::pair<MBM::Requirement,DataTransfer::netentry_t*> ReqEntry;
     /// Definition of the container containing waiting clients
-    typedef std::map<std::string, std::pair<MBM::Requirement,DataTransfer::netentry_t*> > Recipients;
+    typedef std::map<std::string, ReqEntry > Recipients;
 
     /// Reference to MEP manager service
     MEPManager*          m_mepMgr;
@@ -108,6 +110,8 @@ namespace LHCb  {
     void restartRequests();
     /// Send event data to a list of waiting clients
     void sendEvent();
+    /// Shutdown all event requests from the network
+    void shutdownRequests();
     /// Accessor the netplu object
     DataTransfer::NET* netPlug() const {  return m_netPlug; }
   };

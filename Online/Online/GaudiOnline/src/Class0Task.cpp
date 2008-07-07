@@ -17,11 +17,17 @@ StatusCode LHCb::Class0Task::configure()  {
   if ( !m_configured ) {
     int result = configApplication();
     if ( result == 1 ) {
+      //::fprintf(stdout,"Calling init\n");fflush(stdout);
       result = initApplication();
       if ( result == 1 ) {
-	m_configured = true;
-        IOCSENSOR.send(this, STARTUP_DONE);
-	return StatusCode::SUCCESS;
+	//::fprintf(stdout,"Calling start\n");fflush(stdout);
+	result = startApplication();
+	if ( result == 1 ) {
+	  //::fprintf(stdout,"m_configured = true\n");fflush(stdout);
+	  m_configured = true;
+	  IOCSENSOR.send(this, STARTUP_DONE);
+	  return StatusCode::SUCCESS;
+	}
       }
     }
     declareState(ST_ERROR);
@@ -31,12 +37,19 @@ StatusCode LHCb::Class0Task::configure()  {
 }
 
 StatusCode LHCb::Class0Task::terminate()  {
-  int result = finalizeApplication();
-  m_configured = false;
-  if ( result == 1 ) {
-    result = terminateApplication();
+  int result = stopApplication();
+  if (1 == result) {
+    //::fprintf(stdout,"Calling finalize\n");fflush(stdout);
+    result = finalizeApplication();
+    m_configured = false;
     if ( result == 1 ) {
-      return DimTaskFSM::terminate();
+      //::fprintf(stdout,"Calling terminate\n");fflush(stdout);
+      result = terminateApplication();
+      if ( result == 1 ) {
+	//::fprintf(stdout,"m_configured=false\n");fflush(stdout);
+	m_configured = false;
+	return DimTaskFSM::terminate();
+      }
     }
   }
   declareState(ST_STOPPED);
