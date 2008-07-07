@@ -5,7 +5,7 @@
  *  Header file for algorithm : RichMarkovRingFinderAlg
  *
  *  CVS Log :-
- *  $Id: RichMarkovRingFinderAlg.cpp,v 1.70 2008-06-24 17:49:22 jonrob Exp $
+ *  $Id: RichMarkovRingFinderAlg.cpp,v 1.71 2008-07-07 15:42:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-09
@@ -83,6 +83,8 @@ AlgBase<SAMPLER>::AlgBase( const std::string& name,
   declareProperty( "TargetHits",           m_TargetHits        );
   declareProperty( "AbsMaxIts",            m_AbsMaxIts         );
   declareProperty( "AbsMinIts",            m_AbsMinIts         );
+  declareProperty( "DoubleTest", m_dtest );
+  //declareProperty( "FloatTest", m_ftest );
   // Disable histograms by default
   setProduceHistos( false );
   // data maps
@@ -104,6 +106,10 @@ StatusCode AlgBase<SAMPLER>::initialize()
 {
   const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
+
+  //info() << "Float  " << m_ftest << endreq;
+  info() << "Double " << std::setprecision(15) << m_dtest << endreq;
+  return StatusCode::FAILURE;
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool",    m_smartIDTool );
@@ -189,6 +195,8 @@ StatusCode AlgBase<SAMPLER>::richInit()
 template < class SAMPLER >
 StatusCode AlgBase<SAMPLER>::runRingFinder()
 {
+  StatusCode sc = StatusCode::SUCCESS;
+
   // do the finding in a try block to catch exceptions that leak out
   try
   {
@@ -242,11 +250,12 @@ StatusCode AlgBase<SAMPLER>::runRingFinder()
       }
 
       // finalise the results as TES rings
-      const StatusCode saveSc = saveRings(input,output);
-      if ( saveSc.isFailure() ) return saveSc;
+      sc = saveRings(input,output);
+      if ( sc.isFailure() ) return sc;
 
     }
 
+    // count processed (or not) events
     counter("Processed Events") += (int)OK;
 
   }
@@ -256,7 +265,7 @@ StatusCode AlgBase<SAMPLER>::runRingFinder()
              StatusCode::SUCCESS );
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 template < class SAMPLER >
@@ -449,8 +458,8 @@ void AlgBase<SAMPLER>::buildRingPoints( LHCb::RichRecRing * ring,
     ring->ringPoints().reserve(nPoints);
     for ( unsigned int iP = 0; iP < nPoints; ++iP, angle += incr )
     {
-      const double X( ring->centrePointLocal().x() + (std::sin(angle)*ring->radius())/m_scaleFactor);
-      const double Y( ring->centrePointLocal().y() + (std::cos(angle)*ring->radius())/m_scaleFactor);
+      const double X( ring->centrePointLocal().x() + (std::sin(angle)*ring->radius())/m_scaleFactor );
+      const double Y( ring->centrePointLocal().y() + (std::cos(angle)*ring->radius())/m_scaleFactor );
       const Gaudi::XYZPoint pLocal ( X, Y, 0*Gaudi::Units::cm );
       ring->ringPoints().push_back( LHCb::RichRecPointOnRing( m_smartIDTool->globalPosition(pLocal,
                                                                                             rich(),
