@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+<<<<<<< release.notes
+! 2008-07-07 - Adlene Hicheur
+ - Remove warnings sources
+!====================== Magnet v3r8 2008-07-03 ===============================
+=======
+>>>>>>> 1.46
 ! 2008-07-03 - Adlene Hicheur
  - Fixes to read conditions correctly.
 
