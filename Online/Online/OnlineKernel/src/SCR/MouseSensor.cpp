@@ -4,41 +4,33 @@
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
 #include "CPP/Event.h"
-
-// System include files
-#include "sys/time.h"
+#include "RTL/SysTime.h"
 
 using namespace SCR;
 
 static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
   static bool pressed = false;
-  static timeval click = {0,0};
-  timeval now, diff;
-  Event* ev;
-  ::gettimeofday(&now,0);
-  timersub(&now,&click,&diff);
+  static unsigned int click = 0;
+  unsigned int now=RTL::SysTime::now(), diff = now-click;
+  Event* ev = new Event(0,ScrMouseEvent);
 
-  ev = new Event(0,ScrMouseEvent);
   new(ev->get<void>()) MouseEvent(key,x,y,~0x0);
   ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
-  if ( diff.tv_sec==0 && diff.tv_usec<300000 && pressed ) {
+  if ( diff<300 && click != 0 ) {
     ev = new Event(0,ScrMouseEvent);
-    new(ev->get<void>()) MouseEvent(key,x,y,diff.tv_usec);
+    new(ev->get<void>()) MouseEvent(key,x,y,diff);
     ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
-    pressed = false;
-    click.tv_sec = 0;
-    click.tv_usec = 0;
+    click = 0;
   }
   else {
     click = now;
-    pressed = true;
   }
   return 1;
 }
 
 /// Standard constructor
-MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int us) 
-: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), usec(us)
+MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms) 
+: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), msec(us)
 {
 }
 

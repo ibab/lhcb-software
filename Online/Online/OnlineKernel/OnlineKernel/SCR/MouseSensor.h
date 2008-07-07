@@ -24,7 +24,7 @@ namespace SCR {
     unsigned char modifier;
     unsigned char x;
     unsigned char y;
-    unsigned int  usec;
+    unsigned int  msec;
     /// Standard constructor
     MouseEvent(int key, int x, int y, unsigned int us);
   };

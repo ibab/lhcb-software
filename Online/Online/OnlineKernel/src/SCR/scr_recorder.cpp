@@ -36,7 +36,7 @@ namespace {
       char txt[132];
       const MouseEvent* m = ev.get<MouseEvent>();
       sprintf(txt,"((%s-Mouse event: %d  %d x:%d y:%d  %d))",
-	      m->usec != (unsigned int)~0x0 ? "DBLE" : "SNGL",m->button,m->modifier,m->x,m->y,m->usec);
+	      m->msec != (unsigned int)~0x0 ? "DBLE" : "SNGL",m->button,m->modifier,m->x,m->y,m->msec);
       addText(txt);
     }
 
