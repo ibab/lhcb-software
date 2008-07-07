@@ -29,8 +29,8 @@ $MINITERM Moore_3@${HOST}   -e "export UTGID=${NODENAME}/Moore_3;   exec -a \${U
 #$MINITERM Moore_7@${HOST}   -e "export UTGID=${NODENAME}/Moore_7;   exec -a \${UTGID} $Class1_task -opt=$OPTS/ReadMBM.opts"&
 $MINITERM Receiver@${HOST}  -e "export UTGID=${NODENAME}/Receiver;  exec -a \${UTGID} $Class1_task -opt=$OPTS/MDFReceiver.opts"&
 ###$MINITERM DiskWR@${HOST}  -e "export UTGID=${NODENAME}/DiskWR;    exec -a \${UTGID} $Class2_task -opt=$OPTS/DiskWR.opts"&
-#$MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $Class1_task -opt=$OPTS/EventServer.opts"&
-$MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $Class1_task -opt=$OPTS/EventRequestServer.opts"&
+$MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $Class1_task -opt=$OPTS/EventServer.opts"&
+#$MINITERM EvtServ@${HOST}   -e "export UTGID=${NODENAME}/EvtServ;   exec -a \${UTGID} $Class1_task -opt=$OPTS/EventRequestServer.opts"&
 #
 sleep 4
 #
