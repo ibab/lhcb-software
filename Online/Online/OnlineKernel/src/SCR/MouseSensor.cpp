@@ -30,7 +30,7 @@ static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
 
 /// Standard constructor
 MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms) 
-: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), msec(us)
+: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), msec(ms)
 {
 }
 

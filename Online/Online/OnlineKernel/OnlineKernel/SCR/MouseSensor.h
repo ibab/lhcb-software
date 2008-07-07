@@ -10,7 +10,7 @@
 
 namespace SCR {
   // Forward declarations
-  class Pasteboard;
+  struct Pasteboard;
 
   /**
    * Communication object describing the Mouse click events.
