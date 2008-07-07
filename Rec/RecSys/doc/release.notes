@@ -5,10 +5,104 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r8>2008-07-01 RecSys v5r8</A></H1><PRE>
+</PRE><H1><A NAME=v5r8>2008-07-07 RecSys v5r8</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r0.
 
 - Packages added:    RichMarkovRingFinder v2r0
+- Packages modified: CaloMoniDst v3r1, CaloPIDs v4r12, CaloReco v4r13, 
+    PatChecker v3r3, PatFitParams v3r2, TrackCheckers v4r1, TrackFitEvent v3r16,
+    TrackFitter v2r25, TrackMCTools v2r18, TrackTools v3r8, PatAlgorithms v3r7,
+    PatVelo v3r7, PatPV v3r4, MuonTrackAlign v1r4, RichRecAlgorithms v2r11,
+    RichRecMonitors v2r19
+
+- In CaloMoniDst v3r1, CaloPIDs v4r12
+  . Adapt to Gaudi::Math namespace changes in Kernel/LHCbMath v3r0
+
+- In CaloPIDs v4r12
+  . CaloTrackMatchAlg, inCaloAcceptanceAlg: protect against empty track container
+  . Use default HLT locations for the HLT context in all algorithm/tool
+
+- In CaloReco v4r13
+  . Use default HLT locations for the HLT context in all algorithm/tool
+  . Set default location to run the clusterisation sequence on Hcal
+    (depends on the instance name)
+  . New options : HltCaloSeq with setting to run the Reco/PID within HLT framework
+  . Fix id warning in CelAutoTaggedCell.h
+ 
+- In PatChecker v3r3
+  . For VELO tracks, provides a breakdown of PR performance per algorithm
+
+- In PatFitParams v3r2
+  . Update to bring SeedFitParams back in sync with the parameters actually
+    used in PatSeeding
+
+- In TrackCheckers v4r1
+  . Added safety checks to protect against division by zero in TrackEffChecker
+
+- In TrackFitEvent v3r16
+  . Added initialization of deltaEnergy variable to 0 in FitNode
+
+- In TrackFitter v2r25
+  . In TrackKalmanFilter, downgrade Errors to Warnings, reduce verbosity (now
+    Warnings only printed once, more info available in debug() )
+  . Added more safety checks in TrackMasterFitter
+  . Added minMomentumForELossCorr and maxMomentumForScattering variables in
+    TrackMasterFitter
+  . Fail fit if smoother fails to calculate reasonable error on residual
+  . Added safety check to avoid FPE in TrackKalmanFilter::updateResidual
+  . Bug fix: don't remove outlier from track with 1 dof
+
+- In TrackMCTools v2r18
+  . Fix implicit conversions
+
+- In TrackTools v3r8
+  . Fix compilation warning
+  . LongTrackReferenceCreator: Changed default extrapolator to
+    TrackMasterExtrapolator
+  . StateSimpleBetheBlochEnergyCorrectionTool: added safety checks
+  . TrackLikelihood: added a safety check to avoid FPE in initialisation of "lik"
+
+- In PatAlgorithms v3r7
+  . PatSeedingTool:
+    o Added code to deal better with cosmics
+    o Tuning for new field map, now used per default
+    o Added new tuning for old field map, in options/PatSeedingTool-field047.opts
+    o Fixed a bug in the code calculating cluster positions, we now really do
+      it the "Kisel" way
+    o Made new option-controllable parameter OTNHitsLowThresh which gives the
+      threshold below which OT only tracks have to satisfy stricter criteria
+    o Add options to extract T station part of Forward tracks and add resulting
+      tracks to output container
+  . Add option file to find cosmics
+  . Removed superfluous include file (fenv.h)
+  . PatSeedTrack: changes to follow new parametrisation in PatSeedingTool
+  . Fix a possible divide-by-zero in PatDownstream
+
+- In PatVelo v3r7
+  . Fix for FPE problem in PatVeloGeneralTracking
+
+- In PatPV v3r4
+  . New functionality and package structure change: 
+    o PV off-axis reconstruction 
+    o Seeding interface introduced IPVSeeding.h
+    o PVSeed3DTool.cpp - new (second) seeding for off-axis PVs 
+    o LSAdaptPV3DFitter - new PV fitting algorithm for PatPV3D
+    o PatPV3D - new algorithm. Uses PVOfflineTool
+  See <a href="http://indico.cern.ch/materialDisplay.py?contribId=46&sessionId=20&materialId=slides&confId=33862">presentation</a> at tracking and alignment workshop, 2008-06-11
+  . Added example options for displaced vertices
+
+- In MuonTrackAlign v1r4
+  . Added the long track state errors to the match chi^2 
+  . Added some monitoring histograms
+
+- In RichRecAlgorithms v2r11
+  . Add some new algorithms for trackless rings
+    o Rich::Rec::TracklessRingFilterAlg : Filter rings using quality cuts
+    o Rich::Rec::TracklessRingIsolationAlg : Finds isolated trackless rings
+    o Rich::Rec::TracklessRingSegmentAssociationAlg: Associates rings to segments
+
+- In RichRecMonitors v2r19
+  . Add protection against invalid HPD IDs in the decoded data.
 
 </PRE><H1><A NAME=v5r7>2008-06-05 RecSys v5r7</A></H1><PRE>
 This version uses Gaudi v19r9 and LHCb v23r7.
