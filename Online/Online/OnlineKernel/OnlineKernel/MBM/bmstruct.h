@@ -230,6 +230,7 @@ struct CONTROL  {
   int shift_p_Bit;        // Shifts per Bit to obtain size in bytes
   int bytes_p_Bit;        // Number of bytes per bit in bitmap.
   int version;            // Buffer manager version
+  int spare1;             // Last element
 } PACKED_DATA;
 
 struct BUFFERS  {
