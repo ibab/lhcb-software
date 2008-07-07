@@ -1,10 +1,10 @@
-// $Id: PVReFitterAlg.h,v 1.1 2008-07-03 14:55:30 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.2 2008-07-07 16:37:27 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "Kernel/DVAlgorithm.h"
 
 
 // From LHCb
@@ -16,7 +16,7 @@ class ILifetimeFitter;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *  
- * Simple GaudiAlgorithm that takes some particles, their related primary 
+ * Simple DVAlgorithm that takes some particles, their related primary 
  * vertices, and refits the vertices excluding the tracks coming from the 
  * particle's decay. It also creates a relations table associating each 
  * particle to its corresponding new vertex.
@@ -56,7 +56,7 @@ class ILifetimeFitter;
  *  @author Juan PALACIOS
  *  @date   2008-06-25
  */
-class PVReFitterAlg : public GaudiAlgorithm {
+class PVReFitterAlg : public DVAlgorithm {
 public: 
   /// Standard constructor
   PVReFitterAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -73,8 +73,7 @@ private:
   LHCb::RecVertex* refitVertex(const LHCb::RecVertex* v,
                                const LHCb::Particle* p  ) const;
   
-  const LHCb::RecVertex* getRelatedVertex(const LHCb::Particle* p,
-                                          const Particle2Vertex::Table* table) const;
+  const LHCb::RecVertex* getRelatedVertex(const LHCb::Particle* p) const;
   
 
   void getTracks(const LHCb::Particle* p,
