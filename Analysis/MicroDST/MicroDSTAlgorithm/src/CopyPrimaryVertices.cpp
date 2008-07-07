@@ -1,4 +1,4 @@
-// $Id: CopyPrimaryVertices.cpp,v 1.8 2008-07-07 13:36:14 jpalac Exp $
+// $Id: CopyPrimaryVertices.cpp,v 1.9 2008-07-07 15:54:43 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,7 @@ StatusCode CopyPrimaryVertices::execute() {
 
   if (0==v) {
     warning() << "Unable clone or get vertices from " 
-              << fullOutputTESLocation() << endmsg;
+              << inputTESLocation() << endmsg;
   }
 
   return StatusCode::SUCCESS;
