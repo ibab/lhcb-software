@@ -2,6 +2,9 @@ Package         : OTDAQ
 Package manager : J. Nardulli
 !---------------------------------------------------------------------
 
+! 2008-07-07 - Jan Amoraal
+ - Fix tables for Hardware to Software conversion
+
 !======================= OTDAQ v6r0p1 2008-06-30 =====================
 ! 2008-06-27 - Wouter Hulsbergen
  - Fixed an uninitialized variable
