@@ -2,6 +2,14 @@ Package: OnlineKernel
 Author:  Markus Frank
 
 ! 2008-05-19 Markus Frank
+ - Change semaphore handling in buffer manager(s). Named semaphores are now
+   always external and not part of the buffer manager structure. This solves
+   several condition races in the HLT.
+ - A severe bug when creating/accessing named semaphores was removed on Linux,
+   where at creation time semaphores may have been initialized several times.
+ - Got colors and mouse handling in SCR.
+
+! 2008-05-19 Markus Frank
  - Fix problems in scr.
 
 ! 2008-05-19 Markus Frank

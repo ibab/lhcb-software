@@ -229,7 +229,7 @@ struct CONTROL  {
   int last_alloc;         // Byte Offset of last allocation
   int shift_p_Bit;        // Shifts per Bit to obtain size in bytes
   int bytes_p_Bit;        // Number of bytes per bit in bitmap.
-  int spare1;
+  int version;            // Buffer manager version
 } PACKED_DATA;
 
 struct BUFFERS  {

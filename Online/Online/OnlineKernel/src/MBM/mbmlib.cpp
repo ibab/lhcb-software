@@ -33,6 +33,10 @@
 #include "RTL/DoubleLinkedQueue.h"
 #define MBM_MAX_BUFF  32
 
+//#ifdef _WIN32  // Default for all !
+#define _MBM_EXPLICIT_SEMAPHORES 1
+//#endif
+
 #define _mbm_return_err(err_code)  {  errno = err_code; return err_code; }
 
 static inline int mbm_error(const char* fn, int line)  {  
@@ -339,8 +343,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   bm->ctrl->i_users++;
 
   // Activate this user
-#define _WIN32 1
-#ifdef _WIN32
+#ifdef _MBM_EXPLICIT_SEMAPHORES
   ::sprintf(us->wes_flag, "bm_%s_WES_%d_%d", bm_name, us->uid, us->pid);
   ::sprintf(us->wev_flag, "bm_%s_WEV_%d_%d", bm_name, us->uid, us->pid);
   ::sprintf(us->wsp_flag, "bm_%s_WSP_%d_%d", bm_name, us->uid, us->pid);
@@ -1549,7 +1552,7 @@ int _mbm_get_user_flag(std::map<long long int,lib_rtl_event_t>& flags, USER* us,
 }
 
 // Wakeup process to continue processing
-#ifdef _WIN32
+#ifdef _MBM_EXPLICIT_SEMAPHORES
 int _mbm_wake_process (BMID bm, int reason, USER* us) {
   us->reason = reason;
   lib_rtl_event_t flag = 0;
