@@ -9,7 +9,6 @@
 using namespace SCR;
 
 static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
-  static bool pressed = false;
   static unsigned int click = 0;
   unsigned int now=RTL::SysTime::now(), diff = now-click;
   Event* ev = new Event(0,ScrMouseEvent);
