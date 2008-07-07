@@ -92,7 +92,7 @@ StatusCode AnalyticFieldSvc::initialize()
   status = GetParam();
   if ( status.isSuccess() ) {
     log << MSG::DEBUG << "B maps read successfully" << endreq;
-    //    DebugMaps();
+ 
     return status;
   }
   else {
@@ -709,7 +709,7 @@ double AnalyticFieldSvc::EvaluateField(MagVec&  pos, MagMat& bmap) const{
      double term = bmap[i][3];
     for (j = 0; j < 3; j++) {
       // Evaluate the polynomial in the jth variable.
-      int power = (int)bmap[i][j]; 
+      int power = bmap[i][j]; 
       double p1 = 1, p2 = 0, p3 = 0, r = 0;
       double v =  1 + 2. / (bmap[1][j] - bmap[0][j]) * (pos[j] - bmap[1][j]);
       // what is the power to use!
@@ -762,57 +762,3 @@ double AnalyticFieldSvc::EvaluateField(MagVec&  pos, MagMat& bmap) const{
 
    }
 
-void AnalyticFieldSvc::DebugMaps() 
-{
-  ofstream debugbx("debug_bx.txt");
-  ofstream debugby("debug_by.txt");
-  ofstream debugbz("debug_bz.txt");
-  
-  std::cout<<"BXMAP SIZE: "<<Bxmap.size()<<std::endl;
-  std::cout<<"BYMAP SIZE: "<<Bymap.size()<<std::endl;
-  std::cout<<"BZMAP SIZE: "<<Bzmap.size()<<std::endl;
-
-  for (int iMap=0;iMap<Bxmap.size();iMap++){
-    debugbx<<"REGION: "<<iMap<<std::endl;
-    for(int irow=0;irow<(Bxmap[iMap])->nrow();irow++){
-      for (int icol=0;icol<(Bxmap[iMap])->ncol();icol++){      
-        debugbx<<(*(Bxmap[iMap]))[irow][icol]<< "  ";
-      }
-      debugbx<<std::endl;
-      
-    }
-    
-    
-  }
-
-  for (int iMap=0;iMap<Bymap.size();iMap++){
-    debugby<<"REGION: "<<iMap<<std::endl;
-    for(int irow=0;irow<(Bymap[iMap])->nrow();irow++){
-      for (int icol=0;icol<(Bymap[iMap])->ncol();icol++){      
-        debugby<<(*(Bymap[iMap]))[irow][icol]<< "  ";
-      }
-      debugby<<std::endl;
-      
-    }
-    
-    
-  }
-
-  for (int iMap=0;iMap<Bzmap.size();iMap++){
-    debugbz<<"REGION: "<<iMap<<std::endl;
-    for(int irow=0;irow<(Bzmap[iMap])->nrow();irow++){
-      for (int icol=0;icol<(Bzmap[iMap])->ncol();icol++){      
-        debugbz<<(*(Bzmap[iMap]))[irow][icol]<< "  ";
-      }
-      debugbz<<std::endl;
-      
-    }
-    
-    
-  }
-
-  debugbx.close();
-  debugby.close(); 
-  debugbz.close(); 
-  
-}

@@ -78,7 +78,6 @@ void Bcalculation(const Gaudi::XYZPoint&  point,
  double EvaluateField(MagVec& pos, MagMat& bmap) const; ///< Compute the field analytically from the parameterization
 
   void ClearMaps();
-  void DebugMaps();
   
   
   std::string m_filename[3];           ///< Analytic field file names
