@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.48 2008-07-02 10:51:27 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.49 2008-07-07 08:51:45 odescham Exp $ 
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -55,9 +55,9 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   ,  m_pinPedShift       ( 5.9        )
   ,  m_activeToTotal     ( 6.         )
   //
+  ,  m_pinArea           ( -1)
   ,  m_subCalos          () 
   ,  m_subCalos_         ()
-  ,  m_pinArea( -1 )
 { };
 // ============================================================================
 
