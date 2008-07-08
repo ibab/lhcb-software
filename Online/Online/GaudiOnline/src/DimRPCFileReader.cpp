@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.9 2008-06-10 12:37:08 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.10 2008-07-08 13:24:06 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -9,6 +9,8 @@
 #include "GaudiOnline/MEPManager.h"
 #include "OnlineKernel/RTL/rtl.h"
 
+#define _WINDOWS_
+#define _WINSOCKAPI_
 extern "C" {
 #include "dim.h"
 #include "dis.h"
