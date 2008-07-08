@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.7 2008-07-02 14:55:09 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.8 2008-07-08 08:59:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.7 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.8 2008-07-08 08:59:50 frankb Exp $
 
 #include "ROMon/SubfarmDisplay.h"
 #include "ROMon/FarmDisplay.h"
@@ -32,9 +32,14 @@ extern "C" {
 #include <limits>
 #include <cstdio>
 #include <cstdlib>
+#include <cstdarg>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
+#ifdef _WIN32
+#define vsnprintf _vsnprintf
+#endif
 using namespace ROMon;
 using namespace SCR;
 

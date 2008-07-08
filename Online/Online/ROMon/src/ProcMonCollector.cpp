@@ -1,4 +1,4 @@
-// $Id: ProcMonCollector.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Id: ProcMonCollector.cpp,v 1.4 2008-07-08 08:59:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.3 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcMonCollector.cpp,v 1.4 2008-07-08 08:59:50 frankb Exp $
 
 // C++ include files
 #include <iostream>
@@ -142,8 +142,8 @@ int ProcMonCollector::monitor() {
                   p.utgid[sizeof(p.utgid)-1]=0;
                   ::strncpy(p.owner,usr,sizeof(p.owner));
                   p.owner[sizeof(p.owner)-1]=0;
-                  p.cpu     = ::atof(cpu);
-                  p.mem     = ::atof(mem);
+                  p.cpu     = (float)::atof(cpu);
+                  p.mem     = (float)::atof(mem);
                   p.vsize   = (float)::atoi(vsize);
                   p.rss     = (float)::atoi(rss);
                   p.pid     = ::atoi(tgid);
