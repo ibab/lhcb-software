@@ -3,7 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-
+!2008-07-08 -  Sandra Amato
+  - Fix in HltVertexMaker.cpp to correctly deal with vertexing from different
+    containers
 !2008-07-08 - Gerhard Raven
   - prepare Configuration services for Gaudi v20r1
   - check for presence of Odin before grabbing the TCK from the Odin bank

@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.21 2008-07-04 08:07:41 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.22 2008-07-08 16:02:35 sandra Exp $
 // Include files 
 
 
@@ -159,7 +159,9 @@ StatusCode HltVertexMaker::execute() {
 
   // set the iterators
   Hlt::TrackContainer::const_iterator itMEnd = m_inputTracks->end();
-  if (m_input2.size() == m_inputTracks->size()) itMEnd--;
+  if (m_doMergeInputs) {
+    if (m_input2.size() == m_inputTracks->size()) itMEnd--;
+  }
   Hlt::TrackContainer::const_iterator itHStart = m_input2.begin();
   
   for (Hlt::TrackContainer::const_iterator itM = m_inputTracks->begin(); 
