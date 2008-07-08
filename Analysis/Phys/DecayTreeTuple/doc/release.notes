@@ -4,6 +4,10 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-07-08 - Stephane Poss
+ - Fixed use of associators in TupleToolMCHierachy to use the new associators
+   wrapper.
+
 ! 2008-07-04 - V. Gligorov
  - Fixed use of associators in TupleToolMCTruth to use the new associators
    wrapper.

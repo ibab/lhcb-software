@@ -1,4 +1,4 @@
-// $Id: TupleToolMCHierarchy.cpp,v 1.1 2008-03-19 20:26:28 sposs Exp $
+// $Id: TupleToolMCHierarchy.cpp,v 1.2 2008-07-08 11:18:33 sposs Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -34,6 +34,9 @@ TupleToolMCHierarchy::TupleToolMCHierarchy( const std::string& type,
   , m_pLink(0)
   , m_pComp(0)
   , m_pChi2(0)
+  , m_linkerTool_Links(0)
+  , m_linkerTool_Chi2(0)
+  , m_linkerTool_Composite(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
@@ -50,28 +53,9 @@ TupleToolMCHierarchy::TupleToolMCHierarchy( const std::string& type,
 StatusCode TupleToolMCHierarchy::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  if( !m_assocInputs.empty() ){
-    if( !m_useChi2Method ){
-      m_pLink = new Particle2MCLinker( this, Particle2MCMethod::Links, m_assocInputs );
-      m_pComp = new Particle2MCLinker( this, Particle2MCMethod::Composite, m_assocInputs );
-    } else {
-      m_pChi2 = new Particle2MCLinker( this, Particle2MCMethod::Chi2, m_assocInputs );
-    }
-    return StatusCode::SUCCESS;
-  }
-
-  if( ! m_useChi2Method ){
-    m_pLink = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Links,
-                                     std::vector<std::string>(1,"") );
-    m_pComp = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Composite,
-                                     std::vector<std::string>(1,"") );
-  } else {
-    m_pChi2 = new Particle2MCLinker( this,
-                                     Particle2MCMethod::Chi2,
-                                     std::vector<std::string>(1,""));
-  }
+  m_linkerTool_Links = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Links",this);
+  m_linkerTool_Chi2 = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Chi2",this);
+  m_linkerTool_Composite = tool<IDaVinciAssociatorsWrapper>("DaVinciAssociatorsWrapper","Wrapper_Composite",this);
 
   return StatusCode::SUCCESS;
 }
@@ -81,6 +65,10 @@ StatusCode TupleToolMCHierarchy::fill( const LHCb::Particle*
                                        , const LHCb::Particle* P
                                        , const std::string& head
                                        , Tuples::Tuple& tuple ){
+
+  m_pLink = m_linkerTool_Links->linker(Particle2MCMethod::Links,m_assocInputs); 
+  m_pComp = m_linkerTool_Composite->linker(Particle2MCMethod::Composite,m_assocInputs);
+  m_pChi2 = m_linkerTool_Chi2->linker(Particle2MCMethod::Chi2,m_assocInputs);
 
   Assert( ( !m_useChi2Method && m_pLink && m_pComp )
           ||
