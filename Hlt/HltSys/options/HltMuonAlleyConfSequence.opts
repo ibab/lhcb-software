@@ -307,9 +307,7 @@ Hlt1RecoMuonSeg.DecodingFromCoord=true;
 
 Hlt1PrepareMuonSeg.InputSelection = "Hlt/Track/MuonSegmentForL0Single";
 Hlt1PrepareMuonSeg.FilterDescriptor = {
-  //"DoShareM3_Hlt1MuonSingleTUTConf,<,0.5"
-  //This is equivalent to not apply any filter
-  "DoShareM3_Hlt1MuonSingleTUTConf,<,5.0"
+  "DoShareM3_Hlt1MuonSingleTUTConf,<,0.5"
 };
 
 Hlt1MuonDiMuonMuonSegTUTConf.InputSelection = "Hlt1PrepareMuonSeg";

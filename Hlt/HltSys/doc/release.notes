@@ -5,6 +5,8 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-07-08 - Sandra Amato
+ - HltMuonAlleyConfSequence.opts - put back the filter in the muon segments
 ! 2008-07-08 - Patrick Koppenburg
  - Rename ProtoParticles.opts to Particles
 
