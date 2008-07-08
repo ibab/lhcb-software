@@ -445,7 +445,20 @@ bool HltUtils::doShareM3(const Track& t1,
   std::vector<LHCbID>::const_iterator i2 = find_if(l2.begin(),
                                                    l2.end(),
                                                    isMuonStation(2));
-  return (i2==l2.end()) ?  false :  *i1 == *i2;
+
+  if (i2==l2.end()) return false;
+
+  std::vector<LHCbID>::const_iterator i3 = find_if(l1.begin(),
+                                                   l1.end(),
+                                                   isMuonStation(1));
+  if (i3==l1.end()) return false;
+
+  std::vector<LHCbID>::const_iterator i4 = find_if(l2.begin(),
+                                                   l2.end(),
+                                                   isMuonStation(1));
+
+  return (i4==l2.end()) ?  false :  *i1 == *i2 && *i3==*i4;
+
 }
 
 //=============================================================================
