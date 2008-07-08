@@ -67,6 +67,9 @@ public:
   FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator);
   FPEAuditor::~FPEAuditor() {  }
   StatusCode FPEAuditor::initialize() {
+    if (!FPE::Guard::has_working_implementation) { // note: this is a compile-time constant...
+      throw GaudiException("FPEAuditor: no FPE trapping support on this architecture...","",StatusCode::FAILURE);
+    }
     if (m_activateSuperGuard) m_superGuard.reset( new FPE::Guard( m_mask.value() ) );
     return StatusCode::SUCCESS;
   }
@@ -147,9 +150,6 @@ FPEAuditor::FPEAuditor( const std::string& name, ISvcLocator* pSvcLocator)
   : Auditor ( name , pSvcLocator )
   , m_log( msgSvc() , name )
 {
-  if (!FPE::Guard::has_working_implementation) { // note: this is a compile-time constant...
-    throw GaudiException("FPEAuditor: no FPE trapping support on this architecture...","",StatusCode::FAILURE);
-  }
   declareProperty("TrapOn", m_mask.set(  boost::assign::list_of("DivByZero")
                                          ("Invalid")
                                          ("Overflow") ).property() );
