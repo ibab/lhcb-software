@@ -4,6 +4,11 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2008-07-08 - Chris Jones
+ - Improvements to summary information
+  + Add printout for each MC tree type
+  + Add MC->Particle efficiency as well as original ProtoParticle->Particle eff.
+
 !========================== ParticleMakerChecker v1r1p2 2008-04-24 ============
 
 ! 2008-02-12 - Juan PALACIOS

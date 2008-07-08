@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.2 2007-03-06 11:18:56 pkoppenb Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.3 2008-07-08 14:22:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -27,22 +27,23 @@ DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni );
 //=============================================================================
 ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : DVAlgorithm   ( name , pSvcLocator ),
-    m_recurCount  ( 0    ),
-    m_trSel       ( NULL ),
-    m_mcRec       ( NULL ),
-    m_mcSel       ( NULL ),
-    m_particleLinker     ( NULL ),
-    m_chargedProtoLinker ( NULL ),
-    m_neutralProtoLinker ( NULL ),
-    m_nEvts       ( 0    )
+  : DVAlgorithm      ( name , pSvcLocator ),
+    m_recurCount     ( 0    ),
+    m_trSel          ( NULL ),
+    m_mcRec          ( NULL ),
+    m_mcSel          ( NULL ),
+    m_particleLinker ( NULL ),
+    m_nEvts          ( 0    ),
+    m_maxNameLength  ( 50   )
 {
-  declareProperty( "MinContributionInSummary",     m_minContrib       = 0.05  );
+  declareProperty( "MinContributionInSummary",     m_minContrib       = 0.5   );
   declareProperty( "MinChargedProtoPMCAssWeight",  m_minAssWeightCh   = 0.0   );
   declareProperty( "MinNeutralProtoPMCAssWeight",  m_minAssWeightNu   = 0.0   );
   declareProperty( "MinCompositePartMCAssWeight",  m_minAssWeightComp = 0.0   );
   declareProperty( "UseReversePToMCPCharged",      m_useRMCPcharged   = false );
   declareProperty( "UseReversePToMCPNeutral",      m_useRMCPneutral   = true  );
+  declareProperty( "UseFullMCDecayTreeClass",      m_fullMCTree       = true  );
+  declareProperty( "MaxMCDecayTreeSize",           m_maxMCTreeSize    = 5     );
 }
 
 //=============================================================================
@@ -92,29 +93,35 @@ StatusCode ParticleEffPurMoni::execute()
     addParticle( *iP, *iP );
   }
 
+  typedef std::set<std::string> Locations;
   // Proto TES locations found
-  std::map<std::string,bool> protoLocations;
+  Locations protoLocations;
+  // MCParticle locations found
+  Locations mcPLocations;
 
   // Loop over the final list of Protos and associated Particles
-  debug() << "Found " << m_partProtoMap.size() << " used ProtoParticles from input Particles" << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Found " << m_partProtoMap.size()
+            << " used ProtoParticles from input Particles" << endreq;
   for ( ParticleProtoMap::const_iterator iPM = m_partProtoMap.begin();
         iPM != m_partProtoMap.end(); ++iPM )
   {
-    debug() << "  -> ProtoParticle " << (*iPM).first->key() << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "  -> ProtoParticle " << (*iPM).first->key() << endreq;
 
     // select protoparticles
     if ( !selectProto((*iPM).first) ) continue;
-    debug() << "     -> selected " << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "     -> selected " << endreq;
 
     // store this proto TES location
     const std::string protoTesLoc = objectLocation((*iPM).first->parent());
-    protoLocations[ protoTesLoc ] = true;
+    protoLocations.insert( protoTesLoc );
 
     // Get the MCParticle
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
 
-    // Get the particle properties for this MCParticle
-    const ParticleProperty * mcProp = ( mcPart ? partProp(mcPart->particleID()) : NULL );
+    // Store the TES location for this MCParticle container
+    if (mcPart) mcPLocations.insert( objectLocation(mcPart->parent()) );
 
     // Get the MCParticle reco type
     const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
@@ -125,8 +132,9 @@ StatusCode ParticleEffPurMoni::execute()
     {
       // Find its TES location
       const std::string tesLoc = objectLocation( (*iPart).firstParticle->parent() );
-      debug() << " -> Found Particle in " << tesLoc << endreq
-              << " -> " << *iPart << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << " -> Found Particle in " << tesLoc << endreq
+                << " -> " << *iPart << endreq;
 
       // get the data for this TES location
       MCSummaryMap & mcMap = m_locMap[tesLoc];
@@ -142,20 +150,25 @@ StatusCode ParticleEffPurMoni::execute()
       ++mcSum.nReco;
 
       // count the true types for this reco type
-      ++(mcSum.trueMCType[mcRecType])[ mcProp ? mcProp->particle() : "NoMC" ];
+      MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
+      ++(tally.all);
+      // if configured to do so, include full tree info
+      if ( m_fullMCTree && mcPart ) 
+      { ++(tally.detailed[mcParticleNameTree(mcPart)]); }
 
     } // loop over particles produced from this proto
 
   } // loop over all used protos
 
   // Count the total number of protos at each location used from TES
-  for ( std::map<std::string,bool>::const_iterator iProtoLoc = protoLocations.begin();
+  for ( Locations::const_iterator iProtoLoc = protoLocations.begin();
         iProtoLoc != protoLocations.end(); ++iProtoLoc )
   {
     // get the protos at this location
-    const std::string & tesLoc = (*iProtoLoc).first;
+    const std::string & tesLoc = (*iProtoLoc);
     const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( tesLoc );
-    debug() << "Looping over " << protos->size() << " ProtoParticles at " << tesLoc << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Looping over " << protos->size() << " ProtoParticles at " << tesLoc << endreq;
     for ( LHCb::ProtoParticles::const_iterator proto = protos->begin();
           proto != protos->end(); ++proto )
     {
@@ -168,24 +181,87 @@ StatusCode ParticleEffPurMoni::execute()
       // Get the MCParticle
       const LHCb::MCParticle * mcPart = mcParticle(*proto);
 
-      // Get the particles properties for this MCParticle
-      const ParticleProperty * mcProp = ( mcPart ? partProp(mcPart->particleID()) : NULL );
-
       // count the total number of selected protos at this TES location with MC
-      if ( NULL != mcProp ) ++(m_protoTesStats[tesLoc].nWithMC);
+      if ( NULL != mcPart ) ++(m_protoTesStats[tesLoc].nWithMC);
 
       // Get the MCParticle reco type
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
 
+      // protoparticle type (long etc.)
+      const std::string protoType = protoParticleType(*proto);
+
       // count
-      ++((m_mcProtoCount[tesLoc])[protoParticleType(*proto)].trueMCType[mcRecType])[ mcProp ? mcProp->particle() : "NoMC" ];
+      MCTally & tally = 
+        ((m_mcProtoCount[tesLoc])[protoType].trueMCType[mcRecType])[mcParticleName(mcPart)];
+      ++(tally.all);
+      // if configured to do so, include full tree info
+      if ( m_fullMCTree && mcPart )
+      { ++(tally.detailed[mcParticleNameTree(mcPart)]); }
 
     } // loop over all protos at one location in TES
 
   } // loop over TES locations
 
+  // Loop over found MCParticle containers
+  for ( Locations::const_iterator iMCPLoc = mcPLocations.begin();
+        iMCPLoc != mcPLocations.end(); ++iMCPLoc )
+  {
+    // loop over MCParticles at this TES location
+    const LHCb::MCParticles * mcPs = get<LHCb::MCParticles>( *iMCPLoc );
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Looping over " << mcPs->size() << " MCParticles at " << *iMCPLoc << endreq;
+    for ( LHCb::MCParticles::const_iterator iMCP = mcPs->begin();
+          iMCP != mcPs->end(); ++iMCP )
+    {
+      // Get the MCParticle reco type
+      const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(*iMCP);
+      // only consider reconstructable MCPs
+      if ( mcRecType <= IMCReconstructible::NotReconstructible ) continue;
+      // Save the info for this mcparticle
+      MCTally & tally = (m_rawMCMap[mcRecType])[mcParticleName(*iMCP)];
+      ++(tally.all);
+      // if configured to do so, include full tree info
+      if ( m_fullMCTree && *iMCP )
+      { ++(tally.detailed[mcParticleNameTree(*iMCP)]); }
+    }
+  }
+
   setFilterPassed(true);
   return StatusCode::SUCCESS;
+}
+
+std::string ParticleEffPurMoni::mcParticleName( const LHCb::MCParticle * mcPart )
+{
+  // Get the particles properties for this MCParticle only
+  const ParticleProperty * mcProp = ( mcPart ? partProp(mcPart->particleID()) : NULL );
+  // return
+  return ( mcProp ? mcProp->particle() : "NoMC" );
+}
+
+std::string ParticleEffPurMoni::mcParticleNameTree( const LHCb::MCParticle * mcPart )
+{
+  if ( mcPart )
+  {
+    // Use full MC tree for this particle
+    std::string name;
+    unsigned int nTree(0); // Limit tree size in name
+    while ( mcPart && nTree<m_maxMCTreeSize )
+    {
+      // Get the particles properties for this MCParticle only
+      const ParticleProperty * mcProp = partProp(mcPart->particleID());
+      if (mcProp)
+      {
+        if ( !name.empty() ) name = " -> "+name;
+        name = mcProp->particle()+name;
+      }
+      mcPart = mcPart->mother();
+      if ( !mcPart ) name = "BX -> " + name;
+      ++nTree;
+    }
+    //if ( name.size() > m_maxNameLength ) m_maxNameLength = name.size();
+    return name;
+  }
+  return "";
 }
 
 bool ParticleEffPurMoni::selectProto( const LHCb::ProtoParticle * proto ) const
@@ -380,11 +456,11 @@ void ParticleEffPurMoni::printStats() const
   /// @todo Getting a little messy. Could do with a tidy up together with the associated utility classes
 
   const std::string & LINES =
-    "==================================================================================================";
+    "====================================================================================================================";
   const std::string & lines =
-    "--------------------------------------------------------------------------------------------------";
+    "--------------------------------------------------------------------------------------------------------------------";
 
-  const Rich::PoissonEffFunctor eff("%6.2f +-%5.2f");
+  const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
   always() << LINES << endreq;
 
@@ -415,42 +491,79 @@ void ParticleEffPurMoni::printStats() const
       for ( MCRecTypeMap::iterator iMCt = mcTypes.begin();
             iMCt != mcTypes.end(); ++iMCt )
       {
-        nRecoTrue += (*iMCt).second[(*iSum).first.particleName];
+        nRecoTrue += ((*iMCt).second[(*iSum).first.particleName]).all;
       }
-      always() << "  Reco. : " << (*iSum).second.nReco << " " << (*iSum).first.decayTree
-               << " : " << (*iSum).first.protoType << endreq;
       const bool primaryPart = ( (*iSum).first.decayTree == (*iSum).first.particleName );
+      //const bool primaryPart = true;
+      std::ostringstream srecotitle;
+      srecotitle << "  Reco. | " << (*iSum).second.nReco << " " << (*iSum).first.decayTree
+                 << " | " << (*iSum).first.protoType;
+      std::string recotitle = srecotitle.str();
+      recotitle.resize(10+m_maxNameLength,' ');
+      always() << recotitle << " |   % of sample";
+      if ( primaryPart ) always() << "   | Proto->Part eff  | MC->Part eff";
+      always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
         // MC reconstructibility
         for ( MCRecTypeMap::iterator iMCT = (*iSum).second.trueMCType.begin();
               iMCT != (*iSum).second.trueMCType.end(); ++iMCT )
         {
-          always() << "     -> MC Classification : " << IMCReconstructible::text((*iMCT).first)
+          always() << "   -> MC Class | " << IMCReconstructible::text((*iMCT).first)
                    << endreq;
           int suppressedContribs(0);
           // loop over the MC Types for this reco type
           for ( TypeTally::const_iterator iT = (*iMCT).second.begin();
                 iT != (*iMCT).second.end(); ++iT )
           {
-            if ( (100*(*iT).second)/(*iSum).second.nReco > m_minContrib )
+            if ( (100.0*(*iT).second.all)/(*iSum).second.nReco > m_minContrib )
             {
+              const MCTally & tally = (*iT).second;
               std::ostringstream mcTs;
-              mcTs << (*iT).second << " MC " << (*iT).first;
+              mcTs << "     -> " << tally.all << " " << (*iT).first;
               std::string mcT = mcTs.str();
-              mcT.resize(25,' ');
+              mcT.resize(10+m_maxNameLength,' ');
               const long nBkgTrue =
-                ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first];
-              always() << "        -> " << mcT
-                       << " : " << eff( (*iT).second, (*iSum).second.nReco )
-                       << " % of sample";
-              if ( primaryPart ) always() << " : ID eff. = " << eff( (*iT).second, nBkgTrue ) << " %";
+                ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all;
+              const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all;
+              always() << mcT
+                       << " | " << eff( tally.all, (*iSum).second.nReco );
+              if ( primaryPart ) 
+              { always() << " | " << eff( tally.all, nBkgTrue )
+                         << "  |" << eff( tally.all, nTotalMC ); }
               always() << endreq;
+              // sub contributions
+              int suppressedContribsC(0);
+              for ( MCTally::Contributions::const_iterator iC = tally.detailed.begin();
+                    iC != tally.detailed.end(); ++iC )
+              {
+                if ( (100.0*(*iC).second)/(*iSum).second.nReco > m_minContrib )
+                {
+                  std::ostringstream mcTsC;
+                  mcTsC << "       -> "<< (*iC).second << " " << (*iC).first;
+                  std::string mcTC = mcTsC.str();
+                  mcTC.resize(10+m_maxNameLength,' ');
+                  const long nBkgTrue =
+                    ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].detailed[(*iC).first];
+                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].detailed[(*iC).first];;
+                  always() << mcTC
+                           << " | " << eff( (*iC).second, (*iSum).second.nReco );
+                  if ( primaryPart ) 
+                  { always() << " | " << eff( (*iC).second, nBkgTrue )
+                             << "  |" << eff( (*iC).second, nTotalMC ); }
+                  always() << endreq;
+                } else { ++suppressedContribsC; }
+              }
+              if ( suppressedContribsC>0 )
+              {
+                always() << "       -> Suppressed " << suppressedContribsC << " contribution(s) below "
+                         <<  m_minContrib << " %" << endreq;
+          }
             } else { ++suppressedContribs; }
           }
           if ( suppressedContribs>0 )
           {
-            always() << "        -> Suppressed " << suppressedContribs << " contribution(s) below "
+            always() << "     -> Suppressed " << suppressedContribs << " contribution(s) below "
                      <<  m_minContrib << " %" << endreq;
           }
         }
@@ -464,6 +577,38 @@ void ParticleEffPurMoni::printStats() const
   always() << LINES << endreq;
 }
 
+// Access the charged ProtoParticle Linker
+ProtoParticle2MCLinker *
+ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
+{
+  if (!proto) return NULL;
+  const std::string loc = objectLocation(proto->parent());
+  ProtoParticle2MCLinker *& linker = m_chargedProtoLinker[loc];
+  if ( !linker )
+  { linker =
+      new ProtoParticle2MCLinker( this,
+                                  Particle2MCMethod::ChargedPP,
+                                  std::vector<std::string>(1,loc) );
+  }
+  return linker;
+}
+
+// Access the neutral ProtoParticle Linker
+ProtoParticle2MCLinker *
+ParticleEffPurMoni::neutralProtoLinker(const LHCb::ProtoParticle * proto) const
+{
+  if (!proto) return NULL;
+  const std::string loc = objectLocation(proto->parent());
+  ProtoParticle2MCLinker *& linker = m_neutralProtoLinker[loc];
+  if ( !linker )
+  { linker =
+      new ProtoParticle2MCLinker( this,
+                                  Particle2MCMethod::NeutralPP,
+                                  std::vector<std::string>(1,loc) );
+  }
+  return linker;
+}
+
 //=============================================================================
 //  Finalize
 //=============================================================================
@@ -472,9 +617,13 @@ StatusCode ParticleEffPurMoni::finalize()
   // Print out summary info
   if ( m_nEvts > 0 ) printStats();
   // cleanup
-  if ( m_particleLinker     ) { delete m_particleLinker;     m_particleLinker     = NULL; }
-  if ( m_chargedProtoLinker ) { delete m_chargedProtoLinker; m_chargedProtoLinker = NULL; }
-  if ( m_neutralProtoLinker ) { delete m_neutralProtoLinker; m_neutralProtoLinker = NULL; }
+  if ( m_particleLinker ) { delete m_particleLinker; m_particleLinker = NULL; }
+  for ( ProtoLinkerTESMap::iterator iLC = m_chargedProtoLinker.begin();
+        iLC != m_chargedProtoLinker.end(); ++iLC )
+  { delete iLC->second; iLC->second = NULL; }
+  for ( ProtoLinkerTESMap::iterator iLN = m_neutralProtoLinker.begin();
+        iLN != m_neutralProtoLinker.end(); ++iLN )
+  { delete iLN->second; iLN->second = NULL; }
   // finalize base class
   return DVAlgorithm::finalize();
 }

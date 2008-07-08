@@ -4,19 +4,21 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.4 2008-02-12 13:32:15 jpalac Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.5 2008-07-08 14:22:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
  */
 //-----------------------------------------------------------------------------
 
-#ifndef PARTICLEMAKER_ParticleEffPurMoni_H
-#define PARTICLEMAKER_ParticleEffPurMoni_H 1
+#ifndef PARTICLEMAKERCHECKER_ParticleEffPurMoni_H
+#define PARTICLEMAKERCHECKER_ParticleEffPurMoni_H 1
 
 // STD
 #include <sstream>
 #include <memory>
+#include <map>
+#include <set>
 
 // Gaudi
 #include "GaudiKernel/IRegistry.h"
@@ -57,11 +59,11 @@ public:
   /// Standard constructor
   ParticleEffPurMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~ParticleEffPurMoni( ); ///< Destructor
+  virtual ~ParticleEffPurMoni( );  ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize(); ///< Algorithm initialization
+  virtual StatusCode execute   (); ///< Algorithm execution
+  virtual StatusCode finalize  (); ///< Algorithm finalization
 
 private: // definitions
 
@@ -77,9 +79,12 @@ private: // definitions
                      const LHCb::Particle * _prim_part,
                      const std::string & _history,
                      const ParticleProperty * _prop,
-                     const bool orig )
-      : particle(_part), firstParticle(_prim_part),
-        history(_history), properties(_prop), topLevel(orig) { }
+                     const bool _orig )
+      : particle       (_part      ), 
+        firstParticle  (_prim_part ),
+        history        (_history   ), 
+        properties     (_prop      ), 
+        topLevel       (_orig      ) { }
   public:
     const LHCb::Particle * particle;      ///< Pointer to the Particle
     const LHCb::Particle * firstParticle; ///< Pointer to the first Particle
@@ -102,7 +107,16 @@ private: // definitions
   typedef std::map<const LHCb::ProtoParticle *, ParticleHistory::Vector > ParticleProtoMap;
 
   /// Simple tally map for each particle type
-  typedef std::map<std::string, unsigned long int> TypeTally;
+  class MCTally
+  {
+  public:
+    MCTally() : all(0) { }
+  public:
+    unsigned long int all; ///< Total number
+    typedef std::map<std::string,unsigned long int> Contributions;
+    Contributions detailed; ///< Detailed breakdown for each full MC tree decay
+  };
+  typedef std::map<std::string, MCTally> TypeTally;
   typedef std::map< IMCReconstructible::RecCategory, TypeTally > MCRecTypeMap;
 
   /** @class MCSummary ParticleEffPurMoni.h
@@ -117,7 +131,7 @@ private: // definitions
     MCSummary() : nReco(0) { }
   public:
     MCRecTypeMap trueMCType;  ///< Total number of each MC type
-    unsigned int nReco;       ///< Total number reconstructed
+    unsigned long int nReco;  ///< Total number reconstructed
     std::string decayHistory; ///< The particle decay history
   };
 
@@ -217,29 +231,15 @@ private: // methods
   }
 
   /// Access the charged ProtoParticle Linker
-  inline ProtoParticle2MCLinker * chargedProtoLinker() const
-  {
-    if ( !m_chargedProtoLinker )
-    { m_chargedProtoLinker = new ProtoParticle2MCLinker( this, 
-                                                         Particle2MCMethod::ChargedPP, 
-                                                         
-                                                         std::vector<std::string>(1,LHCb::ProtoParticleLocation::Charged) ); }
-    return m_chargedProtoLinker;
-  }
+  ProtoParticle2MCLinker * chargedProtoLinker(const LHCb::ProtoParticle * proto) const;
 
   /// Access the neutral ProtoParticle Linker
-  inline ProtoParticle2MCLinker * neutralProtoLinker() const
-  {
-    if ( !m_neutralProtoLinker )
-    { m_neutralProtoLinker = new ProtoParticle2MCLinker( this, Particle2MCMethod::NeutralPP, 
-                                                         std::vector<std::string>(1,LHCb::ProtoParticleLocation::Neutrals) ); }
-    return m_neutralProtoLinker;
-  }
+  ProtoParticle2MCLinker * neutralProtoLinker(const LHCb::ProtoParticle * proto) const;
 
   /// Access the ProtoParticle Linker appropriate for the given ProtoParticle
   inline ProtoParticle2MCLinker * protoLinker( const LHCb::ProtoParticle * proto ) const
   {
-    return ( 0 != proto->charge() ? chargedProtoLinker() : neutralProtoLinker() );
+    return ( 0 != proto->charge() ? chargedProtoLinker(proto) : neutralProtoLinker(proto) );
   }
 
   /// Returns the MCParticle for a given Particle
@@ -278,6 +278,12 @@ private: // methods
   /// Returns the ProtoParticle 'type'
   std::string protoParticleType( const LHCb::ProtoParticle * proto ) const;
 
+  /// Returns the MCParticle name
+  std::string mcParticleName( const LHCb::MCParticle * mcPart );
+
+  /// Returns the MCParticle name including the decay tree
+  std::string mcParticleNameTree( const LHCb::MCParticle * mcPart );
+
 private: // data
 
   /// Particle/Proto map
@@ -298,11 +304,14 @@ private: // data
   /// MC Associations for Particles
   mutable Particle2MCLinker * m_particleLinker;
 
+  /// TES location -> linker map type
+  typedef std::map<std::string,ProtoParticle2MCLinker *> ProtoLinkerTESMap;
+
   /// MC Associations for charged ProtoParticles
-  mutable ProtoParticle2MCLinker * m_chargedProtoLinker;
+  mutable ProtoLinkerTESMap m_chargedProtoLinker;
 
   /// MC Associations for neutral ProtoParticles
-  mutable ProtoParticle2MCLinker * m_neutralProtoLinker;
+  mutable ProtoLinkerTESMap m_neutralProtoLinker;
 
   /// The overall tally
   mutable LocationMap m_locMap;
@@ -312,6 +321,9 @@ private: // data
 
   /// ProtoParticle stats for each TES location
   mutable ProtoTESStatsMap m_protoTesStats;
+
+  /// Raw MC informtion
+  mutable MCRecTypeMap m_rawMCMap;
 
   /// Min percentage contribution to include in summary tables
   double m_minContrib;
@@ -340,6 +352,15 @@ private: // data
   /// Use reverse MC associations for neutral particles
   bool m_useRMCPneutral;
 
+  /// Use the FULL MC Decay tree for particle classification
+  bool m_fullMCTree;
+
+  /// Length of longest name string
+  unsigned int m_maxNameLength;
+
+  /// Max tree size
+  unsigned int m_maxMCTreeSize;
+
 };
 
-#endif // PARTICLEMAKER_ParticleEffPurMoni_H
+#endif // PARTICLEMAKERCHECKER_ParticleEffPurMoni_H
