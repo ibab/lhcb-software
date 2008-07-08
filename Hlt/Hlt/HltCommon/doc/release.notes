@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-07-08 - Gerhard Raven
+  - prepare Configuration services for Gaudi v20r1
+  - check for presence of Odin before grabbing the TCK from the Odin bank
 !2008-07-04 - Gerhard Raven
   - TCK -> config ID mapping is now functional: can be obtained from database,
     and is used by HltConfigSvc, unless a TCK entry is (first) found in the 
