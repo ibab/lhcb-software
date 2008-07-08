@@ -33,7 +33,7 @@ Hlt2.Members += {"GaudiSequencer/PassedAlleys", // empty sequencer
 //---------------------------------------------------------------------
 // ProtoParticles and Particles
 //---------------------------------------------------------------------
-#include "$HLTSYSROOT/options/HltProtoParticles.opts"
+#include "$HLTSYSROOT/options/Hlt2Particles.opts"
 //---------------------------------------------------------------------
 // Empty Sequencer for MC truth filtering --- fill in HltSelChecker
 //---------------------------------------------------------------------

@@ -9,7 +9,9 @@ HltRecoSequence.Members = {
   "GaudiSequencer/HltTrackRecoSequence"
   //,"GaudiSequencer/HltCaloRecoSequence"  // In HltChargedProtoPAlg for the time being
 };
-HltRecoSequence.IgnoreFilterPassed = true; // process both track and calo independantly
+
+/// @todo This cannot work, as tracking must have been done to process the rest.
+//HltRecoSequence.IgnoreFilterPassed = true; // process both track and calo independently
 
 
 //----------------------- HltTrack sequence

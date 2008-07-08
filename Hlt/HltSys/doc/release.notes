@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-07-08 - Patrick Koppenburg
+ - Rename ProtoParticles.opts to Particles
+
 ! 2008-07-01 - Patrick Koppenburg
  - Use Hlt/Track/Forward in Hlt2
 

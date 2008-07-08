@@ -8,10 +8,10 @@
 //---------------------------------------------------------------------
 // Charged ProtoParticles
 //---------------------------------------------------------------------
-Hlt2.Members += { "GaudiSequencer/SeqHlt2ProtoParticles" } ;
-SeqHlt2ProtoParticles.MeasureTime = true ;
-SeqHlt2ProtoParticles.IgnoreFilterPassed = true ; // do all
-SeqHlt2ProtoParticles.Members += { "GaudiSequencer/SeqHlt2Charged" } ;
+Hlt2.Members += { "GaudiSequencer/SeqHlt2Particles" } ;
+SeqHlt2Particles.MeasureTime = true ;
+SeqHlt2Particles.IgnoreFilterPassed = true ; // do all
+SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2Charged" } ;
 SeqHlt2Charged.MeasureTime = true ;
 SeqHlt2Charged.IgnoreFilterPassed = false ;
 /**
@@ -43,7 +43,7 @@ HltInsertTrackErrParam.InputLocation = "Hlt/Track/ForwardCLEANED" ;
 // -------------------------
 // Calo Reco & PIDs --------
 // -------------------------
-SeqHlt2ProtoParticles.Members += {"GaudiSequencer/RecoCALOSeq" };
+SeqHlt2Particles.Members += {"GaudiSequencer/RecoCALOSeq" };
 // Options for Calo reconstruction
 #include "$CALORECOROOT/options/HltCaloSeq.opts"
 
@@ -75,7 +75,7 @@ BremChi22ID.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
 //---------------------------------------------------------------------
 // MuonID
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "GaudiSequencer/HltMuonIDSeq"} ;
+SeqHlt2Particles.Members += { "GaudiSequencer/HltMuonIDSeq"} ;
 HltMuonIDSeq.Members += { "MuonRec", "MuonID/HltMuonID" };
 #include "$HLTSYSROOT/options/HltMuonID.opts"
 HltMuonID.TrackLocation = "Hlt/Track/ForwardCLEANED" ;
@@ -108,18 +108,18 @@ ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
+SeqHlt2Particles.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
 HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/ForwardCLEANED" ; // Correct this
 // HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // Correct this
 HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
-SeqHlt2ProtoParticles.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
+SeqHlt2Particles.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
 HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 
 
 //---------------------------------------------------------------------
 // NeutralProtoPAlg
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "NeutralProtoPAlg/HltNeutralProtoPAlg" } ;
+SeqHlt2Particles.Members += { "NeutralProtoPAlg/HltNeutralProtoPAlg" } ;
 #include "$CALOPIDSROOT/options/PhotonPDF.opts"
 
 
@@ -147,7 +147,7 @@ HltChargedProtoPAlg.UseVeloPID = false ;
 //---------------------------------------------------------------------
 // Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "PreLoadParticles/HltNoPIDsPions",
+SeqHlt2Particles.Members += { "PreLoadParticles/HltNoPIDsPions",
                                    "PreLoadParticles/HltNoPIDsKaons" }; 
 
 HltNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
@@ -174,7 +174,7 @@ HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
 //---------------------------------------------------------------------
 // Kaons using RICH HLT reco results
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
+SeqHlt2Particles.Members += { "PreLoadParticles/HltRichPIDsKaons" }; 
 
 HltRichPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 HltRichPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
@@ -187,7 +187,7 @@ HltRichPIDsKaons.DecayDescriptor = "Kaon" ;
 //---------------------------------------------------------------------
 // Muons sequence
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "GaudiSequencer/SeqHlt2Muons" } ;
+SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2Muons" } ;
 SeqHlt2Muons.IgnoreFilterPassed = true ;
 //---------------------------------------------------------------------
 // Muons from Long tracks
@@ -250,7 +250,7 @@ HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMu
 //---------------------------------------------------------------------
 // Special case for electrons 
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "PreLoadParticles/HltElectrons"};
+SeqHlt2Particles.Members += { "PreLoadParticles/HltElectrons"};
 HltElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
 HltElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
 HltElectrons.PhysDesktop.CombinedParticleMaker.Particles =  {"electron"} ;
@@ -263,7 +263,7 @@ HltElectrons.DecayDescriptor = "Electron" ;
 // Special case for neutrals (photons & pi0s)
 //---------------------------------------------------------------------
 HltNeutrals.IgnoreFilterPassed = true;
-SeqHlt2ProtoParticles.Members += {"GaudiSequencer/HltNeutrals"};
+SeqHlt2Particles.Members += {"GaudiSequencer/HltNeutrals"};
 HltNeutrals.Members += { 
   "PreLoadParticles/HltPhotons",
   "PreLoadParticles/HltMergedPi0s",
@@ -295,7 +295,7 @@ HltMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* 
 //---------------------------------------------------------------------
 // Special case for Vzero particles
 //---------------------------------------------------------------------
-SeqHlt2ProtoParticles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
+SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
 SeqHlt2VzeroLL.MeasureTime = true ;
 SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
 #include "$HLTKSHORTROOT/options/HltV0LL.opts"
