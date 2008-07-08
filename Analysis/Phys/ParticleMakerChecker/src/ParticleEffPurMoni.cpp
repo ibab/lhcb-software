@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.3 2008-07-08 14:22:35 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.4 2008-07-08 19:49:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -99,6 +99,9 @@ StatusCode ParticleEffPurMoni::execute()
   // MCParticle locations found
   Locations mcPLocations;
 
+  // already used MCParticles
+  std::set<const LHCb::MCParticle *> usedMCPs;
+
   // Loop over the final list of Protos and associated Particles
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Found " << m_partProtoMap.size()
@@ -119,6 +122,12 @@ StatusCode ParticleEffPurMoni::execute()
 
     // Get the MCParticle
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
+
+    // is this a clone ?
+    const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
+
+    // add to list of seen MCPs
+    usedMCPs.insert(mcPart);
 
     // Store the TES location for this MCParticle container
     if (mcPart) mcPLocations.insert( objectLocation(mcPart->parent()) );
@@ -152,9 +161,14 @@ StatusCode ParticleEffPurMoni::execute()
       // count the true types for this reco type
       MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
       ++(tally.all);
+      if ( isClone ) ++(tally.clones);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart ) 
-      { ++(tally.detailed[mcParticleNameTree(mcPart)]); }
+      {
+        const std::string tmpName = mcParticleNameTree(mcPart);
+        ++(tally.all_detailed[tmpName]); 
+        if ( isClone ) ++(tally.clones_detailed[tmpName]); 
+      }
 
     } // loop over particles produced from this proto
 
@@ -164,6 +178,8 @@ StatusCode ParticleEffPurMoni::execute()
   for ( Locations::const_iterator iProtoLoc = protoLocations.begin();
         iProtoLoc != protoLocations.end(); ++iProtoLoc )
   {
+    // already used MCParticles
+    std::set<const LHCb::MCParticle *> usedMCPs;
     // get the protos at this location
     const std::string & tesLoc = (*iProtoLoc);
     const LHCb::ProtoParticles * protos = get<LHCb::ProtoParticles>( tesLoc );
@@ -181,6 +197,12 @@ StatusCode ParticleEffPurMoni::execute()
       // Get the MCParticle
       const LHCb::MCParticle * mcPart = mcParticle(*proto);
 
+      // is this a clone ?
+      const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
+      
+      // add to list of seen MCPs
+      usedMCPs.insert(mcPart);
+
       // count the total number of selected protos at this TES location with MC
       if ( NULL != mcPart ) ++(m_protoTesStats[tesLoc].nWithMC);
 
@@ -196,7 +218,11 @@ StatusCode ParticleEffPurMoni::execute()
       ++(tally.all);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
-      { ++(tally.detailed[mcParticleNameTree(mcPart)]); }
+      {  
+        const std::string tmpName = mcParticleNameTree(mcPart);
+        ++(tally.all_detailed[tmpName]); 
+        if (isClone) ++(tally.clones_detailed[tmpName]); 
+      }
 
     } // loop over all protos at one location in TES
 
@@ -222,7 +248,7 @@ StatusCode ParticleEffPurMoni::execute()
       ++(tally.all);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && *iMCP )
-      { ++(tally.detailed[mcParticleNameTree(*iMCP)]); }
+      { ++(tally.all_detailed[mcParticleNameTree(*iMCP)]); }
     }
   }
 
@@ -398,15 +424,15 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
     return;
   }
 
-  // Does this particle have a ProtoParticle. I.e. its stable
-  const LHCb::ProtoParticle * proto = particle->proto();
-
   // get the history for the Particle
   const ParticleProperty * prop = partProp( particle->particleID() );
   // If not available, just abort
   if ( !prop ) { return; }
 
-  // add to map
+  // Does this particle have a ProtoParticle. I.e. its stable
+  const LHCb::ProtoParticle * proto = particle->proto();
+
+  // yes, so add to map
   if ( proto )
   {
     // down to a basic particle, so save with history
@@ -418,7 +444,7 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
   else if ( !particle->isBasicParticle() )
   {
     // loop over them and to add them instead
-    const LHCb::Particle::ConstVector daughters = particle->daughtersVector();
+    const LHCb::Particle::ConstVector& daughters = particle->daughtersVector();
     for ( LHCb::Particle::ConstVector::const_iterator iP = daughters.begin();
           iP != daughters.end(); ++iP )
     {
@@ -468,11 +494,11 @@ void ParticleEffPurMoni::printStats() const
   for ( ProtoTESStatsMap::iterator iProtoTES = m_protoTesStats.begin();
         iProtoTES != m_protoTesStats.end(); ++iProtoTES )
   {
-    debug() << lines << endreq
-            << " ProtoParticle Location : " << (*iProtoTES).first << endreq
-            << "  -> Fraction with MC "
-            << eff( (*iProtoTES).second.nWithMC,(*iProtoTES).second.nTotal )
-            << endreq;
+    always() << lines << endreq
+             << " ProtoParticle Location : " << (*iProtoTES).first << endreq
+             << "  -> Fraction with MC "
+             << eff( (*iProtoTES).second.nWithMC,(*iProtoTES).second.nTotal )
+             << endreq;
   }
   debug() << LINES << endreq;
 
@@ -501,7 +527,7 @@ void ParticleEffPurMoni::printStats() const
       std::string recotitle = srecotitle.str();
       recotitle.resize(10+m_maxNameLength,' ');
       always() << recotitle << " |   % of sample";
-      if ( primaryPart ) always() << "   | Proto->Part eff  | MC->Part eff";
+      if ( primaryPart ) always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
       always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
@@ -513,12 +539,12 @@ void ParticleEffPurMoni::printStats() const
                    << endreq;
           int suppressedContribs(0);
           // loop over the MC Types for this reco type
-          for ( TypeTally::const_iterator iT = (*iMCT).second.begin();
+          for ( TypeTally::iterator iT = (*iMCT).second.begin();
                 iT != (*iMCT).second.end(); ++iT )
           {
             if ( (100.0*(*iT).second.all)/(*iSum).second.nReco > m_minContrib )
             {
-              const MCTally & tally = (*iT).second;
+              MCTally & tally = (*iT).second;
               std::ostringstream mcTs;
               mcTs << "     -> " << tally.all << " " << (*iT).first;
               std::string mcT = mcTs.str();
@@ -529,13 +555,16 @@ void ParticleEffPurMoni::printStats() const
               always() << mcT
                        << " | " << eff( tally.all, (*iSum).second.nReco );
               if ( primaryPart ) 
-              { always() << " | " << eff( tally.all, nBkgTrue )
-                         << "  |" << eff( tally.all, nTotalMC ); }
+              { 
+                always() << " | " << eff( tally.all, nBkgTrue )
+                         << " |" << eff( tally.all-tally.clones, nTotalMC ) << " |";
+                if ( tally.clones>0 ) always() << eff( tally.clones, nTotalMC );
+              }
               always() << endreq;
               // sub contributions
               int suppressedContribsC(0);
-              for ( MCTally::Contributions::const_iterator iC = tally.detailed.begin();
-                    iC != tally.detailed.end(); ++iC )
+              for ( MCTally::Contributions::const_iterator iC = tally.all_detailed.begin();
+                    iC != tally.all_detailed.end(); ++iC )
               {
                 if ( (100.0*(*iC).second)/(*iSum).second.nReco > m_minContrib )
                 {
@@ -544,13 +573,17 @@ void ParticleEffPurMoni::printStats() const
                   std::string mcTC = mcTsC.str();
                   mcTC.resize(10+m_maxNameLength,' ');
                   const long nBkgTrue =
-                    ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].detailed[(*iC).first];
-                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].detailed[(*iC).first];;
+                    ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
+                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];;
                   always() << mcTC
                            << " | " << eff( (*iC).second, (*iSum).second.nReco );
                   if ( primaryPart ) 
-                  { always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << "  |" << eff( (*iC).second, nTotalMC ); }
+                  { 
+                    const unsigned long int nClones = tally.clones_detailed[(*iC).first];
+                    always() << " | " << eff( (*iC).second, nBkgTrue )
+                             << " |" << eff( (*iC).second-nClones, nTotalMC ) << " |" ;
+                    if ( nClones>0 ) always() << eff( nClones, nTotalMC );
+                  }
                   always() << endreq;
                 } else { ++suppressedContribsC; }
               }

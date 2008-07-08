@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.5 2008-07-08 14:22:35 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.6 2008-07-08 19:49:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -110,11 +110,13 @@ private: // definitions
   class MCTally
   {
   public:
-    MCTally() : all(0) { }
+    MCTally() : all(0), clones(0) { }
   public:
     unsigned long int all; ///< Total number
+    unsigned long int clones; ///< Number of clones
     typedef std::map<std::string,unsigned long int> Contributions;
-    Contributions detailed; ///< Detailed breakdown for each full MC tree decay
+    Contributions all_detailed; ///< Detailed breakdown for each full MC tree decay (all)
+    Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
   };
   typedef std::map<std::string, MCTally> TypeTally;
   typedef std::map< IMCReconstructible::RecCategory, TypeTally > MCRecTypeMap;

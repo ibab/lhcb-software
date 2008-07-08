@@ -8,6 +8,7 @@
  - Improvements to summary information
   + Add printout for each MC tree type
   + Add MC->Particle efficiency as well as original ProtoParticle->Particle eff.
+  + Add a column for clones
 
 !========================== ParticleMakerChecker v1r1p2 2008-04-24 ============
 
