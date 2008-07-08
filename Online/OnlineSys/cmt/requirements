@@ -6,8 +6,8 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r10    DAQ
-use DAQEvent          v7r11    Event
+#use MDF               v3r10    DAQ
+#use DAQEvent          v7r11    Event
 #=======================================================
 # LHCb Online packages
 #=======================================================
@@ -16,13 +16,14 @@ use confDB            v1r6     Online
 use confDBpython      v1r7     Online
 use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
-use DIM               v17r5    Online
+use DIM               v17r7    Online
 ### Obsolete: use DimCond          v1r0     Online
 use ExampleGaucho     v2r5     Online
-use Gaucho            v5r6     Online
+use Gaucho            v5r6p2   Online
 ### Obsolete: use GauchoJob         v3r1     Online
 use GaudiOnline       v2r18    Online
-use GaudiUPI          v1r8     Online
+use GaudiUPI          v1r9     Online
+use GaudiSerialize    v0r1     Online
 use HPDMonitor        v1r5     Online
 use InsertDB          v1r2     Online
 use MBMDump           v1r8     Online
