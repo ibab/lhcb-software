@@ -3,9 +3,58 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v32r8>2008-07-08 Brunel v32r8</A></H1><PRE>
+This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19, Rec v5r8
+ and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r*
+
+This is a development version.
+- Can be used to reconstruct 2008 geometries. 
+- Can be used for DC06 geometries, but material seen is different from DC06
+
+- New features
+  . Add Brunel-2008.py and 2008-Files.py, example jjob for 2008 simulated data
+  . In Brunel Configurable, add support for SIMCOND. Now used by default except
+    for DC06 geometries (Brunel v32r8, GaudiConf v10r10, DDDB v1r8)
+  . Improvements to Floating Point Exception auditing
+    (LHCbKernel v8r5, LHCbAlgs v2r19)
+  . Prepare for IOV based snapshots of ONLINE CondDB (DetCond v12r0)
+  . New primary vertex functionality - See <a href="http://indico.cern.ch/materialDisplay.py?contribId=46&sessionId=20&materialId=slides&confId=33862">presentation</a> at tracking and alignment workshop, 2008-06-11 (PatPV v3r4)
+
+- New tuning
+  . Change 2008 default database tag to head-20080702 (DDDB v1r8, SQLDDDB v4r5)
+  . Many improvements, bug fixes and protections for real data decoding
+    (RichKernel v7r13, MuonDet v8r1, MuonDAQ v4r2, CaloDAQ v4r6, SiDAQ v2r1,
+     RichRecBase v3r15, STKernel v1r5, Tell1Kernel v1r4, L0Calo v9r4,
+     RichDAQ v3r17, STDAQ v3r8, RichREcMonitors v2r19)
+  . Added minMomentumForELossCorr and maxMomentumForScattering variables in
+    TrackMasterFitter (TrackFitter v2r25)
+  . Fail fit if smoother fails to calculate reasonable error on residual
+    (TrackFitter v2r25)
+  . LongTrackReferenceCreator: Changed default extrapolator to
+    TrackMasterExtrapolator (TrackTools v3r8)
+
+- Monitoring changes
+  . Add summary printout of ST bank decoding statistics/errors (STDAQ v3r8)
+  . For VELO tracks, provide a breakdown of PR performance per algorithm
+    (PatChecker v3r3)
+
+- Packaging changes
+  . Brunel.opts no longer includes LHCbApplication.opts, to allow usage of
+    .py version in configurable. Added instead to DC06 *.opts files
+
+- Bug fixes
+  . Remove explicit evaluation of environment variables in Python options, to
+    allow use on the Grid (GaudiConf v10r10, DDDB v1r8)
+  . Fixes and protections for floating point exceptions
+    (DetDesc v4r7, MuonDet v8r1, OTDAQ v6r0p1, TrackCheckers v4r1,
+     TrackFitter v2r25, TrackTools v3r8, PatAlgorithms v3r7, PatVelo v3r7)
+  . Add missing initialization of deltaEnergy in FitNode (TrackFitEvent v3r16)
+  . Don't remove outlier from track with 1 dof (TrackFitter v2r25)
+
+
 </PRE><H1><A NAME=v32r7>2008-06-04 Brunel v32r7</A></H1><PRE>
-This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18, Rec v5r6
- and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
+This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r17, Rec v5r7
+ and DDDB v1r* (SQLDDDB v4r4 or greater), ParamFiles v7r1, FieldMap v5r*
 
 This is a development version.
 - Can be used to reconstruct 2008 geometries. 
@@ -41,7 +90,7 @@ from DC06
     (RichGlobalPID v3r9, RichRecTracktools v1r5)
 
 </PRE><H1><A NAME=v32r6>2008-05-19 Brunel v32r6</A></H1><PRE>
-This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17, Rec v5r5
+This version uses projects Gaudi v19r9, LHCb v23r6, Lbcom v6r17, Rec v5r6
  and DDDB v1r* (SQLDDDB v4r3 or greater), ParamFiles v7r1, FieldMap v5r*
 
 This is a development version.
