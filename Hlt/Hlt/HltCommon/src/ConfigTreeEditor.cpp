@@ -386,7 +386,7 @@ public:
              if (!match(i->first)) continue;
              if (first) {
                     m_os << "\n    Requested Properties for " 
-                         << node.leaf()->type() << "/" << node.leaf()->name() << "\n";
+                         << node.leaf()->fullyQualifiedName() << "\n";
                     first = false;
              }
              m_os << "     \'" << i->first << "\': " << i->second << endl;

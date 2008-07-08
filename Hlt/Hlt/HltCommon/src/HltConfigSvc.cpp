@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.10 2008-07-04 14:42:45 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.11 2008-07-08 14:22:49 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -34,6 +34,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   : PropertyConfigSvc( name , pSvcLocator )
   , m_configuredTCK(0)
   , m_evtSvc(0)
+  , m_incidentSvc(0)
 {
   declareProperty("TCK2ConfigMap", m_tck2config);
   declareProperty("initialTCK", m_initialTCK = TCK_t(0));
@@ -51,7 +52,8 @@ HltConfigSvc::~HltConfigSvc() {
 // Finalization
 //=============================================================================
 StatusCode HltConfigSvc::finalize() {
-  m_evtSvc->release();
+  m_evtSvc->release();      m_evtSvc=0;
+  m_incidentSvc->release(); m_incidentSvc=0;
   return PropertyConfigSvc::finalize();
 }
 
@@ -65,27 +67,25 @@ StatusCode HltConfigSvc::initialize() {
   if (!service( "EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
 
 
-  IIncidentSvc*                incidentSvc;     ///< 
-  if (!service( "IncidentSvc", incidentSvc).isSuccess()) return StatusCode::FAILURE;
+  if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) return StatusCode::FAILURE;
   // add listener to be triggered by first BeginEvent with low priority
   // so it gets called first
   bool rethrow = false;
   bool oneShot = false;
-  incidentSvc->addListener(this,IncidentType::BeginEvent,
+  m_incidentSvc->addListener(this,IncidentType::BeginEvent,
                              std::numeric_limits<long>::min(),rethrow,oneShot);
-  incidentSvc->release();
 
   //TODO:
   // verify that tools do not change from one TCK to the next...
   for (vector<TCK_t>::const_iterator i = m_prefetchTCK.begin(); i!=m_prefetchTCK.end(); ++i ) {
      info() << " loading TCK " << *i << endmsg; 
-     if (!loadConfig( lexical_cast<TCK_t>(*i) )) {
+     if ( !loadConfig( tck2id(*i) ) ) {
         error() << " failed to load TCK " << *i << endmsg; 
         return StatusCode::FAILURE;
      }
   }
   // configure everyone from an a-priori specified TCK
-  status = configure( m_initialTCK );
+  status = configure( tck2id(m_initialTCK), false );
   if (status.isSuccess()) m_configuredTCK = m_initialTCK;
   return status;
 }
@@ -94,8 +94,8 @@ StatusCode HltConfigSvc::initialize() {
 //=============================================================================
 // Perform mapping from TCK to onfiguration ID
 //=============================================================================
-ConfigTreeNode::digest_type 
-HltConfigSvc::tck2config(const TCK_t& tck) const {
+ConfigTreeNode::digest_type
+HltConfigSvc::tck2id(const TCK_t& tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
     TCKMap_t::const_iterator i = m_tck2config.find(lexical_cast<string>(tck));
     if (i != m_tck2config.end()) {
@@ -103,35 +103,26 @@ HltConfigSvc::tck2config(const TCK_t& tck) const {
         debug() << " TCK " << lexical_cast<string>(tck) << " mapped (by explicit option) to " << id << endmsg;
         return id;
     }
-    
-    
-    //@TODO: need to adopt PropertyConfigSvc to allow approaching it with an alias in addition
-    //       to giving it a ref...
-    // until that time, we need access to the IConfigAccessSvc of the parent to make
+
+    // NOTE: we need to access to the IConfigAccessSvc of the parent to make
     // sure we are consistent...
 
-    ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") + lexical_cast<string>(tck) );
-    boost::optional<ConfigTreeNode> n = cas()->readConfigTreeNodeAlias( alias );
-    if (!n) {
-        error() << "Could not resolve TCK " << lexical_cast<string>(tck) << " : no alias found " << endmsg;
-        return id;
+    i = m_tck2configCache.find(lexical_cast<string>(tck));
+    if ( i!=m_tck2configCache.end() )  {
+        id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
+    } else {
+        ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") + lexical_cast<string>(tck) );
+        boost::optional<ConfigTreeNode> n = cas()->readConfigTreeNodeAlias( alias );
+        if (!n) {
+            error() << "Could not resolve TCK " << lexical_cast<string>(tck) << " : no alias found " << endmsg;
+            return id;
+        }
+        id = n->digest(); // need a digest, not an object itself...
+        // add to cache...
+        m_tck2configCache.insert( make_pair( lexical_cast<string>(tck), lexical_cast<string>(id) ) );
     }
-    id = n->digest(); // need a digest, not an object itself... 
-         
     debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << id << endmsg;
     return id;
-}
-
-//=============================================================================
-// Generic forwarding of TCK request to config ID requests...
-//=============================================================================
-template <typename RET, typename FUN>
-RET HltConfigSvc::forward(const TCK_t& tck,const FUN& fun) const {
-    ConfigTreeNode::digest_type id = tck2config(tck);
-    if (!id.valid()) {
-        error() << " could not resolve " << tck << " to a configID " << endl;
-    }
-    return fun( id ); 
 }
 
 //=============================================================================
@@ -150,7 +141,7 @@ void HltConfigSvc::dummyVerifyTCK() {
   }
   if (m_configuredTCK != currentTCK) {
       info() << "updating configuration from TCK " << m_configuredTCK << " to TCK " << currentTCK << endl;
-      StatusCode sc = reconfigure( currentTCK );
+      StatusCode sc = reconfigure( tck2id(currentTCK) );
       if (sc.isSuccess()) m_configuredTCK = currentTCK;
   }
 }
@@ -158,29 +149,40 @@ void HltConfigSvc::dummyVerifyTCK() {
 void HltConfigSvc::verifyTCK() {
 
     SmartDataPtr<LHCb::ODIN> odin( m_evtSvc , LHCb::ODINLocation::Default );
+    if (!odin) {
+        error() << " Could not locate ODIN... " << endmsg;
+        m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+        return;
+    }
     unsigned int TCK = odin->triggerConfigurationKey();
 
-//    cout << " warning : " << (warning().isActive()?"yes":"no") << endl;
-
-//    std::cout << "verifyTCK: currently configured TCK: " << m_configuredTCK << endl;
     debug() << "verifyTCK: currently configured TCK: " << m_configuredTCK << endmsg;
-//    std::cout << "verifyTCK: TCK in ODIN bank: " << TCK << endl;
     debug() << "verifyTCK: TCK in ODIN bank: " << TCK << endmsg;
 
     if ( m_configuredTCK == TCK ) return;
 
     info() << "requesting update of from TCK " << m_configuredTCK << " to TCK " << TCK << endmsg;
-    if (reconfigure( TCK ).isSuccess()) { 
+    if (reconfigure( tck2id(TCK) ).isSuccess()) { 
         m_configuredTCK = TCK;
     } else {
-        warning() << " reconfigure failed... " << endmsg;
+        error()   << "\n\n\n\n\n"
+                  << "            ****************************************\n"
+                  << "            ****************************************\n"
+                  << "            ****************************************\n"
+                  << "            ********                        ********\n"
+                  << "            ********   RECONFIGURE FAILED   ********\n"
+                  << "            ********                        ********\n"
+                  << "            ****************************************\n"
+                  << "            ****************************************\n"
+                  << "            ****************************************\n"
+                  << "\n\n\n\n\n"
+                  << endmsg;
+        m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+        return;
     }
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {
- // std::cout << "received an Incident!" << std::endl;
-
-  debug() << "received an Incident!" << endmsg;
-  // dummyVerifyTCK();
-  verifyTCK();
+    // dummyVerifyTCK();
+    verifyTCK();
 }

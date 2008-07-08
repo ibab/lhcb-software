@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.6 2008-07-04 12:45:33 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.7 2008-07-08 14:22:49 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -7,7 +7,10 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <iterator>
 #include "boost/optional.hpp"
+#include "boost/ptr_container/ptr_vector.hpp"
+
 // from Gaudi
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
@@ -53,25 +56,27 @@ public:
   virtual PropertyConfig::digest_type findInTree(const ConfigTreeNode::digest_type& configTree, const std::string& name) const;
 
   virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const;
+  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const;
   virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const;
+  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNodeAlias::alias_type& nodeRef) const;
 
   virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const;
   virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const;
+  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& ref) const;
   // helper functions
 
-  bool loadConfig(const ConfigTreeNode::digest_type& nodeRef);
-
-  /// given a configuration, configure the matching algorithm, service, tool
-  StatusCode configure(const PropertyConfig& config) const;
+  // preload a configuration
+  StatusCode loadConfig(const ConfigTreeNode::digest_type& nodeRef);
   // resolve the ID to get a list of  configurations, then use them to configure
-  StatusCode configure(const ConfigTreeNode::digest_type& configID) const;
+  StatusCode configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const;
+  StatusCode configure(const ConfigTreeNodeAlias::alias_type& alias, bool callSetProperties) const;
   // reconfigure: first configure, then call sysReinitialize on the top algorithm
   StatusCode reconfigure(const ConfigTreeNode::digest_type& top) const; 
 
 
 protected:
   // check validity of given config
-  bool validateConfig(const PropertyConfig::digest_type& ref) const;
+  StatusCode validateConfig(const PropertyConfig::digest_type& ref) const;
 
   IConfigAccessSvc* cas() const { return m_accessSvc;}
 
@@ -86,11 +91,14 @@ protected:
 private:
   typedef std::map<PropertyConfig::digest_type,  PropertyConfig> PropertyConfigMap_t;
   typedef std::map<ConfigTreeNode::digest_type,  ConfigTreeNode> ConfigTreeNodeMap_t;
+  typedef std::map<ConfigTreeNodeAlias::alias_type,  ConfigTreeNode::digest_type> ConfigTreeNodeAliasMap_t;
 
   //TODO: use multimap instead???
   typedef std::map<ConfigTreeNode::digest_type,  std::vector<PropertyConfig::digest_type> > Tree2LeafMap_t;
   typedef std::map<ConfigTreeNode::digest_type,  std::list<ConfigTreeNode::digest_type> > Tree2NodeMap_t;
   
+  typedef std::map<std::string, PropertyConfig::digest_type> ConfigPushed_t;
+
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          s_accessSvc;
   IJobOptionsSvc*                      m_joboptionsSvc;
@@ -99,8 +107,10 @@ private:
   IConfigAccessSvc*                    m_accessSvc;
   mutable PropertyConfigMap_t          m_configs;  // config ref -> config (leaf)
   mutable ConfigTreeNodeMap_t          m_nodes;    // node   ref -> node
+  mutable ConfigTreeNodeAliasMap_t     m_aliases;    // node   ref -> node
   mutable Tree2LeafMap_t               m_leavesInTree; // top level node ref -> config refs (leaves)
   mutable Tree2NodeMap_t               m_nodesInTree; // top level node ref -> node refs
+  mutable ConfigPushed_t               m_configPushed;
   std::vector<std::string>             m_prefetch;    ///< configurations to load at initialization
   std::vector<std::string>             m_skip;        ///< items NOT to configure with this service
   std::string                          m_ofname;
@@ -109,13 +119,16 @@ private:
 
   MsgStream& msg(MSG::Level level) const;
 
+  template <typename T> T* resolve(const std::string& name) const;
+  StatusCode invokeSetProperties(const PropertyConfig& config) const;
+  StatusCode invokeSysReinitialize(const PropertyConfig& config) const;
+
   StatusCode setTopAlgs(const ConfigTreeNode::digest_type& id) const;
   StatusCode findTopKind(const ConfigTreeNode::digest_type& configID,
                          const std::string& kind,
-                         std::vector<PropertyConfig::digest_type>& ids) const;
-  StatusCode findServicesAndTopAlgorithms(const ConfigTreeNode::digest_type&top,
-                                          std::vector<IService*>& svcs,
-                                          std::vector<IAlgorithm*>& algs) const;
+                         std::back_insert_iterator<std::vector<const PropertyConfig*> > components) const;
   void createGraphVizFile(const PropertyConfig::digest_type& ref, const std::string& fname) const;
+  ConfigTreeNode::digest_type resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) const;
+  StatusCode outOfSyncConfigs(const ConfigTreeNode::digest_type& top, std::back_insert_iterator<std::vector<const PropertyConfig*> >  ) const;
 };
 #endif // PROPERTYCONFIGSVC_H

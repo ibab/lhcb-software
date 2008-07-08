@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.4 2008-07-04 14:42:45 graven Exp $
+// $Id: HltConfigSvc.h,v 1.5 2008-07-08 14:22:49 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -42,27 +42,14 @@ private:
 
   std::vector<TCK_t>           m_prefetchTCK;     ///< which TCK to prefetch
   TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID
+  mutable TCKMap_t             m_tck2configCache; ///< from TCK to configuration ID
   TCK_t                        m_initialTCK;      ///< which TCK to start with...
   TCK_t                        m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
+  IIncidentSvc                *m_incidentSvc;     ///< 
 
   // resolve TCK -> toplevel config ID, then call method with ID
-  template <typename RET, typename FUN>
-  RET forward(const TCK_t& tck,const FUN& fun) const;
-
-  StatusCode configure(const TCK_t& tck) const {
-    typedef StatusCode (PropertyConfigSvc::*fun_t)(const ConfigTreeNode::digest_type&) const;
-    fun_t f = &PropertyConfigSvc::configure;
-    return forward<StatusCode>(tck,boost::lambda::bind(f,this,boost::lambda::_1));
-  }
-  StatusCode reconfigure(const TCK_t& tck) const {
-    return forward<StatusCode>(tck,boost::lambda::bind(&PropertyConfigSvc::reconfigure,this,boost::lambda::_1)); 
-  }
-  bool loadConfig(const TCK_t& tck) {
-    return forward<bool>(tck,boost::lambda::bind(&PropertyConfigSvc::loadConfig,this,boost::lambda::_1)); 
-  }
-
-  ConfigTreeNode::digest_type tck2config(const TCK_t& tk) const;
+  ConfigTreeNode::digest_type tck2id(const TCK_t& tck) const;
 
 };
 #endif // HLTCONFIGSVC_H
