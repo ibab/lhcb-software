@@ -12,11 +12,6 @@
 #ifndef MDFWRITERNET_H
 #define MDFWRITERNET_H
 
-
-static inline unsigned long adler32(unsigned long adler,
-				    const char *buf,
-				    unsigned int len);
-
 /*
  * LHCb namespace
  */
@@ -122,13 +117,25 @@ namespace LHCb {
     inline File* getPrev() { return m_prev; }
 
     /// Constructor
+//    File(std::string fileName, unsigned int runNumber) {
+//      m_seqNum = 0;
+//      m_fileName = fileName;
+//      m_runNumber = runNumber;
+//      m_md5 = new TMD5();
+//      m_adler32 = adler32Checksum(1L, NULL, 0);
+//      m_lastUpdated = time(NULL);
+//      m_fileOpen = false;
+//      m_bytesWritten = 0;
+//      m_prev = NULL;
+//      m_next = NULL;
+//    }
     File(std::string fileName, unsigned int runNumber);
 
     /// Updates the checksums and the bytes written count for the file, given a new chunk to be written.
     /// Returns the number of bytes written in all so far.
     inline size_t updateWrite(const void *data, size_t len) {
       m_md5->Update((UChar_t*)data, (UInt_t)len);
-      m_mon->m_adler32 = adler32(m_mon->m_adler32, (const char*)data, len);
+      m_mon->m_adler32 = adler32Checksum(m_mon->m_adler32, (const char*)data, len);
       m_mon->m_bytesWritten += len;
       m_mon->m_lastUpdated = time(NULL);
       return m_mon->m_bytesWritten;
@@ -307,49 +314,5 @@ namespace LHCb {
     virtual void notifyOpen(struct cmd_header *cmd);
   };
 }
-
-/* The standard Adler32 algorithm taken from the Linux kernel.*/
-
-#define BASE 65521L /* largest prime smaller than 65536 */
-#define NMAX 5552
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
-
-#define DO1(buf,i)  {s1 += buf[i]; s2 += s1;}
-#define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);
-#define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
-#define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
-#define DO16(buf)   DO8(buf,0); DO8(buf,8);
-#define NMAX 5552
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
-
-static inline unsigned long adler32(unsigned long adler,
-				    const char *buf,
-				    unsigned int len)
-{
-  unsigned long s1 = adler & 0xffff;
-  unsigned long s2 = (adler >> 16) & 0xffff;
-  int k;
-
-  if (buf == NULL) return 1L;
-
-  while (len > 0) {
-    k = len < NMAX ? len : NMAX;
-    len -= k;
-    while (k >= 16) {
-      DO16(buf);
-      buf += 16;
-      k -= 16;
-    }
-    if (k != 0) do {
-      s1 += *buf++;
-      s2 += s1;
-    } while (--k);
-    s1 %= BASE;
-    s2 %= BASE;
-  }
-  return (s2 << 16) | s1;
-}
-
-
 #endif //MDFWRITERNET_H
 

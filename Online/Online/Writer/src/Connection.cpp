@@ -65,8 +65,9 @@ void Connection::initialize(void) {
   m_sendThread = new SendThread(this, m_sockfd, &m_mmObj, m_log);
   m_sendThread->start();
 
-  *m_log << MSG::INFO << "Writer " <<
-    getpid() << " Started all threads." << endmsg;
+  *m_log << MSG::INFO << WHERE
+         << "Writer " << " Started all threads."
+         << endmsg;
 }
 
 /** Connects to a storage cluster node.
@@ -79,6 +80,9 @@ void Connection::connect() {
 
   /*Need to change port to the storage service port.*/
   destAddr.sin_port = htons(m_serverPort);
+  *m_log <<MSG::WARNING << WHERE << "Trying to connect to address "
+         << std::hex << ntohl(destAddr.sin_addr.s_addr) << std::dec
+         << endmsg;
   m_sockfd = Utils::connectToAddress(&destAddr, m_sndRcvSizes, m_sndRcvSizes, m_log);
   if(m_sockfd < 0)
     throw std::runtime_error("Could not init stream to server.");
@@ -91,8 +95,8 @@ void Connection::connect() {
  */
 void Connection::closeConnection()
 {
-  *m_log << MSG::INFO << "Writer " << getpid()
-    << " Closing connection." << endmsg;
+  *m_log << MSG::INFO << WHERE << " Closing connection."
+         << endmsg;
 
   m_sendThread->stopAfterFinish();  /*Stop after all messages are sent.*/
   m_ackThread->stopAfterFinish();  /*Stop after all acks have been received.*/
@@ -104,7 +108,9 @@ void Connection::closeConnection()
    */
   int ret;
   while((ret = m_mmObj.getQueueLength()) > 0) {
-    *m_log << MSG::INFO << "Waiting for queuelength to be zero. " << ret << endmsg;
+    *m_log << MSG::INFO << WHERE << "Waiting for queuelength to be zero. "
+           << "Queue size is: " << ret
+           << endmsg;
     sleep(2);
   }
 
@@ -140,16 +146,20 @@ int Connection::failover(int currThread)
 
   switch(currThread) {
     case ACK_THREAD:
-      *m_log << MSG::WARNING << "Writer " << getpid() <<
-        " Failover initiated by ACK thread." << errno << endmsg;
+      *m_log << MSG::WARNING << WHERE
+             << " Failover initiated by ACK thread. Errno is: " << errno
+             << endmsg;
       break;
     case SEND_THREAD:
-      *m_log << MSG::WARNING << "Writer " << getpid() <<
-        " Failover initiated by SEND thread." << errno << endmsg;
+      *m_log << MSG::WARNING << WHERE
+             << " Failover initiated by SEND thread. Errno is: " << errno
+             << endmsg;
       break;
     case FAILOVER_THREAD:
-      *m_log << MSG::WARNING << "Writer " << getpid() <<
-        " Failover initiated by FAILOVER thread." << errno << endmsg;
+      *m_log << MSG::WARNING << WHERE
+             << " Failover initiated by FAILOVER thread. Errno is: " << errno
+             << endmsg;
+
       break;
   }
 
@@ -174,9 +184,10 @@ int Connection::failover(int currThread)
       m_failoverMonitor->connectToAlternative();
       connect();
       break;
-    }catch(std::exception ex) {
-      *m_log << MSG::WARNING << "Writer " << getpid() <<
-        "Could not connect:" << ex.what() << endmsg;
+    } catch(std::exception &ex) {
+      *m_log << MSG::WARNING << WHERE
+             << ex.what()
+             << endmsg;
     }
     sleep(1);
   }
@@ -198,8 +209,9 @@ int Connection::failover(int currThread)
     m_ackThread->start();
   }
 
-  *m_log << MSG::WARNING << "Writer " << getpid() <<
-    "Successfully failed over. " << endmsg;
+  *m_log << MSG::WARNING << WHERE
+         << "Successfully failed over. "
+         << endmsg;
   pthread_mutex_unlock(&m_failoverLock);
 
   return 0;

@@ -2,6 +2,8 @@
 #define UTILS_H_
 
 #include "GaudiKernel/MsgStream.h"
+#define WHERE "File: " << __FILE__ << "[" << __LINE__ << "] " << __FUNCTION__ << "() :"
+#define IP(x)  (x & 0xff) << "." << ((x & 0xff00) >> 8) << "." << ((x & 0xff0000) >> 16) << "." << ((x & 0xff000000) >> 24)
 
 namespace LHCb {
 

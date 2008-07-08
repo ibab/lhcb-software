@@ -1,3 +1,4 @@
+#include "sys/types.h"
 /**
  * \file failover_structs.h
  * \author Sai Suman <Sai.Suman.Cherukuwada@cern.ch>
@@ -15,8 +16,8 @@
  * A structure that defines a message sent by the failover service.
  */
 struct failover_msg {
-	unsigned int msg_type;	/**< One of the NODE_XXX values.*/
-	unsigned int num_nodes; /**< The number of node states that will be sent.*/
+	__uint32_t msg_type;	/**< One of the NODE_XXX values.*/
+	__uint32_t num_nodes; /**< The number of node states that will be sent.*/
 } __attribute__((__packed__));
 
 /**
@@ -28,7 +29,7 @@ struct failover_msg {
  * etc.
  */
 struct load {
-	unsigned int l_connections;	/**<< Current active TCP/IP connections.*/
+	__uint32_t l_connections;	/**<< Current active TCP/IP connections.*/
 } __attribute__((__packed__));
 
 
@@ -36,9 +37,9 @@ struct load {
  * A structure to maintain information on nodes and their current states.
  */
 struct nodestate {
-	unsigned int 	n_ipaddr;	/**<< The IP address of this node.*/
-	unsigned long	n_id;		/**<< A somewhat unique ID for the node.*/
-	time_t 		n_last_ka;		/**<< When did we last hear from it?*/
+	__uint32_t 	n_ipaddr;	/**<< The IP address of this node.*/
+	__uint64_t	n_id;		/**<< A somewhat unique ID for the node.*/
+	__uint32_t	n_last_ka;		/**<< When did we last hear from it?*/
 	struct load	n_load;			/**<< What sort of load does it have?*/
 } __attribute__((__packed__));
 

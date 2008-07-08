@@ -41,8 +41,9 @@ FailoverMonitor::FailoverMonitor(std::string &serverAddr, int serverPort,
     ret = Utils::nameLookup(serverAddr, &m_currAddr, log);
     if(ret == 0)
       break;
-    *log << MSG::ERROR << "Writer " << getpid() <<
-      "Name lookup failed for " << serverAddr << endmsg;
+    *log << MSG::ERROR << "Writer " << getpid()
+         << "Name lookup failed for " << serverAddr
+         << endmsg;
   }
 
   memcpy(&m_initAddr, &m_currAddr, sizeof(struct sockaddr_in));
@@ -66,8 +67,11 @@ int FailoverMonitor::connect(std::list<NodeState*> &nodeStates)
   int ret;
   m_sockFd = Utils::connectToAddress(&m_currAddr,
     Utils::DEFAULT_BUF_SIZE, Utils::DEFAULT_BUF_SIZE, m_log);
+
   if(m_sockFd < 0) {
-    throw std::runtime_error("Could not connect to host.");
+    *m_log << MSG::WARNING << "Could not connect to host "
+           << std::hex << ntohl(m_currAddr.sin_addr.s_addr) << endmsg;
+    throw std::runtime_error("Could not connect to host");
   }
 
   /* Let's get the list of hosts now. */
@@ -88,8 +92,11 @@ void FailoverMonitor::connectToAlternative(void)
     std::list<NodeState*> nodeStates;
 
     /*We're already on m_currState, so we move to the next one and try connecting.*/
-    if(m_nodeStates.size() == 0)
-      throw std::runtime_error("Could not get next address:empty.");  /*Nothing else.*/
+    *m_log << MSG::INFO <<"The total number of alternative machines is: "<< m_nodeStates.size() << endmsg; ;
+    if(m_nodeStates.size() == 0) {
+      *m_log << MSG::WARNING << "No failover nodes found!" << endmsg;
+      throw std::runtime_error("Could not get next failover address: none does exist.");  /*Nothing else.*/
+    }
 
     m_currState++;
     if(m_currState == m_nodeStates.end())
@@ -167,12 +174,8 @@ int FailoverMonitor::getAddressList(std::list<NodeState*> &nodeStates)
       return 0;
     }
 
-    *m_log << MSG::INFO << "Writer " << getpid() <<
-    " Read Server Addr = "
-    << (nState->state.n_ipaddr & 0xff)  << "."
-    << ((nState->state.n_ipaddr & 0xff00) >> 8) << "."
-    << ((nState->state.n_ipaddr & 0xff0000) >> 16)  << "."
-    <<  ((nState->state.n_ipaddr & 0xff000000) >> 24)  << endmsg;
+    *m_log << MSG::INFO << WHERE
+           << " Read Server Addr = " << IP(nState->state.n_ipaddr) << endmsg;
 
     //If it's the current host, push it to the top.
     if(nState->state.n_ipaddr == m_currAddr.sin_addr.s_addr)
@@ -205,8 +208,9 @@ void FailoverMonitor::start(void)
   if(ret != 0) {
     throw std::runtime_error("Could not start the failover service thread.");
   }
-  *m_log << MSG::INFO << "Writer " << getpid() <<
-    "Started Failover thread." << endmsg;
+  *m_log << MSG::INFO << WHERE
+         << "Started Failover thread."
+         << endmsg;
 }
 
 void FailoverMonitor::listenForUpdates(void)
@@ -235,7 +239,9 @@ void FailoverMonitor::listenForUpdates(void)
     /*Let's receive each one of the advertised nodes.*/
     int die = 0;
     struct nodestate nstate;
-
+    *m_log << WHERE << "Failover thread expects update about "
+           << fmsg.num_nodes << " node(s) in state " << fmsg.msg_type
+           << endmsg;
     for(unsigned int i=0;i<fmsg.num_nodes;i++) {
       bRead = 0;
       BIF recvBif(m_sockFd, &nstate, sizeof(struct nodestate));
@@ -245,6 +251,10 @@ void FailoverMonitor::listenForUpdates(void)
           die = 1;
         break;
       }
+      *m_log << MSG::WARNING << WHERE
+             << "Received update for node: " << IP(nstate.n_ipaddr)
+             << " Identifier is: " << nstate.n_id
+             << endmsg;
       update(&fmsg, &nstate);
     }
 

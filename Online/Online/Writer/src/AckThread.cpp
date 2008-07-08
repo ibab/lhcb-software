@@ -53,7 +53,7 @@ void AckThread::start()
     return;
   }
   *m_log << MSG::INFO << "Writer " << getpid()
-    << " Started Ack Thread." << endmsg;
+         << "Started Ack Thread." << endmsg;
 }
 
 /**
@@ -85,7 +85,7 @@ void AckThread::stop(void)
     return;
   }
   *m_log << MSG::INFO << "Writer " << getpid()
-    << " Stopped Ack Thread." << endmsg;
+         << "Stopped Ack Thread." << endmsg;
 }
 
 
@@ -156,8 +156,8 @@ start:
 
       struct cmd_header *cmd;
       if((cmd = m_mmObj->dequeueCommand(seqNum, ackHeaderBuf.run_no)) == NULL) {
-        *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack, run = " <<
-	       ackHeaderBuf.run_no << endmsg;
+        *m_log << MSG::ERROR << "DANGER: Received an unsolicited ack, run = "
+               << ackHeaderBuf.run_no << endmsg;
       } else {
         notify(cmd);
         m_mmObj->freeCommand(cmd);

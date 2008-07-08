@@ -54,8 +54,8 @@ void SendThread::start()
     *m_log << MSG::FATAL << "Could not create send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << " Writer " << getpid() <<
-    " Stared Send thread." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid()
+         <<" Send thread stared" << endmsg;
 }
 
 /**
@@ -87,8 +87,8 @@ void SendThread::stop(void) {
     *m_log << MSG::ERROR << "Could not stop send thread " << errno << endmsg;
     return;
   }
-  *m_log << MSG::INFO << " Writer " << getpid() <<
-    " Stopped Send Thread." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid()
+         << "Send thread stopped " << endmsg;
 }
 
 /** Processes elements from the send queue.

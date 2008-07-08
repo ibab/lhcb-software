@@ -83,6 +83,9 @@ int Utils::connectToAddress(struct sockaddr_in *destAddr,
       (socklen_t)sizeof(struct sockaddr_in));
 
   if(ret != 0) {
+  	*log << MSG::ERROR << "Failed to open socket to adr: "
+  	     << std::hex << ntohl(destAddr->sin_addr.s_addr)
+  	     << " Errno is: " << std::dec << errno << endmsg;
     return -1;
   }
   return sock;
