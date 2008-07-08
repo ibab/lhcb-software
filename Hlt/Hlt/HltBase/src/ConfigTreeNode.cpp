@@ -38,6 +38,7 @@ istream& ConfigTreeNode::read(istream& is) {
             }
         }
     }
+    m_digest = digest_type::createInvalid();
     return is;
 }
 
@@ -49,8 +50,6 @@ ostream& ConfigTreeNode::print(ostream& os) const {
         os << " "<< *i <<'\n';
     return os << "]" << endl;
 }
-
-ConfigTreeNode::digest_type ConfigTreeNode::digest() const { return digest_type::compute(*this); }
 
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
 std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is); }

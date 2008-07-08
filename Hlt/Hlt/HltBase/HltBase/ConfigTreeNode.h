@@ -5,8 +5,14 @@
 #include <iostream>
 #include <vector>
 #include "boost/optional.hpp"
+#include "boost/operators.hpp"
 
-class ConfigTreeNode {
+class ConfigTreeNode;
+
+std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x);
+std::istream& operator>>(std::istream& is, ConfigTreeNode& x);
+
+class ConfigTreeNode : public boost::equality_comparable<ConfigTreeNode> {
 public:
     // this class represent an adjacency view layout of the configuration tree...
     // There is one 'leaf' per node: basically, the 'data' at this node,
@@ -29,22 +35,27 @@ public:
     typedef digest_type              NodeRef;
     typedef std::vector<NodeRef>     NodeRefs;
 
-    ConfigTreeNode() : m_leaf( digest_type::createInvalid() ) 
+    ConfigTreeNode() 
+      : m_leaf( digest_type::createInvalid() ) 
+      , m_digest( digest_type::createInvalid() )
     { }
 
     ConfigTreeNode(const LeafRef& leaf)
       : m_leaf(leaf)
+      , m_digest( digest_type::createInvalid() )
     { }
 
     ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes)
       : m_nodes(nodes)
       , m_leaf(leaf)
+      , m_digest( digest_type::createInvalid() )
     { }
 
     ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label)
       : m_nodes(nodes)
       , m_leaf(leaf)
       , m_label(label)
+      , m_digest( digest_type::createInvalid() )
     { }
 
     ConfigTreeNode *clone(boost::optional<const LeafRef&> newLeaf = boost::optional<const LeafRef&>(), 
@@ -65,7 +76,7 @@ public:
             && m_nodes == rhs.m_nodes; 
     }
 
-    digest_type digest() const;
+    digest_type digest() const { if (!m_digest.valid()) updateCache(); return m_digest;}
 
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
@@ -78,9 +89,9 @@ private:
     NodeRefs    m_nodes;
     LeafRef     m_leaf;
     std::string m_label;
+    void updateCache() const { m_digest=digest_type::compute(*this); }
+    mutable digest_type m_digest;
 };
 
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x);
-std::istream& operator>>(std::istream& is, ConfigTreeNode& x);
 
 #endif

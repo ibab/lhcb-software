@@ -11,6 +11,7 @@ void PropertyConfig::initProperties(const IProperty& obj) {
     for (PropertyList::const_iterator i = items.begin(); i!=items.end();++i) {
         m_properties.push_back(make_pair((*i)->name(),(*i)->toString()));
     }
+    m_digest = digest_type::createInvalid();
 }
 
 istream& PropertyConfig::read(istream& is) {
@@ -49,6 +50,7 @@ istream& PropertyConfig::read(istream& is) {
             }
         }
     }
+    m_digest = digest_type::createInvalid();
     return is;
 }
 

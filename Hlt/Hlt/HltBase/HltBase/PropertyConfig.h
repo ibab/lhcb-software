@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "boost/optional.hpp"
+#include "boost/operators.hpp"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/INamedInterface.h"
 #include "GaudiKernel/IProperty.h"
@@ -13,7 +14,7 @@ class PropertyConfig;
 std::ostream& operator<<(std::ostream& os, const PropertyConfig& x);
 std::istream& operator>>(std::istream& is, PropertyConfig& x);
 
-class PropertyConfig {
+class PropertyConfig : public boost::equality_comparable<PropertyConfig> {
 public:
     typedef Gaudi::Math::MD5 digest_type;
 
@@ -27,12 +28,14 @@ public:
       : m_type(System::typeinfoName(typeid(obj)))
       , m_name(name)
       , m_kind(kind)
+      , m_digest(digest_type::createInvalid())
    { initProperties( obj ) ; }
 
     PropertyConfig(const std::string& name, const std::string& type, const std::string& kind)
       : m_type(type)
       , m_name(name)
       , m_kind(kind)
+      , m_digest(digest_type::createInvalid())
    {  }
 
     PropertyConfig(const std::string& name, const std::string& type, const std::string& kind, const Properties& props)
@@ -40,6 +43,7 @@ public:
       , m_type(type)
       , m_name(name)
       , m_kind(kind)
+      , m_digest(digest_type::createInvalid())
    {  }
 
     bool operator==(const PropertyConfig& rhs) const { 
@@ -49,10 +53,8 @@ public:
             && m_properties == rhs.m_properties;
     }
 
-    bool operator!=(const PropertyConfig& rhs) const { return !operator==(rhs); }
-
-
     const std::string & name() const    { return m_name;}
+    std::string  fullyQualifiedName() const    { return type() + "/" + name();}
     const std::string & type() const    { return m_type;}
     const std::string & kind() const    { return m_kind;}
     const Properties& properties() const { return m_properties;}
@@ -65,11 +67,13 @@ public:
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
-    digest_type digest() const { return digest_type::compute(*this); }
+    digest_type digest() const { if (!m_digest.valid()) updateCache(); return m_digest; }
 
 private:
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;
+    mutable digest_type  m_digest;
+    void updateCache() const { m_digest = digest_type::compute(*this); }
     void initProperties( const IProperty& obj );
 };
 

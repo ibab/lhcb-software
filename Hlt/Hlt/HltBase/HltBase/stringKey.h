@@ -1,9 +1,10 @@
 #ifndef STRINGKEY_H
 #define STRINGKEY_H 1
 #include <cassert>
+#include <boost/operators.hpp>
 #include "GaudiKernel/Property.h"
 
-class stringKey {
+class stringKey : public boost::totally_ordered<stringKey> {
 
 public:
 
@@ -12,7 +13,6 @@ public:
 
     const std::string& str() const { return m_str.value();}
     bool operator==(const stringKey& rhs) const ;
-    bool operator!=(const stringKey& rhs) const ;
     bool operator<(const stringKey& rhs) const ;
     std::ostream& print(std::ostream& o ) const ;
 
@@ -47,9 +47,6 @@ inline std::ostream& operator<< (std::ostream& os, const stringKey& k)
 
 inline bool stringKey::operator==(const stringKey& rhs) const 
 { assert(valid()); return m_hash==rhs.m_hash && str() == rhs.str();}
-
-inline bool stringKey::operator!=(const stringKey& rhs) const 
-{ assert(valid()); return !operator==(rhs);}
 
 inline bool stringKey::operator<(const stringKey& rhs) const 
 { assert(valid());

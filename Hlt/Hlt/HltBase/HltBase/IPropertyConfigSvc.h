@@ -1,4 +1,4 @@
-// $Id: IPropertyConfigSvc.h,v 1.2 2008-03-05 08:01:54 graven Exp $
+// $Id: IPropertyConfigSvc.h,v 1.3 2008-07-08 14:15:58 graven Exp $
 #ifndef IPROPERTYCONFIGSVC_H 
 #define IPROPERTYCONFIGSVC_H 1
 
@@ -7,6 +7,7 @@
 #include <list>
 #include "GaudiKernel/INamedInterface.h"
 #include "HltBase/ConfigTreeNode.h"
+#include "HltBase/ConfigTreeNodeAlias.h"
 #include "HltBase/PropertyConfig.h"
 
 
@@ -45,9 +46,12 @@ public:
   // Note: the service remains the owner of these objects!!!
   virtual const PropertyConfig* resolvePropertyConfig(const PropertyConfig::digest_type& ref) const = 0;
   virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const = 0;
+  virtual const ConfigTreeNode* resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& alias) const = 0;
 
   virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;
+  virtual const std::list<ConfigTreeNode::digest_type>& collectNodeRefs(const ConfigTreeNodeAlias::alias_type& alias) const = 0;
   virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNode::digest_type& nodeRef) const = 0;
+  virtual const std::vector<PropertyConfig::digest_type>& collectLeafRefs(const ConfigTreeNodeAlias::alias_type& alias) const = 0;
 
 
 

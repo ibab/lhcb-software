@@ -1,4 +1,4 @@
-// $Id: IConfigAccessSvc.h,v 1.5 2008-06-30 14:42:57 graven Exp $
+// $Id: IConfigAccessSvc.h,v 1.6 2008-07-08 14:15:58 graven Exp $
 #ifndef ICONFIGACCESSSVC_H 
 #define ICONFIGACCESSSVC_H 1
 
@@ -51,5 +51,7 @@ public:
   // precondition: alias.major() + '/' == alias.str() (? or sould we allow matches more specific than major?)
   virtual std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type& alias) = 0;
 
+  // TODO: gimme all aliases which refer to a given node
+  // virtual std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTree::digest_type& ref) = 0;
 };
 #endif // ICONFIGACCESSSVC_H
