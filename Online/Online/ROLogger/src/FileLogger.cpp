@@ -1,4 +1,4 @@
-// $Id: FileLogger.cpp,v 1.6 2008-07-04 07:40:21 frankb Exp $
+// $Id: FileLogger.cpp,v 1.7 2008-07-08 07:46:28 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.6 2008-07-04 07:40:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/FileLogger.cpp,v 1.7 2008-07-08 07:46:28 frankb Exp $
 
 #include "ROLogger/FileLogger.h"
 
@@ -29,11 +29,11 @@
 extern "C" {
 #include "dis.h"
 }
+#include <sys/types.h>
+#include <sys/stat.h>
 #ifdef _WIN32
 #define vsnprintf _vsnprintf
 #else
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #endif
 static const char*  s_SevList[] = {"VERBOSE","DEBUG","INFO","WARNING","ERROR","FATAL"};
