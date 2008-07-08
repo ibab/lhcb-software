@@ -3,9 +3,41 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
+</PRE><H1><A NAME=v15r2>2008-07-07 Boole v15r2</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19
  and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r1
+
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v32r7 or later
+
+- New features
+  . In Boole Configurable, add support for SIMCOND. Now used by default except
+    for DC06 geometries (Boole v15r2, GaudiConf v10r10, DDDB v1r8)
+  . Implement realistic Ecal Cockroft-Walton noise in CaloDigitAlg, fully
+    incoherent noise description as a sum of gaussian (can be set by options).
+    Adds about 20% to Ecal RawBank size (CaloDigit v2r6)
+  . Improvements to Floating Point Exception auditing
+    (LHCbKernel v8r5, LHCbAlgs v2r19)
+  . Prepare for IOV based snapshots of ONLINE CondDB (DetCond v12r0)
+
+- New tuning
+  . Change 2008 default database tag to head-20080702 (DDDB v1r8, SQLDDDB v4r5)
+
+- Packaging changes
+  . Boole.opts no longer includes LHCbApplication.opts, to allow usage of
+    .py version in configurable. Added instead to DC06 *.opts files
+
+- Bug fixes
+  . Fix default condDBtag in Boole-2008.py
+  . Fix bug in CalODigitAlg : missing "/" in "Prev/" prefix -> no spillover
+    correction (CaloDiit v2r6)
+  . Remove explicit evaluation of environment variables in Python options, to
+    allow use on the Grid (GaudiConf v10r10, DDDB v1r8)
+  . Fixes and protections for floating point exceptions
+    (DetDesc v4r7, MuonDet v8r1, OTDAQ v6r0p1, VeloSimulation v3r2) 
+  . Fix in L0DUEmulatorTool (clear before setting configuration not after !)
+    (L0DU v8r6)
 
 </PRE><H1><A NAME=v15r1>2008-06-03 Boole v15r1</A></H1><PRE>
 This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18
