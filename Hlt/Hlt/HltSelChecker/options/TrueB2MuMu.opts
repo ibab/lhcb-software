@@ -10,7 +10,7 @@
 // Truth filter for Xb -> mu mu
 //
 SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltMuons" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Muons" } ;
 SelectTrueDecay.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/B2MuMu"} ;
 
 SelectTrueDecay.Filter.B2MuMu.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}" ;

@@ -10,7 +10,7 @@
 // Truth filter for B->PhiPhi
 //
 SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Kaons" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2PhiPhi" } ;
 
 SelectTrueDecay.Filter.Bs2PhiPhi.MCDecayFinder.Decay = "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma})(phi(1020) -> ^K+ ^K- {,gamma}{,gamma})]cc" ;

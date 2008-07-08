@@ -10,7 +10,7 @@
 // Truth filter for J/psi -> mu mu
 //
 SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltMuons" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Muons" } ;
 SelectTrueDecay.Filter.Selections =  { "mu+ : TrueMCFilterCriterion/B2JpsiX_MuMu" } ;
 
 SelectTrueDecay.Filter.B2JpsiX_MuMu.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}) ..." ;

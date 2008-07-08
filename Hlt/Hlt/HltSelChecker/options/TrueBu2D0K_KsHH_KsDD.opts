@@ -21,7 +21,7 @@ PrintMCTree.ParticleNames = { "B+", "B-" } ;
 //Default to run the whole truth sequence after the seeding and V0 construction
 SeqHltSeed2TruthFilter.Members += {"CheckSelResult/CheckHlt2VzeroDD" ,  "FilterDesktop/SelectTrueDecay"};
 CheckHlt2VzeroDD.Algorithms = {"HltKsDDParticles"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltNoPIDsPions", "Phys/HltKsDDParticles" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Kaons", "Phys/Hlt2Pions", "Phys/HltKsDDParticles" } ;
 // @ ToDo
 //Find a way/Write an algorithm to clean the V0's since ideally it is the output V0s
 // and not the daughter pions that should be used as input to any selections

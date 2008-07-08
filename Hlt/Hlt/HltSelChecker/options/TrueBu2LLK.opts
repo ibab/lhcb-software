@@ -12,7 +12,8 @@
 //SeqHlt2TruthFilter.Members += { "PrintMCTree"}; 
 PrintMCTree.ParticleNames = { "B+", "B-" } ;
 SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", "Phys/HltMuons", "Phys/HltElectrons" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Kaons", "Phys/Hlt2Muons", 
+                                               "Phys/Hlt2Electrons" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bu2LLK",
                                         "e+ : TrueMCFilterCriterion/Bu2LLK",
                                         "mu+ : TrueMCFilterCriterion/Bu2LLK"} ;

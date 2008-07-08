@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.3 2008-04-21 15:22:40 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.4 2008-07-08 12:12:10 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -135,9 +135,7 @@ StatusCode FilterTrueTracks::execute() {
   
   if ( !newTracks->empty()) setFilterPassed(true);
 
-  m_selResult->write(name(), filterPassed());
-
-  return StatusCode::SUCCESS;
+  return m_selResult->write(name(), filterPassed());
 }
 
 //=========================================================================

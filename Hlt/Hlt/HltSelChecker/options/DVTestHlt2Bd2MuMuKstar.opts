@@ -70,5 +70,5 @@ HltDecayTreeTuple.Head.ToolList += { "TupleToolP2VV"
 
 // HltBackgroundCategory.FillAll = false ;
 
-ApplicationMgr.EvtMax = -1 ;
+ApplicationMgr.EvtMax = 100 ;
 

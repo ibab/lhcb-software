@@ -10,8 +10,8 @@
 // Truth filter for Bs -> DsH
 //
 SeqHlt2TruthFilter.Members += { "FilterDesktop/SelectTrueDecay"};
-SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/HltNoPIDsKaons", 
-                                                "Phys/HltNoPIDsPions" } ;
+SelectTrueDecay.PhysDesktop.InputLocations = { "Phys/Hlt2Kaons", 
+                                                "Phys/Hlt2Pions" } ;
 SelectTrueDecay.Filter.Selections =  { "K+ : TrueMCFilterCriterion/Bs2DsH",
                                         "pi+ : TrueMCFilterCriterion/Bs2DsH"} ;
 
