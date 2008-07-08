@@ -33,7 +33,7 @@ Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2DiMuon" };
 SeqTrueSignalTracks.Members = { "FilterTrueTracks" };
 
 FilterTrueTracks.MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ... " ;
-FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/Forward" } ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
 FilterTrueTracks.OutputLevel = 3 ;
 /*

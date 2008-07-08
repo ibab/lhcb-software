@@ -35,7 +35,7 @@ Hlt2SelectionsCorrs.Algorithms += { "AllTrueBu2LLK" };
 SeqTrueSignalTracks.Members = { "FilterTrueTracks" };
 
 FilterTrueTracks.MCDecayFinder.Decay =  "{[B+ -> ^K+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc, [B+ -> ^K+ ^e+ ^e- {,gamma}{,gamma}{,gamma}{,gamma}{,gamma}]cc}" ;
-FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/Forward" } ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
 FilterTrueTracks.OutputLevel = 3 ;
 /*

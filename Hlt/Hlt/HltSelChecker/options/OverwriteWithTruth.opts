@@ -50,10 +50,10 @@ HltSeedSignalTrackAssociator.TracksInContainer = "Hlt/Track/SeedTTSignal" ;
 KillMyNodes.Members += {"TESCheck/DaVinciEvtCheck2",
                         "EventNodeKiller/DaVinciEvtNodeKiller2",
                         "TrackAssociator/HltSignalTrackAssociator"};
-DaVinciEvtCheck2.Inputs = {"Link/Hlt/Track/ForwardCLEANED"};
+DaVinciEvtCheck2.Inputs = {"Link/Hlt/Track/Forward"};
 DaVinciEvtCheck2.Stop = false;
 DaVinciEvtCheck2.OutputLevel = 1;
-DaVinciEvtNodeKiller2.Nodes = {"Link/Hlt/Track/ForwardCLEANED"};
+DaVinciEvtNodeKiller2.Nodes = {"Link/Hlt/Track/Forward"};
 DaVinciEvtNodeKiller2.OutputLevel = 1;
 TA2.TracksInContainer = "Hlt/Track/Signal" ;
 */

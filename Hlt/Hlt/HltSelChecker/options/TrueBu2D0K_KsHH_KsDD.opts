@@ -58,7 +58,7 @@ SeqTrueSignalTracks.Members = { "FilterTrueTracks"};
 
 //Want seperate track location for the forward and seed tracks
 FilterTrueTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
-FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED"} ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/Forward"} ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
 FilterTrueTracks.OutputLevel = 3 ;
 

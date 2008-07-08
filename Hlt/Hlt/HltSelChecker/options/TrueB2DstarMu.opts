@@ -35,7 +35,7 @@ Hlt2SelectionsCorrs.Algorithms += { "AllTrueB2DstarMu" };
 SeqTrueSignalTracks.Members = { "FilterTrueTracks" };
 
 FilterTrueTracks.MCDecayFinder.Decay =  "{[[B0]nos -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_mu ^mu+ {,gamma}{,gamma} (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B0]nos -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc, [[B~0]os -> nu_tau {,gamma} (tau+ -> ^mu+ nu_mu nu_tau~ {,gamma}{,gamma}) (D*(2010)- -> ^pi- {,gamma}{,gamma} (D~0 -> ^K+ ^pi- {,gamma}{,gamma}{,gamma})) ...]cc}" ;
-FilterTrueTracks.TracksPath = { "Hlt/Track/ForwardCLEANED" } ;
+FilterTrueTracks.TracksPath = { "Hlt/Track/Forward" } ;
 FilterTrueTracks.OutputPath = "Hlt/Track/Signal" ;
 FilterTrueTracks.OutputLevel = 3 ;
 /*
