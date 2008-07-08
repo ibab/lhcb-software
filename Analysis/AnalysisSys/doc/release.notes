@@ -3,12 +3,13 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-! 2008-07-03 - Patrick Koppenburg
- - Moved DaVinciFilter to here
+</PRE><H1><A NAME=v1r14>2008-07-08 Analysis v1r14 - First LHCb v24 version</A></H1><PRE>
 
-</PRE><H1><A NAME=v1r13>2008-06-09 Analysis v1r13 - June 2008 software week tutorial version</A></H1><PRE>
-
- - Uses LHCb v23r7 and Gaudi v19r9
+ - Uses LHCb v24r1
+ - New FlavourTagging
+ - Updated DecayTreeTuple
+ - Improvement in MC truth
+ - More selections
 
 #######################################MM######################################
 #                                  ANALYSIS v1r13                             #
