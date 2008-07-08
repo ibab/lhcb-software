@@ -1,0 +1,44 @@
+/** not run anymore
+ *
+ */
+//---------------------------------------------------------------------
+// Special case for muons from L0
+//---------------------------------------------------------------------
+SeqHlt2Muons.Members += { "HltMuonForTES"} ;
+//HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonsForwardSingle";
+//HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonsForward";
+HltMuonForTES.InputSingleLocation ="Hlt/Selection/Track/Hlt1MuonSingleTMVeloT";
+HltMuonForTES.InputDimuonLocation ="Hlt/Selection/Track/Hlt1MuonDiMuonTMVeloT";
+
+HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
+HltMuonForTES.OutputLevel =3;
+// ToolSvc.CloneFinderTool.CompareAtLHCbIDsLevel=true;
+HltMuonForTES.CloneFinderTool.CompareAtLHCbIDsLevel=true;
+
+// Hacking of errors
+SeqHlt2Muons.Members += { "HltInsertTrackErrParam/HltInsertTrackErrParamMuons"} ;
+HltInsertTrackErrParamMuons.InputLocation = "Hlt/Track/MuonsFromAlley" ;
+
+SeqHlt2Muons.Members += { "GaudiSequencer/SeqTrueSignalMuons" } ; // debug
+
+SeqHlt2Muons.Members += { "ChargedProtoPAlg/HltMuonPAlg" } ;
+//HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 
+//HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
+HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsFromAlley";
+HltMuonPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Muons" ;
+HltMuonPAlg.OutputLevel=3;
+HltMuonPAlg.UseCaloSpdPID = true ;
+HltMuonPAlg.UseCaloPrsPID = true ;
+HltMuonPAlg.UseCaloEcalPID = true ;
+HltMuonPAlg.UseCaloHcalPID = true ;
+HltMuonPAlg.UseCaloBremPID = true ;
+HltMuonPAlg.UseRichPID = false ;
+HltMuonPAlg.UseMuonPID = false ; // not needed
+HltMuonPAlg.UseVeloPID = false ;
+ *
+SeqHlt2Muons.Members += { "PreLoadParticles/HltAlleyMuons" };
+HltAlleyMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+HltAlleyMuons.PhysDesktop.NoPIDsParticleMaker.Inputs =  { "Hlt/ProtoP/Muons"} ;
+HltAlleyMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
+HltAlleyMuons.DecayDescriptor = "Muon" ;
+

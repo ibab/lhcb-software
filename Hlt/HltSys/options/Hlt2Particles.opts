@@ -27,7 +27,7 @@ HltFullRecoTEMPORARYCloneKiller.CloneFinderTool.CompareAtLHCbIDsLevel = true ;
  * @todo TEMPORARY kill huge events
  */
 SeqHlt2Charged.Members += { "NumberOfTracksFilter" };
-NumberOfTracksFilter.TrackLocations = { "Hlt/Track/ForwardCLEANED" };
+NumberOfTracksFilter.TrackLocations = { "Hlt/Track/Forward" };
 NumberOfTracksFilter.MaxTracks = 1000 ;
 /*
  * MC truth associated tracks
@@ -37,7 +37,7 @@ SeqHlt2Charged.Members += { "GaudiSequencer/SeqTrueSignalTracks" }; // debug
  * Hacking of errors
  */
 SeqHlt2Charged.Members += { "HltInsertTrackErrParam"} ;
-HltInsertTrackErrParam.InputLocation = "Hlt/Track/ForwardCLEANED" ;
+HltInsertTrackErrParam.InputLocation = "Hlt/Track/Forward" ;
 
 
 // -------------------------
@@ -47,30 +47,27 @@ SeqHlt2Particles.Members += {"GaudiSequencer/RecoCALOSeq" };
 // Options for Calo reconstruction
 #include "$CALORECOROOT/options/HltCaloSeq.opts"
 
-// Special online setting (will be moved to $CALORECOOPT/HltCaloSeq.opts wiht next release)
+/// @todo Special online setting (will be moved to $CALORECOOPT/HltCaloSeq.opts with next release)
 MergedPi0Rec.EtCut = 2.*GeV;
 ToolSvc.InSpd.Extrapolator = "TrackHerabExtrapolator";
 
 
-// temporary : rededine HLT track location to "Hlt/Track/ForwardCleaned"
-InSPD.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-InPRS.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-InHCAL.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-InECAL.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-InBREM.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-ClusterMatch.Tracks =  {"Hlt/Track/ForwardCLEANED" };
-BremMatch.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
-ElectronMatch.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
-SpdE.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-PrsE.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-EcalE.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-HcalE.Inputs =  {"Hlt/Track/ForwardCLEANED" };
-EcalChi22ID.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
-ClustChi22ID.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
-BremChi22ID.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
-
-
-
+/// @todo temporary : redefine HLT track location to "Hlt/Track/ForwardCleaned"
+InSPD.Inputs =  {"Hlt/Track/Forward" };
+InPRS.Inputs =  {"Hlt/Track/Forward" };
+InHCAL.Inputs =  {"Hlt/Track/Forward" };
+InECAL.Inputs =  {"Hlt/Track/Forward" };
+InBREM.Inputs =  {"Hlt/Track/Forward" };
+ClusterMatch.Tracks =  {"Hlt/Track/Forward" };
+BremMatch.Tracks ={"Hlt/Tracks/Forward"};
+ElectronMatch.Tracks ={"Hlt/Tracks/Forward"};
+SpdE.Inputs =  {"Hlt/Track/Forward" };
+PrsE.Inputs =  {"Hlt/Track/Forward" };
+EcalE.Inputs =  {"Hlt/Track/Forward" };
+HcalE.Inputs =  {"Hlt/Track/Forward" };
+EcalChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+ClustChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+BremChi22ID.Tracks ={"Hlt/Tracks/Forward"};
 
 //---------------------------------------------------------------------
 // MuonID
@@ -78,7 +75,7 @@ BremChi22ID.Tracks ={"Hlt/Tracks/ForwardCLEANED"};
 SeqHlt2Particles.Members += { "GaudiSequencer/HltMuonIDSeq"} ;
 HltMuonIDSeq.Members += { "MuonRec", "MuonID/HltMuonID" };
 #include "$HLTSYSROOT/options/HltMuonID.opts"
-HltMuonID.TrackLocation = "Hlt/Track/ForwardCLEANED" ;
+HltMuonID.TrackLocation = "Hlt/Track/Forward" ;
 HltMuonID.MuonIDLocation = "Hlt/Muon/MuonPID" ;
 HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 
@@ -97,23 +94,24 @@ HltMuonID.MuonTrackLocation = "Hlt/Track/Muon";
 #include "$RICHHLTSYSOPTS/LocalPID.opts"
 
 // temporary, to use the cleaned forward tracks
-ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/ForwardCLEANED";
+ToolSvc.HLT.RichTrackCreator.TracksLocation = "Hlt/Track/Forward";
 
 // Explicitly run the RICH reco sequence
 //SeqHlt2Charged.Members += { "GaudiSequencer/HltRICHReco" };
 // ... or on-demand only when really needed
-//DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' TYPE='GaudiSequencer/HltRICHReco'"};
-//----------------------------------------------------------------------------------------------------
+//DataOnDemandSvc.Algorithms += {"DATA='/Event/Rec/Rich/HltPIDs' 
+//                              TYPE='GaudiSequencer/HltRICHReco'"};
+//-----------------------------------------------------------------
 
 //---------------------------------------------------------------------
 // ChargedProtoPAlg
 //---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "ChargedProtoPAlg/HltChargedProtoPAlg" } ;
-HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/ForwardCLEANED" ; // Correct this
-// HltChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; // Correct this
-HltChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
-SeqHlt2Particles.Members += { "ChargedProtoCombineDLLsAlg/HltChargedProtoCombDLL" };
-HltChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
+SeqHlt2Particles.Members += { "ChargedProtoPAlg/Hlt2ChargedProtoPAlg" } ;
+Hlt2ChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; /// @todo Correct this
+// Hlt2ChargedProtoPAlg.InputTrackLocation = "Hlt/Track/Forward" ; /// @todo Correct this
+Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Charged" ;
+SeqHlt2Particles.Members += { "ChargedProtoCombineDLLsAlg/Hlt2ChargedProtoCombDLL" };
+Hlt2ChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 
 
 //---------------------------------------------------------------------
@@ -126,49 +124,43 @@ SeqHlt2Particles.Members += { "NeutralProtoPAlg/HltNeutralProtoPAlg" } ;
 //---------------------------------------------------------------------
 // ProtoParticles
 //---------------------------------------------------------------------
-//HltChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
-HltChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID";
+//Hlt2ChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs";
+Hlt2ChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID";
 // Calo PID
-HltChargedProtoPAlg.UseCaloSpdPID = true ;
-HltChargedProtoPAlg.UseCaloPrsPID = true ;
-HltChargedProtoPAlg.UseCaloEcalPID = true ;
-HltChargedProtoPAlg.UseCaloHcalPID = true ;
-HltChargedProtoPAlg.UseCaloBremPID = true ;
-//HltChargedProtoPAlg.UseRichPID = false ; // Protos will NOT have any RICH information - HltRichPIDsKaons will not work
-HltChargedProtoPAlg.UseRichPID = true ;    // Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
-HltChargedProtoPAlg.UseMuonPID = true ;
-HltChargedProtoPAlg.UseVeloPID = false ;
-
-
-
-
-
+Hlt2ChargedProtoPAlg.UseCaloSpdPID = true ;
+Hlt2ChargedProtoPAlg.UseCaloPrsPID = true ;
+Hlt2ChargedProtoPAlg.UseCaloEcalPID = true ;
+Hlt2ChargedProtoPAlg.UseCaloHcalPID = true ;
+Hlt2ChargedProtoPAlg.UseCaloBremPID = true ;
+//Hlt2ChargedProtoPAlg.UseRichPID = false ; // Protos will NOT have any RICH information - HltRichPIDsKaons will not work
+Hlt2ChargedProtoPAlg.UseRichPID = true ;    // Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
+Hlt2ChargedProtoPAlg.UseMuonPID = true ;
+Hlt2ChargedProtoPAlg.UseVeloPID = false ;
 
 //---------------------------------------------------------------------
 // Charged Particles - Here make all to Pi and K
 //---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "PreLoadParticles/HltNoPIDsPions",
-                                   "PreLoadParticles/HltNoPIDsKaons" }; 
+SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Pions",
+                              "PreLoadParticles/Hlt2Kaons" }; 
 
-HltNoPIDsPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-HltNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
-HltNoPIDsPions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
-HltNoPIDsPions.DecayDescriptor = "Pion" ;
+Hlt2Pions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
+Hlt2Pions.PhysDesktop.NoPIDsParticleMaker.Particle =  "pion" ;
+Hlt2Pions.DecayDescriptor = "Pion" ;
 
-HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
-HltNoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
-HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+Hlt2Kaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+Hlt2Kaons.PhysDesktop.NoPIDsParticleMaker.Inputs =  {"Hlt/ProtoP/Charged"} ;
+Hlt2Kaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
+Hlt2Kaons.DecayDescriptor = "Kaon" ;
 
-// CRJ : Hack to make the 'NoPIDs' kaons use the RICH - Easy way to get everything downstream using the RICH
-/*
-HltNoPIDsKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
-HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
-HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-HltNoPIDsKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
-HltNoPIDsKaons.DecayDescriptor = "Kaon" ;
+/* To get the RICH kaons
+Hlt2Kaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+Hlt2Kaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+Hlt2Kaons.PhysDesktop.CombinedParticleMaker.InputProtoParticles = "Hlt/ProtoP/Charged";
+Hlt2Kaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+Hlt2Kaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+Hlt2Kaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
+Hlt2Kaons.DecayDescriptor = "Kaon" ;
 */
 
 //---------------------------------------------------------------------
@@ -192,104 +184,71 @@ SeqHlt2Muons.IgnoreFilterPassed = true ;
 //---------------------------------------------------------------------
 // Muons from Long tracks
 //---------------------------------------------------------------------
-SeqHlt2Muons.Members += { "PreLoadParticles/HltForwardMuons" }; 
-HltForwardMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-HltForwardMuons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-HltForwardMuons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
-HltForwardMuons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON'" } ;
-HltForwardMuons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
-HltForwardMuons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
-HltForwardMuons.DecayDescriptor = "Muon" ;
-//---------------------------------------------------------------------
-// Special case for muons from L0
-//---------------------------------------------------------------------
-SeqHlt2Muons.Members += { "HltMuonForTES"} ;
-//HltMuonForTES.InputSingleLocation ="Hlt/Track/MuonsForwardSingle";
-//HltMuonForTES.InputDimuonLocation ="Hlt/Track/DiMuonsForward";
-HltMuonForTES.InputSingleLocation ="Hlt/Selection/Track/Hlt1MuonSingleTMVeloT";
-HltMuonForTES.InputDimuonLocation ="Hlt/Selection/Track/Hlt1MuonDiMuonTMVeloT";
+SeqHlt2Muons.Members += { "PreLoadParticles/Hlt2Muons" }; 
+Hlt2Muons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+Hlt2Muons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+Hlt2Muons.PhysDesktop.CombinedParticleMaker.Particles = {"muon"} ;
+Hlt2Muons.PhysDesktop.CombinedParticleMaker.Muon.Selection = {"RequiresDet='MUON'" } ;
+Hlt2Muons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+Hlt2Muons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
+Hlt2Muons.DecayDescriptor = "Muon" ;
 
-HltMuonForTES.OutputMuonLocation ="Hlt/Track/MuonsFromAlley";
-HltMuonForTES.OutputLevel =3;
-// ToolSvc.CloneFinderTool.CompareAtLHCbIDsLevel=true;
-HltMuonForTES.CloneFinderTool.CompareAtLHCbIDsLevel=true;
-
-// Hacking of errors
-SeqHlt2Muons.Members += { "HltInsertTrackErrParam/HltInsertTrackErrParamMuons"} ;
-HltInsertTrackErrParamMuons.InputLocation = "Hlt/Track/MuonsFromAlley" ;
-
-SeqHlt2Muons.Members += { "GaudiSequencer/SeqTrueSignalMuons" } ; // debug
-
-SeqHlt2Muons.Members += { "ChargedProtoPAlg/HltMuonPAlg" } ;
-//HltMuonPAlg.InputTrackLocation = "Hlt/Track/ForwardMuonRefined" ; 
-//HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsForward" ; 
-HltMuonPAlg.InputTrackLocation = "Hlt/Track/MuonsFromAlley";
-HltMuonPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/Muons" ;
-HltMuonPAlg.OutputLevel=3;
-HltMuonPAlg.UseCaloSpdPID = true ;
-HltMuonPAlg.UseCaloPrsPID = true ;
-HltMuonPAlg.UseCaloEcalPID = true ;
-HltMuonPAlg.UseCaloHcalPID = true ;
-HltMuonPAlg.UseCaloBremPID = true ;
-HltMuonPAlg.UseRichPID = false ;
-HltMuonPAlg.UseMuonPID = false ; // not needed
-HltMuonPAlg.UseVeloPID = false ;
-
-SeqHlt2Muons.Members += { "PreLoadParticles/HltAlleyMuons" };
-HltAlleyMuons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
-HltAlleyMuons.PhysDesktop.NoPIDsParticleMaker.Inputs =  { "Hlt/ProtoP/Muons"} ;
-HltAlleyMuons.PhysDesktop.NoPIDsParticleMaker.Particle =  "muon" ;
-HltAlleyMuons.DecayDescriptor = "Muon" ;
-
-//---------------------------------------------------------------------
-/// Now merge muons    @todo : kill clones
-//---------------------------------------------------------------------
-SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
-HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMuons" };
+/** not run anymore
+ *
+ * //---------------------------------------------------------------------
+ * // Special case for muons from L0
+ * //---------------------------------------------------------------------
+ * #include "$HLTSYSROOT/options/Hlt2ObsoleteMuonsFromL0.opts"
+ * //---------------------------------------------------------------------
+ * /// Now merge muons    @todo : kill clones
+ * //---------------------------------------------------------------------
+ * SeqHlt2Muons.Members += { "FilterDesktop/HltMuons"};
+ * HltMuons.PhysDesktop.InputLocations = { "Phys/HltAlleyMuons", "Phys/HltForwardMuons" };
+ */
 
 //---------------------------------------------------------------------
 // Special case for electrons 
 //---------------------------------------------------------------------
-SeqHlt2Particles.Members += { "PreLoadParticles/HltElectrons"};
-HltElectrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
-HltElectrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
-HltElectrons.PhysDesktop.CombinedParticleMaker.Particles =  {"electron"} ;
-HltElectrons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
-HltElectrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
-HltElectrons.DecayDescriptor = "Electron" ;
+SeqHlt2Particles.Members += { "PreLoadParticles/Hlt2Electrons"};
+Hlt2Electrons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+Hlt2Electrons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+Hlt2Electrons.PhysDesktop.CombinedParticleMaker.Particles =  {"electron"} ;
+Hlt2Electrons.PhysDesktop.CombinedParticleMaker.InputProtoParticles =  "/Event/Hlt/ProtoP/Charged" ;
+Hlt2Electrons.PhysDesktop.CombinedParticleMaker.Electron.Selection = {"RequiresDet='CALO' CombDLL(e-pi)>'-2.0'" } ;
+Hlt2Electrons.DecayDescriptor = "Electron" ;
 
 
 //---------------------------------------------------------------------
 // Special case for neutrals (photons & pi0s)
 //---------------------------------------------------------------------
-HltNeutrals.IgnoreFilterPassed = true;
-SeqHlt2Particles.Members += {"GaudiSequencer/HltNeutrals"};
-HltNeutrals.Members += { 
-  "PreLoadParticles/HltPhotons",
-  "PreLoadParticles/HltMergedPi0s",
-  "PreLoadParticles/HltResolvedPi0s"
+SeqHlt2Neutrals.IgnoreFilterPassed = true;
+SeqHlt2Particles.Members += {"GaudiSequencer/SeqHlt2Neutrals"};
+SeqHlt2Neutrals.Members += { 
+  "PreLoadParticles/Hlt2Photons",
+  "PreLoadParticles/Hlt2MergedPi0s",
+  "PreLoadParticles/Hlt2ResolvedPi0s"
 };
 //Make the photons
-HltPhotons.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-HltPhotons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker" ;
-HltPhotons.DecayDescriptor = "Gamma" ;
-HltPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"; 
-HltPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
-HltPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
-HltPhotons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
+Hlt2Photons.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
+Hlt2Photons.PhysDesktop.CaloParticleMaker.Type = "PhotonMaker" ;
+Hlt2Photons.DecayDescriptor = "Gamma" ;
+Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.Input= "Hlt/ProtoP/Neutrals"; 
+Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.ConvertedPhotons = true  ;
+Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.UnConvertedPhotons = true  ;
+Hlt2Photons.PhysDesktop.CaloParticleMaker.PhotonMaker.PtCut = 200.* MeV;
 //Make the resolved Pi0s
-HltResolvedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-HltResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker" ;
-HltResolvedPi0s.DecayDescriptor = "Pi0" ;
-HltResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.Input = "Hlt/ProtoP/Neutrals";
-HltResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 60.* MeV;
-HltResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
+Hlt2ResolvedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
+Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.Type = "ResolvedPi0Maker" ;
+Hlt2ResolvedPi0s.DecayDescriptor = "Pi0" ;
+Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.Input = "Hlt/ProtoP/Neutrals";
+Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.Pi0MassWindow = 60.* MeV;
+Hlt2ResolvedPi0s.PhysDesktop.CaloParticleMaker.ResolvedPi0Maker.PhotonMaker.PtCut = 200.*MeV;
 //Make the merged Pi0s
-HltMergedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
-HltMergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker" ;
-HltMergedPi0s.DecayDescriptor = "Pi0" ;
-HltMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Input= "Hlt/ProtoP/Neutrals"; 
-HltMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
+Hlt2MergedPi0s.PhysDesktop.ParticleMakerType = "CaloParticleMaker" ;
+Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.Type = "MergedPi0Maker" ;
+Hlt2MergedPi0s.DecayDescriptor = "Pi0" ;
+Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Input= "Hlt/ProtoP/Neutrals"; 
+Hlt2MergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* MeV;
 
 
 //---------------------------------------------------------------------
@@ -298,40 +257,29 @@ HltMergedPi0s.PhysDesktop.CaloParticleMaker.MergedPi0Maker.Pi0MassWindow = 60.* 
 SeqHlt2Particles.Members += { "GaudiSequencer/SeqHlt2VzeroLL" } ;
 SeqHlt2VzeroLL.MeasureTime = true ;
 SeqHlt2VzeroLL.IgnoreFilterPassed = false ;
-#include "$HLTKSHORTROOT/options/HltV0LL.opts"
-HltV0LL.InputTrackContainer = "Hlt/Track/ForwardCLEANED";
 // Kzero from two long tracks
 SeqHlt2VzeroLL.Members += {
-  "CreateHltVzero/HltV0LL",
-  "GaudiSequencer/SeqMakeHltKsLL",
-  "GaudiSequencer/SeqMakeHltLambdaLL"
+  "CreateHltVzero/Hlt2V0LL",
+  "GaudiSequencer/SeqMakeHlt2KsLL",
+  "GaudiSequencer/SeqMakeHlt2LambdaLL"
 };
-SeqMakeHltKsLL.Members += { "HltV0ParticleMakerAlg/HltKsLLParticles" };
-SeqMakeHltKsLL.IgnoreFilterPassed = true ;
-HltKsLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
-HltKsLLParticles.MakeKs = true ;
-HltKsLLParticles.MakeLambda = false ;
-HltKsLLParticles.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions" };
+#include "$HLTKSHORTROOT/options/HltV0LL.opts"
+Hlt2V0LL.InputTrackContainer = "Hlt/Track/Forward";
+SeqMakeHlt2KsLL.Members += { "HltV0ParticleMakerAlg/Hlt2KsLLParticles" };
+SeqMakeHlt2KsLL.IgnoreFilterPassed = true ;
+Hlt2KsLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
+Hlt2KsLLParticles.MakeKs = true ;
+Hlt2KsLLParticles.MakeLambda = false ;
+Hlt2KsLLParticles.PhysDesktop.InputLocations = { "Phys/Hlt2Pions" };
 
-SeqMakeHltLambdaLL.Members += { "HltV0ParticleMakerAlg/HltLambdaLLParticles" };
-SeqMakeHltLambdaLL.IgnoreFilterPassed = true ;
-HltLambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
-HltLambdaLLParticles.MakeKs = false ;
-HltLambdaLLParticles.MakeLambda = true ;
-HltLambdaLLParticles.PhysDesktop.InputLocations = { "Phys/HltNoPIDsPions",
-                                                    "Phys/HltNoPIDsProtons"};
+SeqMakeHlt2LambdaLL.Members += { "HltV0ParticleMakerAlg/Hlt2LambdaLLParticles" };
+SeqMakeHlt2LambdaLL.IgnoreFilterPassed = true ;
+Hlt2LambdaLLParticles.V0Location = "Hlt/Vertex/KsLL" ;
+Hlt2LambdaLLParticles.MakeKs = false ;
+Hlt2LambdaLLParticles.MakeLambda = true ;
+Hlt2LambdaLLParticles.PhysDesktop.InputLocations = { "Phys/Hlt2Pions",
+                                                     "Phys/Hlt2Protons"};
 
-/* printout 
-SeqMakeHltKsLL.Members += {  "PrintTree/PrintKs" };
-PrintKs.PhysDesktop.InputLocations = { "Phys/HltKsLLParticles" };
-SeqMakeHltLambdaLL.Members += {  "PrintTree/PrintLambda" };
-PrintLambda.PhysDesktop.InputLocations = { "Phys/HltLambdaLLParticles" };
-*/
 
-/* debug
-HltKsLLParticles.OutputLevel = 2;
-HltLambdaLLParticles.OutputLevel = 2;
-*/
-
-HltKsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
-HltLambdaLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixe
+Hlt2KsLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixed
+Hlt2LambdaLLParticles.RefitVertex = true ; /// @todo Remove when covariance is fixe
