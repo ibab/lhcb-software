@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.14 2008-04-23 20:28:27 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.15 2008-07-08 16:41:47 pkoppenb Exp $
 
 // Include files 
 
@@ -176,8 +176,8 @@ StatusCode  CheckOverlap::addOrigins( const LHCb::Particle::ConstVector& parts,
     } else {
       if ( 0==m_ppSvc) m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
       ParticleProperty *pp = m_ppSvc->findByPythiaID((*c)->particleID().pid());
-      if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
-                         StatusCode::SUCCESS) ;
+      if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.",10, 
+                         StatusCode::SUCCESS).ignore() ;
       else err() << "Particle with unknown PID " << (*c)->particleID().pid() << " has no endVertex. " 
                  <<  "Assuming it's from MC" << endmsg ;
     } 

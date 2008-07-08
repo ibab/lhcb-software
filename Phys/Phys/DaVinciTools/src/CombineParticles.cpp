@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.17 2008-07-02 10:46:40 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.18 2008-07-08 16:41:47 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -463,7 +463,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       if ( 0 != m_combinationPlots ) 
       {
         StatusCode sc = m_combinationPlots->fillPlots ( &mother ) ;
-        if ( sc.isFailure() ) { Warning ( "The error from CombinationPlots" , sc ) ; } 
+        if ( sc.isFailure() ) { Warning ( "Error from CombinationPlots" , sc ) ; } 
       }
       
       // apply the cut on "mother" particle
@@ -477,7 +477,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
       if ( 0 != m_motherPlots ) 
       {
         StatusCode sc = m_motherPlots->fillPlots ( particle ) ;
-        if ( sc.isFailure() ) { Warning ( "The error from MotherPlots" , sc ) ; } 
+        if ( sc.isFailure() ) { Warning ( "Error from MotherPlots" , sc ) ; } 
       }
 
       // increment number of good decays 

@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.28 2008-04-29 11:06:01 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.29 2008-07-08 16:40:00 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -298,7 +298,7 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
     const LHCb::RichPID * rpid = proto->richPID();
     if ( !rpid )
     {
-      Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ); 
+      Error( "ProtoParticle has RICH information but NULL RichPID SmartRef !" ).ignore(); 
     }
   }
   // test MUON links
@@ -307,7 +307,7 @@ void CombinedParticleMaker::checkPIDInfo( const LHCb::ProtoParticle * proto ) co
     const LHCb::MuonPID * mpid = proto->muonPID();
     if ( !mpid )
     {
-      Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ); 
+      Error( "ProtoParticle has MUON information but NULL MuonPID SmartRef !" ).ignore(); 
     }
   }
 }
