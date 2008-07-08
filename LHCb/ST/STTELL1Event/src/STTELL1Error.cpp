@@ -156,7 +156,7 @@ void LHCb::STTELL1Error::fillErrorInfo() {
       // pseudo error = 1 word per port
       for (unsigned int iPort = 0 ; iPort < nPort; ++iPort ){
 	const unsigned int link = linkID(iLink,iPort);
-        if ( HeaderPseudoError >> link & 1) addLinkInfo(link, kPseudoHeader); 
+        if ( HeaderPseudoError() >> link & 1) addLinkInfo(link, kPseudoHeader); 
       } // iport 
     } // if
   } // iOLink  
