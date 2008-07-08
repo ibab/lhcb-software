@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.h,v 1.20 2008-04-29 11:49:21 cattanem Exp $
+// $Id: RawEventHelpers.h,v 1.21 2008-07-08 16:07:27 rstoica Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -21,6 +21,9 @@
 /*
  *    LHCb namespace
  */
+  unsigned int hash32Checksum(const void* ptr, size_t len); 
+  unsigned long adler32Checksum(unsigned long old, const char *buf, size_t len);
+
 namespace LHCb  {
 
   // Forward declarations
