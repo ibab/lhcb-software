@@ -5,6 +5,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r10>2008-07-09 OnlineSys v4r11</A></H1><PRE>
+     New version v4r11 built against LHCb v24r0.
+     This version uses the new DIM Version v17r7.
+     New package GaudiSerialize to stream Datastore contents
+     over the network.
+     Changes and bug fixes as found during the commissioning week in
+     DAQ/MDF, DIM, GaudiOnline, GaudiUPI, Gaucho, OnlineKernel, OnlineTasks,
+     ROMon and ROLogger.
+
 </PRE><H1><A NAME=v4r10>2008-06-09 OnlineSys v4r10</A></H1><PRE>
 New version v4r10 built against LHCb v23r7.
 Changes and bug fixes in GaudiOnline, OnlineKernel, OnlineTasks, 
