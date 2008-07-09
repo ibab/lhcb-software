@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.6 2008-07-08 19:49:15 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.7 2008-07-09 13:02:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -22,6 +22,7 @@
 
 // Gaudi
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 // base class
 #include "Kernel/DVAlgorithm.h"
@@ -39,6 +40,9 @@
 
 // Event
 #include "Event/MCParticle.h"
+
+// ROOT
+#include "TH1D.h"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
@@ -67,6 +71,49 @@ public:
 
 private: // definitions
 
+  /** @class EffVersusMomentum ParticleEffPurMoni.h
+   *  Utility class used to create efficneicy versus momentum plots
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   09/07/2008
+   */
+  class EffVersusMomentum
+  {
+  public:
+    /// Defintion of internal data storage
+    typedef std::vector<double> Data;
+    /// Constructor
+    explicit EffVersusMomentum( const double _minP  =   0*Gaudi::Units::GeV,
+                                const double _maxP  = 100*Gaudi::Units::GeV,
+                                const int    _nBins = 50 )
+      : m_minP(_minP),
+        m_maxP(_maxP),
+        m_nBins(_nBins),
+        m_data(_nBins,0) { }
+  private:
+    inline unsigned int bin( const double p )
+    {
+      return static_cast<int>( m_nBins * ( p - m_minP ) / ( m_maxP - m_minP) );
+    }
+  public:
+    inline void fill( const double p )
+    {
+      if ( p<=m_maxP && p>=m_minP )
+      {
+        const unsigned int b = bin(p);
+        if ( b<m_nBins) ++m_data[b];
+      }
+    }
+    inline const Data & data() const { return m_data; }
+    inline double minP() const { return m_minP; } 
+    inline double maxP() const { return m_maxP; }
+    inline unsigned int nBins() const { return m_nBins; }
+  private:
+    double m_minP;        ///< Minimum momentum
+    double m_maxP;        ///< Maximum momentum
+    unsigned int m_nBins; ///< Number of bins
+    Data m_data;  ///< The data
+  };
+
   /** @class ParticleHistory ParticleEffPurMoni.h
    *  Utility class containing basic Particle history information for the ParticleEffPurMoni algorithm
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
@@ -80,10 +127,10 @@ private: // definitions
                      const std::string & _history,
                      const ParticleProperty * _prop,
                      const bool _orig )
-      : particle       (_part      ), 
+      : particle       (_part      ),
         firstParticle  (_prim_part ),
-        history        (_history   ), 
-        properties     (_prop      ), 
+        history        (_history   ),
+        properties     (_prop      ),
         topLevel       (_orig      ) { }
   public:
     const LHCb::Particle * particle;      ///< Pointer to the Particle
@@ -112,11 +159,12 @@ private: // definitions
   public:
     MCTally() : all(0), clones(0) { }
   public:
-    unsigned long int all; ///< Total number
-    unsigned long int clones; ///< Number of clones
+    unsigned long int all;         ///< Total number
+    unsigned long int clones;      ///< Number of clones
     typedef std::map<std::string,unsigned long int> Contributions;
-    Contributions all_detailed; ///< Detailed breakdown for each full MC tree decay (all)
+    Contributions all_detailed;    ///< Detailed breakdown for each full MC tree decay (all)
     Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
+    EffVersusMomentum effVp;       ///< Eff versus momentum data
   };
   typedef std::map<std::string, MCTally> TypeTally;
   typedef std::map< IMCReconstructible::RecCategory, TypeTally > MCRecTypeMap;
@@ -149,7 +197,7 @@ private: // definitions
     FullPartName( const std::string & name = "",
                   const std::string & tree = "",
                   const std::string & type = "",
-                  const std::string & protoTes = "" ) 
+                  const std::string & protoTes = "" )
       :  particleName(name),
          decayTree(tree),
          protoType(type),
@@ -157,7 +205,7 @@ private: // definitions
     /// Operator <
     inline bool operator< ( const FullPartName& name ) const
     { return ( this->protoTESLoc + this->protoType + this->particleName + this->decayTree <
-               name.protoTESLoc  + name.protoType  + name.particleName  + name.decayTree ); } 
+               name.protoTESLoc  + name.protoType  + name.particleName  + name.decayTree ); }
     /// Equality operator
     inline bool operator== ( const FullPartName& name ) const
     { return ( this->particleName == name.particleName &&
@@ -169,7 +217,7 @@ private: // definitions
     { return ! this->operator==(name); }
     /// Overloaded operator to ostream
     friend inline std::ostream& operator << ( std::ostream& os, const FullPartName & name )
-    { return os << "[ " << name.particleName << " " 
+    { return os << "[ " << name.particleName << " "
                 << name.decayTree << " " << name.protoType << " ]"; }
   public:
     std::string particleName; ///< Particle name (K+, pi- etc.)
@@ -178,7 +226,7 @@ private: // definitions
     std::string protoTESLoc;  ///< ProtoParticle container location in TES
   };
 
-  typedef std::map< FullPartName, MCSummary >     MCSummaryMap; 
+  typedef std::map< FullPartName, MCSummary >     MCSummaryMap;
   typedef std::map< std::string, std::map< std::string, MCSummary > > MCSummaryMapAllProtos;
   typedef std::map< std::string, MCSummaryMap >   LocationMap;
 
@@ -221,16 +269,18 @@ private: // methods
   /// Printout statistics
   void printStats() const;
 
+  /// Returns the momentum value for a given ProtoParticle
+  const double momentum( const LHCb::ProtoParticle * proto ) const
+  {
+    // CRJ : Need to decide what to do for neutrals
+    return ( NULL != proto->track() ? proto->track()->p() : 0 );
+  }
+
   /// Returns the ParticleProperty object for a given ParticleID
   const ParticleProperty * partProp( const LHCb::ParticleID id ) const;
 
   /// Access the Particle Linker appropriate for the given Particle
-  inline Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const
-  {
-    if ( !m_particleLinker )
-    { m_particleLinker = new Particle2MCLinker ( this, Particle2MCMethod::Composite, std::vector<std::string>(1,"") ); }
-    return m_particleLinker;
-  }
+  Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const;
 
   /// Access the charged ProtoParticle Linker
   ProtoParticle2MCLinker * chargedProtoLinker(const LHCb::ProtoParticle * proto) const;
@@ -273,7 +323,7 @@ private: // methods
   /// Returns the min MC association weight for the given ProtoParticle
   inline double minMCWeight( const LHCb::ProtoParticle * proto ) const
   {
-    return ( proto == NULL ? 1.0 : 
+    return ( proto == NULL ? 1.0 :
              (0 != proto->charge() ? m_minAssWeightCh : m_minAssWeightNu) );
   }
 
@@ -285,6 +335,24 @@ private: // methods
 
   /// Returns the MCParticle name including the decay tree
   std::string mcParticleNameTree( const LHCb::MCParticle * mcPart );
+
+  /// Make a histogram
+  void makeEffHisto( const std::string title, 
+                     const EffVersusMomentum & top,
+                     const EffVersusMomentum & bot ) const;
+
+  /// Strip and/or replace unwanted sub-strings from a string
+  void cleanPath( std::string & title,
+                  const std::string & A,
+                  const std::string & B ) const
+  {
+    std::string::size_type slash = title.find_first_of ( A ) ;
+    while ( std::string::npos != slash ) 
+    {
+      title = title.substr(0,slash) + B + title.substr(slash+A.size());
+      slash = title.find_first_of( A );
+    } 
+  }
 
 private: // data
 

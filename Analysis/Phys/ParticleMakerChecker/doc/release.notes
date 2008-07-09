@@ -4,6 +4,9 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2008-07-09 - Chris Jones
+ - Add effiency versus momentum histograms
+
 ! 2008-07-08 - Chris Jones
  - Improvements to summary information
   + Add printout for each MC tree type

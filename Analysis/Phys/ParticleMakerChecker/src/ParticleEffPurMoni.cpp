@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.4 2008-07-08 19:49:15 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.5 2008-07-09 13:02:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -135,6 +135,9 @@ StatusCode ParticleEffPurMoni::execute()
     // Get the MCParticle reco type
     const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
 
+    // ProtoParticle momentum
+    const double ptot = momentum((*iPM).first);
+
     // Loop over Particles for the Proto
     for ( ParticleHistory::Vector::const_iterator iPart = (*iPM).second.begin();
           iPart != (*iPM).second.end(); ++iPart )
@@ -169,6 +172,8 @@ StatusCode ParticleEffPurMoni::execute()
         ++(tally.all_detailed[tmpName]); 
         if ( isClone ) ++(tally.clones_detailed[tmpName]); 
       }
+      // Momentum histogramming
+      tally.effVp.fill( ptot );
 
     } // loop over particles produced from this proto
 
@@ -223,6 +228,8 @@ StatusCode ParticleEffPurMoni::execute()
         ++(tally.all_detailed[tmpName]); 
         if (isClone) ++(tally.clones_detailed[tmpName]); 
       }
+      // Momentum histogramming
+      tally.effVp.fill( momentum(*proto) );
 
     } // loop over all protos at one location in TES
 
@@ -249,6 +256,8 @@ StatusCode ParticleEffPurMoni::execute()
       // if configured to do so, include full tree info
       if ( m_fullMCTree && *iMCP )
       { ++(tally.all_detailed[mcParticleNameTree(*iMCP)]); }
+      // Momentum histogramming
+      tally.effVp.fill( (*iMCP)->p() );
     }
   }
 
@@ -461,13 +470,13 @@ std::string ParticleEffPurMoni::protoParticleType( const LHCb::ProtoParticle * p
     if ( !track ) Exception( "NULL Track pointer for charged ProtoParticle" );
     switch ( track->type() )
     {
-    case LHCb::Track::Long        : return "Charged : Long Track";
-    case LHCb::Track::Upstream    : return "Charged : Upstream Track";
-    case LHCb::Track::Downstream  : return "Charged : Downstream Track";
-    case LHCb::Track::Ttrack      : return "Charged : Ttrack Track";
-    case LHCb::Track::Velo        : return "Charged : Velo Track";
-    case LHCb::Track::VeloR       : return "Charged : VeloR Track";
-    default                       : return "Charged : UNKNOWN TYPE";
+    case LHCb::Track::Long        : return "Charged Long Track";
+    case LHCb::Track::Upstream    : return "Charged Upstream Track";
+    case LHCb::Track::Downstream  : return "Charged Downstream Track";
+    case LHCb::Track::Ttrack      : return "Charged Ttrack Track";
+    case LHCb::Track::Velo        : return "Charged Velo Track";
+    case LHCb::Track::VeloR       : return "Charged VeloR Track";
+    default                       : return "Charged UNKNOWN";
     }
   }
   else
@@ -549,9 +558,10 @@ void ParticleEffPurMoni::printStats() const
               mcTs << "     -> " << tally.all << " " << (*iT).first;
               std::string mcT = mcTs.str();
               mcT.resize(10+m_maxNameLength,' ');
-              const long nBkgTrue =
-                ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all;
-              const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all;
+              const MCTally & protoTally = ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first];
+              const long nBkgTrue = protoTally.all;
+              const MCTally & mcTally = (m_rawMCMap[(*iMCT).first])[(*iT).first];
+              const long nTotalMC = mcTally.all;
               always() << mcT
                        << " | " << eff( tally.all, (*iSum).second.nReco );
               if ( primaryPart ) 
@@ -561,6 +571,21 @@ void ParticleEffPurMoni::printStats() const
                 if ( tally.clones>0 ) always() << eff( tally.clones, nTotalMC );
               }
               always() << endreq;
+              // make a histo
+              std::string tmpParticlePath = (*iLoc).first;
+              cleanPath( tmpParticlePath, "/Event/Phys/", "" );
+              cleanPath( tmpParticlePath, "/Particles", "" );
+              std::ostringstream h_title;
+              h_title 
+                << tmpParticlePath << "/" 
+                << (*iSum).first.decayTree << "/" 
+                << "Reco " << (*iSum).first.protoType << "/"
+                << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
+                << (*iT).first;
+              makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.", 
+                            tally.effVp, mcTally.effVp );
+              makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.", 
+                            tally.effVp, protoTally.effVp );
               // sub contributions
               int suppressedContribsC(0);
               for ( MCTally::Contributions::const_iterator iC = tally.all_detailed.begin();
@@ -581,7 +606,7 @@ void ParticleEffPurMoni::printStats() const
                   { 
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
                     always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << " |" << eff( (*iC).second-nClones, nTotalMC ) << " |" ;
+                             << " |" << eff( (*iC).second-nClones, nTotalMC ) << " |";
                     if ( nClones>0 ) always() << eff( nClones, nTotalMC );
                   }
                   always() << endreq;
@@ -610,6 +635,32 @@ void ParticleEffPurMoni::printStats() const
   always() << LINES << endreq;
 }
 
+void ParticleEffPurMoni::makeEffHisto( const std::string title, 
+                                       const EffVersusMomentum & top,
+                                       const EffVersusMomentum & bot ) const
+{
+  // Get ROOT pointer (I feel unclean)
+  TH1D * histo 
+    = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title, 
+                                                    top.minP(), top.maxP(), 
+                                                    top.nBins() ) );
+  
+  // Loop over bins and set contents explicitly
+  for ( unsigned int bin = 0; bin < top.nBins(); ++bin )
+  {
+    const double demon = bot.data()[bin];
+    if ( demon>0 )
+    {
+      const double numer = top.data()[bin];
+      const double eff = 100.0 * numer / demon ;
+      const double err = 100.0 * std::sqrt((numer/demon)*(1.-numer/demon)/demon);
+      histo->SetBinContent( bin, eff );
+      histo->SetBinError( bin, err );
+    }
+  }
+
+}
+
 // Access the charged ProtoParticle Linker
 ProtoParticle2MCLinker *
 ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
@@ -618,7 +669,8 @@ ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
   const std::string loc = objectLocation(proto->parent());
   ProtoParticle2MCLinker *& linker = m_chargedProtoLinker[loc];
   if ( !linker )
-  { linker =
+  { 
+    linker =
       new ProtoParticle2MCLinker( this,
                                   Particle2MCMethod::ChargedPP,
                                   std::vector<std::string>(1,loc) );
@@ -634,12 +686,26 @@ ParticleEffPurMoni::neutralProtoLinker(const LHCb::ProtoParticle * proto) const
   const std::string loc = objectLocation(proto->parent());
   ProtoParticle2MCLinker *& linker = m_neutralProtoLinker[loc];
   if ( !linker )
-  { linker =
+  {
+    linker =
       new ProtoParticle2MCLinker( this,
                                   Particle2MCMethod::NeutralPP,
                                   std::vector<std::string>(1,loc) );
   }
   return linker;
+}
+
+// Access the Particle Linker appropriate for the given Particle
+Particle2MCLinker * 
+ParticleEffPurMoni::particleLinker( const LHCb::Particle * /* part */ ) const
+{
+  if ( !m_particleLinker )
+  { m_particleLinker = 
+      new Particle2MCLinker ( this, 
+                              Particle2MCMethod::Composite, 
+                              std::vector<std::string>(1,"") );
+  }
+  return m_particleLinker;
 }
 
 //=============================================================================
@@ -662,3 +728,4 @@ StatusCode ParticleEffPurMoni::finalize()
 }
 
 //=============================================================================
+
