@@ -24,9 +24,22 @@ def confAlley(gaudi,sequencer):
     algos = []
     confSequencer(gaudi,sequencer,algos)
     if (DEBUG):
-        for algo in algos:
-            print 'type = ',algo[0],' name = ',algo[1],' hlt properties = ',algo[2]
+        for algo in algos: print algo
     return algos
+
+class hltalgo():
+    def __init__(self,type,name,props):
+        self.type = type
+        self.name = name
+        self.props = props
+
+    def property(self,name):
+        if (not self.props.has_key(name)): return None
+        return self.props[name]
+
+    def __repr__(self):
+        c = " type = "+str(self.type)+" name= "+str(self.name)
+        return c
 
 def confSequencer(gaudi,sequencer,algos):
     seq = gaudi.algorithm(sequencer)
@@ -51,7 +64,7 @@ def confSequencer(gaudi,sequencer,algos):
                     value = gaudi.algorithm(algo).properties()[hltprop].value()
                     hltprops[hltprop] = value
                     if (DEBUG): print hltprop," = ",value
-            algos.append([type,algo,hltprops])
+            algos.append(hltalgo(type,algo,hltprops))
         else:
             confSequencer(gaudi,algo,algos)
 
