@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.22 2008-07-08 16:02:35 sandra Exp $
+// $Id: HltVertexMaker.cpp,v 1.23 2008-07-09 12:05:29 pkoppenb Exp $
 // Include files 
 
 
@@ -85,13 +85,13 @@ StatusCode HltVertexMaker::initialize() {
     double x0 = -1.e6;
     double xf =  1.e6;
     bool ok = EParser::parseFilter(filtername,funname,mode,x0,xf);
-    Assert(ok," initialize() not able to parse filtername "+filtername);
+    Assert(ok," initialize() not able to parse filtername "+filtername).ignore();
     
     m_filterNames.push_back(funname);
 
     int id = hltInfoID(funname);
     Hlt::TrackBiFunction* fun = factory->function(funname);
-    Assert( 0 !=  fun,  " initialize() function no created"+funname);
+    Assert( 0 !=  fun,  " initialize() function no created"+funname).ignore();
     m_functions.push_back(fun);
     m_filterIDs.push_back(id);
 
@@ -100,7 +100,7 @@ StatusCode HltVertexMaker::initialize() {
                           (mode == ">") ? (Hlt::Filter*)new zen::greater<double>(x0) : 
                                           (Hlt::Filter*)new zen::in_range<double>(x0,xf) );
 
-    Assert( 0 !=  fil,  " initialize() filter no created"+filtername);
+    Assert( 0 !=  fil,  " initialize() filter no created"+filtername).ignore();
     m_filters.push_back(fil);
     
     m_tcounters.push_back(0);   
@@ -109,8 +109,8 @@ StatusCode HltVertexMaker::initialize() {
       m_histos.push_back( initializeHisto(funname,0.,100.,100) );
     }
 
-    debug() << " filter " << filtername << " " << id << " "
-            << mode << x0 << "," << xf << endreq;
+    if (m_debug) debug() << " filter " << filtername << " " << id << " "
+                         << mode << x0 << "," << xf << endreq;
   }
   
   saveConfiguration();
@@ -133,7 +133,7 @@ StatusCode HltVertexMaker::execute() {
   put(overtices,"Hlt/Vertex/"+m_outputVertices->id().str());
 
   if ((!m_twoContainers && m_inputTracks->size() <2)) {
-    debug() << " no enought tracks in container to make vertices " << endreq;
+    if (m_debug) debug() << " no enought tracks in container to make vertices " << endreq;
     return sc;
   } 
   if (m_twoContainers) {
@@ -143,7 +143,7 @@ StatusCode HltVertexMaker::execute() {
     if (!m_doMergeInputs && (n1<1 || n2<1)) novalid = true;
     else if (n1+n2<2) novalid = true;
     if (novalid) {
-      debug() << " no enought tracks in container to make vertices " << endreq;
+      if (m_debug) debug() << " no enought tracks in container to make vertices " << endreq;
       return sc;
     }
   }

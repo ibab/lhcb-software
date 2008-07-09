@@ -3,13 +3,17 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-!2008-07-08 -  Sandra Amato
+
+! 2008-07-09 - Patrick KOPPENBURG
+ - fix some unchecked StatusCodes
+
+! 2008-07-08 -  Sandra Amato
   - Fix in HltVertexMaker.cpp to correctly deal with vertexing from different
     containers
-!2008-07-08 - Gerhard Raven
+! 2008-07-08 - Gerhard Raven
   - prepare Configuration services for Gaudi v20r1
   - check for presence of Odin before grabbing the TCK from the Odin bank
-!2008-07-04 - Gerhard Raven
+! 2008-07-04 - Gerhard Raven
   - TCK -> config ID mapping is now functional: can be obtained from database,
     and is used by HltConfigSvc, unless a TCK entry is (first) found in the 
     joboptions
@@ -17,7 +21,7 @@
   - fix readback of aliases in ConfigFileAccessSvc
   - allow to specify configurations to preload by TCK instead of by config ID
    
-!2008-07-04 - Gerhard Raven
+! 2008-07-04 - Gerhard Raven
   - binders now bind against containers-of-items instead of items, and enforce the
     container to be std::vector<item*> -- update FunctionFactories accordingly
   - replace all floats by double
@@ -28,60 +32,60 @@
     selection
   - use Selections instead of vectors in HltTFilter
 
-!2008-07-02 - Gerhard Raven
+! 2008-07-02 - Gerhard Raven
   - add HltRawBankFilter: filters on the presence of a given set of RawBank types.
 
-!2008-07-01 - Gerhard Raven
+! 2008-07-01 - Gerhard Raven
   - fix unchecked StatusCode in HltL0CaloPrepare, HltSummaryWriter
 
-!2008-06-30 - Gerhard Raven
+! 2008-06-30 - Gerhard Raven
   - implement configuration aliases in all IConfigAccessSvc implementations
   - write toplevel alias when generating configurations in HltGenConfig
   - implement browsing of aliases
   - STL-ify HltL0MuonPrepare::checkClone
 
-!2008-06-25 - Gerhard Raven
+! 2008-06-25 - Gerhard Raven
   - remove stale code in HltSummaryTool, stale include from HltL0{Calo,Muon}Prepare
   - HltANNSvc: replace SelectionID by Hlt1SelectionID
 
-!2008-06-23 - Gerhard Raven
+! 2008-06-23 - Gerhard Raven
   - simplify & extend HltDataSvc
   - use HltDataSvc instead of HltData
 
-!2008-06-20 - Gerhard Raven
+! 2008-06-20 - Gerhard Raven
   - add implementation of IHltDataSvc: HltDataSvc
 
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - Another shot at SEAL-less version
 
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - and back out again the SEAL-less changes for now...
   - resurrect _ddl file
 
 !========================== HltCommon v4r0 2008-06-13 ===================
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - prepare SEAL-less version
 
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - further cleanup of ConfigDBAccessSvc
 
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - back out previous commit to remain compatible with Hlt v3r3, and DaVinci v19r13
     for the time being.  To be put back when next Gaudi release becomes available
 
-!2008-06-12 - Gerhard Raven
+! 2008-06-12 - Gerhard Raven
   - prepare a version of ConfigDBAccessSvc removing ALL dependencies on SEAL,
     and tag v4r0 for the nightly builds.
 
-!2008-06-11 - Gerhard Raven
+! 2008-06-11 - Gerhard Raven
   - simplify ConfigDBAccessSvc, remove direct dependencies on SEAL.
 
 !========================== HltCommon v3r3 2008-06-09 ===================
-!2008-06-06 - Jose A. Hernando
+! 2008-06-06 - Jose A. Hernando
    - reparing the HltSummaryTool that python/examples/hltexamples.py works again
-!2008-06-05 - Gerhard Raven
+! 2008-06-05 - Gerhard Raven
    - allow a TCK of 0 to be specified in HltConfigSvc...
-!2008-06-02 - Gerhard Raven
+! 2008-06-02 - Gerhard Raven
    Hlt{T,}Filters:
    - adapt to m_monitor -> produceHistos()
    - make tesInput a c'tor property instead of derived classes setting a
