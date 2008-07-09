@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.h,v 1.4 2008-03-27 10:42:11 albrecht Exp $
+// $Id: L0ConfirmWithT.h,v 1.5 2008-07-09 08:28:51 hernando Exp $
 #ifndef L0CONFIRMWITHT_H 
 #define L0CONFIRMWITHT_H 1
 
@@ -9,6 +9,9 @@
 
 #include "L0ConfDataStore.h"
 #include "HltBase/IL0ConfExtrapolator.h"
+
+#include "HltBase/ITrackView.h"
+
 class ITrackConfirmTool;
 
 /** @class L0ConfirmWithT L0ConfirmWithT.h
@@ -21,7 +24,10 @@ class ITrackConfirmTool;
  *  @author Johannes Albrecht
  *  @date   2007-07-04
  */
-class L0ConfirmWithT : public GaudiTool, virtual public ITracksFromTrack {
+class L0ConfirmWithT : public GaudiTool, 
+                       virtual public ITracksFromTrack,
+                       virtual public ITrackView 
+{
 public: 
   /// Standard constructor
   L0ConfirmWithT( const std::string& type, 
@@ -35,10 +41,17 @@ public:
 
   virtual StatusCode tracksFromTrack( const LHCb::Track& seed,
                                       std::vector<LHCb::Track*>& tracks );
+
+  virtual std::vector<Tf::IStationSelector*>  view(const LHCb::Track& seed);
+  virtual std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed);
+
   
 protected:
 
 private:
+
+  StatusCode prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates );
+  
 
   bool m_debugMode;
   

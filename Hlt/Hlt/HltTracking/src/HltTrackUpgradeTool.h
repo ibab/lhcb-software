@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.10 2008-07-02 19:32:02 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.11 2008-07-09 08:29:02 hernando Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -65,11 +65,18 @@ public:
   // this method is unsave, it does not take care of the memory
   StatusCode iupgrade(LHCb::Track& seed,
                       std::vector<LHCb::Track*>& track);
-
   
-  Tf::IStationSelector& view(const LHCb::Track& seed);
+  std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed)
+  {
+    Assert(m_viewTool,"view() method no implemented for this reco!");
+    return m_viewTool->view(seed);
+  }
   
-  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed);
+  std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed)
+  {
+    Assert(m_viewTool,"view() method no implemented for this reco!");
+    return m_viewTool->lhcbIDsInView(seed);
+  }
 
 private:
 

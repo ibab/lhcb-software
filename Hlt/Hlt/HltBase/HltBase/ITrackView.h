@@ -1,4 +1,4 @@
-// $Id: ITrackView.h,v 1.2 2008-06-20 09:53:16 hernando Exp $
+// $Id: ITrackView.h,v 1.3 2008-07-09 08:28:35 hernando Exp $
 #ifndef HLTBASE_ITRACKVIEW_H 
 #define HLTBASE_ITRACKVIEW_H 1
 
@@ -24,9 +24,9 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackView; }
-
+  
   // return view of a track (the volume search window open by this seed track)
-  virtual Tf::IStationSelector& view(const LHCb::Track& seed) = 0;
+  virtual std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed) = 0;
   
   // return the hits on the volume search windows of this seed track 
   virtual std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed) = 0;

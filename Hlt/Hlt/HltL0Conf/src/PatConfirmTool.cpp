@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.7 2008-06-03 13:22:40 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.8 2008-07-09 08:28:51 hernando Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,8 @@ PatConfirmTool::PatConfirmTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ITrackConfirmTool>(this);
- 
+  //  declareInterface<ITrackView>(this);
+
   //variables to be defined in job options
   declareProperty("nSigmaX",m_nSigmaX=5.);
   declareProperty("nSigmaY",m_nSigmaY=5.);
@@ -93,8 +94,9 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   // Define track hypothesis from seed state (parabola model) and
   // decode IT and OT hits in search window
   
-  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
-  m_tHitManager->prepareHitsInWindow(tp);
+  ParabolaHypothesis tp = prepareT( seedState );  
+  //   ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
+//   m_tHitManager->prepareHitsInWindow(tp);
 
   
   if (m_debugMode) {
@@ -178,6 +180,33 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   return sc;
 }
 
+ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState )
+{
+  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
+  m_tHitManager->prepareHitsInWindow(tp);
+  return tp;
+}
+
+
+ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState ,std::vector<LHCb::LHCbID> ids)
+{
+
+  //prepare hits in T-stations
+  ParabolaHypothesis tp = prepareT( seedState );
+  Tf::TStationHitManager<PatForwardHit>::HitRange hits = m_tHitManager->hits();
+
+  //get lhcbids from hits and fill output
+  Tf::TStationHitManager<PatForwardHit>::HitRange::const_iterator it;
+  for ( it = hits.begin();it != hits.end();++it){
+  PatForwardHit* myHit = (*it);
+    LHCb::LHCbID id = myHit->hit()->lhcbID();
+    ids.push_back(id);
+  }
+  return tp;
+}
+
+
+
 /*
  *  This small helper seaches for a track found twice
  *  Faster than comparin id's is to check position in 
@@ -189,3 +218,21 @@ bool PatConfirmTool::isClone(const LHCb::Track& t1 , const LHCb::Track& t2)
   if( fabs( t1.closestState(9300.).x()-t2.closestState(9300.).x() ) > 0.01 ) return false;
   return true;
 }
+
+
+// Tf::IStationSelector& view(const LHCb::Track& seed)
+//{
+//  const LHCb::State& seedState = seed.firstState();
+//  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
+//  return tp;
+//}
+
+
+//std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed)
+//{
+//  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nSigmaX , m_nSigmaY );
+//  m_tHitManager->prepareHitsInWindow(tp);
+//  m_tHitManager->hits().
+//}
+
+

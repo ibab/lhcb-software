@@ -3,6 +3,11 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+! 2008-07-09 - Jose A. Hernando
+ - ITrackUpgrade, ITrackConfirm, ITrackView: 
+      o adaptations to drawing in Panoramix
+
 ! 2008-07-08 - sandra Amato
   - Modify HltUtils::doShareM3 to select tracks that share M2 and m3 hits
 

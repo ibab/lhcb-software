@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.17 2008-04-17 09:37:24 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.18 2008-07-09 08:28:51 hernando Exp $
 // Include files 
 
 // from Gaudi

@@ -1,4 +1,4 @@
-// $Id: ITrackConfirmTool.h,v 1.1 2007-02-08 17:32:39 hernando Exp $
+// $Id: ITrackConfirmTool.h,v 1.2 2008-07-09 08:28:35 hernando Exp $
 #ifndef ITRACKCONFIRMTOOL_H 
 #define ITRACKCONFIRMTOOL_H 1
 
@@ -8,6 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
+#include "HltBase/ParabolaHypothesis.h"
 
 class LHCb::State;
 class LHCb::Track;
@@ -28,6 +29,9 @@ public:
 
   virtual StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks ) =0;
   
+  virtual ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids)=0;
+  
+
 protected:
 
 private:
