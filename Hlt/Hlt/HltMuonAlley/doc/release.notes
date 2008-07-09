@@ -4,6 +4,7 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+!========================== HltMuonAlley v2r4p1 2008-07-09 ===================
 ! 2008-06-27 - Patrick Koppenburg
  - HltIsMuonTool : Check StatusCodes. Protect debug().
  - Increment to v2r4p1
