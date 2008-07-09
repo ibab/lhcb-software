@@ -1,4 +1,4 @@
-// $Id: BiasedBB.cpp,v 1.5 2008-05-29 14:21:59 gcorti Exp $
+// $Id: BiasedBB.cpp,v 1.6 2008-07-09 14:32:00 robbep Exp $
 // Include files 
 
 // local
@@ -6,6 +6,8 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/Point4DTypes.h"
 #include "GaudiKernel/Transform4DTypes.h"
 
@@ -32,9 +34,9 @@ BiasedBB::BiasedBB( const std::string& type , const std::string& name ,
     declareInterface< IGenCutTool >( this ) ;
     declareProperty( "EtaMax" , m_etaMax = 4.7 ) ;
     declareProperty( "EtaMin" , m_etaMin = 2.2 ) ;
-    declareProperty( "PtMin" , m_ptMin = 8.4 * GeV ) ;
-    declareProperty( "VMin" , m_vMin = 26. * GeV ) ;
-    declareProperty( "CTauMin" , m_ctauMin = 0.16 * mm ) ;
+    declareProperty( "PtMin" , m_ptMin = 8.4 * Gaudi::Units::GeV ) ;
+    declareProperty( "VMin" , m_vMin = 26. * Gaudi::Units::GeV ) ;
+    declareProperty( "CTauMin" , m_ctauMin = 0.16 * Gaudi::Units::mm ) ;
   }
 
 //=============================================================================
@@ -60,7 +62,7 @@ bool BiasedBB::applyCut( ParticleVector & theParticleVector ,
     pT = fourM.Pt() ;
     
     // Compute v
-    v = pT + 5.360 * GeV * eta ;
+    v = pT + 5.360 * Gaudi::Units::GeV * eta ;
 
     // Compute ctau
     Gaudi::LorentzVector pEnd , pBegin ; 
@@ -68,13 +70,13 @@ bool BiasedBB::applyCut( ParticleVector & theParticleVector ,
     pEnd.SetXYZT( (*it) -> end_vertex() -> position() . x() ,
                   (*it) -> end_vertex() -> position() . y() , 
                   (*it) -> end_vertex() -> position() . z() ,
-                  (*it) -> end_vertex() -> position() . t() * CLHEP::c_light ) ;
+                  (*it) -> end_vertex() -> position() . t() * Gaudi::Units::c_light ) ;
 
     pBegin.SetXYZT( (*it) -> production_vertex() -> position() . x() ,
                     (*it) -> production_vertex() -> position() . y() ,
                     (*it) -> production_vertex() -> position() . z() ,
                     (*it) -> production_vertex() -> position() . t() * 
-                    CLHEP::c_light ) ;  
+                    Gaudi::Units::c_light ) ;  
 
     Gaudi::LorentzVector disp = pEnd - pBegin ;
     // Boost transformation
@@ -87,14 +89,16 @@ bool BiasedBB::applyCut( ParticleVector & theParticleVector ,
     if ( ( eta < m_etaMin ) || ( eta > m_etaMax ) || ( pT < m_ptMin ) ||
          ( v < m_vMin ) || ( ctau < m_ctauMin ) ) {
       debug() << "Particle rejected: [eta = " << eta 
-              << "][pT = " << pT / GeV << " GeV][v = " 
-              << v / GeV << " GeV][ctau = " << ctau / mm << " mm]" 
+              << "][pT = " << pT / Gaudi::Units::GeV << " GeV][v = " 
+              << v / Gaudi::Units::GeV << " GeV][ctau = " 
+              << ctau / Gaudi::Units::mm << " mm]" 
               << endmsg ;
       it = theParticleVector.erase( it );
     } else {
       debug() << "Particle accepted: [eta = " << eta 
-              << "][pT = " << pT / GeV << " GeV][v = " 
-              << v / GeV << " GeV][ctau = " << ctau / mm << " mm]" 
+              << "][pT = " << pT / Gaudi::Units::GeV << " GeV][v = " 
+              << v / Gaudi::Units::GeV << " GeV][ctau = " 
+              << ctau / Gaudi::Units::mm << " mm]" 
               << endmsg ;
       ++it ;
     }
