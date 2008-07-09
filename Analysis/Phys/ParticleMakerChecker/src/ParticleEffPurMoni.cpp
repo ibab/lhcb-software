@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.5 2008-07-09 13:02:47 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.6 2008-07-09 13:18:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -572,12 +572,9 @@ void ParticleEffPurMoni::printStats() const
               }
               always() << endreq;
               // make a histo
-              std::string tmpParticlePath = (*iLoc).first;
-              cleanPath( tmpParticlePath, "/Event/Phys/", "" );
-              cleanPath( tmpParticlePath, "/Particles", "" );
               std::ostringstream h_title;
               h_title 
-                << tmpParticlePath << "/" 
+                << convertTitleToID((*iLoc).first) << "/" 
                 << (*iSum).first.decayTree << "/" 
                 << "Reco " << (*iSum).first.protoType << "/"
                 << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
@@ -639,6 +636,8 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
                                        const EffVersusMomentum & top,
                                        const EffVersusMomentum & bot ) const
 {
+  info() << "Making histogram " << title << endreq;
+
   // Get ROOT pointer (I feel unclean)
   TH1D * histo 
     = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title, 
