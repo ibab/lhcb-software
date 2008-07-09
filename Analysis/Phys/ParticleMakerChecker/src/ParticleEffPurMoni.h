@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.8 2008-07-09 13:18:24 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.9 2008-07-09 14:56:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -43,6 +43,7 @@
 
 // ROOT
 #include "TH1D.h"
+#include "TProfile.h"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
@@ -417,6 +418,9 @@ private: // data
 
   /// Max tree size
   unsigned int m_maxMCTreeSize;
+
+  /// Minimum momentum for plots
+  double m_minP;
 
 };
 

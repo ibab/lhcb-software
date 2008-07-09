@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.7 2008-07-09 13:19:44 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.8 2008-07-09 14:56:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -44,6 +44,7 @@ ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
   declareProperty( "UseReversePToMCPNeutral",      m_useRMCPneutral   = true  );
   declareProperty( "UseFullMCDecayTreeClass",      m_fullMCTree       = true  );
   declareProperty( "MaxMCDecayTreeSize",           m_maxMCTreeSize    = 5     );
+  //declareProperty( "MinimumHistoMomentum",       m_minP = 0*Gaudi::Units::GeV );
 }
 
 //=============================================================================
@@ -173,7 +174,7 @@ StatusCode ParticleEffPurMoni::execute()
         if ( isClone ) ++(tally.clones_detailed[tmpName]); 
       }
       // Momentum histogramming
-      tally.effVp.fill( ptot );
+      if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : ptot );
 
     } // loop over particles produced from this proto
 
@@ -229,7 +230,7 @@ StatusCode ParticleEffPurMoni::execute()
         if (isClone) ++(tally.clones_detailed[tmpName]); 
       }
       // Momentum histogramming
-      tally.effVp.fill( momentum(*proto) );
+      if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : momentum(*proto) );
 
     } // loop over all protos at one location in TES
 
@@ -290,7 +291,7 @@ std::string ParticleEffPurMoni::mcParticleNameTree( const LHCb::MCParticle * mcP
         name = mcProp->particle()+name;
       }
       mcPart = mcPart->mother();
-      if ( !mcPart ) name = "BX -> " + name;
+      if ( !mcPart ) name = "PV -> " + name;
       ++nTree;
     }
     //if ( name.size() > m_maxNameLength ) m_maxNameLength = name.size();
@@ -637,22 +638,29 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
                                        const EffVersusMomentum & bot ) const
 {
   // Get ROOT pointer (I feel unclean)
-  TH1D * histo 
-    = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title, 
-                                                    top.minP(), top.maxP(), 
+  //TProfile * histo 
+  //  = Gaudi::Utils::Aida2ROOT::aida2root ( bookProfile1D ( title, title, 
+  //                                                         top.minP(), top.maxP(), 
+  //                                                         top.nBins() ) );
+  TH1D * histo
+    = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title,
+                                                    top.minP(), top.maxP(),
                                                     top.nBins() ) );
   
   // Loop over bins and set contents explicitly
+  debug() << "Filling histo " << title << endreq;
   for ( unsigned int bin = 0; bin < top.nBins(); ++bin )
   {
+    debug() << " -> bin " << bin << " : " 
+            << top.data()[bin] << " / " << bot.data()[bin] << endreq; 
     const double demon = bot.data()[bin];
     if ( demon>0 )
     {
       const double numer = top.data()[bin];
       const double eff = 100.0 * numer / demon ;
       const double err = 100.0 * std::sqrt((numer/demon)*(1.-numer/demon)/demon);
-      histo->SetBinContent( bin, eff );
-      histo->SetBinError( bin, err );
+      histo->SetBinContent ( bin, eff );
+      histo->SetBinError   ( bin, err );
     }
   }
 
