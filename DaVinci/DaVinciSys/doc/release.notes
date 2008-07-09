@@ -6,6 +6,8 @@ Purpose     : LHCb analysis program
 </PRE><H1><A NAME=v19r14>2008-07-09 DaVinci v19r14. First version with LHCb v24 series</A></H1><PRE>
 Based on Phys v6r14, Analysis v1r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
 
+ - DaVinci now aliased to gaudirun.py. Users are encouraged to use gaudirun.py and to write .py options.
+   . DaVinci.exe kept for ganga. 
  - Major changes in Hlt2
  - FlavourTagging v8r0
  - Many developments in DecayTreeTuple
