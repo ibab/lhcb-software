@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.10 2008-07-09 16:20:22 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.11 2008-07-09 18:11:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -645,33 +645,25 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
                                        const EffVersusMomentum & top,
                                        const EffVersusMomentum & bot ) const
 {
-  // Get ROOT pointer (I feel unclean)
-  //TProfile * histo 
-  //  = Gaudi::Utils::Aida2ROOT::aida2root ( bookProfile1D ( title, title, 
-  //                                                         top.minP(), top.maxP(), 
-  //                                                         top.nBins() ) );
-  TH1D * histo
-    = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title,
-                                                    top.minP(), top.maxP(),
-                                                    top.nBins() ) );
-  
-  // Loop over bins and set contents explicitly
+  // Loop over bins
   debug() << "Filling histo " << title << endreq;
   for ( unsigned int bin = 0; bin < top.nBins(); ++bin )
   {
     debug() << " -> bin " << bin << " : " 
             << top.data()[bin] << " / " << bot.data()[bin] << endreq; 
-    const double demon = bot.data()[bin];
-    if ( demon>0 )
+    const unsigned int total = bot.data()[bin];
+    if ( total>0 )
     {
-      const double numer = top.data()[bin];
-      const double eff = 100.0 * numer / demon ;
-      const double err = 100.0 * std::sqrt((numer/demon)*(1.-numer/demon)/demon);
-      histo->SetBinContent ( bin, eff );
-      histo->SetBinError   ( bin, err );
+      const unsigned int selected = top.data()[bin];
+      // Fill Profile correct number of times with 0 or 1
+      for ( unsigned int i = 0; i < total; ++i )
+      {
+        profile1D( top.p(bin), (i<selected ? 1 : 0),
+                   title, title, 
+                   top.minP(), top.maxP(), top.nBins() );
+      }
     }
   }
-
 }
 
 // Access the charged ProtoParticle Linker

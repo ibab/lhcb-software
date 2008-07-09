@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.10 2008-07-09 16:20:22 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.11 2008-07-09 18:11:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -40,10 +40,6 @@
 
 // Event
 #include "Event/MCParticle.h"
-
-// ROOT
-#include "TH1D.h"
-#include "TProfile.h"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
@@ -93,13 +89,17 @@ private: // definitions
   private:
     inline unsigned int bin( const double p )
     {
-      return static_cast<int>( m_nBins * ( p - m_minP ) / ( m_maxP - m_minP) );
+      return static_cast<unsigned int>( m_nBins * (p-m_minP) / (m_maxP-m_minP) );
     }
   public:
     inline const Data & data() const { return m_data; }
     inline double minP() const { return m_minP; }
     inline double maxP() const { return m_maxP; }
     inline unsigned int nBins() const { return m_nBins; }
+    inline double p(const unsigned int bin) const
+    {
+      return m_minP + (0.5+bin)*(m_maxP-m_minP)/m_nBins;
+    }
   public:
     /// Fill the histogram for the given momentum value
     inline void fill( const double p )
