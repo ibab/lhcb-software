@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.h,v 1.21 2008-07-08 16:07:27 rstoica Exp $
+// $Id: RawEventHelpers.h,v 1.22 2008-07-09 07:45:36 frankb Exp $
 //  ====================================================================
 //  MDFIO.h
 //  --------------------------------------------------------------------
@@ -21,9 +21,6 @@
 /*
  *    LHCb namespace
  */
-  unsigned int hash32Checksum(const void* ptr, size_t len); 
-  unsigned long adler32Checksum(unsigned long old, const char *buf, size_t len);
-
 namespace LHCb  {
 
   // Forward declarations
@@ -35,6 +32,9 @@ namespace LHCb  {
   class MDFHeader;
   class MEPEvent;
   typedef std::pair<char*,int> MDFDescriptor;
+
+  unsigned int hash32Checksum(const void* ptr, size_t len); 
+  unsigned int adler32Checksum(unsigned int old, const char *buf, size_t len);
 
   /// Check sanity of raw bank structure
   bool checkRawBank(const RawBank* b, bool throw_exc=true,bool print_cout=false);

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.39 2008-07-08 16:07:52 rstoica Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.40 2008-07-09 07:45:36 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -66,7 +66,7 @@ namespace LHCb {
 }
 
 /// one-at-time hash function
-unsigned int hash32Checksum(const void* ptr, size_t len) {
+unsigned int LHCb::hash32Checksum(const void* ptr, size_t len) {
   unsigned int hash = 0;
   const char* k = (const char*)ptr;
   for (size_t i=0; i<len; ++i, ++k) {
@@ -81,41 +81,42 @@ unsigned int hash32Checksum(const void* ptr, size_t len) {
 }
 
 /* ========================================================================= */
-unsigned long adler32Checksum(unsigned long adler, 
-                              const char* buf, 
-                              unsigned int len)
-#define BASE 65521UL    /* largest prime smaller than 65536 */
-#define NMAX 5550
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
-
+unsigned int LHCb::adler32Checksum(unsigned int adler, 
+				   const char* buf, 
+				   size_t len)
+{
 #define DO1(buf,i)  {s1 +=(unsigned char)buf[i]; s2 += s1;}
 #define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);
 #define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
 #define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
 #define DO16(buf)   DO8(buf,0); DO8(buf,8);
-{
-    unsigned long s1 = adler & 0xffff;
-    unsigned long s2 = (adler >> 16) & 0xffff;
-    int k;
 
-    if (buf == NULL) return 1L;
-
-    while (len > 0) {
-        k = len < NMAX ? (int)len : NMAX;
-        len -= k;
-        while (k >= 16) {
-            DO16(buf);
-            buf += 16;
-            k -= 16;
-        }
-        if (k != 0) do {
-            s1 += (unsigned char)*buf++;
-            s2 += s1;
-        } while (--k);
-        s1 %= BASE;
-        s2 %= BASE;
+  static const unsigned int BASE = 65521;    /* largest prime smaller than 65536 */
+  /* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
+  static const unsigned int NMAX = 5550;
+  unsigned int s1 = adler & 0xffff;
+  unsigned int s2 = (adler >> 16) & 0xffff;
+  int k;
+  
+  if (buf == NULL) return 1;
+  
+  while (len > 0) {
+    k = len < NMAX ? (int)len : NMAX;
+    len -= k;
+    while (k >= 16) {
+      DO16(buf);
+      buf += 16;
+      k -= 16;
     }
-    return (s2 << 16) | s1;
+    if (k != 0) do {
+      s1 += (unsigned char)*buf++;
+      s2 += s1;
+    } while (--k);
+    s1 %= BASE;
+    s2 %= BASE;
+  }
+  unsigned int result = (s2 << 16) | s1;
+  return result;
 }
 /* ========================================================================= */
 
