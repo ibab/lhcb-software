@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.21 2008-06-12 09:10:16 pkoppenb Exp $
+# $Id: requirements,v 1.22 2008-07-09 16:29:44 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
 
 #============================================================================
 package Moore
-version v4r2
+version v4r3
 
 branches doc cmt options
 
@@ -57,10 +57,10 @@ use PhysSys		v*	     -no_auto_imports
 use OnlineSys           v*           -no_auto_imports
 
 #============================================================================
-application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
+#application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 #============================================================================
-macro Moore_linkopts    "$(application_linkopts)"
+#macro Moore_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
 
@@ -68,7 +68,7 @@ apply_pattern application_path
 set MOOREOPTS ${MOOREROOT}/options
 
 # define aliases
-alias Moore "${MOOREROOT}/${BINDIR}/Moore.exe"
+alias Moore gaudirun.py
 
 
 #===============================================================

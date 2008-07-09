@@ -8,6 +8,22 @@
 
 // POOL Persistency
 #include "$STDOPTS/DstDicts.opts"
+// Get the event time (for CondDb) from ODIN 
+EventClockSvc.EventTimeDecoder = "OdinTimeDecoder";
+
+// Profiling
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = false ;
+MemoryAuditor.Enable = false;
+
+// General output levels (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+
+// Print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 //-----------------------------------------------------------------
 // Rerun L0 and HLT - Alleys
@@ -35,7 +51,7 @@
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax =  10000;
+ApplicationMgr.EvtMax =  10000 ;
 EventSelector.PrintFreq = 100;
 ApplicationMgr.OutputLevel = 10;
 //EventSelector.FirstEvent = 7;  // To skip some events 
@@ -70,6 +86,3 @@ EventSelector.Input   = {
   "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
  };
 
-
-// remove this
-//#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
