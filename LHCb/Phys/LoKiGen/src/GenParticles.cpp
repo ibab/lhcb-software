@@ -1,4 +1,4 @@
-// $Id: GenParticles.cpp,v 1.17 2008-06-25 10:05:45 ibelyaev Exp $
+// $Id: GenParticles.cpp,v 1.18 2008-07-09 16:19:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -18,6 +18,7 @@
 #include "LoKi/GenParticles.h"
 #include "LoKi/GenExtract.h"
 #include "LoKi/GenAlgs.h"
+#include "LoKi/GenOscillated.h"
 // ============================================================================
 /** @file
  *
@@ -1582,6 +1583,33 @@ std::ostream&
 LoKi::GenParticles::InTree::fillStream( std::ostream& s ) const 
 { return s << "GINTREE(" << m_cut << ")" ; }
 // ============================================================================
+
+
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::GenParticles::Oscillated* 
+LoKi::GenParticles::Oscillated::clone() const 
+{ return new LoKi::GenParticles::Oscillated(*this); }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::GenParticles::Oscillated::result_type 
+LoKi::GenParticles::Oscillated::operator() 
+  ( LoKi::GenParticles::Oscillated::argument p ) const 
+{
+  return
+    0 != LoKi::GenParticles::oscillated1 ( p ) || 
+    0 != LoKi::GenParticles::oscillated2 ( p )  ;
+}
+// ============================================================================
+// OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::GenParticles::Oscillated::fillStream ( std::ostream& o ) const 
+{ return o << "GOSCILLATED" ; }
+// ============================================================================
+
 
 
 // ============================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2008-06-30 19:42:01 cattanem Exp $ 
+! $Id: release.notes,v 1.54 2008-07-09 16:19:16 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGen
 ! Responsible : Vanya BELYAEV
@@ -13,6 +13,13 @@
 !   contributions and advices from G.Raven, J.van Tilburg, 
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
+
+! 2008-07-09 - Vanya BELYAEV
+
+ - Many changes for (Gen) Decay Finder 
+ - cmt/requirements 
+    version inrement to v7r5 
+
 
 !============================ LoKiGen v7r4 2008-06-30 =========================
 ! 2008-06-26 - Vanya BELYAEV

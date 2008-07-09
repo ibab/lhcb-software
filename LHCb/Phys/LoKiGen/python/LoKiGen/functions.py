@@ -156,6 +156,8 @@ GNONE    = LoKi.Constant( _GP + ',bool' )(False)
 GNUCLEUS = LoKi.GenParticles.IsNucleus () 
 ## @see LoKi::Cuts::GONE
 GONE      = LoKi.Constant ( _GP + ',double' )( 1.0 )
+## @see LoKi::Cust::GOSCILLATED
+GOSCILLATED = LoKi.GenParticles.Oscillated() 
 ## @see LoKi::Cuts::GP
 GP       = LoKi.GenParticles.Momentum () 
 ## @see LoKi::Cuts::GPHI

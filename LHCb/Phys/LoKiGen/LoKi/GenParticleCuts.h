@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.14 2008-05-05 09:53:35 cattanem Exp $
+// $Id: GenParticleCuts.h,v 1.15 2008-07-09 16:19:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -833,6 +833,28 @@ namespace LoKi
      *  @date 2005-03-27
      */
     const LoKi::BasicFunctors<const HepMC::GenParticle*>::Constant GONE ( 1 ) ;
+    // ========================================================================    
+    /** @var GOSCILLATED 
+     *  Check if the particle oscillated.
+     *
+     *  Note: the concept of oscillation in EvtGen/Pythia/HepMC is a bit 
+     *  mislleading
+     *  
+     *  if one has 
+     *  @f[  \mathrm{B}^0 \to \bar{\mathrm{}}^0 \to \mathrm {X} $f]
+     *  in this case both @\f[\mathrm{B}^0$\f] and  $f[ \bar{\mathrm{}}^0 @f] 
+     *  are considered as "oscillated" 
+     *
+     *  @see LoKi::GenParticles::Oscillated 
+     *  @see LoKi::GenParticles::oscillated1 
+     *  @see LoKi::GenParticles::oscillated2 
+     *
+     *  @code 
+     *  @endcode
+     *  @author Vanay BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @author 2008-07-03
+     */
+    const LoKi::GenParticles::Oscillated                          GOSCILLATED ;
     // ========================================================================    
     /** @var GP 
      *  evaluator of particle momentum (in HepMC units)

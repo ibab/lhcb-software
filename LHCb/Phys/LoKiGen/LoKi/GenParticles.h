@@ -1,4 +1,4 @@
-// $Id: GenParticles.h,v 1.18 2007-12-09 18:08:01 ibelyaev Exp $
+// $Id: GenParticles.h,v 1.19 2008-07-09 16:19:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLES_H 
 #define LOKI_GENPARTICLES_H 1
@@ -1213,6 +1213,28 @@ namespace LoKi
       // the criteria itself:
       LoKi::GenTypes::GCut m_cut       ; ///< the criteria itself:
     } ;    
+    // ========================================================================
+    /** @class Oscillated 
+     *  Simple class to check the oscillation of the particle 
+     *  It evaluates to "true" for both particles 
+     *  @see LoKi::GenParticles::oscillated1 
+     *  @see LoKi::GenParticles::oscillated2
+     *  @see LoKi::Cuts::GOSCILLATED 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nkhef.nl
+     *  @date 2008-07-03
+     */
+    class Oscillated : public LoKi::GenTypes::GCuts 
+    {
+    public:
+      /// MANDATORY: virtual desctructor 
+      virtual ~Oscillated() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual Oscillated* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type   operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;      
+    } ;
   } // end of namespace GenParticles  
 } // end of namespace LoKi
 // ============================================================================
