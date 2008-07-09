@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.11 2008-07-08 14:22:49 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.12 2008-07-09 13:33:18 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -80,6 +80,8 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
   : Service ( name , pSvcLocator )
   , m_joboptionsSvc(0)
   , m_algMgr(0)
+  , m_appMgrUI(0)
+  , m_accessSvc(0)
   , m_os(0)
 {
   declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigFileAccessSvc");
@@ -271,6 +273,7 @@ PropertyConfigSvc::resolveAlias(const ConfigTreeNodeAlias::alias_type& alias) co
     if (m_nodes.find(ref)==m_nodes.end()) {
         pair<ConfigTreeNodeMap_t::iterator,bool> rv = m_nodes.insert( make_pair( ref, *node) );
     }
+    info() << " resolved " << alias << " to " << ref << endmsg;
     return ref;
 }
 
@@ -353,6 +356,7 @@ StatusCode
 PropertyConfigSvc::configure(const ConfigTreeNodeAlias::alias_type& alias, 
                              bool callSetProperties) const 
 {
+    info() << " configuring using " << alias << endmsg;
     return configure( resolveAlias(alias), callSetProperties );
 }
 
@@ -380,6 +384,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const 
 {
+    info() << " configuring using " << configID << endmsg;
     if (!configID.valid()) return StatusCode::FAILURE;
     setTopAlgs(configID); // do this last instead of first?
     vector<const PropertyConfig*> configs;
@@ -447,10 +452,14 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
 
     vector<const PropertyConfig*> ids;
     StatusCode sc = findTopKind(id, "IAlgorithm", back_inserter(ids));
+    if (sc.isFailure()) return sc;
     list<string> request;
-    transform( ids.begin(), ids.end(), 
-               request.end(), 
-               bl::bind(&PropertyConfig::fullyQualifiedName,bl::_1));
+    for (vector<const PropertyConfig*>::const_iterator i = ids.begin();i!=ids.end();++i) {
+        request.push_back( (*i)->fullyQualifiedName() );
+    }
+//    transform( ids.begin(), ids.end(), 
+//               request.end(), 
+//               bl::bind(&PropertyConfig::fullyQualifiedName,bl::_1));
 
     // merge the current TopAlg, and requested TopAlg list, conserving
     // the order of BOTH lists.
@@ -500,18 +509,18 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
         //       for which we have pushed things into the jos...
 
 //    GAUDI v20rx...
-//    m_appMgrUI->restart();
+    return m_appMgrUI->restart();
 
     // call reinitialize for services and top algorithms...
-    vector<const PropertyConfig*> cfgs;
-    sc = findTopKind(top, "IService", back_inserter(cfgs));
-    if (!sc.isSuccess()) return sc;
-    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
-    if (!sc.isSuccess()) return sc;
-    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end()&&sc.isSuccess(); ++i) {
-       sc = invokeSysReinitialize( **i );
-    }
-    return sc;
+//    vector<const PropertyConfig*> cfgs;
+//    sc = findTopKind(top, "IService", back_inserter(cfgs));
+//    if (!sc.isSuccess()) return sc;
+//    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
+//    if (!sc.isSuccess()) return sc;
+//    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end()&&sc.isSuccess(); ++i) {
+//       sc = invokeSysReinitialize( **i );
+//    }
+//    return sc;
 }
 
 //=============================================================================
@@ -600,17 +609,20 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
 const ConfigTreeNode* 
 PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& ref) const
 {
+  info() << " resolving alias " << ref << endmsg;
   return resolveConfigTreeNode( resolveAlias(ref) );
 }
 
 const ConfigTreeNode* 
 PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const
 {
+   debug() << " resolving nodeRef " << ref << endmsg;
    ConfigTreeNodeMap_t::const_iterator i = m_nodes.find(ref);
    if (i!=m_nodes.end()) {
         debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
+   assert(m_accessSvc!=0);
    boost::optional<ConfigTreeNode> node = m_accessSvc->readConfigTreeNode(ref);
    if (!node) { 
         error() << " could not obtain ref " << ref << endmsg;
