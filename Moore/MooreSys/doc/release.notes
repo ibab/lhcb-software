@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v4r3>2008-07-09 Moore v4r3</A></H1><PRE>
+Based on Phys v6r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
+
 </PRE><H1><A NAME=v4r2>2008-06-02 Moore v4r2</A></H1><PRE>
  - Based on Hlt v3r3 and Online v4r10. 
  - New IANNSvc 

@@ -6,7 +6,7 @@ branches doc cmt
 #=======================================================
 # Don't forget the applications
 #=======================================================
-use  Moore  v4r2    Hlt
+use  Moore  v4r3    Hlt
 
 
 # Allow the generation of QMTest summary 
