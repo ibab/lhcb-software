@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.9 2008-07-09 15:03:06 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.10 2008-07-09 16:20:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -100,8 +100,8 @@ StatusCode ParticleEffPurMoni::execute()
   // MCParticle locations found
   Locations mcPLocations;
 
-  // already used MCParticles
-  std::set<const LHCb::MCParticle *> usedMCPs;
+  // already used MCParticles for each each ProtoParticle location
+  std::map< std::string, std::set<const LHCb::MCParticle*> > usedMCPs;
 
   // Loop over the final list of Protos and associated Particles
   if ( msgLevel(MSG::DEBUG) )
@@ -125,10 +125,11 @@ StatusCode ParticleEffPurMoni::execute()
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
 
     // is this a clone ?
-    const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
+    const bool isClone = 
+      ( usedMCPs[protoTesLoc].find(mcPart) != usedMCPs[protoTesLoc].end() );
 
     // add to list of seen MCPs
-    usedMCPs.insert(mcPart);
+    usedMCPs[protoTesLoc].insert(mcPart);
 
     // Store the TES location for this MCParticle container
     if (mcPart) mcPLocations.insert( objectLocation(mcPart->parent()) );
@@ -290,8 +291,13 @@ std::string ParticleEffPurMoni::mcParticleNameTree( const LHCb::MCParticle * mcP
         if ( !name.empty() ) name = " -> "+name;
         name = mcProp->particle()+name;
       }
+      if ( !mcPart->mother() && 
+           mcPart->originVertex() && 
+           mcPart->originVertex()->isPrimary() ) 
+      {
+        name = "PV -> " + name;
+      }
       mcPart = mcPart->mother();
-      if ( !mcPart ) name = "PV -> " + name;
       ++nTree;
     }
     //if ( name.size() > m_maxNameLength ) m_maxNameLength = name.size();
@@ -504,13 +510,12 @@ void ParticleEffPurMoni::printStats() const
   for ( ProtoTESStatsMap::iterator iProtoTES = m_protoTesStats.begin();
         iProtoTES != m_protoTesStats.end(); ++iProtoTES )
   {
-    always() << lines << endreq
-             << " ProtoParticle Location : " << (*iProtoTES).first << endreq
-             << "  -> Fraction with MC "
+    always() << " ProtoParticle Location : " << (*iProtoTES).first << endreq
+             << "   -> Fraction with MC "
              << eff( (*iProtoTES).second.nWithMC,(*iProtoTES).second.nTotal )
              << endreq;
   }
-  debug() << LINES << endreq;
+  always() << LINES << endreq;
 
   // loop over Particle TES locations
   for ( LocationMap::iterator iLoc = m_locMap.begin();

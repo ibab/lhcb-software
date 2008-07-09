@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.9 2008-07-09 14:56:16 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.10 2008-07-09 16:20:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -81,7 +81,7 @@ private: // definitions
   {
   public:
     /// Defintion of internal data storage
-    typedef std::vector<double> Data;
+    typedef std::vector<unsigned int> Data;
     /// Constructor
     explicit EffVersusMomentum( const double _minP  =   0*Gaudi::Units::GeV,
                                 const double _maxP  = 100*Gaudi::Units::GeV,
@@ -96,23 +96,25 @@ private: // definitions
       return static_cast<int>( m_nBins * ( p - m_minP ) / ( m_maxP - m_minP) );
     }
   public:
+    inline const Data & data() const { return m_data; }
+    inline double minP() const { return m_minP; }
+    inline double maxP() const { return m_maxP; }
+    inline unsigned int nBins() const { return m_nBins; }
+  public:
+    /// Fill the histogram for the given momentum value
     inline void fill( const double p )
     {
       if ( p<=m_maxP && p>=m_minP )
       {
         const unsigned int b = bin(p);
-        if ( b<m_nBins) ++m_data[b];
+        if ( b<m_nBins) ++(m_data[b]);
       }
     }
-    inline const Data & data() const { return m_data; }
-    inline double minP() const { return m_minP; } 
-    inline double maxP() const { return m_maxP; }
-    inline unsigned int nBins() const { return m_nBins; }
   private:
     double m_minP;        ///< Minimum momentum
     double m_maxP;        ///< Maximum momentum
     unsigned int m_nBins; ///< Number of bins
-    Data m_data;  ///< The data
+    Data m_data;          ///< The data
   };
 
   /** @class ParticleHistory ParticleEffPurMoni.h
@@ -338,7 +340,7 @@ private: // methods
   std::string mcParticleNameTree( const LHCb::MCParticle * mcPart );
 
   /// Make a histogram
-  void makeEffHisto( const std::string title, 
+  void makeEffHisto( const std::string title,
                      const EffVersusMomentum & top,
                      const EffVersusMomentum & bot ) const;
 
