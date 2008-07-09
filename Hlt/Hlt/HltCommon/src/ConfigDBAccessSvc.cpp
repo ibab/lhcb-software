@@ -7,13 +7,6 @@
 
 #include "GaudiKernel/SvcFactory.h"
 
-// #define GR_USE_SEAL
-#ifdef GR_USE_SEAL
-#include "SealKernel/Context.h"
-#endif
-
-
-
 #include "RelationalAccess/IConnectionService.h"
 #include "RelationalAccess/ISessionProxy.h"
 #include "RelationalAccess/ITransaction.h"
@@ -405,17 +398,13 @@ void ConfigDBAccessSvc::createTable() {
 }
 
 StatusCode ConfigDBAccessSvc::openConnection() {
-  if (m_coolConfSvc==0) {
-    StatusCode sc = service("COOLConfSvc",m_coolConfSvc);
-    if ( !sc.isSuccess() )   return sc;
-  }
+    if (m_coolConfSvc==0) {
+        StatusCode sc = service("COOLConfSvc",m_coolConfSvc);
+        if ( !sc.isSuccess() )   return sc;
+    }
 
-#ifdef GR_USE_SEAL
-  m_session = m_coolConfSvc->context()->query<coral::IConnectionService>( "CORAL/Services/ConnectionService" )->
-#else
-  m_session = m_coolConfSvc->connectionSvc().
-#endif
-               connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
-   info() << "Connected to database \"" << m_connection << "\"" << endmsg;
-   return StatusCode::SUCCESS;
+    m_session = m_coolConfSvc->connectionSvc()
+              . connect(m_connection, m_readOnly ? coral::ReadOnly : coral::Update );
+    info() << "Connected to database \"" << m_connection << "\"" << endmsg;
+    return StatusCode::SUCCESS;
 }
