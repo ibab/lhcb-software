@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # =============================================================================
-""" @namespace hlttime
+""" @namespace hltalleymonitor
 
-@brief example of how to monitor rate and time of an Hlt1 alley
+@brief example of how to monitor rate, time, info of an Hlt1 alley
 @author Jose A. Hernando hernando@cern.ch
 @date 2008-06-16
 """
@@ -36,7 +36,7 @@ BOOKINGS = {"IP":[-0.1,1.9],
             "Fraction":[0.,2.]
             }
 
-MINVAL = 1e-16
+INFODEF = 1e-16
 
 JOB = "$HLTSYSROOT/options/HltJob.opts"
 DATACARD = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
@@ -59,7 +59,7 @@ TIMER = gaudi.toolsvc().create("SequencerTimerTool",interface="ISequencerTimerTo
 
 def bookRate(alley):
     """ book the time, profile and rate histograms of a sequence
-    @ param the name of the alley
+    @ param the name of the alley: i.e HadronSingle
     """
     algos = map(lambda x: x.name,ALGOS[alley])
     xf = 20.
@@ -71,8 +71,8 @@ def bookRate(alley):
     return
 
 def bookCandidates(alley):
-    """ book the time, profile and rate histograms of a sequence
-    @ param the name of the alley
+    """ book number of candidates per algo in the alley
+    @ param the name of the alley, i.e HadronSingle
     """
     xf = 100.
     n = len(ALGOS[alley])+1
@@ -86,6 +86,8 @@ def bookCandidates(alley):
     return
 
 class hltfilter():
+    """ internal class to save info of a filter
+    """ 
     def __init__(self,name,x0=0.,xf=100.):
         def hisrange(name):
             for key in BOOKINGS.keys():
@@ -96,28 +98,35 @@ class hltfilter():
         self.name = cromos[0]
         self.comparator = cromos[1]
         self.value = cromos[2]
+        self.id = int(HLTSUM.confInt("InfoID/"+self.name));
+        print " filter ID ",name,self.id
         if (len(cromos)>3): self.value2 = cromos[3]
-        self.id = HLTSUM.confInt("InfoID/"+name);
         self.xrange = hisrange(name)
 
     def vals(self,candis,fillhisto=True):
-        vals = map(lambda x: x.info(self.id,MINVAL),candis)
+        print " getting vals of ",self.id
+        vals0 = map(lambda x: x.info(self.id,INFODEF),candis)
+        vals = filter(lambda x : x!=INFODEF, vals0)
         if (fillhisto and self.histo):
             for v in vals: self.histo.Fill(v,1.)
+        if (DEBUG): print " vals0: ",vals0
+        if (DEBUG): print " vals : ",vals
         return vals
 
     def best(self,candis,fillhisto=True):
-        vals = map(lambda x: x.info(self.id,MINVAL),candis)
+        vals = map(lambda x: x.info(self.id,INFODEF),candis)
         if (len(vals)<=0): return 0.
         vals.sort()
         best = vals[0]
-        if (self.comparator.find(">")): best=vals[-1]
+        if (self.comparator.find(">")>=0): best=vals[-1]
         if (DEBUG): print best
         if (fillhisto and self.histobest): self.histobest.Fill(best,1.)
         return best
                 
 def bookFilters(alley):
-    
+    """ book quantities of a filter
+    @param: name of the alley HadronSingle
+    """
     algos = ALGOS[alley]
     for algo in algos:
         if (algo.type.find("Filter")>0):
@@ -140,8 +149,8 @@ def bookFilters(alley):
     return
 
 def bookTime(alley):
-    """ book the time, profile and rate histograms of a sequence
-    @ param the name of the alley
+    """ book the time and profile of the algos of an alley
+    @ param the name of the alley, i.e HadronSingle
     """
     algos = map(lambda x: x.name,ALGOS[alley])
     xf = 20.
@@ -174,6 +183,9 @@ def iniAlley(alley):
 ## --------- Analyze ----------
 
 def anaRate(alley):
+    """ ana the rate of an alley
+    @param alley 
+    """
     ok = 1
     for i in range(len(ALGOS[alley])):
         if (not ok): continue
@@ -186,7 +198,7 @@ def anaRate(alley):
     return 
 
 def anaTime(alley):
-    """ analize a given sequence (fill histograms of time and rate)
+    """ analize a given sequence (fill histograms of time)
     @ param alley the name of the alley
     """
     t = 0.
@@ -213,6 +225,10 @@ def anaTime(alley):
     return
 
 def getCandidates(algo,sel=None):
+    """ return the candidates of an algorithm
+    @param algo, hltalgo class
+    @param sel, the candidates of the selection
+    """
     can = []
     if (not sel): sel = algo.property("OutputSelection")
     if (not sel): return can
@@ -223,6 +239,9 @@ def getCandidates(algo,sel=None):
     return can
 
 def anaCandidates(alley):
+    """ ana the candidates
+    @param: name of the alley
+    """
     for algo in ALGOS[alley]:
         sel = algo.property("OutputSelection")
         if (not sel): continue
@@ -233,8 +252,10 @@ def anaCandidates(alley):
     return
 
 def anaFilters(alley):
+    """ ana the filters
+    """
     def fill(x,histo):
-        if (x>MINVAL): histo.Fill(x,1.)
+        if (x!=INFODEF): histo.Fill(x,1.)
     for algo in ALGOS[alley]:
         if (not algo.type.find("Filter")>0): continue
         fils = algo.filters
@@ -327,5 +348,5 @@ def plotAlley(alley):
 def run():
     for A in ALLEYS: iniAlley(A)
     go(NEVENTS)
-    for A in ALLEYS: plotAlley(A)
-    gaudi.finalize()
+    #for A in ALLEYS: plotAlley(A)
+    #gaudi.finalize()
