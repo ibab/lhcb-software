@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2008-07-09 - Jose A. Hernando
+  - HltTrackUpgradeTool: follow interfaces for drawing n panoramix
+
 ! 2008-07-04 - Gerhard Raven
   - HltTrackUpgrade: don't assume HltSelection is-a std::vector
   - HltTrackUpgradeTool: fix extraneous compiler warning

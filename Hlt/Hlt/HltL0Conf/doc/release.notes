@@ -3,6 +3,10 @@
 ! Responsible : Johannes Albrecht
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
+
+!2008-07-09 - Jose A. Hernando
+ - changes from Johannes to use the Panormaix drawing
+
 !2008-06-13 - Gerhard Raven
  - resurrect not-obsolete HltL0Conf_dll.cpp
 
