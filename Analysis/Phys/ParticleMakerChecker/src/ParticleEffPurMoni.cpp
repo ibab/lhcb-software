@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.11 2008-07-09 18:11:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.12 2008-07-09 21:36:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -125,7 +125,7 @@ StatusCode ParticleEffPurMoni::execute()
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
 
     // is this a clone ?
-    const bool isClone = 
+    const bool isClone =
       ( usedMCPs[protoTesLoc].find(mcPart) != usedMCPs[protoTesLoc].end() );
 
     // add to list of seen MCPs
@@ -168,11 +168,11 @@ StatusCode ParticleEffPurMoni::execute()
       ++(tally.all);
       if ( isClone ) ++(tally.clones);
       // if configured to do so, include full tree info
-      if ( m_fullMCTree && mcPart ) 
+      if ( m_fullMCTree && mcPart )
       {
         const std::string tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]); 
-        if ( isClone ) ++(tally.clones_detailed[tmpName]); 
+        ++(tally.all_detailed[tmpName]);
+        if ( isClone ) ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
       if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : ptot );
@@ -206,7 +206,7 @@ StatusCode ParticleEffPurMoni::execute()
 
       // is this a clone ?
       const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
-      
+
       // add to list of seen MCPs
       usedMCPs.insert(mcPart);
 
@@ -220,15 +220,15 @@ StatusCode ParticleEffPurMoni::execute()
       const std::string protoType = protoParticleType(*proto);
 
       // count
-      MCTally & tally = 
+      MCTally & tally =
         ((m_mcProtoCount[tesLoc])[protoType].trueMCType[mcRecType])[mcParticleName(mcPart)];
       ++(tally.all);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
-      {  
+      {
         const std::string tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]); 
-        if (isClone) ++(tally.clones_detailed[tmpName]); 
+        ++(tally.all_detailed[tmpName]);
+        if (isClone) ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
       if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : momentum(*proto) );
@@ -291,9 +291,9 @@ std::string ParticleEffPurMoni::mcParticleNameTree( const LHCb::MCParticle * mcP
         if ( !name.empty() ) name = " -> "+name;
         name = mcProp->particle()+name;
       }
-      if ( !mcPart->mother() && 
-           mcPart->originVertex() && 
-           mcPart->originVertex()->isPrimary() ) 
+      if ( !mcPart->mother() &&
+           mcPart->originVertex() &&
+           mcPart->originVertex()->isPrimary() )
       {
         name = "PV -> " + name;
       }
@@ -570,26 +570,26 @@ void ParticleEffPurMoni::printStats() const
               const long nTotalMC = mcTally.all;
               always() << mcT
                        << " | " << eff( tally.all, (*iSum).second.nReco );
-              if ( primaryPart ) 
-              { 
+              if ( primaryPart )
+              {
                 always() << " | " << eff( tally.all, nBkgTrue )
                          << " |" << eff( tally.all-tally.clones, nTotalMC ) << " |";
                 if ( tally.clones>0 ) always() << eff( tally.clones, nTotalMC );
               }
               always() << endreq;
-              if ( primaryPart ) 
-              { 
+              if ( primaryPart )
+              {
                 // make a histo (not yet for composites....)
                 std::ostringstream h_title;
-                h_title 
-                  << convertTitleToID((*iLoc).first) << "/" 
-                  << (*iSum).first.decayTree << "/" 
+                h_title
+                  << convertTitleToID((*iLoc).first) << "/"
+                  << (*iSum).first.decayTree << "/"
                   << "Reco " << (*iSum).first.protoType << "/"
                   << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
                   << (*iT).first;
-                makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.", 
+                makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.",
                               tally.effVp, mcTally.effVp );
-                makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.", 
+                makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.",
                               tally.effVp, protoTally.effVp );
               }
               // sub contributions
@@ -608,8 +608,8 @@ void ParticleEffPurMoni::printStats() const
                   const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];;
                   always() << mcTC
                            << " | " << eff( (*iC).second, (*iSum).second.nReco );
-                  if ( primaryPart ) 
-                  { 
+                  if ( primaryPart )
+                  {
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
                     always() << " | " << eff( (*iC).second, nBkgTrue )
                              << " |" << eff( (*iC).second-nClones, nTotalMC ) << " |";
@@ -622,7 +622,7 @@ void ParticleEffPurMoni::printStats() const
               {
                 always() << "       -> Suppressed " << suppressedContribsC << " contribution(s) below "
                          <<  m_minContrib << " %" << endreq;
-          }
+              }
             } else { ++suppressedContribs; }
           }
           if ( suppressedContribs>0 )
@@ -641,16 +641,17 @@ void ParticleEffPurMoni::printStats() const
   always() << LINES << endreq;
 }
 
-void ParticleEffPurMoni::makeEffHisto( const std::string title, 
+void ParticleEffPurMoni::makeEffHisto( const std::string title,
                                        const EffVersusMomentum & top,
                                        const EffVersusMomentum & bot ) const
 {
+  AIDA::IProfile1D * h(NULL);
   // Loop over bins
   debug() << "Filling histo " << title << endreq;
   for ( unsigned int bin = 0; bin < top.nBins(); ++bin )
   {
-    debug() << " -> bin " << bin << " : " 
-            << top.data()[bin] << " / " << bot.data()[bin] << endreq; 
+    debug() << " -> bin " << bin << " : "
+            << top.data()[bin] << " / " << bot.data()[bin] << endreq;
     const unsigned int total = bot.data()[bin];
     if ( total>0 )
     {
@@ -658,11 +659,16 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
       // Fill Profile correct number of times with 0 or 1
       for ( unsigned int i = 0; i < total; ++i )
       {
-        profile1D( top.p(bin), (i<selected ? 1 : 0),
-                   title, title, 
-                   top.minP(), top.maxP(), top.nBins() );
+        h = profile1D( top.p(bin), ( i < selected ? 1 : 0 ),
+                       title, title,
+                       top.minP(), top.maxP(), top.nBins() );
       }
     }
+  }
+  if ( h )
+  {
+    TProfile * histo = Gaudi::Utils::Aida2ROOT::aida2root(h);
+    histo->SetErrorOption("g");
   }
 }
 
@@ -674,7 +680,7 @@ ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
   const std::string loc = objectLocation(proto->parent());
   ProtoParticle2MCLinker *& linker = m_chargedProtoLinker[loc];
   if ( !linker )
-  { 
+  {
     linker =
       new ProtoParticle2MCLinker( this,
                                   Particle2MCMethod::ChargedPP,
@@ -701,13 +707,13 @@ ParticleEffPurMoni::neutralProtoLinker(const LHCb::ProtoParticle * proto) const
 }
 
 // Access the Particle Linker appropriate for the given Particle
-Particle2MCLinker * 
+Particle2MCLinker *
 ParticleEffPurMoni::particleLinker( const LHCb::Particle * /* part */ ) const
 {
   if ( !m_particleLinker )
-  { m_particleLinker = 
-      new Particle2MCLinker ( this, 
-                              Particle2MCMethod::Composite, 
+  { m_particleLinker =
+      new Particle2MCLinker ( this,
+                              Particle2MCMethod::Composite,
                               std::vector<std::string>(1,"") );
   }
   return m_particleLinker;

@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.11 2008-07-09 18:11:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.12 2008-07-09 21:36:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -40,6 +40,9 @@
 
 // Event
 #include "Event/MCParticle.h"
+
+// ROOT
+#include "TProfile.h"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
