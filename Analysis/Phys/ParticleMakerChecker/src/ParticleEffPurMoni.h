@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.7 2008-07-09 13:02:47 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.8 2008-07-09 13:18:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -340,19 +340,6 @@ private: // methods
   void makeEffHisto( const std::string title, 
                      const EffVersusMomentum & top,
                      const EffVersusMomentum & bot ) const;
-
-  /// Strip and/or replace unwanted sub-strings from a string
-  void cleanPath( std::string & title,
-                  const std::string & A,
-                  const std::string & B ) const
-  {
-    std::string::size_type slash = title.find_first_of ( A ) ;
-    while ( std::string::npos != slash ) 
-    {
-      title = title.substr(0,slash) + B + title.substr(slash+A.size());
-      slash = title.find_first_of( A );
-    } 
-  }
 
 private: // data
 

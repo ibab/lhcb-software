@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.6 2008-07-09 13:18:24 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.7 2008-07-09 13:19:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -636,8 +636,6 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
                                        const EffVersusMomentum & top,
                                        const EffVersusMomentum & bot ) const
 {
-  info() << "Making histogram " << title << endreq;
-
   // Get ROOT pointer (I feel unclean)
   TH1D * histo 
     = Gaudi::Utils::Aida2ROOT::aida2root ( book1D ( title, title, 
