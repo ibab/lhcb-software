@@ -6,6 +6,34 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-07-09 - Vanya BELYAEV
+
+ - LHCbMath/Digit.h
+    
+  new (templated) function to get the Nth decimal digit for integral type:
+
+
+     #include "LHCbMath/Digit.h"
+
+     ...
+     const int number = ... ;
+     if( 5 != Gaudi::Math::digit ( number , 1 ) ) { ... } 
+
+ - LHCbMath/Bit.h
+
+   the trival function to check Nth bit of the integral type 
+
+     #include "LHCbMath/Bit.h"
+
+     ...
+     const int number = ... ;
+     if (  Gaudi::Math::bit ( number , 11 ) ) { ... } 
+
+
+  - cmt/requirements 
+
+    version increment to v3r1 
+ 
 !========================= LHCbMath v3r0 2008-07-01 ==========================
 ! 2008-07-01 - Gerhard Raven
  - add MD5 and vector<MD5> to the dictionary
