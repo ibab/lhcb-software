@@ -1,4 +1,4 @@
-// $Id: STErrorDecoding.cpp,v 1.2 2008-07-04 15:52:22 mneedham Exp $
+// $Id: STErrorDecoding.cpp,v 1.3 2008-07-09 11:37:02 mneedham Exp $
 // Include files 
 
 
@@ -13,7 +13,7 @@
 #include "Event/STTELL1BoardErrorBank.h"
 #include "Event/STTELL1Error.h"
 #include "Event/RawBank.h"
-#include "Event/ODIN.h"
+
 
 // Kernel
 #include "Kernel/STDetSwitch.h"
@@ -79,8 +79,6 @@ StatusCode STErrorDecoding::execute() {
 
  // get the raw event + odin info
  RawEvent* raw = get<RawEvent>(RawEventLocation::Default );
- ODIN* odin = get<ODIN>(ODINLocation::Default);  
- const int L0EvtID = odin->eventNumber(); 
 
  // Pick up ITError bank 
  const std::vector<LHCb::RawBank*>& itf = raw->banks(LHCb::RawBank::BankType(bankType())); 
@@ -145,11 +143,6 @@ StatusCode STErrorDecoding::execute() {
      myData->addToErrorInfo(errorInfo); 
      w +=5; // read 5 first words
 
-     // check L0 id against Odin
-     if( errorInfo->L0EvtID()  != L0EvtID ){
-       if (m_PrintErrorInfo == 1) error() <<  "L0-Event ID: " << errorInfo->L0EvtID() << " expected: " << L0EvtID << endmsg;	     
-     }
-
      const unsigned int  nOptional = errorInfo->nOptionalWords();
 
      // we must find the optional words + 2 more control words
@@ -176,14 +169,17 @@ StatusCode STErrorDecoding::execute() {
        errorInfo->setWord13(p[w]); ++w;
      }
       
-     if (m_PrintErrorInfo == true) info() << *errorInfo << endmsg;
-
    } //  loop ip [ppx's]
      
    if (w != bankEnd){
      error() << "read " << w << " words, expected: " << bankEnd << endmsg;
    }  
+
+   if (m_PrintErrorInfo == true) info() << *myData << endmsg;
+
   }// end of loop over banks of a certain type
+
+
   
  return StatusCode::SUCCESS;
 } 

@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-09 M Needham
+ - Remove use of ODIN 
+
 ! 2008-07-04 M Needham
  - Minor changes - move some code to base class/change some printouts
 
