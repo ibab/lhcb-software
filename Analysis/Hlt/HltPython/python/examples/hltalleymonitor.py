@@ -21,7 +21,7 @@ from ROOT import *
 # Save all the HLT selections in the HltSummary
 
 DEBUG = False
-NEVENTS = 10
+NEVENTS = 1000
 MONITOR_TIME = True
 MONITOR_RATE = True
 MONITOR_CANDIDATES = True
@@ -243,6 +243,7 @@ def anaCandidates(alley):
         sel = algo.property("OutputSelection")
         if (not sel): continue
         can = getCandidates(algo)
+        if (len(can)<=0): return
         title = algo.name+"/"+sel
         desktop.my(title).Fill(1.*len(can),1.)
         if (DEBUG): print " Candidates: algo",sel," Candidates ",len(can)
@@ -290,7 +291,7 @@ def plotHistos(hs,alley,prefix="",endfix=""):
     return C
 
 def plotTime(alley):
-    prefix = "Time_"
+    prefix = "Time"
     """ plot the histograms associated to that sequence
     @ param alley the name of the alley
     """
@@ -303,7 +304,7 @@ def plotTime(alley):
     return C
 
 def plotRate(alley):
-    prefix = "Rate_"
+    prefix = "Rate"
     hs = [HIS[alley+"/Rate"]]
     C = PlotTools.plot(hs)
     C.SaveAs(prefix+alley+".ps")
@@ -345,5 +346,5 @@ def plotAlley(alley):
 def run():
     for A in ALLEYS: iniAlley(A)
     go(NEVENTS)
-    #for A in ALLEYS: plotAlley(A)
-    #gaudi.finalize()
+    for A in ALLEYS: plotAlley(A)
+    gaudi.finalize()
