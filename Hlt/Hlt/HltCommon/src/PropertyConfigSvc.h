@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.h,v 1.7 2008-07-08 14:22:49 graven Exp $
+// $Id: PropertyConfigSvc.h,v 1.8 2008-07-09 14:11:25 graven Exp $
 #ifndef PROPERTYCONFIGSVC_H 
 #define PROPERTYCONFIGSVC_H 1
 
@@ -116,12 +116,14 @@ private:
   std::string                          m_ofname;
   std::auto_ptr<std::ostream>          m_os;
   bool                                 m_createGraphVizFile;
+  mutable std::auto_ptr<std::vector<std::string> > m_initialTopAlgs;
 
   MsgStream& msg(MSG::Level level) const;
 
   template <typename T> T* resolve(const std::string& name) const;
   StatusCode invokeSetProperties(const PropertyConfig& config) const;
   StatusCode invokeSysReinitialize(const PropertyConfig& config) const;
+  StatusCode invokeSysRestart(const PropertyConfig& config) const;
 
   StatusCode setTopAlgs(const ConfigTreeNode::digest_type& id) const;
   StatusCode findTopKind(const ConfigTreeNode::digest_type& configID,

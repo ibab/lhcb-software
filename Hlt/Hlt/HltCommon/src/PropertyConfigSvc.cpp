@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.12 2008-07-09 13:33:18 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.13 2008-07-09 14:11:25 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -196,7 +196,7 @@ PropertyConfigSvc::resolve(const string& name) const
 
 StatusCode 
 PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
-    debug() << " calling SetProperties for " << conf.name() << endmsg;
+    info() << " calling SetProperties for " << conf.name() << endmsg;
     if (conf.kind() == "IAlgorithm") {
         Algorithm *alg = resolve<Algorithm>(conf.name()); 
         return alg!=0 ? alg->setProperties() : StatusCode::FAILURE ;
@@ -209,13 +209,26 @@ PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
 
 StatusCode 
 PropertyConfigSvc::invokeSysReinitialize(const PropertyConfig& conf) const {
-    debug() << " calling SysReinitialize for " << conf.name() << endmsg;
+    info() << " calling SysReinitialize for " << conf.name() << endmsg;
     if (conf.kind() == "IAlgorithm") {
         Algorithm *alg = resolve<Algorithm>(conf.name()); 
         return alg!=0 ? alg->sysReinitialize() : StatusCode::FAILURE ;
     } else if (conf.kind() == "IService")  {
         Service *svc = resolve<Service>(conf.name()); 
         return svc!=0 ? svc->sysReinitialize() : StatusCode::FAILURE ;
+    } 
+    return StatusCode::FAILURE;
+}
+
+StatusCode 
+PropertyConfigSvc::invokeSysRestart(const PropertyConfig& conf) const {
+    info() << " calling SysRestart for " << conf.name() << endmsg;
+    if (conf.kind() == "IAlgorithm") {
+        Algorithm *alg = resolve<Algorithm>(conf.name()); 
+        return alg!=0 ? alg->sysRestart() : StatusCode::FAILURE ;
+    } else if (conf.kind() == "IService")  {
+        Service *svc = resolve<Service>(conf.name()); 
+        return svc!=0 ? svc->sysRestart() : StatusCode::FAILURE ;
     } 
     return StatusCode::FAILURE;
 }
@@ -442,13 +455,18 @@ PropertyConfigSvc::findTopKind(const ConfigTreeNode::digest_type& configID,
 
 StatusCode 
 PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
+
     // Obtain the IProperty of the ApplicationMgr
     SmartIF<IProperty> appProps(serviceLocator());
     StringArrayProperty topAlgs("TopAlg",vector<string>());
     if ( appProps->getProperty(&topAlgs).isFailure() ) {
         error() << " problem getting StringArrayProperty \"TopAlg\"" << endmsg;
     }
-    debug() << " current TopAlgs: " << topAlgs.toString() << endmsg;
+    info() << " current TopAlgs: " << topAlgs.toString() << endmsg;
+
+    if (m_initialTopAlgs.get()==0) {
+        m_initialTopAlgs.reset( new vector<string>( topAlgs.value() ) );
+    }
 
     vector<const PropertyConfig*> ids;
     StatusCode sc = findTopKind(id, "IAlgorithm", back_inserter(ids));
@@ -472,7 +490,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
     //@TODO: find topAlgs before we touched them -- and use those to merge with...
 
 
-    list<string> merge(topAlgs.value().begin(),topAlgs.value().end());
+    list<string> merge(m_initialTopAlgs->begin(),m_initialTopAlgs->end());
 
     list<string>::iterator ireq = request.begin();
     while (ireq != request.end()) {
@@ -492,7 +510,7 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
         error() << " failed to set property" << endmsg;
         return StatusCode::FAILURE;
     }
-    debug() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
+    info() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
     return StatusCode::SUCCESS;
 } 
 
@@ -504,23 +522,21 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     StatusCode sc = configure(top,true);
     if (!sc.isSuccess()) return sc;
 
-        //@TODO: restart doesn't call setProperties -- need to make sure
-        //       we call setProperties of those algorithms/services/tools which
-        //       for which we have pushed things into the jos...
-
-//    GAUDI v20rx...
-    return m_appMgrUI->restart();
-
+//    assert(m_appMgrUI!=0);
+//    return m_appMgrUI->restart();
     // call reinitialize for services and top algorithms...
-//    vector<const PropertyConfig*> cfgs;
-//    sc = findTopKind(top, "IService", back_inserter(cfgs));
-//    if (!sc.isSuccess()) return sc;
-//    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
-//    if (!sc.isSuccess()) return sc;
-//    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end()&&sc.isSuccess(); ++i) {
-//       sc = invokeSysReinitialize( **i );
-//    }
-//    return sc;
+    vector<const PropertyConfig*> cfgs;
+    sc = findTopKind(top, "IService", back_inserter(cfgs));
+    if (!sc.isSuccess()) return sc;
+    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
+    if (!sc.isSuccess()) return sc;
+    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end(); ++i) {
+       sc = invokeSysRestart( **i );
+       if (sc.isFailure()) { 
+            error() << "FIXME: failed while calling sysRestart on " << (*i)->name() << " : " << sc << endmsg;
+       }
+    }
+    return sc;
 }
 
 //=============================================================================

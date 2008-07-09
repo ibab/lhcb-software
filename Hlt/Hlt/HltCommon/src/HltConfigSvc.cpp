@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.11 2008-07-08 14:22:49 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.12 2008-07-09 14:11:25 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -132,9 +132,9 @@ void HltConfigSvc::dummyVerifyTCK() {
   // check if TCK still the same -- if not, reconfigure... 
   TCK_t currentTCK = m_configuredTCK;
   static unsigned nEvent(0);
-  info() << "nEvent: " << nEvent << endl;
+  debug() << "nEvent: " << nEvent << endmsg;
   if (++nEvent%100==0) { 
-      info()   << " ********************************************\n"
+      always()   << "\n ********************************************\n"
                << " *********INCREASING TCK !!!!****************\n"
                << " ********************************************\n" << endl;
       ++currentTCK;
