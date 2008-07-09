@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.5 2008-07-09 08:28:51 hernando Exp $
+// $Id: PatConfirmTool.h,v 1.6 2008-07-09 14:00:19 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -10,8 +10,6 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "HltBase/ITrackConfirmTool.h"            // Interface
 #include "TrackInterfaces/IPatSeedingTool.h"
-
-//#include "HltBase/ITrackView.h"
 
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
@@ -37,7 +35,6 @@ namespace LHCb{
  */
 class PatConfirmTool : public GaudiTool, 
                        virtual public ITrackConfirmTool
-                     //                     ,virtual public ITrackView 
 {
 public: 
   /// Standard constructor
@@ -52,11 +49,6 @@ public:
 
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks);
 
-  
-  
-
-  //  Tf::IStationSelector& view(const LHCb::Track& seed);
-  //std::vector<LHCb::LHCbID> lhcbIDsInView(const LHCb::Track& seed);
   ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids);
 protected:
   
