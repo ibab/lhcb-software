@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.92 2008-06-30 19:40:20 cattanem Exp $ 
+! $Id: release.notes,v 1.93 2008-07-09 16:01:00 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,26 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-09 - Vanya BELYAEV
+
+ - LoKi/shifts.h 
+    fix the  shifting function for signed types..
+
+ - LoKi/iNode.h, LoKi/Nodes.h, 
+   LoKi/Tree.h, LoKi/Trees.icpp
+   src/Nodes.cpp
+   
+    many fixes for decay finder
+
+ - LoKi/Algs.h
+
+     new algorithms for "inclusive" matching...
+
+ - cmt/requirements
+   
+     version increment to v7r5 
+
 
 ! =========================== LoKiCore v7r4 2008-06-30 ========================
 ! 2008-06-26 - Vanya BELYAEV

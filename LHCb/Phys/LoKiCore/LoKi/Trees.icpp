@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.2 2008-07-01 15:46:58 cattanem Exp $
+// $Id: Trees.icpp,v 1.3 2008-07-09 16:01:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1
@@ -166,12 +166,12 @@ LoKi::Decays::Trees::Op_<PARTICLE>::validate ( IParticlePropertySvc* svc ) const
 // MANDATORY: reset method 
 // ============================================================================
 template <class PARTICLE>
-inline void LoKi::Decays::Trees::Op_<PARTICLE>::i_reset() 
+inline void LoKi::Decays::Trees::Op_<PARTICLE>::i_reset() const
 {
   std::for_each 
     ( m_trees.begin () , 
       m_trees.end   () , 
-      std::mem_fun(&LoKi::Decays::Trees::_Tree_<PARTICLE>::reset) );
+      std::mem_fun_ref(&LoKi::Decays::Trees::_Tree_<PARTICLE>::reset) );
 }
 // ============================================================================
 // MANDATORY: collect all marked elements 
@@ -182,7 +182,7 @@ inline size_t LoKi::Decays::Trees::Op_<PARTICLE>::collect
 {
   size_t size = 0 ;
   for ( typename SubTrees::const_iterator it = m_trees.begin() ; 
-        m_trees.end() != it ; ++it ) { size += it->collect ( 0 ) ; }
+        m_trees.end() != it ; ++it ) { size += it->collect ( o ) ; }
   return size ;
 }
 // ============================================================================
@@ -218,7 +218,7 @@ LoKi::Decays::Trees::Or_<PARTICLE>::fillStream( std::ostream& s ) const
   for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator 
           tree = this->begin() ; this->end() != tree ; ++tree )
   { 
-    if ( this->begin() != tree ) { s << "|" ; } 
+    if ( this->begin() != tree ) { s << "||" ; } 
     s << (*tree) ;
   }
   return s << ") " ;
@@ -281,7 +281,7 @@ LoKi::Decays::Trees::And_<PARTICLE>::fillStream( std::ostream& s ) const
   for ( typename LoKi::Decays::Trees::Op_<PARTICLE>::SubTrees::const_iterator tree 
           = this->begin() ; this->end() != tree ; ++tree )
   { 
-    if ( this->begin() != tree ) { s << "&" ; } 
+    if ( this->begin() != tree ) { s << "&&" ; } 
     s << (*tree) ;
   }
   return s << ") " ;

@@ -1,4 +1,4 @@
-// $Id: shifts.h,v 1.1 2007-07-23 17:07:41 ibelyaev Exp $
+// $Id: shifts.h,v 1.2 2008-07-09 16:01:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_SHIFTS_H 
 #define LOKI_SHIFTS_H 1
@@ -41,7 +41,9 @@ namespace LoKi
     struct CyclicShiftLeft<TYPE,true> 
       : public std::binary_function<TYPE,unsigned int,TYPE>
     {
-      enum { bSize = boost::integer_traits<TYPE>::digits } ;
+      enum { bSize 
+             = boost::integer_traits<TYPE>::digits 
+             + boost::integer_traits<TYPE>::is_signed } ;
       inline TYPE operator () ( TYPE input , unsigned int N ) const 
       {
         N = N%bSize ;
@@ -60,7 +62,9 @@ namespace LoKi
     struct CyclicShiftRight<TYPE,true> 
       : public std::binary_function<TYPE,unsigned int,TYPE>
     {
-      enum { bSize = boost::integer_traits<TYPE>::digits } ;
+      enum { bSize 
+             = boost::integer_traits<TYPE>::digits 
+             + boost::integer_traits<TYPE>::is_signed } ;
       inline TYPE operator() ( TYPE input , unsigned int N ) const 
       {
         N = N%bSize ;

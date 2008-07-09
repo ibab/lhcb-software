@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.1 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Trees.h,v 1.2 2008-07-09 16:01:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYS_TREES_H 
 #define LOKI_DECAYS_TREES_H 1
@@ -37,6 +37,22 @@ namespace LoKi
         Daughters         = 0 , // match only for the direct daughters 
         Sections              , // match in all graph sections 
       } ;
+      // ======================================================================
+      /** @enum Oscillation 
+       *  simple e-num to distinguish oscillated and non-oscillated particles 
+       *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
+       *  @see LHCb:MCParticle
+       *  @see LHCb:MCParticle::hasOscillated 
+       *  @date   2008-05-28
+       */
+      enum Oscillation {
+        /// no need to check the oscillation flag
+        Undefined = 0 , //   non-defined 
+        /// require the positive oscilaltion flag 
+        Oscillated    , //    
+        /// require the negative oscilaltion flag 
+        NotOscillated   // 
+      } ;     
       // ======================================================================
       /** @class Marked_ 
        *  Simple "marked" sub-tree
@@ -180,6 +196,18 @@ namespace LoKi
         // ====================================================================
       public:
         // ====================================================================
+        /// needed for std::find
+        inline bool operator== 
+        ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+        { return m_tree.tree ( p ) ; }
+        // ====================================================================
+        /// needed for std::find
+        inline bool operator!= 
+        ( typename LoKi::Decays::iTree_<PARTICLE>::argument p ) const 
+        { return !m_tree.tree ( p ) ; }
+        // ====================================================================
+      public:
+        // ====================================================================
         /// assignement operator, Copy the unique ID 
         _Tree_& operator=( const _Tree_& right ) 
         { 
@@ -211,6 +239,12 @@ namespace LoKi
         // ====================================================================
       } ;
       // ======================================================================
+      /** @struct CheckTree
+       *  Helper struture to use the whole power of STL algorithms 
+       *  for decay finder tools 
+       *  @author Vanya BELYAEV Ivan.Belyave@nikhef.nl
+       *  @date 2008-07-07
+       */
       template <class PARTICLE>
       struct CheckTree
       {
@@ -260,7 +294,7 @@ namespace LoKi
         /// MANDATORY: the proper validation of the tree
         virtual  StatusCode validate ( IParticlePropertySvc* svc ) const ;
         /// MANDATORY: reset method 
-        virtual void reset() { return i_reset() ; }
+        virtual void reset() const { return i_reset() ; }
         /// MANDATORY: collect all marked elements 
         virtual size_t collect 
         ( typename LoKi::Decays::iTree_<PARTICLE>::Collection& ) const ;
@@ -281,7 +315,7 @@ namespace LoKi
       protected:
         // ====================================================================
         /// inline form of reset 
-        inline void i_reset() ;
+        inline void i_reset() const ;
         // ====================================================================
       private:
         // ====================================================================
@@ -290,7 +324,7 @@ namespace LoKi
         // ====================================================================
       private:
         // ====================================================================
-        SubTrees m_trees ;
+        mutable SubTrees m_trees ;
         // ====================================================================
       } ;
       // ======================================================================
@@ -523,9 +557,7 @@ operator||
 template <class PARTICLE>
 inline LoKi::Decays::Trees::Not_<PARTICLE> 
 operator! ( const LoKi::Decays::iTree_<PARTICLE>& o ) 
-{ 
-  return LoKi::Decays::Trees::Not_<PARTICLE> ( o ) ; 
-}
+{ return LoKi::Decays::Trees::Not_<PARTICLE> ( o ) ; }
 // ============================================================================
 /** The standard output stream operator for the sub-tree
  *  @param s the reference to the outptu stream 
@@ -536,9 +568,35 @@ template <class PARTICLE>
 inline std::ostream& operator<<
   ( std::ostream&                                s , 
     const LoKi::Decays::Trees::_Tree_<PARTICLE>& o ) 
-{ 
-  return o.fillStream ( s ) ;
-}
+{ return o.fillStream ( s ) ; }
+// ============================================================================
+/** "right" for of equality operator 
+ *  (needed for std::find)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-07-07
+ */
+template <class PARTICLE>
+inline bool operator== 
+( typename LoKi::Decays::iTree_<PARTICLE>::argument p , 
+  const    LoKi::Decays::iTree_<PARTICLE>&          t )
+{ return t == p ; }
+// ====================================================================
+
+
+// ============================================================================
+/** sequncer operator  (the same as "OR" here)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+template <class PARTICLE> 
+inline LoKi::Decays::Trees::Or_<PARTICLE>
+operator,
+  ( const LoKi::Decays::iTree_<PARTICLE>& o1 , 
+    const LoKi::Decays::iTree_<PARTICLE>& o2 ) 
+{ return LoKi::Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ; }
+// ============================================================================
+
+
 
 
 // ============================================================================

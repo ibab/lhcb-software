@@ -1,4 +1,4 @@
-// $Id: Algs.h,v 1.13 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Algs.h,v 1.14 2008-07-09 16:01:00 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -8,6 +8,8 @@
 // STD & STL 
 // ============================================================================
 #include <utility>
+#include <set>
+#include <vector>
 #include <algorithm>
 #include <functional>
 // ============================================================================
@@ -468,6 +470,280 @@ namespace LoKi
       }
       return result ;
     }
+    // ========================================================================
+    template <class OBJECT,class PREDICATE1,class PREDICATE2>
+    inline bool _found_2 
+    ( OBJECT            first  , 
+      OBJECT            last   , 
+      const PREDICATE1& cut1   , 
+      const PREDICATE2& cut2   ,
+      OBJECT            except )
+    {
+      bool ok1 = false ;
+      bool ok2 = false ;      
+      for ( ; first != last ; ++first )
+      {
+        if ( first == except ) { continue ; }                       // CONTINUE 
+        //
+        const bool _ok1 = cut1 ( *first ) ;
+        if ( ok2 && _ok1 ) { return true ; }                        // RETURN 
+        //
+        const bool _ok2 = cut2 ( *first ) ;
+        if ( ok1 && _ok2 ) { return true ; }                        // RETURN 
+        //
+        if ( _ok1 ) { ok1 = true ; }
+        if ( _ok2 ) { ok2 = true ; }        
+      }
+      // 
+      return false ;                                                // RETURN
+    }
+    // ========================================================================
+    /** simple algorithm to check the presence of at least 
+     *  two *different* objects in the sequence which satisfy 
+     *  two predicates 
+     *  @param first 'begin'-iterator for the sequence 
+     *  @param last  'end'-iterator for the sequence 
+     *  @param cut1 the first predicate 
+     *  @param cut2 the second predicate 
+     *  @return true if there are two elements  
+     */  
+    template <class OBJECT, class PREDICATE1, class PREDICATE2>
+    inline bool found_2 
+    ( OBJECT            first , 
+      OBJECT            last  , 
+      const PREDICATE1& cut1  ,
+      const PREDICATE2& cut2  )
+    {
+      return _found_2 ( first , last , cut1 , cut2 , last ) ;
+    }
+    // ========================================================================
+    template <class OBJECT, class PREDICATE1, class PREDICATE2, class PREDICATE3>
+    inline bool _found_3
+    ( OBJECT            first  , 
+      OBJECT            last   , 
+      const PREDICATE1& cut1   ,
+      const PREDICATE2& cut2   ,
+      const PREDICATE3& cut3   , 
+      OBJECT            except )
+    {
+      for ( OBJECT f1 = first ; f1 != last ; ++f1 )
+      {
+        //
+        if ( f1 == except ) { continue ; }
+        //
+        if       ( cut1 ( *f1 ) && 
+                   _found_2 ( first , last , cut2 , cut3 , f1 ) ) { return true ; }
+        else if  ( cut2 ( *f1 ) && 
+                   _found_2 ( first , last , cut1 , cut3 , f1 ) ) { return true ; }
+        else if  ( cut3 ( *f1 ) && 
+                   _found_2 ( first , last , cut1 , cut2 , f1 ) ) { return true ; }  
+      }
+      return false ;  
+    }
+    // ========================================================================
+    /** simple algorithm to check the presence of at least 
+     *  three *different* objects in the sequence which satisfy 
+     *  three  predicates 
+     *  @param first 'begin'-iterator for the sequence 
+     *  @param last  'end'-iterator for the sequence 
+     *  @param cut1 the first predicate 
+     *  @param cut2 the second predicate 
+     *  @param cut3 the third predicate 
+     *  @return true if there are two elements  
+     */  
+    template <class OBJECT, class PREDICATE1, class PREDICATE2, class PREDICATE3>
+    inline bool found_3
+    ( OBJECT            first , 
+      OBJECT            last  , 
+      const PREDICATE1& cut1  ,
+      const PREDICATE2& cut2  ,
+      const PREDICATE3& cut3  )
+    {
+      return _found_3 ( first , last , cut1 , cut2 , cut3 , last ) ;
+    }
+    // ========================================================================
+    template <class OBJECT, 
+              class PREDICATE1, class PREDICATE2, 
+              class PREDICATE3, class PREDICATE4>
+    inline bool _found_4
+    ( OBJECT            first  , 
+      OBJECT            last   , 
+      const PREDICATE1& cut1   ,
+      const PREDICATE2& cut2   ,
+      const PREDICATE3& cut3   ,
+      const PREDICATE4& cut4   ,
+      OBJECT            except )
+    {
+      for ( OBJECT f1 = first ; f1 != last ; ++f1 ) 
+      {
+        if ( f1 == except ) { continue ; }
+        //
+        if       ( cut1 ( *f1 ) && 
+                   _found_3 ( first , last , cut2 , cut3 , cut4 , f1 ) ) { return true ; }
+        else if  ( cut2 ( *f1 ) && 
+                   _found_3 ( first , last , cut1 , cut3 , cut4 , f1 ) ) { return true ; }
+        else if  ( cut3 ( *f1 ) && 
+                   _found_3 ( first , last , cut1 , cut2 , cut4 , f1 ) ) { return true ; }
+        else if  ( cut4 ( *f1 ) && 
+                   _found_3 ( first , last , cut1 , cut2 , cut3 , f1 ) ) { return true ; }        
+      }
+      return false ;
+    }
+    // ========================================================================
+    /** simple algorithm to check the presence of at least 
+     *  four *different* objects in the sequence which satisfy 
+     *  four  predicates 
+     *  @param first 'begin'-iterator for the sequence 
+     *  @param last  'end'-iterator for the sequence 
+     *  @param cut1 the first predicate 
+     *  @param cut2 the second predicate 
+     *  @param cut3 the third  predicate 
+     *  @param cut4 the fourth predicate 
+     *  @return true if there are two elements  
+     */  
+    template <class OBJECT, 
+              class PREDICATE1, class PREDICATE2, 
+              class PREDICATE3, class PREDICATE4>
+    inline bool found_4
+    ( OBJECT            first , 
+      OBJECT            last  , 
+      const PREDICATE1& cut1  ,
+      const PREDICATE2& cut2  ,
+      const PREDICATE3& cut3  ,
+      const PREDICATE4& cut4  )
+    {
+      return _found_4 ( first , last , cut1 , cut2 , cut3 , cut4 , last ) ;
+    }
+    // ========================================================================
+    template <class OBJECT, 
+              class PREDICATE1, class PREDICATE2, 
+              class PREDICATE3, class PREDICATE4, class PREDICATE5>
+    inline bool _found_5
+    ( OBJECT            first  , 
+      OBJECT            last   , 
+      const PREDICATE1& cut1   ,
+      const PREDICATE2& cut2   ,
+      const PREDICATE3& cut3   ,
+      const PREDICATE4& cut4   ,
+      const PREDICATE5& cut5   ,
+      OBJECT            except )
+    {
+      for ( OBJECT f1 = first ; f1 != last ; ++f1 ) 
+      {
+        if ( f1 == except ) { continue ; }
+        //
+        if       ( cut1 ( *f1 ) && 
+                   _found_4 ( first , last , cut2 , cut3 , cut4 , cut5 , f1 ) ) { return true ; }
+        else if  ( cut2 ( *f1 ) && 
+                   _found_4 ( first , last , cut1 , cut3 , cut4 , cut5 , f1 ) ) { return true ; }
+        else if  ( cut3 ( *f1 ) && 
+                   _found_4 ( first , last , cut1 , cut2 , cut4 , cut5 , f1 ) ) { return true ; }
+        else if  ( cut4 ( *f1 ) && 
+                   _found_4 ( first , last , cut1 , cut2 , cut3 , cut5 , f1 ) ) { return true ; }        
+        else if  ( cut5 ( *f1 ) && 
+                   _found_4 ( first , last , cut1 , cut2 , cut3 , cut4 , f1 ) ) { return true ; }        
+      }
+      return false ;
+    }  
+    // ========================================================================
+    /** simple algorithm to check the presence of at least 
+     *  five *different* objects in the sequence which satisfy 
+     *  five  predicates 
+     *  @param first 'begin'-iterator for the sequence 
+     *  @param last  'end'-iterator for the sequence 
+     *  @param cut1 the first predicate 
+     *  @param cut2 the second predicate 
+     *  @param cut3 the third  predicate 
+     *  @param cut4 the fourth predicate 
+     *  @param cut5 the fith predicate 
+     *  @return true if there are two elements  
+     */  
+    template <class OBJECT, 
+              class PREDICATE1, class PREDICATE2, 
+              class PREDICATE3, class PREDICATE4, class PREDICATE5>
+    inline bool found_5
+    ( OBJECT            first  , 
+      OBJECT            last   , 
+      const PREDICATE1& cut1   ,
+      const PREDICATE2& cut2   ,
+      const PREDICATE3& cut3   ,
+      const PREDICATE4& cut4   ,
+      const PREDICATE5& cut5   ) 
+    {
+      return _found_5 
+        ( first , last , cut1 , cut2 , cut3 , cut4 , cut5 , last ) ;
+    }
+    // ========================================================================
+    template <class OBJECT, class PREDICATE>
+    inline bool _found_N 
+    ( OBJECT first                          , 
+      OBJECT last                           ,
+      const std::vector<PREDICATE>& cuts    , 
+      const std::set<size_t>&       indices ) 
+    {
+      for ( OBJECT f = first ; last != f ; ++f ) 
+      {
+        const size_t index = f - first ;
+        if ( indices.end() != indices.find ( index ) ) { continue ; } 
+        for ( typename std::vector<PREDICATE>::const_iterator icut = cuts.begin() ;
+              cuts.end() != icut ; ++icut ) 
+        {
+          const PREDICATE& cut = *icut ;
+          if ( !cut ( *f ) )       { continue    ; }              // CONTINUE 
+          if ( 1 == cuts.size()  ) { return true ; }              // TRUE 
+          std::set<size_t>    _indices    ( indices ) ;
+          _indices.insert ( index ) ;
+          std::vector<PREDICATE> _cuts    ( cuts    ) ;
+          _cuts.erase ( _cuts.begin() + ( icut - cuts.begin() ) ) ;
+          return _found_N ( first , last , _cuts , _indices ) ;
+        }
+      }  
+      return false ;
+    }
+    // ========================================================================
+    /** find "N" different elements in the sequence whcih satisfy to N
+     *  various predicates 
+     *  @param first 'begin'-iterator of the sequence 
+     *  @param last  'end'-iterator for the sequence
+     *  @param cust  the list of N-predicates 
+     *  @return true if there are N different good elements in the sequence
+     */
+    template <class OBJECT, class PREDICATE>
+    inline bool found_N 
+    ( OBJECT first                          , 
+      OBJECT last                           ,
+      const std::vector<PREDICATE>& cuts    ) 
+    {
+      if ( cuts.empty() )                                 { return false ; }
+      if ( std::distance ( first , last ) < cuts.size() ) { return false ; }
+      //
+      if      ( 1 == cuts.size() ) 
+      { return last != std::find_if ( first , last , cuts.front() ) ; }
+      else if ( 2 == cuts.size() )
+      { return found_2 ( first , last , cuts.front() , cuts.back() ) ; }
+      else if ( 3 == cuts.size() )
+      { return found_3 ( first , last , 
+                         *( cuts.begin ()     ) ,
+                         *( cuts.begin () + 1 ) ,
+                         *( cuts.begin () + 2 ) ) ; }
+      else if ( 4 == cuts.size() )
+      { return found_4 ( first , last , 
+                         *( cuts.begin ()     ) ,
+                         *( cuts.begin () + 1 ) ,
+                         *( cuts.begin () + 2 ) ,
+                         *( cuts.begin () + 3 ) ) ; }
+      else if ( 5 == cuts.size() )
+      { return found_5 ( first , last , 
+                         *( cuts.begin ()     ) ,
+                         *( cuts.begin () + 1 ) ,
+                         *( cuts.begin () + 2 ) ,
+                         *( cuts.begin () + 3 ) ,
+                         *( cuts.begin () + 4 ) ) ; }
+      
+      std::set<size_t> indices ;
+      return _found_N ( first , last , cuts , indices ) ;
+    }
+    // ========================================================================
   } // end of namespace LoKi::Algs  
 } // end of namespace LoKi
 // ============================================================================

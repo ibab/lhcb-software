@@ -1,4 +1,4 @@
-// $Id: Nodes.h,v 1.1 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Nodes.h,v 1.2 2008-07-09 16:01:00 ibelyaev Exp $
 // ============================================================================
 #ifndef DAVINCI_DECAYNODES_H 
 #define DAVINCI_DECAYNODES_H 1
@@ -731,14 +731,282 @@ inline LoKi::Decays::Nodes::Not operator!
 ( const LoKi::Decays::Nodes::Not& o ) 
 { return LoKi::Decays::Node( o.node() ) ; }
 // ============================================================================
-
-
-// ============================================================================
 /// output operator
 inline std::ostream& operator<< 
   ( std::ostream&                     s , 
     const LoKi::Decays::Nodes::_Node& n ) { return s << n.node() ; }
 // ============================================================================
+
+
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const std::string&         o2 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::ParticleID&    o2 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::Decay::Item&   o2 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const ParticleProperty*    o2 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const std::string&         o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LHCb::ParticleID&    o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const LHCb::Decay::Item&   o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::Or operator||
+( const ParticleProperty*    o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const std::string&         o2 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::ParticleID&    o2 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::Decay::Item&   o2 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const ParticleProperty*    o2 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const std::string&         o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LHCb::ParticleID&    o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const LHCb::Decay::Item&   o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+/** Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+LoKi::Decays::Nodes::And operator&&
+( const ParticleProperty*    o2 ,
+  const LoKi::Decays::iNode& o1 ) ;
+// ============================================================================
+
+
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *
+ *  The composed node could be constructed as "sequence" of two other nodes 
+ *  (It it equaivalent to the logical OR)
+ * 
+ *  @code
+ * 
+ *  const LoKi::Decays::iNode& node1 = ... ;
+ *  const LoKi::Decays::iNode& node2 = ... ;
+ *
+ *  LoKi::Decays::Node node = node1, node2 ;
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LoKi::Decays::iNode& o1 ,
+    const LoKi::Decays::iNode& o2 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *
+ *  The composed node could be constructed as "sequence" of two other nodes 
+ *  (It it equaivalent to the logical OR)
+ * 
+ *  @code
+ * 
+ *  const LoKi::Decays::iNode& node1 = ... ;
+ *  const LHCb::Decay::Item&   item  = ... ;
+ *
+ *  LoKi::Decays::Node node = node1, item ;
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LoKi::Decays::iNode& o1 ,
+    const LHCb::Decay::Item&   o2 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *
+ *  The composed node could be constructed as "sequence" of two other nodes 
+ *  (It it equaivalent to the logical OR)
+ *     
+ *  @code
+ * 
+ *  const LoKi::Decays::iNode& node1 = ... ;
+ *
+ *  LoKi::Decays::Node node = node1, "B_s0";
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LoKi::Decays::iNode& o1 ,
+    const std::string&         o2 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *
+ *  The composed node could be constructed as "sequence" of two other nodes 
+ *  (It it equaivalent to the logical OR)
+ *     
+ *  @code
+ * 
+ *  const LoKi::Decays::iNode& node1 = ... ;
+ *
+ *  LoKi::Decays::Node node = node1, LHCb::ParticleID(511) ;
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LoKi::Decays::iNode& o1 ,
+    const LHCb::ParticleID&    o2 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *
+ *  The composed node could be constructed as "sequence" of two other nodes 
+ *  (It it equaivalent to the logical OR)
+ *     
+ *  @code
+ * 
+ *  const LoKi::Decays::iNode& node1 = ... ;
+ *  const ParticleProperty*    pp    = ... ;
+ *
+ *  LoKi::Decays::Node node = node1, pp ;
+ *
+ *  @endcode 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LoKi::Decays::iNode& o1 ,
+    const ParticleProperty*    o2 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LHCb::Decay::Item&   o2 ,
+    const LoKi::Decays::iNode& o1 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const std::string&         o2 ,
+    const LoKi::Decays::iNode& o1 )  { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const LHCb::ParticleID&    o2 ,
+    const LoKi::Decays::iNode& o1 ) { return o1 || o2 ; }
+// ============================================================================
+/** sequencer operator (the same as "OR" here)
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+inline LoKi::Decays::Nodes::Or operator,
+  ( const ParticleProperty*    o2 ,
+    const LoKi::Decays::iNode& o1 ) { return o1 || o2 ; }
+// ============================================================================
+
 
 // ============================================================================
 // The END 

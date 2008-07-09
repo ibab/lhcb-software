@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.1 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.2 2008-07-09 16:01:01 ibelyaev Exp $
 // ===========================================================================
 // Include files
 // ===========================================================================
@@ -211,7 +211,7 @@ LoKi::Decays::Nodes::Pid::fillStream ( std::ostream& s ) const
 // ============================================================================
 std::ostream& 
 LoKi::Decays::Nodes::CC::fillStream ( std::ostream& s ) const
-{ return s << " [" << item().name() << "]cc"  ; }
+{ return s << " [" << item().name() << "]cc "  ; }
 // ============================================================================
 std::ostream& 
 LoKi::Decays::Nodes::Meson::fillStream ( std::ostream& s ) const
@@ -353,7 +353,7 @@ std::ostream& LoKi::Decays::Nodes::Or::fillStream ( std::ostream& s ) const
   for ( LoKi::Decays::SubNodes::const_iterator node = m_nodes.begin() ;
         m_nodes.end() != node ; ++node ) 
   {
-    if ( m_nodes.begin() != node ) { s << "|" ; }    
+    if ( m_nodes.begin() != node ) { s << "||" ; }    
     s << *node ;
   }  
   return s << ") " ;
@@ -451,7 +451,7 @@ std::ostream& LoKi::Decays::Nodes::And::fillStream ( std::ostream& s ) const
   for ( LoKi::Decays::SubNodes::const_iterator node = m_nodes.begin() ;
         m_nodes.end() != node ; ++node ) 
   {
-    if ( m_nodes.begin() != node ) { s << "&" ; }    
+    if ( m_nodes.begin() != node ) { s << "&&" ; }    
     s << *node ;
   }  
   return s << ") " ;
@@ -522,6 +522,98 @@ LoKi::Decays::Nodes::And::operator+= ( const LoKi::Decays::iNode& node )
 { return (*this) &= node  ; }
 // ============================================================================
 
+
+// ============================================================================
+/*  Create the "OR" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const std::string&         o2 ) 
+{ return o1 || LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::ParticleID&    o2 ) 
+{ return o1 || LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::Decay::Item&   o2 ) 
+{ return o1 || LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LoKi::Decays::iNode& o1 , 
+  const ParticleProperty*    o2 ) 
+{ return o1 || LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const std::string&         o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) || o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LHCb::ParticleID&    o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) || o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const LHCb::Decay::Item&   o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) || o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::Or operator||
+( const ParticleProperty*    o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) || o1 ; }
+// ============================================================================
+/*  Create the "AND" of two nodes
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2008-04-12
+ */
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const std::string&         o2 ) 
+{ return o1 && LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::ParticleID&    o2 ) 
+{ return o1 && LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const LHCb::Decay::Item&   o2 ) 
+{ return o1 && LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LoKi::Decays::iNode& o1 , 
+  const ParticleProperty*    o2 ) 
+{ return o1 && LoKi::Decays::Nodes::Pid ( o2 ) ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const std::string&         o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) && o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LHCb::ParticleID&    o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) && o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const LHCb::Decay::Item&   o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) && o1 ; }
+// ============================================================================
+LoKi::Decays::Nodes::And operator&&
+( const ParticleProperty*    o2 ,
+  const LoKi::Decays::iNode& o1 ) 
+{ return LoKi::Decays::Nodes::Pid ( o2 ) && o1 ; }
+// ============================================================================
 
 
 // ===========================================================================
