@@ -11,7 +11,7 @@
 
 std::ostream& LHCb::STTELL1Error::fillStream(std::ostream& s) const
 {
-  s  << "################################################" << std::endl;
+
   s  << "Tell1 Sent " << sentWords() << " "  << " words " << std::endl; 
 
   if (ErrorBankLength() == 0x14){
@@ -66,15 +66,16 @@ std::ostream& LHCb::STTELL1Error::fillStream(std::ostream& s) const
     s << "Pedestal bank length: " << PedBankLength() << std::endl;
   }
 
-  s << "Summary info " << std::endl;
-  const unsigned pcn = pcnVote();
-  s << "majority PCN vote: " << pcn << std::endl;
-  for (unsigned int iLink = 0u; iLink < nBeetle ; ++iLink){
-    for (unsigned int iPort = 0u; iPort < nPort ; ++iPort){
-      s << "Beetle:"  << iLink << " Port "<<  iPort << "Status: " <<linkInfo(iLink, iPort , pcn) << std::endl;
-    } // port
-  } // link
-
+  if (ErrorBankLength() == 0x14 ){
+    s << "Summary info of errors" << std::endl;
+    const unsigned pcn = pcnVote();
+    s << "majority PCN vote: " << pcn << std::endl;
+    for (unsigned int iLink = 0u; iLink < nBeetle ; ++iLink){
+      for (unsigned int iPort = 0u; iPort < nPort ; ++iPort){
+        s << "Beetle:"  << iLink << " Port "<<  iPort << "Status: " <<linkInfo(iLink, iPort , pcn) << std::endl;
+      } // port
+    } // link
+  }
   return s << "################################################" << std::endl;
 }
 

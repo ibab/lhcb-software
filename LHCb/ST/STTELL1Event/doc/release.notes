@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.13 2008-07-07 14:43:34 mneedham Exp $
+! $Id: release.notes,v 1.14 2008-07-09 11:34:31 mneedham Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2008-08-07 M Needham 
+ - Changes in printout
 
 ! 2008-07-07 M Needham
  - bug fix in fillErrorInfo

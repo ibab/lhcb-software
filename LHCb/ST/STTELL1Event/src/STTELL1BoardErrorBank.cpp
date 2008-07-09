@@ -1,6 +1,6 @@
 
 #include "Event/STTELL1BoardErrorBank.h"
-#include <bitset>
+#include <iostream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STChannelID
@@ -10,12 +10,13 @@
 
 std::ostream& LHCb::STTELL1BoardErrorBank::fillStream(std::ostream& s) const
 {
-  s  << "################################################" << std::endl;
-  s << "Error bank for TELL1 board source "  << key();
+  unsigned int pp = 0;
+  s << "Error bank for TELL1 board source "  << key() << std::endl;
   LHCb::STTELL1BoardErrorBank::ErrorVector::const_iterator iter = m_errorInfo.begin();
-  for(; iter != m_errorInfo.end(); ++iter){
-    s << *iter << std::endl;
+  for(; iter != m_errorInfo.end(); ++iter, ++pp){
+    s << "pp "  << pp<< std::endl;
+    s << **iter << std::endl;
   } // iter 
  
-  return s << "################################################" << std::endl;
+  return s << std::endl;
 }
