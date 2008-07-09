@@ -1,8 +1,7 @@
 # =============================================================================
 """ @namespace hltconf
 
-@brief given alley name return the list of algorithms are in the alley
-[type,name,hlt configuration], where the hlt configuration is a dictionary with the properties of the hlt algorithm (i.e Inputselection or OutputSelection)
+@brief given alley name return the list of hltalgorithms are in the alley, an hltalgorithm has its type, name and a dictionary with the Hlt properties
 @author Jose A. Hernando hernando@cern.ch
 @date 2008-06-16
 """
