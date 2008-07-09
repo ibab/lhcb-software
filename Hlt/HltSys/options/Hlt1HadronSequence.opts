@@ -28,8 +28,8 @@ Hlt1HadronSequence.ShortCircuit = false;
 Hlt1HadronSequence.MeasureTime = true;
 
 Hlt1HadronSF.InputSelections = {
-  "Hlt1HadronSingle",
-  "Hlt1HadronDi"
+  "Hlt1HadronSingleTFGFwrd",
+  "Hlt1HadronDiVFForward"
 };
 
 Hlt1HadronAlleysSF.InputSelections = {
@@ -45,7 +45,7 @@ Hlt1HadronSingleSequence.MeasureTime = true;
 Hlt1HadronSingleSequence.Members = {
   "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronSinglePrepare",
-  "HltTrackFilter/Hlt1HadronSingle",
+  "HltTrackFilter/Hlt1HadronSingleTFGFwrd",
   "GaudiSequencer/HltRecoSequence",
   "HltTrackFilter/Hlt1HadronSingleDecision"
 };
@@ -71,7 +71,7 @@ Hlt1HadronDiSequence.MeasureTime = true;
 Hlt1HadronDiSequence.Members = {
   "GaudiSequencer/PrepareL0HadronDecisionSeq",
   "GaudiSequencer/Hlt1HadronDiPrepare",
-  "HltVertexFilter/Hlt1HadronDi",
+  "HltVertexFilter/Hlt1HadronDiVFForward",
   "GaudiSequencer/HltRecoSequence",
   "HltTrackFilter/Hlt1HadronDiTFForward1",
   "HltVertexMaker/Hlt1HadronDiVMForward1",
@@ -93,20 +93,20 @@ Hlt1HadronDiPrepare.Members = {
 // Single Trigger options
 //-------------------------------------------
 
-Hlt1HadronSingle.InputSelection  = "Hlt1HadronSingleTUGFwd";
-Hlt1HadronSingle.FilterDescriptor = {"PT,>,5000."};
+Hlt1HadronSingleTFGFwrd.InputSelection  = "Hlt1HadronSingleTUGFwd";
+Hlt1HadronSingleTFGFwrd.FilterDescriptor = {"PT,>,5000."};
 
 
 Hlt1HadronSingleDecision.InputSelection = "Forward1";
 Hlt1HadronSingleDecision.FilterDescriptor = {
-  "MatchIDsFraction_Hlt1HadronSingle,>,0.75",
+  "MatchIDsFraction_Hlt1HadronSingleTFGFwrd,>,0.75",
   "IP_PV2D,||>,0.1",
   "PT,>,6000."};
 
 ///------------
 
-Hlt1HadronDi.InputSelection = "Hlt1HadronDiVUForward";
-Hlt1HadronDi.FilterDescriptor = {
+Hlt1HadronDiVFForward.InputSelection = "Hlt1HadronDiVUForward";
+Hlt1HadronDiVFForward.FilterDescriptor = {
   "VertexMinPT,>,1000.",
   "VertexPointing_PV2D,<,0.4"
 };
@@ -122,7 +122,7 @@ Hlt1HadronDiDecision.InputSelection = "Hlt1HadronDiVMForward1";
 Hlt1HadronDiDecision.FilterDescriptor = {
   "VertexMaxPT,>,2500.",
   "VertexPointing_PV2D,<,0.4",
-  "VertexMatchIDsFraction_Hlt1HadronDi,>,1.5"
+  "VertexMatchIDsFraction_Hlt1HadronDiVFForward,>,1.5"
 };
 
 //-------------------------------------------------------------------------
@@ -132,11 +132,6 @@ Hlt1HadronDiDecision.FilterDescriptor = {
 
 Hlt1HadronSingleTFRZVelo.InputSelection = "RZVelo";
 Hlt1HadronSingleTFRZVelo.FilterDescriptor = {"Calo2DChi2_L0HadronDecision,<,4"};
-// Hlt1HadronSingleTFRZVelo.HistogramUpdatePeriod = 1;
-// Hlt1HadronSingleTFRZVelo.HistoDescriptor = {
-//    "Calo2DChi2_L0HadronDecision":("Calo2DChi2_L0HadronDecision",0.,100.,20),
-//    "Calo2DChi2_L0HadronDecisionBest":("Calo2DChi2_L0HadronDecisionBest",0.,100.,20)
-// };
 
 Hlt1HadronSingleTUVelo.InputSelection = "Hlt1HadronSingleTFRZVelo";
 Hlt1HadronSingleTUVelo.RecoName = "Velo";
@@ -147,28 +142,14 @@ Hlt1HadronSingleTFVelo.FilterDescriptor = {
   "IP_PV2D,||>,0.1",
   "Calo3DChi2_L0HadronDecision,<,4"
 };
-// Hlt1HadronSingleTFVelo.HistogramUpdatePeriod = 0;
-// Hlt1HadronSingleTFVelo.HistoDescriptor = {
-//   "IP_PV2D":("IP_PV2D",-0.1,3.,100),
-//   "IP_PV2DBest":("IP_PV2DBest",-0.1,3.,100),
-//   "Calo3DChi2_L0HadronDecision":("Calo3DChi2_L0HadronDecision",-0.1,50.,100),
-//   "Calo3DChi2_L0HadronDecisionBest":("Calo3DChi2_L0HadronDecisionBest",-0.1,50.,100)
-// };
 
 Hlt1HadronSingleTMVeloCalo.InputSelection = "Hlt1HadronSingleTFVelo";
 Hlt1HadronSingleTMVeloCalo.InputSelection2 = "L0HadronDecision";
 Hlt1HadronSingleTMVeloCalo.MatchName = "VeloCalo";
 Hlt1HadronSingleTMVeloCalo.MaxQuality = 4.;
-// Hlt1HadronSingleTMVeloCalo.HistogramUpdatePeriod = 0;
-// Hlt1HadronSingleTMVeloCalo.HistoDescriptor = {
-//   "VeloCalo3DChi2":("VeloCalo3DChi2",0.,100.,100),
-//   "RedoVeloCalo2DChi2":("VeloCalo2DChi2",0.,100.,100)
-// }
 
 Hlt1HadronSingleTUGFwd.InputSelection = "Hlt1HadronSingleTMVeloCalo";
 Hlt1HadronSingleTUGFwd.RecoName = "GuidedForward";
-// Hlt1HadronSingleTUGFwd.HistogramUpdatePeriod = 0;
-
 
 //-------------------------------------------
 // DiHadron Trigger
@@ -177,38 +158,20 @@ Hlt1HadronSingleTUGFwd.RecoName = "GuidedForward";
 
 Hlt1HadronDiTFForward.InputSelection  = "Hlt1HadronSingleTUGFwd";
 Hlt1HadronDiTFForward.FilterDescriptor = {"PT,>,2500."};
-// Hlt1HadronDiTFForward.HistogramUpdatePeriod = 0;
-// Hlt1HadronDiTFForward.HistoDescriptor = {
-//   "PT":("PT",0.,6000.,100),
-//   "PTBest":("PTBest",0.,6000.,100)
-// };
 
 Hlt1HadronDiTFVelo.InputSelection = "Velo";
 Hlt1HadronDiTFVelo.FilterDescriptor = {
   "IP_PV2D,||>,0.1",
   "MatchIDsFraction_Hlt1HadronDiTFForward,<,0.9"
 };
-// Hlt1HadronDiTFVelo.HistogramUpdatePeriod = 0;
-// Hlt1HadronDiTFVelo.HistoDescriptor = {
-//   "IP_PV2D":("IP_PV2D",0.,3.,100),
-//   "IP_PV2DBest":("IP_PV2DBest",0.,3.,100)
-// };
 
 
 Hlt1HadronDiVMVelo.InputSelection = "Hlt1HadronDiTFForward";
 Hlt1HadronDiVMVelo.InputSelection2 = "Hlt1HadronDiTFVelo";
 Hlt1HadronDiVMVelo.FilterDescriptor = { "DOCA,<,0.2"};
-// Hlt1HadronDiVMVelo.HistoDescriptor = { 
-//   "DOCA":("DOCA",0.,3.,100),
-//   "DOCABest":("DOCABest",0.,3.,100)
-// };
 
 Hlt1HadronDiVFVelo.InputSelection = "Hlt1HadronDiVMVelo";
 Hlt1HadronDiVFVelo.FilterDescriptor = { "VertexDz_PV2D,>,0."};
-// Hlt1HadronDiVFVelo.HistoDescriptor = {
-//   "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100),
-//   "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100)
-// };
 
 Hlt1HadronDiVUForward.InputSelection = "Hlt1HadronDiVFVelo";
 Hlt1HadronDiVUForward.RecoName = "Forward";
