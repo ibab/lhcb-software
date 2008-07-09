@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.14 2007-10-10 20:07:24 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.15 2008-07-09 14:30:42 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -7,10 +7,11 @@
 #include <fstream>
 
 // from SEAL
-#include "SealBase/ShellEnvironment.h"
+//#include "SealBase/ShellEnvironment.h"
 #include "SealBase/TempFile.h"
 
 // from Gaudi
+#include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmGen.h"
@@ -21,7 +22,7 @@
 // from LHCb
 #include "Kernel/ParticleID.h"
 #include "GaudiKernel/SystemOfUnits.h"
-
+#include "GaudiKernel/PhysicalConstants.h"
 // from Event
 #include "Event/HepMCEvent.h"
 
@@ -114,8 +115,8 @@ StatusCode EvtGenDecay::initialize( ) {
   // Default location (if not specified in job options is
   // $DECFILESROOT/dkfiles/DECAY.DEC
   if ( m_decayFile.empty() || "empty" == m_decayFile )
-    if ( seal::ShellEnvironment().has("DECFILESROOT") ) 
-      m_decayFile  = seal::ShellEnvironment().get( "DECFILESROOT" ) + 
+    if ( "UNKNOWN" != System::getEnv("DECFILESROOT") ) 
+      m_decayFile  = System::getEnv( "DECFILESROOT" ) + 
         "/dkfiles/DECAY.DEC" ;
   
   // Check if file exists:
@@ -488,7 +489,7 @@ StatusCode EvtGenDecay::createTemporaryEvtFile( const seal::Filename &
       ctau = 0. ;
     // Width in GeV 
     if ( (*i) -> lifetime() > 0. ) {
-      pwidth = ( hbarc / ( (*i) -> lifetime() * c_light ) ) / Gaudi::Units::GeV ; 
+      pwidth = ( Gaudi::Units::hbarc / ( (*i) -> lifetime() * Gaudi::Units::c_light ) ) / Gaudi::Units::GeV ; 
     } else {
       pwidth = 0. ;
     }
