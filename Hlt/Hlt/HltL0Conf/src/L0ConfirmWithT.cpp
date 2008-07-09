@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.8 2008-07-09 08:28:51 hernando Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.9 2008-07-09 14:09:16 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -91,35 +91,15 @@ StatusCode L0ConfirmWithT::tracksFromTrack(
   // get state(s) for the track search which we want to confirm
   // the L0 decision
   LHCb::State seedStates[2];
-  int nStates = 1;
   
+  int nStates = 1;
   StatusCode sc = prepareStates(seed , seedStates, nStates);
   if( sc.isFailure() ) return StatusCode::FAILURE;
   
-//   switch (m_particleType) {
-// 	  case Muon:
-// 		  m_l0ConfExtrapolator->muon2T( seed , seedStates[0] );
-// 		  break;
-// 	  case Hadron:
-// 		  m_l0ConfExtrapolator->hcal2T( seed , seedStates[0] , seedStates[1] );
-// 		  ++nStates;
-// 		  break;
-// 	  case Electron:
-// 		  m_l0ConfExtrapolator->ecal2T( seed , seedStates[0] , seedStates[1] );
-// 		  ++nStates;
-// 		  break;
-// 	  default:
-// 		  // Unknown particle type, complain
-//       error()<<"unknown particle type, return.."<<endmsg;
-//       return StatusCode::FAILURE;
-//   }
-  
-//   StatusCode sc;
   while (nStates--) {
     sc = m_TrackConfirmTool->tracks( seedStates[nStates], tracks );
 	  if (sc.isFailure()) break;
   }
-  
   return sc;
 }
 
@@ -129,11 +109,10 @@ std::vector<Tf::IStationSelector*> L0ConfirmWithT::view(const LHCb::Track& seed)
 // get state(s) for the track search which we want to confirm
   // the L0 decision
   std::vector<Tf::IStationSelector*> windows;
-  //ParabolaHypothesis tp = ParabolaHypothesis(0,0,0,0,0,0,0);
   LHCb::State seedStates[2];
   int nStates = 1;
   StatusCode sc = prepareStates(seed , seedStates, nStates);
-  if( sc.isFailure() ) return windows;//*(new ParabolaHypothesis(tp));
+  if( sc.isFailure() ) return windows;
 
   std::vector<LHCb::LHCbID> ids;
   while (nStates--) {
@@ -141,12 +120,7 @@ std::vector<Tf::IStationSelector*> L0ConfirmWithT::view(const LHCb::Track& seed)
 	  if (sc.isFailure()) break;
     windows.push_back( new ParabolaHypothesis(tp) );
   }
-
-
-  return windows;//*(new ParabolaHypothesis(tp));
-  
-
- 
+  return windows;
 }
 
 
@@ -156,19 +130,18 @@ std::vector<LHCb::LHCbID> L0ConfirmWithT::lhcbIDsInView(const LHCb::Track& seed)
   
   // get state(s) for the track search which we want to confirm
   // the L0 decision
-  ParabolaHypothesis tp = ParabolaHypothesis(0,0,0,0,0,0,0);
   LHCb::State seedStates[2];
   int nStates = 1;
   StatusCode sc = prepareStates(seed , seedStates, nStates);
   if( sc.isFailure() ) return ids;
 
   while (nStates--) {
-    tp = m_TrackConfirmTool->prepareT( seedStates[nStates], ids );
+    ParabolaHypothesis tp = m_TrackConfirmTool->prepareT( seedStates[nStates], ids );
 	  if (sc.isFailure()) break;
   }
   return ids;
-  
 }
+
 
 StatusCode L0ConfirmWithT::prepareStates( const LHCb::Track& seed, LHCb::State* seedStates, int& nStates )
 {
