@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v4r4 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
  - ITrackUpgrade, ITrackConfirm, ITrackView: 
       o adaptations to drawing in Panoramix
