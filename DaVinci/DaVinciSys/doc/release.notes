@@ -3,9 +3,13 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v19r14>2008-07-03 DaVinci v19r14. First version with LHCb v24 series</A></H1><PRE>
+</PRE><H1><A NAME=v19r14>2008-07-09 DaVinci v19r14. First version with LHCb v24 series</A></H1><PRE>
 Based on Phys v6r14, Analysis v1r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
 
+ - Major changes in Hlt2
+ - FlavourTagging v8r0
+ - Many developments in DecayTreeTuple
+ - FilterDesktop moved to DaVinciTools. Phys/DaVinciFilter package moved to Analysis and falgged as deprecated.
 
 </PRE><H1><A NAME=v19r13>2008-06-09 DaVinci v19r13. June 2008 software week tutorial version</A></H1><PRE>
 Based on Phys v6r13, Analysis v1r13, Rec v5r7, HLT v3r3, Lbcom v6r18, LHCb v23r7, Gaudi v19r9, LCGCMT 54e
