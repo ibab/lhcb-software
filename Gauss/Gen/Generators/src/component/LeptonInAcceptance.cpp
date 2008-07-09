@@ -1,10 +1,11 @@
-// $Id: LeptonInAcceptance.cpp,v 1.4 2007-01-12 15:17:38 ranjard Exp $
+// $Id: LeptonInAcceptance.cpp,v 1.5 2008-07-09 14:35:36 robbep Exp $
 // Include files 
 // local
 #include "LeptonInAcceptance.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
@@ -32,8 +33,8 @@ LeptonInAcceptance::LeptonInAcceptance( const std::string& type,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IFullGenEventCutTool >( this ) ;
-    declareProperty( "ThetaMax" , m_thetaMax = 400 * mrad ) ;
-    declareProperty( "PtMin" , m_ptMin = 4. * GeV ) ;
+    declareProperty( "ThetaMax" , m_thetaMax = 400 * Gaudi::Units::mrad ) ;
+    declareProperty( "PtMin" , m_ptMin = 4. * Gaudi::Units::GeV ) ;
 }
 //=============================================================================
 // Destructor
@@ -72,12 +73,14 @@ bool LeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
     if ( ( theta <= m_thetaMax ) && ( pz >= 0. ) && ( pt >= m_ptMin ) ) {
       debug() << 
         format( "Event passed [theta = %.3g] [pz = %.3g] [pt = %.3g]" , 
-                theta / mrad , pz / GeV , pt / GeV ) << endmsg ;
+                theta / Gaudi::Units::mrad , pz / Gaudi::Units::GeV , 
+                pt / Gaudi::Units::GeV ) << endmsg ;
       return true ;
     } else 
       debug() << 
         format( "Particle failed cut [theta = %.3g] [pz = %.3g] [pt = %.3g]" ,
-                theta / mrad , pz / GeV , pt / GeV ) << endmsg ;
+                theta / Gaudi::Units::mrad , pz / Gaudi::Units::GeV , 
+                pt / Gaudi::Units::GeV ) << endmsg ;
   }
   return false ;
 }

@@ -1,4 +1,4 @@
-// $Id: SelectedDaughterInLHCb.cpp,v 1.7 2008-05-29 14:22:00 gcorti Exp $
+// $Id: SelectedDaughterInLHCb.cpp,v 1.8 2008-07-09 14:38:16 robbep Exp $
 // Include files 
 
 // local
@@ -8,6 +8,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
@@ -39,10 +40,10 @@ SelectedDaughterInLHCb::SelectedDaughterInLHCb( const std::string& type,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IGenCutTool >( this ) ;
-    declareProperty( "ChargedThetaMin" , m_chargedThetaMin = 10 * mrad ) ;
-    declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * mrad ) ;
-    declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * mrad ) ;
-    declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * mrad ) ;
+    declareProperty( "ChargedThetaMin" , m_chargedThetaMin = 10 * Gaudi::Units::mrad ) ;
+    declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * Gaudi::Units::mrad ) ;
+    declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * Gaudi::Units::mrad ) ;
+    declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
     declareProperty( "SelectedPIDs"    , m_pidVector ) ;
 }
 
@@ -153,7 +154,7 @@ bool SelectedDaughterInLHCb::passCuts( const HepMC::GenParticle * theSignal )
       passed = true ;
       
       debug() << "Check particle " << (*it) -> pdg_id() << " with angle " 
-              << (*it) -> momentum().theta() / mrad << " mrad." << endmsg ;
+              << (*it) -> momentum().theta() / Gaudi::Units::mrad << " mrad." << endmsg ;
       
       // Remove neutrinos
       if ( ( 12 == abs( (*it) -> pdg_id() ) ) || 

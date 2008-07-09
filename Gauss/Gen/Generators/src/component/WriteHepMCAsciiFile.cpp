@@ -1,8 +1,11 @@
-// $Id: WriteHepMCAsciiFile.cpp,v 1.2 2007-01-12 15:17:47 ranjard Exp $
+// $Id: WriteHepMCAsciiFile.cpp,v 1.3 2008-07-09 14:39:08 robbep Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2007/01/12 15:17:47  ranjard
+// v7r0 - use GAUDI v19r0
+//
 // Revision 1.1  2006/10/06 14:11:17  ibelyaev
 //  add (Read,Write)HepMCAsciiFile components
 // 
@@ -12,6 +15,8 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 // ============================================================================
 // GaudiAlg 
 // ============================================================================
@@ -150,14 +155,16 @@ StatusCode WriteHepMCAsciiFile::execute    ()
     
     // rescale the event if needed 
     if ( m_rescale ) 
-    { GeneratorUtils::scale ( evt , 1./GeV , CLHEP::c_light / mm ) ; }
+    { GeneratorUtils::scale ( evt , 1./Gaudi::Units::GeV , 
+                              Gaudi::Units::c_light / Gaudi::Units::mm ) ; }
     
     // write event to the file:
     *m_file << evt ;                                       // HERE !
     
     // rescale back if needed (convert to LHCb units) 
     if ( m_rescale ) 
-    { GeneratorUtils::scale ( evt ,   GeV ,  mm / CLHEP::c_light ) ; }
+    { GeneratorUtils::scale ( evt , Gaudi::Units::GeV ,  
+                              Gaudi::Units::mm / Gaudi::Units::c_light ) ; }
   }
   //
   return StatusCode::SUCCESS ;

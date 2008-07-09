@@ -1,4 +1,4 @@
-// $Id: LHCbAcceptance.cpp,v 1.7 2007-02-22 13:30:24 robbep Exp $
+// $Id: LHCbAcceptance.cpp,v 1.8 2008-07-09 14:35:12 robbep Exp $
 // Include files 
 
 // local
@@ -6,6 +6,7 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -29,7 +30,7 @@ LHCbAcceptance::LHCbAcceptance( const std::string& type,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IGenCutTool >( this ) ;
-    declareProperty( "ThetaMax" , m_thetaMax = 400 * mrad ) ;
+    declareProperty( "ThetaMax" , m_thetaMax = 400 * Gaudi::Units::mrad ) ;
 }
 
 //=============================================================================

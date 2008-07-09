@@ -1,8 +1,11 @@
-// $Id: ReadHepMCAsciiFile.cpp,v 1.3 2007-03-08 13:41:06 robbep Exp $
+// $Id: ReadHepMCAsciiFile.cpp,v 1.4 2008-07-09 14:37:50 robbep Exp $
 // ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2007/03/08 13:41:06  robbep
+// Adapt to new production tool interface
+//
 // Revision 1.2  2007/01/12 15:17:39  ranjard
 // v7r0 - use GAUDI v19r0
 //
@@ -15,6 +18,8 @@
 // GaudiKernel
 // ===========================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 // ===========================================================================
 // GaudiAlg
 // ===========================================================================
@@ -215,7 +220,8 @@ StatusCode ReadHepMCAsciiFile::generateEvent
   { return Error ( "Error in event reading!" ) ; }
   // rescale if needed (convert to LHCb units) 
   if ( m_rescale ) 
-  { GeneratorUtils::scale ( theEvent , GeV , mm / CLHEP::c_light ) ; }
+    { GeneratorUtils::scale ( theEvent , Gaudi::Units::GeV ,
+                              Gaudi::Units::mm / Gaudi::Units::c_light ) ; }
   //
   return StatusCode::SUCCESS ;
 } ;
