@@ -1,10 +1,14 @@
-// $Id: LoKi_MCSelect.cpp,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
+// $Id: LoKi_MCSelect.cpp,v 1.3 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include file 
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/AlgoMC.h"
+#include "LoKi/VertexCuts.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
 #include "LoKi/ParticleContextCuts.h"
 // ============================================================================
 /** @file 

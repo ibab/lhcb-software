@@ -1,4 +1,4 @@
-// $Id: LoKi_Tracks.cpp,v 1.2 2007-12-04 14:30:14 ibelyaev Exp $
+// $Id: LoKi_Tracks.cpp,v 1.3 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -10,7 +10,7 @@
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/Algo.h"
 // ============================================================================
 /** @file
  *  Simple algorithm to illustrate the 
@@ -77,20 +77,17 @@ namespace
 // ============================================================================
 StatusCode LoKi::SelectTracks::analyse() 
 {
-  using namespace LoKi        ;
-  using namespace LoKi::Cuts  ;
-  using namespace LoKi::Types ;
   
   // locate tool (if not done already) 
   if ( 0 == m_trSelector ) 
   { m_trSelector = tool<ITrackSelector> ( m_trSelectorName , this ) ; }
   
   
-   // locate the tracks
+  // locate the tracks
   const LHCb::Track::Container* tracks = 
     get<LHCb::Track::Container> ( LHCb::TrackLocation::Default ) ;
   
-
+  
   /// count "good tracks"
   size_t nTracks = std::count_if 
     ( tracks -> begin () , tracks -> end   () , GoodTrack( m_trSelector ) ) ;

@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.32 2008-07-03 16:17:16 jpalac Exp $ 
+! $Id: release.notes,v 1.33 2008-07-09 17:00:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.32 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.33 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-09 - Vanya BELYAEV
+
+ - new examples for Decay Finders 
+
 
 !========================== LoKiExample v7r3 2008-07-03 =======================
 

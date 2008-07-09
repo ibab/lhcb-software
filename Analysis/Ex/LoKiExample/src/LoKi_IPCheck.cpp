@@ -1,10 +1,15 @@
-// $Id: LoKi_IPCheck.cpp,v 1.1 2008-07-02 14:18:53 ibelyaev Exp $
+// $Id: LoKi_IPCheck.cpp,v 1.2 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/AlgoMC.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
+#include "LoKi/MCVertexCuts.h"
+#include "LoKi/MCParticleCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
 // ============================================================================
 /** @file
  *  The simple LoKi algorithm to check Wouter's idea about 
@@ -99,7 +104,7 @@ LOKI_MCALGORITHM( IPCheck )
   Fun ip     = IP     ( geo() , pv ) ;
   Fun ipChi2 = IPCHI2 ( geo() , pv ) ;
 
-  const IDistanceCalculator* t = distanceCalculator() ;
+  // const IDistanceCalculator* t = distanceCalculator() ;
   
   for ( std::vector<Range>::const_iterator ir = ranges.begin() ; 
         ranges.end() != ir ; ++ir ) 

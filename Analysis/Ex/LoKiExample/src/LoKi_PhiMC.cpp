@@ -1,11 +1,13 @@
-// $Id: LoKi_PhiMC.cpp,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
+// $Id: LoKi_PhiMC.cpp,v 1.6 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
+#include "LoKi/AlgoMC.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
 // ============================================================================
 /** @file 
  *  The simple LoKi-based example: plot dikaon mass peak with MC-truth

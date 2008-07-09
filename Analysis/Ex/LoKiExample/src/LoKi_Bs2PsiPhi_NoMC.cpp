@@ -1,11 +1,12 @@
-// $Id: LoKi_Bs2PsiPhi_NoMC.cpp,v 1.2 2008-06-26 14:33:19 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi_NoMC.cpp,v 1.3 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
-#include "GaudiAlg/GaudiTool.h" // Needed on windows
+#include "LoKi/Algo.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
 // ============================================================================
 /** @file
  *  Simple LoKi-based algoritm for Bs->phi psi selection 

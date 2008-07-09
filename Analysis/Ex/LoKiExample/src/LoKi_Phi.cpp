@@ -1,10 +1,12 @@
-// $Id: LoKi_Phi.cpp,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
+// $Id: LoKi_Phi.cpp,v 1.6 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi 
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/Algo.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/VertexCuts.h"
 // ============================================================================
 /** @file 
  *  Simple algorithm to polot dikaon invarinat mass 

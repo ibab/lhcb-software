@@ -1,8 +1,9 @@
-// $Id: LoKi_Hybrid.cpp,v 1.5 2008-06-26 14:33:19 ibelyaev Exp $
+// $Id: LoKi_Hybrid.cpp,v 1.6 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/Algo.h"
+#include "LoKi/ParticleCuts.h"
 // ============================================================================
 /** @file 
  *  Simple illustrationof usage of filters and especially hydrid (C++/Python) 

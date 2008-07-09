@@ -1,10 +1,13 @@
-// $Id: LoKi_MCMuon.cpp,v 1.9 2008-07-01 11:12:10 ibelyaev Exp $
+// $Id: LoKi_MCMuon.cpp,v 1.10 2008-07-09 17:00:48 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // LoKi
 // ============================================================================
-#include "LoKi/LoKi.h"
+#include "LoKi/AlgoMC.h"
+#include "LoKi/ParticleCuts.h"
+#include "LoKi/MCParticleCuts.h"
+#include "LoKi/PhysMCParticleCuts.h"
 // ============================================================================
 /** @file
  *
@@ -65,7 +68,6 @@ LOKI_MCALGORITHM( MCMuons )
     MCRange::iterator im = 
       mc->match ( muon , mcmuons.begin() , mcmuons.end() ) ;
     
-    bool match = false ;
     // 4-momentum of MC muon
     LoKi::LorentzVector lv ;
     
