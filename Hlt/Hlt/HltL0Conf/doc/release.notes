@@ -4,10 +4,11 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
-!2008-07-09 - Jose A. Hernando
+!========================== HltL0Conf v2r2 2008-07-09 ===================
+! 2008-07-09 - Jose A. Hernando
  - changes from Johannes to use the Panormaix drawing
 
-!2008-06-13 - Gerhard Raven
+! 2008-06-13 - Gerhard Raven
  - resurrect not-obsolete HltL0Conf_dll.cpp
 
 !========================== HltL0Conf v2r1 2008-06-09 ===================
