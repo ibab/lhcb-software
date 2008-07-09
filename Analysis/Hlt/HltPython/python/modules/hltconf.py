@@ -1,5 +1,5 @@
 # =============================================================================
-""" @namespace hltsequence
+""" @namespace hltconf
 
 @brief given alley name return the list of algorithms are in the alley
 [type,name,hlt configuration], where the hlt configuration is a dictionary with the properties of the hlt algorithm (i.e Inputselection or OutputSelection)

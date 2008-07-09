@@ -1,15 +1,14 @@
 #! /usr/bin/env python
 # =============================================================================
-""" 
-@brief example of how to retrieve the HLT information from the summary
-@author Jose Angel Hernando
+""" @namespace hltexamples
+@brief example of how to get decision, candidates and info from the Hlt1
+@author Jose Angel Hernando jose.angel.hernando-morata@cern.ch
+@date 2007-07-09
 """
 # =============================================================================
 
-
-import gaudimodule
+import GaudiPython
 from math import *
-# from ROOT import TH1F
 
 # define options files and datacards
 HLTJOB = "$HLTSYSROOT/options/HltJob.opts"
@@ -18,7 +17,7 @@ BKPISEL = "$HLTSYSROOT/options/dst06_bkpi_sel.opts"
 BSMUMUSEL = "$HLTSYSROOT/options/dst06_bsmumu_sel.opts"
 
 # crete application and initialize
-gaudi = gaudimodule.AppMgr(outputlevel=3)
+gaudi = GaudiPython.AppMgr(outputlevel=3)
 gaudi.config(files = [HLTJOB,BKPISEL])
 gaudi.initialize()
 
@@ -27,8 +26,8 @@ HLTSUM = gaudi.toolsvc().create("HltSummaryTool",interface="IHltConfSummaryTool"
 
 # get the transient event store
 TES = gaudi.evtsvc()
-# STDVectorVertices = gaudimodule.gbl.std.vector("LHCb::RecVertex *")
-# STDVectorTrack = gaudimodule.gbl.std.vector("LHCb::Track *") 
+# STDVectorVertices = GaudiPython.gbl.std.vector("LHCb::RecVertex *")
+# STDVectorTrack = GaudiPython.gbl.std.vector("LHCb::Track *") 
 
 def info(name):
     """ returns a function to retrieve the info from the object
@@ -57,8 +56,7 @@ def l0():
         how to get the l0 decision per channel (i.e hadron high threshold)
     """
     l0 = TES["Trig/L0/L0DUReport"]
-    print " L0 decision ",l0.decision()
-                 
+    print " L0 decision ",l0                 
 
 
 def l0_candidates():
@@ -79,7 +77,7 @@ def hlt():
         how to get the selections that an event has passed?
     """
     print " HLT decision ", HLTSUM.decision()
-    names = ["L0TriggerHadron","Hlt1HadronSingle","Hlt1HadronDi"]
+    names = ["L0HadronDecision","Hlt1HadronSingleDecision","Hlt1HadronDiDecision"]
     for name in names:
         print " \t",name," ? ",HLTSUM.selectionDecision(name)
 
@@ -90,7 +88,7 @@ def hlt():
 def hlt_selection_configuration(selection):
     """ how to get the filters applied in one selection?
         how to get the input selection used for a selection?
-        @ param name of the selection, i.e Hlt1HadronSingle 
+        @ param name of the selection, i.e Hlt1HadronSingleDecision 
     """
     filters = HLTSUM.confStringVector(selection+"/Filters")
     print " HLT ",selection ," Filters : "
@@ -99,10 +97,10 @@ def hlt_selection_configuration(selection):
     print " HLT ",selection ," Inputs : "
     for input in inputs: print " \t",input
 
-def hlt_candidates_info(selection = "Hlt1HadronSingle"):
+def hlt_candidates_info(selection = "Hlt1HadronSingleDecision"):
     """ how to get the info of the candidates of a selection?
         i.e what is the PT value of the tracks of the HadPreTrigger selection?
-        @ param name of the selection, i.e Hlt1HadronSingle
+        @ param name of the selection, i.e Hlt1HadronSingleDecision
     """
     print " HLT ",selection," ? ",HLTSUM.selectionDecision(selection)
     if (not HLTSUM.hasSelection(selection)): return
@@ -119,19 +117,21 @@ def hlt_candidates_info(selection = "Hlt1HadronSingle"):
 
 def run(n=10):
     """ run 10 events and print info about L0 and HLT
+    @param n number of events to run
     """
     for i in range(n):
         print " *** L0 and HLT info *** "
         gaudi.run(1)
         l0()
-        l0_candidates()
+        # l0_candidates()
         hlt()
-        hlt_candidates_info("Hlt1HadronSingle")
-        hlt_candidates_info("Hlt1HadronDi")
+        hlt_candidates_info("Hlt1HadronSingleDecision")
+        hlt_candidates_info("Hlt1HadronDiDecision")
     print " *** configuration  *** "
-    hlt_selection_configuration("Hlt1HadronSingle")
-    hlt_selection_configuration("Hlt1HadronDi")
+    hlt_selection_configuration("Hlt1HadronSingleDecision")
+    hlt_selection_configuration("Hlt1HadronDiDecision")
 
 
-#run(10)
-#gaudi.finalize()
+if __name__ == "__main__":
+    run()
+    gaudi.finalize()

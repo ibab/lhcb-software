@@ -20,7 +20,7 @@ from ROOT import *
 # Set the alleys to monitor, the entry point,
 # Save all the HLT selections in the HltSummary
 
-DEBUG = True
+DEBUG = False
 NEVENTS = 10
 MONITOR_TIME = True
 MONITOR_RATE = True
@@ -104,13 +104,10 @@ class hltfilter():
         self.xrange = hisrange(name)
 
     def vals(self,candis,fillhisto=True):
-        print " getting vals of ",self.id
         vals0 = map(lambda x: x.info(self.id,INFODEF),candis)
         vals = filter(lambda x : x!=INFODEF, vals0)
         if (fillhisto and self.histo):
             for v in vals: self.histo.Fill(v,1.)
-        if (DEBUG): print " vals0: ",vals0
-        if (DEBUG): print " vals : ",vals
         return vals
 
     def best(self,candis,fillhisto=True):
