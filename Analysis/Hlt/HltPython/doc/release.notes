@@ -4,6 +4,7 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+!========================== HltPython v1r7 2008-07-09 ===================
 ! 2008-7-9 - Jose A. Hernando
    - hltconf hltalleymonitor.py fixing bugs, be sure they can be documented by doxygen
 
