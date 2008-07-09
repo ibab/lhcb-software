@@ -1,10 +1,11 @@
-// $Id: PythiaHiggs.cpp,v 1.5 2007-02-26 16:44:19 robbep Exp $
+// $Id: PythiaHiggs.cpp,v 1.6 2008-07-09 14:44:51 robbep Exp $
 // Include files 
 // local
 #include "PythiaHiggs.h"
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -33,7 +34,7 @@ PythiaHiggs::PythiaHiggs( const std::string & type , const std::string & name ,
                           const IInterface * parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IGenCutTool >( this ) ;
-    declareProperty( "ThetaMax" , m_thetaMax = 400 * mrad ) ;
+    declareProperty( "ThetaMax" , m_thetaMax = 400 * Gaudi::Units::mrad ) ;
 }
 //=============================================================================
 // Destructor
@@ -102,36 +103,37 @@ bool PythiaHiggs::applyCut( ParticleVector & /* theParticleVector */ ,
   if ( ( 0 == thebbarFrag ) || ( 0 == thebFrag ) ) 
     Exception( "No real b quark in this event !") ;
     
-  double pxb = thebFrag -> momentum() . px() * GeV ;
-  double pyb = thebFrag -> momentum() . py() * GeV ;
-  double pzb = thebFrag -> momentum() . pz() * GeV ;
+  double pxb = thebFrag -> momentum() . px() * Gaudi::Units::GeV ;
+  double pyb = thebFrag -> momentum() . py() * Gaudi::Units::GeV ;
+  double pzb = thebFrag -> momentum() . pz() * Gaudi::Units::GeV ;
   double ppb = sqrt( pxb*pxb + pyb*pyb + pzb*pzb ) ;
   double thetab = acos( fabs( pzb ) / ppb ) ;
 
-  double pxbbar = thebbarFrag -> momentum() . px() * GeV ;
-  double pybbar = thebbarFrag -> momentum() . py() * GeV ;
-  double pzbbar = thebbarFrag -> momentum() . pz() * GeV ;
+  double pxbbar = thebbarFrag -> momentum() . px() * Gaudi::Units::GeV ;
+  double pybbar = thebbarFrag -> momentum() . py() * Gaudi::Units::GeV ;
+  double pzbbar = thebbarFrag -> momentum() . pz() * Gaudi::Units::GeV ;
   double ppbbar = sqrt( pxbbar*pxbbar + pybbar*pybbar + pzbbar*pzbbar ) ;
   double thetabbar = acos( fabs( pzbbar ) / ppbbar ) ;
   
   if ( ( thetab <= m_thetaMax ) && ( pzb >= 0. ) && 
        ( thetabbar <= m_thetaMax ) && ( pzbbar >= 0. ) ) {
     debug() << format( "Event passed [thetab = %.5g] [thetabbar = %.5g]" ,
-                       thetab / mrad , thetabbar / mrad ) 
-            << format( " [pzb = %.5g] [pzbbar = %.5g]" , pzb / GeV , 
-                       pzbbar / GeV ) 
+                       thetab / Gaudi::Units::mrad , 
+                       thetabbar / Gaudi::Units::mrad ) 
+            << format( " [pzb = %.5g] [pzbbar = %.5g]" , 
+                       pzb / Gaudi::Units::GeV , 
+                       pzbbar / Gaudi::Units::GeV ) 
             << endmsg ;
     return true ;
   } else {
     debug() << format( "Event rejected [thetab = %.5g] [thetabbar = %.5g]" ,
-                       thetab / mrad , thetabbar / mrad ) 
-            << format( " [pzb = %.5g] [pzbbar = %.5g]" , pzb / GeV , 
-                       pzbbar /GeV ) 
+                       thetab / Gaudi::Units::mrad , 
+                       thetabbar / Gaudi::Units::mrad ) 
+            << format( " [pzb = %.5g] [pzbbar = %.5g]" , 
+                       pzb / Gaudi::Units::GeV , 
+                       pzbbar / Gaudi::Units::GeV ) 
             << endmsg ;
     return false ;
   }
   return false ;
 }
-
-
- 

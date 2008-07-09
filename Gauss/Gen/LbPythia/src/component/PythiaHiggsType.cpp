@@ -5,6 +5,7 @@
 // from Gaudi
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -32,10 +33,10 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
                                   const std::string & name ,
                                   const IInterface * parent )
   : GaudiTool  ( type, name , parent ) ,
-    m_thetaMax         ( 400 * mrad ) ,
+    m_thetaMax         ( 400 * Gaudi::Units::mrad ) ,
     m_nbLepton         ( 1          ) ,
     m_TypeLepton       ( ) ,  
-    m_ptMin            ( 10 * GeV   ) ,
+    m_ptMin            ( 10 * Gaudi::Units::GeV   ) ,
     m_leptonFromMother ( true       ) ,
     m_motheroflepton   ( ) ,
     m_nbbquarks        ( 1          ) ,
@@ -197,15 +198,15 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
 	double pxb1,pyb1,pzb1,ppb1,thetab1;
 	double pxb2,pyb2,pzb2,ppb2,thetab2;
 	if( ( m_nbbquarks != -1 ) && ( bList.size() > 0 ) ) {
-		pxb1 = theb1 -> momentum() . px() * GeV ;
-		pyb1 = theb1 -> momentum() . py() * GeV ;
-		pzb1 = theb1 -> momentum() . pz() * GeV ;
+		pxb1 = theb1 -> momentum() . px() * Gaudi::Units::GeV ;
+		pyb1 = theb1 -> momentum() . py() * Gaudi::Units::GeV ;
+		pzb1 = theb1 -> momentum() . pz() * Gaudi::Units::GeV ;
 		ppb1 = sqrt( pxb1*pxb1 + pyb1*pyb1 + pzb1*pzb1 ) ;
 		thetab1 = acos( fabs( pzb1 ) / ppb1 ) ;
     
-		pxb2 = theb2 -> momentum() . px() * GeV ;
-		pyb2 = theb2 -> momentum() . py() * GeV ;
-		pzb2 = theb2 -> momentum() . pz() * GeV ;
+		pxb2 = theb2 -> momentum() . px() * Gaudi::Units::GeV ;
+		pyb2 = theb2 -> momentum() . py() * Gaudi::Units::GeV ;
+		pzb2 = theb2 -> momentum() . pz() * Gaudi::Units::GeV ;
 		ppb2 = sqrt( pxb2*pxb2 + pyb2*pyb2 + pzb2*pzb2 ) ;
 		thetab2 = acos( fabs( pzb2 ) / ppb2 ) ;
 	}
