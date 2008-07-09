@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.12 2008-07-09 21:36:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.13 2008-07-09 22:43:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -82,9 +82,9 @@ private: // definitions
     /// Defintion of internal data storage
     typedef std::vector<unsigned int> Data;
     /// Constructor
-    explicit EffVersusMomentum( const double _minP  =   0*Gaudi::Units::GeV,
-                                const double _maxP  = 100*Gaudi::Units::GeV,
-                                const int    _nBins = 50 )
+    EffVersusMomentum( const double _minP,
+                       const double _maxP,
+                       const int    _nBins )
       : m_minP(_minP),
         m_maxP(_maxP),
         m_nBins(_nBins),
@@ -163,14 +163,34 @@ private: // definitions
   class MCTally
   {
   public:
-    MCTally() : all(0), clones(0) { }
+    MCTally() : all(0), clones(0), m_effVp(NULL), m_effVpt(NULL) { }
+    ~MCTally() { delete m_effVp; delete m_effVpt; }
   public:
     unsigned long int all;         ///< Total number
     unsigned long int clones;      ///< Number of clones
     typedef std::map<std::string,unsigned long int> Contributions;
     Contributions all_detailed;    ///< Detailed breakdown for each full MC tree decay (all)
     Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
-    EffVersusMomentum effVp;       ///< Eff versus momentum data
+  private:
+    mutable EffVersusMomentum * m_effVp;       ///< Eff versus momentum (p) data
+    mutable EffVersusMomentum * m_effVpt;      ///< Eff versus momentum (pt) data
+  public:
+    inline EffVersusMomentum & effVp() const
+    {
+      if (!m_effVp)
+      {
+        m_effVp  = new EffVersusMomentum(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,50);
+      }
+      return *m_effVp;
+    }
+    inline EffVersusMomentum & effVpt() const
+    { 
+      if (!m_effVpt) 
+      { 
+        m_effVpt = new EffVersusMomentum(0*Gaudi::Units::GeV,10*Gaudi::Units::GeV,50);
+      } 
+      return *m_effVpt; 
+    }
   };
   typedef std::map<std::string, MCTally> TypeTally;
   typedef std::map< IMCReconstructible::RecCategory, TypeTally > MCRecTypeMap;
@@ -280,6 +300,13 @@ private: // methods
   {
     // CRJ : Need to decide what to do for neutrals
     return ( NULL != proto->track() ? proto->track()->p() : 0 );
+  }
+
+  /// Returns the transverse momentum value for a given ProtoParticle
+  const double transverseMomentum( const LHCb::ProtoParticle * proto ) const
+  {
+    // CRJ : Need to decide what to do for neutrals
+    return ( NULL != proto->track() ? proto->track()->pt() : 0 );
   }
 
   /// Returns the ParticleProperty object for a given ParticleID

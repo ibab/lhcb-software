@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.12 2008-07-09 21:36:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.13 2008-07-09 22:43:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -139,6 +139,7 @@ StatusCode ParticleEffPurMoni::execute()
 
     // ProtoParticle momentum
     const double ptot = momentum((*iPM).first);
+    const double pt   = transverseMomentum((*iPM).first);
 
     // Loop over Particles for the Proto
     for ( ParticleHistory::Vector::const_iterator iPart = (*iPM).second.begin();
@@ -175,7 +176,11 @@ StatusCode ParticleEffPurMoni::execute()
         if ( isClone ) ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
-      if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : ptot );
+      if ( !isClone ) 
+      {
+        tally.effVp().fill ( mcPart ? mcPart->p()  : ptot );
+        tally.effVpt().fill( mcPart ? mcPart->pt() : pt   );
+      }
 
     } // loop over particles produced from this proto
 
@@ -231,7 +236,11 @@ StatusCode ParticleEffPurMoni::execute()
         if (isClone) ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
-      if ( !isClone ) tally.effVp.fill( mcPart ? mcPart->p() : momentum(*proto) );
+      if ( !isClone ) 
+      {
+        tally.effVp().fill ( mcPart ? mcPart->p()  : momentum(*proto)           );
+        tally.effVpt().fill( mcPart ? mcPart->pt() : transverseMomentum(*proto) );
+      }
 
     } // loop over all protos at one location in TES
 
@@ -259,7 +268,8 @@ StatusCode ParticleEffPurMoni::execute()
       if ( m_fullMCTree && *iMCP )
       { ++(tally.all_detailed[mcParticleNameTree(*iMCP)]); }
       // Momentum histogramming
-      tally.effVp.fill( (*iMCP)->p() );
+      tally.effVp().fill ( (*iMCP)->p()  );
+      tally.effVpt().fill( (*iMCP)->pt() );
     }
   }
 
@@ -580,17 +590,25 @@ void ParticleEffPurMoni::printStats() const
               if ( primaryPart )
               {
                 // make a histo (not yet for composites....)
-                std::ostringstream h_title;
-                h_title
+                std::ostringstream h_path;
+                h_path
                   << convertTitleToID((*iLoc).first) << "/"
                   << (*iSum).first.decayTree << "/"
                   << "Reco " << (*iSum).first.protoType << "/"
                   << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
                   << (*iT).first;
-                makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.",
-                              tally.effVp, mcTally.effVp );
-                makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.",
-                              tally.effVp, protoTally.effVp );
+                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Ptot",
+                              tally.effVp(), mcTally.effVp() );
+                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Ptot",
+                              tally.effVp(), protoTally.effVp() );
+                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Ptot",
+                              protoTally.effVp(), mcTally.effVp() );
+                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Pt",
+                              tally.effVpt(), mcTally.effVpt() );
+                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Pt",
+                              tally.effVpt(), protoTally.effVpt() );
+                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Pt",
+                              protoTally.effVpt(), mcTally.effVpt() );
               }
               // sub contributions
               int suppressedContribsC(0);

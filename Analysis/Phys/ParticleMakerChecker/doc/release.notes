@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-07-09 - Chris Jones
- - Add effiency versus momentum histograms
+ - Add efficiency versus momentum (p and pt) histograms
 
 ! 2008-07-08 - Chris Jones
  - Improvements to summary information
