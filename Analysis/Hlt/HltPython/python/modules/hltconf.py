@@ -38,7 +38,7 @@ class hltalgo():
         return self.props[name]
 
     def __repr__(self):
-        c = " type = "+str(self.type)+" name= "+str(self.name)
+        c = " type: "+str(self.type)+" name: "+str(self.name)
         return c
 
 def confSequencer(gaudi,sequencer,algos):

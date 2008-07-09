@@ -123,6 +123,7 @@ def bookFilters(alley):
         if (algo.type.find("Filter")>0):
             filters = algo.property("FilterDescriptor")
             algo.filters = []
+            if (not filters): continue
             for f in filters:
                 sel0 = algo.property("InputSelection")
                 sel  = algo.property("OutputSelection")
