@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.24 2008-07-09 08:29:02 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.25 2008-07-09 14:15:38 hernando Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -48,6 +48,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   m_recoConf.add("TConf/Tool",std::string("L0ConfirmWithT"));
   m_recoConf.add("TConf/Owner",true);
+  m_recoConf.add("TConf/View",true);
   m_recoConf.add("TConf/TransferIDs",true);
   m_recoConf.add("TConf/TransferAncestor",true);
   m_recoConf.add("TConf/TrackType", (int) LHCb::Track::Ttrack);
@@ -55,6 +56,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   m_recoConf.add("TMuonConf/Tool",std::string("L0ConfirmWithT/TMuonConf"));
   m_recoConf.add("TMuonConf/Owner",true);
+  m_recoConf.add("TMuonConf/View",true);
   m_recoConf.add("TMuonConf/TransferIDs",true);
   m_recoConf.add("TMuonConf/TransferAncestor",true);
   m_recoConf.add("TMuonConf/TrackType", (int) LHCb::Track::Ttrack);
@@ -62,20 +64,23 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   m_recoConf.add("THadronConf/Tool",std::string("L0ConfirmWithT/THadronConf"));
   m_recoConf.add("THadronConf/Owner",true);
+  m_recoConf.add("THadronConf/View",true);
   m_recoConf.add("THadronConf/TransferIDs",true);
   m_recoConf.add("THadronConf/TransferAncestor",true);
   m_recoConf.add("THadronConf/TrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("THadronConf/TESOutput",std::string("Hlt1/Track/THadronConf"));
+
   m_recoConf.add("TEleConf/Tool",std::string("L0ConfirmWithT/TEleConf"));
   m_recoConf.add("TEleConf/Owner",true);
+  m_recoConf.add("TEleConf/View",true);
   m_recoConf.add("TEleConf/TransferIDs",true);
   m_recoConf.add("TEleConf/TransferAncestor",true);
   m_recoConf.add("TEleConf/TrackType", (int) LHCb::Track::Ttrack);
   m_recoConf.add("TEleConf/TESOutput",std::string("Hlt1/Track/TEleConf"));
-  
-  
+
   m_recoConf.add("Velo/Tool",std::string("Tf::PatVeloSpaceTool"));
   m_recoConf.add("Velo/Owner",true);
+  m_recoConf.add("Velo/View",false);
   m_recoConf.add("Velo/TransferIDs",false);
   m_recoConf.add("Velo/TransferAncestor",false);
   m_recoConf.add("Velo/TrackType", (int) LHCb::Track::Velo);
@@ -83,14 +88,15 @@ void HltTrackUpgradeTool::recoConfiguration() {
   
   m_recoConf.add("VeloTT/Tool",std::string("Tf::PatVeloTTTool"));
   m_recoConf.add("VeloTT/Owner",false);
+  m_recoConf.add("VeloTT/View",false);
   m_recoConf.add("VeloTT/TransferIDs",false);
   m_recoConf.add("VeloTT/TransferAncestor",false);
   m_recoConf.add("VeloTT/TrackType", (int) LHCb::Track::Upstream);
   m_recoConf.add("VeloTT/TESOutput", std::string("Hlt1/Track/VeloTT"));
 
   m_recoConf.add("Forward/Tool",std::string("PatForwardTool"));
-  // m_recoConf.add("Forward/RecoID", (int) HltEnums::ForwardKey);
   m_recoConf.add("Forward/Owner",true);
+  m_recoConf.add("Forward/View",false);
   m_recoConf.add("Forward/TransferIDs",false);
   m_recoConf.add("Forward/TransferAncestor",false);
   m_recoConf.add("Forward/TrackType", (int) LHCb::Track::Long);
@@ -98,6 +104,7 @@ void HltTrackUpgradeTool::recoConfiguration() {
 
   m_recoConf.add("GuidedForward/Tool",std::string("HltGuidedForward"));
   m_recoConf.add("GuidedForward/Owner",true);
+  m_recoConf.add("GuidedForward/View",false);
   m_recoConf.add("GuidedForward/TransferIDs",false);
   m_recoConf.add("GuidedForward/TransferAncestor",false);
   m_recoConf.add("GuidedForward/TrackType", (int) LHCb::Track::Long);
@@ -169,12 +176,19 @@ StatusCode HltTrackUpgradeTool::setReco(const std::string& key)
           << " track type " << m_trackType << endreq;
   
   m_tool = 0;
-  if (m_toolsmap.find(key) != m_toolsmap.end())
+  bool hasView = m_recoConf.retrieve<bool>(m_recoName+"/View");
+  m_viewTool = 0;
+  if (m_toolsmap.find(key) != m_toolsmap.end()) {
     m_tool = m_toolsmap[key];
-  else {
+    if (hasView) m_viewTool = m_viewsmap[key];
+  } else {
     toolConfigure();
     m_tool = tool<ITracksFromTrack>(toolName,this);
     m_toolsmap[key] = m_tool;
+    if (hasView) {
+      m_viewTool = tool<ITrackView>(toolName,this);
+      m_viewsmap[key] = m_viewTool;
+    }
   }
   
   Assert(m_tool," setReco() not able to create tool "+toolName);
