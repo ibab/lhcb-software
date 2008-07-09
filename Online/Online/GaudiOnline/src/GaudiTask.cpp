@@ -1,4 +1,5 @@
 #include "GaudiOnline/GaudiTask.h"
+#include "GaudiKernel/strcasecmp.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
 #include "GaudiKernel/ISvcLocator.h"

@@ -21,11 +21,13 @@ __declspec(dllimport)
 #endif 
 int GaudiMain(int, char**);
 
-static void help() {}
+//static void help() {}
 
 typedef long (*func)(int, char**);
 
 #ifdef _WIN32
+  #define NOMSG
+  #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
   #define LOAD_LIB(x)  ::LoadLibrary( x )
   #define GETPROC(h,x) ::GetProcAddress ( HMODULE(h), x )
