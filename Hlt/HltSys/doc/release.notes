@@ -5,8 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+!========================== HltSys v3r4 2008-07-09 ===================
 ! 2008-07-08 - Patrick Koppenburg
- - Do not clean clones
+ - Do not clean clones in Hlt2
 
 ! 2008-07-08 - Sandra Amato
  - HltMuonAlleyConfSequence.opts - put back the filter in the muon segments

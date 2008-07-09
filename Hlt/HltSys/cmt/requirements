@@ -13,7 +13,7 @@ use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
 use HltMuon             v3r3    Hlt   # Alessia Satta          
 use HltMuonAlley        v2r4p1  Hlt   # Sandra Amato 
-use HltL0Conf           v2r1p1  Hlt   # Johannes Albrecht
+use HltL0Conf           v2r2    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r2    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltRecChecker	v1r6	Hlt   # Jose Angel Hernando-Morata

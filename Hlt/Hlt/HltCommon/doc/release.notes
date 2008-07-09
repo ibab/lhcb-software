@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v3r4 2008-07-09 ===================
 !2008-07-09 - Gerhard Raven
   - Additional changes to support reconfiguring in Gaudi v20r1
 

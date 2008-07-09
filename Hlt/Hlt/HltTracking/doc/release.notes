@@ -4,6 +4,7 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v3r4 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
   - HltTrackUpgradeTool: follow interfaces for drawing n panoramix
 
