@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.135 2008-06-30 19:28:50 cattanem Exp $
+# $Id: requirements,v 1.136 2008-07-09 17:27:20 ibelyaev Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -11,6 +11,7 @@ branches cmt doc Event Kernel src xml
 use GaudiKernel     v*
 use Boost           v* LCG_Interfaces
 use ROOT            v* LCG_Interfaces
+use LHCbMath        v* Kernel -no_auto_import 
 
 private
 use GaudiObjDesc v* -no_auto_imports

@@ -4,6 +4,18 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-07-09 - Vanya BELYAEV
+
+ - src/ParticleID.cpp
+
+   use more efficient algorithm to extract the Nth decimal digit
+   from the integral type 
+
+- cmt/requirements 
+
+    use LHCbMath
+    version increment to v8r6   
+
 !===================== LHCbKernel v8r5 2008-07-04 ========================
 ! 2008-07-04 Marco Cattaneo
  - Remove FPEGuard implementation for Windows (always throws exceptions!)
