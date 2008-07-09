@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.8 2008-07-09 14:56:16 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.9 2008-07-09 15:03:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -572,18 +572,21 @@ void ParticleEffPurMoni::printStats() const
                 if ( tally.clones>0 ) always() << eff( tally.clones, nTotalMC );
               }
               always() << endreq;
-              // make a histo
-              std::ostringstream h_title;
-              h_title 
-                << convertTitleToID((*iLoc).first) << "/" 
-                << (*iSum).first.decayTree << "/" 
-                << "Reco " << (*iSum).first.protoType << "/"
-                << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
-                << (*iT).first;
-              makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.", 
-                            tally.effVp, mcTally.effVp );
-              makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.", 
-                            tally.effVp, protoTally.effVp );
+              if ( primaryPart ) 
+              { 
+                // make a histo (not yet for composites....)
+                std::ostringstream h_title;
+                h_title 
+                  << convertTitleToID((*iLoc).first) << "/" 
+                  << (*iSum).first.decayTree << "/" 
+                  << "Reco " << (*iSum).first.protoType << "/"
+                  << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
+                  << (*iT).first;
+                makeEffHisto( h_title.str()+"/MCParticle -> Particle Eff.", 
+                              tally.effVp, mcTally.effVp );
+                makeEffHisto( h_title.str()+"/ProtoParticle -> Particle Eff.", 
+                              tally.effVp, protoTally.effVp );
+              }
               // sub contributions
               int suppressedContribsC(0);
               for ( MCTally::Contributions::const_iterator iC = tally.all_detailed.begin();
