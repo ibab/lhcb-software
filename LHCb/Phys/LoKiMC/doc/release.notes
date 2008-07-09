@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2008-06-30 19:43:59 cattanem Exp $ 
+! $Id: release.notes,v 1.44 2008-07-09 16:42:28 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,15 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-07-09 - Vanya BELYAEV
+
+ - many changed for (MC) Decay Finder 
+
+ - cmt/requirements 
+
+    version increment to v7r5 
+ 
 
 !========================== LoKiMC v7r4 2008-06-30 ============================
 ! 2008-06-12 - Vanya BELYAEV
