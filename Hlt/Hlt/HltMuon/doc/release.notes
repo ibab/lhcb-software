@@ -3,7 +3,9 @@
 ! Responsible : Alessia Satta
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
- 2008-07-04 - Gerhard Raven
+ 
+!========================== HltMuon v3r3 2008-07-09 ===================
+2008-07-04 - Gerhard Raven
   - call 'clean' on HltSelection, not 'clear'
 
 !========================== HltMuon v3r2 2008-06-09 ===================
