@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.1 2008-05-30 13:49:13 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.2 2008-07-10 10:39:11 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -85,10 +85,14 @@ StatusCode TrackMonitor::execute()
   
   for (; iterT != tracks->end(); ++iterT){
     if (selector((*iterT)->type())->accept(**iterT) == true){
-
-      splitByAlgorithm() == true ? 
-        type = Gaudi::Utils::toString((*iterT)->history()) : type= all(); 
-
+      type = all() ;
+      if( splitByType() ) {
+	type = Gaudi::Utils::toString((*iterT)->type()) ;
+	if( (*iterT)->checkFlag( LHCb::Track::Backward ) ) type += "Backward" ;
+      } else if( splitByAlgorithm() ) {
+	type = Gaudi::Utils::toString((*iterT)->history()) ;
+      } 
+      
       tMap[type]+= 1;
       fillHistograms(*iterT,type);
       plot((*iterT)->type(),2, "type" ,-0.5, 10.5, 10);
@@ -111,29 +115,40 @@ void TrackMonitor::fillHistograms(const LHCb::Track* aTrack,
 
   // plots we should always make...
   plot(aTrack->probChi2(),type+"/2","probChi2", -0.01, 1.01, 51);
-  plot(aTrack->chi2PerDoF(),type+"/3","chi2/ndof", -2., 202., 51);
+  plot(aTrack->chi2PerDoF(),type+"/3","chi2/ndof",0,20);
   plot(aTrack->nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(aTrack->p()/Gaudi::Units::GeV, type+"/5" ,"momentum", -5., 205., 21);
   plot(aTrack->pt()/Gaudi::Units::GeV,type+"/6", "pt", -0.1, 10.1, 51);
   plot(aTrack->pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
+  plot(std::sqrt(aTrack->firstState().covariance()(0,0)),type+"/xerror", "x error at first state",0,2);
+  plot(std::sqrt(aTrack->firstState().covariance()(1,1)),type+"/yerror", "y error at first state",0,2);
+  plot(std::sqrt(aTrack->firstState().covariance()(2,2)),type+"/txerror", "tx error at first state",0,0.02);
+  plot(std::sqrt(aTrack->firstState().covariance()(3,3)),type+"/tyerror", "ty error at first state",0,0.02);
+  plot(std::sqrt(aTrack->firstState().covariance()(4,4)),type+"/qoperror", "qop error at first state",0,1e-3);
+  plot(aTrack->flag(),type+"/flag","flag",-0.5,255.5,256) ;
+  plot(aTrack->history(),type+"/history","history",-0.5,20.5,21) ;
+  
+  plot(aTrack->nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
+  plot(aTrack->nMeasurementsRemoved(),type+"/101","#outliers", -0.5, 10.5, 11);
 
+  // found hits of each type
+  const std::vector<LHCb::LHCbID>& ids = aTrack->lhcbIDs();
+  const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
+  const unsigned int nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isIT,_1));
+  const unsigned int nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isOT,_1));
+  const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
+  const unsigned int nVeloRHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloR,_1));
+  const unsigned int nVeloPhiHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloPhi,_1));
+  
+  plot(nTTHits, type+"/110", "# TT hits",  -0.5, 10.5 ,11);
+  plot(nITHits, type+"/111", "# IT hits",  -0.5, 50.5 ,51);
+  plot(nOTHits, type+"/112", "# OT hits", -0.5, 50.5 ,51);
+  plot(nVeloHits, type+"/113","# Velo hits" ,-0.5, 50.5 ,51);
+  plot(nVeloRHits, type+"/114","# Velo R hits" ,-0.5, 20.5 ,21);
+  plot(nVeloPhiHits, type+"/115","# Velo phi hits" ,-0.5, 20.5 ,21);
+  
   // expert checks  
   if (fullDetail() == true){
-
-    plot(aTrack->nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
-    plot(aTrack->nMeasurementsRemoved(),type+"/101","#outliers", -0.5, 10.5, 61);
-
-    // found hits of each type
-    const std::vector<LHCb::LHCbID>& ids = aTrack->lhcbIDs();
-    const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
-    const unsigned int nITHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isIT,_1));
-    const unsigned int nOTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isOT,_1));
-    const unsigned int nVeloHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
-
-    plot(nTTHits, type+"/110", "# TT hits",  -0.5, 10.5 ,11);
-    plot(nITHits, type+"/111", "# IT hits",  -0.5, 50.5 ,51);
-    plot(nOTHits, type+"/112", "# OT hits", -0.5, 50.5 ,51);
-    plot(nVeloHits, type+"/113","# Velot hits" ,-0.5, 50.5 ,51);
 
     // compare to what we expected
     if (aTrack->hasInfo(LHCb::Track::nExpectedOT) == true){
