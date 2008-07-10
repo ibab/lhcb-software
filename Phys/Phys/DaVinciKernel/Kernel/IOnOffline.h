@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.6 2008-07-10 14:55:05 pkoppenb Exp $
+// $Id: IOnOffline.h,v 1.7 2008-07-10 15:18:20 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -28,9 +28,6 @@ public:
 
   /// On or Offline ?
   virtual bool online(void) const = 0 ;
-
-  /// Return obsolete DispCalculator
-  virtual std::string dispCalculator() const = 0 ;
 
   /// Return DistanceCalculator
   virtual std::string distanceCalculator() const = 0 ;

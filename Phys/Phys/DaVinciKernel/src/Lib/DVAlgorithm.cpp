@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.33 2008-07-10 14:55:05 pkoppenb Exp $
+// $Id: DVAlgorithm.cpp,v 1.34 2008-07-10 15:18:20 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -80,8 +80,8 @@ DVAlgorithm::DVAlgorithm
   m_vertexFitNames [ "ParticleAdder" ] = "ParticleAdder"       ;
   declareProperty ( "VertexFitters"     , m_vertexFitNames    ) ;
   //
+  m_geomToolNames  [ "" ] = "GeomDispCalculator" ;
   m_geomToolNames  [ "Offline" ] = "GeomDispCalculator" ;
-  m_geomToolNames  [ "Trigger" ] = "TrgDispCalculator"  ;
   declareProperty ( "GeomTools"         , m_geomToolNames     ) ;
   //
   declareProperty ( "CheckOverlapTool"  , m_checkOverlapName  ) ;
@@ -218,13 +218,6 @@ StatusCode DVAlgorithm::loadTools()
   vertexFitter() ;
   
   // geometry THIS IS OBSOLETE
-  if ( m_geomToolNames.end() == m_geomToolNames.find("") )
-  {
-    if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
-    m_geomToolNames[""] = onof->dispCalculator() ;
-  }
-  
-  // geometry THIS IS OBSOLETE
   if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
   {
     if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
@@ -242,20 +235,6 @@ StatusCode DVAlgorithm::loadTools()
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading WriteSelResults Tool" << endmsg;
   writeSelResult();
-  
-  /*  Not preloading non-mandatory tools
-  // particle filter
-  for ( size_t i = 0; i < m_fileNames.size();++i) {
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticleFilter " << m_filterName.at(i) << " as " << i << endmsg;
-  particleFilter(i); 
-  }
-  
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading BTagging Tool" << endmsg;
-  flavourTagging();
-
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticleDescendants Tool" << endmsg;
-  descendants();
-  */
 
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading ParticlePropertySvc" << endmsg;
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
