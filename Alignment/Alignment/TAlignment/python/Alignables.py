@@ -108,9 +108,19 @@ class Alignables( list ):
         elements.append( self.m_velo + "/Velo(Left|Right)/Module(02|03|06|07|10|11|14|15|18|19|22|23|26|27|30|31|34|35|38|39)/RPhiPair.{1,2}/Detector-00" )
         self.__append( elements, dofs )
         
+    def VeloPileUpSensors( self, dofs = "" ) :
+        elements = []
+        elements.append( self.m_velo + "/Velo(Left|Right)/Module.{1,2}/RPhiPair.{1,2}/DetectorPU.{1,5}" )
+        self.__append( elements, dofs )
+        
     def VeloRightRSensors( self, dofs = "" ) :
         self.__append( self.m_velo + self.m_veloRight + "/Module(00|01|04|05|08|09|12|13|16|17|20|21|24|25|28|29|32|33|36|37|40|41)/RPhiPair.{1,2}/Detector-00", dofs)
 
+    def VeloRight( self, dofs = "" ) :
+        self.__append( self.m_velo + self.m_veloRight, dofs)
+        
+    def VeloLeft( self, dofs = "" ) :
+        self.__append( self.m_velo + self.m_veloLeft, dofs)
 
     ## TT #################################################################################
     def TT( self, dofs = "" ) :
@@ -124,7 +134,7 @@ class Alignables( list ):
 
     ## IT #################################################################################
     def IT( self, dofs = "" ) :
-        self.__append( self.m_it, element )
+        self.__append( self.m_it, dofs )
 
     def ITBoxes( self, dofs = "" ) :
         elements = []
