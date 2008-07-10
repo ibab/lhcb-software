@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-07-10 - Gerhard Raven
+ - first pythonization of Moore.py...
+
 !========================== Moore v4r3 2008-07-09 ===================
 ! 2008-07-09 - Patrick Koppenburg
  - No Moore.exe anymore.
