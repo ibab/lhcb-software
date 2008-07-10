@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.6 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.7 2008-07-10 15:54:33 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -103,7 +103,7 @@ StatusCode ContextTool::getTools(){
     }
   }
   // now get default tools if needed 
-  if ( 0==m_geom )   m_geom = tool<IGeomDispCalculator>("GeomDispCalcularor",this);
+  if ( 0==m_geom )   m_geom = tool<IGeomDispCalculator>("GeomDispCalculator",this);
   if ( 0==m_fitter ) {
     m_onOffline = tool<IOnOffline>("OnOfflineTool",this);
     m_fitter = tool<IVertexFit>(m_onOffline->vertexFitter(),this);
