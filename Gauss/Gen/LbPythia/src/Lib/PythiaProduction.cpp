@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.7 2008-06-24 10:38:30 ibelyaev Exp $
+// $Id: PythiaProduction.cpp,v 1.8 2008-07-10 18:28:08 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -8,11 +8,11 @@
 #include "LbPythia/Pythia.h"
 #include "LbPythia/PythiaProduction.h"
 
-// from SEAL
-#include "SealBase/ShellEnvironment.h"
-#include "SealBase/Filename.h"
+// from boost
+#include "boost/filesystem.hpp"
 
 // from Gaudi
+#include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -178,17 +178,15 @@ StatusCode PythiaProduction::initialize( ) {
 
   // Name of PYSLHA file to read
   if ( "empty" != m_slhaDecayFile ) {
-    if ( seal::ShellEnvironment().has( "DECFILESROOT" ) ) {
+    if ( "UNKNOWN" != System::getEnv( "DECFILESROOT" ) ) {
       std::string temp = m_slhaDecayFile ;
-      m_slhaDecayFile = seal::ShellEnvironment().get( "DECFILESROOT" ) +
+      m_slhaDecayFile = System::getEnv( "DECFILESROOT" ) +
         "/dkfiles/" + temp ;
     }
     // Check if file exists
-    seal::Filename shlaDecayFile( m_slhaDecayFile ) ;
-    if ( ! shlaDecayFile.exists() ) 
+    boost::filesystem::path slhaDecayFile( m_slhaDecayFile ) ;
+    if ( ! boost::filesystem::exists( slhaDecayFile ) ) 
       return Error( "The SLHA decay file does not exist" ) ;
-    if ( ! shlaDecayFile.isReadable() ) 
-      return Error( "The SLHA decay file cannot be read" ) ;
   }
 
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
@@ -904,8 +902,6 @@ StatusCode PythiaProduction::toHepMC
     
     if ( !m_inconsistencies.empty() && 0 == m_HEPEVT_errors )
     { m_HEPEVT_errors = new std::ofstream ( m_inconsistencies.c_str() ) ; }
-    
-    MsgStream& log = warning() ;
     
     if ( 0 != m_HEPEVT_errors ) 
     {

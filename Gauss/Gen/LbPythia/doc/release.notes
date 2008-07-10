@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-10 - Patrick Robbe
+ - Remove usage of SEAL for file: 
+   . src/Lib/PythiaProduction.cpp
+
 ! 2008-07-09 - Patrick ROBBE and Gloria CORTI
  - Use Gaudi units intsead of implecetely those of CLHEP vias HepMC
    (prepared for migration to HepMC 2)
