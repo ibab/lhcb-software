@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2008-07-09 16:42:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.45 2008-07-10 12:01:48 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,11 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2008-07-10 - Vanya BELYAEV
+
+ - add the function LoKi::MCVertices::decayVertex to access the decay vertex 
+
 
 ! 2008-07-09 - Vanya BELYAEV
 

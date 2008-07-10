@@ -31,6 +31,30 @@ __author__ = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 
 from   LoKiMC.functions    import LoKi,LHCb,cpp
 
+
+
+## get the decay vertex for the particle
+def decayVertex ( mcp ) :
+    """
+    Get the decay vertex for the (MC) particle
+    
+    >>> mcp = ...
+    >>> decVertex = decayVertex ( mcp )
+
+    >>> mcp = ...
+    >>> decVertex = mcp.decayVertex()
+    
+    """
+    return LoKi.MCVertices.decayVertex ( mcp )
+
+decayVertex . __doc__  +=  "\n\n" + LoKi.MCVertices.decayVertex    . __doc__ 
+
+if not hasattr ( LHCb.MCParticle ,     'decayVertex'    ) :
+    LHCb.MCParticle  .   decayVertex      = decayVertex 
+if not hasattr ( LHCb.MCParticle ,   '__decayVertex__'  ) :
+    LHCb.MCParticle  . __decayVertex__    = decayVertex 
+
+
 # =============================================================================
 ## Get number of child particles :
 def nChildren ( p ) :

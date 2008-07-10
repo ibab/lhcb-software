@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiMC.xml,v 1.16 2008-02-15 07:32:03 cattanem Exp $ 
+     * $Id: LoKiMC.xml,v 1.17 2008-07-10 12:01:48 ibelyaev Exp $ 
      * ========================================================================
      * @file
      * The seleciton file to build Reflex dictionaries for Phys/LoKiMC package
@@ -50,6 +50,7 @@
   <class pattern   = "LoKi::MCVertices::*"                 />
   
   <function pattern = "LoKi::MCKinematics::*"               />
+  <function pattern = "LoKi::MCVertices::*"                 />
   <function pattern = "LoKi::PrintMC:*"                     />
   <function pattern = "LoKi::MCChild::*"                    />
   <function pattern = "LoKi::Dicts::MCAlgs::*"              />
