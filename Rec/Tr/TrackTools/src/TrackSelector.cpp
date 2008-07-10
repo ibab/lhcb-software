@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.15 2008-05-27 10:49:21 wouter Exp $
+ *  $Id: TrackSelector.cpp,v 1.16 2008-07-10 11:41:31 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -41,7 +41,9 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MinChi2Cut", m_minChi2Cut  = -1  );
   declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
   declareProperty("MinEtaCut", m_minEtaCut  = boost::numeric::bounds<double>::lowest());
-
+  declareProperty("MinNDoF", m_minNDoF = 0 ) ;
+  declareProperty("MinNVeloRHits", m_minNVeloRHits = 0 ) ;
+  declareProperty("MinNVeloPhiHits", m_minNVeloPhiHits = 0 ) ;
 
   declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
@@ -111,7 +113,12 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   }
 
   // simple cuts first
-
+  if( aTrack.nDoF() < m_minNDoF ) {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endreq;
+    return false;
+  }
+  
   // chi-squared
   const double chi2 = aTrack.chi2PerDoF();
   if ( (m_maxChi2Cut>=0 && (chi2 > m_maxChi2Cut || aTrack.nDoF()<=0 ) )  ||
@@ -165,6 +172,25 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     return false;
   }
  
+  // count number of velo phi and R hits
+  if( m_minNVeloPhiHits > 0 || m_minNVeloRHits > 0 ) {
+    int numVeloPhi(0), numVeloR(0) ;
+    for( std::vector<LHCbID>::const_iterator it = aTrack.lhcbIDs().begin() ;
+	 it != aTrack.lhcbIDs().end(); ++it) 
+      if     ( it->isVeloPhi() ) ++numVeloPhi ;
+      else if( it->isVeloR() ) ++numVeloR ;
+    if ( numVeloPhi < m_minNVeloPhiHits ) {
+      if ( msgLevel(MSG::DEBUG) )
+	debug() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
+      return false;
+    }
+    if ( numVeloR < m_minNVeloRHits ) {
+      if ( msgLevel(MSG::DEBUG) )
+	debug() << " -> #velo R " << numVeloR << " failed cut" << endreq;
+      return false;
+    }
+  }
+  
   // remove seeds with bad likelihood
   if (aTrack.info(Track::Likelihood, -9999.) < m_likCut ) return false;
  

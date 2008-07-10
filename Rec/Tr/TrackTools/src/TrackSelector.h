@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.6 2007-07-04 15:29:53 mneedham Exp $
+ *  $Id: TrackSelector.h,v 1.7 2008-07-10 11:41:31 wouter Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -85,6 +85,9 @@ private:
   double m_minPCut;    ///< Min p cut
   double m_minPtCut;   ///< Min pt cut
   double m_minHitCut;  ///< Min hit cut
+  int m_minNDoF ;      ///< Minimum number of dofs
+  int m_minNVeloRHits ;    ///< Minimum number of velo R hits
+  int m_minNVeloPhiHits ;  ///< Minimum number of velo R hits
 
   double m_maxChi2Cut; ///< Max chi^2 cut
   double m_maxPCut;    ///< Max p cut
