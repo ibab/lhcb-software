@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.3 2008-07-10 20:35:10 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.4 2008-07-10 20:52:11 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -25,9 +25,9 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
                           ISvcLocator* pSvcLocator )  
   : Calo2Dview ( name , pSvcLocator ) 
 { 
-  declareProperty("FullMonitoring"   , m_fullMonitoring    = true ) ;  
+  declareProperty("FullMonitoring"       , m_fullMonitoring    = true ) ;  
   declareProperty( "ReferenceDataSuffix" , m_referenceDataSuffix = "" ) ;  
-  declareProperty( "CheckDataSuffix" , m_checkDataSuffix = "RAW" ) ;  
+  declareProperty( "CheckDataSuffix"     , m_checkDataSuffix = "RAW"  ) ;  
 }
 
 //=============================================================================
@@ -40,8 +40,9 @@ L0CaloCompare::~L0CaloCompare() {};
 //=============================================================================
 StatusCode L0CaloCompare::finalize() {
 
-  info()<<"Number of events "<<m_nEvents <<endmsg;
-  info()<<"Number of useful events (Odin bank decoded) "<<m_nUsefulEvents <<endmsg;
+  info() << "Number of events " << m_nEvents << endmsg ;
+  info() << "Number of useful events (Odin bank decoded) "
+         << m_nUsefulEvents << endmsg;
   return Calo2Dview::finalize();  // must be called after all other actions
 }
 
@@ -72,11 +73,13 @@ StatusCode L0CaloCompare::initialize() {
   bookCalo2D("HcalMapHadCompare","Hadron Hcal map" ,"Hcal") ; 
 
 
-  m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp", "SpdMult comparison "   , -100.,100., 200 );
-  m_histSumEt_Comp  = GaudiHistoAlg::book( "SumEt_Comp", "SumEt comparison "   , -100.,100., 200 );
+  m_histSpdMult_Comp  = GaudiHistoAlg::book( "SpdMult_Comp", "SpdMult comparison " ,
+                                             -100.,100., 200 );
+  m_histSumEt_Comp  = GaudiHistoAlg::book( "SumEt_Comp", "SumEt comparison " , 
+                                           -100.,100., 200 );
 
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -90,32 +93,51 @@ StatusCode L0CaloCompare::execute() {
   LHCb::L0CaloCandidates::const_iterator candCheck;
   
   if (m_fullMonitoring) { 
-    debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Full+m_referenceDataSuffix<<" as a reference"<< endreq;
-    debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Full+m_checkDataSuffix<<" to be checked "<< endreq;
-    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_referenceDataSuffix ) ) 
-      candidatesRef = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_referenceDataSuffix );
+    debug() << "Execute will read " 
+            << LHCb::L0CaloCandidateLocation::Full+m_referenceDataSuffix
+            << " as a reference" << endreq ;
+    debug() << "Execute will read " 
+            << LHCb::L0CaloCandidateLocation::Full+m_checkDataSuffix
+            << " to be checked " << endreq;
+    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+
+                                        m_referenceDataSuffix ) ) 
+      candidatesRef = 
+        get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+
+                                     m_referenceDataSuffix );
     else { 
       Warning( "REF Not found" ).ignore() ;
       return StatusCode::SUCCESS ;
     }
-    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_checkDataSuffix ) ) 
-      candidatesCheck = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+m_checkDataSuffix );
+    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+
+                                        m_checkDataSuffix ) ) 
+      candidatesCheck = 
+        get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Full+
+                                     m_checkDataSuffix );
     else { 
       Warning( "CHECK Not found" ).ignore() ;
       return StatusCode::SUCCESS ;
     }
-  }
-  else { 
-    debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix<<" as a reference"<< endreq;
-    debug() << "Execute will read " <<LHCb::L0CaloCandidateLocation::Default+m_checkDataSuffix<<" to be checked "<< endreq;
-    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix ) ) 
-      candidatesRef = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix );
+  } else { 
+    debug() << "Execute will read " 
+            << LHCb::L0CaloCandidateLocation::Default+m_referenceDataSuffix
+            << " as a reference" << endreq;
+    debug() << "Execute will read " 
+            << LHCb::L0CaloCandidateLocation::Default+m_checkDataSuffix
+            << " to be checked " << endreq;
+    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+
+                                        m_referenceDataSuffix ) ) 
+      candidatesRef = 
+        get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+
+                                     m_referenceDataSuffix );
     else { 
       Warning( "REF Not found" ).ignore() ;
       return StatusCode::SUCCESS ;
     }
-    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_checkDataSuffix ) ) 
-      candidatesCheck = get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+m_checkDataSuffix );
+    if ( exist<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+
+                                        m_checkDataSuffix ) ) 
+      candidatesCheck = 
+        get<LHCb::L0CaloCandidates>( LHCb::L0CaloCandidateLocation::Default+
+                                     m_checkDataSuffix );
     else { 
       Warning( "CHECK Not found" ).ignore() ;
       return StatusCode::SUCCESS ;
@@ -154,31 +176,52 @@ StatusCode L0CaloCompare::execute() {
     int rawId = (*candRef)->id().all() ; 
     switch ( (*candRef)->type() ) {
     case L0DUBase::CaloType::Electron:
-      debug()<<"Event= "<<event<<" Ele : cellID = "<<(*candRef)->id()<<" etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Ele : cellID = " << (*candRef)->id() 
+              << " etCode = " << (*candRef)->etCode()
+              << " rawId= " << rawId << endreq;
       mapEleRef[rawId] = *candRef ;
       break ; 
     case L0DUBase::CaloType::Photon:
-      debug()<<"Event= "<<event<<" Pho : cellID = "<<(*candRef)->id()<<" etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Pho : cellID = " << (*candRef)->id() 
+              << " etCode = " << (*candRef)->etCode()
+              << " rawId= " << rawId << endreq ;
       mapPhoRef[rawId] = *candRef ;
       break ; 
     case L0DUBase::CaloType::Pi0Local:
-      debug()<<"Event= "<<event<<" Pil : cellID = "<<(*candRef)->id()<<" etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event
+              << " Pil : cellID = " << (*candRef)->id()
+              << " etCode = " << (*candRef)->etCode()
+              << " rawId= " << rawId << endreq ;
       mapPilRef[rawId] = *candRef ;
       break ; 
     case L0DUBase::CaloType::Pi0Global:
-      debug()<<"Event= "<<event<<" Pig : cellID = "<<(*candRef)->id()<<" etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event
+              << " Pig : cellID = " << (*candRef)->id()
+              << " etCode = " <<(*candRef)->etCode()
+              << " rawId= " << rawId << endreq ;
       mapPigRef[rawId] = *candRef ;
       break ; 
     case L0DUBase::CaloType::Hadron:
-      debug()<<"Event= "<<event<<" Had : cellID = "<<(*candRef)->id()<<"etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event
+              << " Had : cellID = " << (*candRef)->id()
+              << "etCode = " << (*candRef)->etCode() 
+              << " rawId= " << rawId << endreq ;
       mapHadRef[rawId] = *candRef ;
       break ; 
     case L0DUBase::CaloType::SpdMult:
-      debug()<<"Event= "<<event<<" SpdMult : cellID = "<<(*candRef)->id()<<"etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event
+              << " SpdMult : cellID = " << (*candRef)->id()
+              << "etCode = " << (*candRef)->etCode()
+              << " rawId= " << rawId << endreq ;
       SpdMultRef = *candRef ;
       break ; 
     case L0DUBase::CaloType::SumEt:
-      debug()<<"Event= "<<event<<" SumEt : cellID = "<<(*candRef)->id()<<"etCode = "<<(*candRef)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " SumEt : cellID = " << (*candRef)->id()
+              << "etCode = " << (*candRef)->etCode()
+              << " rawId= " << rawId << endreq;
       SumEtRef = *candRef ;
       break ; 
     }
@@ -188,87 +231,141 @@ StatusCode L0CaloCompare::execute() {
   std::map<int ,LHCb::L0CaloCandidate * >::iterator iterMap ;  
 
 
-  for ( candCheck = candidatesCheck->begin() ; candidatesCheck->end() != candCheck ; ++candCheck ) {
+  for ( candCheck = candidatesCheck->begin() ; 
+        candidatesCheck->end() != candCheck ; ++candCheck ) {
     LHCb::CaloCellID caloCell = (*candCheck)->id() ; 
     int rawId = (*candCheck)->id().all() ; 
     int etCodeCheck = (*candCheck)->etCode() ; 
     switch ( (*candCheck)->type() ) {
     case L0DUBase::CaloType::Electron:
-      debug()<<"Event= "<<event<<" Ele : cellID to check = "<<(*candCheck)->id()<<" etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Ele : cellID to check = " << (*candCheck)->id()
+              << " etCode = " << (*candCheck)->etCode() 
+              << " rawId= " << rawId << endreq ;
       iterMap = mapEleRef.find(rawId) ; 
-      if (iterMap == mapEleRef.end()) debug()<<"          Ele L0cand not found ! "<<endreq; 
-      if (iterMap == mapEleRef.end()) fillCalo2D("EcalMapEleCompare",caloCell,1.,"Electron Ecal map") ; 
-      else{
-	LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
-	int etCodeRef = theCand->etCode() ;
-	if ( etCodeCheck =! etCodeRef) debug()<<" Ele : same cell but different etCode : ref = "<<theCand->etCode()<<" check = "<<(*candCheck)->etCode()<<endreq;
-	if ( etCodeCheck =! etCodeRef) fillCalo2D("EcalMapEleCompare",caloCell,1.,"Electron Ecal map") ; 
+      if (iterMap == mapEleRef.end()) 
+        debug() << "          Ele L0cand not found ! " << endreq ; 
+      if (iterMap == mapEleRef.end()) 
+        fillCalo2D("EcalMapEleCompare",caloCell,1.,"Electron Ecal map") ; 
+      else {
+        LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
+        int etCodeRef = theCand->etCode() ;
+        if ( etCodeCheck != etCodeRef) 
+          debug() << " Ele : same cell but different etCode : ref = "
+                  << theCand->etCode() 
+                  << " check = " << (*candCheck)->etCode() << endreq ;
+        if ( etCodeCheck != etCodeRef) 
+          fillCalo2D("EcalMapEleCompare",caloCell,1.,"Electron Ecal map") ; 
       }
       break ; 
     case L0DUBase::CaloType::Photon:
-      debug()<<"Event= "<<event<<" Pho : cellID to check = "<<(*candCheck)->id()<<" etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Pho : cellID to check = " << (*candCheck)->id()
+              << " etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ;
       iterMap = mapPhoRef.find(rawId) ; 
-      if (iterMap == mapPhoRef.end()) debug()<<"          Pho L0cand not found ! "<<endreq; 
-      if (iterMap == mapPhoRef.end()) fillCalo2D("EcalMapPhoCompare",caloCell,1.,"Photon Ecal map") ; 
+      if (iterMap == mapPhoRef.end()) 
+        debug() << "          Pho L0cand not found ! " << endreq ; 
+      if (iterMap == mapPhoRef.end()) 
+        fillCalo2D("EcalMapPhoCompare",caloCell,1.,"Photon Ecal map") ; 
       else{
-	LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
-	int etCodeRef = theCand->etCode() ;
-	if ( etCodeCheck =! etCodeRef) debug()<<" Pho : same cell but different etCode : ref = "<<theCand->etCode()<<" check = "<<(*candCheck)->etCode()<<endreq;
-	if ( etCodeCheck =! etCodeRef) fillCalo2D("EcalMapPhoCompare",caloCell,1.,"Photon Ecal map") ; 
+        LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
+        int etCodeRef = theCand->etCode() ;
+        if ( etCodeCheck != etCodeRef) 
+          debug() << " Pho : same cell but different etCode : ref = "
+                  << theCand->etCode() 
+                  << " check = " << (*candCheck)->etCode() << endreq ;
+        if ( etCodeCheck != etCodeRef) 
+          fillCalo2D("EcalMapPhoCompare",caloCell,1.,"Photon Ecal map") ; 
       }
       break ; 
     case L0DUBase::CaloType::Pi0Local:
-      debug()<<"Event= "<<event<<" Pil : cellID to check = "<<(*candCheck)->id()<<" etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Pil : cellID to check = " << (*candCheck)->id()
+              << " etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ; 
       iterMap = mapPilRef.find(rawId) ; 
-      if (iterMap == mapPilRef.end()) debug()<<"          Pil L0cand not found ! "<<endreq; 
-      if (iterMap == mapPilRef.end()) fillCalo2D("EcalMapPilCompare",caloCell,1.,"Pi0Local Ecal map") ; 
+      if (iterMap == mapPilRef.end()) 
+        debug()<<"          Pil L0cand not found ! "<<endreq; 
+      if (iterMap == mapPilRef.end()) 
+        fillCalo2D("EcalMapPilCompare",caloCell,1.,"Pi0Local Ecal map") ; 
       else{
-	LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
-	int etCodeRef = theCand->etCode() ;
-	if ( etCodeCheck =! etCodeRef) debug()<<" Pil : same cell but different etCode : ref = "<<theCand->etCode()<<" check = "<<(*candCheck)->etCode()<<endreq;
-	if ( etCodeCheck =! etCodeRef) fillCalo2D("EcalMapPilCompare",caloCell,1.,"Pi0Local Ecal map") ; 
+        LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
+        int etCodeRef = theCand->etCode() ;
+        if ( etCodeCheck != etCodeRef) 
+          debug() << " Pil : same cell but different etCode : ref = "
+                  << theCand->etCode()
+                  << " check = " << (*candCheck)->etCode() << endreq ;
+        if ( etCodeCheck != etCodeRef) 
+          fillCalo2D("EcalMapPilCompare",caloCell,1.,"Pi0Local Ecal map") ; 
       }
       break ; 
     case L0DUBase::CaloType::Pi0Global:
-      debug()<<"Check Event= "<<event<<" Pig : cellID to check = "<<(*candCheck)->id()<<" etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Check Event= " << event
+              << " Pig : cellID to check = " << (*candCheck)->id()
+              << " etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ;
       iterMap = mapPigRef.find(rawId) ; 
-      if (iterMap == mapPigRef.end()) debug()<<"          Pig L0cand not found ! "<<endreq; 
-      if (iterMap == mapPigRef.end()) fillCalo2D("EcalMapPigCompare",caloCell,1.,"Pi0Global Ecal map") ; 
+      if (iterMap == mapPigRef.end()) 
+        debug()<<"          Pig L0cand not found ! "<<endreq; 
+      if (iterMap == mapPigRef.end()) 
+        fillCalo2D("EcalMapPigCompare",caloCell,1.,"Pi0Global Ecal map") ; 
       else{
-	LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
-	int etCodeRef = theCand->etCode() ;
-	if ( etCodeCheck =! etCodeRef) debug()<<" Pig : same cell but different etCode : ref = "<<theCand->etCode()<<" check = "<<(*candCheck)->etCode()<<endreq;
-	if ( etCodeCheck =! etCodeRef) fillCalo2D("EcalMapPigCompare",caloCell,1.,"Pi0Global Ecal map") ; 
+        LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
+        int etCodeRef = theCand->etCode() ;
+        if ( etCodeCheck != etCodeRef) 
+          debug() << " Pig : same cell but different etCode : ref = "
+                  << theCand->etCode() << " check = "
+                  << (*candCheck)->etCode() << endreq ;
+        if ( etCodeCheck != etCodeRef) 
+          fillCalo2D("EcalMapPigCompare",caloCell,1.,"Pi0Global Ecal map") ; 
       }
       break ; 
     case L0DUBase::CaloType::Hadron:
-      debug()<<"Event= "<<event<<" Had : cellID to check = "<<(*candCheck)->id()<<"etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " Had : cellID to check = " << (*candCheck)->id()
+              << "etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ;
       iterMap = mapHadRef.find(rawId) ; 
-      if (iterMap == mapHadRef.end()) debug()<<"          Had L0cand not found ! "<<endreq; 
-      if (iterMap == mapHadRef.end()) fillCalo2D("HcalMapHadCompare",caloCell,1.,"Hadron Hcal map") ; 
+      if (iterMap == mapHadRef.end()) 
+        debug()<<"          Had L0cand not found ! "<<endreq; 
+      if (iterMap == mapHadRef.end()) 
+        fillCalo2D("HcalMapHadCompare",caloCell,1.,"Hadron Hcal map") ; 
       else{
-	LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
-	int etCodeRef = theCand->etCode() ;
-	if ( etCodeCheck =! etCodeRef) debug()<<" Had : same cell but different etCode : ref = "<<theCand->etCode()<<" check = "<<(*candCheck)->etCode()<<endreq;
-	if ( etCodeCheck =! etCodeRef) fillCalo2D("HcalMapHadCompare",caloCell,1.,"Hadron Hcal map") ; 
+        LHCb::L0CaloCandidate* theCand = (*iterMap).second ; 
+        int etCodeRef = theCand->etCode() ;
+        if ( etCodeCheck != etCodeRef) 
+          debug() << " Had : same cell but different etCode : ref = "
+                  << theCand->etCode() 
+                  << " check = " << (*candCheck)->etCode() << endreq ;
+        if ( etCodeCheck != etCodeRef) 
+          fillCalo2D("HcalMapHadCompare",caloCell,1.,"Hadron Hcal map") ; 
       }
       break ; 
     case L0DUBase::CaloType::SumEt:
-      debug()<<"Event= "<<event<<" SumEt : cellID to check = "<<(*candCheck)->id()<<"etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event 
+              << " SumEt : cellID to check = " << (*candCheck)->id()
+              << "etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ;
       debug()<<"SumEtRef etCode = "<<SumEtRef->etCode()<<endreq ;
       int diff_SumEt = (*candCheck)->etCode() - SumEtRef->etCode() ;
       if (diff_SumEt > 100.) diff_SumEt = 100 ; 
       if (diff_SumEt < -100.) diff_SumEt = -100 ; 
       m_histSumEt_Comp -> fill(diff_SumEt) ; 
-      if ( (*candCheck)->etCode() != SumEtRef->etCode() ) debug()<<" SumEt ... Pb " <<endreq;  
+      if ( (*candCheck)->etCode() != SumEtRef->etCode() ) 
+        debug()<<" SumEt ... Pb " <<endreq;  
       break ; 
     case L0DUBase::CaloType::SpdMult:
-      debug()<<"Event= "<<event<<" SpdMult : cellID to check = "<<(*candCheck)->id()<<"etCode = "<<(*candCheck)->etCode()<<" rawId= "<<rawId<<endreq;
+      debug() << "Event= " << event
+              << " SpdMult : cellID to check = " << (*candCheck)->id()
+              << "etCode = " << (*candCheck)->etCode()
+              << " rawId= " << rawId << endreq ;
       int diff_SpdMult = (*candCheck)->etCode() - SpdMultRef->etCode() ;
       if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
       if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
       m_histSpdMult_Comp -> fill(diff_SpdMult) ; 
-      if ( (*candCheck)->etCode() != SpdMultRef->etCode() ) debug()<<" SpdMult ... Pb " <<endreq; 
+      if ( (*candCheck)->etCode() != SpdMultRef->etCode() ) 
+        debug()<<" SpdMult ... Pb " <<endreq; 
       break ; 
     }
   }     
