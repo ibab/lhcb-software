@@ -332,7 +332,17 @@
          checkMeth = 'FALSE' /> 
  
 	
-	</attribute>  
+	</attribute>
+
+	
+       <attribute
+         type    = 'unsigned int'
+         name    = 'sourceID'
+         desc    = 'source id of board'
+         init    = '100'
+         access  = 'PUBLIC'>
+	 </attribute>
+  
 	 </class>
   </package>
 </gdd>
