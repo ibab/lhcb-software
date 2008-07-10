@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.140 2008-07-02 12:59:24 cattanem Exp $
+# $Id: release.notes,v 1.141 2008-07-10 16:53:26 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-07-10 - Marco Clemencic
+ - Fixed a tiny memory leak introduced in COOLConfSvc during the deSEALing.
 
 !===================== Det/DetCond v12r0 2008-06-30 ==========================
 ! 2008-07-02 - Marco Clemencic

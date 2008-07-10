@@ -1,4 +1,4 @@
-// $Id: COOLConfSvc.cpp,v 1.4 2008-06-10 16:47:23 marcocle Exp $
+// $Id: COOLConfSvc.cpp,v 1.5 2008-07-10 16:53:26 marcocle Exp $
 
 // Include files
 #include "RelationalAccess/ConnectionService.h"
@@ -283,7 +283,7 @@ StatusCode COOLConfSvc::initialize(){
 StatusCode COOLConfSvc::finalize(){
   MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalize" << endmsg;
-  m_coolApplication.release();
-  m_replicaSortAlg.release();
+  m_coolApplication.reset();
+  m_replicaSortAlg.reset();
   return Service::finalize();
 }
