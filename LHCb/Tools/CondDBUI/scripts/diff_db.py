@@ -15,6 +15,13 @@ def main(argv):
     (lhs,lhs_tag,rhs,rhs_tag,dest) = argv[1:]
     
     from CondDBUI.PyCoolDiff import diff, CondDBDiffError
+    
+    from CondDBUI import LOG_FORMAT
+    import logging
+    hndlr = logging.StreamHandler()
+    hndlr.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.getLogger().addHandler(hndlr)
+    
     try:
         # diff(originalDB, modifiedDB, diffDB,
         #      nodeName='/',

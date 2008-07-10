@@ -10,7 +10,13 @@ def main(argv):
         return 1
      
     # Main body
-    from CondDBUI import merge
+    from CondDBUI import merge, LOG_FORMAT
+    
+    import logging
+    hndlr = logging.StreamHandler()
+    hndlr.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.getLogger().addHandler(hndlr)
+    
     merge(source,target)
     
     return 0

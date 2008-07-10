@@ -15,10 +15,6 @@ import logging
 _log = logging.getLogger( __name__ )
 _log.setLevel( logging.INFO )
 
-_handler = logging.StreamHandler()
-_handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
-_log.addHandler( _handler )
-
 # COOL application
 _app = None
 

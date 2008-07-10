@@ -108,7 +108,7 @@ def main():
     parser.set_default("rel_notes", os.path.join(os.environ["SQLDDDBROOT"], "doc", "release_notes.xml"))
     parser.set_default("message", None)
     parser.set_default("contributor", None)
-        
+    
     # parse command line
     options, args = parser.parse_args()
     
@@ -117,13 +117,16 @@ def main():
         print "Error: not enough arguments. Try with --help."
         return 1
     
-    # Prepare logger
+    # Prepare local logger
     import logging
     log = logging.getLogger(parser.prog or os.path.basename(sys.argv[0]))
     log.setLevel(logging.INFO)
+    
+    # set the global stream handler
+    from CondDBUI import LOG_FORMAT
     hndlr = logging.StreamHandler()
-    hndlr.setFormatter(logging.Formatter("%(levelname)s: (%(name)s) %(message)s"))
-    log.addHandler(hndlr)
+    hndlr.setFormatter(logging.Formatter(LOG_FORMAT))
+    logging.getLogger().handlers = [hndlr]
     
     # decrease verbosity of PyCoolDiff
     import CondDBUI.PyCoolDiff

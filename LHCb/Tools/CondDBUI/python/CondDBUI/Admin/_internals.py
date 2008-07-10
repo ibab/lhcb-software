@@ -3,17 +3,12 @@
 Internal common functions/utilities. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: _internals.py,v 1.1 2008-07-10 10:49:32 marcocle Exp $"
+__version__ = "$Id: _internals.py,v 1.2 2008-07-10 15:11:39 marcocle Exp $"
 
 # Set up the logger 
 import logging
 log = logging.getLogger("CondDBUI.Admin")
 log.setLevel(logging.INFO)
-if not log.handlers: # we want only one handler
-    hndlr = logging.StreamHandler()
-    hndlr.setFormatter(logging.Formatter("%(levelname)s: (%(name)s) %(message)s"))
-    log.addHandler(hndlr)
-    del hndlr
 
 import os
 import errno

@@ -12,6 +12,8 @@ browser.
 
 import os, md5, random, sys, re, time, datetime
 
+LOG_FORMAT = "%(levelname)s: (%(name)s) %(message)s"
+
 import PyCoolCopy
 from PyCool import cool
 import PyCool
@@ -1685,11 +1687,6 @@ def merge( sourceDB, targetDB,
 
     _log = logging.getLogger( "CondDBUI.merge" )
     _log.setLevel( logging.INFO )
-
-    if not _log.handlers: # we want only one handler
-        _handler = logging.StreamHandler()
-        _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
-        _log.addHandler( _handler )
 
     from PyCoolDiff import CondDBDiffError
     
