@@ -23,7 +23,9 @@ PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueB2JpsiX_MuMu.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}) ..." ;
+FilterTrueMuons.MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> (J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}) ..." ;
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT

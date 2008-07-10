@@ -23,7 +23,9 @@ PrintPreselBu2D0K_D02KsHH.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBu2D0K_KsHH.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
+FilterTrueMuons.MCDecayFinder.Decay =  "[B+ -> (D~0 -> (KS0 -> ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc" ;
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT

@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.4 2008-07-08 12:12:10 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.5 2008-07-10 18:13:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 // LHCb
 #include "MCInterfaces/IMCDecayFinder.h"
 #include "Kernel/IWriteSelResult.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // local
 #include "FilterTrueTracks.h"
@@ -128,12 +130,18 @@ StatusCode FilterTrueTracks::execute() {
                                     << nT << endmsg ;
 
   counter("Saved Tracks") += newTracks->size() ;
+  bool foundall = true ;
 
+  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
-    if (m->second) counter("Found Particles")++ ;
+    std::string pname = ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
+    counter("Found "+pname)+=(m->second) ;
+    //    if (m->second) info() << "Found the " << pname <<  endmsg ;
+    foundall = (foundall && m->second) ;
   }
-  
-  if ( !newTracks->empty()) setFilterPassed(true);
+  counter("Found all")+= foundall ;
+
+  if ( !newTracks->empty()) setFilterPassed(foundall);
 
   return m_selResult->write(name(), filterPassed());
 }

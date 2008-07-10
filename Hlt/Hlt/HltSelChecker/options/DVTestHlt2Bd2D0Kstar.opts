@@ -23,7 +23,8 @@ PrintPreselBd2D0Kst_D02HH.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBd2D0Kstar.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "{[[B0]nos -> (D~0 -> ^K+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^K+ ^K- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^K- ^K+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc, [[B0]nos -> (D~0 -> ^pi+ ^pi- {,gamma}{,gamma}) (K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma})]cc, [[B0]os -> (D0 -> ^pi- ^pi+ {,gamma}{,gamma}) (K*(892)~0 -> ^K- ^pi+ {,gamma}{,gamma})]cc}" ;
 //
 // Overwrite input - uncomment to run HLT on true signal only
 //

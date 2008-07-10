@@ -23,7 +23,8 @@ PrintPreselBs2DsDs.OutputLevel = 3 ;
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBs2DsDs.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "[B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc,  [B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc" ;
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT

@@ -22,7 +22,9 @@ Hlt2SelectionsCorrs.Algorithms += { "PreselBs2PhiPhi" };
 //
 // True filter criterion
 //
-#include "$HLTSELCHECKERROOT/options/TrueBs2PhiPhi.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma})(phi(1020) -> ^K+ ^K- {,gamma}{,gamma})]cc" ;
+FilterTrueMuons.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K- {,gamma}{,gamma})(phi(1020) -> ^K+ ^K- {,gamma}{,gamma})]cc" ;
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT

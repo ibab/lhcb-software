@@ -48,6 +48,6 @@ importOptions("$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts")
 
 ApplicationMgr().EvtMax = 100000
 
-EventSelector().PrintFreq = 100 
+EventSelector().PrintFreq = 1000 
 
 

@@ -23,7 +23,9 @@ PrintPreselHeavyDimuon.OutputLevel = 3 ;
 //
 // True filter criterion - will only run HLT on true signal
 //
-#include "$HLTSELCHECKERROOT/options/TrueB2DiMuon.opts"
+#include "$HLTSELCHECKERROOT/options/FilterTrueTracks.opts"
+FilterTrueTracks.MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ... " ;
+FilterTrueMuons.MCDecayFinder.Decay =  "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} => ^mu+ ^mu- ... " ;
 //
 // Set the following to false if you want only events with a signal
 // fully reconstructed in the HLT
