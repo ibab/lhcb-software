@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.2 2008-07-10 15:13:44 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2008-07-10 16:16:01 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -40,4 +40,18 @@ class Moore(ConfigurableUser):
         importOptions('$STDOPTS/LHCbApplication.opts')
         importOptions('$STDOPTS/DstDicts.opts')
         importOptions('$STDOPTS/DC06Conditions.opts')
-        if self.getProp("DAQStud
+        if self.getProp("DAQStudies") :
+            if self.getProp('IncludeL0') : importOptions('$HLTSYSROOT/options/L0DAQ.opts')
+            importOptions('$HLTSYSROOT/options/HltDAQ.opts')
+        else :
+            if self.getProp('IncludeL0') : 
+                importOptions('$HLTSYSROOT/options/L0.opts')
+            importOptions('$HLTSYSROOT/options/HltInit.opts')
+            if self.getProp('IncludeHlt1') : 
+                importOptions('$HLTSYSROOT/options/Hlt1.opts')
+            if self.getProp('IncludeHlt2') : 
+                importOptions('$HLTSYSROOT/options/Hlt2.opts')
+        if self.getProp('RunTiming') :
+            importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
+            importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
+        LHCbApp().applyConf()
