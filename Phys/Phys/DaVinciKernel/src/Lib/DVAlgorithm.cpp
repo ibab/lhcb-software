@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.32 2008-04-15 13:26:50 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.33 2008-07-10 14:55:05 pkoppenb Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -217,17 +217,25 @@ StatusCode DVAlgorithm::loadTools()
           << m_vertexFitNames[""] << " as IVertexFit " << endmsg;
   vertexFitter() ;
   
-  // geometry
+  // geometry THIS IS OBSOLETE
   if ( m_geomToolNames.end() == m_geomToolNames.find("") )
   {
     if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
     m_geomToolNames[""] = onof->dispCalculator() ;
   }
   
+  // geometry THIS IS OBSOLETE
+  if ( m_distanceCalculatorNames.end() == m_distanceCalculatorNames.find("") )
+  {
+    if ( 0==onof ) onof = tool<IOnOffline>("OnOfflineTool",this);
+    m_distanceCalculatorNames[""] = onof->distanceCalculator() ;
+  }
+  
+  // distance geometry
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading " 
-          << m_geomToolNames[""] 
-          << " as IGeomDispCalculator" << endmsg;
-  geomDispCalculator();
+          << m_distanceCalculatorNames[""] 
+          << " as IDistanceCalculator" << endmsg;
+  distanceCalculator();
   
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading CheckOverlap Tool" << endmsg;
   checkOverlap();

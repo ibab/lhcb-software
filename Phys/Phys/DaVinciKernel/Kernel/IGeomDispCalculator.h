@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.9 2008-01-21 12:36:24 pkoppenb Exp $
+// $Id: IGeomDispCalculator.h,v 1.10 2008-07-10 14:56:25 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 
 #define DAVINCIKERNEL_IGEOMDISPCALCULATOR_H 1
 
@@ -21,6 +21,10 @@ static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 2);
 
 /** @class IGeomDispCalculator IGeomDispCalculator.h Kernel/IGeomDispCalculator.h
  *  Interface for Geometrical Calculation Tool. 
+ *
+ *  This tool is obsolete. Please use IDistanceCaluculator instead
+ *
+ * \sa IDistanceCaluculator
  *
  *  @author Miriam Gandelman
  *  @author Juan Palacios juancho@nikhef.nl

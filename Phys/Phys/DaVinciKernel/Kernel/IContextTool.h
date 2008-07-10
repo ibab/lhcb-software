@@ -1,4 +1,4 @@
-// $Id: IContextTool.h,v 1.1 2006-09-19 13:18:34 pkoppenb Exp $
+// $Id: IContextTool.h,v 1.2 2008-07-10 14:55:05 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICONTEXTTOOL_H 
 #define DAVINCIKERNEL_ICONTEXTTOOL_H 1
 
@@ -16,8 +16,9 @@
 class IVertexFit;
 class IPhysDesktop;
 class IGeomDispCalculator;
+class IDistanceCalculator;
 
-static const InterfaceID IID_IContextTool ( "IContextTool", 1, 0 );
+static const InterfaceID IID_IContextTool ( "IContextTool", 1, 1 );
 
 /** @class IContextTool IContextTool.h Kernel/IContextTool.h
  *  
@@ -38,6 +39,9 @@ public:
   
   /// Get geom tool
   virtual const IGeomDispCalculator* geomTool() const = 0 ;
+
+  /// Get distance tool
+  virtual const IDistanceCalculator* distanceTool() const = 0 ;
 
   /// Get default vertex fitter
   virtual const IVertexFit* vertexFitter() const = 0 ;

@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.27 2008-04-15 13:26:50 ibelyaev Exp $ 
+// $Id: DVAlgorithm.h,v 1.28 2008-07-10 14:55:05 pkoppenb Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -56,8 +56,8 @@
  *   Note: if the type/name of default fitter (<c>""</c>)  is not specified 
  *   it is picked up from IOnOfflineTool. 
  *    
- *   - <b>GeomTools</b>  : the map of possible geometry tools  
- *   @see IGeomDispCalculator 
+ *   - <b>Distance Tools</b>  : the map of possible geometry tools  
+ *   @see IDistanceCalculator
  *   Note: if the type/name of default tool (<c>""</c>)  is not specified 
  *   it is picked up from IOnOfflineTool 
  *
@@ -145,8 +145,10 @@ public:
   
   /// Accessor for Geometrical Displacement Calculation Tool
   inline IGeomDispCalculator* 
-  geomDispCalculator ( const std::string& name = "" ) const
+  obsoleteGeomDispCalculator ( const std::string& name = "" ) const
   {
+    Warning("You are using the obsolete IGeomDispCalculator interface. Use IDistanceCalculator instead.",
+            1,StatusCode::SUCCESS).ignore();
     return getTool<IGeomDispCalculator>
       ( name , 
         m_geomToolNames , 

@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.5 2007-02-06 09:57:56 pkoppenb Exp $
+// $Id: IOnOffline.h,v 1.6 2008-07-10 14:55:05 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IOnOffline ( "IOnOffline", 2, 0 );
+static const InterfaceID IID_IOnOffline ( "IOnOffline", 2, 1 );
 
 /** @class IOnOffline IOnOffline.h Kernel/IOnOffline.h
  *  
@@ -29,8 +29,11 @@ public:
   /// On or Offline ?
   virtual bool online(void) const = 0 ;
 
-  /// Return DispCalculator
+  /// Return obsolete DispCalculator
   virtual std::string dispCalculator() const = 0 ;
+
+  /// Return DistanceCalculator
+  virtual std::string distanceCalculator() const = 0 ;
 
   /// Return Unconstrained Vertex Fitter
   virtual std::string vertexFitter() const = 0 ;

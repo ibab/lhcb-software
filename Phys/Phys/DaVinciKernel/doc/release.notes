@@ -3,6 +3,12 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-07-10 - Patrick Koppenburg
+ - Make IGeomDispCalcularor obsolete in DVAlgorithm, but keep it for the time
+   being.
+ - Reflect this in IOnOffline and IContextTool
+ - Increment to v7r0
+
 !======================== DaVinciKernel v6r15 2008-07-02 ====================
 ! 2008-07-02 - Juan PALACIOS
  - Kernel/IPVReFitter.h
