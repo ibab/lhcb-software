@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-09 - Patrick ROBBE and Gloria CORTI
+ - Use Gaudi units intsead of implecetely those of CLHEP vias HepMC
+   (prepared for migration to HepMC 2)
+
 !========================= LbPythia v7r3 2008-07-06 ==========================
 ! 2008-06-24 - Vanya  BELYAEV
  - PythiaProduction
