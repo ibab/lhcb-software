@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.h,v 1.2 2007-02-06 10:17:30 pkoppenb Exp $
+// $Id: RelatedPVFinder.h,v 1.3 2008-07-10 15:44:38 pkoppenb Exp $
 #ifndef RELATEDPVFINDER_H 
 #define RELATEDPVFINDER_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IRelatedPVFinder.h"            // Interface
 
-class IGeomDispCalculator;
+class IDistanceCalculator;
 class IContextTool ;
 
 /** @class RelatedPVFinder RelatedPVFinder.h
@@ -40,7 +40,7 @@ protected:
   
 private:
 
-  const IGeomDispCalculator* m_geom; ///< pointer to Geom tool. Take same as DVAlgo.
+  const IDistanceCalculator* m_dist; ///< pointer to Geom tool. Take same as DVAlgo.
 
   bool m_closestZ ; ///< Take closest PV in Z
   bool m_closest ; ///< Take closest PV

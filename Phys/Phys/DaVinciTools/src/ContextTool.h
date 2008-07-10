@@ -1,4 +1,4 @@
-// $Id: ContextTool.h,v 1.2 2008-07-10 15:03:24 pkoppenb Exp $
+// $Id: ContextTool.h,v 1.3 2008-07-10 15:44:38 pkoppenb Exp $
 #ifndef CONTEXTTOOL_H 
 #define CONTEXTTOOL_H 1
 
@@ -30,7 +30,7 @@ public:
   /// Get primary vertices
   LHCb::RecVertex::ConstVector primaryVertices() const  ;
   
-  /// Get geom tool
+  /// Get obsolete geom tool
   const IGeomDispCalculator* geomTool()const {return m_geom;}  ;
 
   /// Get distance tool

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.335 2008-07-10 15:03:24 pkoppenb Exp $
+! $Id: release.notes,v 1.336 2008-07-10 15:44:38 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -12,6 +12,7 @@
    . Reflect this in ContextTool and OnOffline tool
  - Remove Siple and Recurisve plot tools. Use LoKi PlotTool.
    . Reflect this in MakeResonances, FilterDesktop and SimplePlots
+ - Remove Particle2Vertex tools and algorithms. Related PV used instead.
  - Increment to v17r0
 
 !======================== DaVinciTools v16r2 2008-07-03 =====================

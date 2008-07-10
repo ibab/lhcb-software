@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.14 2008-07-10 15:03:24 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.15 2008-07-10 15:44:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -35,9 +35,6 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
   declareProperty( "OnlinePVLocation", m_onlinePVLocation = "Hlt/Vertex/PV2D" );
 
   declareProperty( "Online", m_online = false );
-
-  declareProperty( "OfflineGeomTool", m_offlineGeomTool = "GeomDispCalculator" );
-  declareProperty( "OnlineGeomTool", m_onlineGeomTool = "TrgDispCalculator" );
 
   /// @todo There is only one Distance Calculator presently
   declareProperty( "OfflineDistanceTool", m_offlineDistTool = "LoKi::DistanceCalculator" );
@@ -81,7 +78,7 @@ StatusCode OnOfflineTool::initialize(){
   } else {
     m_pvRelator = tool<IRelatedPVFinder>(m_offlinePVRelatorName); // not private    
   }
-  sc = m_pvRelator->setDefaults(getPVLocation(),dispCalculator());
+  sc = m_pvRelator->setDefaults(getPVLocation(),distanceCalculator());
 
   return sc;
    
@@ -93,13 +90,6 @@ StatusCode OnOfflineTool::initialize(){
 std::string OnOfflineTool::getPVLocation(void) const {
   if ( m_online ) return m_onlinePVLocation ;
   else return m_offlinePVLocation ;
-};
-//=============================================================================
-// 
-//=============================================================================
-std::string OnOfflineTool::dispCalculator() const {
-  if ( m_online ) return m_onlineGeomTool ;
-  else return m_offlineGeomTool ;
 };
 //=============================================================================
 // 

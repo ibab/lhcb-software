@@ -1,11 +1,11 @@
-// $Id: RelatedPVFinder.cpp,v 1.4 2007-05-10 10:01:17 pkoppenb Exp $
+// $Id: RelatedPVFinder.cpp,v 1.5 2008-07-10 15:44:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "Kernel/IContextTool.h"            // Interface
 #include "Kernel/Particle2Vertex.h"
-#include "Kernel/IGeomDispCalculator.h"
+#include "Kernel/IDistanceCalculator.h"
 
 // local
 #include "RelatedPVFinder.h"
@@ -28,7 +28,7 @@ RelatedPVFinder::RelatedPVFinder( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_geom(0)
+    , m_dist(0)
 {
   declareInterface<IRelatedPVFinder>(this);
 
@@ -70,7 +70,7 @@ StatusCode RelatedPVFinder::initialize(){
     warning() << "Use (default) IP distance for final state particles" << endmsg ;
   }  
 
-  m_geom = NULL ;
+  m_dist = 0 ;
 
   return StatusCode::SUCCESS;
 }
@@ -78,12 +78,12 @@ StatusCode RelatedPVFinder::initialize(){
 /// Set defaults
 //===========================================================================
 StatusCode RelatedPVFinder::setDefaults(std::string PVloc, std::string geomTool){
-  if (NULL!=m_geom){
-    debug() << "Already initialised" << endmsg;
+  if (0!=m_dist){
+    if (msgLevel(MSG::DEBUG)) debug() << "Already initialised" << endmsg;
     return StatusCode::SUCCESS ;
   }
   
-  m_geom = tool<IGeomDispCalculator>(geomTool,this);
+  m_dist = tool<IDistanceCalculator>(geomTool,this);
   m_pvLocation = PVloc ;
   return StatusCode::SUCCESS ;
 }
@@ -94,13 +94,13 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
                                       Particle2Vertex::Table* table) const {
   
 
-  if (NULL==p) return Error("Particle is NULL") ;
-  if (NULL==m_geom) return Error("RelatedPVFinder has not been initialsied with setDefaults");
+  if (0==p) return Error("Particle is 0") ;
+  if (0==m_dist) return Error("RelatedPVFinder has not been initialised with setDefaults");
   
-  debug() << "Building PV relations for " << p->particleID().pid() << endmsg ;
+  if (msgLevel(MSG::DEBUG)) debug() << "Building PV relations for " << p->particleID().pid() << endmsg ;
   // sanity check
   const LHCb::Vertex* v = p->endVertex() ;
-  if ( (m_closestZ || m_closest) && (NULL==v)) 
+  if ( (m_closestZ || m_closest) && (0==v)) 
     return Error("Cannot measure distances without vertex. You have been warned at initialisation!");
   
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvLocation );
@@ -108,30 +108,30 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
   double fom = 0;
   double err = 0 ;
   StatusCode sc = StatusCode::SUCCESS ;
-  verbose() << "Looping over " << pvs->size() << " PVs" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over " << pvs->size() << " PVs" << endmsg ;
   for ( rv_iter i = pvs->begin() ; i!=pvs->end() ; ++i){
     if ( m_closestZ ) {
       fom = fabs(v->position().z()-(*i)->position().z());
       if ( m_significance ) fom = fom/sqrt((*i)->covMatrix()(2,2)*(*i)->covMatrix()(2,2)
                                            + v->covMatrix()(2,2)*v->covMatrix()(2,2));
-      verbose() << "Closest Z PV at " << (*i)->position() << " fom " << fom << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Closest Z PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_closest ) {
-      sc = m_geom->calcVertexDis(*v,*(*i),fom,err);
+      sc = m_dist->distance(v,(*i),fom,err);
       if ( m_significance ) fom = fom/err ;
-      verbose() << "Closest PV at " << (*i)->position() << " fom " << fom << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Closest PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_smallestIP ) {
-      sc = m_geom->calcImpactPar(*p,*(*i),fom,err);
+      sc = m_dist->distance(p,(*i),fom,err);
       if ( m_significance ) fom = fom/err ;
-      verbose() << "Smallest IP PV at " << (*i)->position() << " fom " << fom << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Smallest IP PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else {
       Exception("None of all options") ;
     }
     if (sc) sc = table->relate(p,*i,1./fom) ;
     if (!sc) return sc;
 
-    debug() << "... PV at " << (*i)->position() << " gets weight 1/" << fom << endmsg ;
+    if (msgLevel(MSG::DEBUG)) debug() << "... PV at " << (*i)->position() << " gets weight 1/" << fom << endmsg ;
   }
-  verbose() << "Done relations for " << pvs->size() << " PVs" << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Done relations for " << pvs->size() << " PVs" << endmsg ;
   return sc ;
 }
 
