@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           Fidel
-version           v1r1
+version           v1r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -17,13 +17,10 @@ branches          cmt doc src options
 # Used packages.
 #============================================================================
 use DaVinciKernel      v*    Phys
-# to be removed
-use MCEvent            v*    Event
-use LinkerEvent        v*    Event
 #============================================================================
 # Component library building rule
 #============================================================================
-library          Fidel    ../src/*.cpp -import=AIDA
+library          Fidel    ../src/*.cpp
 
 #============================================================================
 # define component library link options

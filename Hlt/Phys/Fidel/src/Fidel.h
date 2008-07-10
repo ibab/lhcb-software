@@ -1,5 +1,5 @@
-// $Id: Fidel.h,v 1.4 2008-06-19 17:37:44 sfurcas Exp $
-// $Id: Fidel.h,v 1.4 2008-06-19 17:37:44 sfurcas Exp $
+// $Id: Fidel.h,v 1.5 2008-07-10 16:23:30 pkoppenb Exp $
+// $Id: Fidel.h,v 1.5 2008-07-10 16:23:30 pkoppenb Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -8,10 +8,7 @@
 #include "Kernel/DVAlgorithm.h"
 
 //#include "Kernel/Particle2MCLinker.h"
-
-class IRelatedPV;
-
-
+class IGeomDispCalculator ;
 
 /** @class Fidel Fidel.h
  *  
@@ -61,7 +58,7 @@ private:
   double     m_minFsB2;
   
   
-  IRelatedPV*        m_relatedPV;
+  IGeomDispCalculator* m_geomDispCalculator ; /// @todo replace
   
   
   

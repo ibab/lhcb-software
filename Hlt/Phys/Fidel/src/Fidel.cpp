@@ -1,16 +1,9 @@
-// $Id: Fidel.cpp,v 1.5 2008-06-19 17:37:44 sfurcas Exp $ // Include files
+// $Id: Fidel.cpp,v 1.6 2008-07-10 16:23:30 pkoppenb Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
-// from Event
-#include "Event/Particle.h"
-#include "Event/Vertex.h"
-// from DaVinci
-#include "Kernel/ICheckOverlap.h"
-#include "Kernel/IRelatedPV.h"
-#include "Event/HltSummary.h"
-#include "Event/HltEnums.h"
-#include "Event/L0DUReport.h"
+#include "Kernel/IGeomDispCalculator.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 #include "gsl/gsl_cdf.h"
 
@@ -85,10 +78,8 @@ StatusCode Fidel::initialize() {
   debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
   debug()<<"pointing "<<m_maxPointing<<" rad"<<endmsg;
   
-  m_relatedPV = tool<IRelatedPV>("RelatedPV",this );
-  if (!m_relatedPV) {
-    fatal() << "    Unable to retrieve RelatedPV " ;
-    return StatusCode::FAILURE;  }
+  /// @todo replce with IDistanceCalculator (from DVAlgorithm)
+  m_geomDispCalculator = tool<IGeomDispCalculator>("GeomDispCalculator",this );
   
   return StatusCode::SUCCESS;
 }
@@ -187,22 +178,22 @@ StatusCode Fidel::execute() {
         continue;        
       }
 
-      const LHCb::VertexBase* bestPV  = m_relatedPV->bestPV(&BCand);
+      const LHCb::VertexBase* bestPV  = desktop()->relatedVertex(&BCand);
       Gaudi::XYZPoint Origin = bestPV->position();
         
-      StatusCode sc = geomDispCalculator()->calcImpactPar(BCand,*bestPV,impCand,iperr);
+      StatusCode sc = m_geomDispCalculator->calcImpactPar(BCand,*bestPV,impCand,iperr);
       //impact parameter significance
       ips=impCand/iperr;
       //flight distance Projected B
-      StatusCode sc_B = geomDispCalculator()->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
+      StatusCode sc_B = m_geomDispCalculator->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
       fs_B = dist_B / errdist_B;
       //flight distance Signed B
-      StatusCode scB = geomDispCalculator()->calcSignedFlightDistance(*bestPV,BCand,distB,errdistB);
+      StatusCode scB = m_geomDispCalculator->calcSignedFlightDistance(*bestPV,BCand,distB,errdistB);
       fsB = distB / errdistB;
       //flight distance Projected B - Res 1
-      StatusCode scB1 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
+      StatusCode scB1 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
       //flight distance Projected B - Res 2
-      StatusCode scB2 = geomDispCalculator()->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
+      StatusCode scB2 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
 
       if(scB1)FsB1 = distB1/errdistB1;
       else{
