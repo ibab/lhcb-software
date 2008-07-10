@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-07-10 18:15:36 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-07-10 18:22:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -68,7 +68,7 @@ class Moore(ConfigurableUser):
         if self.getProp('EnableMemoryAuditor') : self.enableAuditor( MemoryAuditor() )
         # TODO: check for mutually exclusive options...
         if self.getProp('UseTCK') :
-            cas = getConfigAccessSvc()
+            cas = self.getConfigAccessSvc()
             tcks = self.getProp('PrefetchTCK')
             cfg = HltConfigSvc( prefetchTCK = tcks, initialTCK = tcks[0], ConfigAccessSvc = cas.getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
@@ -87,7 +87,7 @@ class Moore(ConfigurableUser):
         if self.getProp("GenerateConfig") :
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ],
                                 ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ],
-                                ConfigAccessSvc = getConfigAccessSvc().getName() )
+                                ConfigAccessSvc = self.getConfigAccessSvc().getName() )
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
         LHCbApp().applyConf()
