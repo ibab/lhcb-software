@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.12 2008-06-25 17:28:02 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.13 2008-07-10 16:47:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -114,7 +114,7 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
   for ( LHCb::RecVertex::ConstVector::const_iterator ipv = PVs.begin() ; 
         ipv != PVs.end() ; ++ipv ){
     double ip, ipe;
-    geomDispCalculator()->calcImpactPar(*b, *(*ipv), ip, ipe);
+    distanceCalculator()->distance(b, (*ipv), ip, ipe);
     ips.push_back(ip);
     ipes.push_back(ipe);
   }  

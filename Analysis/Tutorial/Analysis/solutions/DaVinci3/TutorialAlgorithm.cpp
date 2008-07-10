@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.8 2008-06-03 09:58:38 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.9 2008-07-10 16:47:00 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -156,7 +156,7 @@ StatusCode TutorialAlgorithm::plotDaughter(const LHCb::Particle* da, const std::
         ipv != prims.end() ; ++ipv ){
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
-    StatusCode sc = geomDispCalculator()->calcImpactPar(*da, *(*ipv), IP, IPE);
+    StatusCode sc = distanceCalculator()->distance(da, (*ipv), IP, IPE);
     if (sc){
       plot(IP, head+"IP", head+" Daughter IP", 0., 10.*mm);
       if (IPE>0.) plot(IP/IPE, head+"IPS",  head+" Daughter IP/error", 0., 10.);
