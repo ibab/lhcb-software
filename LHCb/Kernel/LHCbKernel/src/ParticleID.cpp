@@ -1,15 +1,8 @@
-// $Id: ParticleID.cpp,v 1.4 2008-07-09 17:27:20 ibelyaev Exp $
-// ============================================================================
+// $Id: ParticleID.cpp,v 1.5 2008-07-10 16:05:34 cattanem Exp $
 // Include files 
-// ============================================================================
-// LHCbKernel
-// ============================================================================
+
 #include "Kernel/ParticleID.h"
-// ============================================================================
-// LHCbMath 
-// ============================================================================
-#include "LHCbMath/Digit.h"
-// ============================================================================
+#include <math.h>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ParticleID
@@ -226,7 +219,8 @@ int LHCb::ParticleID::fundamentalID( ) const {
 unsigned short LHCb::ParticleID::digit(const Location& loc ) const {
   //  PID digits (base 10) are: n nr nl nq1 nq2 nq3 nj
   //  the location enum provides a convenient index into the PID
-  return Gaudi::Math::digit ( abspid() , loc ) ;
+  int numerator = (int) pow(10.0,(loc-1));
+  return (abspid()/numerator)%10;
 }
 
 //=============================================================================

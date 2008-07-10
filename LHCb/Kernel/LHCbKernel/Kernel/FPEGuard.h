@@ -57,28 +57,35 @@ namespace FPE {
     }
     /// Default mask (for default FPE::Guard constructor)
     static const mask_type s_default_guard_mask ( FE_ALL_EXCEPT );
-//#elif defined(_WIN32)
-//    static const bool has_working_implementation = true;
-//    typedef unsigned int mask_type;
+#elif defined(_WIN32)
+    static const bool has_working_implementation = true;
+    typedef unsigned int mask_type;
     // VS8
     // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
     // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
     // VS7
-//    mask_type get() { __asm { fwait };  return _controlfp(0,0); }
-//    mask_type disable(mask_type mask) { return _controlfp(~mask,_MCW_EM);}
-//    mask_type enable(mask_type mask)  { return _controlfp( mask,_MCW_EM);}
-//    const std::map<std::string,mask_type>& map() {
-//      static std::map<std::string,mask_type> m = boost::assign::map_list_of
-//        ( "Inexact"   , mask_type(EM_INEXACT)   )
-//        ( "DivByZero" , mask_type(EM_ZERODIVIDE))
-//        ( "Underflow" , mask_type(EM_UNDERFLOW) )
-//        ( "Overflow"  , mask_type(EM_OVERFLOW)  )
-//        ( "Invalid"   , mask_type(EM_INVALID)   )
-//        ( "AllExcept" , mask_type(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL));
-//      return m;
-//    }
+    mask_type get() { __asm { fwait };  return _controlfp(0,0); }
+    mask_type disable(mask_type mask) { 
+		int cw = get(); // Get current control word
+		cw |= ~mask; // set control bits, turn exceptions off
+		return _controlfp(cw,_MCW_EM);}
+    mask_type enable(mask_type mask)  { 
+        _clearfp(); // remove any 'stale' exceptions before switching on trapping
+                    // otherwise we immediately trigger an exception...
+		int cw = mask;
+		return _controlfp(cw,_MCW_EM);}
+    const std::map<std::string,mask_type>& map() {
+      static std::map<std::string,mask_type> m = boost::assign::map_list_of
+        ( "Inexact"   , mask_type(~EM_INEXACT)   )
+        ( "DivByZero" , mask_type(~EM_ZERODIVIDE))
+        ( "Underflow" , mask_type(~EM_UNDERFLOW) )
+        ( "Overflow"  , mask_type(~EM_OVERFLOW)  )
+        ( "Invalid"   , mask_type(~EM_INVALID)   )
+        ( "AllExcept" , mask_type(~(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL)));
+      return m;
+    }
     /// Default mask (for default FPE::Guard constructor)
-//    static const mask_type s_default_guard_mask = EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL;
+    static const mask_type s_default_guard_mask = ~(EM_INVALID|EM_OVERFLOW|EM_UNDERFLOW|EM_INEXACT|EM_ZERODIVIDE|EM_DENORMAL);
 #else
     static const bool has_working_implementation = false;
     typedef int mask_type;
@@ -86,14 +93,7 @@ namespace FPE {
     mask_type disable(mask_type) { return 0; }
     mask_type enable(mask_type) { return 0; }
     const std::map<std::string,mask_type>& map() {
-      static std::map<std::string,mask_type> m = boost::assign::map_list_of
-        ( "Inexact"   , 0 )
-        ( "DivByZero" , 0 )
-        ( "Underflow" , 0 )
-        ( "Overflow"  , 0 )
-        ( "Invalid"   , 0 )
-        ( "AllExcept" , 0 );
-//      static std::map<std::string,mask_type> m;
+      static std::map<std::string,mask_type> m;
       return m;
     }
     /// Default mask (for default FPE::Guard constructor)
@@ -222,8 +222,13 @@ namespace FPE {
     template <typename Iter>
     static mask_type mask(Iter begin, Iter end)
     {
+#if defined(_WIN32)
+      mask_type m = 0x9ffff;
+      for (;begin!=end;++begin) { m &= mask(*begin); }
+#else
       mask_type m = 0;
       for (;begin!=end;++begin) { m |= mask(*begin); }
+#endif
       return m;
     }
 

@@ -4,15 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-07-10 - Marco Cattaneo
+ - Fix FPEGuard implementation for Windows
+ - Undo Vanya's change because dependency on LHCbMath is undesirable in
+   this package. A better packaging solution should be found 
+
 ! 2008-07-09 - Vanya BELYAEV
-
  - src/ParticleID.cpp
-
    use more efficient algorithm to extract the Nth decimal digit
    from the integral type 
-
-- cmt/requirements 
-
+   
+ - cmt/requirements 
     use LHCbMath
     version increment to v8r6   
 
