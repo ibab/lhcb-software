@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.6 2008-05-29 14:21:59 gcorti Exp $
+// $Id: EvtGenDecay.h,v 1.7 2008-07-10 18:20:11 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -37,8 +37,8 @@
 // from EvtGen
 #include "EvtGenBase/EvtId.hh"
 
-// from SEAL
-#include "SealBase/Filename.h"
+// from boost
+#include "boost/filesystem/path.hpp"
 
 // forward declarations
 namespace LHCb {
@@ -48,10 +48,6 @@ namespace LHCb {
 class EvtGen ;
 class EvtParticle ;
 class EvtRandomEngine ;
-
-namespace seal {
-  class File ;
-}
 
 /** @class EvtGenDecay EvtGenDecay.h "EvtGenDecay.h"
  *  
@@ -134,7 +130,7 @@ public:
    *
    *  @param tempFileName name of the temporary created file
    */
-  StatusCode createTemporaryEvtFile( const seal::Filename & tempFileName ) 
+  StatusCode createTemporaryEvtFile( const boost::filesystem::path & tempFileName ) 
     const ;
 
   /** Check if HepMC Particle is valid for decay by EvtGen and to fill a
@@ -200,10 +196,7 @@ public:
   bool m_generatePolLambdab ;
 
   /// Name of the temporary file for PHOTOS output
-  seal::Filename m_photosTempFilename ;
-  
-  /// File for photos output
-  seal::File * m_photosTempFile ;
+  boost::filesystem::path m_photosTempFilename ;  
 };
 
 #include "EvtGenBase/EvtIncoherentMixing.hh"
