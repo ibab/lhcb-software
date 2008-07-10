@@ -66,13 +66,17 @@ inline double pointerror(const LHCb::StateVector& begin,
 			 const LHCb::StateVector& end,
 			 const LHCb::StateVector& mid )
 {
-  double len = end.z() - begin.z();
-  double tx = (end.x() - begin.x())/len ;
-  double ty = (end.y() - begin.y())/len ;
-  double dz = mid.z() - begin.z() ;
-  double dx = begin.x() + dz*tx - mid.x() ;
-  double dy = begin.y() + dz*ty - mid.y() ;
-  return sqrt(dx*dx+dy*dy) ;
+  double rc(0) ;
+  double dz = end.z() - begin.z();
+  if(fabs(dz)> TrackParameters::propagationTolerance) {
+    double tx = (end.x() - begin.x())/dz ;
+    double ty = (end.y() - begin.y())/dz ;
+    double dz = mid.z() - begin.z() ;
+    double dx = begin.x() + dz*tx - mid.x() ;
+    double dy = begin.y() + dz*ty - mid.y() ;
+    rc = std::sqrt(dx*dx+dy*dy) ;
+  }
+  return rc ;
 }
 
 inline double linearerror(const LHCb::StateVector& origin,
@@ -82,7 +86,7 @@ inline double linearerror(const LHCb::StateVector& origin,
   double dz = destination.z() - origin.z() ;
   double dx = origin.x() + origin.tx()*dz - destination.x() ;
   double dy = origin.y() + origin.ty()*dz - destination.y() ;
-  return 0.25*sqrt(dx*dx+dy*dy) ;
+  return 0.25*std::sqrt(dx*dx+dy*dy) ;
 }
 
 inline std::list<LHCb::StateVector>::iterator next(const std::list<LHCb::StateVector>::iterator& iter)
