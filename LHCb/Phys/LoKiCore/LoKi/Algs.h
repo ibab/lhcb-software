@@ -1,4 +1,4 @@
-// $Id: Algs.h,v 1.14 2008-07-09 16:01:00 ibelyaev Exp $
+// $Id: Algs.h,v 1.15 2008-07-10 09:20:01 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ALGS_H 
 #define LOKI_ALGS_H 1
@@ -714,8 +714,9 @@ namespace LoKi
       OBJECT last                           ,
       const std::vector<PREDICATE>& cuts    ) 
     {
-      if ( cuts.empty() )                                 { return false ; }
-      if ( std::distance ( first , last ) < cuts.size() ) { return false ; }
+      if ( cuts.empty()       )                          { return false ; }
+      const size_t dist = std::distance ( first , last ) ;
+      if ( dist < cuts.size() )                          { return false ; }
       //
       if      ( 1 == cuts.size() ) 
       { return last != std::find_if ( first , last , cuts.front() ) ; }

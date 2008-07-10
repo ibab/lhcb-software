@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.93 2008-07-09 16:01:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.94 2008-07-10 09:20:01 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-10 - Vanya BELYAEV
+
+ - LoKi/Algs.h
+
+    fix the compilation warning 
+
 
 ! 2008-07-09 - Vanya BELYAEV
 
