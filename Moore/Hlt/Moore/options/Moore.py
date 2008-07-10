@@ -66,17 +66,16 @@ AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
 #//---------------------------------------------------------------------------
 ApplicationMgr().EvtMax =  10000 ;
 
-#prefix = "DATAFILE='PFN:/data/bfys/lhcb/MinBias-L0strip/"
-#files= [ prefix + f + '.dst' for f in [ 'MBL0-lumi2-1.dst',
-#                                        'MBL0-lumi2-2.dst',
-#                                        'MBL0-lumi2-3.dst',
-#                                        'MBL0-lumi2-4.dst' ] ]
+#prefix = '/data/bfys/lhcb/MinBias-L0strip/'
+#files= [ prefix + f  for f in [ 'MBL0-lumi2-1.dst',
+#                                'MBL0-lumi2-2.dst',
+#                                'MBL0-lumi2-3.dst',
+#                                'MBL0-lumi2-4.dst' ] ]
 
-prefix = '/afs/cern.ch/lhcb/group/trigger/'
-files = [ prefix + f +'.dst' for f in [ 'vol1/dijkstra/Selections/MBL0-lumi2-1'
-                                        'vol1/dijkstra/Selections/MBL0-lumi2-2',
-                                        'vol3/dijkstra/Selections/MBL0-lumi2-3',
-                                        'vol3/dijkstra/Selections/MBL0-lumi2-4' ] ]
+files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst',
+          '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst',
+          '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst',
+          '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' ]
 
-EventSelector().Input =[ f +"' TYP='POOL_ROOTTREE' OPT='READ'" for f in files ]
+EventSelector().Input =[ "DATAFILE='PFN:"+ f +"' TYP='POOL_ROOTTREE' OPT='READ'" for f in files ]
 EventSelector().PrintFreq = 100;
