@@ -4,6 +4,10 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2008-07-10 - Gloria Corti
+ - use explicitely Gaudi::Units instead of implicitly CLHEP from HepMC 
+   (prepare for migration to HepMC 2.0)
+
 !========================= LbPythia8 v1r1 2007-12-07 =========================
 ! 2007-12-04 - Gloria CORTI
  - Remove LbPythia8_load.cpp that is not necessary with Gaudi v19, since

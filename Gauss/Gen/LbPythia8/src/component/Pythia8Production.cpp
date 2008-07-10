@@ -1,4 +1,4 @@
-// $Id: Pythia8Production.cpp,v 1.4 2007-12-04 16:42:53 gcorti Exp $
+// $Id: Pythia8Production.cpp,v 1.5 2008-07-10 15:50:30 gcorti Exp $
 
 // Include files
 
@@ -9,9 +9,9 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/PhysicalConstants.h"
  
 // from Event
-#include "GaudiKernel/SystemOfUnits.h"
 #include "Event/GenCollision.h"
 
 // from Pythia8
@@ -221,7 +221,7 @@ StatusCode Pythia8Production::initializeGenerator( ) {
   mass2 = (ppSvc -> findByStdHepID(m_id2)) -> mass();
   
   m_engCM = (sqrt(pBeam1.Dot(pBeam1)+mass1*mass1) +  
-             sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/GeV;
+             sqrt(pBeam2.Dot(pBeam2) + mass2*mass2))/Gaudi::Units::GeV;
   
   
   //Initializing the settings for the generator
@@ -309,21 +309,21 @@ void Pythia8Production::updateParticleProperties( const ParticleProperty *
   double pwidth , lifetime ;
   if ( 0 != pythiaId ) {
     if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
-    else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) ;
-    if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+    else pwidth = ( Gaudi::Units::hbarc / ( thePP -> lifetime() * Gaudi::Units::c_light ) ) ;
+    if ( pwidth < ( 1.5e-6 * Gaudi::Units::GeV ) ) pwidth = 0. ;
     
-    lifetime =  thePP -> lifetime() * c_light ;
-    if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
+    lifetime =  thePP -> lifetime() * Gaudi::Units::c_light ;
+    if ( ( lifetime <= 1.e-4 * Gaudi::Units::mm ) || ( lifetime >= 1.e16 * Gaudi::Units::mm ) ) 
       lifetime = 0. ;
     
-    m_pythia -> particleData.m0(pdgId, thePP -> mass() / GeV) ;
+    m_pythia -> particleData.m0(pdgId, thePP -> mass() / Gaudi::Units::GeV) ;
     
     // For Higgs, top, Z and W: update only masses
     if ( ( 6 != pdgId ) && ( 23 != pdgId ) && ( 24 != pdgId ) 
          && ( 25 != pdgId ) ) {
-      m_pythia -> particleData.mWidth(pdgId, pwidth / GeV) ;
-      m_pythia -> particleData.mMax(pdgId, thePP -> maxWidth() / GeV) ;
-      m_pythia -> particleData.tau0(pdgId, lifetime / mm) ;
+      m_pythia -> particleData.mWidth(pdgId, pwidth / Gaudi::Units::GeV) ;
+      m_pythia -> particleData.mMax(pdgId, thePP -> maxWidth() / Gaudi::Units::GeV) ;
+      m_pythia -> particleData.tau0(pdgId, lifetime / Gaudi::Units::mm) ;
     }
   }
 }
@@ -527,16 +527,16 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
       if ((*p) -> status() < -69) (*p) -> set_status(2);
       else (*p) -> set_status(3);
     }
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+    (*p) -> set_momentum( (*p) -> momentum() * Gaudi::Units::GeV ) ;
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
     CLHEP::HepLorentzVector newPos ;
-    newPos.setX( (*v) -> position() . x() ) ;
-    newPos.setY( (*v) -> position() . y() ) ;
-    newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;    
+    newPos.setX( (*v) -> position().x() ) ;
+    newPos.setY( (*v) -> position().y() ) ;
+    newPos.setZ( (*v) -> position().z() ) ;
+    newPos.setT( ( (*v) -> position().t() * Gaudi::Units::mm ) / Gaudi::Units::c_light ) ;    
     (*v) -> set_position( newPos ) ;
   }
 
