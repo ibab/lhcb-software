@@ -18,13 +18,15 @@ class AlConfigurable( ConfigurableUser ) :
         "Pat"                          : False                      , ## Run pattern recognition
         "ElementsToAlign"              : []                         , ## Elements to align
         "NumIterations"                : 10                         , ## Number of iterations
-        "AlignInputTackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
+        "AlignInputTrackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
+        "VertexLocation"               : ""                         , ## Location of input vertex list
         "UseCorrelations"              : True                       , ## Correlations
         "ApplyMS"                      : True                       , ## Multiple Scattering
         "CanonicalConstraintStrategy"  : 0                          , ## Constrain Strategy ( 0 == off, 1 == on, 2 == auto )
         "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
         "UseWeightedAverageConstraint" : False                      , ## Weighted average constraint
         "MinNumberOfHits"              : 1                          , ## Min number of hits per element
+        "Chi2Outlier"                  : 10000                      , ## Chi2 cut for outliers
         "UsePreconditioning"           : False                      , ## Pre-conditioning
         "SolvTool"                     : "gslSolver"                , ## Solver to use
         "WriteCondToXML"               : False                      , ## Write conditions to xml file
@@ -35,6 +37,7 @@ class AlConfigurable( ConfigurableUser ) :
         "ITTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/IT",
         "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT",
         "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon",
+        "CondDepths"                   : []                         ,              ## Condition levels to write to xml
         "Precision"                    : 16                         , ## Set precision for conditions
         "OutputLevel"                  : INFO                         ## Output level
         }
@@ -254,12 +257,14 @@ class AlConfigurable( ConfigurableUser ) :
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations"                )
-            alignAlg.TracksLocation               = self.getProp( "AlignInputTackCont"           )
+            alignAlg.TracksLocation               = self.getProp( "AlignInputTrackCont"          )
+            alignAlg.VertexLocation               = self.getProp( "VertexLocation"               )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"              )
             alignAlg.CanonicalConstraintStrategy  = self.getProp( "CanonicalConstraintStrategy"  )
             alignAlg.Constraints                  = self.getProp( "Constraints"                  )
             alignAlg.UseWeightedAverageConstraint = self.getProp( "UseWeightedAverageConstraint" )
             alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
+            alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"                  )
             alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
             alignAlg.HistoPrint                   = False
 
@@ -280,7 +285,6 @@ class AlConfigurable( ConfigurableUser ) :
 
             if self.getProp( "WriteCondToXML" ) :                 
                 from Configurables import WriteAlignmentConditions
-
                 listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
                 if listOfCondToWrite:
                     for subDet in listOfCondToWrite :
@@ -292,6 +296,7 @@ class AlConfigurable( ConfigurableUser ) :
                                                       OutputLevel = outputLevel,
                                                       topElement = self.getProp( topLevelElement ),
                                                       precision = self.getProp( "Precision" ),
+                                                      depths = self.getProp( "CondDepths"),
                                                       outputFile = condFileName ) )
                             
             return alignSequencer
