@@ -1,4 +1,4 @@
-// $Id: ROMonDisplay.cpp,v 1.6 2008-06-24 15:13:19 frankb Exp $
+// $Id: ROMonDisplay.cpp,v 1.7 2008-07-10 16:31:12 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.6 2008-06-24 15:13:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ROMonDisplay.cpp,v 1.7 2008-07-10 16:31:12 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -109,7 +109,8 @@ void ROMonDisplay::updateDisplay(const Node& /* ns */)   {
 /// Run the interrupt loop
 void ROMonDisplay::run()   {
   while(1) {
-    IocSensor::instance().send(this,CMD_UPDATEDISPLAY,this);
+    //IocSensor::instance().send(this,CMD_UPDATEDISPLAY,this);
+    update();
     ::lib_rtl_sleep(m_delay);
   }
 }
