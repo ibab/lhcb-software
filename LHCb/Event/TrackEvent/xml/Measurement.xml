@@ -108,19 +108,9 @@
         name    = 'detectorElement'
         desc    = 'the corresponding detectorElement'
 	setMeth = 'FALSE'
-	getMeth = 'FALSE'
+	getMeth = 'TRUE'
 	transient = 'TRUE'
         access  = 'PROTECTED' />
-
-      <method
-        type    = 'const DetectorElement*'
-        name    = 'detectorElement'
-        desc    = 'Retrieve const corresponding detectorElement'
-        const   = 'TRUE'>
-        <code>
-  return m_detectorElement ;
-        </code>
-      </method>
 
       <method
         type    = 'double'
