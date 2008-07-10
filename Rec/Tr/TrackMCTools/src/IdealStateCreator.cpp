@@ -1,4 +1,4 @@
-// $Id: IdealStateCreator.cpp,v 1.19 2008-02-08 07:03:54 cattanem Exp $
+// $Id: IdealStateCreator.cpp,v 1.20 2008-07-10 11:27:00 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -299,25 +299,24 @@ StatusCode IdealStateCreator::createStateVectorVertex( const MCParticle* mcParti
 MCHit* IdealStateCreator::findClosestHit( const MCParticle* mcPart,
                                         const double zRec) const
 {
-
+  if (!m_configured) initEvent();
   MCHit* closestHit = 0; 
   double closestZ = 1000000.0;
   std::vector<HitLinks>::iterator iterDet = m_links.begin();
   for (; iterDet != m_links.end(); ++iterDet){
-
     // get the links for this detector 
     MCHit* aMCHit = iterDet->first( mcPart );
     while( 0 != aMCHit ) {
       const double ZOfMidPoint = aMCHit -> midPoint().z();
       // get the closest hit
-      if ( fabs( ZOfMidPoint - zRec ) < closestZ ) {
+      if ( closestHit==0 || fabs( ZOfMidPoint - zRec ) < closestZ ) {
         closestHit = aMCHit;
         closestZ = fabs( ZOfMidPoint - zRec );
-       }
-       aMCHit = iterDet->next();
+      }
+      aMCHit = iterDet->next();
     } // while
   } // iterDet
-
+  
   return closestHit;
 }
 
