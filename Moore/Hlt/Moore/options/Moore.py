@@ -3,12 +3,9 @@
 #   gaudirun.py ../options/Moore2.py
 #
 from Gaudi.Configuration import *
+from Moore.Configuration import *
 
 
-# Standard LHCb application setup
-importOptions('$STDOPTS/LHCbApplication.opts')
-importOptions('$STDOPTS/DstDicts.opts')
-importOptions('$STDOPTS/DC06Conditions.opts')
 
 # Get the event time (for CondDb) from ODIN 
 from Configurables import EventClockSvc
@@ -66,11 +63,10 @@ AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
 #//---------------------------------------------------------------------------
 ApplicationMgr().EvtMax =  10000 ;
 
-#prefix = '/data/bfys/lhcb/MinBias-L0strip/'
-#files= [ prefix + f  for f in [ 'MBL0-lumi2-1.dst',
-#                                'MBL0-lumi2-2.dst',
-#                                'MBL0-lumi2-3.dst',
-#                                'MBL0-lumi2-4.dst' ] ]
+Moore().applyConf()
+
+# files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
+
 
 files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst',
           '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst',
