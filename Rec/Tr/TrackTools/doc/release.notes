@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-07-10 - Wouter Hulsbergen
+ - added more cuts to TrackSelector
+ - make TrackVertexer less verbose
+
 !======================== TrackTools v3r8 2008-07-02 ========================
 ! 2008-07-01 - Marco Cattaneo
  - Fix compilation warning (comment unused variable)
