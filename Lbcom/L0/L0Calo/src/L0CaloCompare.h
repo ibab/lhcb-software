@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.h,v 1.1 2008-04-14 07:46:45 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.2 2008-07-10 20:36:14 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 // Include files
@@ -38,6 +38,9 @@ private:
   int m_nEvents ; 
   int m_nUsefulEvents ; 
   bool m_fullMonitoring ; 
+
+  IHistogram1D*            m_histSpdMult_Comp ; 
+  IHistogram1D*            m_histSumEt_Comp ; 
 
   std::string              m_referenceDataSuffix ;
   std::string              m_checkDataSuffix ;
