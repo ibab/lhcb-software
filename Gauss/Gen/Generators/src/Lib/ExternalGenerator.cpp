@@ -1,12 +1,12 @@
-// $Id: ExternalGenerator.cpp,v 1.23 2008-05-23 11:55:50 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.24 2008-07-10 19:08:15 robbep Exp $
 // Include files 
 
 // local
 #include "Generators/ExternalGenerator.h"
 
-// SEAL
-#include "SealBase/StringOps.h"
-
+// Boost
+#include "boost/tokenizer.hpp"
+#include "boost/algorithm/string/erase.hpp"
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
@@ -112,11 +112,17 @@ StatusCode ExternalGenerator::initialize( ) {
   if ( 0 != m_productionTool ) { 
     m_productionTool -> printRunningConditions( ) ;  
     
-    // set up the name to assign to HepMC events
-    seal::StringList strList = 
-      seal::StringOps::split( m_productionTool -> name() , "." ) ;
+    boost::char_separator<char> sep(".");
+    boost::tokenizer< boost::char_separator<char> > 
+      strList( m_productionTool -> name() , sep ) ;
+
     
-    m_hepMCName = seal::StringOps::remove( strList.back() , "Production" ) ;
+    std::string result = "" ;
+    for ( boost::tokenizer< boost::char_separator<char> >::iterator 
+            tok_iter = strList.begin();
+          tok_iter != strList.end(); ++tok_iter)
+      result = (*tok_iter) ;
+    m_hepMCName = boost::algorithm::ierase_last_copy( result , "Production" ) ;
   } else {
     m_hepMCName = "DecayAlone" ;
   }
