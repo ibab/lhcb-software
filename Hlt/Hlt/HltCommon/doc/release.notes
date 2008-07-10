@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-07-10 - Gerhard Raven
+  - ConfigFileAccessSvc: wrap around boost::create_directories to catch exception 
+    thrown when it fails due to eg. lack of permissions
 
 !========================== HltCommon v3r4 2008-07-09 ===================
 !2008-07-09 - Gerhard Raven

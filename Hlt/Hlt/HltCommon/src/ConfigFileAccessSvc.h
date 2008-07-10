@@ -1,4 +1,4 @@
-// $Id: ConfigFileAccessSvc.h,v 1.4 2008-06-30 14:43:57 graven Exp $
+// $Id: ConfigFileAccessSvc.h,v 1.5 2008-07-10 07:24:08 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -57,6 +57,7 @@ private:
   boost::filesystem::path propertyConfigPath( const PropertyConfig::digest_type& digest ) const;
   boost::filesystem::path configTreeNodePath( const ConfigTreeNode::digest_type& digest ) const;
   boost::filesystem::path configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const;
+  bool create_directories( boost::filesystem::path dir ) const;
 
   MsgStream& msg(MSG::Level level) const;
 };

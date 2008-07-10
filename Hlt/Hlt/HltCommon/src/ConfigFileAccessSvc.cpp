@@ -12,7 +12,6 @@ namespace fs = boost::filesystem;
 
 #include "GaudiKernel/SvcFactory.h"
 
-
 // Factory implementation
 DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
 
@@ -61,6 +60,16 @@ StatusCode ConfigFileAccessSvc::finalize() {
   return Service::finalize();
 }
 
+bool ConfigFileAccessSvc::create_directories( fs::path dir ) const {
+   try {
+        return fs::create_directories(dir);
+   } 
+   catch ( const fs::basic_filesystem_error<fs::path>& x )  {
+        error() << fs::what( x )  << endmsg;
+   }
+   return false;
+}
+
 fs::path 
 ConfigFileAccessSvc::propertyConfigPath( const PropertyConfig::digest_type& digest ) const {
      std::string sref=digest.str();
@@ -85,7 +94,7 @@ boost::optional<PropertyConfig>
 ConfigFileAccessSvc::readPropertyConfig(const PropertyConfig::digest_type& ref) {
    fs::path fnam = propertyConfigPath(ref);
    if (!fs::exists(fnam)) {
-        error() << "file " << fnam.string() << " does not exist" << endmsg;
+        debug() << "file " << fnam.string() << " does not exist" << endmsg;
         return boost::optional<PropertyConfig>();
    }
    PropertyConfig c;
@@ -98,7 +107,7 @@ boost::optional<ConfigTreeNode>
 ConfigFileAccessSvc::readConfigTreeNode(const ConfigTreeNode::digest_type& ref) {
    fs::path fnam = configTreeNodePath(ref);
    if (!fs::exists(fnam)) {
-        error() << "file " << fnam.string() << " does not exist" << endmsg;
+        debug() << "file " << fnam.string() << " does not exist" << endmsg;
         return boost::optional<ConfigTreeNode>();
    }
    ConfigTreeNode c;
@@ -111,7 +120,7 @@ boost::optional<ConfigTreeNode>
 ConfigFileAccessSvc::readConfigTreeNodeAlias(const ConfigTreeNodeAlias::alias_type& alias) {
    fs::path fnam = configTreeNodeAliasPath(alias);
    if (!fs::exists(fnam)) {
-        error() << "file " << fnam.string() << " does not exist" << endmsg;
+        debug() << "file " << fnam.string() << " does not exist" << endmsg;
         return boost::optional<ConfigTreeNode>();
    }
    std::string sref;
@@ -132,7 +141,7 @@ ConfigFileAccessSvc::writePropertyConfig(const PropertyConfig& config) {
 
    fs::path fnam = propertyConfigPath(digest);
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
+   if (!fs::exists(fdir) && !create_directories(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return PropertyConfig::digest_type::createInvalid();
    }
@@ -158,7 +167,7 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
 
    fs::path fnam = configTreeNodePath(digest);
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
+   if (!fs::exists(fdir) && !create_directories(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return ConfigTreeNode::digest_type::createInvalid();
    }
@@ -187,7 +196,7 @@ ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) 
    // now write alias...
    fs::path fnam = configTreeNodeAliasPath(alias.alias());
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !fs::create_directories(fdir)) {
+   if (!fs::exists(fdir) && !create_directories(fdir)) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return ConfigTreeNodeAlias::alias_type();
    }
