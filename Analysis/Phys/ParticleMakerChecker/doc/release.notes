@@ -4,6 +4,11 @@
 ! Purpose     : MC checker algorithms for ParticleMakers
 !-----------------------------------------------------------------------------
 
+! 2008-07-10 - Chris Jones
+ - Add code to produce Protoparticle efficiency correlation information when
+   more than one ProtoParticle location is detected. Useful, for instance, to
+   study correlations between the HLT and offline reconstruction performance.
+
 ! 2008-07-09 - Chris Jones
  - Add efficiency versus momentum (p and pt) histograms
 

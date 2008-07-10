@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.13 2008-07-09 22:43:05 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.14 2008-07-10 17:06:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -184,12 +184,12 @@ private: // definitions
       return *m_effVp;
     }
     inline EffVersusMomentum & effVpt() const
-    { 
-      if (!m_effVpt) 
-      { 
+    {
+      if (!m_effVpt)
+      {
         m_effVpt = new EffVersusMomentum(0*Gaudi::Units::GeV,10*Gaudi::Units::GeV,50);
-      } 
-      return *m_effVpt; 
+      }
+      return *m_effVpt;
     }
   };
   typedef std::map<std::string, MCTally> TypeTally;
@@ -256,7 +256,11 @@ private: // definitions
   typedef std::map< std::string, std::map< std::string, MCSummary > > MCSummaryMapAllProtos;
   typedef std::map< std::string, MCSummaryMap >   LocationMap;
 
-  /// ProtoParticle TES statistics summary class
+  /** @class ProtoTESStats ParticleEffPurMoni.h
+   *  ProtoParticle TES statistics summary class
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2007-02-21
+   */
   class ProtoTESStats
   {
   public:
@@ -271,6 +275,30 @@ private: // definitions
 
   /// Map between Particles and MCParticles
   typedef std::map<const LHCb::ProtoParticle*,const LHCb::MCParticle*> P2MCP;
+
+  /** @class ProtoCorrelations ParticleEffPurMoni.h
+   *  Utility class to help compute reconstruction correlations
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2007-02-21
+   */
+  class ProtoCorrelation
+  {
+  public:
+    class Count
+    {
+    public:
+      Count() : nmc(0) { }
+    public:
+      unsigned int nmc;
+      std::map<std::string,unsigned int> detailed;
+    };
+    typedef std::map<std::string,Count> ProtoCount;
+  public:
+    Count count;
+    ProtoCount proto_count;
+  };
+  typedef std::map<std::string,ProtoCorrelation> ProtoCorrelations;
+  typedef std::map<IMCReconstructible::RecCategory,ProtoCorrelations> MCCatProtoCorrelations;
 
 private: // methods
 
@@ -374,6 +402,9 @@ private: // methods
                      const EffVersusMomentum & top,
                      const EffVersusMomentum & bot ) const;
 
+  /// ProtoParticle short location name
+  const std::string & shortProtoLoc( const std::string & loc ) const;
+
 private: // data
 
   /// Particle/Proto map
@@ -414,6 +445,13 @@ private: // data
 
   /// Raw MC informtion
   mutable MCRecTypeMap m_rawMCMap;
+
+  /// ProtoParticle reconstruction correlations
+  mutable MCCatProtoCorrelations m_protoCorr;
+
+  /// Short name mapping for ProtoParticle locations
+  mutable std::map<std::string,std::string> m_protoShortNames;
+  mutable unsigned int m_protoCount;
 
   /// Min percentage contribution to include in summary tables
   double m_minContrib;
