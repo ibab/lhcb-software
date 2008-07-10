@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.22 2008-07-09 16:29:44 pkoppenb Exp $
+# $Id: requirements,v 1.23 2008-07-10 14:09:23 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -63,6 +63,7 @@ use OnlineSys           v*           -no_auto_imports
 #macro Moore_linkopts    "$(application_linkopts)"
 
 apply_pattern application_path
+apply_pattern install_python_modules
 
 # Set the default path for Moore options.
 set MOOREOPTS ${MOOREROOT}/options
@@ -85,6 +86,3 @@ alias Moore gaudirun.py
 # application MooreOffline $(GAUDICONFROOT)/src/GaudiMain.cpp
 # apply_pattern application_path
 #===============================================================
-
-
-
