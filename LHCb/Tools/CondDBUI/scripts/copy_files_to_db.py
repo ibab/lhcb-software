@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-# $Id: copy_files_to_db.py,v 1.1 2007-12-07 08:34:12 marcocle Exp $
+# $Id: copy_files_to_db.py,v 1.2 2008-07-10 10:49:32 marcocle Exp $
 import sys
 
 import CondDBUI
+import CondDBUI.Admin
 from PyCool import cool
 
 from optparse import OptionParser
@@ -55,80 +56,13 @@ def main():
         CondDBUI.CondDB.dropDatabase(options.connectString)
     db = CondDBUI.CondDB(options.connectString, create_new_db = True, readOnly=False)
 
-    # prepare the list of nodes to insert
-    # the format is something like:
-    # {
-    #   "/path/to/folderset" : {
-    #                           "folder.xml" : {
-    #                                           "data": { 0 : "filename",
-    #                                                     ...
-    #                                                   },
-    #                                           ...
-    #                                          },
-    #                           ...
-    #                          },
-    #   ...
-    # }
     includes = []
     if options.includeFile:
         includes = [ l.strip() for l in open(options.includeFile).xreadlines() ]
-    nodes = CondDBUI._collect_tree_info(options.source, includes = includes, excludes = [])
-
-    # Just count the number of folders we are goinfg to write
-    count_folders = 0
-    for folderset in nodes:
-        count_folders += len(nodes[folderset])
-    count_folders_len = str(len(str(count_folders)))
-
-    # initialize conters for progress output
-    file_count = 0
-    folder_count = 0
-    foldersets = nodes.keys()
-    foldersets.sort() # not needed, but it seems more clean
-    
-    for folderset in foldersets:
         
-        folders = nodes[folderset].keys()
-        folders.sort()
-
-        for folder in folders:
-            keys = nodes[folderset][folder].keys()
-            keys.sort()
-            
-            folder_path = re.sub('/+','/','/'.join([options.dest,folderset,folder]))
-            if options.noextension:
-                folder_path = os.path.splitext(folder_path)[0]
-
-            if not db.db.existsFolder(folder_path):
-                db.createNode(path = folder_path, storageKeys = keys)
-                
-            collection = {}
-            for key in keys:
-                for channel in nodes[folderset][folder][key].keys():
-                    
-                    if channel not in collection:
-                        collection[channel] = {}
-                        for k in keys:
-                            collection[channel][k] = ""
-            
-                    collection[channel][key] = CondDBUI._fix_xml(open(nodes[folderset][folder][key][channel],"rb").read(),
-                                                                 "conddb:"+'/'.join([options.dest,folderset]))
-                    
-            xmllist = []
-            for channel in collection:
-                xmllist.append({ 'payload': collection[channel],
-                                 'since': cool.ValidityKeyMin,
-                                 'until': cool.ValidityKeyMax,
-                                 'channel': channel })
-                
-            folder_count += 1
-            file_count += len(keys)
-            print ("%" + count_folders_len + "d %" + count_folders_len + "d  %s (%d files)")%\
-                  (folder_count,count_folders-folder_count,folder_path,len(keys))
-            db.storeXMLStringList(folder_path, xmllist)
-
-    print "Total folders inserted = %d"%folder_count
-    print "Total files inserted = %d"%file_count
-
+    CondDBUI.Admin.MakeDBFromFiles(options.source, db,
+                                   includes = includes, excludes = [],
+                                   verbose = True)
+    
 if __name__ == '__main__':
     main()

@@ -29,6 +29,10 @@ if 'CORAL_LFC_BASEDIR' in os.environ and 'LFC_HOST' in os.environ and not 'COOL_
         _app.connectionSvc().configuration().setAuthenticationService(LFCRepSvcName)
     del LFCRepSvcName
 
+# disable CORAL time-out thread
+_app.connectionSvc().configuration().disablePoolAutomaticCleanUp()
+_app.connectionSvc().configuration().setConnectionTimeOut(0)
+
 #########################################################################################
 #                                    Tag Class                                          #
 #########################################################################################
@@ -1679,12 +1683,13 @@ def merge( sourceDB, targetDB,
     """
     import logging
 
-    _log = logging.getLogger( __name__ )
+    _log = logging.getLogger( "CondDBUI.merge" )
     _log.setLevel( logging.INFO )
 
-    _handler = logging.StreamHandler()
-    _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
-    _log.addHandler( _handler )
+    if not _log.handlers: # we want only one handler
+        _handler = logging.StreamHandler()
+        _handler.setFormatter( logging.Formatter( "%(levelname)s:%(name)s: %(message)s" ) )
+        _log.addHandler( _handler )
 
     from PyCoolDiff import CondDBDiffError
     

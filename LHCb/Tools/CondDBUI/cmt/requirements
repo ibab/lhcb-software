@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.30 2008-06-26 17:00:10 marcocle Exp $
+# $Id: requirements,v 1.31 2008-07-10 10:49:32 marcocle Exp $
 package CondDBUI
 
-version v2r10
+version v2r11
 
 branches python scripts cmt
 #ignore_pattern package_stamps
@@ -24,8 +24,6 @@ use DDDB       v*    Det -no_auto_imports
 
 # library path needed for oracle backend
 # use oracle        v*    LCG_Interfaces -no_auto_imports
-##set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
-#set TNS_ADMIN ${CONDDBUIROOT}/cmt
 
 # Needed for whatever reason...
 use CORAL v* LCG_Interfaces -no_auto_imports
@@ -51,7 +49,4 @@ private
 # CORAL path
 #set  CORAL_AUTH_PATH       ${HOME}/private
 #set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
-
-# Sessions path
-#set  CONDDBUI_SESSIONS_PATH ${CONDDBUIROOT}/python
 
