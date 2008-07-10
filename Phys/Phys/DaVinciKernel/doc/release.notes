@@ -7,6 +7,7 @@
  - Make IGeomDispCalcularor obsolete in DVAlgorithm, but keep it for the time
    being.
  - Reflect this in IOnOffline and IContextTool
+ - Remove IParticle2VertexAsct tool. 
  - Increment to v7r0
 
 !======================== DaVinciKernel v6r15 2008-07-02 ====================

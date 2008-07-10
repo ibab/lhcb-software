@@ -29,7 +29,6 @@
   <class name = "IP2VVPartAngleCalculator"/>
   <class name = "IParticleArrayFilter"/>
   <class name = "IParticle2State"/>
-  <class name = "IParticle2VertexAsct"/>
   <class name = "IParticleCombiner"/>
   <class name = "IParticleDescendants"/>
   <class name = "IParticleFilter"/>
