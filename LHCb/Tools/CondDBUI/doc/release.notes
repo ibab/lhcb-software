@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.81 2008-07-10 10:49:32 marcocle Exp $
+! $Id: release.notes,v 1.82 2008-07-10 15:12:00 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
@@ -10,6 +10,10 @@
    - cmt/dblookup.xml
    - scripts/create_SQLDDDB.py
  - Converted the python module CondDBUI.Admin to a module with sub-modules
+ - Added the scripts
+   - CondDBAdmin_Commit.py: takes user-provided patches and apply them to
+       official database.
+   - CondDBAdmin_MakeSnapshot.py: simple script to make CondDB snapshots.
  - Added the script CondDBAdmin_Commit.py, which takes user-provided patches
    and apply them to official database.
  - Modify CondDBBrowser.py to accept on the command line the name of a CondDB
