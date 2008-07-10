@@ -40,6 +40,7 @@ VeloPUSim.InputTimeOffsets = { 0*ns, -25*ns, -50*ns, 25*ns };
 // PU hits end up in two containers.
 VeloPUSim.OutputContainers = { "MC/Velo/FE", "MC/Velo/PuFE" };
 VeloPUSim.SimNoisePileUp = true;
+VeloPUSim.StripInefficiency = 0.01;
 VeloPUSim.PulseShapePeakTime = 44.;
 VeloPUSim.OffPeakSamplingTime = 6.;
 

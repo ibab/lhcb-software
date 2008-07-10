@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-10 - David Hutchcroft
+ - Changed code to use real bad strip list from DeVeloSensor to kill bad strips
+   Changed VeloSim.opts to make 1% bad strips in pileup (random) and only 
+   known bad strips dead in main VELO. 
+   Tweaked code for gsl_sf_erf_Q wrapper to reduced unnessecary calls
+
 !===================== VeloSimulation v3r3 2008-07-04 ======================
 ! 2008-07-04 - David Hutchcroft
  - Added an FPE protection wrapper to gsl_sf_erf_Q to remove FPE when audited

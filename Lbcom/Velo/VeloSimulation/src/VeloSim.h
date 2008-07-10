@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.14 2008-07-04 09:46:05 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.15 2008-07-10 11:28:59 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -46,6 +46,7 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalise
 
 protected:
 
@@ -57,9 +58,9 @@ private:
   }
 
   ///protected gsl_erf_sf_q against FPE: integral of normal dist from arg->inf.
-  double safe_gsl_sf_erf_Q(double const &arg) const {
-    // remove underflows by ignoring results different from 0 or 1 by < 1e-100
-    if(fabs(arg)>30.) return (arg>0. ? 0. : 1.);
+  inline double safe_gsl_sf_erf_Q(double const &arg) const {
+    // remove underflows by ignoring results different from 0 or 1 by < 1e-24
+    if(fabs(arg)>10.) return (arg>0. ? 0. : 1.);
     // turn off the inexact FPE (always goes off for this function)
     FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
     return gsl_sf_erf_Q(arg);
@@ -192,6 +193,10 @@ private:
   ISiDepositedCharge* m_depositedCharge;///< Tool calculates accumulated charge
   std::string  m_depChargeToolType;     ///< Name of tool to calculate charge
   bool m_useDepTool; ///< Allows to use GEANT energy directly if false
+
+  unsigned int m_totalFEs; ///< Number of FEs created
+  unsigned int m_killedFEsRandom; ///< Number of FEs removed by random kills
+  unsigned int m_killedFEsBadStrips; ///< Number of FEs removed by bad strips
 
   bool m_isDebug; ///< debug level for output
   bool m_isVerbose; ///< debug level for output

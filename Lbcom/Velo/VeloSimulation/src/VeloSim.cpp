@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.29 2008-07-04 09:46:05 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.30 2008-07-10 11:28:59 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -48,7 +48,10 @@ DECLARE_ALGORITHM_FACTORY( VeloSim );
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_veloDet ( 0 )
+    m_veloDet ( 0 ),
+    m_totalFEs( 0 ),
+    m_killedFEsRandom( 0 ),
+    m_killedFEsBadStrips( 0 )
 {
   declareProperty("InputContainers", m_inputContainers );
   declareProperty("InputContainerToLink", m_MCHitContainerToLinkName );
@@ -209,8 +212,8 @@ StatusCode VeloSim::simulation(LHCb::MCHits * veloHits, double timeOffset) {
     // common mode - not yet implemented
     if (m_CMSim) CMSim();
   }
-  // dead strips / channels
-  if (m_stripInefficiency>0.) deadStrips();
+  // dead strips / channels (always call as dead strips now set in db)
+  deadStrips();
   // remove any unwanted elements and sort
   finalProcess();
   //
@@ -509,6 +512,7 @@ void VeloSim::diffusion(LHCb::MCHit* hit,std::vector<double>& Spoints){
     }
     // renormalise allocated fractions to 1., and update strip signals
     for(iNg=-neighbs; iNg<=+neighbs; iNg++ ){
+      if( totalFraction < 1e-8 ) continue; // skip if very small fraction
       int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
       //
       if(m_isDebug) debug()<< i << " iNg " << iNg 
@@ -958,9 +962,24 @@ void VeloSim::deadStrips(){
   // e.g. set stripInefficiency to 0.01 for 1% dead channels
   for(LHCb::MCVeloFEs::iterator itF1 = m_FEs->begin(); m_FEs->end() != itF1;
       itF1++){
-    double cut =  m_uniformDist();
-    if ( m_stripInefficiency > cut ) {
+    ++m_totalFEs;
+    const DeVeloSensor* sensor=m_veloDet->sensor((*itF1)->sensor());
+    if(sensor->OKStrip((*itF1)->strip())){ 
+      // no db problems, check random inefficiency
+      double cut =  m_uniformDist();
+      if ( m_stripInefficiency > cut ) {
+	++m_killedFEsRandom;
+	(*itF1)->setAddedSignal( 0. );
+      }
+    }else{
+      // assume thresholds set to have no response in TELL1
+      if(m_isVerbose) verbose() 
+	<< "Removed signal and noise from not OK strip "
+	<< format("[%3i,%4i]",(*itF1)->sensor(),(*itF1)->strip())
+	<< endmsg;
       (*itF1)->setAddedSignal( 0. );
+      (*itF1)->setAddedNoise( 0. );
+      ++m_killedFEsBadStrips;
     }
   }
   //
@@ -1138,3 +1157,12 @@ bool VeloSim::checkConditions(LHCb::MCHit* aHit)
   return ( isReadOut );
 }
 //
+
+StatusCode VeloSim::finalize(){
+  double fracBad = static_cast<double>(m_killedFEsBadStrips)/static_cast<double>(m_totalFEs);
+  double fracRandom = static_cast<double>(m_killedFEsRandom)/static_cast<double>(m_totalFEs);
+  info() << format("Removed %5.2f%% MCVeloFEs due to bad strips and %5.2f%% as random removals",
+		   100.*fracBad,100.*fracRandom)
+	 << endmsg;    
+  return GaudiAlgorithm::finalize(); // must be executed last
+}
