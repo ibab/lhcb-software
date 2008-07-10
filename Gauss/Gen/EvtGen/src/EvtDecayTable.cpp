@@ -448,14 +448,8 @@ void EvtDecayTable::readDecayFile(const std::string dec_name){
     } else if (token=="Decay") {
 
       std::string temp_fcn_new_model;
-      //      int temp_fcn_new_ndaug;
       std::vector<std::string> temp_fcn_new_args(500);
-      int temp_fcn_new_narg;
-      EvtId temp_fcn_new_daug[MAX_DAUG];
       EvtDecayBase* temp_fcn_new;
-      //      double temp_sbrfr;
-      //      double temp_massmin;
-      //      int temp_nmode;
       
       double brfrsum=0.0;
 

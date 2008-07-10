@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtMultiChannelParser.cpp,v 1.2 2004-07-12 16:13:31 robbep Exp $
+//      $Id: EvtMultiChannelParser.cpp,v 1.3 2008-07-10 21:25:15 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -199,8 +199,8 @@ void EvtMultiChannelParser::parse(const std::vector<std::string>& v)
   }
 
   printf("PARSING SUCCESSFUL\n");
-  printf("%d amplitude terms\n",_amp.size());
-  printf("%d conj amplitude terms\n",_ampConj.size());
+  printf("%d amplitude terms\n",(int) _amp.size());
+  printf("%d conj amplitude terms\n",(int) _ampConj.size());
 }
 
 

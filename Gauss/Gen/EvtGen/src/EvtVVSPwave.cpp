@@ -82,8 +82,6 @@ void EvtVVSPwave::decay( EvtParticle *p){
   v=p->getDaug(0);
   s=p->getDaug(1);
 
-  EvtVector4R p4[2];
-
   EvtTensor4C d,g;
   
   g.setdiag(1.0,-1.0,-1.0,-1.0);

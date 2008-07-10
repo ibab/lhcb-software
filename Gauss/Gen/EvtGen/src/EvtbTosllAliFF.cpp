@@ -31,7 +31,7 @@ void EvtbTosllAliFF::getScalarFF(EvtId parent, EvtId daught,
                                  double& fp,double& f0,double& ft){
 
   double m=EvtPDL::getMeanMass(parent);
-  double md=EvtPDL::getMeanMass(daught);
+  EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;
@@ -51,7 +51,7 @@ void EvtbTosllAliFF::getVectorFF(EvtId parent, EvtId daught,
 
   
   double m=EvtPDL::getMeanMass(parent);
-  double md=EvtPDL::getMeanMass(daught);
+  EvtPDL::getMeanMass(daught);
   
   double shat=t/(m*m);
   double shat2=shat*shat;

@@ -326,10 +326,7 @@ void EvtVub::decay( EvtParticle *p ){
       +          ctL         *ptmp*zW[j];
 
   double apLW = ptmp;
-  // calculate the neutrino 4 vector in the W restframe
 
-  double pNW[4] = {sqrt(mW2)-pLW[0],-pLW[1],-pLW[2],-pLW[3]};
-    
   // boost them back in the B Meson restframe
   
   double appLB = beta*gamma*pLW[0] + gamma*ctL*apLW;

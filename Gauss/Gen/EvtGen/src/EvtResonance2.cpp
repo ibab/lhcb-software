@@ -70,7 +70,7 @@ EvtComplex EvtResonance2::resAmpl() {
   //listed particles (12)
  
   //angle 3 makes with 2 in rest frame of 12 (CS3)  
-  double cos_phi_0 = EvtDecayAngle(_p4_p, _p4_d1+_p4_d2, _p4_d1);
+  EvtDecayAngle(_p4_p, _p4_d1+_p4_d2, _p4_d1);
   //angle 3 makes with 1 in 12 is, of course, -cos_phi_0
 
   //first compute several quantities...follow CLEO preprint 00-23

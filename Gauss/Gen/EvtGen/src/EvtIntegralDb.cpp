@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtIntegralDb.cpp,v 1.3 2004-07-12 16:13:30 robbep Exp $
+ *    File: $Id: EvtIntegralDb.cpp,v 1.4 2008-07-10 21:24:00 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -21,7 +21,6 @@ void EvtIntegralDb::read(const char* file)
   if(NULL == (f = fopen(file,"r"))) return;
   else {    
     
-    char key[256];
     float itg, err;
     while(EOF != fscanf(f,"%s %d %f %f",&_key[i],&_nitg[i],&itg,&err)) {
 

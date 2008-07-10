@@ -20,7 +20,7 @@
 // 
 #include "EvtGenBase/EvtPatches.hh"
 #include <fstream>
-#include <strstream>
+#include <sstream>
 #include <cstring>
 #include "EvtGenBase/EvtParser.hh"
 #include "EvtGenBase/EvtReport.hh"
@@ -101,19 +101,20 @@ int EvtParser::Read(const std::string filename){
     }while(buf[i-1]!=0);
 
     //read each token
-    std::istrstream ist(buf,strlen(buf));
+    std::string theBuffer( buf , strlen( buf ) ) ;
+    std::istringstream ist(theBuffer);
 
     while(ist>>buf2){
       i=0;
       int semicolon=0;
       do{
-	if (buf2[i]==';') {
-	  buf2[i]=0;
-	  semicolon=1;
-	}
+        if (buf2[i]==';') {
+          buf2[i]=0;
+          semicolon=1;
+        }
       }while(buf2[i++]!=0);
       if (buf2[0]!=0){
-	addToken(line,buf2);
+        addToken(line,buf2);
       }
       if (semicolon) addToken(line,";");
     }

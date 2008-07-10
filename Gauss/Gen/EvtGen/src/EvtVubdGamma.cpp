@@ -96,8 +96,6 @@ double EvtVubdGamma::getdGdxdzdp(const double &x, const double &z, const double 
 
   if ( x < 0 || x > 1 || z < xb || z > (1+xb) ) 
     return 0;
-  
-  double mx = (0>z-1?0:z-1);
 
   double p2min = (0>z-1.?0:z-1.);
   double p2max = (1.-x)*(z-1.+x);
@@ -140,11 +138,9 @@ double EvtVubdGamma::delta(const double &x, const double &xmin, const double &xm
   return 0.0; 
 }
 
-double EvtVubdGamma::getW1delta(const double &x, const double &z)
+double EvtVubdGamma::getW1delta(const double &/*x*/, const double &z)
 {
   double mz = 1.-z;
-  double p2min = (0>z-1.?0:z-1.);
-  double p2max = (1.-x)*(z-1.+x);
 
   double lz;
   if (z == 1) lz = -1.;

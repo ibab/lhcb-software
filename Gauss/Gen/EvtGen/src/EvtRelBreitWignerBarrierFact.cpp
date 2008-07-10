@@ -145,7 +145,7 @@ double EvtRelBreitWignerBarrierFact::getRandMass(EvtId *parId,int nDaug, EvtId *
 
 
   // the user has overridden the partial wave to use.
-  for ( int vC=0; vC<_userSetPW.size(); vC++) {
+  for ( unsigned int vC=0; vC<_userSetPW.size(); vC++) {
     if ( dauId[0]==_userSetPWD1[vC] &&  dauId[1]==_userSetPWD2[vC] ) 
       Lmin=2*_userSetPW[vC]; 
     if ( dauId[0]==_userSetPWD2[vC] &&  dauId[1]==_userSetPWD1[vC] ) 

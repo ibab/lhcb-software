@@ -204,8 +204,6 @@ void EvtBtoXsll::decay( EvtParticle *p ){
   EvtParticle* leptonp = p->getDaug(1);
   EvtParticle* leptonn = p->getDaug(2);
 
-  EvtVector4R p4[3];
-
   double mass[3];
  
   findMasses( p, getNDaug(), getDaugs(), mass );

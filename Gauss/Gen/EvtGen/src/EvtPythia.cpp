@@ -1272,7 +1272,7 @@ void EvtPythia::MakePythiaFile(char* fname){
   outdec.close();
 }
 
-void EvtPythia::pythiaInit(int dummy){
+void EvtPythia::pythiaInit(int /*dummy*/){
   EvtId  ipar ;
   int    lundkc ;
   double mass, width, maxwidth, ctau ;

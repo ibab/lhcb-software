@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-10 - Patrick Robbe
+ - Remove compilation warnings
+
 !========================== EvtGen v9r1 2008-03-20 ===========================
 ! 2008-03-20 - Gloria CORTI
  - Pythia.F: Remove dummy routine calling PYTIME. This requires changes in

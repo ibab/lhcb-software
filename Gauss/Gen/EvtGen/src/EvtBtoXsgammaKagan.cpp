@@ -435,7 +435,7 @@ void EvtBtoXsgammaKagan::computeHadronicMass(int /*nArg*/, double* args){
     double s78Result = mys78FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s22Result = mys22FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     double s27Result = mys27FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
-    double s28Result = mys28FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
+    mys28FermiSimp->evaluate((_mB*ymH-_mb),_mB-_mb);
     
     double py = 
       (pow(_CKMrat,2.)*(6./_fz)*(_alpha/EvtConst::pi)

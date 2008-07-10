@@ -87,8 +87,6 @@ void EvtVVpipi::decay( EvtParticle *p){
   s1=p->getDaug(1);
   s2=p->getDaug(2);
 
-  EvtVector4R p4[3];
-
 //  Put phase space results into the daughters.
   
   EvtVector4C ep0,ep1,ep2;  

@@ -249,8 +249,6 @@ EvtComplex EvtbTosllAmp::GetC7Eff(double q2, bool nnlo)
   double shat = q2/mbeff/mbeff;
   double logshat;
   logshat = log(shat);
-  double mchat = 0.29;
-
   
   double muscale;
   muscale = 2.5;
@@ -517,7 +515,7 @@ EvtComplex EvtbTosllAmp::GetC9Eff(double q2, bool nnlo, bool btod)
   return c9eff;
 }
 
-EvtComplex EvtbTosllAmp::GetC10Eff(double q2, bool nnlo) 
+EvtComplex EvtbTosllAmp::GetC10Eff(double /*q2*/, bool nnlo) 
 {
 
   if (!nnlo) return -4.669;
@@ -612,9 +610,8 @@ double EvtbTosllAmp::dGdsdupProb(double mb, double ms, double ml,
   // Compute the decay probability density function given a value of s and u
   // according to Ali's paper
 
-  double prob, prob_max;
+  double prob;
   double f1sp, f2sp, f3sp;
-  double u_ext;
 
   double sh = s / (mb*mb);
 

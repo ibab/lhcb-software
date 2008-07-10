@@ -151,8 +151,6 @@ void EvtTauHadnu::decay(EvtParticle *p){
 
       EvtVector4R q1 = p->getDaug(0)->getP4();
       EvtVector4R q2 = p->getDaug(1)->getP4();
-      double m1=p->getDaug(0)->mass();
-      double m2=p->getDaug(1)->mass();
   
       hadCurr = Fpi(q1,q2)*(q1-q2);
 

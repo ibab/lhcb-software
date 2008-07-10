@@ -69,9 +69,6 @@ void EvtBHadronic::decay( EvtParticle *p){
   static EvtISGW2FF ffmodel;
 
   p->initializePhaseSpace(getNDaug(),getDaugs());
-
-
-  EvtParticle *pdaug[MAX_DAUG];
   
   EvtVector4R p4[MAX_DAUG];
   double m;

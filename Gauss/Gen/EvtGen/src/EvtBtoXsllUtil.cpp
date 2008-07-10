@@ -84,15 +84,9 @@ EvtComplex EvtBtoXsllUtil::GetC7Eff1(double sh, double mbeff, bool nnlo)
   // change energy scale to 5.0 for full NNLO calculation below shat = 0.25
   double muscale = 5.0;
   double alphas = 0.215;
-  double A7 = -0.312 + 0.008;
   double A8 = -0.148;
-  double A9 = 4.174 + (-0.035);
-  double A10 = -4.592 + 0.379;
   double C1 = -0.487;
   double C2 = 1.024;
-  double T9 = 0.374 + 0.252;
-  double U9 = 0.033 + 0.015;
-  double W9 = 0.032 + 0.012;
   double Lmu = log(muscale/mbeff);
 
   EvtComplex F71;
@@ -258,7 +252,7 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff0(double sh, double mbeff,
 }
 
 EvtComplex EvtBtoXsllUtil::GetC9Eff1(double sh, double mbeff,
-                                     bool nnlo, bool btod) 
+                                     bool nnlo, bool /*btod*/) 
 {
   // This function returns the first-order alpha_s part of C9
 
@@ -335,7 +329,7 @@ EvtComplex EvtBtoXsllUtil::GetC9Eff1(double sh, double mbeff,
   return c9eff;
 }
 
-EvtComplex EvtBtoXsllUtil::GetC10Eff(double sh, bool nnlo) 
+EvtComplex EvtBtoXsllUtil::GetC10Eff(double /*sh*/, bool nnlo) 
 {
 
   if (!nnlo) return -4.669;
@@ -542,7 +536,6 @@ double EvtBtoXsllUtil::dGdsdupProb(double mb, double ms, double ml,
   double c7c10 = real((eta79*c7eff0 + c7eff1)*conj(eta9*c10eff));
   double c9c10 = real((eta9*c9eff0  + c9eff1)*conj(eta9*c10eff));
   double c9c9plusc10c10  = abs2(c9eff) + abs2(c10eff);
-  double c9c9minusc10c10 = abs2(c9eff) - abs2(c10eff);
 
   f1sp = ( pow(mb*mb-ms*ms,2) - s*s) * c9c9plusc10c10 
          + 4.0*( pow(mb,4) - ms*ms*mb*mb - pow(ms,4)*(1.0 - ms*ms/(mb*mb))

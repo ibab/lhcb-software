@@ -61,9 +61,9 @@ void EvtSVVNONCPEIGEN::init(){
   // check that there are 27 arguments
   checkNArg(27,15);
   checkNDaug(2);
-
-  EvtSpinType::spintype parenttype = EvtPDL::getSpinType(getParentId());
-
+  
+  EvtPDL::getSpinType(getParentId());
+  
   if ( getParentId() != EvtPDL::getId("B0") ) {
     report(ERROR,"EvtGen") << "EvtSVVNONCPEIGEN decay "
                            << EvtPDL::name(getParentId()).c_str()

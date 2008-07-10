@@ -153,10 +153,7 @@ void EvtGen::generateDecay(int stdhepid,
 					  P,*spinDensity);
   }
 
-  int times=0;
-
   generateDecay(p);
-  //  p->Decay();
 
   evtStdHep->init();
 
@@ -271,11 +268,6 @@ void EvtGen::generateEvent(EvtParticle *root_part,HepLorentzVector D){
   for(i=0;i<evtstdhep.getNPart();i++){
 
     j=i+1;
-
-    int jmotherfirst=evtstdhep.getFirstMother(i)+1;
-    int jmotherlast=evtstdhep.getLastMother(i)+1;
-    int jdaugfirst=evtstdhep.getFirstDaughter(i)+1;
-    int jdauglast=evtstdhep.getLastDaughter(i)+1;
 
     partnum=evtstdhep.getStdHepID(i);
 
