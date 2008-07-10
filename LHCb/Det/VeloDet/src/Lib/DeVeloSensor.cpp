@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.34 2008-03-28 16:31:15 dhcroft Exp $
+// $Id: DeVeloSensor.cpp,v 1.35 2008-07-10 11:23:37 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -197,7 +197,6 @@ void DeVeloSensor::initSensor()
 StatusCode DeVeloSensor::registerConditionCallBacks() {
 
   StatusCode sc;
-  MsgStream msg(msgSvc(), "DeVeloSensor");
 
   // strip capacitance condition
   updMgrSvc()->registerCondition(this,
@@ -220,6 +219,7 @@ StatusCode DeVeloSensor::registerConditionCallBacks() {
 
   sc = updMgrSvc()->update(this);
   if(!sc.isSuccess()) {
+    MsgStream msg(msgSvc(), "DeVeloSensor");
     msg << MSG::ERROR 
         << "Failed to update sensor conditions!"
         << endreq;
@@ -253,6 +253,17 @@ StatusCode DeVeloSensor::updateStripInfoCondition () {
                  m_stripInfos.begin(),
                  ConvertIntToStripInfo());
 
+  if(m_verbose){
+    MsgStream msg(msgSvc(), "DeVeloSensor");
+    msg << MSG::VERBOSE << "Sensor " << m_sensorNumber << " has stripInfoConditions "<< endmsg;
+    for( int row = 0 ; row < 64 ; ++row ){ //table of 64 rows * 32 columns of statuses
+       msg << MSG::VERBOSE << format("%4i-%4i",(32*row),(32*row+31));
+      for( int col = 0 ; col < 32 ; ++col ){
+	 msg << MSG::VERBOSE << format("%2i ",m_stripInfos[32*row+col].asInt());
+      }
+       msg << MSG::VERBOSE << endmsg;
+    }
+  }
   if (m_stripInfos.size() != m_numberOfStrips) {
     MsgStream msg(msgSvc(), "DeVeloSensor");
     msg << MSG::ERROR << "Strip info condition size does not match number of strips!" << endmsg;
@@ -270,37 +281,3 @@ StatusCode DeVeloSensor::updateReadoutCondition () {
   return StatusCode::SUCCESS;
 }
 
-DeVeloSensor::StripInfo DeVeloSensor::ConvertIntToStripInfo::operator() (int i) {
-
-  DeVeloSensor::StripInfo stripInfo;
-  
-  stripInfo.m_info.set(DeVeloSensor::StripInfo::NOT_READ_OUT,
-                       (1 << DeVeloSensor::StripInfo::NOT_READ_OUT) & i);
-
-  stripInfo.m_info.set(DeVeloSensor::StripInfo::NOT_BONDED,
-                       (1 << DeVeloSensor::StripInfo::NOT_BONDED) & i);
-
-  stripInfo.m_info.set(DeVeloSensor::StripInfo::BONDED_WITH_NEXT,
-                       (1 << DeVeloSensor::StripInfo::BONDED_WITH_NEXT) & i);
-
-  stripInfo.m_info.set(DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS,
-                       (1 << DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS) & i);
-
-  return stripInfo;
-}
-
-int DeVeloSensor::StripInfo::asInt() const
-{
-  int i=0;
-
-  if (m_info[DeVeloSensor::StripInfo::NOT_READ_OUT]) 
-    i |= (1 << DeVeloSensor::StripInfo::NOT_READ_OUT);
-  if (m_info[DeVeloSensor::StripInfo::NOT_BONDED]) 
-    i |= (1 << DeVeloSensor::StripInfo::NOT_BONDED);
-  if (m_info[DeVeloSensor::StripInfo::BONDED_WITH_NEXT]) 
-    i |= (1 << DeVeloSensor::StripInfo::BONDED_WITH_NEXT);
-  if (m_info[DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS]) 
-    i |= (1 << DeVeloSensor::StripInfo::BONDED_WITH_PREVIOUS);
-
-  return i;
-}

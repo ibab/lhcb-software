@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.41 2008-03-28 16:31:15 dhcroft Exp $
+// $Id: DeVeloSensor.h,v 1.42 2008-07-10 11:23:37 dhcroft Exp $
 #ifndef VELODET_DEVELOSENSOR_H
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -285,11 +285,11 @@ public:
   }
 
   /**  Return the validity of a strip
-   *   Cince this method uses the condition cache, the result
+   *   Since this method uses the condition cache, the result
    *   depends on CondDB.
    */
   bool OKStrip(unsigned int strip) const {
-    return (strip<m_numberOfStrips && stripInfo(strip).stripIsReadOut());
+    return (strip<m_numberOfStrips && stripInfo(strip).stripIsOK());
   }
 
   /// Returns the validity of a given channel
@@ -316,7 +316,7 @@ protected:
    */
   struct ConvertIntToStripInfo : public std::unary_function<int, StripInfo>
   {
-    StripInfo operator() (int i);
+    StripInfo operator() (int i) { return StripInfo(i); }
   };
 
   // condition related public types
@@ -324,14 +324,9 @@ protected:
 public:
   /** @class DeVeloSensor::StripInfo DeVeloSensor.h VeloDet/DeVeloSensor.h
    *
-   *  encodes strip information
-   *
-   *  The internal bit encoding is as follows.
-   *
-   *  bit 0: 0 if strip is read out, 1 if not;
-   *  bit 1: 0 if strip is bonded, 1 if not;
-   *  bit 2: 1 if strip is bonded with next strip, 0 if not;
-   *  bit 3: 1 if strip is bonded with previous strip, 0 if not
+   *  Encodes strip information. 
+   *  From construction information states are : 
+   *  OK, Low gain, Noisy, Dead, Open, Pinhole and Short
    *
    *  @author Kurt Rinnert
    *  @date   2006-01-18
@@ -339,29 +334,41 @@ public:
   class StripInfo
   {
   public:
-    StripInfo() : m_info(0x3) { ; }
+    StripInfo() : m_info(0) { ; }
+    StripInfo(int i) : m_info(i) { ; }
 
   private:
     enum {
-      NOT_READ_OUT         = 0,
-      NOT_BONDED           = 1,
-      BONDED_WITH_NEXT     = 2,
-      BONDED_WITH_PREVIOUS = 3
+      LOWGAIN=  2,
+      NOISY=	1,
+      STRIPOK =	0,
+      DEAD=    -1,
+      OPEN=    -2,
+      PINHOLE= -3,
+      SHORT=   -4
     };
 
   public:
-    bool stripIsReadOut() const { return !m_info[NOT_READ_OUT]; }
-    bool stripIsBonded() const { return !m_info[NOT_BONDED]; }
-    bool stripIsBondedWithNext() const { return m_info[BONDED_WITH_NEXT]; }
-    bool stripIsBondedWithPrevious() const { return m_info[BONDED_WITH_PREVIOUS]; }
-
-    int asInt() const;
+    /// No problems with this strip
+    bool stripIsOK() const { return m_info==STRIPOK; } 
+    /// Lower gain strip
+    bool stripIsLowGain() const { return m_info==LOWGAIN; } 
+    /// higher noise strip
+    bool stripIsNoisy() const { return m_info==NOISY; } 
+    /// very low gain strip
+    bool stripIsDead() const { return m_info==DEAD; } 
+    /// Did not bond strip to beetle
+    bool stripIsOpen() const { return m_info==OPEN; } 
+    /// pinhole in sensor
+    bool stripIsPinhole() const { return m_info==PINHOLE; } 
+    /// Strip shorted to another (may not be next neighbour)
+    bool stripIsShort() const { return m_info==SHORT; } 
+    /// StripInfo as integer
+    int asInt() const{ return m_info; }
 
   private:
-    std::bitset<4> m_info;
+    int m_info;
 
-  private:
-    friend struct DeVeloSensor::ConvertIntToStripInfo;
   };
 
   // condition related public methods

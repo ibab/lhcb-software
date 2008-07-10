@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.198 2008-06-02 11:36:28 cattanem Exp $
+! $Id: release.notes,v 1.199 2008-07-10 11:23:37 dhcroft Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
+
+! 2008-07-10 - David Hutchcroft
+ - Changed StripInfo class to store real strip conditions data from construction 
+   and in situe tests before data taking. Strip can be LOWGAIN, NOISY, STRIPOK, 
+   DEAD, OPEN, PINHOLE, SHORT where the assumption is STRIPOK is the only useful 
+   sort of strip
 
 !======================== VeloDet v13r1 2008-06-02 ===========================
 ! 2008-06-02 - Kurt Rinnert
