@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.127 2008-07-10 16:23:48 gcorti Exp $
+! $Id: release.notes,v 1.128 2008-07-10 18:21:24 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-07-10 - Patrick Robbe
+ - Remove completly SEAL functions and replace them with BOOST
+   functions for file handling
+   . src/component/EvtGenDecay.cpp/.h
 
 ! 2008-07-09 - Patrick ROBBE and Gloria CORTI 
  - Use Gaudi units explicitely instead of CLHEP implecitely via HepMC
