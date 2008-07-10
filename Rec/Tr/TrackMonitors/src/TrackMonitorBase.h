@@ -1,4 +1,4 @@
-// $Id: TrackMonitorBase.h,v 1.1 2008-05-30 13:50:08 wouter Exp $
+// $Id: TrackMonitorBase.h,v 1.2 2008-07-10 10:34:13 wouter Exp $
 #ifndef TRACKMONITORBASE_H
 #define TRACKMONITORBASE_H 1
  
@@ -71,6 +71,7 @@ class TrackMonitorBase : public GaudiHistoAlg {
   *  @return splitByAlgorithm true or false
   */ 
   bool splitByAlgorithm() const;
+  bool splitByType() const { return  m_splitByType; }
   
   typedef std::map<LHCb::Track::Types,ITrackSelector*> Selectors;
 
@@ -92,6 +93,7 @@ class TrackMonitorBase : public GaudiHistoAlg {
   ITrackExtrapolator* m_extrapolator; ///< Pointer to extrapolator
 
   bool m_splitByAlgorithm;
+  bool m_splitByType;
   std::string m_allString;  
                                                                        
 };
