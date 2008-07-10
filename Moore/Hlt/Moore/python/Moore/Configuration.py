@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-07-10 18:22:07 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-07-10 18:55:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -11,6 +11,7 @@ from Configurables import ConfigFileAccessSvc, ConfigDBAccessSvc, HltConfigSvc, 
 from Configurables import EventClockSvc
 
 import GaudiKernel.ProcessJobOptions
+from  ctypes import c_uint
 
 class Moore(ConfigurableUser):
     __slots__ = {
@@ -68,9 +69,11 @@ class Moore(ConfigurableUser):
         if self.getProp('EnableMemoryAuditor') : self.enableAuditor( MemoryAuditor() )
         # TODO: check for mutually exclusive options...
         if self.getProp('UseTCK') :
-            cas = self.getConfigAccessSvc()
-            tcks = self.getProp('PrefetchTCK')
-            cfg = HltConfigSvc( prefetchTCK = tcks, initialTCK = tcks[0], ConfigAccessSvc = cas.getFullName() ) 
+            #tcks = [ c_uint(i) for i in self.getProp('PrefetchTCK') ]
+            tcks = [ int(i) for i in self.getProp('PrefetchTCK') ]
+            cfg = HltConfigSvc( prefetchTCK = tcks
+                              , initialTCK = tcks[0]
+                              , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
             if self.getProp("DAQStudies") :
@@ -85,9 +88,9 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
         if self.getProp("GenerateConfig") :
-            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ],
-                                ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ],
-                                ConfigAccessSvc = self.getConfigAccessSvc().getName() )
+            gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
+                              , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
+                              , ConfigAccessSvc = self.getConfigAccessSvc().getName() )
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
         LHCbApp().applyConf()

@@ -27,10 +27,19 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #//---------------------------------------------------------------------------
 ApplicationMgr().EvtMax =  10000 ;
 
+# if you want to generate a configuration, uncomment the following line:
+#Moore().GenerateConfig = True
+
+# if you want to run, using a (set of) TCK(s), uncomment the following two
+# lines, and input the (list of ) TCK(s)
+#Moore().UseTCK = True
+#Moore().PrefetchTCK = [ 3 ]
+
+# always applyConf!
 Moore().applyConf()
 print Moore()
 
-# files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
+#files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
 files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst',
           '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst',
