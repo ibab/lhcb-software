@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.13 2008-06-26 13:54:27 jpalac Exp $
+// $Id: GeomDispCalculator.h,v 1.14 2008-07-10 15:03:24 pkoppenb Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -22,6 +22,10 @@ class IParticleTransporter;
 
 /** @class GeomDispCalculator GeomDispCalculator.h 
  *  Geometrical displacements calculator. 
+ *
+ * This tool is now obsolete. Please use IDistanceCalculator
+ *
+ * \sa IDistanceCalculator
  *
  * @author Miriam Gandelman
  * @date 20/03/2002 

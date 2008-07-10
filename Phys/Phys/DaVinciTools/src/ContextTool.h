@@ -1,4 +1,4 @@
-// $Id: ContextTool.h,v 1.1 2006-09-19 13:12:55 pkoppenb Exp $
+// $Id: ContextTool.h,v 1.2 2008-07-10 15:03:24 pkoppenb Exp $
 #ifndef CONTEXTTOOL_H 
 #define CONTEXTTOOL_H 1
 
@@ -33,6 +33,9 @@ public:
   /// Get geom tool
   const IGeomDispCalculator* geomTool()const {return m_geom;}  ;
 
+  /// Get distance tool
+  const IDistanceCalculator* distanceTool()const{return m_dist;} ;
+
   /// Get default vertex fitter
   const IVertexFit* vertexFitter()const {return m_fitter;}  ;
 
@@ -46,9 +49,9 @@ private :
 private:
 
   IPhysDesktop* m_desktop; ///< pointer to dektop
-  IGeomDispCalculator* m_geom ;    ///< pointer to geaom tool
+  IGeomDispCalculator* m_geom ;    ///< pointer to obsolete geom tool
+  IDistanceCalculator* m_dist ;    ///< pointer to distance tool
   IVertexFit* m_fitter; ///< pointer to fitter
-
   IOnOffline* m_onOffline ; ///< on offline tool provides locations if needed
   
   

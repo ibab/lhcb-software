@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.4 2007-02-06 10:17:30 pkoppenb Exp $
+// $Id: OnOfflineTool.h,v 1.5 2008-07-10 15:03:24 pkoppenb Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -28,8 +28,11 @@ public:
   /// On or Offline ?
   bool online(void) const {return m_online;} ;
 
-  /// Return DispCalculator
+  /// Return Obsolete DispCalculator
   std::string dispCalculator() const  ;
+
+  /// Return DistanceCalculator
+  std::string distanceCalculator() const  ;
 
   /// Return Unconstrained Vertex Fitter
   std::string vertexFitter() const  ;
@@ -49,8 +52,10 @@ private:
   std::string m_onlinePVLocation ; ///< PV location
   std::string m_offlinePVLocation ; ///< PV location
   bool m_online ; ///< On or Offline?
-  std::string m_offlineGeomTool ; ///< offline geom tool
-  std::string m_onlineGeomTool ; ///< online geom tool
+  std::string m_offlineGeomTool ; ///< offline obsolete geom tool
+  std::string m_onlineGeomTool ; ///< online obsolete geom tool
+  std::string m_offlineDistTool ; ///< offline distance tool
+  std::string m_onlineDistTool ; ///< online distance tool
   std::string m_offlineVertexFitter ; ///< offline vertex fitter
   std::string m_onlineVertexFitter ; ///< online vertex fitter
   std::string m_offlinePVRelatorName ; ///< offline PV Relator Name

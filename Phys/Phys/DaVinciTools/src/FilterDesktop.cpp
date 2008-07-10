@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.1 2008-07-03 09:34:46 pkoppenb Exp $
+// $Id: FilterDesktop.cpp,v 1.2 2008-07-10 15:03:24 pkoppenb Exp $
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -29,10 +29,11 @@ FilterDesktop::FilterDesktop( const std::string& name,
   , m_inputPlots()
   , m_outputPlots()
 {
+  // use 
+  declareProperty( "FilterCriterion", m_filterCriterion = "LoKi::Hybrid::FilterCriterion" );
   // Options for plot tool.
-  declareProperty( "FilterCriterion", m_filterCriterion = "ByPIDFilterCriterion" );
-  declareProperty( "InputPlotTool", m_inputPlotTool = "RecursivePlotTool/InputPlots" );
-  declareProperty( "OutputPlotTool", m_outputPlotTool = "RecursivePlotTool/OutputPlots" );
+  declareProperty( "InputPlotTool", m_inputPlotTool = "LoKi::Hybrid::PlotTool/InputPlots" );
+  declareProperty( "OutputPlotTool", m_outputPlotTool = "LoKi::Hybrid::PlotTool/OutputPlots" );
   declareProperty( "InputPlotsPath", m_inputPlotsPath = "" );
   declareProperty( "OutputPlotsPath", m_outputPlotsPath = "" );
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;

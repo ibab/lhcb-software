@@ -1,4 +1,4 @@
-// $Id: SimplePlots.cpp,v 1.6 2008-04-25 16:37:37 pkoppenb Exp $
+// $Id: SimplePlots.cpp,v 1.7 2008-07-10 15:03:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,7 @@ SimplePlots::SimplePlots( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_plots(0)
 {
-  declareProperty( "PlotTool", m_plotTool = "SimplePlotTool/Plots"  );
+  declareProperty( "PlotTool", m_plotTool = "LoKi::Hybrid::PlotTool//Plots"  );
 }
 //=============================================================================
 // Destructor

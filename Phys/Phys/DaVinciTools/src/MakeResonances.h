@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.15 2007-06-28 11:28:18 jpalac Exp $
+// $Id: MakeResonances.h,v 1.16 2008-07-10 15:03:24 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -16,7 +16,6 @@
  * 
  */
 class IFilterCriterion ;
-class IPlotTool;
 class ICheckOverlap;
 class IParticleDescendants;
 
@@ -43,7 +42,6 @@ protected:
   StatusCode applyDecay(Decay&,LHCb::Particle::ConstVector& );
   const LHCb::Particle* makeMother(const LHCb::Particle::ConstVector&,
                                    const LHCb::ParticleID&);
-  StatusCode makePlots(const LHCb::Particle::ConstVector&,IPlotTool*); ///< make plots
   inline const bool consideredPID(const int& pid)const
   {
     return 
@@ -57,21 +55,8 @@ private:
   std::string m_motherFilterName ;     ///< Name for the mother Filter
   IFilterCriterion* m_daughterFilter;
   IFilterCriterion* m_motherFilter;
-  IPlotTool* m_daughterPlots;
-  IPlotTool* m_motherPlots;
   ICheckOverlap* m_checkOverlap ;
   IParticleDescendants* m_particleDescendants;
-  /// Name for the daughter plot tool (switch on with HistoProduce = true, 
-  /// switch off with DaughterPlotTool = "none" )
-  std::string m_daughterPlotTool; 
-  /// Name for the mother plot tool (switch on with HistoProduce = true, 
-  ///  switch off with MotherPlotTool = "none" )
-  std::string m_motherPlotTool;    
-  /// Histogram path name for daughter plot tool. Default is "D" + algorithm instance name.
-  std::string m_daughterPlotsPath;    
-  /// Histogram path name for mother plot tool. Default is "M" + algorithm instance name.
-  std::string m_motherPlotsPath;    
-  /// DecayDescriptors. In case several need to be given
   std::vector<std::string> m_decayDescriptors;    
 
   double     m_massWindow;          ///< Mass Window
@@ -80,7 +65,6 @@ private:
   double     m_minPt;               ///< Minimum Pt of combination
   double     m_minMomentum;         ///< Minimum P of combination
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
-  //  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
   int        m_nEvents ;            ///< Number of events
   int        m_nAccepted ;          ///< Number of events accepted
   int        m_nCandidates ;        ///< Number of candidates

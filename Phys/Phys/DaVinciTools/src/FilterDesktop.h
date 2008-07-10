@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.h,v 1.1 2008-07-03 09:34:46 pkoppenb Exp $
+// $Id: FilterDesktop.h,v 1.2 2008-07-10 15:03:24 pkoppenb Exp $
 #ifndef FILTERDESKTOP_H
 #define FILTERDESKTOP_H 1
 
@@ -16,22 +16,11 @@
  *  
  *  @code
  * 
- *  FilterDesktop.PhysDesktop.InputLocations = {"Phys/CombineParticles"};
- *  FilterDesktop.Filter.Selections = {
- *                                "K*(892)0 : VtxFilterCriterion/KstarFilter,
- *                                            MassFilterCriterion/KstarMass"
- *                                 ,"K+ : PVIPFilterCriterion/KFilter"
- *                               , "pi+ : KinFilterCriterion/PiKinFilter,
- *                                        PVIPFilterCriterion/PiPVFilter"
- *                                };
- *  FilterDesktop.Filter.FilterByDescendents = true ;// use pi and K
- *
- *  FilterDesktop.Filter.KstarFilter.MaxChi2 = 100. ;
- *  FilterDesktop.Filter.KstarMass.Window = 100*MeV ;
-
- *  FilterDesktop.Filter.PVFilter.MinIPsignif =  2.0;  // used for both
- *  FilterDesktop.Filter.KFilter.MinIPsignif = 2.0 ;
- *  FilterDesktop.Filter.PiFilter.MinPt = 300*MeV ;
+ *  FilterDesktop.PhysDesktop.InputLocations = {"Phys/StdLooseKstar2KPi"};
+ *  FilterDesktop.Filter.Code = "(ADMASS('K*(892)0')<100*MeV) 
+ *                             & (VFASPF(VCHI2/VDOF)<100)
+ *                             & (2==NINTREE(MIPCHI2DV(PRIMARY)>4))
+ *                             & (INTREE(( ABSID=='pi+') & (PT>300*MeV)))"
  *
  *  @endcode
  *

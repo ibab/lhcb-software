@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.34 2008-04-17 16:50:58 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.35 2008-07-10 15:03:24 pkoppenb Exp $
 
 #include <algorithm>
 
@@ -8,7 +8,6 @@
 // from DaVinci
 #include "Kernel/IDecodeSimpleDecayString.h"
 #include "Kernel/IFilterCriterion.h"
-#include "Kernel/IPlotTool.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IParticleDescendants.h"
 // local
@@ -34,8 +33,6 @@ MakeResonances::MakeResonances( const std::string& name,
   DVAlgorithm ( name , pSvcLocator ),
   m_daughterFilter(),
   m_motherFilter(),
-  m_daughterPlots(),
-  m_motherPlots(),
   m_checkOverlap(),
   m_particleDescendants(),
   m_decayDescriptors(),
@@ -52,12 +49,7 @@ MakeResonances::MakeResonances( const std::string& name,
   declareProperty( "MinMomentum", m_minMomentum = -1. );  
   declareProperty( "MinPt", m_minPt = -1. );
   declareProperty( "KillOverlap", m_killOverlap = true );  
-  declareProperty( "DaughterPlotTool", m_daughterPlotTool = "RecursivePlotTool/DaughterPlots" );  
-  declareProperty( "MotherPlotTool", m_motherPlotTool = "RecursivePlotTool/MotherPlots" );  
-  declareProperty( "DaughterPlotsPath", m_daughterPlotsPath = "" );  
-  declareProperty( "MotherPlotsPath", m_motherPlotsPath = "" );  
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
-  //  declareProperty( "MakePlots" , m_makePlots = false) ;
   declareProperty( "OutputLocation" , m_outputLocation = "" ) ;
   declareProperty( "PrintStats", m_printStats = false ) ;
   StatusCode sc = setProperty ( "HistoProduce", "0" ) ; // overwrites GaudiHistoAlg.cpp
@@ -99,30 +91,6 @@ StatusCode MakeResonances::initialize() {
       return StatusCode::FAILURE ;    
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "Got overlap and particle descendants tools" << endmsg ;
-  }
-  // histogramming 
-
-  if ( produceHistos() ){
-    if ( m_daughterPlotTool != "none" ){
-      m_daughterPlots = tool<IPlotTool>(m_daughterPlotTool,this);
-      if( !m_daughterPlots ) {
-        err() << "Unable to get " << m_daughterPlotTool << endmsg;
-        return StatusCode::FAILURE;
-      }
-      if (m_daughterPlotsPath == "") m_daughterPlotsPath = "I"+name();
-      else m_daughterPlots->setPath(m_daughterPlotsPath);
-      if (msgLevel(MSG::DEBUG)) debug() << "Daughter plots will be in " << m_daughterPlotsPath << endmsg ;
-    }
-    m_motherPlots = tool<IPlotTool>(m_motherPlotTool,this);
-    if ( m_motherPlotTool != "none" ){
-      if( !m_motherPlots ) {
-        err() << "Unable to get " << m_motherPlotTool << endmsg;
-        return StatusCode::FAILURE;
-      }
-      if (m_motherPlotsPath == "") m_motherPlotsPath = "O"+name();
-      else m_motherPlots->setPath(m_motherPlotsPath);
-      if (msgLevel(MSG::DEBUG)) debug() << "Mother plots will be in " << m_motherPlotsPath << endmsg ;
-    }    
   }
 
   return createDecays();
@@ -268,8 +236,6 @@ StatusCode MakeResonances::execute() {
     if (msgLevel(MSG::DEBUG)) debug() << "No daughters found at all" << endmsg ;
     return StatusCode::SUCCESS;
   }
-  sc = makePlots(Daughters,m_daughterPlots);
-  if (!sc) return sc;
 
   if ( msgLevel(MSG::DEBUG) || m_printStats )
     always() << "Going to loop on " << Daughters.size() 
@@ -295,8 +261,7 @@ StatusCode MakeResonances::execute() {
     err() << "Unable to filter mothers" << endmsg;
     return StatusCode::FAILURE ;  
   }  
-  sc = makePlots(Final,m_motherPlots);
-  if (!sc) return sc;
+
   if (msgLevel(MSG::DEBUG)) debug() << "Saving " << Final.size() << " candidates" << endmsg ;
   sc = desktop()->saveTrees(Final);
   if (!sc) {
@@ -414,18 +379,6 @@ MakeResonances::makeMother(const LHCb::Particle::ConstVector& Daughters,
   return desktop()->keep(&Candidate);
 
 };
-//#############################################################################
-// Plotting
-//#############################################################################
-StatusCode MakeResonances::makePlots(const LHCb::Particle::ConstVector& PV,
-                                     IPlotTool* PT) {
-
-  if (!produceHistos()) return StatusCode::SUCCESS;
-  if (!PT) return StatusCode::SUCCESS;
-  if (msgLevel(MSG::DEBUG)) debug() << "Plotting " << endmsg;
-
-  return PT->fillPlots(PV) ;
-}
 //#############################################################################
 // Finalization
 //#############################################################################
