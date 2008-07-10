@@ -1,11 +1,9 @@
-// $Id: Pythia8Production.cpp,v 1.5 2008-07-10 15:50:30 gcorti Exp $
+// $Id: Pythia8Production.cpp,v 1.6 2008-07-10 19:45:46 robbep Exp $
 
 // Include files
 
-// from SEAL
-#include "SealBase/ShellEnvironment.h"
-
 // from Gaudi
+#include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -136,8 +134,8 @@ StatusCode Pythia8Production::initialize( ) {
   
   // Get XMLDOC path
   std::string xmlpath = "" ;
-  if ( seal::ShellEnvironment().has("PYTHIA8XML") ) 
-    xmlpath  = seal::ShellEnvironment().get( "PYTHIA8XML" ) ;
+  if ( "UNKNOWN" != System::getEnv("PYTHIA8XML") ) 
+    xmlpath  = System::getEnv( "PYTHIA8XML" ) ;
 
   //Initializing the pythia object
   m_pythia = new Pythia8::Pythia( xmlpath );
