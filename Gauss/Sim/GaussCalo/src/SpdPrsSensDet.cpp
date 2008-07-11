@@ -1,4 +1,4 @@
-// $Id: SpdPrsSensDet.cpp,v 1.11 2007-01-12 15:24:49 ranjard Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.12 2008-07-11 10:47:44 robbep Exp $ 
 // Include files
 
 /// SRD & STD 
@@ -76,8 +76,8 @@ SpdPrsSensDet::SpdPrsSensDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : CaloSensDet        ( type , name , parent ) 
-  , G4VSensitiveDetector( name  )
+  : G4VSensitiveDetector( name  )
+  , CaloSensDet        ( type , name , parent ) 
   , m_BX ( 25. * ns )
   , m_numBXs (6)
   , m_sDelays ( 3, 0. )

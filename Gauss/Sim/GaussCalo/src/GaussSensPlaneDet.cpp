@@ -1,4 +1,4 @@
-// $Id: GaussSensPlaneDet.cpp,v 1.6 2007-01-12 15:24:48 ranjard Exp $ 
+// $Id: GaussSensPlaneDet.cpp,v 1.7 2008-07-11 10:47:44 robbep Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -75,8 +75,8 @@ GaussSensPlaneDet::GaussSensPlaneDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaSensDetBase      ( type , name , parent ) 
-  , G4VSensitiveDetector ( name  )
+  : G4VSensitiveDetector ( name  )
+  , GiGaSensDetBase      ( type , name , parent ) 
   ///
   , m_collectionName     ( "Hits"  ) 
   , m_collection         ( 0 )

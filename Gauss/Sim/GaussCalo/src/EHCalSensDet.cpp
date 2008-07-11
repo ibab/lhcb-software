@@ -1,4 +1,4 @@
-// $Id: EHCalSensDet.cpp,v 1.5 2007-01-12 15:24:46 ranjard Exp $ 
+// $Id: EHCalSensDet.cpp,v 1.6 2008-07-11 10:47:44 robbep Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -59,8 +59,8 @@ EHCalSensDet::EHCalSensDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : CaloSensDet        ( type , name , parent ) 
-  , G4VSensitiveDetector( name  )
+  : G4VSensitiveDetector( name  )
+  , CaloSensDet        ( type , name , parent ) 
   , m_slotWidth( 25 * ns ) 
 { 
   declareProperty( "SlotWidth" , m_slotWidth ) ; 

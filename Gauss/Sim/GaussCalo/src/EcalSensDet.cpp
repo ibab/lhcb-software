@@ -1,4 +1,4 @@
-// $Id: EcalSensDet.cpp,v 1.11 2008-05-30 13:51:07 gcorti Exp $ 
+// $Id: EcalSensDet.cpp,v 1.12 2008-07-11 10:47:44 robbep Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -75,8 +75,8 @@ EcalSensDet::EcalSensDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : EHCalSensDet        ( type , name , parent ) 
-    , G4VSensitiveDetector( name  )
+  : G4VSensitiveDetector( name  )
+  , EHCalSensDet        ( type , name , parent ) 
   //
   //  , m_a_local_inner_ecal  ( 0.008 ) // local non uniformity amplitude 
   // inner ecal

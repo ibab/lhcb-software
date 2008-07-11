@@ -1,4 +1,4 @@
-// $Id: HcalSensDet.cpp,v 1.10 2008-05-30 13:51:07 gcorti Exp $ 
+// $Id: HcalSensDet.cpp,v 1.11 2008-07-11 10:47:44 robbep Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -73,8 +73,8 @@ HcalSensDet::HcalSensDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : EHCalSensDet        ( type , name , parent ) 
-  , G4VSensitiveDetector( name  )
+  : G4VSensitiveDetector( name  )
+  , EHCalSensDet        ( type , name , parent ) 
 {};
 // ============================================================================
 /** fill the hit with the concrete information about the energy and the time.

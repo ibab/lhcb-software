@@ -1,4 +1,4 @@
-// $Id: CaloSensDet.cpp,v 1.23 2008-05-30 13:51:07 gcorti Exp $ 
+// $Id: CaloSensDet.cpp,v 1.24 2008-07-11 10:47:44 robbep Exp $ 
 // Include files 
 
 // SRD & STD 
@@ -76,8 +76,8 @@ CaloSensDet::CaloSensDet
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaSensDetBase      ( type , name , parent ) 
-  , G4VSensitiveDetector ( name  )
+  : G4VSensitiveDetector ( name  ) 
+  , GiGaSensDetBase      ( type , name , parent ) 
   , m_endVolumeName      ( "World" )  
   , m_end                ( 0       ) 
   , m_startVolumeNames   (         ) 
