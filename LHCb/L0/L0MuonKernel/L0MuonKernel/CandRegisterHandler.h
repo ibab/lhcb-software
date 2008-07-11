@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.6 2008-06-05 08:20:28 jucogan Exp $
+// $Id: CandRegisterHandler.h,v 1.7 2008-07-11 15:29:08 jucogan Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -148,27 +148,14 @@ namespace L0Muon {
     int getCandQuarter (int icand){
       return m_candRegister->getulong(BitsCandQuarter  ,ShiftCandQuarter +icand*BitsCandTot);
     }
-    int getStatus(         ){
+    int getStatus(){
       return m_candRegister->getulong(BitsStatus ,ShiftStatus  );
     }  
 
     PMuonCandidate getMuonCandidate(int icand);
 
-    int numberOfCandidates(bool useStatus=false){
-      int ncand=0;
-      if (!useStatus) {
-        for (int icand=0; icand<2; icand++){
-          if (!isEmpty(icand)) ncand++;
-        }
-      } else {
-        int status = getStatus();
-        ncand=status&0x3;
-        ncand = ncand>2 ? 2 : ncand;
-      }
-      
-      return ncand;
-    }  
-
+    int numberOfCandidates(bool useStatus=false) ;
+    
     // Return true if the cand is empty (no bit set)
     bool isEmpty(int icand)
     {
@@ -176,46 +163,9 @@ namespace L0Muon {
       return cand.none();
     }
     
-    void dump(int icand=-1,std::string tab="")
-    {      
-      if (icand==0 || icand==1) {        
-        std::cout <<tab<<"icand="<<icand;
-        if ( isEmpty(icand) ){
-          std::cout << " X ";
-        } else {
-          std::cout << " Quarter= " <<getCandQuarter(icand);
-          std::cout << " Pu= "      <<getCandPU(icand);
-          std::cout << " Board= "   <<getCandBoard(icand);
-          if (getCandCharge(icand)>0)
-            std::cout << " + ";
-          else
-            std::cout << " - ";
-          std::cout << " Pt= "      <<getCandPT(icand);
-          std::cout << " AddM3= "   <<getCandAddM3(icand);
-          std::cout << " OffM2= "   <<getCandOffM2(icand);
-          std::cout << " OffM1= "   <<getCandOffM1(icand);
-          //          std::cout << "   =>  "   <<getCandWord(icand);
-        }
-        std::cout <<"\n";
-      } else {
-        dump(0,tab);
-        dump(1,tab);
-        std::cout <<tab<< "status= "<<getStatus()<<"\n";
-      }
-      
-    }
- 
-  private:
-//     void setCandWord(unsigned int word , int icand){
-//       m_candRegister->set(word  ,BitsCandTot  ,icand*BitsCandTot);
-//     }  
-//     unsigned int getCandWord(int icand){
-//       return m_candRegister->getulong(BitsCandTot , icand*BitsCandTot);
-//     }
-
-//     friend void writeCandInRegister(CandRegisterHandler * handler,unsigned int data, int icand, int version);
-//     friend unsigned int readCandFromRegister(CandRegisterHandler * handler,int icand, int version);
+    void dump(int icand=-1,std::string tab="") ;
     
+ 
   private:
     Register * m_candRegister;
     
