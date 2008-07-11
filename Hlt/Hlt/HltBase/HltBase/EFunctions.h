@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.12 2008-07-04 08:07:12 graven Exp $
+// $Id: EFunctions.h,v 1.13 2008-07-11 11:19:12 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -216,15 +216,17 @@ namespace zen
   /* Return some value from the best match
    *
    */
+
   template <class T1, class Container>
   class binder_by_value : public zen::function<T1> 
   {
+    template <typename T> struct _T2Helper { typedef double (T::* ptr_memfun) () const; };
   public:
     typedef zen::function<T1> Function;
-    typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
+    typedef typename boost::remove_pointer<typename Container::value_type>::type T2;
     typedef zen::binder_function<T1,Container> Binder;
     typedef typename Container::iterator iterator;
-    typedef double (T2::* ptr_memfun) () const;
+    typedef typename _T2Helper<T2>::ptr_memfunc ptr_memfun;
     explicit binder_by_value(const Binder& bin, ptr_memfun pmf): m_binder(bin.clone()),m_pmf(pmf) {}
     binder_by_value(const binder_by_value<T1,Container>& rhs) : m_binder(rhs.m_binder->clone()), m_pmf(rhs.m_pmf) {}
     virtual ~binder_by_value() {}
@@ -238,7 +240,6 @@ namespace zen
     ptr_memfun m_pmf;
     std::auto_ptr<Binder> m_binder;
   };
-
   
   //------------ Helper classes ---------------------------------
 
