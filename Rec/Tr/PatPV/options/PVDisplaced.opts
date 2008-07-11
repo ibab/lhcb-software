@@ -10,5 +10,5 @@ PVDisplaced.OutputVerticesName = "Rec/Vertices/myPVs";
 //  using PatPVOffline algorithm and Best tracks
 //  ApplicationMgr.TopAlg += { "PatPVOffline/PVDisplacedOff" };
 //  PVDisplacedOff.PVOfflineTool.PVSeedingName = "PVSeed3DTool";
-//  PVDisplacedOff.OutputVerticesName = "Rec/Vertices/myPVsOff";
+//  PVDisplacedOff.OutputVertices = "Rec/Vertices/myPVsOff";
 
