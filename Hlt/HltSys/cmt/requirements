@@ -3,6 +3,9 @@ version v3r4
 
 branches cmt doc options
 
+# tmp
+use DaVinciKernel v7r0 Phys
+
 #=======================================================
 # HLT1 and common packages
 #=======================================================
@@ -26,7 +29,7 @@ use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata
 #=======================================================
 
 use HltSelections       v7r2    Hlt   # Patrick Koppenburg
-use Fidel               v1r1    Phys   # Sara Furcas
+use Fidel               v1r2    Phys  # Sara Furcas
 use HltKshort           v1r4    Hlt   # Jaap Panman
 
 use HltSelChecker       v6r3    Hlt   # Patrick Koppenburg
