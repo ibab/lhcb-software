@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.15 2008-07-11 17:22:03 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.16 2008-07-11 19:34:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -175,14 +175,14 @@ StatusCode ParticleEffPurMoni::execute()
 
       // count the true types for this reco type
       MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
-      ++(tally.all);
-      if ( isClone ) ++(tally.clones);
+      if ( !isClone ) ++(tally.all);
+      if ( isClone )  ++(tally.clones);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]);
-        if ( isClone ) ++(tally.clones_detailed[tmpName]);
+        if ( !isClone ) ++(tally.all_detailed[tmpName]);
+        if ( isClone )  ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
       if ( !isClone )
@@ -238,13 +238,14 @@ StatusCode ParticleEffPurMoni::execute()
       // count
       MCTally & tally =
         ((m_mcProtoCount[tesLoc])[protoType].trueMCType[mcRecType])[mcParticleName(mcPart)];
-      ++(tally.all);
+      if (!isClone) ++(tally.all);
+      if (isClone) ++(tally.clones);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string& tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]);
-        if (isClone) ++(tally.clones_detailed[tmpName]);
+        if (!isClone) ++(tally.all_detailed[tmpName]);
+        if (isClone)  ++(tally.clones_detailed[tmpName]);
       }
 
       // Momentum histogramming
@@ -638,7 +639,11 @@ void ParticleEffPurMoni::printStats() const
       std::string recotitle = srecotitle.str();
       recotitle.resize(10+m_maxNameLength,' ');
       always() << recotitle << " |   % of sample";
-      if ( primaryPart ) always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
+      if ( primaryPart ) 
+      {
+        always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
+        if ( !m_correlations.empty() ) always() << "  | ProtoCorr";
+      }
       always() << endreq;
       if ( (*iSum).second.nReco > 0 )
       {
@@ -655,6 +660,7 @@ void ParticleEffPurMoni::printStats() const
           {
             if ( (100.0*(*iT).second.all)/(*iSum).second.nReco > m_minContrib )
             {
+              // Main contribution
               MCTally & tally = (*iT).second;
               std::ostringstream mcTs;
               mcTs << "     -> " << tally.all << " " << (*iT).first;
@@ -669,10 +675,18 @@ void ParticleEffPurMoni::printStats() const
               if ( primaryPart )
               {
                 always() << " | " << eff( tally.all, nBkgTrue )
-                         << " |" << eff( tally.all-tally.clones, nTotalMC ) << " |";
-                if ( tally.clones>0 ) always() << eff( tally.clones, nTotalMC );
+                         << " |"  << eff( tally.all, nTotalMC ) 
+                         << " |"  << eff( tally.clones, nTotalMC );
+                // correlations
+                if ( !m_correlations.empty() )
+                {
+                  const MCTally & corTally = (m_correlations.begin()->second)[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
+                  always() << eff( corTally.all, nTotalMC );
+                }
               }
               always() << endreq;
+
+              // histograms
               if ( primaryPart )
               {
                 // make a histo (not yet for composites....)
@@ -696,6 +710,7 @@ void ParticleEffPurMoni::printStats() const
                 makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Pt",
                               protoTally.effVpt(), mcTally.effVpt() );
               }
+
               // sub contributions
               int suppressedContribsC(0);
               for ( MCTally::Contributions::const_iterator iC = tally.all_detailed.begin();
@@ -716,7 +731,7 @@ void ParticleEffPurMoni::printStats() const
                   {
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
                     always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << " |" << eff( (*iC).second-nClones, nTotalMC ) << " |";
+                             << " |"  << eff( (*iC).second, nTotalMC ) << " |";
                     if ( nClones>0 ) always() << eff( nClones, nTotalMC );
                   }
                   always() << endreq;
