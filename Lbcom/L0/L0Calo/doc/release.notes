@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.106 2008-07-10 20:37:34 robbep Exp $
+! $Id: release.notes,v 1.107 2008-07-11 07:37:45 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2008-07-11 - Patrick Robbe
+ - src/L0CaloCompare.cpp: remove compilation warnings
 
 ! 2008-07-10 - Patrick Robbe
  - src/L0CaloCompare.cpp: give names to histograms and add comparison of

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.4 2008-07-10 20:52:11 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.5 2008-07-11 07:37:45 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -167,8 +167,8 @@ StatusCode L0CaloCompare::execute() {
   mapPigRef.clear() ; 
   std::map<int ,LHCb::L0CaloCandidate * > mapHadRef ;  
   mapHadRef.clear() ; 
-  LHCb::L0CaloCandidate * SumEtRef ;  
-  LHCb::L0CaloCandidate * SpdMultRef ;  
+  LHCb::L0CaloCandidate * SumEtRef = 0 ;  
+  LHCb::L0CaloCandidate * SpdMultRef = 0 ;  
 
 
   for ( candRef = candidatesRef->begin() ; candidatesRef->end() != candRef ; ++candRef ) {
