@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.19 2008-07-11 21:47:10 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.20 2008-07-11 22:00:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -596,8 +596,7 @@ void ParticleEffPurMoni::printStats() const
 
   const std::string & LINES =
     "===================================================================================================================================================";
-  const std::string & lines =
-    "---------------------------------------------------------------------------------------------------------------------------------------------------";
+  const std::string & lines =    "---------------------------------------------------------------------------------------------------------------------------------------------------";
 
   const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
@@ -614,7 +613,7 @@ void ParticleEffPurMoni::printStats() const
       always() << "  -> Used ProtoParticles        : " << iX->first << " "
                << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
       always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
-      always() << "  -> 'ProtoCorr%' = (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
+      always() << "    -> 'ProtoCorr%' = (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
                << ")/" << shortProtoLoc(iX->first) << endreq;
     }
     always() << lines << endreq;
@@ -695,10 +694,10 @@ void ParticleEffPurMoni::printStats() const
                 std::ostringstream h_path;
                 h_path
                   << convertTitleToID((*iLoc).first) << "/"
-                  << (*iSum).first.decayTree << "/"
+                  << "Reco " << (*iSum).first.decayTree << "/"
                   << "Reco " << (*iSum).first.protoType << "/"
-                  << "MC " << IMCReconstructible::text((*iMCT).first) << "/"
-                  << (*iT).first;
+                  << "MC "   << IMCReconstructible::text((*iMCT).first) << "/"
+                  << "MC "   << (*iT).first;
                 makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Ptot",
                               tally.effVp(), mcTally.effVp() );
                 makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Ptot",
@@ -717,9 +716,12 @@ void ParticleEffPurMoni::printStats() const
                   const std::string & loc2    = m_corProtoMap[loc1];
                   const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
                   const MCTally & corTally = (m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                  makeEffHisto( h_path.str()+"/ MCParticle -> "+corname+" Versus Ptot",
+                  const std::string & sloc1   = shortProtoLoc(loc1);
+                  const std::string & sloc2   = shortProtoLoc(loc2);
+                  const std::string & scorname = ( sloc1<sloc2 ? sloc1+"&"+sloc2 : sloc2+"&"+sloc1 );
+                  makeEffHisto( h_path.str()+"/ MCParticle -> "+scorname+" Versus Ptot",
                                 corTally.effVp(), mcTally.effVp() );
-                  makeEffHisto( h_path.str()+"/ MCParticle -> "+corname+" Versus Pt",
+                  makeEffHisto( h_path.str()+"/ MCParticle -> "+scorname+" Versus Pt",
                                 corTally.effVpt(), mcTally.effVpt() );
                 }
               }
