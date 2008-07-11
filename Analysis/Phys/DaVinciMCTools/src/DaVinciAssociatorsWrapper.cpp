@@ -35,7 +35,7 @@ DaVinciAssociatorsWrapper::~DaVinciAssociatorsWrapper() {}
 //=============================================================================
 // Make & return the linker
 //============================================================================= 
-Particle2MCLinker* DaVinciAssociatorsWrapper::linker( /*std::string*/ int myMethod, 
+Particle2MCLinker* DaVinciAssociatorsWrapper::linker( Particle2MCMethod::AssociationMethod myMethod, 
                                                       std::vector<std::string> myLocations 
                                                     ) {
   //If the linker already exists, just return a pointer to it

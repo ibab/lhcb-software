@@ -29,7 +29,7 @@ public:
   StatusCode initialize() ;
   StatusCode finalize() ;
 
-  Particle2MCLinker* linker(int, std::vector< std::string >
+  Particle2MCLinker* linker(Particle2MCMethod::AssociationMethod, std::vector< std::string >
 //                            myLocations = std::vector<std::string>(1,"")
                            ) ; ///< returns a linker
 
