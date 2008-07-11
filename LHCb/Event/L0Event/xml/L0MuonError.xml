@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  :  -->
+<!--- Created : 2008-02-12 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='L0Event' >
+    <class name='L0MuonError' id='6011' author='J. Cogan' desc='L0Muon trigger errors'>
+      <desc> *  representing the errors detected in the L0Muon system.</desc>
+      <base name='KeyedObject&lt;LHCb::MuonTileID&gt;'/>
+      &KeyedObject;
+      <import name="Kernel/MuonTileID"/>
+      <location name="Default"   place="Trig/L0/MuonErrorCtrl"/>
+      <location name="CtrlCUSU"      place="Trig/L0/MuonErrorCtrl"/>
+      <location name="CtrlBCSU"  place="Trig/L0/MuonErrorBCSUCtrl"/>
+      <location name="ProcBCSU"      place="Trig/L0/MuonErrorBCSU"/>
+      <location name="ProcPU"        place="Trig/L0/MuonErrorPU"/>
+
+      <constructor
+        argList="LHCb::MuonTileID mid"
+        initList="KeyedObject&lt;LHCb::MuonTileID&gt;(mid), m_decoding (0), m_hardware (0), m_status (0), m_bcid (0)"
+        desc="Constructor"/>
+      
+      <attribute name="decoding" type="int" 
+        desc="Decoding error"/>
+      <attribute name="hardware" type="int" 
+        desc="Hardware error"/>
+      <attribute name="status" type="int" 
+        desc="Status if in error"/>
+      <attribute name="bcid" type="int" 
+        desc="BCID if in error"/>
+      
+    </class>  
+  </package>
+</gdd>
