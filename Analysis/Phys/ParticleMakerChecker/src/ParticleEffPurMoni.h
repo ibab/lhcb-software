@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.15 2008-07-11 17:22:03 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.16 2008-07-11 20:45:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -272,6 +272,7 @@ private: // definitions
 
   /// map between TES location and Stats object
   typedef std::map< std::string, ProtoTESStats > ProtoTESStatsMap;
+  typedef std::map< std::string, ProtoTESStatsMap > ParticleTESStatsMap;
 
   /// Map between Particles and MCParticles
   typedef std::map<const LHCb::ProtoParticle*,const LHCb::MCParticle*> P2MCP;
@@ -401,6 +402,9 @@ private: // data
   /// MC Associations for Particles
   mutable Particle2MCLinker * m_particleLinker;
 
+  /// Statis for Particle and ProtoParticle locations
+  mutable ParticleTESStatsMap m_partProtoTESStats;
+
   /// TES location -> linker map type
   typedef std::map<std::string,ProtoParticle2MCLinker *> ProtoLinkerTESMap;
 
@@ -418,9 +422,6 @@ private: // data
 
   /// Protoparticle reco correlations
   mutable MCSummaryMapAllProtos m_correlations;
-
-  /// ProtoParticle stats for each TES location
-  mutable ProtoTESStatsMap m_protoTesStats;
 
   /// Raw MC informtion
   mutable MCRecTypeMap m_rawMCMap;
@@ -467,6 +468,9 @@ private: // data
 
   /// Minimum momentum for plots
   double m_minP;
+
+  /// ProtoParticle correlation map
+  mutable std::map<std::string,std::string> m_corProtoMap;
 
 };
 

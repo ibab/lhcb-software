@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.16 2008-07-11 19:34:00 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.17 2008-07-11 20:45:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -124,7 +124,7 @@ StatusCode ParticleEffPurMoni::execute()
     if ( msgLevel(MSG::DEBUG) ) debug() << "     -> selected " << endreq;
 
     // store this proto TES location
-    const std::string protoTesLoc = objectLocation((*iPM).first->parent());
+    const std::string& protoTesLoc = objectLocation((*iPM).first->parent());
     protoLocations.insert( protoTesLoc );
 
     // Get the MCParticle
@@ -155,10 +155,14 @@ StatusCode ParticleEffPurMoni::execute()
           iPart != (*iPM).second.end(); ++iPart )
     {
       // Find its TES location
-      const std::string tesLoc = objectLocation( (*iPart).firstParticle->parent() );
+      const std::string& tesLoc = objectLocation( (*iPart).firstParticle->parent() );
       if ( msgLevel(MSG::DEBUG) )
         debug() << " -> Found Particle in " << tesLoc << endreq
                 << " -> " << *iPart << endreq;
+
+      // count protos per particle TES
+      ++((m_partProtoTESStats[tesLoc])[protoTesLoc]).nTotal;
+      if ( mcPart ) ++((m_partProtoTESStats[tesLoc])[protoTesLoc]).nWithMC;
 
       // get the data for this TES location
       MCSummaryMap & mcMap = m_locMap[tesLoc];
@@ -214,9 +218,6 @@ StatusCode ParticleEffPurMoni::execute()
       // is this proto selected ?
       if ( !selectProto(*proto) ) continue;
 
-      // count the total number of selected protos at this TES location
-      ++(m_protoTesStats[tesLoc].nTotal);
-
       // Get the MCParticle
       const LHCb::MCParticle * mcPart = mcParticle(*proto);
 
@@ -225,9 +226,6 @@ StatusCode ParticleEffPurMoni::execute()
 
       // add to list of seen MCPs
       if ( mcPart ) usedMCPs.insert(mcPart);
-
-      // count the total number of selected protos at this TES location with MC
-      if ( mcPart ) ++(m_protoTesStats[tesLoc].nWithMC);
 
       // Get the MCParticle reco type
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
@@ -328,6 +326,7 @@ StatusCode ParticleEffPurMoni::execute()
           const std::string& proto2Type = protoParticleType(*proto2);
           if ( loc1 != loc2 && proto1Type == proto2Type )
           {
+            m_corProtoMap[loc1] = loc2;
             const std::string& corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
             // count
             MCTally & tally =
@@ -593,33 +592,28 @@ void ParticleEffPurMoni::printStats() const
    */
 
   const std::string & LINES =
-    "====================================================================================================================";
+    "===================================================================================================================================================";
   const std::string & lines =
-    "--------------------------------------------------------------------------------------------------------------------";
+    "---------------------------------------------------------------------------------------------------------------------------------------------------";
 
   const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
   always() << LINES << endreq;
 
-  // loop over ProtoParticles used
-  for ( ProtoTESStatsMap::iterator iProtoTES = m_protoTesStats.begin();
-        iProtoTES != m_protoTesStats.end(); ++iProtoTES )
-  {
-    always() << " ProtoParticle Location " << shortProtoLoc((*iProtoTES).first)
-             << " (" << (*iProtoTES).first << ")" << endreq;
-    always() << "   -> Fraction with MC "
-             << eff( (*iProtoTES).second.nWithMC,(*iProtoTES).second.nTotal )
-             << endreq;
-  }
-  always() << lines << endreq;
-
-  always() << LINES << endreq;
   // loop over Particle TES locations
   for ( LocationMap::iterator iLoc = m_locMap.begin();
         iLoc != m_locMap.end(); ++iLoc )
   {
-    always()  << " Particle Location : " << (*iLoc).first << endreq
-              << lines << endreq;
+    always() << " Particle Location : " << (*iLoc).first << endreq;
+    for ( ProtoTESStatsMap::const_iterator iX = m_partProtoTESStats[(*iLoc).first].begin();
+          iX != m_partProtoTESStats[(*iLoc).first].end(); ++iX )
+    {
+      always() << "  -> Used ProtoParticles                   : " << iX->first << " " 
+               << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
+      always() << "  -> Correlated ProtoParticles (ProtoCorr) : " << m_corProtoMap[iX->first] << endreq;
+    }
+    always() << lines << endreq;
+
     // loop over reco particle types for this location
     for ( MCSummaryMap::iterator iSum = (*iLoc).second.begin();
           iSum != (*iLoc).second.end(); ++iSum )
@@ -680,7 +674,10 @@ void ParticleEffPurMoni::printStats() const
                 // correlations
                 if ( !m_correlations.empty() )
                 {
-                  const MCTally & corTally = (m_correlations.begin()->second)[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
+                  const std::string & loc1    = (*iSum).first.protoTESLoc;
+                  const std::string & loc2    = m_corProtoMap[loc1];
+                  const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
+                  const MCTally & corTally = (m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
                   always() << eff( corTally.all, nTotalMC );
                 }
               }
