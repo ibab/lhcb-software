@@ -1,4 +1,4 @@
-// $Id: Particle2MCMethod.h,v 1.3 2008-06-03 15:24:15 cattanem Exp $
+// $Id: Particle2MCMethod.h,v 1.4 2008-07-11 13:29:58 gligorov Exp $
 #ifndef KERNEL_PARTICLE2MCMETHOD_H
 #define KERNEL_PARTICLE2MCMETHOD_H 1
 
@@ -18,7 +18,7 @@ namespace Particle2MCMethod {
    *  @author Juan PALACIOS
    *  @date   2006-10-11
    */
-  enum {
+  enum AssociationMethod {
     No = 0, WithChi2, Chi2, Links, Composite, ChargedPP, NeutralPP, Max
   } ;
 
