@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-07-11 - Stephanie Hansmann-Menzemer
+- Add python directory with Fitting.py and RecoTracking.py
 
 !============================ TrackSys v4r14 2008-06-03 ======================
 ! 2008-06-03 - Marco Cattaneo

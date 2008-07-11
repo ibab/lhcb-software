@@ -1,3 +1,6 @@
+#pragma print on
+// This file (Fitting.opts) is obsolete, please use Fitting.py instead
+#pragma print off
 
 // ====================================================================
 //  Track fitting options

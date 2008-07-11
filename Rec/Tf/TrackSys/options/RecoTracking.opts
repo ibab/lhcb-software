@@ -1,4 +1,6 @@
- 
+ #pragma print on
+// This file (RecoTracking.opts) is obsolete, please use RecoTracking.py instead
+#pragma print off
 // ====================================================================
 //  Tracking reconstruction phase
 // ====================================================================
