@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.44 2008-06-06 12:11:50 lnicolas Exp $
+// $Id: AlignAlgorithm.cpp,v 1.45 2008-07-11 13:52:36 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -29,6 +29,8 @@
 // from BOOST
 #include "boost/assign/std/vector.hpp"
 #include "boost/assign/list_of.hpp"
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 // local
 #include "AlignAlgorithm.h"
@@ -131,7 +133,8 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_matrixSolverTool(0),
     m_trackresidualtool("Al::TrackResidualTool"),
     m_vertexresidualtool("Al::VertexResidualTool"),
-    m_equations(0)
+    m_equations(0),
+    m_resetHistos(false)
 {
   declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
   declareProperty("TracksLocation"              , m_tracksLocation               = TrackLocation::Default  );
@@ -160,7 +163,7 @@ StatusCode AlignAlgorithm::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   /// Set histogram path
-  if ("" == histoTopDir()) setHistoTopDir("Alignment/");
+    //if ("" == histoTopDir()) setHistoTopDir("Alignment/");
 
   /// Get pointer to incident service and add listener
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
@@ -231,48 +234,10 @@ StatusCode AlignAlgorithm::initialize() {
   m_norTotChi2vsIterHisto    = bookProfile1D(32, "Normalised total sum of track chi2 vs iteration" , -0.5, m_nIterations-0.5, m_nIterations);
   m_dAlignChi2vsIterHisto    = bookProfile1D(40, "Delta Alignment chi2 vs iteration"               , -0.5, m_nIterations-0.5, m_nIterations);
   m_nordAlignChi2vsIterHisto = bookProfile1D(41, "Delta Alignment normalised chi2 vs iteration"    , -0.5, m_nIterations-0.5, m_nIterations);
-
-  for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) {
-    const unsigned    index_i = i->index();
-    const std::string name   = i->name();
-    if (printDebug()) debug() << "Booking histograms for element " << name << " with index " << index_i <<endmsg;
-    m_resHistos[index_i]     = book2D(1000u+index_i, "Residual vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations,
-                                      -1.00 , +1.00, 100);
-    m_pullHistos[index_i]    = book2D(2000u+index_i, "Pull vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations,
-                                      -5.00 , +5.00, 100);
-    m_nHitsHistos[index_i]   = book1D(3000u+index_i, "Number of hits vs iteration for " + name, 
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-
-    m_deltaTxHisto[index_i]  = book1D(10000u+index_i, "Delta Tx vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    m_deltaTyHisto[index_i]  = book1D(20000u+index_i, "Delta Ty vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    m_deltaTzHisto[index_i]  = book1D(30000u+index_i, "Delta Tz vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    m_deltaRxHisto[index_i]  = book1D(40000u+index_i, "Delta Rx vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    m_deltaRyHisto[index_i]  = book1D(51000u+index_i, "Delta Ry vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    m_deltaRzHisto[index_i]  = book1D(60000u+index_i, "Delta Rz vs iteration for " + name,
-                                      -0.5, m_nIterations-0.5, m_nIterations);
-    
-    if ( m_fillCorrelationHistos ) {
-      m_autoCorrHistos[index_i] = book2D(4000u+index_i, "hit autocorrelation in " + name + "  vs iteration ",
-                                         -0.5, m_nIterations-0.5, m_nIterations,
-                                         -0.5, +0.5, 250);
-      unsigned(index_j) = index_i; 
-      for (ElementRange::const_iterator j = i; j != m_rangeElements.end(); ++j, ++index_j) {
-	m_corrHistos[std::make_pair(index_i, index_j)] = book2D((10000 + index_i) * (100 + index_j),
-                                                                "hit correlation of " + name + " with " + j->name()
-                                                                + " vs iteration "
-                                                                + ( i == j ? "(excluding autocorrelations!)" : "" ),
-                                                                -0.5, m_nIterations-0.5, m_nIterations,
-                                                                -1.0, +1.0, 250);
-      }
-    }
-  }
+  
+  for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) 
+    m_elemHistos.push_back( new AlElementHistos(*this,*i,m_nIterations) ) ;
+  m_resetHistos = false ;
 
   return StatusCode::SUCCESS;
 }
@@ -285,6 +250,10 @@ StatusCode AlignAlgorithm::finalize() {
     std::ofstream logfile(m_logFileName.c_str()) ;
     logfile << m_logMessage.str() << std::endl ;
   }
+
+  for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
+       ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
+
   return  
     m_trackresidualtool.release() && 
     m_vertexresidualtool.release() && 
@@ -296,15 +265,21 @@ StatusCode AlignAlgorithm::finalize() {
 //=============================================================================
 StatusCode AlignAlgorithm::execute() {
 
+  // Reset histograms if required
+  if(m_resetHistos) resetHistos() ;
+
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
   const Tracks* tracks = get<Tracks>(m_tracksLocation);
   if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks->size() << endmsg;
+  m_nTracks += tracks->size() ;
+
+  // First just copy the tracks
   std::vector<const LHCb::Track*> selectedtracks ;
   for( Tracks::const_iterator iTrack = tracks->begin(), iTrackEnd = tracks->end(); iTrack != iTrackEnd; ++iTrack) 
     // just a sanity check
     if( (*iTrack)->fitStatus()==LHCb::Track::Fitted &&
 	(*iTrack)->nDoF() > 0 &&
-	!(*iTrack)->nodes().empty() ) { 
+	!(*iTrack)->nodes().empty() ) {
       const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
       if( res ) {
 	selectedtracks.push_back( *iTrack ) ;
@@ -319,10 +294,43 @@ StatusCode AlignAlgorithm::execute() {
 		<< " nDoF = " << (*iTrack)->nDoF()
 		<< " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
-  size_t numusedtracks = selectedtracks.size();
-  m_nTracks += selectedtracks.size() ;
+  
+  // Now I got a bit worried about overlaps. Sort these tracks in the
+  // number of LHCbIDs. Then remove overlapping tracks.
+  std::sort(selectedtracks.begin(), selectedtracks.end(), 
+	    boost::lambda::bind(&LHCb::Track::nLHCbIDs,*boost::lambda::_1) > 
+	    boost::lambda::bind(&LHCb::Track::nLHCbIDs,*boost::lambda::_2)) ;
+  std::vector< const LHCb::Track* > nonoverlappingtracks ;
+  std::set< unsigned int > selectedlhcbids ;
+  for( std::vector<const LHCb::Track*>::const_iterator itr = selectedtracks.begin() ;
+       itr != selectedtracks.end(); ++itr) {
+    std::set<unsigned int> ids ;
+    for( std::vector<LHCb::LHCbID>::const_iterator iid = (*itr)->lhcbIDs().begin() ;
+	 iid != (*itr)->lhcbIDs().end(); ++iid) ids.insert( iid->lhcbID() ) ;
+    //std::set<LHCb::LHCbID> ids( (*itr)->lhcbIDs().begin(), (*itr)->lhcbIDs().end() ) ;
+    if( ids.size() != (*itr)->lhcbIDs().size() ) {
+      warning() << "Skipping track with non-unique LHCbIds" << endreq ;
+    } else {
+      std::set<unsigned int> allids = selectedlhcbids ;
+      allids.insert( ids.begin(), ids.end() ) ;
+      if( allids.size() != selectedlhcbids.size() + ids.size() ) {
+	//warning() << "Skipping track of type " << (*itr)->type() 
+	// << "because it overlaps with another selected track" << endreq ;
+      } else {
+	nonoverlappingtracks.push_back(*itr) ;
+	selectedlhcbids = allids ;
+      }
+    }
+  }
+  if( selectedtracks.size() != nonoverlappingtracks.size() ) 
+    warning() << "Rejected " << selectedtracks.size() - nonoverlappingtracks.size() << " out of "
+	      << selectedtracks.size() << " tracks because of overlaps." << endreq ;
+
+  selectedtracks = nonoverlappingtracks ;
+  
 
   // Now deal with vertices, if there are any.
+  size_t numusedtracks(0) ;
   size_t numusedvertices(0) ;
   if( !m_vertexLocation.empty() ) {
     const LHCb::RecVertices* vertices = get<LHCb::RecVertices>(m_vertexLocation);
@@ -333,10 +341,11 @@ StatusCode AlignAlgorithm::execute() {
 	// list. if the vertex is not accepted (e.g. because there are
 	// not enough tracks), then a 0 pointer is returned.
 	const Al::MultiTrackResiduals* res = m_vertexresidualtool->get(**ivertex,selectedtracks) ;
-	if (res ) {
-	  accumulate( *res ) ;
+	if (res && accumulate( *res ) ) {
+	  m_equations->addVertexChi2Summary( res->vertexChi2(), res->vertexNDoF() ) ;
 	  // need some histogramming here
 	  ++numusedvertices ;
+	  numusedtracks += res->numTracks() ;
 	} 
       }
     }
@@ -346,21 +355,47 @@ StatusCode AlignAlgorithm::execute() {
   if (printVerbose()) verbose() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
   for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
        iTrack != selectedtracks.end(); ++iTrack ) {
-
+    
     // this cannot return a zero pointer since we have already checked before
     const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
     assert(res!=0) ;
-    accumulate( *res ) ;
-    m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
-    m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
+    if( res && accumulate( *res ) ) {
+      m_trackChi2Histo->fill(m_iteration, (*iTrack)->chi2());
+      m_trackNorChi2Histo->fill(m_iteration, (*iTrack)->chi2PerDoF());
+      ++numusedtracks ;
+    }
   } 
-
+  
   m_equations->addEventSummary( numusedtracks, numusedvertices ) ;
-
+  
   return StatusCode::SUCCESS;
 }
 
-void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
+static int dumpnumzeroeigenvalues(const CLHEP::HepSymMatrix& M)
+{
+  std::cout << "before diagonalization: " << M.num_row() << std::endl ;
+  CLHEP::HepSymMatrix D = M ;
+  CLHEP::diagonalize( &D ) ;
+  //std::cout << "diagonalized: " << D << std::endl ;
+  std::vector<double> eigenvalues ;
+  int numzero(0),numneg(0) ;
+  for(int irow=1;irow<=D.num_row(); ++irow) {
+    if( D.fast(irow,irow)<0 ) {
+      std::cout << "oops: negative eigenvalue? " << D.fast(irow,irow) << std::endl ;
+      ++numneg ;
+    }
+    else if( D.fast(irow,irow)<1e-6) ++numzero ;
+    eigenvalues.push_back( D.fast(irow,irow)) ;
+  }
+  std::sort(eigenvalues.begin(), eigenvalues.end()) ;
+  std::cout << "numzero: " << numzero << std::endl ;
+  std::cout << "smallest 6 eigenvalues: " ;
+  for(int i=0; i<6; ++i) std::cout << eigenvalues[i] << " " ;
+  std::cout << std::endl ;
+  return numneg ;
+}
+
+bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 {
   if (printVerbose()) verbose() << "==> Found " << residuals.nodes().size() << " nodes"<< endmsg;
   std::vector<Data> data;
@@ -368,6 +403,7 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
   typedef Al::Residuals::NodeContainer::const_iterator NodeIter;
   size_t numexternalhits(0) ;
   size_t nodeindex(0) ;
+  std::set<unsigned> alignables ;
   for (Al::Residuals::NodeContainer::const_iterator node = residuals.nodes().begin(); 
        node != residuals.nodes().end();++node, ++nodeindex) {
     assert( (*node)->hasMeasurement() ) ;
@@ -394,13 +430,8 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       error() << "==> Could not get projector for selected measurement!" << endmsg;
       continue;
     }
-    double res  = residuals.r(nodeindex) ;
-    double err  = std::sqrt(residuals.V(nodeindex)) ;
-    
-    m_nHitsHistos[index]->fill(m_iteration);
-    m_resHistos[index]->fill(m_iteration, res);
-    m_pullHistos[index]->fill(m_iteration, res/(*node)->errResidual());
-    bool isoutlier = res*res/(*node)->errResidual2() > m_chi2Outlier ;
+    double res    = residuals.r(nodeindex) ;
+    double err    = std::sqrt(residuals.V(nodeindex)) ;
     // Get alignment derivatives
     LHCb::StateVector state((*node)->state().stateVector(),(*node)->state().z());
     // the projector calculates the derivatives in the global
@@ -410,13 +441,19 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       proj->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) *
       elem->jacobian() ;
     
+    bool isoutlier = res*res/(*node)->errResidual2() > m_chi2Outlier ;
+    
     // push back normalized residuals & derivatives;
     res /= err;
     der /= err;
     data.push_back(Data(nodeindex, index, res, der, isoutlier));
+    alignables.insert(index) ;
   }
-  
-  if (!data.empty()) {
+
+  // reject this track if there is only a single alignable element and no external hits
+  bool accept = !data.empty() && ( alignables.size()>=2 || numexternalhits >= 1 ) ;
+  if ( accept ) {
+    
     for (std::vector<Data>::const_iterator id = data.begin(), idEnd = data.end(); id != idEnd; ++id) {
       m_equations->addHitSummary(id->index(), residuals.V(id->nodeindex()), residuals.R(id->nodeindex())) ;
       // outliers are not added to the first derivative. they must be
@@ -427,25 +464,16 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	m_equations->V(id->index())            -= convert(id->r()*id->d()) ;
       else
 	m_equations->numOutliers(id->index())  += 1 ;
+      
       m_equations->M(id->index(), id->index()) += (Transpose(id->d())*id->d());
       
       for (std::vector<Data>::const_iterator jd = data.begin(); jd != idEnd; ++jd) {
 	if ( id == jd || ( m_correlation && id->index() <= jd->index() )) {
 	  double c = residuals.HCH_norm( id->nodeindex(), jd->nodeindex() ) ;
 	  m_equations->M(id->index(), jd->index()) -= c * (Transpose(id->d())*jd->d());
-	  
-	  if ( m_fillCorrelationHistos ) {
-	    if (!( id->nodeindex() == jd->nodeindex())) {
-	      m_corrHistos[std::make_pair(id->index(), jd->index())]->
-		fill(m_iteration, c/std::sqrt(residuals.HCH_norm(id->nodeindex(),id->nodeindex()) *
-					      residuals.HCH_norm(jd->nodeindex(),jd->nodeindex())) ) ;
-	    } else {
-	      m_autoCorrHistos[id->index()]->fill(m_iteration, c);
-	    }
-	  }
 	}
       }
-
+          
       // compute the derivative of the curvature, used for one of the
       // canonical constraints:
       //   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
@@ -454,15 +482,38 @@ void AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       const Gaudi::TrackProjectionMatrix& H = residuals.nodes()[id->nodeindex()]->projectionMatrix() ;
       double normalized_drdomega = (H*C)(0,4) / std::sqrt(residuals.V(id->nodeindex())) ;
       m_equations->dOmegaDAlpha(id->index()) += convert(normalized_drdomega*id->d()) ;
-    }
+
+      // fill some histograms
+      {
+	double V = residuals.V(id->nodeindex()) ;
+	double R = residuals.R(id->nodeindex()) ;
+	double r = residuals.r(id->nodeindex()) ;
+	double f = std::sqrt(R/V) ;
+	double pull = r / sqrt(R) ;
+	
+	size_t index = id->index() ;
+	double sign = id->d()(0,0) > 0 ? 1 : -1 ;
+	m_elemHistos[index]->m_nHitsHisto->fill(m_iteration);
+	m_elemHistos[index]->m_resHisto->fill(m_iteration, sign*r);
+	m_elemHistos[index]->m_pullHisto->fill(m_iteration, sign*pull);
+	m_elemHistos[index]->m_autoCorrHisto->fill(m_iteration,f) ;
+	for(int ipar=0; ipar<6; ++ipar) {
+	  double weight = id->d()(0,ipar) * f ;
+	  double thispull = pull ;
+	  if(weight<0) { weight *= -1 ; thispull *= -1 ; }
+	  // the last minus sign is because somebody defined our first derivative with the wrong sign
+	  m_elemHistos[index]->m_residualPullHistos[ipar]->fill( -thispull, weight ) ;
+	}
+      } 
+    } 
     // keep some information about the tracks that we have seen
     m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), numexternalhits ) ;
   }
+  return accept ;
 }
-
-
-
-void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
+ 
+ 
+ void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
 				  AlVec& scale, const std::vector<int>& offsets) const
 {  
   // This is just not sufficiently fool proof!
@@ -539,7 +590,8 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
   if (weight>0) pivot *= 1/weight ;
   Gaudi::Transform3D canonicalframe( pivot ) ;
   Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
-  info() << "Pivot for canonical constraints: " << pivot << endmsg ;
+  info() << "Pivot, z-range for canonical constraints: " 
+	 << pivot << ", [" << zmin << "," << zmax << "]" << endmsg ;
 
   // add extra rows/columns
   size_t size = halfDChi2DAlpha.size() ;
@@ -635,7 +687,6 @@ size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat&
   return numActiveConstraints ;
 }
 
-
 static inline double signedroot(double root)
 {
   return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
@@ -697,13 +748,16 @@ void AlignAlgorithm::update() {
   std::ostringstream logmessage ;
   logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	     << "Iteration: " << m_iteration << std::endl
+	     << "Total number of events: " << m_equations->numEvents() << std::endl 
 	     << "Total number of tracks: " << m_nTracks << std::endl
 	     << "Number of covariance calculation failures: " << m_covFailure << std::endl
 	     << "Used " << m_equations->numVertices() << " vertices for alignment" << std::endl
              << "Used " << m_equations->numTracks() << " tracks for alignment" << std::endl
-	     << "Total track chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
-	     << "Average track chisquare: " << m_equations->totalChiSquare() / m_equations->numTracks() << std::endl
-             << "Normalised total track chisquare: " << m_equations->totalChiSquare() / m_equations->totalNumDofs() << std::endl
+	     << "Total chisquare/dofs: " << m_equations->totalChiSquare() << " / " << m_equations->totalNumDofs() << std::endl
+	     << "Average track chisquare: " << m_equations->totalTrackChiSquare() / m_equations->numTracks() << std::endl
+	     << "Track chisquare/dof: " << m_equations->totalTrackChiSquare() / m_equations->totalTrackNumDofs() << std::endl
+	     << "Vertex chisquare/dof: " 
+	     << (m_equations->totalVertexNumDofs()>0 ? m_equations->totalVertexChiSquare() / m_equations->totalVertexNumDofs() : 0.0 ) << std::endl
 	     << "Used " << m_equations->numHits() << " hits for alignment" << std::endl
              << "Total number of hits in external detectors: " << m_equations->numExternalHits() << std::endl;
 
@@ -720,7 +774,7 @@ void AlignAlgorithm::update() {
       debug() << "\n==> V["<<i<<"] = "    << m_equations->V(i) << endmsg;
     }
   }
-    
+
   /// Take the gaudi vector and matix and fill AlVec and AlSym for ALL elements and ALL parameters
   size_t numParameters = Derivatives::kCols * m_equations->nElem() ;
   AlVec    tmpDerivatives(numParameters);
@@ -856,12 +910,12 @@ void AlignAlgorithm::update() {
 	  // need const_cast because loki range givess access only to const values 
 	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
 	  if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
-          fillHisto1D(m_deltaTxHisto[it->index()], m_iteration+1u, delta.translation()[0], delta.errTranslation()[0]);
-          fillHisto1D(m_deltaTyHisto[it->index()], m_iteration+1u, delta.translation()[1], delta.errTranslation()[1]);
-          fillHisto1D(m_deltaTzHisto[it->index()], m_iteration+1u, delta.translation()[2], delta.errTranslation()[2]);
-          fillHisto1D(m_deltaRxHisto[it->index()], m_iteration+1u, delta.rotation()[0]   , delta.errRotation()[0]);
-          fillHisto1D(m_deltaRyHisto[it->index()], m_iteration+1u, delta.rotation()[1]   , delta.errRotation()[1]);
-          fillHisto1D(m_deltaRzHisto[it->index()], m_iteration+1u, delta.rotation()[2]   , delta.errRotation()[2]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaTxHisto, m_iteration+1u, delta.translation()[0], delta.errTranslation()[0]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaTyHisto, m_iteration+1u, delta.translation()[1], delta.errTranslation()[1]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaTzHisto, m_iteration+1u, delta.translation()[2], delta.errTranslation()[2]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaRxHisto, m_iteration+1u, delta.rotation()[0]   , delta.errRotation()[0]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaRyHisto, m_iteration+1u, delta.rotation()[1]   , delta.errRotation()[1]);
+          fillHisto1D(m_elemHistos[it->index()]->m_deltaRzHisto, m_iteration+1u, delta.rotation()[2]   , delta.errRotation()[2]);
         }
       }
     } else {
@@ -893,6 +947,15 @@ void AlignAlgorithm::reset() {
   m_covFailure = 0u;
   // clear derivatives and H maps
   m_equations->clear();
+  m_resetHistos = true ;
+}
+
+void AlignAlgorithm::resetHistos() 
+{
+  m_resetHistos = false ;
+  // moved this seperately such that histograms are not reset on last iteration
+  std::for_each(m_elemHistos.begin(),m_elemHistos.end(),
+		boost::lambda::bind(&AlElementHistos::reset,*boost::lambda::_1)) ;
 }
 
 StatusCode AlignAlgorithm::queryInterface(const InterfaceID& id, void** ppI) {

@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.29 2008-06-02 09:08:58 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.30 2008-07-11 13:52:36 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -45,6 +45,7 @@
 #include "ITrackResidualTool.h"
 #include "IVertexResidualTool.h"
 #include "AlignmentElement.h"
+#include "AlElementHistos.h"
 
 namespace Al {
   class Equations;
@@ -107,7 +108,8 @@ protected:
 private:
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
-  void accumulate( const Al::Residuals& residuals ) ;
+  bool accumulate( const Al::Residuals& residuals ) ;
+  void resetHistos() ;
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -141,17 +143,7 @@ private:
 
   /// Monitoring
   // @todo: Move this to a monitoring tool
-  std::map<unsigned int, IHistogram2D*>                          m_resHistos;
-  std::map<unsigned int, IHistogram2D*>                          m_pullHistos;
-  std::map<unsigned int, IHistogram1D*>                          m_nHitsHistos;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaTxHisto;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaTyHisto;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaTzHisto;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaRxHisto;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaRyHisto;
-  std::map<unsigned int, IHistogram1D*>                          m_deltaRzHisto;
-  std::map<unsigned int, IHistogram2D*>                          m_autoCorrHistos;
-  std::map<std::pair<unsigned int, unsigned int>, IHistogram2D*> m_corrHistos;
+  std::vector<AlElementHistos*>                                  m_elemHistos ;
   IHistogram2D*                                                  m_trackChi2Histo;
   IHistogram2D*                                                  m_trackNorChi2Histo;
   IProfile1D*                                                    m_totNusedTracksvsIterHisto;
@@ -160,7 +152,7 @@ private:
   IProfile1D*                                                    m_avgChi2vsIterHisto;
   IProfile1D*                                                    m_dAlignChi2vsIterHisto;
   IProfile1D*                                                    m_nordAlignChi2vsIterHisto;
-
+  bool                                                           m_resetHistos ; // reset histos on next event processing
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
