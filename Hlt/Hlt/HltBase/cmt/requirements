@@ -49,4 +49,4 @@ apply_pattern    reflex_dictionary                                 \
 # Hack for cmt v1r19 bug to link dictionary on windows
 macro HltBaseDict_use_linkopts $(use_linkopts)
 
-macro_append Boost_linkopts $(Boost_linkopts_regex)
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
