@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.370 2008-07-11 07:29:47 cattanem Exp $ 
+! $Id: release.notes,v 1.371 2008-07-11 16:35:05 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-07-11 - Marco Clemencic
+ - Minor changes to AlignmentConditions to be able to subclass it (needed by the
+   specialized VeloAlignCond).
+ - Removed CLID for ParamValidDataObject (not used and unusable).
 
 ! 2008-07-11 - Marco Cattaneo
  - In requirements, remove dependency on LHCbKernel, not needed

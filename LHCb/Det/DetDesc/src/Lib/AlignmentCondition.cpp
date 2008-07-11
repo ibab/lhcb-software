@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.20 2008-03-19 00:41:33 janos Exp $
+// $Id: AlignmentCondition.cpp,v 1.21 2008-07-11 16:35:05 marcocle Exp $
 // Include files
 #include <algorithm>
 
@@ -122,5 +122,10 @@ void AlignmentCondition::updateParams()
 //=============================================================================
 IMessageSvc* AlignmentCondition::msgSvc() const {
   return m_services->msgSvc();
+}
+//=============================================================================
+std::ostream &AlignmentCondition::fillStream(std::ostream &s) const {
+  return ParamValidDataObject::fillStream(s)
+           << "offNominalMatrix:\n" << m_matrixInv;
 }
 //=============================================================================

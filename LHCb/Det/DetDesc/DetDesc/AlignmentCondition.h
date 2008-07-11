@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.16 2007-09-18 08:43:51 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.17 2008-07-11 16:35:05 marcocle Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -75,11 +75,11 @@ public:
                                           const std::vector<double>& rotation,
                                           const std::vector<double>& pivot);
 
+  std::ostream &fillStream(std::ostream &s) const;
+  
 protected:
 
   IMessageSvc*       msgSvc  () const;
-
-private:
 
   inline void loadParams(const std::vector<double>& translation,
                          const std::vector<double>& rotation,
@@ -91,9 +91,7 @@ private:
   }
   
 
-  StatusCode makeMatrices();
-
-private:
+  virtual StatusCode makeMatrices();
 
   void updateParams();
 
