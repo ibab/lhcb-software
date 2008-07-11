@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.17 2008-07-11 23:16:35 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.18 2008-07-11 23:20:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -269,7 +269,7 @@ private: // definitions
       {
         m_effVpVpt = new EffVersusMomentum2D(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
                                              0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
-                                             10,10);
+                                             20,20);
       }
       return *m_effVpVpt;
     }

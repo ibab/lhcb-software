@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.23 2008-07-11 23:16:35 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.24 2008-07-11 23:20:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -194,8 +194,10 @@ StatusCode ParticleEffPurMoni::execute()
       // Momentum histogramming
       if ( !isClone )
       {
-        tally.effVp().fill ( mcPart ? mcPart->p()  : ptot );
-        tally.effVpt().fill( mcPart ? mcPart->pt() : pt   );
+        tally.effVp().fill   ( mcPart ? mcPart->p()  : ptot );
+        tally.effVpt().fill  ( mcPart ? mcPart->pt() : pt   );
+        tally.effVpVpt().fill( mcPart ? mcPart->p()  : ptot,
+                               mcPart ? mcPart->pt() : pt   );
       }
 
     } // loop over particles produced from this proto
@@ -252,8 +254,10 @@ StatusCode ParticleEffPurMoni::execute()
       // Momentum histogramming
       if ( !isClone )
       {
-        tally.effVp().fill ( mcPart ? mcPart->p()  : momentum(*proto)           );
-        tally.effVpt().fill( mcPart ? mcPart->pt() : transverseMomentum(*proto) );
+        tally.effVp().fill    ( mcPart ? mcPart->p()  : momentum(*proto)           );
+        tally.effVpt().fill   ( mcPart ? mcPart->pt() : transverseMomentum(*proto) ); 
+        tally.effVpVpt().fill ( mcPart ? mcPart->p()  : momentum(*proto),
+                                mcPart ? mcPart->pt() : transverseMomentum(*proto) );
       }
 
       // Proto Correlations
@@ -292,8 +296,9 @@ StatusCode ParticleEffPurMoni::execute()
       if ( m_fullMCTree ) { ++(tally.all_detailed[fullname]); }
 
       // Momentum histogramming
-      tally.effVp().fill ( (*iMCP)->p()  );
-      tally.effVpt().fill( (*iMCP)->pt() );
+      tally.effVp().fill    ( (*iMCP)->p()  );
+      tally.effVpt().fill   ( (*iMCP)->pt() ); 
+      tally.effVpVpt().fill ( (*iMCP)->p(), (*iMCP)->pt() );
     }
   }
 
