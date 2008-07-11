@@ -1,0 +1,147 @@
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file
+ *
+ *  Configuration file for "StandardDC06" Jpsi
+ *
+ *  @see StandardDC06Options.opts for other intermediate states
+ *
+ *  @author J. Amoraal, P. Koppenburg
+ *  @date 2006-05-23
+ */
+DataOnDemandSvc.Algorithms += {
+  // Lifetime-unbiased very wide Jpsi->MuMu (2.7-10.1 GeV)
+  "DATA='/Event/Phys/StdDC06UnbiasedHeavyDimuon/Particles'     TYPE='GaudiSequencer/StdDC06UnbiasedHeavyDimuonSeq'",
+  "DATA='/Event/Phys/StdDC06UnbiasedHeavyDimuon/Vertices'      TYPE='GaudiSequencer/StdDC06UnbiasedHeavyDimuonSeq'",
+  // B->mumuXs dimuon
+  "DATA='/Event/Phys/StdDC06LoosePenguinDimuon/Particles'      TYPE='GaudiSequencer/StdDC06LoosePenguinDimuonSeq'",
+  "DATA='/Event/Phys/StdDC06LoosePenguinDimuon/Vertices'       TYPE='GaudiSequencer/StdDC06LoosePenguinDimuonSeq'",
+  // Lifetime-unbiased Jpsi->MuMu
+  "DATA='/Event/Phys/StdDC06UnbiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdDC06UnbiasedJpsi2MuMuSeq'",
+  "DATA='/Event/Phys/StdDC06UnbiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdDC06UnbiasedJpsi2MuMuSeq'",
+  // Loose Biased Jpsi->MuMu
+  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2MuMu/Particles'     TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2MuMuSeq'",
+  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2MuMu/Vertices'      TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2MuMuSeq'",
+  // Loose Jpsi->ee
+  "DATA='/Event/Phys/StdDC06LooseJpsi2ee/Particles'     TYPE='GaudiSequencer/StdDC06LooseJpsi2eeSeq'",
+  "DATA='/Event/Phys/StdDC06LooseJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdDC06LooseJpsi2eeSeq'",
+  // Loose Biased Jpsi->ee
+  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2ee/Particles'     TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2eeSeq'",
+  "DATA='/Event/Phys/StdDC06LooseBiasedJpsi2ee/Vertices'      TYPE='GaudiSequencer/StdDC06LooseBiasedJpsi2eeSeq'"
+};
+StdDC06UnbiasedHeavyDimuonSeq.Members += { "MakeResonances/StdDC06UnbiasedHeavyDimuon" };
+StdDC06UnbiasedHeavyDimuonSeq.MeasureTime = true;
+StdDC06LoosePenguinDimuonSeq.Members += { "MakeResonances/StdDC06LoosePenguinDimuon" };
+StdDC06LoosePenguinDimuonSeq.MeasureTime = true;
+StdDC06UnbiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdDC06UnbiasedJpsi2MuMu" };
+StdDC06UnbiasedJpsi2MuMuSeq.MeasureTime = true;
+StdDC06LooseBiasedJpsi2MuMuSeq.Members += { "FilterDesktop/StdDC06LooseBiasedJpsi2MuMu" };
+StdDC06LooseBiasedJpsi2MuMuSeq.MeasureTime = true;
+StdDC06LooseJpsi2eeSeq.Members += { "MakeResonances/StdDC06LooseJpsi2ee" };
+StdDC06LooseJpsi2eeSeq.MeasureTime = true;
+StdDC06LooseBiasedJpsi2eeSeq.Members += { "FilterDesktop/StdDC06LooseBiasedJpsi2ee" };
+StdDC06LooseBiasedJpsi2eeSeq.MeasureTime = true;
+
+/*************************************************************************
+ *  StandardDC06 Lifetime Unbiased J/psi->MuMu
+ *  @author J. Amoraal
+ */
+StdDC06UnbiasedHeavyDimuon.PhysDesktop.InputLocations = { "Phys/StdDC06LooseMuons" } ;
+StdDC06UnbiasedHeavyDimuon.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;
+StdDC06UnbiasedHeavyDimuon.LowerWindow = 400.0 * MeV ; // 400 MeV below the J/psi
+StdDC06UnbiasedHeavyDimuon.UpperWindow = 7.0 * GeV ; // over the Y(1S)
+StdDC06UnbiasedHeavyDimuon.MotherFilter.Selections = { "J/psi(1S) : BooleanFilterCriterion/JpsiFilter" } ;
+
+/// A Boolean AND list of cuts (Pt and Chi2 of the vertex)
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.AndList = { "BooleanFilterCriterion/ptFilter" ,
+                                                           "VtxFilterCriterion/jpsiVertex" } ;
+
+/// Boolean OR Pt cuts; Reguire that the max Pt of a di-muon pair is greater than 500 MeV,
+/// i.e. maxPt(mu+,mu-) > 500 MeV
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.OrList = { "ByPIDFilterCriterion/MupPt" ,
+                                                                   "ByPIDFilterCriterion/MumPt" } ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.FilterByDescendents = true ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.FilterByDescendents = true ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.ApplyCC = false ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.ApplyCC = false ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.Selections = { "mu+ : KinFilterCriterion" } ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.Selections = { "mu- : KinFilterCriterion" } ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MupPt.KinFilterCriterion.MinPt = 500.0 * MeV ;
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.ptFilter.MumPt.KinFilterCriterion.MinPt = 500.0 * MeV ;
+
+/// Chi2 of the vertex cut; Require that the normalised Chi2 of the mu+mu- vertex is less than 15
+StdDC06UnbiasedHeavyDimuon.MotherFilter.JpsiFilter.jpsiVertex.MaxChi2 = 15.0 ;
+
+/*************************************************************************
+ *  StandardDC06 Lifetime Unbiased J/psi->MuMu
+ *  @author P. Koppenburg
+ */
+StdDC06UnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdDC06UnbiasedHeavyDimuon" };
+StdDC06UnbiasedJpsi2MuMu.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
+StdDC06UnbiasedJpsi2MuMu.Filter.Selections = { "J/psi(1S) : MassFilterCriterion" };
+StdDC06UnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
+
+/*************************************************************************
+ *  StandardDC06 Loose Biased Jpsi->MuMu
+ *  @author P. Koppenburg
+ */
+StdDC06LooseBiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdDC06UnbiasedJpsi2MuMu" };
+StdDC06LooseBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
+// Cuts for mother
+StdDC06LooseBiasedJpsi2MuMu.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
+StdDC06LooseBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"};
+StdDC06LooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
+
+
+
+/*************************************************************************
+*  StandardDC06 Loose Jpsi->ee
+*  @authors M. Calvo, A. Hicheur
+*/
+StdDC06LooseJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdDC06TightElectrons" };
+StdDC06LooseJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+// Cuts for daughters
+StdDC06LooseJpsi2ee.DaughterFilter.Selections = {"e+ : KinFilterCriterion"};
+StdDC06LooseJpsi2ee.DaughterFilter.KinFilterCriterion.MinPt = 500.0 * MeV;
+// Cuts for combination
+StdDC06LooseJpsi2ee.LowerWindow = 1000 * MeV;
+StdDC06LooseJpsi2ee.UpperWindow = 400 * MeV;
+// Cuts for mother
+StdDC06LooseJpsi2ee.MotherFilter.Selections = {"J/psi(1S) : VtxFilterCriterion"};
+StdDC06LooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 9.0; 
+
+/*************************************************************************
+*  StandardDC06 Loose Biased Jpsi->ee
+*  @authors M. Calvo, A. Hicheur
+*/
+StdDC06LooseBiasedJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdDC06LooseJpsi2ee" };
+StdDC06LooseBiasedJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+StdDC06LooseBiasedJpsi2ee.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
+StdDC06LooseBiasedJpsi2ee.Filter.Selections = { "J/psi(1S) : MassFilterCriterion, ByPIDFilterCriterion" } ;
+StdDC06LooseBiasedJpsi2ee.Filter.MassFilterCriterion.LowerWindow = 500 * MeV;
+StdDC06LooseBiasedJpsi2ee.Filter.MassFilterCriterion.UpperWindow = 400 * MeV;
+StdDC06LooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.FilterByDescendents = true ;
+StdDC06LooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.ApplyCC = true;
+StdDC06LooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.Selections = { "e+: PVIPFilterCriterion"};
+StdDC06LooseBiasedJpsi2ee.Filter.ByPIDFilterCriterion.PVIPFilterCriterion.MinIPsignif = 1.0;
+
+/*************************************************************************
+*  StandardDC06 Loose dimuon for penguins
+*  @authors J. Dickens
+*/
+
+StdDC06LoosePenguinDimuon.PhysDesktop.InputLocations = {"Phys/StdDC06LooseMuons"};
+StdDC06LoosePenguinDimuon.DecayDescriptors = {"J/psi(1S) -> mu+ mu-"};
+
+// Cuts for the combinations (before vertex fitting)
+
+StdDC06LoosePenguinDimuon.Window = 3000.0 * MeV;
+// Cuts for the mother
+StdDC06LoosePenguinDimuon.MotherFilter.Selections = {       "J/psi(1S) :       VtxFilterCriterion"};
+//                                                              Momentum2FlightAngleFilterCriterion"};
+
+StdDC06LoosePenguinDimuon.MotherFilter.VtxFilterCriterion.MaxChi2 = 100000.0; 
+//StdDC06LoosePenguinDimuon.MotherFilter.Momentum2FlightAngleFilterCriterion.CosAngle = -2;  
+//StdDC06LoosePenguinDimuon.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 0.0;

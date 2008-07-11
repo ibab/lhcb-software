@@ -1,0 +1,67 @@
+// $Id: StandardDC06Dplus.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file
+ *
+ *  Configuration file for "StandardDC06" D+
+ *
+ *  @see StandardDC06Options.opts for other intermediate states
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @author V. Gligorov  v.gligorov1@physics.ox.ac.uk
+ *
+ *  @date 2006-05-19
+ */
+DataOnDemandSvc.Algorithms += {
+  // Loose D+ ->KPiPi
+  "DATA='/Event/Phys/StdDC06LooseD2KPiPi/Particles'     TYPE='GaudiSequencer/StdDC06LooseD2KPiPiSeq'",
+  "DATA='/Event/Phys/StdDC06LooseD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdDC06LooseD2KPiPiSeq'",
+  
+  "DATA='/Event/Phys/StdDC06TightD2KPiPi/Particles'     TYPE='GaudiSequencer/StdDC06TightD2KPiPiSeq'",
+  "DATA='/Event/Phys/StdDC06TightD2KPiPi/Vertices'      TYPE='GaudiSequencer/StdDC06TightD2KPiPiSeq'"
+};
+StdDC06LooseD2KPiPiSeq.Members += { "MakeResonances/StdDC06LooseD2KPiPi" };
+StdDC06LooseD2KPiPiSeq.MeasureTime = true;
+/*************************************************************************
+ *  StandardDC06 Loose D+ -> KPiPi
+ */
+StdDC06LooseD2KPiPi.PhysDesktop.InputLocations = { "Phys/StdDC06LooseKaons", "Phys/StdDC06LoosePions" };
+// Cuts for daughters
+StdDC06LooseD2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
+StdDC06LooseD2KPiPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",
+                                             "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdDC06LooseD2KPiPi.DaughterFilter.KinFilterCriterion.MinPt = 300.0 * MeV;
+StdDC06LooseD2KPiPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV;
+StdDC06LooseD2KPiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 1.0;
+// Cuts for combination
+StdDC06LooseD2KPiPi.Window = 50.0 * MeV;
+StdDC06LooseD2KPiPi.MinPt  = 500.0 * MeV;
+// Cuts for mother
+StdDC06LooseD2KPiPi.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"};
+StdDC06LooseD2KPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 2.0;
+StdDC06LooseD2KPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0;
+
+StdDC06TightD2KPiPiSeq.Members += { "MakeResonances/StdDC06TightD2KPiPi" };
+StdDC06TightD2KPiPiSeq.MeasureTime = true;
+/*************************************************************************
+ *  StandardDC06 Tight D+ -> KPiPi
+ */
+StdDC06TightD2KPiPi.PhysDesktop.InputLocations = { "Phys/StdDC06TightKaons", "Phys/StdDC06TightPions" };
+// Cuts for daughters
+StdDC06TightD2KPiPi.DecayDescriptor = "[D+ -> K- pi+ pi+]cc";
+StdDC06TightD2KPiPi.DaughterFilter.Selections = {"K+ : KinFilterCriterion, PVIPFilterCriterion",
+                                             "pi+ : KinFilterCriterion, PVIPFilterCriterion"};
+StdDC06TightD2KPiPi.DaughterFilter.KinFilterCriterion.MinPt = 300.0 * MeV;
+StdDC06TightD2KPiPi.DaughterFilter.KinFilterCriterion.MinMomentum = 2000.0 * MeV;
+StdDC06TightD2KPiPi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.5;
+// Cuts for combination
+StdDC06TightD2KPiPi.Window = 50 * MeV;
+StdDC06TightD2KPiPi.MinPt  = 2000.0 * MeV;
+// Cuts for mother
+StdDC06TightD2KPiPi.MotherFilter.Selections = {"D+ : VtxFilterCriterion, PVIPFilterCriterion"};
+StdDC06TightD2KPiPi.MotherFilter.PVIPFilterCriterion.MinIPsignif = 3.0;
+StdDC06TightD2KPiPi.MotherFilter.VtxFilterCriterion.MaxChi2 = 15.0;
+
+

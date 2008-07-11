@@ -1,0 +1,87 @@
+/** @file 
+ *
+ *  The configuration file for "StandardDC06" protons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdDC06NoPIDsProtons"  
+ *    - "/Event/Phys/StdDC06LooseProtons"
+ *    - "/Event/Phys/StdDC06LooseVTTProtons"
+ *    - "/Event/Phys/StdDC06LooseDownstreamProtons"
+ *    - "/Event/Phys/StdDC06TightProtons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+DataOnDemandSvc.Algorithms += {
+  // No PID protons 
+  "DATA='/Event/Phys/StdDC06NoPIDsProtons/Particles'   TYPE='GaudiSequencer/StdDC06NoPIDsProtonsSeq'",
+  "DATA='/Event/Phys/StdDC06NoPIDsProtons/Vertices'    TYPE='GaudiSequencer/StdDC06NoPIDsProtonsSeq'",
+  // Loose protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdDC06LooseProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseProtonsSeq'",
+  "DATA='/Event/Phys/StdDC06LooseProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseProtonsSeq'",
+  // Loose VTT protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdDC06LooseVTTProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseVTTProtonsSeq'",
+  "DATA='/Event/Phys/StdDC06LooseVTTProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseVTTProtonsSeq'",
+  // Loose Downstream protons:    RICH & DLL(p-pi)>-5
+  "DATA='/Event/Phys/StdDC06LooseDownstreamProtons/Particles'   TYPE='GaudiSequencer/StdDC06LooseDownstreamProtonsSeq'",
+  "DATA='/Event/Phys/StdDC06LooseDownstreamProtons/Vertices'    TYPE='GaudiSequencer/StdDC06LooseDownstreamProtonsSeq'",
+  // Tight protons
+  "DATA='/Event/Phys/StdDC06TightProtons/Particles'   TYPE='GaudiSequencer/StdDC06TightProtonsSeq'",
+  "DATA='/Event/Phys/StdDC06TightProtons/Vertices'    TYPE='GaudiSequencer/StdDC06TightProtonsSeq'"
+};
+StdDC06NoPIDsProtonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsProtons" };
+StdDC06NoPIDsProtonsSeq.MeasureTime = true;
+StdDC06LooseProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseProtons" };
+StdDC06LooseProtonsSeq.MeasureTime = true;
+StdDC06LooseVTTProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseVTTProtons" };
+StdDC06LooseVTTProtonsSeq.MeasureTime = true;
+StdDC06LooseDownstreamProtonsSeq.Members += { "PreLoadParticles/StdDC06LooseDownstreamProtons" };
+StdDC06LooseDownstreamProtonsSeq.MeasureTime = true;
+StdDC06TightProtonsSeq.Members += { "PreLoadParticles/StdDC06TightProtons" };
+StdDC06TightProtonsSeq.MeasureTime = true;
+
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+StdDC06NoPIDsProtons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdDC06NoPIDsProtons.PhysDesktop.NoPIDsParticleMaker.Particle =  "proton" ;
+StdDC06NoPIDsProtons.DecayDescriptor = "Proton" ;
+// ============================================================================
+// LOOSE long (except VTT protons)
+// ============================================================================
+StdDC06LooseProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06LooseProtons.DecayDescriptor = "Proton" ;
+
+StdDC06LooseDownstreamProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseDownstreamProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Downstream"} ;
+StdDC06LooseDownstreamProtons.DecayDescriptor = "Proton" ;
+
+StdDC06LooseVTTProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'-5.0'" } ;
+StdDC06LooseVTTProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes={"Upstream"} ;
+StdDC06LooseVTTProtons.DecayDescriptor = "Proton" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+
+StdDC06TightProtons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.Particles = {"proton"} ;
+StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.Proton.Selection = {"RequiresDet='RICH' CombDLL(p-pi)>'0.0'" } ;
+StdDC06TightProtons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06TightProtons.DecayDescriptor = "Proton" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

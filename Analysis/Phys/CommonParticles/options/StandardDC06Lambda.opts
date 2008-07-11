@@ -1,0 +1,470 @@
+// $Id: StandardDC06Lambda.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "StandardDC06" Lambda
+ * 
+ *  @see StandardDC06Options.opts for other intermediate states
+ *
+ *  @authors Federica Legger, Eric Conte
+ *  @date 2006-05-22
+ */
+DataOnDemandSvc.Algorithms += {
+//
+// Loose Lambdas with Long Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LL_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LL_Seq'",
+// Loose Lambdas with Downstream Protons and Downstream pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_DD_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_DD_Seq'",
+// Loose Lambdas with Long Protons and  pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LU_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LU_Seq'",
+// Loose Lambdas with VTT Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_UL_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_UL_Seq'",
+// Loose Lambdas with Long Protons and Downstream pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_LD_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_LD_Seq'",
+// Loose Lambdas with Downstream Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdDC06LooseLambda1115_DL_Seq'",
+  "DATA='/Event/Phys/StdDC06LooseLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdDC06LooseLambda1115_DL_Seq'",
+//
+// Tight Lambdas with Long Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LL_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LL_Seq'",
+// Tight Lambdas with Downstream Protons and Downstream pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_DD/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_DD_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_DD/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_DD_Seq'",
+// Tight Lambdas with Long Protons and VTT pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LU/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LU_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LU/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LU_Seq'",
+// Tight Lambdas with VTT Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_UL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_UL_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_UL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_UL_Seq'",
+// Tight Lambdas with Long Protons and Downstream pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LD/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_LD_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_LD/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_LD_Seq'",
+// Tight Lambdas with Downstream Protons and Long pions 
+  "DATA='/Event/Phys/StdDC06TightLambda1115_DL/Particles'     TYPE='GaudiSequencer/StdDC06TightLambda1115_DL_Seq'",
+  "DATA='/Event/Phys/StdDC06TightLambda1115_DL/Vertices'      TYPE='GaudiSequencer/StdDC06TightLambda1115_DL_Seq'" 
+};
+
+StdDC06LooseLambda1115_LL_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_LL" };
+StdDC06LooseLambda1115_LL_Seq.MeasureTime = true;
+StdDC06LooseLambda1115_DD_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_DD" };
+StdDC06LooseLambda1115_DD_Seq.MeasureTime = true;
+StdDC06LooseLambda1115_LU_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_LU" };
+StdDC06LooseLambda1115_LU_Seq.MeasureTime = true;
+StdDC06LooseLambda1115_UL_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_UL" };
+StdDC06LooseLambda1115_UL_Seq.MeasureTime = true;
+StdDC06LooseLambda1115_LD_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_LD" };
+StdDC06LooseLambda1115_LD_Seq.MeasureTime = true;
+StdDC06LooseLambda1115_DL_Seq.Members += { "MakeResonances/StdDC06LooseLambda1115_DL" };
+StdDC06LooseLambda1115_DL_Seq.MeasureTime = true;
+
+StdDC06TightLambda1115_LL_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_LL" };
+StdDC06TightLambda1115_LL_Seq.MeasureTime = true;
+StdDC06TightLambda1115_DD_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_DD" };
+StdDC06TightLambda1115_DD_Seq.MeasureTime = true;
+StdDC06TightLambda1115_LU_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_LU" };
+StdDC06TightLambda1115_LU_Seq.MeasureTime = true;
+StdDC06TightLambda1115_UL_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_UL" };
+StdDC06TightLambda1115_UL_Seq.MeasureTime = true;
+StdDC06TightLambda1115_LD_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_LD" };
+StdDC06TightLambda1115_LD_Seq.MeasureTime = true;
+StdDC06TightLambda1115_DL_Seq.Members += { "MakeResonances/StdDC06TightLambda1115_DL" };
+StdDC06TightLambda1115_DL_Seq.MeasureTime = true;
+
+//------------------------------------------------------------------------------
+//
+//                          make LOOSE LAMBDA combinations
+//
+//------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                          
+// LL combinations
+StdDC06LooseLambda1115_LL.PhysDesktop.InputLocations = {
+                                            "/Event/Phys/StdDC06LooseProtons",
+                                        "/Event/Phys/StdDC06LoosePions"};
+StdDC06LooseLambda1115_LL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_LL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
+StdDC06LooseLambda1115_LL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"}; 
+StdDC06LooseLambda1115_LL.KillOverLap = true;
+StdDC06LooseLambda1115_LL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// DD combinations
+StdDC06LooseLambda1115_DD.PhysDesktop.InputLocations = {
+                                          "/Event/Phys/StdDC06LooseDownstreamProtons",
+                                          "/Event/Phys/StdDC06LooseDownstreamPions"};
+StdDC06LooseLambda1115_DD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_DD.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion"};
+StdDC06LooseLambda1115_DD.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin", 
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"}; 
+StdDC06LooseLambda1115_DD.KillOverLap = true;
+                                                                                
+
+// LU combinations
+StdDC06LooseLambda1115_LU.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseProtons",
+                                                                "/Event/Phys/StdDC06LooseVTTPions"};
+StdDC06LooseLambda1115_LU.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_LU.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
+StdDC06LooseLambda1115_LU.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06LooseLambda1115_LU.KillOverLap = true;
+StdDC06LooseLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// UL combinations
+StdDC06LooseLambda1115_UL.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseVTTProtons",
+                                    "/Event/Phys/StdDC06LoosePions"};
+StdDC06LooseLambda1115_UL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_UL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion"};
+StdDC06LooseLambda1115_UL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06LooseLambda1115_UL.KillOverLap = true;
+StdDC06LooseLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// LD combinations                                                                                
+StdDC06LooseLambda1115_LD.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseProtons",
+                                                                                                                        "/Event/Phys/StdDC06LooseDownstreamPions"};
+StdDC06LooseLambda1115_LD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_LD.MotherFilter.Selections = 
+                                      {"Lambda0 : VtxFilterCriterion"};
+StdDC06LooseLambda1115_LD.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06LooseLambda1115_LD.KillOverLap = true;                                                                                
+
+
+// DL combinations                                                                                                                                                                
+StdDC06LooseLambda1115_DL.PhysDesktop.InputLocations = {"/Event/Phys/StdDC06LooseDownstreamProtons",
+                                                                                                                                 "/Event/Phys/StdDC06LoosePions"};                                                 
+StdDC06LooseLambda1115_DL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06LooseLambda1115_DL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion"};                                                                          
+StdDC06LooseLambda1115_DL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06LooseLambda1115_DL.KillOverLap = true;
+
+
+//------------------------------------------------------------------------------
+//
+//                       selection of LAMBDA final products
+//
+//------------------------------------------------------------------------------
+
+// LL
+StdDC06LooseLambda1115_LL.DaughterFilter.protonKin.MinPt        = 400.0 * MeV;  
+StdDC06LooseLambda1115_LL.DaughterFilter.pionKin.MinPt          = 100.0 * MeV;
+
+StdDC06LooseLambda1115_LL.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06LooseLambda1115_LL.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//DD
+StdDC06LooseLambda1115_DD.DaughterFilter.protonKin.MinPt        = 1100.0 * MeV;  
+StdDC06LooseLambda1115_DD.DaughterFilter.pionKin.MinPt          = 250.0 * MeV;
+
+StdDC06LooseLambda1115_DD.DaughterFilter.pionPVIP.MinIPsignif   = 2.;
+
+
+//LU (Longstream proton, Upstream pion)
+StdDC06LooseLambda1115_LU.DaughterFilter.protonKin.MinPt        = 400.0 * MeV;  
+StdDC06LooseLambda1115_LU.DaughterFilter.pionKin.MinPt          = 50.0 * MeV;
+
+StdDC06LooseLambda1115_LU.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06LooseLambda1115_LU.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//UL (Upstream proton, Longstream pion)
+StdDC06LooseLambda1115_UL.DaughterFilter.protonKin.MinPt        = 300.0 * MeV;  
+StdDC06LooseLambda1115_UL.DaughterFilter.pionKin.MinPt          = 100.0 * MeV;
+
+StdDC06LooseLambda1115_UL.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06LooseLambda1115_UL.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//LD (Longstream proton, Downstream pion)
+StdDC06LooseLambda1115_LD.DaughterFilter.protonKin.MinPt        = 400.0 * MeV;  
+StdDC06LooseLambda1115_LD.DaughterFilter.pionKin.MinPt          = 250.0 * MeV;
+
+StdDC06LooseLambda1115_LD.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06LooseLambda1115_LD.DaughterFilter.pionPVIP.MinIPsignif   = 2.;
+
+
+//DL (Downstream proton, Longstream pion)
+StdDC06LooseLambda1115_DL.DaughterFilter.protonKin.MinPt        = 1100.0 * MeV;  
+StdDC06LooseLambda1115_DL.DaughterFilter.pionKin.MinPt          = 100.0 * MeV;
+
+StdDC06LooseLambda1115_DL.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//------------------------------------------------------------------------------
+//
+//                       selection of LAMBDA candidates
+//
+//------------------------------------------------------------------------------
+
+
+// LL
+StdDC06LooseLambda1115_LL.Window = 50. * MeV;
+StdDC06LooseLambda1115_LL.MinPt = 500. * MeV;
+StdDC06LooseLambda1115_LL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06LooseLambda1115_LL.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 10.0;
+
+
+// DD
+StdDC06LooseLambda1115_DD.Window = 50. * MeV;
+StdDC06LooseLambda1115_DD.MinPt = 1500. * MeV; 
+StdDC06LooseLambda1115_DD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+
+
+// LU & UL
+StdDC06LooseLambda1115_LU.Window = 50. * MeV;
+StdDC06LooseLambda1115_UL.Window = 50. * MeV;
+
+StdDC06LooseLambda1115_LU.MinPt = 500. * MeV;
+StdDC06LooseLambda1115_UL.MinPt = 500. * MeV;
+
+StdDC06LooseLambda1115_LU.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06LooseLambda1115_UL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+
+StdDC06LooseLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 10.;
+StdDC06LooseLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 10.;
+
+
+// LD && DL
+StdDC06LooseLambda1115_LD.Window = 50. * MeV;
+StdDC06LooseLambda1115_DL.Window = 50. * MeV;
+
+StdDC06LooseLambda1115_LD.MinPt = 1000. * MeV;
+StdDC06LooseLambda1115_DL.MinPt = 1000. * MeV;
+
+StdDC06LooseLambda1115_LD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06LooseLambda1115_DL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+
+
+//------------------------------------------------------------------------------
+//
+//                          make TIGHT LAMBDA combinations
+//
+//------------------------------------------------------------------------------                                                                                                                                                                                                                                                                                                                                                                                                                          
+// LL combinations
+StdDC06TightLambda1115_LL.PhysDesktop.InputLocations = {
+                                            "/Event/Phys/StdDC06LooseProtons",
+                                                                "/Event/Phys/StdDC06LoosePions"};
+StdDC06TightLambda1115_LL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_LL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
+StdDC06TightLambda1115_LL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"}; 
+StdDC06TightLambda1115_LL.KillOverLap = true;
+StdDC06TightLambda1115_LL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// DD combinations
+StdDC06TightLambda1115_DD.PhysDesktop.InputLocations = {
+                                          "/Event/Phys/StdDC06LooseDownstreamProtons",
+                                          "/Event/Phys/StdDC06LooseDownstreamPions"};
+StdDC06TightLambda1115_DD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_DD.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion, FlightDistanceFilterCriterion"};
+StdDC06TightLambda1115_DD.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"}; 
+StdDC06TightLambda1115_DD.KillOverLap = true;
+                                                                                
+
+// LU combinations
+StdDC06TightLambda1115_LU.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseProtons",
+                                                                "/Event/Phys/StdDC06LooseVTTPions"};
+StdDC06TightLambda1115_LU.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_LU.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
+StdDC06TightLambda1115_LU.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06TightLambda1115_LU.KillOverLap = true;
+StdDC06TightLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// UL combinations
+StdDC06TightLambda1115_UL.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseVTTProtons",
+                                                                "/Event/Phys/StdDC06LoosePions"};
+StdDC06TightLambda1115_UL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_UL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion,FlightDistanceFilterCriterion,PVIPFilterCriterion"};
+StdDC06TightLambda1115_UL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06TightLambda1115_UL.KillOverLap = true;
+StdDC06TightLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.CutBestPV = false;
+
+
+// LD combinations                                                                                
+StdDC06TightLambda1115_LD.PhysDesktop.InputLocations = {
+                                           "/Event/Phys/StdDC06LooseProtons",
+                                                                                                                        "/Event/Phys/StdDC06LooseDownstreamPions"};
+StdDC06TightLambda1115_LD.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_LD.MotherFilter.Selections = 
+                                      {"Lambda0 : VtxFilterCriterion"};
+StdDC06TightLambda1115_LD.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin, 
+                                              PVIPFilterCriterion/protonPVIP",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06TightLambda1115_LD.KillOverLap = true;                                                                                
+
+
+// DL combinations                                                                                                                                                                
+StdDC06TightLambda1115_DL.PhysDesktop.InputLocations = {"/Event/Phys/StdDC06LooseDownstreamProtons",
+                                                                                                                                 "/Event/Phys/StdDC06LoosePions"};                                                 
+StdDC06TightLambda1115_DL.DecayDescriptor = "[Lambda0 -> p+ pi-]cc";
+StdDC06TightLambda1115_DL.MotherFilter.Selections = 
+                                       {"Lambda0 : VtxFilterCriterion"};                                                                          
+StdDC06TightLambda1115_DL.DaughterFilter.Selections =
+                                       {"p+ : KinFilterCriterion/protonKin",
+                                        "pi- : KinFilterCriterion/pionKin,
+                                               PVIPFilterCriterion/pionPVIP"};
+StdDC06TightLambda1115_DL.KillOverLap = true;
+
+
+//------------------------------------------------------------------------------
+//
+//                       selection of LAMBDA final products
+//
+//------------------------------------------------------------------------------
+
+// LL
+StdDC06TightLambda1115_LL.DaughterFilter.protonKin.MinPt        = 1000.0 * MeV;  
+StdDC06TightLambda1115_LL.DaughterFilter.pionKin.MinPt          = 200.0 * MeV;
+
+StdDC06TightLambda1115_LL.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06TightLambda1115_LL.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//DD
+StdDC06TightLambda1115_DD.DaughterFilter.protonKin.MinPt        = 1500.0 * MeV;  
+StdDC06TightLambda1115_DD.DaughterFilter.pionKin.MinPt          = 250.0 * MeV;
+
+StdDC06TightLambda1115_DD.DaughterFilter.protonPVIP.MinIPsignif = 2.;
+StdDC06TightLambda1115_DD.DaughterFilter.pionPVIP.MinIPsignif   = 2.;
+
+
+//LU (Longstream proton, Upstream pion)
+StdDC06TightLambda1115_LU.DaughterFilter.protonKin.MinPt        = 1000.0 * MeV;  
+StdDC06TightLambda1115_LU.DaughterFilter.pionKin.MinPt          = 10.0 * MeV;
+
+StdDC06TightLambda1115_LU.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06TightLambda1115_LU.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//UL (Upstream proton, Longstream pion)
+StdDC06TightLambda1115_UL.DaughterFilter.protonKin.MinPt        = 300.0 * MeV;  
+StdDC06TightLambda1115_UL.DaughterFilter.pionKin.MinPt          = 200.0 * MeV;
+
+StdDC06TightLambda1115_UL.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06TightLambda1115_UL.DaughterFilter.pionPVIP.MinIPsignif   = 3.;
+
+
+//LD (Longstream proton, Downstream pion)
+StdDC06TightLambda1115_LD.DaughterFilter.protonKin.MinPt        = 1000.0 * MeV;  
+StdDC06TightLambda1115_LD.DaughterFilter.pionKin.MinPt          = 250.0 * MeV;
+
+StdDC06TightLambda1115_LD.DaughterFilter.protonPVIP.MinIPsignif = 3.;  
+StdDC06TightLambda1115_LD.DaughterFilter.pionPVIP.MinIPsignif   = 2.;
+
+
+//DL (Downstream proton, Longstream pion)
+StdDC06TightLambda1115_DL.DaughterFilter.protonKin.MinPt        = 1500.0 * MeV;  
+StdDC06TightLambda1115_DL.DaughterFilter.pionKin.MinPt          = 200.0 * MeV;
+
+StdDC06TightLambda1115_DL.DaughterFilter.protonPVIP.MinIPsignif   = 2.;
+StdDC06TightLambda1115_DL.DaughterFilter.pionPVIP.MinIPsignif     = 3.;
+
+
+//------------------------------------------------------------------------------
+//
+//                       selection of LAMBDA candidates
+//
+//------------------------------------------------------------------------------
+
+
+// LL
+StdDC06TightLambda1115_LL.Window = 50. * MeV;
+StdDC06TightLambda1115_LL.MinPt = 500. * MeV;
+StdDC06TightLambda1115_LL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06TightLambda1115_LL.MotherFilter.PVIPFilterCriterion.MinIPsignif =2.;
+StdDC06TightLambda1115_LL.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.0;
+
+
+// DD
+StdDC06TightLambda1115_DD.Window = 50. * MeV;
+StdDC06TightLambda1115_DD.MinPt = 1500. * MeV; 
+StdDC06TightLambda1115_DD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06TightLambda1115_DD.MotherFilter.FlightDistanceFilterCriterion.MinFPV = 2.;
+
+// LU & UL
+StdDC06TightLambda1115_LU.Window = 50. * MeV;
+StdDC06TightLambda1115_UL.Window = 50. * MeV;
+
+StdDC06TightLambda1115_LU.MinPt = 500. * MeV;
+StdDC06TightLambda1115_UL.MinPt = 500. * MeV;
+
+StdDC06TightLambda1115_LU.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06TightLambda1115_UL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+
+StdDC06TightLambda1115_LU.MotherFilter.PVIPFilterCriterion.MinIPsignif = 2.;
+StdDC06TightLambda1115_UL.MotherFilter.PVIPFilterCriterion.MinIPsignif = 2.;
+
+StdDC06TightLambda1115_LU.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.;
+StdDC06TightLambda1115_UL.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 2.;
+
+
+// LD && DL
+StdDC06TightLambda1115_LD.Window = 50. * MeV;
+StdDC06TightLambda1115_DL.Window = 50. * MeV;
+
+StdDC06TightLambda1115_LD.MinPt = 1000. * MeV;
+StdDC06TightLambda1115_DL.MinPt = 1000. * MeV;
+
+StdDC06TightLambda1115_LD.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;
+StdDC06TightLambda1115_DL.MotherFilter.VtxFilterCriterion.MaxChi2 = 50.;

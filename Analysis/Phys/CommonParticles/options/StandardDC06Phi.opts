@@ -1,0 +1,39 @@
+// $Id: StandardDC06Phi.opts,v 1.1 2008-07-11 15:58:38 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// ============================================================================
+
+/** @file 
+ *
+ *  Configuration file for "StandardDC06" Phi
+ * 
+ *  @see StandardDC06Options.opts for other intermediate states
+ *
+ *  @author P. Koppenburg Patrick.Koppenburg@cern.ch
+ *  @date 2006-01-30
+ */
+DataOnDemandSvc.Algorithms += {
+// Loose Phi->KK
+  "DATA='/Event/Phys/StdDC06LoosePhi2KK/Particles'     TYPE='GaudiSequencer/StdDC06LoosePhi2KKSeq'",
+  "DATA='/Event/Phys/StdDC06LoosePhi2KK/Vertices'      TYPE='GaudiSequencer/StdDC06LoosePhi2KKSeq'"
+};
+StdDC06LoosePhi2KKSeq.Members += { "MakeResonances/StdDC06LoosePhi2KK" };
+StdDC06LoosePhi2KKSeq.MeasureTime = true;
+
+/*************************************************************************
+*  StandardDC06 Loose Phi->KK
+*/
+StdDC06LoosePhi2KK.PhysDesktop.InputLocations = 
+  { "Phys/StdDC06LooseKaons" };
+StdDC06LoosePhi2KK.DecayDescriptor = "phi(1020) -> K+ K-";
+// Cuts for daughters
+StdDC06LoosePhi2KK.DaughterFilter.Selections = 
+  {"K+ : PVIPFilterCriterion"};
+//StdDC06LoosePhi2KK.DaughterFilter.KinFilterCriterion.MinPt =        0.0 * MeV; // hlt tuned: 300 MeV, hlt presel: 200 MeV
+//StdDC06LoosePhi2KK.DaughterFilter.KinFilterCriterion.MinMomentum =  0.0 * MeV; // hlt tuned: 2 GeV, hlt presel: 1 GeV
+StdDC06LoosePhi2KK.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2.0; // hlt tuned: 2, hlt presel: 1
+// Cuts for combination
+StdDC06LoosePhi2KK.Window = 50.0 * MeV; // hlt presel: 50 * MeV;
+// Cuts for mother
+StdDC06LoosePhi2KK.MotherFilter.Selections = {"phi(1020) : VtxFilterCriterion"}; 
+StdDC06LoosePhi2KK.MotherFilter.VtxFilterCriterion.MaxChi2 = 25.0; // hlt presel: 100

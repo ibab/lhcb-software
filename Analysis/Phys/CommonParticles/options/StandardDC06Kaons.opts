@@ -1,0 +1,62 @@
+/** @file 
+ *
+ *  The configuration file for "StandardDC06" kaons, created "on-demand"
+ * 
+ * The configuration includes:
+ *    - "/Event/Phys/StdDC06NoPIDsKaons"  
+ *    - "/Event/Phys/StdDC06LooseKaons"
+ *    - "/Event/Phys/StdDC06TightKaons"
+ *
+ *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+ *  @author Juan PALACIOS juan.palacios@cern.ch
+ *  @date 2006-06-27
+ */
+
+DataOnDemandSvc.Algorithms += {
+  // No PID kaons
+  "DATA='/Event/Phys/StdDC06NoPIDsKaons/Particles'     TYPE='GaudiSequencer/StdDC06NoPIDsKaonsSeq'",
+  "DATA='/Event/Phys/StdDC06NoPIDsKaons/Vertices'      TYPE='GaudiSequencer/StdDC06NoPIDsKaonsSeq'",
+  // Loose kaons      
+  "DATA='/Event/Phys/StdDC06LooseKaons/Particles'     TYPE='GaudiSequencer/StdDC06LooseKaonsSeq'",
+  "DATA='/Event/Phys/StdDC06LooseKaons/Vertices'      TYPE='GaudiSequencer/StdDC06LooseKaonsSeq'",
+  // Tight kaons  
+  "DATA='/Event/Phys/StdDC06TightKaons/Particles'     TYPE='GaudiSequencer/StdDC06TightKaonsSeq'",
+  "DATA='/Event/Phys/StdDC06TightKaons/Vertices'      TYPE='GaudiSequencer/StdDC06TightKaonsSeq'"
+};
+StdDC06NoPIDsKaonsSeq.Members += { "PreLoadParticles/StdDC06NoPIDsKaons" };
+StdDC06NoPIDsKaonsSeq.MeasureTime = true;
+StdDC06LooseKaonsSeq.Members  += { "PreLoadParticles/StdDC06LooseKaons" };
+StdDC06LooseKaonsSeq.MeasureTime  = true;
+StdDC06TightKaonsSeq.Members  += { "PreLoadParticles/StdDC06TightKaons" };
+StdDC06TightKaonsSeq.MeasureTime  = true;
+
+// ============================================================================
+// NO PID, all tracks
+// ============================================================================
+StdDC06NoPIDsKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker" ;
+StdDC06NoPIDsKaons.PhysDesktop.NoPIDsParticleMaker.Particle =  "kaon" ;
+StdDC06NoPIDsKaons.DecayDescriptor = "Kaon" ;
+
+// ============================================================================
+// LOOSE long
+// ============================================================================
+StdDC06LooseKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06LooseKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06LooseKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+StdDC06LooseKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06LooseKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"} ;
+StdDC06LooseKaons.DecayDescriptor = "Kaon" ;
+
+// ============================================================================
+// TIGHT
+// ============================================================================
+StdDC06TightKaons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.Particles = {"kaon"} ;
+StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.Kaon.Selection = {"RequiresDet='RICH' CombDLL(k-pi)>'0.0'" };
+StdDC06TightKaons.PhysDesktop.CombinedParticleMaker.TrackSelector.TrackTypes = {"Long"};
+StdDC06TightKaons.DecayDescriptor = "Kaon" ;
+
+// ============================================================================
+// The END 
+// ============================================================================

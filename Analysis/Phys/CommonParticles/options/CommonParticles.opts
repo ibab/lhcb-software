@@ -1,6 +1,0 @@
-// This package provides defaults "standard / common" particles
-
-ApplicationMgr.DLLs += { "CommonParticles" };
-#include "$COMMONPARTICLESROOT/options/ProducePairPhotons.opts"
-#include "$COMMONPARTICLESROOT/options/MergedPi0Alg.opts"
-#include "$COMMONPARTICLESROOT/options/ResolvedPi0Alg.opts"
