@@ -1,4 +1,4 @@
-// $Id: ConfigDBAccessSvc.h,v 1.6 2008-06-30 14:43:57 graven Exp $
+// $Id: ConfigDBAccessSvc.h,v 1.7 2008-07-11 12:19:57 graven Exp $
 #ifndef CONFIGDBACCESSSVC_H 
 #define CONFIGDBACCESSSVC_H 1
 
@@ -6,6 +6,11 @@
 #include <string>
 #include <memory>
 #include <map>
+// fix against clash on windows with MsgStream...
+#ifdef _WIN32
+#define NOMSG
+#define NOGDI
+#endif
 #include "boost/optional.hpp"
 #include "HltBase/IConfigAccessSvc.h"
 #include "DetCond/ICOOLConfSvc.h"
