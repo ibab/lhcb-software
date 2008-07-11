@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.18 2008-07-11 21:02:24 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.19 2008-07-11 21:47:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -67,6 +67,9 @@ StatusCode ParticleEffPurMoni::initialize()
   m_mcRec = tool<IMCReconstructible>( "MCReconstructible", "MCRecibleForParticleMoni" );
   // MCParticle selector
   m_mcSel = tool<IMCParticleSelector>( "MCParticleSelector" );
+
+  m_protoShortNames["/Event/Rec/ProtoP/Charged"] = "OfflineProtos";
+  m_protoShortNames["/Event/Hlt/ProtoP/Charged"] = "HltProtos";
 
   return sc;
 }
@@ -179,14 +182,14 @@ StatusCode ParticleEffPurMoni::execute()
 
       // count the true types for this reco type
       MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
-      if ( !isClone ) ++(tally.all);
-      if ( isClone )  ++(tally.clones);
+      ++(tally.all);
+      if ( isClone ) ++(tally.clones);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string tmpName = mcParticleNameTree(mcPart);
-        if ( !isClone ) ++(tally.all_detailed[tmpName]);
-        if ( isClone )  ++(tally.clones_detailed[tmpName]);
+        ++(tally.all_detailed[tmpName]);
+        if ( isClone ) ++(tally.clones_detailed[tmpName]);
       }
       // Momentum histogramming
       if ( !isClone )
@@ -236,14 +239,14 @@ StatusCode ParticleEffPurMoni::execute()
       // count
       MCTally & tally =
         ((m_mcProtoCount[tesLoc])[protoType].trueMCType[mcRecType])[mcParticleName(mcPart)];
-      if (!isClone) ++(tally.all);
+      ++(tally.all);
       if (isClone) ++(tally.clones);
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string& tmpName = mcParticleNameTree(mcPart);
-        if (!isClone) ++(tally.all_detailed[tmpName]);
-        if (isClone)  ++(tally.clones_detailed[tmpName]);
+        ++(tally.all_detailed[tmpName]);
+        if (isClone) ++(tally.clones_detailed[tmpName]);
       }
 
       // Momentum histogramming
@@ -291,7 +294,6 @@ StatusCode ParticleEffPurMoni::execute()
       // Momentum histogramming
       tally.effVp().fill ( (*iMCP)->p()  );
       tally.effVpt().fill( (*iMCP)->pt() );
-
     }
   }
 
@@ -328,8 +330,6 @@ StatusCode ParticleEffPurMoni::execute()
           {
             m_corProtoMap[loc1] = loc2;
             m_corProtoMap[loc2] = loc1;
-            //const std::string& sloc1 = shortProtoLoc(loc1);
-            //const std::string& sloc2 = shortProtoLoc(loc2);
             const std::string& corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
             // count
             MCTally & tally =
@@ -611,9 +611,11 @@ void ParticleEffPurMoni::printStats() const
     for ( ProtoTESStatsMap::const_iterator iX = m_partProtoTESStats[(*iLoc).first].begin();
           iX != m_partProtoTESStats[(*iLoc).first].end(); ++iX )
     {
-      always() << "  -> Used ProtoParticles                   : " << iX->first << " "
+      always() << "  -> Used ProtoParticles        : " << iX->first << " "
                << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
-      always() << "  -> Correlated ProtoParticles (ProtoCorr) : " << m_corProtoMap[iX->first] << endreq;
+      always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
+      always() << "  -> 'ProtoCorr%' = (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
+               << ")/" << shortProtoLoc(iX->first) << endreq;
     }
     always() << lines << endreq;
 
@@ -639,7 +641,7 @@ void ParticleEffPurMoni::printStats() const
       if ( primaryPart )
       {
         always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
-        if ( !m_correlations.empty() ) always() << "   | ProtoCorr";
+        if ( !m_correlations.empty() ) always() << "   |  ProtoCorr%";
       }
       always() << endreq;
       if ( (*iSum).second.nReco > 0 )
@@ -672,7 +674,7 @@ void ParticleEffPurMoni::printStats() const
               if ( primaryPart )
               {
                 always() << " | " << eff( tally.all, nBkgTrue )
-                         << " |"  << eff( tally.all, nTotalMC )
+                         << " |"  << eff( tally.all-tally.clones, nTotalMC )
                          << " |"  << eff( tally.clones, nTotalMC );
                 // correlations
                 if ( !m_correlations.empty() )
@@ -681,7 +683,7 @@ void ParticleEffPurMoni::printStats() const
                   const std::string & loc2    = m_corProtoMap[loc1];
                   const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
                   const MCTally & corTally = (m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                  always() << " |" << eff( corTally.all, nTotalMC );
+                  always() << " |" << eff( corTally.all, tally.all );
                 }
               }
               always() << endreq;
@@ -742,8 +744,17 @@ void ParticleEffPurMoni::printStats() const
                   {
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
                     always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << " |"  << eff( (*iC).second, nTotalMC ) << " |";
-                    if ( nClones>0 ) always() << eff( nClones, nTotalMC );
+                             << " |"  << eff( (*iC).second-nClones, nTotalMC ) 
+                             << " |"  << eff( nClones, nTotalMC );
+                    // correlations
+                    if ( !m_correlations.empty() )
+                    {
+                      const std::string & loc1    = (*iSum).first.protoTESLoc;
+                      const std::string & loc2    = m_corProtoMap[loc1];
+                      const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
+                      const long moo = ((m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
+                      always() << " |" << eff( moo, (*iC).second );
+                    }
                   }
                   always() << endreq;
                 } else { ++suppressedContribsC; }
