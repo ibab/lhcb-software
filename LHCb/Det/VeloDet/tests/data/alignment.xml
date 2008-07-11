@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "structure.dtd">
+<DDDB>
+	<catalog name="Alignment">
+		<catalog name="Velo">
+			<condition name="VeloLeft" classID="1008106">
+				<paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+				<paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+				<paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+				<param name="XOffset" type="string">Conditions/Online/Velo/MotionSystem[XOffsetLeft]</param>
+				<param name="YOffset" type="string">Conditions/Online/Velo/MotionSystem[YOffset]</param>
+			</condition>
+			<condition name="VeloRight" classID="1008106">
+				<paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+				<paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+				<paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+				<param name="XOffset" type="string">Conditions/Online/Velo/MotionSystem[XOffsetRight]</param>
+				<param name="YOffset" type="string">Conditions/Online/Velo/MotionSystem[YOffset]</param>
+				<!-- Being YOffset == 1, we should get 15  -->
+				<paramVector name="YOffsetCoeffs" type="double">20 -5</paramVector>
+			</condition>
+		</catalog>
+	</catalog>
+</DDDB>

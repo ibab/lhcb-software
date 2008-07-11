@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "structure.dtd">
+<DDDB>
+	<catalog name="Online">
+		<catalog name="Velo">
+			<condition name="MotionSystem">
+				<param name="XOffsetLeft" type="double">+30</param>
+				<param name="XOffsetRight" type="double">-30</param>
+				<param name="YOffset" type="double">+1</param>
+			</condition>
+		</catalog>
+	</catalog>
+</DDDB>

@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.199 2008-07-10 11:23:37 dhcroft Exp $
+! $Id: release.notes,v 1.200 2008-07-11 16:35:58 marcocle Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+! 2008-07-11 - Marco Clemencic
+ - Added the specialized alignment condition "VeloAlignCond", which is able to
+   get X and Y offsets from another condition (namely the one containing the
+   stepping motors informations). There is a test for it too. The directory
+   tests/data contains a minimal XML detector description (used for the test)
+   that can be seen as an example of how to use VeloAlignCond.
+   NEEDS DedDesc >= v18r7
+   
 ! 2008-07-10 - David Hutchcroft
  - Changed StripInfo class to store real strip conditions data from construction 
    and in situe tests before data taking. Strip can be LOWGAIN, NOISY, STRIPOK, 

@@ -6,5 +6,6 @@
   <class name="std::vector<DeVeloSensor*>"  />
   <class name="std::vector<DeVeloPhiType*>"  />
   <class name="std::vector<DeVeloRType*>"  />
+  <class name="VeloAlignCond" />
   <variable pattern="DeVeloLocation::*" />
 </lcgdict>
