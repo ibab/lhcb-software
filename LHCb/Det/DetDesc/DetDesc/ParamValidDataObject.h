@@ -1,12 +1,9 @@
-//$Id: ParamValidDataObject.h,v 1.10 2008-02-22 12:12:12 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.11 2008-07-11 16:34:50 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
 // Base classes
 #include "DetDesc/ValidDataObject.h"
-
-// Unique ID of the class
-#include "DetDesc/CLIDParamValidDataObject.h"
 
 #include "DetDesc/ParamList.h"
 #include "DetDesc/ParamException.h"
@@ -42,13 +39,6 @@ class ParamValidDataObject : public ValidDataObject {
  public:
 
   // Re-implemented from ValidDataObject
-
-  /// Class ID of this instance
-  virtual const CLID& clID() const { return classID(); } 
-
-  /// Class ID of this class
-  static const CLID& classID() { return CLID_ParamValidDataObject; };
-
   /// Do the deep copy
   virtual void update ( ValidDataObject& obj );
   
