@@ -1,13 +1,12 @@
-# $Id: requirements,v 1.109 2008-06-30 14:01:28 cattanem Exp $ 
+# $Id: requirements,v 1.110 2008-07-11 07:29:47 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v18r6
+version       v18r7
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
 
 # =========== dependencies ====================================================
-use           LHCbKernel        v* Kernel
 use           GaudiKernel       v*
 use           ROOT              v* LCG_Interfaces
 use           GSL               v* LCG_Interfaces 
@@ -27,3 +26,6 @@ apply_pattern     reflex_dictionary                                 \
                   headerfiles=$(DETDESCROOT)/dict/DetDescDict.h     \
                   selectionfile=$(DETDESCROOT)/dict/DetDescDict.xml \
                   options="-U__MINGW32__"
+
+macro_append ROOT_linkopts " -lMathCore " \
+             WIN32 " libMathCore.lib "

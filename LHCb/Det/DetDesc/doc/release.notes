@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.369 2008-06-30 14:01:28 cattanem Exp $ 
+! $Id: release.notes,v 1.370 2008-07-11 07:29:47 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2008-07-11 - Marco Cattaneo
+ - In requirements, remove dependency on LHCbKernel, not needed
 
 !====================== DetDesc v18r6 2008-06-30 ==============================
 ! 2008-06-24 - Chris Jones
