@@ -1,8 +1,37 @@
-! $Id: release.notes,v 1.337 2008-07-10 15:53:27 pkoppenb Exp $
+! $Id: release.notes,v 1.338 2008-07-11 13:29:32 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-07-11 - Vanya BELYAEV
+ - src/CombineParticles.cpp
+    add the inheritance and the implementation of ISetInputParticles interface
+    to CombineParticles algorithm.
+    essentially it allows to use CombineParticles as some kind of "tool"
+    for the interactive processing.
+
+    ## get the iAlgorithm
+    >>> myalg = gaudi.algorithm('MyCombineParticlesAlgorithm') 
+
+    ## get the underlying interface: e.g. getattr( myalg, '_ialg' ) 
+    >>> iAlg = ... 
+
+    ## get the function 
+    >>> setInput = cpp.DaVinci.Utils.setInput 
+
+    ## inside the event loop:     
+    >>> particles = ... # get vector of particles 
+
+    ## set input particle for the algorithm
+    >>> sc =  setInput ( iAlg , particles ) 
+    >>> if sc.isFailure() : ....
+
+    ## run the algorithm
+    >>> sc = iAlg.sysExecute() 
+    >>> if sc.isFailure() : ... 
+    
+
 
 ! 2008-07-10 - Patrick Koppenburg
  - FilterDesktop : Use LoKi Filter by default.

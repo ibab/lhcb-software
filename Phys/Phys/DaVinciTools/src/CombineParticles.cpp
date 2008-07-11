@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.18 2008-07-08 16:41:47 pkoppenb Exp $
+// $Id: CombineParticles.cpp,v 1.19 2008-07-11 13:29:32 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,11 @@
 #include <map>
 #include <set>
 // ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+// ============================================================================
 // DaVinciKernel
 // ============================================================================
 #include "Kernel/DVAlgorithm.h"
@@ -14,6 +19,7 @@
 #include "Kernel/GetDecay.h"
 #include "Kernel/GetParticlesForDecay.h"
 #include "Kernel/IPlotTool.h"
+#include "Kernel/ISetInputParticles.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -41,7 +47,10 @@
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-04-01
      */
-    class CombineParticles : public DVAlgorithm
+    class CombineParticles 
+      : public         DVAlgorithm 
+      , public virtual ISetInputParticles 
+      , public virtual IIncidentListener
     {
       // the friend factory, needed fo rinstantiation
       friend class AlgFactory<CombineParticles> ;
@@ -52,6 +61,40 @@
       virtual StatusCode initialize () ; // standard initialization 
       /// the standard execution      of the algorithm 
       virtual StatusCode execute    () ; // standard execution 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // IIncindentListener interface 
+      // ======================================================================
+      /** Inform that a new incident has occured
+       *  @see IIncidentListener 
+       */
+      virtual void handle ( const Incident& ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // IInterface
+      // ======================================================================
+      /** Query interfaces of Interface
+       *  @see IInterface 
+       *  @param iid ID of Interface to be retrieved
+       *  @param iif Pointer to Location for interface pointer
+       */
+      virtual StatusCode queryInterface 
+      ( const InterfaceID& iid ,
+        void**             iif ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      // ISetInputParticles interface 
+      // ======================================================================
+      /** set the input particles
+       *  @see ISetInputParticles 
+       *  @param input the vector of input particles 
+       *  @return status code 
+       */
+      virtual StatusCode setInput 
+      ( const LHCb::Particle::ConstVector& input ) ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -154,6 +197,13 @@
       /// "Mother      Plots" tool 
       IPlotTool*        m_motherPlots      ; //  the  "Daughter Plots" tool      
       // ======================================================================
+    private: // some very specific stuff for the special studies 
+      // ====================================================================== 
+      /// the vector of input particles to be used instead of the standard
+      LHCb::Particle::ConstVector  m_inputParticles    ;
+      /// the flag which signal the usage of input particles instead of the standard
+      bool                         m_useInputParticles ;
+      // ====================================================================== 
     } ;
     // ========================================================================
 //  } // end of namespace LoKi::Hybrid
@@ -203,6 +253,9 @@ CombineParticles::CombineParticles
   , m_daughtersPlots   ( 0 )  
   , m_combinationPlots ( 0 )  
   , m_motherPlots      ( 0 )  
+  // special
+  , m_inputParticles    (       ) 
+  , m_useInputParticles ( false )
 {
   //
   declareProperty ( "Factory"          , m_factory          , 
@@ -281,6 +334,12 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   if ( sc.isFailure() ) { return sc ; }
   // check for LoKi service 
   svc<IService> ( "LoKiSvc" , true ) ;
+  
+  {
+    // subscribe the incident
+    IIncidentSvc* inc = svc<IIncidentSvc> ( "IncidentSvc" , true );
+    inc -> addListener ( this , IncidentType::BeginEvent ) ;
+  }
   
   // 1) decode all decay descriptors:
   {
@@ -362,8 +421,18 @@ StatusCode CombineParticles::execute    ()  // standard execution
   typedef LoKi::Combiner_<LHCb::Particle::ConstVector>  Combiner ;
   
   // get the particles from the Desktop
-  const LHCb::Particle::ConstVector& particles = desktop()->particles () ;
-  if (msgLevel(MSG::VERBOSE)){
+  const LHCb::Particle::ConstVector& particles 
+    = m_useInputParticles ? m_inputParticles : desktop()->particles () ;
+  
+  if ( m_useInputParticles && msgLevel ( MSG::INFO ) )
+  {
+    info () 
+      << " The external set of " << particles.size() 
+      << " particles is used instead of PhysDesktop " 
+      << endreq ; 
+  }    
+  if ( msgLevel ( MSG::VERBOSE ) ) 
+  {
     for ( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); i!=particles.end();++i)
       verbose() << "Input :  " << (*i)->key() << " " << (*i)->particleID().pid() << " " 
                 << (*i)->momentum() << endmsg ;
@@ -493,13 +562,65 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the final statistics 
   counter ( "# selected") += nTotal ;
   
-  StatusCode sc =  desktop()->saveDesktop() ;
-  if (!sc) return sc;
+  // reset the "use external input" flag
+  m_useInputParticles = false ;
   
+  StatusCode sc =  desktop()->saveDesktop() ;
+  if (!sc) { return sc ; }
+
   // the final decision 
   setFilterPassed ( 0 < nTotal ) ;
   
   return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  Query interfaces of Interface
+ *  @param iid ID of Interface to be retrieved
+ *  @param iif Pointer to Location for interface pointer
+ */
+// ============================================================================
+StatusCode CombineParticles::queryInterface
+(const InterfaceID& iid ,
+ void**             iif ) 
+{
+  if ( 0 == iif ) { return StatusCode::FAILURE ; }                   // RETURN
+  //
+  if      ( ISetInputParticles::interfaceID () . versionMatch ( iid ) )
+  { *iif = static_cast<ISetInputParticles*>      ( this ) ; }
+  else if ( IIncidentListener::interfaceID  () . versionMatch ( iid ) )
+  { *iif = static_cast<IIncidentListener*>       ( this ) ; }
+  else { return Algorithm::queryInterface ( iid , iif ) ; }         // RETURN 
+  //
+  addRef() ;
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  Inform that a new incident has occured
+ *  @see IIncidentListener 
+ */
+// ============================================================================
+void CombineParticles::handle ( const Incident& )
+{
+  m_inputParticles.clear()   ;          // clear the input container 
+  m_useInputParticles= false ;          // reset the flag
+}
+// ============================================================================
+/** set the input particles
+ *  @see ISetInputParticles 
+ *  @param input the vector of input particles 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CombineParticles::setInput 
+( const LHCb::Particle::ConstVector& input )
+{
+  m_inputParticles    = input ;
+  m_useInputParticles = true  ;
+  info () 
+    << "The external set of " << input.size() 
+    << " particles will be used as input instead of PhysDesktop " 
+    << endreq ;
+  return StatusCode ( StatusCode::SUCCESS , true ) ;
 }
 // ============================================================================
 /// The factory (needed for the proper instantiation)
