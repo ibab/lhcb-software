@@ -14,7 +14,7 @@ Reco.DetectorList += {
                     };
 
 // Decoding of tracking detectors, track pattern recognition, track fit
-#include "$TRACKSYSROOT/options/RecoTracking.opts"
+#include "$TRACKSYSROOT/python/RecoTracking.py"
 
 // Primary vertex
 RecoTrSeq.Members   += { "PatPVOffline" };
