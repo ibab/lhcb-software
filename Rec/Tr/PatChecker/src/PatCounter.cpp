@@ -1,4 +1,4 @@
-// $Id: PatCounter.cpp,v 1.4 2008-06-30 12:37:20 mjohn Exp $
+// $Id: PatCounter.cpp,v 1.5 2008-07-11 08:28:05 mjohn Exp $
 // Include files
 
 // from Gaudi
@@ -30,6 +30,8 @@ PatCounter::PatCounter( const std::string& type,
   m_totTrackGrl = 0;
   m_totTrackGen = 0;
   m_totTrackOpn = 0;
+  m_totTrack    = 0;
+  m_totGhost    = 0;
   m_totGhostSpc = 0;
   m_totGhostGrl = 0;
   m_totGhostGen = 0;
