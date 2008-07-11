@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2008-07-11 - Stephanie Hansmann-Menzemer
+- add python directory with PatForward.py and PatSeeding.py scripts
 
 !========================== PatAlgorithms v3r7 2008-07-02 ====================
 ! 2008-07-02 - Manuel Tobias Schiller
