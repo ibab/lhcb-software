@@ -1,4 +1,4 @@
-// $Id: DaVinciKernelDict.h,v 1.13 2008-07-10 15:49:28 pkoppenb Exp $
+// $Id: DaVinciKernelDict.h,v 1.14 2008-07-11 13:11:28 ibelyaev Exp $
 #ifndef DICT_DAVINCIKERNELDICT_H 
 #define DICT_DAVINCIKERNELDICT_H 1
 
@@ -59,6 +59,7 @@
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IPrintDecay.h"
+#include "Kernel/ISetInputParticles.h"
 #include "Kernel/DVAlgorithm.h" // Has to be last for compilation on Windows
 
 #endif // DICT_DAVINCIKERNELDICT_H

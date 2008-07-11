@@ -50,5 +50,8 @@
   <class name = "ITriggerTisTos"/>
   <class name = "IVertexFit"/>
   <class name = "IPrintDecay"/>
+  <class name = "ISetInputParticles"/>
+
+  <function name = "DaVinci::Utils::setInput"/>
 
 </lcgdict>

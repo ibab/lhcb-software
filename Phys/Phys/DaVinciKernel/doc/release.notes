@@ -3,6 +3,19 @@
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2008-07-11 - Vanya BELYAEV
+
+ - Kernel/ISetInputParticles.h, src/Lib/ISetInputParticles.cpp
+
+    new interface to allow some "tool-like" usage of CombineParticle algorithm.
+    Jose Angel & Gabriel have nice use-case for it for debugging of HLT2.
+
+ - dict/DaVinciKernelDict.h, DaVinciKernelDict.xml
+  
+    build the disctionaty for the ISelInputParticles interface and 
+    the related function
+
+
 ! 2008-07-10 - Patrick Koppenburg
  - Make IGeomDispCalcularor obsolete in DVAlgorithm, but keep it for the time
    being.
