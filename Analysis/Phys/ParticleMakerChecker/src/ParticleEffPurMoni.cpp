@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.21 2008-07-11 22:22:09 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.22 2008-07-11 22:30:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -594,8 +594,8 @@ void ParticleEffPurMoni::printStats() const
    *  Could do with a tidy up together with the associated utility classes
    */
 
-  const std::string LINES(149,'=');
-  const std::string lines(149,'-');
+  const std::string LINES(147,'=');
+  const std::string lines(147,'-');
 
   const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
@@ -635,7 +635,7 @@ void ParticleEffPurMoni::printStats() const
                  << " | " << (*iSum).first.protoType;
       std::string recotitle = srecotitle.str();
       recotitle.resize(10+m_maxNameLength,' ');
-      always() << recotitle << " |  % of sample";
+      always() << recotitle << "|  % of sample";
       if ( primaryPart )
       {
         always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
@@ -668,7 +668,7 @@ void ParticleEffPurMoni::printStats() const
               const MCTally & mcTally = (m_rawMCMap[(*iMCT).first])[(*iT).first];
               const long nTotalMC = mcTally.all;
               always() << mcT
-                       << "| " << eff( tally.all, (*iSum).second.nReco );
+                       << "|" << eff( tally.all, (*iSum).second.nReco );
               if ( primaryPart )
               {
                 always() << " | " << eff( tally.all, nBkgTrue )
@@ -740,7 +740,7 @@ void ParticleEffPurMoni::printStats() const
                     ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
                   const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];;
                   always() << mcTC
-                           << " | " << eff( (*iC).second, (*iSum).second.nReco );
+                           << "|" << eff( (*iC).second, (*iSum).second.nReco );
                   if ( primaryPart )
                   {
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
