@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.54 2008-07-03 09:30:57 pkoppenb Exp $
+# $Id: requirements,v 1.55 2008-07-11 16:33:46 pkoppenb Exp $
 package AnalysisSys
-version v1r14
+version v2r0
 
 branches doc cmt
 
@@ -8,35 +8,35 @@ branches doc cmt
 ####################################################################
 
 #===================================================================
-use  CommonParticles            v3r12    Phys   # Juan Palacios, WGs
+use  CommonParticles            v4r0     Phys   # Juan Palacios, WGs
 use  FlavourTagging             v8r0     Phys   # Marco Musy
 use  DaVinciFilter              v6r8     Phys   # Patrick Koppenburg - deprecated
 
 ####################################################################
-use  DaVinciMCTools     	v9r14    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r15    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r2p4   Phys   # Philippe Charpentier
 # use  VertexFitCheck             v1r2p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v3r0     Phys   # Marco Musy
-use  DaVinciUser      	        v8r4p2   Phys   # Juan Palacios
-use  ParticleMakerChecker       v1r1p2   Phys   # Chris Jones
+use  DaVinciUser      	        v8r5     Phys   # Juan Palacios
+use  ParticleMakerChecker       v1r2     Phys   # Chris Jones
 use  LoKiUser                   v6r1     Phys   # Vanya Belyaev
-use  DecayTreeTuple             v1r4     Phys   # Jeremie Borel
+use  DecayTreeTuple             v1r5     Phys   # Jeremie Borel
 ####################################################################
 use  PhysSelSys          	v10r11  PhysSel
 #===================================================================
-use Ccbar	                v1r7    PhysSel # Jan Amoraal, Miriam Calvo
-use B2Dilepton			v1r7	PhysSel # Rare Decays Working Group
-use B2D0X			v1r14	PhysSel # WGs
-use B2DplusX			v1r2	PhysSel # WGs
-use B2DsX			v1r6	PhysSel # WGs
-use B2DstarX			v1r7	PhysSel # WGs
-use B2uds	   		v2r6p2  PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
+use Ccbar	                v1r7p1  PhysSel # Jan Amoraal, Miriam Calvo
+use B2Dilepton			v1r7p1	PhysSel # Rare Decays Working Group
+use B2D0X			v1r14p1	PhysSel # WGs
+use B2DplusX			v1r2p1	PhysSel # WGs
+use B2DsX			v1r6p1	PhysSel # WGs
+use B2DstarX			v1r7p1	PhysSel # WGs
+use B2uds	   		v2r6p3  PhysSel # Juan Palacios, Gabriel Guerrer, Eric Conte
 # use JetsSel	    	    	v1r4p2  PhysSel # Jets WG
-use Radiative       	    	v2r4p1  PhysSel # Vanya BELYAEV
+use Radiative       	    	v2r4p2  PhysSel # Vanya BELYAEV
 
 # temporary packages
-use Bd2PiPiPi0       	   	v4r3p1   PhysSel # Olivier Deschamps
+use Bd2PiPiPi0       	   	v4r3p3   PhysSel # Olivier Deschamps
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
@@ -49,12 +49,16 @@ use  Stripping          	v6r6     Tools   # Patrick Koppenburg
 use  MicroDSTBase        	v1r1p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r0p1  MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r2    MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r2    MicroDST          # Ulrich Kerzel
+use  MicroDSTAlgorithm   	v3r2p1  MicroDST          # Ulrich Kerzel
 
 
 ####################################################################
-use Analysis            	v7r3    Tutorial          # P. Koppenburg
-use LoKiExample         	v7r4    Ex                 # Vanya Belyaev
+use Analysis            	v7r4    Tutorial          # P. Koppenburg
+# tmp # use LoKiExample         	v7r4    Ex                # Vanya Belyaev
+
+# tmp
+use DaVinciKernel v7r0 Phys
+use DaVinciMCKernel v2r10 Phys
 
 
 # Allow the generation of QMTest summary 
