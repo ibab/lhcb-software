@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.9 2008-03-07 15:34:42 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.10 2008-07-11 15:33:20 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -16,6 +16,8 @@
 /// Utility classes
 #include "GaudiKernel/IToolSvc.h" 
   
+#include "Event/RawEvent.h"
+
 #include "Kernel/MuonTileID.h"
 
 DECLARE_ALGORITHM_FACTORY( L0MuonCandidatesFromRaw );
@@ -48,180 +50,101 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IChronoStatSvc * svc = chronoSvc();
-  svc->chronoStart("L0MuonTrigger Initialize");
+  svc->chronoStart("L0MuonCandidatesFromRaw Initialize");
   
   L0Muon::RegisterFactory::selectInstance(1);
 
   // Instanciate the MuonTrigger registers
   std::string xmlFileName = m_configfile;
-//   char buf[4096];
-//   char* format = "%s/L0MuonKernel_mode%d.xml";
-//   sprintf(buf,format,m_configPath.c_str(),m_outputMode);
-//   std::string xmlFileName = buf;
-  info() <<  "XML file = " << xmlFileName << endmsg;
+  info() <<  "XML config file = " << xmlFileName << endmsg;
   L0Muon::L0MuonKernelFromXML(xmlFileName,false);
   if( msgLevel(MSG::DEBUG) ) debug() <<  "MuonTrigger build from xml "<< endmsg;
 
   svc->chronoStop("L0MuonCandidatesFromRaw Initialize");
   svc->chronoDelta("L0MuonCandidatesFromRaw Initialize",IChronoStatSvc::KERNEL);
-  svc->chronoPrint("L0MuonCandidatesFromRaw Initialize");
+  //   svc->chronoPrint("L0MuonCandidatesFromRaw Initialize");
   
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs"  , "OutputTool" , this );
   
   m_totEvent = 0;
-  m_errorEvent=0;
+  m_totBx = 0;
+  m_errorEvent = 0;
 
+  if( msgLevel(MSG::DEBUG) ) {
+    debug()<<"Output mode = "<< m_mode;
+    if (m_mode>0) {
+      debug()<<"=> all L0Muon banks will be used : "<<endmsg;
+      debug()<<"  - L0MuonCtrlCand-1st part : controller boards final candidates     - should always be there"<<endmsg;
+      debug()<<"  - L0MuonCtrlCand-2nd part : controller boards input candidates     - if present"<<endmsg;
+      debug()<<"  - L0MuonProcCand          : processing boards PU & BCSU candidates - if present"<<endmsg;
+      debug()<<"  - L0MuonProcData-1st part : PU link error & optical link data      - if present"<<endmsg;
+      debug()<<"  - L0MuonProcData-2nd part : PU neighbours data                     - if present"<<endmsg;
+    } else {
+      debug()<<"=> only the 1st part of the L0MuonCtrlCand bank will be used (suitable for HLT & MC)"<<endmsg;
+    }
+  }
+  
   return StatusCode::SUCCESS;			  					  		      
 }
-
-
 
 StatusCode L0MuonCandidatesFromRaw::execute()
 {
   L0Muon::RegisterFactory::selectInstance(1);
 
-  if( msgLevel(MSG::DEBUG) ) {
-    debug() << "-----------------------------------------------------------------" << endreq;
-    debug() << "-- Start execution:" << endreq;
-  }
-  
   IChronoStatSvc * svc = chronoSvc();
-  svc->chronoStart("L0MuonTrigger Execute");
+  svc->chronoStart("L0MuonCandidatesFromRaw Execute");
 
   StatusCode sc;
 
-  // Decode Raw banks
-  sc = m_outputTool->decodeRawBanks(m_mode);
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  // Loop over time slots
+  for (int bx=-7; bx<8; ++bx){
 
-  // Write on TES
-  if ( m_writeOnTES) {
-    if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
-    sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
-    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  }
+    setProperty("RootInTes",timeSlot(bx));  
+    if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
 
-  // Fill the container for the L0DU (L0ProcessorData)
-  if ( m_writeL0ProcData) {
-    if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
-    sc = m_outputTool->writeL0ProcessorData(m_extension);
-    if ( sc.isFailure() ) return sc;  
-  }
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<timeSlot(bx) << endmsg;
 
-  // If compare
-  if ( m_writeOnTES  
-       && ("" != m_extension) 
-       && (exist<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default )) ) {
+    sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
+    if ( sc.isFailure() ) return sc;// error printed already by GaudiAlgorithm
 
-    //== Compare 
+    // Decode Raw banks
+    sc = m_outputTool->decodeRawBanks(m_mode);
+    if ( sc.isFailure() ) continue; // error printed already by GaudiAlgorithm
     
-    LHCb::L0MuonCandidates* replayed = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default );
-    LHCb::L0MuonCandidates* fromraw  = get<LHCb::L0MuonCandidates>( LHCb::L0MuonCandidateLocation::Default + m_extension );
+    // Print Errors
+    if (msgLevel(MSG::DEBUG)) {
+      m_outputTool->errors(debug());
+    }
+  
+    // Write on TES
+    if ( m_writeOnTES) {
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
+      sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
+      if ( sc.isFailure() ) continue;  
+    }
+  
+    // Fill the container for the L0DU (L0ProcessorData)
+    if ( m_writeL0ProcData) {
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endreq;
+      sc = m_outputTool->writeL0ProcessorData(m_extension);
+      if ( sc.isFailure() ) continue;  
+    }
 
-    bool error = false;
-   // If the number of candidate don't match
-    if (replayed->size()!=fromraw->size()) {
-      info() << "Error : replayed !=  from raw" <<endreq;
-      info() << " size    : "<<replayed->size()<<" -VS- "<<fromraw->size()<<endreq;
-      info() << " => Evt number : "<< m_totEvent<< endreq;
-      error = true;
-    } else {
-      // Loop over candidates of both versions
-      LHCb::L0MuonCandidates::const_iterator it_replayed = replayed->begin();
-      LHCb::L0MuonCandidates::const_iterator it_fromraw = fromraw->begin();
-      while ( replayed->end() != it_replayed && fromraw->end() != it_fromraw ) {
-      
-        if ( (*it_replayed)->pt()     != (*it_fromraw)->pt()    ||
-             (*it_replayed)->theta()  != (*it_fromraw)->theta() ||
-             (*it_replayed)->phi()    != (*it_fromraw)->phi()     ) {
-        
-          error = true;
+    // Release registers used by the converters
+    sc = m_outputTool->releaseRegisters();
+    if ( sc.isFailure() ) continue; 
 
-          info() << "Error :   replayed !=  from raw  (both with "<<replayed->size()<<" candidates)" <<endreq;
-          info() << " PT      : "<< (*it_replayed)->pt()    << " -VS- "  << (*it_fromraw)->pt()    << endreq;
-          info() << " theta   : "<< (*it_replayed)->theta() << " -VS- "  << (*it_fromraw)->theta() << endreq;
-          info() << " phi     : "<< (*it_replayed)->phi()   << " -VS- "  << (*it_fromraw)->phi()   << endreq;
-          for (int sta=0; sta<3; ++sta) {  
-            info() << " sta M"<<sta+1<<" ";
-            std::vector<LHCb::MuonTileID> pads;
-            std::vector<LHCb::MuonTileID>::iterator itpad;
-            pads= (*it_replayed)->muonTileIDs(sta);
-            for (itpad= pads.begin();itpad<pads.end();++itpad){
-              info()<<" "<<(*itpad).toString();
-            }
-            info() << " -VS- ";
-            pads  =  (*it_fromraw)->muonTileIDs(sta);
-            for (itpad= pads.begin();itpad<pads.end();++itpad){
-              info()<<" "<<(*itpad).toString();
-            }
-            info() <<endreq;
-          }
-          info() << " => Evt number : "<< m_totEvent<< endreq;
-        
-        } else {
-          if( msgLevel(MSG::DEBUG) ) debug() << "Entry OK " << it_fromraw-fromraw->begin()<< endreq;
-        }
-        it_replayed++;
-        it_fromraw++;
-      } // End of Loop over candidates of both versions
+    if( msgLevel(MSG::VERBOSE) ) verbose() << "... decoding done"<< endmsg;
 
-      // If an error occured
-      if (error) {
-        info() << "Error : fromraw  ( "<<fromraw->size()<<" candidates)" <<endreq;
-        for (LHCb::L0MuonCandidates::const_iterator it = fromraw->begin(); it!=fromraw->end(); ++it) {
-          info() << " PT      : "<< (*it)->pt()    << endreq;
-          info() << " theta   : "<< (*it)->theta() << endreq;
-          info() << " phi     : "<< (*it)->phi()   << endreq;
-          for (int sta=0; sta<3; ++sta) {  
-            info() << " sta M"<<sta+1<<" ";
-            std::vector<LHCb::MuonTileID> pads;
-            std::vector<LHCb::MuonTileID>::iterator itpad;
-            pads= (*it)->muonTileIDs(sta);
-            for (itpad= pads.begin();itpad<pads.end();++itpad){
-              info()<<" "<<(*itpad).toString();
-            }
-            info() <<endreq;
-          } 
-        }
-        info() << "Error : replayed  ( "<<replayed->size()<<" candidates)" <<endreq;
-        for (LHCb::L0MuonCandidates::const_iterator it = replayed->begin(); it!=replayed->end(); ++it) {
-          info() << " PT      : "<< (*it)->pt()    << endreq;
-          info() << " theta   : "<< (*it)->theta() << endreq;
-          info() << " phi     : "<< (*it)->phi()   << endreq;
-          for (int sta=0; sta<3; ++sta) {  
-            info() << " sta M"<<sta+1<<" ";
-            std::vector<LHCb::MuonTileID> pads;
-            std::vector<LHCb::MuonTileID>::iterator itpad;
-            pads= (*it)->muonTileIDs(sta);
-            for (itpad= pads.begin();itpad<pads.end();++itpad){
-              info()<<" "<<(*itpad).toString();
-            }
-            info() <<endreq;
-          }
-        }
-      } // End if an error occured
-    } // End else if the number of candidate don't match
+    ++m_totBx;
 
-    if (error)  ++m_errorEvent;
-    
-  }// End If compare
-
-  // Release registers used by the converters
-  sc = m_outputTool->releaseRegisters();
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  } // End of loop over time slots
   
   svc->chronoStop("L0MuonCandidatesFromRaw Execute");
   svc->chronoDelta("L0MuonCandidatesFromRaw Execute", IChronoStatSvc::KERNEL);
-  //if( MSG::DEBUG >= log.level() ) svc->chronoPrint("L0MuonTrigger Execute");
 
   ++m_totEvent;
-
-  if( msgLevel(MSG::DEBUG) ) {
-    debug() << "-- Execution done." << endreq;
-    debug() << "-----------------------------------------------------------------" << endreq;
-  }
-  
 
   return StatusCode::SUCCESS;
   
@@ -230,15 +153,19 @@ StatusCode L0MuonCandidatesFromRaw::execute()
 
 StatusCode L0MuonCandidatesFromRaw::finalize()
 {
-  info() << "- ------------------------------------------------------------------"<<endmsg;
-  info() << "- ========> Final summary of the L0Muon trigger (from raw) <========"<<endmsg;
-  info() << "- Total number of events processed           : "
-         <<format("%8d",m_totEvent)<<endmsg;
-  m_outputTool->statTot(info());
-  if ( "" != m_extension ) 
-    info() << "- Number of events where with a difference with the reprocessing :"
-           << m_errorEvent<<endmsg;
-  info() << "- ------------------------------------------------------------------"<<endmsg;
+  if (msgLevel(MSG::INFO)) {
+
+    m_outputTool->errorSummary(info());
+
+    info() << "- ------------------------------------------------------------------"<<endmsg;
+    info() << "- ========> Final summary of the L0Muon trigger (from raw) <========"<<endmsg;
+    info() << "- Total number of events processed           : "
+           <<format("%8d",m_totEvent)<<endmsg;
+    info() << "- Total number of bunch crossings processed  : "
+           <<format("%8d",m_totBx)<<endmsg;
+    m_outputTool->statTot(info());
+    info() << "- ------------------------------------------------------------------"<<endmsg;
+  }
   
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

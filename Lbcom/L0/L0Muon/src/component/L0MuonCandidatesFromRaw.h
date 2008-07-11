@@ -20,6 +20,7 @@ public:
   StatusCode initialize();
   StatusCode finalize();
   StatusCode execute();
+  StatusCode dumpErrors();
     
 private:
 
@@ -38,8 +39,33 @@ private:
 
   // Counters for final report
   int m_totEvent ;  // Tot number of events processed
+  int m_totBx ;     // Tot number of time slices processed
   int m_errorEvent ; // Number of events where there is a difference between the reprocessing and the raw data
   
+  static inline std::string timeSlot(int bx)
+  {
+    std::string ts;
+    switch (bx) {
+    case -7 : return "Prev7/";
+    case -6 : return "Prev6/";
+    case -5 : return "Prev5/";
+    case -4 : return "Prev4/";
+    case -3 : return "Prev3/";
+    case -2 : return "Prev2/";
+    case -1 : return "Prev1/";
+    case  0 : return "";
+    case  1 : return "Next1/";
+    case  2 : return "Next2/";
+    case  3 : return "Next3/";
+    case  4 : return "Next4/";
+    case  5 : return "Next5/";
+    case  6 : return "Next6/";
+    case  7 : return "Next7/";
+    default : return "Unknown";
+    };
+    
+  };
+    
 };
 
 #endif      // L0MUONTRIGGER_L0MUONCANDIDATESFROMRAW_H 

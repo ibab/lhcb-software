@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.5 2008-06-05 08:28:27 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.6 2008-07-11 15:33:21 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -45,15 +45,16 @@ public:
   StatusCode writeL0ProcessorData(std::string extension);
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
-  /// Monitor the L0Muon Banks
-  StatusCode monitorBanks();
 
+  /// Output event error 
+  void errors(MsgStream & msg) const;
   /// Display stat
   void statTot(MsgStream & os) const;
+  /// Output error counters
+  void errorSummary(MsgStream & msg) const;
+  /// Monitor the L0Muon Banks
+  void monitorBanks(MsgStream & msg);
 
-protected:
-  
-  
 
 private:
 
@@ -99,7 +100,7 @@ private:
   LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand, int procVersion);
   
   /// Converters for the L0Muon banks
-  L0Muon::CtrlCandCnv   m_ctrlCand[2];
+  L0Muon::CtrlCandCnv  m_ctrlCand[2];
   L0Muon::ProcCandCnv  m_procCand[4];
   L0Muon::ProcDataCnv  m_procData[4];
 
