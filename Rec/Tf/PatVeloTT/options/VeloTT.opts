@@ -1,3 +1,7 @@
+#pragma print on
+// This file (VeloTT.opts) is obsolete, please use directly VeloTT.py
+#pragma print off
+
 // For Offline VeloTT tracking
 PatVeloTT.PatVeloTTTool.minMomentum = 800.;
 PatVeloTT.PatVeloTTTool.maxPseudoChi2 = 10000.;

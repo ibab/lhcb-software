@@ -1,3 +1,7 @@
+#pragma print on
+// This file (VeloTT_noB.opts) is obsolete, please use directly VeloTT.py
+#pragma print off
+
 // For Offline VeloTT tracking with no B field
 PatVeloTT.PatVeloTTTool.minMomentum = 5000.;
 PatVeloTT.PatVeloTTTool.DxGroupFactor = 0.0;

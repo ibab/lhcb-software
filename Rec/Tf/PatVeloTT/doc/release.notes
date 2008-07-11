@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2008-07-11 - Stephanie Hansmann-Menzemer
+ - translate VeloTT.opt and VeloTT_noB.opts in VeloTT.py
 
 !========================== PatVeloTT v3r1 2007-12-03 =======================
 ! 2007-11-30 - Wouter Hulsbergen
