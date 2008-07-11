@@ -45,3 +45,7 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 #include "$DAVINCIROOT/options/Phys_v4_BB_lumi2.opts"
 
 
+/// TMP
+SeqPreselXb2GammaX.Members = {
+  "LoKi::PreselXb2GammaX/PreselXb2GammaX"    // the preselection algorithm
+} ;
