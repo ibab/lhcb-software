@@ -1,0 +1,12 @@
+! $Id: release.notes,v 1.1.1.1 2008-07-11 13:02:55 robbep Exp $
+!-----------------------------------------------------------------------------
+! Package     : Gen/HepMCBack
+! Responsible : Patrick ROBBE
+! Purpose     : Streamers to read back HepMC 1 data
+!-----------------------------------------------------------------------------
+
+! 2008-07-11 - Patrick Robbe
+ - new package. This package contains utility functions to be able to 
+   read back data files written with HepMC1, with a Gaudi application 
+   using HepMC2
+
