@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.14 2008-07-10 17:06:31 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.15 2008-07-11 17:22:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -276,30 +276,6 @@ private: // definitions
   /// Map between Particles and MCParticles
   typedef std::map<const LHCb::ProtoParticle*,const LHCb::MCParticle*> P2MCP;
 
-  /** @class ProtoCorrelations ParticleEffPurMoni.h
-   *  Utility class to help compute reconstruction correlations
-   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
-   *  @date   2007-02-21
-   */
-  class ProtoCorrelation
-  {
-  public:
-    class Count
-    {
-    public:
-      Count() : nmc(0) { }
-    public:
-      unsigned int nmc;
-      std::map<std::string,unsigned int> detailed;
-    };
-    typedef std::map<std::string,Count> ProtoCount;
-  public:
-    Count count;
-    ProtoCount proto_count;
-  };
-  typedef std::map<std::string,ProtoCorrelation> ProtoCorrelations;
-  typedef std::map<IMCReconstructible::RecCategory,ProtoCorrelations> MCCatProtoCorrelations;
-
 private: // methods
 
   /** Returns the full location of the given object in the Data Store
@@ -440,14 +416,14 @@ private: // data
   /// Total true number of particles of each type at each TES location
   mutable MCSummaryMapAllProtos m_mcProtoCount;
 
+  /// Protoparticle reco correlations
+  mutable MCSummaryMapAllProtos m_correlations;
+
   /// ProtoParticle stats for each TES location
   mutable ProtoTESStatsMap m_protoTesStats;
 
   /// Raw MC informtion
   mutable MCRecTypeMap m_rawMCMap;
-
-  /// ProtoParticle reconstruction correlations
-  mutable MCCatProtoCorrelations m_protoCorr;
 
   /// Short name mapping for ProtoParticle locations
   mutable std::map<std::string,std::string> m_protoShortNames;

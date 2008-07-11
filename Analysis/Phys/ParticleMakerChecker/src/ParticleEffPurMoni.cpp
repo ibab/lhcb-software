@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.14 2008-07-10 17:06:31 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.15 2008-07-11 17:22:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -147,6 +147,9 @@ StatusCode ParticleEffPurMoni::execute()
     const double ptot = momentum((*iPM).first);
     const double pt   = transverseMomentum((*iPM).first);
 
+    // protoparticle type (long etc.)
+    const std::string& protoType = protoParticleType((*iPM).first);
+
     // Loop over Particles for the Proto
     for ( ParticleHistory::Vector::const_iterator iPart = (*iPM).second.begin();
           iPart != (*iPM).second.end(); ++iPart )
@@ -163,7 +166,7 @@ StatusCode ParticleEffPurMoni::execute()
       // get the summary for this reco particle type
       const FullPartName partName( (*iPart).properties->particle(),
                                    (*iPart).history,
-                                   protoParticleType((*iPM).first),
+                                   protoType,
                                    protoTesLoc );
       MCSummary & mcSum = mcMap[ partName ];
 
@@ -221,16 +224,16 @@ StatusCode ParticleEffPurMoni::execute()
       const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
 
       // add to list of seen MCPs
-      if ( NULL != mcPart ) usedMCPs.insert(mcPart);
+      if ( mcPart ) usedMCPs.insert(mcPart);
 
       // count the total number of selected protos at this TES location with MC
-      if ( NULL != mcPart ) ++(m_protoTesStats[tesLoc].nWithMC);
+      if ( mcPart ) ++(m_protoTesStats[tesLoc].nWithMC);
 
       // Get the MCParticle reco type
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
 
       // protoparticle type (long etc.)
-      const std::string protoType = protoParticleType(*proto);
+      const std::string& protoType = protoParticleType(*proto);
 
       // count
       MCTally & tally =
@@ -239,7 +242,7 @@ StatusCode ParticleEffPurMoni::execute()
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
-        const std::string tmpName = mcParticleNameTree(mcPart);
+        const std::string& tmpName = mcParticleNameTree(mcPart);
         ++(tally.all_detailed[tmpName]);
         if (isClone) ++(tally.clones_detailed[tmpName]);
       }
@@ -252,7 +255,7 @@ StatusCode ParticleEffPurMoni::execute()
       }
 
       // Proto Correlations
-      if ( !isClone ) mcp2Protos[mcPart].insert( *proto );
+      if ( !isClone && mcPart ) mcp2Protos[mcPart].insert( *proto );
 
     } // loop over all protos at one location in TES
 
@@ -275,9 +278,12 @@ StatusCode ParticleEffPurMoni::execute()
       // only consider reconstructable MCPs
       if ( mcRecType <= IMCReconstructible::NotReconstructible ) continue;
 
+      // make sure this MCParticle is in the list
+      //mcp2Protos[*iMCP];
+
       // Save the info for this mcparticle
-      const std::string name     = mcParticleName(*iMCP);
-      const std::string fullname = mcParticleNameTree(*iMCP);
+      const std::string& name     = mcParticleName(*iMCP);
+      const std::string& fullname = mcParticleNameTree(*iMCP);
       MCTally & tally = (m_rawMCMap[mcRecType])[name];
       ++(tally.all);
       // if configured to do so, include full tree info
@@ -287,39 +293,55 @@ StatusCode ParticleEffPurMoni::execute()
       tally.effVp().fill ( (*iMCP)->p()  );
       tally.effVpt().fill( (*iMCP)->pt() );
 
-      // protoparticle reco correlations
-      // count number of MCPs of this type
-      ProtoCorrelation & cors = (m_protoCorr[mcRecType])[name];
-      ++(cors.count.nmc);
-      ++(cors.count.detailed[fullname]);
-      // Do we have any ProtoParticles for this MCParticle ?
-      if ( mcp2Protos.find(*iMCP) != mcp2Protos.end() )
-      {
-        // count number at each ProtoParticle location
-        for ( ProtoSet::const_iterator proto = mcp2Protos[*iMCP].begin();
-              proto != mcp2Protos[*iMCP].end(); ++proto )
-        {
-          // Location in TES
-          const std::string loc = shortProtoLoc(objectLocation((*proto)->parent()));
-          ++(cors.proto_count[loc].nmc);
-          ++(cors.proto_count[loc].detailed[fullname]);
-          ProtoSet::const_iterator proto2 = proto; ++proto2;
-          for ( ; proto2 != mcp2Protos[*iMCP].end(); ++proto2 )
-          {
-            const std::string loc2 = shortProtoLoc(objectLocation((*proto2)->parent()));
-            if ( loc != loc2 )
-            {
-              const std::string corname = ( loc<loc2 ? loc+"&"+loc2 : loc2+"&"+loc );
-              ++(cors.proto_count[corname].nmc);
-              ++(cors.proto_count[corname].detailed[fullname]);
-            }
-          }
-        }
-
-      }
-
     }
   }
+
+  // Loop over found MCParticles with associated protos, if more than one proto location found
+  if ( protoLocations.size() > 1 )
+  {
+    for ( MCP2ProtoSet::const_iterator iMCP = mcp2Protos.begin();
+          iMCP != mcp2Protos.end(); ++iMCP )
+    {
+      const LHCb::MCParticle * mcP = (*iMCP).first;
+      if ( !mcP ) continue;
+      const std::string& name      = mcParticleName(mcP);
+      const std::string& fullname  = mcParticleNameTree(mcP);
+      // Get the MCParticle reco type
+      const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcP);
+
+      // Loop over the pairs of protos
+      for ( ProtoSet::const_iterator proto1 = (*iMCP).second.begin();
+            proto1 != (*iMCP).second.end(); ++proto1 )
+      {
+        // Location in TES for proto1
+        const std::string& loc1 = shortProtoLoc(objectLocation((*proto1)->parent()));
+        // Type of proto1
+        const std::string& proto1Type = protoParticleType(*proto1);
+        // inner loop over protos
+        ProtoSet::const_iterator proto2 = proto1; ++proto2;
+        for ( ; proto2 != (*iMCP).second.end(); ++proto2 )
+        {
+          // Location in TES for proto2
+          const std::string& loc2 = shortProtoLoc(objectLocation((*proto2)->parent()));
+          // Type of proto2
+          const std::string& proto2Type = protoParticleType(*proto2);
+          if ( loc1 != loc2 && proto1Type == proto2Type )
+          {
+            const std::string& corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
+            // count
+            MCTally & tally =
+              ((m_correlations[corname])[proto1Type].trueMCType[mcRecType])[name];
+            ++(tally.all);
+            if ( m_fullMCTree ) { ++(tally.all_detailed[fullname]); }
+            // Momentum histogramming
+            tally.effVp().fill ( mcP->p()  );
+            tally.effVpt().fill( mcP->pt() );
+          }
+        } // proto2 loop
+      } // proto1 loop
+
+    } // loop over MCPs
+  } // more than one proto location
 
   setFilterPassed(true);
   return StatusCode::SUCCESS;
@@ -589,80 +611,6 @@ void ParticleEffPurMoni::printStats() const
              << endreq;
   }
   always() << lines << endreq;
-
-  // Protoparticle reco correlations
-  // Number of ProtoParticle locations found
-  const unsigned int nProtoLocs = m_protoShortNames.size();
-  // No point do correlations if only one location
-  if ( nProtoLocs > 1 )
-  {
-    for ( MCCatProtoCorrelations::iterator iPCors = m_protoCorr.begin();
-          iPCors != m_protoCorr.end(); ++iPCors )
-    {
-      always() << " MC Class | " << IMCReconstructible::text(iPCors->first) << endreq;
-      // First, count total number
-      unsigned int total_n(0);
-      {for ( ProtoCorrelations::iterator iPCor = iPCors->second.begin();
-             iPCor != iPCors->second.end(); ++iPCor )
-      { total_n += iPCor->second.count.nmc; }}
-      int suppressedContribs(0);
-      for ( ProtoCorrelations::iterator iPCor = iPCors->second.begin();
-            iPCor != iPCors->second.end(); ++iPCor )
-      {
-        if ( !iPCor->second.proto_count.empty() )
-        {
-          // get the numbers
-          const unsigned int nMC = iPCor->second.count.nmc;
-          if ( 100.0*nMC/total_n > m_minContrib )
-          {
-            std::ostringstream sname;
-            sname << "   -> " << nMC << " " << iPCor->first;
-            std::string name = sname.str();
-            name.resize(10+m_maxNameLength,' ');
-            always() << name << " Effs";
-            for ( ProtoCorrelation::ProtoCount::iterator iPC = iPCor->second.proto_count.begin();
-                  iPC != iPCor->second.proto_count.end(); ++iPC )
-            { always() << " | " << iPC->first << "=" << eff(iPC->second.nmc,nMC); }
-            always() << endreq;
-            int suppressedContribsC(0);
-            // Detailed stats
-            for ( std::map<std::string,unsigned int>::iterator iDetailed = iPCor->second.count.detailed.begin();
-                  iDetailed != iPCor->second.count.detailed.end(); ++iDetailed )
-            {
-              // get the numbers
-              const unsigned int nMC2 = iDetailed->second;
-              if ( 100.0*nMC2/total_n > m_minContrib )
-              {
-                std::ostringstream sname2;
-                sname2 << "     -> " << nMC2 << " " << iDetailed->first;
-                std::string name2 = sname2.str();
-                name2.resize(10+m_maxNameLength,' ');
-                always() << name2 << " Effs";
-                for ( ProtoCorrelation::ProtoCount::iterator iPC = iPCor->second.proto_count.begin();
-                      iPC != iPCor->second.proto_count.end(); ++iPC )
-                {
-                  // The reco number
-                  const unsigned int nReco2 = (iPCor->second.proto_count[iPC->first]).detailed[iDetailed->first];
-                  always() << " | " << iPC->first << "=" << eff(nReco2,nMC2);
-                }
-                always() << endreq;
-              } else { ++suppressedContribsC; }
-            }
-            if ( suppressedContribsC>0 )
-            {
-              always() << "       -> Suppressed " << suppressedContribsC << " contribution(s) below "
-                       <<  m_minContrib << " %" << endreq;
-            }
-          } else { ++suppressedContribs; }
-        }
-      }
-      if ( suppressedContribs>0 )
-      {
-        always() << "     -> Suppressed " << suppressedContribs << " contribution(s) below "
-                 <<  m_minContrib << " %" << endreq;
-      }
-    }
-  }
 
   always() << LINES << endreq;
   // loop over Particle TES locations
