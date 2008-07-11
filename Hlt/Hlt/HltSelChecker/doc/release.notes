@@ -12,6 +12,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-07-11 - Patrick Koppenburg
+ - Remove all True*.opts files, remove the TrueFilterCriterion association,
+   juts keep FilterTrueTracks and put it in a unique file FilterTrueTracks.opts.
+ - Adapt to new DaVinciAssociatorsWraapper format
+
 !========================== HltSelChecker v6r3 2008-07-09 ===================
 ! 2008-07-08 - Patrick Koppenburg
  - Renaming of some locations

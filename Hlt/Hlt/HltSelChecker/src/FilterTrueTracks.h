@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.h,v 1.2 2008-04-21 15:22:40 pkoppenb Exp $
+// $Id: FilterTrueTracks.h,v 1.3 2008-07-11 08:53:08 pkoppenb Exp $
 #ifndef FILTERTRUETRACKS_H 
 #define FILTERTRUETRACKS_H 1
 
@@ -50,6 +50,8 @@ private:
   std::vector< std::string >  m_tracksPath ;  ///< Tracks input paths
   std::string m_outputPath ;  ///< Tracks output paths
   bool m_filterOut ;          ///< Revert logic and keep only non-signal?
+  IParticlePropertySvc* m_ppSvc ;
+  
   
 };
 #endif // FILTERTRUETRACKS_H

@@ -1,4 +1,4 @@
-// $Id: FilterTrueTracks.cpp,v 1.5 2008-07-10 18:13:04 pkoppenb Exp $
+// $Id: FilterTrueTracks.cpp,v 1.6 2008-07-11 08:53:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ FilterTrueTracks::FilterTrueTracks( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_mcDecFinder(0)
   , m_selResult(0)
+    , m_ppSvc(0)
 {
   
   declareProperty( "TracksPath", m_tracksPath );
@@ -68,6 +69,7 @@ StatusCode FilterTrueTracks::initialize() {
     err() << "You must set the OutputPath " << endmsg ;
     return StatusCode::FAILURE;
   }  
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
   return StatusCode::SUCCESS;
 }
@@ -132,9 +134,8 @@ StatusCode FilterTrueTracks::execute() {
   counter("Saved Tracks") += newTracks->size() ;
   bool foundall = true ;
 
-  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   for ( MCParts::const_iterator m = mcparts.begin() ; m != mcparts.end() ; ++m){
-    std::string pname = ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
+    std::string pname = m_ppSvc->findByPythiaID(m->first->particleID().pid())->particle() ;
     counter("Found "+pname)+=(m->second) ;
     //    if (m->second) info() << "Found the " << pname <<  endmsg ;
     foundall = (foundall && m->second) ;
