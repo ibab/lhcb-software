@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.9 2008-07-11 11:18:02 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.10 2008-07-11 16:37:38 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,12 +11,13 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.9 2008-07-11 11:18:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.10 2008-07-11 16:37:38 frankb Exp $
 
 #include "ROMon/RecSubfarmDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
 #include "ROMon/FarmDisplay.h"
 #include "ROMon/CPUMon.h"
+#include "SCR/MouseSensor.h"
 #include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
 #include "CPP/Event.h"
@@ -198,7 +199,7 @@ HelpDisplay::HelpDisplay(FarmDisplay* parent, const std::string& title, const st
   std::string head = m_title + ": " + fin;
   std::ifstream in(fin.c_str());
 
-  ::scrc_create_display(&m_display,45,130,NORMAL,ON,head.c_str());
+  ::scrc_create_display(&m_display,55,132,NORMAL,ON,head.c_str());
   ::scrc_put_chars(m_display,"Hit CTRL-H to hide the display",BOLD,2,2,1);
   for(int line=3; in.good(); ) {
     std::getline(in,s);
@@ -222,7 +223,7 @@ HelpDisplay::HelpDisplay(FarmDisplay* parent, const std::string& title, const st
 BufferDisplay::BufferDisplay(FarmDisplay* parent, const std::string& title) 
   : InternalDisplay(parent,title), m_node(0)
 {
-  ::scrc_create_display(&m_display,45,130,MAGENTA,ON,"MBM Monitor display for node:");
+  ::scrc_create_display(&m_display,55,130,MAGENTA,ON,"MBM Monitor display for node:");
 }
 
 void BufferDisplay::update(const void* data) {
@@ -469,6 +470,7 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
   }
 }
 
+/// Initializing constructor
 FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
@@ -483,11 +485,15 @@ FarmSubDisplay::FarmSubDisplay(FarmDisplay* parent, const std::string& title, bo
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
+  MouseSensor::instance().add(this,m_display);
 }
 
+/// Standard destructor
 FarmSubDisplay::~FarmSubDisplay() {
+  MouseSensor::instance().remove(m_display);
 }
 
+/// Initialize default display text
 void FarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
@@ -515,6 +521,7 @@ void FarmSubDisplay::update(const void* address) {
   }
 }
 
+/// Set timeout error
 void FarmSubDisplay::setTimeoutError() {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
   ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
@@ -526,6 +533,29 @@ void FarmSubDisplay::check(time_t now) {
     if ( now - lastUpdate() > UPDATE_TIME_MAX ) {
       setTimeoutError();
     }
+  }
+}
+
+/// Set the focus to this display
+void FarmSubDisplay::setFocus() {
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
+}
+
+/// Release the focus of this display
+void FarmSubDisplay::releaseFocus() {
+}
+
+/// Interactor overload: Display callback handler
+void FarmSubDisplay::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case ScrMouseEvent: {
+    const MouseEvent* m = ev.get<MouseEvent>();
+    setFocus();
+    IocSensor::instance().send(parent(),m->usec == -1UL ? CMD_POSCURSOR : CMD_SHOW,this);
+    break;
+  }
+  default:
+    break;
   }
 }
 
@@ -709,6 +739,7 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }
 
+/// Initializing constructor
 RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad) 
 : InternalDisplay(parent, title)
 {
@@ -723,11 +754,15 @@ RecFarmSubDisplay::RecFarmSubDisplay(FarmDisplay* parent, const std::string& tit
   svc += "/ROpublish";
   m_svc = ::dic_info_service((char*)svc.c_str(),MONITORED,0,0,0,dataHandler,(long)this,0,0);
   m_hasProblems = false;
+  MouseSensor::instance().add(this,m_display);
 }
 
+/// Standard destructor
 RecFarmSubDisplay::~RecFarmSubDisplay() {
+  MouseSensor::instance().remove(m_display);
 }
 
+/// Initialize default display text
 void RecFarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
@@ -753,6 +788,7 @@ void RecFarmSubDisplay::update(const void* address) {
   }
 }
 
+/// Set timeout error
 void RecFarmSubDisplay::setTimeoutError() {
   ::scrc_set_border(m_display,m_title.c_str(),INVERSE|RED);
   ::scrc_put_chars(m_display," No update information available",BOLD|RED|INVERSE,4,1,1);
@@ -764,6 +800,29 @@ void RecFarmSubDisplay::check(time_t now) {
     if ( now - lastUpdate() > UPDATE_TIME_MAX ) {
       setTimeoutError();
     }
+  }
+}
+
+/// Set the focus to this display
+void RecFarmSubDisplay::setFocus() {
+  ::scrc_set_border(m_display,m_title.c_str(),INVERSE|BLUE);
+}
+
+/// Release the focus of this display
+void RecFarmSubDisplay::releaseFocus() {
+}
+
+/// Interactor overload: Display callback handler
+void RecFarmSubDisplay::handle(const Event& ev) {
+  switch(ev.eventtype) {
+  case ScrMouseEvent: {
+    const MouseEvent* m = ev.get<MouseEvent>();
+    setFocus();
+    IocSensor::instance().send(parent(),m->usec == -1UL ? CMD_POSCURSOR : CMD_SHOW,this);
+    break;
+  }
+  default:
+    break;
   }
 }
 
@@ -1010,6 +1069,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
   ::scrc_cursor_off(m_pasteboard);
   ::wtc_remove(WT_FACILITY_SCR);
   ::wtc_subscribe(WT_FACILITY_SCR, key_rearm, key_action, m_pasteboard);
+  MouseSensor::instance().start(pasteboard());
   if ( all ) {
     m_svc = ::dic_info_service("DIS_DNS/SERVER_LIST",MONITORED,0,0,0,dataHandler,(long)this,0,0);
   }
@@ -1020,6 +1080,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
 
 /// Standard destructor
 FarmDisplay::~FarmDisplay()  {  
+  MouseSensor::instance().stop();
   ::wtc_remove(WT_FACILITY_SCR);
   disconnect();
   m_listener = std::auto_ptr<PartitionListener>(0);
@@ -1036,6 +1097,7 @@ FarmDisplay::~FarmDisplay()  {
   ::scrc_delete_pasteboard(m_pasteboard);
   m_pasteboard = 0;
   ::scrc_resetANSI();
+  ::printf("Farm display deleted and resources freed......\n");
 }
 
 /// Keyboard rearm action
@@ -1081,6 +1143,7 @@ int FarmDisplay::showSubfarm()    {
   InternalDisplay* d = 0;
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
+    MouseSensor::instance().remove(m_subfarmDisplay->display());
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
@@ -1099,10 +1162,60 @@ int FarmDisplay::showSubfarm()    {
       m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
     m_subfarmDisplay->initialize();
     ::lib_rtl_sleep(200);
+    MouseSensor::instance().add(this,m_subfarmDisplay->display());
     IocSensor::instance().send(this,CMD_UPDATE,m_subfarmDisplay);
     m_subPosCursor = SUBFARM_NODE_OFFSET;
   }
   return WT_SUCCESS;
+}
+
+
+/// DIM command service callback
+void FarmDisplay::update(const void* address) {
+  char c, *msg = (char*)address;
+  std::string svc, node;
+  size_t idx, idq;
+  switch(c=msg[0]) {
+  case '+':
+    getServiceNode(++msg,svc,node);
+    idx = svc.find("/ROpublish");
+    idq = svc.find("/hlt");
+    if ( idx != std::string::npos && idq == 0 ) {
+      std::string f = svc.substr(1,idx-1);
+      if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
+	IocSensor::instance().send(this,CMD_ADD,new std::string(f));
+      }
+    }
+    break;
+  case '-':
+    break;
+  case '!':
+    //getServiceNode(++msg,svc,node);
+    //log() << "Service " << msg << " in ERROR." << std::endl;
+    break;
+  default:
+    if ( *(int*)msg != *(int*)"DEAD" )  {
+      char *at, *p = msg, *last = msg;
+      std::auto_ptr<Farms> farms(new Farms);
+      while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
+	last = strchr(at,'|');
+	if ( last ) *last = 0;
+	getServiceNode(p,svc,node);
+	idx = svc.find("/ROpublish");
+	idq = svc.find("/hlt");
+	if ( idx != std::string::npos && idq == 0 ) {
+	  std::string f = svc.substr(1,idx-1);
+	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
+	    farms->push_back(f);
+	  }
+	}
+	p = last+1;
+      }
+      if ( !farms->empty() )
+	IocSensor::instance().send(this,CMD_CONNECT,farms.release());
+    }
+    break;
+  }
 }
 
 /// Handle keyboard interrupts
@@ -1154,7 +1267,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 	  const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
 	  if ( ns ) {
 	    m_cpuDisplay = std::auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
-	    m_cpuDisplay->show(m_anchorY+5,m_anchorX+10);
+	    m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
 	    return WT_SUCCESS;
 	  }
 	}
@@ -1173,7 +1286,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 	  m_mbmDisplay = std::auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
 	  m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
 	  m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
-	  m_mbmDisplay->show(m_anchorY+5,m_anchorX+10);
+	  m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
 	}
       }
       return WT_SUCCESS;
@@ -1192,7 +1305,7 @@ int FarmDisplay::handleKeyboard(int key)    {
 	  for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
 	    if ( cnt == m_subPosCursor-SUBFARM_NODE_OFFSET ) {
 	      m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this, (*n).name));
-	      m_procDisplay->show(m_anchorY+5,m_anchorX+10);
+	      m_procDisplay->show(m_anchorY+5,m_anchorX+12);
 	      return WT_SUCCESS;
 	    }
 	  }
@@ -1296,61 +1409,18 @@ int FarmDisplay::handleKeyboard(int key)    {
   return WT_SUCCESS;
 }
 
-/// DIM command service callback
-void FarmDisplay::update(const void* address) {
-  char c, *msg = (char*)address;
-  std::string svc, node;
-  size_t idx, idq;
-  switch(c=msg[0]) {
-  case '+':
-    getServiceNode(++msg,svc,node);
-    idx = svc.find("/ROpublish");
-    idq = svc.find("/hlt");
-    if ( idx != std::string::npos && idq == 0 ) {
-      std::string f = svc.substr(1,idx-1);
-      if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	IocSensor::instance().send(this,CMD_ADD,new std::string(f));
-      }
-    }
-    break;
-  case '-':
-    break;
-  case '!':
-    //getServiceNode(++msg,svc,node);
-    //log() << "Service " << msg << " in ERROR." << std::endl;
-    break;
-  default:
-    if ( *(int*)msg != *(int*)"DEAD" )  {
-      char *at, *p = msg, *last = msg;
-      std::auto_ptr<Farms> farms(new Farms);
-      while ( last != 0 && (at=strchr(p,'@')) != 0 )  {
-	last = strchr(at,'|');
-	if ( last ) *last = 0;
-	getServiceNode(p,svc,node);
-	idx = svc.find("/ROpublish");
-	idq = svc.find("/hlt");
-	if ( idx != std::string::npos && idq == 0 ) {
-	  std::string f = svc.substr(1,idx-1);
-	  if ( ::strcase_match_wild(f.c_str(),m_match.c_str()) ) {
-	    farms->push_back(f);
-	  }
-	}
-	p = last+1;
-      }
-      if ( !farms->empty() )
-	IocSensor::instance().send(this,CMD_CONNECT,farms.release());
-    }
-    break;
-  }
-}
-
 /// Interactor overload: Display callback handler
 void FarmDisplay::handle(const Event& ev) {
+  int cnt = 0;
   time_t now = time(0);
   Farms::iterator i;
   SubDisplays::iterator k;
   RTL::Lock lock(s_lock);
   switch(ev.eventtype) {
+  case ScrMouseEvent:
+    if ( ev.get<MouseEvent>()->usec != -1UL )
+      IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
+    return;
   case TimeEvent:
     if (ev.timer_data == m_subfarmDisplay ) {
       m_subfarmDisplay->update();
@@ -1366,6 +1436,32 @@ void FarmDisplay::handle(const Event& ev) {
     switch(ev.type) {
     case CMD_SETCURSOR:
       set_cursor();
+      break;
+    case CMD_SHOWSUBFARM: {
+      RTL::Lock lock(s_lock,true);
+      showSubfarm();
+      return;
+    }
+    case CMD_SHOW:
+      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
+	InternalDisplay* d = (*k).second;
+	if ( d == ev.data )  {
+	  RTL::Lock lock(s_lock,true);
+	  m_posCursor = cnt;
+	  showSubfarm();
+	  return;
+	}
+      }
+      break;
+    case CMD_POSCURSOR:
+      for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
+	InternalDisplay* d = (*k).second;
+	if ( d == ev.data )  {
+	  m_posCursor = cnt;
+	  set_cursor();
+	  return;
+	}
+      }
       break;
     case CMD_UPDATE:
       if ( m_subfarmDisplay ) m_subfarmDisplay->update();

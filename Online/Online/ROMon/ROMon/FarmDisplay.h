@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.5 2008-07-11 11:18:02 frankb Exp $
+// $Id: FarmDisplay.h,v 1.6 2008-07-11 16:37:38 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.5 2008-07-11 11:18:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.6 2008-07-11 16:37:38 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -49,6 +49,9 @@ namespace ROMon {
     CMD_DELETE,
     CMD_UPDATE,
     CMD_SETCURSOR,
+    CMD_POSCURSOR,
+    CMD_SHOW,
+    CMD_SHOWSUBFARM,
     CMD_LAST
   };
 
@@ -77,6 +80,8 @@ namespace ROMon {
     FarmDisplay* parent() const         { return m_parent;     }
     /// Access subfarm name
     const std::string& name() const     { return m_name;       }
+    /// Access title string
+    const std::string& title() const    { return m_title;      }
     /// Access to last update time
     time_t lastUpdate() const           { return m_lastUpdate; }
     /// Initializing constructor
@@ -97,6 +102,10 @@ namespace ROMon {
     virtual void update(const void* data) = 0;
     /// Check display for errors
     virtual void check(time_t /* stamp */) {}
+    /// Set the focus to this display
+    virtual void setFocus() {}
+    /// Release the focus of this display
+    virtual void releaseFocus() {}
     /// DIM command service callback
     static void dataHandler(void* tag, void* address, int* size);
   };
@@ -125,7 +134,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class FarmSubDisplay : public InternalDisplay  {
+  class FarmSubDisplay : public InternalDisplay, public Interactor  {
     int               m_evtBuilt;
     int               m_evtMoore;
     int               m_evtSent;
@@ -148,6 +157,12 @@ namespace ROMon {
     virtual void update(const void* data);
     /// Check display for errors
     virtual void check(time_t stamp);
+    /// Set the focus to this display
+    virtual void setFocus();
+    /// Release the focus of this display
+    virtual void releaseFocus();
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
   };
@@ -159,7 +174,7 @@ namespace ROMon {
    *
    *   @author M.Frank
    */
-  class RecFarmSubDisplay : public InternalDisplay  {
+  class RecFarmSubDisplay : public InternalDisplay, public Interactor  {
     int               m_evtRecv;
     int               m_evtReco;
     int               m_evtSent;
@@ -182,6 +197,12 @@ namespace ROMon {
     virtual void update(const void* data);
     /// Check display for errors
     virtual void check(time_t stamp);
+    /// Set the focus to this display
+    virtual void setFocus();
+    /// Release the focus of this display
+    virtual void releaseFocus();
+    /// Interactor overload: Display callback handler
+    virtual void handle(const Event& ev);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
   };
@@ -195,7 +216,7 @@ namespace ROMon {
   class ProcessDisplay : public InternalDisplay {
   public:
     /// Initializing constructor
-    ProcessDisplay(FarmDisplay* parent, const std::string& title, int height=40,int width=120);
+    ProcessDisplay(FarmDisplay* parent, const std::string& title, int height=55,int width=120);
     /// Standard destructor
     virtual ~ProcessDisplay();
     /// Update display content
@@ -213,7 +234,7 @@ namespace ROMon {
   class CPUDisplay : public InternalDisplay {
   public:
     /// Initializing constructor
-    CPUDisplay(FarmDisplay* parent, const std::string& title, int height=40,int width=120);
+    CPUDisplay(FarmDisplay* parent, const std::string& title, int height=55,int width=120);
     /// Standard destructor
     virtual ~CPUDisplay();
     /// Update display content

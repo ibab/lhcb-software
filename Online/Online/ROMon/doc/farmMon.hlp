@@ -20,6 +20,9 @@ all subfarms of one partition.
 
 To see the subfarm content move with the cursor arrows to the specified subfarm and hit <ENTER> 
 (or <KPD-ENTER>). Then the subfarm display will open.
+The extended subfarm display may alternatively be invoked by double-click with the mouse on the 
+subfarm. To close the window double-click with the mouse on the header section of the extended
+subfarm display.
 
 The display of each subfarm shows in the upper line the basic summary of the event processing 
 buffers MEP,EVENT and SEND. The lower line displays the minimum numbers found.
@@ -41,6 +44,9 @@ and the data senders to the storage cluster.
 You can move with the arrow keys of the keyboard to select a given node and invoke the
 buffer manager monitor if you type KPD-PERIOD (".")
 
+To close the window double-click with the mouse on the header section of the extended
+subfarm dislay. Alternatively type ENTER or KPD-ENTER. Closing this window will
+also close all associated lower level windows mentioned above.
 
 </subfarm>
 
