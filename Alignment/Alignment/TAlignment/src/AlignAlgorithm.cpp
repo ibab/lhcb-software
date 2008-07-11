@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.45 2008-07-11 13:52:36 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.46 2008-07-11 13:53:22 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -371,29 +371,6 @@ StatusCode AlignAlgorithm::execute() {
   return StatusCode::SUCCESS;
 }
 
-static int dumpnumzeroeigenvalues(const CLHEP::HepSymMatrix& M)
-{
-  std::cout << "before diagonalization: " << M.num_row() << std::endl ;
-  CLHEP::HepSymMatrix D = M ;
-  CLHEP::diagonalize( &D ) ;
-  //std::cout << "diagonalized: " << D << std::endl ;
-  std::vector<double> eigenvalues ;
-  int numzero(0),numneg(0) ;
-  for(int irow=1;irow<=D.num_row(); ++irow) {
-    if( D.fast(irow,irow)<0 ) {
-      std::cout << "oops: negative eigenvalue? " << D.fast(irow,irow) << std::endl ;
-      ++numneg ;
-    }
-    else if( D.fast(irow,irow)<1e-6) ++numzero ;
-    eigenvalues.push_back( D.fast(irow,irow)) ;
-  }
-  std::sort(eigenvalues.begin(), eigenvalues.end()) ;
-  std::cout << "numzero: " << numzero << std::endl ;
-  std::cout << "smallest 6 eigenvalues: " ;
-  for(int i=0; i<6; ++i) std::cout << eigenvalues[i] << " " ;
-  std::cout << std::endl ;
-  return numneg ;
-}
 
 bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 {
