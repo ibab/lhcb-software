@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2008-07-11
+- add python directory with TsaSeeding.py script
 
 !======================= TsaAlgorithms v3r3 2008-04-18 ======================
 ! 2007-14-03 M Needham
