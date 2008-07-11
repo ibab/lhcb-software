@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.h,v 1.1 2008-07-10 16:59:01 frankb Exp $
+// $Id: RecSubfarmDisplay.h,v 1.2 2008-07-11 11:18:02 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,9 +12,9 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.1 2008-07-10 16:59:01 frankb Exp $
-#ifndef ROMON_SUBFARMDISPLAY_H
-#define ROMON_SUBFARMDISPLAY_H 1
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.2 2008-07-11 11:18:02 frankb Exp $
+#ifndef ROMON_RECSUBFARMDISPLAY_H
+#define ROMON_RECSUBFARMDISPLAY_H 1
 
 // Framework includes
 #include "ROMon/ROMonDisplay.h"
@@ -73,5 +73,5 @@ namespace ROMon {
     virtual void updateDisplay(const Nodeset& ns);
   };
 }      // End namespace ROMon
-#endif /* ROMON_SUBFARMDISPLAY_H */
+#endif /* ROMON_RECSUBFARMDISPLAY_H */
 

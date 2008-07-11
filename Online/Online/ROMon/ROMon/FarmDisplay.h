@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Id: FarmDisplay.h,v 1.5 2008-07-11 11:18:02 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.4 2008-07-02 14:55:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.5 2008-07-11 11:18:02 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -22,6 +22,7 @@
 
 // C++ include files
 #include <map>
+#include <ctime>
 
 class Interactor;
 namespace SCR {
@@ -34,7 +35,9 @@ namespace SCR {
 namespace ROMon {
 
   class ProcessDisplay;
+  class RecSubfarmDisplay;
   class SubfarmDisplay;
+  class ROMonDisplay;
   class FarmDisplay;
   class ProcFarm;
   class CPUfarm;
@@ -90,10 +93,12 @@ namespace ROMon {
     void close();
     /// Disconnect from services: Only destructor may be called afterwards
     void disconnect();
-    /// DIM command service callback
-    static void dataHandler(void* tag, void* address, int* size);
     /// Update display content
     virtual void update(const void* data) = 0;
+    /// Check display for errors
+    virtual void check(time_t /* stamp */) {}
+    /// DIM command service callback
+    static void dataHandler(void* tag, void* address, int* size);
   };
 
   /**@class HelpDisplay ROMon.h GaudiOnline/FarmDisplay.h
@@ -112,7 +117,6 @@ namespace ROMon {
     /// Update display content
     virtual void update(const void*) {}
   };
-
 
   /**@class FarmSubDisplay ROMon.h GaudiOnline/FarmDisplay.h
    *
@@ -142,6 +146,42 @@ namespace ROMon {
     void init(bool bad);
     /// Update display content
     virtual void update(const void* data);
+    /// Check display for errors
+    virtual void check(time_t stamp);
+    /// Update display content
+    virtual void updateContent(const Nodeset& ns);
+  };
+
+  /**@class RecFarmSubDisplay ROMon.h GaudiOnline/FarmDisplay.h
+   *
+   *   Display summarizing one single subfarm. Showed as an array on the
+   *   main display.
+   *
+   *   @author M.Frank
+   */
+  class RecFarmSubDisplay : public InternalDisplay  {
+    int               m_evtRecv;
+    int               m_evtReco;
+    int               m_evtSent;
+    int               m_totRecv;
+    int               m_totReco;
+    int               m_totSent;
+    bool              m_hasProblems;
+  public:
+    /// Access to problem flag
+    bool hasProblems() const { return m_hasProblems; }
+    /// Set timeout error
+    void setTimeoutError();
+    /// Initializing constructor
+    RecFarmSubDisplay(FarmDisplay* parent, const std::string& title, bool bad=false);
+    /// Standard destructor
+    virtual ~RecFarmSubDisplay();
+    /// Initialize default display text
+    void init(bool bad);
+    /// Update display content
+    virtual void update(const void* data);
+    /// Check display for errors
+    virtual void check(time_t stamp);
     /// Update display content
     virtual void updateContent(const Nodeset& ns);
   };
@@ -231,17 +271,19 @@ namespace ROMon {
    */
   class FarmDisplay : public InternalDisplay, public Interactor  {
   protected:
-    typedef std::map<std::string, FarmSubDisplay*> SubDisplays;
+    enum { HLT_MODE, RECO_MODE };
+    typedef std::map<std::string, InternalDisplay*> SubDisplays;
     typedef std::vector<std::string> Farms;
     SubDisplays                      m_farmDisplays;
     std::auto_ptr<PartitionListener> m_listener;
-    SubfarmDisplay*                  m_subfarmDisplay;
+    ROMonDisplay*                    m_subfarmDisplay;
     std::auto_ptr<ProcessDisplay>    m_procDisplay;
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
 
     std::string        m_partition;
+    std::string        m_match;
     /// vector with all farm displays
     Farms              m_farms;
     int                m_height;
@@ -251,6 +293,7 @@ namespace ROMon {
     size_t             m_posCursor;
     size_t             m_subPosCursor;
     int                m_anchorX, m_anchorY;
+    int                m_mode;
     /// Keyboard rearm action
     static int key_rearm (unsigned int fac, void* param);
     /// Keyboard action
@@ -270,7 +313,7 @@ public:
     int handleKeyboard(int key);
 
     /// Get farm display from cursor position
-    FarmSubDisplay* currentDisplay();
+    InternalDisplay* currentDisplay();
 
     SubDisplays& subDisplays() {  return m_farmDisplays; }
 
