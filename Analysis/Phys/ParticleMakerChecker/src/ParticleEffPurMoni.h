@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.18 2008-07-11 23:20:51 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.19 2008-07-11 23:48:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -146,13 +146,13 @@ private: // definitions
         m_nBinsY(_nBinsY),
         m_data( _nBinsX , std::vector<unsigned int>(_nBinsY,0) ) { }
   private:
-    inline unsigned int binX( const double p )
+    inline unsigned int binX( const double x )
     {
-      return static_cast<unsigned int>( m_nBinsX * (p-m_minX) / (m_maxX-m_minX) );
+      return static_cast<unsigned int>( m_nBinsX * (x-m_minX) / (m_maxX-m_minX) );
     }
-    inline unsigned int binY( const double p )
+    inline unsigned int binY( const double y )
     {
-      return static_cast<unsigned int>( m_nBinsY * (p-m_minY) / (m_maxY-m_minY) );
+      return static_cast<unsigned int>( m_nBinsY * (y-m_minY) / (m_maxY-m_minY) );
     }
   public:
     inline const Data & data() const { return m_data; }
@@ -177,8 +177,8 @@ private: // definitions
       if ( x<=m_maxX && x>=m_minX && y<=m_maxY && y>=m_minY )
       {
         const unsigned int xb = binX(x);
-        const unsigned int yb = binX(y);
-        if ( xb<m_nBinsX && yb<m_nBinsY ) ++(m_data[xb][yb]);
+        const unsigned int yb = binY(y);
+        if ( xb<m_nBinsX && yb<m_nBinsY ) ++((m_data[xb])[yb]);
       }
     }
   private:

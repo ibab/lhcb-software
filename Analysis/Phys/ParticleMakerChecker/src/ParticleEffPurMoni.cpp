@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.24 2008-07-11 23:20:51 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.25 2008-07-11 23:48:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -839,10 +839,10 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
   {
     for ( unsigned int biny = 0; biny < top.nBinsY(); ++biny )
     {
-      const unsigned int total = bot.data()[binx][biny];
+      const unsigned int total = (bot.data()[binx])[biny];
       if ( total>0 )
       {
-        const unsigned int selected = top.data()[binx][biny];
+        const unsigned int selected = (top.data()[binx])[biny];
         // Fill Profile correct number of times with 0 or 100
         for ( unsigned int i = 0; i < total; ++i )
         {
