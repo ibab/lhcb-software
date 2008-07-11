@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2008-07-11 - Mariusz Witek
+  - removal of cout and option correction 
+
 !============================= PatPV v3r4 2008-07-02 =========================
 ! 2008-06-17 - Patrick Koppenburg
  - Removed unnecessary unchecked StatusCode.
