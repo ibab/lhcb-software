@@ -14,14 +14,16 @@
       <location name="Default"  place="Trig/L0/MuonInfo"/>
 
       <constructor
-        argList="int L0EventNumber, int L0_B_Id"
-        initList="m_L0EventNumber(L0EventNumber), m_L0_B_Id(L0_B_Id)"
+        argList="int L0EventNumber, int L0_B_Id, int status"
+        initList="m_L0EventNumber(L0EventNumber), m_L0_B_Id(L0_B_Id), m_status(status)"
         desc="Constructor"/>
       
       <attribute name="L0EventNumber" type="int" 
         desc="Reference L0EventNumber used in the error detection"/>
       <attribute name="L0_B_Id" type="int" 
         desc="Reference L0_B_Id used in the error detection"/>
+      <attribute name="status" type="int" 
+        desc="Global status for the L0Muon"/>
        
     </class>  
   </package>

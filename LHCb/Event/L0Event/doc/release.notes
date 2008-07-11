@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.102 2008-07-11 15:00:15 jucogan Exp $
+! $Id: release.notes,v 1.103 2008-07-11 15:52:06 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
 
 ! 2008-07-11 - Julien Cogan
  - L0MuonError : new object to contain errors for the L0Muon
+ - L0MuonInfo  : add a global status word
 
 ! 2008-07-02 - Olivier Deschamps
  - L0DUConfig.xml : add new attribute recipe() (recipe name as std::string)
