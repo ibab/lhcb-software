@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.22 2008-07-11 22:30:01 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.23 2008-07-11 23:16:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -612,7 +612,7 @@ void ParticleEffPurMoni::printStats() const
       always() << "  -> Used ProtoParticles        : " << iX->first << " "
                << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
       always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
-      always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
+      always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first])
                << ")/" << shortProtoLoc(iX->first) << endreq;
     }
     always() << lines << endreq;
@@ -709,6 +709,12 @@ void ParticleEffPurMoni::printStats() const
                               tally.effVpt(), protoTally.effVpt() );
                 makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Pt",
                               protoTally.effVpt(), mcTally.effVpt() );
+                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus P&Pt",
+                              tally.effVpVpt(), mcTally.effVpVpt() );
+                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus P&Pt",
+                              tally.effVpVpt(), protoTally.effVpVpt() );
+                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus P&Pt",
+                              protoTally.effVpVpt(), mcTally.effVpVpt() );
                 if ( !m_correlations.empty() )
                 {
                   const std::string & loc1    = (*iSum).first.protoTESLoc;
@@ -722,6 +728,8 @@ void ParticleEffPurMoni::printStats() const
                                 corTally.effVp(), mcTally.effVp() );
                   makeEffHisto( h_path.str()+"/ MCParticle -> "+scorname+" Versus Pt",
                                 corTally.effVpt(), mcTally.effVpt() );
+                  makeEffHisto( h_path.str()+"/ MCParticle -> "+scorname+" Versus P&Pt",
+                                corTally.effVpVpt(), mcTally.effVpVpt() );
                 }
               }
 
@@ -745,7 +753,7 @@ void ParticleEffPurMoni::printStats() const
                   {
                     const unsigned long int nClones = tally.clones_detailed[(*iC).first];
                     always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << " |"  << eff( (*iC).second-nClones, nTotalMC ) 
+                             << " |"  << eff( (*iC).second-nClones, nTotalMC )
                              << " |"  << eff( nClones, nTotalMC );
                     // correlations
                     if ( !m_correlations.empty() )
@@ -804,13 +812,48 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
         h = profile1D( top.p(bin),
                        ( i < selected ? 100.0 : 0.0 ),
                        title, title,
-                       top.minP(), top.maxP(), top.nBins() );
+                       top.minX(), top.maxX(), top.nBins() );
       }
     }
   }
   if ( h )
   {
     TProfile * histo = Gaudi::Utils::Aida2ROOT::aida2root(h);
+    histo->SetErrorOption("g");
+  }
+}
+
+void ParticleEffPurMoni::makeEffHisto( const std::string title,
+                                       const EffVersusMomentum2D & top,
+                                       const EffVersusMomentum2D & bot ) const
+{
+  AIDA::IProfile2D * h(NULL);
+  // Loop over bins
+  debug() << "Filling histo " << title << endreq;
+  for ( unsigned int binx = 0; binx < top.nBinsX(); ++binx )
+  {
+    for ( unsigned int biny = 0; biny < top.nBinsY(); ++biny )
+    {
+      const unsigned int total = bot.data()[binx][biny];
+      if ( total>0 )
+      {
+        const unsigned int selected = top.data()[binx][biny];
+        // Fill Profile correct number of times with 0 or 100
+        for ( unsigned int i = 0; i < total; ++i )
+        {
+          h = profile2D( top.x(binx), top.y(biny),
+                         ( i < selected ? 100.0 : 0.0 ),
+                         title, title,
+                         top.minX(), top.maxX(), 
+                         top.minY(), top.maxY(), 
+                         top.nBinsX(), top.nBinsY() );
+        }
+      }
+    }
+  }
+  if ( h )
+  {
+    TProfile2D * histo = Gaudi::Utils::Aida2ROOT::aida2root(h);
     histo->SetErrorOption("g");
   }
 }

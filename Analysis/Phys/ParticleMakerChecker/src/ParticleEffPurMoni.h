@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.16 2008-07-11 20:45:23 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.17 2008-07-11 23:16:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -43,6 +43,7 @@
 
 // ROOT
 #include "TProfile.h"
+#include "TProfile2D.h"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
@@ -82,41 +83,111 @@ private: // definitions
     /// Defintion of internal data storage
     typedef std::vector<unsigned int> Data;
     /// Constructor
-    EffVersusMomentum( const double _minP,
-                       const double _maxP,
+    EffVersusMomentum( const double _minX,
+                       const double _maxX,
                        const int    _nBins )
-      : m_minP(_minP),
-        m_maxP(_maxP),
+      : m_minX(_minX),
+        m_maxX(_maxX),
         m_nBins(_nBins),
         m_data(_nBins,0) { }
   private:
     inline unsigned int bin( const double p )
     {
-      return static_cast<unsigned int>( m_nBins * (p-m_minP) / (m_maxP-m_minP) );
+      return static_cast<unsigned int>( m_nBins * (p-m_minX) / (m_maxX-m_minX) );
     }
   public:
     inline const Data & data() const { return m_data; }
-    inline double minP() const { return m_minP; }
-    inline double maxP() const { return m_maxP; }
+    inline double minX() const { return m_minX; }
+    inline double maxX() const { return m_maxX; }
     inline unsigned int nBins() const { return m_nBins; }
     inline double p(const unsigned int bin) const
     {
-      return m_minP + (0.5+bin)*(m_maxP-m_minP)/m_nBins;
+      return m_minX + (0.5+bin)*(m_maxX-m_minX)/m_nBins;
     }
   public:
     /// Fill the histogram for the given momentum value
     inline void fill( const double p )
     {
-      if ( p<=m_maxP && p>=m_minP )
+      if ( p<=m_maxX && p>=m_minX )
       {
         const unsigned int b = bin(p);
         if ( b<m_nBins) ++(m_data[b]);
       }
     }
   private:
-    double m_minP;        ///< Minimum momentum
-    double m_maxP;        ///< Maximum momentum
+    double m_minX;        ///< Minimum momentum
+    double m_maxX;        ///< Maximum momentum
     unsigned int m_nBins; ///< Number of bins
+    Data m_data;          ///< The data
+  };
+
+  /** @class EffVersusMomentum ParticleEffPurMoni.h
+   *  Utility class used to create efficneicy versus momentum plots
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   09/07/2008
+   */
+  class EffVersusMomentum2D
+  {
+  public:
+    /// Defintion of internal data storage
+    typedef std::vector< std::vector<unsigned int> > Data;
+    /// Constructor
+    EffVersusMomentum2D( const double _minX,
+                         const double _maxX,
+                         const double _minY,
+                         const double _maxY,
+                         const int    _nBinsX,
+                         const int    _nBinsY )
+      : m_minX(_minX),
+        m_maxX(_maxX),
+        m_minY(_minY),
+        m_maxY(_maxY),
+        m_nBinsX(_nBinsX),
+        m_nBinsY(_nBinsY),
+        m_data( _nBinsX , std::vector<unsigned int>(_nBinsY,0) ) { }
+  private:
+    inline unsigned int binX( const double p )
+    {
+      return static_cast<unsigned int>( m_nBinsX * (p-m_minX) / (m_maxX-m_minX) );
+    }
+    inline unsigned int binY( const double p )
+    {
+      return static_cast<unsigned int>( m_nBinsY * (p-m_minY) / (m_maxY-m_minY) );
+    }
+  public:
+    inline const Data & data() const { return m_data; }
+    inline double minX() const { return m_minX; }
+    inline double maxX() const { return m_maxX; }
+    inline double minY() const { return m_minY; }
+    inline double maxY() const { return m_maxY; }
+    inline unsigned int nBinsX() const { return m_nBinsX; }
+    inline unsigned int nBinsY() const { return m_nBinsY; }
+    inline double x(const unsigned int binx) const
+    {
+      return m_minX + (0.5+binx)*(m_maxX-m_minX)/m_nBinsX;
+    }
+    inline double y(const unsigned int biny) const
+    {
+      return m_minY + (0.5+biny)*(m_maxY-m_minY)/m_nBinsY;
+    }
+  public:
+    /// Fill the histogram for the given momentum value
+    inline void fill( const double x, const double y )
+    {
+      if ( x<=m_maxX && x>=m_minX && y<=m_maxY && y>=m_minY )
+      {
+        const unsigned int xb = binX(x);
+        const unsigned int yb = binX(y);
+        if ( xb<m_nBinsX && yb<m_nBinsY ) ++(m_data[xb][yb]);
+      }
+    }
+  private:
+    double m_minX;        ///< Minimum x momentum
+    double m_maxX;        ///< Maximum x momentum
+    double m_minY;        ///< Minimum y momentum
+    double m_maxY;        ///< Maximum y momentum
+    unsigned int m_nBinsX; ///< Number of x bins
+    unsigned int m_nBinsY; ///< Number of y bins
     Data m_data;          ///< The data
   };
 
@@ -163,8 +234,8 @@ private: // definitions
   class MCTally
   {
   public:
-    MCTally() : all(0), clones(0), m_effVp(NULL), m_effVpt(NULL) { }
-    ~MCTally() { delete m_effVp; delete m_effVpt; }
+    MCTally() : all(0), clones(0), m_effVp(NULL), m_effVpt(NULL), m_effVpVpt(NULL) { }
+    ~MCTally() { delete m_effVp; delete m_effVpt; delete m_effVpVpt; }
   public:
     unsigned long int all;         ///< Total number
     unsigned long int clones;      ///< Number of clones
@@ -172,8 +243,9 @@ private: // definitions
     Contributions all_detailed;    ///< Detailed breakdown for each full MC tree decay (all)
     Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
   private:
-    mutable EffVersusMomentum * m_effVp;       ///< Eff versus momentum (p) data
-    mutable EffVersusMomentum * m_effVpt;      ///< Eff versus momentum (pt) data
+    mutable EffVersusMomentum   * m_effVp;       ///< Eff versus momentum (p) data
+    mutable EffVersusMomentum   * m_effVpt;      ///< Eff versus momentum (pt) data
+    mutable EffVersusMomentum2D * m_effVpVpt;    ///< Eff versus momentum (p&pt) data
   public:
     inline EffVersusMomentum & effVp() const
     {
@@ -190,6 +262,16 @@ private: // definitions
         m_effVpt = new EffVersusMomentum(0*Gaudi::Units::GeV,10*Gaudi::Units::GeV,50);
       }
       return *m_effVpt;
+    }
+    inline EffVersusMomentum2D & effVpVpt() const
+    {
+      if (!m_effVpVpt)
+      {
+        m_effVpVpt = new EffVersusMomentum2D(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
+                                             0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
+                                             10,10);
+      }
+      return *m_effVpVpt;
     }
   };
   typedef std::map<std::string, MCTally> TypeTally;
@@ -378,6 +460,11 @@ private: // methods
   void makeEffHisto( const std::string title,
                      const EffVersusMomentum & top,
                      const EffVersusMomentum & bot ) const;
+
+  /// Make a 2D histogram
+  void makeEffHisto( const std::string title,
+                     const EffVersusMomentum2D & top,
+                     const EffVersusMomentum2D & bot ) const;
 
   /// ProtoParticle short location name
   const std::string & shortProtoLoc( const std::string & loc ) const;
