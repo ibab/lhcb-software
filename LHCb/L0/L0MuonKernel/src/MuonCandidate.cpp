@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.cpp,v 1.5 2008-06-18 12:17:17 jucogan Exp $
+// $Id: MuonCandidate.cpp,v 1.6 2008-07-11 15:30:02 jucogan Exp $
 
 #include <cmath>
 #include <vector>
@@ -71,8 +71,8 @@ std::string L0Muon::MuonCandidate::dump(std::string tab){
   std::string sign="+";
   if (m_charge==0) sign="-";
   std::cout<<sign<<std::endl;
-  sprintf(buf,"Cand Q%1d PB%02d PU%1d - M3: col=%2d row=%1d - M2 off=%3d - M1 off=%3d - PT=%1s%3d",
-          (m_quarter+1),m_board,m_pu,m_colM3,m_rowM3,m_offM2,m_offM1,sign.c_str(),m_pT );
+  sprintf(buf,"%sCand Q%1d PB%02d PU%1d - M3: col=%2d row=%1d - M2 off=%3d - M1 off=%3d - PT=%1s%3d",
+          tab.c_str(),(m_quarter+1),m_board,m_pu,m_colM3,m_rowM3,m_offM2,m_offM1,sign.c_str(),m_pT );
   std::string cand = buf;
 
   return cand;

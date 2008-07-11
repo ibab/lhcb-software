@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.3 2008-06-18 12:17:17 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.4 2008-07-11 15:27:31 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -59,9 +59,10 @@ int L0Muon::offsetM1(int offM1, int procVersion)
 std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu, 
                                            int colM3, int rowM3, int offM2, int offM1,
                                            int procVersion, bool debug) {
-
   std::vector<LHCb::MuonTileID> tiles;
 
+  if (procVersion<0) return tiles;
+  
   // MuonTileID of the board where the candidate was found
   int region   = board/3;
   int boardloc = 1+ board - region*3;
@@ -101,10 +102,12 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
     if ( padM2ID.nX()>=2*padM2ID.layout().xGrid() ) {
       std::vector<LHCb::MuonTileID> lpads =  padM2ID.layout().tilesInRegion(padM2ID,padM2ID.region());
       if (lpads.size()!=1) {
-        std::cout<<" M2 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
-        std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
-        std::cout<<"   * col/row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<std::endl;
-        std::cout<<"   * padM2ID= "<<padM2ID.toString()<< " lpads.size()= "<<lpads.size()<<std::endl;
+        if(debug){
+          std::cout<<" M2 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+          std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
+          std::cout<<"   * col/row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<std::endl;
+          std::cout<<"   * padM2ID= "<<padM2ID.toString()<< " lpads.size()= "<<lpads.size()<<std::endl;
+        }
         return tiles;
       }
       padM2ID = lpads[0];
@@ -137,19 +140,23 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
     if ( padM1ID.nX()>=2*padM1ID.layout().xGrid() ) {
       std::vector<LHCb::MuonTileID> lpads =  padM1ID.layout().tilesInRegion(padM1ID,padM1ID.region());
       if (lpads.size()==0) {
-        std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER ANY PAD IN UPPER REGION"<<std::endl;
-        std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
-        std::cout<<"   * col /row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<"offM1= "<<offM1<<std::endl;
-        std::cout<<"   * padM2ID= "<<padM2ID.toString()<< std::endl;
-        std::cout <<"  * padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
-        return tiles;
-      } else {
-        if (lpads.size()>1) {
-          std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+        if(debug){
+          std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER ANY PAD IN UPPER REGION"<<std::endl;
           std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
           std::cout<<"   * col /row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<"offM1= "<<offM1<<std::endl;
           std::cout<<"   * padM2ID= "<<padM2ID.toString()<< std::endl;
           std::cout <<"  * padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+        }
+        return tiles;
+      } else {
+        if (lpads.size()>1) {
+          if(debug){
+            std::cout <<" L0Muon::add2pads : M1 PAD DOES NOT COVER EXACTLY ONE PAD IN UPPER REGION"<<std::endl;
+            std::cout<<"   * PB"<<board<<" PU"<<pu<<std::endl;
+            std::cout<<"   * col /row M3= "<<colM3<<" / "<<rowM3<<" offM2= "<<offM2<<"offM1= "<<offM1<<std::endl;
+            std::cout<<"   * padM2ID= "<<padM2ID.toString()<< std::endl;
+            std::cout <<"  * padM1ID= "<<padM1ID.toString()<< " ; lpads.size()= "<<lpads.size()<<std::endl;
+          }
         }
         padM1ID = lpads[0];
       }
@@ -168,6 +175,8 @@ std::vector<LHCb::MuonTileID> L0Muon::add2pads(int quarter,int board, int pu,
 }
 
 void  L0Muon::xyFromPad(LHCb::MuonTileID pad, double& x, double& y, int procVersion)  {
+
+  if (procVersion<0) return;
 
   double dx = 1.0;
   double dy = 2.5;
