@@ -1,0 +1,19 @@
+ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen","LHCb::RawEventTestDump/Dump", "StoreExplorerAlg" };
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
+StoreExplorerAlg.Load     = 1;
+StoreExplorerAlg.PrintFreq= 0.01;
+EventDataSvc.ForceLeaves  = 1;
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml" };
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 0;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 3;
+
+// To create a MDF file using the standard Gaudi output stream:
+ApplicationMgr.OutStream += { "Writer_0"};
+Writer_0.Output           = "DATAFILE='PFN:root:file://mdfData_0.dat' SVC='LHCb::RawDataCnvSvc' OPT='REC'";
+Writer_0.ItemList         = {"/Event#1" };
+
