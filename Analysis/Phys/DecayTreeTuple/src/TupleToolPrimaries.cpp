@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.2 2008-07-11 09:21:04 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -85,10 +85,6 @@ StatusCode TupleToolPrimaries::initialize(){
 
   m_context = tool<IContextTool>( "ContextTool", this );
 
-  if( !m_context ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
-    return StatusCode::FAILURE;
-  }
   return StatusCode::SUCCESS;
 }
 

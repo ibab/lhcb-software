@@ -7,7 +7,7 @@
 #include "TupleToolVtxIsoln.h"
 
 
-#include <Kernel/IGeomDispCalculator.h>
+#include <Kernel/IDistanceCalculator.h>
 #include <Kernel/IContextTool.h>
 #include <Kernel/IPhysDesktop.h>
 
@@ -15,12 +15,8 @@
 #include "GaudiAlg/TupleObj.h"
 
 #include "Event/Particle.h"
-
-
-
-
 //-----------------------------------------------------------------------------
-// Implementation file for class : GeometryTupleTool
+// Implementation file for class : TupleToolVtxIsoln
 //
 // @author Mitesh Patel
 // @date   2008-04-15
@@ -35,17 +31,17 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
-					const std::string& name,
-					const IInterface* parent )
+                                      const std::string& name,
+                                      const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_context(0) 
-  , m_geom(0)
+  , m_dist(0)
   , m_pVertexFit(0)
 {
   declareInterface<IParticleTupleTool>(this);
 
   declareProperty( "IP", m_IP = 0.0);
-  declareProperty( "IPS", m_IPS = 0.0);
+  //  declareProperty( "IPS", m_IPS = 0.0);
   declareProperty( "MaxDeltaChi2", m_deltaChi2 = 0.0);
   declareProperty( "MaxChi2", m_Chi2 = 0.0);
   declareProperty( "VertexFit", m_typeVertexFit = "default");
@@ -60,14 +56,9 @@ StatusCode TupleToolVtxIsoln::initialize() {
   
   m_context = tool<IContextTool>( "ContextTool", this );
 
-  if( !m_context ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
-    return StatusCode::FAILURE;
-  }
-
-  m_geom = m_context->geomTool ();
-  if( !m_geom ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
+  m_dist = m_context->distanceTool ();
+  if( !m_dist ){
+    Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
 
@@ -85,11 +76,11 @@ StatusCode TupleToolVtxIsoln::initialize() {
 //=============================================================================
 
 StatusCode TupleToolVtxIsoln::fill( const Particle* mother
-				    , const Particle* P
-				    , const std::string& head
-				    , Tuples::Tuple& tuple ){
-  Assert( P && mother && m_geom && m_context
-	  , "This should not happen, you are inside TupleToolVtxIsoln.cpp :(" );
+                                    , const Particle* P
+                                    , const std::string& head
+                                    , Tuples::Tuple& tuple ){
+  Assert( P && mother && m_dist
+          , "This should not happen, you are inside TupleToolVtxIsoln.cpp :(" );
 
   bool test=true;
 
@@ -98,12 +89,12 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   // find the origin vertex. Either the primary or the origin in the
   // decay
   /*
-  const VertexBase* vtx = NULL;
-  if( mother != P ) vtx = originVertex( mother, P );
-  if( !vtx ){
+    const VertexBase* vtx = 0;
+    if( mother != P ) vtx = originVertex( mother, P );
+    if( !vtx ){
     Error("Can't retrieve the origin vertex for " + head );
     return StatusCode::FAILURE;
-  }
+    }
   */
   const LHCb::Vertex* vtx;
   if (P->isBasicParticle()){
@@ -137,25 +128,25 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
   do {
     target.clear();
     for(LHCb::Particle::ConstVector::const_iterator isource = source.begin(); 
-	isource != source.end(); isource++){
+        isource != source.end(); isource++){
       
       if(!((*isource)->daughters().empty())){
  
-	LHCb::Particle::ConstVector tmp = (*isource)->daughtersVector();
+        LHCb::Particle::ConstVector tmp = (*isource)->daughtersVector();
  
-	for( LHCb::Particle::ConstVector::const_iterator itmp = tmp.begin(); 
-	     itmp!=tmp.end(); itmp++){
-	  target.push_back(*itmp);
+        for( LHCb::Particle::ConstVector::const_iterator itmp = tmp.begin(); 
+             itmp!=tmp.end(); itmp++){
+          target.push_back(*itmp);
 	  
-           // Add the final states, i.e. particles with proto and ignoring gammas
-	  if((*itmp)->proto() && 22 != (*itmp)->particleID().pid()) finalStates.push_back(*itmp);
-	}
+          // Add the final states, i.e. particles with proto and ignoring gammas
+          if((*itmp)->proto() && 22 != (*itmp)->particleID().pid()) finalStates.push_back(*itmp);
+        }
       } // if endVertex
-     } // isource
+    } // isource
     source = target;
   } while(target.size() > 0);
   
-  debug() << "Final states size= " <<  finalStates.size()  << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Final states size= " <<  finalStates.size()  << endreq;
     
   
   //--------------------------------------------------
@@ -164,17 +155,17 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
 
 
   for(std::vector<std::string>::iterator i = m_inputParticles.begin(); 
-       i !=m_inputParticles.end(); ++i){
+      i !=m_inputParticles.end(); ++i){
     
     if (!exist<LHCb::Particles>(*i+"/Particles")){
-      debug() << "No particles at " << *i << " !!!!!" << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << "No particles at " << *i << " !!!!!" << endreq;
       continue; 
     }
 
     LHCb::Particles* parts = get<LHCb::Particles>(*i+"/Particles");
  
-    debug() << "Getting particles from " << *i
-            << " with " << (*parts).size() << " particles" << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << "Getting particles from " << *i
+                                      << " with " << (*parts).size() << " particles" << endreq;
     
     for(LHCb::Particles::const_iterator iparts = (*parts).begin(); 
         iparts != (*parts).end(); ++iparts){
@@ -187,12 +178,12 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
       // Compare protos, not pointers (e.g. because of clones)
       bool isSignal = false;
       for(LHCb::Particle::ConstVector::const_iterator signal = finalStates.begin(); 
-	  signal != finalStates.end(); ++signal){
-	const LHCb::ProtoParticle* orig = (*signal)->proto();
-	if(!orig) continue;
-	if(orig != (*iparts)->proto()) continue;
-	isSignal = true;
-	break;
+          signal != finalStates.end(); ++signal){
+        const LHCb::ProtoParticle* orig = (*signal)->proto();
+        if(!orig) continue;
+        if(orig != (*iparts)->proto()) continue;
+        isSignal = true;
+        break;
       }
       
       // Ignore if it is a signal particle
@@ -201,12 +192,12 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
       // Check that the same particle does not appear twice
       bool isIn = false;
       for(LHCb::Particle::ConstVector::const_iterator result = theParts.begin(); 
-	  result != theParts.end(); ++result){
-	const LHCb::ProtoParticle* orig = (*result)->proto();
-	if(!orig) continue;
-	if(orig != (*iparts)->proto()) continue;
-	isIn = true;
-	break;
+          result != theParts.end(); ++result){
+        const LHCb::ProtoParticle* orig = (*result)->proto();
+        if(!orig) continue;
+        if(orig != (*iparts)->proto()) continue;
+        isIn = true;
+        break;
       }
       
       // Already in ?
@@ -214,106 +205,99 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
       if(!isIn) theParts.push_back(*iparts);
       
     } // iparts
-   } // m_inputParticles
+  } // m_inputParticles
   
-     debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
-             << theParts.size() << endreq;
-     //--------------------------------------------------
+  if (msgLevel(MSG::DEBUG)) debug() << "Number of particles to check excluding signal, particles with same proto and gammas = "
+                                    << theParts.size() << endreq;
+  //--------------------------------------------------
      
-     /*
-      *  if basic particle then final states now contains list of particles associated with mother particle - 
-      *  have excluded these when building list of particles to try putting into vertex, now need to build 
-      * vertex- remove everything but basic particle from final states
-      */
+  /*
+   *  if basic particle then final states now contains list of particles associated with mother particle - 
+   *  have excluded these when building list of particles to try putting into vertex, now need to build 
+   * vertex- remove everything but basic particle from final states
+   */
      
-     if (P->isBasicParticle()){
-       finalStates.clear();
-       finalStates.push_back(P);
-       debug() << "Final states mod size= " <<  finalStates.size()  << endreq;       
-     }
+  if (P->isBasicParticle()){
+    finalStates.clear();
+    finalStates.push_back(P);
+    if (msgLevel(MSG::DEBUG)) debug() << "Final states mod size= " <<  finalStates.size()  << endreq;       
+  }
 
-     int nCompatibleIP = 0;
-     int nCompatibleIPS = 0;
-     int nCompatibleDeltaChi2 = 0;
-     int  nCompatibleChi2= 0;
+  int nCompatibleIP = 0;
+  int nCompatibleDeltaChi2 = 0;
+  int nCompatibleChi2= 0;
 
-     // Now count how many particles are compatible with the vertex of the particle under study
-     for(LHCb::Particle::ConstVector::const_iterator iparts = theParts.begin(); 
-	 iparts != theParts.end(); ++iparts){
+  // Now count how many particles are compatible with the vertex of the particle under study
+  for(LHCb::Particle::ConstVector::const_iterator iparts = theParts.begin(); 
+      iparts != theParts.end(); ++iparts){
        
-       // Compute IP only if cuts are applied
-       if(m_IP>0.0 || m_IPS>0.0){
-	 double ip = -1.0 ,ipe = -1.0;
-	 StatusCode sc = m_geom->calcImpactPar(**iparts, *vtx, ip, ipe);
-	 if (!sc.isSuccess()) continue;
-	 double ips = fabs(ip/ipe);
-	  verbose() << "IP is " << ip << "+/-" << ipe << " mm (" << ips
-		    << "sigma)" << endreq;
-	  // Count
-	  if(ip < m_IP && m_IP > 0.0) nCompatibleIP++;
-	  if(ips < m_IPS && m_IPS > 0.0) nCompatibleIPS++;
-       } // if IP cuts
-       
-       // Compute chi2 if cut is applied
-       if(m_deltaChi2>0.0||m_Chi2>0.0){
-        
-	 StatusCode sc = StatusCode::SUCCESS;
-	 LHCb::Vertex vtxWithExtraTrack;
-	 
-	 // Temporarily add the extra track to the finalStates
-	 finalStates.push_back(*iparts);
-	 // debug() << "Adding trk pid"  << (*iparts)->particleID().pid() << " to vtx" << endmsg;
-	 
-	 // Fit
-	 sc = m_pVertexFit->fit(finalStates,vtxWithExtraTrack);
-	 // Remove the added track from finalStates
-	 finalStates.pop_back();
-	 if (!sc){
-	   Warning("Failed to fit vertex");
-	   // return sc;
-	 }
-	 else{
-	   if(fabs(vtxChi2 - vtxWithExtraTrack.chi2())  < m_deltaChi2 && m_deltaChi2 > 0.0) nCompatibleDeltaChi2++;
-	   if(vtxWithExtraTrack.chi2()  < m_Chi2 && m_Chi2 > 0.0) nCompatibleChi2++;
-	   debug() << "Fitted vertex adding track has Delta chi2 = " 
-             << fabs(vtxChi2 - vtxWithExtraTrack.chi2())  << "chi2 = " << vtxWithExtraTrack.chi2() << endmsg;
-	 }
-	 	 
-       } // if delta chi2 or chi2 cut applied
-
-
+    // Compute IP only if cuts are applied
+    if(m_IP>0.0 ){
+      double ip = -1.0 ,chi2 = -1.0;
+      StatusCode sc = m_dist->distance(*iparts, vtx, ip, chi2);
+      if (!sc.isSuccess()) continue;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "IP is " << ip <<  " mm (" << chi2 
+                                            << " chi2)" << endreq;
+      // Count
+      if(ip < m_IP && m_IP > 0.0) nCompatibleIP++;
+      //	  if(ips < m_IPS && m_IPS > 0.0) nCompatibleIPS++; 
+    } // if IP cuts
+    // Compute chi2 if cut is applied
+    if(m_deltaChi2>0.0||m_Chi2>0.0){
       
-     } // iparts
-     
-     if(m_IP > 0.0) debug() << "Number of particles with IP < cut IP = " << nCompatibleIP << endreq;
-     if(m_IPS > 0.0)  debug() << "Number of particles with IPS < cut IPS = " 
-			      << nCompatibleIPS << endreq;
-     if(m_deltaChi2 > 0.0) debug() << "Number of particles with delta chi2 < cut Delta chi2 = " 
-				   << nCompatibleDeltaChi2 << endreq;
-     if(m_Chi2 > 0.0) debug() << "Number of particles with  chi2 < cut  chi2 = " 
-				   << nCompatibleChi2 << endreq;
-     
-     if(m_IP > 0.0) test &= tuple->column( head + "_NOPARTWITHINIPWDW", nCompatibleIP );
-     if(m_IPS > 0.0) test &= tuple->column( head + "_NOPARTWITHINIPSWDW", nCompatibleIPS );
-     if(m_deltaChi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINDCHI2WDW",  nCompatibleDeltaChi2);
-     if(m_Chi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
-     
+      StatusCode sc = StatusCode::SUCCESS;
+      LHCb::Vertex vtxWithExtraTrack;
+      
+      // Temporarily add the extra track to the finalStates
+      finalStates.push_back(*iparts);
+      // if (msgLevel(MSG::DEBUG)) debug() << "Adding trk pid"  << (*iparts)->particleID().pid() << " to vtx" << endmsg;
+      
+      // Fit
+      sc = m_pVertexFit->fit(finalStates,vtxWithExtraTrack);
+      // Remove the added track from finalStates
+      finalStates.pop_back();
+      if (!sc){
+        Warning("Failed to fit vertex").ignore();
+        // return sc;
+      } else{
+        if(fabs(vtxChi2 - vtxWithExtraTrack.chi2())  < m_deltaChi2 && m_deltaChi2 > 0.0) nCompatibleDeltaChi2++;
+        if(vtxWithExtraTrack.chi2()  < m_Chi2 && m_Chi2 > 0.0) nCompatibleChi2++;
+        if (msgLevel(MSG::DEBUG)) debug() << "Fitted vertex adding track has Delta chi2 = " 
+                                          << fabs(vtxChi2 - vtxWithExtraTrack.chi2())  << "chi2 = " 
+                                          << vtxWithExtraTrack.chi2() << endmsg;
+      }
+      
+    } // if delta chi2 or chi2 cut applied
+  } // iparts
+  
+  if ( msgLevel(MSG::DEBUG) ){
+    if(m_IP > 0.0)  debug() << "Number of particles with IP < cut IP = " << nCompatibleIP << endreq;
+    if(m_deltaChi2 > 0.0)  debug() << "Number of particles with delta chi2 < cut Delta chi2 = " 
+                                   << nCompatibleDeltaChi2 << endreq;
+    if(m_Chi2 > 0.0)  debug() << "Number of particles with  chi2 < cut  chi2 = " 
+                                << nCompatibleChi2 << endreq;
+  }
+  
+  if(m_IP > 0.0) test &= tuple->column( head + "_NOPARTWITHINIPWDW", nCompatibleIP );
+  if(m_deltaChi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINDCHI2WDW",  nCompatibleDeltaChi2);
+  if(m_Chi2 > 0.0) test &= tuple->column( head + "_NOPARTWITHINCHI2WDW",  nCompatibleChi2);
+  
   return StatusCode(test);
 }
 
-// =====================================================
-// =====================================================
-
+//=========================================================================
+//  
+//=========================================================================
 const Vertex* TupleToolVtxIsoln::originVertex( const Particle* top
-						 , const Particle* P ) const {
-  if( top == P || P->isBasicParticle() ) return NULL;
-
+                                               , const Particle* P ) const {
+  if( top == P || P->isBasicParticle() ) return 0;
+  
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
   if( dau.empty() ){
-    // debug() << " Particle has no daughters! "  << endreq;
-    return NULL;
+    // if (msgLevel(MSG::DEBUG)) debug() << " Particle has no daughters! "  << endreq;
+    return 0;
   }
-
+  
   SmartRefVector< LHCb::Particle >::const_iterator it;
   for( it = dau.begin(); dau.end()!=it; ++it ){
     if( P == *it ){ // I found the daughter
@@ -328,5 +312,5 @@ const Vertex* TupleToolVtxIsoln::originVertex( const Particle* top
       if( vv ) return vv;
     }
   }
-  return NULL;
+  return 0;
 }

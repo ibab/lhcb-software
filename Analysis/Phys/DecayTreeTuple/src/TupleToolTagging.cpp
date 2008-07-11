@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.2 2008-03-17 08:59:06 sposs Exp $
+// $Id: TupleToolTagging.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -53,14 +53,9 @@ StatusCode TupleToolTagging::initialize() {
   
   m_context = tool<IContextTool>( "ContextTool", this );
 
-  if( !m_context ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
-    return StatusCode::FAILURE;
-  }
-
   const DVAlgorithm* dv = getParent();
   if( !dv ){
-    Warning("Can't find the parent DVAlgorithm, will instantiate the default tagging.");
+    Warning("Can't find the parent DVAlgorithm, will instantiate the default tagging.").ignore();
     m_tagging = tool<IBTaggingTool>( m_toolName, this );
   } else {
     m_tagging = dv->flavourTagging();

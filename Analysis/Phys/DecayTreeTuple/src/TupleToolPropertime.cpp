@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.cpp,v 1.2 2008-06-27 14:34:55 pkoppenb Exp $
+// $Id: TupleToolPropertime.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -49,11 +49,6 @@ StatusCode TupleToolPropertime::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   
   m_context = tool<IContextTool>( "ContextTool", this );
-  if( !m_context ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
-    return StatusCode::FAILURE;
-  }
-
   m_fit = tool<ILifetimeFitter>( m_toolName, this );
   if( !m_fit ){
     Error("Unable to retrieve the ILifetimeFitter tool");

@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.2 2008-07-11 09:21:04 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -8,7 +8,7 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 class IContextTool;
-class IGeomDispCalculator;
+class IDistanceCalculator;
 
 namespace LHCb {
   class Particle;
@@ -60,6 +60,6 @@ private:
   
 
   IContextTool* m_context;
-  const IGeomDispCalculator* m_geom;
+  const IDistanceCalculator* m_dist;
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H

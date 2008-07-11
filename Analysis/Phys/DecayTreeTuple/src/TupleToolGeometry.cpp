@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.2 2008-04-09 22:32:59 gligorov Exp $
+// $Id: TupleToolGeometry.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -8,7 +8,7 @@
 #include "TupleToolGeometry.h"
 
 
-#include <Kernel/IGeomDispCalculator.h>
+#include <Kernel/IDistanceCalculator.h>
 #include <Kernel/IContextTool.h>
 #include <Kernel/IPhysDesktop.h>
 
@@ -39,7 +39,7 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
 					const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_context(0)
-  , m_geom(0)
+  , m_dist(0)
 {
   declareInterface<IParticleTupleTool>(this);
 }
@@ -52,13 +52,13 @@ StatusCode TupleToolGeometry::initialize() {
   m_context = tool<IContextTool>( "ContextTool", this );
 
   if( !m_context ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
+    Error("Unable to retrieve the IContext tool");
     return StatusCode::FAILURE;
   }
 
-  m_geom = m_context->geomTool ();
-  if( !m_geom ){
-    Error("Unable to retrieve the IGeomDispCalculator tool");
+  m_dist = m_context->distanceTool ();
+  if( !m_dist ){
+    Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -70,7 +70,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
 				    , const Particle* P
 				    , const std::string& head
 				    , Tuples::Tuple& tuple ){
-  Assert( P && mother && m_geom && m_context
+  Assert( P && mother && m_dist && m_context
 	  , "This should not happen, you are inside TupleToolGeometry.cpp :(" );
 
   bool test=true;
@@ -82,15 +82,15 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
     return StatusCode::FAILURE;
   }
     
-  double ip=0, eip=0;
-  test &= m_geom->calcImpactPar ( *P, *primVtx, ip, eip );
+  double ip=0, chi2=0;
+  test &= m_dist->distance ( P, primVtx, ip, chi2 );
   if( !test ){
     ip=-1;
-    eip=-1;
+    chi2=-1;
   }
   test &= tuple->column( head + "_IP", ip );
   // test &= tuple->column( head + "_IPS", ip/eip );
-  test &= tuple->column( head + "_IPERR", eip );
+  test &= tuple->column( head + "_IPCHI2", chi2 );
 
   // nothing more for basic particles
   if( P->isBasicParticle() ) return StatusCode(test);
@@ -132,28 +132,28 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   
   // --------------------------------------------------
   // flight distance
-  double dist=0, edist=0;
-  StatusCode sc = m_geom->calcSignedFlightDistance( *vtx, *P, dist, edist );
+  double dist=0;
+  StatusCode sc = m_dist->distance( vtx, P->endVertex(), dist, chi2 );
   if( sc ){}
   else {
     dist = 0;
-    edist = 0;
+    chi2 = 0;
   }
   
   test &= tuple->column( head + "_FD", dist );
   // test &= tuple->column( head + "_FDS", dist/edist );
-  test &= tuple->column( head + "_FDERR", edist );
+  test &= tuple->column( head + "_FDCHI2", chi2 );
 
-  sc = m_geom->calcSignedFlightDistance( *primVtx, *P, dist, edist );
+  sc = m_dist->distance( primVtx, P->endVertex(), dist, chi2 );
   if( sc ){}
   else {
     dist = 0;
-    edist = 0;
+    chi2 = 0;
   }
 
   test &= tuple->column( head + "_FDPV", dist );
   //test &= tuple->column( head + "_FDPVS", dist/edist );
-  test &= tuple->column( head + "_FDPVERR", edist );
+  test &= tuple->column( head + "_FDPVCHI2", chi2 );
 
   return StatusCode(test);
 }

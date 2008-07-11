@@ -8,7 +8,7 @@
 #include "Kernel/IVertexFit.h"
 
 class IContextTool;
-class IGeomDispCalculator;
+class IDistanceCalculator;
 
 namespace LHCb {
   class Particle;
@@ -55,11 +55,11 @@ private:
   
 
   IContextTool* m_context;
-  const IGeomDispCalculator* m_geom;
+  const IDistanceCalculator* m_dist;
   const IVertexFit* m_pVertexFit;
   
   double m_IP; 
-  double m_IPS; 
+  //  double m_IPS; 
   double m_deltaChi2; 
   double m_Chi2; 
   std::string m_typeVertexFit; 
