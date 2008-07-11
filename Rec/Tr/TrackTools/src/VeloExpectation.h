@@ -1,4 +1,4 @@
-//  $Id: VeloExpectation.h,v 1.4 2007-10-10 18:32:17 smenzeme Exp $
+//  $Id: VeloExpectation.h,v 1.5 2008-07-11 14:16:56 dhcroft Exp $
 #ifndef TRACKTOOLS_VeloExpectation_H
 #define TRACKTOOLS_VeloExpectation_H
 
@@ -93,15 +93,16 @@ public:
   virtual int nMissed( const LHCb::Track& aTrack, const double z ) const;
 
 
-  /** Returns true if track passses thro a given sensor
+  /** Returns true if track passses through a working strip in the sensor
+   * 
    *
    *  @param aTrack Reference to the Track to test
-      @param sensorNum ---> sensor number 
+   *  @param sensorNum ---> sensor number 
    *
-   *  @return true if inside sensor
+   *  @return true if crosses a working strip
   */
   bool isInside(const LHCb::Track& aTrack, 
-	        const unsigned int sensorNum) const;
+		const unsigned int sensorNum) const;
 
 private:
 

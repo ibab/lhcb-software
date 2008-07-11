@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-07-11 - David Hutchcroft
+ - Added tests for VELO sensors readout and bad strips to VeloExpectation
+
 ! 2008-07-10 - Wouter Hulsbergen
  - added more cuts to TrackSelector
  - make TrackVertexer less verbose

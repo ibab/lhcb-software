@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : VeloExpectation
  *
  *  CVS Log :-
- *  $Id: VeloExpectation.cpp,v 1.5 2007-10-10 18:32:17 smenzeme Exp $
+ *  $Id: VeloExpectation.cpp,v 1.6 2008-07-11 14:16:56 dhcroft Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @date   11/03/2007
@@ -172,14 +172,23 @@ IVeloExpectation::Info VeloExpectation::scan(const LHCb::Track& aTrack,
   return nHits;
 }
 
-bool VeloExpectation::isInside(const DeVeloSensor* sensor, const Tf::Tsa::Line& xLine, 
-                               const Tf::Tsa::Line& yLine, const double z) const{
-
-  // check inside active area of velo sensor
-  Gaudi::XYZPoint global(xLine.value(z),yLine.value(z),z);  
-  Gaudi::XYZPoint local;
-  local = sensor->globalToLocal(global);   
-  return sensor->isInActiveArea(local);
+bool VeloExpectation::isInside(const DeVeloSensor* sensor, 
+			       const Tf::Tsa::Line& xLine, 
+			       const Tf::Tsa::Line& yLine, 
+			       const double z) const{
+  // check whole sensor readout
+  if( ! sensor->isReadOut() ) return false;
+  // get the strip corresponding to the point 
+  // also checks if local point is in active area
+  Gaudi::XYZPoint trackPos(xLine.value(z),yLine.value(z),z);  
+  LHCb::VeloChannelID channel;
+  double stripFraction;
+  double stripPitch;
+  StatusCode sc = sensor->pointToChannel(trackPos,channel,stripFraction,
+					 stripPitch);
+  if(!sc) return false; // was not in a channel
+  // can finally test state of nearest strip
+  return sensor->OKStrip(channel.strip()); 
 }
 
 
