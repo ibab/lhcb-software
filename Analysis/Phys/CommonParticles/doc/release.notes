@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.98 2008-04-24 14:44:50 jpalac Exp $
+!$Id: release.notes,v 1.99 2008-07-11 10:19:41 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================== CommonParticles v3r13 2008-07-11 ==================
+! 2008-07-11 - Patrick Koppenburg
+ - Explicitly declare ByPIDFilterCriterion for FilterDesktop
 
 !========================== CommonParticles v3r12 2008-04-24 ==================
 

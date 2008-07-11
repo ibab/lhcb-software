@@ -1,5 +1,5 @@
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 // ============================================================================
 
 /** @file
@@ -80,6 +80,7 @@ StdUnbiasedHeavyDimuon.MotherFilter.JpsiFilter.jpsiVertex.MaxChi2 = 15.0 ;
  *  @author P. Koppenburg
  */
 StdUnbiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdUnbiasedHeavyDimuon" };
+StdUnbiasedJpsi2MuMu.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
 StdUnbiasedJpsi2MuMu.Filter.Selections = { "J/psi(1S) : MassFilterCriterion" };
 StdUnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
 
@@ -90,6 +91,7 @@ StdUnbiasedJpsi2MuMu.Filter.MassFilterCriterion.Window = 400*MeV ;
 StdLooseBiasedJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/StdUnbiasedJpsi2MuMu" };
 StdLooseBiasedJpsi2MuMu.DecayDescriptor = "J/psi(1S) -> mu+ mu-";
 // Cuts for mother
+StdLooseBiasedJpsi2MuMu.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
 StdLooseBiasedJpsi2MuMu.Filter.Selections = {"J/psi(1S) : FlightDistanceFilterCriterion"};
 StdLooseBiasedJpsi2MuMu.Filter.FlightDistanceFilterCriterion.MinFSPV = 2.0; // hlt presel: 2
 
@@ -117,6 +119,7 @@ StdLooseJpsi2ee.MotherFilter.VtxFilterCriterion.MaxChi2 = 9.0;
 */
 StdLooseBiasedJpsi2ee.PhysDesktop.InputLocations = { "Phys/StdLooseJpsi2ee" };
 StdLooseBiasedJpsi2ee.DecayDescriptor = "J/psi(1S) -> e+ e-";
+StdLooseBiasedJpsi2ee.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
 StdLooseBiasedJpsi2ee.Filter.Selections = { "J/psi(1S) : MassFilterCriterion, ByPIDFilterCriterion" } ;
 StdLooseBiasedJpsi2ee.Filter.MassFilterCriterion.LowerWindow = 500 * MeV;
 StdLooseBiasedJpsi2ee.Filter.MassFilterCriterion.UpperWindow = 400 * MeV;
