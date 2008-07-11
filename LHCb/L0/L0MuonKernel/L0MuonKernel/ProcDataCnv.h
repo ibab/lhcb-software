@@ -22,6 +22,11 @@ namespace L0Muon {
   
   class ProcDataCnv {
 
+  private:
+
+    static const unsigned int PB_OpticalLinks_size = 24;
+    static const unsigned int PB_Neighbours_size   = 34;
+
   public:
 
     /// Default Constructor
@@ -32,6 +37,9 @@ namespace L0Muon {
 
     /// Destructor
     ~ProcDataCnv();
+
+    LHCb::MuonTileID mid_BCSU(int ib);
+    LHCb::MuonTileID mid_PU(int ib, int ipu);
 
     void release();
 
@@ -46,9 +54,24 @@ namespace L0Muon {
     int rawBank_v1(std::vector<unsigned int> &raw, int mode);
     int rawBank_v2(std::vector<unsigned int> &raw, int mode);
 
+    const bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
+    const int  decodingError(int ib) const { return ((int(m_errors[ib].decodingError())<<1)&2);}
+    const int  hardwareError(int ib, int ipu) const {return m_errors[ib].hardwareError(ipu);}
+
+    const ProcDataErrors * errors(int ib) const {return &m_errors[ib];}
 
   private:
 
+    int setRegisters_for_PB_OpticalLinks(int iboard, boost::dynamic_bitset<> & rawbitset );
+    int setRegisters_for_PB_Neighbours(int iboard, boost::dynamic_bitset<> & rawbitset );
+    
+    int compressedPBWords_to_bitset(const std::vector<unsigned int> & raw, const int size, 
+                                    unsigned int & word_index, int & bit_index,
+                                    boost::dynamic_bitset<> & rawbitset);
+    int notcompressedPBWords_to_bitset(const std::vector<unsigned int> & raw, const int size, 
+                                       unsigned int & word_index,
+                                       boost::dynamic_bitset<> & rawbitset);
+    
     int m_compressionParameter;
 
     boost::dynamic_bitset<> applyCompression(boost::dynamic_bitset<> bitset_to_compress);

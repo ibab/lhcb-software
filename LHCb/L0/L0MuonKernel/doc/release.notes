@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-11 - Julien Cogan
+ - Improve the error managment when decoding the bank v2
+ - Fix some compilation warnings	
+
 ! 2008-06-30 - Marco Cattaneo
  - Add a cmt/version.cmt file to make cmt happy when running without
    version directory (otherwise it thinks the version is 'L0MuonKernel')

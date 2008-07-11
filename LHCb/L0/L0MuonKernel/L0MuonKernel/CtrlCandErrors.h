@@ -1,4 +1,4 @@
-// $Id: CtrlCandErrors.h,v 1.1 2008-06-05 08:20:28 jucogan Exp $
+// $Id: CtrlCandErrors.h,v 1.2 2008-07-11 15:30:48 jucogan Exp $
 #ifndef CTRLCANDERRORS_H 
 #define CTRLCANDERRORS_H 1
 
@@ -14,9 +14,7 @@ namespace L0Muon {
   
     CtrlCandErrors();
     virtual ~CtrlCandErrors();  
-    
-    bool inError();
-    bool decodingError() const {return decoding.inError();};
+
     std::string counters(std::string tab="");
 
     static std::string header(std::string tab=""){
@@ -33,15 +31,26 @@ namespace L0Muon {
       return h;
     } 
 
-    void printCounters(std::string &os, std::string tab="") const;
-    int sumCounters() const ;
+    const int sumCounters() const ;
 
+    const bool inError() const;
+    const bool inError(int ib) const ;
+    const int decodingError() const;
+    const int hardwareError() const;
+    const int hardwareError(int ib) const;
+    const int bcidError() const ;
+    const int bcidError(int ib) const;
+    const int statusError()const ;
+    const int statusError(int ib) const;
+    
+    ErrorHandler present;
     ErrorHandler decoding;
     ErrorHandler l0EventNumber;  
     ErrorHandler l0_B_Id;  
     ErrorHandler ctrl_bcid[2];
     ErrorHandler best_bcid;
     ErrorHandler bcsu_bcid[12];
+    ErrorHandler bcsu_bcid_mismatch[12];
     ErrorHandler best_status;
     ErrorHandler bcsu_status[12];
     ErrorHandler errJ,errK;

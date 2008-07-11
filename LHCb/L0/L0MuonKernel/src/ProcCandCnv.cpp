@@ -46,6 +46,24 @@ L0Muon::ProcCandCnv::ProcCandCnv(int quarter){
 L0Muon::ProcCandCnv::~ProcCandCnv(){
 }
 
+LHCb::MuonTileID L0Muon::ProcCandCnv::mid_BCSU(int ib){
+  MuonLayout lay(1,1);
+  LHCb::MuonTileID board = LHCb::MuonTileID(0);
+  board.setQuarter(m_quarter);
+  board.setLayout(lay);
+  board.setRegion(ib/3);
+  board.setX( (((ib%3)+1)>>0)&1);
+  board.setY( (((ib%3)+1)>>1)&1);
+  return board;
+}
+
+LHCb::MuonTileID L0Muon::ProcCandCnv::mid_PU(int ib, int ipu){
+  LHCb::MuonTileID board = mid_BCSU(ib);
+  MuonLayout lay(2,2);
+  LHCb::MuonTileID pu = LHCb::MuonTileID(board,lay,(ipu>>0)&1,(ipu>>1)&1);
+  return pu;
+}
+
 void L0Muon::ProcCandCnv::release(){
 
   for (int ib = 0; ib <12 ; ib++) {
@@ -56,10 +74,10 @@ void L0Muon::ProcCandCnv::release(){
   }
 }
 
-// void L0Muon::ProcCandCnv::clearRef(){
-//   m_ref_l0_B_Id=-1;
-//   m_ref_l0EventNumber=-1;
-// }
+void L0Muon::ProcCandCnv::clearRef(){
+  m_ref_l0_B_Id=-1;
+  m_ref_l0EventNumber=-1;
+}
 
 std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesPU(){
   std::vector<L0Muon::PMuonCandidate> cands;
@@ -77,6 +95,32 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesPU(){
   
   return cands;
 }
+std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesPU(int ib){
+  std::vector<L0Muon::PMuonCandidate> cands;
+  for (int ipu= 0; ipu<4 ;++ipu) {
+    int ncand= m_candRegHandlerPU[ib][ipu].numberOfCandidates();
+    for (int icand = 0;icand<ncand;icand++) {
+      m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
+      m_candRegHandlerPU[ib][ipu].setCandBoard(ib,icand); 
+      m_candRegHandlerPU[ib][ipu].setCandPU(ipu,icand);
+      cands.push_back(m_candRegHandlerPU[ib][ipu].getMuonCandidate(icand));
+    }    
+  }
+  
+  return cands;
+}
+std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesPU(int ib, int ipu){
+  std::vector<L0Muon::PMuonCandidate> cands;
+  int ncand= m_candRegHandlerPU[ib][ipu].numberOfCandidates();
+  for (int icand = 0;icand<ncand;icand++) {
+    m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
+    m_candRegHandlerPU[ib][ipu].setCandBoard(ib,icand); 
+    m_candRegHandlerPU[ib][ipu].setCandPU(ipu,icand);
+    cands.push_back(m_candRegHandlerPU[ib][ipu].getMuonCandidate(icand));
+  }
+  
+  return cands;
+}
 
 std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesBCSU(){
   std::vector<L0Muon::PMuonCandidate> cands;
@@ -88,6 +132,18 @@ std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesBCSU(){
       cands.push_back(m_candRegHandlerBCSU[ib].getMuonCandidate(icand));
     }    
   }
+  
+  return cands;
+}
+
+std::vector<L0Muon::PMuonCandidate>  L0Muon::ProcCandCnv::muonCandidatesBCSU(int ib){
+  std::vector<L0Muon::PMuonCandidate> cands;
+  int ncand= m_candRegHandlerBCSU[ib].numberOfCandidates();
+  for (int icand = 0;icand<ncand;icand++) {
+    m_candRegHandlerBCSU[ib].setCandQuarter(m_quarter,icand); 
+    m_candRegHandlerBCSU[ib].setCandBoard(ib,icand); 
+    cands.push_back(m_candRegHandlerBCSU[ib].getMuonCandidate(icand));
+  }    
   
   return cands;
 }
@@ -152,24 +208,28 @@ int L0Muon::ProcCandCnv::decodeBank_v1(const std::vector<unsigned int> &raw)
 int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
 {
   static int bankVersion=2;
+
+  bool decodingError=false;
   
   // Clear the registers first
   release();
 
-//   std::cout.setf(std::ios::uppercase) ;
-//   std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
-//   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
-//     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
-//   }
-//   std::cout<<std::dec;
-//   std::cout.unsetf(std::ios::uppercase);
+  //   std::cout.setf(std::ios::uppercase) ;
+  //   std::cout<<"\t=> L0Muon::ProcCandCnv::decodeBank -- dump raw bank of size: "<<raw.size()<<std::hex<<std::endl;
+  //   for (std::vector<unsigned int>::const_iterator itraw = raw.begin(); itraw<raw.end(); ++itraw){
+  //     std::cout <<"\t0x"<<std::setw(8)<<(*itraw)<<std::endl;
+  //   }
+  //   std::cout<<std::dec;
+  //   std::cout.unsetf(std::ios::uppercase);
+  
 
-
-  int iwd = 0; 
+  unsigned int iwd = 0; 
   for (int ib = 0; ib <12 ; ib++) { // Loop over processing boards
+    m_errors[ib].present.set(1);
     unsigned int empty=0;
     
     // first line : Event counters
+    if (iwd>=raw.size()) return 0;
     int l0EventNumber = ( (raw[iwd]>> 0)& 0xFFF );
     int l0_B_Id       = ( (raw[iwd]>>16)& 0xFFF );
     submitL0EventNumber(l0EventNumber);
@@ -182,6 +242,7 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
     ++iwd;
     
     // second line : BCIDs
+    if (iwd>=raw.size()) return 0;
     m_errors[ib].bcsu_bcid.set((raw[iwd])& 0xF, m_ref_l0_B_Id);
     for (int ipu= 0; ipu<4 ;++ipu) {
       m_errors[ib].pus_bcid[ipu].set( (raw[iwd]>>(4+ipu*4)) &  0xF, m_ref_l0_B_Id) ;
@@ -191,12 +252,15 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
     ++iwd;    
     
     // third line : Status
+    if (iwd>=raw.size()) return 0;
     int statusBCSU=((raw[iwd])& 0xF);
-    m_errors[ib].bcsu_status.set(statusBCSU);
+    if (statusBCSU>2) m_errors[ib].bcsu_status.set(statusBCSU);
+    m_candRegHandlerBCSU[ib].setStatus(statusBCSU); 
     int statusPU[4];
     for (int ipu= 0; ipu<4 ;++ipu) {
-      statusPU[ipu]=( (raw[iwd]>>(4+ipu*4)) &  0x3) ;
-      m_errors[ib].pus_status[ipu].set(statusPU[ipu]);
+      statusPU[ipu]=( (raw[iwd]>>(4+ipu*4)) &  0xF) ;
+      if (statusPU[ipu]>2) m_errors[ib].pus_status[ipu].set(statusPU[ipu]);
+      m_candRegHandlerPU[ib][ipu].setStatus(statusPU[ipu]); 
     }
     m_errors[ib].errF.set((raw[iwd]>>20)& 0xF);
     bool compressed   = ( (raw[iwd]>>31)& 0x1   );
@@ -209,6 +273,7 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
 
       ncandBCSU = ncandBCSU>2 ? 2 : ncandBCSU;
       for (int icand =0;icand<ncandBCSU;++icand){
+        if ((iwd+icand)>=raw.size()) return 0;
         L0Muon::writeCandInRegister(&m_candRegHandlerBCSU[ib],raw[iwd+icand],icand,bankVersion);  
         m_candRegHandlerBCSU[ib].setCandQuarter(m_quarter,icand); 
         empty|=((raw[iwd])& 0xC0008000);
@@ -220,6 +285,7 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
         int ncandPU =( statusPU[ipu] &  0x3) ;
         ncandPU = ncandPU>2 ? 2 : ncandPU;
         for (int icand =0;icand<ncandPU;++icand){
+          if ((iwd+icand)>=raw.size()) return 0;
           L0Muon::writeCandInRegister(&m_candRegHandlerPU[ib][ipu],raw[iwd+icand],icand,bankVersion);
           m_candRegHandlerPU[ib][ipu].setCandQuarter(m_quarter,icand); 
           empty|=((raw[iwd])& 0xC0008000);
@@ -233,9 +299,10 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
       if (!compressed) iwd+=10;
     }
     m_errors[ib].decoding.set(empty);
+    decodingError=(empty>0);
   } // End of loop over processing boards
 
-  
+  if (decodingError) return -1;
   return 1;
 }
 

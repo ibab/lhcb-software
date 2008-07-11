@@ -3,9 +3,8 @@
 #include "Kernel/MuonLayout.h"
 #include <math.h>
 
-#define _DET_SPEC_HEADER_ 0
-#define _DEBUG_PROCDATA_  1
-
+#define _DET_SPEC_HEADER_ 1
+#define _DEBUG_PROCDATA_  0
 /**
    Constructor.
 */
@@ -63,6 +62,24 @@ L0Muon::ProcDataCnv::~ProcDataCnv(){
 }
 
 
+LHCb::MuonTileID L0Muon::ProcDataCnv::mid_BCSU(int ib){
+  MuonLayout lay(1,1);
+  LHCb::MuonTileID board = LHCb::MuonTileID(0);
+  board.setQuarter(m_quarter);
+  board.setLayout(lay);
+  board.setRegion(ib/3);
+  board.setX( (((ib%3)+1)>>0)&1);
+  board.setY( (((ib%3)+1)>>1)&1);
+  return board;
+}
+
+LHCb::MuonTileID L0Muon::ProcDataCnv::mid_PU(int ib, int ipu){
+  LHCb::MuonTileID board = mid_BCSU(ib);
+  MuonLayout lay(2,2);
+  LHCb::MuonTileID pu = LHCb::MuonTileID(board,lay,(ipu>>0)&1,(ipu>>1)&1);
+  return pu;
+}
+
 void L0Muon::ProcDataCnv::release(){
   for (int iboard = 0; iboard <12 ; iboard++) {
     for (int ipu = 0; ipu <4 ; ipu++) { 
@@ -71,16 +88,6 @@ void L0Muon::ProcDataCnv::release(){
     }    
   }
 }
-
-// std::vector<LHCb::MuonTileID> L0Muon::ProcDataCnv::ols(int board, int pu)
-// {
-//   return m_ols[board][pu]->firedTiles();
-// }
-    
-// std::vector<LHCb::MuonTileID> L0Muon::ProcDataCnv::neighs(int board, int pu)   
-// {
-//   return m_neighs[board][pu]->firedTiles();
-// }
 
 std::vector<LHCb::MuonTileID> L0Muon::ProcDataCnv::ols(LHCb::MuonTileID puid)
 {
@@ -264,541 +271,254 @@ int L0Muon::ProcDataCnv::decodeBank_v1(const std::vector<unsigned int> & raw)
 int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
 {
 
+  // Decode the L0MuonProcData bank version 2
+  // 
+  // This bank contains 2 parts :
+  //  o 1st part : hardware error detected on PU input links + PU optical link data     
+  //  o 2nd part (not always present) : PU neighbour data 
+  //
+  // Return values :
+  //  o -1 : in case of error
+  //  o  1 : only 1st first part was decoded
+  //  o  2 : the two parts were decoded 
+
   // Clear the registers first
   release();
 
+  bool compressed =  false;
 #if _DET_SPEC_HEADER_==1
-  static int nheader =1;
-  unsigned int nOLwords= (raw[0] & 0xFFFF)/4; // ???? /4 or 2 ????
+  static unsigned int nheader =1;
+  unsigned int nOLwords= (raw[0] & 0xFFFF)/2; 
+  compressed = (raw[0]>>31)&1;
 #else
-  static int nheader = 0;
-  unsigned int nOLwords = (4*(1+5)*2*16)*12/32;
+  static unsigned int nheader = 0;
+  unsigned int nOLwords = PB_OpticalLinks_size*12;
 #endif
-  
-  //if (nheader=0) std::cout << "L0Muon::ProcDataCnv::decodeBank header= "<<std::hex<<raw[0]<<std::dec<<std::endl;
-  //std::cout << "L0Muon::ProcDataCnv::decodeBank  nOLwords= "<<nOLwords<<std::endl;
 
+#if _DEBUG_PROCDATA_ >0
+  std::cout<<"L0Muon::ProcDataCnv::decodeBank (v2) "
+           <<" nheader= "<<nheader
+           <<" nOLwords= "<<nOLwords
+           <<" compressed= "<<compressed
+           <<std::endl;
+#endif
+
+  unsigned int iwd=nheader;
+
+  for (int ib=0; ib<12; ++ib)  m_errors[ib].present.set(1);
+  
   //
-  // Errors & Optical links
+  //--- 1st part 
   //
- 
-  // Read the first nOLwords words of raw into a single bitset
-  // What the following should do :
-  // iwd raw[iwd]
-  //  0    zyxw    
-  //  1    vuts
-  //  2    rqpo
-  // ...
-  // n-2   hgfe
-  // n-1   dcba
-  // => bitset: n-1|n-2|  ...   1 |  0
-  // => bitset: msb---------------->lsb 
-  // => bitset: zyxwvutsrqpo...hgfedcba
-  boost::dynamic_bitset<> rawbitset(nOLwords*32);
-  for (unsigned int iwd=0; iwd<nOLwords; ++iwd){
-    boost::dynamic_bitset<> bitset(32,raw[iwd+nheader]);
-    bitset.resize(nOLwords*32);
-    bitset<<=((nOLwords-iwd-1)*32);
-    rawbitset|=bitset;
+
+  // By default set the decoding error flag ON
+  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(1);
+
+  int ibit=31;
+  for (int ib =0; ib<12; ++ib) 
+  { // Loop over processing boards
+
+    int ok;
+    boost::dynamic_bitset<> bitset;
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank OLs board# "<<ib
+             <<" BEFORE DECODING"
+             <<" bitset size= "<<bitset.size()
+             <<" first_word ="<<iwd
+             <<" first_bit ="<<ibit
+             <<std::endl;
+#endif
+    if (compressed)
+      ok=compressedPBWords_to_bitset(raw, PB_OpticalLinks_size, iwd, ibit, bitset);
+    else
+      ok=notcompressedPBWords_to_bitset(raw, PB_OpticalLinks_size, iwd, bitset);
+    if (ok<0) {
+      //ERROR
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR PBWords_to_bitset returned "<<ok
+               <<" OLs board# "<<ib
+               <<" bitset size= "<<bitset.size()
+               <<" last_word  ="<<iwd
+               <<" last_bit  ="<<ibit
+               <<std::endl;
+#endif
+      return -1;
+    }
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank OLs board# "<<ib
+             <<" AFTER  DECODING"
+             <<" bitset size= "<<bitset.size()
+             <<" last_word  ="<<iwd
+             <<" last_bit  ="<<ibit
+             <<std::endl;
+#endif
+    
+    ok=setRegisters_for_PB_OpticalLinks(ib,bitset);
+    if (ok<0) {
+      //ERROR
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR setRegisters_for_PB_OpticalLinks returned "<<ok
+               <<" OLs board# "<<ib
+               <<std::endl;
+#endif
+      return -1;
+    }
+
+    // if there is no neighbour data, the decoding is complete for this board.
+    // Thus, set the decoding error flag to FALSE.
+    if ((nOLwords+nheader)<=raw.size()) m_errors[ib].decoding.set(0);
+    
+    if (((ib+1)%3)==0) 
+    { // take care of padding bits at the end of each PP
+      if (ibit<16) {
+        ++iwd;
+        ibit=31;
+      } else if (ibit<31) {
+        ibit=15;
+      }
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank OLs board# "<<ib
+             <<" AFTER   PADDING"
+             <<" bitset size= "<<bitset.size()
+             <<" last_word  ="<<iwd
+             <<" last_bit  ="<<ibit
+             <<std::endl;
+#endif
+
+    } // end padding
+  } // End loop over processing boards
+  
+  if (ibit<16) {
+    ++iwd;
+    ibit=31;
   }
 
-  // rawbitset contains the compressed optical link data for the full quarter.
-  // CAUTION: it also contains the compressed error data bits (32 bits once decompressed)
-  // - uncompressed the data for each processing board 
-  // - fill the register for each PU of each board
-  int padding=0;
-  for (int iboard = 0; iboard <12 ; iboard++) { // Loop over PBs for OL data
-
-    if (iboard%3==0) {
-      padding = rawbitset.size();
-    }
-    int current_size;
-    
-    // Errors
-    current_size=rawbitset.size();
-    boost::dynamic_bitset<> errorbitset(current_size);
-    errorbitset=rawbitset>>(current_size-4*32);
-    errorbitset.resize(4*32);
-    rawbitset.resize(current_size-4*32);
-    
-    for (int ipu = 0; ipu <4 ; ipu++) {// Loop over PUs errors
-      boost::dynamic_bitset<> bitset = (errorbitset>>(ipu*32));
-      bitset.resize(32);
-      unsigned int word = bitset.to_ulong();
-      m_errors[iboard].opt_link[ipu].set( (word>>16)&0xFF);
-      m_errors[iboard].ser_link[ipu].set( (word>> 8)&0x3F);
-      m_errors[iboard].par_link[ipu].set( (word>> 0)&0xFF);
-    } // End of loop over PUs errors
-    
-    
-    // Optical links
-    current_size=rawbitset.size();
-    boost::dynamic_bitset<> olbitset(current_size);
-    olbitset=rawbitset>>(current_size-4*10*16);
-    olbitset.resize(4*10*16);
-    rawbitset.resize(current_size-4*10*16);
-    
-    for (int ipu = 0; ipu <4 ; ipu++) {// Loop over PUs
-      
-      current_size=olbitset.size();
-      boost::dynamic_bitset<> pubitset(current_size);
-      pubitset=olbitset>>(current_size-10*16);
-      pubitset.resize(10*16);
-      olbitset.resize(current_size-10*16);
-      
-      if (m_ols[iboard][ipu]!=0) 
-        m_ols[iboard][ipu]->set(pubitset);
-
-#if _DEBUG_PROCDATA_
-       std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   cross check"<<std::endl;
-       if (m_ols[iboard][ipu]!=0) {
-         std::vector<LHCb::MuonTileID> mids = m_ols[iboard][ipu]->getTileVector();
-         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   model"<<std::endl;
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid())
-               std::cout<<(mids[ii*16+iii].station()+1);
-             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
-               std::cout<<"?";
-             else
-               std::cout<<"x";
-           }
-           std::cout<<std::endl;
-         }
-         int nexpected=0;
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid()) ++nexpected;
-           }
-         }        
-         for (int ii=10-1;ii>-1;--ii){
-           for (int iii=16-1;iii>-1;--iii){
-             if (mids[ii*16+iii].isValid()) {
-               if (!m_ols[iboard][ipu]->test(ii*16+iii)){
-                 std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   missing : "<<mids[ii*16+iii].toString()
-                           <<" @ "<<ii*16+iii<<std::endl;
-               }
-             } 
-           }
-         }        
-         std::vector<LHCb::MuonTileID> pads = m_ols[iboard][ipu]->firedTiles();
-         for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
-           if (!it->isValid())
-             std::cout << "L0Muon::ProcDataCnv::decodeBank OLs    OL data :"
-                       <<" tiles "<<it->toString()<<" valid ? "<<it->isValid()<<std::endl;
-         }
-         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   bits found in"
-                   <<" buffer= "<<pubitset.count()
-                   <<" register= "<<pads.size()
-                   <<" model= "<<nexpected;
-         if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
-           std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!";
-         std::cout<<std::endl;
-       }
-#endif      
-    } // End of Loop over PUs
-    
-    if ((iboard+1)%3==0) {
-      padding -= rawbitset.size();
-      padding  = ( 4 - (padding%4) )% 4;
-      int size=rawbitset.size();
-      rawbitset.resize(size-padding);
-    }
-
-  } // End of Loop over PBs for OL data
-  
-  if ( (nOLwords+nheader)==raw.size()) return 1; // raw bank stops here
-  
-  //
-  // Neighbours
-  //
-  
-  rawbitset.clear();
-  unsigned int nNeighwords=raw.size()-(nOLwords+nheader);
-#if _DEBUG_PROCDATA_
-  std::cout << "L0Muon::ProcDataCnv::decodeBank  nNeighwords= "<<nNeighwords<<std::endl;
+#if _DEBUG_PROCDATA_ >0
+  std::cout<<"L0Muon::ProcDataCnv::decodeBank "
+           <<" OL decoding done ..."
+           <<" last_word  ="<<iwd
+           <<" last_bit  ="<<ibit
+           <<std::endl;
 #endif
-  rawbitset.resize(nNeighwords*32);
-  for (unsigned int iwd=0; iwd<nNeighwords; ++iwd){
-    boost::dynamic_bitset<> bitset(32,raw[iwd+nOLwords+nheader]);
-    bitset.resize(nNeighwords*32);
-    bitset<<=((nNeighwords-iwd-1)*32);
-    rawbitset|=bitset;
+  
+  if (iwd!=(nOLwords+nheader)) {
+    // ERROR 
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR  end of 1st part current word ("<<iwd
+             <<") does'nt match 1st part size ("<<(nOLwords+nheader)<<")"
+             <<std::endl;
+#endif
+    return -1;
   }
 
-  // rawbitset contains the compressed neighbours data for the full quarter.
-  // - uncompressed the data for each processing board
-  // - fill the register for each PU of each board
-  padding=0;
-  for (int iboard = 0; iboard <12 ; iboard++) {// Loop over PBs for neighbours data
-    int current_size;
-
-    if (iboard%3==0) {
-      padding = rawbitset.size();
+  if ((nOLwords+nheader)==raw.size()) {
+    // the 2nd part was not activated : stop here
+    return 1;
+  }
+  
+  //
+  //--- 2nd part 
+  //
+  
+  ibit=31;
+  for (int ib =0; ib<12; ++ib) 
+  { // Loop over processing boards
+    int ok;
+    boost::dynamic_bitset<> bitset;
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank Neigh board# "<<ib
+             <<" BEFORE DECODING"
+             <<" bitset size= "<<bitset.size()
+             <<" first_word ="<<iwd
+             <<" first_bit ="<<ibit
+             <<std::endl;
+#endif
+    if (compressed)
+      ok=compressedPBWords_to_bitset(raw, PB_Neighbours_size, iwd, ibit, bitset);
+    else
+      ok=notcompressedPBWords_to_bitset(raw, PB_Neighbours_size, iwd, bitset);
+    if (ok<0) {
+      //ERROR
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR PBWords_to_bitset returned "<<ok
+               <<" Neigh board# "<<ib
+               <<" bitset size= "<<bitset.size()
+               <<" last_word  ="<<iwd
+               <<" last_bit  ="<<ibit
+               <<std::endl;
+#endif
+      return -1;
     }
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank Neigh board# "<<ib
+             <<" AFTER  DECODING"
+             <<" bitset size= "<<bitset.size()
+             <<" last_word  ="<<iwd
+             <<" last_bit  ="<<ibit
+             <<std::endl;
+#endif
     
-    current_size=rawbitset.size();
-    boost::dynamic_bitset<> neighbitset(current_size);
-    neighbitset=rawbitset>>(current_size-4*17*16);
-    neighbitset.resize(4*17*16);
-    rawbitset.resize(current_size-4*17*16);
+    ok=setRegisters_for_PB_Neighbours(ib,bitset);
 
-    for (int ipu = 0; ipu <4 ; ipu++) {  // Loop over PUs
-      current_size=neighbitset.size();
-      boost::dynamic_bitset<> pubitset(current_size);
-      pubitset=neighbitset>>(current_size-17*16);
-      pubitset.resize(17*16);
-      neighbitset.resize(current_size-17*16);
+    if (ok<0) {
+      //ERROR
+#if _DEBUG_PROCDATA_ >0
+      std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR setRegisters_for_PB_Neighbours returned "<<ok
+               <<" OLs board# "<<ib
+               <<std::endl;
+#endif
+      return -1;
+    }
 
-      if (m_neighs[iboard][ipu]!=0)
-        m_neighs[iboard][ipu]->set(pubitset);
-
-#if _DEBUG_PROCDATA_
-      if (m_neighs[iboard][ipu]!=0) {
-        std::cout<<"-- PB"<<iboard<<" PU"<<ipu<<std::endl; 
-        // Cross check (only when all inputs forced to 1)
-        std::vector<LHCb::MuonTileID> mids = m_neighs[iboard][ipu]->getTileVector();
-//         for (int ii=17-1;ii>-1;--ii){
-//           for (int iii=16-1;iii>-1;--iii){
-//             if (mids[ii*16+iii].isValid()) {
-//               if (!m_neighs[iboard][ipu]->test(ii*16+iii)){
-//                 std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   !!! en moins : "<<mids[ii*16+iii].toString()
-//                           <<" @ pos"<<ii*16+iii
-//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
-//               }
-//             } 
-//             if (m_neighs[iboard][ipu]->test(ii*16+iii)){
-//               if (!mids[ii*16+iii].isValid()) {
-//                 std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   !!! en plus  : "<<mids[ii*16+iii].toString()
-//                           <<" @ pos"<<ii*16+iii
-//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
-//               }
-//             }
-//           }
-//         }
-        
-        
-        boost::dynamic_bitset<> model(17*16);
-        for (int ii=17*16-1;ii>-1;--ii){
-          if (mids[ii].isValid()) model.set(ii);
-        }
-        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   PER LINK"<<std::endl;
-        boost::dynamic_bitset<> link;
-        boost::dynamic_bitset<> link2;
-        
-        link.resize(17*16);
-        link=pubitset>>244;
-        link.resize(28);
-        link2.resize(17*16);
-        link2=model>>244;
-        link2.resize(28);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 1 : "<<link<<std::endl;
-        std::cout <<"BP SER 1 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 1";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>0)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 1"<<" excess"<<std::endl;
-        }
-        
-        link.resize(17*16);
-        link=pubitset>>216;
-        link.resize(28);
-        link2.resize(17*16);
-        link2=model>>216;
-        link2.resize(28);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 2 : "<<link<<std::endl;
-        std::cout <<"BP SER 2 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 2 ";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>1)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 2"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>188;
-        link.resize(28);
-        link2.resize(17*16);
-        link2=model>>188;
-        link2.resize(28);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 3 : "<<link<<std::endl;
-        std::cout <<"BP SER 3 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 3";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>2)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 3"<<" excess"<<std::endl;
-        }
-        
-
-        link.resize(17*16);
-        link=pubitset>>176;
-        link.resize(12);
-        link2.resize(17*16);
-        link2=model>>176;
-        link2.resize(12);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 4 : "<<link<<std::endl;
-        std::cout <<"BP SER 4 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 4";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>3)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 4"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>164;
-        link.resize(12);
-        link2.resize(17*16);
-        link2=model>>164;
-        link2.resize(12);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 5 : "<<link<<std::endl;
-        std::cout <<"BP SER 5 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 5";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>4)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 5"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>152;
-        link.resize(12);
-        link2.resize(17*16);
-        link2=model>>152;
-        link2.resize(12);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP SER 6 : "<<link<<std::endl;
-        std::cout <<"BP SER 6 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 6";
-          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>5)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 6"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>150;
-        link.resize(2);
-        link2.resize(17*16);
-        link2=model>>150;
-        link2.resize(2);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP PAR 5 : "<<link<<std::endl;
-        std::cout <<"BP PAR 5 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 5";
-          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>4)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 5"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>148;
-        link.resize(2);
-        link2.resize(17*16);
-        link2=model>>148;
-        link2.resize(2);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP PAR 4 : "<<link<<std::endl;
-        std::cout <<"BP PAR 4 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 4";
-          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>3)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 4"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>146;
-        link.resize(2);
-        link2.resize(17*16);
-        link2=model>>146;
-        link2.resize(2);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP PAR 3 : "<<link<<std::endl;
-        std::cout <<"BP PAR 3 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 3";
-          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>2)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 3"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>144;
-        link.resize(2);
-        link2.resize(17*16);
-        link2=model>>144;
-        link2.resize(2);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP PAR 2 : "<<link<<std::endl;
-        std::cout <<"BP PAR 2 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 2";
-          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>1)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 2"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>142;
-        link.resize(2);
-        link2.resize(17*16);
-        link2=model>>142;
-        link2.resize(2);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"BP PAR 1 : "<<link<<std::endl;
-        std::cout <<"BP PAR 1 - "<<link2<<std::endl;
-#endif
-        if (link2.count()>0) {
-          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 1";
-          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>0)&1);
-          if (link!=link2) std::cout<<" missing";
-          std::cout<<std::endl;
-        } else {
-          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 1"<<" excess"<<std::endl;
-        }
-     
-        link.resize(17*16);
-        link=pubitset>>130;
-        link.resize(12);
-        link2.resize(17*16);
-        link2=model>>130;
-        link2.resize(12); 
-#if _DEBUG_PROCDATA_2
-        std::cout <<"CROS     : "<<link<<std::endl;
-        std::cout <<"CROS     - "<<link2<<std::endl;
-#endif
-     
-        link.resize(17*16);
-        link=pubitset>>48;
-        link.resize(81);
-        link2.resize(17*16);
-        link2=model>>48;
-        link2.resize(81);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"HORI     : "<<link<<std::endl;
-        std::cout <<"HORI     - "<<link2<<std::endl;
-#endif
-     
-        link.resize(17*16);
-        link=pubitset>>6;
-        link.resize(42);
-        link2.resize(17*16);
-        link2=model>>6;
-        link2.resize(42);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"VERT     : "<<link<<std::endl;
-        std::cout <<"VERT     - "<<link2<<std::endl;
-#endif
-     
-        link.resize(17*16);
-        link=pubitset>>0;
-        link.resize(6);
-        link2.resize(17*16);
-        link2=model>>0;
-        link2.resize(6);
-#if _DEBUG_PROCDATA_2
-        std::cout <<"EMPTY    : "<<link<<std::endl;
-        std::cout <<"EMPTY    - "<<link2<<std::endl;
-#endif
+    // The decoding is now complete for this board.
+    // Thus, set the decoding error flag to FALSE.
+    m_errors[ib].decoding.set(0);
+    
+    if (((ib+1)%3)==0) 
+    { // take care of padding bits at the end of each PP
+      if (ibit<16) {
+        ++iwd;
+        ibit=31;
+      } else if (ibit<31) {
+        ibit=15;
       }
-
-      if (m_neighs[iboard][ipu]!=0) {
-        
-        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   cross check"<<std::endl;
-        std::vector<LHCb::MuonTileID> mids = m_neighs[iboard][ipu]->getTileVector();
-//         std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   model"<<std::endl;
-//         for (int ii=17-1;ii>-1;--ii){
-//           int wd=0;
-//           for (int iii=16-1;iii>-1;--iii){
-//             if (mids[ii*16+iii].isValid()) wd|=1<<iii;
-//             if (mids[ii*16+iii].isValid())
-//               std::cout<<(mids[ii*16+iii].station()+1);
-//             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
-//               std::cout<<"?";
-//             else
-//               std::cout<<"x";
-//           }
-//           std::cout<<" "<<std::hex<<wd<<std::dec<<" "<<(ii)<<" "<<(ii*16+15)<<" <- "<<(ii*16)<<std::endl;
-//         }
-        int nexpected=0;
-        for (int ii=17-1;ii>-1;--ii){
-          for (int iii=16-1;iii>-1;--iii){
-            if (mids[ii*16+iii].isValid()) ++nexpected;
-          }
-        }
-        
-        std::vector<LHCb::MuonTileID> pads = m_neighs[iboard][ipu]->firedTiles();
-        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh number of bits fired= "<<pads.size()<<std::endl;
-        for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
-          if (!it->isValid())
-            std::cout << "L0Muon::ProcDataCnv::decodeBank   NOT VALID  "<<it->toString()<<std::endl;
-        }
-        
-        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   bits found in"
-                  <<" buffer= "<<pubitset.count()
-                  <<" register= "<<pads.size()
-                  <<" model= "<<nexpected;
-        if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
-          std::cout << "!!!!!!!!!!!!!!!!!!!!!!!! ERROR -- PB"<<iboard<<" PU"<<ipu;
-        std::cout<<std::endl; 
-        std::cout<<"--"<<std::endl; 
-      }
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank Neigh board# "<<ib
+             <<" AFTER   PADDING"
+             <<" bitset size= "<<bitset.size()
+             <<" last_word  ="<<iwd
+             <<" last_bit  ="<<ibit
+             <<std::endl;
 #endif
-    } // End of Loop over PUs
-    
-    
-    if ((iboard+1)%3==0) {
-      padding -= rawbitset.size(); // size of the 3 processing boards part that have just been decompressed
-      padding  = ( 4 - (padding%4) )% 4;
-      int size=rawbitset.size();
-      rawbitset.resize(size-padding);
-    } 
-  }  // End of Loop over PBs for neighbours data
+    } // end padding
+  } // Enf of loop over processing boards
+
+  if (ibit<16) {
+    ++iwd;
+    ibit=31;
+  }
+#if _DEBUG_PROCDATA_ >0
+  std::cout<<"L0Muon::ProcDataCnv::decodeBank "
+           <<" Neigh decoding done ..."
+           <<" last_word  ="<<iwd
+           <<" last_bit  ="<<ibit
+           <<std::endl;
+#endif
+
+  if (iwd!=raw.size()) {
+    //ERROR
+#if _DEBUG_PROCDATA_ >0
+    std::cout<<"L0Muon::ProcDataCnv::decodeBank ERROR  end of 2nd part current word ("<<iwd
+             <<") does'nt match raw bank size ("<<raw.size()<<")"
+             <<std::endl;
+#endif
+    return -1;
+  }
 
   return 2;
-  
+
 }
 
-  
 
 int L0Muon::ProcDataCnv::rawBank(std::vector<unsigned int> &raw, int version, int mode)
 {
@@ -1098,16 +818,529 @@ boost::dynamic_bitset<> L0Muon::ProcDataCnv::unapplyCompression(boost::dynamic_b
 }
 
 
+int L0Muon::ProcDataCnv::notcompressedPBWords_to_bitset(const std::vector<unsigned int> & raw,const int size_in_words,
+                                                        unsigned int &iwd,
+                                                        boost::dynamic_bitset<> & bitset)
+{
+  int size=size_in_words*32;
+  
+  if ((iwd+size_in_words)>raw.size()) return -1;
+  
+  bitset.resize(size);
+  for (int i=0; i<size_in_words; ++i) {
+    boost::dynamic_bitset<> word_bitset(32,raw[iwd]);
+    word_bitset.resize(size);
+    word_bitset<<=(size-(i+1)*32);
+    bitset|=word_bitset;
+    ++iwd;
+  }
+
+  return 1;
+}
+
+int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned int> & raw,const int size_in_word,
+                                                     unsigned int &iwd,int &ibit,
+                                                     boost::dynamic_bitset<> & bitset)
+{
+  int remains=0;
+  int counter=0;
+
+  int size=size_in_word*32;
+  
+  while (iwd<raw.size())
+  { // Loop over bank words
+    unsigned int reversed_word=raw[iwd];
+    unsigned int word=0;
+    for (int ibyte=0; ibyte<4; ++ibyte)
+    { // Loop over bytes in the correct order
+      int byte=(reversed_word>>(ibyte*8))&0xFF;
+      word|=(byte<<((3-ibyte)*8));
+    } // End of loop over bytes in the correct order
+    while (ibit>-1) 
+    { // Loop over bits in word
+      int bit=(word>>ibit)&1; // current bit
+      if (remains==0) 
+      {  // the current bit is a control bit 
+        if (bit==0) 
+        { // control bit is '0' means the uncompressed sequence is 32 zeros
+          bitset.resize(bitset.size()+32);
+        }  
+        else 
+        { // control bit is '1' means the next 5 bits is a counter encoding the number of zeros
+          remains=5;
+        }
+      } 
+      else 
+      { // the current bit is part of the counter encoding the number of zeros 
+        --remains;
+        counter|=(bit<<remains);
+        if (remains==0) 
+        { // counter is complete
+          bitset.resize(bitset.size()+counter);
+          counter=0;
+          if ((bitset.size() % (size))!=0) bitset.push_back(1);
+          if ((bitset.size() % (size))==0) 
+          { // the PB field is complete  
+            return 1;
+          }
+        } // end counter is complete
+      }
+      --ibit;
+    } // End over bits in word
+    ibit=31;
+    ++iwd;
+  } // End of loop over bank words
+  
+  return -1;
+}
+  
+
 int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode)
 {
+  raw.clear();
+  
   //
   // TO BE IMPLEMENTED
   //
-  return 0;
+  return mode;
 }
 
+int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dynamic_bitset<> & bitset )
+{
+    int current_size;
+    
+    // Errors
+    current_size=bitset.size();
+    boost::dynamic_bitset<> errorbitset(current_size);
+    errorbitset=bitset>>(current_size-4*32);
+    errorbitset.resize(4*32);
+    bitset.resize(current_size-4*32);
+    
+    for (int ipu = 0; ipu <4 ; ipu++) {// Loop over PUs errors
+      boost::dynamic_bitset<> bitset = (errorbitset>>(ipu*32));
+      bitset.resize(32);
+      unsigned int word = bitset.to_ulong();
+      m_errors[iboard].opt_link[ipu].set( (word>>16)&0xFF);
+      m_errors[iboard].ser_link[ipu].set( (word>> 8)&0x3F);
+      m_errors[iboard].par_link[ipu].set( (word>> 0)&0xFF);
+    } // End of loop over PUs errors
+    
+    
+    // Optical links
+    current_size=bitset.size();
+    boost::dynamic_bitset<> olbitset(current_size);
+    olbitset=bitset>>(current_size-4*10*16);
+    olbitset.resize(4*10*16);
+    bitset.resize(current_size-4*10*16);
+    
+    for (int ipu = 0; ipu <4 ; ipu++) {// Loop over PUs
+      
+      current_size=olbitset.size();
+      boost::dynamic_bitset<> pubitset(current_size);
+      pubitset=olbitset>>(current_size-10*16);
+      pubitset.resize(10*16);
+      olbitset.resize(current_size-10*16);
+      
+      if (m_ols[iboard][ipu]!=0) 
+        m_ols[iboard][ipu]->set(pubitset);
 
+#if _DEBUG_PROCDATA_ >0
+       std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   cross check"<<std::endl;
+       if (m_ols[iboard][ipu]!=0) {
+         std::vector<LHCb::MuonTileID> mids = m_ols[iboard][ipu]->getTileVector();
+         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   model"<<std::endl;
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid())
+               std::cout<<(mids[ii*16+iii].station()+1);
+             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
+               std::cout<<"?";
+             else
+               std::cout<<"x";
+           }
+           std::cout<<std::endl;
+         }
+         unsigned int nexpected=0;
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid()) ++nexpected;
+           }
+         }        
+         for (int ii=10-1;ii>-1;--ii){
+           for (int iii=16-1;iii>-1;--iii){
+             if (mids[ii*16+iii].isValid()) {
+               if (!m_ols[iboard][ipu]->test(ii*16+iii)){
+                 std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   missing : "<<mids[ii*16+iii].toString()
+                           <<" @ "<<ii*16+iii<<std::endl;
+               }
+             } 
+           }
+         }        
+         std::vector<LHCb::MuonTileID> pads = m_ols[iboard][ipu]->firedTiles();
+         for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
+           if (!it->isValid())
+             std::cout << "L0Muon::ProcDataCnv::decodeBank OLs    OL data :"
+                       <<" tiles "<<it->toString()<<" valid ? "<<it->isValid()<<std::endl;
+         }
+         std::cout << "L0Muon::ProcDataCnv::decodeBank OLs   bits found in"
+                   <<" buffer= "<<pubitset.count()
+                   <<" register= "<<pads.size()
+                   <<" model= "<<nexpected;
+         if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
+           std::cout << "!!!!!!!!!!!!!!!!!!!!!!!!";
+         std::cout<<std::endl;
+       }
+#endif      
+    } // End of Loop over PUs
 
+    return 1;
 
-  
-  
+}
+int L0Muon::ProcDataCnv::setRegisters_for_PB_Neighbours(int iboard, boost::dynamic_bitset<> & neighbitset )
+{
+    int current_size;
+
+    for (int ipu = 0; ipu <4 ; ipu++) {  // Loop over PUs
+      current_size=neighbitset.size();
+      boost::dynamic_bitset<> pubitset(current_size);
+      pubitset=neighbitset>>(current_size-17*16);
+      pubitset.resize(17*16);
+      neighbitset.resize(current_size-17*16);
+
+      if (m_neighs[iboard][ipu]!=0)
+        m_neighs[iboard][ipu]->set(pubitset);
+
+#if _DEBUG_PROCDATA_ >0
+      if (m_neighs[iboard][ipu]!=0) {
+        std::cout<<"-- PB"<<iboard<<" PU"<<ipu<<std::endl; 
+        // Cross check (only when all inputs forced to 1)
+        std::vector<LHCb::MuonTileID> mids = m_neighs[iboard][ipu]->getTileVector();
+//         for (int ii=17-1;ii>-1;--ii){
+//           for (int iii=16-1;iii>-1;--iii){
+//             if (mids[ii*16+iii].isValid()) {
+//               if (!m_neighs[iboard][ipu]->test(ii*16+iii)){
+//                 std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   !!! en moins : "<<mids[ii*16+iii].toString()
+//                           <<" @ pos"<<ii*16+iii
+//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
+//               }
+//             } 
+//             if (m_neighs[iboard][ipu]->test(ii*16+iii)){
+//               if (!mids[ii*16+iii].isValid()) {
+//                 std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   !!! en plus  : "<<mids[ii*16+iii].toString()
+//                           <<" @ pos"<<ii*16+iii
+//                           <<" word "<<ii<<" bit "<<iii<<std::endl;
+//               }
+//             }
+//           }
+//         }
+        
+        
+        boost::dynamic_bitset<> model(17*16);
+        for (int ii=17*16-1;ii>-1;--ii){
+          if (mids[ii].isValid()) model.set(ii);
+        }
+        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   PER LINK"<<std::endl;
+        boost::dynamic_bitset<> link;
+        boost::dynamic_bitset<> link2;
+        
+        link.resize(17*16);
+        link=pubitset>>244;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>244;
+        link2.resize(28);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 1 : "<<link<<std::endl;
+        std::cout <<"BP SER 1 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 1";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>0)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 1"<<" excess"<<std::endl;
+        }
+        
+        link.resize(17*16);
+        link=pubitset>>216;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>216;
+        link2.resize(28);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 2 : "<<link<<std::endl;
+        std::cout <<"BP SER 2 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 2";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>1)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 2"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>188;
+        link.resize(28);
+        link2.resize(17*16);
+        link2=model>>188;
+        link2.resize(28);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 3 : "<<link<<std::endl;
+        std::cout <<"BP SER 3 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 3";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>2)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 3"<<" excess"<<std::endl;
+        }
+        
+
+        link.resize(17*16);
+        link=pubitset>>176;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>176;
+        link2.resize(12);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 4 : "<<link<<std::endl;
+        std::cout <<"BP SER 4 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 4";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>3)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 4"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>164;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>164;
+        link2.resize(12);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 5 : "<<link<<std::endl;
+        std::cout <<"BP SER 5 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 5";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>4)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 5"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>152;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>152;
+        link2.resize(12);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP SER 6 : "<<link<<std::endl;
+        std::cout <<"BP SER 6 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 6";
+          std::cout<<" status "<<((m_errors[iboard].ser_link[ipu].value()>>5)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP SER 6"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>150;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>150;
+        link2.resize(2);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP PAR 5 : "<<link<<std::endl;
+        std::cout <<"BP PAR 5 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 5";
+          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>4)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 5"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>148;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>148;
+        link2.resize(2);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP PAR 4 : "<<link<<std::endl;
+        std::cout <<"BP PAR 4 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 4";
+          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>3)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 4"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>146;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>146;
+        link2.resize(2);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP PAR 3 : "<<link<<std::endl;
+        std::cout <<"BP PAR 3 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 3";
+          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>2)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 3"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>144;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>144;
+        link2.resize(2);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP PAR 2 : "<<link<<std::endl;
+        std::cout <<"BP PAR 2 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 2";
+          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>1)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 2"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>142;
+        link.resize(2);
+        link2.resize(17*16);
+        link2=model>>142;
+        link2.resize(2);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"BP PAR 1 : "<<link<<std::endl;
+        std::cout <<"BP PAR 1 - "<<link2<<std::endl;
+#endif
+        if (link2.count()>0) {
+          std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 1";
+          std::cout<<" status "<<((m_errors[iboard].par_link[ipu].value()>>0)&1);
+          if (link!=link2) std::cout<<" missing";
+          std::cout<<std::endl;
+        } else {
+          if (link.count()>0) std::cout<<"++Neigh :   PB"<<iboard<<" PU"<<ipu<<" : BP PAR 1"<<" excess"<<std::endl;
+        }
+     
+        link.resize(17*16);
+        link=pubitset>>130;
+        link.resize(12);
+        link2.resize(17*16);
+        link2=model>>130;
+        link2.resize(12); 
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"CROS     : "<<link<<std::endl;
+        std::cout <<"CROS     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=pubitset>>48;
+        link.resize(81);
+        link2.resize(17*16);
+        link2=model>>48;
+        link2.resize(81);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"HORI     : "<<link<<std::endl;
+        std::cout <<"HORI     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=pubitset>>6;
+        link.resize(42);
+        link2.resize(17*16);
+        link2=model>>6;
+        link2.resize(42);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"VERT     : "<<link<<std::endl;
+        std::cout <<"VERT     - "<<link2<<std::endl;
+#endif
+     
+        link.resize(17*16);
+        link=pubitset>>0;
+        link.resize(6);
+        link2.resize(17*16);
+        link2=model>>0;
+        link2.resize(6);
+#if _DEBUG_PROCDATA_ >1
+        std::cout <<"EMPTY    : "<<link<<std::endl;
+        std::cout <<"EMPTY    - "<<link2<<std::endl;
+#endif
+      }
+
+      if (m_neighs[iboard][ipu]!=0) {
+        
+        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   cross check"<<std::endl;
+        std::vector<LHCb::MuonTileID> mids = m_neighs[iboard][ipu]->getTileVector();
+//         std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   model"<<std::endl;
+//         for (int ii=17-1;ii>-1;--ii){
+//           int wd=0;
+//           for (int iii=16-1;iii>-1;--iii){
+//             if (mids[ii*16+iii].isValid()) wd|=1<<iii;
+//             if (mids[ii*16+iii].isValid())
+//               std::cout<<(mids[ii*16+iii].station()+1);
+//             else if (mids[ii*16+iii].layout().xGrid()!=0 && mids[ii*16+iii].layout().xGrid()!=0)
+//               std::cout<<"?";
+//             else
+//               std::cout<<"x";
+//           }
+//           std::cout<<" "<<std::hex<<wd<<std::dec<<" "<<(ii)<<" "<<(ii*16+15)<<" <- "<<(ii*16)<<std::endl;
+//         }
+        unsigned int nexpected=0;
+        for (int ii=17-1;ii>-1;--ii){
+          for (int iii=16-1;iii>-1;--iii){
+            if (mids[ii*16+iii].isValid()) ++nexpected;
+          }
+        }
+        
+        std::vector<LHCb::MuonTileID> pads = m_neighs[iboard][ipu]->firedTiles();
+        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh number of bits fired= "<<pads.size()<<std::endl;
+        for (std::vector<LHCb::MuonTileID>::iterator it=pads.begin(); it<pads.end();++it){
+          if (!it->isValid())
+            std::cout << "L0Muon::ProcDataCnv::decodeBank   NOT VALID  "<<it->toString()<<std::endl;
+        }
+        
+        std::cout << "L0Muon::ProcDataCnv::decodeBank Neigh   bits found in"
+                  <<" buffer= "<<pubitset.count()
+                  <<" register= "<<pads.size()
+                  <<" model= "<<nexpected;
+        if ( (pubitset.count()!=pads.size()) || (pubitset.count()!=nexpected) ) 
+          std::cout << "!!!!!!!!!!!!!!!!!!!!!!!! ERROR -- PB"<<iboard<<" PU"<<ipu;
+        std::cout<<std::endl; 
+        std::cout<<"--"<<std::endl; 
+      }
+#endif
+    } // End of Loop over PUs
+
+    return 1;
+}

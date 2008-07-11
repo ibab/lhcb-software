@@ -1,4 +1,4 @@
-// $Id: ProcDataErrors.h,v 1.1 2008-06-05 08:20:28 jucogan Exp $
+// $Id: ProcDataErrors.h,v 1.2 2008-07-11 15:30:48 jucogan Exp $
 #ifndef PROCDATAERRORS_H 
 #define PROCDATAERRORS_H 1
 
@@ -11,12 +11,9 @@ namespace L0Muon {
   
   public:
   
-  
     ProcDataErrors();
     virtual ~ProcDataErrors();  
     
-    bool inError();
-    bool decodingError() const {return decoding.inError();};
     std::string counters(std::string tab="");
 
     static std::string header(std::string tab=""){
@@ -26,10 +23,13 @@ namespace L0Muon {
       return h;
     } 
 
-    void printCounters(std::string &os, std::string tab="") const;
-    int sumCounters() const ;
+    const int sumCounters() const ;
     
-
+    const bool inError(int ipu) const;
+    const int decodingError() const;
+    const int hardwareError(int ipu) const;
+    
+    ErrorHandler present;
     ErrorHandler decoding;
     ErrorHandler opt_link[4];
     ErrorHandler par_link[4];

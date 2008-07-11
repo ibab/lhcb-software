@@ -1,4 +1,4 @@
-// $Id: ErrorHandler.h,v 1.1 2008-04-02 12:45:49 jucogan Exp $
+// $Id: ErrorHandler.h,v 1.2 2008-07-11 15:30:48 jucogan Exp $
 #ifndef L0MUONKERNEL_ERRORHANDLER_H 
 #define L0MUONKERNEL_ERRORHANDLER_H 1
 
@@ -21,15 +21,17 @@ namespace L0Muon {
   
     ErrorHandler();
     ErrorHandler(std::string fmt, int mask);
+    ErrorHandler(std::string fmt, int mask, std::string name);
 
     virtual ~ErrorHandler();
 
     virtual void set(int value, int ref=0) {
-      m_value= (value&m_mask);
+      m_value= value;
       m_inError=false;
-      if (m_value!=(ref&m_mask)) {
+      if ((m_value&m_mask)!=(ref&m_mask)) {
         m_inError=true;
         ++m_counter;
+        //std::cout<<m_name<<m_value<<m_counter<<std::endl;
       }
     }
 
@@ -44,6 +46,13 @@ namespace L0Muon {
       }
     }
 
+    bool strCounter(std::string& os)  const { 
+      if (m_counter>0){
+        os =  (boost::format("%-20s : %3d") % m_name % m_counter).str();
+        return true;
+      }
+      return false;
+    }
 
   private:
   
@@ -51,6 +60,7 @@ namespace L0Muon {
     bool m_inError;
     int  m_counter;
 
+    std::string m_name;
     std::string m_fmt;
     int m_mask;
     

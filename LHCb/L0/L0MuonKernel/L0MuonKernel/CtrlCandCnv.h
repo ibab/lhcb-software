@@ -31,11 +31,15 @@ namespace L0Muon {
     /// Destructor
     ~CtrlCandCnv();
     
+    LHCb::MuonTileID mid_BCSU(int iq, int ib);
+
     void release();
-//     void clearRef();
 
     std::vector<PMuonCandidate> muonCandidates();
+    std::vector<PMuonCandidate> muonCandidates(int iq);
     std::vector<PMuonCandidate> muonCandidatesBCSU();
+    std::vector<PMuonCandidate> muonCandidatesBCSU(int iq);
+    std::vector<PMuonCandidate> muonCandidatesBCSU(int iq, int ib);
 
     int decodeBank(const std::vector<unsigned int> &raw, int version,int mode);
     int rawBank(std::vector<unsigned int> &raw, int version, int mode, int ievt);
@@ -48,7 +52,7 @@ namespace L0Muon {
     int decodeBankBcsuCandidates(const std::vector<unsigned int> &raw, int version);
     int rawBankBcsuCandidates(std::vector<unsigned int> &raw);
 
-    void dump(std::string tab=""){
+    void dump(std::string tab="") {
       for (int i= 0; i<2; ++i) {
         m_candRegHandler[i].dump(-1,tab);
         for (int ib= 0; ib<12; ++ib) {
@@ -57,18 +61,24 @@ namespace L0Muon {
       }
     }
 
-    int ref_l0_B_Id(){return m_ref_l0_B_Id;}
-    int ref_l0EventNumber() {return m_ref_l0EventNumber;}
-
-    void submitL0_B_Id(int l0_B_Id){
-      if (m_ref_l0_B_Id==-1) m_ref_l0_B_Id=l0_B_Id;
-    }
+    int  ref_l0_B_Id(){return m_ref_l0_B_Id;}
+    int  ref_l0EventNumber() {return m_ref_l0EventNumber;}
+    void submitL0_B_Id(int l0_B_Id){ if (m_ref_l0_B_Id==-1) m_ref_l0_B_Id=l0_B_Id; }
+    void submitL0EventNumber(int l0EventNumber){ if (m_ref_l0EventNumber==-1) m_ref_l0EventNumber=l0EventNumber; }
+    void clearRef();
     
-    void submitL0EventNumber(int l0EventNumber){
-      if (m_ref_l0EventNumber==-1) m_ref_l0EventNumber=l0EventNumber;
-    }
-    
+    const bool inError(int iq) const { return m_errors[iq].inError();}
+    const bool inError(int iq, int ib)const { return m_errors[iq].inError(ib);}
+    const int  decodingError(int iq) const { return int(m_errors[iq].decodingError());}
+    const int  hardwareError(int iq) const {return m_errors[iq].hardwareError();}
+    const int  hardwareError(int iq, int ib) const {return m_errors[iq].hardwareError(ib);}
+    const int  statusError(int iq) const { return m_errors[iq].statusError();}
+    const int  statusError(int iq,int ib) const { return m_errors[iq].statusError(ib);}
+    const int  bcidError(int iq) const { return m_errors[iq].bcidError();}
+    const int  bcidError(int iq,int ib) const { return m_errors[iq].bcidError(ib);}
 
+    const CtrlCandErrors * errors(int iq) const {return &m_errors[iq];}
+    
   private:
     int m_side;
     // Final candidates registers

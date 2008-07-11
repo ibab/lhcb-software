@@ -264,7 +264,7 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
                                     int &Refl0EventNumber, int &Refl0_B_Id){
 
 
-  bool debug=true;
+  bool debug=false;
   
   if (bankVersion<1) return;
 
@@ -307,7 +307,7 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
     if (empty!=0) {
       int ib = (ifr-1)/2;
       ++decodingError[ib];
-      if (debug) std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" I "<<std::endl;
+      if (debug) std::cout << "DEBUG : L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" I "<<std::endl;
       //       std::cout <<" ifr= "<<ifr<<" pos= "<<pos<<" wd=0x"<<std::hex<<empty<<std::dec<<std::endl;
     }
     itraw=raw.begin()+pos;
@@ -587,24 +587,24 @@ void L0Muon::ProcRawCnv::decodeBank(const std::vector<unsigned int> &original, i
 
   }// End of loop over processing boards
 
-  // temporary check
-  std::vector<unsigned int> tmp;
-  rawBank(tmp, bankVersion);
-  for (int ib=0; ib<12;++ib){
-    for (unsigned int i=0; i<L0Muon::ProcRawCnv::board_full_data_size; ++i){
-      unsigned int iw=ib*L0Muon::ProcRawCnv::board_full_data_size+i;
-      if (tmp[iw]!=original[iw]) {
-        if (decodingError[ib]==0){
-          ++decodingError[ib];
-            if (debug) {
-              std::cout << "L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" H"<<std::endl;
-              std::cout<<"\t !!! L0Muon::ProcRawCnv::decodeBank !!! ERROR !!! line "<<iw<<" board "<<ib
-                       <<std::hex<<" rebuild= 0x"<<tmp[iw]<<" VS original= 0x"<<original[iw]<<std::dec<<std::endl;
-            }
-        }
-      }
-    }
-  }
+//   // temporary check
+//   std::vector<unsigned int> tmp;
+//   rawBank(tmp, bankVersion);
+//   for (int ib=0; ib<12;++ib){
+//     for (unsigned int i=0; i<L0Muon::ProcRawCnv::board_full_data_size; ++i){
+//       unsigned int iw=ib*L0Muon::ProcRawCnv::board_full_data_size+i;
+//       if (tmp[iw]!=original[iw]) {
+//         if (decodingError[ib]==0){
+//           ++decodingError[ib];
+//             if (debug) {
+//               std::cout << "DEBUG : L0Muon::ProcRawCnv::decodeBank decodingError ib= "<<ib<<" H"<<std::endl;
+//               std::cout<<"\t !!! L0Muon::ProcRawCnv::decodeBank !!! ERROR !!! line "<<iw<<" board "<<ib
+//                        <<std::hex<<" rebuild= 0x"<<tmp[iw]<<" VS original= 0x"<<original[iw]<<std::dec<<std::endl;
+//             }
+//         }
+//       }
+//     }
+//   }
 
   
   for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decodingError[ib]);
@@ -858,6 +858,7 @@ void L0Muon::ProcRawCnv::reorderOLChannels(const std::vector<unsigned int> &raw,
   for (int ib=0; ib<12; ++ib) {
     for (int ich=1; ich>-1; --ich){
       itstart = raw.begin()+(ib*2+ich)*L0Muon::ProcRawCnv::board_full_frame_size;
+      itstart+=(raw.size()%2);
       itstop  = itstart+L0Muon::ProcRawCnv::board_full_frame_size;
       itpos   = reordered.end();
       reordered.insert(itpos,itstart,itstop);

@@ -2,48 +2,43 @@
 
 L0Muon::ProcDataErrors::ProcDataErrors()
 {
-
-  decoding = L0Muon::ErrorHandler(" %01X",0x00F);
+  present = L0Muon::ErrorHandler(" %01X",0x1,"nb of banks seen");
+  decoding = L0Muon::ErrorHandler(" %08X",0xFFFFFFFF,"decoding");
   for (int ipu=0; ipu<4; ++ipu){
-    opt_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF);
-    par_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF);
-    ser_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x03F);
+    std::string name;
+    name=(boost::format("PU%1d opt. links") % ipu).str();
+    opt_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF,name);
+    name=(boost::format("PU%1d par. links") % ipu).str();
+    par_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF,name);
+    name=(boost::format("PU%1d ser. links") % ipu).str();
+    ser_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x03F,name);
   }
 
 }
 
 L0Muon::ProcDataErrors::~ProcDataErrors(){}
     
-bool L0Muon::ProcDataErrors::inError()
+const bool L0Muon::ProcDataErrors::inError(int ipu) const
 {
-
   bool error=false;
 
-  for (int ipu=0; ipu<4; ++ipu){
-    error|=opt_link[ipu].inError();
-    error|=ser_link[ipu].inError();
-    error|=par_link[ipu].inError();
-  }
+  error|=(decodingError()>0);
+  error|=(hardwareError(ipu)>0);
 
   return error;
 }
 
-
-void L0Muon::ProcDataErrors::printCounters(std::string &os,std::string tab) const {
-
-  for (int ipu=0; ipu<4; ++ipu){
-    opt_link[ipu].printCounter(os,tab+(boost::format("OPT LINK%1d") % ipu).str());
-  }
-  for (int ipu=0; ipu<4; ++ipu){
-    ser_link[ipu].printCounter(os,tab+(boost::format("SER LINK%1d") % ipu).str());
-  }
-  for (int ipu=0; ipu<4; ++ipu){
-    par_link[ipu].printCounter(os,tab+(boost::format("PAR LINK%1d") % ipu).str());
-  }
-
+const int L0Muon::ProcDataErrors::decodingError() const {
+ return int(decoding.inError());
 }
 
-int L0Muon::ProcDataErrors::sumCounters() const {
+const int L0Muon::ProcDataErrors::hardwareError(int ipu) const {
+  return ( ((opt_link[ipu].value()<<16)&0x00FF0000) 
+           + ((ser_link[ipu].value()<<8)&0x0000FF00) 
+           + ((par_link[ipu].value()<<0)&0x000000FF) );
+}
+
+const int L0Muon::ProcDataErrors::sumCounters() const {
   
   int n=0;
 
@@ -59,7 +54,7 @@ int L0Muon::ProcDataErrors::sumCounters() const {
 
 std::ostream &L0Muon::operator<<(std::ostream &os, const L0Muon::ProcDataErrors &pberr) {
 
-  if (pberr.decodingError()) {
+  if (pberr.decoding.inError()) {
     os<<" Data corrupted ";
   } else {
     for (int ipu=0; ipu<4; ++ipu) os<<pberr.opt_link[ipu];
