@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.13 2008-07-11 11:19:12 graven Exp $
+// $Id: EFunctions.h,v 1.14 2008-07-11 11:37:33 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -220,13 +220,13 @@ namespace zen
   template <class T1, class Container>
   class binder_by_value : public zen::function<T1> 
   {
-    template <typename T> struct _T2Helper { typedef double (T::* ptr_memfun) () const; };
+    template <typename T> struct _helper { typedef double (T::* ptr_memfun) () const; };
   public:
     typedef zen::function<T1> Function;
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2;
     typedef zen::binder_function<T1,Container> Binder;
     typedef typename Container::iterator iterator;
-    typedef typename _T2Helper<T2>::ptr_memfunc ptr_memfun;
+    typedef typename _helper<T2>::ptr_memfun ptr_memfun;
     explicit binder_by_value(const Binder& bin, ptr_memfun pmf): m_binder(bin.clone()),m_pmf(pmf) {}
     binder_by_value(const binder_by_value<T1,Container>& rhs) : m_binder(rhs.m_binder->clone()), m_pmf(rhs.m_pmf) {}
     virtual ~binder_by_value() {}
