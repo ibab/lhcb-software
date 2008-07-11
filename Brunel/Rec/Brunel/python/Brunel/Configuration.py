@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-07-04 09:26:21 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-07-11 17:16:42 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -10,6 +10,8 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc, ReadStripETC )
 
 class Brunel(ConfigurableUser):
+
+   
 
     # Steering options
     __slots__ = {
@@ -28,6 +30,7 @@ class Brunel(ConfigurableUser):
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
        ,"monitors": []        # list of monitors to execute
+       ,"usePatSeeding":   False # set True for PatSeeding instead of Tsa  
         }
 
     def getProp(self,name):
@@ -57,14 +60,6 @@ class Brunel(ConfigurableUser):
                 LHCbApp().DDDBtag = DDDBtag
         else:
             DDDBtag = LHCbApp().getDefaultProperties()["DDDBtag"]
-
-        if self.getProp("fieldOff"):
-            print "Using field off tracking options"
-            importOptions("$TRACKSYSROOT/options/NoFieldTracking.opts")
-
-        if self.getProp("veloOpen"):
-            print "Using open Velo tracking options"
-            importOptions("$TRACKSYSROOT/options/VeloOpenTracking.opts")
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")

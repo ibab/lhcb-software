@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Add usePatSeeding switch to Brunel configurables - SHM
+ - move call for tracking options for fieldOff and veloOpen to
+   tracking scripts instead of Brunel main script - SHM
+
 </PRE><H1><A NAME=v32r8>2008-07-04 Brunel v32r8</A></H1><PRE>
  - Add Brunel-2008.py and 2008-Files.py, example job for 2008 simulated data
  - Remove include of LHCbApplication.opts from Brunel.opts, to allow usage of
