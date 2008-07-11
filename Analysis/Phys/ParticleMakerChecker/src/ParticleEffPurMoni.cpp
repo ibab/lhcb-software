@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.20 2008-07-11 22:00:34 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.21 2008-07-11 22:22:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -594,9 +594,8 @@ void ParticleEffPurMoni::printStats() const
    *  Could do with a tidy up together with the associated utility classes
    */
 
-  const std::string & LINES =
-    "===================================================================================================================================================";
-  const std::string & lines =    "---------------------------------------------------------------------------------------------------------------------------------------------------";
+  const std::string LINES(149,'=');
+  const std::string lines(149,'-');
 
   const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
@@ -613,7 +612,7 @@ void ParticleEffPurMoni::printStats() const
       always() << "  -> Used ProtoParticles        : " << iX->first << " "
                << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
       always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
-      always() << "    -> 'ProtoCorr%' = (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
+      always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first]) 
                << ")/" << shortProtoLoc(iX->first) << endreq;
     }
     always() << lines << endreq;
@@ -636,7 +635,7 @@ void ParticleEffPurMoni::printStats() const
                  << " | " << (*iSum).first.protoType;
       std::string recotitle = srecotitle.str();
       recotitle.resize(10+m_maxNameLength,' ');
-      always() << recotitle << " |   % of sample";
+      always() << recotitle << " |  % of sample";
       if ( primaryPart )
       {
         always() << "   | Proto->Part eff |  MC->Part eff  |  % MC Clones";
@@ -669,7 +668,7 @@ void ParticleEffPurMoni::printStats() const
               const MCTally & mcTally = (m_rawMCMap[(*iMCT).first])[(*iT).first];
               const long nTotalMC = mcTally.all;
               always() << mcT
-                       << " | " << eff( tally.all, (*iSum).second.nReco );
+                       << "| " << eff( tally.all, (*iSum).second.nReco );
               if ( primaryPart )
               {
                 always() << " | " << eff( tally.all, nBkgTrue )
