@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-11 - Patrick Robbe
+ - options/Pythia64.opts: add COM charmonium processes
+
 ! 2008-07-10 - Patrick Robbe
  - Remove usage of SEAL for file: 
    . src/Lib/PythiaProduction.cpp
