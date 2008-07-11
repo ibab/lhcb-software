@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.338 2008-07-11 13:29:32 ibelyaev Exp $
+! $Id: release.notes,v 1.339 2008-07-11 14:46:00 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-07-11 - Patrick Koppenburg
+ - Bug fix in RelatedPVFinder. Use chi2 properly.
 
 ! 2008-07-11 - Vanya BELYAEV
  - src/CombineParticles.cpp

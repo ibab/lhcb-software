@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.h,v 1.3 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: RelatedPVFinder.h,v 1.4 2008-07-11 14:46:01 pkoppenb Exp $
 #ifndef RELATEDPVFINDER_H 
 #define RELATEDPVFINDER_H 1
 
@@ -45,7 +45,7 @@ private:
   bool m_closestZ ; ///< Take closest PV in Z
   bool m_closest ; ///< Take closest PV
   bool m_smallestIP ; ///< Take the one with smallest IP
-  bool m_significance ; ///< Cut on significance, not absolute numbers
+  bool m_chi2 ; ///< Cut on chi2 significance, not absolute numbers
   std::string m_pvLocation ; ///< Location of PV
   
 };

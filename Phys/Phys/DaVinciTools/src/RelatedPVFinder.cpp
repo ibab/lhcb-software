@@ -1,4 +1,4 @@
-// $Id: RelatedPVFinder.cpp,v 1.5 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: RelatedPVFinder.cpp,v 1.6 2008-07-11 14:46:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -35,7 +35,7 @@ RelatedPVFinder::RelatedPVFinder( const std::string& type,
   declareProperty("SelectByClosestZ", m_closestZ = false );
   declareProperty("SelectClosest", m_closest = false );
   declareProperty("SelectBySmallestIP", m_smallestIP = true );
-  declareProperty("SelectBySignificance", m_significance = true );
+  declareProperty("SelectByChi2", m_chi2 = true );
 }
 //=============================================================================
 // Destructor
@@ -55,10 +55,10 @@ StatusCode RelatedPVFinder::initialize(){
           << ", SelectBySmallestIP: " << m_smallestIP << endmsg ;
     return StatusCode::FAILURE ;
   }
-  if ( m_significance ){
+  if ( m_chi2 ){
     if ( m_closestZ ) debug() << "The PV closest in Z/err will be chosen." << endmsg ;
-    else if ( m_closest ) debug() << "The PV closest in 3D/err will be chosen." << endmsg ;
-    else if ( m_smallestIP ) debug() << "The PV with smallest IP/err will be chosen." << endmsg ;
+    else if ( m_closest ) debug() << "The PV closest in 3D chi2 will be chosen." << endmsg ;
+    else if ( m_smallestIP ) debug() << "The PV with smallest IP chi2 will be chosen." << endmsg ;
   } else {  
     if ( m_closestZ ) debug() << "The PV closest in Z will be chosen." << endmsg ;
     else if ( m_closest ) debug() << "The PV closest in 3D will be chosen." << endmsg ;
@@ -106,22 +106,22 @@ StatusCode RelatedPVFinder::relatedPVs(const LHCb::Particle* p,
   LHCb::RecVertices* pvs = get<LHCb::RecVertices>( m_pvLocation );
 
   double fom = 0;
-  double err = 0 ;
+  double chi2 = 0 ;
   StatusCode sc = StatusCode::SUCCESS ;
   if (msgLevel(MSG::VERBOSE)) verbose() << "Looping over " << pvs->size() << " PVs" << endmsg ;
   for ( rv_iter i = pvs->begin() ; i!=pvs->end() ; ++i){
     if ( m_closestZ ) {
       fom = fabs(v->position().z()-(*i)->position().z());
-      if ( m_significance ) fom = fom/sqrt((*i)->covMatrix()(2,2)*(*i)->covMatrix()(2,2)
-                                           + v->covMatrix()(2,2)*v->covMatrix()(2,2));
+      if ( m_chi2 ) fom = fom/sqrt((*i)->covMatrix()(2,2)*(*i)->covMatrix()(2,2)
+                                   + v->covMatrix()(2,2)*v->covMatrix()(2,2));
       if (msgLevel(MSG::VERBOSE)) verbose() << "Closest Z PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_closest ) {
-      sc = m_dist->distance(v,(*i),fom,err);
-      if ( m_significance ) fom = fom/err ;
+      sc = m_dist->distance(v,(*i),fom,chi2);
+      if ( m_chi2 ) fom = chi2 ;
       if (msgLevel(MSG::VERBOSE)) verbose() << "Closest PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else if ( m_smallestIP ) {
-      sc = m_dist->distance(p,(*i),fom,err);
-      if ( m_significance ) fom = fom/err ;
+      sc = m_dist->distance(p,(*i),fom,chi2);
+      if ( m_chi2 ) fom = chi2 ;
       if (msgLevel(MSG::VERBOSE)) verbose() << "Smallest IP PV at " << (*i)->position() << " fom " << fom << endmsg ;
     } else {
       Exception("None of all options") ;
