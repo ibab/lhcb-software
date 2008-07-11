@@ -1,4 +1,4 @@
-// $Id: LoKi_Fitters.cpp,v 1.3 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_Fitters.cpp,v 1.4 2008-07-11 15:19:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -105,8 +105,6 @@ LOKI_MCALGORITHM(Fitters)
   bool good = false ;
   
   VFun vdchi2  = VVDCHI2 ( primary ) ;
-  
-  IGeomDispCalculator* geom = geomDispCalculator() ;
   
   Tuple tuple = nTuple("imppar") ;
   
