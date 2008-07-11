@@ -1,4 +1,4 @@
-// $Id: HltSelection.h,v 1.2 2008-07-04 08:07:12 graven Exp $
+// $Id: HltSelection.h,v 1.3 2008-07-11 07:26:26 graven Exp $
 #ifndef HLTBASE_HLTDATA_H 
 #define HLTBASE_HLTDATA_H 1
 
@@ -54,11 +54,12 @@ namespace Hlt
     void clean() { Selection::clean(); m_candidates.clear();}
 
     // forward container functionality..
-    typedef typename container_type::iterator       iterator;
+    typedef typename container_type::iterator        iterator;
     typedef typename container_type::value_type      value_type;
     typedef typename container_type::size_type       size_type;
-    typedef typename container_type::const_iterator const_iterator;
+    typedef typename container_type::const_iterator  const_iterator;
     typedef typename container_type::const_reference const_reference;
+    typedef typename container_type::reference       reference;
     const_iterator begin() const { return m_candidates.begin(); }
     const_iterator end() const { return m_candidates.end(); }
     iterator begin() { return m_candidates.begin(); }
