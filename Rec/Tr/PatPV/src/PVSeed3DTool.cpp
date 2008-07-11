@@ -1,4 +1,4 @@
-// $Id: PVSeed3DTool.cpp,v 1.1 2008-06-11 19:28:24 witekma Exp $
+// $Id: PVSeed3DTool.cpp,v 1.2 2008-07-11 10:13:22 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -84,9 +84,11 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
     seed_tracks.push_back(seedtr);
   }
 
-  cout << " seed_tracks.size  " << seed_tracks.size() << endl; 
-  cout << " inputTracks.size  " << inputTracks.size() << endl; 
-
+  if(msgLevel(MSG::DEBUG))  {
+     debug() << " seed_tracks.size  " << seed_tracks.size() << endmsg; 
+     debug() << " inputTracks.size  " << inputTracks.size() << endmsg;; 
+  }
+   
   std::vector<seedTrack>::iterator its1,its2;
   for(its1 = seed_tracks.begin(); its1 != seed_tracks.end()--; its1++) {       
      for(its2 = its1+1; its2 != seed_tracks.end(); its2++) {
@@ -148,18 +150,18 @@ void PVSeed3DTool::getSeeds(std::vector<const LHCb::Track*>& inputTracks, std::v
       wMean(close_nodes, base_track, mean_point_w);
       seeds.push_back(mean_point_w.position);
       
-      cout << " xyz seed multi  " 
-          << mean_point_w.position.X()  << " " 
-          << mean_point_w.position.Y()  << " " 
-          << mean_point_w.position.Z()  << " | " 
-          << mean_point_w.error.X()  << " " 
-          << mean_point_w.error.Y()  << " " 
-          << mean_point_w.error.Z()  << " | " 
-          << mean_point_w.multiplicity  << " " 
-          << endl;
-      
-      
-
+      if(msgLevel(MSG::DEBUG)) {
+        
+        debug() << " xyz seed multi  " 
+                << mean_point_w.position.X()  << " " 
+                << mean_point_w.position.Y()  << " " 
+                << mean_point_w.position.Z()  << " | " 
+                << mean_point_w.error.X()  << " " 
+                << mean_point_w.error.Y()  << " " 
+                << mean_point_w.error.Z()  << " | " 
+                << mean_point_w.multiplicity  << " " 
+                << endmsg;
+      }
     }
 
   } // its1     
