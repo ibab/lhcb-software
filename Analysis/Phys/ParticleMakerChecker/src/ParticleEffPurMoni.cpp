@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.25 2008-07-11 23:48:32 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.26 2008-07-12 12:06:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -255,7 +255,7 @@ StatusCode ParticleEffPurMoni::execute()
       if ( !isClone )
       {
         tally.effVp().fill    ( mcPart ? mcPart->p()  : momentum(*proto)           );
-        tally.effVpt().fill   ( mcPart ? mcPart->pt() : transverseMomentum(*proto) ); 
+        tally.effVpt().fill   ( mcPart ? mcPart->pt() : transverseMomentum(*proto) );
         tally.effVpVpt().fill ( mcPart ? mcPart->p()  : momentum(*proto),
                                 mcPart ? mcPart->pt() : transverseMomentum(*proto) );
       }
@@ -297,7 +297,7 @@ StatusCode ParticleEffPurMoni::execute()
 
       // Momentum histogramming
       tally.effVp().fill    ( (*iMCP)->p()  );
-      tally.effVpt().fill   ( (*iMCP)->pt() ); 
+      tally.effVpt().fill   ( (*iMCP)->pt() );
       tally.effVpVpt().fill ( (*iMCP)->p(), (*iMCP)->pt() );
     }
   }
@@ -410,20 +410,24 @@ bool ParticleEffPurMoni::selectProto( const LHCb::ProtoParticle * proto ) const
 const LHCb::MCParticle *
 ParticleEffPurMoni::mcParticle_forward( const LHCb::ProtoParticle * proto ) const
 {
+  const LHCb::MCParticle * mcP(NULL);
   // get the appropriate linker
   ProtoParticle2MCLinker * links = protoLinker(proto);
-  // Nastiness to deal with linker interface :(
-  double bestWeight(-999999);
-  const LHCb::MCParticle *mcP(NULL), *tmpMCP(links->firstMCP(proto));
-  while ( NULL != tmpMCP )
+  if ( links )
   {
-    if ( links->weight() > bestWeight &&
-         links->weight() > minMCWeight(proto) )
+    // Nastiness to deal with linker interface :(
+    double bestWeight(-999999);
+    const LHCb::MCParticle * tmpMCP(links->firstMCP(proto));
+    while ( NULL != tmpMCP )
     {
-      bestWeight = links->weight();
-      mcP = tmpMCP;
+      if ( links->weight() > bestWeight &&
+           links->weight() > minMCWeight(proto) )
+      {
+        bestWeight = links->weight();
+        mcP = tmpMCP;
+      }
+      tmpMCP = links->next();
     }
-    tmpMCP = links->next();
   }
   return mcP;
 }
@@ -438,33 +442,36 @@ ParticleEffPurMoni::mcParticle_reverse( const LHCb::ProtoParticle * proto ) cons
     // fill the map
     // get the appropriate linker
     ProtoParticle2MCLinker * links = protoLinker(proto);
-    // loop over all MCPs
-    const LHCb::MCParticles * mcps = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
-    for ( LHCb::MCParticles::const_iterator iMCP = mcps->begin();
-          iMCP != mcps->end(); ++iMCP )
+    if ( links )
     {
-      // right charge ?
-      const int charge = (*iMCP)->particleID().threeCharge();
-      if ( ( 0 == proto->charge() && 0 == charge ) ||
-           ( 0 != proto->charge() && 0 != charge ) )
+      // loop over all MCPs
+      const LHCb::MCParticles * mcps = get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
+      for ( LHCb::MCParticles::const_iterator iMCP = mcps->begin();
+            iMCP != mcps->end(); ++iMCP )
       {
-        if ( m_mcSel->accept(*iMCP) )
+        // right charge ?
+        const int charge = (*iMCP)->particleID().threeCharge();
+        if ( ( 0 == proto->charge() && 0 == charge ) ||
+             ( 0 != proto->charge() && 0 != charge ) )
         {
-          // Nastiness to deal with linker interface :(
-          double bestWeight(-999999);
-          const LHCb::ProtoParticle *P(NULL), *tmpP(links->firstP(*iMCP));
-          while ( NULL != tmpP )
+          if ( m_mcSel->accept(*iMCP) )
           {
-            if ( links->weightP() > bestWeight &&
-                 links->weightP() > minMCWeight(proto) )
+            // Nastiness to deal with linker interface :(
+            double bestWeight(-999999);
+            const LHCb::ProtoParticle *P(NULL), *tmpP(links->firstP(*iMCP));
+            while ( NULL != tmpP )
             {
-              bestWeight = links->weightP();
-              P = tmpP;
+              if ( links->weightP() > bestWeight &&
+                   links->weightP() > minMCWeight(proto) )
+              {
+                bestWeight = links->weightP();
+                P = tmpP;
+              }
+              tmpP = links->nextP();
             }
-            tmpP = links->nextP();
+            // store final best association
+            (*pmap)[P] = *iMCP;
           }
-          // store final best association
-          (*pmap)[P] = *iMCP;
         }
       }
     }
@@ -604,21 +611,23 @@ void ParticleEffPurMoni::printStats() const
 
   const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
 
-  always() << LINES << endreq;
-
   // loop over Particle TES locations
   for ( LocationMap::iterator iLoc = m_locMap.begin();
         iLoc != m_locMap.end(); ++iLoc )
   {
+    always() << LINES << endreq;
     always() << " Particle Location : " << (*iLoc).first << endreq;
     for ( ProtoTESStatsMap::const_iterator iX = m_partProtoTESStats[(*iLoc).first].begin();
           iX != m_partProtoTESStats[(*iLoc).first].end(); ++iX )
     {
       always() << "  -> Used ProtoParticles        : " << iX->first << " "
                << eff( iX->second.nWithMC, iX->second.nTotal ) << "% with MC" << endreq;
-      always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
-      always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first])
-               << ")/" << shortProtoLoc(iX->first) << endreq;
+      if ( !m_corProtoMap[iX->first].empty() )
+      {
+        always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
+        always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first])
+                 << ")/" << shortProtoLoc(iX->first) << endreq;
+      }
     }
     always() << lines << endreq;
 
@@ -789,8 +798,6 @@ void ParticleEffPurMoni::printStats() const
       }
 
     }
-
-    always() << lines << endreq;
   }
 
   always() << LINES << endreq;
@@ -849,8 +856,8 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
           h = profile2D( top.x(binx), top.y(biny),
                          ( i < selected ? 100.0 : 0.0 ),
                          title, title,
-                         top.minX(), top.maxX(), 
-                         top.minY(), top.maxY(), 
+                         top.minX(), top.maxX(),
+                         top.minY(), top.maxY(),
                          top.nBinsX(), top.nBinsY() );
         }
       }
@@ -868,7 +875,7 @@ ProtoParticle2MCLinker *
 ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
 {
   if (!proto) return NULL;
-  const std::string loc = objectLocation(proto->parent());
+  const std::string& loc = objectLocation(proto->parent());
   ProtoParticle2MCLinker *& linker = m_chargedProtoLinker[loc];
   if ( !linker )
   {
@@ -885,7 +892,7 @@ ProtoParticle2MCLinker *
 ParticleEffPurMoni::neutralProtoLinker(const LHCb::ProtoParticle * proto) const
 {
   if (!proto) return NULL;
-  const std::string loc = objectLocation(proto->parent());
+  const std::string& loc = objectLocation(proto->parent());
   ProtoParticle2MCLinker *& linker = m_neutralProtoLinker[loc];
   if ( !linker )
   {
