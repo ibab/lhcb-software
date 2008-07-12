@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.26 2008-07-12 12:06:16 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.27 2008-07-12 13:41:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -411,22 +411,30 @@ const LHCb::MCParticle *
 ParticleEffPurMoni::mcParticle_forward( const LHCb::ProtoParticle * proto ) const
 {
   const LHCb::MCParticle * mcP(NULL);
-  // get the appropriate linker
-  ProtoParticle2MCLinker * links = protoLinker(proto);
-  if ( links )
+  if ( proto->track() )
   {
-    // Nastiness to deal with linker interface :(
-    double bestWeight(-999999);
-    const LHCb::MCParticle * tmpMCP(links->firstMCP(proto));
-    while ( NULL != tmpMCP )
+    // For charged tracks use the RICH tool due to probems with ProtoLinkers
+    mcP = truthTool()->mcParticle( proto->track(), minMCWeight(proto) );
+  }
+  else
+  {
+    // get the appropriate linker
+    ProtoParticle2MCLinker * links = protoLinker(proto);
+    if ( links )
     {
-      if ( links->weight() > bestWeight &&
-           links->weight() > minMCWeight(proto) )
+      // Nastiness to deal with linker interface :(
+      double bestWeight(-999999);
+      const LHCb::MCParticle * tmpMCP(links->firstMCP(proto));
+      while ( NULL != tmpMCP )
       {
-        bestWeight = links->weight();
-        mcP = tmpMCP;
+        if ( links->weight() > bestWeight &&
+             links->weight() > minMCWeight(proto) )
+        {
+          bestWeight = links->weight();
+          mcP = tmpMCP;
+        }
+        tmpMCP = links->next();
       }
-      tmpMCP = links->next();
     }
   }
   return mcP;
@@ -625,7 +633,8 @@ void ParticleEffPurMoni::printStats() const
       if ( !m_corProtoMap[iX->first].empty() )
       {
         always() << "  -> Correlated ProtoParticles  : " << m_corProtoMap[iX->first] << endreq;
-        always() << "    -> 'ProtoCorr%' = 100% * (" << shortProtoLoc(iX->first) << "&" << shortProtoLoc(m_corProtoMap[iX->first])
+        always() << "    -> 'ProtoCorr%' = 100% * (" 
+                 << shortProtoLoc(iX->first) << "&&" << shortProtoLoc(m_corProtoMap[iX->first])
                  << ")/" << shortProtoLoc(iX->first) << endreq;
       }
     }
@@ -870,36 +879,27 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
   }
 }
 
-// Access the charged ProtoParticle Linker
 ProtoParticle2MCLinker *
-ParticleEffPurMoni::chargedProtoLinker(const LHCb::ProtoParticle * proto) const
+ParticleEffPurMoni::protoLinker( const LHCb::ProtoParticle * proto ) const
 {
   if (!proto) return NULL;
   const std::string& loc = objectLocation(proto->parent());
-  ProtoParticle2MCLinker *& linker = m_chargedProtoLinker[loc];
+  ProtoParticle2MCLinker *& linker = m_protoLinker[loc];
   if ( !linker )
   {
     linker =
       new ProtoParticle2MCLinker( this,
-                                  Particle2MCMethod::ChargedPP,
+                                  ( 0 != proto->charge() ?
+                                    Particle2MCMethod::ChargedPP : Particle2MCMethod::NeutralPP ),
                                   std::vector<std::string>(1,loc) );
-  }
-  return linker;
-}
-
-// Access the neutral ProtoParticle Linker
-ProtoParticle2MCLinker *
-ParticleEffPurMoni::neutralProtoLinker(const LHCb::ProtoParticle * proto) const
-{
-  if (!proto) return NULL;
-  const std::string& loc = objectLocation(proto->parent());
-  ProtoParticle2MCLinker *& linker = m_neutralProtoLinker[loc];
-  if ( !linker )
-  {
-    linker =
-      new ProtoParticle2MCLinker( this,
-                                  Particle2MCMethod::NeutralPP,
-                                  std::vector<std::string>(1,loc) );
+    /*
+      if ( linker->notFound() )
+      {
+      Warning( "Failed to get MC Linker for '" + loc + "'" );
+      delete linker;
+      linker = NULL;
+      }
+    */
   }
   return linker;
 }
@@ -909,7 +909,8 @@ Particle2MCLinker *
 ParticleEffPurMoni::particleLinker( const LHCb::Particle * /* part */ ) const
 {
   if ( !m_particleLinker )
-  { m_particleLinker =
+  {
+    m_particleLinker =
       new Particle2MCLinker ( this,
                               Particle2MCMethod::Composite,
                               std::vector<std::string>(1,"") );
@@ -926,12 +927,9 @@ StatusCode ParticleEffPurMoni::finalize()
   if ( m_nEvts > 0 ) printStats();
   // cleanup
   if ( m_particleLinker ) { delete m_particleLinker; m_particleLinker = NULL; }
-  for ( ProtoLinkerTESMap::iterator iLC = m_chargedProtoLinker.begin();
-        iLC != m_chargedProtoLinker.end(); ++iLC )
+  for ( ProtoLinkerTESMap::iterator iLC = m_protoLinker.begin();
+        iLC != m_protoLinker.end(); ++iLC )
   { delete iLC->second; iLC->second = NULL; }
-  for ( ProtoLinkerTESMap::iterator iLN = m_neutralProtoLinker.begin();
-        iLN != m_neutralProtoLinker.end(); ++iLN )
-  { delete iLN->second; iLN->second = NULL; }
   // finalize base class
   return DVAlgorithm::finalize();
 }

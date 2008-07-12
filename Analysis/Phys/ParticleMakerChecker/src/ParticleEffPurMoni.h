@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.19 2008-07-11 23:48:32 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.20 2008-07-12 13:41:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -31,6 +31,7 @@
 #include "TrackInterfaces/ITrackSelector.h"
 #include "MCInterfaces/IMCReconstructible.h"
 #include "MCInterfaces/IMCParticleSelector.h"
+#include "MCInterfaces/IRichRecMCTruthTool.h"
 
 // Kernel
 #include "RichKernel/RichPoissonEffFunctor.h"
@@ -402,17 +403,8 @@ private: // methods
   /// Access the Particle Linker appropriate for the given Particle
   Particle2MCLinker * particleLinker( const LHCb::Particle * /* part */ ) const;
 
-  /// Access the charged ProtoParticle Linker
-  ProtoParticle2MCLinker * chargedProtoLinker(const LHCb::ProtoParticle * proto) const;
-
-  /// Access the neutral ProtoParticle Linker
-  ProtoParticle2MCLinker * neutralProtoLinker(const LHCb::ProtoParticle * proto) const;
-
   /// Access the ProtoParticle Linker appropriate for the given ProtoParticle
-  inline ProtoParticle2MCLinker * protoLinker( const LHCb::ProtoParticle * proto ) const
-  {
-    return ( 0 != proto->charge() ? chargedProtoLinker(proto) : neutralProtoLinker(proto) );
-  }
+  ProtoParticle2MCLinker * protoLinker( const LHCb::ProtoParticle * proto ) const;
 
   /// Returns the MCParticle for a given Particle
   const LHCb::MCParticle * mcParticle( const LHCb::Particle * part ) const;
@@ -469,7 +461,21 @@ private: // methods
   /// ProtoParticle short location name
   const std::string & shortProtoLoc( const std::string & loc ) const;
 
+  /// Access on demand the truth tool
+  const Rich::Rec::MC::IMCTruthTool * truthTool() const
+  {
+    if ( !m_truthTool )
+    {
+      m_truthTool = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool", 
+                                                       "RichRecMCTruth" );
+    }
+    return m_truthTool;
+  }
+
 private: // data
+
+  /// MC truth tool
+  mutable const Rich::Rec::MC::IMCTruthTool * m_truthTool;
 
   /// Particle/Proto map
   mutable ParticleProtoMap m_partProtoMap;
@@ -495,11 +501,8 @@ private: // data
   /// TES location -> linker map type
   typedef std::map<std::string,ProtoParticle2MCLinker *> ProtoLinkerTESMap;
 
-  /// MC Associations for charged ProtoParticles
-  mutable ProtoLinkerTESMap m_chargedProtoLinker;
-
-  /// MC Associations for neutral ProtoParticles
-  mutable ProtoLinkerTESMap m_neutralProtoLinker;
+  /// MC Associations for ProtoParticles
+  mutable ProtoLinkerTESMap m_protoLinker;
 
   /// The overall tally
   mutable LocationMap m_locMap;
