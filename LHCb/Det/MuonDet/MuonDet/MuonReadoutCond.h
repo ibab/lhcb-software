@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.6 2006-02-01 19:45:58 marcocle Exp $
+// $Id: MuonReadoutCond.h,v 1.7 2008-07-12 06:15:40 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/02/01 19:45:58  marcocle
+// Removed constructor using ITime
+//
 // Revision 1.5  2005/10/25 06:55:46  asarti
 // New .h classes
 //
@@ -24,6 +27,8 @@
 #include <vector>
 #include "GaudiKernel/DataObject.h"
 #include "DetDesc/Condition.h"
+#include "Kernel/FPEGuard.h"
+#include <cmath>
 
 #include "MuonDet/CLID_MuonReadoutCond.h"
 
@@ -232,6 +237,13 @@ private:
   } _readoutParameter;
 
 private:
+  //protect for FPE check
+  double safe_exponential(double arg){
+     if((arg)<-100.) return 0.0 ;
+     FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
+     return  exp(arg);
+  }
+
   /// used by the copy and update methods
   std::vector<_readoutParameter> getRList() const{
     return m_RList;

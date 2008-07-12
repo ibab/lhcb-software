@@ -1,4 +1,4 @@
-// $Id: MuonReadoutCond.cpp,v 1.9 2006-06-19 09:03:33 cattanem Exp $
+// $Id: MuonReadoutCond.cpp,v 1.10 2008-07-12 06:15:40 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -238,7 +238,8 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
      if( (*padEdgeSigma) > 0.  &&  (*padEdgeSize) < 0.){
       // tested that there _is_ an effect
        double edgeEffect = (*padEdgeSize) *
-        exp( -0.5 * ( xpos*xpos) / ( (*padEdgeSigma)*(*padEdgeSigma) ));
+        safe_exponential( -0.5 * ( xpos*xpos) 
+            / ( (*padEdgeSigma)*(*padEdgeSigma) ));
       local_cumProb[0] += edgeEffect;
       local_cumProb[1] -= edgeEffect;
      }
