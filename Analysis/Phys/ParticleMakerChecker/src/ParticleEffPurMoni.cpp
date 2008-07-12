@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.27 2008-07-12 13:41:24 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.28 2008-07-12 14:52:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -687,14 +687,13 @@ void ParticleEffPurMoni::printStats() const
               std::string mcT = mcTs.str();
               mcT.resize(10+m_maxNameLength,' ');
               const MCTally & protoTally = ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first];
-              const long nBkgTrue = protoTally.all;
               const MCTally & mcTally = (m_rawMCMap[(*iMCT).first])[(*iT).first];
               const long nTotalMC = mcTally.all;
               always() << mcT
                        << "|" << eff( tally.all, (*iSum).second.nReco );
               if ( primaryPart )
               {
-                always() << " | " << eff( tally.all, nBkgTrue )
+                always() << " | " << eff( tally.all, protoTally.all )
                          << " |"  << eff( tally.all-tally.clones, nTotalMC )
                          << " |"  << eff( tally.clones, nTotalMC );
                 // correlations
@@ -704,7 +703,7 @@ void ParticleEffPurMoni::printStats() const
                   const std::string & loc2    = m_corProtoMap[loc1];
                   const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
                   const MCTally & corTally = (m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                  always() << " |" << eff( corTally.all, tally.all );
+                  always() << " |" << eff( corTally.all, protoTally.all );
                 }
               }
               always() << endreq;
@@ -785,7 +784,7 @@ void ParticleEffPurMoni::printStats() const
                       const std::string & loc2    = m_corProtoMap[loc1];
                       const std::string & corname = ( loc1<loc2 ? loc1+"&"+loc2 : loc2+"&"+loc1 );
                       const long moo = ((m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
-                      always() << " |" << eff( moo, (*iC).second );
+                      always() << " |" << eff( moo, nBkgTrue );
                     }
                   }
                   always() << endreq;
