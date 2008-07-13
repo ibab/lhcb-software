@@ -1,5 +1,9 @@
-// $Id: PatDownstream.cpp,v 1.4 2008-06-09 07:54:46 ocallot Exp $
+// $Id: PatDownstream.cpp,v 1.5 2008-07-13 22:05:47 mschille Exp $
 // Include files 
+
+// from boost
+#include <boost/assign/list_of.hpp>
+#include <boost/array.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -30,18 +34,6 @@ PatDownstream::PatDownstream( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  // Define parameters for DC06 field, zState = 9410
-  m_zMagnetParams.push_back(   5372.42 );
-  m_zMagnetParams.push_back(  -3372.25 );
-  m_zMagnetParams.push_back(   370.484 );
-
-  m_momentumParams.push_back( 1226.32 );
-  m_momentumParams.push_back( 479.859 );
-  m_momentumParams.push_back( 2859.75 );  
-
-  m_yParams.push_back(    5. );
-  m_yParams.push_back( 2000. );
-  
   declareProperty( "InputLocation" , m_inputLocation  = ""    );
   declareProperty( "OutputLocation", m_outputLocation = LHCb::TrackLocation::Downstream );
   declareProperty( "UseForward"    , m_useForward     = false );
@@ -57,9 +49,13 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "errorZMagnet"  , m_errZMag       = 30. *  Gaudi::Units::mm );
   declareProperty( "minTTx"        , m_minTTx        = 35. *  Gaudi::Units::mm );
   declareProperty( "minTTy"        , m_minTTy        = 35. *  Gaudi::Units::mm );
-  declareProperty( "zMagnetParams" , m_zMagnetParams  );
-  declareProperty( "momentumParams", m_momentumParams );
-  declareProperty( "yParams"       , m_yParams );
+  // Define parameters for DC06 field, zState = 9410
+  declareProperty( "zMagnetParams" , m_zMagnetParams =
+		  boost::assign::list_of(5372.42)(-3372.25)(370.484) );
+  declareProperty( "momentumParams", m_momentumParams=
+		  boost::assign::list_of(1226.32)(479.859)(2859.75) );
+  declareProperty( "yParams"       , m_yParams       =
+		  boost::assign::list_of(5.)(2000.) );
 
   declareProperty( "zTT"           , m_zTT           = 2485.* Gaudi::Units::mm );
   declareProperty( "zTTa"          , m_zTTa          = 2350.* Gaudi::Units::mm );
@@ -122,6 +118,7 @@ StatusCode PatDownstream::initialize() {
     warning() << "Not enough momentumParams" << endreq;
     return StatusCode::FAILURE;
   }
+
   return StatusCode::SUCCESS;
 };
 
@@ -131,16 +128,16 @@ StatusCode PatDownstream::initialize() {
 StatusCode PatDownstream::execute() {
 
   debug() << "==> Execute" << endmsg;
-  
+
   //== if no specified input location, get seed if it exists, else Tsa.
-  if ( "" == m_inputLocation ) {
+  if ( m_inputLocation.empty() ) {
     if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Seed ) ) {
       m_inputLocation = LHCb::TrackLocation::Seed;
     } else {
       m_inputLocation = LHCb::TrackLocation::Tsa;
     }
   }
-
+  
   ttCoordCleanup();
   //==========================================================================
   // Prepare the tracks, removing the seends already used in Match.
@@ -543,14 +540,13 @@ void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
 //=========================================================================
 void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
 
-  bool again = true;
   PatTTHits::iterator itH;
 
   if ( 2 > track.hits().size() ) return;  // no fit if single point !
   
-  while ( again ) {
+  bool again;
+  do {
     again = false;
-    
     //== Fit, using the magnet point as constraint.
     double s0  = 1./( track.errXMag() * track.errXMag() );
     double sz  = 0.;
@@ -581,7 +577,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       sx   += w * dist;
       sxz  += w * dist * dz;
       sxt  += w * dist * t ;
-      if ( 0 != t ) nbUV++;
+      if ( ! hit->hit()->isX() ) nbUV++;
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
@@ -676,7 +672,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     if ( m_printing ) {
       info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chisq, maxDist, m_maxDistance ) << endreq;
     }    
-  }
+  } while (again);
 }
 
 

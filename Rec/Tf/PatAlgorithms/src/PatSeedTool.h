@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.h,v 1.3 2008-06-04 15:33:48 mschille Exp $
+// $Id: PatSeedTool.h,v 1.4 2008-07-13 22:05:48 mschille Exp $
 #ifndef PATSEEDTOOL_H
 #define PATSEEDTOOL_H 1
 
@@ -14,18 +14,19 @@
 static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
 
 
-  /** @class PatSeedTool PatSeedTool.h
-   *  Tool to fit the PatSeeding tracks
-   *
-   *  @author Olivier Callot
-   *  @date   2006-10-23 Initial version
-   *  @date   2007-08-20 Update for a-team framework 
-   *  @date   2008-06-04 protect against tracks with too few hits to solve
-   *          for fit parameters (i.e. protect against solving a linear system
-   *          represented by a singular matrix)
-   */
+/** @class PatSeedTool PatSeedTool.h
+ *  Tool to fit the PatSeeding tracks
+ *
+ *  @author Olivier Callot
+ *  @date   2006-10-23 Initial version
+ *  @date   2007-08-20 Update for a-team framework 
+ *  @date   2008-06-04 protect against tracks with too few hits to solve
+ *          for fit parameters (i.e. protect against solving a linear system
+ *          represented by a singular matrix)
+ *  @date   2008-07-11 protect against singular matrix, 2nd part
+ */
 
-  class PatSeedTool : public GaudiTool {
+class PatSeedTool : public GaudiTool {
   public:
 
     // Return the interface ID
@@ -33,8 +34,8 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
 
     /// Standard constructor
     PatSeedTool( const std::string& type,
-                 const std::string& name,
-                 const IInterface* parent);
+	const std::string& name,
+	const IInterface* parent);
 
     virtual ~PatSeedTool( ); ///< Destructor
 
@@ -46,7 +47,8 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
      * @param forceDebug force printing debugging information
      * @return false if fit failed to satisfy criteria given by arguments, true otherwise
      */
-    bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes, bool xOnly, bool forceDebug ) const;
+    bool fitTrack( PatSeedTrack& track, double maxChi2, int minPlanes,
+	bool xOnly, bool forceDebug ) const;
 
   protected:
 
@@ -60,18 +62,23 @@ static const InterfaceID IID_PatSeedTool ( "PatSeedTool", 1, 0 );
     bool fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug ) const;
 
     /// helper for debugging output
-    void printTCoord( MsgStream& msg,
-	const PatSeedTrack& track, const PatFwdHit* hit ) const
-    {
-      double dist = track.distance( hit );
-      double chi2 = dist*dist* hit->hit()->weight();
-      msg << "  Hit st " << hit->hit()->station() << " lay " << hit->hit()->layer()
-          << " region " << hit->hit()->region()
-          << format( " code%3d z %7.1f distWire%7.2f drift%5.2f dist%8.3f rl%2d Chi2 %8.3f",
-                     hit->planeCode(), hit->z(), hit->x() - track.xAtZ( hit->z() ),
-                     hit->driftDistance(), dist, hit->rlAmb(), chi2 );
-    }
+    inline void printTCoord( MsgStream& msg,
+	const PatSeedTrack& track, const PatFwdHit* hit ) const;
   private:
-  };
+};
+
+
+void PatSeedTool::printTCoord( MsgStream& msg,
+    const PatSeedTrack& track, const PatFwdHit* hit ) const
+{
+  double dist = track.distance( hit );
+  double chi2 = dist*dist* hit->hit()->weight();
+  msg << "  Hit st " << hit->hit()->station() << " lay " << hit->hit()->layer()
+    << " region " << hit->hit()->region()
+    << format( " code%3d z %7.1f distWire%7.2f drift%5.2f dist%8.3f rl%2d Chi2 %8.3f",
+	hit->planeCode(), hit->z(), hit->x() - track.xAtZ( hit->z() ),
+	hit->driftDistance(), dist, hit->rlAmb(), chi2 );
+}
 
 #endif // PATSEEDTOOL_H
+// vim:shiftwidth=2:tw=78

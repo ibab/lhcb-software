@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.17 2008-07-03 00:03:58 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.18 2008-07-13 22:05:48 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -13,8 +13,10 @@
 #include "OTDet/DeOTDetector.h"
 // from TrackEvent
 #include "Event/StateParameters.h"
+// from boost
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
+#include <boost/foreach.hpp>
 // local
 #include "PatSeedingTool.h"
 #include "PatFwdFitLine.h"
@@ -239,9 +241,7 @@ unsigned PatSeedingTool::prepareHits()
   const double driftRadLow = m_driftRadiusRange[0];
   const double driftRadHigh = m_driftRadiusRange[1];
   HitRange range = hits();
-  for (HitRange::const_iterator itH = range.begin();
-      range.end() != itH; ++itH ) {
-    PatFwdHit* hit = *itH;
+  BOOST_FOREACH( PatFwdHit* hit, range ) {
     hit->setSelected( true );
     hit->setIgnored( false );
     if ( m_useForward )
@@ -296,9 +296,9 @@ unsigned PatSeedingTool::prepareHits()
       for (unsigned sta = 0; sta < m_nSta; ++sta) {
 	for (unsigned lay = 0; lay < m_nLay; ++lay) {
 	  HitRange range = hits(sta, lay, reg);
-	  for (itH = range.begin(); range.end() != itH; ++itH ) {
-	    if ( ! (*itH)->isUsed() ) continue;
-	    debugFwdHit( *itH, verbose() );
+	  BOOST_FOREACH( const PatFwdHit* hit, range ) {
+	    if ( ! hit->isUsed() ) continue;
+	    debugFwdHit( hit, verbose() );
 	  }
 	}
       }
@@ -313,38 +313,34 @@ unsigned PatSeedingTool::prepareHits()
 void PatSeedingTool::killClonesAndStore(
 		std::vector<PatSeedTrack*>& finalSelection,
 		std::vector<LHCb::Track*>& outputTracks,
-		double maxUsedFraction)
+		double maxUsedFraction) const
 {
   // make sure there's space in the output
   outputTracks.reserve(outputTracks.size() + finalSelection.size());
   //== Sort tracks according to their chi2
-  m_printing = msgLevel( MSG::DEBUG );
   if ( finalSelection.size() > 1 )
     std::sort( finalSelection.begin(), finalSelection.end(),
 		    PatSeedTrack::decreasingQuality() );
 
+  bool debug = msgLevel( MSG::DEBUG );
   //== Keep only those with less than maxUsedFraction used clusters
-  std::vector<PatSeedTrack*>::iterator itSP;
-  for ( itSP = finalSelection.begin(); finalSelection.end() != itSP; ++itSP ) {
-    PatSeedTrack& track = *(*itSP);
+  BOOST_FOREACH( const PatSeedTrack* track, finalSelection) {
     // this is a funny way to implement the cut on the fraction of used
     // hits, but the advantage is that we stop counting early, if the
     // track does not pass the cut
-    int maxUsed = int(std::ceil(maxUsedFraction * track.nCoords()));
-    PatFwdHits::const_iterator itH;
-    for (itH = track.coordBegin(); track.coordEnd() != itH; ++itH)
-      if ((*itH)->isUsed())
-	if (0 > --maxUsed) break;
+    int maxUsed = int(std::ceil(maxUsedFraction * track->nCoords()));
+    BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
+      if (hit->isUsed() && (0 > --maxUsed)) break;
     if ( 0 > maxUsed ) continue;
 
-    if ( m_printing ) {
-      info() << "** Store track, estimated P " << 1./( .038e6 * track.curvature() )
-	<< " nCoord " << track.nCoords() << " chi2 " << track.chi2() << endreq;
-      for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-	debugFwdHit( *itH, info() );
-      }
+    if ( debug ) {
+      const double p = 1. / (m_momentumScale * track->curvature());
+      info() << "** Store track, estimated P " << p << " nCoord "
+	<< track->nCoords() << " chi2 " << track->chi2() << endreq;
+      BOOST_FOREACH( const PatFwdHit* hit, track->coords() )
+	debugFwdHit( hit, info() );
     }
-    storeTrack( track, outputTracks );
+    storeTrack( *track, outputTracks );
   }
 }
 
@@ -470,7 +466,7 @@ void PatSeedingTool::collectPerRegion(
       // region to another)
       // regmask encodes if the second and third hit used in findXCandidates
       // are to be searched in the same or a different OT region
-      for ( unsigned regmask = 0; regmask < (m_cosmics?4:1); ++regmask) {
+      for ( unsigned regmask = m_cosmics?4:1; regmask--; ) {
 	// in the OT, we only do two combinations
 	if (isRegionOT(reg) && 2 <= nlay) break;
 	pool.clear();
@@ -493,8 +489,7 @@ void PatSeedingTool::collectPerRegion(
 	lowQualTracks.reserve(lowQualTracks.size() + pool.size());
 	finalSelection.clear();
 	finalSelection.reserve(pool.size());
-	for ( itS = pool.begin(); pool.end() != itS; ++itS ) {
-	  PatSeedTrack& track = *itS;
+	BOOST_FOREACH( PatSeedTrack& track, pool ) {
 	  // skip tracks for which x part is already invalid
 	  if ( !track.valid() ) continue;
 	  // unless y turns out to be ok, default to not valid
@@ -503,12 +498,17 @@ void PatSeedingTool::collectPerRegion(
 	  m_printing = msgLevel( MSG::DEBUG );
 
 	  if ( m_printing ) {
-	    info() << "--- X candidate "
-	      << itS - pool.begin()
-	      << endreq;
-	    for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-	      info() << format( "dist %7.3f ", track.distance( *itH ) );
-	      debugFwdHit( *itH, info() );
+	    // if we're debugging, we can be slow in determining where
+	    // othertrack is in pool
+	    int nTrack = 0;
+	    BOOST_FOREACH( const PatSeedTrack& tmp, pool ) {
+	      if (&tmp == &track) break;
+	      ++nTrack;
+	    }
+	    info() << "--- X candidate " << nTrack << endreq;
+	    BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
+	      info() << format( "dist %7.3f ", track.distance( hit ) );
+	      debugFwdHit( hit, info() );
 	    }
 	  }
 
@@ -519,9 +519,9 @@ void PatSeedingTool::collectPerRegion(
 
 	  if ( m_printing ) {
 	    info() << "--- Initial list of stereo hits " << endreq;
-	    for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-	      if ( (*itH)->isIgnored() ) continue;
-	      debugFwdHit( *itH, info() );
+	    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+	      if ( hit->isIgnored() ) continue;
+	      debugFwdHit( hit, info() );
 	    }
 	  }
 	  if ( stereo.size() < unsigned(minNbPlanes) )  continue;
@@ -534,9 +534,9 @@ void PatSeedingTool::collectPerRegion(
 
 	  if ( m_printing ) {
 	    info() << "--- After filtering of stereo hits " << endreq;
-	    for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-	      if ( (*itH)->isIgnored() ) continue;
-	      debugFwdHit( *itH, info() );
+	    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+	      if ( hit->isIgnored() ) continue;
+	      debugFwdHit( hit, info() );
 	    }
 	  }
 
@@ -577,10 +577,10 @@ void PatSeedingTool::collectPerRegion(
 
 	  if ( m_printing ) {
 	    info() << "Fitted line y0 " << y0 << " sl " << sl << endreq;
-	    for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-	      if ( (*itH)->isIgnored() ) continue;
-	      info() << format( "dist %7.3f ",  (*itH)->projection() - y0 - (*itH)->z() * sl );
-	      debugFwdHit( *itH, info() );
+	    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+	      if ( hit->isIgnored() ) continue;
+	      info() << format( "dist %7.3f ",  hit->projection() - y0 - hit->z() * sl );
+	      debugFwdHit( hit, info() );
 	    }
 	  }
 	  //== Check for enough OT if not near boundary
@@ -603,9 +603,22 @@ void PatSeedingTool::collectPerRegion(
 	    }
 	  }
 
-	  for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-	    if ( (*itH)->isIgnored() ) continue;
-	    track.addCoord( *itH );
+	  BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+	    if ( hit->isIgnored() ) continue;
+	    track.addCoord( hit );
+	  }
+	  
+	  if (m_cosmics) {
+	    // for cosmics, we were more permissive when collecting hits
+	    // as we may have picked up some way off in y, discard them now
+	    // (track parameters in y are known by now)
+	    for (PatFwdHits::iterator itH = track.coordBegin();
+		track.coordEnd() != itH; ++itH) {
+	      const double yMin = (*itH)->hit()->yMin() - m_maxRangeOT;
+	      const double yMax = (*itH)->hit()->yMax() + m_maxRangeOT;
+	      const double yHit = y0 + sl * (*itH)->z();
+	      if ( yHit < yMin || yHit > yMax) track.removeCoord(itH);;
+	    }
 	  }
 
 	  if ( isRegionOT(reg) &&
@@ -630,9 +643,8 @@ void PatSeedingTool::collectPerRegion(
 	    if ( m_printing ) {
 	      info()  << "Too many on side " << track.nbOnSide() << " with only "
 		<< track.nCoords() << " coordinates" << endreq;
-	      for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-		debugFwdHit( *itH, info() );
-	      }
+	      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+		debugFwdHit( hit, info() );
 	    }
 	    continue;
 	  }
@@ -645,7 +657,7 @@ void PatSeedingTool::collectPerRegion(
 	  // if a track makes it to this point, it's valid
 	  track.setValid( true );
 	  finalSelection.push_back(&track);
-	}
+	} // end loop over pool
 	if ( m_measureTime ) m_timer->stop( m_timeStereo );
 
 	//== Keep only best with >50% unused clusters (in the current pass...)
@@ -788,9 +800,14 @@ void PatSeedingTool::collectITOT(
                 info() << "     hit sta " << sta << " lay 2 x = " << hit2->x() << endreq;
 
 	      // ok, we have a seed
-              PatSeedTrack track( hit0, hit1, hit2, hit3, m_zReference, m_dRatio, m_initialArrow );
+              pool.push_back(
+		  PatSeedTrack( hit0, hit1, hit2, hit3,
+		    m_zReference, m_dRatio, m_initialArrow ) );
+	      PatSeedTrack& track = pool.back();
               if ( 3 > track.nbHighThreshold() ) {
                 if ( m_printing ) info() << "   less than 3 with high threshold" << endreq;
+		// unfortunately not good enough, so pop it off again
+		pool.pop_back();
                 continue;
               }
 
@@ -800,12 +817,10 @@ void PatSeedingTool::collectITOT(
 	      addNeighbour(track, hit2, itH2, rangeH2);
 	      addNeighbour(track, hit3, itH3, rangeH3);
 
-              pool.push_back( track );
               if ( m_printing ) {
                 info() << "--- IT point -- " << endreq;
-                for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-                  debugFwdHit( *itH, info() );
-                }
+		BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+                  debugFwdHit( hit, info() );
               }
             }
           }
@@ -933,9 +948,8 @@ void PatSeedingTool::collectITOT(
       if ( m_printing ) {
         info() << " --- We have found " << nbSta << " stations, fitOK " <<
 		fitOK << "." << endreq;
-        for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-          debugFwdHit( *itH, info() );
-        }
+	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+          debugFwdHit( hit, info() );
       }
 
       if ( m_fieldOff ) {
@@ -1079,9 +1093,8 @@ void PatSeedingTool::collectLowQualTracks(
       if ( m_printing ) {
         info()  << "Too many on side " << track.nbOnSide() << " with only "
 		<< track.nCoords() << " coordinates" << endreq;
-	for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-          debugFwdHit( *itH, info() );
-	}
+	BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+          debugFwdHit( hit, info() );
       }
       continue;
     }
@@ -1103,8 +1116,8 @@ void PatSeedingTool::collectLowQualTracks(
 //=========================================================================
 // Store the track in the final container
 //=========================================================================
-void PatSeedingTool::storeTrack ( PatSeedTrack& track,
-		std::vector<LHCb::Track*>& outputTracks)
+void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
+		std::vector<LHCb::Track*>& outputTracks ) const
 {
   LHCb::Track* out = new LHCb::Track();
   out->setType( LHCb::Track::Ttrack );
@@ -1112,24 +1125,24 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track,
   out->setPatRecStatus( LHCb::Track::PatRecIDs );
 
   debug() << "==== Storing track " << outputTracks.size() << endreq;
-  for ( PatFwdHits::iterator itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-    out->addToLhcbIDs( (*itH)->hit()->lhcbID() );
+  BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
+    out->addToLhcbIDs( hit->hit()->lhcbID() );
     //== Tag used coordinates
-    (*itH)->hit()->setStatus(Tf::HitBase::UsedByPatSeeding);
-    (*itH)->setIsUsed(true);
-    if ( msgLevel( MSG::DEBUG ) ) debugFwdHit( *itH, debug() );
+    hit->hit()->setStatus(Tf::HitBase::UsedByPatSeeding);
+    hit->setIsUsed(true);
   }
+  if ( msgLevel( MSG::DEBUG ) )
+    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+      debugFwdHit( hit, debug() );
 
   // get momentum estimate from track using the momentum estimation tool
-  double z = m_zReference;
-  LHCb::State temp(Gaudi::TrackVector(
-			  track.xAtZ(z), track.yAtZ(z),
-			  track.xSlope(z), track.ySlope(z), 0.),
-		  z, LHCb::State::AtT);
+  LHCb::State temp(
+      Gaudi::TrackVector(track.xAtZ(m_zReference), track.yAtZ(m_zReference),
+	track.xSlope(m_zReference), track.ySlope(m_zReference), 0.),
+      m_zReference, LHCb::State::AtT);
   double qOverP, sigmaQOverP;
-  StatusCode sc = m_fastMomentumTool->calculate(&temp,
-      qOverP, sigmaQOverP, true);
-  if (sc.isFailure()) {
+  if (m_fastMomentumTool->calculate(&temp, qOverP,
+	sigmaQOverP, true).isFailure()) {
     // two reasons for this - 1. never leave a StatusCode unchecked
     // 2. if we ever get a failure here, we can still revert to calculating
     // q/p from curvature
@@ -1145,14 +1158,13 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track,
   cov(3,3) = m_stateErrorTY2;
   cov(4,4) = sigmaQOverP * sigmaQOverP;
 
-  for ( unsigned i = 0; i < m_zOutputs.size(); ++i ) {
-	  z = m_zOutputs[i];
-	  temp.setX(track.xAtZ(z));
-	  temp.setY(track.yAtZ(z));
-	  temp.setZ(z);
-	  temp.setTx(track.xSlope(z));
-	  temp.setTy(track.ySlope(z));
-	  out->addToStates( temp );
+  BOOST_FOREACH( const double z, m_zOutputs ) {
+    temp.setX(track.xAtZ(z));
+    temp.setY(track.yAtZ(z));
+    temp.setZ(z);
+    temp.setTx(track.xSlope(z));
+    temp.setTy(track.ySlope(z));
+    out->addToStates( temp );
   }
 
   outputTracks.push_back( out );
@@ -1160,7 +1172,8 @@ void PatSeedingTool::storeTrack ( PatSeedTrack& track,
 //=========================================================================
 //  Debug one coordinate
 //=========================================================================
-void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) {
+void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) const
+{
   msg << format( " Z %10.2f Xp %10.2f X%10.2f  St%2d lay%2d typ%2d used%2d",
                  coord->z(),
                  coord->projection(),
@@ -1191,44 +1204,39 @@ void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) {
 //  add the new track to the vector, if better, this means longer than
 //  any other track sharing >70% of hits
 //=========================================================================
-bool PatSeedingTool::addIfBetter (
-   PatSeedTrack& track,
-   std::vector<PatSeedTrack>& pool)
+void PatSeedingTool::addIfBetter (PatSeedTrack& track,
+   std::vector<PatSeedTrack>& pool) const
 {
   // this routine assumes that z0() is the same for all tracks
   const double xTrack = track.xAtZEqZ0();
 
   bool printing = msgLevel ( MSG::VERBOSE );
-  bool stored = false;
   
   if ( printing ) {
     info() << ".. Compare new track:" << endreq;
-    for ( PatFwdHits::const_iterator itH = track.coordBegin();
-	track.coordEnd() != itH; ++itH ) {
-      debugFwdHit( *itH, info() );
-    }
+    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+      debugFwdHit( hit, info() );
   }
 
   // points to invalid entry which we can replace instead of making the
-  // vector bigger; is pool.end() if no invalid entry found
-  std::vector<PatSeedTrack>::iterator itLastInvalid = pool.end();
-  for ( std::vector<PatSeedTrack>::iterator itT = pool.begin();
-        pool.end() != itT; ++itT ) {
-    if ( !(*itT).valid() ) {
-      itLastInvalid = itT;
+  // vector bigger; is 0 if no invalid entry found
+  PatSeedTrack* lastInvalidTrack = 0;
+  bool stored = false;
+  BOOST_FOREACH( PatSeedTrack& othertrack, pool ) {
+    if ( !othertrack.valid() ) {
+      lastInvalidTrack = &othertrack;
       continue;
     }
     //== compare the list of hits only if not too far...
-    if ( m_cloneMaxXDist < fabs( itT->xAtZEqZ0() - xTrack ) ) continue;
+    if ( m_cloneMaxXDist < fabs( othertrack.xAtZEqZ0() - xTrack ) ) continue;
 
     // this is a funny way to check if there are too many common hits,
     // but we can stop early if this is the case
     int nCommonMax = int(std::ceil(m_commonXFraction *
-			    std::min(itT->nCoords(), track.nCoords())));
-    for ( PatFwdHits::const_iterator itH1 = itT->coordBegin();
-          itT->coordEnd() != itH1; ++itH1 ) {
+			    std::min(othertrack.nCoords(), track.nCoords())));
+    BOOST_FOREACH( const PatFwdHit* hit1, othertrack.coords() ) {
       if ( track.coordEnd() !=
-          std::find(track.coordBegin(), track.coordEnd(), *itH1) )
+          std::find(track.coordBegin(), track.coordEnd(), hit1) )
 	if (0 > --nCommonMax) break;
     }
 
@@ -1236,28 +1244,33 @@ bool PatSeedingTool::addIfBetter (
     //== enough common in stored track: Keep the best (longest / best chi2)
     if ( printing ) {
       int nCommonMax = int(std::ceil(m_commonXFraction *
-	    std::min(itT->nCoords(), track.nCoords())));
-      info() << "Track " << itT - pool.begin() << " size " <<  (*itT).nCoords()
-	<< " chi2 " << (*itT).chi2() << " has <= " << nCommonMax
+	    std::min(othertrack.nCoords(), track.nCoords())));
+      // if we're debugging, we can be slow in determining where othertrack
+      // is in pool
+      int nTrack = 0;
+      BOOST_FOREACH( const PatSeedTrack& tmp, pool ) {
+	if (&tmp == &othertrack) break;
+	++nTrack;
+      }
+      info() << "Track " << nTrack << " size " <<  othertrack.nCoords()
+	<< " chi2 " << othertrack.chi2() << " has <= " << nCommonMax
 	<< " hit shared with current track of size " << track.nCoords()
 	<< " chi2 " << track.chi2() << endreq;
-      for ( PatFwdHits::const_iterator itH1 = (*itT).coordBegin();
-	  (*itT).coordEnd() != itH1; ++itH1 ) {
-	debugFwdHit( *itH1, info() );
-      }
+      BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+	      debugFwdHit( hit, info() );
     }
     double qual1 = 0., qual2 = 0.;
-    if (m_qualityWeights[0] != 0.) {
+    if (0. != m_qualityWeights[0]) {
       qual1 += m_qualityWeights[0] * double(track.nCoords());
-      qual2 += m_qualityWeights[0] * double((*itT).nCoords());
+      qual2 += m_qualityWeights[0] * double(othertrack.nCoords());
     }
-    if (m_qualityWeights[1] != 0.) {
-      qual1 += m_qualityWeights[1] * double(track.chi2());
-      qual2 += m_qualityWeights[1] * double((*itT).chi2());
+    if (0. != m_qualityWeights[1]) {
+      qual1 += m_qualityWeights[1] * track.chi2();
+      qual2 += m_qualityWeights[1] * othertrack.chi2();
     }
     if ( qual1 < qual2 ) {
       if ( printing ) info() << "  new is shorter / higher chi2 -> ignore new" << endreq;
-      return false;
+      return;
     }
     // reuse an entry instead of erasing the old and allocating a new one,
     // if there's more than one to be erased, flag it invalid instead of
@@ -1265,22 +1278,28 @@ bool PatSeedingTool::addIfBetter (
     // to close the resulting gap...
     if ( !stored ) {
       if ( printing ) info() << "  replacing old" << endreq;
-      *itT = track;
+      othertrack = track;
       stored = true;
     } else {
       if ( printing ) info() << "  invalidating old" << endreq;
-      (*itT).setValid(false);
+      othertrack.setValid(false);
+      lastInvalidTrack = &othertrack;
     }
-  }
+  } // end of loop over pool
   if ( !stored ) {
     if ( printing ) info() << "  Store new one" << endreq;
     // if we can reuse an invalid entry, we do so
-    if (pool.end() != itLastInvalid)
-      *itLastInvalid = track;
+    if (0 != lastInvalidTrack)
+      *lastInvalidTrack = track;
     else
       pool.push_back( track );
   }
-  return true;
+  if ( m_printing ) {
+    info() << " ****** stored track " << endreq;
+    BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
+      debugFwdHit( hit, info() );
+  }
+  return;
 }
 
 //----------------------------------------------------------------------
@@ -1354,18 +1373,18 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 
   // decode layer bit mask to determine which layer to use in which station
   // to form the initial parabola
-  unsigned lay0 = (lay & 1)?3:0, lay1 = (lay & 2)?3:0, lay2 = (lay & 4)?3:0;
+  const unsigned lay0 = (lay&1)?3:0, lay1 = (lay&2)?3:0, lay2 = (lay&4)?3:0;
   // if we should reconstruct cosmics, we can no longer rely on the fact that
   // very few tracks migrate between regions
   // thus, we "decode" reg in a way similar to what is done for layers above
   // (only in the cosmic case)
-  unsigned reg0 = reg & 0x07;
-  unsigned reg1 = ((m_cosmics && (reg & 0x08))?(reg0 ^ 1):reg0);
-  unsigned reg2 = ((m_cosmics && (reg & 0x10))?(reg0 ^ 1):reg0);
+  const unsigned reg0 = reg & 0x07;
+  const unsigned reg1 = ((m_cosmics && (reg & 0x08))?(reg0 ^ 1):reg0);
+  const unsigned reg2 = ((m_cosmics && (reg & 0x10))?(reg0 ^ 1):reg0);
   
-  double zScaling  = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
+  const double zScaling  = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
     ( regionZ0(0,lay0,reg0) - m_zMagnet );
-  double zScaling2 = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
+  const double zScaling2 = ( regionZ0(2,lay2,reg0) - regionZ0(0,lay0,reg0) ) /
     regionZ0(0,lay0,reg0);
 
   bool matchIn0 = false;
@@ -1526,8 +1545,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	      HitRange rangeX2 = hitsWithMinX( xPredMin - 2.0 * m_tolCollect,
 		  sta, olay, regc );
 	      int found = 0;
-	      for ( itH = rangeX2.begin(); rangeX2.end() != itH; ++itH ) {
-		PatFwdHit* hit = *itH;
+	      BOOST_FOREACH( PatFwdHit* hit, rangeX2 ) {
 		if ( xPredMax + 2.0 * m_tolCollect < hit->hit()->xAtYEq0() )
 		  break;
 		if ( hit->isUsed() ) continue;
@@ -1561,7 +1579,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	    }
 	    if ( m_maxMisses < nbMissed ) break;
 	  }
-	  if (m_maxMisses < nbMissed) break;
+	  if ( m_maxMisses < nbMissed ) break;
 	}
 	if ( m_maxMisses < nbMissed ) continue;
 
@@ -1618,23 +1636,13 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	if (0 != state && fabs(track.xSlope(z1) - state->tx()) >
 			std::sqrt(state->errTx2()))
 		continue;
-        bool ok = addIfBetter( track, pool );
-        if ( ok ) {
-          if ( m_printing ) {
-            info() << " ****** stored N= " << pool.size() -1 << endreq;
-            for ( itH = track.coordBegin(); track.coordEnd() != itH; ++itH ) {
-              debugFwdHit( *itH, info() );
-            }
-          }
-        }
+        addIfBetter( track, pool );
       }
     }
   }
 
   //== Final refit, as track may have been modified...
-  for( std::vector<PatSeedTrack>::iterator itT = pool.begin();
-       pool.end() != itT; ++itT ) {
-    PatSeedTrack& track = *itT;
+  BOOST_FOREACH( PatSeedTrack& track, pool ) {
     if (!track.valid()) continue;
 
     track.sort();
@@ -1725,8 +1733,7 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
 	  std::fill(nDense.begin(), nDense.end(), 0);
 
 	HitRange rangeW = hitsWithMinX( xMin, sta, sLay, testRegion);
-	for ( itH = rangeW.begin(); rangeW.end() != itH; ++itH ) {
-	  PatFwdHit* hit = *itH;
+	BOOST_FOREACH( PatFwdHit* hit, rangeW ) {
           if ( xMax < hit->hit()->xAtYEq0() ) break;
 	  if ( hit->isUsed() ) continue;
           if ( xMin > hit->hit()->xAtYEq0() ) continue;
@@ -1895,11 +1902,13 @@ bool PatSeedingTool::findBestRangeCosmics(
   PatFwdHits best, current;
   for (PatFwdHits::const_iterator it = stereo.begin();
       stereo.end() != it; ++it) {
+    const PatFwdHit *h1 = *it;
     for (PatFwdHits::const_iterator jt = it + 1;
 	stereo.end() != jt; ++jt) {
-      const PatFwdHit *h1 = *it, *h2 = *jt;
-      // only consider pairs of hits from different stations
+      const PatFwdHit *h2 = *jt;
+      // only consider pairs of hits from same region, but different stations
       // (to make sure we have sufficient lever arm)
+      if (h1->hit()->region() != h2->hit()->region()) continue;
       if (h1->hit()->station() == h2->hit()->station()) continue;
       // for each pair of hits, work out slope and intercept
       const double z1 = h1->z();
@@ -1915,11 +1924,10 @@ bool PatSeedingTool::findBestRangeCosmics(
       // now, collect hits around predicted position in projection plane
       current.clear();
       current.reserve(stereo.size());
-      for (PatFwdHits::const_iterator kt = stereo.begin();
-	  stereo.end() != kt; ++kt) {
-	if (fabs((*kt)->projection() - y0 / (*kt)->z() - ty) > maxRangeSize)
+      BOOST_FOREACH( PatFwdHit* hit, stereo ) {
+	if (fabs(hit->projection() - y0 / hit->z() - ty) > maxRangeSize)
 	  continue;
-	current.push_back(*kt);
+	current.push_back(hit);
       }
 
       // count number of hits - more hits win (fast check first)
@@ -1941,11 +1949,10 @@ bool PatSeedingTool::findBestRangeCosmics(
 //=========================================================================
 //  Fit a line in Y projection, returns the parameters.
 //=========================================================================
-bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
+bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) const
 {
-  double maxYDist = 20. * m_tolCollect;
+  const double maxYDist = 20. * m_tolCollect;
 
-  PatFwdHits::iterator itH;
   // we use builtin arrays here because we know how big they need to be,
   // and we do not want the additional cost of allocating memory dynamically
   // for std::vector
@@ -1954,23 +1961,21 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
   double slopeguess = 0.;
   int npoints = 0;
 
-  for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-    PatFwdHit* hit = *itH;
+  BOOST_FOREACH( PatFwdHit* hit, stereo ) {
     if ( hit->isIgnored() ) continue;
-    // go from prejection plane to y of hit
-    hit->setProjection( hit->projection() * hit->z() / m_zForYMatch );
-    if (hit->hit()->type() == Tf::RegionID::OT ) {
-      hit->setRlAmb( 0 );
-      int sta = hit->hit()->station();
-      if ( largestDrift[sta] < hit->driftDistance() ) {
-        largestDrift[sta] =  hit->driftDistance();
-        seeds[sta] = hit;
-      }
-    }
     // calculate average slope as first guess for IT or OT without
     // or very small drift times
-    slopeguess += hit->projection() / hit->z();
-    ++npoints;
+    slopeguess += hit->projection(); ++npoints;
+    // go from prejection plane to y of hit
+    hit->setProjection( hit->projection() * hit->z() / m_zForYMatch );
+
+    if (hit->hit()->type() != Tf::RegionID::OT ) continue;
+    hit->setRlAmb( 0 );
+    const int sta = hit->hit()->station();
+    if ( largestDrift[sta] < hit->driftDistance() ) {
+      largestDrift[sta] =  hit->driftDistance();
+      seeds[sta] = hit;
+    }
   }
   slopeguess /= double(npoints);
 
@@ -1988,10 +1993,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
     seeds[2] = seeds[1];
   }
 
-  double minChi2 = 1e42;
-  int bestMask = 0;
-  double bestSl = slopeguess;
-  double bestY0 = 0.;
+  double bestY0 = 0., bestSl = slopeguess;
   if ( 0.1 < largestDrift[0] && 0.1 < largestDrift[2] ) {
     // try all four combinations to resolve ambiguity for seeds[0]. seeds[2]
     // and take best, fix those ambiguities
@@ -2006,34 +2008,36 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
       info() << format( "  2: z %8.2f y %7.2f d %7.2f", z2, x2, d2 ) << endreq;
     }
 
-    for ( int mask = 0; 4 > mask; ++mask ) {
-      int sign0 = 2*(mask&1)-1;
-      int sign2 = 2*((mask>>1)&1) -1;
+    double minChi2 = 1e42;
+    for ( int mask = 4; mask--; ) {
+      int sign0 = ((mask << 1) & 2) - 1;
+      int sign2 = (mask & 2) - 1;
       double locY0 = x0 + sign0 * d0;
       double locY2 = x2 + sign2 * d2;
       sl = (locY2 - locY0) / (z2 - z0);
       y0 = locY0 - sl * z0;
       double chi2 = 0.;
-      for ( PatFwdHits::iterator itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-        if ( (*itH)->isIgnored() ) continue;
-	double y = (*itH)->projection();
-        double dist = y - y0 - (*itH)->z() * sl;
-        double drift = (*itH)->driftDistance() / (*itH)->hit()->dxDy();
+      BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+        if ( hit->isIgnored() ) continue;
+	double y = hit->projection();
+        double dist = y - y0 - hit->z() * sl;
+        double drift = hit->driftDistance() / hit->hit()->dxDy();
 	// resolve ambiguity towards line defined by y0, sl
-        dist = std::min(fabs(dist-drift), fabs(dist+drift));
+        dist = std::min(fabs(dist - drift), fabs(dist + drift));
         if ( m_printing ) info() << format( "    z%8.2f proj%8.2f drift%8.2f dist%8.2f",
-                                            (*itH)->z(), (*itH)->projection(), drift, dist ) << endreq;
+                                            hit->z(), hit->projection(), drift, dist ) << endreq;
         chi2 += dist * dist;
       }
       if ( m_printing ) info() << format( "-- y fit: mask%2d y0 %8.2f sl%10.6f chi2 %12.2f",
                                           mask, y0, sl, chi2 ) << endreq;
       if ( chi2 < minChi2 ) {
+	// current mask is best combination so far, save parameters and fix
+	// ambiguities
         minChi2 = chi2;
-        bestMask = mask;
         bestSl = sl;
         bestY0 = y0;
-        seeds[0]->setRlAmb( 2*(bestMask&1)-1 );
-        seeds[2]->setRlAmb( 2*((bestMask>>1)&1) -1 );
+        seeds[0]->setRlAmb( sign0 );
+        seeds[2]->setRlAmb( sign2 );
       }
     }
   }
@@ -2044,15 +2048,15 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
     // bias the fit: add a point at y = z = 0, sigma = 200 mm
     PatFwdFitLine line( 0., 0., 0.25e-4 );
     int nOK = 0;
-    for ( itH = stereo.begin(); stereo.end() != itH; ++itH ) {
-      if ( (*itH)->isIgnored() ) continue;
-      double proj = (*itH)->projection();
-      double dist = proj - y0 - (*itH)->z() * sl;
-      double drift = (*itH)->driftDistance() / (*itH)->hit()->dxDy();
+    BOOST_FOREACH( const PatFwdHit* hit, stereo ) {
+      if ( hit->isIgnored() ) continue;
+      double proj = hit->projection();
+      double dist = proj - y0 - hit->z() * sl;
+      double drift = hit->driftDistance() / hit->hit()->dxDy();
       // resolve ambiguity towards old fit parameters
-      proj += (fabs(dist-drift) < fabs(dist+drift))?(-drift):(drift);
-      line.addPoint( (*itH)->z(), proj, (*itH)->hit()->weight() );
-      nOK++;
+      proj += (fabs(dist - drift) < fabs(dist + drift))?(-drift):(drift);
+      line.addPoint( hit->z(), proj, hit->hit()->weight() );
+      ++nOK;
     }
     if ( 4 > nOK ) return false;
     line.solve();
@@ -2060,12 +2064,13 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl )
     sl = line.bx();
     // find worst hit
     double worstDist = 0.;
-    PatFwdHits::iterator worst;
-    for ( itH = stereo.begin();	stereo.end() != itH; ++itH ) {
-      if ( (*itH)->isIgnored() ) continue;
-      double proj = (*itH)->projection();
-      double dist = proj - y0 - (*itH)->z() * sl;
-      double drift = (*itH)->driftDistance() / (*itH)->hit()->dxDy();
+    PatFwdHits::iterator worst = stereo.begin(), end = stereo.end();
+    for ( PatFwdHits::iterator itH = worst; end != itH; ++itH ) {
+      const PatFwdHit* hit = *itH;
+      if ( hit->isIgnored() ) continue;
+      double proj = hit->projection();
+      double dist = proj - y0 - hit->z() * sl;
+      double drift = hit->driftDistance() / hit->hit()->dxDy();
       // resolve ambiguity towards new fit parameters
       dist = std::min(fabs(dist - drift), fabs(dist + drift));
       if ( dist > worstDist ) {
@@ -2114,8 +2119,7 @@ void PatSeedingTool::processForwardTracks ( const std::string& location,
   std::vector<LHCb::LHCbID> ids;
   ids.reserve(64);
   // loop over input tracks
-  for ( itT = inputTracks->begin(); inputTracks->end() != itT;  ++itT ) {
-    const LHCb::Track* track = *itT;
+  BOOST_FOREACH( const LHCb::Track* track, *inputTracks ) {
     ids.clear();
     // copy the LHCbIDs which are either IT or OT hits
     const std::vector<LHCb::LHCbID>& allids = track->lhcbIDs();
@@ -2219,21 +2223,19 @@ StatusCode PatSeedingTool::performTracking( LHCb::Tracks* outputTracks,
 
   StatusCode sc = performTracking(outvec, state);
   
-  if (sc.isSuccess()) {
+  if (sc.isSuccess() && !outvec.empty()) {
     // copy tracks from outvec to output container
     outputTracks->reserve(outvec.size());
-    std::vector<LHCb::Track*>::const_iterator itT, itE = outvec.end();
-    for (itT = outvec.begin(); itE != itT; ++itT)
-      outputTracks->insert(*itT);
+    BOOST_FOREACH( LHCb::Track* track, outvec )
+      outputTracks->insert(track);
   }
-  outvec.clear();
 
   return sc;
 }
 
 //======================================================================
 bool PatSeedingTool::isIsolated(HitRange::const_iterator it,
-		const HitRange& range)
+		const HitRange& range) const
 {
 	double isolationRange = m_OTIsolation;
 	if ( (*it)->hit()->sthit() )
@@ -2283,3 +2285,5 @@ bool PatSeedingTool::isIsolated(HitRange::const_iterator it,
 	}
 	// we should never arrive here
 }
+
+// vim:shiftwidth=2:tw=78

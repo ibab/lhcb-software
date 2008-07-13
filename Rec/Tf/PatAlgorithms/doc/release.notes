@@ -3,6 +3,31 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2008-07-14 - Manuel Tobias Schiller
+ - PatDownstream:
+   - use a proper check for x layers instead of comparing sine of stereo angle
+     to zero
+   - use boost::assign::list_of where applicable when declaring properties
+ - PatSeedTool:
+   - more effective protection against singular matrix in fit
+   - use of BOOST_FOREACH to clean up code
+   - more straightforward bit-shifting when trying to fix ambiguities
+ - PatSeedingTool:
+   - when reconstructing cosmics, make sure we do not pick up hits from the
+     upper half of the OT when we know that the track is in the lower half and
+     vice-versa
+   - use of BOOST_FOREACH to clean up code
+   - more straightforward bit-shifting when trying to fix ambiguities
+ - PatSeedTrack:
+   - use of BOOST_FOREACH to clean up code
+   - add method coords() to have a BOOST_FOREACH-compatible interface for the
+     rest of the code
+   - use initializer lists in constructors more extensively
+   - remove unused members
+   - changed order of members to improve memory layout
+   - better documentation of methods
+
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
 - add python directory with PatForward.py and PatSeeding.py scripts
 
