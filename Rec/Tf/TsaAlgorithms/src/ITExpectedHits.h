@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.h,v 1.5 2008-03-14 18:21:37 mneedham Exp $
+// $Id: ITExpectedHits.h,v 1.6 2008-07-14 10:24:52 mneedham Exp $
 #ifndef _ITExpectedHits_H
 #define _ITExpectedHits_H
 
@@ -15,7 +15,7 @@
 
 // Kernel
 #include "Kernel/STChannelID.h"
-#include "LHCbMath/GeomFun.h"
+
 
 // Geometry
 #include "STDet/DeSTDetector.h"
@@ -65,8 +65,15 @@ namespace Tf
       bool insideLayer(const DeSTLayer* sector,
                        const Line3D& line) const;
 
-      Gaudi::XYZPoint intersection(const Line3D& line,
+
+      bool isOKStrip(const LHCb::STChannelID& elemChan,
+                 const DeSTSector* sector,
+                 const unsigned int firstStrip, 
+                 const unsigned int lastStrip) const;
+
+     Gaudi::XYZPoint intersection(const Line3D& line,
                                    const Gaudi::Plane3D& aPlane) const;
+
 
       DeSTDetector* m_tracker;
 

@@ -1,4 +1,4 @@
-// $Id: ITExpectedHits.cpp,v 1.3 2008-03-14 18:21:37 mneedham Exp $
+// $Id: ITExpectedHits.cpp,v 1.4 2008-07-14 10:24:52 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -89,15 +89,7 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
 
         unsigned int firstStrip = sensor->localUToStrip(localEntry.x());
         unsigned int lastStrip =  sensor->localUToStrip(localExit.x());
-
-        if ( msgLevel(MSG::VERBOSE) )
-        {
-          verbose() << " -> globalEntry = " << globalEntry << endreq;
-          verbose() << " -> globalExit  = " << globalExit << endreq;
-          verbose() << " -> localEntry  = " << localEntry << endreq;
-          verbose() << " -> localExit   = " << localExit << endreq;
-          verbose() << " -> firstStrip = " << firstStrip << " lastStrip = " << lastStrip << endreq;
-        }
+        
 
         // might have to swap...
         if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
@@ -107,16 +99,15 @@ StatusCode ITExpectedHits::collect(const Parabola& parab,
         if (sensor->isStrip(lastStrip+1) == true) ++lastStrip;
 
         LHCb::STChannelID elemChan = (*iterS)->elementID();
+        if (isOKStrip(elemChan, aSector ,firstStrip, lastStrip) == false) continue;
 
-        for (unsigned int iStrip = firstStrip; iStrip <= lastStrip; ++iStrip)
-        {
+        for (unsigned int iStrip = firstStrip; iStrip <= lastStrip; ++iStrip){
 
           LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
                                                       elemChan.station(),
                                                       elemChan.layer(),
                                                       elemChan.detRegion(),
                                                       elemChan.sector(), iStrip);
-
 
           hits.push_back(std::make_pair(aChan,double(iCount)));
 
@@ -171,3 +162,21 @@ Gaudi::XYZPoint ITExpectedHits::intersection(const Line3D& line,
   return inter;
 }
 
+bool ITExpectedHits::isOKStrip(const LHCb::STChannelID& elemChan,
+                               const DeSTSector* sector,
+                               const unsigned int firstStrip, 
+                               const unsigned int lastStrip) const{
+
+
+  unsigned int iStrip = firstStrip;
+  for (; iStrip <= lastStrip; ++iStrip){
+
+     LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
+                                                      elemChan.station(),
+                                                      elemChan.layer(),
+                                                      elemChan.detRegion(),
+                                                      elemChan.sector(), iStrip);
+     if (sector->isOKStrip(aChan) == false) return false;
+  }
+  return true;
+}

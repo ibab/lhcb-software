@@ -3,6 +3,11 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+
+! 2008-14-07 
+ - add use of dead strips in ITExpectedHits tool
+
 ! 2008-07-11
 - add python directory with TsaSeeding.py script
 
