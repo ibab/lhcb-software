@@ -82,10 +82,10 @@ def main():
     parser.add_option("--user-tag", type = "string",
                       help = "Tag to be used to extract the changes from the user " +
                              "database. It make sense only if changes_source is a " +
-                             "COOL database. [default is current directory]"
+                             "COOL database. [default = %default]"
                       )
     parser.add_option("-d","--dir", type = "string",
-                      help = "Directory where to put the DB with the differences. [default = %default]"
+                      help = "Directory where to put the DB with the differences. [default is current directory]"
                       )
     parser.add_option("--rel-notes", type = "string",
                       help = "XML file containing the release notes"
