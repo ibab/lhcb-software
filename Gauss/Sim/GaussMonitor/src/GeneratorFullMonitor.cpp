@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.6 2007-03-07 18:48:26 gcorti Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.7 2008-07-14 20:34:20 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -68,6 +68,7 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
     , m_shat ( )
     , m_that ( )
     , m_uhat ( )
+    , m_pthat( )
     , m_x1 ( )
     , m_x2 ( )
     , m_procId ( )
@@ -218,6 +219,9 @@ StatusCode GeneratorFullMonitor::initialize() {
     sc = nt -> addIndexedItem ( "u_hat" , m_event , m_uhat ) ;
   }
   if ( sc.isSuccess() ) {
+    sc = nt -> addIndexedItem ( "pt_hat" , m_event , m_pthat ) ;
+  }
+  if ( sc.isSuccess() ) {
     sc = nt -> addIndexedItem ( "x1_Bjork" , m_event , m_x1 ) ;
     }
   if ( sc.isSuccess() ) {
@@ -258,6 +262,7 @@ StatusCode GeneratorFullMonitor::execute() {
     m_shat   [ m_event ] = (*itC)->sHat();
     m_that   [ m_event ] = (*itC)->tHat();
     m_uhat   [ m_event ] = (*itC)->uHat();
+    m_pthat  [ m_event ] = (*itC)->ptHat() ;
     m_x1     [ m_event ] = (*itC)->x1Bjorken();
     m_x2     [ m_event ] = (*itC)->x2Bjorken();
     m_event++;

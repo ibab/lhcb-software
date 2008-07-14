@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.h,v 1.5 2007-03-07 18:48:26 gcorti Exp $
+// $Id: GeneratorFullMonitor.h,v 1.6 2008-07-14 20:34:20 robbep Exp $
 #ifndef GAUSSMONITOR_GENERATORFULLMONITOR_H 
 #define GAUSSMONITOR_GENERATORFULLMONITOR_H 1
 
@@ -60,6 +60,7 @@ private:
   NTuple::Array< float > m_shat; ///< S_hat madelstam variable
   NTuple::Array< float > m_that; ///< T_hat madelstam variable
   NTuple::Array< float > m_uhat; ///< U_hat madelstam variable
+  NTuple::Array< float > m_pthat; ///< pt_hat madelstam variable
   NTuple::Array< float > m_x1;   ///< x1 mandelstam variable
   NTuple::Array< float > m_x2;   ///< x2 madelstam variable
   NTuple::Array< long  > m_procId;   ///< hard process ID
