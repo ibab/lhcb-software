@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2008-07-14 M Needham
+ - Add Tell1 strip number to STCluster class
+
 !========================== DigiEvent v2r6 2008-05-05 ========================
 ! 2008-05-05 M Needham
  - Add source id to STCluster class
