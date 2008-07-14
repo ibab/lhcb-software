@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.17 2008-06-30 11:43:46 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.18 2008-07-14 12:17:54 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -62,6 +62,11 @@ StatusCode MuonRawBuffer::initialize()
     m_NZSprocessed_bank[i]=0;
     m_pad_checkSize[i]=0;
     m_hit_checkSize[i]=0;
+    m_tell1_header_error[i]=0;
+    m_tell1_header_ORODE_error[i]=0;
+    m_tell1_header_SYNCH_data_error[i]=0;
+    m_tell1_header_SYNCH_BC_error[i]=0;
+    m_tell1_header_SYNCH_Evt_error[i]=0;
     
   }
   
@@ -79,13 +84,16 @@ void MuonRawBuffer::handle ( const Incident& incident )
 
 void MuonRawBuffer::clearData(){
   debug()<<" reset all buffers "<<endreq;
-  
+  m_checkTell1HeaderPerformed=false;
+  m_checkTell1HeaderResult=false;
+ 
   for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
     m_storage[i].clear();
     m_alreadyDecoded[i]=false;
     m_padStorage[i].clear();
     m_padAlreadyDecoded[i]=false;
     m_ODEAlreadyDecoded[i]=false;
+    m_already_decoded_headerTell1[i]=false;
     m_eventHeader[i]=0;    
     for(int j=0;j<24;j++)m_hitNumInLink[i*24+j]=0;
     for(int j=0;j<4;j++)m_hitNumInLink[i*4+j]=0;    
@@ -121,8 +129,20 @@ StatusCode MuonRawBuffer::finalize() {
     // break;
     
   }
-
-  if(print_ZS||print_NZS){
+  bool print_errors=false;
+  for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+    if(m_tell1_header_error[i]>0||m_tell1_header_ORODE_error[i]>0||
+       m_tell1_header_SYNCH_data_error[i]>0||
+       m_tell1_header_SYNCH_BC_error[i]>0||m_tell1_header_SYNCH_Evt_error[i]>0)
+    {
+      print_errors=true;
+      break;
+      
+    }
+  
+  }
+  
+  if(print_ZS||print_NZS||print_errors){
     
     info()<<" Summary of Muon banks decoding errors "<<endreq;
   }
@@ -147,10 +167,43 @@ StatusCode MuonRawBuffer::finalize() {
           m_hit_checkSize[i]<<" processed banks # "<<
           m_processed_bank[i]<<endreq;
       }
-      
-  
     }
   }
+  
+  if(print_errors){
+    for (unsigned int i=0;i<MuonDAQHelper_maxTell1Number;i++){
+      if(m_tell1_header_error[i]>0){
+        info()<<" in Tell1 "<<i<<" error inside Tell1 "<<m_tell1_header_error[i]<<endreq;
+        
+      }
+      
+      if(m_tell1_header_ORODE_error[i]>0)
+      {
+        info()<<" in Tell1 "<<i<<" ODE reported error "<<m_tell1_header_ORODE_error[i]<<endreq;
+      }
+      
+      
+      if( m_tell1_header_SYNCH_data_error[i]>0){
+        info()<<" in Tell1 "<<i<<" SYNCH data consistency  error "
+               <<m_tell1_header_SYNCH_data_error[i]<<endreq;
+      }
+      
+      if(m_tell1_header_SYNCH_BC_error[i]>0){ 
+        info()<<" in Tell1 "<<i<<" SYNCH BC consistency  error "
+              <<m_tell1_header_SYNCH_BC_error[i]<<endreq;
+      }
+      if(m_tell1_header_SYNCH_Evt_error[i]>0){
+        
+        info()<<" in Tell1 "<<i<<" SYNCH L0Evt consistency  error "
+              <<m_tell1_header_SYNCH_BC_error[i]<<endreq;
+      }
+      
+    }
+    
+  }
+  
+
+
   if(print_NZS){
     
     info()<<" Non Zero suppressed part "<<endreq;
@@ -161,6 +214,7 @@ StatusCode MuonRawBuffer::finalize() {
       
     }
   }
+
   clearData();  
   return GaudiTool::finalize() ;
 };
@@ -341,7 +395,9 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
       skip=(nPads+2)/2+1;
     }
     for(int k=0;k<2*skip;k++){      
-      if(k==1)m_eventHeader[tell1Number]=*it;    
+      if(k==1)fillTell1Header(tell1Number,*it);
+      
+      //  m_eventHeader[tell1Number]=*it;    
             //if(k==1)info()<<tell1Number<<" "<<((*it)&(0xFF))<<" "<<(((*it)&(0xFF00))>>8)<<endreq;
       
       it++;
@@ -407,34 +463,38 @@ StatusCode  MuonRawBuffer::decodeTileAndTDCV1(const RawBank* rawdata){
 StatusCode MuonRawBuffer::getPads(std::vector<LHCb::MuonTileID>& storage)
 {  
   LHCb::RawEvent* raw = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);  
-  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  // const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
   storage.clear();
+
+
+
+  StatusCode sc= getPads(raw,storage);
   
+    return sc;
 
+//  //first decode data and insert in buffer
+//   for( itB = b.begin(); itB != b.end(); itB++ ) {    
+//     const RawBank* r = *itB;   
+//     StatusCode sc=DecodeDataPad(r);
+//     if(sc.isFailure())return sc; 
+//   }
 
- //first decode data and insert in buffer
-  for( itB = b.begin(); itB != b.end(); itB++ ) {    
-    const RawBank* r = *itB;   
-    StatusCode sc=DecodeDataPad(r);
-    if(sc.isFailure())return sc; 
-  }
-
-  //compact data  in one container
+//   //compact data  in one container
  
-  for( itB = b.begin(); itB != b.end(); itB++ ) {  
-    unsigned int tell1Number=(*itB)->sourceID();
+//   for( itB = b.begin(); itB != b.end(); itB++ ) {  
+//     unsigned int tell1Number=(*itB)->sourceID();
  
-     std::vector<LHCb::MuonTileID>::iterator itStorage;
-     for(itStorage=(m_padStorage[tell1Number]).begin();
-         itStorage<(m_padStorage[tell1Number]).end();itStorage++){
-       storage.push_back(*itStorage);
-     }
-  }
+//      std::vector<LHCb::MuonTileID>::iterator itStorage;
+//      for(itStorage=(m_padStorage[tell1Number]).begin();
+//          itStorage<(m_padStorage[tell1Number]).end();itStorage++){
+//        storage.push_back(*itStorage);
+//      }
+//   }
 
 
   
-  return StatusCode::SUCCESS;
+//   return StatusCode::SUCCESS;
   
 }
 
@@ -511,7 +571,9 @@ StatusCode MuonRawBuffer::getTile(const LHCb::RawBank* r,std::vector<LHCb::MuonT
 };
 
 StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID>& storage)
-{
+{ 
+  StatusCode sc=checkAllHeaders(raw);
+  if(sc.isFailure())return sc;
   storage.clear();
   
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
@@ -543,6 +605,10 @@ StatusCode MuonRawBuffer::getTile( LHCb::RawEvent* raw,std::vector<LHCb::MuonTil
 StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pair<LHCb::MuonTileID,unsigned int> > & storage)
 {
   
+  StatusCode sc=checkAllHeaders(raw);
+  if(sc.isFailure())return sc;
+
+
   storage.clear();
  
   
@@ -603,7 +669,9 @@ StatusCode MuonRawBuffer::getTileAndTDC(const LHCb::RawBank* r,std::vector<std::
 
 StatusCode MuonRawBuffer::getPads(LHCb::RawEvent* raw,std::vector<LHCb::MuonTileID> & pads)
 {
-  
+  StatusCode sc=checkAllHeaders(raw);
+  if(sc.isFailure())return sc;
+
   pads.clear();
   
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
@@ -1166,3 +1234,65 @@ std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders
 }
 
 
+
+
+StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
+{
+
+  if( m_checkTell1HeaderPerformed)return m_checkTell1HeaderResult;
+  std::vector<unsigned int> tell1InEvent;
+  
+  std::vector<unsigned int>::iterator  iList;
+  const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
+  std::vector<RawBank*>::const_iterator itB;  
+  
+  //first decode data and insert in buffer
+  for( itB = b.begin(); itB != b.end(); itB++ ) {    
+  
+    unsigned int tell1Number=(*itB)->sourceID();
+    iList=std::find(tell1InEvent.begin(), tell1InEvent.end(),tell1Number );
+    if(iList<tell1InEvent.end()){
+      m_checkTell1HeaderResult=false;
+      m_checkTell1HeaderPerformed=true;
+      return  m_checkTell1HeaderResult;
+      
+    }
+    
+    tell1InEvent.push_back(tell1Number);   
+  }
+  //there is repeated Tell1
+  //now checj the fw version
+
+  //compact data  in one container
+  unsigned int ReferenceVersion=(*(b.begin()))->version();
+
+  for( itB = b.begin(); itB != b.end(); itB++ ) {  
+
+    if((*itB)->version()!=ReferenceVersion){
+      error()<<
+        " The muon Tell1 boards: not all the same version so  skip the event"
+             << endreq;
+      
+      m_checkTell1HeaderResult=false;
+      m_checkTell1HeaderPerformed=true;
+      return  m_checkTell1HeaderResult;
+    }    
+  }
+}
+
+
+void MuonRawBuffer::fillTell1Header(unsigned int tell1Number,unsigned int data)
+{
+  m_eventHeader[tell1Number]=data;
+  if(m_already_decoded_headerTell1[tell1Number])return;
+  
+  MuonTell1Header dataWord(data);
+  verbose()<<dataWord.getError()<<endreq;
+  
+  if(dataWord.getError())m_tell1_header_error[tell1Number]++;
+  if(dataWord.getOROfODEErrors())m_tell1_header_ORODE_error[tell1Number]++;
+  if(dataWord.getSYNCHDataErrorInODE())m_tell1_header_SYNCH_data_error[tell1Number]++;
+  if(dataWord.getSYNCHBCNCntErrorInODE())m_tell1_header_SYNCH_BC_error[tell1Number]++;
+  if(dataWord.getSYNCHEventCntErrorInODE())m_tell1_header_SYNCH_Evt_error[tell1Number]++;
+
+}

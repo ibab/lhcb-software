@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.h,v 1.10 2008-06-30 11:43:46 asatta Exp $
+// $Id: MuonRawBuffer.h,v 1.11 2008-07-14 12:17:54 asatta Exp $
 #ifndef MUONRAWBUFFER_H 
 #define MUONRAWBUFFER_H 1
 
@@ -84,6 +84,8 @@ private:
   
   StatusCode DecodeData(const LHCb::RawBank* r);
   StatusCode checkBankSize(const LHCb::RawBank* rawdata);
+  StatusCode checkAllHeaders(LHCb::RawEvent* raw);
+  void fillTell1Header(unsigned int tell1,unsigned int data);
   
   unsigned int m_NLink;
   unsigned int m_ODEWord;
@@ -94,7 +96,10 @@ private:
   mutable std::vector<LHCb::MuonTileID> m_padStorage[MuonDAQHelper_maxTell1Number];
   bool m_padAlreadyDecoded[MuonDAQHelper_maxTell1Number];
   bool m_ODEAlreadyDecoded[MuonDAQHelper_maxTell1Number];
-
+  bool m_already_decoded_headerTell1[MuonDAQHelper_maxTell1Number];
+  bool m_checkTell1HeaderPerformed;
+  bool m_checkTell1HeaderResult;
+  
   //mutable MuonTell1Header m_Tell1Header[[MuonDAQHelper_maxTell1Number];
   mutable MuonODEData m_ODEData[MuonDAQHelper_maxTell1Number*24];
   mutable MuonPPEventInfo m_PPEventInfo[MuonDAQHelper_maxTell1Number*4];
@@ -108,6 +113,11 @@ private:
   unsigned int m_hitNumInPP[MuonDAQHelper_maxTell1Number*4];
   unsigned int m_hit_checkSize[  MuonDAQHelper_maxTell1Number];
   unsigned int m_pad_checkSize[  MuonDAQHelper_maxTell1Number];
+  unsigned int m_tell1_header_error[  MuonDAQHelper_maxTell1Number];
+  unsigned int m_tell1_header_ORODE_error[  MuonDAQHelper_maxTell1Number];
+  unsigned int m_tell1_header_SYNCH_data_error[  MuonDAQHelper_maxTell1Number];
+  unsigned int m_tell1_header_SYNCH_BC_error[  MuonDAQHelper_maxTell1Number];
+  unsigned int m_tell1_header_SYNCH_Evt_error[  MuonDAQHelper_maxTell1Number];
   
 
 };
