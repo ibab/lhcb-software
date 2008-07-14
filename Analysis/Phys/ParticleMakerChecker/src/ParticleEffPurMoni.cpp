@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.29 2008-07-14 12:46:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.30 2008-07-14 12:52:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -80,6 +80,9 @@ StatusCode ParticleEffPurMoni::initialize()
 //=============================================================================
 StatusCode ParticleEffPurMoni::execute()
 {
+  // Never abort a sequence
+  setFilterPassed(true);
+
   // get the desktop particles
   const LHCb::Particle::ConstVector & particles = desktop()->particles();
   if ( particles.empty() ) return StatusCode::SUCCESS;
@@ -357,7 +360,6 @@ StatusCode ParticleEffPurMoni::execute()
     } // loop over MCPs
   } // more than one proto location
 
-  setFilterPassed(true);
   return StatusCode::SUCCESS;
 }
 
