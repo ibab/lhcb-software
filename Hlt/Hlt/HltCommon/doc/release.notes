@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-07-14 - Gerhard Raven
+  - add HltIncidentFilter: responds to incidents requesting the event to be kept
 
 !========================== HltCommon v3r4 2008-07-09 ===================
 !2008-07-10 - Gerhard Raven
