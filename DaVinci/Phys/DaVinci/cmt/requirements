@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.383 2008-06-27 15:34:41 pkoppenb Exp $
+# $Id: requirements,v 1.384 2008-07-14 15:30:11 hmdegaud Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -55,7 +55,7 @@ use AnalysisSys v*
 
 # Build DaVinci Application with standard executable
 #============================================================================
-# application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
+application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # define link options
 #============================================================================
