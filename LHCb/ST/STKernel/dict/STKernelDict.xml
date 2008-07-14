@@ -2,5 +2,7 @@
 
   <class name = "ISTReadoutTool"       />
   <class name = "ISTSignalToNoiseTool" />
+  <class name = "STTell1ID" />
+  <class name = "STTell1Board" />
 
 </lcgdict>

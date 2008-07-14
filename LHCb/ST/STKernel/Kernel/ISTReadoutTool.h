@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.4 2008-02-15 06:28:51 cattanem Exp $
+// $Id: ISTReadoutTool.h,v 1.5 2008-07-14 07:32:30 mneedham Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -11,6 +11,7 @@
 #include "Event/STCluster.h"
 
 class STTell1Board;
+class DeSTSector;
 
 namespace LHCb{
  class STChannelID;
@@ -67,7 +68,13 @@ public:
 
   /// printout
   virtual void printMapping() const = 0;
- 
+
+  /// list of the readout sector ids on the board in a board
+  virtual std::vector<LHCb::STChannelID> sectorIDs(const STTell1ID board) const = 0;
+  
+  /// list of the readout sectors in a board
+  virtual std::vector<DeSTSector*> sectors(const STTell1ID board) const = 0;
+  
 };
 
 
