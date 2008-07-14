@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.12 2008-07-04 15:52:21 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.13 2008-07-14 08:18:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -11,23 +11,23 @@
 #include "Event/ByteStream.h"
 #include "Event/STCluster.h"
 #include "Event/STSummary.h"
-#include "Kernel/STDataFunctor.h"
 
+#include "Kernel/STDataFunctor.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
-#include "SiDAQ/SiADCWord.h"
 #include "Kernel/STRawBankMap.h"
 #include "Kernel/STDecoder.h"
 #include "Kernel/STDetSwitch.h"
 
 #include "SiDAQ/SiHeaderWord.h"
+#include "SiDAQ/SiADCWord.h"
 
 
 #include "STDet/DeSTDetector.h"
 
-
 using namespace LHCb;
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RawBufferToSTClusterAlg
@@ -79,9 +79,10 @@ StatusCode STDecodingBaseAlg::initialize() {
     
 
 void STDecodingBaseAlg::createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
-                                           const bool pcnsync, const std::vector<unsigned int>& bankList) const{
+                                           const bool pcnsync, const std::vector<unsigned int>& bankList, 
+                                           const std::vector<unsigned int>& missing) const{
 
-  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList);   
+  STSummary* sum = new STSummary(nclus,pcn,pcnsync,bankList, missing);   
   put(sum, m_summaryLocation);
 }
 
@@ -155,6 +156,23 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
   if (!ok) ++counter("skipped Banks");
  
   return ok;
+}
+
+std::vector<unsigned int> STDecodingBaseAlg::missingInAction(const std::vector<RawBank* >& banks) const{
+
+  std::vector<unsigned int> missing;
+
+  if ( banks.size() != readoutTool()->nBoard()) {
+    for (unsigned int iBoard = 0u; iBoard < readoutTool()->nBoard() ; ++iBoard ){
+      int testID = readoutTool()->findByOrder(iBoard)->boardID().id();
+      std::vector<RawBank* >::const_iterator iterBank = banks.begin();
+      for (; iterBank != banks.end() && (*iterBank)->sourceID() != testID; ++iterBank){} // iterBank 
+      if (iterBank == banks.end()){
+        missing.push_back((unsigned int)testID);
+      }
+    } // iBoard
+  }
+  return missing;
 }
 
 StatusCode STDecodingBaseAlg::finalize() {

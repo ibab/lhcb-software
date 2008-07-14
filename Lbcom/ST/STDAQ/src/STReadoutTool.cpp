@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.8 2008-07-01 10:10:06 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.9 2008-07-14 08:18:03 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -195,3 +195,27 @@ StatusCode STReadoutTool::validate() const{
   
   return valid;
 }
+
+std::vector<LHCb::STChannelID> STReadoutTool::sectorIDs(const STTell1ID board) const{
+
+  std::vector<LHCb::STChannelID> sectors; sectors.reserve(8);
+  STTell1Board* theBoard = findByBoardID(board);  
+  if (theBoard){
+    sectors.insert(sectors.begin(), theBoard->sectorIDs().begin(), theBoard->sectorIDs().end());
+  }
+  else {
+    Error("Failed to find Board", StatusCode::SUCCESS, 100);
+  }
+  return sectors;
+}
+  
+std::vector<DeSTSector*> STReadoutTool::sectors(const STTell1ID board) const{ 
+
+  std::vector<LHCb::STChannelID> sectors = sectorIDs(board);
+  return m_tracker->findSectors(sectors);
+}
+
+
+
+
+

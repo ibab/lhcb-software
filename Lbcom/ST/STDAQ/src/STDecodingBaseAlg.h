@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.8 2008-07-04 15:52:22 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.9 2008-07-14 08:18:03 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -52,12 +52,16 @@ protected:
  std::string detType() const;
 
  void createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
-                         const bool pcnsync, const std::vector<unsigned int>& bankList) const;
+                         const bool pcnsync, const std::vector<unsigned int>& bankList,
+                         const std::vector<unsigned int>& missing ) const;
 
  unsigned int pcnVote(const std::vector<LHCb::RawBank* >& banks) const;
 
  bool checkDataIntegrity(STDecoder& decoder, const STTell1Board* aBoard, 
                          const unsigned int bankSize, const int version) const;
+
+ /** list of boards missing in action */
+ std::vector<unsigned int> missingInAction(const std::vector<LHCb::RawBank*>& banks) const; 
 
  bool m_skipErrors;
  std::string m_bankTypeString;

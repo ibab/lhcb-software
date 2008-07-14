@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.21 2008-07-04 15:52:21 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.22 2008-07-14 08:18:03 mneedham Exp $
 
 
 #include <algorithm>
@@ -93,9 +93,10 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   put(fCont, m_clusterLocation);
 
 
-  if ( readoutTool()->nBoard() != tBanks.size() ){
-    counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
-    if (tBanks.size() == 0) {
+  std::vector<unsigned int> missing = missingInAction(tBanks);
+  if ( missing.empty() == false ){
+    counter("lost Banks") += missing.size() ;
+    if (tBanks.size() == 0){
       ++counter("no banks found");
       return StatusCode::SUCCESS;
     }

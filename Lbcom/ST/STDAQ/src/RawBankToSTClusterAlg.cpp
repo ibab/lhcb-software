@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.29 2008-07-04 15:52:21 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.30 2008-07-14 08:18:03 mneedham Exp $
 
 #include <algorithm>
 
@@ -98,13 +98,14 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   const std::vector<RawBank* >&  tBanks = rawEvt->banks(bankType());
 
-  if ( readoutTool()->nBoard() != tBanks.size() ){
-    counter("lost Banks") += readoutTool()->nBoard() - tBanks.size() ;
-    if (tBanks.size() == 0) {
-      ++counter("no banks found");
+  std::vector<unsigned int> missing = missingInAction(tBanks);
+  if (missing.empty() == false){
+    counter("lost Banks") += missing.size();
+    if (tBanks.size() == 0){
+       ++counter("no banks found");
       return StatusCode::SUCCESS;
     }
-  } 
+  }
 
   // vote on the pcns
   const unsigned int pcn = pcnVote(tBanks);
@@ -172,7 +173,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
 
   } // iterBank
    
-  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList);
+  createSummaryBlock(clusCont->size(), pcn, pcnSync, bankList, missing);
 
   return StatusCode::SUCCESS;
 
@@ -216,7 +217,8 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 
                                                                nearestChan,
                                                                fracStrip),
-                                                               adcs,neighbour, aBoard->boardID().id());
+                                                               adcs,neighbour, aBoard->boardID().id(), 
+                                                               aWord.channelID());
 
   if (!clusCont->object(nearestChan)) {
     clusCont->insert(newCluster,nearestChan);

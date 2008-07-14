@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.5 2008-07-01 10:10:06 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.6 2008-07-14 08:18:03 mneedham Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -67,11 +67,18 @@ public:
   /// find Tell1 board by storage order
   virtual STTell1Board* findByOrder(const unsigned int aValue) const;
 
+  /// list of the readout sector ids on the board
+  virtual std::vector<LHCb::STChannelID> sectorIDs(const STTell1ID board) const;
+  
+  /// list of the readout sectors
+  virtual std::vector<DeSTSector*> sectors(const STTell1ID board) const;
+
+  /// print mapping
+  void printMapping() const;
+
 protected:
 
   void clear();
-
-  void printMapping() const;
 
   StatusCode validate() const;
   
