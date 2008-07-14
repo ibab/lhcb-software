@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.30 2008-07-14 12:52:02 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.31 2008-07-14 13:02:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -339,11 +339,7 @@ StatusCode ParticleEffPurMoni::execute()
           const std::string& proto2Type = protoParticleType(*proto2);
           if ( protoloc1 != protoloc2 && proto1Type == proto2Type )
           {
-            m_corProtoMap[protoloc1].insert(protoloc2);
-            m_corProtoMap[protoloc2].insert(protoloc1);
-            const std::string corname = corProtoLocation( protoloc1, protoloc2 );
-            m_locsToCorMap[StringPair(protoloc1,protoloc2)] = corname;
-            m_locsToCorMap[StringPair(protoloc2,protoloc1)] = corname;
+            const std::string& corname = corProtoLocation( protoloc1, protoloc2 );
             // count
             MCTally & tally =
               ((m_correlations[corname])[proto1Type].trueMCType[mcRecType])[name];

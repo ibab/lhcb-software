@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.21 2008-07-14 12:46:38 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.22 2008-07-14 13:02:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -43,8 +43,13 @@
 #include "Event/MCParticle.h"
 
 // ROOT
+#include "TAxis.h"
+#include "TH1.h"
 #include "TProfile.h"
 #include "TProfile2D.h"
+
+// Boost
+#include "boost/lexical_cast.hpp"
 
 //-----------------------------------------------------------------------------
 /** @class ParticleEffPurMoni ParticleEffPurMoni.h
@@ -588,12 +593,6 @@ private: // data
 
   /// Minimum momentum for plots
   double m_minP;
-
-  /// ProtoParticle correlation map
-  mutable std::map<std::string,std::set<std::string> > m_corProtoMap;
-
-  typedef std::pair<std::string,std::string> StringPair;
-  mutable std::map< StringPair, std::string > m_locsToCorMap;
 
 };
 
