@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+__author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.4 2008-07-14 17:37:21 marcocle Exp $"
+
 import os, sys, stat
 
 def _which(cmd):
@@ -78,7 +81,15 @@ def _getMessage():
 def main():
     # Configure the parser
     from optparse import OptionParser
-    parser = OptionParser(usage = "%prog [options] changes_source partition reference_tag local_tag")
+    parser = OptionParser(usage = "%prog [options] changes_source partition reference_tag local_tag",
+                          version = __version__,
+                          description =
+"""This script tries to commit changes to the official CondDB, tagging the new
+files and updating the release notes. The user has to provide a source
+(directory or SQLite file), the partition to modify (DDDB, LHCBCOND or SIMCOND),
+a reference tag in the master CondDB to compare the changes to and the local
+tag to use for the modified files. The script will ask for the contributor name
+and for a short message for the release notes.""")
     parser.add_option("--user-tag", type = "string",
                       help = "Tag to be used to extract the changes from the user " +
                              "database. It make sense only if changes_source is a " +
@@ -213,7 +224,7 @@ def main():
 
     from CondDBUI.Admin import ReleaseNotes
     rel_notes = ReleaseNotes(options.rel_notes)
-    rel_notes.addNote(provider = options.contributor,
+    rel_notes.addNote(contributor = options.contributor,
                       partitions = {partition:(local_tag,modified + added)},
                       description = [options.message])
     

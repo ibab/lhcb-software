@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.82 2008-07-10 15:12:00 marcocle Exp $
+! $Id: release.notes,v 1.83 2008-07-14 17:37:21 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic / Nicolas Gilardi
 ! =============================================================================
+
+! 2008-07-14 - Marco Clemencic
+ - Minor improvements (documentation) to CondDBAdmin_Commit.py and
+   CondDBAdmin_MakeSnapshot.py.
 
 ! 2008-07-10 - Marco Clemencic
  - Removed some obsolete files:

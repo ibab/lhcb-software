@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+__author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.2 2008-07-14 17:37:21 marcocle Exp $"
+
 import os, sys
 
 # Fix the problem with multiple logger handlers
@@ -82,7 +85,13 @@ def timeToValKey(tstring, default):
 def main(argv):
     # Configure the parser
     from optparse import OptionParser
-    parser = OptionParser(usage = "%prog [options] partition destination")
+    parser = OptionParser(usage = "%prog [options] partition destination",
+                          version = __version__,
+                          description =
+"""This script produces a snapshot of the specified partition of the CondDB.
+The argument 'partition' can be the partition name (the connection string is
+guessed from standard or provided job options), an SQLite file or a COOL
+connection string. 'destination' must be a connection string.""")
     parser.add_option("-T", "--tag", type = "string", action = "append",
                       dest = "tags",
                       help = "Tag to use for the snapshot. [default = %default]"
