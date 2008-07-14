@@ -4,6 +4,10 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
+! 2008-07-14 - Sara Furcas
+ - Remove Geom tool and replace with DistanceCalculator in Fidel.cpp
+ - Cut in impact parameter significance replaced by cut in chi2 
+
 ! 2008-07-10 - Patrick Koppenburg
  - Remove MC-dependent FidelTuple
  - Do not get Geom tool from DVAlgorithm. That won't be possible soon.
@@ -27,3 +31,5 @@
 
 ! 2008-03-19 - Sara Furcas
  - first import
+
+

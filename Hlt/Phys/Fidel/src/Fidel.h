@@ -1,5 +1,5 @@
-// $Id: Fidel.h,v 1.5 2008-07-10 16:23:30 pkoppenb Exp $
-// $Id: Fidel.h,v 1.5 2008-07-10 16:23:30 pkoppenb Exp $
+// $Id: Fidel.h,v 1.6 2008-07-14 19:57:33 sfurcas Exp $
+// $Id: Fidel.h,v 1.6 2008-07-14 19:57:33 sfurcas Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -39,7 +39,8 @@ private:
   double     m_maxPointing;
   double     m_maxChi2;
   bool       m_basicparticle;
-  double     m_maxIps;
+  //double     m_maxIps;
+  double     m_maxIpchi2;
   bool       m_checkQ;
   int        m_minQ; 
   int        m_maxQ;

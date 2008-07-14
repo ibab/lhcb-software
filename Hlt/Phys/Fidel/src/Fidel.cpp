@@ -1,7 +1,8 @@
-// $Id: Fidel.cpp,v 1.6 2008-07-10 16:23:30 pkoppenb Exp $ // Include files
+// $Id: Fidel.cpp,v 1.7 2008-07-14 19:57:33 sfurcas Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
@@ -38,11 +39,15 @@ Fidel::Fidel( const std::string& name,
   declareProperty("maxChi2", m_maxChi2 = -999);
   declareProperty("maxPointing",m_maxPointing = -999);  
   declareProperty("pid",m_pid = 511);
-  declareProperty("maxIps",m_maxIps = -999);
+  //declareProperty("maxIps",m_maxIps = -999);
+  declareProperty("maxIpchi2",m_maxIpchi2 = -999);
   declareProperty("minCts",m_minCts = -999);  
   declareProperty("minProb",m_minProb = -999);
   declareProperty("minFsB1",m_minFsB1 = -999);
   declareProperty("minFsB2",m_minFsB2 = -999);
+
+
+
   declareProperty("inputParticles",m_inputParticles = 1000);
   declareProperty("basicparticle",m_basicparticle = false);
   declareProperty("checkQ",m_checkQ = true );
@@ -103,13 +108,15 @@ StatusCode Fidel::execute() {
   
   LHCb::Particle::ConstVector  Muons;
   StatusCode scMu = particleFilter() -> filterByPID(parts,Muons,13,true);
+  if(!scMu)return scMu;
   
+
   Gaudi::LorentzVector Cand1Cand2Comb;
 
-  double ips=0;
-  double impCand=0;double iperr=0;
+  //double ips=0;
+  double impCand=0;//double iperr=0;
+  double ipchi2=0;
   double dist_B=0; double errdist_B=0; double fs_B=0;
-  double distB=0; double errdistB=0; double fsB=0;
   double distB1=-9; double errdistB1=-9;double FsB1=-999;
   double distB2=-9; double errdistB2=-9;double FsB2=-999;
   double angleP=0;
@@ -174,26 +181,32 @@ StatusCode Fidel::execute() {
       
       StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);      
       if(!fit) {      
-        Warning("Fit error");
+        debug()<<"Fit error"<<endmsg;
         continue;        
       }
 
       const LHCb::VertexBase* bestPV  = desktop()->relatedVertex(&BCand);
       Gaudi::XYZPoint Origin = bestPV->position();
-        
-      StatusCode sc = m_geomDispCalculator->calcImpactPar(BCand,*bestPV,impCand,iperr);
-      //impact parameter significance
-      ips=impCand/iperr;
+
+      const LHCb::Particle *myBCand = BCand.clone();
+      const LHCb::VertexBase *BVtx = BCand.endVertex();
+      
+      StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);  
+      //StatusCode sc = m_geomDispCalculator->calcImpactPar(BCand,*bestPV,impCand,iperr);
+      
       //flight distance Projected B
-      StatusCode sc_B = m_geomDispCalculator->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
+      StatusCode sc_B = distanceCalculator()->projectedDistance(myBCand,bestPV,dist_B,errdist_B);
+      //StatusCode sc_B = m_geomDispCalculator->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
       fs_B = dist_B / errdist_B;
-      //flight distance Signed B
-      StatusCode scB = m_geomDispCalculator->calcSignedFlightDistance(*bestPV,BCand,distB,errdistB);
-      fsB = distB / errdistB;
+      
       //flight distance Projected B - Res 1
-      StatusCode scB1 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
+      StatusCode scB1 = distanceCalculator()->projectedDistance((*ip1),BVtx,distB1,errdistB1);
+      //StatusCode scB1 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
+
       //flight distance Projected B - Res 2
-      StatusCode scB2 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
+      StatusCode scB2 = distanceCalculator()->projectedDistance((*ip2),BVtx,distB2,errdistB2);
+      //StatusCode scB2 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
+      
 
       if(scB1)FsB1 = distB1/errdistB1;
       else{
@@ -222,9 +235,10 @@ StatusCode Fidel::execute() {
       //============================================//
       //  Latest cuts and save  the B candidate     //
       //============================================//
-      if(m_maxIps>0.0 && ips>m_maxIps)continue;
+      //if(m_maxIps>0.0 && ips>m_maxIps)continue;
+      if(m_maxIpchi2>0.0 && ipchi2>m_maxIpchi2)continue;
       if(m_maxChi2>0.0 && BCandVertex.chi2()>m_maxChi2)continue;
-      if(m_maxPointing>0.0 && angleP>m_maxPointing)continue;      
+      if(m_maxPointing>0.0 && angleP>m_maxPointing && angleP>0.0)continue;      
       if(m_minCts>-999.0 && fs_B<m_minCts)continue;
       if(m_minProb>-999.0 && Pchi2<m_minProb)continue;
 
