@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.31 2008-07-14 13:02:07 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.32 2008-07-14 15:48:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -785,14 +785,19 @@ void ParticleEffPurMoni::printStats() const
                   for ( std::set<StringPair>::const_iterator iCorPartLoc = _corLocs.begin();
                         iCorPartLoc != _corLocs.end(); ++iCorPartLoc )
                   {
-                    const std::string & corname = iCorPartLoc->second;
-                    const MCTally & corTally = (m_correlations[corname])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                    makeEffHisto( h_path.str()+"/ MCParticle -> "+corname+" Versus Ptot",
+                    const MCTally & corTally = (m_correlations[iCorPartLoc->second])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
+                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus Ptot",
                                   corTally.effVp(), mcTally.effVp() );
-                    makeEffHisto( h_path.str()+"/ MCParticle -> "+corname+" Versus Pt",
+                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus Pt",
                                   corTally.effVpt(), mcTally.effVpt() );
-                    makeEffHisto( h_path.str()+"/ MCParticle -> "+corname+" Versus P&Pt",
+                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus P&Pt",
                                   corTally.effVpVpt(), mcTally.effVpVpt() );
+                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus Ptot",
+                                  corTally.effVp(), tally.effVp() );
+                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus Pt",
+                                  corTally.effVpt(), tally.effVpt() );
+                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus P&Pt",
+                                  corTally.effVpVpt(), tally.effVpVpt() );
                   }
                 }
               }
