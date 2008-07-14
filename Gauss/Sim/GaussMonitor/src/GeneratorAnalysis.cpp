@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.4 2007-04-13 16:30:11 gcorti Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.5 2008-07-14 20:33:42 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -839,46 +839,53 @@ void GeneratorAnalysis::normHistos()
 void GeneratorAnalysis::bHadronInfo( LHCb::ParticleID m_mPID, 
                                  LHCb::ParticleID m_dPID )
 {
-  if( ( (m_mPID.isMeson()) && (m_mPID.hasBottom()) ) ||
-      ( (m_mPID.isMeson()) && (m_mPID.hasTop())    )
-      ){
-  }else{
+    if ( m_dPID.abspid() == 5 ) return ;
+    if ( ! m_mPID.hasBottom() ) {
     if(m_dPID.hasBottom()){
       m_nBParticles++;
       //Set default B Hadron Type
       bHadronType type = BdMeson;
-      
+      bool valid = false ;
       if(m_dPID.isMeson()){
         //Daughter has bottom and is a meson
         if(m_dPID.hasDown()){
           m_nBdMeson++;
-          type = BdMeson;          
+          type = BdMeson;  
+          valid = true ;        
         }else if(m_dPID.hasUp()){
           m_nBuMeson++;
           type = BuMeson;        
+          valid = true ;
         }else if(m_dPID.hasStrange()){
           m_nBsMeson++;
           type = BsMeson;
+          valid = true ;
         }else if(m_dPID.hasCharm()){
           m_nBcMeson++;
           type = BcMeson;
+          valid = true ;
         }else if(m_dPID.hasTop()){
           m_nTbMeson++;            
           type = TbMeson;
+          valid = true ;
         }else{
           m_nBbMeson++;
           type = BbMeson;
+          valid = true ;
         }  
-      }
-      if(m_dPID.isBaryon()){
+      } else if(m_dPID.isBaryon()){
         //Daughter is a B baryon
         type = BBaryon;
+        valid = true ;
         if(    !( (m_mPID.isBaryon()) && (m_mPID.hasBottom()) )   ){
           //Mother not a BBaryon
           m_nBBaryon++;  
         }
       }
-      if( produceHistos() ) m_bMesonFraction->fill((double)type);
+      if ( ! valid ) 
+        warning() << "Unknown B code " << m_dPID << endreq ;
+      if( produceHistos() )
+       if ( valid ) m_bMesonFraction->fill((double)( (int) type ) - 0.1 );
     }
     
     //Set default meson spin state
@@ -923,5 +930,5 @@ void GeneratorAnalysis::bHadronInfo( LHCb::ParticleID m_mPID,
       }
       if( produceHistos() ) m_bMesonStatesCode->fill((double)spin);
     }
-  }
+    }
 }
