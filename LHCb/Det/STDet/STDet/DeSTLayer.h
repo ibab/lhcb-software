@@ -1,4 +1,4 @@
-// $Id: DeSTLayer.h,v 1.10 2008-06-16 14:24:03 mneedham Exp $
+// $Id: DeSTLayer.h,v 1.11 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeSTLayer_H_
 #define _DeSTLayer_H_
 
@@ -84,6 +84,8 @@ public:
   * Nickname for the layer
   **/
   const std::string& nickname() const;
+
+
 
 protected:
 

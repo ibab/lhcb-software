@@ -6,6 +6,7 @@
 
 //STL
 #include <algorithm>
+#include <numeric>
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -79,5 +80,10 @@ DeTTLayer* DeTTStation::findLayer(const Gaudi::XYZPoint& point) {
   return (iter != m_layers.end() ? *iter: 0);
 }
 
+
+double DeTTStation::fractionActive() const {
+
+  return std::accumulate(m_layers.begin(), m_layers.end(), 0.0,  _1 + bind(&DeTTLayer::fractionActive,_2))/double(m_layers.size());   
+}
 
 

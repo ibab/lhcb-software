@@ -14,6 +14,11 @@
 
 #include "Kernel/STChannelID.h"
 
+//STL
+#include <algorithm>
+#include <numeric>
+
+
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -70,6 +75,12 @@ DeITBox* DeITStation::findBox(const Gaudi::XYZPoint& point) {
                                                         bind(&DeITBox::isInside, _1, point)); 
   return (iter != m_boxes.end() ? *iter: 0);
 }
+
+double DeITStation::fractionActive() const {
+
+  return std::accumulate(m_boxes.begin(), m_boxes.end(), 0.0,  _1 + bind(&DeITBox::fractionActive,_2))/double(m_boxes.size());   
+}
+
 
 
 

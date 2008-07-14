@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.28 2008-06-16 14:24:03 mneedham Exp $
+// $Id: DeSTSector.h,v 1.29 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -243,6 +243,12 @@ public:
   * Nickname for the sensor 
   **/
   const std::string& nickname() const ; 
+
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
 
 protected:
 

@@ -70,6 +70,12 @@ public:
   /** vector of children */
   const Children& layers() const; 
 
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
+
 private:
 
 

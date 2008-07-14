@@ -1,4 +1,4 @@
-// $Id: DeITLayer.h,v 1.6 2007-03-01 11:08:00 cattanem Exp $
+// $Id: DeITLayer.h,v 1.7 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeITLayer_H_
 #define _DeITLayer_H_
 
@@ -75,6 +75,12 @@ public:
 
   /** vector of children */
   const DeITLayer::Children& ladders() const;
+
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
 
 private:
 

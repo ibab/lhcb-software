@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.cpp,v 1.15 2006-08-28 08:04:05 mneedham Exp $
+// $Id: DeSTDetector.cpp,v 1.16 2008-07-14 07:38:36 mneedham Exp $
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTStation.h"
@@ -193,4 +193,10 @@ std::auto_ptr<LHCb::Trajectory> DeSTDetector::trajectoryLastStrip(const LHCb::LH
   }
   return tTraj;  
 }
+
+double DeSTDetector::fractionActive() const {
+
+  return std::accumulate(m_sectors.begin(), m_sectors.end(), 0.0,  _1 + bind(&DeSTSector::fractionActive,_2))/double(m_sectors.size());   
+}
+
 

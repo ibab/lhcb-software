@@ -1,4 +1,4 @@
-// $Id: DeITStation.h,v 1.3 2007-02-28 18:30:45 marcocle Exp $
+// $Id: DeITStation.h,v 1.4 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeITStation_H_
 #define _DeITStation_H_
 
@@ -71,6 +71,12 @@ public:
 
   /** vector of children */
   const DeITStation::Children& boxes() const; 
+
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
 
 private:
    

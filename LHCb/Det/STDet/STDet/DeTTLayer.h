@@ -1,4 +1,4 @@
-// $Id: DeTTLayer.h,v 1.5 2007-03-01 11:08:01 cattanem Exp $
+// $Id: DeTTLayer.h,v 1.6 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeTTLayer_H_
 #define _DeTTLayer_H_
 
@@ -76,6 +76,12 @@ public:
 
   /** vector of children */
   const DeTTLayer::Children& DeTTLayer::halfModules() const;
+
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
 
  private:
 

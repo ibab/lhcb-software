@@ -1,4 +1,4 @@
-// $Id: DeSTDetector.h,v 1.21 2007-09-12 08:28:51 mneedham Exp $
+// $Id: DeSTDetector.h,v 1.22 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeSTDetector_H_
 #define _DeSTDetector_H_
 
@@ -169,6 +169,15 @@ public:
   /** number of layers per station **/
   unsigned int nLayersPerStation() const;
 
+  /** 
+  * fraction active channels
+  * @return bool fraction active
+  */
+  double fractionActive() const;
+
+  /** find a list of sectors from channelIDs **/
+  DeSTDetector::Sectors findSectors(const std::vector<LHCb::STChannelID>& vec);
+
 protected:
 
   /** set the first Station number */
@@ -278,6 +287,17 @@ inline unsigned int DeSTDetector::nReadoutSector() const{
 
 inline unsigned int DeSTDetector::nLayersPerStation() const{
   return nLayer()/nStation();
+}
+
+inline DeSTDetector::Sectors DeSTDetector::findSectors(const std::vector<LHCb::STChannelID>& vec){
+  std::vector<DeSTSector*> sectors; sectors.reserve(vec.size());
+  std::vector<LHCb::STChannelID>::const_iterator iter = vec.begin();
+  for (; iter != vec.end(); ++iter){
+    DeSTSector* aSector = findSector(*iter);
+    if (aSector != 0) sectors.push_back(aSector);
+  }  // for 
+  std::unique(sectors.begin(), sectors.end());
+  return sectors;
 }
 
 #endif // _DeSTDetector_H

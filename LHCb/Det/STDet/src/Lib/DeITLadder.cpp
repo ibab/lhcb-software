@@ -67,7 +67,7 @@ StatusCode DeITLadder::initialize() {
 std::ostream& DeITLadder::printOut( std::ostream& os ) const{
 
   // stream to cout
-  os << " Box : "  << name() 
+  os << " Ladder : "  << name() 
      << " id " << id() 
      << std::endl;
 
@@ -77,13 +77,17 @@ std::ostream& DeITLadder::printOut( std::ostream& os ) const{
 MsgStream& DeITLadder::printOut( MsgStream& os ) const{
 
   // stream to Msg service
-  os << " Box : "  << name() 
+  os << " Ladder : "  << name() 
      << " id " << id() 
      << std::endl;
 
   return os;
 }
 
+double DeITLadder::fractionActive() const {
+
+  return m_child->fractionActive();
+}
 
 
 

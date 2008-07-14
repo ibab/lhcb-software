@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.42 2008-07-04 08:04:57 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.43 2008-07-14 07:38:36 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -338,6 +338,16 @@ bool DeSTSector::globalInBondGap(const Gaudi::XYZPoint& point,
   return (aSensor ?  aSensor->globalInBondGap(point, tol) : false ); 
 };
 
+double DeSTSector::fractionActive() const {
 
+  unsigned int nActive = 0u;
+  std::vector<DeSTSector::Status> statusVector = stripStatus();
+  std::vector<DeSTSector::Status>::iterator iter = statusVector.begin();
+  for (; iter != statusVector.end(); ++iter){
+    if ( *iter == DeSTSector::OK || *iter == DeSTSector::Pinhole  ) ++nActive;
+  }
+
+  return nActive/double(nStrip());
+}
 
 

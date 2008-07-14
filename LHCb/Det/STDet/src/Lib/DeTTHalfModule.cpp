@@ -20,6 +20,7 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <numeric>
 
 using namespace LHCb;
 using namespace boost::lambda;
@@ -115,10 +116,16 @@ DeTTSector* DeTTHalfModule::findSector(const Gaudi::XYZPoint& point) {
 
   // find the half module 
   Children::iterator iter = std::find_if(m_sectors.begin(), m_sectors.end(), 
-                                                            bind(&DeTTHalfModule::isInside, _1, point)); 
+                                                            bind(&DeSTSector::isInside, _1, point)); 
 
   return (iter != m_sectors.end() ? *iter: 0);
 }
 
 
+
+double DeTTHalfModule::fractionActive() const {
+
+  return std::accumulate(m_sectors.begin(), m_sectors.end(), 0.0,  _1 + bind(&DeSTSector::fractionActive,_2))/double(m_sectors.size()); 
+  
+}
 

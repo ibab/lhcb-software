@@ -1,4 +1,4 @@
-// $Id: DeITBox.h,v 1.5 2008-06-16 14:24:03 mneedham Exp $
+// $Id: DeITBox.h,v 1.6 2008-07-14 07:38:36 mneedham Exp $
 #ifndef _DeITBox_H_
 #define _DeITBox_H_
 
@@ -88,6 +88,12 @@ public:
 
    /** Nickname for the box **/   
    const std::string& nickname() const;
+
+   /** 
+   * fraction active channels
+   * @return bool fraction active
+   */
+   double fractionActive() const;
 
 private:
 

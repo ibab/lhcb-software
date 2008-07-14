@@ -9,6 +9,7 @@
 
 //STL
 #include <algorithm>
+#include <numeric>
 
 // Boost
 #include <boost/lambda/bind.hpp>
@@ -92,6 +93,13 @@ void DeTTLayer::flatten() {
   } // half module
 
 }
+
+
+double DeTTLayer::fractionActive() const {
+
+  return std::accumulate(m_modules.begin(), m_modules.end(), 0.0,  _1 + bind(&DeTTHalfModule::fractionActive,_2))/double(m_modules.size());   
+}
+
 
 
 

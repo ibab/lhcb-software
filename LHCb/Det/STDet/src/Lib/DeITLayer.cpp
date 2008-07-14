@@ -14,6 +14,12 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+
+
+//STL
+#include <numeric>
+#include <algorithm>
+
 #include "Kernel/ITNames.h"
 
 using namespace LHCb;
@@ -79,5 +85,11 @@ void DeITLayer::flatten() {
  } //sectors     
 
 }
+
+double DeITLayer::fractionActive() const {
+
+  return std::accumulate(m_ladders.begin(), m_ladders.end(), 0.0,  _1 + bind(&DeITLadder::fractionActive,_2))/double(m_ladders.size());   
+}
+
 
 
