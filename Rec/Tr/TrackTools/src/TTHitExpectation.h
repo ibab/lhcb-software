@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.h,v 1.3 2008-04-18 07:55:44 mneedham Exp $
+// $Id: TTHitExpectation.h,v 1.4 2008-07-14 10:24:08 mneedham Exp $
 #ifndef _TTHitExpectation_H
 #define _TTHitExpectation_H
 
@@ -14,7 +14,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "TsaKernel/Line3D.h"
 #include "TrackInterfaces/IHitExpectation.h"
-
+#include "LHCbMath/GeomFun.h"
+#include "GaudiKernel/Plane3DTypes.h"
 #include <string>
 
 namespace LHCb{
@@ -67,7 +68,16 @@ private:
   void collectHits(std::vector<LHCb::STChannelID>& chan, 
 		  LHCb::StateVector stateVec, const unsigned int station ) const;
 
-  bool insideSensor(const DeSTSensor* sensor,const LHCb::StateVector& stateVec) const;
+  bool insideSensor(const DeSTSensor* sensor,const Tf::Tsa::Line3D& line) const;
+
+  Gaudi::XYZPoint intersection(const Tf::Tsa::Line3D& line,
+                               const Gaudi::Plane3D& aPlane) const;
+
+  bool isOKStrip(const LHCb::STChannelID& elemChan,
+                  const DeSTSector* sector,
+                  const unsigned int firstStrip, 
+                  const unsigned int lastStrip) const;
+
  
   ITrackExtrapolator* m_extrapolator;
   DeSTDetector* m_ttDet;
@@ -82,11 +92,10 @@ private:
 #include "STDet/DeSTSensor.h"
 
 inline bool TTHitExpectation::insideSensor(const DeSTSensor* sensor,
-                                           const LHCb::StateVector& stateVec) const{
+                                           const Tf::Tsa::Line3D& line) const{
 
   bool isIn = false;
   Gaudi::XYZPoint point;
-  Tf::Tsa::Line3D line(stateVec.position(), stateVec.slopes());
   double mu;
   if (Gaudi::Math::intersection(line, sensor->plane() ,point, mu) == true){
     isIn = sensor->globalInActive(point);

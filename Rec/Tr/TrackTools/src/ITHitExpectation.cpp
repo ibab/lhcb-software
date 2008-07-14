@@ -1,4 +1,4 @@
-// $Id: ITHitExpectation.cpp,v 1.3 2007-10-10 18:32:17 smenzeme Exp $
+// $Id: ITHitExpectation.cpp,v 1.4 2008-07-14 10:24:08 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,6 +29,8 @@
 
 #include <algorithm>
 #include <utility>
+
+#include "LHCbMath/GeomFun.h"
 
 using namespace boost::lambda;
 using namespace LHCb;

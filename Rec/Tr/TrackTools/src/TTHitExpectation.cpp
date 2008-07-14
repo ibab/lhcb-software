@@ -1,4 +1,4 @@
-// $Id: TTHitExpectation.cpp,v 1.3 2008-04-18 07:55:44 mneedham Exp $
+// $Id: TTHitExpectation.cpp,v 1.4 2008-07-14 10:24:08 mneedham Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -111,12 +111,63 @@ void TTHitExpectation::collectHits(std::vector<LHCb::STChannelID>& chan,
       const DeSTSector::Sensors& tsensors = (*iterS)->sensors();
       DeSTSector::Sensors::const_iterator iter = tsensors.begin();
       for (; iter != tsensors.end(); ++iter){
-        if (insideSensor(*iter,stateVec) == true){
-          chan.push_back(elemID);
+        Tf::Tsa::Line3D aLine3D(stateVec.position(), stateVec.slopes());
+        if (insideSensor(*iter, aLine3D) == true){
+
+	  // get the list of strips that could be in the cluster
+          Gaudi::XYZPoint globalEntry = intersection(aLine3D,(*iter)->entryPlane());
+          Gaudi::XYZPoint globalExit = intersection(aLine3D,(*iter)->exitPlane());
+          Gaudi::XYZPoint localEntry = (*iter)->toLocal(globalEntry);
+          Gaudi::XYZPoint localExit =  (*iter)->toLocal(globalExit);
+
+          unsigned int firstStrip = (*iter)->localUToStrip(localEntry.x());
+          unsigned int lastStrip =  (*iter)->localUToStrip(localExit.x());
+         
+          // might have to swap...
+          if (firstStrip > lastStrip) std::swap(firstStrip, lastStrip);
+
+          // allow for capacitive coupling....
+          if ((*iter)->isStrip(firstStrip-1) == true) --firstStrip;
+          if ((*iter)->isStrip(lastStrip+1) == true) ++lastStrip;
+
+          if (isOKStrip(elemID, *iterS  ,firstStrip, lastStrip) == true){
+            chan.push_back(elemID);
+	  }
         }
       }  // iter
     } // station
   } // sector
+}
+
+
+Gaudi::XYZPoint TTHitExpectation::intersection(const Tf::Tsa::Line3D& line,
+                                            const Gaudi::Plane3D& aPlane) const{
+
+  // make a plane
+  Gaudi::XYZPoint inter;
+  double mu = 0;
+  Gaudi::Math::intersection(line,aPlane,inter,mu);
+  return inter;
+}
+
+
+bool TTHitExpectation::isOKStrip(const LHCb::STChannelID& elemChan,
+                              const DeSTSector* sector,
+                              const unsigned int firstStrip, 
+                              const unsigned int lastStrip) const{
+
+
+  unsigned int iStrip = firstStrip;
+  for (; iStrip <= lastStrip; ++iStrip){
+
+     LHCb::STChannelID aChan = LHCb::STChannelID(elemChan.type(),
+                                                      elemChan.station(),
+                                                      elemChan.layer(),
+                                                      elemChan.detRegion(),
+                                                      elemChan.sector(), iStrip);
+     if (sector->isOKStrip(aChan) == false) return false;
+  }
+  return true;
 }
 
 
