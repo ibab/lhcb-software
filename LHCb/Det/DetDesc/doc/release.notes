@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.371 2008-07-11 16:35:05 marcocle Exp $ 
+! $Id: release.notes,v 1.372 2008-07-14 08:35:31 smenzeme Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+! 2008-07-14 - Stephanie Hansmann-Menzemer
+ - Minor fix to the computation of the molar weight for computation of dE/dx
+   constants for mixtures - almost no effect on fitted tracks
 
 ! 2008-07-11 - Marco Clemencic
  - Minor changes to AlignmentConditions to be able to subclass it (needed by the

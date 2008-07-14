@@ -1,4 +1,4 @@
-// $Id: Mixture.cpp,v 1.12 2008-05-20 08:27:43 smenzeme Exp $ 
+// $Id: Mixture.cpp,v 1.13 2008-07-14 08:35:31 smenzeme Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -128,14 +128,13 @@ StatusCode Mixture::computeByAtoms()
                               + "mismatch in container sizes!",this);}
   ///
   /// Compute molecular weight
-  double Amol     = 0.0;
+  double sum     = 0.0;
   for( unsigned int i1 = 0 ; i1 < m_elements.size() ; ++i1 )
-    { Amol += m_atoms[i1] * m_elements[i1].second->A(); }
+    sum += m_atoms[i1]; 
   ///
   /// Compute proprotion by weight for each element
   for( unsigned int i2 = 0; i2 < m_elements.size() ;  ++i2  )      
-    { m_elements[i2].first = 
-        ( m_atoms[i2] * m_elements[i2].second->A() ) / Amol; }
+    m_elements[i2].first = m_atoms[i2]/ sum; 
   ///
   m_atoms.clear();
   ///
