@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.20 2008-07-12 13:41:24 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.21 2008-07-14 12:46:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -74,7 +74,7 @@ public:
 private: // definitions
 
   /** @class EffVersusMomentum ParticleEffPurMoni.h
-   *  Utility class used to create efficneicy versus momentum plots
+   *  Utility class used to create efficiency versus momentum (p or pt) plots
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   09/07/2008
    */
@@ -122,8 +122,8 @@ private: // definitions
     Data m_data;          ///< The data
   };
 
-  /** @class EffVersusMomentum ParticleEffPurMoni.h
-   *  Utility class used to create efficneicy versus momentum plots
+  /** @class EffVersusMomentum2D ParticleEffPurMoni.h
+   *  Utility class used to create efficiency versus momentum (p,pt) plots
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   09/07/2008
    */
@@ -193,7 +193,8 @@ private: // definitions
   };
 
   /** @class ParticleHistory ParticleEffPurMoni.h
-   *  Utility class containing basic Particle history information for the ParticleEffPurMoni algorithm
+   *  Utility class containing basic Particle history information for the
+   *  ParticleEffPurMoni algorithm
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2007-02-21
    */
@@ -231,11 +232,16 @@ private: // definitions
   /// Type for mapping between ProtoParticle and list of Particles produced from it
   typedef std::map<const LHCb::ProtoParticle *, ParticleHistory::Vector > ParticleProtoMap;
 
-  /// Simple tally map for each particle type
+  /** @class MCTally ParticleEffPurMoni.h
+   *  Simple tally map for each particle type
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2007-02-21
+   */
   class MCTally
   {
   public:
-    MCTally() : all(0), clones(0), m_effVp(NULL), m_effVpt(NULL), m_effVpVpt(NULL) { }
+    MCTally() : all(0), clones(0), 
+                m_effVp(NULL), m_effVpt(NULL), m_effVpVpt(NULL) { }
     ~MCTally() { delete m_effVp; delete m_effVpt; delete m_effVpVpt; }
   public:
     unsigned long int all;         ///< Total number
@@ -461,15 +467,36 @@ private: // methods
   /// ProtoParticle short location name
   const std::string & shortProtoLoc( const std::string & loc ) const;
 
+  /// ProtoParticle short location name
+  const std::string & shortPartLoc( const std::string & loc ) const;
+
   /// Access on demand the truth tool
   const Rich::Rec::MC::IMCTruthTool * truthTool() const
   {
     if ( !m_truthTool )
     {
-      m_truthTool = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool", 
+      m_truthTool = tool<Rich::Rec::MC::IMCTruthTool>( "Rich::Rec::MC::MCTruthTool",
                                                        "RichRecMCTruth" );
     }
     return m_truthTool;
+  }
+
+  /// Creates a unique string to identify the correlation of two ProtoParticle locations
+  inline std::string corProtoLocation( const std::string& protoloc1,
+                                       const std::string& protoloc2 ) const
+  {
+    return ( protoloc1 < protoloc2 ? 
+             shortProtoLoc(protoloc1)+"&"+shortProtoLoc(protoloc2) : 
+             shortProtoLoc(protoloc2)+"&"+shortProtoLoc(protoloc1) );
+  }
+
+  /// Creates a unique string to identify the correlation of two ProtoParticle locations
+  inline std::string corPartLocation( const std::string& loc1,
+                                      const std::string& loc2 ) const
+  {
+    return ( loc1 < loc2 ? 
+             shortPartLoc(loc1)+"&"+shortPartLoc(loc2) : 
+             shortPartLoc(loc2)+"&"+shortPartLoc(loc1) );
   }
 
 private: // data
@@ -517,8 +544,11 @@ private: // data
   mutable MCRecTypeMap m_rawMCMap;
 
   /// Short name mapping for ProtoParticle locations
-  mutable std::map<std::string,std::string> m_protoShortNames;
+  mutable std::map<std::string,std::string> m_ShortNames;
+  /// Number of ProtoParticle locations
   mutable unsigned int m_protoCount;
+  /// Number of Particle locations
+  mutable unsigned int m_partCount;
 
   /// Min percentage contribution to include in summary tables
   double m_minContrib;
@@ -560,7 +590,10 @@ private: // data
   double m_minP;
 
   /// ProtoParticle correlation map
-  mutable std::map<std::string,std::string> m_corProtoMap;
+  mutable std::map<std::string,std::set<std::string> > m_corProtoMap;
+
+  typedef std::pair<std::string,std::string> StringPair;
+  mutable std::map< StringPair, std::string > m_locsToCorMap;
 
 };
 
