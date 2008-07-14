@@ -1,7 +1,6 @@
-// $Id: MagFieldReader.cpp,v 1.14 2008-07-14 15:26:14 ahicheur Exp $
+// $Id: MagFieldReader.cpp,v 1.15 2008-07-14 15:28:49 ahicheur Exp $
 // Include files 
 #include "Riostream.h"
-#include <cctype>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -63,7 +62,7 @@ StatusCode MagFieldReader::initialize() {
   debug() << "FieldReader intialize() has been called" << endmsg;
   
   m_pIMF = svc<IMagneticFieldSvc>( m_FieldServiceName, true );
-  //  m_pIAF = svc<IMagneticFieldSvc>( "AnalyticFieldSvc", true );
+  // m_pIAF = svc<IMagneticFieldSvc>( "AnalyticFieldSvc", true );
 
   info() << "MagFieldReader initialized with service ==> " <<  m_FieldServiceName << endmsg;
   return StatusCode::SUCCESS;
@@ -83,62 +82,19 @@ StatusCode MagFieldReader::execute() {
   Tuple nt1 = nTuple( 10, "Field", CLID_ColumnWiseTuple );
 
   Gaudi::XYZVector B(0.0,0.0,0.0);
-  Gaudi::XYZVector Ba(0.0,0.0,0.0);
-  //  ofstream gridmap;
-  //  gridmap.open("/afs/cern.ch/user/a/ahicheur/w0/bfieldvalid/gridmap10_new.txt");
-  // gridmap.open("gridmap_nomag8-9y30.txt");    
-  /*  gridmap<<"DETECTOR"<<endl;
-  gridmap<<"NAME: FLDT"<<endl;
-  gridmap<<"VERSION: test"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"# Units are in cgs"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"AUTHOR: Adlene Hicheur"<<endl;
-  //  gridmap<<"PARAMETERS: 736285"<<endl;
-  gridmap<<"PARAMETERS: 5727760"<<endl;
-  gridmap<<"GEOMETRY"<<endl;
-  gridmap<<"#   DX   DY   DZ  NX  NY  NZ   Z_OFFSET"<<endl;
-  //  gridmap<<"   10.0 10.0 10.0 41  41  146  -50.0"<<endl;
-  gridmap<<"   5.0 5.0 5.0 81  81  291  -50.0"<<endl;
-  gridmap<<"#"<<endl;
-  gridmap<<"#"<<endl;*/
+
+
 
   for ( double z = m_zMin; z <= m_zMax; z += m_step ) {
     for( double y = m_yMin; y <= m_yMax; y += m_step ) {
       for( double x = m_xMin; x <= m_xMax; x += m_step ) {
         Gaudi::XYZPoint P( x, y, z );
         
-        //     bool vetoy30 = z>=470.0*Gaudi::Units::cm && z<510.0*Gaudi::Units::cm && fabs(y)>(fabs(z)*tan(0.25)- 300.0*Gaudi::Units::mm) && fabs(y)<fabs(z)*tan(0.25) && fabs(x) < fabs(z)*tan(0.3);
 
-bool vetoy30 = fabs(y)<fabs(z)*tan(0.25) && fabs(x) < fabs(z)*tan(0.3);
-        //   vetoy30=true;
+          m_pIMF->fieldVector( P, B );
+
         
         
-        // get field at point P
-        //    if (fabs(x)<fabs(z)*tan(0.3) && fabs(y)<(fabs(z)*tan(0.25)) && z<10000.0*Gaudi::Units::mm && !vetoy30) {     
-/*        if(vetoy30 && z > m_zMin && z<1000*Gaudi::Units::cm) {
-          
-          m_pIAF->fieldVector( P, B );
-           } else {
-             m_pIMF->fieldVector( P, B );
-             }*/
-        m_pIMF->fieldVector( P, B );
-          //     double dbx,dby,dbz;
-          //     dbx=B.x()/Gaudi::Units::tesla-Ba.x()/Gaudi::Units::tesla;
-          //     dby=B.y()/Gaudi::Units::tesla-Ba.y()/Gaudi::Units::tesla;
-          //     dbz=B.z()/Gaudi::Units::tesla-Ba.z()/Gaudi::Units::tesla;
-          //   }
-        //     gridmap << setprecision(9) << B.x()/Gaudi::Units::tesla*1e4 << "  " << B.y()/Gaudi::Units::tesla*1e4 << "  " <<  B.z()/Gaudi::Units::tesla*1e4;
-        //if (fabs(B.x())<1e-19 && fabs(B.y())<1e-19 && fabs(B.z())<1e-19) gridmap << " - "<<P.x()<<"  "<<P.y()<<"  "<<P.z();
-        //    if ((B.x()/Gaudi::Units::tesla*1e4-1702.42041)<1e-7) gridmap << " - "<<P.x()<<"  "<<P.y()<<"  "<<P.z();
-        //       if(isnan(B.x()) || isnan(B.y()) || isnan(B.x())) gridmap << " - "<<P.x()<<"  "<<P.y()<<"  "<<P.z();
-//     gridmap<<endl;
-        if(0) {
-        //   gridmap << setprecision(9) << B.x()/Gaudi::Units::tesla*1e4 << "  " << B.y()/Gaudi::Units::tesla*1e4 << "  " <<  B.z()/Gaudi::Units::tesla*1e4;
-          //    if(fabs(B.x()/Gaudi::Units::tesla*1e4)<1e-12 && fabs(B.y()/Gaudi::Units::tesla*1e4)<1e-12 && fabs(B.z()/Gaudi::Units::tesla*1e4)<1e-12) gridmap<<"  ANOM: "<< x << " " <<y<< " "<<z;
-        //   gridmap<<endl;
         
         // fill ntuple
         nt1->column( "x", P.x()/Gaudi::Units::cm );
@@ -147,18 +103,13 @@ bool vetoy30 = fabs(y)<fabs(z)*tan(0.25) && fabs(x) < fabs(z)*tan(0.3);
         nt1->column( "Bx", B.x()/Gaudi::Units::tesla );
         nt1->column( "By", B.y()/Gaudi::Units::tesla );
         nt1->column( "Bz", B.z()/Gaudi::Units::tesla );
-        //  nt1->column( "dBx",dbx);
-        //  nt1->column( "dBy",dby);
-        //  nt1->column( "dBz",dbz);
  
         nt1->write();
-        }
-        
       }
     }
 
      Gaudi::XYZPoint P0( 0.0, 0.0, z);
-   
+     Gaudi::XYZPoint P02( 0.0, 0.0, z);
       m_pIMF->fieldVector( P0, B );
   
 
@@ -168,42 +119,11 @@ bool vetoy30 = fabs(y)<fabs(z)*tan(0.25) && fabs(x) < fabs(z)*tan(0.3);
               << (B.y())/Gaudi::Units::tesla << ", "
               << (B.z())/Gaudi::Units::tesla << " Tesla " 
               << endmsg;
-      /*                 m_pIAF->fieldVector( P0, B );
-      debug() << "Analytic Magnetic Field at ("
-              << P0.x() << ", " << P0.y() << ", " << P0.z() << " ) = "
-              << (B.x())/Gaudi::Units::tesla << ", "
-              << (B.y())/Gaudi::Units::tesla << ", "
-              << (B.z())/Gaudi::Units::tesla << " Tesla " 
-              << endmsg;*/
+
 
   }
 
-  //field value at the four probes:
-  std::cout<<" ----- FIELD VALUE AT THE FOUR PROBES POSITIONS ----- "<<std::endl;
-  std::cout<<"Probe 0: "<<std::endl;
-    Gaudi::XYZPoint Pr0( 99.86*Gaudi::Units::cm, -132.47*Gaudi::Units::cm, 511.04*Gaudi::Units::cm);
-      m_pIMF->fieldVector( Pr0, B );
-      std::cout<<"Position: "<<Pr0.x()<<" * "<<Pr0.y()<<" * "<<Pr0.z()<<std::endl;
-      std::cout<<"Field: "<<B.x()/Gaudi::Units::tesla<<" * "<<B.y()/Gaudi::Units::tesla<<" * "<<B.z()/Gaudi::Units::tesla<<std::endl;
-std::cout<<"Probe 1: "<<std::endl;
-    Gaudi::XYZPoint Pr1( 155.41*Gaudi::Units::cm, 82.20*Gaudi::Units::cm, 511.36*Gaudi::Units::cm); 
-m_pIMF->fieldVector( Pr1, B );
-      std::cout<<"Position: "<<Pr1.x()<<" * "<<Pr1.y()<<" * "<<Pr1.z()<<std::endl;
-      std::cout<<"Field: "<<B.x()/Gaudi::Units::tesla<<" * "<<B.y()/Gaudi::Units::tesla<<" * "<<B.z()/Gaudi::Units::tesla<<std::endl;
-std::cout<<"Probe 2: "<<std::endl;
-    Gaudi::XYZPoint Pr2( 100.36*Gaudi::Units::cm, 131.96*Gaudi::Units::cm, 511.13*Gaudi::Units::cm); 
-m_pIMF->fieldVector( Pr2, B );
-      std::cout<<"Position: "<<Pr2.x()<<" * "<<Pr2.y()<<" * "<<Pr2.z()<<std::endl;
-      std::cout<<"Field: "<<B.x()/Gaudi::Units::tesla<<" * "<<B.y()/Gaudi::Units::tesla<<" * "<<B.z()/Gaudi::Units::tesla<<std::endl;
-std::cout<<"Probe 3: "<<std::endl;
-    Gaudi::XYZPoint Pr3( -154.74*Gaudi::Units::cm, 83.02*Gaudi::Units::cm, 511.34*Gaudi::Units::cm); 
-m_pIMF->fieldVector( Pr3, B );
-       std::cout<<"Position: "<<Pr3.x()<<" * "<<Pr3.y()<<" * "<<Pr3.z()<<std::endl;
-      std::cout<<"Field: "<<B.x()/Gaudi::Units::tesla<<" * "<<B.y()/Gaudi::Units::tesla<<" * "<<B.z()/Gaudi::Units::tesla<<std::endl;
 
-
-
-  // gridmap.close();
 
   // Return status code.
   return StatusCode::SUCCESS;

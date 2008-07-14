@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.18 2008-07-03 14:37:03 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.19 2008-07-14 15:26:14 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -42,8 +42,7 @@ public:
   /// Initialise the service (Inherited Service overrides) 
   virtual StatusCode initialize();
   
-  /// Finalize the service (Inherited Service overrides) 
-  virtual StatusCode finalize();
+ 
   
   /** Query the available interfaces.
    * @param riid Requested interface ID
@@ -72,6 +71,7 @@ private:
   StatusCode parseFile( );       ///< Reads the field map from file 
   StatusCode parseRealFiles( );  ///< Reads the real field map from files 
   StatusCode i_updateScaling(); ///< Reads current and polarity from conditions
+  double GetScale();
   
 
   

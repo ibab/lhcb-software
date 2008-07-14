@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.30 2008-07-03 14:37:02 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.31 2008-07-14 15:26:14 ahicheur Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -122,20 +122,7 @@ StatusCode MagneticFieldSvc::initialize()
 
 }
 
-//=========================================================================
-// Finalize 
-//=========================================================================
-StatusCode MagneticFieldSvc::finalize ( ) {
-  
-  if (m_updMgrSvc) {
-    m_updMgrSvc->unregister(this);
-    m_updMgrSvc->release();
-    m_updMgrSvc = 0;
-  }
-  
 
-  return Service::finalize();
-}
 
 //=============================================================================
 // QueryInterface
@@ -555,9 +542,9 @@ StatusCode MagneticFieldSvc::i_updateScaling()
   MsgStream log(msgSvc(), name());
   m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent*m_condition->param<int>("Polarity");
   
-  log << MSG::INFO << "*** Print Magnet conditions *** " << endreq;
-  log << MSG::INFO << "Current: "<< m_condition->param<double>("Current") <<endreq;
-  log << MSG::INFO << "Polarity: "<< m_condition->param<int>("Polarity") <<endreq;  
+  //  log << MSG::INFO << "*** Print Magnet conditions *** " << endmsg;
+  log << MSG::INFO << "Conditions path name: "<<m_condPath<<endmsg;
+  log << MSG::INFO << "Current: "<< m_condition->param<double>("Current") << " || Polarity: "<< m_condition->param<int>("Polarity") <<endmsg;  
  
   if( fabs(m_scaleFactor-1.) > 1e-6 ) {
     log << MSG::WARNING << "Field map will be scaled by a factor = "
@@ -566,4 +553,9 @@ StatusCode MagneticFieldSvc::i_updateScaling()
   
   return StatusCode::SUCCESS; 
   
+}
+
+double MagneticFieldSvc::GetScale() 
+{
+  return m_scaleFactor;
 }
