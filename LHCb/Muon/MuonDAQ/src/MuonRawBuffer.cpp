@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.19 2008-07-15 11:38:28 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.20 2008-07-15 17:39:18 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -1266,7 +1266,7 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
   //now check the fw version
 
   //compact data  in one container
-  unsigned int ReferenceVersion=(*(b.begin()))->version();
+  int ReferenceVersion=(*(b.begin()))->version();
 
   for( itB = b.begin(); itB != b.end(); itB++ ) {  
 
