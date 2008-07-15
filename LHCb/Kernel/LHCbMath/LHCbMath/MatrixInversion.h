@@ -32,7 +32,7 @@ namespace Gaudi
      *  @author Manuel Schiller
      *  @date 2008-07-14
      **/
-    bool invertPosDefSymMatrix( Gaudi::SymMatrix5x5& m )
+    inline bool invertPosDefSymMatrix( Gaudi::SymMatrix5x5& m )
     {
       // perform cholesky decomposition of matrix: M = L L^T
       // only thing that can go wrong: trying to take square root of negative
