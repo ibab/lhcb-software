@@ -3,9 +3,11 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2008-15-07 Stephanie Hansmann-Menzemer
+- move TsaSeeding.py to options directory
 
-! 2008015-07 M Needham
- - Add missing heaader in ITExpectedHits
+! 2008-15-07 M Needham
+ - Add missing header in ITExpectedHits
 
 ! 2008-14-07 
  - add use of dead strips in ITExpectedHits tool
