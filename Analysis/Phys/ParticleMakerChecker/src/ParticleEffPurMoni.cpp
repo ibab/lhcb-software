@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.33 2008-07-15 11:15:20 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.34 2008-07-15 11:51:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -886,7 +886,7 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
   if ( h )
   {
     TProfile * histo = Gaudi::Utils::Aida2ROOT::aida2root(h);
-    histo->SetErrorOption("g");
+    if (histo) histo->SetErrorOption("g");
   }
 }
 
@@ -921,7 +921,7 @@ void ParticleEffPurMoni::makeEffHisto( const std::string title,
   if ( h )
   {
     TProfile2D * histo = Gaudi::Utils::Aida2ROOT::aida2root(h);
-    histo->SetErrorOption("g");
+    if (histo) histo->SetErrorOption("g");
   }
 }
 
