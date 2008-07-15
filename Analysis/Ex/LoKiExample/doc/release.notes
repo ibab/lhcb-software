@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.34 2008-07-11 15:19:20 ibelyaev Exp $ 
+! $Id: release.notes,v 1.35 2008-07-15 10:18:10 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.34 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.35 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-15 - Vanya BELYAEV
+
+ - add new example LoKi_DCCheck
+
+   for testing of IDistanceCalculator tools 
 
 ! 2008-07-11 - Vanya BELYAEV
 
