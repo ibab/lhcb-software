@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.24 2008-07-15 11:15:20 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.25 2008-07-15 18:10:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -233,19 +233,22 @@ private: // definitions
   public:
     /// Operator ==
     inline bool operator== ( const ParticleHistory& hist ) const
-    { return ( this->particle == hist.particle &&
-               this->history  == hist.history  ); }
+    {
+      return ( this->particle == hist.particle &&
+               this->history  == hist.history  );
+    }
     /// Operator !=
     inline bool operator!= ( const ParticleHistory& hist ) const
-    {  return ! this->operator==(hist); }
+    {  
+      return ! this->operator==(hist); 
+    }
     /// Operator <
     inline bool operator<  ( const ParticleHistory& hist ) const
-    { return ( this->particle < hist.particle &&
-               this->history  < hist.history  ); }
-    /// Operator >
-    inline bool operator>  ( const ParticleHistory& hist ) const
-    { return ( this->particle > hist.particle &&
-               this->history  > hist.history  ); }
+    {
+      // CRJ : Could do this more efficiently ...
+      return ( boost::lexical_cast<std::string>(this->particle)+this->history <
+               boost::lexical_cast<std::string>(hist.particle)+hist.history   );
+    }
   };
 
   /// Type for mapping between ProtoParticle and list of Particles produced from it

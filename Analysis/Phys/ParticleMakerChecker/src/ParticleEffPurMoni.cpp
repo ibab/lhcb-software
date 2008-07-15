@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.34 2008-07-15 11:51:33 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.35 2008-07-15 18:10:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -46,7 +46,6 @@ ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
   declareProperty( "UseReversePToMCPNeutral",      m_useRMCPneutral   = true  );
   declareProperty( "UseFullMCDecayTreeClass",      m_fullMCTree       = true  );
   declareProperty( "MaxMCDecayTreeSize",           m_maxMCTreeSize    = 5     );
-  //declareProperty( "MinimumHistoMomentum",       m_minP = 0*Gaudi::Units::GeV );
 }
 
 //=============================================================================
@@ -110,12 +109,13 @@ StatusCode ParticleEffPurMoni::execute()
   Locations mcPLocations;
 
   // Protos associated to each MCParticle
-  typedef std::set<const LHCb::ProtoParticle *> ProtoSet;
-  typedef std::map<const LHCb::MCParticle*, ProtoSet> MCP2ProtoSet;
-  MCP2ProtoSet mcp2Protos;
+  typedef std::set<const LHCb::Particle *> PartSet;
+  typedef std::map<const LHCb::MCParticle*, PartSet> MCP2PartSet;
+  MCP2PartSet mcp2Parts;
 
   // already used MCParticles for each each ProtoParticle location
-  std::map< std::string, std::set<const LHCb::MCParticle*> > usedMCPs;
+  typedef std::pair<std::string,std::string> StringPair;
+  std::map< StringPair, std::set<const LHCb::MCParticle*> > usedMCPs;
 
   // Loop over the final list of Protos and associated Particles
   if ( msgLevel(MSG::DEBUG) )
@@ -138,13 +138,6 @@ StatusCode ParticleEffPurMoni::execute()
     // Get the MCParticle
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
 
-    // is this a clone ?
-    const bool isClone =
-      ( usedMCPs[protoTesLoc].find(mcPart) != usedMCPs[protoTesLoc].end() );
-
-    // add to list of seen MCPs
-    usedMCPs[protoTesLoc].insert(mcPart);
-
     // Store the TES location for this MCParticle container
     if (mcPart) mcPLocations.insert( objectLocation(mcPart->parent()) );
 
@@ -158,9 +151,6 @@ StatusCode ParticleEffPurMoni::execute()
     // protoparticle type (long etc.)
     const std::string& protoType = protoParticleType((*iPM).first);
 
-    // Proto Correlations
-    if ( !isClone && mcPart ) { mcp2Protos[mcPart].insert( (*iPM).first ); }
-
     // Loop over Particles for the Proto
     for ( ParticleHistory::Map::const_iterator iPart = (*iPM).second.begin();
           iPart != (*iPM).second.end(); ++iPart )
@@ -171,9 +161,24 @@ StatusCode ParticleEffPurMoni::execute()
         debug() << " -> Found Particle in " << tesLoc << endreq
                 << " -> " << (*iPart).first << endreq;
 
+      // is this a clone ?
+      const StringPair cloneKey(tesLoc,protoTesLoc);
+      const bool isClone =
+        ( usedMCPs[cloneKey].find(mcPart) != usedMCPs[cloneKey].end() );
+
+      // add to list of seen MCPs
+      usedMCPs[cloneKey].insert(mcPart);
+
       // count protos per particle TES
       ++((m_partProtoTESStats[tesLoc])[protoTesLoc]).nTotal;
       if ( mcPart ) ++((m_partProtoTESStats[tesLoc])[protoTesLoc]).nWithMC;
+
+      // Proto Correlations
+      if ( !isClone && mcPart )
+      {
+        verbose() << "   -> Adding " << (*iPart).first.firstParticle << " to MCPs" << endreq;
+        mcp2Parts[mcPart].insert( (*iPart).first.firstParticle );
+      }
 
       // get the data for this TES location
       MCSummaryMap & mcMap = m_locMap[tesLoc];
@@ -305,11 +310,13 @@ StatusCode ParticleEffPurMoni::execute()
   }
 
   // Loop over found MCParticles with associated protos, if more than one proto location found
-  if ( protoLocations.size() > 1 )
+  for ( MCP2PartSet::const_iterator iMCP = mcp2Parts.begin();
+        iMCP != mcp2Parts.end(); ++iMCP )
   {
-    for ( MCP2ProtoSet::const_iterator iMCP = mcp2Protos.begin();
-          iMCP != mcp2Protos.end(); ++iMCP )
+    // Need at least 2 particles for correlations ...
+    if ( (*iMCP).second.size() > 1 )
     {
+
       // Pointer to MCParticle
       const LHCb::MCParticle * mcP = (*iMCP).first;
       if ( !mcP ) continue;
@@ -322,24 +329,32 @@ StatusCode ParticleEffPurMoni::execute()
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcP);
 
       // Loop over the pairs of protos
-      for ( ProtoSet::const_iterator proto1 = (*iMCP).second.begin();
-            proto1 != (*iMCP).second.end(); ++proto1 )
+      for ( PartSet::const_iterator part1 = (*iMCP).second.begin();
+            part1 != (*iMCP).second.end(); ++part1 )
       {
+
+        const LHCb::ProtoParticle * proto1 = (*part1)->proto();
+        // Location in TES for part1
+        const std::string& partloc1   = objectLocation((*part1)->parent());
         // Location in TES for proto1
-        const std::string& protoloc1  = objectLocation((*proto1)->parent());
+        const std::string& protoloc1  = objectLocation(proto1->parent());
         // Type of proto1
-        const std::string& proto1Type = protoParticleType(*proto1);
+        const std::string& proto1Type = protoParticleType(proto1);
         // inner loop over protos
-        ProtoSet::const_iterator proto2 = proto1; ++proto2;
-        for ( ; proto2 != (*iMCP).second.end(); ++proto2 )
+        PartSet::const_iterator part2 = part1; ++part2;
+        for ( ; part2 != (*iMCP).second.end(); ++part2 )
         {
+          const LHCb::ProtoParticle * proto2 = (*part2)->proto();
+          // Location in TES for part2
+          const std::string& partloc2  = objectLocation((*part2)->parent());
           // Location in TES for proto2
-          const std::string& protoloc2 = objectLocation((*proto2)->parent());
+          const std::string& protoloc2 = objectLocation(proto2->parent());
           // Type of proto2
-          const std::string& proto2Type = protoParticleType(*proto2);
-          if ( protoloc1 != protoloc2 && proto1Type == proto2Type )
+          const std::string& proto2Type = protoParticleType(proto2);
+          if ( partloc1 != partloc2 && proto1Type == proto2Type )
           {
-            const std::string& corname = corProtoLocation( protoloc1, protoloc2 );
+            const std::string corname = ( corProtoLocation( protoloc1, protoloc2 ) +
+                                          corPartLocation ( partloc1,  partloc2  ) );
             // count
             MCTally & tally =
               ((m_correlations[corname])[proto1Type].trueMCType[mcRecType])[name];
@@ -353,8 +368,8 @@ StatusCode ParticleEffPurMoni::execute()
         } // proto2 loop
       } // proto1 loop
 
-    } // loop over MCPs
-  } // more than one proto location
+    } // more than one associated particle
+  } // loop over MCPs
 
   return StatusCode::SUCCESS;
 }
@@ -666,10 +681,10 @@ void ParticleEffPurMoni::printStats() const
         {
           always() << "      -> Used ProtoParticles    : " << iXX->first << " "
                    << eff( iXX->second.nWithMC, iXX->second.nTotal ) << "% with MC" << endreq;
-          const std::string corProtoLoc = corProtoLocation(iX->first,iXX->first);
-          const std::string corPartLoc  = corPartLocation((*iLoc).first,(*iLoc2).first);
+          const std::string corLoc = ( corProtoLocation(iX->first,iXX->first) +
+                                       corPartLocation((*iLoc).first,(*iLoc2).first) );
           const std::string effS = "CorrEff"+boost::lexical_cast<std::string>(effN++);
-          _corLocs.insert(StringPair(effS,corProtoLoc));
+          _corLocs.insert(StringPair(effS,corLoc));
           always() << "      -> '" << effS << "' = 100% * ("
                    << shortPartLoc((*iLoc).first) << "&&" << shortPartLoc((*iLoc2).first)
                    << ")/" << shortPartLoc((*iLoc).first) << endreq;
@@ -703,7 +718,7 @@ void ParticleEffPurMoni::printStats() const
         for ( std::set<StringPair>::const_iterator iCorPartLoc = _corLocs.begin();
               iCorPartLoc != _corLocs.end(); ++iCorPartLoc )
         {
-          always() << "   |  " << iCorPartLoc->first;
+          always() << "   |   " << iCorPartLoc->first << "  ";
         }
       }
       always() << endreq;
