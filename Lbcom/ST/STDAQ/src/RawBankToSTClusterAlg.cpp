@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.31 2008-07-15 11:20:26 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.32 2008-07-15 13:47:49 mneedham Exp $
 
 #include <algorithm>
 
@@ -111,7 +111,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   const unsigned int pcn = pcnVote(tBanks);
   if (pcn == STDAQ::inValidPcn && !m_skipErrors) {
     counter("skipped Banks") += tBanks.size();
-    warning() << "PCN vote failed with " << tBanks.size() << endmsg; 
+    debug() << "PCN vote failed with " << tBanks.size() << endmsg; 
     return Warning("PCN vote failed", StatusCode::SUCCESS);
   }
     
@@ -136,6 +136,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     STDecoder decoder((*iterBank)->data());    
     // get verion of the bank
     const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
+
+    std::cout << "version " << version << std::endl;
 
     if (decoder.hasError() == true && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
@@ -224,7 +226,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     clusCont->insert(newCluster,nearestChan.first);
   }   
   else {
-    warning() << "Cluster already exists not inserted: " << aBoard->boardID()<< " " <<  aWord.channelID() << endmsg;  
+    debug() << "Cluster already exists not inserted: " << aBoard->boardID()<< " " <<  aWord.channelID() << endmsg;  
     Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
     delete newCluster; 
   }

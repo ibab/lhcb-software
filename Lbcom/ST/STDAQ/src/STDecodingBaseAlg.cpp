@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.14 2008-07-15 11:20:26 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.15 2008-07-15 13:47:49 mneedham Exp $
 
 #include <algorithm>
 
@@ -133,15 +133,15 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
               << endmsg ;
       Warning("ADC values do not match", StatusCode::FAILURE);
       ok = false;
-      //      break;
+      break;
     }
 
     // decode the channel
     if (aBoard->validChannel(aWord.channelID()) == false){
-      warning() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
+      debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
       Warning("Invalid tell1 channel", StatusCode::SUCCESS); 
       ok = false;
-      // break;
+      break;
     }
 
   } // loop clusters
