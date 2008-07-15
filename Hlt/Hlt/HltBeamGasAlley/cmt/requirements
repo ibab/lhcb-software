@@ -1,0 +1,29 @@
+#============================================================================
+# Created    : 2008-07-14
+# Maintainer : Plamen Hopchev
+#============================================================================
+package           HltBeamGasAlley
+version           v1r0
+
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src 
+include_path      none
+
+
+# Used packages
+#============================================================================
+use	GaudiAlg	v*
+use	HltBase		v*	Hlt
+use	AIDA		v*	LCG_Interfaces
+
+
+# Component library building rule
+#============================================================================
+library          HltBeamGasAlley    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern	component_library	library=HltBeamGasAlley

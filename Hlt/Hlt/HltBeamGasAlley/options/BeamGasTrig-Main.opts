@@ -1,0 +1,61 @@
+// ###################################### 
+// Main job-option file for the BeamGas
+// Triggering algorithms
+// ######################################
+
+//
+// Configure application for DC06 
+//
+#include "$STDOPTS/LHCbApplication.opts"
+#include "$STDOPTS/DstDicts.opts"
+#include "$DDDBROOT/options/DC06.opts"
+
+
+//
+// L0 and HLT sequences
+//
+
+#include "./BeamGasTrig-L0.opts" // Its 1to1 as the default. Is it needed ??? 
+#include "./BeamGasTrig-Hlt1.opts"
+
+// 
+// Histos and NTuple - commented by default
+//
+// ApplicationMgr.HistogramPersistency = "ROOT";
+// HistogramPersistencySvc.OutputFile = "./hopchevHltJobHistos.root";
+// ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// NTupleSvc.Output={"FILE1 DATAFILE='hltjob.root' TYP='ROOT' OPT='NEW'"};
+
+//
+//  Message level
+//
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+//
+// Number of events to process, skip and printing frequency
+//
+
+ApplicationMgr.EvtMax    = 100;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1000;
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+// ##############   MBL0-passed DC06-L0-v1-lumi2 4.6 M Events  #################
+#pragma print off
+#include "/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/part2/datasets/MBL0--4_6M--DC06-L0-v1-lumi2.filelist"
+#pragma print on
+//---------------------------------------------------------------------------
+
+EventSelector.Input += {
+
+//   BeamGas File : 1291 BG pseudol0 fixed 
+//   "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol4/massi/BEAMGAS_MINBIAS/DIGI/pseudol0/beamgas.digi' TYP='POOL_ROOTTREE' OPT='READ'"
+
+};

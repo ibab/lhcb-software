@@ -1,0 +1,14 @@
+//---------------------------
+// LO
+//--------------------------
+
+// Emulate L0
+#include "$L0DUROOT/options/L0Sequence.opts"
+ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
+
+L0.MeasureTime = true;
+// L0.Members += {"L0MuonCandidatesFromRaw"};
+
+L0Muon.WriteOnTES = false ;
+L0DU.WriteOnTES = true ;
+

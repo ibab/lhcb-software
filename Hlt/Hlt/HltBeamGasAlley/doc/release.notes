@@ -1,0 +1,23 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltBeamGasAlley
+! Responsible : Plamen Hopchev
+! Purpose     : Decision algorithms for the two HLT beam-gas alleys
+!-----------------------------------------------------------------------------
+
+! 2008-07-14 Plamen Hopchev
+	- src/BeamGasTrigCheckL0AndTracks.h (.cpp) : decision algorithm which confirms the L0 decision
+	                                             and check the RZ tracks container
+	- src/BeamGasTrigClusterCut.h (.cpp)       : decision algorithm (inheriting GaudiAlg) which evaluates the 
+						     fraction of unused clusters and lets through only the events 
+						     with high fraction of unused clusters 
+	- src/BeamGasTrigExtractClusters.h (.cpp)  : extracts the unused (lite) clusters to a new container
+	- src/BeamGasTrigVertexCut.h (.cpp)        : decision algorithm which creates a "vertex" histogram and
+						     triggers events with high value of the maximum bin 
+	- src/BeamGasTrigBGOnlyL0.h (.cpp)         : decision algorithm which confirms the L0 decision and checks
+						     the bunch-crossing type from ODIN
+	
+! More details:
+	- The two beam-gas alleys are called BeamGasWithPPAlley and BeamGasOnlyAlley
+	- Both of them use the PatVeloRTracking algorithm
+	- Job-option files: /afs/cern.ch/lhcb/group/vertex/vol6/phopchev/BeamGasForHlt/opts/
+
