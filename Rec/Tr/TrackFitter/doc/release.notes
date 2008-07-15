@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2008-07-15 - Wouter Hulsbergen
+ - Use cholesky decomposition for track covariance matrix inversion (Manuel Schiller)
+
 !=========================== TrackFitter v2r25 2008-07-02 ===================
 ! 2008-07-01 - Marco Cattaneo
  - In TrackKalmanFilter, downgrade Errors to Warnings, reduce verbosity (now
