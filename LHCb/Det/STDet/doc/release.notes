@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.137 2008-07-14 07:38:36 mneedham Exp $
+!$Id: release.notes,v 1.138 2008-07-15 12:54:49 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-07-15 M needham
+ - Add some information in DeSTSector printout
 
 !  2008-07-14 M Needham
  - Add active fraction functions

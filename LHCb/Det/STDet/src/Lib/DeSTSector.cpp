@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.43 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.44 2008-07-15 12:54:49 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -50,15 +50,17 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
 
   // stream to cout  
   os << " Sector :  "  << name() << std::endl;
-  os   << " Nickname: " << m_nickname 
-      << "\n ID " << id() 
-      << "\n layer " << elementID().layer()
+  os << " Nickname: " << m_nickname 
+     << "\n ID " << id() 
+     << "\n layer " << elementID().layer()
      << "\n type  " << type() 
      << "\n pitch " << m_pitch 
      << "\n strip " << m_nStrip
      << "\n capacitance " << m_capacitance/Gaudi::Units::picofarad
      << "\n dead width " << m_deadWidth
      << "\n center " << globalCentre()
+     << "\n fraction active " << fractionActive() 
+     << "\n version " << m_versionString 
      << std::endl; 
   return os;
 }
@@ -75,6 +77,8 @@ MsgStream& DeSTSector::printOut( MsgStream& os ) const{
      << " capacitance \n " << m_capacitance/Gaudi::Units::picofarad
      << "dead width \n " << m_deadWidth
      << "\n center " << globalCentre()
+     << "\n fraction active " << fractionActive() 
+     << "\n version " << m_versionString 
      << std::endl;
 
   return os;
