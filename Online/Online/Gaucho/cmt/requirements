@@ -19,7 +19,7 @@ macro_append ROOT_linkopts ' -lHist'
 apply_pattern install_more_includes more=Gaucho
 
 # build a component library
-library Gaucho  ../src/components/*.cpp 
+library Gaucho  ../src/components/*.cpp ../src/services/*.cpp
 library GauchoLib  ../src/lib/*.cpp 
 
 # define component library link options
