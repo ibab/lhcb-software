@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.17 2008-07-04 07:34:29 cattanem Exp $
+// $Id: XmlParserSvc.cpp,v 1.18 2008-07-15 17:03:51 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -43,7 +43,7 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
   declareProperty ("CacheBehavior", m_cacheBehavior = 2);
   
   // Name of the xerces::EntityResolver provider
-  declareProperty ("EntityResolver", m_resolverName = ""
+  declareProperty ("EntityResolver", m_resolverName = "",
                    "Name of the tool provding the IXmlEntityResolver interface.");
   
   // Name of the xerces::EntityResolver provider
