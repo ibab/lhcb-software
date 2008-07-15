@@ -18,7 +18,7 @@ from Configurables import ( ProcessPhase, CondDBAccessSvc, MagneticFieldSvc, Rea
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
-                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva)
+                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, OTHitCreator)
 
 
 ## Start TransportSvc, needed by track fit
@@ -96,6 +96,12 @@ else:
 ## Set of standard fitting options
 importOptions( "$TRACKSYSROOT/options/Fitting.py" )
 
+
+if "noDrifttimes" in Brunel().getProp("expertTracking"):
+  otHitCreator = OTHitCreator("OTHitCreator")
+  otHitCreator.NoDriftTimes = True
+
+
 ## Forward pattern
 GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
 importOptions("$PATALGORITHMSROOT/options/PatForward.py")
@@ -160,7 +166,6 @@ else:
                                                   "Rec/Track/Downstream", "Rec/Track/VeloTT",
                                                   "Rec/Track/Seed"]
                                                     
-
 ## Prepare the velo tracks for the fit
 GaudiSequencer("TrackVeloPreFitSeq").Members += [ TrackPrepareVelo() ] 
 
