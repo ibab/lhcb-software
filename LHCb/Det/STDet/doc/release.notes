@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.138 2008-07-15 12:54:49 mneedham Exp $
+!$Id: release.notes,v 1.139 2008-07-15 15:25:02 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2008-07-15 M Needham
+ - Bug fixes in dead strip handling
 
 ! 2008-07-15 M needham
  - Add some information in DeSTSector printout

@@ -10,6 +10,8 @@ const StatusMap::StatusToStringMap& StatusMap::statusDescription() {
                                       (DeSTSector::Open, "Open")
                                       (DeSTSector::Short,"Short")
                                       (DeSTSector::Pinhole,"Pinhole")
+                                      (DeSTSector::LowGain, "LowGain")
+                                      (DeSTSector::ReadoutProblems,"ReadoutProblems")
                                       (DeSTSector::OtherFault,"OtherFault")
                                       (DeSTSector::Dead,"Dead"); 
   }

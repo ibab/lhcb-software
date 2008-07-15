@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.29 2008-07-14 07:38:36 mneedham Exp $
+// $Id: DeSTSector.h,v 1.30 2008-07-15 15:25:02 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -415,6 +415,10 @@ inline bool DeSTSector::isOKStrip(const LHCb::STChannelID& chan) const{
 inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
   std::vector<Status> vec; vec.resize(nBeetle());
   for (unsigned int iBeetle = m_firstStrip; iBeetle <= nBeetle(); ++iBeetle){
+    if (sectorStatus() != DeSTSector::OK){
+      vec[iBeetle - 1] = sectorStatus();
+      continue;
+    }
     DeSTSector::StatusMap::const_iterator iter = m_beetleStatus.find(iBeetle);
     if (iter != m_beetleStatus.end()){
       vec[iBeetle - 1] = iter->second;
@@ -429,6 +433,15 @@ inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
 inline std::vector<DeSTSector::Status> DeSTSector::stripStatus() const{
   std::vector<Status> vec; vec.resize(nStrip());
   for (unsigned int iStrip = m_firstStrip; iStrip <= nStrip(); ++iStrip){
+    if (sectorStatus() != DeSTSector::OK){
+      vec[iStrip - 1] = sectorStatus();
+      continue;
+    }
+    LHCb::STChannelID chan = stripToChan(iStrip);
+    if (beetleStatus(chan) != DeSTSector::OK){
+      vec[iStrip - 1] = beetleStatus(chan);
+      continue; 
+    }
     DeSTSector::StatusMap::const_iterator iter = m_stripStatus.find(iStrip);
     if (iter != m_stripStatus.end()){
       vec[iStrip - 1] = iter->second;

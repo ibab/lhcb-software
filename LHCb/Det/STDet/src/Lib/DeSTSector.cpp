@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.44 2008-07-15 12:54:49 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.45 2008-07-15 15:25:03 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -59,6 +59,7 @@ std::ostream& DeSTSector::printOut( std::ostream& os ) const{
      << "\n capacitance " << m_capacitance/Gaudi::Units::picofarad
      << "\n dead width " << m_deadWidth
      << "\n center " << globalCentre()
+     << "\n Sector status " << sectorStatus() 
      << "\n fraction active " << fractionActive() 
      << "\n version " << m_versionString 
      << std::endl; 
