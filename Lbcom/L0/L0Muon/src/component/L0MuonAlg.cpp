@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.13 2008-07-15 12:50:50 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.14 2008-07-15 14:49:58 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -79,7 +79,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("DebugMode"      , m_debug       = false );
 
   // Default for Boole :
-  declareProperty("WriteRawBanks"  , m_storeBank        = true);  
+  declareProperty("StoreInBuffer"  , m_storeBank        = true);  
   declareProperty("WriteOnTES"     , m_writeOnTES       = false);  
   declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
   declareProperty("InputSource"    , m_inputSource = 0);  
