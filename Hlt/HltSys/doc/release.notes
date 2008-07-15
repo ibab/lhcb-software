@@ -5,7 +5,13 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-07-15 - Tomasz Skwarnicki
+ - fix error in HltL0TriggerSequence (L0MuonORMuonNoGlob.MinPt value)
+
 </PRE><H1><A NAME=v3r4>2008-07-09 HltSys v3r4</A></H1><PRE>
+
+
+
  This version uses LHCb v24r0
  . Many preparations for Gaudi state machine
  . Adabatic improvements in Hlt1 and 2.
