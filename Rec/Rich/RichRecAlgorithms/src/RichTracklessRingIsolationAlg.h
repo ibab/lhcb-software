@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::TracklessRingIsolationAlg
  *
  *  CVS Log :-
- *  $Id: RichTracklessRingIsolationAlg.h,v 1.2 2008-06-13 13:20:27 jonrob Exp $
+ *  $Id: RichTracklessRingIsolationAlg.h,v 1.3 2008-07-15 14:15:42 shaines Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -60,6 +60,7 @@ namespace Rich
       virtual StatusCode initialize(); ///< Algorithm initialisation
       virtual StatusCode execute();    ///< Algorithm execution
 
+
     private:
 
       /// Input location in TES for rings
@@ -71,6 +72,16 @@ namespace Rich
       /// Minimum separation between ring centres for each radiator
       std::vector<double> m_sizesepcut;
 
+      /// Minimum fraction of pixels in ring region
+      std::vector<double> m_sizeringwidth;
+      std::vector<double> m_sizepixelcut;
+      std::vector<double> m_ckThetaMax;
+      std::vector<double> m_sepGMax;
+      std::vector<double> m_scale;
+      ///Phi cuts
+      std::vector<unsigned int> m_nPhiRegions;
+      std::vector<double> m_sizephicut;
+    
     };
 
   }
