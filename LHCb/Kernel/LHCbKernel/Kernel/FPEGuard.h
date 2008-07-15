@@ -64,17 +64,17 @@ namespace FPE {
     // mask_type disable(mask_type mask) { mask_type p; _controlfp_s(&p,~mask,_MCW_EM); return p;}
     // mask_type enable(mask_type mask)  { mask_type p; _controlfp_s(&p, mask,_MCW_EM); return p;}
     // VS7
-    mask_type get() { __asm { fwait };  return _controlfp(0,0); }
-    mask_type disable(mask_type mask) { 
-		int cw = get(); // Get current control word
-		cw |= ~mask; // set control bits, turn exceptions off
-		return _controlfp(cw,_MCW_EM);}
-    mask_type enable(mask_type mask)  { 
-        _clearfp(); // remove any 'stale' exceptions before switching on trapping
-                    // otherwise we immediately trigger an exception...
-		int cw = mask;
-		return _controlfp(cw,_MCW_EM);}
-    const std::map<std::string,mask_type>& map() {
+    inline mask_type get() { __asm { fwait };  return _controlfp(0,0); }
+    inline mask_type disable(mask_type mask) { 
+      int cw = get(); // Get current control word
+      cw |= ~mask; // set control bits, turn exceptions off
+      return _controlfp(cw,_MCW_EM);}
+    inline mask_type enable(mask_type mask)  { 
+      _clearfp(); // remove any 'stale' exceptions before switching on trapping
+                  // otherwise we immediately trigger an exception...
+      int cw = mask;
+      return _controlfp(cw,_MCW_EM);}
+    inline const std::map<std::string,mask_type>& map() {
       static std::map<std::string,mask_type> m = boost::assign::map_list_of
         ( "Inexact"   , mask_type(~EM_INEXACT)   )
         ( "DivByZero" , mask_type(~EM_ZERODIVIDE))
@@ -89,10 +89,10 @@ namespace FPE {
 #else
     static const bool has_working_implementation = false;
     typedef int mask_type;
-    mask_type get() { return 0; }
-    mask_type disable(mask_type) { return 0; }
-    mask_type enable(mask_type) { return 0; }
-    const std::map<std::string,mask_type>& map() {
+    inline mask_type get() { return 0; }
+    inline mask_type disable(mask_type) { return 0; }
+    inline mask_type enable(mask_type) { return 0; }
+    inline const std::map<std::string,mask_type>& map() {
       static std::map<std::string,mask_type> m;
       return m;
     }
