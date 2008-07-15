@@ -4,6 +4,8 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008015-07 M Needham
+ - Add missing heaader in ITExpectedHits
 
 ! 2008-14-07 
  - add use of dead strips in ITExpectedHits tool
