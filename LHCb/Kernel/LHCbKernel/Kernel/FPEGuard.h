@@ -37,15 +37,15 @@ namespace FPE {
     static const bool has_working_implementation = true;
     typedef int mask_type;
     // make sure the FPU has caught up by explicitly issueing an fwait...
-    mask_type get()  { asm volatile("fwait"); return fegetexcept() & FE_ALL_EXCEPT; }
-    mask_type disable(mask_type mask) { return fedisableexcept( mask & FE_ALL_EXCEPT ); }
-    mask_type enable(mask_type mask)  {
+    inline mask_type get()  { asm volatile("fwait"); return fegetexcept() & FE_ALL_EXCEPT; }
+    inline mask_type disable(mask_type mask) { return fedisableexcept( mask & FE_ALL_EXCEPT ); }
+    inline mask_type enable(mask_type mask)  {
       mask &= FE_ALL_EXCEPT ;
       feclearexcept(mask); // remove any 'stale' exceptions before switching on trapping
                            // otherwise we immediately trigger an exception...
       return feenableexcept(mask) & FE_ALL_EXCEPT;
     }
-    const std::map<std::string,mask_type>& map() {
+    inline const std::map<std::string,mask_type>& map() {
       static std::map<std::string,mask_type> m = boost::assign::map_list_of
         ( "Inexact"   , mask_type(FE_INEXACT)  )
         ( "DivByZero" , mask_type(FE_DIVBYZERO))

@@ -3,6 +3,8 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+! 2008-07-15 Gerhard Raven
+ - protect FPEGuard for multiple definitions, i.e. add 'inline' keyword
 
 ! 2008-07-10 - Marco Cattaneo
  - Fix FPEGuard implementation for Windows
