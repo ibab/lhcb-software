@@ -47,10 +47,10 @@ Particle2MCLinker* DaVinciAssociatorsWrapper::linker( Particle2MCMethod::Associa
   }
 
   //Otherwise make the required linker 
-  info() << "Creating linker for " << Particle2MCMethod::algType[myMethod] ;
-  info() << " using locations " << m_locations ;
+  debug() << "Creating linker for " << Particle2MCMethod::algType[myMethod] ;
+  debug() << " using locations " << m_locations ;
   m_linker =  new Particle2MCLinker(this, myMethod, m_locations);
-  info() << endmsg ;
+  debug() << endmsg ;
 
   //If something went wrong...
   if ( NULL == m_linker ){

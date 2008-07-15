@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.225 2008-07-04 21:46:39 gligorov Exp $
+! $Id: release.notes,v 1.226 2008-07-15 16:12:05 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-07-15 - V. Gligorov
+ - src/DaVinciAssociatorsWrapper.cpp
+    Changed message printing from info to debug.
 
 ! 2008-07-04 - V. Gligorov
  - src/BackgroundCategory.{cpp,h}
