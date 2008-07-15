@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.7 2008-06-30 11:40:52 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.8 2008-07-15 11:45:29 asatta Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -1756,3 +1756,21 @@ StatusCode  MuonDAQHelper::findL0Number(LHCb::MuonTileID digit,
                                      
   return StatusCode::SUCCESS;
 }
+unsigned int MuonDAQHelper::getODENumberInQuadrant(std::string ODEName)
+{
+  std::string::size_type cPos=ODEName.find_first_of("_");
+  if(cPos!=std::string::npos){
+    std::string sCurr;
+    sCurr = ODEName.substr(cPos+1); // get up to the end 
+    int i;
+    const char *p;
+    p=sCurr.c_str();
+    sscanf(p, "%d", &i);
+    return i;
+    
+  }
+  return 0;
+  
+}
+
+

@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.h,v 1.5 2008-06-30 11:40:52 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.6 2008-07-15 11:45:29 asatta Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
@@ -118,7 +118,8 @@ public:
   {
     return m_tellPerStation[station];
   }
-
+  unsigned int getODENumberInQuadrant(std::string ODEName);
+  
 protected:
 
 private:
