@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.23 2008-07-14 13:03:07 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.24 2008-07-15 11:15:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -209,11 +209,11 @@ private: // definitions
                      const std::string & _history,
                      const ParticleProperty * _prop,
                      const bool _orig )
-      : particle       (_part      ),
-        firstParticle  (_prim_part ),
-        history        (_history   ),
-        properties     (_prop      ),
-        topLevel       (_orig      ) { }
+      : particle       ( _part      ),
+        firstParticle  ( _prim_part ),
+        history        ( _history   ),
+        properties     ( _prop      ),
+        topLevel       ( _orig      ) { }
   public:
     const LHCb::Particle * particle;      ///< Pointer to the Particle
     const LHCb::Particle * firstParticle; ///< Pointer to the first Particle
@@ -221,7 +221,7 @@ private: // definitions
     const ParticleProperty * properties;  ///< Properties
     bool topLevel;                        ///< Was the Particle in one of the original input locations
   public:
-    typedef std::vector< ParticleHistory > Vector;
+    typedef std::map<ParticleHistory,unsigned int> Map;
   public:
     /// Overloaded printout to ostream
     friend inline std::ostream& operator << ( std::ostream& os,
@@ -230,10 +230,26 @@ private: // definitions
       return os << "Particle=" << hist.particle << " history=" << hist.history
                 << " topLevel=" << hist.topLevel;
     }
+  public:
+    /// Operator ==
+    inline bool operator== ( const ParticleHistory& hist ) const
+    { return ( this->particle == hist.particle &&
+               this->history  == hist.history  ); }
+    /// Operator !=
+    inline bool operator!= ( const ParticleHistory& hist ) const
+    {  return ! this->operator==(hist); }
+    /// Operator <
+    inline bool operator<  ( const ParticleHistory& hist ) const
+    { return ( this->particle < hist.particle &&
+               this->history  < hist.history  ); }
+    /// Operator >
+    inline bool operator>  ( const ParticleHistory& hist ) const
+    { return ( this->particle > hist.particle &&
+               this->history  > hist.history  ); }
   };
 
   /// Type for mapping between ProtoParticle and list of Particles produced from it
-  typedef std::map<const LHCb::ProtoParticle *, ParticleHistory::Vector > ParticleProtoMap;
+  typedef std::map<const LHCb::ProtoParticle *, ParticleHistory::Map > ParticleProtoMap;
 
   /** @class MCTally ParticleEffPurMoni.h
    *  Simple tally map for each particle type
@@ -243,8 +259,10 @@ private: // definitions
   class MCTally
   {
   public:
-    MCTally() : all(0), clones(0), 
+    /// Default Constructor
+    MCTally() : all(0), clones(0),
                 m_effVp(NULL), m_effVpt(NULL), m_effVpVpt(NULL) { }
+    /// Destructor
     ~MCTally() { delete m_effVp; delete m_effVpt; delete m_effVpVpt; }
   public:
     unsigned long int all;         ///< Total number
@@ -257,6 +275,7 @@ private: // definitions
     mutable EffVersusMomentum   * m_effVpt;      ///< Eff versus momentum (pt) data
     mutable EffVersusMomentum2D * m_effVpVpt;    ///< Eff versus momentum (p&pt) data
   public:
+    /// Access on-demand the P histogram
     inline EffVersusMomentum & effVp() const
     {
       if (!m_effVp)
@@ -265,6 +284,7 @@ private: // definitions
       }
       return *m_effVp;
     }
+    /// Access on-demand the Pt histogram
     inline EffVersusMomentum & effVpt() const
     {
       if (!m_effVpt)
@@ -273,6 +293,7 @@ private: // definitions
       }
       return *m_effVpt;
     }
+    /// Access on-demand the P & Pt histogram
     inline EffVersusMomentum2D & effVpVpt() const
     {
       if (!m_effVpVpt)
@@ -488,8 +509,8 @@ private: // methods
   inline std::string corProtoLocation( const std::string& protoloc1,
                                        const std::string& protoloc2 ) const
   {
-    return ( protoloc1 < protoloc2 ? 
-             shortProtoLoc(protoloc1)+"&"+shortProtoLoc(protoloc2) : 
+    return ( protoloc1 < protoloc2 ?
+             shortProtoLoc(protoloc1)+"&"+shortProtoLoc(protoloc2) :
              shortProtoLoc(protoloc2)+"&"+shortProtoLoc(protoloc1) );
   }
 
@@ -497,8 +518,8 @@ private: // methods
   inline std::string corPartLocation( const std::string& loc1,
                                       const std::string& loc2 ) const
   {
-    return ( loc1 < loc2 ? 
-             shortPartLoc(loc1)+"&"+shortPartLoc(loc2) : 
+    return ( loc1 < loc2 ?
+             shortPartLoc(loc1)+"&"+shortPartLoc(loc2) :
              shortPartLoc(loc2)+"&"+shortPartLoc(loc1) );
   }
 
