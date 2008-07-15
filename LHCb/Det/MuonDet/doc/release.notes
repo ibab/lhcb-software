@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.116 2008-07-12 06:15:40 asatta Exp $
+! $Id: release.notes,v 1.117 2008-07-15 11:43:09 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2008-07-14 - Alessia Satta
+  - Remove the explict FPE Guard , leave only the standar protection
 ! 2008-06-30 - Alessia Satta
   - MuonReadoutCond :
     Add protection to avoid FPE check to signal inexact FPE 

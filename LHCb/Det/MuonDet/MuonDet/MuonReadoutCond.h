@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.7 2008-07-12 06:15:40 asatta Exp $
+// $Id: MuonReadoutCond.h,v 1.8 2008-07-15 11:43:09 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/07/12 06:15:40  asatta
+// Add FPE Guard
+//
 // Revision 1.6  2006/02/01 19:45:58  marcocle
 // Removed constructor using ITime
 //
@@ -27,7 +30,7 @@
 #include <vector>
 #include "GaudiKernel/DataObject.h"
 #include "DetDesc/Condition.h"
-#include "Kernel/FPEGuard.h"
+//#include "Kernel/FPEGuard.h"
 #include <cmath>
 
 #include "MuonDet/CLID_MuonReadoutCond.h"
@@ -240,7 +243,7 @@ private:
   //protect for FPE check
   double safe_exponential(double arg){
      if((arg)<-100.) return 0.0 ;
-     FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
+//     FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
      return  exp(arg);
   }
 
