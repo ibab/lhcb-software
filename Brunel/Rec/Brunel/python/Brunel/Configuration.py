@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.6 2008-07-11 17:16:42 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2008-07-15 17:43:54 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -31,6 +31,7 @@ class Brunel(ConfigurableUser):
        ,"veloOpen":     False # set to True for Velo open data
        ,"monitors": []        # list of monitors to execute
        ,"usePatSeeding":   False # set True for PatSeeding instead of Tsa  
+       ,"expertTracking": []     # options "noDrifttimes" "simplifiedGeometry"
         }
 
     def getProp(self,name):

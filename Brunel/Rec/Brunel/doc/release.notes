@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Add usePatSeeding switch to Brunel configurables - SHM
+ - Add usePatSeeding and expertTracking switches to Brunel configurables - SHM
  - move call for tracking options for fieldOff and veloOpen to
    tracking scripts instead of Brunel main script - SHM
 
