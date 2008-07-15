@@ -3,6 +3,9 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2008-07-15 - Stephanie Hansmann-Menzemer
+ - move *.py files to option directory, remove python directory
+
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
  - translate VeloTT.opt and VeloTT_noB.opts in VeloTT.py
 
