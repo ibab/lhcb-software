@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.13 2008-07-09 14:11:25 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.14 2008-07-15 07:43:44 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -99,7 +99,8 @@ PropertyConfigSvc::~PropertyConfigSvc() {
 
 MsgStream& PropertyConfigSvc::msg(MSG::Level level) const {
      if (m_msg.get()==0) m_msg.reset( new MsgStream( msgSvc(), name() ));
-     return *m_msg << level;
+     *m_msg << level;
+     return *m_msg;
 }
 
 //=============================================================================
@@ -388,7 +389,12 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
                       << endl;
             continue;
         }
-        if ( m_configPushed[config->name()] != *i ) *newConfigs = config;
+        if ( m_configPushed[config->name()] != *i ) { 
+             debug() << " " << config->name() 
+                      << " current: " <<  m_configPushed[config->name()]  
+                      << " requested: " << *i << endmsg;
+            *newConfigs = config;
+        }
     }
     return StatusCode::SUCCESS;
 }
@@ -405,14 +411,15 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
     if (sc.isFailure()) return sc;
     for (vector<const PropertyConfig*>::const_iterator i = configs.begin(); i!=configs.end();++i) {
         string name = (*i)->name();
-        debug() << " configuring " << name << endl;
+        debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
+        //@TODO: push changes only...
         for_each(map.begin(),
                  map.end(),
                  property2jos(m_joboptionsSvc,name,m_os.get())) ;
         m_configPushed[name] = (*i)->digest();
     }
-    //  _after_ pushing all changes, invoke 'setProperties' on the changed ones...
+    //  _after_ pushing all configurations, invoke 'setProperties'...
     //@TODO: should we do this in reverse order??
     if (callSetProperties) {
         for (vector<const PropertyConfig*>::const_iterator i=configs.begin();i!=configs.end();++i)
@@ -504,13 +511,23 @@ PropertyConfigSvc::setTopAlgs(const ConfigTreeNode::digest_type& id) const {
     merge.splice(merge.end(),request);
     assert(request.empty());
 
-    //@TODO first check if something actually changed... if not, don't do anything!!
-    topAlgs.setValue( vector<string>(merge.begin(),merge.end()) );
-    if ( appProps->setProperty(topAlgs).isFailure() ) { 
-        error() << " failed to set property" << endmsg;
-        return StatusCode::FAILURE;
+    bool hasChanged = (merge.size()!=topAlgs.value().size());
+    if (!hasChanged) {
+        pair<std::vector<std::string>::const_iterator, std::list<std::string>::const_iterator>  
+        diff = std::mismatch(topAlgs.value().begin(), topAlgs.value().end(), merge.begin());
+        hasChanged = ( diff.first != topAlgs.value().end() );
     }
-    info() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
+
+    if (hasChanged) {
+        topAlgs.setValue( vector<string>(merge.begin(),merge.end()) );
+        if ( appProps->setProperty(topAlgs).isFailure() ) { 
+            error() << " failed to set property" << endmsg;
+            return StatusCode::FAILURE;
+        }
+        info() << " updated TopAlgs: " << topAlgs.toString() << endmsg;
+    } else {
+        info() << " TopAlgs remain unchanged: " << topAlgs.toString() << endmsg;
+    }
     return StatusCode::SUCCESS;
 } 
 
@@ -522,21 +539,23 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     StatusCode sc = configure(top,true);
     if (!sc.isSuccess()) return sc;
 
-//    assert(m_appMgrUI!=0);
-//    return m_appMgrUI->restart();
+    assert(m_appMgrUI!=0);
+//    sc = m_appMgrUI->stop();
+//    if (!sc.isSuccess()) return sc;
+    return m_appMgrUI->restart();
     // call reinitialize for services and top algorithms...
-    vector<const PropertyConfig*> cfgs;
-    sc = findTopKind(top, "IService", back_inserter(cfgs));
-    if (!sc.isSuccess()) return sc;
-    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
-    if (!sc.isSuccess()) return sc;
-    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end(); ++i) {
-       sc = invokeSysRestart( **i );
-       if (sc.isFailure()) { 
-            error() << "FIXME: failed while calling sysRestart on " << (*i)->name() << " : " << sc << endmsg;
-       }
-    }
-    return sc;
+//    vector<const PropertyConfig*> cfgs;
+//    sc = findTopKind(top, "IService", back_inserter(cfgs));
+//    if (!sc.isSuccess()) return sc;
+//    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
+//    if (!sc.isSuccess()) return sc;
+//    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end(); ++i) {
+//       sc = invokeSysRestart( **i );
+//       if (sc.isFailure()) { 
+//            error() << "FIXME: failed while calling sysRestart on " << (*i)->name() << " : " << sc << endmsg;
+//       }
+//    }
+//    return sc;
 }
 
 //=============================================================================
