@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+! 2008-07-15 - Stephanie Hansmann-Menzemer
+- move TrackMatch.py to option directory
+
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
 - add python directory with TrackMatch.py script
 
