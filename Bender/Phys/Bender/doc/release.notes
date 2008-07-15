@@ -1,13 +1,18 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.30 2008-06-12 13:30:37 ibelyaev Exp $
+! $Id: release.notes,v 1.31 2008-07-15 10:30:00 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.30 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.31 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v8r3p1 2008-07-15 ==========================
+
+! 2008-07-15 - Vanya BELYAEV
+ - New version (identical to v8r3) but based on DaVinci v19r14 
 
 ! ==================== Phys/Bender v8r3 2008-06-12 ============================
 
