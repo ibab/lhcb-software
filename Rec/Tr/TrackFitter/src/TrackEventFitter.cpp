@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.18 2008-06-17 13:30:22 lnicolas Exp $
+// $Id: TrackEventFitter.cpp,v 1.19 2008-07-15 06:51:19 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -132,8 +132,11 @@ StatusCode TrackEventFitter::execute() {
         debug() << "Fitted successfully track # " << track.key() << endmsg;
       }
       // Update counters
-      counter("chisqprobSum") += track.probChi2() ;
-      counter("badChisq") += bool(track.probChi2()<0.01) ;
+      if( track.nDoF()>0) {
+	double chisqprob = track.probChi2() ;
+	counter("chisqprobSum") += chisqprob ;
+	counter("badChisq") += bool(chisqprob<0.01) ;
+      }
       counter("numOutliers") += track.nMeasurementsRemoved() ;
     }
     else {
