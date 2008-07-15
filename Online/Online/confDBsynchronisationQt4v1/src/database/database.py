@@ -102,13 +102,13 @@ class DataBase:
     def log(self, string_to_log):
         self.logfile.write(string_to_log+"\n")
     """reverses an ip address, resulting ip address may not be a valid ip address!"""
-    def make_temp_ip(ip):
+    def make_temp_ip(self, ip):
         m = []
         m = split(ip, ".")
         return m[2]+"."+m[1]+"."+m[0]+".253"
 
 """class to access the configuration oracle database"""
-class ConfigurationDB(DataBase, QObject):
+class ConfigurationDB(DataBase):
     def __init__(self, logfile, name = cDB_name, user = cDB_user, password = cDB_pass):
         DataBase.__init__(self, name, user, password, logfile)
     def getDevicesCount(self):
@@ -195,6 +195,71 @@ class ConfigurationDB(DataBase, QObject):
         #print len(changed_dhcp_system.getAllDevices())
         #print len(devices_up_to_date.getAllDevices())
         return [ new_devices_with_dhcp, new_devices_without_dhcp, changed_location_system, changed_dhcp_system, devices_up_to_date]
+    """updates the location of a given device"""
+    def updateLocationOfDevice(self, device, db):
+        new_connections = []
+        try:
+            db.UpdateMultipleAttributesDevices(device.devicename, -1, -1, device.loc, "none", 1, 1)
+            self.log("updating location of "+device.devicename+"("+device.sn+"): "+" new location= "+device.loc)
+            """alte ports loeschen"""
+            try:
+                devid  = db.GetDeviceID_devicename(device.devicename)
+            except RuntimeError:
+                print "Exception retrieving deviceID"
+                return
+            if devid == -1:
+                self.log("Device Name "+device.devicename+"not found")
+                return
+            try:
+                ports = db.GetPortIDPerDevID(devid)
+                for p in ports:
+                    db.DeletePortRow(p)
+                self.log("deleting old ports of "+device.devicename+"("+device.sn+")")
+            except RuntimeError:
+                self.log("error deleting old ports of "+device.devicename+"("+device.sn+")")
+            """neue Ports einfuegen"""
+            try:
+                device.insports(db)
+                self.log("inserting insports for "+device.devicename+", "+device.sn)
+                new_connections.append(device)
+            except RuntimeError, inst:
+                self.log("error inserting insports for "+device.devicename+", "+device.sn+", "+inst.__str__())
+        except RuntimeError, inst:
+            self.log("error updating location of "+device.devicename,+"("+device.sn+")"+" new location: "+device.loc+" ERROR: "+inst.__str__())
+    """updates the location of a given device"""
+    def updateDHCPDataOfDevice(self, item, db):
+        query="select ipaddress from lhcb_ipinfo where ipname = '"+lower(item.devicename)+"'"
+        old_ip_a = self.executeSelectQuery(query)
+        if len(old_ip_a) == 0 and item.CIPadd is not None:
+            try:
+                if item.CIPadd is None or item.CMACadd is None:
+                    self.log("error inserting insports for "+item.devicename+", "+item.sn+", reason: no IP address or no MAC address")
+                else:
+                    self.log("inserting insports for "+item.devicename+", "+item.sn)
+                    item.insports(db)
+            except RuntimeError, inst:
+                self.log("error inserting insports for "+item.devicename+", "+item.sn+", "+inst.__str__())
+        else:
+            """DHCP data already exists"""
+            try:
+                db.UpdateMultipleIPAddresses(item.CIPadd, old_ip_a[0][0], 1, 1)
+                self.log("trying:"+item.devicename+" "+item.CIPadd+" -> "+old_ip_a[0][0])
+            except:
+                self.log("Did not work:"+item.devicename+" "+item.CIPadd+" -> "+old_ip_a[0][0]+" trying to swap with temp_ip")
+                try:
+                    """excpected error when bew ip address is used by another device"""
+                    temp_ip = self.make_temp_ip(old_ip_a[0][0])
+                    """1. free new ip (new ip becomes temp ip)"""
+                    self.log(item.devicename+" "+item.CIPadd+" -> "+temp_ip)
+                    db.UpdateMultipleIPAddresses(temp_ip, item.CIPadd, 1, 1)
+                    """2. the update"""
+                    self.log(item.devicename+" "+old_ip_a[0][0]+" -> "+item.CIPadd)
+                    db.UpdateMultipleIPAddresses(item.CIPadd, old_ip_a[0][0], 1, 1)
+                    """3. temp ip becomes old ip"""
+                    self.log(item.devicename+" "+temp_ip+" -> "+old_ip_a[0][0])
+                    db.UpdateMultipleIPAddresses(old_ip_a[0][0], temp_ip, 1, 1)
+                except RuntimeError, inst:
+                    self.log("error updating ipaddress of "+item.devicename+" "+inst.__str__())
     """update devices with changed locations"""
     def updateChangesOfLocation(self, db, controller, progressFrame = None):
         print "\nConfigurationDB.updateChangesOfLocation start..."
@@ -361,10 +426,10 @@ class ConfigurationDB(DataBase, QObject):
         disconnect(db)
         print "connecting masterhugins with TFCMUNIN finished!"
     """creates the throttle connectivity"""
-    def createThrottleConnectivity(self, db, devices_to_connect, controller):
+    def createThrottleConnectivity(self, db, devices_to_connect, equipDBSystem):
         for device in devices_to_connect:
             if device.typ != "hugin":
-                hugin_device = controller.equipdb_system.getHuginForDevice(device)
+                hugin_device = equipDBSystem.getHuginForDevice(device)
                 if hugin_device is not None:
                     dport = device.loc.split("f")[1]
                     """removing leading 0"""

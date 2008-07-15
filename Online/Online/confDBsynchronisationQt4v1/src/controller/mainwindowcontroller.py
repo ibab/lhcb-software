@@ -9,6 +9,7 @@ from view.deviceswidget import DevicesWidget
 from view.spareswidget import SparesWidget
 from database.spare import SpareDB
 from worker.RefreshWorker import RefreshWorker
+from updatedevicescontroller import UpdateDevicesController
 
 class MainWindowController(Controller):
     def __init__(self, application):
@@ -100,6 +101,7 @@ class MainWindowController(Controller):
         print "MainWindowController.onRefreshSparesWidget() end"
     def onUpdate(self):
         print "MainWindowController.onUpdate() start"
+        self.updateDevicesController = UpdateDevicesController(self)
         print "MainWindowController.onUpdate() end"
     def onDelete(self):
         print "MainWindowController.onDelete() start"
