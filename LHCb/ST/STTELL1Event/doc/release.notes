@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.15 2008-07-10 14:24:52 mneedham Exp $
+! $Id: release.notes,v 1.16 2008-07-15 15:29:42 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
 
-! 2008-11-07 M needham
+! 2008-07-15 - Marco Cattaneo
+ - Remove cmt/version.cmt file, breaks cmt when running with version directory!
+
+! 2008-07-11 M needham
   - add source id to eventinfo 
 
 ! 2008-08-07 M Needham 
