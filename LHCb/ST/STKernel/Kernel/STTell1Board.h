@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.4 2008-05-12 13:08:26 mneedham Exp $
+// $Id: STTell1Board.h,v 1.5 2008-07-15 11:21:03 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -22,6 +22,8 @@ class STTell1Board{
 
 public:
 
+  typedef std::pair<LHCb::STChannelID,int> chanPair;
+
   /// constructer
   STTell1Board(const STTell1ID aBoard, 
                const unsigned int stripsPerHybrid);
@@ -40,9 +42,9 @@ public:
                 unsigned int& sectorIndex) const;
 
   /// construct LHCb::STChannelID from DAQ Channel
-  LHCb::STChannelID DAQToOffline(const unsigned int aDAQChan, 
-				 unsigned int& fracStrip,
-				 const int version) const;
+  chanPair DAQToOffline(const unsigned int aDAQChan, 
+			const unsigned int fracStrip,
+			const int version) const;
 
   /// fill adc values offline 
     void ADCToOffline(const unsigned int aDAQChan,

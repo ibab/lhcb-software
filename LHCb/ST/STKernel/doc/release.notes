@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2008-07-14 07:32:30 mneedham Exp $
+! $Id: release.notes,v 1.21 2008-07-15 11:21:03 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2008-07-15 M. Needham
+ - Be more friendly for python [don't believe the hype!]
+
 ! 2008-07-14 M Needham 
+  - Extend ISTReadoutTool interface
   - Add dictionaries for STTell1Board and STTell1ID
 
 !====================== STKernel v1r5 2008-06-30 ============================

@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.3 2008-05-12 13:08:26 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.4 2008-07-15 11:21:04 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 
@@ -40,32 +40,34 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
 }
 
 
-STChannelID STTell1Board::DAQToOffline(const unsigned int aDAQChan,
-                                       unsigned int& fracStrip,
+STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int aDAQChan,
+                                       const unsigned int fracStrip,
                                        const int version) const{
 
   // convert a DAQ channel to offline !
   const unsigned int index = aDAQChan/m_nStripsPerHybrid;
   unsigned int strip =  aDAQChan - (index*m_nStripsPerHybrid);
 
+  int interstrip = fracStrip;
+
   if (m_orientation[index] == 0) {
     // reverse direction of strip numbering
     strip = m_nStripsPerHybrid - strip;
     // shift channel by one, because interstrip fraction cannot be negative
     if (fracStrip != 0 && version >= STDAQ::v4 ) {
-      fracStrip = 4 - fracStrip;
+      interstrip = 4 - fracStrip;
       --strip;
     }
   } else { // Add one because offline strips start at one.
     ++strip;
   }
   
-  return STChannelID(m_sectorsVector[index].type(),
+  return std::make_pair(STChannelID(m_sectorsVector[index].type(),
                      m_sectorsVector[index].station(), 
                      m_sectorsVector[index].layer(),
                      m_sectorsVector[index].detRegion(),
                      m_sectorsVector[index].sector(),
-                     strip);
+                     strip), interstrip);
 }
 
 
