@@ -4,6 +4,9 @@
 ! Purpose     : Successor of DecayChainNTuple
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 - V. Gligorov
+ - Fixed initialization issues in TupleToolMCHierachy and TupleToolMCBackgroundInfo.
+
 ! 2008-07-11 - Patrick Koppenburg
  - TupleTool* : Do not use IGeomDispCalculator but IDistanceCalculator
 

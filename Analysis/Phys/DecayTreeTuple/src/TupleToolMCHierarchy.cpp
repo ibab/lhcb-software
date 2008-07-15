@@ -1,4 +1,4 @@
-// $Id: TupleToolMCHierarchy.cpp,v 1.2 2008-07-08 11:18:33 sposs Exp $
+// $Id: TupleToolMCHierarchy.cpp,v 1.3 2008-07-15 16:19:14 gligorov Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -41,7 +41,7 @@ TupleToolMCHierarchy::TupleToolMCHierarchy( const std::string& type,
   declareInterface<IParticleTupleTool>(this);
 
   // Associator input location. Empty should be fine for most of the case
-  declareProperty( "InputLocations", m_assocInputs );
+  declareProperty( "InputLocations", m_assocInputs = std::vector<std::string>(1,""));
 
   // Use the chi2 associator instead of the link and composite associator
   declareProperty( "UseChi2Method", m_useChi2Method=false );
