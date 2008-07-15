@@ -1,4 +1,4 @@
-// $Id: TupleToolMCBackgroundInfo.cpp,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolMCBackgroundInfo.cpp,v 1.2 2008-07-15 16:18:54 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -33,6 +33,7 @@ TupleToolMCBackgroundInfo::TupleToolMCBackgroundInfo( const std::string& type,
 						      const std::string& name,
 						      const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_bkg(0)
 {
   declareInterface<IParticleTupleTool>(this);
 }
