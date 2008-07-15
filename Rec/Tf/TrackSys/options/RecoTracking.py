@@ -94,11 +94,11 @@ else:
                            ]
                
 ## Set of standard fitting options
-importOptions( "$TRACKSYSROOT/python/Fitting.py" )
+importOptions( "$TRACKSYSROOT/options/Fitting.py" )
 
 ## Forward pattern
 GaudiSequencer("TrackForwardPatSeq").Members +=  [ PatForward("PatForward") ]
-importOptions("$PATALGORITHMSROOT/python/PatForward.py")
+importOptions("$PATALGORITHMSROOT/options/PatForward.py")
 
 ## Forward prefit
 GaudiSequencer("TrackForwardPreFitSeq").Members += [TrackEventFitter("PreFitForward")] 
@@ -110,11 +110,11 @@ GaudiSequencer("TrackForwardFitSeq").Members += [TrackEventFitter("FitForward" )
   
 if Brunel().getProp("usePatSeeding"):
    GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
-   importOptions("$PATALGORITHMSROOT/python/PatSeeding.py")
+   importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
 else:     
    GaudiSequencer("TrackSeedPatSeq").Members += [Tf__Tsa__Seed("TsaSeed"),
                                                  Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv" )]
-   importOptions("$TSAALGORITHMSROOT/python/TsaSeeding.py")
+   importOptions("$TSAALGORITHMSROOT/options/TsaSeeding.py")
 
 ##get parameters for fast momentum estimate
 importOptions ("$TRACKTOOLSROOT/options/FastMomentumEstimate.opts")
@@ -125,7 +125,7 @@ GaudiSequencer("TrackSeedFitSeq").Members += [ TrackEventFitter("FitSeed")]
 ## Match pattern
 GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch")]
 
-importOptions("$TRACKMATCHINGROOT/python/TrackMatch.py")
+importOptions("$TRACKMATCHINGROOT/options/TrackMatch.py")
 
 ## Match prefit
 GaudiSequencer("TrackMatchPreFitSeq").Members += [ TrackEventFitter("PreFitMatch")] 
@@ -144,7 +144,7 @@ GaudiSequencer("TrackDownstreamFitSeq").Members += [ TrackEventFitter("FitDownst
 
 ## Velo-TT pattern
 GaudiSequencer("TrackVeloTTPatSeq").Members += [ PatVeloTT("PatVeloTT")] 
-importOptions ("$PATVELOTTROOT/python/PatVeloTT.py")
+importOptions ("$PATVELOTTROOT/options/PatVeloTT.py")
 
 ## Velo-TT fit
 GaudiSequencer("TrackVeloTTFitSeq").Members += [ TrackEventFitter("FitVeloTT") ]

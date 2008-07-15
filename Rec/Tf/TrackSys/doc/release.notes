@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2008-07-15 - Stephanie Hansmann-Menzemer
+- move Fitting.py and RecoTracking.py in option directory, remove python 
+  directory
+
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
 - Add python directory with Fitting.py and RecoTracking.py
 
