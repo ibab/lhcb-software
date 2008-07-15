@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer.cpp,v 1.18 2008-07-14 12:17:54 asatta Exp $
+// $Id: MuonRawBuffer.cpp,v 1.19 2008-07-15 11:38:28 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -610,7 +610,7 @@ StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pai
 
 
   storage.clear();
- 
+  verbose()<<" start the real decoding "<<endreq;
   
   const std::vector<RawBank*>& b = raw->banks(RawBank::Muon);
   std::vector<RawBank*>::const_iterator itB;  
@@ -621,7 +621,7 @@ StatusCode MuonRawBuffer::getTileAndTDC(LHCb::RawEvent* raw,std::vector<std::pai
     StatusCode sc=DecodeData(r);
     if(sc.isFailure())return sc; 
   }
-
+  verbose()<<" the decoding is finished "<<endreq;
   //compact data  in one container
  
   for( itB = b.begin(); itB != b.end(); itB++ ) {  
@@ -1238,8 +1238,11 @@ std::vector<std::pair<MuonTell1Header, unsigned int> > MuonRawBuffer::getHeaders
 
 StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
 {
+  verbose()<<" check headers consistency "<<endreq;
 
   if( m_checkTell1HeaderPerformed)return m_checkTell1HeaderResult;
+  verbose()<<" check headers consistency not yet done"<<endreq;
+
   std::vector<unsigned int> tell1InEvent;
   
   std::vector<unsigned int>::iterator  iList;
@@ -1254,14 +1257,13 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
     if(iList<tell1InEvent.end()){
       m_checkTell1HeaderResult=false;
       m_checkTell1HeaderPerformed=true;
-      return  m_checkTell1HeaderResult;
-      
-    }
-    
+      verbose()<<" failed "<<endreq;
+      return StatusCode::FAILURE;      
+    }    
     tell1InEvent.push_back(tell1Number);   
   }
   //there is repeated Tell1
-  //now checj the fw version
+  //now check the fw version
 
   //compact data  in one container
   unsigned int ReferenceVersion=(*(b.begin()))->version();
@@ -1271,13 +1273,14 @@ StatusCode MuonRawBuffer::checkAllHeaders(LHCb::RawEvent* raw)
     if((*itB)->version()!=ReferenceVersion){
       error()<<
         " The muon Tell1 boards: not all the same version so  skip the event"
-             << endreq;
-      
+             << endreq;      
       m_checkTell1HeaderResult=false;
       m_checkTell1HeaderPerformed=true;
-      return  m_checkTell1HeaderResult;
+      return StatusCode::FAILURE; // return m_checkTell1HeaderResult;
     }    
   }
+  verbose()<<" test successeful "<<endreq;
+  return StatusCode::SUCCESS;
 }
 
 
