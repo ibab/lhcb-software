@@ -2,6 +2,7 @@
 #include "ITrackResidualTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiTool.h"
+#include "LHCbMath/MatrixInversion.h"
 #include <map>
 
 namespace Al
@@ -201,11 +202,8 @@ namespace Al
       // this is the smoothedcovariance
       const Gaudi::TrackSymMatrix& cov    = node->state().covariance() ;
       
-      // invert that prediction
-      int fail ;
-      Gaudi::TrackSymMatrix invpredcov = predcov.Inverse(fail); assert(fail==0);
-      
       // invert the transport matrix
+      int fail ;
       Gaudi::TrackMatrix invF = F.Inverse(fail) ; assert(fail==0);
       
       // Now compute the smoother gain matrix for node k-1. The full formula is
@@ -230,8 +228,20 @@ namespace Al
 	    warning() << "Predicted covariance has negative correlation. Skipping track." << endreq ;
 	}
       
-      // continue
-      smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
+      // This is the full formula
+      //   smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
+      // but we only compute it this way if the noise is non-zero:
+      if( Q(2,2) > 0 || Q(4,4) > 0 ) {
+	Gaudi::TrackSymMatrix invpredcov = predcov ;
+	if( Gaudi::Math::invertPosDefSymMatrix( invpredcov ) ) {
+	  smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
+	} else {
+	  warning() << "Error inverting prediction. Skipping track" << endreq ;
+	  error = true ;
+	}
+      } else {
+	smoothergainmatrix[k-1] = invF  ;
+      }
       
       // Now calculate the diagonal (k-1,k). This matrix represents
       // the covariance of the statvectors of k-1 and k. (multiply
@@ -320,20 +330,35 @@ namespace Al
       
       // Let's check the result. Keep track of the roots.
       const double tol = 1e-3 ;
-      std::vector<double> diagroots ;
+      std::vector<double> HCHdiagroots ;
+      std::vector<double> Rdiagroots ;
       for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
 	double c = residuals->m_HCH.fast(irow+1,irow+1) ;
 	error = ! (0<=c) ;
-	if(error) warning() << "found bad element on diagonal: " << c << endreq ;
-	diagroots.push_back(std::sqrt(c)) ;
+	if(error) warning() << "found negative element on diagonal: " << c << endreq ;
+	error = ! ( c<residuals->V(irow)) ;
+	if(error) warning() << "found too large element on diagonal: " << c/residuals->V(irow) << endreq ;
+	
+	HCHdiagroots.push_back( std::sqrt(c) ) ;
+	Rdiagroots.push_back( std::sqrt(residuals->V(irow) - c) ) ;
       }
-      for(size_t irow=0; irow<nummeasurements && !error; ++irow) 
+      bool offdiagerror(false) ;
+      for(size_t irow=0; irow<nummeasurements && !error; ++irow) {
 	for(size_t icol=0; icol<irow && !error; ++icol) {
-	  double c = residuals->m_HCH.fast(irow+1,icol+1) / (diagroots[irow]*diagroots[icol]) ;
-	  error =  ! (-1-tol < c && c <1+tol) ;
-	  if(error) warning() << "found bad element on offdiagonal: " << c << endreq ;
+	  double c = residuals->m_HCH.fast(irow+1,icol+1) / (HCHdiagroots[irow]*HCHdiagroots[icol]) ;
+	  bool thiserror =  ! (-1-tol < c && c <1+tol) ;
+	  double d = residuals->m_HCH.fast(irow+1,icol+1) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
+	  bool thisderror =  ! (-1-tol < d && d <1+tol) ;
+	  if(thiserror||thisderror) {
+	    warning() << "found bad element on offdiagonal: " 
+		      << irow << " " << icol << " " 
+		      << c << " " << d << endreq ;
+	  }
+	  
+	  offdiagerror |= thiserror || thisderror ;
 	}
-      if(error) { delete residuals ; residuals = 0 ; }
+      }
+      if(error||offdiagerror) { delete residuals ; residuals = 0 ; }
       
     }
 
