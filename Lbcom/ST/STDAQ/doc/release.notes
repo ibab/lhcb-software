@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 Allow possibility to force the bank version
 
 ! 2008-07-14 - Add functionality to see which banks are missing
              - Follow changes in readout tool interface

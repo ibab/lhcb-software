@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.13 2008-07-14 08:18:03 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.14 2008-07-15 11:20:26 mneedham Exp $
 
 #include <algorithm>
 
@@ -46,6 +46,7 @@ GaudiAlgorithm (name , pSvcLocator){
  declareProperty("summaryLocation", m_summaryLocation = STSummaryLocation::TTSummary);
  declareProperty("skipBanksWithErrors", m_skipErrors = false );
  declareProperty("rawEventLocation",m_rawEventLocation = RawEventLocation::Default);
+ declareProperty("forcedVersion", m_forcedVersion = -1);
 }
 
 STDecodingBaseAlg::~STDecodingBaseAlg() {
@@ -132,15 +133,15 @@ bool STDecodingBaseAlg::checkDataIntegrity(STDecoder& decoder, const STTell1Boar
               << endmsg ;
       Warning("ADC values do not match", StatusCode::FAILURE);
       ok = false;
-      break;
+      //      break;
     }
 
     // decode the channel
     if (aBoard->validChannel(aWord.channelID()) == false){
-      debug() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
+      warning() << "invalid TELL1 channel number board: " << aBoard->boardID() << " chan " << aWord.channelID() << endmsg;
       Warning("Invalid tell1 channel", StatusCode::SUCCESS); 
       ok = false;
-      break;
+      // break;
     }
 
   } // loop clusters

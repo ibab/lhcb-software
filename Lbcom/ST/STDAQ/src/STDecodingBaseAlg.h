@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.h,v 1.9 2008-07-14 08:18:03 mneedham Exp $
+// $Id: STDecodingBaseAlg.h,v 1.10 2008-07-15 11:20:26 mneedham Exp $
 #ifndef STDECODINGBASEALG_H 
 #define STDECODINGBASEALG_H 1
 
@@ -51,6 +51,8 @@ protected:
 
  std::string detType() const;
 
+ bool forceVersion() const;  
+
  void createSummaryBlock(const unsigned int nclus, const unsigned int pcn, 
                          const bool pcnsync, const std::vector<unsigned int>& bankList,
                          const std::vector<unsigned int>& missing ) const;
@@ -66,7 +68,9 @@ protected:
  bool m_skipErrors;
  std::string m_bankTypeString;
  std::string m_rawEventLocation;
-
+ 
+ int m_forcedVersion;
+ 
 private:
 
   /// bank type
@@ -76,7 +80,7 @@ private:
   LHCb::RawBank::BankType m_bankType;
   std::string m_readoutToolName;
   ISTReadoutTool* m_readoutTool;
-
+  
 };
 
 inline ISTReadoutTool* STDecodingBaseAlg::readoutTool() const{
@@ -89,6 +93,10 @@ inline LHCb::RawBank::BankType STDecodingBaseAlg::bankType() const {
 
 inline std::string STDecodingBaseAlg::detType() const{
   return m_detType;
+}
+
+inline bool STDecodingBaseAlg::forceVersion() const{
+  return m_forcedVersion >= 0;
 }
 
 

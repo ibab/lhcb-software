@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.30 2008-07-14 08:18:03 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.31 2008-07-15 11:20:26 mneedham Exp $
 
 #include <algorithm>
 
@@ -135,8 +135,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // make a decoder
     STDecoder decoder((*iterBank)->data());    
     // get verion of the bank
-    const unsigned int version = (*iterBank)->version();
-    
+    const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
+
     if (decoder.hasError() == true && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
       std::string errorBank = "bank has errors, skip sourceID "+
@@ -208,23 +208,23 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
     adcs.push_back(std::make_pair(i-offset,(int)tWords[i].adc()));
   } // iDigit
 
-  STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
-                                                 version);
+  STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
+                                                            version);
 
   aBoard->ADCToOffline(aWord.channelID(),adcs,version,offset,interStripPos);
 
   // make cluster +set things
   STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 
-                                                               nearestChan,
-                                                               fracStrip),
+                                                               nearestChan.first,
+                                                               nearestChan.second),
                                                                adcs,neighbour, aBoard->boardID().id(), 
                                                                aWord.channelID());
 
-  if (!clusCont->object(nearestChan)) {
-    clusCont->insert(newCluster,nearestChan);
+  if (!clusCont->object(nearestChan.first)) {
+    clusCont->insert(newCluster,nearestChan.first);
   }   
   else {
-    debug() << "Cluster already exists not inserted: " << nearestChan << endmsg;  
+    warning() << "Cluster already exists not inserted: " << aBoard->boardID()<< " " <<  aWord.channelID() << endmsg;  
     Warning("Failed to insert cluster --> exists in container", StatusCode::SUCCESS , 100);
     delete newCluster; 
   }

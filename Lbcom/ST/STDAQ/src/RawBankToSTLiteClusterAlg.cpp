@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.22 2008-07-14 08:18:03 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.23 2008-07-15 11:20:26 mneedham Exp $
 
 
 #include <algorithm>
@@ -144,7 +144,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       continue; 
     }
 
-    const int version = (*iterBank)->version();
+    const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
 
     // check the integrity of the bank --> always skip if not ok
     if (!m_skipErrors && checkDataIntegrity(decoder, aBoard , (*iterBank)->size() , version) == false) continue;
@@ -156,14 +156,13 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
       STClusterWord aWord = *iterDecoder;
       unsigned int fracStrip = aWord.fracStripBits();
       
-      STChannelID chan =  aBoard->DAQToOffline(aWord.channelID(),fracStrip,
-                                               version);
+      STTell1Board::chanPair chan = aBoard->DAQToOffline(aWord.channelID(),fracStrip,
+                                                         version);
 
-
-      STLiteCluster liteCluster(fracStrip,
+      STLiteCluster liteCluster(chan.second,
                                 aWord.pseudoSizeBits(),
                                 aWord.hasHighThreshold(),
-                                chan);
+                                chan.first);
 
       fCont->push_back(liteCluster);
 
