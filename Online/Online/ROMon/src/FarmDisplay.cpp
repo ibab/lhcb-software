@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.10 2008-07-11 16:37:38 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.11 2008-07-15 12:18:34 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.10 2008-07-11 16:37:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.11 2008-07-15 12:18:34 frankb Exp $
 
 #include "ROMon/RecSubfarmDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
@@ -550,9 +550,13 @@ void FarmSubDisplay::handle(const Event& ev) {
   switch(ev.eventtype) {
   case ScrMouseEvent: {
     const MouseEvent* m = ev.get<MouseEvent>();
+    if ( m->button == 2 ) {
+      IocSensor::instance().send(parent(),CMD_SHOWHELP,this);
+      return;
+    }
     setFocus();
     IocSensor::instance().send(parent(),m->usec == -1UL ? CMD_POSCURSOR : CMD_SHOW,this);
-    break;
+    return;
   }
   default:
     break;
@@ -1014,7 +1018,7 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
 
 /// Standard constructor
 FarmDisplay::FarmDisplay(int argc, char** argv)
-  : InternalDisplay(0,""), m_subfarmDisplay(0), 
+  : InternalDisplay(0,""), m_subfarmDisplay(0), m_nodeSelector(0), 
     m_posCursor(0), m_subPosCursor(0), m_anchorX(10), m_anchorY(20), m_mode(HLT_MODE)
 {
   bool all = false;
@@ -1034,7 +1038,7 @@ FarmDisplay::FarmDisplay(int argc, char** argv)
       m_anchorY = y;
     }
     else {
-      printf("No valid anchor position given.\n");
+      ::printf("No valid anchor position given.\n");
     }
   }
   m_dense = 0 != cli.getopt("dense",2);
@@ -1087,6 +1091,10 @@ FarmDisplay::~FarmDisplay()  {
   ::scrc_begin_pasteboard_update(m_pasteboard);
   m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
   if ( m_subfarmDisplay ) {
+    MouseSensor::instance().remove(m_subfarmDisplay->display());
+    if ( m_nodeSelector ) {
+      MouseSensor::instance().remove(m_nodeSelector->display());
+    }
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
@@ -1144,6 +1152,9 @@ int FarmDisplay::showSubfarm()    {
   if ( m_subfarmDisplay ) {
     DisplayUpdate update(this,true);
     MouseSensor::instance().remove(m_subfarmDisplay->display());
+    if ( m_nodeSelector ) {
+      MouseSensor::instance().remove(m_nodeSelector->display());
+    }
     m_subfarmDisplay->finalize();
     delete m_subfarmDisplay;
     m_subfarmDisplay = 0;
@@ -1151,24 +1162,116 @@ int FarmDisplay::showSubfarm()    {
     m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
     m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
     m_subPosCursor = 8;
+    m_nodeSelector = 0;
   }
   else if ( (d=currentDisplay()) != 0 ) {
     std::string title = "Sub farm info:" + d->name();
     std::string svc = "-servicename=/"+d->name()+"/ROpublish";
     const char* argv[] = {"",svc.c_str(), "-delay=300"};
-    if ( m_mode == RECO_MODE )
-      m_subfarmDisplay = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
-    else
-      m_subfarmDisplay = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+    if ( m_mode == RECO_MODE ) {
+      RecSubfarmDisplay* dis = new RecSubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_nodeSelector = dynamic_cast<ScrDisplay*>(dis->nodeDisplay());
+      m_subfarmDisplay = dis;
+    }
+    else {
+      SubfarmDisplay* dis = new SubfarmDisplay(SUBFARM_WIDTH,SUBFARM_HEIGHT,m_anchorX,m_anchorY,3,(char**)argv);
+      m_nodeSelector = dynamic_cast<ScrDisplay*>(dis->nodeDisplay());
+      m_subfarmDisplay = dis;
+    }
     m_subfarmDisplay->initialize();
     ::lib_rtl_sleep(200);
     MouseSensor::instance().add(this,m_subfarmDisplay->display());
+    if ( m_nodeSelector )   {
+      MouseSensor::instance().add(this,m_nodeSelector->display());
+    }
     IocSensor::instance().send(this,CMD_UPDATE,m_subfarmDisplay);
     m_subPosCursor = SUBFARM_NODE_OFFSET;
   }
   return WT_SUCCESS;
 }
 
+/// Show context dependent help window
+int FarmDisplay::showHelpWindow() {
+  DisplayUpdate update(this,true);
+  if ( m_helpDisplay.get() ) {
+    MouseSensor::instance().remove(this,m_helpDisplay->display());
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(0);
+  }
+  else if ( m_mbmDisplay.get() ) 
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
+  else if ( m_procDisplay.get() ) 
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
+  else if ( m_cpuDisplay.get() ) 
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","cpu"));
+  else if ( m_subfarmDisplay )
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
+  else
+    m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","farm"));
+  if ( m_helpDisplay.get() ) {
+    m_helpDisplay->show(m_anchorY,m_anchorX);
+    MouseSensor::instance().add(this,m_helpDisplay->display());
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with processes on a given node
+int FarmDisplay::showProcessWindow() {
+  if ( m_procDisplay.get() ) {
+    m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
+  }
+  else if ( m_subfarmDisplay ) {
+    const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
+    if ( ns ) {
+      size_t cnt;
+      Nodes::const_iterator n;
+      const Nodes& nodes = ns->nodes;
+      for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
+	if ( cnt == m_subPosCursor-SUBFARM_NODE_OFFSET ) {
+	  m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this, (*n).name));
+	  m_procDisplay->show(m_anchorY+5,m_anchorX+12);
+	  return WT_SUCCESS;
+	}
+      }
+    }
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with buffer information of a given node
+int FarmDisplay::showMbmWindow() {
+  if ( m_subfarmDisplay ) {
+    DisplayUpdate update(this,true);
+    if ( m_mbmDisplay.get() ) {
+      m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
+    }
+    else if ( m_subfarmDisplay ) {
+      m_mbmDisplay = std::auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
+      m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
+      m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
+      m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
+    }
+  }
+  return WT_SUCCESS;
+}
+
+/// Show window with CPU information of a given subfarm
+int FarmDisplay::showCpuWindow() {
+  if ( m_subfarmDisplay ) {
+    DisplayUpdate update(this,true);
+    if ( m_cpuDisplay.get() ) {
+      m_cpuDisplay = std::auto_ptr<CPUDisplay>(0);
+    }
+    else if ( m_subfarmDisplay ) {
+      const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
+      if ( ns ) {
+	m_cpuDisplay = std::auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
+	m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
+	return WT_SUCCESS;
+      }
+    }
+  }
+  return WT_SUCCESS;
+}
 
 /// DIM command service callback
 void FarmDisplay::update(const void* address) {
@@ -1239,86 +1342,24 @@ int FarmDisplay::handleKeyboard(int key)    {
       return WT_SUCCESS;
     case 'h':
     case 'H':
-    case CTRL_H: {
-      DisplayUpdate update(this,true);
-      if ( m_helpDisplay.get() )
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(0);
-      else if ( m_mbmDisplay.get() ) 
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","mbm"));
-      else if ( m_procDisplay.get() ) 
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","procs"));
-      else if ( m_cpuDisplay.get() ) 
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","cpu"));
-      else if ( m_subfarmDisplay )
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","subfarm"));
-      else
-	m_helpDisplay = std::auto_ptr<HelpDisplay>(new HelpDisplay(this,"Help window","farm"));
-      if ( m_helpDisplay.get() ) m_helpDisplay->show(m_anchorY,m_anchorX);
-      return WT_SUCCESS;
-    }
+    case CTRL_H:
+      return showHelpWindow();
     case 'c':
     case 'C':
-      if ( m_subfarmDisplay ) {
-	DisplayUpdate update(this,true);
-	if ( m_cpuDisplay.get() ) {
-	  m_cpuDisplay = std::auto_ptr<CPUDisplay>(0);
-	}
-	else if ( m_subfarmDisplay ) {
-	  const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
-	  if ( ns ) {
-	    m_cpuDisplay = std::auto_ptr<CPUDisplay>(new CPUDisplay(this,ns->name));
-	    m_cpuDisplay->show(m_anchorY+5,m_anchorX+12);
-	    return WT_SUCCESS;
-	  }
-	}
-      }
-      return WT_SUCCESS;
+      return showCpuWindow();
     case 'm':
     case 'M':
     case '.':
     case KPD_PERIOD:
-      if ( m_subfarmDisplay ) {
-	DisplayUpdate update(this,true);
-	if ( m_mbmDisplay.get() ) {
-	  m_mbmDisplay = std::auto_ptr<BufferDisplay>(0);
-	}
-	else if ( m_subfarmDisplay ) {
-	  m_mbmDisplay = std::auto_ptr<BufferDisplay>(new BufferDisplay(this,"MBM Monitor display"));
-	  m_mbmDisplay->setNode(m_subPosCursor-SUBFARM_NODE_OFFSET);
-	  m_mbmDisplay->update(m_subfarmDisplay->data().pointer);
-	  m_mbmDisplay->show(m_anchorY+5,m_anchorX+12);
-	}
-      }
-      return WT_SUCCESS;
+      return showMbmWindow();
     case 'p':
     case 'P':
-    case CTRL_P: {
-      if ( m_procDisplay.get() ) {
-	m_procDisplay = std::auto_ptr<ProcessDisplay>(0);
-      }
-      else if ( m_subfarmDisplay ) {
-	const Nodeset* ns = (const Nodeset*)m_subfarmDisplay->data().pointer;
-	if ( ns ) {
-	  size_t cnt;
-	  Nodes::const_iterator n;
-	  const Nodes& nodes = ns->nodes;
-	  for (n=nodes.begin(), cnt=0; n!=nodes.end(); n=nodes.next(n), ++cnt)  {
-	    if ( cnt == m_subPosCursor-SUBFARM_NODE_OFFSET ) {
-	      m_procDisplay = std::auto_ptr<ProcessDisplay>(new ProcessDisplay(this, (*n).name));
-	      m_procDisplay->show(m_anchorY+5,m_anchorX+12);
-	      return WT_SUCCESS;
-	    }
-	  }
-	}
-      }
-      return WT_SUCCESS;
-    }
+    case CTRL_P:
+      return showProcessWindow();
     case RETURN_KEY:
-    case ENTER: {
-      RTL::Lock lock(s_lock,true);
-      showSubfarm();
+    case ENTER:
+      IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
       return WT_SUCCESS;
-    }
     case MOVE_LEFT:
       if ( 0 == m_subfarmDisplay && (d=currentDisplay()) ) {
 	SubDisplays::reverse_iterator k;
@@ -1415,11 +1456,35 @@ void FarmDisplay::handle(const Event& ev) {
   time_t now = time(0);
   Farms::iterator i;
   SubDisplays::iterator k;
+  const MouseEvent* m = 0;
+
   RTL::Lock lock(s_lock);
   switch(ev.eventtype) {
   case ScrMouseEvent:
-    if ( ev.get<MouseEvent>()->usec != -1UL )
+    m = ev.get<MouseEvent>();
+    if ( m->button == 2 ) {
+      IocSensor::instance().send(this,CMD_SHOWHELP,this);
+    }
+    else if ( m->usec != -1UL ) {
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
+    }
+    else if ( m_subfarmDisplay && m->usec == -1UL ) {
+      if ( m->display == m_nodeSelector->display() ) {
+	SubfarmDisplay* sfd = (m_mode==HLT_MODE) ? (SubfarmDisplay*)m_subfarmDisplay : 0;
+	RecSubfarmDisplay* rsfd = (m_mode==RECO_MODE) ? (RecSubfarmDisplay*)m_subfarmDisplay : 0;
+	size_t cur = m->y-3-SUBFARM_NODE_OFFSET;
+	size_t pos = -1UL;
+	if ( sfd && sfd->numNodes()>cur )
+	  pos = cur+SUBFARM_NODE_OFFSET;
+	else if ( rsfd && rsfd->numNodes()>cur )
+	  pos = cur+SUBFARM_NODE_OFFSET;
+	if ( pos != -1UL ) {
+	  RTL::Lock unlock(s_lock,true);
+	  m_subPosCursor = pos;
+	  handleKeyboard(m->button == 0 ? KPD_PERIOD : CTRL_P);
+	}
+      }
+    }
     return;
   case TimeEvent:
     if (ev.timer_data == m_subfarmDisplay ) {
@@ -1437,16 +1502,22 @@ void FarmDisplay::handle(const Event& ev) {
     case CMD_SETCURSOR:
       set_cursor();
       break;
+    case CMD_HANDLE_KEY:
+      handleKeyboard((int)ev.data);
+      break;
     case CMD_SHOWSUBFARM: {
       RTL::Lock lock(s_lock,true);
       showSubfarm();
       return;
     }
+    case CMD_SHOWHELP:
+      showHelpWindow();
+      return;
     case CMD_SHOW:
       for(k=m_farmDisplays.begin(); k != m_farmDisplays.end(); ++k, ++cnt) {
 	InternalDisplay* d = (*k).second;
 	if ( d == ev.data )  {
-	  RTL::Lock lock(s_lock,true);
+	  RTL::Lock unlock(s_lock,true);
 	  m_posCursor = cnt;
 	  showSubfarm();
 	  return;

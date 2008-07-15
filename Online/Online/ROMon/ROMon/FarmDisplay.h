@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.6 2008-07-11 16:37:38 frankb Exp $
+// $Id: FarmDisplay.h,v 1.7 2008-07-15 12:18:34 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.6 2008-07-11 16:37:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.7 2008-07-15 12:18:34 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -52,6 +52,8 @@ namespace ROMon {
     CMD_POSCURSOR,
     CMD_SHOW,
     CMD_SHOWSUBFARM,
+    CMD_SHOWHELP,
+    CMD_HANDLE_KEY,
     CMD_LAST
   };
 
@@ -302,19 +304,19 @@ namespace ROMon {
     std::auto_ptr<BufferDisplay>     m_mbmDisplay;
     std::auto_ptr<HelpDisplay>       m_helpDisplay;
     std::auto_ptr<CPUDisplay>        m_cpuDisplay;
-
-    std::string        m_partition;
-    std::string        m_match;
+    ScrDisplay*                      m_nodeSelector;
+    std::string                      m_partition;
+    std::string                      m_match;
     /// vector with all farm displays
-    Farms              m_farms;
-    int                m_height;
-    int                m_width;
-    int                m_dense;
+    Farms                            m_farms;
+    int                              m_height;
+    int                              m_width;
+    int                              m_dense;
     /// Cursor position in sub display array
-    size_t             m_posCursor;
-    size_t             m_subPosCursor;
-    int                m_anchorX, m_anchorY;
-    int                m_mode;
+    size_t                           m_posCursor;
+    size_t                           m_subPosCursor;
+    int                              m_anchorX, m_anchorY;
+    int                              m_mode;
     /// Keyboard rearm action
     static int key_rearm (unsigned int fac, void* param);
     /// Keyboard action
@@ -323,32 +325,32 @@ namespace ROMon {
 public:
     /// Standard constructor
     FarmDisplay(int argc, char** argv);
-
     /// Standard destructor
     virtual ~FarmDisplay();
-
     /// Show subfarm display
     int showSubfarm();
-
     /// Handle keyboard interrupts
     int handleKeyboard(int key);
-
     /// Get farm display from cursor position
     InternalDisplay* currentDisplay();
-
+    /// Accessor to sub-displays of main panel
     SubDisplays& subDisplays() {  return m_farmDisplays; }
-
     /// Set cursor to position
     void set_cursor();
-
     /// Interactor overload: Display callback handler
     virtual void handle(const Event& ev);
-
     /// Connect to data sources
     void connect(const std::vector<std::string>& farms);
-
     /// DIM command service callback
     virtual void update(const void* data);
+    /// Show context dependent help window
+    int showHelpWindow();
+    /// Show window with processes on a given node
+    int showProcessWindow();
+    /// Show window with CPU information of a given subfarm
+    int showCpuWindow();
+    /// Show window with buffer information of a given node
+    int showMbmWindow();
   };
 }      // End namespace ROMon
 #endif /* ROMON_FARMDISPLAY_H */

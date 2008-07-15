@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.h,v 1.2 2008-07-11 11:18:02 frankb Exp $
+// $Id: RecSubfarmDisplay.h,v 1.3 2008-07-15 12:18:34 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.2 2008-07-11 11:18:02 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/RecSubfarmDisplay.h,v 1.3 2008-07-15 12:18:34 frankb Exp $
 #ifndef ROMON_RECSUBFARMDISPLAY_H
 #define ROMON_RECSUBFARMDISPLAY_H 1
 
@@ -59,6 +59,9 @@ namespace ROMon {
 
     /// Number of nodes in the dataset
     size_t numNodes();
+
+    /// Access Node display
+    MonitorDisplay* nodeDisplay() const {    return m_nodes; }
 
     /// Show the display header information (title, time, ...)
     void showHeader(const Nodeset& ns);
