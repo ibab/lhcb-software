@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2008-07-15 - Stephanie Hansmann-Menzemer
+- move PatForward.py and PatSeeding.py to option directory, remove python
+  directory
 
 ! 2008-07-14 - Manuel Tobias Schiller
  - PatDownstream:
