@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.103 2008-07-11 15:52:06 jucogan Exp $
+! $Id: release.notes,v 1.104 2008-07-15 15:28:07 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-07-15 - Marco Cattaneo
+ - Remove cmt/version.cmt file, breaks cmt when running with version directory!
 
 ! 2008-07-11 - Julien Cogan
  - L0MuonError : new object to contain errors for the L0Muon
