@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.26 2008-03-31 07:07:59 mneedham Exp $
+// $Id: TrackKalmanFilter.h,v 1.27 2008-07-15 07:04:28 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -75,10 +75,7 @@ protected:
   void updateResidual( LHCb::FitNode& node ) const ;
 
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
-
-  // ! invert matrix after preconditioning
-  bool invertMatrix( Gaudi::TrackSymMatrix& mat ) const;
+  bool isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
 
 private:
 
@@ -111,9 +108,9 @@ inline StatusCode TrackKalmanFilter::failure( const std::string& comment ) const
 //=========================================================================
 // 
 //=========================================================================
-inline StatusCode TrackKalmanFilter::checkPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
+inline bool TrackKalmanFilter::isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const 
 {
   unsigned int i = 0u;
   for ( ; i < Gaudi::TrackSymMatrix::kRows && mat(i,i) > 0.0 ; ++i ) {}
-  return i == Gaudi::TrackSymMatrix::kRows ? StatusCode::SUCCESS : Warning( "Covariance matrix has non-positive elements!",StatusCode::FAILURE,1 ); ;
+  return i == Gaudi::TrackSymMatrix::kRows ;
 }

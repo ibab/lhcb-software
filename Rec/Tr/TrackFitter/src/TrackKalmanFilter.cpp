@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.62 2008-07-01 14:43:28 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.63 2008-07-15 07:04:28 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
+#include "LHCbMath/MatrixInversion.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -458,8 +459,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 	      << " err meas = "
 	      << (node.hasMeasurement() ? node.measurement().errMeasure() : 0 )
 	      << " errMeas2 = " << node.errMeasure2()
-	      << " errRes2 = " << errorMeas2 + Similarity(H,C)(0,0) << std::endl
-	      << " K = " << K << endmsg ;
+	      << " errRes2 = " << errorMeas2 + Similarity(H,C)(0,0) << endmsg ;
   
   return StatusCode::SUCCESS;
 }
@@ -484,8 +484,8 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 
   // invert the covariance matrix
   TrackSymMatrix invPrevNodeC = prevNodeC;
-  StatusCode sc = invertMatrix( invPrevNodeC );
-  if ( sc.isFailure() ) return failure( "unable to invert matrix in smoother" );
+  if ( !Gaudi::Math::invertPosDefSymMatrix( invPrevNodeC ) )
+    return failure( "unable to invert matrix in smoother" );
 
   // Get the filtered result from this node
   TrackVector& thisNodeX = thisNode.state().stateVector();
@@ -514,8 +514,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   thisNodeC += covUpDate;
 
   // check that the cov matrix is positive
-  sc = checkPositiveMatrix( thisNodeC ) ;
-  if ( sc.isFailure() ) {
+  if ( !isPositiveMatrix(thisNodeC) ) {
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
          << thisNode.z() << " thisNodeC = " << thisNodeC;
@@ -551,8 +550,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) c
   // Calculate the gain matrix. Start with inverting the cov matrix of the difference.
   TrackSymMatrix R = filtStateC + predRevC ;
   TrackSymMatrix invR = R ;
-  bool OK = invertMatrix( invR );
-  if ( !OK ) {
+  if ( !Gaudi::Math::invertPosDefSymMatrix( invR ) ) {
     debug() << "unable to invert matrix in smoother" << invR << endreq ;
     return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,0);
   }
@@ -626,31 +624,6 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
     node.setErrResidual(0) ;
   }
 }
-
-//=========================================================================
-// Invert covariance matrix after conditioning
-//=========================================================================
-
-bool TrackKalmanFilter::invertMatrix( Gaudi::TrackSymMatrix& matrix ) const
-{
-  // Reduce matrix condition number by scaling it such that it has
-  // unit values on the diagonal The time-limitation here is not the
-  // sqrt (which we could solve with an approximation), but really the
-  // scaling itself. The total procedure is about a factor 1.5 slower
-  // than the inversion alone.
-  double scale[TrackSymMatrix::kRows] ;
-  for(size_t j=0; j<TrackSymMatrix::kRows; ++j) 
-    scale[j] = 1.0/std::sqrt(matrix(j,j)) ;
-  for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
-    for(size_t k=0; k<=j; ++k)
-      matrix(j,k) *= scale[j] * scale[k] ;
-  bool OK = matrix.Invert() ;
-  for(size_t j=0; j<TrackSymMatrix::kRows; ++j)
-    for(size_t k=0; k<=j; ++k)
-      matrix(j,k) *= scale[j] * scale[k] ;
-  return OK ;
-}
-
 
 //=========================================================================
 
