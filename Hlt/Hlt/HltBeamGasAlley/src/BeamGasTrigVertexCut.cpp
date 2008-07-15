@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigVertexCut.cpp,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigVertexCut.cpp,v 1.1.1.2 2008-07-15 14:29:54 phopchev Exp $
 #include "GaudiKernel/AlgFactory.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -58,8 +58,8 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 	 << "zOfTracksExclRegionUpp = " << m_zMaxPosCut  << " mm"    << endreq
 	 << "======================================"		<< endreq
 	 << "========== HLT Algorithm related parameters ========="   << endreq
-	 << "InputSelectionName  =         " << m_RZTracksLocation    << endreq
-	 << "OutputSelectionName =         " << m_outputSelectionName << endreq;
+	 << "InputSelectionName  =         " << m_RZTracksLocation    << endreq;
+	 //<< "OutputSelectionName =         " << m_outputSelectionName << endreq;
   
   m_outputTracks = &( registerTSelection<LHCb::Track>() );
   
@@ -111,20 +111,17 @@ StatusCode BeamGasTrigVertexCut::execute() {
       decision = true;
       if( zPosOfMaxBin > 0 ) m_trigEventsZpositive += 1;
       else m_trigEventsZnegative += 1;
-      
+            
       //Fill HLT SUMMARY with the big z_r0 tracks of the triggered event
-      //If not using TES !!!
-      m_outputTracks->clear();
-      
       for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
       {  
         z = (*itT)->firstState().z();
         r = (*itT)->firstState().x();
     	t = (*itT)->firstState().tx();
     	z_r0 = z - r/t;    
-        if( std::fabs(z_r0 - zPosOfMaxBin) < m_binWidth ) m_outputTracks->push_back( *itT );
+        if( std::fabs(z_r0 - zPosOfMaxBin) < m_binWidth*0.5 ) m_outputTracks->push_back( *itT );
       }
-      info() << "Number of Objects in the outputSelction = " << m_outputTracks->ncandidates() << endmsg;      
+      debug() << "Number of Objects in the outputSelction = " << m_outputTracks->ncandidates() << endmsg;      
     }
   }
       

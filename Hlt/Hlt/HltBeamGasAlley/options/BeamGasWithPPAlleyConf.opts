@@ -41,4 +41,3 @@ BeamGasTrigVertexCut.zMinPosCut  = -265.0;
 BeamGasTrigVertexCut.zMaxPosCut = 265.0;
 //HltAlgorithm related
 //BeamGasTrigVertexCut.InputSelection = "RZVeloBeamGas";
-//BeamGasTrigVertexCut.OutputSelection = "RZVeloBeamGasBigZOnly";
