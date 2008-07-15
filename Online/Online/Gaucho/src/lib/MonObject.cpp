@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.8 2008-06-24 12:30:02 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.9 2008-07-15 16:34:25 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"
@@ -12,6 +12,7 @@ MonObject::MonObject(IMessageSvc* msgSvc, const std::string& source, int version
   m_dimPrefix = "MonObj";
   m_comments = "";
   m_endOfRun = false;
+  m_serviceActive = true;
   pthread_mutex_init(&m_mtx,NULL);
 }
 

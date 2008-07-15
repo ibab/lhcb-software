@@ -39,14 +39,14 @@
 // Static Factory declaration
 DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
 
-
 // Constructor
 //------------------------------------------------------------------------------
 UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
-  : GaudiAlgorithm(name, ploc), m_deltaTCycle(5)
+  : GaudiAlgorithm(name, ploc)
 {
-  declareProperty("deltaTCycle", m_deltaTCycle);
-  m_generatedRunNumber = 0; 
+  m_desiredDeltaTCycle = 0;
+  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle);
+  m_firstExecute = true;
 }
 
 //------------------------------------------------------------------------------
@@ -66,34 +66,32 @@ StatusCode UpdateAndReset::initialize() {
     msg << MSG::FATAL << "Unable to locate the IGauchoMonitorSvc interface." << endreq;
     return StatusCode::FAILURE;
   }
-  
+
+  if (0 == m_desiredDeltaTCycle){
+    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
+    m_desiredDeltaTCycle = 5;
+  }
+    
   // In the begining the delayed values are the same as the current values.
-  
+  msg << MSG::INFO << "This program will TRY to update data every " << m_desiredDeltaTCycle << " seconds !!!" << endreq;
+   
   // The below part is for test
   m_countExecutes = 0; 
-  m_runTestElapsedTime = 0.0; 
-  m_deltaTRunTest = 8 * m_deltaTCycle; 
-  m_runTestTimer.start(); 
-  m_timeFirstEvInRun = GauchoTimer::currentTime(); 
-  m_timeStart = m_timeFirstEvInRun;
-  // The above part is for test 
+  m_deltaTRunTest = 8 * m_desiredDeltaTCycle;
   
-  retrieveRunNumber();
-  m_cycleNumber = 0;
-  m_timeTrueLastEvInCycle = m_timeFirstEvInRun;
+  m_timeStart = GauchoTimer::currentTime();
   
-  msg << MSG::INFO << " m_timeTrueLastEvInCycle = " << m_timeTrueLastEvInCycle << endreq;
-  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_timeFirstEvInRun, m_timeTrueLastEvInCycle); 
-  msg << MSG::INFO << " m_timeTrueLastEvInCycle = " << m_timeTrueLastEvInCycle << endreq;
+  m_runNumber = currentRunNumber().first;
+  m_cycleNumber = currentCycleNumber(m_timeStart).first;
+  m_timeFirstEvInRun = m_timeStart;
+  m_timeLastEvInCycle = m_timeStart;
+  m_gpsTimeLastEvInCycle = gpsTime();
+  m_runStatus = s_statusNoUpdated;
+  m_cycleStatus = s_statusNoUpdated;
   
-  longlong currentTime = GauchoTimer::currentTime();
-  longlong timeNextUp  = timeNextUpdate(currentTime);
+  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_timeFirstEvInRun, m_timeLastEvInCycle, m_gpsTimeLastEvInCycle);
   
-  //int timeToWait = ((int)(timeNextUp - currentTime)); // milliseconds
-  int timeToWait = ((int)(timeNextUp - currentTime))/1000; // seconds
-  msg << MSG::INFO << " timeToWait = " << timeToWait << endreq;
-  
-  start(timeToWait); //start seconds
+  //start(20); // we wait a few seconds 
   
   return StatusCode::SUCCESS;
 }
@@ -103,12 +101,13 @@ void UpdateAndReset::timerHandler()
   MsgStream msg(msgSvc(), name());
 //  msg << MSG::INFO << "**********************************************************************" << endreq;
 //  msg << MSG::INFO << "********************Inside timerHandler*******************************" << endreq;
-  start(m_deltaTCycle); // seconds
-  retrieveCycleNumber();
-  updateData(false);
+  
+  verifyAndProcessRunChange("timer");
+  verifyAndProcessCycleChange("timer");
+
+  start(1); // we verify the cycle status every 1 second
 //  msg << MSG::INFO << "***********************End timerHandler*******************************" << endreq;
 //  msg << MSG::INFO << "**********************************************************************" << endreq;
-
 }
 
 
@@ -117,23 +116,49 @@ StatusCode UpdateAndReset::execute() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   m_countExecutes++;
-  
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
 //  msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "********************************************************************" << endreq;
   
-  if (0 != retrieveRunNumber()) {
-    msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq; 
-    retrieveCycleNumber();
-    updateData(true);
-  }
+  verifyAndProcessRunChange("execute");
+  verifyAndProcessCycleChange("execute");
   
+  // Because the plot method we start the timer after the first execute...
+  // This is because of plot method declareinfo in the execute method...
+  if (m_firstExecute){ 
+   m_firstExecute = false;
+   start(1); 
+  }
 //  msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
-  
   return StatusCode::SUCCESS;
 }
 
+void UpdateAndReset::verifyAndProcessCycleChange(std::string method) {
+  ulonglong currentTime = GauchoTimer::currentTime();
+  std::pair<int, bool> cycleNumber = currentCycleNumber(currentTime);
+  if (!cycleNumber.second) return;
+  if (s_statusNoUpdated != m_cycleStatus) return;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << " Process Triggered by the "<< method <<"() method." << endreq;
+  m_cycleStatus = s_statusProcessingUpdate;
+  updateData(false);
+  m_cycleStatus = s_statusUpdated;
+  retrieveCycleNumber(cycleNumber.first);
+}
+
+void UpdateAndReset::verifyAndProcessRunChange(std::string method) {
+  std::pair<int, bool> runNumber = currentRunNumber();
+  if (!runNumber.second) return;
+  if (s_statusNoUpdated != m_runStatus) return;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq;
+  msg << MSG::INFO << " Process Triggered by the "<< method <<"() method." << endreq;
+  m_runStatus = s_statusProcessingUpdate;
+  updateData(true);
+  m_runStatus = s_statusUpdated;
+  retrieveRunNumber(runNumber.first);
+}
 
 //------------------------------------------------------------------------------
 StatusCode UpdateAndReset::finalize() {
@@ -145,94 +170,96 @@ StatusCode UpdateAndReset::finalize() {
 }
 
 //------------------------------------------------------------------------------
-int UpdateAndReset::retrieveRunNumber() {
+void UpdateAndReset::retrieveRunNumber(int runNumber) {
+//------------------------------------------------------------------------------
+  m_runNumber = runNumber;
+  m_runStatus = s_statusNoUpdated;
+  m_timeFirstEvInRun = GauchoTimer::currentTime();
+}
+
+//------------------------------------------------------------------------------
+std::pair<int, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
-  int currentRunNumber=0;
+  int runNumber=0;
+  bool changed = false;
+  
+  //msg << MSG::INFO<< "Reading ODIN Bank. " <<endreq;
+  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+    msg << MSG::INFO<< "ODIN Bank exist. " <<endreq;
+    LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+    msg << MSG::INFO<< "Getting RunNumber. " <<endreq;
+    runNumber = odin->runNumber();
+    msg << MSG::INFO<< "runNumber from ODIN is. " <<endreq;
+  }
+  else
+  {
+    // this is only for test when Odin doesn't work
+    ulonglong currentTime = GauchoTimer::currentTime();
+    runNumber = currentTime/(m_deltaTRunTest*1000);
+  }
+  
+  if (m_runNumber != runNumber) changed = true;
+  
+  return std::pair<int, bool>(runNumber,changed);
+  
+}
+
+//------------------------------------------------------------------------------
+ulonglong UpdateAndReset::gpsTime() {
+//------------------------------------------------------------------------------
+  MsgStream msg( msgSvc(), name() );
   
 //  msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
-  
   if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+  
+    msg << MSG::INFO<< " Congratulations, you can read the ODIN Bank. " << endreq;
     LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-    currentRunNumber = odin->runNumber();
+    return odin->gpsTime();
   }
-  else {
-  
-//    msg << MSG::WARNING<< "No ODIN Bank found. We don't get the runNumber" <<endreq;
-//    msg << MSG::INFO<< "For testing we generate a runNumber" <<endreq;
-  
-    m_runTestElapsedTime = m_runTestTimer.stop();
-    if (m_runTestElapsedTime > 1000*m_deltaTRunTest){
-//       msg << MSG::INFO<< "Changing run number becase timer elapsed (" << m_runTestElapsedTime << ") is greather than m_deltaTRunTest (" << 1000*m_deltaTRunTest<< ") " <<endreq;  
-       m_generatedRunNumber++; 
-       m_runTestElapsedTime = 0;
-       m_runTestTimer.start();
-    }
     
-    currentRunNumber = m_generatedRunNumber;
-  }
+  // this is only for test when Odin doesn't work
+  ulonglong currentTime = GauchoTimer::currentTime();
+    
+  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000);
+    
+  ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000);
   
-  if (m_runNumber != currentRunNumber) {
-    m_runNumber = currentRunNumber;
-    m_timeFirstEvInRun = GauchoTimer::currentTime();
-    return 1;
-  }
-  
-  return 0;
+  return gpsTime;
 }
 
-int UpdateAndReset::cycleNumber(longlong currentTime) {
-  return currentTime/(m_deltaTCycle*1000);
+std::pair<int, bool> UpdateAndReset::currentCycleNumber(ulonglong currentTime) {
+  bool changed = false;
+  int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000);
+  if (m_cycleNumber != cycleNumber ) changed = true;
+  return std::pair<int, bool>(cycleNumber,changed);
 }
 
 //------------------------------------------------------------------------------
-int UpdateAndReset::retrieveCycleNumber() {
+void UpdateAndReset::retrieveCycleNumber(int cycleNumber) {
 //------------------------------------------------------------------------------
-  MsgStream msg(msgSvc(), name());
-//  msg << MSG::INFO << "**********************************************************************" << endreq;
-//  msg << MSG::INFO << "********************Inside retrieveCycleNumber************************" << endreq;
-  longlong currentTime = GauchoTimer::currentTime();
-  int currentCycleNumber = cycleNumber(currentTime);
-//  msg << MSG::INFO << "m_cycleNumber = " << m_cycleNumber << endreq;
-//  msg << MSG::INFO << "currentCycleNumber = " << currentCycleNumber << endreq;
-  
-  if (m_cycleNumber != currentCycleNumber) {
-    m_cycleNumber = currentCycleNumber;
-    m_timeLastEvInCycle = (((longlong)m_cycleNumber) + 1)*((longlong) m_deltaTCycle)*1000;
-//    msg << MSG::INFO << "We change th cycle number " << endreq;
-//    msg << MSG::INFO << "m_timeLastEvInCycle = " << m_timeLastEvInCycle << endreq;
-//    msg << MSG::INFO << "***********************End retrieveCycleNumber************************" << endreq;
-//    msg << MSG::INFO << "**********************************************************************" << endreq;
-    return 1;
-  }
-  
-//  msg << MSG::INFO << "***********************End retrieveCycleNumber************************" << endreq;
-//  msg << MSG::INFO << "**********************************************************************" << endreq;
-  
-  return 0;
+  // In order to avoid conflict, the cycle number is updated here and only here
+  m_cycleNumber = cycleNumber;
+  m_cycleStatus = s_statusNoUpdated;
 }
 
-longlong UpdateAndReset::timeNextUpdate(longlong currentTime) {
-  return (((longlong) cycleNumber(currentTime)) + 1)*((longlong) m_deltaTCycle)*1000;
-}
 
 void UpdateAndReset::updateData(bool isRunNumberChanged) {
   MsgStream msg( msgSvc(), name() );
+  ulonglong currentTime = GauchoTimer::currentTime();
   msg << MSG::INFO << "**********************************************************************" << endreq;
-  msg << MSG::INFO << "************Updating data " << (GauchoTimer::currentTime() - m_timeStart) << " milliseconds after start **********" << endreq;
-  msg << MSG::INFO << "************Updating data " << (GauchoTimer::currentTime() - m_timeTrueLastEvInCycle) << " milliseconds after last update " << endreq;
-  
-  m_timeTrueLastEvInCycle = GauchoTimer::currentTime();
- 
-  // We change the cycle number 
-  // We set the MonRate parameters  
-  // (delayed parameters) with the old values 
+  msg << MSG::INFO << "************Updating data " << (currentTime - m_timeStart) << " milliseconds after start **********" << endreq;
   msg << MSG::INFO << "m_runNumber        = " << m_runNumber << endreq;
   msg << MSG::INFO << "m_cycleNumber      = " << m_cycleNumber << endreq;
   msg << MSG::INFO << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
+  m_deltaTCycle = currentTime - m_timeLastEvInCycle;
+  msg << MSG::INFO << "m_deltaTCycle = " << m_deltaTCycle << " milliseconds" << endreq;
+  m_timeLastEvInCycle = currentTime;
   msg << MSG::INFO << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
-  msg << MSG::INFO << "m_timeTrueLastEvInCycle = " << m_timeTrueLastEvInCycle << endreq;
-  msg << MSG::INFO << "Time ERROR = " << m_timeTrueLastEvInCycle - m_timeLastEvInCycle << endreq;
+  msg << MSG::INFO << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000 << " milliseconds" << endreq;
+  m_gpsTimeLastEvInCycle = gpsTime();
+  msg << MSG::INFO << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
+  msg << MSG::INFO << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " milliseconds" << endreq;
   
   std::string changed = "Cycle";
   if (isRunNumberChanged) {

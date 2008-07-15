@@ -9,52 +9,63 @@
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GauchoTimer.h"
 #include "dis.hxx"
+#include <map>
+
+static const std::string s_statusNoUpdated("NO_UPDATED");
+static const std::string s_statusProcessingUpdate("PROCESSINGUPDATE");
+static const std::string s_statusUpdated("UPDATED");
 
 class UpdateAndReset : public GaudiAlgorithm, public DimTimer {
 public:
    /// Constructor of this form must be provided
    UpdateAndReset(const std::string& name, ISvcLocator* pSvcLocator); 
-   
-  /// Three mandatory member functions of any algorithm
+
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
-  //int getRunNumber();
   
   void timerHandler();
   
-  //void changeCycle(bool isRunNumberChanged, int currentRunNumber);
-  //void getCycleNumber(std::string deltaTCycle);
-
-  int retrieveRunNumber();
-  int retrieveCycleNumber();
+  void retrieveRunNumber(int runNumber);
+  void retrieveCycleNumber(int cycleNumber);
   
-  int cycleNumber(longlong currentTime);
+  std::pair<int, bool> currentRunNumber();
+  std::pair<int, bool> currentCycleNumber(ulonglong currentTime);
   
-  longlong timeNextUpdate(longlong currentTime);
+  ulonglong UpdateAndReset::gpsTime();
+  
   void updateData(bool isRunNumberChanged);
+  
+  void verifyAndProcessRunChange(std::string method);
+  void verifyAndProcessCycleChange(std::string method);
+  
   
 private:
   
   IGauchoMonitorSvc* m_pGauchoMonitorSvc; ///< Online Gaucho Monitoring Service
   
-  int m_deltaTCycle;
+  int m_desiredDeltaTCycle;// integer because dimTimer can only accept seconds
   
   // MonRate information
   int m_runNumber;  
   int m_cycleNumber;
-  longlong m_timeStart;
-  longlong m_timeFirstEvInRun;
-  longlong m_timeLastEvInCycle;
-  longlong m_timeTrueLastEvInCycle;
+  ulonglong m_timeStart;
+  ulonglong m_timeFirstEvInRun;
+  ulonglong m_timeLastEvInCycle;
+  ulonglong m_gpsTimeLastEvInCycle;
+  double m_deltaTCycle;
   
   // For Testing RunNumber generator
-  int m_generatedRunNumber;
+  int m_deltaTRunTest;
   int m_countExecutes;
-  double m_runTestElapsedTime;
-  GauchoTimer m_runTestTimer;
-  double m_deltaTRunTest;
+  int m_runNumberTest;
   
+  bool m_firstExecute;
+  
+  std::string m_cycleStatus;
+  std::string m_runStatus;
+   
+    
 };  
 
 #endif  // GAUCHO_UPDATEANDRESET_H

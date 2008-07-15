@@ -57,6 +57,11 @@ void MonH1F::load2(boost::archive::binary_iarchive  & ar){
   ar & sTitle;
   ar & bBinLabel;
 
+//  std::cout << "==============================================================" << std::endl;
+//  std::cout << "========================LOAD==================================" << std::endl;
+//  std::cout << "  nEntries = " <<  nEntries << std::endl;
+//  std::cout << "==============================================================" << std::endl;
+  
   binCont = new float[(nbinsx+2)];
 
   for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -111,6 +116,11 @@ void MonH1F::save3(boost::archive::binary_oarchive  & ar){
   ar & sTitle;
   ar & bBinLabel;
 
+/*  std::cout << "==============================================================" << std::endl;
+  std::cout << "========================SAVE==================================" << std::endl;
+  std::cout << "  nEntries = " <<  nEntries << std::endl;
+  std::cout << "==============================================================" << std::endl;*/
+      
   for (int i = 0; i < (nbinsx+2) ; ++i){
     ar & binCont[i];
   }

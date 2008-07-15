@@ -18,8 +18,10 @@ protected:
   
   int    *m_runNumber;       // Maybe we have to use double
   int    *m_cycleNumber;
-  longlong *m_timeFirstEvInRun;
-  longlong *m_timeLastEvInCycle; // Maybe we have to use double, have to check serialization
+  double    *m_deltaT;
+  ulonglong *m_timeFirstEvInRun;
+  ulonglong *m_timeLastEvInCycle; 
+  ulonglong *m_gpsTimeLastEvInCycle; 
   
 public:
   BOOST_SERIALIZATION_SPLIT_MEMBER()
@@ -38,11 +40,13 @@ public:
     m_counterMap[countName] = std::pair<double*, std::string*> (const_cast<double *>(&count), descr);
   }
   
-  void addComplement(int* runNumber, int* cycleNumber, longlong* timeFirstEvInRun, longlong* timeLastEvInCycle){
+  void addComplement(int* runNumber, int* cycleNumber, double* deltaT, ulonglong* timeFirstEvInRun, ulonglong* timeLastEvInCycle, ulonglong* gpsTimeLastEvInCycle){
     m_runNumber = runNumber;
     m_cycleNumber = cycleNumber;
+    m_deltaT = deltaT;
     m_timeFirstEvInRun = timeFirstEvInRun;
     m_timeLastEvInCycle = timeLastEvInCycle;
+    m_gpsTimeLastEvInCycle = gpsTimeLastEvInCycle;
   }
   
   double counter(std::string countName) {return (*(m_counterMap[countName].first));}
@@ -50,10 +54,12 @@ public:
   
   std::map<const std::string, std::pair<double*, std::string*>, std::less<std::string> > counterMap(){return m_counterMap;}
   
-  longlong timeFirstEvInRun() {return (*m_timeFirstEvInRun);}
-  longlong timeLastEvInCycle() {return (*m_timeLastEvInCycle);}
+  ulonglong timeFirstEvInRun() {return (*m_timeFirstEvInRun);}
+  ulonglong timeLastEvInCycle() {return (*m_timeLastEvInCycle);}
+  ulonglong gpsTimeLastEvInCycle() {return (*m_gpsTimeLastEvInCycle);}
   int runNumber() {return (*m_runNumber);}
   int cycleNumber() {return (*m_cycleNumber);}
+  double deltaT() {return (*m_deltaT);}
   
   virtual void combine(MonObject * monObject);
   virtual void copyFrom(MonObject* monObject);

@@ -26,16 +26,16 @@ private:
   DimInfo*     m_dimInfo;
   
 public : 
-  DimInfoMonObject(std::string svcName);
   DimInfoMonObject(std::string svcName, int refreshTime);
   DimInfoMonObject(std::string svcName, int refreshTime, std::string source);
   virtual ~DimInfoMonObject();
   void infoHandler();
+  void setSourceName(std::string source) {m_source = source;}
   void setMsgSvc(IMessageSvc* msgSvc){m_msgSvc = msgSvc;}
   IMessageSvc* msgSvc(){return m_msgSvc;}
   std::string  name(){return m_name;}  
-  void createMonObject();
-  void loadMonObject();
+  bool createMonObject();
+  bool loadMonObject();
   MonObject *monObject();
   DimInfo*  dimInfo(){ return m_dimInfo;};
   int stringSize() const { return m_StringSize;};

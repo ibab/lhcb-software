@@ -127,7 +127,7 @@ private:
   bool m_monRateDeclared;
   
 public:    
-   void declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle);  
+   void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, ulonglong& timeFirstEvInRun, ulonglong& timeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle);  
 };
 
 #endif // GAUDIKERNEL_MONITORSVC_H

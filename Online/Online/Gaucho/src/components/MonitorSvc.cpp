@@ -67,6 +67,7 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 
 StatusCode MonitorSvc::initialize() {
+
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( IService::INITIALIZED == this->state() ) {
     msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
@@ -143,7 +144,10 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
     std::string newName = name;
     newName.erase(0, 16);
     newName.erase(newName.size() - 1, 1);
-    if (!m_monRateDeclared) declareInfoMonObject("monRate", m_monRate, "MonRate Description", this);
+    if (!m_monRateDeclared) { 
+      declareInfoMonObject("monRate", m_monRate, "MonRate Description", this);
+      m_monRateDeclared = true;
+    }
     m_monRate->addCounter(newName, desc, var);
     return;
   } 
@@ -209,14 +213,14 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 
 }
 
-void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, longlong& timeFirstEvInRun, longlong& timeLastEvInCycle){
+void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, ulonglong& timeFirstEvInRun, ulonglong& timeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle){
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "Inside declareMonRateComplement" << endreq;
 // /*  m_runNumber = &runNumber;
 //   m_cycleNumber = &cycleNumber;
 //   m_timeFirstEvInRun = &timeFirstEvInRun;
 //   m_timeLastEvInCycle = &timeLastEvInCycle;*/
-  m_monRate->addComplement(&runNumber, &cycleNumber, &timeFirstEvInRun, &timeLastEvInCycle);
+  m_monRate->addComplement(&runNumber, &cycleNumber, &deltaT, &timeFirstEvInRun, &timeLastEvInCycle, &gpsTimeLastEvInCycle);
   m_monRate->print();
 }  
 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.7 2008-06-24 12:30:51 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.8 2008-07-15 16:34:25 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -85,7 +85,8 @@ protected:
   std::string m_dimPrefix;
   unsigned int m_version;
   bool m_endOfRun;
-
+  bool m_serviceActive;
+  
 public:
   MonObject(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonObject();
@@ -107,6 +108,9 @@ public:
 
   bool endOfRun(){return m_endOfRun;}
   void setEndOfRun(bool endofrun){m_endOfRun = endofrun;}
+  
+  void setServiceActive (bool serviceActive) {m_serviceActive = serviceActive;}
+  bool serviceActive () {return m_serviceActive;}
 
   virtual std::string dimPrefix() const {return m_dimPrefix;}
   void setDimPrefix(std::string dimPrefix){m_dimPrefix = dimPrefix;}

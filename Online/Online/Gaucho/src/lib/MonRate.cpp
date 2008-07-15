@@ -7,8 +7,10 @@ MonRate::MonRate(IMessageSvc* msgSvc, const std::string& source, int version):
   m_dimPrefix="MonR";
   m_runNumber = new int(0);
   m_cycleNumber = new int(0);
-  m_timeFirstEvInRun = new longlong(0);
-  m_timeLastEvInCycle = new longlong(0);
+  m_deltaT = new double(0);
+  m_timeFirstEvInRun = new ulonglong(0);
+  m_timeLastEvInCycle = new ulonglong(0);
+  m_gpsTimeLastEvInCycle = new ulonglong(0);
 }
   
 MonRate::~MonRate(){
@@ -17,6 +19,14 @@ MonRate::~MonRate(){
 
 void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar, version);
+  
+  ar & (*m_runNumber);
+  ar & (*m_cycleNumber);
+  ar & (*m_deltaT);
+  ar & (*m_timeFirstEvInRun);
+  ar & (*m_timeLastEvInCycle);
+  ar & (*m_gpsTimeLastEvInCycle);
+
   int size = m_counterMap.size();
   ar & size;
   for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt) {
@@ -25,11 +35,6 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     ar & (*(m_counterMapIt->second.second));
   }
   
-  ar & (*m_timeFirstEvInRun);
-  ar & (*m_timeLastEvInCycle);
-  ar & (*m_runNumber);
-  ar & (*m_cycleNumber);
-
   m_profile = new TProfile("profile","MonRate Profile", size, 0, size);
   
   m_profile->Fill(0.00, 1.00, 1.00);
@@ -48,6 +53,14 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
 void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
   MonObject::load(ar, version);
+  
+  ar & (*m_runNumber);
+  ar & (*m_cycleNumber);
+  ar & (*m_deltaT);
+  ar & (*m_timeFirstEvInRun);
+  ar & (*m_timeLastEvInCycle);
+  ar & (*m_gpsTimeLastEvInCycle);
+  
   int size = 0;
   MsgStream msg = createMsgStream();
   ar & size;
@@ -62,10 +75,6 @@ void MonRate::load(boost::archive::binary_iarchive  & ar, const unsigned int ver
     //m_counterMap[name] = new double(val);
     m_counterMap[name] = std::pair<double*, std::string*>(new double(val), new std::string(title));
   }
-  ar & (*m_timeFirstEvInRun);
-  ar & (*m_timeLastEvInCycle);
-  ar & (*m_runNumber);
-  ar & (*m_cycleNumber);
   
   MonProfile::load(ar, version);
 }
@@ -93,10 +102,12 @@ void MonRate::combine(MonObject * monObject) {
     //(*m_counterMapIt->second) =+  monRate->counter(m_counterMapIt->first);
     (*m_counterMapIt->second.first) =+ monRate->counter(m_counterMapIt->first);
   }
-  (*m_timeFirstEvInRun) =+ monRate->timeFirstEvInRun();
-  (*m_timeLastEvInCycle) =+ monRate->timeLastEvInCycle();  
   (*m_runNumber) =+ monRate->runNumber();  
   (*m_cycleNumber) =+ monRate->cycleNumber();
+  (*m_deltaT) =+ monRate->deltaT();
+  (*m_timeFirstEvInRun) =+ monRate->timeFirstEvInRun();
+  (*m_timeLastEvInCycle) =+ monRate->timeLastEvInCycle();  
+  (*m_gpsTimeLastEvInCycle) =+ monRate->gpsTimeLastEvInCycle();  
   
   MonProfile::combine(monObject);  
   
@@ -115,10 +126,12 @@ void MonRate::copyFrom(MonObject * monObject){
   m_counterMap = mo->counterMap();
   m_comments = mo->comments();
   
-  (*m_timeFirstEvInRun) = mo->timeFirstEvInRun();
-  (*m_timeLastEvInCycle) = mo->timeLastEvInCycle();  
   (*m_runNumber) = mo->runNumber();  
   (*m_cycleNumber) = mo->cycleNumber();
+  (*m_deltaT) = mo->deltaT();
+  (*m_timeFirstEvInRun) = mo->timeFirstEvInRun();
+  (*m_timeLastEvInCycle) = mo->timeLastEvInCycle();  
+  (*m_gpsTimeLastEvInCycle) = mo->gpsTimeLastEvInCycle();  
   
   MonProfile::copyFrom(monObject);
   
@@ -129,10 +142,12 @@ void MonRate::reset(){
 //  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
 //    (*m_counterMapIt->second) = 0;
   
-  (*m_timeFirstEvInRun) = 0; // This is a Time may be we have to let it with the last value 
-  (*m_timeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
   (*m_runNumber) = 0;
   (*m_cycleNumber) = 0;
+  (*m_deltaT) = 0;
+  (*m_timeFirstEvInRun) = 0; // This is a Time may be we have to let it with the last value 
+  (*m_timeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
+  (*m_gpsTimeLastEvInCycle) = 0; // This is a Time may be we have to let it with the last value 
   
   MonProfile::reset();
   
@@ -144,19 +159,20 @@ void MonRate::print(){
   MonProfile::print();
   MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "*************************************"<<endreq;
+  msgStream << MSG::INFO << " runNumber: "<<  runNumber() << endreq;
+  msgStream << MSG::INFO << " cycleNumber: "<<  cycleNumber() << endreq;
+  msgStream << MSG::INFO << " deltaT: "<<  deltaT() << endreq;
+  msgStream << MSG::INFO << " timeFirstEvInRun: "<<  timeFirstEvInRun() << endreq;
+  msgStream << MSG::INFO << " timeLastEvInCycle: "<<  timeLastEvInCycle() << endreq;
+  msgStream << MSG::INFO << " gpsTimeLastEvInCycle: "<<  gpsTimeLastEvInCycle() << endreq;
+  msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << m_typeName << " counter size :"<< m_counterMap.size() << endreq;
   msgStream << MSG::INFO << m_typeName << " values :" << endreq;
   
   for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
     msgStream << MSG::INFO << " counter: "<<  m_counterMapIt->first << ", value: " << (*m_counterMapIt->second.first) << ", description: "<< (*m_counterMapIt->second.second) << endreq;
-  
   msgStream << MSG::INFO << "*************************************"<<endreq;
   
-  msgStream << MSG::INFO << " timeFirstEvInRun: "<<  timeFirstEvInRun() << endreq;
-  msgStream << MSG::INFO << " timeLastEvInCycle: "<<  timeLastEvInCycle() << endreq;
-  msgStream << MSG::INFO << " runNumber: "<<  runNumber() << endreq;
-  msgStream << MSG::INFO << " cycleNumber: "<<  cycleNumber() << endreq;
-  msgStream << MSG::INFO << "*************************************"<<endreq;
   
 }
 

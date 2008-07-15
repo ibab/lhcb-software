@@ -329,10 +329,10 @@ void MonH2F::combine(MonObject * H){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-//  if (H->endOfRun() != this->endOfRun()){
- //   msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
-  //  return;
- // }
+  if (H->endOfRun() != this->endOfRun()){
+    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+    return;
+ }
   if (!isLoaded){
     copyFrom(H);
     return;

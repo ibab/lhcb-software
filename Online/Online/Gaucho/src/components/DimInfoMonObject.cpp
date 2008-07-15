@@ -9,18 +9,6 @@
 #include <stdlib.h>
 #include <malloc.h>
 
-DimInfoMonObject::DimInfoMonObject(std::string svcName):
-  m_hasData(false),
-  m_name("DimInfoMonObject"),
-  m_svcName(svcName),
-  m_source("UndefinedSource"),
-  m_monObject(0),
-  m_msgSvc(0),
-  m_StringSize(-1)
-{
-  m_dimInfo = new DimInfo((m_svcName).c_str(), (float)-1.0);
-}
-
 DimInfoMonObject::DimInfoMonObject(std::string svcName, int refreshTime):
   m_hasData(false),
   m_name("DimInfoMonObject"),
@@ -57,15 +45,26 @@ void DimInfoMonObject::infoHandler()
   else loadMonObject();
 }
 
-void DimInfoMonObject::createMonObject(){
+bool DimInfoMonObject::createMonObject() {
   MsgStream msg(msgSvc(), name());
   //msg << MSG::DEBUG << "getting stream" << endreq;
+  
+  if (m_monObject) {delete m_monObject; m_monObject = 0;}    
+  
   int tmpStringSize = -1;
-  while ( (tmpStringSize = m_dimInfo->getSize()) <=0 ) {
-    //msg << MSG::DEBUG << "stream size"<< m_dimInfo->getSize() << endreq;
+  int numTent = 0;
+  while ( (tmpStringSize = m_dimInfo->getSize()) <= 10 ) {
+    //msg << MSG::DEBUG << "svcName : " << m_svcName << ", stream size "<< m_dimInfo->getSize() << endreq;
+    if (numTent > 40) {
+      msg << MSG::WARNING << "==================> INEXISTENT SERVICE " << m_svcName << endreq;
+      return false;
+    }
     usleep(10000);
+    numTent++;
   }
  
+  //msg << MSG::DEBUG << " ==> stream size = "<< tmpStringSize << endreq;
+  
   m_StringSize = tmpStringSize;
 
   char* c = const_cast<char *>((const char*) m_dimInfo->getData());
@@ -78,8 +77,6 @@ void DimInfoMonObject::createMonObject(){
   boost::archive::binary_iarchive *ia = new boost::archive::binary_iarchive(is);
   monObjectBase->load(*ia, 0);
   std::string monObjectTypeName  = monObjectBase->typeName();
-  
-  if (m_monObject) {delete m_monObject; m_monObject = 0;}  
   
   //msg << MSG::DEBUG << "creating MonObject" << endreq;
   m_monObject = MonObjectCreator::createMonObject(monObjectTypeName, m_msgSvc, m_source);
@@ -95,22 +92,43 @@ void DimInfoMonObject::createMonObject(){
   if (ia) {delete ia; ia = 0;}
   if (ia2) {delete ia2; ia2 = 0;}
   
+  return true;
 }
 
-void DimInfoMonObject::loadMonObject(){
-
+bool DimInfoMonObject::loadMonObject(){
+  MsgStream msg(msgSvc(), name());
   int tmpStringSize = -1;
-  while ( (tmpStringSize = m_dimInfo->getSize()) <0 ){usleep(10000);}
+  int numTent = 0;
+  
+  if (!m_monObject) {
+    msg << MSG::DEBUG << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
+    return false;
+  }
+  
+  m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
+
+  //msg << MSG::DEBUG << "getting stream" << endreq;
+  while ( (tmpStringSize = m_dimInfo->getSize()) < 10 ){
+    //msg << MSG::DEBUG << "svcName : " << m_svcName << ", stream size "<< m_dimInfo->getSize() << endreq;
+    if (numTent > 40) {
+      msg << MSG::WARNING << "==================> INEXISTENT SERVICE " << m_svcName << endreq;
+      m_monObject->setServiceActive (false);
+      return false;
+    }
+    usleep(10000);
+    numTent++;
+  }
+  
+  //msg << MSG::DEBUG << " ==> stream size = "<< tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
   char* c = const_cast<char *>((const char*) m_dimInfo->getData());
-  m_monObject->reset();
- 
-  //m_dimMonObjectManager->loadMonObject(c, m_StringSize, m_monObject);
+    
   std::stringstream is;
   is.rdbuf()->pubsetbuf(c, m_StringSize);
   boost::archive::binary_iarchive *ia = new boost::archive::binary_iarchive(is);
   m_monObject->load(*ia, 0);
   if (ia) {delete ia; ia = 0;}
+  if (!m_monObject->serviceActive ()) m_monObject->setServiceActive (true);
 }
 
 MonObject *DimInfoMonObject::monObject() {
