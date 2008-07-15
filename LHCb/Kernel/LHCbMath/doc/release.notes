@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 - Wouter Hulsbergen (code provided by Manuel Schiller)
+  - LHCbMath/MatrixInversion.h: matrix inversion for pos-def
+  symmetric matrices based on cholesky decomposition.
+
 ! 2008-07-09 - Vanya BELYAEV
 
  - LHCbMath/Digit.h
