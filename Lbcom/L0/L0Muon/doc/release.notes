@@ -1,7 +1,12 @@
-!  $Id: release.notes,v 1.57 2008-07-11 15:33:20 jucogan Exp $
+!  $Id: release.notes,v 1.58 2008-07-15 12:50:50 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
+
+! 2008-07-15 - Julien Cogan
+ - Possibility to ask for compression of banks
+ - Clean the managment of the ouput mode 
+ - Merge procVersion & bankVersion into a single tag : version 
 
 ! 2008-07-11 - Julien Cogan
  - Decoding of bank version 2 : tested (without RLE compression)

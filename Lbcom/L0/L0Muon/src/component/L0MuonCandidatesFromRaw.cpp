@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.10 2008-07-11 15:33:20 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.11 2008-07-15 12:50:50 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -29,17 +29,23 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
 {
   
   m_configfile="L0MuonKernel.xml";
+  if( NULL != getenv("PARAMFILESROOT") )
+  {
+    m_configfile  = getenv( "PARAMFILESROOT" ) ;
+    m_configfile += "/data/L0MuonKernel.xml"  ;
+  }
 
   m_ptParameters.push_back(40.);   // Precision on PT (MeV)
   m_ptParameters.push_back(7.);    // Number of bins in PT
   
   declareProperty( "ConfigFile"     , m_configfile      );
   declareProperty( "PtParameters"   , m_ptParameters    ); 
-  declareProperty( "ProcVersion"    , m_procVersion = 0 );
-  declareProperty( "Extension"      , m_extension = ""  );
-  declareProperty( "WriteOnTES"     , m_writeOnTES = true);  
+
+  // Default for HLT :
+  declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  
   declareProperty( "WriteL0ProcData", m_writeL0ProcData  = false);  
   declareProperty( "OutputMode"     , m_mode = 0 );
+  declareProperty( "Extension"      , m_extension = ""  );
 }
 
 
@@ -106,10 +112,11 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     if( msgLevel(MSG::VERBOSE) ) verbose() << "decoding event ... "<<timeSlot(bx) << endmsg;
 
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
-    if ( sc.isFailure() ) return sc;// error printed already by GaudiAlgorithm
+    if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
 
     // Decode Raw banks
-    sc = m_outputTool->decodeRawBanks(m_mode);
+    m_outputTool->setMode(m_mode);
+    sc = m_outputTool->decodeRawBanks();
     if ( sc.isFailure() ) continue; // error printed already by GaudiAlgorithm
     
     // Print Errors
@@ -120,7 +127,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
-      sc = m_outputTool->writeOnTES(m_procVersion,m_extension);
+      sc = m_outputTool->writeOnTES(m_extension);
       if ( sc.isFailure() ) continue;  
     }
   

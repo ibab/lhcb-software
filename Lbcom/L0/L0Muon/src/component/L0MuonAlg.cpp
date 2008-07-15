@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.12 2008-06-05 08:28:27 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.13 2008-07-15 12:50:50 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -46,6 +46,11 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   m_muonBuffer = 0;
 
   m_configfile="L0MuonKernel.xml";
+  if( NULL != getenv("PARAMFILESROOT") )
+  {
+    m_configfile  = getenv( "PARAMFILESROOT" ) ;
+    m_configfile += "/data/L0MuonKernel.xml"  ;
+  }
 
   m_foiXSize.push_back(4); // 0-> Xfoi in M1
   m_foiXSize.push_back(5); // 1-> Xfoi in M2
@@ -66,23 +71,23 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("ConfigFile"     , m_configfile);
   declareProperty("IgnoreM1"       , m_ignoreM1 = false );
   declareProperty("IgnoreM2"       , m_ignoreM2 = false );
-  declareProperty("ForceM3"        , m_forceM3 = false );
+  declareProperty("ForceM3"        , m_forceM3  = false );
 
   declareProperty("FoiXSize"       , m_foiXSize);
   declareProperty("FoiYSize"       , m_foiYSize);
 
-  declareProperty("StoreInBuffer"  , m_storeBank  = true);  
-  declareProperty("WriteOnTES"     , m_writeOnTES = false);  
+  declareProperty("DebugMode"      , m_debug       = false );
+
+  // Default for Boole :
+  declareProperty("WriteRawBanks"  , m_storeBank        = true);  
+  declareProperty("WriteOnTES"     , m_writeOnTES       = false);  
   declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
-
   declareProperty("InputSource"    , m_inputSource = 0);  
+  declareProperty("Extension"      , m_extension = ""  );
+  declareProperty("Version"        , m_version     = 2 );
+  declareProperty("OutputMode"     , m_outputMode  = 0 );
+  declareProperty("Compression"    , m_compression = false );
 
-  declareProperty("DebugMode"      , m_debug = false );
-  declareProperty("BankVersion"    , m_bankVersion = 0 );
-  declareProperty("ProcVersion"    , m_procVersion = 0 );
-  declareProperty("OutputMode"     , m_outputMode = 0 );
-
-  declareProperty("Extension"     , m_extension = ""  );
 }
 
 
@@ -151,10 +156,6 @@ StatusCode L0MuonAlg::execute()
 
   //debug() << "Read data from digits ..." << endreq; 
   sc = fillOLsfromDigits();
-
-  // Measure the time needed for loading OL's only
-  //return StatusCode::SUCCESS;
-
   if( sc.isFailure() ) {
     error() << "Failed to load OLs" << endreq;
     return sc;
@@ -168,17 +169,20 @@ StatusCode L0MuonAlg::execute()
   if( msgLevel(MSG::DEBUG) ) debug() << "Execution of MuonKernel units ..." << endreq;
   m_muontriggerunit->execute();
 
+  // Specify the version parameters to the output tool 
+  m_outputTool->setVersion(m_version, m_outputMode, m_compression);
+    
   // Fill the Raw Event container 
   if ( m_storeBank ) {
     if( msgLevel(MSG::DEBUG) ) debug() << "Fill RawEvent ..." << endreq;
-    sc = m_outputTool->writeRawBanks(m_outputMode,m_bankVersion);
+    sc = m_outputTool->writeRawBanks();
     if ( sc.isFailure() ) return sc;  
   } 
   
   // Write on TES
   if ( m_writeOnTES) {
     if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
-    sc = m_outputTool->writeOnTES(m_procVersion, m_extension);
+    sc = m_outputTool->writeOnTES(m_extension);
     if ( sc.isFailure() ) return sc;  
   }
 
@@ -348,7 +352,7 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
   properties["ignoreM2"]       = m_ignoreM2 ? L0Muon::Property("1") : L0Muon::Property("0");
 
   
-  sprintf(buf,"%d",m_procVersion);
+  sprintf(buf,"%d",m_version);
   prop=buf;
   properties["procVersion"]    = L0Muon::Property(prop);;
 
@@ -390,8 +394,8 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
           LHCb::MuonTileID mkey = (*itdata)->key();    
           std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
           if (ols.size()>0) {
-            if( msgLevel(MSG::DEBUG) ) debug()  <<"fillOLsfromDigits:    PU: "
-                                                <<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
+            if( msgLevel(MSG::VERBOSE) ) verbose()  <<"fillOLsfromDigits:    PU: "
+                                                    <<mkey.toString()<<" => "<<ols.size()<<" hits found"<<endmsg;;
             for (std::vector<LHCb::MuonTileID>::iterator itol=ols.begin(); itol!=ols.end(); ++itol){
               //              if( msgLevel(MSG::DEBUG) )debug()  <<"fillOLsfromDigits:       "<<(*itol).toString()<<endmsg;
               ddigits.push_back(*itol);
@@ -444,8 +448,8 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     std::vector<LHCb::MuonTileID>::const_iterator id;
     for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
       LHCb::MuonTileID mkey = *id;
-      if( msgLevel(MSG::DEBUG) ) {
-        debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+      if( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
       }
     }
     
@@ -485,10 +489,10 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     
       //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
 
-      if( msgLevel(MSG::DEBUG) ) {
-        debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString();
-        debug() << " olID: "<<olID.toString();
-        debug() << " buf: "<<buf<<endmsg;
+      if( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString();
+        verbose() << " olID: "<<olID.toString();
+        verbose() << " buf: "<<buf<<endmsg;
       }
       
 

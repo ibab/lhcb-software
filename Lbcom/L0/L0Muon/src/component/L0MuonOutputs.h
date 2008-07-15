@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.6 2008-07-11 15:33:21 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.7 2008-07-15 12:50:50 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -35,16 +35,27 @@ public:
   virtual ~L0MuonOutputs( ); ///< Destructor
 
   /// Decode the L0Muon banks and fill the registers of the converters
-  StatusCode decodeRawBanks(int mode=0);
+  StatusCode decodeRawBanks();
   /// From the registers of the converters, fill the L0Muon banks
-  StatusCode writeRawBanks(int mode, int bankVersion);
+  StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates
   /// and L0MuonData containers on the TES
-  StatusCode writeOnTES(int procVersion, std::string extension);
+  StatusCode writeOnTES(std::string extension);
   /// From the registers of the converters, fill the L0ProcessorDatas
   StatusCode writeL0ProcessorData(std::string extension);
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
+
+  
+  /// Configure the emulator version
+  void setVersion(int version, bool compression, int mode){
+    m_version=version; 
+    m_compression=compression; 
+    m_mode=mode; 
+  }
+  void setVersion(int version)  { m_version=version;}
+  void setCompression(bool compression)  { m_compression=compression;}
+  void setMode(int mode)  { m_mode=mode;}
 
   /// Output event error 
   void errors(MsgStream & msg) const;
@@ -58,12 +69,16 @@ public:
 
 private:
 
+  int  m_version;      // L0Muon version to be emulated
+  bool m_compression; // Apply compression on raw banks
+  int  m_mode;         // Raw banks output mode 
+  
   enum Quarters {Q1=0,Q2,Q3,Q4,NQuarters};
   enum Sides {A=0,C,NSides};
 
-  int procSourceID(int srcID, int bankVersion)
+  int procSourceID(int srcID)
   {
-    switch(bankVersion) {
+    switch(m_version) {
     case 1:
       return srcID;
     case 2:
@@ -80,9 +95,9 @@ private:
     }
     return 0;
   }
-  int ctrlSourceID(int srcID, int bankVersion)
+  int ctrlSourceID(int srcID)
   {
-    switch(bankVersion) {
+    switch(m_version) {
     case 1:
       return srcID;
     case 2:
@@ -97,7 +112,7 @@ private:
   }
 
   std::vector<unsigned int> DC06RawBanks();
-  LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand, int procVersion);
+  LHCb::L0MuonCandidate* l0muoncandidate(L0Muon::PMuonCandidate cand);
   
   /// Converters for the L0Muon banks
   L0Muon::CtrlCandCnv  m_ctrlCand[2];
