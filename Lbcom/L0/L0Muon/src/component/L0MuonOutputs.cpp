@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.14 2008-07-15 12:50:50 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.15 2008-07-15 15:06:15 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -837,9 +837,9 @@ void L0MuonOutputs::errorSummary(MsgStream & msg) const{
 
       if (!ctrlCandError->present.strCounter(err)) break;
 
-      if (ii==0) {
+      if (i==0) {
         msg<<"L0MuonCtrlCand "<<"Side ";
-        switch (ii){
+        switch (i){
         case 0:
           msg<<"A";
           break;
@@ -847,6 +847,7 @@ void L0MuonOutputs::errorSummary(MsgStream & msg) const{
           msg<<"C";
           break;
         }
+        msg<<"Q"<<(i*2+ii+1);
         msg<<" -> "<<err<<endmsg;
       }
 
