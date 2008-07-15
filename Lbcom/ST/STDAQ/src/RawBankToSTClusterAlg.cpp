@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.32 2008-07-15 13:47:49 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.33 2008-07-15 15:43:05 mneedham Exp $
 
 #include <algorithm>
 
@@ -137,7 +137,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // get verion of the bank
     const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
 
-    std::cout << "version " << version << std::endl;
+    //    std::cout << "version " << version << std::endl;
 
     if (decoder.hasError() == true && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
