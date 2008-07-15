@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.71 2008-07-02 12:28:18 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.72 2008-07-15 09:14:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -82,11 +82,11 @@ StatusCode RawDataFormatTool::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // report inactive RICHes
-  if ( m_richIsActive.size() != Rich::NRiches ) 
+  if ( m_richIsActive.size() != Rich::NRiches )
   { return Error( "Incorrectly configured active RICH options" ); }
-  if ( !m_richIsActive[Rich::Rich1] ) 
+  if ( !m_richIsActive[Rich::Rich1] )
   { Warning("Decoding for RICH1 disabled",StatusCode::SUCCESS).ignore(); }
-  if ( !m_richIsActive[Rich::Rich2] ) 
+  if ( !m_richIsActive[Rich::Rich2] )
   { Warning("Decoding for RICH2 disabled",StatusCode::SUCCESS).ignore(); }
 
   // if suppression is less than max possible number of (ALICE) hits, print a message.
@@ -97,13 +97,13 @@ StatusCode RawDataFormatTool::initialize()
 
   if ( m_extendedFormat ) info() << "Will encode RawEvent using extended HPD format" << endreq;
 
-  if ( m_decodeUseOdin )       
+  if ( m_decodeUseOdin )
     Warning( "ODIN integrity checks are enabled",      StatusCode::SUCCESS ).ignore();
-  if ( !m_checkDataIntegrity ) 
+  if ( !m_checkDataIntegrity )
     Warning( "HPD Data integrity checks are disabled", StatusCode::SUCCESS ).ignore();
-  if ( !m_checkEventsIDs )     
+  if ( !m_checkEventsIDs )
     Warning( "Header Event ID checks are disabled",    StatusCode::SUCCESS ).ignore();
-  if ( !m_checkBxIDs )         
+  if ( !m_checkBxIDs )
     Warning( "Header BX ID checks are disabled",       StatusCode::SUCCESS ).ignore();
 
   // Setup incident services
@@ -879,6 +879,15 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                        << " data block failed integrity check";
                   Error( mess.str() );
                   if ( m_purgeHPDsFailIntegrity ) { newids.clear(); }
+                }
+
+                // Is all 'OK' but header is in extended mode ?
+                if ( OK && hpdBank->headerWords().size()>1 )
+                {
+                  std::ostringstream mess;
+                  mess << "HPD L0ID=" << hpdBank->level0ID() << " " << hpdID
+                       << " in extended mode for UNKNOWN reasons";
+                  Error( mess.str() );
                 }
 
                 if ( msgLevel(MSG::VERBOSE) && hpdHitCount>0 )

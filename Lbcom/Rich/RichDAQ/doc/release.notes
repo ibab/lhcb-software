@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 - Chris Jones
+ - Add an error message in the case an HPD is found in extended format, but
+   no errors where detected.
+
 !========================== RichDAQ v3r17 2008-07-02 =========================
 ! 2008-07-02 - Chris Jones
  - Purge the hits from the decoded data structure for HPDs which fail the 
