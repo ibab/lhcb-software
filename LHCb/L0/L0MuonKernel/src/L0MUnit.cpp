@@ -135,7 +135,7 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
   if (m_inputs.size()>0) {
     xmlString +=tab+"    ";
     xmlString +="<"+XMLInputRegisters+" ";
-    sprintf(buf,"%u",m_inputs.size());
+    sprintf(buf,"%d",int(m_inputs.size()));
     str = buf;
     xmlString +=" size = \""+str+"\" ";
     xmlString +=" >\n";
@@ -162,7 +162,7 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
   if (m_outputs.size()>0) {
     xmlString +=tab+"    ";
     xmlString +="<"+XMLOutputRegisters+" ";
-    sprintf(buf,"%u",m_outputs.size());
+    sprintf(buf,"%d",int(m_outputs.size()));
     str = buf;
     xmlString +=" size = \""+str+"\" ";
     xmlString +=" >\n";
