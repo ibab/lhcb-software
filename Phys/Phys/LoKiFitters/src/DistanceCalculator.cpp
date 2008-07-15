@@ -1,21 +1,572 @@
-// $Id: DistanceCalculator.cpp,v 1.2 2008-04-04 08:58:28 ibelyaev Exp $
+// $Id: DistanceCalculator.cpp,v 1.3 2008-07-15 10:12:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
-// GaudiKenrel
+// GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/ToolFactory.h"
+// ============================================================================
+// DaVinciKernel
+// ============================================================================
+#include "Kernel/IParticleTransporter.h"
+#include "Kernel/IDistanceCalculator.h"
 // ============================================================================
 // local
 // ============================================================================
-#include "DistanceCalculator.h"
+#include "DistanceCalculatorBase.h"
+#include "KalmanFilter.h"
 #include "FitterUtils.h"
-// ============================================================================
-/** @file 
- *  the implementation of the class LoKi::DistanceCalculator 
- *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *  @date 2008-03-05
- */
+/// ============================================================================
+namespace LoKi 
+{
+  /** @class DistanceCalculator DistanceCalculator.h
+   *
+   *  It is the simplest implementation of the basic math, 
+   *  needed for the real implementation 
+   *  on the abstract interface IDistanceCalculator 
+   *  Essentially it relies on many nice functions, 
+   *  coded by Juan & Matt  
+   *  
+   *  @see IDistanceCalculator 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date   2008-03-05
+   */
+  class DistanceCalculator 
+    : public virtual IDistanceCalculator 
+    , public LoKi::DistanceCalculatorBase  
+  {
+    // ========================================================================
+    // the friend factory for instantiation 
+    friend class ToolFactory<LoKi::DistanceCalculator> ;
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup ParticlePoint 
+     *   Evaluation of the distance between the particle and the vertex  
+     *  @{
+     */
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter  ("distance")
+     *  vector of the particle with respect to some vertex.
+     *  @param particle (input) pointer to the particle 
+     *  @param vertex   (input) pointer to the vertex 
+     *  @param imppar   (output) the value of impact parameter ("distance") 
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   ) const 
+    {
+      StatusCode sc = check ( particle , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *particle , *vertex , impact ) ;
+      imppar = impact.R() ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter  ("distance")
+     *  vector of the particle with respect to some vertex.
+     *  @param particle (input) pointer to the particle 
+     *  @param vertex   (input) pointer to the vertex 
+     *  @param imppar   (output) the value of impact parameter ("distance") 
+     *  @param chi2     (output) the chi2 estimate for the separation
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const LHCb::VertexBase* vertex   , 
+      double&                 imppar   , 
+      double&                 chi2     ) const 
+    {
+      StatusCode sc = check ( particle , vertex ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *particle , *vertex , impact , &chi2 ) ;
+      imppar = impact.R() ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup ParticlePoint 
+     *   Evalaution of the distance between the particle and the fixed point 
+     *  @{
+     */
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter ("distance")
+     *  vector of the particle with respect to the fixed point 
+     *  @param particle (input) pointer to the particle 
+     *  @param point    (input) the fixed point  
+     *  @param imppar   (output) the value of impact parameter ("distance") 
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const Gaudi::XYZPoint&  point    , 
+      double&                 imppar   ) const 
+    { 
+      StatusCode sc = check ( particle ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *particle , point , impact ) ;
+      imppar = impact.R() ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================    
+    /** The method for the evaluation of the impact parameter ("distance")
+     *  vector of the particle with respect to the fixed point 
+     *  @param particle (input) pointer to the particle 
+     *  @param point    (input) the fixed point  
+     *  @param imppar   (output) the value of impact parameter ("distance") 
+     *  @param chi2     (output) the chi2 estimate for the separation
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle*   particle ,
+      const Gaudi::XYZPoint&  point    , 
+      double&                 imppar   , 
+      double&                 chi2     ) const 
+    { 
+      StatusCode sc = check ( particle ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the proper evaluations 
+      Gaudi::XYZVector impact ;
+      sc = _distance ( *particle , point , impact , &chi2 ) ;
+      imppar = impact.R() ;
+      return sc ;                                                    // RETURN 
+    }
+    // ========================================================================    
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup VertexVertex 
+     *   Evalaution of the distance between two vertices  
+     *  @{
+     */
+    // ========================================================================
+    /** The trivial method for evaluation of the distance between two vertices 
+     *  @param v1   (input) the pointr to the first vertex 
+     *  @param v2   (input) the pointer to the second vertex 
+     *  @param dist (output) the distance between two vertices 
+     *  @param return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::VertexBase*  v1   , 
+      const LHCb::VertexBase*  v2   , 
+      double&                  dist ) const 
+    {
+      StatusCode sc = check ( v1 , v2 ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real calculations 
+      return i_distance ( *v1 , *v2 , dist ) ;                        // RETURN
+    }
+    // ========================================================================
+    /** The method for evaluation of the distance between two vertices and the 
+     *  corresponding \f$\chi^2\f$ for the separation significance.
+     *  @param v1   (input) the pointr to the first vertex 
+     *  @param v2   (input) the pointer to the second vertex 
+     *  @param dist (output) the distance between two vertices 
+     *  @param return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::VertexBase*  v1   , 
+      const LHCb::VertexBase*  v2   , 
+      double&                  dist , 
+      double&                  chi2 ) const      
+    {  
+      StatusCode sc = check ( v1 , v2 ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the real calculations 
+      return i_distance ( *v1 , *v2 , dist , &chi2 ) ;               // RETURN 
+    }
+    // ========================================================================
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup VertexPoint
+     *   The set of the methods for evaluation of the various distances
+     *   between the vertex and th efixed point 
+     *  @{
+     */
+    // ========================================================================
+    /** The trivial method for evaluation of the distance between the vertex 
+     *  and some "fixed" point
+     *  @param v   (input) the pointr to the first vertex 
+     *  @param p   (input) the fixed point  
+     *  @param dist (output) the distance between two vertices 
+     *  @param return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::VertexBase*  v    , 
+      const Gaudi::XYZPoint&   p    , 
+      double&                  dist ) const      
+    {
+      StatusCode sc = check ( v ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real calculations 
+      return i_distance ( *v , p , dist ) ;                           // RETURN 
+    }
+    // ========================================================================
+    /** The method for evaluation of the distance between the vertices 
+     *  and some fixed point and the corresponding \f$\chi^2\f$ for 
+     *  the separation significance.
+     *  @param v   (input)   the pointer to the first vertex 
+     *  @param p   (input)   the fixed point 
+     *  @param dist (output) the distance between two vertices 
+     *  @param chi2 (output) the chi2 of the separation significance
+     *  @param return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::VertexBase*  v    , 
+      const Gaudi::XYZPoint&   p    , 
+      double&                  dist , 
+      double&                  chi2 ) const 
+    {
+      StatusCode sc = check ( v ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real calculations 
+      return i_distance ( *v , p , dist , &chi2 ) ;                   // RETURN
+    }
+    // ========================================================================
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup ParticleParticle
+     *   The set of the methods for evaluation of the various distances
+     *   between two particles 
+     *  @{
+     */
+    // ========================================================================
+    /** The method for evaluation of the scalar distance between two particles, 
+     *  aka "distance of the closest approach". 
+     *  @param p1 (input) the pointer to the first particle 
+     *  @param p2 (input) the pointer to the second particle 
+     *  @param dist (output) the shortest distance between two trajectories  
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle* p1   , 
+      const LHCb::Particle* p2   , 
+      double&               dist ) const 
+    {
+      StatusCode sc = check ( p1 , p2 ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real calculations 
+      return _distance ( *p1 , *p2 , dist ) ;                         // RETURN  
+    }
+    // ========================================================================
+    /** The method for evaluation of the scalar distance between two particles, 
+     *  aka "distance of the closest approach" and also its 
+     *   \f$\chi^2\f$ for separation significance 
+     *  @param p1 (input) the pointer to the first particle 
+     *  @param p2 (input) the pointer to the second particle 
+     *  @param dist (output) the shortest diostance between trajectories   
+     *  @param chi2 (output) chi2-estimate for the separation significance
+     *  @return status code 
+     */
+    virtual StatusCode distance 
+    ( const LHCb::Particle* p1   , 
+      const LHCb::Particle* p2   ,
+      double&               dist , 
+      double&               chi2 ) const 
+    {
+      StatusCode sc = check ( p1 , p2 ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real calculations 
+      return _distance ( *p1 , *p2 , dist , &chi2 ) ;                 // RETURN  
+    }
+    // ========================================================================
+    /// @}
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** @defgroup OtherDistances
+     *   The set of the methods for evaluation of "other" distances 
+     *  @{
+     */
+    // ========================================================================
+    /** The method for evaluation of the "path"-distance 
+     *  between the decay vertex of the particle and the vertex.
+     * 
+     *  The path-distance, 
+     *   is defined as the value of the scalar parameter \f$s\f$
+     *  from the vector equation: 
+     *
+     *   \f[  \vec{\mathbf{v}}_{decay} = \vec{\mathbf{v}}_{production} + 
+     *           \frac{\vec{\mathbf{p}}}{\left|\vec{\mathbf{p}}\right|}s \f]
+     *  
+     *  @param   particle (input) the pointer to the particle 
+     *  @param   primary  (input) the pointer to the production vertex
+     *  @param   path     (output) the "path-distance"
+     *  @param   error    (output) the estimate of the uncertanti in 
+     *                the projected distance
+     *  @param   chi2 (output) the overall chi2 the procedure, 
+     *                which is the measure of the consistency
+     *  @return  status code 
+     */
+    virtual StatusCode pathDistance 
+    ( const LHCb::Particle*   particle , 
+      const LHCb::VertexBase* primary  , 
+      double&                 path     ,
+      double&                 error    , 
+      double&                 chi2     ) const 
+    {
+      // check the input data 
+      StatusCode sc = check ( particle , primary ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // check the end-vertex
+      const LHCb::VertexBase* decay = particle->endVertex() ;
+      sc = check ( decay ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real evaluation:
+      return _distance ( *primary  , *particle , *decay , path , error , chi2 ) ;
+    }
+    // ========================================================================
+    /** Calculate the projected distance 
+     *
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *
+     * @param particle (input)  the pointer to the particle 
+     * @param primary  (input)  the pointer to the production vertex 
+     * @param dist     (output) the projected distance
+     * @return status code 
+     */
+    virtual StatusCode projectedDistance   
+    ( const LHCb::Particle*   particle , 
+      const LHCb::VertexBase* primary  , 
+      double&                 dist     ) const      
+    {
+      // check the input data 
+      StatusCode sc = check ( particle , primary ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // check the end-vertex
+      const LHCb::VertexBase* decay = particle->endVertex() ;
+      sc = check ( decay ) ;
+      if ( sc.isFailure() ) { return sc ; }                          // RETURN 
+      // make the real evaluation:
+      return _distance ( *primary  , *particle , *decay , dist , 0 ) ;
+    }
+    // ========================================================================
+    /** Calculate the projected distance 
+     *
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ i a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *  and its error 
+     *
+     * @param particle (input)  the pointer to the particle 
+     * @param primary  (input)  the pointer to the production vertex 
+     * @param dist     (output) the projected distance
+     * @param error    (output) the estimate of the error in the distance 
+     * @return status code 
+     */
+    virtual StatusCode projectedDistance   
+    ( const LHCb::Particle*   particle , 
+      const LHCb::VertexBase* primary  , 
+      double&                 dist     , 
+      double&                 error    ) const 
+    {
+      // check the input data 
+      StatusCode sc = check ( particle , primary ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // check the end-vertex
+      const LHCb::VertexBase* decay = particle->endVertex() ;
+      sc = check ( decay ) ;
+      if ( sc.isFailure() ) { return sc ; }                           // RETURN 
+      // make the real evaluation:
+      return _distance ( *primary  , *particle , *decay , dist , &error ) ;
+    }
+    // ========================================================================
+    /// @}
+    // ========================================================================
+  protected: 
+    /** Standard constructor
+     *  @param type tool type(?)
+     *  @param name tool instance name 
+     *  @param parent the pointer to the parent
+     */
+    DistanceCalculator
+    ( const std::string& type   ,    // tool type (?)
+      const std::string& name   ,    // tool instance name 
+      const IInterface*  parent ) ;  // the parent 
+    // virtual and protected desctrustor 
+    virtual ~DistanceCalculator () ; // Destructor
+  private:
+    /// the default constructor is disabled 
+    DistanceCalculator () ; // no default constructor 
+    /// the copy    constructor is disabled 
+    DistanceCalculator ( const DistanceCalculator&) ; // no copy 
+    /// the assignement operator is disabled 
+    DistanceCalculator& operator=( const DistanceCalculator&) ; // no assignement
+  private:
+    // ========================================================================
+    /** transport the particle to a certain Z position
+     *  @param particle (input) the particle to be transported
+     *  @param newZ     (input) new position 
+     *  @param transported (output) the transported particle
+     *  @return status code 
+     */
+    inline StatusCode transport 
+    ( const LHCb::Particle* particle    , 
+      const double          newZ        , 
+      LHCb::Particle&       transported ) const 
+    {
+      if ( 0 == m_transporter ) 
+      { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
+      return m_transporter -> transport ( particle , newZ , transported ) ;
+    }  
+    // ========================================================================
+    /** transport the particle to a certain Z position
+     *  @param particle (input) the particle to be transported
+     *  @param newZ     (input) new position 
+     *  @param transported (output) the transported particle
+     *  @return status code 
+     */
+    inline StatusCode transport 
+    ( const LHCb::Particle*  particle    , 
+      const Gaudi::XYZPoint& z           , 
+      LHCb::Particle&        transported ) const 
+    { return transport ( particle , z.Z() , transported ) ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter ("distance") 
+     *  vector of the particle with respect to some vertex. 
+     *  @param particle (input) pointer to the particle 
+     *  @param vertex   (input) pointer to the vertex 
+     *  @param imppar   (output) the impact parameter ("distance") vector 
+     *  @param chi2     (output,optional) the chi2 of the inmpact parameter
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Particle&   particle     ,
+      const LHCb::VertexBase& vertex       , 
+      Gaudi::XYZVector&       imppar       , 
+      double*                 chi2     = 0 ) const ;
+    // ========================================================================
+    /** The method for the evaluation of the impact parameter ("distance") 
+     *  vector of the particle with respect to the fixed vertex  
+     *  @param particle (input) the particle 
+     *  @param point    (input) the fixed point
+     *  @param imppar   (output) the impact parameter ("distance") vector 
+     *  @param chi2     (output,optional) the chi2 of the inmpact parameter
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Particle&   particle     ,
+      const Gaudi::XYZPoint&  point        , 
+      Gaudi::XYZVector&       imppar       , 
+      double*                 chi2     = 0 ) const;
+    // ========================================================================
+    /** The method for evaluation of the scalar distance between two particles, 
+     *  aka "distance of the closest approach" and also its 
+     *   \f$\chi^2\f$ for separation significance 
+     *  @param p1 (input) the first particle 
+     *  @param p2 (input) the second particle 
+     *  @param dist (output) the shortest distance between trajectories   
+     *  @param chi2 (output,optional) chi2-estimate for the separation significance
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::Particle& p1       , 
+      const LHCb::Particle& p2       ,
+      double&               dist     , 
+      double*               chi2 = 0 ) const ;
+    // ========================================================================
+    /** the method for the evaluation of "path"-distance
+     *  @param primary  (input) the production(primary) vertex 
+     *  @param particle (input) the particle 
+     *  @param decay    (input) the decay vertex of the particle 
+     *  @param path     (output) the path-distance  
+     *  @param error    (output) the error inpath distance 
+     *  @param chi2     (output) the chi2 of the procedure 
+     *  @return status code 
+     */
+    StatusCode _distance 
+    ( const LHCb::VertexBase& primary  ,  
+      const LHCb::Particle&   particle , 
+      const LHCb::VertexBase& decay    ,  
+      double&                 path     ,
+      double&                 error    ,
+      double&                 chi2     ) const ;  
+    // ========================================================================
+    /** Calculate the projected distance 
+     *
+     *  \f$s=\frac{\left(\vec{\mathbf{v}}\vec{\mathbf{p}}
+     *     \right)}{\left|\vec{\mathbf{p}}\right|}\f,$
+     *  where vector \f$\vec{\mathbf{v}}\f$ is a vector from 
+     *  the primary to the secondary vertex: 
+     *    \f$\vec{\mathbf{v}}=\vec{\mathbf{x}}_{d}-\vec{\mathbf{x}}_{pv}\f$,
+     *  and its error 
+     *
+     * The simplest way to evaluate the error it to considner formally 
+     * the problem as a constrained minimization with the constraint:
+     *  
+     * \f$ H = \left(\vec{\mathbf{v}}\vec{\mathbf{p}}\right) - 
+     *    \mathbf{s}\left|\vec{\mathbf{p}}\right| = 0 
+     * \f$
+     * Of course there is no need to perform the actual minimiation 
+     * The solution is known in advance!), but formalizm is easy to reuse 
+     * for evaluation of \f$\mathbf{C_s}\f$
+     *  
+     * @param primary  (input)  the production vertex 
+     * @param particle (input)  the particle 
+     * @param decay    (input)  the decay particle 
+     * @param dist     (output) the projected distance
+     * @param error    (output) the estimate of the error in the distance 
+     * @return status code 
+     */
+    StatusCode _distance   
+    ( const LHCb::VertexBase& primary      , 
+      const LHCb::Particle&   particle     , 
+      const LHCb::VertexBase& decay        , 
+      double&                 dist         , 
+      double*                 error    = 0 ) const ;
+    // ========================================================================
+  private:
+    /// the maximal number of iterations 
+    unsigned int m_nIter_max  ; // the maximal number of iterations 
+    /// the convergency criterion for impact parameter evaluations 
+    double       m_deltaZ     ; // the convergency criterion for ip-evaluations
+    /// the convergency criterion for delta(chi2) 
+    double       m_delta_chi2 ; // the convergency criterion for delta(chi2) 
+    // the convergency criteri for delta(path)
+    double       m_delta_path ; // the convergency criterion for delta(path)
+    /// The name of particle transpoter tool 
+    std::string  m_transporterName ; // The name of particle transpoter tool    
+    /// The particle transporter itself 
+    mutable IParticleTransporter* m_transporter ; // The transporter itself
+    /// some static particle 
+    mutable LHCb::Particle        m_particle1   ; // some particle 
+    /// another static particle 
+    mutable LHCb::Particle        m_particle2   ; // some particle 
+    /// Kalman filter object: 
+    mutable LoKi::KalmanFilter::Entry   m_entry   ; // Kalman filter object
+    /// Kalman filter objects: 
+    mutable LoKi::KalmanFilter::Entries m_entries ; // Kalman filter objects
+    /// distance/path fitter
+    mutable LoKi::Fitters::Fitter1      m_fitter  ; // distance/path fitter
+  } ;
+  // ==========================================================================
+} // end of namespace LoKi
 // ============================================================================
 /** Standard constructor
  *  @param type tool type(?)
@@ -31,11 +582,11 @@ LoKi::DistanceCalculator::DistanceCalculator
   /// the maximal number of iterations 
   , m_nIter_max ( 10 ) // the maximal number of iterations 
   /// the convergency criterion for ip-evaluation
-  , m_deltaZ     ( 1 * Gaudi::Units::micrometer ) // the criteria for ip-evaluation
+  , m_deltaZ     ( 2 * Gaudi::Units::micrometer ) // the criteria for ip-evaluation
   /// the convergency criterion for delta(chi2) 
-  , m_delta_chi2 ( 0.01 ) 
+  , m_delta_chi2 ( 0.05 ) 
   /// the convergency criterion for delta(path) 
-  , m_delta_path ( 1 * Gaudi::Units::micrometer )
+  , m_delta_path ( 2 * Gaudi::Units::micrometer )
   /// The name of particle transpoter tool 
   , m_transporterName ( "ParticleTransporter:PUBLIC" ) // The name of particle transpoter tool
   /// The tarnsported tool itself 
@@ -115,10 +666,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { 
-    counter ("delta(Z)-I") += deltaZ ;
-    return Error ( "Ehere is no convergency", NoConvergency ) ;
-  }
+  { Warning ( "There is no convergency-I", NoConvergency ) ; }
   
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -127,20 +675,18 @@ StatusCode LoKi::DistanceCalculator::_distance
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Error("_distance(I): error from KalmanFilter::load", sc ) ; }
+    { return Error("distance(I): error from KalmanFilter::load", sc ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 
-    { return Error ( "_distance(I): unable to calculate the gain matrix" ) ; }
+    { return Error ( "distance(I): unable to calculate the gain matrix" ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry , vertex.position() , ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(I): error from Kalman Filter step" , sc ) ; }
+    { return Error ( "distance(I): error from Kalman Filter step" , sc ) ; }
     // get the chi2 
     *chi2 = m_entry.m_chi2 ;
   }
-  
-  counter ( "#iterations-I" ) += nIter ;
   //
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
@@ -177,7 +723,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point + impact   ,   // new Z 
         m_particle1      ) ; // the result 
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(II): error from transport()" , sc ) ; }
+    { return Error ( "distance(II): error from transport()" , sc ) ; }
     
     // the transported particle 
     good = &m_particle1 ;
@@ -193,10 +739,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { 
-    counter ("delta(Z)-II") += deltaZ ;
-    return Error ( "_distance(II): there is no convergency", NoConvergency ) ;
-  }
+  { Warning ( "There is no convergency-II", NoConvergency ) ; }
   
   // evaluate the chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -205,12 +748,10 @@ StatusCode LoKi::DistanceCalculator::_distance
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return Error("_distance(II): eroro from KalmanFilter::load" , sc ) ; }
+    { return Error("distance(II): error from KalmanFilter::load" , sc ) ; }
     // here the evaluations of chi2 is just trivial:
     *chi2 = Gaudi::Math::Similarity ( m_entry.m_vxi , impact ) ;
   }
-  
-  counter ( "#iterations-II" ) += nIter ;
   //
   return StatusCode::SUCCESS ;                                 // RETURN 
 }
@@ -251,7 +792,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point1      ,  // where to transport 
         m_particle1 )  ; // destination 
     if ( sc.isFailure() ) 
-    { Warning ( "Error from ParticleTransporter, ignore" , sc ) ; }
+    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
     else { good1 = &m_particle1 ; } // the properly transported particles:
     
     // transport the second particle into new positions:
@@ -260,7 +801,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point2      ,  // where to transport 
         m_particle2 )  ; // destination 
     if ( sc.isFailure() ) 
-    { Warning ( "Error from ParticleTransporter, ignore" , sc ) ; }
+    { Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
     else { good2 = &m_particle2 ; } // the properly transported particles:
     
     // make new (improved) evaluation of the distance:
@@ -276,10 +817,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { 
-    counter ("delta(Z)-III") += dz ;
-    return Error ( "There is no convergency", NoConvergency ) ;
-  }
+  { Warning ( "There is no convergency-III", NoConvergency ) ; }
   
   // evaluate the distance 
   dist = ( point1 - point2 ) . R () ;
@@ -295,11 +833,11 @@ StatusCode LoKi::DistanceCalculator::_distance
     
     StatusCode sc = LoKi::KalmanFilter::load ( *good1 , *first  ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::load(1)" , sc ) ; }
+    { return Error ( "distance(III): error from KalmanFilter::load(1)" , sc ) ; }
     
     sc =            LoKi::KalmanFilter::load ( *good2 , *second ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::load(2)" , sc ) ; }
+    { return Error ( "distance(III): error from KalmanFilter::load(2)" , sc ) ; }
     
     // construct the proper seed:
     Gaudi::Vector3       x  ;
@@ -307,7 +845,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     sc = LoKi::KalmanFilter::seed ( m_entries , x , ci , 1.e-4 ) ;
     if ( sc.isFailure() ) 
     { 
-      Warning ( "_distance(III): error from KalmanFilter::seed" , sc ) ; 
+      Warning ( "distance(III): error from KalmanFilter::seed" , sc ) ; 
       // set manually the seed to be equal to the middle position 
       Gaudi::Math::geo2LA ( point1 + 0.5 * ( point2 - point1 ) , x ) ;
       // set the gain matrix to be "small enought" 
@@ -321,7 +859,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     // make the first step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( *first , *_x , *_ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::step(1)" , sc ) ; }
+    { return Error ( "distance(III): error from KalmanFilter::step(1)" , sc ) ; }
     
     // use the step result as seed for the second step:
     _x  = &first->m_x  ;
@@ -330,13 +868,11 @@ StatusCode LoKi::DistanceCalculator::_distance
     // make the second step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( *second , *_x , *_ci , first->m_chi2 ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "_distance(III): error from KalmanFilter::step(2)" , sc ) ; }
+    { return Error ( "distance(III): error from KalmanFilter::step(2)" , sc ) ; }
     
     // get the final chi2 
     *chi2 = second->m_chi2 ;
   }
-  //
-  counter ( "#iterations-III" ) += nIter ;
   //
   return StatusCode::SUCCESS ;                                 // RETURN
 }
@@ -359,8 +895,8 @@ StatusCode LoKi::DistanceCalculator::_distance
   // propagate particle into its own decay vertex:
   StatusCode sc = transport ( &particle , decay.position() , m_particle1 ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "The error from IParticleTransporter" , sc ) ; }
-
+  { return Error ( "distance(IV):Error from IParticleTransporter" , sc ) ; }
+  
   
   const LHCb::Particle* good = &m_particle1 ;// the properly transported particle
   
@@ -368,7 +904,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   sc = LoKi::Fitters::path0 ( primary , *good , decay , path ) ;
   if ( sc.isFailure() ) 
   {
-    Warning ( "Error code from LoKi::Fitters::path0" , sc ) ;
+    Warning ( "distance(IV):Error code from LoKi::Fitters::path0" , sc ) ;
     path = 0 ;
   }
   
@@ -384,12 +920,13 @@ StatusCode LoKi::DistanceCalculator::_distance
     const double o_path = path ;
     
     // make one step of the fit:
+    m_fitter.m_var = path ; 
     sc = LoKi::Fitters::path_step 
       ( primary , *good , momentum , decvertex , primvertex , m_fitter ) ;
     if ( sc.isFailure() ) 
     {
-      counter ( "#reset" ) += 1 ;
       // reset  to the initial expansion point and reiterate 
+      Warning ( "distance(IV): error from path_step" , sc ) ;
       momentum   = good     -> momentum       () ;
       decvertex  = good     -> referencePoint () ;
       primvertex = primary  .  position       () ;
@@ -403,19 +940,21 @@ StatusCode LoKi::DistanceCalculator::_distance
     
     // check for the convergency: 
     //    - by the change in either chi2 *OR* in the proper lifetime  
-    if ( ::fabs ( chi2  - o_chi2 ) < m_delta_chi2 
-         || 
+    if ( ::fabs ( chi2  - o_chi2 ) < m_delta_chi2 || 
          ::fabs ( path  - o_path ) < m_delta_path ) 
     {
       // get the error in "path" 
       error = ::sqrt ( m_fitter.m_Vvar ) ;
       //
-      counter ( "#iterations-IV" ) += iIter ;
       return StatusCode::SUCCESS ;                                   // RETURN 
     }  
   }
+  
+  Warning ( "There is no convergency-IV" , NoConvergency ) ;
+  // get the error in "path" 
+  error = ::sqrt ( m_fitter.m_Vvar ) ;
   //
-  return Error ( "There is no convergency" , NoConvergency ) ;
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================ 
 /* Calculate the projected distance 
@@ -440,7 +979,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   // propagate the particle into its own decay vertex:
   StatusCode sc = transport ( &particle , decay.position() , m_particle1 ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "The error from IParticleTransporter" , sc ) ; }
+  { return Error ( "distance(V):Error from IParticleTransporter" , sc ) ; }
   
   const LHCb::Particle* good = &m_particle1 ; // the properly transported particle
   
@@ -483,264 +1022,14 @@ StatusCode LoKi::DistanceCalculator::_distance
   else 
   {
     *error = -1 ;
-    return Error ( "The negative covarinace, return error=-1" ) ;    // RETURN 
+    Warning ( "distance(V):The negative covarinace, return error=-1" ) ;    
   }
   //
   return StatusCode::SUCCESS ;                                       // RETURN
 }
 // ============================================================================
-// The functions from the interface 
-// ============================================================================
-// Particle - Vertex 
-// ============================================================================
-//  The method for the evaluation of the impact parameter ("distance") 
-//  of the particle with respect to some vertex. 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::Particle*   particle ,
-  const LHCb::VertexBase* vertex   , 
-  double&                 imppar   ) const 
-{
-  StatusCode sc = check ( particle , vertex ) ;
-  if ( sc.isFailure() ) { return sc ; }                        // RETURN 
-  // make the proper evaluations 
-  Gaudi::XYZVector impact ;
-  sc = _distance ( *particle , *vertex , impact ) ;
-  imppar = impact.R() ;
-  return sc ;                                               // RETURN 
-}
-// ============================================================================
-//  The method for the evaluation of the impact parameter ("distance") 
-// of the particle with respect to some vertex. 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::Particle*   particle ,
-  const LHCb::VertexBase* vertex   , 
-  double&                 imppar   , 
-  double&                 chi2     ) const 
-{
-  StatusCode sc = check ( particle , vertex ) ;
-  if ( sc.isFailure() ) { return sc ; }                        // RETURN 
-  // make the proper evaluations 
-  Gaudi::XYZVector impact ;
-  sc = _distance ( *particle , *vertex , impact , &chi2 ) ;
-  imppar = impact.R() ;
-  return sc ;                                               // RETURN 
-}
-// ============================================================================
-// Particle - Point
-// ============================================================================
-// The method for the evaluation of the impact parameter ("distance")
-//  of the particle with respect to fixed point 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::Particle*   particle ,
-  const Gaudi::XYZPoint&  point    , 
-  double&                 imppar   ) const 
-{ 
-  StatusCode sc = check ( particle ) ;
-  if ( sc.isFailure() ) { return sc ; }                        // RETURN 
-  // make the proper evaluations 
-  Gaudi::XYZVector impact ;
-  sc = _distance ( *particle , point , impact ) ;
-  imppar = impact.R() ;
-  return sc ;                                               // RETURN 
-}
-// ============================================================================
-// The method for the evaluation of the impact parameter ("distance")
-//  of the particle with respect to fixed point 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::Particle*   particle ,
-  const Gaudi::XYZPoint&  point    , 
-  double&                 imppar   , 
-  double&                 chi2     ) const 
-{ 
-  StatusCode sc = check ( particle ) ;
-  if ( sc.isFailure() ) { return sc ; }                        // RETURN 
-  // make the proper evaluations 
-  Gaudi::XYZVector impact ;
-  sc = _distance ( *particle , point , impact , &chi2 ) ;
-  imppar = impact.R() ;
-  return sc ;                                               // RETURN 
-}
-// ============================================================================
-// Vertex - Vertex 
-// ============================================================================
-// The trivial method for evaluation of the distance between two vertices 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::VertexBase*  v1   , 
-  const LHCb::VertexBase*  v2   , 
-  double&                  dist ) const 
-{
-  StatusCode sc = check ( v1 , v2 ) ;
-  if ( sc.isFailure() ) { return sc ; }               // RETURN 
-  // make the real calculations 
-  return i_distance ( *v1 , *v2 , dist ) ;
-}
-// ============================================================================
-// The method for evaluation of the distance between two vertices and the 
-//  corresponding \f$\chi^2\f$ for the separation significance.
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance 
-( const LHCb::VertexBase*  v1   , 
-  const LHCb::VertexBase*  v2   , 
-  double&                  dist , 
-  double&                  chi2 ) const 
-{  
-  StatusCode sc = check ( v1 , v2 ) ;
-  if ( sc.isFailure() ) { return sc ; }           // RETURN 
-  // make the real calculations 
-  return i_distance ( *v1 , *v2 , dist , &chi2 ) ;   // RETURN 
-}
-// ============================================================================
-// Vertex - Point
-// ============================================================================
-// The trivial method for evaluation of the distance between the vertex 
-//  and some "fixed" point
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance
-( const LHCb::VertexBase*  vertex , 
-  const Gaudi::XYZPoint&   point  , 
-  double&                  dist   ) const 
-{
-  StatusCode sc = check ( vertex ) ;
-  if ( sc.isFailure() ) { return sc ; }                // RETURN 
-  // make the real calculations 
-  return i_distance ( *vertex , point , dist ) ;       // RETURN 
-}
-// ============================================================================
-// The method for evaluation of the distance between the vertices 
-//  and some fixed point and the corresponding chi^2 for 
-//  the separation significance.
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance
-( const LHCb::VertexBase*  vertex , 
-  const Gaudi::XYZPoint&   point  , 
-  double&                  dist   , 
-  double&                  chi2   ) const 
-{
-  StatusCode sc = check ( vertex ) ;
-  if ( sc.isFailure() ) { return sc ; }                    // RETURN 
-  // make the real calculations 
-  return i_distance ( *vertex , point , dist , &chi2 ) ;   // RETURN 
-}
-// ============================================================================
-// Particle-Particle 
-// ============================================================================
-// The method for evaluation of the scalar distance between two particles, 
-//  aka "distance of the closest approach". 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance
-( const LHCb::Particle* p1   , 
-  const LHCb::Particle* p2   , 
-  double&               dist ) const 
-{
-  StatusCode sc = check ( p1 , p2 ) ;
-  if ( sc.isFailure() ) { return sc ; }                    // RETURN 
-  // make the real calculations 
-  return _distance ( *p1 , *p2 , dist ) ;                  // RETURN  
-}
-// ============================================================================
-// The method for evaluation of the scalar distance between two particles, 
-// aka "distance of the closest approach" and also its 
-//  chi2 for separation significance 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::distance
-( const LHCb::Particle* p1   , 
-  const LHCb::Particle* p2   ,
-  double&               dist , 
-  double&               chi2 ) const 
-{
-  StatusCode sc = check ( p1 , p2 ) ;
-  if ( sc.isFailure() ) { return sc ; }                      // RETURN 
-  // make the real calculations 
-  return _distance ( *p1 , *p2 , dist , &chi2 ) ;            // RETURN  
-} 
-// ============================================================================
-// The method for evaluation of the "path"-distance 
-//  between the decay vertex of the particle and the vertex.
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::pathDistance 
-( const LHCb::Particle*   particle , 
-  const LHCb::VertexBase* primary  ,  
-  double&                 path     ,
-  double&                 error    ,
-  double&                 chi2     ) const 
-{
-  // check the input data 
-  StatusCode sc = check ( particle , primary ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // check the end-vertex
-  const LHCb::VertexBase* decay = particle->endVertex() ;
-  sc = check ( decay ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // make the real evaluation:
-  return _distance ( *primary  , *particle , *decay , path , error , chi2 ) ;
-}
-// ============================================================================
-// Calculate the projected distance 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::projectedDistance   
-( const LHCb::Particle*   particle , 
-  const LHCb::VertexBase* primary  , 
-  double&                 dist     ) const 
-{
-  // check the input data 
-  StatusCode sc = check ( particle , primary ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // check the end-vertex
-  const LHCb::VertexBase* decay = particle->endVertex() ;
-  sc = check ( decay ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // make the real evaluation:
-  return _distance ( *primary  , *particle , *decay , dist , 0 ) ;
-}
-// ============================================================================
-// Calculate the projected distance 
-// ============================================================================
-StatusCode 
-LoKi::DistanceCalculator::projectedDistance   
-( const LHCb::Particle*   particle , 
-  const LHCb::VertexBase* primary  , 
-  double&                 dist     , 
-  double&                 error    ) const 
-{
-  // check the input data 
-  StatusCode sc = check ( particle , primary ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // check the end-vertex
-  const LHCb::VertexBase* decay = particle->endVertex() ;
-  sc = check ( decay ) ;
-  if ( sc.isFailure() ) { return sc ; }                     // RETURN 
-  // make the real evaluation:
-  return _distance ( *primary  , *particle , *decay , dist , &error ) ;
-}
-// ============================================================================
-
-
-
-
-
-// ============================================================================
 /// the factory (needed for instantiation)
 DECLARE_NAMESPACE_TOOL_FACTORY(LoKi,DistanceCalculator) ;
-// ============================================================================
-
-
 // ============================================================================
 // The END 
 // ============================================================================

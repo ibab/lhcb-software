@@ -1,10 +1,10 @@
-// $Id: DistanceCalculatorBase.cpp,v 1.1 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: DistanceCalculatorBase.cpp,v 1.2 2008-07-15 10:12:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
 // local
 // ============================================================================
-#include "DistanceCalculator.h"
+#include "DistanceCalculatorBase.h"
 // ============================================================================
 /** @file 
  *  the implementation of the class LoKi::DistanceCalculator 

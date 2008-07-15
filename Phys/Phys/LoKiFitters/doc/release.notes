@@ -1,9 +1,35 @@
-! $Id: release.notes,v 1.7 2008-07-03 15:02:23 jpalac Exp $ 
+! $Id: release.notes,v 1.8 2008-07-15 10:12:21 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-15 - Vanya BELYAEV
+ 
+- add new tool LoKi::TrgDistanceCalculator - 
+
+    fast ("trigger oriented")  version of LoKi::DistanceCalculator 
+    There is some gain in CPU. The numerical performace is rather adequite:
+    The relative numerical difference with respect to full unstripped 
+    version is 
+       
+         O(10^-5) for the impact parameters  of tracks 
+         O(3%)    for chi2 of impact parameters of tracks 
+         O(1.5%)  for doca("distance of closest approach") between two tracks 
+         O(3%)    for chi2 of doca 
+         O(10^-3) for "s-path"
+         O(2%)    for error in s-path
+         O(1-^-2) for chi2 of s-path 
+
+      No difference for vertex distance, chi2(vertes distance), 
+      and projected distances are found.
+
+- remove unnesessary header files.
+- reduce a bit the printout for LoKi::DistanceCalculator 
+
+- cmt/requirements 
+    version increment to v2r0 
 
 ! =========================== LoKiFitters v1r2 2008-07-03 =====================
 

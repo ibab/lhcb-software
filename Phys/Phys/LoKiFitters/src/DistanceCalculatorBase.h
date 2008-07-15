@@ -1,4 +1,4 @@
-// $Id: DistanceCalculatorBase.h,v 1.3 2008-06-26 13:31:11 jpalac Exp $
+// $Id: DistanceCalculatorBase.h,v 1.4 2008-07-15 10:12:21 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DISTANCECALCULATORBASE_H 
 #define LOKIFITTERS_DISTANCECALCULATORBASE_H 1
@@ -268,10 +268,6 @@ inline StatusCode LoKi::DistanceCalculatorBase::check
   return StatusCode::SUCCESS ;
 }
 // ========================================================================
-
-
-
-// ============================================================================
 // construct the line trajector from the particle  
 // ============================================================================
 inline LoKi::DistanceCalculatorBase::Line_
@@ -391,8 +387,6 @@ LoKi::DistanceCalculatorBase::i_distance
   //
   return ( vd  - vp ).Dot ( p ) ;
 }
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================
