@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 !2008-07-15 - Gerhard Raven
   - PropertyConfigSvc: only update TopAlgs if changed
+  - HltL0Filter: make 'restart-aware'
 
 !2008-07-14 - Gerhard Raven
   - add HltIncidentFilter: responds to incidents requesting the event to be kept

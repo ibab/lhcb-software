@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.3 2008-07-04 08:07:41 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.4 2008-07-15 09:55:50 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -26,12 +26,21 @@ HltL0Filter::HltL0Filter( const std::string& name,
   : HltAlgorithm ( name , pSvcLocator )
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
+  m_l0Channels.declareUpdateHandler( &HltL0Filter::updateChannels , this);
   declareProperty("L0Channels",   m_l0Channels);
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 HltL0Filter::~HltL0Filter() {}; 
+
+//=============================================================================
+// Restart -- we explicitly support restart... woho!
+//=============================================================================
+StatusCode HltL0Filter::restart() 
+{
+    return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 // Initialization
@@ -42,7 +51,7 @@ StatusCode HltL0Filter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // no selection as input, but we do have an output selection,
-  // of 'no candate' type..
+  // of 'no candidate' type..
   registerSelection();
 
   //TODO: maybe at some point we start filling in part of the TCK 
@@ -91,6 +100,11 @@ StatusCode HltL0Filter::execute() {
   return StatusCode::SUCCESS;
 };
 
+void
+HltL0Filter::updateChannels(Property&) {
+    m_map.clear(); // invalidate all our channel mappings
+}
+
 HltL0Filter::ChannelMap_t 
 HltL0Filter::getL0Map( const LHCb::L0DUChannel::Map& channels) const {
     ChannelMap_t m;
@@ -100,6 +114,6 @@ HltL0Filter::getL0Map( const LHCb::L0DUChannel::Map& channels) const {
         LHCb::L0DUChannel::Map::const_iterator chan = channels.find(*i);
         Assert(chan != channels.end(),"Could not find requested L0channel");
         m.insert( *i, chan->second->id() );
-    }	
+    }
     return m;
 }

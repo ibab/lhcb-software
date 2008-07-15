@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.h,v 1.2 2008-06-02 19:57:57 graven Exp $
+// $Id: HltL0Filter.h,v 1.3 2008-07-15 09:55:50 graven Exp $
 #ifndef HLTL0FILTER_H 
 #define HLTL0FILTER_H 1
 
@@ -32,11 +32,13 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode restart   ();    ///< Algorithm restart
 
 private:
   typedef GaudiUtils::VectorMap<std::string,unsigned int> ChannelMap_t;
   typedef GaudiUtils::VectorMap<long, ChannelMap_t > TCKMap_t;
 
+  void updateChannels(Property&);
   ChannelMap_t getL0Map( const LHCb::L0DUChannel::Map& channels) const;
 
   std::string         m_l0Location;
