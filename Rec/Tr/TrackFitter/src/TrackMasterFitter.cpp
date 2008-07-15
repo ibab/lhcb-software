@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.48 2008-06-17 13:26:50 lnicolas Exp $
+// $Id: TrackMasterFitter.cpp,v 1.49 2008-07-15 06:52:16 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -166,8 +166,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   }
 
   // create a covariance matrix to seed the Kalman fit
-  TrackSymMatrix seedCov ;
-  seedCov = TrackSymMatrix(); // Set off-diagonal elements to zero
+  TrackSymMatrix seedCov ; // Set off-diagonal elements to zero
   seedCov(0,0) = m_errorX2;
   seedCov(1,1) = m_errorY2;
   seedCov(2,2) = m_errorTx2;
