@@ -1,4 +1,4 @@
-// $Id: ProcUtilities.cpp,v 1.4 2008-07-11 15:27:31 jucogan Exp $
+// $Id: ProcUtilities.cpp,v 1.5 2008-07-15 12:48:53 jucogan Exp $
 
 #include "L0MuonKernel/ProcUtilities.h"
 
@@ -240,8 +240,8 @@ std::vector<double> L0Muon::kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2, int p
   double x1=0., y1=0.;// M1 hit coordinates
   double x2=0., y2=0.;// M2 hit coordinates
 
-  xyFromPad(p1,x1,y1);
-  xyFromPad(p2,x2,y2);
+  xyFromPad(p1,x1,y1,procVersion);
+  xyFromPad(p2,x2,y2,procVersion);
 
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
@@ -288,21 +288,21 @@ std::vector<double> L0Muon::kine(LHCb::MuonTileID p1, LHCb::MuonTileID p2, int p
   if (debug)    std::cout  <<"\t=> L0Muon::kine : "
                            << " p1 = " <<   p1.toString()
                            << " p2 = " <<   p2.toString()
-//                            << " d1 = " <<   d1
-//                            << " d2 = " <<   d2
-//                            << " d3 = " <<   d3
-//                            << " alpha= " << alpha
-//                            << " x1 = " <<   x1
-//                            << " y1 = " <<   y1
-//                            << " x2 = " <<   x2
-//                            << " y2 = " <<   y2
-//                            << " sq= " <<    sq
-//                            << " sr= " <<    sr
-//                            << " sc= " <<    sc
-//                            << " st= " <<    st
-//                            << " ptm= " <<   ptm
-//                            << " xslope= " <<xslope
-//                            << " xin= " <<   xin
+                  //                            << " d1 = " <<   d1
+                  //                            << " d2 = " <<   d2
+                  //                            << " d3 = " <<   d3
+                  //                            << " alpha= " << alpha
+                  //                            << " x1 = " <<   x1
+                  //                            << " y1 = " <<   y1
+                  //                            << " x2 = " <<   x2
+                  //                            << " y2 = " <<   y2
+                  //                            << " sq= " <<    sq
+                  //                            << " sr= " <<    sr
+                  //                            << " sc= " <<    sc
+                  //                            << " st= " <<    st
+                  //                            << " ptm= " <<   ptm
+                  //                            << " xslope= " <<xslope
+                  //                            << " xin= " <<   xin
                            << " pt= " <<    pt 
                            << " theta= " << theta
                            << " phi= " << phi
@@ -329,8 +329,8 @@ std::vector<double> L0Muon::kineV0(LHCb::MuonTileID p1, LHCb::MuonTileID p2, boo
   double x1=0., y1=0.;// M1 hit coordinates
   double x2=0., y2=0.;// M2 hit coordinates
 
-  xyFromPad(p1,x1,y1);
-  xyFromPad(p2,x2,y2);
+  xyFromPad(p1,x1,y1,0);
+  xyFromPad(p2,x2,y2,0);
 
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);

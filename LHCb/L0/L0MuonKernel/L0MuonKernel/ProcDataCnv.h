@@ -50,9 +50,9 @@ namespace L0Muon {
     int decodeBank(const std::vector<unsigned int> raw, int version);
     int decodeBank_v1(const std::vector<unsigned int> &raw);
     int decodeBank_v2(const std::vector<unsigned int> &raw);
-    int rawBank(std::vector<unsigned int> &raw, int version,int mode);
+    int rawBank(std::vector<unsigned int> &raw, int version,int mode, bool compression);
     int rawBank_v1(std::vector<unsigned int> &raw, int mode);
-    int rawBank_v2(std::vector<unsigned int> &raw, int mode);
+    int rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression);
 
     const bool inError(int ib, int ipu) const { return m_errors[ib].inError(ipu);}
     const int  decodingError(int ib) const { return ((int(m_errors[ib].decodingError())<<1)&2);}

@@ -306,14 +306,14 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
   return 1;
 }
 
-int L0Muon::ProcCandCnv::rawBank(std::vector<unsigned int> &raw, int bankVersion, int ievt)
+int L0Muon::ProcCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int bankVersion, bool compression)
 {
   switch (bankVersion){
   case 1:
     return rawBank_v1(raw,ievt);
     break;
   default:
-    return rawBank_v2(raw,ievt);
+    return rawBank_v2(raw,ievt, compression);
     break;
   };
   
@@ -364,7 +364,7 @@ int L0Muon::ProcCandCnv::rawBank_v1(std::vector<unsigned int> &raw, int ievt)
 
 
 
-int L0Muon::ProcCandCnv::rawBank_v2(std::vector<unsigned int> &raw, int ievt)
+int L0Muon::ProcCandCnv::rawBank_v2(std::vector<unsigned int> &raw, int ievt, bool compression)
 {
 
   static int bankVersion=2;
@@ -385,19 +385,24 @@ int L0Muon::ProcCandCnv::rawBank_v2(std::vector<unsigned int> &raw, int ievt)
     for (int ipu= 0; ipu<4 ;++ipu) {
       word|= ( m_candRegHandlerPU[ib][ipu].getStatus() <<(4+ipu*4) );
     }    
+    if (compression) word|=0x80000000;
     raw.push_back(word);
 
     // Candidates
     for (int icand=0; icand<2; icand++){
-      if (m_candRegHandlerBCSU[ib].isEmpty(icand)) break;
+      if (compression && m_candRegHandlerBCSU[ib].isEmpty(icand)) break;
       word = L0Muon::readCandFromRegister(&m_candRegHandlerBCSU[ib], icand, bankVersion);
-      raw.push_back(word&0x30FFFFFF);// mask the quarter and the board
+      word&=0x30FFFFFF; // mask the quarter and the board
+      if (compression && word==0) continue;
+      raw.push_back(word);
     } 
     for (int ipu= 0; ipu<4 ;++ipu) {
       for (int icand=0; icand<2; icand++){
-        if (m_candRegHandlerPU[ib][ipu].isEmpty(icand)) break;
+        if (compression && m_candRegHandlerPU[ib][ipu].isEmpty(icand)) break;
         word = L0Muon::readCandFromRegister(&m_candRegHandlerPU[ib][ipu], icand, bankVersion);
-        raw.push_back(word&0x30FFFFFF);// mask the quarter and the board
+        word&=0x30FFFFFF; // mask the quarter and the board
+        if (compression && word==0) continue;
+        raw.push_back(word);
       } 
     }
 

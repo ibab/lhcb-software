@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 - Julien Cogan
+ - Encoding of banks L0MuonCtrlCand (to be tested)
+ - Possibility to zero-supress bank with candidates (to be tested)
+ - By default, use the status to compute the number of candidates
+
 ! 2008-07-11 - Julien Cogan
  - Improve the error managment when decoding the bank v2
  - Fix some compilation warnings	

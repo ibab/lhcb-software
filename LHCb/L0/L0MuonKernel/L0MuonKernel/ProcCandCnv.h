@@ -45,9 +45,9 @@ namespace L0Muon {
     int decodeBank_v1(const std::vector<unsigned int> &raw);
     int decodeBank_v2(const std::vector<unsigned int> &raw);
 
-    int rawBank(std::vector<unsigned int> &raw, int version, int ievt);
+    int rawBank(std::vector<unsigned int> &raw, int ievt, int version, bool compression);
     int rawBank_v1(std::vector<unsigned int> &raw, int ievt);
-    int rawBank_v2(std::vector<unsigned int> &raw, int ievt);
+    int rawBank_v2(std::vector<unsigned int> &raw, int ievt, bool compression);
     
     void dump(std::string tab=""){
       for (int ib=0; ib<12; ++ib) 

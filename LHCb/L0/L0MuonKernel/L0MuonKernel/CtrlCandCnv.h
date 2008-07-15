@@ -42,7 +42,7 @@ namespace L0Muon {
     std::vector<PMuonCandidate> muonCandidatesBCSU(int iq, int ib);
 
     int decodeBank(const std::vector<unsigned int> &raw, int version,int mode);
-    int rawBank(std::vector<unsigned int> &raw, int version, int mode, int ievt);
+    int rawBank(std::vector<unsigned int> &raw, int ievt, int version, int mode, bool compression);
 
     // Obsolete versions only used in the simulation (before commissionning)
     int decodeBankDC06(const std::vector<unsigned int> &raw, int version);

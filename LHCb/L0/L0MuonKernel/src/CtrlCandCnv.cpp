@@ -295,15 +295,94 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
   
 }
 
-int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int bankVersion, int mode, int ievt){
+int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int bankVersion, int mode, bool compression){
   raw.clear();
   if (bankVersion<2) return 0;
   if (ievt<0) return 0;
+
+  int nWordsPart1=0;
   
-  //
-  // TO BE IMPLEMENTED
-  //
-  return mode;
+  int event_number = ievt;
+  int l0_bid = ievt;
+  int bcid   = l0_bid&0xF;
+  
+  // -- 1st part
+
+  // Loop over controller boards
+  for (int iq = 0; iq <2 ; iq++) {
+    unsigned int word;
+    
+    // Event numbers
+    word = ( (l0_bid<<16)&0xFFF0000 )+ ( event_number&0xFFF );
+    raw.push_back(word);
+
+    // Status & BCIDs
+    word = m_candRegHandler[iq].getStatus();   
+    word|=((bcid<<4)&0xF0);
+    word|=((bcid<<16)&0x0F0000);
+    word|=((bcid<<20)&0xF00000);
+    if (compression) word|=0x80000000;
+    raw.push_back(word);
+
+    // Candidates
+    for (int icand=0; icand<2; icand++){
+      if (compression && m_candRegHandler[iq].isEmpty(icand)) break;
+      word = L0Muon::readCandFromRegister(&m_candRegHandler[iq], icand, bankVersion);
+      if (compression && word==0) continue;
+      raw.push_back(word);
+    } 
+    
+  }
+
+  nWordsPart1=raw.size();
+  unsigned int header=nWordsPart1*2;
+  raw.insert(raw.begin(),header);
+  
+  // 1st part of the bank is done - 
+  if (mode<2) return 1;
+  
+  // -- 2nd part
+
+  // Loop over controller boards
+  for (int iq = 0; iq <2 ; iq++) {
+    unsigned int word=0;
+    for (int i=0; i<3; ++i) raw.push_back(word); // error fields (empty in MC)
+    
+    // Status processing boards
+    for (int i=0; i<2; ++i) {
+      word=0;
+      for (int ii=0;ii<6;++ii){
+        int ib=ii+(i*6);
+        int shift=ii*4;
+        word|=(m_candRegHandlerBCSU[iq][ib].getStatus()<<shift);
+      }
+      if (i==0 && compression)  word|=0x80000000;
+      raw.push_back(word);
+    }
+
+    // BCIDS processing boards
+    for (int i=0; i<2; ++i) {
+      word=0;
+      for (int ii=0;ii<6;++ii){
+        int shift=ii*4;
+        word|=(bcid<<shift);
+      }
+      raw.push_back(word);
+    }
+    
+    // Candidates
+    for (int ib = 0; ib <12 ; ib++) {
+      for (int icand=0; icand<2; icand++){
+        if (compression && m_candRegHandlerBCSU[iq][ib].isEmpty(icand)) break;
+        word = L0Muon::readCandFromRegister(&m_candRegHandlerBCSU[iq][ib], icand, bankVersion);
+        if (compression && word==0) continue;
+        raw.push_back(word);
+      } 
+    }
+  }
+
+  return 2;
+  
 }
 
 int L0Muon::CtrlCandCnv::decodeBankFinalCandidates(const std::vector<unsigned int> &raw, int bankVersion){

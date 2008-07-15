@@ -520,14 +520,14 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
 }
 
 
-int L0Muon::ProcDataCnv::rawBank(std::vector<unsigned int> &raw, int version, int mode)
+int L0Muon::ProcDataCnv::rawBank(std::vector<unsigned int> &raw, int version, int mode, bool compression)
 {
   switch (version){
   case 1:
     return rawBank_v1(raw,mode);
     break;
   case 2:
-    return rawBank_v2(raw,mode);
+    return rawBank_v2(raw,mode, compression);
     break;
   };
   
@@ -895,13 +895,14 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
 }
   
 
-int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode)
+int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression)
 {
   raw.clear();
   
   //
   // TO BE IMPLEMENTED
   //
+  if (compression) return mode;
   return mode;
 }
 
