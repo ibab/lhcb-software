@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-15 - Marco Cattaneo
+ - Remove cmt/version.cmt file, breaks cmt when running with version directory!
+
 ! 2008-07-15 - Julien Cogan
  - Encoding of banks L0MuonCtrlCand (to be tested)
  - Possibility to zero-supress bank with candidates (to be tested)

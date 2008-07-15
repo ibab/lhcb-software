@@ -3,9 +3,12 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2008-07-15 - Marco Cattaneo
+ - Remove cmt/version.cmt file, breaks cmt when running with version directory!
 
 ! 2008-07-02 - Olivier Deschamps 
-    - IL0DUFromRawTool : new virtual method roStatus() that return the RawBankReadoutStatus
+ - IL0DUFromRawTool : new virtual method roStatus() that return the 
+                      RawBankReadoutStatus
 
 !====================== L0Interfaces v1r1p1 2008-06-30 ========================
 ! 2008-06-30 - Marco Cattaneo
