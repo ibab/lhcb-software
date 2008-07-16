@@ -1,4 +1,5 @@
 from database.database import connect, disconnect, ConfigurationDB, EquipmentDB
+from database.spare import SpareDB
 from time import strftime
 from string import replace
 from string import upper, lower, split
@@ -21,6 +22,7 @@ class Controller(object):
         self.cn = None
         self.confDB = None
         self.equipDB = None
+        self.spareDB = None
         print "Controller.initVars() end"
     def connectConfDBPython(self):
         print "Controller.connectConfDBPython() start"
@@ -65,5 +67,15 @@ class Controller(object):
                 self.equipDB = None
         print "Controller.getEquipDBCxOracleConnection() end"
         return self.equipDB
+    def getSpareDB(self):
+        print "Controller.getSpareDB() start"
+        if self.spareDB is None:
+            try:
+                self.spareDB = SpareDB(self.getConfDBCxOracleConnection(), self.getEquipDBCxOracleConnection(), self.logfile)
+            except:
+                print "Error creating SpareDB"
+                self.spareDB = None
+        print "Controller.getSpareDB() end"
+        return self.spareDB
     def getCn(self):
         return self.cn

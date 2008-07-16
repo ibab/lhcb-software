@@ -211,7 +211,7 @@ class SpareDB:
         database.disconnect(db)
         print "SpareDB.replaceDevice end"
     def getAllSparesEquipDB(self):
-        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and name like '%Spare%' or name like '%spare%' order by name"
+        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and (name like '%Spare%' or name like '%spare%') order by name"
         spares = self.equipDB.executeSelectQuery(query)
         result = []
         for spare in spares:
@@ -219,7 +219,7 @@ class SpareDB:
         return result
     """returns a list with all spares from lhcbintegration"""
     def getAllSparesEquipDBCount(self):
-        query = "select count(*) c from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and name like '%Spare%' or name like '%spare%'"
+        query = "select count(*) c from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and (name like '%Spare%' or name like '%spare%')"
         result = self.equipDB.executeSelectQuery(query)
         try:
             return result[0][0]

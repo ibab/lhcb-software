@@ -1,5 +1,5 @@
 #from cdbutils import subsystems
-from PyQt4.QtCore import QObject
+#from PyQt4.QtCore import QObject
 from config import eDB_name, eDB_user, eDB_pass, dhcp_file, dhcp_flags
 from config import cDB_name, cDB_user, cDB_pass
 import cx_Oracle
@@ -13,7 +13,7 @@ from model.Tell1 import Tell1
 from model.UKL1 import UKL1
 from model.spare import Spare
 from string import upper, lower, split, replace
-import wx
+#import wx
 from re import compile, sub
 from emptydatabase import removedev
 
@@ -140,7 +140,7 @@ class ConfigurationDB(DataBase):
         self.executeQuery(query)
         query = "delete from LHCB_IPINFO where IPNAME NOT like 'pctest'"
         self.executeQuery(query)
-    """gets all devices"""
+    """return all devices"""
     def getAllDevices(self):
         query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 ORDER BY devicename ASC"
         result = self.executeSelectQuery(query)
@@ -148,6 +148,21 @@ class ConfigurationDB(DataBase):
         for r in result:
             devices.append(str(r[0])+" ("+str(r[1])+")")
         return devices
+    def getAllDevicesAsString(self):
+        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 ORDER BY devicename ASC"
+        result = self.executeSelectQuery(query)
+        devices = []
+        for r in result:
+            devices.append(str(r[0])+" ("+str(r[1])+")")
+        return devices
+    """return all spares"""
+    def getAllSparesAsString(self):
+        spares = []
+        query = "SELECT hwname, serialnb from lhcb_hw_devices WHERE device_status = 2 and serialnb like '4%' and length(serialnb) = 14 order by hwname ASC"
+        confdb_spare_result = self.executeSelectQuery(query)
+        for spare_result in confdb_spare_result:
+            spares.append(str(spare_result[0])+" ("+str(spare_result[1])+")")
+        return spares
     """returns systems with devices which have different data in lhcbintegration and confdb"""
     def getChangedSystems(self, equipdb_system):
         new_devices_with_dhcp = System("New Devices with DHCP-data")
@@ -637,7 +652,7 @@ class EquipmentDB(DataBase):
                 pass#print "Warning: ", module[0], module[1], module[2], module[3], module[4], " is not a known module type and will be ignored!"
         return result
     def getAllSpares(self):
-        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and name like '%Spare%' or name like '%spare%' order by name"
+        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and length(item_id) = 14 and (name like '%Spare%' or name like '%spare%') order by name"
         spares = self.executeSelectQuery(query)
         result = []
         for spare in spares:
@@ -649,6 +664,7 @@ class EquipmentDB(DataBase):
         devices = self.getAllDevices()
         for device in devices:
             system.addDevice(device) #will manage the subsystems automatically
+            system.getMasterHugin(device)
         return system
     """returns a device with the given serial or None if not found"""
     def getDeviceBySerial(self, serial):

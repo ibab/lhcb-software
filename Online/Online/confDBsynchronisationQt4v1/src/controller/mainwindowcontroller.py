@@ -10,12 +10,12 @@ from view.spareswidget import SparesWidget
 from database.spare import SpareDB
 from worker.RefreshWorker import RefreshWorker
 from updatedevicescontroller import UpdateDevicesController
+from swapdeviceswindowcontroller import SwapDevicesWindowController
 
 class MainWindowController(Controller):
     def __init__(self, application):
         Controller.__init__(self)
         self.application = application
-        self.spareDB = SpareDB(self.getConfDBCxOracleConnection(), self.getEquipDBCxOracleConnection(), self.logfile)
         self.devicesInfo = self.getDevicesInfo()
         self.sparesInfo = self.getSparesInfo()
         self.mainWindow = MainWindow(self)
@@ -38,6 +38,7 @@ class MainWindowController(Controller):
         confDB = self.getConfDBCxOracleConnection()
         equipDB = self.getEquipDBCxOracleConnection()
         sparesInfo = SparesInfo()
+        self.spareDB = self.getSpareDB()
         sparesInfo.SparesInEquipDB = self.spareDB.getAllSparesEquipDBCount()
         sparesInfo.setSparesInConfDB(self.spareDB.getAllSparesConfDBCount())
         sparesInfo.setChangedSpares(len(self.spareDB.getChangedSpares()))
@@ -117,6 +118,7 @@ class MainWindowController(Controller):
         print "MainWindowController.onTfcmunin01() end"
     def onSwap(self):
         print "MainWindowController.onSwap() start"
+        self.swapDevicesWindowController = SwapDevicesWindowController(self)
         print "MainWindowController.onSwap() end"
     def onInsertNewSpares(self):
         print "MainWindowController.onInsertNewSpares() start"
