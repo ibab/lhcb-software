@@ -1,13 +1,12 @@
-! $Id: release.notes,v 1.16 2008-06-30 16:43:49 odescham Exp $
+! $Id: release.notes,v 1.17 2008-07-16 19:44:52 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
-
+!===================== CaloDetXmlCnv v3r2 2008-07-16 ========================
 ! 2008-06-30 - Olivier Deschamps
- - Adapt to the new structure in Calo DDDDB (add src/XmlDeSubSubCalorimeterCnv.cpp)
-
+ - Adapt to new structure in Calo DDDDB (add src/XmlDeSubSubCalorimeterCnv.cpp)
 
 !===================== CaloDetXmlCnv v3r1 2007-03-05 ========================
 ! 2007-03-05 - Marco Cattaneo
