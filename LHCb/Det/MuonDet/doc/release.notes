@@ -1,16 +1,18 @@
-! $Id: release.notes,v 1.118 2008-07-15 11:45:29 asatta Exp $
+! $Id: release.notes,v 1.119 2008-07-16 20:12:01 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v8r2 2008-07-16 ==========================
 ! 2008-07-14 - Alessia Satta
-  - Remove the explict FPE Guard , leave only the standar protection
+  - Remove the explict FPE Guard , leave only the standard protection
   - Add ODE name in number translation
+
 ! 2008-06-30 - Alessia Satta
   - MuonReadoutCond :
     Add protection to avoid FPE check to signal inexact FPE 
 
-!========================= MuonDet v8r2 2008-06-30 ==========================
+!========================= MuonDet v8r1 2008-06-30 ==========================
 ! 2008-06-30 - Alessia Satta
   - Fix for Tell1 firmware limitation when >1 TsMap in ODE
 
