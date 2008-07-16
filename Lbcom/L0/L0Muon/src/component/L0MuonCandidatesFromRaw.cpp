@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.12 2008-07-16 08:17:56 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.13 2008-07-16 12:39:40 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -72,6 +72,7 @@ StatusCode L0MuonCandidatesFromRaw::initialize()
   
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs"  , "OutputTool" , this );
+  m_outputTool->setDecodingMode();
   
   m_totEvent = 0;
   m_totBx = 0;
@@ -117,7 +118,7 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Decode Raw banks
     m_outputTool->setMode(m_mode);
     sc = m_outputTool->decodeRawBanks();
-    if ( sc.isFailure() ) continue; // error printed already by GaudiAlgorithm
+    if ( sc.isFailure() ) continue;
     
     // Print Errors
     if (msgLevel(MSG::DEBUG)) {

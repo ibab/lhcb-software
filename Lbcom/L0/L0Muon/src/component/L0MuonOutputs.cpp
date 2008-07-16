@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.17 2008-07-16 08:17:56 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.18 2008-07-16 12:39:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -339,7 +339,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
       for (int i= 0; i<4; ++i) {
         m_procData[i].rawBank(data,m_version,m_mode,m_compression);
         raw->addBank(i, LHCb::RawBank::L0MuonProcData,m_version,data);
-        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0MuonProcData bank written (version "
+        if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written (version "
                                                << m_version<<" ) size is "<< data.size() <<endreq;
         rawBankSize += data.size();
       }
@@ -348,33 +348,98 @@ StatusCode L0MuonOutputs::writeRawBanks(){
     
   } else { // Bank version >1
 
+    int encoding_status;
+    
     // L0Muon (always there - light, standard and debug modes)
     for (int i= 0; i<2; ++i) {
-      m_ctrlCand[i].rawBank(data,ievt,m_version,m_mode,m_compression);
-      raw->addBank(i, LHCb::RawBank::L0Muon,m_version,data);
-      if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0Muon bank written (version "
-                                             << m_version<<" ) size is "<< data.size() <<endreq;
+      encoding_status = m_ctrlCand[i].rawBank(data,ievt,m_version,m_mode,m_compression);
+      if (encoding_status<1) {
+        if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0Muon bank "
+                                           << "with srcID= "<<ctrlSourceID_inv(i)
+                                           <<" ( "
+                                           <<"version "<< m_version
+                                           <<", mode "<< m_mode
+                                           <<", compression "<< m_compression
+                                           <<" )"
+                                           <<" size is "<< data.size() 
+                                           <<" -> encoding error: status= "<<encoding_status
+                                           <<endreq;
+        continue;
+      }
+      raw->addBank(ctrlSourceID_inv(i), LHCb::RawBank::L0Muon,m_version,data);
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0Muon bank written "
+                                             << "with srcID= "<<ctrlSourceID_inv(i)
+                                             <<" ( "
+                                             <<"version "<< m_version
+                                             <<", mode "<< m_mode
+                                             <<", compression "<< m_compression
+                                             <<" )"
+                                             <<" size is "<< data.size() 
+                                             <<" -> encoding error: status= "<<encoding_status
+                                             <<endreq;
       rawBankSize += data.size();
     }
 
     // L0MuonProcCand (only for standard and debug modes)
     if (m_mode>0) {
       for (int i= 0; i<4; ++i) {
-        m_procCand[i].rawBank(data,ievt,m_version,m_compression);
-        raw->addBank(i, LHCb::RawBank::L0MuonProcCand,m_version,data);
-        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0MuonProcCand bank written (version "
-                                               << m_version<<" ) size is "<< data.size() <<endreq;
-      rawBankSize += data.size();
+        encoding_status = m_procCand[i].rawBank(data,ievt,m_version,m_compression);
+        if (encoding_status<1) {
+          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcCand bank written "
+                                             << "with srcID= "<<procSourceID_inv(i)
+                                             <<" ( "
+                                             <<"version "<< m_version
+                                             <<", mode "<< m_mode
+                                             <<", compression "<< m_compression
+                                             <<" )"
+                                             <<" size is "<< data.size() 
+                                             <<" -> encoding error: status= "<<encoding_status
+                                             <<endreq;
+          continue;
+        }
+        raw->addBank(procSourceID_inv(i), LHCb::RawBank::L0MuonProcCand,m_version,data);
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0MuonProcCand bank written "
+                                               << "with srcID= "<<procSourceID_inv(i)
+                                               <<" ( "
+                                               <<"version "<< m_version
+                                               <<", mode "<< m_mode
+                                               <<", compression "<< m_compression
+                                               <<" )"
+                                               <<" size is "<< data.size() 
+                                               <<" -> encoding error: status= "<<encoding_status
+                                               <<endreq;
+        rawBankSize += data.size();
       }
     }
     
     // L0MuonProcData (only for standard and debug modes)
     if (m_mode>0) {
       for (int i= 0; i<4; ++i) {
-        m_procData[i].rawBank(data,m_version,m_mode,m_compression);
-        raw->addBank(i, LHCb::RawBank::L0MuonProcData,m_version,data);
-        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0MuonProcData bank written (version "
-                                               << m_version<<" ) size is "<< data.size() <<endreq;
+        encoding_status = m_procData[i].rawBank(data,m_version,m_mode,m_compression);
+        if (encoding_status<1) {
+          if( msgLevel(MSG::DEBUG) ) debug() << "writeRawBanks: L0MuonProcData bank written "
+                                             << "with srcID= "<<procSourceID_inv(i)
+                                             <<" ( "
+                                             <<"version "<< m_version
+                                             <<", mode "<< m_mode
+                                             <<", compression "<< m_compression
+                                             <<" )"
+                                             <<" size is "<< data.size() 
+                                             <<" -> encoding error: status= "<<encoding_status
+                                             <<endreq;
+          continue;
+        }
+        raw->addBank(procSourceID_inv(i), LHCb::RawBank::L0MuonProcData,m_version,data);
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeRawBanks: L0MuonProcData bank written "
+                                               << "with srcID= "<<procSourceID_inv(i)
+                                               <<" ( "
+                                               <<"version "<< m_version
+                                               <<", mode "<< m_mode
+                                               <<", compression "<< m_compression
+                                               <<" )"
+                                               <<" size is "<< data.size() 
+                                               <<" -> encoding error: status= "<<encoding_status
+                                               <<endreq;
         rawBankSize += data.size();
       }
     } 

@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.7 2008-07-15 12:50:50 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.8 2008-07-16 12:39:41 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -46,12 +46,13 @@ public:
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
 
+  void setDecodingMode(){for (int i=0; i<4; ++i) m_procCand[i].setDecodingMode();}
   
   /// Configure the emulator version
-  void setVersion(int version, bool compression, int mode){
+  void setVersion(int version, int mode, bool compression){
     m_version=version; 
-    m_compression=compression; 
     m_mode=mode; 
+    m_compression=compression; 
   }
   void setVersion(int version)  { m_version=version;}
   void setCompression(bool compression)  { m_compression=compression;}
@@ -91,6 +92,41 @@ private:
         return Q1;
       case 4:
         return Q2;
+      }
+    }
+    return 0;
+  }
+
+  int ctrlSourceID_inv(int side)
+  {
+    switch(m_version) {
+    case 1:
+      return side;
+    case 2:
+      switch(side){
+      case 0:
+        return 5;
+      case 1:
+        return 0;
+      }
+    }
+    return 0;
+  }
+  int procSourceID_inv(int quarter)
+  {
+    switch(m_version) {
+    case 1:
+      return quarter;
+    case 2:
+      switch(quarter){
+      case 0:
+        return 3;
+      case 1:
+        return 4;
+      case 2:
+        return 2;
+      case 3:
+        return 1;
       }
     }
     return 0;
