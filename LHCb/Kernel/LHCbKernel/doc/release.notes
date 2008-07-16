@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v8r6 2008-07-16 ========================
 ! 2008-07-15 Gerhard Raven, M.Cattaneo
  - protect FPEGuard for multiple definitions, i.e. add 'inline' keyword
 
