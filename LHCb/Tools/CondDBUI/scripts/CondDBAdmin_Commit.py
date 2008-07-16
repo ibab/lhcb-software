@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_Commit.py,v 1.4 2008-07-14 17:37:21 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.5 2008-07-16 16:28:38 marcocle Exp $"
 
 import os, sys, stat
 
@@ -125,8 +125,7 @@ and for a short message for the release notes.""")
     
     # check arguments
     if len(args) != 4:
-        print "Error: not enough arguments. Try with --help."
-        return 1
+        parser.error("not enough arguments. Try with --help.")
     
     # Prepare local logger
     import logging
@@ -148,9 +147,8 @@ and for a short message for the release notes.""")
     
     partitions = ["DDDB", "LHCBCOND", "SIMCOND"]
     if partition not in partitions:
-        log.error("'%s' is not a valid partition name. Allowed: %s" % \
-                  (partition, partitions))
-        return 1
+        parser.error("'%s' is not a valid partition name. Allowed: %s" % \
+                     (partition, partitions))
     
     log.info("Preparing database with changes from data in %s for partition %s" % (changes_source, partition))
     log.info("reference tag = %s" % reference_tag)

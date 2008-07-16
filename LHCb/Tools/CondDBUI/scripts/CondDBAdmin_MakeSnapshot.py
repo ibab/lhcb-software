@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.2 2008-07-14 17:37:21 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.3 2008-07-16 16:28:38 marcocle Exp $"
 
 import os, sys
 
@@ -123,8 +123,7 @@ connection string. 'destination' must be a connection string.""")
     
     # check arguments
     if len(args) != 2:
-        print "Error: not enough arguments. Try with --help."
-        return 1
+        parser.error("not enough arguments. Try with --help.")
     
     # Prepare logger
     import logging
