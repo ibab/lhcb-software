@@ -26,6 +26,8 @@ namespace L0Muon {
 
     static const unsigned int PB_OpticalLinks_size = 24;
     static const unsigned int PB_Neighbours_size   = 34;
+    static const unsigned int PU_OpticalLinks_size_16 = 10;
+    static const unsigned int PU_Neighbours_size_16   = 17;
 
   public:
 

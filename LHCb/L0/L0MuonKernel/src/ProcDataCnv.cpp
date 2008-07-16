@@ -537,6 +537,7 @@ int L0Muon::ProcDataCnv::rawBank(std::vector<unsigned int> &raw, int version, in
 int L0Muon::ProcDataCnv::rawBank_v1(std::vector<unsigned int> &raw, int mode)
 {
 
+  raw.clear();
   unsigned int header = 0;
   raw.push_back(header);
 
@@ -898,12 +899,75 @@ int L0Muon::ProcDataCnv::compressedPBWords_to_bitset(const std::vector<unsigned 
 int L0Muon::ProcDataCnv::rawBank_v2(std::vector<unsigned int> &raw, int mode, bool compression)
 {
   raw.clear();
+  if (compression) {
+    //
+    // TO BE IMPLEMENTED
+    //
+    raw.push_back(0x80000000);
+    return 0;
+  }
   
+  
+  //
+  //--- 1st part 
+  //
+
+  for (int ib =0; ib<12; ++ib) 
+  { // Loop over processing boards
+    for (int ipu=0; ipu<4; ++ipu) raw.push_back(0);
+    for (int ipu=0; ipu<4; ++ipu) {
+      for (unsigned int iwd=0; iwd<PU_OpticalLinks_size_16/2; ++iwd) {
+        unsigned int word=m_ols[ib][ipu]->getulong(32,iwd*32);
+        raw.push_back(word);
+      }
+    }
+    //     boost::dynamic_bitset<> olbitset(PB_OpticalLinks_size*32);
+    //     for (int ipu=0; ipu<4; ++ipu) {
+    //       boost::dynamic_bitset<> pubitset = m_ols[ib][ipu]->getBitset();
+    //       pubitset.resize(PB_OpticalLinks_size);
+    //       olbitset|=( pubitset << ( (4*32) + (PU_OpticalLinks_size_16*16*ipu) ) );
+    //     }
+    //     if (compression) {
+    //       // compress olbitset
+    //     }
+    //     unsigned int nwords=olbitset.size()/32;
+    //     for (unsigned int iwd=0; iwd<nwords;++iwd) {
+    //       unsigned int word=olbitset.to_ulong()&0xFFFFFFFF;
+    //       raw.push_back(word);
+    //       olbitset>>=32;
+    //     }
+    //     unsigned int remainder=olbitset.size()%32;
+  }
+
+  unsigned int header=raw.size()*2;
+  raw.insert(raw.begin(),header);
+
+  if (mode<2) return 1;
+  
+  //
+  //--- 2nd part 
+
+  //
   //
   // TO BE IMPLEMENTED
   //
-  if (compression) return mode;
-  return mode;
+
+  //   for (int ib =0; ib<12; ++ib) 
+  //   { // Loop over processing boards
+  //     unsigned int word=0;
+  //     for (int ipu=0; ipu<4; ++ipu) {
+  //       int shift=0;
+  //       int msb=1;
+  //       for (int iwd=0; iwd<PU_OpticalLinks_size_16){
+  //         unsigned int word16 = m_neighs[ib][ipu]->getulong(16, shift);
+  //         shift+=16;
+  //         word|=(word16<<(msb*16));
+  //         if (!msb) raw.push_back(0);
+  //         msb=!msb;
+  //       }
+  //     }
+  //   }
+  return -2;
 }
 
 int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dynamic_bitset<> & bitset )
