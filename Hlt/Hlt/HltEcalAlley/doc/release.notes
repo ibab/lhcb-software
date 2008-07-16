@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltEcalAlley
+! Responsible : Mariusz Witek
+! Purpose     : Ecal alley specific algorithms and tools
+!----------------------------------------------------------------------------
+
+! 2008-07-16 - Mariusz Witek
+ - creation of new package
+
+
+
