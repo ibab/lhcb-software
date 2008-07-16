@@ -1,7 +1,8 @@
 Package         : OTDAQ
-Package manager : J. Nardulli
+Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+!======================= OTDAQ v6r1 2008-07-16 =======================
 ! 2008-07-07 - Jan Amoraal
  - Fix tables for Hardware to Software conversion
 
