@@ -4,7 +4,8 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
-! 2008-06-12 - Marco Clemencic
+!======================== XmlTools v6r1 2008-07-16 ===========================
+! 2008-07-12 - Marco Clemencic
  - Fixed bug #38890: XmlParserSvc does not work with default options.
 
 !======================== XmlTools v6r0 2008-07-04 ===========================
