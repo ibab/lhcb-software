@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.35 2008-07-15 18:10:25 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.36 2008-07-16 21:02:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -132,14 +132,14 @@ StatusCode ParticleEffPurMoni::execute()
     if ( msgLevel(MSG::DEBUG) ) debug() << "     -> selected " << endreq;
 
     // store this proto TES location
-    const std::string& protoTesLoc = objectLocation((*iPM).first->parent());
+    const std::string& protoTesLoc = objectLocation((*iPM).first);
     protoLocations.insert( protoTesLoc );
 
     // Get the MCParticle
     const LHCb::MCParticle * mcPart = mcParticle((*iPM).first);
 
     // Store the TES location for this MCParticle container
-    if (mcPart) mcPLocations.insert( objectLocation(mcPart->parent()) );
+    if (mcPart) mcPLocations.insert( objectLocation(mcPart) );
 
     // Get the MCParticle reco type
     const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
@@ -156,7 +156,7 @@ StatusCode ParticleEffPurMoni::execute()
           iPart != (*iPM).second.end(); ++iPart )
     {
       // Find its TES location
-      const std::string& tesLoc = objectLocation( (*iPart).first.firstParticle->parent() );
+      const std::string& tesLoc = objectLocation( (*iPart).first.firstParticle );
       if ( msgLevel(MSG::DEBUG) )
         debug() << " -> Found Particle in " << tesLoc << endreq
                 << " -> " << (*iPart).first << endreq;
@@ -176,8 +176,8 @@ StatusCode ParticleEffPurMoni::execute()
       // Proto Correlations
       if ( !isClone && mcPart )
       {
-        verbose() << "   -> Adding " << (*iPart).first.firstParticle << " to MCPs" << endreq;
-        mcp2Parts[mcPart].insert( (*iPart).first.firstParticle );
+        //mcp2Parts[mcPart].insert( (*iPart).first.firstParticle );
+        mcp2Parts[mcPart].insert( (*iPart).first.particle );
       }
 
       // get the data for this TES location
@@ -335,9 +335,9 @@ StatusCode ParticleEffPurMoni::execute()
 
         const LHCb::ProtoParticle * proto1 = (*part1)->proto();
         // Location in TES for part1
-        const std::string& partloc1   = objectLocation((*part1)->parent());
+        const std::string& partloc1   = objectLocation(*part1);
         // Location in TES for proto1
-        const std::string& protoloc1  = objectLocation(proto1->parent());
+        const std::string& protoloc1  = objectLocation(proto1);
         // Type of proto1
         const std::string& proto1Type = protoParticleType(proto1);
         // inner loop over protos
@@ -346,9 +346,9 @@ StatusCode ParticleEffPurMoni::execute()
         {
           const LHCb::ProtoParticle * proto2 = (*part2)->proto();
           // Location in TES for part2
-          const std::string& partloc2  = objectLocation((*part2)->parent());
+          const std::string& partloc2  = objectLocation(*part2);
           // Location in TES for proto2
-          const std::string& protoloc2 = objectLocation(proto2->parent());
+          const std::string& protoloc2 = objectLocation(proto2);
           // Type of proto2
           const std::string& proto2Type = protoParticleType(proto2);
           if ( partloc1 != partloc2 && proto1Type == proto2Type )
@@ -944,7 +944,7 @@ ProtoParticle2MCLinker *
 ParticleEffPurMoni::protoLinker( const LHCb::ProtoParticle * proto ) const
 {
   if (!proto) return NULL;
-  const std::string& loc = objectLocation(proto->parent());
+  const std::string& loc = objectLocation(proto);
   ProtoParticle2MCLinker *& linker = m_protoLinker[loc];
   if ( !linker )
   {

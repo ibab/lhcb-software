@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.25 2008-07-15 18:10:25 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.26 2008-07-16 21:02:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -405,6 +405,18 @@ private: // methods
   {
     return ( !pObj ? "Null DataObject !" :
              (pObj->registry() ? pObj->registry()->identifier() : "UnRegistered") );
+  }
+
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj contained object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string objectLocation( const ContainedObject * pObj ) const
+  {
+    return ( pObj ? 
+             objectLocation(pObj->parent()) : "Null ContainedObject !" );
   }
 
   /// Create a unique list of Particles to study
