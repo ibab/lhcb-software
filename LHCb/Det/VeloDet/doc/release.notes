@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.200 2008-07-11 16:35:58 marcocle Exp $
+! $Id: release.notes,v 1.201 2008-07-16 20:18:22 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r2 2008-07-16 ===========================
 ! 2008-07-11 - Marco Clemencic
  - Added the specialized alignment condition "VeloAlignCond", which is able to
    get X and Y offsets from another condition (namely the one containing the

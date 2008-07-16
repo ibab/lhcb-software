@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.71 2008-07-11 16:35:58 marcocle Exp $
+# $Id: requirements,v 1.72 2008-07-16 20:18:22 cattanem Exp $
 # =========================================================================
 
 # Maintained by : Mark Tobin
 #                 David Hutchcroft
 #                 Kurt Rinnert
 package  VeloDet 
-version  v13r1
+version  v13r2
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet dict
