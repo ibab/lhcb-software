@@ -4,6 +4,8 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-07-16 - Adlene Hicheur
+ - Add possibility not to read conditions 
 ! 2008-07-14 - Adlene Hicheur
  - Clean up warning 
  - Fix sources of windows compilation errors

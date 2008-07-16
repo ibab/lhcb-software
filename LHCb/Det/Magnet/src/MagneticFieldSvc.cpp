@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.31 2008-07-14 15:26:14 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.32 2008-07-16 15:08:57 ahicheur Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -54,6 +54,8 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "NominalCurrent", m_nominalCurrent = 5850);
   declareProperty( "CondPath", m_condPath = "/dd/Conditions/Online/LHCb/Magnet/Measured",
                    "Path to the magnetic field condition in the transient store");
+  declareProperty( "UseConditions", m_UseConditions = true);
+  
   
   
 }
@@ -107,18 +109,23 @@ StatusCode MagneticFieldSvc::initialize()
     return StatusCode::FAILURE;
   }
 
-  //retrieve current from conditions, set the scale factor:
-  status = service("UpdateManagerSvc",m_updMgrSvc);
-  if ( status.isFailure() ) {
-    log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
-    return status;
+  if(m_UseConditions) {
+    //retrieve current from conditions, set the scale factor:
+    status = service("UpdateManagerSvc",m_updMgrSvc);
+    if ( status.isFailure() ) {
+      log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
+      return status;
+    }
+    
+    //  std::string mypath = m_condPath + "Set";
+    //  updMgrSvc()->registerCondition(this,mypath,&MagneticFieldSvc::i_updateScaling,m_condition);
+    m_updMgrSvc->registerCondition(this,m_condPath,&MagneticFieldSvc::i_updateScaling,m_condition);
+    
+    return m_updMgrSvc->update(this);
   }
+ 
+  return StatusCode::SUCCESS;  
 
-  //  std::string mypath = m_condPath + "Set";
-  //  updMgrSvc()->registerCondition(this,mypath,&MagneticFieldSvc::i_updateScaling,m_condition);
-  m_updMgrSvc->registerCondition(this,m_condPath,&MagneticFieldSvc::i_updateScaling,m_condition);
-
-  return m_updMgrSvc->update(this);
 
 }
 

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.19 2008-07-14 15:26:14 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.20 2008-07-16 15:08:57 ahicheur Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -93,6 +93,7 @@ private:
   double              m_nominalCurrent; ///< To set up the running magnet current for rescaling
   std::string m_condPath; ///< Path to access the field conditions from the database.
   Condition *m_condition; ///< Access the conditions
+  bool m_UseConditions;
   IUpdateManagerSvc * m_updMgrSvc;
    
 
