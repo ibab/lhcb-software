@@ -3,11 +3,13 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
+
+!========================== MuonDAQ v4r3 2008-07-16 ==========================
 ! 2008-07-14 - Alessia Satta
- - add check that all tell1 headers are consistent ( version and source 
-   id)
- - improve the Tell1 header decdoing, statistics is printed and end of job in
-   cas of errors 
+ - add check that all tell1 headers are consistent ( version and source id)
+ - improve the Tell1 header decoding, statistics is printed and end of job in
+   case of errors 
+
 !========================== MuonDAQ v4r2 2008-06-30 ==========================
 ! 2008-06-30 - Alessia Satta
  - Add Tell1 header decoding  
