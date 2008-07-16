@@ -1,4 +1,4 @@
-// $Id: GaussMonitoringBdD0KstKpiDecProdCut.opts,v 1.1 2008-07-14 20:28:03 robbep Exp $ 
+// $Id: GaussMonitoringBdD0KstKpiDecProdCut.opts,v 1.2 2008-07-16 19:41:00 robbep Exp $ 
 
 /** @file 
  * 
@@ -35,8 +35,7 @@ GeneratorAnalysis.NeutralParticleHistos = true ;
 GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 
 ApplicationMgr.HistogramPersistency = "ROOT" ;
-HistogramPersistencySvc.OutputFile = "GaussHistos_11164011.root";  // 
-Monitoring histos
+HistogramPersistencySvc.OutputFile = "GaussHistos_11164011.root";  // Monitoring histos
 
 #include "$DECFILESROOT/options/11164011.opts"  // Min Bias
 Generation.PileUpTool = "FixedNInteractions" ;
