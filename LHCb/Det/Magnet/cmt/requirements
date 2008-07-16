@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.28 2008-07-03 15:27:39 cattanem Exp $
+# $Id: requirements,v 1.29 2008-07-16 16:34:58 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v3r10
+version           v4r0
 
 branches          cmt doc src 
 

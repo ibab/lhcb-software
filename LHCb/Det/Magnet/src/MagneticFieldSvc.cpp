@@ -1,13 +1,10 @@
-// $Id: MagneticFieldSvc.cpp,v 1.32 2008-07-16 15:08:57 ahicheur Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.33 2008-07-16 16:34:58 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SystemOfUnits.h"
-//#include "GaudiKernel/IDataManagerSvc.h"
-//#include "GaudiKernel/IUpdateManagerSvc.h"
-//#include "GaudiAlg/GaudiCommon.h"
 
 #include "MagneticFieldSvc.h"
 
@@ -82,6 +79,25 @@ StatusCode MagneticFieldSvc::initialize()
     return StatusCode::SUCCESS;
   }
 
+  if(m_UseConditions) {
+    //retrieve current from conditions, set the scale factor:
+    status = service("UpdateManagerSvc",m_updMgrSvc);
+    if ( status.isFailure() ) {
+      log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
+      return status;
+    }
+    
+    m_updMgrSvc->registerCondition(this,m_condPath,
+                                   &MagneticFieldSvc::i_updateScaling,
+                                   m_condition);
+    
+    status = m_updMgrSvc->update(this);
+    if ( status.isFailure() ) {
+      log << MSG::ERROR << "Cannot find " << m_condPath << endmsg;
+      return status;
+    }
+  }
+ 
   
   if (m_useRealMap) { 
     log << MSG::INFO << "*** Real Field parameterization will be used *** " << endreq;
@@ -109,21 +125,6 @@ StatusCode MagneticFieldSvc::initialize()
     return StatusCode::FAILURE;
   }
 
-  if(m_UseConditions) {
-    //retrieve current from conditions, set the scale factor:
-    status = service("UpdateManagerSvc",m_updMgrSvc);
-    if ( status.isFailure() ) {
-      log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
-      return status;
-    }
-    
-    //  std::string mypath = m_condPath + "Set";
-    //  updMgrSvc()->registerCondition(this,mypath,&MagneticFieldSvc::i_updateScaling,m_condition);
-    m_updMgrSvc->registerCondition(this,m_condPath,&MagneticFieldSvc::i_updateScaling,m_condition);
-    
-    return m_updMgrSvc->update(this);
-  }
- 
   return StatusCode::SUCCESS;  
 
 
@@ -451,10 +452,16 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
     
     int iquadr=999;
     
-  if(r.x() >=0 && r.y() >=0) iquadr=0;
-  if(r.x() <0 && r.y() >0) iquadr=1;
-  if(r.x() >0 && r.y() <0) iquadr=2;
-  if(r.x() <0 && r.y() <0) iquadr=3;
+  if(r.x() >=0)
+    if( r.y() >=0) 
+      iquadr=0;
+    else
+      iquadr=2;
+  else
+    if(r.y() >=0)
+      iquadr=1;
+    else
+      iquadr=3;
 
 
   cx000 = (m_Q_quadr[iquadr])[ ijk000 ];
@@ -547,7 +554,9 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
 StatusCode MagneticFieldSvc::i_updateScaling() 
 {
   MsgStream log(msgSvc(), name());
-  m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent*m_condition->param<int>("Polarity");
+  //  m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent*m_condition->param<int>("Polarity");
+  m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent;
+  
   
   //  log << MSG::INFO << "*** Print Magnet conditions *** " << endmsg;
   log << MSG::INFO << "Conditions path name: "<<m_condPath<<endmsg;

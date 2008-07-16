@@ -4,6 +4,15 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-07-16 - Marco Cattaneo
+ - Fix (again!) bug for selecting quadrants with new field map
+ - Remove polarity from calculation of scaling factor from conditions: polarity
+   should be used to select different field map files (TODO!)
+ - Move registration of condition to *before* parsing of field maps, so that
+   scaling factor is correctly intialised from CondDB. NB, it's not enough to
+   apply scale factor in file parsing, any change in conditions after parsing
+   is not taken into account! 
+
 ! 2008-07-16 - Adlene Hicheur
  - Add possibility not to read conditions 
 ! 2008-07-14 - Adlene Hicheur
