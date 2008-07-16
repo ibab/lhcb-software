@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.2 2008-07-10 15:34:09 marcocle Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.3 2008-07-16 16:28:08 marcocle Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -94,4 +94,4 @@ class ReleaseNotes(object):
         indent(self.tree.getroot(), indentation = "\t")
         self.tree.write(f,encoding)
         
-        open(filename,"w").write(f.getvalue())
+        open(filename,"w").write(f.getvalue()+"\n")
