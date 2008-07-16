@@ -6,4 +6,5 @@ LHCBCOND.DefaultTAG = "DC06-20080516";
 
 // DC06 magnetic field
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field047.cdf";
+MagneticFieldSvc.UseConditions = false;
 

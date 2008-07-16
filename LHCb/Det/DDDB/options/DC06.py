@@ -11,3 +11,4 @@ CondDBAccessSvc("LHCBCOND",DefaultTAG = tag)
 
 # DC06 magnetic field
 MagneticFieldSvc(FieldMapFile = os.path.join("$FIELDMAPROOT","cdf","field047.cdf"))
+MagneticFieldSvc().UseConditions = False
