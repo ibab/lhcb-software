@@ -41,7 +41,7 @@ private:
 
   // Emulator running modes
   int m_version;                      // Emulator version 
-  int m_outputMode;                   // Banks output mode (0=light, 1=standard, 2=full)
+  int m_mode;                         // Banks output mode (0=light, 1=standard, 2=full)
   bool m_compression;                 // Apply compression when writing banks
   // Emulator properties
   std::vector<int> m_foiXSize;        // values of FoI's in X

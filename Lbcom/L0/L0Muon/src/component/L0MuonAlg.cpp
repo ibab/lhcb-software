@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.14 2008-07-15 14:49:58 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.15 2008-07-16 08:17:56 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -85,7 +85,7 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("InputSource"    , m_inputSource = 0);  
   declareProperty("Extension"      , m_extension = ""  );
   declareProperty("Version"        , m_version     = 2 );
-  declareProperty("OutputMode"     , m_outputMode  = 0 );
+  declareProperty("DAQMode"        , m_mode  = 0 );
   declareProperty("Compression"    , m_compression = false );
 
 }
@@ -170,7 +170,7 @@ StatusCode L0MuonAlg::execute()
   m_muontriggerunit->execute();
 
   // Specify the version parameters to the output tool 
-  m_outputTool->setVersion(m_version, m_outputMode, m_compression);
+  m_outputTool->setVersion(m_version, m_mode, m_compression);
     
   // Fill the Raw Event container 
   if ( m_storeBank ) {

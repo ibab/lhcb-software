@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.16 2008-07-15 17:40:07 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.17 2008-07-16 08:17:56 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -820,7 +820,7 @@ void L0MuonOutputs::statTot(MsgStream & os) const{
   
   if (0!=m_rawBankNorm)
   {  
-    os << "- Average decoded banks size                 : "
+    os << "- Average raw banks size                     : "
        <<format("  %8.1f Bytes",(4.*m_rawBankSizeTot)/m_rawBankNorm)<<endmsg;
   }
 

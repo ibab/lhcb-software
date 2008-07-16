@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.11 2008-07-15 12:50:50 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.12 2008-07-16 08:17:56 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -44,7 +44,7 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   // Default for HLT :
   declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  
   declareProperty( "WriteL0ProcData", m_writeL0ProcData  = false);  
-  declareProperty( "OutputMode"     , m_mode = 0 );
+  declareProperty( "DAQMode"        , m_mode = 0 );
   declareProperty( "Extension"      , m_extension = ""  );
 }
 
