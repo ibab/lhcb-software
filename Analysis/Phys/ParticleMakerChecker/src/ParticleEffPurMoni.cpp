@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.36 2008-07-16 21:02:17 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.37 2008-07-16 21:15:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -109,9 +109,9 @@ StatusCode ParticleEffPurMoni::execute()
   Locations mcPLocations;
 
   // Protos associated to each MCParticle
-  typedef std::set<const LHCb::Particle *> PartSet;
-  typedef std::map<const LHCb::MCParticle*, PartSet> MCP2PartSet;
-  MCP2PartSet mcp2Parts;
+  typedef std::map<const LHCb::Particle *,const LHCb::Particle *> PartMap;
+  typedef std::map<const LHCb::MCParticle*, PartMap> MCP2PartMap;
+  MCP2PartMap mcp2Parts;
 
   // already used MCParticles for each each ProtoParticle location
   typedef std::pair<std::string,std::string> StringPair;
@@ -176,8 +176,7 @@ StatusCode ParticleEffPurMoni::execute()
       // Proto Correlations
       if ( !isClone && mcPart )
       {
-        //mcp2Parts[mcPart].insert( (*iPart).first.firstParticle );
-        mcp2Parts[mcPart].insert( (*iPart).first.particle );
+        (mcp2Parts[mcPart])[ (*iPart).first.particle ] = (*iPart).first.firstParticle;
       }
 
       // get the data for this TES location
@@ -310,7 +309,7 @@ StatusCode ParticleEffPurMoni::execute()
   }
 
   // Loop over found MCParticles with associated protos, if more than one proto location found
-  for ( MCP2PartSet::const_iterator iMCP = mcp2Parts.begin();
+  for ( MCP2PartMap::const_iterator iMCP = mcp2Parts.begin();
         iMCP != mcp2Parts.end(); ++iMCP )
   {
     // Need at least 2 particles for correlations ...
@@ -329,24 +328,31 @@ StatusCode ParticleEffPurMoni::execute()
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcP);
 
       // Loop over the pairs of protos
-      for ( PartSet::const_iterator part1 = (*iMCP).second.begin();
-            part1 != (*iMCP).second.end(); ++part1 )
+      for ( PartMap::const_iterator ipart1 = (*iMCP).second.begin();
+            ipart1 != (*iMCP).second.end(); ++ipart1 )
       {
-
-        const LHCb::ProtoParticle * proto1 = (*part1)->proto();
+        // get pointers to particles
+        const LHCb::Particle * part1      = (*ipart1).first;
+        const LHCb::Particle * firstpart1 = (*ipart1).second;
+        // pointer to proto
+        const LHCb::ProtoParticle * proto1 = part1->proto();
         // Location in TES for part1
-        const std::string& partloc1   = objectLocation(*part1);
+        const std::string& partloc1   = objectLocation(firstpart1);
         // Location in TES for proto1
         const std::string& protoloc1  = objectLocation(proto1);
         // Type of proto1
         const std::string& proto1Type = protoParticleType(proto1);
         // inner loop over protos
-        PartSet::const_iterator part2 = part1; ++part2;
-        for ( ; part2 != (*iMCP).second.end(); ++part2 )
-        {
-          const LHCb::ProtoParticle * proto2 = (*part2)->proto();
+        PartMap::const_iterator ipart2 = ipart1; ++ipart2;
+        for ( ; ipart2 != (*iMCP).second.end(); ++ipart2 )
+        {  
+          // get pointers to particles
+          const LHCb::Particle * part2      = (*ipart2).first;
+          const LHCb::Particle * firstpart2 = (*ipart2).second;
+          // pointer to proto
+          const LHCb::ProtoParticle * proto2 = part2->proto();
           // Location in TES for part2
-          const std::string& partloc2  = objectLocation(*part2);
+          const std::string& partloc2  = objectLocation(firstpart2);
           // Location in TES for proto2
           const std::string& protoloc2 = objectLocation(proto2);
           // Type of proto2
