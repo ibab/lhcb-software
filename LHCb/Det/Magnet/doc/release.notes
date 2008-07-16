@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v4r0 2008-07-16 ===============================
 ! 2008-07-16 - Marco Cattaneo
  - Fix (again!) bug for selecting quadrants with new field map
  - Remove polarity from calculation of scaling factor from conditions: polarity
