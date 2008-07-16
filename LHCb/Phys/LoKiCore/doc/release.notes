@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.94 2008-07-10 09:20:01 ibelyaev Exp $ 
+! $Id: release.notes,v 1.95 2008-07-16 21:13:40 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,11 +15,9 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v7r5 2008-07-16 ========================
 ! 2008-07-10 - Vanya BELYAEV
-
- - LoKi/Algs.h
-
-    fix the compilation warning 
+ - LoKi/Algs.h:  fix the compilation warning 
 
 
 ! 2008-07-09 - Vanya BELYAEV
