@@ -8,14 +8,14 @@
 // HLT Pho Alley
 //--------------------------
 HltSummaryWriter.Save += {"L0PhotonDecision",
-                          "Hlt1PhotonPhoTrkDecision"
+                          "Hlt1PhotonDiTrackDecision"
 };
 
-HltAlleys.InputSelections += {"Hlt1PhotonPhoTrkDecision"};
+HltAlleys.InputSelections += {"Hlt1PhotonDiTrackDecision"};
 
 Hlt1PhoAlleySequence.Members = {
   "GaudiSequencer/PrepareL0PhotonDecisionSeq",
-  "HltL0CaloPrepare/Hlt1PhoTightL0Calos",
+  "HltTrackFilter/Hlt1PhoTFPhoton",
   "GaudiSequencer/Hlt1RecoRZVeloSequence",
   "HltTrackFilter/Hlt1PhoTFRZVelo",
   "HltTrackUpgrade/Hlt1PhoTUVelo",
@@ -24,30 +24,21 @@ Hlt1PhoAlleySequence.Members = {
   "GaudiSequencer/HltDecodeTT",
   "HltTrackUpgrade/Hlt1PhoTUForward",
   "HltTrackFilter/Hlt1PhoTFForward",
-  "HltVertexMaker/Hlt1PhotonPhoTrkDecision"
+  "HltVertexMaker/Hlt1PhoVMDiTrack",
+  "HltVertexFilter/Hlt1PhoVFDiTrack",
+  "HltAddPhotonToVertex/Hlt1PhotonDiTrackDecision"
 };
 Hlt1PhoAlleySequence.MeasureTime = true;
-
-
-
 
 //-------------------------------------------------------------------------
 // HLT PhoAlley options (CaloAlleySequence cuts)
 //-------------------------------------------------------------------------
 
 
-
-Hlt1PhoTightL0Calos.InputSelection   = "L0PhotonDecision";
-Hlt1PhoTightL0Calos.CaloType = 1;  // photon !
-Hlt1PhoTightL0Calos.MinEt = 2890.0;   // this trigger threshold; tighter than L0 threshold
-Hlt1PhoTightL0Calos.OutputLevel = 3;
-
-
-//    2D IP selection
-
+Hlt1PhoTFPhoton.InputSelection = "L0PhotonDecision";
+Hlt1PhoTFPhoton.FilterDescriptor = {"IsPhoton,>,0.5"};
 
 Hlt1PhoTFRZVelo.InputSelection     = "RZVelo";
-//  fake dependence (no matching)
 Hlt1PhoTFRZVelo.FilterDescriptor = {"rIP_PV2D,||[],0.10,3.0"};
 Hlt1PhoTFRZVelo.HistogramUpdatePeriod = 0;
 Hlt1PhoTFRZVelo.HistoDescriptor = {
@@ -62,7 +53,6 @@ Hlt1PhoTUVelo.RecoName = "Velo";
 
 //    3D IP selection
 
-
 Hlt1PhoTFVelo.InputSelection     = "Hlt1PhoTUVelo";
 Hlt1PhoTFVelo.FilterDescriptor = {"IP_PV2D,||[],0.15,3.0"};
 Hlt1PhoTFVelo.HistogramUpdatePeriod = 0;
@@ -76,10 +66,11 @@ Hlt1PhoTFVelo.OutputLevel = 3;
 
 Hlt1PhoTUForward.InputSelection = "Hlt1PhoTFVelo";
 Hlt1PhoTUForward.RecoName = "Forward";
+
 //  Pt cut (call it pretrigger sice couldn't implement veloTT)
 
 Hlt1PhoTFForward.InputSelection     = "Hlt1PhoTUForward";
-Hlt1PhoTFForward.FilterDescriptor = {"PT,>,1274."};
+Hlt1PhoTFForward.FilterDescriptor = {"PT,>,650."};
 Hlt1PhoTFForward.HistogramUpdatePeriod = 0;
 Hlt1PhoTFForward.HistoDescriptor =  { 
   "PT"     : ("PT",0.,8000.,100),
@@ -87,11 +78,26 @@ Hlt1PhoTFForward.HistoDescriptor =  {
 };
 Hlt1PhoTFForward.OutputLevel = 3;
 
+// two track vertex
 
-// Hlt1PhotonPhoTrkDecision:  Fake Hlt1PhoTFForward-L0Pho vertices (there is no matching here!)
+Hlt1PhoVMDiTrack.InputSelection    = "Hlt1PhoTFForward";
+Hlt1PhoVMDiTrack.FilterDescriptor = { "DOCA,<,0.2"};
+Hlt1PhoVMDiTrack.HistoDescriptor = { 
+  "DOCA":("DOCA",0.,3.,100),
+  "DOCABest":("DOCABest",0.,3.,100)
+};
 
-Hlt1PhotonPhoTrkDecision.InputSelection    = "Hlt1PhoTFForward";
-Hlt1PhotonPhoTrkDecision.InputSelection2   = "Hlt1PhoTightL0Calos";
-Hlt1PhotonPhoTrkDecision.OutputLevel = 3;
+Hlt1PhoVFDiTrack.InputSelection = "Hlt1PhoVMDiTrack";
+Hlt1PhoVFDiTrack.FilterDescriptor = { "VertexDz_PV2D,>,0."};
+Hlt1PhoVFDiTrack.HistoDescriptor = {
+  "VertexDz_PV2D":("VertexDz_PV2D",-3.,3.,100),
+  "VertexDz_PV2DBest":("VertexDz_PV2D",-3.,3.,100)
+};
+
+// add photon track to ditrack vertex to save all objects into summary
+Hlt1PhotonDiTrackDecision.InputSelection = "Hlt1PhoVFDiTrack";
+Hlt1PhotonDiTrackDecision.InputSelection2 = "Hlt1PhoTFPhoton";
 
 
+
+ 
