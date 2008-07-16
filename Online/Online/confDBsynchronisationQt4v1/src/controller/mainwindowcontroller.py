@@ -17,6 +17,7 @@ from updatesparescontroller import UpdateNewSparesController
 from tfcmunin01controller import TFCMunin01Controller
 from showlogwindowcontroller import ShowLogWindowController
 from selectlogfilecontroller import SelectLogFileController
+from createsummarylogcontroller import CreateSummaryLogController
 
 class MainWindowController(Controller):
     def __init__(self, application):
@@ -81,6 +82,7 @@ class MainWindowController(Controller):
         print "MainWindowController.onExit() end"
     def onCreateSummaryLog(self):
         print "MainWindowController.onCreateSummaryLog() start"
+        self.createSummaryLogController = CreateSummaryLogController(self)
         print "MainWindowController.onCreateSummaryLog() end"
     def onSelectLog(self):
         print "MainWindowController.onSelectLog() start"

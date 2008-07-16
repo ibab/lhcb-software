@@ -75,4 +75,13 @@ class Tell1:
     def summary(self):
         return self.devicename+", "+self.sn
     def __str__(self):
-        return self.summary()
+        output = self.summary()
+        if self.CIPadd is None:
+            output += " no ipaddress "
+        else:
+            output += " "+str(self.CIPadd)+" "
+        if self.CMACadd is None:
+            output += " no macaddress "
+        else:
+            output += " "+str(self.CMACadd)+" "
+        return output
