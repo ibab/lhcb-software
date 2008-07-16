@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.5 2008-07-11 07:37:45 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloCompare.cpp,v 1.6 2008-07-16 20:21:20 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -343,29 +343,38 @@ StatusCode L0CaloCompare::execute() {
       }
       break ; 
     case L0DUBase::CaloType::SumEt:
-      debug() << "Event= " << event 
-              << " SumEt : cellID to check = " << (*candCheck)->id()
-              << "etCode = " << (*candCheck)->etCode()
-              << " rawId= " << rawId << endreq ;
-      debug()<<"SumEtRef etCode = "<<SumEtRef->etCode()<<endreq ;
-      int diff_SumEt = (*candCheck)->etCode() - SumEtRef->etCode() ;
-      if (diff_SumEt > 100.) diff_SumEt = 100 ; 
-      if (diff_SumEt < -100.) diff_SumEt = -100 ; 
-      m_histSumEt_Comp -> fill(diff_SumEt) ; 
-      if ( (*candCheck)->etCode() != SumEtRef->etCode() ) 
-        debug()<<" SumEt ... Pb " <<endreq;  
+      {
+        debug() << "Event= " << event 
+                << " SumEt : cellID to check = " << (*candCheck)->id()
+                << "etCode = " << (*candCheck)->etCode()
+                << " rawId= " << rawId << endreq ;
+        if ( 0 != SumEtRef ) 
+          debug()<<"SumEtRef etCode = "<<SumEtRef->etCode()<<endreq ;
+        int sumRef = 0 ;
+        if ( 0 != SumEtRef ) sumRef = SumEtRef -> etCode() ;
+        int diff_SumEt = (*candCheck)->etCode() - sumRef ;
+        if (diff_SumEt > 100.) diff_SumEt = 100 ; 
+        if (diff_SumEt < -100.) diff_SumEt = -100 ; 
+        m_histSumEt_Comp -> fill(diff_SumEt) ; 
+        if ( (*candCheck)->etCode() != sumRef ) 
+          debug()<<" SumEt ... Pb " <<endreq;  
+      }
       break ; 
     case L0DUBase::CaloType::SpdMult:
-      debug() << "Event= " << event
-              << " SpdMult : cellID to check = " << (*candCheck)->id()
-              << "etCode = " << (*candCheck)->etCode()
-              << " rawId= " << rawId << endreq ;
-      int diff_SpdMult = (*candCheck)->etCode() - SpdMultRef->etCode() ;
-      if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
-      if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
-      m_histSpdMult_Comp -> fill(diff_SpdMult) ; 
-      if ( (*candCheck)->etCode() != SpdMultRef->etCode() ) 
-        debug()<<" SpdMult ... Pb " <<endreq; 
+      { 
+        debug() << "Event= " << event
+                << " SpdMult : cellID to check = " << (*candCheck)->id()
+                << "etCode = " << (*candCheck)->etCode()
+                << " rawId= " << rawId << endreq ;
+        int spdRef = 0 ;
+        if ( 0 != SpdMultRef ) spdRef = SpdMultRef -> etCode() ;
+        int diff_SpdMult = (*candCheck)->etCode() - spdRef ;
+        if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
+        if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
+        m_histSpdMult_Comp -> fill(diff_SpdMult) ; 
+        if ( (*candCheck)->etCode() != spdRef ) 
+          debug()<<" SpdMult ... Pb " <<endreq; 
+      }
       break ; 
     }
   }     
