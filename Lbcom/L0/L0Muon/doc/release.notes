@@ -1,7 +1,11 @@
-!  $Id: release.notes,v 1.58 2008-07-15 12:50:50 jucogan Exp $
+!  $Id: release.notes,v 1.59 2008-07-16 13:07:22 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
+
+! 2008-07-16 - Julien Cogan
+ - Bug fixes
+ - Protect raw bank writing for encoding errors
 
 ! 2008-07-15 - Julien Cogan
  - Possibility to ask for compression of banks
@@ -18,6 +22,7 @@
 ! 2008-06-05 - Julien Cogan
  - Decoding of bank version 2 !! NOT TESTED !!
  - Possibility to run without M1 or M2
+
 !========================= L0Muon v7r8p1 2008-05-13 ======================
 ! 2008-05-13 - Julien Cogan
  - Add check for untested status codes in L0MuonAlg.
