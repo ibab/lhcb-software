@@ -27,6 +27,7 @@ class MainWindow(QtGui.QMainWindow):
         ###############################################################################
         self.logMenu = self.menuBar().addMenu(self.tr("&Log"))
         self.logMenu.addAction(self.createSummaryLogAction)
+        self.logMenu.addAction(self.selectLogAction)
         self.logMenu.addAction(self.showLastSessionLogAction)
         self.logMenu.addAction(self.showLastSummaryLogAction)
         ###############################################################################
@@ -73,7 +74,7 @@ class MainWindow(QtGui.QMainWindow):
         self.swapAction.setShortcut(self.tr("Ctrl+S"))
         self.swapAction.setStatusTip(self.tr("Swaps tow devices, e.g. swaps a device with a spare"))
         #########################################################################################################
-        self.insertNewSparesAction = QtGui.QAction(self.tr("&Insert new spares"), self)
+        self.insertNewSparesAction = QtGui.QAction(self.tr("&Insert new spares into configuation database"), self)
         self.insertNewSparesAction.setStatusTip(self.tr("Copies new spares from lhcbintegration to configuration database"))
         #########################################################################################################
         self.updateSparesAction = QtGui.QAction(self.tr("&Update spares in configuration database"), self)
@@ -84,6 +85,9 @@ class MainWindow(QtGui.QMainWindow):
         #########################################################################################################
         self.createSummaryLogAction = QtGui.QAction(self.tr("&Create summary log"), self)
         self.createSummaryLogAction.setStatusTip(self.tr("Creates a summary log about changed data"))
+        #########################################################################################################
+        self.selectLogAction = QtGui.QAction(self.tr("Select logfile"), self)
+        self.selectLogAction.setStatusTip(self.tr("Select a log file and view it"))
         #########################################################################################################
         self.showLastSessionLogAction = QtGui.QAction(self.tr("&Show last session log"), self)
         self.showLastSessionLogAction.setStatusTip(self.tr("Shows the last session log"))

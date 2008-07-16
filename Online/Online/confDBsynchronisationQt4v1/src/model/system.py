@@ -85,15 +85,15 @@ class System(object):
                 for hugin_candidate in self.getAllDevices():
                     if hugin_candidate.hwtyp == "HUGIN":
                         if upper(hugin_candidate.devicename) == upper(masterhugin):
-                            print "Masterhugin for "+str(device.devicename)+"="+str(hugin_candidate.devicename)
+                            #print "Masterhugin for "+str(device.devicename)+"="+str(hugin_candidate.devicename)
                             return hugin_candidate
         #still no hugin found? try it with the algorithm
-        print "no masterhugin found yet, trying the algorithmic way"
+        #print "no masterhugin found yet, trying the algorithmic way"
         masterhugin = self.getHuginForDevice(device)
-        if masterhugin is not None:
-            print "Masterhugin for "+str(device.devicename)+"="+str(masterhugin.devicename)
-        else:
-            print "no masterhugin found for "+str(device.devicename)
+        #if masterhugin is not None:
+            #print "Masterhugin for "+str(device.devicename)+"="+str(masterhugin.devicename)
+        #else:
+            #print "no masterhugin found for "+str(device.devicename)
         return masterhugin
     def __str__(self):
         output = "\n------------------------- "+self.name+"--------------------------------\n"

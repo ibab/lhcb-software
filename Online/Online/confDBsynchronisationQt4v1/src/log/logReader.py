@@ -15,7 +15,7 @@ class LogReader(object):
         for file in files:
             if file.endswith(pattern):
                 latest = file
-        if file == None:
+        if file is None or latest is None:
             return "No Log-File found!"
         else:
             return self.readFile(directory+self.seperator+latest)
@@ -28,5 +28,5 @@ class LogReader(object):
         print "opening "+file
         with open(file) as file:
             for line in file:
-                log += line+"\n"
+                log += line+"<br>\n"
         return log

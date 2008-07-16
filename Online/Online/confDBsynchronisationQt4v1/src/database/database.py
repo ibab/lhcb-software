@@ -407,9 +407,8 @@ class ConfigurationDB(DataBase):
         disconnect(db)
         print "ConfigurationDB.insertNewDevices end"
     """connecting masterhugins to tfcmunin01"""
-    def connect_masterhugins(self):
+    def connect_masterhugins(self, db):
         print "connecting masterhugins with TFCMUNIN..."
-        db = connect()
         hugins = []
         hugins.append("tfchugin01".upper())
         hugins.append("puhugin01".upper())
@@ -438,7 +437,6 @@ class ConfigurationDB(DataBase):
             except RuntimeError, inst:
                 print "Source or Destination Hugin does not exist\n"+inst.__str__()
                 pass
-        disconnect(db)
         print "connecting masterhugins with TFCMUNIN finished!"
     """creates the throttle connectivity"""
     def createThrottleConnectivity(self, db, devices_to_connect, equipDBSystem):
@@ -585,7 +583,7 @@ class ConfigurationDB(DataBase):
         return device.typ == "spare"
     """returns a device with the given serial or None if not found"""
     def getDeviceBySerial(self, serialnb):
-        print "ConfigurationDB.getDeviceBySerial("+str(serialnb)+") start"
+        #print "ConfigurationDB.getDeviceBySerial("+str(serialnb)+") start"
         query = """SELECT lg.devicename, lg.location, hw.responsible, lg.serialnb, ipinfo.ipaddress, p.macaddress
                     FROM lhcb_hw_devices hw 
                     LEFT JOIN lhcb_lg_devices lg ON (lg.serialnb = hw.serialnb)

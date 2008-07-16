@@ -9,8 +9,9 @@ from PyQt4.QtCore import QObject
     Controller class from which other controller inherit methods to 
     connect to the database"""
 class Controller(object):
-    def __init__(self):
-        self.logfile = self.createSessionLog()
+    def __init__(self, createLogFile = False):
+        if createLogFile:
+            self.logfile = self.createSessionLog()
         self.initVars()
     def createSessionLog(self):
         datestamp = strftime("%m.%d.%Y - %H:%M:%S")
@@ -78,4 +79,7 @@ class Controller(object):
         print "Controller.getSpareDB() end"
         return self.spareDB
     def getCn(self):
+        if self.cn is None:
+            if self.connectConfDBPython():
+                return self.cn
         return self.cn

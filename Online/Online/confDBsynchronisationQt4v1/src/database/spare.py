@@ -33,6 +33,7 @@ class SpareDB:
         print "spares in equipdb: "+str(len(equipdb_spares))
         new_spares = []
         if len(equipdb_spares) == 0:
+            print "found no spares in equipdb"
             return []
         for spare in equipdb_spares:
             query = "SELECT hwname, hwtype, serialnb, responsible, location, location, user_comments from lhcb_hw_devices WHERE serialnb like '"+spare.serialnb+"'"

@@ -11,10 +11,16 @@ from database.spare import SpareDB
 from worker.RefreshWorker import RefreshWorker
 from updatedevicescontroller import UpdateDevicesController
 from swapdeviceswindowcontroller import SwapDevicesWindowController
+from deletesparescontroller import DeleteSparesController
+from insertnewsparescontroller import InsertNewSparesController
+from updatesparescontroller import UpdateNewSparesController
+from tfcmunin01controller import TFCMunin01Controller
+from showlogwindowcontroller import ShowLogWindowController
+from selectlogfilecontroller import SelectLogFileController
 
 class MainWindowController(Controller):
     def __init__(self, application):
-        Controller.__init__(self)
+        Controller.__init__(self, True)
         self.application = application
         self.devicesInfo = self.getDevicesInfo()
         self.sparesInfo = self.getSparesInfo()
@@ -56,6 +62,7 @@ class MainWindowController(Controller):
         mainWindow.connect(mainWindow, QtCore.SIGNAL("mainWindowCloses"), self.close)
         ##########################################################################################
         mainWindow.connect(mainWindow.createSummaryLogAction, QtCore.SIGNAL("triggered()"), self.onCreateSummaryLog)
+        mainWindow.connect(mainWindow.selectLogAction, QtCore.SIGNAL("triggered()"), self.onSelectLog)
         mainWindow.connect(mainWindow.showLastSessionLogAction, QtCore.SIGNAL("triggered()"), self.onShowLastSessionLog)
         mainWindow.connect(mainWindow.showLastSummaryLogAction, QtCore.SIGNAL("triggered()"), self.onShowLastSummaryLog)
         ##########################################################################################
@@ -75,11 +82,19 @@ class MainWindowController(Controller):
     def onCreateSummaryLog(self):
         print "MainWindowController.onCreateSummaryLog() start"
         print "MainWindowController.onCreateSummaryLog() end"
+    def onSelectLog(self):
+        print "MainWindowController.onSelectLog() start"
+        self.selectLogFileController = SelectLogFileController(self)
+        print "MainWindowController.onSelectLog() end"
     def onShowLastSessionLog(self):
         print "MainWindowController.onShowLastSessionLog() start"
+        self.logfile.flush()
+        self.showLogWindowController = ShowLogWindowController(self, False)
         print "MainWindowController.onShowLastSessionLog() end"
     def onShowLastSummaryLog(self):
         print "MainWindowController.onShowLastSummaryLog() start"
+        self.logfile.flush()
+        self.showLogWindowController = ShowLogWindowController(self, True)
         print "MainWindowController.onShowLastSummaryLog() end"
     def onInsert(self):
         print "MainWindowController.onInsert() start"
@@ -89,6 +104,7 @@ class MainWindowController(Controller):
         print "MainWindowController.onInsert() end"
     def onRefresh(self):
         print "MainWindowController.onRefresh() start"
+        self.logfile.flush()
         self.refreshWorker = RefreshWorker(self.getEquipDBCxOracleConnection(), self.getConfDBCxOracleConnection(), self.spareDB, self.devicesInfo, self.sparesInfo, self)
         self.refreshWorker.start()
         print "MainWindowController.onRefresh() end"
@@ -115,6 +131,7 @@ class MainWindowController(Controller):
         print "MainWindowController.onDelete() end"
     def onTfcmunin01(self):
         print "MainWindowController.onTfcmunin01() start"
+        self.tFCMunin01Controller = TFCMunin01Controller(self)
         print "MainWindowController.onTfcmunin01() end"
     def onSwap(self):
         print "MainWindowController.onSwap() start"
@@ -122,11 +139,14 @@ class MainWindowController(Controller):
         print "MainWindowController.onSwap() end"
     def onInsertNewSpares(self):
         print "MainWindowController.onInsertNewSpares() start"
+        self.insertNewSparesController = InsertNewSparesController(self)
         print "MainWindowController.onInsertNewSpares() end"
     def onUpdateSpares(self):
         print "MainWindowController.onUpdateSpares() start"
+        self.updateNewSparesController = UpdateNewSparesController(self)
         print "MainWindowController.onUpdateSpares() end"
     def onDeleteSpares(self):
         print "MainWindowController.onDeleteSpares() start"
+        self.deleteSparesController = DeleteSparesController(self)
         print "MainWindowController.onDeleteSpares() end"
 
