@@ -1,22 +1,19 @@
-! $Id: release.notes,v 1.91 2008-07-02 10:51:26 odescham Exp $ 
+! $Id: release.notes,v 1.92 2008-07-16 06:40:38 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
-
+!======================== CaloDet v9r0 2008-07-16 =============================
 ! 2008-07-02 Olivier Deschamps
  - fix uninitialised m_pinArea in case of SPD 
 
-
 ! 2008-06-30 Olivier Deschamps
  - Adapt to new DDDB structure  : Calo / Calo-halves / Calo_area as DetElem
-    - new DeSubSubCalorimeter  detElement (CaloArea)
-    - DeSubCalorimeter   detElement (CaloSide was CaloArea with previous structure)
-    - adapt DeCalorimeter methods (buildCells, Cell_(), ...) to the change in DE structure 
+   o new DeSubSubCalorimeter  detElement (CaloArea)
+   o DeSubCalorimeter detElement (CaloSide was CaloArea with previous structure)
+   o adapt DeCalorimeter methods (buildCells, Cell_(), ...) to the change in DE structure 
  - increment version v9r0 
-
-
 
 !======================== CaloDet v8r7 2008-05-30 =============================
 ! 2008-05-30 Olivier Deschamps
