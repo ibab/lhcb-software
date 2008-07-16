@@ -10,6 +10,10 @@
 !2008-07-14 - Gerhard Raven
   - add HltIncidentFilter: responds to incidents requesting the event to be kept
 
+!2008-07-16 - Mariusz Witek
+  - add new track filter into HltFunctionFactories.cpp 
+    ( HltIsPhotonTool in new Hlt/HltEcalAlley imported to CVS )
+
 !========================== HltCommon v3r4 2008-07-09 ===================
 !2008-07-10 - Gerhard Raven
   - ConfigFileAccessSvc: wrap around boost::create_directories to catch exception 
