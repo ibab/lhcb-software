@@ -5,7 +5,7 @@ from Configurables import CondDBAccessSvc
 import os
 
 # 2008 database tags
-tag = "head-20080702"
+tag = "head-20080716"
 CondDBAccessSvc( "DDDB",     DefaultTAG = tag )
 CondDBAccessSvc( "LHCBCOND", DefaultTAG = tag )
 CondDBAccessSvc( "SIMCOND",  DefaultTAG = tag )
