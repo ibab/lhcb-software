@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.21 2008-06-30 15:51:51 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.22 2008-07-16 15:28:43 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -44,18 +44,20 @@ DECLARE_ALGORITHM_FACTORY( CaloDigitAlg );
 CaloDigitAlg::CaloDigitAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator            )
-  , m_inputPrevData     ( ""    )
-  , m_rndmSvc           (  0    )
-  , m_coherentNoise     ( 0.3   )
-  , m_incoherentNoise   ( 1.2   )
-  , m_gainError         ( 0.01  )
-  , m_fracPrev          ( 0.20  )
-  , m_pedShift          ( 0.00  )
-  , m_pePerMeV          ( 0.    )
-  , m_deadCellFraction  ( 0.00  )
-  , m_triggerEtScale    ( 20 * Gaudi::Units::MeV )
-  , m_triggerThreshold  ( 0. )
-  , m_zSupThreshold     ( -100000 )
+    , m_inputPrevData     ( ""    )
+    , m_rndmSvc           (  0    )
+    , m_coherentNoise     ( 0.3   )
+    , m_incoherentNoise   ( 1.2   )
+    , m_gainError         ( 0.01  )
+    , m_fracPrev          ( 0.20  )
+    , m_pedShift          ( 0.00  )
+    , m_pePerMeV          ( 0.    )
+    , m_deadCellFraction  ( 0.00  )
+    , m_triggerEtScale    ( 20 * Gaudi::Units::MeV )
+    , m_triggerThreshold  ( 0. )
+    , m_zSupThreshold     ( -100000 )
+    , m_monitorNoise     ( false )
+    , m_useAdvancedNoise ( false )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
@@ -73,7 +75,13 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("TriggerThreshold"   , m_triggerThreshold ) ;  
   declareProperty("TriggerEtScale"     , m_triggerEtScale   ) ;
   declareProperty("ZSupThreshold"      , m_zSupThreshold    ) ;
-  
+  declareProperty("MonitorNoise"       , m_monitorNoise,        "Switch on/off noise monitoring" );
+  declareProperty("UseAdvancedNoise"   , m_useAdvancedNoise,    "Switch on/off advanced noise"   );
+  declareProperty("AdvancedNoiseOuter" , m_advancedNoise[0],    "Advanced noise for outer area." );
+  declareProperty("AdvancedNoiseMiddle", m_advancedNoise[1],    "Advanced noise for middle area.");
+  declareProperty("AdvancedNoiseInner" , m_advancedNoise[2],    "Advanced noise for inner area." );
+
+  // default setting  
   m_advancedNoise[0].clear();
   m_advancedNoise[1].clear();
   m_advancedNoise[2].clear();
@@ -174,18 +182,6 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_corrArea.push_back( 1.05 );
   }
 
-  declareProperty("MonitorNoise", m_monitorNoise,
-    "Switch on/off noise monitoring");
-
-  declareProperty("UseAdvancedNoise", m_useAdvancedNoise,
-    "Switch on/off advanced noise");
-
-  declareProperty("AdvancedNoiseOuter", m_advancedNoise[0],
-    "Advanced noise for outer area.");
-  declareProperty("AdvancedNoiseMiddle", m_advancedNoise[1],
-    "Advanced noise for middle area.");
-  declareProperty("AdvancedNoiseInner", m_advancedNoise[2],
-    "Advanced noise for inner area.");
 
 };
 
