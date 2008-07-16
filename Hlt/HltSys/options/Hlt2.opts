@@ -42,7 +42,7 @@ Hlt2.Members += { "GaudiSequencer/SeqHlt2TruthFilter" } ;
 // Standard HLT Particles
 //---------------------------------------------------------------------
 // just initialisation
-#include "$HLTSELECTIONSROOT/options/Hlt2Shared.opts"
+#include "$HLTSELECTIONSROOT/options/Hlt2Shared.py"
 //---------------------------------------------------------------------
 // Final selections
 //---------------------------------------------------------------------
