@@ -1,8 +1,9 @@
-!$Id: release.notes,v 1.139 2008-07-15 15:25:02 mneedham Exp $
+!$Id: release.notes,v 1.140 2008-07-16 20:15:37 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+!======================== STDet v4r3 2008-07-16 ==========================
 ! 2008-07-15 M Needham
  - Bug fixes in dead strip handling
 
@@ -19,7 +20,6 @@
  - Change way interact with update service
 
 !======================== STDet v4r2 2008-06-30 ==========================
-
 ! 2008-06-16 M Needham
  - Add nickname to detector elements
 
