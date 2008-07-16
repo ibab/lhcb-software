@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.51 2008-06-18 09:26:15 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.52 2008-07-16 13:31:56 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -182,6 +182,9 @@ StatusCode L0CaloAlg::initialize() {
   
   
   if ( m_createHCALLut ) createHCALLut( ) ;
+
+  createECALLutVB() ; 
+  createHCALLutVB() ; 
   
   // Initialize the PreShower validation mask: 1 or 2 bits, no more
 
@@ -230,7 +233,6 @@ StatusCode L0CaloAlg::initialize() {
 // Execute: Compute the calo trigger information
 //=============================================================================
 StatusCode L0CaloAlg::execute() {
-
   // Get the ECAL data, store them in the Front-End card
   
   sumEcalData( );
@@ -797,13 +799,124 @@ StatusCode L0CaloAlg::execute() {
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas();
   put( L0Calo, m_nameOfOutputDataContainer ) ;
   
-  // Store the various candidates
+  L0Candidate theCorrectElectron ( m_ecal );
+  theCorrectElectron.setCandidate(electron.et(),electron.ID()) ; 
 
-  electron.saveCandidate(  L0DUBase::Fiber::CaloElectron,  L0Calo );
-  photon.saveCandidate(    L0DUBase::Fiber::CaloPhoton,    L0Calo );
-  hadron.saveCandidate(    L0DUBase::Fiber::CaloHadron,    L0Calo );
-  pi0Local.saveCandidate(  L0DUBase::Fiber::CaloPi0Local,  L0Calo );
-  pi0Global.saveCandidate( L0DUBase::Fiber::CaloPi0Global, L0Calo );
+  L0Candidate theCorrectPhoton ( m_ecal );
+  theCorrectPhoton.setCandidate(photon.et(),photon.ID()) ; 
+
+  L0Candidate theCorrectPi0Local ( m_ecal );
+  theCorrectPi0Local.setCandidate(pi0Local.et(),pi0Local.ID()) ; 
+
+  L0Candidate theCorrectPi0Global ( m_ecal );
+  theCorrectPi0Global.setCandidate(pi0Global.et(),pi0Global.ID()) ; 
+
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    if ( allElectrons[kk].et() == electron.et() && electron.et() != 0 && allElectrons[kk].ID().all()  != electron.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForEcal(allElectrons[kk]) ; 
+      int inputNumber = findInputNumberForEcal(theCorrectElectron) ; 
+      if (inputNumber_all < inputNumber ) theCorrectElectron.setCandidate(allElectrons[kk].et(),allElectrons[kk].ID()) ; 
+    }
+  }
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    if ( allPhotons[kk].et() == photon.et() && photon.et() != 0 && allPhotons[kk].ID().all()  != photon.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForEcal(allPhotons[kk]) ; 
+      int inputNumber = findInputNumberForEcal(theCorrectPhoton) ; 
+      if (inputNumber_all < inputNumber ) theCorrectPhoton.setCandidate(allPhotons[kk].et(),allPhotons[kk].ID()) ; 
+    }
+  }
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    if ( allPi0Local[kk].et() == pi0Local.et() && pi0Local.et() != 0 && allPi0Local[kk].ID().all()  != pi0Local.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForEcal(allPi0Local[kk]) ; 
+      int inputNumber = findInputNumberForEcal(theCorrectPi0Local) ; 
+      if (inputNumber_all < inputNumber ) theCorrectPi0Local.setCandidate(allPi0Local[kk].et(),allPi0Local[kk].ID()) ; 
+    }
+  }
+
+  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+    if ( allPi0Global[kk].et() == pi0Global.et() && pi0Global.et() != 0 && allPi0Global[kk].ID().all()  != pi0Global.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForEcal(allPi0Global[kk]) ; 
+      int inputNumber = findInputNumberForEcal(theCorrectPi0Global) ; 
+      if (inputNumber_all < inputNumber ) theCorrectPi0Global.setCandidate(allPi0Global[kk].et(),allPi0Global[kk].ID()) ; 
+    }
+  }
+
+  // Store the various candidates
+  theCorrectElectron.saveCandidate (  L0DUBase::Fiber::CaloElectron,  L0Calo );
+  theCorrectPhoton.saveCandidate   (  L0DUBase::Fiber::CaloPhoton,  L0Calo );
+  theCorrectPi0Local.saveCandidate (  L0DUBase::Fiber::CaloPi0Local,  L0Calo );
+  theCorrectPi0Global.saveCandidate(  L0DUBase::Fiber::CaloPi0Global,  L0Calo );
+
+  debug()<<" electromagnetic candidates done .... " <<endreq ; 
+
+
+  L0Candidate theCorrectHadronMaster ( m_hcal );
+  theCorrectHadronMaster.setCandidate(hadronMaster.et(),hadronMaster.ID()) ; 
+
+  L0Candidate theCorrectHadronSlave1 ( m_hcal );
+  theCorrectHadronSlave1.setCandidate(hadronSlave1.et(),hadronSlave1.ID()) ; 
+
+  L0Candidate theCorrectHadronSlave2 ( m_hcal );
+  theCorrectHadronSlave2.setCandidate(hadronSlave2.et(),hadronSlave2.ID()) ; 
+
+  // First for Slave1, Slave2 and Master if same Et select the one with the smaller input ... (as for electromagnetic candidates) 
+  for ( int kk=0 ; nbMasterSEL > kk ; kk++ ) {
+    if ( allHadronsMaster[kk].et() == hadronMaster.et() && hadronMaster.et() != 0 && allHadronsMaster[kk].ID().all()  != hadronMaster.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      LHCb::CaloCellID caloCell = allHadronsMaster[kk].ID(); 
+      int inputNumber_all = findInputNumberForHcal(allHadronsMaster[kk]) ; 
+      int inputNumber = findInputNumberForHcal(theCorrectHadronMaster) ; 
+      if (inputNumber_all < inputNumber ) theCorrectHadronMaster.setCandidate(allHadronsMaster[kk].et(),allHadronsMaster[kk].ID()) ; 
+    }
+  }
+
+  for ( int kk=0 ; nbSlave1SEL > kk ; kk++ ) {
+    if ( allHadronsSlave1[kk].et() == hadronSlave1.et() && hadronSlave1.et() != 0 && allHadronsSlave1[kk].ID().all()  != hadronSlave1.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForHcal(allHadronsSlave1[kk]) ; 
+      int inputNumber = findInputNumberForHcal(theCorrectHadronSlave1) ; 
+      if (inputNumber_all < inputNumber ) theCorrectHadronSlave1.setCandidate(allHadronsSlave1[kk].et(),allHadronsSlave1[kk].ID()) ; 
+    }
+  }
+
+  for ( int kk=0 ; nbSlave2SEL > kk ; kk++ ) {
+    if ( allHadronsSlave2[kk].et() == hadronSlave2.et() && hadronSlave2.et() != 0 && allHadronsSlave2[kk].ID().all()  != hadronSlave2.ID().all() ) { 
+      // an other candidate with the same energy but different cell number...=> mimic the electronic      
+      // behaviour look at the validation board # and at the cardSlot and search for the corresponding input#
+      int inputNumber_all = findInputNumberForHcal(allHadronsSlave2[kk]) ; 
+      int inputNumber = findInputNumberForHcal(theCorrectHadronSlave2) ; 
+      if (inputNumber_all < inputNumber ) theCorrectHadronSlave2.setCandidate(allHadronsSlave2[kk].et(),allHadronsSlave2[kk].ID()) ; 
+    }
+  }
+
+  // if Slave1 = Slave2 => save Slave1 
+  L0Candidate theCorrectHadronSlave ( m_hcal );
+  theCorrectHadronSlave.setCandidate(hadronSlave1.et(),hadronSlave1.ID()) ; 
+  if (theCorrectHadronSlave1.et() >  theCorrectHadronSlave2.et() ) theCorrectHadronSlave.setCandidate(theCorrectHadronSlave1.et(),theCorrectHadronSlave1.ID()) ; 
+  if (theCorrectHadronSlave1.et() <  theCorrectHadronSlave2.et() ) theCorrectHadronSlave.setCandidate(theCorrectHadronSlave2.et(),theCorrectHadronSlave2.ID()) ; 
+  if (theCorrectHadronSlave1.et() == theCorrectHadronSlave2.et() ) theCorrectHadronSlave.setCandidate(theCorrectHadronSlave1.et(),theCorrectHadronSlave1.ID()) ; 
+
+  L0Candidate theCorrectHadron ( m_hcal );
+  theCorrectHadron.setCandidate(hadronSlave1.et(),hadronSlave1.ID()) ; 
+  if (theCorrectHadronSlave.et() > theCorrectHadronMaster.et() ) theCorrectHadron.setCandidate(theCorrectHadronSlave.et(),theCorrectHadronSlave.ID()) ; 
+  if (theCorrectHadronSlave.et() < theCorrectHadronMaster.et() ) theCorrectHadron.setCandidate(theCorrectHadronMaster.et(),theCorrectHadronMaster.ID()) ; 
+  if (theCorrectHadronSlave.et() == theCorrectHadronMaster.et() ) theCorrectHadron.setCandidate(theCorrectHadronMaster.et(),theCorrectHadronMaster.ID()) ; 
+
+  theCorrectHadron.saveCandidate(    L0DUBase::Fiber::CaloHadron,    L0Calo );
+
 
   unsigned int code = 0x10000 + (sumEt << L0DUBase::Calo::Sum::Shift);    
   LHCb::L0ProcessorData* hsum = 
@@ -860,10 +973,10 @@ StatusCode L0CaloAlg::execute() {
 
   //Save the candidates ... 
   IO = 1 ; 
-  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Electron, electron, 1 );
-  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Photon, photon, 1 );
-  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Local, pi0Local, 1 );
-  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Global, pi0Global, 1 );
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Electron, theCorrectElectron, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Photon, theCorrectPhoton, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Local, theCorrectPi0Local, 1 );
+  saveInRawEvent(IO,slave,mask,  L0DUBase::CaloType::Pi0Global, theCorrectPi0Global, 1 );
 
   //-----------------------------------------------------------------------------------
   //For the HCAL part 
@@ -882,7 +995,7 @@ StatusCode L0CaloAlg::execute() {
   //Save the local highest candidate 
   IO = 1 ; 
   slave = 1 ; // 0 all selection board except hadron global info 
-  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave1, 1 );
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, theCorrectHadronSlave1, 1 );
   //Save the local sum 
   IO = 1 ; 
   slave = 1 ; // 0 all selection board except hadron global info 
@@ -899,7 +1012,7 @@ StatusCode L0CaloAlg::execute() {
   //Save the local highest candidate 
   IO = 1 ; 
   slave = 2 ; // 0 all selection board except hadron global info 
-  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave2, 1 );
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, theCorrectHadronSlave2, 1 );
   //Save the local sum 
   IO = 1 ; 
   slave = 2 ; // 0 all selection board except hadron global info 
@@ -917,9 +1030,9 @@ StatusCode L0CaloAlg::execute() {
   IO = 0 ;
   slave = 1 ;
   mask = 0;
-  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave1, 1 );
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, theCorrectHadronSlave1, 1 );
   slave = 2 ;
-  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, hadronSlave2, 1 );
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, theCorrectHadronSlave2, 1 );
   // Sum from Slave 1 and 2 
   IO = 0 ;
   slave = 1 ;
@@ -931,38 +1044,9 @@ StatusCode L0CaloAlg::execute() {
   IO = 1 ;
   slave = 0 ;
   mask = 0;
-  // Compute the Highest of Master, Slave1 and Slave2 
-  int deltaS1S2 = hadronSlave1.et() - hadronSlave2.et() ;
-  if (deltaS1S2 >= 0 ) {
-    int deltaS1M = hadronSlave1.et() - hadronMaster.et() ;
-    if (deltaS1M >=0 ) 
-      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
-                      hadronSlave1, 1 );
-    if (deltaS1M <0 ) 
-      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
-                      hadronMaster, 1 );
-    if (deltaS1M >=0 ) 
-      debug()<<"For Master Highest="<<hadronSlave1.ID()<<" Et= "
-             << hadronSlave1.et()<< endmsg;
-    if (deltaS1M <0 ) 
-      debug()<<"For Master Highest="<<hadronMaster.ID()<<" Et= "
-             << hadronMaster.et()<< endmsg;
-  } 
-  else{
-    int deltaS2M = hadronSlave2.et() - hadronMaster.et() ;
-    if (deltaS2M >=0 ) 
-      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
-                      hadronSlave2, 1 );
-    if (deltaS2M <0 ) 
-      saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, 
-                      hadronMaster, 1 );
-    if (deltaS2M >=0 )
-      debug()<<"For Master Highest= "<<hadronSlave2.ID()<<" Et= "
-             << hadronSlave2.et()<< endmsg;
-    if (deltaS2M <0 ) 
-      debug()<<"For Master Highest="<<hadronMaster.ID()<<" Et= "
-             << hadronMaster.et()<< endmsg;
-  }
+  // Save the Highest of Master, Slave1 and Slave2 
+  saveInRawEvent( IO,slave,mask, L0DUBase::CaloType::Hadron, theCorrectHadron, 1 );
+
   // Compute the Sum of Master + Slave1 + Slave2 
   int outputSumEtMaster = sumEtSlave1 + sumEtSlave2 + sumEtMaster ;
   //store one candidate ... note that ID is meaningless ... 
@@ -1286,7 +1370,30 @@ void L0CaloAlg::saveInRawEvent ( int IO, int slave, int mask, int type,
               << endmsg ;
   }
 }
-
+//=====================================================================
+int L0CaloAlg::findInputNumberForEcal ( L0Candidate& cand ) { 
+  LHCb::CaloCellID caloCell =  cand.ID(); 
+  int card  = m_ecal->cardNumber( caloCell) ; 
+  int cardSlot = m_ecal->cardSlot(card) ; 
+  int crateNumber = m_ecal->cardCrate(card); 
+  int valBoardExt = 0 ; 
+  if (cardSlot >= 8 ) valBoardExt = 1 ; 
+  // LUT filled by hand to link  crateNum.valBoardExt and #input       
+  int inputNumber = m_EcalLUT[crateNumber][valBoardExt] ; 
+  //  info()<<"cellID= "<<caloCell<<" cardSlot= "<<cardSlot<<" crate= "<<crateNumber<<" valBoardExt= "<<valBoardExt<<" inputNumber= "<<inputNumber<<endreq ;       
+  return inputNumber ; 
+}
+//=====================================================================
+int L0CaloAlg::findInputNumberForHcal ( L0Candidate& cand ) { 
+  LHCb::CaloCellID caloCell =  cand.ID(); 
+  int card  = m_hcal->cardNumber( caloCell) ; 
+  int cardSlot = m_hcal->cardSlot(card) ; 
+  int crateNumber = m_hcal->cardCrate(card); 
+  // LUT filled by hand to link HcalCrate and HcalSlot and #input       
+  //  info()<<"cellID= "<<caloCell<<" cardSlot= "<<cardSlot<<" crate= "<<crateNumber<<" card = "<<card<<endreq ; 
+  int inputNumber = m_HcalLUT[crateNumber][cardSlot] ; 
+  return inputNumber ; 
+}
 //=====================================================================
 // Functions of the auxilliary class L0Candidate
 //=====================================================================
@@ -1320,6 +1427,101 @@ void  L0Candidate::setCandidate( int et, LHCb::CaloCellID ID ) {
   }
 };
 
+//=========================================================================
+// Utility function to create ECAL LUT from validation board number to input#
+//=========================================================================
+void L0CaloAlg::createECALLutVB( ) {  
+  m_EcalLUT[8][0] = 1 ; 
+  m_EcalLUT[9][0] = 2 ; 
+  m_EcalLUT[13][0] = 3; 
+  m_EcalLUT[14][0] = 4; 
+  m_EcalLUT[13][1] = 5; 
+  m_EcalLUT[14][1] = 6; 
+  m_EcalLUT[8][1] = 7; 
+  m_EcalLUT[9][1] = 8; 
+  m_EcalLUT[11][0] = 9; 
+  m_EcalLUT[12][0] = 10; 
+  m_EcalLUT[11][1] = 11; 
+  m_EcalLUT[12][1] = 12; 
+  m_EcalLUT[20][0] = 13; 
+  m_EcalLUT[21][0] = 14; 
+  m_EcalLUT[15][0] = 15; 
+  m_EcalLUT[16][0] = 16; 
+  m_EcalLUT[15][1] = 17; 
+  m_EcalLUT[16][1] = 18; 
+  m_EcalLUT[20][1] = 19; 
+  m_EcalLUT[21][1] = 20; 
+  m_EcalLUT[17][1] = 21; 
+  m_EcalLUT[18][1] = 22; 
+  m_EcalLUT[17][0] = 23; 
+  m_EcalLUT[18][0] = 24; 
+  m_EcalLUT[10][0] = 25; 
+  m_EcalLUT[10][1] = 26; 
+  m_EcalLUT[19][0] = 27; 
+  m_EcalLUT[19][1] = 28; 
+
+}
+//=========================================================================
+// Utility function to create HCAL LUT from validation board number to input#
+//=========================================================================
+void L0CaloAlg::createHCALLutVB( ) {  
+  m_HcalLUT[22][2] = 1 ; 
+  m_HcalLUT[22][3] = 3 ; 
+  m_HcalLUT[22][4] = 5; 
+  m_HcalLUT[22][5] = 7; 
+  m_HcalLUT[22][6] = 9; 
+  m_HcalLUT[22][7] = 11; 
+  m_HcalLUT[22][8] = 13; 
+  m_HcalLUT[22][9] = 5; 
+  m_HcalLUT[22][10] = 9; 
+  m_HcalLUT[22][11] = 14; 
+  m_HcalLUT[22][12] = 18; 
+
+  m_HcalLUT[23][1] = 13 ; 
+  m_HcalLUT[23][2] = 15 ; 
+  m_HcalLUT[23][3] = 17 ; 
+  m_HcalLUT[23][4] = 19; 
+  m_HcalLUT[23][5] = 21; 
+  m_HcalLUT[23][6] = 23; 
+  m_HcalLUT[23][7] = 6; 
+  m_HcalLUT[23][8] = 17; 
+  m_HcalLUT[23][9] = 3; 
+  m_HcalLUT[23][10] = 25; 
+  m_HcalLUT[23][11] = 1; 
+  m_HcalLUT[23][12] = 27; 
+  m_HcalLUT[23][13] = 4; 
+  m_HcalLUT[23][14] = 10; 
+
+  m_HcalLUT[24][1] = 15 ; 
+  m_HcalLUT[24][2] = 21 ; 
+  m_HcalLUT[24][3] = 19 ; 
+  m_HcalLUT[24][4] = 23; 
+  m_HcalLUT[24][5] = 21; 
+  m_HcalLUT[24][6] = 22; 
+  m_HcalLUT[24][7] = 8; 
+  m_HcalLUT[24][8] = 19; 
+  m_HcalLUT[24][9] = 25; 
+  m_HcalLUT[24][10] = 27; 
+  m_HcalLUT[24][11] = 13; 
+  m_HcalLUT[24][12] = 15; 
+  m_HcalLUT[24][13] = 17; 
+  m_HcalLUT[24][14] = 12; 
+
+
+  m_HcalLUT[25][2] = 7 ; 
+  m_HcalLUT[25][3] = 11 ; 
+  m_HcalLUT[25][4] = 16; 
+  m_HcalLUT[25][5] = 20; 
+  m_HcalLUT[25][6] = 1; 
+  m_HcalLUT[25][7] = 3; 
+  m_HcalLUT[25][8] = 5; 
+  m_HcalLUT[25][9] = 7; 
+  m_HcalLUT[25][10] = 9; 
+  m_HcalLUT[25][11] = 11; 
+  m_HcalLUT[25][12] = 23; 
+
+
+}
 //=========================================================================
 // Create HCAL LUT
 //=========================================================================

@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.27 2008-06-18 09:19:14 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.28 2008-07-16 13:31:56 robbep Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -142,5 +142,14 @@ private:
   
   /// Utility function to create HCAL LUT for validation from geometry
   void createHCALLut( ) ;
+  /// Utility function to create ECAL LUT from validation board number to input#
+  void createECALLutVB( ) ;
+  int m_EcalLUT[22][2];
+  /// Utility function to create HCAL LUT from validation board number to input#
+  void createHCALLutVB( ) ;
+  int m_HcalLUT[26][15];
+
+  int findInputNumberForEcal(L0Candidate& cand) ; 
+  int findInputNumberForHcal(L0Candidate& cand) ; 
 };
 #endif //   L0CALO_L0CALOALG_H
