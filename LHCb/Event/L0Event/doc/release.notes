@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.104 2008-07-15 15:28:07 cattanem Exp $
+! $Id: release.notes,v 1.105 2008-07-16 20:30:20 cattanem Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+!======================== L0Event v17r0 2008-07-16 ===========================
+! 2008-07-16 - Olivier Deschamps
+ - L0DUReport.xml : add new attribute valid() (validity of the report)
 
 ! 2008-07-15 - Marco Cattaneo
  - Remove cmt/version.cmt file, breaks cmt when running with version directory!
@@ -12,7 +16,6 @@
 
 ! 2008-07-02 - Olivier Deschamps
  - L0DUConfig.xml : add new attribute recipe() (recipe name as std::string)
-
 
 !======================== L0Event v16r11 2008-06-30 ==========================
 ! 2008-06-30 - Marco Cattaneo
