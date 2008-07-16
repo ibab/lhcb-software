@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/DumpL0CaloBanks.cpp,v 1.1 2008-06-18 09:21:14 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/DumpL0CaloBanks.cpp,v 1.2 2008-07-16 20:20:17 robbep Exp $
 
 #include <fstream>
 
@@ -26,6 +26,8 @@ DumpL0CaloBanks::DumpL0CaloBanks( const std::string& name,
   : GaudiAlgorithm( name , pSvcLocator ) , m_event( 0 ) 
 { 
   declareProperty( "FileName"  , m_fileName  = "l0calobanks.txt" ) ;  
+  declareProperty( "NZSBanks" , m_nzsBanks = false ) ;
+  declareProperty( "ErrorBanks" , m_errorBanks = false ) ;
 }
 
 //=============================================================================
@@ -61,18 +63,26 @@ StatusCode DumpL0CaloBanks::initialize() {
 //=============================================================================
 StatusCode DumpL0CaloBanks::execute() {
   // ODIN first 
-  (*m_file) << "---------------------------------------------" << ++m_event << std::endl ;
+  (*m_file) << "---------------------------------------------" 
+            << ++m_event << std::endl ;
   
   if ( exist< LHCb::ODIN >( LHCb::ODINLocation::Default ) ) {
     LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
-    (*m_file) << "event = " << odin -> eventNumber() << " BCId = " << odin -> bunchId() 
+    (*m_file) << "event = " << odin -> eventNumber() 
+              << " BCId = " << odin -> bunchId() 
               << std::endl ;
   }
   
   LHCb::RawEvent * rawEvt( 0 ) ;
+  LHCb::RawBank::BankType bankType = LHCb::RawBank::L0Calo ;
+  if ( m_nzsBanks ) 
+    bankType = LHCb::RawBank::L0CaloFull ;
+  else if ( m_errorBanks ) 
+    bankType = LHCb::RawBank::L0CaloError ;
   if ( exist< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ) {
     rawEvt = get< LHCb::RawEvent >( LHCb::RawEventLocation::Default ) ;
-    const std::vector< LHCb::RawBank * > & banks = rawEvt -> banks( LHCb::RawBank::L0Calo ) ;
+    const std::vector< LHCb::RawBank * > & banks = 
+      rawEvt -> banks( bankType ) ;
   
     if ( 0 == banks.size() ) return StatusCode::SUCCESS ;
     

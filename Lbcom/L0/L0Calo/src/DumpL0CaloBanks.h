@@ -1,4 +1,4 @@
-// $Id: DumpL0CaloBanks.h,v 1.1 2008-06-18 09:21:14 robbep Exp $
+// $Id: DumpL0CaloBanks.h,v 1.2 2008-07-16 20:20:17 robbep Exp $
 #ifndef DUMPL0CALOBANKS_H 
 #define DUMPL0CALOBANKS_H 1
 // Include files
@@ -31,5 +31,7 @@ private:
   int m_event ;
   std::string m_fileName ; ///< File name
   std::ofstream * m_file ; ///< the file object
+  bool m_nzsBanks ; ///< Dump Non zero-suppressed banks
+  bool m_errorBanks ; ///< Dump error banks
 };
 #endif // DUMPL0CALOBANKS_H
