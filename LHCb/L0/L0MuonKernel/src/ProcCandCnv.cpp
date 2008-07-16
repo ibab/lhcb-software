@@ -22,7 +22,7 @@ L0Muon::ProcCandCnv::ProcCandCnv(int quarter){
 
   for (int iboard = 0; iboard <12 ; iboard++) {
     // Candidate Register handlers for BCSU candidates
-    format = "BOARDCAND_Q%d_%d_proc";
+    format = "BOARDCAND_Q%d_%d";
     sprintf(buf,format,m_quarter+1,iboard);
     //    L0Muon::Register* reg_board = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
     L0Muon::Register* reg_board = rfactory->createRegister(buf,CandRegisterHandler::size());
@@ -62,6 +62,23 @@ LHCb::MuonTileID L0Muon::ProcCandCnv::mid_PU(int ib, int ipu){
   MuonLayout lay(2,2);
   LHCb::MuonTileID pu = LHCb::MuonTileID(board,lay,(ipu>>0)&1,(ipu>>1)&1);
   return pu;
+}
+
+void L0Muon::ProcCandCnv::setDecodingMode(){
+  // In decoding mode (when filling the BCSU registers from the raw banks),
+  // do not use the registers pointed at in the constructor because it already 
+  // used by the controller board. Create new registers instead.
+
+  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
+
+  char buf[4096];
+  char* format ;
+  for (int iboard = 0; iboard <12 ; iboard++) {
+    format = "BOARDCAND_Q%d_%d_proc";
+    sprintf(buf,format,m_quarter+1,iboard);
+    L0Muon::Register* reg_board = rfactory->createRegister(buf,CandRegisterHandler::size());
+    m_candRegHandlerBCSU[iboard] = CandRegisterHandler(reg_board) ;
+  }
 }
 
 void L0Muon::ProcCandCnv::release(){
@@ -270,7 +287,6 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
     // next lines : candidates
     int ncandBCSU = (statusBCSU& 0x3);
     if (ncandBCSU>0) { // If at least one candidate in this board
-
       ncandBCSU = ncandBCSU>2 ? 2 : ncandBCSU;
       for (int icand =0;icand<ncandBCSU;++icand){
         if ((iwd+icand)>=raw.size()) return 0;
@@ -323,6 +339,7 @@ int L0Muon::ProcCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
 
 int L0Muon::ProcCandCnv::rawBank_v1(std::vector<unsigned int> &raw, int ievt)
 {
+  raw.clear();
   static int bankVersion=1;
 
   int event_number = ievt;
@@ -366,21 +383,30 @@ int L0Muon::ProcCandCnv::rawBank_v1(std::vector<unsigned int> &raw, int ievt)
 
 int L0Muon::ProcCandCnv::rawBank_v2(std::vector<unsigned int> &raw, int ievt, bool compression)
 {
+  raw.clear();
 
   static int bankVersion=2;
 
   int event_number = ievt;
   int l0_bid = ievt;
-
+  int bcid   = (ievt&0xF);
+  
   // Loop over processing boards
   for (int ib = 0; ib <12 ; ib++) {
     unsigned int word;
     
-    // Event numbers
-    word = ( (l0_bid<<16)&0xFFF0000 )+ ( event_number&0xFFF );
+    // 1st line : Event numbers
+    word = ( (l0_bid<<16)&0xFFF0000 ) + ( event_number&0xFFF );
     raw.push_back(word);
 
-    // Status
+    // 2nd line : BCIDs
+    word = bcid;
+    for (int ipu= 0; ipu<4 ;++ipu) {
+      word|= ( bcid <<(4+ipu*4) );
+    }    
+    raw.push_back(word);
+
+    // 3rd line : Status
     word = m_candRegHandlerBCSU[ib].getStatus();   
     for (int ipu= 0; ipu<4 ;++ipu) {
       word|= ( m_candRegHandlerPU[ib][ipu].getStatus() <<(4+ipu*4) );
@@ -388,20 +414,26 @@ int L0Muon::ProcCandCnv::rawBank_v2(std::vector<unsigned int> &raw, int ievt, bo
     if (compression) word|=0x80000000;
     raw.push_back(word);
 
-    // Candidates
-    for (int icand=0; icand<2; icand++){
-      if (compression && m_candRegHandlerBCSU[ib].isEmpty(icand)) break;
+    // Next lines : Candidates
+    int ncand=2;
+    if (compression) {
+      ncand=m_candRegHandlerBCSU[ib].getStatus()&0x3;
+      if (ncand>2) ncand=2;
+    }
+    for (int icand=0; icand<ncand; icand++){
       word = L0Muon::readCandFromRegister(&m_candRegHandlerBCSU[ib], icand, bankVersion);
-      word&=0x30FFFFFF; // mask the quarter and the board
-      if (compression && word==0) continue;
+      word&=0x3FFFFFFF; // mask the quarter 
       raw.push_back(word);
     } 
     for (int ipu= 0; ipu<4 ;++ipu) {
-      for (int icand=0; icand<2; icand++){
-        if (compression && m_candRegHandlerPU[ib][ipu].isEmpty(icand)) break;
+      ncand=2;
+      if (compression) {
+        ncand=m_candRegHandlerPU[ib][ipu].getStatus()&0x3;
+        if (ncand>2) ncand=2;
+      }
+      for (int icand=0; icand<ncand; icand++){
         word = L0Muon::readCandFromRegister(&m_candRegHandlerPU[ib][ipu], icand, bankVersion);
-        word&=0x30FFFFFF; // mask the quarter and the board
-        if (compression && word==0) continue;
+        word&=0x3FFFFFFF; // mask the quarter 
         raw.push_back(word);
       } 
     }

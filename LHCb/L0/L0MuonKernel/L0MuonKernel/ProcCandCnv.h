@@ -34,6 +34,7 @@ namespace L0Muon {
     LHCb::MuonTileID mid_PU(int ib, int ipu);
 
     void release();
+    void setDecodingMode();
     
     std::vector<PMuonCandidate> muonCandidatesPU();
     std::vector<PMuonCandidate> muonCandidatesBCSU();
@@ -75,14 +76,14 @@ namespace L0Muon {
     const int  bcidError(int ib,int ipu) const { return m_errors[ib].bcidError(ipu);}
     
     const ProcCandErrors * errors(int ib) const {return &m_errors[ib];}
-    
+
   private:
 
     int m_quarter;
     // Input candidate registers from the PU Cnv (max=48)
     CandRegisterHandler m_candRegHandlerPU[12][4];
     // Input candidate registers from the BCSU Cnv (max=12)
-    CandRegisterHandler m_candRegHandlerBCSU[12];
+    CandRegisterHandler m_candRegHandlerBCSU[12];  // filled by the emulator
 
     ProcCandErrors m_errors[12];
 

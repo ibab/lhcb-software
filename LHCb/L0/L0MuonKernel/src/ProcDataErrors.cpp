@@ -42,6 +42,7 @@ const int L0Muon::ProcDataErrors::sumCounters() const {
   
   int n=0;
 
+  n+=decoding.counter();
   for (int i=0; i<4; ++i){  
     n+=opt_link[i].counter();
     n+=ser_link[i].counter();

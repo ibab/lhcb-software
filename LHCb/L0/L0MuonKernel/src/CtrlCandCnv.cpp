@@ -300,8 +300,6 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
   if (bankVersion<2) return 0;
   if (ievt<0) return 0;
 
-  int nWordsPart1=0;
-  
   int event_number = ievt;
   int l0_bid = ievt;
   int bcid   = l0_bid&0xF;
@@ -325,17 +323,19 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
     raw.push_back(word);
 
     // Candidates
-    for (int icand=0; icand<2; icand++){
-      if (compression && m_candRegHandler[iq].isEmpty(icand)) break;
+    int ncand=2;
+    if (compression) {
+      ncand=m_candRegHandler[iq].getStatus()&0x3;
+      if (ncand>2) ncand=2;
+    }
+    for (int icand=0; icand<ncand; icand++){
       word = L0Muon::readCandFromRegister(&m_candRegHandler[iq], icand, bankVersion);
-      if (compression && word==0) continue;
       raw.push_back(word);
     } 
     
   }
 
-  nWordsPart1=raw.size();
-  unsigned int header=nWordsPart1*2;
+  unsigned int header=raw.size()*2;
   raw.insert(raw.begin(),header);
   
   // 1st part of the bank is done - 
@@ -372,10 +372,13 @@ int L0Muon::CtrlCandCnv::rawBank(std::vector<unsigned int> &raw, int ievt, int b
     
     // Candidates
     for (int ib = 0; ib <12 ; ib++) {
-      for (int icand=0; icand<2; icand++){
-        if (compression && m_candRegHandlerBCSU[iq][ib].isEmpty(icand)) break;
+      int ncand=2;
+      if (compression) {
+        ncand=m_candRegHandlerBCSU[iq][ib].getStatus()&0x3;
+        if (ncand>2) ncand=2;
+      }
+      for (int icand=0; icand<ncand; icand++){
         word = L0Muon::readCandFromRegister(&m_candRegHandlerBCSU[iq][ib], icand, bankVersion);
-        if (compression && word==0) continue;
         raw.push_back(word);
       } 
     }
