@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.21 2008-07-15 11:21:03 mneedham Exp $
+! $Id: release.notes,v 1.22 2008-07-16 21:20:36 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r6 2008-07-16 ============================
 ! 2008-07-15 M. Needham
  - Be more friendly for python [don't believe the hype!]
 
