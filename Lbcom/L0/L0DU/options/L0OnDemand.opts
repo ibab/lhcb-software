@@ -7,5 +7,5 @@ DataOnDemandSvc.AlgMap += {
 #include "$L0DUOPTS/L0DUConfig.opts"
 L0MuonFromRaw.ConfigFile      = "$PARAMFILESROOT/data/L0MuonKernel.xml";
 
-L0MuonFromRaw.OutputLevel=1;
-L0DUFromRawAlg.OutputLevel = 1;
+//L0MuonFromRaw.OutputLevel=1;
+//L0DUFromRawAlg.OutputLevel = 1;
