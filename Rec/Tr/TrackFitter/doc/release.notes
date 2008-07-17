@@ -3,8 +3,10 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r26 2008-07-17 ===================
 ! 2008-07-15 - Wouter Hulsbergen
- - Use cholesky decomposition for track covariance matrix inversion (Manuel Schiller)
+ - Use cholesky decomposition for track covariance matrix inversion
+   (Manuel Schiller)
 
 !=========================== TrackFitter v2r25 2008-07-02 ===================
 ! 2008-07-01 - Marco Cattaneo
