@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.110 2008-07-17 15:30:02 cattanem Exp $
+! $Id: release.notes,v 1.111 2008-07-17 16:18:44 odescham Exp $
 ! Package	        : L0/L0Calo
-! Package Manager : Olivier Deschamps
+! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-07-17 - Olivier Deschamps
+  - L0CaloAlg : add 'WriteOnTES' property. Writing L0CaloCandidate on  TES is now independant on 'StoreInBuffer' as in L0Muon and L0DU.
 
 !========================= L0Calo v9r15 2008-07-17 ========================
 ! 2008-07-16 - Patrick Robbe

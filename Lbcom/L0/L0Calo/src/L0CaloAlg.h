@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.28 2008-07-16 13:31:56 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.29 2008-07-17 16:18:44 odescham Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -133,6 +133,7 @@ private:
   std::vector<std::vector<unsigned int> > m_rawOutput; ///< RAW output bank
 
   bool m_storeFlag;
+  bool m_writeOnTES;
 
   double m_totRawSize;
   int m_nbEvents;  

@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.52 2008-07-16 13:31:56 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.53 2008-07-17 16:18:44 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,10 +30,11 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   , m_bankVersion( 1 ) 
 {
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
-  declareProperty("StoreInBuffer"   , m_storeFlag      = true ) ;
-  declareProperty("UsePSSPD"        , m_usePsSpd       = true ) ;
-  declareProperty("AddECALToHCAL"   , m_addEcalToHcal  = true ) ;
-  declareProperty("CreateHCALLut"   , m_createHCALLut  = false ) ;
+  declareProperty("StoreInBuffer"   , m_storeFlag      = true    ) ;
+  declareProperty("WriteOnTES"      , m_writeOnTES     = false   ) ; 
+  declareProperty("UsePSSPD"        , m_usePsSpd       = true    ) ;
+  declareProperty("AddECALToHCAL"   , m_addEcalToHcal  = true    ) ;
+  declareProperty("CreateHCALLut"   , m_createHCALLut  = false   ) ;
 };
 
 
@@ -1089,7 +1090,9 @@ StatusCode L0CaloAlg::execute() {
       get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
     raw->addBank( 0, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[0] );
     raw->addBank( 1, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[1] );
-  } else {
+  }
+
+  if( m_writeOnTES ) {
     std::string name     = rootInTES() + LHCb::L0CaloCandidateLocation::Default;
     std::string nameFull = rootInTES() + LHCb::L0CaloCandidateLocation::Full;
     m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name , m_bankVersion );
