@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-07-17 - Olivier Deschamps
+ - DecodeRawEvent.opts : include L0 on-Demand options from L0DU package (and remove L0DUReport specific line)
+
 !======================== GaudiConf v10r10 2008-07-03 =======================
 ! 2008-07-03 - Marco Cattaneo
  - In Configuration.py, add support for SIMCOND, initialize TES

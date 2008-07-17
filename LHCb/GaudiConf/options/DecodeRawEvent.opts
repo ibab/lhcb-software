@@ -11,7 +11,6 @@ DataOnDemandSvc.AlgMap += {
   ,"Raw/OT/Times"          : "OTTimeCreator"
   ,"Raw/Muon/Coords"       : "MuonRec"
   ,"DAQ/ODIN"              : "createODIN"
-  ,"Trig/L0/L0DUReport"    : "L0DUFromRawAlg"
 };
 createITClusters.detType     = "IT";
 createITLiteClusters.detType = "IT";
@@ -19,4 +18,4 @@ createVeloClusters.DecodeToVeloClusters     = true;
 createVeloClusters.DecodeToVeloLiteClusters = false;
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
-#include "$L0DUOPTS/L0DUConfig.opts"
+#include "$L0DUOPTS/L0OnDemand.opts"
