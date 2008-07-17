@@ -3,13 +3,15 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
+
+!======================= TrackMatching v2r18 2008-07-17 ======================
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
-- move TrackMatch.py to option directory
+ - move TrackMatch.py to option directory
 
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
-- add python directory with TrackMatch.py script
+ - add python directory with TrackMatch.py script
 
-!======================= TrackMatching v2r16 2007-12-03 ======================
+!======================= TrackMatching v2r17 2007-12-03 ======================
 ! 2007-12-03 - Marco Cattaneo
  - Adapt to new STL serializers in Gaudi v19r6
 
