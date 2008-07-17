@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.47 2008-07-17 09:32:38 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.48 2008-07-17 09:47:53 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -127,7 +127,6 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_nTracks(0u),
     m_covFailure(0u),
     m_elements(),
-    m_initAlignConstants(),
     m_align(0),
     m_projSelector(0),
     m_matrixSolverTool(0),
@@ -144,11 +143,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
   declareProperty("UseCorrelations"             , m_correlation                  = true                    );
   declareProperty("UpdateInFinalize"            , m_updateInFinalize             = false                   );
-  declareProperty("CanonicalConstraintStrategy" , m_canonicalConstraintStrategy  = CanonicalConstraintAuto );
-  declareProperty("Constraints"                 , m_constraints = Constraints::global() ) ;
-  declareProperty("UseWeightedAverageConstraint", m_useWeightedAverageConstraint = false                   );
   declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 100u                    ); 
-  declareProperty("FillCorrelationsHistos"      , m_fillCorrelationHistos        = false                   );
   declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
   declareProperty("OutputDataFile"              , m_outputDataFileName           = "alignderivatives.dat" ) ;
   declareProperty("InputDataFiles"              , m_inputDataFileNames ) ;

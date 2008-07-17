@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.31 2008-07-17 09:32:38 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.32 2008-07-17 09:47:53 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -111,7 +111,6 @@ private:
   size_t                            m_nTracks;                       ///< Number of tracks used
   size_t                            m_covFailure;                    ///< Number of covariance calculation failures
   ElementRange                      m_elements;                      ///< Detector elements
-  std::vector<double>               m_initAlignConstants;            ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;                ///< Tracks for alignment
   std::string                       m_vertexLocation;                ///< Vertices for alignment
@@ -125,13 +124,9 @@ private:
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
-  int                               m_canonicalConstraintStrategy ;  ///< Constrain global dofs
-  std::vector<std::string>          m_constraints;                   ///< Names of constrains
-  bool                              m_useWeightedAverageConstraint ; ///< Flag to turn on weighting in constraint averages
   size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
   double                            m_chi2Outlier ;                  ///< Chi2 threshold for outlier rejection
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
-  bool                              m_fillCorrelationHistos;         ///< Flag to turn on filling of residual correlation histos
   std::string                       m_logFileName ;
   std::ostringstream                m_logMessage ;
   std::string                       m_outputDataFileName ;
