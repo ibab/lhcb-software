@@ -62,7 +62,7 @@ class Alignables( list ):
         try:
             assert( type( elements ) == types.ListType or type( elements ) == types.StringType )
         except AssertionError :
-            self.__elementsError()
+            self.__elementsError( elements )
             return None
         
         ## Paranoia; extend also throws an exception
@@ -71,13 +71,14 @@ class Alignables( list ):
                 try:
                     assert( type( elements[ i ] ) == types.StringType )
                 except AssertionError :
-                    self.__elementsError
+                    self.__elementsError( elements )
                     return None
         return True
     
-    def __elementsError( self ) :
+    def __elementsError( self, elements ) :
         print "ERROR: Specify either a string representing a detector element"
         print "       or a list of strings representing a list of detector elements"
+        print "elements = ",elements
         
     def __append( self,  elements, dofs ) :          
         if dofs :
