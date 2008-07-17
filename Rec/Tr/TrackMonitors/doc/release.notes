@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!============================ TrackMonitors v1r2 2008-07-17 ==================
+! 2008-07-17 - Marco Cattaneo for Wouter Hulsbergen
+ - Added monitoring algorithms and other undocumented changes
+
 !============================ TrackMonitors v1r1 2008-06-03 ==================
 ! 2008-05-30 - Wouter Hulsbergen
  - created new package
