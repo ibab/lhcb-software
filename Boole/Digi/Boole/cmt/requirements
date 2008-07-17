@@ -15,7 +15,7 @@ use Python             v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det    -no_auto_imports
-use ParamFiles         v7r1         -no_auto_imports
+use ParamFiles         v7r2         -no_auto_imports
 use FieldMap           v5r*         -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
