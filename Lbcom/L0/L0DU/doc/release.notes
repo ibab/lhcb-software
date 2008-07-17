@@ -1,16 +1,19 @@
-! $Id: release.notes,v 1.113 2008-07-17 16:16:07 odescham Exp $
+! $Id: release.notes,v 1.114 2008-07-17 16:30:42 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
 
+!========================== L0DU v8r7 2008-07-17 =========================
 ! 2008-07-17 - Olivier Deschamps
  - review options
 
 ! 2008-07-16 - Olivier Deschamps
- - L0DUFromRawAlg : always produce L0DUReport on TES (flagged as non valid in case of corrupted/missing bank)
+ - L0DUFromRawAlg : always produce L0DUReport on TES
+   (flagged as non valid in case of corrupted/missing bank)
 
 ! 2008-07-05 - Olivier Deschamps
- - add new TCKs in L0DUConfig_0x000X.opts (TCK=0x0001 -> 0x0007 : cosmics triggers as for july 2008 GCW)
+ - add new TCKs in L0DUConfig_0x000X.opts
+   (TCK=0x0001 -> 0x0007 : cosmics triggers as for july 2008 GCW)
 
 ! 2008-07-02 - Olivier Deschamps 
  - add protection against missing bank in L0DURawBankMonitor
