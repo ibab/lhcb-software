@@ -5,6 +5,10 @@
 !               CondDB URLs into XML documents
 !-----------------------------------------------------------------------------
 
+!================ Tools/CondDBEntityResolver v5r1 2008-07-17 ===============
+! 2008-07-17 - Marco Clemencic
+ - Fixed a problem in the implementation of the IFileAccess interface.
+
 !================ Tools/CondDBEntityResolver v5r0 2008-06-30 ===============
 Needs Gaudi v20r0 and Tools/XmlTools v6r0
 ! 2008-06-12 - Marco Clemencic

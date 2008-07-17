@@ -1,4 +1,4 @@
-// $Id: CondDBEntityResolver.cpp,v 1.1 2008-06-12 18:44:18 marcocle Exp $
+// $Id: CondDBEntityResolver.cpp,v 1.2 2008-07-17 17:36:21 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/IDetDataSvc.h"
@@ -149,7 +149,11 @@ StatusCode CondDBEntityResolver::i_getData(const std::string &url,
 
   std::string path;
   if (url.substr(0,7) == "conddb:") {
-    path = url.substr(7);
+    if (url.substr(7,2) == "//") {
+      path = url.substr(9); // url starts with "conddb://"
+    } else {
+      path = url.substr(7); // url starts with "conddb:"
+    }
   } else {
     path = url;
   }
