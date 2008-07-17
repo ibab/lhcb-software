@@ -3,12 +3,14 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+!============================ TrackSys v4r15 2008-07-17 ======================
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
-- move Fitting.py and RecoTracking.py in option directory, remove python 
-  directory - add switches for "noDrifttimes" and "simplifiedGeometry"
+ - move Fitting.py and RecoTracking.py in option directory, remove python 
+   directory - add switches for "noDrifttimes" and "simplifiedGeometry"
 
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
-- Add python directory with Fitting.py and RecoTracking.py
+ - Add python directory with Fitting.py and RecoTracking.py
 
 !============================ TrackSys v4r14 2008-06-03 ======================
 ! 2008-06-03 - Marco Cattaneo
