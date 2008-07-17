@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r12 2008-07-17 ===========================
 ! 2008-07-17 - Tomasz Skwarnicki
  - Added HltSelCandidates and HltPrimaryVertex bank types
 
