@@ -19,14 +19,15 @@ public:
   typedef AlSymMat                          Covariance ;
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
   typedef boost::array<double,NumPars>      TransformParameters ;
+  typedef AlDofMask<6>                      DofMask ; 
 
   /** Constructors */
-  AlParameters(AlDofMask mask=AlDofMask()) ;
-  AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
+  AlParameters(DofMask mask=DofMask()) ;
+  AlParameters(const Vector& parameters, const Covariance& covariance, DofMask mask=DofMask(), size_t offset = 0u) ;
   AlParameters(const Vector& parameters, const Covariance& covariance, const Covariance& weightmatrix,
-	       AlDofMask mask=AlDofMask(), size_t offset = 0u) ;
-  AlParameters(double parameters[6], AlDofMask mask=AlDofMask()) ;
-  AlParameters(const TransformParameters& parameters, AlDofMask mask=AlDofMask()) ;
+	       DofMask mask=DofMask(), size_t offset = 0u) ;
+  AlParameters(double parameters[6], DofMask mask=DofMask()) ;
+  AlParameters(const TransformParameters& parameters, DofMask mask=DofMask()) ;
   
   size_t dim() const { return m_mask.nActive() ; }
   static std::string parName( int ) ;
@@ -48,9 +49,10 @@ public:
   double globalCorrelationCoefficient(int iactive) const ;
   double measurementCoordinateSigma(double weightR) const ;
   TransformParameters parameterArray() const ;
+  static double signedSqrt(double root) ;
 
 private:
-  AlDofMask   m_mask;
+  DofMask     m_mask;
   Vector      m_parameters ;
   Covariance  m_covariance ;
   Covariance  m_weightmatrix ;

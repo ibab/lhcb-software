@@ -8,12 +8,12 @@
 #include "Math/Vector3D.h"
 #include "Math/SVector.h"
 
-AlParameters::AlParameters(AlDofMask mask) 
+AlParameters::AlParameters(DofMask mask) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim()) 
 {
 }
 
-AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, AlDofMask mask, size_t offset) 
+AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, DofMask mask, size_t offset) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim()), m_weightmatrix(dim())
 {
   for (unsigned int i = 0u; i < dim(); ++i) {
@@ -24,7 +24,7 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
 }
 
 AlParameters::AlParameters(const Vector& parameters, const Covariance& covariance, 
-			   const Covariance& weightmatrix, AlDofMask mask, size_t offset) 
+			   const Covariance& weightmatrix, DofMask mask, size_t offset) 
   : m_mask(mask), m_parameters(dim()), m_covariance(dim()), m_weightmatrix(dim())
 {
   for (unsigned int i = 0u; i < dim(); ++i) {
@@ -36,14 +36,14 @@ AlParameters::AlParameters(const Vector& parameters, const Covariance& covarianc
   }
 }
 
-AlParameters::AlParameters(double parameters[6], AlDofMask mask)
+AlParameters::AlParameters(double parameters[6], DofMask mask)
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
   for( unsigned int i = 0u; i < dim(); ++i) 
     m_parameters[i] = parameters[mask.parIndex(i)] ;
 }
 
-AlParameters::AlParameters(const TransformParameters& parameters, AlDofMask mask)
+AlParameters::AlParameters(const TransformParameters& parameters, DofMask mask)
   : m_mask(mask), m_parameters(dim()), m_covariance(dim())
 {
   for( unsigned int i = 0u; i < dim(); ++i) 
@@ -65,7 +65,7 @@ std::string AlParameters::parName(int parindex)
   return rc ;
 }
 
-static inline double signedroot(double root)
+double AlParameters::signedSqrt(double root)
 {
   return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
 }
@@ -75,7 +75,7 @@ std::ostream& AlParameters::fillStream(std::ostream& os) const
   for (unsigned int iactive = 0u; iactive < dim(); ++iactive) {
     os << std::setw(6)  << parName(m_mask.parIndex(iactive)) << ": " 
        << std::setw(12) << m_parameters[iactive] << " +/- "
-       << std::setw(12) << signedroot(m_covariance[iactive][iactive]) << std::endl ;
+       << std::setw(12) << signedSqrt(m_covariance[iactive][iactive]) << std::endl ;
   }
   return os ;
 }
@@ -91,9 +91,9 @@ std::vector<double> AlParameters::translation() const
 
 std::vector<double> AlParameters::errTranslation() const {
   std::vector<double> errT(3, 0.0);
-  errT[Tx] = m_mask.isActive(Tx) ? signedroot(m_covariance[m_mask.activeParIndex(Tx)][m_mask.activeParIndex(Tx)]) : 0.0;
-  errT[Ty] = m_mask.isActive(Ty) ? signedroot(m_covariance[m_mask.activeParIndex(Ty)][m_mask.activeParIndex(Ty)]) : 0.0;
-  errT[Tz] = m_mask.isActive(Tz) ? signedroot(m_covariance[m_mask.activeParIndex(Tz)][m_mask.activeParIndex(Tz)]) : 0.0;
+  errT[Tx] = m_mask.isActive(Tx) ? signedSqrt(m_covariance[m_mask.activeParIndex(Tx)][m_mask.activeParIndex(Tx)]) : 0.0;
+  errT[Ty] = m_mask.isActive(Ty) ? signedSqrt(m_covariance[m_mask.activeParIndex(Ty)][m_mask.activeParIndex(Ty)]) : 0.0;
+  errT[Tz] = m_mask.isActive(Tz) ? signedSqrt(m_covariance[m_mask.activeParIndex(Tz)][m_mask.activeParIndex(Tz)]) : 0.0;
   return errT;
 }
 
@@ -108,9 +108,9 @@ std::vector<double> AlParameters::rotation() const
 
 std::vector<double> AlParameters::errRotation() const {
   std::vector<double> errR(3, 0.0);
-  errR[Rx-3] = m_mask.isActive(Rx) ? signedroot(m_covariance[m_mask.activeParIndex(Rx)][m_mask.activeParIndex(Rx)]) : 0.0;
-  errR[Ry-3] = m_mask.isActive(Ry) ? signedroot(m_covariance[m_mask.activeParIndex(Ry)][m_mask.activeParIndex(Ry)]) : 0.0;
-  errR[Rz-3] = m_mask.isActive(Rz) ? signedroot(m_covariance[m_mask.activeParIndex(Rz)][m_mask.activeParIndex(Rz)]) : 0.0;
+  errR[Rx-3] = m_mask.isActive(Rx) ? signedSqrt(m_covariance[m_mask.activeParIndex(Rx)][m_mask.activeParIndex(Rx)]) : 0.0;
+  errR[Ry-3] = m_mask.isActive(Ry) ? signedSqrt(m_covariance[m_mask.activeParIndex(Ry)][m_mask.activeParIndex(Ry)]) : 0.0;
+  errR[Rz-3] = m_mask.isActive(Rz) ? signedSqrt(m_covariance[m_mask.activeParIndex(Rz)][m_mask.activeParIndex(Rz)]) : 0.0;
   return errR;
 }
 
