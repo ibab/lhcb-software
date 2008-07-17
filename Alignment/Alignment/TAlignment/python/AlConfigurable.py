@@ -22,7 +22,6 @@ class AlConfigurable( ConfigurableUser ) :
         "VertexLocation"               : ""                         , ## Location of input vertex list
         "UseCorrelations"              : True                       , ## Correlations
         "ApplyMS"                      : True                       , ## Multiple Scattering
-        "CanonicalConstraintStrategy"  : 0                          , ## Constrain Strategy ( 0 == off, 1 == on, 2 == auto )
         "Constraints"                  : []                         , ## Specify which constrains to use with strategy 1  
         "UseWeightedAverageConstraint" : False                      , ## Weighted average constraint
         "MinNumberOfHits"              : 1                          , ## Min number of hits per element
@@ -189,7 +188,7 @@ class AlConfigurable( ConfigurableUser ) :
             
             from Configurables import ( TESCheck, EventNodeKiller ) 
             
-            patSequencer.Members.append( TESCheck( Inputs = [ "Link/Rec/Track/Best" ] ) )
+            patSequencer.Members.append( TESCheck( Inputs = [ "Link/Rec/Track/Best" ], Stop=False ) )
             patSequencer.Members.append( EventNodeKiller( Nodes = [ "Rec", "Raw", "Link/Rec" ] ) )
             
             patSequencer.Members.append( GaudiSequencer( "RecoVELOSeq" , MeasureTime = True ) )
@@ -253,16 +252,14 @@ class AlConfigurable( ConfigurableUser ) :
             alignSequencer.MeasureTime = True
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
-                                        gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool )
+                                        gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool,
+                                        Al__AlignConstraintTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations"                )
             alignAlg.TracksLocation               = self.getProp( "AlignInputTrackCont"          )
             alignAlg.VertexLocation               = self.getProp( "VertexLocation"               )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"              )
-            alignAlg.CanonicalConstraintStrategy  = self.getProp( "CanonicalConstraintStrategy"  )
-            alignAlg.Constraints                  = self.getProp( "Constraints"                  )
-            alignAlg.UseWeightedAverageConstraint = self.getProp( "UseWeightedAverageConstraint" )
             alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"                  )
             alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
@@ -280,6 +277,11 @@ class AlConfigurable( ConfigurableUser ) :
             alignAlg.addTool( GetElementsToBeAligned( "GetElementsToBeAligned" ) )
             alignAlg.GetElementsToBeAligned.OutputLevel = outputLevel
             alignAlg.GetElementsToBeAligned.Elements    = self.getProp( "ElementsToAlign" )
+
+            # this one is in the toolsvc, for now
+            constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
+            constrainttool.Constraints = self.getProp( "Constraints" )
+            constrainttool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
             
             alignSequencer.Members.append(alignAlg)
 
