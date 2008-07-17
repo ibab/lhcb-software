@@ -1,6 +1,5 @@
 <lcgdict>
   <class name    = "IAddTTClusterTool"       />
-  <class name    = "IFastMomentumEstimate"   />
   <class name    = "IHitExpectation"         />
   <class name    = "IHltV0Upgrade"           />
   <class name    = "IMaterialLocator"        />
@@ -23,10 +22,10 @@
   <class name    = "ITrackFunctionTool"      />
   <class name    = "ITrackInterpolator"      />
   <class name    = "ITrackManipulator"       />
-  <class name    = "ITrackMatch"             />
+  <class name    = "ITrackMatch"             /> 
+  <class name    = "ITrackMomentumEstimate"  />
   <class name    = "ITrackProjector"         />
   <class name    = "ITrackProjectorSelector" />
-  <class name    = "ITrackPtKick"            />
   <class name    = "ITrackSelector"          />
   <class name    = "ITracksFromTrack"        />
   <class name    = "ITrackVelodEdxCharge"    />
