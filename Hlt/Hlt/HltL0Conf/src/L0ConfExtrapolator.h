@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.h,v 1.3 2008-04-28 15:14:47 pkoppenb Exp $
+// $Id: L0ConfExtrapolator.h,v 1.4 2008-07-17 08:09:59 albrecht Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
@@ -54,12 +54,7 @@ private:
   double m_curvFactor;
   
   //for getFwdHypothesis
-  double m_zMagnet;
-  double m_zRef;
-  double m_axParam;
-  double m_cxParam;
-  double m_dxParam;
-  double m_byParam;
+  double m_zMagnet, m_zRef, m_axParam, m_cxParam, m_dxParam, m_byParam;
 
   std::vector<double> m_fwdSigmaX2;
   std::vector<double> m_fwdSigmaY2;
