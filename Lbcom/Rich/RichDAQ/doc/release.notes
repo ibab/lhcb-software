@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r18 2008-07-17 =========================
 ! 2008-07-15 - Chris Jones
  - Add an error message in the case an HPD is found in extended format, but
    no errors where detected.
