@@ -3,13 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v16r0>2008-07-17 Boole v16r0</A></H1><PRE>
+This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20
+ and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r1
+
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v33r0 or later
+
 </PRE><H1><A NAME=v15r2>2008-07-07 Boole v15r2</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19
  and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
-commissioned. Output requires Brunel v32r7 or later
+commissioned. Output requires Brunel v32r7 or v32r8
 
 - New features
   . In Boole Configurable, add support for SIMCOND. Now used by default except
@@ -45,9 +53,9 @@ This version uses projects Gaudi v19r9, LHCb v23r7, Lbcom v6r18
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
-commissioned. Output requires Brunel v32r7 or later
+commissioned. Output requires Brunel v32r7 or v32r8
 
-- Persistency changes (require Brunel v32r7 or greater to read)
+- Persistency changes (require Brunel v32r7 or v32r8 to read)
   . Outer tracker RawBank is now in 2008 format (OTSimulation v4r0, OTDAQ v6r0)
 
 - Tuning changes
