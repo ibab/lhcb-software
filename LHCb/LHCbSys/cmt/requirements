@@ -33,7 +33,7 @@ use DetDesc               v18r7   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv            v4r7    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v2r0    Det     # Marco Clemencic, Matt Needham
 use Magnet                v4r0    Det     # Adlene Hicheur
-use MuonDet               v8r1    Det     # Alessia Satta, Alessio Sarti
+use MuonDet               v8r2    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v7r9    Det     # Jan Amoraal
 use RichDet               v10r12  Det     # Chris Jones
 use STDet                 v4r3    Det     # Jeroen van Tilburg, Matt Needham
