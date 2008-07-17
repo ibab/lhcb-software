@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-07-17 - Johannes Albrecht
+ - ParabolaHypothesis, FwdHypothesis: include validity range
+
+
 !========================== HltBase v4r4 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
  - ITrackUpgrade, ITrackConfirm, ITrackView: 

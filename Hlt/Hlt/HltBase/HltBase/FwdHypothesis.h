@@ -1,4 +1,4 @@
-// $Id: FwdHypothesis.h,v 1.1 2008-03-27 10:31:17 albrecht Exp $
+// $Id: FwdHypothesis.h,v 1.2 2008-07-17 08:15:03 albrecht Exp $
 #ifndef FWDHYPOTHESIS_H 
 #define FWDHYPOTHESIS_H 1
 
@@ -21,9 +21,11 @@ public:
   FwdHypothesis( float ax , float bx , float cx , float dx, 
                  float ay , float by, 
                  float errx , float erry, 
-                 float zRef ) :
+                 float zRef ,
+                 double zMin, double zMax ) :
 	  m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_ay(ay), m_by(by),
-	  m_errx(errx), m_erry(erry), m_zRef(zRef)
+	  m_errx(errx), m_erry(erry), m_zRef(zRef),
+    m_zMin(zMin), m_zMax(zMax)
   { }
   
   Tf::XYSearchWindow searchWindow(double z) const
@@ -35,10 +37,19 @@ public:
     return Tf::XYSearchWindow(x - m_errx, x + m_errx, y - m_erry, y + m_erry);
   }
 
+  void getValidity(double& zmin, double& zmax) const
+  {
+    zmin = m_zMin;
+    zmax = m_zMax;
+    return;
+  }
+  
+
 private:
   float m_ax, m_bx, m_cx, m_dx;
   float m_ay, m_by;
   float m_errx, m_erry;
   float m_zRef;
+  double m_zMin, m_zMax;
 };
 #endif // FWDHYPOTHESIS_H
