@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::TStationHitManager
  *
- *  $Id: TStationHitManager.h,v 1.24 2008-06-02 13:49:53 smenzeme Exp $
+ *  $Id: TStationHitManager.h,v 1.25 2008-07-17 07:24:24 albrecht Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -44,6 +44,7 @@ namespace Tf
   class IStationSelector {
   public:
     virtual XYSearchWindow searchWindow(double z) const = 0;
+    virtual void getValidity(double& zmin, double& zmax) const = 0;
   };
 
   /** @class TStationHitManager TStationHitManager.h TfKernel/TStationHitManager.h 

@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-07-17 - Johannes Albrecht
+ - TStationHitManager.h: add validity range to IStationSelector
+
 !============================ TfKernel v2r5 2008-06-02 =======================
 ! 2008-06-02 - Stephanie Hansmann-Menzemer
  - Move cleaning of hits from EndEvent to BeginEvent in
