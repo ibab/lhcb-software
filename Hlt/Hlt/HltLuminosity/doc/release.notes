@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltLuminosity
+! Responsible : Jaap Panman
+! Purpose     : collect luminosity data and fill output bank and histos
+!-----------------------------------------------------------------------------
+
+!=============== HltLuminosity v1r0 2008-07-17 =============================
+! 2008-07-17 - Jaap Panman
+ - Package created to contain code for Luminosity measurement  
+
+ - CollectLumiData:   fills words in LumiSummary class
+
+ - DummyLumiAlley:    dummy algorithm providing TRUE HLT decision
+
+ - HltLumiOdinReader: algorithm to help debugging, prints Odin types 
+
