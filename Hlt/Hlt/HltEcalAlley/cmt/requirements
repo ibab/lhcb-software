@@ -20,7 +20,6 @@ use L0Event             v*    Event
 use HltBase             v*    Hlt
 use TrackInterfaces     v*    Tr
 use CaloDet             v*    Det
-use CaloReco            v*    Calo
 use CaloInterfaces      v*    Calo 
 
 #============================================================================

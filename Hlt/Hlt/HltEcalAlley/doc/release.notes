@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2008-07-17 - Patrick Koppenburg
+ - Do not depend on CaloReco (in Rec)
+
 ! 2008-07-16 - Mariusz Witek
  - creation of new package
 
