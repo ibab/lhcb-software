@@ -5,11 +5,11 @@
 #include <vector>
 #include <algorithm>
 
+template <int NumPars=6>
 class AlDofMask
 {
 public:
   /** Enums, typedefs */
-  enum { Tx=0, Ty, Tz, Rx, Ry, Rz, NumPars = 6 } EParameter ;
   typedef boost::array<bool,NumPars> MaskType ;
   
   /** Constructors */
@@ -32,7 +32,7 @@ public:
   //
   bool& operator[](size_t ipar) { assert(ipar<m_mask.size()) ; return m_mask[ipar] ; }
   //
-  typedef MaskType::const_iterator const_iterator ;
+  typedef typename MaskType::const_iterator const_iterator ;
   const_iterator begin() const { return m_mask.begin() ; }
   const_iterator end()   const { return m_mask.end() ; }
 
@@ -46,26 +46,33 @@ private:
   std::vector<unsigned char> m_activetoallmap; 
 } ;
 
-inline AlDofMask::AlDofMask()
+template <int NumPars> 
+AlDofMask<NumPars>::AlDofMask()
 {
-  for(MaskType::iterator it = m_mask.begin(); it != m_mask.end(); ++it) *it = true ;
+  for(typename MaskType::iterator it = m_mask.begin(); it != m_mask.end(); ++it) *it = true ;
   fillIndexMaps() ;
 }
 
-inline AlDofMask::AlDofMask(const std::vector<bool>& mask)
+template <int NumPars> 
+AlDofMask<NumPars>::AlDofMask(const std::vector<bool>& mask)
 {
-  assert(mask.size()==m_mask.size()) ;
+  if(mask.size() != m_mask.size()) {
+    std::cout << "range error in AlDofMask: " << m_mask.size() << " " << mask.size() << std::endl ;
+    assert(mask.size()==m_mask.size()) ;
+  }
   for(size_t i=0; i<m_mask.size(); ++i) m_mask[i] = mask[i] ;
   fillIndexMaps() ;
 }
 
-inline AlDofMask::AlDofMask(const MaskType& mask)
+template <int NumPars> 
+AlDofMask<NumPars>::AlDofMask(const MaskType& mask)
   : m_mask(mask)
 {
   fillIndexMaps() ;
 }
 
-inline void AlDofMask::fillIndexMaps() 
+template <int NumPars> 
+void AlDofMask<NumPars>::fillIndexMaps() 
 {
   m_activetoallmap.clear() ;
   for(unsigned int ipar=0; ipar<m_mask.size(); ++ipar) {
