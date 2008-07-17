@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.12 2008-07-17 17:23:01 cattanem Exp $
+! $Id: release.notes,v 1.13 2008-07-17 17:28:02 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+! 2008-07-17 - Marco Cattaneo for Stephanie Menzemer
+ - Adapt to new momentum interfaces
 
 !=================== MuonTrackAlign v1r5 2008-07-02 ==================
 ! 2008-07-17 - Marco Cattaneo for Silvia Pozzi
