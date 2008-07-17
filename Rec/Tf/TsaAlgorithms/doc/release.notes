@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-07-17 - Stephanie Hansmann-Menzemer
+ - adapt seeding algorithm to changes in PtKick and FastMomentumEstimate
+
 !======================= TsaAlgorithms v3r4 2008-07-17 ======================
 ! 2008-07-17 - Stephanie Hansmann-Menzemer
  - move TsaSeeding.py to options directory
