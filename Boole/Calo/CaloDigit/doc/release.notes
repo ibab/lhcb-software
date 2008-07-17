@@ -4,11 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-
+!======================== CaloDigit v2r7 2008-07-17 ==========================
 ! 2008-07-16 - Olivier Deschamps 
-  - fix uninitialized data members (m_useAdvancedNoise, m_monitorNoise) in CaloDigitAlg.cpp
-
-
+  - fix uninitialized data members (m_useAdvancedNoise, m_monitorNoise)
+    in CaloDigitAlg.cpp
 
 !======================== CaloDigit v2r6 2008-07-03 ==========================
 ! 2008-06-30 - Olivier Deschamps for Miriam Calvo
