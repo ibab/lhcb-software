@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.3 2008-07-11 13:59:32 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.4 2008-07-17 11:52:51 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,7 @@ RawBankSizes::RawBankSizes( const std::string& name,
    declareProperty( "MaxSizeDef"  , m_def=500);
    declareProperty( "Bins"        , m_bin=100);
    declareProperty( "Profile"     , m_prof=true);
+   declareProperty( "number_ofRMS"     , m_nRMS=5);
 
    // default bank types list == all banks !
    for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
@@ -38,6 +39,7 @@ RawBankSizes::RawBankSizes( const std::string& name,
      m_bankNames.push_back( bname );
    }
    m_firstevent = true;
+   first_few = true;
    n_ev = 0;
 }
 //=============================================================================
@@ -108,6 +110,7 @@ StatusCode RawBankSizes::execute()
 //
   if (first_few)
   {
+    //printf("Running through first few events...\n");
     int tots;
     tots = 0;
     for(int i = 0 ; i != (int) LHCb::RawBank::LastType; i++)
@@ -131,7 +134,7 @@ StatusCode RawBankSizes::execute()
     {
       Banks[i].fillstat(bsize[i]);
     }
-
+    //printf ("Filling totsize: %d\n",tots);
     totsize.fillstat(tots);
     n_ev++;
     if (n_ev >= 100) first_few=false;
@@ -164,7 +167,7 @@ StatusCode RawBankSizes::execute()
       s_min = Banks[id].min_source;
       s_max = Banks[id].max_source;
       profile1D( (double) (*ib)->sourceID() , (double) (*ib)->size()
-        , (*ib)->typeName( (*ib)->type()) + " sourceID (profile) [Bytes]"
+        , (*ib)->typeName( (*ib)->type()) + " size vs. sourceID"
         , s_min , s_max+1, s_max-s_min+1);
     }
     if (!banks->empty())
@@ -173,12 +176,15 @@ StatusCode RawBankSizes::execute()
       double rms;
       double smin,smax;
       Banks[bnkid].stat(mean,rms,smin,smax);
-      plot1D((double)bs,bname+" Size in Bytes",mean-5*rms,mean+5*rms,100);
+      plot1D((double)bs,bname+" Size in Bytes",mean-m_nRMS*rms,mean+m_nRMS*rms,m_bin);
     }
   }
-  double mean,rms,smin,smax;
-  totsize.stat(mean,rms,smin,smax);
-  plot1D((double)tots,"Total Event Size [Bytes]",mean-5*rms,mean+5*rms,100);
+  double tmean,trms,tsmin,tsmax,total;
+  totsize.stat(tmean,trms,tsmin,tsmax);
+  total = tots;
+  //printf ("totsize Class: %f %f \n", totsize.sum, totsize.sum2);
+  //printf("Total Size: %f %f %f\n",total,tmean,trms);
+  plot1D(total,"Total Event Size [Bytes]",tmean-m_nRMS*trms,tmean+m_nRMS*trms,m_bin);
   return StatusCode::SUCCESS;
 }
 

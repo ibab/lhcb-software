@@ -22,5 +22,7 @@ EventSelector.Input                  = {
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 StoreExplorerAlg.OutputLevel         = 3;
 RootHistSvc.OutputFile               = "MyHistos.root";
+RawBankSizes.number_ofRMS            = 10;
+RawBankSizes.Bins                    = 200;
 
 

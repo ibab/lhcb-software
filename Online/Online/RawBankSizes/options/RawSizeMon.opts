@@ -15,3 +15,5 @@ EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
 #include "$ONLINETASKS/options/MessageSvc.opts"
 EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
 ApplicationMgr.TopAlg                = { "LHCb::RawBankSizes/RawBankSizes" };
+RawBankSizes.number_ofRMS            = 10;
+RawBankSizes.Bins                    = 100;

@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.h,v 1.1 2008-07-11 13:37:38 jost Exp $
+// $Id: RawBankSizes.h,v 1.2 2008-07-17 11:52:51 jost Exp $
 #ifndef COMPONENT_RawBankSizes_H 
 #define COMPONENT_RawBankSizes_H 1
 
@@ -186,6 +186,7 @@ namespace LHCb
     BankDescr totsize;
     int n_ev;
     bool first_few;
+    int m_nRMS;
   };
 }
 #endif // COMPONENT_RawBankSizes_H
