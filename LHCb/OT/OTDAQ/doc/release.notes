@@ -2,9 +2,10 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
-!======================= OTDAQ v6r1 2008-07-16 =======================
+!======================= OTDAQ v7r0 2008-07-16 =======================
 ! 2008-07-07 - Jan Amoraal
- - Fix tables for Hardware to Software conversion
+ - Fix tables for Hardware to Software conversion. N.B., this change breaks
+   the decoding of any data encoded with OTDAQ v6r0
 
 !======================= OTDAQ v6r0p1 2008-06-30 =====================
 ! 2008-06-27 - Wouter Hulsbergen
