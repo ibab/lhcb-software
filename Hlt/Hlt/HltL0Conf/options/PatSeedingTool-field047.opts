@@ -1,0 +1,5 @@
+ToolSvc.PatSeedingTool.InitialArrow = 4.21826e-09;
+ToolSvc.PatSeedingTool.MomentumScale = 40.3751;
+ToolSvc.PatSeedingTool.zMagnet = 5372.1;
+ToolSvc.PatSeedingTool.dRatio = -3.81831e-4;
+ToolSvc.PatSeedingTool.yCorrection = 8.6746e-15;
