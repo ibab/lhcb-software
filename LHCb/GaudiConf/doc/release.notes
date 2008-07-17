@@ -2,8 +2,10 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r11 2008-07-17 =======================
 ! 2008-07-17 - Olivier Deschamps
- - DecodeRawEvent.opts : include L0 on-Demand options from L0DU package (and remove L0DUReport specific line)
+ - DecodeRawEvent.opts : include L0 on-Demand options from L0DU package
+   (and remove L0DUReport specific line)
 
 !======================== GaudiConf v10r10 2008-07-03 =======================
 ! 2008-07-03 - Marco Cattaneo
