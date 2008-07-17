@@ -53,6 +53,37 @@ dum = Subsystem("DUM", "dum", 17,0)
 tdet = Subsystem("TDET","dum",20,0)
 pus = Subsystem("PUS","pu",21,0)
 
+vetell_ports = { "vetella01" : 2, "vetella02" : 3, "vetella03" : 4, "vetella04" : 5,
+                 "vetella05" : 6, "vetella06" : 7, "vetella07" : 8, "vetella08" : 9,
+                 "vetella09" : 10, "vetella10" : 11, "vetella11" : 12, "vetella12" : 13,
+                 "vetella13" : 14, "vetella14" : 15, "vetella15" : 16, "vetella16" : 17,
+                 ####################################################################
+                 "vetella17" : 2, "vetella18" : 3, "vetella19" : 4, "vetella20" : 5,
+                 "vetella21" : 6, "vetella22" : 7, "vetella23" : 8, "vetella24" : 9,
+                 "vetella25" : 10, "vetella26" : 11, "vetella27" : 12, "vetella28" : 13,
+                 "vetella29" : 14, 
+                 ####################################################################
+                 "vetella30" : 2, "vetella31" : 3, "vetella32" : 4, "vetella33" : 5,
+                 "vetella34" : 6, "vetella35" : 7, "vetella36" : 8, "vetella37" : 9,
+                 "vetella38" : 10, "vetella39" : 11, "vetella40" : 12, "vetella41" : 13,
+                 "vetella42" : 14,
+                 ####################################################################
+                 "vetellc01" : 1, "vetellc02" : 2, "vetellc03" : 3, "vetellc04" : 4,
+                 "vetellc05" : 5, "vetellc06" : 6, "vetellc07" : 7, "vetellc08" : 8,
+                 ####################################################################
+                 "vetellc09" : 2, "vetellc10" : 3, "vetellc11" : 4, "vetellc12" : 5,
+                 "vetellc13" : 6, "vetellc14" : 7, "vetellc15" : 8, "vetellc16" : 9,
+                 "vetellc17" : 10, "vetellc18" : 11, "vetellc19" : 12, "vetellc20" : 13,
+                 "vetellc21" : 14, "vetellc22" : 15, "vetellc23" : 16, "vetellc24" : 17,
+                 "vetellc25" : 18,
+                 ####################################################################
+                 "vetellc26" : 2, "vetellc27" : 3, "vetellc28" : 4, "vetellc29" : 5,
+                 "vetellc30" : 6, "vetellc31" : 7, "vetellc32" : 8, "vetellc33" : 9,
+                 "vetellc34" : 10, "vetellc35" : 11, "vetellc36" : 12, "vetellc37" : 13,
+                 "vetellc38" : 14, "vetellc39" : 15, "vetellc40" : 16, "vetellc41" : 17,
+                 "vetellc42" : 18
+                 }
+
 subsystems = {"ecal" : ecal, "tcal" : tcal, "muon_a" : muon_a, "muon_c" : muon_c ,"ot_a" : ot_a,
               "ot_c" : ot_c, "mutq" : mutq, "velo_a" : velo_a, "velo_c" : velo_c, "prs" : prs,
               "tt" : tt, "rich1" : rich1, "rich2" : rich2, "hcal" : hcal, "it" : it,
@@ -438,21 +469,81 @@ class ConfigurationDB(DataBase):
                 print "Source or Destination Hugin does not exist\n"+inst.__str__()
                 pass
         print "connecting masterhugins with TFCMUNIN finished!"
+    def deleteAllMicroscopicLinksForDevice(self, deviceid):
+        query_select = """"select lmc.linkid linkid from lhcb_port_properties lpp
+                            left join LHCB_MICROSCOPIC_CONNECTIVITY lmc on lpp.portid = lmc.portidfrom
+                            where lmc.linkid is not null and lpp.deviceid='"""+str(deviceid)+"'"
+        result = self.executeSelectQuery(query_select)
+        if len(result) == 0:
+            print "no ports found for deviceid "+str(deviceid)
+        for portrow in result:
+            query = "DELETE FROM LHCB_MICROSCOPIC_CONNECTIVITY WHERE linkid = '"+str(portrow[0])+"'"
+            try:
+                self.executeQuery(query)
+                self.log("deleted microscopic link (linkid='"+str(portrow[0])+"') for deviceid '"+str(deviceid)+"'")
+            except RuntimeError, inst:
+                self.log("error deleting microscopic link (linkid='"+str(portrow[0])+"') for deviceid '"+str(deviceid)+"'\n"+str(inst))
+    def deleteMicroscopicLinkRow(self, portid):
+        query = "DELETE FROM LHCB_MICROSCOPIC_CONNECTIVITY WHERE portidfrom = '"+str(portid)+"' or portidto= '"+str(portid)+"'"
+        try:
+            self.executeQuery(query)
+            self.log("deleted microscopic links for port = '"+str(portid))
+        except RuntimeError, inst:
+            self.log("error deleting microscopic links for port = '"+str(portid))
+    def deleteThrottleConnectivityStrings(self, devicestrings):
+        for devicestring in devicestrings:
+            query_select = """select LHCB_MACROSCOPIC_CONNECTIVITY.linkid linkid
+                                FROM lhcb_lg_devices
+                                LEFT JOIN LHCB_PORT_PROPERTIES ON lhcb_lg_devices.deviceid = LHCB_PORT_PROPERTIES.deviceid
+                                LEFT JOIN LHCB_MACROSCOPIC_CONNECTIVITY ON LHCB_PORT_PROPERTIES.portid = LHCB_MACROSCOPIC_CONNECTIVITY.portidfrom
+                                WHERE lhcb_lg_devices.devicename = '"""+str(devicestring)+"' and LHCB_MACROSCOPIC_CONNECTIVITY.portidfrom is not null and LHCB_PORT_PROPERTIES.port_nbr = 4 and LHCB_MACROSCOPIC_CONNECTIVITY.link_info = 'Throttle Link'"
+            #print "\n"+query_select+"\n"
+            result = self.executeSelectQuery(query_select)
+            if len(result) == 0:
+                continue
+            linkid = result[0][0]
+            query_delete = "DELETE FROM LHCB_MACROSCOPIC_CONNECTIVITY WHERE linkid = "+str(linkid)+""
+            try:
+                self.executeQuery(query_delete)
+                self.log("deleted link with linkid="+str(linkid)+". Device was: "+str(devicestring))
+            except:
+                self.log("could not deleted link with linkid="+str(linkid)+". Device was: "+str(devicestring))
+    def deleteThrottleConnectivity(self, devices):
+        for device in devices:
+            query_select = """select LHCB_MACROSCOPIC_CONNECTIVITY.linkid linkid
+                                FROM lhcb_lg_devices
+                                LEFT JOIN LHCB_PORT_PROPERTIES ON lhcb_lg_devices.deviceid = LHCB_PORT_PROPERTIES.deviceid
+                                LEFT JOIN LHCB_MACROSCOPIC_CONNECTIVITY ON LHCB_PORT_PROPERTIES.portid = LHCB_MACROSCOPIC_CONNECTIVITY.portidfrom
+                                WHERE lhcb_lg_devices.devicename = '"""+str(device.devicename)+"' and LHCB_MACROSCOPIC_CONNECTIVITY.portidfrom is not null and LHCB_PORT_PROPERTIES.port_nbr = 4 and LHCB_MACROSCOPIC_CONNECTIVITY.link_info = 'Throttle Link'"
+            result = self.executeSelectQuery(query_select)
+            if len(result) == 0:
+                continue
+            linkid = result[0][0]
+            query_delete = "DELETE FROM LHCB_MACROSCOPIC_CONNECTIVITY WHERE linkid = "+str(linkid)+""
+            try:
+                self.executeQuery(query_delete)
+                self.log("deleted link with linkid="+str(linkid)+". Device was: "+str(device.devicename))
+            except:
+                self.log("could not deleted link with linkid="+str(linkid)+". Device was: "+str(device.devicename))
     """creates the throttle connectivity"""
     def createThrottleConnectivity(self, db, devices_to_connect, equipDBSystem):
         for device in devices_to_connect:
             if device.typ != "hugin":
-                hugin_device = equipDBSystem.getHuginForDevice(device)
+                hugin_device = equipDBSystem.getMasterHugin(device)
                 if hugin_device is not None:
-                    dport = device.loc.split("f")[1]
-                    """removing leading 0"""
-                    if dport[0] == "0":
-                        dport = dport[1]
+                    if vetell_ports.has_key(device.IPname):
+                        dport = str(vetell_ports[device.IPname])
+                        #print device.IPname+", Port: "+str(dport)
+                    else:
+                        dport = device.loc.split("f")[1]
+                        """removing leading 0"""
+                        if dport[0] == "0":
+                            dport = dport[1]
                     try:
                         db.InsertMultipleMacroLinks(device.devicename, hugin_device.devicename,"4",dport,"THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
-                        self.log("connecting "+device.devicename+"("+device.loc+", Port 4) and "+hugin_device.devicename+"("+hugin_device.loc+", Port, "+dport+")")
-                    except:
-                        self.log("could not connect "+device.devicename+"("+device.loc+", Port 4) and "+hugin_device.devicename+"("+hugin_device.loc+", Port, "+dport+")")
+                        self.log("connecting "+device.devicename+"("+device.loc+", Port 4) and "+hugin_device.devicename+"("+hugin_device.loc+", Port, "+str(dport)+")")
+                    except RuntimeError, inst:
+                        self.log("could not connect "+device.devicename+"("+device.loc+", Port 4) and "+hugin_device.devicename+"("+hugin_device.loc+", Port, "+str(dport)+")\n"+str(inst))
                 else:
                     self.log("could not find hugin  for "+device.devicename+" at location "+device.loc)
         """connecting XXHugin02 - XXHuginNN to XXHugin01"""
@@ -582,6 +673,41 @@ class ConfigurationDB(DataBase):
     def isSpare(self, device):
         return device.typ == "spare"
     """returns a device with the given serial or None if not found"""
+    def getVETELL(self):
+        vetells = []
+        query = """SELECT lg.devicename, lg.location, hw.responsible, lg.serialnb, ipinfo.ipaddress, p.macaddress
+                    FROM lhcb_hw_devices hw 
+                    LEFT JOIN lhcb_lg_devices lg ON (lg.serialnb = hw.serialnb)
+                    LEFT JOIN lhcb_ipinfo ipinfo ON lower(lg.devicename) = ipinfo.ipname
+                    LEFT JOIN lhcb_hwport_properties p ON p.serialnb = hw.serialnb
+                    WHERE devicename like 'VETELL%'"""
+        results = self.executeSelectQuery(query)
+        if len(results) == 0:
+            return []
+        lastdevice = ""
+        for module in results:
+            if module[0] == lastdevice:
+                continue
+            else:
+                lastdevice = module[0]
+            mac = module[5]
+            ip = module[4]
+            if mac is None:
+                mac = ""
+            if ip is None:
+                ip = ""
+            device = None
+            modulenumber = module[0]
+            modulenumber = modulenumber[-2:]
+            if getModuleType(module[0]) == "Hugin":
+                vetells.append( Hugin(subsystems[ getDetector(module[0]) ], modulenumber, mac, ip, module[2], module[3], module[1]))
+            elif getModuleType(module[0]) == "Ukl1":
+                vetells.append( UKL1(subsystems[ getDetector(module[0]) ], modulenumber, mac, ip, module[2], module[3], module[1]) )
+            elif getModuleType(module[0]) == "Tell1":
+                vetells.append( Tell1(subsystems[ getDetector(module[0]) ], modulenumber, mac, ip, module[2], module[3], module[1]) )
+            else:
+                pass
+        return vetells
     def getDeviceBySerial(self, serialnb):
         #print "ConfigurationDB.getDeviceBySerial("+str(serialnb)+") start"
         query = """SELECT lg.devicename, lg.location, hw.responsible, lg.serialnb, ipinfo.ipaddress, p.macaddress
@@ -592,7 +718,7 @@ class ConfigurationDB(DataBase):
                     WHERE hw.serialnb = '"""+str(serialnb)+"'"
         result = self.executeSelectQuery(query)
         if len(result) == 0:
-            print "module with serilanb "+str(serialnb)+" not found!"
+            #print "module with serilanb "+str(serialnb)+" not found!"
             return None
         module = result[0]
         if len(module) == 0:
@@ -632,7 +758,7 @@ class EquipmentDB(DataBase):
         print "EquipmentDB.__init__() end"
     """returns a list of all devices (hugin, tell1 or UKL1)"""
     def getAllDevices(self):
-        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' order by name"
+        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and length(item_id) = 14 and label_det is not null order by name"
         modules = self.executeSelectQuery(query)
         result = []
         dhcp = self.dhcp
@@ -677,13 +803,13 @@ class EquipmentDB(DataBase):
             modulenumber = module[0]
             modulenumber = modulenumber[-2:]
             if getModuleType(module[0]) == "Hugin":
-                print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
+                #print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
                 return Hugin(subsystems[ getDetector(module[0]) ], modulenumber, dhcp.getMACByIPName(module[0]), dhcp.getIPByIPName(module[0]), module[2], module[4], module[1])
             elif getModuleType(module[0]) == "Ukl1":
-                print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
+                #print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
                 return UKL1(subsystems[ getDetector(module[0]) ], modulenumber, dhcp.getMACByIPName(module[0]), dhcp.getIPByIPName(module[0]), module[2], module[4], module[1]) 
             elif getModuleType(module[0]) == "Tell1":
-                print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
+                #print "subsystem:"+str(subsystems[ getDetector(module[0]) ])
                 return Tell1(subsystems[ getDetector(module[0]) ], modulenumber, dhcp.getMACByIPName(module[0]), dhcp.getIPByIPName(module[0]), module[2], module[4], module[1]) 
             else:
                 return None #unknwon type

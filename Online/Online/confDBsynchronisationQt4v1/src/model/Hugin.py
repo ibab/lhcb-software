@@ -25,7 +25,6 @@ class Hugin:
         return self.devicename == other.devicename
 
     def insert(self,db,first,last):
-        print "self.system: "+str(self.system)
         db.InsertMultipleFunctionalDevices(self.system,str(self.devicename),
         "HUGIN",1,0,self.sn,str(self.hwtyp),str(self.responsible),str(self.loc),
         "First Try to enter Hugins","none",first,last)

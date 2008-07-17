@@ -4,7 +4,7 @@ class SparesWidget(QtGui.QWidget):
         def __init__(self, sparesInfo, parent = None):
             QtGui.QWidget.__init__(self, parent)
             self.gridLayout = QtGui.QGridLayout()
-            self.setGeometry(10, 210, 300, 200)
+            self.setGeometry(10, 240, 300, 200)
             self.sparesInfo = sparesInfo
             self.createLabels()
             self.createLineEdits()

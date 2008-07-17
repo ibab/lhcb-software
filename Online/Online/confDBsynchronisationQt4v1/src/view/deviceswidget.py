@@ -4,7 +4,7 @@ class DevicesWidget(QtGui.QWidget):
     def __init__(self, devicesInfo, parent = None):
         QtGui.QWidget.__init__(self, parent)
         self.gridLayout = QtGui.QGridLayout()
-        self.setGeometry(10, 30, 300, 200)
+        self.setGeometry(10, 60, 300, 200)
         self.devicesInfo = devicesInfo
         self.createLabels()
         self.createLineEdits()

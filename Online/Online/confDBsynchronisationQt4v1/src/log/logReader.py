@@ -28,5 +28,6 @@ class LogReader(object):
         print "opening "+file
         with open(file) as file:
             for line in file:
+#                line = line.replace("error", "<font color='red'>Error:</font>")
                 log += line+"<br>\n"
         return log

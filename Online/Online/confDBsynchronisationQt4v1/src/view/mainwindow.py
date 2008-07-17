@@ -7,6 +7,8 @@ class MainWindow(QtGui.QMainWindow):
         self.createActions()
         self.createMenu()
         self.statusBar()
+        self.createToolBars()
+        self.setWindowTitle("confDBsynchronisationQt4v1")
         self.setGeometry(1, 1, 800, 600) #startX, startY, length, height
         self.center()
     def center(self):
@@ -43,7 +45,7 @@ class MainWindow(QtGui.QMainWindow):
         self.configurationdbMenu.addAction(self.updateSparesAction)
         self.configurationdbMenu.addAction(self.deleteSparesAction)
     def createActions(self):
-        self.exitAction = QtGui.QAction(self.tr("&Exit"), self)
+        self.exitAction = QtGui.QAction(QtGui.QIcon("images/quit.png"), self.tr("&Exit"), self)
         self.exitAction.setShortcut(self.tr("Ctrl+X"))
         self.exitAction.setStatusTip(self.tr("exit"))
         #########################################################################################################
@@ -54,15 +56,15 @@ class MainWindow(QtGui.QMainWindow):
         self.aboutAction = QtGui.QAction(self.tr("&About"), self)
         self.aboutAction.setStatusTip(self.tr("About this program"))
         #########################################################################################################
-        self.insertAction = QtGui.QAction(self.tr("&Insert new devices"), self)
+        self.insertAction = QtGui.QAction(QtGui.QIcon("images/new.png"), self.tr("&Insert new devices"), self)
         self.insertAction.setShortcut(self.tr("Ctrl+I"))
         self.insertAction.setStatusTip(self.tr("Copies devices from lhcbintegration to configuration database"))
         #########################################################################################################
-        self.updateAction = QtGui.QAction(self.tr("&Update devices in configuration database"), self)
+        self.updateAction = QtGui.QAction(QtGui.QIcon("images/update.png"), self.tr("&Update devices in configuration database"), self)
         self.updateAction.setShortcut(self.tr("Ctrl+U"))
         self.updateAction.setStatusTip(self.tr("Updates existing devices in configuration database"))
         #########################################################################################################
-        self.deleteAction = QtGui.QAction(self.tr("&Delete all devices from configuration database"), self)
+        self.deleteAction = QtGui.QAction(QtGui.QIcon("images/delete.png"), self.tr("&Delete all devices from configuration database"), self)
         self.deleteAction.setShortcut(self.tr("Ctrl+D"))
         self.deleteAction.setStatusTip(self.tr("Deletes all devices from configuration database"))
         #########################################################################################################
@@ -95,6 +97,12 @@ class MainWindow(QtGui.QMainWindow):
         self.showLastSummaryLogAction = QtGui.QAction(self.tr("&Show last summary log"), self)
         self.showLastSummaryLogAction.setStatusTip(self.tr("Shows the last session log"))
         #########################################################################################################
+    def createToolBars(self):
+        self.deviceToolBar = self.addToolBar(self.tr("device"))
+        self.deviceToolBar.addAction(self.exitAction)
+        self.deviceToolBar.addAction(self.insertAction)
+        self.deviceToolBar.addAction(self.updateAction)
+        self.deviceToolBar.addAction(self.deleteAction)
     def about(self):
         print "MainWindow.about() start"
         QtGui.QMessageBox.information(self, "About", "confDBsnychronisation\n\nCopyright (c) 2008 CERN")

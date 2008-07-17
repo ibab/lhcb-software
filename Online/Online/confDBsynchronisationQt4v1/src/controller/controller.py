@@ -20,66 +20,66 @@ class Controller(object):
         return lf
     def initVars(self):
         print "Controller.initVars() start"
-        self.cn = None
-        self.confDB = None
-        self.equipDB = None
-        self.spareDB = None
+        self.__cn = None
+        self.__confDB = None
+        self.__equipDB = None
+        self.__spareDB = None
         print "Controller.initVars() end"
     def connectConfDBPython(self):
         print "Controller.connectConfDBPython() start"
-        self.cn = None
+        self.__cn = None
         result = False
         try:
-            self.cn = connect()
+            self.__cn = connect()
             result =  True
         except:
             result = False
-        print "confDBpython-connection:\t"+str(self.cn)
+        print "confDBpython-connection:\t"+str(self.__cn)
         print "Controller.connectConfDBPython() end"
         return result
     def disconnectConfDBPython(self):
         print "Controller.disconnectConfDBPython() start"
-        if self.cn is not None:
+        if self.__cn is not None:
             try:
-                disconnect(self.cn)
+                disconnect(self.__cn)
             except Exception, inst:
                 print str(inst)
         else:
             print "No connection to close."
-        self.cn = None
+        self.__cn = None
         print "Controller.disconnectConfDBPython() end"
     def getConfDBCxOracleConnection(self):
         print "Controller.getConfDBCxOracleConnection() start"
-        if self.confDB is None:
+        if self.__confDB is None:
             try:
-                self.confDB = ConfigurationDB(self.logfile)
+                self.__confDB = ConfigurationDB(self.logfile)
             except:
                 print "Error connecting to ConfigurationDB"
-                self.confDB = None
+                self.__confDB = None
         print "Controller.getConfDBCxOracleConnection() end"
-        return self.confDB
+        return self.__confDB
     def getEquipDBCxOracleConnection(self):
         print "Controller.getEquipDBCxOracleConnection() start"
-        if self.equipDB is None:
+        if self.__equipDB is None:
             try:
-                self.equipDB = EquipmentDB(self.logfile)
+                self.__equipDB = EquipmentDB(self.logfile)
             except:
                 print "Error connecting to EquipmentDB"
-                self.equipDB = None
+                self.__equipDB = None
         print "Controller.getEquipDBCxOracleConnection() end"
-        return self.equipDB
+        return self.__equipDB
     def getSpareDB(self):
         print "Controller.getSpareDB() start"
-        if self.spareDB is None:
+        if self.__spareDB is None:
             try:
-                self.spareDB = SpareDB(self.getConfDBCxOracleConnection(), self.getEquipDBCxOracleConnection(), self.logfile)
+                self.__spareDB = SpareDB(self.getConfDBCxOracleConnection(), self.getEquipDBCxOracleConnection(), self.logfile)
             except:
                 print "Error creating SpareDB"
-                self.spareDB = None
+                self.__spareDB = None
         print "Controller.getSpareDB() end"
-        return self.spareDB
+        return self.__spareDB
     def getCn(self):
-        if self.cn is None:
+        if self.__cn is None:
             if self.connectConfDBPython():
-                return self.cn
-        return self.cn
+                return self.__cn
+        return self.__cn

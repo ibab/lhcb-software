@@ -111,7 +111,7 @@ class NewDevicesWindowController(Controller):
         print "NewDevicesWindowController.onAddThis() start"
         for item in self.newDevicesList.selectedItems():
             if item is not None:
-                print item.data(0, 32).toString()
+                #print item.data(0, 32).toString()
                 item = str(item.text(0))
                 self.newDevicesListModel.remove(item)
                 self.selectedDevicesListModel.append(item)

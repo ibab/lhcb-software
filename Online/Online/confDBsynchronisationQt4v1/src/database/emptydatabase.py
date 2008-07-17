@@ -4,7 +4,7 @@ from string import upper
 from config import cDB_name, cDB_user, cDB_pass
 
 def removedev(db,nam):
-    print "deleting "+nam+" in db "+str(db)+"..."
+    #print "deleting "+nam+" in db "+str(db)+"..."
     devid = -1
     try:
         devid  = db.GetDeviceID_devicename(nam)

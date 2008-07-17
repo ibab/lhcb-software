@@ -124,12 +124,10 @@ class MainWindowController(Controller):
         print "MainWindowController.onUpdate() end"
     def onDelete(self):
         print "MainWindowController.onDelete() start"
-        self.confDB = self.getConfDBCxOracleConnection()
-        self.equipDB = self.getEquipDBCxOracleConnection()
         self.connectConfDBPython()
         self.db = self.getCn()
         print str(self.db)
-        self.deletedevicescontroller = DeleteDevicesController(self.confDB, self.equipDB, self.db, self)
+        self.deletedevicescontroller = DeleteDevicesController(self)
         print "MainWindowController.onDelete() end"
     def onTfcmunin01(self):
         print "MainWindowController.onTfcmunin01() start"
