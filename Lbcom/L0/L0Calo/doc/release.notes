@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.109 2008-07-16 20:21:20 robbep Exp $
+! $Id: release.notes,v 1.110 2008-07-17 15:30:02 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r15 2008-07-17 ========================
 ! 2008-07-16 - Patrick Robbe
  - src/L0CaloAlg.cpp: decides which candidate to take in case of equality
    to mimic electronics behaviour
