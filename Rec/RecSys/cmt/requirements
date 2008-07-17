@@ -1,5 +1,5 @@
 package RecSys
-version v5r8
+version v5r9
 
 branches cmt doc
  
@@ -24,34 +24,34 @@ use TrackAssociators    v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers       v4r1    Tr    # Eduardo Rodrigues
 use TrackExtrapolators  v2r18   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r16   Tr    # Eduardo Rodrigues
-use TrackFitter         v2r25   Tr    # Eduardo Rodrigues
+use TrackFitter         v2r26   Tr    # Eduardo Rodrigues
 use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
-use TrackMCTools        v2r18   Tr    # Eduardo Rodrigues
+use TrackMCTools        v2r19   Tr    # Eduardo Rodrigues
 use TrackProjectors     v2r18   Tr    # Eduardo Rodrigues, Edwin Bos
-use TrackMonitors       v1r1    Tr    # Wouter Hulsbergen, Stephanie Menzemer
+use TrackMonitors       v1r2    Tr    # Wouter Hulsbergen, Stephanie Menzemer
 use TrackPython         v3r1    Tr    # Eduardo Rodrigues
-use TrackTools          v3r8    Tr    # Eduardo Rodrigues
-use TrackUtils          v1r20   Tr    # Eduardo Rodrigues
+use TrackTools          v3r9    Tr    # Eduardo Rodrigues
+use TrackUtils          v1r21   Tr    # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
-use TrackSys            v4r14   Tf    # Eduardo Rodrigues
+use TrackSys            v4r15   Tf    # Eduardo Rodrigues
 use NNTools             v1r2p1  Tr    # Adrian Perieanu
-use PatAlgorithms       v3r7    Tf    # Stephanie Hansmann-Menzemer
+use PatAlgorithms       v3r8    Tf    # Stephanie Hansmann-Menzemer
 use PatVelo             v3r7    Tf    # David Hutchcroft
-use PatVeloTT           v3r1    Tf    # Mariusz Witek
+use PatVeloTT           v3r2    Tf    # Mariusz Witek
 use TfTools             v1r5    Tf    # Stephanie Hansmann-Menzemer
 use TrackSeeding        v1r3    Tf    # Eduardo Rodrigues, Henk Jan Bulten
-use TrackMatching       v2r17   Tf    # Eduardo Rodrigues
-use TsaAlgorithms       v3r3    Tf    # Matt Needham
+use TrackMatching       v2r18   Tf    # Eduardo Rodrigues
+use TsaAlgorithms       v3r4    Tf    # Matt Needham
 
 # Primary Vertex Finder
-use PatPV               v3r4    Tr   # Mariusz Witek
+use PatPV               v3r5    Tr   # Mariusz Witek
 
 # Muon
 #use MuonUtils		v1r0	Muon  # N.N.
 use MuonID              v5r2    Muon  # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker      v2r2    Muon  # Erica Polycarpo, Miriam Gandelman
-use MuonTrackAlign      v1r4    Muon  # Silvia Pozzi
+use MuonTrackAlign      v1r5    Muon  # Silvia Pozzi
 #use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
