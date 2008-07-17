@@ -1,6 +1,6 @@
 ////////// Brunel v32r7 ///////////////
 
-// $Id: AlignMuonRec.cpp,v 1.8 2008-07-03 17:01:48 spozzi Exp $
+// $Id: AlignMuonRec.cpp,v 1.9 2008-07-17 12:50:32 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -125,7 +125,7 @@ StatusCode AlignMuonRec::initialize() {
   m_muonDetector=getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
 
   //calculate the transverse momentum  
-  m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
+  m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
   info() << "In init, PTKick from geometry " << endreq;
   
 
@@ -380,7 +380,10 @@ StatusCode AlignMuonRec::execute() {
 	    temp.setQOverP( bestState.qOverP() ) ;
 	  } else {
 	    temp.setQOverP( 1 / 10000.) ;
-	    m_fCalcPtKick->calculate(&temp);
+	    double qOverP, sigmaQOverP;
+	    m_fCalcMomentum->calculate(&temp, qOverP, sigmaQOverP);
+	    temp.setQOverP(qOverP);
+	    temp.setErrQOverP2(sigmaQOverP*sigmaQOverP);
 	  }
 	  
 	  temp.setLocation(LHCb::State::EndVelo);

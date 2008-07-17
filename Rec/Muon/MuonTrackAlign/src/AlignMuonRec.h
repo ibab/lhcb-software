@@ -1,4 +1,4 @@
-// $Id: AlignMuonRec.h,v 1.3 2008-06-30 17:20:28 spozzi Exp $
+// $Id: AlignMuonRec.h,v 1.4 2008-07-17 12:50:32 smenzeme Exp $
 #ifndef ALIGNMUONREC_H 
 #define ALIGNMUONREC_H 1
 
@@ -22,7 +22,7 @@
 #include "AlignMuonTrack.h"
 #include "MuonDAQ/IMuonRawBuffer.h"
 //tools
-#include "TrackInterfaces/ITrackPtKick.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 //#include "HltBase/HltAlgorithm.h"
 //#include "HltBase/HltFunctions.h"
@@ -69,7 +69,7 @@ private:
 //  IMuonGeometryTool *m_iGeomTool;  
 //  IMuonGetInfoTool  *m_iGetInfo;  
   IMuonRawBuffer* m_muonBuffer;
-  ITrackPtKick* m_fCalcPtKick; // Pt-kick tool  // Silvia July 07
+  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool  // Silvia July 07
 
   DeMuonDetector* m_muonDetector;
   //  IMuonPosTool      *m_iPosTool;
