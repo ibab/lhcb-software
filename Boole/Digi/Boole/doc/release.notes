@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v16r0>2008-07-17 Boole v16r0</A></H1><PRE>
+
 </PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
  - Update 2008-Files.py with latest test file from Gauss v31r2
  - Fix default condDBtag in Boole-2008.py
