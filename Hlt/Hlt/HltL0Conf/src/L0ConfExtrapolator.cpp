@@ -1,10 +1,13 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.3 2008-04-28 15:14:47 pkoppenb Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.4 2008-07-17 08:10:40 albrecht Exp $
 // Include files 
 
 #include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+
+//Event
+#include "Event/StateParameters.h"
 
 #include "LineHypothesis.h"
 #include "HltBase/ParabolaHypothesis.h"
@@ -58,7 +61,6 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
   declareProperty("hCalEcalKick2" , m_HECalKick[1] = 1.585e6 );
   declareProperty("hCalKick1" , m_HCalKick[0] = 17. );
   declareProperty("hCalKick2" , m_HCalKick[1] = 1.712e6 );
-
 }
 //=============================================================================
 // Destructor
@@ -154,7 +156,8 @@ ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& 
   
   return ParabolaHypothesis(aState.ty(), aState.y() - aState.ty() * z,
                             ax, bx, cx, nSigmaX * std::sqrt(aState.errX2()),
-                            nSigmaY * std::sqrt(aState.errY2()));
+                            nSigmaY * std::sqrt(aState.errY2()),
+                            StateParameters::ZBegT, StateParameters::ZEndT );
 }
 
 FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack,
@@ -187,13 +190,14 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
   
   if ( reg < 0 || reg > 4 ) {
     error()<<"region not meaningful .. "<<endmsg;
-    return FwdHypothesis(0,0,0,0,0,0,0,0,0);
+    return FwdHypothesis(0,0,0,0,0,0,0,0,0,0,0);
   }
   
   return FwdHypothesis( ax, bx, cx,dx,
                         ay, by,
                         nSigma*std::sqrt(m_fwdSigmaX2[reg]), nSigma*std::sqrt(m_fwdSigmaY2[reg]),
-                        m_zRef);
+                        m_zRef,
+                        StateParameters::ZBegT, StateParameters::ZEndT);
 }
 
 /*
