@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.18 2008-07-09 08:28:51 hernando Exp $
+// $Id: TsaConfirmTool.cpp,v 1.19 2008-07-17 08:08:19 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -122,8 +122,7 @@ StatusCode TsaConfirmTool::initialize() {
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
   
 
-  return StatusCode::SUCCESS;
-
+  return sc;
 }
 
 //=============================================================================
@@ -163,6 +162,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     }
   }
 
+  StatusCode sc;
   // if there are too few hits in the window, we won't even start
   if (m_hitMan->hits().size() >= minHits) {
     /*
@@ -184,30 +184,70 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       // x search: give state as input to restrict slope
       LHCb::State aState(seedState);
       if ( m_restrictTx ) {
-        m_xSearchStep[sector]->execute(aState , seeds , hits ); 
+        sc = m_xSearchStep[sector]->execute(aState , seeds , hits ); 
+        if (sc.isFailure()) {
+          return Error("x search failed", StatusCode::FAILURE,1);
+        }
+        
       } else {
-        m_xSearchStep[sector]->execute(seeds,hits);  
+        sc = m_xSearchStep[sector]->execute(seeds,hits);  
+        if (sc.isFailure()) {
+          return Error("x search failed", StatusCode::FAILURE,1);
+        }
       }
 
-      if (sector >2 ) m_xSelection->execute(seeds); // x selection
-       
+      if (sector >2 ) {
+        sc = m_xSelection->execute(seeds); // x selection
+        if (sc.isFailure()) {
+          return Error("x selection failed", StatusCode::FAILURE,1);
+        }
+      }
+      
       // add stereo
       if ( m_restrictTy ) {
-        m_stereoStep[sector]->execute(aState , seeds , sHits );
+        sc = m_stereoStep[sector]->execute(aState , seeds , sHits );
+        if (sc.isFailure()) {
+          return Error("stereo search failed", StatusCode::FAILURE,1);
+        }
       } else {
-        m_stereoStep[sector]->execute(seeds,sHits); 
+        sc = m_stereoStep[sector]->execute(seeds,sHits); 
+        if (sc.isFailure()) {
+          return Error("stereo search failed", StatusCode::FAILURE,1);
+        }
       }
 
-      if (m_calcLikelihood == true) m_likelihood->execute(seeds); // likelihood
+      if (m_calcLikelihood == true) {
+        sc = m_likelihood->execute(seeds); // likelihood
+        if (sc.isFailure()) {
+          return Error("likelihood failed", StatusCode::FAILURE,1);
+        }
+      }
+      
+        
+      sc = m_finalSelection->execute(seeds); // final selection
+      if (sc.isFailure()) {
+        return Error("selection failed", StatusCode::FAILURE,1);
+      }
 
-      m_finalSelection->execute(seeds); // final selection
-
-      if ( sector <= 2 ) m_stubFind->execute( hits, sHits, stubs );
+      if ( sector <= 2 ) {
+        sc = m_stubFind->execute( hits, sHits, stubs );
+        if (sc.isFailure()) {
+          return Error("stub finding failed", StatusCode::FAILURE,1);
+        }
+      }
+      
+        
 
       //  After the IT stub finding is finished, try to link the stubs to make seed candidates
       if ( sector == 2 ) {
-        m_stubLinker->execute( stubs, seeds );
-        m_finalSelection->execute(seeds); 
+        sc = m_stubLinker->execute( stubs, seeds );
+        if (sc.isFailure()) {
+          return Error("stub linking failed", StatusCode::FAILURE,1);
+        }
+        sc = m_finalSelection->execute(seeds); 
+        if (sc.isFailure()) {
+          return Error("stub selection failed", StatusCode::FAILURE,1);
+        }
       }
 
       // Convert TsaSeedTracks to LHCb tracks
@@ -224,8 +264,15 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       if ( sector > 2 ) {
         std::vector<SeedTrack*> extendedSeeds; 
         extendedSeeds.reserve(10);
-        m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
-        m_finalSelection->execute(extendedSeeds); 
+        sc = m_extendStubs->execute( sector, stubs, hits, sHits, extendedSeeds );
+        if (sc.isFailure()) {
+          return Error("stub extension", StatusCode::FAILURE,1);
+        }
+
+        sc = m_finalSelection->execute(extendedSeeds); 
+        if (sc.isFailure()) {
+          return Error("extended stub selection failed", StatusCode::FAILURE,1);
+        }
 
         //Convert TsaSeedTracks to LHCb tracks
         for ( std::vector<Tf::Tsa::SeedTrack*>::iterator itEx = extendedSeeds.begin(); extendedSeeds.end() != itEx; ++itEx ) {
@@ -249,7 +296,7 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
       }
     } //loop sectors
 
-    // clean up the stubs...
+      // clean up the stubs...
     for ( int stn = 0; stn < 3; ++stn ) {
       for ( std::vector<Tf::Tsa::SeedStub*>::iterator it = stubs[stn].begin(); stubs[stn].end() != it; ++it ) {
         delete *it;
@@ -269,3 +316,4 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   return StatusCode::SUCCESS;
 }
 
+  
