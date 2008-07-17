@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.23 2008-07-15 11:20:26 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.24 2008-07-17 06:57:42 mneedham Exp $
 
 
 #include <algorithm>
@@ -73,8 +73,7 @@ StatusCode RawBankToSTLiteClusterAlg::execute() {
   // Retrieve the RawEvent:
   RawEvent* rawEvt = get<RawEvent>(m_rawEventLocation);
 
-  std::cout << " retrieve from " << name()<< "  " << m_rawEventLocation;
-
+ 
   // decode banks
   StatusCode sc = decodeBanks(rawEvt);   
   if (sc.isFailure()){

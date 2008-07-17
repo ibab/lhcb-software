@@ -4,6 +4,8 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-17 M Needham Remove cout
+
 ! 2008-07-15 Add dependency on RecEvent
 
 ! 2008-07-15 Put back some breaks I removed for testing
