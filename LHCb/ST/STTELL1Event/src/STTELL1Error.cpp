@@ -135,7 +135,11 @@ unsigned int LHCb::STTELL1Error::findPCN(const unsigned int beetle) const{
 void LHCb::STTELL1Error::fillErrorInfo() {
 
   for (unsigned int iLink = 0; iLink < nBeetle ; ++iLink){
-    if ( OptLnkDisable() >> iLink & 1 ) {
+    if ( !correctPatterns() )
+      {
+	flagBadLinks(iLink,kCorruptedBank);
+      }
+    else if ( OptLnkDisable() >> iLink & 1 ) {
       flagBadLinks(iLink,kOptLinkDisabled);      
     }   
     else  if ( tlkLnkLoss() >> iLink & 1 ) {
@@ -162,6 +166,26 @@ void LHCb::STTELL1Error::fillErrorInfo() {
     } // if
   } // iOLink  
 
+}
+
+bool LHCb::STTELL1Error::correctPatterns() const
+{
+  bool isOK(true);
+
+  isOK  = (EmptyVal0() == 0) * (EmptyVal1() == nMagic); // Error bank
+
+  return isOK;
+
+  isOK *= (EmptyVal2() == 1) * (EmptyVal3() == nMagic); // Cluster bank
+  isOK *= (EmptyVal4() == 2) * (EmptyVal5() == nMagic); // ADC bank
+
+  if (hasNZS())
+      isOK *= (EmptyVal6() == 3) * (EmptyVal7() == nMagic); // NZS bank
+
+  if (hasPed())
+    isOK *= (EmptyVal8() == 4) * (EmptyVal9() == nMagic); // Pedestal bank
+
+  return isOK;
 }
 
 

@@ -28,9 +28,9 @@
   <enum access = 'PUBLIC'
     name = 'FailureMode' 
     desc = 'enumerate failure modes' 
-    value = 'kNone = 0,  kOptLinkDisabled = 1 , kTlkLinkLoss = 2,  
-             kOptLinkNoClock  = 3, kSyncRAMFull = 4, kSyncEvtSize =5, 
-             kOptLinkNoEvent  =6 , kPseudoHeader = 7, kWrongPCN = 8'
+    value = 'kNone = 0,  kCorruptedBank = 1, kOptLinkDisabled = 2 , kTlkLinkLoss = 3,  
+             kOptLinkNoClock  = 4, kSyncRAMFull = 5, kSyncEvtSize = 6, 
+             kOptLinkNoEvent  = 7, kPseudoHeader = 8, kWrongPCN = 9'
     unknownValue = 'kNone'
     strTypConv = 'TRUE'>
   </enum>
@@ -39,7 +39,7 @@
    <enum access = 'PRIVATE'
      name = 'Tell1Const'
      desc = 'few useful constants'
-     value = 'nPort = 4, nBeetle = 6'
+     value = 'nPort = 4, nBeetle = 6, nMagic = 0x8E'
     >
      </enum>
 
@@ -120,6 +120,15 @@
        type = "void"
        access = "PRIVATE"
     />
+
+      <method
+	name   = "correctPatterns"
+	desc   = "checks the magic patterns in error bank"
+	type   = "bool"
+	const  = "TRUE"
+	access = "PRIVATE"
+	/>
+
 
       <attribute
        type    = 'bitfield'

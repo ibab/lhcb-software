@@ -52,6 +52,12 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        	</attribute>
+
+      <enum access = 'PRIVATE'
+	name = 'Tell1Const'
+	desc = 'few useful constants'
+	value = 'nPort = 4, nBeetle = 6, nMagic = 0x8E'
+	/>
  	   
       <attribute
        type    = 'bitfield'
@@ -342,6 +348,29 @@
          init    = '100'
          access  = 'PUBLIC'>
 	 </attribute>
+ 
+      <method
+	name    = "findPCN"
+	desc    = "find pcn for value for this beetle"
+        argList = "const unsigned int beetle" 
+        const   = "TRUE"
+        type    = "unsigned int"
+	/>
+      
+      <method
+	name = 'pcnVote'
+	desc = 'majority vote on pcn'
+	type = 'unsigned int'
+	const = "TRUE"
+	/>
+
+      <method
+	name   = "pcnConsistency"
+	desc   = "checks that pcn values are the same"
+	type   = "bool"
+	const  = "TRUE"
+	access = "PUBLIC"
+	/>
   
 	 </class>
   </package>
