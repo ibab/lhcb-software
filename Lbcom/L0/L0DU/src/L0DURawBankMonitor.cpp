@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.6 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.7 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -101,14 +101,8 @@ StatusCode L0DURawBankMonitor::execute() {
   if(m_decode){
     ok = m_fromRaw->decodeBank();
   }else{
-    bool ko = 
-      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Corrupted  )  ||
-      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Missing    )  ||
-      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Incomplete )  ||
-      ( m_fromRaw->roStatus() && LHCb::RawBankReadoutStatus::Empty      )  ;
-      ok = !ko;
-  }
-  
+    ok = m_fromRaw->report().valid();
+  }  
   if(!ok){
     Error("Readout error : unable to monitor the L0DU rawBank", StatusCode::SUCCESS,StatusCode::SUCCESS).ignore();
     return StatusCode::SUCCESS;

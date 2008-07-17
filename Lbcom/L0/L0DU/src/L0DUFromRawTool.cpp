@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.16 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.17 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -87,6 +87,10 @@ StatusCode L0DUFromRawTool::initialize(){
 // ---------------------------------------------
 bool L0DUFromRawTool::decodeBank(int ibank){
   bool ok = decoding(ibank);
+  if( !ok ){
+    m_report.clear();
+    m_report.setValid( false );
+  }
   putStatusOnTES();
   return ok;
 }

@@ -7,7 +7,7 @@
 //------------------------- TCK = 0x0001 / Recipe name : Cosmics_Calo_OR_Muon_0x0001
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0001"};
-//ToolSvc.L0DUConfig.TCK_0x0001.Name = "Cosmics_Calo_OR_Muon_0x0001";
+ToolSvc.L0DUConfig.TCK_0x0001.Name = "Cosmics_Calo_OR_Muon_0x0001";
 ToolSvc.L0DUConfig.TCK_0x0001.Description ="(el>20 and had>5) or (mu1>0)";
 
 ToolSvc.L0DUConfig.TCK_0x0001.Conditions = {
@@ -30,7 +30,7 @@ ToolSvc.L0DUConfig.TCK_0x0001.Triggers +={
 //------------------------- TCK = 0x0002 / Recipe name : Cosmics_CaloOnly_0x0002
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0002"};
-//ToolSvc.L0DUConfig.TCK_0x0002.Name = "Cosmics_CaloOnly_0x0002";
+ToolSvc.L0DUConfig.TCK_0x0002.Name = "Cosmics_CaloOnly_0x0002";
 ToolSvc.L0DUConfig.TCK_0x0002.Description ="el>20 and had>5";
 ToolSvc.L0DUConfig.TCK_0x0002.Conditions = {
 { "name=[Electron,Et]" , "data=[Electron(Et)]" , "comparator=[>]" , "threshold=[20]" },
@@ -48,7 +48,7 @@ ToolSvc.L0DUConfig.TCK_0x0002.Triggers +={
 //------------------------- TCK = 0x0003 / Recipe name : Cosmics_MuonOnly_0x0003
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0003"};
-//ToolSvc.L0DUConfig.TCK_0x0003.Name = "Cosmics_MuonOnly_0x0003";
+ToolSvc.L0DUConfig.TCK_0x0003.Name = "Cosmics_MuonOnly_0x0003";
 ToolSvc.L0DUConfig.TCK_0x0003.Description ="mu1>0";
 
 
@@ -68,7 +68,7 @@ ToolSvc.L0DUConfig.TCK_0x0003.Triggers +={
 //------------------------- TCK = 0x0004 / Recipe name : Cosmics_Calo_OR_MuonPresdaled_0x0004
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0004"};
-//ToolSvc.L0DUConfig.TCK_0x0004.Name = "Cosmics_Calo_OR_MuonPresdaled_0x0004";
+ToolSvc.L0DUConfig.TCK_0x0004.Name = "Cosmics_Calo_OR_MuonPresdaled_0x0004";
 ToolSvc.L0DUConfig.TCK_0x0004.Description ="(el>20 and had>5) or (mu1>0)_downscaled";
 ToolSvc.L0DUConfig.TCK_0x0004.Conditions = {
   { "name=[Electron,Et]" , "data=[Electron(Et)]" , "comparator=[>]" , "threshold=[20]" },
@@ -90,7 +90,7 @@ ToolSvc.L0DUConfig.TCK_0x0004.Triggers +={
 //------------------------- TCK = 0x0005 / Recipe name : Cosmics_elPmu_OR_hadPmu_0x0005
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0005"};
-//ToolSvc.L0DUConfig.TCK_0x0005.Name = "Cosmics_elPmu_OR_hadPmu_0x0005";
+ToolSvc.L0DUConfig.TCK_0x0005.Name = "Cosmics_elPmu_OR_hadPmu_0x0005";
 ToolSvc.L0DUConfig.TCK_0x0005.Description ="(el>20 and mu1>0) or (had>5 and mu1>0)";
 
 
@@ -119,7 +119,7 @@ ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={
 //------------------------- TCK = 0x006
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0006"};
-//ToolSvc.L0DUConfig.TCK_0x0006.Name = "Cosmics_Spd";
+ToolSvc.L0DUConfig.TCK_0x0006.Name = "Cosmics_Spd";
 ToolSvc.L0DUConfig.TCK_0x0006.Description ="spdMult>1 ";
 ToolSvc.L0DUConfig.TCK_0x0006.Conditions = {
  { "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[1]"   }
@@ -128,13 +128,15 @@ ToolSvc.L0DUConfig.TCK_0x0006.Channels ={
 { "name=[Spd]" , "rate==[100]" , "conditions= [SpdMult]" }
 };
   
-
+ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[Spd]" }
+}; 
 
 //----------------------------------------------------//
 //------------------------- TCK = 0x007
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0x0007"};
-//ToolSvc.L0DUConfig.TCK_0x0007.Name = "Cosmics_SpdMu";
+ToolSvc.L0DUConfig.TCK_0x0007.Name = "Cosmics_SpdMu";
 ToolSvc.L0DUConfig.TCK_0x0007.Description ="spdMult>1 and muon>0";
 ToolSvc.L0DUConfig.TCK_0x0007.Conditions = {
  { "name=[SpdMult]"         , "data=[Spd(Mult)]"     , "comparator=[>]" , "threshold=[0]"   },
@@ -142,4 +144,8 @@ ToolSvc.L0DUConfig.TCK_0x0007.Conditions = {
 };
 ToolSvc.L0DUConfig.TCK_0x0007.Channels ={
 { "name=[spd_and_mu]" , "rate==[100]" , "conditions= [SpdMult]      && [Muon]" }
+}; 
+ToolSvc.L0DUConfig.TCK_0x0005.Triggers +={ 
+  {"name=[L0Calo]"     , "channels=[spd_and_mu]" },
+  {"name=[L0Muon]"     , "channels=[spd_and_mu]" }
 }; 

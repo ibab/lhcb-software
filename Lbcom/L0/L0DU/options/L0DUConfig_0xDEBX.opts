@@ -6,7 +6,7 @@
 //------------------------- TCK = 0xDEB1 / Recipe name : Debug_Algo1_0xdeb1
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEB1"};
-// ToolSvc.L0DUConfig.TCK_0xDEB1.Name = "Debug_Algo1_0xdeb1";
+ToolSvc.L0DUConfig.TCK_0xDEB1.Name = "Debug_Algo1_0xdeb1";
 ToolSvc.L0DUConfig.TCK_0xDEB1.Description ="Test Algo 1 (TCK=0xdeb1)";
 
 ToolSvc.L0DUConfig.TCK_0xDEB1.Conditions = {
@@ -28,7 +28,7 @@ ToolSvc.L0DUConfig.TCK_0xDEB1.Channels ={
 //------------------------- TCK = 0xDEB2 / Recipe name : Debug_Algo2_0xdeb2
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEB2"};
-// ToolSvc.L0DUConfig.TCK_0xDEB2.Name = "Debug_Algo2_0xdeb2";
+ToolSvc.L0DUConfig.TCK_0xDEB2.Name = "Debug_Algo2_0xdeb2";
 ToolSvc.L0DUConfig.TCK_0xDEB2.Description ="Test Algo 2 (TCK=0xdeb2)";
 
 ToolSvc.L0DUConfig.TCK_0xDEB2.Conditions = {
@@ -54,7 +54,7 @@ ToolSvc.L0DUConfig.TCK_0xDEB2.Channels ={
 //------------------------- TCK = 0xDEB3 / Recipe name : Debug_Algo3_0xdeb3
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEB3"};
-//ToolSvc.L0DUConfig.TCK_0xDEB3.Name = "Debug_Algo3_0xdeb3";
+ToolSvc.L0DUConfig.TCK_0xDEB3.Name = "Debug_Algo3_0xdeb3";
 ToolSvc.L0DUConfig.TCK_0xDEB3.Description ="Test Algo 3 (TCK=0xdeb3)";
 
 ToolSvc.L0DUConfig.TCK_0xDEB3.ConstData = {"CaloArea" : 12288 };
@@ -89,7 +89,7 @@ ToolSvc.L0DUConfig.TCK_0xDEB3.Channels ={
 //------------------------- TCK = 0xDEBA / Recipe name : Debug_el=251_0xdeba
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEBA"};
-//ToolSvc.L0DUConfig.TCK_0xDEBA.Name = "Debug_el=251_0xdeba";
+ToolSvc.L0DUConfig.TCK_0xDEBA.Name = "Debug_el=251_0xdeba";
 ToolSvc.L0DUConfig.TCK_0xDEBA.Description ="electron=251 (tck=0xdeba)";
 
 
@@ -105,7 +105,7 @@ ToolSvc.L0DUConfig.TCK_0xDEBA.Channels ={
 //------------------------- TCK = 0xDEBB / Recipe name : Debug_had=251_0xdebb
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEBB"};
-//ToolSvc.L0DUConfig.TCK_0xDEBB.Name = "Debug_had=251_0xdebb";
+ToolSvc.L0DUConfig.TCK_0xDEBB.Name = "Debug_had=251_0xdebb";
 ToolSvc.L0DUConfig.TCK_0xDEBB.Description ="hadron=251 (tck=0xdebb)";
 
 
@@ -121,7 +121,7 @@ ToolSvc.L0DUConfig.TCK_0xDEBB.Channels ={
 //------------------------- TCK = 0xDEBC / Recipe name : Debug_mu1=127_0xdebc
 //----------------------------------------------------//
 ToolSvc.L0DUConfig.registerTCK += {"0xDEBC"};
-// ToolSvc.L0DUConfig.TCK_0xDEBC.Name = "Debug_mu1=127_0xdebc";
+ToolSvc.L0DUConfig.TCK_0xDEBC.Name = "Debug_mu1=127_0xdebc";
 ToolSvc.L0DUConfig.TCK_0xDEBC.Description ="Muon1=127 (tck=0xdebc)";
 
 

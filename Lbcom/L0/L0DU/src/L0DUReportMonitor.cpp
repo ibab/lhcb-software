@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.12 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.13 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -43,6 +43,8 @@ L0DUReportMonitor::L0DUReportMonitor( const std::string& name,
   declareProperty( "FullMonitoring"    , m_full  = false);
   declareProperty( "DataReBinFactor"   , m_bin = 1);
   declareProperty( "SplitConfig"       , m_split = true);
+
+  if( context() == "Emulation" )m_reportLocation = LHCb::L0DUReportLocation::Emulated;
 
   setHistoDir( name );
 }
@@ -95,10 +97,13 @@ StatusCode L0DUReportMonitor::execute() {
 
 
   if(config == NULL){
-    Error("NULL L0DUConfig of unknown  tck = " + ttck.str() + " -> cannot monitor the report").ignore();
+    Error("NULL L0DUConfig for tck = " + ttck.str() + " -> cannot monitor the report").ignore();
     return StatusCode::SUCCESS;
   }
-  
+  if( !report->valid() ){
+    Error("Invalid report -> cannot monitor").ignore();
+    return StatusCode::SUCCESS;
+  }
 
   // Initialisation
   bool init = false;
@@ -568,8 +573,10 @@ StatusCode L0DUReportMonitor::finalize() {
     
     info() << "   **************************************************** " << endreq;    
     info() << "   ***  Trigger Configuration Key : "  << format("0x%04X", tck)  << " (" << tck << ")"<<  endreq;
+    info() << "   ***  Recipe name : '" << config->recipe() << "'" << endreq;
+    info() << "   ***  short description : '" << config->definition() << "'" << endreq;
     info() << "   **************************************************** " << endreq;    
-    debug() << "       REMIND : the corresponding L0DU algorithm description is : " << endreq;
+    debug() << "       The complete algorithm description is : " << endreq;
     debug() << config->description() << endreq;
     info() << " " << endreq;
 

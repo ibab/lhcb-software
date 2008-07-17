@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.cpp,v 1.8 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DUConfigProvider.cpp,v 1.9 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -185,7 +185,7 @@ StatusCode L0DUConfigProvider::initialize(){
 
   if(m_recipe == ""){
     std::stringstream recipe("");
-    recipe << "L0-Algo-TCK=" <<  format("0x%04X" , m_tckopts ) ;    
+    recipe << "Undefined recipe name for TCK=" <<  format("0x%04X" , m_tckopts ) ;    
     m_config->setRecipe( recipe.str() );
   }else{
     m_config->setRecipe( m_recipe );

@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.7 2008-05-29 14:01:14 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.8 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ L0DUAlg::L0DUAlg( const std::string& name,
   //
   declareProperty( "StoreInBuffer"           , m_fillRaw = true );
   declareProperty( "RawLocation"             , m_rawLocation    = LHCb::RawEventLocation::Default   );
-  declareProperty( "WriteOnTES"              , m_writeOnTES = true   );
+  declareProperty( "WriteOnTES"              , m_writeOnTES = false   );
   declareProperty( "ReportLocation"          , m_reportLocation = LHCb::L0DUReportLocation::Default );
   //
   declareProperty( "TCK"                     , m_tck="");
@@ -49,6 +49,9 @@ L0DUAlg::L0DUAlg( const std::string& name,
   m_rawSrcID = 0 ;// hardcoded rawBank srcID
   m_rawBankType  = LHCb::RawBank::L0DU; // rawBank Type
 
+
+  if( context() == "Emulation" )m_reportLocation = LHCb::L0DUReportLocation::Emulated;
+  
 
 }
 
@@ -125,10 +128,11 @@ StatusCode L0DUAlg::execute() {
   
   //push bank in RawBuffer
   if(m_fillRaw){
+    debug() << "Insert RawBank in rawEvent" << endreq;
     const std::vector<unsigned int> block = m_emulator->bank(m_rawVsn);
     LHCb::RawEvent* raw = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     raw->addBank(m_rawSrcID , m_rawBankType , m_rawVsn , block);
-  }
+  } 
 
   return StatusCode::SUCCESS ;
 };

@@ -1,29 +1,71 @@
+//  ----------------------------
+//  THE VARIOUS L0(DU) sequences
+//  ----------------------------
+
+
 //-----------------------------------------------------
-// Run the whole L0 sequence including the L0Processors
+// Emulate the whole L0Processors sequence (but L0DU)
 //-----------------------------------------------------
-L0.Members += { "L0CaloAlg/L0Calo", 
-                "L0MuonAlg/L0Muon",
-                "PuVetoAlg/L0PuVeto",
-                "L0DUAlg/L0DU"};
+L0ProcessorsSeq.Members += { "L0CaloAlg/L0Calo", 
+                             "L0MuonAlg/L0Muon",
+                             "PuVetoAlg/L0PuVeto"};
 #include "$L0MUONROOT/options/l0muonAlg.opts"
 // Do not create rawBank when re-running L0DU out of Boole
-L0DU.StoreInBuffer = false;   
 L0Calo.StoreInBuffer=false;
 L0Muon.StoreInBuffer=false;
 
-//---------------------
-// Monitoring sequence
-//--------------------
-MoniL0.Members += { "L0DUReportMonitor" };
 
+//-----------------------------------------------------
+// Emulate the whole L0 sequence including the L0Processors
+//-----------------------------------------------------
+L0EmulatorSeq.Members += { "GaudiSequencer/L0ProcessorsSeq",
+                           "L0DUAlg/L0DU"};
+// Do not create rawBank when re-running L0DU out of Boole
+L0DU.StoreInBuffer = false;   
+
+//--------------------------
+// L0DU Monitoring sequence
+//--------------------------
+L0DUMoniSeq.Members += { "L0DUReportMonitor" };
+
+
+//------------------------------
+// whole L0 Monitoring sequence
+//------------------------------
+L0MoniSeq.Members += { "L0CaloMonit",
+                       "L0DUReportMonitor" 
+};
 
 //------------------------
 // L0DU From Raw sequence
 //-----------------------
-L0DUFromRaw.Members += { "L0DUFromRawAlg" };
+L0DUFromRawSeq.Members += { "L0DUFromRawAlg" };
+
+//------------------------
+// whole L0 From Raw sequence
+//-----------------------
+L0FromRawSeq.Members += {   "L0CaloCandidatesFromRaw/L0CaloFromRaw",
+                            "L0MuonCandidatesFromRaw/L0MuonFromRaw",
+                            "L0DUFromRawAlg" };
+L0MuonFromRaw.ConfigFile      = "$PARAMFILESROOT/data/L0MuonKernel.xml";
+
+
+//------------------------
+// L0DU Filter From Raw 
+//-----------------------
+L0FilterFromRawSeq.Members += {  "GaudiSequencer/L0DUFromRawSeq",
+                                 "L0Filter"};
+
+
+//---------------------------
+// L0DU Filter From Emulation
+//---------------------------
+L0FilterFromEmulSeq.Members += {  "GaudiSequencer/L0EmulatorSeq",
+                          "L0Filter"};
 
 
 
-// THE CONFIGURATIONS :
+// THE L0 TRIGGER CONFIGURATIONS KEYS:
+#include "$L0DUROOT/options/L0DUConfig.opts"  // list of registered TCKs for raw decoding
+#include "$L0DUROOT/options/DefaultTCK.opts"  // default TCK for SIM/E-mulation
 
-#include "$L0DUROOT/options/L0DUConfig.opts"

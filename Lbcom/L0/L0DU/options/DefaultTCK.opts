@@ -1,0 +1,5 @@
+
+// ----- default TCK for the L0DU Emulation/SIMulation
+
+L0DU.TCK = "0xFFFF";  
+

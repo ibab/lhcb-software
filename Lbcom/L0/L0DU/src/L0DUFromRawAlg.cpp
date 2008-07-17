@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.4 2008-06-06 11:46:42 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.5 2008-07-17 16:16:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,10 +71,8 @@ StatusCode L0DUFromRawAlg::execute() {
 
 
   // decode the bank
-  if(!m_fromRaw->decodeBank()){
-    Error("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
-    return StatusCode::SUCCESS;  
-  }
+
+  if(!m_fromRaw->decodeBank())Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
   
   LHCb::L0DUReport rep = m_fromRaw->report();
   // put the report and processor data on TES
