@@ -1,4 +1,4 @@
-// $Id: RawBank.cpp,v 1.4 2008-07-01 10:12:29 tskwarni Exp $
+// $Id: RawBank.cpp,v 1.5 2008-07-17 09:46:53 tskwarni Exp $
 
 // local
 #include "Event/RawBank.h"
@@ -66,6 +66,8 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::TestDet         : return  "TestDet";
   case LHCb::RawBank::L0DUError       : return  "L0DUError";
   case LHCb::RawBank::HltRoutingBits  : return  "HltRoutingBits";
+  case LHCb::RawBank::HltSelCandidates: return  "HltSelCandidates";
+  case LHCb::RawBank::HltPrimaryVertex: return  "HltPrimaryVertex";
   default                             : return  "Undefined name";
   };
 }  

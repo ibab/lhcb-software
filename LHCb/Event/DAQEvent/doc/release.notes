@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-07-17 - Tomasz Skwarnicki
+ - Added HltSelCandidates and HltPrimaryVertex bank types
+
 ! 2008-07-17 - Jaap Panman
  - Fixed the range of bits tested in OdinTypesFilter.cpp
 

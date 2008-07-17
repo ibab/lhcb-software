@@ -105,6 +105,8 @@ namespace LHCb
                    TestDet,         // 51
                    L0DUError,       // 52
                    HltRoutingBits,  // 53
+                   HltSelCandidates,// 54
+                   HltPrimaryVertex,// 55
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
