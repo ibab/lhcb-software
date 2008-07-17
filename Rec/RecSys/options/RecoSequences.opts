@@ -1,0 +1,35 @@
+//------------------------------------------------------------------
+// Job options for Brunel Reco Phase common to Reco.opts and Reco.py
+// Do not use directly (misses tracking sequences)
+//------------------------------------------------------------------
+Reco.DetectorList += {
+                      "VELO" 
+                     ,"TT"
+                     ,"IT"
+                     ,"OT"
+                     ,"Tr"
+                     ,"Vertex"
+                     ,"RICH"
+                     ,"CALO"
+                     ,"MUON"
+                     ,"PROTO"
+                    };
+
+// Primary vertex
+RecoVertexSeq.Members   += { "PatPVOffline" };
+
+// Rich
+#include "$RICHRECSYSOPTS/RecoOfflineToolPara.opts"
+#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+
+// Calorimeter reconstruction
+#include "$CALORECOOPTS/Brunel.opts"
+#include "$CALOPIDSOPTS/PhotonPDF.opts"
+
+// Muon ID
+RecoMUONSeq.Members += { "MuonRec" };
+RecoMUONSeq.Members += { "MuonID" };
+#include "$MUONIDROOT/options/MuonID.opts"
+
+// Global Reco (ProtoParticles)
+#include "$GLOBALRECOOPTS/Reco.opts"
