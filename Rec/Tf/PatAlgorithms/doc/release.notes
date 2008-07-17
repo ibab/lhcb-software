@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-07-17 - Stephanie Hansmann-Menzemer
+ - adapt pattern reco algorithms to new B field map and to changes in
+   momentum interfaces
+
 !========================== PatAlgorithms v3r8 2008-07-17 ====================
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
  - move PatForward.py and PatSeeding.py to option directory, remove python
