@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.30 2008-07-11 13:52:36 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.31 2008-07-17 09:32:38 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -44,6 +44,7 @@
 #include "IGetElementsToBeAligned.h"
 #include "ITrackResidualTool.h"
 #include "IVertexResidualTool.h"
+#include "IAlignConstraintTool.h"
 #include "AlignmentElement.h"
 #include "AlElementHistos.h"
 
@@ -87,14 +88,6 @@ public:
   /// Methods to call when an update is triggered
   void update();
   void reset();
-
-  /** Add canonical constraints. Return the number of added constraints. */
-  size_t addCanonicalConstraints(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,
-				 std::vector<bool>& dofmask, std::ostream& logmessage) const ;
-  void printCanonicalConstraints(const AlVec& parameters, const AlSymMat& covariance,
-				 size_t numConstraints, std::ostream& logmessage) const ;
-  void preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale, const std::vector<int>& offsets) const ;
-  void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
   
   /** Method to get alignment constants, posXYZ and rotXYZ for a given set
   * of detector elements
@@ -110,12 +103,14 @@ private:
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   bool accumulate( const Al::Residuals& residuals ) ;
   void resetHistos() ;
+  void preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale) const ;
+  void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
   size_t                            m_nTracks;                       ///< Number of tracks used
   size_t                            m_covFailure;                    ///< Number of covariance calculation failures
-  ElementRange                      m_rangeElements;                 ///< Detector elements
+  ElementRange                      m_elements;                      ///< Detector elements
   std::vector<double>               m_initAlignConstants;            ///< Initial alignment constants
   IGetElementsToBeAligned*          m_align;                         ///< Pointer to tool to align detector
   std::string                       m_tracksLocation;                ///< Tracks for alignment
@@ -124,8 +119,9 @@ private:
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
   std::string                       m_matrixSolverToolName;          ///< Name of linear algebra solver tool
   IAlignSolvTool*                   m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
-  ToolHandle<Al::ITrackResidualTool>  m_trackresidualtool ;
-  ToolHandle<Al::IVertexResidualTool> m_vertexresidualtool ;
+  ToolHandle<Al::ITrackResidualTool>   m_trackresidualtool ;
+  ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
+  ToolHandle<Al::IAlignConstraintTool> m_constrainttool ;
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize

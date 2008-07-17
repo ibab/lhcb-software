@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.46 2008-07-11 13:53:22 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.47 2008-07-17 09:32:38 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -126,13 +126,14 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_nIterations(0u),
     m_nTracks(0u),
     m_covFailure(0u),
-    m_rangeElements(),
+    m_elements(),
     m_initAlignConstants(),
     m_align(0),
     m_projSelector(0),
     m_matrixSolverTool(0),
     m_trackresidualtool("Al::TrackResidualTool"),
     m_vertexresidualtool("Al::VertexResidualTool"),
+    m_constrainttool("Al::AlignConstraintTool"),
     m_equations(0),
     m_resetHistos(false)
 {
@@ -180,26 +181,29 @@ StatusCode AlignAlgorithm::initialize() {
   sc = m_vertexresidualtool.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
+  sc = m_constrainttool.retrieve() ;
+  if ( sc.isFailure() ) return sc;
+
   /// Get range  detector elements
-  m_rangeElements = m_align->rangeElements();
+  m_elements = m_align->rangeElements();
   
   if (printDebug()) {
-    debug() << "==> Got " << m_rangeElements.size() << " elements to align!" << endmsg;
-    for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) {
-      const AlDofMask& ownDoFMask = i->dofMask();
+    debug() << "==> Got " << m_elements.size() << " elements to align!" << endmsg;
+    for(ElementRange::const_iterator i = m_elements.begin(); i!= m_elements.end(); ++i) {
+      const AlParameters::DofMask& ownDoFMask = i->dofMask();
       debug() <<  "        " << (*i) << endmsg;
       const std::vector<std::string> dofs = boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz");
       debug() << "DOFs: ";
-      for (AlDofMask::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
+      for (AlParameters::DofMask::const_iterator j = ownDoFMask.begin(), jEnd = ownDoFMask.end(); j != jEnd; ++j) {
         if ((*j)) info() << dofs.at(std::distance(ownDoFMask.begin(), j));
       }
       debug() << endmsg;
     }
   }
   
-  m_equations = new Al::Equations(m_rangeElements.size());
+  m_equations = new Al::Equations(m_elements.size());
   m_equations->clear() ;
-  assert( m_rangeElements.size() == m_equations->nElem() ) ;
+  assert( m_elements.size() == m_equations->nElem() ) ;
   for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
       ifile != m_inputDataFileNames.end(); ++ifile) {
     Al::Equations tmp(m_equations->nElem()) ;
@@ -235,7 +239,7 @@ StatusCode AlignAlgorithm::initialize() {
   m_dAlignChi2vsIterHisto    = bookProfile1D(40, "Delta Alignment chi2 vs iteration"               , -0.5, m_nIterations-0.5, m_nIterations);
   m_nordAlignChi2vsIterHisto = bookProfile1D(41, "Delta Alignment normalised chi2 vs iteration"    , -0.5, m_nIterations-0.5, m_nIterations);
   
-  for(ElementRange::const_iterator i = m_rangeElements.begin(); i!= m_rangeElements.end(); ++i) 
+  for(ElementRange::const_iterator i = m_elements.begin(); i!= m_elements.end(); ++i) 
     m_elemHistos.push_back( new AlElementHistos(*this,*i,m_nIterations) ) ;
   m_resetHistos = false ;
 
@@ -254,10 +258,10 @@ StatusCode AlignAlgorithm::finalize() {
   for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
        ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
 
-  return  
-    m_trackresidualtool.release() && 
-    m_vertexresidualtool.release() && 
-    GaudiHistoAlg::finalize();
+  m_trackresidualtool.release() ;
+  m_vertexresidualtool.release() ;
+  m_constrainttool.release() ;
+  return GaudiHistoAlg::finalize();
 }
 
 //=============================================================================
@@ -490,19 +494,20 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 }
  
  
- void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
-				  AlVec& scale, const std::vector<int>& offsets) const
+void AlignAlgorithm::preCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
+				  AlVec& scale) const
 {  
   // This is just not sufficiently fool proof!
   size_t size = halfDChi2DAlpha.size() ;
   scale.reSize(size) ;
   for (size_t i = 0u, iEnd = size; i< iEnd; ++i) scale[i] = 1 ;
   int iElem(0u) ;
-  for (ElementRange::const_iterator it = m_rangeElements.begin(), itEnd = m_rangeElements.end(); it != itEnd; ++it, ++iElem) {
-    if ( offsets[iElem]>=0 ) {
+  for (ElementRange::const_iterator it = m_elements.begin(), itEnd = m_elements.end(); it != itEnd; ++it, ++iElem) {
+    int offset = it->activeParOffset() ;
+    if ( 0<=offset ) {
       size_t ndof = (*it).dofMask().nActive() ;
       size_t N = m_equations->numHits(iElem) ;
-      for (size_t i = offsets[iElem]; i< offsets[iElem]+ndof; ++i) {
+      for (size_t i = offset; i< offset+ndof; ++i) {
         assert( i < size ) ;
         if ( halfD2Chi2DAlpha2[i][i] > 0 ) scale[i] = std::sqrt( N / halfD2Chi2DAlpha2[i][i] ) ;
       }
@@ -525,185 +530,10 @@ void AlignAlgorithm::postCondition(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2D
   }
 }
 
-size_t AlignAlgorithm::addCanonicalConstraints(AlVec& halfDChi2DAlpha, AlSymMat& halfD2Chi2DAlpha2,
-					       std::vector<bool>& dofmask,
-					       std::ostream& logmessage) const
-{
-  // This adds lagrange multipliers to constrain the average rotation
-  // and translation. Ideally, we could calculate this in any
-  // frame. In practise, the average depends on the reference frame in
-  // which is is calculated. We will calculate a single 'pivot' point
-  // to define the transform to the frame in which we apply the
-  // constraint.
-  
-  // To make the bookkeeping easy, we add all possible constraints and
-  // then 'disable' those we don't need with the 'dofmask'.
-  // 
-  // This is the numbering:
-  // 0 -> Tx
-  // 1 -> Ty
-  // 2 -> Tz
-  // 3 -> Rx
-  // 4 -> Ry
-  // 5 -> Rz
-  // 6 -> Sx  (zx shearing)
-  // 7 -> Sy  (zy shearing)
-  // 8 -> Sz  (zz shearing == s-scale)
-  // 9 -> Curvature (Curvature constraint)
-  info() << "Adding canonical constraints." << endmsg ;
-  double weight(0) ;
-  size_t numhits(0) ;
-  Gaudi::XYZVector pivot ;
-  double zmin(9999999), zmax(-999999) ;
-  size_t iElem(0u) ;
-  for (ElementRange::const_iterator it = m_rangeElements.begin(), itEnd = m_rangeElements.end(); it != itEnd; ++it, ++iElem) {
-    double thisweight = m_equations->weight(iElem) ;
-    weight += thisweight ;
-    pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
-    zmin = std::min(it->centerOfGravity().z(),zmin) ;
-    zmax = std::max(it->centerOfGravity().z(),zmax) ;
-    numhits += m_equations->numHits(iElem) ;
-  }
-  if (weight>0) pivot *= 1/weight ;
-  Gaudi::Transform3D canonicalframe( pivot ) ;
-  Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
-  info() << "Pivot, z-range for canonical constraints: " 
-	 << pivot << ", [" << zmin << "," << zmax << "]" << endmsg ;
-
-  // add extra rows/columns
-  size_t size = halfDChi2DAlpha.size() ;
-  halfDChi2DAlpha.reSize(size + Constraints::NumConstraints) ;
-  halfD2Chi2DAlpha2.reSize(size + Constraints::NumConstraints) ;
-  dofmask.resize( size + Constraints::NumConstraints, 0 ) ;
-
-  // Set all new elements to 0
-  for (size_t i = size; i < size+Constraints::NumConstraints; ++i) {
-    halfDChi2DAlpha[i] = 0 ;
-    for (size_t j = 0u; j <= i; ++j) halfD2Chi2DAlpha2[i][j] = 0 ;
-  }
-  
-  // Now fill the only part that is nonzero: halfD2Chi2/DAlphadLambda. 
-  iElem = 0u ;
-  for (ElementRange::const_iterator it = m_rangeElements.begin(), itEnd = m_rangeElements.end(); it != itEnd; ++it, ++iElem) {
-    // calculate the Jacobian for going from the 'alignment' frame to
-    // the 'canonical' frame. This is the first place where we could
-    // turn things around. It certainly works if the transforms are
-    // just translations.
-    Gaudi::Transform3D trans = canonicalframeInv * it->alignmentFrame() ;
-    Gaudi::Matrix6x6 jacobian = AlParameters::jacobian( trans ) ;
-    double thisweight = m_useWeightedAverageConstraint ? m_equations->weight(iElem)/weight : 1./double( m_equations->nElem() ) ;
-    thisweight = 1.0/double( m_equations->nElem() ) ;
-    for (size_t i = 0u; i < 6; ++i) {
-      for (size_t j = 0; j < Derivatives::kCols; ++j) {
-	// and here comes the 2nd place we could do things entirely
-	// wrong, but I think that this is right.
-	halfD2Chi2DAlpha2[size+i][j+iElem*Derivatives::kCols] = thisweight * jacobian(i,j) ;
-      }
-    }
-  
-    // Shearing constraints
-    double deltaZ = it->centerOfGravity().z() - zmin ;
-    for (size_t i = 0u; i < 3u; ++i) {
-      for (size_t j = 0u; j < Derivatives::kCols; ++j) {
-	halfD2Chi2DAlpha2[size+i+6][j+iElem*Derivatives::kCols] = thisweight * deltaZ/(zmax-zmin) * jacobian(i,j) ;
-      }
-    }
-
-    // Curvature constraint. The constraint is on the average per
-    // track.
-    for (size_t j = 0u; j < Derivatives::kCols; ++j)
-      halfD2Chi2DAlpha2[size+9][j+iElem*Derivatives::kCols] = m_equations->dOmegaDAlpha(iElem)(j)/m_equations->numTracks() ;
-  }
-  
-  if (printDebug()) debug() << "Full matrix after adding constraints: " << std::endl
-                            << halfD2Chi2DAlpha2 << endmsg ;
-
-  // we have now calculated everything for all constraints. However,
-  // we may not want all of them:
-  // * only activate costraints that we asked for
-  // * remove constraints that have no active non-zero derivative 
-  // * remove constraints if the dof is effectively constrained by inactive parameters
-  // this is pretty tricky. need to replace the following with something more sensible:
-  size_t numActiveConstraints(0) ;
-  for( std::vector<std::string>::const_iterator iname = m_constraints.begin();
-       iname != m_constraints.end(); ++iname) {
-    size_t i = Constraints::index(*iname) ;
-    if( i == Constraints::NumConstraints ) {
-      logmessage << "Warning: unknown constraint " << *iname << std::endl ;
-    } else {
-      dofmask[ size + i ] = true ; 
-      const double threshold = FLT_MIN ;
-      bool hasNonZeroDerivativeToActive(false) ;
-      bool hasNonZeroDerivativeToInactive(false) ;
-      for (size_t j = 0u; j < size && !(hasNonZeroDerivativeToActive && hasNonZeroDerivativeToInactive); ++j) {
-	// check that derivative is non-zero
-	if ( std::abs(halfD2Chi2DAlpha2[size+i][j]) > threshold ) {
-	  if ( dofmask[j] ) hasNonZeroDerivativeToActive = true ;
-	  // the logic fails because rotations cannot 'constrain' translations. need to think of something else.
-	  // if( !dofmask[j] ) hasNonZeroDerivativeToInactive = true ;
-	}
-      }
-      bool useConstraint = hasNonZeroDerivativeToActive && !hasNonZeroDerivativeToInactive ;
-      if( !useConstraint) {
-	dofmask[ size + i ] = false ;
-	logmessage << "Warning: removing constraint " << *iname << std::endl ;
-      } else {
-	++numActiveConstraints ;
-      }
-    }
-  }
-
-  // Finally, add some info to the log message
-  assert( dofmask.size() == size + Constraints::NumConstraints) ;
-  logmessage << "Added canonical constraints for (global) : " ;
-  for (size_t i = 0u; i < Constraints::NumConstraints; ++i) 
-    if ( dofmask[size+i] ) 
-      logmessage << Constraints::name(i) << (i != Constraints::NumConstraints-1u ? ", " : "" );
-  logmessage << std::endl ;
-  
-  return numActiveConstraints ;
-}
-
-static inline double signedroot(double root)
-{
-  return root > 0 ? std::sqrt(root) : ( root < 0  ? - std::sqrt(-root) : (std::isfinite(root) ? 0 : root ) ) ;
-}
-
-void AlignAlgorithm::printCanonicalConstraints(const AlVec& parameters, const AlSymMat& covariance,
-					       size_t numConstraints, std::ostream& logmessage) const
-{
-  // first extract the part concerning the lagrange multipliers
-  size_t N = parameters.size() ;
-  AlVec lambda(numConstraints);
-  AlSymMat covlambda(numConstraints) ;
-  for (size_t i = 0u; i < numConstraints; ++i) {
-    lambda[i] = parameters[N - numConstraints + i] ;
-    for (size_t j = 0u; j <= i; ++j)
-      covlambda[i][j] = covariance[N - numConstraints + i][N - numConstraints + j] ;
-  }
-  // For a lagrage constraint defined as delta-chisqyare = 2 * lambda * constraint, the solution for lambda is
-  //  lambda     =   W * constraint
-  //  cov-lambda =   W
-  // where W is minus the inverse of the covariance of the constraint. From this we extract
-  //   constraint       = W^{-1} * lambda
-  //   constraint error = sqrt( W^{-1} )
-  //   chisquare = - lambda * constraint
-  // Note that this all needs to work for vectors.
-
-  AlSymMat V = -1 * covlambda ; // Al$%$%^&$%&&*&^
-  int ierr ;
-  V.invert(ierr) ;
-  AlVec x = (V * lambda) ; // This might need a minus sign ...
-  double chisquare = (lambda * V * lambda) ;
-  logmessage << "Canonical constraint values: " << std::endl ;
-  for (size_t i = 0u; i < numConstraints; ++i)
-    logmessage << std::setw(5) << i << std::setw(12) << x[i] << " +/- " << signedroot( V[i][i] ) << std::endl ;
-  logmessage << "Canonical constraint chisquare: " << chisquare << std::endl ;
-}
-
 //=============================================================================
 //  Update
 //=============================================================================
+
 void AlignAlgorithm::update() {
 
   if ( m_equations->nElem() == 0 ) {
@@ -714,8 +544,8 @@ void AlignAlgorithm::update() {
   info() << "\n";
   info() << "==> iteration " << m_iteration << " : Initial alignment conditions  : [";
   std::vector<double> deltas;
-  deltas.reserve(m_rangeElements.size()*6u);  
-  getAlignmentConstants(m_rangeElements, deltas);
+  deltas.reserve(m_elements.size()*6u);  
+  getAlignmentConstants(m_elements, deltas);
   for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
     info() << (*i) << (i != iEnd-1u ? ", " : "]");
   }
@@ -752,85 +582,68 @@ void AlignAlgorithm::update() {
     }
   }
 
-  /// Take the gaudi vector and matix and fill AlVec and AlSym for ALL elements and ALL parameters
-  size_t numParameters = Derivatives::kCols * m_equations->nElem() ;
-  AlVec    tmpDerivatives(numParameters);
-  AlSymMat tmpMatrix(numParameters);
-
-  /// Loop over map of index to 2nd derivative matrix and 1st
-  /// derivative vector. Note that we correct here for the fraction of
-  /// outliers.
-  for (unsigned i = 0u, iEnd = m_equations->nElem(); i < iEnd ; ++i) {
-    ass(tmpDerivatives, i*Derivatives::kCols, ROOT::Math::SVector<double, 6u>(m_equations->V(i)/m_equations->fracNonOutlier(i)));
-    /// (assume upper triangular input!)
-    for (unsigned j = i ; j < iEnd; ++j ) ass(tmpMatrix, i*Derivatives::kCols, j*Derivatives::kCols, m_equations->M(i,j));
-  }
-
-  // Now reduce the large system to the active parameters
-
   // Create the dof mask and a map from AlignableElements to an
   // offset. The offsets are initialized with '-1', which signals 'not
   // enough hits'.
-  size_t dim(0) ;
-  size_t iElem(0) ;
-  std::vector<int>  offsets(m_rangeElements.size(), -1) ;
-  std::vector<bool> dofmask(tmpDerivatives.size(), true) ;
-  for (ElementRange::const_iterator it = m_rangeElements.begin(), itEnd = m_rangeElements.end(); it != itEnd; ++it, ++iElem) {
-    if (m_equations->numHits(iElem) >= m_minNumberOfHits) {
-      offsets[iElem] = dim ;
-      for (size_t ipar = 0u; ipar < Derivatives::kCols; ++ipar) dofmask[iElem*Derivatives::kCols+ipar] = it->dofMask()[ipar] ;
-      dim += it->dofMask().nActive() ;
+  size_t numParameters(0), numExcluded(0) ;
+  for (ElementRange::const_iterator it = m_elements.begin(); it != m_elements.end(); ++it ) {
+    if (m_equations->numHits(it->index()) >= m_minNumberOfHits) {
+      it->setActiveParOffset( numParameters ) ;
+      numParameters += it->dofMask().nActive() ;
     } else {
-      for (size_t ipar = 0u; ipar < Derivatives::kCols; ++ipar) dofmask[iElem*Derivatives::kCols+ipar] = false ;
+      it->setActiveParOffset(-1) ;
+      ++numExcluded ;
     }
   }
   
-  // Add the canonical constraints, if needed
-  size_t numConstraints(0) ;
-  if ( m_canonicalConstraintStrategy == CanonicalConstraintOn ||
-       (m_canonicalConstraintStrategy == CanonicalConstraintAuto && m_equations->numExternalHits() == 0u) ) {
-    numConstraints = addCanonicalConstraints(tmpDerivatives, tmpMatrix, dofmask, logmessage) ;
-    assert(dofmask.size() == tmpDerivatives.size() ) ;
-  }
-  
-  size_t nDOFs = std::count(dofmask.begin(), dofmask.end(), true) ;
-  
-  logmessage << "Number of alignables with insufficient statistics: " << std::count(offsets.begin(),offsets.end(),-1) << std::endl
-	     << "Number of constraints: "                             << numConstraints << std::endl
-	     << "Number of active parameters: "                       << nDOFs-numConstraints << std::endl ;
-  
-  if ( nDOFs > 0 ) {
-    AlVec    halfDChi2dX(nDOFs);
-    AlSymMat halfD2Chi2dX2(nDOFs);
-    
-    // Remove all parameters that are masked out.
-    unsigned insert_i = 0u;
-    unsigned insert_j = 0u;
-    typedef std::vector<bool>::const_iterator boolIter; 
-    for (std::vector<bool>::const_iterator i = dofmask.begin(), iEnd = dofmask.end(); i != iEnd; ++i) {
-      if (*i) {
-	const unsigned index_i = std::distance(boolIter(dofmask.begin()), i);
-	halfDChi2dX[insert_i] = tmpDerivatives[index_i];
-	for (std::vector<bool>::const_iterator j = i, jEnd = dofmask.end(); j != jEnd; ++j) {
-	  if (*j) {
-	    if (printVerbose()) {
-	      verbose() << "insert_i = " << insert_i << " insert_j = " << insert_j 
-			<< " halfD2Chi2dX2[" << index_i << "][" << std::distance(boolIter(dofmask.begin()), j) << "]" 
-			<< tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)] << endmsg;
-	    }
-	    halfD2Chi2dX2[insert_i][insert_j++] = tmpMatrix[index_i][std::distance(boolIter(dofmask.begin()), j)];
-	  }
+  if(numParameters>0) {
+
+    // now fill the 'big' vector and matrix
+    AlVec    halfDChi2dX(numParameters) ;
+    AlSymMat halfD2Chi2dX2(numParameters);
+    size_t index(0);
+    int iactive, jactive ;
+    for( Al::Equations::ElementContainer::const_iterator ieq = m_equations->elements().begin() ;
+	 ieq != m_equations->elements().end(); ++ieq, ++index ) {
+      const AlignmentElement& ielem = m_elements[index] ;
+      // first derivative. note that we correct here for the fraction of outliers
+      double outliercorrection = 1./ieq->fracNonOutlier() ;
+      for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
+	if( 0<= (iactive = ielem.activeParIndex(ipar) ) )
+	  halfDChi2dX(iactive) = ieq->V()(ipar) * outliercorrection ;
+      
+      // second derivative. fill only non-zero terms
+      for( Al::ElementData::OffdiagonalContainer::const_iterator im = ieq->M().begin() ;
+	   im != ieq->M().end(); ++im ) {
+	size_t jndex = im->first ;
+	// guaranteed: index <= jndex .. that's how we fill it. furthermore, row==i, col==j
+	if(jndex==index) { // diagonal element
+	  for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
+	    if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
+	      for(unsigned jpar=0; jpar<=ipar; ++jpar) 
+		if( 0<= ( jactive = ielem.activeParIndex(jpar) ) )
+		  halfD2Chi2dX2.fast(iactive,jactive) = im->second(ipar,jpar) ;
+	} else {
+	  const AlignmentElement& jelem = m_elements[jndex] ;
+	  for(unsigned ipar=0; ipar<Derivatives::kCols; ++ipar) 
+	    if( 0<= ( iactive = ielem.activeParIndex(ipar) ) ) 
+	      for(unsigned jpar=0; jpar<Derivatives::kCols; ++jpar) 
+		if( 0<= ( jactive = jelem.activeParIndex(jpar) ) ) {
+		  assert(jactive > iactive  ) ;
+		  halfD2Chi2dX2.fast(jactive,iactive) = im->second(ipar,jpar) ;
+		}
 	}
-	insert_j = ++insert_i;
       }
     }
+    // add the constraints
+    size_t numConstraints = m_constrainttool->addConstraints(m_elements,*m_equations,halfDChi2dX,halfD2Chi2dX2) ;
     
-    if (printDebug()) {
-      debug() << "Tmp AlVec Vector    = " << tmpDerivatives << endmsg;
-      debug() << "Tmp AlSymMat Matrix = " << tmpMatrix      << endmsg;
-    }
+    logmessage << "Number of alignables with insufficient statistics: " << numExcluded << std::endl
+	       << "Number of constraints: "                             << numConstraints << std::endl
+	       << "Number of active parameters: "                       << numParameters << std::endl ;
     
-    if (nDOFs < 50 ) {
+    int numDoFs = halfDChi2dX.size() ;
+    if (numDoFs < 50 ) {
       info() << "AlVec Vector    = " << halfDChi2dX << endmsg;
       info() << "AlSymMat Matrix = " << halfD2Chi2dX2      << endmsg;
     } else {
@@ -841,43 +654,43 @@ void AlignAlgorithm::update() {
     AlVec    scale(halfD2Chi2dX2.size()) ;
     AlSymMat covmatrix = halfD2Chi2dX2 ;
     AlVec    solution  = halfDChi2dX ;
-    if (m_usePreconditioning) preCondition(solution,covmatrix, scale,offsets) ;
+    if (m_usePreconditioning) preCondition(solution,covmatrix, scale) ;
     bool solved = m_matrixSolverTool->compute(covmatrix, solution);
     if (m_usePreconditioning) postCondition(solution,covmatrix, scale) ;
     
     if (solved) {
-      StatusCode sc = StatusCode::SUCCESS;
       double deltaChi2 = solution * halfDChi2dX ; //somewhere we have been a bit sloppy with two minus signs!
       if (printDebug()) {
 	info() << "Solution = " << solution << endmsg ;
 	info() << "Covariance = " << covmatrix << endmsg ;
       }
       logmessage << "Alignment change chisquare/dof: " 
-		 << deltaChi2 << " / " << nDOFs-numConstraints << std::endl
-                 << "Normalised alignment change chisquare: " << deltaChi2 / (nDOFs-numConstraints) << std::endl;
+		 << deltaChi2 << " / " << numParameters << std::endl
+                 << "Normalised alignment change chisquare: " << deltaChi2 / numParameters << std::endl;
       
       m_dAlignChi2vsIterHisto->fill(m_iteration, deltaChi2) ;
-      m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 / (nDOFs-numConstraints));
+      m_nordAlignChi2vsIterHisto->fill(m_iteration, deltaChi2 /numParameters);
       
-      if (numConstraints > 0) printCanonicalConstraints(solution, covmatrix, numConstraints, logmessage) ;
+      m_constrainttool->printConstraints(solution, covmatrix, logmessage) ;
       
       if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
       size_t iElem(0u) ;
-      for (ElementRange::iterator it = m_rangeElements.begin(); it != m_rangeElements.end(); ++it, ++iElem) {
+      for (ElementRange::iterator it = m_elements.begin(); it != m_elements.end(); ++it, ++iElem) {
 	logmessage << "Alignable: " << it->name() << std::endl
 		   << "Number of hits/outliers seen: " << m_equations->numHits(iElem) << " "
 		   << m_equations->numOutliers(iElem) << std::endl ;
-	if( offsets[iElem] < 0 ) {
+	int offset = it->activeParOffset() ;
+	if( offset < 0 ) {
 	  logmessage << "Not enough hits for alignment. Skipping update." << std::endl ;
 	} else {
-	  AlParameters delta( solution, covmatrix, halfD2Chi2dX2, it->dofMask(), offsets[iElem] ) ;
+	  AlParameters delta( solution, covmatrix, halfD2Chi2dX2, it->dofMask(), offset ) ;
 	  AlParameters refdelta = it->currentActiveDelta() ;
 	  //logmessage << delta ;
 	  for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
 	    logmessage << std::setw(6)  << delta.activeParName(iactive) << ":" 
 		       << " cur= " << std::setw(12) << refdelta.parameters()[iactive]
 		       << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
-		       << std::setw(12) << signedroot(delta.covariance()[iactive][iactive]) 
+		       << std::setw(12) << AlParameters::signedSqrt(delta.covariance()[iactive][iactive]) 
 		       << " gcc= " << delta.globalCorrelationCoefficient(iactive) << std::endl ;
 	  double contributionToCoordinateError = delta.measurementCoordinateSigma( m_equations->weightR(iElem) ) ;
 	  double coordinateError = std::sqrt(m_equations->numHits(iElem)/m_equations->weight(iElem)) ;
@@ -907,7 +720,7 @@ void AlignAlgorithm::update() {
   info() << "\n";
   info() << "==> iteration " << m_iteration << " : Updated alignment conditions  : [";
   deltas.clear();
-  getAlignmentConstants(m_rangeElements, deltas);
+  getAlignmentConstants(m_elements, deltas);
   for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
     info() << (*i) << (i != iEnd-1u ? ", " : "]");
   }
