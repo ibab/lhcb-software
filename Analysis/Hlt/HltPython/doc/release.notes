@@ -4,6 +4,12 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-17 - Jose A. Hernando
+   - python/modules hltconf method to get the hltconfiguration and hltfilters
+   - python/modules arguments method to get easily the arguments from command line
+   - python/modules hltbchannles dictionaries with dst,opts, etc for the benchmarck channels selected by Hans (prepared by Antonio)
+   - python/examples hltalleymonitor.py extending functionality
+
 !========================== HltPython v1r7 2008-07-09 ===================
 ! 2008-7-9 - Jose A. Hernando
    - hltconf hltalleymonitor.py fixing bugs, be sure they can be documented by doxygen
