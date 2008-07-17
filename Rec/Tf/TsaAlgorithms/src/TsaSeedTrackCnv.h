@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnv.h,v 1.4 2007-11-02 14:59:36 albrecht Exp $
+// $Id: TsaSeedTrackCnv.h,v 1.5 2008-07-17 13:22:20 smenzeme Exp $
 #ifndef _TsaSeedTrackCnv_H_
 #define _TsaSeedTrackCnv_H_
 
@@ -6,8 +6,6 @@
 
 #include <string>
 #include <vector>
-
-#include "TrackInterfaces/ITrackPtKick.h"
 
 // TsaKernel
 #include "TsaKernel/SeedTrack.h"

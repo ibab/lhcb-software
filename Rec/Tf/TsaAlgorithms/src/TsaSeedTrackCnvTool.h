@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.h,v 1.2 2007-11-29 08:11:55 mneedham Exp $
+// $Id: TsaSeedTrackCnvTool.h,v 1.3 2008-07-17 13:22:20 smenzeme Exp $
 #ifndef TSASEEDTRACKCNVTOOL_H 
 #define TSASEEDTRACKCNVTOOL_H 1
 
@@ -9,8 +9,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "TrackInterfaces/ITrackPtKick.h"
-#include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 // TsaKernel
 #include "TsaKernel/ITsaSeedTrackCnvTool.h"            // Interface
@@ -59,8 +58,7 @@ namespace Tf
       void addState(const SeedTrack* aTrack,
                     LHCb::Track* lTrack, const double z) const;
 
-      ITrackPtKick* m_ptKickTool;
-      IFastMomentumEstimate* m_fastPTool;
+      ITrackMomentumEstimate* m_momentumTool;
       
       double m_EX2;
       double m_EY2;

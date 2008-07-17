@@ -1,4 +1,4 @@
-// $Id: TsaSeedTrackCnvTool.cpp,v 1.5 2007-11-30 10:02:32 mneedham Exp $
+// $Id: TsaSeedTrackCnvTool.cpp,v 1.6 2008-07-17 13:22:20 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -74,9 +74,11 @@ StatusCode SeedTrackCnvTool::initialize()
     return sc;
   }
   debug() << " ==> Initialize " << endmsg;
-  
-  m_ptKickTool = tool<ITrackPtKick>("TrackPtKick");
-  m_fastPTool = tool <IFastMomentumEstimate>("FastMomentumEstimate");
+
+  if (m_pFromPtKick)
+    m_momentumTool = tool<ITrackMomentumEstimate>("TrackPtKick");
+  else
+    m_momentumTool = tool <ITrackMomentumEstimate>("FastMomentumEstimate");
   
   return sc;
 }
@@ -142,14 +144,8 @@ void SeedTrackCnvTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, co
   aState.setTx(aTrack->xSlope(z,0.));
   aState.setTy(aTrack->sy());
 
-  // p estimate can come from ptKick, curvature or Fast momentum estimate tool. 
-  if ( m_pFromPtKick ){
-    StatusCode sc = m_ptKickTool->calculate(&aState);
-    if( sc.isFailure() ) {
-      Warning( "Pt Kick tool failed, but still adding State" );
-    }
-  }
-  else if( m_pFromCurvature ){
+  // p estimate can come from curvature or momentum tool. 
+  if( m_pFromCurvature ){
     aState.setQOverP(estimateCurvature(aTrack->tx(), m_curvFactor));
     if (m_largeErrors) {
       aState.setErrQOverP2( m_EQdivP2*gsl_pow_2(stateVec(4)));
@@ -171,21 +167,20 @@ void SeedTrackCnvTool::addState(const SeedTrack* aTrack, LHCb::Track* lTrack, co
 
     double qOverP = 0;
     double sigmaQOverP = 0;
-    StatusCode sc = m_fastPTool->calculate(&aStateT ,qOverP, sigmaQOverP , false );
+    StatusCode sc = m_momentumTool->calculate(&aStateT ,qOverP, sigmaQOverP , false );
     if( sc.isFailure() ) {
-      Warning( "FastMomentumEstimate tool  failed, but still adding State" );
+      Warning( "MomentumEstimate tool  failed, but still adding State" );
     }
     //momentum assigned is p at mid T
     aState.setQOverP( qOverP );
-    aState.setErrQOverP2( sigmaQOverP );
-  
+    aState.setErrQOverP2( sigmaQOverP*sigmaQOverP );
+    
     // ok the rest we can get from the correct place
     aStateT.setX(aTrack->x(z,0.));
     aStateT.setY(aTrack->y(z,0.));
     aStateT.setTx(aTrack->xSlope(z,0.));
     aStateT.setTy(aTrack->sy());
   }
-  
   // add to states
   lTrack->addToStates(aState);
   

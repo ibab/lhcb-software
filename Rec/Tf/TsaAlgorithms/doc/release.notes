@@ -3,10 +3,13 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
-! 2008-15-07 Stephanie Hansmann-Menzemer
+! 2008-17-07 - Stephanie Hansmann-Menzemer
+- adapt seeding algorithm to changes in PtKick and FastMomentumEstimate
+
+! 2008-15-07 - Stephanie Hansmann-Menzemer
 - move TsaSeeding.py to options directory
 
-! 2008-15-07 M Needham
+! 2008-15-07 - M Needham
  - Add missing header in ITExpectedHits
 
 ! 2008-14-07 
@@ -16,7 +19,7 @@
 - add python directory with TsaSeeding.py script
 
 !======================= TsaAlgorithms v3r3 2008-04-18 ======================
-! 2007-14-03 M Needham
+! 2007-14-03 - M Needham
  - Changes for DeSTSensor in STDet
 
 !======================= TsaAlgorithms v3r2 2007-11-30 ======================
