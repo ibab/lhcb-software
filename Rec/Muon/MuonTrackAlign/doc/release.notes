@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.11 2008-07-02 13:37:26 cattanem Exp $
+! $Id: release.notes,v 1.12 2008-07-17 17:23:01 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+!=================== MuonTrackAlign v1r5 2008-07-02 ==================
+! 2008-07-17 - Marco Cattaneo for Silvia Pozzi
+ - Fixed bug in detectClone() and StrongCloneKiller()
 
 !=================== MuonTrackAlign v1r4 2008-07-02 ==================
 ! 2008-06-30 - Silvia Pozzi
