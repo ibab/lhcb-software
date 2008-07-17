@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.20 2008-07-16 15:08:57 ahicheur Exp $
+// $Id: MagneticFieldSvc.h,v 1.21 2008-07-17 12:42:06 smenzeme Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -62,6 +62,9 @@ public:
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
                                         Gaudi::XYZVector& fvec ) const;
+
+  bool   UseRealMap() const { return m_useRealMap; } 
+  double GetScale() const { return m_scaleFactor; }
 
 private:
 
