@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.5 2008-05-21 10:59:26 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.6 2008-07-17 13:54:39 lnicolas Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -169,6 +169,7 @@ private:
 
   double m_trackChi2PerDoF;
   double m_trackChi2Prob;
+  double m_trackFitMatchChi2;
 
   double m_trackEta;
 

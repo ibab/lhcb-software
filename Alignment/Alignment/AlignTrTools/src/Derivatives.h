@@ -36,8 +36,8 @@ virtual ~Derivatives(); ///< Destructor
 			const Gaudi::Transform3D &,
 			std::vector<double> &, int, double, double );
 
-  StatusCode SetLocal( std::vector<double> &, int, double,
-			double, double );
+  StatusCode SetLocal( std::vector<double> &, /*int,*/ double,
+      /*double,*/ double );
 
 
   bool SetGlobalN( const std::vector<double> &, 
@@ -50,7 +50,7 @@ virtual ~Derivatives(); ///< Destructor
 			 const Gaudi::XYZVector & );
 
   bool SetLocalN( std::vector<double> &, 
-			int, 
+      // int, 
 			const std::vector<double> &, 
 			const std::vector<double> &, 
 			const Gaudi::XYZPoint &, 

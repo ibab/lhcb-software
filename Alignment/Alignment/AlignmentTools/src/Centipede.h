@@ -60,7 +60,7 @@ class Centipede : public Millepede, virtual public ICentipede {
 			    std::vector<double> &track_params, 
 			    int single_fit, 
 			    std::vector<double> &estimated_para, 
-			    double &chi2, 
+			    // double &chi2, 
 			    double &res );
 
   virtual StatusCode MakeGlobalFit( std::vector<double> &, 

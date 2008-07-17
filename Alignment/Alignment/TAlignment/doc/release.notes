@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-07-17 - Louis Nicolas
+ - Commented unused variables in GAlign
+
 </PRE><H1><A NAME=v3r5>2008-06-17 TAlignment v3r6</A></H1><PRE>
 - Johan Blouw: 2008-06-17, tagged the head as v3r6 for alignment release v3r1
 

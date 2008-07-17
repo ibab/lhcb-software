@@ -3,6 +3,9 @@ Package : AlignmentTools
 Package Coordinator : Sebastien Viret
 Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
+! 2008-07-17 - Louis Nicolas
+ - Commented unused variables in methods of Centipede
+
 - 24/05/08 J. Blouw: modification of 04/02/08 introduced a small bug, a bit
   further in that method (MakeGlobalFit). If psigm < 0, then the C-matrix is
   not inverted. It has been changed to "if ( fabs( psigm[i]) > 0.0 ) {".

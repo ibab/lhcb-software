@@ -41,7 +41,7 @@ class ICentipede : virtual public IMillepede {
 			std::vector<double> &,
 			int,
 			std::vector<double> &,
-			double &,
+			// double &,
 			double & ) = 0;
   virtual StatusCode MakeGlobalFit( std::vector<double> &,
 				    std::vector<double> &,

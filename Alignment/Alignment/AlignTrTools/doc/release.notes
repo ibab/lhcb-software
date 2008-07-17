@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2008-07-17 - Louis Nicolas
+ - Commented unused variables in Derivatives and TAConfig.
+
 </PRE><H1><A NAME=v3r6>2008-06-17 AlignTrTools v3r6 </A></H1><PRE>
  - J. Blouw:  tagged v3r6 for alignment project software release v3r1
 

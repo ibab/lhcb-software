@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.13 2008-06-06 16:00:10 janos Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.14 2008-07-17 13:54:39 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -18,7 +18,6 @@
 #include "GaudiKernel/ToStream.h"
 
 // Interfaces
-#include "TrackInterfaces/ITrackCloneFinder.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 // Det
@@ -53,10 +52,6 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   m_sharedHits.reserve ( 1000 );
   
   // constructor
-  // Clone finder
-  this -> declareProperty ( "CloneFinderTool",
-                            m_cloneFinderName = "TrackCloneFinder" );
-
   // Location of the IT/OT geometries
   this -> declareProperty ( "OTGeometryPath",
                             m_otTrackerPath = DeOTDetectorLocation::Default );
@@ -69,9 +64,6 @@ AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
   this -> declareProperty ( "OTTimesLocation",
                             m_otTimesPath = LHCb::OTTimeLocation::Default );
   this -> declareProperty ( "TracksLocation", m_tracksPath = "Rec/Track/Best" );
-
-  // Are we using MC or real data?
-  this -> declareProperty ( "MCData", m_mcData = true );
 
   // 48 = 12 (layers) * 2 (ladder overlaps) * 2 (box overlaps)
   this -> declareProperty ( "IsolatedTrackNStripsTolerance",
@@ -103,10 +95,6 @@ StatusCode AlignTrackMonitor::initialize ( ) {
 
   // The extrapolator
   m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
-
-  // Retrieve the clone finder tool
-  m_cloneFinder = tool<ITrackCloneFinder>( m_cloneFinderName,
-                                           "CloneFinderTool", this );
 
   // Get The Magnetic Field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
@@ -157,10 +145,6 @@ StatusCode AlignTrackMonitor::execute ( ) {
   m_sharedHits.clear( );
   getSharedHits ( );
   
-  // Get the association table 
-  AsctTool associator( evtSvc(), m_tracksPath );
-  m_directTable = associator.direct();
-
   //**********************************************************************
   // Global Variables
   //**********************************************************************
@@ -180,31 +164,6 @@ StatusCode AlignTrackMonitor::execute ( ) {
   LHCb::Tracks::const_iterator iTracks = m_tracks->begin();
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = **iTracks;
-
-    if ( (iTracks == m_tracks->begin()) && m_mcData )
-      if ( isGhostTrack( &aTrack ) )
-        m_ghostRate = (double)1/m_eventMultiplicity;
-      else
-        m_ghostRate = 0;
-
-    bool isAClone = false;
-    // Do not run code on clones
-    LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
-    for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
-      LHCb::Track& tr2 = **iTracks2;
-      m_cloneFinder->areClones( aTrack, tr2, isAClone );
-      if ( isAClone ) break;
-      // Compute ghost rate
-      if ( (iTracks == m_tracks->begin()) && m_mcData )
-        if ( isGhostTrack( &tr2 ) )
-          m_ghostRate += (double)1/m_eventMultiplicity;
-      
-    }
-    if ( isAClone ) {
-      if ( msgLevel( MSG::DEBUG ) )
-        debug() << "Track is a clone! Skipping track!" << endmsg;
-      continue;
-    }
 
     if ( msgLevel( MSG::DEBUG ) )     
       debug() << "******************************************************" << endmsg
@@ -266,8 +225,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   m_trackP = aTrack->p()/Gaudi::Units::GeV;
   m_trackPt = aTrack->pt()/Gaudi::Units::GeV;
   m_trackErrP = sqrt(aTrack->firstState().errP2())/Gaudi::Units::GeV;
-  m_trackMCP = defValue;
-  m_trackMCPt = defValue;
 
   // Track pseudo-rapidity
   m_trackEta = aTrack->pseudoRapidity();
@@ -279,28 +236,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   m_entryX = aState.x();
   m_entryY = aState.y();
   //**********************************************************************
-
-  if ( m_mcData ) {
-    //**********************************************************************
-    // MCP and MCPt (get MCParticle linked to the track)
-    //**********************************************************************
-    // Retrieve the Linker table
-    LinkedTo<LHCb::MCParticle,LHCb::Track>
-      directLink( evtSvc(), msgSvc(), m_tracksPath );
-    if ( directLink.notFound() )
-      Error("Linker table not found", StatusCode::SUCCESS, 1);
-
-    // Get MCParticle linked by highest weight to Track
-    // and get its p and pt in GeV
-    LHCb::MCParticle* mcPart = new LHCb::MCParticle;
-    mcPart = directLink.first( aTrack );
-    if ( 0 != mcPart ) {
-      m_trackMCP  = mcPart->p()/Gaudi::Units::GeV;
-      m_trackMCPt = mcPart->pt()/Gaudi::Units::GeV;
-    }
-    delete mcPart;
-    //**********************************************************************
-  }
 
   // For Box Overlap
   unsigned int overlapStation = abs(defValue);
@@ -490,18 +425,6 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   //**********************************************************************
 
   return fillHistos( );
-}
-//===========================================================================
-
-
-//===========================================================================
-// Is track ghost or not?
-//===========================================================================
-bool AlignTrackMonitor::isGhostTrack ( const LHCb::Track* aTrack ) {
-
-  DirectRange range = m_directTable->relations(aTrack);
-
-  return ( range.empty() ? true:false );
 }
 //===========================================================================
 
@@ -812,8 +735,6 @@ StatusCode AlignTrackMonitor::fillHistos ( ) {
 
   // Event Variables  
   plot ( m_eventMultiplicity, "Multiplicity", "Multiplicity", 0., 500., 50 );
-  if ( m_mcData )
-    plot ( m_ghostRate, "GhostRate", "GhostRate", -0.01, 1.01, 50 );
   plot ( m_nITClusters, "NITClusters", "NITClusters", 0., 2000., 50 );
   plot ( m_nVeloClusters, "NVeloClusters", "NVeloClusters", 0., 5000., 50 );
 
@@ -835,10 +756,6 @@ StatusCode AlignTrackMonitor::fillHistos ( ) {
   plot ( m_trackP, "TrackP", "TrackP", -5., 205., 50 );
   plot ( m_trackPt, "TrackPt", "TrackPt", -0.1, 10.1, 50 );
   plot ( m_trackErrP, "TrackErrP", "TrackErrP", -0.1, 10.1, 50 );
-  if ( m_mcData && (m_trackMCP != defValue) && (m_trackMCPt != defValue) ) {
-    plot ( m_trackMCP, "TrackMCP", "TrackMCP", -5., 205., 50 );
-    plot ( m_trackMCPt, "TrackMCPt", "TrackMCPt", -0.1, 10.1, 50 );
-  }
 
   // Track pseudo-rapidity
   plot ( m_trackEta, "TrackEta", "TrackEta", 0., 10., 50 );

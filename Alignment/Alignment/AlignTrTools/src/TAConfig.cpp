@@ -3,7 +3,7 @@
  *  Implementation file for Millepede configuration tool : TAConfig
  *
  *  CVS Log :-
- *  $Id: TAConfig.cpp,v 1.20 2008-05-23 16:28:19 jblouw Exp $
+ *  $Id: TAConfig.cpp,v 1.21 2008-07-17 13:54:40 lnicolas Exp $
  *
  *  @author J. Blouw (johan.blouw@mpi-hd.mpg.de)
  *          M. Deissenroth (marc.deissenroth@physi.uni-heidelberg.de)
@@ -1042,7 +1042,7 @@ StatusCode TAConfig::ConfMatrix( unsigned int cnt,
     info() << "trpar = " << trpar << endreq;
     info() << "deltaB4 = " << deltaB4 << endreq;
   }
-  m_derivatives->SetLocalN( m_derLC, m_rank_nr, trpar, deltaB4, cAlignD, sD, mv, kv );
+  m_derivatives->SetLocalN( m_derLC, /*m_rank_nr,*/ trpar, deltaB4, cAlignD, sD, mv, kv );
   if ( fabs(m_derLC[0]) > 1.0e50 
        || fabs(m_derLC[1]) > 1.0e50 
        || fabs(m_derLC[2]) > 1.0e50 
@@ -1234,7 +1234,7 @@ StatusCode TAConfig::FillMatrix( unsigned int trcnt,
     info() << "                   trt = " << trt << endreq;
     info() << "              deltaNew = " << deltaNew << endreq;
   }
-  StatusCode sc = m_derivatives->SetLocalN( m_derLC, m_rank_nr, trt, deltaNew, cAlignD, sD, mv, kv );
+  StatusCode sc = m_derivatives->SetLocalN( m_derLC, /*m_rank_nr,*/ trt, deltaNew, cAlignD, sD, mv, kv );
   if ( sc == StatusCode::FAILURE ) {
     error() << "Error in calculating derivatives; will exit!" << endreq;
     return StatusCode::FAILURE;
@@ -1274,8 +1274,8 @@ StatusCode TAConfig::FillMatrix( unsigned int trcnt,
 //                      LHCb::State &trState (at this state)
 //-------------------------------------------------------
 
-bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
-				   const LHCb::Track &track, 
+bool TAConfig::CalcResidualOT( // unsigned int tr_cnt,
+           // const LHCb::Track &track, 
 				   const LHCb::Measurement *trMeas, 
 				   const LHCb::LHCbID &id,
 				   bool localF,
@@ -1283,7 +1283,7 @@ bool TAConfig::CalcResidualOT( unsigned int tr_cnt,
   
   // const LHCb::Measurement trMeas(track.measurement(id)); // Get measurement    
   if(id.isOT()){
-    double weight = 1./1.44;
+    // double weight = 1./1.44;
     double stereo_angle= stereo_angle = m_ot->findLayer( id.otID() )->angle();
     Gaudi::XYZPoint Ppoint = (trMeas->trajectory()).position(0.);
     std::auto_ptr<LHCb::Trajectory> lhcbidTraj = m_ot->findModule( id.otID() )->trajectory(id.otID());   
@@ -1516,7 +1516,7 @@ StatusCode TAConfig::CalcResidual( unsigned int tr_cnt,
   //---------------------
   Gaudi::XYZVector distance(-999999.9999,-9999.9999,-99999.99999);
   double onstraw = 0.; 
-  double onZaxis = 0.; 
+  // double onZaxis = 0.; 
   sc = m_poca->minimize( *measTraj, onstraw, mC, distance, m_tolerance );
   if ( sc.isFailure() ) {
     error() << "Error in calculating poca between measurement trajectory and center of module"<< endreq;
@@ -1784,13 +1784,13 @@ StatusCode TAConfig::GlobalFit( std::vector<double> & parameter,
 StatusCode TAConfig::LocalTrackFit( unsigned int tr_cnt,
                              std::vector<double> &trpar,
                              std::vector<double> & estimated,
-                             double & chi2,
+			     // double & chi2,
                              double & residual) {
   StatusCode sc  = m_Centipede->FitLoc( (int) tr_cnt, 
 					trpar, 
 					0, 
 					estimated, 
-					chi2, 
+					// chi2, 
 					residual );
   if ( sc.isFailure() ) {
     error() << "Error in LocalTrackFit" <<  endreq;
@@ -1869,7 +1869,7 @@ const Gaudi::Transform3D TAConfig::FindHitModule( const LHCb::LHCbID &id,
       layer = t_lay;
       return layer;
     } else if ( m_otModule ) { // we want to align modules
-      DeOTModule * otm = dynamic_cast<DeOTModule*> (m_ot->findModule( id.otID() ));
+      // DeOTModule * otm = dynamic_cast<DeOTModule*> (m_ot->findModule( id.otID() ));
       Gaudi::Transform3D t_mod( R, Mod );
       module = t_mod;
       return module;

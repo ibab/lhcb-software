@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.6 2008-05-21 10:59:26 lnicolas Exp $
+// $Id: AlignSaveTuple.cpp,v 1.7 2008-07-17 13:54:39 lnicolas Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ StatusCode AlignSaveTuple::execute ( ) {
   getSharedHits();
   
   // Creating the tuple in memory
-  Tuples::Tuple trackSelTuple = nTuple( "TrackSel N-tuple" );
+  Tuples::Tuple trackSelTuple = nTuple( "TrackSelNTuple" );
   
   // Get the association table 
   AsctTool associator( evtSvc(), m_tracksPath );
@@ -203,22 +203,23 @@ StatusCode AlignSaveTuple::execute ( ) {
   for ( ; iTracks != m_tracks->end(); ++iTracks ) {
     LHCb::Track& aTrack = **iTracks;
 
-    if ( iTracks == m_tracks->begin() )
-      if ( isGhostTrack( &aTrack ) )
-        m_ghostRate = (double)1/m_eventMultiplicity;
-      else
-        m_ghostRate = 0;
-
-    LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
-    for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
-      LHCb::Track& tr2 = **iTracks2;
-
-      // Compute ghost rate
+    if ( m_mcData ) {
       if ( iTracks == m_tracks->begin() )
-        if ( isGhostTrack( &tr2 ) )
-          m_ghostRate += (double)1/m_eventMultiplicity;
-
+	if ( isGhostTrack( &aTrack ) )
+	  m_ghostRate = (double)1/m_eventMultiplicity;
+	else
+	  m_ghostRate = 0;
+      
+      LHCb::Tracks::const_iterator iTracks2 = iTracks+1;
+      for ( ; iTracks2 != m_tracks->end(); ++iTracks2 ) {
+	LHCb::Track& tr2 = **iTracks2;
+	// Compute ghost rate
+	if ( iTracks == m_tracks->begin() )
+	  if ( isGhostTrack( &tr2 ) )
+	    m_ghostRate += (double)1/m_eventMultiplicity;
+      }
     }
+
     if ( msgLevel( MSG::DEBUG ) )     
       debug() << "******************************************************" << endmsg
               << "Entering new good track" << endmsg;
@@ -301,6 +302,7 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 
   m_trackChi2PerDoF = aTrack->chi2PerDoF();
   m_trackChi2Prob = aTrack->probChi2();
+  m_trackFitMatchChi2 = aTrack->info(LHCb::Track::FitMatchChi2, 999999);
 
   m_trackEta = aTrack->pseudoRapidity();
 
@@ -537,7 +539,12 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
 //===========================================================================
 bool AlignSaveTuple::isGhostTrack ( const LHCb::Track* aTrack ) {
 
-  DirectRange range = m_directTable->relations(aTrack);
+  DirectRange range;
+  if ( !m_directTable ) {
+    Error( "Track MCParticle table missing. Are you running TrackAssociator before?" );
+    return false;
+  }
+  range = m_directTable->relations(aTrack);
 
   return ( range.empty() ? true:false );
 }
@@ -857,7 +864,8 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   trackSelTuple -> column ( "EvtNr", m_evtNr );
   trackSelTuple -> column ( "RunNr", m_runNr );
   trackSelTuple -> column ( "Multiplicity", m_eventMultiplicity );
-  trackSelTuple -> column ( "GhostRate", m_ghostRate );
+  if ( m_mcData )
+    trackSelTuple -> column ( "GhostRate", m_ghostRate );
 
   trackSelTuple -> column ( "NVeLoClusters", m_nVeLoClusters );
   trackSelTuple -> column ( "NITClusters", m_nITClusters );
@@ -879,6 +887,7 @@ StatusCode AlignSaveTuple::writeNTuple ( Tuples::Tuple trackSelTuple ) {
   
   trackSelTuple -> column ( "TrackChi2PerDoF", m_trackChi2PerDoF );
   trackSelTuple -> column ( "TrackChi2Prob", m_trackChi2Prob );
+  trackSelTuple -> column ( "TrackFitMatchChi2", m_trackFitMatchChi2 );
 
   trackSelTuple -> column ( "TrackEta", m_trackEta );  
 

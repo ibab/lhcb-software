@@ -3,7 +3,7 @@
  *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.12 2008-05-23 16:29:21 jblouw Exp $
+ *  $Id: GAlign.cpp,v 1.13 2008-07-17 13:54:11 lnicolas Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -414,7 +414,7 @@ StatusCode GAlign::execute() {
            m_ntr++;
 	std::vector<double> estimated( m_estimated.size(), 0.0);
 	//        std::vector<double> estimated = m_estimated;
-	StatusCode sc = m_taConfig->LocalTrackFit( tr_cnt, trpar, estimated, chi2, residual );
+	StatusCode sc = m_taConfig->LocalTrackFit( tr_cnt, trpar, estimated, /*chi2,*/ residual );
 	plot2D( m_iterations, chi2, "Chi2 vs iteration", 0.0, 20.0,0.0,10000,21,100);
 	if ( chi2 > 0.0 ) m_chi2 += 1.0/chi2;
 	if ( sc.isFailure() ) {

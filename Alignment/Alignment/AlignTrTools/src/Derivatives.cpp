@@ -264,9 +264,9 @@ bool Derivatives::SetGlobalN( const std::vector<double> &tvec,
 
 
 StatusCode Derivatives::SetLocal( std::vector<double> &derLC,
-				  int rank,
+          // int rank,
 				  double z,
-				  double dz,
+          // double dz,
 				  double stereo_angle ) {
 
 
@@ -303,7 +303,7 @@ StatusCode Derivatives::SetLocal( std::vector<double> &derLC,
 
 
 bool Derivatives::SetLocalN( std::vector<double> &derLC, 
-				  int rank, 
+          // int rank, 
                                   const std::vector<double> &tvec,
 				  const std::vector<double> &delta,
                                   const Gaudi::XYZPoint &plane,
@@ -314,7 +314,7 @@ bool Derivatives::SetLocalN( std::vector<double> &derLC,
 
   double x0,tx,y0,ty,dtau,dz,alpha, dalpha,dbeta,dgamma;
   double kx,ky,kz,mx,my,mz;
-  double stereo_angle=0;
+  // double stereo_angle=0;
   alpha=0.;
   x0=tvec[0];
   tx=tvec[1];
@@ -335,7 +335,7 @@ bool Derivatives::SetLocalN( std::vector<double> &derLC,
   kx=Mtraj.X()/sqrt(Mtraj.Mag2()); ky=Mtraj.Y()/sqrt(Mtraj.Mag2()); kz=Mtraj.Z()/sqrt(Mtraj.Mag2());
   mx=Straj.X()/sqrt(Straj.Mag2()); my=Straj.Y()/sqrt(Straj.Mag2()); mz=Straj.Z()/sqrt(Straj.Mag2()); //strip trajectory 
 
-  double z=0.0;
+  // double z=0.0;
   //C  info() << "m_tr_pars: " << m_tr_pars << " " << rank  << " " << z << " " << stereo_angle  <<endreq; 
   if ( fabs(derLC[0]) > 1.0e50 
        || fabs(derLC[1]) > 1.0e50 

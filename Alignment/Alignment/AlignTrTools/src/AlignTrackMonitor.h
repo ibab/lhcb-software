@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.8 2008-05-21 10:59:27 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.9 2008-07-17 13:54:39 lnicolas Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -22,7 +22,6 @@
 #include "Linker/LinkedTo.h"
 
 // Event
-#include "Event/MCParticle.h"
 #include "Event/Track.h"
 #include "Event/STLiteCluster.h"
 #include "Event/VeloCluster.h"
@@ -35,7 +34,6 @@
 //===========================================================================
 class ITrackExtrapolator;
 class IMagneticFieldSvc;
-class ITrackCloneFinder;
 
 class DeOTDetector;
 class DeSTDetector;
@@ -58,18 +56,12 @@ public:
 private:
 
   typedef std::vector<double> Array;
-  typedef LinkerTool<LHCb::Track, LHCb::MCParticle> AsctTool;
-  typedef AsctTool::DirectType DirectTable;
-  typedef DirectTable::Range DirectRange;
   typedef LHCb::STLiteCluster::STLiteClusters STLiteClusters;
 
   static const int defValue = -999999;
   
   // Fill the Variables
   StatusCode fillVariables ( const LHCb::Track* aTrack );
-
-  // Is the track linked to a MC particle or not?
-  bool isGhostTrack ( const LHCb::Track* aTrack );
 
   // Check if the hit is being shared with (at least) one other Track
   void getSharedHits ( );
@@ -101,16 +93,12 @@ private:
   //======================================================================
   // Properties
   //======================================================================
-  std::string m_cloneFinderName;
-
   std::string m_otTrackerPath;       ///< Name of the OT XML geom path
   std::string m_itTrackerPath;       ///< Name of the IT XML geom path
 
   std::string m_tracksPath;
   std::string m_itClustersPath;
   std::string m_otTimesPath;
-
-  bool m_mcData;
 
   double m_nStripsTol;
   double m_nStrawsTol;
@@ -127,9 +115,7 @@ private:
   //======================================================================
 
   ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
-  ITrackCloneFinder* m_cloneFinder; ///< Interface to clone finder tool
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
-  DirectTable* m_directTable;
   DeOTDetector* m_otTracker;           ///< Pointer to the OT XML geom
   DeITDetector* m_itTracker;           ///< Pointer to the IT XML geom
 
@@ -142,7 +128,6 @@ private:
 
   // event variables
   int m_eventMultiplicity;
-  double m_ghostRate;
   int m_nITClusters;
   int m_nVeloClusters;
 
@@ -164,8 +149,6 @@ private:
   double m_trackP;
   double m_trackPt;
   double m_trackErrP;
-  double m_trackMCP;
-  double m_trackMCPt;
 
   // Track pseudo-rapidity
   double m_trackEta;
