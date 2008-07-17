@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.7 2008-07-09 08:28:51 hernando Exp $
+// $Id: TsaConfirmTool.h,v 1.8 2008-07-17 08:07:35 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -54,7 +54,7 @@ public:
 
   //@@JA fix!!!
   ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids){
-    return ParabolaHypothesis(1,1,1,1,1,1,1);
+    return ParabolaHypothesis(0,0,0,0,0,0,0,0,0);
   };     
 protected:
 
