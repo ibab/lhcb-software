@@ -83,14 +83,9 @@ InitMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
 
 // Subdetector algorithms
 //--------------------------------------------------------------
-// L0 trigger
-DigiL0Seq.Members += { "L0CaloAlg/L0Calo", "L0CaloCandidatesFromRaw" };
-#include "$L0MUONROOT/options/l0muonAlg.opts"
-DigiL0Seq.Members += { "L0MuonAlg/L0Muon" };
-DigiL0Seq.Members += { "PuVetoFillRawBuffer", "PuVetoAlg" };
-DigiL0Seq.Members += { "L0DUAlg/L0DU" }; 
+// L0 trigger Simulation
+DigiL0Seq.Members += { "GaudiSequencer/L0SimulationSeq" };
 #include "$L0DUROOT/options/Boole.opts"
-
 
 // Calorimeter digitisation
 DigiCALOSeq.Members = {

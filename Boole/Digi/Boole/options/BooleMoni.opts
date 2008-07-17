@@ -35,8 +35,7 @@ Boole.BooleMemory.HistoTopDir = "Boole/";
 Boole.BooleMemory.HistoDir    = "MemoryTool";
 
 // L0 Trigger
-MoniL0Seq.Members += { "L0CaloMonit" };
-MoniL0Seq.Members += { "L0DUReportMonitor/L0Monitor" };
+MoniL0Seq.Members += { "GaudiSequencer/L0MoniSeq" };
 
 // Velo
 MoniVELOSeq.Members += {
