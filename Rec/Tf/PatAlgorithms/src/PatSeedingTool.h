@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.10 2008-07-13 22:05:48 mschille Exp $
+// $Id: PatSeedingTool.h,v 1.11 2008-07-17 13:16:49 smenzeme Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -14,7 +14,8 @@
 
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
-#include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 #include "PatSeedTool.h"
 #include "PatSeedTrack.h"
@@ -178,6 +179,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	  double maxUsedFraction) const;
 
     private:
+      IMagneticFieldSvc* m_magFieldSvc;
       std::string      m_inputTracksName;
 
       double m_zMagnet;
@@ -267,8 +269,8 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
       bool m_reusePatSeeding;
 
       // use tool for momentum parametrisation
-      std::string m_fastMomentumToolName;
-      IFastMomentumEstimate *m_fastMomentumTool;
+      std::string m_momentumToolName;
+      ITrackMomentumEstimate *m_momentumTool;
 
       // cuts on fraction of used hits during final selection (per stage)
       double m_maxUsedFractPerRegion;

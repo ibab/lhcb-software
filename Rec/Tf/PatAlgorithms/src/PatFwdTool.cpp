@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.7 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatFwdTool.cpp,v 1.8 2008-07-17 13:16:49 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -36,17 +36,18 @@ PatFwdTool::PatFwdTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<PatFwdTool>(this);
+
   declareProperty( "ZReference"      , m_zReference      = StateParameters::ZMidT); 
   declareProperty( "ZOutput"          ,m_zOutputs        = boost::assign::list_of(StateParameters::ZBegT)
 		   (StateParameters::ZMidT)(StateParameters::ZEndT));
   declareProperty( "ZMagnetParams"   , m_zMagnetParams   = boost::assign::list_of
-		   (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281));
+		   (0.0));
   declareProperty( "xParams"         , m_xParams         = boost::assign::list_of
-		   (16.8238) (-6.35556));
+		   (0.0));
   declareProperty( "yParams"         , m_yParams         = boost::assign::list_of
-		   (-970.89)  (-0.686028) );
+		   (0.0));
   declareProperty( "momentumParams"  , m_momentumParams  = boost::assign::list_of
-		   (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909));
+		   (0.0));
   declareProperty( "xMagnetTol"      , m_xMagnetTol      = 3. );
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField = false);
@@ -65,10 +66,30 @@ StatusCode PatFwdTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
 
-  if ( 5 > m_zMagnetParams.size() )  return Error ( "Not enough zMagnetParams values" );
-  if ( 6 > m_momentumParams.size() ) return Error ( "Not enough momentumParams values" );
-  if ( 2 > m_xParams.size() )        return Error ( "Not enough xParams values" );
-  if ( 2 > m_yParams.size() )        return Error ( "Not enough yParams values" );
+  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+
+  if ( 5 > m_zMagnetParams.size() || 6 > m_momentumParams.size() || 
+       2 > m_xParams.size() || 2 > m_yParams.size()){
+  
+    m_zMagnetParams.clear();
+    m_momentumParams.clear();
+    m_xParams.clear();
+    m_yParams.clear();
+
+    
+    if (m_magFieldSvc->UseRealMap()){
+      m_zMagnetParams   = boost::assign::list_of (5208.05) (318.502) (-1223.87) (9.80117e-06) (-304.272);
+      m_xParams         = boost::assign::list_of (17.5815) (-5.94803);
+      m_yParams         = boost::assign::list_of (-979.0) (-0.684947);
+      m_momentumParams  = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
+    } else {
+      m_zMagnetParams   = boost::assign::list_of (5199.31) (334.725) (-1283.86) (9.59486e-06) (-413.281);
+      m_xParams         = boost::assign::list_of (16.8238) (-6.35556);
+      m_yParams         = boost::assign::list_of (-970.89) (-0.686028);
+      m_momentumParams  = boost::assign::list_of (1.21909) (0.627841) (-0.235216) (0.433811) (2.92798) (-21.3909);
+    }
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -584,7 +605,7 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
                   m_momentumParams[5] * track.slY2() * track.slY2() );
   double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
 
-  return track.dSlope() / ( coef * Gaudi::Units::GeV * proj );
+  return track.dSlope() / ( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->GetScale());
 
 
 }

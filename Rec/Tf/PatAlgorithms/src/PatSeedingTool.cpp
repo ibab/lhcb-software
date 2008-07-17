@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.18 2008-07-13 22:05:48 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.19 2008-07-17 13:16:49 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -58,9 +58,9 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   //------------------------------------------------------------------------
   // track model
   //------------------------------------------------------------------------
-  declareProperty( "dRatio",			m_dRatio		= -3.2265e-4);
-  declareProperty( "InitialArrow",		m_initialArrow		= 4.25307e-09);
-  declareProperty( "MomentumScale",		m_momentumScale		= 44.1416);
+  declareProperty( "dRatio",			m_dRatio		= -999);
+  declareProperty( "InitialArrow",		m_initialArrow		= -999);
+  declareProperty( "MomentumScale",		m_momentumScale		= -999);
   declareProperty( "zReference",		m_zReference		=  StateParameters::ZMidT);
 
   //------------------------------------------------------------------------
@@ -70,7 +70,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MinMomentum",		m_minMomentum		=  500. * Gaudi::Units::MeV );
   declareProperty( "CurveTol",			m_curveTol		=    5. * Gaudi::Units::mm );
   // center of magnet compatibility
-  declareProperty( "zMagnet",			m_zMagnet		= 5383.17 * Gaudi::Units::mm );
+  declareProperty( "zMagnet",			m_zMagnet		= -999 );
   declareProperty( "xMagTol",			m_xMagTol		= 2000. * Gaudi::Units::mm );
   // window to collect hits from
   declareProperty( "TolCollectOT",		m_tolCollectOT		=    3. * Gaudi::Units::mm );
@@ -90,7 +90,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "MaxRangeOT",		m_maxRangeOT		=  150. * Gaudi::Units::mm );
   declareProperty( "MaxRangeIT",		m_maxRangeIT		=   50. * Gaudi::Units::mm );
   // pointing criterium in y
-  declareProperty( "yCorrection",		m_yCorrection		= 4.73385e-15);
+  declareProperty( "yCorrection",		m_yCorrection		= -999);
   declareProperty( "MaxYAtOrigin",		m_maxYAtOrigin		=  400. * Gaudi::Units::mm );
   declareProperty( "MaxYAtOriginLowQual",	m_maxYAtOriginLowQual	= 1500. * Gaudi::Units::mm );
 
@@ -127,7 +127,7 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "StateErrorY2",		m_stateErrorY2		= 400. );
   declareProperty( "StateErrorTX2",		m_stateErrorTX2		= 6e-5 );
   declareProperty( "StateErrorTY2",		m_stateErrorTY2		= 1e-4 );
-  declareProperty( "FastMomentumToolName",	m_fastMomentumToolName	= "FastMomentumEstimate" );
+  declareProperty( "MomentumToolName",	        m_momentumToolName	= "FastMomentumEstimate" );
   declareProperty( "ZOutput",			m_zOutputs		=
 		  boost::assign::list_of(StateParameters::ZBegT)(StateParameters::ZMidT)(StateParameters::ZEndT));
 
@@ -177,8 +177,28 @@ StatusCode PatSeedingTool::initialize() {
 
   m_tHitManager    = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
 
+  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+
+  if (m_initialArrow == -999 || m_momentumScale == -999 ||
+      m_zMagnet == -999 || m_dRatio == -999 || m_yCorrection == -999){
+    if (m_magFieldSvc->UseRealMap()){
+      m_initialArrow		= 4.25307e-09;
+      m_momentumScale         = 44.141;
+      m_dRatio		= -3.2265e-4;
+      m_zMagnet               = 5383.17 * Gaudi::Units::mm;
+      m_yCorrection           = 4.73385e-15;
+    } else {
+      m_initialArrow = 4.21826e-09;
+      m_momentumScale = 40.3751;
+      m_zMagnet = 5372.1;
+      m_dRatio = -3.81831e-4;
+      m_yCorrection = 8.6746e-15;
+    }
+  }
+
+
   m_seedTool = tool<PatSeedTool>( "PatSeedTool" );
-  m_fastMomentumTool = tool<IFastMomentumEstimate>( m_fastMomentumToolName );
+  m_momentumTool = tool<ITrackMomentumEstimate>( m_momentumToolName );
 
   //== Max impact: first term is due to arrow ->curvature by / (mm)^2 then momentum to impact at z=0
   //== second term is decay of Ks: 210 MeV Pt, 2000 mm decay distance.
@@ -1141,8 +1161,9 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
 	track.xSlope(m_zReference), track.ySlope(m_zReference), 0.),
       m_zReference, LHCb::State::AtT);
   double qOverP, sigmaQOverP;
-  if (m_fastMomentumTool->calculate(&temp, qOverP,
-	sigmaQOverP, true).isFailure()) {
+
+  if (m_momentumTool->calculate(&temp,
+      qOverP, sigmaQOverP, true).isFailure()){
     // two reasons for this - 1. never leave a StatusCode unchecked
     // 2. if we ever get a failure here, we can still revert to calculating
     // q/p from curvature

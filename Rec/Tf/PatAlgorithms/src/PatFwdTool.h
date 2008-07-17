@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.h,v 1.4 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatFwdTool.h,v 1.5 2008-07-17 13:16:49 smenzeme Exp $
 #ifndef FWDGEOMETRYTOOL_H
 #define FWDGEOMETRYTOOL_H 1
 
@@ -10,6 +10,8 @@
 #include "PatFwdPlaneCounter.h"
 #include "PatFwdRegionCounter.h"
 #include "PatKernel/PatForwardHit.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
+
 
 static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
 
@@ -142,6 +144,7 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
   protected:
 
   private:
+    IMagneticFieldSvc* m_magFieldSvc; 
     std::vector<double> m_zMagnetParams;
     std::vector<double> m_xParams;
     std::vector<double> m_yParams;

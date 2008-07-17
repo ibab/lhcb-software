@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.h,v 1.2 2007-11-19 15:06:06 aperiean Exp $
+// $Id: PatForwardTool.h,v 1.3 2008-07-17 13:16:49 smenzeme Exp $
 #ifndef PATFORWARDTOOL_H
 #define PATFORWARDTOOL_H 1
 
@@ -20,6 +20,8 @@
 
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
+
+
 
 static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
 
@@ -90,6 +92,8 @@ static const InterfaceID IID_PatForwardTool ( "PatForwardTool", 1, 0 );
     Tf::TStationHitManager <PatForwardHit> *   m_tHitManager;    ///< Tool to provide hits
     IAddTTClusterTool*                          m_addTTClusterTool;
     std::string                                 m_addTtToolName;
+
+      
 
     //== Parameters of the algorithm
     double m_zAfterVelo;

@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.10 2008-05-29 10:54:25 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.11 2008-07-17 13:16:49 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -97,6 +97,7 @@ StatusCode PatForwardTool::initialize ( ) {
   } else {
     m_addTTClusterTool = NULL;
   }
+
 
   return StatusCode::SUCCESS;
 }
