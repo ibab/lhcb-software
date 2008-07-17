@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.5 2008-05-09 12:00:47 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.6 2008-07-17 08:50:16 cattanem Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -155,18 +155,9 @@ void MCSTDepositCreator::createDeposits( const MCHits* mcHitsCont,
   for (; iterHit!=mcHitsCont->end();++iterHit){    
     MCHit* aHit = *iterHit;
 
-    DeSTSector* aSector = 0;    
-    // if (m_useSensDetID == true){
-    //  aSector = m_tracker->findSector(aHit->sensDetID());
-    // }
-    //else {
-     aSector = m_tracker->findSector(aHit->midPoint());
-      //std::cout << "Find point " << std::endl;
-    //}
-
+    DeSTSector* aSector = m_tracker->findSector(aHit->midPoint());
     if (aSector == 0) {
-      //std::cout << STChannelID(aHit->sensDetID()) << std::endl;
-      warning() << "point " << aHit->midPoint() << endreq;
+      debug() << "point " << aHit->midPoint() << endreq;
       Warning("Failed to find sector", StatusCode::SUCCESS, 1).ignore();
       continue;
     }

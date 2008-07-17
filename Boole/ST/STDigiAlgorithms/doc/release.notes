@@ -4,6 +4,10 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v1r2p1 2008-07-17 ================
+! 2008-07-17 - Marco Cattaneo
+ - Downgrade a warning() to debug()
+
 !========================= STDigiAlgorithms v1r2 2008-07-03 ==================
 ! 2008-06-18 M Needham
  - Fix implicit conversions
