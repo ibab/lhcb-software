@@ -68,7 +68,7 @@ use SiDAQ                 v2r1    Si      # Matt Needham
 # Other stuff
 use CaloInterfaces        v7r7   Calo    # Olivier Deschamps
 use CaloUtils             v8r1   Calo    # Olivier Deschamps
-use CondDBEntityResolver  v5r0   Tools   # Marco Clemencic
+use CondDBEntityResolver  v5r1   Tools   # Marco Clemencic
 use CondDBUI              v2r11  Tools   # Marco Clemencic
 use DaVinciKernel         v7r0   Phys    # Juan Palacios
 use DaVinciMCKernel       v2r10  Phys    # Juan Palacios
