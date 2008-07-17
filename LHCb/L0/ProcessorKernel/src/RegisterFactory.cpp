@@ -158,7 +158,7 @@ std::string L0Muon::RegisterFactory::toXML(std::string tab){
 
 
   xmlString += "<"+XMLRegisterFactory+" ";
-  sprintf(buf,"%d",m_registers.size());
+  sprintf(buf,"%d",int(m_registers.size()));
   str = buf;
   xmlString += " size = \""+str+"\" ";
   xmlString += " >\n";
