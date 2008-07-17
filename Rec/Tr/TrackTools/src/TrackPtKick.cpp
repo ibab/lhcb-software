@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.12 2008-02-08 07:37:58 cattanem Exp $
+// $Id: TrackPtKick.cpp,v 1.13 2008-07-17 12:55:51 smenzeme Exp $
 // Include files
 // -------------
 
@@ -41,7 +41,7 @@ TrackPtKick::TrackPtKick( const std::string& type,
   , m_FieldPolarity(1)
 
 {
-  declareInterface<ITrackPtKick>(this);
+  declareInterface<ITrackMomentumEstimate>(this);
 
  declareProperty( "resParams",  
                   m_resParams =  boost::assign::list_of(0.015)(0.29) );
@@ -77,23 +77,32 @@ StatusCode TrackPtKick::initialize()
 
   return StatusCode::SUCCESS;
 };
+// Estimate the momentum P of a State
+//=============================================================================
+//
+StatusCode TrackPtKick::calculate( const LHCb::State* veloState, const LHCb::State* tState, 
+				   double& qOverP, double& sigmaQOverP, bool tCubicFit ) const
+{
+  calculate (tState, qOverP, sigmaQOverP, tCubicFit);
+}
 
 //=============================================================================
 // Estimate the momentum P of a State
 //=============================================================================
-StatusCode TrackPtKick::calculate( LHCb::State* state ) const
+StatusCode TrackPtKick::calculate( const LHCb::State* tState, double& qOverP, double& sigmaQOverP,
+				bool tCubicFit ) const
 {
   // calculate intial estimate of track momentum assuming it came from
   // the primary vertex
 
   // scan in cm steps  
   Gaudi::XYZPoint  begin( 0., 0., 0. );
-  Gaudi::XYZPoint  end( state->x(), state->y(), state->z() );
+  Gaudi::XYZPoint  end( tState->x(), tState->y(), tState->z() );
   Gaudi::XYZVector bdl;
   double zCenter;
 
-  StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, state->tx(), 
-                                                         state->ty(), zCenter, bdl );
+  StatusCode sc = m_bIntegrator -> calculateBdlAndCenter(begin, end, tState->tx(), 
+                                                         tState->ty(), zCenter, bdl );
   if (sc.isFailure()){
     return Warning("Failed to integrate field", StatusCode::FAILURE, 1);
   }
@@ -105,8 +114,8 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
     //can estimate momentum and charge
 
     //Rotate to the  0-0-z axis and do the ptkick 
-    const double tX = state -> tx();
-    const double xCenter = state -> x() + tX * ( zCenter - state->z() );
+    const double tX = tState -> tx();
+    const double xCenter = tState -> x() + tX * ( zCenter - tState->z() );
 
     const double zeta_trk = -tX / sqrt( 1.0 + tX*tX );
     const double tx_vtx   = xCenter / zCenter;
@@ -127,7 +136,7 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
 
     // momentum
     p = Gaudi::Units::eplus * Gaudi::Units::c_light *fabs(bdl.x()) 
-        * sqrt((1.0 +tX*tX+gsl_pow_2(state->ty()))
+        * sqrt((1.0 +tX*tX+gsl_pow_2(tState->ty()))
                                            /(1.0 +gsl_pow_2(tX)))/fabs(curv);
 
     //   Addition Correction factor for the angle of the track!
@@ -144,11 +153,11 @@ StatusCode TrackPtKick::calculate( LHCb::State* state ) const
     sc = StatusCode::FAILURE;
   }
 
-  // set the state parameters
-  state -> setQOverP( q / p );
+  
+  qOverP = q / p;  
   const double err2 = gsl_pow_2(m_resParams[0]) + gsl_pow_2(m_resParams[1]/p) ;
-  state -> setErrQOverP2(err2*gsl_pow_2(1.0/p) );
-
+  sigmaQOverP = sqrt(err2*gsl_pow_2(1.0/p));
+ 
   return sc;
 }
 

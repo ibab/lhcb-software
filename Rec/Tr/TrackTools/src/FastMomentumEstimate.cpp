@@ -29,18 +29,16 @@ FastMomentumEstimate::FastMomentumEstimate( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
 
-  declareInterface<IFastMomentumEstimate>(this);
+  declareInterface<ITrackMomentumEstimate>(this);
   
   declareProperty( "ParamsTCubic", m_paramsTCubic 
-		   = boost::assign::list_of(-6.3453)(-4.77725)(-14.9039)(3.13647e-08)); 
+		   = boost::assign::list_of(0.0)); 
   declareProperty( "ParamsTParabola", m_paramsTParab  
-		   = boost::assign::list_of(-6.31652)(-4.46153)(-16.694)(2.55588e-08));
+		   = boost::assign::list_of(0.0));
   declareProperty( "ParamsVeloTCubic", m_paramsVeloTCubic 
-		   = boost::assign::list_of(1.21909)(0.627841)(-0.235216)(0.433811)
-		   (2.92798)(-21.3909) ); 
+		   = boost::assign::list_of(0.0)); 
   declareProperty( "ParamsVeloTParabola", m_paramsVeloTParab 
-		   = boost::assign::list_of(1.21485)(0.64199)(-0.27158)(0.440325)
-		   (2.9191)(-20.4831));
+		   = boost::assign::list_of(0.0));
   declareProperty( "TResolution", m_tResolution = 0.025);
   declareProperty( "VeloPlusTResolution", m_veloPlusTResolution = 0.015);
 };
@@ -57,12 +55,30 @@ StatusCode FastMomentumEstimate::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
-
-  if (m_paramsTParab.size()!=4)     return Error ( "Not enough ParamsTParabola values" ); 
-  if (m_paramsTCubic.size()!=4)     return Error ( "Not enough ParamsTCubic values" );  
-  if (m_paramsVeloTParab.size()!=6) return Error ( "Not enough ParamsVeloTParabola values" ); 
-  if (m_paramsVeloTCubic.size()!=6) return Error ( "Not enough ParamsVeloTCubic values" );
   
+ m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+
+  if ( 4 != m_paramsTParab.size() || 4 != m_paramsTCubic.size() || 
+       6 != m_paramsVeloTParab.size() || 6 != m_paramsVeloTCubic.size()){
+  
+    m_paramsTParab.clear();
+    m_paramsVeloTParab.clear();
+    m_paramsTCubic.clear();
+    m_paramsVeloTCubic.clear();
+
+    if (m_magFieldSvc->UseRealMap()){ 
+      m_paramsTParab      = boost::assign::list_of (-6.30991) (-4.83533) (-12.9192) (4.23025e-08);
+      m_paramsVeloTParab  = boost::assign::list_of (1.20812) (0.636694) (-0.251334) (0.414017) (2.87247) (-20.0982);
+      m_paramsTCubic      = boost::assign::list_of (-6.34025) (-4.85287) (-12.4491) (4.25461e-08);
+      m_paramsVeloTCubic  = boost::assign::list_of (1.21174) (0.634127) (-0.242116) (0.412728) (2.82916) (-20.6599);
+    } else {
+      m_paramsTParab      = boost::assign::list_of (-6.3453)(-4.77725)(-14.9039)(3.13647e-08);
+      m_paramsVeloTParab  = boost::assign::list_of (1.21909)(0.627841)(-0.235216)(0.433811)(2.92798)(-21.3909);
+      m_paramsTCubic      = boost::assign::list_of (-6.31652)(-4.46153)(-16.694)(2.55588e-08);
+      m_paramsVeloTCubic  = boost::assign::list_of (1.21485)(0.64199)(-0.27158)(0.440325)(2.9191)(-20.4831);
+    }
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -88,7 +104,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
       m_paramsTParab[3] * x0 * x0;
   }
    
-  qOverP = x0/(p*1000000);
+  qOverP = x0/(p*1000000*m_magFieldSvc->GetScale());
   sigmaQOverP = m_tResolution * std::fabs(qOverP);
 
   return StatusCode::SUCCESS;
@@ -124,7 +140,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
     
   double proj = sqrt( ( 1. + txV*txV + tyV*tyV ) / ( 1. + txV*txV ) );
 
-  qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj );
+  qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->GetScale());
   sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   
   return StatusCode::SUCCESS;

@@ -5,16 +5,18 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
+
 
 // from TrackInterfaces
-#include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 /** @class FastMomentumEstimate FastMomentumEstimate.h
  *  
  *  @author Stephanie Hansmann-Menzemer
  *  @date   2007-10-30
  */
-class FastMomentumEstimate : public GaudiTool, virtual public IFastMomentumEstimate{
+class FastMomentumEstimate : public GaudiTool, virtual public ITrackMomentumEstimate{
 public: 
   /// Standard construct
   FastMomentumEstimate( const std::string& type, 
@@ -38,7 +40,7 @@ public:
 protected:
 
 private:
- 
+  IMagneticFieldSvc* m_magFieldSvc;
   double m_MomentumError;
   /// Define the parameters of the Z dependance
   std::vector<double> m_paramsTCubic;

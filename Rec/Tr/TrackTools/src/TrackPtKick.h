@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.h,v 1.4 2007-03-20 13:11:42 mneedham Exp $
+// $Id: TrackPtKick.h,v 1.5 2008-07-17 12:55:51 smenzeme Exp $
 #ifndef TRACKTOOLS_TRACKPTKICK_H 
 #define TRACKTOOLS_TRACKPTKICK_H 1
 
@@ -11,14 +11,14 @@
 #include "Kernel/IBIntegrator.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackPtKick.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 /** @class TrackPtKick TrackPtKick.h TrackTools/TrackPtKick.h
  *  
  *  @author M. Needham
  *  @date   2000-08-16
  */
-class TrackPtKick : public GaudiTool, virtual public ITrackPtKick {
+class TrackPtKick : public GaudiTool, virtual public ITrackMomentumEstimate {
 public: 
   /// Standard constructor
   TrackPtKick( const std::string& type, 
@@ -29,8 +29,14 @@ public:
 
   StatusCode initialize();
 
-  // Estimate the momentum P of a State
-  virtual StatusCode calculate( LHCb::State* State ) const;
+  // Estimate the momentum P of a State in T at ZAtMidT
+  virtual StatusCode calculate( const LHCb::State* tState, double& qOverP, double& sigmaQOverP,
+				bool tCubicFit=0 ) const; 
+
+  // Estimate the momentum P of a velo State and a State in T at ZAtMidT
+  virtual StatusCode calculate( const LHCb::State* veloState, const LHCb::State* tState,
+				double& qOverP, double& sigmaQOverP,
+				bool tCubicFit=0 ) const;// Estimate the momentum P of a State
 
 protected:
 
