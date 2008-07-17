@@ -14,6 +14,8 @@ use HltCommon           v3r4    Hlt   # Jose Angel Hernando-Morata
 use HltTracking         v3r4    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
+use HltEcalAlley        v1r0    Hlt   # Mariusz Witek
+
 use HltMuon             v3r3    Hlt   # Alessia Satta          
 use HltMuonAlley        v2r4p1  Hlt   # Sandra Amato 
 use HltL0Conf           v2r2    Hlt   # Johannes Albrecht
