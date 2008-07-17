@@ -1,0 +1,107 @@
+//---------------------------
+// HLT Reconstruction
+//--------------------------
+#include "$HLTSYSROOT/options/HltRecoSequence.opts"
+
+//---------------------------
+// HLT Lumi Alley
+//--------------------------
+
+// (not) in HltSummary but in LumiSummary
+HltSummaryWriter.Save += {
+  // not clear:  "Hlt1LumiDecision"
+};
+
+// decision is part of the OR of alleys
+HltAlleys.InputSelections += {"Hlt1LumiDecision"};
+HltAlleys.InputSelections += {"Hlt1LumiDecision2"};
+
+// Reconstruction (always pass)
+Hlt1LumiRecoSequence.Members = {
+  "GaudiSequencer/HltRecoSequence",
+  "DummyLumiAlley/HltDummyReco"
+};
+Hlt1LumiRecoSequence.ModeOr = true;         // should always pass
+Hlt1LumiRecoSequence.ShortCircuit = false;  // execute the last always
+Hlt1LumiRecoSequence.MeasureTime = true;
+Hlt1LumiRecoSequence.OutputLevel=3;
+
+// place for histograms with NoBeam condition
+Hlt1LumiNoBeamSequence.Members = {
+  "OdinTypesFilter/FilterNoBeam",
+  "HltLumiOdinReader/OdinReaderNoBeam"
+};
+FilterNoBeam.BXTypes={"NoBeam"};
+OdinReaderNoBeam.OutputLevel=3;
+Hlt1LumiNoBeamSequence.MeasureTime = true;
+Hlt1LumiNoBeamSequence.OutputLevel=3;
+
+// place for histograms with BeamCrossing condition
+Hlt1LumiBeamCrossingSequence.Members = {
+  "OdinTypesFilter/FilterBeamCrossing",
+  "HltLumiOdinReader/OdinReaderBeamCrossing"
+};
+FilterBeamCrossing.BXTypes={"BeamCrossing"};
+OdinReaderBeamCrossing.OutputLevel=3;
+Hlt1LumiBeamCrossingSequence.MeasureTime = true;
+Hlt1LumiBeamCrossingSequence.OutputLevel=3;
+
+// container sequence (just to make sure it doesn't block)
+Hlt1LumiBXTypesSequence.Members = {
+  // sequences depending on Odin BX types
+  "GaudiSequencer/Hlt1LumiBeamCrossingSequence",
+  "GaudiSequencer/Hlt1LumiNoBeamSequence",
+  "DummyLumiAlley/HltDummyBXType"
+};
+Hlt1LumiBXTypesSequence.ModeOr = true;         // should always pass
+Hlt1LumiBXTypesSequence.ShortCircuit = false;  // execute the last always
+Hlt1LumiBXTypesSequence.MeasureTime = true;
+Hlt1LumiBXTypesSequence.OutputLevel=3;
+
+// Alley sequence
+Hlt1LumiAlleySequence.Members = {
+  // "HltL0Filter/LumiEntry",       // L0 not needed, use Odin bit directly
+  // filter on Odin trigger types
+  "OdinTypesFilter/OdinTypesFilter",
+  // should put in here some reco sequence which always passes
+  "GaudiSequencer/Hlt1LumiRecoSequence",
+  // should put some new algo which writes summary bank
+  "CollectLumiData/CollectLumiData",
+  "HltLumiOdinReader/HltLumiOdinReader",
+  // sequences depending on Odin BX types
+  "GaudiSequencer/Hlt1LumiBXTypesSequence",
+  // prescale to allow for higher rate histogramming than storage
+  "DeterministicPrescaler/PrescaleLumiDecision",
+  "DummyLumiAlley/Hlt1LumiDecision",
+  "DeterministicPrescaler/PrescaleLumiDecision2",
+  "DummyLumiAlley/Hlt1LumiDecision2"
+};
+
+CollectLumiData.OutputLevel=3;
+HltLumiOdinReader.OutputLevel=3;
+
+OdinTypesFilter.OutputLevel=3;
+//OdinTypesFilter.TriggerTypes="ALL";
+//OdinTypesFilter.TriggerTypes={"Reserve","PhysicsTrigger","RandomTrigger","TimingTrigger","CalibrationTrigger"};
+OdinTypesFilter.TriggerTypes={"Reserve"};  // should become "Random"
+OdinTypesFilter.BXTypes={"NoBeam","BeamCrossing","SingleBeamRight","SingleBeamLeft"};
+
+PrescaleLumiDecision.AcceptFraction=0.5;
+PrescaleLumiDecision2.AcceptFraction=0.5;
+
+Hlt1LumiAlleySequence.MeasureTime = true;
+Hlt1LumiAlleySequence.OutputLevel=3;
+
+//-------------------------------------------------------------------------
+// HLT Hlt1LumiDecision is empty to always pass
+//-------------------------------------------------------------------------
+Hlt1LumiDecision.OutputLevel=3;
+
+//-------------------------------------------------------------------------
+// HLT LumiAlley options
+//-------------------------------------------------------------------------
+
+// // L0 entry: random prescaler
+// LumiEntry.L0Channels = {"Random"};
+// LumiEntry.OutputLevel=3;
+
