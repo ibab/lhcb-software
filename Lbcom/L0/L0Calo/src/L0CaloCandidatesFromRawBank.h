@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.h,v 1.3 2007-12-11 18:26:50 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.h,v 1.4 2008-07-17 20:38:38 robbep Exp $
 #ifndef L0CALOCANDIDATESFROMRAWBANK_H 
 #define L0CALOCANDIDATESFROMRAWBANK_H 1
 
@@ -9,8 +9,12 @@
 #include "Event/RawEvent.h"
 #include "Event/L0CaloCandidate.h"
 
+// forward declaration
+namespace LHCb {
+  class RawBankReadoutStatus ;
+};
 
-static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 2, 0 );
+static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 3, 0 );
 
 /** @class L0CaloCandidatesFromRawBank L0CaloCandidatesFromRawBank.h
  *  Tool to convert the Raw Bank L0CaloCandidate to TES containers
@@ -36,7 +40,8 @@ public:
   void convertRawBankToTES( std::vector<std::vector<unsigned int> >& data,
                             std::string& nameFullInTES,
                             std::string& nameInTES,
-			    const int version );
+                            const int version , 
+                            LHCb::RawBankReadoutStatus & readoutStatus );
 
 protected:
 

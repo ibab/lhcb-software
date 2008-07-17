@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.53 2008-07-17 16:18:44 odescham Exp $
+// $Id: L0CaloAlg.cpp,v 1.54 2008-07-17 20:38:38 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -1095,7 +1095,9 @@ StatusCode L0CaloAlg::execute() {
   if( m_writeOnTES ) {
     std::string name     = rootInTES() + LHCb::L0CaloCandidateLocation::Default;
     std::string nameFull = rootInTES() + LHCb::L0CaloCandidateLocation::Full;
-    m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name , m_bankVersion );
+    LHCb::RawBankReadoutStatus readoutStatus( LHCb::RawBank::L0Calo ) ;
+    m_bankToTES->convertRawBankToTES( m_rawOutput, nameFull, name , 
+                                      m_bankVersion , readoutStatus );
   }
 
   return StatusCode::SUCCESS;
