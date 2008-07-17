@@ -1,4 +1,4 @@
-// $Id: TrackSeedFind.h,v 1.1.1.1 2007-10-09 18:18:15 smenzeme Exp $
+// $Id: TrackSeedFind.h,v 1.2 2008-07-17 13:24:20 smenzeme Exp $
 #ifndef TRACKSEEDING_SEEDFind_H 
 #define TRACKSEEDING_SEEDFind_H 1
 
@@ -10,7 +10,7 @@
 #include <utility>
 
 //tools
-#include "TrackInterfaces/ITrackPtKick.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Kernel/ISTClusterPosition.h"
 
 /** @class TrackSeedFind TrackSeedFind.h
@@ -89,7 +89,7 @@ private:
   double m_maxChi2; // maximum allowed chi2 for all fits
 
   
-  ITrackPtKick* m_fCalcPtKick; // Pt-kick tool
+  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
   ISTClusterPosition* m_itPositionTool; // IT cluster position tool; necessary to create measurements
   
 // an average displacement for a curved track will be calculated in order to set a window

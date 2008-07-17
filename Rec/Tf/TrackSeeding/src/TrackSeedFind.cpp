@@ -27,7 +27,6 @@
 #include "TrackSeedFind.h"
 //tools
 #include "Kernel/IBIntegrator.h"
-#include "TrackInterfaces/ITrackPtKick.h"
 
 // Detector description
 #include "DetDesc/IGeometryInfo.h"
@@ -191,7 +190,7 @@ StatusCode TrackSeedFind::initialize() {
    }
 
    if (m_usePtKick) {
-      m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
+      m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
       info() << "In init, PTKick from geometry. n stations = " <<
          m_otTracker->nStation() << " zmin = " << m_zmin[0] << " zmax= " << m_zmax [2]<< endreq;
 // check, if plane positions are reasoneable
@@ -1840,7 +1839,10 @@ StatusCode TrackSeedFind::maketracks() {
       stateCov(4,4)=0; // will be filled by PTKick
       seedState.setCovariance(stateCov);
       seedState.setLocation(LHCb::State::AtT);
-      m_fCalcPtKick->calculate(&seedState);
+      double qOverP, sigmaQOverP;
+      m_fCalcMomentum->calculate(&seedState, qOverP, sigmaQOverP);
+      seedState.setQOverP(qOverP);
+      seedState.setErrQOverP2(sigmaQOverP*sigmaQOverP);
 
     // set new state as current track state
       tTrack->addToStates(seedState);

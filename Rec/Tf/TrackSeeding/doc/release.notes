@@ -3,6 +3,8 @@
 ! Responsible : Henk Jan Bulten
 ! Purpose     : Package for the Seeding Pattern Recognition algorithm
 !-----------------------------------------------------------------------------
+! 2008-07-14 - Stephanie Hansmann-Menzemer
+- adapt to changes in interface of PtKick method
 
 !========================= TrackSeeding v1r3 2007-12-03 ======================
 ! 2007-12-01 - Wouter Hulsbergen
