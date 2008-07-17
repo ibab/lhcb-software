@@ -4,24 +4,24 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2008-07-17 M Needham Remove cout
+!=============================== STDAQ v3r9 2008-07-17 =======================
+! 2008-07-17 M Needham
+ - Remove cout
 
-! 2008-07-15 Add dependency on RecEvent
+! 2008-07-15  M Needham
+ - Add dependency on RecEvent
+ - Put back some breaks I removed for testing
+ - Allow possibility to force the bank version
 
-! 2008-07-15 Put back some breaks I removed for testing
-
-! 2008-07-15 Allow possibility to force the bank version
-
-! 2008-07-14 - Add functionality to see which banks are missing
-             - Follow changes in readout tool interface
-
+! 2008-07-14  M Needham
+ - Add functionality to see which banks are missing
+ - Follow changes in readout tool interface
 
 ! 2008-07-09 M Needham
  - Remove use of ODIN 
 
 ! 2008-07-04 M Needham
  - Minor changes - move some code to base class/change some printouts
-
 
 !=============================== STDAQ v3r8 2008-07-02 =======================
 ! 2008-07-01 M Needham
