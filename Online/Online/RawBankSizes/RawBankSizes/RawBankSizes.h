@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.h,v 1.2 2008-07-17 11:52:51 jost Exp $
+// $Id: RawBankSizes.h,v 1.3 2008-07-17 13:24:07 jost Exp $
 #ifndef COMPONENT_RawBankSizes_H 
 #define COMPONENT_RawBankSizes_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 // from LHCb
 #include "Event/RawEvent.h"
+#include "math.h"
 namespace LHCb 
 {
   class BankDescr

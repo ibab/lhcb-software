@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.4 2008-07-17 11:52:51 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.5 2008-07-17 13:27:27 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -146,7 +146,7 @@ StatusCode RawBankSizes::execute()
   n_ev++;
   int tots;
   tots = 0;
-  int bnkid;
+  int bnkid=0;
   for(std::vector<LHCb::RawBank::BankType>::const_iterator it = m_bankTypes.begin();it!=m_bankTypes.end();it++)
   {
     
