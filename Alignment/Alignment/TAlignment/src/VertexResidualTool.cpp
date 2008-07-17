@@ -1,7 +1,9 @@
 #include "IVertexResidualTool.h"
+#include "TrackInterfaces/ITrackSelector.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/ToolHandle.h"
+#include "LHCbMath/MatrixInversion.h"
 
 class ITrackExtrapolator ;
 namespace LHCb {
@@ -43,7 +45,11 @@ namespace Al
   private:
     ToolHandle<ITrackResidualTool> m_trackresidualtool ;
     ToolHandle<ITrackExtrapolator> m_extrapolator ;
+    //ToolHandle<ITrackSelector> m_trackselectorhandle ;
+    ITrackSelector* m_trackselector ;
+    std::string m_trackselectorname ;
     double m_chiSquarePerDofCut ;
+    bool   m_computeCorrelations ;
     typedef std::vector<const Al::MultiTrackResiduals*> ResidualContainer ;
     mutable ResidualContainer m_residuals ;
   } ;
@@ -72,10 +78,17 @@ namespace Al
     : GaudiTool(type,name,parent),
       m_trackresidualtool("Al::TrackResidualTool"), // important: use the toolsvc, because of caching!
       m_extrapolator("TrackMasterExtrapolator"),
-      m_chiSquarePerDofCut(10)
+      //m_trackselectorhandle("TrackSelector",this),
+      m_chiSquarePerDofCut(10),
+      m_computeCorrelations(true)
   {
     // interfaces
     declareInterface<IVertexResidualTool>(this);
+    declareProperty("TrackResidualTool",m_trackresidualtool) ;
+    declareProperty("Extrapolator",m_extrapolator) ;
+    // declareProperty("TrackSelectorHandle",m_trackselectorhandle) ;
+    declareProperty("MyTrackSelector",m_trackselectorname="YourTrackSelector") ;
+    declareProperty("ComputeCorrelations",m_computeCorrelations) ;
   }
   
   StatusCode VertexResidualTool::initialize()
@@ -86,13 +99,16 @@ namespace Al
     }
     m_trackresidualtool.retrieve().ignore() ;
     m_extrapolator.retrieve().ignore() ;
+    m_trackselector = tool<ITrackSelector>(m_trackselectorname,this) ;
+    //m_trackselectorhandle.retrieve().ignore() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
     return sc ;
   }
 
   StatusCode VertexResidualTool::finalize()
   {
-    return m_trackresidualtool.release() && m_extrapolator.release() && GaudiTool::finalize() ;
+    return m_trackresidualtool.release() && m_extrapolator.release() && 
+      /*m_trackselectorhandle.release() && */ GaudiTool::finalize() ;
   }
   
   void VertexResidualTool::handle( const Incident& incident )
@@ -128,6 +144,10 @@ namespace Al
   const Al::MultiTrackResiduals* VertexResidualTool::get(const LHCb::RecVertex& vertex,
 							 TrackContainer& tracks) const
   {
+//     std::cout << "compcorr, name of track selector: "
+// 	      << m_computeCorrelations << " "
+// 	      << m_trackselector->name() << " "
+// 	      << std::endl ;
     // loop over the list of vertices, collect tracks in the vertex
     const Al::MultiTrackResiduals* rc(0) ;
     TrackContainer usedtracks ;
@@ -136,7 +156,9 @@ namespace Al
 	 itrack !=  vertex.tracks().end(); ++itrack) {
       // we'll use the track in the provided list, not the track in the vertex
       TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
-      if( jtrack != tracks.end() ) {
+      if( jtrack != tracks.end() /* && ((**jtrack).hasT()||(**jtrack).hasTT() )*/
+	  && m_trackselector->accept( **jtrack ) ) {
+	//assert( (**jtrack).hasT()||(**jtrack).hasTT() ) ;
 	const Al::TrackResiduals* trackres = m_trackresidualtool->get( **jtrack ) ;
 	if(trackres) {
 	  usedtracks.push_back( *jtrack ) ; 
@@ -229,7 +251,7 @@ namespace Al
 	// create a vertexresiduals object
 	totalchisq += vchi2 ;
 	totalndof  += vertex.nDoF() ;
-	rc = new Al::MultiTrackResiduals( allnodes, totalchisq, totalndof, vchi2, vertex.nDoF()  ) ;
+	rc = new Al::MultiTrackResiduals( allnodes, totalchisq, totalndof, states.size(), vchi2, vertex.nDoF()  ) ;
 	debug() << "created the vertex: " << allnodes.size() << endreq ;
 
 	// calculate all new residuals and all correlations
@@ -262,17 +284,54 @@ namespace Al
 	  }
 	  
 	  // now the correlations. this is the very time-consuming part
-	  for(size_t j =0; j<i && !computationerror; ++j) {
-	    size_t joffset = states[j].offset ;
-	    for(size_t irow = 1; irow<=states[i].trackresiduals->size(); ++irow) {
-	      // store this intermediate matrix too save some time
-	      Gaudi::TrackProjectionMatrix A = states[i].dResidualdState[irow-1] * vertex.stateCovariance(i,j) ;
-	      for(size_t jcol = 1; jcol<=states[j].trackresiduals->size(); ++jcol)
-		rc->m_HCH.fast(irow + ioffset, jcol + joffset) = 
-		  (A * ROOT::Math::Transpose( states[j].dResidualdState[jcol-1] ))(0,0) ;
+	  if( m_computeCorrelations && !computationerror) {
+	    for(size_t j =0; j<i && !computationerror; ++j) {
+	      size_t joffset = states[j].offset ;
+	      for(size_t irow = 1; irow<=states[i].trackresiduals->size(); ++irow) {
+		// store this intermediate matrix too save some time
+		Gaudi::TrackProjectionMatrix A = states[i].dResidualdState[irow-1] * vertex.stateCovariance(i,j) ;
+		for(size_t jcol = 1; jcol<=states[j].trackresiduals->size(); ++jcol)
+		  rc->m_HCH.fast(irow + ioffset, jcol + joffset) = 
+		    (A * ROOT::Math::Transpose( states[j].dResidualdState[jcol-1] ))(0,0) ;
+	      }
 	    }
 	  }
+       
+	  // Let's check the result. Keep track of the roots.
+	  if(!computationerror) {
+	    bool error(false) ;
+	    const double tol = 1e-3 ;
+	    std::vector<double> HCHdiagroots ;
+	    std::vector<double> Rdiagroots ;
+	    for(size_t irow=0; irow<rc->size() && !error; ++irow) {
+	      double c = rc->HCH(irow,irow) ;
+	      error = ! (0<=c) ;
+	      if(error) warning() << "found negative element on diagonal: " << c << endreq ;
+	      error = ! ( c<rc->V(irow)) ;
+	      if(error) warning() << "found too large element on diagonal: " << c/rc->V(irow) << endreq ;
+	      
+	      HCHdiagroots.push_back( std::sqrt(c) ) ;
+	      Rdiagroots.push_back( std::sqrt(rc->V(irow) - c) ) ;
+	    }
+	    
+	    bool offdiagerror(false) ;
+	    for(size_t irow=0; irow<rc->size() && !error; ++irow) {
+	      for(size_t icol=0; icol<irow && !error; ++icol) {
+		double c = rc->HCH(irow,icol) / (HCHdiagroots[irow]*HCHdiagroots[icol]) ;
+		double d = rc->HCH(irow,icol) / (Rdiagroots[irow]*Rdiagroots[icol]) ;
+		bool thiserror =  ! (-1-tol < c && c <1+tol) || ! (-1-tol < d && d <1+tol) ;
+		if(thiserror) {
+		  warning() << "found bad element on offdiagonal: " 
+			    << irow << " " << icol << " " 
+			    << c << " " << d << endreq ;
+		}
+		offdiagerror |= thiserror;
+	      }
+	    }
+	    computationerror |=  error || offdiagerror ;
+	  }
 	}
+	
 	if(computationerror) {
 	  delete rc ;
 	  rc = 0 ;
@@ -331,7 +390,7 @@ namespace Al
       
       // invert the covariance matrix
       Gaudi::TrackSymMatrix Cinv = state.covariance() ;
-      bool OK = Cinv.Invert() ;
+      bool OK = Gaudi::Math::invertPosDefSymMatrix( Cinv ) ;
       if(!OK) {
 	warning() << "Inversion error in VertexResidualTool::extrapolate" << endreq ;
 	sc = StatusCode::FAILURE ;
