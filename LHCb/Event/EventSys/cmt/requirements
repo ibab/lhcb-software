@@ -5,7 +5,7 @@ branches doc cmt
 
 # LHCb Event libraries
 
-use DAQEvent    v7r11p1 Event
+use DAQEvent    v7r12   Event
 use DigiEvent   v2r7    Event
 use EventAssoc  v4r4    Event
 use EventBase   v2r5    Event
