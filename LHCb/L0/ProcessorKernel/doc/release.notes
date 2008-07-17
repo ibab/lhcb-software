@@ -4,6 +4,9 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+! 2008-07-17 - Julien Cogan
+ - Fix compilation warning (RegisterFactory.cpp) 
+
 !======================== ProcessorKernel v5r1 2007-10-09 ===================
 ! 2007-10-09 - Julien Cogan
  - Move implementation of static selectInstance to .cpp to avoid a problem on
