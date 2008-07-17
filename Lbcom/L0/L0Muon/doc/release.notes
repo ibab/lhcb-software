@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.59 2008-07-16 13:07:22 jucogan Exp $
+!  $Id: release.notes,v 1.60 2008-07-17 15:32:52 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v8r0 2008-07-17 ========================
 ! 2008-07-16 - Julien Cogan
  - Bug fixes
  - Protect raw bank writing for encoding errors
