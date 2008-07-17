@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.h,v 1.9 2008-04-22 16:45:29 janos Exp $
+// $Id: GetElementsToBeAligned.h,v 1.10 2008-07-17 09:27:09 wouter Exp $
 #ifndef GETELEMENTSTOBEALIGNED_H
 #define GETELEMENTSTOBEALIGNED_H 1
 
@@ -64,7 +64,6 @@ private:
   std::vector<std::string>                                          m_elemsToBeAligned; ///< Elemenst : Path to elements
   RegExs                                                            m_regexs;           ///< List of regular expresions
   size_t                                                            m_depth;            ///< How deep?
-  size_t                                                            m_index;            ///< index
   mutable std::vector<const DetectorElement*>                       m_elements;         ///< Flat vector of detector elements
   mutable IGetElementsToBeAligned::Elements                         m_alignElements;    ///< Flat vector of alignment elements
   IGetElementsToBeAligned::ElementRange                             m_rangeElements;    ///< Range of elements to be aligned

@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.19 2008-04-22 16:45:28 janos Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.20 2008-07-17 09:27:09 wouter Exp $
 // Include files
 
 //from STL
@@ -42,10 +42,9 @@ GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_useLocalFrame(false),
+    m_useLocalFrame(true),
     m_elemsToBeAligned(),
     m_depth(0),
-    m_index(0),
     m_elements(),
     m_rangeElements(),
     m_elementMap()
@@ -93,6 +92,7 @@ StatusCode GetElementsToBeAligned::initialize() {
   info() << "===================== GetElementsToAlign =====================" << endmsg;
   info() << "   Using the following regular expressions: " << endmsg;
 
+  size_t index(0) ;
   for ( std::vector<std::string>::const_iterator i = m_elemsToBeAligned.begin(), iEnd = m_elemsToBeAligned.end(); 
         i != iEnd; ++i ) {
     /// Split string into path to det elem regex and dofs to align
@@ -194,18 +194,18 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
     
     /// Loop over elements and create AlignmentElements
-    if (groupElems) m_alignElements.push_back(AlignmentElement(m_elements, m_index++, dofMask,m_useLocalFrame));
+    if (groupElems) m_alignElements.push_back(AlignmentElement(m_elements, index++, dofMask,m_useLocalFrame));
     else std::transform(m_elements.begin(), m_elements.end(), std::back_inserter(m_alignElements),
                         boost::lambda::bind(boost::lambda::constructor<AlignmentElement>(), 
                                             boost::lambda::_1, 
-                                            boost::lambda::var(m_index)++, 
+                                            boost::lambda::var(index)++, 
                                             dofMask,
                                             m_useLocalFrame));
-    
+
     m_regexs.clear();
     m_depth = 0u;
     m_elements.clear();
-    
+
   }
       
   m_rangeElements = ElementRange(m_alignElements.begin(), m_alignElements.end());
@@ -223,7 +223,7 @@ StatusCode GetElementsToBeAligned::initialize() {
     }
   }
   info() << "   Number of elements in map: " << m_elementMap.size() << endmsg ;
-
+  
   info() << "==============================================================" << endmsg;
 
   return sc;
