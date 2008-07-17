@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.2 2008-07-10 15:03:24 pkoppenb Exp $
+// $Id: FilterDesktop.cpp,v 1.3 2008-07-17 07:52:27 pkoppenb Exp $
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -136,6 +136,7 @@ StatusCode FilterDesktop::execute() {
       {
         verbose() << "Particle " << (*ip)->particleID().pid() << " with momentum "
                   << (*ip)->momentum() << " m=" << (*ip)->measuredMass() << " is rejected" << endreq ;
+        verbose() << " position : " << (*ip)->referencePoint() << ", error : " << (*ip)->posCovMatrix() << endreq ;
       }
     }
   }
