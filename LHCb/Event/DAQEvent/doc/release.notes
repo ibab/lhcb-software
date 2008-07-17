@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-07-17 - Jaap Panman
+ - Fixed the range of bits tested in OdinTypesFilter.cpp
+
 ! 2008-07-01 - Tomasz Skwarnicki
  - Added new bank type (RawBank::HltRoutingBits) for routing in MF
 

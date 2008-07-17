@@ -1,4 +1,4 @@
-// $Id: OdinTypesFilter.cpp,v 1.1 2008-02-27 17:52:19 odescham Exp $
+// $Id: OdinTypesFilter.cpp,v 1.2 2008-07-17 09:24:54 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode OdinTypesFilter::initialize() {
     std::string  bx;
     bool ok = false;
     int max = LHCb::ODIN::BXTypeMask >> LHCb::ODIN::BXTypeBits;
-    while(k < max && !ok){
+    while(k <= max && !ok){
       std::stringstream s("");
       s << (LHCb::ODIN::BXTypes) k;
       bx = s.str();
@@ -81,7 +81,7 @@ StatusCode OdinTypesFilter::initialize() {
     std::string  tr;
     bool ok = false;
     int max = LHCb::ODIN::TriggerTypeMask >> LHCb::ODIN::TriggerTypeBits;
-    while(k <max && !ok){
+    while(k <= max && !ok){
       std::stringstream s("");
       s << (LHCb::ODIN::TriggerType) k;
       tr = s.str();
