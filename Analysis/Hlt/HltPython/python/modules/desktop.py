@@ -138,12 +138,34 @@ def register( rootObject ):
     objectName = rootObject.GetName()
 
     if objectName in ROOTOBJECTS.keys():
-        print 'ALREADY REGISTERED A ROOT OBJECT WITH THAT NAME!'
+        print 'Already registered object named: ',objectName
         raise RuntimeError
 
+    rootObject.lock = False  
     ROOTOBJECTS[ objectName ] = rootObject
 
     return
+
+def unlockHistos():
+    """ If the histos are loock, unlock them
+    """
+    for key in ROOTOBJECTS.keys(): ROOTOBJECTS[key].look = False
+    
+def hfill(name,value,weight=1.,lock=True):
+    """ fill a histogram, and lock it for this event (not able to be filled anymore)
+    @param name of the histogram
+    @param value of the quantity to be histogramed
+    @param weight weight of the entry
+    @param lock lock this histogram, not be able to filled anymore till unlocked
+    @author Jose A. Hernando jose.hernando@cern.ch
+    """
+    h = my(name)
+    if (not h.lock):
+        h.Fill(value,weight)
+        if (lock): h.lock = True
+        
+    
+
 
 #---------------------------------------------------
 def showRegistered():
