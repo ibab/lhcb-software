@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.13 2008-06-02 09:07:29 wouter Exp $
+// $Id: AlignmentElement.h,v 1.14 2008-07-17 09:30:21 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -23,7 +23,6 @@
 #include "boost/assign/list_of.hpp"
 
 // LOcal
-#include "AlDofMask.h"
 #include "AlParameters.h"
 
 /** @class AlignmentElement AlignmentElement.h
@@ -74,13 +73,15 @@ public:
    *  vector of booleans representing which dofs to align for, Tx, Ty, Tz, 
    *  Rx, Ry, and Rz. Default is all dofs
    */
-  AlignmentElement(const std::vector<const DetectorElement*>& elements, const unsigned int index, 
+  AlignmentElement(const std::vector<const DetectorElement*>& elements, 
+		   const unsigned int index, 
                    const std::vector<bool>& dofMask = std::vector<bool>(6, true),
 		   bool useLocalFrame=false);
 
  public:
 
   typedef std::vector<const DetectorElement*> ElementContainer ;
+  typedef AlParameters::DofMask DofMask ;
 
   /** Method to get the detector elements
    */
@@ -107,7 +108,7 @@ public:
    */
   unsigned int nDOFs() const { return m_dofMask.nActive() ; }
 
-  const AlDofMask& dofMask() const { return m_dofMask ; }
+  const DofMask& dofMask() const { return m_dofMask ; }
     
   /** Method to update the parameters of the detector element. 
    * The delta translations and rotations are in the alignment frame (see above).
@@ -147,6 +148,21 @@ public:
 
   /** return the current delta (active parameters only) */
   AlParameters currentActiveDelta() const ;
+
+  /** set the active par index offset. if negative, this is a deselected element */
+  void setActiveParOffset( int offset ) const { m_activeParOffset = offset ; }
+  
+  /** set the active par index offset. if negative, this is a deselected element */
+  int activeParOffset() const { return m_activeParOffset ; }
+
+  /** return the global index of a parameter in this element. -1 means
+      either that this element has been deactivated or that the
+      particular element was deactivated. */
+  int activeParIndex(size_t ipar) const { 
+    int tmp ;
+    return m_activeParOffset >=0 ? ( (tmp = m_dofMask.activeParIndex(ipar))>=0 ? (tmp + m_activeParOffset) : -1) : -1 ; 
+  }
+ 
 private:
   
   typedef std::vector<const DetectorElement*>::const_iterator ElemIter;
@@ -163,7 +179,8 @@ private:
 
   std::vector<const DetectorElement*>          m_elements;         ///< Vector of pointers to detector elements
   unsigned int                                 m_index;            ///< Index. Needed for bookkeeping
-  AlDofMask                                    m_dofMask;          ///< d.o.f's we want to align for
+  mutable int                                  m_activeParOffset;  ///< Parameter index of first active parameter in this element
+  DofMask                                      m_dofMask;          ///< d.o.f's we want to align for
   Gaudi::XYZPoint                              m_centerOfGravity ; ///< Center of gravity in the global frame
   Gaudi::Transform3D                           m_alignmentFrame;   ///< Frame in which delta-derivatives are calculated
   Gaudi::Matrix6x6                             m_jacobian ;        ///< Jacobian for going from global to alignment frame

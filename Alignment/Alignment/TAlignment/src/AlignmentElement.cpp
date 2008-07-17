@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.17 2008-06-02 09:07:29 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.18 2008-07-17 09:30:21 wouter Exp $
 // Include files
 
 // from STD
@@ -13,6 +13,7 @@
 #include "DetDesc/ParamException.h"
 #include "DetDesc/GeometryInfoException.h"
 #include "VeloDet/DeVeloRType.h"
+#include "VeloDet/DeVeloPhiType.h"
 
 // from BOOST
 #include "boost/regex.hpp"
@@ -29,6 +30,7 @@ AlignmentElement::AlignmentElement(const DetectorElement* element,
 				   bool useLocalFrame)
   : m_elements(1u, element),
     m_index(index),
+    m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
@@ -44,6 +46,7 @@ AlignmentElement::AlignmentElement(const std::vector<const DetectorElement*>& el
 				   bool useLocalFrame)
   : m_elements(elements),
     m_index(index),
+    m_activeParOffset(-1),
     m_dofMask(dofMask),
     m_useLocalFrame(useLocalFrame)
 {
@@ -101,9 +104,9 @@ void AlignmentElement::initAlignmentFrame() {
   }
   m_jacobian = AlParameters::jacobian( m_alignmentFrame ) ;
   
-  // This is a simple check for velo phi, just to make sure Jan separated them correctly:
+  // This is a simple check for velo R, just to make sure Jan separated them correctly:
   if( m_elements.size()==1 && dynamic_cast<const DeVeloRType*>(m_elements.front()) &&
-      m_dofMask[AlDofMask::Rz] ) {
+      m_dofMask[AlParameters::Rz] ) {
     std::cout << "PROBLEM: You are aligning Rz for velo R module with name "
 	      << m_elements.front()->name() << std::endl ;
   }
@@ -219,7 +222,7 @@ std::ostream& AlignmentElement::fillStream(std::ostream& lhs) const {
       << "* dRotXYZ  : " << Gaudi::XYZPoint(r[0], r[1], r[2]) << "\n"
       << "* PivotXYZ : " << centerOfGravity() << "\n"
       << "* DoFs     : ";
-  for (AlDofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
+  for (DofMask::const_iterator j = m_dofMask.begin(), jEnd = m_dofMask.end(); j != jEnd; ++j) {
     if ((*j)) lhs << dofs.at(std::distance(m_dofMask.begin(), j)) + " ";
   }
   lhs << std::endl;
