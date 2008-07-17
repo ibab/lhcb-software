@@ -4,6 +4,15 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-07-17 - Johannes Albrecht
+	- L0ConfExtrapolator.cpp: adjust for validity range in Parabola & FwdHypothesis
+	- L0ConfExtrapolator.h: minor cleanup
+	- TsaConfirmTool.cpp: fix unchecked Status Codes
+	- TsaConfirmTool.h: adjust for validity range in ParabolaHypothesis
+	- LineHypothesis.h: add Validity range
+
+
+
 !========================== HltL0Conf v2r2 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
  - changes from Johannes to use the Panormaix drawing
