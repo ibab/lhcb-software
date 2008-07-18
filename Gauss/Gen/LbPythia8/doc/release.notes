@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!========================= LbPythia8 v1r2 2008-07-18 =========================
 ! 2008-07-10 - Patrick Robbe
  - remove SEAL functions from Pythia8Production.cpp
 

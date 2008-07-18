@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.129 2008-07-18 11:22:46 robbep Exp $
+! $Id: release.notes,v 1.130 2008-07-18 15:37:53 gcorti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
 
+!====================== Generators v8r2 2008-07-18 ===========================
 ! 2008-07-18 - Patrick Robbe
  - Generation.cpp: fix compilation warning
+
+! 2008-07-16 - Gloria CORTI
+ - Remove use of SEAL from requirements file
 
 ! 2008-07-10 - Patrick Robbe
  - Remove completly SEAL functions and replace them with BOOST
