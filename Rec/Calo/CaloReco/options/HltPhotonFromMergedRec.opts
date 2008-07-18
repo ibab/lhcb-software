@@ -1,0 +1,13 @@
+// ============================================================================
+/** @file
+ *  Options file to run CaloPhotonFromMergedAlg "PhotonFromMergedRec" 
+ *  @author Olivier Deschamps
+ */
+// ============================================================================
+
+HltPhotonFromMergedRec.InputData =   "Hlt/Calo/SplitPhotons"        ;
+//HltPhotonFromMergedRec.Tools    += { "CaloExtraDigits/SpdExtraG"   };   // Spd Digit 
+//HltPhotonFromMergedRec.Tools    += { "CaloExtraDigits/PrsExtraG"   };   // Prs Digit
+HltPhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrection
+HltPhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
+HltPhotonFromMergedRec.Tools    += { "CaloLCorrection/LCorrection" };   // Lcorrection

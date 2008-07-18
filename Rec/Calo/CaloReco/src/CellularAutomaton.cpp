@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.11 2008-06-30 15:36:33 odescham Exp $
+// $Id: CellularAutomaton.cpp,v 1.12 2008-07-18 00:33:10 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -144,9 +144,9 @@ CellularAutomaton::CellularAutomaton
   , m_sort             ( true  )
   , m_sortByET         ( false )
 {
-  declareProperty("InputData" , m_inputData );
-  declareProperty("OutputData", m_outputData);  
-  declareProperty("Detector"  , m_detData   ) ;
+  declareProperty("InputData" , m_inputData  = LHCb::CaloDigitLocation::Ecal);
+  declareProperty("OutputData", m_outputData = LHCb::CaloClusterLocation::Ecal);  
+  declareProperty("Detector"  , m_detData    = DeCalorimeterLocation::Ecal) ;
   // sort the clusters ? 
   declareProperty ( "Sort"     , m_sort     ) ;
   declareProperty ( "SortByET" , m_sortByET ) ;

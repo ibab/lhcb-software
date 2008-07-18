@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.7 2008-06-30 15:36:33 odescham Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.8 2008-07-18 00:33:10 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -60,9 +60,9 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
   declareProperty ( "ShareSumEnergy"    , m_useSumEnergy  ) ;
   declareProperty ( "Iterations"        , m_numIterations ) ;
   declareProperty ( "ShowerSizes"       , m_showerSizes   ) ;  
-  declareProperty ( "InputData"         , m_inputData     ) ;  
-  declareProperty ( "OutputData"        , m_outputData     ) ;  
-  declareProperty ( "Detector"          , m_detData      ) ;  
+  declareProperty ( "InputData"         , m_inputData     = LHCb::CaloClusterLocation::Ecal) ;  
+  declareProperty ( "OutputData"        , m_outputData    ) ;  
+  declareProperty ( "Detector"          , m_detData       = DeCalorimeterLocation::Ecal ) ;  
 
 
   // set default data as a function of detector

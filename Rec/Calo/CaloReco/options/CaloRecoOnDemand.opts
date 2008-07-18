@@ -17,7 +17,7 @@ DataOnDemandSvc.AlgMap += {
 CaloClusterOnDemand.Members += { "CellularAutomaton/EcalClust",
                                  "CaloSharedCellAlg/EcalShare",
                                  "CaloClusterCovarianceAlg/EcalCovar",
-                                 "CaloClusterCorrect3x3Position"};
+                                 "CaloClusterCorrect3x3Position/EcalPosition"};
 MergedPi0Rec.CreateSplitClustersOnly = true;
 
 

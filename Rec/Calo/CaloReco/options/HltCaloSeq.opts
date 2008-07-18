@@ -4,20 +4,106 @@
 
 
 
-//ApplicationMgr.TopAlg += {"GaudiSequencer/RecoCaloSeq"};
+//ApplicationMgr.TopAlg += {"GaudiSequencer/HltRecoCaloSeq"};
 
-RecoCALOSeq.Context = "HLT";
-#include "$CALORECOOPTS/Brunel.opts"
+HltRecoCALOSeq.Context = "HLT";
+
+// The main stream (same as in Brunel : just change the instance name and the default locations)
+HltRecoCALOSeq.Members +=     { 	"GaudiSequencer/HltCaloDigits" ,
+                                  "GaudiSequencer/HltCaloClusters",
+                                  "GaudiSequencer/HltCaloTrackMatch" ,
+                                  "GaudiSequencer/HltCaloRec",
+                                  "GaudiSequencer/HltCaloPIDs" };
+
+//------ Unpack the rawBanks & create CaloDigit on TES 
+HltCaloDigits.Members = {  "CaloZSupAlg/EcalHltZSup",                 
+                           "CaloZSupAlg/HcalHltZSup",                  
+                           "CaloDigitsFromRaw/PrsHltFromRaw",        
+                           "CaloDigitsFromRaw/SpdHltFromRaw"};
+
+
+//------ Clusterize, clean & compute cluster parameters 
+HltCaloClusters.Members += { "CellularAutomaton/EcalHltClust",
+                             "CaloSharedCellAlg/EcalHltShare",
+                             "CaloClusterCovarianceAlg/EcalHltCovar",
+                             "CaloClusterCorrect3x3Position/EcalHltPosition"};
+
+//------ Track-Cluster 2D matching for Neutral/Charged cluster selection
+HltCaloTrackMatch.Members +=     { "GaudiSequencer/HltCaloAcceptance",
+                                   "PhotonMatchAlg/HltClusterMatch"   } ;
+
+//------ Acceptance Filters
+
+/// Special online setting : use fast extrapolator for first alg.
+HltInSPD.Tool = "InSpdAcceptance/HltInSpd:PUBLIC";
+ToolSvc.HltInSpd.Extrapolator = "TrackHerabExtrapolator";
+
+HltCaloAcceptance.Members = { "InSpdAcceptanceAlg/HltInSPD" ,
+                              "InPrsAcceptanceAlg/HltInPRS" ,
+                              "InEcalAcceptanceAlg/HltInECAL", 
+                              "InHcalAcceptanceAlg/HltInHCAL" ,
+                              "InBremAcceptanceAlg/HltInBREM" };
+
+
+//------ Merged Pi0, Single Photon & Electron reconstruction
+HltCaloRec.Members += {"CaloMergedPi0Alg/HltMergedPi0Rec", 
+                       "CaloHypoAlg/HltPhotonFromMergedRec",
+                       "CaloSinglePhotonAlg/HltSinglePhotonRec",
+                       "CaloElectronAlg/HltElectronRec"};
+
+
+
+#include "$CALORECOOPTS/HltMergedPi0Rec.opts"
+#include "$CALORECOOPTS/HltPhotonFromMergedRec.opts"
+#include "$CALORECOOPTS/HltSinglePhotonRec.opts" 
+#include "$CALORECOOPTS/HltElectronRec.opts" 
+// Configure Tools
+#include "$CALORECOOPTS/ExtraDigits.opts"
+#include "$CALORECOOPTS/CaloECorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
+#include "$CALORECOOPTS/CaloLCorrectionParam.opts"
+
+//------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
+HltCaloPIDs.Members +=    { 		"GaudiSequencer/HltCaloMatch",
+                                "GaudiSequencer/HltCaloEnergy",
+                                "GaudiSequencer/HltCaloDLLs"} ;
+HltCaloMatch.Members +=   {    "ElectronMatchAlg/HltElectronMatch",
+                               "BremMatchAlg/HltBremMatch" };
+HltCaloEnergy.Members =   {    "Track2SpdEAlg/HltSpdE"
+                               ,"Track2PrsEAlg/HltPrsE"
+                               ,"Track2EcalEAlg/HltEcalE"
+                               ,"Track2HcalEAlg/HltHcalE"};
+HltCaloDLLs.Members +=   {   "EcalChi22ID/HltEcalChi22ID"
+                             , "BremChi22ID/HltBremChi22ID"
+                             , "ClusChi22ID/HltClusChi22ID"
+                             , "PrsPIDeAlg/HltPrsPIDe" 
+                             , "BremPIDeAlg/HltBremPIDe" 
+                             , "EcalPIDeAlg/HltEcalPIDe" 
+                             , "HcalPIDeAlg/HltHcalPIDe" 
+                             , "EcalPIDmuAlg/HltEcalPIDmu" 
+                             , "HcalPIDmuAlg/HltHcalPIDmu" 
+};
+
+#include "$CALORECOOPTS/CaloPIDs.opts"
+
+
+HltCaloDigits.MeasureTime     = true ;
+HltCaloClusters.MeasureTime   = true ;
+HltCaloTrackMatch.MeasureTime = true ;
+HltCaloRec.MeasureTime        = true ;
+HltCaloPIDs.MeasureTime       = true ;
+HltCaloAcceptance.MeasureTime = true ;
+HltCaloMatch.MeasureTime      = true ;
+HltCaloEnergy.MeasureTime     = true ;
+HltCaloDLLs.MeasureTime       = true ;
 
 
 // Overwrite some default offline settings with HLT special settings
-PhotonFromMergedRec.InputData= "Hlt/Calo/SplitPhotons";
-ToolSvc.NeutralCluster.Table = "Hlt/Calo/ClusterMatch";
-ToolSvc.ChargedCluster.Table = "Hlt/Calo/ClusterMatch";
-ToolSvc.PhotonPID.TableLocation = "Hlt/Calo/ClusterMatch";
-MergedPi0Rec.CreateSplitClustersOnly = false; 
+HltNeutralProtoPAlg.PhotonIDName = "HltPhotonPID";
+ToolSvc.HltPhotonPID.TableLocation = "Hlt/Calo/ClusterMatch";
+#include "$CALOPIDSROOT/options/HltPhotonPDF.opts"
 
-#include "$CALOPIDSROOT/options/PhotonPDF.opts"
+
 
 //RecoCALOSeq.OutputLevel = 1;
 //HltNeutralProtoPAlg.OutputLevel=1;

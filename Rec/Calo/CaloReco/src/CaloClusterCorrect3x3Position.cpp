@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.9 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.10 2008-07-18 00:33:10 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -53,8 +53,8 @@ CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position
   ,m_inputData    ( ) 
   ,m_detData      ( ) 
 {
-  declareProperty ( "InputData"         , m_inputData     ) ;  
-  declareProperty ( "Detector"          , m_detData      ) ;  
+  declareProperty ( "InputData"         , m_inputData    = LHCb::CaloClusterLocation::Ecal) ;  
+  declareProperty ( "Detector"          , m_detData      = DeCalorimeterLocation::Ecal ) ;  
 
 
   // set default data as a function of detector

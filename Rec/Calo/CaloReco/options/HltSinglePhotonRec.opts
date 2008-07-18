@@ -1,0 +1,20 @@
+// ============================================================================
+
+/** @file 
+ *  Options to run  CaloSinglePhotonAlg "SinglePhotonRec" algorithm 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// Select neutral clusters
+HltSinglePhotonRec.SelectionTools   = { "CaloSelectNeutralCluster/HltNeutralCluster" } ;
+ToolSvc.HltNeutralCluster.Cut = 4 ;
+ToolSvc.HltNeutralCluster.Table = "Hlt/Calo/ClusterMatch";
+
+/// hypo tools 
+HltSinglePhotonRec.HypoTools         = { "CaloExtraDigits/SpdExtraG"              } ;
+HltSinglePhotonRec.HypoTools        += { "CaloExtraDigits/PrsExtraG"              } ;
+
+HltSinglePhotonRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
+HltSinglePhotonRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
+HltSinglePhotonRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;

@@ -1,0 +1,22 @@
+// ============================================================================
+
+/** @file 
+ *  Options to run  CaloElectronAlg "PhotonRec" algorithm 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 2002-10-31
+ */
+
+// Selector
+HltElectronRec.SelectionTools           =  { "CaloSelectorNOT/HltElectronSelect"     }; 
+ToolSvc.HltElectronSelect.SelectorTools =  { "CaloSelectNeutralCluster/HltChargedCluster"} ;
+ToolSvc.HltChargedCluster.Cut        = 25 ;
+ToolSvc.HltChargedCluster.Table = "Hlt/Calo/ClusterMatch";
+
+// Tools and correctors
+HltElectronRec.HypoTools        = { "CaloExtraDigits/SpdExtraE"           } ;
+HltElectronRec.HypoTools       += { "CaloExtraDigits/PrsExtraE"           } ;
+
+HltElectronRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
+HltElectronRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;
+HltElectronRec.CorrectionTools2  += { "CaloLCorrection/LCorrection"      } ;
+
