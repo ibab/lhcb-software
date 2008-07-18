@@ -1,4 +1,4 @@
-// $Id: MCSTDepositCreator.cpp,v 1.6 2008-07-17 08:50:16 cattanem Exp $
+// $Id: MCSTDepositCreator.cpp,v 1.7 2008-07-18 09:35:21 mneedham Exp $
 
 // GSL 
 #include "gsl/gsl_math.h"
@@ -58,7 +58,7 @@ MCSTDepositCreator::MCSTDepositCreator( const std::string& name,
   declareProperty("SigNoiseTool", m_sigNoiseToolName = "STSignalToNoiseTool");
   declareProperty("Scaling", m_scaling = 1.0);
   declareProperty("ResponseTypes", m_beetleResponseTypes);
-  declareProperty("useStatusConditions", m_useStatusConditions = false);
+  declareProperty("useStatusConditions", m_useStatusConditions = true);
   declareProperty("useSensDetID", m_useSensDetID = false);
 
 
