@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.114 2008-07-18 00:33:10 odescham Exp $
+! $Id: release.notes,v 1.115 2008-07-18 06:25:25 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloReco v4r14 2008-07-18 ===================
 ! 2008-07-18 - Olivier Deschamps
- - make the Hlt stream fully independant of the offline sequence in options/
+ - make the Hlt stream fully independent of the offline sequence in options/
  - fix missing prefix in CaloOnDemand.opts
-
 
 !========================== CaloReco v4r13 2008-07-02 ===================
 ! 2008-06-27 - Olivier Deschamps
