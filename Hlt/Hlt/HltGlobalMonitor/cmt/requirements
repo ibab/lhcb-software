@@ -3,7 +3,7 @@
 # Maintainer : Bruno Souza de Paula	 
 #============================================================================
 package           HltGlobalMonitor
-version           v1r0
+version           v1r1
 
 # Structure
 #============================================================================
@@ -13,6 +13,8 @@ include_path none
 # Used packages
 #============================================================================
 use GaudiAlg            v*
+use Gaucho              v*    Online
+
 
 use HltEvent            v*    Event
 use L0Event		v*    Event

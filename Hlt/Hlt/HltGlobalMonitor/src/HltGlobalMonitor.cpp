@@ -150,7 +150,7 @@ void HltGlobalMonitor::monitorL0() {
 
   for (int i = 0; i<14; i+=1){ 
     if (m_l0->channelDecision(i)) {
-      fillHisto( m_histoL0, 1.*i , 1.);
+      fillHisto(*m_histoL0, 1.*i , 1.);
        if (i!=0){ 
         for (int j = i+1; j<14; j+=1){ 
          if (m_l0->channelDecision(j)) {
