@@ -1,0 +1,139 @@
+//-----------------------------------------------------------------
+// Main Opts to run the Moore or HLTAPP application 
+//-----------------------------------------------------------------
+
+#pragma print off
+// Standard LHCb application setup
+#include "$STDOPTS/LHCbApplication.opts"
+
+// POOL Persistency
+#include "$STDOPTS/DstDicts.opts"
+
+//-----------------------------------------------------------------
+// Rerun L0 and HLT - Alleys
+//-----------------------------------------------------------------
+
+// Default options to rerun L0 and run Hlt 
+//#include "$GAUDICONFROOT/options/DecodeRawEvent.opts" 
+#include "$MOOREROOT/options/DecodeRawEvent.opts" 
+//#include "$HLTSYSROOT/options/L0.opts"
+//#include "$HLTSYSROOT/options/L0FromRaw.opts"
+//#include "$HLTSYSROOT/options/Hlt1.opts"
+//#include "$HLTSYSROOT/options/PrescaledAlleys.opts"
+#include "$HLTSYSROOT/options/RandomPrescaling.opts"
+//#include "$HLTSYSROOT/options/Hlt2.opts"
+
+// For DAQ studies replace the includes above for these ones:
+// #include "$HLTSYSROOT/options/L0DAQ.opts"
+// #include "$HLTSYSROOT/options/HltDAQ.opts"
+
+// include this options to get time or histogram information of alleys
+// #include "$HLTSYSROOT/options/HltAlleysTime.opts"
+// #include "$HLTSYSROOT/options/HltAlleysHistos.opts"
+
+//---------------------------------------------------------------------------
+// Geometry specific options
+//---------------------------------------------------------------------------
+#include "$STDOPTS/DC06Conditions.opts"
+DDDB.DefaultTAG = "head-20080422";
+LHCBCOND.DefaultTAG = "head-20080422";
+#pragma print on
+
+//ApplicationMgr.TopAlg +=  [ "CaloDigitsFromRaw/EcalFromRaw" ] ;
+
+//EcalFromRaw.RootInTES = "Next1";
+//ApplicationMgr.TopAlg +=  [ "CaloDigitsFromRaw/HcalFromRaw" ] ;
+
+//HcalFromRaw.RootInTES = "Next2";
+
+//---------------------------------------------------------------------------
+// Number of events to process, optionally skipping some events
+//---------------------------------------------------------------------------
+//ApplicationMgr.EvtMax =  10000;
+//EventSelector.PrintFreq = 100;
+//ApplicationMgr.OutputLevel = 10;
+//EventSelector.FirstEvent = 7;  // To skip some events 
+
+//---------------------------------------------------------------------------
+// Histogram output
+//---------------------------------------------------------------------------
+//ApplicationMgr.HistogramPersistency = "ROOT";
+//HistogramPersistencySvc.OutputFile = "Moore_minbias.root";  
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+// PoolDbCacheSvc.Catalog = {
+//  "xmlcatalog_file:$HLTAPPROOT/job/NewCatalog.xml"
+// };
+ApplicationMgr.ExtSvc +=  [ "ToolSvc" , "AuditorSvc" ] ; 
+ApplicationMgr.AuditAlgorithms = 1;  
+AuditorSvc.Auditors +=  [ "TimingAuditor/TIMER" ] ;   
+//AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;   
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ToolSvc.SequencerTimerTool.OutputLevel = 4;          
+
+
+ApplicationMgr.ExtSvc += {"MonitorSvc"};
+//ApplicationMgr.DLLs + = {"Gaucho","GaudiOnline"};
+
+//---------------------------------------------------------------------------
+// Event input
+//---------------------------------------------------------------------------
+//#include "$MOOREROOT/options/raw06_minbias_1.opts"
+
+EventPersistencySvc.CnvServices += {"LHCb::RawDataCnvSvc"};
+ApplicationMgr.ExtSvc += {"DataOnDemandSvc"};
+//EventSelector.Input   = {
+//"DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2008/RAW/LHCb/PHYSICS/22759/022759_0000012258.raw' SVC='LHCb::MDFSelector' "
+//};
+//DDDB.DefaultTAG = "head-20080422";
+
+//LHCBCOND.DefaultTAG = "head-20080422";
+//EventSelector.Input   = {
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+//  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+// };
+
+
+// remove this
+//#include "$HLTSELECTIONSROOT/options/HltCorrelations.opts"
+
+#include "$HLTOPTS/OnlineEnvironment.opts"
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+//MessageSvc.OutputLevel               = 1;
+MessageSvc.LoggerOnly                = true;
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc                += { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
+
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+
+
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.Input                  = "EVENT";
+//EventSelector.Input                  = "MEP";
+//EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+MEPManager.Buffers                   = { "EVENT", "SEND" };
+//MEPManager.Buffers                   = { "MEP", "SEND" };
+EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+
+ApplicationMgr.TopAlg               += { "Sequencer/SendSequence" };
+SendSequence.Members                 = {"CheckHLTDecision", "LHCb::RawEvent2MBMMergerAlg/Output"};
+//SendSequence.Members                 = {"LHCb::RawEvent2MBMMergerAlg/Output"};
+//SendSequence.OutputLevel             = @OnlineEnv.OutputLevel;
+SendSequence.OutputLevel             = 3;
+
+//MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+//HltAllAlleysSequence.OutputLevel     =1;
+//EventSelector.OutputLevel            = @OnlineEnv.OutputLevel;
+//EventLoopMgr.OutputLevel             = @OnlineEnv.OutputLevel;
+//Runable.OutputLevel                  = @OnlineEnv.OutputLevel;
+Output.Buffer                        = "SEND";
+Output.DataType                      = 3;
+Output.InputDataType                 = 1;
+Output.Compress                      = 0;
