@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 
-DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObject)
+DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObject):DimService(svcName.c_str(), "", m_data, 0)
 {
   m_monObject = monObject;
   m_svcName = svcName;
@@ -14,12 +14,12 @@ DimServiceMonObject::DimServiceMonObject(std::string svcName, MonObject *monObje
   boost::archive::binary_oarchive m_oa(m_ss);
   m_monObject->save(m_oa, m_monObject->version());
   m_data = const_cast<void *>((const void*)m_ss.str().data());
-  m_dimService = new DimService(svcName.c_str(), "", m_data, m_ss.str().length());
-  m_dimService->setData(m_data, m_ss.str().length());
+  //m_dimService = new DimService(svcName.c_str(), "", m_data, m_ss.str().length());
+  setData(m_data, m_ss.str().length());
 }
 
 DimServiceMonObject::~DimServiceMonObject() {
-  delete m_dimService; m_dimService = 0;
+  //delete m_dimService; m_dimService = 0;
 }
 
 void DimServiceMonObject::updateServiceMonObject(bool endOfRun) {
@@ -39,7 +39,7 @@ void DimServiceMonObject::setDataFromMonObject() {
 //   std::cout << "==============================================================" << std::endl;
 
   m_data = const_cast<void *>((const void*)m_ss.str().data());
-  m_dimService->setData(m_data, m_ss.str().length());
+  setData(m_data, m_ss.str().length());
   //DimService::updateService(); // why it doesnt work
 }
 

@@ -111,16 +111,23 @@ private:
   InfoNamesMap  m_InfoNamesMap;
   InfoNamesMapIt m_InfoNamesMapIt;
 
-  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
-  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
-  DimServiceMonObjectMap    m_dimMonObjects;
-  DimServiceMonObjectMapIt  m_dimMonObjectsIt;
-  
-  void declareInfoMonObject( const std::string& name, MonObject* monObject, const std::string& desc, const IInterface* owner);
-  void undeclServiceMonObject(std::string infoName);
-  void updateServiceMonObject(std::string infoName, bool endOfRun);
+//  typedef std::map<std::string, DimServiceMonObject*, std::less<std::string> > DimServiceMonObjectMap;
+//  typedef DimServiceMonObjectMap::iterator DimServiceMonObjectMapIt;
+//  DimServiceMonObjectMap    m_dimMonObjects;
+//  DimServiceMonObjectMapIt  m_dimMonObjectsIt;
+
+  typedef std::map<std::string, DimService*, std::less<std::string> > DimServiceMap;
+  typedef DimServiceMap::iterator DimServiceMapIt;
+  DimServiceMap    m_dimSrv;
+  DimServiceMapIt  m_dimSrvIt;
+
+  bool registerName( const std::string& name, const IInterface* owner);
+  std::pair<std::string, std::string> registerDimSvc(const std::string& name, const std::string& dimPrefix, const IInterface* owner, bool isComment);
+  void undeclService(std::string infoName);
+  void updateService(std::string infoName, bool endOfRun);
 
   std::string infoOwnerName( const IInterface* owner );
+  std::string extract(const std::string mascara, std::string value);
 
   // MonObjetc to convert conters in rates  
   MonRate  *m_monRate;

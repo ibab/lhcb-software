@@ -116,74 +116,214 @@ StatusCode MonitorSvc::finalize() {
 void MonitorSvc::declareInfo(const std::string& name, const bool&  var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monBool, msgSvc(), "MonitorSvc");
-  ((MonBool*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  MonObject *monObject = 0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monBool, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonBool*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), "C:1", (void*)&var, sizeof(bool));
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(newName, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const int&  var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monInt, msgSvc(), "MonitorSvc");
-  ((MonInt*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  MonObject *monObject = 0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monInt, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonInt*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(newName, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const long&  var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monLong, msgSvc(), "MonitorSvc");
-  ((MonLong*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monLong, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonLong*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(int&)var);
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(newName, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const double& var, 
                              const std::string& desc, const IInterface* owner) 
 {
+  MsgStream msg(msgSvc(),"MonitorSvc");
   if (name.find("COUNTER_TO_RATE") != std::string::npos) {
-    std::string newName = name;
-    newName.erase(0, 16);
-    newName.erase(newName.size() - 1, 1);
+    std::string newName = extract("COUNTER_TO_RATE", name);
     if (!m_monRateDeclared) { 
-      declareInfoMonObject("monRate", m_monRate, "MonRate Description", this);
+      if (!registerName("monRate", this)) return;
+      m_monRate->setComments("My name is MonRate. Nice to meet you !!");
+      std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
+      if ("" == dimSvcName.second) return;
+      m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
       m_monRateDeclared = true;
     }
     m_monRate->addCounter(newName, desc, var);
     return;
-  } 
-  
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monDouble, msgSvc(), "MonitorSvc");
-  ((MonDouble*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  }
+
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monDouble, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonDouble*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(double&)var);
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(newName, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const std::string& var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monString, msgSvc(), "MonitorSvc");
-  ((MonString*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monString, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonString*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(),(char*)var.c_str());
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(newName, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,double>& var, 
                              const std::string& desc, const IInterface* owner) 
 {
-  MonObject *monObject = MonObjectCreator::createMonObject(s_monPairDD, msgSvc(), "MonitorSvc");
-  ((MonPairDD*) monObject)->setValue(var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    monObject = MonObjectCreator::createMonObject(s_monPairDD, msgSvc(), "MonitorSvc");
+    monObject->setComments(desc);
+    ((MonPairDD*) monObject)->setValue(var);
+    prefix = monObject->dimPrefix() + "/";
+  }else {
+    msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring pairs without using MonObjects " << endreq;
+    return;
+  }
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const std::string& format, const void* var,
                              int size, const std::string& desc, const IInterface* owner) 
 {
-  // We use this funtion to publish MonObjects. unhappyness we can not modify the IMonitorSvc 
-  // we igore values format and size. To hide the warnings because they are not used we print them.
   MsgStream msg(msgSvc(),"MonitorSvc");
-  msg << MSG::DEBUG << "format=" << format << endreq;
-  msg << MSG::DEBUG << "size=" << size << endreq;
-  
-  MonObject *monObject = const_cast<MonObject *>((const MonObject*) var);
-  declareInfoMonObject(name, monObject, desc, owner);
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  if ("MonObject" == format)
+  {
+    isMonObject = true;
+    monObject = const_cast<MonObject *>((const MonObject*) var);
+    monObject->setComments(desc);
+    prefix = monObject->dimPrefix() + "/";
+  }
+
+  if (!registerName(name, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  if (isMonObject) m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  else {
+    m_dimSrv[dimSvcName.first]= new DimService(dimSvcName.second.c_str(), (char*)format.c_str(), (void *)var, size);
+    std::pair<std::string, std::string> dimSvcNameComment = registerDimSvc(name, prefix, owner, true);
+    if ("" != dimSvcNameComment.second) m_dimSrv[dimSvcNameComment.first]= new DimService(dimSvcNameComment.second.c_str(),(char*)desc.c_str());
+  }
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
 void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
@@ -191,25 +331,39 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   MonObject *monObject=0;
-  if( 0 != dynamic_cast<const AIDA::IProfile1D * >(var) ) {
-    monObject = MonObjectCreator::createMonObject(s_monProfile, msgSvc(), "MonitorSvc");
-    ((MonProfile*) monObject)->setAidaProfile(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D *>(var)));
-  }
-  else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(var) ){ 
-    monObject = MonObjectCreator::createMonObject(s_monH1F, msgSvc(), "MonitorSvc");
-    ((MonH1F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D *>(var)));
-  
-  }
-  else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(var) ){ 
-    monObject = MonObjectCreator::createMonObject(s_monH2F, msgSvc(), "MonitorSvc");
-    ((MonH2F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D *>(var)));
-  }
-  else {
-    msg << MSG::ERROR << "Unknown histogram type, name = " << name << ", desc = " << desc << endreq;
+  bool isMonObject = false;
+  std::string prefix = "";
+  std::string newName = extract("NO_MONOBJECT", name);
+  if (name.find("NO_MONOBJECT") == std::string::npos){
+    isMonObject = true;
+    if( 0 != dynamic_cast<const AIDA::IProfile1D * >(var) ) {
+      monObject = MonObjectCreator::createMonObject(s_monProfile, msgSvc(), "MonitorSvc");
+      ((MonProfile*) monObject)->setAidaProfile(const_cast<AIDA::IProfile1D *>(dynamic_cast<const AIDA::IProfile1D *>(var)));
+    }
+    else if( 0 != dynamic_cast<const AIDA::IHistogram1D * >(var) ){ 
+      monObject = MonObjectCreator::createMonObject(s_monH1F, msgSvc(), "MonitorSvc");
+      ((MonH1F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram1D *>(dynamic_cast<const AIDA::IHistogram1D *>(var)));
+    }
+    else if( 0 != dynamic_cast<const AIDA::IHistogram2D * >(var) ){ 
+      monObject = MonObjectCreator::createMonObject(s_monH2F, msgSvc(), "MonitorSvc");
+      ((MonH2F*) monObject)->setAidaHisto(const_cast<AIDA::IHistogram2D *>(dynamic_cast<const AIDA::IHistogram2D *>(var)));
+    }
+    else {
+      msg << MSG::ERROR << "Unknown histogram type, name = " << name << ", desc = " << desc << endreq;
+        return;
+    }
+    monObject->setComments(desc);
+    prefix = monObject->dimPrefix() + "/";
+  }else {
+    msg << MSG::ERROR << "MonitorSvc doesn't have support for declaring histograms/profiles without using MonObjects " << endreq;
     return;
   }
-  
-  declareInfoMonObject(name, monObject, desc, owner);
+
+  if (!registerName(newName, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(newName, prefix, owner, false);
+  if ("" == dimSvcName.second) return;
+
+  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
 
 }
 
@@ -224,7 +378,33 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, dou
   m_monRate->print();
 }  
 
-void MonitorSvc::declareInfoMonObject(const std::string& name, MonObject* monObject, const std::string& desc, const IInterface* owner) 
+std::string MonitorSvc::extract(const std::string mascara, std::string value){
+  if (value.find(mascara) != std::string::npos) {
+    value.erase(0, mascara.size()+1);
+    value.erase(value.size() - 1, 1);
+  }
+  return value;
+}
+
+std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string& name, const std::string& dimPrefix, const IInterface* owner, bool isComment){
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  std::string ownerName = infoOwnerName(owner);
+  std::string dimName = name;
+  if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
+  if (isComment) dimName = dimName + "/gauchocomment";
+  std::pair<DimServiceMapIt,bool> p = m_dimSrv.insert(DimServiceMap::value_type(dimName, 0));
+
+  if (!p.second) {
+    msg << MSG::ERROR << "Already existing " + dimName << endreq;
+    return std::pair<std::string, std::string> ("", "");
+  }
+
+  std::string dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+
+  return std::pair<std::string, std::string> (dimName, dimSvcName);
+}
+
+bool MonitorSvc::registerName(const std::string& name, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
   
@@ -237,31 +417,14 @@ void MonitorSvc::declareInfoMonObject(const std::string& name, MonObject* monObj
     else 
     { // Insertion failed: Name already exists
       msg << MSG::ERROR << "Already existing info " << name << " from owner " << ownerName << " not published" << endreq;
-      return;
+      return false;
     }
   }
   else { // Create a new set for this algo and insert name
     m_InfoNamesMap[owner]=std::set<std::string>();
     m_InfoNamesMap[owner].insert(name);
   }
-  
-  std::string dimName = name;
-  if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-  
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-  
-  monObject->setComments(desc);
-  
-  std::string dimPrefix = monObject->dimPrefix();
-  std::string dimSvcName = dimPrefix + "/"+m_utgid+"/"+dimName;
-  std::pair<DimServiceMonObjectMapIt,bool> p = m_dimMonObjects.insert(DimServiceMonObjectMap::value_type(dimName,0));
-
-  if (p.second) {
-    m_dimMonObjects[dimName]=new DimServiceMonObject(dimSvcName, monObject);
-    msg << MSG::DEBUG << "New DimMonObject: " + dimSvcName << endreq;
-  }
-  else msg << MSG::ERROR << "Already existing DimMonObject: " + dimSvcName << endreq;
-  
+  return true;
 }
 
 void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner )
@@ -279,8 +442,8 @@ void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner
 
     std::string dimName = name;
     if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-    undeclServiceMonObject( dimName ) ;
-    
+    undeclService( dimName ) ;
+    undeclService( dimName + "/gauchocomment") ;
     (*infoNamesSet).erase(name);
     msg << MSG::INFO << "undeclareInfo: " << name << " from owner " 
         << ownerName  << " undeclared" << endreq;
@@ -333,7 +496,7 @@ void MonitorSvc::updateSvc( const std::string& name, bool endOfRun, const IInter
   if( (*infoNamesSet).find( name) !=  (*infoNamesSet).end() ){
     std::string dimName = name;
     if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-    updateServiceMonObject( dimName, endOfRun ) ;
+    updateService( dimName, endOfRun ) ;
     //msg << MSG::DEBUG << "update: " << name << " from owner " << ownerName  << " updated" << endreq;
   }  
   else{
@@ -366,7 +529,7 @@ void MonitorSvc::undeclareAll( const IInterface* owner)
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-      undeclServiceMonObject( dimName ) ;
+      undeclService( dimName ) ;
       msg << MSG::INFO << "undeclareAll: Undeclared info " << (*infoNamesIt) 
           << " from owner " << ownerName << endreq;
     }
@@ -399,7 +562,7 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
       std::string dimName = (*infoNamesIt);
       if (dimName.find(ownerName) == std::string::npos) dimName = ownerName + "/" + dimName;
-      updateServiceMonObject( dimName, endOfRun ) ;
+      updateService( dimName, endOfRun ) ;
       //msg << MSG::DEBUG << "updateAll: Updated info " << (*infoNamesIt) << " from owner " << ownerName << endreq;
     }
   } else { // Null pointer. Update for all owners
@@ -429,35 +592,38 @@ void MonitorSvc::resetHistos( const IInterface* owner )
         m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
       resetHistos(m_InfoNamesMapIt->first);
  }
- 
 }
 
-void MonitorSvc::undeclServiceMonObject(std::string infoName)
+void MonitorSvc::undeclService(std::string infoName)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
 
-  for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
-      msg << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
+  for (m_dimSrvIt = m_dimSrv.begin(); m_dimSrvIt != m_dimSrv.end(); m_dimSrvIt++)
+      msg << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
   
-  m_dimMonObjectsIt = m_dimMonObjects.find(infoName);
+  m_dimSrvIt = m_dimSrv.find(infoName);
 
-  if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
-    delete (*m_dimMonObjectsIt).second;
-    m_dimMonObjects.erase(m_dimMonObjectsIt);
+  if(m_dimSrvIt != m_dimSrv.end()) {
+    delete (*m_dimSrvIt).second;
+    m_dimSrv.erase(m_dimSrvIt);
     msg << MSG::DEBUG << "undeclSvc: Service " + infoName + " undeclared" << endreq;
     return;
   }
-  msg << MSG::ERROR << "undeclSvc: No DimServiceMonObject found with the name:" + infoName << endreq;
+  if (infoName.find("gauchocomment") == std::string::npos) return;
+
+  msg << MSG::ERROR << "undeclSvc: No DimService found with the name:" + infoName << endreq;
 }
 
-void MonitorSvc::updateServiceMonObject(std::string infoName, bool endOfRun)
+void MonitorSvc::updateService(std::string infoName, bool endOfRun)
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  //for (m_dimMonObjectsIt = m_dimMonObjects.begin(); m_dimMonObjectsIt != m_dimMonObjects.end(); m_dimMonObjectsIt++)
-  //  mes << MSG::DEBUG << (*m_dimMonObjectsIt).first << endreq;
-  m_dimMonObjectsIt = m_dimMonObjects.find(infoName);
-  if(m_dimMonObjectsIt != m_dimMonObjects.end()) {
-    (*m_dimMonObjectsIt).second->updateServiceMonObject(endOfRun);
+  //for (m_dimSrvIt = m_dimSrv.begin(); m_dimSrvIt != m_dimSrv.end(); m_dimSrvIt++)
+  //  mes << MSG::DEBUG << (*m_dimSrvIt).first << endreq;
+  m_dimSrvIt = m_dimSrv.find(infoName);
+  if(m_dimSrvIt != m_dimSrv.end()) {
+    DimServiceMonObject* dimSvcMO = dynamic_cast<DimServiceMonObject*>((*m_dimSrvIt).second);
+    if (0 != dimSvcMO) dimSvcMO->updateServiceMonObject(endOfRun);
+    else (*m_dimSrvIt).second->updateService(); //THIS IS WRONG
     //msg << MSG::DEBUG << "updateSvc: Service " + infoName + " updated" << endreq;
     return;
   }
