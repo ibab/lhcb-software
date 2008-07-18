@@ -5,13 +5,96 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v5r9>2008-07-18 RecSys v5r9</A></H1><PRE>
+</PRE><H1><A NAME=v5r9>2008-07-21 RecSys v5r9</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r1.
 
-- Rename Reco.opts to RecoSequences.opts, excluding Tracking sequences
-- Reco.opts calls RecoSequences.opts and RecoTracking.opts (legacy, for xxx.exe)
-- Reco.py calls RecoSequences.opts and RecoTracking.py (for gaudirun.py)
-- Add "Vertex" to Reco.DetectorList, called after "Tr", for primary vertex Reco.
+- Packages modified: CaloPIDs v4r13, CaloReco v4r14, PatChecker v3r3p1,
+    TrackFitter v2r26, TrackMCTools v2r19, TrackMonitors v1r2, TrackTools v3r9,
+    TrackUtils v1r21, TrackSys v4r15, PatAlgorithms v3r8, PatVeloTT v3r2,
+    TrackMatching v2r18, TsaAlgorithms v3r4, PatPV v3r5, MuonTrackAlign v1r5
+
+- In RecSys v5r9
+  . Rename Reco.opts to RecoSequences.opts, excluding Tracking sequences
+  . Reco.opts calls RecoSequences.opts and RecoTracking.opts (legacy, for *.exe)
+  . Reco.py calls RecoSequences.opts and RecoTracking.py (for gaudirun.py)
+  . Add "Vertex" to Reco.DetectorList, called after "Tr", for primary vertex Reco
+
+- In CaloPIDs v4r13
+  . duplicate PhotonPDF.opts for Hlt usage (HltPhotonPDF.opts)
+
+- In CaloReco v4r14
+  . Make the Hlt stream fully independent of the offline sequence in options
+  . Fix missing prefix in CaloOnDemand.opts
+
+- In PatChecker v3r3p1
+  . Fix uninitialised variables
+
+- In TrackFitter v2r26
+  . Use cholesky decomposition for track covariance matrix inversion
+
+- In TrackMCTools v2r19
+  . Added some protection in IdealStateCreator::findClosestHit
+
+- In TrackMonitors v1r2
+  . Added monitoring algorithms
+
+- In TrackTools v3r9
+  . Add use of dead strips to TTHitExpectation
+  . Added tests for VELO sensors readout and bad strips to VeloExpectation
+  . Added more cuts to TrackSelector
+  . Make TrackVertexer less verbose
+
+- In TrackUtils v1r21 
+  . TrackRemoveDoubleHits: separated OT double hits in acceptable (high tx) / not
+    acceptable.
+
+- In TrackSys v4r15
+  . Add options/RecoTracking.py and Fitting.py, replaces corresponding .opts
+    files which are now obsolete
+  . Implements the following "expertTrackng" options for Brunel:
+    "usePatSeeding", "noDrifttimes" and "simplifiedGeometry"
+
+- In PatAlgorithms v3r8 
+  . PatDownstream:
+    o use a proper check for x layers instead of comparing sine of stereo angle
+      to zero
+    o use boost::assign::list_of where applicable when declaring properties
+  . PatSeedTool:
+    o more effective protection against singular matrix in fit
+    o use of BOOST_FOREACH to clean up code
+    o more straightforward bit-shifting when trying to fix ambiguities
+  . PatSeedingTool:
+    o when reconstructing cosmics, make sure we do not pick up hits from the
+      upper half of the OT when we know that the track is in the lower half and
+      vice-versa
+    o use of BOOST_FOREACH to clean up code
+    o more straightforward bit-shifting when trying to fix ambiguities
+  . PatSeedTrack:
+    o use of BOOST_FOREACH to clean up code
+    o add method coords() to have a BOOST_FOREACH-compatible interface for the
+      rest of the code
+    o use initializer lists in constructors more extensively
+    o remove unused members
+    o changed order of members to improve memory layout
+    o better documentation of methods
+  . Add python job options PatForward.py and PatSeeding.py
+
+- In PatVeloTT v3r2
+  . Translate VeloTT.opts and VeloTT_noB.opts in PatVeloTT.py. These .opts files
+    are obsolete
+
+- In TrackMatching v2r18
+  . Add python job options TrackMatch.py
+
+- In TsaAlgorithms v3r4
+  . Add use of dead strips in ITExpectedHits tool
+  . Add TsaSeeding.py options file 
+
+- In PatPV v3r5
+  . Fix the options
+
+- In MuonTrackAlign v1r5
+  . Fixed bug in detectClone() and StrongCloneKiller()
 
 </PRE><H1><A NAME=v5r8>2008-07-07 RecSys v5r8</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r0.
