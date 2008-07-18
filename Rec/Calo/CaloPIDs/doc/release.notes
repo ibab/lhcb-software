@@ -1,14 +1,13 @@
-! $Id: release.notes,v 1.59 2008-07-18 00:33:44 odescham Exp $ 
+! $Id: release.notes,v 1.60 2008-07-18 06:27:06 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================== CaloPIDs v4r13 2008-07-18 =========================
 ! 2008-07-17 - Olivier Deschamps
  - duplicate PhotonPDF.opts for Hlt usage (HltPhotonPDF.opts)
-
-
 
 !========================== CaloPIDs v4r12 2008-07-02 =========================
 ! 2008-06-27 - Olivier Deschamps
