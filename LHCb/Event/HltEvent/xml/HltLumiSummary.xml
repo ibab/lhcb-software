@@ -23,7 +23,7 @@
       <!-- &KeyedObject; -->
 
       <typedef
-        type="GaudiUtils::VectorMap&lt;int,short&gt;"
+        type="GaudiUtils::VectorMap&lt; short, unsigned short&gt;"
         def="ExtraInfo"
         desc="User information"
         access="PUBLIC"
@@ -110,7 +110,7 @@
         name="hasInfo"
         const="TRUE"
         desc="has information for specified key"
-        argList="int key"
+        argList="short key"
         type="bool"
 	> 
 	<code>
@@ -121,7 +121,7 @@
       <method
         name="addInfo"
         desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
-        argList="const int key, const double info"
+        argList="const short key, const unsigned short info"
         type="bool"
 	> 
 	<code>
@@ -132,8 +132,8 @@
       <method
         name="info"
         desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
-        argList="const int key, const double def"
-        type="double"
+        argList="const short key, const unsigned short def"
+        type="unsigned short"
         const="TRUE"
 	> 
 	<code>
@@ -145,7 +145,7 @@
       <method
         name="eraseInfo"
         desc="erase the information associated with the given key"
-        argList="int key"
+        argList="short key"
         type="unsigned long"
 	> 
 	<code>
