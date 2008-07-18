@@ -8,7 +8,7 @@
 #include "Event/HltSummary.h"
 #include "Event/L0DUReport.h"
 //#include "Event/IL0Candidate.h"
-#include "HltBase/HltMonitorAlgorithm.h"
+#include "HltBase/HltBaseAlg.h"
 
 /** @class HltGlobalMonitor HltGlobalMonitor.h
  *
@@ -20,7 +20,7 @@
  *  @date   2003-03-06
  */
 
-class HltGlobalMonitor : public HltMonitorAlgorithm {
+class HltGlobalMonitor : public HltBaseAlg {
 //class HltGlobalMonitor : public HltAlgorithm {
 public: 
   /// Standard constructor
@@ -40,31 +40,34 @@ protected:
 
   LHCb::L0DUReport* m_l0;
 
+  IHistogramSvc* m_histosvc;
+
   // metodos
-protected:
   
   void monitorL0();
-  void monitorAlleysinput(LHCb::HltSummary* sum);
-  void monitoracceptAlleys(LHCb::HltSummary* sum);
-  void monitorHLT(LHCb::HltSummary* sum);
+  void monitorAlleysinput();
+//  void monitoracceptAlleys(LHCb::HltSummary* sum);
+  void monitorHLT();
   void monitorAlleySpecific(LHCb::HltSummary* sum);
-  void monitorMuonAlley(LHCb::HltSummary* sum);
-  void monitorMuonHadAlley(LHCb::HltSummary* sum);
-  void monitorHadronAlley(LHCb::HltSummary* sum);
-  void monitorCaloAlley(LHCb::HltSummary* sum);
+//  void monitorMuonAlley(LHCb::HltSummary* sum);
+//  void monitorMuonHadAlley(LHCb::HltSummary* sum);
+//  void monitorHadronAlley(LHCb::HltSummary* sum);
+//  void monitorCaloAlley(LHCb::HltSummary* sum);
   void monitorGlobalEvent(){;}
-  bool CheckDecision(LHCb::HltSummary* sum, int sumid);
+//  bool CheckDecision(LHCb::HltSummary* sum, int sumid);
+  bool first;
+  double gpsfirst;
 
   void starthistos(){
 //L0 output histograms
-  initializeHisto(m_histoL0,"L0",0.,14.,14);
+  m_histoL0 = initializeHisto("L0 bits",0.,14.,14);
   m_histoL0corr = this->book2D("Correlated L0 bits",0.,14.,14,0.,14.,14);
 //Alley specific histograms
-  initializeHisto(m_histomuonalley,"Muon Alley fonctioning",0.,10.,10);
+  m_histomuonalley = initializeHisto("Muon Alley fonctioning",0.,10.,10);
   m_histoMuonTrigCorr = this->book2D("Correlated Muon Alley Triggers", 4.,10.,6,4.,10.,6);
-  initializeHisto(m_histohadronalley,"Hadron Alley fonctioning",0.,10.,10);
-  initializeHisto(m_histomuonhadalley,"Muon+Hadron Alley fonctioning",0.,10.,10);
-  initializeHisto(m_histocaloalley,"Calo Alley fonctioning",0.,10.,10);
+  m_histohadronalley = initializeHisto("Hadron Alley fonctioning",0.,10.,10);
+  m_histomuonhadalley = initializeHisto("Muon+Hadron Alley fonctioning",0.,10.,10);
+  m_histocaloalley = initializeHisto("Calo Alley fonctioning",0.,10.,10);
 //Standard Bins
 #define binL0entry 0.5  
 #define binL0conf 1.5  
@@ -77,8 +80,9 @@ protected:
 #define binHadTrig 4.5
 
 //Interalley overview
-  initializeHisto(m_histoalleycall,"Alleys Called",0.,6.,6);
-  initializeHisto(m_histoalleyacc,"Accepted by Alley",0.,6.,6);
+  //m_histoalleycall = initializeHisto("Alleys Called",0.,6.,6);
+//  m_histoalleycall = initializeHisto("m_histoalleycall",0.,6.,6);
+  m_histoalleyacc = initializeHisto("Accepted by Alley",0.,6.,6);
   m_hcorrallcall = this->book2D("Correlation Calls",0.,6.,6,0.,6.,6);
   m_hcorrallacc = this->book2D("Correlated Alleys",0.,6.,6,0.,6.,6);
 
@@ -93,13 +97,14 @@ protected:
   // hists
 protected:
   
-  HltHisto m_histoL0;
-  HltHisto m_histoalleycall;
-  HltHisto m_histoalleyacc;
-  HltHisto m_histomuonalley;
-  HltHisto m_histomuonhadalley;
-  HltHisto m_histocaloalley;
-  HltHisto m_histohadronalley;
+  Hlt::Histo* m_histoL0;
+  AIDA::IHistogram1D* m_histoalleycall; 
+  AIDA::IHistogram1D* m_gpstime; 
+  Hlt::Histo* m_histoalleyacc;
+  Hlt::Histo* m_histomuonalley;
+  Hlt::Histo* m_histomuonhadalley;
+  Hlt::Histo* m_histocaloalley;
+  Hlt::Histo* m_histohadronalley;
 
   AIDA::IHistogram2D* m_histoL0corr;
   AIDA::IHistogram2D* m_histoMuonTrigCorr;
@@ -108,9 +113,14 @@ protected:
 
  private:
 
+  double gpst;
   int _counter1;        // "All events"
   int _counter2;       // "L0 accepted evts"
   float _efficiency;  // "Ratio counter2/counter1"
+  double muonallacc;
+  double muhadallacc;
+  double hadronallacc;
+  double orallacc;
 
 
 };
