@@ -13,7 +13,7 @@ while [ $# -ne 0 ];do
 done   
 
 echo $MOOREROOT
-cd /home/bdepaula/cmtuser/Moore_v4r2/Hlt/Moore/v4r2/job
+cd $MOOREROOT/job
 . ./pathsetup
 #cd $oldpwd
 
