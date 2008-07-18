@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.140 2008-07-16 20:15:37 cattanem Exp $
+!$Id: release.notes,v 1.141 2008-07-18 09:31:14 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2008-07-15 M Needham
+ - Add some info to printouts
+ - Add NotBonded to enum in DeSTSector
+ 
 !======================== STDet v4r3 2008-07-16 ==========================
 ! 2008-07-15 M Needham
  - Bug fixes in dead strip handling

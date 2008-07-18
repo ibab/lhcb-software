@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.30 2008-07-15 15:25:02 mneedham Exp $
+// $Id: DeSTSector.h,v 1.31 2008-07-18 09:31:14 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -50,8 +50,9 @@ public:
     Short = 2, 
     Pinhole = 3,
     ReadoutProblems = 4,
-    LowGain = 5, 
-    Noisy = 6,
+    NotBonded = 5,
+    LowGain = 6, 
+    Noisy = 7,
     OtherFault = 9,
     Dead = 10
   };
@@ -164,6 +165,10 @@ public:
   /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
   unsigned int beetle(const LHCb::STChannelID& chan) const;
 
+
+  /** beetle corresponding to channel  1-3 (IT) 1-4 (TT)*/
+  unsigned int beetle(const unsigned int strip) const;
+
   /** n beetle 
    * @return double nBeetles
   */
@@ -271,6 +276,7 @@ private:
 
 
   unsigned int m_firstStrip;
+  unsigned int m_firstBeetle;
   unsigned int m_id;
   double m_pitch;
   unsigned int m_nStrip;
@@ -375,7 +381,12 @@ inline void DeSTSector::trajectory(unsigned int strip,
 }
 
 inline unsigned int DeSTSector::beetle(const LHCb::STChannelID& chan) const{
-  return ((chan.strip()-1)/LHCbConstants::nStripsInBeetle) + 1;
+  return beetle(chan.strip());
+}
+
+
+inline unsigned int DeSTSector::beetle(const unsigned int strip) const{
+  return ((strip-1u)/LHCbConstants::nStripsInBeetle) + 1u;
 }
 
 inline unsigned int DeSTSector::nBeetle() const{
@@ -414,7 +425,7 @@ inline bool DeSTSector::isOKStrip(const LHCb::STChannelID& chan) const{
 
 inline std::vector<DeSTSector::Status> DeSTSector::beetleStatus() const{
   std::vector<Status> vec; vec.resize(nBeetle());
-  for (unsigned int iBeetle = m_firstStrip; iBeetle <= nBeetle(); ++iBeetle){
+  for (unsigned int iBeetle = m_firstBeetle; iBeetle <= nBeetle(); ++iBeetle){
     if (sectorStatus() != DeSTSector::OK){
       vec[iBeetle - 1] = sectorStatus();
       continue;

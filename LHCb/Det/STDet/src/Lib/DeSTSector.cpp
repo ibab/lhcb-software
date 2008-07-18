@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.45 2008-07-15 15:25:03 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.46 2008-07-18 09:31:14 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -35,6 +35,7 @@ using namespace LHCb;
 DeSTSector::DeSTSector( const std::string& name ) :
   DeSTBaseElement( name ),
   m_firstStrip(1),
+  m_firstBeetle(1),
   m_status(OK),
   m_statusString("Status"),
   m_versionString("DC06")
