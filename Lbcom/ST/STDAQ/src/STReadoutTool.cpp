@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.9 2008-07-14 08:18:03 mneedham Exp $
+// $Id: STReadoutTool.cpp,v 1.10 2008-07-18 09:37:26 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -14,10 +14,23 @@
 
 // IT
 #include "Kernel/STChannelID.h"
-
 #include "STDet/DeSTDetector.h"
 
+
+// Boost
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+/** @file DeSTSector.cpp
+*
+*  Implementation of class :  DeSTSector
+*
+*    @author Matthew Needham
+*/
+
+using namespace boost::lambda;
 using namespace LHCb;
+
 
 STReadoutTool::STReadoutTool(const std::string& type,
                             const std::string& name,
@@ -159,7 +172,11 @@ bool STReadoutTool::ADCOfflineToDAQ(const STChannelID aOfflineChan,
 
 STTell1Board* STReadoutTool::findByBoardID(const STTell1ID aBoardID) const{
   // find by board id
-  return findByOrder( m_firstBoardInRegion[aBoardID.region()] + aBoardID.subID());
+  std::vector<STTell1Board*>::const_iterator iter = 
+    std::find_if( m_boards.begin(), m_boards.end(), 
+    bind(&STTell1Board::sameID, _1, aBoardID));
+  return (iter != m_boards.end() ? *iter: 0);
+  //  return findByOrder( m_firstBoardInRegion[aBoardID.region()] + aBoardID.subID());
 }
 
 STTell1Board* STReadoutTool::findByOrder(const unsigned int aValue) const{

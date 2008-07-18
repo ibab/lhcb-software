@@ -4,6 +4,13 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-18 M Needham
+
+ - really check Tell1 source is valid
+ - clean up of counters  
+ - add check on magic pattern
+ - remove some unneeded printouts
+
 !=============================== STDAQ v3r9 2008-07-17 =======================
 ! 2008-07-17 M Needham
  - Remove cout

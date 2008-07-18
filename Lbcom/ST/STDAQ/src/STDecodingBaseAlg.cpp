@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.15 2008-07-15 13:47:49 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.16 2008-07-18 09:37:26 mneedham Exp $
 
 #include <algorithm>
 
@@ -22,6 +22,7 @@
 
 #include "SiDAQ/SiHeaderWord.h"
 #include "SiDAQ/SiADCWord.h"
+#include "boost/lexical_cast.hpp"
 
 
 #include "STDet/DeSTDetector.h"
@@ -170,6 +171,9 @@ std::vector<unsigned int> STDecodingBaseAlg::missingInAction(const std::vector<R
       for (; iterBank != banks.end() && (*iterBank)->sourceID() != testID; ++iterBank){} // iterBank 
       if (iterBank == banks.end()){
         missing.push_back((unsigned int)testID);
+        std::string lostBank = "lost bank "+
+	 boost::lexical_cast<std::string>(testID);  
+        Warning(lostBank, StatusCode::SUCCESS);
       }
     } // iBoard
   }

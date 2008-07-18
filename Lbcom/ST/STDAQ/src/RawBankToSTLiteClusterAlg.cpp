@@ -1,4 +1,4 @@
-// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.24 2008-07-17 06:57:42 mneedham Exp $
+// $Id: RawBankToSTLiteClusterAlg.cpp,v 1.25 2008-07-18 09:37:26 mneedham Exp $
 
 
 #include <algorithm>
@@ -111,15 +111,27 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
   std::vector<RawBank* >::const_iterator iterBank =  tBanks.begin();
   for (; iterBank != tBanks.end() ; ++iterBank){
 
-    ++counter("found Banks");
+    ++counter("# valid banks");
 
     // get the board and data
     STTell1Board* aBoard = readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID()));
     if (!aBoard && !m_skipErrors){
-      Warning("Invalid source ID --> skip bank", StatusCode::SUCCESS);
+      std::string invalidSource = "Invalid source ID --> skip bank"+
+	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+      Warning(invalidSource,StatusCode::SUCCESS); 
       ++counter("skipped Banks");
       continue;
     } 
+
+   ++counter("# valid source ID");
+
+   if ((*iterBank)->magic() != RawBank::MagicPattern) {
+      std::string pattern = "wrong magic pattern "+
+	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+      Warning(pattern, StatusCode::SUCCESS);
+      counter("skipped Banks") += tBanks.size();
+      continue;
+    }
  
     // make a SmartBank of shorts...
     STDecoder decoder((*iterBank)->data());
@@ -185,7 +197,7 @@ StatusCode RawBankToSTLiteClusterAlg::decodeBanks(RawEvent* rawEvt) const{
 StatusCode RawBankToSTLiteClusterAlg::finalize() {
 
   const double failed = counter("skipped Banks").flag();
-  const double processed = counter("found Banks").flag();  
+  const double processed = counter("# valid banks").flag();  
   const double eff = 1.0 - (failed/processed); 
 
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;

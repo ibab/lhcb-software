@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.34 2008-07-17 06:57:42 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.35 2008-07-18 09:37:26 mneedham Exp $
 
 #include <algorithm>
 
@@ -119,16 +119,27 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   // loop over the banks of this type..
   for (iterBank = tBanks.begin(); iterBank != tBanks.end() ; ++iterBank){
 
-    ++counter("found Banks");
-    std::string foundBanks = "source id" +  boost::lexical_cast<std::string>((*iterBank)->sourceID());    
-    ++counter(foundBanks);
-
+    ++counter("# banks found");
     // get the board and data
-    const STTell1Board* aBoard =  readoutTool()->findByBoardID(STTell1ID((*iterBank)->sourceID())); 
+    STTell1ID tell1ID = STTell1ID((unsigned int)(*iterBank)->sourceID()); 
+    const STTell1Board* aBoard =  readoutTool()->findByBoardID(tell1ID); 
+
     if (!aBoard && !m_skipErrors){
       // not a valid IT
-      Warning("Invalid source ID --> skip bank",StatusCode::SUCCESS); 
+     std::string invalidSource = "Invalid source ID --> skip bank"+
+	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+      Warning(invalidSource,StatusCode::SUCCESS); 
       ++counter("skipped Banks");
+      continue;
+    }
+
+    ++counter("# valid banks");
+
+    if ((*iterBank)->magic() != RawBank::MagicPattern) {
+      std::string pattern = "wrong magic pattern "+
+	 boost::lexical_cast<std::string>((*iterBank)->sourceID());  
+      Warning(pattern, StatusCode::SUCCESS); 
+      ++counter("skipped banks");
       continue;
     }
 
@@ -137,7 +148,7 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
     // get verion of the bank
     const int version = forceVersion() ? m_forcedVersion: (*iterBank)->version();
 
-    //std::cout << "version " << version << std::endl;
+    debug() << "decoding bank version " << version << endmsg;
 
     if (decoder.hasError() == true && !m_skipErrors){
       bankList.push_back((*iterBank)->sourceID());
@@ -253,7 +264,7 @@ double RawBankToSTClusterAlg::mean(const std::vector<SiADCWord>& adcValues) cons
 StatusCode RawBankToSTClusterAlg::finalize() {
 
   const double failed = counter("skipped Banks").flag();
-  const double processed = counter("found Banks").flag();  
+  const double processed = counter("# valid banks").flag();  
   const double eff = 1.0 - (failed/processed); 
 
   info() << "Successfully processed " << 100* eff << " %"  << endmsg;

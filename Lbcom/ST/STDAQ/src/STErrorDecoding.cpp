@@ -1,4 +1,4 @@
-// $Id: STErrorDecoding.cpp,v 1.3 2008-07-09 11:37:02 mneedham Exp $
+// $Id: STErrorDecoding.cpp,v 1.4 2008-07-18 09:37:26 mneedham Exp $
 // Include files 
 
 
@@ -100,10 +100,16 @@ StatusCode STErrorDecoding::execute() {
   
  for( std::vector<LHCb::RawBank*>::const_iterator itB = itf.begin(); itB != itf.end(); ++itB ) {
 
-
    std::string errorBank = "sourceID "+
 	boost::lexical_cast<std::string>((*itB)->sourceID());  
    ++counter(errorBank);
+
+   if ((*itB)->magic() != RawBank::MagicPattern) {
+     std::string pattern = "wrong magic pattern "+
+	boost::lexical_cast<std::string>((*itB)->sourceID());  
+     Warning(pattern, StatusCode::SUCCESS); 
+     continue;
+   }
 
    const unsigned int* p = (*itB)->data();
    unsigned int w=0;
