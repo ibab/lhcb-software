@@ -23,7 +23,7 @@
       <!-- &KeyedObject; -->
 
       <typedef
-        type="GaudiUtils::VectorMap&lt; short, unsigned short&gt;"
+        type="GaudiUtils::VectorMap&lt;  short, unsigned short&gt;"
         def="ExtraInfo"
         desc="User information"
         access="PUBLIC"
