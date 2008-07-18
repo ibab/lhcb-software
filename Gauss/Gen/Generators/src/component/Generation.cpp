@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.28 2008-07-09 14:34:47 robbep Exp $
+// $Id: Generation.cpp,v 1.29 2008-07-18 11:22:46 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -176,7 +176,7 @@ StatusCode Generation::execute() {
     theGenHeader -> setEvType( m_eventType );  
   }
 
-  unsigned int  nPileUp ;
+  unsigned int  nPileUp( 0 ) ;
   double        currentLuminosity ;
   
   LHCb::HepMCEvents::iterator itEvents ;
