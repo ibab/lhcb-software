@@ -1,4 +1,4 @@
-// $Id: STTell1ID.h,v 1.1.1.1 2007-11-16 16:15:15 mneedham Exp $
+// $Id: STTell1ID.h,v 1.2 2008-07-18 09:34:56 mneedham Exp $
 #ifndef _STTell1ID_H
 #define _STTell1ID_H 1
 
@@ -25,7 +25,7 @@ public:
            (aSubID<<subIDBits);                  
   }
   
-  explicit STTell1ID(int id):
+  explicit STTell1ID(unsigned int id):
   m_id(id){}
 
   /// Default Constructor
@@ -107,8 +107,8 @@ inline unsigned int STTell1ID::subID() const
 inline std::ostream& STTell1ID::fillStream(std::ostream& s) const
 {
   s << "{ "
-    << " STTell1ID:\t" << std::hex << id() << std::endl
-    << std::dec << " region:\t"     << region() << std::endl
+    << " STTell1ID:\t" << id() << std::endl
+    << " region:\t"     << region() << std::endl
     << " subID:\t"     << subID() << " } ";
 
   return s;

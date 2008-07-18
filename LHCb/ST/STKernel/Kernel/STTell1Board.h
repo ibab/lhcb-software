@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.5 2008-07-15 11:21:03 mneedham Exp $
+// $Id: STTell1Board.h,v 1.6 2008-07-18 09:34:56 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -37,6 +37,9 @@ public:
   /// board indentifer
   STTell1ID boardID() const;
 
+  /// same board id
+  bool sameID(const STTell1ID& id) const;
+ 
   /// channel is in this board
   bool isInside(const LHCb::STChannelID aOfflineChan,
                 unsigned int& sectorIndex) const;
@@ -91,6 +94,10 @@ private:
 
 inline STTell1ID STTell1Board::boardID() const{
   return m_boardID;
+}
+
+inline bool STTell1Board::sameID(const STTell1ID& id) const{
+  return m_boardID == id ? true : false;
 }
 
 inline const std::vector<int>& STTell1Board::orientation() const{

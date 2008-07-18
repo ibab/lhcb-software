@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.4 2008-07-15 11:21:04 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.5 2008-07-18 09:34:56 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 
@@ -126,7 +126,8 @@ unsigned int STTell1Board::offlineToDAQ(const STChannelID aOfflineChan,
 std::ostream& STTell1Board::fillStream( std::ostream& os ) const{
 
   // print function
-  os << " Board: " << m_boardID.region() << " " <<  m_boardID.subID() << std::endl;
+  os << " Source ID Board: "  <<m_boardID.id() << " region " << m_boardID.region() 
+     << " subID" <<  m_boardID.subID() << std::endl;
   os << "# readout sectors " << m_sectorsVector.size() << std::endl;
   std::vector<STChannelID>::const_iterator iterW = m_sectorsVector.begin();
   for (; iterW !=  m_sectorsVector.end() ;++iterW){
