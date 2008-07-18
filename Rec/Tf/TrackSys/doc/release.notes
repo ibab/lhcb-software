@@ -4,7 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
-!============================ TrackSys v4r15 2008-07-17 ======================
+!============================ TrackSys v4r15 2008-07-18 ======================
+! 2008-07-18 - Marco Cattaneo
+ - In RecoTracking.py, "usePatSeeding" is now an "expertTracking" option
+
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
  - move Fitting.py and RecoTracking.py in option directory, remove python 
    directory - add switches for "noDrifttimes" and "simplifiedGeometry"

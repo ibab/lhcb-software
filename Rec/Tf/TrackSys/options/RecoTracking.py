@@ -5,21 +5,19 @@ import GaudiKernel.ProcessJobOptions
 from Brunel.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
-from Configurables import ( ProcessPhase, CondDBAccessSvc, MagneticFieldSvc, ReadStripETC,
+from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             DecodeVeloRawBuffer, Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
                             Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
                             Tf__PatVeloTrackTool,
                             RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
                             OTTimeCreator,
-                            PatForward, 
-                            TrackEventFitter, TrackMasterFitter, TrackMasterExtrapolator,
-                            TrackKalmanFilter, TrackSimpleExtraSelector,
+                            PatForward,
+                            TrackEventFitter,
                             Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, OTHitCreator)
-
 
 ## Start TransportSvc, needed by track fit
 ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -114,7 +112,7 @@ GaudiSequencer("TrackForwardFitSeq").Members += [TrackEventFitter("FitForward" )
 
 ## Seed pattern
   
-if Brunel().getProp("usePatSeeding"):
+if "usePatSeeding" in Brunel().getProp("expertTracking"):
    GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
    importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
 else:     
