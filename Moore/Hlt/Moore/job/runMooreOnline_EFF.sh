@@ -3,7 +3,7 @@
 # Scripts for testing on offline machine the initialisation of MooreOnline
 
 #to get online joboptions for buffermanager etc
-cd job
+cd $ONLINETASKSROOT/job
 . ./setupOnline.sh $*
 
 oldpwd=$PWD
