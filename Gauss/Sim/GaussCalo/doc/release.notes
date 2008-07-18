@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.72 2008-07-11 10:47:44 robbep Exp $
+! $Id: release.notes,v 1.73 2008-07-18 15:53:55 gcorti Exp $
 ! -----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
@@ -8,6 +8,7 @@
 !                  : G4 actions, etc for LHCb calorimeters
 ! -----------------------------------------------------------------------------
 
+!========================= GaussCalo v9r2 2008-07-18 ==========================
 ! 2008-07-11 - Patrick Robbe
  - Fix compilation warnings in SensDet classes (constructors)
 
