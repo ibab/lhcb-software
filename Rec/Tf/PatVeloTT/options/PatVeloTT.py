@@ -1,6 +1,7 @@
 from Brunel.Configuration import *
 
-from Configurables import ( PatVeloTT, PatVeloTTTool )
+from Configurables import ( PatVeloTT, PatVeloTTTool,
+                            TrackMasterFitter, TrackMasterExtrapolator, TrackKalmanFilter, TrackSimpleExtraSelector )
 
 PatVeloTT("PatVeloTT").InputUsedTracksNames = ["Rec/Track/Forward","Rec/Track/Match"]
 PatVeloTT("PatVeloTT").addTool(TrackMasterFitter, name="Fitter")

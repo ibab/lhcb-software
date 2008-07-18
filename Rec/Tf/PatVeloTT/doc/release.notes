@@ -4,12 +4,15 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================== PatVeloTT v3r2 2008-07-17 ========================
+!========================== PatVeloTT v3r2 2008-07-18 ========================
+! 2008-07-18 - Marco Cattaneo
+ - Add missing imports in PatVeloTT.py
+
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
  - move *.py files to option directory, remove python directory
 
 ! 2008-07-11 - Stephanie Hansmann-Menzemer
- - translate VeloTT.opt and VeloTT_noB.opts in VeloTT.py
+ - translate VeloTT.opt and VeloTT_noB.opts in PatVeloTT.py
 
 !========================== PatVeloTT v3r1 2007-12-03 =======================
 ! 2007-11-30 - Wouter Hulsbergen
