@@ -22,8 +22,10 @@ cd /home/bdepaula/cmtuser/Moore_v4r2/Hlt/Moore/v4r2/job
 #$DIM_release_area/DIM/v16r5/slc4_ia32_gcc345/bin/dns &
 
 #$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so GaudiOnline -runable=LHCb::OnlineRunable -options=$MOOREOPTS/MoorePrescale.opts -msgsvc=MessageSvc -loop -auto
-echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/MoorePrescale.opts
-exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/MoorePrescale.opts
+#echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/MoorePrescale.opts
+#exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/MoorePrescale.opts
+echo exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/DummyRead.opts
+exec -a ${UTGID} ${CLASS1_TASK} -opt=${MOOREOPTS}/DummyRead.opts
 
 #${CLASS1_TASK} -opt=${MOOREOPTS}/MoorePrescale.opts
 
