@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.2 2008-06-18 07:41:04 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.3 2008-07-18 09:49:39 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -40,7 +40,7 @@ STDigitCreator::STDigitCreator( const std::string& name,
   declareProperty("Saturation", m_saturation = 127.);
   declareProperty("DetType", m_detType = "TT");
   declareProperty("allStrips", m_allStrips = false);
-  declareProperty("useStatusConditions", m_useStatusConditions = false);
+  declareProperty("useStatusConditions", m_useStatusConditions = true);
 
 }
 
