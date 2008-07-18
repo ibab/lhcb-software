@@ -5,8 +5,205 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v24r1>2008-07-17 LHCbSys v24r1</A></H1><PRE>
+</PRE><H1><A NAME=v24r1>2008-07-18 LHCbSys v24r1</A></H1><PRE>
 This version uses Gaudi v20r1 and LCG_55
+
+- Packages modified: GaudiConf v10r11, KernelSys v8r1, LHCbKernel v8r6,
+    LHCbMath v3r1, L0MuonKernel v8r0, ProcessorKernel v5r1p1, DetSys v14r0,
+    CaloDet v9r0, CaloDetXmlCnv v3r2, DDDB v1r9, DetCond v12r1, DetDesc v18r7,
+    Magnet v4r0, MuonDet v8r2, STDet v4r3, VeloDet v13r2, XmlTools v6r1,
+    EventSys v24r6, DAQEvent v7r12, DigiEvent v2r7, L0Event v17r0,
+    RecEvent v2r13, TrackEvent v4r14, STTELL1Event v1r3, DAQSys v5r0,
+    MuonDAQ v4r3, OTDAQ v7r0, CondDBEntityResolver v5r1, CondDBUI v2r11,
+    DaVinciKernel v7r0, DaVinciMCKernel v2r10, LoKiCore v7r5, LoKiGen v7r5,
+    LoKiMC v7r5, LoKiPhys v7r6, L0Interfaces v1r2, MDF v3r11,
+    SimComponents v2r10p2, STKernel v1r6, Tell1Kernel v1r5
+
+- In GaudiConf v10r11
+  . DecodeRawEvent.opts : include L0 on-Demand options from L0DU package
+    (and remove L0DUReport specific line)
+
+- In LHCbKernel v8r6
+  . Protect FPEGuard for multiple definitions, i.e. add 'inline' keyword
+  . Fix FPEGuard implementation for Windows
+
+- In LHCbMath v3r1
+  . Add LHCbMath/MatrixInversion.h: matrix inversion for pos-def
+        symmetric matrices based on cholesky decomposition.
+  . Add LHCbMath/Digit.h:   
+        Templated function to get the Nth decimal digit for integer type
+  . Add LHCbMath/Bit.h: Function to check Nth bit of the integer type 
+
+- In L0MuonKernel v8r0
+  . Encoding of L0MuonProcData part 1 without compression
+  . Encoding of L0MuonCtrlCand
+    o Possibility to zero-supress bank with candidates
+    o By default, use the status to compute the number of candidates
+  . Decoding of bank version 2 without Zero suppression, improve error management
+  . Possibility to run witout M1 or M2 
+  . Bug fixes and improvements
+  . Fix some compilation warnings	
+
+- In ProcessorKernel v5r1p1
+  . Fix compilation warning (RegisterFactory.cpp) 
+
+- In CaloDet v9r0 (needs SQLDDDB v4r6)
+  . Adapt to new DDDB structure  : Calo / Calo-halves / Calo_area as DetElem
+    o new DeSubSubCalorimeter  detElement (CaloArea)
+    o DeSubCalorimeter detElement (CaloSide was CaloArea with previous structure)
+    o adapt DeCalorimeter methods (buildCells, Cell_(), ...) to the change in DE
+      structure 
+  . Fix uninitialised m_pinArea in case of SPD 
+
+- In CaloDetXmlCnv v3r2
+  . Adapt to new structure in Calo DDDDB (add src/XmlDeSubSubCalorimeterCnv.cpp)
+
+- In DDDB v1r9 (needs SQLDDDB v4r6)
+  . In DC06.py, .opts: Change default DC06 tag to DC06-20080716
+                       Do not use conditions for DC06 magnetic field scaling
+  . In LHCb-2008.opts: Change default 2008 tag to head-20080716
+
+- In DetCond v12r1
+  . Fixed a tiny memory leak introduced in COOLConfSvc during the deSEALing.
+
+- In DetDesc v18r7
+  . Minor fix to the computation of the molar weight for computation of dE/dx
+    constants for mixtures
+  . Minor changes to AlignmentConditions to be able to subclass it
+  . Removed CLID for ParamValidDataObject (not used and unusable).
+  . In requirements, remove dependency on LHCbKernel, not needed
+
+- In Magnet v4r0
+  . Current and polarity now read from Conditions, used to calculate scaling
+    factor. Option exists to not use conditions (e.g. for DC06) 
+  . Clean up warnings
+
+- In MuonDet v8r2
+  . Add ODE name in number translation
+  . MuonReadoutCond : add protection to avoid FPE check to signal inexact FPE 
+
+- In STDet v4r3
+  . Bug fixes in dead strip handling
+  . Add some information in DeSTSector printout
+  . Add active fraction functions
+  . Bug fix in trajectory
+  . Change way interact with update service
+
+- In VeloDet v13r2
+  . Added the specialized alignment condition "VeloAlignCond", which is able to
+    get X and Y offsets from another condition (namely the one containing the
+    stepping motors informations). 
+  . The directory tests/data contains a minimal XML detector description (used
+    for the test) that can be seen as an example of how to use VeloAlignCond.
+  . Changed StripInfo class to store real strip conditions data from construction
+    and in situ tests before data taking. Strip can be LOWGAIN, NOISY, STRIPOK, 
+    DEAD, OPEN, PINHOLE, SHORT where the assumption is STRIPOK is the only 
+    useful sort of strip
+
+- In XmlTools v6r1
+  . Fixed bug #38890: XmlParserSvc does not work with default options.
+
+- In DAQEvent v7r12
+  . Added HltSelCandidates, HltPrimaryVertex, HltRoutingBits bank types
+  . Fixed the range of bits tested in OdinTypesFilter.cpp
+
+- In DigiEvent v2r7
+  . Add Tell1 strip number to STCluster class
+
+- In L0Event v17r0
+  . L0DUReport.xml : add new attribute valid() (validity of the report)
+  . L0MuonError : new object to contain errors for the L0Muon
+  . L0MuonInfo  : add a global status word
+  . L0DUConfig.xml : add new attribute recipe() (recipe name as std::string)
+  . Remove cmt/version.cmt file, breaks cmt when running with version directory!
+
+- In RecEvent v2r13
+  . Add new attributes to STSummary class
+
+- In TrackEvent v4r14
+  . Use GaudiObjDesc to generate Measurement::detectorElement 
+
+- In  STTELL1Event v1r3
+  . Add source id to eventinfo 
+  . Changes in printout
+  . Bug fix in fillErrorInfo
+  . Tidy up in STTELL1BoardErrorBank
+  . Bug fix in findPCN [STTELL1Error]
+  . Remove cmt/version.cmt file, breaks cmt when running with version directory!
+
+- In MuonDAQ v4r3
+  . Add check that all tell1 headers are consistent ( version and source id)
+  . Improve the Tell1 header decoding, statistics is printed and end of job in
+    case of errors 
+
+- In OTDAQ v7r0
+  . Fix tables for Hardware to Software conversion. N.B., this change breaks
+    the decoding of any data encoded with OTDAQ v6r0
+
+- In CondDBEntityResolver v5r1
+  . Fixed a problem in the implementation of the IFileAccess interface.
+
+- In CondDBUI v2r11
+  . Added method CondDB.isMultiVersionFolder.
+  . Removed some obsolete files:
+    o cmt/dblookup.xml
+    o scripts/create_SQLDDDB.py
+  . Converted the python module CondDBUI.Admin to a module with sub-modules
+  . Added the scripts
+    o CondDBAdmin_Commit.py: takes user-provided patches and apply them to
+                             official database.
+    o CondDBAdmin_MakeSnapshot.py: simple script to make CondDB snapshots.
+    o CondDBAdmin_Commit.py: takes user-provided patches and apply them to
+                             official database.
+  . Modify CondDBBrowser.py to accept on the command line the name of a CondDB
+    partition and open the corresponding database (guessed from SQLDDDB options)
+  . Minor improvements in other scripts
+
+- In DaVinciKernel v7r0
+  . Kernel/ISetInputParticles.h, src/Lib/ISetInputParticles.cpp:
+    new interface to allow some "tool-like" usage of CombineParticle algorithm.
+    the related function
+  . Make IGeomDispCalcularor obsolete in DVAlgorithm, but keep it for the time
+    being, reflect this in IOnOffline and IContextTool
+  . Remove IParticle2VertexAsct tool. 
+
+- In DaVinciMCKernel v2r10
+  . Updated IDaVinciAssociatorsWrapper.h to allow a default argument of 0 for
+    the container containg particle to be associated.  
+
+- In LoKiCore v7r5
+  . LoKi/shifts.h: fix the  shifting function for signed types
+  . Many fixes for decay finder
+  . New algorithms for "inclusive" matching
+
+- In LoKiGen v7r5
+  . Many changes for (Gen) Decay Finder 
+
+- In LoKiMC v7r5
+  . Add the function LoKi::MCVertices::decayVertex to access the decay vertex 
+  . Many changes for (MC) Decay Finder 
+
+- In LoKiPhys v7r6
+  . Many changes for Decay Finder 
+
+- In L0Interfaces v1r2
+  . IL0DUFromRawTool : new virtual method roStatus() that returns the 
+                       RawBankReadoutStatus
+  . Remove cmt/version.cmt file, breaks cmt when running with version directory!
+
+- In MDF v3r11
+  . Fix bug in ALDER 32 checksum calculation.
+
+- In SimComponents v2r10p2
+  . Fix compiler warning in mclexer.icpp
+
+- In STKernel v1r6
+  . Be more friendly for python
+  . Extend ISTReadoutTool interface
+  . Add dictionaries for STTell1Board and STTell1ID
+
+- In Tell1Kernel v1r5
+  . Remove cmt/version.cmt file, breaks cmt when running with version directory!
 
 </PRE><H1><A NAME=v24r0>2008-07-04 LHCbSys v24r0</A></H1><PRE>
 This version uses Gaudi v20r1 and LCG_55
