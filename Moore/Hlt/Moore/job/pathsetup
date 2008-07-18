@@ -1,0 +1,361 @@
+CMTROOT="/sw/lib/contrib/CMT/v1r20p20070208"; export CMTROOT
+CMTCONFIG=slc4_amd64_gcc34; export CMTCONFIG
+GAUDICONFROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/GaudiConf/v10r9"; export GAUDICONFROOT
+DDDBROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/DDDB/v1r7"; export DDDBROOT
+CONDDBENTITYRESOLVERROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tools/CondDBEntityResolver/v4r1p1"; export CONDDBENTITYRESOLVERROOT
+DETCONDROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/DetCond/v11r11"; export DETCONDROOT
+RECSYSROOT="/sw/lib/lhcb/REC/REC_v5r7/RecSys/v5r7"; export RECSYSROOT
+TRACKSYSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/TrackSys/v4r14"; export TRACKSYSROOT
+TRACKPYTHONROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackPython/v3r1"; export TRACKPYTHONROOT
+HLTSYSROOT="/home/bdepaula/cmtuser/Moore_v4r2/HltSys/v3r3"; export HLTSYSROOT
+HLTCOMMONROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltCommon/v3r3"; export HLTCOMMONROOT
+LOKITRIGGERROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Phys/LoKiTrigger/v7r3"; export LOKITRIGGERROOT
+PHYSSYSROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/PhysSys/v6r13"; export PHYSSYSROOT
+DAVINCITOOLSROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/DaVinciTools/v16r1"; export DAVINCITOOLSROOT
+LOKIARRAYFUNCTORSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/LoKiArrayFunctors/v7r4"; export LOKIARRAYFUNCTORSROOT
+LOKIPHYSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/LoKiPhys/v7r4"; export LOKIPHYSROOT
+LOKINUMBERSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/LoKiNumbers/v7r3"; export LOKINUMBERSROOT
+HLTPYTHONROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltPython/v1r6"; export HLTPYTHONROOT
+GAUDIPYTHONROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPython/v8r19"; export GAUDIPYTHONROOT
+LHCBALGSROOT="/home/bdepaula/cmtuser/Moore_v4r2/Kernel/LHCbAlgs/v2r18"; export LHCBALGSROOT
+SIMCOMPONENTSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Sim/SimComponents/v2r10"; export SIMCOMPONENTSROOT
+LBCOMSYSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/LbcomSys/v6r18"; export LBCOMSYSROOT
+MUONASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Muon/MuonAssociators/v3r2"; export MUONASSOCIATORSROOT
+RICHMCMONITORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Rich/RichMCMonitors/v1r6"; export RICHMCMONITORSROOT
+RICHMCTOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Rich/RichMCTools/v3r9"; export RICHMCTOOLSROOT
+SITOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Si/SiTools/v1r5"; export SITOOLSROOT
+STCHECKERSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STCheckers/v2r5"; export STCHECKERSROOT
+RECCHECKERSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rec/RecCheckers/v1r0p1"; export RECCHECKERSROOT
+TRACKCHECKERSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackCheckers/v4r0"; export TRACKCHECKERSROOT
+TRACKIDEALPRROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackIdealPR/v2r15"; export TRACKIDEALPRROOT
+TRACKMCTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackMCTools/v2r17"; export TRACKMCTOOLSROOT
+RICHRECSYSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecSys/v3r10"; export RICHRECSYSROOT
+RICHPIDMERGEROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichPIDMerge/v2r5"; export RICHPIDMERGEROOT
+RICHLOCALPIDROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichLocalPID/v3r5"; export RICHLOCALPIDROOT
+RICHRECMCALGORITHMSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecMCAlgorithms/v1r1"; export RICHRECMCALGORITHMSROOT
+RICHRECMCTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecMCTools/v2r19"; export RICHRECMCTOOLSROOT
+RICHRECMONITORSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecMonitors/v2r18"; export RICHRECMONITORSROOT
+RICHRECQCROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecQC/v2r19"; export RICHRECQCROOT
+MCINTERFACESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/MCInterfaces/v1r5"; export MCINTERFACESROOT
+RICHDAQROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Rich/RichDAQ/v3r16"; export RICHDAQROOT
+RICHTOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Rich/RichTools/v2r20"; export RICHTOOLSROOT
+RICHGLOBALPIDROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichGlobalPID/v3r9"; export RICHGLOBALPIDROOT
+RICHHLTSYSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichHLTSys/v3r3"; export RICHHLTSYSROOT
+RICHHLTLOCALPIDROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichHLTLocalPID/v1r2"; export RICHHLTLOCALPIDROOT
+RICHRECTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecTools/v4r4"; export RICHRECTOOLSROOT
+RICHRECALGORITHMSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecAlgorithms/v2r10"; export RICHRECALGORITHMSROOT
+RICHRECPHOTONTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecPhotonTools/v1r4"; export RICHRECPHOTONTOOLSROOT
+RICHRECSTEREOTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecStereoTools/v1r2"; export RICHRECSTEREOTOOLSROOT
+RICHRECTRACKTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecTrackTools/v1r5"; export RICHRECTRACKTOOLSROOT
+RICHRECBASEROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Rich/RichRecBase/v3r14"; export RICHRECBASEROOT
+RICHDETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/RichDet/v10r11"; export RICHDETROOT
+RICHKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Rich/RichKernel/v7r12"; export RICHKERNELROOT
+ASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Associators/Associators/v3r6"; export ASSOCIATORSROOT
+CALOASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Calo/CaloAssociators/v6r5"; export CALOASSOCIATORSROOT
+CALOTOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Calo/CaloTools/v5r1"; export CALOTOOLSROOT
+L0CALOROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/L0Calo/v9r13p1"; export L0CALOROOT
+L0DUROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/L0DU/v8r5"; export L0DUROOT
+CALOMONIDSTROOT="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloMoniDst/v3r0p2"; export CALOMONIDSTROOT
+CALOPIDSROOT="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloPIDs/v4r11"; export CALOPIDSROOT
+CALORECOROOT="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloReco/v4r12"; export CALORECOROOT
+GLOBALRECOROOT="/sw/lib/lhcb/REC/REC_v5r7/Rec/GlobalReco/v6r16"; export GLOBALRECOROOT
+HLTL0MUONCONFROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltL0MuonConf/v3r1"; export HLTL0MUONCONFROOT
+HLTL0CONFROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltL0Conf/v2r1"; export HLTL0CONFROOT
+PARTICLEMAKERROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/ParticleMaker/v4r0"; export PARTICLEMAKERROOT
+CALOUTILSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Calo/CaloUtils/v8r0p1"; export CALOUTILSROOT
+CALOINTERFACESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Calo/CaloInterfaces/v7r6"; export CALOINTERFACESROOT
+CALODAQROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Calo/CaloDAQ/v4r5"; export CALODAQROOT
+TISTOSTOBBINGROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Phys/TisTosTobbing/v2r4"; export TISTOSTOBBINGROOT
+CALODETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/CaloDet/v8r7"; export CALODETROOT
+VELOTOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Velo/VeloTools/v3r2"; export VELOTOOLSROOT
+TRACKASSOCIATORSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackAssociators/v2r6"; export TRACKASSOCIATORSROOT
+TRACKEXTRAPOLATORSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackExtrapolators/v2r18"; export TRACKEXTRAPOLATORSROOT
+TRACKFITTERROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackFitter/v2r24"; export TRACKFITTERROOT
+TRACKPROJECTORSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackProjectors/v2r18"; export TRACKPROJECTORSROOT
+TRACKMONITORSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackMonitors/v1r1"; export TRACKMONITORSROOT
+TRACKTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackTools/v3r7"; export TRACKTOOLSROOT
+TRACKUTILSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackUtils/v1r20"; export TRACKUTILSROOT
+TSAALGORITHMSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/TsaAlgorithms/v3r3"; export TSAALGORITHMSROOT
+TRACKSEEDINGROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/TrackSeeding/v1r3"; export TRACKSEEDINGROOT
+TRACKMATCHINGROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/TrackMatching/v2r17"; export TRACKMATCHINGROOT
+TRACKFITEVENTROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackFitEvent/v3r15"; export TRACKFITEVENTROOT
+PATALGORITHMSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/PatAlgorithms/v3r6"; export PATALGORITHMSROOT
+PATVELOROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/PatVelo/v3r6"; export PATVELOROOT
+PATVELOTTROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/PatVeloTT/v3r1"; export PATVELOTTROOT
+PATPVROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/PatPV/v3r3"; export PATPVROOT
+HLTTRACKINGROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltTracking/v3r3"; export HLTTRACKINGROOT
+HLTHADALLEYROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltHadAlley/v3r2"; export HLTHADALLEYROOT
+HLTMUONALLEYROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltMuonAlley/v2r4"; export HLTMUONALLEYROOT
+HLTKSHORTROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltKshort/v1r3"; export HLTKSHORTROOT
+DAVINCIFILTERROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/DaVinciFilter/v6r7"; export DAVINCIFILTERROOT
+PROTOPARTICLEFILTERROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/ProtoParticleFilter/v1r3"; export PROTOPARTICLEFILTERROOT
+DAVINCITRANSPORTERROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/DaVinciTransporter/v3r8"; export DAVINCITRANSPORTERROOT
+VERTEXFITROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/VertexFit/v5r1"; export VERTEXFITROOT
+HLTGLOBALMONITORROOT="/home/bdepaula/cmtuser/Moore_v4r2/Hlt/HltGlobalMonitor/v1r0"; export HLTGLOBALMONITORROOT
+TRACKINTERFACESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tr/TrackInterfaces/v3r15"; export TRACKINTERFACESROOT
+PATKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tf/PatKernel/v2r1"; export PATKERNELROOT
+PATCHECKERROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/PatChecker/v3r2"; export PATCHECKERROOT
+TSAKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tf/TsaKernel/v3r3"; export TSAKERNELROOT
+TFTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tf/TfTools/v1r5"; export TFTOOLSROOT
+TFKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tf/TfKernel/v2r5"; export TFKERNELROOT
+PUVETOROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/PuVeto/v7r3"; export PUVETOROOT
+VELOALGORITHMSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Velo/VeloAlgorithms/v4r7p1"; export VELOALGORITHMSROOT
+VELODAQROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Velo/VeloDAQ/v4r2"; export VELODAQROOT
+VELOSIMULATIONROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Velo/VeloSimulation/v3r2"; export VELOSIMULATIONROOT
+VELODETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/VeloDet/v13r1"; export VELODETROOT
+HLTSELCHECKERROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltSelChecker/v6r2"; export HLTSELCHECKERROOT
+DAVINCIMCKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/DaVinciMCKernel/v2r8"; export DAVINCIMCKERNELROOT
+LOKICOREROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/LoKiCore/v7r3"; export LOKICOREROOT
+OTDAQROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/OT/OTDAQ/v6r0"; export OTDAQROOT
+L0MUONROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/L0Muon/v7r8p1"; export L0MUONROOT
+MUONTRACKALIGNROOT="/sw/lib/lhcb/REC/REC_v5r7/Muon/MuonTrackAlign/v1r3"; export MUONTRACKALIGNROOT
+MUONDAQROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Muon/MuonDAQ/v4r1"; export MUONDAQROOT
+OTMONITORROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/OT/OTMonitor/v2r8"; export OTMONITORROOT
+OTASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/OT/OTAssociators/v4r2"; export OTASSOCIATORSROOT
+STALGORITHMSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STAlgorithms/v3r0"; export STALGORITHMSROOT
+GAUDIGSLROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiGSL/v6r9"; export GAUDIGSLROOT
+STASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STAssociators/v1r5"; export STASSOCIATORSROOT
+STDAQROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STDAQ/v3r7"; export STDAQROOT
+STTOOLSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STTools/v3r5"; export STTOOLSROOT
+VELOASSOCIATORSROOT="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Velo/VeloAssociators/v2r3"; export VELOASSOCIATORSROOT
+RECALGSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rec/RecAlgs/v1r6"; export RECALGSROOT
+RECUTILSROOT="/sw/lib/lhcb/REC/REC_v5r7/Rec/RecUtils/v1r5"; export RECUTILSROOT
+HLTSELECTIONSROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltSelections/v7r1"; export HLTSELECTIONSROOT
+FIDELROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Phys/Fidel/v1r0"; export FIDELROOT
+LOKIFITTERSROOT="/sw/lib/lhcb/PHYS/PHYS_v6r13/Phys/LoKiFitters/v1r1"; export LOKIFITTERSROOT
+DAVINCIKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Phys/DaVinciKernel/v6r14"; export DAVINCIKERNELROOT
+PATFITPARAMSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/PatFitParams/v3r1"; export PATFITPARAMSROOT
+NNTOOLSROOT="/sw/lib/lhcb/REC/REC_v5r7/Tr/NNTools/v1r2p1"; export NNTOOLSROOT
+MUONIDROOT="/sw/lib/lhcb/REC/REC_v5r7/Muon/MuonID/v5r2"; export MUONIDROOT
+MUONPIDCHECKERROOT="/sw/lib/lhcb/REC/REC_v5r7/Muon/MuonPIDChecker/v2r2"; export MUONPIDCHECKERROOT
+HLTMUONROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltMuon/v3r2"; export HLTMUONROOT
+HLTRECCHECKERROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltRecChecker/v1r6"; export HLTRECCHECKERROOT
+HLTBASEROOT="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltBase/v4r3"; export HLTBASEROOT
+GAUDIONLINEROOT="/home/online/Online_v4r10/Online/GaudiOnline"; export GAUDIONLINEROOT
+GAUDIALGROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiAlg/v10r5"; export GAUDIALGROOT
+GAUDIPOOLDBROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPoolDb/v3r1"; export GAUDIPOOLDBROOT
+MDFROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/DAQ/MDF/v3r10"; export MDFROOT
+GAUDIUTILSROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiUtils/v1r6"; export GAUDIUTILSROOT
+OTDETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/OTDet/v7r8"; export OTDETROOT
+STDETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/STDet/v4r1"; export STDETROOT
+MUONDETROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/MuonDet/v8r0p1"; export MUONDETROOT
+DETDESCCNVROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/DetDescCnv/v4r6"; export DETDESCCNVROOT
+DETDESCROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/DetDesc/v18r5"; export DETDESCROOT
+STKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/ST/STKernel/v1r4"; export STKERNELROOT
+DAQEVENTROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Event/DAQEvent/v7r11"; export DAQEVENTROOT
+GENEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/GenEvent/v5r2"; export GENEVENTROOT
+LINKERINSTANCESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/LinkerInstances/v3r4"; export LINKERINSTANCESROOT
+MCEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/MCEvent/v2r8"; export MCEVENTROOT
+HLTEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/HltEvent/v8r9"; export HLTEVENTROOT
+PHYSEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/PhysEvent/v11r6"; export PHYSEVENTROOT
+RECEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/RecEvent/v2r12"; export RECEVENTROOT
+EVENTBASEROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/EventBase/v2r5"; export EVENTBASEROOT
+TRACKEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/TrackEvent/v4r13"; export TRACKEVENTROOT
+L0INTERFACESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/L0/L0Interfaces/v1r1"; export L0INTERFACESROOT
+L0EVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/L0Event/v16r10"; export L0EVENTROOT
+LINKEREVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/LinkerEvent/v3r4"; export LINKEREVENTROOT
+DIGIEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/DigiEvent/v2r6"; export DIGIEVENTROOT
+L0MUONKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/L0/L0MuonKernel/v7r4"; export L0MUONKERNELROOT
+PROCESSORKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/L0/ProcessorKernel/v5r1"; export PROCESSORKERNELROOT
+MUONKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Muon/MuonKernel/v4r0"; export MUONKERNELROOT
+VELOEVENTROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Event/VeloEvent/v16r4"; export VELOEVENTROOT
+LHCBKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/LHCbKernel/v8r4"; export LHCBKERNELROOT
+XMLTOOLSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Tools/XmlTools/v5r2"; export XMLTOOLSROOT
+GAUDISVCROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiSvc/v16r5"; export GAUDISVCROOT
+LHCBMATHROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/LHCbMath/v2r8"; export LHCBMATHROOT
+RELATIONSROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/Relations/v5r4"; export RELATIONSROOT
+RECINTERFACESROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Kernel/RecInterfaces/v1r0"; export RECINTERFACESROOT
+GAUDIKERNELROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiKernel/v24r0"; export GAUDIKERNELROOT
+CALOKERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Calo/CaloKernel/v5r1"; export CALOKERNELROOT
+SIDAQROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/Si/SiDAQ/v2r0"; export SIDAQROOT
+TELL1KERNELROOT="/sw/lib/lhcb/LHCB/LHCB_v23r7/DAQ/Tell1Kernel/v1r3"; export TELL1KERNELROOT
+DIMROOT="/sw/lib/lhcb/ONLINE/ONLINE_v4r10/Online/DIM/v17r5"; export DIMROOT
+ONLINEKERNELROOT="/home/online/Online_v4r10/Online/OnlineKernel"; export ONLINEKERNELROOT
+GAUDIPOLICYROOT="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPolicy/v8r2"; export GAUDIPOLICYROOT
+REFLEXROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Reflex"; export REFLEXROOT
+POOLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/POOL"; export POOLROOT
+ROOTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/ROOT"; export ROOTROOT
+PYTHONROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Python"; export PYTHONROOT
+GCCXMLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/GCCXML"; export GCCXMLROOT
+COOLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/COOL"; export COOLROOT
+SEALROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/SEAL"; export SEALROOT
+BOOSTROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/Boost"; export BOOSTROOT
+HEPMCROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/HepMC"; export HEPMCROOT
+CLHEPROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/CLHEP"; export CLHEPROOT
+AIDAROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/AIDA"; export AIDAROOT
+UUIDROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/uuid"; export UUIDROOT
+XERCESCROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/XercesC"; export XERCESCROOT
+PCREROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/PCRE"; export PCREROOT
+CORALROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/CORAL"; export CORALROOT
+RXROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/rx"; export RXROOT
+GSLROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/GSL"; export GSLROOT
+SQLITEROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/sqlite"; export SQLITEROOT
+ORACLEROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/oracle"; export ORACLEROOT
+LFCROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/lfc"; export LFCROOT
+LCGDMCOMMONROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/lcgdmcommon"; export LCGDMCOMMONROOT
+GLOBUSROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/globus"; export GLOBUSROOT
+VOMSAPICROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/vomsapic"; export VOMSAPICROOT
+RELAXROOT="/sw/lib/lcg/external/LCGCMT/LCGCMT_54e/LCG_Interfaces/RELAX"; export RELAXROOT
+SQLDDDBROOT="/sw/lib/lhcb/DBASE/Det/SQLDDDB/v4r4"; export SQLDDDBROOT
+PARAMFILESROOT="/sw/lib/lhcb/PARAM/ParamFiles/v7r1"; export PARAMFILESROOT
+FIELDMAPROOT="/sw/lib/lhcb/DBASE/FieldMap/v5r0"; export FIELDMAPROOT
+MOOREROOT="/home/bdepaula/cmtuser/Moore_v4r2/Hlt/Moore/v4r2"; export MOOREROOT
+CMTPATH="/home/bdepaula/cmtuser/Moore_v4r2:/home/online/Online_v4r10:/sw/lib/lhcb/MOORE/MOORE_v4r2:/sw/lib/lhcb/ONLINE/ONLINE_v4r10:/sw/lib/lhcb/LHCB/LHCB_v23r7:/sw/lib/lhcb/GAUDI/GAUDI_v19r9:/sw/lib/lhcb/DBASE:/sw/lib/lhcb/PARAM:/sw/lib/lcg/external/LCGCMT/LCGCMT_54e:/sw/lib/lhcb/HLT/HLT_v3r3:/sw/lib/lhcb/LBCOM/LBCOM_v6r18:/sw/lib/lhcb/REC/REC_v5r7:/sw/lib/lhcb/PHYS/PHYS_v6r13"; export CMTPATH
+PATH="/home/bdepaula/cmtuser/Moore_v4r2/InstallArea/scripts:/home/online/Online_v4r10/InstallArea/scripts:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/scripts:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/scripts:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/scripts:/sw/lib/lhcb/MOORE/MOORE_v4r2/InstallArea/scripts:/sw/lib/lhcb/HLT/HLT_v3r3/InstallArea/scripts:/sw/lib/lhcb/LBCOM/LBCOM_v6r18/InstallArea/scripts:/sw/lib/lhcb/REC/REC_v5r7/InstallArea/scripts:/sw/lib/lhcb/PHYS/PHYS_v6r13/InstallArea/scripts:/home/bdepaula/cmtuser/Moore_v4r2/InstallArea/slc4_amd64_gcc34/bin:/home/online/Online_v4r10/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/MOORE/MOORE_v4r2/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/HLT/HLT_v3r3/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/LBCOM/LBCOM_v6r18/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/REC/REC_v5r7/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lhcb/PHYS/PHYS_v6r13/InstallArea/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/POOL/POOL_2_7_4/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/Grid/globus/4.0.3-VDT-1.6.0/slc4_amd64_gcc34/globus/bin:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/sqlite/3.4.0/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/COOL/COOL_2_4_0/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/SEAL/SEAL_1_9_4/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/bin:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/bin:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/bin:/sw/lib/contrib/CMT/v1r20p20070208/Linux-x86_64:/sw/lib/lcg/external/Grid/LFC/1.6.7/slc4_amd64_gcc34/bin:/home/bdepaula/bin:/home/bdepaula/scripts:/usr/sue/bin:/usr/local/bin:/usr/local/bin/X11:/usr/bin:/bin:/usr/bin/X11:/cern/pro/bin:/opt/pvss/pvss2_v3.6/bin:/usr/kerberos/bin:/usr/X11R6/bin:/opt/fmc/bin:/usr/sbin:/group/online/bin:/group/online/scripts"; export PATH
+CLASSPATH="/sw/lib/contrib/CMT/v1r20p20070208/java"; export CLASSPATH
+unset include
+unset lib
+NEWCMTCONFIG="x86_64-slc46-gcc346"; export NEWCMTCONFIG
+MOOREOPTS="/home/bdepaula/cmtuser/Moore_v4r2/Hlt/Moore/v4r2/options"; export MOOREOPTS
+SITEROOT="/sw/lib"; export SITEROOT
+LD_LIBRARY_PATH="/home/bdepaula/cmtuser/Moore_v4r2/InstallArea/slc4_amd64_gcc34/lib:/home/online/Online_v4r10/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/MOORE/MOORE_v4r2/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/HLT/HLT_v3r3/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LBCOM/LBCOM_v6r18/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/REC/REC_v5r7/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/PHYS/PHYS_v6r13/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/RELAX/RELAX_1_1_11/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/POOL/POOL_2_7_4/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Grid/globus/4.0.3-VDT-1.6.0/slc4_amd64_gcc34/globus/lib:/sw/lib/lcg/external/oracle/10.2.0.3-full/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/sqlite/3.4.0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/GSL/1.10/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/COOL/COOL_2_4_0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/CORAL/CORAL_1_9_5/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/SEAL/SEAL_1_9_4/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/XercesC/2.8.0/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/HepMC/1.26.02/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/clhep/1.9.3.1/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Boost/1.34.1_python2.5/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/lib:/sw/lib/lcg/external/Grid/LFC/1.6.7/slc4_amd64_gcc34/lib64:/sw/lib/lcg/external/Grid/lcg-dm-common/1.6.7/slc4_amd64_gcc34/lib64:/sw/lib/lcg/external/Grid/voms-api-c/1.7.22/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib"; export LD_LIBRARY_PATH
+unset DYLD_LIBRARY_PATH
+PYTHONPATH="/home/bdepaula/cmtuser/Moore_v4r2/InstallArea/python:/home/online/Online_v4r10/InstallArea/python:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/python:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/python:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/python:/sw/lib/lhcb/MOORE/MOORE_v4r2/InstallArea/python:/sw/lib/lhcb/HLT/HLT_v3r3/InstallArea/python:/sw/lib/lhcb/LBCOM/LBCOM_v6r18/InstallArea/python:/sw/lib/lhcb/REC/REC_v5r7/InstallArea/python:/sw/lib/lhcb/PHYS/PHYS_v6r13/InstallArea/python:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPython/v8r19/python:/sw/lib/lcg/external/Grid/LFC/1.6.7/slc4_amd64_gcc34/lib64/python:/sw/lib/lcg/external/CORAL/CORAL_1_9_5/slc4_amd64_gcc34/python:/sw/lib/lcg/external/CORAL/CORAL_1_9_5/slc4_amd64_gcc34/lib:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/lib:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/lib/python2.5:/home/bdepaula/cmtuser/Moore_v4r2/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/MOORE/MOORE_v4r2/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/HLT/HLT_v3r3/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LHCB/LHCB_v23r7/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/LBCOM/LBCOM_v6r18/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/REC/REC_v5r7/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/PHYS/PHYS_v6r13/InstallArea/slc4_amd64_gcc34/lib:/sw/lib/lhcb/ONLINE/ONLINE_v4r10/InstallArea/slc4_amd64_gcc34/lib:/sw/oracle/linux64/python:/sw/lib/lcg/external/cx_Oracle/4.1.2/slc4_amd64_gcc34/lib/python:/sw/lib/lhcb/REC/REC_v5r7/Tr/TrackPython/v3r1/python:/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltPython/v1r6/python/modules:/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltPython/v1r6/python/examples:/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltPython/v1r6/python/scripts:/home/online/Online_v4r10/Online/OnlineKernel/python"; export PYTHONPATH
+MANPATH="/home/bdepaula/man:/usr/sue/man:/usr/local/man:/cern/man:/sw/lib/lcg/external/gccxml/0.7.0_20070615/slc4_amd64_gcc34/man:/sw/lib/lcg/external/root/5.18.00/slc4_amd64_gcc34/root/man:/sw/lib/lcg/external/root/5.18.00/src/root/man:/sw/lib/lcg/external/pcre/4.4/slc4_amd64_gcc34/man:/sw/lib/lcg/external/Grid/lcg-dm-common/1.6.7/slc4_amd64_gcc34/man:/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root/man:/sw/lib/lcg/external/root/5.18.00a/src/root/man:/sw/lib/lcg/external/Python/2.5/slc4_amd64_gcc34/man:/sw/lib/lcg/external/uuid/1.38/slc4_amd64_gcc34/man:/sw/lib/lcg/external/GSL/1.10/slc4_amd64_gcc34/man:/sw/lib/lcg/external/Grid/globus/4.0.3-VDT-1.6.0/slc4_amd64_gcc34/globus/man:/sw/lib/lcg/external/Grid/LFC/1.6.7/slc4_amd64_gcc34/man"; export MANPATH
+unset QMTEST_CLASS_PATH
+STDOPTS="/sw/lib/lhcb/LHCB/LHCB_v23r7/GaudiConf/v10r9/options"; export STDOPTS
+ROOTSYS="/sw/lib/lcg/external/root/5.18.00a/slc4_amd64_gcc34/root"; export ROOTSYS
+SQLITEDBPATH="/sw/lib/lhcb/DBASE/Det/SQLDDDB/v4r4/db"; export SQLITEDBPATH
+CORAL_LFC_BASEDIR="/grid/lhcb/database"; export CORAL_LFC_BASEDIR
+unset GaudiUtilsShr
+unset GaudiAlgShr
+SEAL_PLUGINS="/sw/lib/lcg/external/SEAL/SEAL_1_9_4/slc4_amd64_gcc34/lib/modules:/sw/lib/lcg/external/CORAL/CORAL_1_9_5/slc4_amd64_gcc34/lib/modules:/sw/lib/lcg/external/COOL/COOL_2_4_0/slc4_amd64_gcc34/lib/modules:/sw/lib/lcg/external/POOL/POOL_2_7_4/slc4_amd64_gcc34/lib/modules:/sw/lib/lcg/external/RELAX/RELAX_1_1_11/slc4_amd64_gcc34/lib/modules:/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPoolDb/v3r1/slc4_amd64_gcc34/modules"; export SEAL_PLUGINS
+unset DetCondShr
+unset XmlToolsShr
+unset CondDBEntityResolverShr
+TNS_ADMIN="${SITEROOT}/project/oracle/admin"; export TNS_ADMIN
+ORA_FPU_PRECISION="EXTENDED"; export ORA_FPU_PRECISION
+NLS_LANG="AMERICAN_AMERICA.WE8ISO8859P1"; export NLS_LANG
+FIELDMAP="/sw/lib/lhcb/DBASE/FieldMap/v5r0/cdf/field047.cdf"; export FIELDMAP
+unset GaudiSvcShr
+unset GaudiSvcTestShr
+JOBOPTSEARCHPATH="/sw/lib/lhcb/GAUDI/GAUDI_v19r9/GaudiPoolDb/v3r1/options"; export JOBOPTSEARCHPATH
+unset DAQEventShr
+unset LHCbAlgsShr
+unset SimComponentsShr
+unset AssociatorsShr
+CALODETOPTS="/sw/lib/lhcb/LHCB/LHCB_v23r7/Det/CaloDet/v8r7/options"; export CALODETOPTS
+unset CaloDetShr
+unset DetDescCnvShr
+unset OTDetShr
+unset STDetShr
+unset VeloDetShr
+unset LoKiCoreShr
+unset OTDAQShr
+unset PatKernelShr
+CALOASSOCIATORSOPTS="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/Calo/CaloAssociators/v6r5/options"; export CALOASSOCIATORSOPTS
+unset CaloAssociatorsShr
+unset CaloToolsShr
+L0CALOOPTS="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/L0Calo/v9r13p1/options"; export L0CALOOPTS
+unset CaloDAQShr
+unset L0CaloShr
+L0DUOPTS="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/L0/L0DU/v8r5/options"; export L0DUOPTS
+unset MuonDetShr
+unset MuonDAQShr
+unset L0MuonShr
+unset L0DUShr
+unset PuVetoShr
+unset MuonAssociatorsShr
+unset OTMonitorShr
+OTASSOCIATORSOPTS="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/OT/OTAssociators/v4r2/options"; export OTASSOCIATORSOPTS
+unset OTAssociatorsShr
+unset RichDetShr
+unset RichDAQShr
+unset RichMCMonitorsShr
+unset RichMCToolsShr
+unset RichToolsShr
+unset GaudiGSLShr
+unset SiToolsShr
+unset STAlgorithmsShr
+STASSOCIATORSOPTS="/sw/lib/lhcb/LBCOM/LBCOM_v6r18/ST/STAssociators/v1r5/options"; export STASSOCIATORSOPTS
+unset STAssociatorsShr
+unset STCheckersShr
+unset STDAQShr
+unset STToolsShr
+unset VeloAssociatorsShr
+unset VeloAlgorithmsShr
+unset VeloDAQShr
+unset VeloSimulationShr
+unset VeloToolsShr
+unset RecAlgsShr
+unset RecCheckersShr
+unset RecUtilsShr
+CALOMONIDSTOPTS="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloMoniDst/v3r0p2/options"; export CALOMONIDSTOPTS
+unset CaloMoniDstShr
+CALOPIDSOPTS="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloPIDs/v4r11/options"; export CALOPIDSOPTS
+unset CaloPIDsShr
+CALORECOOPTS="/sw/lib/lhcb/REC/REC_v5r7/Calo/CaloReco/v4r12/options"; export CALORECOOPTS
+unset CaloRecoShr
+unset PatCheckerShr
+unset PatFitParamsShr
+unset TrackAssociatorsShr
+unset TrackCheckersShr
+unset TrackExtrapolatorsShr
+unset TrackFitterShr
+unset TrackIdealPRShr
+unset TrackMCToolsShr
+unset TrackProjectorsShr
+unset TrackMonitorsShr
+unset TrackToolsShr
+unset TrackUtilsShr
+unset TsaAlgorithmsShr
+unset TrackSeedingShr
+unset TrackMatchingShr
+unset NNToolsShr
+unset PatAlgorithmsShr
+unset TfToolsShr
+unset PatVeloShr
+unset PatVeloTTShr
+unset PatPVShr
+unset MuonIDShr
+unset MuonPIDCheckerShr
+unset MuonTrackAlignShr
+RICHGLOBALPIDOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichGlobalPID/v3r9/options"; export RICHGLOBALPIDOPTS
+unset RichGlobalPIDShr
+unset RichHLTLocalPIDShr
+RICHHLTSYSOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichHLTSys/v3r3/options"; export RICHHLTSYSOPTS
+unset RichRecToolsShr
+unset RichRecAlgorithmsShr
+RICHLOCALPIDOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichLocalPID/v3r5/options"; export RICHLOCALPIDOPTS
+unset RichLocalPIDShr
+RICHPIDMERGEOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichPIDMerge/v2r5/options"; export RICHPIDMERGEOPTS
+unset RichPIDMergeShr
+unset RichRecMCAlgorithmsShr
+unset RichRecMCToolsShr
+RICHRECMONITORSOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecMonitors/v2r18/options"; export RICHRECMONITORSOPTS
+unset RichRecMonitorsShr
+unset RichRecPhotonToolsShr
+RICHRECQCOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecQC/v2r19/options"; export RICHRECQCOPTS
+unset RichRecQCShr
+unset RichRecStereoToolsShr
+RICHRECSYSOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rich/RichRecSys/v3r10/options"; export RICHRECSYSOPTS
+unset RichRecTrackToolsShr
+GLOBALRECOOPTS="/sw/lib/lhcb/REC/REC_v5r7/Rec/GlobalReco/v6r16/options"; export GLOBALRECOOPTS
+unset GlobalRecoShr
+unset LoKiTriggerShr
+unset HltCommonShr
+unset HltTrackingShr
+unset HltHadAlleyShr
+unset HltMuonShr
+unset HltMuonAlleyShr
+HLTLOCONFOPTS="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltL0Conf/v2r1/options"; export HLTLOCONFOPTS
+unset HltL0ConfShr
+HLTLOMUONCONFOPTS="/sw/lib/lhcb/HLT/HLT_v3r3/Hlt/HltL0MuonConf/v3r1/options"; export HLTLOMUONCONFOPTS
+unset HltL0MuonConfShr
+unset HltRecCheckerShr
+unset HltSelectionsShr
+unset FidelShr
+unset HltKshortShr
+unset HltSelCheckerShr
+unset TisTosTobbingShr
+unset DaVinciFilterShr
+unset ProtoParticleFilterShr
+unset LoKiArrayFunctorsShr
+unset DaVinciToolsShr
+unset DaVinciTransporterShr
+unset ParticleMakerShr
+unset VertexFitShr
+unset LoKiFittersShr
+unset HltGlobalMonitorShr
+alias Moore="/home/bdepaula/cmtuser/Moore_v4r2/Hlt/Moore/v4r2/slc4_amd64_gcc34/Moore.exe"
+
