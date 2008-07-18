@@ -52,7 +52,8 @@ TESCheck.OutputLevel  = 5;
 EventNodeKiller.Nodes = { "Rec", "Raw", "Link/Rec" };
 
 // Reconstruction phase
-#include "$RECSYSROOT/options/Reco.opts"
+#include "$RECSYSROOT/options/Reco.py"
+//#include "$RECSYSROOT/options/Reco.opts"
 
 // Monitoring phase (monitoring independent of MC truth)
 #include "$BRUNELOPTS/BrunelMoni.opts"

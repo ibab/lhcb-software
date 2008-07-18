@@ -1,5 +1,5 @@
 package Brunel
-version v32r8
+version v33r0
 
 branches doc cmt job options
 
@@ -16,7 +16,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 
 # Databases
 use DDDB               v1r*  Det            -no_auto_imports
-use ParamFiles         v7r1                 -no_auto_imports
+use ParamFiles         v7r2                 -no_auto_imports
 use FieldMap           v5r*                 -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
@@ -40,12 +40,7 @@ use LbcomSys           v*                   -no_auto_imports
 # The whole REC project
 use RecSys             v*                   -no_auto_imports
 
-#===== build Brunel =========================
-application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp
-# ========================= set macros ============================
-
-macro Brunel_linkopts    "$(application_linkopts)"
-
+# set up the application
 apply_pattern application_path
 apply_pattern install_python_modules
 apply_pattern GaudiApp

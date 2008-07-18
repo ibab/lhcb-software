@@ -3,9 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
- - Add usePatSeeding and expertTracking switches to Brunel configurables - SHM
- - move call for tracking options for fieldOff and veloOpen to
-   tracking scripts instead of Brunel main script - SHM
+</PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
+ - In requirements:
+   . Remove creation of Brunel.exe, only gaudirun.py is supported in this version 
+   . use ParamFiles v7r2
+ - In python/Brunel/Configuration.py, options/Brunel-Default.py:
+   . Add expertTracking switches to Brunel configurables. 
+     Supported values are: ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
+   . Add more checks on input arguments
+   . Move handling of options for fieldOff and veloOpen to tracking scripts
+ - In Brunel.opts: include Reco.py instead of Reco.opts
 
 </PRE><H1><A NAME=v32r8>2008-07-04 Brunel v32r8</A></H1><PRE>
  - Add Brunel-2008.py and 2008-Files.py, example job for 2008 simulated data

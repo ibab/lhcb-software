@@ -28,10 +28,8 @@ Brunel().EvtMax       = -1      # Number of events to process
 # Brunel().mainOptions  = "$BRUNELOPTS/Brunel.opts" # top level options to import
 # Brunel().monitors += ["SC","FPE"] # Add some monitors. SC: StatusCode check
 #                                                 FPE: Floating Point exceptions
-# Brunel().usePatSeeding   = False # set to True for switching on PatSeeding and
-#                                   switching off TsaSeeding
 # Brunel().expertTracking += [] # Add some expert tracking switches
-#                                "simplifiedGeometry", "noDrifttimes"
+#                                "usePatSeeding", "simplifiedGeometry", "noDrifttimes"
 ##############################################################################
 
 ##############################################################################

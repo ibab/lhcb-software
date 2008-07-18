@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-07-15 17:43:54 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-07-18 12:39:25 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -9,9 +9,9 @@ from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc, ReadStripETC )
 
-class Brunel(ConfigurableUser):
 
-   
+
+class Brunel(ConfigurableUser):
 
     # Steering options
     __slots__ = {
@@ -29,10 +29,12 @@ class Brunel(ConfigurableUser):
        ,"condDBtag":"DEFAULT" # conditions database tag
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
-       ,"monitors": []        # list of monitors to execute
-       ,"usePatSeeding":   False # set True for PatSeeding instead of Tsa  
-       ,"expertTracking": []     # options "noDrifttimes" "simplifiedGeometry"
+       ,"monitors": []        # list of monitors to execute, see KnownMonitors
+       ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
+
+    KnownMonitors       = ["SC", "FPE"]
+    KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
 
     def getProp(self,name):
         if hasattr(self,name):
@@ -77,6 +79,10 @@ class Brunel(ConfigurableUser):
                 LHCbApp().skipEvents = skipEvents
 
     def defineOptions(self):
+        for prop in Brunel().getProp("expertTracking"):
+            if prop not in self.KnownExpertTracking:
+                raise RuntimeError("Unknown expertTracking option '%s'"%prop)
+
         inputType = self.getProp( "inputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
             raise TypeError( "Invalid outputType '%s'"%inputType )
@@ -119,6 +125,9 @@ class Brunel(ConfigurableUser):
     def defineMonitors(self):
         # get all defined monitors
         monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
+        for prop in monitors:
+            if prop not in self.KnownMonitors:
+                raise RuntimeError("Unknown monitor '%s'"%prop)
         # pass to LHCbApp any monitors not dealt with here
         LHCbApp().setProp("monitors", monitors)
 
