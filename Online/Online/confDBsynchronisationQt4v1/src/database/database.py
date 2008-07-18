@@ -109,6 +109,7 @@ class DataBase:
         self.connection = cx_Oracle.connect(user, password, name)
         print "DataBase.__init__(): connection created"
         self.logfile = logfile
+        self.log(str(self.connection)+" created")
         print "DataBase.__init__() end"
     """returns the connection"""
     def getConnection(self):
