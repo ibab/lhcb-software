@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-07-18 - Marco Cattaneo
+ - Add Kernel/ILHCbMagnetSvc.h : LHCb extensions to Gaudi IMagneticFieldSvc i/f 
+
 ! 2008-07-18 M Needham
  - Add ITNames, TTNames to python dict
 

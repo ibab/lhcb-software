@@ -31,6 +31,7 @@
   <class name = "IEvtTypeSvc"          />
   <class name = "IGenericTool"         />
   <class name = "IInAcceptance"        />
+  <class name = "ILHCbMagnetSvc"       />
   <class name = "IMCVeloFEType"        />
   <class name = "INormalizeTool"       />
   <class name = "ISiAmplifierResponse" />

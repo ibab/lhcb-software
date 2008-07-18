@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.11 2008-07-18 09:33:07 mneedham Exp $
+// $Id: LHCbKernelDict.h,v 1.12 2008-07-18 16:12:10 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -30,6 +30,7 @@
 #include "Kernel/IEvtTypeSvc.h"
 #include "Kernel/IGenericTool.h"
 #include "Kernel/IInAcceptance.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 #include "Kernel/IMCVeloFEType.h"
 #include "Kernel/INormalizeTool.h"
 #include "Kernel/ISiAmplifierResponse.h"
