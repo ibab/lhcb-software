@@ -6,7 +6,9 @@
 
 !============================ TrackSys v4r15 2008-07-18 ======================
 ! 2008-07-18 - Marco Cattaneo
- - In RecoTracking.py, "usePatSeeding" is now an "expertTracking" option
+ - In RecoTracking.py:
+   . "usePatSeeding" is now an "expertTracking" option
+   . Fix typo in name of "TrackClonesSeq"
 
 ! 2008-07-15 - Stephanie Hansmann-Menzemer
  - move Fitting.py and RecoTracking.py in option directory, remove python 

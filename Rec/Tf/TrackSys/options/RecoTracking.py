@@ -180,7 +180,7 @@ trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood] ## NeuralNetTmva() ]
 
 ## Clone finding and flagging
-trackClones = GaudiSequencer("TrackClones")
+trackClones = GaudiSequencer("TrackClonesSeq")
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ];
 trackClones.MeasureTime = True;
 importOptions( "$TRACKSYSROOT/options/TrackClones.opts" )
