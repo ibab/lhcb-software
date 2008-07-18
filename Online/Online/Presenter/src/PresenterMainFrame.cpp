@@ -1199,7 +1199,7 @@ void PresenterMainFrame::setDatabaseMode(const DatabaseMode & databaseMode) {
     default:
       if (m_verbosity >= Debug) {
         std::cout << "something went wrong when setting database mode."
-          << std::endl;
+                  << std::endl;
       }
       break;
   }
@@ -2187,6 +2187,13 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
       m_candidateDimServices.push_back(std::string(dimService));
     }        
   }
+  // HPD
+  std::string serviceType(s_HPD);
+  (serviceType.append(s_slash)).append("*");
+  m_dimBrowser->getServices(serviceType.c_str());
+  while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {            
+    m_candidateDimServices.push_back(std::string(dimService));
+  }
       
   if (0 != m_dimSvcListTree && 0 != m_dimBrowser) {
     const int nDimServers = m_dimBrowser->getServers();
@@ -2547,14 +2554,22 @@ void PresenterMainFrame::addDbHistoToPage()
 
 std::string PresenterMainFrame::assembleCurrentDimServiceName(OnlineHistogram* histogram) {
 
-  std::string dimServiceNameQueryBegining =  histogram->hstype() + s_slash +
-                                             m_currentPartition +
-                                             s_underscrore + "*";
+  std::string dimServiceNameQueryBegining;
+  if (s_P1D != histogram->hstype()) {
+     dimServiceNameQueryBegining = histogram->hstype() + s_slash +
+                                   m_currentPartition +
+                                   s_underscrore + "*";
+// HPD
+  } else {
+    dimServiceNameQueryBegining =  s_HPD + s_slash +
+                                   m_currentPartition +
+                                   s_underscrore + "*";    
+  }
+  
   char *dimService; 
   char *dimFormat;
   int dimType;
   std::string dimServiceName("");
-  
 
   m_dimBrowser->getServices(dimServiceNameQueryBegining.c_str());
   while(dimType = m_dimBrowser->getNextService(dimService, dimFormat)) {
@@ -2572,7 +2587,7 @@ std::string PresenterMainFrame::assembleCurrentDimServiceName(OnlineHistogram* h
         dimServiceName = dimServiceCandidate;
         break;
       }
-    }  else {
+    } else {
       if (m_verbosity >= Verbose) {
         std::cout << std::endl << "NOT found: " << dimService << std::endl;
       }
