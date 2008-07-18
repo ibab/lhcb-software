@@ -3,11 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
- -2008-07-17 Olivier Deschamps
- - Boole.opts & BooleMoni.opts : update L0 sequences according to changes in L0DU/ options.
-
-</PRE><H1><A NAME=v16r0>2008-07-17 Boole v16r0</A></H1><PRE>
+</PRE><H1><A NAME=v16r0>2008-07-18 Boole v16r0</A></H1><PRE>
  - In requirements, use ParamFiles v7r2
+ - In Boole.opts, BooleMoni.opts : update L0 sequences according to changes in
+                                   L0DU/options.
 
 </PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
  - Update 2008-Files.py with latest test file from Gauss v31r2
