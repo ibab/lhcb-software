@@ -1,14 +1,15 @@
-// $Id: MagneticFieldSvc.h,v 1.21 2008-07-17 12:42:06 smenzeme Exp $
+// $Id: MagneticFieldSvc.h,v 1.22 2008-07-18 16:11:24 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "DetDesc/Condition.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+
+#include "Kernel/ILHCbMagnetSvc.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
@@ -25,7 +26,7 @@ template <class TYPE> class SvcFactory;
  */
 
 class MagneticFieldSvc : public Service,
-                         virtual public IMagneticFieldSvc {
+                         virtual public ILHCbMagnetSvc {
 
 protected:
   
@@ -61,10 +62,10 @@ public:
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                        Gaudi::XYZVector& fvec ) const;
-
-  bool   UseRealMap() const { return m_useRealMap; } 
-  double GetScale() const { return m_scaleFactor; }
+                                  Gaudi::XYZVector& fvec ) const;
+  
+  bool   useRealMap() const { return m_useRealMap; } ///< accessor to m_useRealMap
+  double scaleFactor() const { return m_scaleFactor; } ///< accessor to m_scaleFactor
 
 private:
 
