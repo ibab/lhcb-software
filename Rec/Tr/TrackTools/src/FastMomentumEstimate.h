@@ -5,7 +5,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 
 // from TrackInterfaces
@@ -40,7 +40,7 @@ public:
 protected:
 
 private:
-  IMagneticFieldSvc* m_magFieldSvc;
+  ILHCbMagnetSvc*     m_magFieldSvc;
   double m_MomentumError;
   /// Define the parameters of the Z dependance
   std::vector<double> m_paramsTCubic;

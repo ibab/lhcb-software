@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.11 2008-07-17 13:16:49 smenzeme Exp $
+// $Id: PatSeedingTool.h,v 1.12 2008-07-18 16:10:14 cattanem Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -15,7 +15,7 @@
 #include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
+#include "Kernel/ILHCbMagnetSvc.h"
 
 #include "PatSeedTool.h"
 #include "PatSeedTrack.h"
@@ -179,7 +179,7 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	  double maxUsedFraction) const;
 
     private:
-      IMagneticFieldSvc* m_magFieldSvc;
+      ILHCbMagnetSvc*  m_magFieldSvc;
       std::string      m_inputTracksName;
 
       double m_zMagnet;

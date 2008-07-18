@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.h,v 1.4 2008-05-22 12:00:37 cattanem Exp $
+// $Id: PatMatchTool.h,v 1.5 2008-07-18 16:10:14 cattanem Exp $
 #ifndef PATMATCHTOOL_H 
 #define PATMATCHTOOL_H 1
 
@@ -14,7 +14,7 @@
 
 #include "TrackInterfaces/IMatchTool.h"            // Interface
 #include "TrackInterfaces/ITrackMatch.h"            // Interface for Hlt
-#include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 
 
@@ -110,7 +110,7 @@ private:
   
   // use tool for momentum parametrisation
   std::string m_fastMomentumToolName;
-  IFastMomentumEstimate *m_fastMomentumTool;
+  ITrackMomentumEstimate *m_fastMomentumTool;
   
   IAddTTClusterTool*   m_addTTClusterTool;
   

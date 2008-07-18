@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-07-18 - Marco Cattaneo
+ - Adapt tools to use new ILHCbMagnetSvc interface where needed
+ - Adapt PatMatchTool to use new ITrackMomentumEstimate interface
+
 ! 2008-07-17 - Stephanie Hansmann-Menzemer
  - adapt pattern reco algorithms to new B field map and to changes in
    momentum interfaces

@@ -1,4 +1,4 @@
-// $Id: PatMatchTool.cpp,v 1.5 2008-05-23 06:54:30 albrecht Exp $
+// $Id: PatMatchTool.cpp,v 1.6 2008-07-18 16:10:14 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ StatusCode PatMatchTool::initialize() {
 
   m_addTTClusterTool = tool<IAddTTClusterTool>( "PatAddTTCoord" );
 
-  m_fastMomentumTool = tool<IFastMomentumEstimate>( m_fastMomentumToolName );
+  m_fastMomentumTool = tool<ITrackMomentumEstimate>( m_fastMomentumToolName );
 
   return StatusCode::SUCCESS;
 }

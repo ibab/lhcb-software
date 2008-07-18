@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.19 2008-07-17 13:16:49 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.20 2008-07-18 16:10:14 cattanem Exp $
 // Include files
 
 #include <cmath>
@@ -177,11 +177,11 @@ StatusCode PatSeedingTool::initialize() {
 
   m_tHitManager    = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
 
-  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   if (m_initialArrow == -999 || m_momentumScale == -999 ||
       m_zMagnet == -999 || m_dRatio == -999 || m_yCorrection == -999){
-    if (m_magFieldSvc->UseRealMap()){
+    if (m_magFieldSvc->useRealMap()){
       m_initialArrow		= 4.25307e-09;
       m_momentumScale         = 44.141;
       m_dRatio		= -3.2265e-4;

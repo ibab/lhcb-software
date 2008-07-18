@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.8 2008-07-17 13:16:49 smenzeme Exp $
+// $Id: PatFwdTool.cpp,v 1.9 2008-07-18 16:10:14 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -66,7 +66,7 @@ StatusCode PatFwdTool::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
   if ( !sc ) return sc;
 
-  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   if ( 5 > m_zMagnetParams.size() || 6 > m_momentumParams.size() || 
        2 > m_xParams.size() || 2 > m_yParams.size()){
@@ -77,7 +77,7 @@ StatusCode PatFwdTool::initialize ( ) {
     m_yParams.clear();
 
     
-    if (m_magFieldSvc->UseRealMap()){
+    if (m_magFieldSvc->useRealMap()){
       m_zMagnetParams   = boost::assign::list_of (5208.05) (318.502) (-1223.87) (9.80117e-06) (-304.272);
       m_xParams         = boost::assign::list_of (17.5815) (-5.94803);
       m_yParams         = boost::assign::list_of (-979.0) (-0.684947);
@@ -605,7 +605,7 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
                   m_momentumParams[5] * track.slY2() * track.slY2() );
   double proj = sqrt( ( 1. + track.slX2() + track.slY2() ) / ( 1. + track.slX2() ) );
 
-  return track.dSlope() / ( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->GetScale());
+  return track.dSlope() / ( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->scaleFactor());
 
 
 }

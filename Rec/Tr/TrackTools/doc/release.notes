@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-07-18 - Marco Cattaneo
+ - Adapt tools to use new ILHCbMagnetSvc interface where needed
+
+! 2008-07-17 - Stephanie Hansmann-Menzemer
+ - Adapt to new B field map and to changes in momentum interfaces
+
 !======================== TrackTools v3r9 2008-07-17 ========================
 ! 2008-07-14 M Needham
  - Add use of dead strips to TTHitExpectation

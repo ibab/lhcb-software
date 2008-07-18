@@ -56,7 +56,7 @@ StatusCode FastMomentumEstimate::initialize()
   StatusCode sc = GaudiTool::initialize();
   if (sc.isFailure()) return sc;  // error already reported by base class
   
- m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
   if ( 4 != m_paramsTParab.size() || 4 != m_paramsTCubic.size() || 
        6 != m_paramsVeloTParab.size() || 6 != m_paramsVeloTCubic.size()){
@@ -66,7 +66,7 @@ StatusCode FastMomentumEstimate::initialize()
     m_paramsTCubic.clear();
     m_paramsVeloTCubic.clear();
 
-    if (m_magFieldSvc->UseRealMap()){ 
+    if (m_magFieldSvc->useRealMap()){ 
       m_paramsTParab      = boost::assign::list_of (-6.30991) (-4.83533) (-12.9192) (4.23025e-08);
       m_paramsVeloTParab  = boost::assign::list_of (1.20812) (0.636694) (-0.251334) (0.414017) (2.87247) (-20.0982);
       m_paramsTCubic      = boost::assign::list_of (-6.34025) (-4.85287) (-12.4491) (4.25461e-08);
@@ -104,7 +104,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
       m_paramsTParab[3] * x0 * x0;
   }
    
-  qOverP = x0/(p*1000000*m_magFieldSvc->GetScale());
+  qOverP = x0/(p*1000000*m_magFieldSvc->scaleFactor());
   sigmaQOverP = m_tResolution * std::fabs(qOverP);
 
   return StatusCode::SUCCESS;
@@ -140,7 +140,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* veloState, const 
     
   double proj = sqrt( ( 1. + txV*txV + tyV*tyV ) / ( 1. + txV*txV ) );
 
-  qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->GetScale());
+  qOverP = (txV-txT)/( coef * Gaudi::Units::GeV * proj * m_magFieldSvc->scaleFactor());
   sigmaQOverP = m_veloPlusTResolution * std::fabs(qOverP);
   
   return StatusCode::SUCCESS;
