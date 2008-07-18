@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-07-18 - Gerhard Raven & Bruno de Paula
+ - added online scripts
+
 ! 2008-07-11 - Gerhard Raven
  - configurable now 'does the right thing' on MDF files when told to
 ! 2008-07-10 - Gerhard Raven
