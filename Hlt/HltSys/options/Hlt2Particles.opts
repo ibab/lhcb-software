@@ -43,31 +43,26 @@ HltInsertTrackErrParam.InputLocation = "Hlt/Track/Forward" ;
 // -------------------------
 // Calo Reco & PIDs --------
 // -------------------------
-SeqHlt2Particles.Members += {"GaudiSequencer/RecoCALOSeq" };
+SeqHlt2Particles.Members += {"GaudiSequencer/HltRecoCALOSeq" };
 // Options for Calo reconstruction
 #include "$CALORECOROOT/options/HltCaloSeq.opts"
 
-/// @todo Special online setting (will be moved to $CALORECOOPT/HltCaloSeq.opts with next release)
-MergedPi0Rec.EtCut = 2.*GeV;
-ToolSvc.InSpd.Extrapolator = "TrackHerabExtrapolator";
-
-
 /// @todo temporary : redefine HLT track location to "Hlt/Track/ForwardCleaned"
-InSPD.Inputs =  {"Hlt/Track/Forward" };
-InPRS.Inputs =  {"Hlt/Track/Forward" };
-InHCAL.Inputs =  {"Hlt/Track/Forward" };
-InECAL.Inputs =  {"Hlt/Track/Forward" };
-InBREM.Inputs =  {"Hlt/Track/Forward" };
-ClusterMatch.Tracks =  {"Hlt/Track/Forward" };
-BremMatch.Tracks ={"Hlt/Tracks/Forward"};
-ElectronMatch.Tracks ={"Hlt/Tracks/Forward"};
-SpdE.Inputs =  {"Hlt/Track/Forward" };
-PrsE.Inputs =  {"Hlt/Track/Forward" };
-EcalE.Inputs =  {"Hlt/Track/Forward" };
-HcalE.Inputs =  {"Hlt/Track/Forward" };
-EcalChi22ID.Tracks ={"Hlt/Tracks/Forward"};
-ClustChi22ID.Tracks ={"Hlt/Tracks/Forward"};
-BremChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+HltInSPD.Inputs =  {"Hlt/Track/Forward" };
+HltInPRS.Inputs =  {"Hlt/Track/Forward" };
+HltInHCAL.Inputs =  {"Hlt/Track/Forward" };
+HltInECAL.Inputs =  {"Hlt/Track/Forward" };
+HltInBREM.Inputs =  {"Hlt/Track/Forward" };
+HltClusterMatch.Tracks =  {"Hlt/Track/Forward" };
+HltBremMatch.Tracks ={"Hlt/Tracks/Forward"};
+HltElectronMatch.Tracks ={"Hlt/Tracks/Forward"};
+HltSpdE.Inputs =  {"Hlt/Track/Forward" };
+HltPrsE.Inputs =  {"Hlt/Track/Forward" };
+HltEcalE.Inputs =  {"Hlt/Track/Forward" };
+HltHcalE.Inputs =  {"Hlt/Track/Forward" };
+HltEcalChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+HltClustChi22ID.Tracks ={"Hlt/Tracks/Forward"};
+HltBremChi22ID.Tracks ={"Hlt/Tracks/Forward"};
 
 //---------------------------------------------------------------------
 // MuonID
@@ -118,7 +113,6 @@ Hlt2ChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/Charged" ;
 // NeutralProtoPAlg
 //---------------------------------------------------------------------
 SeqHlt2Particles.Members += { "NeutralProtoPAlg/HltNeutralProtoPAlg" } ;
-#include "$CALOPIDSROOT/options/PhotonPDF.opts"
 
 
 //---------------------------------------------------------------------

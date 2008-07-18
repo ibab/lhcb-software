@@ -5,6 +5,14 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+
+
+
+
+=======
+! 2008-07-18 - Olivier Deschamps
+ - update calo reco sequence in Hlt2
+
 ! 2008-07-16 - Patrick Koppenburg
  - Hlt2Shared.opts becore .py
 
