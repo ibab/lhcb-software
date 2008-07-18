@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.2 2008-07-18 08:49:16 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.3 2008-07-18 11:07:09 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -151,10 +151,10 @@ void CollectLumiData::collect() {
   LHCb::HltLumiSummary* hltLS= new LHCb::HltLumiSummary();
 
   // add tracks
-  hltLS->addInfo((short) LHCb::HltLumiSummary::RZVelo, m_nRZVelo);
+  hltLS->addInfo( (short) LHCb::HltLumiSummary::RZVelo, m_nRZVelo);
   
   // add vertices
-  hltLS->addInfo((short) LHCb::HltLumiSummary::PV2D, m_nPV2D);
+  hltLS->addInfo( (short) LHCb::HltLumiSummary::PV2D, m_nPV2D);
 
   m_HltLumiSummarys->insert( hltLS );
 
