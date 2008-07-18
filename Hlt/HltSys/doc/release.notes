@@ -5,11 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-07-18 - Patrick Koppenburg
+ - Remove it again
 
-
-
-
-=======
 ! 2008-07-18 - Gerhard Raven
  - Add HltGlobalMonitor to requirements
 
