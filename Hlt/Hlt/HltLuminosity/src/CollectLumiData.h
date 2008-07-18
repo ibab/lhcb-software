@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.h,v 1.1.1.1 2008-07-17 08:50:25 panmanj Exp $
+// $Id: CollectLumiData.h,v 1.2 2008-07-18 08:49:16 panmanj Exp $
 #ifndef COLLECTLUMIDATA_H 
 #define COLLECTLUMIDATA_H 1
 
@@ -34,10 +34,10 @@ public:
 protected:
   std::string m_RZVeloContainerName;
   const LHCb::Tracks* m_RZVelo;
-  short m_nRZVelo;
+  unsigned short m_nRZVelo;
   std::string m_PV2DContainerName;
   const LHCb::RecVertices* m_PV2D;
-  short m_nPV2D;
+  unsigned short m_nPV2D;
 
   std::string m_OutputContainerName;
   LHCb::HltLumiSummarys* m_HltLumiSummarys;

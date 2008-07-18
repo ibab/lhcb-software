@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.1.1.1 2008-07-17 08:50:25 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.2 2008-07-18 08:49:16 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -94,7 +94,7 @@ StatusCode CollectLumiData::execute() {
     if (m_printing_verbose) 
       verbose() << "found " << n_RZVelo << " RZVelo tracks." << endreq ;
   }
-  m_nRZVelo = (short) n_RZVelo;
+  m_nRZVelo = (unsigned short) n_RZVelo;
   debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endreq ;
 
   // ------------------------------------------
@@ -114,7 +114,7 @@ StatusCode CollectLumiData::execute() {
     if (m_printing_verbose) 
       verbose() << "found " << n_PV2D << " PV2D vertices." << endreq ;
   }
-  m_nPV2D = (short) n_PV2D;
+  m_nPV2D = (unsigned short) n_PV2D;
   debug() << "There are " << n_PV2D << " vertices in " << m_PV2DContainerName <<  endreq ;
 
   // ------------------------------------------
@@ -151,10 +151,10 @@ void CollectLumiData::collect() {
   LHCb::HltLumiSummary* hltLS= new LHCb::HltLumiSummary();
 
   // add tracks
-  hltLS->addInfo(LHCb::HltLumiSummary::RZVelo, m_nRZVelo);
+  hltLS->addInfo((short) LHCb::HltLumiSummary::RZVelo, m_nRZVelo);
   
   // add vertices
-  hltLS->addInfo(LHCb::HltLumiSummary::PV2D, m_nPV2D);
+  hltLS->addInfo((short) LHCb::HltLumiSummary::PV2D, m_nPV2D);
 
   m_HltLumiSummarys->insert( hltLS );
 
