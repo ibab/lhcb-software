@@ -9,8 +9,8 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").outputLocation = "Rec/Track/Seed"
 ## Hit cleaning options
 Tf__Tsa__Seed("TsaSeed").addTool( Tf__Tsa__TStationHitManager("TsaDataManager") )
-Tf__Tsa__Seed("TsaSeed").TsaDataManager.CleanITHits = True;
-Tf__Tsa__Seed("TsaSeed").TsaDataManager.CleanOTHits = True;
+Tf__Tsa__TStationHitManager("TsaDataManager").CleanITHits = True;
+Tf__Tsa__TStationHitManager("TsaDataManager").CleanOTHits = True;
   
 Tf__Tsa__Seed("TsaSeed").addTool(Tf__Tsa__ITXSearch(), name="xSearchS0")
 Tf__Tsa__Seed("TsaSeed").addTool(Tf__Tsa__ITXSearch(), name="xSearchS1")
