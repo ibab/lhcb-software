@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-07-18 M Needham
+ - Add ITNames, TTNames to python dict
+
 !===================== LHCbKernel v8r6 2008-07-16 ========================
 ! 2008-07-15 Gerhard Raven, M.Cattaneo
  - protect FPEGuard for multiple definitions, i.e. add 'inline' keyword

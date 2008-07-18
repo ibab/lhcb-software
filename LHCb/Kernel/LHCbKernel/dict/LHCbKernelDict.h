@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.10 2008-06-17 21:46:39 pkoppenb Exp $
+// $Id: LHCbKernelDict.h,v 1.11 2008-07-18 09:33:07 mneedham Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -36,6 +36,8 @@
 #include "Kernel/ISTClusterPosition.h"
 #include "Kernel/ITrajPoca.h"
 #include "Kernel/IUsedLHCbID.h"
+#include "Kernel/TTNames.h"
+#include "Kernel/ITNames.h"
 
 // end include files
 

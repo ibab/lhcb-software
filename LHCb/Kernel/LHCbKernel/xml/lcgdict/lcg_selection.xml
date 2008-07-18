@@ -37,6 +37,8 @@
   <class name = "ISTClusterPosition"   />
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
+  <class name = "TTNames.h" />
+  <class name = "ITNames.h" />
 <!--- These should really be moved to GaudiKernel or Reflex --> 
   <class name="std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>" />
 </lcgdict>
