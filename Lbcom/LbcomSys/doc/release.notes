@@ -9,6 +9,59 @@
 </PRE><H1><A NAME=v6r20>2008-07-18 LbcomSys v6r20</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r1
 
+- Packages modified: L0Calo v9r15, L0DU v8r7, L0Muon v8r0, RichDAQ v3r18, 
+    STDAQ v3r9, VeloSimulation v3r4
+
+- In L0Calo v9r15
+  . L0CaloAlg: 
+    o add 'WriteOnTES' property. Writing L0CaloCandidate on TES is now
+      independent of 'StoreInBuffer' as in L0Muon and L0DU.
+    o decides which candidate to take in case of equality, to mimic electronics
+      behaviour
+  . src/DumpL0CaloBanks.h/.cpp: add the possibility to dump non-zero
+                                suppressed banks and error banks
+  . src/L0CaloCompare.cpp:
+    o protect against missing SPD and SumEt candidates
+    o give names to histograms and add comparison of SPD multiplicity.
+  . src/L0CaloMonit.cpp: give names to histograms
+
+- In L0DU v8r7
+  . Review options
+  . L0DUFromRawAlg : always produce L0DUReport on TES
+                     (flagged as non valid in case of corrupted/missing bank)
+  . Add new TCKs in L0DUConfig_0x000X.opts
+    (TCK=0x0001 -> 0x0007 : cosmics triggers as for july 2008 GCW)
+  . Add protection against missing bank in L0DURawBankMonitor
+  . Fix problem with ReadoutStatus in L0DUFromRaw
+  . Tune the warning verbosity
+
+- In L0Muon v8r0
+  . Protect raw bank writing for encoding errors
+  . Possibility to ask for compression of banks
+  . Clean the management of the output mode 
+  . Merge procVersion & bankVersion into a single tag : version 
+  . Decoding of bank version 2 : tested (without RLE compression)
+  . Use of L0MuonError (introduced in Event/L0Event)
+  . Possibility to run without M1 or M2
+
+- In RichDAQ v3r18
+  . Add an error message in the case an HPD is found in extended format, but
+    no errors where detected.
+ 
+- In STDAQ v3r9
+  . Add dependency on RecEvent
+  . Allow possibility to force the bank version
+  . Add functionality to see which banks are missing
+  . Follow changes in readout tool interface
+  . Remove use of ODIN 
+  . Move some code to base class/change some printouts
+
+- In VeloSimulation v3r4
+  . Changed code to use real bad strip list from DeVeloSensor to kill bad strips
+  . Changed VeloSim.opts to make 1% bad strips in pileup (random) and only 
+    known bad strips dead in main VELO. 
+  . Tweaked code for gsl_sf_erf_Q wrapper to reduce unnecessary calls
+
 </PRE><H1><A NAME=v6r19>2008-07-04 LbcomSys v6r19</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r0
 
