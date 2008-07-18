@@ -22,6 +22,7 @@ use HltL0Conf           v2r2    Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r2    Hlt   # Alessia Satta/Sandra Amato  
 
 use HltRecChecker	v1r6	Hlt   # Jose Angel Hernando-Morata
+use HltGlobalMonitor	v1r1	Hlt   # Bruno de Paula
 
 # And now for something completely different
 use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata

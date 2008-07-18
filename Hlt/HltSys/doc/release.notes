@@ -10,6 +10,9 @@ Purpose: LHCb High Level Trigger packages.
 
 
 =======
+! 2008-07-18 - Gerhard Raven
+ - Add HltGlobalMonitor to requirements
+
 ! 2008-07-18 - Olivier Deschamps
  - update calo reco sequence in Hlt2
 
