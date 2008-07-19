@@ -27,6 +27,7 @@
 # running help(XXX) at the ganga prompt. I.e.
 #  > help(Dirac)
 # For more information on the Dirac backend
+#
 #===============================================================================
 
 #-------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ j.application.optsfile = [ File ( j.application.user_release_area +
                                   + j.application.version + '/options/DaVinci.py' ) ]
 # Extra options
 # Appended to the end of the main options to override default settings
-#myApplication.extraopts = ''
+j.application.extraopts = ''
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
