@@ -4,7 +4,8 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
-! 2008-07-18 - Marco Cattaneo
+! 2008-07-19 - Marco Cattaneo
+ - Fix compilation warning in TrackPtKick.cpp
  - Adapt tools to use new ILHCbMagnetSvc interface where needed
 
 ! 2008-07-17 - Stephanie Hansmann-Menzemer

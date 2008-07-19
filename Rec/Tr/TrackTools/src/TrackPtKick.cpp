@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.13 2008-07-17 12:55:51 smenzeme Exp $
+// $Id: TrackPtKick.cpp,v 1.14 2008-07-19 20:35:46 cattanem Exp $
 // Include files
 // -------------
 
@@ -80,17 +80,19 @@ StatusCode TrackPtKick::initialize()
 // Estimate the momentum P of a State
 //=============================================================================
 //
-StatusCode TrackPtKick::calculate( const LHCb::State* veloState, const LHCb::State* tState, 
+StatusCode TrackPtKick::calculate( const LHCb::State* /* veloState */,
+                                   const LHCb::State* tState, 
 				   double& qOverP, double& sigmaQOverP, bool tCubicFit ) const
 {
-  calculate (tState, qOverP, sigmaQOverP, tCubicFit);
+  return calculate (tState, qOverP, sigmaQOverP, tCubicFit);
 }
 
 //=============================================================================
 // Estimate the momentum P of a State
 //=============================================================================
-StatusCode TrackPtKick::calculate( const LHCb::State* tState, double& qOverP, double& sigmaQOverP,
-				bool tCubicFit ) const
+StatusCode TrackPtKick::calculate( const LHCb::State* tState,
+                                   double& qOverP, double& sigmaQOverP,
+                                   bool /* tCubicFit */ ) const
 {
   // calculate intial estimate of track momentum assuming it came from
   // the primary vertex
