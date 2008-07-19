@@ -436,7 +436,7 @@ StatusCode TrackSeedFind::getData() {
       typedef FastClusterContainer<LHCb::STLiteCluster, int> STLiteClusters;
       STLiteClusters* ITClus = get<STLiteClusters>( m_ITclusterPath );
       if ( m_verbose )
-        verbose() << " ITClus pointer " << (int) ITClus << endreq;
+        verbose() << " ITClus pointer " << ITClus << endreq;
    
       LHCb::STLiteCluster::FastContainer::iterator It;
       //LHCb::STLiteCluster* itclus;
@@ -1792,7 +1792,7 @@ StatusCode TrackSeedFind::maketracks() {
    if (trackCands.size()<1) return StatusCode::SUCCESS;
 
    //m_measProvider->load();
-   LHCb::STClusters* itClusters = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
+   //   LHCb::STClusters* itClusters = get<LHCb::STClusters>(LHCb::STClusterLocation::ITClusters);
    LHCb::Tracks* trSeedTracksCont;
 
    if (exist <LHCb::Tracks>(m_trackLocation)) trSeedTracksCont = get<LHCb::Tracks>(m_trackLocation);  
