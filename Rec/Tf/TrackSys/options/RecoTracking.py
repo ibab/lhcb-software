@@ -17,7 +17,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             PatSeeding,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackEventCloneKiller, TrackPrepareVelo, TrackContainerCopy,
-                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, OTHitCreator)
+                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator)
 
 ## Start TransportSvc, needed by track fit
 ApplicationMgr().ExtSvc.append("TransportSvc")
@@ -177,7 +177,8 @@ GaudiSequencer("TrackVeloFitSeq").Members += [ copyVelo ]
 trackAddLikelihood = TrackAddLikelihood()
 trackAddLikelihood.addTool( TrackLikelihood, name = "TrackMatching_likTool" )
 trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
-GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood] ## NeuralNetTmva() ]
+GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood, NeuralNetTmva() ]
+importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
 
 ## Clone finding and flagging
 trackClones = GaudiSequencer("TrackClonesSeq")
