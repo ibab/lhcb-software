@@ -51,7 +51,7 @@ j.application.optsfile = [ File ( j.application.user_release_area +
                                   + j.application.version + '/options/DaVinci.py' ) ]
 # Extra options
 # Appended to the end of the main options to override default settings
-j.application.extraopts = ''
+#j.application.extraopts = ''
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
