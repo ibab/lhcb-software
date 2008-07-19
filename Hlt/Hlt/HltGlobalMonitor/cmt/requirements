@@ -13,7 +13,6 @@ include_path none
 # Used packages
 #============================================================================
 use GaudiAlg            v*
-use Gaucho              v*    Online
 
 
 use HltEvent            v*    Event
@@ -23,7 +22,6 @@ use TrackEvent          v*    Event
 use HltBase             v*    Hlt
 
 use TrackInterfaces     v*    Tr
-#use PatTools            v*    Pat
 
 use Boost        v*   LCG_Interfaces
 #============================================================================

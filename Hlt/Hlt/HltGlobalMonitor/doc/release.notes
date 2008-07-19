@@ -2,6 +2,8 @@ Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
+- remove explciit Gaucho dependency, update to work with Hlt v3r4
+
 !----v1r0>2007-02-11 HltGlobaMonitor v1r0-------
 -First release, for tests with the Online software
 -Takes information from HltSummary, makes and publishes histograms for the Global Monitoring of HLT counting alleys entries and success

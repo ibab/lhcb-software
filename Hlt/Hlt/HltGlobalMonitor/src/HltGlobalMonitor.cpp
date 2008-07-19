@@ -8,10 +8,6 @@
 
 // local
 #include "HltGlobalMonitor.h"
-//#include "InitHistos.h"
-#include "Event/HltEnums.h"
-//#include "Event/HltSummary.h"
-#include "HltBase/HltData.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
@@ -274,14 +270,15 @@ void HltGlobalMonitor::monitorAlleysinput() {
 //   stringKey keymu("HltMuonAlley");
 //   stringKey keymuhad("HltMuHadAlley");
 //   stringKey keyhad("HltHadAlley");
+   //TODO: pick up _all_ 'decisions' ....
    stringKey keyphys("PhysicsTrigger");
    stringKey keyrand("RandomTrigger");
-   if (hltData().selection(keyphys).decision()) {
+   if (dataSvc().selection(keyphys,this).decision()) {
 //      m_histoalleycall = plot1D(binMuonAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
       fill(m_histoalleycall, binMuonAlley, 1.);
       muonallacc=muonallacc+1;
    }
-    if (hltData().selection(keyrand).decision()){ 
+    if (dataSvc().selection(keyrand,this).decision()){ 
 //      Hlt::Histo* m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
 //      m_histoalleycall = plot1D(binMuonHadAlley,"AlleyCalls", "Alleys Called", 0, 6., 6, 1.);
       fill(m_histoalleycall, binMuonHadAlley, 1.);

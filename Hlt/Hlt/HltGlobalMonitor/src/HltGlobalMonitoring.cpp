@@ -3,15 +3,8 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-// #include "Event/L0CaloCandidate.h"
-// #include "Event/L0MuonCandidate.h"
-
 // local
 #include "HltGlobalMonitoring.h"
-//#include "InitHistos.h"
-#include "Event/HltEnums.h"
-//#include "Event/HltSummary.h"
-#include "HltBase/HltData.h"
 
 using namespace LHCb;
 
@@ -99,7 +92,7 @@ StatusCode HltGlobalMonitoring::execute() {
   _counter1++;  // count all evts
   monitorL0();
 
-  // IN THE EFF you can use the hltData() the FULL summary!
+  // IN THE EFF you can use the dataSvc() the FULL summary!
    monitorHLT();
 
 //  monitorAlleysinput();
@@ -165,7 +158,7 @@ void HltGlobalMonitoring::monitorAlleySpecific() {
 void HltGlobalMonitoring::monitorMuonAlley() {
 //Filling the histo for L0 Entry and Confirmation of the object
 //   stringKey keymu("MuonEntry");
-   if (hltData().selection(m_keymu).decision()) fillHisto(*m_histomuonalley, binL0entry, 1.);
+   if (dataSvc().selection(m_keymu,this).decision()) fillHisto(*m_histomuonalley, binL0entry, 1.);
 
 //Putting the different groups of the muon alley Trigger
    bool corr=false;
@@ -174,7 +167,7 @@ void HltGlobalMonitoring::monitorMuonAlley() {
    for (it = setKey.begin(); it != setKey.end(); it++ ){
      cont1=cont1+1;
      cont2=cont1;
-     if (hltData().selection((*it)).decision()){ 
+     if (dataSvc().selection((*it),this).decision()){ 
        // muonalleyacc=true;
        muonalleyacc=true;
        fillHisto(*m_histomuonalley, binTrigOr+cont1, 1.);
@@ -184,7 +177,7 @@ void HltGlobalMonitoring::monitorMuonAlley() {
          cont2=cont2+1;
 //         info() << "Alley 1" << *it << "Alley 2" << *it2 << endreq;
 //         info() << "cont 1" << cont1 << "cont 2" << cont2 << endreq;
-         if (hltData().selection((*it)).decision() && hltData().selection((*it2)).decision()){
+         if (dataSvc().selection(*it,this).decision() && dataSvc().selection(*it2,this).decision()){
            fill(m_histoMuonTrigCorr, binTrigOr+cont1, binTrigOr+cont2, 1.);
            corr=true;
          } 
@@ -197,32 +190,11 @@ if (muonalleyacc) fillHisto(*m_histomuonalley, binTrigOr, 1.);
 // Or of the correlation histo
 if (corr) fill(m_histoMuonTrigCorr,binTrigOr,binTrigOr,1.);
 };
-/*
-void HltGlobalMonitoring::monitorCaloAlley(LHCb::HltSummary* sum) {
-//Filling the histo for Alley Entry and Confirmation of L0 object
-if (CheckDecision(sum,HltEnums::CalEntry)) fillHisto(*m_histocaloalley, binL0entry, 1.);
-if (CheckDecision(sum,HltEnums::CalL0Conf)) fillHisto(*m_histocaloalley, binL0conf, 1.);
 
-//Filling Trigger of Calo Alley
-if (CheckDecision(sum,HltEnums::CalTrigger)){
-fillHisto(*m_histocaloalley, binTrigOr, 1.);
-}
-
-};
-void HltGlobalMonitoring::monitorMuonHadAlley(LHCb::HltSummary* sum) {
-//Filling the histo for Alley Entry and Confirmation of L0 object
-if (CheckDecision(sum,HltEnums::MuonHadEntry)) fillHisto(*m_histomuonhadalley, binL0entry, 1.);
-if (CheckDecision(sum,HltEnums::MuonHadL0Conf)) fillHisto(*m_histomuonhadalley, binL0conf, 1.);
-
-if (CheckDecision(sum,HltEnums::MuonHadTrigger)){
-fillHisto(*m_histomuonhadalley, binTrigOr, 1.);
-}
-};
-*/
 void HltGlobalMonitoring::monitorHadronAlley() {
 //Filling the histo for L0 Entry and Confirmation of the object
 //stringKey keyhad("L0EntryTriggerHadron");
-if (hltData().selection(m_keyhad).decision()) fillHisto(*m_histohadronalley, binL0entry, 1.);
+if (dataSvc().selection(m_keyhad,this).decision()) fillHisto(*m_histohadronalley, binL0entry, 1.);
 
 //Putting the different groups of the hadron alley Trigger
    bool corr=false;
@@ -231,7 +203,7 @@ if (hltData().selection(m_keyhad).decision()) fillHisto(*m_histohadronalley, bin
    for (it = setKeyHad.begin(); it != setKeyHad.end(); it++ ){
      cont1=cont1+1;
      cont2=cont1;
-     if (hltData().selection((*it)).decision()){ 
+     if (dataSvc().selection(*it,this).decision()){ 
        hadronalleyacc=true;
        fillHisto(*m_histohadronalley, binTrigOr+cont1, 1.);
        fill(m_histoHadronTrigCorr, binTrigOr+cont1, binTrigOr+cont1, 1.);
@@ -240,7 +212,7 @@ if (hltData().selection(m_keyhad).decision()) fillHisto(*m_histohadronalley, bin
          cont2=cont2+1;
          info() << "Alley 1" << *it << "Alley 2" << *it2 << endreq;
          info() << "cont 1" << cont1 << "cont 2" << cont2 << endreq;
-         if (hltData().selection((*it)).decision() && hltData().selection((*it2)).decision()){
+         if (dataSvc().selection(*it,this).decision() && dataSvc().selection(*it2,this).decision()){
            fill(m_histoHadronTrigCorr, binTrigOr+cont1, binTrigOr+cont2, 1.);
            corr=true;
          } 
@@ -262,22 +234,22 @@ void HltGlobalMonitoring::monitorAlleysinput() {
    stringKey keyele("EleL0Entry");
 //fill overall alley entry
    bool entries=false;
-   if (hltData().selection(m_keymu).decision()){ 
+   if (dataSvc().selection(m_keymu,this).decision()){ 
      fillHisto(*m_histoalleycall, binMuonAlley, 1.);
      fill(m_hcorrallcall,binMuonAlley, binMuonAlley, 1.);
      entries=true;
 }
-   if (hltData().selection(keymuhad).decision()){ 
+   if (dataSvc().selection(keymuhad,this).decision()){ 
      fillHisto(*m_histoalleycall, binMuonHadAlley, 1.);
      fill(m_hcorrallcall,binMuonHadAlley, binMuonHadAlley, 1.);
      entries=true;
 } 
-   if (hltData().selection(m_keyhad).decision()){ 
+   if (dataSvc().selection(m_keyhad,this).decision()){ 
      fillHisto(*m_histoalleycall, binHadronAlley, 1.);
      fill(m_hcorrallcall,binHadronAlley, binHadronAlley, 1.);
      entries=true;
 }
-   if (hltData().selection(keyele).decision()){ 
+   if (dataSvc().selection(keyele,this).decision()){ 
      fillHisto(*m_histoalleycall, binCaloAlley, 1.);
      fill(m_hcorrallcall,binCaloAlley, binCaloAlley, 1.);
      entries=true;
@@ -286,33 +258,33 @@ void HltGlobalMonitoring::monitorAlleysinput() {
 
 // Filling the correlation histo for Alley calls
 bool corr=false;
-if (hltData().selection(m_keymu).decision()&&
-    hltData().selection(keymuhad).decision()){
+if (dataSvc().selection(m_keymu,this).decision()&&
+    dataSvc().selection(keymuhad,this).decision()){
       fill(m_hcorrallcall,binMuonAlley, binMuonHadAlley,1.);
       corr=true;
 }
-if (hltData().selection(m_keymu).decision()&&
-    hltData().selection(m_keyhad).decision()){
+if (dataSvc().selection(m_keymu,this).decision()&&
+    dataSvc().selection(m_keyhad,this).decision()){
       fill(m_hcorrallcall,binMuonAlley,binHadronAlley,1.);
       corr=true;
 }
-if (hltData().selection(m_keymu).decision()&&
-    hltData().selection(keyele).decision()){
+if (dataSvc().selection(m_keymu,this).decision()&&
+    dataSvc().selection(keyele,this).decision()){
       fill(m_hcorrallcall,binMuonAlley,binCaloAlley,1.);
       corr=true;
 }
-if (hltData().selection(keymuhad).decision()&&
-    hltData().selection(m_keyhad).decision()){ 
+if (dataSvc().selection(keymuhad,this).decision()&&
+    dataSvc().selection(m_keyhad,this).decision()){ 
       fill(m_hcorrallcall,binMuonHadAlley, binHadronAlley,1.);
       corr=true;
 }
-if (hltData().selection(keymuhad).decision()&&
-    hltData().selection(keyele).decision()){ 
+if (dataSvc().selection(keymuhad,this).decision()&&
+    dataSvc().selection(keyele,this).decision()){ 
       fill(m_hcorrallcall,binMuonHadAlley, binCaloAlley,1.);
       corr=true;
 }
-if (hltData().selection(m_keyhad).decision()&&
-    hltData().selection(keyele).decision()){ 
+if (dataSvc().selection(m_keyhad,this).decision()&&
+    dataSvc().selection(keyele,this).decision()){ 
       fill(m_hcorrallcall,binHadronAlley, binCaloAlley,1.);
       corr=true;
 }
@@ -320,93 +292,6 @@ if (hltData().selection(m_keyhad).decision()&&
 if (corr) fill(m_hcorrallcall,binAlleyOr,binAlleyOr,1.);
 };
 
-/*void HltGlobalMonitoring::monitoracceptAlleys(LHCb::HltSummary* sum) {
-// trying to get the Hlt Summaries
-bool accep=false;
-if (CheckDecision(sum,HltEnums::MuonTriggerSingle)||
-CheckDecision(sum,HltEnums::MuonTriggerDiMuon)||
-CheckDecision(sum,HltEnums::MuonTriggerIPDiMuon)){ 
-fillHisto(*m_histoalleyacc, binMuonAlley, 1.);
-fill(m_hcorrallacc, binMuonAlley, binMuonAlley, 1.);
-accep=true;
-}
-
-if (CheckDecision(sum,HltEnums::MuonHadTrigger)){
-fillHisto(*m_histoalleyacc, binMuonHadAlley, 1.);
-fill(m_hcorrallacc, binMuonHadAlley, binMuonHadAlley, 1.);
-accep=true;
-}
-
-if (CheckDecision(sum,HltEnums::HadTrigger)){
-fillHisto(*m_histoalleyacc, binHadronAlley, 1.);
-fill(m_hcorrallacc, binHadronAlley, binHadronAlley, 1.);
-accep=true;
-}
-
-if (CheckDecision(sum,HltEnums::CalTrigger)){
-fillHisto(*m_histoalleyacc, binCaloAlley, 1.);
-fill(m_hcorrallacc, binCaloAlley, binCaloAlley, 1.);
-accep=true;
-}
-
-//     Filling 0 bin for the histos if any entry was made in the histo
-if (accep) fillHisto(*m_histoalleyacc, binAlleyOr, 1.);
-
-//Trying to put the correlation histo
-bool corr=false;
-if ((CheckDecision(sum,HltEnums::MuonTriggerSingle)||
-CheckDecision(sum,HltEnums::MuonTriggerDiMuon)||
-CheckDecision(sum,HltEnums::MuonTriggerIPDiMuon))&&
-(CheckDecision(sum,HltEnums::MuonHadTrigger))) {
-fill(m_hcorrallacc,binMuonAlley,binMuonHadAlley,1.);
-corr=true;
-}
-
-if ((CheckDecision(sum,HltEnums::MuonTriggerSingle)||
-CheckDecision(sum,HltEnums::MuonTriggerDiMuon)||
-CheckDecision(sum,HltEnums::MuonTriggerIPDiMuon))&&
-(CheckDecision(sum,HltEnums::HadTrigger))) {
-fill(m_hcorrallacc,binMuonAlley,binHadronAlley,1.);
-corr=true;
-}
-
-if ((CheckDecision(sum,HltEnums::MuonTriggerSingle)||
-CheckDecision(sum,HltEnums::MuonTriggerDiMuon)||
-CheckDecision(sum,HltEnums::MuonTriggerIPDiMuon))&&
-(CheckDecision(sum,HltEnums::CalTrigger))) {
-fill(m_hcorrallacc,binMuonAlley,binCaloAlley,1.);
-corr=true;
-}
-
-if (CheckDecision(sum,HltEnums::MuonHadTrigger)&&
-CheckDecision(sum,HltEnums::HadTrigger)) {
-fill(m_hcorrallacc,binMuonHadAlley,binHadronAlley,1.);
-corr=true;
-}
-
-if (CheckDecision(sum,HltEnums::MuonHadTrigger)&&
-CheckDecision(sum,HltEnums::CalTrigger)) {
-fill(m_hcorrallacc,binMuonHadAlley,binCaloAlley,1.);
-corr=true;
-}
-
-if (CheckDecision(sum,HltEnums::HadTrigger)&&
-CheckDecision(sum,HltEnums::CalTrigger)) {
-fill(m_hcorrallacc,binHadronAlley,binCaloAlley,1.);
-corr=true;
-}
-
-if (corr) fill(m_hcorrallacc,binAlleyOr, binAlleyOr, 1.);
-
-};
-*/
-//bool HltGlobalMonitoring::CheckDecision(LHCb::HltSummary* sum, int sumid){
-//if (!sum->hasSelectionSummary(sumid)) return false; 
-//  LHCb::HltSelectionSummary& thissummary = sum->
-//      selectionSummary(sumid);
-//if (thissummary.decision()) return true;
-// return false;
-//};
 
 
 
