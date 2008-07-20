@@ -7,6 +7,9 @@
 #  > GangaEnv
 # Then choose your ganga version (default version is normally the best option)
 #
+#  NB : This file is for the old ganga 4 series of releases. If you are using
+#       a ganga 5 release, use Boole_Ganga.py instead 
+#
 # Submit with
 #  > ganga Boole_Ganga.py
 #
