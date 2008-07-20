@@ -1,12 +1,24 @@
-! $Id: release.notes,v 1.1.1.1 2008-07-11 13:02:55 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/HepMCBack
-! Responsible : Patrick ROBBE
-! Purpose     : Streamers to read back HepMC 1 data
+! Responsible : Marco Clemencic, Gloria Corti, Patrick Robbe
+! Purpose     : Holds classes for schema evolution from HepMC 1.26 to 
+!               HepMC 2.03
 !-----------------------------------------------------------------------------
 
-! 2008-07-11 - Patrick Robbe
- - new package. This package contains utility functions to be able to 
-   read back data files written with HepMC1, with a Gaudi application 
-   using HepMC2
+!========================= HepMCBack v1r0 2008-07-20 =========================
+ 
+! 2008-07-20 - Marco Clemencic, Gloria Corti, Patrick Robbe
+ - Classes provided by Philippe Canal and Lars Sonnenchein to allow reading
+   with code compiled with HepMC 2.03.09 events written with HepMC 1.26,
+   provided the appropriate GenReflex is used.
+   In HepMC 1.26 CLHEP::LorentzVector was used for 4-momentum while in 
+   HepMC 2.03 internally 4 doubles are used and a HepMC::FourVector method
+   is used. The classes affected are HepMC::GenParticle and HepMC::GenVertex
+ - If events are produced with HepMC 2.0 nothing is necessary, while if 
+   events produced with HepMC 1.26 are read in, the new class is filled
+   appropriately. The library can be loaded as necessary by including in
+   the application reading DC06 data the following:
+   . ApplicationMgr.Dlls += { "HepMCBack" };
 
+!============================================================================= 
+    

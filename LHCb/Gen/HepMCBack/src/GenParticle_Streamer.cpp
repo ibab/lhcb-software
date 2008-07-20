@@ -1,4 +1,3 @@
-// $Id: GenParticle_Streamer.cpp,v 1.1.1.1 2008-07-11 13:02:55 robbep Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 //Break the privacy of classes
