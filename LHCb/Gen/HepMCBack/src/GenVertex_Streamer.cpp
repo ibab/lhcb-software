@@ -1,3 +1,4 @@
+// $Id: GenVertex_Streamer.cpp,v 1.2 2008-07-20 18:10:02 gcorti Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 //Break the privacy of classes
