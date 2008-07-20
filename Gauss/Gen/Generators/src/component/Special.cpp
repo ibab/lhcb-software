@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.11 2008-01-25 11:42:45 robbep Exp $
+// $Id: Special.cpp,v 1.12 2008-07-20 17:19:32 robbep Exp $
 // Include files 
 
 // local
@@ -9,6 +9,7 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/GenCounters.h"
+#include "Generators/LhaPdf.h"
 
 // Event 
 #include "Event/HepMCEvent.h"
@@ -51,6 +52,14 @@ Special::~Special( ) { ; }
 StatusCode Special::initialize( ) {
   info() << "Generating Special events." << endmsg ;
 
+  // Switch off LHA print out first
+  if ( msgLevel( MSG::DEBUG ) ) {
+    LhaPdf::lhacontrol().setlhaparm( 19 , "DEBUG" ) ;
+  }
+  else {
+    LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
+  }
+  
   if ( "" != m_pileUpProductionToolName ) 
     m_pileUpProductionTool = 
       tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
