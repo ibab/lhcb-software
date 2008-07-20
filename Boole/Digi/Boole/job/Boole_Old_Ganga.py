@@ -7,8 +7,6 @@
 #  > GangaEnv
 # Then choose your ganga version (default version is normally the best option)
 #
-# NB : This file is for the ganga 5 releases
-#
 # Submit with
 #  > ganga Boole_Ganga.py
 #
@@ -23,96 +21,94 @@
 # For Dirac jobs, you can monitor their status at
 # http://lhcb.pic.es/DIRAC/Monitoring/Analysis
 #
-# For any ganga object used below, more detailed information can be found by
-# running help(XXX) at the ganga prompt. I.e.
-#  > help(Dirac)
-# For more information on the Dirac backend
-#
 #===============================================================================
 
 #-------------------------------------------------------------------------------
-# Make a new job object for Boole
+# Define the version of Boole to use
 #-------------------------------------------------------------------------------
-j = Job( application = Boole( version = 'v16r0' ) )
+BooleVersion = 'v16r0'
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Define name for identifying the job (this name appears in the ganga job list)
 #-------------------------------------------------------------------------------
-j.name = 'MyBoole'
+myJobName = 'MyBoole'
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# The job configuration
+# The application to run
 #-------------------------------------------------------------------------------
-# Define the configuration file(s) to use
-myOptsPath = ( j.application.user_release_area + '/Boole_' +
-               j.application.version + '/Digi/Boole/' +
-               j.application.version + '/options/' )
-j.application.optsfile = [ File ( myOptsPath + 'Boole-Default.py' ),
-                           File ( myOptsPath + 'DC06-Files.py'    ) ]
+myApplication = Boole()
+# Application version number
+myApplication.version = BooleVersion
+# Define the options file to use.
+# Note, if you want you can replace the PFNs in this file with LFNs directly,
+# since ganga takes care of the book-keeping for you :)
+myApplication.optsfile = File ( myApplication.cmt_user_path
+   + '/Boole_' + BooleVersion + '/Digi/Boole/' + BooleVersion
+   + '/options/v200601.opts' )
 # Extra options
 # Appended to the end of the main options to override default settings
-#j.application.extraopts = ''
+#myApplication.extraopts = ''
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Define a job splitter (very useful for many input data files)
 #-------------------------------------------------------------------------------
+# Split jobs into 2 input files per job. max of 10 files in total (thus 5 jobs)
+mySplitter = SplitByFiles ( filesPerJob = 2, maxFiles = 10 )
 # Use a single job, no splitting
-j.splitter = None
-
-# Split jobs into 1 input file per job. max of 5 files in total
-#j.splitter = SplitByFiles ( filesPerJob = 1, maxFiles = 5 )
-
-# This Splitter will query the Logical File Catalog (LFC) to find
-# at which sites a particular file is stored. Subjobs will be created
-# so that all the data required for each subjob is stored in
-# at least one common location. This prevents the submission of jobs that
-# are unrunnable due to data availability.
-# Useful when using the Dirac backend (see below)
-#j.splitter = DiracSplitter ( filesPerJob = 1, maxFiles = 5 )
+#mySplitter = None
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# Job merging (merge output from sub-jobs from job splitter, if used)
+# Job merging
 #-------------------------------------------------------------------------------
 # No merging
-j.merger = None
-
-# Root file merging. See help( RootMerger ) for more details
-#j.merger = RootMerger( files = ['histos.root'], ignorefailed = True )
-
+#myMerger = None
+#
+# Root file merging. For more details run from the ganga prompt
+#  ganga > help( RootMerger )
+#myMerger = RootMerger( files = ['00001820_00000001_5.root'], ignorefailed = 1 )
+#
 # SmartMerger - Able to handle various file formats (including root files)
-#               See ghelp( SmartMerger ) for more details
-#j.merger = SmartMerger( files = ['histos.root'], ignorefailed = True )
+#               For more details run from the ganga prompt
+#  ganga > help( SmartMerger )
+myMerger = SmartMerger( files = ['00001820_00000001_4.root'], ignorefailed = 1 )
+#
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Add here any special input files. Normally not needed.
 #-------------------------------------------------------------------------------
-j.inputsandbox = []
+myInputsandbox = []
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
 # Define where to run
 #-------------------------------------------------------------------------------
-# Run interactively on the local machine
-#j.backend    = Interactive()
+# Run interactively
+#myBackend    = Interactive()
 # Run directly on the local machine, but in the background
-j.backend    = Local()
+myBackend    = Local()
 # Submit to an LSF batch system, using the 8nm queue
-#j.backend    = LSF( queue = '8nm' )
+#myBackend    = LSF( queue = '8nm' )
+# Submit to the grid. Requires a working grid certificate of course :)
+#myBackend    = Dirac()
 # Submit to a condor batch system
-#j.backend    = Condor()
-# Submit to a PBS batch system
-#j.backend    = PBS()
-# Submit to the grid.
-#j.backend    = Dirac()
+#myBackend    = Condor()
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
-# Submit the job
+# Finally, create a Ganga job object and submit
 #-------------------------------------------------------------------------------
+j = Job (
+ name         = myJobName,
+ application  = myApplication,
+ splitter     = mySplitter,
+ merger       = myMerger,
+ inputsandbox = myInputsandbox,
+ backend      = myBackend
+) 
 j.submit()
 #-------------------------------------------------------------------------------
