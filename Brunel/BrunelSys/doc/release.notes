@@ -7,8 +7,9 @@ Purpose: LHCb reconstruction programs
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20, Rec v5r9
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r*
 
-As from this version, Brunel.exe and corresponding top level options have been
-removed. Only gaudirun.py is supported
+As from this version, top level *.opts options have been removed, please use
+gaudirun.py with the python configurable options. Usage of Brunel.exe is no
+longer supported, it is kept for Ganga usage only
 
 This is a development version.
 - Can be used to reconstruct 2008 geometries
@@ -41,11 +42,12 @@ This is a development version.
     another condition (VeloDet v13r2, SQLDDDB v4r6)
   . New calorimeter description with split halves
     (SQLDDDB v4r6, CaloDet v9r0, CaloDetXmlCnv v3r2)
+  . Update Brunel_ganga.py for usage with Ganga 5
  
 - Removed features
-  . Remove creation of Brunel.exe, only gaudirun.py is supported from now
-    (N.B. Brunel-Ganga.job, valgrind.job not yet migrated, do not use)
   . Remove all top level *.opts files, use configurable instead
+  . Brunel.exe no longer supported, except for legacy usage via Ganga
+    (N.B. valgrind.job not yet migrated, do not use)
 
 - New tuning
   . Update 2008 simulation test file with one produced with Boole v16r0
