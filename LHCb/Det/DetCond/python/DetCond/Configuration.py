@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.3 2008-06-27 17:00:41 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2008-07-21 19:14:30 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
@@ -14,10 +14,11 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBLogger )
 
 # Exported symbols
-__all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger" ]
+__all__ = [ "addCondDBLayer", "addCondDBAlternative", "useCondDBLogger",
+            "configureOnlineSnapshots" ]
 # Configurables provided by the package
 __all__ += [ "CondDBAccessSvc",
-             "CondDBDispatcherSvc", "CondDBLayeringSvc",
+             "CondDBDispatcherSvc", "CondDBLayeringSvc", "CondDBTimeSwitchSvc", 
              "CondDBSQLiteCopyAccSvc", "CondDBLogger",
              "CondDBCnvSvc" ]
 
@@ -136,3 +137,72 @@ def useCondDBLogger(filename = None, logger = None):
     # Use the user specified filename, if any
     if filename:
         cnvSvc.CondDBReader.LogFile = filename
+
+def _timegm(t):
+    """Inverse of time.gmtime. Implementation from Gaudi::Time."""
+    import time
+    if t[8] != 0: # ensure that dst is not set
+        t = tuple(list(t[0:8]) + [0])
+    t1 = time.mktime(t)
+    gt = time.gmtime(t1)
+    t2 = time.mktime(gt)
+    return t1 + (t1 - t2)
+
+def defConnStrFunc(ym_tuple):
+    return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
+    
+def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
+    if connStrFunc is None:
+        connStrFunc = defConnStrFunc
+    
+    # prepare the configurable instance
+    ONLINE = CondDBTimeSwitchSvc("ONLINE")
+    
+    # Set the first available pair (year,month) 
+    if start is None:
+        first_snapshot = (2008,6)
+    else:
+        first_snapshot = start
+    
+    # Set the last available pair (year,month) 
+    if end is None:
+        # By default it is the previous month
+        import time
+        now = time.gmtime()[0:2]
+        if now[1] == 1:
+            last_snapshot = (now[0]-1,12)
+        else:
+            last_snapshot = (now[0],now[1]-1)
+    else:
+        last_snapshot = end
+    
+    # reset the list of readers, for safety
+    ONLINE.Readers = []
+    # loop from first to last-1
+    i = first_snapshot
+    until = 0 # this makes the first service used from times starting from 0
+    while i < last_snapshot:
+        name = "ONLINE-%04d%02d" % i
+        accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
+        since = until
+        # increment
+        if i[1] == 12:
+            i = (i[0]+1,1)
+        else:
+            i = (i[0],i[1]+1)
+        until = int(_timegm(tuple([i[0], i[1], 1, 0, 0, 0, 0, 0, 0]))) * 1000000000
+        descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
+        ONLINE.Readers.append(descr)
+    
+    # append the last database with validity extended to the maximum validity
+    name = "ONLINE-%04d%02d" % i
+    accSvc = CondDBAccessSvc(name,
+                             ConnectionString = "sqlite_file:%s/%s.db/ONLINE" % (path, name),
+                             )
+    since = until
+    until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
+    descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
+    ONLINE.Readers.append(descr)
+    
+    
+    

@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.142 2008-07-16 19:46:44 cattanem Exp $
+# $Id: release.notes,v 1.143 2008-07-21 19:14:30 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-07-21 - Marco Clemencic
+ - Added a function to DetCond.Configuration (configureOnlineSnapshots) to
+   prepare the configuration using monthly snapshots of the ONLINE partition.
+   The first and last snapshot used extend their validity to 0 and +infinity
+   respectively.
 
 !===================== Det/DetCond v12r1 2008-07-16 ==========================
 ! 2008-07-10 - Marco Clemencic
