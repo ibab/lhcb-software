@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.18 2008-07-17 16:12:14 jluisier Exp $
+! $Id: release.notes,v 1.19 2008-07-21 11:21:41 jluisier Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2008-07-21 J Luisier
+ - Check of all reserved words imlemented
 
 ! 2008-07-17 J Luisier
  - Add PCN check methods in STTELL1EventInfo

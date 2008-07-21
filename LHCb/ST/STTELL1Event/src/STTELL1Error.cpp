@@ -137,7 +137,7 @@ void LHCb::STTELL1Error::fillErrorInfo() {
   for (unsigned int iLink = 0; iLink < nBeetle ; ++iLink){
     if ( !correctPatterns() )
       {
-	flagBadLinks(iLink,kCorruptedBank);
+        flagBadLinks(iLink,kCorruptedBank);
       }
     else if ( OptLnkDisable() >> iLink & 1 ) {
       flagBadLinks(iLink,kOptLinkDisabled);      
@@ -170,20 +170,25 @@ void LHCb::STTELL1Error::fillErrorInfo() {
 
 bool LHCb::STTELL1Error::correctPatterns() const
 {
-  bool isOK(true);
+  bool isOK(true), tmp;
 
-  isOK  = (EmptyVal0() == 0) * (EmptyVal1() == nMagic); // Error bank
+  // testing word4 Error bank
+  isOK  *= ((m_word4 & 0xFF) == 0) * (((m_word4 & 0xFF00) / 0x100) == 0x8e);
 
-  return isOK;
+  // testing word10 Cluster bank
+  isOK *= ((m_word10 & 0xFF) == 1) * (((m_word10 & 0xFF00) / 0x100) == 0x8e);
 
-  isOK *= (EmptyVal2() == 1) * (EmptyVal3() == nMagic); // Cluster bank
-  isOK *= (EmptyVal4() == 2) * (EmptyVal5() == nMagic); // ADC bank
+  // testing word11 ADC bank
+  isOK *= ((m_word11 & 0xFF) == 2) * (((m_word11 & 0xFF00) / 0x100) == 0x8e);
 
   if (hasNZS())
-      isOK *= (EmptyVal6() == 3) * (EmptyVal7() == nMagic); // NZS bank
+    // testing word12 NZS bank
+    isOK *= ((m_word12 & 0xFF) == 3) * (((m_word12 & 0xFF00) / 0x100) == 0x8e);
+  
 
   if (hasPed())
-    isOK *= (EmptyVal8() == 4) * (EmptyVal9() == nMagic); // Pedestal bank
+    // testing word13 Pedestal bank
+    isOK *= ((m_word13 & 0xFF) == 4) * (((m_word13 & 0xFF00) / 0x100) == 0x8e);
 
   return isOK;
 }
