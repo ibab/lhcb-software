@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.h,v 1.5 2008-07-03 18:33:11 odescham Exp $
+// $Id: L0DURawBankMonitor.h,v 1.6 2008-07-21 14:35:50 cattanem Exp $
 #ifndef L0DURAWBANKMONITOR_H 
 #define L0DURAWBANKMONITOR_H 1
 
@@ -7,7 +7,7 @@
 #include "L0Interfaces/IL0DUFromRawTool.h"
 #include "L0Interfaces/IL0CondDBProvider.h"
 #include "L0Interfaces/IL0DUEmulatorTool.h"
-#include "Kernel/IEventTimeDecoder.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 #include "Event/RawBankReadoutStatus.h"
 // Base class
 #include "CaloUtils/Calo2Dview.h"

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.114 2008-07-17 16:30:42 cattanem Exp $
+! $Id: release.notes,v 1.115 2008-07-21 14:35:50 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !-------------------------------------------------------------------------
+
+! 2008-07-21 - Marco Cattaneo
+ - Adapt to new location of IEventTimeDecoder.h (needs Gaudi v20r1)
 
 !========================== L0DU v8r7 2008-07-17 =========================
 ! 2008-07-17 - Olivier Deschamps
