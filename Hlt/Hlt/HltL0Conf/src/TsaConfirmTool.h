@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.h,v 1.8 2008-07-17 08:07:35 albrecht Exp $
+// $Id: TsaConfirmTool.h,v 1.9 2008-07-21 12:54:12 albrecht Exp $
 #ifndef TSACONFIRMTOOL_H 
 #define TSACONFIRMTOOL_H 1
 
@@ -53,8 +53,8 @@ public:
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks );
 
   //@@JA fix!!!
-  ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids){
-    return ParabolaHypothesis(0,0,0,0,0,0,0,0,0);
+  ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID>& ids){
+    return ParabolaHypothesis(0,0,0,0,0,0,0);
   };     
 protected:
 

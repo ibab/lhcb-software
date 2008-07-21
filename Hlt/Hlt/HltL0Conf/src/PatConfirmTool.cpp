@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.9 2008-07-09 14:05:15 albrecht Exp $
+// $Id: PatConfirmTool.cpp,v 1.10 2008-07-21 12:54:06 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -75,6 +75,10 @@ StatusCode PatConfirmTool::initialize(){
 
   m_l0ConfExtrapolator = tool<IL0ConfExtrapolator>("L0ConfExtrapolator");
 
+  always()<<"nSigma:  X = "<<m_nSigmaX<<"  , y = "<<m_nSigmaY
+          <<" ,  Tx = "<<m_nSigmaTx<<"  , Ty = "<<m_nSigmaTy<<endmsg;
+  
+
   return sc;
 
 }
@@ -135,7 +139,8 @@ StatusCode PatConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
     stateCov(2,2) *= m_nSigmaTx * m_nSigmaTx;
     stateCov(3,3) *= m_nSigmaTy * m_nSigmaTy;
     state.setCovariance(stateCov);
-    sc=m_patSeedingTool->performTracking(tmpTracks, &state);
+    //sc=m_patSeedingTool->performTracking(tmpTracks, &state);
+    sc=m_patSeedingTool->performTracking(tmpTracks );
     if(sc.isFailure())
       if (msgLevel(MSG::DEBUG) ) debug() << "seeding failed!!"<<endmsg;
     
@@ -184,13 +189,13 @@ ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState )
 }
 
 
-ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState ,std::vector<LHCb::LHCbID> ids)
+ParabolaHypothesis PatConfirmTool::prepareT( const LHCb::State& seedState ,std::vector<LHCb::LHCbID>& ids)
 {
 
   //prepare hits in T-stations
   ParabolaHypothesis tp = prepareT( seedState );
   Tf::TStationHitManager<PatForwardHit>::HitRange hits = m_tHitManager->hits();
-
+  
   //get lhcbids from hits and fill output
   Tf::TStationHitManager<PatForwardHit>::HitRange::const_iterator it;
   for ( it = hits.begin();it != hits.end();++it){

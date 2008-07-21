@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.h,v 1.6 2008-07-09 14:00:19 albrecht Exp $
+// $Id: PatConfirmTool.h,v 1.7 2008-07-21 12:54:01 albrecht Exp $
 #ifndef PATCONFIRMTOOL_H 
 #define PATCONFIRMTOOL_H 1
 
@@ -49,7 +49,7 @@ public:
 
   StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks);
 
-  ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids);
+  ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID>& ids);
 protected:
   
 private:
