@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.45 2008-07-02 12:03:04 cattanem Exp $
+! $Id: release.notes,v 1.46 2008-07-21 14:40:37 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2008-07-21 - Marco Cattaneo
+ - Adapt to new location of IEventTimeDecoder.h (needs Gaudi v20r1)
 
 !========================== CaloTools v5r2 2008-07-02 =========================
 ! 2008-06-30 - Olivier Deschamps
