@@ -3,6 +3,7 @@
 
 // Include files
 #include "TfKernel/TStationHitManager.h"
+#include "Event/StateParameters.h"
 
 /** @class LineHypothesis LineHypothesis.h
  *
@@ -18,10 +19,8 @@ class LineHypothesis : virtual public Tf::IStationSelector {
 public: 
   /// Standard constructor
   LineHypothesis( float my , float cy , float mx , float cx,
-                  float dx, float dy ,
-                  double zMin, double zMax ) :
-	  m_y(my), m_cy(cy), m_x(mx), m_cx(cx), m_dx(dx), m_dy(dy),
-    m_zMin(zMin), m_zMax(zMax)
+                  float dx, float dy ) :
+	  m_y(my), m_cy(cy), m_x(mx), m_cx(cx), m_dx(dx), m_dy(dy)
   { }
 
   Tf::XYSearchWindow searchWindow(float zz) const
@@ -34,15 +33,14 @@ public:
 
   void getValidity(double& zmin, double& zmax) const
   {
-    zmin = m_zMin;
-    zmax = m_zMax;
+    zmin = double(StateParameters::ZBegT);
+    zmax = double(StateParameters::ZEndT);
     return;
   }
-
+  
 private:
   float m_y, m_cy;
   float m_x, m_cx;
   float m_dx, m_dy;
-  double m_zMin, m_zMax;
 };
 #endif // LINEHYPOTHESIS_H
