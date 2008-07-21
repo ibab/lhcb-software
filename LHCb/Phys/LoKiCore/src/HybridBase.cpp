@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.6 2008-05-28 13:40:29 cattanem Exp $
+// $Id: HybridBase.cpp,v 1.7 2008-07-21 15:05:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -46,7 +46,7 @@ namespace
     std::string::size_type pos = str.find ( '\n' ) ;
     while ( std::string::npos != pos ) 
     {
-      str.insert ( pos + 1 , comm );
+      str.replace ( pos , 1 , comm );
       pos = str.find ( '\n' , pos + 2 ) ;
     }
     return str ;
@@ -195,6 +195,15 @@ std::string LoKi::Hybrid::Base::makeCode
   const LoKi::Hybrid::Base::Strings& lines   ,
   const std::string&                 context ) const 
 {
+  std::string _code = code ;
+  {
+    std::string::size_type pos = _code.find ( '\n' ) ;
+    while ( std::string::npos != pos ) 
+    {
+      _code.replace( pos , 1 , " " ) ;
+      pos = _code.find ('\n') ;
+    }
+  }    
   std::ostringstream stream ;
   // start the code:
   stream << "# " << std::string(78,'=') << std::endl ;
@@ -202,7 +211,7 @@ std::string LoKi::Hybrid::Base::makeCode
          << name() << "'" << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
   stream << "# Arguments: " << std::endl ;
-  stream << "# \tcode    = " << Gaudi::Utils::toString ( code    )  << std::endl ;
+  stream << "# \tcode    = " << Gaudi::Utils::toString ( _code   )  << std::endl ;
   stream << "# \tactor   = " << Gaudi::Utils::toString ( actor   )  << std::endl ;
   stream << "# \tmodules = " << Gaudi::Utils::toString ( modules )  << std::endl ;
   stream << "# \tlines   = " << Gaudi::Utils::toString ( lines   )  << std::endl ;
@@ -229,11 +238,11 @@ std::string LoKi::Hybrid::Base::makeCode
   if ( !context.empty() ) { stream << context << std::endl ; }
   stream << "## End of CONTEXT  " << std::endl ;
   stream << "##        CODE :"    << std::endl ;  
-  stream << "_code="  << code     << std::endl ;
+  stream << "_code="  << _code    << std::endl ;
   stream << "## End of CODE :"    << std::endl ;  
   stream << "sc=_actor.process('" << name() << "',_code)" << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ;
-  stream << "# The END " << std::endl ;
+  stream << "# The END "                << std::endl ;
   stream << "# " << std::string(78,'=') << std::endl ; 
   //
   std::string result = stream.str() ;
