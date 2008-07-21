@@ -4,14 +4,18 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-07-21 - Johannes Albrecht
+ - LineHypothesis.h: return z-range from StateParameters
+ - TsaConfirmTool.h, PatConfirmTool.h,cpp: fix for visualization: pass by reference
+ - L0ConfExtrapolator.cpp: adapt for changes in FwdHypothesis
+ - MuonSeedTool: adapt for interface change
+
 ! 2008-07-17 - Johannes Albrecht
 	- L0ConfExtrapolator.cpp: adjust for validity range in Parabola & FwdHypothesis
 	- L0ConfExtrapolator.h: minor cleanup
 	- TsaConfirmTool.cpp: fix unchecked Status Codes
 	- TsaConfirmTool.h: adjust for validity range in ParabolaHypothesis
 	- LineHypothesis.h: add Validity range
-
-
 
 !========================== HltL0Conf v2r2 2008-07-09 ===================
 ! 2008-07-09 - Jose A. Hernando
