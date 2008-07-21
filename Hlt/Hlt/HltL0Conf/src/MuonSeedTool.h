@@ -1,11 +1,11 @@
-// $Id: MuonSeedTool.h,v 1.3 2008-06-04 06:43:26 albrecht Exp $
+// $Id: MuonSeedTool.h,v 1.4 2008-07-21 17:01:19 albrecht Exp $
 #ifndef MUONSEEDTOOL_H 
 #define MUONSEEDTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackInterfaces/ITrackPtKick.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 
 // Interface
 #include "HltBase/IMuonSeedTool.h"           
@@ -43,7 +43,8 @@ private:
 
   bool m_debugMode;
   bool m_useM1;
-  
+  std::string m_momentumToolName;
+
   std::vector<double> m_sigmaX2;
   std::vector<double> m_sigmaY2;
   std::vector<double> m_sigmaTx2;
@@ -56,8 +57,8 @@ private:
   
   IMuonPosTool      *m_iPosTool;
 
-  ITrackPtKick* m_fCalcPtKick;
   
+  ITrackMomentumEstimate* m_momentumTool;
   
   //debug information
   L0ConfDataStore* m_DataStore;

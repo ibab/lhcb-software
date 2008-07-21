@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.7 2008-06-04 06:43:36 albrecht Exp $
+// $Id: MuonSeedTool.cpp,v 1.8 2008-07-21 17:02:13 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,7 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
 
   declareProperty("debugMode",m_debugMode = false );
   declareProperty("useM1",m_useM1 = true );
+  declareProperty("momentumToolName",m_momentumToolName="FastMomentumEstimate");
 
   //resolution for track hypothesis taken from muon stations M1 and M2 
   declareProperty("sigmaX2", m_sigmaX2 = boost::assign::list_of(64.)(225.)(841.)(2916.) );
@@ -71,7 +72,7 @@ StatusCode MuonSeedTool::initialize()
   }
   
   m_iPosTool=tool<IMuonPosTool>( "MuonPosTool" );
-  m_fCalcPtKick = tool<ITrackPtKick>("TrackPtKick");
+  m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
 
   //tool for debug information
   m_DataStore = tool<L0ConfDataStore>("L0ConfDataStore");
@@ -137,8 +138,14 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
 
   LHCb::State seedState;
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
-  m_fCalcPtKick->calculate(&seedState);
+  double qOverP = 0;
+  double sigmaQOverP = 0;
+  sc = m_momentumTool->calculate(&seedState ,qOverP, sigmaQOverP , false );
+  if( sc.isFailure() ) {
+    Warning( "MomentumEstimate tool  failed, but still adding State" );
+  }
   seedState.setQOverP( seedState.qOverP() );
+  seedState.setErrQOverP2( sigmaQOverP*sigmaQOverP );
 
   Gaudi::TrackSymMatrix stateCov = Gaudi::TrackSymMatrix();
   stateCov(0,0) = m_sigmaX2NoM1[muonRegion];
