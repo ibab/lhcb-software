@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.31 2008-07-02 12:28:18 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.32 2008-07-21 14:44:36 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -27,6 +27,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 // Base class
 #include "RichKernel/RichToolBase.h"
@@ -36,7 +37,6 @@
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
-#include "Kernel/IEventTimeDecoder.h"
 
 // local
 #include "RichDAQVersions.h"
