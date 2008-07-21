@@ -1,4 +1,4 @@
-// $Id: RecInit.cpp,v 1.6 2008-07-21 14:34:53 cattanem Exp $
+// $Id: RecInit.cpp,v 1.7 2008-07-21 14:39:30 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IGenericTool.h"
+#include "GaudiAlg/IGenericTool.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
