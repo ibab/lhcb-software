@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.4 2008-07-17 08:10:40 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.5 2008-07-21 17:07:35 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -156,8 +156,7 @@ ParabolaHypothesis L0ConfExtrapolator::getParabolaHypothesis(const LHCb::State& 
   
   return ParabolaHypothesis(aState.ty(), aState.y() - aState.ty() * z,
                             ax, bx, cx, nSigmaX * std::sqrt(aState.errX2()),
-                            nSigmaY * std::sqrt(aState.errY2()),
-                            StateParameters::ZBegT, StateParameters::ZEndT );
+                            nSigmaY * std::sqrt(aState.errY2()));
 }
 
 FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack,
@@ -190,14 +189,15 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
   
   if ( reg < 0 || reg > 4 ) {
     error()<<"region not meaningful .. "<<endmsg;
-    return FwdHypothesis(0,0,0,0,0,0,0,0,0,0,0);
+    return FwdHypothesis(1,1,1,1,1,1,1,1,1);
   }
   
   return FwdHypothesis( ax, bx, cx,dx,
                         ay, by,
                         nSigma*std::sqrt(m_fwdSigmaX2[reg]), nSigma*std::sqrt(m_fwdSigmaY2[reg]),
-                        m_zRef,
-                        StateParameters::ZBegT, StateParameters::ZEndT);
+                        m_zRef);
+  
+                    
 }
 
 /*
