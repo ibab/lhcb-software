@@ -1,4 +1,4 @@
-// $Id: ITrackConfirmTool.h,v 1.2 2008-07-09 08:28:35 hernando Exp $
+// $Id: ITrackConfirmTool.h,v 1.3 2008-07-21 12:59:44 albrecht Exp $
 #ifndef ITRACKCONFIRMTOOL_H 
 #define ITRACKCONFIRMTOOL_H 1
 
@@ -29,7 +29,7 @@ public:
 
   virtual StatusCode tracks(const LHCb::State& seedState, std::vector<LHCb::Track*>& outputTracks ) =0;
   
-  virtual ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID> ids)=0;
+  virtual ParabolaHypothesis prepareT( const LHCb::State& seedState ,  std::vector<LHCb::LHCbID>& ids)=0;
   
 
 protected:
