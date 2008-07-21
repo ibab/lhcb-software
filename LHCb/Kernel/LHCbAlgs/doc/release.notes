@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2008-07-21 - Marco Cattaneo
+ - Adapt to new locations of IEventTimeDecoder and IGenericTool interfaces
+   (needs Gaudi v20r2)
+
 !======================== LHCbAlgs v2r19 2008-07-08 ==========================
 ! 2008-07-08 - Marco Cattaneo
  - In FPEAuditor, move exception in case of no implementation to initialize

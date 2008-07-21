@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.10 2008-04-10 11:27:28 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.11 2008-07-21 14:46:34 cattanem Exp $
 // Include files
 #include <string>
 #include <vector>
@@ -10,10 +10,10 @@
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiAlg/IGenericTool.h"
 
 // local
 #include "Kernel/LbAppInit.h"
-#include "Kernel/IGenericTool.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LbAppInit

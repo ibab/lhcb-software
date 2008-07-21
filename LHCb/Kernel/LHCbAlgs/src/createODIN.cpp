@@ -1,11 +1,9 @@
-// $Id: createODIN.cpp,v 1.1 2008-01-15 10:11:23 cattanem Exp $
+// $Id: createODIN.cpp,v 1.2 2008-07-21 14:45:52 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-// from LHCbKernel
-#include "Kernel/IEventTimeDecoder.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 // local
 #include "createODIN.h"

@@ -4,6 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-07-21 - Marco Cattaneo
+ - Remove Kernel/IEventTimeDecoder.h, now in GaudiKernel (Gaudi v20r2)
+ - Remove Kernel/IGenericTool.h,      now in GaudiKernel (Gaudi v20r2)
+ - Remove Kernel/IDetElemFinder.h,    moved to Det/DetDesc
+
+ - The above changes now make it possible to:
+   . In requirements: 
+     o put back LHCbMath dependency
+     o remove addition of MathCore to ROOT_linkopts (already done in LHCbMath)
+   . Put back Vanya's fix to ParticleID.cpp
+
 ! 2008-07-18 - Marco Cattaneo
  - Add Kernel/ILHCbMagnetSvc.h : LHCb extensions to Gaudi IMagneticFieldSvc i/f 
 

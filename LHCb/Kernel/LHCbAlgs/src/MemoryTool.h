@@ -1,11 +1,11 @@
-// $Id: MemoryTool.h,v 1.1 2005-12-14 13:22:21 cattanem Exp $
+// $Id: MemoryTool.h,v 1.2 2008-07-21 14:45:52 cattanem Exp $
 #ifndef MEMORYTOOL_H 
 #define MEMORYTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiHistoTool.h"
-#include "Kernel/IGenericTool.h"            // Interface
+#include "GaudiAlg/IGenericTool.h"            // Interface
 
 
 /** @class MemoryTool MemoryTool.h

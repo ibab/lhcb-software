@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.12 2008-07-18 16:12:10 cattanem Exp $
+// $Id: LHCbKernelDict.h,v 1.13 2008-07-21 14:46:34 cattanem Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -25,10 +25,7 @@
 #include "Kernel/IBIntegrator.h"
 #include "Kernel/ICheckTool.h"
 #include "Kernel/ICondDBInfo.h"
-#include "Kernel/IDetElemFinder.h"
-#include "Kernel/IEventTimeDecoder.h"
 #include "Kernel/IEvtTypeSvc.h"
-#include "Kernel/IGenericTool.h"
 #include "Kernel/IInAcceptance.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "Kernel/IMCVeloFEType.h"

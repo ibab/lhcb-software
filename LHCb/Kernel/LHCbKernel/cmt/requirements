@@ -1,13 +1,14 @@
-# $Id: requirements,v 1.138 2008-07-18 16:12:10 cattanem Exp $
+# $Id: requirements,v 1.139 2008-07-21 14:46:34 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v8r7
+version v9r0
 
 branches cmt doc Event Kernel src xml
 
+use LHCbMath        v* Kernel
 use GaudiKernel     v*
 use Boost           v* LCG_Interfaces
 use ROOT            v* LCG_Interfaces
@@ -47,6 +48,3 @@ apply_pattern linker_library    library=LHCbKernel
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
-
-macro_append ROOT_linkopts " -lMathCore " \
-             WIN32 " libMathCore.lib "
