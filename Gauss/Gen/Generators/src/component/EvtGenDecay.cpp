@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.16 2008-07-10 18:20:11 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.17 2008-07-21 13:37:34 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -94,6 +94,14 @@ EvtGenDecay::EvtGenDecay( const std::string& type,
     declareProperty("KeepTempEvtFile" , m_keepTempEvtFile = false ) ;
     // Generate Polarized Lambda_b decays
     declareProperty("PolarizedLambdad" , m_generatePolLambdab = false ) ;
+    // Generate Polarized charmonium
+    declareProperty("PolarizedCharmonium" , m_generatePolCharmonium = false ) ;
+    // Parameters for charmonium polarization
+    declareProperty("RealHelOne"  , m_realHelOne  = 1. ) ;
+    declareProperty("ImHelOne"    , m_imHelOne    = 0. ) ;
+    declareProperty("RealHelZero" , m_realHelZero = 1. ) ;
+    declareProperty("ImHelOne"    , m_imHelZero   = 0. ) ;
+    
     
   // Initialize signalId
   m_signalId = EvtId( -1, -1 ) ;
@@ -707,6 +715,22 @@ const {
     thePart -> setSpinDensityForwardHelicityBasis( rho ) ;
   } else {
     thePart -> setDiagonalSpinDensity( ) ;
+  }
+  
+  // Generates polarized charmonium if requested: 
+  // Only if vector particle, is meson, and contains two charm quarks
+  if ( m_generatePolCharmonium ) {
+    if ( ( abs( theHepMCPart -> pdg_id() ) == 443 ) ||
+         ( abs( theHepMCPart -> pdg_id() ) == 20443 ) ) {
+      EvtSpinDensity rho ;
+      rho.SetDiag( thePart -> getSpinStates() ) ;
+      rho.Set( 0 , 0 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
+      rho.Set( 1 , 1 , EvtComplex( m_realHelZero , m_imHelZero ) ) ;
+      rho.Set( 2 , 2 , EvtComplex( m_realHelOne  , m_imHelOne  ) ) ;
+      thePart -> setSpinDensityForwardHelicityBasis( rho ) ;    
+    } else if ( 445 == abs( theHepMCPart -> pdg_id() ) ) {
+         // WHAT TO DO HERE FOR TENSOR PARTICLES ? 
+    }
   }
 
   // Generate decay tree of part with EvtGen  

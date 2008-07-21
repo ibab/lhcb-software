@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.7 2008-07-10 18:20:11 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.8 2008-07-21 13:37:34 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -195,6 +195,21 @@ public:
   /// Flag for polarized Lambda_b production (set by options)
   bool m_generatePolLambdab ;
 
+  /// Flag for polarized charmonium production (set by options)
+  bool m_generatePolCharmonium ;
+  
+  /// Real part of spin matrix for helicity 0 for charmonium polarization
+  double m_realHelZero ;
+
+  /// Imaginary part of spin matrix for helicity 0 for charmonium polarization
+  double m_imHelZero ;
+  
+  /// Real part of spin matrix for helicity 1 for charmonium polarization
+  double m_realHelOne ;
+
+  /// Imaginary part of spin matrix for helicity 1 for charmonium polarization
+  double m_imHelOne ;
+  
   /// Name of the temporary file for PHOTOS output
   boost::filesystem::path m_photosTempFilename ;  
 };
