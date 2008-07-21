@@ -1,9 +1,10 @@
-// $Id: FwdHypothesis.h,v 1.2 2008-07-17 08:15:03 albrecht Exp $
+// $Id: FwdHypothesis.h,v 1.3 2008-07-21 13:01:41 albrecht Exp $
 #ifndef FWDHYPOTHESIS_H 
 #define FWDHYPOTHESIS_H 1
 
 // Include files
 #include "TfKernel/TStationHitManager.h"
+#include "Event/StateParameters.h"
 
 /** @class FwdHypothesis FwdHypothesis.h
  *  
@@ -21,11 +22,9 @@ public:
   FwdHypothesis( float ax , float bx , float cx , float dx, 
                  float ay , float by, 
                  float errx , float erry, 
-                 float zRef ,
-                 double zMin, double zMax ) :
+                 float zRef ) :
 	  m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_ay(ay), m_by(by),
-	  m_errx(errx), m_erry(erry), m_zRef(zRef),
-    m_zMin(zMin), m_zMax(zMax)
+	  m_errx(errx), m_erry(erry), m_zRef(zRef)
   { }
   
   Tf::XYSearchWindow searchWindow(double z) const
@@ -39,8 +38,8 @@ public:
 
   void getValidity(double& zmin, double& zmax) const
   {
-    zmin = m_zMin;
-    zmax = m_zMax;
+    zmin = double(StateParameters::ZBegT);
+    zmax = double(StateParameters::ZEndT);
     return;
   }
   
@@ -50,6 +49,5 @@ private:
   float m_ay, m_by;
   float m_errx, m_erry;
   float m_zRef;
-  double m_zMin, m_zMax;
 };
 #endif // FWDHYPOTHESIS_H
