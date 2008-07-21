@@ -4,11 +4,11 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
- - In requirements:
-   . Remove creation of Brunel.exe, only gaudirun.py is supported from now
-     (N.B. Brunel-Ganga.job, valgrind.job not yet migrated, do not use)
-   . use ParamFiles v7r2
- - Remove all top level *.opts files, use configurable instead
+ - In requirements: use ParamFiles v7r2
+ - Remove all top level *.opts files, use Gaudirun.py with configurable instead. 
+   N.B. Brunel.exe is still available for use by Ganga with a flattened options
+   file. Do not attempt to use it directly.
+   N.B.2 valgrind.job not yet migrated, do not use
  - In python/Brunel/Configuration.py, options/Brunel-Default.py:
    . Add expertTracking switches to Brunel configurables. 
      Supported values are: ["usePatSeeding","noDrifttimes","simplifiedGeometry"]

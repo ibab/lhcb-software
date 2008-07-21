@@ -45,3 +45,7 @@ apply_pattern application_path
 apply_pattern install_python_modules
 apply_pattern GaudiApp
 
+##### Build also the .exe, for Ganga usage only #####
+application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp
+macro Brunel_linkopts    "$(application_linkopts)"
+#####################################################
