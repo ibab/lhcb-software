@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-21 J Luisier
+ - change STTELL1Error construction sequence in STErrorDecoding
+
 ! 2008-07-18 M Needham
 
  - really check Tell1 source is valid

@@ -1,4 +1,4 @@
-// $Id: STErrorDecoding.cpp,v 1.4 2008-07-18 09:37:26 mneedham Exp $
+// $Id: STErrorDecoding.cpp,v 1.5 2008-07-21 11:15:00 jluisier Exp $
 // Include files 
 
 
@@ -158,7 +158,7 @@ StatusCode STErrorDecoding::execute() {
       }
 
      if (errorInfo->hasErrorInfo()){
-       errorInfo->setOptionalErrorWords(p[w], p[w+1], p[w+2], p[w+3], p[w+4]);
+       //errorInfo->setOptionalErrorWords(p[w], p[w+1], p[w+2], p[w+3], p[w+4]);
        w+= 5;
      } // has error information
 
@@ -174,6 +174,12 @@ StatusCode STErrorDecoding::execute() {
      if (errorInfo->hasPed() == true){
        errorInfo->setWord13(p[w]); ++w;
      }
+
+     if (errorInfo->hasErrorInfo()){
+       w -= 8;
+       errorInfo->setOptionalErrorWords(p[w], p[w+1], p[w+2], p[w+3], p[w+4]);
+       w += 8;
+     } // has error information
       
    } //  loop ip [ppx's]
      
