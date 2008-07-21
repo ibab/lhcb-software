@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.4 2008-02-22 12:12:12 marcocle Exp $
+// $Id: DetDescDict.h,v 1.5 2008-07-21 14:51:45 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -14,6 +14,7 @@
 // DetDesc 
 // ============================================================================
 #include "DetDesc/IDetectorElement.h"
+#include "DetDesc/IDetElemFinder.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"

@@ -2,6 +2,7 @@
   
   <class name="IDetectorElement"  />
   <class name="std::vector&lt;IDetectorElement*&gt;"  />
+  <class name="IDetElementFinder" />
   <class name="IGeometryInfo"     />
   <class name="ILVolume"          />
   <class name="IPVolume"          />
