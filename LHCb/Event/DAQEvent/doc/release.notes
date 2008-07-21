@@ -4,6 +4,13 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-07-21 - Marco Cattaneo
+ - Pick up IEventTimeDecoder.h from GaudiKernel and remove LHCbKernel dependency
+ - Move tests/src/RawEventCreator (renamed DummyRawEventCreator) and
+   tests/src/ByteStreamTests to src/components
+ - Remove TestRawEvent.exe (use gaudirun.py instead)
+ - Update test/options/test.opts and qmtest files accordingly
+
 !================ DAQEvent v7r12 2008-07-17 ===========================
 ! 2008-07-17 - Tomasz Skwarnicki
  - Added HltSelCandidates and HltPrimaryVertex bank types

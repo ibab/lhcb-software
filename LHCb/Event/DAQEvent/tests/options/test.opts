@@ -2,7 +2,7 @@
 // Private Application Configuration options
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "DAQEventTests::ByteStreamTests",
-                           "DAQEventTests::RawEventCreator",
+                           "DAQEventTests::DummyRawEventCreator",
                            "RawEventDump" };
 ApplicationMgr.EvtMax = 1;
 ApplicationMgr.EvtSel = "NONE";

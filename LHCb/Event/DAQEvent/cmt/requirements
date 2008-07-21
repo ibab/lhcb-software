@@ -1,5 +1,5 @@
 package DAQEvent
-version v7r12
+version v7r13
 
 use GaudiKernel v*
 branches cmt doc Event src tests xml
@@ -25,25 +25,14 @@ macro DAQEventLib_dependencies DAQEventObj2Doth
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================
-library DAQEvent        component/*.cpp -import=GaudiAlg
+library DAQEvent        component/*.cpp  -import=GaudiAlg
 
 # ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
 
-
-# we need LHCbKernel just for an include file
-use LHCbKernel   v* Kernel
-macro_remove DAQEvent_use_linkopts '$(LHCbKernel_linkopts)'
-macro_remove DAQEventLib_use_linkopts '$(LHCbKernel_linkopts)'
-macro_remove DAQEventDict_use_linkopts '$(LHCbKernel_linkopts)'
-
+# Set up the test application with packages needed at run time
 private
-#========= Test application ==========
-use GaudiConf   v*      -no_auto_imports
-use GaudiSvc    v*      -no_auto_imports
-macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
-application   TestRawEvent -group=tests $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/src/*.cpp
-#apply_pattern application_path
-
-apply_pattern QMTest
+  use GaudiSvc    v*      -no_auto_imports
+  apply_pattern QMTest
+end_private

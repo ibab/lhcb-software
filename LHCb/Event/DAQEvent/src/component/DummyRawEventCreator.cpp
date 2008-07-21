@@ -1,26 +1,24 @@
-// $Id: RawEventCreator.cpp,v 1.1 2007-12-07 14:34:05 marcocle Exp $
+// $Id: DummyRawEventCreator.cpp,v 1.1 2008-07-21 14:50:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// from LHCb
-#include "Kernel/IEventTimeDecoder.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 // local
 #include "Event/RawEvent.h"
 #include "Event/ODIN.h"
 
-#include "RawEventCreator.h"
+#include "DummyRawEventCreator.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RawEventCreator
+// Implementation file for class : DummyRawEventCreator
 //
 // 2005-10-13 : Markus Frank
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(DAQEventTests,RawEventCreator)
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DAQEventTests,DummyRawEventCreator)
 
 #ifndef ODIN_VERSION
 #define ODIN_VERSION 3
@@ -31,8 +29,8 @@ using namespace DAQEventTests;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RawEventCreator::RawEventCreator( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+DummyRawEventCreator::DummyRawEventCreator( const std::string& name,
+                                            ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ), m_eventTimeDecoder(NULL)
 {
   
@@ -40,9 +38,9 @@ RawEventCreator::RawEventCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-RawEventCreator::~RawEventCreator() {}; 
+DummyRawEventCreator::~DummyRawEventCreator() {}; 
 
-StatusCode RawEventCreator::initialize() {
+StatusCode DummyRawEventCreator::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if (sc.isFailure()) return sc;
   
@@ -54,7 +52,7 @@ StatusCode RawEventCreator::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode RawEventCreator::execute() {
+StatusCode DummyRawEventCreator::execute() {
 
   debug() << "==> Execute" << endmsg;
 

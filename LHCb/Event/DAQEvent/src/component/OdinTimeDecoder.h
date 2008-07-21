@@ -1,11 +1,11 @@
-// $Id: OdinTimeDecoder.h,v 1.3 2007-04-19 13:25:39 cattanem Exp $
+// $Id: OdinTimeDecoder.h,v 1.4 2008-07-21 14:50:55 cattanem Exp $
 #ifndef ODINTIMEDECODER_H 
 #define ODINTIMEDECODER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IEventTimeDecoder.h"            // Interface
+#include "GaudiKernel/IEventTimeDecoder.h"            // Interface
 
 // forward declarations
 class IDataProviderSvc;
