@@ -11,6 +11,38 @@ This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
 commissioned. Output requires Brunel v33r0 or later
 
+- Persistency changes
+  . Different OT RawBank encoding, to correspond to real data. Bank version not
+    changed (remains v3 as in real data), so change is backward incompatible,
+    requires Brunel v33r0 or later to decode (OTDAQ v7r0)
+  . Changes, extensions and bug fixes to L0Muon encoding
+    (L0Muon v8r0, L0MuonKernel v8r0, ParamFiles v7r2)
+
+- New features
+  . VeloSim takes bad stripslist from DeVeloSensor to kill bad strips. Taken from
+    SIMCOND for Velo, 1% random for Pileup (VeloSimulation v3r4, VeloDet v13r2)
+  . Added bad known bad strips in Velo (SQLDDDB v4r6)
+  . New calorimeter description with split halves
+    (SQLDDDB v4r6, CaloDet v9r0, CaloDetXmlCnv v3r2)
+  . Magnetic field scaling factor now taken from SIMCOND (Magnet v4r0)
+  . Add new TCKs for L0 (cosmics triggers) (L0DU v8r7)
+  . Possibility to run L0Muon without M1 and M2 (L0Muon v8r0)
+
+- New tuning
+  . L0CaloAlg decides which candidate to take in case of equality, to mimic
+    real electronics behaviour (L0Calo v9r15)
+  . Reduce unneccessary calls to gsl_sf_erf_Q (VeloSimulation v3r4)
+
+- New packaging
+  . Update L0Sequences (L0DU v8r7, Boole.opts, BooleMoni.opts)
+
+- Bug fixes
+  . Fix uninitialized member variables in CaloDigitAlg (CaloDigit v2r7)
+  . Fixes to IT geometry (SQLDDDB v4r6, STDet v4r3)
+  . Fix FPE monitoring on Windows (LHCbKernel v8r6)
+  . Protect a FPE in MuonDet (MuonDet v8r2)
+  . Fix tiny memory leak (DetCond v12r1)
+
 </PRE><H1><A NAME=v15r2>2008-07-07 Boole v15r2</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19
  and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r1
