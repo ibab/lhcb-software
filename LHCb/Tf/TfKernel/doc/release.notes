@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2008-07-21 - Gabriel Guerrer
+ - Tf::IStationSelector and Tf::XYSearchWindow exposed to python
+
 ! 2008-07-17 - Johannes Albrecht
  - TStationHitManager.h: add validity range to IStationSelector
 

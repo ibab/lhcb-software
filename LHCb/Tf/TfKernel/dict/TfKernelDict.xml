@@ -34,5 +34,9 @@
   <class name = "Tf::IITHitCreator::STRegion" />
   <class name = "Tf::ITTHitCreator::STRegion" />
   <class name = "Tf::IOTHitCreator::OTRegion" />
+  
+  <class name = "Tf::IStationSelector" />
+  <class name = "std::vector<Tf::IStationSelector*>" />
+  <class name = "Tf::XYSearchWindow" />
 
 </lcgdict>
