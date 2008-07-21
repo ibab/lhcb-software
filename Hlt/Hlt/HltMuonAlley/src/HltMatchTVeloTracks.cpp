@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.5 2008-06-02 10:57:59 graven Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.6 2008-07-21 18:02:42 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,7 @@ StatusCode HltMatchTVeloTracks::initialize()
  StatusCode sc = GaudiTool::initialize();
 
 
-  m_fastPTool = tool <IFastMomentumEstimate>("FastMomentumEstimate");
+  m_fastPTool = tool <ITrackMomentumEstimate>("FastMomentumEstimate");
 
  return StatusCode::SUCCESS;
 

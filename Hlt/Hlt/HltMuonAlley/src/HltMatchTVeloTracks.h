@@ -1,4 +1,4 @@
-// $Id: HltMatchTVeloTracks.h,v 1.4 2008-06-02 10:57:59 graven Exp $
+// $Id: HltMatchTVeloTracks.h,v 1.5 2008-07-21 18:02:45 albrecht Exp $
 #ifndef HLTMUONALLEY_MATCHTVELOTRACKS_H 
 #define HLTMUONALLEY_MATCHTVELOTRACKS_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/ITrackMatch.h"            // Interface
-#include "TrackInterfaces/IFastMomentumEstimate.h"
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Event/StateParameters.h"
 #include "HltBase/IMatchTVeloTracks.h"            // Interface
 #include "HltBase/IBiFunctionTool.h"            // Interface
@@ -72,8 +72,8 @@ private:
   double m_space_cut;
   double m_ptkickConstant;
 
-  IFastMomentumEstimate* m_fastPTool;
-
+  ITrackMomentumEstimate* m_fastPTool;
+  
   LHCb::State* m_myState;
 };
 #endif // MATCHTVELOTRACKS_H
