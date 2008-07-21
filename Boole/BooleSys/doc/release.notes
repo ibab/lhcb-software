@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v16r0>2008-07-17 Boole v16r0</A></H1><PRE>
+</PRE><H1><A NAME=v16r0>2008-07-21 Boole v16r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r1
 
@@ -27,6 +27,7 @@ commissioned. Output requires Brunel v33r0 or later
   . Magnetic field scaling factor now taken from SIMCOND (Magnet v4r0)
   . Add new TCKs for L0 (cosmics triggers) (L0DU v8r7)
   . Possibility to run L0Muon without M1 and M2 (L0Muon v8r0)
+  . Adapt Boole_ganga.py to Ganga 5 and python options
 
 - New tuning
   . L0CaloAlg decides which candidate to take in case of equality, to mimic
