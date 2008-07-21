@@ -7,6 +7,7 @@ Purpose: LHCb Digitization program
  - In requirements, use ParamFiles v7r2
  - In Boole.opts, BooleMoni.opts : update L0 sequences according to changes in
                                    L0DU/options.
+ - Update Boole_Ganga.py for use with Ganga 5
 
 </PRE><H1><A NAME=v15r2>2008-07-03 Boole v15r2</A></H1><PRE>
  - Update 2008-Files.py with latest test file from Gauss v31r2
