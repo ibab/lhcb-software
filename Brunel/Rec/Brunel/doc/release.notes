@@ -6,7 +6,9 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
  - In requirements:
    . Remove creation of Brunel.exe, only gaudirun.py is supported from now
+     (N.B. Brunel-Ganga.job, valgrind.job not yet migrated, do not use)
    . use ParamFiles v7r2
+ - Remove all top level *.opts files, use configurable instead
  - In python/Brunel/Configuration.py, options/Brunel-Default.py:
    . Add expertTracking switches to Brunel configurables. 
      Supported values are: ["usePatSeeding","noDrifttimes","simplifiedGeometry"]
@@ -16,6 +18,7 @@ Purpose: LHCb reconstruction program
    . include Reco.py instead of Reco.opts
    . use L0FilterFromRawSeq sequence from L0DU package in case of L0 filtering
      (previously was filtering from recalculated emulated decision)
+ - In 2008-Files.opts: update test file with one produced with Boole v16r0
 
 </PRE><H1><A NAME=v32r8>2008-07-04 Brunel v32r8</A></H1><PRE>
  - Add Brunel-2008.py and 2008-Files.py, example job for 2008 simulated data
