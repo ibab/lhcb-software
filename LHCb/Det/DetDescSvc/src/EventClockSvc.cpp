@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.7 2007-12-07 08:11:42 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.8 2008-07-21 14:52:40 cattanem Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -6,8 +6,7 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Time.h"
-
-#include "Kernel/IEventTimeDecoder.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
 
 // local
 #include "EventClockSvc.h"

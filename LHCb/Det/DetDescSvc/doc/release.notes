@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.46 2008-06-09 09:56:48 cattanem Exp $ 
+! $Id: release.notes,v 1.47 2008-07-21 14:52:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2008-07-21 - Marco Cattaneo
+ - Pick up interfaces previously in LHCbKernel from their new locations in
+   GaudiKernel, GaudiAlg, DetDesc (needs Gaudi v20r2)
+ - Remove LHCbKernel dependency
 
 !========================= DetDescSvc v2r0 2008-06-09 =========================
 ! 2008-06-09 - Marco Cattaneo

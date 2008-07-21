@@ -1,11 +1,11 @@
-// $Id: DetElemFinder.h,v 1.1 2006-10-11 13:41:05 marcocle Exp $
+// $Id: DetElemFinder.h,v 1.2 2008-07-21 14:52:40 cattanem Exp $
 #ifndef DETELEMFINDER_H 
 #define DETELEMFINDER_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/HashMap.h"
-#include "Kernel/IDetElemFinder.h"
+#include "DetDesc/IDetElemFinder.h"
 
 /** @class DetElemFinder DetElemFinder.h
  *  

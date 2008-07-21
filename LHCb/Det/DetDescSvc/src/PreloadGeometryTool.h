@@ -1,11 +1,11 @@
-// $Id: PreloadGeometryTool.h,v 1.1 2006-07-27 20:39:16 cattanem Exp $
+// $Id: PreloadGeometryTool.h,v 1.2 2008-07-21 14:52:40 cattanem Exp $
 #ifndef PRELOADGEOMETRYTOOL_H 
 #define PRELOADGEOMETRYTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IGenericTool.h"            // Interface
+#include "GaudiAlg/IGenericTool.h"            // Interface
 
 
 /** @class PreloadGeometryTool PreloadGeometryTool.h

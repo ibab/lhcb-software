@@ -1,11 +1,11 @@
-// $Id: FakeEventTime.h,v 1.1 2006-09-26 10:45:48 marcocle Exp $
+// $Id: FakeEventTime.h,v 1.2 2008-07-21 14:52:40 cattanem Exp $
 #ifndef FAKEEVENTTIME_H 
 #define FAKEEVENTTIME_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
-#include "Kernel/IEventTimeDecoder.h"            // Interface
+#include "GaudiKernel/IEventTimeDecoder.h"            // Interface
 
 class IDataProviderSvc;
 

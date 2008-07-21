@@ -1,16 +1,16 @@
-# $Id: requirements,v 1.22 2008-06-09 09:56:48 cattanem Exp $ 
+# $Id: requirements,v 1.23 2008-07-21 14:52:40 cattanem Exp $ 
 # ============================================================================
 # Created    : 2005-04-22
 # Maintainer : Matt Needham, Marco Clemencic
 # ============================================================================
 package           DetDescSvc
-version           v2r0
+version           v2r1
 
 branches          cmt doc src
 
 use DetDesc       v*   Det
-use LHCbKernel    v*   Kernel
 use GaudiAlg      v*
+use GaudiKernel   v*
 
 # ============================================================================
 # Component library building rule
@@ -21,6 +21,7 @@ apply_pattern    component_library library=DetDescSvc
 # Boost is needed only at compile time (Boost::Spirit)
 private
 use Boost v* LCG_Interfaces
+end_private
 
 # ============================================================================
 # The END 
