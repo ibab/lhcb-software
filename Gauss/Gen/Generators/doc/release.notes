@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.131 2008-07-20 17:20:06 robbep Exp $
+! $Id: release.notes,v 1.132 2008-07-21 13:38:48 robbep Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2008-07-21 - Patrick Robbe 
+ - EvtGenDecay.cpp: add possibility to generate polarized charmonium
 
 ! 2008-07-20 - Patrick Robbe
  - Special.cpp: suppress LHAPDF output
