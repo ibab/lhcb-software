@@ -4,6 +4,9 @@
 ! Purpose     : Decision Algorithms for the muon trigger
 !-----------------------------------------------------------------------------
 
+! 2008-07-21 - Johannes Albrecht
+ - HltMatchTVeloTracks.h, cpp adapt interface for ITrackMomentumEstimate tool
+
 !========================== HltMuonAlley v2r4p1 2008-07-09 ===================
 ! 2008-06-27 - Patrick Koppenburg
  - HltIsMuonTool : Check StatusCodes. Protect debug().
