@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.15 2008-07-09 16:19:16 ibelyaev Exp $
+// $Id: GenParticleCuts.h,v 1.16 2008-07-21 12:12:21 hmdegaud Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -842,7 +842,7 @@ namespace LoKi
      *  
      *  if one has 
      *  @f[  \mathrm{B}^0 \to \bar{\mathrm{}}^0 \to \mathrm {X} $f]
-     *  in this case both @\f[\mathrm{B}^0$\f] and  $f[ \bar{\mathrm{}}^0 @f] 
+     *  in this case both @\f[\mathrm{B}^0$\f] and  $\f[ \bar{\mathrm{}}^0 @\f] 
      *  are considered as "oscillated" 
      *
      *  @see LoKi::GenParticles::Oscillated 
