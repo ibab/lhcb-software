@@ -1,15 +1,14 @@
-// $Id: CaloCosmicsTrackTool.h,v 1.1 2008-05-22 22:47:59 odescham Exp $
+// $Id: CaloCosmicsTrackTool.h,v 1.2 2008-07-21 14:40:37 cattanem Exp $
 #ifndef CALOCOSMICSTRACKTOOL_H 
 #define CALOCOSMICSTRACKTOOL_H 1
 
 // Include files
 // from Gaudi
+#include "GaudiKernel/IEventTimeDecoder.h"
 #include "GaudiAlg/GaudiTupleTool.h"
+
 // from LHCb
 #include "CaloInterfaces/ICaloCosmicsTrackTool.h"            // Interface
-#include "Kernel/IEventTimeDecoder.h"
-
-
 
 /** @class CaloCosmicsTrackTool CaloCosmicsTrackTool.h
  *  
