@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.18 2008-07-16 12:39:40 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.19 2008-07-21 07:38:37 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -607,22 +607,26 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 
   // Errors
   location = LHCb::L0MuonErrorLocation::ProcPU + extension;
-  if (exist<LHCb::L0MuonErrors>(location) ) return Warning("LHCb::L0MuonInfo already exist at "+location,StatusCode::FAILURE,50);
+  if (exist<LHCb::L0MuonErrors>(location) ) 
+    return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_proc_pu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_pu, location );
 
   location = LHCb::L0MuonErrorLocation::ProcBCSU + extension;
-  if (exist<LHCb::L0MuonErrors>(location) ) return Warning("LHCb::L0MuonInfo already exist at "+location,StatusCode::FAILURE,50);
+  if (exist<LHCb::L0MuonErrors>(location) ) 
+    return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_proc_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_bcsu, location );
 
   location = LHCb::L0MuonErrorLocation::CtrlBCSU + extension;
-  if (exist<LHCb::L0MuonErrors>(location) ) return Warning("LHCb::L0MuonInfo already exist at "+location,StatusCode::FAILURE,50);
+  if (exist<LHCb::L0MuonErrors>(location) ) 
+    return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_ctrl_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_ctrl_bcsu, location );
 
   location = LHCb::L0MuonErrorLocation::CtrlCUSU + extension;
-  if (exist<LHCb::L0MuonErrors>(location) ) return Warning("LHCb::L0MuonInfo already exist at "+location,StatusCode::FAILURE,50);
+  if (exist<LHCb::L0MuonErrors>(location) ) 
+    return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_ctrl_cusu = new LHCb::L0MuonErrors();
   put(pl0merrors_ctrl_cusu, location );
 
@@ -700,7 +704,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 
   // Info
   location = LHCb::L0MuonInfoLocation::Default + extension;
-  if (exist<LHCb::L0MuonDatas>(location) ) {
+  if (exist<LHCb::L0MuonInfo>(location) ) {
     return Warning("LHCb::L0MuonInfo already exist at "+location,
                    StatusCode::FAILURE,50);
   }
