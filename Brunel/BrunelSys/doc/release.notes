@@ -3,6 +3,75 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
+This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20, Rec v5r9
+ and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r*
+
+As from this version, Brunel.exe and corresponding top level options have been
+removed. Only gaudirun.py is supported
+
+This is a development version.
+- Can be used to reconstruct 2008 geometries
+- Can be used for DC06 geometries, but material seen is different from DC06
+- Cannot reconstruct data produced with Boole v15r1 or v15r2 (use v32r8 instead)
+
+- New features
+  . Tracking now steered by python options
+    (TrackSys v4r15, PatAlgorithms v3r8, PatVeloTT v3r2, TrackMatching v2r18,
+     TsaAlgorithms v3r4)
+  . Add expertTracking switches to Brunel configurables. 
+    Supported values are: ["usePatSeeding","noDrifttimes","simplifiedGeometry"]
+    (python/Brunel/Configuration.py, options/Brunel-Default.py, TrackSys v4r15)
+  . Add "Vertex" to Reco.DetectorList, called after "Tr", for primary vertex
+    reconstruction (RecSys v5r9)
+  . Added possibility to use of dead strips in TT and IT 
+    (TrackTools v3r9, TsaAlgorithms v3r4, STDet v4r3)
+  . Added tests for VELO sensors readout and bad strips
+    (TrackTools v3r9, VeloDet v13r2)
+  . Added more cuts to TrackSelector (TrackTools v3r9)
+  . OT decoding modified to support real data. Breaks support for simulated
+    data digitized with Boole v15r1 and v15r2 (OTDAQ v7r0)
+  . Many fixes and protections for decoding real data
+    (L0Interfaces v1r3, L0Event v17r0, L0Calo v9r15, L0DU v8r7, L0Muon v8r0,
+     L0MuonKernel v8r0,MuonDAQ v4r3, OTDAQ v7r0, RichDAQ v3r8, STDAQ v3r9,
+     STKernel v1r6, STTell1Event v1r3)
+  . Magnetic field scaling factor now taken from SIMCOND or ONLINE, can be
+    over-ridden by job options (e.g. for DC06 field map) (Magnet v4r0)
+  . Added Velo alignment condition, which is able to get X and Y offsets from
+    another condition (VeloDet v13r2, SQLDDDB v4r6)
+  . New calorimeter description with split halves
+    (SQLDDDB v4r6, CaloDet v9r0, CaloDetXmlCnv v3r2)
+ 
+- Removed features
+  . Remove creation of Brunel.exe, only gaudirun.py is supported from now
+    (N.B. Brunel-Ganga.job, valgrind.job not yet migrated, do not use)
+  . Remove all top level *.opts files, use configurable instead
+
+- New tuning
+  . Update 2008 simulation test file with one produced with Boole v16r0
+    (2008-Files.opts)
+  . Add more checks on input arguments of python/Brunel/Configuration.py
+  . Use L0FilterFromRawSeq sequence from L0DU package in case of L0 filtering.
+    Previously was recalculating emulated decision (Brunel.opts, L0DU
+  . Use cholesky decomposition for track covariance matrix inversion
+    (TrackFitter v2r26)
+  . Improvements to PatDownstream and PatSeeding (PatAlgorithms v3r8)
+  . Minor fix to the computation of the molar weight for computation of dE/dx
+    constants for mixtures (DetDesc v18r7)
+
+- New packaging
+  . Move handling of options for fieldOff and veloOpen to tracking scripts
+    (python/Brunel/Configuration.py, TrackSys v4r15)
+  . Take reconstruction sequences from Reco.py, no longer from Reco.opts 
+    (Brunel.opts, RecSys v5r9)
+
+- Bug fixes
+  . Fix uninitialised variables (PatChecker v3r3p1)
+  . Fixes to IT geometry (SQLDDDB v4r6, STDet v4r3)
+  . Fix FPE monitoring on Windows (LHCbKernel v8r6)
+  . Protect a FPE in MuonDet (MuonDet v8r2)
+  . Fix tiny memory leak (DetCond v12r1)
+
 </PRE><H1><A NAME=v32r8>2008-07-08 Brunel v32r8</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r0, Lbcom v6r19, Rec v5r8
  and DDDB v1r* (SQLDDDB v4r5 or greater), ParamFiles v7r1, FieldMap v5r*
@@ -12,7 +81,7 @@ This is a development version.
 - Can be used for DC06 geometries, but material seen is different from DC06
 
 - New features
-  . Add Brunel-2008.py and 2008-Files.py, example jjob for 2008 simulated data
+  . Add Brunel-2008.py and 2008-Files.py, example job for 2008 simulated data
   . In Brunel Configurable, add support for SIMCOND. Now used by default except
     for DC06 geometries (Brunel v32r8, GaudiConf v10r10, DDDB v1r8)
   . Improvements to Floating Point Exception auditing
