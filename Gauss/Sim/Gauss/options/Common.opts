@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.28 2008-06-05 09:51:34 gcorti Exp $ 
+// $Id: Common.opts,v 1.29 2008-07-22 17:02:49 gcorti Exp $ 
 
 /** @file 
  * 
@@ -11,12 +11,6 @@
  */
 
 #units "$STDOPTS/units.opts"
-
-// External services that will be always used
-ApplicationMgr.ExtSvc = { "ToolSvc" ,
-                          "ParticlePropertySvc" ,
-                          "EventSelector",
-                          "EventClockSvc" };
 
 // Configuration of various services that are used: 
 RndmGenSvc.Engine.SetSingleton   = true;
