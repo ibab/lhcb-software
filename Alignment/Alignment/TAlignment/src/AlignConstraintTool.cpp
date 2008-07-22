@@ -110,16 +110,19 @@ namespace Al
   StatusCode AlignConstraintTool::initialize()
   {
     // check that constraints exist
-    StatusCode sc = StatusCode::SUCCESS ;
-    if( !Constraints::check(m_constraintNames) ) {
-      error() << "Constraint list contains unknown constraints! "  << endreq ;
-      sc = StatusCode::FAILURE ;
-    } else {
-      info() << "Constraining for " ;
-      for( std::vector<std::string>::const_iterator it = m_constraintNames.begin() ;
+    StatusCode sc = GaudiTool::initialize() ;
+    
+    if( sc.isSuccess() ) {
+      if( !Constraints::check(m_constraintNames) ) {
+	error() << "Constraint list contains unknown constraints! "  << endreq ;
+	sc = StatusCode::FAILURE ;
+      } else {
+	info() << "Constraining for " ;
+	for( std::vector<std::string>::const_iterator it = m_constraintNames.begin() ;
 	   it != m_constraintNames.end(); ++it )
-	info() << *it << " , " ;
-      info() << endmsg ;
+	  info() << *it << " , " ;
+	info() << endmsg ;
+      }
     }
     return sc ;
   }
