@@ -4,6 +4,10 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-21 - Jose A. Hernando
+	 - python/modules improvements in PlotTools, pidtools
+   - python/examples hltmonitoralley (almost final script to monitor alleys) 
+
 ! 2008-7-17 - Jose A. Hernando
    - python/modules hltconf method to get the hltconfiguration and hltfilters
    - python/modules arguments method to get easily the arguments from command line

@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-@brief two methods to deal with command input arguments
+@brief methods to retrieve the command arguments given to the python script
 @author J.A. Hernando, jose.hernando@cern.ch
 @ data 16-03-05
 """
@@ -9,13 +9,23 @@ import sys
 import os
 import string
 
+def maketype(val,default):
+    """ convert the val object into an object of the same type as the default
+    """
+    if (not default): return val
+    st = str(type(default))
+    i0 = st.find("'")
+    ie = st.rfind("'")
+    dtype = st[i0+1:ie]+"(val)"
+    val = eval(dtype)
+    return val
+
 def argument(key, comment, default = None):
     """ return the command line argument associated with a key, if not
     return the default value
     use: argument('-ifile',' input file name','input.txt')
     @author Jose A. Hernando
     """
-
     args = sys.argv
     i = 0
     name= default;
@@ -27,6 +37,7 @@ def argument(key, comment, default = None):
     print " argument ",key," \t", comment," : \t",name
     if (name == None):
         print "   use: ",comment
+    if (default): name = maketype(name,default)
     return name
 
 def argument_list(key, comment, default = []):

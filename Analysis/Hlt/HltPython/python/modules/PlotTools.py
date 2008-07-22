@@ -614,6 +614,31 @@ def getleg( trees, drawopt='l', fillcolor=COLOR['white']):
 	return l
 
 #---------------------------------------------------
+def getleg( objs, legends, drawopt='l', fillcolor=COLOR['white']):
+	"""
+	Produces a legend given a list of objects.	
+	Possible drawopt: 'l' - line, 'p' - marker, 'f' - filled box, 'ep' - marker with vertical error bar
+	"""
+	l = TLegend(.65,.45,.98,.68)
+	l.SetFillColor(fillcolor)		
+	for i in range(len(objs)):
+		l.AddEntry(objs[i], legends[i], drawopt)
+	return l
+
+#---------------------------------------------------
+def setleg( objs, legends, drawopt='l', fillcolor=COLOR['white']):
+	"""
+	set as legent the list of names in legends for a list of objets
+	Possible drawopt: 'l' - line, 'p' - marker, 'f' - filled box, 'ep' - marker with vertical error bar
+	"""
+	l = TLegend(.65,.45,.98,.68)
+	l.SetFillColor(fillcolor)		
+	for i in range(len(objs)):
+		l.AddEntry(objs[i], legends[i], drawopt)
+	leg2objs(l,objs)
+	return l
+
+#---------------------------------------------------
 def plot(objs, extraopts=''):
 	"""
 	Display objs on screen, returning the correspondent canvas
