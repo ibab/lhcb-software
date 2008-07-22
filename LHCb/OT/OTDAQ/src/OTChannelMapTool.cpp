@@ -1,4 +1,4 @@
-// $Id: OTChannelMapTool.cpp,v 1.6 2008-07-05 14:55:18 janos Exp $
+// $Id: OTChannelMapTool.cpp,v 1.7 2008-07-22 13:16:54 janos Exp $
 // Include files
 
 // Include files
@@ -243,13 +243,25 @@ void OTChannelMapTool::updateChannelMap() const
     
     // what happens next depends on the bank version. eventually, we
     // can also read a file that corrects the channel map
-    if( m_currentBankVersion == OTBankVersion::DC06 ) {
-      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan) 
-	module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
-    } else {
-      for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan)
-        module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ; 
-    }
+     switch( m_currentBankVersion ) {
+       case OTBankVersion::DC06:
+         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
+         break;
+         // Note: SIM and v3 currently (22/07/2008) uses same decoding.
+         //       If SIM changes w.r.t. to the real decoding then we'll need
+         //       to change it here.
+       case OTBankVersion::SIM:
+       case OTBankVersion::v3:
+         for ( unsigned ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan ) module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ;
+     }
+     
+    // if( m_currentBankVersion == OTBankVersion::DC06 ) {
+    //       for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan) 
+    // 	module.m_channelToStraw[ichan] = computeStrawDC06(ichan) ;
+    //     } else {
+    //       for(unsigned int ichan = 0; ichan < OTDAQ::ChannelMap::Module::NumChannels; ++ichan)
+    //         module.m_channelToStraw[ichan] =computeStrawV3( it->first, ichan ) ; 
+    //     }
     
     // finally, fill the inverse table
     module.fillStrawToChannelMap() ;

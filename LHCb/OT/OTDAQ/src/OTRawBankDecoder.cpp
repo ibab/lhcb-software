@@ -1,4 +1,4 @@
-// $Id: OTRawBankDecoder.cpp,v 1.16 2008-06-27 08:41:18 wouter Exp $
+// $Id: OTRawBankDecoder.cpp,v 1.17 2008-07-22 13:17:02 janos Exp $
 // Include files
 #include <algorithm>
 
@@ -138,12 +138,16 @@ namespace OTRawBankDecoderHelpers
   {
     size_t rc(0) ;
     switch(m_bankversion) {
-    case OTBankVersion::DC06: 
-      rc = decodeDC06(tdcconversion) ;
-      break;
-    case OTBankVersion::v3:
-      rc = decodeV3(tdcconversion) ;
-      break;
+      case OTBankVersion::DC06: 
+        rc = decodeDC06(tdcconversion) ;
+        break;
+        // Note: SIM and v3 currently (22/07/2008) uses same decoding.
+        //       If SIM changes w.r.t. to the real decoding then we'll need
+        //       to change it here. 
+      case OTBankVersion::SIM:
+      case OTBankVersion::v3:
+        rc = decodeV3(tdcconversion) ;
+        break;
     }
     return rc ;
   }
@@ -352,7 +356,8 @@ StatusCode OTRawBankDecoder::decodeGolHeadersV3(const RawBank& bank, int bankver
     // if there are no hits, issue a warning
     numhits = golHeader.numberOfHits() ;
     if( 0 == numhits ) {
-      warning() << "Found empty GOL header " << golHeader << " " << *idata << endmsg ;
+      Warning( "Found empty GOL header!", StatusCode::SUCCESS, 0).ignore();
+      //warning() << "Found empty GOL header " << golHeader << " " << *idata << endmsg ;
     } else {
       // Decode the GOL ID
       station = golHeader.station();
@@ -420,15 +425,19 @@ StatusCode OTRawBankDecoder::decodeGolHeaders() const
       m_channelmaptool->setBankVersion( bVersion ) ;
       StatusCode sc ;
       switch( bVersion ) {
-      case OTBankVersion::DC06:
-        sc = decodeGolHeadersDC06(**ibank,bVersion) ;
-        break ;
-      case OTBankVersion::v3:
-        sc = decodeGolHeadersV3(**ibank,bVersion) ;
-        break ;
-      default:
-        warning() << "Cannot decode OT raw buffer bank version "
-                  << bVersion << " with this version of OTDAQ" << endmsg;
+        case OTBankVersion::DC06:
+          sc = decodeGolHeadersDC06(**ibank,bVersion) ;
+          break ;
+          // Note: SIM and v3 currently (22/07/2008) uses same decoding.
+          //       If SIM changes w.r.t. to the real decoding then we'll need
+          //       to change it here.
+        case OTBankVersion::SIM:
+        case OTBankVersion::v3:
+          sc = decodeGolHeadersV3(**ibank,bVersion) ;
+          break ;
+        default:
+          warning() << "Cannot decode OT raw buffer bank version "
+                    << bVersion << " with this version of OTDAQ" << endmsg;
       } ;
       // ignore errors
       sc.ignore() ;
