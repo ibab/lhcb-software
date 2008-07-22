@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-07-22 - Marco Cattaneo
+ - Fix ForcedBDecayTool.cpp for HepMC 2 (Gaudi v20r2)
+ - Fix a doxygen warning
+
 !====================== SimComponents v2r10p2 2008-07-17 =====================
 ! 2008-07-17 - Marco Cattaneo
  - Fix compiler warning in mclexer.icpp

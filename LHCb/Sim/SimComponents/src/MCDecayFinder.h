@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.6 2008-06-18 09:28:33 pkoppenb Exp $
+// $Id: MCDecayFinder.h,v 1.7 2008-07-22 13:01:43 cattanem Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -68,7 +68,7 @@ struct yy_buffer_state;
  *        simply write <c>"B0 => D_s- K+ ..."</c>. NB: The <c>"..."</c> is here to catch any
  *        number of particles of any kind so you get the products of the D*_s-.
  *
- *  Note: <c>"pp"</c> stands for "proton - proton collision"</c>. The decay products will
+ *  Note: <c>"pp"</c> stands for <c>"proton - proton collision"</c>. The decay products will
  *        be matched against the particles with no mother. An implicit <c>"..."</c> is
  *        appended. Only the boolean information for that kind of find can be
  *        used, the returned particle is set (MCParticle *)1 in case of match
