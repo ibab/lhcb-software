@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.15 2008-06-26 12:09:52 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.16 2008-07-22 13:00:57 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -16,6 +16,7 @@
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+#include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ServiceLocatorHelper.h"
 // ============================================================================
 // LoKiCore 
@@ -26,6 +27,7 @@
 #include "LoKi/Welcome.h"
 #include "LoKi/Exception.h"
 #include "LoKi/Services.h"
+#include "LoKi/CC.h"
 // ============================================================================
 /** @file
  *
@@ -183,6 +185,47 @@ public:
   // ==========================================================================
 public:
   // ==========================================================================
+  /** make a charge conjugate over the 'decay' expression 
+   *  @param decay 
+   *  @return cc-expression of the decay 
+   */
+  virtual std::string  cc ( const std::string& decay  ) const 
+  {
+    // build the map if not done yet 
+    if ( m_ccMap.empty() )  
+    {
+      if ( 0 == m_ppSvc ) { ppSvc() ; }
+      // get the particles form ParticleService 
+      for ( IParticlePropertySvc::const_iterator it = m_ppSvc->begin() ; 
+            m_ppSvc->end() != it ; ++it )
+      {
+        const ParticleProperty* pp = *it ;
+        if ( 0 == pp   ) { continue ; }
+        const ParticleProperty* anti = pp->antiParticle() ;
+        if ( 0 == anti ) { continue ; }
+        m_ccMap [ pp   -> particle() ] = anti->particle() ;
+      }
+      // get the particles from the options 
+      for ( std::map<std::string,std::string>::const_iterator ic = 
+              m_ccmap_.begin() ; m_ccmap_.end() != ic ; ++ic ) 
+      {
+        m_ccMap [ ic -> first  ] = ic -> second ;
+        m_ccMap [ ic -> second ] = ic -> first  ;
+      }
+      MsgStream log ( msgSvc() , name() ) ;
+      log  << MSG::DEBUG ;
+      if ( log.isActive() ) 
+      {
+        Gaudi::Utils::toStream ( m_ccMap , log.stream() ) ;
+        log << endreq ;
+      }
+    }
+    // use the map 
+    return LoKi::CC::cc_ ( decay , m_ccMap ) ;
+  }
+  // ==========================================================================
+public:
+  // ==========================================================================
   /// Inform that a new incident has occured
   virtual void handle ( const Incident& inc ) 
   {
@@ -235,6 +278,8 @@ public:
     LoKi::ErrorReport& rep = LoKi::ErrorReport::instance() ;
     if ( 0 == rep.reporter() && 0 != m_reporter ) 
     { rep.setReporter ( m_reporter ) ; }
+    // 
+    m_ccMap.clear() ;
     //
     return StatusCode::SUCCESS ;
   }   
@@ -278,6 +323,8 @@ public:
       log << endreq ;
     }
     //
+    m_ccMap.clear() ;
+    //
     return Service::finalize() ;
   } 
   // ==========================================================================
@@ -314,6 +361,8 @@ public:
       svc.releaseAll();
       if ( 0 == svc.lokiSvc() ) { svc.setLoKi( this ) ; }
     }
+    //
+    m_ccMap.clear() ;
     //
     { // welcome message 
       MsgStream log ( msgSvc() , name() ) ;
@@ -389,9 +438,21 @@ protected:
     , m_reporter     (  0 )
     , m_reporterName ( "LoKi::Reporter/REPORT")
     , m_event        ( -1 )
+    , m_ccMap        ()
+    , m_ccmap_       ()
     //
-  { 
-    declareProperty ( "Reporter" , m_reporterName ) ;
+  {
+    declareProperty 
+      ( "Reporter" , m_reporterName , "The type/name of default Reporter tool") ;
+    /// @see file Nodes.cpp 
+    m_ccmap_ [ "X+"     ] = "X-"     ; // charged, positive
+    m_ccmap_ [ "X-"     ] = "X+"     ; // charged, negative 
+    m_ccmap_ [ "l+"     ] = "l-"     ; // charged lepton, positive 
+    m_ccmap_ [ "l-"     ] = "l+"     ; // charged lepton, negative
+    //
+    declareProperty 
+      ( "ChargeConjugations" , m_ccmap_ , 
+        "The map of charge-conjugation symbols" ) ; // see Nodes.cpp 
   } 
   // ==========================================================================
   /// virtual and protected destructor
@@ -407,21 +468,35 @@ protected:
   }   
   // ==========================================================================
 private:
-  // default constructor is disabled
-  LoKiSvc () ;
-  // copy constructor is disabled 
-  LoKiSvc           ( const  LoKiSvc& ) ;
-  // assignement operator is disabled 
-  LoKiSvc& operator=( const  LoKiSvc& ) ;
+  // ==========================================================================
+  /// default constructor is disabled
+  LoKiSvc () ;                                        // no default constructor 
+  /// copy constructor is disabled 
+  LoKiSvc           ( const  LoKiSvc& ) ;                            // no copy 
+  /// assignement operator is disabled 
+  LoKiSvc& operator=( const  LoKiSvc& ) ;            // no assignement operator 
+  // ==========================================================================
 private:
-  //
-  mutable IParticlePropertySvc* m_ppSvc        ;
-  mutable IToolSvc*             m_toolSvc      ;
-  mutable IAlgContextSvc*       m_contextSvc   ;
-  mutable IIncidentSvc*         m_incidentSvc  ;
-  mutable LoKi::IReporter*      m_reporter     ;
-  std::string                   m_reporterName ;
-  long                          m_event        ;
+  // ==========================================================================
+  /// the particle property service 
+  mutable IParticlePropertySvc* m_ppSvc        ; // the particle property service 
+  /// the tool service 
+  mutable IToolSvc*             m_toolSvc      ;            // the tool service 
+  /// the context service 
+  mutable IAlgContextSvc*       m_contextSvc   ;         // the context service 
+  /// the incident service 
+  mutable IIncidentSvc*         m_incidentSvc  ;        // the incident service 
+  /// the default reporter 
+  mutable LoKi::IReporter*      m_reporter     ;        // the default reporter 
+  /// the name of the default reporter 
+  std::string                   m_reporterName ; // the name of the default reporter 
+  /// the event marker 
+  long                          m_event        ;            // the event marker
+  /// the CC-map 
+  mutable LoKi::CC::Map         m_ccMap        ;                  // the CC-map 
+  /// CC-map for properties 
+  std::map<std::string,std::string> m_ccmap_   ;                      // CC-map
+  // ==========================================================================
 };
 // ============================================================================
 DECLARE_SERVICE_FACTORY(LoKiSvc)

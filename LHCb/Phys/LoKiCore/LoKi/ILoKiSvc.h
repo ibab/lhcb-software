@@ -1,4 +1,4 @@
-// $Id: ILoKiSvc.h,v 1.7 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: ILoKiSvc.h,v 1.8 2008-07-22 13:00:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ILOKISVC_H 
 #define LOKI_ILOKISVC_H 1
@@ -95,6 +95,14 @@ namespace LoKi
      */
     virtual long                 event       () const = 0 ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /** make a charge conjugate over the 'decay' expression 
+     *  @param decay 
+     *  @return cc-expression of the decay 
+     */
+    virtual std::string  cc ( const std::string& decay  ) const = 0 ;
+    // ========================================================================    
   public:
     // ========================================================================
     /** Retrieve interface ID

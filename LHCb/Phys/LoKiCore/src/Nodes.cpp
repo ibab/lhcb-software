@@ -1,4 +1,4 @@
-// $Id: Nodes.cpp,v 1.2 2008-07-09 16:01:01 ibelyaev Exp $
+// $Id: Nodes.cpp,v 1.3 2008-07-22 13:00:57 ibelyaev Exp $
 // ===========================================================================
 // Include files
 // ===========================================================================
@@ -247,7 +247,7 @@ LoKi::Decays::Nodes::Negative::fillStream ( std::ostream& s ) const
 // ============================================================================
 std::ostream& 
 LoKi::Decays::Nodes::Nu::fillStream ( std::ostream& s ) const
-{ return s << " nu "  ; }
+{ return s << " Nu "  ; }
 // ============================================================================
 std::ostream& 
 LoKi::Decays::Nodes::Ell::fillStream ( std::ostream& s ) const
