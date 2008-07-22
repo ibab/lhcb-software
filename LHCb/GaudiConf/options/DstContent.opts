@@ -7,7 +7,6 @@
 DstWriter.ItemList += 
 {
   "/Event/DAQ/RawEvent#1"
-, "/Event/Rec/Rich/RichOfflineSummaryTracks#1"
 , "/Event/Rec/Track/Muon#1"
 };
 

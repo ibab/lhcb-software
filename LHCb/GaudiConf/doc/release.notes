@@ -2,6 +2,9 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-07-22 - Marco Cattaneo
+ - Remove /Event/Rec/Rich/RichOfflineSummaryTracks from default DST
+
 !======================== GaudiConf v10r11 2008-07-17 =======================
 ! 2008-07-17 - Olivier Deschamps
  - DecodeRawEvent.opts : include L0 on-Demand options from L0DU package
