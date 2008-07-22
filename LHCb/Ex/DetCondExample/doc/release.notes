@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.105 2008-06-30 19:16:52 cattanem Exp $
+! $Id: release.notes,v 1.106 2008-07-22 17:09:35 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-07-22 - Marco Clemencic
+ - Removed the algorithm LoadDDDB which is now in DetDescChecks.
 
 !============ Ex/DetCondExample v11r3 2008-06-30 ==============================
 ! 2008-06-10 - Marco Clemencic
