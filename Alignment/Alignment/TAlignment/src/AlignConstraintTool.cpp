@@ -154,30 +154,32 @@ namespace Al
     // 10 -> Curvature (Curvature constraint)
     
     // it should be possible to do this better
-    size_t numAlignPars = elements.back().activeParOffset() + elements.back().dofMask().nActive() ;
-    if(m_constraints) delete m_constraints ;
-    m_constraints = new Al::Constraints(numAlignPars,m_constraintNames) ;
-    
     double weight(0) ;
     size_t numhits(0) ;
     Gaudi::XYZVector pivot ;
     double zmin(9999999), zmax(-999999) ;
-    size_t index(0u) ;
-    for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it, ++index) {
-      double thisweight = equations.weight(index) ;
-      weight += thisweight ;
-      pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
-      zmin = std::min(it->centerOfGravity().z(),zmin) ;
-      zmax = std::max(it->centerOfGravity().z(),zmax) ;
-      numhits += equations.numHits(index) ;
-    }
-    
+    size_t index(0u) ; 
+    size_t numAlignPars(0) ;
+    for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it, ++index) 
+      if( it->activeParOffset() >= 0 ) { // only take selected elements
+	double thisweight = equations.weight(index) ;
+	weight += thisweight ;
+	pivot += thisweight * Gaudi::XYZVector( it->centerOfGravity() ) ;
+	zmin = std::min(it->centerOfGravity().z(),zmin) ;
+	zmax = std::max(it->centerOfGravity().z(),zmax) ;
+	numhits += equations.numHits(index) ;
+	numAlignPars += it->dofMask().nActive() ;
+      }
+      
     if (weight>0) pivot *= 1/weight ;
     Gaudi::Transform3D canonicalframe( pivot ) ;
     Gaudi::Transform3D canonicalframeInv = canonicalframe.Inverse() ;
     info() << "Pivot, z-range for canonical constraints: " 
 	   << pivot << ", [" << zmin << "," << zmax << "]" << endmsg ;
-    
+
+    if(m_constraints) delete m_constraints ;
+    m_constraints = new Al::Constraints(numAlignPars,m_constraintNames) ;
+ 
     index = 0u ;
     for (Elements::const_iterator it = elements.begin(); it !=elements.end() ; ++it, ++index)
       if( it->activeParOffset() >= 0 ) { // only take selected elements
