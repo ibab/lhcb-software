@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.27 2008-06-02 11:46:04 cattanem Exp $ 
+! $Id: release.notes,v 1.28 2008-07-22 13:14:43 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-22 - Marco Cattaneo
+ - Trivial fix in ForcedBDecayTool.cpp to use a Gaudi::Unit:: instead of CLHEP::
+ - Increment version to v7r1p1
 
 !========================== LoKiGenMC v7r1 2008-06-02 =========================
 ! 2008-06-02 - Marco Cattaneo
@@ -399,6 +403,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.27  2008/06/02 11:46:04  cattanem
+! cosmetic fixes
+!
 ! Revision 1.26  2008/06/02 09:54:46  ibelyaev
 !  change the incidents: EndEvent -> BeginEvent
 !

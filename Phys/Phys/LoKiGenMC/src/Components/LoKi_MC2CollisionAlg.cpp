@@ -1,4 +1,4 @@
-// $Id: LoKi_MC2CollisionAlg.cpp,v 1.7 2007-07-23 17:29:54 ibelyaev Exp $
+// $Id: LoKi_MC2CollisionAlg.cpp,v 1.8 2008-07-22 13:14:43 cattanem Exp $
 // ============================================================================
 // Include file
 // ============================================================================
@@ -97,7 +97,7 @@ protected:
     , m_vertices     ( LHCb::MCVertexLocation     ::Default ) 
     , m_collisions   ( LHCb::GenCollisionLocation ::Default ) 
     , m_output       ( LHCb::MC2CollisionLocation ::Default )
-    , m_threshold    ( 0.1 * CLHEP::micrometer ) 
+    , m_threshold    ( 0.1 * Gaudi::Units::micrometer ) 
   {
     declareProperty ( "MCVertices"    , m_vertices   ) ;
     declareProperty ( "GenCollisions" , m_collisions ) ;

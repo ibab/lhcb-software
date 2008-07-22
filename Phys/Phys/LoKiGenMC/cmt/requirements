@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.17 2008-06-02 11:46:04 cattanem Exp $ 
+# $Id: requirements,v 1.18 2008-07-22 13:14:43 cattanem Exp $ 
 # =============================================================================
 # Created    : 2006-01-16
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # =============================================================================
 package            LoKiGenMC
-version            v7r1
+version            v7r1p1
 
 # ================ structure ==================================================
 branches           cmt doc src options dict python LoKi
