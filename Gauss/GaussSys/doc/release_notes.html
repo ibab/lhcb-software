@@ -3,6 +3,105 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+</PRE><H1><A NAME="v34r0">2008-07-22 - GaussSys v34r0</A></H1><PRE>
+<H2><A NAME="Note">DEVELOPEMENT version. Support only tag head-20080702 
+   via first version of SIMCOND.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v24r0 (and Gaudi v20r1)</b>
+   pythia6 416.2, photos 215.2, lhapdf 5.3.1 (via LCG_GeneratorsInterfaces)
+   HepMC 1.26.02 (via LCG_Interfaces)
+   <b>Geant4 v91r2p1 (based on geant4.9.1.p02)</b>
+   <b>DecFiles v15r0 (DC06 incompatible)</b>, ParamFiles v7r1 
+   DDDB v1r*, FieldMap v5r0, XmlVis v1r6</A></H3>
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces)
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces)
+   pythia8 107.1</A></H3>
+
+!======================== Gauss v34r0 2008-07-22 =============================
+! 2008-07-20 - Gloria CORTI
+ - Remove list of external services ( ToolSvc, ParticlePropertySvc,
+   EventSelector, EventClockSvc ) that are anayway taken as necessary.
+   . Common.opts
+ - Use SIMCOND dbase and latest tags: head-20080702
+   . lhcb-2008.opts
+ - Use macro to fix application version and number in python automatically
+   . requirements
+   . lhcb-2008.py
+
+!========================== EvtGen v9r2 2008-07-18 ===========================
+! 2008-07-10 - Patrick Robbe
+ - Remove compilation warnings
+
+!========================= LbPythia v7r4 2008-07-18 ==========================
+! 2008-07-11 - Patrick Robbe
+ - options/Pythia64.opts: add COM charmonium processes
+
+! 2008-07-10 - Patrick Robbe
+ - Remove usage of SEAL for file:
+   . src/Lib/PythiaProduction.cpp
+
+! 2008-07-09 - Patrick ROBBE and Gloria CORTI
+ - Use Gaudi units intsead of implecetely those of CLHEP vias HepMC
+   (prepared for migration to HepMC 2)
+
+!====================== Generators v8r2 2008-07-18 ===========================
+! 2008-07-18 - Patrick Robbe
+ - Generation.cpp: fix compilation warning
+
+! 2008-07-16 - Gloria CORTI
+ - Remove use of SEAL from requirements file
+
+! 2008-07-10 - Patrick Robbe
+ - Remove completly SEAL functions and replace them with BOOST
+   functions for file handling
+   . src/component/EvtGenDecay.cpp/.h
+
+! 2008-07-09 - Patrick ROBBE and Gloria CORTI
+ - Use Gaudi units explicitely instead of CLHEP implecitely via HepMC
+   (preparation for migration to HepMC 2.0)
+ - Replace use of SEAL utility for environment variables with that of Gaudi
+   . src/component/BiasedBB.cpp
+   . src/component/DaughtersInLHCb.cpp
+   . src/component/EvtGenDecay.cpp
+   . src/component/Generation.cpp
+   . src/component/LHCbAcceptance.cpp
+   . src/component/LeptonInAcceptance.cpp
+   . src/component/ListOfDaughtersInLHCb.cpp
+   . src/component/ReadHepMCAsciiFile.cpp
+   . src/component/SelectedDaughterInLHCb.cpp
+   . src/component/WriteHepMCAsciiFile.cpp
+
+!======================== LbHerwig v5r3 2008-07-18 ==========================
+! 2008-07-10 - Patrick Robbe
+ - HerwigProduction: remove SEAL functions
+
+!========================= LbPythia8 v1r2 2008-07-18 =========================
+! 2008-07-10 - Patrick Robbe
+ - remove SEAL functions from Pythia8Production.cpp
+
+! 2008-07-10 - Gloria Corti
+ - use explicitely Gaudi::Units instead of implicitly CLHEP from HepMC
+   (prepare for migration to HepMC 2.0)
+
+!======================= ParticleGuns v5r2 2008-07-18 =======================
+! 2008-07-11 - Patrick Robbe
+ - Remove SEAL functions from ParticleGun.cpp
+
+!========================= GaussCalo v9r2 2008-07-18 ==========================
+! 2008-07-11 - Patrick Robbe
+ - Fix compilation warnings in SensDet classes (constructors)
+
+!====================== GaussMonitor v5r3 2008-07-18 =========================
+! 2008-07-14 - Patrick Robbe
+ - Correct GeneratorAnalysis histograms to remove b quarks from analysis
+ - GeneratorFullMonitor: add pThat variable
+
+!=========================== XmlVis v1r6 =====================================
+! 2008-07-10 - Thomas Ruf
+ - match to latest changes in infrastructure, beampipe, beam magnets
+
+!=============================================================================
 </PRE><H1><A NAME="v33r2">2008-07-06 - GaussSys v33r2</A></H1><PRE>
 <H2><A NAME="Note">DEVELOPEMENT version. Support latest geometry tags
    head-20080603 and head-20060516.
