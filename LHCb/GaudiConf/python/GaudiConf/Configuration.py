@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-07-03 14:36:06 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-07-22 17:44:05 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -14,6 +14,7 @@ class LHCbApp(ConfigurableUser):
        ,"skipEvents":             0  # events to skip
        ,"DDDBtag":    "DC06-default" # geometry   database tag
        ,"condDBtag":  "DC06-default" # conditions database tag
+       ,"useOracleCondDB":    False  # if False, use SQLDDDB instead
        ,"monitors"  :  []            # monitor actions
         }
 

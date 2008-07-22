@@ -3,6 +3,7 @@
 !----------------------------------------------------------------------------
 
 ! 2008-07-22 - Marco Cattaneo
+ - Add "useOracleCondDB" options to LHCbApp Configurable, default is False
  - Remove /Event/Rec/Rich/RichOfflineSummaryTracks from default DST
 
 !======================== GaudiConf v10r11 2008-07-17 =======================
