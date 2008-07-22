@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.113 2008-07-17 20:38:38 robbep Exp $
+! $Id: release.notes,v 1.114 2008-07-22 08:36:37 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-07-22 - Patrick Robbe for Marie-Helene Schune
+ - L0CaloMonit: add possibility to detect automatically hot cells in 
+   the calo trigger
 
 ! 2008-07-17 - Patrick Robbe
  - L0CaloAlg, L0CaloCandidatesFromRaw and L0CaloCandidatesFromRawBank: use

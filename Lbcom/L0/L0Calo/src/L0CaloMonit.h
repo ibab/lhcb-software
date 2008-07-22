@@ -1,4 +1,4 @@
-// $Id: L0CaloMonit.h,v 1.4 2008-03-10 19:40:07 robbep Exp $
+// $Id: L0CaloMonit.h,v 1.5 2008-07-22 08:36:37 robbep Exp $
 #ifndef L0CALOMONIT_H 
 #define L0CALOMONIT_H 1
 // Include files
@@ -8,7 +8,6 @@
 
 class IHistogram1D ;
 class IHistogram2D ;
-
 class DeCalorimeter ;
 
 /** @class L0CaloMonit L0CaloMonit.h
@@ -34,6 +33,8 @@ protected:
 
 private:
 
+  void SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) ; 
+
   DeCalorimeter * m_ecal            ; ///< Pointer to Ecal detector element
   DeCalorimeter * m_hcal            ; ///< Pointer to Hcal detector element
 
@@ -43,6 +44,30 @@ private:
 
   bool m_fullMonitoring ; 
   std::string              m_inputDataSuffix ;
+  int  m_updateFrequency ; 
+  int m_alarmThresholdRatio ; 
+
+  bool  m_lookForHotCells ; 
+
+  IHistogram1D*    m_histEleFreqInn  ; 
+  IHistogram1D*    m_histEleFreqMid  ; 
+  IHistogram1D*    m_histEleFreqOut  ; 
+
+  IHistogram1D*    m_histPhoFreqInn  ; 
+  IHistogram1D*    m_histPhoFreqMid  ; 
+  IHistogram1D*    m_histPhoFreqOut  ; 
+
+  IHistogram1D*    m_histPilFreqInn  ; 
+  IHistogram1D*    m_histPilFreqMid  ; 
+  IHistogram1D*    m_histPilFreqOut  ; 
+
+  IHistogram1D*    m_histPigFreqInn  ; 
+  IHistogram1D*    m_histPigFreqMid  ; 
+  IHistogram1D*    m_histPigFreqOut  ; 
+
+  IHistogram1D*    m_histHadFreqInn  ; 
+  IHistogram1D*    m_histHadFreqOut  ; 
+
   IHistogram1D*            m_histElectron      ;
   IHistogram1D*            m_histPhoton        ;
   IHistogram1D*            m_histHadron        ;

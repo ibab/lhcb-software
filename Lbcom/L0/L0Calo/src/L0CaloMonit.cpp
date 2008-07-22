@@ -1,12 +1,13 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.19 2008-07-10 20:37:00 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.20 2008-07-22 08:36:37 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiUtils/Aida2ROOT.h"
 
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IAxis.h"
 #include "AIDA/IHistogram2D.h"
-
 // Event/L0Event
 #include "Event/L0CaloCandidate.h"
 #include "Event/RawEvent.h"
@@ -34,6 +35,9 @@ L0CaloMonit::L0CaloMonit( const std::string& name,
 { 
   declareProperty( "FullMonitoring"  , m_fullMonitoring  = false ) ;  
   declareProperty( "InputDataSuffix" , m_inputDataSuffix = ""   ) ;  
+  declareProperty( "UpdateFrequency" , m_updateFrequency = -1   ) ;  
+  declareProperty( "LookForHotCells" , m_lookForHotCells = false  ) ;  
+  declareProperty( "AlarmThresholdRatio", m_alarmThresholdRatio = 5 ) ; 
 }
 
 //=============================================================================
@@ -48,6 +52,47 @@ StatusCode L0CaloMonit::finalize() {
   info() << "Number of events " << m_nEvents << endmsg ;
   info() << "Number of useful events (Odin bank decoded) " << m_nUsefulEvents 
          << endmsg;
+
+  if (m_updateFrequency < 0 && m_lookForHotCells ) { 
+    int caloType = 1 ; 
+    info()<<" =========================Hot cells ========================="<<endreq ; 
+    info()<<" ============================================================"<<endreq ; 
+    info()<<" ===        Electron Candidates Inner region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histEleFreqInn , caloType ) ; 
+    info()<<" ===        Electron Candidates Middle region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histEleFreqMid , caloType ) ; 
+    info()<<" ===        Electron Candidates Outer region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histEleFreqOut , caloType ) ; 
+    info()<<" ============================================================"<<endreq ; 
+    info()<<" ===        Photon Candidates Inner region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPhoFreqInn , caloType ) ; 
+    info()<<" ===        Photon Candidates Middle region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPhoFreqMid , caloType ) ; 
+    info()<<" ===        Photon Candidates Outer region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPhoFreqOut , caloType ) ; 
+    info()<<" ============================================================"<<endreq ; 
+    info()<<" ===        Pi0Local Candidates Inner region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPilFreqInn , caloType ) ; 
+    info()<<" ===        Pi0Local Candidates Middle region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPilFreqMid , caloType ) ; 
+    info()<<" ===        Pi0Local Candidates Outer region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPilFreqOut , caloType ) ; 
+    info()<<" ============================================================"<<endreq ; 
+    info()<<" ===        Pi0Global Candidates Inner region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPigFreqInn , caloType ) ; 
+    info()<<" ===        Pi0Global Candidates Middle region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPigFreqMid , caloType ) ; 
+    info()<<" ===        Pi0Global Candidates Outer region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histPigFreqOut , caloType ) ; 
+    caloType = 2 ; 
+    info()<<" ============================================================"<<endreq ; 
+    info()<<" ===        Hadron Candidates Inner region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histHadFreqInn , caloType ) ; 
+    info()<<" ===        Hadron Candidates Outer region              ===" <<endreq ; 
+    SearchForHotCellsAndReset(m_histHadFreqOut , caloType ) ; 
+    info()<<" ============================================================"<<endreq ; 
+  }
+    
   return Calo2Dview::finalize();  // must be called after all other actions
 }
 
@@ -100,6 +145,26 @@ StatusCode L0CaloMonit::initialize() {
   m_histPi0Global = GaudiHistoAlg::book( "EtPig", "Et Pi0 Global " , xMinEt, xMaxEt, nBinEt );
   m_histSumEt     = GaudiHistoAlg::book( "SumEt", "Sum Et "        , xMinSumEt, xMaxSumEt, nBinSumEt );
   m_histSpdMult   = GaudiHistoAlg::book( "SpdMult", "Spd Mult "      , xMinSpdMult, xMaxSpdMult , nBinSpdMult );
+
+
+  m_histEleFreqInn  = GaudiHistoAlg::book( "FreqEleInn", "Electron Candidate occurence Inner "   ,41500., 44500., 3000 );
+  m_histEleFreqMid  = GaudiHistoAlg::book( "FreqEleMid", "Electron Candidate occurence Middle "   ,37000., 41500., 4500 );
+  m_histEleFreqOut  = GaudiHistoAlg::book( "FreqEleOut", "Electron Candidate occurence Outer "   ,32500., 37000., 4500 );
+
+  m_histPhoFreqInn  = GaudiHistoAlg::book( "FreqPhoInn", "Photon Candidate occurence Inner "   ,41500., 44500., 3000 );
+  m_histPhoFreqMid  = GaudiHistoAlg::book( "FreqPhoMid", "Photon Candidate occurence Middle "   ,37000., 41500., 4500 );
+  m_histPhoFreqOut  = GaudiHistoAlg::book( "FreqPhoOut", "Photon Candidate occurence Outer "   ,32500., 37000., 4500 );
+
+  m_histPilFreqInn  = GaudiHistoAlg::book( "FreqPilInn", "Pi0Local Candidate occurence Inner "   ,41500., 44500., 3000 );
+  m_histPilFreqMid  = GaudiHistoAlg::book( "FreqPilMid", "Pi0Local Candidate occurence Middle "   ,37000., 41500., 4500 );
+  m_histPilFreqOut  = GaudiHistoAlg::book( "FreqPilOut", "Pi0Local Candidate occurence Outer "   ,32500., 37000., 4500 );
+
+  m_histPigFreqInn  = GaudiHistoAlg::book( "FreqPigInn", "Pi0Global Candidate occurence Inner "   ,41500., 44500., 3000 );
+  m_histPigFreqMid  = GaudiHistoAlg::book( "FreqPigMid", "Pi0Global Candidate occurence Middle "   ,37000., 41500., 4500 );
+  m_histPigFreqOut  = GaudiHistoAlg::book( "FreqPigOut", "Pi0Global Candidate occurence Outer "   ,32500., 37000., 4500 );
+  
+  m_histHadFreqInn  = GaudiHistoAlg::book( "FreqHadInn", "Hadron Candidate occurence Inner "   ,53300., 55300. , 2000) ; 
+  m_histHadFreqOut  = GaudiHistoAlg::book( "FreqHadOut", "Hadron Candidate occurence Outer "   ,49200, 51000. , 1800) ; 
 
   // Electron
   bookCalo2D("EcalMapEle","Electron Ecal map" ,"Ecal") ; 
@@ -251,14 +316,19 @@ StatusCode L0CaloMonit::execute() {
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     debug() << "Event "<<event<<" Type  = " << (*cand)->type() << " Et  = " << (*cand)->etCode() << endmsg ; 
     LHCb::CaloCellID caloCell = (*cand)->id() ; 
-    debug() << "Candidat x  = " << (*cand)->position().x() << " y=" << (*cand)->position().y() << endmsg ;
-    debug() << "CellID  = "     << (*cand)->id() << endmsg ;
+    //    debug() << "Candidat x  = " << (*cand)->position().x() << " y=" << (*cand)->position().y() << endmsg ;
+    //    debug() << "CellID  = "     << (*cand)->id() << " CellID.all = "<<(*cand)->id().all()<<endmsg ;
     if ( L0DUBase::CaloType::Photon == (*cand)->type()  ) nPhotonL0Cand++ ; 
     if ( L0DUBase::CaloType::Hadron == (*cand)->type()  ) nHadronL0Cand++ ; 
     if ( L0DUBase::CaloType::Electron == (*cand)->type()  ) {
       m_histElectron  -> fill( (*cand)->etCode(), 1. );
+      int card  = m_ecal->cardNumber( caloCell) ; 
+      if( ! m_ecal->isPinCard(card) ) { 
+	if (caloCell.area() == 2 ) m_histEleFreqInn  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 1 ) m_histEleFreqMid  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 0 ) m_histEleFreqOut  -> fill(caloCell.all(),1.) ; 
+      } 
       if ( m_fullMonitoring ) {
-        int card  = m_ecal->cardNumber( caloCell) ; 
         int crate = m_ecal->cardCrate(card); 
         int cardSlot = m_ecal->cardSlot(card) ; 
         
@@ -289,6 +359,12 @@ StatusCode L0CaloMonit::execute() {
     } else if ( L0DUBase::CaloType::Photon == (*cand)->type()  ) {
 
       m_histPhoton -> fill( (*cand)->etCode() , 1. ) ;
+      int card  = m_ecal->cardNumber( caloCell) ; 
+      if( ! m_ecal->isPinCard(card) ) { 
+	if (caloCell.area() == 2 ) m_histPhoFreqInn  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 1 ) m_histPhoFreqMid  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 0 ) m_histPhoFreqOut  -> fill(caloCell.all(),1.) ; 
+      } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 
         int crate = m_ecal->cardCrate(card); 
@@ -324,8 +400,13 @@ StatusCode L0CaloMonit::execute() {
     } else if ( L0DUBase::CaloType::Hadron == (*cand)->type()  ) {
       
       m_histHadron -> fill( (*cand)->etCode(), 1. );
+      int card  = m_hcal->cardNumber( caloCell) ;
+      if( ! m_hcal->isPinCard(card) ) {
+	if (caloCell.area() == 1 ) m_histHadFreqInn  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 0 ) m_histHadFreqOut  -> fill(caloCell.all(),1.) ; 
+      }
       if ( m_fullMonitoring ) {
-        int card  = m_hcal->cardNumber( caloCell) ; 
+
         int crate = m_hcal->cardCrate(card);
         int cardSlot = m_hcal->cardSlot(card) ;       
         if( m_hcal->isPinCard(card) ) 
@@ -346,6 +427,12 @@ StatusCode L0CaloMonit::execute() {
     } else if ( L0DUBase::CaloType::Pi0Local == (*cand)->type()  ) {
     
       m_histPi0Local  -> fill( (*cand)->etCode(), 1. );
+      int card  = m_ecal->cardNumber( caloCell) ; 
+      if( ! m_ecal->isPinCard(card) ) { 
+	if (caloCell.area() == 2 ) m_histPilFreqInn  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 1 ) m_histPilFreqMid  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 0 ) m_histPilFreqOut  -> fill(caloCell.all(),1.) ; 
+      } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 
         int crate = m_ecal->cardCrate(card); 
@@ -378,6 +465,12 @@ StatusCode L0CaloMonit::execute() {
     } else if ( L0DUBase::CaloType::Pi0Global == (*cand)->type()  ) {
     
       m_histPi0Global -> fill( (*cand)->etCode(), 1. );
+      int card  = m_ecal->cardNumber( caloCell) ; 
+      if( ! m_ecal->isPinCard(card) ) { 
+	if (caloCell.area() == 2 ) m_histPigFreqInn  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 1 ) m_histPigFreqMid  -> fill(caloCell.all(),1.) ; 
+	if (caloCell.area() == 0 ) m_histPigFreqOut  -> fill(caloCell.all(),1.) ; 
+      } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 
         int crate = m_ecal->cardCrate(card); 
@@ -421,7 +514,6 @@ StatusCode L0CaloMonit::execute() {
 
 
   if (m_fullMonitoring) {
-    
     if ( ! exist< LHCb::L0CaloCandidates >( LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix ) ) {
       debug() << "No data at " << LHCb::L0CaloCandidateLocation::Full+m_inputDataSuffix << endreq ;
     } else {
@@ -462,7 +554,123 @@ StatusCode L0CaloMonit::execute() {
     }
   }
 
+  if (m_updateFrequency > 0 ) { 
+    int goForCheck = m_nEvents%m_updateFrequency ; 
+    if (goForCheck == 0 ) { 
+      info()<<"m_nEvents == "<<m_nEvents<<" go for check ... "<<endreq ; 
+      if (m_lookForHotCells ) { 
+	int caloType = 1 ; 
+	info()<<" =========================Hot cells ========================="<<endreq ; 
+	info()<<" ============================================================"<<endreq ; 
+	info()<<" ===        Electron Candidates Inner region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histEleFreqInn , caloType ) ; 
+	info()<<" ===        Electron Candidates Middle region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histEleFreqMid , caloType ) ; 
+	info()<<" ===        Electron Candidates Outer region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histEleFreqOut , caloType ) ; 
+	info()<<" ============================================================"<<endreq ; 
+	info()<<" ===        Photon Candidates Inner region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPhoFreqInn , caloType ) ; 
+	info()<<" ===        Photon Candidates Middle region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPhoFreqMid , caloType ) ; 
+	info()<<" ===        Photon Candidates Outer region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPhoFreqOut , caloType ) ; 
+	info()<<" ============================================================"<<endreq ; 
+	info()<<" ===        Pi0Local Candidates Inner region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPilFreqInn , caloType ) ; 
+	info()<<" ===        Pi0Local Candidates Middle region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPilFreqMid , caloType ) ; 
+	info()<<" ===        Pi0Local Candidates Outer region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPilFreqOut , caloType ) ; 
+	info()<<" ============================================================"<<endreq ; 
+	info()<<" ===        Pi0Global Candidates Inner region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPigFreqInn , caloType ) ; 
+	info()<<" ===        Pi0Global Candidates Middle region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPigFreqMid , caloType ) ; 
+	info()<<" ===        Pi0Global Candidates Outer region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histPigFreqOut , caloType ) ; 
+	caloType = 2 ; 
+	info()<<" ============================================================"<<endreq ; 
+	info()<<" ===        Hadron Candidates Inner region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histHadFreqInn , caloType ) ; 
+	info()<<" ===        Hadron Candidates Outer region              ===" <<endreq ; 
+	SearchForHotCellsAndReset(m_histHadFreqOut , caloType ) ; 
+	info()<<" ============================================================"<<endreq ; 
+      }
+    }
+  }
+
+
+
   //  return sc ; 
   return StatusCode::SUCCESS; 
 }
 //============================================================================
+void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) { 
+  float nIn = hist->entries() ;
+  const IAxis& xAxis = hist->axis() ; 
+  int nBin = xAxis.bins() ; 
+  float data[nBin] ; 
+  float nUsedCells = 0 ; 
+  for ( int i = 0 ; i<nBin ; i++) {
+    data[i] = hist->binEntries(i) ; 
+    if (data[i] !=0) nUsedCells++ ; 
+  } 
+  bool hotChannels = false ; 
+  float meanOcc = nIn/nUsedCells ; 
+  for ( int i = 0 ; i<nBin ; i++) { 
+    data[i] = hist->binEntries(i) ; 
+    if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
+      hotChannels = true ; 
+      break ; 
+    }
+  }
+
+  if (hotChannels) { 
+    info()<<"Number of hit cells : "<<nUsedCells<<" mean occupancy : "<<meanOcc<<" alarm threshold : "<<m_alarmThresholdRatio*meanOcc<<endreq ; 
+    info()<<"-------------------------------------------------------------------------"<<endreq ; 
+    info()<<"|   Data     |    Hot(?) Cell    |    Crate    | Slot     |   Channel   |"<<endreq ; 
+    info()<<"-------------------------------------------------------------------------"<<endreq ; 
+    for ( int i = 0 ; i<nBin ; i++) { 
+      data[i] = hist->binEntries(i) ; 
+      if (data[i] > meanOcc*m_alarmThresholdRatio ) { 
+	double idAll = xAxis.binLowerEdge(i) ; 
+	LHCb::CaloCellID caloCell ((int)idAll)  ; 
+	int card = -999 ; 
+	int crate = -999 ; 
+	int cardSlot = -999 ; 
+	int channelNum = 0 ; 
+	int cellChannel = 0 ; 
+	
+	if (caloType == 1 ) { 
+	  card  = m_ecal->cardNumber( caloCell) ; 
+	  crate = m_ecal->cardCrate(card); 
+	  cardSlot = m_ecal->cardSlot(card) ; 
+	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_ecal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
+	    if (*it == caloCell) cellChannel = channelNum ; 
+	    channelNum++ ; 
+	  } 
+	}
+	if (caloType == 2 ) { 
+	  card  = m_hcal->cardNumber( caloCell) ; 
+	  crate = m_hcal->cardCrate(card); 
+	  cardSlot = m_hcal->cardSlot(card) ; 
+	  std::vector<LHCb::CaloCellID>&  myCardChannels = m_hcal->cardChannels( card ) ;
+	  std::vector<LHCb::CaloCellID>::iterator it ;
+	  for ( it = myCardChannels.begin() ; it != myCardChannels.end() ;  it++ ) {
+	    if (*it == caloCell) cellChannel = channelNum ; 
+	    channelNum++ ; 
+	  }
+	}
+	
+	info()<<"|     "<<data[i]<<"     |   "<<caloCell<<"    |     "<<crate<<"     |     " <<cardSlot<<"      |  "<<"   |   "<<cellChannel << "  |  "<<endreq ; 
+	info()<<"-------------------------------------------------------------------------"<<endreq ; 
+      } 
+    } 
+  } else {
+    info()<<" ===> No hot channels for this region "<<endreq ;
+  }
+  hist->reset() ; 
+} 
