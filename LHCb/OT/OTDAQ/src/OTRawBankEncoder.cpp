@@ -8,16 +8,20 @@
 // from Event
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
+#include "Event/OTBankVersion.h"
 
 // from Boost
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
 
-// local
-#include "OTRawBankEncoder.h"
+// from OTDAQ
 #include "OTDAQ/OTSpecificHeader.h"
 #include "OTDAQ/GolHeader.h"
 #include "OTDAQ/RawHit.h"
+
+// local
+#include "OTRawBankEncoder.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTRawBankEncoder
@@ -301,7 +305,7 @@ StatusCode OTRawBankEncoder::encodeChannels( const std::vector<LHCb::OTChannelID
       /// create RawBank
       const OTRawBank& rawBank = createRawBank( (*bank) );
       // put raw bank in raw event
-      rawEvent->addBank( bank->id(), LHCb::RawBank::OT, 3, rawBank );
+      rawEvent->addBank( bank->id(), LHCb::RawBank::OT, OTBankVersion::SIM, rawBank );
       /// clear raw bank
       m_rawBank.clear();
     }
