@@ -48,6 +48,13 @@ CreatePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
+// General PID sequence
+//-----------------------------------------------------------------------------
+
+RecoRICHSeq.Members += { "GaudiSequencer/RichPIDSeq" };
+RichPIDSeq.MeasureTime   = true;
+
+//-----------------------------------------------------------------------------
 // Local PID algorithm
 //-----------------------------------------------------------------------------
 //RecoRICHSeq.Members += { "GaudiSequencer/RichLocalPIDSeq" };
@@ -58,7 +65,7 @@ CreatePhotons.CreatePhotons   = true;
 //-----------------------------------------------------------------------------
 // Global PID algorithm
 //-----------------------------------------------------------------------------
-RecoRICHSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
+RichPIDSeq.Members += { "GaudiSequencer/RichGlobalPIDSeq" };
 RichGlobalPIDSeq.MeasureTime   = true;
 
 // Initialise Global PID algorithm for each event
@@ -91,10 +98,10 @@ RichGlobalPIDSeq.Members += { "Rich::Rec::GlobalPID::Finalize/RichGloPIDFin" };
 // Make final output PID results
 // Current uses for each track Global PID if it exists,
 // otherwise local if that exists
-RecoRICHSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
+RichPIDSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
 
 // Reconstruction summary
-RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
+//RecoRICHSeq.Members += { "Rich::Rec::SummaryAlg/RichRecSummary" };
 
 // Reconstruction algorithm parameters
 // ========================================================================================

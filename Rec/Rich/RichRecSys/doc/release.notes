@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-07-22 - Chris Jones
+ - Disable the Rich::Rec::SummaryAlg algorithm
+
 !====================== RichRecSys v3r11 2008-07-02 ==========================
 ! 2008-07-01 - Chris Jones
  - Add RichMarkovRingFinder package to list of CMT usages
