@@ -4,12 +4,6 @@
  * Take care when changing. Make sure changes work for both trigger levels.
  */
 /**
- * Define HltDataSvc 
- */
-// ApplicationMgr.SvcOptMapping += {"DataSvc/HltDataSvc"};
-HltSvc.ForceLeaves = true;
-
-/**
  * defines online reconstruction
  */
 #include "$HLTSYSROOT/options/HltRecoSequence.opts"
@@ -24,9 +18,7 @@ HltSvc.ForceLeaves = true;
  *
 #include "$HLTKSHORTROOT/options/HltV0LL.opts"
 // Kzero from two long tracks
-HltRecoSequence.Members += {
-  "CreateHltVzero/HltV0LL",
-};
+HltRecoSequence.Members += { "CreateHltVzero/HltV0LL", };
 
 */
 
@@ -38,7 +30,3 @@ ApplicationMgr.TopAlg += {"GaudiSequencer/Hlt"};
 Hlt.ModeOr = true;
 Hlt.ShortCircuit = false;
 
-/**
- * init the HLT sequencer
- */
-Hlt.Members += { "GaudiSequencer/HltInitSequence" };
