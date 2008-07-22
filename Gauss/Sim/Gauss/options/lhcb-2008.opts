@@ -19,8 +19,9 @@
 // Geometry database dependent options: latest picked
 //                                      head-20080516 still works
 //--------------------------------------------------------------------------
-DDDB.DefaultTAG     = "head-20080603";
-LHCBCOND.DefaultTAG = "head-20080603";
+CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/SIMCOND" };
+DDDB.DefaultTAG     = "head-20080702";
+SIMCOND.DefaultTAG  = "head-20080702";
 
 // Magnetic field: measured map
 #include "$GAUSSOPTS/MeasuredFieldMap.opts"
