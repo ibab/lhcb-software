@@ -1,13 +1,13 @@
-// $Id: MuonBackground.cpp,v 1.44 2008-02-03 14:39:43 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.45 2008-07-22 13:28:40 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IAlgManager.h"
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
@@ -87,8 +87,6 @@ StatusCode MuonBackground::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by  GaudiAlgorithm	
   m_muonDetector=getDet<DeMuonDetector>(DeMuonLocation::Default);
   
-
-  //MsgStream msg(msgSvc(), name());
   debug() << "==> Initialise" << endreq;
 
   // Get the application manager. Used to find the histogram persistency type
@@ -221,7 +219,6 @@ StatusCode MuonBackground::initialize() {
 //=============================================================================
 StatusCode MuonBackground::execute() {
 
-  //MsgStream  msg( msgSvc(), name() );
   debug() << "==> Execute" << endreq;
   StatusCode sc;
   
@@ -338,14 +335,12 @@ StatusCode MuonBackground::execute() {
 //=============================================================================
 StatusCode MuonBackground::finalize() {
 
-  MsgStream msg(msgSvc(), name());
   debug() << "==> Finalize" << endreq;
   delete m_flatDistribution;
   for (int i=0;i<m_maxDimension;i++){
     MuBgDistribution* pointDelete=m_correlation[i];    
     if(pointDelete)delete pointDelete;
     pointDelete=m_radial[i];
-    //  msg << MSG::INFO << "==> deleting  " << endreq;    
     if(pointDelete)delete pointDelete;
     pointDelete=m_phiglobvsradial[i];
     if(pointDelete)delete pointDelete;
@@ -370,7 +365,6 @@ StatusCode MuonBackground::finalize() {
 //  GeometryInitialization
 //=============================================================================
 StatusCode MuonBackground::initializeGeometry() {
-  MsgStream msg(msgSvc(), name());
   debug() << "==> initializeGeometry" << endreq;
   int gap=0;  
   for(int i=0;i< (int)m_partition;i++){
@@ -396,7 +390,6 @@ StatusCode MuonBackground::initializeGeometry() {
 
 StatusCode MuonBackground::initializeParametrization()
 {
-  MsgStream msg(msgSvc(), name());
   int numName=m_histoName.size();
   int numCode=m_histogramsMapNumber.size();
   int code=0;
@@ -467,7 +460,7 @@ StatusCode MuonBackground::initializeParametrization()
               }             
             }
             else{
-              msg<<MSG::WARNING<<"not found the 1D  histo "<<path<<endreq;
+              warning() <<"not found the 1D  histo " << path << endmsg;
             }
           }            
           else if (m_histogramsDimension[i]==2){
@@ -507,7 +500,7 @@ StatusCode MuonBackground::initializeParametrization()
               }                  
             }
             else{
-              msg<<MSG::WARNING<<"not found the 2D-histo "<<path<<endreq;
+              warning() << "not found the 2D-histo " << path << endmsg;
              }
             }
           
@@ -520,7 +513,6 @@ StatusCode MuonBackground::initializeParametrization()
 
 //=============================================================================
 StatusCode MuonBackground::calculateNumberOfCollision(int ispill) {
-  MsgStream msg(msgSvc(), name());
   debug() << "==> calculateNumberOfCollsion " << endreq;
   int collision=0;
   std::string collisionLocation="/Event"
@@ -703,7 +695,6 @@ MuonBackground::initializeRNDDistribution1D(IHistogram1D*
                                             double& xmax)
 {
  
-  //   MsgStream msg(msgSvc(), name());
   //  const IAxis* axis=&(histoPointer->axis());
   const IAxis& axis=(histoPointer->axis());
   int nbin=axis.bins();
@@ -806,11 +797,11 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
     tryPhi=0;  
     while(!hitInsideCha&&tryPhi<maxTryPhi){
       verbose()<<"tryphi "<<endreq;      
-      double globalPhi = ((m_phiglobvsradial[index])->giveRND(r))*pi/180.0;
+      double globalPhi = ((m_phiglobvsradial[index])->giveRND(r))*Gaudi::Units::pi/180.0;
       //3) test whether the r,phi is inside the sensitive chamber volume      
       //  transform r and phi in x,y
-      xpos=float(r*cos(globalPhi)*mm*m_unitLength);
-      ypos=float(r*sin(globalPhi)*mm*m_unitLength);
+      xpos=float(r*cos(globalPhi)*Gaudi::Units::mm*m_unitLength);
+      ypos=float(r*sin(globalPhi)*Gaudi::Units::mm*m_unitLength);
       pChamber=NULL;
       LHCb::MuonTileID tile;
       int chNumber=-1;
@@ -898,8 +889,8 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
     for(tryPhiLoc=0;tryPhiLoc<maxTryPhiLoc&&!allHitsInsideCha;tryPhiLoc++){
       allHitsInsideCha=true;      
       hitsToAdd=false;      
-      double phiLoc=((m_philocvsradial[index])->giveRND(r))*pi/180.0;
-      double thetaLoc=((m_thetalocvsradial[index])->giveRND(r))*pi/180.0;      
+      double phiLoc=((m_philocvsradial[index])->giveRND(r))*Gaudi::Units::pi/180.0;
+      double thetaLoc=((m_thetalocvsradial[index])->giveRND(r))*Gaudi::Units::pi/180.0;      
       //define the more confortable slope in x-y direction 
       if(cos(thetaLoc)!=0){        
         xSlope=float(sin(thetaLoc)*cos(phiLoc)/cos(thetaLoc));
