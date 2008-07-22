@@ -1,4 +1,4 @@
-// $Id: DecayChain.h,v 1.9 2008-05-19 06:46:13 cattanem Exp $
+// $Id: DecayChain.h,v 1.10 2008-07-22 13:45:52 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYCHAIN_H 
 #define LOKI_DECAYCHAIN_H 1
@@ -454,7 +454,7 @@ namespace LoKi
       if ( !marked && !accept ( particle ) ) 
       { stream << " ... (skip  by cuts) " << term ; return stream ; }
       
-      stream << toString( particle->momentum() ) ;
+      stream << toString( LoKi::LorentzVector( particle->momentum() ) ) ;
       stream << " #" << toString ( particle->barcode () ) 
              << "/"  << toString ( particle->status  () )  ;
       ///
@@ -466,7 +466,7 @@ namespace LoKi
         stream << term ;  
         stream << s_indent ;
         stream << " Origin    " 
-               << toString ( vertex -> point3d() ) ;
+               << toString ( LoKi::Point3D( vertex -> point3d() ) ) ;
         stream << " #" << toString ( vertex -> barcode() ) ; 
       }
       
@@ -478,7 +478,7 @@ namespace LoKi
         stream << term ;
         stream << s_indent ;          
         stream << " EndVertex " 
-               << toString( evertex -> point3d() ) ; 
+               << toString( LoKi::Point3D ( evertex -> point3d() ) ) ; 
         stream << " #" << toString ( evertex -> barcode() ) ; 
       }
       // use terminator 
@@ -1087,19 +1087,6 @@ namespace LoKi
       const StatusCode&   sc  = StatusCode::FAILURE ,
       const size_t        mx  = 10                  ) const ;
     // ========================================================================    
-  protected:  /// @todo remove CLHEP methods
-    // ========================================================================
-    /// Lorentz vector as string : due to HepMC
-    inline const std::string toString 
-    ( const CLHEP::HepLorentzVector& v ) const 
-    { return toString 
-        ( LoKi::LorentzVector ( v.x() , v.y() , v.z() , v.e() ) ) ; }
-    // ========================================================================
-    /// 3D point  as string : due to HepMC
-    inline const std::string toString 
-    ( const HepGeom::Point3D<double>& v ) const 
-    { return toString ( LoKi::Point3D( v.x() , v.y() , v.z() ) )  ; }
-    // ========================================================================
   private: 
     // ========================================================================    
     /// copy constructor is disabled

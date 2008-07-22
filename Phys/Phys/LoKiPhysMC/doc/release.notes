@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.45 2008-06-30 19:49:06 cattanem Exp $ 
+! $Id: release.notes,v 1.46 2008-07-22 13:45:52 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-22 - Vanya BELYAEV
+
+ - LoKi/DecayChain.h
+
+   remove obsolete CLHEP methods (not needed anymore with new HepMC)
+
+- cmt/requirements 
+
+   version inrement to v7r4
 
 !========================== LoKiPhysMC v7r3 2008-06-30 ========================
 ! 2008-06-25 - Vanya BELYAEV
