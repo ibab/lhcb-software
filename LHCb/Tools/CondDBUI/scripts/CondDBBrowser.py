@@ -14,7 +14,7 @@ def main(args):
     
     if len(args) > 1:
         # the first argument can be the name of a partition
-        if args[1] in _allowed_partitions:
+        if args[1] in _allowed_partitions or re.match(r"ONLINE-[0-9]{6}",args[1]):
             from Gaudi.Configuration import importOptions, allConfigurables
             importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
             if args[1] in allConfigurables \

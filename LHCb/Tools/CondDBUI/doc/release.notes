@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.86 2008-07-16 21:26:20 cattanem Exp $
+! $Id: release.notes,v 1.87 2008-07-22 08:01:35 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-07-22 - Marco Clemencic
+ - Modified CondDBAdmin_MakeSnapshot.py to accept interval of validity as UTC.
+ - Allow ONLINE-YYYYMM as partition alias in CondDBBrowser.py and
+   CondDBAdmin_MakeSnapshot.py.
 
 !===================== Tools/CondDBUI v2r11 2008-07-16 ========================
 ! 2008-07-16 - Marco Clemencic

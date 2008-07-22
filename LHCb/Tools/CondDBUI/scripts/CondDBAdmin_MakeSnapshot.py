@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.3 2008-07-16 16:28:38 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.4 2008-07-22 08:01:35 marcocle Exp $"
 
 import os, sys
 
@@ -19,8 +19,9 @@ def _fixLogger():
 isSQLiteFile = lambda path: os.path.isfile(path) and (open(path, "rb").read(6) == "SQLite")
 
 def guessConnectionString(partition, options):
+    import re
     known_partitions = [ "DDDB", "LHCBCOND", "SIMCOND", "ONLINE" ]
-    if partition in known_partitions:
+    if partition in known_partitions or re.match(r"ONLINE-[0-9]{6}", partition):
         # Try to extract the connection string from the default configuration
         from Gaudi.Configuration import importOptions, allConfigurables
         _fixLogger()
@@ -32,7 +33,6 @@ def guessConnectionString(partition, options):
     # No configurable found
     if isSQLiteFile(partition):
         # it is an SQLite file, let's try to guess the partition name
-        import re
         exp = re.compile(r"([A-Z][A-Z0-9_]{0,7})\.db")
         filename = os.path.basename(partition)
         m = exp.match(filename)
@@ -49,13 +49,23 @@ def guessConnectionString(partition, options):
     # No further guessing, let's assume that we are dealing with a connection string
     return partition
 
+def timegm(t):
+    """Inverse of time.gmtime. Implementation from Gaudi::Time."""
+    import time
+    if t[8] != 0: # ensure that dst is not set
+        t = tuple(list(t[0:8]) + [0])
+    t1 = time.mktime(t)
+    gt = time.gmtime(t1)
+    t2 = time.mktime(gt)
+    return t1 + (t1 - t2)
+
 def timeToValKey(tstring, default):
     if not tstring: return default
     import re
-    # Format YYYY-MM-DD[_HH:MM[:SS.SSS][UTC]]
-    #exp = re.compile(r"^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})(?:_(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2})(?::(?P<second>[0-9]{2})(?:\.(?P<decimal>[0-9]*))?)?(?P<utc>UTC)?)?$")
-    # Format YYYY-MM-DD[_HH:MM[:SS.SSS]] ... I didn't find a good way of do the utc conversion 
-    exp = re.compile(r"^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})(?:_(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2})(?::(?P<second>[0-9]{2})(?:\.(?P<decimal>[0-9]*))?)?)?$")
+    # Format YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]
+    exp = re.compile(r"^(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})"+
+                     r"(?:_(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2})(?::(?P<second>[0-9]{2})(?:\.(?P<decimal>[0-9]*))?)?)?"+
+                     r"(?P<utc>UTC)?$")
     m = exp.match(tstring)
     if m:
         # FIXME: check for validity ranges
@@ -64,10 +74,12 @@ def timeToValKey(tstring, default):
             return 0
         tm = tuple([ toInt(n) for n in m.groups()[0:6] ] + [ 0, 0, -1 ])
         import time
-        t = time.mktime(tm) # seconds since epoch UTC
-        #if m.group('utc'):
-        #    # the user specified UTC
-        #    pass
+        if m.group('utc'):
+            # the user specified UTC
+            t = timegm(tm)
+        else:
+            # seconds since epoch UTC, from local time tuple
+            t = time.mktime(tm)
         t = int(t) * 1000000000 # to ns
         d = m.group('decimal')
         if d:
@@ -102,10 +114,10 @@ connection string. 'destination' must be a connection string.""")
                       " [default = %default]")
     parser.add_option("-s", "--since", type = "string",
                       help = "Start of the interesting Interval Of Validity (local time)." + 
-                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]]")
+                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("-u", "--until", type = "string",
                       help = "End of the interesting Interval Of Validity (local time)"+ 
-                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]]")
+                      " Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]")
     parser.add_option("--merge", action = "store_true",
                       help = "Whether to merge the data into an existing DB")
     parser.add_option("-v", "--verbose", action = "store_true",
