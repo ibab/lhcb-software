@@ -87,7 +87,7 @@ namespace Al
     declareProperty("TrackResidualTool",m_trackresidualtool) ;
     declareProperty("Extrapolator",m_extrapolator) ;
     // declareProperty("TrackSelectorHandle",m_trackselectorhandle) ;
-    declareProperty("MyTrackSelector",m_trackselectorname="YourTrackSelector") ;
+    declareProperty("MyTrackSelector",m_trackselectorname="TrackSelector") ;
     declareProperty("ComputeCorrelations",m_computeCorrelations) ;
   }
   
