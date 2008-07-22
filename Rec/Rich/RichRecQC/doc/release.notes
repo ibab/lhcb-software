@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2008-07-22 - Chris Jones
+ - Disable the reconstruction summary data objects monitor
+
 !======================= RichRecQC v2r20 2008-07-02 ==========================
 ! 2008-06-11 - Chris Jones
  - Add protection against invalid HPD IDs in the decoded data.

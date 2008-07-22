@@ -60,7 +60,7 @@ RiCKResSeedHighBeta.HistoPrint      = false;
 //RiCKResMCRichTrack.HistoPrint      = true;
 
 // Reco summary monitor
-CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryQC/RiSummaryQC" };
+//CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryQC/RiSummaryQC" };
 
 // Cross check CK res from summary objects
 //CheckRICHSeq.Members += { "Rich::Rec::MC::SummaryCKResMoni/RiSummaryCKResLongAll" };
