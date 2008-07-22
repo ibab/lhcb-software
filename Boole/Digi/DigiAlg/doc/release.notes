@@ -4,6 +4,10 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-07-22 - Marco Cattaneo
+ - Adapt to new location of IEventTimeDecode and IGenericTool interfaces
+   (Gaudi v20r2)
+
 !========================== DigiAlg v4r9 2008-04-04 ==========================
 ! 2008-03-31 - Jan Amoraal
  - Some changes in BuildMCTrackInfo.cpp to reflect changes in OT linkers

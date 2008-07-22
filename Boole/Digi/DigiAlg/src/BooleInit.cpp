@@ -1,12 +1,10 @@
-// $Id: BooleInit.cpp,v 1.24 2007-06-07 06:22:35 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.25 2008-07-22 13:33:09 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-// from LHCbKernel
-#include "Kernel/IEventTimeDecoder.h"
-#include "Kernel/IGenericTool.h"
+#include "GaudiKernel/IEventTimeDecoder.h"
+#include "GaudiAlg/IGenericTool.h"
 
 // from EventBase
 #include "Event/ProcessHeader.h"
