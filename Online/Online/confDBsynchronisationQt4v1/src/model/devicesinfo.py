@@ -10,13 +10,11 @@ class DevicesInfo(QObject):
     def getNewDevicesWithoutDHCPData(self):
         return self.new_devices_without_dhcp_data
     def setNewDevicesWithoutDHCPData(self, value):
-        print "setting self.new_devices_without_dhcp_data to"+str(value)
         self.new_devices_without_dhcp_data = value
         self.compute()
     def getNewDevicesWithDHCPData(self):
         return self.new_devices_with_dhcp_data
     def setNewDevicesWithDHCPData(self, value):
-        print "setting self.new_devices_with_dhcp_data to"+str(value)
         self.new_devices_with_dhcp_data = value
         self.compute()
     def getNewDevicesAtAll(self):
