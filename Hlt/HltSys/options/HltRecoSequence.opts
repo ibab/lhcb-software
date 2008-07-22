@@ -34,11 +34,20 @@ HltCaloRecoSequence.Members = {"GaudiSequencer/RecoCALOSeq" };
 //---------------------
 HltRecoRZVeloSequence.MeasureTime = true;
 HltRecoRZVeloSequence.Members = { 
-  "DecodeVeloRawBuffer", 
-  "Tf::PatVeloRTracking/HltRecoRZVelo",
-  "PatPV2D/HltRecoPV2D"
+  "GaudiSequencer/HltRecoRZVeloTracksSequence",
+  "GaudiSequencer/HltRecoRZPVSequence"
 };
 
+HltRecoRZVeloTracksSequence.MeasureTime = true;
+HltRecoRZVeloTracksSequence.Members = { 
+  "DecodeVeloRawBuffer", 
+  "Tf::PatVeloRTracking/HltRecoRZVelo"
+};
+
+HltRecoRZPVSequence.MeasureTime = true;
+HltRecoRZPVSequence.Members = { 
+  "PatPV2D/HltRecoPV2D"
+};
 
 HltRecoRZVelo.OutputTracksName = "Hlt/Track/RZVelo";
 

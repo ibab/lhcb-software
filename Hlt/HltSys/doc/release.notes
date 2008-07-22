@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-07-22 - Jose A. Hernando
+ - add Hlt1Hadron*InternalMonitor.opts and split velo reco in tracks in PVs
+
 ! 2008-07-22 - Gerhard Raven
  - remove obsolete options in HltMainSequence 
 
