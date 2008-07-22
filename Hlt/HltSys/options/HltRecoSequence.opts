@@ -81,20 +81,31 @@ HltPrepareForward.OutputSelection = "Forward1";
 
 
 
-
-
 //------------------------------
 // Definition of the Hlt1 Reconstruction
 //-----------------------------
 
 Hlt1RecoSequence.MeasureTime = true;
 Hlt1RecoSequence.Members = {
-  "GaudiSequencer/Hlt1RecoRZVeloSequence",
+  "GaudiSequencer/Hlt1RecoRZVeloTracksSequence",
+  "GaudiSequencer/Hlt1RecoRZPVSequence",
   "HltTrackUpgrade/Hlt1RecoVelo",
   "PatPV3D/Hlt1RecoPV3D",
   "GaudiSequencer/HltDecodeTT",
   "GaudiSequencer/HltDecodeT",
   "HltTrackUpgrade/Hlt1RecoForward"
+};
+
+Hlt1RecoRZVeloTracksSequence.MeasureTime = true;
+Hlt1RecoRZVeloTracksSequence.Members += { 
+  "GaudiSequencer/HltRecoRZVeloTracksSequence",
+  "HltTrackPrepare/Hlt1PrepareRZVelo"
+};
+
+Hlt1RecoRZPVSequence.MeasureTime = true;
+Hlt1RecoRZPVSequence.Members += { 
+  "GaudiSequencer/HltRecoRZPVSequence",
+  "HltVertexPrepare/Hlt1PreparePV2D"
 };
 
 
