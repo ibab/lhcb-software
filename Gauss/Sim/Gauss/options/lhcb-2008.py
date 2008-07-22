@@ -13,7 +13,3 @@ ec.addTool(FakeEventTime(), name="EventTimeDecoder")
 #--Geometry dependent options
 importOptions('$GAUSSOPTS/lhcb-2008.opts')
 
-#--Application name and version
-ApplicationMgr( AppName    = 'Gauss',
-                AppVersion = 'v32r2' )
-

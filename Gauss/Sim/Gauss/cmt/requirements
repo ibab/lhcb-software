@@ -3,11 +3,11 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v33r2
+version v34r0
 
 #============================================================================
 #-- Structure
-branches src doc options cmt job
+branches src doc options cmt job python
 
 #-- tags: Vis, GDML, Herwig, Hijing, BcVegPy, HidValley
 
@@ -17,9 +17,9 @@ branches src doc options cmt job
 use DDDB               v1r*   Det            -no_auto_imports
 use ParamFiles         v7r1                  -no_auto_imports
 use FieldMap           v5r0                  -no_auto_imports
-use DecFiles           v14r4  Gen            -no_auto_imports
+use DecFiles           v15r*  Gen            -no_auto_imports
 use Geant4Files	       v91r0	             -no_auto_imports
-use XmlVis             v1r5   Vis            -no_auto_imports
+use XmlVis             v1r6   Vis            -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 
@@ -121,5 +121,6 @@ path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/bin"
 #path_append    PATH  "" Linux&Vis "$(DAWN_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
-
+apply_pattern install_python_modules
+apply_pattern GaudiApp
 
