@@ -1,11 +1,15 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.36 2008-06-30 13:23:50 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2008-07-22 17:36:10 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2008-07-22 - Marco Cattaneo
+ - Replace LoadDDDDB.opts by LoadDDDB.py
+ - Add example option for accessing Oracle CondDB instead of SQLDDDB
 
 !======================= DetDescChecks v4r7 2008-06-30 ========================
 ! 2008-06-30 - Marco Cattaneo

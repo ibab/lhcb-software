@@ -2,7 +2,7 @@
 /en.dtd'>
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
-  <argument name="args"><set><text>-v</text><text>../../options/LoadDDDB.opts</text></set></argument>
+  <argument name="args"><set><text>-v</text><text>../../options/LoadDDDB.py</text></set></argument>
 <argument name="validator"><text>
 linecount = 0
 errors = {'ERROR':[],'FATAL':[]}
