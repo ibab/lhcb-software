@@ -95,7 +95,10 @@ CondDBCnvSvc( CondDBReader = allConfigurables["MainCondDBReader"] )
 ##########################################################################
 # Technology dependent options
 ##########################################################################
-importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+if "LHCbApp" in allConfigurables and allConfigurables["LHCbApp"].getProp("useOracleCondDB"):
+    importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.opts")
+else:   
+    importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
 
 # Suppress pointless warning from COOL_2_5_0
 MessageSvc().setError.append("RelationalDatabase")
