@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-07-22 - Gerhard Raven
+  - remove L0Entry
+
 !2008-07-15 - Gerhard Raven
   - PropertyConfigSvc: only update TopAlgs if changed
   - HltL0Filter: make 'restart-aware'
