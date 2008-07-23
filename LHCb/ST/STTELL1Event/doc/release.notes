@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.19 2008-07-21 11:21:41 jluisier Exp $
+! $Id: release.notes,v 1.20 2008-07-23 07:57:17 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2008-07-23 - Marco Cattaneo
+ - Remove xml/gdd.dtd, this file is provided automatically by GaudiObjDesc
 
 ! 2008-07-21 J Luisier
  - Check of all reserved words imlemented
