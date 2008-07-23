@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.133 2008-07-23 16:56:12 cattanem Exp $
+! $Id: release.notes,v 1.134 2008-07-23 17:21:55 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
@@ -8,6 +8,8 @@
 ! 2008-07-23 - Marco Cattaneo
  - Removed DumpHepMCTree, DumpMC, DumpMCDecay algorithms, moved to 
    Sim/SimComponents, last two renamed DumpHepMC and DumpHepMCDecay
+ - Generator/HepMCUtils.h has been moved to GenEvent package. A dummy file is
+   kept for backwards compatibility, forwarding to the new include 
 
 ! 2008-07-21 - Patrick Robbe 
  - EvtGenDecay.cpp: add possibility to generate polarized charmonium
