@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.5 2007-12-06 09:31:25 odescham Exp $ 
+// $Id: CaloZSupAlg.h,v 1.6 2008-07-23 10:42:03 odescham Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -47,6 +47,7 @@ private:
   std::string m_zsupMethod        ; ///< Name of Zero Suppression method
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
+  int         m_zsupNeighbor      ; ///< zsup (ADC) for neighbors for 2D method
   bool m_adcOnTES;
   bool m_digitOnTES;
   double m_pedShift;

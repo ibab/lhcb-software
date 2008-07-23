@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.10 2008-06-13 16:18:49 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.11 2008-07-23 10:42:03 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,6 +32,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("OutputDigitData" , m_outputDigitData    ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod         ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold      ) ;
+  declareProperty("ZsupNeighbor"   , m_zsupNeighbor=-256  ) ;
   declareProperty("OutputType"      , m_outputType = "Digits"  ) ;
   declareProperty( "Extension"  ,  m_extension = "" );
   declareProperty( "StatusOnTES"   , m_statusOnTES = true);
@@ -53,6 +54,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_outputDigitData  = LHCb::CaloDigitLocation::Ecal + m_extension;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
+    m_zsupNeighbor     = -5; // reject large negative noise
   } else if ( "Hcal" == name.substr( 0 , 4 ) ) {
     m_detectorName     = DeCalorimeterLocation::Hcal;
     m_outputADCData    = LHCb::CaloAdcLocation::Hcal   + m_extension;
@@ -210,6 +212,7 @@ StatusCode CaloZSupAlg::execute() {
     LHCb::CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
     if( DefaultFlag == caloFlags[index] ) { continue; }
+    if( NeighborFlag == caloFlags[index] && (*anAdc).adc() < m_zsupNeighbor)continue;
     
     if(m_adcOnTES){
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, (*anAdc).adc() );
