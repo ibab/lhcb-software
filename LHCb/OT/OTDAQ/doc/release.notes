@@ -2,6 +2,11 @@ Package         : OTDAQ
 Package manager : J.Amoraal
 !---------------------------------------------------------------------
 
+! 2008-07-22 - Jan Amoraal
+ - Added bank version for simulation (SIM=63). Currently the decoding of
+   SIM is the same as for real data (v3).
+ - Make OTRawBankDecoder less verbose concerning empty GOL headders.
+
 !======================= OTDAQ v7r0 2008-07-16 =======================
 ! 2008-07-07 - Jan Amoraal
  - Fix tables for Hardware to Software conversion. N.B., this change breaks
