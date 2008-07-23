@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::PhotonRecoUsingCKEstiFromRadius
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.5 2008-02-18 14:53:00 jonrob Exp $
+ * $Id: RichPhotonRecoUsingCKEstiFromRadius.cpp,v 1.6 2008-07-23 12:52:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -126,7 +126,7 @@ reconstructPhoton ( const LHCb::RichRecSegment * segment,
 
   // estimate phi from these hits
   // use full atan2
-  //const float phiCerenkov = Gaudi::Units::pi + atan2( diff_y, diff_x );
+  //const float phiCerenkov = Gaudi::Units::pi + std::atan2( diff_y, diff_x );
   // use fast atan2
   const float phiCerenkov = Gaudi::Units::pi + Rich::Maths::atan2_f( diff_y, diff_x );
 
