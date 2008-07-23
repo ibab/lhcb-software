@@ -71,6 +71,7 @@ class DetCondConfigurationTest(unittest.TestCase):
                           "CondDBDispatcherSvc")
         orig_dict = dict(orig_reader.Alternatives)
         
+        
         # Add the alternative
         alternative = CondDBAccessSvc("alternative")
         addCondDBAlternative(alternative, "/Test")
@@ -84,7 +85,7 @@ class DetCondConfigurationTest(unittest.TestCase):
         for k in orig_dict:
             self.assertEqual(reader.Alternatives[k], orig_dict[k])
         # plus the new one
-        self.assertEqual(reader.Alternatives["/Test"], alternative)
+        self.assertEqual(reader.Alternatives["/Test"], alternative.getFullName())
         
     def test_020_addCondDBAlternative_2(self):
         """Replace one alternative from CondDBAccessSvc instance""" 
@@ -108,7 +109,7 @@ class DetCondConfigurationTest(unittest.TestCase):
             if k != path:
                 self.assertEqual(reader.Alternatives[k], orig_dict[k])
             else:
-                self.assertEqual(reader.Alternatives[k], alternative)
+                self.assertEqual(reader.Alternatives[k], alternative.getFullName())
         
 if __name__ == '__main__':
     unittest.main(testRunner = unittest.TextTestRunner(stream=sys.stdout,verbosity=2))
