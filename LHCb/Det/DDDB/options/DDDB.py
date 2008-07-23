@@ -9,6 +9,7 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBEntityResolver,
                             XmlCnvSvc,
                             XmlParserSvc )
+from GaudiConf.Configuration import LHCbApp
 
 # Helper function that should be moved to Gaudi 
 def getConfigurable(name, defaultType = None):
@@ -25,8 +26,13 @@ def getConfigurable(name, defaultType = None):
             defaultType = name
         if type(defaultType) is str:
             # we need to convert from string to actual class
-            exec "from Configurables import %(type)s; defaultType = %(type)s" % \
-                 {"type": defaultType}
+            if defaultType in globals():
+                # We the type is defined in the global namespace
+                defaultType = globals()[defaultType]
+            else:
+                # otherwise we try to get it from the Configurables database
+                exec "from Configurables import %s" % defaultType
+                defaultType = locals()[defaultType]
         return defaultType(name)
 
 ##########################################################################
@@ -100,9 +106,8 @@ SIMCOND  = getConfigurable("SIMCOND",  CondDBAccessSvc)
 CondDBDispatcherSvc("MainCondDBReader",
                      MainAccessSvc = DDDB,
                      Alternatives = {
-                       "/Conditions": LHCBCOND,
-                       # Not yet available
-                       # "/Conditions/Online": ONLINE
+                       "/Conditions": LHCBCOND.getFullName(),
+                       "/Conditions/Online": ONLINE.getFullName()
                        }
                     )
 
@@ -110,7 +115,7 @@ CondDBDispatcherSvc("MainCondDBReader",
 CondDBDispatcherSvc("SimulationCondDBReader",
                     MainAccessSvc = DDDB,
                     Alternatives = {
-                      "/Conditions": SIMCOND
+                      "/Conditions": SIMCOND.getFullName()
                       }
                     )
 
