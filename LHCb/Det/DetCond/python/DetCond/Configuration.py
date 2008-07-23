@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.4 2008-07-21 19:14:30 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2008-07-23 08:13:44 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
@@ -196,9 +196,7 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     
     # append the last database with validity extended to the maximum validity
     name = "ONLINE-%04d%02d" % i
-    accSvc = CondDBAccessSvc(name,
-                             ConnectionString = "sqlite_file:%s/%s.db/ONLINE" % (path, name),
-                             )
+    accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
     since = until
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax
     descr = "'%s':(%d,%d)" % ( accSvc.getFullName(), since, until )
