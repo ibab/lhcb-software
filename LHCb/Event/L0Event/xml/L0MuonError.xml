@@ -12,10 +12,10 @@
       &KeyedObject;
       <import name="Kernel/MuonTileID"/>
       <location name="Default"   place="Trig/L0/MuonErrorCtrl"/>
-      <location name="CtrlCUSU"      place="Trig/L0/MuonErrorCtrl"/>
+      <location name="CtrlCUSU"  place="Trig/L0/MuonErrorCtrl"/>
       <location name="CtrlBCSU"  place="Trig/L0/MuonErrorBCSUCtrl"/>
-      <location name="ProcBCSU"      place="Trig/L0/MuonErrorBCSU"/>
-      <location name="ProcPU"        place="Trig/L0/MuonErrorPU"/>
+      <location name="ProcBCSU"  place="Trig/L0/MuonErrorBCSU"/>
+      <location name="ProcPU"    place="Trig/L0/MuonErrorPU"/>
 
       <constructor
         argList="LHCb::MuonTileID mid"
@@ -30,7 +30,31 @@
         desc="Status if in error"/>
       <attribute name="bcid" type="int" 
         desc="BCID if in error"/>
-      
+
+      <method name="index" type="void" const="TRUE" inline="FALSE"
+              desc="update input argument with quarter, board and pu index">
+	<arg type="int" name="quarter" inout="BOTH"/>
+	<arg type="int" name="board" inout="BOTH"/>
+	<arg type="int" name="pu" inout="BOTH"/>
+      </method>      
+
+      <method name="decoding_data" type="bool" const="TRUE" inline="TRUE" 
+              desc="True if an error occurred in the bank containing data">
+	<code> return ((m_decoding&amp;0x2)&gt;0); </code>
+      </method>      
+      <method name="decoding_cand" type="bool" const="TRUE" inline="TRUE" 
+              desc="True if an error occurred in the bank containing candidates">
+	<code> return ((m_decoding&amp;0x1)&gt;0); </code>
+      </method>      
+      <method name="overflow" type="bool" const="TRUE" inline="TRUE" 
+              desc="True if an overflow was reported (more than 2 candidates in a PU)">
+	<code>  return (m_status&amp;0x3)&gt;0; </code>
+      </method>      
+      <method name="internal" type="bool" const="TRUE" inline="TRUE" 
+              desc="True if an internal error was reported (wrong bcid/input links)">
+	<code>  return ( ((m_status&amp;0xC)&gt;0) || (m_hardware&gt;0) || (m_bcid&gt;0) );</code>
+      </method>      
+
     </class>  
   </package>
 </gdd>

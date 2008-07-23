@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.105 2008-07-16 20:30:20 cattanem Exp $
+! $Id: release.notes,v 1.106 2008-07-23 07:53:45 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-07-23 - Julien Cogan
+ - Add methods to L0MuonError 
 
 !======================== L0Event v17r0 2008-07-16 ===========================
 ! 2008-07-16 - Olivier Deschamps
