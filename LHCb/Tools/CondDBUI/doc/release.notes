@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.87 2008-07-22 08:01:35 marcocle Exp $
+! $Id: release.notes,v 1.88 2008-07-23 14:45:32 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2008-07-23 - Marco Clemencic
+ - Added the connection string to the opened database in the status bar of
+   CondDBBrowser.py.
+ - Bug-fixes in CondDBAdmin_Commit.py and PyCoolDiff to support local tags. 
 
 ! 2008-07-22 - Marco Clemencic
  - Modified CondDBAdmin_MakeSnapshot.py to accept interval of validity as UTC.

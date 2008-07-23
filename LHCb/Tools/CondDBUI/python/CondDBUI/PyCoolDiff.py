@@ -168,7 +168,9 @@ def diff( originalDB, modifiedDB, diffDB,
                     _log.debug("No objects to insert")
     
             except Exception, e:
-                if "No child tag can be found in node" in str(e):
+                s = str(e)
+                if "No child tag can be found in node" in s \
+                  or 'Attempt to access data of NULL attribute "NODE_PARENTID"' in s:
                     pass
                 else:
                     raise

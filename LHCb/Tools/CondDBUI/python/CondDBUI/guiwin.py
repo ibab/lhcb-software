@@ -9,7 +9,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD'
 
-versionId  = '$Id: guiwin.py,v 1.5 2008-01-07 17:45:05 marcocle Exp $'.split()
+versionId  = '$Id: guiwin.py,v 1.6 2008-07-23 14:45:32 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:
@@ -37,6 +37,7 @@ class myWindow(qt.QMainWindow):
         self.confFile = os.path.join(os.environ['HOME'],'.conddbbrowserrc')
         self.old_sessions = ["sqlite_file:$SQLITEDBPATH/DDDB.db/DDDB [r-]",
                              "sqlite_file:$SQLITEDBPATH/LHCBCOND.db/LHCBCOND [r-]",
+                             "sqlite_file:$SQLITEDBPATH/SIMCOND.db/SIMCOND [r-]",
                              ]
         self.max_old_sessions = 15
         self.external_editor = "emacs"
@@ -557,7 +558,10 @@ class myWindow(qt.QMainWindow):
             self.menuBar.setItemEnabled(self.menuBar.idAt(1), True)
             self.menuBar.setItemEnabled(self.menuBar.idAt(2), True)
         self.dbTree.setEnabled(True)
-
+        if bridge:
+            self.statusBar.message(sessionText)
+        else:
+            self.statusBar.clear()
 
     def delBridge(self):
         '''
@@ -574,6 +578,7 @@ class myWindow(qt.QMainWindow):
         self.menuBar.setItemEnabled(self.menuBar.idAt(1), False)
         self.menuBar.setItemEnabled(self.menuBar.idAt(2), False)
         self.dbTree.setEnabled(False)
+        self.statusBar.clear()
 
     def catchException(self, location, exception, details):
         '''
