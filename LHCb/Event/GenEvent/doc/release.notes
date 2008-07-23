@@ -2,6 +2,9 @@
 ! package coordinator: G.Corti
 !------------------------------------------------------------------------------
 
+! 2008-07-23 - Marco Cattaneo
+ - Add GenEvent/HepMCUtils.h, previously in Gen/Generators
+
 !======================= GenEvent v5r2 2008-03-03 =============================
 ! 2008-02-27 - Chris Jones
  - Add missing STL include
