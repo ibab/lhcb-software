@@ -4,9 +4,9 @@
 	<catalog name="Online">
 		<catalog name="Velo">
 			<condition name="MotionSystem">
-				<param name="XOffsetLeft" type="double">+30</param>
-				<param name="XOffsetRight" type="double">-30</param>
-				<param name="YOffset" type="double">+1</param>
+				<param name="ResolPosLA" type="double">+30</param>
+				<param name="ResolPosRC" type="double">-30</param>
+				<param name="ResolPosY" type="double">+1</param>
 			</condition>
 		</catalog>
 	</catalog>
