@@ -1,13 +1,10 @@
 ///---------------------------------------------------------------
 #include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
 
-ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
-
 //no filter:
 //ApplicationMgr.TopAlg += { "BTaggingAnalysis" };
 
 //if using the filter to fix opposite side B fractions:
-ApplicationMgr.DLLs   += { "DaVinciMCTools" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MySeqTag" };
 MySeqTag.Members      += { "FilterToFixOppositeBFractions" };
 

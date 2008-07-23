@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.35 2008-07-03 15:51:36 jpalac Exp $
+! $Id: release.notes,v 1.36 2008-07-23 11:49:28 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
-!===================== FlavourTaggingChecker v3r0 2008-07-03 ===============
+! 2008-07-23 - Marco Cattaneo
+ - Fix to CheatedSelection.cpp to compile with HepMC 2 (Gaudi v20r2)
+ - Remove obsolete ApplicationMgr.DLLs option from *.ops files
 
+!===================== FlavourTaggingChecker v3r0 2008-07-03 ===============
 ! 2008-06-18 - Patrick Koppenburg
  - Depend on new package HltInterfaces
 

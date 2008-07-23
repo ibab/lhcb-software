@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTaggingChecker
-version           v3r0
+version           v3r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -17,7 +17,6 @@ set FLAVOURTAGGINGCHECKEROPTS ${FLAVOURTAGGINGCHECKERROOT}/options
 # Used packages. 
 #============================================================================
 use DaVinciKernel   v*  Phys
-use DaVinciMCTools  v*  Phys
 use MCInterfaces    v*  Kernel
 use HltInterfaces   v*  Kernel
 

@@ -20,7 +20,6 @@
 //////////////////////////////////////////////////
 //Define execution tree
 
-ApplicationMgr.DLLs   += { "FlavourTagging" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/MySeq" };
 
 /*
@@ -39,7 +38,6 @@ SeqPreselBs2DsMuX.Members = {"CheckPV", "MakeResonances/PreselBs2DsMuX"};
 PreselBs2DsMuX.OutputLevel = 6; 
 
 //////////////////////////////////////////////////
-// ApplicationMgr.DLLs   += { "VeloDAQ" };
 // SeqTagging.Members    += { "DecodeVeloRawBuffer" };
  
 SeqTagging.Members    += {"TaggingTuplesSignal"};
@@ -83,8 +81,6 @@ ToolSvc.BTaggingTool.EnableJetSameTagger = false;
 ToolSvc.BTaggingTool.OutputLevel = 6;
 
 //////////////////////////////////////////////////
-ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
-
 #include "$STDOPTS/RootHist.opts" 
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 // For MC Signal
