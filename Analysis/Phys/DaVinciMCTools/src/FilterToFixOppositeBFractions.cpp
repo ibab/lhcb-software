@@ -1,4 +1,4 @@
-// $Id: FilterToFixOppositeBFractions.cpp,v 1.11 2008-04-09 20:24:28 ibelyaev Exp $
+// $Id: FilterToFixOppositeBFractions.cpp,v 1.12 2008-07-23 11:38:41 cattanem Exp $
 // Include files
 #include <sstream>
 
@@ -342,8 +342,8 @@ MCParticle* FilterToFixOppositeBFractions::associatedofHEP(HepMC::GenParticle* h
 
   MCParticles* mcpart = get<MCParticles>(MCParticleLocation::Default);
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().vect().mag();
-  double moththeta = hepmcp->momentum().vect().theta();
+  double mothmom = hepmcp->momentum().mag();
+  double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {

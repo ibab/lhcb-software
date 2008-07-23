@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.226 2008-07-15 16:12:05 gligorov Exp $
+! $Id: release.notes,v 1.227 2008-07-23 11:38:41 cattanem Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2008-07-23 - Marco Cattaneo
+ - Fix to FilterToFixOppositeBFractions.cpp to compile with HepMC 2.
+   (Needs Gaudi v20r2)
 
 ! 2008-07-15 - V. Gligorov
  - src/DaVinciAssociatorsWrapper.cpp

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.71 2008-07-11 09:31:34 pkoppenb Exp $
+# $Id: requirements,v 1.72 2008-07-23 11:38:41 cattanem Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -15,7 +15,7 @@ version           v9r15
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src/Lib options
+branches          cmt doc src options
 
 include_path             none
 
@@ -28,7 +28,6 @@ use  DaVinciMCKernel     v*  Phys
 use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
-#use  CaloAssociators     v*  Calo
 use  CaloUtils           v*  Calo 
 use  MCInterfaces        v*  Kernel
 # Extra language for translating yacc to c++
