@@ -10,6 +10,25 @@ from Configurables import ( CondDBAccessSvc,
                             XmlCnvSvc,
                             XmlParserSvc )
 
+# Helper function that should be moved to Gaudi 
+def getConfigurable(name, defaultType = None):
+    """Helper function to get a configurable with the given name regardless
+    for the type.
+    If defaultType can be a class derived from configurable or a string. If not
+    specified, the tool name is used as type."""
+    if name in allConfigurables:
+        return allConfigurables[name]
+    else:
+        # if the configurable is not found, we need to instantiate it
+        if defaultType is None:
+            # try to use the name of the configurable as default type
+            defaultType = name
+        if type(defaultType) is str:
+            # we need to convert from string to actual class
+            exec "from Configurables import %(type)s; defaultType = %(type)s" % \
+                 {"type": defaultType}
+        return defaultType(name)
+
 ##########################################################################
 # Detector Transient Store Configuration
 ##########################################################################
@@ -59,46 +78,47 @@ DetectorPersistencySvc( CnvServices = [ xmlCnvSvc ] )
 ApplicationMgr().ExtSvc += [ detDataSvc ]
 
 ##########################################################################
+# Technology dependent options
+##########################################################################
+if getConfigurable("LHCbApp").getProp("useOracleCondDB"):
+    importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.opts")
+else:   
+    importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+
+##########################################################################
 # Access to ConditionsDB
 ##########################################################################
 # DB partitions
-DDDB     = CondDBAccessSvc("DDDB")
-LHCBCOND = CondDBAccessSvc("LHCBCOND")
-ONLINE   = CondDBAccessSvc("ONLINE")
-SIMCOND  = CondDBAccessSvc("SIMCOND")
+
+DDDB     = getConfigurable("DDDB",     CondDBAccessSvc)
+LHCBCOND = getConfigurable("LHCBCOND", CondDBAccessSvc)
+ONLINE   = getConfigurable("ONLINE",   CondDBAccessSvc)
+SIMCOND  = getConfigurable("SIMCOND",  CondDBAccessSvc)
 
 # Standard configurations
-#  - Reconstruction / analisys
+#  - Reconstruction / analysis
 CondDBDispatcherSvc("MainCondDBReader",
                      MainAccessSvc = DDDB,
-                     Alternatives = [
-                       "/Conditions=" + LHCBCOND.getFullName(),
+                     Alternatives = {
+                       "/Conditions": LHCBCOND,
                        # Not yet available
-                       # "/Conditions/Online=" + ONLINE.getFullName()
-                       ]
+                       # "/Conditions/Online": ONLINE
+                       }
                     )
 
 #  - Simulation
 CondDBDispatcherSvc("SimulationCondDBReader",
                     MainAccessSvc = DDDB,
-                    Alternatives = [
-                      "/Conditions=" + SIMCOND.getFullName()
-                      ]
+                    Alternatives = {
+                      "/Conditions": SIMCOND
+                      }
                     )
 
 # Default is real data
-CondDBCnvSvc( CondDBReader = allConfigurables["MainCondDBReader"] )
+CondDBCnvSvc( CondDBReader = getConfigurable("MainCondDBReader") )
 
 # Use this for simulated data
-#CondDBCnvSvc( CondDBReader = allConfigurables["SimulationCondDBReader"] )
-
-##########################################################################
-# Technology dependent options
-##########################################################################
-if "LHCbApp" in allConfigurables and allConfigurables["LHCbApp"].getProp("useOracleCondDB"):
-    importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.opts")
-else:   
-    importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
+#CondDBCnvSvc( CondDBReader = getConfigurable("SimulationCondDBReader") )
 
 # Suppress pointless warning from COOL_2_5_0
 MessageSvc().setError.append("RelationalDatabase")
