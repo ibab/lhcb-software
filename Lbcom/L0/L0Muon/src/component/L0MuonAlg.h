@@ -54,7 +54,6 @@ private:
   bool m_debug;                       // Flag to turn on debug mode for L0MuonKernel
   
   // Algorithm's properties
-  std::string m_extension;            // Extension to the location of the L0MuonCandidates
   bool m_writeL0ProcData;             // Flag to activate the writing of the L0ProcessorData for the L0DU
   bool m_writeOnTES;                  // Flag to activate the writing of the L0MuonCandidates 
   bool m_storeBank;                   // Flag to enable/disable event storage in raw banks

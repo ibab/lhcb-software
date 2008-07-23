@@ -1,7 +1,13 @@
-!  $Id: release.notes,v 1.61 2008-07-21 07:38:37 jucogan Exp $
+!  $Id: release.notes,v 1.62 2008-07-23 07:56:59 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
+
+! 2008-07-23 - Julien Cogan
+ - Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
+   Replaced by the Context property in the L0MuonOutput tool.
+ - Check for L0MuonError bank - fill the RawBankReadOutStatus if error bank
+   found
 
 ! 2008-07-21 - Julien Cogan
  - minor bug fix (error message in L0MuonOutput)

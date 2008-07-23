@@ -25,7 +25,6 @@ public:
 private:
 
   // Algorithm's properties
-  std::string m_extension;            // Extension to the location of the L0MuonCandidates
   int m_procVersion;                  // Emulator version
   std::vector<double> m_ptParameters; // Pt calculation parameters
   std::string  m_configfile;          // Config file name

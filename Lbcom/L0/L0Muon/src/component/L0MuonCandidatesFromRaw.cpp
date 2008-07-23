@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidatesFromRaw.cpp,v 1.13 2008-07-16 12:39:40 jucogan Exp $
+// $Id: L0MuonCandidatesFromRaw.cpp,v 1.14 2008-07-23 07:56:58 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -45,7 +45,6 @@ L0MuonCandidatesFromRaw::L0MuonCandidatesFromRaw(const std::string& name,
   declareProperty( "WriteOnTES"     , m_writeOnTES       = true);  
   declareProperty( "WriteL0ProcData", m_writeL0ProcData  = false);  
   declareProperty( "DAQMode"        , m_mode = 0 );
-  declareProperty( "Extension"      , m_extension = ""  );
 }
 
 
@@ -128,14 +127,14 @@ StatusCode L0MuonCandidatesFromRaw::execute()
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Write on TES ..." << endreq;
-      sc = m_outputTool->writeOnTES(m_extension);
+      sc = m_outputTool->writeOnTES();
       if ( sc.isFailure() ) continue;  
     }
   
     // Fill the container for the L0DU (L0ProcessorData)
     if ( m_writeL0ProcData) {
       if( msgLevel(MSG::VERBOSE) ) verbose() << "Fill L0ProcessorData ..." << endreq;
-      sc = m_outputTool->writeL0ProcessorData(m_extension);
+      sc = m_outputTool->writeL0ProcessorData();
       if ( sc.isFailure() ) continue;  
     }
 

@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.15 2008-07-16 08:17:56 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.16 2008-07-23 07:56:58 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -83,7 +83,6 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("WriteOnTES"     , m_writeOnTES       = false);  
   declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
   declareProperty("InputSource"    , m_inputSource = 0);  
-  declareProperty("Extension"      , m_extension = ""  );
   declareProperty("Version"        , m_version     = 2 );
   declareProperty("DAQMode"        , m_mode  = 0 );
   declareProperty("Compression"    , m_compression = false );
@@ -182,14 +181,14 @@ StatusCode L0MuonAlg::execute()
   // Write on TES
   if ( m_writeOnTES) {
     if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
-    sc = m_outputTool->writeOnTES(m_extension);
+    sc = m_outputTool->writeOnTES();
     if ( sc.isFailure() ) return sc;  
   }
 
   // Fill the container for the L0DU (L0ProcessorData)
   if ( m_writeL0ProcData) {
     if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
-    sc = m_outputTool->writeL0ProcessorData(m_extension);
+    sc = m_outputTool->writeL0ProcessorData();
     if ( sc.isFailure() ) return sc;  
   }
   

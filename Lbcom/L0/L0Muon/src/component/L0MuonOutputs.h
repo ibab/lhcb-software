@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.8 2008-07-16 12:39:41 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.9 2008-07-23 07:56:59 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -40,9 +40,9 @@ public:
   StatusCode writeRawBanks();
   /// From the registers of the converters, fill the L0MuonCandidates
   /// and L0MuonData containers on the TES
-  StatusCode writeOnTES(std::string extension);
+  StatusCode writeOnTES();
   /// From the registers of the converters, fill the L0ProcessorDatas
-  StatusCode writeL0ProcessorData(std::string extension);
+  StatusCode writeL0ProcessorData();
   /// Reset the registers used by the converters
   StatusCode releaseRegisters();
 

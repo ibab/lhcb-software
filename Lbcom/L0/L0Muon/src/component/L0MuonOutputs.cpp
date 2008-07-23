@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.19 2008-07-21 07:38:37 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.20 2008-07-23 07:56:58 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -85,6 +85,9 @@ L0MuonOutputs::~L0MuonOutputs() {}
  
 StatusCode L0MuonOutputs::decodeRawBanks(){
 
+  bool error_bank[6];
+  for (int srcId=0; srcId<6; ++srcId) error_bank[srcId]=false;
+  
   LHCb::RawBankReadoutStatuss * L0MuonBanksStatus = 
     getOrCreate<LHCb::RawBankReadoutStatuss,LHCb::RawBankReadoutStatuss>( LHCb::RawBankReadoutStatusLocation::Default );
 
@@ -104,6 +107,18 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
 
   // ======================
   //
+  // L0Muon Error Banks
+  //
+  // ======================
+  const std::vector<LHCb::RawBank*>& errbanks = rawEvt->banks( LHCb::RawBank::L0MuonError );
+  for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = errbanks.begin(); errbanks.end() != itBnk; ++itBnk ) {
+    int srcID = (*itBnk)->sourceID();
+    if( msgLevel(MSG::DEBUG) ) debug() << "L0MuonError bank found srcID="<<srcID<<endreq;
+    error_bank[srcID]=true;
+  }
+
+  // ======================
+  //
   // L0Muon(CtrlCand) Banks
   //
   // ======================
@@ -118,6 +133,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
   } else {
     for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); banks.end() != itBnk; ++itBnk ) {
       int srcID = (*itBnk)->sourceID();
+      if (error_bank[srcID]) {
+        ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+      }
       int size = (*itBnk)->size()/4;
       if (size==0) {
         ctrlCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
@@ -196,6 +214,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
       m_procCandFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = proccandbanks.begin(); proccandbanks.end() != itBnk; ++itBnk ) {
         int srcID = (*itBnk)->sourceID();
+        if (error_bank[srcID]) {
+          procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+        }
         int size = (*itBnk)->size()/4;
         if (size==0) {
           procCandStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
@@ -249,6 +270,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
       m_procDataFlag =true;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = procdatabanks.begin(); procdatabanks.end() != itBnk; ++itBnk ) {
         int srcID = (*itBnk)->sourceID();
+        if (error_bank[srcID]) {
+          procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::ErrorBank);
+        }
         int size = (*itBnk)->size()/4;
         if (size==0) {
           procDataStatus->addStatus(srcID,LHCb::RawBankReadoutStatus::Empty);
@@ -454,7 +478,7 @@ StatusCode L0MuonOutputs::writeRawBanks(){
   
 }
 
-StatusCode L0MuonOutputs::writeOnTES(std::string extension){
+StatusCode L0MuonOutputs::writeOnTES(){
 
   int nCandFinal  = 0;
   double sumPt = 0;
@@ -464,7 +488,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
   std::vector<L0Muon::PMuonCandidate>::iterator itcand;
   std::string location;
 
-  location = LHCb::L0MuonCandidateLocation::Default + extension;
+  location = LHCb::L0MuonCandidateLocation::Default + context();
   if (exist<LHCb::L0MuonCandidates>(location) ) {
     return Warning("LHCb::L0MuonCandidates already exist at "+location,
                    StatusCode::FAILURE,50);
@@ -504,7 +528,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 
   // Candidates selected by the BCSUs (seen by the controller boards)
   if (m_ctrlCandFlagBCSU && (m_mode>1) ) {
-    location = LHCb::L0MuonCandidateLocation::BCSU +"fromCB"+ extension;
+    location = LHCb::L0MuonCandidateLocation::BCSU +"fromCB"+ context();
     if (exist<LHCb::L0MuonCandidates>(location) ) {
       return Warning("LHCb::L0MuonCandidates already exist at "+location,
                      StatusCode::FAILURE,50);
@@ -531,7 +555,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 
   // Candidates selected by the BCSUs (sent by the processing boards)
   if (m_procCandFlag && (m_mode>0) ) {
-    location = LHCb::L0MuonCandidateLocation::BCSU +"fromPB"+ extension;
+    location = LHCb::L0MuonCandidateLocation::BCSU +"fromPB"+ context();
     if (exist<LHCb::L0MuonCandidates>(location) ) {
       return Warning("LHCb::L0MuonCandidates already exist at "+location,
                      StatusCode::FAILURE,50);
@@ -558,7 +582,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
   
   // Candidates found by the PUs
   if (m_procCandFlag && (m_mode>0) ) {
-    location = LHCb::L0MuonCandidateLocation::PU  + extension;
+    location = LHCb::L0MuonCandidateLocation::PU  + context();
     if (exist<LHCb::L0MuonCandidates>(location) ) {
       return Warning("LHCb::L0MuonCandidates already exist at "+location,
                      StatusCode::FAILURE,50);
@@ -585,7 +609,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
   
   // Data received by the PUs
   if (m_procDataFlag && (m_mode>0) ){
-    location = LHCb::L0MuonDataLocation::Default + extension;
+    location = LHCb::L0MuonDataLocation::Default + context();
     if (exist<LHCb::L0MuonDatas>(location) ) {
       return Warning("LHCb::L0MuonCandidates already exist at "+location,
                      StatusCode::FAILURE,50);
@@ -606,25 +630,25 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
   
 
   // Errors
-  location = LHCb::L0MuonErrorLocation::ProcPU + extension;
+  location = LHCb::L0MuonErrorLocation::ProcPU + context();
   if (exist<LHCb::L0MuonErrors>(location) ) 
     return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_proc_pu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_pu, location );
 
-  location = LHCb::L0MuonErrorLocation::ProcBCSU + extension;
+  location = LHCb::L0MuonErrorLocation::ProcBCSU + context();
   if (exist<LHCb::L0MuonErrors>(location) ) 
     return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_proc_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_proc_bcsu, location );
 
-  location = LHCb::L0MuonErrorLocation::CtrlBCSU + extension;
+  location = LHCb::L0MuonErrorLocation::CtrlBCSU + context();
   if (exist<LHCb::L0MuonErrors>(location) ) 
     return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_ctrl_bcsu = new LHCb::L0MuonErrors();
   put(pl0merrors_ctrl_bcsu, location );
 
-  location = LHCb::L0MuonErrorLocation::CtrlCUSU + extension;
+  location = LHCb::L0MuonErrorLocation::CtrlCUSU + context();
   if (exist<LHCb::L0MuonErrors>(location) ) 
     return Warning("LHCb::L0MuonErrors already exist at "+location,StatusCode::FAILURE,50);
   LHCb::L0MuonErrors* pl0merrors_ctrl_cusu = new LHCb::L0MuonErrors();
@@ -703,7 +727,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 
 
   // Info
-  location = LHCb::L0MuonInfoLocation::Default + extension;
+  location = LHCb::L0MuonInfoLocation::Default + context();
   if (exist<LHCb::L0MuonInfo>(location) ) {
     return Warning("LHCb::L0MuonInfo already exist at "+location,
                    StatusCode::FAILURE,50);
@@ -715,7 +739,7 @@ StatusCode L0MuonOutputs::writeOnTES(std::string extension){
 }
 
 
-StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
+StatusCode L0MuonOutputs::writeL0ProcessorData(){
 
   unsigned long cu[4],su[4];
   unsigned long  index[4];
@@ -784,7 +808,7 @@ StatusCode L0MuonOutputs::writeL0ProcessorData(std::string extension){
   l0MuonDatas->insert( l0SU2 ) ; 
   l0MuonDatas->insert( l0CU3 ) ;
   l0MuonDatas->insert( l0SU3 ) ; 
-  put(  l0MuonDatas ,  LHCb::L0ProcessorDataLocation::Muon + extension );
+  put(  l0MuonDatas ,  LHCb::L0ProcessorDataLocation::Muon + context() );
 
   return StatusCode::SUCCESS;
 }
