@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.144 2008-07-23 14:46:24 marcocle Exp $
+# $Id: release.notes,v 1.145 2008-07-23 17:27:33 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
@@ -9,6 +9,8 @@
  - Changed the type of CondDBDispatcherSvc.Alternatives from list of strings
    to map<string,string>.
  - Added tests for DetCond.Configuration.
+ - Fixed a problem with conversion between 'double' and 'long long' in
+   CondDBTimeSwitchSvc.
 
 ! 2008-07-21 - Marco Clemencic
  - Added a function to DetCond.Configuration (configureOnlineSnapshots) to

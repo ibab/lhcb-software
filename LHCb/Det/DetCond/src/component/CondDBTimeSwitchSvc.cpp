@@ -1,4 +1,4 @@
-// $Id: CondDBTimeSwitchSvc.cpp,v 1.1 2008-06-27 17:00:41 marcocle Exp $
+// $Id: CondDBTimeSwitchSvc.cpp,v 1.2 2008-07-23 17:27:33 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -21,15 +21,6 @@ DECLARE_SERVICE_FACTORY(CondDBTimeSwitchSvc)
 //
 // 2006-07-10 : Marco CLEMENCIC
 //-----------------------------------------------------------------------------
-
-namespace {
-  double convert(const Gaudi::Time &t){
-    return static_cast<double>(t.ns());
-  }
-  Gaudi::Time convert(const double &ns){
-    return Gaudi::Time(static_cast<Gaudi::Time::ValueType>(ns));
-  }
-}
 
 // This is needed otherwise the implementation of std::map does
 // not find operator<(Gaudi::Time,Gaudi::Time).
@@ -75,6 +66,16 @@ StatusCode CondDBTimeSwitchSvc::queryInterface(const InterfaceID& riid,
   }
   return Service::queryInterface(riid,ppvUnknown);
 }
+namespace {
+  long long d2ll(double when) {
+    long long iwhen = static_cast<long long>(when);
+    if (iwhen < 0) {
+      // FIXME: (MCl) empirically, this means that "when" was too big (approximation)
+      iwhen = LONGLONG_MAX;
+    }
+    return iwhen;
+  }
+}
 //=============================================================================
 // initialize
 //=============================================================================
@@ -94,6 +95,7 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
   
   // decoding the property "Readers"
   std::string reader_name, reader_siov;
+  // FIXME: We should use directly 'long long' and not 'double'
   std::pair<double,double> reader_iov;
   for (ReadersDeclatationsType::iterator rd = m_readersDeclatations.begin();
        rd != m_readersDeclatations.end(); ++rd){
@@ -109,8 +111,8 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
     }
     // Check for overlaps
     const bool quiet = true;
-    ReaderInfo *old = readerFor(reader_iov.first,quiet);
-    if (!old) old = readerFor(reader_iov.second,quiet);
+    ReaderInfo *old = readerFor(::d2ll(reader_iov.first),quiet);
+    if (!old) old = readerFor(::d2ll(reader_iov.second),quiet);
     if (old) {
       log << MSG::ERROR << "Conflicting IOVs between '" << old->name  << "':("
           << old->since.ns() << "," << old->until.ns() << ") and "
@@ -118,7 +120,7 @@ StatusCode CondDBTimeSwitchSvc::initialize(){
       return StatusCode::FAILURE;
     }
     // use "until" as key to be able to search with "upper_bound"
-    ReaderInfo ri(reader_name, reader_iov.first, reader_iov.second);
+    ReaderInfo ri(reader_name, ::d2ll(reader_iov.first), ::d2ll(reader_iov.second));
     m_readers.insert(std::make_pair(ri.until,ri));
   }
   // we need to reset it because it got corrupted during the

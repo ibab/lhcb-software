@@ -1,4 +1,4 @@
-// $Id: CondDBTimeSwitchSvc.h,v 1.1 2008-06-27 17:00:41 marcocle Exp $
+// $Id: CondDBTimeSwitchSvc.h,v 1.2 2008-07-23 17:27:33 marcocle Exp $
 #ifndef COMPONENT_CONDDBTIMESWITCHSVC_H 
 #define COMPONENT_CONDDBTIMESWITCHSVC_H 1
 
@@ -98,10 +98,10 @@ private:
       m_reader(0)
     {}
     /// Default Constructor
-    ReaderInfo(const std::string &_n, double _s, double _u):
+    ReaderInfo(const std::string &_n, Gaudi::Time::ValueType _s, Gaudi::Time::ValueType _u):
       name(_n),
-      since(static_cast<Gaudi::Time::ValueType>(_s)),
-      until(static_cast<Gaudi::Time::ValueType>(_u)),
+      since(_s),
+      until(_u),
       m_reader(0)
     {}
     /// Copy constructor (for a correct reference counting).
@@ -150,10 +150,6 @@ private:
   /// Returns 0 if no service is available.
   /// The boolean flsg is used to avoid messages (durin initialization).
   ReaderInfo *readerFor(const Gaudi::Time &when, bool quiet = false);
-
-  ReaderInfo *readerFor(double when, bool quiet = false) {
-    return readerFor(Gaudi::Time(static_cast<long long>(when)),quiet);
-  }
 
   /// Get the the CondDBReader valid for a given point in time.
   /// Returns 0 if no service is available
