@@ -170,7 +170,7 @@ void LHCb::STTELL1Error::fillErrorInfo() {
 
 bool LHCb::STTELL1Error::correctPatterns() const
 {
-  bool isOK(true), tmp;
+  bool isOK(true);
 
   // testing word4 Error bank
   isOK  *= ((m_word4 & 0xFF) == 0) * (((m_word4 & 0xFF00) / 0x100) == 0x8e);
