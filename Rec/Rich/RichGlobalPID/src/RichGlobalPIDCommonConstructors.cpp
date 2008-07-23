@@ -2,10 +2,10 @@
 //-----------------------------------------------------------------------------
 /** @file RichGlobalPIDCommonConstructors.cpp
  *
- *  Implementation of templated constructors for RiochCommonBase
+ *  Implementation of templated constructors for Rich::Rec::GlobalPID::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDCommonConstructors.cpp,v 1.1 2008-03-25 16:26:44 jonrob Exp $
+ *  $Id: RichGlobalPIDCommonConstructors.cpp,v 1.2 2008-07-23 12:51:13 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
