@@ -509,6 +509,7 @@ int L0Muon::CtrlCandCnv::rawBankBcsuCandidates(std::vector<unsigned int> &raw){
 
 int L0Muon::CtrlCandCnv::decodeBankDC06(const std::vector<unsigned int> &raw, int bankVersion){
   if (bankVersion!=0) return 0;
+  
 
   static int size    = 31;
   static int max     = 32;
@@ -546,6 +547,9 @@ int L0Muon::CtrlCandCnv::decodeBankDC06(const std::vector<unsigned int> &raw, in
       end   = 0;
     }
   }
+
+  for (int ir=0;ir<2;++ir) m_candRegHandler[ir].setStatus(qcand[ir]);
+
   return 1;
   
 }
