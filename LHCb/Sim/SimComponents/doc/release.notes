@@ -5,6 +5,10 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-07-23 - Marco Cattaneo
+ - Add DumpHepMCDecay, DumpHepMC, DumpHepMCTree algorithms, previously in
+   Gen/Generators as DumpMCDecay, DumpMC, DumpHepMCTree
+
 ! 2008-07-22 - Marco Cattaneo
  - Fix ForcedBDecayTool.cpp for HepMC 2 (Gaudi v20r2)
  - Fix a doxygen warning
