@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.24 2008-01-30 15:45:32 cattanem Exp $
+! $Id: release.notes,v 1.25 2008-07-23 16:40:06 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !---------------------------------------------------------------------------
+
+! 2008-07-23 - Marco Cattaneo
+ - Add HepMCBack Dll to options reading HepMC 1.26 data
+ - Remove IOMin.exe, use gaudirun.py instead
+ - Add QMTests, to write/read a .sim, .digi, .dst file
 
 !====================== IOExample v2r4 2008-01-30 =========================
 ! 2008-01-30 - Marco Cattaneo

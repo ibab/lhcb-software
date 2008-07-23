@@ -11,8 +11,8 @@ FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
 // Set up the OutputStream that copies an event data file
 ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
-// Set up POOL persistency and load DLLs that contain the necessary dictionaries
-#include "$STDOPTS/SimDicts.opts"
+// Set up POOL persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // Select an input file type
 #include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST

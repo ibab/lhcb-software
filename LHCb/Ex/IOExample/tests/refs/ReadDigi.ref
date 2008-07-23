@@ -1,0 +1,376 @@
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadDigi.opts'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/ReadMin.opts'
+# ApplicationMgr.TopAlg += { "GaudiSequencer/ExampleSeq" };
+# ExampleSeq.Members     += { "PrintHeader" };
+# FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
+# ExampleSeq.Members     += { "StoreExplorerAlg" };
+# StoreExplorerAlg.Load = true;
+# StoreExplorerAlg.PrintFreq = 1.;
+# StoreExplorerAlg.ExploreRelations = 1;
+# ExampleSeq.Members     += { "DumpMCEventAlg" };
+# DumpMCEventAlg.OutputLevel = 3;
+# ApplicationMgr.EvtMax      = 5;
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
+# ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+# EventDataSvc.EnableFaultHandler = true;
+# --> Including file '/build/cattanem/LHCb_HEAD/GaudiConf/options/UnpackDigi.opts'
+# DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"                          , "MC/Vertices"  : "UnpackMCVertex"                          };
+# <-- End of file '/build/cattanem/LHCb_HEAD/GaudiConf/options/UnpackDigi.opts'
+# EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/ReadMin.opts'
+# ApplicationMgr.EvtMax = 5;
+# EventSelector.Input = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadDigi.opts'
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.1 $
+                                          running on lxbuild120.cern.ch on Wed Jul 23 18:33:03 2008
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+ExampleSeq           INFO Member list: PrintHeader, StoreExplorerAlg, DumpMCEventAlg
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+PoolDigi.root     SUCCESS Root file version:51800
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2edc630@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitSummaries [Address: CLID=0x23079 Type=0x202]  ObjectVector<LHCb::MCRichDigitSu [0x10d9]
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO     +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 1, 39716752, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	1
+evtTime :	0
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 2190 Vertices:
+DumpMCEventAlg       INFO There are 2064 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2edc660@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitSummaries [Address: CLID=0x23079 Type=0x202]  ObjectVector<LHCb::MCRichDigitSu [0x6dc]
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO     +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 2, 798745099, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	2
+evtTime :	25
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 2294 Vertices:
+DumpMCEventAlg       INFO There are 2084 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2f48480@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitSummaries [Address: CLID=0x23079 Type=0x202]  ObjectVector<LHCb::MCRichDigitSu [0x5b7]
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Next [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO     +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 3, 753917107, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	3
+evtTime :	50
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 1389 Vertices:
+DumpMCEventAlg       INFO There are 1283 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x31ad520@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitSummaries [Address: CLID=0x23079 Type=0x202]  ObjectVector<LHCb::MCRichDigitSu [0x4d8]
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /PrevPrev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO     +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 4, 1546304296, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	4
+evtTime :	75
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 1552 Vertices:
+DumpMCEventAlg       INFO There are 1451 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x3ada080@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitsInfo [Address: CLID=0x1f4 Type=0x202]  LHCb::IntLink
+StoreExplorerAlg     INFO | | +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /DigitSummaries [Address: CLID=0x23079 Type=0x202]  ObjectVector<LHCb::MCRichDigitSu [0xf3c]
+StoreExplorerAlg     INFO | | +--> /DigiHeader [Address: CLID=0x67 Type=0x202]  LHCb::ProcessHeader
+StoreExplorerAlg     INFO | | +--> /TrackInfo [Address: CLID=0x12c Type=0x202]  LHCb::MCProperty
+StoreExplorerAlg     INFO | +--> /DAQ [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /RawEvent [Address: CLID=0x3ea Type=0x202]  LHCb::RawEvent
+StoreExplorerAlg     INFO | +--> /Prev [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Link [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Raw [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Clusters2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Clusters [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Times2MCHits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | | +--> /Times [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | |   +--> /Digits [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /Trig [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | +--> /L0 [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | | | +--> /Calo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | |   +--> /FullCalo [Address: CLID=0x190 Type=0x202]  LHCb::LinksByKey
+StoreExplorerAlg     INFO | | +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   +--> /pSim [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /MCVertices [Address: CLID=0x5e7 Type=0x202]  LHCb::PackedMCVertices
+StoreExplorerAlg     INFO     +--> /MCParticles [Address: CLID=0x5e6 Type=0x202]  LHCb::PackedMCParticles
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 5, 1230214522, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	5
+evtTime :	100
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 5930 Vertices:
+DumpMCEventAlg       INFO There are 5503 Particles:
+ApplicationMgr       INFO Application Manager Stopped successfully
+PrintHeader          INFO Filtered 5 events
+PrintHeader       SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
+PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.97 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 10/0/15 Algorithms: Time User   : Tot=   10 [ms] Ave/Min/Max=    1(+-0.894)/    0/    3 [ms] #= 10
+PoolRootTreeEvt...   INFO Disconnected data IO:A41C4985-D458-DD11-BADF-0030487C5E0E[PoolDigi.root]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

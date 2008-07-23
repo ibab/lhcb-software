@@ -1,4 +1,4 @@
-// $Id: ReadMin.opts,v 1.22 2008-01-30 15:45:32 cattanem Exp $
+// $Id: ReadMin.opts,v 1.23 2008-07-23 16:40:06 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
@@ -9,7 +9,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/ExampleSeq" };
 ExampleSeq.Members     += { "PrintHeader" };
 
 // FilterByRunEvent selects given event numbers for further processing
-ExampleSeq.Members     += { "FilterByRunEvent" };
+//ExampleSeq.Members     += { "FilterByRunEvent" };
 FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
 
 // StoreExplorerAlg algorithm loads all leaves in Event Data store
@@ -23,8 +23,8 @@ ExampleSeq.Members     += { "DumpMCEventAlg" };
 DumpMCEventAlg.OutputLevel = 3; // try also 2, or 1 !!
 ApplicationMgr.EvtMax      = 5;
 
-// Set up POOL persistency and load DLLs that contain the necessary dictionaries
-#include "$STDOPTS/SimDicts.opts"
+// Set up POOL persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
@@ -35,7 +35,7 @@ ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 EventDataSvc.EnableFaultHandler = true ;
 #include "$STDOPTS/UnpackDigi.opts"
 
-// Input data file can be produced by first running IOMin.exe with WriteMin.opts
+// Input data file can be produced by first running "gaudirun.py WriteMin.opts"
 
 // Brunel file
 EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'"};

@@ -5,3 +5,6 @@ EventSelector.Input = {
 }; // B->J/Psi(mumu)Ks events with Boole v12r4, Gauss v25r2, XmlDDDB v30r8
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// Option needed when reading a file containing HepMC 1.26 records (e.g. DC06)
+ApplicationMgr.Dlls += { "HepMCBack" };

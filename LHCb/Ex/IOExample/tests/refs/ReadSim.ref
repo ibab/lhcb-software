@@ -1,0 +1,296 @@
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadSim.opts'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/ReadMin.opts'
+# ApplicationMgr.TopAlg += { "GaudiSequencer/ExampleSeq" };
+# ExampleSeq.Members     += { "PrintHeader" };
+# FilterByRunEvent.RunEventNumList = { (182001,1), (182001,3), (182001,5) };
+# ExampleSeq.Members     += { "StoreExplorerAlg" };
+# StoreExplorerAlg.Load = true;
+# StoreExplorerAlg.PrintFreq = 1.;
+# StoreExplorerAlg.ExploreRelations = 1;
+# ExampleSeq.Members     += { "DumpMCEventAlg" };
+# DumpMCEventAlg.OutputLevel = 3;
+# ApplicationMgr.EvtMax      = 5;
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
+# ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+# EventDataSvc.EnableFaultHandler = true;
+# --> Including file '/build/cattanem/LHCb_HEAD/GaudiConf/options/UnpackDigi.opts'
+# DataOnDemandSvc.AlgMap += { "MC/Particles" : "UnpackMCParticle"                          , "MC/Vertices"  : "UnpackMCVertex"                          };
+# <-- End of file '/build/cattanem/LHCb_HEAD/GaudiConf/options/UnpackDigi.opts'
+# EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/ReadMin.opts'
+# ApplicationMgr.EvtMax = 5;
+# EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/ReadSim.opts'
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.1 $
+                                          running on lxbuild120.cern.ch on Wed Jul 23 18:31:27 2008
+====================================================================================================================================
+ApplicationMgr       INFO Application Manager Configured successfully
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+ExampleSeq           INFO Member list: PrintHeader, StoreExplorerAlg, DumpMCEventAlg
+RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
+RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
+RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='READ'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+PoolSim.root      SUCCESS Root file version:51800
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2e76bc0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO   +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO   | +--> /Particles [Address: CLID=0x600d2 Type=0x202]  KeyedContainer<LHCb::MCParticle, [0x810]
+StoreExplorerAlg     INFO   | +--> /Vertices [Address: CLID=0x600dc Type=0x202]  KeyedContainer<LHCb::MCVertex,Co [0x88e]
+StoreExplorerAlg     INFO   | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x4f4]
+StoreExplorerAlg     INFO   | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x30]
+StoreExplorerAlg     INFO   | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x17e]
+StoreExplorerAlg     INFO   | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xc2]
+StoreExplorerAlg     INFO   | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x309]
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x102]
+StoreExplorerAlg     INFO   | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x37c]
+StoreExplorerAlg     INFO   | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x7c7]
+StoreExplorerAlg     INFO   | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xb8e]
+StoreExplorerAlg     INFO   | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x1f6]
+StoreExplorerAlg     INFO     +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x1096]
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 1, 39716752, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	1
+evtTime :	0
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 2190 Vertices:
+DumpMCEventAlg       INFO There are 2064 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2e76bf0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO   +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO   | +--> /Particles [Address: CLID=0x600d2 Type=0x202]  KeyedContainer<LHCb::MCParticle, [0x824]
+StoreExplorerAlg     INFO   | +--> /Vertices [Address: CLID=0x600dc Type=0x202]  KeyedContainer<LHCb::MCVertex,Co [0x8f6]
+StoreExplorerAlg     INFO   | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x4a1]
+StoreExplorerAlg     INFO   | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x37]
+StoreExplorerAlg     INFO   | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x1d3]
+StoreExplorerAlg     INFO   | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x16c]
+StoreExplorerAlg     INFO   | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x3d6]
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x19d]
+StoreExplorerAlg     INFO   | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x57a]
+StoreExplorerAlg     INFO   | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xc17]
+StoreExplorerAlg     INFO   | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xfd3]
+StoreExplorerAlg     INFO   | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x1e0]
+StoreExplorerAlg     INFO     +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x6c9]
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 2, 798745099, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	2
+evtTime :	25
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 2294 Vertices:
+DumpMCEventAlg       INFO There are 2084 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x2ee1c00@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO   +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO   | +--> /Particles [Address: CLID=0x600d2 Type=0x202]  KeyedContainer<LHCb::MCParticle, [0x503]
+StoreExplorerAlg     INFO   | +--> /Vertices [Address: CLID=0x600dc Type=0x202]  KeyedContainer<LHCb::MCVertex,Co [0x56d]
+StoreExplorerAlg     INFO   | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x37b]
+StoreExplorerAlg     INFO   | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x11]
+StoreExplorerAlg     INFO   | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x14a]
+StoreExplorerAlg     INFO   | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xd0]
+StoreExplorerAlg     INFO   | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2f4]
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xf3]
+StoreExplorerAlg     INFO   | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x358]
+StoreExplorerAlg     INFO   | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x626]
+StoreExplorerAlg     INFO   | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x9ea]
+StoreExplorerAlg     INFO   | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x1c9]
+StoreExplorerAlg     INFO     +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x632]
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 3, 753917107, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	3
+evtTime :	50
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 1389 Vertices:
+DumpMCEventAlg       INFO There are 1283 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x3ae8a10@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x1]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x1]
+StoreExplorerAlg     INFO   +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO   | +--> /Particles [Address: CLID=0x600d2 Type=0x202]  KeyedContainer<LHCb::MCParticle, [0x5ab]
+StoreExplorerAlg     INFO   | +--> /Vertices [Address: CLID=0x600dc Type=0x202]  KeyedContainer<LHCb::MCVertex,Co [0x610]
+StoreExplorerAlg     INFO   | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x270]
+StoreExplorerAlg     INFO   | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x1a]
+StoreExplorerAlg     INFO   | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xa7]
+StoreExplorerAlg     INFO   | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x120]
+StoreExplorerAlg     INFO   | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2df]
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xfe]
+StoreExplorerAlg     INFO   | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x3ec]
+StoreExplorerAlg     INFO   | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x7c2]
+StoreExplorerAlg     INFO   | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x9a7]
+StoreExplorerAlg     INFO   | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x144]
+StoreExplorerAlg     INFO     +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x572]
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 4, 1546304296, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	4
+evtTime :	75
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 1552 Vertices:
+DumpMCEventAlg       INFO There are 1451 Particles:
+PrintHeader       WARNING PrintHeader:: No ODIN Header StatusCode=FAILURE
+StoreExplorerAlg     INFO ========= /Event[0x3a06ed0@EventDataSvc]:
+StoreExplorerAlg     INFO +--> /Event [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | +--> /Gen [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO | | +--> /Header [Address: CLID=0x66 Type=0x202]  LHCb::GenHeader
+StoreExplorerAlg     INFO | | +--> /HepMCEvents [Address: CLID=0x600ca Type=0x202]  KeyedContainer<LHCb::HepMCEvent, [0x2]
+StoreExplorerAlg     INFO | | +--> /Collisions [Address: CLID=0x600cc Type=0x202]  KeyedContainer<LHCb::GenCollisio [0x2]
+StoreExplorerAlg     INFO   +--> /MC [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | +--> /Header [Address: CLID=0x68 Type=0x202]  LHCb::MCHeader
+StoreExplorerAlg     INFO   | +--> /Particles [Address: CLID=0x600d2 Type=0x202]  KeyedContainer<LHCb::MCParticle, [0x157f]
+StoreExplorerAlg     INFO   | +--> /Vertices [Address: CLID=0x600dc Type=0x202]  KeyedContainer<LHCb::MCVertex,Co [0x172a]
+StoreExplorerAlg     INFO   | +--> /Velo [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xc58]
+StoreExplorerAlg     INFO   | +--> /PuVeto [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0xb8]
+StoreExplorerAlg     INFO   | +--> /TT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2e4]
+StoreExplorerAlg     INFO   | +--> /IT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x2d6]
+StoreExplorerAlg     INFO   | +--> /OT [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x86b]
+StoreExplorerAlg     INFO   | +--> /Muon [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x200e6 Type=0x202]  ObjectVector<LHCb::MCHit> [0x30a]
+StoreExplorerAlg     INFO   | +--> /Spd [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0xadb]
+StoreExplorerAlg     INFO   | +--> /Prs [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x16b2]
+StoreExplorerAlg     INFO   | +--> /Ecal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x1dc2]
+StoreExplorerAlg     INFO   | +--> /Hcal [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO   | | +--> /Hits [Address: CLID=0x207d0 Type=0x202]  ObjectVector<LHCb::MCCaloHit> [0x3e4]
+StoreExplorerAlg     INFO     +--> /Rich [Address: CLID=0x1 Type=0x202]  DataObject
+StoreExplorerAlg     INFO       +--> /Hits [Address: CLID=0x2307d Type=0x202]  ObjectVector<LHCb::MCRichHit> [0x104e]
+DumpMCEventAlg       INFO ++++++++++++++++++++++++++++++++++++++++++++++++++++
+{ randomSeeds :	[182001, 5, 1230214522, 0]
+applicationName :	Gauss
+applicationVersion :	v25r9
+runNumber :	182001
+condDBTags :	[]
+ }{ evtNumber :	5
+evtTime :	100
+ }
+DumpMCEventAlg       INFO MCVertex/MCParticle tree structure is OK
+DumpMCEventAlg       INFO There are 5930 Vertices:
+DumpMCEventAlg       INFO There are 5503 Particles:
+ApplicationMgr       INFO Application Manager Stopped successfully
+PrintHeader          INFO Filtered 5 events
+PrintHeader       SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
+PrintHeader       SUCCESS  #WARNINGS   = 5        Message = 'No ODIN Header'
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO This machine has a speed about   1.96 times the speed of a 2.8 GHz Xeon.
+ToolSvc.Sequenc...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+ToolSvc.Sequenc...   INFO ------------------------------------------------------------------------------------------------
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 0/0/5 Algorithms: Time User   : Tot=    0 [us]                                             #=  0
+PoolRootTreeEvt...   INFO Disconnected data IO:86AB7993-D458-DD11-9D0A-0030487C5E0E[PoolSim.root]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

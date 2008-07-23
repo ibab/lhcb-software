@@ -1,0 +1,60 @@
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/WriteMin.opts'
+# ApplicationMgr.HistogramPersistency = "NONE";
+# ApplicationMgr.EvtMax   = 100;
+# EventSelector.PrintFreq = 1;
+# FileCatalog.Catalogs = {"xmlcatalog_file:MyCatalog.xml"};
+# ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
+# EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
+# EventPersistencySvc.CnvServices += { "PoolRootKeyEvtCnvSvc" };
+# PoolRootEvtCnvSvc.DbType         = "POOL_ROOT";
+# PoolRootKeyEvtCnvSvc.DbType      = "POOL_ROOTKEY";
+# PoolRootTreeEvtCnvSvc.DbType     = "POOL_ROOTTREE";
+# PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "GaudiKernelDict" };
+# PoolDbCacheSvc.OutputLevel       = 4;
+# PoolDbCacheSvc.DomainOpts        = { "Domain[ROOT_All].TREE_MAX_SIZE=500000000000 TYP=longlong" };
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v20r2/GaudiPoolDb/v4r0/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+# InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
+# ApplicationMgr.Dlls += { "HepMCBack" };
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts'
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/WriteMin.opts'
+# ApplicationMgr.EvtMax = 5;
+# Warning: file '/build/cattanem/LHCb_HEAD/Ex/IOExample/options/PoolDst.opts' already included, ignored.
+# <-- End of file '/build/cattanem/LHCb_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+ApplicationMgr    SUCCESS
+====================================================================================================================================
+                                                   Welcome to ApplicationMgr $Revision: 1.1 $
+                                          running on lxbuild120.cern.ch on Wed Jul 23 18:04:17 2008
+====================================================================================================================================
+ApplicationMgr       INFO Successfully loaded modules : HepMCBack
+ApplicationMgr       INFO Application Manager Configured successfully
+EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
+EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
+InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'
+HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+ApplicationMgr       INFO Application Manager Started successfully
+rfio:/castor/ce...SUCCESS Root file version:51400
+rfio:/castor/ce...SUCCESS Root file version:51400
+EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
+PoolDst.root      SUCCESS Root file version:51800
+EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
+EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
+EventSelector     SUCCESS Reading Event record 4. Record number within stream 1: 4
+EventSelector     SUCCESS Reading Event record 5. Record number within stream 1: 5
+ApplicationMgr       INFO Application Manager Stopped successfully
+InputCopyStream      INFO Events output: 5
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ToolSvc              INFO Removing all tools created by ToolSvc
+PoolRootTreeEvt...   INFO Disconnected data IO:AE240E8A-D058-DD11-89B1-0030487C5E0E[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:CAA89D27-E42D-DC11-B844-003048836626[rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst]
+ApplicationMgr       INFO Application Manager Finalized successfully
+ApplicationMgr       INFO Application Manager Terminated successfully

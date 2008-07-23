@@ -1,0 +1,4 @@
+// Write a test DST
+#include "$IOEXAMPLEROOT/options/WriteMin.opts"
+ApplicationMgr.EvtMax = 5;
+#include "$IOEXAMPLEROOT/options/PoolSim.opts"

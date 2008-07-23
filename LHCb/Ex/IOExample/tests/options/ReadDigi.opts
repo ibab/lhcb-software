@@ -1,0 +1,4 @@
+// Write the test DST produced by WriteDst.opts
+#include "$IOEXAMPLEROOT/options/ReadMin.opts"
+ApplicationMgr.EvtMax = 5;
+EventSelector.Input = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOTTREE' OPT='READ'"};

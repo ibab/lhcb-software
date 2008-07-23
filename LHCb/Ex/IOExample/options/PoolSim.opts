@@ -4,3 +4,6 @@ EventSelector.Input   = {
 };
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
+
+// Option needed when reading a file containing HepMC 1.26 records (e.g. DC06)
+ApplicationMgr.Dlls += { "HepMCBack" };
