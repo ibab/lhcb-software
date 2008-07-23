@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.cpp,v 1.7 2008-06-26 14:22:45 marcocle Exp $
+// $Id: CondDBDispatcherSvc.cpp,v 1.8 2008-07-23 14:46:24 marcocle Exp $
 // Include files
 
 #include "GaudiKernel/SvcFactory.h"
@@ -28,7 +28,7 @@ CondDBDispatcherSvc::CondDBDispatcherSvc( const std::string& name, ISvcLocator* 
   m_alternatives()
 {
   declareProperty("MainAccessSvc", m_mainAccessSvcName = "CondDBAccessSvc" );
-  declareProperty("Alternatives",  m_alternativesDeclaration               );
+  declareProperty("Alternatives",  m_alternativesDeclarationMap            );
 
   declareProperty("EnableXMLDirectMapping", m_xmlDirectMapping = true,
                   "Allow direct mapping from CondDB structure to"
@@ -76,16 +76,10 @@ StatusCode CondDBDispatcherSvc::initialize(){
   }
 
   // locate all the alternative AccessSvcs
-  std::vector<std::string>::iterator decl;
-  for ( decl = m_alternativesDeclaration.begin(); decl != m_alternativesDeclaration.end(); ++decl ) {
-    std::string::size_type pos = decl->find('=');
-    if ( pos == std::string::npos ) {
-      log << MSG::ERROR << "Malformed declaration of alternative: it sould be '/path/in/cool=ServiceType/ServiceName'" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    
-    std::string svcName(*decl,pos+1);
-    std::string altPath(*decl,0,pos);
+  std::map<std::string,std::string>::iterator decl;
+  for ( decl = m_alternativesDeclarationMap.begin(); decl != m_alternativesDeclarationMap.end(); ++decl ) {
+    const std::string &altPath = decl->first;
+    const std::string &svcName = decl->second;
     
     if ( m_alternatives.find(altPath) != m_alternatives.end() ) {
       log << MSG::ERROR << "More than one alternative for path " << altPath << endreq;

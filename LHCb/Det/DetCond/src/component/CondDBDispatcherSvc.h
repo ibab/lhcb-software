@@ -1,4 +1,4 @@
-// $Id: CondDBDispatcherSvc.h,v 1.7 2008-06-27 17:00:41 marcocle Exp $
+// $Id: CondDBDispatcherSvc.h,v 1.8 2008-07-23 14:46:24 marcocle Exp $
 #ifndef COMPONENT_CONDDBDISPATCHERSVC_H 
 #define COMPONENT_CONDDBDISPATCHERSVC_H 1
 
@@ -87,13 +87,9 @@ private:
   /// Property CondDBDispatcherSvc.MainAccessSvc: the AccessSvc instance to use to retrieve all the
   /// objects for which an alternative is not specified (default to "CondDBAccessSvc").
   std::string m_mainAccessSvcName;
-
-  /// Property CondDBDispatcherSvc.Alternatives: list of alternative Access Services in the form of
-  /// "/path/for/alternative=ServiceType/ServiceName".
-  std::vector<std::string> m_alternativesDeclaration;
   
-  /// Property CondDBDispatcherSvc.AlternativesMap: list of alternative Access Services in the form of
-  /// "/path/for/alternative=ServiceType/ServiceName".
+  /// Property CondDBDispatcherSvc.Alternatives: list of alternative Access Services in the form of
+  /// "/path/for/alternative":"ServiceType/ServiceName".
   std::map<std::string,std::string> m_alternativesDeclarationMap;
   
   /// Pointer to the main access service.

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.5 2008-07-23 08:13:44 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2008-07-23 14:46:24 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
@@ -80,11 +80,6 @@ def addCondDBAlternative(accessSvc,path):
     if type(accessSvc) not in __CondDBReaders__:
         raise TypeError("addCondDBAlternative does not support '%s'"%accessSvc.__class__.__name__)
     
-    if type(accessSvc) is str:
-        accessSvcName = accessSvc
-    else:
-        accessSvcName = accessSvc.getFullName()
-    
     # Check for basic configuration
     _assertConfig('addCondDBAlternative')
     cnvSvc = allConfigurables["CondDBCnvSvc"]
@@ -93,17 +88,7 @@ def addCondDBAlternative(accessSvc,path):
     if type(originalReader) == CondDBDispatcherSvc:
         # If the original reader is already a dispatcher, we can extend the
         # configuration:
-        # - get initial mapping
-        mapping = {}
-        for l in originalReader.Alternatives:
-            k,v = l.split('=')
-            mapping[k] = v
-        # - add the new one (it will replace the existing one, if any)
-        mapping[path] = accessSvcName
-        # - reset the mapping property and fill it again
-        originalReader.Alternatives = []
-        for p in mapping:
-            originalReader.Alternatives.append("%s=%s"%(p,mapping[p]))
+        originalReader.Alternatives[path] = accessSvc
     else:
         # We have to create a new dispatcher
         name = "CondDBDispatcherSvc"
@@ -113,7 +98,7 @@ def addCondDBAlternative(accessSvc,path):
             name = "CondDBDispatcherSvc_%d"%i
         cnvSvc.CondDBReader = CondDBDispatcherSvc(name,
                                                   MainAccessSvc = originalReader,
-                                                  Alternatives = [ "%s=%s"%(path,accessSvcName) ]
+                                                  Alternatives = { path: accessSvc }
                                                   )
 
 def useCondDBLogger(filename = None, logger = None):

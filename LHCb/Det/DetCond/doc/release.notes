@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.143 2008-07-21 19:14:30 marcocle Exp $
+# $Id: release.notes,v 1.144 2008-07-23 14:46:24 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2008-07-23 - Marco Clemencic
+ - Changed the type of CondDBDispatcherSvc.Alternatives from list of strings
+   to map<string,string>.
+ - Added tests for DetCond.Configuration.
 
 ! 2008-07-21 - Marco Clemencic
  - Added a function to DetCond.Configuration (configureOnlineSnapshots) to
