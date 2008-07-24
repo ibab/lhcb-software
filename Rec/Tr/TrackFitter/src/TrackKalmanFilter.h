@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.27 2008-07-15 07:04:28 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.28 2008-07-24 20:49:38 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -66,10 +66,10 @@ protected:
   StatusCode filter( LHCb::FitNode& node, LHCb::State& state ) const;
   
   //! smooth 2 nodes
-  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1, bool upstream ) const;
+  StatusCode smooth( LHCb::FitNode& node0, const LHCb::FitNode& node1 ) const;
 
   //! smoother for bidirectional fit nodes
-  StatusCode biSmooth( LHCb::FitNode& node0, bool upstream ) const;
+  StatusCode biSmooth( LHCb::FitNode& node0 ) const;
 
   //! update the residual such that it corresponds the the current state in the node
   void updateResidual( LHCb::FitNode& node ) const ;
