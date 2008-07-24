@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.22 2008-02-21 16:35:03 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.23 2008-07-24 18:04:14 papanest Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -258,7 +258,7 @@ namespace Rich
     public:
       /// Operator == that takes into account the correct number of bits
       inline bool operator== ( const EventID& id ) const
-      { 
+      {
         // Compute which how many bits the words should in common, so we only compare these
         const ShortType lowBits = ( this->activeBits() < id.activeBits() ?
                                     this->activeBits() : id.activeBits() );
@@ -268,7 +268,7 @@ namespace Rich
       }
       /// Operator != that takes into account the correct number of bits
       inline bool operator!= ( const EventID& id ) const
-      { 
+      {
         return ! this->operator==(id);
       }
     private:
@@ -301,7 +301,7 @@ namespace Rich
     public:
       /// Operator == that takes into account the correct number of bits
       inline bool operator== ( const BXID& id ) const
-      { 
+      {
         // Compute which how many bits the words should in common, so we only compare these
         const ShortType lowBits = ( this->activeBits() < id.activeBits() ?
                                     this->activeBits() : id.activeBits() );
@@ -311,7 +311,7 @@ namespace Rich
       }
       /// Operator != that takes into account the correct number of bits
       inline bool operator!= ( const BXID& id ) const
-      { 
+      {
         return ! this->operator==(id);
       }
     private:
@@ -487,6 +487,23 @@ namespace Rich
       {
         return ( value <= max );
       }
+    };
+
+    /** @class  HPDCopyNumber RichKernel/RichDAQDefinitions.h
+     *
+     *  The Geant4 copy number equivalent. A different way to locate HPDs.
+     *  The number starts at 0 at Rich1,Top,HPDColumn=0,NumInCol=0 and reaches
+     *  483 at Rich2,Right,HPDColumn=8,NumInCol=15
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   24/07/2008
+     */
+    class HPDCopyNumber : public NumericType<ShortType>
+    {
+    public :
+      /// Constructor
+      explicit HPDCopyNumber ( const ShortType id = 0 )
+        : NumericType<ShortType>(id) { }
     };
 
     //---------------------------------------------------------------------------------
