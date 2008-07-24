@@ -1,5 +1,12 @@
+.NOTPARALLEL :: $(dest)${NAME}.obj2dict
+
+$(dest)${package}_dictionary.h  $(dest)${package}_selection.xml :: $(dest)${NAME}.obj2dict
+
 $(dest)${NAME}.obj2dict :  ${FULLNAME}
 	@echo Producing Dictionary files from ${FULLNAME}
 	@if !(test -d $(dest)); then mkdir -p $(dest); fi 
 	export LD_LIBRARY_PATH=$(Python_home)/lib; $(pythonexe) $(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) $(${package}Obj2Doth_GODflags) -g dct -r $(GAUDIOBJDESCROOT) -d $(dest) ${FULLNAME}
 	@echo /dev/null > $@
+
+${CONSTITUENT}_obj2dict_list += $(dest)${NAME}.obj2dict
+

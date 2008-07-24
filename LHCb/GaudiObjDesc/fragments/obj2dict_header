@@ -13,3 +13,16 @@ ${CONSTITUENT} :: $(dtdfile) $(dest)${package}.lcgdict
 $(dtdfile) : $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd
 	@echo "Copying global DTD to current package"
 	@cp $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd $(dtdfile)
+
+${CONSTITUENT}_obj2dict_list = 
+
+${CONSTITUENT}_cleanuplist = $(dest)${package}_dictionary.h
+${CONSTITUENT}_cleanuplist += $(dest)${package}_selection.xml
+${CONSTITUENT}_cleanuplist += $(dest)${package}.lcgdict
+
+
+$(dest)${package}.lcgdict :: $(dest)${package}_dictionary.h  $(dest)${package}_selection.xml
+	@( if [ -e $(dest)${package}.lcgdict ]; then touch $(dest)${package}.lcgdict; \
+	else echo /dev/null > $(dest)${package}.lcgdict; fi ) 
+ 
+ 

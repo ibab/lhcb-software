@@ -20,7 +20,8 @@ pattern god_dictionary \
 
 pattern god_headers \
    document obj2doth <package>Obj2Doth <files> ; \
-   macro_append <package>_dependencies <package>Obj2Doth
+   macro_append <package>_dependencies <package>Obj2Doth ; \
+   macro_append install_more_includes_dependencies " <package>Obj2Doth "
 
 use Python v* LCG_Interfaces
 use GaudiPolicy v*
