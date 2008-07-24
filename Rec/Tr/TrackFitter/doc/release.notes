@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+
+! 2008-07-24 - Wouter Hulsbergen
+ - adapted to change in FitNode
+ - revived standard smoother
+
 !=========================== TrackFitter v2r26 2008-07-17 ===================
 ! 2008-07-15 - Wouter Hulsbergen
  - Use cholesky decomposition for track covariance matrix inversion
