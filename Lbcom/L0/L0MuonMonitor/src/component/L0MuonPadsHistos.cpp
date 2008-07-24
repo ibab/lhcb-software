@@ -1,4 +1,4 @@
-// $Id: LogicalPads2DMaps.cpp,v 1.2 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonPadsHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -6,39 +6,38 @@
 #include "Kernel/MuonTileID.h"
 
 // local
-#include "L0MuonMonUtils.h"
-#include "LogicalPads2DMaps.h"
+#include "L0MuonPadsHistos.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : LogicalPads2DMaps
+// Implementation file for class : L0MuonPadsHistos
 //
 // 2008-04-02 : 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( LogicalPads2DMaps );
+DECLARE_TOOL_FACTORY( L0MuonPadsHistos );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-LogicalPads2DMaps::LogicalPads2DMaps( const std::string& type,
+L0MuonPadsHistos::L0MuonPadsHistos( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiHistoTool ( type, name , parent )
 {
-  declareInterface<LogicalPads2DMaps>(this);
+  declareInterface<L0MuonPadsHistos>(this);
   
-  m_stationLayouts[M1]=MuonLayout(24,8);
-  m_stationLayouts[M2]=MuonLayout(48,8);
-  m_stationLayouts[M3]=MuonLayout(48,8);
-  m_stationLayouts[M4]=MuonLayout(12,8);
-  m_stationLayouts[M5]=MuonLayout(12,8);
+  m_stationLayouts[L0Muon::MonUtilities::M1]=MuonLayout(24,8);
+  m_stationLayouts[L0Muon::MonUtilities::M2]=MuonLayout(48,8);
+  m_stationLayouts[L0Muon::MonUtilities::M3]=MuonLayout(48,8);
+  m_stationLayouts[L0Muon::MonUtilities::M4]=MuonLayout(12,8);
+  m_stationLayouts[L0Muon::MonUtilities::M5]=MuonLayout(12,8);
   
-  for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) {
+  for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
     m_hmap[sta]=NULL;  
     m_hmultiBx[sta]=NULL;
-    for (int reg=0; reg<L0MuonMonUtils::NRegions; ++reg) {
+    for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
       m_hmultiBx_region[sta][reg]=NULL;
     }
   }
@@ -48,15 +47,18 @@ LogicalPads2DMaps::LogicalPads2DMaps( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-LogicalPads2DMaps::~LogicalPads2DMaps() {} 
+L0MuonPadsHistos::~L0MuonPadsHistos() {} 
 
 //=============================================================================
 
-void LogicalPads2DMaps::bookHistos() {
-  for (int i=0; i<L0MuonMonUtils::NStations; ++i) bookHistos(i);
+void L0MuonPadsHistos::bookHistos(bool shortname) {
+  for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) bookHistos(i, shortname);
 }
  
-void LogicalPads2DMaps::bookHistos(int sta) {
+void L0MuonPadsHistos::bookHistos(int sta,bool shortname) {
+  std::string toolname="";
+  if (!shortname) toolname=name();
+
   std::string hname;
 
   int xgrid=m_stationLayouts[sta].xGrid();
@@ -64,23 +66,23 @@ void LogicalPads2DMaps::bookHistos(int sta) {
   int nx=xgrid*16;
   int ny=ygrid*16;
 
-  hname = name()+"_"+L0MuonMonUtils::stationName(sta);
+  hname = L0Muon::MonUtilities::hname_pads_map(sta,toolname);
   AIDA::IHistogram2D * h2D=book2D(hname,hname,-nx,nx,2*nx,-ny,ny,2*ny);
   m_hmap[sta]= h2D;
 
-  hname = name()+"_multiplicity_per_time_slot_"+L0MuonMonUtils::stationName(sta);
+  hname = L0Muon::MonUtilities::hname_pads_multiBx(sta,toolname);
   m_hmultiBx[sta]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
-  for (int reg=0; reg<L0MuonMonUtils::NRegions; ++reg) {
-    hname = name()+"_multiplicity_per_time_slot_"+L0MuonMonUtils::stationName(sta)+"_"+L0MuonMonUtils::regionName(reg);
+  for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
+    hname = L0Muon::MonUtilities::hname_pads_multiBx_region(sta,reg,toolname);
     m_hmultiBx_region[sta][reg]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
   }
 } 
 
-void LogicalPads2DMaps::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int ts) 
+void L0MuonPadsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int ts) 
 { 
-  int multi[L0MuonMonUtils::NStations][L0MuonMonUtils::NRegions];
-  for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) {
-    for (int reg=0; reg<L0MuonMonUtils::NRegions; ++reg) {
+  int multi[L0Muon::MonUtilities::NStations][L0Muon::MonUtilities::NRegions];
+  for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
+    for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
       multi[sta][reg]=0;
     }
   }
@@ -98,16 +100,16 @@ void LogicalPads2DMaps::fillHistos(const std::vector<LHCb::MuonTileID> &pads, in
       for (int iy=Y*f; iy<Y*f+f; ++iy){
         int x= ix;
         int y= iy;
-        L0MuonMonUtils::flipCoord(x,y,qua);
+        L0Muon::MonUtilities::flipCoord(x,y,qua);
         fill(m_hmap[sta],x,y,1);
       }
     }
     ++multi[sta][reg];
   }
 
-  for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) {
+  for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
     int n=0;
-    for (int reg=0; reg<L0MuonMonUtils::NRegions; ++reg) {
+    for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
       if (m_hmultiBx_region[sta][reg]==NULL) continue;
       n+=multi[sta][reg];
       fill(m_hmultiBx_region[sta][reg],ts,multi[sta][reg],1);

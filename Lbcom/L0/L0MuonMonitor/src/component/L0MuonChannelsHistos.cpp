@@ -1,32 +1,31 @@
-// $Id: PhysicalChannelsHist.cpp,v 1.4 2008-06-05 08:29:10 jucogan Exp $
+// $Id: L0MuonChannelsHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "L0MuonMonUtils.h"
-#include "PhysicalChannelsHist.h"
+#include "L0MuonChannelsHistos.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : PhysicalChannelsHist
+// Implementation file for class : L0MuonChannelsHistos
 //
 // 2008-04-07 : 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( PhysicalChannelsHist );
+DECLARE_TOOL_FACTORY( L0MuonChannelsHistos );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PhysicalChannelsHist::PhysicalChannelsHist( const std::string& type,
+L0MuonChannelsHistos::L0MuonChannelsHistos( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   : GaudiHistoTool ( type, name , parent )
 {
-  declareInterface<PhysicalChannelsHist>(this);
+  declareInterface<L0MuonChannelsHistos>(this);
 
   declareProperty("H2D", m_2D=false);
   declareProperty("HBX", m_BX=false);
@@ -35,7 +34,9 @@ PhysicalChannelsHist::PhysicalChannelsHist( const std::string& type,
   setLayouts();
   
   for (int qua=0;qua<4;++qua){
-    for (L0MuonMonUtils::Channel_type type =L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
+    for (L0Muon::MonUtilities::Channel_type type =L0Muon::MonUtilities::Pad; 
+         type<L0Muon::MonUtilities::nb_channel_types; 
+         type++){
       for (int sta=0;sta<5;++sta){
         for (int reg=0; reg<4; ++reg){  
           m_hist[qua][type][sta][reg]=NULL;
@@ -48,27 +49,31 @@ PhysicalChannelsHist::PhysicalChannelsHist( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-PhysicalChannelsHist::~PhysicalChannelsHist() {} 
+L0MuonChannelsHistos::~L0MuonChannelsHistos() {} 
 
 //=============================================================================
 
-void PhysicalChannelsHist::bookHistos()
+void L0MuonChannelsHistos::bookHistos(bool shortname)
 {
   for (int qua=0;qua<4;++qua){
     for (int reg=0; reg<4; ++reg){  
       for (int sta=0;sta<5;++sta){
-        bookHistos(qua, reg, sta);
+        bookHistos(qua, reg, sta,shortname);
       }
     }
   } 
 }
 
-void PhysicalChannelsHist::bookHistos(int quarter, int region, int station)
+void L0MuonChannelsHistos::bookHistos(int quarter, int region, int station, bool shortname)
 {
+  std::string toolname="";
+  if (!shortname) toolname=name();
+
   // Physical channels
-  for (L0MuonMonUtils::Channel_type type=L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
-    std::string hname = name()+"_Hits_"+L0MuonMonUtils::quarterName(quarter)+"_"+L0MuonMonUtils::stationName(station)
-      +"_"+L0MuonMonUtils::regionName(region)+"_"+L0MuonMonUtils::channelTypeName(type);
+  for (L0Muon::MonUtilities::Channel_type type=L0Muon::MonUtilities::Pad;
+       type<L0Muon::MonUtilities::nb_channel_types;
+       type++){
+    std::string hname = L0Muon::MonUtilities::hname_channels_hist(quarter,type,station,region,toolname);
     MuonLayout lay = m_channel_layout[type].stationLayout(station).regionLayout(region);
     if (lay.isDefined()){  
       int nbins=lay.xGrid()*lay.yGrid()*3;
@@ -77,29 +82,34 @@ void PhysicalChannelsHist::bookHistos(int quarter, int region, int station)
       if (m_2D) {
         int xbins=2*lay.xGrid();
         int ybins=2*lay.yGrid();
-        AIDA::IHistogram2D * h2D = book2D(hname+"2D",hname+"2D",-0.5,xbins-0.5,xbins,-0.5,ybins-0.5,ybins);
+        hname=L0Muon::MonUtilities::hname_channels_hist2D(quarter,type,station,region,toolname);
+        AIDA::IHistogram2D * h2D = book2D(hname,hname,-0.5,xbins-0.5,xbins,-0.5,ybins-0.5,ybins);
         m_hist2D[quarter][type][station][region]= h2D;
       }
       if (m_BX){
-        AIDA::IHistogram2D * hBX = book2D(hname+"-VS-BX",hname+"-VS-BX",-0.5,nbins-0.5,nbins,-7.5,7.5,15);
+        hname=L0Muon::MonUtilities::hname_channels_histBX(quarter,type,station,region,toolname);
+        AIDA::IHistogram2D * hBX = book2D(hname,hname,-0.5,nbins-0.5,nbins,-7.5,7.5,15);
         m_histBX[quarter][type][station][region]= hBX;
       }
       if (m_DT){
-        AIDA::IHistogram2D * hDT = book2D(hname+"-wrt-Muon",hname+"-wrt-Muon",-0.5,nbins-0.5,nbins,-15.5,15.5,31);
+        hname=L0Muon::MonUtilities::hname_channels_histDT(quarter,type,station,region,toolname);
+        AIDA::IHistogram2D * hDT = book2D(hname,hname,-0.5,nbins-0.5,nbins,-15.5,15.5,31);
         m_histDT[quarter][type][station][region]= hDT;
       }
     }
   }
 }
 
-void PhysicalChannelsHist::fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts)
+void L0MuonChannelsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &tiles, int ts)
 {
     std::vector<LHCb::MuonTileID>::const_iterator it_tiles;
     for (it_tiles=tiles.begin();it_tiles<tiles.end();++it_tiles){
       int sta = it_tiles->station();
       int reg = it_tiles->region();
       MuonLayout lay = it_tiles->layout();
-      for (L0MuonMonUtils::Channel_type type =L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
+      for (L0Muon::MonUtilities::Channel_type type =L0Muon::MonUtilities::Pad;
+           type<L0Muon::MonUtilities::nb_channel_types;
+           type++){
         if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
           int qua = it_tiles->quarter();
           if (m_hist[qua][type][sta][reg]==NULL) continue;
@@ -125,7 +135,7 @@ void PhysicalChannelsHist::fillHistos(const std::vector<LHCb::MuonTileID> &tiles
     }
 }
 
-void PhysicalChannelsHist::fillHistos(const std::vector<std::pair<LHCb::MuonTileID, double > > &tiles)
+void L0MuonChannelsHistos::fillHistos(const std::vector<std::pair<LHCb::MuonTileID, double > > &tiles)
 {
   
   if (!m_DT) return;
@@ -136,7 +146,9 @@ void PhysicalChannelsHist::fillHistos(const std::vector<std::pair<LHCb::MuonTile
       int sta = tile.station();
       int reg = tile.region();
       MuonLayout lay = tile.layout();
-      for (L0MuonMonUtils::Channel_type type =L0MuonMonUtils::Pad; type<L0MuonMonUtils::nb_channel_types; type++){
+      for (L0Muon::MonUtilities::Channel_type type =L0Muon::MonUtilities::Pad;
+           type<L0Muon::MonUtilities::nb_channel_types;
+           type++){
         if (lay==m_channel_layout[type].stationLayout(sta).regionLayout(reg)) {
           int qua = tile.quarter();
           if (m_hist[qua][type][sta][reg]==NULL) continue;
@@ -161,7 +173,7 @@ void PhysicalChannelsHist::fillHistos(const std::vector<std::pair<LHCb::MuonTile
 }
 
 
-void PhysicalChannelsHist::setLayouts()
+void L0MuonChannelsHistos::setLayouts()
 {
 
 
@@ -226,9 +238,9 @@ void PhysicalChannelsHist::setLayouts()
                                        MuonStationLayout(MuonLayout(2,2)));
   
   
-  m_channel_layout[L0MuonMonUtils::Pad]   =pad_layout;
-  m_channel_layout[L0MuonMonUtils::StripV]=stripV_layout;
-  m_channel_layout[L0MuonMonUtils::StripH]=stripH_layout;
+  m_channel_layout[L0Muon::MonUtilities::Pad]   =pad_layout;
+  m_channel_layout[L0Muon::MonUtilities::StripV]=stripV_layout;
+  m_channel_layout[L0Muon::MonUtilities::StripH]=stripH_layout;
 
 
 }

@@ -1,4 +1,4 @@
-// $Id: L0MuonAlgComparison.cpp,v 1.3 2008-06-05 08:29:10 jucogan Exp $
+// $Id: L0MuonAlgComparison.cpp,v 1.4 2008-07-24 09:36:53 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -10,7 +10,6 @@
 #include "Event/ODIN.h"
 
 // local
-#include "L0MuonMonUtils.h"
 #include "L0MuonAlgComparison.h"
 
 //-----------------------------------------------------------------------------
@@ -85,18 +84,6 @@ StatusCode L0MuonAlgComparison::execute() {
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
 
-//     info()<<"*** Dump Candidates **** TIME SLOT=-1"<<endmsg;
-//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(-1));
-//     info()<<"-- Ctrl :"<<endmsg;
-//     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_0);
-//     printCand(LHCb::L0MuonCandidateLocation::Default+ m_extension_1);
-//     debug()<<"-- BCSU :"<<endmsg;
-//     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_0);
-//     printCand(LHCb::L0MuonCandidateLocation::BCSU+ m_extension_1);
-//     debug()<<"-- PU :"<<endmsg;
-//     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_0);
-//     printCand(LHCb::L0MuonCandidateLocation::PU+ m_extension_1);
-//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(0));
 
   }
 

@@ -2,26 +2,26 @@ package L0MuonMonitor
 version v1r0
 
 
-# ================ structure =========================================
+# =========== structure =======================================================
 
-branches src cmt doc options 
+branches src cmt doc options L0MuonMonitor
 
-include_dirs      $(L0MUONMONITORROOT)
+# =========== dependencies ====================================================
 
-# ================ used packages =========================================
-use L0Muon      v*    L0
-use MuonDAQ     v*    Muon
-use MuonDet     v*    Det
-use GaudiAlg    v*
+use L0Muon        v*    L0
+use L0MuonKernel  v*    L0
+use MuonDAQ       v*    Muon
+use MuonDet       v*    Det
+use GaudiAlg      v*
 
 
-# build a component library
+# =========== constituents =====================================================
 
-library L0MuonMonitor  ../src/component/*.cpp
+library L0MuonMonitor     ../src/component/*.cpp
+
+# =========== standard patterns (the order is essential!) ====================== 
+
 apply_pattern component_library library=L0MuonMonitor
 
-
-
-#===============================================================
 
 

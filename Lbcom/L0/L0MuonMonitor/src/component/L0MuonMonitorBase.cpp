@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.cpp,v 1.3 2008-06-05 08:29:10 jucogan Exp $
+// $Id: L0MuonMonitorBase.cpp,v 1.4 2008-07-24 09:36:53 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +12,6 @@
 
 // local
 #include "L0MuonMonitorBase.h"
-#include "L0MuonMonUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0MuonMonitorBase
@@ -44,7 +43,7 @@ L0MuonMonitorBase::L0MuonMonitorBase( const std::string& name,
   declareProperty( "Stations"  , m_stations = stations);
 
   std::vector<int> regions;
-  for (int i=0;i<5;++i) regions.push_back(i);
+  for (int i=0;i<4;++i) regions.push_back(i);
   declareProperty( "Regions"  , m_regions = regions);
 
   std::vector<unsigned int> excludedBxs;
@@ -53,9 +52,12 @@ L0MuonMonitorBase::L0MuonMonitorBase( const std::string& name,
   std::vector<unsigned int> exclusiveBxs;
   declareProperty( "ExclusiveBxs"  , m_exclusiveBxs = exclusiveBxs);
 
-//   declareProperty( "TriggerType"  , m_triggerType = "");
   declareProperty( "TriggerType"  , m_triggerType = -1);
+
+  declareProperty( "ShortNames", m_shortnames = true);
+  
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -100,8 +102,9 @@ StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0m
 {
   l0muontiles.clear();
   
-  std::string location = LHCb::L0MuonDataLocation::Default ;
-  if (  exist<LHCb::L0MuonDatas>(location ) ) {
+  std::string location = LHCb::L0MuonDataLocation::Default +context();
+  if (  exist<LHCb::L0MuonDatas>(location ) ) 
+  {
     LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( location );
     LHCb::L0MuonDatas::const_iterator itdata;
     for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
@@ -121,10 +124,12 @@ StatusCode L0MuonMonitorBase::getL0MuonTiles(std::vector<LHCb::MuonTileID> & l0m
         }
       }
     }
-  } // End if container found in TES
-  else {
-    error()<<"getL0MuonTiles : "<<LHCb::L0MuonDataLocation::Default<<" not found @"<<rootInTES()<<endmsg;
-    return StatusCode::FAILURE;
+  } 
+  else 
+  {
+    std::stringstream errstr("");
+    errstr<<"getL0MuonTiles : L0MuonDatas not found @"<<rootInTES()<<"/"<<LHCb::L0MuonDataLocation::Default+context();
+    return Warning(errstr.str(),StatusCode::FAILURE,5);
   }
   return StatusCode::SUCCESS;
 }
@@ -180,26 +185,13 @@ bool L0MuonMonitorBase::exclusiveBx() {
 
 bool L0MuonMonitorBase::selectedTrigger()
 {
-//   // Loop over time slots
-//   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
-
-//     setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
-//     debug()<<"RootInTes : "<<rootInTES()<<endmsg;
-    
-//     if (exist<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default )) {
-//       const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default );
-//       debug()<<"L0DU report'"<<(*l0)<<endmsg;
-//       } else {
-//       debug()<<"L0DU report not found"<<endmsg;
-//      }
-//   }
   
   //  if (m_triggerType.size()==0) return true;
   if (m_triggerType<0) return true;
   
   bool trig=false;
-  if (exist<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default )) {
-    const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default );
+  if (exist<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default +context())) {
+    const LHCb::L0DUReport* l0 = get<LHCb::L0DUReport>( LHCb::L0DUReportLocation::Default+context() );
 //     //    trig = l0->channelDecisionByName(m_triggerType);
 //     trig = l0->channelDecisionByName("CaloCosmicsTrigger");
 //     info()<<"selectedTrigger CaloCosmicsTrigger ? "<<trig<<endmsg;
@@ -213,7 +205,7 @@ bool L0MuonMonitorBase::selectedTrigger()
     
     trig = l0->channelDecision(m_triggerType);
   } else {
-    error()<<"Can not access the L0DUReport @ "<<LHCb::L0DUReportLocation::Default<<endmsg;
+    error()<<"Can not access the L0DUReport @ "<<LHCb::L0DUReportLocation::Default+context()<<endmsg;
   }
   return trig;
 }

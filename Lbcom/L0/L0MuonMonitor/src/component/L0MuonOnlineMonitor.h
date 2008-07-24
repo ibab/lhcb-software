@@ -1,13 +1,15 @@
-// $Id: L0MuonOnlineMonitor.h,v 1.3 2008-06-05 08:29:10 jucogan Exp $
+#define _ERROR_V2_ 1
+// $Id: L0MuonOnlineMonitor.h,v 1.4 2008-07-24 09:36:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONONLINEMONITOR_H 
 #define COMPONENT_L0MUONONLINEMONITOR_H 1
 
 // Include files
 
 #include "L0MuonMonitorBase.h"
-#include "LogicalPads2DMaps.h"
-#include "PhysicalChannelsHist.h"
-#include "InstantaneousRate.h"
+#include "L0MuonPadsHistos.h"
+#include "L0MuonChannelsHistos.h"
+#include "L0MuonInfoHistos.h"
+#include "L0MuonErrorHistos.h"
 
 /** @class L0MuonOnlineMonitor L0MuonOnlineMonitor.h component/L0MuonOnlineMonitor.h
  *  
@@ -31,11 +33,16 @@ protected:
 
 private:
 
-  LogicalPads2DMaps*    m_padsMaps;
-  PhysicalChannelsHist* m_channelHist;
-  InstantaneousRate *   m_rate;
-
+  L0MuonPadsHistos*         m_padsHistos;
+  L0MuonChannelsHistos*     m_channelsHistos;
+  L0MuonInfoHistos *  m_info;
+#if _ERROR_V2_
+  L0MuonErrorHistos * m_error;
+#else  
+  // ---- TMP ---- WILL NOT BE USED WITH BANK V2
   AIDA::IHistogram1D* m_decoding_status[4][3];
+  // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
+#endif
 
 };
 #endif // COMPONENT_L0MUONONLINEMONITOR_H

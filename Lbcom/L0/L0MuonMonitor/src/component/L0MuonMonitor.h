@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitor.h,v 1.4 2008-06-05 08:29:10 jucogan Exp $
+// $Id: L0MuonMonitor.h,v 1.5 2008-07-24 09:36:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITOR_H 
 #define COMPONENT_L0MUONMONITOR_H 1
 
@@ -8,9 +8,8 @@
 #include "MuonDAQ/IMuonRawBuffer.h"
 
 #include "L0MuonMonitorBase.h"
-#include "LogicalPads2DMaps.h"
-#include "PhysicalChannelsHist.h"
-#include "InstantaneousRate.h"
+//#include "L0MuonPadsHistos.h"
+#include "L0MuonChannelsHistos.h"
 
 /** @class L0MuonMonitor L0MuonMonitor.h component/L0MuonMonitor.h
  *  
@@ -39,9 +38,8 @@ private:
 
   //  IEventTimeDecoder* m_odin;
 
-  PhysicalChannelsHist* m_channelHist_l0muon;
-  PhysicalChannelsHist* m_channelHist_muon;
-  InstantaneousRate * m_rate;
+  L0MuonChannelsHistos* m_channelHist_l0muon;
+  L0MuonChannelsHistos* m_channelHist_muon;
   
   IMuonRawBuffer* m_muonBuffer;
 

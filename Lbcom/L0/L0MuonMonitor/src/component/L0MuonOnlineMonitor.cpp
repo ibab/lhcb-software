@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.5 2008-06-05 08:29:10 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.6 2008-07-24 09:36:53 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -15,8 +15,9 @@
 #include "Event/L0MuonProcError.h"
 #include "Event/L0MuonCtrlError.h"
 
+#include "L0MuonKernel/MonUtilities.h"
+
 // local
-#include "L0MuonMonUtils.h"
 #include "L0MuonOnlineMonitor.h"
 
 //-----------------------------------------------------------------------------
@@ -54,61 +55,82 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Tools
-  m_padsMaps =  tool<LogicalPads2DMaps>( "LogicalPads2DMaps" , "Pads" , this );
-  m_channelHist = tool<PhysicalChannelsHist>( "PhysicalChannelsHist", "Channels", this);
-  m_rate = tool<InstantaneousRate>( "InstantaneousRate", "Run", this);
+  m_padsHistos     = tool<L0MuonPadsHistos>( "L0MuonPadsHistos" , "Pads" , this );
+  m_channelsHistos = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels", this);
+  m_info           = tool<L0MuonInfoHistos>( "L0MuonInfoHistos", "Info", this);
+  m_error          = tool<L0MuonErrorHistos>( "L0MuonErrorHistos", "Error", this);
   
   setHistoDir("L0Muon/Online");
 
-  // Rate
-  m_rate->setHistoDir("L0Muon/Online");
-  m_rate->bookHistos();
+  // Run info
+  m_info->setHistoDir("L0Muon/Online");
+  m_info->bookHistos(m_shortnames);
+  debug() << "==>   -- RunInfo done" << endmsg;
 
   // Decoding
-  std::string name;
+#if _ERROR_V2_==1
+  m_error->setHistoDir("L0Muon/Online");
+  for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
+    int iq = (*itq);
+    m_error->bookHistos_ctrl(iq,m_shortnames);
+    for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
+      int reg = (*itr);
+      m_error->bookHistos_proc(iq,reg,m_shortnames);
+    }
+  }
+#else
+  // ---- TMP ---- WILL NOT BE USED WITH BANK V2
   for (int iq=0; iq<4;++iq){
     for (int i=0; i<3; ++i) m_decoding_status[iq][i]=NULL;
   }
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
+    std::string hname;
     int iq = (*itq);
-    name="Decoding_errors_"+L0MuonMonUtils::quarterName(iq);
-    m_decoding_status[iq][2]=book1D(name,name,-0.5,-0.5+16,16);
-    name="Inconsistencies_"+L0MuonMonUtils::quarterName(iq);
-    m_decoding_status[iq][1]=book1D(name,name,-0.5,-0.5+16,16);
-    name="Valid_"+L0MuonMonUtils::quarterName(iq);
-    m_decoding_status[iq][0]=book1D(name,name,-0.5,-0.5+16,16);
+    hname="Decoding_errors_"+L0Muon::MonUtilities::quarterName(iq);
+    m_decoding_status[iq][2]=book1D(hname,hname,-0.5,-0.5+16,16);
+    hname="Inconsistencies_"+L0Muon::MonUtilities::quarterName(iq);
+    m_decoding_status[iq][1]=book1D(hname,hname,-0.5,-0.5+16,16);
+    hname="Valid_"+L0Muon::MonUtilities::quarterName(iq);
+    m_decoding_status[iq][0]=book1D(hname,hname,-0.5,-0.5+16,16);
   }
-  
-  // Physical channels
-  m_channelHist->setHistoDir("L0Muon/Online");
+  // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
+#endif
+  debug() << "==>   -- Decoding done" << endmsg;
+
+  // Logical channels
+  m_channelsHistos->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
     for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
       int reg = (*itr);
       for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
         int sta = (*its);
-        m_channelHist->bookHistos(iq,reg,sta);
+        m_channelsHistos->bookHistos(iq,reg,sta,m_shortnames);
       }
     }
   }
+  debug() << "==>   -- Logical Channels done" << endmsg;
   
-  // Logical channels
-  m_padsMaps->setHistoDir("L0Muon/Online");
+  // Logical pads
+  m_padsHistos->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
     int sta = (*its);
-    m_padsMaps->bookHistos(sta);
+    m_padsHistos->bookHistos(sta,m_shortnames);
   }
+  debug() << "==>   -- Logical Pads done" << endmsg;
 
   // Multiplicity  
   for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
+    std::string hname;
     int sta = (*its);
-    name="NPads_per_event_"+L0MuonMonUtils::stationName(sta);
-    book1D(name,name,-0.5,10.5,11);
-    name="NPads_per_bx_"+L0MuonMonUtils::stationName(sta);
-    book2D(name,name,
+    hname="NPads_per_event_"+L0Muon::MonUtilities::stationName(sta);
+    book1D(hname,hname,-0.5,10.5,11);
+    hname="NPads_per_bx_"+L0Muon::MonUtilities::stationName(sta);
+    book2D(hname,hname,
            (-1*int(m_time_slots.size()/2))-0.5,(int(m_time_slots.size()/2))+0.5,m_time_slots.size(),
            +0.5,10.5,10);
   }
+  debug() << "==>   -- Multiplicity done" << endmsg;
   
 
   // Candidates
@@ -116,6 +138,7 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   book2D("NCands_per_bx","NCands_per_bx",
          (-1*int(m_time_slots.size()/2))-0.5,(int(m_time_slots.size()/2))+0.5,m_time_slots.size(),
          +0.5,0.5+2*m_quarters.size(),2*m_quarters.size());
+  debug() << "==>   -- Candidates done" << endmsg;
   
   return StatusCode::SUCCESS;
 }
@@ -128,26 +151,30 @@ StatusCode L0MuonOnlineMonitor::execute() {
   
   debug() << "==> Execute" << endmsg;
 
-  setProperty("RootInTes",L0MuonMonUtils::timeSlot(0));
+  setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(0));
   if (excludedBx()) return StatusCode::SUCCESS;
   if (!exclusiveBx()) return StatusCode::SUCCESS;
   if (!selectedTrigger()) return StatusCode::SUCCESS;
 
   int ncand=0;
-  int npad[L0MuonMonUtils::NStations]; for (int i=0; i<L0MuonMonUtils::NStations; ++i) npad[i]=0;
+  int npad[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad[i]=0;
 
-  //Rate
-  m_rate->fillHistos();
+  //Run info
+  m_info->getInfo();
+  m_info->fillHistos();
 
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
-    setProperty("RootInTes",L0MuonMonUtils::timeSlot(*it_ts));
+    setProperty("RootInTes",L0Muon::MonUtilities::timeSlot(*it_ts));
     if (!exist<LHCb::RawEvent> (LHCb::RawEventLocation::Default)) continue;
     
     std::string location;
-    std::string name;
-    
+
+#if _ERROR_V2_==1
+    m_error->fillHistos();
+#else
+    // ---- TMP ---- WILL NOT BE USED WITH BANK V2
     location = LHCb::L0MuonCtrlErrorLocation::Default ;
     if (exist<LHCb::L0MuonCtrlErrors>(location) ){ //If container found in TES
       LHCb::L0MuonCtrlErrors* perrors = get<LHCb::L0MuonCtrlErrors>(location);
@@ -180,7 +207,9 @@ StatusCode L0MuonOnlineMonitor::execute() {
         }
       }// End of loop over proc errors
     } // End if container found in TES
-    
+    // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
+#endif
+
     // Get L0Muon Hits
     std::vector<LHCb::MuonTileID> l0muontiles;
     sc = getL0MuonTiles(l0muontiles);
@@ -188,28 +217,29 @@ StatusCode L0MuonOnlineMonitor::execute() {
 
     // Build logical channels 
     std::vector<LHCb::MuonTileID> l0muonpads;
-    L0MuonMonUtils::makePads(l0muontiles,l0muonpads);
+    L0Muon::MonUtilities::makePads(l0muontiles,l0muonpads);
 
     // Physical channels histos
-    m_channelHist->fillHistos(l0muontiles,*it_ts);
+    m_channelsHistos->fillHistos(l0muontiles,*it_ts);
 
     // Logical channels histos
-    m_padsMaps->fillHistos(l0muonpads,*it_ts);
+    m_padsHistos->fillHistos(l0muonpads,*it_ts);
 
     // Multiplicity
-    int np[L0MuonMonUtils::NStations]; for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) np[sta]=0;
+    int np[L0Muon::MonUtilities::NStations]; for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) np[sta]=0;
     for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
       ++np[itpad->station()];
     }
-    for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) {
-      name="NPads_per_bx_"+L0MuonMonUtils::stationName(sta);
-      AIDA::IHistogram2D *hcand2 = histo2D(name);
+    for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
+      std::string hname;
+      hname="NPads_per_bx_"+L0Muon::MonUtilities::stationName(sta);
+      AIDA::IHistogram2D *hcand2 = histo2D(hname);
       if (hcand2!=NULL) fill(hcand2,(*it_ts),np[sta],1.);
     }
-    for (int sta=0; sta<L0MuonMonUtils::NStations; ++sta) npad[sta]+=np[sta];
+    for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) npad[sta]+=np[sta];
 
     // Candidates
-    location = LHCb::L0MuonCandidateLocation::Default ;
+    location = LHCb::L0MuonCandidateLocation::Default + context();
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
       LHCb::L0MuonCandidates::const_iterator itcand;
@@ -232,7 +262,7 @@ StatusCode L0MuonOnlineMonitor::execute() {
   // Multiplicity
   for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
     int sta = (*its);
-    std::string hname="NPads_per_event_"+L0MuonMonUtils::stationName(sta);
+    std::string hname="NPads_per_event_"+L0Muon::MonUtilities::stationName(sta);
     AIDA::IHistogram1D *hmulti=histo1D(hname);
     if (hmulti!=NULL) fill(hmulti,npad[sta],1.);
   }

@@ -1,4 +1,4 @@
-// $Id: L0MuonMonitorBase.h,v 1.2 2008-05-06 12:19:27 jucogan Exp $
+// $Id: L0MuonMonitorBase.h,v 1.3 2008-07-24 09:36:53 jucogan Exp $
 #ifndef COMPONENT_L0MUONMONITORBASE_H 
 #define COMPONENT_L0MUONMONITORBASE_H 1
 
@@ -30,6 +30,8 @@ protected:
   bool excludedBx(); //Return true if the current Bx is in the list of exclusion  
   bool exclusiveBx(); //Return true if the current Bx is in the list of exclusive  
   bool selectedTrigger();
+
+  bool m_shortnames; // Use shortname for histograms created by the monitoring tools  
 
   std::vector<int> m_time_slots;
   std::vector<int> m_stations;
