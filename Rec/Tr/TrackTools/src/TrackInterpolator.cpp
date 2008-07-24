@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.5 2007-11-30 14:49:53 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.6 2008-07-24 20:57:23 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -8,6 +8,7 @@
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
+#include "LHCbMath/MatrixInversion.h"
 
 // from TrackEvent
 #include "Event/TrackUnitsConverters.h"
@@ -117,26 +118,25 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   } 
   
   // so, we interpolate. Get the nodes:
-  const LHCb::FitNode* nodeUp   = dynamic_cast<LHCb::FitNode*>(*nextnode) ;
-  const LHCb::FitNode* nodeDown = dynamic_cast<LHCb::FitNode*>(*prevnode) ;
-  if( nodeUp->z() > nodeDown->z() ) std::swap(nodeUp,nodeDown) ;
+  const LHCb::FitNode* nodeNext   = dynamic_cast<LHCb::FitNode*>(*nextnode) ;
+  const LHCb::FitNode* nodePrev = dynamic_cast<LHCb::FitNode*>(*prevnode) ;
   
   // bail out if we have actually reached our destination
-  if( fabs(nodeUp->z() - z) < TrackParameters::propagationTolerance ) {
-    state = nodeUp->state() ;
+  if( fabs(nodeNext->z() - z) < TrackParameters::propagationTolerance ) {
+    state = nodeNext->state() ;
     return StatusCode::SUCCESS ;
   }
-  if( fabs(nodeDown->z() - z) < TrackParameters::propagationTolerance ) {
-    state = nodeDown->state() ;
+  if( fabs(nodePrev->z() - z) < TrackParameters::propagationTolerance ) {
+    state = nodePrev->state() ;
     return StatusCode::SUCCESS ;
   }
 
   // Get the predicted states
-  State stateDown = nodeDown->predictedStateDown();
-  State stateUp   = nodeUp->predictedStateUp();
+  State stateDown = nodePrev->predictedStateForward();
+  State stateUp   = nodeNext->predictedStateBackward();
 
-  if ( nodeDown->hasMeasurement() ) filter( *nodeDown, stateDown );
-  if ( nodeUp->hasMeasurement()   ) filter( *nodeUp, stateUp );
+  if ( nodePrev->hasMeasurement() ) filter( *nodePrev, stateDown );
+  if ( nodeNext->hasMeasurement()   ) filter( *nodeNext, stateUp );
 
   // extrapolate the upstream and downstream states
   m_extrapolator -> propagate( stateDown, z );  
@@ -145,21 +145,21 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   // Get the predicted downstream state and invert the covariance matrix
   const TrackVector& stateDownX = stateDown.stateVector();
   TrackSymMatrix invStateDownC = stateDown.covariance();
-  StatusCode sc = invertMatrix( invStateDownC );
-  if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
+  if ( !Gaudi::Math::invertPosDefSymMatrix( invStateDownC ) )
+    return Error( "inverting matrix in smoother" );
 
   // Get the predicted upstream state and invert the covariance matrix
   const TrackVector& stateUpX = stateUp.stateVector();
   TrackSymMatrix invStateUpC = stateUp.covariance();
-  sc = invertMatrix( invStateUpC );
-  if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
+  if ( !Gaudi::Math::invertPosDefSymMatrix( invStateUpC ) )
+    return Error( "inverting matrix in smoother" );
 
   // Add the inverted matrices
   TrackSymMatrix& stateC = state.covariance();
   stateC = invStateDownC + invStateUpC;
-  sc = invertMatrix( stateC );
-  if ( sc.isFailure() ) return Error( "inverting matrix in smoother" );
-
+  if ( !Gaudi::Math::invertPosDefSymMatrix( stateC ) )
+    return Error( "inverting matrix in smoother" );
+  
   // Get the state by calculating the weighted mean
   TrackVector& stateX = state.stateVector();
   stateX = stateC * ((invStateDownC * stateDownX) + (invStateUpC * stateUpX)) ;
@@ -203,29 +203,6 @@ StatusCode TrackInterpolator::filter(const FitNode& node, State& state)
   static const TrackSymMatrix unit = TrackSymMatrix( SMatrixIdentity());
   C = Symmetrize( Similarity( unit - ( K*H ), C ) 
                   +(errorMeas2*K)*Transpose(K) );
-
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-// Invert prev node covariance matrix
-// What follows may seem strange - trust me it works - you
-// are strongly recommended NOT to change it. It turns out that
-// the choice of MeV, mm as units is BAD - the inversion simply fails
-// for numerical reasons. Therefore it is necessary to change back to G3
-// units, invert then go back to G4 units
-// M. Needham 13/6/2000
-// J.A. Hernando (we trust you) 15/05/05
-//=========================================================================
-StatusCode TrackInterpolator::invertMatrix( Gaudi::TrackSymMatrix& m )
-{
-  TrackUnitsConverters::convertToG3( m );
-  bool OK = m.Invert();
-  TrackUnitsConverters::convertToG4( m );
-
-  if ( !OK ) {
-    return Warning("Failed to invert covariance matrix", StatusCode::FAILURE,1);
-  }
 
   return StatusCode::SUCCESS;
 }

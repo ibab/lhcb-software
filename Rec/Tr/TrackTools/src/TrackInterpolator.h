@@ -49,9 +49,6 @@ private:
   /// filter this node
   StatusCode filter( const LHCb::FitNode& node, LHCb::State& state );
 
-  /// invert this matrix
-  StatusCode invertMatrix( Gaudi::TrackSymMatrix& mat );
-
   /// extrapolator
   ITrackExtrapolator* m_extrapolator;
 
