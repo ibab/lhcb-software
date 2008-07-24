@@ -29,6 +29,7 @@ namespace Al
   private:
     typedef std::map<const LHCb::Track*, const Al::TrackResiduals*> ResidualMap ;
     mutable ResidualMap m_residuals ;
+    bool m_updateStateCovariance ;
   } ;
   
 }
@@ -51,10 +52,12 @@ namespace Al
   TrackResidualTool::TrackResidualTool(const std::string& type,
 				       const std::string& name,
 				       const IInterface* parent)
-    : GaudiTool(type,name,parent)
+    : GaudiTool(type,name,parent),
+      m_updateStateCovariance(true)
   {
     // interfaces
     declareInterface<ITrackResidualTool>(this);
+    declareProperty("UpdateStateCovariance",m_updateStateCovariance) ;
   }
   
   StatusCode TrackResidualTool::initialize()
@@ -161,12 +164,10 @@ namespace Al
     
     size_t numnodes = nodes.size() ;
     
-    // These are the diagonal elements. Those can just be pointers to the nodes.
-    std::vector< const Gaudi::TrackSymMatrix* > diagcov(numnodes) ;
-    // These are the inverse of the diagonal elements
-    for( size_t irow = 0; irow<numnodes; ++irow) {
-      diagcov[irow]    = &(nodes[irow]->state().covariance());
-    }
+    // These are the diagonal elements. At first we just copy these
+    std::vector< const Gaudi::TrackSymMatrix* > diagcov(numnodes,0) ;
+    for( size_t irow = 0; irow<numnodes; ++irow)
+      diagcov[irow] = &(nodes[irow]->state().covariance()) ;
     
     // These are the off-diagonal elements, which are not symmetric. We
     // need to choose whether we store lower or upper triangle. We are
@@ -180,27 +181,27 @@ namespace Al
       offdiagcov[irow] = std::vector<Gaudi::TrackMatrix*>(irow,0) ;
     }
     
-    // We will not first compute the smoother gain matrix on every (but
-    // the last) node. Once we have the gain matrices, the rest is
+    // We first compute the smoother gain matrix on every (but the
+    // last) node. Once we have the gain matrices, the rest is
     // trivial, though still CPU intensive.
 
     bool error = false ;
     std::vector< Gaudi::TrackMatrix > smoothergainmatrix(numnodes-1) ;
-    for(size_t k=1; k<numnodes && !error; ++k) {
+    for(size_t k=numnodes-1; k>0 && !error; --k) {
       //std::cout << "k, size: " << k << " " << offdiagcov[k].size() << std::endl ;
       const LHCb::FitNode* node     = dynamic_cast<const LHCb::FitNode*>(nodes[k]) ;
       const LHCb::FitNode* prevnode = dynamic_cast<const LHCb::FitNode*>(nodes[k-1]) ;
       // do these _really_ correspond to 'prevnode'? how do we find out?
       assert( node && prevnode ) ;
-      
+
       // this is the transport matrix  from  k-1 to k
       const Gaudi::TrackMatrix& F          = node->transportMatrix();
       // this is the noise matrix from k-1 to k
       const Gaudi::TrackSymMatrix& Q       = node->noiseMatrix();
       // this is the prediction from k-1 to k
       const Gaudi::TrackSymMatrix& predcov = node->predictedStateUp().covariance() ;
-      // this is the smoothedcovariance
-      const Gaudi::TrackSymMatrix& cov    = node->state().covariance() ;
+      // this is the smoothedcovariance at node k
+      const Gaudi::TrackSymMatrix& cov    = *(diagcov[k]) ;
       
       // invert the transport matrix
       int fail ;
@@ -230,8 +231,9 @@ namespace Al
       
       // This is the full formula
       //   smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
-      // but we only compute it this way if the noise is non-zero:
-      if( Q(2,2) > 0 || Q(4,4) > 0 ) {
+      // but we only compute it this way if the noise is non-zero.
+      bool nonZeroNoise = Q(2,2) > 0 || Q(4,4) > 0  ;
+      if( nonZeroNoise ) {
 	Gaudi::TrackSymMatrix invpredcov = predcov ;
 	if( Gaudi::Math::invertPosDefSymMatrix( invpredcov ) ) {
 	  smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
@@ -257,8 +259,22 @@ namespace Al
       assert( k-1< offdiagcov[k].size() ) ;
       
       offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
+
+      // now compute the smoothed covariance matrix for node k-1. this
+      // is new. it is really ugly.
+      if( m_updateStateCovariance )
+	if( nonZeroNoise ) {
+	  // we need the filtered covariance for the previous node. since
+	  // that is not stored, we'll need to extract it.
+	  Gaudi::TrackSymMatrix filteredcovkm1 =  
+	    ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( invF, predcovMinusQ ) ;
+	  const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = filteredcovkm1 + 
+	    ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( smoothergainmatrix[k-1], cov - predcov ) ;
+	} else {
+	  const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = ROOT::Math::Similarity( invF, cov ) ;
+	}
     }
-    
+
     // calculate the remaining elements in the covariance matrix. We
     // need to do this off-diagonal by off-diagonal. The easiest is
     // probably to do it on demand, but the following should also work. Note that
