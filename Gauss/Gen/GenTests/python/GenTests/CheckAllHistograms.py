@@ -1,12 +1,13 @@
 import os
+import datetime
 
-GaussVersion = 'v31r1'
+GaussVersion = 'v31r2'
 
 listofhistos = {
     '30000000': 'MinBias',
     '11164011': 'BdD0KstKpiDecProdCut',
     '13264001': 'BsDspiDecProdCut',
-    '12463010': 'BuD0hKpicocktail',
+#    '12463010': 'BuD0hKpicocktail',
     '10000000': 'InclB',
     '20000000': 'InclD',
     '24142001': 'InclJpsi'
@@ -18,6 +19,8 @@ pathCastor = '/castor/cern.ch/user/r/robbep/GaussGen_' + GaussVersion + '/'
 # copy the index page from the Web area
 webarea = os.environ['LHCBDOC'] + '/gauss/generator/validation/'
 os.system( 'cp -f '+webarea+'index.html .')
+toDay = datetime.date.today()
+os.system( 'cp -f '+webarea+'index.html '+webarea+'index.html.'+toDay.isoformat() ) 
 
 for eventtype, eventname in listofhistos.iteritems():
     # Copy CASTOR files locally

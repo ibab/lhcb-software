@@ -67,7 +67,7 @@ class GeneratorLogFile:
       if ( self.TotalEventsAfterCut == None ):
         self.TotalEventsAfterCut = grepPattern( 'Number of events for generator level cut, before : \d+, after : (\d+)' , line )
       if ( self.TotalTime == None ):
-        self.TotalTime = grepPattern( 'SequencerTime... *INFO *Generation *| *([0-9])' , line )
+        self.TotalTime = grepPattern( 'SequencerTime... *INFO *Generation *\| *(\S+)' , line )
     f.close()
     
   def eventType(self):
@@ -103,7 +103,7 @@ class GeneratorLogFile:
       return 0
     return float( ( int(self.TotalEventsAfterCut) - int(self.TotalZInvertedEvents) ) / float( self.TotalSignalProcessEvents) )
   def timePerEvent( self ):
-    print self.TotalTime
+    return float(self.TotalTime)
      
 #################################################################################  
 class GeneratorHisto:
@@ -167,6 +167,8 @@ class GeneratorHisto:
 class GeneratorWebPage:
   def __init__(self,N):
     self.name = N
+    self.listOfQuantities = []
+    self.listOfPlots = []
     self.basicQuantities = dict()
     self.basicRefQuantities = dict()
     self.refPlots = dict()
@@ -188,9 +190,11 @@ class GeneratorWebPage:
   def setEventType(self,E):
     self.eventType = E
   def addQuantity(self,N,R,C):
-    self.basicQuantities[N]=str(C)
-    self.basicRefQuantities[N]=str(R)
+    self.listOfQuantities.append(N)
+    self.basicQuantities[N]=C
+    self.basicRefQuantities[N]=R
   def addPlot(self,Plot):
+    self.listOfPlots.append(Plot.title())
     self.refPlots[Plot.title()] = Plot.title()
     self.plots[Plot.title()] = Plot.fileName()
     self.refPlots[Plot.title()] = Plot.refFileName()
@@ -292,16 +296,19 @@ class GeneratorWebPage:
     f.write("</div>\n")
     f.write("</TR>\n")   
     
-    for nameofQuantity, refQuantity in self.basicRefQuantities.iteritems():      
+    for nameOfQuantity in self.listOfQuantities:
+#    for nameofQuantity, refQuantity in self.basicRefQuantities.iteritems():      
       f.write("<TR>\n")
       f.write("<TD>\n")
-      f.write(nameofQuantity + "\n")
+      f.write(nameOfQuantity + "\n")
       f.write("</TD>\n")
       f.write("<TD>\n")
-      f.write(self.basicQuantities[nameofQuantity]+"\n")
+      if self.basicQuantities[nameOfQuantity]!=None:
+        f.write("%.3f"%self.basicQuantities[nameOfQuantity]+"\n")
       f.write("</TD>\n")
       f.write("<TD>\n")
-      f.write(refQuantity+"\n")
+      if self.basicQuantities[nameOfQuantity]!=None:
+        f.write("%.3f"%self.basicRefQuantities[nameOfQuantity]+"\n")
       f.write("</TD>\n")
       f.write("</TR>\n")
     f.write("</TABLE>\n")
@@ -331,20 +338,21 @@ class GeneratorWebPage:
     f.write("</TD>\n")
     f.write("</div>\n")
     f.write("</TR>\n")   
-    
-    for nameofPlot, refPlot in self.refPlots.iteritems():      
+
+    for nameOfPlot in self.listOfPlots:
+#    for nameofPlot, refPlot in self.refPlots.iteritems():      
       f.write("<TR>\n")
       f.write("<TD>\n")
-      f.write(nameofPlot + "\n")
+      f.write(nameOfPlot + "\n")
       f.write("</TD>\n")
       f.write("<TD>\n")
-      f.write("<A href=\""+self.plots[nameofPlot]+"\">X</A>\n")
+      f.write("<A href=\""+self.plots[nameOfPlot]+"\">X</A>\n")
       f.write("</TD>\n")
       f.write("<TD>\n")
-      f.write("<A href=\""+refPlot+"\">X</A>\n")
+      f.write("<A href=\""+self.refPlots[nameOfPlot]+"\">X</A>\n")
       f.write("</TD>\n")
       f.write("<TD>\n")
-      f.write("<A href=\""+self.supPlots[nameofPlot]+"\">X</A>\n")
+      f.write("<A href=\""+self.supPlots[nameOfPlot]+"\">X</A>\n")
       f.write("</TD>\n")
       f.write("</TR>\n")
     f.write("</TABLE>\n")    

@@ -4,17 +4,17 @@ from random import Random
 #--------------------------------
 # Put Gauss version here
 #--------------------------------
-GaussVersion = 'v31r1'
+GaussVersion = 'v31r2'
 #--------------------------------
 
 listoftests = {
-    '30000000': 'MinBias',
+#    '30000000': 'MinBias',
     '11164011': 'BdD0KstKpiDecProdCut',
-    '13264001': 'BsDspiDecProdCut',
-    '12463010': 'BuD0hKpicocktail',
-    '10000000': 'InclB',
-    '20000000': 'InclD',
-    '24142001': 'InclJpsi'
+#    '13264001': 'BsDspiDecProdCut',
+#    '12463010': 'BuD0hKpicocktail',
+#    '10000000': 'InclB',
+    '20000000': 'InclD' #,
+#    '24142001': 'InclJpsi'
     }
 
 #----------------------------------------------
