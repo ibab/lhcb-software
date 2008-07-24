@@ -3,7 +3,7 @@ WARNING: Spillover is disabled
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r0
-                                          running on lxbuild120.cern.ch on Thu Jul 24 16:38:47 2008
+                                          running on lxbuild120.cern.ch on Thu Jul 24 17:38:48 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -89,6 +89,7 @@ L0SimulationSeq      INFO Member list: PuVetoFillRawBuffer, GaudiSequencer/L0Emu
 L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L0DU
 L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
 L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
+ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/L0MuonKernel.xml
 L0Muon               INFO MuonTriggerUnit properties are:
 L0Muon               INFO  foiXSize = 4,5,0,2,4
@@ -97,7 +98,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.66  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.63  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -167,8 +168,9 @@ BooleInit            INFO Evt 8,  Run 1,  Nr. in job = 8
 BooleInit            INFO Evt 9,  Run 1,  Nr. in job = 9
 BooleInit            INFO Evt 10,  Run 1,  Nr. in job = 10
 ApplicationMgr       INFO Application Manager Stopped successfully
-PackMCVertex      SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-PackMCVertex      SUCCESS  #WARNINGS   = 1622     Message = 'PackedVertex.tof underflow, set to 0.'
+PackMCVertex      SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/2
+PackMCVertex      SUCCESS  #WARNINGS   = 8        Message = 'PackedVertex.tof overflow, set to max float'
+PackMCVertex      SUCCESS  #WARNINGS   = 1638     Message = 'PackedVertex.tof underflow, set to 0.'
 BooleInit         SUCCESS ==================================================================
 BooleInit         SUCCESS 10 events processed
 BooleInit         SUCCESS ==================================================================
@@ -632,21 +634,22 @@ ToolSvc.RichRaw...   INFO  Rich1 Average     | L1 size = 133.80 +- 3.66 hpds :  
 ToolSvc.RichRaw...   INFO  Rich2 Average     | L1 size = 134.70 +- 3.67 hpds :  689.70 +- 8.30 words : 1245.70 +-11.16 hits / event
 ToolSvc.RichRaw...   INFO ==========================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   70 [ms] Ave/Min/Max=  3.5(+- 2.01)/0.999/    8 [ms] #= 20
-PoolRootTreeEvt...   INFO Disconnected data IO:66F75D98-8C59-DD11-8437-0030487C5E0E[11144103-100ev-20080613-10ev.digi]
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   74 [ms] Ave/Min/Max=  3.7(+-  2.3)/    1/   10 [ms] #= 20
 PoolRootTreeEvt...   INFO Disconnected data IO:6CEBF406-EF38-DD11-80DB-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r2/11144103-100ev-20080613.sim]
+PoolRootTreeEvt...   INFO Disconnected data IO:F0625448-9659-DD11-849F-0030487C5E0E[11144103-100ev-20080613-10ev.digi]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  134 [ms] Ave/Min/Max= 13.4(+- 3.93)/    9/   22 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.66  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  137 [ms] Ave/Min/Max= 13.7(+- 4.03)/   10/   23 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.63  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 20.5  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-376 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
+377 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

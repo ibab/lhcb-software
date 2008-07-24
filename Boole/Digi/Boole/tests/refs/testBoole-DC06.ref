@@ -2,7 +2,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r0
-                                          running on lxbuild120.cern.ch on Thu Jul 24 16:51:37 2008
+                                          running on lxbuild120.cern.ch on Thu Jul 24 17:40:17 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -98,7 +98,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.67  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.61  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -163,9 +163,7 @@ SpilloverAlg         INFO +--> Evt 2,  Run 182002 [Nr. in job = 2] at /Event/Pre
 SpilloverAlg         INFO +--> Evt 3,  Run 182002 [Nr. in job = 3] at /Event/Next
 MCTTDepositCreatorWARNING MCSTDepositCreator:: The WARNING message is suppressed : 'Failed to find sensor'
 MCITDepositCreatorWARNING MCSTDepositCreator:: The WARNING message is suppressed : 'Failed to find sensor'
-IODataManager        INFO Referring to dataset 00001820_00000001-10ev.digi by its file ID:D8C98929-9059-DD11-9BA7-0030487C5E0E
 00001820_000000...SUCCESS Root file version:51800
-IODataManager        INFO Referring to dataset 00001820_00000001-L0ETC.root by its file ID:FAB8272A-9059-DD11-9BA7-0030487C5E0E
 00001820_000000...SUCCESS Root file version:51800
 PoolDbDatabaseCnv    INFO Recreate Database file:00001820_00000001-L0ETC.root as /EVTTAGS
 BooleInit            INFO Evt 2,  Run 182001,  Nr. in job = 2
@@ -187,8 +185,9 @@ SpilloverAlg         INFO +--> Evt 11,  Run 182002 [Nr. in job = 11] at /Event/P
 BooleInit            INFO Evt 10,  Run 182001,  Nr. in job = 10
 SpilloverAlg         INFO +--> Evt 12,  Run 182002 [Nr. in job = 12] at /Event/Prev
 ApplicationMgr       INFO Application Manager Stopped successfully
-PackMCVertex      SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/1
-PackMCVertex      SUCCESS  #WARNINGS   = 322      Message = 'PackedVertex.tof underflow, set to 0.'
+PackMCVertex      SUCCESS Exceptions/Errors/Warnings Statistics : 0/0/2
+PackMCVertex      SUCCESS  #WARNINGS   = 8        Message = 'PackedVertex.tof overflow, set to max float'
+PackMCVertex      SUCCESS  #WARNINGS   = 1410     Message = 'PackedVertex.tof underflow, set to 0.'
 BooleInit         SUCCESS ==================================================================
 BooleInit         SUCCESS 10 events processed
 BooleInit         SUCCESS ==================================================================
@@ -664,23 +663,23 @@ ToolSvc.RichRaw...   INFO  Rich1 Average     | L1 size = 135.30 +- 3.68 hpds :  
 ToolSvc.RichRaw...   INFO  Rich2 Average     | L1 size = 110.70 +- 3.33 hpds :  488.40 +- 6.99 words :  745.00 +- 8.63 hits / event
 ToolSvc.RichRaw...   INFO ==========================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/943 Algorithms: Time User   : Tot=   40 [ms] Ave/Min/Max=    2(+-0.949)/0.999/    5 [ms] #= 20
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/943 Algorithms: Time User   : Tot=   42 [ms] Ave/Min/Max=  2.1(+- 1.14)/0.999/    5 [ms] #= 20
+PoolRootTreeEvt...   INFO Disconnected data IO:3A616B7F-9659-DD11-98C2-0030487C5E0E[00001820_00000001-10ev.digi]
 PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:969FF8CE-CDD9-DB11-823E-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim]
-PoolRootTreeEvt...   INFO Disconnected data IO:D8C98929-9059-DD11-9BA7-0030487C5E0E[00001820_00000001-10ev.digi]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  126 [ms] Ave/Min/Max= 12.6(+- 1.96)/    9/   15 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.67  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 22.4  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  131 [ms] Ave/Min/Max= 13.1(+- 2.47)/    9/   16 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.61  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 22.2  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-366 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
+368 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
