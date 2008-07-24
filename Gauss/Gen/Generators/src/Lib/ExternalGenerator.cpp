@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.24 2008-07-10 19:08:15 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.25 2008-07-24 22:05:38 robbep Exp $
 // Include files 
 
 // local
@@ -235,7 +235,7 @@ void ExternalGenerator::revertEvent( HepMC::GenEvent * theEvent ) const {
     y = (*itv) -> position().y() ;
     z = (*itv) -> position().z() ;
     t = (*itv) -> position().t() ;
-    (*itv) -> set_position( HepLorentzVector( x, y, -z, t ) ) ;
+    (*itv) -> set_position( HepMC::FourVector( x, y, -z, t ) ) ;
   }
 
   HepMC::GenEvent::particle_iterator itp ;
@@ -246,7 +246,7 @@ void ExternalGenerator::revertEvent( HepMC::GenEvent * theEvent ) const {
     py = (*itp) -> momentum().py() ;
     pz = (*itp) -> momentum().pz() ;
     E  = (*itp) -> momentum().e() ;
-    (*itp) -> set_momentum( HepLorentzVector( px, py, -pz, E ) ) ;
+    (*itp) -> set_momentum( HepMC::FourVector( px, py, -pz, E ) ) ;
   }      
 }
 

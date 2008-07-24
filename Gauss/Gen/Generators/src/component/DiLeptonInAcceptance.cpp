@@ -1,8 +1,9 @@
-// $Id: DiLeptonInAcceptance.cpp,v 1.1 2007-03-08 19:56:17 robbep Exp $
+// $Id: DiLeptonInAcceptance.cpp,v 1.2 2008-07-24 22:05:38 robbep Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/SystemOfUnits.h"
 
 // local
 #include "DiLeptonInAcceptance.h"
@@ -33,11 +34,11 @@ DiLeptonInAcceptance::DiLeptonInAcceptance( const std::string& type,
 {
   declareInterface<IFullGenEventCutTool>( this );
   
-  declareProperty( "PtMin"     , m_ptMin = 0*GeV );
-  declareProperty( "MinTheta"  , m_chargedThetaMin = 10*mrad );
-  declareProperty( "MaxTheta"  , m_chargedThetaMax = 400*mrad );
-  declareProperty( "MinMass"   , m_minMass = 0*GeV );
-  declareProperty( "MaxMass"   , m_maxMass = 100*GeV );
+  declareProperty( "PtMin"     , m_ptMin = 0*Gaudi::Units::GeV );
+  declareProperty( "MinTheta"  , m_chargedThetaMin = 10*Gaudi::Units::mrad );
+  declareProperty( "MaxTheta"  , m_chargedThetaMax = 400*Gaudi::Units::mrad );
+  declareProperty( "MinMass"   , m_minMass = 0*Gaudi::Units::GeV );
+  declareProperty( "MaxMass"   , m_maxMass = 100*Gaudi::Units::GeV );
   declareProperty( "PositiveLepton" , m_leptonPlusPDG = -13 );
   declareProperty( "NegativeLepton" , m_leptonMinusPDG = 13 );
   declareProperty( "CCFlag"    , m_ccFlag = true );
@@ -107,8 +108,12 @@ bool DiLeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
       if ( !isCombination( (*plusIter), (*minusIter) ) ) continue;
       
       // Apply Di Muon Mass Cut
-      dimuonMass = ((*minusIter)->momentum() 
-                    + (*plusIter)->momentum()).m();
+      HepMC::FourVector sum ;
+      sum.setPx( (*minusIter) -> momentum().px() + (*plusIter)->momentum().px() ) ;
+      sum.setPy( (*minusIter) -> momentum().py() + (*plusIter)->momentum().py() ) ;
+      sum.setPz( (*minusIter) -> momentum().px() + (*plusIter)->momentum().pz() ) ;
+      sum.setE ( (*minusIter) -> momentum().e()  + (*plusIter)->momentum().e() ) ;
+      dimuonMass = sum.m();
       
       if ( dimuonMass >= m_minMass && dimuonMass <= m_maxMass ){
         debug() << " Combination passes mass cut " << endmsg;

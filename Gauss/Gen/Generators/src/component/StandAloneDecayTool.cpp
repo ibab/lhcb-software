@@ -1,4 +1,4 @@
-// $Id: StandAloneDecayTool.cpp,v 1.3 2007-01-12 15:17:47 ranjard Exp $
+// $Id: StandAloneDecayTool.cpp,v 1.4 2008-07-24 22:06:07 robbep Exp $
 // Include files 
 #include "StandAloneDecayTool.h"
 
@@ -71,11 +71,11 @@ bool StandAloneDecayTool::generate( const unsigned int nPileUp ,
     // Particle to decay
     HepMC::GenParticle * theParticle = new HepMC::GenParticle( ) ;
     theParticle -> 
-      set_momentum( HepLorentzVector( 0. , 0. , 0., m_signalMass ) ) ;
+      set_momentum( HepMC::FourVector( 0. , 0. , 0., m_signalMass ) ) ;
 
     // Decay the particle at (0,0,0,0)
     HepMC::GenVertex * theVertex = 
-      new HepMC::GenVertex( HepLorentzVector( 0., 0., 0., 0. ) ) ;
+      new HepMC::GenVertex( HepMC::FourVector( 0., 0., 0., 0. ) ) ;
     theGenEvent -> add_vertex( theVertex ) ;
     theVertex -> add_particle_out( theParticle ) ;
     

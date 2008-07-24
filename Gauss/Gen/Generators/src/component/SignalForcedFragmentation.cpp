@@ -1,10 +1,12 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.14 2008-05-29 14:22:00 gcorti Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.15 2008-07-24 22:05:38 robbep Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from HepMC
 #include "HepMC/GenEvent.h"
@@ -72,7 +74,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
   HepMC::GenEvent * theSignalHepMCEvent = new HepMC::GenEvent( ) ;
   HepMC::GenParticle * theSignalAtRest = new HepMC::GenParticle( ) ;
   theSignalAtRest -> 
-    set_momentum( HepLorentzVector( 0., 0., 0., m_signalMass ) ) ;
+    set_momentum( HepMC::FourVector( 0., 0., 0., m_signalMass ) ) ;
 
   // Memorize if signal has been inverted (not used here)
   bool isInverted = false ;
@@ -80,7 +82,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
 
   // Create an origin vertex at (0,0,0,0) for the signal particle at rest
   HepMC::GenVertex * theVertex =  
-    new HepMC::GenVertex( HepLorentzVector( 0., 0., 0., 0. ) ) ;
+    new HepMC::GenVertex( HepMC::FourVector( 0., 0., 0., 0. ) ) ;
   theSignalHepMCEvent -> add_vertex( theVertex ) ;
   theVertex -> add_particle_out( theSignalAtRest ) ;
   
@@ -228,13 +230,13 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
                        theSignalAtRest -> end_vertex() -> position() . y() ,
                        theSignalAtRest -> end_vertex() -> position() . z() ,
                        theSignalAtRest -> end_vertex() -> position() . t() *
-                       CLHEP::c_light ) ;
+                       Gaudi::Units::c_light ) ;
   
   positionBegin.SetXYZT(theSignalAtRest->production_vertex()->position().x() ,
                         theSignalAtRest->production_vertex()->position().y() ,
                         theSignalAtRest->production_vertex()->position().z() ,
                         theSignalAtRest->production_vertex()->position().t() 
-                        * CLHEP::c_light ) ;
+                        * Gaudi::Units::c_light ) ;
   
   Gaudi::LorentzVector position = positionEnd - positionBegin ;
   
@@ -244,7 +246,7 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
   // LHCb Units
   Gaudi::LorentzVector newP ;
   newP.SetXYZT( newPosition.X() , newPosition.Y() , newPosition.Z() ,
-                newPosition.T() / CLHEP::c_light ) ;
+                newPosition.T() / Gaudi::Units::c_light ) ;
   
   // Add original position
   Gaudi::LorentzVector 
@@ -253,8 +255,8 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
 
   // Create new HepMC vertex after boost and add it to the current event    
   HepMC::GenVertex * newVertex = 
-    new HepMC::GenVertex( HepLorentzVector(newP.X(), newP.Y() , newP.Z() , 
-                                           newP.T()));
+    new HepMC::GenVertex( HepMC::FourVector(newP.X(), newP.Y() , newP.Z() , 
+                                            newP.T()));
   
   theSignal -> parent_event() -> add_vertex( newVertex ) ;
   newVertex -> add_particle_in( theSignal ) ;
@@ -273,10 +275,10 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
     int status                       = (*child) -> status() ;
     
     HepMC::GenParticle * newPart =
-      new HepMC::GenParticle( HepLorentzVector( newMomentum.Px() , 
-                                                newMomentum.Py() , 
-                                                newMomentum.Pz() , 
-                                                newMomentum.E()   ) , 
+      new HepMC::GenParticle( HepMC::FourVector( newMomentum.Px() , 
+                                                 newMomentum.Py() , 
+                                                 newMomentum.Pz() , 
+                                                 newMomentum.E()   ) , 
                               id , status ) ;
     
     newVertex -> add_particle_out( newPart ) ;

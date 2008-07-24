@@ -1,4 +1,4 @@
-// $Id: UniformSmearVertex.cpp,v 1.4 2008-05-29 14:22:00 gcorti Exp $
+// $Id: UniformSmearVertex.cpp,v 1.5 2008-07-24 22:05:38 robbep Exp $
 // Include files 
 
 // local
@@ -114,8 +114,8 @@ StatusCode UniformSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
         ++vit ) {
     Gaudi::LorentzVector pos ( (*vit) -> position() ) ;
     pos += dpos ;
-    (*vit) -> set_position( HepLorentzVector( pos.x() , pos.y() , pos.z() ,
-                                              pos.t() ) ) ;
+    (*vit) -> set_position( HepMC::FourVector( pos.x() , pos.y() , pos.z() ,
+                                               pos.t() ) ) ;
   }
 
   return StatusCode::SUCCESS ;      
