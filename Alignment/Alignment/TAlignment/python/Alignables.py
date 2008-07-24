@@ -193,20 +193,34 @@ class Alignables( list ):
                         elements.append( "Group : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
         
-    def OTCFrames( self, dofs = "" ) :
+    def OTCFramesCSide( self, dofs = "" ) :
         elements = []
         for i in self.m_otStations :
             station = self.m_ot + i
             ## C-side X1 and U
-            elements.append( station + "/(X1|U)layer" + self.m_otQuarters[0] + "/Module.")
+            elements.append( "Group : " + station + "/(X1|U)layer" + self.m_otQuarters[0] + "/Module." )
             ## C-side V and X2
-            elements.append( station + "/(V|X2)layer" + self.m_otQuarters[0] + "/Module.")
-            ## A-side X1 and U
-            elements.append( station + "/(X1|U)layer" + self.m_otQuarters[1] + "/Module.")
-            ## A-side V and X2
-            elements.append( station + "/(V|X2)layer" + self.m_otQuarters[1] + "/Module.")
+            elements.append( "Group : " + station + "/(V|X2)layer" + self.m_otQuarters[0] + "/Module." )
         self.__append( elements, dofs )
 
+    def OTLayersCSide( self, dofs = "" ) :
+        elements = []
+        for i in self.m_otStations :
+            station = self.m_ot + i
+            for j in self.m_otLayers :
+                ## C-side layers
+                elements.append( "Group : " + station + j + self.m_otQuarters[0] + "/Module." )
+        self.__append( elements, dofs )
+        
+    def OTCFramesASide( self, dofs = "" ) :
+        elements = []
+        for i in self.m_otStations :
+            station = self.m_ot + i
+            ## A-side X1 and U
+            elements.append( "Group : " + station + "/(X1|U)layer" + self.m_otQuarters[1] + "/Module." )
+            ## A-side V and X2
+            elements.append( "Group : " + station + "/(V|X2)layer" + self.m_otQuarters[1] + "/Module." )
+        self.__append( elements, dofs )
 
     ## OTHER ##############################################################################
     def ITLaddersOTModules( self, dofs = "" ) :
