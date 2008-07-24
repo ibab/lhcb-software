@@ -6,6 +6,7 @@ branches cmt doc Event src tests xml
 private
   use GaudiAlg     v*      -no_auto_imports
   use GaudiObjDesc v*      -no_auto_imports
+  use DetDesc      v* Det
 end_private
 
 # Produce Header-Files from XML description

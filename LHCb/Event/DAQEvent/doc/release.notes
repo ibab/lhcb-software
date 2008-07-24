@@ -4,6 +4,15 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-07-24 - Marco Clemencic
+ - Made OdinTimeDecoder issue a "RunChange" incident when the run number
+   obtained from ODIN is different from the previous one.
+ - Added a test for the "RunChange" incident.
+ - Added a service (RunChangeHandlerSvc) to intercept "RunChange" incidents and
+   replace the path of the source XML files of objects in the DetectorDataSvc
+   according to new run number. The service takes care the the update of the
+   conditions is triggered. A simple test has been added too.
+
 ! 2008-07-21 - Marco Cattaneo
  - Pick up IEventTimeDecoder.h from GaudiKernel and remove LHCbKernel dependency
  - Move tests/src/RawEventCreator (renamed DummyRawEventCreator) and
