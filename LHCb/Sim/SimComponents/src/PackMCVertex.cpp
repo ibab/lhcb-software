@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.3 2008-07-24 15:39:54 cattanem Exp $
+// $Id: PackMCVertex.cpp,v 1.4 2008-07-24 16:23:28 cattanem Exp $
 // Include files 
 
 // from STD
@@ -60,15 +60,15 @@ StatusCode PackMCVertex::execute() {
     newVert.y    = pack.position( vert->position().y() );
     newVert.z    = pack.position( vert->position().z() );
 
-    // Protect crazy vertex times
-    if( fabs(vert->time()) < std::numeric_limits<float>::min() ) {
+    // Protect crazy vertex times (no need for fabs, is always positive!) 
+    if( vert->time() < std::numeric_limits<float>::min() ) {
       Warning( "PackedVertex.tof underflow, set to 0.", StatusCode::SUCCESS, 0 ).ignore();
       if( msgLevel(MSG::DEBUG) )
         debug() << "time " << vert->time() << " set to zero for vertex "
                 << vert->key() << " of type " << vert->type() << endmsg;
       newVert.tof = 0.;
     }
-    else if ( fabs(vert->time()) > std::numeric_limits<float>::max()  ) {
+    else if ( vert->time() > std::numeric_limits<float>::max() ) {
       Warning( "PackedVertex.tof overflow, set to max float", StatusCode::SUCCESS, 0 ).ignore();
       if( msgLevel(MSG::DEBUG) )
         debug() << "time " << vert->time() << " set to "
