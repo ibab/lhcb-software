@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.20 2008-07-22 08:36:37 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.21 2008-07-24 12:09:12 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -53,7 +53,7 @@ StatusCode L0CaloMonit::finalize() {
   info() << "Number of useful events (Odin bank decoded) " << m_nUsefulEvents 
          << endmsg;
 
-  if (m_updateFrequency < 0 && m_lookForHotCells ) { 
+  if ( ( m_updateFrequency < 0 ) && ( m_lookForHotCells ) ) { 
     int caloType = 1 ; 
     info()<<" =========================Hot cells ========================="<<endreq ; 
     info()<<" ============================================================"<<endreq ; 
@@ -146,26 +146,55 @@ StatusCode L0CaloMonit::initialize() {
   m_histSumEt     = GaudiHistoAlg::book( "SumEt", "Sum Et "        , xMinSumEt, xMaxSumEt, nBinSumEt );
   m_histSpdMult   = GaudiHistoAlg::book( "SpdMult", "Spd Mult "      , xMinSpdMult, xMaxSpdMult , nBinSpdMult );
 
+  if ( m_lookForHotCells ) {
+    m_histEleFreqInn  = GaudiHistoAlg::book( "FreqEleInn", 
+                                             "Electron Candidate occurence Inner",
+                                             41500., 44500., 3000 );
+    m_histEleFreqMid  = GaudiHistoAlg::book( "FreqEleMid", 
+                                             "Electron Candidate occurence Middle",
+                                             37000., 41500., 4500 );
+    m_histEleFreqOut  = GaudiHistoAlg::book( "FreqEleOut", 
+                                             "Electron Candidate occurence Outer",
+                                             32500., 37000., 4500 );
 
-  m_histEleFreqInn  = GaudiHistoAlg::book( "FreqEleInn", "Electron Candidate occurence Inner "   ,41500., 44500., 3000 );
-  m_histEleFreqMid  = GaudiHistoAlg::book( "FreqEleMid", "Electron Candidate occurence Middle "   ,37000., 41500., 4500 );
-  m_histEleFreqOut  = GaudiHistoAlg::book( "FreqEleOut", "Electron Candidate occurence Outer "   ,32500., 37000., 4500 );
+    m_histPhoFreqInn  = GaudiHistoAlg::book( "FreqPhoInn", 
+                                             "Photon Candidate occurence Inner",
+                                             41500., 44500., 3000 );
+    m_histPhoFreqMid  = GaudiHistoAlg::book( "FreqPhoMid", 
+                                             "Photon Candidate occurence Middle",
+                                             37000., 41500., 4500 );
+    m_histPhoFreqOut  = GaudiHistoAlg::book( "FreqPhoOut", 
+                                             "Photon Candidate occurence Outer",
+                                             32500., 37000., 4500 );
 
-  m_histPhoFreqInn  = GaudiHistoAlg::book( "FreqPhoInn", "Photon Candidate occurence Inner "   ,41500., 44500., 3000 );
-  m_histPhoFreqMid  = GaudiHistoAlg::book( "FreqPhoMid", "Photon Candidate occurence Middle "   ,37000., 41500., 4500 );
-  m_histPhoFreqOut  = GaudiHistoAlg::book( "FreqPhoOut", "Photon Candidate occurence Outer "   ,32500., 37000., 4500 );
+    m_histPilFreqInn  = GaudiHistoAlg::book( "FreqPilInn", 
+                                             "Pi0Local Candidate occurence Inner",
+                                             41500., 44500., 3000 );
+    m_histPilFreqMid  = GaudiHistoAlg::book( "FreqPilMid", 
+                                             "Pi0Local Candidate occurence Middle",
+                                             37000., 41500., 4500 );
+    m_histPilFreqOut  = GaudiHistoAlg::book( "FreqPilOut", 
+                                             "Pi0Local Candidate occurence Outer",
+                                             32500., 37000., 4500 );
 
-  m_histPilFreqInn  = GaudiHistoAlg::book( "FreqPilInn", "Pi0Local Candidate occurence Inner "   ,41500., 44500., 3000 );
-  m_histPilFreqMid  = GaudiHistoAlg::book( "FreqPilMid", "Pi0Local Candidate occurence Middle "   ,37000., 41500., 4500 );
-  m_histPilFreqOut  = GaudiHistoAlg::book( "FreqPilOut", "Pi0Local Candidate occurence Outer "   ,32500., 37000., 4500 );
-
-  m_histPigFreqInn  = GaudiHistoAlg::book( "FreqPigInn", "Pi0Global Candidate occurence Inner "   ,41500., 44500., 3000 );
-  m_histPigFreqMid  = GaudiHistoAlg::book( "FreqPigMid", "Pi0Global Candidate occurence Middle "   ,37000., 41500., 4500 );
-  m_histPigFreqOut  = GaudiHistoAlg::book( "FreqPigOut", "Pi0Global Candidate occurence Outer "   ,32500., 37000., 4500 );
+    m_histPigFreqInn  = GaudiHistoAlg::book( "FreqPigInn", 
+                                             "Pi0Global Candidate occurence Inner",
+                                             41500., 44500., 3000 );
+    m_histPigFreqMid  = GaudiHistoAlg::book( "FreqPigMid", 
+                                             "Pi0Global Candidate occurence Middle",
+                                             37000., 41500., 4500 );
+    m_histPigFreqOut  = GaudiHistoAlg::book( "FreqPigOut", 
+                                             "Pi0Global Candidate occurence Outer",
+                                             32500., 37000., 4500 );
   
-  m_histHadFreqInn  = GaudiHistoAlg::book( "FreqHadInn", "Hadron Candidate occurence Inner "   ,53300., 55300. , 2000) ; 
-  m_histHadFreqOut  = GaudiHistoAlg::book( "FreqHadOut", "Hadron Candidate occurence Outer "   ,49200, 51000. , 1800) ; 
-
+    m_histHadFreqInn  = GaudiHistoAlg::book( "FreqHadInn", 
+                                             "Hadron Candidate occurence Inner",
+                                             53300., 55300. , 2000) ; 
+    m_histHadFreqOut  = GaudiHistoAlg::book( "FreqHadOut", 
+                                             "Hadron Candidate occurence Outer",
+                                             49200, 51000. , 1800) ; 
+  }
+    
   // Electron
   bookCalo2D("EcalMapEle","Electron Ecal map" ,"Ecal") ; 
 
@@ -554,57 +583,56 @@ StatusCode L0CaloMonit::execute() {
     }
   }
 
-  if (m_updateFrequency > 0 ) { 
+  if ( ( m_updateFrequency > 0 ) && ( m_lookForHotCells ) ) { 
     int goForCheck = m_nEvents%m_updateFrequency ; 
     if (goForCheck == 0 ) { 
       info()<<"m_nEvents == "<<m_nEvents<<" go for check ... "<<endreq ; 
       if (m_lookForHotCells ) { 
-	int caloType = 1 ; 
-	info()<<" =========================Hot cells ========================="<<endreq ; 
-	info()<<" ============================================================"<<endreq ; 
-	info()<<" ===        Electron Candidates Inner region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histEleFreqInn , caloType ) ; 
-	info()<<" ===        Electron Candidates Middle region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histEleFreqMid , caloType ) ; 
-	info()<<" ===        Electron Candidates Outer region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histEleFreqOut , caloType ) ; 
-	info()<<" ============================================================"<<endreq ; 
-	info()<<" ===        Photon Candidates Inner region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPhoFreqInn , caloType ) ; 
-	info()<<" ===        Photon Candidates Middle region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPhoFreqMid , caloType ) ; 
-	info()<<" ===        Photon Candidates Outer region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPhoFreqOut , caloType ) ; 
-	info()<<" ============================================================"<<endreq ; 
-	info()<<" ===        Pi0Local Candidates Inner region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPilFreqInn , caloType ) ; 
-	info()<<" ===        Pi0Local Candidates Middle region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPilFreqMid , caloType ) ; 
-	info()<<" ===        Pi0Local Candidates Outer region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPilFreqOut , caloType ) ; 
-	info()<<" ============================================================"<<endreq ; 
-	info()<<" ===        Pi0Global Candidates Inner region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPigFreqInn , caloType ) ; 
-	info()<<" ===        Pi0Global Candidates Middle region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPigFreqMid , caloType ) ; 
-	info()<<" ===        Pi0Global Candidates Outer region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histPigFreqOut , caloType ) ; 
-	caloType = 2 ; 
-	info()<<" ============================================================"<<endreq ; 
-	info()<<" ===        Hadron Candidates Inner region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histHadFreqInn , caloType ) ; 
-	info()<<" ===        Hadron Candidates Outer region              ===" <<endreq ; 
-	SearchForHotCellsAndReset(m_histHadFreqOut , caloType ) ; 
-	info()<<" ============================================================"<<endreq ; 
+        int caloType = 1 ; 
+        info()<<" =========================Hot cells ========================="<<endreq ; 
+        info()<<" ============================================================"<<endreq ; 
+        info()<<" ===        Electron Candidates Inner region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histEleFreqInn , caloType ) ; 
+        info()<<" ===        Electron Candidates Middle region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histEleFreqMid , caloType ) ; 
+        info()<<" ===        Electron Candidates Outer region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histEleFreqOut , caloType ) ; 
+        info()<<" ============================================================"<<endreq ; 
+        info()<<" ===        Photon Candidates Inner region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPhoFreqInn , caloType ) ; 
+        info()<<" ===        Photon Candidates Middle region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPhoFreqMid , caloType ) ; 
+        info()<<" ===        Photon Candidates Outer region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPhoFreqOut , caloType ) ; 
+        info()<<" ============================================================"<<endreq ; 
+        info()<<" ===        Pi0Local Candidates Inner region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPilFreqInn , caloType ) ; 
+        info()<<" ===        Pi0Local Candidates Middle region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPilFreqMid , caloType ) ; 
+        info()<<" ===        Pi0Local Candidates Outer region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPilFreqOut , caloType ) ; 
+        info()<<" ============================================================"<<endreq ; 
+        info()<<" ===        Pi0Global Candidates Inner region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPigFreqInn , caloType ) ; 
+        info()<<" ===        Pi0Global Candidates Middle region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPigFreqMid , caloType ) ; 
+        info()<<" ===        Pi0Global Candidates Outer region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histPigFreqOut , caloType ) ; 
+        caloType = 2 ; 
+        info()<<" ============================================================"<<endreq ; 
+        info()<<" ===        Hadron Candidates Inner region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histHadFreqInn , caloType ) ; 
+        info()<<" ===        Hadron Candidates Outer region              ===" <<endreq ; 
+        SearchForHotCellsAndReset(m_histHadFreqOut , caloType ) ; 
+        info()<<" ============================================================"<<endreq ; 
       }
     }
   }
 
-
-
   //  return sc ; 
   return StatusCode::SUCCESS; 
 }
+
 //============================================================================
 void L0CaloMonit::SearchForHotCellsAndReset(IHistogram1D* hist , int caloType ) { 
   float nIn = hist->entries() ;

@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.54 2008-07-17 20:38:38 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.55 2008-07-24 12:09:12 robbep Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -352,6 +352,7 @@ StatusCode L0CaloAlg::execute() {
     int pCard = m_ecal->previousCardNumber(eCard);
     if ( 0 <= pCard ) {
       int etMaxTot  = etMax + m_ecalFe[pCard].etMax()  ;
+      if ( etMaxTot > 255 ) etMaxTot = 255 ;
       LHCb::CaloCellID ID2 = m_ecalFe[pCard].cellIdMax();
       int diffRow = ID2.row() - ID.row();
       int diffCol = ID2.col() - ID.col();
