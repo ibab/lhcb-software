@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.22 2008-07-16 15:28:43 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.23 2008-07-24 18:03:41 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -410,8 +410,7 @@ StatusCode CaloDigitAlg::execute() {
 
     //== generate the photo-electron fluctuation...
     if ( 0. < energy && 0. < m_pePerMeV ) {
-      Rndm::Numbers nPe ( rndmSvc(), Rndm::Poisson( energy * m_pePerMeV) );
-      energy = nPe() / m_pePerMeV;
+      energy = safe_poisson( energy * m_pePerMeV ) / m_pePerMeV;
     }
 
     double gain     = m_calo->cellGain( id ) ;

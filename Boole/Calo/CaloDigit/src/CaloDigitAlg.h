@@ -1,13 +1,17 @@
-// $Id: CaloDigitAlg.h,v 1.7 2008-04-28 14:32:39 akozlins Exp $ 
+// $Id: CaloDigitAlg.h,v 1.8 2008-07-24 18:03:41 cattanem Exp $ 
 #ifndef   CALODIGIT_CALODIGITALG_H
 #define   CALODIGIT_CALODIGITALG_H 1
 // ============================================================================
 // from Gaudi 
 #include "GaudiKernel/IRndmGenSvc.h" 
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/RndmGenerators.h"
 
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
+
+// FPE guard to protect Rndm::Poisson
+#include "Kernel/FPEGuard.h"
 
 /** @class CaloDigitAlg CaloDigitAlg.h   
  *
@@ -67,5 +71,15 @@ private:
   double m_noiseIntegral[3]; ///< integrals of noise spectra
   std::map< int, std::vector< std::vector<double> > > m_advancedNoise; ///< parameters of the advanced noise spectra for different sections
   AIDA::IHistogram1D* m_noiseHist[3]; ///< monitoring histograms from advanced noise
+
+  ///protected poisson distribution against FPE
+  inline double safe_poisson( double num ) {
+    // turn off the inexact FPE
+    FPE::Guard underFPE(FPE::Guard::mask("AllExcept"), true);
+    Rndm::Numbers nPe( this->rndmSvc(), Rndm::Poisson( num ) );
+    return nPe();
+  }
+
 };
+
 #endif //    CALODIGIT_CALODIGITALG_H
