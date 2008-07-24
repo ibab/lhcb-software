@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-24 - Julien Cogan
+ - Add MonUtilities : contains functions usefull for the monitoring
+
 ! 2008-07-23 - Julien Cogan
  - Bug fix : correct a bug introduced in the previous release affecting 
    the decoding of the DC06 banks  
