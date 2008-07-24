@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.23 2007-12-06 14:43:32 wouter Exp $
+// $Id: FitNode.h,v 1.24 2008-07-24 20:38:33 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -92,26 +92,26 @@ namespace LHCb
     double projectionTerm() const { return m_refResidual + (projectionMatrix()*refVector().parameters())(0) ; }
     
     /// retrieve state predicted by the kalman filter step
-    State& predictedStateUp()
-    { return m_predictedStateUp; }
+    State& predictedStateForward()
+    { return m_predictedStateForward; }
 
     /// retrieve state predicted by the kalman filter step
-    const State& predictedStateUp() const
-    { return m_predictedStateUp; }
+    const State& predictedStateForward() const
+    { return m_predictedStateForward; }
 
     /// set state predicted by the kalman filter
-    void setPredictedStateUp( const State& predictedStateUp );
+    void setPredictedStateForward( const State& predictedStateForward );
 
     /// retrieve predicted state from backward filter
-    State& predictedStateDown()
-    { return m_predictedStateDown; }
+    State& predictedStateBackward()
+    { return m_predictedStateBackward; }
 
     /// retrieve predicted state from backward filter
-    const State& predictedStateDown() const
-    { return m_predictedStateDown; }
+    const State& predictedStateBackward() const
+    { return m_predictedStateBackward; }
 
     /// set predicted state from backward filter
-    void setPredictedStateDown( const State& predictedStateDown );
+    void setPredictedStateBackward( const State& predictedStateBackward );
 
     /// retrieve unbiased residual
     double unbiasedResidual() const 
@@ -125,16 +125,16 @@ namespace LHCb
     State unbiasedState() const ;
 
     /// set chisq contribution in upstream filter
-    void setDeltaChi2Upstream(double dchi2) { m_deltaChi2Up = dchi2 ; }
+    void setDeltaChi2Forward(double dchi2) { m_deltaChi2Forward = dchi2 ; }
 
     /// retrieve chisq contribution in upstream filter
-    double deltaChi2Upstream() const { return m_deltaChi2Up ; }
+    double deltaChi2Forward() const { return m_deltaChi2Forward ; }
 
     /// set chisq contribution in downstream filter
-    void setDeltaChi2Downstream(double dchi2) { m_deltaChi2Down = dchi2 ; }
+    void setDeltaChi2Backward(double dchi2) { m_deltaChi2Backward = dchi2 ; }
 
     /// retrieve chisq contribution in downstream filter
-    double deltaChi2Downstream() const { return m_deltaChi2Down ; }
+    double deltaChi2Backward() const { return m_deltaChi2Backward ; }
 
     /// set the residual of the reference
     void setRefResidual( double res ) { m_refResidual = res ; }
@@ -147,7 +147,13 @@ namespace LHCb
 
     /// get the delta-energy
     double deltaEnergy() const { return m_deltaEnergy ; }
+
+    /// set the smoother gain matrix
+    void setSmootherGainMatrix( const Gaudi::TrackMatrix& m) { m_smootherGainMatrix = m ; }
     
+    // get the smoother gain matrix
+    const Gaudi::TrackMatrix& smootherGainMatrix() const { return m_smootherGainMatrix ; }
+
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
@@ -156,10 +162,11 @@ namespace LHCb
     double                m_deltaEnergy;        ///< change in energy in propagation from previous node to this one
     bool                  m_transportIsSet;     ///< Flag for transport params
     double                m_refResidual;        ///< residual of the reference    
-    State                 m_predictedStateUp;   ///< predicted state upstream
-    State                 m_predictedStateDown; ///< predicted state downstream
-    double                m_deltaChi2Up;        ///< chisq contribution in upstream filter
-    double                m_deltaChi2Down;      ///< chisq contribution in downstream filter
+    State                 m_predictedStateForward;  ///< predicted state of forward filter
+    State                 m_predictedStateBackward; ///< predicted state of backward filter (bi-directional fit only)
+    double                m_deltaChi2Forward;       ///< chisq contribution in forward filter
+    double                m_deltaChi2Backward;      ///< chisq contribution in backward filter (bi-directional fit only)
+    Gaudi::TrackMatrix    m_smootherGainMatrix ;    ///< smoother gain matrix (smoothedfit only)
   };
 
 } // namespace LHCb

@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.22 2008-06-17 08:01:21 lnicolas Exp $
+// $Id: FitNode.cpp,v 1.23 2008-07-24 20:38:33 wouter Exp $
 // Include files
 
 // local
@@ -32,8 +32,8 @@ FitNode::FitNode():
   m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
-  m_deltaChi2Up(0),
-  m_deltaChi2Down(0)
+  m_deltaChi2Forward(0),
+  m_deltaChi2Backward(0)
 {
   // FitNode default constructor
 }
@@ -44,8 +44,8 @@ FitNode::FitNode( double zPos ):
   m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
-  m_deltaChi2Up(0),
-  m_deltaChi2Down(0)
+  m_deltaChi2Forward(0),
+  m_deltaChi2Backward(0)
 {
 }
 
@@ -55,8 +55,8 @@ FitNode::FitNode(Measurement& aMeas):
   m_deltaEnergy(0),
   m_transportIsSet(false),
   m_refResidual(0),
-  m_deltaChi2Up(0),
-  m_deltaChi2Down(0)
+  m_deltaChi2Forward(0),
+  m_deltaChi2Backward(0)
 {
 }
 
@@ -71,16 +71,16 @@ LHCb::Node* FitNode::clone() const
   return new LHCb::FitNode(*this) ;
 }
 
-/// Update the State predicted by the upstream filter
-void FitNode::setPredictedStateUp( const State& predictedStateUp )
+/// Forwarddate the State predicted by the upstream filter
+void FitNode::setPredictedStateForward( const State& predictedStateForward )
 {  
-  m_predictedStateUp = predictedStateUp ;
+  m_predictedStateForward = predictedStateForward ;
 }
 
-/// Update the predicted State from downstream filter
-void FitNode::setPredictedStateDown( const State& predictedStateDown )
+/// Forwarddate the predicted State from downstream filter
+void FitNode::setPredictedStateBackward( const State& predictedStateBackward )
 {  
-  m_predictedStateDown = predictedStateDown ;
+  m_predictedStateBackward = predictedStateBackward ;
 }
 
 /// Calculate an unbiased state
@@ -93,10 +93,10 @@ LHCb::State FitNode::unbiasedState() const
   double R = errResidual2() ;
   const TrackSymMatrix& biasedC = state().covariance() ;
   ROOT::Math::SMatrix<double,5,1> K = (biasedC * Transpose(H)) / R;
-  // Update the state vectors
+  // Forwarddate the state vectors
   const TrackVector&  biasedX = state().stateVector();
   TrackVector unbiasedX=biasedX - K.Col(0) * r;
-  // Update the covariance matrix
+  // Forwarddate the covariance matrix
   static const TrackSymMatrix unit = TrackSymMatrix( ROOT::Math::SMatrixIdentity());
   TrackSymMatrix unbiasedC ;
   ROOT::Math::AssignSym::Evaluate(unbiasedC, (unit + K*H)*biasedC) ;

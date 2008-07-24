@@ -4,6 +4,11 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2008-07-24 - Wouter Hulsbergen
+ - two changes to FitNode:
+   - added smoother gain matrix to fitnode for use in alignment
+   - renamed Upstream->Forward, Downstream->Backward (less confusing and less code)
+
 !========================== TrackFitEvent v3r16 2008-07-02 ===================
 ! 2008-06-17 - Louis Nicolas
  - Added initialization of deltaEnergy variable to 0 in FitNode
