@@ -1,4 +1,4 @@
-// $Id: GetElementsToBeAligned.cpp,v 1.20 2008-07-17 09:27:09 wouter Exp $
+// $Id: GetElementsToBeAligned.cpp,v 1.21 2008-07-24 13:44:22 janos Exp $
 // Include files
 
 //from STL
@@ -61,7 +61,7 @@ StatusCode GetElementsToBeAligned::initialize() {
   StatusCode sc =  GaudiTool::initialize();
   if (sc.isFailure()) return Error("Failed to initialize tool!", sc);
 
-  if (m_elemsToBeAligned.empty()) return Error("Please specify which elements to align!", sc);
+  if ( m_elemsToBeAligned.empty() ) return Error( "Please specify which elements to align!", StatusCode::FAILURE );
 
   /// Get pointer to detector svc
   IDataProviderSvc* detectorSvc = 0;
