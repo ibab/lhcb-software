@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.21 2008-07-23 08:21:19 cattanem Exp $
+! $Id: release.notes,v 1.22 2008-07-24 13:52:05 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
+
+! 2008-07-24 - Marco Cattaneo
+ - Remove xml/STTELL1BoardError.xml (duplicate def. of STTELL1BoardErrorBank)
+ - Change STELL1Error and STTELL1ErrorBank class IDs to 9012 and 9013 
+   respectively, to avoid duplicates
+ - Add god_dictionary pattern to generate a Reflex dictionary for these classes
 
 ! 2008-07-23 - Marco Cattaneo
  - Remove xml/gdd.dtd, this file is provided automatically by GaudiObjDesc

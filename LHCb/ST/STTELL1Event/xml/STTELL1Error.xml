@@ -6,7 +6,7 @@
   <!-- location = address in TES -->
   <!-- classId = identifier -->
     <class name='STTELL1Error'
-	   id='9011' 
+	   id='9012' 
 	   author='Mathias Knecht' 
 	   desc='Error info from one PP-FPGA for a TELL1 board'
            virtual = 'FALSE'>
