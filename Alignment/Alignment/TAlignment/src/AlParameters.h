@@ -18,6 +18,7 @@ public:
   typedef AlVec                             Vector ;
   typedef AlSymMat                          Covariance ;
   typedef ROOT::Math::SMatrix<double, 6, 6> Matrix6x6 ;
+  typedef ROOT::Math::SVector<double, 6>    Vector6 ;
   typedef boost::array<double,NumPars>      TransformParameters ;
   typedef AlDofMask<6>                      DofMask ; 
 
@@ -50,7 +51,7 @@ public:
   double measurementCoordinateSigma(double weightR) const ;
   TransformParameters parameterArray() const ;
   static double signedSqrt(double root) ;
-
+  Vector6 parameterVector6() const ;
 private:
   DofMask     m_mask;
   Vector      m_parameters ;

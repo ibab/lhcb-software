@@ -124,6 +124,13 @@ AlParameters::TransformParameters AlParameters::parameterArray() const
   return pars ;
 }
 
+AlParameters::Vector6 AlParameters::parameterVector6() const 
+{
+  Vector6 pars ;
+  for (size_t iactive = 0u; iactive < dim(); ++iactive) pars[m_mask.parIndex(iactive)] = m_parameters[iactive] ;
+  return pars ;
+}
+
 ROOT::Math::Transform3D AlParameters::transform() const
 {
   return transform( parameterArray() ) ;
