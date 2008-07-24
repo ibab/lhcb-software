@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.16 2008-07-23 07:56:58 jucogan Exp $
+// $Id: L0MuonAlg.cpp,v 1.17 2008-07-24 09:28:50 jucogan Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -420,7 +420,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     else 
     {
       // Use the MuonRawBufer tool to produce the MuonDigits from the raw buffer (DaVinci)
-      if( msgLevel(MSG::DEBUG) ) debug() << "Getting hits from Raw buffer "<<m_muonBuffer<<endmsg;
+      if( msgLevel(MSG::DEBUG) ) debug() << "Getting hits from Muon Raw buffer "<<m_muonBuffer<<endmsg;
       if(!m_muonBuffer) {
         // First call: initialize the pointer to the Muon Raw Buffer Interface
         m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRaw", this);
@@ -469,7 +469,10 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
 
       LHCb::MuonTileID mkey = *id;
 
-      //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
+      if (!mkey.isValid()) continue;
+
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString()
+                                             <<" is valid ?"<<mkey.isValid()<<endmsg;
 
       if (m_ignoreM1 && mkey.station()==0) continue;
       if (m_ignoreM2 && mkey.station()==1) continue;
@@ -477,7 +480,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       int sta = mkey.station(); 
       LHCb::MuonTileID olID = m_ollayout.contains(mkey);
 
-      //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
+      if( msgLevel(MSG::VERBOSE) ) verbose() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
 
       char bufnm[1024];
       sprintf(bufnm,"(Q%d,R%d,%d,%d)",
@@ -496,11 +499,25 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       
 
       L0Muon::TileRegister* pReg = rfactory->createTileRegister(buf,0);
+      if( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "fillOLsfromDigits:     pReg "<<pReg<<endmsg;
+      }
       pReg->setTile(mkey);
+
+      if( msgLevel(MSG::VERBOSE) ) {
+        verbose() << "fillOLsfromDigits:     OK "<<endmsg;
+      }
+    }
+
+    if( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "fillOLsfromDigits:     TS: "<<(*it_ts)<<"DONE "<<endmsg;
     }
 
   } // End of loop over time slots
 
+  if( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "fillOLsfromDigits:     DONE "<<endmsg;
+  }
     
   if (m_debug) rfactory->dump();  
     

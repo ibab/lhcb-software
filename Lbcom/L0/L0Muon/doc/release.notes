@@ -1,9 +1,10 @@
-!  $Id: release.notes,v 1.62 2008-07-23 07:56:59 jucogan Exp $
+!  $Id: release.notes,v 1.63 2008-07-24 09:28:50 jucogan Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
 ! 2008-07-23 - Julien Cogan
+ - Protect against not valid MuonTileID when filling the OL in L0MuonAlg. 
  - Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
    Replaced by the Context property in the L0MuonOutput tool.
  - Check for L0MuonError bank - fill the RawBankReadOutStatus if error bank

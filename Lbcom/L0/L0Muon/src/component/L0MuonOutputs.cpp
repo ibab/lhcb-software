@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.cpp,v 1.20 2008-07-23 07:56:58 jucogan Exp $
+// $Id: L0MuonOutputs.cpp,v 1.21 2008-07-24 09:28:50 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -128,6 +128,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
                    ,StatusCode::FAILURE,50);
   }
   LHCb::RawBankReadoutStatus * ctrlCandStatus = new LHCb::RawBankReadoutStatus(LHCb::RawBank::L0Muon );
+
+  if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: "<<banks.size()<<" L0Muon banks found"<<endreq;
+
   if (banks.size()==0) {
     ctrlCandStatus->addStatus(0,LHCb::RawBankReadoutStatus::Missing);
   } else {
@@ -157,6 +160,9 @@ StatusCode L0MuonOutputs::decodeRawBanks(){
           decoding_status=m_ctrlCand[0].decodeBankDC06(data,bankVersion);
           decoding_status=m_ctrlCand[1].decodeBankDC06(data,bankVersion);
           m_ctrlCandFlag=true;
+          if( msgLevel(MSG::VERBOSE) ) verbose() << "decodeRawBanks: L0Muon bank (version "<< bankVersion <<" ) found"
+                                                 <<", sourceID is "<< srcID <<", size is "<<size
+                                                 <<" decoding status= "<<decoding_status<<endreq;
           break; // only 1 bank
         }
       }// End  DC06
@@ -499,9 +505,12 @@ StatusCode L0MuonOutputs::writeOnTES(){
   if (m_ctrlCandFlag) {
     for (int i= 0; i<2; ++i) {
       for (int iq=0; iq<2; ++iq){
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeOnTES: "<<" side"<<i<<" Q"<<(i*2+iq)<<endreq;
         // Do not write the candidates on TES if an error occured in the decoding
         if (m_ctrlCand[i].decodingError(iq)>0) continue;
         cands = m_ctrlCand[i].muonCandidates(iq);
+        if( msgLevel(MSG::VERBOSE) ) verbose() << "writeOnTES: "<<" side"<<i<<" Q"<<(i*2+iq)
+                                               <<" nb of cand= "<<cands.size()<<endreq;
         nCandFinal+=cands.size();
         for ( itcand = cands.begin();itcand!=cands.end();++itcand ) {
           LHCb::L0MuonCandidate* l0mcand = l0muoncandidate(*itcand);
