@@ -28,7 +28,7 @@ readers = []
 for i in range(len(DBs)):
     readers.append("'%s':(%d,%d)"%(DBs[i].getFullName(),i*10,(i+1)*10))
 CondDBTimeSwitchSvc(Readers = readers)
-CondDBCnvSvc(CondDBReader = CondDBTimeSwitchSvc(Readers = readers))
+CondDBCnvSvc(CondDBReader = CondDBTimeSwitchSvc(Readers = readers, OutputLevel = DEBUG))
 
 from Configurables import DetCondTest__TestConditionAlg
 alg = DetCondTest__TestConditionAlg()
@@ -38,6 +38,15 @@ ApplicationMgr(TopAlg = [alg], EvtSel = "NONE", EvtMax = 2)
 
 </text></argument>
 <argument name="validator"><text>
+## 1st check: Find reference block
+reference_block = """
+CondDBTimeSwitc...  DEBUG Configured CondDBReaders:
+CondDBTimeSwitc...  DEBUG  0.0 - 0.00000001: CondDBAccessSvc/TESTDB0
+CondDBTimeSwitc...  DEBUG  0.00000001 - 0.00000002: CondDBAccessSvc/TESTDB3
+"""
+findReferenceBlock(reference_block, stdout, result, causes)
+
+## 2nd check: find data
 expected = [
     'DetCondTest::Te...   INFO Requested Conditions:',
     '--- /dd/AutoMap/FolderSet1/Object1',
@@ -49,17 +58,17 @@ expected = [
     '(int) Data = 2']
 
 regexp = r"^---|^Validity|^\(int\) Data|.*Requested Conditions"
-outlines = [ l.rstrip() for l in stdout.splitlines() ]
+outputlines = [ l.rstrip() for l in stdout.splitlines() ]
 
 # grep
 import re
 exp = re.compile(regexp)
-outlines = [ l for l in outlines if exp.match(l) ]
+outputlines = [ l for l in outputlines if exp.match(l) ]
 
-if outlines != expected:
+if outputlines != expected:
     causes.append("output")
     result["GaudiTest.output.regexp"] = result.Quote(regexp)
     result["GaudiTest.output.expected"] = result.Quote("\n".join(expected))
-    result["GaudiTest.output.found"] = result.Quote("\n".join(outlines))
+    result["GaudiTest.output.found"] = result.Quote("\n".join(outputlines))
 </text></argument>
 </extension>
