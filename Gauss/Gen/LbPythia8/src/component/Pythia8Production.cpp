@@ -1,4 +1,4 @@
-// $Id: Pythia8Production.cpp,v 1.6 2008-07-10 19:45:46 robbep Exp $
+// $Id: Pythia8Production.cpp,v 1.7 2008-07-24 22:25:02 robbep Exp $
 
 // Include files
 
@@ -525,12 +525,17 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
       if ((*p) -> status() < -69) (*p) -> set_status(2);
       else (*p) -> set_status(3);
     }
-    (*p) -> set_momentum( (*p) -> momentum() * Gaudi::Units::GeV ) ;
+    (*p) -> set_momentum( HepMC::FourVector( 
+                           (*p) -> momentum().px() * Gaudi::Units::GeV ,
+                           (*p) -> momentum().py() * Gaudi::Units::GeV , 
+                           (*p) -> momentum().pz() * Gaudi::Units::GeV , 
+                           (*p) -> momentum().e() * Gaudi::Units::GeV )
+                         );
   }
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
+    HepMC::FourVector newPos ;
     newPos.setX( (*v) -> position().x() ) ;
     newPos.setY( (*v) -> position().y() ) ;
     newPos.setZ( (*v) -> position().z() ) ;
