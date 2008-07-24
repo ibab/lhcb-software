@@ -1,0 +1,15 @@
+//---------------------------------------------------------------------------
+// Job options to dump the HepMC record read from a POOL file
+//---------------------------------------------------------------------------
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.EvtMax   = 2;
+EventSelector.PrintFreq = 1;
+
+// Set up POOL persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
+// Select an input file type
+#include "$IOEXAMPLEROOT/options/PoolDst.opts"
+
+// Run the algorithm
+ApplicationMgr.TopAlg += { "DumpHepMC" };
