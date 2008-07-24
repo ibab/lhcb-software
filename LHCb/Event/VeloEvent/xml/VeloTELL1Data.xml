@@ -5,7 +5,7 @@
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
- <package name="VeloTELL1Event">
+ <package name="VeloEvent">
   <class 
    name="VeloTELL1Data"
    author="Tomasz Szumlak"
@@ -23,7 +23,7 @@
    <import name = "Tell1Kernel/VeloTell1Core"/>
    <import name = "cassert" std="TRUE" />
    <import name = "vector"  std="TRUE" />
-
+   <template name="KeyedObjectDict" t1="int"/>
    <base name="KeyedObject&lt;int&gt;"/>
 
    &KeyedContainer;

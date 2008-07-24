@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2008-04-29 12:18:06 cattanem Exp $
+# $Id: requirements,v 1.43 2008-07-24 14:56:18 truf Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
@@ -18,4 +18,7 @@ end_private
 macro VeloEventObj2Doth_GODflags " -s ../VeloEvent/ " \
       WIN32                      " -s ..\VeloEvent\ "
 apply_pattern god_headers files=../xml/*.xml
+# Generate dictionaries with lcgdict via GOD
+#============================================================================
+apply_pattern god_dictionary files=../xml/*.xml
 apply_pattern install_more_includes more=VeloEvent
