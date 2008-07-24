@@ -19,6 +19,12 @@ set FLAVOURTAGGINGCHECKEROPTS ${FLAVOURTAGGINGCHECKERROOT}/options
 use DaVinciKernel   v*  Phys
 use MCInterfaces    v*  Kernel
 use HltInterfaces   v*  Kernel
+use GenEvent        v*  Event
+use L0Event         v*  Event
+use LinkerEvent     v*  Event
+use MCEvent         v*  Event
+use RecEvent        v*  Event
+use GaudiKernel     v*
 
 # Component library building rule
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesSignal.cpp,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
+// $Id: TaggingTuplesSignal.cpp,v 1.3 2008-07-24 08:21:09 cattanem Exp $
 // Include files 
 // local
 #include "TaggingTuplesSignal.h"
@@ -177,14 +177,8 @@ StatusCode TaggingTuplesSignal::execute() {
   FlavourTags*  tags = new FlavourTags;
 
 // about MCParticle
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
-  if ( ! mcpart ) {
-    error() << "No MCParticles retrieved" << endreq;
-    return StatusCode::FAILURE;
-  }
-  debug() << "Nr of MCParticles retrieved="<< mcpart->size()
-          << endreq;
-
+  MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
+  debug() << "Nr of MCParticles retrieved="<< mcpart->size() << endmsg;
 // end about MCparticle
 
   for(Particle::ConstVector::const_iterator icandB = parts.begin(); 
@@ -236,12 +230,7 @@ StatusCode TaggingTuplesSignal::execute() {
 // getting MCPrintTree Stuff
 
       if(Bsmass !=0){
-        SmartDataPtr<MCParticles> mcpart (eventSvc(),
-                                         MCParticleLocation::Default );
-        if ( ! mcpart ) {
-          error() << "No MCParticles retrieved" << endreq;
-          return StatusCode::FAILURE;
-        }
+        MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
         MCParticles::const_iterator imc;
         for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ){
           if( (*imc)->particleID().hasBottom()){
@@ -401,8 +390,8 @@ MCParticle* TaggingTuplesSignal::associatedofHEP(HepMC::GenParticle* hepmcp) {
   MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().vect().mag();
-  double moththeta = hepmcp->momentum().vect().theta();
+  double mothmom = hepmcp->momentum().mag();
+  double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {

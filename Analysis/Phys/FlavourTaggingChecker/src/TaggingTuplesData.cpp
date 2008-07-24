@@ -1,8 +1,15 @@
-// $Id: TaggingTuplesData.cpp,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
+// $Id: TaggingTuplesData.cpp,v 1.3 2008-07-24 08:21:09 cattanem Exp $
 // Include files 
 
 // from Gaudi
+#include "GaudiKernel/SystemOfUnits.h"
+
+// Event Model
+#include "Event/FlavourTag.h"
 #include "Event/L0DUReport.h"
+#include "Event/MCParticle.h"
+#include "Event/RecHeader.h"
+
 // local
 #include "TaggingTuplesData.h"
 
@@ -166,16 +173,8 @@ StatusCode TaggingTuplesData::execute() {
 
   FlavourTags*  tags = new FlavourTags;
 
-// about MCParticle
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
-  if ( ! mcpart ) {
-    error() << "No MCParticles retrieved" << endreq;
-    return StatusCode::FAILURE;
-  }
-  debug() << "Nr of MCParticles retrieved="<< mcpart->size()
-          << endreq;
-
-// end about MCparticle
+  MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
+  debug() << "Nr of MCParticles retrieved="<< mcpart->size() << endmsg;
 
 
   for(Particle::ConstVector::const_iterator icandB = parts.begin(); 
@@ -227,12 +226,7 @@ StatusCode TaggingTuplesData::execute() {
 // getting MCPrintTree info
 
       if(Bsmass !=0){
-        SmartDataPtr<MCParticles> mcpart (eventSvc(),
-                                          MCParticleLocation::Default );
-        if ( ! mcpart ) {
-          error() << "No MCParticles retrieved" << endreq;
-          return StatusCode::FAILURE;
-        }
+        MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
         MCParticles::const_iterator imc;
         for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ){
           if( (*imc)->particleID().hasBottom()){
@@ -331,7 +325,7 @@ StatusCode TaggingTuplesData::execute() {
         std::vector<Particle>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
                    debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
-                  << " p= "  << kp->p()/GeV << endreq;
+                           << " p= "  << kp->p()/Gaudi::Units::GeV << endmsg;
 	}
           if(tts=="OS_Muon"){
           osmuondec=itag->decision();

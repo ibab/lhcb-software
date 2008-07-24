@@ -145,7 +145,7 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
   mcdaughters.clear();
 
   // Get MCParticle container
-  SmartDataPtr<MCParticles> mcpart( eventSvc(), MCParticleLocation::Default);
+  MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
     if( originof(*imc) == B0 ) {

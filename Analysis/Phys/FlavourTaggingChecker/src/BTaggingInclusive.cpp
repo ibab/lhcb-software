@@ -1,4 +1,4 @@
-// $Id: BTaggingInclusive.cpp,v 1.6 2008-02-14 08:21:40 pkoppenb Exp $
+// $Id: BTaggingInclusive.cpp,v 1.7 2008-07-24 08:21:09 cattanem Exp $
 // local
 #include "BTaggingInclusive.h"
 
@@ -319,8 +319,8 @@ MCParticle* BTaggingInclusive::associatedofHEP(HepMC::GenParticle* hepmcp) {
   MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().vect().mag();
-  double moththeta = hepmcp->momentum().vect().theta();
+  double mothmom = hepmcp->momentum().mag();
+  double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {

@@ -1,25 +1,17 @@
-// $Id: TaggingTuplesData.h,v 1.2 2008-03-14 17:41:30 pkoppenb Exp $
+// $Id: TaggingTuplesData.h,v 1.3 2008-07-24 08:21:09 cattanem Exp $
 #ifndef TAGGINGTUPLESDATA_H 
 #define TAGGINGTUPLESDATA_H 1
 
 // Include files
-// Include files
 #include "GaudiKernel/AlgFactory.h"
-#include "Event/FlavourTag.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/IPrintDecayTreeTool.h"
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"
 #include <iomanip>
-#include "Event/GenCollision.h"
-#include "Event/GenHeader.h"
-#include "Kernel/IEvtTypeSvc.h"
 #include "MCInterfaces/IMCDecayFinder.h"
-#include "Event/RecVertex.h"
-#include "Event/MCParticle.h"
 #include "MCInterfaces/IForcedBDecayTool.h"
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
-#include "Event/RecHeader.h"
 #include "Kernel/IBackgroundCategory.h"
 
 /**
@@ -50,11 +42,10 @@ protected:
 
 private:
   std::string m_tagslocation;
-    IPrintDecayTreeTool* m_debugParticle;
-    IPrintMCDecayTreeTool* m_debugMCParticle;
-  // LHCb::MCParticle* associatedofHEP(HepMC::GenParticle* ) ;
+  IPrintDecayTreeTool* m_debugParticle;
+  IPrintMCDecayTreeTool* m_debugMCParticle;
   int nSelected,nrt[100],nwt[100];  
- IBackgroundCategory* m_back;
+  IBackgroundCategory* m_back;
   
   NTuple::Item<long>      osmuondec;
   NTuple::Item<long>      oselectrondec;

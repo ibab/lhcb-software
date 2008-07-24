@@ -1,7 +1,6 @@
-// $Id: BTaggingChecker.cpp,v 1.10 2008-02-14 08:21:39 pkoppenb Exp $
-// local
-//#include "Kernel/StringUtils.h"
+// $Id: BTaggingChecker.cpp,v 1.11 2008-07-24 08:21:09 cattanem Exp $
 
+// local
 #include "BTaggingChecker.h"
 
 //--------------------------------------------------------------------------
@@ -183,8 +182,8 @@ MCParticle* BTaggingChecker::associatedofHEP(HepMC::GenParticle* hepmcp) {
   MCParticles* mcpart = get<MCParticles> ( MCParticleLocation::Default );
 
   int mid = hepmcp->pdg_id();
-  double mothmom = hepmcp->momentum().vect().mag();
-  double moththeta = hepmcp->momentum().vect().theta();
+  double mothmom = hepmcp->momentum().mag();
+  double moththeta = hepmcp->momentum().theta();
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); ++imc ) {
     if( mid == (*imc)->particleID().pid() ) {
