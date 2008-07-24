@@ -17,8 +17,9 @@ class AlConfigurable( ConfigurableUser ) :
         "SimplifiedGeom"               : False                      , ## Use simplified geometry
         "Pat"                          : False                      , ## Run pattern recognition
         "ElementsToAlign"              : []                         , ## Elements to align
+        "UseLocalFrame"                : True                       , ## Use local frame?
         "NumIterations"                : 10                         , ## Number of iterations
-        "AlignInputTrackCont"           : "Alignment/AlignmentTracks", ## Input track container for alignment
+        "AlignInputTrackCont"          : "Alignment/AlignmentTracks", ## Input track container for alignment
         "VertexLocation"               : ""                         , ## Location of input vertex list
         "UseCorrelations"              : True                       , ## Correlations
         "ApplyMS"                      : True                       , ## Multiple Scattering
@@ -38,7 +39,8 @@ class AlConfigurable( ConfigurableUser ) :
         "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon",
         "CondDepths"                   : []                         ,              ## Condition levels to write to xml
         "Precision"                    : 16                         , ## Set precision for conditions
-        "OutputLevel"                  : INFO                         ## Output level
+        "OutputLevel"                  : INFO                       , ## Output level
+        "LogFile"                      : "alignlog.txt"    
         }
 
     def getProp( self, name ) :
@@ -218,7 +220,7 @@ class AlConfigurable( ConfigurableUser ) :
             return patSequencer
         else :
             if outputLevel == VERBOSE: print "VERBOSE: Pat Sequencer already defined!" 
-            return allConfigurables.get( "patSeq" )
+            return allConfigurables.get( "PatSeq" )
 
     def fitSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "TrackFitSeq" ) :
@@ -256,14 +258,15 @@ class AlConfigurable( ConfigurableUser ) :
                                         Al__AlignConstraintTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
-            alignAlg.NumberOfIterations           = self.getProp( "NumIterations"                )
-            alignAlg.TracksLocation               = self.getProp( "AlignInputTrackCont"          )
-            alignAlg.VertexLocation               = self.getProp( "VertexLocation"               )
-            alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"              )
-            alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
-            alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"                  )
-            alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
+            alignAlg.NumberOfIterations           = self.getProp( "NumIterations"       )
+            alignAlg.TracksLocation               = self.getProp( "AlignInputTrackCont" )
+            alignAlg.VertexLocation               = self.getProp( "VertexLocation"      )
+            alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"     )
+            alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"     )
+            alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"         )
+            alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"  )
             alignAlg.HistoPrint                   = False
+            alignAlg.LogFile                      = self.getProp( "LogFile"             ) 
 
             if self.getProp( "SolvTool" ) == "gslSolver" :
                 alignAlg.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
@@ -275,8 +278,9 @@ class AlConfigurable( ConfigurableUser ) :
                 alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
                 
             alignAlg.addTool( GetElementsToBeAligned( "GetElementsToBeAligned" ) )
-            alignAlg.GetElementsToBeAligned.OutputLevel = outputLevel
-            alignAlg.GetElementsToBeAligned.Elements    = self.getProp( "ElementsToAlign" )
+            alignAlg.GetElementsToBeAligned.OutputLevel   = outputLevel
+            alignAlg.GetElementsToBeAligned.Elements      = self.getProp( "ElementsToAlign" )
+            alignAlg.GetElementsToBeAligned.UseLocalFrame = self.getProp( "UseLocalFrame"   )  
 
             # this one is in the toolsvc, for now
             constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
