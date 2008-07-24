@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.15 2008-07-10 11:28:59 dhcroft Exp $
+#// $Id: VeloSim.h,v 1.16 2008-07-24 17:36:43 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -64,6 +64,13 @@ private:
     // turn off the inexact FPE (always goes off for this function)
     FPE::Guard reducedFPE(FPE::Guard::mask("Inexact"), true);
     return gsl_sf_erf_Q(arg);
+  }
+
+  ///protected poisson distribution against floating point exceptions
+  inline int safe_int_poissonDist() {
+    // turn off FPEs
+    FPE::Guard allFPE(FPE::Guard::mask("AllExcept"), true);
+    return int(m_poissonDist());
   }
 
   /// process requested simulation steps

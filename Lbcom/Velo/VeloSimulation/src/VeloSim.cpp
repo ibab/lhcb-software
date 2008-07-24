@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.30 2008-07-10 11:28:59 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.31 2008-07-24 17:36:43 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -863,7 +863,7 @@ void VeloSim::noiseSim(){
       int hitNoiseTotal=-999;
       int maxStrips= sens->numberOfStrips();
       if(!m_makeNonZeroSuppressedData){
-        hitNoiseTotal = int(m_poissonDist());
+        hitNoiseTotal = safe_int_poissonDist();
       }else{
         hitNoiseTotal=sens->numberOfStrips();
       }

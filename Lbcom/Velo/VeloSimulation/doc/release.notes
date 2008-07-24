@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-24 - Marco Cattaneo
+ - Add a new wrapper inline int safe_int_poissonDist() to protect against 
+   FPE in Rndm::Poisson
+
 !===================== VeloSimulation v3r4 2008-07-17 ======================
 ! 2008-07-10 - David Hutchcroft
  - Changed code to use real bad strip list from DeVeloSensor to kill bad strips
