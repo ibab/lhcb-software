@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2008-07-24 - Marco Cattaneo
+ - Improve protection against crazy vertex times in PackMCVertex
+
 ! 2008-07-23 - Marco Cattaneo
  - Add DumpHepMCDecay, DumpHepMC, DumpHepMCTree algorithms, previously in
    Gen/Generators as DumpMCDecay, DumpMC, DumpHepMCTree

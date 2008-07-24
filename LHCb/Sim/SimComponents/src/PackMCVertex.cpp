@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.2 2008-06-05 12:18:29 cattanem Exp $
+// $Id: PackMCVertex.cpp,v 1.3 2008-07-24 15:39:54 cattanem Exp $
 // Include files 
 
 // from STD
@@ -59,13 +59,22 @@ StatusCode PackMCVertex::execute() {
     newVert.x    = pack.position( vert->position().x() );
     newVert.y    = pack.position( vert->position().y() );
     newVert.z    = pack.position( vert->position().z() );
-    // Protect crazy vertex times in DC06 data.
-    if( vert->time() > 0. && vert->time() < std::numeric_limits<float>::min() ) {
+
+    // Protect crazy vertex times
+    if( fabs(vert->time()) < std::numeric_limits<float>::min() ) {
       Warning( "PackedVertex.tof underflow, set to 0.", StatusCode::SUCCESS, 0 ).ignore();
       if( msgLevel(MSG::DEBUG) )
         debug() << "time " << vert->time() << " set to zero for vertex "
                 << vert->key() << " of type " << vert->type() << endmsg;
       newVert.tof = 0.;
+    }
+    else if ( fabs(vert->time()) > std::numeric_limits<float>::max()  ) {
+      Warning( "PackedVertex.tof overflow, set to max float", StatusCode::SUCCESS, 0 ).ignore();
+      if( msgLevel(MSG::DEBUG) )
+        debug() << "time " << vert->time() << " set to "
+                << std::numeric_limits<float>::max() << " for vertex "
+                << vert->key() << " of type " << vert->type() << endmsg;
+      newVert.tof = std::numeric_limits<float>::max() ;
     }
     else
       newVert.tof  = vert->time();   // What scale ?
