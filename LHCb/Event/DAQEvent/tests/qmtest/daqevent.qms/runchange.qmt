@@ -1,0 +1,29 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+<text>-v</text>
+</set></argument>
+<argument name="options"><text>
+from Gaudi.Configuration import *
+from Configurables import DAQEventTests__RunChangeTest as TestAlg
+
+app = ApplicationMgr()
+app.TopAlg = [ TestAlg("RunChangeTest") ]
+app.EvtSel = "NONE"
+app.EvtMax = 2
+
+EventDataSvc(ForceLeaves = True)
+#MessageSvc(OutputLevel = DEBUG)
+
+</text></argument>
+<argument name="validator"><text>
+reference_block = """
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run number:1
+RunChangeTest        INFO RunChange incident received from RunChangeTest.OdinTimeDecoder
+RunChangeTest        INFO Run number:2
+"""
+findReferenceBlock(reference_block, stdout, result, causes)
+</text></argument>
+</extension>
