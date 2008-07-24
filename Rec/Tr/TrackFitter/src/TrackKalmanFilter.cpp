@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.63 2008-07-15 07:04:28 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.64 2008-07-24 20:50:23 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -81,8 +81,6 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
   StatusCode sc(StatusCode::SUCCESS, true); 
   
   // First node must have a seed state
-  bool upstream = nodes.front()->z() > nodes.back()->z() ;
-  
   // Set the initial state. The vector comes from the first node in
   // the list. The seed covariance from the first node on the tr ack.
   NodeRange::iterator iNode = nodes.begin();
@@ -105,8 +103,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     }
     
     // save predicted state
-    if ( upstream ) node.setPredictedStateUp( state );
-    else            node.setPredictedStateDown( state );
+    node.setPredictedStateForward( state ) ;
 
     // filter if there is a measurement
     if ( node.hasMeasurement() ) {
@@ -120,14 +117,13 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 
       // add the chisquare
       chisq += node.chi2();
-      if ( upstream ) node.setDeltaChi2Upstream( node.chi2() );
-      else            node.setDeltaChi2Downstream( node.chi2() ) ;
+      node.setDeltaChi2Forward( node.chi2() );
       ++ndof ;
     } else {
       // this should actually be done somewhere else
       node.setResidual( 0 );
-      node.setDeltaChi2Upstream( 0 );
-      node.setDeltaChi2Downstream( 0 ) ;
+      node.setDeltaChi2Forward( 0 );
+      node.setDeltaChi2Backward( 0 ) ;
     }
 
     // save filtered state
@@ -163,8 +159,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
       }
 
       // save predicted state
-      if ( !upstream ) node.setPredictedStateUp( state );
-      else             node.setPredictedStateDown( state );
+      node.setPredictedStateBackward( state ) ;
 
       // filter, if there is a measuerment
       if ( node.hasMeasurement() ) {
@@ -174,14 +169,12 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 	
         // add the chisquare
         chisqreverse += node.chi2() ;
-        if ( !upstream ) node.setDeltaChi2Upstream( node.chi2() );
-        else             node.setDeltaChi2Downstream( node.chi2() ) ;
+	node.setDeltaChi2Backward( node.chi2() );
       }
       
       // save filtered state, but not for the first node. we also
       // don't smooth for the first state.
       if( irNode != rbegin ) {
-	if ( !upstream  ) node.setState( state );
 	
 	// Smoother step
 	if(m_smooth ) {
@@ -189,7 +182,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 	  if( *irNode == nodes.front() ) {
 	    node.setState( state );
 	  } else {
-	    sc = biSmooth( node, upstream );
+	    sc = biSmooth( node );
 	    if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 0 );
 	  }
 	}
@@ -211,11 +204,14 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
     NodeRange::reverse_iterator iPrevNode = rbegin;
     NodeRange::reverse_iterator ithisNode = iPrevNode;
     ++ithisNode;
+    updateResidual(dynamic_cast<FitNode&>(**iPrevNode)) ;
     while ( iPrevNode != rend && ithisNode != rend ) {
       FitNode& prevNode = dynamic_cast<FitNode&>(**iPrevNode);
       FitNode& thisNode = dynamic_cast<FitNode&>(**ithisNode);
       // Smoother step
-      sc = smooth( thisNode, prevNode, upstream );
+      sc = smooth( thisNode, prevNode ); 
+      // Whatever the logic before, make sure the residual matches the state
+      updateResidual(thisNode) ;
       if ( sc.isFailure() ) return Warning( "Fit failure: unable to smooth node!", StatusCode::FAILURE, 0 );
       ++ithisNode;
       ++iPrevNode;
@@ -242,7 +238,6 @@ StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID )
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
   
   TrackSymMatrix seedCov = nodes.front()->state().covariance() ;
-  bool upstream = nodes.front()->z() > nodes.back()->z() ;
   
   // First locate the first and last node that actually have information
   NodeContainer::iterator firstMeasurementNode = nodes.begin() ;
@@ -274,10 +269,10 @@ StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID )
       sc = predictReverseFit( *prevNode, *node, state );
       if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
       node->setState(state) ;
-      if ( !upstream ) node->setPredictedStateUp( state );
-      else             node->setPredictedStateDown( state );
-      node->setDeltaChi2Upstream(0);
-      node->setDeltaChi2Downstream(0);
+      node->setPredictedStateForward( LHCb::State() );
+      node->setPredictedStateBackward( LHCb::State() );
+      node->setDeltaChi2Forward(0);
+      node->setDeltaChi2Backward(0);
       if(node->hasMeasurement()) sc = projectReference(*node) ;
       updateResidual(*node) ;
       prevNode = node ;
@@ -291,10 +286,10 @@ StatusCode TrackKalmanFilter::fit( Track& track, LHCb::ParticleID )
       sc = predict( *node, state );
       if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
       node->setState(state) ;
-      if ( upstream ) node->setPredictedStateUp( state );
-      else            node->setPredictedStateDown( state );
-      node->setDeltaChi2Upstream(0);
-      node->setDeltaChi2Downstream(0);
+      node->setPredictedStateForward( LHCb::State() );
+      node->setPredictedStateBackward( LHCb::State() );
+      node->setDeltaChi2Forward(0);
+      node->setDeltaChi2Backward(0);
       if(node->hasMeasurement()) sc = projectReference(*node) ;
       updateResidual(*node) ;
     }
@@ -471,79 +466,74 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
 // M. Needham 9/11/99
 //----------------------------------------------------------------
 StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
-                                      const FitNode& prevNode,
-				      bool upstream ) const
+                                      const FitNode& nextNode ) const
 {
-  // Get the predicted state from the previous node
-  const TrackVector& prevNodeX = (upstream) ? 
-    prevNode.predictedStateUp().stateVector() :
-    prevNode.predictedStateDown().stateVector();
-  const TrackSymMatrix& prevNodeC = (upstream) ?
-    prevNode.predictedStateUp().covariance() :
-    prevNode.predictedStateDown().covariance();
+  // Get the predicted state from the next node
+  const TrackVector& nextNodeX    = nextNode.predictedStateForward().stateVector() ;
+  const TrackSymMatrix& nextNodeC = nextNode.predictedStateForward().covariance() ;
 
-  // invert the covariance matrix
-  TrackSymMatrix invPrevNodeC = prevNodeC;
-  if ( !Gaudi::Math::invertPosDefSymMatrix( invPrevNodeC ) )
-    return failure( "unable to invert matrix in smoother" );
+  // Get the smoothed state of the next node
+  const TrackVector& nextNodeSmoothedX = nextNode.state().stateVector();
+  const TrackSymMatrix& nextNodeSmoothedC = nextNode.state().covariance();
 
   // Get the filtered result from this node
   TrackVector& thisNodeX = thisNode.state().stateVector();
   TrackSymMatrix& thisNodeC = thisNode.state().covariance();
-
-  // Save filtered state vector
-  TrackVector oldNodeX = thisNodeX;
-
+  
   // transport
-  const TrackMatrix& F = prevNode.transportMatrix();
+  const TrackMatrix& F = nextNode.transportMatrix();
+  
+  bool nonZeroNoise = nextNode.noiseMatrix()(2,2)>0 ||nextNode.noiseMatrix()(3,3)>0||nextNode.noiseMatrix()(4,4) > 0 ;
+  if(nonZeroNoise) {
 
-  // calculate gain matrix A
-  TrackMatrix A = thisNodeC * Transpose( F ) * invPrevNodeC;
+    // invert the covariance matrix
+    TrackSymMatrix invNextNodeC = nextNodeC;
+    if ( !Gaudi::Math::invertPosDefSymMatrix( invNextNodeC ) ) 
+      return Warning("Unable to invert matrix in smoother",StatusCode::FAILURE,0) ;
+    
+    // calculate gain matrix A
+    TrackMatrix A = thisNodeC * Transpose( F ) * invNextNodeC;
+    thisNode.setSmootherGainMatrix(A) ;
+    
+    // smooth covariance  matrix
+    TrackSymMatrix covUpDate = 
+      Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
+      (A ,  nextNodeSmoothedC - nextNodeC );
+    thisNodeC += covUpDate;
 
-  // Get the smoothed state of the previous node
-  const TrackVector& prevNodeSmoothedX = prevNode.state().stateVector();
-  const TrackSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
+    TrackSymMatrix dCov = nextNodeC - nextNodeSmoothedC ;
+  } else {
+    // if there is no noise, the gain matrix is just the inverse of
+    // the transport matrix
+    TrackMatrix A = F ;
+    A.Invert() ;
+    thisNode.setSmootherGainMatrix(A) ;
+    // the update of the covariance matrix becomes a lot simpler
+    thisNodeC = Similarity( A, nextNodeSmoothedC ) ;
+  }
 
-  // smooth state
-  thisNodeX += A * ( prevNodeSmoothedX - prevNodeX );
-
-  // smooth covariance  matrix
-  TrackSymMatrix covUpDate = 
-    Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-    ( A,  prevNodeSmoothedC - prevNodeC );
-  thisNodeC += covUpDate;
+  // smooth the state
+  thisNodeX += thisNode.smootherGainMatrix() * (nextNodeSmoothedX - nextNodeX );
 
   // check that the cov matrix is positive
   if ( !isPositiveMatrix(thisNodeC) ) {
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
-         << thisNode.z() << " thisNodeC = " << thisNodeC;
+         << thisNode.z() << std::endl
+	 << " thisNodeC = " << thisNodeC << std::endl
+	 << " noise = " << nextNode.noiseMatrix() << std::endl ;
     Warning("Problems in smoothing",StatusCode::FAILURE,0).ignore();
     return failure( mess.str() );
-  }
-
-  // Only update residuals for node with measurement
-  if ( thisNode.hasMeasurement() ) {
-    // update = smooth the residuals
-    const TrackProjectionMatrix& H = thisNode.projectionMatrix();
-    const double res = thisNode.residual() - Vector1(H*(thisNodeX - oldNodeX ))(0) ;
-    thisNode.setResidual( res );
-    const double errRes2 = thisNode.errResidual2() - 
-      Matrix1x1(Similarity( H, covUpDate ))(0,0);
-    if ( errRes2 < 0.) {
-      return Warning( "Negative residual error in smoother!", StatusCode::SUCCESS, 0 );
-    }
-    thisNode.setErrResidual( sqrt(errRes2) );
   }
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode, bool /*upstream*/ ) const
+StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
 {
   // Get the predicted state from the reverse fit
-  const TrackVector& predRevX = thisNode.predictedStateDown().stateVector();
-  const TrackSymMatrix& predRevC = thisNode.predictedStateDown().covariance();
+  const TrackVector& predRevX = thisNode.predictedStateBackward().stateVector();
+  const TrackSymMatrix& predRevC = thisNode.predictedStateBackward().covariance();
   // Get the filtered state from the forward fit
   const TrackVector& filtStateX = thisNode.state().stateVector();
   const TrackSymMatrix& filtStateC = thisNode.state().covariance();
@@ -613,8 +603,6 @@ void TrackKalmanFilter::updateResidual(FitNode& node) const
     double R = V + sign * HCH;
     if ( !(R>0) ) {
       Warning( "Non-positive variance for residual", StatusCode::SUCCESS, 0 ).ignore();
-      debug() << "Non-positive variance for residual: "
-	      << node.measurement().type() << " " << V << " " << HCH << endmsg;
       node.setErrResidual(0);
     } else {
       node.setErrResidual( std::sqrt( R ) ) ;
