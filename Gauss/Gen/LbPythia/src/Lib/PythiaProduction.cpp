@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.8 2008-07-10 18:28:08 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.9 2008-07-24 22:19:59 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -15,6 +15,8 @@
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Event
 #include "Event/GenCollision.h"
@@ -84,7 +86,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_had_mstu_2 ( 0 ) , 
     // list of particles to be printed using PyList(12) 
     m_pdtlist    (   ) , 
-    m_widthLimit ( 1.5e-6 * GeV ) 
+    m_widthLimit ( 1.5e-6 * Gaudi::Units::GeV ) 
   /// boolean flag to force the valiadation of IO_HEPEVT 
   , m_validate_HEPEVT ( false ) // force the valiadation of IO_HEPEVT 
   /// the file to dump the HEPEVT inconsistencies 
@@ -96,7 +98,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
   declareProperty( "PygiveCommands" , m_pygive  ) ;
   declareProperty( "PDTList"        , m_pdtlist ) ;
   declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
-  declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * GeV ) ;
+  declareProperty( "WidthLimit" , m_widthLimit = 1.5e-6 * Gaudi::Units::GeV ) ;
   declareProperty( "SLHADecayFile" , m_slhaDecayFile = "empty" ) ;
 
   declareProperty 
@@ -231,8 +233,12 @@ StatusCode PythiaProduction::initializeGenerator( ) {
     Gaudi::XYZVector pBeam1 , pBeam2 ;
     m_beamTool -> getMeanBeams( pBeam1 , pBeam2 ) ;
     // Pythia Units are GeV
-    Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() /GeV ,
-                     pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() /GeV ) ;
+    Pythia::SetBeam( pBeam1.X() / Gaudi::Units::GeV , 
+                     pBeam1.Y() / Gaudi::Units::GeV , 
+                     pBeam1.Z() / Gaudi::Units::GeV ,
+                     pBeam2.X() / Gaudi::Units::GeV , 
+                     pBeam2.Y() / Gaudi::Units::GeV , 
+                     pBeam2.Z() / Gaudi::Units::GeV ) ;
 
     Pythia::pypars().mstp( 171 ) = 1 ;  // new energy given for each event 
     Pythia::pypars().mstp( 172 ) = 1 ;  // event generated at requested energy
@@ -332,8 +338,12 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
     Gaudi::XYZVector pBeam1 , pBeam2 ;
     m_beamTool -> getBeams( pBeam1 , pBeam2 ) ;
     // PYTHIA Units are GeV
-    Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() / GeV ,
-                     pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() / GeV ) ;
+    Pythia::SetBeam( pBeam1.X() / Gaudi::Units::GeV ,
+                     pBeam1.Y() / Gaudi::Units::GeV , 
+                     pBeam1.Z() / Gaudi::Units::GeV ,
+                     pBeam2.X() / Gaudi::Units::GeV , 
+                     pBeam2.Y() / Gaudi::Units::GeV , 
+                     pBeam2.Z() / Gaudi::Units::GeV ) ;
   }
   
   // Generate Event
@@ -379,32 +389,34 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
     int kc = Pythia::PyComp( pythiaId ) ;
     if ( kc > 0 ) {
       if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
-      else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) ;
+      else pwidth = ( Gaudi::Units::hbarc / 
+                      ( thePP -> lifetime() * Gaudi::Units::c_light ) ) ;
       //      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
       if ( pwidth < m_widthLimit ) pwidth = 0. ;
 
-      lifetime =  thePP -> lifetime() * c_light ;
-      if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
+      lifetime =  thePP -> lifetime() * Gaudi::Units::c_light ;
+      if ( ( lifetime <= 1.e-4 * Gaudi::Units::mm ) || 
+           ( lifetime >= 1.e16 * Gaudi::Units::mm ) ) 
         lifetime = 0. ;
       
       verbose() << "Change particle property of KC = " << kc 
                 << " (" << pythiaId << ")" << endmsg ;
       verbose() << "Mass (GeV) from " << Pythia::pydat2().pmas( kc , 1 ) 
-                << " to " << thePP -> mass() / GeV << endmsg ;
+                << " to " << thePP -> mass() / Gaudi::Units::GeV << endmsg ;
       verbose() << "Width (GeV) from " << Pythia::pydat2().pmas( kc , 2 ) 
-                << " to " << pwidth / GeV << endmsg ;
+                << " to " << pwidth / Gaudi::Units::GeV << endmsg ;
       verbose() << "MaxWidth (GeV) from " << Pythia::pydat2().pmas( kc , 3 ) 
-                << " to " << thePP -> maxWidth() / GeV << endmsg ;
+                << " to " << thePP -> maxWidth() / Gaudi::Units::GeV << endmsg ;
       verbose() << "Lifetime from " << Pythia::pydat2().pmas( kc , 4 ) 
-                << " to " << lifetime / mm << endmsg ;
+                << " to " << lifetime / Gaudi::Units::mm << endmsg ;
       
-      Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / GeV ;
+      Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / Gaudi::Units::GeV ;
       // For Higgs, top, Z and W: update only masses
       if ( ( 6 != pythiaId ) && ( 23 != pythiaId ) && ( 24 != pythiaId ) 
            && ( 25 != pythiaId ) ) {
-        Pythia::pydat2().pmas( kc , 2 ) = pwidth / GeV ;
-        Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / GeV ;
-        Pythia::pydat2().pmas( kc , 4 ) = lifetime / mm ;
+        Pythia::pydat2().pmas( kc , 2 ) = pwidth / Gaudi::Units::GeV ;
+        Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / Gaudi::Units::GeV ;
+        Pythia::pydat2().pmas( kc , 4 ) = lifetime / Gaudi::Units::mm ;
       }
     }
   }
@@ -925,15 +937,21 @@ StatusCode PythiaProduction::toHepMC
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) 
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+    (*p) -> 
+      set_momentum(
+HepMC::FourVector( (*p) -> momentum().px() * Gaudi::Units::GeV ,
+                   (*p) -> momentum().py() * Gaudi::Units::GeV , 
+                   (*p) -> momentum().pz() * Gaudi::Units::GeV , 
+                   (*p) -> momentum().e() * Gaudi::Units::GeV ) ) ;
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
+    HepMC::FourVector newPos ;
     newPos.setX( (*v) -> position() . x() ) ;
     newPos.setY( (*v) -> position() . y() ) ;
     newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    newPos.setT( ( (*v) -> position() . t() * Gaudi::Units::mm ) 
+                 / Gaudi::Units::c_light ) ;
     
     (*v) -> set_position( newPos ) ;
   }

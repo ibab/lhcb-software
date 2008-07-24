@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Patrick Robbe
+ - Move to HEPMC2
+
 !========================= LbPythia v7r4 2008-07-18 ==========================
 ! 2008-07-11 - Patrick Robbe
  - options/Pythia64.opts: add COM charmonium processes

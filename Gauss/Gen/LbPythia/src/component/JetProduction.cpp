@@ -1,4 +1,4 @@
-// $Id: JetProduction.cpp,v 1.2 2007-10-10 14:37:55 gcorti Exp $
+// $Id: JetProduction.cpp,v 1.3 2008-07-24 22:19:59 robbep Exp $
 // Include files 
 
 // local
@@ -8,6 +8,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Event
 #include "Event/GenCollision.h"
@@ -84,10 +85,10 @@ JetProduction::JetProduction( const std::string& type,
   declareProperty( "ParticlesSigma" , m_particlessigma = 0.01 );
   declareProperty( "Particles" , m_particles );
   declareProperty( "ParticlesMode" , m_particlesgenmode = GenMode::FlatMode );
-  declareProperty( "EnergyMin" , m_energymin = 10.*GeV );
-  declareProperty( "EnergyMax" , m_energymax = 50.*GeV );
-  declareProperty( "EnergyMean" , m_energymean = 20.*GeV );
-  declareProperty( "EnergySigma" , m_energysigma = 5.*GeV );
+  declareProperty( "EnergyMin" , m_energymin = 10.*Gaudi::Units::GeV );
+  declareProperty( "EnergyMax" , m_energymax = 50.*Gaudi::Units::GeV );
+  declareProperty( "EnergyMean" , m_energymean = 20.*Gaudi::Units::GeV );
+  declareProperty( "EnergySigma" , m_energysigma = 5.*Gaudi::Units::GeV );
   declareProperty( "Energy" , m_energy );
   declareProperty( "EnergyMode" , m_energygenmode = GenMode::FlatMode );
   declareProperty( "ThetaMin" , m_thetamin = 0.015 );
@@ -381,7 +382,7 @@ StatusCode JetProduction::generateEvent( HepMC::GenEvent * theEvent ,
               << " will be added to the pyjets commonblock and processed, energy [MeV]: "
               << m_energy.at(i) << " MeV, theta: " << m_theta.at(i) << " [rad], phi: "
               << m_phi.at(i) << " [rad]" << endmsg;
-    Pythia::PyAddp(m_index,m_particles.at(i),m_energy.at(i)/GeV,
+    Pythia::PyAddp(m_index,m_particles.at(i),m_energy.at(i)/Gaudi::Units::GeV,
                    m_theta.at(i),m_phi.at(i)) ;      
     m_index--;
   }
@@ -437,31 +438,31 @@ void JetProduction::updateParticleProperties( const ParticleProperty *
     int kc = Pythia::PyComp( pythiaId ) ;
     if ( kc > 0 ) {
       if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
-      else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) ;
-      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+      else pwidth = ( Gaudi::Units::hbarc / ( thePP -> lifetime() * Gaudi::Units::c_light ) ) ;
+      if ( pwidth < ( 1.5e-6 * Gaudi::Units::GeV ) ) pwidth = 0. ;
 
-      lifetime =  thePP -> lifetime() * c_light ;
-      if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
+      lifetime =  thePP -> lifetime() * Gaudi::Units::c_light ;
+      if ( ( lifetime <= 1.e-4 * Gaudi::Units::mm ) || ( lifetime >= 1.e16 * Gaudi::Units::mm ) ) 
         lifetime = 0. ;
       
       verbose() << "Change particle property of KC = " << kc 
                 << " (" << pythiaId << ")" << endmsg ;
       verbose() << "Mass (GeV) from " << Pythia::pydat2().pmas( kc , 1 ) 
-                << " to " << thePP -> mass() / GeV << endmsg ;
+                << " to " << thePP -> mass() / Gaudi::Units::GeV << endmsg ;
       verbose() << "Width (GeV) from " << Pythia::pydat2().pmas( kc , 2 ) 
-                << " to " << pwidth / GeV << endmsg ;
+                << " to " << pwidth / Gaudi::Units::GeV << endmsg ;
       verbose() << "MaxWidth (GeV) from " << Pythia::pydat2().pmas( kc , 3 ) 
-                << " to " << thePP -> maxWidth() / GeV << endmsg ;
+                << " to " << thePP -> maxWidth() / Gaudi::Units::GeV << endmsg ;
       verbose() << "Lifetime from " << Pythia::pydat2().pmas( kc , 4 ) 
-                << " to " << lifetime / mm << endmsg ;
+                << " to " << lifetime / Gaudi::Units::mm << endmsg ;
       
-      Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / GeV ;
+      Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / Gaudi::Units::GeV ;
       // For Higgs, top, Z and W: update only masses
       if ( ( 6 != pythiaId ) && ( 23 != pythiaId ) && ( 24 != pythiaId ) 
            && ( 25 != pythiaId ) ) {
-        Pythia::pydat2().pmas( kc , 2 ) = pwidth / GeV ;
-        Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / GeV ;
-        Pythia::pydat2().pmas( kc , 4 ) = lifetime / mm ;
+        Pythia::pydat2().pmas( kc , 2 ) = pwidth / Gaudi::Units::GeV ;
+        Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / Gaudi::Units::GeV ;
+        Pythia::pydat2().pmas( kc , 4 ) = lifetime / Gaudi::Units::mm ;
       }
     }
   }
@@ -957,15 +958,21 @@ StatusCode JetProduction::toHepMC
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
         p != theEvent -> particles_end() ; ++p ) 
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
+
+    (*p)->set_momentum(
+          HepMC::FourVector( (*p) -> momentum().px() * Gaudi::Units::GeV ,
+                             (*p) -> momentum().py() * Gaudi::Units::GeV , 
+                             (*p) -> momentum().pz() * Gaudi::Units::GeV , 
+                             (*p) -> momentum().e() * Gaudi::Units::GeV ) ) ;
+  
   
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
+    HepMC::FourVector newPos ;
     newPos.setX( (*v) -> position() . x() ) ;
     newPos.setY( (*v) -> position() . y() ) ;
     newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    newPos.setT( ( (*v) -> position() . t() * Gaudi::Units::mm ) / Gaudi::Units::c_light ) ;
     
     (*v) -> set_position( newPos ) ;
   }
