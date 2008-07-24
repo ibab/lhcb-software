@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-07-24 - Wouter Hulsbergen
+ - adapted to change in FitNode
+ - use new matrix inversion
+
 ! 2008-07-19 - Marco Cattaneo
  - Fix compilation warning in TrackPtKick.cpp
  - Adapt tools to use new ILHCbMagnetSvc interface where needed
