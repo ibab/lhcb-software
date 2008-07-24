@@ -3,114 +3,67 @@
  *  Hlt exclusive selections shared particles for 
  *   2 body combinations	
  *  
+ *  file for optimization selection
+ *	
  *  @author S.Furcas
  *  @date 2008-05-16
  */
 
 
 Hlt2Selections.Members += { "GaudiSequencer/Hlt2SeqSelBmake" };
-
 Hlt2SeqSelBmake.Members += { "DeterministicPrescaler/PrescaleHltSel2Body" } ;
-
 Hlt2SeqSelBmake.Members += {"FilterDesktop/Hlt2Tight2Body","Fidel/HltSel2Body"};
 
 
-Hlt2Tight2Body.PhysDesktop.InputLocations  = 
-{"Phys/HltSharedDiMuon","Phys/HltForwardMuons","Phys/HltNoPIDsPions","Phys/HltNoPIDsKaons","Phys/HltSharedPhi2KK","Phys/HltSharedDs2KKPi","Phys/HltSharedD02KPi","Phys/HltSharedKstar2KPi","Phys/HltSharedKsLL","Phys/HltSharedDstarWithD02KPi","Phys/HltSharedDplus2KPiPi","Phys/HltSharedKstarPlus","Phys/HltSharedLambda0"}; 
-
-
-/*  
-//Old options 
-Hlt2Tight2Body.Filter.Selections = { "J/psi(1S) : MassFilterCriterion/massJpsi,
-                                  VtxFilterCriterion/VtxJpsi,
-                                  FlightDistanceFilterCriterion/FsJpsi,
- 	   				                     KinFilterCriterion/KinJpsi",
-                               "phi(1020) : MassFilterCriterion/massPhi,
-                                 FlightDistanceFilterCriterion/FsPhi,
-	   				                     KinFilterCriterion/KinPhi",
-                               "KS0 : MassFilterCriterion/massKS,
-                                 FlightDistanceFilterCriterion/FsKS,
-                                 KinFilterCriterion/KinKS",
-                               "K*(892)0 : MassFilterCriterion/massKstar,
-                                 PVIPFilterCriterion/PVIPKstar,
-                                 FlightDistanceFilterCriterion/FsKstar,
-                                 KinFilterCriterion/KinKstar",
-                               "D_s- : MassFilterCriterion/massDs, 
-                                 PVIPFilterCriterion/IpsDs,
-                                 FlightDistanceFilterCriterion/FsDs,
-					                       KinFilterCriterion/KinDs",
-                               "D0 : MassFilterCriterion/massD0,
-                                 FlightDistanceFilterCriterion/FsD0,
-	                               KinFilterCriterion/KinD0",
-                               "D+ : MassFilterCriterion/massD, 
-                                 FlightDistanceFilterCriterion/FsDp, 
-                                 PVIPFilterCriterion/IpsD,
-                                 KinFilterCriterion/KinD",
-                               "D*(2010)+ : KinFilterCriterion/KinDstar,
-                                 FlightDistanceFilterCriterion/FsDstar",
-                               "K- : KinFilterCriterion/KinK,
-                                  PVIPFilterCriterion/PVIPK",
-                               "mu-: KinFilterCriterion/Kinmu,
-                                     PVIPFilterCriterion/PVIPmu",
-                               "pi-: KinFilterCriterion/KinPi,
-                                  PVIPFilterCriterion/PVIPPi"
-};
-Hlt2Tight2Body.Filter.KinK.MinPt = 2000.;
-Hlt2Tight2Body.Filter.Kinmu.MinPt = 2000.;
-Hlt2Tight2Body.Filter.KinPi.MinPt = 2000.;
-Hlt2Tight2Body.Filter.PVIPK.MinIPsignif = 3.;
-Hlt2Tight2Body.Filter.PVIPmu.MinIPsignif = 3.;
-Hlt2Tight2Body.Filter.PVIPPi.MinIPsignif = 3.;
-Hlt2Tight2Body.Filter.massJpsi.Window = 100. * MeV;
-Hlt2Tight2Body.Filter.VtxJpsi.MaxChi2 = 25;
-Hlt2Tight2Body.Filter.KinJpsi.MinPt = 1000. * MeV;
-//Hlt2Tight2Body.Filter.FsJpsi.MinFsPV = 0.;
-Hlt2Tight2Body.Filter.massPhi.Window = 30. * MeV;
-Hlt2Tight2Body.Filter.KinPhi.MinPt = 1000. * MeV;
-//Hlt2Tight2Body.Filter.FsPhi.MinFsPV = 0.;
-Hlt2Tight2Body.Filter.massKstar.Window = 100. * MeV;
-Hlt2Tight2Body.Filter.KinKstar.MinPt = 2500. * MeV;
-//Hlt2Tight2Body.Filter.FsKstar.MinFsPV = 0.;
-Hlt2Tight2Body.Filter.massDs.Window = 30. * MeV;
-Hlt2Tight2Body.Filter.IpsDs.MinIPsignif = 10.;
-//Hlt2Tight2Body.Filter.FsDs.MinFsPV = 3.;
-//Hlt2Tight2Body.Filter.FsDs.MaxFsPV = 100;
-Hlt2Tight2Body.Filter.KinDs.MinPt = 2500. * MeV;
-Hlt2Tight2Body.Filter.massD0.Window = 35. * MeV;
-Hlt2Tight2Body.Filter.KinD0.MinPt = 2500. * MeV;
-//Hlt2Tight2Body.Filter.FsD0.MinFsPV = 3.;
-Hlt2Tight2Body.Filter.massKS.Window = 50. * MeV;
-Hlt2Tight2Body.Filter.KinKS.MinPt = 1000. * MeV;
-//Hlt2Tight2Body.Filter.FsKS.MinFsPV = 3.;
-Hlt2Tight2Body.Filter.KinDstar.MinPt = 2500. * MeV;
-//Hlt2Tight2Body.Filter.FsDstar.MinFsPV = 0.;
-Hlt2Tight2Body.Filter.KinD.MinPt = 2500. * MeV;
-Hlt2Tight2Body.Filter.massD.Window = 30. * MeV;
-Hlt2Tight2Body.Filter.IpsD.MinIPsignif = 10.;
-//Hlt2Tight2Body.Filter.FsDp.MinFsPV = 3.;
-*/
-
+Hlt2Tight2Body.PhysDesktop.InputLocations  =  { "Phys/HltMuons",
+                                                       "Phys/HltNoPIDsPions",
+                                                       "Phys/HltNoPIDsKaons",
+                                                       "Phys/HltSharedDiMuon",
+                                                       "Phys/HltSharedPhi2KK",
+                                                       "Phys/HltSharedDs2KKPi",
+                                                       "Phys/HltSharedD02KPi",
+                                                       "Phys/HltSharedKstar2KPi",
+                                                       "Phys/HltSharedKsLL",
+                                                       "Phys/HltSharedDstarWithD02KPi",
+                                                       "Phys/HltSharedDplus2KPiPi",
+                                                       "Phys/HltSharedKstarPlus",
+                                                       "Phys/HltSharedLambda0"}; 
 
 Hlt2Tight2Body.FilterCriterion = "LoKi::Hybrid::FilterCriterion" ;
 
-Hlt2Tight2Body.Filter.Code ="((ABSID =='mu+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) | ((ABSID =='K+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) | ((ABSID =='pi+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) | ((ADMASS('J/psi(1S)')<100)& (PT>1*GeV) & (BPVVDCHI2>0)) | ((ADMASS('phi(1020)')<30)& (PT>1*GeV)&(BPVVDCHI2>0)) | ((ADMASS('K*(892)0')<100)& (PT>2.5*GeV) &(BPVVDCHI2>0) ) | ((ADMASS('D_s+')<30)& (PT>2.5*GeV) & (MIPCHI2DV(PRIMARY)>100) & (BPVVDCHI2>9)&(BPVVDCHI2<100)) | ((ADMASS('D0')<35)& (PT>2.5*GeV)&(BPVVDCHI2>9)) | ((ADMASS('KS0')<50)& (PT>1*GeV)&(BPVVDCHI2>9)) | ((ABSID =='D*(2010)+') & (PT>2.5*GeV)&(BPVVDCHI2>0)) | ((ADMASS('D+')<30)& (PT>2.5*GeV) & (MIPCHI2DV(PRIMARY)>100)&(BPVVDCHI2>9))";
 
+Hlt2Tight2Body.Filter.Code ="((ABSID =='mu+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) |        
+                             ((ABSID =='K+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) | 
+                             ((ABSID =='pi+') & (PT>2*GeV) & (MIPCHI2DV(PRIMARY)>9)) | 
+                             ((ABSID =='J/psi(1S)') & (ADMASS('J/psi(1S)')<100*MeV)& (PT>1*GeV) ) |                
+                             ((ABSID =='phi(1020)') & (ADMASS('phi(1020)')<30*MeV)& (PT>1*GeV)) |              
+                             ((ABSID =='K*(892)0') & (ADMASS('K*(892)0')<100*MeV)& (PT>2.5*GeV)) |                 
+                             ((ABSID =='D_s+') & (ADMASS('D_s+')<30*MeV)& (PT>2.5*GeV) & (MIPCHI2DV(PRIMARY)>20) )|
+                             ((ABSID =='D0') & (ADMASS('D0')<35*MeV) & (PT>2.5*GeV) ) |                
+                             ((ABSID =='KS0') & (ADMASS('KS0')<50*MeV) & (PT>1.0*GeV)) |               
+                             ((ABSID =='D*(2010)+') & (PT>2.5*GeV)) |                
+                             ((ABSID =='D+') & (ADMASS('D+')<30*MeV) & (PT>2.5*GeV) & (MIPCHI2DV(PRIMARY)>20))";                                         
 
 
 //****** Fidel selection ****//
 HltSel2Body.PhysDesktop.InputLocations  = {"Phys/Hlt2Tight2Body"};
-HltSel2Body.VertexFitters += { "" : "TrgVertexFitter" };
 HltSel2Body.pid = 511;
 HltSel2Body.maxChi2 = 40;
 HltSel2Body.minMass = 5000.0;
 HltSel2Body.maxMass = 7000.0;
 HltSel2Body.maxPointing = 0.01;
-HltSel2Body.maxIps = 5;
+HltSel2Body.maxIpchi2 = 5;
 HltSel2Body.minProb = 0.1;
-HltSel2Body.minPt = 5000.;
+HltSel2Body.minPt = 3000.;
 HltSel2Body.minCts = 6.5;
-HltSel2Body.minFsB1 = -2.;
-HltSel2Body.minFsB2 = -2.;
+HltSel2Body.minFsB1Res = -1.;
+HltSel2Body.minFsB2Res = -1.;
+HltSel2Body.minFsB1ch = 0.;
+HltSel2Body.minFsB2ch = 0.;
+HltSel2Body.minFsB1KS0 = 10.;
+HltSel2Body.minFsB2KS0 = 10.;
+HltSel2Body.minChFs = 9.;
+HltSel2Body.minFs = 0.;
 HltSel2Body.minQ = -1;
 HltSel2Body.maxQ = 1;
 HltSel2Body.minB    = 0;
@@ -123,6 +76,4 @@ HltSel2Body.checkL = true;
 HltSel2Body.cc     = true;
 HltSel2Body.basicparticle = false;
 HltSel2Body.OutputLevel = 3;
-
-
 

@@ -1,5 +1,5 @@
-// $Id: Fidel.h,v 1.6 2008-07-14 19:57:33 sfurcas Exp $
-// $Id: Fidel.h,v 1.6 2008-07-14 19:57:33 sfurcas Exp $
+// $Id: Fidel.h,v 1.7 2008-07-24 10:11:34 sfurcas Exp $
+// $Id: Fidel.h,v 1.7 2008-07-24 10:11:34 sfurcas Exp $
 #ifndef FIDEL_H 
 #define FIDEL_H 1
 
@@ -7,8 +7,7 @@
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
 
-//#include "Kernel/Particle2MCLinker.h"
-class IGeomDispCalculator ;
+//class IGeomDispCalculator ;
 
 /** @class Fidel Fidel.h
  *  
@@ -39,7 +38,6 @@ private:
   double     m_maxPointing;
   double     m_maxChi2;
   bool       m_basicparticle;
-  //double     m_maxIps;
   double     m_maxIpchi2;
   bool       m_checkQ;
   int        m_minQ; 
@@ -55,11 +53,17 @@ private:
   double     m_minCts;  
   bool       m_muonReq;
   double     m_minProb;
-  double     m_minFsB1;
-  double     m_minFsB2;
+  double     m_minFsB1Res;
+  double     m_minFsB2Res;  
+  double     m_minFsB1ch;
+  double     m_minFsB2ch;
+  double     m_minFsB1KS0;
+  double     m_minFsB2KS0;
+  double     m_minFs;  
+  double     m_minChFs;
   
-  
-  IGeomDispCalculator* m_geomDispCalculator ; /// @todo replace
+
+  //IGeomDispCalculator* m_geomDispCalculator ; /// @todo replace
   
   
   

@@ -1,9 +1,8 @@
-// $Id: Fidel.cpp,v 1.7 2008-07-14 19:57:33 sfurcas Exp $ // Include files
+// $Id: Fidel.cpp,v 1.8 2008-07-24 10:11:34 sfurcas Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "Kernel/IDistanceCalculator.h"
-#include "Kernel/IGeomDispCalculator.h"
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "gsl/gsl_cdf.h"
@@ -32,22 +31,25 @@ Fidel::Fidel( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
   
 {
-  declareProperty("minMass", m_minMass = 4000); 
-  declareProperty("maxMass", m_maxMass = 7000);  
-  declareProperty("minPt",   m_minPt = -999);
-  declareProperty("minP",    m_minP = -999);
-  declareProperty("maxChi2", m_maxChi2 = -999);
+  declareProperty("minMass",   m_minMass = 4000); 
+  declareProperty("maxMass",   m_maxMass = 7000);  
+  declareProperty("minPt",     m_minPt = -999);
+  declareProperty("minP",      m_minP = -999);
+  declareProperty("maxChi2",   m_maxChi2 = -999);
   declareProperty("maxPointing",m_maxPointing = -999);  
-  declareProperty("pid",m_pid = 511);
-  //declareProperty("maxIps",m_maxIps = -999);
-  declareProperty("maxIpchi2",m_maxIpchi2 = -999);
-  declareProperty("minCts",m_minCts = -999);  
-  declareProperty("minProb",m_minProb = -999);
-  declareProperty("minFsB1",m_minFsB1 = -999);
-  declareProperty("minFsB2",m_minFsB2 = -999);
-
-
-
+  declareProperty("pid",       m_pid = 511);
+  declareProperty("maxIpchi2", m_maxIpchi2 = -999);
+  declareProperty("minCts",    m_minCts = -999);  
+  declareProperty("minProb",   m_minProb = -999);
+  declareProperty("minFsB1Res",m_minFsB1Res = -999);
+  declareProperty("minFsB2Res",m_minFsB2Res = -999);
+  declareProperty("minFsB1ch", m_minFsB1ch = -999);
+  declareProperty("minFsB2ch", m_minFsB2ch = -999);
+  declareProperty("minFsB1KS0",m_minFsB1KS0 = -999);
+  declareProperty("minFsB2KS0",m_minFsB2KS0 = -999);
+  declareProperty("minFs",     m_minFs=-999);
+  declareProperty("minChFs",   m_minChFs=-999);
+ 
   declareProperty("inputParticles",m_inputParticles = 1000);
   declareProperty("basicparticle",m_basicparticle = false);
   declareProperty("checkQ",m_checkQ = true );
@@ -83,8 +85,6 @@ StatusCode Fidel::initialize() {
   debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
   debug()<<"pointing "<<m_maxPointing<<" rad"<<endmsg;
   
-  /// @todo replce with IDistanceCalculator (from DVAlgorithm)
-  m_geomDispCalculator = tool<IGeomDispCalculator>("GeomDispCalculator",this );
   
   return StatusCode::SUCCESS;
 }
@@ -113,15 +113,15 @@ StatusCode Fidel::execute() {
 
   Gaudi::LorentzVector Cand1Cand2Comb;
 
-  //double ips=0;
-  double impCand=0;//double iperr=0;
+  double impCand=0;
   double ipchi2=0;
   double dist_B=0; double errdist_B=0; double fs_B=0;
   double distB1=-9; double errdistB1=-9;double FsB1=-999;
   double distB2=-9; double errdistB2=-9;double FsB2=-999;
   double angleP=0;
   double Pchi2=0;
-  
+  double dist1,errdist1,fs1;
+  double dist2,errdist2,fs2;
   
   LHCb::Vertex BCandVertex; 
 
@@ -191,22 +191,29 @@ StatusCode Fidel::execute() {
       const LHCb::Particle *myBCand = BCand.clone();
       const LHCb::VertexBase *BVtx = BCand.endVertex();
       
-      StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);  
-      //StatusCode sc = m_geomDispCalculator->calcImpactPar(BCand,*bestPV,impCand,iperr);
+      StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);
       
       //flight distance Projected B
       StatusCode sc_B = distanceCalculator()->projectedDistance(myBCand,bestPV,dist_B,errdist_B);
-      //StatusCode sc_B = m_geomDispCalculator->calcProjectedFlightDistance(*bestPV,BCand,dist_B,errdist_B);
       fs_B = dist_B / errdist_B;
       
+      //flight distance Projected PV - Res 1
+      StatusCode scfs1 = distanceCalculator()->projectedDistance((*ip1),bestPV,dist1,errdist1);
+      //flight distance Projected PV - Res 2
+      StatusCode scfs2 = distanceCalculator()->projectedDistance((*ip2),bestPV,dist2,errdist2);
+      if(scfs1)fs1 = dist1/errdist1;
+      else{
+        fs1=-999; 
+      }
+      if(scfs2)fs2 = dist2/errdist2;
+      else{
+        fs2=-999; 
+      }
+
       //flight distance Projected B - Res 1
       StatusCode scB1 = distanceCalculator()->projectedDistance((*ip1),BVtx,distB1,errdistB1);
-      //StatusCode scB1 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip1),distB1,errdistB1);
-
       //flight distance Projected B - Res 2
-      StatusCode scB2 = distanceCalculator()->projectedDistance((*ip2),BVtx,distB2,errdistB2);
-      //StatusCode scB2 = m_geomDispCalculator->calcProjectedFlightDistance(BCandVertex,*(*ip2),distB2,errdistB2);
-      
+      StatusCode scB2 = distanceCalculator()->projectedDistance((*ip2),BVtx,distB2,errdistB2);      
 
       if(scB1)FsB1 = distB1/errdistB1;
       else{
@@ -226,7 +233,9 @@ StatusCode Fidel::execute() {
       if(cosangle>0){
         angleP = acos(cosangle);//angle in rad
       }
-
+      //pointing>0
+      if(angleP<0)continue;
+      
       //--------------------//
       //  chi2Probability   //
       //--------------------//      
@@ -235,15 +244,31 @@ StatusCode Fidel::execute() {
       //============================================//
       //  Latest cuts and save  the B candidate     //
       //============================================//
-      //if(m_maxIps>0.0 && ips>m_maxIps)continue;
       if(m_maxIpchi2>0.0 && ipchi2>m_maxIpchi2)continue;
       if(m_maxChi2>0.0 && BCandVertex.chi2()>m_maxChi2)continue;
-      if(m_maxPointing>0.0 && angleP>m_maxPointing && angleP>0.0)continue;      
+      if(m_maxPointing>0.0 && angleP>m_maxPointing)continue;      
       if(m_minCts>-999.0 && fs_B<m_minCts)continue;
       if(m_minProb>-999.0 && Pchi2<m_minProb)continue;
+      
+      if((abs(id1.pid())==411 || abs(id1.pid())==431 || abs(id1.pid())==421) && fs1>-999 && fs1<m_minChFs)continue;
+      else if (fs1>-999 && fs1<m_minFs)continue;
+      
+      if((abs(id2.pid())==411 || abs(id2.pid())==431 || abs(id2.pid())==421) && fs2>-999 && fs2<m_minChFs)continue;
+      else if (fs2>-999 && fs2<m_minFs)continue;
+      
+      //cuts particle 1
+      if((abs(id1.pid())==443 || abs(id1.pid())==333 || abs(id1.pid())==313 || abs(id1.pid())==413) &&
+         FsB1>-999 && FsB1<m_minFsB1Res)continue;
+      else if((abs(id1.pid())==411 || abs(id1.pid())==431 || abs(id1.pid())==421) && FsB1>-999 && FsB1<m_minFsB1ch)continue;
+      else if(abs(id1.pid())==310 && FsB1>-999 && FsB1<m_minFsB1KS0)continue;
+      
+      //cuts particle 2
+      if((abs(id2.pid())==443 || abs(id2.pid())==333 || abs(id2.pid())==313 || abs(id2.pid())==413) &&
+         FsB2>-999 && FsB2<m_minFsB2Res)continue;
+      else if((abs(id2.pid())==411 || abs(id2.pid())==431 || abs(id2.pid())==421) && FsB2>-999 && FsB2<m_minFsB2ch)continue;
+      else if(abs(id2.pid())==310 && FsB2>-999 && FsB2<m_minFsB2KS0)continue;
+ 
 
-      if(FsB1>-999 && FsB1<m_minFsB1)continue;
-      if(FsB2>-999 && FsB2<m_minFsB2)continue;
 
 
       desktop()->keep(&BCand); 
