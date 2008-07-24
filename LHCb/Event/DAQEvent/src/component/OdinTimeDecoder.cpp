@@ -1,7 +1,9 @@
-// $Id: OdinTimeDecoder.cpp,v 1.4 2008-01-08 14:20:09 cattanem Exp $
+// $Id: OdinTimeDecoder.cpp,v 1.5 2008-07-24 19:18:09 marcocle Exp $
 // Include files 
 
 // from Gaudi
+#include "GaudiKernel/Incident.h" 
+#include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/ToolFactory.h" 
 
 // data model
@@ -11,6 +13,7 @@
 
 // local
 #include "OdinTimeDecoder.h"
+#include "RunChangeIncident.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OdinTimeDecoder
@@ -28,11 +31,13 @@ DECLARE_TOOL_FACTORY( OdinTimeDecoder );
 OdinTimeDecoder::OdinTimeDecoder( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_currentRun(0)
 {
   declareProperty( "ForceRawEvent", m_forceRawEvent = false );
   declareInterface<IEventTimeDecoder>(this);
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -91,7 +96,17 @@ Gaudi::Time OdinTimeDecoder::getTime ( ) const {
 
   if (odin) {
     debug() << "GPS Time = " << odin->gpsTime() << endmsg;
-    last_time = odin->eventTime();
+    
+    // Check the run number in ODIN
+    if (m_currentRun != odin->runNumber()) {
+      debug() << "Firing " << IncidentType::RunChange << " incident. Old run="
+              << m_currentRun;
+      m_currentRun = odin->runNumber();
+      debug() << ", new run=" << m_currentRun << endmsg;
+      incSvc()->fireIncident(Incident(name(),IncidentType::RunChange));
+    }
+    
+    last_time = odin->eventTime();    
   }
   
   return last_time;

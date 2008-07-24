@@ -1,4 +1,4 @@
-// $Id: OdinTimeDecoder.h,v 1.4 2008-07-21 14:50:55 cattanem Exp $
+// $Id: OdinTimeDecoder.h,v 1.5 2008-07-24 19:18:09 marcocle Exp $
 #ifndef ODINTIMEDECODER_H 
 #define ODINTIMEDECODER_H 1
 
@@ -9,6 +9,7 @@
 
 // forward declarations
 class IDataProviderSvc;
+class IIncidentSvc;
 namespace LHCb 
 {
   class ODIN;
@@ -28,7 +29,7 @@ public:
                    const IInterface* parent);
 
   virtual ~OdinTimeDecoder( ); ///< Destructor
-
+  
   // --- implementation of IEventTimeDecoder ---
   /// Get the time of the current event from the ODIN object.
   /// @return The time of current event.
@@ -44,6 +45,10 @@ private:
   /// @return Pointer to the ODIN object or NULL if bank cannot be found.
   LHCb::ODIN *decodeODIN() const;
 
+  // --- local data ---
+  /// Used to remember the run number and spot a change of run number.
+  mutable unsigned int m_currentRun;
+  
   // --- properties ---
   bool m_forceRawEvent; ///< Flag to force unconditional decoding from RawEvent
   
