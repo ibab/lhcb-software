@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.35 2008-01-29 07:58:28 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.36 2008-07-24 18:28:57 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -191,21 +191,17 @@ StatusCode DeRich2::initialize()
 
   bool needUpdate( false );
   m_sphMirAlignCond = condition( "Rich2SphMirrorAlign" );
-  if ( m_sphMirAlignCond ) {
+  if ( m_sphMirAlignCond )
+  {
     ums->registerCondition(this,m_sphMirAlignCond.path(),&DeRich2::alignSphMirrors );
     needUpdate = true;
   }
-  else
-    msg << MSG::WARNING << "Cannot load Condition Rich2SphMirrorAlign" << endmsg;
-
   m_secMirAlignCond = condition( "Rich2SecMirrorAlign" );
-  if ( m_secMirAlignCond ) {
+  if ( m_secMirAlignCond )
+  {
     ums->registerCondition(this,m_secMirAlignCond.path(),&DeRich2::alignSecMirrors );
     needUpdate = true;
   }
-  else
-    msg << MSG::WARNING << "Cannot load Condition Rich2SecMirrorAlign" << endmsg;
-
   StatusCode upsc = StatusCode::SUCCESS;
   if ( needUpdate ) upsc = ums->update(this);
 

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.30 2008-01-29 07:58:28 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.31 2008-07-24 18:28:57 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -268,22 +268,16 @@ StatusCode DeRichSphMirror::initialize()
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG<< "Reflectivity is from TabProp "
-      << m_reflectivity->tabProperty()->name() << endmsg;
-  msg << MSG::VERBOSE <<"End initialisation for DeRichSphMirror" << endmsg;
+  msg << MSG::DEBUG<< "Reflectivity is from TabProp " << m_reflectivity->tabProperty()->name() << endmsg;
+  msg << MSG::VERBOSE << m_reflectivity->tabProperty() << endmsg;
 
-  // register condition update for alignment
-  if ( Rich::Rich1 == rich )
-    updMgrSvc()->registerCondition(this, geometry(),
-                                   &DeRichSphMirror::updateGeometry );
-  else
-    updMgrSvc()->registerCondition(this, deRich2.ptr(),
-                                   &DeRichSphMirror::updateGeometry );
-
+  // update localy cashed geometry info
+  updMgrSvc()->registerCondition(this, geometry(),
+                                 &DeRichSphMirror::updateGeometry );
   StatusCode update = updMgrSvc()->update(this);
   if ( !update ) return update;
 
-  msg << MSG::DEBUG << "Completed initialize" << endmsg;
+  msg << MSG::VERBOSE << "Completed initialize" << endmsg;
   return StatusCode::SUCCESS;
 }
 

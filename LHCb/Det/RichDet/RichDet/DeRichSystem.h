@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.10 2007-12-17 12:35:26 papanest Exp $
+ *  $Id: DeRichSystem.h,v 1.11 2008-07-24 18:28:57 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -44,7 +44,6 @@ extern const CLID CLID_DERichSystem;
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   27/01/2006
  *
- * @todo Remove the hardcoded numbers in the copyNumber function
  */
 class DeRichSystem: public DetectorElement
 {
@@ -93,6 +92,18 @@ public:
    *  @return The corresponding HPD RichSmartID
    */
   const LHCb::RichSmartID richSmartID( const Rich::DAQ::Level0ID l0ID ) const;
+
+  /** Convert a RICH Copy Number into the corresponding HPD RichSmartID
+   *  @param copyNumber The HPD Copy Number
+   *  @return The corresponding HPD RichSmartID
+   */
+  const LHCb::RichSmartID richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const;
+
+  /** Convert a RICH smartID to the corresponding HPD Copy Number
+   *  @param smartID The HPD RichSmartID
+   *  @return The corresponding HPD Copy Number
+   */
+  const Rich::DAQ::HPDCopyNumber copyNumber( const LHCb::RichSmartID smartID ) const;
 
   /// Returns a list of all active HPDs identified by their RichSmartID
   const LHCb::RichSmartID::Vector & activeHPDRichSmartIDs() const;
@@ -179,9 +190,6 @@ public:
   /// Returns a list of all valid Level1 board IDs
   const Rich::DAQ::Level1IDs & level1IDs() const;
 
-  /// Return the copy number for a given smartID
-  unsigned int copyNumber( const LHCb::RichSmartID smartID ) const;
-
   /**
    * Retrieves the location of the HPD in the detector store, so it can be
    * loaded using the getDet<DeRichHPD> method.
@@ -258,6 +266,14 @@ private: // data
   /// List of all valid Level1 IDs
   Rich::DAQ::Level1IDs m_l1IDs;
 
+  /// smartID to copy number map
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDCopyNumber > SmartIDToCopyN;
+  SmartIDToCopyN m_smartid2copyNumber;
+
+  /// copy number to smartID map
+  typedef GaudiUtils::HashMap< const Rich::DAQ::HPDCopyNumber, LHCb::RichSmartID > CopyNToSmartID;
+  CopyNToSmartID m_copyNumber2smartid;
+
   /// Rich1 & Rich2 detector elements
   boost::array<DetectorElement*, Rich::NRiches> m_deRich;
 
@@ -267,17 +283,10 @@ private: // data
   /// The total number of HPDs in Rich1.
   int m_rich1NumberHpds;
 
-};
+  /// DC06 copy number compatibility
+  bool m_useOldCopyNumber;
 
-//=========================================================================
-// Return the copy number for a given smartID
-//=========================================================================
-inline unsigned int DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
-{
-  return( smartID.rich() == Rich::Rich1 ?
-          smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
-          m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
-}
+};
 
 //=========================================================================
 // activeHPDRichSmartIDs

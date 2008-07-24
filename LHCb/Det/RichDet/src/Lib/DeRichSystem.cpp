@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichSystem
  *
- * $Id: DeRichSystem.cpp,v 1.16 2008-01-10 17:30:17 papanest Exp $
+ * $Id: DeRichSystem.cpp,v 1.17 2008-07-24 18:28:57 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-01-27
@@ -76,6 +76,8 @@ StatusCode DeRichSystem::initialize ( )
   m_deRich[0] = deRich1;
   m_deRich[1] = deRich2;
 
+  m_useOldCopyNumber = ( exists("HpdQuantumEffCommonLoc") ? false : true);  //DC06 compatibility
+
   // register condition for updates
   updMgrSvc()->registerCondition(this,rich1numbers.path(),&DeRichSystem::buildHPDMappings);
   updMgrSvc()->registerCondition(this,rich2numbers.path(),&DeRichSystem::buildHPDMappings);
@@ -110,6 +112,8 @@ StatusCode DeRichSystem::buildHPDMappings()
   m_smartid2L1In.clear();
   m_hardid2L1In.clear();
   m_l0hard2soft.clear();
+  m_smartid2copyNumber.clear();
+  m_copyNumber2smartid.clear();
   m_inactiveSmartIDs.clear();
   m_inactiveHardIDs.clear();
 
@@ -152,6 +156,13 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   const CondData & l1IDs   = numbers->paramVect<int>("HPDLevel1IDs");
   // vector of HPD Level1 input numbers
   const CondData & l1Ins   = numbers->paramVect<int>("HPDLevel1InputNums");
+  // vector of HPD Copy numbers
+  // define default vector with numbers for DC06 compatibility
+  std::vector<int> defaultCopyN;
+  for (unsigned int i=rich*196; i<rich*196+nHPDs; ++i) { defaultCopyN.push_back( i ); }
+  const CondData & copyNs   = ( numbers->exists("HPDCopyNumbers") ?
+                                numbers->paramVect<int>("HPDCopyNumbers") :
+                                defaultCopyN );
   // inactive HPDs
   const CondData & inacts = numbers->paramVect<int>("InactiveHPDs");
 
@@ -160,12 +171,14 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
        nHPDs != hardIDs.size() ||
        nHPDs != l1IDs.size()   ||
        nHPDs != l0IDs.size()   ||
-       nHPDs != l1Ins.size()   )
+       nHPDs != l1Ins.size()   ||
+       nHPDs != copyNs.size()   )
   {
     msg << MSG::ERROR << "Mismatch in " << rich << " HPD numbering schemes : # HPDs = "
         << nHPDs << " # SmartIDs = " << softIDs.size() << " # HardIDs = "
         << hardIDs.size() << " # L0IDs = " << l0IDs.size() << " # L1BoardIDs = "
-        << l1IDs.size() << " # L1InputIDs = " << l1Ins.size() << endmsg;
+        << l1IDs.size() << " # L1InputIDs = " << l1Ins.size() << " # CopyNumbers = "
+        << copyNs.size() << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -173,25 +186,30 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   const int saveL1size = m_l1IDs.size();
 
   // build cached mappings
-  CondData::const_iterator iSoft = softIDs.begin();
-  CondData::const_iterator iHard = hardIDs.begin();
-  CondData::const_iterator iL1   = l1IDs.begin();
-  CondData::const_iterator iL1In = l1Ins.begin();
-  CondData::const_iterator iL0   = l0IDs.begin();
-  for ( ; iSoft != softIDs.end() &&
-          iHard != hardIDs.end() &&
-          iL0   != l0IDs.end()   &&
-          iL1   != l1IDs.end()   &&
-          iL1In != l1Ins.end()   ;
-        ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In )
+  CondData::const_iterator iSoft  = softIDs.begin();
+  CondData::const_iterator iHard  = hardIDs.begin();
+  CondData::const_iterator iL1    = l1IDs.begin();
+  CondData::const_iterator iL1In  = l1Ins.begin();
+  CondData::const_iterator iL0    = l0IDs.begin();
+  CondData::const_iterator icopyN = copyNs.begin();
+
+  for ( ; iSoft  != softIDs.end() &&
+          iHard  != hardIDs.end() &&
+          iL0    != l0IDs.end()   &&
+          iL1    != l1IDs.end()   &&
+          iL1In  != l1Ins.end()   &&
+          icopyN != copyNs.end()
+          ;
+        ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In, ++icopyN)
   {
 
     // get data
-    const LHCb::RichSmartID        hpdID  ( *iSoft );
-    const Rich::DAQ::HPDHardwareID hardID ( *iHard );
-    const Rich::DAQ::Level1ID      L1ID   ( *iL1   );
-    const Rich::DAQ::Level0ID      L0ID   ( *iL0   );
-    const Rich::DAQ::Level1Input   L1IN   ( *iL1In );
+    const LHCb::RichSmartID        hpdID  ( *iSoft  );
+    const Rich::DAQ::HPDHardwareID hardID ( *iHard  );
+    const Rich::DAQ::Level1ID      L1ID   ( *iL1    );
+    const Rich::DAQ::Level0ID      L0ID   ( *iL0    );
+    const Rich::DAQ::Level1Input   L1IN   ( *iL1In  );
+    const Rich::DAQ::HPDCopyNumber copyN  ( *icopyN );
     // Sanity checks that this HPD is not already in the maps
     if ( m_soft2hard.find(hpdID) != m_soft2hard.end() )
     {
@@ -208,6 +226,12 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     {
       msg << MSG::ERROR << "Multiple entries for HPD L0 ID "
           << (std::string)L0ID << endmsg;
+      return StatusCode::FAILURE;
+    }
+    if ( m_copyNumber2smartid.find(copyN) != m_copyNumber2smartid.end() )
+    {
+      msg << MSG::ERROR << "Multiple entries for HPD copy number "
+          << (std::string)copyN << hpdID << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -227,6 +251,8 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     m_hardid2L1[hardID] = L1ID;
     m_smartid2L1In[hpdID] = L1IN;
     m_hardid2L1In[hardID] = L1IN;
+    m_smartid2copyNumber[hpdID] = copyN;
+    m_copyNumber2smartid[copyN] = hpdID;
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
     if ( std::find( m_l1IDs.rbegin(), m_l1IDs.rend(), L1ID ) == m_l1IDs.rend() )
@@ -440,6 +466,59 @@ DeRichSystem::level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const
 }
 
 //=========================================================================
+//  richSmartID from copy number
+//=========================================================================
+const LHCb::RichSmartID
+DeRichSystem::richSmartID( const Rich::DAQ::HPDCopyNumber copyNumber ) const
+{
+  // See if this Level0 hardware ID is known
+  CopyNToSmartID::const_iterator id = m_copyNumber2smartid.find( copyNumber );
+  if ( m_copyNumber2smartid.end() == id )
+  {
+    throw GaudiException( "Unknown HPD Copy Number " + (std::string)copyNumber,
+                          "DeRichSystem::richSmartID",
+                          StatusCode::FAILURE );
+  }
+
+  // Found, so return RichSmartID
+  return (*id).second;
+}
+
+//=========================================================================
+//  copyNumber
+// Obtain the Copy Number number for a given RichSmartID
+//=========================================================================
+const Rich::DAQ::HPDCopyNumber
+DeRichSystem::copyNumber( const LHCb::RichSmartID smartID ) const
+{
+  if ( !m_useOldCopyNumber )  // use the copy number vector
+  {
+    // See if this RichSmartID is known
+    SmartIDToCopyN::const_iterator id = m_smartid2copyNumber.find( smartID.hpdID() );
+    if ( m_smartid2copyNumber.end() == id )
+    {
+      std::ostringstream mess;
+      mess << "Unknown HPD RichSmartID " << smartID;
+      throw GaudiException( mess.str(),
+                            "DeRichSystem::copyNumber",
+                            StatusCode::FAILURE );
+    }
+    // Found, so return copy number
+    return (*id).second;
+  }
+  else // do it the DC06 way
+  {
+    unsigned int cn =  ( smartID.rich() == Rich::Rich1 ?
+                         smartID.panel()*98 + smartID.hpdCol()*14 + smartID.hpdNumInCol() :
+                         m_rich1NumberHpds + smartID.panel()*144 + smartID.hpdCol()*16 + smartID.hpdNumInCol() );
+    return Rich::DAQ::HPDCopyNumber( cn );
+  }
+}
+
+
+
+
+//=========================================================================
 //  l1HPDSmartIDs
 //=========================================================================
 const LHCb::RichSmartID::Vector &
@@ -498,7 +577,7 @@ DeRichSystem::richDetector( const Rich::DAQ::Level1ID l1ID ) const
 //=========================================================================
 std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
 {
-  const unsigned int cNumber = copyNumber( smartID );
+  const Rich::DAQ::HPDCopyNumber cNumber = copyNumber( smartID );
   std::string loc;
 
   if ( m_deRich[smartID.rich()]->exists("HPDPanelDetElemLocations") )
@@ -521,7 +600,7 @@ std::string DeRichSystem::getDeHPDLocation (LHCb::RichSmartID smartID ) const
         loc = DeRichLocations::Rich2Panel1;
   }
 
-  loc = loc + "/HPD:"+boost::lexical_cast<std::string>(cNumber);
+  loc = loc + "/HPD:"+std::string(cNumber);
   return loc;
 }
 //===========================================================================

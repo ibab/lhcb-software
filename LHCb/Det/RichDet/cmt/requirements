@@ -1,5 +1,5 @@
 package RichDet
-version v10r12
+version v10r13
 
 branches src RichDet dict doc cmt
 

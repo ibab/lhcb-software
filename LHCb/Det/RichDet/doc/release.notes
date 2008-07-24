@@ -4,6 +4,11 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-07-24 - Antonis Papanestis
+ - Added HPDCopyNumber to DeRichSystem
+ - Required changes for R2 mirrors now using framework alignment conditions
+   ( DeRich2, DeRichSphMirror)
+
 ! 2008-06-06 - Antonis Papanestis
  In DeRichHPDPanel:
  - Added method to retrieve the local z offset of the detection plane.

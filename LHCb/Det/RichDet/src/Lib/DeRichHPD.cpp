@@ -4,7 +4,7 @@
  *
  * Implementation file for class : DeRichHPD
  *
- * $Id: DeRichHPD.cpp,v 1.14 2008-04-10 15:23:02 papanest Exp $
+ * $Id: DeRichHPD.cpp,v 1.15 2008-07-24 18:28:57 papanest Exp $
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  * @date   2006-09-19
@@ -24,6 +24,7 @@
 // local
 #include "RichDet/DeRichHPD.h"
 #include "RichDet/DeRich.h"
+#include "RichDet/DeRichSystem.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -184,8 +185,7 @@ StatusCode DeRichHPD::initialize ( )
                    childIDetectorElements().front() : NULL );
   if ( !m_deSiSensor )
   {
-    msg << MSG::ERROR << "Cannot find SiSensor detector element for HPD "
-        << m_name << endmsg;
+    msg << MSG::ERROR << "Cannot find SiSensor detector element for HPD " << m_name << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -200,26 +200,53 @@ StatusCode DeRichHPD::initialize ( )
   }
 
   // get quantum efficiency tabulated property from LHCBCOND if available
-  SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
-  if ( hpdQuantumEffCond.path() == "" )
+  SmartDataPtr<DeRichSystem> deRichS( dataSvc(), DeRichLocations::RichSystem );
+  if ( !deRichS )
   {
-    //MsgStream msg( msgSvc(), myName() );
-    //if ( m_number%130 == 0 )
-    //  msg << MSG::WARNING << "Cannot get QE from LHCBCOND; will use nominal QE from DDDB" << endmsg;
-    SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
-    m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
+    msg << MSG::ERROR << "Cannot locate RichSystem at " <<  DeRichLocations::RichSystem << endmsg;
+    return StatusCode::FAILURE;
   }
-  else
+
+  MsgStream moreInfo( msgSvc(), myName() ); // output only for this HPD
+  if ( deRichS->exists( "HpdQuantumEffCommonLoc" ) )  // use hardware ID to locate QE
   {
-    SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), hpdQuantumEffCond.path() );
+    // convert copy number to smartID
+    LHCb::RichSmartID id(deRichS->richSmartID(Rich::DAQ::HPDCopyNumber(m_number)));
+    std::string qePath = deRichS->param<std::string>("HpdQuantumEffCommonLoc");
+    std::string hID( deRichS->hardwareID(id) );
+    SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), qePath+hID );
     if ( !hpdQuantumEffTabProp )
     {
-      msg<<MSG::FATAL<<"Could not load HPD's Quantum Efficiency tabproperty for "<<m_name<<endmsg;
+      msg << MSG::FATAL << "Could not load HPD's Quantum Efficiency tabproperty for " << myName()
+          << " from " << qePath+hID <<endmsg;
       return StatusCode::FAILURE;
     }
     m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
     flags[6] = true;
+    moreInfo << MSG::DEBUG << "HPD:" << id << endmsg;
   }
+  else           // use copy number to locate QE
+  {
+    SmartRef<Condition> hpdQuantumEffCond = condition("QuantumEffTable");
+    if ( hpdQuantumEffCond.path() == "" )
+    {
+      SmartDataPtr<DeRich> deRich1( dataSvc(), DeRichLocations::Rich1 );
+      m_hpdQuantumEffFunc = deRich1->nominalHPDQuantumEff();
+    }
+    else
+    {
+      SmartDataPtr<TabulatedProperty> hpdQuantumEffTabProp( dataSvc(), hpdQuantumEffCond.path() );
+      if ( !hpdQuantumEffTabProp )
+      {
+        msg<<MSG::FATAL<<"Could not load HPD's Quantum Efficiency tabproperty for "<<myName()<<endmsg;
+        return StatusCode::FAILURE;
+      }
+      m_hpdQuantumEffFunc = new Rich::TabulatedProperty1D( hpdQuantumEffTabProp );
+      flags[6] = true;
+    }
+  }
+  msg << MSG::DEBUG << "QE from location:" << m_hpdQuantumEffFunc->tabProperty()->name() << endmsg;
+  moreInfo << MSG::DEBUG << m_hpdQuantumEffFunc->tabProperty() << endmsg;
 
   // Magnetic Distortions
   // Make interpolators
