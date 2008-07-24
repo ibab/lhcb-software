@@ -1,14 +1,14 @@
-// $Id: BcDaughtersInLHCb.h,v 1.1 2007-05-08 13:45:19 robbep Exp $
+// $Id: BcDaughtersInLHCb.h,v 1.2 2008-07-24 22:37:48 robbep Exp $
 #ifndef GENERATORS_BCDAUGHTERSINLHCB_H 
 #define GENERATORS_BCDAUGHTERSINLHCB_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Generators/ExternalGenerator.h"
+#include "GaudiKernel/Transform4DTypes.h"
 
+#include "Generators/ExternalGenerator.h"
 #include "Generators/IGenCutTool.h"
-#include "Kernel/Transform4DTypes.h"
 
 // Forward declaration
 class IDecayTool ;

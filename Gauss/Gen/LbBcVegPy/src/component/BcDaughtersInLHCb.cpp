@@ -1,4 +1,4 @@
-// $Id: BcDaughtersInLHCb.cpp,v 1.1 2007-05-08 13:45:19 robbep Exp $
+// $Id: BcDaughtersInLHCb.cpp,v 1.2 2008-07-24 22:37:48 robbep Exp $
 // Include files 
 
 // local
@@ -8,10 +8,11 @@
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/SystemOfUnits.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
-#include "Kernel/Vector4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenParticle.h"
@@ -40,10 +41,10 @@ BcDaughtersInLHCb::BcDaughtersInLHCb( const std::string& type,
   : GaudiTool ( type, name , parent ),
     m_decayTool( 0 ) {
   declareInterface< IGenCutTool >( this ) ;
-  declareProperty( "ChargedThetaMin" , m_chargedThetaMin = 10 * mrad ) ;
-  declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * mrad ) ;
-  declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * mrad ) ;
-  declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * mrad ) ;
+  declareProperty( "ChargedThetaMin" , m_chargedThetaMin = 10 * Gaudi::Units::mrad ) ;
+  declareProperty( "ChargedThetaMax" , m_chargedThetaMax = 400 * Gaudi::Units::mrad ) ;
+  declareProperty( "NeutralThetaMin" , m_neutralThetaMin = 5 * Gaudi::Units::mrad ) ;
+  declareProperty( "NeutralThetaMax" , m_neutralThetaMax = 400 * Gaudi::Units::mrad ) ;
   declareProperty( "DecayTool" ,       m_decayToolName = "EvtGenDecay") ;
   m_sigBcPID = 541 ;
   if ( "" != m_decayToolName ) 
@@ -128,7 +129,7 @@ bool BcDaughtersInLHCb::passCuts( const HepMC::GenParticle * theSignal )
         ++it ) {
     
     debug() << "Check particle " << (*it) -> pdg_id() << " with angle " 
-            << (*it) -> momentum().theta() / mrad << " mrad." << endmsg ;
+            << (*it) -> momentum().theta() / Gaudi::Units::mrad << " mrad." << endmsg ;
     
     // Remove neutrinos
     if ( ( 12 == abs( (*it) -> pdg_id() ) ) || 

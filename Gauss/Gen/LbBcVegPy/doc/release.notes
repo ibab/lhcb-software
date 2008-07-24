@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.9 2007-05-16 16:38:11 gcorti Exp $
+! $Id: release.notes,v 1.10 2008-07-24 22:37:48 robbep Exp $
 ! Package     : Gen/LbBcGen
 ! Responsible : Patrick ROBBE
+
+! 2008-07-25 - Patrick Robbe
+ - BcDaughtersInLHCb: use units from Gaudi 
 
 !===================== LbBcVegPy v1r5 2007-05-10 =====================
 ! 2007-05-08 - Patrick Robbe for Jibo He
