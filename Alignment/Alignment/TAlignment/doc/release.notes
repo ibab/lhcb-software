@@ -3,6 +3,13 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2008-07-07 - Jan Amoraal
+ - Throw StatusCode::FAILURE when no elments are given in GetElementsToBeAligned
+ - Added some more ot alignables
+ - Added property to change log filename to AlConfigurable  
+ - Added property to change frame to AlConfigurable
+ - Use index of elements as histogram directories ( easier to loop over )
+
 ! 2008-07-17 - Louis Nicolas
  - Commented unused variables in GAlign
 
