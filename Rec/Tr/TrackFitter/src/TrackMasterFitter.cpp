@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.49 2008-07-15 06:52:16 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.50 2008-07-24 20:41:24 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -561,10 +561,8 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   track.eraseInfo( Track::FitTChi2 ) ;
   track.eraseInfo( Track::FitTNDoF ) ;
   track.eraseInfo( Track::FitMatchChi2 ) ;
-
+  
   // Compute the chisquare integrals for forward and backward
-  // upstream   == from T to Velo
-  // downstream == from Velo to T
   double chisqT[2]    = {0,0} ;
   double chisqTT[2]   = {0,0} ;
   double chisqVelo[2] = {0,0} ;
@@ -580,19 +578,19 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
 	switch( node->measurement().type() ) {
 	case Measurement::VeloR:
 	case Measurement::VeloPhi:
-	  chisqVelo[0] += node->deltaChi2Upstream() ;
-	  chisqVelo[1] += node->deltaChi2Downstream() ;
+	  chisqVelo[0] += node->deltaChi2Forward() ;
+	  chisqVelo[1] += node->deltaChi2Backward() ;
 	  ++nhitsVelo ;
 	  break;
 	case Measurement::TT:
-	  chisqTT[0] += node->deltaChi2Upstream() ;
-	  chisqTT[1] += node->deltaChi2Downstream() ;
+	  chisqTT[0] += node->deltaChi2Forward() ;
+	  chisqTT[1] += node->deltaChi2Backward() ;
 	  ++nhitsTT ;
 	  break;
 	case Measurement::OT:
 	case Measurement::IT:
-	  chisqT[0] += node->deltaChi2Upstream() ;
-	  chisqT[1] += node->deltaChi2Downstream() ;
+	  chisqT[0] += node->deltaChi2Forward() ;
+	  chisqT[1] += node->deltaChi2Backward() ;
 	  ++nhitsT ;
 	  break;
 	default:
@@ -602,19 +600,20 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
     }
 
   const int nPar = track.nStates()>0 ? track.firstState().nParameters() : 5 ;
+  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
   
   if( track.hasT() ) {
-    track.addInfo( Track::FitTChi2 , chisqT[0] ) ;
+    track.addInfo( Track::FitTChi2 , upstream ? chisqT[0] : chisqT[1]) ;
     track.addInfo( Track::FitTNDoF , nhitsT - nPar ) ;
   }
   
   if( track.hasVelo() ) {
-    track.addInfo( Track::FitVeloChi2, chisqVelo[1] ) ;
+    track.addInfo( Track::FitVeloChi2, upstream ? chisqVelo[1] : chisqVelo[0] ) ;
     track.addInfo( Track::FitVeloNDoF, nhitsVelo - nPar ) ;
     if( track.hasT() ) {
       // Calculate the chisquare of the breakpoint between TT and T
-      double thischisqT       = chisqT[0] ;
-      double thischisqVeloTT  = chisqVelo[1] + chisqTT[1] ;
+      double thischisqT       = upstream ? chisqT[0] : chisqT[1] ;
+      double thischisqVeloTT  = upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0];
       // they should be equal, but this is safer
       double chisqTot   = std::max( chisqT[0]+chisqTT[0]+chisqVelo[0], chisqT[1]+chisqTT[1]+chisqVelo[1] ) ;
       double chisqMatch = chisqTot - thischisqT - thischisqVeloTT ;
