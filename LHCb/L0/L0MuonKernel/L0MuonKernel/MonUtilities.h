@@ -1,4 +1,4 @@
-// $Id: MonUtilities.h,v 1.1 2008-07-24 08:55:21 jucogan Exp $
+// $Id: MonUtilities.h,v 1.2 2008-07-25 14:42:15 jucogan Exp $
 #ifndef COMPONENT_MONUTILITIES_H 
 #define COMPONENT_MONUTILITIES_H 1
 
@@ -35,16 +35,26 @@ namespace L0Muon
     std::string hname_info_bid(std::string toolname="")  ;
     std::string hname_info_bid2(std::string toolname="") ;
     std::string hname_info_evt(std::string toolname="") ;
+
     std::string hname_pads_map(int sta,std::string toolname="") ;
     std::string hname_pads_multiBx(int sta,std::string toolname="") ;
+    std::string hname_pads_multi(int sta,std::string toolname="") ;
     std::string hname_pads_multiBx_region(int sta, int reg,std::string toolname="") ;
+
     std::string hname_error_ctrl1(int type, std::string toolname="") ;
     std::string hname_error_ctrl2(int type, int qua, std::string toolname="") ;
     std::string hname_error_proc(int type, int qua, int board, std::string toolname="") ;
+
     std::string hname_channels_hist(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_hist2D(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_histBX(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
     std::string hname_channels_histDT(int qua,Channel_type type, int sta, int reg,std::string toolname="") ;
+
+    std::string hname_cand_pt(std::string toolname="") ;
+    std::string hname_cand_encodedpt(std::string toolname="") ;
+    std::string hname_cand_pos(int sta, std::string toolname="") ;
+    std::string hname_cand_number(std::string toolname="") ;
+    std::string hname_cand_sum(std::string toolname="") ;
 
   } // namespace MonUtilities
 } // namespace L0Muon

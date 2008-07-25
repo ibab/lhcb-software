@@ -1,4 +1,4 @@
-// $Id: MonUtilities.cpp,v 1.1 2008-07-24 08:55:21 jucogan Exp $
+// $Id: MonUtilities.cpp,v 1.2 2008-07-25 14:42:15 jucogan Exp $
 // Include files 
 
 #include <sstream>
@@ -169,6 +169,10 @@ std::string L0Muon::MonUtilities::hname_pads_multiBx(int sta,std::string toolnam
   return toolname+"multiplicity_per_time_slot_"+stationName(sta);
 }
 
+std::string L0Muon::MonUtilities::hname_pads_multi(int sta,std::string toolname)  {
+  return toolname+"multiplicity_"+stationName(sta);
+}
+
 std::string L0Muon::MonUtilities::hname_pads_multiBx_region(int sta, int reg,std::string toolname)  {
   return toolname+"multiplicity_per_time_slot_"+stationName(sta)+"_"+regionName(reg);
 }
@@ -202,3 +206,22 @@ std::string L0Muon::MonUtilities::hname_channels_histDT(int qua,Channel_type typ
   return hname_channels_hist(qua,type,sta,reg,toolname)+"-wrt-Muon";
 }
 
+std::string L0Muon::MonUtilities::hname_cand_pt(std::string toolname)  {
+  return toolname+"PT";
+}
+
+std::string L0Muon::MonUtilities::hname_cand_encodedpt(std::string toolname)  {
+  return toolname+"encodedPT";
+}
+
+std::string L0Muon::MonUtilities::hname_cand_pos(int sta, std::string toolname)  {
+  return toolname+"Pos_"+stationName(sta);
+}
+
+std::string L0Muon::MonUtilities::hname_cand_number(std::string toolname)  {
+  return toolname+"number_of_candidates_per_ts";
+}
+
+std::string L0Muon::MonUtilities::hname_cand_sum(std::string toolname)  {
+  return toolname+"number_of_candidates";
+}
