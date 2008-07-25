@@ -1,5 +1,5 @@
 package LbcomSys
-version v6r20
+version v6r21
 
 branches doc cmt
 
@@ -18,6 +18,7 @@ use CaloTools         v5r2    Calo      # Olivier Deschamps
 use L0Calo            v9r15   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v8r7    L0        # Olivier Deschamps   
 use L0Muon            v8r0    L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0MuonMonitor     v1r1    L0        # Julien Cogan
 use PuVeto            v7r3    L0        # Marko Zupan
 
 # Muon
