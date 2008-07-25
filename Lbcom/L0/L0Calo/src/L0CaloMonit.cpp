@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.21 2008-07-24 12:09:12 robbep Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.22 2008-07-25 09:04:34 robbep Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -353,9 +353,11 @@ StatusCode L0CaloMonit::execute() {
       m_histElectron  -> fill( (*cand)->etCode(), 1. );
       int card  = m_ecal->cardNumber( caloCell) ; 
       if( ! m_ecal->isPinCard(card) ) { 
-	if (caloCell.area() == 2 ) m_histEleFreqInn  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 1 ) m_histEleFreqMid  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 0 ) m_histEleFreqOut  -> fill(caloCell.all(),1.) ; 
+        if ( m_lookForHotCells ) {
+          if (caloCell.area() == 2 ) m_histEleFreqInn  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 1 ) m_histEleFreqMid  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 0 ) m_histEleFreqOut  -> fill(caloCell.all(),1.) ; 
+        }
       } 
       if ( m_fullMonitoring ) {
         int crate = m_ecal->cardCrate(card); 
@@ -390,9 +392,11 @@ StatusCode L0CaloMonit::execute() {
       m_histPhoton -> fill( (*cand)->etCode() , 1. ) ;
       int card  = m_ecal->cardNumber( caloCell) ; 
       if( ! m_ecal->isPinCard(card) ) { 
-	if (caloCell.area() == 2 ) m_histPhoFreqInn  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 1 ) m_histPhoFreqMid  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 0 ) m_histPhoFreqOut  -> fill(caloCell.all(),1.) ; 
+        if ( m_lookForHotCells ) {
+          if (caloCell.area() == 2 ) m_histPhoFreqInn  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 1 ) m_histPhoFreqMid  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 0 ) m_histPhoFreqOut  -> fill(caloCell.all(),1.) ; 
+        }
       } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 
@@ -431,11 +435,13 @@ StatusCode L0CaloMonit::execute() {
       m_histHadron -> fill( (*cand)->etCode(), 1. );
       int card  = m_hcal->cardNumber( caloCell) ;
       if( ! m_hcal->isPinCard(card) ) {
-	if (caloCell.area() == 1 ) m_histHadFreqInn  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 0 ) m_histHadFreqOut  -> fill(caloCell.all(),1.) ; 
+        if ( m_lookForHotCells ) {
+          if (caloCell.area() == 1 ) m_histHadFreqInn  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 0 ) m_histHadFreqOut  -> fill(caloCell.all(),1.) ; 
+        }
       }
       if ( m_fullMonitoring ) {
-
+        
         int crate = m_hcal->cardCrate(card);
         int cardSlot = m_hcal->cardSlot(card) ;       
         if( m_hcal->isPinCard(card) ) 
@@ -445,10 +451,12 @@ StatusCode L0CaloMonit::execute() {
           info() << " !!! area = " << caloCell.area() << " ID=" << caloCell << " crate = " << crate 
                  << " card= " << card << " cardSlot= " << cardSlot << endmsg ; 
         debug() << " area = " << caloCell.area() << " ID=" << caloCell << " crate = " << crate << " card= " << card << endmsg ; 
-        if (crate == 22) m_histHadronCrate22 -> fill(cardSlot,1.) ; 
-        if (crate == 23) m_histHadronCrate23 -> fill(cardSlot,1.) ; 
-        if (crate == 24) m_histHadronCrate24 -> fill(cardSlot,1.) ; 
-        if (crate == 25) m_histHadronCrate25 -> fill(cardSlot,1.) ; 
+        if ( m_lookForHotCells ) {
+          if (crate == 22) m_histHadronCrate22 -> fill(cardSlot,1.) ; 
+          if (crate == 23) m_histHadronCrate23 -> fill(cardSlot,1.) ; 
+          if (crate == 24) m_histHadronCrate24 -> fill(cardSlot,1.) ; 
+          if (crate == 25) m_histHadronCrate25 -> fill(cardSlot,1.) ; 
+        }
       }
       
       fillCalo2D("HcalMapHad",caloCell,1.,"Hadron Hcal map") ; 
@@ -458,9 +466,11 @@ StatusCode L0CaloMonit::execute() {
       m_histPi0Local  -> fill( (*cand)->etCode(), 1. );
       int card  = m_ecal->cardNumber( caloCell) ; 
       if( ! m_ecal->isPinCard(card) ) { 
-	if (caloCell.area() == 2 ) m_histPilFreqInn  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 1 ) m_histPilFreqMid  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 0 ) m_histPilFreqOut  -> fill(caloCell.all(),1.) ; 
+        if ( m_lookForHotCells ) {
+          if (caloCell.area() == 2 ) m_histPilFreqInn  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 1 ) m_histPilFreqMid  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 0 ) m_histPilFreqOut  -> fill(caloCell.all(),1.) ; 
+        }
       } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 
@@ -496,9 +506,11 @@ StatusCode L0CaloMonit::execute() {
       m_histPi0Global -> fill( (*cand)->etCode(), 1. );
       int card  = m_ecal->cardNumber( caloCell) ; 
       if( ! m_ecal->isPinCard(card) ) { 
-	if (caloCell.area() == 2 ) m_histPigFreqInn  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 1 ) m_histPigFreqMid  -> fill(caloCell.all(),1.) ; 
-	if (caloCell.area() == 0 ) m_histPigFreqOut  -> fill(caloCell.all(),1.) ; 
+        if ( m_lookForHotCells ) {
+          if (caloCell.area() == 2 ) m_histPigFreqInn  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 1 ) m_histPigFreqMid  -> fill(caloCell.all(),1.) ; 
+          if (caloCell.area() == 0 ) m_histPigFreqOut  -> fill(caloCell.all(),1.) ; 
+        }
       } 
       if ( m_fullMonitoring ) {
         int card  = m_ecal->cardNumber( caloCell) ; 

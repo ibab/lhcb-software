@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.115 2008-07-24 12:09:12 robbep Exp $
+! $Id: release.notes,v 1.116 2008-07-25 09:04:34 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-07-25 - Patrick Robbe
+ - L0CaloMonit: do not fill histograms when not booked
 
 ! 2008-07-24 - Patrick Robbe
  - L0CaloMonit: do not book histograms to look for hot cells if 
