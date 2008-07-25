@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.1 2008-05-30 13:49:13 wouter Exp $
+// $Id: TrackMonitor.h,v 1.2 2008-07-25 08:01:48 wouter Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -6,7 +6,11 @@
  
 // from Gaudi
 #include "TrackMonitorBase.h"
-#include "Event/Track.h"
+
+namespace LHCb {
+  class Track ;
+  class State ;
+}
 
 /** @class TrackMonitor TrackMonitor.h "TrackCheckers/TrackMonitor"
  * 
@@ -33,8 +37,12 @@ class TrackMonitor : public TrackMonitorBase {
 
  private:
 
-  void fillHistograms(const LHCb::Track* aTrack, 
-                      const std::string& type);
+  void fillHistograms(const LHCb::Track& track, 
+                      const std::string& type) const ;
+
+  void findRefStates(const LHCb::Track& track,
+		     const LHCb::State*& firstMeasurementState,
+		     const LHCb::State*& lastMeasurementState) const ;
 
   double m_refZ;
   double m_xMax;
