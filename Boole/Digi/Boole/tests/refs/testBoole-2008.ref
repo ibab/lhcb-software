@@ -3,7 +3,7 @@ WARNING: Spillover is disabled
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r0
-                                          running on lxbuild120.cern.ch on Thu Jul 24 17:38:48 2008
+                                          running on lxbuild120.cern.ch on Fri Jul 25 12:45:04 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -98,7 +98,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.63  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -504,29 +504,15 @@ MuonDigitChecker     INFO 0.000  0.000  0.000  0.000  0.000   R4
 MuonDigitChecker  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 L0CaloMonit          INFO Number of events 10
 L0CaloMonit          INFO Number of useful events (Odin bank decoded) 10
-L0CaloMonit       SUCCESS Booked 26 Histogram(s) : 1D=21 2D=5
+L0CaloMonit       SUCCESS Booked 12 Histogram(s) : 1D=7 2D=5
 L0CaloMonit       SUCCESS List of booked 1D histograms in directory         "L0CaloMonit" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | FreqEleOut                | "Electron Candidate occurence Outer "         |    6    |      34277 | 542.19     |   -0.65441 |    -0.8903 |
  | EtPil                     | "Et Pi0 Local "                               |    10   |      117.6 | 44.943     |    0.54057 |  -0.039879 |
  | EtPho                     | "Et photon "                                  |    10   |       61.6 | 42.483     |    0.93663 |  -0.076496 |
- | FreqPilOut                | "Pi0Local Candidate occurence Outer "         |    4    |      34162 | 586.21     |   -0.36817 |    -1.3528 |
- | FreqPhoOut                | "Photon Candidate occurence Outer "           |    3    |      34381 | 206.65     |   -0.68003 |    -1.5066 |
- | FreqPilInn                | "Pi0Local Candidate occurence Inner "         |    5    |      42958 | 246.67     |   -0.74889 |   -0.70446 |
- | FreqPhoInn                | "Photon Candidate occurence Inner "           |    3    |      42941 | 162.23     |    0.39613 |    -1.4952 |
  | SumEt                     | "Sum Et "                                     |    10   |     1240.6 | 537.82     |    0.39946 |   -0.27493 |
- | FreqPilMid                | "Pi0Local Candidate occurence Middle "        |    1    |      39476 | 0          |          0 |          0 |
  | EtEle                     | "Et electron "                                |    10   |       65.3 | 33.782     |    0.59581 |    -1.1268 |
- | FreqPhoMid                | "Photon Candidate occurence Middle "          |    4    |      39069 | 202.77     |     1.0169 |   -0.78798 |
- | FreqPigOut                | "Pi0Global Candidate occurence Outer "        |    4    |      34136 | 502.92     |   -0.91349 |   -0.89457 |
- | FreqHadOut                | "Hadron Candidate occurence Outer "           |    0    |          0 | 0          |          0 |          0 |
  | EtHad                     | "Et hadron "                                  |    10   |     141.11 | 58.872     |    0.45003 |   -0.87226 |
- | FreqHadInn                | "Hadron Candidate occurence Inner "           |    10   |      54280 | 154.51     |    0.15655 |    0.49724 |
- | FreqPigMid                | "Pi0Global Candidate occurence Middle "       |    2    |      39009 | 467        |   0.003212 |         -2 |
- | FreqPigInn                | "Pi0Global Candidate occurence Inner "        |    4    |      42694 | 263.26     |   -0.11478 |    -1.4193 |
- | FreqEleMid                | "Electron Candidate occurence Middle "        |    1    |      38733 | 0          |          0 |          0 |
  | SpdMult                   | "Spd Mult "                                   |    10   |      205.6 | 116.98     |    0.51522 |    -1.0068 |
- | FreqEleInn                | "Electron Candidate occurence Inner "         |    3    |      43046 | 43.269     |   -0.24708 |    -1.5122 |
  | EtPig                     | "Et Pi0 Global "                              |    10   |      115.9 | 45.966     |    0.48276 |   -0.75404 |
 L0CaloMonit       SUCCESS List of booked 2D histograms in directory         "L0CaloMonit" :-
  ID=EcalMapEle                 "Electron Ecal map"                              Ents/All=  237/237  <X>/sX=-641.18/2377,<Y>/sY=-930.58/1026.4
@@ -634,22 +620,22 @@ ToolSvc.RichRaw...   INFO  Rich1 Average     | L1 size = 133.80 +- 3.66 hpds :  
 ToolSvc.RichRaw...   INFO  Rich2 Average     | L1 size = 134.70 +- 3.67 hpds :  689.70 +- 8.30 words : 1245.70 +-11.16 hits / event
 ToolSvc.RichRaw...   INFO ==========================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   74 [ms] Ave/Min/Max=  3.7(+-  2.3)/    1/   10 [ms] #= 20
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   76 [ms] Ave/Min/Max=  3.8(+- 1.99)/    1/    9 [ms] #= 20
 PoolRootTreeEvt...   INFO Disconnected data IO:6CEBF406-EF38-DD11-80DB-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r2/11144103-100ev-20080613.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:F0625448-9659-DD11-849F-0030487C5E0E[11144103-100ev-20080613-10ev.digi]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  137 [ms] Ave/Min/Max= 13.7(+- 4.03)/   10/   23 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.63  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 20.5  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  151 [ms] Ave/Min/Max= 15.1(+- 5.05)/   10/   26 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 22.4  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-377 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
+379 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
