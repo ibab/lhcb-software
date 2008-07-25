@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.50 2008-07-24 20:41:24 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.51 2008-07-25 12:33:22 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -76,8 +76,8 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                                         (StateParameters::ZEndRich1)
                                                         (StateParameters::ZBegRich2)
                                                         (StateParameters::ZEndRich2));
-  declareProperty( "ErrorX2"        , m_errorX2 = 10000.0*Gaudi::Units::mm2 );
-  declareProperty( "ErrorY2"        , m_errorY2 = 10000.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorX2"        , m_errorX2 =  400.0*Gaudi::Units::mm2 );
+  declareProperty( "ErrorY2"        , m_errorY2 =  400.0*Gaudi::Units::mm2 );
   declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                     );
   declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                     );
   declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001) );
