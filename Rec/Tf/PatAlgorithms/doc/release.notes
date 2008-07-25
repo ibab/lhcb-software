@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Manuel Tobias Schiller
+ - PatSeedingTool: fixed a bug introduced when migrating to BOOST_FOREACH
+   which caused jobs with isolation cuts to crash
+
 ! 2008-07-18 - Marco Cattaneo
  - Adapt tools to use new ILHCbMagnetSvc interface where needed
  - Adapt PatMatchTool to use new ITrackMomentumEstimate interface

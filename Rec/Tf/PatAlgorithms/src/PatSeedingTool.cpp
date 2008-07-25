@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.20 2008-07-18 16:10:14 cattanem Exp $
+// $Id: PatSeedingTool.cpp,v 1.21 2008-07-25 21:46:57 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -1466,6 +1466,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
       if ( x2Max < hit2->hit()->xAtYEq0() ) break;
       if ( hit2->isUsed() ) continue;
       if ( x2Min > hit2->hit()->xAtYEq0() ) continue;
+
       double x2 = hit2->hit()->xAtYEq0();
       double z2 = hit2->hit()->zAtYEq0();
 
@@ -1527,7 +1528,6 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
         } else if ( m_printing ) {
           info() << "         ==> found hit1 " << x1 << endreq;
         }
-
 	// isolation in station 1?
 	if (m_enforceIsolation && !isIsolated(itH1, rangeX1))
 		continue;
@@ -1566,7 +1566,10 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 	      HitRange rangeX2 = hitsWithMinX( xPredMin - 2.0 * m_tolCollect,
 		  sta, olay, regc );
 	      int found = 0;
-	      BOOST_FOREACH( PatFwdHit* hit, rangeX2 ) {
+	      PatFwdHits::const_iterator it = rangeX2.begin(),
+		end = rangeX2.end();
+	      for ( ; end != it; ++it ) {
+		PatFwdHit* hit = *it;
 		if ( xPredMax + 2.0 * m_tolCollect < hit->hit()->xAtYEq0() )
 		  break;
 		if ( hit->isUsed() ) continue;
@@ -1584,7 +1587,7 @@ void PatSeedingTool::findXCandidates ( unsigned lay, unsigned reg,
 		    hit->hit()->xAtYEq0() ) break;
 		if ( xPredMin - m_tolCollect - hit->driftDistance() >
 		    hit->hit()->xAtYEq0() ) continue;
-		if ( m_enforceIsolation && !isIsolated(itH, rangeX2) )
+		if ( m_enforceIsolation && !isIsolated(it, rangeX2) )
 		  continue;
 		track.addCoord( hit );
 		++found;
@@ -1682,7 +1685,6 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
 		unsigned reg, PatFwdHits& stereo,
 		const LHCb::State* state ) {
 
-  HitRange::const_iterator itH;
   stereo.clear();
   int minRegion = reg;
   int maxRegion = reg + 1;
@@ -1754,14 +1756,16 @@ void PatSeedingTool::collectStereoHits ( PatSeedTrack& track,
 	  std::fill(nDense.begin(), nDense.end(), 0);
 
 	HitRange rangeW = hitsWithMinX( xMin, sta, sLay, testRegion);
-	BOOST_FOREACH( PatFwdHit* hit, rangeW ) {
+	HitRange::const_iterator it = rangeW.begin(), end = rangeW.end();
+	for ( ; end != it; ++it ) {
+	  PatFwdHit* hit = *it;
           if ( xMax < hit->hit()->xAtYEq0() ) break;
 	  if ( hit->isUsed() ) continue;
           if ( xMin > hit->hit()->xAtYEq0() ) continue;
 	  restoreCoordinate(hit);
           double y = ( track.xAtZ( hit->z() ) - hit->x() ) / hit->hit()->dxDy();
 	  // check if the hit is isolated
-	  if ( m_enforceIsolation && !isIsolated(itH, rangeW) ) {
+	  if ( m_enforceIsolation && !isIsolated(it, rangeW) ) {
 		  int idx = int(fabs(y) * 20. / 3e3);
 		  if (idx < 0) idx = 0;
 		  if (idx >= 20) idx = 19;
