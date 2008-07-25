@@ -7,7 +7,7 @@ from Configurables import LoadDDDB
 #LHCbApp().useOracleCondDB = True
 
 importOptions( "$DDDBROOT/options/DDDB.py" )
-importOptions( "$DDDBROOT/options/DC06.opts" )
+importOptions( "$DDDBROOT/options/DC06.py" )
 
 ApplicationMgr().EvtSel     = "NONE"
 ApplicationMgr().EvtMax     = 1
@@ -15,9 +15,6 @@ ApplicationMgr().EvtMax     = 1
 ApplicationMgr().TopAlg  = [ "GaudiSequencer" ]
 GaudiSequencer().Members += [ "LoadDDDB" ]
 GaudiSequencer().MeasureTime = True
-
-importOptions( "$DDDBROOT/options/DDDB.py" )
-importOptions( "$DDDBROOT/options/DC06.opts" )
 
 # ---------- option to select only a subtree
 #LoadDDDB().Node = "/dd/Geometry*"
