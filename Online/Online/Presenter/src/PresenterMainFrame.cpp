@@ -120,6 +120,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   // Thermo palette for hitmaps
   gStyle->SetPalette(1);
   
+//std::cout << "PresenterMainFrame() gStyle->GetOptStat: " << gStyle->GetOptStat;
   gStyle->SetOptStat("emrou"); // nemr
 
   // only one presenter session allowed
@@ -2446,7 +2447,7 @@ void PresenterMainFrame::addDimSvcToPage()
     int paintFillStyle = bulkHistoOptions.m_fillStyle;
     int paintLineStyle = bulkHistoOptions.m_lineStyle;
     int paintLineColour = bulkHistoOptions.m_lineColour;
-    bool paintStats = bulkHistoOptions.m_statsOption;
+    int paintStats = bulkHistoOptions.m_statsOption;
     dbRootHist->rootHistogram->SetXTitle(paintDrawXLabel.Data());
     dbRootHist->rootHistogram->SetYTitle(paintDrawYLabel.Data());
     dbRootHist->rootHistogram->SetLineWidth(paintLineWidth);
@@ -2454,7 +2455,7 @@ void PresenterMainFrame::addDimSvcToPage()
     dbRootHist->rootHistogram->SetFillStyle(paintFillStyle);
     dbRootHist->rootHistogram->SetLineStyle(paintLineStyle);
     dbRootHist->rootHistogram->SetLineColor(paintLineColour);
-    dbRootHist->rootHistogram->SetStats((bool)paintStats);
+    dbRootHist->rootHistogram->SetStats(paintStats);
 
     TString paintDrawOption;
     if (s_H1D == dbRootHist->histogramType()) {
@@ -2749,7 +2750,7 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
         int paintFillStyle = bulkHistoOptions.m_fillStyle;
         int paintLineStyle = bulkHistoOptions.m_lineStyle;
         int paintLineColour = bulkHistoOptions.m_lineColour;
-        //bool paintStats = m_bulkHistoOptions.m_statsOption;
+        int paintStats = bulkHistoOptions.m_statsOption;
 
         if (s_H1D == onlineHistogramToSet->hstype() ||
             s_P1D == onlineHistogramToSet->hstype() ||
@@ -2776,8 +2777,8 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
                                                &paintLineColour);
         onlineHistogramToSet->setDisplayOption("LINEWIDTH",
                                                &paintLineWidth);
-  //        onlineHistogramToSet->setDisplayOption("STATS",
-        //                                     &paintStats);
+        onlineHistogramToSet->setDisplayOption("STATS",
+                                               &paintStats);
         onlineHistogramToSet->setDisplayOption("DRAWOPTS",
                                                &paintDrawOption);
 

@@ -618,11 +618,12 @@ void DbRootHist::setTH1FromDB()
         rootHistogram->SetMaximum(fopt);
       }
     }
-    rootHistogram->SetStats(true);
+//    rootHistogram->SetStats(true);
     if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
-//      gStyle->SetOptStat(iopt);
+      gStyle->SetOptStat(iopt);
       rootHistogram->SetStats(0 != iopt);
     }
+        
     if (m_onlineHistogram->getDisplayOption("REF", &sopt)) {
       m_refOption = sopt;      
     }
@@ -692,10 +693,11 @@ void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 
     // TPaveStats is obtained after a pad->Draw(), but changing OptStat
     // doesn't resize the Pave.. using gStyle->SetOptStat in Draw() instead
-    // if (m_dbHist->getDisplayOption("STATS", &iopt)) {
-    //   TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
-    //   if (stats) stats->SetOptStat(iopt);
-
+    if (m_onlineHistogram->getDisplayOption("STATS", &iopt)) {
+       TPaveStats* stats =  (TPaveStats*)rootHistogram->GetListOfFunctions()->FindObject("stats");
+       if (stats) stats->SetOptStat(iopt);
+    }
+    
     if (m_onlineHistogram->getDisplayOption("DRAWOPTS", &sopt)) {
       rootHistogram->SetDrawOption(sopt.c_str());
     }

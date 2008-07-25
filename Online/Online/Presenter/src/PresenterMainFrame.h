@@ -123,7 +123,7 @@ class PresenterMainFrame : public TGMainFrame
       TString m_yLabel;
       int m_fillColour;
       int m_lineColour;
-      bool m_statsOption;
+      int m_statsOption;
       int m_fillStyle;
       int m_lineWidth;
       int m_lineStyle;
