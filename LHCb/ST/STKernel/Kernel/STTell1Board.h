@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.6 2008-07-18 09:34:56 mneedham Exp $
+// $Id: STTell1Board.h,v 1.7 2008-07-25 15:42:49 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -109,7 +109,10 @@ inline const std::vector<LHCb::STChannelID>& STTell1Board::sectorIDs() const{
 }
 
 inline bool STTell1Board::validChannel(const unsigned int daqChan) const{
-  return (daqChan < m_nStripsPerHybrid*m_sectorsVector.size()); 
+  if (daqChan > m_nStripsPerHybrid*m_sectorsVector.size()) return false;
+  const int index = daqChan/m_nStripsPerHybrid; 
+  if (m_sectorsVector[index].sector() == 0 ) return false;
+  return true; 
 }
   
 #endif // _STTell1Board_H

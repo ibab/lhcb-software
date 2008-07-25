@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.23 2008-07-18 09:34:56 mneedham Exp $
+! $Id: release.notes,v 1.24 2008-07-25 15:42:49 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-07-25 M Needham
+ - Bug fix in validChannel function [broken after STDAQ changes]
 
 ! 2008-07-18 M Needham
  - Add sameID function to STTell1Board
