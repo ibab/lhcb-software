@@ -8,7 +8,7 @@
 #units "$STDOPTS/units.opts"
 
 // POOL Persistency
-#include "$STDOPTS/DigiDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // Unpack MCParticles and MCVertices if not existing on input file
 ApplicationMgr.ExtSvc  += { "DataOnDemandSvc" };

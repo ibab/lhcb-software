@@ -27,6 +27,7 @@ from Boole.Configuration import *
 # Boole().datasetName  = ""    # string used to build file names
 # Boole().DDDBtag      = "DC06-default"          # geometry database tag
 # Boole().condDBtag    = "DC06-default"          # conditions database tag
+# Brunel().useOracleCondDB = False # if False, use SQLDDDB, if True use Oracle
 # Boole().mainOptions  = "$BOOLEOPTS/Boole.opts" # top level options to import
 # Boole().monitors += ["SC","FPE"] # Add some monitors. SC: StatusCode check
 #                                                 FPE: Floating Point exceptions 

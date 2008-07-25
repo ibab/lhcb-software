@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.12 2008-07-04 09:25:17 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-07-25 14:51:11 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -26,8 +26,9 @@ class Boole(ConfigurableUser):
        ,"mainOptions" : '$BOOLEOPTS/Boole.opts' # top level options to import
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  '00001820_00000001' # string used to build file names
-       ,"DDDBtag":   "DEFAULT" # geometry database tag
-       ,"condDBtag": "DEFAULT" # conditions database tag
+       ,"DDDBtag":      ""    # geometry database tag
+       ,"condDBtag":    ""    # conditions database tag
+       ,"useOracleCondDB": False  # if False, use SQLDDDB instead
        ,"monitors": []        # list of monitors to execute
         }
 
@@ -40,32 +41,27 @@ class Boole(ConfigurableUser):
     def setProp(self,name,value):
         return setattr(self,name,value)
 
-    def defineDB(self):
-        condDBtag = self.getProp("condDBtag")
-        if condDBtag != "DEFAULT":
-            if hasattr(LHCbApp(),"condDBtag"):
-                print "LHCbApp().condDBtag already defined, ignoring Boole().condDBtag"
+    def setOtherProp(self,other,name):
+        # Function to propagate properties to other component, if not already set
+        if hasattr(self,name):
+            if hasattr(other,name):
+                print "%s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
             else:
-                LHCbApp().condDBtag = condDBtag
-        else:
-            condDBtag =  LHCbApp().getDefaultProperties()["condDBtag"]
+                other.setProp(name,self.getProp(name))
 
-        DDDBtag = self.getProp("DDDBtag")
-        if DDDBtag != "DEFAULT":
-            if hasattr(LHCbApp(),"DDDBtag"):
-                print "LHCbApp().DDDBtag already defined, ignoring Boole().DDDBtag"
-            else:
-                LHCbApp().DDDBtag = DDDBtag
-        else:
-            DDDBtag = LHCbApp().getDefaultProperties()["DDDBtag"]
+
+    def defineDB(self):
+        self.setOtherProp(LHCbApp(),"condDBtag") 
+        self.setOtherProp(LHCbApp(),"DDDBtag") 
 
         # Special options for DC06 data processing
-        if condDBtag.find("DC06") != -1 and DDDBtag.find("DC06") != -1 :
+        if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
+            ApplicationMgr().Dlls += [ "HepMCBack" ]
             MCSTDepositCreator("MCITDepositCreator").DepChargeTool = "SiDepositedCharge"
             MCSTDepositCreator("MCTTDepositCreator").DepChargeTool = "SiDepositedCharge"
 
         # Special options for 2008 data processing
-        if condDBtag.find("-2008") != -1 and DDDBtag.find("-2008") != -1 :
+        if LHCbApp().getProp("DDDBtag").find("-2008") != -1 :
             MuonDigitToRawBuffer().VType = 2 # New RawBank type
           
     def defineEvents(self):
@@ -184,6 +180,9 @@ class Boole(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
+        # Propagate the useOracleCondDB property to LHCbApp before it is used by DDDB.py
+        self.setOtherProp(LHCbApp(),"useOracleCondDB") 
+        # Next line has to be before mainOptions - TODO: why?
         importOptions( "$DDDBROOT/options/DDDB.py" )
         importOptions( self.getProp( "mainOptions" ) )
         self.defineDB()

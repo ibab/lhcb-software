@@ -5,6 +5,10 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v16r1>2008-07-28 Boole v16r1</A></H1><PRE>
  - Add qmtests
+ - Changes to Configurable:
+   . Load the HepMCBack Dll for DC06 data (HepMC 1.26 compatibility)
+   . Add a useOracleCondDB flag (default False: uses SQLDDDB)
+   . Add setOtherProp function to propagate properties to another configurable
 
 </PRE><H1><A NAME=v16r0>2008-07-18 Boole v16r0</A></H1><PRE>
  - In requirements, use ParamFiles v7r2
