@@ -5,7 +5,7 @@
  *  Header file for Rich::DAQ::DecodedData
  *
  *  CVS Log :-
- *  $Id: RichDecodedData.h,v 1.3 2008-06-11 09:07:11 jonrob Exp $
+ *  $Id: RichDecodedData.h,v 1.4 2008-07-25 15:26:19 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -126,10 +126,10 @@ namespace Rich
     };
 
     /// Map for HPD data for each L1 ingress
-    typedef std::map< const L1IngressID, IngressInfo >                     IngressMap;
+    typedef std::map< const L1IngressID, IngressInfo >           IngressMap;
 
     /// Map for RICH HPD data, sorted by Level1 board number
-    typedef std::map< const Level1ID, IngressMap >                         L1Map;
+    typedef std::map< const Level1HardwareID, IngressMap >       L1Map;
 
   }
 }

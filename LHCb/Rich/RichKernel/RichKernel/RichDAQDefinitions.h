@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.23 2008-07-24 18:04:14 papanest Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.24 2008-07-25 15:26:19 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -319,18 +319,33 @@ namespace Rich
       ShortType m_nActiveBits;
     };
 
-    /** @class Level1ID RichKernel/RichDAQDefinitions.h
+    /** @class Level1LogicalID RichKernel/RichDAQDefinitions.h
      *
-     *  The Level 1 board ID.
+     *  The Level 1 board (logical) ID.
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   11/11/2005
      */
-    class Level1ID : public NumericType<ShortType>
+    class Level1LogicalID : public NumericType<ShortType>
     {
     public :
       /// Constructor
-      explicit Level1ID ( const ShortType id = 0 )
+      explicit Level1LogicalID ( const ShortType id = 0 )
+        : NumericType<ShortType>(id) { }
+    };
+
+    /** @class Level1HardwareID RichKernel/RichDAQDefinitions.h
+     *
+     *  The Level 1 board (hardware) ID.
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   11/11/2005
+     */
+    class Level1HardwareID : public NumericType<ShortType>
+    {
+    public :
+      /// Constructor
+      explicit Level1HardwareID ( const ShortType id = 0 )
         : NumericType<ShortType>(id) { }
     };
 
@@ -442,7 +457,7 @@ namespace Rich
       explicit HPDL1InputID ( const ShortType id = 0 )
         : NumericType<ShortType>(id) { }
       /// Constructor from a L1 ID and input number
-      HPDL1InputID ( const Level1ID l1ID,    ///< The L1 board ID
+      HPDL1InputID ( const Level1HardwareID l1ID,    ///< The L1 board hardware ID
                      const Level1Input input ///< L1 input number
                      )
         : NumericType<ShortType>(0)
@@ -451,12 +466,12 @@ namespace Rich
         setInputNumber(input);
       }
       /// Return the Level1 board number
-      inline Level1ID boardNumber() const
+      inline Level1HardwareID boardNumber() const
       {
-        return Level1ID( (data() & MaskB) >> ShiftB );
+        return Level1HardwareID( (data() & MaskB) >> ShiftB );
       }
       /// Set the Level1 board number
-      inline bool setBoardNumber( const Level1ID board )
+      inline bool setBoardNumber( const Level1HardwareID board )
       {
         return ( dataInRange(board.data(),MaxB) ?
                  set( board.data(), ShiftB, MaskB ) : false );
@@ -513,19 +528,18 @@ namespace Rich
 
     /// Vector of HPD Hardware IDs
     typedef std::vector< HPDHardwareID >                                 HPDHardwareIDs;
-    //typedef LHCb::FastAllocVector< HPDHardwareID >                       HPDHardwareIDs;
 
     /// Vector of Level 0 IDs
     typedef std::vector< Level0ID >                                      Level0IDs;
-    //typedef LHCb::FastAllocVector< Level0ID >                            Level0IDs;
 
-    /// Vector of Level 1 IDs
-    typedef std::vector< Level1ID >                                      Level1IDs;
-    //typedef LHCb::FastAllocVector< Level1ID >                            Level1IDs;
+    /// Vector of Level 1 hardware IDs
+    typedef std::vector< Level1HardwareID >                              Level1HardwareIDs;
+
+    /// Vector of Level 1 logical IDs
+    typedef std::vector< Level1LogicalID >                               Level1LogicalIDs;
 
     /// Vector of L1InputWithinIngress
     typedef std::vector< L1InputWithinIngress >                          L1IngressInputs;
-    //typedef LHCb::FastAllocVector< L1InputWithinIngress >                L1IngressInputs;
 
     //---------------------------------------------------------------------------------
 
@@ -580,18 +594,31 @@ namespace __gnu_cxx
   template <> struct hash<const Rich::DAQ::Level0ID&>
   { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
 
-  /// Level1ID hash function
-  template <> struct hash<Rich::DAQ::Level1ID>
-  { inline size_t operator() ( Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID hash function
-  template <> struct hash<Rich::DAQ::Level1ID&>
-  { inline size_t operator() ( Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID hash function
-  template <> struct hash<const Rich::DAQ::Level1ID>
-  { inline size_t operator() ( const Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID hash function
-  template <> struct hash<const Rich::DAQ::Level1ID&>
-  { inline size_t operator() ( const Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID hash function
+  template <> struct hash<Rich::DAQ::Level1HardwareID>
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID hash function
+  template <> struct hash<Rich::DAQ::Level1HardwareID&>
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID hash function
+  template <> struct hash<const Rich::DAQ::Level1HardwareID>
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID hash function
+  template <> struct hash<const Rich::DAQ::Level1HardwareID&>
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1LogicalID hash function
+  template <> struct hash<Rich::DAQ::Level1LogicalID>
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID hash function
+  template <> struct hash<Rich::DAQ::Level1LogicalID&>
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID hash function
+  template <> struct hash<const Rich::DAQ::Level1LogicalID>
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID hash function
+  template <> struct hash<const Rich::DAQ::Level1LogicalID&>
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
 
   /// L1IngressID hash function
   template <> struct hash<Rich::DAQ::L1IngressID>
@@ -676,18 +703,31 @@ namespace GaudiUtils
   template <> struct Hash<const Rich::DAQ::Level0ID&>
   { inline size_t operator() ( const Rich::DAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
 
-  /// Level1ID Hash function
-  template <> struct Hash<Rich::DAQ::Level1ID>
-  { inline size_t operator() ( Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID Hash function
-  template <> struct Hash<Rich::DAQ::Level1ID&>
-  { inline size_t operator() ( Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID Hash function
-  template <> struct Hash<const Rich::DAQ::Level1ID>
-  { inline size_t operator() ( const Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
-  /// Level1ID Hash function
-  template <> struct Hash<const Rich::DAQ::Level1ID&>
-  { inline size_t operator() ( const Rich::DAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID Hash function
+  template <> struct Hash<Rich::DAQ::Level1HardwareID>
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID Hash function
+  template <> struct Hash<Rich::DAQ::Level1HardwareID&>
+  { inline size_t operator() ( Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID Hash function
+  template <> struct Hash<const Rich::DAQ::Level1HardwareID>
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+  /// Level1HardwareID Hash function
+  template <> struct Hash<const Rich::DAQ::Level1HardwareID&>
+  { inline size_t operator() ( const Rich::DAQ::Level1HardwareID id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1LogicalID Hash function
+  template <> struct Hash<Rich::DAQ::Level1LogicalID>
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID Hash function
+  template <> struct Hash<Rich::DAQ::Level1LogicalID&>
+  { inline size_t operator() ( Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID Hash function
+  template <> struct Hash<const Rich::DAQ::Level1LogicalID>
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
+  /// Level1LogicalID Hash function
+  template <> struct Hash<const Rich::DAQ::Level1LogicalID&>
+  { inline size_t operator() ( const Rich::DAQ::Level1LogicalID id ) const { return (size_t)id.data(); } } ;
 
   /// L1IngressID Hash function
   template <> struct Hash<Rich::DAQ::L1IngressID>
@@ -768,14 +808,14 @@ namespace Rich
     typedef std::map< const LHCb::RichSmartID, LHCb::RichSmartID::Vector >            PDMap;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
-    typedef GaudiUtils::HashMap< const Level1ID, LHCb::RichSmartID::Vector >          L1ToSmartIDs;
+    typedef GaudiUtils::HashMap< const Level1HardwareID, LHCb::RichSmartID::Vector >  L1ToSmartIDs;
     /// Pair type in a L1ToSmartIDs
-    typedef std::pair< const Level1ID, LHCb::RichSmartID::Vector >                    L1ToSmartIDsPair;
+    typedef std::pair< const Level1HardwareID, LHCb::RichSmartID::Vector >            L1ToSmartIDsPair;
 
     /// Mapping from Level1 ID to list of HPD RichSmartIDs
-    typedef GaudiUtils::HashMap< const Level1ID, HPDHardwareIDs >                     L1ToHardIDs;
+    typedef GaudiUtils::HashMap< const Level1HardwareID, HPDHardwareIDs >             L1ToHardIDs;
     /// Pair type in a L1ToHardIDs
-    typedef std::pair< const Level1ID, HPDHardwareIDs >                               L1ToHardIDsPair;
+    typedef std::pair< const Level1HardwareID, HPDHardwareIDs >                       L1ToHardIDsPair;
 
   }
 }

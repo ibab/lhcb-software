@@ -13,7 +13,8 @@
   <class name    = "LHCb::RichTrackSegment"              />
 
   <class name    = "Rich::DAQ::Level0ID"                 />
-  <class name    = "Rich::DAQ::Level1ID"                 />
+  <class name    = "Rich::DAQ::Level1HardwareID"         />
+  <class name    = "Rich::DAQ::Level1LogicalID"          />
   <class name    = "Rich::DAQ::EventID"                  />
   <class name    = "Rich::DAQ::BXID"                     />
   <class name    = "Rich::DAQ::L1IngressID"              />
@@ -21,10 +22,12 @@
   <class name    = "Rich::DAQ::L1InputWithinIngress"     />
   <class name    = "Rich::DAQ::Level1Input"              />
   <class name    = "Rich::DAQ::HPDHardwareID"            />
+  <class name    = "Rich::DAQ::HPDCopyNumber"            />
   <class name    = "Rich::DAQ::HPDL1InputID"             />
   <class name    = "Rich::DAQ::HPDHardwareIDs"           />
   <class name    = "Rich::DAQ::Level0IDs"                />
-  <class name    = "Rich::DAQ::Level1IDs"                />
+  <class name    = "Rich::DAQ::Level1HardwareIDs"        />
+  <class name    = "Rich::DAQ::Level1LogicalIDs"         />
   <class name    = "Rich::DAQ::L1IngressInputs"          />
   <class name    = "Rich::DAQ::HPDInfo"                  />
   <class name    = "Rich::DAQ::HPDInfo::Header"          />
