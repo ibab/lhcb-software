@@ -4,9 +4,14 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Wouter Hulsbergen
+ - adapted to change in TrackFitEvent
+ - added histograms for monitoring track errors on TrackMonitor
+
 !============================ TrackMonitors v1r2 2008-07-17 ==================
 ! 2008-07-17 - Marco Cattaneo for Wouter Hulsbergen
- - Added monitoring algorithms and other undocumented changes
+ - added TrackFitMatchMonitor
+ - added option to split by track type to TrackMonitor 
 
 !============================ TrackMonitors v1r1 2008-06-03 ==================
 ! 2008-05-30 - Wouter Hulsbergen
