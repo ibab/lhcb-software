@@ -4,6 +4,11 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Jeroen Van Tilburg
+ - Bug in TTReadoutTool.cpp: Removed condition that skips addSector in a
+   STTELL1Board. Each board should have all 6 sectors (TT). Otherwise, the
+   STRawBankToClusterAlg complains about unknown channels (tested with data).
+
 ! 2008-07-23
  - Bug fix in Error construction
 

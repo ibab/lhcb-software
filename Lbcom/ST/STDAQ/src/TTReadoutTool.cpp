@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.11 2008-07-01 10:10:06 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.12 2008-07-25 11:45:14 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -97,10 +97,7 @@ StatusCode TTReadoutTool::createBoards() {
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
-       if (!sectorID.sector() == 0){
-	 // only add valid sectors --> some links in TT unused.
-         aBoard->addSector(sectorID, (unsigned int)orientation[vecLoc]);
-       }
+       aBoard->addSector(sectorID, (unsigned int)orientation[vecLoc]);
      } // iH
 
      m_boards.push_back(aBoard);
