@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v33r1>2008-07-25 Brunel v33r1</A></H1><PRE>
+ - Changes to Configurable:
+   . Load the HepMCBack Dll for DC06 data (HepMC 1.26 compatibility)
+   . Add a useOracleCondDB flag (default False: uses SQLDDDB)
+   . Add setOtherProp function to propagate properties to another configurable
+
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
  - In requirements: use ParamFiles v7r2
  - Remove all top level *.opts files, use Gaudirun.py with configurable instead. 

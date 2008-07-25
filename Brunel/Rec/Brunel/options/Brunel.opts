@@ -11,7 +11,7 @@
 #units "$STDOPTS/units.opts"
 
 // POOL Persistency
-#include "$STDOPTS/DstDicts.opts"
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
 // By default, Brunel only needs to open one input file at a time
 IODataManager.AgeLimit = 0;

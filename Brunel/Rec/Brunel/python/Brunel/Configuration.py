@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-07-18 12:39:25 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-07-25 14:36:53 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -25,15 +25,15 @@ class Brunel(ConfigurableUser):
        ,"noWarnings":   False # suppress all messages with MSG::WARNING or below 
        ,"datasetName":  ""    # string used to build file names
        ,"mainOptions" : '$BRUNELOPTS/Brunel.opts' # top level options to import
-       ,"DDDBtag":  "DEFAULT" # geometry database tag
-       ,"condDBtag":"DEFAULT" # conditions database tag
+       ,"DDDBtag":      ""    # geometry database tag
+       ,"condDBtag":    ""    # conditions database tag
+       ,"useOracleCondDB": False  # if False, use SQLDDDB instead
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
        ,"monitors": []        # list of monitors to execute, see KnownMonitors
        ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
 
-    KnownMonitors       = ["SC", "FPE"]
     KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
 
     def getProp(self,name):
@@ -45,24 +45,20 @@ class Brunel(ConfigurableUser):
     def setProp(self,name,value):
         return setattr(self,name,value)
 
-    def defineGeometry(self):
-        condDBtag = self.getProp("condDBtag")
-        if condDBtag != "DEFAULT":
-            if hasattr(LHCbApp(),"condDBtag"):
-                print "LHCbApp().condDBtag already defined, ignoring Brunel().condDBtag"
+    def setOtherProp(self,other,name):
+        # Function to propagate properties to other component, if not already set
+        if hasattr(self,name):
+            if hasattr(other,name):
+                print "%s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
             else:
-                LHCbApp().condDBtag = condDBtag
-        else:
-            condDBtag =  LHCbApp().getDefaultProperties()["condDBtag"]
+                other.setProp(name,self.getProp(name))
 
-        DDDBtag = self.getProp("DDDBtag")
-        if DDDBtag != "DEFAULT":
-            if hasattr(LHCbApp(),"DDDBtag"):
-                print "LHCbApp().DDDBtag already defined, ignoring Brunel().DDDBtag"
-            else:
-                LHCbApp().DDDBtag = DDDBtag
-        else:
-            DDDBtag = LHCbApp().getDefaultProperties()["DDDBtag"]
+    def defineGeometry(self):
+        self.setOtherProp(LHCbApp(),"condDBtag") 
+        self.setOtherProp(LHCbApp(),"DDDBtag") 
+        if LHCbApp().getProp("DDDBtag").find("DC06") != -1 :
+            ApplicationMgr().Dlls += [ "HepMCBack" ]
+
 
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
@@ -125,9 +121,6 @@ class Brunel(ConfigurableUser):
     def defineMonitors(self):
         # get all defined monitors
         monitors = self.getProp("monitors") + LHCbApp().getProp("monitors")
-        for prop in monitors:
-            if prop not in self.KnownMonitors:
-                raise RuntimeError("Unknown monitor '%s'"%prop)
         # pass to LHCbApp any monitors not dealt with here
         LHCbApp().setProp("monitors", monitors)
 
@@ -182,6 +175,9 @@ class Brunel(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
+        # Propagate the useOracleCondDB property to LHCbApp before it is used by DDDB.py
+        self.setOtherProp(LHCbApp(),"useOracleCondDB") 
+        # Next line has to be before mainOptions - TODO: why?
         importOptions( "$DDDBROOT/options/DDDB.py" )
         importOptions( self.getProp( "mainOptions" ) )
         self.defineGeometry()
