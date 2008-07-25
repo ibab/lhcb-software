@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.4 2008-07-24 09:36:53 jucogan Exp $
+! $Id: release.notes,v 1.5 2008-07-25 14:44:38 jucogan Exp $
 ! Package     : L0MuonMonitor
 ! Responsible : Julien Cogan
 ! Purpose     : Monitoring of the L0Muon
 
 ! 2008-07-23 - Julien Cogan
- - The packages contains :
+ - The package contains :
    o Algorithms to produce monitoring plots 
      + L0MuonOnlineMonitoring : 
        . online histos to be displayed with Presenter
@@ -16,6 +16,7 @@
      + L0MuonPadsHisto
      + L0MuonErrorHisto
      + L0MuonInfoHisto  
+     + L0MuonCandHisto  
    o Algorithm to compare decoding and emulator
 
 ! 2008-05-06 - Julien Cogan 
