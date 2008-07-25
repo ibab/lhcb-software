@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.33 2008-07-16 16:34:58 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.34 2008-07-25 12:23:18 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -138,19 +138,16 @@ StatusCode MagneticFieldSvc::initialize()
 StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid, 
                                              void** ppvInterface      ) 
 {
-  StatusCode sc = StatusCode::FAILURE;
-  if ( ppvInterface ) {
-    *ppvInterface = 0;
-    
-    if ( riid == IID_IMagneticFieldSvc ) {
-      *ppvInterface = static_cast<IMagneticFieldSvc*>(this);
-      sc = StatusCode::SUCCESS;
-      addRef();
-    }
-    else
-      sc = Service::queryInterface( riid, ppvInterface );    
+  if ( IID_IMagneticFieldSvc.versionMatch(riid) ) {
+    *ppvInterface = (IMagneticFieldSvc*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  } else if ( IID_ILHCbMagnetSvc.versionMatch(riid) ) {
+    *ppvInterface = (ILHCbMagnetSvc*)this;
+    addRef();
+    return StatusCode::SUCCESS;
   }
-  return sc;
+  return Service::queryInterface(riid,ppvInterface);
 }
 
 // ---------------------------------------------------------------------------
