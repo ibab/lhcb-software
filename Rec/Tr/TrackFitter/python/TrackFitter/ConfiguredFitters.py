@@ -3,17 +3,6 @@
 #  Track fitting options
 # ====================================================================
 
-# --------------------------------------------------------------------
-# NOTE:
-# These options assume the following conventions:
-#
-# 1. the instances of the TrackEventFitter are named as
-#    Fit<track_container_name>
-#
-# 2. the track containers considered are:
-#    Forward, Seed, Match, KsTrack, VeloTT, PreparedVelo
-# --------------------------------------------------------------------
-
 from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, SimplifiedMaterialLocator, DetailedMaterialLocator)
@@ -60,11 +49,13 @@ def createConfiguredFitters( FieldOff = False, SimplifiedGeometry = False, NoDri
     defaultMasterFitter.addTool(defaultMasterExtrapolator,name="Extrapolator")
     defaultMasterFitter.addTool(defaultMaterialLocator,name="MaterialLocator")
     defaultMasterFitter.addTool(defaultNodeFitter,name="NodeFitter")
+    defaultMasterFitter.NumberFitIterations = 2
 
     prefitMasterFitter = defaultMasterFitter.clone("PreFitMasterFitter")
     prefitMasterFitter.addTool(prefitNodeFitter,name="NodeFitter")
     prefitMasterFitter.NumberFitIterations = 2
     prefitMasterFitter.MaxNumberOutliers = 0
+    prefitMasterFitter.ErrorY2 = 10000
 
     # now set of the default and prefit event fitter
     defaultTrackEventFitter = TrackEventFitter("DefaultTrackEventFitter")
@@ -92,6 +83,7 @@ def createConfiguredFitters( FieldOff = False, SimplifiedGeometry = False, NoDri
     configuredFitVeloTT = defaultTrackEventFitter.clone("FitVeloTT",TracksInContainer = "Rec/Track/VeloTT")
     configuredFitVeloTT.Fitter.ZPositions = [ 990., 2165. ]
     configuredFitVeloTT.Fitter.ErrorP = [1.2, 5e-07]
+    configuredFitVeloTT.Fitter.MaxNumberOutliers = 1
 
     configuredFitVelo = defaultTrackEventFitter.clone("FitVelo",TracksInContainer = "Rec/Track/PreparedVelo")
     configuredFitVelo.Fitter.ZPositions = []
