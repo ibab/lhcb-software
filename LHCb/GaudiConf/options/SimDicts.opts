@@ -1,10 +1,4 @@
-
-// write an output file in POOL format
+#pragma print on
+// This file ($STDOPTS/SimDicts.opts) is obsolete, use GaudiPoolDbRoot.opts directly
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-
-// Job option to tell POOL to load LCG reflex dictionaries. Will be obsolete
-// when LCG generates correct rootmap file
-PoolDbCacheSvc.Dlls += { "HepMCRflx" };
-PoolDbCacheSvc.Dlls += { "CLHEPRflx" };
-PoolDbCacheSvc.Dlls += { "STLRflx" };
-PoolDbCacheSvc.Dlls += { "MathRflx" };
+#pragma print off

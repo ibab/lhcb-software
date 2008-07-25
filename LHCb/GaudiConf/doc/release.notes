@@ -2,6 +2,13 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-07-25 - Marco Cattaneo
+ - Remove obsolete Reflex dictionaries from SimDicts.opts. This renders this
+   file obsolete, use $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts directly
+ - In Configurable: 
+   . Remove handling of MagneticFieldSvc fieldmap file, will be done via CondDB
+   . Add function to return knownMonitors and use it to test monitors option
+
 ! 2008-07-22 - Marco Cattaneo
  - Add "useOracleCondDB" options to LHCbApp Configurable, default is False
  - Remove /Event/Rec/Rich/RichOfflineSummaryTracks from default DST
