@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.32 2008-07-21 14:44:36 cattanem Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.33 2008-07-25 15:27:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -111,8 +111,8 @@ namespace Rich
     private: // definitions
 
       // Summary data
-      typedef std::pair< const Rich::DAQ::BankVersion, Rich::DAQ::Level1ID >            L1IDandV;
-      typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > > L1CountAndSize;
+      typedef std::pair< const Rich::DAQ::BankVersion, Rich::DAQ::Level1HardwareID > L1IDandV;
+      typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > >  L1CountAndSize;
       typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
 
     private: // methods
@@ -273,7 +273,7 @@ namespace Rich
       bool m_useFakeHPDID;
 
       /// Map of the number of time each L1 board ID is found per event (debugging variable)
-      mutable Rich::Map<Rich::DAQ::Level1ID,unsigned int> m_l1IdsDecoded;
+      mutable Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int> m_l1IdsDecoded;
 
       /** Turn on/off detailed error messages.
        *

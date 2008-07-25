@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.72 2008-07-15 09:14:09 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.73 2008-07-25 15:27:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -151,22 +151,35 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
   if ( !count.empty() )
   {
 
+    const std::string & LINES = "========================================================================================================================";
+    const std::string & lines = "------------------------------------------------------------------------------------------------------------------------";
+
     // Statistical calculators
     const StatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
 
     // Printout
-    info() << "==========================================================================================================" << endreq
+    info() << LINES << endreq
            << "                             " << title << " : " << m_evtCount << " events" << endreq;
 
     std::map<Rich::DetectorType,unsigned long> totWordSize, totBanks, totHits;
     Rich::DetectorType lastrich = Rich::InvalidDetector;
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
-      const Level1ID      L1ID   = (*iL1C).first.second;
-      const BankVersion version  = (*iL1C).first.first;
+      const Level1HardwareID  L1HardID = (*iL1C).first.second;
+      Level1LogicalID L1LogID(0);
+      try { L1LogID = m_richSys->level1LogicalID(L1HardID); }
+      catch ( const GaudiException & expt ) 
+      {
+        Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID );
+      }
+      const BankVersion version    = (*iL1C).first.first;
       Rich::DetectorType rich;
-      try                                   { rich = m_richSys->richDetector( L1ID ); }
-      catch ( const GaudiException & expt ) { rich = Rich::InvalidDetector;           }
+      try { rich = m_richSys->richDetector( L1HardID ); }
+      catch ( const GaudiException & expt ) 
+      { 
+        Warning( "Unknown L1 Hardware ID " + (std::string)L1HardID );
+        rich = Rich::InvalidDetector; 
+      }
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
       const unsigned long words           = (*iL1C).second.second.first;
@@ -177,10 +190,10 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
       if ( rich != lastrich )
       {
         lastrich = rich;
-        info() << "----------------------------------------------------------------------------------------------------------" << endreq;
+        info() << lines << endreq;
       }
 
-      info() << " " << rich << " L1 " << boost::format("%3i") % L1ID.data();
+      info() << " " << rich << " L1ID(log/hard) " << boost::format("%2i/%2i") % L1HardID.data() % L1LogID.data();
       info() << " V" << boost::format("%3i") % version;
       info() << " | L1 size ="
              << occ1(nBanks,m_evtCount) << " hpds :"
@@ -188,21 +201,23 @@ RawDataFormatTool::printL1Stats( const L1TypeCount & count,
              << occ2(hits,m_evtCount) << " hits / event" << endreq;
     }
 
-    info() << "----------------------------------------------------------------------------------------------------------" << endreq;
+    info() << lines << endreq;
     if ( totBanks[Rich::Rich1]>0 )
     {
-      info() << " Rich1 Average     | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+      info() << " Rich1 Average                   | L1 size =" 
+             << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
              << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
              << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
     }
     if ( totBanks[Rich::Rich2]>0 )
     {
-      info() << " Rich2 Average     | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+      info() << " Rich2 Average                   | L1 size =" 
+             << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
              << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
              << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
     }
 
-    info() << "==========================================================================================================" << endreq;
+    info() << LINES << endreq;
 
   } // end stats available
 
@@ -510,8 +525,8 @@ void RawDataFormatTool::fillRawEvent( const LHCb::RichSmartID::Vector & smartIDs
   {
 
     // Get Level 1 board number and input
-    const Level1ID    L1ID    = m_richSys->level1ID       ( *iDigit );
-    const Level1Input L1Input = m_richSys->level1InputNum ( *iDigit );
+    const Level1HardwareID L1ID = m_richSys->level1HardwareID ( *iDigit );
+    const Level1Input L1Input   = m_richSys->level1InputNum   ( *iDigit );
 
     // Get reference to correct data group
     IngressMap & ingress   = L1Data  [ L1ID                ];
@@ -644,7 +659,7 @@ void RawDataFormatTool::decodeToSmartIDs( const LHCb::RawBank & bank,
   }
 
   // Get L1 ID
-  const Level1ID L1ID ( bank.sourceID() );
+  const Level1HardwareID L1ID ( bank.sourceID() );
 
   // Is the RICH this L1 ID is for active ?
   const Rich::DetectorType rich = m_richSys->richDetector(L1ID);
@@ -701,7 +716,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                                                L1Map & decodedData ) const
 {
   // Get L1 ID
-  const Level1ID L1ID ( bank.sourceID() );
+  const Level1HardwareID L1ID ( bank.sourceID() );
   if ( msgLevel(MSG::DEBUG) ) debug() << "Decoding L1 bank " << L1ID << endreq;
 
   // various counts
@@ -990,7 +1005,7 @@ void RawDataFormatTool::decodeToSmartIDs_2006TB( const LHCb::RawBank & bank,
 {
 
   // Get L1 ID
-  const Level1ID L1ID ( bank.sourceID() );
+  const Level1HardwareID L1ID ( bank.sourceID() );
 
   // HPD count
   unsigned int nHPDbanks(0), decodedHits(0);
@@ -1125,7 +1140,7 @@ void RawDataFormatTool::decodeToSmartIDs_DC0406( const LHCb::RawBank & bank,
 {
 
   // Get L1 ID
-  const Level1ID L1ID ( bank.sourceID() );
+  const Level1HardwareID L1ID ( bank.sourceID() );
 
   // Get max data size for LHCb mode
   const ShortType maxDataSize = MaxDataSize;
@@ -1331,7 +1346,7 @@ RawDataFormatTool::decodeToSmartIDs( L1Map & decodedData ) const
   }
 
   // loop over the L1 map to check we only got each L1 ID once
-  for ( Rich::Map<Rich::DAQ::Level1ID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
+  for ( Rich::Map<Rich::DAQ::Level1HardwareID,unsigned int>::const_iterator iL1 = m_l1IdsDecoded.begin();
         iL1 != m_l1IdsDecoded.end(); ++iL1 )
   {
     if ( iL1->second > 1 )
@@ -1364,16 +1379,16 @@ const Rich::DAQ::L1Map & RawDataFormatTool::dummyMap() const
       ingressMap[L1IngressID(input)].setIngressHeader(header);
     }
     // create a dummy L1data object with a default ingress map for each L1 board
-    for ( Level1IDs::const_iterator iID = m_richSys->level1IDs().begin();
-          iID != m_richSys->level1IDs().end(); ++iID )
+    for ( Level1HardwareIDs::const_iterator iID = m_richSys->level1HardwareIDs().begin();
+          iID != m_richSys->level1HardwareIDs().end(); ++iID )
     {
       dummyMap[ *iID ] = ingressMap;
     }
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Created " << dummyMap.size()
-              << " entries in empty L1 map : L1IDs = "
-              << m_richSys->level1IDs() << endreq;
+              << " entries in empty L1 map : L1HardwareIDs = "
+              << m_richSys->level1HardwareIDs() << endreq;
     }
   }
   return dummyMap;
@@ -1384,7 +1399,7 @@ void RawDataFormatTool::dumpRawBank( const LHCb::RawBank & bank,
 {
 
   // Get bank version and ID
-  const Level1ID L1ID ( bank.sourceID() );
+  const Level1HardwareID L1ID ( bank.sourceID() );
   const BankVersion version = bankVersion( bank );
 
   std::ostringstream magicAsHex;

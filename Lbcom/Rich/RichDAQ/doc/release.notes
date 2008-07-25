@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Chris Jones
+ - Adapt to new distinction between L1 hardware and logical ID numbers
+
 ! 2008-07-21 - Marco Cattaneo
  - Adapt to new location of IEventTimeDecoder.h (needs Gaudi v20r2)
 
