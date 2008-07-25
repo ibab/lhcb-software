@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !---------------------------------------------------------------------
 
+! 2008-07-25 - Marco Cattaneo
+ - Remove #pragma print on from options
+
 !========================== MuonID v5r2 2007-06-30 ===================
 ! 2007-06-30 - Miriam Gandelman
  - added a smartRef to the muonTracks

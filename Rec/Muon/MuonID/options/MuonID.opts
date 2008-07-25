@@ -1,4 +1,3 @@
-#pragma print on
 //-----------------------------------------------------------------
 // MuonID v5r2
 // June 2007 Added a SmartRef to the muonTracks 
@@ -78,4 +77,3 @@ MuonID.YFOIParameter3 = {0.03, 0.02, 0.00, 0.09,
 MuonID.distMuon  = {0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.64};
 
 MuonID.distPion  = {11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.};
-#pragma print off
