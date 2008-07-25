@@ -1,4 +1,4 @@
-// $Id: L0MuonErrorHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonErrorHistos.cpp,v 1.2 2008-07-25 14:42:59 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ void L0MuonErrorHistos::bookHistos(bool shortname)
     bookHistos_ctrl(quarter, shortname);
   }
   
-  for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::NErrors; ++ih){
+  for (int ih=L0Muon::MonUtilities::Overflow; ih<L0Muon::MonUtilities::Decoding_data; ++ih){
     for (int quarter=0; quarter<4; ++quarter){
       for (int region=0; region<4; ++region){
         bookHistos_proc(quarter, region, shortname);

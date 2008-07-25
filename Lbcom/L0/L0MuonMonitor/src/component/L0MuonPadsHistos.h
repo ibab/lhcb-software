@@ -1,4 +1,4 @@
-// $Id: L0MuonPadsHistos.h,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonPadsHistos.h,v 1.2 2008-07-25 14:42:59 jucogan Exp $
 #ifndef COMPONENT_L0MUONPADSHISTOS_H 
 #define COMPONENT_L0MUONPADSHISTOS_H 1
 
@@ -33,6 +33,7 @@ public:
   void bookHistos(bool shortname=true);
   void bookHistos(int station, bool shortname=true);
   void fillHistos(const std::vector<LHCb::MuonTileID> &pads, int ts=0);
+  void fillHistos(int *multi );
   
 
 protected:
@@ -41,6 +42,7 @@ private:
 
   AIDA::IHistogram2D * m_hmap[L0Muon::MonUtilities::NStations];
   AIDA::IHistogram2D * m_hmultiBx[L0Muon::MonUtilities::NStations];
+  AIDA::IHistogram1D * m_hmulti[L0Muon::MonUtilities::NStations];
   AIDA::IHistogram2D * m_hmultiBx_region[L0Muon::MonUtilities::NStations][L0Muon::MonUtilities::NRegions];
 
   MuonLayout m_stationLayouts[L0Muon::MonUtilities::NStations];

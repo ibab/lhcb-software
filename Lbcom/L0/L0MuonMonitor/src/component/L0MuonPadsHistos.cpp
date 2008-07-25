@@ -1,4 +1,4 @@
-// $Id: L0MuonPadsHistos.cpp,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonPadsHistos.cpp,v 1.2 2008-07-25 14:42:59 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,7 @@ L0MuonPadsHistos::L0MuonPadsHistos( const std::string& type,
   for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
     m_hmap[sta]=NULL;  
     m_hmultiBx[sta]=NULL;
+    m_hmulti[sta]=NULL;
     for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
       m_hmultiBx_region[sta][reg]=NULL;
     }
@@ -72,6 +73,8 @@ void L0MuonPadsHistos::bookHistos(int sta,bool shortname) {
 
   hname = L0Muon::MonUtilities::hname_pads_multiBx(sta,toolname);
   m_hmultiBx[sta]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
+  hname = L0Muon::MonUtilities::hname_pads_multi(sta,toolname);
+  m_hmulti[sta]= book1D(hname,hname,0.5,10.5,10);;
   for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
     hname = L0Muon::MonUtilities::hname_pads_multiBx_region(sta,reg,toolname);
     m_hmultiBx_region[sta][reg]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
@@ -118,4 +121,11 @@ void L0MuonPadsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int
     fill(m_hmultiBx[sta],ts,n,1);
   }
   
+}
+
+void L0MuonPadsHistos::fillHistos(int *npad) 
+{ 
+  for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
+      fill(m_hmulti[sta],npad[sta],1);
+  }
 }

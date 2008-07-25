@@ -1,10 +1,11 @@
-// $Id: L0MuonCandHistos.h,v 1.1 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonCandHistos.h,v 1.2 2008-07-25 14:42:59 jucogan Exp $
 #ifndef COMPONENT_L0MUONCANDHISTOS_H 
 #define COMPONENT_L0MUONCANDHISTOS_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiHistoTool.h"
+#include "Kernel/MuonLayout.h"
 
 #include "Event/L0MuonCandidate.h"
 
@@ -29,18 +30,21 @@ public:
 
   virtual ~L0MuonCandHistos( ); ///< Destructor
 
-  void bookHistos(bool shortname=true);
+  void bookHistos(int nmax=8, bool shortname=true);
   void fillHistos(LHCb::L0MuonCandidates* cands, int ts=0);
+  void fillHistos(int sum);
 
 protected:
 
 private:
 
-  AIDA::IHistogram1D * m_hpt;
-  AIDA::IHistogram2D * m_hseedmap;
-  AIDA::IHistogram2D * m_hcandinM1map;
-  AIDA::IHistogram2D * m_hcandinM2map;
-  AIDA::IHistogram2D * m_hnbcands_in_ts;
+  MuonLayout m_stationLayouts[3];
 
+  AIDA::IHistogram1D * m_hpt;
+  AIDA::IHistogram1D * m_hencodedpt;
+  AIDA::IHistogram2D * m_hpos[3];
+  AIDA::IHistogram2D * m_hnumber;
+  AIDA::IHistogram1D * m_hsum;
+  
 };
 #endif // COMPONENT_L0MUONCANDHISTOS_H

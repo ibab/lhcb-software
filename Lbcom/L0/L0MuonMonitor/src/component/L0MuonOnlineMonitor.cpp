@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.6 2008-07-24 09:36:53 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.7 2008-07-25 14:42:59 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -55,10 +55,12 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   // Tools
-  m_padsHistos     = tool<L0MuonPadsHistos>( "L0MuonPadsHistos" , "Pads" , this );
-  m_channelsHistos = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels", this);
-  m_info           = tool<L0MuonInfoHistos>( "L0MuonInfoHistos", "Info", this);
-  m_error          = tool<L0MuonErrorHistos>( "L0MuonErrorHistos", "Error", this);
+  m_padsHistos      = tool<L0MuonPadsHistos>( "L0MuonPadsHistos" , "Pads" , this );
+  m_channelsHistos  = tool<L0MuonChannelsHistos>( "L0MuonChannelsHistos", "Channels", this);
+  m_info            = tool<L0MuonInfoHistos>( "L0MuonInfoHistos", "Info", this);
+  m_error           = tool<L0MuonErrorHistos>( "L0MuonErrorHistos", "Error", this);
+  m_candHistosFinal = tool<L0MuonCandHistos>( "L0MuonCandHistos", "FinalCand", this);
+  m_candHistosPU    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand", this);
   
   setHistoDir("L0Muon/Online");
 
@@ -68,7 +70,6 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==>   -- RunInfo done" << endmsg;
 
   // Decoding
-#if _ERROR_V2_==1
   m_error->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
@@ -78,23 +79,6 @@ StatusCode L0MuonOnlineMonitor::initialize() {
       m_error->bookHistos_proc(iq,reg,m_shortnames);
     }
   }
-#else
-  // ---- TMP ---- WILL NOT BE USED WITH BANK V2
-  for (int iq=0; iq<4;++iq){
-    for (int i=0; i<3; ++i) m_decoding_status[iq][i]=NULL;
-  }
-  for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
-    std::string hname;
-    int iq = (*itq);
-    hname="Decoding_errors_"+L0Muon::MonUtilities::quarterName(iq);
-    m_decoding_status[iq][2]=book1D(hname,hname,-0.5,-0.5+16,16);
-    hname="Inconsistencies_"+L0Muon::MonUtilities::quarterName(iq);
-    m_decoding_status[iq][1]=book1D(hname,hname,-0.5,-0.5+16,16);
-    hname="Valid_"+L0Muon::MonUtilities::quarterName(iq);
-    m_decoding_status[iq][0]=book1D(hname,hname,-0.5,-0.5+16,16);
-  }
-  // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
-#endif
   debug() << "==>   -- Decoding done" << endmsg;
 
   // Logical channels
@@ -119,26 +103,14 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   }
   debug() << "==>   -- Logical Pads done" << endmsg;
 
-  // Multiplicity  
-  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
-    std::string hname;
-    int sta = (*its);
-    hname="NPads_per_event_"+L0Muon::MonUtilities::stationName(sta);
-    book1D(hname,hname,-0.5,10.5,11);
-    hname="NPads_per_bx_"+L0Muon::MonUtilities::stationName(sta);
-    book2D(hname,hname,
-           (-1*int(m_time_slots.size()/2))-0.5,(int(m_time_slots.size()/2))+0.5,m_time_slots.size(),
-           +0.5,10.5,10);
-  }
-  debug() << "==>   -- Multiplicity done" << endmsg;
-  
 
   // Candidates
-  book1D("NCands_per_event","NCands_per_event",-0.5,0.5+2*m_quarters.size(),1+2*m_quarters.size());
-  book2D("NCands_per_bx","NCands_per_bx",
-         (-1*int(m_time_slots.size()/2))-0.5,(int(m_time_slots.size()/2))+0.5,m_time_slots.size(),
-         +0.5,0.5+2*m_quarters.size(),2*m_quarters.size());
+  m_candHistosFinal->setHistoDir("L0Muon/Online");
+  m_candHistosFinal->bookHistos(m_shortnames);
+  m_candHistosPU->setHistoDir("L0Muon/Online/PU");
+  m_candHistosPU->bookHistos(m_shortnames);
   debug() << "==>   -- Candidates done" << endmsg;
+
   
   return StatusCode::SUCCESS;
 }
@@ -159,10 +131,6 @@ StatusCode L0MuonOnlineMonitor::execute() {
   int ncand=0;
   int npad[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad[i]=0;
 
-  //Run info
-  m_info->getInfo();
-  m_info->fillHistos();
-
   // Loop over time slots
   for (std::vector<int>::iterator it_ts=m_time_slots.begin(); it_ts<m_time_slots.end(); ++it_ts){
 
@@ -171,44 +139,12 @@ StatusCode L0MuonOnlineMonitor::execute() {
     
     std::string location;
 
-#if _ERROR_V2_==1
+    //Run info
+    m_info->getInfo();
+    m_info->fillHistos();
+
+    // Error
     m_error->fillHistos();
-#else
-    // ---- TMP ---- WILL NOT BE USED WITH BANK V2
-    location = LHCb::L0MuonCtrlErrorLocation::Default ;
-    if (exist<LHCb::L0MuonCtrlErrors>(location) ){ //If container found in TES
-      LHCb::L0MuonCtrlErrors* perrors = get<LHCb::L0MuonCtrlErrors>(location);
-      LHCb::L0MuonCtrlErrors::iterator iterror;
-      for (iterror = perrors->begin() ; iterror!=perrors->end() ; ++iterror){ // Loop over ctrl errors
-        int iq = (*iterror)->key();
-        int header=(*iterror)->header();
-        for (int i=0;i<3;++i){
-          if ( ((header>>i)&1) ) {
-            fill( m_decoding_status[iq][i] , 15.  , 1.);
-          }
-        }
-      }// End of loop over ctrl errors
-    } // End if container found in TES
-    
-    location =  LHCb::L0MuonProcErrorLocation::Default ;
-    if (exist<LHCb::L0MuonProcErrors>(location) ){ // If container found in TES
-      LHCb::L0MuonProcErrors* perrors = get<LHCb::L0MuonProcErrors>(location);
-      LHCb::L0MuonProcErrors::iterator iterror;
-      for (iterror = perrors->begin() ; iterror!=perrors->end() ; ++iterror){ // Loop over proc errors
-        LHCb::MuonTileID mid = (*iterror)->key();
-        int iq = mid.quarter();
-        int ib = (*iterror)->board_index();
-        int header=(*iterror)->header();
-        for (int i=0;i<3;++i){
-          if ( ((header>>i)&1) ) {
-            if (m_decoding_status[iq][i]!=NULL) fill( m_decoding_status[iq][i] , ib  , 1.);
-          }
-          
-        }
-      }// End of loop over proc errors
-    } // End if container found in TES
-    // ---- END TMP ---- WILL NOT BE USED WITH BANK V2
-#endif
 
     // Get L0Muon Hits
     std::vector<LHCb::MuonTileID> l0muontiles;
@@ -226,50 +162,32 @@ StatusCode L0MuonOnlineMonitor::execute() {
     m_padsHistos->fillHistos(l0muonpads,*it_ts);
 
     // Multiplicity
-    int np[L0Muon::MonUtilities::NStations]; for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) np[sta]=0;
     for (std::vector<LHCb::MuonTileID>::iterator itpad=l0muonpads.begin(); itpad<l0muonpads.end();++itpad){
-      ++np[itpad->station()];
+      ++npad[itpad->station()];
     }
-    for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) {
-      std::string hname;
-      hname="NPads_per_bx_"+L0Muon::MonUtilities::stationName(sta);
-      AIDA::IHistogram2D *hcand2 = histo2D(hname);
-      if (hcand2!=NULL) fill(hcand2,(*it_ts),np[sta],1.);
-    }
-    for (int sta=0; sta<L0Muon::MonUtilities::NStations; ++sta) npad[sta]+=np[sta];
 
     // Candidates
     location = LHCb::L0MuonCandidateLocation::Default + context();
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
-      LHCb::L0MuonCandidates::const_iterator itcand;
-      int n=0;
-      for ( itcand= cands->begin(); itcand<cands->end();++itcand) {
-        LHCb::MuonTileID seed = (*itcand)->muonTileIDs(2)[0];
-        if (!quarterInUse(seed.quarter())) continue;
-        if (!regionInUse(seed.region())  ) continue;
-        ++n;
-      }
-      
-      AIDA::IHistogram2D *hcand2 = histo2D(std::string("NCands_per_bx"));
-      if (hcand2!=NULL) fill(hcand2,(*it_ts),n,1.);
-      ncand+=n;
+      m_candHistosFinal->fillHistos(cands,(*it_ts));
+      ncand+=cands->size();
+    }
+
+    location = LHCb::L0MuonCandidateLocation::PU + context();
+    if (  exist<LHCb::L0MuonCandidates>(location ) ) {
+      LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
+      m_candHistosPU->fillHistos(cands,(*it_ts));
     }
 
     
   } // End of loop over time slots
 
   // Multiplicity
-  for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
-    int sta = (*its);
-    std::string hname="NPads_per_event_"+L0Muon::MonUtilities::stationName(sta);
-    AIDA::IHistogram1D *hmulti=histo1D(hname);
-    if (hmulti!=NULL) fill(hmulti,npad[sta],1.);
-  }
+  m_padsHistos->fillHistos(npad);
   
   // Candidates
-  AIDA::IHistogram1D *hcand=histo1D(std::string("NCands_per_event"));
-  if (hcand!=NULL) fill(hcand,ncand,1.);
+  m_candHistosFinal->fillHistos(ncand);
 
   return StatusCode::SUCCESS;
 }
