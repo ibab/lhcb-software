@@ -123,8 +123,8 @@ void TrackFitMatchMonitor::plotDelta(const std::string& thisname,
 				     bool upstream)
 {
   // get the two predictions
-  LHCb::State stateUp   = node.predictedStateUp() ;
-  LHCb::State stateDown = node.predictedStateDown() ;
+  LHCb::State stateUp   = node.predictedStateForward() ;
+  LHCb::State stateDown = node.predictedStateBackward() ;
   // filter one of them
   filter(node, upstream ? stateUp : stateDown ) ;
   // compute the difference
