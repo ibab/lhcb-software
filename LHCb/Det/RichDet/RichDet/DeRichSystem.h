@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichSystem
  *
  *  CVS Log :-
- *  $Id: DeRichSystem.h,v 1.11 2008-07-24 18:28:57 papanest Exp $
+ *  $Id: DeRichSystem.h,v 1.12 2008-07-25 15:24:28 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-01-26
@@ -139,17 +139,31 @@ public:
    */
   const Rich::DAQ::Level0ID level0ID( const Rich::DAQ::HPDHardwareID hardID ) const;
 
-  /** Obtain the Level1 ID number for a given HPD RichSmartID
+  /** Obtain the Level1 hardware ID number for a given HPD RichSmartID
    *  @param smartID The RichSmartID for the HPD
-   *  @return The corresponding HPD Level1 ID
+   *  @return The corresponding HPD Level1 hardware ID
    */
-  const Rich::DAQ::Level1ID level1ID( const LHCb::RichSmartID smartID ) const;
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const LHCb::RichSmartID smartID ) const;
 
-  /** Obtain the Level1 ID number for a given HPD hardware ID
+  /** Obtain the Level1 hardware ID number for a given HPD hardware ID
    *  @param hardID The hardware ID for the HPD
-   *  @return The corresponding HPD Level1 ID
+   *  @return The corresponding HPD Level1 hardware ID
    */
-  const Rich::DAQ::Level1ID level1ID( const Rich::DAQ::HPDHardwareID hardID ) const;
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DAQ::HPDHardwareID hardID ) const;
+
+  /** Obtain the Level1 hardware ID number for a Level1 logical ID
+   *  @param rich The RICH detector
+   *  @param logID The logical ID for the HPD
+   *  @return The corresponding HPD Level1 hardware ID
+   */
+  const Rich::DAQ::Level1HardwareID level1HardwareID( const Rich::DetectorType rich,
+                                                      const Rich::DAQ::Level1LogicalID logID ) const;
+
+  /** Obtain the Level1 logical ID number for a Level1 hardware ID
+   *  @param hardID The hardware ID for the HPD
+   *  @return The corresponding HPD Level1 logical ID
+   */
+  const Rich::DAQ::Level1LogicalID level1LogicalID( const Rich::DAQ::Level1HardwareID hardID ) const;
 
   /** Obtain the Level1 input number for a given HPD RichSmartID
    *  @param smartID The RichSmartID for the HPD
@@ -163,23 +177,23 @@ public:
    */
   const Rich::DAQ::Level1Input level1InputNum( const Rich::DAQ::HPDHardwareID hardID ) const;
 
-  /** Obtain a list of RichSmartID HPD identifiers for a given level1 ID
+  /** Obtain a list of RichSmartID HPD identifiers for a given level1 hardwareID
    *  @param l1ID The level1 ID number
    *  @return Vector of all HPD RichSmartIDs for that Level1 board
    */
-  const LHCb::RichSmartID::Vector & l1HPDSmartIDs( const Rich::DAQ::Level1ID l1ID ) const;
+  const LHCb::RichSmartID::Vector & l1HPDSmartIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /** Obtain a list of HPD hardware identifiers for a given level1 ID
+  /** Obtain a list of HPD hardware identifiers for a given level1 hardware ID
    *  @param l1ID The level1 ID number
    *  @return Vector of all HPD hardware IDs for that Level1 board
    */
-  const Rich::DAQ::HPDHardwareIDs & l1HPDHardIDs( const Rich::DAQ::Level1ID l1ID ) const;
+  const Rich::DAQ::HPDHardwareIDs & l1HPDHardIDs( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
-  /** Return which RICH detector a given Level1 ID is for
-   *  @param l1ID The Level 1 ID
+  /** Return which RICH detector a given Level1 hardware ID is for
+   *  @param l1ID The Level 1 hardware ID
    *  @return The RICH detector
    */
-  const Rich::DetectorType richDetector( const Rich::DAQ::Level1ID l1ID ) const;
+  const Rich::DetectorType richDetector( const Rich::DAQ::Level1HardwareID l1ID ) const;
 
   /// Direct access to the mapping between Level1 IDs and HPD RichSmartIDs
   const Rich::DAQ::L1ToSmartIDs & l1HPDSmartIDs() const;
@@ -187,15 +201,15 @@ public:
   /// Direct access to the mapping between Level1 IDs and HPD RichSmartIDs
   const Rich::DAQ::L1ToHardIDs & l1HPDHardIDs() const;
 
-  /// Returns a list of all valid Level1 board IDs
-  const Rich::DAQ::Level1IDs & level1IDs() const;
+  /// Returns a list of all valid Level1 board hardware IDs
+  const Rich::DAQ::Level1HardwareIDs & level1HardwareIDs() const;
 
   /**
    * Retrieves the location of the HPD in the detector store, so it can be
    * loaded using the getDet<DeRichHPD> method.
    * @return The location of the HPD in the detector store
    */
-  std::string getDeHPDLocation(LHCb::RichSmartID smartID) const;
+  std::string getDeHPDLocation(const LHCb::RichSmartID smartID) const;
 
 
 private: // methods
@@ -241,11 +255,11 @@ private: // data
   HardIDToL0 m_hardid2L0; ///< HPD Hardware ID to L0 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 ID
-  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level1ID > SmartIDToL1;
+  typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::Level1HardwareID > SmartIDToL1;
   SmartIDToL1 m_smartid2L1; ///< HPD RichSmartID to L1 ID map
 
   /// Typedef for mapping from HPD Hardware ID to Level1 ID
-  typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level1ID > HardIDToL1;
+  typedef GaudiUtils::HashMap< const Rich::DAQ::HPDHardwareID, Rich::DAQ::Level1HardwareID > HardIDToL1;
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 input number
@@ -257,14 +271,14 @@ private: // data
   HardIDToL1In m_hardid2L1In; ///< HPD Hardware ID to L1 input number map
 
   /// Typedef for mapping between L1 boards and RICH detector
-  typedef GaudiUtils::HashMap< const Rich::DAQ::Level1ID, Rich::DetectorType > L1ToRICH;
+  typedef GaudiUtils::HashMap< const Rich::DAQ::Level1HardwareID, Rich::DetectorType > L1ToRICH;
   L1ToRICH m_l1ToRich; ///< L1 to RICH map
 
   Rich::DAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
   Rich::DAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
 
   /// List of all valid Level1 IDs
-  Rich::DAQ::Level1IDs m_l1IDs;
+  Rich::DAQ::Level1HardwareIDs m_l1IDs;
 
   /// smartID to copy number map
   typedef GaudiUtils::HashMap< const LHCb::RichSmartID, Rich::DAQ::HPDCopyNumber > SmartIDToCopyN;
@@ -285,6 +299,14 @@ private: // data
 
   /// DC06 copy number compatibility
   bool m_useOldCopyNumber;
+
+  /// Logical to hardware L1 ID map
+  typedef GaudiUtils::HashMap< const Rich::DAQ::Level1LogicalID, Rich::DAQ::Level1HardwareID > L1LogToHard;
+  GaudiUtils::HashMap<const Rich::DetectorType,L1LogToHard> m_l1LogToHard;
+
+  /// Logical to hardware L1 ID map
+  typedef GaudiUtils::HashMap< const Rich::DAQ::Level1HardwareID, Rich::DAQ::Level1LogicalID > L1HardToLog;
+  L1HardToLog m_l1HardToLog;
 
 };
 
@@ -347,9 +369,9 @@ inline const Rich::DAQ::L1ToHardIDs& DeRichSystem::l1HPDHardIDs() const
 }
 
 //=========================================================================
-// level1IDs
+// level1 hardware IDs
 //=========================================================================
-inline const Rich::DAQ::Level1IDs& DeRichSystem::level1IDs() const
+inline const Rich::DAQ::Level1HardwareIDs& DeRichSystem::level1HardwareIDs() const
 {
   return m_l1IDs;
 }

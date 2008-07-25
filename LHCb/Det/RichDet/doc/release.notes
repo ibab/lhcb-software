@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Chris Jones
+ - Add to DeRichSystem mapping between L1 hardware and logical IDs
+
 ! 2008-07-24 - Antonis Papanestis
  - Added HPDCopyNumber to DeRichSystem
  - Required changes for R2 mirrors now using framework alignment conditions
