@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.35 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.36 2008-07-26 23:03:01 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -23,8 +23,8 @@
  *
  *  @author Edgar De Oliveira
  *  @date   2002-05-21
- *  Updated and further developped - Adlene Hicheur
- *  Updated and further developped - Marco Cattaneo
+ *  Updated and further developed - Adlene Hicheur
+ *  Updated and further developed - Marco Cattaneo
  */
 
 DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
@@ -136,8 +136,8 @@ StatusCode MagneticFieldSvc::initialize()
     return status;
   }
   
-  // Normal case, use conditions database
   if( m_UseConditions ) {
+    // Normal case, use conditions database
     status = initializeWithCondDB();
   }
   else {
@@ -304,17 +304,14 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   }
   else
     polarity = m_measuredPtr->param<int>("Polarity");
-    // polarity = condition( MagnetCondLocations::Measured.c_str() )->param<int>("Polarity");
   
   // Update the scale factor
   if( !m_scaleFromOptions ) {
-    //    double measuredCurrent = condition( MagnetCondLocations::Measured )->param<double>("Current");
     double measuredCurrent = m_measuredPtr->param<double>("Current");
     
     // ******* Check I have the correct convention!!
     std::vector<double> coeffs;
     if( polarity > 0 )
-      //      coeffs = condition( MagnetCondLocations::ScaleUp.c_str() )->param<std::vector<double>("Coeffs");
       coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
     else
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
@@ -329,7 +326,6 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     // ******* Check I have the correct convention!!
     std::vector<std::string> files;
     if( polarity > 0 )
-      // files = condition( MagnetCondLocations::FieldMapFilesUp.c_str() )->param<std::vector<std::string>("Polarity");
       files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
     else
       files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");

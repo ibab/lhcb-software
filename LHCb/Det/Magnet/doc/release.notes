@@ -5,9 +5,22 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-07-26 - Marco Cattaneo
- - Brand new implementation. Magnetic field service is fully integrated with
-   conditions database, delegates to different tools depending on field map 
-   and polarity
+ - Revised implementation of MagneticFieldSvc
+   . Service now gets names of field map files from CondDB. Can be over-ridden
+     by FieldMapFiles option, previous options for field map are obsolete
+   . Service delegates reading of map files and caching of map to a
+     IMagFieldTool. There are two implementations: MagFieldTool for the real
+     map, MagFieldToolDC06 for the DC06 map
+   . On initialisation, service instantiates tool corresponding to current
+     fieldmap type and polarity. If polarity changes during the job, a second
+     tool is instantiated, and service dispatches fieldVector calls to the
+     appropriate tool.
+   . If scaling factor changes during the job, cached map in the tool is 
+     rescaled. Scaling factor can either be set by job options or calculated
+     from condDB data as follows:
+     scaleFactor = Coeff[0] + Coeff[1] * (Measured current)/(Nominal Current)
+  - Fixed options/UseRealMap.py for consistency with above changes. This file
+    should now only be used if not using the CondDB.
 
 ! 2008-07-18 - Marco Cattaneo
  - MagneticFieldSvc now implements ILHCbMagnetSvc interface

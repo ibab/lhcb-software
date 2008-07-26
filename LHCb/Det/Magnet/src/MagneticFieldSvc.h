@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.23 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.24 2008-07-26 23:03:01 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -78,16 +78,17 @@ private:
   StatusCode initializeWithCondDB();    ///< default get magnet data from CondDB
   StatusCode initializeWithoutCondDB(); ///< alternative get magnet data from job options
 
-  StatusCode i_updateConditions(); ///< Reads from conditions
+  StatusCode i_updateConditions();       ///< Reads from conditions
   StatusCode updateTool( int polarity ); ///< Steers conditions to appropriate tool
 
+  // Properties to configure the service
+  bool m_UseConditions;      ///< Get data from CondDB or options. Default CondDB
+  double m_nominalCurrent;   ///< Nominal magnet current to normalise rescaling
+  std::string m_mapFilePath; ///< Directory where field map files are located
+ 
+  // Special properties to use constant field (and no condDB!)
   bool                m_useConstField;    ///< Job option to use constant field
   std::vector<double> m_constFieldVector; ///< Option for constant field value
-  double              m_nominalCurrent; ///< To set up the running magnet current for rescaling
-  bool m_UseConditions;
-
-  // Properties to configure the service
-  std::string m_mapFilePath; ///< Directory where field map files are located
 
   // Properties to over-ride values in CondDB
   std::vector<std::string> m_mapFileNames; ///< Field map file names
@@ -109,8 +110,8 @@ private:
   IMagFieldTool* m_RealFieldUp;   ///< Pointer to tool handling "Up" Real map
   IMagFieldTool* m_RealFieldDown; ///< Pointer to tool handling "Down" Real map
 
-  IUpdateManagerSvc* m_updMgrSvc;
-  IToolSvc*          m_toolSvc;
+  IUpdateManagerSvc* m_updMgrSvc; ///< Pointer to UpdateManagerSvc
+  IToolSvc*          m_toolSvc;   ///< Pointer to ToolSvc
 
   // Following are obsolete, will be removed soon
   bool m_useRealMap; ///< OBSOLETE: To use the real map for data

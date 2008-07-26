@@ -1,4 +1,4 @@
-// $Id: MagFieldToolDC06.h,v 1.1 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagFieldToolDC06.h,v 1.2 2008-07-26 23:03:01 cattanem Exp $
 #ifndef MAGFIELDTOOLDC06_H 
 #define MAGFIELDTOOLDC06_H 1
 
@@ -34,7 +34,10 @@ public:
 protected:
 
 private:
+  /// Read the field map from theFile and apply the scaleFactor
   StatusCode readFile( const std::string& theFile, const double& scaleFactor );
+
+  /// Rescale the cached map be rescaleFactor
   void rescale ( const double& rescaleFactor );
   
 
@@ -44,8 +47,8 @@ private:
   std::vector<double> m_Q;       ///< Field vector
   double m_Dxyz[3];              ///< Steps in x, y and z
   int    m_Nxyz[3];              ///< Number of steps in x, y and z
-  double m_max_FL[3];
-  double m_min_FL[3];
+  double m_max_FL[3];            ///< Maximum limits of the field grid
+  double m_min_FL[3];            ///< Minimum limits of the field grid
   double m_zOffSet;              ///< The z offset
 
 
