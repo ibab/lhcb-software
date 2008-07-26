@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Patrick Robbe
+ - Move to HEPMC2
+
 !========================= GaussKine v2r1 2008-06-27 ========================= 
 ! 2008-06-12 - Patrick Robbe
  - Add the modifications for optical photon particle gun in GeneratorToG4
