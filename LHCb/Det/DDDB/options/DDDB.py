@@ -6,6 +6,7 @@ from Configurables import ( CondDBAccessSvc,
                             CondDBDispatcherSvc, 
                             CondDBLayeringSvc, 
                             CondDBCnvSvc,
+                            CondDBTimeSwitchSvc,
                             CondDBEntityResolver,
                             XmlCnvSvc,
                             XmlParserSvc )
@@ -98,7 +99,7 @@ else:
 
 DDDB     = getConfigurable("DDDB",     CondDBAccessSvc)
 LHCBCOND = getConfigurable("LHCBCOND", CondDBAccessSvc)
-ONLINE   = getConfigurable("ONLINE",   CondDBAccessSvc)
+ONLINE   = getConfigurable("ONLINE",   CondDBTimeSwitchSvc)
 SIMCOND  = getConfigurable("SIMCOND",  CondDBAccessSvc)
 
 # Standard configurations

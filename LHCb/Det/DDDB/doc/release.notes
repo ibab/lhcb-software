@@ -4,6 +4,13 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+! 2008-07-26 - Marco Cattaneo
+ - In DC06.py, .opts change default DC06 tag to DC06-20080725
+ - In LHCb-2008.py   change default 2008 tag to head-20080725
+ - Remove Magnetic field options from DC06.py, LHCb-2008.py, now taken
+   from ONLINE condDB partition
+ - Fix DDDB.py to make ONLINE a CondDBTimeSwitchSvc 
+
 ! 2008-07-23 - Marco Clemencic
  - Modified DDDB.py to avoid conflicts with the next version of SQLDDDB, where
    ONLINE may not be a CondDBAccessSvc.
@@ -16,7 +23,7 @@
 ! 2008-07-16 - Marco Cattaneo
  - In DC06.py, .opts: Do not use conditions for DC06 magnetic field scaling
                       Change default DC06 tag to DC06-20080716
- - In LHCb-2008.opts: Change default 2008 tag to head-20080716
+ - In LHCb-2008.py:   Change default 2008 tag to head-20080716
 
 !========================== DDDB v1r8 2008-07-03 =============================
 ! 2008-07-03 - Marco Cattaneo
