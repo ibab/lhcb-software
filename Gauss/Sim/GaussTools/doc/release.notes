@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2008-07-25 - Patrick Robbe
+ - MCTruthManager.h/.cpp: Adapt to HEPMC2
+
 !======================== GaussTools v14r0 2008-06-26 ========================
 ! 2008-06-26 - Gloria CORTI
  - Use new patterns in Gaudi v19r9 to create genConf helper library for

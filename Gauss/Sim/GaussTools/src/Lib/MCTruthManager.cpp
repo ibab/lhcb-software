@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.6 2007-10-02 16:33:25 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.7 2008-07-26 15:43:15 robbep Exp $
 // Include files 
 
 // local
@@ -95,9 +95,9 @@ int MCTruthManager::GetCreatorID(int barcode)
 //-----------------------------------------------------------------------------
 // Add new particle and related vertex(ices) to event
 //-----------------------------------------------------------------------------
-void MCTruthManager::AddParticle(HepLorentzVector& momentum, 
-                                 HepLorentzVector& prodpos, 
-                                 HepLorentzVector& endpos, 
+void MCTruthManager::AddParticle(HepMC::FourVector& momentum, 
+                                 HepMC::FourVector& prodpos, 
+                                 HepMC::FourVector& endpos, 
                                  int pdg_id, int partID, int motherID,
                                  bool directParent, int creatorID,
                                  bool hasOscillated)
@@ -134,7 +134,7 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
       // we first check whether the mother's end vertex corresponds to the particle's
       // production vertex
       HepMC::GenVertex* motherendvtx = mother->end_vertex();
-      HepLorentzVector motherendpos = motherendvtx->position();
+      HepMC::FourVector motherendpos = motherendvtx->position();
 
       if( motherendpos.x() == prodpos.x() &&
           motherendpos.y() == prodpos.y() &&
@@ -154,7 +154,7 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
           {
             if((*it)->pdg_id()==DummyPDGID)
             {
-              HepLorentzVector dummypos = (*it)->end_vertex()->position();
+              HepMC::FourVector dummypos = (*it)->end_vertex()->position();
               
               if( dummypos.x() == prodpos.x() &&
                   dummypos.y() == prodpos.y() &&
@@ -176,7 +176,9 @@ void MCTruthManager::AddParticle(HepLorentzVector& momentum,
             creators[-DummyBarCode - partID] = creatorID;
             event->add_vertex(childvtx);
             
-            HepMC::GenParticle* dummypart = new HepMC::GenParticle(HepLorentzVector(),DummyPDGID);
+            HepMC::GenParticle* dummypart = 
+              new HepMC::GenParticle(HepMC::FourVector(0.,0.,0.,0.),
+                                     DummyPDGID);
             // the dummy particle gets the dummy barcode plus the daughter particle barcode
             dummypart->suggest_barcode(DummyBarCode+partID);
             childvtx->add_particle_in(dummypart);

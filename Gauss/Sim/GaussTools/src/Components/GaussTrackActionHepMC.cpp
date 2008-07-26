@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.cpp,v 1.7 2008-04-28 09:04:20 robbep Exp $
+// $Id: GaussTrackActionHepMC.cpp,v 1.8 2008-07-26 15:43:15 robbep Exp $
 // Include files 
 
 // STD & STL 
@@ -132,7 +132,10 @@ void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
 {
   // new track is being started
   // we record its initial momentum 
-  fourmomentum = HepLorentzVector( track->GetMomentum(), track->GetTotalEnergy() );
+  fourmomentum = HepMC::FourVector( track->GetMomentum().x(),
+                                    track->GetMomentum().y(),
+                                    track->GetMomentum().z(),
+                                    track->GetTotalEnergy() );
 
   // This should have been done in GaussPostTrackAction, but check here
   if( !track->GetUserInformation() ) {    
@@ -176,9 +179,14 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
   GaussTrackInformation* ginf = (GaussTrackInformation*) track->GetUserInformation();
 
   if( ginf->storeHepMC() ) {
-    HepLorentzVector prodpos(track->GetVertexPosition(),
-                             track->GetGlobalTime() - track->GetLocalTime());
-    HepLorentzVector endpos(track->GetPosition(), track->GetGlobalTime());
+    HepMC::FourVector prodpos(track->GetVertexPosition().x(),
+                              track->GetVertexPosition().y(),
+                              track->GetVertexPosition().z(),
+                              track->GetGlobalTime() - track->GetLocalTime());
+    HepMC::FourVector endpos(track->GetPosition().x(), 
+                             track->GetPosition().y(), 
+                             track->GetPosition().z(), 
+                             track->GetGlobalTime());
 
     // Get the pdgID+LHCb extension
     int pdgID = track->GetDefinition()->GetPDGEncoding();
@@ -187,9 +195,16 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
       if ( NULL != track -> GetDynamicParticle() ) {
         if ( NULL != track -> GetDynamicParticle() -> GetPrimaryParticle() ) {
           pdgID = track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetPDGcode() ;
-          if ( "unknown" == track->GetDefinition()->GetParticleName() ) 
-            fourmomentum.setVectM( track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMomentum() , 
-                                   track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMass() ) ;
+          if ( "unknown" == track->GetDefinition()->GetParticleName() ) {
+            double ener = 
+              sqrt( track->GetDynamicParticle()->GetPrimaryParticle()->GetMomentum().mag2() + 
+                    track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMass() * 
+                    track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMass() ) ;
+            fourmomentum.setPx( track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMomentum().x() ) ;
+            fourmomentum.setPy( track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMomentum().y() ) ;
+            fourmomentum.setPz( track -> GetDynamicParticle() -> GetPrimaryParticle() -> GetMomentum().z() ) ;
+            fourmomentum.setE( ener ) ;
+          }
         }
       } 
       if ( 0 == pdgID ) {

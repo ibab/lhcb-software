@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.h,v 1.3 2006-05-02 18:29:29 gcorti Exp $
+// $Id: MCTruthManager.h,v 1.4 2008-07-26 15:43:15 robbep Exp $
 #ifndef COMPONENTS_MCTRUTHMANAGER_H 
 #define COMPONENTS_MCTRUTHMANAGER_H 1
 
@@ -39,8 +39,8 @@ public:
 
   void PrintEvent();
  
-  void AddParticle(HepLorentzVector& fourMom, 
-                   HepLorentzVector& prodPos, HepLorentzVector& endPos, 
+  void AddParticle(HepMC::FourVector& fourMom, 
+                   HepMC::FourVector& prodPos, HepMC::FourVector& endPos, 
                    int pdg, int trID, int parentID, bool directParent,
                    int creatorID, bool oscillated = false );
  

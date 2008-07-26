@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionHepMC.h,v 1.3 2007-01-12 15:36:44 ranjard Exp $
+// $Id: GaussTrackActionHepMC.h,v 1.4 2008-07-26 15:43:15 robbep Exp $
 #ifndef COMPONENT_GAUSSTRACKACTIONHEPMC_H 
 #define COMPONENT_GAUSSTRACKACTIONHEPMC_H 1
 
@@ -89,7 +89,7 @@ private:
 
   MCTruthManager*        m_mcMgr;
   IParticlePropertySvc*  m_ppSvc;
-  HepLorentzVector       fourmomentum;
+  HepMC::FourVector      fourmomentum;
 
   std::vector<std::string> m_hadronicProcesses;  
 

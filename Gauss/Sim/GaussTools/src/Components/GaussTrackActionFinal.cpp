@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionFinal.cpp,v 1.7 2007-01-12 15:36:43 ranjard Exp $ 
+// $Id: GaussTrackActionFinal.cpp,v 1.8 2008-07-26 15:43:15 robbep Exp $ 
 // Include files 
 
 // from Gaudi
@@ -99,6 +99,8 @@ void GaussTrackActionFinal::PostUserTrackingAction
   
   // get the trajectory 
   GaussTrajectory*       tr   = trajectory() ;  
+  if( 0 == tr   ) 
+  { Warning ( "Pre...: GaussTrajectory*       points to NULL" ) ; }
   
   // get the information 
   GaussTrackInformation* info = trackInfo() ;
