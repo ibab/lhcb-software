@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-26 - Patrick Robbe
+ - PythiaProduction.cpp: set new tune for Pythia6.4 as default
+   options
+ - Pythia64.opts: leave old charmonium production temporarily
+
 ! 2008-07-25 - Patrick Robbe
  - Move to HEPMC2
 

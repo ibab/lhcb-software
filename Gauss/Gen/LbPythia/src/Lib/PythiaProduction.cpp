@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.9 2008-07-24 22:19:59 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.10 2008-07-26 18:04:54 robbep Exp $
 
 // Include files
 // STD * STL 
@@ -133,21 +133,24 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
+  m_defaultSettings.push_back( "pypars mstp 81 21" ) ;
   m_defaultSettings.push_back( "pypars mstp 82 3" ) ;
   m_defaultSettings.push_back( "pypars mstp 52 2" ) ;
   m_defaultSettings.push_back( "pypars mstp 51 10042" ) ;
   m_defaultSettings.push_back( "pypars parp 67 1.0" ) ;
-  m_defaultSettings.push_back( "pypars parp 82 3.41" ) ;
+  m_defaultSettings.push_back( "pypars parp 82 4.50" ) ;
   m_defaultSettings.push_back( "pypars parp 89 14000" ) ;
-  m_defaultSettings.push_back( "pypars parp 90 0.162" ) ;
+  m_defaultSettings.push_back( "pypars parp 90 0.116" ) ;
   m_defaultSettings.push_back( "pypars parp 85 0.33" ) ;
   m_defaultSettings.push_back( "pypars parp 86 0.66" ) ;
   m_defaultSettings.push_back( "pypars parp 91 1.0" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 13 0.750" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 14 0.162" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 11 0.5" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 12 0.4" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 13 0.79" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 14 0.0" ) ;
   m_defaultSettings.push_back( "pydat1 parj 15 0.018" ) ;
   m_defaultSettings.push_back( "pydat1 parj 16 0.054" ) ;
-  m_defaultSettings.push_back( "pydat1 parj 17 0.090" ) ;
+  m_defaultSettings.push_back( "pydat1 parj 17 0.131" ) ;
   m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
   m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
 } ;
