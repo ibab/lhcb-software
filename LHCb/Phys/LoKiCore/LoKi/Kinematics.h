@@ -1,15 +1,13 @@
-// $Id: Kinematics.h,v 1.13 2008-06-12 08:14:31 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.14 2008-07-26 17:19:56 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// Math Definitions 
+// LoKi
 // ============================================================================
-#include "GaudiKernel/Vector4DTypes.h"
-#include "GaudiKernel/Vector3DTypes.h"
-#include "GaudiKernel/Point3DTypes.h"
+#include "LoKi/KinTypes.h"
 // ============================================================================
 /** @file
  *
@@ -27,16 +25,6 @@
 // ============================================================================
 namespace LoKi
 {
-  // Lorentz vector 
-  typedef Gaudi::LorentzVector LorentzVector ;
-  // Lorentz vector 
-  typedef LorentzVector        Vector4D      ;
-  // 3D vector 
-  typedef Gaudi::XYZVector     ThreeVector   ;
-  // 3D vector 
-  typedef ThreeVector          Vector3D      ;
-  // 3D point
-  typedef Gaudi::XYZPoint      Point3D       ;
   // ===========================================================================
   /** @namespace LoKi::Kinematics 
    *  collection of few trivial functions for kinematical evaluations
