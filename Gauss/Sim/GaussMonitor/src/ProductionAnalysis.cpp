@@ -1,4 +1,4 @@
-// $Id: ProductionAnalysis.cpp,v 1.1 2007-05-16 17:33:29 gcorti Exp $
+// $Id: ProductionAnalysis.cpp,v 1.2 2008-07-26 18:02:08 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -144,7 +144,7 @@ StatusCode ProductionAnalysis::execute() {
   
               double energy = hepMCpart->momentum().e()/Gaudi::Units::GeV;
               double pt = hepMCpart->momentum().perp()/Gaudi::Units::GeV;
-              double p =  hepMCpart->momentum().vect().mag()/Gaudi::Units::GeV;
+              double p =  hepMCpart->momentum().mag()/Gaudi::Units::GeV;
             
               debug() << "ready to book histos" << endmsg;
 

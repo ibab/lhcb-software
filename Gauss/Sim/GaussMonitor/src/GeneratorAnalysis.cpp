@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.5 2008-07-14 20:33:42 robbep Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.6 2008-07-26 18:02:08 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -200,7 +200,7 @@ StatusCode GeneratorAnalysis::execute() {
         double pseudoRap =  hepMCpart->momentum().pseudoRapidity();
         double energy = hepMCpart->momentum().e()/Gaudi::Units::GeV;
         double pt = hepMCpart->momentum().perp()/Gaudi::Units::GeV;
-        double p =  hepMCpart->momentum().vect().mag()/Gaudi::Units::GeV;
+        double p =  hepMCpart->momentum().mag()/Gaudi::Units::GeV;
         int pID = hepMCpart->pdg_id();
         LHCb::ParticleID LHCb_pID( hepMCpart->pdg_id() );
 

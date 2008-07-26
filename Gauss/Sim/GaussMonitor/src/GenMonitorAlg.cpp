@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.12 2008-05-07 09:54:20 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.13 2008-07-26 18:01:29 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -142,7 +142,7 @@ StatusCode GenMonitorAlg::execute() {
                                Gaudi::Units::ns );
             }
           } 
-          m_hPartP->fill( hepMCpart->momentum().vect().mag()/
+          m_hPartP->fill( hepMCpart->momentum().mag()/
                           Gaudi::Units::GeV );
           m_hPartPDG->fill( hepMCpart->pdg_id() );
         }
@@ -153,7 +153,7 @@ StatusCode GenMonitorAlg::execute() {
         if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
           nParticlesStable++;
           if( produceHistos() ) {
-            m_hProtoP->fill( hepMCpart->momentum().vect().mag()/
+            m_hProtoP->fill( hepMCpart->momentum().mag()/
                              Gaudi::Units::GeV );
             m_hProtoPDG->fill( hepMCpart->pdg_id() );
             m_hProtoLTime->fill( GaussGenUtil::lifetime( hepMCpart )/

@@ -1,4 +1,4 @@
-// $Id: ProductionAsymmetry.cpp,v 1.1 2007-05-16 17:33:29 gcorti Exp $
+// $Id: ProductionAsymmetry.cpp,v 1.2 2008-07-26 18:02:08 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -237,7 +237,7 @@ StatusCode ProductionAsymmetry::someplots(const HepMC::GenParticle* plotme)
    double pseudoRap =  plotme->momentum().pseudoRapidity();
    double energy = plotme->momentum().e()/Gaudi::Units::GeV;
    double pt = plotme->momentum().perp()/Gaudi::Units::GeV;
-   double p =  plotme->momentum().vect().mag()/Gaudi::Units::GeV;
+   double p =  plotme->momentum().mag()/Gaudi::Units::GeV;
             
    debug() << "ready to book histos" << endmsg;
 

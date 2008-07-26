@@ -1,9 +1,11 @@
-// $Id: GaussGenUtil.cpp,v 1.4 2007-04-13 16:29:59 gcorti Exp $
+// $Id: GaussGenUtil.cpp,v 1.5 2008-07-26 18:01:29 robbep Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/Transform4DTypes.h"
 
 // From HepMC
 #include "Event/HepMCEvent.h"
@@ -25,20 +27,27 @@ namespace GaussGenUtil {
   double lifetime( const HepMC::GenParticle* thePart ) {
 
     // Exit for off-shell particles
-    if ( thePart -> momentum().restMass2() < 0 ) return -1.0 ;
+    if ( thePart -> momentum().m2() < 0 ) return -1.0 ;
     
     if ( thePart->end_vertex() && thePart->production_vertex() ) {   
-      HepLorentzVector thePosition = thePart->end_vertex()->position() -
-        thePart->production_vertex()->position() ;
-      HepLorentzVector theNewPosition ;
-      theNewPosition.setX( thePosition.x() ) ;
-      theNewPosition.setY( thePosition.y() ) ;
-      theNewPosition.setZ( thePosition.z() ) ;
-      theNewPosition.setT( thePosition.t() * Gaudi::Units::c_light ) ;
 
-      Hep3Vector theBoost = thePart->momentum().boostVector() ;
-      HepLorentzVector thePositionBoost = theNewPosition.boost( -theBoost );
-      return thePositionBoost.t();  // in mm
+      Gaudi::LorentzVector thePosition( thePart->end_vertex()->position().x() -
+                                        thePart->production_vertex()->position().x(),
+                                        thePart->end_vertex()->position().y() -
+                                        thePart->production_vertex()->position().y(),
+                                        thePart->end_vertex()->position().z() -
+                                        thePart->production_vertex()->position().z(),
+                                        thePart->end_vertex()->position().t() -
+                                        thePart->production_vertex()->position().t());
+      // switch units for time to distance (mm)
+      thePosition.SetE( thePosition.t() * Gaudi::Units::c_light ) ;
+      
+      Gaudi::LorentzVector mom( thePart->momentum() ) ;
+      ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
+      
+      // switch again to time from distance (ns)
+      Gaudi::LorentzVector newPosition = theBoost( thePosition ) ;
+      return newPosition.t();  // in mm
     }
     return -1.0 ;
 
