@@ -1,10 +1,13 @@
-// $Id: GeneratorToG4.cpp,v 1.8 2008-06-12 18:45:16 robbep Exp $
+// $Id: GeneratorToG4.cpp,v 1.9 2008-07-26 17:29:33 robbep Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/Transform4DTypes.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from GiGa
 #include "GiGa/IGiGaSvc.h" 
@@ -271,16 +274,23 @@ G4PrimaryParticle* GeneratorToG4::makeG4Particle(HepMC::GenParticle* genPart,
   
   if( genPart->end_vertex() ) {
     // assign decay time
-    HepLorentzVector theLorentzV = (genPart->end_vertex()->position()
-                                    - genPart->production_vertex()->position());
+    Gaudi::LorentzVector theLorentzV( genPart->end_vertex()->position().x() -
+                                      genPart->production_vertex()->position().x(),
+                                      genPart->end_vertex()->position().y() -
+                                      genPart->production_vertex()->position().y(),
+                                      genPart->end_vertex()->position().z() -
+                                      genPart->production_vertex()->position().z(),
+                                      genPart->end_vertex()->position().t() -
+                                      genPart->production_vertex()->position().t());
     // switch units for time to distance (mm)
-    theLorentzV.setT( theLorentzV.t() * CLHEP::c_light ) ;
+    theLorentzV.SetE( theLorentzV.t() * Gaudi::Units::c_light ) ;
 
-    Hep3Vector theBoost = genPart->momentum().boostVector();
+    Gaudi::LorentzVector mom( genPart->momentum() ) ;
+    ROOT::Math::Boost theBoost( -mom.BoostToCM() ) ;
 
     // switch again to time from distance (ns)
-    g4Particle->SetProperTime((theLorentzV.boost(-theBoost)).t()/
-                              CLHEP::c_light);
+    Gaudi::LorentzVector newPosition = theBoost( theLorentzV ) ;
+    g4Particle->SetProperTime(newPosition.T()/Gaudi::Units::c_light);
     
     // Better to use print here instead of verbose because
 //     verbose() << "assigning time " 
