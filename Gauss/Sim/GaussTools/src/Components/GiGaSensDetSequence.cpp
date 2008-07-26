@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetSequence.cpp,v 1.2 2007-01-12 15:36:55 ranjard Exp $
+// $Id: GiGaSensDetSequence.cpp,v 1.3 2008-07-26 15:44:17 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,8 @@ DECLARE_TOOL_FACTORY( GiGaSensDetSequence );
 GiGaSensDetSequence::GiGaSensDetSequence( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : GiGaSensDetBase ( type, name , parent )
-  , G4VSensitiveDetector( name )
+  : G4VSensitiveDetector( name )
+  ,GiGaSensDetBase ( type, name , parent )
 {
 
   m_sensDets.clear();

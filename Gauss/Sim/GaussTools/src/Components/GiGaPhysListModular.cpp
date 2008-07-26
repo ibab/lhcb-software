@@ -1,4 +1,4 @@
-// $Id: GiGaPhysListModular.cpp,v 1.16 2007-01-12 15:36:52 ranjard Exp $
+// $Id: GiGaPhysListModular.cpp,v 1.17 2008-07-26 15:43:52 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -48,7 +48,8 @@ GiGaPhysListModular::GiGaPhysListModular
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList(),
+  : G4VModularPhysicsList(),
+    GiGaPhysListBase( type , name , parent ),
     m_dumpCutsTable(false)
 {
   declareProperty( "PhysicsConstructors"  , m_physconstr);

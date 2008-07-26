@@ -1,4 +1,4 @@
-// $Id: GiGaSensDetBudget.cpp,v 1.3 2007-01-12 15:36:55 ranjard Exp $
+// $Id: GiGaSensDetBudget.cpp,v 1.4 2008-07-26 15:43:52 robbep Exp $
 // Include files
 
 // from Gaudi
@@ -45,8 +45,8 @@ GiGaSensDetBudget::GiGaSensDetBudget
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaSensDetBase      ( type , name , parent ) 
-  , G4VSensitiveDetector ( name  )
+  : G4VSensitiveDetector ( name  )
+  , GiGaSensDetBase      ( type , name , parent ) 
   , m_budgetL            (       )
   , m_budgetP            (       )
   , m_budgetM            (       )
