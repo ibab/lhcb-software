@@ -1,19 +1,23 @@
-// $Id: MagneticFieldSvc.h,v 1.22 2008-07-18 16:11:24 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.23 2008-07-26 18:04:53 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
-#include "GaudiKernel/Service.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+#include "DetDesc/Condition.h"
+
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "DetDesc/Condition.h"
-#include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/Service.h"
 
-#include "Kernel/ILHCbMagnetSvc.h"
+#include <vector>
+#include <string>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
-
+class IToolSvc;
+class IUpdateManagerSvc;
+class IMagFieldTool;
 
 /** @class MagneticFieldSvc MagneticFieldSvc.h
  *  A service for finding the magnetic field vector at a given
@@ -64,42 +68,55 @@ public:
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
                                   Gaudi::XYZVector& fvec ) const;
   
-  bool   useRealMap() const { return m_useRealMap; } ///< accessor to m_useRealMap
+  bool   useRealMap() const; ///< True is using real map
   double scaleFactor() const { return m_scaleFactor; } ///< accessor to m_scaleFactor
 
 private:
 
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<MagneticFieldSvc>;
+  StatusCode initializeWithCondDB();    ///< default get magnet data from CondDB
+  StatusCode initializeWithoutCondDB(); ///< alternative get magnet data from job options
 
-  StatusCode parseFile( );       ///< Reads the field map from file 
-  StatusCode parseRealFiles( );  ///< Reads the real field map from files 
-  StatusCode i_updateScaling(); ///< Reads current and polarity from conditions
-  double GetScale();
-  
-
-  
-  std::string m_filename;        ///< Magnetic field file name
-  std::string m_qfilename[4];    ///< True Magnetic field file names (one for each quadrant
-  std::vector<double> m_Q;       ///< Field vector
-  std::vector<double> m_Q_quadr[4];      ///< Field vectors for 4 quadrants real map
-  double m_Dxyz[3];              ///< Steps in x, y and z
-  int    m_Nxyz[3];              ///< Number of steps in x, y and z
-  double m_max_FL[3];    
-  double m_min_FL[3];
-
-  double m_zOffSet;              ///< The z offset
+  StatusCode i_updateConditions(); ///< Reads from conditions
+  StatusCode updateTool( int polarity ); ///< Steers conditions to appropriate tool
 
   bool                m_useConstField;    ///< Job option to use constant field
   std::vector<double> m_constFieldVector; ///< Option for constant field value
-  double              m_scaleFactor;      ///< Option for field scaling factor
-  bool                m_useRealMap; ///< To use the real map for data
   double              m_nominalCurrent; ///< To set up the running magnet current for rescaling
-  std::string m_condPath; ///< Path to access the field conditions from the database.
-  Condition *m_condition; ///< Access the conditions
   bool m_UseConditions;
-  IUpdateManagerSvc * m_updMgrSvc;
-   
+
+  // Properties to configure the service
+  std::string m_mapFilePath; ///< Directory where field map files are located
+
+  // Properties to over-ride values in CondDB
+  std::vector<std::string> m_mapFileNames; ///< Field map file names
+  int                      m_polarity;     ///< Polarity
+  double                   m_scaleFactor;  ///< Field scaling factor
+
+  // Private data
+  bool m_mapFromOptions;        ///< Set if not using condDB for field map.
+  bool m_scaleFromOptions;      ///< Set if not using condDB for scale factor.
+  Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
+  Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition
+  Condition* m_scaleUpPtr;      ///< Pointer to ScaleUp condition
+  Condition* m_scaleDownPtr;    ///< Pointer to ScaleDown condition
+  Condition* m_measuredPtr;     ///< Pointer to Measured condition
+
+  IMagFieldTool* m_fieldTool;     ///< Pointer to current map handling tool
+  IMagFieldTool* m_DC06FieldUp;   ///< Pointer to tool handling "Up" DC06 map
+  IMagFieldTool* m_DC06FieldDown; ///< Pointer to tool handling "Down" DC06 map
+  IMagFieldTool* m_RealFieldUp;   ///< Pointer to tool handling "Up" Real map
+  IMagFieldTool* m_RealFieldDown; ///< Pointer to tool handling "Down" Real map
+
+  IUpdateManagerSvc* m_updMgrSvc;
+  IToolSvc*          m_toolSvc;
+
+  // Following are obsolete, will be removed soon
+  bool m_useRealMap; ///< OBSOLETE: To use the real map for data
+  std::string m_filename; ///< OBSOLETE: Magnetic field file name
+  std::string m_qfilename[4]; ///< OBSOLETE: True Magnetic field file names (one for each quadrant
+  std::string m_condPath; ///< OBSOLETE Path to access the field conditions from the database.
 
 };
 

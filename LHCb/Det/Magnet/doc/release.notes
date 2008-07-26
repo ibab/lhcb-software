@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-07-26 - Marco Cattaneo
+ - Brand new implementation. Magnetic field service is fully integrated with
+   conditions database, delegates to different tools depending on field map 
+   and polarity
+
 ! 2008-07-18 - Marco Cattaneo
  - MagneticFieldSvc now implements ILHCbMagnetSvc interface
  - Accessor methods renamed to scaleFactor() and useRealMap() to conform with

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.30 2008-07-18 16:11:24 cattanem Exp $
+# $Id: requirements,v 1.31 2008-07-26 18:04:53 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v4r1
+version           v5r0
 
 branches          cmt doc src 
 
@@ -11,6 +11,7 @@ use GaudiKernel v*
 use GaudiSvc v*
 use DetDesc v*  Det
 use DDDB   v* Det
+use FieldMap  v* -no_auto_imports
 
 library          Magnet    ../src/*.cpp -import=GaudiAlg
 

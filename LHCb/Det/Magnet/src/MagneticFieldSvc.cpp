@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.34 2008-07-25 12:23:18 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.35 2008-07-26 18:04:53 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -7,9 +7,13 @@
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "MagneticFieldSvc.h"
+#include "MagnetCondLocations.h"
+#include "IMagFieldTool.h"
 
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/IToolSvc.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -20,6 +24,7 @@
  *  @author Edgar De Oliveira
  *  @date   2002-05-21
  *  Updated and further developped - Adlene Hicheur
+ *  Updated and further developped - Marco Cattaneo
  */
 
 DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
@@ -29,31 +34,54 @@ DECLARE_SERVICE_FACTORY( MagneticFieldSvc );
 //=============================================================================
 MagneticFieldSvc::MagneticFieldSvc( const std::string& name, 
                                     ISvcLocator* svc ) : Service( name, svc ),
-                                                         m_condition(0),
-                                                         m_updMgrSvc(0)
+                                                         m_mapFromOptions(false),
+                                                         m_scaleFromOptions(false),
+                                                         m_mapFilesUpPtr(0),
+                                                         m_mapFilesDownPtr(0),
+                                                         m_scaleUpPtr(0),
+                                                         m_scaleDownPtr(0),
+                                                         m_measuredPtr(0),
+                                                         m_fieldTool(0),
+                                                         m_DC06FieldUp(0),
+                                                         m_DC06FieldDown(0),
+                                                         m_updMgrSvc(0),
+                                                         m_toolSvc(0)
 {
 
+  m_constFieldVector.push_back( 0. );
+  m_constFieldVector.push_back( 0. );
+  m_constFieldVector.push_back( 0. );
 
-  m_constFieldVector.push_back( 0. );
-  m_constFieldVector.push_back( 0. );
-  m_constFieldVector.push_back( 0. );
+  if( std::getenv("FIELDMAPROOT") != NULL ) {
+    m_mapFilePath  = getenv("FIELDMAPROOT");
+    m_mapFilePath += "/cdf/";
+  }
+  else
+    m_mapFilePath  = "";
   
-  declareProperty( "FieldMapFile",        m_filename = "FieldMapFileNotSet" );
-  declareProperty( "FieldMapFileQ1",m_qfilename[0] = "FieldMapFileQ1NotSet");
-  declareProperty( "FieldMapFileQ2",m_qfilename[1] = "FieldMapFileQ2NotSet");
-  declareProperty( "FieldMapFileQ3",m_qfilename[2] = "FieldMapFileQ3NotSet");
-  declareProperty( "FieldMapFileQ4",m_qfilename[3] = "FieldMapFileQ4NotSet");
+  declareProperty( "NominalCurrent", m_nominalCurrent = 5850, 
+                   "Nominal magnet current in Amps" );
+  declareProperty( "FieldMapPath",  m_mapFilePath, 
+                   "Directory where field map files are located, including trailing separator" );
+  declareProperty( "UseConditions", m_UseConditions = true );
+  declareProperty( "FieldMapFiles", m_mapFileNames, 
+                   "Vector of file names for the field map. If set, over-rides CondDB value" );
+  declareProperty( "ScaleFactor",   m_scaleFactor = 9999.,
+                   "Factor by which to rescale the field map. If set, over-rides CondDB value" );
+  declareProperty( "Polarity",      m_polarity = 0,
+                   "Polarity of the magnet. If set, over-rides CondDB value" );
+  
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
-  declareProperty( "ScaleFactor",         m_scaleFactor = 1. );
-  declareProperty( "UseRealMap", m_useRealMap = false);
-  //Nominal magnet current in A
-  declareProperty( "NominalCurrent", m_nominalCurrent = 5850);
-  declareProperty( "CondPath", m_condPath = "/dd/Conditions/Online/LHCb/Magnet/Measured",
-                   "Path to the magnetic field condition in the transient store");
-  declareProperty( "UseConditions", m_UseConditions = true);
-  
-  
+
+  // Obsolete properties, will be removed soon, do not use!
+  declareProperty( "UseRealMap",    m_useRealMap   = false );
+  declareProperty( "FieldMapFile",  m_filename     = "" );
+  declareProperty( "FieldMapFileQ1",m_qfilename[0] = "" );
+  declareProperty( "FieldMapFileQ2",m_qfilename[1] = "" );
+  declareProperty( "FieldMapFileQ3",m_qfilename[2] = "" );
+  declareProperty( "FieldMapFileQ4",m_qfilename[3] = "" );
+  declareProperty( "CondPath", m_condPath = "" );
   
 }
 //=============================================================================
@@ -72,65 +100,157 @@ StatusCode MagneticFieldSvc::initialize()
   MsgStream log(msgSvc(), name());
   StatusCode status = Service::initialize();
   if( status.isFailure() ) return status;
+
+  // Backward compatibility of old options
+  if( m_filename != "" || m_qfilename[0] != "" || m_qfilename[1] != ""
+                       || m_qfilename[2] != "" || m_qfilename[3] != "") {
+    if( m_mapFileNames.size() > 0 ) {
+      log << MSG::ERROR << "Both old and new style FieldMapFile options set, don't know what to do!" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    else if( m_filename != "" && m_qfilename[0] == "" && m_qfilename[1] == ""
+                              && m_qfilename[2] == "" && m_qfilename[3] == "") {
+      log << MSG::WARNING << "Using obsolete DC06 option FieldMapFile, please change to FieldMapFiles" << endmsg;
+      m_mapFileNames.push_back( m_filename );
+    }
+    else if( m_filename == "" && m_qfilename[0] != "" && m_qfilename[1] != ""
+                              && m_qfilename[2] != "" && m_qfilename[3] != "") {
+      log << MSG::WARNING << "Using obsolete real map options FieldMapFileQ*, please change to FieldMapFiles" << endmsg;
+      m_mapFileNames.push_back( m_qfilename[0] );
+      m_mapFileNames.push_back( m_qfilename[1] );
+      m_mapFileNames.push_back( m_qfilename[2] );
+      m_mapFileNames.push_back( m_qfilename[3] );
+    }
+    else {
+      log << MSG::ERROR << "Using invalid combination of FieldMapFile and FieldMapfileQ* options" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  if( m_condPath != "" )
+    log << MSG::WARNING << "Obsolete property CondPath given but has no effect" << endmsg;
+
+  // Tool service, for access to the Field map tool(s)
+  status = service("ToolSvc", m_toolSvc );
+  if ( status.isFailure() ) {
+    log << MSG::ERROR << "Cannot find the ToolSvc" << endmsg;
+    return status;
+  }
   
+  // Normal case, use conditions database
+  if( m_UseConditions ) {
+    status = initializeWithCondDB();
+  }
+  else {
+    status = initializeWithoutCondDB();
+  }
+  
+  return status;  
+}
+
+//=============================================================================
+bool MagneticFieldSvc::useRealMap() const
+//=============================================================================
+{
+  if( m_mapFileNames.size() == 4 )
+    return true;
+  else
+    return false;
+}
+
+//=============================================================================
+StatusCode MagneticFieldSvc::initializeWithCondDB() 
+//=============================================================================
+{
+  MsgStream log(msgSvc(), name());
+
+  if( m_useConstField ) {
+    log << MSG::ERROR 
+        << "use of constant field was requested together with CondDB!"
+        << "I don't know what to do!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  StatusCode status = service("UpdateManagerSvc",m_updMgrSvc);
+  if ( status.isFailure() ) {
+    log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
+    return status;
+  }
+
+  // FieldMap file name(s). If not over-ridden by options, get from CondDB
+  m_mapFromOptions = false;
+  m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
+                                  &MagneticFieldSvc::i_updateConditions, m_measuredPtr );
+
+  if( m_mapFileNames.size() != 0 ) {
+    log << MSG::WARNING 
+        << "Requested condDB but using manually set field map file name(s) = "
+        << m_mapFileNames << endmsg;
+    m_mapFromOptions = true;
+  }
+  else {
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesUp,
+                                    &MagneticFieldSvc::i_updateConditions, m_mapFilesUpPtr );
+
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::FieldMapFilesDown,
+                                    &MagneticFieldSvc::i_updateConditions, m_mapFilesDownPtr );
+  }
+  
+
+  // Scaling factor. If not over-ridden by options, get it from CondDB
+  m_scaleFromOptions = false;
+  if( m_scaleFactor < 9998. ) {
+    log << MSG::WARNING 
+        << "Requested condDB but using manually set scale factor = "
+        << m_scaleFactor << endmsg;
+    m_scaleFromOptions = true;
+  }
+  else {
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::Measured,
+                                    &MagneticFieldSvc::i_updateConditions, m_measuredPtr );
+
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleUp,
+                                    &MagneticFieldSvc::i_updateConditions, m_scaleUpPtr );
+
+    m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleDown,
+                                    &MagneticFieldSvc::i_updateConditions, m_scaleDownPtr );
+  }
+  
+  // Initialize the service using the current conditions values
+  return m_updMgrSvc->update(this);
+
+}
+
+//=============================================================================
+StatusCode MagneticFieldSvc::initializeWithoutCondDB() 
+//=============================================================================
+{
+
+  MsgStream log(msgSvc(), name());
+
   if( m_useConstField ) {
     log << MSG::WARNING << "using constant magnetic field with field vector "
         << m_constFieldVector << " (Tesla)" << endmsg;
     return StatusCode::SUCCESS;
   }
 
-  if(m_UseConditions) {
-    //retrieve current from conditions, set the scale factor:
-    status = service("UpdateManagerSvc",m_updMgrSvc);
-    if ( status.isFailure() ) {
-      log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
-      return status;
-    }
-    
-    m_updMgrSvc->registerCondition(this,m_condPath,
-                                   &MagneticFieldSvc::i_updateScaling,
-                                   m_condition);
-    
-    status = m_updMgrSvc->update(this);
-    if ( status.isFailure() ) {
-      log << MSG::ERROR << "Cannot find " << m_condPath << endmsg;
-      return status;
-    }
-  }
- 
+  log << MSG::WARNING << "Not using CondDB, entirely steered by options" << endmsg;
   
-  if (m_useRealMap) { 
-    log << MSG::INFO << "*** Real Field parameterization will be used *** " << endreq;
-    status = parseRealFiles();
-
-  }
-  else {
-
-   status = parseFile(); 
-  }
-  
-
-  if ( status.isSuccess() ) {
-      log << MSG::DEBUG << "Magnetic field parsed successfully" << endreq;
-
-    for (int iC = 0; iC< 3; ++iC ){
-      m_min_FL[iC] = 0.0;
-      m_max_FL[iC] = m_min_FL[iC]+( m_Nxyz[iC]-1 )* m_Dxyz[iC];
-    } // iC
-    
-    //    return status;
-  }
-  else {
-    log << MSG::DEBUG << "Magnetic field parse failed" << endreq;
+  if( m_mapFileNames.size() == 0 ) {
+    log << MSG::ERROR << "Field Map filename(s) not set" << endmsg;
     return StatusCode::FAILURE;
   }
+  m_mapFromOptions = true;
 
-  return StatusCode::SUCCESS;  
-
-
+  if( m_scaleFactor > 9998. ) {
+    m_scaleFactor = 1.;
+    log << MSG::DEBUG << "Scale factor set to default = " << m_scaleFactor << endmsg;
+    m_scaleFromOptions = true;
+  }
+  
+  // Value of polarity irrelevant when using options
+  // Parse the file via the appropriate tool
+  return updateTool( 1 );
 }
-
-
 
 //=============================================================================
 // QueryInterface
@@ -150,232 +270,6 @@ StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
   return Service::queryInterface(riid,ppvInterface);
 }
 
-// ---------------------------------------------------------------------------
-// Routine: parseFile
-// Purpose: Parses the file and fill a magnetic field vector
-// ---------------------------------------------------------------------------
-StatusCode MagneticFieldSvc::parseFile() {
-  StatusCode sc = StatusCode::FAILURE;
-  
-  MsgStream log( msgSvc(), name() );
-  char line[ 255 ];
-  std::ifstream infile( m_filename.c_str() );
-  
-  if ( infile ) {
-	  sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Opened magnetic field file : " << m_filename
-	      << endreq;
-    
-    // Skip the header till PARAMETER
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != 'P' );
-    
-    // Get the PARAMETER
-    std::string sPar[2];
-    char* token = strtok( line, " " );
-    int ip = 0;
-    do{
-      if ( token ) { sPar[ip] = token; token = strtok( NULL, " " );} 
-      else continue;
-      ip++;
-    } while ( token != NULL );
-    long int npar = atoi( sPar[1].c_str() );
-
-    // Skip the header till GEOMETRY
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != 'G' );
-    
-    // Skip any comment before GEOMETRY 
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != '#' );
-    
-    // Get the GEOMETRY
-    infile.getline( line, 255 );
-    std::string sGeom[7];
-    token = strtok( line, " " );
-    int ig = 0;
-    do{
-      if ( token ) { sGeom[ig] = token; token = strtok( NULL, " " );} 
-      else continue; 
-      ig++;  
-    } while (token != NULL);
-
-    // Grid dimensions are given in cm in CDF file. Convert to CLHEP units
-    m_Dxyz[0] = atof( sGeom[0].c_str() ) * Gaudi::Units::cm;
-    m_Dxyz[1] = atof( sGeom[1].c_str() ) * Gaudi::Units::cm;
-    m_Dxyz[2] = atof( sGeom[2].c_str() ) * Gaudi::Units::cm;
-    m_Nxyz[0] = atoi( sGeom[3].c_str() );
-    m_Nxyz[1] = atoi( sGeom[4].c_str() );
-    m_Nxyz[2] = atoi( sGeom[5].c_str() );
-    m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
-    
-    m_Q.clear();
-    m_Q.reserve(npar - 7);
-    // Number of lines with data to be read
-    long int nlines = ( npar - 7 ) / 3;
-    
-    // Check number of lines with data read in the loop
-    long int ncheck = 0;
-    
-    // Skip comments and fill a vector of magnetic components for the
-    // x, y and z positions given in GEOMETRY
-    
-   	while( infile ) {
-      // parse each line of the file, 
-      // comment lines begin with '#' in the cdf file
-	    infile.getline( line, 255 );
-	    if ( line[0] == '#' ) continue;
-	    std::string sFx, sFy, sFz; 
-	    char* token = strtok( line, " " );
-	    if ( token ) { sFx = token; token = strtok( NULL, " " );} else continue;
-  	  if ( token ) { sFy = token; token = strtok( NULL, " " );} else continue;
-  	  if ( token ) { sFz = token; token = strtok( NULL, " " );} else continue;
-	    if ( token != NULL ) continue;
-      
-      // Field values are given in gauss in CDF file. Convert to CLHEP units
-      double fx = atof( sFx.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      double fy = atof( sFy.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      double fz = atof( sFz.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      
-      // Add the magnetic field components of each point to 
-      // sequentialy in a vector 
-      m_Q.push_back( fx );
-      m_Q.push_back( fy );
-      m_Q.push_back( fz );
-      // counts after reading and filling to match the number of lines
-      ncheck++; 
-	  }
-    infile.close();
-    if ( nlines != ncheck ) {
-      log << MSG::ERROR << " Number of points in field map does not match" 
-          << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-  else {
-  	log << MSG::ERROR << "Unable to open magnetic field file : " 
-        << m_filename << endreq;
-  }
-  
-  return sc;
-}
-
-
-StatusCode MagneticFieldSvc::parseRealFiles() {
-  StatusCode sc = StatusCode::FAILURE;
-  
-  MsgStream log( msgSvc(), name() );
-  char line[ 255 ];
-
-for(int ifile=0;ifile<4;ifile++) {
-  std::ifstream infile( m_qfilename[ifile].c_str() );
-  
-  if ( infile ) {
-	  sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Opened magnetic field file : " << m_qfilename[ifile]
-	      << endreq;
-    
-    // Skip the header till PARAMETER
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != 'P' );
-    
-    // Get the PARAMETER
-    std::string sPar[2];
-    char* token = strtok( line, " " );
-    int ip = 0;
-    do{
-      if ( token ) { sPar[ip] = token; token = strtok( NULL, " " );} 
-      else continue;
-      ip++;
-    } while ( token != NULL );
-    long int npar = atoi( sPar[1].c_str() );
-
-    // Skip the header till GEOMETRY
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != 'G' );
-    
-    // Skip any comment before GEOMETRY 
-    do{
-	    infile.getline( line, 255 );
-	  } while( line[0] != '#' );
-    
-    // Get the GEOMETRY
-    infile.getline( line, 255 );
-    std::string sGeom[7];
-    token = strtok( line, " " );
-    int ig = 0;
-    do{
-      if ( token ) { sGeom[ig] = token; token = strtok( NULL, " " );} 
-      else continue; 
-      ig++;  
-    } while (token != NULL);
-
-    // Grid dimensions are given in cm in CDF file. Convert to CLHEP units
-    m_Dxyz[0] = atof( sGeom[0].c_str() ) * Gaudi::Units::cm;
-    m_Dxyz[1] = atof( sGeom[1].c_str() ) * Gaudi::Units::cm;
-    m_Dxyz[2] = atof( sGeom[2].c_str() ) * Gaudi::Units::cm;
-    m_Nxyz[0] = atoi( sGeom[3].c_str() );
-    m_Nxyz[1] = atoi( sGeom[4].c_str() );
-    m_Nxyz[2] = atoi( sGeom[5].c_str() );
-    m_zOffSet = atof( sGeom[6].c_str() ) * Gaudi::Units::cm;
-    
-    m_Q_quadr[ifile].clear();
-    m_Q_quadr[ifile].reserve(npar - 7);
-    // Number of lines with data to be read
-    long int nlines = ( npar - 7 ) / 3;
-    
-    // Check number of lines with data read in the loop
-    long int ncheck = 0;
-    
-    // Skip comments and fill a vector of magnetic components for the
-    // x, y and z positions given in GEOMETRY
-    
-   	while( infile ) {
-      // parse each line of the file, 
-      // comment lines begin with '#' in the cdf file
-	    infile.getline( line, 255 );
-	    if ( line[0] == '#' ) continue;
-	    std::string sFx, sFy, sFz; 
-	    char* token = strtok( line, " " );
-	    if ( token ) { sFx = token; token = strtok( NULL, " " );} else continue;
-  	  if ( token ) { sFy = token; token = strtok( NULL, " " );} else continue;
-  	  if ( token ) { sFz = token; token = strtok( NULL, " " );} else continue;
-	    if ( token != NULL ) continue;
-      
-      // Field values are given in gauss in CDF file. Convert to CLHEP units
-      double fx = atof( sFx.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      double fy = atof( sFy.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      double fz = atof( sFz.c_str() ) * Gaudi::Units::gauss * m_scaleFactor;
-      
-      // Add the magnetic field components of each point to 
-      // sequentialy in a vector 
-      m_Q_quadr[ifile].push_back( fx );
-      m_Q_quadr[ifile].push_back( fy );
-      m_Q_quadr[ifile].push_back( fz );
-      // counts after reading and filling to match the number of lines
-      ncheck++; 
-	  }
-    infile.close();
-    if ( nlines != ncheck ) {
-      log << MSG::ERROR << " Number of points in field map does not match" 
-          << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-  else {
-  	log << MSG::ERROR << "Unable to open magnetic field file : " 
-        << m_qfilename[ifile] << endreq;
-  }
-}
- 
-  return sc;
-}
-
 //=============================================================================
 // FieldVector: find the magnetic field value at a given point in space
 //=============================================================================
@@ -388,187 +282,139 @@ StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
                m_constFieldVector[2]*Gaudi::Units::tesla );
     return StatusCode::SUCCESS;
   }
+
+  // Forward request to the tool
+  m_fieldTool->fieldVector( r, bf );
+  return StatusCode::SUCCESS;
   
-  bf.SetXYZ( 0.0, 0.0, 0.0 );
-
-  ///  Linear interpolated field
-  double z = r.z() - m_zOffSet;
-  if( !(z >= m_min_FL[2] && z < m_max_FL[2]) )  return StatusCode::SUCCESS;
-  double x = fabs( r.x() );  
-  if( !(x >= m_min_FL[0] && x < m_max_FL[0]) )  return StatusCode::SUCCESS;
-  double y = fabs( r.y() );
-  if( !(y >= m_min_FL[1] && y < m_max_FL[1]) )  return StatusCode::SUCCESS;
-  int i = int( x/m_Dxyz[0]);
-  int j = int( y/m_Dxyz[1] );
-  int k = int( z/m_Dxyz[2] );
-  
-  int ijk000 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j )     + i );
-  int ijk001 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j )     + i );
-  int ijk010 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1 ) + i );
-  int ijk011 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1)  + i );
-  int ijk100 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j)      + i + 1 );
-  int ijk101 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j)      + i + 1 );
-  int ijk110 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1)  + i + 1 );
-  int ijk111 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1 ) + i + 1 );
-
-
-  
-  // auxiliary variables defined at the vertices of the cube that
-  // contains the (x, y, z) point where the field is interpolated
-
-  double cx000,cx001,cx010,cx011,cx100,cx101,cx110,cx111,cy000,cy001,cy010,cy011,cy100,cy101,cy110,cy111,cz000,cz001,cz010,cz011,cz100,cz101,cz110,cz111;
-
-  if(!m_useRealMap) {
-    
-  cx000 = m_Q[ ijk000 ];
-  cx001 = m_Q[ ijk001 ];
-  cx010 = m_Q[ ijk010 ];
-  cx011 = m_Q[ ijk011 ];
-  cx100 = m_Q[ ijk100 ];
-  cx101 = m_Q[ ijk101 ];
-  cx110 = m_Q[ ijk110 ];
-  cx111 = m_Q[ ijk111 ];
-  cy000 = m_Q[ ijk000+1 ];
-  cy001 = m_Q[ ijk001+1 ];
-  cy010 = m_Q[ ijk010+1 ];
-  cy011 = m_Q[ ijk011+1 ];
-  cy100 = m_Q[ ijk100+1 ];
-  cy101 = m_Q[ ijk101+1 ];
-  cy110 = m_Q[ ijk110+1 ];
-  cy111 = m_Q[ ijk111+1 ];
-  cz000 = m_Q[ ijk000+2 ];
-  cz001 = m_Q[ ijk001+2 ];
-  cz010 = m_Q[ ijk010+2 ];
-  cz011 = m_Q[ ijk011+2 ];
-  cz100 = m_Q[ ijk100+2 ];
-  cz101 = m_Q[ ijk101+2 ];
-  cz110 = m_Q[ ijk110+2 ];
-  cz111 = m_Q[ ijk111+2 ];
-  
-  } else {
-    
-    int iquadr=999;
-    
-  if(r.x() >=0)
-    if( r.y() >=0) 
-      iquadr=0;
-    else
-      iquadr=2;
-  else
-    if(r.y() >=0)
-      iquadr=1;
-    else
-      iquadr=3;
-
-
-  cx000 = (m_Q_quadr[iquadr])[ ijk000 ];
-  cx001 = (m_Q_quadr[iquadr])[ ijk001 ];
-  cx010 = (m_Q_quadr[iquadr])[ ijk010 ];
-  cx011 = (m_Q_quadr[iquadr])[ ijk011 ];
-  cx100 = (m_Q_quadr[iquadr])[ ijk100 ];
-  cx101 = (m_Q_quadr[iquadr])[ ijk101 ];
-  cx110 = (m_Q_quadr[iquadr])[ ijk110 ];
-  cx111 = (m_Q_quadr[iquadr])[ ijk111 ];
-  cy000 = (m_Q_quadr[iquadr])[ ijk000+1 ];
-  cy001 = (m_Q_quadr[iquadr])[ ijk001+1 ];
-  cy010 = (m_Q_quadr[iquadr])[ ijk010+1 ];
-  cy011 = (m_Q_quadr[iquadr])[ ijk011+1 ];
-  cy100 = (m_Q_quadr[iquadr])[ ijk100+1 ];
-  cy101 = (m_Q_quadr[iquadr])[ ijk101+1 ];
-  cy110 = (m_Q_quadr[iquadr])[ ijk110+1 ];
-  cy111 = (m_Q_quadr[iquadr])[ ijk111+1 ];
-  cz000 = (m_Q_quadr[iquadr])[ ijk000+2 ];
-  cz001 = (m_Q_quadr[iquadr])[ ijk001+2 ];
-  cz010 = (m_Q_quadr[iquadr])[ ijk010+2 ];
-  cz011 = (m_Q_quadr[iquadr])[ ijk011+2 ];
-  cz100 = (m_Q_quadr[iquadr])[ ijk100+2 ];
-  cz101 = (m_Q_quadr[iquadr])[ ijk101+2 ];
-  cz110 = (m_Q_quadr[iquadr])[ ijk110+2 ];
-  cz111 = (m_Q_quadr[iquadr])[ ijk111+2 ];
-  
-  }
-  
-  double hx1 = ( x-i*m_Dxyz[0] )/m_Dxyz[0];
-  double hy1 = ( y-j*m_Dxyz[1] )/m_Dxyz[1];
-  double hz1 = ( z-k*m_Dxyz[2] )/m_Dxyz[2];
-  double hx0 = 1.0-hx1;
-  double hy0 = 1.0-hy1;
-  double hz0 = 1.0-hz1;
-
-  double h000 = hx0*hy0*hz0;
-  if( fabs(h000) > 0.0 &&
-      cx000 > 9.0e5 && cy000 > 9.0e5 && cz000 > 9.0e5) return StatusCode::SUCCESS;
- 
-  double h001 = hx0*hy0*hz1;
-  if( fabs(h001) > 0.0 && 
-      cx001 > 9.0e5 && cy001 > 9.0e5 && cz001 > 9.0e5) return StatusCode::SUCCESS;
-
-  double h010 = hx0*hy1*hz0;
-  if( fabs(h010) > 0.0 && 
-      cx010 > 9.0e5 && cy010 > 9.0e5 && cz010 > 9.0e5) return StatusCode::SUCCESS;
-
-  double h011 = hx0*hy1*hz1;
-  if( fabs(h011) > 0.0 && 
-      cx011 > 9.0e5 && cy011 > 9.0e5 && cz011 > 9.0e5) return StatusCode::SUCCESS;
-
-  double h100 = hx1*hy0*hz0;
-  if( fabs(h100) > 0.0 && 
-      cx100 > 9.0e5 && cy100 > 9.0e5 && cz100 > 9.0e5) return StatusCode::SUCCESS;
- 
-  double h101 = hx1*hy0*hz1;
-  if( fabs(h101) > 0.0 && 
-      cx101 > 9.0e5 && cy101 > 9.0e5 && cz101 > 9.0e5) return StatusCode::SUCCESS;
- 
-  double h110 = hx1*hy1*hz0;
-  if( fabs(h110) > 0.0 && 
-      cx110 > 9.0e5 && cy110 > 9.0e5 && cz110 > 9.0e5) return StatusCode::SUCCESS;
-
-  double h111 = hx1*hy1*hz1;
-  if( fabs(h111) > 0.0 && 
-      cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return StatusCode::SUCCESS;
-
-  bf.SetX ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
-            cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
-  bf.SetY ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
-            cy100*h100 + cy101*h101 + cy110*h110 + cy111*h111 );
-  bf.SetZ ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
-            cz100*h100 + cz101*h101 + cz110*h110 + cz111*h111 );
-
-  if( r.x() < 0. && r.y() >= 0. ){
-    bf.SetX( -bf.x() );
-  }
-  else if(  r.x() < 0. &&  r.y()  < 0. ){
-    bf.SetZ( -bf.z() );
-  }
-  else if( r.x() >= 0. && r.y() < 0. ){    
-    bf.SetX( -bf.x() );
-    bf.SetZ( -bf.z() );
-  } 
-  return StatusCode::SUCCESS;      
 }
 
-
-StatusCode MagneticFieldSvc::i_updateScaling() 
+//=============================================================================
+StatusCode MagneticFieldSvc::i_updateConditions() 
+//=============================================================================
 {
   MsgStream log(msgSvc(), name());
-  //  m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent*m_condition->param<int>("Polarity");
-  m_scaleFactor= m_condition->param<double>("Current") / m_nominalCurrent;
+  log << MSG::DEBUG << "updateConditions called" << endmsg;
+
+  int polarity;
+  if( m_polarity != 0 ) {
+    log << MSG::WARNING 
+        << "Requested condDB but using manually set polarity = " << m_polarity << endmsg;
+    polarity = m_polarity;
+  }
+  else
+    polarity = m_measuredPtr->param<int>("Polarity");
+    // polarity = condition( MagnetCondLocations::Measured.c_str() )->param<int>("Polarity");
   
+  // Update the scale factor
+  if( !m_scaleFromOptions ) {
+    //    double measuredCurrent = condition( MagnetCondLocations::Measured )->param<double>("Current");
+    double measuredCurrent = m_measuredPtr->param<double>("Current");
+    
+    // ******* Check I have the correct convention!!
+    std::vector<double> coeffs;
+    if( polarity > 0 )
+      //      coeffs = condition( MagnetCondLocations::ScaleUp.c_str() )->param<std::vector<double>("Coeffs");
+      coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
+    else
+      coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
   
-  //  log << MSG::INFO << "*** Print Magnet conditions *** " << endmsg;
-  log << MSG::INFO << "Conditions path name: "<<m_condPath<<endmsg;
-  log << MSG::INFO << "Current: "<< m_condition->param<double>("Current") << " || Polarity: "<< m_condition->param<int>("Polarity") <<endmsg;  
- 
-  if( fabs(m_scaleFactor-1.) > 1e-6 ) {
-    log << MSG::WARNING << "Field map will be scaled by a factor = "
-        << m_scaleFactor << endmsg;
+    m_scaleFactor = coeffs[0] + ( coeffs[1]*(measuredCurrent/m_nominalCurrent) );
+  }
+   
+  // Update the field map file
+  if( !m_mapFromOptions ) {
+    m_mapFileNames.clear();
+    
+    // ******* Check I have the correct convention!!
+    std::vector<std::string> files;
+    if( polarity > 0 )
+      // files = condition( MagnetCondLocations::FieldMapFilesUp.c_str() )->param<std::vector<std::string>("Polarity");
+      files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
+    else
+      files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");
+
+    for ( std::vector<std::string>::const_iterator iF = files.begin(); iF != files.end(); ++iF ) {
+      m_mapFileNames.push_back( m_mapFilePath + *iF );
+    }
   }
   
-  return StatusCode::SUCCESS; 
-  
+  log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
+  log << MSG::DEBUG << "Scale factor updated: "    << m_scaleFactor << endmsg;
+
+  // Finally update the appropriate tool
+  return updateTool( polarity );
 }
 
-double MagneticFieldSvc::GetScale() 
+//=============================================================================
+StatusCode MagneticFieldSvc::updateTool( int polarity )
+//=============================================================================
 {
-  return m_scaleFactor;
+  // Depending on the polarity and the type of field map, update the tool
+  MsgStream log(msgSvc(), name());
+  StatusCode sc = StatusCode::FAILURE;
+
+  if( polarity == 0 ) {
+    polarity = 1;
+    log << MSG::INFO << "Polarity not set, using default = 1 (UP) " << endmsg;
+  }
+
+  if(  m_mapFileNames.size() == 1 ) {
+    // DC06 case
+    if( polarity > 0 ) {
+      if( 0 == m_DC06FieldUp ) {
+        sc = m_toolSvc->retrieveTool( "MagFieldToolDC06", "MagToolDC06Up",
+                                      m_DC06FieldUp, this );
+        if( sc.isFailure() ) {
+          log << MSG::ERROR << "Could not retrieve MagToolDC06Up" << endmsg;
+          return sc;
+        }
+        m_fieldTool = m_DC06FieldUp;
+      }
+    }
+    else {
+      if( 0 == m_DC06FieldDown ) {
+        sc = m_toolSvc->retrieveTool( "MagFieldToolDC06", "MagToolDC06Down",
+                                      m_DC06FieldDown, this );
+        if( sc.isFailure() ) {
+          log << MSG::ERROR << "Could not retrieve MagToolDC06Down" << endmsg;
+          return sc;
+        }
+        m_fieldTool = m_DC06FieldDown;
+      }
+    }
+  }
+  else if( m_mapFileNames.size() == 4 ) {
+    // Real map case
+    if( polarity > 0 ) {
+      if( 0 == m_RealFieldUp ) {
+        sc = m_toolSvc->retrieveTool( "MagFieldTool", "MagToolRealUp",
+                                      m_RealFieldUp, this );
+        if( sc.isFailure() ) {
+          log << MSG::ERROR << "Could not retrieve MagToolRealUp" << endmsg;
+          return sc;
+        }
+        m_fieldTool = m_RealFieldUp;
+      }
+    }
+    else {
+      if( 0 == m_RealFieldDown ) {
+        sc = m_toolSvc->retrieveTool( "MagFieldTool", "MagToolRealDown",
+                                      m_RealFieldDown, this );
+        if( sc.isFailure() ) {
+          log << MSG::ERROR << "Could not retrieve MagToolRealDown" << endmsg;
+          return sc;
+        }
+        m_fieldTool = m_RealFieldDown;
+      }
+    }
+  }
+  else {
+    log << MSG::ERROR 
+        << "Wrong number of field map files, don't know what to do" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // Update the Tool
+  return m_fieldTool->updateMap( m_mapFileNames, m_scaleFactor );
 }
