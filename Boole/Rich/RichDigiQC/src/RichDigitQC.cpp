@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.37 2008-06-05 10:00:37 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.38 2008-07-26 11:49:17 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -164,7 +164,7 @@ StatusCode DigitQC::execute()
         plot1D( (*iHPD).second, hID.data(), title.str(), 0, 150, 75 );
       }
       (m_nHPDSignal[rich])[(*iHPD).first] += (*iHPD).second;
-      const Rich::DAQ::Level1ID l1ID = m_richSys->level1ID( (*iHPD).first );
+      const Rich::DAQ::Level1HardwareID l1ID = m_richSys->level1HardwareID( (*iHPD).first );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
     }
@@ -232,8 +232,8 @@ StatusCode DigitQC::finalize()
     for ( HPDCounter::const_iterator iHPD = m_nHPDSignal[rich].begin();
           iHPD != m_nHPDSignal[rich].end(); ++iHPD )
     {
-      const Rich::DAQ::HPDHardwareID hID ( m_richSys->hardwareID( (*iHPD).first ) );
-      const Rich::DAQ::Level1ID l1ID     ( m_richSys->level1ID( (*iHPD).first ) );
+      const Rich::DAQ::HPDHardwareID    hID ( m_richSys->hardwareID( (*iHPD).first ) );
+      const Rich::DAQ::Level1HardwareID l1ID( m_richSys->level1HardwareID( (*iHPD).first ) );
       Gaudi::XYZPoint hpdGlo;
       const StatusCode sc = m_smartIDs->hpdPosition( (*iHPD).first, hpdGlo );
       if (sc.isFailure()) continue;

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2008-07-26 - Chris Jones
+ - Adapt to changes in L1 ID classes in RichKernel
+
 !======================== RichDigiQC v3r9 2008-06-05 ========================
 ! 2008-06-05 - Chris Jones
  - Adapt to changes in detector element locations in RichDet

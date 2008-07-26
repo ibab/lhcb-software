@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : Rich::MC::Digi::DigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.27 2008-01-30 16:58:12 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.28 2008-07-26 11:49:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -98,7 +98,7 @@ namespace Rich
         unsigned int m_evtC;
 
         /// L1 occupancy counter
-        typedef Rich::HashMap< const Rich::DAQ::Level1ID, unsigned int > L1Counter;
+        typedef Rich::HashMap< const Rich::DAQ::Level1HardwareID, unsigned int > L1Counter;
 
         /// Counter for hits in each HPD
         typedef Rich::HashMap< const LHCb::RichSmartID, unsigned int > HPDCounter;
