@@ -103,7 +103,7 @@ use TsaKernel             v3r4   Tf      # Matt Needham
 
 # LHCb  Examples
 use DetCondExample        v11r4  Ex      # Marco Clemencic
-use DetDescChecks         v4r7   Det     # Ivan Belyaev
+use DetDescChecks         v4r8   Det     # Ivan Belyaev
 use DetDescExample        v7r6   Ex      # Marco Clemencic
 use IOExample             v2r5   Ex      # Marco Cattaneo
 
