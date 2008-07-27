@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.28 2008-07-22 13:14:43 cattanem Exp $ 
+! $Id: release.notes,v 1.29 2008-07-27 16:03:24 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiGenMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,7 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiGenMC v7r1p1 2008-07-27 =======================
 ! 2008-07-22 - Marco Cattaneo
  - Trivial fix in ForcedBDecayTool.cpp to use a Gaudi::Unit:: instead of CLHEP::
  - Increment version to v7r1p1
@@ -403,6 +404,9 @@
 
 ! -----------------------------------------------------------------------------
 ! $Log: not supported by cvs2svn $
+! Revision 1.28  2008/07/22 13:14:43  cattanem
+! use Gaudi::Units, not CLHEP::
+!
 ! Revision 1.27  2008/06/02 11:46:04  cattanem
 ! cosmetic fixes
 !
