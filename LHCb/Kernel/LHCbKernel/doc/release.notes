@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v9r0 2008-07-27 =========================
 ! 2008-07-21 - Marco Cattaneo
  - Remove Kernel/IEventTimeDecoder.h, now in GaudiKernel (Gaudi v20r2)
  - Remove Kernel/IGenericTool.h,      now in GaudiKernel (Gaudi v20r2)
