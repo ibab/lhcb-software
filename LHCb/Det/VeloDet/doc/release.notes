@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.202 2008-07-23 10:14:21 marcocle Exp $
+! $Id: release.notes,v 1.203 2008-07-27 13:17:19 cattanem Exp $
 ! package VeloDet
 ! package manager : Velo Group
 !-----------------------------------------------------------------------------
 
+!======================== VeloDet v13r3 2008-07-27 ===========================
 ! 2008-07-23 - Marco Clemencic
  - Changed the names in the test for VeloAlignCond to match the final names.
 
