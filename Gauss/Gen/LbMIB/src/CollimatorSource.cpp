@@ -1,10 +1,11 @@
-// $Id: CollimatorSource.cpp,v 1.3 2007-10-02 09:26:04 gcorti Exp $
+// $Id: CollimatorSource.cpp,v 1.4 2008-07-27 13:12:45 robbep Exp $
 // Include files
  
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/IRndmGenSvc.h"
  
 // STL
@@ -66,7 +67,7 @@ CollimatorSource::CollimatorSource(const std::string& type,
   declareProperty("EnvelopeSize", m_envelopeSize = 1000);
 
   // Z origin and direction for generated particles
-  declareProperty("ZParticleOrigin", m_zOrigin = -1.0*m);
+  declareProperty("ZParticleOrigin", m_zOrigin = -1.0*Gaudi::Units::m);
   declareProperty("ZDirection", m_dz = 1);
 
 }
@@ -228,13 +229,16 @@ StatusCode CollimatorSource::generateParticle( HepMC::GenEvent* evt ) {
   }
 
   // Find Vertex and four momentum
-  const HepLorentzVector vtx = getVertex( rawPart->ekin*GeV, rawPart->pid, 
-                                          rawPart->x*cm, rawPart->y*cm, 
-                                          m_zOrigin, rawPart->dx, 
-                                          rawPart->dy );
-  HepLorentzVector fourMom = getMomentum( rawPart->ekin*GeV, 
-                                          rawPart->pid, rawPart->dx, 
-                                          rawPart->dy );
+  const HepMC::FourVector vtx = getVertex( rawPart->ekin*Gaudi::Units::GeV, 
+                                           rawPart->pid, 
+                                           rawPart->x*Gaudi::Units::cm, 
+                                           rawPart->y*Gaudi::Units::cm, 
+                                           m_zOrigin, 
+                                           rawPart->dx, 
+                                           rawPart->dy );
+  HepMC::FourVector fourMom = getMomentum( rawPart->ekin*Gaudi::Units::GeV, 
+                                           rawPart->pid, rawPart->dx, 
+                                           rawPart->dy );
 
   // Make vertex
   HepMC::GenVertex* mcvtx;
@@ -257,27 +261,27 @@ StatusCode CollimatorSource::generateParticle( HepMC::GenEvent* evt ) {
   if( m_genHist ){
     double r = sqrt( rawPart->x*rawPart->x + rawPart->y*rawPart->y );
     m_xyDistGen->fill( rawPart->x, rawPart->y );
-    m_pxVSrGen->fill( r, fourMom.px()/GeV );
-    m_pyVSrGen->fill( r, fourMom.py()/GeV );
-    m_pzVSrGen->fill( r, fourMom.pz()/GeV );
+    m_pxVSrGen->fill( r, fourMom.px()/Gaudi::Units::GeV );
+    m_pyVSrGen->fill( r, fourMom.py()/Gaudi::Units::GeV );
+    m_pzVSrGen->fill( r, fourMom.pz()/Gaudi::Units::GeV );
     m_absPGen->fill( ( rawPart->dx==0 && rawPart->dy==0 ? fourMom.pz() : 
                        ( rawPart->dx!=0 ? fourMom.px()/rawPart->dx : 
-                         fourMom.py()/rawPart->dy ) )/GeV );
-    m_thetaGen->fill( ( fourMom.pz()==0 ? pi/2 : 
+                         fourMom.py()/rawPart->dy ) )/Gaudi::Units::GeV );
+    m_thetaGen->fill( ( fourMom.pz()==0 ? Gaudi::Units::pi/2 : 
                         atan(sqrt(fourMom.px()*fourMom.px()+fourMom.py()*fourMom.py())/
-                             fourMom.pz()) )/degree );
+                             fourMom.pz()) )/Gaudi::Units::degree );
 
     if( m_fileOffset >= 0 ){
       m_xyDistGenWeight->fill( rawPart->x, rawPart->y, rawPart->weight );
-      m_pxVSrGenWeight->fill( r, fourMom.px()/GeV, rawPart->weight );
-      m_pyVSrGenWeight->fill( r, fourMom.py()/GeV, rawPart->weight );
-      m_pzVSrGenWeight->fill( r, fourMom.pz()/GeV, rawPart->weight );
+      m_pxVSrGenWeight->fill( r, fourMom.px()/Gaudi::Units::GeV, rawPart->weight );
+      m_pyVSrGenWeight->fill( r, fourMom.py()/Gaudi::Units::GeV, rawPart->weight );
+      m_pzVSrGenWeight->fill( r, fourMom.pz()/Gaudi::Units::GeV, rawPart->weight );
       m_absPGenWeight->fill( ( rawPart->dx==0 && rawPart->dy==0 ? fourMom.pz() :
                                ( rawPart->dx!=0 ? fourMom.px()/rawPart->dx : 
-                                 fourMom.py()/rawPart->dy ) ) /GeV, rawPart->weight );
-      m_thetaGenWeight->fill( ( fourMom.pz()==0 ? pi/2 : 
+                                 fourMom.py()/rawPart->dy ) ) /Gaudi::Units::GeV, rawPart->weight );
+      m_thetaGenWeight->fill( ( fourMom.pz()==0 ? Gaudi::Units::pi/2 : 
                                 atan(sqrt(fourMom.px()*fourMom.px()+fourMom.py()*fourMom.py())/
-                                     fourMom.pz()) )/degree, rawPart->weight );
+                                     fourMom.pz()) )/Gaudi::Units::degree, rawPart->weight );
     }
   }
   
@@ -380,8 +384,8 @@ StatusCode CollimatorSource::createBinFile(){
       m_xyDistInput->fill( x, y, weight );
       m_eKinInput->fill( ekin, weight );
       m_logEKinInput->fill( log10(ekin), weight );
-      m_thetaInput->fill( ( (dx*dx+dy*dy)>=1 ? pi/2 : 
-                            ( sqrt((dx*dx+dy*dy)/(1-dx*dx-dy*dy)) ) )/degree,
+      m_thetaInput->fill( ( (dx*dx+dy*dy)>=1 ? Gaudi::Units::pi/2 : 
+                            ( sqrt((dx*dx+dy*dy)/(1-dx*dx-dy*dy)) ) )/Gaudi::Units::degree,
                           weight );      
     }
     
@@ -504,8 +508,8 @@ StatusCode CollimatorSource::bookHistos() {
 // Get Momentum four vector
 //===========================================================================
 
-HepLorentzVector CollimatorSource::getMomentum(double ekin, int pid, 
-                                               double dx, double dy) {
+HepMC::FourVector CollimatorSource::getMomentum(double ekin, int pid, 
+                                                double dx, double dy) {
   
   verbose() << " getMomentum" << endmsg;
 
@@ -529,7 +533,7 @@ HepLorentzVector CollimatorSource::getMomentum(double ekin, int pid,
   px = ptot * dx;
   py = ptot * dy;
 
-  HepLorentzVector fourMom( Hep3Vector( px,py,pz ), mass );
+  HepMC::FourVector fourMom( px , py , pz , etot ) ;
 
   return fourMom;
 }
@@ -539,10 +543,10 @@ HepLorentzVector CollimatorSource::getMomentum(double ekin, int pid,
 // Get vertex four vector
 //===========================================================================
 
-HepLorentzVector CollimatorSource::getVertex(double ekin, int pid, 
-                                             double x, double y, double z, 
-                                             double dx, double dy) {
-
+HepMC::FourVector CollimatorSource::getVertex(double ekin, int pid, 
+                                              double x, double y, double z, 
+                                              double dx, double dy) {
+  
   verbose() << " getVertex" << endmsg;
 
   double dz, dz2, mass;
@@ -556,8 +560,9 @@ HepLorentzVector CollimatorSource::getVertex(double ekin, int pid,
   if ( dz2 > 0 ){ dz = m_dz*sqrt( dz2 ); }
   else{ dz = 0; }
 
-  const HepLorentzVector vtx( x, y, z, 
-                              z*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(c_light*dz) );
+  const HepMC::FourVector vtx( x, y, z, 
+                               z*sqrt(1/(1-1/pow(1+ekin/mass,2)))/
+                               (Gaudi::Units::c_light*dz) );
 
   return vtx;
 }

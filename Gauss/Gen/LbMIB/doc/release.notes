@@ -5,6 +5,9 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+! 2008-07-27 - Patrick Robbe
+ - Move to HEPMC2 
+
 !=========================== LbMIB v2r3 2008-07-04 ===========================
 ! 2008-07-04 - Magnus Lieng
  - Fixed compatability issue with Windows. 'inttypes.h' no longer used.

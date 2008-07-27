@@ -1,4 +1,4 @@
-// $Id: CollimatorSource.h,v 1.3 2008-07-04 10:25:44 mlieng Exp $
+// $Id: CollimatorSource.h,v 1.4 2008-07-27 13:12:45 robbep Exp $
 #ifndef COLLIMATORSOURCE_H
 #define COLLIMATORSOURCE_H 1
 
@@ -54,11 +54,11 @@ protected:
   StatusCode bookHistos();
 
   /// Get Momentum
-  HepLorentzVector getMomentum(double ekin, int pid, double dx, double dy);
+  HepMC::FourVector getMomentum(double ekin, int pid, double dx, double dy);
 
   /// Get Vertex
-  HepLorentzVector getVertex(double ekin, int pid, double x, double y, 
-                             double z, double dx, double dy);
+  HepMC::FourVector getVertex(double ekin, int pid, double x, double y, 
+                              double z, double dx, double dy);
 
   /// Create Binary File
   StatusCode createBinFile();
