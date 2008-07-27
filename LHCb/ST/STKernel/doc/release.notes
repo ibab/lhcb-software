@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.24 2008-07-25 15:42:49 mneedham Exp $
+! $Id: release.notes,v 1.25 2008-07-27 16:12:00 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+!====================== STKernel v1r7 2008-07-27 ============================
 ! 2008-07-25 M Needham
  - Bug fix in validChannel function [broken after STDAQ changes]
 
