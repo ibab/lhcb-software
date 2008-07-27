@@ -2,9 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v10r12 2008-07-27 =======================
 ! 2008-07-25 - Marco Cattaneo
- - Remove obsolete Reflex dictionaries from SimDicts.opts. This renders this
-   file obsolete, use $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts directly
+ - Remove obsolete explicit loading of Reflex dictionaries from SimDicts.opts.
+   This renders this file obsolete, use
+   $GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts directly
  - In Configurable: 
    . Remove handling of MagneticFieldSvc fieldmap file, will be done via CondDB
    . Add function to return knownMonitors and use it to test monitors option
