@@ -1,13 +1,15 @@
-! $Id: release.notes,v 1.57 2008-07-24 14:56:18 truf Exp $
+! $Id: release.notes,v 1.58 2008-07-27 15:33:19 cattanem Exp $
 ! package Event/VeloEvent
 ! package manager: C.Parkes, T.Szumlak
 !========================================================================
 
-!====================== VeloEvent v16r4 2008-04-29 ======================
+!====================== VeloEvent v16r5 2008-07-27 ======================
 ! 2008-07-24 - Thomas Ruf
  - modifications to allow creation of dictionaries
    - VeloTELL1Data.xml, Package name="VeloEvent"
    - requirement file: apply_pattern god_dictionary
+
+!====================== VeloEvent v16r4 2008-04-29 ======================
 ! 2008-04-28 - Tomasz Szumlak
  - New functionality added for VeloTELL1Data
    allow to:
