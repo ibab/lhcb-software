@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages and build corresponding dictionaries
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v15r0 2008-07-27 ===========================
+! 2008-07-27 - Marco Cattaneo
+ - Use DDDB v1r10, DetCond v12r2, DetDesc v18r8, DetDescSvc v2r1, Magnet v5r0,
+       RichDet v11r0, STDet v4r4, VeloDet v13r3
+
 !========================= DetSys v14r0 2008-07-16 ===========================
 ! 2008-07-16 - Marco Cattaneo
  - Use CaloDet v9r0, CaloDetXmlCnv v3r2, DDDB v1r9, DetCond v12r1, DetDesc v18r7,
