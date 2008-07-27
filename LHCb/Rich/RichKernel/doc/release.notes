@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.187 2008-07-25 15:26:19 jonrob Exp $
+! $Id: release.notes,v 1.188 2008-07-27 16:07:10 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r14 2008-07-27 ====================
 ! 2008-07-25 - Chris Jones
  - Add logical and hardware Level1 ID classes
 
