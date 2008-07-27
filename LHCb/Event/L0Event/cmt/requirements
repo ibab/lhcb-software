@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2005-11-10
-# Maintainer : Olivier Callot
+# Maintainer : Juilen Cogan, Olivier Deschamps
 #============================================================================
 package           L0Event
-version           v17r0
+version           v17r1
 
 branches          cmt doc Event xml src
 
