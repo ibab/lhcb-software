@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.88 2008-07-23 14:45:32 marcocle Exp $
+! $Id: release.notes,v 1.89 2008-07-27 16:23:35 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r12 2008-07-27 ========================
 ! 2008-07-23 - Marco Clemencic
  - Added the connection string to the opened database in the status bar of
    CondDBBrowser.py.
