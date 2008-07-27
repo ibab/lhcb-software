@@ -5,6 +5,7 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+!====================== SimComponents v2r11 2008-07-27 =======================
 ! 2008-07-24 - Marco Cattaneo
  - Improve protection against crazy vertex times in PackMCVertex
 
