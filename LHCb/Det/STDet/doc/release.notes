@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.141 2008-07-18 09:31:14 mneedham Exp $
+!$Id: release.notes,v 1.142 2008-07-27 13:11:04 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-! 2008-07-15 M Needham
+!======================== STDet v4r4 2008-07-27 ==========================
+! 2008-07-18 M Needham
  - Add some info to printouts
  - Add NotBonded to enum in DeSTSector
  
