@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2008-07-26 18:04:53 cattanem Exp $
+# $Id: requirements,v 1.32 2008-07-27 13:04:07 cattanem Exp $
 #============================================================================
 package           Magnet
 version           v5r0
@@ -23,12 +23,7 @@ use GaudiConf 	v*	-no_auto_imports
 application TestMagnet $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # To run application, source setup.csh -tag_add=check
-macro useGaudiSvc  "" check " GaudiSvc  v* -no_auto_imports"
 macro useRootHist  "" check " RootHistCnv  v* -no_auto_imports"
-macro useFieldMap  "" check " FieldMap  v* -no_auto_imports"
-
-use ${useGaudiSvc}
 use ${useRootHist}
-use ${useFieldMap}
 
 apply_pattern ld_library_path

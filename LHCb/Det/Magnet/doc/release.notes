@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Det/Magnet
-! Responsible : Adlene Hicheur
+! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r0 2008-07-27 ===============================
 ! 2008-07-26 - Marco Cattaneo
  - Revised implementation of MagneticFieldSvc
    . Service now gets names of field map files from CondDB. Can be over-ridden
