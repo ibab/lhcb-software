@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v11r0 2008-07-27 ===========================
 ! 2008-07-25 - Chris Jones
  - Add to DeRichSystem mapping between L1 hardware and logical IDs
 
