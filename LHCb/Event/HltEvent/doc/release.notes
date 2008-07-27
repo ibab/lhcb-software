@@ -4,10 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r11 2008-07-27 ==========================
 ! 2008-07-18 - Jaap Panman
  - use short ints in HltLumiSummary class to save space
 
-!======================== HltEvent v8r11 2008-07-18 ==========================
 ! 2008-07-17 - Jaap Panman
  - added a prototype version of a HltLumiSummary class to be written by HLT
 
