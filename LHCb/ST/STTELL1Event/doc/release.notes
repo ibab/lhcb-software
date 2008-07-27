@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.22 2008-07-24 13:52:05 cattanem Exp $
+! $Id: release.notes,v 1.23 2008-07-27 16:10:40 cattanem Exp $
 ! Package     : STTELL1Event
 ! Responsible : Mathias Knecht
 !-----------------------------------------------------------------------------
 
+!======================== STTELL1Event v1r4 2008-07-27 =======================
 ! 2008-07-24 - Marco Cattaneo
  - Remove xml/STTELL1BoardError.xml (duplicate def. of STTELL1BoardErrorBank)
  - Change STELL1Error and STTELL1ErrorBank class IDs to 9012 and 9013 
