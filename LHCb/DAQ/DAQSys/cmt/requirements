@@ -7,5 +7,5 @@ branches doc cmt
 
 use MuonDAQ     v4r3    Muon
 use OTDAQ       v7r1    OT
-use CaloDAQ     v4r6    Calo
+use CaloDAQ     v4r7    Calo
 use SiDAQ       v2r1    Si
