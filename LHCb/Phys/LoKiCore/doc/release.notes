@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.99 2008-07-27 16:00:51 cattanem Exp $ 
+! $Id: release.notes,v 1.100 2008-07-27 18:19:27 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,39 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-07-27 - Vanya BELYAEV
+
+ - LoKi/Kinematics.h, src/Kinematics.cpp
+
+   - reimplement of 2-argument LoKi::Kinematics::decayAngle in terms 
+     of 3-argument form in terms of Lorentz invariants
+     (no "boost" are used).
+  
+     The old implementation (with "boost") is available 
+     under the name LoKi::Kinematics::decayAngle_ 
+ 
+   - add new functions:  
+
+     For evaluation of angle "chi" between the decay planes.
+     The implemntation is doen completely in terms of 
+     Lorenzt invarinats and does nto use any "boost":
+
+       LoKi::Kinematics::cosDecayAngleChi 
+       LoKi::Kinematics::sinDecayAngleChi 
+       LoKi::Kinematics::decayAngleChi 
+
+     For evaluation of energy and 3-momentum magnitude of one 
+     particle in the reference system of another particle:
+
+       LoKi::Kinematics::restMomentum 
+       LoKi::Kinematics::restEnergy 
+  
+ - LoKi/Report.h,
+   LoKi/ErrorReport.h 
+
+       some ironing of status codes 
+  
 
 ! =========================== LoKiCore v7r6 2008-07-27 ========================
 ! 2008-07-26 - Vanya BELYAEV

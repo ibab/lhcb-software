@@ -1,4 +1,4 @@
-// $Id: Tensors.cpp,v 1.1 2008-07-26 17:19:57 ibelyaev Exp $
+// $Id: Tensors.cpp,v 1.2 2008-07-27 18:19:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -229,6 +229,55 @@ double LoKi::Tensors::Epsilon::epsilon
     +    e1 * z2 * y3 * x4 * Epsilon_<E,Z,Y,X>::value  ; 
 }
 // ============================================================================
+/* evaluate the tensor product: (e*v1*v2*v3)*(e*v4*v5*v6)
+ * 
+ *  \f$  r = 
+ *  \epsilon_{\mu\nu\lambda\kappa}
+ *  \epsilon_{\mu\rho\\delta\tau}
+ *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
+ *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+ *
+ *  This expression typically appears in evaution of 
+ *  various "plane-angles".
+ *
+ *  @code 
+ *  
+ *   const LorentzVector& v1 = ... ;
+ *   const LorentzVector& v2 = ... ;
+ *   const LorentzVector& v3 = ... ;
+ *   const LorentzVector& v4 = ... ;
+ *   const LorentzVector& v5 = ... ;
+ *   const LorentzVector& v6 = ... ;
+ *
+ *   Epsilon e ;
+ *
+ *   const double r = e.epsilon ( v1 , v2 , v3 , v4 , v5 , v6 ) ; 
+ *
+ *  @endcode 
+ *
+ *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+ * 
+ *  @param v1 the first  vector 
+ *  @param v2 the second vector 
+ *  @param v3 the third  vector 
+ *  @param v4 the fourth vector 
+ *  @param v5 the fith   vector 
+ *  @param v6 the sixth  vector 
+ *  @return the tensor product
+ */
+// ============================================================================
+double LoKi::Tensors::Epsilon::epsilon 
+( const LoKi::LorentzVector& v1 , 
+  const LoKi::LorentzVector& v2 , 
+  const LoKi::LorentzVector& v3 , 
+  const LoKi::LorentzVector& v4 , 
+  const LoKi::LorentzVector& v5 , 
+  const LoKi::LorentzVector& v6 ) const 
+{
+  return epsilon ( epsilon ( v1 , v2 , v3 ) , v4 , v5 , v6 ) ;
+}
+// ============================================================================
+
 
 
 // ============================================================================

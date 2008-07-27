@@ -1,4 +1,4 @@
-// $Id: Tensors.h,v 1.2 2008-07-26 17:19:56 ibelyaev Exp $
+// $Id: Tensors.h,v 1.3 2008-07-27 18:19:27 ibelyaev Exp $
 // ===============================================================
 #ifndef LOKI_TENSORS_H 
 #define LOKI_TENSORS_H 1
@@ -24,6 +24,29 @@ namespace LoKi
    */
   namespace Tensors 
   {
+    // ========================================================================
+    /** @enum Indices 
+     *  The list of Lorentz indices 
+     *  The numbersin g is in accordance to 
+     *  ROOT::Math::LorentzVector 
+     *  @see ROOT::Math::Lorentz::Vector 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-0725
+     */  
+    enum {
+      //
+      X    = 0 , 
+      Y    = 1 , 
+      Z    = 2 , 
+      T    = 3 , 
+      //
+      PX   = X , 
+      PY   = Y , 
+      PZ   = Z , 
+      E    = T ,
+      //
+      LAST = 4  
+    } ;
     // ========================================================================
     /** @struct Delta_
      *
@@ -85,7 +108,7 @@ namespace LoKi
      *
      *  @code
      *
-     *    int g00 = G_<0,0>::value ;
+     *    const int gXX = G_<X,X>::value ;
      *
      *  @endcode
      *
@@ -99,7 +122,7 @@ namespace LoKi
     struct G_<I,I>     { enum { value = -1 } ; } ;
     /// the proper template specialzation for time component 
     template <>
-    struct G_<3,3>     { enum { value =  1 } ; } ;
+    struct G_<T,T>     { enum { value =  1 } ; } ;
     // ========================================================================
     /** struct G 
      *
@@ -131,7 +154,12 @@ namespace LoKi
       inline int  g
       ( const size_t i , 
         const size_t j ) const 
-      { return ( i != j ) ?  0 : ( i < 3 ) ? -1 : ( 3 == i ) ? 1 : 0  ; }
+      { 
+        return    
+          ( i    != j )  ?  0 : 
+          ( LAST <= i )  ?  0 :
+          ( T    == i )  ?  1 : -1 ;
+      }
       // ======================================================================
     };
     // ========================================================================
@@ -140,11 +168,11 @@ namespace LoKi
      *  (Compile-time) 4D Antisymmetric Levy-Civita tensor
      *   \f$ \epsilon_{\mu\nu\lambda\delta} \f$ 
      *
-     *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+     *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
      *
      *  @code
      *
-     *   int result = Epsilon_<0,1,2,3>::value ;
+     *   int result = Epsilon_<X,Y,Z,T>::value ;
      *
      *  @endcode
      *
@@ -203,7 +231,7 @@ namespace LoKi
     // ========================================================================
     /// stopping criteria for compile-time recursion    
     template <>
-    struct Epsilon_<0,1,2,3> { enum { value = 1 } ; } ;
+    struct Epsilon_<X,Y,Z,T> { enum { value = 1 } ; } ;
     // ========================================================================    
     namespace detail 
     {
@@ -244,7 +272,7 @@ namespace LoKi
       enum { value = !valid ? 0 : 
              detail::_Value<(I<J),
              detail::_Value<(J<K),
-             detail::_Value<(K<L),(L<4)?1:0,_34>::value,_23>::value,_12>::value } ;
+             detail::_Value<(K<L),(L<LAST)?1:0,_34>::value,_23>::value,_12>::value } ;
       // ======================================================================
     };
     // ========================================================================
@@ -252,7 +280,7 @@ namespace LoKi
      *  Simple implementation of 4D Antisymmetric Levy-Civita symbols
      *   \f$ \epsilon_{\mu\nu\lambda\delta} \f$ and some related operations 
      *
-     *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+     *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
      *
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-0725
@@ -261,15 +289,10 @@ namespace LoKi
     {
     public:
       // ======================================================================
-      /// indices...
-      enum { X  = 0 , Y  = 1 , Z = 2 , T = 3 , E = T } ;             // indices 
-      // ======================================================================
-    public:
-      // ======================================================================
       /** the major method for evaluation of elements of Levy-Civita tensor
        *   \f$ \epsilon_{\mu\nu\lambda\delta} \f$ 
        *  
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
        *
        *  @code 
        *
@@ -307,12 +330,11 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double t_XYE = e ( Epsilon::X , 
-       *                            Epsilon::Y ,
-       *                            Epsilon::E , v ) ;
+       *   const double t_XYE = e ( X , Y , E , v ) ;
+       *
        *  @endcode 
        *
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{xyzt} = 1 \f$ 
        *
        *  @attention the evaluation could be rather CPU expensive, 
        *             please use the templated form if indices 
@@ -345,12 +367,11 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double v_XY = e ( Epsilon::X ,
-       *                           Epsilon::Y , v1 , v2 ) ;
+       *   const double v_XY = e ( X , Y , v1 , v2 ) ;
        *
        *  @endcode 
        *
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
        *
        *  @attention the evaluation could be rather CPU expensive, 
        *             please use the templated form if indices 
@@ -384,11 +405,11 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double v_X = e ( Epsilon::X , v1 , v2 , v3 ) ; 
+       *   const double v_X = e ( X , v1 , v2 , v3 ) ; 
        *
        *  @endcode 
        *
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
        *
        *  @param mu the first index 
        *  @param v1 the first  vector 
@@ -416,11 +437,11 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double v_X = e ( Epsilon::X , v1 , v2 , v3 ) ; 
+       *   const double v_X = e ( X , v1 , v2 , v3 ) ; 
        *
        *  @endcode 
        *
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{xyzt} = 1 \f$ 
        *
        *  The following identity holds numerically:
        *  @code
@@ -470,7 +491,7 @@ namespace LoKi
        *
        *  @endcode 
        *
-       *  Convention here: \f$ \epsilon_{0,1,2,3} = \epsilon_{x,y,z,t} = 1 \f$ 
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
        * 
        *  The following identity holds numerically:
        *  @code
@@ -501,6 +522,51 @@ namespace LoKi
           const LoKi::LorentzVector& v4 ) const 
       { return epsilon ( v1 , v2 , v3 , v4 ) ; }
       // ======================================================================
+      /* evaluate the tensor product: (e*v1*v2*v3)*(e*v4*v5*v6)
+       * 
+       *  \f$  r = 
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *  \epsilon_{\mu\rho\\delta\tau}
+       *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
+       *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+       *
+       *  This expression typically appears in evaution of 
+       *  various "plane-angles".
+       *
+       *  @code 
+       *  
+       *   const LorentzVector& v1 = ... ;
+       *   const LorentzVector& v2 = ... ;
+       *   const LorentzVector& v3 = ... ;
+       *   const LorentzVector& v4 = ... ;
+       *   const LorentzVector& v5 = ... ;
+       *   const LorentzVector& v6 = ... ;
+       *
+       *   Epsilon e ;
+       *
+       *   const double r = e ( v1 , v2 , v3 , v4 , v5 , v6 ) ; 
+       *
+       *  @endcode 
+       *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
+       *  @param v1 the first  vector 
+       *  @param v2 the second vector 
+       *  @param v3 the third  vector 
+       *  @param v4 the fourth vector 
+       *  @param v5 the fith   vector 
+       *  @param v6 the sixth  vector 
+       *  @return the tensor product
+       */
+      double operator() 
+        ( const LoKi::LorentzVector& v1 , 
+          const LoKi::LorentzVector& v2 , 
+          const LoKi::LorentzVector& v3 , 
+          const LoKi::LorentzVector& v4 , 
+          const LoKi::LorentzVector& v5 , 
+          const LoKi::LorentzVector& v6 ) const 
+      { return epsilon ( v1 , v2 , v3 , v4 , v5 , v6 ) ; }
+      // =====================================================================
     public:
       // ======================================================================
       /** the major method for evaluation of elements of Levy-Civita tensor
@@ -516,6 +582,8 @@ namespace LoKi
        *             If the indices are known at compile time, try to use 
        *             the templated methods - they are much efficient 
        *  
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @param i the first  index 
        *  @param j the second index 
        *  @param k the third  index 
@@ -551,10 +619,12 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double t_XYE = e.e_1<Epsilon::X,Epsilon::Y,Epsilon::E>( v ) 
+       *   const double t_XYE = e.e_1<X,Y,E>( v ) 
        *
        *  @endcode 
        *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @see Epsilon::e_3
        *
        *  @param v the input vector 
@@ -595,10 +665,12 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double v_XY = e.e_2<Epsilon::X,Epsilon::Y>( v1 , v2 ) 
+       *   const double v_XY = e.e_2<X,Y>( v1 , v2 ) 
        *
        *  @endcode 
        *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @see Epsilon::e_2
        *
        *  @param mu the first index 
@@ -630,6 +702,8 @@ namespace LoKi
        *
        *  @endcode 
        *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @see Epsilon::e_1
        *
        *  @param mu the index of the result 
@@ -661,6 +735,8 @@ namespace LoKi
        *
        *  @endcode 
        *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @see Epsilon::e_1
        *
        *  @param v1 the first  vector 
@@ -692,6 +768,8 @@ namespace LoKi
        *
        *  @endcode 
        *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
        *  @param v1 the first  vector 
        *  @param v2 the second vector 
        *  @param v3 the third  vector 
@@ -703,6 +781,50 @@ namespace LoKi
         const LoKi::LorentzVector& v2 , 
         const LoKi::LorentzVector& v3 ,
         const LoKi::LorentzVector& v4 ) const ;
+      // ======================================================================
+      /** evaluate the tensor product: (e*v1*v2*v3)*(e*v4*v5*v6)
+       * 
+       *  \f$  r = 
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *  \epsilon_{\mu\rho\\delta\tau}
+       *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
+       *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+       *
+       *  This expression typically appears in evalution of 
+       *  various "plane-angles" (for this case v3=v6) 
+       *
+       *  @code 
+       *  
+       *   const LorentzVector& v1 = ... ;
+       *   const LorentzVector& v2 = ... ;
+       *   const LorentzVector& v3 = ... ;
+       *   const LorentzVector& v4 = ... ;
+       *   const LorentzVector& v5 = ... ;
+       *   const LorentzVector& v6 = ... ;
+       *
+       *   Epsilon e ;
+       *
+       *   const double r = e.epsilon ( v1 , v2 , v3 , v4 , v5 , v6 ) ; 
+       *
+       *  @endcode 
+       *
+       *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
+       * 
+       *  @param v1 the first  vector 
+       *  @param v2 the second vector 
+       *  @param v3 the third  vector 
+       *  @param v4 the fourth vector 
+       *  @param v5 the fith   vector 
+       *  @param v6 the sixth  vector 
+       *  @return the tensor product
+       */
+      double epsilon 
+      ( const LoKi::LorentzVector& v1 , 
+        const LoKi::LorentzVector& v2 , 
+        const LoKi::LorentzVector& v3 , 
+        const LoKi::LorentzVector& v4 , 
+        const LoKi::LorentzVector& v5 , 
+        const LoKi::LorentzVector& v6 ) const ;  
       // ======================================================================
     public:
       // ======================================================================

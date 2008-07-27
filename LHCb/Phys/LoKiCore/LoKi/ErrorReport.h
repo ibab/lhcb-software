@@ -1,4 +1,4 @@
-// $Id: ErrorReport.h,v 1.8 2008-03-30 17:55:52 ibelyaev Exp $
+// $Id: ErrorReport.h,v 1.9 2008-07-27 18:19:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_ERRORREPORT_H 
 #define LOKI_ERRORREPORT_H 1
@@ -38,22 +38,27 @@ namespace LoKi
   class ErrorReport 
   {
   public: 
+    // ========================================================================
     /** static function for the instance of the reporter 
      *  @return the refence to the unique static instance 
      */
     static ErrorReport& instance() ;
+    // ========================================================================
     /** get the LoKi reporter
      *  @return pointer to currently active LoKi error reporter tool
      */
     const LoKi::IReporter* reporter    () const ;
+    // ========================================================================
     /** set new active eporter 
      *  @return status code 
      */
     StatusCode             setReporter ( const LoKi::IReporter* reporter ) ;
+    // ========================================================================
     /** make a report 
      *  @return status code 
      */
     StatusCode             report      () const ;
+    // ========================================================================
     /** Print the error  message, return status code
      *  @param msg    error message 
      *  @param st     status code 
@@ -61,9 +66,11 @@ namespace LoKi
      *  @return       status code 
      */
     StatusCode Error     
-    ( const std::string&  msg                       , 
-      const StatusCode    st  = StatusCode ( StatusCode::FAILURE , true ) ,
-      const size_t        mx  = 10                  ) const  ;
+    ( const std::string&  msg                   , 
+      const StatusCode    st  = 
+      StatusCode ( StatusCode::FAILURE , true ) ,
+      const size_t        mx  = 10              ) const  ;
+    // ========================================================================
     /** Print the warning  message, return status code 
      *  @param msg    warning message 
      *  @param st     status code  
@@ -71,9 +78,11 @@ namespace LoKi
      *  @return       status code 
      */
     StatusCode Warning   
-    ( const std::string&  msg                       , 
-      const StatusCode    st  = StatusCode ( StatusCode::FAILURE , true ) , 
-      const size_t        mx  = 10                  ) const  ;
+    ( const std::string&  msg                   , 
+      const StatusCode    st  = 
+      StatusCode ( StatusCode::FAILURE , true ) , 
+      const size_t        mx  = 10              ) const  ;
+    // ========================================================================
     /** Print the message and return status code 
      *  @param msg    warning message 
      *  @param st     status code 
@@ -81,9 +90,11 @@ namespace LoKi
      *  @return       status code 
      */
     StatusCode Print     
-    ( const std::string& msg                       , 
-      const StatusCode   st  = StatusCode ( StatusCode::FAILURE , true ) ,
-      const MSG::Level   lev = MSG::INFO           ) const ;
+    ( const std::string& msg                    , 
+      const StatusCode   st  = 
+      StatusCode ( StatusCode::SUCCESS , true ) ,
+      const MSG::Level   lev = MSG::INFO        ) const ;
+    // ========================================================================
     /** Assertion - throw exception, if condition is not fulfilled 
      *  @see GaudiException
      *  @see LoKi::Exception
@@ -95,12 +106,14 @@ namespace LoKi
      *  @return             status code        
      */ 
     inline StatusCode Assert 
-    ( const bool         ok                            , 
-      const std::string& message = ""                  , 
-      const StatusCode   sc      = StatusCode ( StatusCode::FAILURE , true ) ) const 
+    ( const bool         ok                     , 
+      const std::string& message = ""           , 
+      const StatusCode   sc      = 
+      StatusCode ( StatusCode::FAILURE , true ) ) const 
     {
       return ( ok ? StatusCode::SUCCESS : Exception( message , sc ) ) ;
     } 
+    // ========================================================================
     /** Create and (re)-throw the exception  
      *  @see LoKi::Exception
      *  @exception LoKi::Exception always!
@@ -112,7 +125,9 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const GaudiException & exc                        , 
-      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
+      const StatusCode       sc  = 
+      StatusCode ( StatusCode::FAILURE , true ) ) const ;
+    // ========================================================================
     /** Create and (re)-throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -124,7 +139,9 @@ namespace LoKi
     StatusCode Exception 
     ( const std::string    & msg                        ,  
       const std::exception & exc                        , 
-      const StatusCode       sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
+      const StatusCode       sc  = 
+      StatusCode ( StatusCode::FAILURE , true ) ) const ;
+    // ========================================================================
     /** Create and throw the exception  
      *  @see GaudiException
      *  @exception GaudiException always!
@@ -134,16 +151,23 @@ namespace LoKi
      */
     StatusCode Exception 
     ( const std::string& msg = "no message"        ,  
-      const StatusCode   sc  = StatusCode ( StatusCode::FAILURE , true ) ) const ;
+      const StatusCode   sc  = 
+      StatusCode ( StatusCode::FAILURE , true ) ) const ;
+    // ========================================================================
   private:
+    // ========================================================================
     /// private destructor 
     ~ErrorReport( );
+    // ========================================================================
   private:
+    // ========================================================================
     /// private default constructor
     ErrorReport();
     // private copy constructor
     ErrorReport( const ErrorReport&);
+    // ========================================================================
   private:
+    // ========================================================================
     typedef GaudiUtils::HashMap<std::string,unsigned long> Counter ;   
     /// counter of errorr 
     mutable Counter m_errors     ; // counter of errorr 
@@ -153,6 +177,7 @@ namespace LoKi
     mutable Counter m_exceptions ; //  counter of exceptions
     //
     const LoKi::IReporter* m_reporter ;    
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi

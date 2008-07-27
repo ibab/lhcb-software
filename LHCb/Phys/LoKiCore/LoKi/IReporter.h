@@ -1,4 +1,4 @@
-// $Id: IReporter.h,v 1.5 2007-07-23 17:07:38 ibelyaev Exp $
+// $Id: IReporter.h,v 1.6 2008-07-27 18:19:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IREPORTER_H 
 #define LOKI_IREPORTER_H 1
@@ -36,8 +36,7 @@ namespace LoKi
   // ==========================================================================
   /** @class IReporter IReporter.h LoKi/IReporter.h
    *  
-   *
-   *  @author Ivan Belyaev ivelyaev@physics.syr.edu
+   *  @author Vanya BELYAEV ivelyaev@physics.syr.edu
    *  @date   2003-01-16
    */
   class IReporter 
@@ -45,6 +44,7 @@ namespace LoKi
     , public virtual   IErrorTool
   {
   public: 
+    // ========================================================================
     /** Retrieve interface ID
      *  mandatory method from IInterface 
      *  @see IInterface 
@@ -52,9 +52,12 @@ namespace LoKi
      *  @return unique interface identifier 
      */
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   protected:
+    // ========================================================================
     // destructor 
     virtual ~IReporter() ; 
+    // ========================================================================
   };
   // ==========================================================================
 } // end of namespace LoKi
