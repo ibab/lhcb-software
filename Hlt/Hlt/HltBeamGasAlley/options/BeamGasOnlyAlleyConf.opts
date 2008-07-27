@@ -23,11 +23,11 @@ PatVeloRTrackingBGOnly.ZVertexMin = -1500.0;
 PatVeloRTrackingBGOnly.ZVertexMax = 1500.0;
 PatVeloRTrackingBGOnly.OutputLevel = 5;
 
-BeamGasTrigVertexCutBGOnly.RZBeamGasTracks =    "Hlt/Track/RZVeloBGSingleBeam";
-BeamGasTrigVertexCutBGOnly.maxCut   = 5;
-BeamGasTrigVertexCutBGOnly.binWidth = 10;
-BeamGasTrigVertexCutBGOnly.zMinPosCut = 0.; 
-BeamGasTrigVertexCutBGOnly.zMaxPosCut = 0.;   
+BeamGasTrigVertexCutBGOnly.RZTracksInputLocation = "Hlt/Track/RZVeloBGSingleBeam";
+BeamGasTrigVertexCutBGOnly.MaxBinValueCut   = 5;
+BeamGasTrigVertexCutBGOnly.HistoBinWidth = 10;
+BeamGasTrigVertexCutBGOnly.ZExclusionRangeLow = 0.; 
+BeamGasTrigVertexCutBGOnly.ZExclusionRangeUp  = 0.;   
 BeamGasTrigVertexCutBGOnly.OutputLevel = 5;
 //HltAlgorithm related
 //BeamGasTrigVertexCutBGOnly.InputSelection = "RZVeloBGSingleBeam";

@@ -5,14 +5,23 @@
 !-----------------------------------------------------------------------------
 
 
+! 2008-07-27 Plamen Hopchev
+	- v1r2
+	- note on the previous version (v1r1): It doesn't compile/run under DaVinci v19r14 !!!
+	  so the neccesary changes still to be done. This version will not work under v19r14 too.
+	- the changes here are just renaming of some of the job-option names. They are
+	  consistent with the names used in the Beam-Gas trigger note.
+
 
 ! 2008-07-15 Plamen Hopchev
+	- v1r1
 	- remove 2 lines in BeamGasVertexCut in order to run with DaVinci v19r14
 	- the first was m_outputSelection->clear(), before writing the output selection to TES
 	- the second was print of the output selection name, which is private (now?) data member of HltAlgorithm
 	
 
 ! 2008-07-14 Plamen Hopchev
+	- v1r0
 	- src/BeamGasTrigCheckL0AndTracks.h (.cpp) : decision algorithm which confirms the L0 decision
 	                                             and check the RZ tracks container
 	- src/BeamGasTrigClusterCut.h (.cpp)       : decision algorithm (inheriting GaudiAlg) which evaluates the 

@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigExtractClusters.h,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigExtractClusters.h,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
 #ifndef INCLUDE_BEAMGASTRIGEXTRACTCLUSTERS_H
 #define INCLUDE_BEAMGASTRIGEXTRACTCLUSTERS_H 1
 

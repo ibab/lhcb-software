@@ -20,7 +20,7 @@ BeamGasTrigCheckL0AndTracks.OutputLevel = 3;
 
 BeamGasTrigClusterCut.SensorsBegin = 22;
 BeamGasTrigClusterCut.SensorsEnd   = 39;
-BeamGasTrigClusterCut.LeftClustersFracTrig = 0.27;
+BeamGasTrigClusterCut.FracUnusedClustersCut = 0.27;
 BeamGasTrigClusterCut.OutputLevel = 3;
 
 BeamGasTrigExtractClusters.OutputLocation = "Raw/Velo/UnusedRLiteClusters";
@@ -34,10 +34,11 @@ PatVeloRTrackingSecond.ZVertexMax = 1500.0;
 PatVeloRTrackingSecond.OutputLevel = 3;
 
 BeamGasTrigVertexCut.OutputLevel = 3;
-BeamGasTrigVertexCut.RZBeamGasTracks = "Hlt/Track/RZVeloBeamGas";
-BeamGasTrigVertexCut.maxCut   = 5;
-BeamGasTrigVertexCut.binWidth = 10;
-BeamGasTrigVertexCut.zMinPosCut  = -265.0;
-BeamGasTrigVertexCut.zMaxPosCut = 265.0;
+BeamGasTrigVertexCut.RZTracksInputLocation = "Hlt/Track/RZVeloBeamGas";
+BeamGasTrigVertexCut.MaxBinValueCut   = 5;
+BeamGasTrigVertexCut.HistoBinWidth    = 10;
+BeamGasTrigVertexCut.ZExclusionRangeLow  = -265.0;
+BeamGasTrigVertexCut.ZExclusionRangeUp   = 265.0;
 //HltAlgorithm related
 //BeamGasTrigVertexCut.InputSelection = "RZVeloBeamGas";
+//BeamGasTrigVertexCut.OutputSelection = "RZVeloBeamGasBigZOnly";

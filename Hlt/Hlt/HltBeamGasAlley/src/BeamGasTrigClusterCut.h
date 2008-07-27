@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigClusterCut.h,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigClusterCut.h,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
 #ifndef INCLUDE_BEAMGASTRIGCLUSTERCUT_H
 #define INCLUDE_BEAMGASTRIGCLUSTERCUT_H 1
 
@@ -31,9 +31,9 @@ public:
 
 private:
   std::string 	m_hitManagerName;
-  int		m_sensorsBegin;		///< The first sensor used for counting the unused clusters
-  int		m_sensorsEnd;		///< The last sensor used for counting the unused clusters
-  float         m_leftClustersFracTrig; ///< Cut to decide further BG inspectation  
+  int		m_sensorsBegin;		 ///< The first sensor used for counting the unused clusters
+  int		m_sensorsEnd;		 ///< The last sensor used for counting the unused clusters
+  float         m_fracUnusedClustersCut; ///< Cut to decide further BG inspectation  
   
   Tf::DefaultVeloRHitManager* m_rHitManager;
   

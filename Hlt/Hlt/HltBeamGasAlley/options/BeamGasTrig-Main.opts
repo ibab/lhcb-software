@@ -22,7 +22,7 @@
 // Histos and NTuple - commented by default
 //
 // ApplicationMgr.HistogramPersistency = "ROOT";
-// HistogramPersistencySvc.OutputFile = "./hopchevHltJobHistos.root";
+// HistogramPersistencySvc.OutputFile = "./BeamGasAlleys-OutputHistograms.root";
 // ApplicationMgr.ExtSvc += { "NTupleSvc" };
 // NTupleSvc.Output={"FILE1 DATAFILE='hltjob.root' TYP='ROOT' OPT='NEW'"};
 
@@ -54,8 +54,37 @@ EventSelector.PrintFreq  = 1000;
 //---------------------------------------------------------------------------
 
 EventSelector.Input += {
-
-//   BeamGas File : 1291 BG pseudol0 fixed 
-//   "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol4/massi/BEAMGAS_MINBIAS/DIGI/pseudol0/beamgas.digi' TYP='POOL_ROOTTREE' OPT='READ'"
-
+//  BeamGas File : 1291 BG pseudol0 fixed 
+//  "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol4/massi/BEAMGAS_MINBIAS/DIGI/pseudol0/beamgas.digi' TYP='POOL_ROOTTREE' OPT='READ'"
 };
+
+/*
+// 183 Nasty background events. A subset from 5M MBL0 events (the same sample as above - DC06-L0-v1-lumi2).
+// fsc0 means "first step cut, i.e. cluster cut = 0.0; cc0 means "cluster container = 0", i.e. we haven't
+// extracted the unused clusters to new container and PatVeloRTracking second has been performed over
+// the default cluster container. And cc1 means the opposite. The difference is hardly noticable.
+EventSelector.Input += {
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART1-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART2-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART3-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART4-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART5-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART6-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART7-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART8-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART9-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART10-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART11-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+    "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/note/LHCbNote-400K-PART12-maxBinMoreThan_4-fsc0-cc1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+*/
+
+EventSelector.Input += {
+//  133 Nasty Background events. A subset from 3M MBL0 events (the same sample as above - DC06-L0-v1-lumi2)
+//  "DATAFILE='PFN:rfio:/afs/cern.ch/lhcb/group/vertex/vol6/phopchev/myDSTFiles/backup/nastyBGr-3M-maxBinMoreThan_4-fsc0-cc0.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+
+
+
+

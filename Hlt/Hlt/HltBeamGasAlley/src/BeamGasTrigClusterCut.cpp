@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigClusterCut.cpp,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigClusterCut.cpp,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
 #include "GaudiKernel/AlgFactory.h"
 
 #include "Event/Track.h"
@@ -27,7 +27,7 @@ BeamGasTrigClusterCut::BeamGasTrigClusterCut(const std::string& name, ISvcLocato
   declareProperty( "HitManagerName", m_hitManagerName = "DefaultVeloRHitManager" );
   declareProperty( "SensorsBegin", m_sensorsBegin = 22 );
   declareProperty( "SensorsEnd",   m_sensorsEnd   = 39 );
-  declareProperty( "LeftClustersFracTrig", m_leftClustersFracTrig = 0.0 );    
+  declareProperty( "FracUnusedClustersCut", m_fracUnusedClustersCut = 0.0 );    
 }
 
 //=============================================================================
@@ -85,7 +85,7 @@ StatusCode BeamGasTrigClusterCut::execute()
   float frUnusedRClusters = nRHits ? ( ( nRHits - nUsedRHits ) / (float)nRHits ) : 0.0001 ;
    
   bool trigPass = false;
-  if ( frUnusedRClusters > m_leftClustersFracTrig ) trigPass = true;
+  if ( frUnusedRClusters > m_fracUnusedClustersCut ) trigPass = true;
   
   setFilterPassed(trigPass);
  

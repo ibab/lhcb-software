@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigVertexCut.cpp,v 1.1.1.2 2008-07-15 14:29:54 phopchev Exp $
+// $Id: BeamGasTrigVertexCut.cpp,v 1.1.1.3 2008-07-27 11:35:09 phopchev Exp $
 #include "GaudiKernel/AlgFactory.h"
 #include "AIDA/IHistogram1D.h"
 #include "GaudiUtils/Aida2ROOT.h"
@@ -23,13 +23,13 @@ DECLARE_ALGORITHM_FACTORY( BeamGasTrigVertexCut );
 BeamGasTrigVertexCut::BeamGasTrigVertexCut( const std::string& name, ISvcLocator* pSvcLocator):
                 HltAlgorithm ( name , pSvcLocator ), m_trigEventsZnegative(0), m_trigEventsZpositive(0)		
 {
-  declareProperty( "RZBeamGasTracks", m_RZTracksLocation = "Rec/Track/RZVeloBeamGas" );
-  declareProperty( "binWidth", m_binWidth = 10);
-  declareProperty( "maxCut", m_maxCut = 5);
-  declareProperty( "zMinPosCut", m_zMinPosCut = -265.0);
-  declareProperty( "zMaxPosCut", m_zMaxPosCut = 265.0);
-  declareProperty( "z_min", m_zMin = -1500.0);
-  declareProperty( "z_max", m_zMax =  1500.0);
+  declareProperty( "RZTracksInputLocation", m_RZTracksLocation = "Rec/Track/RZVeloBeamGas" );
+  declareProperty( "HistoBinWidth", m_binWidth = 10);
+  declareProperty( "MaxBinValueCut", m_maxCut = 5);
+  declareProperty( "ZExclusionRangeLow", m_zExclusionRangeLow = -265.0);
+  declareProperty( "ZExclusionRangeUp",  m_zExclusionRangeUp  =  265.0);
+  declareProperty( "HistoZRangeLow", m_histoZMin = -1500.0);
+  declareProperty( "HistoZRangeUp",  m_histoZMax =  1500.0);
 }
 //=============================================================================
 // Destructor
@@ -45,21 +45,21 @@ StatusCode BeamGasTrigVertexCut::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   
-  m_nBins = (int)(m_zMax - m_zMin)/m_binWidth; 
+  m_nBins = (int)(m_histoZMax - m_histoZMin)/m_binWidth; 
   
   info() << "========== Algorithm parameters ======"            << endreq
-         << "m_RZTracksLocation   = " << m_RZTracksLocation     << endreq   
-         << "ZVertexMin           = " << m_zMin     << " mm"    << endreq
-         << "ZVertexMax           = " << m_zMax     << " mm"    << endreq
-	 << "BinWidth		  = " << m_binWidth << " mm"	<< endreq
+         << "RZTracksLocation     = " << m_RZTracksLocation     << endreq   
+         << "HistoZRangeLow       = " << m_histoZMin << " mm"   << endreq
+         << "HistoZRangeUp        = " << m_histoZMax << " mm"   << endreq
+	 << "HistoBinWidth	  = " << m_binWidth  << " mm"	<< endreq
 	 << "NumberOfBins	  = " << m_nBins    		<< endreq
-	 << "Max-Cut		  = " << m_maxCut		<< endreq
-	 << "zOfTracksExclRegionLow = " << m_zMinPosCut  << " mm"    << endreq
-	 << "zOfTracksExclRegionUpp = " << m_zMaxPosCut  << " mm"    << endreq
+	 << "MaxBinValueCut       = " << m_maxCut		<< endreq
+	 << "ZExclusionRangeLow   = " << m_zExclusionRangeLow   << " mm"    << endreq
+	 << "ZExclusionRangeUp    = " << m_zExclusionRangeUp    << " mm"    << endreq
 	 << "======================================"		<< endreq
 	 << "========== HLT Algorithm related parameters ========="   << endreq
-	 << "InputSelectionName  =         " << m_RZTracksLocation    << endreq;
-	 //<< "OutputSelectionName =         " << m_outputSelectionName << endreq;
+	 << "InputSelectionName  =         " << m_RZTracksLocation    << endreq
+	 << "OutputSelectionName =         " << m_outputSelectionName << endreq;
   
   m_outputTracks = &( registerTSelection<LHCb::Track>() );
   
@@ -82,7 +82,7 @@ StatusCode BeamGasTrigVertexCut::execute() {
   float z, r, t;  
   float z_r0 = 0.;
   
-  AIDA::IHistogram1D* h_z_r0BGTracks = book("z at r=0 of BG tracks" , m_zMin, m_zMax, m_nBins);
+  AIDA::IHistogram1D* h_z_r0BGTracks = book("z at r=0 of BG tracks" , m_histoZMin, m_histoZMax, m_nBins);
   
   
   for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
@@ -93,7 +93,7 @@ StatusCode BeamGasTrigVertexCut::execute() {
     t = (*itT)->firstState().tx();
     z_r0 = z - r/t;
     
-    if( z_r0 < m_zMinPosCut || z_r0 > m_zMaxPosCut ) 
+    if( z_r0 < m_zExclusionRangeLow || z_r0 > m_zExclusionRangeUp ) 
     { h_z_r0BGTracks->fill(z_r0, 1.0); }    
   }
   
@@ -111,8 +111,11 @@ StatusCode BeamGasTrigVertexCut::execute() {
       decision = true;
       if( zPosOfMaxBin > 0 ) m_trigEventsZpositive += 1;
       else m_trigEventsZnegative += 1;
-            
+      
       //Fill HLT SUMMARY with the big z_r0 tracks of the triggered event
+      //If not using TES !!!
+      m_outputTracks->clear();
+      
       for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 
       {  
         z = (*itT)->firstState().z();
@@ -121,7 +124,7 @@ StatusCode BeamGasTrigVertexCut::execute() {
     	z_r0 = z - r/t;    
         if( std::fabs(z_r0 - zPosOfMaxBin) < m_binWidth*0.5 ) m_outputTracks->push_back( *itT );
       }
-      debug() << "Number of Objects in the outputSelction = " << m_outputTracks->ncandidates() << endmsg;      
+      info() << "Number of Objects in the outputSelction = " << m_outputTracks->ncandidates() << endmsg;      
     }
   }
       

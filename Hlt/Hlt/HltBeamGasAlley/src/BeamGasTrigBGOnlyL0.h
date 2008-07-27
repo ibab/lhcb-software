@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigBGOnlyL0.h,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigBGOnlyL0.h,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
 #ifndef INCLUDE_BEAMGASTRIGBGONLYL0_H
 #define INCLUDE_BEAMGASTRIGBGONLYL0_H 1
 

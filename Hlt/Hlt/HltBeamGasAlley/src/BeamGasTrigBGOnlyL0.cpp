@@ -1,4 +1,4 @@
-// $Id: BeamGasTrigBGOnlyL0.cpp,v 1.1.1.1 2008-07-15 13:53:25 phopchev Exp $
+// $Id: BeamGasTrigBGOnlyL0.cpp,v 1.1.1.2 2008-07-27 11:35:09 phopchev Exp $
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/ODIN.h"
 #include "BeamGasTrigBGOnlyL0.h"
