@@ -2,8 +2,9 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r0
-                                          running on lxbuild120.cern.ch on Fri Jul 25 12:46:33 2008
+                                          running on lxbuild120.cern.ch on Sun Jul 27 14:53:51 2008
 ====================================================================================================================================
+ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -33,10 +34,10 @@ InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/v4r7/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "DC06-20080716"
+DDDB                 INFO Using TAG "DC06-20080725"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/v4r7/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "DC06-20080716"
+LHCBCOND             INFO Using TAG "DC06-20080725"
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root" for reading
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonflat-G4.root" for reading
 DigiPrev2            INFO Member list: , with rootInTES 'Prev2/', with globalTimeOffset 50
@@ -98,7 +99,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.83  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -622,50 +623,50 @@ EventLoopMgr         INFO Histograms converted successfully according to request
 EvtTupleSvc          INFO NTuples saved successfully
 EvtTupleSvc.EVT...   INFO File sharing enabled. Do not retire files.
 ToolSvc              INFO Removing all tools created by ToolSvc
-ToolSvc.RichRaw...   INFO ==========================================================================================================
+ToolSvc.RichRaw...   INFO ========================================================================================================================
 ToolSvc.RichRaw...   INFO                              RICH Level 1 : Encoding Summary : 10 events
-ToolSvc.RichRaw...   INFO ----------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich1 L1   0 V129 | L1 size =  12.40 +- 1.11 hpds :   71.00 +- 2.66 words :  122.60 +- 3.50 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   1 V129 | L1 size =  14.10 +- 1.19 hpds :   74.60 +- 2.73 words :  131.50 +- 3.63 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   2 V129 | L1 size =  13.30 +- 1.15 hpds :   70.10 +- 2.65 words :  132.70 +- 3.64 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   3 V129 | L1 size =  13.60 +- 1.17 hpds :   72.40 +- 2.69 words :  117.00 +- 3.42 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   4 V129 | L1 size =  14.40 +- 1.20 hpds :   73.50 +- 2.71 words :  119.90 +- 3.46 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   5 V129 | L1 size =  13.00 +- 1.14 hpds :   61.50 +- 2.48 words :   90.20 +- 3.00 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   6 V129 | L1 size =  13.70 +- 1.17 hpds :   79.30 +- 2.82 words :  158.20 +- 3.98 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   7 V129 | L1 size =  14.80 +- 1.22 hpds :   82.40 +- 2.87 words :  150.30 +- 3.88 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   8 V129 | L1 size =  13.20 +- 1.15 hpds :   70.20 +- 2.65 words :  116.60 +- 3.41 hits / event
-ToolSvc.RichRaw...   INFO  Rich1 L1   9 V129 | L1 size =  12.80 +- 1.13 hpds :   62.90 +- 2.51 words :   96.80 +- 3.11 hits / event
-ToolSvc.RichRaw...   INFO ----------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich2 L1  10 V129 | L1 size =  13.30 +- 1.15 hpds :   63.90 +- 2.53 words :  113.80 +- 3.37 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  11 V129 | L1 size =  13.70 +- 1.17 hpds :   52.90 +- 2.30 words :   64.70 +- 2.54 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  12 V129 | L1 size =  13.30 +- 1.15 hpds :   56.70 +- 2.38 words :   77.20 +- 2.78 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  13 V129 | L1 size =  14.80 +- 1.22 hpds :   68.00 +- 2.61 words :  113.30 +- 3.37 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  14 V129 | L1 size =  13.20 +- 1.15 hpds :   64.60 +- 2.54 words :  106.00 +- 3.26 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  15 V129 | L1 size =  14.30 +- 1.20 hpds :   63.30 +- 2.52 words :   92.40 +- 3.04 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  16 V129 | L1 size =  13.90 +- 1.18 hpds :   57.90 +- 2.41 words :   89.00 +- 2.98 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 L1  17 V129 | L1 size =  14.20 +- 1.19 hpds :   61.10 +- 2.47 words :   88.60 +- 2.98 hits / event
-ToolSvc.RichRaw...   INFO ----------------------------------------------------------------------------------------------------------
-ToolSvc.RichRaw...   INFO  Rich1 Average     | L1 size = 135.30 +- 3.68 hpds :  717.90 +- 8.47 words : 1235.80 +-11.12 hits / event
-ToolSvc.RichRaw...   INFO  Rich2 Average     | L1 size = 110.70 +- 3.33 hpds :  488.40 +- 6.99 words :  745.00 +- 8.63 hits / event
-ToolSvc.RichRaw...   INFO ==========================================================================================================
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  0/ 0 V129 | L1 size =  12.40 +- 1.11 hpds :   71.00 +- 2.66 words :  122.60 +- 3.50 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  1/ 1 V129 | L1 size =  14.10 +- 1.19 hpds :   74.60 +- 2.73 words :  131.50 +- 3.63 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  2/ 2 V129 | L1 size =  13.30 +- 1.15 hpds :   70.10 +- 2.65 words :  132.70 +- 3.64 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  3/ 3 V129 | L1 size =  13.60 +- 1.17 hpds :   72.40 +- 2.69 words :  117.00 +- 3.42 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  4/ 4 V129 | L1 size =  14.40 +- 1.20 hpds :   73.50 +- 2.71 words :  119.90 +- 3.46 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  5/ 5 V129 | L1 size =  13.00 +- 1.14 hpds :   61.50 +- 2.48 words :   90.20 +- 3.00 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  6/ 6 V129 | L1 size =  13.70 +- 1.17 hpds :   79.30 +- 2.82 words :  158.20 +- 3.98 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  7/ 7 V129 | L1 size =  14.80 +- 1.22 hpds :   82.40 +- 2.87 words :  150.30 +- 3.88 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  8/ 8 V129 | L1 size =  13.20 +- 1.15 hpds :   70.20 +- 2.65 words :  116.60 +- 3.41 hits / event
+ToolSvc.RichRaw...   INFO  Rich1 L1ID(log/hard)  9/ 9 V129 | L1 size =  12.80 +- 1.13 hpds :   62.90 +- 2.51 words :   96.80 +- 3.11 hits / event
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 10/10 V129 | L1 size =  13.30 +- 1.15 hpds :   63.90 +- 2.53 words :  113.80 +- 3.37 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 11/11 V129 | L1 size =  13.70 +- 1.17 hpds :   52.90 +- 2.30 words :   64.70 +- 2.54 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 12/12 V129 | L1 size =  13.30 +- 1.15 hpds :   56.70 +- 2.38 words :   77.20 +- 2.78 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 13/13 V129 | L1 size =  14.80 +- 1.22 hpds :   68.00 +- 2.61 words :  113.30 +- 3.37 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 14/14 V129 | L1 size =  13.20 +- 1.15 hpds :   64.60 +- 2.54 words :  106.00 +- 3.26 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 15/15 V129 | L1 size =  14.30 +- 1.20 hpds :   63.30 +- 2.52 words :   92.40 +- 3.04 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 16/16 V129 | L1 size =  13.90 +- 1.18 hpds :   57.90 +- 2.41 words :   89.00 +- 2.98 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 L1ID(log/hard) 17/17 V129 | L1 size =  14.20 +- 1.19 hpds :   61.10 +- 2.47 words :   88.60 +- 2.98 hits / event
+ToolSvc.RichRaw...   INFO ------------------------------------------------------------------------------------------------------------------------
+ToolSvc.RichRaw...   INFO  Rich1 Average                   | L1 size = 135.30 +- 3.68 hpds :  717.90 +- 8.47 words : 1235.80 +-11.12 hits / event
+ToolSvc.RichRaw...   INFO  Rich2 Average                   | L1 size = 110.70 +- 3.33 hpds :  488.40 +- 6.99 words :  745.00 +- 8.63 hits / event
+ToolSvc.RichRaw...   INFO ========================================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/943 Algorithms: Time User   : Tot=   45 [ms] Ave/Min/Max= 2.25(+-0.994)/0.999/    5 [ms] #= 20
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/943 Algorithms: Time User   : Tot=   39 [ms] Ave/Min/Max= 1.95(+-0.973)/0.999/    5 [ms] #= 20
 PoolRootTreeEvt...   INFO Disconnected data IO:3A616B7F-9659-DD11-98C2-0030487C5E0E[00001820_00000001-10ev.digi]
 PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:969FF8CE-CDD9-DB11-823E-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_2.sim]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  138 [ms] Ave/Min/Max= 13.8(+- 2.52)/   10/   17 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.83  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 23.6  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  125 [ms] Ave/Min/Max= 12.5(+- 2.11)/    9/   15 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.64  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 22.2  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-368 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
+366 | ROOT::Reflex::NewDelFunctionsT<StatusCode>::delete_T(void*) | libGaudiKernelDict.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
