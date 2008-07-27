@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.37 2008-07-22 17:36:10 cattanem Exp $ 
+! $Id: release.notes,v 1.38 2008-07-27 12:50:19 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! Package     : Det/DetDescChecks
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
+!======================= DetDescChecks v4r8 2008-07-27 ========================
 ! 2008-07-22 - Marco Cattaneo
  - Replace LoadDDDDB.opts by LoadDDDB.py
  - Add example option for accessing Oracle CondDB instead of SQLDDDB
