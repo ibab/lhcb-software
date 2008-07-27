@@ -4,6 +4,7 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+!================ DAQEvent v7r13 2008-07-27 ===========================
 ! 2008-07-24 - Marco Clemencic
  - Made OdinTimeDecoder issue a "RunChange" incident when the run number
    obtained from ODIN is different from the previous one.
