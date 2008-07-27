@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r20 2008-07-21 ==========================
 ! 2008-07-21 - Marco Cattaneo
  - Adapt to new locations of IEventTimeDecoder and IGenericTool interfaces
    (needs Gaudi v20r2)
