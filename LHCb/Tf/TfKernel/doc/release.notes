@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r6 2008-07-27 =======================
 ! 2008-07-21 - Gabriel Guerrer
  - Tf::IStationSelector and Tf::XYSearchWindow exposed to python
 
