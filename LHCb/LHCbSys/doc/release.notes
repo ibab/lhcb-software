@@ -5,6 +5,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v25r0>2008-07-28 LHCbSys v25r0</A></H1><PRE>
+This version uses Gaudi v20r2 and LCG_55a
+
  - Packages added:   Gen/HepMCBack v1r0 - Streamer to read HepMC 1.26 event
 
 </PRE><H1><A NAME=v24r1>2008-07-18 LHCbSys v24r1</A></H1><PRE>
