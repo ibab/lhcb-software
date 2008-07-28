@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-07-28 - Gerhard Raven
+  - add TCKData package
+
 </PRE><H1><A NAME=v4r3>2008-07-09 Moore v4r3</A></H1><PRE>
 Based on Phys v6r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
 
