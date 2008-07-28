@@ -1,11 +1,12 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.9 2008-07-25 14:36:53 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-07-28 16:19:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
+from TrackSys.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( ProcessPhase, CondDBCnvSvc, MagneticFieldSvc, ReadStripETC )
 
@@ -28,13 +29,12 @@ class Brunel(ConfigurableUser):
        ,"DDDBtag":      ""    # geometry database tag
        ,"condDBtag":    ""    # conditions database tag
        ,"useOracleCondDB": False  # if False, use SQLDDDB instead
+       ,"monitors": []        # list of monitors to execute, see KnownMonitors
+        # Following are options forwarded to TrackSys
        ,"fieldOff":     False # set to True for magnetic field off data
        ,"veloOpen":     False # set to True for Velo open data
-       ,"monitors": []        # list of monitors to execute, see KnownMonitors
        ,"expertTracking": []  # list of expert Tracking options, see KnownExpertTracking
         }
-
-    KnownExpertTracking = ["usePatSeeding", "noDrifttimes", "simplifiedGeometry"]
 
     def getProp(self,name):
         if hasattr(self,name):
@@ -48,7 +48,7 @@ class Brunel(ConfigurableUser):
     def setOtherProp(self,other,name):
         # Function to propagate properties to other component, if not already set
         if hasattr(self,name):
-            if hasattr(other,name):
+            if hasattr(other,name) and len(other.getProp(name)) > 0 :
                 print "%s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
             else:
                 other.setProp(name,self.getProp(name))
@@ -75,9 +75,6 @@ class Brunel(ConfigurableUser):
                 LHCbApp().skipEvents = skipEvents
 
     def defineOptions(self):
-        for prop in Brunel().getProp("expertTracking"):
-            if prop not in self.KnownExpertTracking:
-                raise RuntimeError("Unknown expertTracking option '%s'"%prop)
 
         inputType = self.getProp( "inputType" ).upper()
         if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
@@ -115,6 +112,7 @@ class Brunel(ConfigurableUser):
         """
         expertHistos = self.getProp("expertHistos")
         if expertHistos:
+            TrackSys().setProp( "expertHistos", expertHistos )
             importOptions( "$BRUNELOPTS/ExpertCheck.opts" )
             IODataManager().AgeLimit += 1
 
@@ -179,6 +177,9 @@ class Brunel(ConfigurableUser):
         self.setOtherProp(LHCbApp(),"useOracleCondDB") 
         # Next line has to be before mainOptions - TODO: why?
         importOptions( "$DDDBROOT/options/DDDB.py" )
+        self.setOtherProp(TrackSys(),"expertTracking") 
+        self.setOtherProp(TrackSys(),"fieldOff") 
+        self.setOtherProp(TrackSys(),"veloOpen") 
         importOptions( self.getProp( "mainOptions" ) )
         self.defineGeometry()
         self.defineEvents()
@@ -186,6 +187,7 @@ class Brunel(ConfigurableUser):
         self.defineHistos()
         self.defineOutput()
         self.defineMonitors()
+        TrackSys().applyConf()
         LHCbApp().applyConf()
         # Use SIMCOND for Simulation, if not DC06
         if self.getProp("withMC") and LHCbApp().getProp("condDBtag").find("DC06") == -1:
