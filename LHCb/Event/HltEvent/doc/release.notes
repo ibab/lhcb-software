@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+
+! 2008-07-28 - Jaap Panman
+ - updated HltLumiSummary class to use int internally and write out as short
+
 ! 2008-07-28 - Tomasz Skwarnicki
  - added HltDecReport,HltDecReports,HltObjectSummary,HltSelReports classes
 

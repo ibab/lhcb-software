@@ -23,7 +23,7 @@
       <!-- &KeyedObject; -->
 
       <typedef
-        type="GaudiUtils::VectorMap&lt;  short, unsigned short&gt;"
+        type="GaudiUtils::VectorMap&lt;  int, int&gt;"
         def="ExtraInfo"
         desc="User information"
         access="PUBLIC"
@@ -67,7 +67,7 @@
    return *this;
         </code>
       </method>
- 
+<!-- 
       <enum
         desc="Additional information. Contains nTuple style information"
         name="additionalInfo"
@@ -83,10 +83,10 @@
         <enumval name="PV2D"       value = "10"  desc="number of 2D vertices"/>
         <enumval name="PV3D"       value = "11"  desc="number of 3D vertices"/>
         <enumval name="PU"         value = "13"  desc="number of PU vertices"/>
-        <enumval name="LastGlobal"      value="10000"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
+        <enumval name="LastGlobal" value = "20"  desc="The last official flag value. Private user variables should use flags greater than this value"/>
 
       </enum>
-
+-->
       <attribute
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."
@@ -110,7 +110,7 @@
         name="hasInfo"
         const="TRUE"
         desc="has information for specified key"
-        argList="short key"
+        argList="int key"
         type="bool"
 	> 
 	<code>
@@ -121,7 +121,7 @@
       <method
         name="addInfo"
         desc=" Add new information associated with the specified key. This method cannot be used to modify information for a pre-existing key."
-        argList="const short key, const unsigned short info"
+        argList="const int key, const int info"
         type="bool"
 	> 
 	<code>
@@ -132,8 +132,8 @@
       <method
         name="info"
         desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
-        argList="const short key, const unsigned short def"
-        type="unsigned short"
+        argList="const int key, const int def"
+        type="int"
         const="TRUE"
 	> 
 	<code>
@@ -145,7 +145,7 @@
       <method
         name="eraseInfo"
         desc="erase the information associated with the given key"
-        argList="short key"
+        argList="int key"
         type="unsigned long"
 	> 
 	<code>
