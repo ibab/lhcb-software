@@ -1,0 +1,26 @@
+#pragma print off
+#printOptions full
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-2008.opts
+ *  Velo Open
+ *  Magnetic field off
+ *
+ *  @author G.Corti
+ *  @date   2008-06-10
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/lhcb-2008.opts"
+
+// Set generator settings
+#include "$GAUSSOPTS/BeamCond-5TeV.opts"
+
+// Set initial time as to indentiy in data different configuration
+EventClockSvc.FakeEventTime.StartTime   = 3000000;
+
+ 

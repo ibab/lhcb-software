@@ -4,6 +4,24 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2008-07-28 - Gloria CORTI
+ - Add few steering options for alignment production:
+   450 GeV with magnet off, 5 TeV with magnet off and on (leave in this case
+   the spread of the beam as for 450 GeV, same beta*, but z lenght of
+   bunche and crossing angle as in 7 TeV)
+   . lhcb-2008-{450GeV,5TeV}-{BOff}.opts
+
+!======================== Gauss v34r0 2008-07-22 =============================
+! 2008-07-20 - Gloria CORTI
+ - Remove list of external services ( ToolSvc, ParticlePropertySvc, 
+   EventSelector, EventClockSvc ) that are anayway taken as necessary.
+   . Common.opts
+ - Use SIMCOND dbase and latest tags: head-20080702
+   . lhcb-2008.opts
+ - Use macro to fix application version and number in python automatically
+   . requirements
+   . lhcb-2008.py
+
 !======================== Gauss v33r2 2008-07-06 =============================
 ! 2008-07-06 - Gloria CORTI
  - Use Gean4Files for G4 9.1
