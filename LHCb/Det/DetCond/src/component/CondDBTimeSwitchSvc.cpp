@@ -1,5 +1,11 @@
-// $Id: CondDBTimeSwitchSvc.cpp,v 1.3 2008-07-24 07:55:56 marcocle Exp $
+// $Id: CondDBTimeSwitchSvc.cpp,v 1.4 2008-07-28 15:30:21 cattanem Exp $
 // Include files
+
+#ifdef WIN32 // Hacks to compile on Windows...
+#define NOMSG
+#define NOGDI
+#define max max
+#endif
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -12,6 +18,7 @@
 // local
 #include "CondDBTimeSwitchSvc.h"
 #include "CondDBCommon.h"
+
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(CondDBTimeSwitchSvc)
