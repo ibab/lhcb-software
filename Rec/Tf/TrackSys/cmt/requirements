@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackSys
-version           v4r15
+version           v4r16
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -39,3 +39,5 @@ use   TrackMonitors        v1r*    Tr
 use   TrackPython          v3r*    Tr
 
 #============================================================================
+# Install the configurable
+apply_pattern install_python_modules

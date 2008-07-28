@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2008-07-28 - Marco Cattaneo
+ - Add a TrackSys configurable, with options expertHistos, fieldOff, veloOpen, 
+   expertTracking. RecoTracking.opts now tests on TrackSys() options instead of
+   Brunel() options
+
 !============================ TrackSys v4r15 2008-07-18 ======================
 ! 2008-07-18 - Marco Cattaneo
  - In RecoTracking.py:

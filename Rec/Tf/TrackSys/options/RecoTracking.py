@@ -2,7 +2,7 @@ from os import environ
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 import GaudiKernel.ProcessJobOptions
-from Brunel.Configuration import *
+from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
 from Configurables import ( ProcessPhase, MagneticFieldSvc,
@@ -32,7 +32,7 @@ patVeloSpaceTracking = Tf__PatVeloSpaceTracking("PatVeloSpaceTracking");
 
 
 
-if Brunel().getProp( "veloOpen" ):
+if TrackSys().getProp( "veloOpen" ):
    GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(), Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
    Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
@@ -70,7 +70,7 @@ GaudiSequencer("RecoOTSeq").Members += [ OTTimeCreator() ]
 track = ProcessPhase("Track");
 GaudiSequencer("RecoTrSeq").Members += [ track ]
 
-if Brunel().getProp("fieldOff"):
+if TrackSys().getProp("fieldOff"):
    track.DetectorList = [ "ForwardPat",   "ForwardPreFit",   "ForwardFit"
                       , "SeedPat",      "SeedPreFit",      "SeedFit"
                       , "MatchPat",     "MatchPreFit",     "MatchFit"
@@ -95,7 +95,7 @@ else:
 importOptions( "$TRACKSYSROOT/options/Fitting.py" )
 
 
-if "noDrifttimes" in Brunel().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
   otHitCreator = OTHitCreator("OTHitCreator")
   otHitCreator.NoDriftTimes = True
 
@@ -112,7 +112,7 @@ GaudiSequencer("TrackForwardFitSeq").Members += [TrackEventFitter("FitForward" )
 
 ## Seed pattern
   
-if "usePatSeeding" in Brunel().getProp("expertTracking"):
+if "usePatSeeding" in TrackSys().getProp("expertTracking"):
    GaudiSequencer("TrackSeedPatSeq").Members += [PatSeeding("PatSeeding")]
    importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
 else:     
@@ -156,7 +156,7 @@ GaudiSequencer("TrackVeloTTFitSeq").Members += [ TrackEventFitter("FitVeloTT") ]
 ## Clone tracks killer: output is "best" container
 GaudiSequencer("TrackPostFitSeq").Members += [ TrackEventCloneKiller() ]
 
-if Brunel().getProp("fieldOff"):
+if TrackSys().getProp("fieldOff"):
   TrackEventCloneKiller().TracksInContainers = ["Rec/Track/Forward", "Rec/Track/Match",
                                                 "Rec/Track/VeloTT", "Rec/Track/Seed"]
 else:
@@ -185,5 +185,4 @@ trackClones = GaudiSequencer("TrackClonesSeq")
 GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackClones ];
 trackClones.MeasureTime = True;
 importOptions( "$TRACKSYSROOT/options/TrackClones.opts" )
-
 
