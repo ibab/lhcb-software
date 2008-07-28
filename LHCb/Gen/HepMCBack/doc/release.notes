@@ -6,8 +6,7 @@
 
 !========================= HepMCBack v1r0 2008-07-28 =========================
 ! 2008-07-28 - Marco Cattaneo
- - Disable Streamer code on Windows, the library fails to link due to the
-   define public private trick. Which means this DLL is not usable on Windows
+ - Fix for windows linkage, move TClassRef.h before #define private public
  
 ! 2008-07-20 - Marco Clemencic, Gloria Corti, Patrick Robbe
  - Classes provided by Philippe Canal and Lars Sonnenchein to allow reading
