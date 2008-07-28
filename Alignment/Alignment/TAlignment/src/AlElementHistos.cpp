@@ -10,7 +10,7 @@ AlElementHistos::AlElementHistos(GaudiHistoAlg& parent, const AlignmentElement& 
 {
   //size_t index_i         = elem.index() ;
   const std::string name = elem.name(); 
-  std::string dirname =  boost::lexical_cast<std::string>( elem.index() ) + "/"; //name + "/" ;
+  std::string dirname =  "element" + boost::lexical_cast<std::string>( elem.index() ) + "/"; //name + "/" ;
   m_resHisto      = parent.book2D(dirname + boost::lexical_cast<std::string>(1000u), 
 				  "Residual vs iteration for " + name,
 				  -0.5, numiter-0.5, numiter, -5.00 , +5.00, 100);
