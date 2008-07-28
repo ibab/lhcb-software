@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.h,v 1.7 2008-07-10 11:41:31 wouter Exp $
+ *  $Id: TrackSelector.h,v 1.8 2008-07-28 11:38:41 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -98,6 +98,8 @@ private:
   double m_maxEtaCut;
   double m_likCut;
 
+  bool m_acceptClones; ///< Flag to turn on/off reject of clones
+  double m_cloneCut;   ///< Clone distance cut
 
   /// Track types to accept
   typedef std::vector<std::string> TrackTypes;

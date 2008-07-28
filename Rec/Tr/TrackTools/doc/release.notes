@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !----------------------------------------------------------------------------
 
+! 2008-07-28 - Chris Jones
+ - Add options to TrackSelector to reject clones
+
 ! 2008-07-24 - Wouter Hulsbergen
  - adapted to change in FitNode
  - use new matrix inversion

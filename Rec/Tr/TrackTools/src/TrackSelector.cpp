@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.16 2008-07-10 11:41:31 wouter Exp $
+ *  $Id: TrackSelector.cpp,v 1.17 2008-07-28 11:38:41 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -40,10 +40,11 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "MinPtCut",   m_minPtCut    = 0.0 ); // in GeV
   declareProperty( "MinChi2Cut", m_minChi2Cut  = -1  );
   declareProperty( "MinHitCut",  m_minHitCut   = 0.0 );
-  declareProperty("MinEtaCut", m_minEtaCut  = boost::numeric::bounds<double>::lowest());
-  declareProperty("MinNDoF", m_minNDoF = 0 ) ;
-  declareProperty("MinNVeloRHits", m_minNVeloRHits = 0 ) ;
-  declareProperty("MinNVeloPhiHits", m_minNVeloPhiHits = 0 ) ;
+
+  declareProperty( "MinEtaCut",  m_minEtaCut   = boost::numeric::bounds<double>::lowest());
+  declareProperty( "MinNDoF",    m_minNDoF     = 0 ) ;
+  declareProperty( "MinNVeloRHits", m_minNVeloRHits     = 0 ) ;
+  declareProperty( "MinNVeloPhiHits", m_minNVeloPhiHits = 0 ) ;
 
   declareProperty( "MaxPCut",    m_maxPCut     = boost::numeric::bounds<double>::highest() ); // in GeV
   declareProperty( "MaxPtCut",   m_maxPtCut    = boost::numeric::bounds<double>::highest() ); // in GeV
@@ -52,8 +53,11 @@ TrackSelector::TrackSelector( const std::string& type,
 
   declareProperty( "MaxEtaCut",  m_maxEtaCut   = boost::numeric::bounds<double>::highest() );
 
-  declareProperty("LikCut", m_likCut =  boost::numeric::bounds<double>::lowest());
- 
+  declareProperty( "LikCut", m_likCut =  boost::numeric::bounds<double>::lowest());
+
+  declareProperty( "AcceptClones", m_acceptClones = true  );
+  declareProperty( "CloneDistCut", m_cloneCut     = -1e10 );
+
   m_trTypes =
     boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream")("Ttrack");
   declareProperty( "TrackTypes", m_trTypes );
@@ -101,6 +105,9 @@ StatusCode TrackSelector::initialize()
     // Note, track types not selected above, will automatically NOT be selected
   }
 
+  if ( !m_acceptClones ) 
+    debug() << "Will reject clones. CloneDist cut = " << m_cloneCut << endreq;
+
   return sc;
 }
 
@@ -112,8 +119,9 @@ bool TrackSelector::accept ( const Track& aTrack ) const
             << endreq;
   }
 
-  // simple cuts first
-  if( aTrack.nDoF() < m_minNDoF ) {
+  // NDOF
+  if( aTrack.nDoF() < m_minNDoF ) 
+  {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> NDoF " << aTrack.nDoF() << " failed cut" << endreq;
     return false;
@@ -122,7 +130,8 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   // chi-squared
   const double chi2 = aTrack.chi2PerDoF();
   if ( (m_maxChi2Cut>=0 && (chi2 > m_maxChi2Cut || aTrack.nDoF()<=0 ) )  ||
-       (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) ) {
+       (m_minChi2Cut>=0 && (chi2 < m_minChi2Cut || aTrack.nDoF()<=0 ) ) )
+  {
     if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Chi^2 " << chi2 << " failed cut" << endreq;
     return false;
@@ -154,6 +163,34 @@ bool TrackSelector::accept ( const Track& aTrack ) const
     return false;
   }
 
+  // eta
+  const double eta = aTrack.pseudoRapidity();
+  if ( eta < m_minEtaCut || eta > m_maxEtaCut )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> #eta " << eta << " failed cut" << endreq;
+    return false;
+  }
+
+  // Clones
+  info() << "CloneDist " << aTrack.info(LHCb::Track::CloneDist,9e99) << endreq;
+  if ( !m_acceptClones && ( aTrack.checkFlag(LHCb::Track::Clone) || 
+                            aTrack.info(LHCb::Track::CloneDist,9e99) < m_cloneCut ) )
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> Track failed clone rejection" << endreq;
+    return false;
+  }
+
+  // remove tracks with bad likelihood
+  const double lik = aTrack.info(Track::Likelihood, -9999.);
+  if ( lik < m_likCut) 
+  {
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> Likelihood " << lik << " failed cut" << endreq;
+    return false;
+  }
+
   // measurements
   const double nMeas = weightedMeasurementSum(aTrack);
   if ( nMeas < m_minHitCut || nMeas > m_maxHitCut )
@@ -162,38 +199,26 @@ bool TrackSelector::accept ( const Track& aTrack ) const
       debug() << " -> #hits " << nMeas << " failed cut" << endreq;
     return false;
   }
- 
-  // eta
-  double eta = aTrack.pseudoRapidity();
-  if ( eta < m_minEtaCut || eta > m_maxEtaCut )
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << " -> #eta " << eta << " failed cut" << endreq;
-    return false;
-  }
- 
+
   // count number of velo phi and R hits
   if( m_minNVeloPhiHits > 0 || m_minNVeloRHits > 0 ) {
     int numVeloPhi(0), numVeloR(0) ;
     for( std::vector<LHCbID>::const_iterator it = aTrack.lhcbIDs().begin() ;
-	 it != aTrack.lhcbIDs().end(); ++it) 
+         it != aTrack.lhcbIDs().end(); ++it)
       if     ( it->isVeloPhi() ) ++numVeloPhi ;
       else if( it->isVeloR() ) ++numVeloR ;
     if ( numVeloPhi < m_minNVeloPhiHits ) {
       if ( msgLevel(MSG::DEBUG) )
-	debug() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
+        debug() << " -> #velo phi " << numVeloPhi << " failed cut" << endreq;
       return false;
     }
     if ( numVeloR < m_minNVeloRHits ) {
       if ( msgLevel(MSG::DEBUG) )
-	debug() << " -> #velo R " << numVeloR << " failed cut" << endreq;
+        debug() << " -> #velo R " << numVeloR << " failed cut" << endreq;
       return false;
     }
   }
-  
-  // remove seeds with bad likelihood
-  if (aTrack.info(Track::Likelihood, -9999.) < m_likCut ) return false;
- 
+
   if ( msgLevel(MSG::DEBUG) ) debug() << " -> Track selected" << endreq;
   return true;
 }
