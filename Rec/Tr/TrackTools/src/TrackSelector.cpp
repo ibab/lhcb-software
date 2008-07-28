@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.17 2008-07-28 11:38:41 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.18 2008-07-28 11:46:23 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -56,7 +56,7 @@ TrackSelector::TrackSelector( const std::string& type,
   declareProperty( "LikCut", m_likCut =  boost::numeric::bounds<double>::lowest());
 
   declareProperty( "AcceptClones", m_acceptClones = true  );
-  declareProperty( "CloneDistCut", m_cloneCut     = -1e10 );
+  declareProperty( "CloneDistCut", m_cloneCut     = 1e3 );
 
   m_trTypes =
     boost::assign::list_of("Velo")("VeloR")("Long")("Upstream")("Downstream")("Ttrack");
