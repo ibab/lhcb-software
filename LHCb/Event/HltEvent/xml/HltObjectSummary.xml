@@ -1,0 +1,356 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Skwarnicki -->
+<!--- Created : 2008-07-23 -->
+
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' >
+<gdd>
+  <package name='HltEvent'>
+
+<!-- HltObjectSummary Class -->
+
+    <class
+      name        = 'HltObjectSummary'
+      author      = 'Tomasz Skwarnicki'
+      desc        = 'Summary class for selected Hlt candidates (Particles, Tracks, vertices, etc.), and selection list itself.'
+      stdVectorTypeDef = 'TRUE' 
+      id          = '7530'>
+
+
+      <location name='Default'  place='Hlt/SelReports/Candidates' />
+      <location name='Emulated' place='Hlt/Emu/SelReports/Candidates' />
+      
+      <base name='ContainedObject' />
+      &ContainedObject;
+
+
+      <import name='vector' std='TRUE' />
+      <import name='Kernel/LHCbID' />
+      <import name='GaudiKernel/VectorMap' />
+
+
+      <typedef
+        type   = 'GaudiUtils::VectorMap&lt;std::string,float&gt;'
+        def    = 'Info'
+        desc   = 'Numerical info from the object keyed with a string info ID'
+        access = 'PUBLIC'
+      />
+
+
+      <attribute
+        type      = 'std::vector&lt; LHCb::LHCbID &gt;'
+        name      = 'lhcbIDs'
+        desc      = 'List of of LHCbIDs stored directly here. Not expected for obj summary with a substructure. See also Flattened access method.'
+        access    = 'PROTECTED' 
+      />
+
+
+      <attribute
+        name    = 'numericalInfo'
+        desc    = 'List of numerical information from the object stored directly here. See  also Flattened access method.'
+        type    = 'Info'
+        access  = 'PROTECTED' />
+
+
+      <attribute
+        name    = 'summarizedObjectCLID'
+        desc    = 'Class ID of the object being summarized.'
+        type    = 'unsigned int'
+        access  = 'PROTECTED' />
+
+      <attribute
+        name    = 'summarizedObject'
+        desc    = 'Pointer to the object being summarized. Non persistent.'
+        type    = 'const ContainedObject*'
+        access  = 'PROTECTED' />
+
+      <relation
+        type      = 'LHCb::HltObjectSummary'
+        name      = 'substructure'
+        addMeth   = 'TRUE'
+        desc      = 'Either pointer to subobject of the same type or pointers to objects on which this one was built ( e.g. particle daughters, tracks making the vertex etc.). See also Flattened access method.'
+        access    = 'PROTECTED' 
+	multiplicity = 'N'
+      />
+
+
+     <!-- methods undoing subobjects if any -->
+
+      <method 
+          name='numericalInfoFlattened'
+          type='LHCb::HltObjectSummary::Info'
+          desc='numericalInfo from the summarized objected including the parts stored on subobjects. Users should use this method instead of locally stored numericalInfo.'
+          const='TRUE' >
+        <code>
+          Info flattenedInfo = m_numericalInfo;
+          if( m_substructure.size() == 1 ){
+              const HltObjectSummary &amp; inner = *(m_substructure[0]);
+              if( inner.summarizedObjectCLID() == m_summarizedObjectCLID ){
+                 Info innerInfo = inner.numericalInfoFlattened();
+                 flattenedInfo.insert(innerInfo.begin(),innerInfo.end());
+              }
+          }
+          return flattenedInfo;
+       </code>
+      </method>
+                  
+         
+      <method 
+          name='lhcbIDsFlattened'
+          type='std::vector&lt;LHCb::LHCbID&gt;'
+          desc='lhcbIDs from the summarized object including the parts stored on subobjects. Users should use this method instead of locally stored lhcbIDs.'
+          const='TRUE' >
+        <code>
+          std::vector&lt;LHCb::LHCbID&gt; flattenedLhcbIDs = m_lhcbIDs;
+          if( m_substructure.size() == 1 ){
+              const HltObjectSummary &amp; inner = *(m_substructure[0]);
+              if( inner.summarizedObjectCLID() == m_summarizedObjectCLID ){
+                 std::vector&lt;LHCb::LHCbID&gt; innerHits = inner.lhcbIDsFlattened();
+                 flattenedLhcbIDs.insert(flattenedLhcbIDs.end(),innerHits.begin(),innerHits.end());
+              }
+          }
+          return flattenedLhcbIDs;
+       </code>
+      </method>
+                  
+         
+      <method 
+          name='substructureFlattened'
+          type='SmartRefVector&lt;LHCb::HltObjectSummary&gt;'
+          desc='substructure of the summarized object (e.g. particle daughters, track of particle with no daughters etc.) - returns substructure of the bottom subobject'
+          const='TRUE' >
+        <code>
+          SmartRefVector&lt;LHCb::HltObjectSummary&gt; subFlattened;             
+          if( m_substructure.size() == 1 ){
+              const HltObjectSummary &amp; inner = *(m_substructure[0]);
+              if( inner.summarizedObjectCLID() == m_summarizedObjectCLID ){
+                 SmartRefVector&lt;LHCb::HltObjectSummary&gt; innerSub = inner.substructureFlattened();
+                 subFlattened.insert(subFlattened.end(),innerSub.begin(),innerSub.end());
+              } else {
+                 subFlattened.insert(subFlattened.end(),m_substructure.begin(),m_substructure.end());
+              }
+          } else {
+             subFlattened.insert(subFlattened.end(),m_substructure.begin(),m_substructure.end());
+          }
+          return subFlattened;
+       </code>
+      </method>
+                  
+
+      <!--- add to local info -->
+
+      <method
+        name    = "addToInfo"
+        desc    = "Add new information, associated with the specified key. This method cannot be used to modify information for an already existing key"
+        argList = "const std::string key, const float info"
+        type    = "bool" >
+        <code>
+          return m_numericalInfo.insert( key , info ).second ;
+        </code>       
+      </method>
+          
+         
+     <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout'
+        const='TRUE' >
+        <code>
+         std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+
+         ss &lt;&lt; "{ " &lt;&lt; " summarizedObjectCLID : " &lt;&lt; summarizedObjectCLID() ;
+
+         ss &lt;&lt; " numericalInfo : { ";
+	 for( Info::const_iterator i=numericalInfo().begin();i!=numericalInfo().end();++i){
+	     ss &lt;&lt; i->first &lt;&lt; ":" &lt;&lt; i->second &lt;&lt; " , ";
+         }
+         ss &lt;&lt; " } ";
+
+         ss &lt;&lt; " substructure : { ";
+	 for( SmartRefVector &lt; LHCb::HltObjectSummary &gt;::const_iterator j=substructure().begin();j!=substructure().end();++j){
+	     ss &lt;&lt;  (*j)->index() &lt;&lt; ":" &lt;&lt; (*j)->summarizedObjectCLID() &lt;&lt; " , ";
+         }
+         ss &lt;&lt; " } ";
+
+         ss &lt;&lt; " lhcbIDs : { ";
+	 for( std::vector &lt; LHCb::LHCbID  &gt;::const_iterator k=lhcbIDs().begin();k!=lhcbIDs().end();++k){
+	     ss &lt;&lt;  k->lhcbID() &lt;&lt; " , ";
+         }
+         ss &lt;&lt; " } ";
+
+         ss &lt;&lt; " } ";
+
+         return ss;
+        </code>
+      </method>
+
+    </class>
+
+<!-- HltSelReports class -->
+
+    <!--- the code here should have the same structure as HltDecReports -->
+
+    <class
+      name        = 'HltSelReports'
+      author      = 'Tomasz Skwarnicki'
+      desc        = 'managed container of Hlt Selection Reports'
+      id          = '7531' >
+      
+      <location name='Default'  place='Hlt/SelReports' />
+      <location name='Emulated' place='Hlt/Emu/SelReports' />
+
+      <base name='DataObject' />
+      &DataObject;
+
+      <import name='GaudiKernel/VectorMap' />
+      <import name='Event/HltObjectSummary' />
+      <import name='vector' std='TRUE' />
+
+      <typedef
+        type   = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltObjectSummary &gt;'
+        def    = 'Container'
+        desc   = 'container of HltObjectSummary-s keyed by trigger selection name'
+        access = 'PUBLIC'
+      />
+
+      <attribute
+        type      = 'LHCb::HltSelReports::Container'
+        name      = 'selReports'
+        desc      = 'container of HltObjectSummary-s keyed by trigger selection name'
+        access    = 'PROTECTED' />
+
+      <!-- report accessor (for convenience) -->
+
+      <method 
+         name='selReport'
+         type='const LHCb::HltObjectSummary*'
+         argList = 'const std::string selectionName'
+         desc='returns a pointer to Hlt Decision Report for given trigger selection name (==0 if not found)'
+         const = 'TRUE' >
+        <code>
+    Container::const_iterator rep = m_selReports.find(selectionName);
+    if( rep==m_selReports.end() )return ((const LHCb::HltObjectSummary*)(0));
+    return &amp;(rep->second);
+        </code>
+      </method>
+
+      <!-- selection name inquiries (for convenience) -->
+
+      <method
+         name = 'hasSelectionName'
+         type = 'bool'
+         argList = 'const std::string selectionName'
+         desc = 'check if the trigger selection name is present in the container'
+         access ='PUBLIC'
+         const = 'TRUE'
+       >
+        <code>
+          return (m_selReports.find(selectionName)!=m_selReports.end());
+       </code>
+      </method>
+
+      <method
+        type = 'std::vector &lt; std::string &gt;'
+        name = 'selectionNames'
+        desc = 'return names of the selections stored in the container'
+        const = 'TRUE' >
+        <code>
+    std::vector&lt;std::string&gt; names;
+    Container::const_iterator it = m_selReports.begin();
+    while ( it != m_selReports.end()) names.push_back((it++)->first);
+    return names;
+        </code>
+      </method>
+
+    <!-- basic iterators -->
+
+      <method
+         name = 'begin'
+         type = 'LHCb::HltSelReports::Container::const_iterator'
+         desc = 'begin iterator'
+         access ='PUBLIC'
+         const = 'TRUE' >
+        <code>
+          return m_selReports.begin();
+       </code>
+      </method>
+        
+      <method
+         name = 'end'
+         type = 'LHCb::HltSelReports::Container::const_iterator'
+         desc = 'end iterator'
+         access ='PUBLIC'
+         const = 'TRUE'>
+        <code>
+          return m_selReports.end();
+       </code>
+      </method>
+        
+      <method
+         name = 'find'
+         type = 'LHCb::HltSelReports::Container::const_iterator'
+         argList = 'const std::string selectionName'
+         desc = 'find HltObjectSummary in the container given its trigger selection name'
+         const = 'TRUE' >
+        <code>
+          return m_selReports.find(selectionName);
+       </code>
+      </method>
+        
+     <!-- size -->
+
+     <method
+        name='size'
+        type='LHCb::HltSelReports::Container::size_type'
+        desc='size of the HltSelReports container (i.e. number of decision reports stored)'
+        const = 'TRUE' >
+        <code>
+   return m_selReports.size();
+       </code>
+      </method>
+      
+
+     <!-- insertor -->
+
+      <method
+        name='insert'
+        type='StatusCode'
+        argList='const std::string selectionName,const LHCb::HltObjectSummary selReport'
+        desc='insert HltObjectSummary for given selectionName, returns StatusCode::FAILURE if duplicate selection name'        
+      >
+        <code>
+   if( m_selReports.insert(selectionName,selReport).second )return StatusCode::SUCCESS;
+   return StatusCode::FAILURE;
+        </code>
+      </method>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout' 
+        const='TRUE' >
+        <code>
+          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+          ss &lt;&lt; " HltSelReports : { "  &lt;&lt; std::endl;
+          for(Container::const_iterator i=m_selReports.begin();
+                                        i!=m_selReports.end(); ++i){
+           ss &lt;&lt; " selectionName :	" &lt;&lt; i->first
+              &lt;&lt; " HltObjectSummary :	" &lt;&lt; i->second 
+              &lt;&lt; std::endl;
+          }
+          ss &lt;&lt; " }" &lt;&lt; std::endl;
+          return ss;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+
+</gdd>

@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Skwarnicki -->
+<!--- Created : 2008-07-22 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+
+  <package name='HltEvent'>
+
+    <class
+      name        = 'HltDecReport'
+      author      = 'Tomasz Skwarnicki'
+      desc        = 'Hlt Trigger Decision'>
+
+      <attribute
+        type = 'bitfield'
+        name = 'decReport'
+        desc = 'encoded decision, errors, number of candidates and selection ID'
+	init = '0'
+	access = 'PROTECTED' >
+
+        <bitfield
+            type='unsigned int'
+            name='decision'
+            length='1'
+            desc='decision 1(true)=passed selection 0(false)=did not pass selection'
+            setMeth ='FALSE'
+	    />
+
+	<bitfield
+            type='unsigned int'
+	    name='errorBits'
+	    length='5'
+	    desc='error code 0=none'
+	    />
+
+	<bitfield
+	    type='unsigned int'
+	    name='numberOfCandidates'
+	    length='10'
+	    desc='number of selected candidates passing trigger selection criteria' 
+            setMeth ='FALSE'
+	    />
+
+	<bitfield
+	    type='unsigned int'
+	    name='intSelectionID'
+	    length='16'
+	    desc='integer selection ID'
+            setMeth ='FALSE'
+	    />
+
+      </attribute>
+
+
+      <!--- smart setters -->
+
+
+      <method
+        name='setDecision'
+        type='void'
+        argList='int dec' 
+        desc='set decision bit; passed selection=(dec!=0)'
+        >
+        <code>
+   m_decReport &amp;= ~decisionMask;
+   if( dec ){ 
+     m_decReport |= ((((unsigned int)1) &lt;&lt; decisionBits) &amp; decisionMask); 
+   }
+       </code>
+      </method>        
+
+      <method
+        static='TRUE'
+        type='unsigned int'
+        name='saturatedNumberOfCandidates' 
+        desc='if numberOfCandidates in HltDecReport equals this then actual number might have been larger'
+        >
+        <code>
+  return (unsigned int)(numberOfCandidatesMask &gt;&gt; numberOfCandidatesBits);
+        </code>
+      </method>
+        
+      <method
+        name='setNumberOfCandidates'
+        type='void'
+        argList='int noc' 
+        desc='set numberOfCandidates; set to saturation value if larger than max allowed; set to 0 if negative'
+        >
+        <code>
+  unsigned int val=(noc&lt;0)?0:((unsigned int)noc);
+  val=(val&lt;saturatedNumberOfCandidates())?val:saturatedNumberOfCandidates(); 
+  m_decReport &amp;= ~numberOfCandidatesMask;
+  m_decReport |= ((val &lt;&lt; numberOfCandidatesBits) &amp; numberOfCandidatesMask);
+       </code>
+      </method>        
+
+      <method
+        static='TRUE'
+        type='unsigned int'
+        name='illegalIntSelectionID' 
+        desc='if intSelectionID in HltDecReport equals this then passed selection ID was out of allowed range'
+        >
+        <code>
+  return (unsigned int)(intSelectionIDMask &gt;&gt; intSelectionIDBits);
+        </code>
+      </method>
+        
+      <method
+        name='setIntSelectionID'
+        type='void'
+        argList='int selID' 
+        desc='set intSelectionID; set to illegal value if out of allowed range'
+        >
+        <code>
+  unsigned int val=(selID&lt;=0)?illegalIntSelectionID():((unsigned int)selID);
+  val=(val&lt;illegalIntSelectionID())?val:illegalIntSelectionID(); 
+  m_decReport &amp;= ~intSelectionIDMask;
+  m_decReport |= ((val &lt;&lt; intSelectionIDBits) &amp; intSelectionIDMask);
+        </code>   
+      </method>
+
+      <method
+        name='invalidIntSelectionID'
+        type='bool'
+        desc='checked if intSelectionID was invalid when set'
+        const='TRUE'>
+        <code>
+  return ((intSelectionID()==illegalIntSelectionID())||(intSelectionID()==0));
+        </code>
+      </method>
+
+
+      <!-- non-trivial constructors -->
+        
+      <constructor
+        argList='unsigned int decRep'
+	initList='m_decReport(decRep)'
+        desc='create from integer'
+	/>
+
+      <constructor
+        argList='int dec, unsigned int eb, int noc, int selID'
+        desc='create from subfield inputs with allowed range checking'
+	>
+        <code>
+   m_decReport=0;
+   setDecision(dec);
+   setErrorBits(eb);          
+   setNumberOfCandidates(noc);
+   setIntSelectionID(selID);
+        </code>   
+      </constructor>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout'
+        const='TRUE' >
+        <code>
+          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+          ss &lt;&lt; "{ " 
+             &lt;&lt; " decision :	" &lt;&lt; decision() 
+             &lt;&lt; " errorBits :	" &lt;&lt; errorBits() 
+             &lt;&lt; " numberOfCandidates :	" &lt;&lt; numberOfCandidates() 
+             &lt;&lt; " intSelectionID :	" &lt;&lt; intSelectionID() 
+             &lt;&lt; " }" ;
+          return ss;
+        </code>
+      </method>
+
+
+    </class>
+
+<!-- HltDecReports class -->
+
+    <class
+      name        = 'HltDecReports'
+      author      = 'Tomasz Skwarnicki'
+      desc        = 'managed container of Hlt Trigger Decision Reports'
+      id          = '7521' >
+      
+      <location name='Default'  place='Hlt/DecReports' />
+      <location name='Emulated' place='Hlt/Emu/DecReports' />
+
+      <base name='DataObject' />
+      &DataObject;
+
+      <import name='GaudiKernel/VectorMap' />
+      <import name='Event/HltDecReport' />
+      <import name='vector' std='TRUE' />
+
+      <typedef
+        type   = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltDecReport &gt;'
+        def    = 'Container'
+        desc   = 'container of HltDecReport-s keyed by trigger selection name'
+        access = 'PUBLIC'
+      />
+
+      <attribute
+        type      = 'LHCb::HltDecReports::Container'
+        name      = 'decReports'
+        desc      = 'container of HltDecReport-s keyed by trigger selection name'
+        access    = 'PROTECTED' />
+
+      <!-- report accessor (for convenience) -->
+
+      <method 
+         name='decReport'
+         type='const LHCb::HltDecReport*'
+         argList = 'const std::string selectionName'
+         desc='return pointer to Hlt Decision Report for given trigger selection name (==0 if not found)'
+         const = 'TRUE' >
+        <code>
+    Container::const_iterator rep = m_decReports.find(selectionName);
+    if( rep==m_decReports.end() )return ((const LHCb::HltDecReport*)(0));
+    return &amp;(rep->second);
+        </code>
+      </method>
+
+      <!-- selection name inquiries (for convenience) -->
+
+      <method
+         name = 'hasSelectionName'
+         type = 'bool'
+         argList = 'const std::string selectionName'
+         desc = 'check if the trigger selection name is present in the container'
+         access ='PUBLIC'
+         const = 'TRUE'
+       >
+        <code>
+          return (m_decReports.find(selectionName)!=m_decReports.end());
+       </code>
+      </method>
+
+      <method
+        type = 'std::vector &lt; std::string &gt;'
+        name = 'selectionNames'
+        desc = 'return names of the selections stored in the container'
+        const = 'TRUE' >
+        <code>
+    std::vector&lt;std::string&gt; names;
+    Container::const_iterator it = m_decReports.begin();
+    while ( it != m_decReports.end()) names.push_back((it++)->first);
+    return names;
+        </code>
+      </method>
+
+    <!-- basic iterators -->
+
+      <method
+         name = 'begin'
+         type = 'LHCb::HltDecReports::Container::const_iterator'
+         desc = 'begin iterator'
+         access ='PUBLIC'
+         const = 'TRUE' >
+        <code>
+          return m_decReports.begin();
+       </code>
+      </method>
+        
+      <method
+         name = 'end'
+         type = 'LHCb::HltDecReports::Container::const_iterator'
+         desc = 'end iterator'
+         access ='PUBLIC'
+         const = 'TRUE'>
+        <code>
+          return m_decReports.end();
+       </code>
+      </method>
+        
+      <method
+         name = 'find'
+         type = 'LHCb::HltDecReports::Container::const_iterator'
+         argList = 'const std::string selectionName'
+         desc = 'find HltDecReport in the container given its trigger selection name'
+         const = 'TRUE' >
+        <code>
+          return m_decReports.find(selectionName);
+       </code>
+      </method>
+        
+     <!-- size -->
+
+     <method
+        name='size'
+        type='LHCb::HltDecReports::Container::size_type'
+        desc='size of the HltDecReports container (i.e. number of decision reports stored)'
+        const = 'TRUE' >
+        <code>
+   return m_decReports.size();
+       </code>
+      </method>
+      
+
+     <!-- insertor -->
+
+      <method
+        name='insert'
+        type='StatusCode'
+        argList='const std::string selectionName,const LHCb::HltDecReport decReport'
+        desc='insert HltDecReport for given selectionName, returns StatusCode::FAILURE if duplicate selection name'        
+      >
+        <code>
+   if( m_decReports.insert(selectionName,decReport).second )return StatusCode::SUCCESS;
+   return StatusCode::FAILURE;
+        </code>
+      </method>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout' 
+        const='TRUE' >
+        <code>
+          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+          ss &lt;&lt; " HltDecReports : { "  &lt;&lt; std::endl;
+          for(Container::const_iterator i=m_decReports.begin();
+                                        i!=m_decReports.end(); ++i){
+           ss &lt;&lt; " selectionName :	" &lt;&lt; i->first
+              &lt;&lt; " HltDecReport :	" &lt;&lt; i->second 
+              &lt;&lt; std::endl;
+          }
+          ss &lt;&lt; " }" &lt;&lt; std::endl;
+          return ss;
+        </code>
+      </method>
+
+    </class>
+
+
+  </package>
+
+</gdd>
