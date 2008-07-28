@@ -4,6 +4,12 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !----------------------------------------------------------------------
 
+! 2008-07-28 - Tomasz Skwarnicki
+ - Added RawBank::HltLumiSummary bank type on Jaap Panman's request
+   renamed HLT,HltSelCandidates,HltPrimaryVertex to HltDecReports, 
+   HltSelReports and HltVertexReports respectively
+
+
 !================ DAQEvent v7r13 2008-07-27 ===========================
 ! 2008-07-24 - Marco Clemencic
  - Made OdinTimeDecoder issue a "RunChange" incident when the run number

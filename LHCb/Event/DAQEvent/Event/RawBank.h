@@ -68,7 +68,7 @@ namespace LHCb
                    L0PU,            // 14
                    DAQ,             // 15
                    ODIN,            // 16
-                   HLT,             // 17
+                   HltDecReports,   // 17
                    VeloFull,        // 18
                    TTFull,          // 19
                    ITFull,          // 20
@@ -105,8 +105,9 @@ namespace LHCb
                    TestDet,         // 51
                    L0DUError,       // 52
                    HltRoutingBits,  // 53
-                   HltSelCandidates,// 54
-                   HltPrimaryVertex,// 55
+                   HltSelReports,   // 54
+                   HltVertexReports,// 55
+                   HltLumiSummary,  // 56
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };

@@ -1,4 +1,4 @@
-// $Id: RawBank.cpp,v 1.5 2008-07-17 09:46:53 tskwarni Exp $
+// $Id: RawBank.cpp,v 1.6 2008-07-28 15:46:47 tskwarni Exp $
 
 // local
 #include "Event/RawBank.h"
@@ -29,7 +29,7 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::L0PU            : return  "L0PU";            
   case LHCb::RawBank::DAQ             : return  "DAQ";             
   case LHCb::RawBank::ODIN            : return  "ODIN";            
-  case LHCb::RawBank::HLT             : return  "HLT";             
+  case LHCb::RawBank::HltDecReports   : return  "HltDecReports";    
   case LHCb::RawBank::VeloFull        : return  "VeloFull";        
   case LHCb::RawBank::TTFull          : return  "TTFull";         
   case LHCb::RawBank::ITFull          : return  "ITFull";          
@@ -66,8 +66,9 @@ std::string LHCb::RawBank::typeName(LHCb::RawBank::BankType e){
   case LHCb::RawBank::TestDet         : return  "TestDet";
   case LHCb::RawBank::L0DUError       : return  "L0DUError";
   case LHCb::RawBank::HltRoutingBits  : return  "HltRoutingBits";
-  case LHCb::RawBank::HltSelCandidates: return  "HltSelCandidates";
-  case LHCb::RawBank::HltPrimaryVertex: return  "HltPrimaryVertex";
+  case LHCb::RawBank::HltSelReports   : return  "HltSelReports";
+  case LHCb::RawBank::HltVertexReports: return  "HltVertexReports";
+  case LHCb::RawBank::HltLumiSummary  : return  "HltLumiSummary";
   default                             : return  "Undefined name";
   };
 }  
