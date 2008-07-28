@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.44 2008-07-27 15:33:19 cattanem Exp $
+# $Id: requirements,v 1.45 2008-07-28 08:58:45 cattanem Exp $
 # Maintainer: Chris Parkes, Tomasz Szumlak
 #
 package VeloEvent
@@ -9,16 +9,23 @@ branches cmt doc xml VeloEvent
 
 use LHCbKernel     v* Kernel
 use Tell1Kernel    v* DAQ
-private
-use GaudiObjDesc v* -no_auto_imports
-end_private
 
+# From here everything private, just needed to generate headers and dicts
+private
+
+use GaudiObjDesc v* -no_auto_imports
 # Produce Header-Files from XML description
 #============================================================================
 macro VeloEventObj2Doth_GODflags " -s ../VeloEvent/ " \
       WIN32                      " -s ..\VeloEvent\ "
 apply_pattern god_headers files=../xml/*.xml
+apply_pattern install_more_includes more=VeloEvent
+
 # Generate dictionaries with lcgdict via GOD
 #============================================================================
+macro VeloEventObj2Dict_GODflags " -s ../VeloEvent/ " \
+      WIN32                       " -s ..\VeloEvent\ "
 apply_pattern god_dictionary files=../xml/*.xml
-apply_pattern install_more_includes more=VeloEvent
+
+end_private
+
