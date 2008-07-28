@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_Commit.py,v 1.5 2008-07-16 16:28:38 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_Commit.py,v 1.6 2008-07-28 19:30:45 marcocle Exp $"
 
 import os, sys, stat
 
@@ -229,8 +229,15 @@ and for a short message for the release notes.""")
     ans = None
     if options.dry_run:
         ans = "No"
-        log.info("Updated release notes written in the local directory")
-        rel_notes.write("release_notes.xml")
+        msg = "Updated release notes written in "
+        dest = "release_notes.xml"
+        if options.dir:
+            msg += options.dir
+            dest = os.path.join(options.dir,dest)
+        else:
+            msg += "the local directory"
+        log.info(msg)
+        rel_notes.write(dest)
     
     while ans is None:
         ans = raw_input("Do you really want to commit the changes (Yes,[No])? ")

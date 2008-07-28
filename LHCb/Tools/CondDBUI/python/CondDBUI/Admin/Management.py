@@ -2,7 +2,7 @@
 Management utilities: Commit, TAG, etc. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: Management.py,v 1.2 2008-07-23 14:45:32 marcocle Exp $"
+__version__ = "$Id: Management.py,v 1.3 2008-07-28 19:30:45 marcocle Exp $"
 
 
 # Exported symbols
@@ -92,7 +92,7 @@ def prepareChangesDB(srcpath, partition, reftag, usertag = "HEAD", destdir = Non
                 CondDBUI.CondDB(_coolSQLiteURL(first_pass_file, partition),
                                 create_new_db = True)
             filename = first_pass_file
-            usertag = "HEAD"
+            reftag = usertag = "HEAD"
         
         CondDBUI.PyCoolDiff.diff(_masterCoolURL(partition),
                                  _coolSQLiteURL(filename, partition),

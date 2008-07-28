@@ -1533,7 +1533,7 @@ def _collect_tree_info(source_dir, includes = [], excludes = [],
     """
     # add to the exclude list CVS and back-up files
     exclude_dirs += [ x for x in ['CVS'] if x not in exclude_dirs ]
-    excludes += [ x for x in ['.*~'] if x not in excludes ]
+    excludes += [ x for x in ['.*~', r'.*\.bak'] if x not in excludes ]
     # convert to regular expression objects
     includes = [ re.compile(x) for x in includes]
     include_dirs = [ re.compile(x) for x in include_dirs]
