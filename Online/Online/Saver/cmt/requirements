@@ -3,23 +3,18 @@ version v2r0
 
 branches cmt doc src 
 
-use GaudiKernel  v* 
-use GaudiAlg     v*
-use AIDA         v* LCG_Interfaces
+# use AIDA       v* LCG_Interfaces
 use ROOT         v* LCG_Interfaces
 use DIM          v* Online
-use OnlineKernel v* Online
+use GaudiOnline  v* Online
 use Gaucho       v* Online
-use GaudiAud     v*
-use GaudiSvc     v*
+# use GaudiKernel  v*
+# use GaudiSvc     v*
 
-
-library Saver  ../src/Saver.cpp ../src/Saver.h \
-../src/Misc.cpp ../src/Misc.h \
-../src/DimInfoServerStatus.cpp ../src/DimInfoServerStatus.h
-
+library Saver *.cpp
 apply_pattern component_library library=Saver
+apply_pattern generate_rootmap library=Saver
 
 private
-macro_append Saver_shlibflags "-lGaucho -lHist -lGraf -lGraf3d -lGpad  -lRint -lPostscript -lMatrix -lPhysics -lpthread -lm -ldl -rdynamic" \
-  WIN32 " libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib "
+macro_append Saver_shlibflags " -lGaucho -lHist "  WIN32 " libHist.lib "
+
