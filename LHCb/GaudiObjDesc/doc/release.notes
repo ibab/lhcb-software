@@ -4,6 +4,9 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2008-08-28 - Hubert Degaudenzi
+ - fixed problem in the fragment for the creation of the target dircectory
+
 !======================== GaudiObjDesc v11r3 2008-07-27 ======================
 ! 2008-08-24 - Hubert Degaudenzi
  - fixed dependency problems in the fragments to allow parallel compilation

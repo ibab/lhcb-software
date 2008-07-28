@@ -1,3 +1,6 @@
+$(dest):
+	@if !(test -d $(dest)); then mkdir -p $(dest); fi
+
 
 ${CONSTITUENT}_cleanuplist += $(${CONSTITUENT}_headerlist)
 ${CONSTITUENT}_cleanuplist += $(${CONSTITUENT}_obj2dothlist)
