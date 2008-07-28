@@ -1,4 +1,4 @@
-// $Id: GenVertex_Streamer.cpp,v 1.2 2008-07-20 18:10:02 gcorti Exp $
+// $Id: GenVertex_Streamer.cpp,v 1.3 2008-07-28 08:11:57 cattanem Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 //Break the privacy of classes
@@ -9,9 +9,7 @@
 
 #include "TBuffer.h"
 #include "TClassRef.h"
-#include "TClassRef.h"
 #include "TVirtualStreamerInfo.h"
-
 
 #include "HepMC/GenVertex.h"
 #include "HepMC/GenEvent.h"
@@ -47,12 +45,13 @@ void GenVertex_Streamer(TBuffer &R__b, void *obj);
    //   double    dx;          
    //   double    dy;          
    //   double    dz;          
- 
    static TClassRef vert_cl("HepMC::GenVertex");
    static TClassRef vec_part_cl("vector<HepMC::GenParticle*>");
    static TClassRef weights_cl("HepMC::WeightContainer");
    static TClassRef hlv_cl("CLHEP::HepLorentzVector");
    static TClassRef h3v_cl("CLHEP::Hep3Vector");
+
+#ifndef WIN32 // define private public trick does not work in Windows
 
    if (R__b.IsReading()) {
       UInt_t R__s, R__c;
@@ -117,4 +116,5 @@ void GenVertex_Streamer(TBuffer &R__b, void *obj);
    } else {
       R__b.WriteClassBuffer(vert_cl,obj);
    }
+#endif // WIN32
 }

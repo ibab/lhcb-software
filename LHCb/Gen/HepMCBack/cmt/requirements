@@ -22,7 +22,7 @@ include_path      none
 
 # Linker library building rule
 #============================================================================
-library          HepMCBack    ../src/*.cpp 
+library          HepMCBack    ../src/*.cpp
 
 # define linker library link options
 #============================================================================

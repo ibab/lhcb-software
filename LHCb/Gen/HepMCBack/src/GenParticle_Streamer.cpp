@@ -1,4 +1,4 @@
-// $Id: GenParticle_Streamer.cpp,v 1.2 2008-07-20 18:10:02 gcorti Exp $
+// $Id: GenParticle_Streamer.cpp,v 1.3 2008-07-28 08:11:57 cattanem Exp $
 // see TClass::AdoptStreamer(new TClassStreamer(GenParticle_Streamer))
 
 //Break the privacy of classes
@@ -52,6 +52,8 @@ void GenParticle_Streamer(TBuffer &R__b, void *obj) {
    static TClassRef pola_cl("HepMC::Polarization");
    static TClassRef hlv_cl("CLHEP::HepLorentzVector");
    static TClassRef h3v_cl("CLHEP::Hep3Vector");
+
+#ifndef WIN32 // define private public trick does not work in Windows
 
    if (R__b.IsReading()) {
       UInt_t R__s, R__c;
@@ -132,4 +134,5 @@ void GenParticle_Streamer(TBuffer &R__b, void *obj) {
    } else {
       R__b.WriteClassBuffer(part_cl,obj);
    }
+#endif // WIN32
 }

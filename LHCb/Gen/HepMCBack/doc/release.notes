@@ -4,7 +4,10 @@
 ! Purpose     : Streamers to read back HepMC 1 data
 !-----------------------------------------------------------------------------
 
-!========================= HepMCBack v1r0 2008-07-20 =========================
+!========================= HepMCBack v1r0 2008-07-28 =========================
+! 2008-07-28 - Marco Cattaneo
+ - Disable Streamer code on Windows, the library fails to link due to the
+   define public private trick. Which means this DLL is not usable on Windows
  
 ! 2008-07-20 - Marco Clemencic, Gloria Corti, Patrick Robbe
  - Classes provided by Philippe Canal and Lars Sonnenchein to allow reading
