@@ -1,4 +1,4 @@
-// $Id: Tensors.cpp,v 1.2 2008-07-27 18:19:27 ibelyaev Exp $
+// $Id: Tensors.cpp,v 1.3 2008-07-28 18:28:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -229,54 +229,111 @@ double LoKi::Tensors::Epsilon::epsilon
     +    e1 * z2 * y3 * x4 * Epsilon_<E,Z,Y,X>::value  ; 
 }
 // ============================================================================
-/* evaluate the tensor product: (e*v1*v2*v3)*(e*v4*v5*v6)
+/* evaluate the tensor product: (e*a1*a2*a3)*(e*b1*b2*b3)
  * 
  *  \f$  r = 
  *  \epsilon_{\mu\nu\lambda\kappa}
  *  \epsilon_{\mu\rho\\delta\tau}
- *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
- *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+ *          a_1^{\nu}a_2^{\lambda}a_3^{\kappa} 
+ *          b_1^{\rho}b_2^{\delta}b_3^{\tau}   \f$
  *
- *  This expression typically appears in evaution of 
+ *  This expression typically appears in evaluation of 
  *  various "plane-angles".
  *
  *  @code 
  *  
- *   const LorentzVector& v1 = ... ;
- *   const LorentzVector& v2 = ... ;
- *   const LorentzVector& v3 = ... ;
- *   const LorentzVector& v4 = ... ;
- *   const LorentzVector& v5 = ... ;
- *   const LorentzVector& v6 = ... ;
+ *   const LorentzVector& a1 = ... ;
+ *   const LorentzVector& a2 = ... ;
+ *   const LorentzVector& a3 = ... ;
+ *   const LorentzVector& b4 = ... ;
+ *   const LorentzVector& b5 = ... ;
+ *   const LorentzVector& b6 = ... ;
  *
  *   Epsilon e ;
  *
- *   const double r = e.epsilon ( v1 , v2 , v3 , v4 , v5 , v6 ) ; 
+ *   const double r = e.epsilon ( a1 , a2 , a3 , b1 , b2 , b3 ) ; 
  *
  *  @endcode 
  *
  *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
  * 
- *  @param v1 the first  vector 
- *  @param v2 the second vector 
- *  @param v3 the third  vector 
- *  @param v4 the fourth vector 
- *  @param v5 the fith   vector 
- *  @param v6 the sixth  vector 
+ *  @param a1 the first  vector 
+ *  @param a2 the second vector 
+ *  @param a3 the third  vector 
+ *  @param b1 the fourth vector 
+ *  @param b2 the fith   vector 
+ *  @param b3 the sixth  vector 
  *  @return the tensor product
  */
 // ============================================================================
 double LoKi::Tensors::Epsilon::epsilon 
-( const LoKi::LorentzVector& v1 , 
-  const LoKi::LorentzVector& v2 , 
-  const LoKi::LorentzVector& v3 , 
-  const LoKi::LorentzVector& v4 , 
-  const LoKi::LorentzVector& v5 , 
-  const LoKi::LorentzVector& v6 ) const 
-{
-  return epsilon ( epsilon ( v1 , v2 , v3 ) , v4 , v5 , v6 ) ;
+( const LoKi::LorentzVector& a1 , 
+  const LoKi::LorentzVector& a2 , 
+  const LoKi::LorentzVector& a3 , 
+  const LoKi::LorentzVector& b1 , 
+  const LoKi::LorentzVector& b2 , 
+  const LoKi::LorentzVector& b3 ) const 
+{ 
+  //
+  const double a1b1 = a1 . Dot ( b1 ) ;
+  const double a1b2 = a1 . Dot ( b2 ) ;
+  const double a1b3 = a1 . Dot ( b3 ) ;
+  //
+  const double a2b1 = a2 . Dot ( b1 ) ;
+  const double a2b2 = a2 . Dot ( b2 ) ;
+  const double a2b3 = a2 . Dot ( b3 ) ;
+  //
+  const double a3b1 = a3 . Dot ( b1 ) ;
+  const double a3b2 = a3 . Dot ( b2 ) ;
+  const double a3b3 = a3 . Dot ( b3 ) ;
+  
+  return a1b1 * a2b3 * a3b2 
+    +    a1b2 * a2b1 * a3b3 
+    +    a1b3 * a2b2 * a3b1 
+    //
+    -    a1b1 * a2b2 * a3b3 
+    -    a1b2 * a2b3 * a3b1 
+    -    a1b3 * a2b1 * a3b2 ;
 }
 // ============================================================================
+/*  evaluate the magnitude of the "4-normal" 
+ * 
+ *  \f$ l^2 = L_{\mu}L^{\mu} 
+ *      = \left( \epsilon_{\mu\nu\lambda\delta}
+ *     a^{\nu}b^{\lambda}c^{\delta} \right)^2 
+ *    = 
+ *     \left(ab\right)c^2 +      
+ *     \left(ac\right)b^2 +     
+ *     \left(bc\right)a^2 -     
+ *      a^2b^2c^2 - 2\left(ab\right)\left(bc\right)\left(ac\right)
+ *   \f$ 
+ *
+ *  @param a the first  vector 
+ *  @param b the second vector 
+ *  @param c the third  vector 
+ *  @return the magnitude of 4-normal
+ */
+// ============================================================================
+double LoKi::Tensors::Epsilon::mag2
+( const LoKi::LorentzVector& a , 
+  const LoKi::LorentzVector& b , 
+  const LoKi::LorentzVector& c ) const 
+{
+  const double a2 = a . M2 () ;
+  const double b2 = b . M2 () ;
+  const double c2 = c . M2 () ;
+  const double ab = a . Dot ( b ) ;
+  const double ac = a . Dot ( c ) ;
+  const double bc = b . Dot ( c ) ;
+  
+  return ab * ab * c2 
+    +    ac * ac * b2 
+    +    bc * bc * a2 
+    -    a2 * b2 * c2 
+    -    ab * bc * ac * 2 ;
+}
+
+  
 
 
 

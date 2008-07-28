@@ -1,4 +1,4 @@
-// $Id: Kinematics.h,v 1.15 2008-07-27 18:19:27 ibelyaev Exp $
+// $Id: Kinematics.h,v 1.16 2008-07-28 18:28:23 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_KINEMATICS_H 
 #define LOKI_KINEMATICS_H 1
@@ -501,45 +501,10 @@ namespace LoKi
      *  The angle is evaluated in the rest frame 
      *  of "mother" particles (defined as v1+v2+h1+h2) 
      *      
-     *  The angle is  calculated as the angle between 
-     *  two "4-normales" in the rest frame of mother particle.
-     *  The "4-normales" are defined as:
-     *  \f$ L_1^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
-     *                d_1^{\nu}d_2^{\lambda}M^{\kappa} \f$ and 
-     *  \f$ L_2^{\mu} = \epsilon_{\mu\lambda\delta\rho}
-     *                h_1^{\lambda}h_2^{\delta}M^{\rho} \f$.
-     *
-     *  Clearly we can use the general formula: 
-     *
-     *  \f$ \cos\theta = 
-     *     \frac{1}{\left|\vec{L}_1\right|\left|\vec{L}_2\right|} 
-     *     \left( E_1E_2 -\frac{1}{2}
-     *   \left(\left(L_1+L_2\right)^2-L_1^2-L_2^2 \right) \right) \f$,
-     *
-     *  however for 4-normales we have in an obvious way
-     *  \f$ L_1 \cdot M = L_2 \cdot M = 0 \f$, therefore 
-     *  \f$ E1 = E2 = 0 \f$ and 
-     *   \f$ \left| \vec{L}_1 \right| = \sqrt{ -L_1^2 } \f$ 
-     *   \f$ \left| \vec{L}_2 \right| = \sqrt{ -L_1^2 } \f$, therefore:
-     *
-     *  \f$ \cos\theta = 
-     *     -\frac{1}{2\sqrt{\left[-L_1^2\right]\left[-L_2^2\right]}}
-     *   \left(\left(L_1+L_2\right)^2-L_1^2-L_2^2 \right) \right) \f$,
-     *
-     *  In a similar way:
-     *
-     *  \f$ \sin\theta = -\frac
-     *  {\epsilon_{\mu\nu\lambda\kappa}
-     *      L_1^{\mu}L_2^{\nu}(h_1+h_2)^{\lambda}M^{\kappa}}
-     *  {\sqrt{ \left( \left(h_1+h_2\right)\cdot M \right)^2 - 
-     *       \left(h_1+h_2\right)^2 }} \f$
-     *     
-     *  The sign for <c>sin</c> is set according to Thomas Blake's code from
+     *  The sign is set according to Thomas Blake's code from
      *  P2VVAngleCalculator tool
      *  @see P2VVAngleCalculator 
      *
-     *  @attention the function can be rather expensive to 
-     *             evaluate, use faster cosDecayAngleChi 
      *  @see LoKi::Kinematics::cosDecayAngleChi 
      *
      *  @param d1 the 1st daughter 
@@ -559,33 +524,25 @@ namespace LoKi
     /** evaluate \f$\cos \chi\f$, where \f$\chi\f$ if the angle  
      *  beween two decay planes, formed by particles d1&d2 
      *  and h1&h2 correspondingly. 
+     *
      *  The angle is evaluated in the rest frame 
      *  of "mother" particles (defined as d1+d2+h1+h2) 
-     *      
-     *  The angle is  calculated as the angle between 
-     *  two "4-normales" in the rest frame of mother particle.
-     *  The "4-normales" are defined as:
-     *  \f$ L_1^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
-     *                d_1^{\nu}d_2^{\lambda}M^{\kappa} \f$ and 
-     *  \f$ L_2^{\mu} = \epsilon_{\mu\lambda\delta\rho}
-     *                h_1^{\lambda}h_2^{\delta}M^{\rho} \f$.
      *
-     *  Clearly we can use the general formula: 
+     *  The angle is evaluated using the explicit 
+     *  Lorenzt-invariant expressions
      *
-     *  \f$ \cos\theta = 
-     *     \frac{1}{\left|\vec{L}_1\right|\left|\vec{L}_2\right|} 
-     *     \left( E_1E_2 -\frac{1}{2}
-     *   \left(\left(L_1+L_2\right)^2-L_1^2-L_2^2 \right) \right) \f$,
-     *
-     *  however for 4-normales we have in an obvious way
-     *  \f$ L_1 \cdot M = L_2 \cdot M = 0 \f$, therefore 
-     *  \f$ E1 = E2 = 0 \f$ and 
-     *   \f$ \left| \vec{L}_1 \right| = \sqrt{ -L_1^2 } \f$ 
-     *   \f$ \left| \vec{L}_2 \right| = \sqrt{ -L_1^2 } \f$, therefore:
-     *
-     *  \f$ \cos\theta = 
-     *     -\frac{1}{2\sqrt{\left[-L_1^2\right]\left[-L_2^2\right]}}
-     *   \left(\left(L_1+L_2\right)^2-L_1^2-L_2^2 \right) \right) \f$,
+     *  \f$ 
+     *   \cos \chi = - \frac{
+     *     \epsilon_{ijkl}\d_1^{j}d^2^{k}\left(h_1+h_2\right)^l
+     *     \epsilon_{imnp}\h_1^{m}h^2^{p}\left(d_1+d_2\right)^p }
+     *     { \sqrt{ \left[ -L_D^2 \right]\left[-L_H^2 \right] }},
+     *  \f$ 
+     *  where "4-normales" are defined as:
+     *  \f$ L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
+     *                d_1^{\nu}d_2^{\lambda}\left(h_1+h_2\right)^{\kappa} \f$ 
+     *   and 
+     *  \f$ L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *                h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} \f$.
      *
      *  @param d1 the 1st daughter 
      *  @param d2 the 2nd daughter 
@@ -607,40 +564,30 @@ namespace LoKi
      *  The angle is evaluated in the rest frame 
      *  of "mother" particles (defined as v1+v2+h1+h2) 
      *      
-     *  The angle is  calculated as the angle between 
-     *  two "4-normales" in the rest frame of mother particle.
-     *  The "4-normales" are defined here as:
-     *  \f$ L_1^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
-     *                d_1^{\nu}d_2^{\lambda}M^{\kappa} \f$ and 
-     *  \f$ L_2^{\mu} = \epsilon_{\mu\lambda\delta\rho}
-     *                h_1^{\lambda}h_2^{\delta}M^{\rho} \f$.
+     *  The angle is  calculated using the explicit 
+     *   Lorentz-invariant expression:
+     *  
+     *  \f$ 
+     *   \sin \chi = \frac 
+     *     { \epsilon_{\mu\nu\lambda\delta}
+     *        d_1^{\mu}d_2^{\nu}h_1^{\lambda}h_2^{\delta}
+     *     \left( \left( D \cdot H \right)^2 - D^2H^2 \righ) } 
+     *     { \sqrt{ \left[ -L_D^2 \right]\left[-L_H^2 \right] 
+     *      \left[ \left(H\cdotM\right)^2-H^2M^2 \right] \right] 
+     *    } },
+     *  \f$ 
+     *  where "4-normales" are defined as:
+     *  \f$ L_D^{\mu} = \epsilon_{\mu\nu\lambda\kappa}
+     *                d_1^{\nu}d_2^{\lambda}\left(h_1+h_2\right)^{\kappa} \f$, 
+     *  \f$ L_H^{\mu} = \epsilon_{\mu\lambda\delta\rho}
+     *                h_1^{\lambda}h_2^{\delta}\left(d_1+d_2\right)^{\rho} \f$
+     *  and   \f$ D = d_1 + d_2 \f$, 
+     *        \f$ H = h_1 + h_2 \f$, 
+     *        \f$ M = D + H = d_1 + d_2 + h_1+h_2 \f$. 
      *
-     *  Clearly we can use the general formula: 
-     *
-     *  \f$ \cos\theta = 
-     *     \frac{1}{\left|\vec{L}_1\right|\left|\vec{L}_2\right|} 
-     *     \left( E_1E_2 -\frac{1}{2}
-     *   \left(\left(L_1+L_2\right)^2-L_1^2-L_2^2 \right) \right) \f$,
-     *
-     *  however for 4-normales we have in an obvious way
-     *  \f$ L_1 \cdot M = L_2 \cdot M = 0 \f$, therefore 
-     *  \f$ E1 = E2 = 0 \f$ and 
-     *   \f$ \left| \vec{L}_1 \right| = \sqrt{ -L_1^2 } \f$ 
-     *   \f$ \left| \vec{L}_2 \right| = \sqrt{ -L_1^2 } \f$, therefore:
-     *
-     *  \f$ \sin\theta = -\frac
-     *  {\epsilon_{\mu\nu\lambda\kappa}
-     *      L_1^{\mu}L_2^{\nu}(h_1+h_2)^{\lambda}M^{\kappa}}
-     *  {\sqrt{ \left( \left(h_1+h_2\right)\cdot M \right)^2 - 
-     *       \left(h_1+h_2\right)^2 }} \f$
-     *     
      *  The sign for <c>sin</c> is set according to Thomas Blake's code from
      *  P2VVAngleCalculator tool
      *  @see P2VVAngleCalculator 
-     *
-     *  @attention the function can be rather expensive to 
-     *             evaluate, use faster cosDecayAngleChi 
-     *  @see LoKi::Kinematics::cosDecayAngleChi 
      *
      *  @param d1 the 1st daughter 
      *  @param d2 the 2nd daughter 

@@ -1,4 +1,4 @@
-// $Id: Tensors.h,v 1.3 2008-07-27 18:19:27 ibelyaev Exp $
+// $Id: Tensors.h,v 1.4 2008-07-28 18:28:23 ibelyaev Exp $
 // ===============================================================
 #ifndef LOKI_TENSORS_H 
 #define LOKI_TENSORS_H 1
@@ -275,6 +275,94 @@ namespace LoKi
              detail::_Value<(K<L),(L<LAST)?1:0,_34>::value,_23>::value,_12>::value } ;
       // ======================================================================
     };
+    // ========================================================================
+    /** @struct Epsilon1_ 
+     *  (Compile-time) evaluation of the tensor product of 
+     *  two Levy-Civita symbols:
+     *
+     *  The following identity has been used:
+     * \f[ \alpha^{IJK}_{LMN} = 
+     *     \epsilon^{IJK\kappa}
+     *     \epsilon_{LMN\kappa} = - 
+     *  \begin{Vmatrix}
+     *   \delta^{I}_{L} & \delta^{I}_{M} & \delta^{I}_{N} \\ 
+     *   \delta^{J}_{L} & \delta^{J}_{M} & \delta^{J}_{N}  \\ 
+     *   \delta^{K}_{L} & \delta^{K}_{M} & \delta^{K}_{N} 
+     *  \end{Vmatrix} 
+     * \f]
+     * 
+     * \f$ \alpha^{IJK}_{LMN} = 
+     *     \epsilon^{IJK\kappa}
+     *     \epsilon_{LMN\kappa} = 
+     *   + \delta^{I}_{N}\delta^{J}_{M}\delta^{K}_{L}
+     *   + \delta^{I}_{M}\delta^{J}_{L}\delta^{K}_{N}
+     *   + \delta^{I}_{L}\delta^{J}_{N}\delta^{K}_{M}
+     *   - \delta^{I}_{L}\delta^{J}_{M}\delta^{K}_{N}
+     *   - \delta^{I}_{M}\delta^{J}_{N}\delta^{K}_{L}
+     *   - \delta^{I}_{N}\delta^{J}_{L}\delta^{K}_{M}
+     *  \f$
+     *  
+     *  @code
+     *
+     *  const int alpha_XYZXYE = Epsilon1_<X,Y,Z,X,Y,E>::value ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-07-28
+     */
+    template <unsigned int I, 
+              unsigned int J, 
+              unsigned int K, 
+              unsigned int L,
+              unsigned int M,
+              unsigned int N>
+    struct Epsilon1_ 
+    {
+      enum 
+        {
+          value = Delta_<I,N>::value * Delta_<J,M>::value * Delta_<K,L>::value 
+          +       Delta_<I,M>::value * Delta_<J,L>::value * Delta_<K,N>::value 
+          +       Delta_<I,L>::value * Delta_<J,N>::value * Delta_<K,M>::value 
+          //
+          -       Delta_<I,L>::value * Delta_<J,M>::value * Delta_<K,N>::value 
+          -       Delta_<I,M>::value * Delta_<J,N>::value * Delta_<K,L>::value 
+          -       Delta_<I,N>::value * Delta_<J,L>::value * Delta_<K,M>::value 
+        } ;
+    } ;
+    // ========================================================================
+    /** @struct Epsilon2_ 
+     *  (Compile-time) evaluation of the tensor product of 
+     *  two Levy-Civita symbols:
+     *
+     * \f[ \alpha^{IJ}_{KL} = 
+     *     \epsilon^{IJ\gamma\kappa}
+     *     \epsilon_{KL\rho\kappa} = - 
+     *  \begin{Vmatrix}
+     *   \delta^{I}_{K} & \delta^{I}_{L} \\ 
+     *   \delta^{J}_{K} & \delta^{J}_{L}  \\ 
+     *  \end{Vmatrix} 
+     * \f]
+     *  
+     *  @code
+     *
+     *  const int alpha_XYYE = Epsilon2_<X,Y,Y,E>::value ;
+     *
+     *  @endcode 
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2008-07-28
+     */
+    template <unsigned int I, 
+              unsigned int J, 
+              unsigned int K, 
+              unsigned int L>
+    struct Epsilon2_ 
+    {
+      enum 
+        { value = -2 * ( Delta_<I,K>::value * Delta_<J,L>::value - 
+                         Delta_<J,K>::value * Delta_<I,L>::value ) } ;
+    } ;
     // ========================================================================
     /** @struct Epsilon
      *  Simple implementation of 4D Antisymmetric Levy-Civita symbols
@@ -782,49 +870,87 @@ namespace LoKi
         const LoKi::LorentzVector& v3 ,
         const LoKi::LorentzVector& v4 ) const ;
       // ======================================================================
-      /** evaluate the tensor product: (e*v1*v2*v3)*(e*v4*v5*v6)
+      /** evaluate the tensor product: (e*a1*a2*a3)*(e*b1*b2*b3)
        * 
        *  \f$  r = 
        *  \epsilon_{\mu\nu\lambda\kappa}
        *  \epsilon_{\mu\rho\\delta\tau}
-       *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
-       *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+       *          a_1^{\nu}a_2^{\lambda}a_3^{\kappa} 
+       *          b_1^{\rho}b_2^{\delta}b_3^{\tau}   \f$
        *
        *  This expression typically appears in evalution of 
-       *  various "plane-angles" (for this case v3=v6) 
+       *  various "plane-angles" (for this case a3=b3) 
        *
        *  @code 
        *  
-       *   const LorentzVector& v1 = ... ;
-       *   const LorentzVector& v2 = ... ;
-       *   const LorentzVector& v3 = ... ;
-       *   const LorentzVector& v4 = ... ;
-       *   const LorentzVector& v5 = ... ;
-       *   const LorentzVector& v6 = ... ;
+       *   const LorentzVector& a1 = ... ;
+       *   const LorentzVector& a2 = ... ;
+       *   const LorentzVector& a3 = ... ;
+       *   const LorentzVector& b1 = ... ;
+       *   const LorentzVector& b2 = ... ;
+       *   const LorentzVector& b3 = ... ;
        *
        *   Epsilon e ;
        *
-       *   const double r = e.epsilon ( v1 , v2 , v3 , v4 , v5 , v6 ) ; 
+       *   const double r = e.epsilon ( a1 , a2 , a3 , b1 , b2 , b3 ) ; 
        *
        *  @endcode 
        *
+       *  The following identity has been used:
+       * \f[ \epsilon^{\alpha\beta\gamma\kappa}
+       *     \epsilon_{\mu\mu\rho\kappa} = - 
+       *  \begin{Vmatrix}
+       *   \delta^{\alpha}_{\mu} & \delta^{\alpha}_{\nu} & \delta^{\alpha}_{\rho} \\ 
+       *   \delta^{\beta}_{\mu}  & \delta^{\beta}_{\nu}  & \delta^{\beta}_{\rho}  \\ 
+       *   \delta^{\gamma}_{\mu} & \delta^{\gamma}_{\nu} & \delta^{\gamma}_{\rho} 
+       *  \end{Vmatrix} 
+       * \f]
+       *  
        *  Convention here: \f$ \epsilon_{0123} = \epsilon_{XYZT} = 1 \f$ 
        * 
-       *  @param v1 the first  vector 
-       *  @param v2 the second vector 
-       *  @param v3 the third  vector 
-       *  @param v4 the fourth vector 
-       *  @param v5 the fith   vector 
-       *  @param v6 the sixth  vector 
+       *  @param a1 the first  vector 
+       *  @param a2 the second vector 
+       *  @param a3 the third  vector 
+       *  @param b1 the fourth vector 
+       *  @param b2 the fith   vector 
+       *  @param b3 the sixth  vector 
        *  @return the tensor product
        */
       double epsilon 
-      ( const LoKi::LorentzVector& v1 , 
-        const LoKi::LorentzVector& v2 , 
-        const LoKi::LorentzVector& v3 , 
-        const LoKi::LorentzVector& v4 , 
-        const LoKi::LorentzVector& v5 , 
-        const LoKi::LorentzVector& v6 ) const ;  
+      ( const LoKi::LorentzVector& a1 , 
+        const LoKi::LorentzVector& a2 , 
+        const LoKi::LorentzVector& a3 , 
+        const LoKi::LorentzVector& b1 , 
+        const LoKi::LorentzVector& b2 , 
+        const LoKi::LorentzVector& b3 ) const ;  
+      // ======================================================================
+    public:
+      // ======================================================================     
+      /** evaluate the magnitude of the "4-normal" 
+       * 
+       *  \f$ l^2 = L_{\mu}L^{\mu} 
+       *      = \left( \epsilon_{\mu\nu\lambda\delta}
+       *     a^{\nu}b^{\lambda}c^{\delta} \right)^2 
+       *    = 
+       *     \left(ab\right)c^2 +      
+       *     \left(ac\right)b^2 +     
+       *     \left(bc\right)a^2 -     
+       *      a^2b^2c^2 - 2\left(ab\right)\left(bc\right)\left(ac\right)
+       *   \f$ 
+       *
+       *  @attention For time-like input vectors, 
+       *             the 4-normal is a space-like vector,  
+       *             and therefore the result must be non-positive! 
+       *
+       *  @param a the first  vector 
+       *  @param b the second vector 
+       *  @param c the third  vector 
+       *  @return the magnitude of 4-normal
+       */
+      double mag2 
+      ( const LoKi::LorentzVector& a , 
+        const LoKi::LorentzVector& b , 
+        const LoKi::LorentzVector& c  ) const ;
       // ======================================================================
     public:
       // ======================================================================

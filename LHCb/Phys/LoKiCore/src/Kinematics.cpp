@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.9 2008-07-27 18:19:27 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.10 2008-07-28 18:28:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -374,45 +374,33 @@ double LoKi::Kinematics::cosDecayAngleChi
   const LoKi::LorentzVector& h1 , 
   const LoKi::LorentzVector& h2 ) 
 { 
-  // ========================================================================
-  // Mother Particle 
-  LoKi::LorentzVector M  (d1 ) ; M += d2 ; M += h1 ; M+= h2 ;
-  // ========================================================================
-  const double M2 = M.M2() ;
-  if ( 0 >= M2 ) 
-  {
-    LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosDecayAngleChi():: rest-system is not time-like" ) ;
-    return LoKi::Constants::InvalidAngle ;
-  }
-  // ========================================================================
-  LoKi::Tensors::Epsilon e ;
-  // ========================================================================
-  // get the normales 
-  const LoKi::LorentzVector L1 ( e ( d1 , d2 , M ) ) ;
-  const LoKi::LorentzVector L2 ( e ( h1 , h2 , M ) ) ;
-  // ========================================================================
+  // get the intermediate particles D & H 
+  const LoKi::LorentzVector D ( d1 + d2 ) ;
+  const LoKi::LorentzVector H ( h1 + h2 ) ;
   
-  const double l1 = L1.M2() ;
-  const double l2 = L2.M2() ;
+  // Evaluator of various tensor expressions:
+  LoKi::Tensors::Epsilon e ;
+  
+  // evaluate the length of normales :
+  const double l1 = e.mag2 ( d1 , d2 , H ) ; // == | [d1,d2,M] |
+  const double l2 = e.mag2 ( h1 , h2 , D ) ; // == | [h1,h2,M] | 
   
   if ( 0 <= l1 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosDecayAngleChi ():: L1^2 >= 0 " );
+      ( "LoKi::Kinematics::cosDecayAngleChi () : L1^2 >= 0 " );
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 0 <= l2 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::cosDecayAngleChi ():: L2^2 >= 0 " );
+      ( "LoKi::Kinematics::cosDecayAngleChi () : L2^2 >= 0 " );
     return LoKi::Constants::InvalidAngle ;
   }
   
-  // use simple expression for |L| and E :
   const double cosChi = 
-    -0.5 * ( ( L1 + L2 ).M2() - l1 - l2 ) / ::sqrt ( l1 * l2 ) ;  
-  //
+    - e.epsilon ( d1 , d2 , H , h1 , h2 , D ) / ::sqrt ( l1 * l2 ) ;
+  
   return cosChi ;
 }
 // ============================================================================
@@ -432,58 +420,9 @@ double LoKi::Kinematics::decayAngleChi
   const LoKi::LorentzVector& h1 , 
   const LoKi::LorentzVector& h2 ) 
 {
-  // ========================================================================
-  // Mother Particle 
-  LoKi::LorentzVector M  (d1 ) ; M += d2 ; M += h1 ; M+= h2 ;
-  // ========================================================================
-  const double M2 = M.M2() ;
-  if ( 0 >= M2 ) 
-  {
-    LoKi::Report::Error 
-      ( "LoKi::Kinematics::decayAngleChi():: rest-system is not time-like" ) ;
-    return LoKi::Constants::InvalidAngle ;
-  }
-  LoKi::Tensors::Epsilon e ;
-  // ========================================================================
-  // get the normales 
-  const LoKi::LorentzVector L1 ( e ( d1 , d2 , M ) ) ;
-  const LoKi::LorentzVector L2 ( e ( h1 , h2 , M ) ) ;
-  // ========================================================================
-  
-  const double l1 = L1.M2() ;
-  const double l2 = L2.M2() ;
-  
-  if ( 0 <= l1 )
-  {
-    LoKi::Report::Error 
-      ( "LoKi::Kinematics::decayAngleChi ():: L1^2 >= 0 " );
-    return LoKi::Constants::InvalidAngle ;
-  }
-  if ( 0 <= l2 )
-  {
-    LoKi::Report::Error 
-      ( "LoKi::Kinematics::decayAngleChi ():: L2^2 >= 0 " );
-    return LoKi::Constants::InvalidAngle ;
-  }
-
-  // use simple expression for |L| and E :
-  const double cosChi = 
-    -0.5 * ( ( L1 + L2 ).M2() - l1 - l2 ) / ::sqrt ( l1 * l2 ) ;  
-  
-  // try to get the sine    
-  
-  const LoKi::LorentzVector h12 = h1 + h2 ;
-  const double _sin  = - e ( L1 , L2 , h12 , M ) ;
-  const double h12M  = h12.Dot ( M ) ;
-  const double p_h12 = h12M*h12M / M2 - h12.M2() ;
-  if ( 0 >= p_h12 ) 
-  {
-    LoKi::Report::Error 
-      ( "LoKi::Kinematics::decayAngleChi ():: |h1+h2| < 0 " );
-    return LoKi::Constants::InvalidAngle ;
-  }
   //
-  const double sinChi =  _sin / sqrt( l1 * l2 * p_h12 * M2 ) ;
+  const double cosChi = cosDecayAngleChi ( d1 , d2 , h1 , h2 ) ;
+  const double sinChi = sinDecayAngleChi ( d1 , d2 , h1 , h2 ) ;  
   //
   return ::atan2 ( sinChi , cosChi ) ;
 }
@@ -495,8 +434,11 @@ double LoKi::Kinematics::sinDecayAngleChi
   const LoKi::LorentzVector& h2 ) 
 {
   // ========================================================================
-  // Mother Particle 
-  LoKi::LorentzVector M  (d1 ) ; M += d2 ; M += h1 ; M+= h2 ;
+  //  reconstrcut the intermediate particles 
+  const LoKi::LorentzVector D ( d1 + d2 ) ;
+  const LoKi::LorentzVector H ( h1 + h2 ) ;
+  /// Mother Particle 
+  const LoKi::LorentzVector M ( D  + H  ) ;
   // ========================================================================
   const double M2 = M.M2() ;
   if ( 0 >= M2 ) 
@@ -506,43 +448,42 @@ double LoKi::Kinematics::sinDecayAngleChi
     return LoKi::Constants::InvalidAngle ;
   }
   // ========================================================================
+  // avaluator of various tensor expressions 
   LoKi::Tensors::Epsilon e ;
   // ========================================================================
-  // get the normales 
-  const LoKi::LorentzVector L1 ( e ( d1 , d2 , M ) ) ;
-  const LoKi::LorentzVector L2 ( e ( h1 , h2 , M ) ) ;
-  // ========================================================================
-  
-  const double l1 = L1.M2() ;
-  const double l2 = L2.M2() ;
+  // get the length of 4-normales 
+  const double l1 = e.mag2 ( d1 , d2 , H ) ; // == | [d1,d2,M] |
+  const double l2 = e.mag2 ( h1 , h2 , D ) ; // == | [h1,h2,M] | 
   
   if ( 0 <= l1 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi ():: L1^2 >= 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : L1^2 >= 0 " );
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 0 <= l2 )
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi ():: L2^2 >= 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : L2^2 >= 0 " );
     return LoKi::Constants::InvalidAngle ;
   }
   
-  // try to get the sine    
+  // try to get the sine
   
-  const LoKi::LorentzVector h12 = h1 + h2 ;
-  const double _sin  = - e ( L1 , L2 , h12 , M ) ;
-  const double h12M  = h12.Dot ( M ) ;
-  const double p_h12 = h12M*h12M / M2 - h12.M2() ;
-  if ( 0 >= p_h12 ) 
+  const double DH = D.Dot ( H ) ;
+  
+  const double var = e ( d1 , d2 , h1 , h2 ) * ( DH * DH - D.M2()*H.M2() ) ;
+  
+  const double HM    = H.Dot ( M ) ;
+  const double p_H   = HM*HM - H.M2()*M2  ;
+  if ( 0 >= p_H ) 
   {
     LoKi::Report::Error 
-      ( "LoKi::Kinematics::sinDecayAngleChi ():: |h1+h2| < 0 " );
+      ( "LoKi::Kinematics::sinDecayAngleChi () : |H| < 0 " );
     return LoKi::Constants::InvalidAngle ;
   }
   //
-  const double sinChi =  _sin / sqrt( l1 * l2 * p_h12 * M2 ) ;
+  const double sinChi =  var / ::sqrt ( l1 * l2 * p_H ) ;
   //
   return sinChi ;  
 }
