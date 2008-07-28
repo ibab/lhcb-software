@@ -1,20 +1,14 @@
+#!/usr/bin/env gaudirun.py
+#
 # Minimal file for running Moore from python prompt
 # Syntax is:
 #   gaudirun.py ../options/Moore.py
+# or just
+#   ../options/Moore.py
 #
 from Gaudi.Configuration import *
 from Moore.Configuration import *
 
-
-# General output levels 
-ToolSvc().OutputLevel                     = INFO
-from Configurables import XmlParserSvc
-XmlParserSvc().OutputLevel                = WARNING
-MessageSvc().OutputLevel                  = INFO
-ApplicationMgr().OutputLevel              = ERROR
-
-# Print algorithm name with 40 characters
-MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
 
 #//---------------------------------------------------------------------------
 #// Histogram output
@@ -25,7 +19,7 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #---------------------------------------------------------------------------
 # Number of events to process, optionally skipping some events
 #---------------------------------------------------------------------------
-Moore().EvtMax =  100 ;
+#Moore().EvtMax =  100 ;
 
 # if you want to generate a configuration, uncomment the following line:
 #Moore().GenerateConfig = True
@@ -33,8 +27,16 @@ Moore().EvtMax =  100 ;
 # if you want to run, using a (set of) TCK(s), uncomment the following two
 # lines, and input the (list of ) TCK(s)
 #Moore().UseTCK = True
-#Moore().PrefetchTCK = [ 0x03 ]
-
+#Moore().PrefetchTCK = [ 0x1,0x2,0x3 ]
+#HltConfigSvc().OutputLevel = DEBUG
+#
+#from Configurables import L0CaloCandidatesFromRawBank, L0CaloCandidatesFromRaw
+#L0CaloCandidatesFromRawBank().OutputLevel = DEBUG
+#L0CaloCandidatesFromRaw().OutputLevel = DEBUG
+Moore().runType = 'Physics_Hlt1'
+#Moore().runType = 'Physics_Hlt1+Hlt2'
+#Moore().DDDBtag = 'head-20080422'
+#Moore().condDBtag = 'head-20080422'
 
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
@@ -44,14 +46,17 @@ files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1
           '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst',
           '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' ]
 
-#TODO: figure out the filetype from the filename...
-#Moore().InputType = 'mdf'
+filetype = files[0][-3:].upper()
+
+Moore().inputType = filetype
 
 extensions = { 'MDF' : "' SVC='LHCb::MDFSelector'",
                'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
 
-EventSelector().Input =[ "DATAFILE='PFN:"+ f + extensions[ Moore().InputType.upper()] for f in files ]
+EventSelector().Input =[ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in files ]
 EventSelector().PrintFreq = 100;
+
+#ApplicationMgr().EvtMax = 1000
 
 # always applyConf!
 Moore().applyConf()

@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-07-11 12:06:53 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-07-28 09:07:08 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -14,24 +14,22 @@ import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
 
 class Moore(ConfigurableUser):
-    #TODO: add some higher level configuration,
+    #TODO: add some higher level configuration, eg. DC06, DATA08, ...
     #      which sets the right combinations...
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "DAQStudies":        False # use DAQ study version of options
-        , "InputType":         'dst' # must either 'mdf' or 'dst'
-        , "IncludeL0Emulator": True  # re-run L0 using the emulator
-        , "IncludeHlt1":       True  # include Hlt1...
-        , "IncludeHlt2":       True  # include Hlt2...
-        , "RunTiming"  :       False # include additional timing information
-        , "UseTCK"     :       False # use TCK instead of options...
-        , "PrefetchTCK" :      []    # which TCKs to prefetch. Initial TCK used is first one...
-        , "GenerateConfig" :   False # whether or not to generate a configuration
-        , "TCKDirectory" :     '/user/graven/tmp/config' # where do we read TCKs from?
-        #TODO: the next can probably be done in better and more generic way...
-        , "EnableMemoryAuditor" : False
-        , "EnableChronoAuditor" : False
-        , "EnableNameAuditor" : False
+        , "DDDBtag" :          'DEFAULT'
+        , "condDBtag" :        'DEFAULT'
+        , "inputType":         'dst' # must either 'mdf' or 'dst'
+        , "runType" :          'Physics_Hlt1+Hlt2'
+        , "runTiming"  :       False # include additional timing information
+        , "useTCK"     :       False # use TCK instead of options...
+        , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
+        , "generateConfig" :   False # whether or not to generate a configuration
+        , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
+        , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
+        , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         }   
                 
     def getProp(self,name):
@@ -43,6 +41,20 @@ class Moore(ConfigurableUser):
     def setProp(self,name,value):
         return setattr(self,name,value)
 
+    def setDBtag(self,name) :
+        map = { 'DDDB' : 'DDDBtag' , 'LHCBCOND' : 'condDBtag' }
+        if name not in  map : raise TypeError('Invalid db name %s'%tag)
+        item = map[name]
+        tag = self.getProp( item )
+        if tag != 'DEFAULT' :
+            if hasattr(LHCbApp(),item):
+                print "LHCbApp()."+item+" already defined as "+attr(LHCbApp(),item)+", ignoring Moore()."+name+"="+tag
+            else:
+                setattr(LHCbApp(),item,tag)
+
+    def validRunTypes(self):
+        return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning' ] 
+
     def evtMax(self):
         if hasattr(ApplicationMgr(),"EvtMax"):
             return getattr(ApplicationMgr(),"EvtMax")
@@ -50,15 +62,23 @@ class Moore(ConfigurableUser):
             return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def getConfigAccessSvc(self):
-        # TODO: avoid hardwiring ConfigAccessSvc...
-        return ConfigFileAccessSvc( Directory = self.getProp('TCKDirectory') )
-    def enableAuditor(self,x) :
+        method = self.getProp('TCKpersistency').lower()
+        if method not in [ 'file', 'sqlite' ] : raise TypeError("invalid TCK persistency '%s'"%method)
+        TCKData = self.getProp('TCKData')
+        if method == 'file' :
+            return ConfigFileAccessSvc( Directory = TCKData +'/config' )
+        if method == 'sqlite' :
+            return ConfigDBAccessSvc( Connection = 'sqlite_file:' + TCKData +'/db/config.db' )
+
+    def addAuditor(self,x) :
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
+
     def convertToInt(self,x) :
         # TODO: use c_uint instead??
         if type(x)==int : return x
         if type(x)==str : 
+            # then again, why would someone specify a string, and not an int?
             if x[0:2] == '0x' : return int(x,16)
             return int(x)
 
@@ -66,25 +86,32 @@ class Moore(ConfigurableUser):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         importOptions('$STDOPTS/LHCbApplication.opts')
         importOptions('$STDOPTS/DstDicts.opts')
-        inputType = self.getProp('InputType').upper()
+        importOptions('$STDOPTS/DecodeRawEvent.opts')
+        inputType = self.getProp('inputType').upper()
         if inputType not in [ "MDF","DST" ] : raise TypeError("Invalid input type '%s'"%inputType)
-        #TODO: add flag for other types of data...
         if inputType == "MDF" : EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-            
-
+        ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
+        for i in [ 'DDDB', 'LHCBCOND' ] : self.setDBtag( i )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
+        # output levels...
+        ToolSvc().OutputLevel                     = INFO
+        from Configurables import XmlParserSvc 
+        XmlParserSvc().OutputLevel                = WARNING
+        MessageSvc().OutputLevel                  = INFO
+        ApplicationMgr().OutputLevel              = ERROR
+        SequencerTimerTool().OutputLevel          = WARNING
+        # Print algorithm name with 40 characters
+        MessageSvc().Format = '% F%40W%S%7W%R%T %0W%M'
         # Profiling
         for i in [ 'ToolSvc' , 'AuditorSvc' ] : ApplicationMgr().ExtSvc.append( i ) 
         ApplicationMgr().AuditAlgorithms = 1
         AuditorSvc().Auditors.append( 'TimingAuditor/TIMER' )
-        if self.getProp('EnableNameAuditor')   : self.enableAuditor( NameAuditor() )
-        if self.getProp('EnableChronoAuditor') : self.enableAuditor( ChronoAuditor() )
-        if self.getProp('EnableMemoryAuditor') : self.enableAuditor( MemoryAuditor() )
+        for i in self.getProp('enableAuditor') : self.addAuditor( i )
         # TODO: check for mutually exclusive options...
-        if self.getProp('UseTCK') :
-            tcks = [ int(i) for i in self.getProp('PrefetchTCK') ]
+        if self.getProp('useTCK') :
+            tcks = [ int(i) for i in self.getProp('prefetchTCK') ]
             cfg = HltConfigSvc( prefetchTCK = tcks
                               , initialTCK = tcks[0]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
@@ -94,17 +121,16 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/L0DAQ.opts')
                 importOptions('$HLTSYSROOT/options/HltDAQ.opts')
             else :
-                if self.getProp('IncludeL0Emulator') : 
-                    importOptions('$HLTSYSROOT/options/L0.opts')
-                else : 
-                    importOptions('$HLTSYSROOT/options/L0FromRaw.opts')
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
-                if self.getProp('IncludeHlt1') : importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                if self.getProp('IncludeHlt2') : importOptions('$HLTSYSROOT/options/Hlt2.opts')
-            if self.getProp('RunTiming') :
+                runtype = self.getProp('runType')
+                if runtype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%runtype)
+                if runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
+                if runtype in [ 'Physics_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                if runtype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+            if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
-        if self.getProp("GenerateConfig") :
+        if self.getProp("generateConfig") :
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
                               , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName() )

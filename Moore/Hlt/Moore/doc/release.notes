@@ -2,6 +2,11 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-07-28 - Gerhard Raven 
+ - improved configurable: introduced runType slot, 
+   sets up the L0 from raw decoding using data-on-demand service
+ - add dependency on TCKData package
+
 ! 2008-07-18 - Gerhard Raven & Bruno de Paula
  - added online scripts
 

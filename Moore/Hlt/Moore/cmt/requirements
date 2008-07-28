@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.23 2008-07-10 14:09:23 graven Exp $
+# $Id: requirements,v 1.24 2008-07-28 09:07:08 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -27,6 +27,7 @@ use HepMC              v*    LCG_Interfaces -no_auto_imports
 use DDDB               v1r*  Det            -no_auto_imports
 use ParamFiles         v7r1                 -no_auto_imports
 use FieldMap           v5r0                 -no_auto_imports
+use TCKData            v1r0  Hlt            -no_auto_imports
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages
