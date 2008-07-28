@@ -2,9 +2,8 @@ from PyQt4 import QtCore, QtGui
 from controller import Controller
 from worker.deletesparesworker import DeleteSparesWorker
 
-class DeleteSparesController(Controller):
+class DeleteSparesController(object):
     def __init__(self, parentController):
-        Controller.__init__(self)
         self.parentController = parentController
         self.spareDB = self.parentController.getSpareDB()
         self.db = self.parentController.getCn()
@@ -22,6 +21,6 @@ class DeleteSparesController(Controller):
         print "UpdateDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        QtGui.QMessageBox.information(None, "Finish", "Deleting spares finished. Check log-files for details.")
         self.parentController.onRefresh()
+        QtGui.QMessageBox.information(None, "Finish", "Deleting spares finished. Check log-files for details.")
         print "UpdateDevicesController.onFinish() start"

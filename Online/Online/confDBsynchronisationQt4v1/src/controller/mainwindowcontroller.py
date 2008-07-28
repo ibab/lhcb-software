@@ -26,8 +26,8 @@ class MainWindowController(Controller):
         self.devicesInfo = self.getDevicesInfo()
         self.sparesInfo = self.getSparesInfo()
         self.mainWindow = MainWindow(self)
-        self.devicesWidget = DevicesWidget(self.devicesInfo, self.mainWindow)
-        self.sparesWidget = SparesWidget(self.sparesInfo, self.mainWindow)
+        self.devicesWidget = DevicesWidget(self.devicesInfo, self.mainWindow, self)
+        self.sparesWidget = SparesWidget(self.sparesInfo, self.mainWindow, self)
         self.connectActions(self.mainWindow)
         self.mainWindow.show()
     def getDevicesInfo(self):

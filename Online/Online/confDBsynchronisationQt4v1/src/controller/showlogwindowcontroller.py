@@ -2,9 +2,8 @@ from PyQt4 import QtCore, QtGui
 from controller import Controller
 from log.logReader import LogReader
 
-class ShowLogWindowController(Controller):
+class ShowLogWindowController(object):
     def __init__(self, parentController, summary):
-        Controller.__init__(self)
         self.parentController = parentController
         self.logReader = LogReader()
         if summary:

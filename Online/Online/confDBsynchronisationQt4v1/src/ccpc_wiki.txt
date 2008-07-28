@@ -1,5 +1,85 @@
 |*Host*|*Location*|*ip0*|*eth0*|*ip1*|*eth1*|*Serial*|*Has ipmi*|
 |*D1*||||||||
+|hltc0101|D1C01|10.130.123.1|00:30:48:7E:0A:50|192.168.88.1|00:30:48:7E:0A:51|cr004310|<div style='background-color:green'>x</div>|
+|hltc0102|D1C01|10.130.123.2|00:30:48:7E:0A:4A|192.168.88.2|00:30:48:7E:0A:4B|cr004311|<div style='background-color:green'>x</div>|
+|hltc0103|D1C01|10.130.123.3|00:30:48:7D:02:2C|192.168.88.65|00:30:48:7D:02:2D|cr004410|<div style='background-color:green'>x</div>|
+|hltc0104|D1C01|10.130.123.4|00:30:48:7D:07:C4|192.168.88.66|00:30:48:7D:07:C5|cr004411|<div style='background-color:green'>x</div>|
+|hltc0201|D1C02|10.130.124.1|00:30:48:7D:05:F6|192.168.92.1|00:30:48:7D:05:F7|cr004312|<div style='background-color:green'>x</div>|
+|hltc0202|D1C02|10.130.124.2|00:30:48:7D:05:F4|192.168.92.2|00:30:48:7D:05:F5|cr004313|<div style='background-color:green'>x</div>|
+|hltc0203|D1C02|10.130.124.3|00:30:48:7D:07:B2|192.168.92.65|00:30:48:7D:07:B3|cr004412|<div style='background-color:green'>x</div>|
+|hltc0204|D1C02|10.130.124.4|00:30:48:7D:08:44|192.168.92.66|00:30:48:7D:08:45|cr004413|<div style='background-color:green'>x</div>|
+|hltc0301|D1C03|10.130.125.1|00:30:48:7E:2F:FA|192.168.96.1|00:30:48:7E:2F:FB|cr004314|<div style='background-color:green'>x</div>|
+|hltc0302|D1C03|10.130.125.2|00:30:48:7E:28:20|192.168.96.2|00:30:48:7E:28:21|cr004315|<div style='background-color:green'>x</div>|
+|hltc0303|D1C03|10.130.125.3|00:30:48:7D:A8:08|192.168.96.65|00:30:48:7D:A8:09|cr004414|<div style='background-color:green'>x</div>|
+|hltc0304|D1C03|10.130.125.4|00:30:48:7D:A7:F0|192.168.96.66|00:30:48:7D:A7:F1|cr004415|<div style='background-color:green'>x</div>|
+|hltc0401|D1C04|10.130.126.1|00:30:48:7D:02:26|192.168.100.1|00:30:48:7D:02:27|cr004316|<div style='background-color:green'>x</div>|
+|hltc0402|D1C04|10.130.126.2|00:30:48:7D:08:2E|192.168.100.2|00:30:48:7D:08:2F|cr004317|<div style='background-color:green'>x</div>|
+|hltc0403|D1C04|10.130.126.3|00:30:48:7D:A8:32|192.168.100.65|00:30:48:7D:A8:33|cr004416|<div style='background-color:green'>x</div>|
+|hltc0404|D1C04|10.130.126.4|00:30:48:7D:A8:28|192.168.100.66|00:30:48:7D:A8:29|cr004417|<div style='background-color:green'>x</div>|
+|hltc0601|D1C06|10.130.128.1|00:30:48:7D:A8:F2|192.168.108.1|00:30:48:7D:A8:F3|cr004318|<div style='background-color:green'>x</div>|
+|hltc0602|D1C06|10.130.128.2|00:30:48:7D:A8:F8|192.168.108.2|00:30:48:7D:A8:F9|cr004319|<div style='background-color:green'>x</div>|
+|hltc0603|D1C06|10.130.128.3|00:30:48:7D:A7:52|192.168.108.65|00:30:48:7D:A7:53|cr004418|<div style='background-color:green'>x</div>|
+|hltc0604|D1C06|10.130.128.4|00:30:48:7D:A8:14|192.168.108.66|00:30:48:7D:A8:15|cr004419|<div style='background-color:green'>x</div>|
+|hltc0701|D1C07|10.130.129.1|00:30:48:7D:07:F8|192.168.112.1|00:30:48:7D:07:F9|cr004320|<div style='background-color:green'>x</div>|
+|hltc0702|D1C07|10.130.129.2|00:30:48:7D:07:70|192.168.112.2|00:30:48:7D:07:71|cr004321|<div style='background-color:green'>x</div>|
+|hltc0703|D1C07|10.130.129.3|00:30:48:7D:60:56|192.168.112.65|00:30:48:7D:60:57|cr004420|<div style='background-color:green'>x</div>|
+|hltc0704|D1C07|10.130.129.4|00:30:48:7D:7B:7E|192.168.112.66|00:30:48:7D:7B:7F|cr004421|<div style='background-color:green'>x</div>|
+|hltc0801|D1C08|10.130.130.1|00:30:48:7D:01:F4|192.168.116.1|00:30:48:7D:01:F5|cr004322|<div style='background-color:green'>x</div>|
+|hltc0802|D1C08|10.130.130.2|00:30:48:7D:01:F2|192.168.116.2|00:30:48:7D:01:F3|cr004323|<div style='background-color:green'>x</div>|
+|hltc0803|D1C08|10.130.130.3|00:30:48:7D:08:1C|192.168.116.65|00:30:48:7D:08:1D|cr004422|<div style='background-color:green'>x</div>|
+|hltc0804|D1C08|10.130.130.4|00:30:48:7D:02:32|192.168.116.66|00:30:48:7D:02:33|cr004423|<div style='background-color:green'>x</div>|
+|hltc0901|D1C09|10.130.131.1|00:30:48:7D:06:1E|192.168.120.1|00:30:48:7D:06:1F|cr004324|<div style='background-color:green'>x</div>|
+|hltc0902|D1C09|10.130.131.2|00:30:48:7D:07:C2|192.168.120.2|00:30:48:7D:07:C3|cr004325|<div style='background-color:green'>x</div>|
+|hltc0903|D1C09|10.130.131.3|00:30:48:7D:A9:16|192.168.120.65|00:30:48:7D:A9:17|cr004424|<div style='background-color:green'>x</div>|
+|hltc0904|D1C09|10.130.131.4|00:30:48:7D:A8:44|192.168.120.66|00:30:48:7D:A8:45|cr004425|<div style='background-color:green'>x</div>|
+|hltc1001|D1C10|10.130.132.1|00:30:48:7D:08:4E|192.168.124.1|00:30:48:7D:08:4F|cr004326|<div style='background-color:green'>x</div>|
+|hltc1002|D1C10|10.130.132.2|00:30:48:7D:08:4A|192.168.124.2|00:30:48:7D:08:4B|cr004327|<div style='background-color:green'>x</div>|
+|hltc1003|D1C10|10.130.132.3|00:30:48:7D:05:8C|192.168.124.65|00:30:48:7D:05:8D|cr004426|<div style='background-color:green'>x</div>|
+|hltc1004|D1C10|10.130.132.4|00:30:48:7D:05:F2|192.168.124.66|00:30:48:7D:05:F3|cr004427|<div style='background-color:green'>x</div>|
+|hltc1101|D1C11|10.130.133.1|00:30:48:7D:02:36|192.168.128.1|00:30:48:7D:02:37|cr004328|<div style='background-color:green'>x</div>|
+|hltc1102|D1C11|10.130.133.2|00:30:48:7D:07:C0|192.168.128.2|00:30:48:7D:07:C1|cr004329|<div style='background-color:green'>x</div>|
+|hltc1103|D1C11|10.130.133.3|00:30:48:7D:07:66|192.168.128.65|00:30:48:7D:07:67|cr004428|<div style='background-color:green'>x</div>|
+|hltc1104|D1C11|10.130.133.4|00:30:48:7D:07:64|192.168.128.66|00:30:48:7D:07:65|cr004429|<div style='background-color:green'>x</div>|
+|hltd0101|D1D01|10.130.134.1|00:30:48:7D:A8:0E|192.168.132.1|00:30:48:7D:A8:0F|cr004330|<div style='background-color:green'>x</div>|
+|hltd0102|D1D01|10.130.134.2|00:30:48:7D:A8:C6|192.168.132.2|00:30:48:7D:A8:C7|cr004331|<div style='background-color:green'>x</div>|
+|hltd0103|D1D01|10.130.134.3|00:30:48:7D:05:06|192.168.132.65|00:30:48:7D:05:07|cr004430|<div style='background-color:green'>x</div>|
+|hltd0104|D1D01|10.130.134.4|00:30:48:7D:07:6E|192.168.132.66|00:30:48:7D:07:6F|cr004431|<div style='background-color:green'>x</div>|
+|hltd0201|D1D02|10.130.135.1|00:30:48:7D:4C:42|192.168.136.1|00:30:48:7D:4C:43|cr004332|<div style='background-color:green'>x</div>|
+|hltd0202|D1D02|10.130.135.2|00:30:48:7D:70:24|192.168.136.2|00:30:48:7D:70:25|cr004333|<div style='background-color:green'>x</div>|
+|hltd0203|D1D02|10.130.135.3|00:30:48:7D:6D:80|192.168.136.65|00:30:48:7D:6D:81|cr004432|<div style='background-color:green'>x</div>|
+|hltd0204|D1D02|10.130.135.4|00:30:48:7D:6D:70|192.168.136.66|00:30:48:7D:6D:71|cr004433|<div style='background-color:green'>x</div>|
+|hltd0301|D1D03|10.130.136.1|00:30:48:7E:31:26|192.168.140.1|00:30:48:7E:31:27|cr004334|<div style='background-color:green'>x</div>|
+|hltd0302|D1D03|10.130.136.2|00:30:48:7E:30:4E|192.168.140.2|00:30:48:7E:30:4F|cr004335|<div style='background-color:green'>x</div>|
+|hltd0303|D1D03|10.130.136.3|00:30:48:7D:4F:F2|192.168.140.65|00:30:48:7D:4F:F3|cr004434|<div style='background-color:green'>x</div>|
+|hltd0304|D1D03|10.130.136.4|00:30:48:7D:4F:F0|192.168.140.66|00:30:48:7D:4F:F1|cr004435|<div style='background-color:green'>x</div>|
+|hltd0401|D1D04|10.130.137.1|00:30:48:7D:F9:7A|192.168.144.1|00:30:48:7D:F9:7B|cr004336|<div style='background-color:green'>x</div>|
+|hltd0402|D1D04|10.130.137.2|00:30:48:7E:19:8C|192.168.144.2|00:30:48:7E:19:8D|cr004337|<div style='background-color:green'>x</div>|
+|hltd0403|D1D04|10.130.137.3|00:30:48:7D:05:CC|192.168.144.65|00:30:48:7D:05:CD|cr004436|<div style='background-color:green'>x</div>|
+|hltd0404|D1D04|10.130.137.4|00:30:48:7D:08:04|192.168.144.66|00:30:48:7D:08:05|cr004437|<div style='background-color:green'>x</div>|
+|hltd0601|D1D06|10.130.139.1|00:30:48:7E:52:06|192.168.152.1|00:30:48:7E:52:07|cr004338|<div style='background-color:green'>x</div>|
+|hltd0602|D1D06|10.130.139.2|00:30:48:7E:54:8C|192.168.152.2|00:30:48:7E:54:8D|cr004339|<div style='background-color:green'>x</div>|
+|hltd0603|D1D06|10.130.139.3|00:30:48:7D:08:1A|192.168.152.65|00:30:48:7D:08:1B|cr004438|<div style='background-color:green'>x</div>|
+|hltd0604|D1D06|10.130.139.4|00:30:48:7D:07:7E|192.168.152.66|00:30:48:7D:07:7F|cr004439|<div style='background-color:green'>x</div>|
+|hltd0701|D1D07|10.130.140.1|00:30:48:7E:31:24|192.168.156.1|00:30:48:7E:31:25|cr004340|<div style='background-color:green'>x</div>|
+|hltd0702|D1D07|10.130.140.2|00:30:48:7E:2C:EA|192.168.156.2|00:30:48:7E:2C:EB|cr004341|<div style='background-color:green'>x</div>|
+|hltd0703|D1D07|10.130.140.3|00:30:48:7D:7B:DA|192.168.156.65|00:30:48:7D:7B:DB|cr004440|<div style='background-color:green'>x</div>|
+|hltd0704|D1D07|10.130.140.4|00:30:48:7D:7B:D8|192.168.156.66|00:30:48:7D:7B:D9|cr004441|<div style='background-color:green'>x</div>|
+|hltd0801|D1D08|10.130.141.1|00:30:48:7E:30:46|192.168.160.1|00:30:48:7E:30:47|cr004342|<div style='background-color:green'>x</div>|
+|hltd0802|D1D08|10.130.141.2|00:30:48:7E:30:48|192.168.160.2|00:30:48:7E:30:49|cr004343|<div style='background-color:green'>x</div>|
+|hltd0803|D1D08|10.130.141.3|00:30:48:7D:07:B0|192.168.160.65|00:30:48:7D:07:B1|cr004442|<div style='background-color:green'>x</div>|
+|hltd0804|D1D08|10.130.141.4|00:30:48:7D:08:10|192.168.160.66|00:30:48:7D:08:11|cr004443|<div style='background-color:green'>x</div>|
+|hltd0901|D1D09|10.130.142.1|00:30:48:7E:30:8A|192.168.164.1|00:30:48:7E:30:8B|cr004344|<div style='background-color:green'>x</div>|
+|hltd0902|D1D09|10.130.142.2|00:30:48:7E:30:16|192.168.164.2|00:30:48:7E:30:17|cr004345|<div style='background-color:green'>x</div>|
+|hltd0903|D1D09|10.130.142.3|00:30:48:7D:6D:AA|192.168.164.65|00:30:48:7D:6D:AB|cr004444|<div style='background-color:green'>x</div>|
+|hltd0904|D1D09|10.130.142.4|00:30:48:7D:6D:B8|192.168.164.66|00:30:48:7D:6D:B9|cr004445|<div style='background-color:green'>x</div>|
+|hltd1001|D1D10|10.130.143.1|00:30:48:7E:30:14|192.168.168.1|00:30:48:7E:30:15|cr004346|<div style='background-color:green'>x</div>|
+|hltd1002|D1D10|10.130.143.2|00:30:48:7E:30:12|192.168.168.2|00:30:48:7E:30:13|cr004347|<div style='background-color:green'>x</div>|
+|hltd1003|D1D10|10.130.143.3|00:30:48:7D:04:B6|192.168.168.65|00:30:48:7D:04:B7|cr004446|<div style='background-color:green'>x</div>|
+|hltd1004|D1D10|10.130.143.4|00:30:48:7D:04:C0|192.168.168.66|00:30:48:7D:04:C1|cr004447|<div style='background-color:green'>x</div>|
+|hltd1101|D1D11|10.130.144.1|00:30:48:79:C6:38|192.168.172.1|00:30:48:79:C6:39|cr004348|<div style='background-color:green'>x</div>|
+|hltd1102|D1D11|10.130.144.2|00:30:48:7D:6D:7E|192.168.172.2|00:30:48:7D:6D:7F|cr004349|<div style='background-color:green'>x</div>|
+|hltd1103|D1D11|10.130.144.3|00:30:48:7D:6D:7C|192.168.172.65|00:30:48:7D:6D:7D|cr004448|<div style='background-color:green'>x</div>|
+|hltd1104|D1D11|10.130.144.4|00:30:48:7D:4E:DC|192.168.172.66|00:30:48:7D:4E:DD|cr004449|<div style='background-color:green'>x</div>|
 |hlte0201|D1E03|10.130.146.1|00:19:B9:DE:16:B8|192.168.180.1|00:19:B9:DE:16:BA|4y5zf2j|<div style='background-color:green'>x</div>|
 |hlte0202|D1E03|10.130.146.2|00:13:72:F9:A9:7B|192.168.180.2|00:13:72:F9:A9:7D|8y5zf2j|<div style='background-color:green'>x</div>|
 |hlte02proto|D1E02|192.168.38.1|00:15:c5:e5:3a:77|10.130.148.4|00:15:c5:e5:3a:75|XXXXX||
@@ -58,6 +138,27 @@
 |hlte11proto|d1e11|10.135.155.101|00:13:72:FA:15:AF|10.135.155.101|00:13:72:FA:15:AF|||
 |*D2*||||||||
 |bcmdaq01|d2|10.130.39.22|00:30:48:7E:75:CE||00:30:48:7E:75:CF|SN0100008457|<div style='background-color:green'>x</div>|
+|hltb01|D2B04|10.130.112.100|00:11:43:FD:99:09||00:11:43:FD:99:0A|1kstj1j|<div style='background-color:green'>x</div>|
+|hltc01|D2B03|10.130.123.100|00:11:43:FD:98:AF||00:11:43:FD:98:B0|5nstj1j|<div style='background-color:green'>x</div>|
+|hltc02|D2B03|10.130.124.100|00:11:43:FD:9A:20||00:11:43:FD:9A:21|7nstj1j|<div style='background-color:green'>x</div>|
+|hltc03|D2B03|10.130.125.100|00:11:43:FD:9F:F9||00:11:43:FD:9F:FA|hjstj1j|<div style='background-color:green'>x</div>|
+|hltc04|D2B03|10.130.126.100|00:11:43:FD:94:E3||00:11:43:FD:94:E4|7mstj1j|<div style='background-color:green'>x</div>|
+|hltc06|D2B03|10.130.128.100|00:11:43:FD:A4:0A||00:11:43:FD:A4:0B|16mrj1j|<div style='background-color:green'>x</div>|
+|hltc07|D2B03|10.130.129.100|00:11:43:FD:98:FA||00:11:43:FD:98:FB|cjstj1j|<div style='background-color:green'>x</div>|
+|hltc08|D2B03|10.130.130.100|00:11:43:FD:9A:32||00:11:43:FD:9A:33|d1ntj1j|<div style='background-color:green'>x</div>|
+|hltc09|D2B03|10.130.131.100|00:11:43:FD:9C:2D||00:11:43:FD:9C:2E|fjstj1j|<div style='background-color:green'>x</div>|
+|hltc10|D2B03|10.130.132.100|00:11:43:FD:99:27||00:11:43:FD:99:28|cnstj1j|<div style='background-color:green'>x</div>|
+|hltc11|D2B03|10.130.133.100|00:11:43:FD:99:87||00:11:43:FD:99:88|3hstj1j|<div style='background-color:green'>x</div>|
+|hltd01|D2B02|10.130.134.100|00:11:43:FD:98:D6||00:11:43:FD:98:D7|6mstj1j|<div style='background-color:green'>x</div>|
+|hltd02|D2B02|10.130.135.100|00:11:43:FD:99:39||00:11:43:FD:99:3A|ggstj1j|<div style='background-color:green'>x</div>|
+|hltd03|D2B02|10.130.136.100|00:11:43:FD:98:70||00:11:43:FD:98:71|bnstj1j|<div style='background-color:green'>x</div>|
+|hltd04|D2B02|10.130.137.100|00:11:43:FD:99:E4||00:11:43:FD:99:E5|9jstj1j|<div style='background-color:green'>x</div>|
+|hltd06|D2B02|10.130.139.100|00:11:43:FD:9A:02||00:11:43:FD:9A:03|1pstj1j|<div style='background-color:green'>x</div>|
+|hltd07|D2B02|10.130.140.100|00:11:43:FD:9A:35||00:11:43:FD:9A:36|bmstj1j|<div style='background-color:green'>x</div>|
+|hltd08|D2B02|10.130.141.100|00:11:43:FD:99:7E||00:11:43:FD:99:7F|2mstj1j|<div style='background-color:green'>x</div>|
+|hltd09|D2B02|10.130.142.100|00:11:43:FD:9A:41||00:11:43:FD:9A:42|6nstj1j|<div style='background-color:green'>x</div>|
+|hltd10|D2B02|10.130.143.100|00:11:43:FD:98:7C||00:11:43:FD:98:7D|4nstj1j|<div style='background-color:green'>x</div>|
+|hltd11|D2B02|10.130.144.100|00:11:43:FD:9E:3A||00:11:43:FD:9E:3B|1nstj1j|<div style='background-color:green'>x</div>|
 |hlte02|D2B01|10.130.146.100|00:14:22:B0:C7:7D||00:14:22:B0:C7:7E|7L3122J|<div style='background-color:green'>x</div>|
 |hlte03|D2B01|10.130.147.100|00:14:22:B0:C6:18||00:14:22:B0:C6:19|7L3122J|<div style='background-color:green'>x</div>|
 |cadcs01w|d2c06f34|10.130.20.19|00:14:22:B0:C9:79||00:14:22:B0:C9:78||<div style='background-color:green'>x</div>|
@@ -136,7 +237,7 @@
 |tfc001|D2C07|10.130.39.7|00:14:22:b0:c9:c0||00:14:22:b0:c9:c1|99D122G|<div style='background-color:green'>x</div>|
 |tmudaq01|d2c07|10.130.39.8|00:14:22:B0:CA:2F||00:14:22:b0:ca:30|fm4122j|<div style='background-color:green'>x</div>|
 |tmudaq02|d2c07|10.130.39.19|00:14:22:B0:CA:CB||00:14:22:b0:ca:cc|jdy122j|<div style='background-color:green'>x</div>|
-|tpudaq01|D2C04|10.130.39.21|00:04:23:C6:DD:28||00:04:23:C6:DD:29|BZDR60251032|<div style='background-color:green'>x</div>|
+|tpudaq01|d2c04|10.130.39.21|00:04:23:C6:DD:28||00:04:23:c6:dd:29|bzdr60251032|<div style='background-color:green'>x</div>|
 |trg001|D2C07|10.130.39.9|00:14:22:b0:c7:b9||00:14:22:b0:c7:ba|3N4122J|<div style='background-color:green'>x</div>|
 |ttdaq01|d2c07|10.130.39.15|00:14:22:B0:C9:60||00:14:22:b0:c9:61|72h222j|<div style='background-color:green'>x</div>|
 |ttdaq02|D2C01|10.130.20.28|00:04:23:C5:1A:28||00:04:23:C5:1A:29|BZDR60100472|<div style='background-color:green'>x</div>|
@@ -149,6 +250,7 @@
 |vedcs01w|d2c04f37|10.130.20.7|00:14:22:B0:CF:9A||00:14:22:B0:CF:99|21r122j|<div style='background-color:green'>x</div>|
 |vedcs02w|d2c04f38|10.130.20.13|00:14:22:B0:C4:48||00:14:22:B0:C4:47|h0r122j|<div style='background-color:green'>x</div>|
 |*D3*||||||||
+|muhvc03|D3A06|10.130.20.65|00:30:48:7E:7B:32||00:30:48:7E:7B:33|8483|<div style='background-color:green'>x</div>|
 |pcd302|D3|10.130.1.18|00:07:E9:71:D8:B8|||CH169-331-891||
 |dumtell01|d3d02f29|10.130.69.1|00:30:59:01:C7:e1|||40dlautl00267||
 |dumtell02|d3d02f29|10.130.69.2|00:30:59:01:C8:98|||40dlautl00267||
@@ -171,7 +273,7 @@
 |ectell11|d3b02f29|10.130.36.31|00:30:59:01:C8:89|||40dlautl00325||
 |ectell12|d3b02f29|10.130.36.32|00:30:59:01:C3:F9|||40dlautl00250||
 |ectell13|d3b02f29|10.130.36.33|00:30:59:03:55:14|||40dlautl00277||
-|ectell14|d3b02f42|10.130.36.34|00:30:59:01:C4:04|||40dlautl00084||
+|ectell14|d3b02f42|10.130.36.34|00:30:59:01:c8:91|||237||
 |ectell15|d3b02f42|10.130.36.35|00:30:59:01:C7:B7|||40dlautl00221||
 |ectell16|d3b02f42|10.130.36.36|00:30:59:01:C7:9C|||40dlautl00293||
 |ectell17|d3b02f42|10.130.36.37|00:30:59:01:C8:D4|||40dlautl00092||
@@ -298,9 +400,9 @@
 |ottellc09|d3d01f29|10.130.35.59|00:30:59:01:C8:49|||40dlautl00300||
 |ottellc10|d3d01f29|10.130.35.60|00:30:59:01:C8:48|||40dlautl00303||
 |ottellc11|d3d01f29|10.130.35.61|00:30:59:03:55:1E|||40dlautl00406||
-|ottellc12|d3d01f29|10.130.35.62|00:30:59:01:C8:4A|||40dlautl00315||
-|ottellc13|d3d01f42|10.130.35.63|00:30:59:01:C4:1E|||40dlautl00243||
-|ottellc14|d3d01f42|10.130.35.64|00:30:59:01:C8:9B|||39||
+|ottellc12|d3d01f29|10.130.35.62|00:30:59:01:C8:4A|||40dlautl00283||
+|ottellc13|d3d01f42|10.130.35.63|00:30:59:03:55:20|||223||
+|ottellc14|d3d01f42|10.130.35.64|00:30:59:01:C8:8B|||4ODLAUTL000315||
 |ottellc15|d3d01f42|10.130.35.65|00:30:59:01:C4:20|||40dlautl00119||
 |ottellc16|d3d01f42|10.130.35.66|00:30:59:01:C4:1D|||40dlautl00139||
 |ottellc17|d3d01f42|10.130.35.67|00:30:59:01:C4:21|||40dlautl00256||
@@ -310,8 +412,9 @@
 |ottellc21|d3d01f42|10.130.35.71|00:30:59:01:C7:C0|||40dlautl00164||
 |ottellc22|d3d01f42|10.130.35.72|00:30:59:01:C7:BC|||40dlautl00129||
 |ottellc23|d3d01f42|10.130.35.73|00:30:59:01:C7:BD|||40dlautl00138||
-|ottellc24|d3d01f42|10.130.35.74|00:30:59:01:C8:4A|||40dlautl00283||
+|ottellc24|d3d01f42|10.130.35.74|00:30:59:01:C8:9B|||40dlautl00283||
 |ottellspare01|d3d01f29|10.130.35.75|00:30:59:01:C7:E3|||45||
+|Spare01|D2E01F42f19|10.131.1.100|00:11:22:33:44:55|||4ODLAUTL000154||
 |pcd301|D3|10.130.1.15|00:04:76:8b:84:64|||||
 |pcd302|D3|10.130.1.18|00:07:E9:71:D8:B8|||CH169-331-891||
 |pstell01|d3b01f29|10.130.36.11|00:30:59:01:C8:AF|||40dlautl00254||
@@ -321,7 +424,7 @@
 |pstell05|d3b01f29|10.130.36.15|00:30:59:01:C8:AC|||40dlautl00206||
 |pstell06|d3b01f29|10.130.36.16|00:30:59:01:C8:D6|||40dlautl00090||
 |pstell07|d3b01f29|10.130.36.17|00:30:59:01:C8:B9|||40dlautl00212||
-|pstell08|d3b01f29|10.130.36.18|00:30:59:01:C8:AD|||40dlautl00210||
+|pstell08|d3b01f29|10.130.36.18|00:30:59:01:C4:19|||106||
 |r1hugin01|D3C01F42|10.130.30.98|00:30:59:01:c9:49|||4OTCERHU001028||
 |r1hv01|D3C06|10.130.30.92|00:30:59:02:AA:0A|||||
 |r1ukl101|d3c01f42|10.130.30.1|00:30:59:01:C7:C7|||4rxcaml1000003||
@@ -417,6 +520,11 @@
 |tmutellq12|d3a04f42|10.130.32.156|00:30:59:01:C3:E1|||40dlautl00353||
 |tmutellq34|d3a04f29|10.130.32.153|00:30:59:01:C7:FC|||40dlautl00179||
 |tpuhugin01|d3e01f42|10.130.31.108|00:30:59:01:C9:0E|||4otcerhu001000||
+|tputell01|d3e01f42|10.130.31.95|00:30:59:01:C8:BB|||4odlautl000093||
+|tputell02|d3e01f42|10.130.31.96|00:30:59:01:C8:07|||4odlautl000021||
+|tputell03|d3e01f42|10.130.31.97|00:30:59:01:C8:08|||4odlautl000022||
+|tputell04|d3e01f42|10.130.31.98|00:30:59:01:C8:09|||4odlautl000023||
+|tputell05|d3e01f42|10.130.31.99|00:30:59:01:C8:0C|||4odlautl000026||
 |tthugin01|d3e07f29|10.130.34.100|00:30:59:01:C8:77|||40tcerhu001039||
 |tthugin02|d3e07f29|10.130.34.101|00:30:59:01:C8:79|||40tcerhu001041||
 |tthugin03|d3e07f42|10.130.34.102|00:30:59:01:C8:53|||40tcerhu001013||
@@ -443,7 +551,7 @@
 |tttell20|d3e07f42|10.130.34.20|00:30:59:01:C7:D2|||40dlautl00102||
 |tttell21|d3e07f42|10.130.34.21|00:30:59:01:C8:C6|||40dlautl00133||
 |tttell22|d3e07f42|10.130.34.22|00:30:59:01:C8:C8|||40dlautl00134||
-|tttell23|d3e07f42|10.130.34.23|00:30:59:01:C7:CC|||40dlautl00100||
+|tttell23|d3e07f42|10.130.34.23|00:30:59:01:C7:D4|||40dlautl00106||
 |tttell24|d3e07f42|10.130.34.24|00:30:59:01:C8:A6|||40DLAUTL00053||
 |tttell25|d3e07f42|10.130.34.25|00:30:59:01:C8:A5|||40dlautl00056||
 |tttell26|d3e07f42|10.130.34.26|00:30:59:01:C3:FE|||40dlautl00109||
@@ -453,9 +561,9 @@
 |tttell30|d3e07f42|10.130.34.30|00:30:59:01:C4:02|||40dlautl00111||
 |tttell31|d3e07f42|10.130.34.31|00:30:59:01:C3:E2|||40dlautl00349||
 |tttell32|d3e07f42|10.130.34.32|00:30:59:01:C8:7F|||40dlautl00298||
-|tttell33|d3e07f29|10.130.34.33|00:30:59:03:55:25|||40dlautl00098||
+|tttell33|d3e07f29|10.130.34.33|00:30:59:03:55:25|||327||
 |tttell34|d3e07f29|10.130.34.34|00:30:59:01:C4:14|||40dlautl00086||
-|tttell35|d3e07f29|10.130.34.35|00:30:59:01:C7:E8|||40dlautl00060||
+|tttell35|d3e07f29|10.130.34.35|00:30:59:01:c8:ab|||154||
 |tttell36|d3e07f29|10.130.34.36|00:30:59:01:C4:16|||40dlautl00083||
 |tttell37|d3e07f29|10.130.34.37|00:30:59:01:C4:10|||40dlautl00080||
 |tttell38|d3e07f29|10.130.34.38|00:30:59:01:C7:E0|||40dlautl00042||
@@ -480,13 +588,13 @@
 |vetella01|d3e04f42|10.130.31.1|00:30:59:01:C9:56|||40dlautl00244||
 |vetella02|d3e04f42|10.130.31.2|00:30:59:01:C8:CE|||40dlautl00051||
 |vetella03|d3e04f42|10.130.31.3|00:30:59:01:C9:69|||40dlautl00207||
-|vetella04|d3e04f42|10.130.31.4|00:30:59:01:c8:b6|||40dlautl00233||
+|vetella04|d3e04f42|10.130.31.4|00:30:59:01:C8:E2|||?||
 |vetella05|d3e04f42|10.130.31.5|00:30:59:01:C9:58|||40dlautl00162||
 |vetella06|d3e04f42|10.130.31.6|00:30:59:01:D2:4B|||40dlautl00121||
 |vetella07|d3e04f42|10.130.31.7|00:30:59:01:C9:57|||40dlautl00242||
 |vetella08|d3e04f42|10.130.31.8|00:30:59:01:C9:5B|||40dlautl00231||
 |vetella09|d3e04f42|10.130.31.9|00:30:59:01:C8:A0|||40dlautl00062||
-|vetella10|d3e04f42|10.130.31.10|00:30:59:01:C9:68|||40dlautl00123||
+|vetella10|d3e04f42|10.130.31.10|00:30:59:01:C9:55|||?||
 |vetella11|d3e04f42|10.130.31.11|00:30:59:01:C9:6B|||40dlautl00120||
 |vetella12|d3e04f42|10.130.31.12|00:30:59:01:C9:54|||40dlautl00230||
 |vetella13|d3e04f42|10.130.31.13|00:30:59:01:C9:52|||40dlautl00229||
@@ -500,20 +608,20 @@
 |vetella21|d3e03f42|10.130.31.21|00:30:59:01:C4:29|||40dlautl00263||
 |vetella22|d3e03f42|10.130.31.22|00:30:59:01:C9:66|||40dlautl00247||
 |vetella23|d3e03f42|10.130.31.23|00:30:59:01:C3:F6|||40dlautl00131||
-|vetella24|d3e03f42|10.130.31.24|00:30:59:01:C3:FB|||40dlautl00238||
+|vetella24|d3e03f42|10.130.31.24|00:30:59:01:C8:A1|||?||
 |vetella25|d3e03f42|10.130.31.25|00:30:59:01:C3:F1|||40dlautl00069||
-|vetella26|d3e03f42|10.130.31.26|00:30:59:03:55:1c|||40dlautl00239||
+|vetella26|d3e03f42|10.130.31.26|00:30:59:01:C8:E1|||?||
 |vetella27|d3e03f42|10.130.31.27|00:30:59:01:D2:3E|||40dlautl00253||
 |vetella28|d3e03f42|10.130.31.28|00:30:59:01:C9:67|||40dlautl00118||
-|vetella29|d3e03f42|10.130.31.29|00:30:59:01:C3:F8|||40dlautl00189||
-|vetella30|d3e03f29|10.130.31.34|00:30:59:01:C8:34|||40dlautl00208||
+|vetella29|d3e03f42|10.130.31.29|00:30:59:01:C4:32|||?||
+|vetella30|d3e03f29|10.130.31.34|00:30:59:01:C8:93|||?||
 |vetella31|d3e03f29|10.130.31.35|00:30:59:01:C8:33|||40dlautl00216||
 |vetella32|d3e03f29|10.130.31.36|00:30:59:01:C8:31|||40dlautl00217||
 |vetella33|d3e03f29|10.130.31.37|00:30:59:01:C8:32|||40dlautl00215||
 |vetella34|d3e03f29|10.130.31.38|00:30:59:01:D2:47|||40dlautl00240||
 |vetella35|d3e03f29|10.130.31.39|00:30:59:01:D2:44|||40dlautl00235||
 |vetella36|d3e03f29|10.130.31.40|00:30:59:01:C8:a9|||40dlautl00158||
-|vetella37|d3e03f29|10.130.31.41|00:30:59:01:D2:43|||40dlautl00236||
+|vetella37|d3e03f29|10.130.31.41|00:30:59:03:55:0B|||?||
 |vetella38|d3e03f29|10.130.31.42|00:30:59:01:C3:F0|||40dlautl00218||
 |vetella39|d3e03f29|10.130.31.43|00:30:59:01:D2:3F|||40dlautl00252||
 |vetella40|d3e03f29|10.130.31.44|00:30:59:01:C4:25|||40dlautl00205||
@@ -558,13 +666,31 @@
 |vetellc37|d3e02f29|10.130.31.79|00:30:59:01:C8:DC|||40dlautl000143||
 |vetellc38|d3e02f29|10.130.31.80|00:30:59:01:C8:35|||40dlautl000214||
 |vetellc39|d3e02f29|10.130.31.81|00:30:59:01:C8:DD|||40dlautl000232||
-|vetellc40|d3e02f29|10.130.31.82|00:30:59:01:C8:E0|||40dlautl000175||
+|vetellc40|d3e02f29|10.130.31.82|00:30:59:01:C8:0F|||?||
 |vetellc41|d3e02f29|10.130.31.83|00:30:59:01:C8:30|||40dlautl000195||
 |vetellc42|d3e02f29|10.130.31.84|00:30:59:01:C8:2F|||40dlautl000194||
 |*S1*||||||||
 |fmc01|S1D01|10.128.20.129|00:30:48:7E:78:7A||00:30:48:7E:78:7B|SN0100008464|<div style='background-color:green'>x</div>|
 |netctrl01|S1D02|10.132.10.1|00:14:22:B0:C8:46||00:14:22:B0:C8:47||<div style='background-color:green'>x</div>|
 |plus02|S1D01|10.128.20.81|00:11:43:FD:9F:B7||00:11:43:FD:9F:B8|JGSTJ1J|<div style='background-color:green'>x</div>|
+|plus03|S1D01|10.128.21.03|00:1E:C9:AD:0F:1C||00:1E:C9:AD:0F:1E|29SNN3J|<div style='background-color:green'>x</div>|
+|plus04|S1D01|10.128.21.4|00:1D:09:70:D3:9C||00:1D:09:70:D3:9E|D8SNN3J|<div style='background-color:green'>x</div>|
+|plus05|S1D01|10.128.21.05|00:1E:C9:AD:1A:8E||00:1E:C9:AD:1A:90|19SNN3J|<div style='background-color:green'>x</div>|
+|plus06|S1D01|10.128.21.6|00:1E:C9:AD:0F:21||00:1E:C9:AD:0F:23|49SNN3J|<div style='background-color:green'>x</div>|
+|plus07|S1D01|10.128.21.7|00:1E:C9:AD:0F:12||00:1E:C9:AD:0F:14|79SNN3J|<div style='background-color:green'>x</div>|
+|plus08|S1D01|10.128.21.8|00:1D:09:70:D3:1F||00:1D:09:70:D3:21|G8SNN3J|<div style='background-color:green'>x</div>|
+|plus09|S1D01|10.128.21.9|00:1E:C9:AD:0A:4E||00:1E:C9:AD:0A:50|59SNN3J|<div style='background-color:green'>x</div>|
+|plus10|S1D01|10.128.21.10|00:1E:C9:AD:0F:2B||00:1E:C9:AD:0F:2D|69SNN3J|<div style='background-color:green'>x</div>|
+|plus11|S1D01|10.128.21.11|00:1D:09:70:D3:65||00:1D:09:70:D3:67|2NSNN3J|<div style='background-color:green'>x</div>|
+|plus12|S1D01|10.128.21.12|00:1E:C9:AD:0E:13||00:1E:C9:AD:0E:15|CMSNN3J|<div style='background-color:green'>x</div>|
+|plus13|S1D01|10.128.21.13|00:1D:09:70:D3:7E||00:1D:09:70:D3:80|8MSNN3J|<div style='background-color:green'>x</div>|
+|plus14|S1D01|10.128.21.14|00:1E:C9:AD:0A:B2||00:1E:C9:AD:0A:B4|HMSNN3J|<div style='background-color:green'>x</div>|
+|plus15|S1D01|10.128.21.15|00:1E:C9:AD:0A:DA||00:1E:C9:AD:0A:DC|GMSNN3J|<div style='background-color:green'>x</div>|
+|plus16|S1D01|10.128.21.16|00:1D:09:70:D2:D9||00:1D:09:70:D2:DB|5NSNN3J|<div style='background-color:green'>x</div>|
+|plus17|S1D01|10.128.21.17|00:1D:09:70:D0:18||00:1D:09:70:D0:1A|3NSNN3J|<div style='background-color:green'>x</div>|
+|plus18|S1D01|10.128.21.18|00:1E:C9:AD:0A:A8||00:1E:C9:AD:0A:AA|FMSNN3J|<div style='background-color:green'>x</div>|
+|plus19|S1D01|10.128.21.19|00:1D:09:70:D3:42||00:1D:09:70:D3:44|6NSNN3J|<div style='background-color:green'>x</div>|
+|plus20|S1D01|10.128.21.20|00:1D:09:70:D3:24||00:1D:09:70:D3:26|7NSNN3J|<div style='background-color:green'>x</div>|
 |cadaqhv01|S1D01|10.128.20.125|00:04:23:C5:19:DC||00:04:23:C5:19:DD|BZDR60251249|<div style='background-color:green'>x</div>|
 |condb01|S1D02|10.128.20.40|00:14:22:b0:c9:1e||00:14:22:b0:c9:1f|13H122J|<div style='background-color:green'>x</div>|
 |diptn01|S1D02|10.128.2.20|00:14:22:b0:c6:cc||00:14:22:b0:c6:cd|GL3122J|<div style='background-color:green'>x</div>|
@@ -584,6 +710,27 @@
 |*UNKNOWN*||||||||
 |bcmtell01||10.130.37.198|00:30:59:01:C8:A8|||||
 |gw03|2885 r-07|10.128.2.3|00:14:22:B0:C5:f1|137.138.11.112|00:14:22:B0:C5:f2|JDC222J|<div style='background-color:green'>x</div>|
+|hltb01proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc01proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc02proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc03proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc04proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc06proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc07proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc08proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc09proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc10proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltc11proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd01proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd02proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd03proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd04proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd06proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd07proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd08proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd09proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd10proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
+|hltd11proto|virtual|0.0.0.0|00:00:00:00:00:00|0.0.0.0|00:00:00:00:00:00|Do not exist||
 |profiles-info||||||||
 |bcmtell01||10.130.37.198|00:30:59:01:C8:A8|||||
 |dumopg03||10.130.69.203|00:30:59:01:c8:66|||||
@@ -604,6 +751,14 @@
 |r2dcs02w|? pinged|10.130.20.9|00:14:22:B0:C4:AE||00:14:22:B0:C4:AD|61r122j|<div style='background-color:green'>x</div>|
 |r2hv01||10.130.30.91|00:30:59:01:7e:d1|||||
 |riccpc001||10.130.30.2|00:30:59:02:aa:0e|||||
+|sparetell01||10.130.69.11|00:30:59:01:C8:8E|||144||
+|sparetell02||10.130.69.12|00:30:59:03:55:20|||223||
+|sparetell03||10.130.69.13|00:30:59:01:C8:AB|||154||
+|sparetell04||10.130.69.14|00:30:59:01:C8:91|||237||
+|sparetell05||10.130.69.15|00:30:59:01:C7:CE|||140||
+|sparetell06||10.130.69.16|00:30:59:01:C4:03|||112||
+|sparetell07||10.130.69.17|00:30:59:01:C7:D4|||106||
+|sparetell08||10.130.69.18|00:30:59:01:C7:A2|||327||
 |storectl01proto|virtual||00:14:22:B0:C5:9B|10.128.40.52|00:14:22:B0:C5:9A|||
 |tcasb01||10.130.36.81|00:30:59:01:C8:68|||||
 |tcasb02||10.130.36.82|00:30:59:01:C8:64|||||
@@ -626,7 +781,6 @@
 |tfcodin16||10.130.37.26|00:30:59:01:C8:FC|||||
 |tfcthor01||10.130.37.50|00:30:59:01:C9:06|||||
 |tfcthor02||10.130.37.51|00:30:59:01:C9:07|||||
-|tputell01||10.130.31.95|00:30:59:01:C8:BB|||||
 |tpuvepr01||10.130.31.91|00:30:59:01:C7:C2|||||
 |tpuvepr02||10.130.31.92|00:30:59:01:C7:C3|||||
 |tpuvepr03||10.130.31.93|00:30:59:01:C7:C4|||||
@@ -636,11 +790,13 @@
 |trgtell102||10.130.37.2|00:30:59:01:C9:6A|||||
 |venik03|2885 2-3|10.128.20.192|00:19:bb:4b:D5:f2|||||
 |vetellc50|test|10.130.31.85|00:30:59:01:C8:A1|||40dlautl00049||
-|vetellc51|test|10.130.31.86|00:30:59:01:C8:CD|||40dlautl00061||
+|vetellc51|test|10.130.31.86|00:30:59:03:55:0A|||?||
 |vetellc52|test|10.130.31.87|00:30:59:01:C8:E1|||40dlautl00173||
 |vetellc53|test|10.130.31.88|00:30:59:01:C8:E2|||40dlautl00174||
 |vetellc54|test|10.130.31.89|00:30:59:01:C4:32|||40dlautl00203||
 |vetellc55|test|10.130.31.90|00:30:59:01:C9:55|||40dlautl00245||
+|vetellc56|test|10.130.31.120|00:30:59:01:C8:0F|||40dlautl00029||
+|vetellc57|test|10.130.31.121|00:30:59:01:C8:93|||40dlautl00030||
 |web01|2885 r-07|10.128.2.7|00:14:22:B0:C6:4B|137.138.11.123|00:14:22:B0:C6:4C|D9D122J|<div style='background-color:green'>x</div>|
 |web02|2885 r-07|10.128.2.9|00:30:48:7E:75:CC|10.128.2.9|00:30:48:7E:75:CD|SN0100008454|<div style='background-color:green'>x</div>|
 

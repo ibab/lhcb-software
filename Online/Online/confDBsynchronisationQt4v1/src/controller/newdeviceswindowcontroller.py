@@ -4,9 +4,8 @@ from view.newdeviceswindow import NewDevicesWindow
 from view.newdeviceswindow import DevicesList
 from insertnewdevicescontroller import InsertNewDevicesController
 
-class NewDevicesWindowController(Controller):
+class NewDevicesWindowController(object):
     def __init__(self, confDB, equipDB, parentController):
-        Controller.__init__(self)
         self.parentController = parentController
         self.confDB = confDB
         self.equipDB = equipDB

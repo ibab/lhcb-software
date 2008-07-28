@@ -1,13 +1,15 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 class DevicesWidget(QtGui.QWidget):
-    def __init__(self, devicesInfo, parent = None):
+    def __init__(self, devicesInfo, parent = None, parentController = None):
         QtGui.QWidget.__init__(self, parent)
+        self.parentController = parentController
         self.gridLayout = QtGui.QGridLayout()
         self.setGeometry(10, 60, 300, 200)
         self.devicesInfo = devicesInfo
         self.createLabels()
         self.createLineEdits()
+        self.createButtons()
         self.setLayout(self.gridLayout)
         self.show()
     def setDevicesInfo(self, devicesInfo):
@@ -60,6 +62,27 @@ class DevicesWidget(QtGui.QWidget):
         self.gridLayout.addWidget(self.cLineEdit, 3, 1)
         self.gridLayout.addWidget(self.utdLineEdit, 4, 1)
         self.gridLayout.addWidget(self.aLineEdit, 5, 1)
+    def createButtons(self):
+        self.insertDevicesButton = QtGui.QPushButton(self)
+        self.insertDevicesButton.setText("Insert")
+        self.insertDevicesButton.setToolTip("Select and insert new devices \nto be inserted into ConfDB")
+        self.insertDevicesButton.setFixedSize(50, 20)
+        self.gridLayout.addWidget(self.insertDevicesButton, 2, 2)
+        self.connect(self.insertDevicesButton, QtCore.SIGNAL("clicked()"), self.parentController.onInsert)
+        ############################################################################
+        self.updateDevicesButton = QtGui.QPushButton(self)
+        self.updateDevicesButton.setText("Update")
+        self.updateDevicesButton.setToolTip("Upate existing devices in ConfDB")
+        self.updateDevicesButton.setFixedSize(50, 20)
+        self.gridLayout.addWidget(self.updateDevicesButton, 3, 2)
+        self.connect(self.updateDevicesButton, QtCore.SIGNAL("clicked()"), self.parentController.onUpdate)
+        ############################################################################
+        self.deleteDevicesButton = QtGui.QPushButton(self)
+        self.deleteDevicesButton.setText("Delete")
+        self.deleteDevicesButton.setToolTip("Delete all devices from ConfDB")
+        self.deleteDevicesButton.setFixedSize(50, 20)
+        self.gridLayout.addWidget(self.deleteDevicesButton, 4, 2)
+        self.connect(self.deleteDevicesButton, QtCore.SIGNAL("clicked()"), self.parentController.onDelete)
     def updateLineEdits(self):
         self.nwodLineEdit.setText(str(self.devicesInfo.NewDevicesWithoutDHCPData))
         self.nwdLineEdit.setText(str(self.devicesInfo.NewDevicesWithDHCPData))

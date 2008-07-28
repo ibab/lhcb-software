@@ -2,7 +2,7 @@ from PyQt4 import QtCore, QtGui
 from controller import Controller
 from worker.tfcmunin01worker import TFCMunin01Worker
 
-class TFCMunin01Controller(Controller):
+class TFCMunin01Controller(object):
     def __init__(self, parentController):
         self.parentController = parentController
         self.progressDialog = QtGui.QProgressDialog()

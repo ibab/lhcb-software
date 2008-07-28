@@ -25,6 +25,7 @@ class CreateSummaryLogWorker(QThread):
         i = 0
         for system in changedSystems:
             lf.write(headings[i])
+            i += 1
             for device in system.getAllDevices():
                 lf.write("\n"+str(device))
         lf.close()

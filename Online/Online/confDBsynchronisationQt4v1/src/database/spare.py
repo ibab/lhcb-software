@@ -54,7 +54,7 @@ class SpareDB:
             query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE serialnb = '"+spare.serialnb+"' and device_status = 2"
             confdb_spare_result = self.confDB.executeSelectQuery(query)
             if len(confdb_spare_result) > 0:
-                confdb_spare = Spare(confdb_spare_result[0][0], confdb_spare_result[0][1], confdb_spare_result[0][2], confdb_spare_result[0][3], confdb_spare_result[0][4], confdb_spare_result[0][5])
+                confdb_spare = Spare(confdb_spare_result[0][0], confdb_spare_result[0][1], confdb_spare_result[0][2], confdb_spare_result[0][3], confdb_spare_result[0][4], confdb_spare_result[0][5], "", "") #TODO: ip spare
                 if spare.__cmp__(confdb_spare) != 0:
                     new_spares.append(spare)
                     print "Spare in lhcbintegration: "+str(spare)
@@ -68,7 +68,7 @@ class SpareDB:
         query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE device_status = 2 and serialnb like '4%'"
         confdb_spare_result = self.confDB.executeSelectQuery(query)
         for spare_result in confdb_spare_result:
-            spares.append(Spare(spare_result[0], spare_result[1], spare_result[2], spare_result[3], spare_result[4], spare_result[5]))
+            spares.append(Spare(spare_result[0], spare_result[1], spare_result[2], spare_result[3], spare_result[4], spare_result[5], "", "")) #TODO: ip adress for spare 
         print "SpareDB.getSparesInConfDB() end"
         return spares
     """returns a list of Spares existing in confDB as String like: sparename (spare_serialnb)"""
@@ -109,8 +109,8 @@ class SpareDB:
         try:
             self.logfile.write("deleting spare "+str(spare)+" from confdb")
             db.DeleteHWDevice(spare.serialnb)
-        except:
-            self.logfile.write("error deleting spare "+str(spare)+" from confdb")
+        except RuntimeError, inst:
+            self.logfile.write("error deleting spare "+str(spare)+" from confdb\n"+str(inst))
             print "error deleting :"+str(spare)
         if disconnect:
             database.disconnect(db)
@@ -124,6 +124,7 @@ class SpareDB:
             self.confDB.executeQuery(query1)
             self.confDB.executeQuery(query2)
             r = True
+            self.logfile.write("all spares in confb have been deleted!")
         except:
             print ("error doing "+query1+" and "+query2)
             r = False

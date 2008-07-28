@@ -2,9 +2,8 @@ from controller import Controller
 from PyQt4 import QtCore, QtGui
 from worker.createsummarylogworker import CreateSummaryLogWorker
 
-class CreateSummaryLogController(Controller):
+class CreateSummaryLogController(object):
     def __init__(self, parentController):
-        Controller.__init__(self)
         self.parentController = parentController
         self.progressDialog = QtGui.QProgressDialog()
         self.progressDialog.setMinimum(0)

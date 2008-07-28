@@ -35,6 +35,8 @@ class RemoveAllDevicesWorker(QThread):
                     #print "devid "+str(devid)
                 except RuntimeError, inst:
                     print "Exception retrieving deviceID. Reason: "+str(inst)
+                    self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
+                    continue
                 if devid == -1:
                     print "Device Name not found"
                     self.emit(QtCore.SIGNAL("setValue(int)"), workDone)

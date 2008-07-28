@@ -2,7 +2,7 @@ from PyQt4 import QtCore, QtGui
 from controller import Controller
 from worker.updatesparesworker import UpdateSparesWorker
 
-class UpdateNewSparesController(Controller):
+class UpdateNewSparesController(object):
     def __init__(self, parentController):
         self.parentController = parentController
         self.spareDB = self.parentController.getSpareDB()

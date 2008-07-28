@@ -1,13 +1,15 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 class SparesWidget(QtGui.QWidget):
-        def __init__(self, sparesInfo, parent = None):
+        def __init__(self, sparesInfo, parent = None, parentController = None):
             QtGui.QWidget.__init__(self, parent)
+            self.parentController = parentController
             self.gridLayout = QtGui.QGridLayout()
             self.setGeometry(10, 240, 300, 200)
             self.sparesInfo = sparesInfo
             self.createLabels()
             self.createLineEdits()
+            self.createButtons()
             self.setLayout(self.gridLayout)
             self.show()
         def setSparesInfo(self, sparesInfo):
@@ -45,6 +47,27 @@ class SparesWidget(QtGui.QWidget):
             self.gridLayout.addWidget(self.confLineEdit, 1, 1)
             self.gridLayout.addWidget(self.changedLineEdit, 2, 1)
             self.gridLayout.addWidget(self.newLineEdit, 3, 1)
+        def createButtons(self):
+            self.deleteAllSparesButton = QtGui.QPushButton(self)
+            self.deleteAllSparesButton.setText("Delete")
+            self.deleteAllSparesButton.setToolTip("Delete all spares from ConfDB")
+            self.deleteAllSparesButton.setFixedSize(50, 20)
+            self.gridLayout.addWidget(self.deleteAllSparesButton, 1, 2)
+            self.connect(self.deleteAllSparesButton, QtCore.SIGNAL("clicked()"), self.parentController.onDeleteSpares)
+            ############################################################################
+            self.updateSparesButton = QtGui.QPushButton(self)
+            self.updateSparesButton.setText("Update")
+            self.updateSparesButton.setToolTip("Update existing spares in ConfDB")
+            self.updateSparesButton.setFixedSize(50, 20)
+            self.gridLayout.addWidget(self.updateSparesButton, 2, 2)
+            self.connect(self.updateSparesButton, QtCore.SIGNAL("clicked()"), self.parentController.onUpdateSpares)
+            ############################################################################
+            self.insertNewSparesButton = QtGui.QPushButton(self)
+            self.insertNewSparesButton.setText("Insert")
+            self.insertNewSparesButton.setToolTip("Insert new spares into ConfDB")
+            self.insertNewSparesButton.setFixedSize(50, 20)
+            self.gridLayout.addWidget(self.insertNewSparesButton, 3, 2)
+            self.connect(self.insertNewSparesButton, QtCore.SIGNAL("clicked()"), self.parentController.onInsertNewSpares)
         def updateLineEdits(self):
             self.equipLineEdit.setText(str(self.sparesInfo.SparesInEquipDB))
             self.confLineEdit.setText(str(self.sparesInfo.SparesInConfDB))

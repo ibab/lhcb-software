@@ -1,13 +1,17 @@
 class Spare:
-    def __init__(self, hwname, hwtype, serialnb, responsible, location, comments):
+    def __init__(self, hwname, hwtype, serialnb, responsible, location, comments, mac = None, ip = None):
+        self.CMACadd = mac
+        self.CIPadd = ip
         self.hwname = hwname
         self.devicename = self.hwname
+        self.IPname = self.devicename
         self.hwtype = hwtype
         self.typ = "spare"
         self.serialnb = serialnb
         self.sn = self.serialnb
         self.responsible = responsible
         self.location = location
+        self.slot= self.location.split("f")[1]
         self.loca = self.location
         self.comments = comments
     def __cmp__(self, other):

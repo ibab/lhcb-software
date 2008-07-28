@@ -2,9 +2,8 @@ from PyQt4 import QtCore, QtGui
 from worker.updatedevicesworker import UpdateDevicesWorker
 from controller import Controller
 
-class UpdateDevicesController(Controller):
+class UpdateDevicesController(object):
     def __init__(self, parentController):
-        Controller.__init__(self)
         self.parentController = parentController
         self.equipDB = self.parentController.getEquipDBCxOracleConnection()
         self.confDB = self.parentController.getConfDBCxOracleConnection()

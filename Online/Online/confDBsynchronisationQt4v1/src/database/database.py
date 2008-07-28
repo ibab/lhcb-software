@@ -488,9 +488,9 @@ class ConfigurationDB(DataBase):
         query = "DELETE FROM LHCB_MICROSCOPIC_CONNECTIVITY WHERE portidfrom = '"+str(portid)+"' or portidto= '"+str(portid)+"'"
         try:
             self.executeQuery(query)
-            self.log("deleted microscopic links for port = '"+str(portid))
+            self.log("deleted microscopic links for port = "+str(portid))
         except RuntimeError, inst:
-            self.log("error deleting microscopic links for port = '"+str(portid))
+            self.log("error deleting microscopic links for port = "+str(portid)+"\n"+str(inst))
     def deleteThrottleConnectivityStrings(self, devicestrings):
         for devicestring in devicestrings:
             query_select = """select LHCB_MACROSCOPIC_CONNECTIVITY.linkid linkid
@@ -667,6 +667,16 @@ class ConfigurationDB(DataBase):
         print "can only swap devices of type Hugin, UKL1, Tell1 and Spare"
         print "ConfigurationDB.swapDevices() end"
         return False
+    def replaceDeviceBySpare(self, deviceserial, spareserial, sparemacaddress = None):
+        swap_query = ""
+        swap_query = sub("SERIALNUMBER_DEVICE", deviceserial, swap_query)
+        swap_query= sub("SERIALNUMBER_SPARE", device2.sn, swap_query)
+        swap_query= sub("MACADDRESS_SPARE", device2.sn, swap_query)
+        try:
+            self.executeQuery(swap_query)
+            self.log(query)
+        except RuntimeError, inst:
+            self.log("replacing device "+str(deviceserial)+" with spare "+str(spareserial)+ "failed!\n"+str(inst))
     """checks if a device is hugin, ukl1 or Tell"""
     def isDevice(self, device):
         return device.typ == "hugin" or device.typ == "ukl1" or device.typ == "tell"
@@ -777,11 +787,13 @@ class EquipmentDB(DataBase):
                 pass#print "Warning: ", module[0], module[1], module[2], module[3], module[4], " is not a known module type and will be ignored!"
         return result
     def getAllSpares(self):
-        query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and length(item_id) = 14 and (name like '%Spare%' or name like '%spare%') order by name"
+        query = "select b.name,b.label,b.responsible,b.position,b.item_id, b.label_det from board b where (label like 'D%f%') and type='electronics' and item_id like '4%' and length(item_id) = 14 and (name like '%Spare%' or name like '%spare%') order by name"
         spares = self.executeSelectQuery(query)
         result = []
+        dhcp = self.dhcp
         for spare in spares:
-            result.append(Spare(spare[0],"type",spare[4],spare[2],spare[1],"comment"))
+            type = str(spare[5]).split(',')[0]
+            result.append(Spare(spare[0],type ,spare[4],spare[2],spare[1],"comment", dhcp.getMACByIPName(spare[0]), dhcp.getIPByIPName(spare[0])))
         return result
     """returns all devides in a model of system - subsyste - devices"""
     def getSystem(self):
@@ -819,34 +831,36 @@ class EquipmentDB(DataBase):
             True if swap succeed
             False if swap was not successful
     """
-    def swapDevices(self, device1, device2):
-        print "EquipmentDB.swapDevices("+str(device1.devicename)+", "+str(device2.devicename)+") start"
-        self.log("swapping "+str(device1.devicename)+" and "+str(device2.devicename)+" in equipmentdb")
+    def swapDevices(self, device1serial, device2serial):
+        print "EquipmentDB.swapDevices("+str(device1serial)+", "+str(device2serial)+") start"
         if device1 is None or device2 is None:
             self.log("device1 or device2 is None, swap failed!")
             return False
-        if device1.devicename == device2.devicename:
+        if device1serial == device2serial:
             self.log("cannot swap 2 identical devices, stopping swap!")
             return False
         swap_query = """
         DECLARE
             location1 board.label%TYPE;
             location2 board.label%TYPE;
+            name1 board.name%TYPE;
+            name2 board.name%TYPE;
             item_id1 board.item_id%TYPE;
             item_id2 board.item_id%TYPE;
         BEGIN
-            SELECT label, item_id INTO location1, item_id1 FROM board WHERE item_id = 'SERIALNUMBER1';
-            SELECT label, item_id INTO location2, item_id2 FROM board WHERE item_id = 'SERIALNUMBER2';
-            UPDATE board SET label = location2||'UNIQUE' WHERE item_id = item_id1;
-            UPDATE board SET label = location1||'UNIQUE' WHERE item_id = item_id2;
-            UPDATE board SET label = location2 WHERE item_id = item_id1;
-            UPDATE board SET label = location1 WHERE item_id = item_id2;
+            SELECT label, item_id, name INTO location1, item_id1, name1 FROM board WHERE item_id = 'SERIALNUMBER1';
+            SELECT label, item_id, name INTO location2, item_id2, name2 FROM board WHERE item_id = 'SERIALNUMBER2';
+            UPDATE board SET label = location2||'UNIQUE', name = name2||'UNIQUE' WHERE item_id = item_id1;
+            UPDATE board SET label = location1||'UNIQUE', name = name1||'UNIQUE' WHERE item_id = item_id2;
+            UPDATE board SET label = location2, name = name2 WHERE item_id = item_id1;
+            UPDATE board SET label = location1, name = name1 WHERE item_id = item_id2;
             COMMIT;
         END;"""
-        swap_query = sub("SERIALNUMBER1", device1.sn, swap_query)
-        swap_query= sub("SERIALNUMBER2", device2.sn, swap_query)
+        swap_query = sub("SERIALNUMBER1", device1serial, swap_query)
+        swap_query= sub("SERIALNUMBER2", device2serial, swap_query)
         try:
             self.executeQuery(swap_query)
+            self.log("swapped "+str(device1serial)+" and "+str(device2serial)+" in equipmentdb")
             print "EquipmentDB.swapDevice() end"
             return True
         except:

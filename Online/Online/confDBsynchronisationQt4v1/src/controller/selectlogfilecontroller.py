@@ -2,9 +2,8 @@ from controller import Controller
 from PyQt4 import QtCore, QtGui
 from log.logReader import LogReader
 
-class SelectLogFileController(Controller):
+class SelectLogFileController(object):
     def __init__(self, parentController):
-        Controller.__init__(self)
         self.parentController = parentController
         self.logReader = LogReader()
         fileName = QtGui.QFileDialog.getOpenFileName(None,

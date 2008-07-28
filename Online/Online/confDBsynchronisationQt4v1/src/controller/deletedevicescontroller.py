@@ -4,11 +4,9 @@ from controller import Controller
 from PyQt4.QtGui import QDialog
 from worker.removealldevicesworker import RemoveAllDevicesWorker
 
-class DeleteDevicesController(Controller, QObject):
+class DeleteDevicesController(object):
     def __init__(self, parentController):
         print "DeleteDevicesController.__init__() start"
-        Controller.__init__(self)
-        QObject.__init__(self)
         self.parentController = parentController
         self.db = self.parentController.getCn()
         print str(self.db)
@@ -22,8 +20,8 @@ class DeleteDevicesController(Controller, QObject):
             self.progressDialog.setMinimum(0)
             self.progressDialog.setMaximum(count)
             self.removeAllDevicesWorker = RemoveAllDevicesWorker(self.parentController.getConfDBCxOracleConnection(), self.db, count)
-            self.connect(self.removeAllDevicesWorker, QtCore.SIGNAL("setValue(int)"), self.progressDialog, QtCore.SLOT("setValue(int)"))
-            self.connect(self.removeAllDevicesWorker, QtCore.SIGNAL("removealldevicesdone()"), self.onFinish)
+            self.removeAllDevicesWorker.connect(self.removeAllDevicesWorker, QtCore.SIGNAL("setValue(int)"), self.progressDialog, QtCore.SLOT("setValue(int)"))
+            self.removeAllDevicesWorker.connect(self.removeAllDevicesWorker, QtCore.SIGNAL("removealldevicesdone()"), self.onFinish)
             self.progressDialog.show()
             self.removeAllDevicesWorker.start()
         print "DeleteDevicesController.__init__() end"
@@ -31,10 +29,6 @@ class DeleteDevicesController(Controller, QObject):
         print "DeleteDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        self.disconnectConfDBPython()
+        self.parentController.onRefresh()
         QtGui.QMessageBox.information(None, "Finish", "Deleteing devices from ConfDB has finished. Check log-files for details.")
-        if self.parentController is not None:
-            self.parentController.onRefresh()
-        else:
-            print "self.parentController is None "+str(self.parentController)
         print "DeleteDevicesController.onFinish() end"

@@ -2,10 +2,9 @@ from worker.insertdevicesworker import InsertDevicesWorker
 from controller import Controller
 from PyQt4 import QtCore, QtGui
 
-class InsertNewDevicesController(Controller):
+class InsertNewDevicesController(object):
     def __init__(self, serialnbs, parentController):
         print "InsertNewDevicesController.__init__() start"
-        Controller.__init__(self)
         self.parentController = parentController
         self.serialnbs = serialnbs
         max = len(serialnbs)
@@ -14,8 +13,8 @@ class InsertNewDevicesController(Controller):
         self.progressDialog.setMinimum(0)
         self.progressDialog.setMaximum(max)
         self.insertDevicesWorker = InsertDevicesWorker(serialnbs, self.parentController.getEquipDBCxOracleConnection(), self.parentController.getConfDBCxOracleConnection(), self.parentController.getCn())
-        self.progressDialog.connect(self.insertDevicesWorker, QtCore.SIGNAL("setValue(int)"), QtCore.SLOT("setValue(int)"))
-        self.progressDialog.connect(self.insertDevicesWorker, QtCore.SIGNAL("insertdevicesfinish"), self.onFinish)
+        self.progressDialog.connect(self.insertDevicesWorker, QtCore.SIGNAL("workProgressed(int)"), QtCore.SLOT("setValue(int)"))
+        self.progressDialog.connect(self.insertDevicesWorker, QtCore.SIGNAL("workFinished()"), self.onFinish)
         self.progressDialog.show()
         self.insertDevicesWorker.start()
         print "InsertNewDevicesController.__init()__ end"
@@ -23,6 +22,6 @@ class InsertNewDevicesController(Controller):
         print "InsertNewDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        QtGui.QMessageBox.information(None, "Finish", "Inserting devices finished. Check log-files for details.")
         self.parentController.onRefresh()
+        QtGui.QMessageBox.information(None, "Finish", "Inserting devices finished. Check log-files for details.")
         print "InsertNewDevicesController.onFinish() end"
