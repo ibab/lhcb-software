@@ -5,15 +5,15 @@
  *  Header file for algorithm class : Rich::Rec::SummaryAlg
  *
  *  CVS Log :-
- *  $Id: RichRecSummaryAlg.h,v 1.7 2007-11-26 16:48:07 jonrob Exp $
+ *  $Id: RichRecSummaryAlg.h,v 1.8 2008-07-28 16:08:11 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
  */
 //---------------------------------------------------------------------------
 
-#ifndef RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H
-#define RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H 1
+#ifndef RICHRECALGORITHMS_RichRecSummaryAlg_H
+#define RICHRECALGORITHMS_RichRecSummaryAlg_H 1
 
 // Base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -88,4 +88,4 @@ namespace Rich
   }
 }
 
-#endif // RICHRECALGORITHMS_RICHRECBACKGROUNDESTI_H
+#endif // RICHRECALGORITHMS_RichRecSummaryAlg_H
