@@ -5,10 +5,227 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v25r0>2008-07-28 LHCbSys v25r0</A></H1><PRE>
+</PRE><H1><A NAME=v25r0>2008-07-29 LHCbSys v25r0</A></H1><PRE>
 This version uses Gaudi v20r2 and LCG_55a
 
- - Packages added:   Gen/HepMCBack v1r0 - Streamer to read HepMC 1.26 event
+ - Packages added:    Gen/HepMCBack v1r0 - Streamer to read HepMC 1.26 event
+ - Packages modified: GaudiConf v10r12, GaudiObjDesc v11r3, KernelSys v9r0,
+     LHCbKernel v9r0, L0MuonKernel v8r1, RichKernel v7r14, DetSys v15r0,
+     DDDB v1r10, DetCond v12r2, DetDesc v18r8, DetDescSvc v2r1, Magnet v4r0,
+     RichDet v11r0, STDet v4r4, VeloDet v13r3, EventSys v24r7, DAQEvent v7r13,
+     GenEvent v5r3, HltEvent v8r11, L0Event v17r1, VeloEvent v16r5,
+     STTELL1Event v1r4, DAQSys v5r1, OTDAQ v7r1, CaloDAQ v4r7, CondDBUI v2r12,
+     LHCbAlgs v2r20, LoKiCore v7r6, LoKiGenMC v7r1p1, LoKiPhysMC v7r4, MDF v3r12,
+     SimComponents v2r11, STKernel v1r7, TfKernel v2r6, TrackInterfaces v3r16,
+     DetCondExample v11r4, DetDescChecks v4r8, IOExample v2r5
+
+- In GaudiConf v10r12
+  . Added the script gaudirun.py including work-arounds for
+    o Gaudi bug #39117: incorrect handling of ToolHandles
+    o Gaudi bug #39116: bad comment sign when exporting to old-opts
+  . Removed obsolete explicit loading of Reflex dictionaries from SimDicts.opts.
+  . In Configurable: 
+    o Removed handling of MagneticFieldSvc fieldmap file, will be done via CondDB
+    o Added function to return knownMonitors and use it to test monitors option
+    o Added "useOracleCondDB" option, default is False
+  . Removed /Event/Rec/Rich/RichOfflineSummaryTracks from default DST
+
+- In GaudiObjDesc v11r3
+  . Fixed dependency problems in the fragments to allow parallel compilation
+    with "make -j"
+
+- In LHCbKernel v9r0
+  . Remove Kernel/IEventTimeDecoder.h, IGenericTool.h, now in GaudiKernel
+  . Remove Kernel/IDetElemFinder.h,    moved to Det/DetDesc
+  . Add Kernel/ILHCbMagnetSvc.h : LHCb extensions to Gaudi IMagneticFieldSvc i/f 
+  . src/ParticleID.cpp: use more efficient algorithm (from LHCbMath) to extract
+    the Nth decimal digit from the integral type (introduces LHCbMath dependency)
+  . Add ITNames, TTNames to python dict
+
+- In L0MuonKernel v8r1
+  . Add MonUtilities : contains functions usefull for the monitoring
+  . Bug fix : correct a bug introduced in the previous release affecting 
+              the decoding of the DC06 banks  
+
+- In RichKernel v7r14
+  . Added logical and hardware Level1 ID classes
+  . Added HPDCopyNumber class in DAQDefinitions
+
+- In DDDB v1r10
+  . In LHCb-2008.py:   change default 2008 tag to head-20080729
+  . In DC06.py, .opts: change default DC06 tag to DC06-20080725
+  . In DDDB.opts, DDDB.py: ONLINE partition now enabled
+  . Remove Magnetic field options from DC06.opts, DC06.py, LHCb-2008.py,
+    now taken from ONLINE condDB partition
+  . In DDDB.py, use new "useOracleCondDB" property of LHCbApp configurable to
+    access Oracle CondDB instead of SQLDDDB. Default is SQLDDDB
+
+- In DetCond v12r2
+  . Changed the type of CondDBDispatcherSvc.Alternatives from list of strings
+    to map<string,string>.
+  . Added tests for DetCond.Configuration.
+  . Fixed a problem with conversion between 'double' and 'long long' in
+    CondDBTimeSwitchSvc.
+  . Added a function to DetCond.Configuration (configureOnlineSnapshots) to
+    prepare the configuration using monthly snapshots of the ONLINE partition.
+    The first and last snapshot used extend their validity to 0 and +infinity
+    respectively.
+
+- In DetDesc v18r8
+  . Add DetDesc/IDetElemFinder.h, previously in LHCbKernel
+  . Remove from DetDescDict.h the hack for an obsolete gccxml problem on Win32
+
+- In DetDescSvc v2r1
+  . Modified the EventClockSvc to use the current time as initial guess for the
+    event time.
+  . Pick up interfaces previously in LHCbKernel from their new locations in
+    GaudiKernel, GaudiAlg, DetDesc (needs Gaudi v20r2)
+  . Remove LHCbKernel dependency
+
+- In Magnet v4r0
+  . Revised implementation of MagneticFieldSvc (see release notes for details)
+    o Now implements ILHCbMagnetSvc interface, with added methods scaleFactor()
+      and useRealMap()
+    o Service now gets names of field map files from CondDB
+    o Handling of changes in magnet conditions during the job
+    o Reading and caching of field map delegated to a IMagFieldTool, with two
+      implementations: MagFieldTool, MagFieldToolDC06 for the real and DC06 maps
+  . Fixed options/UseRealMap.py for consistency with above changes. This file
+    should now only be used if not using the CondDB.
+  . Fixed option/job.opts with use with new DDDB+SQLDDDB options
+
+- In RichDet v11r0
+  . Add to DeRichSystem mapping between L1 hardware and logical IDs
+  . Added HPDCopyNumber to DeRichSystem
+  . Required changes for R2 mirrors now using framework alignment conditions
+    (DeRich2, DeRichSphMirror)
+  . In DeRichHPDPanel:
+    o Added method to retrieve the local z offset of the detection plane.
+    o Removed method globalToPDPanel.
+    o Fixed problem with local x/y offset. 
+  . Remove obsolete object locations in DeRichLocations.h
+
+- In STDet v4r4
+  . Add some info to printouts
+  . Add NotBonded to enum in DeSTSector
+
+- In VeloDet v13r3
+  . Changed the names in the test for VeloAlignCond to match the final names.
+
+- In DAQEvent v7r13
+  . Added RawBank::HltLumiSummary bank type
+  . Renamed HLT, HltSelCandidates, HltPrimaryVertex bank types to HltDecReports, 
+    HltSelReports and HltVertexReports respectively
+  . Made OdinTimeDecoder issue a "RunChange" incident when the run number
+    obtained from ODIN is different from the previous one.
+  . Added a test for the "RunChange" incident.
+  . Added a service (RunChangeHandlerSvc) to intercept "RunChange" incidents and
+    replace the path of the source XML files of objects in the DetectorDataSvc
+    according to new run number.
+  . Pick up IEventTimeDecoder.h from GaudiKernel and remove LHCbKernel dependency
+  . Move tests/src/RawEventCreator (renamed DummyRawEventCreator) and
+    tests/src/ByteStreamTests to src/components
+  . Remove TestRawEvent.exe (use gaudirun.py instead)
+  . Update test/options/test.opts and qmtest files accordingly
+
+- In GenEvent v5r3
+  . Add GenEvent/HepMCUtils.h, previously in Gen/Generators
+
+- In HltEvent v8r11
+  . Added HltDecReports and HltSelReports, containers of Hlt decisions and 
+    selections respectively - keyed with string, thus cannot rely on standard
+    containers.
+  . Added HltObjectSummary, summaries to get restored to a standard container
+  . Added HltLumiSummary class
+  . See detailed description in 
+    <a href="http://indico.cern.ch/materialDisplay.py?contribId=0&materialId=slides&confId=33043">talk at T-Rec on 2009-07-28</a>
+
+- In L0Event v17r1
+  . Add methods to L0MuonError 
+
+- In VeloEvent v16r5
+  . Modifications to switch on creation of dictionaries
+
+- In STTELL1Event v1r4
+  . Remove xml/STTELL1BoardError.xml (duplicate def. of STTELL1BoardErrorBank)
+  . Change STELL1Error and STTELL1ErrorBank class IDs to 9012 and 9013 
+    respectively, to avoid duplicates
+  . Add god_dictionary pattern to generate a Reflex dictionary for these classes
+  . Remove xml/gdd.dtd, this file is provided automatically by GaudiObjDesc
+  . Remove obsolete file Event/STProcessInfo.h
+  . Check of all reserved words implemented
+  . Add PCN check methods in STTELL1EventInfo
+  . Add kCorruptedBank FailureMode in STTELL1Error
+
+- In OTDAQ v7r1
+  . Added bank version for simulation (SIM=63). Currently the decoding of
+    SIM is the same as for real data (v3).
+  . Make OTRawBankDecoder less verbose concerning empty GOL headders.
+
+- In CaloDAQ v4r7
+  . CaloZSupAlg : protect against large negative noise in 2D 0-sup method
+                  (via ZsupNeighbor property)
+
+- In CondDBUI v2r12
+  . Work around for a problem with the LCG interface package for sip (affecting
+    the distributed version of LCG 55a).
+  . Minor fixes in CondDBUI.Management (CondDBAdmin_Commit.py). 
+  . Added the connection string to the opened database in the status bar of
+    CondDBBrowser.py.
+  . Bug-fixes in CondDBAdmin_Commit.py and PyCoolDiff to support local tags. 
+  . Modified CondDBAdmin_MakeSnapshot.py to accept interval of validity as UTC.
+  . Allow ONLINE-YYYYMM as partition alias in CondDBBrowser.py and
+    CondDBAdmin_MakeSnapshot.py.
+
+- In LHCbAlgs v2r20
+  . Adapt to new locations of IEventTimeDecoder and IGenericTool interfaces
+
+- In LoKiCore v7r6
+  . Extract the type definitions from LoKi/Knematics into separate file
+    LoKi/KinTypes.h
+  . Add LoKi/Tensors.h, src/Tensors.cpp, implementation of Levy-Civita symbols.
+  . Add functionality to build "charge-conjugated" strings, decays, etc...
+
+- In LoKiGenMC v7r1p1
+  . Trivial fix in ForcedBDecayTool.cpp to use a Gaudi::Unit:: instead of CLHEP::
+
+- In LoKiPhysMC v7r4
+  . LoKi/DecayChain.h: remove obsolete CLHEP methods (not needed with new HepMC)
+
+- In MDF v3r12
+  . Update RawEventPrintout.cpp with latest RawBank types
+
+- In SimComponents v2r11
+  . Improve protection against crazy vertex times in PackMCVertex
+  . Add DumpHepMCDecay, DumpHepMC, DumpHepMCTree algorithms, previously in
+    Gen/Generators as DumpMCDecay, DumpMC, DumpHepMCTree
+  . Fix ForcedBDecayTool.cpp for HepMC 2
+  . Fix a doxygen warning
+
+- In STKernel v1r7
+  . Bug fix in validChannel function
+  . Add sameID function to STTell1Board
+  . Change printout from hex to dec in STell1Board
+
+- In TfKernel v2r6
+  . Tf::IStationSelector and Tf::XYSearchWindow exposed to python
+  . TStationHitManager.h: add validity range to IStationSelector
+
+- In TrackInterfaces v3r16
+  . Unification of interfaces for FastMomentumEstimate and TrackPtKick
+
+- In DetCondExample v11r4
+  . Removed the algorithm LoadDDDB which is now in DetDescChecks.
+
+- In DetDescChecks v4r8
+  . Replace LoadDDDDB.opts by LoadDDDB.py
+  . Add example option for accessing Oracle CondDB instead of SQLDDDB
+
+- In IOExample v2r5
+  . Add HepMCBack Dll to options reading HepMC 1.26 data
+  . Remove IOMin.exe, use gaudirun.py instead
+  . Add QMTests, to write/read a .sim, .digi, .dst file, 
+    and to read and write a HepMC event record
 
 </PRE><H1><A NAME=v24r1>2008-07-18 LHCbSys v24r1</A></H1><PRE>
 This version uses Gaudi v20r1 and LCG_55
