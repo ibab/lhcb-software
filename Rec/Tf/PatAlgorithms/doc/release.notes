@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================== PatAlgorithms v3r9 2008-07-29 ====================
 ! 2008-07-29 - Marco Cattaneo
  - Use TrackSys instead of Brunel configurable in python options
 
