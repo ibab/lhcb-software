@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r10 2008-07-29 ======================
 ! 2008-07-25 - Jeroen Van Tilburg
  - Bug in TTReadoutTool.cpp: Removed condition that skips addSector in a
    STTELL1Board. Each board should have all 6 sectors (TT). Otherwise, the
@@ -16,7 +17,6 @@
  - change STTELL1Error construction sequence in STErrorDecoding
 
 ! 2008-07-18 M Needham
-
  - really check Tell1 source is valid
  - clean up of counters  
  - add check on magic pattern
