@@ -5,6 +5,7 @@
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
+!====================== MuonBackground v2r7p1 2008-07-29 =====================
 ! 2008-07-22 - Marco Cattaneo
  - Add a missing Gaudi::Units::
  - Remove an unneccessary MsgStream
