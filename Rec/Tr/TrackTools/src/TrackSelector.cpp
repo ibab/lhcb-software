@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : TrackSelector
  *
  *  CVS Log :-
- *  $Id: TrackSelector.cpp,v 1.19 2008-07-28 12:12:12 jonrob Exp $
+ *  $Id: TrackSelector.cpp,v 1.20 2008-07-29 09:15:46 jonrob Exp $
  *
  *  @author M.Needham Matt.Needham@cern.ch
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -173,7 +173,6 @@ bool TrackSelector::accept ( const Track& aTrack ) const
   }
 
   // Clones
-  info() << "CloneDist " << aTrack.info(LHCb::Track::CloneDist,9e99) << endreq;
   if ( !m_acceptClones && ( aTrack.checkFlag(LHCb::Track::Clone) || 
                             aTrack.info(LHCb::Track::CloneDist,9e99) < m_cloneCut ) )
   {
