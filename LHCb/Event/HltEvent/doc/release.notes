@@ -4,14 +4,18 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v8r11 2008-07-29 ==========================
+! 2008-07-28 - Tomasz Skwarnicki
+ - Added HltDecReports and HltSelReports, containers of Hlt decisions and 
+   selections respectively - keyed with string, thus cannot rely on standard
+   containers.
+ - Added HltObjectSummary, summaries to get restored to a standard container.
+ - See detailed description in 
+   <a href="http://indico.cern.ch/materialDisplay.py?contribId=0&materialId=slides&confId=33043">talk at T-Rec on 2009-07-28</a>
 
 ! 2008-07-28 - Jaap Panman
  - updated HltLumiSummary class to use int internally and write out as short
 
-! 2008-07-28 - Tomasz Skwarnicki
- - added HltDecReport,HltDecReports,HltObjectSummary,HltSelReports classes
-
-!======================== HltEvent v8r11 2008-07-27 ==========================
 ! 2008-07-18 - Jaap Panman
  - use short ints in HltLumiSummary class to save space
 
