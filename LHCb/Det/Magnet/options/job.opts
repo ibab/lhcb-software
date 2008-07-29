@@ -56,7 +56,7 @@ ApplicationMgr.EvtMax   = 1;      // events to be processed (default is 10)
 //Obsolete ===> Uncomment to test AnalyticFieldSvc:
 //MagFieldReader.FieldSvcName="AnalyticFieldSvc";
 // Pick up default field map as defined in FieldMap package
-MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
+MagneticFieldSvc.FieldMapFiles = {"$FIELDMAP"};
 //MagneticFieldSvc.FieldMapFile = "$HOME/w0/field048.c1.vp.cdf";
 //MagneticFieldSvc.FieldMapFile = "gridmap_nomag7-8y30.txt";
 //MagneticFieldSvc.FieldMapFile = "field048.c1.vp.cdf";
