@@ -48,8 +48,8 @@ XmlParserSvc.EntityResolver = "CondDBEntityResolver";
 // (and, in the future, for online)
 CondDBCnvSvc.CondDBReader = "CondDBDispatcherSvc";
 CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
-CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/LHCBCOND" };
-//CondDBDispatcherSvc.Alternatives += { "/Conditions/Online=CondDBTimeSwitchSvc/ONLINE" };
+CondDBDispatcherSvc.Alternatives = { "/Conditions": "CondDBAccessSvc/LHCBCOND" };
+CondDBDispatcherSvc.Alternatives += { "/Conditions/Online": "CondDBTimeSwitchSvc/ONLINE" };
 
 //----------------------------------------------------------------------------
 // Technology dependent options
