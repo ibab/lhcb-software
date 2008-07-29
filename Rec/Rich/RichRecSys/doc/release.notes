@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r12 2008-07-29 ==========================
 ! 2008-07-22 - Chris Jones
  - Disable the Rich::Rec::SummaryAlg algorithm
 
