@@ -2,7 +2,7 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.71 2008-06-24 12:15:44 jonrob Exp $
+# $Id: requirements,v 1.72 2008-07-29 16:37:25 hmdegaud Exp $
 #============================================================================
 
 package   RichRecBase
@@ -23,7 +23,10 @@ use   RichDet        v*      Det
 #============================================================================
 # Build GOD objects
 #============================================================================
-document obj2doth RichRecBase_CommonObj2Doth   ../xml/*.xml
+private
+use GaudiObjDesc v* -no_auto_imports
+end_private
+apply_pattern god_headers files=../xml/*.xml
 
 #============================================================================
 # Environment
@@ -35,7 +38,6 @@ apply_pattern install_more_includes more=RichRecBase offset=Event
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
 apply_pattern linker_library    library=RichRecBase
-macro RichRecBase_dependencies RichRecBase_CommonObj2Doth
 
 # =============== LCG Dictionaries ============================================
 apply_pattern reflex_dictionary                                         \
@@ -45,5 +47,3 @@ apply_pattern reflex_dictionary                                         \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
 
 #============================================================================
-private
-use GaudiObjDesc v* -no_auto_imports
