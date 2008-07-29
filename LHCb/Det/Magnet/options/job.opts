@@ -1,8 +1,6 @@
 #include "$DDDBROOT/options/DC06.opts"
 #include "$DDDBROOT/options/DDDB.opts"
-CondDBDispatcherSvc.Alternatives = { "/Conditions=CondDBAccessSvc/SIMCOND" };
-//CondDBDispatcherSvc.Alternatives += { "/Conditions/Online=CondDBAccessSvc/ONLINE" };
-//##############################################################
+///##############################################################
 #units "$STDOPTS/units.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 //Uncomment for AnalyticFieldSvc testing

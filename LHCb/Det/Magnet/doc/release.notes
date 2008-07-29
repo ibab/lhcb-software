@@ -4,8 +4,8 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
-!====================== Magnet v5r0 2008-07-27 ===============================
-! 2008-07-26 - Marco Cattaneo
+!====================== Magnet v5r0 2008-07-29 ===============================
+! 2008-07-29 - Marco Cattaneo
  - Revised implementation of MagneticFieldSvc
    . Service now gets names of field map files from CondDB. Can be over-ridden
      by FieldMapFiles option, previous options for field map are obsolete
@@ -22,6 +22,7 @@
      scaleFactor = Coeff[0] + Coeff[1] * (Measured current)/(Nominal Current)
   - Fixed options/UseRealMap.py for consistency with above changes. This file
     should now only be used if not using the CondDB.
+  - Fixed option/job.opts with use with new DDDB+SQLDDDB options
 
 ! 2008-07-18 - Marco Cattaneo
  - MagneticFieldSvc now implements ILHCbMagnetSvc interface
