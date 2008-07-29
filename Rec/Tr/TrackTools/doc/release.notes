@@ -2,8 +2,9 @@
 ! Package     : Tr/TrackTools
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
+!======================== TrackTools v3r10 2008-07-29 ========================
 ! 2008-07-28 - Chris Jones
  - Add options to TrackSelector to reject clones
 
