@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v3r17 2008-07-29 ===================
 ! 2008-07-24 - Wouter Hulsbergen
  - two changes to FitNode:
    - added smoother gain matrix to fitnode for use in alignment
