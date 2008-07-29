@@ -4,11 +4,12 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r12 2008-07-29 ====================
 ! 2008-07-28 - Chris Jones
  - Add two new algorithms
   + RichRecEventSelectionAlg : To select and filter events (GC studies)
   + TrackUseCaloMomentumAl : Clones Track objects and updates their momentum
-    using CALO information (used in filed off RICH reconstruction).
+    using CALO information (used in field off RICH reconstruction).
 
 !===================== RichRecAlgorithms v2r11 2008-07-02 ====================
 ! 2008-06-13 - Chris Jones
