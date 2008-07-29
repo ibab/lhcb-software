@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.26 2008-07-16 21:02:17 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.27 2008-07-29 13:36:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -186,13 +186,13 @@ private: // definitions
       }
     }
   private:
-    double m_minX;        ///< Minimum x momentum
-    double m_maxX;        ///< Maximum x momentum
-    double m_minY;        ///< Minimum y momentum
-    double m_maxY;        ///< Maximum y momentum
+    double m_minX;         ///< Minimum x momentum
+    double m_maxX;         ///< Maximum x momentum
+    double m_minY;         ///< Minimum y momentum
+    double m_maxY;         ///< Maximum y momentum
     unsigned int m_nBinsX; ///< Number of x bins
     unsigned int m_nBinsY; ///< Number of y bins
-    Data m_data;          ///< The data
+    Data m_data;           ///< The data
   };
 
   /** @class ParticleHistory ParticleEffPurMoni.h
@@ -239,8 +239,8 @@ private: // definitions
     }
     /// Operator !=
     inline bool operator!= ( const ParticleHistory& hist ) const
-    {  
-      return ! this->operator==(hist); 
+    {
+      return ! this->operator==(hist);
     }
     /// Operator <
     inline bool operator<  ( const ParticleHistory& hist ) const
@@ -254,6 +254,43 @@ private: // definitions
   /// Type for mapping between ProtoParticle and list of Particles produced from it
   typedef std::map<const LHCb::ProtoParticle *, ParticleHistory::Map > ParticleProtoMap;
 
+  /** @class HistoHandle ParticleEffPurMoni.h
+   *  Handle a set of histograms
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2007-02-21
+   */
+  class HistoHandle
+  {
+  public:
+    /// Constructor
+    HistoHandle() 
+      : m_effVp   (0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,50), 
+        m_effVpt  (0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,50)
+        //m_effVpVpt(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
+        //           0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
+        //           20,20) 
+    { }
+  public:
+    /// Fill all histos
+    inline void fillAll( const double ptot, const double pt )
+    {
+      m_effVp.fill(ptot);
+      m_effVpt.fill(pt);
+      //m_effVpVpt.fill(ptot,pt);
+    }
+  public:
+    /// Access the P histogram
+    inline EffVersusMomentum & effVp() const { return m_effVp; }
+    /// Access the Pt histogram
+    inline EffVersusMomentum & effVpt() const { return m_effVpt; }
+    /// Access the P & Pt histogram
+    //inline EffVersusMomentum2D & effVpVpt() const { return m_effVpVpt; }
+  private:
+    mutable EffVersusMomentum   m_effVp;       ///< Eff versus momentum (p) data
+    mutable EffVersusMomentum   m_effVpt;      ///< Eff versus momentum (pt) data
+    // mutable EffVersusMomentum2D m_effVpVpt;    ///< Eff versus momentum (p&pt) data
+  };
+
   /** @class MCTally ParticleEffPurMoni.h
    *  Simple tally map for each particle type
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
@@ -263,50 +300,18 @@ private: // definitions
   {
   public:
     /// Default Constructor
-    MCTally() : all(0), clones(0),
-                m_effVp(NULL), m_effVpt(NULL), m_effVpVpt(NULL) { }
-    /// Destructor
-    ~MCTally() { delete m_effVp; delete m_effVpt; delete m_effVpVpt; }
+    MCTally() : notclones(0), clones(0) { }
+    /// Returns all tracks
+    unsigned long int all() const { return notclones+clones; }
   public:
-    unsigned long int all;         ///< Total number
+    unsigned long int notclones;   ///< Total number of non-clones
     unsigned long int clones;      ///< Number of clones
     typedef std::map<std::string,unsigned long int> Contributions;
-    Contributions all_detailed;    ///< Detailed breakdown for each full MC tree decay (all)
-    Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
-  private:
-    mutable EffVersusMomentum   * m_effVp;       ///< Eff versus momentum (p) data
-    mutable EffVersusMomentum   * m_effVpt;      ///< Eff versus momentum (pt) data
-    mutable EffVersusMomentum2D * m_effVpVpt;    ///< Eff versus momentum (p&pt) data
-  public:
-    /// Access on-demand the P histogram
-    inline EffVersusMomentum & effVp() const
-    {
-      if (!m_effVp)
-      {
-        m_effVp  = new EffVersusMomentum(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,50);
-      }
-      return *m_effVp;
-    }
-    /// Access on-demand the Pt histogram
-    inline EffVersusMomentum & effVpt() const
-    {
-      if (!m_effVpt)
-      {
-        m_effVpt = new EffVersusMomentum(0*Gaudi::Units::GeV,10*Gaudi::Units::GeV,50);
-      }
-      return *m_effVpt;
-    }
-    /// Access on-demand the P & Pt histogram
-    inline EffVersusMomentum2D & effVpVpt() const
-    {
-      if (!m_effVpVpt)
-      {
-        m_effVpVpt = new EffVersusMomentum2D(0*Gaudi::Units::GeV,100*Gaudi::Units::GeV,
-                                             0*Gaudi::Units::GeV, 10*Gaudi::Units::GeV,
-                                             20,20);
-      }
-      return *m_effVpVpt;
-    }
+    typedef std::map<std::string,HistoHandle> DetailedHistos;
+    mutable Contributions notclones_detailed;    ///< Detailed breakdown for each full MC tree decay (not clones)
+    mutable Contributions clones_detailed; ///< Detailed breakdown for each full MC tree decay (clones)
+    HistoHandle histos;
+    mutable DetailedHistos histos_detailed;
   };
   typedef std::map<std::string, MCTally> TypeTally;
   typedef std::map< IMCReconstructible::RecCategory, TypeTally > MCRecTypeMap;
@@ -393,6 +398,8 @@ private: // definitions
   /// Map between Particles and MCParticles
   typedef std::map<const LHCb::ProtoParticle*,const LHCb::MCParticle*> P2MCP;
 
+  typedef std::pair<std::string,std::string> StringPair;
+
 private: // methods
 
   /** Returns the full location of the given object in the Data Store
@@ -415,15 +422,15 @@ private: // methods
    */
   inline std::string objectLocation( const ContainedObject * pObj ) const
   {
-    return ( pObj ? 
-             objectLocation(pObj->parent()) : "Null ContainedObject !" );
+    return ( pObj ? objectLocation(pObj->parent()) : "Null ContainedObject !" );
   }
 
   /// Create a unique list of Particles to study
   void addParticle( const LHCb::Particle * particle,
                     const LHCb::Particle * firstParticle,
-                    const std::string & history = "",
-                    const bool toplevel         = true ) const;
+                    const unsigned int recurCount = 0,
+                    const std::string & history   = "",
+                    const bool toplevel           = true ) const;
 
   /// Printout statistics
   void printStats() const;
@@ -537,6 +544,17 @@ private: // methods
              shortPartLoc(loc1)+"&"+shortPartLoc(loc2) :
              shortPartLoc(loc2)+"&"+shortPartLoc(loc1) );
   }
+
+  void makeAllPlots1( const std::string hpath,
+                      const HistoHandle & partTally,
+                      const HistoHandle & protoTally,
+                      const HistoHandle & mcTally ) const;
+
+  void makeAllPlots2( const std::string hpath,
+                      const HistoHandle & partTally,
+                      const HistoHandle & mcTally,
+                      const StringPair& corName,
+                      const HistoHandle & corTally ) const;
 
 private: // data
 

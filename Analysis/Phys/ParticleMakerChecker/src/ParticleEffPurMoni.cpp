@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.37 2008-07-16 21:15:17 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.38 2008-07-29 13:36:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -28,7 +28,6 @@ DECLARE_ALGORITHM_FACTORY( ParticleEffPurMoni );
 ParticleEffPurMoni::ParticleEffPurMoni( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : DVAlgorithm      ( name , pSvcLocator ),
-    m_recurCount     ( 0    ),
     m_trSel          ( NULL ),
     m_mcRec          ( NULL ),
     m_mcSel          ( NULL ),
@@ -98,7 +97,6 @@ StatusCode ParticleEffPurMoni::execute()
   for ( LHCb::Particle::ConstVector::const_iterator iP = particles.begin();
         iP != particles.end(); ++iP )
   {
-    m_recurCount = 0;
     addParticle( *iP, *iP );
   }
 
@@ -109,12 +107,12 @@ StatusCode ParticleEffPurMoni::execute()
   Locations mcPLocations;
 
   // Protos associated to each MCParticle
-  typedef std::map<const LHCb::Particle *,const LHCb::Particle *> PartMap;
+  typedef std::set<const LHCb::Particle *> PartSet;
+  typedef std::map<const LHCb::Particle *, PartSet> PartMap;
   typedef std::map<const LHCb::MCParticle*, PartMap> MCP2PartMap;
   MCP2PartMap mcp2Parts;
 
   // already used MCParticles for each each ProtoParticle location
-  typedef std::pair<std::string,std::string> StringPair;
   std::map< StringPair, std::set<const LHCb::MCParticle*> > usedMCPs;
 
   // Loop over the final list of Protos and associated Particles
@@ -176,40 +174,39 @@ StatusCode ParticleEffPurMoni::execute()
       // Proto Correlations
       if ( !isClone && mcPart )
       {
-        (mcp2Parts[mcPart])[ (*iPart).first.particle ] = (*iPart).first.firstParticle;
+        ((mcp2Parts[mcPart])[(*iPart).first.particle]).insert((*iPart).first.firstParticle);
       }
 
       // get the data for this TES location
       MCSummaryMap & mcMap = m_locMap[tesLoc];
 
       // get the summary for this reco particle type
-      const FullPartName partName( (*iPart).first.properties->particle(),
-                                   (*iPart).first.history,
-                                   protoType,
-                                   protoTesLoc );
-      MCSummary & mcSum = mcMap[ partName ];
+      MCSummary & mcSum = mcMap[ FullPartName( (*iPart).first.properties->particle(),
+                                               (*iPart).first.history,
+                                               protoType,
+                                               protoTesLoc ) ];
 
       // count the number reconstructed for this type
       ++mcSum.nReco;
 
       // count the true types for this reco type
       MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
-      ++(tally.all);
-      if ( isClone ) ++(tally.clones);
+      if ( !isClone )
+      {
+        ++(tally.notclones);
+        tally.histos.fillAll( mcPart ? mcPart->p()  : ptot,
+                              mcPart ? mcPart->pt() : pt   );
+      } else { ++(tally.clones); }
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string& tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]);
-        if ( isClone ) ++(tally.clones_detailed[tmpName]);
-      }
-      // Momentum histogramming
-      if ( !isClone )
-      {
-        tally.effVp().fill   ( mcPart ? mcPart->p()  : ptot );
-        tally.effVpt().fill  ( mcPart ? mcPart->pt() : pt   );
-        tally.effVpVpt().fill( mcPart ? mcPart->p()  : ptot,
-                               mcPart ? mcPart->pt() : pt   );
+        if ( !isClone )
+        {
+          ++(tally.notclones_detailed[tmpName]);
+          tally.histos_detailed[tmpName].fillAll( mcPart ? mcPart->p()  : ptot,
+                                                  mcPart ? mcPart->pt() : pt   );
+        } else { ++(tally.clones_detailed[tmpName]); }
       }
 
     } // loop over particles produced from this proto
@@ -253,23 +250,23 @@ StatusCode ParticleEffPurMoni::execute()
       // count
       MCTally & tally =
         ((m_mcProtoCount[tesLoc])[protoType].trueMCType[mcRecType])[mcParticleName(mcPart)];
-      ++(tally.all);
-      if (isClone) ++(tally.clones);
+      // Momentum histogramming
+      if ( !isClone )
+      {
+        ++(tally.notclones);
+        tally.histos.fillAll ( mcPart ? mcPart->p()  : momentum(*proto),
+                               mcPart ? mcPart->pt() : transverseMomentum(*proto) );
+      } else { ++(tally.clones); }
       // if configured to do so, include full tree info
       if ( m_fullMCTree && mcPart )
       {
         const std::string& tmpName = mcParticleNameTree(mcPart);
-        ++(tally.all_detailed[tmpName]);
-        if (isClone) ++(tally.clones_detailed[tmpName]);
-      }
-
-      // Momentum histogramming
-      if ( !isClone )
-      {
-        tally.effVp().fill    ( mcPart ? mcPart->p()  : momentum(*proto)           );
-        tally.effVpt().fill   ( mcPart ? mcPart->pt() : transverseMomentum(*proto) );
-        tally.effVpVpt().fill ( mcPart ? mcPart->p()  : momentum(*proto),
-                                mcPart ? mcPart->pt() : transverseMomentum(*proto) );
+        if ( !isClone )
+        { 
+          ++(tally.notclones_detailed[tmpName]);
+          tally.histos_detailed[tmpName].fillAll( mcPart ? mcPart->p()  : momentum(*proto),
+                                                  mcPart ? mcPart->pt() : transverseMomentum(*proto) );
+        } else { ++(tally.clones_detailed[tmpName]); }
       }
 
     } // loop over all protos at one location in TES
@@ -297,81 +294,109 @@ StatusCode ParticleEffPurMoni::execute()
       const std::string& name     = mcParticleName(*iMCP);
       const std::string& fullname = mcParticleNameTree(*iMCP);
       MCTally & tally = (m_rawMCMap[mcRecType])[name];
-      ++(tally.all);
-      // if configured to do so, include full tree info
-      if ( m_fullMCTree ) { ++(tally.all_detailed[fullname]); }
-
+      ++(tally.notclones);
       // Momentum histogramming
-      tally.effVp().fill    ( (*iMCP)->p()  );
-      tally.effVpt().fill   ( (*iMCP)->pt() );
-      tally.effVpVpt().fill ( (*iMCP)->p(), (*iMCP)->pt() );
+      tally.histos.fillAll ( (*iMCP)->p(), (*iMCP)->pt() );
+      // if configured to do so, include full tree info
+      if ( m_fullMCTree )
+      {
+        ++(tally.notclones_detailed[fullname]);
+        tally.histos_detailed[fullname].fillAll( (*iMCP)->p(), (*iMCP)->pt() );
+      }
+
     }
   }
 
   // Loop over found MCParticles with associated protos, if more than one proto location found
+  debug() << "Starting Correlations ..." << endreq;
   for ( MCP2PartMap::const_iterator iMCP = mcp2Parts.begin();
         iMCP != mcp2Parts.end(); ++iMCP )
   {
+    // Pointer to MCParticle
+    const LHCb::MCParticle * mcP = (*iMCP).first;
+    if ( !mcP ) continue;
+
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "MCParticle " << mcP->key() << " ("
+              << objectLocation(mcP) << ") has "
+              << (*iMCP).second.size() << " Particles" << endreq;
+    
     // Need at least 2 particles for correlations ...
     if ( (*iMCP).second.size() > 1 )
     {
 
-      // Pointer to MCParticle
-      const LHCb::MCParticle * mcP = (*iMCP).first;
-      if ( !mcP ) continue;
-
       // MCParticle Type
       const std::string& name      = mcParticleName(mcP);
       const std::string& fullname  = mcParticleNameTree(mcP);
+      debug() << " -> MC Type " << fullname << endreq;
 
       // Get the MCParticle reco type
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcP);
 
       // Loop over the pairs of protos
+      PartMap::const_iterator ipart1_end = (*iMCP).second.end(); 
+      --ipart1_end;
       for ( PartMap::const_iterator ipart1 = (*iMCP).second.begin();
-            ipart1 != (*iMCP).second.end(); ++ipart1 )
+            ipart1 != ipart1_end; ++ipart1 )
       {
         // get pointers to particles
-        const LHCb::Particle * part1      = (*ipart1).first;
-        const LHCb::Particle * firstpart1 = (*ipart1).second;
-        // pointer to proto
-        const LHCb::ProtoParticle * proto1 = part1->proto();
-        // Location in TES for part1
-        const std::string& partloc1   = objectLocation(firstpart1);
+        const LHCb::Particle * part1 = (*ipart1).first;
         // Location in TES for proto1
-        const std::string& protoloc1  = objectLocation(proto1);
+        const std::string& protoloc1  = objectLocation(part1->proto());
         // Type of proto1
-        const std::string& proto1Type = protoParticleType(proto1);
-        // inner loop over protos
-        PartMap::const_iterator ipart2 = ipart1; ++ipart2;
-        for ( ; ipart2 != (*iMCP).second.end(); ++ipart2 )
-        {  
-          // get pointers to particles
-          const LHCb::Particle * part2      = (*ipart2).first;
-          const LHCb::Particle * firstpart2 = (*ipart2).second;
-          // pointer to proto
-          const LHCb::ProtoParticle * proto2 = part2->proto();
-          // Location in TES for part2
-          const std::string& partloc2  = objectLocation(firstpart2);
-          // Location in TES for proto2
-          const std::string& protoloc2 = objectLocation(proto2);
-          // Type of proto2
-          const std::string& proto2Type = protoParticleType(proto2);
-          if ( partloc1 != partloc2 && proto1Type == proto2Type )
+        const std::string& proto1Type = protoParticleType(part1->proto());
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "  -> Part1 " << part1->key() << " " << objectLocation(part1) 
+                  << " " << protoloc1 << endreq;
+        for ( PartSet::const_iterator iPset1 = (*ipart1).second.begin();
+              iPset1 != (*ipart1).second.end(); ++iPset1 )
+        {
+          const LHCb::Particle * firstpart1 = *iPset1;
+          // Location in TES for part1
+          const std::string& partloc1 = objectLocation(firstpart1);
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "   -> First Part1 " << firstpart1->key() << " " << partloc1 << endreq;
+          // inner loop over protos
+          PartMap::const_iterator ipart2 = ipart1; ++ipart2;
+          for ( ; ipart2 != (*iMCP).second.end(); ++ipart2 )
           {
-            const std::string corname = ( corProtoLocation( protoloc1, protoloc2 ) +
-                                          corPartLocation ( partloc1,  partloc2  ) );
-            // count
-            MCTally & tally =
-              ((m_correlations[corname])[proto1Type].trueMCType[mcRecType])[name];
-            ++(tally.all);
-            if ( m_fullMCTree ) { ++(tally.all_detailed[fullname]); }
-            // Momentum histogramming
-            tally.effVp().fill    ( mcP->p()  );
-            tally.effVpt().fill   ( mcP->pt() );
-            tally.effVpVpt().fill ( mcP->p(), mcP->pt() );
-          }
-        } // proto2 loop
+            // get pointers to particles
+            const LHCb::Particle * part2 = (*ipart2).first;
+            // Location in TES for proto2
+            const std::string& protoloc2 = objectLocation(part2->proto());
+            // Type of proto2
+            const std::string& proto2Type = protoParticleType(part2->proto());
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << "    -> Part2 " << part2->key() << " " << objectLocation(part2)
+                      << " " << protoloc2 << endreq;
+            for ( PartSet::const_iterator iPset2 = (*ipart2).second.begin();
+                  iPset2 != (*ipart2).second.end(); ++iPset2 )
+            {
+              const LHCb::Particle * firstpart2 = *iPset2;
+              // Location in TES for part2
+              const std::string& partloc2  = objectLocation(firstpart2);
+              if ( msgLevel(MSG::DEBUG) )
+                debug() << "     -> First Part2 " << firstpart2->key() << " " << partloc2 << endreq;
+              if ( partloc1 != partloc2 && proto1Type == proto2Type )
+              {
+                const std::string corname = ( corProtoLocation( protoloc1, protoloc2 ) + "-" +
+                                              corPartLocation ( partloc1,  partloc2  ) );
+                debug() << "      -> Correlation name " << corname << endreq;
+                // count
+                MCTally & tally =
+                  ((m_correlations[corname])[proto1Type].trueMCType[mcRecType])[name];
+                ++(tally.notclones);
+                // Momentum histogramming
+                tally.histos.fillAll ( mcP->p(), mcP->pt() );
+                if ( m_fullMCTree )
+                {
+                  ++(tally.notclones_detailed[fullname]);
+                  tally.histos_detailed[fullname].fillAll ( mcP->p(), mcP->pt() );
+                }
+              }
+            }
+          } // proto2 loop
+        }
       } // proto1 loop
 
     } // more than one associated particle
@@ -558,12 +583,12 @@ ParticleEffPurMoni::partProp( const LHCb::ParticleID id ) const
 void
 ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
                                  const LHCb::Particle * firstParticle,
+                                 const unsigned int recurCount,
                                  const std::string & history,
                                  const bool toplevel ) const
 {
   // protect against too many recursive calls... (should never ever get this deep)
-  ++m_recurCount;
-  if ( m_recurCount > 9999 )
+  if ( recurCount > 9999 )
   {
     Warning( "Recursive limit in addParticle reached. Aborting Particle tree scan" );
     return;
@@ -593,7 +618,8 @@ ParticleEffPurMoni::addParticle( const LHCb::Particle * particle,
     for ( LHCb::Particle::ConstVector::const_iterator iP = daughters.begin();
           iP != daughters.end(); ++iP )
     {
-      addParticle( *iP, firstParticle, history + prop->particle() + " -> ", false );
+      addParticle( *iP, firstParticle, recurCount+1,
+                   history + prop->particle() + " -> ", false );
     }
   }
 }
@@ -667,7 +693,6 @@ void ParticleEffPurMoni::printStats() const
              << endreq;
 
     // Print ProtoParticle Stats for these Particles
-    typedef std::pair<std::string,std::string> StringPair;
     std::set<StringPair> _corLocs;
     unsigned effN(0);
     for ( ProtoTESStatsMap::const_iterator iX = m_partProtoTESStats[(*iLoc).first].begin();
@@ -687,7 +712,7 @@ void ParticleEffPurMoni::printStats() const
         {
           always() << "      -> Used ProtoParticles    : " << iXX->first << " "
                    << eff( iXX->second.nWithMC, iXX->second.nTotal ) << "% with MC" << endreq;
-          const std::string corLoc = ( corProtoLocation(iX->first,iXX->first) +
+          const std::string corLoc = ( corProtoLocation(iX->first,iXX->first) + "-" +
                                        corPartLocation((*iLoc).first,(*iLoc2).first) );
           const std::string effS = "CorrEff"+boost::lexical_cast<std::string>(effN++);
           _corLocs.insert(StringPair(effS,corLoc));
@@ -708,7 +733,7 @@ void ParticleEffPurMoni::printStats() const
       for ( MCRecTypeMap::iterator iMCt = mcTypes.begin();
             iMCt != mcTypes.end(); ++iMCt )
       {
-        nRecoTrue += ((*iMCt).second[(*iSum).first.particleName]).all;
+        nRecoTrue += ((*iMCt).second[(*iSum).first.particleName]).all();
       }
       //const bool primaryPart = ( (*iSum).first.decayTree == (*iSum).first.particleName );
       const bool primaryPart = true;
@@ -741,23 +766,33 @@ void ParticleEffPurMoni::printStats() const
           for ( TypeTally::iterator iT = (*iMCT).second.begin();
                 iT != (*iMCT).second.end(); ++iT )
           {
-            if ( (100.0*(*iT).second.all)/(*iSum).second.nReco > m_minContrib )
+            if ( (100.0*(*iT).second.all())/(*iSum).second.nReco > m_minContrib )
             {
               // Main contribution
               MCTally & partTally = (*iT).second;
               std::ostringstream mcTs;
-              mcTs << "     -> " << partTally.all << " " << (*iT).first;
+              mcTs << "     -> " << partTally.all() << " " << (*iT).first;
               std::string mcT = mcTs.str();
               mcT.resize(10+m_maxNameLength,' ');
               const MCTally & protoTally = ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first];
               const MCTally & mcTally = (m_rawMCMap[(*iMCT).first])[(*iT).first];
-              const long nTotalMC = mcTally.all;
+              const long nTotalMC = mcTally.all();
               always() << mcT
-                       << "|" << eff( partTally.all, (*iSum).second.nReco );
+                       << "|" << eff( partTally.all(), (*iSum).second.nReco );
+
+              // histo path
+              std::ostringstream h_path;
+              h_path << convertTitleToID((*iLoc).first) << "/"
+                     << "Reco " << (*iSum).first.decayTree << "/"
+                     << "Reco " << (*iSum).first.protoType << "/"
+                     << "MC "   << IMCReconstructible::text((*iMCT).first) << "/"
+                     << "MC "   << (*iT).first;
+
               if ( primaryPart )
               {
-                always() << " | " << eff( partTally.all, protoTally.all )
-                         << " |"  << eff( partTally.all-partTally.clones, nTotalMC )
+                makeAllPlots1( h_path.str(), partTally.histos, protoTally.histos, mcTally.histos );
+                always() << " | " << eff( partTally.notclones, protoTally.notclones )
+                         << " |"  << eff( partTally.notclones, nTotalMC )
                          << " |"  << eff( partTally.clones, nTotalMC );
                 // correlations
                 if ( !m_correlations.empty() )
@@ -766,83 +801,40 @@ void ParticleEffPurMoni::printStats() const
                         iCorPartLoc != _corLocs.end(); ++iCorPartLoc )
                   {
                     const MCTally & corTally  = (m_correlations[iCorPartLoc->second])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                    always() << " |" << eff( corTally.all, partTally.all );
+                    always() << " |" << eff( corTally.notclones, partTally.notclones );
+                    makeAllPlots2( h_path.str(), partTally.histos, mcTally.histos, *iCorPartLoc, corTally.histos );
                   }
                 }
               }
               always() << endreq;
 
-              // histograms
-              std::ostringstream h_path;
-              h_path << convertTitleToID((*iLoc).first) << "/"
-                     << "Reco " << (*iSum).first.decayTree << "/"
-                     << "Reco " << (*iSum).first.protoType << "/"
-                     << "MC "   << IMCReconstructible::text((*iMCT).first) << "/"
-                     << "MC "   << (*iT).first;
-              if ( primaryPart )
-              {
-                // make a histo (not yet for composites....)
-                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Ptot",
-                              partTally.effVp(), mcTally.effVp() );
-                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Ptot",
-                              partTally.effVp(), protoTally.effVp() );
-                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Ptot",
-                              protoTally.effVp(), mcTally.effVp() );
-                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Pt",
-                              partTally.effVpt(), mcTally.effVpt() );
-                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Pt",
-                              partTally.effVpt(), protoTally.effVpt() );
-                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Pt",
-                              protoTally.effVpt(), mcTally.effVpt() );
-                makeEffHisto( h_path.str()+"/MCParticle -> Particle Eff. Versus Ptot&Pt",
-                              partTally.effVpVpt(), mcTally.effVpVpt() );
-                makeEffHisto( h_path.str()+"/ProtoParticle -> Particle Eff. Versus Ptot&Pt",
-                              partTally.effVpVpt(), protoTally.effVpVpt() );
-                makeEffHisto( h_path.str()+"/MCParticle -> ProtoParticle Eff. Versus Ptot&Pt",
-                              protoTally.effVpVpt(), mcTally.effVpVpt() );
-                if ( !m_correlations.empty() )
-                {
-                  for ( std::set<StringPair>::const_iterator iCorPartLoc = _corLocs.begin();
-                        iCorPartLoc != _corLocs.end(); ++iCorPartLoc )
-                  {
-                    const MCTally & corTally = (m_correlations[iCorPartLoc->second])[(*iSum).first.protoType].trueMCType[(*iMCT).first][(*iT).first];
-                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus Ptot",
-                                  corTally.effVp(), mcTally.effVp() );
-                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus Pt",
-                                  corTally.effVpt(), mcTally.effVpt() );
-                    makeEffHisto( h_path.str()+"/MCParticle -> "+iCorPartLoc->second+" Versus Ptot&Pt",
-                                  corTally.effVpVpt(), mcTally.effVpVpt() );
-                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus Ptot",
-                                  corTally.effVp(), partTally.effVp() );
-                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus Pt",
-                                  corTally.effVpt(), partTally.effVpt() );
-                    makeEffHisto( h_path.str()+"/'"+iCorPartLoc->first+"' Versus Ptot&Pt",
-                                  corTally.effVpVpt(), partTally.effVpVpt() );
-                  }
-                }
-              }
-
               // sub contributions
               int suppressedContribsC(0);
-              for ( MCTally::Contributions::const_iterator iC = partTally.all_detailed.begin();
-                    iC != partTally.all_detailed.end(); ++iC )
+              for ( MCTally::Contributions::const_iterator iC = partTally.notclones_detailed.begin();
+                    iC != partTally.notclones_detailed.end(); ++iC )
               {
-                if ( (100.0*(*iC).second)/(*iSum).second.nReco > m_minContrib )
+                const unsigned long int nClones    = partTally.clones_detailed[(*iC).first];
+                const unsigned long int nNotClones = (*iC).second;
+                const unsigned long int nTotal     = nClones+nNotClones;
+                if ( (100.0*nTotal)/(*iSum).second.nReco > m_minContrib )
                 {
                   std::ostringstream mcTsC;
-                  mcTsC << "       -> "<< (*iC).second << " " << (*iC).first;
+                  mcTsC << "       -> "<< nTotal << " " << (*iC).first;
                   std::string mcTC = mcTsC.str();
                   mcTC.resize(10+m_maxNameLength,' ');
                   const long nBkgTrue =
-                    ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
-                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];;
+                    ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];
+                  const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];;
                   always() << mcTC
-                           << "|" << eff( (*iC).second, (*iSum).second.nReco );
+                           << "|" << eff( nTotal, (*iSum).second.nReco );
                   if ( primaryPart )
                   {
-                    const unsigned long int nClones = partTally.clones_detailed[(*iC).first];
-                    always() << " | " << eff( (*iC).second, nBkgTrue )
-                             << " |"  << eff( (*iC).second-nClones, nTotalMC )
+                    makeAllPlots1( h_path.str()+"/"+(*iC).first,
+                                   partTally.histos_detailed[(*iC).first],
+                                   protoTally.histos_detailed[(*iC).first],
+                                   mcTally.histos_detailed[(*iC).first] );
+                    always() << " | " << eff( nNotClones, nBkgTrue )
+                             << " |"  << eff( nNotClones, nTotalMC )
                              << " |"  << eff( nClones, nTotalMC );
                     // correlations
                     if ( !m_correlations.empty() )
@@ -850,12 +842,19 @@ void ParticleEffPurMoni::printStats() const
                       for ( std::set<StringPair>::const_iterator iCorPartLoc = _corLocs.begin();
                             iCorPartLoc != _corLocs.end(); ++iCorPartLoc )
                       {
-                        const long moo = ((m_correlations[iCorPartLoc->second])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].all_detailed[(*iC).first];
-                        always() << " |" << eff( moo, (*iC).second );
+                        const MCTally & ccorTally = ((m_correlations[iCorPartLoc->second])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first];
+                        const long moo = ccorTally.notclones_detailed[(*iC).first];
+                        always() << " |" << eff( moo, nNotClones );
+                        makeAllPlots2( h_path.str()+"/"+(*iC).first,
+                                       partTally.histos_detailed[(*iC).first],
+                                       mcTally.histos_detailed[(*iC).first],
+                                       *iCorPartLoc,
+                                       ccorTally.histos_detailed[(*iC).first] );
                       }
                     }
                   }
                   always() << endreq;
+
                 } else { ++suppressedContribsC; }
               }
               if ( suppressedContribsC>0 )
@@ -877,6 +876,51 @@ void ParticleEffPurMoni::printStats() const
   }
 
   always() << LINES << endreq;
+}
+
+void ParticleEffPurMoni::makeAllPlots1( const std::string hpath,
+                                        const HistoHandle & partTally,
+                                        const HistoHandle & protoTally,
+                                        const HistoHandle & mcTally ) const
+{
+  makeEffHisto( hpath+"/MCParticle -> Particle Eff. Versus Ptot",
+                partTally.effVp(), mcTally.effVp() );
+  makeEffHisto( hpath+"/ProtoParticle -> Particle Eff. Versus Ptot",
+                partTally.effVp(), protoTally.effVp() );
+  makeEffHisto( hpath+"/MCParticle -> ProtoParticle Eff. Versus Ptot",
+                protoTally.effVp(), mcTally.effVp() );
+  makeEffHisto( hpath+"/MCParticle -> Particle Eff. Versus Pt",
+                partTally.effVpt(), mcTally.effVpt() );
+  makeEffHisto( hpath+"/ProtoParticle -> Particle Eff. Versus Pt",
+                partTally.effVpt(), protoTally.effVpt() );
+  makeEffHisto( hpath+"/MCParticle -> ProtoParticle Eff. Versus Pt",
+                protoTally.effVpt(), mcTally.effVpt() );
+  //makeEffHisto( hpath+"/MCParticle -> Particle Eff. Versus Ptot&Pt",
+  //              partTally.effVpVpt(), mcTally.effVpVpt() );
+  //makeEffHisto( hpath+"/ProtoParticle -> Particle Eff. Versus Ptot&Pt",
+  //              partTally.effVpVpt(), protoTally.effVpVpt() );
+  //makeEffHisto( hpath+"/MCParticle -> ProtoParticle Eff. Versus Ptot&Pt",
+  //              protoTally.effVpVpt(), mcTally.effVpVpt() );
+}
+
+void ParticleEffPurMoni::makeAllPlots2( const std::string hpath,
+                                        const HistoHandle & partTally,
+                                        const HistoHandle & mcTally,
+                                        const StringPair& corName,
+                                        const HistoHandle & corTally ) const
+{
+  makeEffHisto( hpath+"/MCParticle -> "+corName.second+" Versus Ptot",
+                corTally.effVp(), mcTally.effVp() );
+  makeEffHisto( hpath+"/MCParticle -> "+corName.second+" Versus Pt",
+                corTally.effVpt(), mcTally.effVpt() );
+  //makeEffHisto( hpath+"/MCParticle -> "+corName.second+" Versus Ptot&Pt",
+  //              corTally.effVpVpt(), mcTally.effVpVpt() );
+  makeEffHisto( hpath+"/'"+corName.first+"' Versus Ptot",
+                corTally.effVp(), partTally.effVp() );
+  makeEffHisto( hpath+"/'"+corName.first+"' Versus Pt",
+                corTally.effVpt(), partTally.effVpt() );
+  //makeEffHisto( hpath+"/'"+corName.first+"' Versus Ptot&Pt",
+  //              corTally.effVpVpt(), partTally.effVpVpt() );
 }
 
 void ParticleEffPurMoni::makeEffHisto( const std::string title,
