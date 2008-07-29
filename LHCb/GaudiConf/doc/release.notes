@@ -2,7 +2,7 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
-! 2008-7-29 - Marco Clemencic
+! 2008-07-29 - Marco Clemencic
  - Added the script gaudirun.py including work-arounds for
    - Gaudi bug #39117: incorrect handling of ToolHandles
    - Gaudi bug #39116: bad comment sign when exporting to old-opts
