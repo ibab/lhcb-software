@@ -3,13 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v16r1>2008-07-29 Boole v16r1</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21
+ and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r1
+
+This is a development version. It can process DC06 data, but output format and
+tuning is different from DC06. Processing of 2008 data is possible but not yet
+commissioned. Output requires Brunel v33r1 or later
+
 </PRE><H1><A NAME=v16r0>2008-07-21 Boole v16r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r1
 
 This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
-commissioned. Output requires Brunel v33r0 or later
+commissioned. Output requires Brunel v33r0
 
 - Persistency changes
   . Different OT RawBank encoding, to correspond to real data. Bank version not
