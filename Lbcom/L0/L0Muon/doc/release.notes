@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.63 2008-07-24 09:28:50 jucogan Exp $
+!  $Id: release.notes,v 1.64 2008-07-29 14:30:41 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !-------------------------------------------------------------------------
 
+!========================= L0Muon v8r1 2008-07-29 ========================
 ! 2008-07-23 - Julien Cogan
  - Protect against not valid MuonTileID when filling the OL in L0MuonAlg. 
  - Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
