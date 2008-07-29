@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v6r21>2008-07-30 LbcomSys v6r21</A></H1><PRE>
+This version uses Gaudi v20r2 and LHCb v25r0
+
 - Packages added:    L0/L0MuonMonitor: Package to monitor the L0Muon
 
 </PRE><H1><A NAME=v6r20>2008-07-18 LbcomSys v6r20</A></H1><PRE>
