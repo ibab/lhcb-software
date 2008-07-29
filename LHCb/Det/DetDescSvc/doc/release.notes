@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.48 2008-07-27 12:55:38 cattanem Exp $ 
+! $Id: release.notes,v 1.49 2008-07-29 12:26:55 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2008-07-29 - Marco Clemencic
+ - Modified the EventClockSvc to use the current time as initial guess for the
+   event time.
 
 !========================= DetDescSvc v2r1 2008-07-21 =========================
 ! 2008-07-21 - Marco Cattaneo
