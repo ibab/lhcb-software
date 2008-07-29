@@ -1,5 +1,5 @@
 package		HltL0Conf
-version 	v2r2
+version 	v2r3
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -23,6 +23,7 @@ use TsaKernel           v*      Tf
 
 use HltBase             v*      Hlt
 
+use LinkerInstances    v*    Event
 # ================ component library =====================================
 library		HltL0Conf	../src/*.cpp
 
