@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2008-07-29 - Marco Cattaneo
+ - in options, use TrackSys configurable instead of Brunel
+
 ! 2008-07-17 - Stephanie Hansmann-Menzemer
  - adapt seeding algorithm to changes in PtKick and FastMomentumEstimate
 

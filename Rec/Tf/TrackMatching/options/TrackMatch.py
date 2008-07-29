@@ -1,8 +1,8 @@
-from Brunel.Configuration import *
+from TrackSys.Configuration import *
 
 from Configurables import ( TrackMatchVeloSeed )
 
-if Brunel().getProp("fieldOff"):
+if TrackSys().getProp("fieldOff"):
   TrackMatchVeloSeed("TrackMatch").Chi2MatchingCut = 4000;
   TrackMatchVeloSeed("TrackMatch").MomentumCut = 0.;
   TrackMatchVeloSeed("TrackMatch").pt2Cut = 0;

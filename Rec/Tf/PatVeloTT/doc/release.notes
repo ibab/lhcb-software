@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-29 - Marco Cattaneo
+ - Use TrackSys instead of Brunel configurable in options
+
 !========================== PatVeloTT v3r2 2008-07-18 ========================
 ! 2008-07-18 - Marco Cattaneo
  - Add missing imports in PatVeloTT.py

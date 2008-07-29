@@ -1,4 +1,4 @@
-from Brunel.Configuration import *
+from TrackSys.Configuration import *
 
 from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             Tf__Tsa__ITXSearch, Tf__Tsa__OTXSearch,
@@ -36,7 +36,7 @@ Tf__Tsa__Seed("TsaSeed").stereoS2.sector = 2
 Tf__Tsa__Seed("TsaSeed").stereoS3.sector = 3
 Tf__Tsa__Seed("TsaSeed").stereoS4.sector = 4
 
-if Brunel().getProp("fieldOff"):
+if TrackSys().getProp("fieldOff"):
     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").addTool( Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool"))
     Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool").pFromCurvature = True
     

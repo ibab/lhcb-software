@@ -1,4 +1,4 @@
-from Brunel.Configuration import *
+from TrackSys.Configuration import *
 
 from Configurables import ( PatVeloTT, PatVeloTTTool,
                             TrackMasterFitter, TrackMasterExtrapolator, TrackKalmanFilter, TrackSimpleExtraSelector )
@@ -18,7 +18,7 @@ PatVeloTT("PatVeloTT").Fitter.NodeFitter.Extrapolator.ExtraSelector = "TrackSimp
 PatVeloTT("PatVeloTT").Fitter.StateAtBeamLine = False;
 
 PatVeloTT("PatVeloTT").addTool(PatVeloTTTool, name="PatVeloTTTool")
-if Brunel().getProp("fieldOff"):
+if TrackSys().getProp("fieldOff"):
    PatVeloTT("PatVeloTT").PatVeloTTTool.minMomentum = 5000.;
    PatVeloTT("PatVeloTT").PatVeloTTTool.maxPseudoChi2 = 256;
    PatVeloTT("PatVeloTT").maxChi2 = 256.;

@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2008-07-29 - Marco Cattaneo
+ - Use TrackSys instead of Brunel configurable in python options
+
 ! 2008-07-25 - Manuel Tobias Schiller
  - PatSeedingTool: fixed a bug introduced when migrating to BOOST_FOREACH
    which caused jobs with isolation cuts to crash
