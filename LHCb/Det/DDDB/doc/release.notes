@@ -4,6 +4,10 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r10 2008-07-27 ============================
+! 2008-07-29 - Marco Cattaneo
+ - Remove Magnetic field options also from DC06.opts
+
 ! 2008-07-29 - Marco Clemencic
  - DDDB.opts:
    - Fixed a problem with the new type of CondDBDispatcherSvc.Alternatives.
@@ -11,7 +15,6 @@
  - DDDB.py:
    - Use SQLDDDB-Oracle.py instead of SQLDDDB-Oracle.opts.
 
-!========================== DDDB v1r10 2008-07-27 ============================
 ! 2008-07-26 - Marco Cattaneo
  - In DC06.py, .opts change default DC06 tag to DC06-20080725
  - In LHCb-2008.py   change default 2008 tag to head-20080725

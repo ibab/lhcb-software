@@ -3,7 +3,3 @@
 // DC06 database tags
 DDDB.DefaultTAG = "DC06-20080725";
 LHCBCOND.DefaultTAG = "DC06-20080725";
-
-// DC06 magnetic field
-MagneticFieldSvc.FieldMapFiles = {"$FIELDMAPROOT/cdf/field047.cdf"};
-MagneticFieldSvc.UseConditions = false;
