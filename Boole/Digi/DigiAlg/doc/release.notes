@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r10 2008-07-29 =========================
 ! 2008-07-22 - Marco Cattaneo
  - Adapt to new location of IEventTimeDecode and IGenericTool interfaces
    (Gaudi v20r2)
