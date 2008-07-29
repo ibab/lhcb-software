@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventPrintout.cpp,v 1.2 2008-02-05 16:44:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventPrintout.cpp,v 1.3 2008-07-29 07:48:05 cattanem Exp $
 //  ====================================================================
 //  MIFWriter.cpp
 //  --------------------------------------------------------------------
@@ -51,7 +51,7 @@ std::string RawEventPrintout::bankType(int i)  {
     PRINT(L0PU);            // 14
     PRINT(DAQ);             // 15
     PRINT(ODIN);            // 16
-    PRINT(HLT);             // 17
+    PRINT(HltDecReports);   // 17
     PRINT(VeloFull);        // 18
     PRINT(TTFull);          // 19
     PRINT(ITFull);          // 20
@@ -83,6 +83,14 @@ std::string RawEventPrintout::bankType(int i)  {
     PRINT(TTProcFull);      // 46
     PRINT(ITProcFull);      // 47
     PRINT(TAEHeader);       // 48
+    PRINT(MuonFull);        // 49
+    PRINT(MuonError);       // 50
+    PRINT(TestDet);         // 51
+    PRINT(L0DUError);       // 52
+    PRINT(HltRoutingBits);  // 53
+    PRINT(HltSelReports);   // 54
+    PRINT(HltVertexReports);// 55
+    PRINT(HltLumiSummary);  // 56
 
     default: return "UNKNOWN";
 #undef PRINT

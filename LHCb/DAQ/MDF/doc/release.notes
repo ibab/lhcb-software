@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r12 2008-07-29 ===============================
+! 2008-07-29 - Marco Cattaneo
+ - Update RawEventPrintout.cpp with latest RawBank types, including change of
+   name of HLT bank (to HltDecReports)
 
 !========================= MDF v3r11 2008-07-08 ===============================
 ! 2008-07-08 - Radu Stoica
