@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.19 2008-07-17 08:08:19 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.20 2008-07-29 07:40:52 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -131,9 +131,8 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   ChronoEntity tDecode, tTracking;
   if (m_debugMode) tDecode.start();
  
-  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nsigma );
-  m_hitMan->prepareHitsInWindow(tp);    
-
+  ParabolaHypothesis tp = prepareT( seedState );
+    
   if (m_debugMode) {
     tDecode.stop();
     m_DataStore->nTHits.push_back( m_hitMan->hits().size() ) ;
@@ -316,4 +315,27 @@ StatusCode TsaConfirmTool::tracks(const LHCb::State& seedState, std::vector<Trac
   return StatusCode::SUCCESS;
 }
 
+ParabolaHypothesis TsaConfirmTool::prepareT( const LHCb::State& seedState )
+{
+  ParabolaHypothesis tp = m_l0ConfExtrapolator->getParabolaHypothesis( seedState, m_nsigma );
+  m_hitMan->prepareHitsInWindow(tp);
+  return tp;
+}
+
+
+ParabolaHypothesis TsaConfirmTool::prepareT( const LHCb::State& seedState ,std::vector<LHCb::LHCbID>& ids)
+{
+
+  //prepare hits in T-stations
+  ParabolaHypothesis tp = prepareT( seedState );
+  Tf::TStationHitManager<Tf::Tsa::SeedingHit>::HitRange hits = m_hitMan->hits();
   
+  //get lhcbids from hits and fill output
+  Tf::TStationHitManager<Tf::Tsa::SeedingHit>::HitRange::const_iterator it;
+  for ( it = hits.begin();it != hits.end();++it){
+    //  Tf::Tsa::SeedingHit* myHit = (*it);
+    LHCb::LHCbID id = (*it)->hit()->lhcbID();
+    ids.push_back(id);
+  }
+  return tp;
+}
