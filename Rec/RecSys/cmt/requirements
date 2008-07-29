@@ -22,7 +22,7 @@ use PatChecker          v3r3p1  Tr    # Olivier Callot, David Hutchcroft
 use PatFitParams        v3r2    Tr    # Olivier Callot
 use TrackAssociators    v2r6    Tr    # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers       v4r1    Tr    # Eduardo Rodrigues
-use TrackExtrapolators  v2r18   Tr    # Eduardo Rodrigues
+use TrackExtrapolators  v2r19   Tr    # Eduardo Rodrigues
 use TrackFitEvent       v3r17   Tr    # Eduardo Rodrigues
 use TrackFitter         v2r27   Tr    # Eduardo Rodrigues
 use TrackIdealPR        v2r15   Tr    # Eduardo Rodrigues
