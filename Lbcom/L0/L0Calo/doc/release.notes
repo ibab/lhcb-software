@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.116 2008-07-25 09:04:34 robbep Exp $
+! $Id: release.notes,v 1.117 2008-07-29 14:27:07 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v9r16 2008-07-29 ========================
 ! 2008-07-25 - Patrick Robbe
  - L0CaloMonit: do not fill histograms when not booked
 
