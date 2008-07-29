@@ -88,7 +88,7 @@ ApplicationMgr().ExtSvc += [ detDataSvc ]
 # Technology dependent options
 ##########################################################################
 if getConfigurable("LHCbApp").getProp("useOracleCondDB"):
-    importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.opts")
+    importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
 else:   
     importOptions("$SQLDDDBROOT/options/SQLDDDB.py")
 
