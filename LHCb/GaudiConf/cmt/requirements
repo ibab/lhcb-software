@@ -13,3 +13,4 @@ set STDOPTS    $(GaudiConf_root)/options
 macro_append cppflags ' -DAPPNAME=\"${package}\" -DAPPVERS=\"${version}\" '
 
 apply_pattern install_python_modules
+apply_pattern install_scripts

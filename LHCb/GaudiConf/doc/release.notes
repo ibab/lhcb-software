@@ -2,6 +2,11 @@
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2008-7-29 - Marco Clemencic
+ - Added the script gaudirun.py including work-arounds for
+   - Gaudi bug #39117: incorrect handling of ToolHandles
+   - Gaudi bug #39116: bad comment sign when exporting to old-opts
+
 !======================== GaudiConf v10r12 2008-07-27 =======================
 ! 2008-07-25 - Marco Cattaneo
  - Remove obsolete explicit loading of Reflex dictionaries from SimDicts.opts.
