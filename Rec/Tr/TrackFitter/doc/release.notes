@@ -3,7 +3,7 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
-
+!=========================== TrackFitter v2r27 2008-07-29 ===================
 ! 2008-07-24 - Wouter Hulsbergen
  - adapted to change in FitNode
  - revived standard smoother
