@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================== RecAlgs v1r7 2008-07-29 ==========================
 ! 2008-07-21 - Marco Cattaneo
  - Adapt to new location of IGenericTool.h (needs Gaudi v20r2) 
 
