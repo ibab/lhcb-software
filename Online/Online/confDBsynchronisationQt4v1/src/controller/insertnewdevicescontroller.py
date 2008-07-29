@@ -22,6 +22,6 @@ class InsertNewDevicesController(object):
         print "InsertNewDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        self.parentController.onRefresh()
         QtGui.QMessageBox.information(None, "Finish", "Inserting devices finished. Check log-files for details.")
+        self.parentController.onRefresh()
         print "InsertNewDevicesController.onFinish() end"

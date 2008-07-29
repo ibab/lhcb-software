@@ -27,7 +27,7 @@ class Hugin:
     def insert(self,db,first,last):
         db.InsertMultipleFunctionalDevices(self.system,str(self.devicename),
         "HUGIN",1,0,self.sn,str(self.hwtyp),str(self.responsible),str(self.loc),
-        "First Try to enter Hugins","none",first,last)
+        "Hugin created","none",first,last)
     def insports(self,db):
         controlport = IntVec()
         controlport.append(100) #speed

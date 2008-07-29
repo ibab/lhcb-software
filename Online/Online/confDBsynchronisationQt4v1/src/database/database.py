@@ -16,6 +16,7 @@ from string import upper, lower, split, replace
 #import wx
 from re import compile, sub
 from emptydatabase import removedev
+from string import upper
 
 class Subsystem:
     def __init__(self,sys,pat,rne,start,midfix=""):
@@ -106,29 +107,30 @@ def connect(name = cDB_name, user = cDB_user, password = cDB_pass):
 class DataBase:
     def __init__(self, name, user, password, logfile):
         print "DataBase.__init__() start"
-        self.connection = cx_Oracle.connect(user, password, name)
+        self.sessionPool = cx_Oracle.SessionPool(user, password, name, 1, 5, 1, threaded = True)
+        self.connection = self.sessionPool.acquire()#cx_Oracle.connect(user, password, name, threaded = True)
         print "DataBase.__init__(): connection created"
         self.logfile = logfile
         self.log(str(self.connection)+" created")
         print "DataBase.__init__() end"
     """returns the connection"""
     def getConnection(self):
-        return self.connection
+        return self.sessionPool.acquire()
     """executing an insert or update query with following commit"""
     def executeQuery(self, query, commit = True):
-        cursor = self.connection.cursor()
+        cursor = self.getConnection().cursor()
         cursor.execute(query)
         if commit:
             cursor.execute("commit")
         cursor.close()
     """sends a commit"""
     def commit(self, query):
-        cursor = self.connection.cursor()
+        cursor = self.getConnection().cursor()
         cursor.execute("commit")
         cursor.close()
     """doing a select query which will not modify data in the database and returning the result"""
     def executeSelectQuery(self, query):
-        cursor = self.connection.cursor()
+        cursor = self.getConnection().cursor()
         cursor.execute(query)
         return cursor.fetchall()
     def log(self, string_to_log):
@@ -143,6 +145,7 @@ class DataBase:
 class ConfigurationDB(DataBase):
     def __init__(self, logfile, name = cDB_name, user = cDB_user, password = cDB_pass):
         DataBase.__init__(self, name, user, password, logfile)
+        self.dhcp = DHCP(dhcp_file, dhcp_flags)
     def getDevicesCount(self):
         query = "select count(*) count from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
         result = self.executeSelectQuery(query)
@@ -563,7 +566,11 @@ class ConfigurationDB(DataBase):
                 splt = hugin.split("0")
                 dport=splt[1]
                 try:
-                    db.InsertMultipleMacroLinks(hugin,masterhugin,"0",dport,"THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
+                    sdevid  = db.GetDeviceID_devicename(upper(hugin))
+                    ddevid  = db.GetDeviceID_devicename(upper(masterhugin))
+                    print upper(hugin), sdevid
+                    print upper(masterhugin), ddevid
+                    db.InsertMultipleMacroLinks(str(sdevid), str(ddevid), "0", str(dport), "THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
                     self.log("connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport)
                 except RuntimeError, inst:
                     self.log("error connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport+" "+inst.__str__())
@@ -667,14 +674,44 @@ class ConfigurationDB(DataBase):
         print "can only swap devices of type Hugin, UKL1, Tell1 and Spare"
         print "ConfigurationDB.swapDevices() end"
         return False
-    def replaceDeviceBySpare(self, deviceserial, spareserial, sparemacaddress = None):
-        swap_query = ""
+    def replaceDeviceBySpare(self, deviceserial, spareserial, sparemacaddress):
+        swap_query = """
+                        DECLARE
+                            hwnamedevice lhcb_lg_devices.devicename%type;
+                            hwnamespare lhcb_lg_devices.devicename%type;
+                            locationspare lhcb_hw_devices.location%TYPE;
+                            locationdevice lhcb_hw_devices.location%TYPE;
+                            serialnbdevice lhcb_lg_devices.serialnb%TYPE;
+                            serialnbspare lhcb_lg_devices.serialnb%TYPE;
+                            macaddress_spare lhcb_hwport_properties.macaddress%type;
+                            macaddress_device lhcb_hwport_properties.macaddress%type;
+                            deviceid_device lhcb_lg_devices.deviceid%TYPE;
+                        BEGIN
+                            serialnbspare := 'SERIALNUMBER_SPARE';
+                            serialnbdevice := 'SERIALNUMBER_DEVICE';
+                            macaddress_spare := 'MACADDRESS_SPARE';
+                            select macaddress into macaddress_device from lhcb_hwport_properties where serialnb = serialnbdevice and port_type = 'control';
+                            select devicename, deviceid into hwnamedevice, deviceid_device from lhcb_lg_devices where serialnb = serialnbdevice;
+                            select hwname, location into hwnamespare, locationspare from lhcb_hw_devices where serialnb = serialnbspare;
+                            select location into locationdevice from lhcb_hw_devices where serialnb = serialnbdevice;
+                            update lhcb_hw_devices set hwname = hwnamedevice, device_status = 1, location = locationdevice where serialnb = serialnbspare;
+                            update lhcb_hw_devices set hwname = hwnamespare, device_status = 2, location = locationspare where serialnb = serialnbdevice;
+                            update lhcb_lg_devices set serialnb = serialnbspare where serialnb = serialnbdevice;
+                            update lhcb_hwport_properties set macaddress = macaddress_spare where macaddress = macaddress_device;
+                            update lhcb_hwport_properties set serialnb = serialnbspare where serialnb = serialnbdevice;
+                            update LHCB_DEVICE_HISTORY set serialnb = serialnbspare where serialnb = serialnbdevice and device_status = 'IN_USE';
+                            update LHCB_DEVICE_HISTORY set serialnb = serialnbdevice where serialnb = serialnbspare and device_status = 'SPARE';
+                            COMMIT;
+                        END;
+                        """
         swap_query = sub("SERIALNUMBER_DEVICE", deviceserial, swap_query)
-        swap_query= sub("SERIALNUMBER_SPARE", device2.sn, swap_query)
-        swap_query= sub("MACADDRESS_SPARE", device2.sn, swap_query)
+        swap_query= sub("SERIALNUMBER_SPARE", spareserial, swap_query)
+        swap_query= sub("MACADDRESS_SPARE", sparemacaddress, swap_query)
+        print swap_query
         try:
             self.executeQuery(swap_query)
-            self.log(query)
+            self.log("replacing device "+str(deviceserial)+" with spare "+str(spareserial)+ " was successful")
+            self.log(swap_query)
         except RuntimeError, inst:
             self.log("replacing device "+str(deviceserial)+" with spare "+str(spareserial)+ "failed!\n"+str(inst))
     """checks if a device is hugin, ukl1 or Tell"""
@@ -684,6 +721,26 @@ class ConfigurationDB(DataBase):
     def isSpare(self, device):
         return device.typ == "spare"
     """returns a device with the given serial or None if not found"""
+    def insert_MUNIN(self, db):
+        try:
+            db.InsertMultipleFunctionalDevices("TFC","TFCMUNIN01","MUNIN",1,0,"Serial Number","MUNIN","RICHARD JACOBSSON","D3XXXX","First Try to enter Munin","none",1,1)
+            controlport = []
+            controlport.append(100) #speed
+            controlport.append(1)   #admin_status
+            controlport.append(1)   #pxi booting
+            intvector = []
+            intvector.append(0) #speed         
+            intvector.append(1) #admin_status  
+            intvector.append(0) #pxi booting   
+            db.InsertMultiplePorts("TFCMUNIN01","0",1,"control","","tfcmunin01","10.130.37.79",CTRLsubnet,"00:30:59:01:C9:32",controlport,"",1,0)
+            for j in range(16):
+                db.InsertMultiplePorts("TFCMUNIN01",str(j+1),1,"THROTTLE_data_in","","","","","",intvector,"",0,0)
+            for j in range(15):
+                db.InsertMultiplePorts("TFCMUNIN01",str(j+1),2,"THROTTLE_data_out","","","","","",intvector,"",0,0)
+            db.InsertMultiplePorts("TFCMUNIN01","16",2,"THROTTLE_data_out","","","","","",intvector,"",0,1)
+            self.log("inserting TFCMUNIN01")
+        except RuntimeError, inst:
+            self.log("Error inserting TFCMUNIN01: "+str(inst))
     def getVETELL(self):
         vetells = []
         query = """SELECT lg.devicename, lg.location, hw.responsible, lg.serialnb, ipinfo.ipaddress, p.macaddress

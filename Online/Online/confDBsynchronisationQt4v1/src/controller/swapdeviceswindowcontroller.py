@@ -78,8 +78,9 @@ class SwapDevicesWindowController(object):
         print "SwapDevicesWindowController.onClose() end"
     def onFinish(self):
         print "InsertNewSparesController.onFinish() start"
+        #self.parentController.onRefresh() not neessary: no. of devices and spares has not changed
         self.progressDialog.hide()
         self.progressDialog.destroy()
         QtGui.QMessageBox.information(None, "Finish", "Swapping devices finished. Check log-files for details.")
-        self.parentController.onRefresh()
+        self.onClose()
         print "InsertNewSparesController.onFinish() start"

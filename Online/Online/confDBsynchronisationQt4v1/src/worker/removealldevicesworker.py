@@ -41,6 +41,8 @@ class RemoveAllDevicesWorker(QThread):
                     print "Device Name not found"
                     self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
                     continue
+                #delete history
+                self.confDB.executeQuery("DELETE FROM LHCB_DEVICE_HISTORY WHERE deviceid = "+str(devid))
                 #delete throttle connection
                 self.confDB.deleteThrottleConnectivityStrings([device[0]])
                 ports = []

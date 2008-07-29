@@ -18,6 +18,7 @@ from tfcmunin01controller import TFCMunin01Controller
 from showlogwindowcontroller import ShowLogWindowController
 from selectlogfilecontroller import SelectLogFileController
 from createsummarylogcontroller import CreateSummaryLogController
+from connectcontroller import ConnectController
 
 class MainWindowController(Controller):
     def __init__(self, application):
@@ -70,6 +71,7 @@ class MainWindowController(Controller):
         mainWindow.connect(mainWindow.insertAction, QtCore.SIGNAL("triggered()"), self.onInsert)
         mainWindow.connect(mainWindow.updateAction, QtCore.SIGNAL("triggered()"), self.onUpdate)
         mainWindow.connect(mainWindow.deleteAction, QtCore.SIGNAL("triggered()"), self.onDelete)
+        mainWindow.connect(mainWindow.connectAction, QtCore.SIGNAL("triggered()"), self.onConnect)
         mainWindow.connect(mainWindow.tfcmunin01Action, QtCore.SIGNAL("triggered()"), self.onTfcmunin01)
         mainWindow.connect(mainWindow.swapAction, QtCore.SIGNAL("triggered()"), self.onSwap)
         ##########################################################################################
@@ -124,11 +126,14 @@ class MainWindowController(Controller):
         print "MainWindowController.onUpdate() end"
     def onDelete(self):
         print "MainWindowController.onDelete() start"
-        self.connectConfDBPython()
         self.db = self.getCn()
-        print str(self.db)
         self.deletedevicescontroller = DeleteDevicesController(self)
         print "MainWindowController.onDelete() end"
+    def onConnect(self):
+        print "MainWindowController.onConnect() start"
+        self.db = self.getCn()
+        self.connectController = ConnectController(self)
+        print "MainWindowController.onConnect() end"
     def onTfcmunin01(self):
         print "MainWindowController.onTfcmunin01() start"
         self.tFCMunin01Controller = TFCMunin01Controller(self)

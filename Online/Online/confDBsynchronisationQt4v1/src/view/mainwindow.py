@@ -38,6 +38,7 @@ class MainWindow(QtGui.QMainWindow):
         self.configurationdbMenu.addAction(self.insertAction)
         self.configurationdbMenu.addAction(self.updateAction)
         self.configurationdbMenu.addAction(self.deleteAction)
+        self.configurationdbMenu.addAction(self.connectAction)
         self.configurationdbMenu.addAction(self.tfcmunin01Action)
         self.configurationdbMenu.addAction(self.swapAction)
         ##########################################################
@@ -67,6 +68,10 @@ class MainWindow(QtGui.QMainWindow):
         self.deleteAction = QtGui.QAction(QtGui.QIcon("images/delete.png"), self.tr("&Delete all devices from configuration database"), self)
         self.deleteAction.setShortcut(self.tr("Ctrl+D"))
         self.deleteAction.setStatusTip(self.tr("Deletes all devices from configuration database"))
+        #########################################################################################################
+        self.connectAction = QtGui.QAction(self.tr("&Connect devices"), self)
+        self.connectAction.setShortcut(self.tr("Ctrl+T"))
+        self.connectAction.setStatusTip(self.tr("Connects devices to hugins and hugin02,03,04 to hugin01"))
         #########################################################################################################
         self.tfcmunin01Action = QtGui.QAction(self.tr("&Connect hugins to TFCMUNIN01"), self)
         self.tfcmunin01Action.setShortcut(self.tr("Ctrl+T"))
