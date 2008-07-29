@@ -1,16 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.90 2008-07-28 19:30:45 marcocle Exp $
+! $Id: release.notes,v 1.91 2008-07-29 07:52:34 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r12 2008-07-29 ========================
 ! 2008-07-28 - Marco Clemencic
  - Work around for a problem with the LCG interface package for sip (affecting
    the distributed version of LCG 55a).
  - Minor fixes in CondDBUI.Management (CondDBAdmin_Commit.py). 
 
-!===================== Tools/CondDBUI v2r12 2008-07-27 ========================
 ! 2008-07-23 - Marco Clemencic
  - Added the connection string to the opened database in the status bar of
    CondDBBrowser.py.
