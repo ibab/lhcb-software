@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2008-07-29 - Johannes Albrecht
+ - TsaConfirmTool.h,cpp: changes for Panoramix drawing now also in TsaConfirmTool
+
 ! 2008-07-21 - Johannes Albrecht
  - LineHypothesis.h: return z-range from StateParameters
  - TsaConfirmTool.h, PatConfirmTool.h,cpp: fix for visualization: pass by reference
