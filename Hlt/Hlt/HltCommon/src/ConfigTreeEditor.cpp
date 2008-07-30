@@ -427,7 +427,7 @@ class DiffFinder : public ConfigTree::Visitor {
 public:
    DiffFinder(ConfigTree* referenceTree); 
 
-   void pre(const ConfigTree& node) { }
+   void pre(const ConfigTree& ) { }
 
    bool descend(const ConfigTree&) { return true;}
 

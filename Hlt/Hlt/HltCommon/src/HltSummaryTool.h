@@ -1,4 +1,4 @@
-// $Id: HltSummaryTool.h,v 1.12 2008-06-25 20:06:33 graven Exp $
+// $Id: HltSummaryTool.h,v 1.13 2008-07-30 18:07:39 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYTOOL_H 
 #define HLTCOMMON_HLTSUMMARYTOOL_H 1
 
@@ -38,7 +38,7 @@ public:
 
   StatusCode load() {getSummary();return StatusCode::SUCCESS;}  
 
-  void setSummary(const LHCb::HltSummary& summary) {};
+  void setSummary(const LHCb::HltSummary& ) {};
   
   // returns the HLT summary
   const LHCb::HltSummary& summary();
