@@ -53,7 +53,7 @@ namespace Al
 				       const std::string& name,
 				       const IInterface* parent)
     : GaudiTool(type,name,parent),
-      m_updateStateCovariance(true)
+      m_updateStateCovariance(false)
   {
     // interfaces
     declareInterface<ITrackResidualTool>(this);
@@ -194,85 +194,94 @@ namespace Al
       // do these _really_ correspond to 'prevnode'? how do we find out?
       assert( node && prevnode ) ;
 
-      // this is the transport matrix  from  k-1 to k
-      const Gaudi::TrackMatrix& F          = node->transportMatrix();
-      // this is the noise matrix from k-1 to k
-      const Gaudi::TrackSymMatrix& Q       = node->noiseMatrix();
-      // this is the prediction from k-1 to k
-      const Gaudi::TrackSymMatrix& predcov = node->predictedStateUp().covariance() ;
-      // this is the smoothedcovariance at node k
-      const Gaudi::TrackSymMatrix& cov    = *(diagcov[k]) ;
-      
-      // invert the transport matrix
-      int fail ;
-      Gaudi::TrackMatrix invF = F.Inverse(fail) ; assert(fail==0);
-      
-      // Now compute the smoother gain matrix for node k-1. The full formula is
-      //
-      // A_{k-1} = invF * ( predcov - Q ) * invpredcov
-      //
-      // The one big problem is the subtraction: If Q is large
-      // compared to the filter covariance from the previous state
-      // (which we do no longer have), then this subtraction can go
-      // wrong. (The correlation is then essentially 'zero'.) Let's
-      // hope that this does not happen.
-      
-      // let's do some test
-      Gaudi::TrackSymMatrix predcovMinusQ = predcov - Q ;
-      for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
-	if( (error = !(0<=predcovMinusQ(irow,irow)) ) )
-	  warning() << "Predicted covariance has negative element on diagonal. Skipping track." << endreq ;
-      for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
-	for(size_t icol=0; icol<irow && !error; ++icol) {
-	  double c2 = predcovMinusQ(irow,icol)*predcovMinusQ(irow,icol)/( predcovMinusQ(irow,irow)*predcovMinusQ(icol,icol)) ;
-	  if( ( error = !( -1<=c2 && c2<=1) ) ) 
-	    warning() << "Predicted covariance has negative correlation. Skipping track." << endreq ;
-	}
-      
-      // This is the full formula
-      //   smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
-      // but we only compute it this way if the noise is non-zero.
-      bool nonZeroNoise = Q(2,2) > 0 || Q(4,4) > 0  ;
-      if( nonZeroNoise ) {
-	Gaudi::TrackSymMatrix invpredcov = predcov ;
-	if( Gaudi::Math::invertPosDefSymMatrix( invpredcov ) ) {
-	  smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
-	} else {
-	  warning() << "Error inverting prediction. Skipping track" << endreq ;
-	  error = true ;
-	}
+      if( track.fitHistory() == LHCb::Track::StdKalman ) {
+	// we have run the smoother. that makes things really easy.
+	smoothergainmatrix[k-1] = prevnode->smootherGainMatrix() ;
+	Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * node->state().covariance() ;
+	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
       } else {
-	smoothergainmatrix[k-1] = invF  ;
-      }
-      
-      // Now calculate the diagonal (k-1,k). This matrix represents
-      // the covariance of the statvectors of k-1 and k. (multiply
-      // with k-1 on the left and with k on the right)
-      Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * cov ;
-      
-      // What we actually need is the transpose. We can imporve this later:
-      
-      assert( k < offdiagcov.size() ) ;
-      if ( !(k-1 < offdiagcov[k].size() ) ) {
-	std::cout << "k,size" << k << " " << offdiagcov[k-1].size() << std::endl ;
-      }
-      assert( k-1< offdiagcov[k].size() ) ;
-      
-      offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
+	// we have run the bi-directional fit. that basically means we have to rerun the smoother
 
-      // now compute the smoothed covariance matrix for node k-1. this
-      // is new. it is really ugly.
-      if( m_updateStateCovariance )
+	// this is the transport matrix  from  k-1 to k
+	const Gaudi::TrackMatrix& F          = node->transportMatrix();
+	// this is the noise matrix from k-1 to k
+	const Gaudi::TrackSymMatrix& Q       = node->noiseMatrix();
+	// this is the prediction from k-1 to k
+	const Gaudi::TrackSymMatrix& predcov = node->predictedStateForward().covariance() ;
+	// this is the smoothedcovariance at node k
+	const Gaudi::TrackSymMatrix& cov    = *(diagcov[k]) ;
+	
+	// invert the transport matrix
+	int fail ;
+	Gaudi::TrackMatrix invF = F.Inverse(fail) ; assert(fail==0);
+	
+	// Now compute the smoother gain matrix for node k-1. The full formula is
+	//
+	// A_{k-1} = invF * ( predcov - Q ) * invpredcov
+	//
+	// The one big problem is the subtraction: If Q is large
+	// compared to the filter covariance from the previous state
+	// (which we do no longer have), then this subtraction can go
+	// wrong. (The correlation is then essentially 'zero'.) Let's
+	// hope that this does not happen.
+	
+	// let's do some test
+	Gaudi::TrackSymMatrix predcovMinusQ = predcov - Q ;
+	for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
+	  if( (error = !(0<=predcovMinusQ(irow,irow)) ) )
+	    warning() << "Predicted covariance has negative element on diagonal. Skipping track." << endreq ;
+	for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
+	  for(size_t icol=0; icol<irow && !error; ++icol) {
+	    double c2 = predcovMinusQ(irow,icol)*predcovMinusQ(irow,icol)/( predcovMinusQ(irow,irow)*predcovMinusQ(icol,icol)) ;
+	    if( ( error = !( -1<=c2 && c2<=1) ) ) 
+	      warning() << "Predicted covariance has negative correlation. Skipping track." << endreq ;
+	  }
+	
+	// This is the full formula
+	//   smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
+	// but we only compute it this way if the noise is non-zero.
+	bool nonZeroNoise = Q(2,2) > 0 || Q(4,4) > 0  ;
 	if( nonZeroNoise ) {
-	  // we need the filtered covariance for the previous node. since
-	  // that is not stored, we'll need to extract it.
-	  Gaudi::TrackSymMatrix filteredcovkm1 =  
-	    ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( invF, predcovMinusQ ) ;
-	  const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = filteredcovkm1 + 
-	    ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( smoothergainmatrix[k-1], cov - predcov ) ;
+	  Gaudi::TrackSymMatrix invpredcov = predcov ;
+	  if( Gaudi::Math::invertPosDefSymMatrix( invpredcov ) ) {
+	    smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
+	  } else {
+	    warning() << "Error inverting prediction. Skipping track" << endreq ;
+	    error = true ;
+	  }
 	} else {
-	  const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = ROOT::Math::Similarity( invF, cov ) ;
+	  smoothergainmatrix[k-1] = invF  ;
 	}
+	
+	// Now calculate the diagonal (k-1,k). This matrix represents
+	// the covariance of the statvectors of k-1 and k. (multiply
+	// with k-1 on the left and with k on the right)
+	Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * cov ;
+	
+	// What we actually need is the transpose. We can imporve this later:
+	
+	assert( k < offdiagcov.size() ) ;
+	if ( !(k-1 < offdiagcov[k].size() ) ) {
+	  std::cout << "k,size" << k << " " << offdiagcov[k-1].size() << std::endl ;
+	}
+	assert( k-1< offdiagcov[k].size() ) ;
+	
+	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
+	
+	// now compute the smoothed covariance matrix for node k-1. this
+	// is new. it is really ugly.
+	if( m_updateStateCovariance )
+	  if( nonZeroNoise ) {
+	    // we need the filtered covariance for the previous node. since
+	    // that is not stored, we'll need to extract it.
+	    Gaudi::TrackSymMatrix filteredcovkm1 =  
+	      ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( invF, predcovMinusQ ) ;
+	    const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = filteredcovkm1 + 
+	      ROOT::Math::Similarity<double,Gaudi::TrackMatrix::kRows,Gaudi::TrackMatrix::kCols>( smoothergainmatrix[k-1], cov - predcov ) ;
+	  } else {
+	    const_cast<Gaudi::TrackSymMatrix&>(*(diagcov[k-1])) = ROOT::Math::Similarity( invF, cov ) ;
+	  }
+      }
     }
 
     // calculate the remaining elements in the covariance matrix. We
@@ -353,8 +362,16 @@ namespace Al
 	error = ! (0<=c) ;
 	if(error) warning() << "found negative element on diagonal: " << c << endreq ;
 	error = ! ( c<residuals->V(irow)) ;
-	if(error) warning() << "found too large element on diagonal: " << c/residuals->V(irow) << endreq ;
-	
+	if(error) {
+	  warning() << "found too large element on diagonal: " << c/residuals->V(irow) << endreq ;
+	  size_t k = measurementnodeindices[irow] ;
+	  const Gaudi::TrackProjectionMatrix& Hk = nodes[k]->projectionMatrix() ;
+	  double d = ROOT::Math::Similarity(Hk,*(diagcov[k]))(0,0) ;
+	  std::cout << "c,d: " << c << "," << d << " " << residuals->V(irow) << " "
+		    << nodes[k]->errMeasure() << std::endl ;
+	  std::cout << *(diagcov[k]) << std::endl ;
+	  std::cout << nodes[k]->state().covariance() << std::endl ;
+	}
 	HCHdiagroots.push_back( std::sqrt(c) ) ;
 	Rdiagroots.push_back( std::sqrt(residuals->V(irow) - c) ) ;
       }
