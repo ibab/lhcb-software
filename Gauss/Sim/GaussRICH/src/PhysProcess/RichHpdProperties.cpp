@@ -351,7 +351,7 @@ void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc,
     std::string location = richsys->getDeHPDLocation(*i);
     int irichdet = (*i).rich();
     int nHpdInRich1 = m_RichHpdQEList[0].size();
-    int ih = richsys->copyNumber(*i) - nHpdInRich1*irichdet;//runs 0->195 and 0->287
+    int ih = richsys->copyNumber(*i).data() - nHpdInRich1*irichdet;//runs 0->195 and 0->287
     if(irichdet>1) RichHpdPropLogQE<<MSG::ERROR<<"Error in HPD numbering scheme!"<<endreq;
 //     RichHpdPropLogQE <<MSG::INFO<<"QE DeHPDLocation="<<location
 //                      <<"  CopyNr="<<richsys->copyNumber(*i)
@@ -622,7 +622,7 @@ void  RichHpdProperties::FillHpdDemagTablesAtInit ( IDataProviderSvc* detSvc,
 	std::string location = richsys->getDeHPDLocation(*i);
 	int irichdet = (*i).rich();
 	int nHpdInRich = m_RichHpdDeMagList[0].size();
-	int ih       = richsys->copyNumber(*i) - nHpdInRich*irichdet;//runs 0->195 and 0->288
+	int ih       = richsys->copyNumber(*i).data() - nHpdInRich*irichdet;//runs 0->195 and 0->288
 	if(irichdet>1) RichHpdPropLogDemag<<MSG::ERROR<<"Error in numbering scheme!"<<endreq;
 // 	RichHpdPropLogDemag<<MSG::INFO<<"DeHPDLocation="<<location
 // 			   <<"  CopyNr="<<richsys->copyNumber(*i)

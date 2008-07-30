@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------- 
 
 !========================= GaussRICH v9r0 2008-06-26 =========================
+! 2008-07-30 - Sajan Easo 
+  Updated the RichHpdProperties.cpp to be compatible with the latest RichDet when
+  accesing the HPD QE info from the DataBase.
 ! 2008-06-26 - Gloria CORTI
  - Adapt to change in Geant4 v92r0 (9.0.p02) where kCarTolerance is no
    longer available and has to be replaced by GetSurfaceTolerance() method
