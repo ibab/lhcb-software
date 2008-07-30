@@ -53,6 +53,7 @@ if(isset($htype) ) {
 	printf("<input type='hidden' name='htype' value='%s'>\n",$htype);
 	printf("<input type='hidden' name='NHS' value='%s'>\n",$histo["NHS"]);
 	printf("<input type='hidden' name='HSTYPE' value='%s'>\n",$histo["HSTYPE"]);
+	printf("<input type='hidden' name='TASKNAME' value='%s'>\n",$histo["TASKNAME"]);
 	echo "<table align=right><tr><td><input type='submit' name='New' value='Specify Display Option'></tr></table>";
 	echo "</form>";
       }

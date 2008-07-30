@@ -33,13 +33,14 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
                         theOptions IN dispopt) return number;
  function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt)  return number;
  procedure GET_DISPLAYOPTIONS(theDOID IN int
-,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
-,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
-,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
-,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
-,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
-,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
-,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2);
+  ,LABEL_X OUT VARCHAR2,LABEL_Y OUT VARCHAR2,LABEL_Z OUT VARCHAR2,YMIN OUT FLOAT,YMAX OUT FLOAT,STATS OUT INT
+  ,FILLSTYLE OUT INT,FILLCOLOR OUT INT,LINESTYLE OUT INT,LINECOLOR OUT INT,LINEWIDTH OUT INT,DRAWOPTS OUT VARCHAR2
+  ,XMIN OUT FLOAT,XMAX OUT FLOAT,ZMIN OUT FLOAT,ZMAX OUT FLOAT,LOGX OUT INT,LOGY OUT INT
+  ,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
+  ,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
+  ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
+  ,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
+  ,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT);
 
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetHID(theHistoName IN varchar2,Subindex OUT HISTOGRAM.IHS%TYPE) return number;
@@ -290,24 +291,27 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
  if mysn%NOTFOUND then -- if service name is known, do nothing
   -- decode service name
   mytype := REGEXP_SUBSTR(ServiceName,'^.{3}');
-  tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_([^/]+)_[^/]*/.+$','\1');
+  if  (mytype = 'Mon') then -- support for MonObjects
+   mytype := REGEXP_REPLACE(ServiceName,'^Mon([^/]*)/.+$','\1');
+  end if;
+  tk := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]*_([^/]+)_[^/]*/.+$','\1');
   if (tk = ServiceName) then -- try without farm node
-   tk := REGEXP_REPLACE(ServiceName,'^.{3}/([^/]+)/.+$','\1');
+   tk := REGEXP_REPLACE(ServiceName,'^[^/]*/([^/]+)/.+$','\1');
 
   end if;
   if (tk = ServiceName) then
      raise_application_error(-20051,'syntax error in Service Name '||ServiceName);
   end if;
   if (tk = 'Adder') then -- expect one more field for the taskname
-     tk := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]*_Adder_[^/]*/([^/]+)/.+$','\1');
+     tk := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]*_Adder_[^/]*/([^/]+)/.+$','\1');
      if (tk = ServiceName) then
        raise_application_error(-20052,'syntax error in Service Name '||ServiceName);
      end if;
-     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/([^/]+)/.+$','\1');
-     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/[^/]+/(.+)$','\1');
+     algo := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]+/[^/]+/([^/]+)/.+$','\1');
+     title := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]+/[^/]+/[^/]+/(.+)$','\1');
   else	
-     algo := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/([^/]+)/.+$','\1'); 
-     title := REGEXP_REPLACE(ServiceName,'^.{3}/[^/]+/[^/]+/(.+)$','\1');
+     algo := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]+/([^/]+)/.+$','\1'); 
+     title := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]+/[^/]+/(.+)$','\1');
   end if;
   if (algo = ServiceName) then
     raise_application_error(-20053,'syntax error in Service Name '||ServiceName);
@@ -359,6 +363,16 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
  end if;
  -- backw. compat. hack
  if (mytype = 'HPD') then
+  mytype := 'P1D';
+ end if;
+ -- support for MonObjects
+ if (mytype = 'H1F') then
+  mytype := 'H1D';
+ end if;
+ if (mytype = 'H2F') then
+  mytype := 'H2D';
+ end if;
+ if (mytype = 'P1') then
   mytype := 'P1D';
  end if;
   -- see if histogram exists
@@ -769,7 +783,9 @@ procedure GET_DISPLAYOPTIONS(theDOID IN int
 ,LOGZ OUT INT,TIMAGE OUT VARCHAR2,REF OUT VARCHAR2,REFRESH OUT FLOAT,TIT_X_SIZE OUT FLOAT,TIT_X_OFFS OUT FLOAT
 ,TIT_Y_SIZE OUT FLOAT,TIT_Y_OFFS OUT FLOAT,TIT_Z_SIZE OUT FLOAT,TIT_Z_OFFS OUT FLOAT,LAB_X_SIZE OUT FLOAT,LAB_X_OFFS OUT FLOAT
 ,LAB_Y_SIZE OUT FLOAT,LAB_Y_OFFS OUT FLOAT,LAB_Z_SIZE OUT FLOAT,LAB_Z_OFFS OUT FLOAT,GRIDX OUT INT,GRIDY OUT INT
-,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2) is
+,THETA OUT FLOAT,PHI OUT FLOAT,CNTPLOT OUT VARCHAR2,DRAWPATTERN OUT VARCHAR2,STAT_X_SIZE OUT FLOAT,STAT_X_OFFS OUT FLOAT
+,STAT_Y_SIZE OUT FLOAT,STAT_Y_OFFS OUT FLOAT,HTIT_X_SIZE OUT FLOAT,HTIT_X_OFFS OUT FLOAT,HTIT_Y_SIZE OUT FLOAT,HTIT_Y_OFFS OUT FLOAT
+) is
  mydo dispopt; 
 begin
  SELECT OPT INTO mydo FROM DISPLAYOPTIONS WHERE DOID = theDOID;
@@ -812,6 +828,15 @@ begin
  THETA := mydo.THETA;
  PHI := mydo.PHI;
  CNTPLOT := mydo.CNTPLOT;
+ DRAWPATTERN := mydo.DRAWPATTERN;
+ STAT_X_SIZE := mydo.STAT_X_SIZE;
+ STAT_X_OFFS := mydo.STAT_X_OFFS;
+ STAT_Y_SIZE := mydo.STAT_Y_SIZE;
+ STAT_Y_OFFS := mydo.STAT_Y_OFFS;
+ HTIT_X_SIZE := mydo.HTIT_X_SIZE;
+ HTIT_X_OFFS := mydo.HTIT_X_OFFS;
+ HTIT_Y_SIZE := mydo.HTIT_Y_SIZE;
+ HTIT_Y_OFFS := mydo.HTIT_Y_OFFS;
 end GET_DISPLAYOPTIONS;
 
 -------------------------------

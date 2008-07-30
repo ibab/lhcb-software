@@ -1,3 +1,4 @@
+--- obsolete!! ---
 drop table DIMSERVICENAME;
 drop table SHOWHISTO;
 drop table PAGE;

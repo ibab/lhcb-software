@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.32 2008-05-14 15:00:57 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.33 2008-07-30 15:54:33 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -299,9 +299,9 @@ void OnlineHistogram::createDisplayOptions() {
 				(dvoid **) &m_dispopt_null), SEVERE);
 
 
-    m_do.reserve(39);
+    m_do.reserve(48);
     m_do.push_back(new OnlineDisplayOption("LABEL_X",OnlineDisplayOption::STRING,
-					   (void*) &(m_dispopt->LABEL_X),
+             (void*) &(m_dispopt->LABEL_X),
 					   &(m_dispopt_null->LABEL_X), this ) );
     m_do.push_back(new OnlineDisplayOption("LABEL_Y",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->LABEL_Y),
@@ -417,6 +417,33 @@ void OnlineHistogram::createDisplayOptions() {
     m_do.push_back(new OnlineDisplayOption("CNTPLOT",OnlineDisplayOption::STRING,
 					   (void*) &(m_dispopt->CNTPLOT),
 					   &(m_dispopt_null->CNTPLOT), this ) );
+    m_do.push_back(new OnlineDisplayOption("DRAWPATTERN",OnlineDisplayOption::STRING,
+					   (void*) &(m_dispopt->DRAWPATTERN),
+					   &(m_dispopt_null->DRAWPATTERN), this ) );
+    m_do.push_back(new OnlineDisplayOption("STAT_X_SIZE",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->STAT_X_SIZE),
+					   &(m_dispopt_null->STAT_X_SIZE), this ) );
+    m_do.push_back(new OnlineDisplayOption("STAT_X_OFFS",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->STAT_X_OFFS),
+					   &(m_dispopt_null->STAT_X_OFFS), this ) );
+    m_do.push_back(new OnlineDisplayOption("STAT_Y_SIZE",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->STAT_Y_SIZE),
+					   &(m_dispopt_null->STAT_Y_SIZE), this ) );
+    m_do.push_back(new OnlineDisplayOption("STAT_Y_OFFS",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->STAT_Y_OFFS),
+					   &(m_dispopt_null->STAT_Y_OFFS), this ) );
+    m_do.push_back(new OnlineDisplayOption("HTIT_X_SIZE",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->HTIT_X_SIZE),
+					   &(m_dispopt_null->HTIT_X_SIZE), this ) );
+    m_do.push_back(new OnlineDisplayOption("HTIT_X_OFFS",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->HTIT_X_OFFS),
+					   &(m_dispopt_null->HTIT_X_OFFS), this ) );
+    m_do.push_back(new OnlineDisplayOption("HTIT_Y_SIZE",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->HTIT_Y_SIZE),
+					   &(m_dispopt_null->HTIT_Y_SIZE), this ) );
+    m_do.push_back(new OnlineDisplayOption("HTIT_Y_OFFS",OnlineDisplayOption::FLOAT,
+					   (void*) &(m_dispopt->HTIT_Y_OFFS),
+					   &(m_dispopt_null->HTIT_Y_OFFS), this ) );
   }
 
   if(m_shdisp) {

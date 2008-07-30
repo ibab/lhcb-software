@@ -165,8 +165,8 @@ function histo_display($id,$htype,$mode)
   }
   if($mode == "display") {
     $script='write/histo_display.php';
-    foreach (array("HSTYPE","NHS","DISPLAY","HSDISPLAY") 
-	     as $field)
+    foreach (array("HSTYPE","NHS","DISPLAY","HSDISPLAY","TASKNAME") 
+	     as $field) 
       $_POST[$field]=$histo[$field];
     if($htype == 'HID'){
       if($histo["DISPLAY"]) {
@@ -206,7 +206,7 @@ function histo_display($id,$htype,$mode)
            To change options for a single histogram, select it from the 
            <a href='../Histogram.php?hsid=${id}&fulllist=1#LIST'> histogram list </a> </B><br>\n";
   }
-  foreach (array("HSTYPE","NHS","DISPLAY","HSDISPLAY") as $field)
+  foreach (array("HSTYPE","NHS","DISPLAY","HSDISPLAY","TASKNAME") as $field)
     echo "<input type='hidden' name='${field}' value='".$_POST[$field]."'>\n";
   echo "<input type='hidden' name='id' value='${id}'>\n";
   echo "<input type='hidden' name='htype' value='${htype}'>\n";
@@ -214,7 +214,19 @@ function histo_display($id,$htype,$mode)
     echo "<input type='hidden' name='PAGE' value='".$_POST["PAGE"]."'>\n";
     echo "<input type='hidden' name='INSTANCE' value='".$_POST["INSTANCE"]."'>\n";
   }
-  echo "Leave options blank for default values<br>";
+  if ($mode != "display") {
+    echo "<font size=+1> Leave options blank for default values</font><br><br>";
+  }
+  
+  printf("Histogram title window &nbsp&nbsp size X <input name='HTIT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["HTIT_X_SIZE"]);
+  printf(" &nbsp size Y <input name='HTIT_Y_SIZE' size=5 value='%s' ${cw_ro}>  \n",$_POST["HTIT_Y_SIZE"]);
+  printf(" &nbsp offset X <input name='HTIT_X_OFFS' size=5 value='%s' ${cw_ro}> \n",$_POST["HTIT_X_OFFS"]);
+  printf(" &nbsp offset Y <input name='HTIT_Y_OFFS' size=5 value='%s' ${cw_ro}> <br><br>\n",$_POST["HTIT_Y_OFFS"]);
+
+  printf("Stat window &nbsp&nbsp size X <input name='STAT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["STAT_X_SIZE"]);
+  printf(" &nbsp size Y <input name='STAT_Y_SIZE' size=5 value='%s' ${cw_ro}>  \n",$_POST["STAT_Y_SIZE"]);
+  printf(" &nbsp offset X <input name='STAT_X_OFFS' size=5 value='%s' ${cw_ro}> \n",$_POST["STAT_X_OFFS"]);
+  printf(" &nbsp offset Y <input name='STAT_Y_OFFS' size=5 value='%s' ${cw_ro}> <br><br>\n",$_POST["STAT_Y_OFFS"]);
 
   printf("X Axis &nbsp&nbsp  title <input name='LABEL_X' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_X"]);
   printf("size <input name='TIT_X_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_X_SIZE"]);
@@ -225,11 +237,11 @@ function histo_display($id,$htype,$mode)
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
   printf(" Log scale <input ${cw_dis} type='checkbox' name='LOGX' value='1' %s>&nbsp&nbsp\n",
 	 $_POST["LOGX"] ? "checked" : "");
-  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s><br>\n",
+  printf(" Grid <input ${cw_dis} type='checkbox' name='GRIDX' value='1' %s><br> \n",
 	 $_POST["GRIDX"] ? "checked" : "");
   
   
-  printf("Y Axis &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
+  printf("<br>Y Axis &nbsp&nbsp  title <input name='LABEL_Y' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Y"]);
   printf("size <input name='TIT_Y_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Y_SIZE"]);
   printf("offset <input name='TIT_Y_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Y_OFFS"]);
   echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -242,7 +254,7 @@ function histo_display($id,$htype,$mode)
 	 $_POST["GRIDY"] ? "checked" : "");
 
   if ($_POST["HSTYPE"]=='H2D' || $_POST["HSTYPE"]=='P2D') {
-    printf("Z Axis &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
+    printf("<br>Z Axis &nbsp&nbsp  title <input name='LABEL_Z' size=15 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["LABEL_Z"]);
     printf("size <input name='TIT_Z_SIZE' size=5 value='%s' ${cw_ro}> &nbsp&nbsp \n",$_POST["TIT_Z_SIZE"]);
     printf("offset <input name='TIT_Z_OFFS' size=5 value='%s' ${cw_ro}> &nbsp&nbsp <br>\n",$_POST["TIT_Z_OFFS"]);
     echo "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
@@ -255,7 +267,7 @@ function histo_display($id,$htype,$mode)
 	   $_POST["GRIDZ"] ? "checked" : "");
   }
   
-  printf("X miminum <input name='XMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["XMIN"]);
+  printf("<br>X miminum <input name='XMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["XMIN"]);
   printf("X maximum <input name='XMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["XMAX"]);
   printf("Y miminum <input name='YMIN' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["YMIN"]);
   printf("Y maximum <input name='YMAX' size=7 value='%s' ${cw_ro}> <br>\n",$_POST["YMAX"]);
@@ -274,20 +286,25 @@ function histo_display($id,$htype,$mode)
      printf("Phi <input name='PHI' size=5 value='%s' ${cw_ro}> <br>",$_POST["PHI"]);     
   }
 
-  printf("Stats option <input name='STATS' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["STATS"]);
+  printf("<br>Stats option <input name='STATS' size=7 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["STATS"]);
   printf("Fill Style <input name='FILLSTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["FILLSTYLE"]);
   printf("Fill Color <input name='FILLCOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["FILLCOLOR"]);
   printf("Line Width <input name='LINEWIDTH' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINEWIDTH"]);
   printf("Line Style <input name='LINESTYLE' size=2 value='%s' ${cw_ro}> &nbsp&nbsp ",$_POST["LINESTYLE"]);
   printf("Line Color <input name='LINECOLOR' size=2 value='%s' ${cw_ro}><br>\n",$_POST["LINECOLOR"]);
   printf("ROOT Draw options <input name='DRAWOPTS' size=20 value='%s' ${cw_ro}><br>\n",$_POST["DRAWOPTS"]);
-  printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
-  printf("Overplot reference (if available)    <select name='REF'>");
+  // printf("Display Refresh Time (s)  <input name='REFRESH' size=5 value='%s' ${cw_ro}><br>\n",$_POST["REFRESH"]);
+  printf("<br>Overplot reference (if available)    <select name='REF'>");
   foreach (array("","NOREF","NONE","AREA","ENTR") as $val) {
       $SELECTED[$val] = ($_POST["REF"] == $val) ? "SELECTED" : "" ;
       echo "<option ".$SELECTED[$val]."> ".$val." </option>";
     }
-  echo "</select><br> &nbsp&nbsp&nbsp&nbsp(Possible Normalization is NONE, same AREA, same ENTRies)";
+  echo "</select> &nbsp&nbsp(Possible Normalization is NONE, same AREA, same ENTRies)<br>";
+  printf("<br>Pattern to be overdrawn on histogram (must be a ROOT file name)<br> \$GROUPDIR/online/Histograms/Reference/%s/",
+         $_POST["TASKNAME"]);
+  printf("<input name='DRAWPATTERN' size=40 value='%s' ${cw_ro}><br>\n",$_POST["DRAWPATTERN"]);
+
+
   if( $canwrite) {
     $action= ($mode == "display" && $htype != "SHID") ? "Update Display Options" : "Confirm";
     echo "<table align=right><tr><td> <input align=right type='submit' name='Update_display' value='${action}'></tr></table>";

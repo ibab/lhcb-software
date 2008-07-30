@@ -37,7 +37,16 @@ $DispOpt = array("LABEL_X",
 "GRIDY",
 "THETA",
 "PHI",
-"CNTPLOT");
+"CNTPLOT",
+"DRAWPATTERN",
+"STAT_X_SIZE",
+"STAT_X_OFFS",
+"STAT_Y_SIZE",
+"STAT_Y_OFFS",
+"HTIT_X_SIZE",
+"HTIT_X_OFFS",
+"HTIT_Y_SIZE",
+"HTIT_Y_OFFS");
 function get_displayoptions($disp) {
   global $conn;
   $query="BEGIN ONLINEHISTDB.GET_DISPLAYOPTIONS($disp";
@@ -119,6 +128,24 @@ function get_displayoptions($disp) {
   $_POST["PHI"] = 9999999999.;
   $query .= ",:CNTPLOT";
   $_POST["CNTPLOT"] = str_repeat(" ",5);
+  $query .= ",:DRAWPATTERN";
+  $_POST["DRAWPATTERN"] = str_repeat(" ",100);
+  $query .= ",:STAT_X_SIZE";
+  $_POST["STAT_X_SIZE"] = 9999999999.;
+  $query .= ",:STAT_X_OFFS";
+  $_POST["STAT_X_OFFS"] = 9999999999.;
+  $query .= ",:STAT_Y_SIZE";
+  $_POST["STAT_Y_SIZE"] = 9999999999.;
+  $query .= ",:STAT_Y_OFFS";
+  $_POST["STAT_Y_OFFS"] = 9999999999.;
+  $query .= ",:HTIT_X_SIZE";
+  $_POST["HTIT_X_SIZE"] = 9999999999.;
+  $query .= ",:HTIT_X_OFFS";
+  $_POST["HTIT_X_OFFS"] = 9999999999.;
+  $query .= ",:HTIT_Y_SIZE";
+  $_POST["HTIT_Y_SIZE"] = 9999999999.;
+  $query .= ",:HTIT_Y_OFFS";
+  $_POST["HTIT_Y_OFFS"] = 9999999999.;
   $query .= "); END;";
   $dstid = OCIParse($conn,$query);
   ocibindbyname($dstid,":LABEL_X",$_POST["LABEL_X"],50);
@@ -160,6 +187,15 @@ function get_displayoptions($disp) {
   ocibindbyname($dstid,":THETA",$_POST["THETA"]);
   ocibindbyname($dstid,":PHI",$_POST["PHI"]);
   ocibindbyname($dstid,":CNTPLOT",$_POST["CNTPLOT"],5);
+  ocibindbyname($dstid,":DRAWPATTERN",$_POST["DRAWPATTERN"],100);
+  ocibindbyname($dstid,":STAT_X_SIZE",$_POST["STAT_X_SIZE"]);
+  ocibindbyname($dstid,":STAT_X_OFFS",$_POST["STAT_X_OFFS"]);
+  ocibindbyname($dstid,":STAT_Y_SIZE",$_POST["STAT_Y_SIZE"]);
+  ocibindbyname($dstid,":STAT_Y_OFFS",$_POST["STAT_Y_OFFS"]);
+  ocibindbyname($dstid,":HTIT_X_SIZE",$_POST["HTIT_X_SIZE"]);
+  ocibindbyname($dstid,":HTIT_X_OFFS",$_POST["HTIT_X_OFFS"]);
+  ocibindbyname($dstid,":HTIT_Y_SIZE",$_POST["HTIT_Y_SIZE"]);
+  ocibindbyname($dstid,":HTIT_Y_OFFS",$_POST["HTIT_Y_OFFS"]);
   OCIExecute($dstid);
   ocifreestatement($dstid);
 }
