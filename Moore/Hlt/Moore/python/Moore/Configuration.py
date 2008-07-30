@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.8 2008-07-28 09:07:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2008-07-30 13:58:21 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -14,8 +14,6 @@ import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
 
 class Moore(ConfigurableUser):
-    #TODO: add some higher level configuration, eg. DC06, DATA08, ...
-    #      which sets the right combinations...
     __slots__ = {
           "EvtMax":            -1    # Maximum number of events to process
         , "DAQStudies":        False # use DAQ study version of options
@@ -41,14 +39,11 @@ class Moore(ConfigurableUser):
     def setProp(self,name,value):
         return setattr(self,name,value)
 
-    def setDBtag(self,name) :
-        map = { 'DDDB' : 'DDDBtag' , 'LHCBCOND' : 'condDBtag' }
-        if name not in  map : raise TypeError('Invalid db name %s'%tag)
-        item = map[name]
+    def setDBtag(self,item) :
         tag = self.getProp( item )
         if tag != 'DEFAULT' :
             if hasattr(LHCbApp(),item):
-                print "LHCbApp()."+item+" already defined as "+attr(LHCbApp(),item)+", ignoring Moore()."+name+"="+tag
+                print "LHCbApp()."+item+" already defined as "+attr(LHCbApp(),item)+", ignoring Moore()."+item+"="+tag
             else:
                 setattr(LHCbApp(),item,tag)
 
@@ -86,13 +81,16 @@ class Moore(ConfigurableUser):
         GaudiKernel.ProcessJobOptions.printing_level += 1
         importOptions('$STDOPTS/LHCbApplication.opts')
         importOptions('$STDOPTS/DstDicts.opts')
-        importOptions('$STDOPTS/DecodeRawEvent.opts')
+
         inputType = self.getProp('inputType').upper()
-        if inputType not in [ "MDF","DST" ] : raise TypeError("Invalid input type '%s'"%inputType)
-        if inputType == "MDF" : EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        if inputType not in [ 'MDF','DST' ] : raise TypeError("Invalid input type '%s'"%inputType)
+        if inputType != 'DST' : 
+            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+            importOptions('$STDOPTS/DecodeRawEvent.opts')
+
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
-        for i in [ 'DDDB', 'LHCBCOND' ] : self.setDBtag( i )
+        for i in [ 'DDDBtag', 'condDBtag' ] : self.setDBtag( i )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # output levels...
