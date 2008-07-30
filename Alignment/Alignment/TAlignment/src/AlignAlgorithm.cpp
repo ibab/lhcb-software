@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.48 2008-07-17 09:47:53 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.49 2008-07-30 12:43:07 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -225,8 +225,7 @@ StatusCode AlignAlgorithm::initialize() {
 				      -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
                                       +100.00, 100);
   m_trackNorChi2Histo        = book2D(11, "Normalised track chi2 distribution vs iteration", 
-                                      -0.5, m_nIterations-0.5, m_nIterations, -1.00, 
-                                      +100.00, 100);
+                                      -0.5, m_nIterations-0.5, m_nIterations,0,20) ;
   m_totNusedTracksvsIterHisto= bookProfile1D(20, "Total number of used tracks for alignment vs iteration" , -0.5, m_nIterations-0.5, m_nIterations);
   m_totChi2vsIterHisto       = bookProfile1D(30, "Total sum of track chi2 vs iteration"            , -0.5, m_nIterations-0.5, m_nIterations);
   m_avgChi2vsIterHisto       = bookProfile1D(31, "Average sum of track chi2 vs iteration"          , -0.5, m_nIterations-0.5, m_nIterations);
@@ -454,11 +453,14 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
       // canonical constraints:
       //   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
       //             = - 2 * dr/dalpha * V^{-1} * H * C
+      // This stil neds seom work because I catually want the
+      // derivative to the first state.
+
       const Gaudi::TrackSymMatrix& C = residuals.nodes()[id->nodeindex()]->state().covariance() ;
       const Gaudi::TrackProjectionMatrix& H = residuals.nodes()[id->nodeindex()]->projectionMatrix() ;
-      double normalized_drdomega = (H*C)(0,4) / std::sqrt(residuals.V(id->nodeindex())) ;
-      m_equations->dOmegaDAlpha(id->index()) += convert(normalized_drdomega*id->d()) ;
-
+      const ROOT::Math::SMatrix<double,5,1> normalizeddrdstate = C*Transpose(H) / std::sqrt(residuals.V(id->nodeindex())) ;
+      m_equations->dStateDAlpha(id->index()) += normalizeddrdstate * id->d() ;
+      
       // fill some histograms
       {
 	double V = residuals.V(id->nodeindex()) ;
@@ -670,6 +672,7 @@ void AlignAlgorithm::update() {
       
       if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
       size_t iElem(0u) ;
+      double totalLocalDeltaChi2(0) ; // another figure of merit of the size of the misalignment.
       for (ElementRange::iterator it = m_elements.begin(); it != m_elements.end(); ++it, ++iElem) {
 	logmessage << "Alignable: " << it->name() << std::endl
 		   << "Number of hits/outliers seen: " << m_equations->numHits(iElem) << " "
@@ -692,6 +695,18 @@ void AlignAlgorithm::update() {
 	  logmessage << "contribution to hit error (absolute/relative): "
 		     << contributionToCoordinateError << " " << contributionToCoordinateError/coordinateError << std::endl ;
 	  
+	  // compute another figure of merit for the change in
+	  // alignment parameters that does not rely on the
+	  // correlations. this should also go into either
+	  // AlParameters or AlEquation
+	  const Gaudi::Matrix6x6& thisdChi2dAlpha2 = m_equations->elements()[iElem].M().find(iElem)->second ;
+	  Gaudi::Vector6 thisAlpha = delta.parameterVector6() ;
+	  double thisLocalDeltaChi2 = ROOT::Math::Dot(thisAlpha,thisdChi2dAlpha2 * thisAlpha) ;
+	  logmessage << "local delta chi2 / dof: " << thisLocalDeltaChi2 << " / " << delta.dim() << std::endl ;
+	  totalLocalDeltaChi2 += thisLocalDeltaChi2 ;
+	  //double d2 = m_equations->elements()[iElem].M()[iElem]
+
+
 	  // need const_cast because loki range givess access only to const values 
 	  StatusCode sc = (const_cast<AlignmentElement&>(*it)).updateGeometry(delta) ;
 	  if (!sc.isSuccess()) error() << "Failed to set alignment condition for " << it->name() << endmsg ; 
@@ -703,6 +718,7 @@ void AlignAlgorithm::update() {
           fillHisto1D(m_elemHistos[it->index()]->m_deltaRzHisto, m_iteration+1u, delta.rotation()[2]   , delta.errRotation()[2]);
         }
       }
+      logmessage << "total local delta chi2 / dof: " << totalLocalDeltaChi2 << " / " << numParameters << std::endl ;
     } else {
       error() << "Failed to solve system" << endmsg ;
     }
