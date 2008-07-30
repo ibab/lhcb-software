@@ -3,6 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v33r1>2008-07-31 Brunel v33r1</A></H1><PRE>
+This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21, Rec v5r10
+ and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r*
+
+This is a development version.
+- Can be used to reconstruct 2008 geometries
+- Can be used for DC06 geometries, but material seen is different from DC06
+- Cannot reconstruct data produced with Boole v15r1 or v15r2 (use v32r8 instead)
+- Cannot reconstruct 2008 simulation digitized with Boole v16r0 (use v33r0)
+
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20, Rec v5r9
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r*
@@ -12,7 +22,7 @@ gaudirun.py with the python configurable options. Usage of Brunel.exe is no
 longer supported, it is kept for Ganga usage only
 
 This is a development version.
-- Can be used to reconstruct 2008 geometries
+- Can be used to reconstruct 2008 geometries, but only produced with Boole v16r0
 - Can be used for DC06 geometries, but material seen is different from DC06
 - Cannot reconstruct data produced with Boole v15r1 or v15r2 (use v32r8 instead)
 
