@@ -8,6 +8,76 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v5r10>2008-07-30 RecSys v5r10</A></H1><PRE>
 This version uses Gaudi v20r2 and LHCb v2r50.
 
+- Packages modified: MuonID v5r2p1, MuonTrackAlign v1r6, PatAlgorithms v3r9,
+    PatVeloTT v3r3, RecAlgs v1r7, RichRecAlgorithms v2r12, RichRecQC v2r20,
+    RichRecSys v3r12, TrackExtrapolators v2r19, TrackFitEvent v3r17,
+    TrackFitter v2r27, TrackMatching v2r19, TrackMonitors v1r3, TrackTools v3r10,
+    TrackSeeding v1r4, TrackSys v4r16, TsaAlgorithms v3r5
+
+- In MuonID v5r2p1
+  . Remove #pragma print on from options
+
+- In MuonTrackAlign v1r6, PatAlgorithms v3r9, TrackTools v3r10, 
+     TrackSeeding v1r4, TsaAlgorithms v3r5
+  . Adapt to new ITrackMomentumEstimate interface
+
+- In PatAlgorithms v3r9, PatVeloTT v3r3, TrackMatching v2r19, TsaAlgorithms v3r5
+  . Use TrackSys instead of Brunel configurable in python options
+
+- In PatAlgorithms v3r9, TrackTools v3r10
+  . Adapt tools to use new ILHCbMagnetSvc interface where needed
+  . Adapt tuning for new B field map
+
+- In PatAlgorithms v3r9
+  . PatSeedingTool: fixed a bug introduced when migrating to BOOST_FOREACH
+                    which caused jobs with isolation cuts to crash
+
+- In RecAlgs v1r7
+  . Adapt to new location of IGenericTool.h
+
+- In RichRecAlgorithms v2r12
+  . Add two new algorithms
+    o RichRecEventSelectionAlg : To select and filter events (GC studies)
+    o TrackUseCaloMomentumAl : Clones Track objects and updates their momentum
+      using CALO information (used in field off RICH reconstruction).
+
+- In RichRecQC v2r20
+  . Disable the reconstruction summary data objects monitor
+
+- In RichRecSys v3r12
+  . Disable the Rich::Rec::SummaryAlg algorithm
+
+- In TrackExtrapolators v2r19
+  . Protect MaterialLocator base to against 'null' extrapolation
+
+- In TrackFitEvent v3r17
+  . In FitNode:
+    o added smoother gain matrix to fitnode for use in alignment
+    o renamed Upstream->Forward, Downstream->Backward (less confusing, less code)
+
+- In TrackFitter v2r27, TrackMonitors v1r3, TrackTools v3r10
+  . Adapted to change in FitNode
+
+- In TrackFitter v2r27
+  . Revived standard smoother
+
+- In TrackMonitors v1r3
+  . Added histograms for monitoring track errors on TrackMonitor
+
+- In TrackTools v3r10
+  . Add options to TrackSelector to reject clones
+  . Use new matrix inversion
+
+- In TrackTools v3r10, TrackSeeding v1r4
+  . Fix compilation warning. 
+    Complete REC project now compiles with gcc34 without warnings
+
+- In TrackSys v4r16
+  . Add a TrackSys configurable, with options expertHistos, fieldOff, veloOpen, 
+    expertTracking. RecoTracking.opts and Fitting.py now test on TrackSys()
+    options instead of Brunel() options
+
+
 </PRE><H1><A NAME=v5r9>2008-07-21 RecSys v5r9</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r1.
 
