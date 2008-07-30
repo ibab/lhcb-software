@@ -1,9 +1,10 @@
-// $Id: HltRecChecker.h,v 1.4 2007-07-13 08:54:09 pkoppenb Exp $
+// $Id: HltRecChecker.h,v 1.5 2008-07-30 13:38:48 graven Exp $
 #ifndef HLTRECCHECKER_H 
 #define HLTRECCHECKER_H 1
 
 // Include files
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "Event/MCParticle.h"
 
 /** @class HltRecChecker HltRecChecker.h
@@ -25,18 +26,17 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
   
 
-protected:
+private:
 
   void checkQuark();
   
-  void checkTracks();
+  void checkTracks(const Hlt::TrackSelection&);
   
-  void checkVertices();  
+  void checkVertices(const Hlt::VertexSelection&);  
 
   StatusCode printTrack(const LHCb::Track*);
-  
 
-protected:
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
 
   std::string m_linkName;
 

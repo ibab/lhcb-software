@@ -1,6 +1,7 @@
-// $Id: HltVertexToTracks.cpp,v 1.5 2008-05-15 08:56:55 graven Exp $
+// $Id: HltVertexToTracks.cpp,v 1.6 2008-07-30 13:37:33 graven Exp $
 // Include files 
 #include <algorithm>
+#include "boost/foreach.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -11,6 +12,15 @@
 #include "Event/RecVertex.h"
 
 using namespace LHCb;
+
+namespace {
+  template <class INPUT,class OBJECT>
+  inline bool extend(INPUT& cont, OBJECT& obj) {
+    if (std::find(cont.begin(),cont.end(),obj) != cont.end()) return false;
+    cont.push_back(obj);
+    return true;
+  }
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVertexToTracks
@@ -28,8 +38,9 @@ DECLARE_ALGORITHM_FACTORY( HltVertexToTracks );
 HltVertexToTracks::HltVertexToTracks( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
-
+    m_selections.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -44,8 +55,8 @@ StatusCode HltVertexToTracks::initialize() {
   debug() << "==> Initialize" << endmsg;
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
 
-  m_inputVertices = &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
 
   saveConfiguration();
 
@@ -58,23 +69,12 @@ StatusCode HltVertexToTracks::initialize() {
 StatusCode HltVertexToTracks::execute() {
   debug() << "==> Execute" << endmsg;
 
-  for(  Hlt::VertexContainer::const_iterator it= m_inputVertices->begin(); 
-        it<m_inputVertices->end(); ++it){
-    SmartRefVector< LHCb::Track >  trks = (*it)->tracks();
+  BOOST_FOREACH( LHCb::RecVertex* vertex, *m_selections.input<1>()) {
+    SmartRefVector< LHCb::Track >  trks = vertex->tracks();
     if(trks.size()!=2) return StatusCode::FAILURE;
-    zen::extend(*m_outputTracks,trks[0]);
-    zen::extend(*m_outputTracks,trks[1]);
+    extend(*m_selections.output(),trks[0]);
+    extend(*m_selections.output(),trks[1]);
   }
 
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltVertexToTracks::finalize() 
-{
-  debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  // must be called after all other actions
-}
-

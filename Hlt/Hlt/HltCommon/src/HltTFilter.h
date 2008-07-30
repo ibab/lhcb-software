@@ -1,10 +1,11 @@
-// $Id: HltTFilter.h,v 1.5 2008-07-04 08:07:41 graven Exp $
+// $Id: HltTFilter.h,v 1.6 2008-07-30 13:37:33 graven Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltBase/IFunctionFactory.h"
 
 /** @class HltTrackFilter HltTrackFilter.h
@@ -49,7 +50,7 @@ template <class T>
 class HltTFilter : public HltAlgorithm {
 public: 
   /// Standard constructor
-  HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName, bool tesInput=false );
+  HltTFilter( const std::string& algoname, ISvcLocator* pSvcLocator, const std::string& factoryName );
 
   virtual ~HltTFilter( );
 
@@ -58,23 +59,15 @@ public:
   virtual StatusCode finalize  ();
 
 private:
-  typedef typename Hlt::TSelection<T> TSelection;
   typedef typename Hlt::TFilterData<T> TFilterData;
   typedef typename std::vector<TFilterData*>::iterator TFilterDataIterator;
-  typedef typename zen::function<T> TFunction;
-  typedef typename zen::filter<T> TFilter;
-  //typedef typename std::vector<T*> TContainer;
-  //typedef typename std::vector<T*>::iterator TContainerIterator;
 
   virtual void saveConfiguration();  
   bool addTFilterData(const std::string& filtername);
 
-
-  bool m_tesInput;
   bool m_addInfo;
 
-  TSelection* m_tselinput;
-  TSelection* m_tseloutput;
+  Hlt::SelectionContainer2<T,T> m_selections;
 
   StringArrayProperty m_filterDescriptor;
   std::vector< TFilterData* > m_tfilters;

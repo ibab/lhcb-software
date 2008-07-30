@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.h,v 1.4 2008-06-23 07:31:57 graven Exp $
+// $Id: HltTrackUpgrade.h,v 1.5 2008-07-30 13:39:39 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltTrackUpgradeTool.h"
 
 /** @class HltTrackUpgrade HltTrackUpgrade.h
@@ -30,16 +31,15 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  
   void saveConfiguration();
-
 
   std::string m_recoName;
   HltTrackUpgradeTool* m_tool;
 
-
+  // 1 input: Track
+  // 1 output: Track
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
 };
 #endif // HLTTRACKING_H

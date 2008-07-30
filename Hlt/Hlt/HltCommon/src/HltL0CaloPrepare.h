@@ -1,10 +1,11 @@
-// $Id: HltL0CaloPrepare.h,v 1.1 2008-01-22 09:56:32 hernando Exp $
+// $Id: HltL0CaloPrepare.h,v 1.2 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltBase/ICaloSeedTool.h"
 #include "Event/L0CaloCandidate.h"
 
@@ -34,12 +35,9 @@ private:
 
 protected:
 
-  // Already in HltAlgorithm
-  // Hlt::TrackSelection* m_outputTracks;
+  Hlt::SelectionContainer1<LHCb::Track> m_selection; 
+  //Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
 
-  int m_caloType;
-  double m_minEt;
-  
   std::string m_caloCandidatesLocation;
   std::string m_outputL0CaloCandidatesName;
 
@@ -48,6 +46,9 @@ protected:
   
   Hlt::Histo* m_histoEt;
   Hlt::Histo* m_histoEt1;
+
+  double m_minEt;
+  int m_caloType;
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

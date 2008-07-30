@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.cpp,v 1.4 2008-07-15 09:55:50 graven Exp $
+// $Id: HltL0Filter.cpp,v 1.5 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,10 +24,12 @@ DECLARE_ALGORITHM_FACTORY( HltL0Filter );
 HltL0Filter::HltL0Filter( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selection(*this)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   m_l0Channels.declareUpdateHandler( &HltL0Filter::updateChannels , this);
   declareProperty("L0Channels",   m_l0Channels);
+  m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -52,7 +54,7 @@ StatusCode HltL0Filter::initialize() {
 
   // no selection as input, but we do have an output selection,
   // of 'no candidate' type..
-  registerSelection();
+  m_selection.registerSelection();
 
   //TODO: maybe at some point we start filling in part of the TCK 
   //      dependent L0 mapping already at initialize...
@@ -82,7 +84,10 @@ StatusCode HltL0Filter::execute() {
   if (msgLevel(MSG::DEBUG)) debug() << " L0 decision " << pass << endreq;
 
   //TODO: right now we always require the 'or' of a set of channels, maybe
-  //      we should add the possibility of adding the 'and' of a set?
+  //      we should add the possibility of doing boolean logic on a set?
+
+  // TODO: check trigger types (and think about priority!!!)
+  // TODO: check validity of L0DU data and printout warning if invalid
 
   //TODO CHECK: is it possible l0->decision is false, but a channel is true?
   //    if not, we can abandon anything with the global L0 negative here...
@@ -91,10 +96,16 @@ StatusCode HltL0Filter::execute() {
     pass = false;
     ChannelMap_t::const_iterator i = map->second.begin(), 
                                end = map->second.end();
-    while (!pass && i!= end) pass = l0->channelDecision((i++)->second);
+    while (!pass && i!= end) {
+        pass = l0->channelDecision(i->second);
+        if (msgLevel(MSG::DEBUG)) debug() << " " << i->first << " (" << i->second 
+                                          << ") : " << (pass?"accept":"reject") 
+                                          << endreq;
+        ++i;
+    }
   }
   
-  setDecision(pass);
+  m_selection.output()->setDecision(pass);
   if (msgLevel(MSG::DEBUG)) 
     debug() << "HltL0Filter: " << (pass?"accept":"reject") << endreq;
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: HltSelectionFilter.cpp,v 1.6 2008-07-04 08:07:41 graven Exp $
+// $Id: HltSelectionFilter.cpp,v 1.7 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // local
 #include "HltSelectionFilter.h"
+#include "boost/foreach.hpp"
 
 using namespace LHCb;
 
@@ -23,9 +24,10 @@ DECLARE_ALGORITHM_FACTORY( HltSelectionFilter );
 //=============================================================================
 HltSelectionFilter::HltSelectionFilter( const std::string& name,
                     ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator )
+  : HltAlgorithm ( name , pSvcLocator, false )
 {
-  declareProperty("InputSelections", m_extraInputSelectionsNames);
+  declareProperty("OutputSelection", m_outputSelectionName = name);
+  declareProperty("InputSelections", m_inputSelectionNames);
 }
 //=============================================================================
 // Destructor
@@ -41,16 +43,13 @@ StatusCode HltSelectionFilter::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_considerInputs = false;
-
-  const std::vector<std::string>& values = m_extraInputSelectionsNames.value();
-  for (std::vector<std::string>::const_iterator it = values.begin();
-       it != values.end(); ++it) {
-    retrieveSelection(*it);
+  const std::vector<std::string>& values = m_inputSelectionNames.value();
+  BOOST_FOREACH( const std::string& name, values ) {
+    m_input.push_back(&retrieveSelection(name));
     m_scounters.push_back(0);
   }
   
-  m_outputSelections = &(registerTSelection<Hlt::Selection>());
+  m_output = &(registerTSelection<Hlt::Selection>(m_outputSelectionName));
   
   saveConfiguration();
 
@@ -63,14 +62,14 @@ StatusCode HltSelectionFilter::initialize() {
 StatusCode HltSelectionFilter::execute() {
   
   size_t i = 0;
-  for (Hlt::SelectionIterator it = m_inputSelections.begin();
-       it != m_inputSelections.end(); ++it, ++i) {
-    if ( (*it)->decision()) {
-      debug() << " positive selection " << (*it)->id().str() << endreq;
-      m_outputSelections->push_back(*it);
+  BOOST_FOREACH( Hlt::Selection* sel, m_input ) {
+    if ( sel->decision()) {
+      debug() << " positive selection " << sel->id().str() << endreq;
+      m_output->push_back(sel);
       ++m_scounters[i];
     }
-  }  
+    ++i;
+  }
   return StatusCode::SUCCESS;
 };
 
@@ -82,7 +81,7 @@ StatusCode HltSelectionFilter::finalize() {
   for (size_t i = 0; i < m_scounters.size(); ++i) {
     infoSubsetEvents(m_scounters[i],
                      m_counterEntries,
-                     m_inputSelections[i]->id().str());
+                     m_input[i]->id().str());
   }
   return HltAlgorithm::finalize();  
 }

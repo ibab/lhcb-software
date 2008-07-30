@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.cpp,v 1.1 2008-07-14 07:15:49 graven Exp $
+// $Id: HltIncidentFilter.cpp,v 1.2 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -26,10 +26,12 @@ DECLARE_ALGORITHM_FACTORY( HltIncidentFilter );
 HltIncidentFilter::HltIncidentFilter( const string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selection(*this)
   , m_keep(false)
 {
     declareProperty("AcceptQuota", m_quota );
     declareProperty("HltAcceptIncident", s_incident = "RequestHltAccept" );
+    m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -45,14 +47,12 @@ StatusCode HltIncidentFilter::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   IIncidentSvc *incidentSvc = svc<IIncidentSvc>("IncidentSvc");
-  // add listener to be triggered by first BeginEvent with low priority
-  // so it gets called first
   bool rethrow = false;
   bool oneShot = false;
   incidentSvc->addListener(this,s_incident,int(0),rethrow,oneShot);
   incidentSvc->addListener(this,"EndEvent",int(0),rethrow,oneShot);
 
-  registerSelection();
+  m_selection.registerSelection();
 
   return StatusCode::SUCCESS;
 };
@@ -74,9 +74,9 @@ StatusCode HltIncidentFilter::finalize() {
 // Main execution
 //=============================================================================
 StatusCode HltIncidentFilter::execute() {
-  setDecision(m_keep);
-  if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endreq;
-  return StatusCode::SUCCESS;
+    m_selection.output()->setDecision(m_keep);
+    if (msgLevel(MSG::DEBUG)) debug() << "HltIncidentFilter: " << (m_keep?"accept":"reject") << endreq;
+    return StatusCode::SUCCESS;
 };
 
 void HltIncidentFilter::handle(const Incident& incident) {
@@ -84,7 +84,7 @@ void HltIncidentFilter::handle(const Incident& incident) {
         m_keep = false; 
     } else if ( incident.type() == s_incident )  {
         stat& s = m_stat[incident.source()];
-        ++s.request; // always keep track of requests...
+        ++s.request;   // always keep track of requests...
         if (!m_keep) { // only check quota if event not yet accepted...
             std::map<std::string,int>::const_iterator i = m_quota.find(incident.source());
             typedef unsigned long ul;

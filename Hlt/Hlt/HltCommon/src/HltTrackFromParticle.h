@@ -1,10 +1,10 @@
-// $Id: HltTrackFromParticle.h,v 1.4 2008-05-15 08:56:55 graven Exp $
+// $Id: HltTrackFromParticle.h,v 1.5 2008-07-30 13:37:33 graven Exp $
 #ifndef HLTTRACKFROMPARTICLE_H 
 #define HLTTRACKFROMPARTICLE_H 1
 
 // Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "Event/Particle.h"
 
 /** @class HltTrackFromParticle HltTrackFromParticle.h
@@ -29,6 +29,7 @@ private:
   void loadParticle(const LHCb::Particle& par);
 
   std::string m_particlesName;
+  Hlt::SelectionContainer1<LHCb::Track> m_selections;
 
 };
 

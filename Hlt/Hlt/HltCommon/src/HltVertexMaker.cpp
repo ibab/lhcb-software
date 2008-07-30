@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.23 2008-07-09 12:05:29 pkoppenb Exp $
+// $Id: HltVertexMaker.cpp,v 1.24 2008-07-30 13:37:33 graven Exp $
 // Include files 
 
 
@@ -20,37 +20,75 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( HltVertexMaker );
+DECLARE_ALGORITHM_FACTORY( HltVertexMaker1 );
+DECLARE_ALGORITHM_FACTORY( HltVertexMaker2 );
 
 using namespace LHCb;
 using namespace boost::lambda;
 // #namespace bl = boost::lambda;
 
+template <typename Selections>
+HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(HltVertexMaker::combinatorics_engine::iterator begin1,
+                                                           HltVertexMaker::combinatorics_engine::iterator end1,
+                                                           HltVertexMaker::combinatorics_engine::iterator begin2,
+                                                           HltVertexMaker::combinatorics_engine::iterator end2,bool merge) 
+    : m_range1(begin1,end1)
+    , m_merge(merge)
+{
+    if (merge) { 
+        m_mergedList.insert(m_mergedList.end(),begin1,end1);
+        m_mergedList.insert(m_mergedList.end(),begin2,end2);
+        m_range2 = std::make_pair(m_mergedList.begin(),m_mergedList.end());
+    } else {
+        m_range2 = std::make_pair(begin2,end2);
+    }
+    m_current = std::make_pair( m_range1.first , m_range2.first );
+    if (merge) inc2();
+}
+
+template <typename Selections>
+HltVertexMaker<Selections>::combinatorics_engine::combinatorics_engine(iterator begin1,iterator end1)
+            : m_range1(begin1,end1)
+            , m_range2(begin1,end1)
+            , m_current(begin1,begin1) 
+            , m_merge(true)
+{ 
+    inc2(); 
+}
+
+template <typename Selections>
+typename HltVertexMaker<Selections>::combinatorics_engine&
+HltVertexMaker<Selections>::combinatorics_engine::operator++() {
+    inc2(); 
+    if (atEnd2()) {
+        inc1();
+        if (m_merge && m_range2.first!=m_range2.second) { 
+            ++m_range2.first;
+        }
+        m_current.second=m_range2.first;
+    }
+    return *this;
+}
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-HltVertexMaker::HltVertexMaker( const std::string& name,
+template <typename SelectionContainer>
+HltVertexMaker<SelectionContainer>::HltVertexMaker( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty("CheckForOverlaps", m_checkForOverlaps = false );
   declareProperty("FilterDescriptor", m_filterDescriptor);
-  declareProperty("DoMergeInputs", m_doMergeInputs = true);
-
-  m_inputTracks = 0;
-  m_inputTracks2 = 0;
-  m_outputVertices = 0;
-
-  m_twoContainers = false;
-  m_considerInputs = false;
+  m_selections.declareProperties();
 }
-
-
 
 //=============================================================================
 // Destructor
 //=============================================================================
-HltVertexMaker::~HltVertexMaker() {
+template <typename Selections>
+HltVertexMaker<Selections>::~HltVertexMaker() {
   std::for_each(m_functions.begin(),m_functions.end(), delete_ptr());
   std::for_each(m_filters.begin(),m_filters.end(), delete_ptr());
 };
@@ -59,20 +97,13 @@ HltVertexMaker::~HltVertexMaker() {
 // Initialization
 //=============================================================================
 
-StatusCode HltVertexMaker::initialize() {
+template <typename Selections>
+StatusCode HltVertexMaker<Selections>::initialize() {
   StatusCode sc = HltAlgorithm::initialize();
 
-  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
-  
-  if (!m_inputSelection2Name.empty()) {
-    m_inputTracks2 = 
-      &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-    m_twoContainers = true;
-    debug() << " consider 2 container " << m_inputSelection2Name << endreq; 
-  }
+  m_selections.retrieveSelections();
 
-  m_outputVertices = &(registerTSelection<LHCb::RecVertex>());
-
+  typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> IBiTrackFactory;
   IBiTrackFactory* factory = 
     tool<IBiTrackFactory>("HltTrackBiFunctionFactory",this);
 
@@ -112,119 +143,78 @@ StatusCode HltVertexMaker::initialize() {
     if (m_debug) debug() << " filter " << filtername << " " << id << " "
                          << mode << x0 << "," << xf << endreq;
   }
+
+  m_selections.registerSelection();
   
   saveConfiguration();
 
   return sc;
 };
 
-
-
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltVertexMaker::execute() {
+template <typename Selections>
+StatusCode HltVertexMaker<Selections>::execute() {
 
   StatusCode sc = StatusCode::SUCCESS;
 
   if ( m_debug ) debug() << "HltVertexMaker: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,"Hlt/Vertex/"+m_outputVertices->id().str());
+  put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
 
-  if ((!m_twoContainers && m_inputTracks->size() <2)) {
-    if (m_debug) debug() << " no enought tracks in container to make vertices " << endreq;
-    return sc;
-  } 
-  if (m_twoContainers) {
-    size_t n1 = m_inputTracks->size();
-    size_t n2 = m_inputTracks2->size();
-    bool novalid = false;
-    if (!m_doMergeInputs && (n1<1 || n2<1)) novalid = true;
-    else if (n1+n2<2) novalid = true;
-    if (novalid) {
-      if (m_debug) debug() << " no enought tracks in container to make vertices " << endreq;
-      return sc;
-    }
-  }
-
-  m_input2.clear();
-  if (m_doMergeInputs) zen::copy(*m_inputTracks,m_input2);
-  if (m_twoContainers) zen::copy(*m_inputTracks2,m_input2);
-
-  if (m_debug) {
-    printInfo( "tracks [1]", *m_inputTracks);
-    printInfo( "tracks [2]",  m_input2);
-  }
-
-  // set the iterators
-  Hlt::TrackContainer::const_iterator itMEnd = m_inputTracks->end();
-  if (m_doMergeInputs) {
-    if (m_input2.size() == m_inputTracks->size()) itMEnd--;
-  }
-  Hlt::TrackContainer::const_iterator itHStart = m_input2.begin();
-  
-  for (Hlt::TrackContainer::const_iterator itM = m_inputTracks->begin(); 
-       itM != itMEnd; itM++) {
-    const LHCb::Track& track1 = *(*itM);
-    
-    verbose() << " track 0 " << track1.key() << track1.slopes() << endreq;
-
-    if (m_doMergeInputs) itHStart++;
-    else itHStart = m_input2.begin();
-
-    for (Hlt::TrackContainer::const_iterator itH = itHStart; 
-         itH != m_input2.end(); itH++) {
-      const LHCb::Track& track2 = *(*itH);
-      verbose() << " track 1 " << track2.key() << track2.slopes() << endreq;
+  for (combinatorics_engine combinations = combine();!combinations.end();++combinations) {
+      const LHCb::Track* track1 = combinations().first;
+      const LHCb::Track* track2 = combinations().second;
+      assert(track1!=0);
+      assert(track2!=0);
+      verbose() << " track 1 " << track1->key() << track1->slopes() << endreq;
+      verbose() << " track 2 " << track2->key() << track2->slopes() << endreq;
       
       // can not be the same track
-      if ((*itH) == (*itM)) continue;
+      if (track1 == track2) continue;
 
       increaseCounter(m_counterCombinations);
 
       // Check for segment overlaps
-      bool accepted = true;
-      if (m_checkForOverlaps)
-        accepted = !HltUtils::matchIDs(track1,track2);
+      bool rejected = ( m_checkForOverlaps && HltUtils::matchIDs(*track1,*track2) );
       
-      verbose() << " accepted due to overlaps?" << accepted << endreq;
+      verbose() << " rejected due to overlaps?" << rejected<< endreq;
+      if (rejected) continue;
 
       m_vals.clear();
       for (size_t i = 0; i < m_functions.size(); ++i) {
         verbose() << " filter " << m_filterNames[i] << endreq;
-        Hlt::TrackBiFunction& fun = *(m_functions[i]);
-        Hlt::Filter& fil = (*m_filters[i]);
-        double val = (fun)(track1,track2);
-        accepted = (fil)(val);
-        verbose() << " value " << val << " accepted? " << accepted << endreq;
+        double val = (*m_functions[i])(*track1,*track2);
+        rejected = !(*m_filters[i])(val);
+        verbose() << " value " << val << " rejected? " << rejected << endreq;
         fillHisto(*m_histos[i],val,1.);
-        if (!accepted) break;
+        if (rejected) break;
         m_tcounters[i] += 1;
         m_vals.push_back(val);
       }
       
-      if (!accepted) continue;
+      if (rejected) continue;
 
-      verbose()<<" pair found [0] "<<track1.key() <<track1.slopes() << endreq;
-      verbose()<<" pair found [1] "<<track2.key() <<track2.slopes() << endreq;
+      verbose()<<" pair found [0] "<<track1->key()<<" "<<track1->slopes() << endreq;
+      verbose()<<" pair found [1] "<<track2->key()<<" "<<track2->slopes() << endreq;
       // Write vertex
-      //if ( m_outputByVertex ) {
       LHCb::RecVertex* sv = new RecVertex();
-      _makeVertex(track1,track2,*sv);
-      m_outputVertices->push_back(sv);
+      m_makeVertex(*track1,*track2,*sv);
+      m_selections.output()->push_back(sv);
       overtices->insert(sv);
       for (size_t i = 0; i < m_filterIDs.size(); ++i) {
         verbose()<< " info " << m_filterIDs[i]<<" = "<<m_vals[i] << endreq;
         sv->addInfo(m_filterIDs[i],m_vals[i]);
       }
       if (m_debug) printInfo(" make vertex ",*sv);
-    } // loop on tracks2
-  } // loop on tracks1
+  } 
   return StatusCode::SUCCESS;  
 }
 
-void HltVertexMaker::saveConfiguration() {
+template <typename Selections>
+void HltVertexMaker<Selections>::saveConfiguration() {
   HltAlgorithm::saveConfiguration();
 
   const std::vector<std::string>& values = m_filterDescriptor.value();
@@ -236,7 +226,8 @@ void HltVertexMaker::saveConfiguration() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode HltVertexMaker::finalize() {
+template <typename Selections>
+StatusCode HltVertexMaker<Selections>::finalize() {
 
   
   info() << " N Combinations " << m_counterCombinations << endreq;
@@ -251,4 +242,33 @@ StatusCode HltVertexMaker::finalize() {
 }
 
 //=============================================================================
+////////////////////////// TrackContainer -> VertexContainer
 
+HltVertexMaker1::HltVertexMaker1( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+  : HltVertexMaker<Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::Track> >( name , pSvcLocator )
+{ 
+}
+
+HltVertexMaker<Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::Track> >::combinatorics_engine
+HltVertexMaker1::combine() {
+    typedef HltVertexMaker<container_type>::combinatorics_engine engine_type;
+    return engine_type(m_selections.input<1>()->begin(),
+                       m_selections.input<1>()->end());
+}
+////////////////////////// TrackContainer + TrackContainer -> VertexContainer
+
+HltVertexMaker2::HltVertexMaker2( const std::string& name,
+                                ISvcLocator* pSvcLocator)
+  : HltVertexMaker<Hlt::SelectionContainer3<LHCb::RecVertex,LHCb::Track,LHCb::Track> >( name , pSvcLocator )
+{
+    declareProperty("DoMergeInputs", m_doMergeInputs = true);
+}
+
+HltVertexMaker<Hlt::SelectionContainer3<LHCb::RecVertex,LHCb::Track,LHCb::Track> >::combinatorics_engine
+HltVertexMaker2::combine() {
+    typedef HltVertexMaker<container_type>::combinatorics_engine engine_type;
+    return engine_type(m_selections.input<1>()->begin(), m_selections.input<1>()->end(),
+                       m_selections.input<2>()->begin(), m_selections.input<2>()->end(),
+                       m_doMergeInputs);
+}

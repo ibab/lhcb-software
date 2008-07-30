@@ -1,9 +1,11 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.8 2008-07-04 08:07:41 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.9 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include <algorithm>
+#include "boost/foreach.hpp"
+
 
 // local
 #include "HltL0MuonPrepare.h"
@@ -27,8 +29,10 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
   , m_maker(0)
+  , m_selections(*this)
 {
   declareProperty("MinPt", m_PtMin = 0.1);
+  m_selections.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -43,7 +47,8 @@ StatusCode HltL0MuonPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
   m_maker = tool<IMuonSeedTool>("MuonSeedTool");
 
@@ -57,44 +62,37 @@ StatusCode HltL0MuonPrepare::initialize() {
 //=============================================================================
 StatusCode HltL0MuonPrepare::execute() {
 
-  StatusCode sc = StatusCode::SUCCESS;
 
-  L0MuonCandidates* inputL0Muon = 
-    get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
-
+  L0MuonCandidates* input = get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
   Tracks* muons = new Tracks();
-  put(muons, "Hlt/Track/"+m_outputTracks->id().str());
+  put(muons, "Hlt/Track/"+m_selections.output()->id().str());
 
-  for (std::vector<L0MuonCandidate*>::iterator it= inputL0Muon->begin();
-       it !=  inputL0Muon->end(); ++it){
-    const L0MuonCandidate& l0muon = *(*it);
-    if (fabs(l0muon.pt()) < m_PtMin) continue;
-    debug() << "l0pt " << l0muon.pt()<< endmsg;
-    bool isClone=checkClone(*it);
-    if (isClone) debug() << "is clone " << endmsg;
-    if (isClone) continue;
-    Track* track = new Track();
-    sc = m_maker->makeTrack(l0muon,*track);
+  //BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selections.input<1>()) {
+  BOOST_FOREACH( L0MuonCandidate* l0muon, *input) {
+    debug() << "l0pt " << l0muon->pt()<< endmsg;
+    if (fabs(l0muon->pt()) < m_PtMin) continue;
+    bool isClone = checkClone(l0muon);
+    if (isClone) {
+        debug() << "is clone " << endmsg;
+        continue;
+    }
+    std::auto_ptr<Track> track( new Track() );
+    StatusCode sc = m_maker->makeTrack(*l0muon,*track);
+    if (sc.isFailure()) return sc;
     //TODO: pushes both into IHltDataSvc (m_outputTracks) and into TES (muons)
     //      this should be possible to do through the IHltDataSvc...
-    muons->insert(track);
-    m_outputTracks->push_back(track);
+    //      triggered by 'setDecision'...
+    m_selections.output()->push_back(track.get());
+    muons->insert(track.release());
   }
 
   if (m_debug) {
-    debug() << " n L0MuonCandidates " << inputL0Muon->size() << endreq;
-    debug() << " n L0Muon Tracks " << m_outputTracks->size() << endreq;
+    // debug() << "# Input: " << m_selections.input<1>()->size() 
+    debug() << "# Input: " << input->size() 
+            << " -> # Output: " << m_selections.output()->size() << endreq;
   }
 
-  return sc;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltL0MuonPrepare::finalize() {
-  debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  
+  return StatusCode::SUCCESS;
 }
 
 namespace {
@@ -113,14 +111,15 @@ bool HltL0MuonPrepare::checkClone(L0MuonCandidate* muon)
   const MuonTileID& tileM1 = muon->muonTileIDs(0).front();
   const MuonTileID& tileM2 = muon->muonTileIDs(1).front();
 
-  for( std::vector<Track*>::const_iterator t = m_outputTracks->begin();
-                                           t!= m_outputTracks->end(); ++t) {
-    const std::vector< LHCb::LHCbID >& ids= (*t)->lhcbIDs();
+  BOOST_FOREACH( Track* t, *m_selections.output() ) {
+    const std::vector< LHCb::LHCbID >& ids= t->lhcbIDs();
 
-    std::vector<LHCb::LHCbID>::const_iterator oldTileM1 = std::find_if( ids.begin(), ids.end(), isInMuonStation(0));
+    std::vector<LHCb::LHCbID>::const_iterator oldTileM1 = 
+        std::find_if( ids.begin(), ids.end(), isInMuonStation(0));
     if (oldTileM1 == ids.end() || !(*oldTileM1 == tileM1) ) continue; // not found, or no match...
 
-    std::vector<LHCb::LHCbID>::const_iterator oldTileM2 = std::find_if( ids.begin(), ids.end(), isInMuonStation(1));
+    std::vector<LHCb::LHCbID>::const_iterator oldTileM2 =
+        std::find_if( ids.begin(), ids.end(), isInMuonStation(1));
     if (oldTileM2 != ids.end() &&   *oldTileM2 == tileM2 ) return true; // found, and match...
   }
   return false;

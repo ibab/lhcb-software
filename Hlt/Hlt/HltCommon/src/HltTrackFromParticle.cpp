@@ -1,4 +1,4 @@
-// $Id: HltTrackFromParticle.cpp,v 1.7 2008-07-04 08:07:41 graven Exp $
+// $Id: HltTrackFromParticle.cpp,v 1.8 2008-07-30 13:37:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,9 +24,11 @@ DECLARE_ALGORITHM_FACTORY( HltTrackFromParticle );
 //=============================================================================
 HltTrackFromParticle::HltTrackFromParticle( const std::string& name, ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
 
   declareProperty( "ParticlesName" , m_particlesName = "");
+  m_selections.declareProperties();
 }
 
 //=============================================================================
@@ -42,7 +44,7 @@ StatusCode HltTrackFromParticle::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.registerSelection();
 
   saveConfiguration();
   info() << "HltAlgorithm initialized";
@@ -67,7 +69,7 @@ StatusCode HltTrackFromParticle::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputTracks->clean();
+  m_selections.output()->clean();
 //  std::for_each( boost::iterator::make_indirect_iterator(pars->begin()),
 //                 boost::iterator::make_indirect_iterator(pars->end()),
 //                 boost::bind(&HltTrackFromParticle::loadParticle,this,_1));
@@ -76,8 +78,8 @@ StatusCode HltTrackFromParticle::execute() {
   }
   
   if (m_debug) {
-    debug() << " candidates found " << m_outputTracks->size() << endreq;
-    printInfo(" tracks from particles ",*m_outputTracks);
+    debug() << " candidates found " << m_selections.output()->size() << endreq;
+    printInfo(" tracks from particles ",*m_selections.output());
   }
   
   return sc;
@@ -87,7 +89,7 @@ void HltTrackFromParticle::loadParticle(const Particle& par) {
   verbose() << " loading " << par.pt() << endreq;
   if (par.isBasicParticle()) {
     const Track* track = par.proto()->track();
-    if (track) m_outputTracks->push_back( const_cast<Track*>(track));
+    if (track) m_selections.output()->push_back( const_cast<Track*>(track));
     verbose() << " loading particle " << par.pt() 
               << " as track " << track->pt() << endreq;
   } else {

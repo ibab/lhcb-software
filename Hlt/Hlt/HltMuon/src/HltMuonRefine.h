@@ -1,8 +1,10 @@
-// $Id: HltMuonRefine.h,v 1.5 2008-01-22 09:59:19 hernando Exp $
+// $Id: HltMuonRefine.h,v 1.6 2008-07-30 13:40:37 graven Exp $
 #ifndef HLTMUON_HLTMUONREFINE_H 
 #define HLTMUON_HLTMUONREFINE_H 1
 
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
+#include <math.h>
 
 // Include files
 #include "Event/L0MuonCandidate.h"
@@ -24,14 +26,18 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
-  bool acceptMatch(float dist,float momentum);
-  float calcDist(float slX,float slY,float X,float Y,
-                 float Z,float XMuon,float YMuon,float ZMuon);
-  bool acceptMatchL0(float slX,float slY,float X,float Y,float Z,
+private:
+
+  bool acceptMatch(double dist,double momentum);
+  double calcDist(double slX,double slY,double X,double Y,
+                  double Z,double XMuon,double YMuon,double ZMuon) {
+    double distx=(slX*(ZMuon-Z)+X-XMuon);
+    double disty=(slY*(ZMuon-Z)+Y-YMuon);
+    return sqrt(distx*distx+disty*disty/4);
+  };
+  bool acceptMatchL0(double slX,double slY,double X,double Y,double Z,
                      double XMuon,double YMuon,double ZMuon,int region);
   
-
-protected:
 
 private:
 
@@ -50,26 +56,20 @@ private:
 
 
 
-  float m_par1;
-  float m_par2;
-  float m_par3;
-  float m_par4;
-  float m_L0X[4];
-  float m_L0Y[4];
-  float m_dxR1;
-  float m_dxR2;
-  float m_dxR3;
-  float m_dxR4;
-  float m_dyR1;
-  float m_dyR2;
-  float m_dyR3;
-  float m_dyR4;
+  double m_par1;
+  double m_par2;
+  double m_par4;
+  std::vector<double> m_L0X;
+  std::vector<double> m_L0Y;
   
   bool               m_onTES; ///< Should create States ?
 
   // Counters
   int m_countEvents;
   int m_countRemoved;
+
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track>  m_selections;
+
 
 };
 #endif // HLTMUON_HLTMUONREFINE_H

@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.h,v 1.1 2008-07-14 07:15:49 graven Exp $
+// $Id: HltIncidentFilter.h,v 1.2 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTINCIDENTFILTER_H 
 #define HLTINCIDENTFILTER_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IIncidentListener.h"
 
@@ -44,6 +45,7 @@ private:
   std::map<std::string,int>        m_quota; // note: this is PER PROCESS
   std::map<std::string,stat>       m_stat;
   std::string                      s_incident;
+  Hlt::SelectionContainer0         m_selection;
   bool                             m_keep;
 };
 #endif

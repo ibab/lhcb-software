@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.h,v 1.5 2008-05-15 08:56:55 graven Exp $
+// $Id: HltSummaryWriter.h,v 1.6 2008-07-30 13:37:33 graven Exp $
 #ifndef HLTCOMMON_HLTSUMMARYWRITER_H 
 #define HLTCOMMON_HLTSUMMARYWRITER_H 1
 
@@ -23,7 +23,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
 

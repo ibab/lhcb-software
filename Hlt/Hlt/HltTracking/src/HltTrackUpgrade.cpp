@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.cpp,v 1.11 2008-07-04 07:56:53 graven Exp $
+// $Id: HltTrackUpgrade.cpp,v 1.12 2008-07-30 13:39:39 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -24,8 +24,10 @@ DECLARE_ALGORITHM_FACTORY( HltTrackUpgrade );
 HltTrackUpgrade::HltTrackUpgrade( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty("RecoName", m_recoName = "empty");  
+  m_selections.declareProperties();
 };
 //=============================================================================
 // Destructor
@@ -39,8 +41,10 @@ StatusCode HltTrackUpgrade::initialize() {
   StatusCode sc = HltAlgorithm::initialize();
   if (sc.isFailure()) return sc;
 
-  m_inputTracks  = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));  
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.retrieveSelections();
+  // ownership: see TrackUpgradeTool: it always assumes ownership,
+  // and then transfers it to the TES...
+  m_selections.registerSelection();
 
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
   
@@ -58,22 +62,14 @@ StatusCode HltTrackUpgrade::execute() {
 
   //@TODO: adapt interface to be more neutral: input a vector<Track*>::const_iterator begin,end, and a back_inserter
   //       don't rely on tool doing pt ordering...
-  std::vector<LHCb::Track*> in(m_inputTracks->begin(),m_inputTracks->end());
-  assert(m_outputTracks->empty());
+  std::vector<LHCb::Track*> in(m_selections.input<1>()->begin(),m_selections.input<1>()->end());
+  assert(m_selections.output()->empty());
   std::vector<LHCb::Track*> out;
   StatusCode sc = m_tool->upgrade(in,out);
-  m_outputTracks->insert(m_outputTracks->end(),out.begin(),out.end());
-  if (m_debug) printInfo(" upgraded tracks ",*m_outputTracks);
+  m_selections.output()->insert(m_selections.output()->end(),out.begin(),out.end());
+  if (m_debug) printInfo(" upgraded tracks ",*m_selections.output());
   
   return sc;
-}
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltTrackUpgrade::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

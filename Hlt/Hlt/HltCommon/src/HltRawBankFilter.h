@@ -1,4 +1,4 @@
-// $Id: HltRawBankFilter.h,v 1.1 2008-07-02 14:21:14 graven Exp $
+// $Id: HltRawBankFilter.h,v 1.2 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTRAWBANKFILTER_H 
 #define HLTRAWBANKFILTER_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "GaudiKernel/Property.h"
 #include "Event/RawBank.h"
 
@@ -52,5 +53,6 @@ private:
 
   std::string         m_rawEventLocation;
   BankTypeList        m_rawBanks;
+  Hlt::SelectionContainer0 m_selection;
 };
 #endif

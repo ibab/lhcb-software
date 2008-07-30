@@ -1,4 +1,4 @@
-// $Id: HltRecChecker.cpp,v 1.7 2008-05-15 08:48:56 graven Exp $
+// $Id: HltRecChecker.cpp,v 1.8 2008-07-30 13:38:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,17 +24,23 @@ DECLARE_ALGORITHM_FACTORY( HltRecChecker );
 HltRecChecker::HltRecChecker( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
-  
   declareProperty( "LinkName" ,    m_linkName     = "" );
-  
+  m_selections.declareProperties();
 }
 
-HltRecChecker::~HltRecChecker() {} 
+HltRecChecker::~HltRecChecker() 
+{
+} 
 
 StatusCode HltRecChecker::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
+
 
   book1D("Quark",0.,6.,6);
   book1D("Track Bs",0.,10.,10);
@@ -54,9 +60,9 @@ StatusCode HltRecChecker::execute() {
   
   checkQuark();
   
-  if (m_inputTracks) checkTracks();
+  if (m_selections.input<1>()!=0) checkTracks(*m_selections.input<1>());
 
-  if (m_inputVertices) checkVertices();
+  // checkVertices();
 
   return StatusCode::SUCCESS;  
 }
@@ -64,49 +70,45 @@ StatusCode HltRecChecker::execute() {
 void HltRecChecker::checkQuark() {
   MCParticles* mcpars = get<MCParticles>(MCParticleLocation::Default);
   int q = MCHlt::iquark(*mcpars);
-  std::string title = "Quark";
-  fill( histo1D(title), q, 1.);
+  fill( histo1D(std::string("Quark")), q, 1.);
   debug() << " check quark " << q << endreq;
 }
 
-void HltRecChecker::checkTracks() {
+void HltRecChecker::checkTracks(const Hlt::TrackSelection& tracks) {
+
 
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
   
   unsigned nbs = 0;
-  for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
-       it != m_inputTracks->end(); ++it) {
-    const Track& track = *(*it);
-    printTrack(&track).ignore();
-    MCParticle* par = link.first( track.key() );
-    if (!par) continue;
+  for (Hlt::TrackSelection::const_iterator it = tracks.begin();
+       it != tracks.end(); ++it) {
+    printTrack(*it).ignore();
+    MCParticle* par = link.first( (*it)->key() );
+    if (par==0) continue;
     const MCParticle& mother = MCHlt::ancestor( (*par) );
     int q = MCHlt::iquark(mother);
-    if (q == 1) {
-      ++nbs;
-      if (m_outputTracks) m_outputTracks->push_back( (Track*) &track);
-    }
+    if (q != 1) continue;
+    ++nbs;
+    if (m_selections.output()) m_selections.output()->push_back( const_cast<Track*>( *it ));
   }
   
-  std::string title = "Track Bs";
-  fill( histo1D(title), nbs, 1.);
+  fill( histo1D(std::string("Track Bs")), nbs, 1.);
   
   bool tos = false;
   bool tis = false;
   
   if (nbs >0) tos = true;
-  if (m_inputTracks->size() > nbs) tis = true;
+  if (tracks.size() > nbs) tis = true;
 
   // int tostis = MCHlt::tostis(tos,tis);
-  // title = "Track TISTOS";
-  // fill( histo1D(title),tostis,1.);
+  // fill( histo1D(Track TISTOS),tostis,1.);
 
   debug() << " check tracks nbs " << nbs << endreq;
   // debug() << " check tracks tostis " << tostis << endreq;
 
 }
 
-void HltRecChecker::checkVertices() {
+void HltRecChecker::checkVertices(const Hlt::VertexSelection&) {
   
 }
 
@@ -115,8 +117,8 @@ void HltRecChecker::checkVertices() {
 //=========================================================================
 StatusCode HltRecChecker::printTrack(const LHCb::Track* T) {
   if (!msgLevel(MSG::DEBUG)) return StatusCode::SUCCESS ;
-  if ( NULL==T ){
-    Warning("NULL Track");
+  if ( T==0 ){
+    Warning("NULL Track pointer");
     return StatusCode::SUCCESS;
   }
   

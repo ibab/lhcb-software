@@ -1,8 +1,9 @@
-// $Id: HltSelectTracksForSwimming.cpp,v 1.3 2008-07-04 08:07:41 graven Exp $
+// $Id: HltSelectTracksForSwimming.cpp,v 1.4 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "boost/foreach.hpp"
 
 // from Event
 #include "HltSelectTracksForSwimming.h"
@@ -23,9 +24,10 @@ DECLARE_ALGORITHM_FACTORY( HltSelectTracksForSwimming );
 //=============================================================================
 HltSelectTracksForSwimming::HltSelectTracksForSwimming( const std::string& name, ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
-
   declareProperty( "ParticlesName" , m_particlesName = "");
+  m_selections.declareProperties();
 }
 
 //=============================================================================
@@ -43,14 +45,8 @@ StatusCode HltSelectTracksForSwimming::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
-
-  if (!m_inputSelection2Name.empty()) {
-    m_inputTracks2 =
-      &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-  }
-
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
 
   saveConfiguration();
   info() << "HltAlgorithm initialized" << endmsg;
@@ -75,7 +71,7 @@ StatusCode HltSelectTracksForSwimming::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputTracks->clean();
+  m_selections.output()->clean();
 
   //Lets see what we just did, for debug
   if (m_debug) {
@@ -83,17 +79,12 @@ StatusCode HltSelectTracksForSwimming::execute() {
         verbose() << "About to print out a  mountain of crap" << endmsg;
 
         verbose() << "Printing out the trigger tracks" << endmsg;
-        for (iT = (*m_inputTracks).begin(); iT != (*m_inputTracks).end(); ++iT) {
-
-                verbose() << (*iT) << endmsg;
-
+        BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>()) {
+                verbose() << iT << endmsg;
         }
-
         debug() << "Printing out the B tracks" << endmsg;
-        for (iT = (*m_inputTracks2).begin(); iT != (*m_inputTracks2).end(); ++iT) {
-
-                debug() << (*iT) << endmsg;
-
+        BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<2>()) {
+                debug() << iT << endmsg;
         }
 
   }
@@ -101,24 +92,19 @@ StatusCode HltSelectTracksForSwimming::execute() {
   sc = filter_Tracks();
 
   if (m_debug) {
-
         debug() << "About to print out a mountain of crap" << endmsg;
-
         debug() << "Printing out the output tracks" << endmsg;
-        for (iT = (*m_outputTracks).begin(); iT != (*m_outputTracks).end(); ++iT) {
-
-                debug() << (*iT) << endmsg;
-
+        BOOST_FOREACH( LHCb::Track *iT, *m_selections.output() ) {
+                debug() << iT << endmsg;
         }
-
   }
   
-  int ncan = m_outputTracks->size();
+  int ncan = m_selections.output()->size();
   //candidateFound(ncan);
   
   debug() << " candidates found " << ncan << endmsg;
   if (m_debug)
-    printInfo(" tracks from particles ",*m_outputTracks);
+    printInfo(" tracks from particles ",*m_selections.output());
   
   return sc;
   
@@ -127,35 +113,24 @@ StatusCode HltSelectTracksForSwimming::execute() {
 StatusCode HltSelectTracksForSwimming::filter_Tracks(){
 //Leave only the tracks which are associated to the B in the event
 
-  bool trackmatchfound = false;
 
   debug() << "Beginning to match tracks for swimming" << endmsg;
 
-  for (iT = (*m_inputTracks).begin(); iT != (*m_inputTracks).end(); ++iT) {
-
+  BOOST_FOREACH( LHCb::Track* iT, *m_selections.input<1>() ) {
         verbose() << "Outputing the current trigger track" << endmsg;
-        verbose() << *iT << endmsg;
-
-        for (iTT = (*m_inputTracks2).begin(); iTT != (*m_inputTracks2).end(); ++iTT) {
-
+        verbose() << iT << endmsg;
+        bool trackmatchfound = false;
+        BOOST_FOREACH (LHCb::Track *iTT, *m_selections.input<2>() ) {
                 verbose() << "Outputing the current B track" << endmsg;
-                verbose() << *iTT << endmsg;
-
-                if (tracksMatchInVelo(*iT,*iTT)) {
-
+                verbose() << iTT << endmsg;
+                if (tracksMatchInVelo(iT,iTT)) {
                         trackmatchfound = true;
                         verbose() << "The tracks are a match!" << endmsg;
                         break;
-
                 } else verbose() << "No match found... better luck next time!" << endmsg;
-
         }
-
-        if (trackmatchfound) m_outputTracks->push_back( const_cast<Track*>(*iT));
-        trackmatchfound = false;
-
+        if (trackmatchfound) m_selections.output()->push_back(iT);
   }
-
   return StatusCode::SUCCESS;
 }
 //=============================================================================

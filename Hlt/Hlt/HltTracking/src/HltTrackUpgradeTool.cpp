@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.25 2008-07-09 14:15:38 hernando Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.26 2008-07-30 13:39:39 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -367,7 +367,7 @@ size_t HltTrackUpgradeTool::find(const Track& seed,
 
 void HltTrackUpgradeTool::printInfo(const std::string& title,
                                     const std::vector<Track*>& con) {
-  for (Hlt::TrackContainer::const_iterator it = con.begin(); 
+  for (std::vector<Track*>::const_iterator it = con.begin(); 
        it != con.end(); it++) 
     printInfo(title,*(*it));
 }

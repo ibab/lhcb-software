@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.12 2008-07-09 14:11:25 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.13 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -156,12 +156,14 @@ void HltConfigSvc::verifyTCK() {
     }
     unsigned int TCK = odin->triggerConfigurationKey();
 
-    debug() << "verifyTCK: currently configured TCK: " << m_configuredTCK << endmsg;
     debug() << "verifyTCK: TCK in ODIN bank: " << TCK << endmsg;
+    debug() << "verifyTCK: currently configured TCK: " << m_configuredTCK << endmsg;
 
     if ( m_configuredTCK == TCK ) return;
 
-    info() << "requesting update of from TCK " << m_configuredTCK << " to TCK " << TCK << endmsg;
+    info() << "requesting configuration update from TCK " 
+           << m_configuredTCK 
+           << " to TCK " << TCK << endmsg;
     if (reconfigure( tck2id(TCK) ).isSuccess()) { 
         m_configuredTCK = TCK;
     } else {
@@ -183,6 +185,6 @@ void HltConfigSvc::verifyTCK() {
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {
-    // dummyVerifyTCK();
-    verifyTCK();
+     dummyVerifyTCK();
+    // verifyTCK();
 }

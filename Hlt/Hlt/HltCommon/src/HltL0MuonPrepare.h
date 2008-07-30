@@ -1,10 +1,11 @@
-// $Id: HltL0MuonPrepare.h,v 1.1 2008-01-22 09:56:33 hernando Exp $
+// $Id: HltL0MuonPrepare.h,v 1.2 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltBase/IMuonSeedTool.h"
 #include "Event/L0MuonCandidate.h"
 
@@ -23,7 +24,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 
 private:
@@ -33,7 +33,8 @@ private:
   IMuonSeedTool* m_maker;
 
   bool checkClone(LHCb::L0MuonCandidate* muon);
-
+  // Hlt::SelectionContainer2<LHCb::Track,LHCb::L0MuonCandidate> m_selections;
+  Hlt::SelectionContainer1<LHCb::Track> m_selections;
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

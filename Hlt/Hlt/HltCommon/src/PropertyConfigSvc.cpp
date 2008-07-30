@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.14 2008-07-15 07:43:44 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.15 2008-07-30 13:37:33 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -208,31 +208,7 @@ PropertyConfigSvc::invokeSetProperties(const PropertyConfig& conf) const {
     return StatusCode::FAILURE;
 }
 
-StatusCode 
-PropertyConfigSvc::invokeSysReinitialize(const PropertyConfig& conf) const {
-    info() << " calling SysReinitialize for " << conf.name() << endmsg;
-    if (conf.kind() == "IAlgorithm") {
-        Algorithm *alg = resolve<Algorithm>(conf.name()); 
-        return alg!=0 ? alg->sysReinitialize() : StatusCode::FAILURE ;
-    } else if (conf.kind() == "IService")  {
-        Service *svc = resolve<Service>(conf.name()); 
-        return svc!=0 ? svc->sysReinitialize() : StatusCode::FAILURE ;
-    } 
-    return StatusCode::FAILURE;
-}
 
-StatusCode 
-PropertyConfigSvc::invokeSysRestart(const PropertyConfig& conf) const {
-    info() << " calling SysRestart for " << conf.name() << endmsg;
-    if (conf.kind() == "IAlgorithm") {
-        Algorithm *alg = resolve<Algorithm>(conf.name()); 
-        return alg!=0 ? alg->sysRestart() : StatusCode::FAILURE ;
-    } else if (conf.kind() == "IService")  {
-        Service *svc = resolve<Service>(conf.name()); 
-        return svc!=0 ? svc->sysRestart() : StatusCode::FAILURE ;
-    } 
-    return StatusCode::FAILURE;
-}
 
 //=============================================================================
 // implemenation of the IPropertyConfigSvc interface:
@@ -400,6 +376,12 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 }
 
 
+//TODO: add a locking mechanism that, after the first configure, forbids new entries,
+//      i.e. only allow pushing changes to existing entries, i.e. m_configPushed must 
+//      be a valid digest prior to pushing... 
+//      This would basically forbid changes in flow, as any added 'member' in an existing 
+//      sequencer would not have its properties pushed yet, but will in the config, so it 
+//      would be caught when trying to push the properties of the new algorithm.
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const 
 {
@@ -538,24 +520,8 @@ PropertyConfigSvc::reconfigure(const ConfigTreeNode::digest_type& top) const
     // on the ones we pushed...
     StatusCode sc = configure(top,true);
     if (!sc.isSuccess()) return sc;
-
     assert(m_appMgrUI!=0);
-//    sc = m_appMgrUI->stop();
-//    if (!sc.isSuccess()) return sc;
     return m_appMgrUI->restart();
-    // call reinitialize for services and top algorithms...
-//    vector<const PropertyConfig*> cfgs;
-//    sc = findTopKind(top, "IService", back_inserter(cfgs));
-//    if (!sc.isSuccess()) return sc;
-//    sc = findTopKind(top,"IAlgorithm",back_inserter(cfgs));
-//    if (!sc.isSuccess()) return sc;
-//    for (vector<const PropertyConfig*>::iterator i = cfgs.begin(); i!=cfgs.end(); ++i) {
-//       sc = invokeSysRestart( **i );
-//       if (sc.isFailure()) { 
-//            error() << "FIXME: failed while calling sysRestart on " << (*i)->name() << " : " << sc << endmsg;
-//       }
-//    }
-//    return sc;
 }
 
 //=============================================================================

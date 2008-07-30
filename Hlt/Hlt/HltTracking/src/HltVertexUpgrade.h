@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.5 2008-05-11 10:03:22 graven Exp $
+// $Id: HltVertexUpgrade.h,v 1.6 2008-07-30 13:39:39 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -8,6 +8,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltUtils.h"
 #include "HltBase/EDictionary.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "HltTrackUpgradeTool.h"
 
 /** @class HltVertexUpgrade HltVertexUpgrade.h
@@ -56,8 +57,10 @@ private:
   Hlt::VertexCreator _makeVertex;
 
   std::string m_inputName;
-  Hlt::VertexSelection* m_inputVertices;
-  Hlt::VertexSelection* m_outputVertices;
+
+  // one output: vertex
+  // one input: vertex
+  Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::RecVertex> m_selections;
   
 
 };

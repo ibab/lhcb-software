@@ -27,18 +27,3 @@ HltVertexFilter::HltVertexFilter( const std::string& name,
   HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory")
 {}
 
-
-DECLARE_ALGORITHM_FACTORY( HltTrackPrepare );
-
-HltTrackPrepare::HltTrackPrepare( const std::string& name, 
-                                ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::Track>(name,pSvcLocator, "HltTrackFunctionFactory",true)
-{ }
-
-
-DECLARE_ALGORITHM_FACTORY( HltVertexPrepare );
-
-HltVertexPrepare::HltVertexPrepare( const std::string& name, 
-                                    ISvcLocator* pSvcLocator ) :
-  HltTFilter<LHCb::RecVertex>(name,pSvcLocator, "HltVertexFunctionFactory",true)
-{ }

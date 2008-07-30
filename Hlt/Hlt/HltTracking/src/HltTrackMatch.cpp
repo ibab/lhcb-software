@@ -1,8 +1,9 @@
-// $Id: HltTrackMatch.cpp,v 1.9 2008-07-02 19:15:23 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.10 2008-07-30 13:39:39 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "boost/foreach.hpp"
 
 // local
 #include "HltTrackMatch.h"
@@ -27,22 +28,21 @@ DECLARE_ALGORITHM_FACTORY( HltTrackMatch );
 HltTrackMatch::HltTrackMatch( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
+  , m_tool(0)
+  , m_qualityID(0)
+  , m_quality2ID(0)
 {
   declareProperty("MatchName",m_matchName = "");
   
   declareProperty("MaxQuality",m_maxQuality = 1e6);
   declareProperty("MaxQuality2",m_maxQuality2 = 1e6);
 
-  m_inputTracks = 0;
-  m_inputTracks2 = 0;
-  m_outputTracks = 0;
+  m_selections.declareProperties();
 
   m_TESOutput = "";
-  m_tool = 0;
   m_qualityName = "";
   m_quality2Name = "";
-  m_qualityID = 0;
-  m_quality2ID = 0;
 }
 //=============================================================================
 // Destructor
@@ -58,9 +58,8 @@ StatusCode HltTrackMatch::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_inputTracks  = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
-  m_inputTracks2 = &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
   recoConfiguration();
   
@@ -161,22 +160,16 @@ StatusCode HltTrackMatch::execute() {
   Tracks* otracks = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_TESOutput);
 
-  for (std::vector<LHCb::Track*>::iterator it = m_inputTracks->begin();
-       it != m_inputTracks->end(); ++it) {
-    const LHCb::Track& track1 = *(*it);
-    if (m_verbose) printInfo(" track [1] ",track1);
-    
-    for (std::vector<LHCb::Track*>::iterator it2 = m_inputTracks2->begin();
-         it2 != m_inputTracks2->end(); ++it2) {
-      const LHCb::Track& track2 = *(*it2);
-      
-      if (m_verbose) printInfo(" track [2] ",track2);
+  BOOST_FOREACH( LHCb::Track* track1, *m_selections.input<1>()) {
+    if (m_verbose) printInfo(" track [1] ",*track1);
+    BOOST_FOREACH( LHCb::Track* track2, *m_selections.input<2>()) {
+      if (m_verbose) printInfo(" track [2] ",*track2);
 
-      Track otrack(track1.key());
+      Track otrack(track1->key());
 
       double quality = 0.;
       double quality2 = 0.;
-      sc = m_tool->match(track1,track2,otrack,quality,quality2);
+      sc = m_tool->match(*track1,*track2,otrack,quality,quality2);
       if (sc.isFailure()) {
         // Warning(" matching failed ",0);
         continue;
@@ -193,30 +186,19 @@ StatusCode HltTrackMatch::execute() {
         if (m_qualityID != 0) track3->addInfo(m_qualityID,quality);
         if (m_quality2ID != 0) track3->addInfo(m_quality2ID,quality2);
         if (m_transferInfo) {
-          Hlt::MergeInfo(track1,*track3);
-          Hlt::MergeInfo(track2,*track3);
+          Hlt::MergeInfo(*track1,*track3);
+          Hlt::MergeInfo(*track2,*track3);
         }  
         otracks->insert( track3 );
-        m_outputTracks->push_back( track3);
+        m_selections.output()->push_back(track3);
       }
 
     }
   }
   
-  if (m_debug) printInfo(" matched tracks ",*m_outputTracks);
+  if (m_debug) printInfo(" matched tracks ",*m_selections.output());
 
 
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltTrackMatch::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return HltAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================

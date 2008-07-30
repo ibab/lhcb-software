@@ -1,8 +1,9 @@
-// $Id: HltMoveVerticesForSwimming.cpp,v 1.4 2008-07-04 08:07:41 graven Exp $
+// $Id: HltMoveVerticesForSwimming.cpp,v 1.5 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "boost/foreach.hpp"
 
 // from Event
 #include "HltMoveVerticesForSwimming.h"
@@ -24,10 +25,13 @@ DECLARE_ALGORITHM_FACTORY( HltMoveVerticesForSwimming );
 //=============================================================================
 HltMoveVerticesForSwimming::HltMoveVerticesForSwimming( const std::string& name, ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty("Blifetime", m_bLifetime = -999999.0);
   declareProperty("SwimmingDistance", m_swimmingDistance = 0.0);
   declareProperty("ParticlesName" , m_particlesName = "");
+
+  m_selections.declareProperties();
 }
 
 //=============================================================================
@@ -45,9 +49,8 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_inputVertices = &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
-
-  m_outputVertices = &(registerTSelection<LHCb::RecVertex>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
 
   saveConfiguration();
   info() << "HltAlgorithm initialized" << endmsg;
@@ -61,6 +64,7 @@ StatusCode HltMoveVerticesForSwimming::initialize() {
 StatusCode HltMoveVerticesForSwimming::execute() {
 
   StatusCode sc = HltAlgorithm::execute(); // must be executed first
+  if (sc.isFailure()) return sc;
 
   //Check if particles exist
   if (!exist<Particles>(m_particlesName)) return sc;
@@ -72,17 +76,14 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   }  
   if (pars == 0) return sc;
   
-  m_outputVertices->clean();
+  m_selections.output()->clean(); //TODO: is this really needed?
 
   //Lets see what we just did, for debug
   if (m_debug) {
         debug() << "Printing out the input vertices" << endmsg;
-        for (iV = (*m_inputVertices).begin(); iV != (*m_inputVertices).end(); ++iV) {
-
-                debug() << (*iV) << endmsg;
-
+        BOOST_FOREACH( LHCb::RecVertex* v, *m_selections.input<1>()) {
+                debug() << *v << endmsg;
         }
-
   }
 
   //Swim the primary vertices
@@ -90,6 +91,7 @@ StatusCode HltMoveVerticesForSwimming::execute() {
   m_bVertexPosition = (*(pars->begin()))->endVertex()->position();
   m_bMass = (*(pars->begin()))->measuredMass();
   m_bMom = (*(pars->begin()))->p();
+  //FIXME: why is the next line commented out???
   //sc = move_PVs();
 
   debug() << "The B direction is" << endmsg;
@@ -104,14 +106,10 @@ StatusCode HltMoveVerticesForSwimming::execute() {
 
   debug() << "The swimming distance is " << m_swimmingDistance << endmsg;
 
-  if (m_inputVertices->size() > 0) m_bLifetime = get_B_lifetime();
-  else m_bLifetime = -999999.0;
+  m_bLifetime = get_B_lifetime();
   
-  int ncan = m_outputVertices->size();
-  //candidateFound(ncan);
-  
+  int ncan = m_selections.output()->size();
   debug() << " candidates found " << ncan << endmsg;
-
   return sc;
   
 }
@@ -123,14 +121,14 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(){
 
   debug() << "Beginning to move vertices for swimming" << endmsg;
 
-  for (iV = (*m_inputVertices).begin(); iV != (*m_inputVertices).end(); ++iV) {
+  BOOST_FOREACH( LHCb::RecVertex *vertex, *m_selections.input<1>()) {
 
-        debug() << "The primary vertex is at " << (*iV) << endmsg;
-        debug() << "With X coordinate " << (*iV)->position().X() << endmsg;
-        debug() << "With Y coordinate " << (*iV)->position().Y() << endmsg;
-        debug() << "With Z coordinate " << (*iV)->position().Z() << endmsg;
+        debug() << "The primary vertex is at " << vertex << endmsg;
+        debug() << "With X coordinate " << vertex->position().X() << endmsg;
+        debug() << "With Y coordinate " << vertex->position().Y() << endmsg;
+        debug() << "With Z coordinate " << vertex->position().Z() << endmsg;
 
-        newVertPos = (*iV)->position() + m_swimmingDistance*m_bDirection;
+        newVertPos = vertex->position() + m_swimmingDistance*m_bDirection;
         //newVertPos = m_bVertexPosition - m_swimmingDistance*m_bDirection;
 
         debug() << "The new vertex" << endmsg;
@@ -138,11 +136,9 @@ StatusCode HltMoveVerticesForSwimming::move_PVs(){
         debug() << "With Y coordinate " << newVertPos.Y() << endmsg;
         debug() << "With Z coordinate " << newVertPos.Z() << endmsg;
 
-        (*iV)->setPosition(newVertPos);
-        m_outputVertices->push_back( const_cast<LHCb::RecVertex*>(*iV));
-
+        vertex->setPosition(newVertPos); //@TODO / @FIXME: we should NOT change the input vertex!!!
+        m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(vertex));
   }
-
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -150,28 +146,25 @@ double HltMoveVerticesForSwimming::get_B_lifetime(){
 //Get the B lifetime. The "correct" PV is defined as the one
 //with the larger absolute cos(theta) the the B. 
 
-  Gaudi::XYZPoint newVertPos;
   double templifetime = -999999.;
+  if (m_selections.input<1>()->empty()) return templifetime;
+
+  Gaudi::XYZPoint newVertPos;
   double vertexCosTheta = 0.;
   double bestVertexCosTheta = 0.;
-  LHCb::RecVertex* bestVertex = (*(*m_inputVertices).begin()); 
+
+  LHCb::RecVertex* bestVertex = m_selections.input<1>()->front();
   
   debug() << "Trying to find the best vertex" << endmsg;
 
-  for (iV = (*m_inputVertices).begin(); iV != (*m_inputVertices).end(); ++iV) {
-
-	debug() << "First candidate is " << (*iV) << endmsg;
-
-  	vertexCosTheta = ((m_bVertexPosition - (*iV)->position()).Unit()).Dot(m_bDirection.Unit());
-
+  BOOST_FOREACH( LHCb::RecVertex* vertex, *m_selections.input<1>() ) {
+	debug() << "First candidate is " << vertex << endmsg;
+  	vertexCosTheta = ((m_bVertexPosition - vertex->position()).Unit()).Dot(m_bDirection.Unit());
 	debug() << "It has a cos theta of " << vertexCosTheta << endmsg;
-
 	if (fabs(vertexCosTheta) > fabs(bestVertexCosTheta)) {
-
 		debug() << "Which is a new best cos theta" << endmsg;
-
 		bestVertexCosTheta = fabs(vertexCosTheta);
-		bestVertex = (*iV);
+		bestVertex = vertex;
 	}
   }
 
@@ -183,14 +176,14 @@ double HltMoveVerticesForSwimming::get_B_lifetime(){
   debug() << "Z coordinate " << bestVertex->position().Z() << endmsg;
 
   newVertPos = bestVertex->position() + m_swimmingDistance*m_bDirection; 
-  bestVertex->setPosition(newVertPos);
+  bestVertex->setPosition(newVertPos); //@FIXME @TODO should NOT modify input vertex
 
   debug() << "The moved vertex is at " << bestVertex << endmsg;
   debug() << "With X coordinate " << bestVertex->position().X() << endmsg;
   debug() << "With Y coordinate " << bestVertex->position().Y() << endmsg;
   debug() << "With Z coordinate " << bestVertex->position().Z() << endmsg;
 
-  m_outputVertices->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
+  m_selections.output()->push_back( const_cast<LHCb::RecVertex*>(bestVertex));
 
   templifetime = 1000.*m_bMass*sqrt(	(m_bVertexPosition - 
 		       			 bestVertex->position()
@@ -203,20 +196,5 @@ double HltMoveVerticesForSwimming::get_B_lifetime(){
   } 
 
   debug() << "With lifetime " << templifetime << endmsg;
-
   return templifetime;
-
 }
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltMoveVerticesForSwimming::finalize() {
-
-  StatusCode sc = HltAlgorithm::finalize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-  
-  debug() << "==> Finalize" << endmsg;
-
-  return  StatusCode::SUCCESS;
-}
-

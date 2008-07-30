@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.7 2008-01-22 11:04:06 hernando Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.8 2008-07-30 13:38:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,12 +25,12 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckVertices );
 HltRecCheckVertices::HltRecCheckVertices( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator ), m_ipFun(0)
+  , m_selections(*this)
 {
-  
   declareProperty( "LinkName" ,    m_linkName     = "" );
   declareProperty( "TESInputVerticesName", m_TESInputVerticesName = "");
   declareProperty( "IPType", m_ipType = "");
-  
+  m_selections.declareProperties();
 }
 
 HltRecCheckVertices::~HltRecCheckVertices() {
@@ -39,6 +39,8 @@ HltRecCheckVertices::~HltRecCheckVertices() {
 StatusCode HltRecCheckVertices::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+
+  m_selections.retrieveSelections();
 
   m_histoNRCV = initializeHisto("NRCV",0.,10.,10);
   m_histoNMCV = initializeHisto("NMCV",0.,10.,10);
@@ -62,7 +64,7 @@ StatusCode HltRecCheckVertices::initialize() {
 
 StatusCode HltRecCheckVertices::execute() {
   
-  if (m_inputTracks) {
+  if (m_selections.input<1>()) {
     relateVertices();
     checkVertices();
   }
@@ -76,8 +78,8 @@ void HltRecCheckVertices::relateVertices() {
   m_TESInputVertices = get<RecVertices>(m_TESInputVerticesName);
   m_relTrackMCVertex.clear();
   m_relVertexMCVertex.clear();
-  for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
-       it != m_inputTracks->end(); ++it) {
+  for (Hlt::TrackSelection::iterator it = m_selections.input<1>()->begin();
+       it != m_selections.input<1>()->end(); ++it) {
     const Track& track = *(*it);
     MCParticle* mcpar = link.first( track.key() );
 
@@ -149,8 +151,6 @@ void HltRecCheckVertices::checkVertices() {
     debug() << " dx vertex " << x-mcx << endreq;
     debug() << " dy vertex " << y-mcy << endreq;
     debug() << " dz vertex " << z-mcz << endreq;
-    
-    
   }
 }
 

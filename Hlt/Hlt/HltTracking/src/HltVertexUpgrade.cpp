@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.12 2008-07-02 19:32:02 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.13 2008-07-30 13:39:39 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -23,6 +23,7 @@ DECLARE_ALGORITHM_FACTORY( HltVertexUpgrade );
 HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty("RecoName", m_recoName = "empty");
   
@@ -30,7 +31,8 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
   
   declareProperty( "TESOutputVerticesName",  
                    m_TESOutputVerticesName = "Hlt/Vertex/VertexUpgradeBank");
- 
+
+  m_selections.declareProperties();
 };
 //=============================================================================
 // Destructor
@@ -44,13 +46,9 @@ StatusCode HltVertexUpgrade::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  m_inputVertices = 
-    &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
-  m_outputVertices = 
-    &(registerTSelection<LHCb::RecVertex>());
-  
-
   m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
   if (!m_tool) 
     fatal() << " not able to retrieve upgrade track tool " << endreq;
@@ -76,8 +74,8 @@ StatusCode HltVertexUpgrade::execute() {
     getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
   m_tool->beginExecute();
 
-  for (Hlt::VertexContainer::iterator it = m_inputVertices->begin();
-       it != m_inputVertices->end(); ++it) {
+  Hlt::VertexSelection *input = m_selections.input<1>();
+  for (Hlt::VertexSelection::iterator it=input->begin(); it!=input->end(); ++it) {
     RecVertex& vseed = *(*it);
     const SmartRefVector<Track>& otracks = vseed.tracks();
     Track& seed1 = (Track&) *(*otracks.begin());
@@ -104,7 +102,7 @@ StatusCode HltVertexUpgrade::execute() {
         _makeVertex(track1,track2,*sv);
         sv->setExtraInfo(vseed.extraInfo());
         overtices->insert(sv);
-        m_outputVertices->push_back(sv);
+        m_selections.output()->push_back(sv);
         debug() << " created vertex " << endreq;
         if (m_debug) printInfo(" vertex ",*sv);
         // TODO - wait till RecVertex is done

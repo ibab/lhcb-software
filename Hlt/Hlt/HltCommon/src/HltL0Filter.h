@@ -1,4 +1,4 @@
-// $Id: HltL0Filter.h,v 1.3 2008-07-15 09:55:50 graven Exp $
+// $Id: HltL0Filter.h,v 1.4 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTL0FILTER_H 
 #define HLTL0FILTER_H 1
 
@@ -9,6 +9,7 @@
 
 #include "Event/L0DUReport.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 
 /** @class HltL0Filter HltL0Filter.h
  *  
@@ -49,6 +50,8 @@ private:
   //      that way most of the time the requested map is the first
   //      one tried...
   TCKMap_t            m_map;
+
+  Hlt::SelectionContainer0 m_selection;
 
 };
 #endif // HltL0Filter_H

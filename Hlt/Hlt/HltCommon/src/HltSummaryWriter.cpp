@@ -1,4 +1,4 @@
-// $Id: HltSummaryWriter.cpp,v 1.13 2008-07-04 08:07:41 graven Exp $
+// $Id: HltSummaryWriter.cpp,v 1.14 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,7 @@ StatusCode HltSummaryWriter::initialize() {
 // Main execution
 //=============================================================================
 StatusCode HltSummaryWriter::execute() {
+//TODO: use a variant on SelectionContainer, setup flow in initialize
 
   debug() << "==> Execute" << endmsg;
 
@@ -111,17 +112,3 @@ void HltSummaryWriter::writeSelection(HltSummary& summary, const stringKey& id) 
           << " [hltsummary]: decision " << sum.decision() 
           <<  " candidates " << sum.data().size() << endreq;
 }
-
-
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltSummaryWriter::finalize() {
-
-  StatusCode sc = HltBaseAlg::finalize();
-  debug() << " finalize " << sc << endreq;
-  return sc;
-}
-
-

@@ -1,9 +1,10 @@
-// $Id: HltRecCheckVertices.h,v 1.3 2008-01-22 11:04:06 hernando Exp $
+// $Id: HltRecCheckVertices.h,v 1.4 2008-07-30 13:38:48 graven Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
 // Include files
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "Event/MCParticle.h"
 #include "HltBase/ERelations.h"
 #include "HltBase/HltTypes.h"
@@ -31,7 +32,7 @@ protected:
   
   void checkVertices();
 
-protected:
+private:
 
   std::string m_linkName;
   std::string m_ipType;
@@ -41,7 +42,8 @@ protected:
   
   zen::bifunction<LHCb::Track,LHCb::RecVertex>* m_ipFun;
 
-protected:
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+
 
   Hlt::Histo* m_histoNRCV;
   Hlt::Histo* m_histoNMCV;
@@ -54,8 +56,6 @@ protected:
   Hlt::Histo* m_histoDX;
   Hlt::Histo* m_histoDY;
   Hlt::Histo* m_histoDZ;
-
-protected:
 
   zen::relation<LHCb::Track*,LHCb::MCVertex*> m_relTrackMCVertex;
   zen::relation<LHCb::MCVertex*,LHCb::Track*> m_relMCVertexTrack;

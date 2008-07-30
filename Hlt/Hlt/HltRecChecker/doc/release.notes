@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
+! 2008-07-30 - Gerhard Raven
+  - follow changes in HltBase
 
 !========================== HltRecChecker v1r6 2008-06-09 ===================
 ! 2008-05-15 - Gerhard Raven

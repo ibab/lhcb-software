@@ -1,10 +1,11 @@
-// $Id: HltMoveVerticesForSwimming.h,v 1.2 2008-04-09 10:03:03 gligorov Exp $
+// $Id: HltMoveVerticesForSwimming.h,v 1.3 2008-07-30 13:37:32 graven Exp $
 #ifndef HLTMOVEVERTICESFORSWIMMING_H 
 #define HLTMOVEVERTICESFORSWIMMING_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "Event/Particle.h"
 
 /** @class HltMoveVerticesForSwimming HltMoveVerticesForSwimming.h
@@ -23,19 +24,17 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   double get_B_lifetime();
   StatusCode move_PVs();
 
+  Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::RecVertex> m_selections;
+
   //The location of the B
   std::string m_particlesName;
 
-  //Some iterators for the above
-  std::vector<LHCb::RecVertex*>::const_iterator iV;
-  LHCb::Particles::const_iterator iP;
 
   Gaudi::XYZVector m_bDirection; //The direction in which to swim
   Gaudi::XYZPoint m_bVertexPosition; //The starting point for the swimming

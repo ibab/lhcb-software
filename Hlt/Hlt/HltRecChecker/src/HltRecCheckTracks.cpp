@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.cpp,v 1.4 2008-01-22 11:04:06 hernando Exp $
+// $Id: HltRecCheckTracks.cpp,v 1.5 2008-07-30 13:38:48 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -23,10 +23,17 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckTracks );
 HltRecCheckTracks::HltRecCheckTracks( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
+  , m_histoGhost(0)
+  , m_histoDx(0)
+  , m_histoDy(0)
+  , m_histoDz(0)
+  , m_histoDTx(0)
+  , m_histoDTy(0)
+  , m_histoPOP(0)
 {
-  
-  declareProperty( "LinkName" ,    m_linkName     = "" );
-  
+  declareProperty( "LinkName" ,    m_linkName );
+  m_selections.declareProperties();
 }
 
 HltRecCheckTracks::~HltRecCheckTracks() {} 
@@ -34,6 +41,8 @@ HltRecCheckTracks::~HltRecCheckTracks() {}
 StatusCode HltRecCheckTracks::initialize() {
 
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
+
+  m_selections.retrieveSelections();
 
   m_histoGhost = initializeHisto("Ghost",0.,1.,100);
   m_histoDx = initializeHisto("DeltaX",-0.3,0.3,100);
@@ -48,23 +57,20 @@ StatusCode HltRecCheckTracks::initialize() {
 
 StatusCode HltRecCheckTracks::execute() {
   
-  if (m_inputTracks) checkTracks();
-
-  return StatusCode::SUCCESS;  
-}
-
-void HltRecCheckTracks::checkTracks() {
+  if (m_selections.input<1>()==0) return StatusCode::SUCCESS;  
 
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
   
   int nghost = 0;
-  for (Hlt::TrackContainer::iterator it = m_inputTracks->begin();
-       it != m_inputTracks->end(); ++it) {
-    const Track& track = *(*it);
+  for (Hlt::TrackSelection::iterator it = m_selections.input<1>()->begin();
+       it != m_selections.input<1>()->end(); ++it) {
+    const Track& track = **it;
     const State& state = track.firstState();
     MCParticle* mcpar = link.first( track.key() );
-    if (!mcpar) nghost += 1;
-    if (!mcpar) continue;
+    if (mcpar==0) { 
+        ++nghost;
+        continue;
+    }
 
     double mcpz = mcpar->momentum().z();
     double mctx = mcpar->momentum().x()/mcpz;
@@ -93,16 +99,12 @@ void HltRecCheckTracks::checkTracks() {
 
   }
 
-  int ntracks = m_inputTracks->size();
-  double rat = (1.*nghost)/(1.*ntracks);
-  fillHisto( *m_histoGhost, rat, 1.);
-
-  debug() << " checkReco ghost " << nghost << " " 
-          << ntracks << " " << rat << endreq;
-  
-}
-
-
-StatusCode HltRecCheckTracks::finalize() {
-  return HltAlgorithm::finalize();
+  int ntracks = m_selections.input<1>()->size();
+  if (ntracks!=0) {
+      double rat = double(nghost)/double(ntracks);
+      fillHisto( *m_histoGhost, rat, 1.);
+      debug() << " checkReco ghost " << nghost << " " 
+              << ntracks << " " << rat << endreq;
+  }
+  return StatusCode::SUCCESS;
 }

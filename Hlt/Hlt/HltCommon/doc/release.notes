@@ -3,6 +3,11 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-07-30 - Gerhard Raven
+  - add HltRoutingBitsWriter & HltRoutingBitEvaluatorFactory
+  - follow changes in HltBase
+  - clean up ConfigSvc for Gaudi v20r1 or later
+
 !2008-07-22 - Gerhard Raven
   - remove L0Entry
 

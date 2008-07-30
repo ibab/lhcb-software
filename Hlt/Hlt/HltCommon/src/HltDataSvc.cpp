@@ -107,20 +107,33 @@ IDataProviderSvc& HltDataSvc::evtSvc() const {
 
 
 StatusCode 
-HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* /*parent*/,bool useTES) {
+HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesFromTES) {
 //@TODO: record dependency of id on parent
-//    if (parent==0) std::cout << "don't have parent..." << std::endl;
-//    else std::cout << "HltDataSvc("<<name()<<"):addSelection called by " << parent->name() << " for " << sel->id() << std::endl;
 //@TODO: verify that is a valid name by going to the ANNSvc...
+    if (parent==0) {
+        error() << " did not specify parent... " << endmsg;
+        return StatusCode::FAILURE;
+    }
+    if (sel->id().empty()) {
+        error() << " attempt by " << parent->name() << " to register an unnamed selection... " << endmsg;
+        assert(1==0);
+        return StatusCode::FAILURE;
+    }
+    if (!originatesFromTES) { 
+        if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
+            error() << " parent already registerd an output selection... " << endmsg;
+            return StatusCode::FAILURE;
+        }
+        m_parents.push_back(parent); // register that a parent generated an output selection...
+        debug() << "adding output selection " << sel->id() << " for " << parent->name() << endmsg;
+    } else {
+        debug() << "adding TES input selection " << sel->id() << " requested by " << parent->name() << endmsg;
+    }
     typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
     std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
     if (p.first!=p.second) return StatusCode::FAILURE; // already there...
     m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
-    assert(!useTES);
-    if (useTES) {
-        StatusCode sc = evtSvc().registerObject(m_TESOutputPrefix + "/" + sel->id().str(),sel);
-        if (sc.isFailure()) return sc;
-    } else {
+    if (!originatesFromTES) {
         m_ownedSelections.push_back(sel);
     }
     return StatusCode::SUCCESS;
@@ -133,23 +146,22 @@ HltDataSvc::hasSelection(const stringKey& id) const {
     
 
 Hlt::Selection& 
-HltDataSvc::selection(const stringKey& id,IAlgorithm* /*parent*/) {
+HltDataSvc::selection(const stringKey& id,IAlgorithm* parent) {
 //@TODO: record dependency of parent on id
     //if (parent==0) std::cout << "don't have parent..." << std::endl;
     // else std::cout << "HltDataSvc("<<name()<<"):selection called by " << parent->name() << " for " << id << std::endl;
     // don't use hasSelection here to avoid doing 'find' twice...
+    if (parent==0) {
+        throw GaudiException(" did not specify parent... ", id.str(),StatusCode::FAILURE);
+    }
+    if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
+        throw GaudiException( " parent requests input after declaring output!",parent->name()+":"+id.str(),StatusCode::FAILURE);
+    }
     std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.find(id);
     if (i == m_mapselections.end()) throw GaudiException( name()+"::selection() not present ",id.str(),StatusCode::FAILURE);
     return *(i->second);
 }
 
-void 
-HltDataSvc::clean() {
-    for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
-                                                        i != m_mapselections.end(); ++i)
-        i->second->clean();
-}
-    
 std::vector<stringKey> 
 HltDataSvc::selectionKeys()
 {
@@ -157,12 +169,6 @@ HltDataSvc::selectionKeys()
     for (std::map<stringKey,Hlt::Selection*>::const_iterator i = m_mapselections.begin();
          i!=m_mapselections.end();++i)  keys.push_back(i->first);
     return keys;
-}
-
-void 
-HltDataSvc::resetData() {
-    assert(1==0);
-    // m_hltData = 0;
 }
 
 Hlt::Configuration& 
@@ -174,8 +180,9 @@ HltDataSvc::config() {
 };
 
 void HltDataSvc::handle( const Incident& ) {
-    // what to do with selections in TES???
-    clean();
+    for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
+                                                        i != m_mapselections.end(); ++i)
+        i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
 };
 
 MsgStream& HltDataSvc::msg(MSG::Level level) const {

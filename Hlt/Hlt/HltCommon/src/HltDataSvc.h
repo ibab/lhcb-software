@@ -25,12 +25,10 @@ public:
     StatusCode queryInterface(const InterfaceID& riid,
                                     void** ppvUnknown) ;
 
-    void resetData();
     StatusCode addSelection(Hlt::Selection* sel,IAlgorithm *parent,bool useTES=false);
     bool hasSelection(const stringKey& id) const;
     Hlt::Selection& selection(const stringKey& id,IAlgorithm* parent);
     std::vector<stringKey> selectionKeys();
-    void clean();
 
     Hlt::Configuration& config();
 
@@ -56,6 +54,8 @@ private:
   std::string                         m_TESOutputPrefix;
   std::map<stringKey,Hlt::Selection*> m_mapselections;
   std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
+
+  std::vector<IAlgorithm*>            m_parents;
 
 //  std::multimap<Hlt::Selection*,IAlgorithm*> m_users;     // which algorithms use a given selection?
 //  std::map<Hlt::Selection*,IAlgorithm*>      m_producers; // which algorithm produced a given selection?

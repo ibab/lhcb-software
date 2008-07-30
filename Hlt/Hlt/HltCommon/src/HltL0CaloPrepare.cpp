@@ -1,8 +1,10 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.7 2008-07-01 20:04:13 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.8 2008-07-30 13:37:32 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "boost/foreach.hpp"
+#include <memory>
 
 // local
 #include "HltL0CaloPrepare.h"
@@ -25,15 +27,21 @@ DECLARE_ALGORITHM_FACTORY( HltL0CaloPrepare );
 HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selection(*this)
+  , m_caloMaker(0)
+  , m_histoEt(0)
+  , m_histoEt1(0)
 {
-  
   declareProperty("MinEt", m_minEt = 3500.);
   declareProperty("CaloType", m_caloType = 2);
 
   declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
                   L0CaloCandidateLocation::Full);
+                  // L0CaloCandidateLocation::Default);
 
   declareProperty("CaloMakerTool", m_caloMakerName = "");
+
+  m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -48,7 +56,9 @@ StatusCode HltL0CaloPrepare::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorith
 
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
+  m_selection.retrieveSelections();
+
+  m_selection.registerSelection();
 
   m_histoEt = initializeHisto("Et",0.,6000.,100);
   m_histoEt1 = initializeHisto("Et1",0.,6000.,100);
@@ -56,9 +66,9 @@ StatusCode HltL0CaloPrepare::initialize() {
   debug() << " calo candidates location " 
           << m_caloCandidatesLocation << endreq;
 
-  m_caloMaker = 0;
-  if (m_caloMakerName != "")
-    m_caloMaker = tool<ICaloSeedTool>("HadronSeedTool");
+  m_caloMaker = (m_caloMakerName.empty() 
+                    ? (ICaloSeedTool*)0
+                    :tool<ICaloSeedTool>("HadronSeedTool"));
 
   saveConfiguration();  
   
@@ -70,31 +80,31 @@ StatusCode HltL0CaloPrepare::initialize() {
 //=============================================================================
 StatusCode HltL0CaloPrepare::execute() {
 
-
-  // get calo candidates
-  L0CaloCandidates* calos = get<L0CaloCandidates>(m_caloCandidatesLocation);
+  L0CaloCandidates* input = get<L0CaloCandidates>(m_caloCandidatesLocation);
   Tracks* output = new Tracks();
-  put(output,"Hlt/Track/"+m_outputTracks->id().str());
+  put(output,"Hlt/Track/"+m_selection.output()->id().str());
 
-  for (L0CaloCandidates::const_iterator it = calos->begin(); 
-       it != calos->end(); ++it) {
-    const L0CaloCandidate& calo = **it;
-    if (calo.type() == m_caloType && calo.et() >= m_minEt) {
-        Track* tcalo = new Track();
+  // BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
+  BOOST_FOREACH(const L0CaloCandidate* calo, *input ) {
+    if (calo->type() == m_caloType && calo->et() >= m_minEt) {
+        std::auto_ptr<Track> tcalo( new Track() );
         if (m_caloMaker) {
-            StatusCode sc = m_caloMaker->makeTrack(calo,*tcalo);
+            StatusCode sc = m_caloMaker->makeTrack(*calo,*tcalo);
             if (sc.isFailure()) return sc;
-        } else                           makeTrack(calo,*tcalo);
-        addExtras(calo,*tcalo);
+        } else                           makeTrack(*calo,*tcalo);
+        addExtras(*calo,*tcalo);
         //TODO: pushes both into IHltDataSvc (m_outputTracks) and into TES (output)
-        output->insert(tcalo);
-        m_outputTracks->push_back(tcalo);
+        m_selection.output()->push_back(tcalo.get());
+        output->insert(tcalo.release());
     }
   }
 
-  debug() << " number of calos above et " << m_outputTracks->size() 
-          << " candidates " << m_outputSelection->ncandidates() << endreq;
-  if (m_debug) printInfo(" Calos ",*m_outputTracks);
+  if (m_debug) {
+    // debug()  << "# Input: " << m_selection.input<1>()->size() 
+    debug()  << "# Input: " << input->size() 
+             << " -> # Output: " << m_selection.output()->size() << endreq;
+  }
+  if (m_debug) printInfo(" Calos ",*m_selection.output());
 
   return StatusCode::SUCCESS;
 }
@@ -136,14 +146,11 @@ void HltL0CaloPrepare::addExtras(const L0CaloCandidate& calo,
   double ex     = calo.posTol()*(4./sqrt(12.0));
   double ey     = ex;
 
-  const std::vector<State*>& states = track.states();
-  for (std::vector<State*>::const_iterator it = states.begin();
-       it != states.end(); ++it) {
-    State& state = *(*it);
-    if (state.location() == State::MidHCal){
-      state.setTx(ex); // ???
-      state.setTy(ey); // ???
-      debug() << " changed slopes! " << state.slopes() << endreq;
+  BOOST_FOREACH( State* state, track.states() ) {
+    if (state->location() == State::MidHCal){
+      state->setTx(ex); // ???
+      state->setTy(ey); // ???
+      debug() << " changed slopes! " << state->slopes() << endreq;
     }
   }
 

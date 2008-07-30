@@ -1,10 +1,11 @@
-// $Id: HltTrackMatch.h,v 1.3 2008-06-27 16:34:08 hernando Exp $
+// $Id: HltTrackMatch.h,v 1.4 2008-07-30 13:39:39 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKMATCH_H 
 #define HLTTRACKING_HLTTRACKMATCH_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "TrackInterfaces/ITrackMatch.h"
 #include "Event/HltEnums.h"
 #include "Event/Track.h"
@@ -25,21 +26,18 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
+private:
 
   void recoConfiguration();
 
   StatusCode setReco(const std::string& recoName);
-  
 
-protected:
 
-  // they are in HltAlgorithm
-  // Hlt::TrackSelection* m_inputTracks;
-  // Hlt::TrackSelection* m_inputTracks2;
-  // Hlt::TrackSelection* m_outputTracks;
+  // 1 output: track
+  // 2 inputs: track, track
+  // hence: container3<track,track,track> (output, first input, second input)
+  Hlt::SelectionContainer3<LHCb::Track,LHCb::Track,LHCb::Track> m_selections;
 
   std::string m_matchName;
   ITrackMatch* m_tool;
@@ -49,8 +47,6 @@ protected:
   double m_maxQuality;
   double m_maxQuality2;
 
-protected:
-  
   template <class T>
   void recoregister(const std::string& name, const std::string& prop,
                     const T& t) {
@@ -60,7 +56,6 @@ protected:
 
   zen::dictionary m_recoConf;
 
-protected:
 
   std::string m_qualityName;
   std::string m_quality2Name;
