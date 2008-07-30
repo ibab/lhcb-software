@@ -1,7 +1,7 @@
 """
 High level configuration tools for Conditions Database.
 """
-__version__ = "$Id: Configuration.py,v 1.7 2008-07-23 15:54:41 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2008-07-30 12:08:10 marcocle Exp $"
 __author__  = "Marco Clemencic <Marco.Clemencic@cern.ch>"
 
 from Gaudi.Configuration import allConfigurables
@@ -172,7 +172,7 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
     i = first_snapshot
     until = 0 # this makes the first service used from times starting from 0
     while i < last_snapshot:
-        name = "ONLINE-%04d%02d" % i
+        name = "ONLINE_%04d%02d" % i
         accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
         since = until
         # increment
@@ -185,7 +185,7 @@ def configureOnlineSnapshots(start = None, end = None, connStrFunc = None):
         ONLINE.Readers.append(descr)
     
     # append the last database with validity extended to the maximum validity
-    name = "ONLINE-%04d%02d" % i
+    name = "ONLINE_%04d%02d" % i
     accSvc = CondDBAccessSvc(name, ConnectionString = connStrFunc(i))
     since = until
     until = 0x7fffffffffffffffL # Defined in PyCool.cool as ValidityKeyMax

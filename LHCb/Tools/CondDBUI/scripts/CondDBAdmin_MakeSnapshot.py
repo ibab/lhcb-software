@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.4 2008-07-22 08:01:35 marcocle Exp $"
+__version__ = "$Id: CondDBAdmin_MakeSnapshot.py,v 1.5 2008-07-30 12:07:29 marcocle Exp $"
 
 import os, sys
 
@@ -21,7 +21,7 @@ isSQLiteFile = lambda path: os.path.isfile(path) and (open(path, "rb").read(6) =
 def guessConnectionString(partition, options):
     import re
     known_partitions = [ "DDDB", "LHCBCOND", "SIMCOND", "ONLINE" ]
-    if partition in known_partitions or re.match(r"ONLINE-[0-9]{6}", partition):
+    if partition in known_partitions or re.match(r"ONLINE_[0-9]{6}", partition):
         # Try to extract the connection string from the default configuration
         from Gaudi.Configuration import importOptions, allConfigurables
         _fixLogger()
