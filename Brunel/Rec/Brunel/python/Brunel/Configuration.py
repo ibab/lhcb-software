@@ -1,7 +1,7 @@
 """
 High level configuration tools for Brunel
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-07-28 16:19:36 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-07-30 15:30:00 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -49,7 +49,7 @@ class Brunel(ConfigurableUser):
         # Function to propagate properties to other component, if not already set
         if hasattr(self,name):
             if hasattr(other,name) and len(other.getProp(name)) > 0 :
-                print "%s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
+                print "# %s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
             else:
                 other.setProp(name,self.getProp(name))
 
@@ -63,14 +63,14 @@ class Brunel(ConfigurableUser):
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
         if hasattr(LHCbApp(),"EvtMax"):
-            print "LHCbApp().EvtMax already defined, ignoring Brunel().EvtMax"
+            print "# LHCbApp().EvtMax already defined, ignoring Brunel().EvtMax"
         else:
             LHCbApp().EvtMax = evtMax
 
         skipEvents = self.getProp("skipEvents")
         if skipEvents > 0 :
             if hasattr(LHCbApp(),"skipEvents"):
-                print "LHCbApp().skipEvents already defined, ignoring Brunel().skipEvents"
+                print "# LHCbApp().skipEvents already defined, ignoring Brunel().skipEvents"
             else:
                 LHCbApp().skipEvents = skipEvents
 

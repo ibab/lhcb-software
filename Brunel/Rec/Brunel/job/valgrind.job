@@ -27,20 +27,27 @@
 if ($#argv == 0 ) then
   echo "\nUsage: valgrind.job <options>"
   echo " where:"
-  echo "  <options> (mandatory) is name of options file (e.g. v200601)"
+  echo "  <options> (mandatory) is path of options file(s)"
   exit 0
-else
-  set Dver = $1
-  shift
 endif
+
+set nar = $#argv
+set options = ""
+set i = 0
+while ($i < $nar)
+  @ i = ${i} + 1
+  set options = ( $options  " "  $argv[${i}] )
+  echo ${options}  
+end
+
 #   
 set Bversion = "v33r1"
-echo "Executing valgrind for Brunel $Bversion using options file $Dver.opts"
+echo "Executing valgrind for Brunel $Bversion using options $options"
 #
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
-# in BATCH, location of executable has to be given explicitly
+# in BATCH, location of options has to be given explicitly
   setenv MYJOBROOT ~/cmtuser/Brunel_$Bversion/Rec/Brunel/$Bversion
 else
 # in interactive set WORKDIR to submission directory
@@ -53,36 +60,36 @@ endif
 
 # == set the program environment
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
-
-source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
+source /afs/cern.ch/lhcb/scripts/SetupProject.csh Brunel $Bversion
 
 # Go to working directory
 cd $WORKDIR
 
+
 if ($?LS_SUBCWD) then
 # == in batch copy the executable and options files to $WORKDIR
-  cp $MYJOBROOT/$CMTDEB/Brunel.exe tmpjob_$Dver.exe
-  cp $MYJOBROOT/options/*.opts .
-  cp $MYJOBROOT/job/Brunel.supp Brunel.supp
-  setenv BRUNELOPTS .
+  mkdir job
+  mkdir options
+  cp $MYJOBROOT/job/Brunel.supp job/Brunel.supp
+  cp $MYJOBROOT/options/*.* options
+  set SuppFile = "./Brunel.supp"
+  cd job
 else
-# == in interactive create a link to the executable
-  ln -fs $MYJOBROOT/$CMTDEB/Brunel.exe tmpjob_$Dver.exe
-  cp $BRUNELOPTS/$Dver.opts .
+  set SuppFile = "$MYJOBROOT/job/Brunel.supp"
 endif
-cp $Dver.opts valgrind.opts
+
+# Flatten the options and force 5 events only
+gaudirun.py -n -v --old-opts $options >! ./valgrind.opts
 echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
 
 # == run the excutable ================================
-set SuppFile = "./Brunel.supp"
 
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile ./tmpjob_$Dver.exe valgrind.opts >& memcheck.log
+valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile Gaudi.exe ./valgrind.opts >&! memcheck.log
 
 # == job is finished: remove temporary files ==========
-rm tmpjob_$Dver.exe
 rm valgrind.opts
 if ($?LS_SUBCWD) then
-  rm -f *.opts
+  rm -rf ../options
 # if in batch copy output files to user directories
   ls *.* >! RETURN
 endif

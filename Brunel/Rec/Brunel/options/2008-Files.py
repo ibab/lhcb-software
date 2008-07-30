@@ -40,7 +40,7 @@ else:
     # Example POOL DIGI (default, MC production)
     datasetName =  "11144103-100ev-20080613"
     # B->J/Psi(mumu)Ks events with Boole v16r0, Gauss v31r2, DB tag head-20080603
-    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r0/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
+    EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v16r1/" + datasetName + ".digi' TYP='POOL_ROOTTREE' OPT='READ'"]
 
 # Set the property, used to build other file names
 Brunel().setProp( "datasetName", datasetName )

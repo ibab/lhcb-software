@@ -3,12 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v33r1>2008-07-28 Brunel v33r1</A></H1><PRE>
+</PRE><H1><A NAME=v33r1>2008-07-30 Brunel v33r1</A></H1><PRE>
  - Changes to Configurable:
    . Load the HepMCBack Dll for DC06 data (HepMC 1.26 compatibility)
    . Add a useOracleCondDB flag (default False: uses SQLDDDB)
    . Add setOtherProp function to propagate properties to another configurable
    . Adapt to new TrackSys configurable
+ - In 2008-Files.py, update to an example file produced with Boole v16r1
+ - Adapt valgrind.job to work with python options
 
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
  - In requirements: use ParamFiles v7r2
