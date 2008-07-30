@@ -19,7 +19,6 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #---------------------------------------------------------------------------
 # Number of events to process, optionally skipping some events
 #---------------------------------------------------------------------------
-#Moore().EvtMax =  100 ;
 
 # if you want to generate a configuration, uncomment the following line:
 #Moore().GenerateConfig = True
@@ -27,18 +26,14 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 # if you want to run, using a (set of) TCK(s), uncomment the following two
 # lines, and input the (list of ) TCK(s)
 #Moore().UseTCK = True
-#Moore().PrefetchTCK = [ 0x1,0x2,0x3 ]
+#Moore().PrefetchTCK = [ 0x00010000,0x00020000,0x00030000 ]
 #HltConfigSvc().OutputLevel = DEBUG
 #
-#from Configurables import L0CaloCandidatesFromRawBank, L0CaloCandidatesFromRaw
-#L0CaloCandidatesFromRawBank().OutputLevel = DEBUG
-#L0CaloCandidatesFromRaw().OutputLevel = DEBUG
 Moore().runType = 'Physics_Hlt1'
 #Moore().runType = 'Physics_Hlt1+Hlt2'
 #Moore().DDDBtag = 'head-20080422'
 #Moore().condDBtag = 'head-20080422'
 
-#files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
 
 files = [ '/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/MBL0-lumi2-1.dst',
@@ -54,10 +49,14 @@ extensions = { 'MDF' : "' SVC='LHCb::MDFSelector'",
                'DST' : "' TYP='POOL_ROOTTREE' OPT='READ'" }
 
 EventSelector().Input =[ "DATAFILE='PFN:"+ f + extensions[ filetype ] for f in files ]
-EventSelector().PrintFreq = 100;
+EventSelector().PrintFreq = 100
 
-#ApplicationMgr().EvtMax = 1000
+#ApplicationMgr().EvtMax = 5000
 
-# always applyConf!
+# optionally, we can enable some auditors...
+# Moore().enableAuditor = [ NameAuditor() ]
+# always, always applyConf!
 Moore().applyConf()
+
+#and tell the world how we are configured
 print Moore()
