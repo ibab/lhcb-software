@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.13 2008-07-25 14:51:11 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2008-07-30 15:22:43 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -45,7 +45,7 @@ class Boole(ConfigurableUser):
         # Function to propagate properties to other component, if not already set
         if hasattr(self,name):
             if hasattr(other,name):
-                print "%s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
+                print "# %s().%s already defined, ignoring Brunel().%s"%(other.name(),name,name)
             else:
                 other.setProp(name,self.getProp(name))
 
@@ -67,21 +67,21 @@ class Boole(ConfigurableUser):
     def defineEvents(self):
         evtMax = self.getProp("EvtMax")
         if hasattr(LHCbApp(),"EvtMax"):
-            print "LHCbApp().EvtMax already defined, ignoring Boole().EvtMax"
+            print "# LHCbApp().EvtMax already defined, ignoring Boole().EvtMax"
         else:
             LHCbApp().EvtMax = evtMax
 
         skipEvents = self.getProp("skipEvents")
         if skipEvents > 0 :
             if hasattr(LHCbApp(),"skipEvents"):
-                print "LHCbApp().skipEvents already defined, ignoring Boole().skipEvents"
+                print "# LHCbApp().skipEvents already defined, ignoring Boole().skipEvents"
             else:
                 LHCbApp().skipEvents = skipEvents
 
         skipSpill  = self.getProp("skipSpill")
         if skipSpill  > 0 :
             if hasattr(EventSelector("SpilloverSelector"),"FirstEvent"):
-                print "EventSelector('SpilloverSelector').FirstEvent already defined, ignoring Boole().skipSpill"
+                print "# EventSelector('SpilloverSelector').FirstEvent already defined, ignoring Boole().skipSpill"
             else:
                 EventSelector("SpilloverSelector").FirstEvent = skipSpill + 1
 
@@ -104,7 +104,7 @@ class Boole(ConfigurableUser):
         """
         Switch to disable spillover. Spillover is on by default
         """
-        print "WARNING: Spillover is disabled"
+        print "# WARNING: Spillover is disabled"
         initDataSeq = GaudiSequencer( "InitDataSeq" )
         initDataSeq.Members.remove( "MergeEventAlg/SpilloverAlg" )    
 

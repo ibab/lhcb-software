@@ -1,9 +1,9 @@
-# --> Including file '/build/cattanem/Boole_HEAD/Digi/Boole/tests/options/testBoole-2008.py'
-WARNING: Spillover is disabled
+# --> Including file '/build/cattanem/Boole_v16r1/Digi/Boole/tests/options/testBoole-2008.py'
+# WARNING: Spillover is disabled
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Boole version v16r0
-                                          running on lxbuild120.cern.ch on Tue Jul 29 16:54:26 2008
+                                          running on lxbuild120.cern.ch on Wed Jul 30 17:14:49 2008
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -30,10 +30,10 @@ InitDataSeq          INFO Member list:
 InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackground/MuonFlatSpillover
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/v4r7/db/DDDB.db/DDDB"
+DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r7/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "head-20080729"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
-SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/user/m/marcocle/public/DBASE/Det/SQLDDDB/v4r7/db/SIMCOND.db/SIMCOND"
+SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/v4r7/db/SIMCOND.db/SIMCOND"
 SIMCOND              INFO Using TAG "head-20080729"
 RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/releases/PARAM/ParamFiles/v7r2/data/muonlow-G4.root" for reading
 MuonLowEnergy     WARNING SpilloverAlg not found
@@ -98,7 +98,7 @@ L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
 L0Muon               INFO  ptParameters = 40.000000,7.000000
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.85  [s]                                             #=  1
 ToolSvc.L0DUCon...   INFO **** L0DU Configs loading : TCK = 0xFFFF
 ToolSvc.L0DUCon...   INFO Short description ::  TCK = 0xFFFF : Algorithm[1] Setting[0] lumi[2] - 2007 tuning - gain:Calo[20] : Muon[40]
 L0DU                 INFO The L0DUConfig (TCK=0xFFFF) have been succesfully loaded
@@ -620,15 +620,15 @@ ToolSvc.RichRaw...   INFO  Rich1 Average                   | L1 size = 133.80 +-
 ToolSvc.RichRaw...   INFO  Rich2 Average                   | L1 size = 134.70 +- 3.67 hpds :  689.60 +- 8.30 words : 1245.60 +-11.16 hits / event
 ToolSvc.RichRaw...   INFO ========================================================================================================================
 BooleInit.Boole...SUCCESS Booked 2 Histogram(s) : 1D=2
-DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   70 [ms] Ave/Min/Max=  3.5(+- 1.99)/    1/    9 [ms] #= 20
+DataOnDemandSvc      INFO  #Incidents: Alg/Node/All: 20/10/950 Algorithms: Time User   : Tot=   77 [ms] Ave/Min/Max= 3.85(+- 2.22)/    1/   10 [ms] #= 20
 PoolRootTreeEvt...   INFO Disconnected data IO:6CEBF406-EF38-DD11-80DB-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2008/v31r2/11144103-100ev-20080613.sim]
 PoolRootTreeEvt...   INFO Disconnected data IO:F0625448-9659-DD11-849F-0030487C5E0E[11144103-100ev-20080613-10ev.digi]
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger E...   INFO Time User   : Tot=  143 [ms] Ave/Min/Max= 14.3(+-  3.9)/   10/   22 [ms] #= 10
-L0MuonTrigger I...   INFO Time User   : Tot= 1.62  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot= 21.5  [s]                                             #=  1
+L0MuonTrigger E...   INFO Time User   : Tot=  146 [ms] Ave/Min/Max= 14.6(+- 4.56)/   10/   25 [ms] #= 10
+L0MuonTrigger I...   INFO Time User   : Tot= 1.85  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot=   22  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized succesfully
 StatusCodeSvc        INFO listing all unchecked return codes:

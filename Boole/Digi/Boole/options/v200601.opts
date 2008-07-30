@@ -21,6 +21,9 @@
 MCITDepositCreator.DepChargeTool = "SiDepositedCharge";
 MCTTDepositCreator.DepChargeTool = "SiDepositedCharge";
 
+// Load the HepMC v1.26 backward compatibility Dll
+ApplicationMgr.Dlls += { "HepMCBack" };
+
 // By default, Boole uses G4 parameterisation for Muon background
 // Uncomment next two lines to use old GCALOR parameterisation instead
 //#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy-GCALOR.opts"
