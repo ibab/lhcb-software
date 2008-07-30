@@ -10,6 +10,45 @@
 This version uses Gaudi v20r2 and LHCb v25r0
 
 - Packages added:    L0/L0MuonMonitor: Package to monitor the L0Muon
+- Packages modified: CaloTools v5r3, L0Calo v9r16, L0DU v8r8, L0Muon v8r1,
+    RichDAQ v3r19, STDAQ v3r10, VeloSimulation v3r5
+
+- In CaloTools v5r3, L0DU v8r8, RichDAQ v3r19
+  . Adapt to new location of IEventTimeDecoder.h
+
+- In L0Calo v9r16
+  . L0CaloAlg: gives correct address in case of saturated cells
+               with equal energies in global pi0 candidate
+  . L0CaloMonit: add possibility to detect automatically hot cells in 
+                 the calo trigger
+  . L0CaloAlg, L0CaloCandidatesFromRaw and L0CaloCandidatesFromRawBank: 
+      use RawBankReadoutStatus class to store status of L0Calo banks decoding.
+
+- In L0Muon v8r1
+  . Protect against not valid MuonTileID when filling the OL in L0MuonAlg. 
+  . Remove the Extension property from L0MuonAlg and L0MuonCandidatesFromRaw.
+    Replaced by the Context property in the L0MuonOutput tool.
+  . Check for L0MuonError bank - fill the RawBankReadOutStatus if error bank
+    found
+  . Minor bug fix (error message in L0MuonOutput)
+
+- In RichDAQ v3r19
+  . Adapt to new distinction between L1 hardware and logical ID numbers
+
+- In STDAQ v3r10
+  . Bug in TTReadoutTool.cpp: Removed condition that skips addSector in a
+    STTELL1Board. Each board should have all 6 sectors (TT). Otherwise, the
+    STRawBankToClusterAlg complains about unknown channels (tested with data).
+  . Bug fix in Error construction
+  . Change STTELL1Error construction sequence in STErrorDecoding
+  . Really check Tell1 source is valid
+  . Clean up of counters  
+  . Add check on magic pattern
+  . Remove some unneeded printouts
+
+- In VeloSimulation v3r5
+  . Add a new wrapper inline int safe_int_poissonDist() to protect against 
+    FPE in Rndm::Poisson
 
 </PRE><H1><A NAME=v6r20>2008-07-18 LbcomSys v6r20</A></H1><PRE>
 This version uses Gaudi v20r1 and LHCb v24r1
