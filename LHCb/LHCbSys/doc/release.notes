@@ -11,7 +11,7 @@ This version uses Gaudi v20r2 and LCG_55a
  - Packages added:    Gen/HepMCBack v1r0 - Streamer to read HepMC 1.26 event
  - Packages modified: GaudiConf v10r12, GaudiObjDesc v11r3, KernelSys v9r0,
      LHCbKernel v9r0, L0MuonKernel v8r1, RichKernel v7r14, DetSys v15r0,
-     DDDB v1r10, DetCond v12r2, DetDesc v18r8, DetDescSvc v2r1, Magnet v4r0,
+     DDDB v1r10, DetCond v12r2, DetDesc v18r8, DetDescSvc v2r1, Magnet v5r0,
      RichDet v11r0, STDet v4r4, VeloDet v13r3, EventSys v24r7, DAQEvent v7r13,
      GenEvent v5r3, HltEvent v8r11, L0Event v17r1, VeloEvent v16r5,
      STTELL1Event v1r4, DAQSys v5r1, OTDAQ v7r1, CaloDAQ v4r7, CondDBUI v2r12,
@@ -82,7 +82,7 @@ This version uses Gaudi v20r2 and LCG_55a
     GaudiKernel, GaudiAlg, DetDesc (needs Gaudi v20r2)
   . Remove LHCbKernel dependency
 
-- In Magnet v4r0
+- In Magnet v5r0
   . Revised implementation of MagneticFieldSvc (see release notes for details)
     o Now implements ILHCbMagnetSvc interface, with added methods scaleFactor()
       and useRealMap()
