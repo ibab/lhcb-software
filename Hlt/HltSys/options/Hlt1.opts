@@ -1,39 +1,39 @@
 /**
- * Steering file for Hlt1 (alleys) 
+ * Steering file for Hlt1 
  */
 #include "$HLTSYSROOT/options/HltMainSequence.opts"
 /**
- * the Alleys sequencer
+ * the Hlt1 sequencer
  */
-Hlt.Members += { "GaudiSequencer/HltAllAlleysSequence" };
+Hlt.Members += { "GaudiSequencer/Hlt1" };
 
-HltAllAlleysSequence.ModeOr=true; 
-HltAllAlleysSequence.ShortCircuit=false; 
+Hlt1.ModeOr=true; 
+Hlt1.ShortCircuit=false; 
 
 //
 // NOTE:
 // To switch off an alley, please comment out the sequencer and the options
 //
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
+Hlt1.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
 #include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuonAlleySequence" };
+Hlt1.Members += {  "GaudiSequencer/HltMuonAlleySequence" };
 #include "$HLTSYSROOT/options/HltMuonAlleyConfSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
+Hlt1.Members += {  "GaudiSequencer/HltMuHadAlleySequence" };
 #include "$HLTSYSROOT/options/Hlt1MuTrackSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1HadronSequence" };
+Hlt1.Members += {  "GaudiSequencer/Hlt1HadronSequence" };
 #include "$HLTSYSROOT/options/Hlt1HadronSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
+Hlt1.Members += {  "GaudiSequencer/Hlt1EleAlleySequence" };
 #include "$HLTSYSROOT/options/HltEleAlleyConfSequence.opts"
 
-HltAllAlleysSequence.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
+Hlt1.Members += {  "GaudiSequencer/Hlt1PhoAlleySequence" };
 #include "$HLTSYSROOT/options/HltPhoAlleySequence.opts"
 
-HltAllAlleysSequence.Members += {  "HltSelectionFilter/HltAlleys" };
+Hlt1.Members += {  "HltSelectionFilter/HltAlleys" };
 
 
 
