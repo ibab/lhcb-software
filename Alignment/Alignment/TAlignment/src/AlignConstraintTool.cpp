@@ -11,7 +11,7 @@ namespace Al
   class Constraints
   {
   public:
-    enum EConstraints { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, SRz, Cur, NumConstraints } ;
+    enum EConstraints { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, SRz, TrX, TrY, TrTx, TrTy, Cur, NumConstraints } ;
     typedef AlDofMask<NumConstraints> DofMask ;
     Constraints(size_t dim, const std::vector<std::string>& activeconstraints) ;
     AlMat& derivatives() { return m_derivatives ; }
@@ -60,7 +60,8 @@ namespace Al
   }
   
   const std::vector<std::string> Constraints::m_names =
-     boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("SRz")("Cur");
+     boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("SRz")
+    ("TrX")("TrY")("TrTx")("TrTy")("TrCur");
   
 
   class AlignConstraintTool : public GaudiTool,  
@@ -151,7 +152,11 @@ namespace Al
     // 7 -> Sy  (zy shearing)
     // 8 -> Sz  (zz shearing == z-scale)
     // 9 -> SRz (twist around z-axis)
-    // 10 -> Curvature (Curvature constraint)
+    // 10 -> Average track X
+    // 11 -> Average track Y
+    // 12 -> Average track Tx
+    // 13 -> Average track Ty
+    // 14 -> Curvature (Curvature constraint)
     
     // it should be possible to do this better
     double weight(0) ;
@@ -211,7 +216,8 @@ namespace Al
 	    m_constraints->derivatives()(Constraints::SRz,jpar) = thisweight * deltaZ/(zmax-zmin) * jacobian(5,j) ;
 	    
 	    // Curvature constraint. The constraint is on the average per track.
-	    m_constraints->derivatives()(Constraints::Cur,jpar) = equations.dOmegaDAlpha(index)(j)/equations.numTracks() ;
+	    for(size_t trkpar=0; trkpar<5; ++trkpar)
+	      m_constraints->derivatives()(Constraints::TrTx+trkpar,jpar) = equations.dStateDAlpha(index)(trkpar,j)/equations.numTracks() ;
 	  }
 	} 
       }
