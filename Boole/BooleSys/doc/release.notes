@@ -11,6 +11,43 @@ This is a development version. It can process DC06 data, but output format and
 tuning is different from DC06. Processing of 2008 data is possible but not yet
 commissioned. Output requires Brunel v33r1 or later
 
+- Persistency changes
+  . Fixes to 2008 TT channel numbering for consistency with real TELL1. 
+    Needs Brunel v33r1 or later to decode (STDAQ v3r10, STKernel v1r7)
+  . HepMCEvent on input file is assumed to be in HepMC 1 format for DC06 data,
+    HepMC 2 otherwise. This can be changed by respectively removing or adding the
+    Dll "HepMCBack" from ApplicationMgr().Dlls
+  . HepMCEvent on output file is in HepMC 2 format, needs Brunel v33r1 or
+    later, DaVinci v19r15 or later to decode. (LCG_55a)
+  . Added OT bank version for simulation (SIM=63). Currently the same as v3 in
+    real data. Needs Brunel v33r1 or later to decode (OTAQ v7r1)
+
+- New features
+  . Velo motion system position (for Velo open/closed simulation) now taken
+    from SIMCOND (VeloDet v13r3, SQLDDDB v4r7)
+  . Magnetic field scale factor, polarity, field maps now taken from CondDB
+    (Magnet v5r0, SQLDDDB v4r7)
+  . Added QMTest files. Executed with "cmt TestPackage" directive
+  . Added Boole().useOracleCondDB flag (default False, uses SQLDDDB)
+    (GaudiConf v10r12, DDDB v1r10)
+  . Updated valgrind.job to work with python options
+
+- New tuning
+  . Enable usage of TT dead strip conditions, uses updated IT and TT dead channel
+    maps for 2008 (STDigiAlgorithms v1r3, STDet v4r4, SQLDDDB v4r7)
+  . New distinction between Rich L1 hardware and logical ID numbers
+    (RichDigiQC v3r10, RichDAQ v3r19, RichDet v11r0, RichKernel v7r14)
+
+- Bug fixes
+  . Fix to gaudirun.py to allow producing correct old style options from
+    python options (GaudiConf v10r12)
+  . Protect Floating Point Exceptions in Rndm::Poisson
+    (CaloDigit v2r8, VeloSimulation v3r5)
+  . Improve protection against crazy vertex times in PackMCVertex
+    (SimComponents v2r11)
+  . L0CaloAlg gives correct address in case of saturated cells with equal
+    energies in global pi0 candidate (L0Calo v9r16)
+
 </PRE><H1><A NAME=v16r0>2008-07-21 Boole v16r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r1
