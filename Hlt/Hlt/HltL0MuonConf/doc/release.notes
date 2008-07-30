@@ -3,10 +3,12 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+! 2008-07-30 - Gerhard Raven
+ - follow changes to HltAlgorithm in HltBase
 
 !========================== HltL0MuonConf v3r2 2008-07-09 ===================
 ! 2008-06-13 - Gerhard Raven
- - ressurect the not-obsolete _dll.cpp file
+ - revive the non-obsolete _dll.cpp file
 
 !========================== HltL0MuonConf v3r1 2008-06-09 ===================
 ! 2008-05-14 - Gerhard Raven

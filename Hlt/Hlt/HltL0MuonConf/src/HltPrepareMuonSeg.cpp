@@ -1,4 +1,4 @@
-// $Id: HltPrepareMuonSeg.cpp,v 1.6 2008-05-15 08:56:55 graven Exp $
+// $Id: HltPrepareMuonSeg.cpp,v 1.7 2008-07-30 13:42:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,9 +25,11 @@ using namespace LHCb;
 HltPrepareMuonSeg::HltPrepareMuonSeg( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName = "Hlt/Tracks/ConfirmedTMuon");
+  m_selections.declareProperties();
 
 }
 //=============================================================================
@@ -41,16 +43,12 @@ HltPrepareMuonSeg::~HltPrepareMuonSeg() {}
 StatusCode HltPrepareMuonSeg::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelectionName));
-  
-  m_outputTracks = &(registerTSelection<LHCb::Track>());
-
   debug() << "==> Initialize" << endmsg;
+
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
   m_prepareMuonSeed = tool<IMuonSeedTool>("MuonSeedTool",this);
-  
-
 
   return StatusCode::SUCCESS;
 }
@@ -65,10 +63,10 @@ StatusCode HltPrepareMuonSeg::execute() {
   //Container with all T tracks
   Tracks* muontracks = new Tracks();
   put(muontracks,m_outputMuonTracksName);
-  debug() << "Muon segments tracks size " << m_inputTracks->size()<< endmsg;
+  debug() << "Muon segments tracks size " << m_selections.input<1>()->size()<< endmsg;
   
-   for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
-        m_inputTracks->end() != itT; itT++ ) {
+   for ( std::vector<Track*>::const_iterator itT = m_selections.input<1>()->begin();
+        m_selections.input<1>()->end() != itT; itT++ ) {
     Track* itMuonSeg = (*itT);
     Track* seedTrack = new Track();
     //    LHCb::Track seedTrack; 
@@ -77,8 +75,8 @@ StatusCode HltPrepareMuonSeg::execute() {
       err()<<"Failed to prepare the seed"<<endmsg;
     }
     muontracks->insert(seedTrack); 
-    m_outputTracks->push_back(seedTrack);
- }//for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin() 
+    m_selections.output()->push_back(seedTrack);
+ }//for ( std::vector<Track*>::const_iterator itT = m_selections.input()->begin() 
   return StatusCode::SUCCESS;
 }
 

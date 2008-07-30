@@ -1,10 +1,11 @@
-// $Id: FilterMuonSegments.h,v 1.2 2008-01-22 09:58:06 hernando Exp $
+// $Id: FilterMuonSegments.h,v 1.3 2008-07-30 13:42:04 graven Exp $
 #ifndef FILTERMUONSEGMENTS_H 
 #define FILTERMUONSEGMENTS_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 
 /** @class FilterMuonSegments FilterMuonSegments.h
  *  
@@ -23,9 +24,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-  
 private:
+  Hlt::SelectionContainer3<LHCb::Track,LHCb::Track,LHCb::Track> m_selections;
   
 };
 #endif // FILTERMUONSEGMENTS_H

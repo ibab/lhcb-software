@@ -1,11 +1,11 @@
-// $Id: TTrackAndDistCut.h,v 1.2 2008-01-22 09:58:06 hernando Exp $
+// $Id: TTrackAndDistCut.h,v 1.3 2008-07-30 13:42:04 graven Exp $
 #ifndef TTRACKANDDISTCUT_H 
 #define TTRACKANDDISTCUT_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 #include "Event/L0MuonCandidate.h"
 #include "MuonDet/IMuonPosTool.h"
 
@@ -24,14 +24,12 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
   
-protected:
 
 private:
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
   IMuonPosTool*      m_iPosTool;
-  float m_maxdist;
-//  bool m_skipFilter;
+  double m_maxdist;
   double  calcDLL(LHCb::Track* track, LHCb::MuonTileID & tileM4, LHCb::MuonTileID & tileM5);
 
 };

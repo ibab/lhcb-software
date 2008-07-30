@@ -1,4 +1,4 @@
-// $Id: FilterMuonSegments.cpp,v 1.1 2007-12-06 16:12:15 hernando Exp $
+// $Id: FilterMuonSegments.cpp,v 1.2 2008-07-30 13:42:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,7 +24,11 @@ using namespace LHCb;
 //=============================================================================
 FilterMuonSegments::FilterMuonSegments( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator ){ }
+  : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
+{
+  m_selections.declareProperties();
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -38,6 +42,8 @@ StatusCode FilterMuonSegments::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
   
   return StatusCode::SUCCESS;
@@ -51,18 +57,17 @@ StatusCode FilterMuonSegments::execute() {
   debug() << "==> Execute" << endmsg;
   setFilterPassed(false);
 
-  if (m_inputTracks->size()<1) return StatusCode::SUCCESS;
+  if (m_selections.input<1>()->empty()) return StatusCode::SUCCESS;
+  if (m_selections.input<2>()->empty()) return StatusCode::SUCCESS;
+
+
+  debug() << "muon segments size "<< m_selections.input<2>()->size() << endmsg;
+
+
+  debug() << "L0 confirmed tracks size " << m_selections.input<1>()->size()<< endmsg;
   
-  if (m_inputTracks2->size()<1) return StatusCode::SUCCESS;
-
-
-  debug() << "muon segments size "<< m_inputTracks2->size() << endmsg;
-
-
-  debug() << "L0 confirmed tracks size " << m_inputTracks->size()<< endmsg;
-  
-  for ( std::vector<Track*>::const_iterator itT = m_inputTracks2->begin();
-        m_inputTracks2->end() != itT; itT++ ) {
+  for ( std::vector<Track*>::const_iterator itT = m_selections.input<2>()->begin();
+        m_selections.input<2>()->end() != itT; itT++ ) {
     
     Track* pTrack = (*itT);
     MuonTileID tileM2=0;
@@ -79,8 +84,8 @@ StatusCode FilterMuonSegments::execute() {
       tileM3 << endmsg;   
     //reject the muon tracks that share the M3 pad with one T Track from L0Muon    
     bool L0clone=false;
-    for(std::vector<LHCb::Track*>::iterator itL0Mu = m_inputTracks->begin();
-	itL0Mu!= m_inputTracks->end();
+    for(std::vector<LHCb::Track*>::iterator itL0Mu = m_selections.input<1>()->begin();
+	itL0Mu!= m_selections.input<1>()->end();
 	itL0Mu++){ 
       std::vector<LHCb::LHCbID> lista= (*itL0Mu)->lhcbIDs ();
       debug() << "lista size " << lista.size() << endmsg;
@@ -100,7 +105,7 @@ StatusCode FilterMuonSegments::execute() {
       debug() << "skipping " << endmsg; 
       continue;
     }
-    m_outputTracks->push_back(*itT);
+    m_selections.output()->push_back(*itT);
 
     debug() << "saved "<< endmsg; 
     setFilterPassed(true);

@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.cpp,v 1.2 2008-01-23 11:44:15 pkoppenb Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.3 2008-07-30 13:42:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -27,8 +27,10 @@ DECLARE_ALGORITHM_FACTORY( TTrackAndDistCut );
 TTrackAndDistCut::TTrackAndDistCut( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
   declareProperty( "maxDist",m_maxdist=100);
+  m_selections.declareProperties();
   
 }
 //=============================================================================
@@ -42,8 +44,11 @@ TTrackAndDistCut::~TTrackAndDistCut() {}
 StatusCode TTrackAndDistCut::initialize() {
   StatusCode sc = HltAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
   debug() << "==> Initialize" << endmsg;
+
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
+
   m_iPosTool  = tool<IMuonPosTool>( "MuonPosTool" );
   if(!m_iPosTool)info()<<"error retrieving the pos tool "<<endreq;
 
@@ -57,35 +62,21 @@ StatusCode TTrackAndDistCut::execute() {
 
   debug() << "==> Execute" << endmsg;
   setFilterPassed(true);
-  for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
-        m_inputTracks->end() != itT; itT++ ) {   
-     MuonTileID tileM4, tileM5;
+  for ( std::vector<Track*>::const_iterator itT = m_selections.input<1>()->begin();
+        m_selections.input<1>()->end() != itT; itT++ ) {   
+    MuonTileID tileM4, tileM5;
     double dist = calcDLL(*itT, tileM4, tileM5);    
     if(dist<m_maxdist){ 
-      setFilterPassed(true);
        (*itT)->addToAncestors (*itT);
        (*itT)->addToLhcbIDs(tileM4);
        (*itT)->addToLhcbIDs(tileM5);
-       (*itT)->addInfo(HltEnums::HltParticleInfoToType("MuonTdist"),dist);
-       m_outputTracks->push_back(*itT);
-
-
+       (*itT)->addInfo(HltEnums::HltParticleInfoToType("MuonTdist"),dist); //FIXME
+       m_selections.output()->push_back(*itT);
     }
-    
   }
   
   
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TTrackAndDistCut::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return HltAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -184,9 +175,6 @@ double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID 
          tileM5 = (*iCoord)->key();
       }
     }
-    
-
-    
   }
 
   distDLL+=dist_tempM4;
@@ -194,6 +182,4 @@ double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID 
   distDLL+=dist_tempM5;
   debug()<<" dist M5 "<<distDLL<<endreq;
   return distDLL;
-
-      
 }  

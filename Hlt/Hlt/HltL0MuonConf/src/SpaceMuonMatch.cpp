@@ -1,4 +1,4 @@
-// $Id: SpaceMuonMatch.cpp,v 1.9 2008-01-22 09:58:06 hernando Exp $
+// $Id: SpaceMuonMatch.cpp,v 1.10 2008-07-30 13:42:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,10 +24,12 @@ using namespace LHCb;
 SpaceMuonMatch::SpaceMuonMatch( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
  
  declareProperty("OutputMuonTracksName"   ,
                   m_outputMuonTracksName );
+  m_selections.declareProperties();
 
 }
 //=============================================================================
@@ -44,6 +46,8 @@ StatusCode SpaceMuonMatch::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   m_matchToolPointer=tool<IMatchTVeloTracks>( "MatchTVeloTracks" );
 
   return StatusCode::SUCCESS;
@@ -55,22 +59,23 @@ StatusCode SpaceMuonMatch::initialize() {
 StatusCode SpaceMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
-  debug()<<" velo "<<m_inputTracks->size()<<" T track "<<m_inputTracks2->size()
+  debug()<<" velo "<<m_selections.input<1>()->size()<<" T track "<<m_selections.input<2>()->size()
         <<endreq;
 
   Tracks* muontracks = new Tracks();
   muontracks->reserve(50);
+  put(muontracks,m_outputMuonTracksName);
 
   int tt=0;
-  for ( std::vector<Track*>::const_iterator itT = m_inputTracks->begin();
-        m_inputTracks->end() != itT; itT++ ) {
+  for ( std::vector<Track*>::const_iterator itT = m_selections.input<1>()->begin();
+        m_selections.input<1>()->end() != itT; itT++ ) {
     
     Track* pTrack = (*itT);
     if( pTrack->checkFlag( Track::Backward ) ) continue; // skip backward tracks
     debug()<<" new velo track "<<tt<<endreq;
 
-    for ( std::vector<Track*>::const_iterator itMuon = m_inputTracks2->begin();
-          m_inputTracks2->end() != itMuon; itMuon++ ) {
+    for ( std::vector<Track*>::const_iterator itMuon = m_selections.input<2>()->begin();
+          m_selections.input<2>()->end() != itMuon; itMuon++ ) {
       Track* muon=(*itMuon);
       Track* outputTrack=new Track();
       double x_dist, y_dist; 
@@ -84,8 +89,6 @@ StatusCode SpaceMuonMatch::execute() {
         double x_dist2dRecalc= 99999999;
         StatusCode sc2 = m_matchToolPointer->match2dVelo(*ppConvert,*muon, x_dist2dRecalc);        
 
-        muontracks->insert(outputTrack); 
-        setFilterPassed(true);
         //float x_dist2d = (*(anceRZ.begin()))->info(LHCb::HltEnums::Muon2DxDist,-1);
         //debug() << "xdist 2d from ancestor " << x_dist2d << endmsg;
         outputTrack->addInfo(HltEnums::Muon2DxDist,x_dist2dRecalc);
@@ -115,14 +118,13 @@ StatusCode SpaceMuonMatch::execute() {
           if((*itState)->qOverP() == 0)(*itState)->setQOverP(outputTrack->firstState().qOverP());
        }//for(std::vector< LHCb::State* >::iterator itState=allStates.begin()
 
-        m_outputTracks->push_back(outputTrack);
+        muontracks->insert(outputTrack); 
+        m_selections.output()->push_back(outputTrack);
       }
             
     }
     tt++;
   }  
-//  HltAlgorithm::endExecute();
-  put(muontracks,m_outputMuonTracksName);
   return StatusCode::SUCCESS;
 }
 

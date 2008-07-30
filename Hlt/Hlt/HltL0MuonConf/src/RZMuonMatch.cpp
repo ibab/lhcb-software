@@ -1,4 +1,4 @@
-// $Id: RZMuonMatch.cpp,v 1.7 2008-01-22 09:58:06 hernando Exp $
+// $Id: RZMuonMatch.cpp,v 1.8 2008-07-30 13:42:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -24,8 +24,9 @@ using namespace LHCb;
 RZMuonMatch::RZMuonMatch( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
-
+    m_selections.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -41,6 +42,8 @@ StatusCode RZMuonMatch::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
   
   m_matchToolPointer=tool<IMatchTVeloTracks>( "MatchTVeloTracks" );
 
@@ -53,27 +56,24 @@ StatusCode RZMuonMatch::initialize() {
 StatusCode RZMuonMatch::execute() {
 
   debug() << "==> Execute" << endmsg;
-//  setFilterPassed(false);
-//  HltAlgorithm::beginExecute();
-  debug()<<"velo " << m_inputTracks2->size()<<"T track "<<m_inputTracks->size()
-        <<endreq;
-  int tt=0;
+  debug()<<" velo "   << m_selections.input<2>()->size()
+         <<" T track "<< m_selections.input<1>()->size()
+         <<endreq;
   
-  for ( std::vector<Track*>::const_iterator itT = m_inputTracks2->begin();
-        m_inputTracks2->end() != itT; itT++ ) {
+  for ( std::vector<Track*>::const_iterator itT = m_selections.input<2>()->begin();
+        m_selections.input<2>()->end() != itT; itT++ ) {
     
     Track* pTr2d = (*itT);
     pTr2d->setFlag(Track::PIDSelected,false);
     pTr2d->setFlag(Track::L0Candidate,false);
     if( pTr2d->checkFlag( Track::Backward ) ) continue; // skip backward tracks
-    debug()<<" new velo track "<<tt<<endreq;
-    tt++;
+    debug()<<" new velo track "<<(itT-m_selections.input<2>()->begin())<<endreq;
     
 
-    for ( std::vector<Track*>::const_iterator itMuon = m_inputTracks->begin();
-          m_inputTracks->end() != itMuon; itMuon++ ) {  
+    for ( std::vector<Track*>::const_iterator itMuon = m_selections.input<1>()->begin();
+          m_selections.input<1>()->end() != itMuon; itMuon++ ) {  
       
-      debug()<<" enter loop new muon "<<m_inputTracks->size()<<endreq;
+      debug()<<" enter loop new muon "<<m_selections.input<1>()->size()<<endreq;
       Track* muon=(*itMuon);
       double x_dist;
       StatusCode sc=m_matchToolPointer->match2dVelo(*pTr2d,*muon, x_dist );
@@ -81,38 +81,21 @@ StatusCode RZMuonMatch::execute() {
       if(StatusCode::SUCCESS == sc) {
         debug()<<" success "<<endreq;
         debug() << "x_dist " << x_dist << endmsg;     
-        m_outputTracks->push_back(pTr2d);
+        m_selections.output()->push_back(pTr2d);
               
         pTr2d->setFlag(Track::PIDSelected,true);
         pTr2d->addInfo(HltEnums::Muon2DxDist,x_dist); 
 
         
-        if(m_debug){
-          debug() << " Selected track" << endreq;
-        }
+        if(m_debug) debug() << " Selected track" << endreq;
         
-        setFilterPassed(true);
+        //TODO ?? only first match is considered ???
         break;
       
       }
     }
-    tt++;
   }  
-  
-//  HltAlgorithm::endExecute();
   return StatusCode::SUCCESS;
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode RZMuonMatch::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return HltAlgorithm::finalize();  // must be called after all other actions
-}
-
-//=============================================================================
 
 
