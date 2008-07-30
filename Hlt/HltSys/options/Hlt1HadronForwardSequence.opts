@@ -71,7 +71,7 @@ Hlt1HadronForwardDiPrepare.Members = {
   "HltTrackFilter/Hlt1HadronForwardDiTFForward",
   "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/Hlt1HadronForwardDiTFVelo",
-  "HltVertexMaker/Hlt1HadronForwardDiVMVelo",
+  "HltVertexMaker2/Hlt1HadronForwardDiVMVelo",
   "HltVertexFilter/Hlt1HadronForwardDiVFVelo",
   "HltVertexUpgrade/Hlt1HadronForwardDiVUForward"
 };
@@ -161,7 +161,7 @@ Hlt1HadronForwardDiTFVelo.HistoDescriptor = {
 };
 
 
-Hlt1HadronForwardDiVMVelo.InputSelection = "Hlt1HadronForwardDiTFForward";
+Hlt1HadronForwardDiVMVelo.InputSelection1 = "Hlt1HadronForwardDiTFForward";
 Hlt1HadronForwardDiVMVelo.InputSelection2 = "Hlt1HadronForwardDiTFVelo";
 Hlt1HadronForwardDiVMVelo.FilterDescriptor = { "DOCA,<,0.2"};
 Hlt1HadronForwardDiVMVelo.HistoDescriptor = { 

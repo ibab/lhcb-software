@@ -15,9 +15,6 @@ HltAllAlleysSequence.ShortCircuit=false;
 // To switch off an alley, please comment out the sequencer and the options
 //
 
-//HltAllAlleysSequence.Members += {  "GaudiSequencer/HltL0TriggerSequence" };
-//#include "$HLTSYSROOT/options/HltL0TriggerSequence.opts"
-
 
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltPhysics" };
 HltAllAlleysSequence.Members += {  "GaudiSequencer/HltRandom" };

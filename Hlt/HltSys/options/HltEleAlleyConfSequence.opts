@@ -43,7 +43,7 @@ Hlt1ElectronEleTrkDecisionSeq.Members += {
                        "HltTrackFilter/Hlt1EleCompanionTFVelo",
                        "HltTrackUpgrade/Hlt1EleCompanionTUForward",
                        "HltTrackFilter/Hlt1EleCompanionTFForward",
-                       "HltVertexMaker/Hlt1EleDiElectronVM",
+                       "HltVertexMaker2/Hlt1EleDiElectronVM",
                        "HltVertexFilter/Hlt1ElectronEleTrkDecision"
 };
 Hlt1ElectronEleTrkDecisionSeq.MeasureTime = true;
@@ -53,7 +53,6 @@ Hlt1ElectronEleTrkDecisionSeq.MeasureTime = true;
 //-------------------------------------------------------------------------
 // HLT EleAlley options
 //-------------------------------------------------------------------------
-
 
 
 //
@@ -116,8 +115,7 @@ Hlt1EleTFForward.OutputLevel = 3;
 //
 // select velo tracks as companions 
 //
-Hlt1EleCompanionTFVelo.InputSelection     = "Velo";
-Hlt1EleCompanionTFVelo.InputSelection2    = "PV2D";
+Hlt1EleCompanionTFVelo.InputSelection    = "Velo";
 Hlt1EleCompanionTFVelo.HistogramUpdatePeriod = 0;
 Hlt1EleCompanionTFVelo.FilterDescriptor = {
   "IP_PV2D,||[],0.1,3.",
@@ -152,7 +150,7 @@ Hlt1EleCompanionTFForward.OutputLevel = 3;
 //
 // Make vertices with the forward companion tracks 
 //
-Hlt1EleDiElectronVM.InputSelection    = "Hlt1EleTFForward";
+Hlt1EleDiElectronVM.InputSelection1   = "Hlt1EleTFForward";
 Hlt1EleDiElectronVM.InputSelection2   = "Hlt1EleCompanionTFForward";
 Hlt1EleDiElectronVM.OutputLevel = 3;
 Hlt1EleDiElectronVM.FilterDescriptor = {"DOCA,<,0.2"};

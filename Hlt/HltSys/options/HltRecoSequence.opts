@@ -18,12 +18,12 @@ HltRecoSequence.Members = {
 HltTrackRecoSequence.Members = {
   "GaudiSequencer/HltRecoRZVeloSequence",
   "Tf::PatVeloSpaceTracking/HltRecoVelo",
-  "HltTrackPrepare/HltPrepareVelo",
+  "HltTrackFilter/HltPrepareVelo",
   // "PatPV3D/HltRecoPV3D",
   "GaudiSequencer/HltDecodeTT",
   "GaudiSequencer/HltDecodeT",
   "PatForward/HltRecoForward",
-  "HltTrackPrepare/HltPrepareForward"
+  "HltTrackFilter/HltPrepareForward"
 };
 // --------------------- HltCalosequence // In HltChargedProtoPAlg for the time being
 HltCaloRecoSequence.Members = {"GaudiSequencer/RecoCALOSeq" };
@@ -56,6 +56,7 @@ HltRecoPV2D.OutputVerticesName = "Hlt/Vertex/PV2D";
 
 HltRecoVelo.InputTracksName = "Hlt/Track/RZVelo";
 HltRecoVelo.OutputTracksName = "Hlt/Track/Velo";
+HltRecoVelo.PatVeloSpaceTool.OutputLevel = 4;
 
 HltRecoPV3D.InputTracksName = "Hlt/Track/Velo";
 
@@ -73,10 +74,10 @@ HltDecodeT.Members += {
 };
 createITLiteClusters.detType = "IT";
 
-HltPrepareVelo.InputSelection = "Hlt/Track/Velo";
+HltPrepareVelo.InputSelection = "TES:Hlt/Track/Velo";
 HltPrepareVelo.OutputSelection = "Velo1";
 
-HltPrepareForward.InputSelection = "Hlt/Track/Forward";
+HltPrepareForward.InputSelection = "TES:Hlt/Track/Forward";
 HltPrepareForward.OutputSelection = "Forward1";
 
 
@@ -112,16 +113,16 @@ Hlt1RecoRZPVSequence.Members += {
 Hlt1RecoRZVeloSequence.MeasureTime = true;
 Hlt1RecoRZVeloSequence.Members += { 
   "GaudiSequencer/HltRecoRZVeloSequence",
-  "HltTrackPrepare/Hlt1PrepareRZVelo",
-  "HltVertexPrepare/Hlt1PreparePV2D"
+  "HltTrackFilter/Hlt1PrepareRZVelo",
+  "HltVertexFilter/Hlt1PreparePV2D"
 };
 
-Hlt1PrepareRZVelo.InputSelection   = "Hlt/Track/RZVelo";
+Hlt1PrepareRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
 Hlt1PrepareRZVelo.AddInfo = false;
 Hlt1PrepareRZVelo.FilterDescriptor = {"IsBackward,<,0.5"};
 Hlt1PrepareRZVelo.OutputSelection     = "RZVelo";
 
-Hlt1PreparePV2D.InputSelection = "Hlt/Vertex/PV2D";
+Hlt1PreparePV2D.InputSelection = "TES:Hlt/Vertex/PV2D";
 Hlt1PreparePV2D.OutputSelection   = "PV2D";
 
 Hlt1RecoVelo.InputSelection = "RZVelo";

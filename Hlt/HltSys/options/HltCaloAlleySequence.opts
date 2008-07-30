@@ -25,7 +25,7 @@ HltCaloPreTrigger.ModeOr = true;
 //-------------------------------------------------------------------------
 
 // L0CaloEntry.OutputLevel = 3;
-L0CaloEntry.L0ChannelsName = {"electron","photon","localPi0","globalPi0"};
+L0CaloEntry.L0Channels = {"electron","photon","localPi0","globalPi0"};
 
 //------- the Calorimeter PreTrigger ------------
 HltCaloPreTrigger0.SelectionName      = "CalPreTrigger";

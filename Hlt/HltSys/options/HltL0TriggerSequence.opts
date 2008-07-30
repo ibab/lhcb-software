@@ -81,7 +81,7 @@ PrepareL0MuonDecisionSeq.Members = {
 
 PrepareL0DiMuonDecisionSeq.Members = {
   "HltL0Filter/Hlt1L0DiMuon",
-  "HltVertexMaker/L0DiMuonDecision"
+  "HltVertexMaker1/L0DiMuonDecision"
 };
 
 PrepareL0MuonNoGlobDecisionSeq.Members = {

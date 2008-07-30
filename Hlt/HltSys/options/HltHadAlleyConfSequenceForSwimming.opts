@@ -72,7 +72,7 @@ HadDiHadronSeq.Members = {
 //
 // Enter if there is a L0Hadron yes
 //
-HadL0Entry.L0ChannelsName = {"Hadron"};
+HadL0Entry.L0Channels = {"Hadron"};
 HadL0Entry.OutputLevel = 3;
 
 // HadL0Calos.MinEt = 3500.;

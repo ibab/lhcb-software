@@ -23,7 +23,7 @@ HltMuHadAlleySequence.Members = {
   "HltTrackFilter/Hlt1MuTrackMuonTF",     //IP and pT muon track filter
   "HltTrackUpgrade/Hlt1RecoVelo",      // Velo reco  
   "HltTrackFilter/Hlt1MuTrackVeloCompanionTF",  //IP and DOCA filter for velo tracks
-  "HltVertexMaker/Hlt1MuTrackVeloVM",           //make vertices from muon forward + velo track (+DOCA filter again?)
+  "HltVertexMaker2/Hlt1MuTrackVeloVM",           //make vertices from muon forward + velo track (+DOCA filter again?)
   "HltVertexFilter/Hlt1MuTrackVeloVF",       //DZ vertex filter    
   "GaudiSequencer/HltDecodeT",         // T stations reco  
   "HltVertexUpgrade/Hlt1MuTrackCompanionVUForward", // companion track => forward
@@ -71,10 +71,9 @@ Hlt1MuTrackVeloCompanionTF.OutputLevel = 3;
 
 
 // Make vertices with the velo companion tracks and filter with DOCA and DZ 
-Hlt1MuTrackVeloVM.InputSelection    = "Hlt1MuTrackMuonTF";
+Hlt1MuTrackVeloVM.InputSelection1   = "Hlt1MuTrackMuonTF";
 Hlt1MuTrackVeloVM.InputSelection2   = "Hlt1MuTrackVeloCompanionTF";
-Hlt1MuTrackVeloVM.FilterDescriptor = {"DOCA,<,0.3"
-};
+Hlt1MuTrackVeloVM.FilterDescriptor = {"DOCA,<,0.3" };
 Hlt1MuTrackVeloVM.HistogramUpdatePeriod = 0;
 //Hlt1MuTrackVeloVM.HistoDescriptor = {  
 //  "DOCA" : ("DOCA",100,0.,1.),

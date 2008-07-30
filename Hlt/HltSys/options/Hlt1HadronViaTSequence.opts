@@ -68,7 +68,7 @@ Hlt1HadronViaTDiPrepare.Members = {
   "GaudiSequencer/Hlt1HadronViaTSinglePrepare",
   "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/Hlt1HadronViaTDiTFVelo",
-  "HltVertexMaker/Hlt1HadronViaTDiVMVelo",
+  "HltVertexMaker2/Hlt1HadronViaTDiVMVelo",
   "HltVertexFilter/Hlt1HadronViaTDiVFVelo",
   "HltVertexUpgrade/Hlt1HadronViaTDiVUForward"
 };
@@ -168,7 +168,7 @@ Hlt1HadronViaTDiTFVelo.FilterDescriptor = {
 // };
 
 
-Hlt1HadronViaTDiVMVelo.InputSelection = "Hlt1HadronViaTSingleTMPatMatch";
+Hlt1HadronViaTDiVMVelo.InputSelection1 = "Hlt1HadronViaTSingleTMPatMatch";
 Hlt1HadronViaTDiVMVelo.InputSelection2 = "Hlt1HadronViaTDiTFVelo";
 Hlt1HadronViaTDiVMVelo.FilterDescriptor = { "DOCA,<,0.2"};
 // Hlt1HadronViaTDiVMVelo.HistoDescriptor = { 

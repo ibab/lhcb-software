@@ -61,19 +61,19 @@ HltPatChecker.Context = "Hlt";
 // MCHltHadForward.OutputLevel = 3;
 
 MCCheckRecoVelo.PassPeriod = 1;
-MCCheckRecoVelo.InputTracksName = "Hlt/Track/Velo";
+MCCheckRecoVelo.InputSelectionName = "Hlt/Track/Velo";
 MCCheckRecoVelo.LinkName = "Hlt/Track/Velo";
 MCCheckRecoVelo.HistogramUpdatePeriod = 1;
 MCCheckRecoVelo.OutputLevel = 3;
 
 MCCheckRecoVeloTT.PassPeriod = 1;
-MCCheckRecoVeloTT.InputTracksName = "Hlt/Track/VeloTT";
+MCCheckRecoVeloTT.InputSelectionName = "Hlt/Track/VeloTT";
 MCCheckRecoVeloTT.LinkName = "Hlt/Track/VeloTT";
 MCCheckRecoVeloTT.HistogramUpdatePeriod = 1;
 MCCheckRecoVeloTT.OutputLevel = 3;
 
 MCCheckRecoForward.PassPeriod = 1;
-MCCheckRecoForward.InputTracksName = "Hlt/Track/Forward";
+MCCheckRecoForward.InputSelectionName = "Hlt/Track/Forward";
 MCCheckRecoForward.LinkName = "Hlt/Track/Forward";
 MCCheckRecoForward.HistogramUpdatePeriod = 1;
 MCCheckRecoForward.OutputLevel = 3;

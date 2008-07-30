@@ -74,7 +74,7 @@ Hlt1HadronDiSequence.Members = {
   "HltVertexFilter/Hlt1HadronDiVFForward",
   "GaudiSequencer/HltRecoSequence",
   "HltTrackFilter/Hlt1HadronDiTFForward1",
-  "HltVertexMaker/Hlt1HadronDiVMForward1",
+  "HltVertexMaker1/Hlt1HadronDiVMForward1",
   "HltVertexFilter/Hlt1HadronDiDecision"
 };
 
@@ -84,7 +84,7 @@ Hlt1HadronDiPrepare.Members = {
   "HltTrackFilter/Hlt1HadronDiTFForward",
   "HltTrackUpgrade/Hlt1RecoVelo",
   "HltTrackFilter/Hlt1HadronDiTFVelo",
-  "HltVertexMaker/Hlt1HadronDiVMVelo",
+  "HltVertexMaker2/Hlt1HadronDiVMVelo",
   "HltVertexFilter/Hlt1HadronDiVFVelo",
   "HltVertexUpgrade/Hlt1HadronDiVUForward"
 };
@@ -143,7 +143,7 @@ Hlt1HadronSingleTFVelo.FilterDescriptor = {
   "Calo3DChi2_L0HadronDecision,<,4"
 };
 
-Hlt1HadronSingleTMVeloCalo.InputSelection = "Hlt1HadronSingleTFVelo";
+Hlt1HadronSingleTMVeloCalo.InputSelection1 = "Hlt1HadronSingleTFVelo";
 Hlt1HadronSingleTMVeloCalo.InputSelection2 = "L0HadronDecision";
 Hlt1HadronSingleTMVeloCalo.MatchName = "VeloCalo";
 Hlt1HadronSingleTMVeloCalo.MaxQuality = 4.;
@@ -166,7 +166,7 @@ Hlt1HadronDiTFVelo.FilterDescriptor = {
 };
 
 
-Hlt1HadronDiVMVelo.InputSelection = "Hlt1HadronDiTFForward";
+Hlt1HadronDiVMVelo.InputSelection1 = "Hlt1HadronDiTFForward";
 Hlt1HadronDiVMVelo.InputSelection2 = "Hlt1HadronDiTFVelo";
 Hlt1HadronDiVMVelo.FilterDescriptor = { "DOCA,<,0.2"};
 

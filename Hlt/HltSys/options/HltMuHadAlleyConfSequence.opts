@@ -16,7 +16,7 @@ HltSummaryWriter.Save += {"PV2D",
 HltAlleys.InputSelections += {"Hlt1MuTrack"};
 
 HltMuHadAlleySequence.Members = {
-  "L0Entry/MuonEntry",
+  "HltL0Filter/MuonEntry",
   "HltSelectionFilter/MuHadEntry",
   "HltTrackFilter/MuHadMuonTF",
   // NEED TO CHANGE TO MAKEVERTICES TO HAVE A GOOD CONFIRMATION LOGICS
@@ -36,7 +36,7 @@ HltMuHadAlleySequence.MeasureTime = true;
 
 
 // L0 entry: single muon
-MuonEntry.L0ChannelsName = {"Muon" ,"MuonNoGlob"};
+MuonEntry.L0Channels = {"Muon" ,"MuonNoGlob"};
 MuonEntry.OutputLevel=3;
 
 // HLT entry: some L0 confirmed muon;
