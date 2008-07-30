@@ -15,8 +15,6 @@ use   DIM              v*  	Online
 #
 apply_pattern install_more_includes more=OMAlib
 #
-# Go for the latest and greatest ROOT
-macro ROOT_config_version "5.18.00"
 
 library OMAlib  $(OMALIBROOT)/src/*.cpp  $(OMALIBROOT)/algorithms/*.cpp
 #apply_pattern component_library library=OMAlib
