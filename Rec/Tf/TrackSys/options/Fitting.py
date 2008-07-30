@@ -18,7 +18,7 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, SimplifiedMaterialLocator, DetailedMaterialLocator)
 
-from Brunel.Configuration import *
+from TrackSys.Configuration import *
  
 # Forward fit
 TrackEventFitter("FitForward").TracksInContainer = "Rec/Track/Forward"
@@ -29,7 +29,7 @@ TrackEventFitter("FitForward").Fitter.addTool(TrackMasterExtrapolator,name="Extr
 TrackEventFitter("FitForward").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("FitForward").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if Brunel().getProp( "fieldOff" ):
+if TrackSys().getProp( "fieldOff" ):
     TrackEventFitter("FitForward").Fitter.addTool(TrackMasterExtrapolator,name="Extrapolator")
     TrackEventFitter("FitForward").Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
     TrackEventFitter("FitForward").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
@@ -44,7 +44,7 @@ if Brunel().getProp( "fieldOff" ):
     TrackEventFitter("FitForward").Fitter.Extrapolator.addTool(materialLocator)
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.addTool(materialLocator)
     
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitForward").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitForward").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -53,7 +53,7 @@ else:
     TrackEventFitter("FitForward").Fitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
     TrackEventFitter("FitForward").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
-if "noDrifttimes" in Brunel().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitForward").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
     TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 
@@ -72,7 +72,7 @@ TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitForward").Fitter.addTool(TrackMasterExtrapolator,name="Extrapolator")
 TrackEventFitter("PreFitForward").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("PreFitForward").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("PreFitForward").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("PreFitForward").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -96,14 +96,14 @@ TrackEventFitter("FitSeed").Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtr
 TrackEventFitter("FitSeed").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("FitSeed").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if Brunel().getProp("fieldOff") :
+if TrackSys().getProp("fieldOff") :
    TrackEventFitter("FitSeed").Fitter.Extrapolator.ApplyEnergyLossCorr = False;
    TrackEventFitter("FitSeed").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
    TrackEventFitter("FitSeed").Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
    TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.ApplyEnergyLossCorr = False;
    TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitSeed").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitSeed").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -112,7 +112,7 @@ else:
     TrackEventFitter("FitSeed").Fitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
     TrackEventFitter("FitSeed").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
-if "noDrifttimes" in Brunel().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitSeed").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
     TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 
@@ -126,7 +126,7 @@ TrackEventFitter("FitMatch").Fitter.addTool(TrackKalmanFilter, name="NodeFitter"
 TrackEventFitter("FitMatch").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 TrackEventFitter("FitMatch").Fitter.addTool(TrackMasterExtrapolator,name="Extrapolator")
 
-if Brunel().getProp("fieldOff") :    
+if TrackSys().getProp("fieldOff") :    
     TrackEventFitter("FitMatch").Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
     TrackEventFitter("FitMatch").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
     TrackEventFitter("FitMatch").Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
@@ -136,7 +136,7 @@ if Brunel().getProp("fieldOff") :
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitMatch").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitMatch").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -145,7 +145,7 @@ else:
     TrackEventFitter("FitMatch").Fitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
-if "noDrifttimes" in Brunel().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitMatch").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
     TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
     
@@ -163,7 +163,7 @@ TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitMatch").Fitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 TrackEventFitter("PreFitMatch").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("PreFitMatch").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("PreFitMatch").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("PreFitMatch").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -182,7 +182,7 @@ TrackEventFitter("FitDownstream").Fitter.addTool(TrackMasterExtrapolator, name="
 TrackEventFitter("FitDownstream").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("FitDownstream").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitDownstream").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitDownstream").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitDownstream").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -191,7 +191,7 @@ else:
     TrackEventFitter("FitDownstream").Fitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
     TrackEventFitter("FitDownstream").Fitter.NodeFitter.Extrapolator.MaterialLocator="DetailedMaterialLocator"
 
-if "noDrifttimes" in Brunel().getProp("expertTracking"):
+if "noDrifttimes" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitDownstream").Fitter.NodeFitter.Projector.OT = "TrajOTProjector/OTNoDrifttimesProjector"
     TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 
@@ -210,7 +210,7 @@ TrajOTProjector("OTNoDrifttimesProjector").UseDrift = False
 TrackEventFitter("PreFitDownstream").Fitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 TrackEventFitter("PreFitDownstream").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("PreFitDownstream").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("PreFitDownstream").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("PreFitDownstream").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -232,7 +232,7 @@ TrackEventFitter("FitVeloTT").Fitter.Extrapolator.ExtraSelector = "TrackSimpleEx
 TrackEventFitter("FitVeloTT").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("FitVeloTT").Fitter.NodeFitter.addTool(TrackMasterExtrapolator, name="Extrapolator")
 
-if Brunel().getProp( "fieldOff") :
+if TrackSys().getProp( "fieldOff") :
    TrackEventFitter("FitVeloTT").Fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
    TrackEventFitter("FitVeloTT").Fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
    TrackEventFitter("FitVeloTT").Fitter.Extrapolator.ApplyEnergyLossCorr = False
@@ -241,7 +241,7 @@ if Brunel().getProp( "fieldOff") :
    TrackEventFitter("FitVeloTT").Fitter.NodeFitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
    TrackEventFitter("FitVeloTT").Fitter.NodeFitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator";  
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitVeloTT").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitVeloTT").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitVeloTT").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
@@ -265,7 +265,7 @@ TrackEventFitter("FitVelo").Fitter.Extrapolator.ApplyEnergyLossCorr = False
 TrackEventFitter("FitVelo").Fitter.addTool(TrackKalmanFilter, name="NodeFitter")
 TrackEventFitter("FitVelo").Fitter.NodeFitter.addTool(TrackMasterExtrapolator,name="Extrapolator")
 
-if "simplifiedGeometry" in Brunel().getProp("expertTracking"):
+if "simplifiedGeometry" in TrackSys().getProp("expertTracking"):
     TrackEventFitter("FitVelo").Fitter.MaterialLocator = "SimplifiedMaterialLocator"
     TrackEventFitter("FitVelo").Fitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
     TrackEventFitter("FitVelo").Fitter.NodeFitter.Extrapolator.MaterialLocator="SimplifiedMaterialLocator"
