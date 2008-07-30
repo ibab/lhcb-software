@@ -40,12 +40,6 @@ namespace zen {
 
   //--- sequences in containers ---------------------------
   
-  template <class INPUT,class OBJECT>
-  inline bool extend(INPUT& cont, OBJECT& obj) {
-    if (std::find(cont.begin(),cont.end(),obj) != cont.end()) return false;
-    cont.push_back(obj);
-    return true;
-  }
   
   template <class INPUT>
   inline size_t count(const INPUT& c1, const INPUT& c2) 

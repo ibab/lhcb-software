@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.29 2008-07-04 08:07:12 graven Exp $
+// $Id: HltAlgorithm.h,v 1.30 2008-07-30 13:33:16 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -29,7 +29,7 @@ class HltAlgorithm : public HltBaseAlg {
 public:
 
   // Standard constructor
-  HltAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
+  HltAlgorithm( const std::string& name, ISvcLocator* pSvcLocator, bool requireInputsToBeValid=true );
 
   // Standard destructor
   virtual ~HltAlgorithm( ); 
@@ -40,8 +40,46 @@ public:
   // initialize algorithm
   virtual StatusCode initialize();
 
+  // restart algorithm
+  virtual StatusCode restart  ();
+
   // finalize algorithm
   virtual StatusCode finalize  ();
+
+public:
+  //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
+  // retrieve a selection
+  Hlt::Selection& retrieveSelection(const stringKey& selname);
+
+  // retrieve a selection with candidates of type T (e.g. Track)
+  template <class T>
+  Hlt::TSelection<T>& retrieveTSelection(const stringKey& selname) {
+    Hlt::Selection& sel = retrieveSelection(selname);
+    Hlt::TSelection<T> *tsel = sel.down_cast<T>();
+    if (tsel==0) throw GaudiException("Failed to down_cast Selection",selname.str(),StatusCode::FAILURE);
+    return *tsel;
+  }
+
+  // register an output selection of no candidates
+  Hlt::Selection& registerSelection(const stringKey& selname) 
+  {
+    Hlt::Selection* tsel = new Hlt::Selection(selname);
+    setOutputSelection(tsel);
+    return *tsel;
+  }
+
+  // register an output selection with candidates of T type (e.g. Track)
+  template <class T>
+  Hlt::TSelection<T>& registerTSelection(const stringKey& selname)
+  {
+    Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(selname);
+    setOutputSelection(tsel);
+    return *tsel;
+  }
+
+  StatusCode registerTESInputSelection(Hlt::Selection* sel) {
+    return dataSvc().addSelection(sel,this,true);
+  }
 
 protected:
 
@@ -51,7 +89,22 @@ protected:
   // save configurtion of algorithm
   virtual void saveConfiguration();
 
-private:  
+  // decision according with nCandidates and filter, or preset in the selection
+  void setDecision() ;
+
+private:
+
+  // monitor inputs, fill histograms with the candidates of input selections
+  void monitorInputs();
+
+  // monitor output, fill histogram with candidates of output selection
+  void monitorOutput();
+
+  // force decision to the value of decision
+  void setDecision(bool decision);
+  //
+  // check that all input selections are present & positive...
+  bool verifyInput() ;
 
   // begin execution: monitor input selections
   StatusCode beginExecute();
@@ -62,58 +115,9 @@ private:
   // driver of the execute()
   StatusCode sysExecute();
 
-protected:
-
-  // check if ther input selections are positive
-  bool considerInputs() ;
-
-  // monitor inputs, fill histograms with the candidates of input selections
-  void monitorInputs();
-
-  // monitor output, fill histogram with candidates of output selection
-  void monitorOutput();
-  
-  // force decision to the value of decision
-  void setDecision(bool decision);
-  
-  // decision according with nCandidates and filter
-  void setDecision() ;
-    
-public:
-  //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
-  // retrieve a selection
-  Hlt::Selection& retrieveSelection(const stringKey& selname);
-
-  // retrieve a selection with candidates of type T (e.g. Track)
-  template <class T>
-  Hlt::TSelection<T>& retrieveTSelection(const stringKey& selname) {
-      // dynamic_cast with reference will throw an execption when it fails,
-      // which is preferred over a SEGV...
-    return dynamic_cast<Hlt::TSelection<T>&>(retrieveSelection(selname));
-  }
-
-  // register an output selection of no candidates
-  Hlt::Selection& registerSelection();
-
-  // register an output selection with candidates of T type (i.e Track)
-  template <class T>
-  Hlt::TSelection<T>& registerTSelection()
-  {
-    Assert( ! m_outputSelectionName.empty(), " registerTSelection(): no output name???");
-    debug() << " registerTSelection " << m_outputSelectionName << endreq;
-    Hlt::TSelection<T>* tsel = new Hlt::TSelection<T>(m_outputSelectionName);
-    StatusCode sc = dataSvc().addSelection(tsel,this,false);
-    if (sc.isFailure()) {
-       throw GaudiException("Failed to add Selection",m_outputSelectionName.str(),StatusCode::FAILURE);
-    }
-    setOutputSelection(tsel);
-    debug() << " registered selection " << m_outputSelectionName
-                 << " type " << tsel->classID() << endreq;
-    return *tsel;
-  }
-
-    
 private:
+  // must inputs be valid?
+  bool m_requireInputsToBeValid;
 
   // period to update filling of histogram
   int m_histogramUpdatePeriod;
@@ -123,24 +127,15 @@ private:
 
   // minimun number of candidates
   //   deciison true if output selection has more candidates than the minimun
+  //TODO: since this is not applicable to all algorithms, remove from base...
   size_t m_minNCandidates;
 
-protected:
-
-  // name of the input selection (option)
-  std::string m_inputSelectionName;
-
-  // name of the 2nd input selection (option)
-  std::string m_inputSelection2Name;
 
 private:
-  // name of the output selection
- stringKey m_outputSelectionName;
+  // set this selection as output, to be monitor, and to decide if the 
+  // event pass
+  void setOutputSelection(Hlt::Selection* sel);
 
-protected:
-  stringKey outputSelectionName()  const { return m_outputSelectionName; }
-
-protected:
   // list of all the input selections
   std::vector<Hlt::Selection*> m_inputSelections;
 
@@ -149,23 +144,10 @@ protected:
 
 protected:
 
-  // bool to check if the inputs are fine in execute()
-  bool m_considerInputs;
-
-private:
-  // set this selection as input, to be check and monitor every event
-  void setInputSelection(Hlt::Selection& sel);
-  
-  // set this selection as output, to be monitor, and to decide if the 
-  // event pass
-  void setOutputSelection(Hlt::Selection* sel);
-
-protected:
-
-
   // counter with all the entries of the algorithm
   Hlt::Counter m_counterEntries;
 
+private:
   // counter with all the events with fine inputs
   Hlt::Counter m_counterInputs;
 
@@ -178,23 +160,11 @@ protected:
   // coutner with the total number of candidates
   Hlt::Counter m_counterCandidates;
 
-protected:
-
   // map of id of selection and histogram to monitor input candidate
   std::map<stringKey,Hlt::Histo*> m_inputHistos;
   
   // map of the output selection candidates
   Hlt::Histo* m_outputHisto;
-
-protected:
-
-  Hlt::TrackSelection* m_inputTracks;
-  Hlt::TrackSelection* m_inputTracks2;
-  Hlt::VertexSelection* m_inputVertices;
-  Hlt::VertexSelection* m_primaryVertices;
-  
-  Hlt::TrackSelection* m_outputTracks;
-  Hlt::VertexSelection* m_outputVertices;
 
 };
 #endif // HLTBASE_HLTALGORITHM_H

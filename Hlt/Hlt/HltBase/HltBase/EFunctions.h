@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.14 2008-07-11 11:37:33 graven Exp $
+// $Id: EFunctions.h,v 1.15 2008-07-30 13:33:16 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -420,11 +420,13 @@ namespace zen
     typedef zen::filter<bool> Cut;
   public:
     explicit filter_from_filter(const Filter& f, const Cut& c)
-        : filter( f.clone() )
+        : Filter()
+        , filter( f.clone() )
         , cut( c.clone() ) 
     {}
     filter_from_filter(const filter_from_filter<T>& f)
-        : filter( f.filter->clone() )
+        : Filter()
+        , filter( f.filter->clone() )
         , cut( f.cut->clone() ) 
     {}
     ~filter_from_filter() {}
@@ -445,12 +447,13 @@ namespace zen
   public:
     explicit filter_from_filters(const Filter& f, 
                                  const Filter& f2, const Cut& c)
-        : filter(f.clone())
+        : Filter()
+        , filter(f.clone())
         , filter2(f2.clone())
         , cut(c.clone())
     {}
     filter_from_filters(const filter_from_filters& f)
-        : zen::filter<T>()
+        : Filter()
         , filter(f.filter->clone())
         , filter2(f.filter2->clone())
         , cut(f.cut->clone())

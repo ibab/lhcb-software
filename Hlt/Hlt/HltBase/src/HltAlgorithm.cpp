@@ -1,10 +1,13 @@
-// $Id: HltAlgorithm.cpp,v 1.38 2008-07-04 08:07:12 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.39 2008-07-30 13:33:17 graven Exp $
 // Include files 
 
 #include "HltBase/HltAlgorithm.h"
-
 #include "HltBase/ESequences.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
+#include "boost/foreach.hpp"
 
+namespace bl = boost::lambda;
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAlgorithm
 //
@@ -13,32 +16,19 @@
 
 
 HltAlgorithm::HltAlgorithm( const std::string& name,
-                            ISvcLocator* pSvcLocator )
+                            ISvcLocator* pSvcLocator,
+                            bool requireInputsToBeValid )
   : HltBaseAlg ( name , pSvcLocator )
-  , m_outputSelectionName(name)
+  , m_requireInputsToBeValid(requireInputsToBeValid)
   , m_outputSelection(0)
   , m_outputHisto(0)
-  , m_inputTracks(0)
-  , m_inputTracks2(0)
-  , m_inputVertices(0)
-  , m_primaryVertices(0)
-  , m_outputTracks(0)
-  , m_outputVertices(0)
 {
-  
   declareProperty("HistogramUpdatePeriod" , m_histogramUpdatePeriod = 0 );
   declareProperty("SaveConfiguration", m_saveConf = true);
 
-  declareProperty("ConsiderInputs",m_considerInputs = true);  
+
+  //TODO: since this is not applicable to all algorithms, remove from base...
   declareProperty("MinCandidates",m_minNCandidates = 1);
-
-  declareProperty("InputSelection",  m_inputSelectionName );
-  declareProperty("InputSelection2", m_inputSelection2Name );
-  declareProperty("OutputSelection", m_outputSelectionName.property(), "The location the output is written to");
-
-  m_inputSelections.clear();
-
-
 }
 
 HltAlgorithm::~HltAlgorithm()
@@ -69,13 +59,17 @@ StatusCode HltAlgorithm::initialize() {
 
 }
 
+StatusCode HltAlgorithm::restart() {
+  always() << "restart of " << name() << " requested -- please implement! " << endmsg;
+  return StatusCode::SUCCESS;
+}
+
 void HltAlgorithm::initCounters() 
 {
    // counters
   initializeCounter(m_counterEntries,    "Entries");
   initializeCounter(m_counterInputs,     "Inputs");
   initializeCounter(m_counterAccepted,   "Accepted Events");
-  initializeCounter(m_counterPassed,     "Passed Events");
   initializeCounter(m_counterCandidates, "nCandidates");
 }
 
@@ -85,18 +79,15 @@ void HltAlgorithm::saveConfiguration() {
 
   
   if (!m_saveConf) return;
-  verbose() << "Saving Config " << m_outputSelection->id() << endmsg ;
-  assert( m_outputSelectionName == m_outputSelection->id() );
   if ( m_outputSelection == 0 ) {
     warning() << "m_outputSelection is NULL. Not saving config." << endmsg ;
     return ;
   }
-  
-  verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
-
-  Assert(m_outputSelection != 0," No output Selection");
+  verbose() << "Saving Config " << m_outputSelection->id() << endmsg ;
 
   CLID clID = m_outputSelection->classID();
+  verbose() << " classID: " << m_outputSelection->classID() << endmsg ;
+
   std::string type = ( clID == LHCb::Track::classID()     ?  "Track"    :
                        clID == LHCb::RecVertex::classID() ?  "Vertex"   :
                        clID == LHCb::Particle::classID()  ?  "Particle" :
@@ -105,17 +96,12 @@ void HltAlgorithm::saveConfiguration() {
   
   std::string algoType =  System::typeinfoName(typeid(*this));
 
-  confregister("Algorithm",algoType+"/"+name(),         m_outputSelection->id().str());
-  confregister("SelectionType",type,                    m_outputSelection->id().str());
+  confregister("Algorithm",algoType+"/"+name(), m_outputSelection->id().str());
+  confregister("SelectionType",type,            m_outputSelection->id().str());
 
+  const std::vector<stringKey>& in = m_outputSelection->inputSelectionsIDs();
   std::vector<std::string> inames;
-  for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin(); 
-       it != m_inputSelections.end(); ++it) inames.push_back((*it)->id().str());
-
-  //const std::vector<stringKey>& in = m_outputSelection->inputSelectionsIDs();
-  //@TODO: use data in outputselection to get inputselections... verify 'in' and 'inames'
-  //       are equivalent...
-
+  transform(in.begin(),in.end(),std::back_inserter(inames),bl::bind(&stringKey::str,bl::_1));
 
   confregister("InputSelections",inames,m_outputSelection->id().str());
   verbose() << "Done saveConfigureation" << endmsg ;  
@@ -135,12 +121,14 @@ StatusCode HltAlgorithm::sysExecute() {
       restore=true;
   }
   
+  //TODO: move callbacks here...
   sc = beginExecute();
   if (sc.isFailure()) return sc;
   
   sc = HltBaseAlg::sysExecute();
   if (sc.isFailure()) return sc;
   
+  //TODO: add flushbacks here...
   sc = endExecute();
 
   // restore original setting of produceHistos...
@@ -152,47 +140,60 @@ StatusCode HltAlgorithm::sysExecute() {
 
 StatusCode HltAlgorithm::beginExecute() {
 
-  // verbose() << " entering beginExecute " << endreq;
-
-  StatusCode sc = StatusCode::SUCCESS;
   setDecision(false);
   
   increaseCounter( m_counterEntries );
-
   
   Assert( m_outputSelection != 0," beginExecute() no output selection !");
   m_outputSelection->clean();
-  bool ok = considerInputs();
+  bool ok = verifyInput();
   if (produceHistos()) monitorInputs();
-
   if (ok) increaseCounter(m_counterInputs);
-  else sc = StatusCode::FAILURE;
   
-  return sc;
+  return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
+}
+
+StatusCode HltAlgorithm::endExecute() {
+  setDecision();
+  if (produceHistos()) monitorOutput();
+  
+  debug() << " output candidates " << m_outputSelection->ncandidates() 
+          << " decision " << m_outputSelection->decision() 
+          << " filterpassed " << filterPassed() << endreq;
+  return StatusCode::SUCCESS;
 }
 
 
-bool HltAlgorithm::considerInputs() 
+
+bool HltAlgorithm::verifyInput() 
 {
-  if (!m_considerInputs) return true;
+  if (!m_requireInputsToBeValid) return true;
   bool ok = true;
-  size_t i = 0;
-  for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
-       it != m_inputSelections.end(); ++it, ++i) {
-    ok = ok && (*it)->decision();
+  BOOST_FOREACH( Hlt::Selection* i, m_inputSelections ) {
+    ok = ok &&  ( i->decision() || ( i->id().str().substr(0,4)=="TES:" )); // TES selection could be faulted when requested...
     if (m_debug) 
-      debug() << " input selection " << (*it)->id()
-              << " decision " << (*it)->decision() 
-              << " candidates " << (*it)->ncandidates() << endreq;
+      debug() << " input selection " << i->id()
+              << " decision " << i->decision() 
+              << " process status " << i->processed() 
+              << " candidates " << i->ncandidates() << endreq;
   }
 
   if (!ok) {
-    warning() << name() << " Empty input or false input selection!" << endreq;
-    for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
-       it != m_inputSelections.end(); ++it, ++i) 
-      warning() << " input selection " << (*it)->id()
-                << " decision " << (*it)->decision()
-                << " candidates " << (*it)->ncandidates() << endreq;      
+    warning() << endreq;
+    warning() << endreq;
+    warning() << " FIXME FIXME FIXME FIXME" << endreq;
+    warning() << endreq;
+    warning() << " Empty input or false input selection!" << endreq;
+    warning() << " Most likely due to a misconfiguration" << endreq;
+    BOOST_FOREACH( Hlt::Selection *i, m_inputSelections ) {
+      warning() << " input selection " << i->id()
+                << " decision " << i->decision()
+                << " processed " << i->processed()
+                << " candidates " << i->ncandidates() << endreq;      
+    }
+    warning() << endreq;
+    warning() << endreq;
+    warning() << endreq;
     return StatusCode::FAILURE;
   }
   // verbose() << " consider inputs " << ok <<endreq;
@@ -214,42 +215,23 @@ void HltAlgorithm::monitorOutput() {
   size_t nCandidates = m_outputSelection->ncandidates();
   Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
   fillHisto(*m_outputHisto,nCandidates,1.);
-  // verbose() << " end monitor output " << nCandidates << endreq;
 }
 
+//@TODO: 
+//@FIXME: 
+// in case we have candidates, the decision is taken by the algorithm from the selection,
+// but in case there are no candidates, we MUST call setDecision(bool) explicitly!!
 void HltAlgorithm::setDecision() {
-
   Assert (0 != m_outputSelection," setDecision() no output selection! ");
-  
-  size_t nCandidates = m_outputSelection->ncandidates();
-  increaseCounter(m_counterCandidates,nCandidates);
-  bool accept = ( nCandidates >= m_minNCandidates );
-
-  // if (accept) increaseCounter(m_counterAccepted);
-  if (accept) setDecision(true);
-  // Assert( (accept || !m_filter) == filterPassed(), "filterPassed unexpected..");
-		  
-  if (filterPassed()) increaseCounter(m_counterPassed);
+  size_t n = m_outputSelection->ncandidates();
+  increaseCounter(m_counterCandidates,n);
+  if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
+  setDecision( m_outputSelection->decision() );
 }
 
-void HltAlgorithm::setDecision(bool ok) {
-  setFilterPassed(ok);
-  m_outputSelection->setDecision(ok);
-  if (ok) increaseCounter(m_counterAccepted);
-  // verbose() << " decision " << filterPassed() 
-  //        << " in selection " << m_outputSelection->decision() << endreq;
-}
-
-StatusCode HltAlgorithm::endExecute() {
-  StatusCode sc = StatusCode::SUCCESS;
-  
-  setDecision();
-  if (produceHistos()) monitorOutput();
-  
-  debug() << " output candidates " << m_outputSelection->ncandidates() 
-          << " decision " << filterPassed() << endreq;
-  
-  return sc;
+void HltAlgorithm::setDecision(bool accept) {
+  setFilterPassed(accept);
+  if (accept) increaseCounter(m_counterAccepted);
 }
 
 ////  Finalize
@@ -270,23 +252,6 @@ private:
     stringKey m_id;
 };
 
-void HltAlgorithm::setInputSelection(Hlt::Selection& sel) {
-  if (std::find_if(m_inputSelections.begin(),
-                   m_inputSelections.end(), 
-                   cmp_by_id(sel))!=m_inputSelections.end() ) {
-    debug() << " selection already in input " << sel.id() << endreq;
-    return;
-  }
-  if (produceHistos()) {
-    Hlt::Histo* histo = initializeHisto(sel.id().str());
-    bool has = (m_inputHistos.find(sel.id()) != m_inputHistos.end());
-    Assert(!has,"setInputSelection() already input selection "+sel.id().str());
-    m_inputHistos[sel.id()] = histo;
-  }
-  m_inputSelections.push_back(&sel);
-  debug() << " Input selection " << sel.id() << endreq;
-}
-
 
 Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
@@ -296,30 +261,29 @@ Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
       Assert(0," retrieveSelection, unknown selection!");
     }
     Hlt::Selection& sel = dataSvc().selection(selname,this);
-    setInputSelection(sel);
+    if (std::find_if(m_inputSelections.begin(),
+                     m_inputSelections.end(), 
+                     cmp_by_id(sel))==m_inputSelections.end() ) {
+      m_inputSelections.push_back(&sel);
+      if (produceHistos()) {
+        Assert(m_inputHistos.find(sel.id()) == m_inputHistos.end(),"setInputSelection() already input selection "+sel.id().str());
+        m_inputHistos[sel.id()] = initializeHisto(sel.id().str());
+      }
+      debug() << " Input selection " << sel.id() << endreq;
+    }
     debug() << " retrieved selection " << sel.id() << endreq;    
     return sel;
 }
 
-Hlt::Selection& HltAlgorithm::registerSelection() {
-    Assert( ! m_outputSelectionName.empty(), " registerSelection(): no output name???");
-    debug() << " registerSelection " << m_outputSelectionName << endreq;
-    Hlt::Selection* sel = new Hlt::Selection(m_outputSelectionName);
-    StatusCode sc = dataSvc().addSelection(sel,this,false);
-    if ( sc.isFailure()) {
-       throw GaudiException("Failed to add Selection",m_outputSelectionName.str(),StatusCode::FAILURE);
-    }
-    setOutputSelection(sel);
-    debug() << " registered selection " << m_outputSelectionName << endreq;
-    return *sel;
-}
   
 void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
-  Assert(m_outputSelectionName == sel->id(), "inconsistent selection vs selectionName!");
-  Assert( 0 != sel,"setOutputSelection() no output selection");
-  if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
-    Assert(m_outputSelection == 0, " setOutputSelection() already set output selection!");    
     m_outputSelection = sel;
     sel->addInputSelectionIDs( m_inputSelections.begin(), m_inputSelections.end() );
-  debug() << " Output selection " << sel->id() << endreq;
+    debug() << " Output selection " << sel->id() << endreq;
+    StatusCode sc = dataSvc().addSelection(sel,this,false);
+    if (sc.isFailure()) {
+       throw GaudiException("Failed to add Selection",sel->id().str(),StatusCode::FAILURE);
+    }
+    if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
+    debug() << " registered selection " << sel->id() << " type " << sel->classID() << endreq;
 }

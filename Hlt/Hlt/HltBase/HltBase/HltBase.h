@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.13 2008-07-04 08:07:12 graven Exp $
+// $Id: HltBase.h,v 1.14 2008-07-30 13:33:16 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -137,9 +137,10 @@ protected:
   IHltDataSvc& dataSvc() const;
   IANNSvc&     annSvc() const;
 
-  // reset the hltData pointer (for the useTES() mode) 
-  void resetHltData() { dataSvc().resetData(); }
 
+  // @TODO: forward Hlt::Configuration so that it is no longer exposed...
+  // next, replace by direct queries to dataSvc()...
+  // Note: sole user is HltSummaryTool...
   // returns the hlt configuration
   Hlt::Configuration& hltConf() { return dataSvc().config(); }
   

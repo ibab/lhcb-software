@@ -4,6 +4,27 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-07-30 - Gerhard Raven
+ - HltAlgorithm: move items not mandatory out of baseclass, and into 
+      HltSelectionContainer. Implementations can use the templates in 
+      HltSelectionContainer when appropriate. Update HltAlgorithm to
+      work together with HltSelectionContainer.
+      Implement 'restart', default to printing out a warning, to be silenced
+      when actual implementation implements an explicit 'restart' to signal
+      their compliance with restart...
+      rename 'considerInputs' to 'requireInputsToBeValid', and add an option
+      to the c'tor to flag when this is not required (default is it is required!)
+ - HltSelectionContainer: new class to manage input & output selections.
+ - HltSelection: add a 'processed' flag which allows to see whether a selection
+      has been processed. forward more vector functionality to TSelection.
+ - HltTypes: remove redundant typedef
+ - HltBase: remove unused resetHltData
+ - IHltDataSvc: replace 'useTES' by 'originatesFromTES' to clarify direction
+ - stringKey: implement copy-c'tor and operator=
+ - EFunctions: explicity call baseclass constructor to silence compiler warning
+ - ESequences: remove unused extend
+
+
 ! 2008-07-21 - Johannes Albrecht
  - ParabolaHypothesis, FwdHypothesis: tidy up: fix z-range with  StateParameters
  - ITrackCOnfirmTool.h: fix prepareT: pass argument as reference

@@ -10,6 +10,14 @@ public:
 
     stringKey(const std::string& str) : m_str(str), m_hash( hash(str) ) 
     { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
+    stringKey(const stringKey& key) : m_str(key.m_str), m_hash(key.m_hash) 
+    { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
+    stringKey& operator=(const stringKey& rhs) {
+        m_str=rhs.m_str;
+        m_hash=rhs.m_hash;
+        m_str.declareUpdateHandler( &stringKey::updateHandler,this);
+        return *this;
+    }
 
     const std::string& str() const { return m_str.value();}
     bool operator==(const stringKey& rhs) const ;
@@ -17,13 +25,11 @@ public:
     std::ostream& print(std::ostream& o ) const ;
 
     StringProperty& property() { return m_str; }
-    void updateHandler(Property& prop) { 
-        m_str = prop.toString();
-        m_hash = hash(str());
-    }
+    void updateHandler(Property& prop);
 
     // transitional functionality -- to be deleted when no longer needed...
-    stringKey() : m_hash( 0 ) { }
+    stringKey() : m_hash( 0 )
+    { m_str.declareUpdateHandler( &stringKey::updateHandler,this); }
     bool empty() const { return str().empty(); }
 
 private:
@@ -56,6 +62,6 @@ inline bool stringKey::operator<(const stringKey& rhs) const
 
 inline std::ostream& stringKey::print(std::ostream & o ) const 
 { assert(valid()); 
-  return  o << "stringKey(" << str() << ")"; 
+  return  o << "stringKey(" << str() << ")";
 }
 #endif

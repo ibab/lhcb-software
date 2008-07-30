@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.7 2008-06-28 08:16:18 graven Exp $
+// $Id: HltTypes.h,v 1.8 2008-07-30 13:33:16 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -29,9 +29,6 @@ namespace Hlt {
   
   typedef std::vector<Hlt::Selection*> Selections;
   typedef std::vector<Hlt::Selection*>::iterator SelectionIterator;
-
-  typedef TrackSelection     TrackContainer;
-  typedef VertexSelection    VertexContainer;
 
   typedef AIDA::IHistogram1D Histo;
 
