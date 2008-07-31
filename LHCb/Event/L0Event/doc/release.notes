@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.107 2008-07-27 13:24:26 cattanem Exp $
+! $Id: release.notes,v 1.108 2008-07-31 09:09:09 jucogan Exp $
 ! Package : L0Event
 ! Package manager : Olivier Deschamps, Julien Cogan
 !-----------------------------------------------------------------------------
+
+! 2008-07-31 - Julien Cogan
+ - Bug fix : correct the pu index computation
 
 !======================== L0Event v17r1 2008-07-27 ===========================
 ! 2008-07-23 - Julien Cogan

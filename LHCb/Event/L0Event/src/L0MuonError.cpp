@@ -40,7 +40,7 @@ void LHCb::L0MuonError::index( int & quarter, int & board, int & pu ) const{
     board=mid.region()*3+mid.nY()*2+mid.nX()-1;
     
     pu=5;
-    
+
     return;
     
   }
@@ -53,7 +53,9 @@ void LHCb::L0MuonError::index( int & quarter, int & board, int & pu ) const{
     
     board=mid_board.region()*3+mid_board.nY()*2+mid_board.nX()-1;
     
-    pu=mid.nY()*2+mid.nX();
+    pu=(mid.nY()%2)*2+(mid.nX()%2);
+
+    //if (pu==4) std::cout<<"%%%% pu=4 %%%% should be <4 "<<mid.toString()<<std::endl;
     
     return;
     
