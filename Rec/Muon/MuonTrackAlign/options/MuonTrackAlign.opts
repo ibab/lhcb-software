@@ -23,10 +23,10 @@ AlignMuonRec.Extrapolator.OutputLevel = 5;
 // add Align.DetectorList += {"Muon"}; after the end of "BrunelSequencer.Members"
 // and uncomment the following lines
 
-AlignMuonSeq.Members += {"MuonRead" };
-AlignMuonSeq.OutputLevel = 5;
-MuonRead.MuonTracksName = "/Event/Rec/Muon/MuonsTrackForAlignment"; 
-MuonRead.OutputLevel = 5;
+//AlignMuonSeq.Members += {"MuonRead" };
+//AlignMuonSeq.OutputLevel = 5;
+//MuonRead.MuonTracksName = "/Event/Rec/Muon/MuonsTrackForAlignment"; 
+//MuonRead.OutputLevel = 5;
 
 //===============================
 // To store the states after the track fit in the dst file substitue this line
