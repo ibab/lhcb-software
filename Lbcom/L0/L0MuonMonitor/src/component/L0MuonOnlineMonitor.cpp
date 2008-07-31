@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.8 2008-07-31 18:35:40 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.9 2008-07-31 20:56:59 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -113,10 +113,10 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   // Candidates
   //   if (m_shortnames) m_candHistosFinal->setHistoDir(""); else m_candHistosFinal->setHistoDir("L0Muon/Online");
   if (!m_shortnames) m_candHistosFinal->setHistoDir("L0Muon/Online");
-  m_candHistosFinal->bookHistos(m_shortnames);
+  m_candHistosFinal->bookHistos(8,m_shortnames);
   //   if (m_shortnames) m_candHistosPU->setHistoDir(""); else m_candHistosPU->setHistoDir("L0Muon/Online/PU");
   if (!m_shortnames) m_candHistosPU->setHistoDir("L0Muon/Online/PU");
-  m_candHistosPU->bookHistos(m_shortnames);
+  m_candHistosPU->bookHistos(16,m_shortnames);
   debug() << "==>   -- Candidates done" << endmsg;
 
   
