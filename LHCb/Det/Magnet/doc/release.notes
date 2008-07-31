@@ -8,7 +8,8 @@
  - Fix uninitialised pointer to Real field map tools
  - Clean up dependencies in requirements
  - Remove unneccessary TestMagnet.exe. Test can be run with 
-   "Gaudi.exe ../options/job.opts"
+   "Gaudi.exe ../options/job.opts" or  "gaudirun.py ../options/job.opts"
+ - Improve messages when scaling factor changes
 
 !====================== Magnet v5r0 2008-07-29 ===============================
 ! 2008-07-29 - Marco Cattaneo

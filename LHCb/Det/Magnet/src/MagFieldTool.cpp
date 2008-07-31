@@ -1,4 +1,4 @@
-// $Id: MagFieldTool.cpp,v 1.1 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagFieldTool.cpp,v 1.2 2008-07-31 09:22:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -75,12 +75,14 @@ StatusCode MagFieldTool::updateMap( const std::vector<std::string>& theFiles,
     m_mapFileNames[2] = theFiles[2];
     m_mapFileNames[3] = theFiles[3];
     m_scaleFactor = scaleFactor;
+    info() << "Map scaled by factor " << m_scaleFactor << endmsg;
   }
   else {
     // Only the scale factor has changed, rescale
     double rescaleFactor = scaleFactor / m_scaleFactor;
     rescale( rescaleFactor );
     m_scaleFactor = scaleFactor;
+    info() << "Map scaled by factor " << m_scaleFactor << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -92,20 +94,15 @@ StatusCode MagFieldTool::updateMap( const std::vector<std::string>& theFiles,
 StatusCode MagFieldTool::readFiles( const std::vector<std::string>& theFiles,
                                     const double& scaleFactor )
 {
-  StatusCode sc = StatusCode::FAILURE;
-  
-  MsgStream log( msgSvc(), name() );
-  char line[ 255 ];
 
   for(int ifile=0;ifile<4;ifile++) {
     std::ifstream infile( theFiles[ifile].c_str() );
   
     if ( infile ) {
-      sc = StatusCode::SUCCESS;
-      log << MSG::INFO << "Opened magnetic field file : " << theFiles[ifile]
-          << endmsg;
+      info() << "Opened magnetic field file : " << theFiles[ifile] << endmsg;
     
     // Skip the header till PARAMETER
+      char line[ 255 ];
       do{
         infile.getline( line, 255 );
       } while( line[0] != 'P' );
@@ -189,14 +186,11 @@ StatusCode MagFieldTool::readFiles( const std::vector<std::string>& theFiles,
       }
       infile.close();
       if ( nlines != ncheck ) {
-        log << MSG::ERROR << " Number of points in field map does not match" 
-            << endreq;
-        return StatusCode::FAILURE;
+        return Error( " Number of points in field map does not match" );
       }
     }
     else {
-      log << MSG::ERROR << "Unable to open magnetic field file : " 
-          << theFiles[ifile] << endreq;
+      return Error( "Unable to open magnetic field file :" + theFiles[ifile]);
     }
   }
 
@@ -206,7 +200,7 @@ StatusCode MagFieldTool::readFiles( const std::vector<std::string>& theFiles,
     m_max_FL[iC] = m_min_FL[iC]+( m_Nxyz[iC]-1 )* m_Dxyz[iC];
   } // iC
   
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: MagFieldToolDC06.cpp,v 1.1 2008-07-26 18:04:53 cattanem Exp $
+// $Id: MagFieldToolDC06.cpp,v 1.2 2008-07-31 09:22:32 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -62,12 +62,14 @@ StatusCode MagFieldToolDC06::updateMap( const std::vector<std::string>& theFiles
     if( sc.isFailure() ) return sc;
     m_mapFileName = theFiles[0];
     m_scaleFactor = scaleFactor;
+    info() << "Map scaled by factor " << m_scaleFactor << endmsg;
   }
   else {
     // Only the scale factor has changed, rescale
     double rescaleFactor = scaleFactor / m_scaleFactor;
     rescale( rescaleFactor );
     m_scaleFactor = scaleFactor;
+    info() << "Map scaled by factor " << m_scaleFactor << endmsg;
   }
   return StatusCode::SUCCESS;
 }
@@ -79,20 +81,15 @@ StatusCode MagFieldToolDC06::updateMap( const std::vector<std::string>& theFiles
 StatusCode MagFieldToolDC06::readFile( const std::string& theFile,
                                        const double& scaleFactor )
 {
-  StatusCode sc = StatusCode::FAILURE;
-  
-  MsgStream log( msgSvc(), name() );
-  char line[ 255 ];
   std::ifstream infile( theFile.c_str() );
-
   if ( infile ) {
-	  sc = StatusCode::SUCCESS;
-    log << MSG::INFO << "Opened magnetic field file : " << theFile << endmsg;
+    info() << "Opened magnetic field file : " << theFile << endmsg;
 
     // Clear any previous map
     m_Q.clear();
     
     // Skip the header till PARAMETER
+    char line[ 255 ];
     do{
 	    infile.getline( line, 255 );
 	  } while( line[0] != 'P' );
@@ -176,14 +173,11 @@ StatusCode MagFieldToolDC06::readFile( const std::string& theFile,
 	  }
     infile.close();
     if ( nlines != ncheck ) {
-      log << MSG::ERROR << " Number of points in field map does not match" 
-          << endmsg;
-      return StatusCode::FAILURE;
+      return Error( " Number of points in field map does not match" );
     }
   }
   else {
-  	log << MSG::ERROR << "Unable to open magnetic field file : " 
-        << theFile << endmsg;
+  	return Error( "Unable to open magnetic field file : " + theFile );
   }
 
   // Update the map limits
@@ -192,7 +186,7 @@ StatusCode MagFieldToolDC06::readFile( const std::string& theFile,
     m_max_FL[iC] = m_min_FL[iC]+( m_Nxyz[iC]-1 )* m_Dxyz[iC];
   } // iC
   
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
