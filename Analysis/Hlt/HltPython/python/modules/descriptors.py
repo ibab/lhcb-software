@@ -50,36 +50,6 @@ decayDescriptorDict = {
 
 
 #---------------------------------------------------
-# Conversion to Hans preselection names
-hansFileDict ={
-    'Bd2DstarMuNu'    : 'Bd2DstMu',
-    'Bd2D0Kstar'      : 'Bd2D0Kst',
-    'Bs2MuMu'         : 'Bs2MuMu',
-    'Bd2KPi'          : 'Bd2Kpi-decprodcut',
-    'Bd2KstarD2KSPiPi': 'Bd2KstD2KSPiPi',
-    'Bs2DsDs'         : 'Bs2DsDs',
-    'Bs2DsPi'         : 'Bs2Dspi-Decprodcut',
-    'Bs2PhiPhi'       : 'Bs2PhiPhi',
-    'Bu2KD2KSPiPi'    : 'Bu2KD-KSPiPi',
-    'Bu2KMuMu'        : 'Bu2Kmumu',
-    'Bd2MuMuKstar'    : 'Bd2MuMuKst',
-    'Bd2PiPiPi0'      : 'Bd2PiPiPi',
-    'Bs2PhiGamma'     : 'Bs2phigamma',
-    'Bs2PsiPhi'       : 'Bs2psiphi-decprodcut',
-    'Bu2Kee'          : 'Bu2Kee'
-}
-
-#---------------------------------------------------
-# Information on offline selected samples
-offlSelInfoDict = {
-    'Bd2DstarMuNu': 'Unofficial Bender selection implemented by Hugo Ruiz based on DC04 selection published in LHCb-2007-036',
-    'Bs2DsMuNu':    'Unofficial Bender selection implemented by Antonio Perez-Calero based on DC04 selection published in LHCb-2007-127',
-    'Bd2PiK':       'Unofficial Bender selection implemented by Elias Lopez based on DC04 selection published in LHCb-2007-059'
-    }
-
-
-
-#---------------------------------------------------
 def decayDescriptor ( sample ):
     """ Returns decay descriptor corresponding to a sample name.
     @param sample Standard name of the data sample
@@ -88,54 +58,4 @@ def decayDescriptor ( sample ):
     """
     return decayDescriptorDict[ sample ]
 
-
-#---------------------------------------------------
-def hansVolume( sample ):
-    """ Returns number of volume where Hans put the corresponding data file in his presel stripping.
-    @param sample Standard name of the data sample
-    @returns Volume number where Hans has the corresponding file
-    @autor Hugo Ruiz, hugo.ruiz@cern.ch
-    """
-    filesInVol1 = ['Bd2D0Kst', 'Bd2DstMu', 'Bd2Kpi-decprodcut', 'Bd2KstD2KSPiPi', 'Bs2DsDs', 'Bs2Dspi-Decprodcut', 'Bs2MuMu', 'Bs2PhiPhi', 'Bu2KD-KSPiPi', 'Bu2Kmumu','MBL0-lumi2-1.dst','MBL0-lumi2-2.dst']
-    filesInVol3 = ['Bd2MuMuKst', 'Bd2PiPiPi', 'Bs2phigamma', 'Bs2psiphi-decprodcut', 'Bu2Kee','MBL0-lumi2-3.dst','MBL0-lumi2-4.dst']
-
-    if hansFileDict[sample] in filesInVol1: return 1
-    elif hansFileDict[sample] in filesInVol3: return 3
-    else:
-        print 'SAMPLE IS NOT IN HANS PRESELECTIONS'
-        raise RuntimeError
-    return
-
-#---------------------------------------------------
-def optionForHansFile ( sample ):
-    """ Returns an option including in the event selector the  corresponding data file in Hans's presel stripping.
-    @param sample Standard name of the data sample
-    @returns An option including in the event selector the  corresponding data file in Hans's presel stripping
-    @autor Hugo Ruiz, hugo.ruiz@cern.ch
-    """
-    
-    out = 'EventSelector.Input   = {"DATAFILE=\'PFN:/afs/cern.ch/lhcb/group/trigger/vol'
-    out += str(hansVolume( sample ))+'/dijkstra/Selections/'+hansFileDict[sample]+'-lum2.dst\' TYP=\'POOL_ROOTTREE\' OPT=\'READ\'"}'
-    return out
-
-
-#---------------------------------------------------
-def offlSelOpts ( sample ):
-    """ Returns the name of the option file containing the input data corresponding to a given sample.
-    @param sample Standard name of the data sample
-    @returns An option file including in the event selector the corresponding offline selected sample
-    @autor Hugo Ruiz, hugo.ruiz@cern.ch
-    """
-
-    return '$HLTPYTHONROOT/options/OfflSel'+sample+'.opts'
-
-#---------------------------------------------------
-def offlSelInfo ( sample ):
-    """ Returns a brief text with explanation on the conditions of an offline selected sample.
-    @param sample Standard name of the data sample
-    @returns A brief text with explanation on the conditions of an offline selected sample.
-    @autor Hugo Ruiz, hugo.ruiz@cern.ch
-    """
-
-    return offlSelInfoDict[ sample ]
 

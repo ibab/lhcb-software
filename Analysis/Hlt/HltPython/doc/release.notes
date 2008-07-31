@@ -4,6 +4,11 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+! 2008-7-31 - Antonio Perez-Calero and Hugo Ruiz
+   - renamed hltbchannels.py module to benchmarkchannels.py and added some more methods taken from descriptors.py
+	 - modified descriptors.py. several functions now moved to benchmarkchannels.py
+	 - removed old selections files OfflSelBd2DstarMuNu.opts and OfflSelBd2PiK.opts (obsolete now and updated now with DC06 selections by Hans)
+
 ! 2008-7-21 - Jose A. Hernando
 	 - python/modules improvements in PlotTools, pidtools
    - python/examples hltmonitoralley (almost final script to monitor alleys) 

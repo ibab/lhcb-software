@@ -1,29 +1,18 @@
 #! /usr/bin/env python
 # =============================================================================
-"""@namespace hltbchannels
+"""@namespace benchmarkchannels
 
 @dictionaries for HLT benchmark channels by DC06 selection
 
-@author Antonio Perez-Calero Yzquierdo aperez@ecm.ub.es
+@author Antonio PEREZ-CALERO Yzquierdo aperez@ecm.ub.es
+@author Hugo RUIZ hugo.ruiz@cern.ch
 
 @date 2008-6-27
 """
 # =============================================================================
 
-def configuration(channel):
-    """ for a given channel returns the list of files needs for the selection,
-    the extraopts to include the data cards with the DSTs, and a dictionary with some extra data information, i.e path in the TES of the selection, number of evetns etc
-    """
-    datacard = createOptLines(channel)
-    eopts = []
-    files = selectionOptsFiles[channel]
-    eopts.append(datacard)
-    data = {}
-    data["TESPATH"] = TESPath[channel]
-    return files,eopts,data
-
 #---------------------------------------------------
-# Dst Files for each sample:
+# Dst Files for each selected sample DC06:
 
 dstDataCards = {
     'Bd2MuMuKstar'     : ['/d/dijkstra/Selections-DC06/Bd2KstarMuMu-lum2.dst'],
@@ -31,7 +20,19 @@ dstDataCards = {
     'Bd2DstarMuNu'     : ['/d/dijkstra/Selections-DC06/Bd2DstarMu-lum2.dst'],
     'Bs2MuMu'          : ['/d/diegoms/A_ver_se_vai.dst'],
     'Bs2Jpsi2MuMuPhi'  : ['/d/dijkstra/Selections-DC06/Bs2JpsiPhi-lum2.dst'],
-    'Bs2DsMuNu'        : [''],  #not yet!!
+    'Bs2DsMuNu'        : ['/a/aperezca/Bs2Dsmunu/Bs2DsMuNu1.dst',   # SELECTED ACCORDING TO DC04 OPTIMIZATION!
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu2.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu3.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu4.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu5.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu6.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu7.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu8.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu9.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu10.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu11.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu12.dst',
+                          '/a/aperezca/Bs2Dsmunu/Bs2DsMuNu13.dst'],
     'Z2MuMu'           : [''],  #not yet!!
     'Bd2D0Kstar'       : ['/d/dijkstra/Selections-DC06/Bd2D0Kst_D02HH-lum2.dst'],
     'Bd2RhoPi'         : [''],  #not yet!!
@@ -59,15 +60,13 @@ dstDataCards = {
     }
 
 #---------------------------------------------------
-# We need to create an option string like this
-#EventSelector.Input   = {
-#    "DATAFILE='file1' TYP='POOL_ROOTTREE' OPT='READ'",
-#    "DATAFILE='file2' TYP='POOL_ROOTTREE' OPT='READ'",
-#    ....
-#    "DATAFILE='fileN' TYP='POOL_ROOTTREE' OPT='READ'"
-#    };
 
 def createOptLines(sample):
+    """ Returns input dst data files as lines to include in options
+    @param sample Standard name of the data sample
+    @returns input option lines 
+    @autor Antonio Perez-Calero, aperez@ecm.ub.es
+    """
     dataOptline='EventSelector.Input = {'
     for ifile in dstDataCards[sample]:
         line='"'+'DATAFILE='+"'"+"PFN:castor:/castor/cern.ch/user"+ifile+"'"+" TYP="+"'"+"POOL_ROOTTREE"+"'"+" OPT="+"'"+"READ"+"'"+'",'
@@ -90,17 +89,17 @@ selectionOptsFiles = {
                           StandardParticles, StandardJPsi],
     'Bd2DstarMuNu'     : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBd2DstarMu.opts',
                           StandardParticles, StandardJPsi],
-    'Bs2MuMu'          : [''],  #??
+    'Bs2MuMu'          : [],  #??
     'Bs2Jpsi2MuMuPhi'  : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/Jpsi2MuMu_forDC06selBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/Phi2KK_forDC06selBs2Jpsi2MuMuPhi2KK_lifetime_unbiased.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/DC06SelBs2JpsiPhi_lifetime_unbiased.opts',
                           StandardParticles, StandardJPsi],
-    'Bs2DsMuNu'        : [''],  #not yet!!
-    'Z2MuMu'           : [''],  #not yet!!
+    'Bs2DsMuNu'        : [],  #not yet!!
+    'Z2MuMu'           : [],  #not yet!!
     'Bd2D0Kstar'       : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBd2D0Kst_D02HHhans.opts',
                           StandardParticles, StandardJPsi],
-    'Bd2RhoPi'         : [''],  #not yet!!
+    'Bd2RhoPi'         : [],  #not yet!!
 
                                                           #B->hh common selection
     'Bd2KPi'           : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DVSelB2HH.opts',StandardParticles, StandardJPsi], 
@@ -114,16 +113,16 @@ selectionOptsFiles = {
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/DC06SelBu2D0K_D02KsPiPi.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/Sel_D02KsPiPi_4Bu2D0K.opts',
                           StandardParticles, StandardJPsi],
-    'Bs2PhiPhi'        : [''], #??
+    'Bs2PhiPhi'        : [], #??
     'Bs2DsPi'          : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBs2DsH.opts',StandardParticles, StandardJPsi],
     'Bs2DsK'           : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBs2DsH.opts',StandardParticles, StandardJPsi],
-    'Bs2DsDs'          : [''],  #not yet!!
+    'Bs2DsDs'          : [],  #not yet!!
     'Dstar2D2hhPi'     : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DVSelDstar2D0Pi_D02HH.opts',StandardParticles, StandardJPsi],
     'Bu2eeK'           : ['/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoDC06SelBu2eeK.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/DoPreselBu2LLK.opts',
                           '/afs/cern.ch/user/d/dijkstra/python/offline-sel/PreselBu2LLK.opts',
                           StandardParticles, StandardJPsi],
-    'Bs2PhiGamma'      : [''], #??
+    'Bs2PhiGamma'      : [], #??
     }
 
 
@@ -156,41 +155,60 @@ TESPath = {
                          
     }
 
-#-------------------------------------------------------------
-# Testing channels!
-import GaudiPython
 
-def testChannel():    
-    sampleList=dstDataCards.keys()
-    extraOpts = []
-    DVJOB = ["$HLTSYSROOT/options/HltJob.opts"]
-    NoConfig=0
-    NoRun=0
-    for sample in sampleList:
-        gaudi = GaudiPython.AppMgr(outputlevel=4)
-        DVJOB += selectionOptsFiles[sample]
-        DataCardOpts = createOptLines(sample)
-        extraOpts.append(DataCardOpts)
-        print
-        print "Configure",sample
-        print
-        print
-        try:
-            gaudi.config(files = DVJOB, options = extraOpts)
-        except:
-            print "Could not configure ",sample
-            NoConfig+=1
-        gaudi.initialize()
-        print
-        print "Run",sample
-        print
-        print
-        try:
-            gaudi.run(20)
-        except:
-            print "Could not run on",sample
-            NoRun+=1
-        gaudi.finalize()
-        del gaudi
-    print "No config",NoConfig," No Run",NoRun
-    return 
+# =============================================================================
+
+# WARNING following functions possibly outdated!
+
+
+
+#---------------------------------------------------
+def hansVolume( sample ):
+    """ Returns number of volume where Hans put the corresponding data file in his presel stripping.
+    @param sample Standard name of the data sample
+    @returns Volume number where Hans has the corresponding file
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
+    """
+    filesInVol1 = ['Bd2D0Kst', 'Bd2DstMu', 'Bd2Kpi-decprodcut', 'Bd2KstD2KSPiPi', 'Bs2DsDs', 'Bs2Dspi-Decprodcut', 'Bs2MuMu', 'Bs2PhiPhi', 'Bu2KD-KSPiPi', 'Bu2Kmumu','MBL0-lumi2-1.dst','MBL0-lumi2-2.dst']
+    filesInVol3 = ['Bd2MuMuKst', 'Bd2PiPiPi', 'Bs2phigamma', 'Bs2psiphi-decprodcut', 'Bu2Kee','MBL0-lumi2-3.dst','MBL0-lumi2-4.dst']
+
+    if hansFileDict[sample] in filesInVol1: return 1
+    elif hansFileDict[sample] in filesInVol3: return 3
+    else:
+        print 'SAMPLE IS NOT IN HANS PRESELECTIONS'
+        raise RuntimeError
+    return
+#---------------------------------------------------
+# Conversion to Hans preselection names
+hansFileDict ={
+    'Bd2DstarMuNu'    : 'Bd2DstMu',
+    'Bd2D0Kstar'      : 'Bd2D0Kst',
+    'Bs2MuMu'         : 'Bs2MuMu',
+    'Bd2KPi'          : 'Bd2Kpi-decprodcut',
+    'Bd2KstarD2KSPiPi': 'Bd2KstD2KSPiPi',
+    'Bs2DsDs'         : 'Bs2DsDs',
+    'Bs2DsPi'         : 'Bs2Dspi-Decprodcut',
+    'Bs2PhiPhi'       : 'Bs2PhiPhi',
+    'Bu2KD2KSPiPi'    : 'Bu2KD-KSPiPi',
+    'Bu2KMuMu'        : 'Bu2Kmumu',
+    'Bd2MuMuKstar'    : 'Bd2MuMuKst',
+    'Bd2PiPiPi0'      : 'Bd2PiPiPi',
+    'Bs2PhiGamma'     : 'Bs2phigamma',
+    'Bs2PsiPhi'       : 'Bs2psiphi-decprodcut',
+    'Bu2Kee'          : 'Bu2Kee'
+}
+
+
+#---------------------------------------------------
+def optionForHansFile ( sample ):
+    """ Returns an option including in the event selector the  corresponding data file in Hans's presel stripping.
+    @param sample Standard name of the data sample
+    @returns An option including in the event selector the  corresponding data file in Hans's presel stripping
+    @autor Hugo Ruiz, hugo.ruiz@cern.ch
+    """
+    
+    out = 'EventSelector.Input   = {"DATAFILE=\'PFN:/afs/cern.ch/lhcb/group/trigger/vol'
+    out += str(hansVolume( sample ))+'/dijkstra/Selections/'+hansFileDict[sample]+'-lum2.dst\' TYP=\'POOL_ROOTTREE\' OPT=\'READ\'"}'
+    return out
+
+
