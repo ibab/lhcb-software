@@ -23,6 +23,7 @@ use HltL0MuonConf       v3r2    Hlt   # Alessia Satta/Sandra Amato
 
 use HltRecChecker	v1r6	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v1r1	Hlt   # Bruno de Paula
+use HltLuminosity       v1r1    Hlt   # Jaap Panman
 
 # And now for something completely different
 use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata
@@ -32,7 +33,7 @@ use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata
 #=======================================================
 
 use HltSelections       v7r2    Hlt   # Patrick Koppenburg
-use Fidel               v1r2    Phys  # Sara Furcas
+use Fidel               v1r2    Phys  # Sara Furcas    
 use HltKshort           v1r4    Hlt   # Jaap Panman
 
 use HltSelChecker       v6r3    Hlt   # Patrick Koppenburg

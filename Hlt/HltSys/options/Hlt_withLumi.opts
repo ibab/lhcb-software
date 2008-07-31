@@ -1,0 +1,18 @@
+/**
+ * Main configuration file for all HLT (1 and 2)
+ */
+
+/**
+ * common initialization between HLT1 and HLT2
+ */
+#include "$HLTSYSROOT/options/HltInit_withLumi.opts"
+
+/**
+ * Hlt alleys - HLT 1 (this requires L0 to have been run)
+ */
+#include "$HLTSYSROOT/options/Hlt1_withLumi.opts"
+
+/**
+ * Hlt selections - HLT 2
+ */
+#include "$HLTSYSROOT/options/Hlt2.opts"
