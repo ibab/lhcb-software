@@ -4,6 +4,14 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!=============== HltLuminosity v1r1 2008-07-31 =============================
+! 2008-07-23 - Jaap Panman
+ - add algorithms to count objects: LumiCountHltTracks, LumiCountTracks, 
+ - LumiCountVertices, LumiFromL0DU
+ - add raw bank encoding HltLumiFillRawBuffer 
+ - add LumiANNSvc implements lookup service for key names
+
+
 !=============== HltLuminosity v1r0 2008-07-17 =============================
 ! 2008-07-17 - Jaap Panman
  - Package created to contain code for Luminosity measurement  

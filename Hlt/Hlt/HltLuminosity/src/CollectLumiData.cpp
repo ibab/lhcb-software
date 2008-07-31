@@ -1,4 +1,4 @@
-// $Id: CollectLumiData.cpp,v 1.3 2008-07-18 11:07:09 panmanj Exp $
+// $Id: CollectLumiData.cpp,v 1.4 2008-07-31 21:34:47 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,8 @@
 #include "Event/Vertex.h"
 #include "Event/RecVertex.h"
 #include "Event/HltLumiSummary.h"
+
+#include "HltBase/ANNSvc.h"
 
 // local
 #include "CollectLumiData.h"
@@ -54,6 +56,32 @@ StatusCode CollectLumiData::initialize() {
   info() << "PV2DContainer       " << m_PV2DContainerName   << endmsg;
 
   info() << "OutputContainer     " << m_OutputContainerName << endmsg;
+
+
+  // ------------------------------------------
+  IANNSvc* annSvc = svc<IANNSvc>("LumiANNSvc");
+
+  boost::optional<IANNSvc::minor_value_type> 
+    x = annSvc->value("LumiCounters","PV2D");
+
+  if (!x) {
+    // name1 is not known under major "MyMajorName"
+    info() << "LumiCounters not found" <<  endmsg;
+  } else {
+    m_iPV2D = x->second;
+    info() << "LumiCounters::PV2D key value: " << m_iPV2D << endmsg;
+  }
+    x = annSvc->value("LumiCounters","RZVelo");
+
+  if (!x) {
+    // name1 is not known under major "MyMajorName"
+    info() << "LumiCounters not found" <<  endmsg;
+  } else {
+    m_iRZVelo = x->second;
+    info() << "LumiCounters::PV2D key value: " << m_iRZVelo << endmsg;
+  }
+  // ------------------------------------------
+
  
   return StatusCode::SUCCESS;
 }
@@ -94,7 +122,7 @@ StatusCode CollectLumiData::execute() {
     if (m_printing_verbose) 
       verbose() << "found " << n_RZVelo << " RZVelo tracks." << endreq ;
   }
-  m_nRZVelo = (unsigned short) n_RZVelo;
+  m_nRZVelo = n_RZVelo;
   debug() << "There are " << n_RZVelo << " tracks in " << m_RZVeloContainerName <<  endreq ;
 
   // ------------------------------------------
@@ -114,7 +142,7 @@ StatusCode CollectLumiData::execute() {
     if (m_printing_verbose) 
       verbose() << "found " << n_PV2D << " PV2D vertices." << endreq ;
   }
-  m_nPV2D = (unsigned short) n_PV2D;
+  m_nPV2D = n_PV2D;
   debug() << "There are " << n_PV2D << " vertices in " << m_PV2DContainerName <<  endreq ;
 
   // ------------------------------------------
@@ -151,10 +179,10 @@ void CollectLumiData::collect() {
   LHCb::HltLumiSummary* hltLS= new LHCb::HltLumiSummary();
 
   // add tracks
-  hltLS->addInfo( (short) LHCb::HltLumiSummary::RZVelo, m_nRZVelo);
+  hltLS->addInfo( m_iRZVelo, m_nRZVelo);
   
   // add vertices
-  hltLS->addInfo( (short) LHCb::HltLumiSummary::PV2D, m_nPV2D);
+  hltLS->addInfo( m_iPV2D, m_nPV2D);
 
   m_HltLumiSummarys->insert( hltLS );
 
