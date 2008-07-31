@@ -1,3 +1,10 @@
+2008-07-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py: Major restructuring (not fully tested yet).
+	  New features: allow arbitrary version strings (like HEAD), better
+	  support for user projects and dev areas (like nightlies), improved
+	  feedback.
+	
 2008-06-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: added a hack for temporary directories with '+++'
