@@ -195,6 +195,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
     int bcidSU  =((raw[iwd]>>20)& 0xF);
     bool compression =  ((raw[iwd]>>31)& 0x1);
     if (status>2) m_errors[iq].best_status.set(status);
+    else m_errors[iq].best_status.set(0);
     m_errors[iq].best_bcid.set(bcid,m_ref_l0_B_Id);
     m_errors[iq].ctrl_bcid[0].set(bcidCU,m_ref_l0_B_Id);
     m_errors[iq].ctrl_bcid[1].set(bcidSU,m_ref_l0_B_Id);
@@ -257,6 +258,7 @@ int L0Muon::CtrlCandCnv::decodeBank(const std::vector<unsigned int> &raw, int ba
         bcsu_ncand[iboard]=ncand;
         m_candRegHandlerBCSU[iq][iboard].setStatus( status );    
         if (status>2) m_errors[iq].bcsu_status[iboard].set(status);
+        else m_errors[iq].bcsu_status[iboard].set(0);
         ++iboard;
       } // End of loop over the 4 boards in the current word
       empty|=((raw[iwd])& 0x7F000000);

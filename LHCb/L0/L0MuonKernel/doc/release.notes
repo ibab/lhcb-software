@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-07-31 - Julien Cogan
+ - Bug fix in the handling of status error 
  - Minor bug fix in the handling of decoding error counter
 
 !============================ L0MuonKernel v8r1 2008-07-27 =================== 

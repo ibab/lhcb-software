@@ -272,11 +272,13 @@ int L0Muon::ProcCandCnv::decodeBank_v2(const std::vector<unsigned int> &raw)
     if (iwd>=raw.size()) return 0;
     int statusBCSU=((raw[iwd])& 0xF);
     if (statusBCSU>2) m_errors[ib].bcsu_status.set(statusBCSU);
+    else m_errors[ib].bcsu_status.set(0);
     m_candRegHandlerBCSU[ib].setStatus(statusBCSU); 
     int statusPU[4];
     for (int ipu= 0; ipu<4 ;++ipu) {
       statusPU[ipu]=( (raw[iwd]>>(4+ipu*4)) &  0xF) ;
       if (statusPU[ipu]>2) m_errors[ib].pus_status[ipu].set(statusPU[ipu]);
+      else m_errors[ib].pus_status[ipu].set(0);
       m_candRegHandlerPU[ib][ipu].setStatus(statusPU[ipu]); 
     }
     m_errors[ib].errF.set((raw[iwd]>>20)& 0xF);
