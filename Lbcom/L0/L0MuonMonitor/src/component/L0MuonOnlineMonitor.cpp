@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.9 2008-07-31 20:56:59 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.10 2008-07-31 21:15:31 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -137,6 +137,7 @@ StatusCode L0MuonOnlineMonitor::execute() {
   if (!selectedTrigger()) return StatusCode::SUCCESS;
 
   int ncand=0;
+  int ncandPU=0;
   int npad[L0Muon::MonUtilities::NStations]; for (int i=0; i<L0Muon::MonUtilities::NStations; ++i) npad[i]=0;
 
   // Loop over time slots
@@ -186,6 +187,7 @@ StatusCode L0MuonOnlineMonitor::execute() {
     if (  exist<LHCb::L0MuonCandidates>(location ) ) {
       LHCb::L0MuonCandidates* cands = get<LHCb::L0MuonCandidates>( location );
       m_candHistosPU->fillHistos(cands,(*it_ts));
+      ncandPU+=cands->size();
     }
 
     
@@ -196,7 +198,8 @@ StatusCode L0MuonOnlineMonitor::execute() {
   
   // Candidates
   m_candHistosFinal->fillHistos(ncand);
-
+  m_candHistosPU->fillHistos(ncandPU);
+  
   return StatusCode::SUCCESS;
 }
 
