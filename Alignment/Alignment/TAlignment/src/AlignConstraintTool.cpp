@@ -11,7 +11,7 @@ namespace Al
   class Constraints
   {
   public:
-    enum EConstraints { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, SRz, TrX, TrY, TrTx, TrTy, Cur, NumConstraints } ;
+    enum EConstraints { Tx=0, Ty, Tz, Rx, Ry, Rz, Szx, Szy, Szz, SRz, Trx, Try, Trtx, Trty, Cur, NumConstraints } ;
     typedef AlDofMask<NumConstraints> DofMask ;
     Constraints(size_t dim, const std::vector<std::string>& activeconstraints) ;
     AlMat& derivatives() { return m_derivatives ; }
@@ -61,7 +61,7 @@ namespace Al
   
   const std::vector<std::string> Constraints::m_names =
      boost::assign::list_of("Tx")("Ty")("Tz")("Rx")("Ry")("Rz")("Szx")("Szy")("Szz")("SRz")
-    ("TrX")("TrY")("TrTx")("TrTy")("TrCur");
+    ("Trx")("Try")("Trtx")("Trty")("Trcur");
   
 
   class AlignConstraintTool : public GaudiTool,  
@@ -216,8 +216,8 @@ namespace Al
 	    m_constraints->derivatives()(Constraints::SRz,jpar) = thisweight * deltaZ/(zmax-zmin) * jacobian(5,j) ;
 	    
 	    // Curvature constraint. The constraint is on the average per track.
-	    for(size_t trkpar=0; trkpar<5; ++trkpar)
-	      m_constraints->derivatives()(Constraints::TrTx+trkpar,jpar) = equations.dStateDAlpha(index)(trkpar,j)/equations.numTracks() ;
+	    for(size_t trkpar=0; trkpar<5; ++trkpar) 
+	      m_constraints->derivatives()(Constraints::Trx+trkpar,jpar) = equations.dStateDAlpha(index)(trkpar,j)/equations.numTracks() ;
 	  }
 	} 
       }
