@@ -1,4 +1,4 @@
-// $Id: GenParticleCuts.h,v 1.16 2008-07-21 12:12:21 hmdegaud Exp $
+// $Id: GenParticleCuts.h,v 1.17 2008-07-31 09:56:40 hmdegaud Exp $
 // ============================================================================
 #ifndef LOKI_GENPARTICLECUTS_H 
 #define LOKI_GENPARTICLECUTS_H 1
@@ -841,7 +841,7 @@ namespace LoKi
      *  mislleading
      *  
      *  if one has 
-     *  @f[  \mathrm{B}^0 \to \bar{\mathrm{}}^0 \to \mathrm {X} $f]
+     *  @\f[  \mathrm{B}^0 \to \bar{\mathrm{}}^0 \to \mathrm {X} $\f]
      *  in this case both @\f[\mathrm{B}^0$\f] and  $\f[ \bar{\mathrm{}}^0 @\f] 
      *  are considered as "oscillated" 
      *
@@ -1333,3 +1333,4 @@ namespace LoKi
 // ============================================================================
 #endif // LOKI_GENPARTICLECUTS_H
 // ============================================================================
+
