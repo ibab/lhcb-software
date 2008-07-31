@@ -4,7 +4,7 @@
  *  Implementation file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.cpp,v 1.38 2008-07-29 13:36:11 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.cpp,v 1.39 2008-07-31 16:59:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -113,7 +113,7 @@ StatusCode ParticleEffPurMoni::execute()
   MCP2PartMap mcp2Parts;
 
   // already used MCParticles for each each ProtoParticle location
-  std::map< StringPair, std::set<const LHCb::MCParticle*> > usedMCPs;
+  std::map< const std::string, std::set<const LHCb::MCParticle*> > usedMCPs;
 
   // Loop over the final list of Protos and associated Particles
   if ( msgLevel(MSG::DEBUG) )
@@ -160,7 +160,7 @@ StatusCode ParticleEffPurMoni::execute()
                 << " -> " << (*iPart).first << endreq;
 
       // is this a clone ?
-      const StringPair cloneKey(tesLoc,protoTesLoc);
+      const std::string cloneKey(tesLoc+protoTesLoc);
       const bool isClone =
         ( usedMCPs[cloneKey].find(mcPart) != usedMCPs[cloneKey].end() );
 
@@ -172,7 +172,7 @@ StatusCode ParticleEffPurMoni::execute()
       if ( mcPart ) ++((m_partProtoTESStats[tesLoc])[protoTesLoc]).nWithMC;
 
       // Proto Correlations
-      if ( !isClone && mcPart )
+      if ( !isClone )
       {
         ((mcp2Parts[mcPart])[(*iPart).first.particle]).insert((*iPart).first.firstParticle);
       }
@@ -187,7 +187,7 @@ StatusCode ParticleEffPurMoni::execute()
                                                protoTesLoc ) ];
 
       // count the number reconstructed for this type
-      ++mcSum.nReco;
+      ++(mcSum.nReco);
 
       // count the true types for this reco type
       MCTally & tally = (mcSum.trueMCType[mcRecType])[ mcParticleName(mcPart) ];
@@ -218,7 +218,7 @@ StatusCode ParticleEffPurMoni::execute()
         iProtoLoc != protoLocations.end(); ++iProtoLoc )
   {
     // already used MCParticles
-    std::set<const LHCb::MCParticle *> usedMCPs;
+    std::set<const LHCb::MCParticle *> usedMCPs2;
     // fill short location name
     shortProtoLoc(*iProtoLoc);
     // get the protos at this location
@@ -236,10 +236,10 @@ StatusCode ParticleEffPurMoni::execute()
       const LHCb::MCParticle * mcPart = mcParticle(*proto);
 
       // is this a clone ?
-      const bool isClone = ( usedMCPs.find(mcPart) != usedMCPs.end() );
+      const bool isClone = ( usedMCPs2.find(mcPart) != usedMCPs2.end() );
 
       // add to list of seen MCPs
-      if ( mcPart ) usedMCPs.insert(mcPart);
+      if ( mcPart ) usedMCPs2.insert(mcPart);
 
       // Get the MCParticle reco type
       const IMCReconstructible::RecCategory mcRecType = m_mcRec->reconstructible(mcPart);
@@ -681,8 +681,6 @@ void ParticleEffPurMoni::printStats() const
   const std::string LINES(147,'=');
   const std::string lines(147,'-');
 
-  const Rich::PoissonEffFunctor eff("%7.2f +-%5.2f");
-
   // loop over Particle TES locations
   for ( LocationMap::iterator iLoc = m_locMap.begin();
         iLoc != m_locMap.end(); ++iLoc )
@@ -824,6 +822,7 @@ void ParticleEffPurMoni::printStats() const
                   mcTC.resize(10+m_maxNameLength,' ');
                   const long nBkgTrue =
                     ((m_mcProtoCount[(*iSum).first.protoTESLoc])[(*iSum).first.protoType].trueMCType[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];
+                  //const long nBkg = nBkgTrue + nClones;
                   const long nTotalMC = (m_rawMCMap[(*iMCT).first])[(*iT).first].notclones_detailed[(*iC).first];;
                   always() << mcTC
                            << "|" << eff( nTotal, (*iSum).second.nReco );

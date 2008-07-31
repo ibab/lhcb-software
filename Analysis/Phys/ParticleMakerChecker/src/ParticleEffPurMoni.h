@@ -4,7 +4,7 @@
  *  Header file for class : ParticleEffPurMoni
  *
  *  CVS Log :-
- *  $Id: ParticleEffPurMoni.h,v 1.27 2008-07-29 13:36:11 jonrob Exp $
+ *  $Id: ParticleEffPurMoni.h,v 1.28 2008-07-31 16:59:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2007-002-21
@@ -301,7 +301,7 @@ private: // definitions
   public:
     /// Default Constructor
     MCTally() : notclones(0), clones(0) { }
-    /// Returns all tracks
+    /// Returns # of all tracks
     unsigned long int all() const { return notclones+clones; }
   public:
     unsigned long int notclones;   ///< Total number of non-clones
@@ -545,16 +545,27 @@ private: // methods
              shortPartLoc(loc2)+"&"+shortPartLoc(loc1) );
   }
 
+  /// Make a set of plots
   void makeAllPlots1( const std::string hpath,
                       const HistoHandle & partTally,
                       const HistoHandle & protoTally,
                       const HistoHandle & mcTally ) const;
 
+  /// Make a set of plots
   void makeAllPlots2( const std::string hpath,
                       const HistoHandle & partTally,
                       const HistoHandle & mcTally,
                       const StringPair& corName,
                       const HistoHandle & corTally ) const;
+
+  /// Compute the poisson efficiencies
+  inline Rich::PoissonEffFunctorResult eff( double top, double bot ) const
+  {
+    static const Rich::PoissonEffFunctor _eff("%7.2f +-%5.2f");
+    // CRJ : temporary hack. Need to find out properly what is causing this
+    if ( bot < top ) top = bot;
+    return _eff(top,bot);
+  }
 
 private: // data
 
