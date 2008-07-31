@@ -8,11 +8,69 @@ This version uses projects Gaudi v20r2, LHCb v25r0, Lbcom v6r21, Rec v5r10
  and DDDB v1r* (SQLDDDB v4r7 or greater), ParamFiles v7r2, FieldMap v5r*
 
 This is a development version.
-- Can be used to reconstruct 2008 geometries
+- Should be used to reconstruct 2008 geometries
 - Can be used for DC06 geometries, but material seen is different from DC06
 - Cannot reconstruct data produced with Boole v15r1 or v15r2 (use v32r8 instead)
 - Cannot reconstruct 2008 simulation digitized with Boole v16r0 (use v33r0)
 
+- Persistency changes
+  . Output data needs DaVinci v19r15 or later in following cases:
+    o If accessing simulated OT raw banks produced with Boole v16r1 or later
+      (bank version SIM=63) (OTDAQ v7r1)
+    o If accessing TT raw banks in 2008 data or simulation, due to fixes to 2008
+      TT decoding. Thes fixes also prevent reconstruction of 2008 simulation
+      digitized with Boole v16r0 or earlier (STDAQ v3r10, STKernel v1r7)
+    o If accessing HepMCEvent record, which is always in HepMC 2 format on Brunel
+      output. When reading .digi files, Brunel assumes HepMC 1 format for DC06
+      data (and converts to HepMC 2), HepMC 2 otherwise; for DC06 data in HepMC 2
+      format or other data in HepMC 1 format, change defaults by respectively 
+      removing or adding the Dll "HepMCBack" from ApplicationMgr().Dlls (LCG_55a)
+  . Removed /Event/Rec/Rich/RichOfflineSummaryTracks from default DST
+    (GaudiConf v10r12, RichRecSys v3r12)
+
+- New features
+  . Added access to ONLINE partition of CondDB
+    (DDDB v1r10, DetCond v12r2, SQLDDDB v4r7)
+  . Added Brunel().useOracleCondDB flag (default False, uses SQLDDDB)
+    (GaudiConf v10r12, DDDB v1r10)
+  . At initialisation, use current time as best guess for initial values of
+    conditions (DetDescSvc v2r1)
+  . Velo motion system position (for Velo open/closed geometry) now taken from
+    CondDB (VeloDet v13r3, SQLDDDB v4r7)
+  . Magnetic field scale factor, polarity, field maps now taken from CondDB
+    (Magnet v5r0, SQLDDDB v4r7)
+  . New "RunChange" incident issued by OdinTimeDecoder when run number obtained
+    from ODIN is different from the previous one (DAQEvent v7r13)
+  . New algorithm TrackUseCaloMomentumAlg, clones Track objects and updates their
+    momentum using CALO information (used in field off RICH reconstruction)
+    (RichRecAlgorithms v2r12)
+  . Updated valgrind.job to work with python options
+
+- New tuning
+  . Updated IT and TT dead channel maps for 2008 (STDet v4r4, SQLDDDB v4r7)
+  . New distinction between Rich L1 hardware and logical ID numbers
+    (RichDAQ v3r19, RichDet v11r0, RichKernel v7r14)
+  . Adapted pattern algorithm tuning to measured field map, selecting correct
+    tuning according to field map in use in MagneticFieldSvc
+    (PatAlgorithms v3r9, TrackTools v3r10, Magnet v5r0, LHCbKernel v9r0)
+  . Use new matrix inversion based on cholesky decomposition (TrackTools v3r10)
+
+- Monitoring changes
+  . Disable the Rich reconstruction summary data objects monitor (no longer
+    produced by default) (RichRecQC v2r20)
+
+- Bug fixes
+  . Fix to gaudirun.py to allow producing correct old style options from
+    python options (GaudiConf v10r12)
+  . Fix to PatSeedingTool, was crashing when using isolation cuts
+    (PatAlgorithms v3r9)
+  . Protect MaterialLocator base to against 'null' extrapolation
+    (TrackExtrapolators v2r19)
+  . More fixes and protections for real data decoding (L0Calo v9r19, L0Muon v8r1,
+    STDAQ v3r10, L0Event v17r1, STTELL1Event v1r4, STKernel v1r7)
+  . In CaloZSupAlg, protect against large negative noise in 2D 0-sup method
+    (CaloDAQ v4r7)
+ 
 </PRE><H1><A NAME=v33r0>2008-07-21 Brunel v33r0</A></H1><PRE>
 This version uses projects Gaudi v20r1, LHCb v24r1, Lbcom v6r20, Rec v5r9
  and DDDB v1r* (SQLDDDB v4r6 or greater), ParamFiles v7r2, FieldMap v5r*
