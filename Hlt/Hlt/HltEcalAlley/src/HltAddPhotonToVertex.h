@@ -1,12 +1,11 @@
-// $Id: HltAddPhotonToVertex.h,v 1.1.1.1 2008-07-16 16:54:04 witekma Exp $
+// $Id: HltAddPhotonToVertex.h,v 1.2 2008-07-31 11:55:52 graven Exp $
 #ifndef HLTADDPHOTONTOVERTEX_H 
 #define HLTADDPHOTONTOVERTEX_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/HltAlgorithm.h"
-//#include "HltBase/IBiFunctionFactory.h"
-//#include "HltFunctions.h"
+#include "HltBase/HltSelectionContainer.h"
 
 /** @class HltAddPhotonToVertex HltAddPhotonToVertex.h
  *  
@@ -19,16 +18,15 @@
 class HltAddPhotonToVertex : public HltAlgorithm {
  public: 
 
-  typedef IBiFunctionFactory<LHCb::Track,LHCb::Track> IBiTrackFactory;
-  
   /// Standard constructor
   HltAddPhotonToVertex( const std::string& name, ISvcLocator* pSvcLocator );
   
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
     
  private:
+  Hlt::SelectionContainer3<LHCb::RecVertex, LHCb::RecVertex, LHCb::Track>  m_selections;
+
 
 };
 #endif // HLTADDPHOTONTOVERTEX_H 

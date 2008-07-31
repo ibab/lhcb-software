@@ -1,14 +1,13 @@
-// $Id: HltAddPhotonToVertex.cpp,v 1.1.1.1 2008-07-16 16:54:04 witekma Exp $
+// $Id: HltAddPhotonToVertex.cpp,v 1.2 2008-07-31 11:55:52 graven Exp $
 // Include files 
 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "boost/foreach.hpp"
 
 // local
 #include "HltAddPhotonToVertex.h"
-//#include "HltBase/EParser.h"
-//#include "HltBase/ESequences.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAddPhotonToVertex
@@ -29,12 +28,9 @@ using namespace LHCb;
 HltAddPhotonToVertex::HltAddPhotonToVertex( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selections(*this)
 {
-
-  m_inputVertices = 0;
-  m_inputTracks   = 0;
-  m_outputVertices = 0;
-
+    m_selections.declareProperties();
 }
 
 //=============================================================================
@@ -44,10 +40,8 @@ HltAddPhotonToVertex::HltAddPhotonToVertex( const std::string& name,
 StatusCode HltAddPhotonToVertex::initialize() {
   StatusCode sc = HltAlgorithm::initialize();
 
-  m_inputVertices = &(retrieveTSelection<LHCb::RecVertex>(m_inputSelectionName));
-  m_inputTracks = &(retrieveTSelection<LHCb::Track>(m_inputSelection2Name));
-  
-  m_outputVertices = &(registerTSelection<LHCb::RecVertex>());
+  m_selections.retrieveSelections();
+  m_selections.registerSelection();
 
   saveConfiguration();
 
@@ -61,51 +55,25 @@ StatusCode HltAddPhotonToVertex::initialize() {
 //=============================================================================
 StatusCode HltAddPhotonToVertex::execute() {
 
-  StatusCode sc = StatusCode::SUCCESS;
 
   if ( m_debug ) debug() << "HltAddPhotonToVertex: Execute" << endmsg;
 
   RecVertices* overtices = new RecVertices();
-  put(overtices,"Hlt/Vertex/"+m_outputVertices->id().str());
+  put(overtices,"Hlt/Vertex/"+m_selections.output()->id().str());
 
-  if (( m_inputVertices->size() < 1 || m_inputTracks->size() <1)) {
+  if (( m_selections.input<1>()->empty() || m_selections.input<2>()->empty() )) {
     if ( m_debug ) debug() << " no tracks or no vertices to run on  " << endreq;
-    return sc;
+    return StatusCode::SUCCESS;
   } 
 
-  for(  Hlt::VertexContainer::const_iterator it= m_inputVertices->begin(); 
-        it != m_inputVertices->end(); ++it){
-
-    const LHCb::RecVertex& vx_in = *(*it);
-
-    for (Hlt::TrackContainer::const_iterator itM = m_inputTracks->begin(); 
-         itM != m_inputTracks->end(); itM++) {
-      const LHCb::Track& track1 = *(*itM);
-    
-
-      LHCb::RecVertex* vx_out = new RecVertex();
-      *vx_out = vx_in;
-
-      vx_out->addToTracks((Track*) &track1);
-
-      m_outputVertices->push_back(vx_out);
+  BOOST_FOREACH( const LHCb::RecVertex* vx_in, *m_selections.input<1>() ) {
+    BOOST_FOREACH( const LHCb::Track* track, *m_selections.input<2>() ) {
+      LHCb::RecVertex* vx_out = new RecVertex( *vx_in );
+      vx_out->addToTracks( const_cast<Track*>(track));
       overtices->insert(vx_out);
-
+      m_selections.output()->push_back(vx_out);
     }
   }
-  
   return StatusCode::SUCCESS;  
 }
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode HltAddPhotonToVertex::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-  return HltAlgorithm::finalize();  // must be called after all other actions 
-  
-}
-
-//=============================================================================
 
