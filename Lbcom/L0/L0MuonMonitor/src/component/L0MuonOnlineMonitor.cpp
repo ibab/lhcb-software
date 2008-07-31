@@ -1,4 +1,4 @@
-// $Id: L0MuonOnlineMonitor.cpp,v 1.7 2008-07-25 14:42:59 jucogan Exp $
+// $Id: L0MuonOnlineMonitor.cpp,v 1.8 2008-07-31 18:35:40 jucogan Exp $
 // Include files 
 
 #include "boost/format.hpp"
@@ -62,15 +62,19 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   m_candHistosFinal = tool<L0MuonCandHistos>( "L0MuonCandHistos", "FinalCand", this);
   m_candHistosPU    = tool<L0MuonCandHistos>( "L0MuonCandHistos", "PUCand", this);
   
-  setHistoDir("L0Muon/Online");
+
+  //   if (m_shortnames) setHistoDir(""); else setHistoDir("L0Muon/Online");
+  if (!m_shortnames) setHistoDir("L0Muon/Online");
 
   // Run info
-  m_info->setHistoDir("L0Muon/Online");
+  //   if (m_shortnames) m_info->setHistoDir(""); else m_info->setHistoDir("L0Muon/Online");
+  if (!m_shortnames) m_info->setHistoDir("L0Muon/Online");
   m_info->bookHistos(m_shortnames);
   debug() << "==>   -- RunInfo done" << endmsg;
 
   // Decoding
-  m_error->setHistoDir("L0Muon/Online");
+  //  if (m_shortnames) m_error->setHistoDir(""); else m_error->setHistoDir("L0Muon/Online");
+  if (!m_shortnames) m_error->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
     m_error->bookHistos_ctrl(iq,m_shortnames);
@@ -82,7 +86,8 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==>   -- Decoding done" << endmsg;
 
   // Logical channels
-  m_channelsHistos->setHistoDir("L0Muon/Online");
+  //   if (m_shortnames) m_channelsHistos->setHistoDir(""); else m_channelsHistos->setHistoDir("L0Muon/Online");
+  if (!m_shortnames) m_channelsHistos->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator itq=m_quarters.begin(); itq<m_quarters.end(); ++itq){
     int iq = (*itq);
     for (std::vector<int>::iterator itr=m_regions.begin(); itr<m_regions.end(); ++itr){
@@ -96,7 +101,8 @@ StatusCode L0MuonOnlineMonitor::initialize() {
   debug() << "==>   -- Logical Channels done" << endmsg;
   
   // Logical pads
-  m_padsHistos->setHistoDir("L0Muon/Online");
+  //   if (m_shortnames) m_padsHistos->setHistoDir(""); else  m_padsHistos->setHistoDir("L0Muon/Online");
+  if (!m_shortnames) m_padsHistos->setHistoDir("L0Muon/Online");
   for (std::vector<int>::iterator its=m_stations.begin(); its<m_stations.end(); ++its){
     int sta = (*its);
     m_padsHistos->bookHistos(sta,m_shortnames);
@@ -105,9 +111,11 @@ StatusCode L0MuonOnlineMonitor::initialize() {
 
 
   // Candidates
-  m_candHistosFinal->setHistoDir("L0Muon/Online");
+  //   if (m_shortnames) m_candHistosFinal->setHistoDir(""); else m_candHistosFinal->setHistoDir("L0Muon/Online");
+  if (!m_shortnames) m_candHistosFinal->setHistoDir("L0Muon/Online");
   m_candHistosFinal->bookHistos(m_shortnames);
-  m_candHistosPU->setHistoDir("L0Muon/Online/PU");
+  //   if (m_shortnames) m_candHistosPU->setHistoDir(""); else m_candHistosPU->setHistoDir("L0Muon/Online/PU");
+  if (!m_shortnames) m_candHistosPU->setHistoDir("L0Muon/Online/PU");
   m_candHistosPU->bookHistos(m_shortnames);
   debug() << "==>   -- Candidates done" << endmsg;
 

@@ -1,4 +1,4 @@
-// $Id: L0MuonCandHistos.cpp,v 1.2 2008-07-25 14:42:59 jucogan Exp $
+// $Id: L0MuonCandHistos.cpp,v 1.3 2008-07-31 18:35:40 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ void L0MuonCandHistos::bookHistos(int nmax, bool shortname)
   std::string hname;
   
   hname = L0Muon::MonUtilities::hname_cand_pt(toolname);
-  m_hpt=book1D(hname,hname,200.,0.,20);
+  m_hpt=book1D(hname,hname,0.,20.,200);
 
   hname = L0Muon::MonUtilities::hname_cand_encodedpt(toolname);
   m_hencodedpt=book1D(hname,hname,-127.5,127.5,255);
@@ -83,11 +83,13 @@ void L0MuonCandHistos::fillHistos(LHCb::L0MuonCandidates* cands, int ts)
 
   for ( itcand= cands->begin(); itcand<cands->end();++itcand) {
 
-    fill(m_hpt,(*itcand)->pt(),1);
     int encodedPt = (*itcand)->encodedPt();
     int value=encodedPt&0x7F;
     int charge=(encodedPt>>7)&0x1;
-    encodedPt= value*( (charge*2) -1);
+    int sign=(charge*2) -1;
+    encodedPt= value*sign;
+    double abs_pt_gev=sign*(*itcand)->pt()/1000.;
+    fill(m_hpt,abs_pt_gev,1);
     fill(m_hencodedpt,encodedPt,1);
     
     for (int sta=0; sta<3;++sta) {
