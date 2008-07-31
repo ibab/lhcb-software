@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-07-31 - Gerhard Raven 
+ - adapt configurable for Gaudi v20r2, LHCb v25r0, Rec v5r10
+
 ! 2008-07-28 - Gerhard Raven 
  - improved configurable: introduced runType slot, 
    sets up the L0 from raw decoding using data-on-demand service

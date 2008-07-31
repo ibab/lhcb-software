@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.9 2008-07-30 13:58:21 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2008-07-31 15:51:24 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -39,22 +39,16 @@ class Moore(ConfigurableUser):
     def setProp(self,name,value):
         return setattr(self,name,value)
 
-    def setDBtag(self,item) :
-        tag = self.getProp( item )
-        if tag != 'DEFAULT' :
-            if hasattr(LHCbApp(),item):
-                print "LHCbApp()."+item+" already defined as "+attr(LHCbApp(),item)+", ignoring Moore()."+item+"="+tag
+    def setOtherProp(self,other,name):
+        # Function to propagate properties to other component, if not already set
+        if hasattr(self,name):
+            if hasattr(other,name) and len(other.getProp(name)) > 0 :
+                print "# %s().%s already defined, ignoring Moore().%s"%(other.name(),name,name)
             else:
-                setattr(LHCbApp(),item,tag)
+                setattr(other,name,self.getProp(name))
 
     def validRunTypes(self):
         return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning' ] 
-
-    def evtMax(self):
-        if hasattr(ApplicationMgr(),"EvtMax"):
-            return getattr(ApplicationMgr(),"EvtMax")
-        else:
-            return ApplicationMgr().getDefaultProperties()["EvtMax"]
 
     def getConfigAccessSvc(self):
         method = self.getProp('TCKpersistency').lower()
@@ -69,17 +63,9 @@ class Moore(ConfigurableUser):
         AuditorSvc().Auditors.append( x.name() )
         x.Enable = True
 
-    def convertToInt(self,x) :
-        # TODO: use c_uint instead??
-        if type(x)==int : return x
-        if type(x)==str : 
-            # then again, why would someone specify a string, and not an int?
-            if x[0:2] == '0x' : return int(x,16)
-            return int(x)
-
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        importOptions('$STDOPTS/LHCbApplication.opts')
+        # importOptions('$STDOPTS/LHCbApplication.opts')
         importOptions('$STDOPTS/DstDicts.opts')
 
         inputType = self.getProp('inputType').upper()
@@ -90,7 +76,15 @@ class Moore(ConfigurableUser):
 
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
-        for i in [ 'DDDBtag', 'condDBtag' ] : self.setDBtag( i )
+        # forward some other settings... TODO: make a dictionary..
+        self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
+        importOptions( "$DDDBROOT/options/DDDB.py" )
+        from DetCond.Configuration import configureOnlineSnapshots
+        configureOnlineSnapshots()
+        self.setOtherProp( LHCbApp(), 'DDDBtag' )
+        self.setOtherProp( LHCbApp(), 'condDBtag' )
+        self.setOtherProp( LHCbApp(), 'skipEvents' )
+        self.setOtherProp( ApplicationMgr(), 'EvtMax' )
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # output levels...
