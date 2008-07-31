@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-07-31 - Julien Cogan
+ - Minor bug fix in the handling of decoding error counter
+
 !============================ L0MuonKernel v8r1 2008-07-27 =================== 
 ! 2008-07-25 - Julien Cogan
  - Add new functions in MonUtilities

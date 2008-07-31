@@ -312,8 +312,12 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
   //
 
   // By default set the decoding error flag ON
-  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(1);
+  int decoding_error[12];
+  for (int ib=0; ib<12; ++ib)  decoding_error[ib]=1;
+  
+  //for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(1);
 
+  
   int ibit=31;
   for (int ib =0; ib<12; ++ib) 
   { // Loop over processing boards
@@ -342,6 +346,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" last_bit  ="<<ibit
                <<std::endl;
 #endif
+      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
       return -1;
     }
 #if _DEBUG_PROCDATA_ >0
@@ -361,12 +366,14 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" OLs board# "<<ib
                <<std::endl;
 #endif
+      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
       return -1;
     }
 
     // if there is no neighbour data, the decoding is complete for this board.
     // Thus, set the decoding error flag to FALSE.
-    if ((nOLwords+nheader)<=raw.size()) m_errors[ib].decoding.set(0);
+    //if ((nOLwords+nheader)<=raw.size()) m_errors[ib].decoding.set(0);
+    if ((nOLwords+nheader)<=raw.size()) decoding_error[ib]=0;
     
     if (((ib+1)%3)==0) 
     { // take care of padding bits at the end of each PP
@@ -408,11 +415,13 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
              <<") does'nt match 1st part size ("<<(nOLwords+nheader)<<")"
              <<std::endl;
 #endif
+    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
     return -1;
   }
 
   if ((nOLwords+nheader)==raw.size()) {
     // the 2nd part was not activated : stop here
+    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
     return 1;
   }
   
@@ -447,6 +456,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" last_bit  ="<<ibit
                <<std::endl;
 #endif
+      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
       return -1;
     }
 #if _DEBUG_PROCDATA_ >0
@@ -467,12 +477,14 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
                <<" OLs board# "<<ib
                <<std::endl;
 #endif
+      for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
       return -1;
     }
 
     // The decoding is now complete for this board.
     // Thus, set the decoding error flag to FALSE.
-    m_errors[ib].decoding.set(0);
+    //m_errors[ib].decoding.set(0);
+    decoding_error[ib]=0.;
     
     if (((ib+1)%3)==0) 
     { // take care of padding bits at the end of each PP
@@ -512,9 +524,11 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
              <<") does'nt match raw bank size ("<<raw.size()<<")"
              <<std::endl;
 #endif
+    for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
     return -1;
   }
 
+  for (int ib=0; ib<12; ++ib)  m_errors[ib].decoding.set(decoding_error[ib]);
   return 2;
 
 }
