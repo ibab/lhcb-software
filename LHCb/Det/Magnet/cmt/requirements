@@ -1,29 +1,24 @@
-# $Id: requirements,v 1.32 2008-07-27 13:04:07 cattanem Exp $
+# $Id: requirements,v 1.33 2008-07-31 08:53:15 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v5r0
+version           v5r1
 
 branches          cmt doc src 
 
-use LHCbKernel  v*      Kernel
-use GaudiAlg    v*      -no_auto_imports
+use GaudiConf   v*        -no_auto_imports
+use LHCbKernel  v* Kernel
+use GaudiAlg    v*        -no_auto_imports
 use GaudiKernel v*
-use GaudiSvc v*
-use DetDesc v*  Det
-use DDDB   v* Det
-use FieldMap  v* -no_auto_imports
+use DetDesc     v* Det
+use DDDB        v* Det
+use FieldMap    v*        -no_auto_imports
 
 library          Magnet    ../src/*.cpp -import=GaudiAlg
-
 apply_pattern component_library library=Magnet
 
-#================== Test application ============
 private
-use GaudiConf 	v*	-no_auto_imports
-application TestMagnet $(GAUDICONFROOT)/src/GaudiMain.cpp
-
-# To run application, source setup.csh -tag_add=check
-macro useRootHist  "" check " RootHistCnv  v* -no_auto_imports"
-use ${useRootHist}
-
-apply_pattern ld_library_path
+# Environment for test application. To run it:
+# cmt -tag=check run Gaudi.exe ../options/job.opts
+  macro useGaudiConf "" check " GaudiConf    v* -no_auto_imports"
+  use ${useGaudiConf}
+end_private

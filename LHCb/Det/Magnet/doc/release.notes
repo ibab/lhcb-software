@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-07-31 - Marco Cattaneo
+ - Fix uninitialised pointer to Real field map tools
+ - Clean up dependencies in requirements
+ - Remove unneccessary TestMagnet.exe. Test can be run with 
+   "Gaudi.exe ../options/job.opts"
+
 !====================== Magnet v5r0 2008-07-29 ===============================
 ! 2008-07-29 - Marco Cattaneo
  - Revised implementation of MagneticFieldSvc

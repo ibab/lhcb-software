@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.36 2008-07-26 23:03:01 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.37 2008-07-31 08:53:15 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -44,6 +44,8 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
                                                          m_fieldTool(0),
                                                          m_DC06FieldUp(0),
                                                          m_DC06FieldDown(0),
+                                                         m_RealFieldUp(0),
+                                                         m_RealFieldDown(0),
                                                          m_updMgrSvc(0),
                                                          m_toolSvc(0)
 {
