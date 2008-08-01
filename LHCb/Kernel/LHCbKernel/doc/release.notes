@@ -4,6 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-01 - Vanya BELYAEV
+
+ - src/ParticleID.h
+
+   Small update for LHCb::ParticleID::digit function 
+   to take into account upodated Gaudi::Math::digit function 
+   (The least significat digit i snumberes now as #0)
+
+ - cmt/requirements 
+   version increment to v9r1 
+
 !===================== LHCbKernel v9r0 2008-07-27 =========================
 ! 2008-07-21 - Marco Cattaneo
  - Remove Kernel/IEventTimeDecoder.h, now in GaudiKernel (Gaudi v20r2)

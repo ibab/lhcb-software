@@ -1,16 +1,20 @@
-// $Id: ParticleID.cpp,v 1.6 2008-07-21 14:46:34 cattanem Exp $
+// $Id: ParticleID.cpp,v 1.7 2008-08-01 10:34:09 ibelyaev Exp $
+// ============================================================================
 // Include files 
-
-#include "Kernel/ParticleID.h"
+// ============================================================================
+// LHCbMath 
+// ============================================================================
 #include "LHCbMath/Digit.h"
-#include <math.h>
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : ParticleID
-//
-// 19/02/2002 : Gloria Corti
-//-----------------------------------------------------------------------------
-
+// ============================================================================
+// Local 
+// ============================================================================
+#include "Kernel/ParticleID.h"
+// ============================================================================
+/** @file 
+ *  Implementation file for class : ParticleID
+ *  @date 19/02/2002 
+ *  @author Gloria Corti
+ */
 //=============================================================================
 // Is a valid number according to LHCb scheme
 //=============================================================================
@@ -220,7 +224,7 @@ int LHCb::ParticleID::fundamentalID( ) const {
 unsigned short LHCb::ParticleID::digit(const Location& loc ) const {
   //  PID digits (base 10) are: n nr nl nq1 nq2 nq3 nj
   //  the location enum provides a convenient index into the PID
-  return Gaudi::Math::digit( abspid(), loc );
+  return Gaudi::Math::digit ( abspid(), loc - 1  );
 }
 
 //=============================================================================
