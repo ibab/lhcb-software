@@ -46,18 +46,20 @@ class Environment:
         del self.env[key]
         log = logging.getLogger()
         log.info("removed %s from environment" % key)
-
+	
     def keys(self):
         """
         Return the list of defined environment variables.
         Needed to provide the same interface as os.environ.
         """
         return self.env.keys()
+    
     def has_key(self,key):
         """
         return True if the key is present
         """
         return (key in self.env.keys())
+    
     def items(self):
         """
         Return the list of (name,value) pairs for the defined environment variables.
@@ -74,7 +76,7 @@ class Environment:
     
     def restore(self):
         """
-        Revert all the changes done to the orignal environment.
+        Revert all the changes done to the original environment.
         """
         for key,value in self.old_values.items():
             if value is None:
@@ -89,7 +91,21 @@ class Environment:
         """
         #print "Restoring the environment"
         self.restore()
-
+        
+    def get(self, key, default = None):
+        """
+        Implementation of the standard get method of a dictionary: return the
+        value associated to "key" if present, otherwise return the default.
+        """
+        return self.env.get(key,default)
+    
+    def commit(self):
+        """
+        Forget the old values for the changes done so far (avoids that the
+        changes are rolled-back when the instance goes out of scope). 
+        """
+        self.old_values = {}
+    
     def gen_script(self,shell_type):
         """
         Generate a shell script to reproduce the changes in the environment.
