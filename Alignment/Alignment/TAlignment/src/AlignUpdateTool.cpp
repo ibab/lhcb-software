@@ -44,7 +44,6 @@ namespace Al
     IAlignSolvTool*            m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
     IGetElementsToBeAligned*   m_elementProvider ;
     IAlignConstraintTool*      m_constrainttool ;
-    size_t                     m_nIterations;                   ///< Number of iterations
     size_t                     m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
     bool                       m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
     std::string                m_logFileName ;
@@ -66,7 +65,6 @@ namespace Al
   {
     // interfaces
     declareInterface<IAlignUpdateTool>(this); 
-    declareProperty("NumberOfIterations"          , m_nIterations                  = 10u                     );
     declareProperty("MatrixSolverTool"            , m_matrixSolverToolName         = "SpmInvTool"            );
     declareProperty("MinNumberOfHits"             , m_minNumberOfHits              = 100u                    ); 
     declareProperty("UsePreconditioning"          , m_usePreconditioning           = false                   );
@@ -82,14 +80,15 @@ namespace Al
     // check that constraints exist
     StatusCode sc = GaudiHistoTool::initialize() ;
     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-    //setHistoTopDir("/Alignment") ;
-
+    setHistoTopDir("") ;
+    setHistoDir("Alignment") ;
+    
     // Get tool to align detector, from the tool service
     m_elementProvider = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
     if (!m_elementProvider) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
     
     // Get the constraint tool, also from the toolsvc
-    m_constrainttool = tool<IAlignConstraintTool>("AlignConstraintTool") ;
+    m_constrainttool = tool<IAlignConstraintTool>("Al::AlignConstraintTool") ;
     if (!m_constrainttool) return Error("==> Failed to retrieve constraint tool!", StatusCode::FAILURE);
     
     //Get matrix solver tool
