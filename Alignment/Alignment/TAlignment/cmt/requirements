@@ -27,6 +27,7 @@ use   	TrackInterfaces   	v*      Tr
 use 	STDet			v*	Det
 use     MuonDet                 v*      Det
 use     LHCbKernel              v*      Kernel
+use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
 use   LinkerEvent	v*	Event
 
