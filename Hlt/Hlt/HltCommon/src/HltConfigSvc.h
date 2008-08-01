@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.5 2008-07-08 14:22:49 graven Exp $
+// $Id: HltConfigSvc.h,v 1.6 2008-08-01 12:09:19 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -34,8 +34,8 @@ public:
   virtual void handle(const Incident&);
 
 private:
-  void dummyVerifyTCK();
-  void verifyTCK();
+  void dummyCheckOdin();
+  void checkOdin();
 
   typedef unsigned int TCK_t ;
   typedef std::map<std::string,std::string> TCKMap_t;
@@ -47,6 +47,7 @@ private:
   TCK_t                        m_configuredTCK;   ///< which TCK is currently in use?
   IDataProviderSvc            *m_evtSvc;          ///< get Evt Svc to get ODIN (which contains TCK)
   IIncidentSvc                *m_incidentSvc;     ///< 
+  bool                         m_checkOdin;
 
   // resolve TCK -> toplevel config ID, then call method with ID
   ConfigTreeNode::digest_type tck2id(const TCK_t& tck) const;

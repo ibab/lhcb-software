@@ -3,6 +3,10 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-08-01 - Gerhard Raven
+  - add release number & runtype in toplevel config aliases
+  - add flag to NOT check odin for TCK
+
 !2008-07-30 - Gerhard Raven
   - add HltRoutingBitsWriter & HltRoutingBitEvaluatorFactory
   - follow changes in HltBase

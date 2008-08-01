@@ -70,6 +70,9 @@ namespace {
         evaluator_factory(const std::string& input,HltAlgorithm& parent) {
             parent.debug() << "parsing '" << input <<"'" << endreq;
 
+            // TODO simplify using closures...
+            // TODO see http://www.boost.org/doc/libs/1_34_1/libs/spirit/doc/closures.html
+
             // define our grammar, 
             // and associate parser actions
             rule<phrase_scanner_t> decision, term, expression;

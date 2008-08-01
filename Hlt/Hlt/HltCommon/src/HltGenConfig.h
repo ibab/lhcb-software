@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.7 2008-07-04 12:45:33 graven Exp $
+// $Id: HltGenConfig.h,v 1.8 2008-08-01 12:09:19 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -44,6 +44,8 @@ private:
   IPropertyConfigSvc*      m_configSvc;
   std::vector<std::string> m_topConfig;   ///< where to start when configuring 
   std::vector<std::string> m_svcConfig;   ///< Which services to configure
+  std::string              m_runType;     ///< what runtype do we label this config as?
+  std::string              m_release;     ///< what is the Moore release we use as a label?
 
   StatusCode                generateConfig() const;
   
