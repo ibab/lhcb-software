@@ -1,9 +1,18 @@
+2008-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py:
+	   * clean up and improved testability 
+	   * added options --overriding-projects
+	   * improved handling of projects without version
+	* tests/SetupProjectTest.py: clean up and adaptation to restructuring
+	  in SetupProject.py 
+
 2008-07-31  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py: Major restructuring (not fully tested yet).
 	  New features: allow arbitrary version strings (like HEAD), better
 	  support for user projects and dev areas (like nightlies), improved
-	  feedback.
+	  feedback, create a dictionary for the environment produced.
 	
 2008-06-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
