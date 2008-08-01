@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.8 2008-08-01 12:30:21 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.9 2008-08-01 12:50:17 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -105,7 +105,13 @@ class TemporaryEnvironment:
         Needed to provide the same interface as os.environ.
         """
         return self.env.keys()
-        
+    
+    def has_key(self,key):
+        """
+        return True if the key is present
+        """
+        return (key in self.env.keys())
+    
     def items(self):
         """
         Return the list of (name,value) pairs for the defined environment variables.
@@ -122,7 +128,7 @@ class TemporaryEnvironment:
     
     def restore(self):
         """
-        Revert all the changes done to the orignal environment.
+        Revert all the changes done to the original environment.
         """
         for key,value in self.old_values.items():
             if value is None:
@@ -138,11 +144,18 @@ class TemporaryEnvironment:
         #print "Restoring the environment"
         self.restore()
         
-    def get(self, k, d = None):
-        return self.env.get(k,d)
+    def get(self, key, default = None):
+        """
+        Implementation of the standard get method of a dictionary: return the
+        value associated to "key" if present, otherwise return the default.
+        """
+        return self.env.get(key,default)
     
     def commit(self):
-        """Forget the old values for the changes done so far"""
+        """
+        Forget the old values for the changes done so far (avoids that the
+        changes are rolled-back when the instance goes out of scope). 
+        """
         self.old_values = {}
     
     def gen_script(self,shell_type):
@@ -151,25 +164,25 @@ class TemporaryEnvironment:
         """
         shells = [ 'csh', 'sh', 'bat' ]
         if shell_type not in shells:
-            raise RuntimeError("Shell type '%s' unknown. Available: %s"%(shell_type,shells))
+            raise RuntimeError("Shell type '%s' unknown. Available: %s" % (shell_type, shells))
         out = ""
-        for key,value in self.old_values.items():
+        for key in self.old_values:
             if key not in self.env:
                 # unset variable
                 if shell_type == 'csh':
-                    out += 'unsetenv %s\n'%key
+                    out += 'unsetenv %s\n' % key
                 elif shell_type == 'sh':
-                    out += 'unset %s\n'%key
+                    out += 'unset %s\n' % key
                 elif shell_type == 'bat':
-                    out += 'set %s=\n'%key
+                    out += 'set %s=\n' % key
             else:
                 # set variable
                 if shell_type == 'csh':
-                    out += 'setenv %s "%s"\n'%(key,self.env[key])
+                    out += 'setenv %s "%s"\n' % (key, self.env[key])
                 elif shell_type == 'sh':
-                    out += 'export %s="%s"\n'%(key,self.env[key])
+                    out += 'export %s="%s"\n' % (key, self.env[key])
                 elif shell_type == 'bat':
-                    out += 'set %s=%s\n'%(key,self.env[key])
+                    out += 'set %s=%s\n' % (key, self.env[key])
         return out
 
 class TempDir:
