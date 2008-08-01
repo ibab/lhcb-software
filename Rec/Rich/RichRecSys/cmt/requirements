@@ -2,14 +2,14 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.74 2008-07-22 11:13:50 jonrob Exp $
+# $Id: requirements,v 1.75 2008-08-01 09:35:38 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
 version           v3r12
 
 # ================ structure ================================================
-branches          cmt doc options
+branches          cmt doc options python
 
 # ================ environment ==============================================
 set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
@@ -37,3 +37,5 @@ use RichRecMCTools      v2r*   Rich
 # Ring finder
 use RichMarkovRingFinder  v2r*   Rich
 
+# Setup
+apply_pattern install_python_modules
