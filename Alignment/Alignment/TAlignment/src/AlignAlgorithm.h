@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.h,v 1.32 2008-07-17 09:47:53 wouter Exp $
+// $Id: AlignAlgorithm.h,v 1.33 2008-08-01 20:33:28 wouter Exp $
 #ifndef TALIGNMENT_ALIGNALGORITHM_H
 #define TALIGNMENT_ALIGNALGORITHM_H 1
 
@@ -45,6 +45,7 @@
 #include "ITrackResidualTool.h"
 #include "IVertexResidualTool.h"
 #include "IAlignConstraintTool.h"
+#include "IAlignUpdateTool.h"
 #include "AlignmentElement.h"
 #include "AlElementHistos.h"
 
@@ -87,6 +88,9 @@ public:
 
   /// Methods to call when an update is triggered
   void update();
+  void update( const Al::Equations& equations ) ;
+  const Al::Equations* equations() const { return m_equations ; }
+
   void reset();
   
   /** Method to get alignment constants, posXYZ and rotXYZ for a given set
@@ -103,8 +107,6 @@ private:
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   bool accumulate( const Al::Residuals& residuals ) ;
   void resetHistos() ;
-  void preCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2,AlVec& scale) const ;
-  void postCondition(AlVec& dChi2dAlpha, AlSymMat& d2Chi2dAlpha2, const AlVec& scale) const ;
 
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
@@ -116,19 +118,14 @@ private:
   std::string                       m_vertexLocation;                ///< Vertices for alignment
   std::string                       m_projSelectorName;              ///< Name of projector selector tool
   ITrackProjectorSelector*          m_projSelector;                  ///< Pointer to projector selector tool
-  std::string                       m_matrixSolverToolName;          ///< Name of linear algebra solver tool
-  IAlignSolvTool*                   m_matrixSolverTool;              ///< Pointer to linear algebra solver tool
   ToolHandle<Al::ITrackResidualTool>   m_trackresidualtool ;
   ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
-  ToolHandle<Al::IAlignConstraintTool> m_constrainttool ;
+  ToolHandle<Al::IAlignUpdateTool>  m_updatetool ;
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
   bool                              m_updateInFinalize ;             ///< Call update from finalize
-  size_t                            m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
   double                            m_chi2Outlier ;                  ///< Chi2 threshold for outlier rejection
   bool                              m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
-  std::string                       m_logFileName ;
-  std::ostringstream                m_logMessage ;
   std::string                       m_outputDataFileName ;
   std::vector<std::string>          m_inputDataFileNames ;
 
@@ -137,12 +134,6 @@ private:
   std::vector<AlElementHistos*>                                  m_elemHistos ;
   IHistogram2D*                                                  m_trackChi2Histo;
   IHistogram2D*                                                  m_trackNorChi2Histo;
-  IProfile1D*                                                    m_totNusedTracksvsIterHisto;
-  IProfile1D*                                                    m_totChi2vsIterHisto;
-  IProfile1D*                                                    m_norTotChi2vsIterHisto;
-  IProfile1D*                                                    m_avgChi2vsIterHisto;
-  IProfile1D*                                                    m_dAlignChi2vsIterHisto;
-  IProfile1D*                                                    m_nordAlignChi2vsIterHisto;
   bool                                                           m_resetHistos ; // reset histos on next event processing
 };
 
