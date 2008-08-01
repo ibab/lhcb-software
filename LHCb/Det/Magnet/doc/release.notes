@@ -4,6 +4,10 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2008-08-01 - Marco Cattaneo
+ - If MagneticFieldSvc.UseConstantField option is set, all other options are
+   ignored
+
 ! 2008-07-31 - Marco Cattaneo
  - Fix uninitialised pointer to Real field map tools
  - Clean up dependencies in requirements

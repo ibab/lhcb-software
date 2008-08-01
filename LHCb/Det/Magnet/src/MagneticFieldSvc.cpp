@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.37 2008-07-31 08:53:15 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.38 2008-08-01 08:03:15 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -137,6 +137,13 @@ StatusCode MagneticFieldSvc::initialize()
     log << MSG::ERROR << "Cannot find the ToolSvc" << endmsg;
     return status;
   }
+
+  if( m_useConstField ) {
+    // Constant field requested, do not use any field map
+    log << MSG::WARNING << "using constant magnetic field with field vector "
+        << m_constFieldVector << " (Tesla)" << endmsg;
+    return StatusCode::SUCCESS;
+  }
   
   if( m_UseConditions ) {
     // Normal case, use conditions database
@@ -165,13 +172,6 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
 {
   MsgStream log(msgSvc(), name());
 
-  if( m_useConstField ) {
-    log << MSG::ERROR 
-        << "use of constant field was requested together with CondDB!"
-        << "I don't know what to do!" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  
   StatusCode status = service("UpdateManagerSvc",m_updMgrSvc);
   if ( status.isFailure() ) {
     log << MSG::ERROR << "Cannot find the UpdateManagerSvc" << endmsg;
@@ -228,13 +228,6 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
 {
 
   MsgStream log(msgSvc(), name());
-
-  if( m_useConstField ) {
-    log << MSG::WARNING << "using constant magnetic field with field vector "
-        << m_constFieldVector << " (Tesla)" << endmsg;
-    return StatusCode::SUCCESS;
-  }
-
   log << MSG::WARNING << "Not using CondDB, entirely steered by options" << endmsg;
   
   if( m_mapFileNames.size() == 0 ) {
