@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.9 2008-08-01 12:50:17 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.10 2008-08-01 15:23:09 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -673,6 +673,9 @@ class SetupProject:
                 cmtProjPath = cmtProjPath.split(os.pathsep)
             else: # to prevent a dir of size 0 in the path
                 cmtProjPath = []
+            # Prepend the user release area, if not there
+            if self.user_area and self.user_area not in cmtProjPath:
+                cmtProjPath.insert(0, self.user_area)
             # explicit dev dirs must always be taken into account
             for d in self.dev_dirs:
                 if d not in cmtProjPath:
