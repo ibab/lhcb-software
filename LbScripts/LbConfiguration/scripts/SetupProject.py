@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.5 2008-07-31 21:18:23 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.6 2008-08-01 10:21:13 marcocle Exp $"
 
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
@@ -47,6 +47,15 @@ class Logger:
         writeln(self.ALWAYS, message)
 
 log = Logger()
+
+def uniq(iterable):
+    """Returns a list of unique elements in the passed iterable.
+    """
+    result = []
+    for i in iterable:
+        if i not in result:
+            result.append(i)
+    return result
 
 class TemporaryEnvironment:
     """
@@ -182,46 +191,6 @@ class TempDir:
     def __getattr__(self,attr):
         return getattr(self.name,attr)
 
-class ProjectInfo:
-    """
-    Class to get project related infos.
-    """
-    # @todo: use LHCB_config.py instead of scanning directories
-    searchpath = []
-    def __init__(self, project, version, realName, path):
-        self.name = project
-        self.version = version
-        self.realName = realName
-        self.path = path
-        self.project_dir = os.path.join(self.path, self.realName)
-        
-        # discover project policy
-        self._projectenv_cmt_dir = os.path.join(self.path,"%sEnv"%self.name,self.version,'cmt')
-        if os.path.isdir(self._projectenv_cmt_dir):
-            self.policy = 'old'
-        else:
-            self.policy = 'new'
-        
-        self.sys = self._projectsys()
-        if self.sys:
-            self.syscmtfullpath = os.path.join(self.project_dir,self.sys,self.version,'cmt')
-        else:
-            self.syscmtfullpath = None
-        
-    def _projectsys(self):
-        """
-        Return the name of the package referencing all the packages belonging to a project.
-        """
-        if self.name == 'Gaudi':
-            if self.policy == 'new':
-                return self.name + "Release"
-            else:
-                return self.name
-        elif self.name == 'LCGCMT':
-            return None
-        else:
-            return self.name + 'Sys'
-
 def isProject(path):
     return os.path.isfile(os.path.join(path,'cmt','project.cmt'))
 
@@ -237,8 +206,6 @@ def _extract_version(project, version):
                 v = version[len(project):]
     return v
 
-# This is a dictionary used to speed up the lookup of versions
-_FindProjectVersionsCache = {}
 def FindProjectVersions(project, search_path, user_area = None):
     """Given a project name, discovers all the matching project/versions using
     the provided user_area and the the search_path (a list of directories).
@@ -284,9 +251,7 @@ def SortVersions(versions):
     ordered by version.
     """
     # remove duplicates
-    tmp_list = []
-    for v in versions:
-        if v not in tmp_list: tmp_list.append(v)
+    tmp_list = uniq(versions)
     sortable_list = []
     for v in tmp_list:
         if v is None:
@@ -312,6 +277,82 @@ def SortVersions(versions):
                     sortable_list.append( ((0,0,v), v) )
     sortable_list.sort()
     return [ v[1] for v in sortable_list ]
+
+
+def LatestVersion(versions):
+    """Extract the latest version from a list of version tuples
+    (output of FindProjectVersions)."""
+    return SortVersions([ v[1] for v in versions ])[-1]
+
+def _GetVersionTuple(v, versions):
+    """Extract the version tuple corresponding to version v.
+    """
+    for vers_tuple in versions:
+        if vers_tuple[1] == v:
+            return vers_tuple
+    if v is None: # take the latest
+        return _GetVersionTuple(LatestVersion(versions), versions)
+    return None
+
+class ProjectInfo:
+    """
+    Class to get project related infos.
+    """
+    # @todo: use LHCB_config.py instead of scanning directories
+    searchpath = []
+    def __init__(self, project, version, realName, path):
+        self.name = project
+        self.version = version
+        self.realName = realName
+        self.path = path
+        self.project_dir = os.path.join(self.path, self.realName)
+        
+        # discover project policy
+        self._projectenv_cmt_dir = os.path.join(self.path,"%sEnv"%self.name,self.version,'cmt')
+        if os.path.isdir(self._projectenv_cmt_dir):
+            self.policy = 'old'
+        else:
+            self.policy = 'new'
+        
+        self.sys = self._projectsys()
+        if self.sys:
+            self.syscmtfullpath = os.path.join(self.project_dir,self.sys,self.version,'cmt')
+        else:
+            self.syscmtfullpath = None
+        
+    def _projectsys(self):
+        """
+        Return the name of the package referencing all the packages belonging to a project.
+        """
+        if self.name == 'Gaudi':
+            if self.policy == 'new':
+                return self.name + "Release"
+            else:
+                return self.name
+        elif self.name == 'LCGCMT':
+            return None
+        else:
+            return self.name + 'Sys'
+
+def _defaultSearchPath():
+    search_path = []
+    for v in ["CMTPROJECTPATH", "LHCBPROJECTPATH"]:
+        if v in os.environ:
+            search_path += os.environ[v].split(os.pathsep)
+    return search_path
+
+def makeProjectInfo(project = None, version = None, versions = None, search_path = None, user_area = None):
+    # actual body
+    if not search_path: # default search path
+        search_path = _defaultSearchPath()
+    if versions is None:
+        if not project:
+            raise TypeError("makeProjectInfo() requires either 'project' or 'versions'")
+        versions = FindProjectVersions(project, search_path, user_area)
+    vers_tuple = _GetVersionTuple(version,versions)
+    if not vers_tuple:
+        return None
+    return apply(ProjectInfo,vers_tuple)
 
 class CMT:
     def __init__(self):
@@ -1043,11 +1084,6 @@ class SetupProject:
         self._debug("----- main() -----")
         
         self._verbose("SetupProject %s"%self.parser.get_version())
-
-        #------------- sanity check: the shell type has to be specified
-        if not self.shell:
-            self._error("Internal error: shell type not specified")
-            return 1
         
         #------------- get project name
         if len(self.args) < 1:
@@ -1055,6 +1091,11 @@ class SetupProject:
             return 1
         else:
             self.project_name = self.args.pop(0)
+        
+        #------------- sanity check: the shell type has to be specified
+        if not self.shell:
+            self._error("Internal error: shell type not specified")
+            return 1
         
         #------------- prepare search_path
         self.search_path = []
@@ -1065,12 +1106,7 @@ class SetupProject:
             if v in os.environ:
                 self.search_path += os.environ[v].split(os.pathsep)
         # remove duplicates
-        tmp_sp = []
-        for d in self.search_path: 
-            if d not in tmp_sp:
-                tmp_sp.append(d)
-        self.search_path = tmp_sp
-        del tmp_sp
+        self.search_path = uniq(self.search_path)
         
         #------------- set user area
         self.user_area = os.environ.get('User_release_area', None)
@@ -1095,7 +1131,7 @@ class SetupProject:
             if self.args[0] in [ v[1] for v in versions ]:
                 self.project_version = self.args.pop(0)
             elif re.match('v[0-9]*r[0-9p]*|HEAD',self.args[0]):
-                self._error("Cannot find version '%s' of %s. Try with --list-versions" % (self.args[0], self.project_name))
+                self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
                 return 1
         
         #------------- Prompt for a version to use
@@ -1108,31 +1144,26 @@ class SetupProject:
         
         #------------- Initialize the ProjectInfo objects
         # Main project
-        most_recent = lambda versions: SortVersions([ v[1] for v in versions ])[-1]
-        def get_tuple(v, versions):
-            for vers_tuple in versions:
-                if vers_tuple[1] == v:
-                    return vers_tuple
-            if v is None: # take the latest
-                return get_tuple(most_recent(versions), versions)
-            return None
-        
-        vers_tuple = get_tuple(self.project_version,versions)
-        if not vers_tuple:
+        self.project_info = makeProjectInfo(version = self.project_version,
+                                            versions = versions,
+                                            search_path = self.search_path,
+                                            user_area = self.user_area)
+        if not self.project_info:
             # we should never get here
             self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_name, self.project_version))
             return 1
-        self.project_info = apply(ProjectInfo,vers_tuple)
         
         # runtime projects
         self.runtime_projects = []
         for p,v in self.opts.runtime_projects:
-            rtvers = FindProjectVersions(p, self.search_path, self.user_area)
-            vt = get_tuple(v,rtvers)
-            if not vt:
-                self._error("Cannot find version '%s' of %s. Try with --list-versions" % (v, p))
+            pi = makeProjectInfo(project = p,
+                                 version = v,
+                                 search_path = self.search_path,
+                                 user_area = self.user_area)
+            if not pi:
+                self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
                 return 1                
-            self.runtime_projects.append(apply(ProjectInfo,vt))
+            self.runtime_projects.append(pi)
             
         for p in [self.project_info] + self.runtime_projects:
             self._verbose("Project %s %s uses %s policy"%(p.name,
