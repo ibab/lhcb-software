@@ -36,8 +36,11 @@ public:
     ConfigTreeNodeAlias() : m_ref(digest_type::createInvalid()) {}
 
     // protect top of alias namespace...
-    static ConfigTreeNodeAlias createTopLevel(const ConfigTreeNode& top) 
-    { digest_type d=top.digest(); return ConfigTreeNodeAlias(d,alias_type("TOPLEVEL") / d.str()); }
+    static ConfigTreeNodeAlias createTopLevel(const std::string& release, const std::string& runType, const ConfigTreeNode& top) 
+    { 
+        if (runType.empty()) return ConfigTreeNodeAlias(); 
+        digest_type d=top.digest(); return ConfigTreeNodeAlias(d,alias_type("TOPLEVEL") / release / runType / d.str()); 
+    }
     static ConfigTreeNodeAlias createTCK(const ConfigTreeNode& top, unsigned int tck) 
     { return ConfigTreeNodeAlias(top.digest(),alias_type("TCK") / boost::lexical_cast<std::string>(tck)); }
     static ConfigTreeNodeAlias createTag(const ConfigTreeNode& top, const std::string& tag) 

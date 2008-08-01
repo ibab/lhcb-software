@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2008-08-01 - Gerhard Raven
+ - require that toplevel aliases for configuration contain a release
+   version and a runtype
+
 ! 2008-07-30 - Gerhard Raven
  - HltAlgorithm: move items not mandatory out of baseclass, and into 
       HltSelectionContainer. Implementations can use the templates in 
