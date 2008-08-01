@@ -1,8 +1,11 @@
-// $Id: DummyLumiAlley.cpp,v 1.1.1.1 2008-07-17 08:50:25 panmanj Exp $
+// $Id: DummyLumiAlley.cpp,v 1.2 2008-08-01 08:13:21 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+
+#include "Event/L0DUReport.h"
+#include "Event/HltSummary.h"
 
 // local
 #include "DummyLumiAlley.h"
@@ -25,8 +28,10 @@ DECLARE_ALGORITHM_FACTORY( DummyLumiAlley );
 DummyLumiAlley::DummyLumiAlley( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selection(*this)
 {
   declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
+  m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -43,7 +48,7 @@ StatusCode DummyLumiAlley::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // default configuration
-  registerSelection();
+  m_selection.registerSelection();
 
   return StatusCode::SUCCESS;
 };
@@ -53,11 +58,11 @@ StatusCode DummyLumiAlley::initialize() {
 //=============================================================================
 StatusCode DummyLumiAlley::execute() {
 
-  m_l0 = get<L0DUReport>(m_l0Location);
-  
   debug() << " Entering the execute " << endreq;
 
-  setDecision(true);
+  LHCb::L0DUReport *l0 = get<L0DUReport>(m_l0Location);
+
+  m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
 };

@@ -1,4 +1,4 @@
-// $Id: HltLumiOdinReader.h,v 1.1.1.1 2008-07-17 08:50:25 panmanj Exp $
+// $Id: HltLumiOdinReader.h,v 1.2 2008-08-01 08:13:21 graven Exp $
 #ifndef HLTLUMIODINREADER_H 
 #define HLTLUMIODINREADER_H 1
 
@@ -6,9 +6,8 @@
 // from Gaudi
 
 
-#include "Event/HltSummary.h"
-#include "Event/L0DUReport.h"
 #include "HltBase/HltAlgorithm.h"
+#include "HltBase/HltSelectionContainer.h"
 
 /** @class HltLumiOdinReader HltLumiOdinReader.h
  *  
@@ -30,10 +29,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-protected:
-
-
-protected:
+private:
+  Hlt::SelectionContainer0 m_selection;
 
 
 };

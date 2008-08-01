@@ -1,10 +1,12 @@
-// $Id: HltLumiOdinReader.cpp,v 1.1.1.1 2008-07-17 08:50:25 panmanj Exp $
+// $Id: HltLumiOdinReader.cpp,v 1.2 2008-08-01 08:13:21 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Event/ODIN.h"
+#include "Event/HltSummary.h"
+#include "Event/L0DUReport.h"
 // local
 #include "HltLumiOdinReader.h"
 
@@ -25,8 +27,10 @@ DECLARE_ALGORITHM_FACTORY( HltLumiOdinReader );
 HltLumiOdinReader::HltLumiOdinReader( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
+  , m_selection(*this)
 {
 //  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
+   m_selection.declareProperties();
 }
 //=============================================================================
 // Destructor
@@ -42,7 +46,7 @@ StatusCode HltLumiOdinReader::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // default configuration
-  registerSelection();
+  m_selection.registerSelection();
 
   return StatusCode::SUCCESS;
 };
@@ -67,7 +71,7 @@ StatusCode HltLumiOdinReader::execute() {
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
   info() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
-  setDecision(true);
+  m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
 };
@@ -81,6 +85,3 @@ StatusCode HltLumiOdinReader::finalize() {
 }
 
 //=============================================================================
-
-
-
