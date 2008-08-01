@@ -255,33 +255,37 @@ class AlConfigurable( ConfigurableUser ) :
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
                                         gslSVDsolver, CLHEPSolver, MA27Solver, DiagSolvTool,
-                                        Al__AlignConstraintTool )
+                                        Al__AlignConstraintTool, Al__AlignUpdateTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations"       )
             alignAlg.TracksLocation               = self.getProp( "AlignInputTrackCont" )
             alignAlg.VertexLocation               = self.getProp( "VertexLocation"      )
             alignAlg.UseCorrelations              = self.getProp( "UseCorrelations"     )
-            alignAlg.MinNumberOfHits              = self.getProp( "MinNumberOfHits"     )
             alignAlg.Chi2Outlier                  = self.getProp( "Chi2Outlier"         )
-            alignAlg.UsePreconditioning           = self.getProp( "UsePreconditioning"  )
             alignAlg.HistoPrint                   = False
-            alignAlg.LogFile                      = self.getProp( "LogFile"             ) 
 
+            # and also the update tool is in the toolsv
+            updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
+            updatetool.MinNumberOfHits              = self.getProp( "MinNumberOfHits"              )
+            updatetool.UsePreconditioning           = self.getProp( "UsePreconditioning"           )
+            updatetool.LogFile                      = self.getProp( "LogFile"             ) 
             if self.getProp( "SolvTool" ) == "gslSolver" :
-                alignAlg.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
+                updatetool.addTool( gslSVDsolver(), name = "MatrixSolverTool" )
             if self.getProp( "SolvTool" ) == "CLHEPSolver" :
-                alignAlg.addTool( CLHEPSolver(), name = "MatrixSolverTool" )
+                updatetool.addTool( CLHEPSolver(), name = "MatrixSolverTool" )
             if self.getProp( "SolvTool" ) == "MA27Solver" :
-                alignAlg.addTool( MA27Solver(), name = "MatrixSolverTool" )
+                updatetool.addTool( MA27Solver(), name = "MatrixSolverTool" )
             if self.getProp( "SolvTool" ) == "DiagSolvTool" :
-                alignAlg.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
+                updatetool.addTool( DiagSolvTool(), name = "MatrixSolverTool" )
                 
-            alignAlg.addTool( GetElementsToBeAligned( "GetElementsToBeAligned" ) )
-            alignAlg.GetElementsToBeAligned.OutputLevel   = outputLevel
-            alignAlg.GetElementsToBeAligned.Elements      = self.getProp( "ElementsToAlign" )
-            alignAlg.GetElementsToBeAligned.UseLocalFrame = self.getProp( "UseLocalFrame"   )  
-
+            # configure in the tool service
+            elementtool = GetElementsToBeAligned( "GetElementsToBeAligned" )
+            elementtool.OutputLevel = outputLevel
+            elementtool.Elements    = self.getProp( "ElementsToAlign" )
+            elementtool.UseLocalFrame = self.getProp( "UseLocalFrame"   )  
+            #alignAlg.addTool( elementtool )
+            
             # this one is in the toolsvc, for now
             constrainttool = Al__AlignConstraintTool("Al::AlignConstraintTool")
             constrainttool.Constraints = self.getProp( "Constraints" )
