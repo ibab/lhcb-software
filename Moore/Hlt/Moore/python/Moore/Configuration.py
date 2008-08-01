@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.10 2008-07-31 15:51:24 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2008-08-01 12:11:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -49,6 +49,16 @@ class Moore(ConfigurableUser):
 
     def validRunTypes(self):
         return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning' ] 
+
+    def getRelease(self):
+        import re,fileinput
+        version = re.compile('^version (\w+)')
+        for line in fileinput.input(os.environ.get('MOOREROOT')+'/cmt/requirements') :
+            match = version.match(line)
+            if not match: continue
+            fileinput.close()
+            return 'MOORE_'+match.group(1)
+        raise TypeError('Could not deduce version from cmt/requirementes')
 
     def getConfigAccessSvc(self):
         method = self.getProp('TCKpersistency').lower()
@@ -123,9 +133,12 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
         if self.getProp("generateConfig") :
+            # TODO: add properties for ConfigTop and ConfigSvc...
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
                               , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
-                              , ConfigAccessSvc = self.getConfigAccessSvc().getName() )
+                              , ConfigAccessSvc = self.getConfigAccessSvc().getName()
+                              , runType = self.getProp('runType')
+                              , mooreRelease = self.getRelease() )
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
         LHCbApp().applyConf()
