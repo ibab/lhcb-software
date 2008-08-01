@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.6 2008-08-01 10:21:13 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.7 2008-08-01 11:34:49 marcocle Exp $"
 
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
@@ -287,6 +287,8 @@ def LatestVersion(versions):
 def _GetVersionTuple(v, versions):
     """Extract the version tuple corresponding to version v.
     """
+    if not versions:
+        return None
     for vers_tuple in versions:
         if vers_tuple[1] == v:
             return vers_tuple
@@ -308,14 +310,20 @@ class ProjectInfo:
         self.project_dir = os.path.join(self.path, self.realName)
         
         # discover project policy
-        self._projectenv_cmt_dir = os.path.join(self.path,"%sEnv"%self.name,self.version,'cmt')
-        if os.path.isdir(self._projectenv_cmt_dir):
-            self.policy = 'old'
+        if self.version:
+            self._projectenv_cmt_dir = os.path.join(self.path,"%sEnv"%self.name,self.version,'cmt')
+            if os.path.isdir(self._projectenv_cmt_dir):
+                self.policy = 'old'
+            else:
+                self._projectenv_cmt_dir = None
+                self.policy = 'new'
         else:
+            # Projects without version must be considered "new" style
+            self._projectenv_cmt_dir = None
             self.policy = 'new'
         
         self.sys = self._projectsys()
-        if self.sys:
+        if self.version and self.sys:
             self.syscmtfullpath = os.path.join(self.project_dir,self.sys,self.version,'cmt')
         else:
             self.syscmtfullpath = None
@@ -333,6 +341,11 @@ class ProjectInfo:
             return None
         else:
             return self.name + 'Sys'
+    def __str__(self):
+        if self.version:
+            return "%s %s from %s" % (self.name, self.version, self.project_dir)
+        else:
+            return "%s from %s" % (self.name, self.project_dir)
 
 def _defaultSearchPath():
     search_path = []
@@ -343,11 +356,11 @@ def _defaultSearchPath():
 
 def makeProjectInfo(project = None, version = None, versions = None, search_path = None, user_area = None):
     # actual body
-    if not search_path: # default search path
-        search_path = _defaultSearchPath()
     if versions is None:
         if not project:
             raise TypeError("makeProjectInfo() requires either 'project' or 'versions'")
+        if not search_path: # default search path
+            search_path = _defaultSearchPath()
         versions = FindProjectVersions(project, search_path, user_area)
     vers_tuple = _GetVersionTuple(version,versions)
     if not vers_tuple:
@@ -853,6 +866,22 @@ class SetupProject:
                           nargs = 0,
                           help="Add a project to the runtime environment")
         
+        def overriding_project_option(option, opt_str, value, parser):
+            if len(parser.rargs) < 1:
+                raise OptionValueError("%s must be followed by the project name and optionally by the version"%opt_str)
+            p_name = parser.rargs.pop(0)
+            if len(parser.rargs) and re.match("^v[0-9]+r[0-9]+(p[0-9]+)?$",parser.rargs[0]):
+                v = parser.rargs.pop(0)
+            else:
+                v = None
+            parser.values.overriding_projects.append( (p_name,v) )
+            
+        parser.add_option("--overriding-project", action="callback",
+                          metavar = "PROJECT [VERSION]", type="string",
+                          callback=overriding_project_option,
+                          nargs = 0,
+                          help="Add a project to override packages")
+        
         parser.set_defaults(output=None,
                             mktemp=False,
                             loglevel = 3,
@@ -863,7 +892,8 @@ class SetupProject:
                             use = [],
                             tag_add = [],
                             set_CMTPATH = False,
-                            runtime_projects = []
+                            runtime_projects = [],
+                            overriding_projects = []
                             )
         
         if 'CMTSITE' in os.environ and \
@@ -982,7 +1012,7 @@ class SetupProject:
         os.mkdir(os.path.join(tmp_dir,"cmt"))
         prj = open(os.path.join(tmp_dir,"cmt","project.cmt"),"w")
         # add usage for the requested project(s)
-        for p in [self.project_info] + self.runtime_projects:
+        for p in self.overriding_projects + [self.project_info] + self.runtime_projects:
             prj.write("use %s\n" % p.realName.replace(os.sep," "))
         prj.flush()
         del prj
@@ -1145,9 +1175,7 @@ class SetupProject:
         #------------- Initialize the ProjectInfo objects
         # Main project
         self.project_info = makeProjectInfo(version = self.project_version,
-                                            versions = versions,
-                                            search_path = self.search_path,
-                                            user_area = self.user_area)
+                                            versions = versions)
         if not self.project_info:
             # we should never get here
             self._error("PANIC: Cannot find version '%s' of %s after initial check" % (self.project_name, self.project_version))
@@ -1156,16 +1184,32 @@ class SetupProject:
         # runtime projects
         self.runtime_projects = []
         for p,v in self.opts.runtime_projects:
-            pi = makeProjectInfo(project = p,
-                                 version = v,
-                                 search_path = self.search_path,
-                                 user_area = self.user_area)
+            vv = FindProjectVersions(p, self.search_path, self.user_area)
+            if not vv:
+                self._error("Cannot find project '%s'" % p)
+                return 1
+            pi = makeProjectInfo(version = v,
+                                 versions = vv)
             if not pi:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
                 return 1                
             self.runtime_projects.append(pi)
-            
-        for p in [self.project_info] + self.runtime_projects:
+        
+        # runtime projects
+        self.overriding_projects = []
+        for p,v in self.opts.overriding_projects:
+            vv = FindProjectVersions(p, self.search_path, self.user_area)
+            if not vv:
+                self._error("Cannot find project '%s'" % p)
+                return 1
+            pi = makeProjectInfo(version = v,
+                                 versions = vv)
+            if not pi:
+                self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
+                return 1                
+            self.overriding_projects.append(pi)
+        
+        for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
             self._verbose("Project %s %s uses %s policy"%(p.name,
                                                           p.version,
                                                           p.policy))
@@ -1206,16 +1250,16 @@ class SetupProject:
                 script += "echo Using CMTPATH = '%s'\n" % CMTPATH
             script += 'echo Environment for %s %s ready.\n'%(self.project_info.name,
                                                              self.project_info.version)
-            if not self.runtime_projects:
+            
+            if not self.runtime_projects and not self.overriding_projects:
                 script += 'echo "(taken from %s)"\n'%(self.project_info.project_dir)
             else:
-                script += 'echo "(%s %s from %s'%(self.project_info.name,
-                                                    self.project_info.version,
-                                                    self.project_info.project_dir)
+                script += 'echo "('
+                for pi in self.overriding_projects:
+                    script += '%s,"\necho " '%(pi)
+                script += '%s'%(self.project_info)
                 for pi in self.runtime_projects:
-                    script += ',"\necho " %s %s from %s'%(pi.name,
-                                                          pi.version,
-                                                          pi.project_dir)
+                    script += ',"\necho " %s'%(pi)
                 script += ')"\n'
         else:
             output += '\necho Build-time environment for %s %s ready.'%(self.project_info.name,
