@@ -4,13 +4,13 @@
 #============================================================================
 
 package LHCbMath
-version v3r1
+version v3r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 
-branches cmt doc LHCbMath src dict python
+branches cmt doc LHCbMath src dict python tests 
 
 #============================================================================
 # Used packages
@@ -30,7 +30,11 @@ macro_append ROOT_linkopts " -lMathCore " \
 
 # ================= constituents: linker library ============================
 library             LHCbMathLib    ../src/*.cpp
-
+                
+application  TestPow   ../tests/pow.cpp     -check 
+application  TestBit   ../tests/bit.cpp     -check 
+application  TestDigit ../tests/digit.cpp   -check 
+        
 # ================= patterns ================================================
 apply_pattern       linker_library library=LHCbMathLib
 #============================================================================

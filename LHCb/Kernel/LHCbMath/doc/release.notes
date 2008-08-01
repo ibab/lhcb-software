@@ -6,6 +6,116 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-08-01 - Vanya BELYAEV
+
+ - LHCbMath/Bit.h
+ 
+    add few more evaluators of Nth nit for integral unsigned types 
+
+    Finally one has three possibility:
+
+    1) Gaudi::Math::IBit, for compile time evaluation of Nth bit:
+    
+          const bool bit12 = Gaudi::Math::IBit<unisgned int,12456,12>::value ;
+
+    2) Gaudi::Math::Bit, for evaluation of Nth  bit of integral type,
+       N is a compile-time constant:
+
+          Gaudi::Math::Bit<unsigned int,12> fun ;
+              
+        unsigned int value = ... ;
+
+        const bool bit12 = fun ( value ) ;
+
+    3) Gaudi::Math::bit, the function which should be use if neither 
+       value nor N are known at compile time:
+
+        
+       unsigned int value = ... ;
+       unsigned int N     = ... ;
+ 
+         const bool bitN = Gaudi::Math::bit ( value , N ) ;
+ 
+    The compile-time protection is added for all templates, 
+    the "value" is required to be
+        - integral 
+        - unsigned 
+    The check is done with boost::integer_traits 
+
+    ATTENTION! 
+    The least significat bit is numbered as  #0 
+
+ - LHCbMath/Digit.h
+ 
+    add few more evaluators of Nth decimal digit  for integral unsigned types 
+
+    Finally one has three possibility:
+
+    1) Gaudi::Math::IDigit, for compile time evaluation of Nth decimal digit:
+    
+          const int dig5 = Gaudi::Math::IDigit<unisgned int,12456,5>::value ;
+
+    2) Gaudi::Math::Digit, for evaluation of Nth  decimal of integral unsigned 
+       type,
+       N is a compile-time constant:
+
+          Gaudi::Math::Digit<unsigned int,12> fun ;
+              
+        unsigned int value = ... ;
+
+        const int digit12 = fun ( value ) ;
+
+    3) Gaudi::Math::digit, the function which should be use if neither 
+       value nor N are known at compile time:
+
+        
+       unsigned int value = ... ;
+       unsigned int N     = ... ;
+ 
+       const int digitN = Gaudi::Math::digit ( value , N ) ;
+ 
+    The compile-time protection is added for all templates, 
+    the "value" is required to be
+        - integral 
+        - unsigned 
+    The check is done with boost::integer_traits 
+
+    ATTENTION! 
+    The least significat digit is numbered #0 
+  
+
+-  LHCbMath/TypeWrapper.h
+
+      TypeWrapper utility (extraction from IPower.hpp)
+      Null and Null_ strructures 
+
+-  LHCbMath/IPower.hpp
+
+      extract the useful TypeWrapper consttuction
+
+- tests/pow.cpp
+    
+      new test for testiing various "pow"-functions  
+
+- tests/bit.cpp
+
+      new test for testiing various "bit"-functions  
+
+- tests/digit.cpp
+
+      new test for testiing various "digit"-functions  
+
+- cmt/requirements 
+
+       add "check" applications: 
+
+           TestPow 
+           TestBit 
+           TestDigit 
+     
+        version increment to v3r2 
+
+
 !========================= LHCbMath v3r1 2008-07-16 ==========================
 ! 2008-07-15 - Wouter Hulsbergen (code provided by Manuel Schiller)
  - LHCbMath/MatrixInversion.h: matrix inversion for pos-def

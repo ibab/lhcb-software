@@ -1,13 +1,19 @@
-// $Id: IPower.hpp,v 1.1 2006-10-27 15:34:42 jpalac Exp $
+// $Id: IPower.hpp,v 1.2 2008-08-01 10:16:02 ibelyaev Exp $
 #ifndef LHCBMATH_IPOWER_HPP 
 #define LHCBMATH_IPOWER_HPP 1
-
+// ============================================================================
+// Include file
+// ============================================================================
+// LHcbMath
+// ============================================================================
+#include "LHCbMath/TypeWrapper.h"
+// ============================================================================
 namespace Gaudi 
 {  
   namespace Math 
   {
-    
-    /** @fn Gaudi::Math::IPower 
+    // ========================================================================
+    /** @struct Gaudi::Math::IPower 
      *  Template metafunction for compile-time calculation of even, positive
      *  powers of integer numbers.
      *
@@ -22,33 +28,29 @@ namespace Gaudi
      *  @author Juan PALACIOS juan.palacios@cern.ch
      *  @date 2006-10-26 
      */
-
-
-    template <typename T>
-    struct TypeWrapper 
-    {
-      typedef T value_type;
-    };
-
     template<typename TYPE,  typename TypeWrapper<TYPE>::value_type X, int N>
     struct IPower
     {
       enum { value = X * IPower<TYPE, X, N-1>::value };
     };
-
+    /// the specialization to stop the compile-time recursion 
     template<typename TYPE, typename TypeWrapper<TYPE>::value_type X>
     struct IPower<TYPE, X, 1>
     {
       enum { value = X };
     };
-
+    /// the specialization to stop the compile-time recursion
     template<typename TYPE,  typename TypeWrapper<TYPE>::value_type X>
     struct IPower<TYPE, X, 0>
     {
       enum { value = 1 };
     };
-    
+    // ========================================================================
   } // Math namespace  
+  // ==========================================================================
 } // Gaudi namespace
-
+// ============================================================================
+// The END 
+// ============================================================================
 #endif // LHCBMATH_IPOWER_HPP
+// ============================================================================
