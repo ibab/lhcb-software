@@ -555,7 +555,6 @@ class SetupProjectTestCase(unittest.TestCase):
                 write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
             
             env['User_release_area'] = tmp_dir
-            del env['CMTPROJECTPATH'] # because the default conflicts with the temporary user release area
             x = os.popen4("python SetupProject.py --shell=%s Brunel %s"%(_shell,v))
             s = x[1].read().strip()
             
