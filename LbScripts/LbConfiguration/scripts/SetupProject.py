@@ -4,10 +4,18 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.7 2008-08-01 11:34:49 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.8 2008-08-01 12:30:21 marcocle Exp $"
 
+########################################################################
+# Useful constants
+########################################################################
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
+# TODO: Copied from LbConfiguration.Project
+project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
+                 "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
+                 "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
+                 "Panoramix", "LbScripts", "LCGCMT"]
 
 ########################################################################
 # Utility classes
@@ -47,15 +55,6 @@ class Logger:
         writeln(self.ALWAYS, message)
 
 log = Logger()
-
-def uniq(iterable):
-    """Returns a list of unique elements in the passed iterable.
-    """
-    result = []
-    for i in iterable:
-        if i not in result:
-            result.append(i)
-    return result
 
 class TemporaryEnvironment:
     """
@@ -303,7 +302,7 @@ class ProjectInfo:
     # @todo: use LHCB_config.py instead of scanning directories
     searchpath = []
     def __init__(self, project, version, realName, path):
-        self.name = project
+        self.name = FixProjectCase(project)
         self.version = version
         self.realName = realName
         self.path = path
@@ -390,6 +389,15 @@ class CMT:
 ########################################################################
 # Utility functions
 ########################################################################
+
+def uniq(iterable):
+    """Returns a list of unique elements in the passed iterable.
+    """
+    result = []
+    for i in iterable:
+        if i not in result:
+            result.append(i)
+    return result
 
 if not 'mkdtemp' in dir(tempfile):
     # mkdtemp has been introduced in python 2.3, I simulate it
@@ -542,6 +550,17 @@ def batParser(script, env):
 ShellParser = {"sh":shParser,
                "csh":cshParser,
                "bat":batParser}
+
+def FixProjectCase(project):
+    """Convert the case of the project name to the correct one, based on a list
+    of known project names.
+    If the project is not known, the name is returned unchanged.
+    """
+    proj = project.lower()
+    for p in project_names:
+        if p.lower() == proj:
+            return p
+    return p
 
 ########################################################################
 # Main class

@@ -260,10 +260,13 @@ class SetupProjectTestCase(unittest.TestCase):
     def test_067_main(self):
         """main (wrong case in project name)
         """
+        v = SetupProject.makeProjectInfo("Brunel").version
 
         x = os.popen4("python SetupProject.py --shell=%s BrUnEl"%_shell)
         s = x[1].read()
-        self.assert_("Could not produce the environment, check the arguments" in s)
+        ## wrong case is valid
+        # self.assert_("Could not produce the environment, check the arguments" in s)
+        self._check_env(s, "Brunel", v)
 
     def test_070_main(self):
         """main (Brunel w/o ext)

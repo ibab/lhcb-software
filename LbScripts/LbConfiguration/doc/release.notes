@@ -4,6 +4,7 @@
 	   * clean up and improved testability 
 	   * added options --overriding-projects
 	   * improved handling of projects without version
+	   * allow wrong case in the project name
 	* tests/SetupProjectTest.py: clean up and adaptation to restructuring
 	  in SetupProject.py 
 
