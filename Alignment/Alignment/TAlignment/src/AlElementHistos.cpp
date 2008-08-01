@@ -20,24 +20,24 @@ AlElementHistos::AlElementHistos(GaudiHistoAlg& parent, const AlignmentElement& 
   m_nHitsHisto    = parent.book1D(dirname + boost::lexical_cast<std::string>(3000u), 
 				  "Number of hits vs iteration for " + name, 
 				  -0.5, numiter-0.5, numiter);
-  m_deltaTxHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(10000u),
-				  "Delta Tx vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
-  m_deltaTyHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(20000u),
-				  "Delta Ty vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
-  m_deltaTzHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(30000u),
-				  "Delta Tz vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
-  m_deltaRxHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(40000u),
-				  "Delta Rx vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
-  m_deltaRyHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(50000u),
-				  "Delta Ry vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
-  m_deltaRzHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(60000u),
-				  "Delta Rz vs iteration for " + name,
-				  -0.5, numiter-0.5, numiter);
+  //   m_deltaTxHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(10000u),
+  // 				  "Delta Tx vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
+  //   m_deltaTyHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(20000u),
+  // 				  "Delta Ty vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
+  //   m_deltaTzHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(30000u),
+  // 				  "Delta Tz vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
+  //   m_deltaRxHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(40000u),
+  // 				  "Delta Rx vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
+  //   m_deltaRyHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(50000u),
+  // 				  "Delta Ry vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
+  //   m_deltaRzHisto  = parent.book1D(dirname + boost::lexical_cast<std::string>(60000u),
+  // 				  "Delta Rz vs iteration for " + name,
+  // 				  -0.5, numiter-0.5, numiter);
   m_autoCorrHisto = parent.book2D(dirname + boost::lexical_cast<std::string>(4000u),
 				  "hit residual scale factor in " + name + "  vs iteration ",
 				  -0.5, numiter-0.5, numiter,-1, 1, 100);
