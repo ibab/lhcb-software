@@ -1,4 +1,4 @@
-// $Id: DummyAlley.cpp,v 1.1 2008-08-01 10:49:09 graven Exp $
+// $Id: DummyAlley.cpp,v 1.2 2008-08-01 11:03:04 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,11 +28,9 @@ DummyAlley::DummyAlley( const std::string& name,
                     ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
 {
-//  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
+  declareProperty("L0DULocation", m_l0Location = L0DUReportLocation::Default );
   declareProperty("RightType", m_RightType = -1 );
   declareProperty("WrongType", m_WrongType = -1 );
-//  m_doInitSelections = false;
-//  m_algoType = "DummyAlley";
 }
 //=============================================================================
 // Destructor
@@ -51,7 +49,7 @@ StatusCode DummyAlley::initialize() {
   // default configuration
   // TODO; this needs to be solved with the TCK!!
 //  registerSelection(m_outputSelectionName);
-  registerSelection();
+  // registerSelection();
 
   return StatusCode::SUCCESS;
 };
@@ -66,33 +64,27 @@ StatusCode DummyAlley::execute() {
   debug() << " Entering the execute " << endreq;
 //  LHCb::HltSummary *summary = get<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default);
 //  summary->setDecision(true);
- LHCb::ODIN* odin = 0;
- try {
-   odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
- }
- catch( const GaudiException& Exception ) {
-  // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
-   this->setFilterPassed( false );
+  if (!exist<LHCb::ODIN> ( LHCb::ODINLocation::Default )) {
+    // m_incidentSvc->fireIncident(Incident(name(),IncidentType::AbortEvent));
+   setFilterPassed( false );
    return Error( "ODIN missing, skipping event", StatusCode::SUCCESS );
- }
+  }
+  LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
   debug() << " Trigger type =  " << odin->triggerType() << endreq;
   if (m_RightType!= -1 && m_WrongType!=-1){ 
     warning() << "You are setting both the wanted and the unwanted trigger type. No events accepted" << endreq;
-  }
-  else if (m_WrongType == -1 && odin->triggerType()== m_RightType){
+  } else if (m_WrongType == -1 && odin->triggerType()== m_RightType){
     debug() << "This choses trigger type " << m_RightType << endreq; 
-    setDecision(true);
-    this->setFilterPassed( true );
-  }
-  else if (m_RightType == -1 && odin->triggerType()!= m_WrongType){
+    //setDecision(true);
+    setFilterPassed( true );
+  } else if (m_RightType == -1 && odin->triggerType()!= m_WrongType){
     debug() << "This ignores trigger type " << m_WrongType << endreq; 
-    setDecision(true);
-    this->setFilterPassed( true );
-  }
-  else if (m_RightType == -1 && m_WrongType==-1) {
+    //setDecision(true);
+    setFilterPassed( true );
+  } else if (m_RightType == -1 && m_WrongType==-1) {
     debug() << "No specific trigger type. All events accepted" << endreq;
-    setDecision(true);
-    this->setFilterPassed( true );
+    //setDecision(true);
+    setFilterPassed( true );
   }
   
 
