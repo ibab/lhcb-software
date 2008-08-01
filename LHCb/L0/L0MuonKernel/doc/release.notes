@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2008-08-01 - Julien Cogan
+ - Fix compilation warning
+
 ! 2008-07-31 - Julien Cogan
  - Bug fix in the handling of status error 
  - Minor bug fix in the handling of decoding error counter

@@ -484,7 +484,7 @@ int L0Muon::ProcDataCnv::decodeBank_v2(const std::vector<unsigned int> & raw)
     // The decoding is now complete for this board.
     // Thus, set the decoding error flag to FALSE.
     //m_errors[ib].decoding.set(0);
-    decoding_error[ib]=0.;
+    decoding_error[ib]=0;
     
     if (((ib+1)%3)==0) 
     { // take care of padding bits at the end of each PP
