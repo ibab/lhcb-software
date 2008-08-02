@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltRawData
+! Responsible : Tomasz Skwarnicki
+! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
+!-----------------------------------------------------------------------------
+
+! 2008-08-02 - Tomasz Skwarnicki
+ - first version in cvs, HltDecReports and HltSelReports implemented
