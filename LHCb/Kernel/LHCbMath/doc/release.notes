@@ -6,6 +6,37 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2008-08-02 - Vanya BELYAEV
+ - LHCbMath/Bit.h
+   LHCbMath/Digit.h
+
+     add functionality to get the RANGE of bits (or decimal digits) from
+     unsigned integral type. 
+
+     The utilities for evaluation of 
+     decimal N1->N2 decimal digits for the unsigned integral values:
+ 
+    -  Gaudi::Math::IDigits 
+       The most efficient compile-time evaluator.  
+       It is applicable if both N1/N2 and value are compile-time constanst 
+    -  Gaudi::Math::Digits 
+       Rather efficient fuctor, N1&N2 are compile-time constanst 
+    -  Gaudi::Math::digits
+       The regular function, the least efficient evaluator 
+ 
+     The utilities for evaluation of range of bits [N1,N2) for 
+     the unsigned integral values. N2 is *NOT* included:
+   
+     -  Gaudi::Math::IBits 
+        The most efficient compile-time evaluator.
+        It is applicable if both N1&N2 and value are compile-time constanst 
+     -  Gaudi::Math::Bits
+        Rather efficient fuctor, N1&N2 are compile-time constanst 
+     -  Gaudi::Math::bits
+        The regular function, the least efficient evaluator 
+
+ 
+
 ! 2008-08-01 - Vanya BELYAEV
 
  - LHCbMath/Bit.h

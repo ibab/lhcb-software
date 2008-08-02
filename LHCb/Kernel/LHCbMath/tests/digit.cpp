@@ -1,4 +1,4 @@
-// $Id: digit.cpp,v 1.1 2008-08-01 10:16:02 ibelyaev Exp $
+// $Id: digit.cpp,v 1.2 2008-08-02 10:14:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -55,8 +55,6 @@ int main()
     Digit<unsigned int,5>   bit5 ;
     Digit<unsigned int,6>   bit6 ;
     Digit<unsigned int,7>   bit7 ;
-    Digit<unsigned int,64>  bit64 ;
-    Digit<unsigned int,200> bit200 ;
     //
     std::cout 
       <<  " Digit<0>        " << bit0   ( value )  << std::endl 
@@ -67,8 +65,6 @@ int main()
       <<  " Digit<5>        " << bit5   ( value )  << std::endl 
       <<  " Digit<6>        " << bit6   ( value )  << std::endl 
       <<  " Digit<7>        " << bit7   ( value )  << std::endl 
-      <<  " Digit<64>       " << bit64  ( value )  << std::endl 
-      <<  " Digit<200>      " << bit200 ( value )  << std::endl 
       ;  
   }
   
@@ -83,9 +79,56 @@ int main()
       <<  " IDigit<724,5>   " << IDigit<unsigned int,724,5>  ::value << std::endl 
       <<  " IDigit<724,6>   " << IDigit<unsigned int,724,6>  ::value << std::endl 
       <<  " IDigit<724,7>   " << IDigit<unsigned int,724,7>  ::value << std::endl 
-      <<  " IDigit<724,64>  " << IDigit<unsigned int,724,64> ::value << std::endl 
-      <<  " IDigit<724,200> " << IDigit<unsigned int,724,200>::value << std::endl 
       ;  
+  }
+  
+
+  {
+    const unsigned short value = static_cast<unsigned short> ( -1 ); 
+    std::cout
+      <<  std::endl 
+      <<  " Value "           <<          value              << std::endl 
+      <<  " digits(0,0)     " << digits ( value ,  0 ,   0 ) << std::endl 
+      <<  " digits(0,1)     " << digits ( value ,  0 ,   1 ) << std::endl 
+      <<  " digits(0,2)     " << digits ( value ,  0 ,   2 ) << std::endl 
+      <<  " digits(0,3)     " << digits ( value ,  0 ,   3 ) << std::endl 
+      <<  " digits(0,4)     " << digits ( value ,  0 ,   4 ) << std::endl 
+      <<  " digits(0,5)     " << digits ( value ,  0 ,   5 ) << std::endl 
+      <<  " digits(0,6)     " << digits ( value ,  0 ,   6 ) << std::endl 
+      <<  " digits(0,7)     " << digits ( value ,  0 ,   7 ) << std::endl 
+      <<  " digits(0,8)     " << digits ( value ,  0 ,   8 ) << std::endl 
+      <<  " digits(0,9)     " << digits ( value ,  0 ,   9 ) << std::endl 
+      <<  " digits(2,10)    " << digits ( value ,  2 ,  10 ) << std::endl 
+      <<  " digits(3,4)     " << digits ( value ,  3 ,   4 ) << std::endl 
+      <<  " digits(5,64)    " << digits ( value ,  5 ,  64 ) << std::endl 
+      <<  " digits(0,200)   " << digits ( value ,  0 , 200 ) << std::endl 
+      <<  " digits(85,200)  " << digits ( value , 85 , 200 ) << std::endl 
+      ;
+  }
+  
+  
+  {
+    const unsigned short value = static_cast<unsigned short> ( -1 ); 
+    std::cout
+      <<  std::endl 
+      <<  " Value "           <<          value              << std::endl 
+      <<  " digits<0,1>     " << Digits<unsigned short,0,1> () ( value ) << std::endl 
+      <<  " digits<0,2>     " << Digits<unsigned short,0,2> () ( value ) << std::endl 
+      <<  " digits<0,3>     " << Digits<unsigned short,0,3> () ( value ) << std::endl 
+      <<  " digits<0,4>     " << Digits<unsigned short,0,4> () ( value ) << std::endl 
+      <<  " digits<0,5>     " << Digits<unsigned short,0,5> () ( value ) << std::endl 
+      ;
+  }
+
+  {
+    std::cout
+      <<  std::endl 
+      <<  " IDigits<0,1>     " << IDigits<unsigned short,65535,0,1>::value << std::endl 
+      <<  " IDigits<0,2>     " << IDigits<unsigned short,65535,0,2>::value  << std::endl 
+      <<  " IDigits<0,3>     " << IDigits<unsigned short,65535,0,3>::value  << std::endl 
+      <<  " IDigits<0,4>     " << IDigits<unsigned short,65535,0,4>::value  << std::endl 
+      <<  " IDigits<0,5>     " << IDigits<unsigned short,65535,0,5>::value  << std::endl 
+      ;
   }
   
   // ==========================================================================

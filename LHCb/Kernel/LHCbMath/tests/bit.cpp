@@ -1,4 +1,4 @@
-// $Id: bit.cpp,v 1.1 2008-08-01 10:16:02 ibelyaev Exp $
+// $Id: bit.cpp,v 1.2 2008-08-02 10:14:05 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,6 +30,7 @@ int main()
   {
     unsigned int value = 7 ;
     std::cout 
+      <<  std::endl 
       <<  " Value       " << value  << std::endl  
       <<  " bit(0)      " << bit ( value ,   0 )  << std::endl 
       <<  " bit(1)      " << bit ( value ,   1 )  << std::endl 
@@ -55,10 +56,9 @@ int main()
     Bit<unsigned int,5>   bit5 ;
     Bit<unsigned int,6>   bit6 ;
     Bit<unsigned int,7>   bit7 ;
-    Bit<unsigned int,64>  bit64 ;
-    Bit<unsigned int,200> bit200 ;
     //
     std::cout 
+      <<  std::endl 
       <<  " Bit<0>      " << bit0   ( value )  << std::endl 
       <<  " Bit<1>      " << bit1   ( value )  << std::endl 
       <<  " Bit<2>      " << bit2   ( value )  << std::endl 
@@ -67,13 +67,12 @@ int main()
       <<  " Bit<5>      " << bit5   ( value )  << std::endl 
       <<  " Bit<6>      " << bit6   ( value )  << std::endl 
       <<  " Bit<7>      " << bit7   ( value )  << std::endl 
-      <<  " Bit<64>     " << bit64  ( value )  << std::endl 
-      <<  " Bit<200>    " << bit200 ( value )  << std::endl 
       ;  
   }
   
   {
     std::cout 
+      <<  std::endl 
       <<  " IBit<7,0>   " << IBit<unsigned int,7,0>  ::value << std::endl 
       <<  " IBit<7,1>   " << IBit<unsigned int,7,1>  ::value << std::endl 
       <<  " IBit<7,2>   " << IBit<unsigned int,7,2>  ::value << std::endl 
@@ -82,11 +81,57 @@ int main()
       <<  " IBit<7,5>   " << IBit<unsigned int,7,5>  ::value << std::endl 
       <<  " IBit<7,6>   " << IBit<unsigned int,7,6>  ::value << std::endl 
       <<  " IBit<7,7>   " << IBit<unsigned int,7,7>  ::value << std::endl 
-      <<  " IBit<7,64>  " << IBit<unsigned int,7,64> ::value << std::endl 
-      <<  " IBit<7,200> " << IBit<unsigned int,7,200>::value << std::endl 
       ;  
   }
+  
+  
+  {
+    unsigned int value = 7 ;
+    std::cout
+      << std::endl
+      << " Bits<0,1>   " << Bits<unsigned int,0,1>() ( value ) << std::endl 
+      << " Bits<0,2>   " << Bits<unsigned int,0,2>() ( value ) << std::endl 
+      << " Bits<0,3>   " << Bits<unsigned int,0,3>() ( value ) << std::endl 
+      << " Bits<0,4>   " << Bits<unsigned int,0,4>() ( value ) << std::endl 
+      << " Bits<0,5>   " << Bits<unsigned int,0,5>() ( value ) << std::endl 
+      << " Bits<1,5>   " << Bits<unsigned int,1,5>() ( value ) << std::endl 
+      << " Bits<2,5>   " << Bits<unsigned int,2,5>() ( value ) << std::endl 
+      << " Bits<8,9>   " << Bits<unsigned int,8,9>() ( value ) << std::endl 
+      ;
+  }
+  
+  {
+    std::cout 
+      << std::endl 
+      << " IBits<0,1>  " << IBits<unsigned int,7,0,1>::value << std::endl 
+      << " IBits<0,2>  " << IBits<unsigned int,7,0,2>::value << std::endl 
+      << " IBits<0,3>  " << IBits<unsigned int,7,0,3>::value << std::endl 
+      << " IBits<0,4>  " << IBits<unsigned int,7,0,4>::value << std::endl 
+      << " IBits<0,5>  " << IBits<unsigned int,7,0,5>::value << std::endl 
+      << " IBits<1,5>  " << IBits<unsigned int,7,1,5>::value << std::endl 
+      << " IBits<2,5>  " << IBits<unsigned int,7,2,5>::value << std::endl 
+      << " IBits<8,9>  " << IBits<unsigned int,7,8,9>::value << std::endl 
+      ;
+  }
 
+  {
+    unsigned int value = 7 ;
+    std::cout 
+      << std::endl 
+      << " Value       " << value  << std::endl  
+      << " bits(0,1)   " << bits ( value ,   0 ,   1 )  << std::endl 
+      << " bits(0,2)   " << bits ( value ,   0 ,   2 )  << std::endl 
+      << " bits(0,3)   " << bits ( value ,   0 ,   3 )  << std::endl 
+      << " bits(0,4)   " << bits ( value ,   0 ,   4 )  << std::endl 
+      << " bits(0,5)   " << bits ( value ,   0 ,   5 )  << std::endl 
+      << " bits(1,5)   " << bits ( value ,   1 ,   5 )  << std::endl 
+      << " bits(2,5)   " << bits ( value ,   2 ,   5 )  << std::endl 
+      << " bits(8,9)   " << bits ( value ,   8 ,   9 )  << std::endl 
+      << " bits(0,64)  " << bits ( value ,   0 ,  64 )  << std::endl 
+      << " bits(64,200)" << bits ( value ,  64 , 200 )  << std::endl 
+      ;  
+  }
+  
   // ==========================================================================
   exit(0) ;                                                             // EXIT
   // ==========================================================================
