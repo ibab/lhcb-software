@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-08-02 - Tomasz Skwarnicki
+ - fix info ids in HltInit.opts to avoid conflict with Track class range
+ - fix L0.opts for Hlt to get emulated L0 output (DC06 data only)
+
 ! 2008-07-31 - Jaap Panman
  - make a more complete list of counters
 

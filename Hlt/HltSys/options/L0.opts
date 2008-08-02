@@ -1,6 +1,7 @@
 //---------------------------
 // LO
 //--------------------------
+#include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
 
 // Emulate L0
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
