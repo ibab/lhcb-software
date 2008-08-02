@@ -1,3 +1,5 @@
+#units "$STDOPTS/units.opts"
+
 
 ApplicationMgr.ExtSvc += { "HltANNSvc" };
 
