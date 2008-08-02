@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.10 2008-08-01 15:23:09 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.11 2008-08-02 12:06:49 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1189,7 +1189,7 @@ class SetupProject:
         # Now I can print the version if I was asked to do it
         if self.list_versions:
             self._print_versions(versions)
-            return 1
+            return 0
 
         #------------- project version
         if self.args:
@@ -1253,7 +1253,8 @@ class SetupProject:
     def main(self,args = sys.argv[1:]):
         # Initialization from arguments
         rc = self.prepare(args)
-        if rc: return rc
+        if rc or self.list_versions: # No need to go on if --list-versions or error
+            return rc
         
         # Temporary enviroment
         env = TemporaryEnvironment()
