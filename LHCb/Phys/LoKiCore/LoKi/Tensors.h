@@ -1,4 +1,4 @@
-// $Id: Tensors.h,v 1.4 2008-07-28 18:28:23 ibelyaev Exp $
+// $Id: Tensors.h,v 1.5 2008-08-02 13:34:27 ibelyaev Exp $
 // ===============================================================
 #ifndef LOKI_TENSORS_H 
 #define LOKI_TENSORS_H 1
@@ -27,7 +27,7 @@ namespace LoKi
     // ========================================================================
     /** @enum Indices 
      *  The list of Lorentz indices 
-     *  The numbersin g is in accordance to 
+     *  The numbers are in accordance to 
      *  ROOT::Math::LorentzVector 
      *  @see ROOT::Math::Lorentz::Vector 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -63,7 +63,7 @@ namespace LoKi
      */
     template <unsigned int I, unsigned int J> 
     struct Delta_      { enum { value =  0 } ; } ;
-    /// the proper template speciazation 
+    /// the proper template specialization for diagonal elements 
     template <unsigned int I> 
     struct Delta_<I,I> { enum { value =  1 } ; } ;
     // ========================================================================
@@ -101,9 +101,16 @@ namespace LoKi
     /** @struct G_ 
      *
      *  (Compile-time) Minkowski metric: 
-     *    \f$ g_{\mu\nu} = diag\left(-1,-1,-1,+1\right) \f$ 
+     * \f$  g_{\mu\nu} = 
+     *   \begin{pmatrix}
+     *      -1 &  0  &  0  & 0 \\
+     *       0 & -1  &  0  & 0 \\
+     *       0 &  0  & -1  & 0 \\
+     *       0 &  0  &  0  & 1  
+     * \end{pmatrix} 
+     * \f$ 
      *
-     *  The metric has been chossen in the way (-,-,-,+) in 
+     *  The metric has been choosen in the way (-,-,-,+) in 
      *   accordance with ROOT::Math::LorentzVector 
      *
      *  @code
@@ -127,10 +134,17 @@ namespace LoKi
     /** struct G 
      *
      *  Minkowski metric: 
-     *    \f$ g_{\mu\nu} = diag\left(-1,-1,-1,+1\right) \f$ 
+     * \f$  g_{\mu\nu} = 
+     *   \begin{pmatrix}
+     *      -1 &  0  &  0  & 0 \\
+     *       0 & -1  &  0  & 0 \\
+     *       0 &  0  & -1  & 0 \\
+     *       0 &  0  &  0  & 1  
+     * \end{pmatrix} 
+     * \f$ 
      *
      *  The metric has been choosen in the way (-,-,-,+) in 
-     *   accordance with ROOT::Math::LorentzVector 
+     *  accordance with ROOT::Math::LorentzVector 
      *
      *  @code
      *
@@ -281,26 +295,22 @@ namespace LoKi
      *  two Levy-Civita symbols:
      *
      *  The following identity has been used:
-     * \f[ \alpha^{IJK}_{LMN} = 
-     *     \epsilon^{IJK\kappa}
-     *     \epsilon_{LMN\kappa} = - 
+     * \f[ 
+     *  \alpha^{IJK}_{LMN} = 
+     *  \epsilon^{IJK\kappa}
+     *  \epsilon_{LMN\kappa} = - 
      *  \begin{Vmatrix}
-     *   \delta^{I}_{L} & \delta^{I}_{M} & \delta^{I}_{N} \\ 
-     *   \delta^{J}_{L} & \delta^{J}_{M} & \delta^{J}_{N}  \\ 
-     *   \delta^{K}_{L} & \delta^{K}_{M} & \delta^{K}_{N} 
+     *    \delta^{I}_{L} & \delta^{I}_{M} & \delta^{I}_{N} \\ 
+     *    \delta^{J}_{L} & \delta^{J}_{M} & \delta^{J}_{N}  \\ 
+     *    \delta^{K}_{L} & \delta^{K}_{M} & \delta^{K}_{N} 
      *  \end{Vmatrix} 
-     * \f]
-     * 
-     * \f$ \alpha^{IJK}_{LMN} = 
-     *     \epsilon^{IJK\kappa}
-     *     \epsilon_{LMN\kappa} = 
-     *   + \delta^{I}_{N}\delta^{J}_{M}\delta^{K}_{L}
-     *   + \delta^{I}_{M}\delta^{J}_{L}\delta^{K}_{N}
-     *   + \delta^{I}_{L}\delta^{J}_{N}\delta^{K}_{M}
-     *   - \delta^{I}_{L}\delta^{J}_{M}\delta^{K}_{N}
-     *   - \delta^{I}_{M}\delta^{J}_{N}\delta^{K}_{L}
-     *   - \delta^{I}_{N}\delta^{J}_{L}\delta^{K}_{M}
-     *  \f$
+     * = \delta^{I}_{N}\delta^{J}_{M}\delta^{K}_{L}
+     *  + \delta^{I}_{M}\delta^{J}_{L}\delta^{K}_{N}
+     *  + \delta^{I}_{L}\delta^{J}_{N}\delta^{K}_{M}
+     *  - \delta^{I}_{L}\delta^{J}_{M}\delta^{K}_{N}
+     *  - \delta^{I}_{M}\delta^{J}_{N}\delta^{K}_{L}
+     *  - \delta^{I}_{N}\delta^{J}_{L}\delta^{K}_{M}
+     * \f] 
      *  
      *  @code
      *
@@ -335,12 +345,13 @@ namespace LoKi
      *  (Compile-time) evaluation of the tensor product of 
      *  two Levy-Civita symbols:
      *
-     * \f[ \alpha^{IJ}_{KL} = 
-     *     \epsilon^{IJ\gamma\kappa}
-     *     \epsilon_{KL\rho\kappa} = - 
+     * \f[
+     *  \alpha^{IJ}_{KL} = 
+     *  \epsilon^{IJ\gamma\kappa}
+     *  \epsilon_{KL\rho\kappa} = - 
      *  \begin{Vmatrix}
-     *   \delta^{I}_{K} & \delta^{I}_{L} \\ 
-     *   \delta^{J}_{K} & \delta^{J}_{L}  \\ 
+     *    \delta^{I}_{K} & \delta^{I}_{L} \\ 
+     *    \delta^{J}_{K} & \delta^{J}_{L}  \\ 
      *  \end{Vmatrix} 
      * \f]
      *  
@@ -525,7 +536,7 @@ namespace LoKi
        *
        *   Epsilon e ;
        *
-       *   const double v_X = e ( X , v1 , v2 , v3 ) ; 
+       *   const LorentzVector = e ( v1 , v2 , v3 ) ; 
        *
        *  @endcode 
        *
@@ -537,7 +548,6 @@ namespace LoKi
        *   const LorentzVector& v1  = ... ;
        *   const LorentzVector& v2  = ... ;
        *   const LorentzVector& v3  = ... ;
-       *   const LorentzVector& v4  = ... ;
        * 
        *   Epsilon e ;
        *
@@ -563,8 +573,11 @@ namespace LoKi
       /** evaluate the e*v1*v2*v3*v4 product
        * 
        *  \f$  r = 
-       *  \epsilon_{\mu\nu\lambda\kappa}v_1^{\mu}
-       *          v_2^{\nu}v_3^{\lambda}v_4^{\kappa} \f$
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *       v_1^{\mu}
+       *       v_2^{\nu}
+       *       v_3^{\lambda}
+       *       v_4^{\kappa} \f$
        *
        *  @code 
        *  
@@ -614,9 +627,9 @@ namespace LoKi
        * 
        *  \f$  r = 
        *  \epsilon_{\mu\nu\lambda\kappa}
-       *  \epsilon_{\mu\rho\\delta\tau}
-       *          v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
-       *          v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
+       *  \epsilon_{\mu\rho\delta\tau}
+       *      v_1^{\nu}v_2^{\lambda}v_3^{\kappa} 
+       *      v_4^{\rho}v_5^{\delta}v_6^{\tau}   \f$
        *
        *  This expression typically appears in evaution of 
        *  various "plane-angles".
@@ -735,16 +748,17 @@ namespace LoKi
         const double z = -v.Pz () ;
         const double e =  v.E  () ;
         //
-        return -x * epsilon ( 0  , mu , nu     , lambda )   // 3permutations 
-          +     y * epsilon ( mu ,  1 , nu     , lambda )   // 2 permutation 
-          -     z * epsilon ( mu , nu ,  2     , lambda )   // 1 permutations
+        return -x * epsilon ( 0  , mu , nu     , lambda )   //  3 permutations 
+          +     y * epsilon ( mu ,  1 , nu     , lambda )   //  2 permutations 
+          -     z * epsilon ( mu , nu ,  2     , lambda )   //  1 permutation
           +     e * epsilon ( mu , nu , lambda ,      3 ) ; // no permitations
       }
       // ======================================================================
       /** evaluate the tensor e*v1*v2 product
        * 
        *  \f$  v_{\mu\nu} = 
-       *  \epsilon_{\mu\nu\lambda\kappa}v_1^{\lambda}v_2^{\kappa} \f$
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *       v_1^{\lambda}v_2^{\kappa} \f$
        *
        *  @code 
        *  
@@ -809,7 +823,8 @@ namespace LoKi
       /** evaluate the e*v1*v2*v3 product
        * 
        *  \f$  v_{\mu} = 
-       *  \epsilon_{\mu\nu\lambda\kappa}v_1^{\nu}v_2^{\lambda}v_3^{\kappa} \f$
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *   v_1^{\nu}v_2^{\lambda}v_3^{\kappa} \f$
        *
        *  @code 
        *  
@@ -840,8 +855,11 @@ namespace LoKi
       /** evaluate the tensor product: e*v1*v2*v3*v4
        * 
        *  \f$  r = 
-       *  \epsilon_{\mu\nu\lambda\kappa}v_1^{\mu}
-       *          v_2^{\nu}v_3^{\lambda}v_4^{\kappa} \f$
+       *  \epsilon_{\mu\nu\lambda\kappa}
+       *    v_1^{\mu}
+       *    v_2^{\nu}
+       *    v_3^{\lambda}
+       *    v_4^{\kappa} \f$
        *
        *  @code 
        *  
@@ -874,7 +892,7 @@ namespace LoKi
        * 
        *  \f$  r = 
        *  \epsilon_{\mu\nu\lambda\kappa}
-       *  \epsilon_{\mu\rho\\delta\tau}
+       *  \epsilon_{\mu\rho\delta\tau}
        *          a_1^{\nu}a_2^{\lambda}a_3^{\kappa} 
        *          b_1^{\rho}b_2^{\delta}b_3^{\tau}   \f$
        *
@@ -897,7 +915,8 @@ namespace LoKi
        *  @endcode 
        *
        *  The following identity has been used:
-       * \f[ \epsilon^{\alpha\beta\gamma\kappa}
+       * \f[ 
+       *     \epsilon^{\alpha\beta\gamma\kappa}
        *     \epsilon_{\mu\mu\rho\kappa} = - 
        *  \begin{Vmatrix}
        *   \delta^{\alpha}_{\mu} & \delta^{\alpha}_{\nu} & \delta^{\alpha}_{\rho} \\ 

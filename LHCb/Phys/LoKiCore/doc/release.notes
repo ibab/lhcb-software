@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.101 2008-07-28 18:28:23 ibelyaev Exp $ 
+! $Id: release.notes,v 1.102 2008-08-02 13:34:27 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-02 - Vanya BELYAEV
+
+ - fix LaTeX expresssions inside Doxygen comments 
 
 ! 2008-07-28 - Vanya BELYAEV
 

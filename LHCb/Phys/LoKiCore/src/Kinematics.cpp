@@ -1,4 +1,4 @@
-// $Id: Kinematics.cpp,v 1.10 2008-07-28 18:28:23 ibelyaev Exp $
+// $Id: Kinematics.cpp,v 1.11 2008-08-02 13:34:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -303,20 +303,6 @@ double LoKi::Kinematics::restEnergy
 /** simple function to evaluate the cosine angle between 
  *  two directions (v1 and v2) in the rest system of M 
  *
- *  \f$ \cos\theta = 
- *   \frac{\vec{p}_1\vec{p}_2}{\left|\vec{p}_1\right|
- *                             \left|\vec{p}_2\right|} = 
- *     \frac{1}{\left|\vec{p}_1\right|\left|\vec{p}_2\right|} 
- *     \left( E_1E_2 -\frac{1}{2}
- *   \left(\left(v_1+v_2\right)^2-v_1^2-v_2^2 \righ) \right) \f$ 
- *  
- *  \f$ E_1 E_2 = \frac{ \left(v_1\cdotM\righ)\keft(v_2\cdotM\right)}
- *    {M^2} \f$ and 
- *  \f$ {\left|\vec{p}_1\right|\left|\vec{p}_2\right| = 
- *   \sqrt{ 
- *   \left( \frac{\left(v_1\cdotM\right)^2}{M^2}-v_1^2 \right)   
- *   \left( \frac{\left(v_2\cdotM\right)^2}{M^2}-v_2^2 \right) } \f$ 
- * 
  *  @attention the particle M must be time-like particle: M^2 > 0 ! 
  *  @param v1 the first vector 
  *  @param v2 the last vector 
