@@ -1,0 +1,55 @@
+//HltSummaryWriter.SaveAll = true;
+
+// Load this DLL --------------------------------------------
+ApplicationMgr.DLLs += { "HltRawData" };
+
+// Add a sequence
+ApplicationMgr.TopAlg += { "GaudiSequencer/HltWriteSeq" };
+HltWriteSeq.MeasureTime = true;
+
+HltWriteSeq.Members += {"HltDecReportsMaker","HltSelReportsMaker","HltDecReportsWriter","HltSelReportsWriter"};
+HltDecReportsMaker.OutputLevel            = 1;
+HltDecReportsWriter.OutputLevel            = 1;
+HltSelReportsMaker.OutputLevel            = 1;
+HltSelReportsWriter.OutputLevel            = 1;
+
+
+// 0=infinity 1=always 100=every 100th event etc.
+HltDecReportsMaker.DebugEventPeriod = 0;
+// default info levels  0=no output 1=if passed 2=if errors 3=if passed or errors 4=always
+HltDecReportsMaker.InfoLevelDecision = 4;
+HltDecReportsMaker.InfoLevelDecisionDebug = 4;
+HltDecReportsMaker.InfoLevelNonDecision = 0;
+HltDecReportsMaker.InfoLevelNonDecisionDebug = 3; 
+
+
+// 0=infinity 1=always 100=every 100th event etc.
+HltSelReportsMaker.DebugEventPeriod = 0;
+// default info levels  0=lhcbids 1=lhcbids+standard info 2=lhcbids+extra info 3=lhcbids+standard info+extra info
+HltSelReportsMaker.InfoLevelDecision = 3;
+HltSelReportsMaker.InfoLevelDecisionDebug = 3;
+HltSelReportsMaker.InfoLevelNonDecision = 0;
+HltSelReportsMaker.InfoLevelNonDecisionDebug = 3; 
+//     global enablers
+HltSelReportsMaker.InfoLevelTrack=3;
+HltSelReportsMaker.InfoLevelTrackDebug=3;
+HltSelReportsMaker.InfoLevelRecVertex=3;
+HltSelReportsMaker.InfoLevelRecVertexDebug=3;
+HltSelReportsMaker.InfoLevelParticle=3;
+HltSelReportsMaker.InfoLevelParticleDebug=3;
+HltSelReportsMaker.InfoLevelCaloCluster=3;
+HltSelReportsMaker.InfoLevelCaloClusterDebug=3;
+
+
+// selection specific setting
+HltSelReportsMaker.SelectionMaxCandidates = { 
+   "PV2D"   : 0, 
+   "RZVelo" : 0, 
+   "Velo"   : 0 
+};
+HltSelReportsMaker.SelectionMaxCandidatesDebug = { 
+   "PV2D"   : 0, 
+   "RZVelo" : 0, 
+   "Velo"   : 0 
+};
+
