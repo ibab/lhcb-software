@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-03 - Vanya BELYAEV 
+
+ - src/Inspectors.cpp
+  
+     fix for Win32 platform
+
 ! 2008-08-03 - Vanya BELYAEV
 
  - Kernel/Inspectors.h

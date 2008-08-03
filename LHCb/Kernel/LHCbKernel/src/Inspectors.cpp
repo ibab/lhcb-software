@@ -1,4 +1,4 @@
-// $Id: Inspectors.cpp,v 1.1 2008-08-03 12:34:37 ibelyaev Exp $
+// $Id: Inspectors.cpp,v 1.2 2008-08-03 16:46:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -122,7 +122,7 @@ LHCb::Inspector::Inspector
 {}
 // ============================================================================
 StatusCode  
-LHCb::Inspector::Inspector::inspect 
+LHCb::Inspector::inspect 
 ( const IInterface*      component , 
   std::ostream&          stream    , 
   const size_t           level     ) const 
