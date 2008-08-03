@@ -139,6 +139,17 @@ def listConfigurations( cas = ConfigFileAccessSvc() ) :
     from pprint import pprint
     pprint(info)
     return info
+def getReleases( cas = ConfigFileAccessSvc() ) :
+    info = execInSandbox( _getConfigurations, cas )
+
+def getRunTypes( release, cas = ConfigFileAccessSvc() ) :
+    info = execInSandbox( _getConfigurations, cas )
+    rt = [ i['runtype'] if i['release']==release  for i in info.itervalues() ]
+    from pprint import pprint
+    pprint(rt)
+    return rt
+
+    
                                
 
 def showAlgorithms( id, cas = ConfigFileAccessSvc() ) :
