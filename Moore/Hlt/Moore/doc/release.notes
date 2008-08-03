@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+! 2008-08-03 - Gerhard Raven 
+ - add TCK management utilities
+
 ! 2008-08-01 - Gerhard Raven 
  - add release version & runtype to generated toplevel aliases
 
