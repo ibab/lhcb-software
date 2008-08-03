@@ -35,10 +35,15 @@ def _getConfigurations( cas ) :
     appMgr.createSvc(cas.getFullName())
     s = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
     d = {}
+    x = set()
     for i in ['TOPLEVEL','TCK','TAG' ] :
         d[i] = s.configTreeNodeAliases( alias( i+'/'  ) ) 
-    info = {}
-    for i in d['TOPLEVEL'] : info[ i.ref().str()  ] = dict(zip(  ['release','runtype'],  i.alias().str().split('/')[1:3]))
+#        x.append( [ j.ref() for j in d[i] ) # get the label of this config...
+    info = {} 
+    for i in d['TOPLEVEL'] : 
+        info[ i.ref().str()  ] = dict(zip(  ['release','runtype'],  i.alias().str().split('/')[1:3]))
+        ref = s.readConfigTreeNode( i.ref() )
+        info[ i.ref().str() ].update( { 'label' : ref.get().label() } )
     for i in d['TCK'] :      info[ i.ref().str()  ].update( { 'TCK' : int(i.alias().str().split('/')[-1]) } )
     for i in d['TAG'] :      info[ i.ref().str()  ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
@@ -139,12 +144,24 @@ def listConfigurations( cas = ConfigFileAccessSvc() ) :
     from pprint import pprint
     pprint(info)
     return info
+
 def getReleases( cas = ConfigFileAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
+    rel = set( [ i['release']  for i in info.itervalues()  ] )
+    from pprint import pprint
+    pprint(rel)
+    return rel
 
 def getRunTypes( release, cas = ConfigFileAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    rt = [ i['runtype'] if i['release']==release  for i in info.itervalues() ]
+    rt = set( [ i['runtype']  for i in info.itervalues() if i['release']==release ] )
+    from pprint import pprint
+    pprint(rt)
+    return rt
+
+def getTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
+    info = execInSandbox( _getConfigurations, cas )
+    rt = [ (k,v['TCK'])  for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] 
     from pprint import pprint
     pprint(rt)
     return rt
