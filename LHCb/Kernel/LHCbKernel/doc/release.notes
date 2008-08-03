@@ -4,6 +4,31 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2008-08-03 - Vanya BELYAEV
+
+ - Kernel/Inspectors.h
+   src/Inspectors.cpp
+   
+      New utility class LHCb::Inspector 
+      for (recursive) inspection of the 
+      major properties of various Gaudi components, including 
+      the application itself. It is especially suited for 
+      inspection of "algorithmic" part.  
+   
+- python/LHCbKernel/Inspector.py
+
+      Helper python module with the proper decorations for LHCb::Inspector.
+      See the embedded documentation inside the module  
+
+ - xml/lcgdict/lcg_seletiron.xml
+   dict/LHCbKernelDict.h
+
+      add LHCb::Inspector into the dictionary
+
+ - cmt/requirements 
+  
+      add "python_install" pattern  
+
 ! 2008-08-01 - Vanya BELYAEV
 
  - src/ParticleID.h
