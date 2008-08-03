@@ -38,8 +38,7 @@ def _getConfigurations( cas ) :
     for i in ['TOPLEVEL','TCK','TAG' ] :
         d[i] = s.configTreeNodeAliases( alias( i+'/'  ) ) 
     info = {}
-    for i in d['TOPLEVEL'] : info[ i.ref().str()  ] = { 'release' : i.alias().str().split('/')[1],
-                                                        'runtype' : i.alias().str().split('/')[2] }
+    for i in d['TOPLEVEL'] : info[ i.ref().str()  ] = dict(zip(  ['release','runtype'],  i.alias().str().split('/')[1:3]))
     for i in d['TCK'] :      info[ i.ref().str()  ].update( { 'TCK' : int(i.alias().str().split('/')[-1]) } )
     for i in d['TAG'] :      info[ i.ref().str()  ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
