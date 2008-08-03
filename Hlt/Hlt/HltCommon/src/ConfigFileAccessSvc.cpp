@@ -11,6 +11,7 @@ namespace fs = boost::filesystem;
 
 
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/System.h"
 
 // Factory implementation
 DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
@@ -22,7 +23,9 @@ DECLARE_SERVICE_FACTORY(ConfigFileAccessSvc)
 ConfigFileAccessSvc::ConfigFileAccessSvc( const std::string& name, ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
 {
-  declareProperty("Directory", m_dir = "/user/graven/tmp/config/");
+  std::string def( System::getEnv("TCKDATAROOT") );
+  if (!def.empty()) def += "/config";
+  declareProperty("Directory", m_dir = def);
 }
 
 //=============================================================================
@@ -84,10 +87,7 @@ ConfigFileAccessSvc::configTreeNodePath( const ConfigTreeNode::digest_type& dige
 
 fs::path 
 ConfigFileAccessSvc::configTreeNodeAliasPath( const ConfigTreeNodeAlias::alias_type& alias ) const {
-     std::string major = alias.major();
-     std::string minor = alias.str();
-     minor.erase(0,major.size()+1);
-     return fs::path(m_dir) / "Aliases" / major / minor ;
+     return fs::path(m_dir) / "Aliases" / alias.str();
 }
 
 boost::optional<PropertyConfig> 

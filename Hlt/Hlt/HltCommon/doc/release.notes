@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-08-03 - Gerhard Raven
+  - fix default TCK data location
+
 !2008-08-01 - Gerhard Raven
   - add release number & runtype in toplevel config aliases
   - add flag to NOT check odin for TCK

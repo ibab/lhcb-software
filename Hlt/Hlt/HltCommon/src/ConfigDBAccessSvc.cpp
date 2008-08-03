@@ -219,7 +219,9 @@ ConfigDBAccessSvc::ConfigDBAccessSvc( const std::string& name, ISvcLocator* pSvc
   : Service ( name , pSvcLocator )
   ,m_coolConfSvc(0)
 {
-  declareProperty("Connection", m_connection = "sqlite_file:/tmp/config.db");
+  std::string def( System::getEnv("TCKDATAROOT") );
+  if (!def.empty()) def = std::string("sqlite_file:") + def + "/db/config.db";
+  declareProperty("Connection", m_connection = def );
   declareProperty("ReadOnly", m_readOnly = true );
   declareProperty("CreateSchema", m_createSchema = false);
 }
