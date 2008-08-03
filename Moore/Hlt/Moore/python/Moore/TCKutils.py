@@ -141,11 +141,11 @@ def createTCKEntries(d, cas = ConfigFileAccessSvc() ) :
 def listConfigurations( cas = ConfigFileAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
     print '\n\n   List of configurations'
-    for release in set( [ i['release']  for i in info.itervalues()  ] ) : 
+    for release in set( [ i['release'] for i in info.itervalues()  ] ) : 
         print release
-        for runtype in set( [ i['runtype']  for i in info.itervalues() if i['release']==release ] ) :
+        for runtype in set( [ i['runtype'] for i in info.itervalues() if i['release']==release ] ) :
             print '    ' + runtype
-            for c in [ k  for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype]  :
+            for c in [ k for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] :
                 print '       0x%08x : %s : %s' % ( info[c]['TCK'] , c, info[c]['label'] )
     return info
 
