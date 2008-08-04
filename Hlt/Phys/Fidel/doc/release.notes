@@ -3,6 +3,10 @@
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+
+! 2008-08-04 - Patrick Koppenburg
+ - Removed Hlt2SelB2TwoBody.py. Use the one in HltSelections.
+
 ! 2008-08-04 - Sara Furcas
 - Added comments in Fidel.cpp and Fidel.h
 
