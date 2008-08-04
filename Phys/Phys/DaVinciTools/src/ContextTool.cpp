@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.8 2008-08-04 16:31:29 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.9 2008-08-04 17:19:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,8 +61,9 @@ const DVAlgorithm*  ContextTool::getDVAlgorithm ( )const {
   if (msgLevel(MSG::DEBUG)) debug() << "Looking for parents of " << atool->name() << endmsg ;
   while ( 0!=dynamic_cast<const IAlgTool*>(atool->parent())){
     atool = dynamic_cast<const IAlgTool*>(atool->parent());
-    if (msgLevel(MSG::DEBUG)) debug() << "... tool is owned by tool " << atool->name() << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "... tool is owned by tool " << atool->name() << endmsg ;
   }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "null. Checking for toolsvc with " << atool<< endmsg ;
   // check it's not the ToolSvc
   const IToolSvc* tsvc = dynamic_cast<const IToolSvc*>( atool->parent() );
   if ( 0!=tsvc ){
@@ -70,9 +71,12 @@ const DVAlgorithm*  ContextTool::getDVAlgorithm ( )const {
     warning() << "OnOffline tool will return default tools" << endmsg ;
   } else {
     // check if it is an algorithm
-    const DVAlgorithm* dvalgo = dynamic_cast<const DVAlgorithm*>( atool->parent() );
-    if (0==dvalgo) warning() << "parent of " << atool->name() << " is not a DVAlgorithm" << endmsg ;
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Not toolsvc. Checking for DVA with " << atool << endmsg ;
+    dvalgo = dynamic_cast<const DVAlgorithm*>( atool->parent() );
+    if (0==dvalgo) warning() << "parent of " << name() << " is not a DVAlgorithm" << endmsg ;
   }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "DVA is " << dvalgo << endmsg ;
+  
   return dvalgo ;
 }
 //=============================================================================
@@ -80,6 +84,7 @@ const DVAlgorithm*  ContextTool::getDVAlgorithm ( )const {
 //=============================================================================
 StatusCode ContextTool::getTools(){
 
+  if (msgLevel(MSG::DEBUG)) debug() << "getTools()" << endmsg ;
   const DVAlgorithm* dvalgo = getDVAlgorithm() ;
 
   if (0!=dvalgo){
