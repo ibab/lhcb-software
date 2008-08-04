@@ -1,24 +1,27 @@
 // Job options file. Simple Online monitoring example
 //==============================================================
 
-
-ApplicationMgr.ExtSvc = { "MonitorSvc" };
-
+ApplicationMgr.TopAlg = {"UpdateAndReset", "GaudiExample"};
 ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
-ApplicationMgr.DLLs += {"ExampleGaucho"};
 
-AuditorSvc.Auditors = { "ChronoAuditor" };
 
-ApplicationMgr.TopAlg  = { "GaudiExample" };
-GaudiExample.SleepTime = 5;  // in seconds
+ApplicationMgr.EvtMax = -1;
+ApplicationMgr.OutputLevel = 10;
+MessageSvc.OutputLevel=1;
+MonitorSvc.OutputLevel=1;
+UpdateAndReset.OutputLevel=3;
+UpdateAndReset.desiredDeltaTCycle=20;  // in seconds
+ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
 
-GaudiExample.OutputLevel = 3;
-MonitorSvc.OutputLevel=3;
-MonitorSvc.refreshtime=10;  // in seconds
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;   
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+GaudiExample.SleepTime = 10;  // in seconds
+
 
 // Modify Message Format to print algorithm name with 20 characters
 MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
-
-ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
-//ApplicationMgr.EvtMax    = 5;   // events to be processed (default is 10)
-ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

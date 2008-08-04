@@ -43,12 +43,20 @@
 #**************************************************************************************
 
 
-setenv UTGID $1
-shift
+
+
+if ( $1 == "" ) then 
+  setenv UTGID "test"
+  else {
+    setenv UTGID $1
+    shift
+  }
+endif
+
 
 #please change the DIM_DNS_NODE to your own! 
 #Can be defined as an environment variable before calling the script or here
-#setenv DIM_DNS_NODE lxplus210.cern.ch
+setenv DIM_DNS_NODE pclhcb80.cern.ch
 if ( $DIM_DNS_NODE == "" ) then
 echo "Start a DIM dns server and set environment variable DIM_DNS_NODE" 
 exit
@@ -59,7 +67,11 @@ echo "DIM_DNS_NODE set to " $DIM_DNS_NODE
 setenv LHCBHOME /afs/cern.ch/lhcb
 source $LHCBHOME/scripts/CMT.csh
 
-SetupProject Online v4r5
+
+#SetupProject Online v4r10
+
+cd /afs/cern.ch/user/e/evh/w0/test/Online_v4r10/Online/ExampleGaucho/v3r0/cmt
+source setup.csh
 
 echo EXAMPLEGAUCHOROOT = $EXAMPLEGAUCHOROOT
 
