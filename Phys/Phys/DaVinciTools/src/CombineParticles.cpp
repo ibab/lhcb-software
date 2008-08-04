@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.19 2008-07-11 13:29:32 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.20 2008-08-04 09:26:35 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -300,6 +300,13 @@ StatusCode CombineParticles::decodeAllCuts()
         m_daughterCuts.end() != ic ; ++ic )
   {
     if ( ic->first.empty() ) { continue ; }
+    //
+    { // check the correctness of particle name
+      const ParticleProperty* _pp = LoKi::Particles::ppFromName ( ic->first ) ;
+      Assert ( 0 != _pp , 
+               " Invalid Particle Name is used as the key : '"  + (ic->first) + "'" ) ;
+    }
+    //
     MyCut item ;
     StatusCode sc = factory->get ( ic->second , item.m_cut ) ;
     if ( sc.isFailure() ) 
