@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.9 2008-08-04 11:05:52 sfurcas Exp $ // Include files
+// $Id: Fidel.cpp,v 1.10 2008-08-04 17:23:27 pkoppenb Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -80,12 +80,12 @@ StatusCode Fidel::initialize() {
   StatusCode sc = DVAlgorithm::initialize(); 
   if ( sc.isFailure() ) return sc;
 
-  debug() << "==> Initialize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initialize" << endmsg;
 
-  debug()<<"*************FIDEL CUTS************  "<<endmsg;
-  debug()<<"minMass  "<<m_minMass<<", maxMass  "<<m_maxMass<<" MeV"<<endmsg;
-  debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
-  debug()<<"pointing "<<m_maxPointing<<" rad"<<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug()<<"*************FIDEL CUTS************  "<<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug()<<"minMass  "<<m_minMass<<", maxMass  "<<m_maxMass<<" MeV"<<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug()<<"minPt "<<m_minPt<<"MeV, max Chi2 "<<m_maxChi2<<endmsg;
+  if (msgLevel(MSG::DEBUG)) debug()<<"pointing "<<m_maxPointing<<" rad"<<endmsg;
   
   
   return StatusCode::SUCCESS;
@@ -96,7 +96,7 @@ StatusCode Fidel::initialize() {
 //=============================================================================
 StatusCode Fidel::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
   setFilterPassed(false);
 
@@ -107,6 +107,7 @@ StatusCode Fidel::execute() {
 
   LHCb::Particle::ConstVector  Candidates;
   StatusCode sc = particleFilter() -> filter (parts,Candidates);
+  if (!sc) return sc;
   
   LHCb::Particle::ConstVector  Muons;
   StatusCode scMu = particleFilter() -> filterByPID(parts,Muons,13,true);
@@ -183,7 +184,7 @@ StatusCode Fidel::execute() {
       
       StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);      
       if(!fit) {      
-        debug()<<"Fit error"<<endmsg;
+        if (msgLevel(MSG::DEBUG)) debug()<<"Fit error"<<endmsg;
         continue;        
       }
 
@@ -194,19 +195,21 @@ StatusCode Fidel::execute() {
       const LHCb::VertexBase *BVtx = BCand.endVertex();
       
       StatusCode sc = distanceCalculator()->distance(myBCand,bestPV,impCand,ipchi2);
+      if (!sc) return sc;
       
       //flight distance Projected B
       StatusCode sc_B = distanceCalculator()->projectedDistance(myBCand,bestPV,dist_B,errdist_B);
+      if (!sc_B) return sc_B ;
       fs_B = dist_B / errdist_B;
       
       //flight distance Projected PV - Res 1
       StatusCode scfs1 = distanceCalculator()->projectedDistance((*ip1),bestPV,dist1,errdist1);
-      //flight distance Projected PV - Res 2
-      StatusCode scfs2 = distanceCalculator()->projectedDistance((*ip2),bestPV,dist2,errdist2);
       if(scfs1)fs1 = dist1/errdist1;
       else{
         fs1=-999; 
       }
+      //flight distance Projected PV - Res 2
+      StatusCode scfs2 = distanceCalculator()->projectedDistance((*ip2),bestPV,dist2,errdist2);
       if(scfs2)fs2 = dist2/errdist2;
       else{
         fs2=-999; 
@@ -214,13 +217,13 @@ StatusCode Fidel::execute() {
 
       //flight distance Projected B - Res 1
       StatusCode scB1 = distanceCalculator()->projectedDistance((*ip1),BVtx,distB1,errdistB1);
-      //flight distance Projected B - Res 2
-      StatusCode scB2 = distanceCalculator()->projectedDistance((*ip2),BVtx,distB2,errdistB2);      
-
       if(scB1)FsB1 = distB1/errdistB1;
       else{
         FsB1=-999; 
       }
+      //flight distance Projected B - Res 2
+      StatusCode scB2 = distanceCalculator()->projectedDistance((*ip2),BVtx,distB2,errdistB2);      
+
       if(scB2)FsB2 = distB2/errdistB2;
       else{
         FsB2=-999; 
@@ -273,14 +276,12 @@ StatusCode Fidel::execute() {
 
       desktop()->keep(&BCand); 
       setFilterPassed(true);
-      sc = StatusCode::SUCCESS;
 
     }//ip2
   }//ip1
 
   return desktop()->saveDesktop();
   
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
@@ -288,7 +289,7 @@ StatusCode Fidel::execute() {
 //=============================================================================
 StatusCode Fidel::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Finalize" << endmsg;
 
   return DVAlgorithm::finalize(); 
 }
