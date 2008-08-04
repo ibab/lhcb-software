@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.342 2008-08-04 10:00:58 pkoppenb Exp $
+! $Id: release.notes,v 1.343 2008-08-04 16:31:29 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-08-04 - Patrick Koppenburg
+ - ContextTool : do not preload obsolete geomTool to avoid unnecessary warnings.
 
 ! 2008-08-04 - Patrick Koppenburg for Rob Lambert
  - Added FindCloneTool and RemoveClones. They all to identify and kill

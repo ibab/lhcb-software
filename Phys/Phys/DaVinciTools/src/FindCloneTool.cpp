@@ -1,4 +1,4 @@
-// $Id: FindCloneTool.cpp,v 1.1 2008-08-04 10:00:58 pkoppenb Exp $
+// $Id: FindCloneTool.cpp,v 1.2 2008-08-04 16:31:29 pkoppenb Exp $
 
 // Include files 
 
@@ -143,43 +143,52 @@ bool FindCloneTool::searchOverlap( std::vector< std::vector<const LHCb::ProtoPar
 bool FindCloneTool::foundOverlap( const LHCb::Particle::ConstVector & parts,
                                std::vector<const LHCb::ProtoParticle*> & proto  )
 {  
-  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector) dummy proto has size: " 
+                                        << proto.size() << endmsg ;
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 //===========================================================================
 bool FindCloneTool::foundOverlap( const LHCb::Particle::Vector & parts,
                                std::vector<const LHCb::ProtoParticle*> & proto )
 {  
-  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::Vector) dummy proto has size: " 
+                                        << proto.size() << endmsg ;
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 //===========================================================================
 bool FindCloneTool::foundOverlap( const LHCb::Particle::ConstVector & parts )
 {  
   if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 
 //===========================================================================
 bool FindCloneTool::foundOverlap( const LHCb::Particle::Vector & parts )
 {  
-  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::ConstVector)" << endmsg ;
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(LHCb::Particle::Vector)" << endmsg ;
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 
 //===========================================================================
 bool FindCloneTool::foundOverlap( const LHCb::Particle* particle1 )
 { 
   //can't have a clone if there is only one particle!
-  if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(1)" << endmsg ;
+  if (msgLevel(MSG::VERBOSE))
+  {
+    verbose() << "foundOverlap(1)" ;
+    if(particle1)  verbose() << " on particle: " <<  particle1->particleID().pid();
+    verbose() <<  endmsg ;
+    
+  }
+  
   return false;
 }
 
@@ -192,9 +201,9 @@ bool FindCloneTool::foundOverlap( const LHCb::Particle* particle1,
   LHCb::Particle::ConstVector parts ;
   parts.push_back( particle1 );
   parts.push_back( particle2 );
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 
 //===========================================================================
@@ -208,9 +217,9 @@ bool FindCloneTool::foundOverlap( const LHCb::Particle* particle1,
   parts.push_back( particle1 );
   parts.push_back( particle2 );
   parts.push_back( particle3 );
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 //===========================================================================
 bool FindCloneTool::foundOverlap( const LHCb::Particle* particle1, 
@@ -225,9 +234,9 @@ bool FindCloneTool::foundOverlap( const LHCb::Particle* particle1,
   parts.push_back( particle2 );
   parts.push_back( particle3 );
   parts.push_back( particle4 );
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
-  return foundOverlap( parts, m_proto, isclone );
+  return foundOverlap( parts, all_protos, isclone );
 }
 //===========================================================================
 // Check for duplicate use of all protoparticles to produce decay tree of
@@ -238,10 +247,10 @@ StatusCode FindCloneTool::removeOverlap( LHCb::Particle::Vector& PV)
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "removeOverlap( LHCb::Particle::Vector) in size is " << PV.size() << endmsg ;
 
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
 
-  if (!foundOverlap( PV,m_proto,isclone )) return StatusCode::SUCCESS ;
+  if (!foundOverlap( PV,all_protos,isclone )) return StatusCode::SUCCESS ;
 
   if (isclone.size() != PV.size()  )
   {
@@ -279,10 +288,10 @@ StatusCode FindCloneTool::removeOverlap( LHCb::Particle::ConstVector& PV)
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "removeOverlap( LHCb::Particle::ConstVector) in size is " << PV.size() << endmsg ;
 
-  std::vector< std::vector<const LHCb::ProtoParticle*> > m_proto(0);
+  std::vector< std::vector<const LHCb::ProtoParticle*> > all_protos(0);
   std::vector<bool> isclone;
 
-  if (!foundOverlap( PV,m_proto,isclone )) return StatusCode::SUCCESS ;
+  if (!foundOverlap( PV,all_protos,isclone )) return StatusCode::SUCCESS ;
 
   if (isclone.size() != PV.size()  )
   {

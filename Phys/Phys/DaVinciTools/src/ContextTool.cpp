@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.7 2008-07-10 15:54:33 pkoppenb Exp $
+// $Id: ContextTool.cpp,v 1.8 2008-08-04 16:31:29 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,6 @@ ContextTool::ContextTool( const std::string& type,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_desktop()
-  , m_geom()
   , m_fitter(){
   declareInterface<IContextTool>(this);
 
@@ -51,11 +50,12 @@ StatusCode ContextTool::initialize(){
   return getTools();
    
 }
-//=============================================================================
-// get tools
-//=============================================================================
-StatusCode ContextTool::getTools(){
-  // look for desktop
+
+//=========================================================================
+// get parent DVAlgorithm
+//=========================================================================
+const DVAlgorithm*  ContextTool::getDVAlgorithm ( )const {
+  const DVAlgorithm* dvalgo = 0 ;
   const IAlgTool* atool = this ;
   // get last tool in chain
   if (msgLevel(MSG::DEBUG)) debug() << "Looking for parents of " << atool->name() << endmsg ;
@@ -71,43 +71,42 @@ StatusCode ContextTool::getTools(){
   } else {
     // check if it is an algorithm
     const DVAlgorithm* dvalgo = dynamic_cast<const DVAlgorithm*>( atool->parent() );
-    if ( 0==dvalgo ){
-      warning() << "Parent of " << atool->name() << " is not a DVAlgorithm." << endmsg ;
-      warning() << "OnOffline tool will get tools according to context ``" << context() 
-                << "''" << endmsg ;
-    } else {
-      if (msgLevel(MSG::DEBUG)) debug() << atool->name() << " is owned by " << dvalgo->name() << endmsg ;
-      m_desktop = dvalgo->desktop() ;
-      if (0==m_desktop) {
-        err() << "No desktop found" << endmsg;
-        return StatusCode::FAILURE;
-      } else if (msgLevel(MSG::DEBUG)) debug() << "Desktop of parent DVAlgorithm found" << endmsg ;
-      
-      m_geom = dvalgo->obsoleteGeomDispCalculator() ;
-      if (0==m_geom) {
-        err() << "No geomDispCalculator found" << endmsg;
-        return StatusCode::FAILURE;
-      } else if (msgLevel(MSG::DEBUG)) debug() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
-      
-      m_dist = dvalgo->distanceCalculator() ;
-      if (0==m_dist) {
-        err() << "No DistanceCalculator found" << endmsg;
-        return StatusCode::FAILURE;
-      } else if (msgLevel(MSG::DEBUG)) debug() << "distanceCalculator of parent DVAlgorithm found" << endmsg ;
-      
-      m_fitter = dvalgo->vertexFitter() ;
-      if (0==m_geom) {
-        err() << "No Vertex Fitter found" << endmsg;
-        return StatusCode::FAILURE;
-      } else if (msgLevel(MSG::DEBUG)) debug() << "Vertex Fitter of parent DVAlgorithm found" << endmsg ;
-    }
+    if (0==dvalgo) warning() << "parent of " << atool->name() << " is not a DVAlgorithm" << endmsg ;
   }
+  return dvalgo ;
+}
+//=============================================================================
+// get tools
+//=============================================================================
+StatusCode ContextTool::getTools(){
+
+  const DVAlgorithm* dvalgo = getDVAlgorithm() ;
+
+  if (0!=dvalgo){
+    if (msgLevel(MSG::DEBUG)) debug() << name() << " is owned by " << dvalgo->name() << endmsg ;
+    m_desktop = dvalgo->desktop() ;
+    if (0==m_desktop) {
+      err() << "No desktop found" << endmsg;
+      return StatusCode::FAILURE;
+    } else if (msgLevel(MSG::DEBUG)) debug() << "Desktop of parent DVAlgorithm found" << endmsg ;
+    
+    m_dist = dvalgo->distanceCalculator() ;
+    if (0==m_dist) {
+      err() << "No DistanceCalculator found" << endmsg;
+      return StatusCode::FAILURE;
+    } else if (msgLevel(MSG::DEBUG)) debug() << "distanceCalculator of parent DVAlgorithm found" << endmsg ;
+    
+    m_fitter = dvalgo->vertexFitter() ;
+    if (0==m_fitter) {
+      err() << "No Vertex Fitter found" << endmsg;
+      return StatusCode::FAILURE;
+    } else if (msgLevel(MSG::DEBUG)) debug() << "Vertex Fitter of parent DVAlgorithm found" << endmsg ;
+  }
+  
   // now get default tools if needed 
-  if ( 0==m_geom )   m_geom = tool<IGeomDispCalculator>("GeomDispCalculator",this);
-  if ( 0==m_fitter ) {
-    m_onOffline = tool<IOnOffline>("OnOfflineTool",this);
-    m_fitter = tool<IVertexFit>(m_onOffline->vertexFitter(),this);
-  }
+  if ( 0==m_fitter ) m_fitter = tool<IVertexFit>(m_onOffline->vertexFitter(),this);
+  if ( 0==m_onOffline ) m_onOffline = tool<IOnOffline>("OnOfflineTool",this);
+  if ( 0==m_dist ) m_dist = tool<IDistanceCalculator>("DistanceCalculator",this);
   
   return StatusCode::SUCCESS;
 }
@@ -133,3 +132,25 @@ LHCb::RecVertex::ConstVector ContextTool::primaryVertices() const {
   return PV ;
 }
 
+//=============================================================================
+// get the obsolete geom tool - load on demand only.
+//=============================================================================
+const IGeomDispCalculator* ContextTool::geomTool() const {
+
+  const IGeomDispCalculator* obsoleteGeom = 0 ;
+  const DVAlgorithm* dvalgo = getDVAlgorithm() ;
+  if ( 0==dvalgo ){
+    warning() << "Ancestor of " << name() 
+              << " is not a DVAlgorithm. Gettting own instance of obsolete geometry tool." << endmsg ;
+    obsoleteGeom = tool<IGeomDispCalculator>("GeomDispCalculator",this);
+  } else {
+    obsoleteGeom = dvalgo->obsoleteGeomDispCalculator() ;
+    if (0==obsoleteGeom) {
+      Exception("No geomDispCalculator found");
+    } else {
+      if (msgLevel(MSG::DEBUG)) debug() << "geomDispCalculator of parent DVAlgorithm found" << endmsg ;
+    }
+  }
+  
+  return obsoleteGeom;
+}

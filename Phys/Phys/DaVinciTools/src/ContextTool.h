@@ -1,4 +1,4 @@
-// $Id: ContextTool.h,v 1.3 2008-07-10 15:44:38 pkoppenb Exp $
+// $Id: ContextTool.h,v 1.4 2008-08-04 16:31:29 pkoppenb Exp $
 #ifndef CONTEXTTOOL_H 
 #define CONTEXTTOOL_H 1
 
@@ -30,8 +30,8 @@ public:
   /// Get primary vertices
   LHCb::RecVertex::ConstVector primaryVertices() const  ;
   
-  /// Get obsolete geom tool
-  const IGeomDispCalculator* geomTool()const {return m_geom;}  ;
+  /// Get obsolete geom tool - load on demand only.
+  const IGeomDispCalculator* geomTool()const  ;
 
   /// Get distance tool
   const IDistanceCalculator* distanceTool()const{return m_dist;} ;
@@ -45,11 +45,12 @@ public:
 private :
   /// get tools
   StatusCode getTools() ;
+  /// get tools
+  const DVAlgorithm* getDVAlgorithm() const ;
 
 private:
 
   IPhysDesktop* m_desktop; ///< pointer to dektop
-  IGeomDispCalculator* m_geom ;    ///< pointer to obsolete geom tool
   IDistanceCalculator* m_dist ;    ///< pointer to distance tool
   IVertexFit* m_fitter; ///< pointer to fitter
   IOnOffline* m_onOffline ; ///< on offline tool provides locations if needed
