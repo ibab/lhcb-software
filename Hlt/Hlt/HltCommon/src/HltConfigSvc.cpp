@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.15 2008-08-04 12:09:34 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.16 2008-08-04 12:15:09 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -99,7 +99,7 @@ StatusCode HltConfigSvc::initialize() {
 ConfigTreeNode::digest_type
 HltConfigSvc::tck2id(const TCK_t& tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
-    std::string tckRep = boost::str( boost::format("0x08x")%tck ) ;
+    std::string tckRep = boost::str( boost::format("0x%08x")%tck ) ;
     TCKMap_t::const_iterator i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
         ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
