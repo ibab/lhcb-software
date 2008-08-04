@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.9 2008-06-18 07:40:39 mneedham Exp $
+// $Id: STClusterMonitor.cpp,v 1.10 2008-08-04 07:22:33 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -125,7 +125,7 @@ void STClusterMonitor::fillHistograms(const STCluster* aCluster)
     const DeSTSector* aSector = m_tracker->findSector(aCluster->channelID());
     if (aSector != 0) {
       plot(aCluster->totalCharge(),aSector->type()+"/1", "Charge",
-           -2.5, 502.5, 101);
+           -0.5, 500.5, 501);
       plot(m_sigNoiseTool->signalToNoise(aCluster), 
            aSector->type()+"/2","S/N",0., 100., 100);
     }

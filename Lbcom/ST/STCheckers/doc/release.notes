@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2008-04-08 M Needham
+ - Add STPerformanceMonitor 
+
 !=========================== STCheckers v2r6 2008-07-02 =======================
 ! 2008-06-18 M Needham
  - Fix implicit conversions
