@@ -1,4 +1,4 @@
-// $Id: LoKiSvc.cpp,v 1.16 2008-07-22 13:00:57 ibelyaev Exp $
+// $Id: LoKiSvc.cpp,v 1.17 2008-08-04 10:56:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -445,10 +445,18 @@ protected:
     declareProperty 
       ( "Reporter" , m_reporterName , "The type/name of default Reporter tool") ;
     /// @see file Nodes.cpp 
-    m_ccmap_ [ "X+"     ] = "X-"     ; // charged, positive
-    m_ccmap_ [ "X-"     ] = "X+"     ; // charged, negative 
-    m_ccmap_ [ "l+"     ] = "l-"     ; // charged lepton, positive 
-    m_ccmap_ [ "l-"     ] = "l+"     ; // charged lepton, negative
+    m_ccmap_ [ "X+"       ] = "X-"       ; // charged, positive
+    m_ccmap_ [ "X-"       ] = "X+"       ; // charged, negative 
+    m_ccmap_ [ "l+"       ] = "l-"       ; // charged lepton, positive 
+    m_ccmap_ [ "l-"       ] = "l+"       ; // charged lepton, negative
+    // prevent soem other symbols from inproper conversions
+    m_ccmap_ [ "Meson"    ] = "Meson"    ; // the generic meson 
+    m_ccmap_ [ "Hadron"   ] = "Hadron"   ; // the generic hadron
+    m_ccmap_ [ "Baryon"   ] = "Baryon"   ; // the generic baryon
+    m_ccmap_ [ "Lepton"   ] = "Lepton"   ; // the generic lepton
+    m_ccmap_ [ "Nu"       ] = "Nu"       ; // the generic neutrino
+    m_ccmap_ [ "HasQuark" ] = "HasQuark" ; // for protection 
+    m_ccmap_ [ "JSpin"    ] = "JSpin"    ; // for protection
     //
     declareProperty 
       ( "ChargeConjugations" , m_ccmap_ , 

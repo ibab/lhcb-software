@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.102 2008-08-02 13:34:27 ibelyaev Exp $ 
+! $Id: release.notes,v 1.103 2008-08-04 10:56:46 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-04 - Vanya BELYAEV
+
+ - src/Component/LoKiSvc.cpp 
+
+    add more "protected" words/symbols for CC-utility
+
 
 ! 2008-08-02 - Vanya BELYAEV
 
