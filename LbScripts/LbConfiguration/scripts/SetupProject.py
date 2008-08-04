@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.11 2008-08-02 12:06:49 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.12 2008-08-04 10:28:29 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1265,7 +1265,8 @@ class SetupProject:
         # projects
         CMTPATH = env.get("CMTPATH","")
         
-        output_script = ""
+        script = "" # things we need to append to the setup script (like aliases)
+        messages = [] # lines to print (feedback)
         if not self.build_env: # this part is needed only if we do not ask for build only env
             tmp_dir = self._prepare_tmp_local_project()
             try:
@@ -1281,30 +1282,37 @@ class SetupProject:
                 return 1
             # Feedback
             if 'CMTPROJECTPATH' in env:
-                script += "echo Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'\n" % env
+                messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
             else:
-                script += "echo Using CMTPATH = '%s'\n" % CMTPATH
-            script += 'echo Environment for %s %s ready.\n'%(self.project_info.name,
-                                                             self.project_info.version)
+                messages.append("Using CMTPATH = '%s'" % CMTPATH)
+            messages.append('Environment for %s %s ready.'%(self.project_info.name,
+                                                            self.project_info.version))
             
-            if not self.runtime_projects and not self.overriding_projects:
-                script += 'echo "(taken from %s)"\n'%(self.project_info.project_dir)
+            # collect project infos descriptions
+            lines = []
+            for pi in self.overriding_projects:
+                lines.append(str(pi))
+            lines.append(str(self.project_info))
+            for pi in self.runtime_projects:
+                lines.append(str(pi))
+            # add decorators
+            if len(lines) > 1:
+                lines = [ '(%s,' % lines[0] ] + [ ' %s,' % l for l in lines[1:-1] ] + [ ' %s)' % lines[-1] ]
             else:
-                script += 'echo "('
-                for pi in self.overriding_projects:
-                    script += '%s,"\necho " '%(pi)
-                script += '%s'%(self.project_info)
-                for pi in self.runtime_projects:
-                    script += ',"\necho " %s'%(pi)
-                script += ')"\n'
+                lines[0] = '(taken from %s)' % lines[0]
+            messages += lines
+                
         else:
-            output += '\necho Build-time environment for %s %s ready.'%(self.project_info.name,
-                                                                        self.project_info.version)
+            messages.append('\necho Build-time environment for %s %s ready.' % \
+                            (self.project_info.name, self.project_info.version))
         
         output_script = env.gen_script(self.shell)
-        # I have to touch a file to tell the release manager which version of the project I'm using
-        output_script += self._touch_project_logfiles()
         output_script += script
+        for m in messages:
+            output_script += 'echo "%s"\n' % m
+        #I have to touch a file to tell the release manager which version of the project I'm using
+        output_script += self._touch_project_logfiles()
+        
         self._verbose("########## done ##########")
         
         # as very last step, generate the output script to be sourced by the wrapper
