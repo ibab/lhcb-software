@@ -705,8 +705,8 @@ class ConfigurationDB(DataBase):
                             update lhcb_lg_devices set serialnb = serialnbspare where serialnb = serialnbdevice;
                             update lhcb_hwport_properties set macaddress = macaddress_spare where macaddress = macaddress_device;
                             update lhcb_hwport_properties set serialnb = serialnbspare where serialnb = serialnbdevice;
-                            update LHCB_DEVICE_HISTORY set serialnb = serialnbspare where serialnb = serialnbdevice and device_status = 'IN_USE';
-                            update LHCB_DEVICE_HISTORY set serialnb = serialnbdevice where serialnb = serialnbspare and device_status = 'SPARE';
+                            update LHCB_DEVICE_HISTORY set serialnb = serialnbspare, user_comment = 'was swapped with '||serialnbdevice where serialnb = serialnbdevice and device_status = 'IN_USE';
+                            update LHCB_DEVICE_HISTORY set serialnb = serialnbdevice, user_comment = 'was swapped with '||serialnbspare where serialnb = serialnbspare and device_status = 'SPARE';
                             COMMIT;
                         END;
                         """

@@ -48,7 +48,7 @@ class Tell1:
     def insert(self,db,first,last):
         db.InsertMultipleFunctionalDevices(str(self.system),str(self.devicename),
         "ROBoard",1,0,self.sn,str(self.hwtyp),str(self.responsible),str(self.loc),
-        "First Try to enter Readout Boards","none",first,last)
+        "Tell1 created","none",first,last)
 
     def insports(self,db):
         controlport = IntVec()
