@@ -1,6 +1,6 @@
-! $Id: release.notes,v 1.36 2008-08-04 09:55:23 ibelyaev Exp $ 
+! $Id: release.notes,v 1.37 2008-08-04 11:00:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.36 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.37 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
@@ -9,8 +9,12 @@
 
 ! 2008-08-04 - Vanya BELYAEV
 
- - fix bugs & warnings 
+ - src/LoKi_CCTest.cpp, options/LoKi_CCTest.py
 
+      simple test for LoKi::CC::cc utility 
+
+ - fix bugs & warnings 
+ 
 ! 2008-07-15 - Vanya BELYAEV
 
  - add new example LoKi_DCCheck
