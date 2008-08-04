@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.13 2008-08-04 17:51:18 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.14 2008-08-04 20:41:14 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -573,7 +573,7 @@ def FixProjectCase(project):
     for p in project_names:
         if p.lower() == proj:
             return p
-    return p
+    return project
 
 ########################################################################
 # Main class
@@ -950,11 +950,13 @@ class SetupProject:
     def _ask_version(self, versions):
         # ask for a version
         versions = SortVersions([ v[1] for v in versions ])
+        # string representations, to handle correctly projects without version
+        str_versions = [ str(v) for v in versions ]
         ans = None
         while not ans:
             self._logger.write(self._logger.ALWAYS,
                                "Please enter your choice (%s q[uit] [%s]): "%
-                               (" ".join(versions),versions[-1]))
+                               (" ".join(str_versions),str_versions[-1]))
             #self._always("Please enter your choice (%s q[uit] [%s]): "%
             #             (" ".join(versions),versions[-1]))
             ans = sys.stdin.readline().strip()
@@ -962,11 +964,14 @@ class SetupProject:
                 ans = versions[-1]
             elif ans.lower() in [ 'q', 'quit' ]:
                 return "quit"
-            elif ans not in versions:
+            elif ans not in str_versions:
                 self._always("Version '%s' not valid!"%ans)
                 ans = None
         if ans:
             self._always("Trying version '%s'"%ans)
+            # handle project without version
+            if ans == 'None' and None in versions:
+                ans = None
         return ans
     
     def _touch_project_logfiles(self):
@@ -974,7 +979,8 @@ class SetupProject:
         if self.shell in [ 'csh', 'sh' ]:
             # I have to touch a file to tell the release manager which version of the project I'm using
             if 'LHCBHOME' in os.environ and 'USER' in os.environ \
-                and lhcb_style_version.match(self.project_info.version): # I do not want to record non-standard versions
+                and self.project_info.version \
+                and lhcb_style_version.match(self.project_info.version): # I do not want to record non-standard or no versions
                 dirname = os.path.join(os.environ['LHCBHOME'],'project','logfiles')
                 if os.path.isdir(dirname):
                     return 'touch %s/%s_%s_%s\n'%(dirname,
@@ -997,8 +1003,12 @@ class SetupProject:
         if not self.external_only and self.project_info.sys:
             # if we were not asked only for external and the Sys package exists,
             # we use it
-            req.write("use %s %s\n"%(self.project_info.sys,
-                                     self.project_info.version))
+            req.write("use %s" % self.project_info.sys)
+            # this is to handle projects without version
+            if self.project_info.version:
+                req.write(" %s\n" % self.project_info.version)
+            else:
+                req.write(" v*\n")
         
         # add user specified tags
         for t in self.tag_add:
@@ -1284,8 +1294,9 @@ class SetupProject:
                 messages.append("Using CMTPROJECTPATH = '%(CMTPROJECTPATH)s'" % env)
             else:
                 messages.append("Using CMTPATH = '%s'" % CMTPATH)
-            messages.append('Environment for %s %s ready.'%(self.project_info.name,
-                                                            self.project_info.version))
+            tmps = self.project_info.name
+            if self.project_info.version: tmps += " %s" % self.project_info.version
+            messages.append('Environment for %s ready.' % tmps)
             
             # collect project infos descriptions
             lines = []
@@ -1302,8 +1313,9 @@ class SetupProject:
             messages += lines
                 
         else:
-            messages.append('Build-time environment for %s %s ready.' % \
-                            (self.project_info.name, self.project_info.version))
+            tmps = self.project_info.name
+            if self.project_info.version: tmps += " %s" % self.project_info.version
+            messages.append('Build-time environment for %s ready.' % tmps)
             # create the user project if User_release_area is defined, it is a
             # project with InstallArea and the directory doesn't exist yet.
             if self.user_area:
