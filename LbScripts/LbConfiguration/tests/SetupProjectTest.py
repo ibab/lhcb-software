@@ -18,9 +18,12 @@ def search_string(output,s):
 def proj_not_found(output, project="DummyProject"):
     return output.startswith("Cannot find project '%s'" % project)
 
-def project_configured(output,project,version):
+def project_configured(output, project, version = None):
     #print output
-    return search_string(output,"Environment for %s %s ready."%(project,version)) >= 0
+    tmps = project
+    if version: tmps += " %s" % version
+    #print ("Environment for %s ready." % tmps), output
+    return ("Environment for %s ready." % tmps) in output
 
 def get_all_versions(project):
     versions = SetupProject.FindProjectVersions(project, SetupProject._defaultSearchPath())
@@ -32,11 +35,12 @@ else:
     _shell = "sh"
 
 class SetupProjectTestCase(unittest.TestCase):
-    def _check_env(self,output,project,version,withsys=True):
+    def _check_env(self, output, project, version, withsys=True, main=True):
         self.assert_(re.compile('PATH=.*%s'%project.upper()).search(output) is not None)
         if withsys:
             self.assert_(re.compile('%sSYSROOT=.*%s'%(project.upper(),version)).search(output) is not None)
-        self.assert_(project_configured(output,project,version))
+        if main:
+            self.assert_(project_configured(output,project,version))
 
     def test_010_mkdtemp(self):
         """mkdtemp
@@ -335,7 +339,7 @@ class SetupProjectTestCase(unittest.TestCase):
         s = x[1].read()
         
         self._check_env(s, "Brunel", v)
-        self._check_env(s, "Online", v, withsys = False)
+        self._check_env(s, "Online", vo, withsys = False, main = False)
 
     def test_090_main(self):
         """main (Brunel with wrong ext)
@@ -403,7 +407,7 @@ class SetupProjectTestCase(unittest.TestCase):
         s = x[1].read()
         
         self._check_env(s,"Brunel",v)
-        self._check_env(s, "Online", v, withsys = False)
+        self._check_env(s, "Online", vo, withsys = False, main = False)
         
     def test_130_main(self):
         """main (Brunel explicit bad version)
@@ -476,7 +480,6 @@ class SetupProjectTestCase(unittest.TestCase):
         """
 
         l = get_all_versions("Brunel")
-        l = map(lambda x: x[0],l)
         
         x = os.popen3("python SetupProject.py --shell=%s Brunel --ask"%_shell)
 
@@ -590,6 +593,9 @@ class SetupProjectTestCase(unittest.TestCase):
 package BrunelSys
 version v999r999
 """)
+            os.mkdir(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt'))
+            open(os.path.join(tmp_dir,'BRUNEL','BRUNEL_v999r999','cmt','project.cmt'),"w").write("project Brunel\n")
+            
             env['LHCBDEV'] = tmp_dir
             # get it from LHCBDEV
             x = os.popen4("python SetupProject.py --shell=%s --ignore-missing --dev Brunel"%_shell)
@@ -665,6 +671,68 @@ version v999r999
         finally:
             SetupProject.removeall(tmp_dir)
 
+    def _createFakeProject(self, name = "TestProject", version = None, tmp_dir = None):
+        if not tmp_dir:
+            tmp_dir = SetupProject.mkdtemp()
+        old = os.getcwd()
+        os.chdir(tmp_dir)
+        if version is None:
+            x = os.popen4("cmt create_project %s" % name)
+            x[1].read()
+            os.chdir(os.path.join(tmp_dir,name))
+            version = "v1r0" # just a default value
+        else:
+            x = os.popen4("cmt create_project %s %s_%s" % (name.upper(), name.upper(), version))
+            x[1].read()
+            os.chdir(os.path.join(tmp_dir,name.upper(),"%s_%s"%(name.upper(), version)))
+        x = os.popen4("cmt create %sSys %s" % (name, version))
+        x[1].read()
+        os.chdir(old)
+        return tmp_dir
+        
+    def test_400_main(self):
+        """main (no-version project, no explicit version)
+        """
+        
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = self._createFakeProject()
+        self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
+        env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
+        try:
+            x = os.popen4("python SetupProject.py --shell=%s --disable-CASTOR TestProject"%_shell)
+            s = x[1].read()
+            self.assert_(project_configured(s, "TestProject", None))
+        finally:
+            SetupProject.removeall(tmp_dir)
+        
+    def test_410_main(self):
+        """main (no-version project, ask version)
+        """
+        
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = self._createFakeProject()
+        self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
+        env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
+        
+        try:
+            x = os.popen3("python SetupProject.py --shell=%s --disable-CASTOR TestProject --ask"%_shell)
     
+            self.assertEquals("Please enter",x[2].read(12))
+    
+            # read up to the prompt
+            while x[2].read(1) != ':':
+                pass
+            x[2].read(1) # eat the space char
+    
+            # quit
+            x[0].write("None\n")
+            x[0].flush()
+
+            s = x[1].read()
+            self.assert_(project_configured(s, "TestProject", None))
+        finally:
+            SetupProject.removeall(tmp_dir)
+
+
 if __name__ == '__main__':
     unittest.main()
