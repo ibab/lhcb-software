@@ -8,10 +8,10 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/HltWriteSeq" };
 HltWriteSeq.MeasureTime = true;
 
 HltWriteSeq.Members += {"HltDecReportsMaker","HltSelReportsMaker","HltDecReportsWriter","HltSelReportsWriter"};
-HltDecReportsMaker.OutputLevel            = 1;
-HltDecReportsWriter.OutputLevel            = 1;
-HltSelReportsMaker.OutputLevel            = 1;
-HltSelReportsWriter.OutputLevel            = 1;
+HltDecReportsMaker.OutputLevel            = 3;
+HltDecReportsWriter.OutputLevel            = 3;
+HltSelReportsMaker.OutputLevel            = 3;
+HltSelReportsWriter.OutputLevel            = 3;
 
 
 // 0=infinity 1=always 100=every 100th event etc.

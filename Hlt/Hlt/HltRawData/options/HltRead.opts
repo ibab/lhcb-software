@@ -7,11 +7,11 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/HltReadSeq" };
 HltReadSeq.MeasureTime = true;
 
 HltReadSeq.Members += {"HltDecReportsReader","HltSelReportsReader"};
-HltDecReportsReader.OutputLevel = 1;
-HltSelReportsReader.OutputLevel = 1;
+HltDecReportsReader.OutputLevel = 3;
+HltSelReportsReader.OutputLevel = 3;
 
 // redirect TES output to non-default location if run HltRead in the same job as HltWrite
-HltDecReportsReader.OutputHltDecReportsLocation = "Hlt/FromRawEvent/DecReports";
-HltSelReportsReader.OutputHltSelReportsLocation = "Hlt/FromRawEvent/SelReports";
+// HltDecReportsReader.OutputHltDecReportsLocation = "Hlt/FromRawEvent/DecReports";
+// HltSelReportsReader.OutputHltSelReportsLocation = "Hlt/FromRawEvent/SelReports";
 
 
