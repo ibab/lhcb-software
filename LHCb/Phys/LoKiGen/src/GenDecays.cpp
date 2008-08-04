@@ -1,4 +1,4 @@
-// $Id: GenDecays.cpp,v 1.2 2008-07-09 16:19:16 ibelyaev Exp $
+// $Id: GenDecays.cpp,v 1.3 2008-08-04 14:06:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -436,10 +436,11 @@ LoKi::Decays::Trees::GenExclusive::ok ( const HepMC::GenParticle* p ) const
  */
 // ============================================================================
 LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LoKi::Decays::iNode&                         mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                     alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+( const LoKi::Decays::iNode&                         mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -448,33 +449,10 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  */
 // ============================================================================
 LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LoKi::Decays::iNode&                        mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        ) 
-  : LoKi::Decays::Trees::GenExclusive( mother , alg ) 
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param children the list of daughter substrees 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const std::string&                                 mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                     alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
-{}
-// ============================================================================
-/*  constructor from the node (mother), subtrees and "final" flag
- *  @param mother the mother node 
- *  @param alg the matching algorithm 
- */
-// ============================================================================
-LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const std::string&                                mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        ) 
-  : LoKi::Decays::Trees::GenExclusive( mother , alg ) 
+( const LoKi::Decays::iNode&                        mother , 
+  const LoKi::Decays::Trees::Alg                    alg    ,
+  const LoKi::Decays::Trees::Oscillation            osc    )
+  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -484,10 +462,11 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  */
 // ============================================================================
 LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LHCb::ParticleID&                            mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::Alg                     alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+( const std::string&                                 mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::Alg                     alg      ,  
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
 {}
 // ============================================================================
 /*  constructor from the node (mother), subtrees and "final" flag
@@ -496,9 +475,36 @@ LoKi::Decays::Trees::GenInclusive::GenInclusive
  */
 // ============================================================================
 LoKi::Decays::Trees::GenInclusive::GenInclusive
-( const LHCb::ParticleID&                           mother     , 
-  const LoKi::Decays::Trees::Alg                    alg        ) 
-  : LoKi::Decays::Trees::GenExclusive( mother , alg ) 
+( const std::string&                                mother , 
+  const LoKi::Decays::Trees::Alg                    alg    , 
+  const LoKi::Decays::Trees::Oscillation            osc    )
+  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
+{}
+// ============================================================================
+/*  constructor from the node (mother), subtrees and "final" flag
+ *  @param mother the mother node 
+ *  @param children the list of daughter substrees 
+ *  @param alg the matching algorithm 
+ */
+// ============================================================================
+LoKi::Decays::Trees::GenInclusive::GenInclusive
+( const LHCb::ParticleID&                            mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::Alg                     alg      ,    
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
+{}
+// ============================================================================
+/*  constructor from the node (mother), subtrees and "final" flag
+ *  @param mother the mother node 
+ *  @param alg the matching algorithm 
+ */
+// ============================================================================
+LoKi::Decays::Trees::GenInclusive::GenInclusive
+( const LHCb::ParticleID&                           mother , 
+  const LoKi::Decays::Trees::Alg                    alg    ,
+  const LoKi::Decays::Trees::Oscillation            osc    )
+  : LoKi::Decays::Trees::GenExclusive( mother , alg , osc ) 
 {}
 // ============================================================================
 // constructor  from GenExclusive 
@@ -612,11 +618,12 @@ LoKi::Decays::Trees::GenInclusive::fillStream ( std::ostream& s ) const
 // GENOPTIONAL
 // ============================================================================
 LoKi::Decays::Trees::GenOptional::GenOptional
-( const LoKi::Decays::iNode&                         mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional   ,
-  const Alg                                          alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg )
+( const LoKi::Decays::iNode&                         mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
@@ -624,8 +631,9 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const LoKi::Decays::iNode&                             mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Alg                                              alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
@@ -633,17 +641,19 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const LoKi::Decays::iNode&                         mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
 LoKi::Decays::Trees::GenOptional::GenOptional
-( const std::string&                                 mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional   ,
-  const Alg                                          alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg )
+( const std::string&                                 mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
@@ -651,8 +661,9 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const std::string&                                     mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Alg                                              alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
@@ -660,17 +671,19 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const std::string&                                 mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
 LoKi::Decays::Trees::GenOptional::GenOptional
-( const LHCb::ParticleID&                            mother     , 
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& children   ,
-  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional   ,
-  const Alg                                          alg        ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg )
+( const LHCb::ParticleID&                            mother   , 
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
+  const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc )
   , m_optional ( optional ) 
 {}
 // ============================================================================
@@ -678,8 +691,9 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const LHCb::ParticleID&                                mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const Alg                                              alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , optional ) 
 {}
 // ============================================================================
@@ -687,8 +701,9 @@ LoKi::Decays::Trees::GenOptional::GenOptional
 ( const LHCb::ParticleID&                            mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      ) 
-  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg ) 
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother , children , alg , osc ) 
   , m_optional ( 1 , GenExclusive ( optional ) ) 
 {}
 // ============================================================================
@@ -910,8 +925,9 @@ void LoKi::Decays::Trees::GenOptional::setOptional
 LoKi::Decays::Trees::GenPhotos::GenPhotos
 ( const LoKi::Decays::iNode&                      mother   , 
   const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg ) 
+  const LoKi::Decays::Trees::Alg                  alg      ,
+  const LoKi::Decays::Trees::Oscillation          osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
@@ -920,8 +936,9 @@ LoKi::Decays::Trees::GenPhotos::GenPhotos
 LoKi::Decays::Trees::GenPhotos::GenPhotos
 ( const std::string&                              mother   , 
   const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg ) 
+  const LoKi::Decays::Trees::Alg                  alg      ,
+  const LoKi::Decays::Trees::Oscillation          osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
   , m_photon    ( "gamma"   )
 {}
 // ============================================================================
@@ -930,9 +947,10 @@ LoKi::Decays::Trees::GenPhotos::GenPhotos
 LoKi::Decays::Trees::GenPhotos::GenPhotos
 ( const LHCb::ParticleID&                         mother   , 
   const LoKi::Decays::Trees::GenPhotos::SubTrees& children ,
-  const LoKi::Decays::Trees::Alg                  alg      )
-  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg ) 
-  , m_photon    ( "gamma"   )
+  const LoKi::Decays::Trees::Alg                  alg      ,
+  const LoKi::Decays::Trees::Oscillation          osc      )
+  : LoKi::Decays::Trees::GenExclusive ( mother    , children , alg , osc ) 
+    , m_photon    ( "gamma"   )
 {}
 // ============================================================================
 LoKi::Decays::Trees::GenPhotos::GenPhotos
@@ -1030,8 +1048,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LoKi::Decays::iNode&                         mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1039,8 +1058,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LoKi::Decays::iNode&                         mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1048,8 +1068,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LoKi::Decays::iNode&                             mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1057,8 +1078,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                 mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1066,8 +1088,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                 mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1075,8 +1098,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const std::string&                                     mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1084,8 +1108,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                            mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::Trees::GenExclusive::SubTrees& optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1093,8 +1118,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                            mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees& children ,
   const LoKi::Decays::iNode&                         optional ,
-  const LoKi::Decays::Trees::Alg                     alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                     alg      ,
+  const LoKi::Decays::Trees::Oscillation             osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================
@@ -1102,8 +1128,9 @@ LoKi::Decays::Trees::GenPhotosOptional::GenPhotosOptional
 ( const LHCb::ParticleID&                                mother   , 
   const LoKi::Decays::Trees::GenExclusive::SubTrees&     children ,
   const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-  const LoKi::Decays::Trees::Alg                         alg      )
-  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg )
+  const LoKi::Decays::Trees::Alg                         alg      ,
+  const LoKi::Decays::Trees::Oscillation                 osc      )
+  : LoKi::Decays::Trees::GenOptional ( mother , children , optional , alg , osc )
   , m_photon ( "gamma")  
 {}
 // ============================================================================

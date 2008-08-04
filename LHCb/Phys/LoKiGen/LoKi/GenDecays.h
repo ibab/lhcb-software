@@ -1,4 +1,4 @@
-// $Id: GenDecays.h,v 1.2 2008-07-09 16:19:16 ibelyaev Exp $
+// $Id: GenDecays.h,v 1.3 2008-08-04 14:06:16 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_GENDECAYS_H 
 #define LOKI_GENDECAYS_H 1
@@ -34,7 +34,197 @@ namespace LoKi
        *  subtrees ("children"). Essentially it represent also the 
        *  "semi-exclusive" decay (as well as any decay with the fixed 
        *  number of components for comparisons).
+       *
+       *  Define the simple regular decay, e.g. \f$ B^0 \to \pi^+ \pi^- \f$:
+       *
+       *  @code
+       *
+       *   // " B0 -> pi+ pi- "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"    ,     // the parent  
+       *               chidren ) ;   // children 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-in-sections", e.g. all following 
+       *  decays will be correctly matched with the descriptor 
+       *  <c>" B0 --> pi+ pi- pi0 "</c>":
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^-   \right) 
+       *               \left( \pi^0  \to \gamma \gamma \right) \f$
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0   \right) \pi^-\f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0   \right) \pi^+\f$ 
+       *
+       *  @code 
+       *
+       *   // " B0 --> pi+ pi- pi0 "
+       * 
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"            ,   // parent  
+       *               chidren         ,   // children 
+       *               Trees::Sections ) ; // matching algorithm 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-with-oscillation". Here the mother particle
+       *  is required to oscillate before the decay, e.g. 
+       *  \f$ B^0 \to \bar{B}^0 \to \pi^+ \pi^- \f$:
+       *
+       *  @code
+       *
+       *   // " [B0]os -> pi+ pi- "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"              ,   // parent  
+       *               chidren           ,   // children 
+       *               Trees::Daughetrs  ,   // matching algorithm
+       *               Trees::Oscillated ) ; // oscillation flag 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-without-oscillations":
+       *
+       *  @code 
+       *
+       *   // " [B0]nos --> pi+ pi- pi0 "
+       * 
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"                 ,   // parent  
+       *               chidren              ,   // children 
+       *               Trees::Sections      ,   // matching algorithm 
+       *               Trees::NotOscillated ) ; // oscillation flag 
+       *
+       *  @endcode 
+       *
+       *
+       *  Define the complex decay, e.g.
+       *  \f$  B^0 \to \bar{B}^0 \to 
+       *    \left( \rho^0 \to \pi^+ \pi^- \right) \pi^0 \f$:
        *  
+       *  @code 
+       *
+       *   // " [B0]os -> ( rho(770)0 -> pi+ pi- ) pi0 "
+       *
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenExclusive rho
+       *             ( "rho(770)0"          ,   // parent  
+       *               chidren              ) ; // children 
+       *   
+       *   children.clear() 
+       *   children.push_back ( rho ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"                 ,   // parent  
+       *               chidren              ,   // children 
+       *               Trees::Daughters     ,   // matching algorithm 
+       *               Trees::NotOscillated ) ; // oscillation flag 
+       *  @endcode    
+       *
+       *  Define "semi-inclusive" decays, e.g. 
+       *  \f$ B^0 \to X^+ X^- \f$, where 
+       *  \f$X^+\f$ and \f$X^-\f$ are any posively and negatively 
+       *  charged particles:
+       *
+       *  @code 
+       *
+       *   // " B0 -> X+ X- "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( Nodes::Positive () ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( Nodes::Negative () ) ) ;
+       *
+       *   Trees::GenExclusive decay 
+       *             ( "B0"    ,     // the parent  
+       *               chidren ) ;   // chidlren 
+       *
+       *  @endcode 
+       *
+       *  The <c>algorithm</c> is defined by the length  of the arrow:
+       *  
+       *    - <c> "->"</c> the decay is defined in terms of direct daughters 
+       *    - <c>"-->"</c> the decay is defined in terms of "Sections"
+       *
+       *  For some decays useful shortcuts could be created:
+       *  @code
+       *
+       *   // " B0 -> pi+ pi- "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   Trees::GenExclusive decay ( "B0" ) ;
+       *   decay += "pi+" ;
+       *   decay += "pi-" ;
+       *
+       *  @endcode 
+       *  Or 
+       *  @code
+       *
+       *   // " [B0]os --> pi+ pi- pi0"
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   Trees::GenExclusive decay ( "B0"              , 
+       *                               Trees::Sections   , 
+       *                               Trees::Oscilalted ) ;
+       *   decay += "pi+" ;
+       *   decay += "pi-" ;
+       *   decay += "pi0" ;
+       *
+       *  @endcode 
+       *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-06-10
        */
@@ -227,7 +417,7 @@ namespace LoKi
         SubTrees::const_iterator  childEnd   () const { return m_children.end   () ; }
         // ====================================================================
         SubTrees::const_reference front () const { return m_children.front () ; }
-        SubTrees::const_reference back  () const { return m_children.back  () ; }        
+        SubTrees::const_reference back  () const { return m_children.back  () ; }
         // ====================================================================
         size_t nChildren () const { return m_children.size() ; }    
         // ====================================================================
@@ -270,6 +460,131 @@ namespace LoKi
        *  Simple sub tree which consists of the node ("mother") and 
        *  subtrees ("children"). Essentially it represent the 
        *  inclusive decays.
+       *
+       *  The inclusive decays are identified with ellipses: "..." ;
+       *
+       *  Define the simple regular decay, e.g. 
+       *   \f$ B^0 \to \pi^+ \pi^- + ... \f$:
+       *  @code
+       *
+       *   // " B0 -> pi+ pi- ... "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenInclusive decay 
+       *             ( "B0"    ,     // the parent  
+       *               chidren ) ;   // children 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-in-sections", e.g. all following 
+       *  decays will be correctly matched with the descriptor 
+       *  <c>" B0 --> pi+ pi- pi0 ... "</c>":
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^- \right) 
+       *               \left( \pi^0  \to \gamma \gamma  \right) + ...         \f$
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^- + ... \right) 
+       *               \left( \pi^0  \to \gamma \gamma  \right)               \f$
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0 + ...  \right) \pi^-  \f$ 
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0 \right) \pi^- + ...   \f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0 + ... \right) \pi^+   \f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0   \right) \pi^+ + ... \f$ 
+       *    - \f$ B^0 \to \pi^+ \pi^- \pi^0 + ... \f$ 
+       *
+       *  @code 
+       *
+       *   // " B0 --> pi+ pi- pi0 ... "
+       * 
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenInclusive decay 
+       *             ( "B0"            ,   // parent  
+       *               chidren         ,   // children 
+       *               Trees::Sections ) ; // matching algorithm 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-with-oscillation". Here the mother particle
+       *  is required to oscillate before the decay, e.g. 
+       *  \f$ B^0 \to \bar{B}^0 \to \pi^+ \pi^- + ... \f$:
+       *
+       *  @code
+       *
+       *   // " [B0]os -> pi+ pi- ... "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenInclusive decay 
+       *             ( "B0"              ,   // parent  
+       *               chidren           ,   // children 
+       *               Trees::Daughetrs  ,   // matching algorithm
+       *               Trees::Oscillated ) ; // oscillation flag 
+       *
+       *  @endcode 
+       *
+       *  Define the "decay-without-oscillations":
+       *
+       *  @code 
+       *
+       *   // " [B0]nos --> pi+ pi- pi0 ... "
+       * 
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenInclusive decay 
+       *             ( "B0"                 ,   // parent  
+       *               chidren              ,   // children 
+       *               Trees::Sections      ,   // matching algorithm 
+       *               Trees::NotOscillated ) ; // oscillation flag 
+       *
+       *  @endcode 
+       *
+       *  The <c>algorithm</c> is defined by the length  of the arrow:
+       *  
+       *    - <c> "->"</c> the decay is defined in terms of direct daughters 
+       *    - <c>"-->"</c> the decay is defined in terms of "Sections"
+       *
+       *  It is rather convinient to create the inclusive decay 
+       *  from the corresponding regular decay:
+       *
+       *  @code 
+       *  
+       *   using namespace LoKi::Decays ; 
+       *
+       *   const Trees::GenExclusive& regular = ... ;
+       * 
+       *   const Trees::GenInclusive decay ( regular ) ;
+       *
+       *  @endcode 
+       *  
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-06-10
        */
@@ -281,13 +596,13 @@ namespace LoKi
          *  @param mother the mother node 
          *  @param children the list of daughter substrees 
          *  @param alg the matching algorithm 
-         *  @param decayOnly the flag to search only through decay products 
-         *  @param oscillated check the oscilaltion flag
+         *  @param osc  the oscilaltion flag
          */
         GenInclusive
         ( const LoKi::Decays::iNode& mother                 , 
           const SubTrees&            children               ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                  alg        = Daughters , 
+          const Oscillation          osc        = Undefined ) ;
         /** constructor from the node (mother), subtrees and "final" flag
          *  @param mother the mother node 
          *  @param alg the matching algorithm 
@@ -295,18 +610,19 @@ namespace LoKi
          */
         GenInclusive
         ( const LoKi::Decays::iNode& mother                 , 
-          const Alg                  alg        = Daughters ) ;
+          const Alg                  alg        = Daughters ,
+          const Oscillation          osc        = Undefined ) ;
         /** constructor from the node (mother), subtrees and "final" flag
          *  @param mother the mother node 
          *  @param children the list of daughter substrees 
          *  @param alg the matching algorithm 
-         *  @param decayOnly the flag to search only through decay products 
-         *  @param oscillated check the oscilaltion flag
+         *  @param osc the oscilaltion flag
          */
         GenInclusive
         ( const std::string&         mother                 , 
           const SubTrees&            children               ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                  alg        = Daughters ,
+          const Oscillation          osc        = Undefined ) ;
         /** constructor from the node (mother), subtrees and "final" flag
          *  @param mother the mother node 
          *  @param alg the matching algorithm 
@@ -314,18 +630,19 @@ namespace LoKi
          */
         GenInclusive
         ( const std::string&         mother                 , 
-          const Alg                  alg        = Daughters ) ;
+          const Alg                  alg        = Daughters ,
+          const Oscillation          osc        = Undefined ) ;
         /** constructor from the node (mother), subtrees and "final" flag
          *  @param mother the mother node 
          *  @param children the list of daughter substrees 
          *  @param alg the matching algorithm 
-         *  @param decayOnly the flag to search only through decay products 
-         *  @param oscillated check the oscilaltion flag
+         *  @param osc the oscilaltion flag
          */
         GenInclusive
         ( const LHCb::ParticleID&    mother                 , 
           const SubTrees&            children               ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                  alg        = Daughters ,
+          const Oscillation          osc        = Undefined ) ;
         /** constructor from the node (mother), subtrees and "final" flag
          *  @param mother the mother node 
          *  @param alg the matching algorithm 
@@ -333,11 +650,10 @@ namespace LoKi
          */
         GenInclusive
         ( const LHCb::ParticleID&    mother                 , 
-          const Alg                  alg        = Daughters ) ;
-        /** constructor from the node (mother), subtrees and "final" flag
+          const Alg                  alg        = Daughters ,
+          const Oscillation          osc        = Undefined ) ;
+        /** constructor from exclusive decay
          *  @param mother the mother node 
-         *  @param alg the matching algorithm 
-         *  @param osc require the oscillation flag for mother 
          */
         GenInclusive ( const GenExclusive& right ) ;
         /// MANDATORY: virtual destructor 
@@ -386,8 +702,65 @@ namespace LoKi
       // ======================================================================
       /** @class GenOptional
        *  Simple sub tree which consists of the node ("mother") and 
-       *  subtrees ("children") and optional nodes. Essentially it represent the 
-       *  decays with optional particles 
+       *  subtrees ("children") and optional nodes. 
+       *  Essentially it represent the decays with "optional" particles.
+       * 
+       *  
+       *  Define the simple regular decay withoptional components, e.g.
+       *     - \f$ B^0 \to \pi^+ \pi^-       \f$
+       *     - \f$ B^0 \to \pi^+ \pi^- \pi^0 \f$
+       *
+       *  @code
+       *
+       *   // " B0 -> pi+ pi-  { pi0 } "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *   typedef Trees::GenExclusive::SubTrees    Optional ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *   
+       *   // define optional 
+       *   Optional optional ;
+       *   optional.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   Trees::GenOptional decay 
+       *             ( "B0"     ,     // the parent  
+       *               chidren  ,     // children 
+       *               optional ) ;   // optional 
+       *
+       *  @endcode 
+       *
+       *  The <c>algorithm</c> is defined by the length  of the arrow:
+       *  
+       *    - <c> "->"</c> the decay is defined in terms of direct daughters 
+       *    - <c>"-->"</c> the decay is defined in terms of "Sections"
+       *
+       *  The most convinient way to create the "optional" decay is from 
+       *  the regular decay:
+       *  
+       *  @code
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees  Optional ;
+       *
+       *   // define optional 
+       *   Optional optional ;
+       *   optional.push_back ( Trees::GenExclusive ( "pi0" ) ) ;
+       *
+       *   const Trees::GenExclusive& regular = ... ; 
+       *  
+       *   Trees::GenOptional decay 
+       *             ( regular  , 
+       *               optional ) ;   // optional 
+       *
+       *  @endcode
+       *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-13
        */
@@ -397,63 +770,72 @@ namespace LoKi
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
-        ( const LoKi::Decays::iNode& mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LoKi::Decays::iNode& mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
         ( const LoKi::Decays::iNode&                             mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                             alg        = Daughters  ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenOptional
         ( const LoKi::Decays::iNode& mother                             , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters , 
+          const Oscillation          osc      = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
-        ( const std::string&         mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const std::string&         mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
         ( const std::string&                                     mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                             alg        = Daughters  ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenOptional
-        ( const std::string&         mother                             , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const std::string&         mother               , 
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
-        ( const LHCb::ParticleID&    mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LHCb::ParticleID&    mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenOptional
         ( const LHCb::ParticleID&                                mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                             alg        = Daughters  ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenOptional
-        ( const LHCb::ParticleID&    mother                             , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LHCb::ParticleID&    mother               , 
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor  from GenExclusive & optional stuff
         GenOptional 
         ( const GenExclusive& right    ,
@@ -552,6 +934,47 @@ namespace LoKi
       // ======================================================================
       /** @class GenPhotos
        *  Simple sub-tree which can contains an undefined number of "photons"
+       *
+       *
+       *  Define the decay with undefined number of photons, e.g.
+       *  \f$ B^0 \to \pi^+ \pi^- n\gamma \f$:
+       *  @code 
+       *
+       *   // " B0 => pi+ pi- "
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   typedef Trees::GenExclusive::SubTrees    Children ;
+       *
+       *   // define daughters:
+       *   Children children ;
+       *   children.push_back ( Trees::GenExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::GenExclusive ( "pi-" ) ) ;
+       *
+       *   Trees::GenPhotos decay 
+       *             ( "B0"    ,     // the parent  
+       *               chidren ) ;   // children 
+       *
+       *  @endcode 
+       *  
+       *  The <c>algorithm</c> is defined by the length  of the arrow:
+       *  
+       *    - <c> "=>"</c> the decay is defined in terms of direct daughters 
+       *    - <c>"==>"</c> the decay is defined in terms of "Sections"
+       *
+       *  The most convinient way to create the Photos-aware decay 
+       *  is from the regular one:
+       *
+       *  @code 
+       * 
+       *   using namespace LoKi::Decays ; 
+       *
+       *   const Trees::GenExclusive& regular = ... ;
+       *  
+       *   const Trees::GenPhotons decay ( regular ) ;
+       *
+       *  @endcode 
+       *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-21
        */
@@ -561,20 +984,23 @@ namespace LoKi
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenPhotos
-        ( const LoKi::Decays::iNode&     mother                 , 
-          const SubTrees&                children               ,
-          const LoKi::Decays::Trees::Alg alg        = Daughters ) ;
+        ( const LoKi::Decays::iNode&     mother                  , 
+          const SubTrees&                children                ,
+          const LoKi::Decays::Trees::Alg alg        = Daughters  ,
+          const Oscillation              oscillation = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotos
-        ( const std::string&             mother                 , 
-          const SubTrees&                children               ,
-          const LoKi::Decays::Trees::Alg alg        = Daughters ) ;
+        ( const std::string&             mother                  , 
+          const SubTrees&                children                ,
+          const LoKi::Decays::Trees::Alg alg         = Daughters ,
+          const Oscillation              oscillation = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotos
-        ( const LHCb::ParticleID&        mother                 , 
-          const SubTrees&                children               ,
-          const LoKi::Decays::Trees::Alg alg        = Daughters ) ;
-        /// constcrutor from GenExclusive 
+        ( const LHCb::ParticleID&        mother                  , 
+          const SubTrees&                children                ,
+          const LoKi::Decays::Trees::Alg alg         = Daughters ,
+          const Oscillation              oscillation = Undefined ) ;
+        /// constructor from GenExclusive 
         GenPhotos ( const GenExclusive& right ) ;
         /// MANDATORY: virtual destructor 
         virtual ~GenPhotos () {}
@@ -631,6 +1057,26 @@ namespace LoKi
        *  Simple sub tree which consists of the node ("mother") and 
        *  subtrees ("children") and optional nodes. Essentially it represent the 
        *  decays with optional particles 
+       *
+       *  The <c>algorithm</c> is defined by the length  of the arrow:
+       *  
+       *    - <c> "=>"</c> the decay is defined in terms of direct daughters 
+       *    - <c>"==>"</c> the decay is defined in terms of "Sections"
+       *
+       *  The most convinient way to define "photos-aware" decay with the 
+       *  optional components if from the regular decay woth otional 
+       *  components: 
+       *
+       *  @code
+       *
+       *   using namespace LoKi::Decays ; 
+       *
+       *   const Trees::GenOptional& regular = ... ;
+       *
+       *   const Trees::GenPhotonsOptional decay ( regular ) ;
+       *
+       *  @endcode
+       *       
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-06-10
        */
@@ -640,60 +1086,69 @@ namespace LoKi
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const LoKi::Decays::iNode& mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LoKi::Decays::iNode& mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const LoKi::Decays::iNode& mother                 , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LoKi::Decays::iNode& mother               , 
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
         ( const LoKi::Decays::iNode&                             mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const std::string&         mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const std::string&         mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const std::string&         mother                 , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const std::string&         mother               , 
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
         ( const std::string&                                     mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         // ====================================================================
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const LHCb::ParticleID&    mother                 , 
-          const SubTrees&            children               ,
-          const SubTrees&            optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LHCb::ParticleID&    mother               , 
+          const SubTrees&            children             ,
+          const SubTrees&            optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
-        ( const LHCb::ParticleID&    mother                 , 
-          const SubTrees&            children               ,
-          const LoKi::Decays::iNode& optional               ,
-          const Alg                  alg        = Daughters ) ;
+        ( const LHCb::ParticleID&    mother               , 
+          const SubTrees&            children             ,
+          const LoKi::Decays::iNode& optional             ,
+          const Alg                  alg      = Daughters ,
+          const Oscillation          osc      = Undefined ) ;
         /// constructor from the node (mother) and subtrees 
         GenPhotosOptional
         ( const LHCb::ParticleID&                                mother   , 
           const SubTrees&                                        children ,
           const LoKi::Decays::iTree_<const HepMC::GenParticle*>& optional ,
-          const Alg                  alg        = Daughters ) ;
+          const Alg                                       alg = Daughters ,
+          const Oscillation                               osc = Undefined ) ;
         /// constructor from GenOptional 
         GenPhotosOptional ( const GenOptional& right ) ;
         /// constructor from GenExclusive & optional stuff  
@@ -704,7 +1159,7 @@ namespace LoKi
         GenPhotosOptional 
         ( const GenExclusive&        right    , 
           const LoKi::Decays::iNode& optional ) ;
-        // ============================================================================
+        // ====================================================================
         /// MANDATORY: virtual destructor 
         virtual ~GenPhotosOptional () {}
         // ====================================================================
