@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.142 2008-07-27 13:11:04 cattanem Exp $
+!$Id: release.notes,v 1.143 2008-08-04 07:23:56 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
+! 2008-08-04 M Needham
+ -  Add lots of dictionary stuff for python
+ - Alot of work !!!!!!!!! 
+ 
 !======================== STDet v4r4 2008-07-27 ==========================
 ! 2008-07-18 M Needham
  - Add some info to printouts
