@@ -1,5 +1,5 @@
 
-tmp2dffile=`AllProjectsSetup.py --shell=sh --mktemp "$@"`
+tmp2dffile=`AllProjectsSetup.py --shell=sh --mktemp`
 AllProjectsSetupStatus="$?"
 if [ "$AllProjectsSetupStatus" = 0 ]; then
     . $tmp2dffile

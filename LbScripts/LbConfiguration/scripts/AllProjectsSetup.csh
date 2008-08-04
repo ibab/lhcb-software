@@ -1,5 +1,5 @@
 
-set tmp2dffile = `AllProjectsSetup.py --shell=csh --mktemp ${*:q}`
+set tmp2dffile = `AllProjectsSetup.py --shell=csh --mktemp`
 set AllProjectsSetupStatus = $?
 if ( ! $AllProjectsSetupStatus ) then
     source $tmp2dffile
