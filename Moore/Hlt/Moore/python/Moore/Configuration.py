@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.11 2008-08-01 12:11:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2008-08-04 07:11:03 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -75,7 +75,6 @@ class Moore(ConfigurableUser):
 
     def applyConf(self):
         GaudiKernel.ProcessJobOptions.printing_level += 1
-        # importOptions('$STDOPTS/LHCbApplication.opts')
         importOptions('$STDOPTS/DstDicts.opts')
 
         inputType = self.getProp('inputType').upper()
@@ -83,14 +82,12 @@ class Moore(ConfigurableUser):
         if inputType != 'DST' : 
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
             importOptions('$STDOPTS/DecodeRawEvent.opts')
-
+        
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
         # forward some other settings... TODO: make a dictionary..
         self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
         importOptions( "$DDDBROOT/options/DDDB.py" )
-        from DetCond.Configuration import configureOnlineSnapshots
-        configureOnlineSnapshots()
         self.setOtherProp( LHCbApp(), 'DDDBtag' )
         self.setOtherProp( LHCbApp(), 'condDBtag' )
         self.setOtherProp( LHCbApp(), 'skipEvents' )
@@ -119,6 +116,7 @@ class Moore(ConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
+            if (inputType == 'DST') : importOptions('$HLTSYSROOT/options/L0.opts')
             if self.getProp("DAQStudies") :
                 importOptions('$HLTSYSROOT/options/L0DAQ.opts')
                 importOptions('$HLTSYSROOT/options/HltDAQ.opts')
