@@ -4,7 +4,7 @@
 #include "HltBase/ConfigTreeNode.h"
 #include <string>
 #include <iostream>
-#include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 
 
@@ -42,7 +42,7 @@ public:
         digest_type d=top.digest(); return ConfigTreeNodeAlias(d,alias_type("TOPLEVEL") / release / runType / d.str()); 
     }
     static ConfigTreeNodeAlias createTCK(const ConfigTreeNode& top, unsigned int tck) 
-    { return ConfigTreeNodeAlias(top.digest(),alias_type("TCK") / boost::lexical_cast<std::string>(tck)); }
+    { return ConfigTreeNodeAlias(top.digest(),alias_type("TCK") / boost::str(boost::format("0x%08x") %tck )); }
     static ConfigTreeNodeAlias createTag(const ConfigTreeNode& top, const std::string& tag) 
     { return ConfigTreeNodeAlias(top.digest(),alias_type("TAG") / tag); }
 
