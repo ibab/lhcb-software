@@ -1,27 +1,29 @@
-// $Id: LoKi_GenDecay.cpp,v 1.1 2008-07-09 17:00:48 ibelyaev Exp $
-// =============================================================================
+// $Id: LoKi_GenDecay.cpp,v 1.2 2008-08-04 15:40:03 ibelyaev Exp $
+// ============================================================================
 // Include files 
-// =============================================================================
+// ============================================================================
 // LoKi
-// =============================================================================
+// ============================================================================
 #include "LoKi/GenTypes.h"
 #include "LoKi/GenDecays.h"
-// =============================================================================
+// ============================================================================
 #include "LoKi/AlgoMC.h"
 #include "LoKi/GenParticleCuts.h"
 #include "LoKi/PrintHepMCDecay.h"
-// =============================================================================
+// ============================================================================
 /** @file
  *  Simple test file to test various C++ decay descriptors 
  *  @author Vanya BELAYEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-0702
  */
-// =============================================================================
+// ============================================================================
 LOKI_MCALGORITHM( GenDecayDescriptor ) 
 {
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts  ;
   
+  typedef LoKi::Decays::Trees::Marked_<const HepMC::GenParticle*> Marked ;
+  typedef LoKi::Decays::iTree_<const HepMC::GenParticle*>         iTree  ;
   
   // get all beauty mesons 
   GRange b = gselect ( "B" , GABSID == "B_s0" ) ;
@@ -111,12 +113,21 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   
   LoKi::Decays::Tree_<const HepMC::GenParticle*> p19 = p17 || p18 ;
 
+
   LoKi::Decays::Trees::GenExclusive p20 
     ( LoKi::Decays::Nodes::Pid ( "B_s0" )  || "B_s~0") ;
   p20 += "J/psi(1S)" ;
   p20 += "phi(1020)" ;
   p20.setOscillation ( LoKi::Decays::Trees::Oscillated ) ;
 
+
+  LoKi::Decays::Trees::GenExclusive p21 ( "B_s0" ) ;
+  p21 += "J/psi(1S)" ;
+  p21 += Marked ( LoKi::Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
+
+  LoKi::Decays::Trees::GenExclusive p22 ( "B_s0" ) ;
+  p22 += Marked ( LoKi::Decays::Trees::GenExclusive ( "J/psi(1S)" ) ) ;
+  p22 += Marked ( LoKi::Decays::Trees::GenExclusive ( "phi(1020)" ) ) ;
   
   Assert ( p1  . validate ( ppSvc () ) . isSuccess () , "p1  is invalid!" ) ;
   Assert ( p2  . validate ( ppSvc () ) . isSuccess () , "p2  is invalid!" ) ;
@@ -138,6 +149,8 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
   Assert ( p18 . validate ( ppSvc () ) . isSuccess () , "p18 is invalid!" ) ;
   Assert ( p19 . validate ( ppSvc () ) . isSuccess () , "p19 is invalid!" ) ;
   Assert ( p20 . validate ( ppSvc () ) . isSuccess () , "p20 is invalid!" ) ;
+  Assert ( p21 . validate ( ppSvc () ) . isSuccess () , "p21 is invalid!" ) ;
+  Assert ( p22 . validate ( ppSvc () ) . isSuccess () , "p21 is invalid!" ) ;
 
   // loop over beauty mesons 
   for ( GRange::iterator ib = b.begin() ; b.end() != ib ; ++ib )
@@ -186,7 +199,34 @@ LOKI_MCALGORITHM( GenDecayDescriptor )
         << "p19 : " << ( p19 ( p ) ? "True  " : "False " ) << "  " << p19 ;
     log << std::endl 
         << "p20 : " << ( p20 ( p ) ? "True  " : "False " ) << "  " << p20 ;
+    log << std::endl 
+        << "p21 : " << ( p21 ( p ) ? "True  " : "False " ) << "  " << p21 ;
   
+    p21.reset() ;
+    if ( p21 (  p ) ) 
+    {
+      iTree::Collection marked ;
+      log << p21.collect ( marked ) << std::endl ;
+      for ( iTree::Collection::const_iterator im = marked.begin() ;
+            marked.end() != im ; ++im ) 
+      { log << std::endl << " marked: " << LoKi::Print::printDecay ( *im ) ; }
+      p21.reset() ;
+    }
+
+    log << std::endl 
+        << "p22 : " << ( p22 ( p ) ? "True  " : "False " ) << "  " << p22 ;
+  
+    p22.reset() ;
+    if ( p22 (  p ) ) 
+    {
+      iTree::Collection marked ;
+      log << std::endl << " # of marked : " << p22.collect ( marked ) ;
+      for ( iTree::Collection::const_iterator im = marked.begin() ;
+            marked.end() != im ; ++im ) 
+      { log << std::endl << " marked: " << LoKi::Print::printDecay ( *im ) ; }
+      p22.reset() ;
+    }
+    
     log << endreq ;
   }
   
