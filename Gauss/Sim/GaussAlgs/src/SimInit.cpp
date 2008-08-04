@@ -1,13 +1,11 @@
-// $Id: SimInit.cpp,v 1.6 2007-07-03 16:54:01 gcorti Exp $
+// $Id: SimInit.cpp,v 1.7 2008-08-04 21:08:47 gcorti Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/Time.h"
-
-// from LHCbKernel
-#include "Kernel/IGenericTool.h"
+#include "GaudiAlg/IGenericTool.h"
 
 // from GenEvent
 #include "Event/GenHeader.h"

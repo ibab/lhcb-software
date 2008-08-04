@@ -1,12 +1,10 @@
-// $Id: GenInit.cpp,v 1.4 2007-01-12 15:23:40 ranjard Exp $
+// $Id: GenInit.cpp,v 1.5 2008-08-04 21:08:47 gcorti Exp $
 // Include files 
 #include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-
-// from LHCbKernel
-#include "Kernel/IGenericTool.h"
+#include "GaudiAlg/IGenericTool.h"
 
 // from GenEvent
 #include "Event/GenHeader.h"

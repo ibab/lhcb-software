@@ -4,6 +4,13 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!======================== GaussAlgs v3r3 2008-08-04 ===========================
+! 2008-08-04 - Gloria CORTI
+ - Fix compilation errors due to move of include IGenericTool from LHCbKernel
+   (LHCB v25r0) to GaudiAlg (Gaudi v20r2)
+   . GenInit.cpp
+   . SimInit.cpp
+
 !======================== GaussAlgs v3r2 2008-05-07 ===========================
 ! 2008-05-07 - Gloria CORTI
  - Change printout of number of hits from info() to debug() to reduce 
