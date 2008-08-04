@@ -1,31 +1,20 @@
 package Adder
 version v5r0
 
-branches cmt doc src
+branches cmt doc src 
 
-include_dirs $(ADDERROOT)
+# use AIDA       v* LCG_Interfaces
+use ROOT         v* LCG_Interfaces
+use DIM          v* Online
+use GaudiOnline  v* Online
+use Gaucho       v* Online
+# use GaudiKernel  v*
+# use GaudiSvc     v*
 
-use GaudiKernel  v*
-use GaudiAlg     v*
-use AIDA         v*  LCG_Interfaces
-use ROOT         v*  LCG_Interfaces
-use DIM          v*  Online
-use OnlineKernel v*  Online
-use Gaucho       v*  Online
-use GaudiAud     v*
-use GaudiSvc     v*
-use OnlineHistDB v*  Online
-use Boost v* LCG_Interfaces
-
-library Adder  \
-../src/Misc.cpp  ../src/Misc.h \ 
-../src/DimInfoServerStatus.cpp ../src/DimInfoServerStatus.h \
-../src/DimInfoServiceSet.cpp ../src/DimInfoServiceSet.h \
-../src/DimTimerAdder.cpp ../src/DimTimerAdder.h \
-../src/Adder.cpp ../src/Adder.h 
-
+library Adder *.cpp
 apply_pattern component_library library=Adder
+apply_pattern generate_rootmap library=Adder
 
 private
-macro_append Adder_shlibflags "-lGaucho  -lboost_serialization-gcc34 -lHist -lGraf -lGraf3d -lGpad \
--lRint -lPostscript -lMatrix -lPhysics -lm -ldl -rdynamic " WIN32 " libHist.lib libGra$
+macro_append Adder_shlibflags " -lGaucho -lHist "  WIN32 " libHist.lib "
+

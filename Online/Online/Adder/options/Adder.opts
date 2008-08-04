@@ -1,26 +1,14 @@
-// Job options file. Simple Online monitoring example
-//==============================================================
-
-ApplicationMgr.ExtSvc = { "MonitorSvc" };
-
-ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
-ApplicationMgr.DLLs += {"Adder"};
-
-AuditorSvc.Auditors = { "ChronoAuditor" };
-
-ApplicationMgr.TopAlg  = { "Adder" };
-
-
-Adder.OutputLevel = 1;
-
-ApplicationMgr.EvtMax    = -1;   // events to be processed (default is 10)
-ApplicationMgr.EvtSel   = "NONE"; // do not use any event input
+ApplicationMgr.ExtSvc               += { "LHCb::AdderSvc/AdderSvc" };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
 
-Adder.nodenames={"node00101"};
-Adder.servername="${TOPLEVEL}";
-Adder.histogramname={"1Da*","2D*","1Db*","Prof*"};
-Adder.algorithmname={"GaudiExample","GaudiExample","GaudiExample","GaudiExample"};
-Adder.taskname={"Test","Test","Test","Test"};
-Adder.refreshtime=5;
-Adder.dimclientdns="pclhcb11.cern.ch";
+AdderSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 1;
+
+AdderSvc.taskname={"Test"}; 
+AdderSvc.refreshTime=20;
+AdderSvc.dimclientdns="lxplus224.cern.ch";
+
