@@ -1,5 +1,4 @@
 
-
 set tmp2file = `SetupProject.py --shell=csh --mktemp ${*:q}`
 set SetupProjectStatus = $?
 if ( ! $SetupProjectStatus ) then
