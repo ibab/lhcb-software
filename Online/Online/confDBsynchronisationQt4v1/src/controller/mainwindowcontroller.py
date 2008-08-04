@@ -24,6 +24,7 @@ class MainWindowController(Controller):
     def __init__(self, application):
         Controller.__init__(self, True)
         self.application = application
+        self.equipDBSystem = None
         self.devicesInfo = self.getDevicesInfo()
         self.sparesInfo = self.getSparesInfo()
         self.mainWindow = MainWindow(self)
@@ -34,8 +35,9 @@ class MainWindowController(Controller):
     def getDevicesInfo(self):
         confDB = self.getConfDBCxOracleConnection()
         equipDB = self.getEquipDBCxOracleConnection()
-        equipDBSystem = equipDB.getSystem()
-        changedSystem = confDB.getChangedSystems(equipDBSystem)
+        if self.equipDBSystem is None:
+            self.equipDBSystem = equipDB.getSystem()
+        changedSystem = confDB.getChangedSystems(self.equipDBSystem)
         devicesInfo = DevicesInfo()
         devicesInfo.setNewDevicesWithDHCPData(len(changedSystem[0].getAllDevices()))
         devicesInfo.setNewDevicesWithoutDHCPData(len(changedSystem[1].getAllDevices()))
@@ -106,6 +108,18 @@ class MainWindowController(Controller):
         equipDB = self.getEquipDBCxOracleConnection()
         self.newDevicesWindowController = NewDevicesWindowController(confDB, equipDB, self)
         print "MainWindowController.onInsert() end"
+    def onRefreshDevices(self):
+        print "MainWindowController.onRefreshDevices() start"
+        self.logfile.flush()
+        self.refreshWorker = RefreshWorker(self.getEquipDBCxOracleConnection(), self.getConfDBCxOracleConnection(), self.spareDB, self.devicesInfo, None, self)
+        self.refreshWorker.start()
+        print "MainWindowController.onRefreshDevices() end"
+    def onRefreshSpares(self):
+        print "MainWindowController.onRefreshSpares() start"
+        self.logfile.flush()
+        self.refreshWorker = RefreshWorker(self.getEquipDBCxOracleConnection(), self.getConfDBCxOracleConnection(), self.spareDB, None, self.sparesInfo, self)
+        self.refreshWorker.start()
+        print "MainWindowController.onRefreshSpares() end"
     def onRefresh(self):
         print "MainWindowController.onRefresh() start"
         self.logfile.flush()

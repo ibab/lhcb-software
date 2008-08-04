@@ -22,5 +22,5 @@ class UpdateNewSparesController(object):
         self.progressDialog.hide()
         self.progressDialog.destroy()
         QtGui.QMessageBox.information(None, "Finish", "Updating spares finished. Check log-files for details.")
-        self.parentController.onRefresh()
+        self.parentController.onRefreshSpares()
         print "InsertNewSparesController.onFinish() start"

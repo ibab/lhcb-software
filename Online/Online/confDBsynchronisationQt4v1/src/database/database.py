@@ -207,13 +207,19 @@ class ConfigurationDB(DataBase):
         devices_up_to_date = System("Devices with the same data in lhcbintegration and confdb")
         allDevices = equipdb_system.getAllDevices()
         #print "devices in equipdb: "+str(len(allDevices))
-        for device in allDevices:
-            device_up_to_date = True
-            query =     "SELECT devices.serialnb, devices.location, ipinfo.ipaddress "+\
+        cursor = self.getConnection().cursor()
+        query =     "SELECT devices.serialnb, devices.location, ipinfo.ipaddress "+\
                         "FROM lhcb_lg_devices devices "+\
                         "LEFT JOIN lhcb_ipinfo ipinfo ON lower(devices.devicename) = ipinfo.ipname "+\
-                        "WHERE lower(devices.devicename) = '"+lower(device.IPname)+"'"
-            result = self.executeSelectQuery(query)
+                        "WHERE lower(devices.devicename) = :ipname"
+        cursor.prepare(query) #
+        for device in allDevices:
+            device_up_to_date = True
+            params = { "ipname" : lower(device.IPname) }
+            execresult = cursor.execute(None, params)
+            r = cursor.fetchone()
+            result = [r]
+            #result = self.executeSelectQuery(query)
             if len(result) == 0:
                 #device is new
                 device_up_to_date = False
@@ -244,6 +250,7 @@ class ConfigurationDB(DataBase):
         #print len(changed_location_system.getAllDevices())
         #print len(changed_dhcp_system.getAllDevices())
         #print len(devices_up_to_date.getAllDevices())
+        cursor.close()
         return [ new_devices_with_dhcp, new_devices_without_dhcp, changed_location_system, changed_dhcp_system, devices_up_to_date]
     """updates the location of a given device"""
     def updateLocationOfDevice(self, device, db):

@@ -21,6 +21,6 @@ class DeleteSparesController(object):
         print "UpdateDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        self.parentController.onRefresh()
+        self.parentController.onRefreshSpares()
         QtGui.QMessageBox.information(None, "Finish", "Deleting spares finished. Check log-files for details.")
         print "UpdateDevicesController.onFinish() start"
