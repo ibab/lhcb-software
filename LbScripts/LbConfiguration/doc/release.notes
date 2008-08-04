@@ -1,9 +1,19 @@
 2008-08-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:
-	   * modified the behavior of --build-env to be equivalent to
+	   - modified the behavior of --build-env to be equivalent to
 	     setenvProject.[c]sh
-	* tests/SetupProjectTest.py: added tests for changes to --build-env
+	   - improved handling of projects without versions
+	* tests/SetupProjectTest.py:
+	   - added tests for changes to --build-env
+	   - fixed some bugs in the tests
+	* scripts/SetupProject.*: changed the name of the tempfile variable to
+	  SetupProject_tmpfile to avoid conflicts.
+	* scripts/setenvProject.*: modified to use SetupProject.py --build-env
+	* scripts/AllProjectsSetup.*: ignore command line arguments, they are
+	  not needed and if the script is sourced by SetupProject (as it usually
+	  happens) the arguments to SetupProject are passed to AllProjectsSetup
+	  too.
 
 2008-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
