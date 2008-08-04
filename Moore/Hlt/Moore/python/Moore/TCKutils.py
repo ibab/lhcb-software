@@ -123,11 +123,7 @@ def _updateProperties(id,algname,props, cas  ) :
         print 'something went wrong: no unique toplevel match for ' + str(id)
         return
     (release,runtype) = a[0].alias().str().split('/',3)[1:3]
-    print "got release='"+release+"', runtype='"+runtype+"'"
     updates = vector_string()
-    print "Properties:" 
-    from  pprint import pprint
-    pprint( props )
     for k,v in props.iteritems() : 
         updates.push_back( algname + '.' + k + ': ' + v)
     newId = ed.updateAndWrite(id,updates)
@@ -139,7 +135,7 @@ def _updateProperties(id,algname,props, cas  ) :
 
 ### and now define the routines visible from the outside world...
 def updateProperties(id,algname,properties, cas = ConfigFileAccessSvc() ) :
-    return execInSandbox( _updateProperties, id,algname,property,cas )
+    return execInSandbox( _updateProperties, id,algname,properties,cas )
 def createTCKEntries(d, cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
 def listConfigurations( cas = ConfigFileAccessSvc() ) :
