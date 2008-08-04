@@ -24,8 +24,8 @@ def _createTCKEntries(d, cas ) :
     appMgr.createSvc(cas.getFullName())
     s = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
     for tck,id in d.iteritems() :
-        if type(id) == str: id = digest( id )
-        print ' creating mapping ' + str(tck) + ' -> ' + str(id)
+        if type(id) == str : id = digest( id )
+        print ' creating mapping:  TCK: ' + str(tck) + ' -> ID: ' + str(id)
         ref = s.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
         s.writeConfigTreeNodeAlias(alias)
@@ -106,7 +106,7 @@ def _showProperties(id,algname,property, cas ) :
     x = appMgr.toolsvc().create(cte.name(),interface='IConfigTreeEditor')
     x.printProperties(id,algname,property)
 
-def _updateProperties(id,algname,properties, cas  ) :
+def _updateProperties(id,algname,props, cas  ) :
     if type(id) == str: id = digest( id )
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
@@ -125,7 +125,10 @@ def _updateProperties(id,algname,properties, cas  ) :
     (release,runtype) = a[0].alias().str().split('/',3)[1:3]
     print "got release='"+release+"', runtype='"+runtype+"'"
     updates = vector_string()
-    for k,v in properties.iteritems() : 
+    print "Properties:" 
+    from  pprint import pprint
+    pprint( props )
+    for k,v in props.iteritems() : 
         updates.push_back( algname + '.' + k + ': ' + v)
     newId = ed.updateAndWrite(id,updates)
     noderef = cf.readConfigTreeNode( newId )
@@ -148,7 +151,7 @@ def listConfigurations( cas = ConfigFileAccessSvc() ) :
             print '    ' + runtype
             for c in [ k for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] :
                 tck = '  <NONE>  '
-                if info[c].has_key('TCK') : tck = '0x%08x' % info[c]['TCK']
+                if 'TCK' in info[c] : tck = '0x%08x' % info[c]['TCK']
                 print '       %s : %s : %s' % ( tck , c, info[c]['label'] )
     return info
 
