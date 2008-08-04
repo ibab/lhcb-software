@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.7 2008-07-25 15:42:49 mneedham Exp $
+// $Id: STTell1Board.h,v 1.8 2008-08-04 07:19:44 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -46,6 +46,30 @@ public:
 
   /// construct LHCb::STChannelID from DAQ Channel
   chanPair DAQToOffline(const unsigned int aDAQChan, 
+			const unsigned int fracStrip,
+			const int version) const;
+
+  /** construct LHCb::STChannelID from 
+  *   beetle [0 - 23]
+  *   port [0 -3]
+  *   strip [0 -31]
+  */
+  chanPair DAQToOffline(const unsigned int beetle,
+                        const unsigned int port,
+                        const unsigned int strip,
+			const unsigned int fracStrip,
+			const int version) const;
+
+ /** construct LHCb::STChannelID from 
+  *   pp [0-3]
+  *   beetle [0 - 5]
+  *   port [0 -3]
+  *   strip [0 -31]
+  */
+  chanPair DAQToOffline(const unsigned int pp,
+                        const unsigned int beetle,
+                        const unsigned int port,
+                        const unsigned int strip,
 			const unsigned int fracStrip,
 			const int version) const;
 

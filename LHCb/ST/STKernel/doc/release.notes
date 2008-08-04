@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.25 2008-07-27 16:12:00 cattanem Exp $
+! $Id: release.notes,v 1.26 2008-08-04 07:19:44 mneedham Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2008-08-04 M Needham
+ - Add functionality to STTell1Board
+ - Add dictionary stuff [lots done, but still incomplete !]
 
 !====================== STKernel v1r7 2008-07-27 ============================
 ! 2008-07-25 M Needham

@@ -4,5 +4,9 @@
   <class name = "ISTSignalToNoiseTool" />
   <class name = "STTell1ID" />
   <class name = "STTell1Board" />
+  <class name = "STBitsPolicy" />
+  <enum pattern="STBitsPolicy::bits" />
+  <enum pattern="STBitsPolicy::masks" />
+  <function pattern="STFun::*" />
 
 </lcgdict>

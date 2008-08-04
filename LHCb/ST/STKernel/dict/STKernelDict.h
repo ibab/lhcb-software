@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.4 2008-07-15 11:21:03 mneedham Exp $
+// $Id: STKernelDict.h,v 1.5 2008-08-04 07:19:44 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -6,6 +6,8 @@
 #include "Kernel/ISTSignalToNoiseTool.h"
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STTell1ID.h"
+#include "Kernel/STBitsPolicy.h"
+#include "Kernel/STFun.h"
 
 
 

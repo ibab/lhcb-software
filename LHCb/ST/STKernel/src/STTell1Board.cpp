@@ -1,6 +1,7 @@
-// $Id: STTell1Board.cpp,v 1.5 2008-07-18 09:34:56 mneedham Exp $
+// $Id: STTell1Board.cpp,v 1.6 2008-08-04 07:19:44 mneedham Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
+#include "Kernel/LHCbConstants.h"
 
 #include "Event/STCluster.h"
 
@@ -18,6 +19,34 @@ STTell1Board::STTell1Board(const STTell1ID aBoard,
 STTell1Board::~STTell1Board(){
   // destructer
 }
+
+STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int beetle,
+                                   const unsigned int port,
+                                   const unsigned int strip,
+			           const unsigned int fracStrip,
+		      	           const int version) const{
+
+  const unsigned int  tell1Chan = strip + (port * LHCbConstants::nStripsInPort) + (beetle*LHCbConstants::nStripsInBeetle) ; 
+
+  return DAQToOffline(tell1Chan, fracStrip, version);
+}
+
+
+STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int pp,
+                                   const unsigned int beetle,
+                                   const unsigned int port,
+                                   const unsigned int strip,
+			           const unsigned int fracStrip,
+		      	           const int version) const{
+
+  const unsigned int  tell1Chan = strip +
+                              + (STDAQ::nStripPerPPx *pp) 
+                              + (port * LHCbConstants::nStripsInPort)
+                              + (beetle*LHCbConstants::nStripsInBeetle) ; 
+
+  return DAQToOffline(tell1Chan, fracStrip, version);
+}
+
 
 void STTell1Board::addSector(STChannelID aOfflineChan, unsigned int orientation){
  // add sector to vector
