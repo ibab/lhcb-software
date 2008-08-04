@@ -1,15 +1,18 @@
-! $Id: release.notes,v 1.341 2008-08-04 09:26:35 ibelyaev Exp $
+! $Id: release.notes,v 1.342 2008-08-04 10:00:58 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2008-08-04 - Patrick Koppenburg for Rob Lambert
+ - Added FindCloneTool and RemoveClones. They all to identify and kill
+   B candidates where all final state particles are clones of each other.
 
 ! 2008-08-04 - Vanya BELYAEV
  - src/CombineParticles.cpp
 
    Add the assertion for valid names od daughter paricles, used an the keys
    for the map: { "name":"cuts" } 
-
 
 ! 2008-07-17 - Patrick Koppenburg
  - More verbose printout in FilterDesktop
