@@ -1,9 +1,10 @@
-// $Id: HltConfigSvc.cpp,v 1.14 2008-08-01 12:09:19 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.15 2008-08-04 12:09:34 graven Exp $
 // Include files 
 
 #include <algorithm>
 
 #include "boost/lexical_cast.hpp"
+#include "boost/format.hpp"
 
 // from Gaudi
 #include "GaudiKernel/IIncidentSvc.h"
@@ -98,31 +99,36 @@ StatusCode HltConfigSvc::initialize() {
 ConfigTreeNode::digest_type
 HltConfigSvc::tck2id(const TCK_t& tck) const {
     ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createInvalid();
-    TCKMap_t::const_iterator i = m_tck2config.find(lexical_cast<string>(tck));
+    std::string tckRep = boost::str( boost::format("0x08x")%tck ) ;
+    TCKMap_t::const_iterator i = m_tck2config.find( tck );
     if (i != m_tck2config.end()) {
         ConfigTreeNode::digest_type id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
-        debug() << " TCK " << lexical_cast<string>(tck) << " mapped (by explicit option) to " << id << endmsg;
+        debug() << " TCK " << tckRep << " mapped (by explicit option) to " << id << endmsg;
         return id;
     }
 
     // NOTE: we need to access to the IConfigAccessSvc of the parent to make
     // sure we are consistent...
 
-    i = m_tck2configCache.find(lexical_cast<string>(tck));
+    //TODO: make dedicated type of TCK (containing an 'unsigned int') which defines
+    //      amongst others its text representation, and allows strong typing in 
+    //      interfaces...
+
+    i = m_tck2configCache.find( tck );
     if ( i!=m_tck2configCache.end() )  {
         id = ConfigTreeNode::digest_type::createFromStringRep(i->second);
     } else {
-        ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") + lexical_cast<string>(tck) );
+        ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tckRep  );
         boost::optional<ConfigTreeNode> n = cas()->readConfigTreeNodeAlias( alias );
         if (!n) {
-            error() << "Could not resolve TCK " << lexical_cast<string>(tck) << " : no alias found " << endmsg;
+            error() << "Could not resolve TCK " <<  tckRep  << " : no alias found " << endmsg;
             return id;
         }
         id = n->digest(); // need a digest, not an object itself...
         // add to cache...
-        m_tck2configCache.insert( make_pair( lexical_cast<string>(tck), lexical_cast<string>(id) ) );
+        m_tck2configCache.insert( make_pair(  tck , id.str() ) );
     }
-    debug() << "mapping TCK" << lexical_cast<string>(tck) << " to configuration ID" << id << endmsg;
+    debug() << "mapping TCK" <<  tckRep  << " to configuration ID" << id << endmsg;
     return id;
 }
 

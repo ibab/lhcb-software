@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 !2008-08-03 - Gerhard Raven
   - fix default TCK data location
+  - adapt to change in TCK on-disk format 
 
 !2008-08-01 - Gerhard Raven
   - add release number & runtype in toplevel config aliases

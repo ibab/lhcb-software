@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.6 2008-08-01 12:09:19 graven Exp $
+// $Id: HltConfigSvc.h,v 1.7 2008-08-04 12:09:34 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -38,7 +38,7 @@ private:
   void checkOdin();
 
   typedef unsigned int TCK_t ;
-  typedef std::map<std::string,std::string> TCKMap_t;
+  typedef std::map<TCK_t,std::string> TCKMap_t;
 
   std::vector<TCK_t>           m_prefetchTCK;     ///< which TCK to prefetch
   TCKMap_t                     m_tck2config;      ///< from TCK to configuration ID

@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.9 2008-07-30 13:37:32 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.10 2008-08-04 12:09:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -71,8 +71,7 @@ StatusCode HltL0MuonPrepare::execute() {
   BOOST_FOREACH( L0MuonCandidate* l0muon, *input) {
     debug() << "l0pt " << l0muon->pt()<< endmsg;
     if (fabs(l0muon->pt()) < m_PtMin) continue;
-    bool isClone = checkClone(l0muon);
-    if (isClone) {
+    if (checkClone(l0muon)) {
         debug() << "is clone " << endmsg;
         continue;
     }
