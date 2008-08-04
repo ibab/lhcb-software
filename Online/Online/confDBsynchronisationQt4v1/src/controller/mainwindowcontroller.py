@@ -19,6 +19,7 @@ from showlogwindowcontroller import ShowLogWindowController
 from selectlogfilecontroller import SelectLogFileController
 from createsummarylogcontroller import CreateSummaryLogController
 from connectcontroller import ConnectController
+from deletedeviceswindowcontroller import DeleteDevicesWindowController
 
 class MainWindowController(Controller):
     def __init__(self, application):
@@ -141,7 +142,7 @@ class MainWindowController(Controller):
     def onDelete(self):
         print "MainWindowController.onDelete() start"
         self.db = self.getCn()
-        self.deletedevicescontroller = DeleteDevicesController(self)
+        self.deleteDevicesWindowController = DeleteDevicesWindowController(self)
         print "MainWindowController.onDelete() end"
     def onConnect(self):
         print "MainWindowController.onConnect() start"

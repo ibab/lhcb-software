@@ -220,7 +220,7 @@ class ConfigurationDB(DataBase):
             r = cursor.fetchone()
             result = [r]
             #result = self.executeSelectQuery(query)
-            if len(result) == 0:
+            if r is None or len(result) == 0:
                 #device is new
                 device_up_to_date = False
                 if device.CIPadd is None or device.CMACadd is None:
@@ -361,7 +361,6 @@ class ConfigurationDB(DataBase):
         print "\nConfigurationDB.updateChangesOfLocation finished!"
     """updates the dhcp data of the devices in the given system"""
     def updateDHCPSystem(self, db, controller, progressFrame = None):
-        #TODO: update DHCP data of devices
         print "ConfigurationDB.updateDHCPSystem start"
         changed_devices = []
         for device in controller.changed_dhcp_system.getAllDevices():

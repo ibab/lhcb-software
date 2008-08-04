@@ -3,28 +3,34 @@ from PyQt4 import QtCore
 from string import upper
 
 class RemoveAllDevicesWorker(QThread):
-    def __init__(self, confDB, db, count):
+    def __init__(self, confDB, db, count, devicenames = None):
         QThread.__init__(self)
         self.confDB = confDB
         self.db = db
         self.count = count
+        self.devicenames = devicenames
     def run(self):
         print "RemoveAllDevicesWorker.run() start"
         workDone = 0
-        query = "select devicename, deviceid from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
-        result = self.confDB.executeSelectQuery(query)
-        if len(result) == 0:
-            print "no devices found"
-            self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
-            return
-        else:
-            print "found "+str(len(result))+" devices to delete"
         db = self.db
-        if db is None or db == False:
-            print "No db connection!"
-            self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
-            return
-        i = 0
+        if self.devicenames is None:
+            query = "select devicename, deviceid from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
+            result = self.confDB.executeSelectQuery(query)
+            if len(result) == 0:
+                print "no devices found"
+                self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
+                return
+            else:
+                print "found "+str(len(result))+" devices to delete"
+                if db is None or db == False:
+                    print "No db connection!"
+                    self.emit(QtCore.SIGNAL("removealldevicesdone()"))
+                    return
+                i = 0
+        else:
+            result = []
+            for devicename in self.devicenames:
+                result.append([devicename])
         if len(result) > 0:
             for device in result:
                 workDone += 1
