@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.12 2008-08-04 07:11:03 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2008-08-04 09:04:33 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -81,7 +81,7 @@ class Moore(ConfigurableUser):
         if inputType not in [ 'MDF','DST' ] : raise TypeError("Invalid input type '%s'"%inputType)
         if inputType != 'DST' : 
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-            importOptions('$STDOPTS/DecodeRawEvent.opts')
+        importOptions('$STDOPTS/DecodeRawEvent.opts')
         
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
@@ -116,7 +116,6 @@ class Moore(ConfigurableUser):
                               , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
             ApplicationMgr().ExtSvc.append(cfg.getFullName())
         else:
-            if (inputType == 'DST') : importOptions('$HLTSYSROOT/options/L0.opts')
             if self.getProp("DAQStudies") :
                 importOptions('$HLTSYSROOT/options/L0DAQ.opts')
                 importOptions('$HLTSYSROOT/options/HltDAQ.opts')
@@ -124,6 +123,10 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
                 runtype = self.getProp('runType')
                 if runtype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%runtype)
+                if inputType == 'DST' and runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : 
+                        importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
+                        importOptions('$L0DUROOT/options/L0Sequence.opts')
+                        ApplicationMgr().TopAlg.append( 'GaudiSequencer/L0')
                 if runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
                 if runtype in [ 'Physics_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
                 if runtype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
