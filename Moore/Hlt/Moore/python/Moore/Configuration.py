@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.13 2008-08-04 09:04:33 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2008-08-04 12:49:59 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -25,6 +25,7 @@ class Moore(ConfigurableUser):
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
         , "generateConfig" :   False # whether or not to generate a configuration
+        , "configLabel" :      ''    # label for generated configuration
         , "TCKData" :          '$TCKDATAROOT' # where do we read TCK data from?
         , "TCKpersistency" :   'file' # which method to use for TCK data? valid is 'file' and 'sqlite'
         , "enableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
@@ -139,7 +140,8 @@ class Moore(ConfigurableUser):
                               , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName()
                               , runType = self.getProp('runType')
-                              , mooreRelease = self.getRelease() )
+                              , mooreRelease = self.getRelease()
+                              , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
             ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
         LHCbApp().applyConf()

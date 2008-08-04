@@ -13,7 +13,9 @@ topLevelAlias = GaudiPython.gbl.ConfigTreeNodeAlias.createTopLevel
 TCK = GaudiPython.gbl.ConfigTreeNodeAlias.createTCK
 vector_string = GaudiPython.gbl.std.vector('std::string')
 
-
+def _tck(x) :
+    if type(x) == str and x[0:2] == '0x' :  return int(x,16)
+    return int(x)
 
 
 def _createTCKEntries(d, cas ) :
@@ -44,7 +46,7 @@ def _getConfigurations( cas ) :
         info[ i.ref().str()  ] = dict(zip(  ['release','runtype'],  i.alias().str().split('/')[1:3]))
         ref = s.readConfigTreeNode( i.ref() )
         info[ i.ref().str() ].update( { 'label' : ref.get().label() } )
-    for i in d['TCK'] :      info[ i.ref().str()  ].update( { 'TCK' : int(i.alias().str().split('/')[-1]) } )
+    for i in d['TCK'] :      info[ i.ref().str()  ].update( { 'TCK' : _tck(i.alias().str().split('/')[-1]) } )
     for i in d['TAG'] :      info[ i.ref().str()  ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
 
@@ -56,25 +58,24 @@ def _copyTree(svc,nodeRef,prefix) :
         leaf = svc.readPropertyConfig(leafRef)
         print prefix + leaf.name()
         newRef = svc.writePropertyConfig(leaf.get())
-    for i in node.nodes() : copyTree(svc,i,prefix+'   ')
+        # TODO: check validity...
+    for i in node.nodes() : _copyTree(svc,i,prefix+'   ')
     svc.writeConfigTreeNode(node.get())
 
-def copyAll() :
-    target  = ConfigFileAccessSvc( 'db2', Directory = '/tmp/config', OutputLevel=DEBUG )
-    csvc = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), cas.getFullName() ], OutputLevel=DEBUG )
+def _copy( source , target ) :
+    csvc = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ], OutputLevel=DEBUG )
     # run program...
     ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.initialize()
     appMgr.createSvc(csvc.getFullName())
     s = appMgr.service(csvc.getFullName(),'IConfigAccessSvc')
-    for label in [ 'TOPLEVEL/','TCK/' ] :
-        key = alias( label )
-        for i in s.configTreeNodeAliases( key ) : 
+    for label in [ 'TOPLEVEL','TCK','ALIAS' ] :
+        for i in s.configTreeNodeAliases( alias(label+'/') ) : 
             print '\n\n copying tree ' + str(i.alias()) + '\n\n'
             _copyTree(s,i.ref(),' ')
-        print '\n\n writng alias ' + str(i.alias()) + '\n\n'
-        s.writeConfigTreeNodeAlias(i)
+            print '\n\n writing alias ' + str(i.alias()) + '\n\n'
+            s.writeConfigTreeNodeAlias(i)
     print 'done copying...'
 
 def _showAlgorithms(id, cas ) :
@@ -146,7 +147,9 @@ def listConfigurations( cas = ConfigFileAccessSvc() ) :
         for runtype in set( [ i['runtype'] for i in info.itervalues() if i['release']==release ] ) :
             print '    ' + runtype
             for c in [ k for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] :
-                print '       0x%08x : %s : %s' % ( info[c]['TCK'] , c, info[c]['label'] )
+                tck = '  <NONE>  '
+                if info[c].has_key('TCK') : tck = '0x%08x' % info[c]['TCK']
+                print '       %s : %s : %s' % ( tck , c, info[c]['label'] )
     return info
 
 def getReleases( cas = ConfigFileAccessSvc() ) :
@@ -170,6 +173,8 @@ def getTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
     pprint(rt)
     return rt
 
+def copy( source = ConfigFileAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
+    return execInSandbox( _copy, source, target )
     
                                
 
@@ -185,7 +190,7 @@ if __name__ == '__main__' :
 
 #   cas = ConfigDBAccessSvc( ReadOnly = True , OutputLevel=DEBUG )
     listConfigurations()
-#    copyAll()
+#    copy()
 #   createTCKEntries( { 1 : 'ecaf5768575d96fed8b54ed02dbf1496' , 
 #                       2 : '9ffa18d95f9bf05421a5e6276adc8c67' } )
 
