@@ -1,4 +1,4 @@
-// $Id: Trees.icpp,v 1.3 2008-07-09 16:01:00 ibelyaev Exp $
+// $Id: Trees.icpp,v 1.4 2008-08-04 15:08:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYTREES_ICPP 
 #define LOKI_DECAYTREES_ICPP 1
@@ -24,7 +24,7 @@
 // ============================================================================
 template <class PARTICLE>
 inline LoKi::Decays::Trees::Marked_<PARTICLE>::Marked_ 
-( LoKi::Decays::iTree_<PARTICLE>& tree ) 
+( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
   : LoKi::Decays::iTree_<PARTICLE>() 
   , m_tree     ( tree ) 
   , m_particle ( 0    ) 

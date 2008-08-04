@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.103 2008-08-04 10:56:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.104 2008-08-04 15:08:49 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -16,6 +16,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2008-08-04 - Vanya BELYAEV
+
+ - LoKi/Trees.h, 
+   LoKi/Trees.icpp 
+
+     fix wrong signature of constructor for Marked_ 
 
  - src/Component/LoKiSvc.cpp 
 

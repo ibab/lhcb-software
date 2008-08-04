@@ -1,4 +1,4 @@
-// $Id: Trees.h,v 1.2 2008-07-09 16:01:00 ibelyaev Exp $
+// $Id: Trees.h,v 1.3 2008-08-04 15:08:49 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYS_TREES_H 
 #define LOKI_DECAYS_TREES_H 1
@@ -28,8 +28,22 @@ namespace LoKi
     {
       // ======================================================================
       /** the type of maching algorithm:
+       *
        *   - <c>Daughters</c> match within (all) direct daughetrs 
        *   - <c>Sections</c>  match within all sections of the decay graph 
+       *
+       *  For C++ classes the nmatchiung algorithm is defined through 
+       *  the length of the arrow:
+       *   
+       *   - <c>Daughters</c> are defined through "short" arrow:
+       *      -#   "->"
+       *      -#   "=>"  (for MC- and HepMC-decays only) 
+       *      -#  "=x>"  (for MC-decays only)
+       *   - <c>Sections</c> are defined through "long" arrow:
+       *      -#   "-->"
+       *      -#   "==>"  (for MC- and HepMC-decays only) 
+       *      -#  "==x>"  (for MC-decays only)
+       *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-30
        */       
@@ -40,6 +54,13 @@ namespace LoKi
       // ======================================================================
       /** @enum Oscillation 
        *  simple e-num to distinguish oscillated and non-oscillated particles 
+       *
+       *   - <c>Undefined</c> : no indication are requred 
+       *   - <c>Oscillated</c>: 
+       *        <c>[ A ]os -> X Y Z </c>, for (MC- and HepMC-decays only)  
+       *   - <c>NotOscillated</c>: 
+       *        <c>[ A ]nos -> X Y Z </c>, for (MC- and HepMC-decays only)  
+       *
        *  @author Vanya BELYAEV Ivan.BELYAEV@nikhef.nl
        *  @see LHCb:MCParticle
        *  @see LHCb:MCParticle::hasOscillated 
@@ -56,6 +77,21 @@ namespace LoKi
       // ======================================================================
       /** @class Marked_ 
        *  Simple "marked" sub-tree
+       *
+       *  @code 
+       *
+       *   typedef ...   PARTICKLE ;
+       * 
+       *   const iTree_<PARTICLE>& decay = ... ;
+       *  
+       *   // create marked decay:
+       *   const Marked_<PARTICLE> marked ( decay ); 
+       *
+       *  @endcode 
+       *
+       *  For the decay descrptors, the marked component is 
+       *  denoted with "^"-sumbol:
+       *  
        *  @attention the class caches the event-data!!
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-30
@@ -66,7 +102,7 @@ namespace LoKi
       public:
         // ====================================================================
         /// constructor from the tree 
-        Marked_ ( LoKi::Decays::iTree_<PARTICLE>& tree ) ;
+        Marked_ ( const LoKi::Decays::iTree_<PARTICLE>& tree ) ;
         /// copy constructor (ignore the marked particle)
         Marked_ ( const Marked_& right ) ;
         /// MANDATORY: virtual destructor 
@@ -464,7 +500,30 @@ namespace LoKi
       // ======================================================================      
     } // end of namespace LoKi::Decays::Trees 
     // ========================================================================
-  } // end of namespace DaVinci::Graphs
+  } // end of namespace DaVinci::Decays
+  // ==========================================================================
+  /** The helper function to "mark" the decay tree:
+   * 
+   *  @code 
+   * 
+   *   typedef ... PARTICLE ;
+   * 
+   *   const LoKi::Decays::iTree_<PARTICLE>& tree = ....; 
+   * 
+   *   const LoKi::Decays::Tree_<PARTICLE> marked = mark ( tree ) ;
+   *
+   *  @endcode 
+   *
+   *  @param tree the deay tree to be marked 
+   *
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2008-08-04
+   */
+  template <class PARTICLE>
+  inline 
+  LoKi::Decays::Trees::Marked_<PARTICLE> 
+  mark   ( const LoKi::Decays::iTree_<PARTICLE>& tree ) 
+  { return LoKi::Decays::Trees::Marked_<PARTICLE> ( tree ) ; }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================
@@ -580,9 +639,6 @@ inline bool operator==
 ( typename LoKi::Decays::iTree_<PARTICLE>::argument p , 
   const    LoKi::Decays::iTree_<PARTICLE>&          t )
 { return t == p ; }
-// ====================================================================
-
-
 // ============================================================================
 /** sequncer operator  (the same as "OR" here)
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
@@ -595,7 +651,6 @@ operator,
     const LoKi::Decays::iTree_<PARTICLE>& o2 ) 
 { return LoKi::Decays::Trees::Or_<PARTICLE> ( o1 , o2 ) ; }
 // ============================================================================
-
 
 
 
