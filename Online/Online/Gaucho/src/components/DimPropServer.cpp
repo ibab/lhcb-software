@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.11 2008-08-04 07:12:38 evh Exp $
+// $Id: DimPropServer.cpp,v 1.12 2008-08-04 14:22:52 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -72,14 +72,6 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :
     log << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
   }   
   
-  //to traverse the transient store  
-  sc = svclocator->service("MonitorSvc", m_publishsvc, true );
-  if( sc.isSuccess() )   {
-    log << MSG::INFO << "Found the IPublish interface" << endreq;
-  }
-  else {    
-    log << MSG::FATAL << "Unable to locate the IPublish interface." << endreq;
-  }  
 
   // get pointer to ApplicationMgr
   IProperty* appmgr;

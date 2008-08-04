@@ -79,10 +79,6 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
-  if( IService::INITIALIZED == this->state() ) {
-    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
-    return StatusCode::SUCCESS; 
-  }
   Service::initialize(); 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
@@ -92,20 +88,20 @@ StatusCode MonitorSvc::initialize() {
     m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
     msg << MSG::INFO << "DimPropServer created with name " << m_utgid << endreq;
   }
-  else msg << MSG::INFO << "DimPropServer process is disable." << endreq;
+  else msg << MSG::INFO << "DimPropServer process is disabled." << endreq;
 
   if ( 0 == m_disableDimPropServer) {
     m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator());
     msg << MSG::INFO << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
   }
-  else msg << MSG::INFO << "DimCmdServer process is disable." << endreq; 
+  else msg << MSG::INFO << "DimCmdServer process is disabled." << endreq; 
 
   if ( 0 == m_disableMonRate) {
     msg << MSG::DEBUG << "Declaring MonRate Information" << endreq;
     m_monRate = new MonRate(msgSvc(), "MonitorSvc", 0);
     m_monRateDeclared = false;
   }
-  else  msg << MSG::INFO << "MonRate process is disable." << endreq; 
+  else  msg << MSG::INFO << "MonRate process is disabled." << endreq; 
 
   return StatusCode::SUCCESS;
 }
