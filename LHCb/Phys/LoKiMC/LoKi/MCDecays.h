@@ -1,4 +1,4 @@
-// $Id: MCDecays.h,v 1.2 2008-07-09 16:42:28 ibelyaev Exp $
+// $Id: MCDecays.h,v 1.3 2008-08-04 15:38:53 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCDECAYS_H
 #define LOKI_MCDECAYS_H 1
@@ -32,6 +32,65 @@ namespace LoKi
        *  subtrees ("children"). Essentially it represent also the
        *  "semi-exclusive" decay (as well as any decay with the fixed
        *  number of components for comparisons).
+       *
+       *  Define the regular decay, e.g. \f$ B^0 \to \pi^+ \pi^- \f$: 
+       *
+       *  @code 
+       *
+       *   // " B0 -> pi+ pi- " 
+       *
+       *   using namespace LoKi::Decays ;
+       *   typedef LoKi::Decays::Trees::MCExclusive::SubTrees Children ;
+       *
+       *   Children children ;
+       *   children.push_back ( Trees::MCExclusive( "pi+" ) ) ;
+       *   children.push_back ( Trees::MCExclusive( "pi-" ) ) ;
+       * 
+       *   const Trees::MCExclusive decay 
+       *                ( "B0"     ,    // the parent 
+       *                  children ) ;  // children  
+       * 
+       *  @endcode 
+       * 
+       *  Define the "decay-in-sections", e.g. all following 
+       *  decays will be correctly matched with the descriptor 
+       *  <c>" B0 --> pi+ pi- pi0 "</c>":
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^-   \right) 
+       *               \left( \pi^0  \to \gamma \gamma \right) \f$
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0   \right) \pi^-\f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0   \right) \pi^+\f$ 
+       *
+       *  @code 
+       *
+       *   // " B0 --> pi+ pi- pi0 " 
+       *
+       *   using namespace LoKi::Decays ;
+       *   typedef LoKi::Decays::Trees::MCExclusive::SubTrees Children ;
+       *
+       *   Children children ;
+       *   children.push_back ( Trees::MCExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::MCExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::MCExclusive ( "pi0" ) ) ;
+       * 
+       *   const Trees::MCExclusive decay 
+       *                ( "B0"            ,   // the parent 
+       *                  children        ,   // children  
+       *                  Trees::Sections ) ; // matching algorithm 
+       * 
+       *  @endcode 
+       * 
+       * 
+       *  <c>Algorithm</c> and <c>DecayOnly</c> are defined through 
+       *  the type of "arrow":
+       *
+       *     - <c>"->"</c> Search withing the direct daughter particles, 
+       *                   ignore the partricles form "non-decay" vertices 
+       *     - <c>"-->"</c> Search withing the decay sections. 
+       *                   ignore the partricles form "non-decay" vertices 
+       *     - <c>"-x>"</c> Search withing the direct daughter particles, 
+       *                    including the particles from non-decay vertices 
+       *     - <c>"--x>"</c> Search withing the decay sections. 
+       *                    including the particles from non-decay vertices 
        *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-13
@@ -271,6 +330,83 @@ namespace LoKi
        *  Simple sub tree which consists of the node ("mother") and
        *  subtrees ("children"). Essentially it represent the
        *  inclusive decays.
+       *
+       *  Define the regular decay, e.g. \f$ B^0 \to \pi^+ \pi^- + ... \f$: 
+       *
+       *  @code 
+       *
+       *   // " B0 -> pi+ pi- ... " 
+       *
+       *   using namespace LoKi::Decays ;
+       *   typedef LoKi::Decays::Trees::MCExclusive::SubTrees Children ;
+       *
+       *   Children children ;
+       *   children.push_back ( Trees::MCExclusive( "pi+" ) ) ;
+       *   children.push_back ( Trees::MCExclusive( "pi-" ) ) ;
+       * 
+       *   const Trees::MCInclusive decay 
+       *                ( "B0"     ,    // the parent 
+       *                  children ) ;  // children  
+       * 
+       *  @endcode 
+       * 
+       *  Define the "decay-in-sections", e.g. all following 
+       *  decays will be correctly matched with the descriptor 
+       *  <c>" B0 --> pi+ pi- pi0 "</c>":
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^-  + ... \right) 
+       *               \left( \pi^0  \to \gamma \gamma \right) \f$
+       *    - \f$ B^0 \to \left( \rho^0 \to \pi^+ \pi^- \right) 
+       *               \left( \pi^0  \to \gamma \gamma \right) + ... \f$
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0  + ... \right) \pi^-\f$ 
+       *    - \f$ B^0 \to \left( \rho^+ \to \pi^+ \pi^0  \right) \pi^- + ... \f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0  + ... \right) \pi^+\f$ 
+       *    - \f$ B^0 \to \left( \rho^- \to \pi^- \pi^0   \right) + ... \pi^+\f$ 
+       *    - \f$ B^0 \to \pi^+ \pi^- \pi^0 + ... \f$ 
+       *
+       *  @code 
+       *
+       *   // " B0 --> pi+ pi- pi0 ... " 
+       *
+       *   using namespace LoKi::Decays ;
+       *   typedef LoKi::Decays::Trees::MCExclusive::SubTrees Children ;
+       *
+       *   Children children ;
+       *   children.push_back ( Trees::MCExclusive ( "pi+" ) ) ;
+       *   children.push_back ( Trees::MCExclusive ( "pi-" ) ) ;
+       *   children.push_back ( Trees::MCExclusive ( "pi0" ) ) ;
+       * 
+       *   const Trees::MCInclusive decay 
+       *                ( "B0"            ,   // the parent 
+       *                  children        ,   // children  
+       *                  Trees::Sections ) ; // matching algorithm 
+       * 
+       *  @endcode 
+       *
+       *  <c>Algorithm</c> and <c>DecayOnly</c> are defined through 
+       *  the type of "arrow":
+       *
+       *     - <c>"->"</c> Search withing the direct daughter particles, 
+       *                   ignore the partricles form "non-decay" vertices 
+       *     - <c>"-->"</c> Search withing the decay sections. 
+       *                   ignore the partricles form "non-decay" vertices 
+       *     - <c>"-x>"</c> Search withing the direct daughter particles, 
+       *                    including the particles from non-decay vertices 
+       *     - <c>"--x>"</c> Search withing the decay sections. 
+       *                    including the particles from non-decay vertices 
+       *
+       *  The most convinine tway to create the inclusive decay is from 
+       *  the regular decay:
+       * 
+       *  @code 
+       *
+       *   using namespace LoKi::Decays ;
+       * 
+       *   const Trees::MCExclsuive& regular = .... ;   
+       * 
+       *   const Trees::MCInclusive decay ( regular ) ;
+       * 
+       *  @endcode 
+       *
        *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
        *  @date 2008-04-13
        */
