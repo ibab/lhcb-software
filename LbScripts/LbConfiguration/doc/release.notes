@@ -1,3 +1,10 @@
+2008-08-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py:
+	   * modified the behavior of --build-env to be equivalent to
+	     setenvProject.[c]sh
+	* tests/SetupProjectTest.py: added tests for changes to --build-env
+
 2008-08-01  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:

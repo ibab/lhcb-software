@@ -602,8 +602,69 @@ version v999r999
             self.assert_(project_configured(s,"Brunel",v))
             
         finally:
-            #SetupProject.removeall(tmp_dir)
-            pass
+            SetupProject.removeall(tmp_dir)
+    
+    def test_300_main(self):
+        """main (Build-time environment expl. version)
+        """
+        l = get_all_versions("Brunel")
+        v = l[-1]
+
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = SetupProject.mkdtemp()
+        env["User_release_area"] = tmp_dir
+        try:
+            x = os.popen3("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel %s"%(_shell,v))
+            s = x[1].read()
+            proj_cmt = os.path.join(tmp_dir,"Brunel_%s" % v, "cmt", "project.cmt")
+            self.assert_(os.path.isfile(proj_cmt))
+            self.assert_(re.search(r"use\s+BRUNEL\s+BRUNEL_%s" % v,open(proj_cmt).read()) is not None)
+        finally:
+            SetupProject.removeall(tmp_dir)
+            
+    def test_310_main(self):
+        """main (Build-time environment, no version/ask)
+        """
+        l = get_all_versions("Brunel")
+        v = l[-1]
+
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = SetupProject.mkdtemp()
+        env["User_release_area"] = tmp_dir
+        try:
+            x = os.popen3("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel"%_shell)
+            self.assertEquals("Please enter",x[2].read(12))
+        
+            # read up to the prompt
+            while x[2].read(1) != ':':
+                pass
+            x[2].read(1)
+            
+            x[0].write("\n")
+            x[0].flush()
+        
+            s = x[1].read()
+            proj_cmt = os.path.join(tmp_dir,"Brunel_%s" % v, "cmt", "project.cmt")
+            self.assert_(os.path.isfile(proj_cmt))
+            self.assert_(re.search(r"use\s+BRUNEL\s+BRUNEL_%s" % v,open(proj_cmt).read()) is not None)
+        finally:
+            SetupProject.removeall(tmp_dir)
+            
+    def test_320_main(self):
+        """main (Build-time environment, bad version)
+        """
+        
+        env = SetupProject.TemporaryEnvironment()
+        tmp_dir = SetupProject.mkdtemp()
+        env["User_release_area"] = tmp_dir
+        try:
+            x = os.popen4("python SetupProject.py --shell=%s --ignore-missing --build-env Brunel v999r999"%_shell)
+            s = x[1].read()
+            proj_cmt = os.path.join(tmp_dir,"Brunel_v999r999", "cmt", "project.cmt")
+            self.assert_(not os.path.isfile(proj_cmt))
+        finally:
+            SetupProject.removeall(tmp_dir)
+
     
 if __name__ == '__main__':
     unittest.main()
