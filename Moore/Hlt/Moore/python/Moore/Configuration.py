@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.14 2008-08-04 12:49:59 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2008-08-04 20:37:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -126,8 +126,6 @@ class Moore(ConfigurableUser):
                 if runtype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%runtype)
                 if inputType == 'DST' and runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
-                        importOptions('$L0DUROOT/options/L0Sequence.opts')
-                        ApplicationMgr().TopAlg.append( 'GaudiSequencer/L0')
                 if runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
                 if runtype in [ 'Physics_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
                 if runtype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
