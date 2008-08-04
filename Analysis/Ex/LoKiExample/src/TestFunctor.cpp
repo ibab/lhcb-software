@@ -1,4 +1,4 @@
-// $Id: TestFunctor.cpp,v 1.1 2008-06-12 10:44:01 ibelyaev Exp $
+// $Id: TestFunctor.cpp,v 1.2 2008-08-04 09:55:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -71,12 +71,12 @@ namespace LoKi
     ( const std::string& name , // algorithm instance name 
       ISvcLocator*       pSvc ) // pointer to Service Locator 
       : DVAlgorithm ( name , pSvc ) 
-        //
-      , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
-        //
+      //
       , m_fun ( LoKi::Constant<const LHCb::Particle*,double>( -1.0e+10 ) ) 
       , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>  ( false    ) )
-        //
+      //
+      , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
+      //
       , m_funCode ( "P"    )
       , m_cutCode ( "NONE" )
     {

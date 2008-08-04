@@ -1,4 +1,4 @@
-// $Id: LoKi_Bs2PsiPhi.cpp,v 1.8 2008-07-09 17:00:48 ibelyaev Exp $
+// $Id: LoKi_Bs2PsiPhi.cpp,v 1.9 2008-08-04 09:55:23 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -152,7 +152,7 @@ LOKI_MCALGORITHM(Bs2PsiPhi)
     if ( 0 > vchi2     || 49 < vchi2    ) { continue ; }        // CONTINUE 
     // presice mass evaluation
     const double mass = M ( b ) / GeV ;
-    plot ( m   , " psi phi mass, chi2_vx < 49  " , 4 , 6 ) ;
+    plot ( mass , " psi phi mass, chi2_vx < 49  " , 4 , 6 ) ;
     // get children:
     const LHCb::Particle* psi = b(1) ;
     const LHCb::Particle* phi = b(2) ;
