@@ -135,6 +135,19 @@ private:
   
 public:    
    void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, ulonglong& timeFirstEvInRun, ulonglong& timeLastEvInCycle, ulonglong& gpsTimeLastEvInCycle);  
+
+  int m_disableMonRate;
+  int m_disableDimPropServer;
+  int m_disableDimCmdServer;
+  int m_disableDeclareInfoBool;
+  int m_disableDeclareInfoInt;
+  int m_disableDeclareInfoLong;
+  int m_disableDeclareInfoDouble;
+  int m_disableDeclareInfoString;
+  int m_disableDeclareInfoPair;
+  int m_disableDeclareInfoFormat;
+  int m_disableDeclareInfoHistos;
+
 };
 
 #endif // GAUDIKERNEL_MONITORSVC_H

@@ -64,9 +64,14 @@ private:
   
   std::string m_cycleStatus;
   std::string m_runStatus;
-   
-    
-};  
+  
+  int m_disableMonRate;
+  int m_disableReadOdin;
+  int m_disableChekInTimer;
+  int m_disableChekInExecute;
+  int m_disableUpdateData;
+  int m_disableResetHistos;
+};
 
 #endif  // GAUCHO_UPDATEANDRESET_H
 

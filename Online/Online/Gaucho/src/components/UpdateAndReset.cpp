@@ -44,8 +44,13 @@ DECLARE_ALGORITHM_FACTORY(UpdateAndReset)
 UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc)
 {
-  m_desiredDeltaTCycle = 0;
-  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle);
+  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 10);
+  declareProperty("disableReadOdin", m_disableReadOdin = 0);
+  declareProperty("disableChekInTimer", m_disableChekInTimer = 0);
+  declareProperty("disableChekInExecute", m_disableChekInExecute = 0);
+  declareProperty("disableUpdateData", m_disableUpdateData = 0);
+  declareProperty("disableResetHistos", m_disableResetHistos = 0);
+
   m_firstExecute = true;
 }
 
@@ -74,13 +79,13 @@ StatusCode UpdateAndReset::initialize() {
     
   // In the begining the delayed values are the same as the current values.
   msg << MSG::INFO << "This program will TRY to update data every " << m_desiredDeltaTCycle << " seconds !!!" << endreq;
-   
+
   // The below part is for test
   m_countExecutes = 0; 
   m_deltaTRunTest = 8 * m_desiredDeltaTCycle;
-  
+
   m_timeStart = GauchoTimer::currentTime();
-  
+
   m_runNumber = currentRunNumber().first;
   m_cycleNumber = currentCycleNumber(m_timeStart).first;
   m_timeFirstEvInRun = m_timeStart;
@@ -88,20 +93,24 @@ StatusCode UpdateAndReset::initialize() {
   m_gpsTimeLastEvInCycle = gpsTime();
   m_runStatus = s_statusNoUpdated;
   m_cycleStatus = s_statusNoUpdated;
-  
-  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_timeFirstEvInRun, m_timeLastEvInCycle, m_gpsTimeLastEvInCycle);
-  
+
+  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_timeFirstEvInRun, m_timeLastEvInCycle, m_gpsTimeLastEvInCycle);
+
   //start(20); // we wait a few seconds 
-  
+
   return StatusCode::SUCCESS;
 }
 
 void UpdateAndReset::timerHandler()
 {
   MsgStream msg(msgSvc(), name());
+  if (0 != m_disableChekInTimer) {
+    msg << MSG::INFO << "===============> Checking changes inside timer handler is disable." << endreq;
+    return;
+  }
 //  msg << MSG::INFO << "**********************************************************************" << endreq;
 //  msg << MSG::INFO << "********************Inside timerHandler*******************************" << endreq;
-  
+
   verifyAndProcessRunChange("timer");
   verifyAndProcessCycleChange("timer");
 
@@ -115,14 +124,18 @@ void UpdateAndReset::timerHandler()
 StatusCode UpdateAndReset::execute() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
+
   m_countExecutes++;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;
 //  msg << MSG::DEBUG << "Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "********************************************************************" << endreq;
-  
-  verifyAndProcessRunChange("execute");
-  verifyAndProcessCycleChange("execute");
-  
+
+  if (0 == m_disableChekInExecute){
+    verifyAndProcessRunChange("execute");
+    verifyAndProcessCycleChange("execute");
+  }
+  //else msg << MSG::INFO << "===============> Checking changes inside execute method is disable." << endreq;
+
   // Because the plot method we start the timer after the first execute...
   // This is because of plot method declareinfo in the execute method...
   if (m_firstExecute){ 
@@ -137,25 +150,25 @@ StatusCode UpdateAndReset::execute() {
 void UpdateAndReset::verifyAndProcessCycleChange(std::string method) {
   ulonglong currentTime = GauchoTimer::currentTime();
   std::pair<int, bool> cycleNumber = currentCycleNumber(currentTime);
-  if (!cycleNumber.second) return;
-  if (s_statusNoUpdated != m_cycleStatus) return;
+  if (!cycleNumber.second) return; // false means that the cycleNumber wasn't change
+  if (s_statusNoUpdated != m_cycleStatus) return; // We update if the cycleStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << " Process Triggered by the "<< method <<"() method." << endreq;
   m_cycleStatus = s_statusProcessingUpdate;
-  updateData(false);
+  updateData(false); //false means that the update wasn't called when runNumber changed
   m_cycleStatus = s_statusUpdated;
   retrieveCycleNumber(cycleNumber.first);
 }
 
 void UpdateAndReset::verifyAndProcessRunChange(std::string method) {
-  std::pair<int, bool> runNumber = currentRunNumber();
-  if (!runNumber.second) return;
-  if (s_statusNoUpdated != m_runStatus) return;
+  std::pair<int, bool> runNumber = currentRunNumber(); // if this process is too late, then we can not avoid two process calling this method.
+  if (!runNumber.second) return;// false means that the runNumber wasn't change
+  if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
   MsgStream msg(msgSvc(), name());
   msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms" << endreq;
   msg << MSG::INFO << " Process Triggered by the "<< method <<"() method." << endreq;
   m_runStatus = s_statusProcessingUpdate;
-  updateData(true);
+  updateData(true); //true means that the update was called because the runNumber changed
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first);
 }
@@ -183,48 +196,60 @@ std::pair<int, bool> UpdateAndReset::currentRunNumber() {
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
   bool changed = false;
-  
+
   //msg << MSG::INFO<< "Reading ODIN Bank. " <<endreq;
-  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-    msg << MSG::INFO<< "ODIN Bank exist. " <<endreq;
-    LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-    msg << MSG::INFO<< "Getting RunNumber. " <<endreq;
-    runNumber = odin->runNumber();
-    msg << MSG::INFO<< "runNumber from ODIN is. " <<endreq;
+
+  if (0 == m_disableReadOdin) {
+    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+      msg << MSG::INFO<< "ODIN Bank exist. " <<endreq;
+      LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+      msg << MSG::INFO<< "Getting RunNumber. " <<endreq;
+      runNumber = odin->runNumber();
+      msg << MSG::INFO<< "runNumber from ODIN is. " <<endreq;
+    }
+    else
+    {
+      //msg << MSG::INFO<< "ODIN Bank doesn't exist. " <<endreq;
+      // this is only for test when Odin doesn't work
+      ulonglong currentTime = GauchoTimer::currentTime();
+      runNumber = currentTime/(m_deltaTRunTest*1000);
+    }
   }
-  else
-  {
-    // this is only for test when Odin doesn't work
+  else {
+    //msg << MSG::INFO<< "===============> Reading Odin data base process is disable. " <<endreq;
     ulonglong currentTime = GauchoTimer::currentTime();
     runNumber = currentTime/(m_deltaTRunTest*1000);
   }
-  
+
   if (m_runNumber != runNumber) changed = true;
-  
+
   return std::pair<int, bool>(runNumber,changed);
-  
+
 }
 
 //------------------------------------------------------------------------------
 ulonglong UpdateAndReset::gpsTime() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
-  
+
 //  msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
-  if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
-  
-    msg << MSG::INFO<< " Congratulations, you can read the ODIN Bank. " << endreq;
-    LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
-    return odin->gpsTime();
+
+  if (0 == m_disableReadOdin) {
+    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+      msg << MSG::INFO<< " Congratulations, you can read the ODIN Bank. " << endreq;
+      LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+      return odin->gpsTime();
+    }
   }
-    
+  else msg << MSG::INFO<< "===============> Reading Odin data base process is disable. " <<endreq;
+
   // this is only for test when Odin doesn't work
   ulonglong currentTime = GauchoTimer::currentTime();
-    
+
   int cycleNumber = currentTime/(m_desiredDeltaTCycle*1000);
-    
+
   ulonglong gpsTime = ((ulonglong)cycleNumber)*((ulonglong) m_desiredDeltaTCycle*1000);
-  
+
   return gpsTime;
 }
 
@@ -260,15 +285,16 @@ void UpdateAndReset::updateData(bool isRunNumberChanged) {
   m_gpsTimeLastEvInCycle = gpsTime();
   msg << MSG::INFO << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
   msg << MSG::INFO << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " milliseconds" << endreq;
-  
-  std::string changed = "Cycle";
+
   if (isRunNumberChanged) {
-    m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
-    m_pGauchoMonitorSvc->resetHistos();
-    changed = "Run";
+    if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
+    else msg << MSG::INFO << "===============> Data was not updated because the UpdateData process is disable." << endreq;
+    if (0 == m_disableResetHistos) m_pGauchoMonitorSvc->resetHistos();
+    else  msg << MSG::INFO << "===============> Histos were not reseted because the ResetHistos process is disable." << endreq;
   }
   else{
-    m_pGauchoMonitorSvc->updateAll(false);
+    if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(false);
+    else msg << MSG::INFO << "===============> Data was not updated because the UpdateData process is disable." << endreq;
   }
   msg << MSG::INFO << "***************************  End updateData  *************************" << endreq;
   msg << MSG::INFO << "**********************************************************************" << endreq;

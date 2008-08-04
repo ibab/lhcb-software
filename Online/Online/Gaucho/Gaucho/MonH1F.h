@@ -30,7 +30,7 @@ public:
   void save3(boost::archive::binary_oarchive  & ar);
   void load2(boost::archive::binary_iarchive  & ar);
 
-  void createObject();
+  virtual void createObject();
   void createObject(std::string name);
   void loadObject();
   void splitObject();   
@@ -46,6 +46,7 @@ public:
   virtual void combine(MonObject * m2);
   virtual void copyFrom(MonObject* m2);
   virtual void print();
+  virtual void printObject();
   virtual void write();
   virtual void reset();
 

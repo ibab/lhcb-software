@@ -177,7 +177,7 @@ TH2F* MonH2F::hist(){
 void MonH2F::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TH2F " << name << endreq;
+  msgStream <<MSG::INFO<<"Creating TH2F " << name << endreq;
   m_hist = new TH2F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }

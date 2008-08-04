@@ -9,9 +9,10 @@
 #include <vector>
 
 static const int s_saveHistos(123);
-static const int s_updateServiceMap(124);
-static const int s_createServiceMap(125);
+static const int s_updateSvcMapFromInfoService(124);
+static const int s_updateSvcMapFromInfoServer(125);
 static const int s_startTimer(126);
+static const int s_createInfoServices(127);
 
 //  Author: jotalo, 19/06/2008
 
@@ -44,8 +45,8 @@ public:
   
   void createInfoServers();
   void createInfoServices(std::string serverName);
-  void createServiceMap();
   void createTimerProcess(int refreshTime);
+  void updateMap(); //this method update data when we dont have the ServerMap 
 
   void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_withPartitionName = true;}
   void setTaskVector(const std::vector<std::string> &taskName) {m_taskName = taskName;}
@@ -53,9 +54,8 @@ public:
   void setObjectVector(const std::vector<std::string> &objectName) {m_objectName = objectName;}
   void setUtgid(const std::string &utgid);
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
-  
   void timerHandler();
-  
+
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
 

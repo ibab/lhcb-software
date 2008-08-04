@@ -1,4 +1,4 @@
-// $Id: IGauchoMonitorSvc.h,v 1.6 2008-07-18 07:55:58 evh Exp $
+// $Id: IGauchoMonitorSvc.h,v 1.7 2008-08-04 07:12:38 evh Exp $
 #ifndef KERNEL_IGAUCHOMONITORSVC_H 
 #define KERNEL_IGAUCHOMONITORSVC_H 1
 

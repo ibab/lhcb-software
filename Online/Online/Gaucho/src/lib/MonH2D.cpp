@@ -177,7 +177,7 @@ TH2D* MonH2D::hist(){
 void MonH2D::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TH1D " << name << endreq;
+  msgStream <<MSG::INFO<<"Creating TH1D " << name << endreq;
   m_hist = new TH2D(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, nbinsy, Ymin, Ymax);
   objectCreated = true;
 }

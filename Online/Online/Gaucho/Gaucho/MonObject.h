@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.9 2008-07-18 07:55:58 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/MonObject.h,v 1.10 2008-08-04 07:12:38 evh Exp $
 #ifndef GAUCHO_MONOBJECT_H
 #define GAUCHO_MONOBJECT_H 1
 
@@ -123,7 +123,10 @@ public:
   virtual void reset();
   virtual void subtract();
   virtual void print();
+  virtual void printObject(){};
+  virtual void createObject(){};
   virtual void write(){};
+  virtual void loadObject(){};
 
   // bool islocked();
    TStopwatch watchOut;

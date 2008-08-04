@@ -104,7 +104,6 @@ bool DimInfoMonObject::loadMonObject(){
     msg << MSG::DEBUG << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
     return false;
   }
-  
   m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
 
   //msg << MSG::DEBUG << "getting stream" << endreq;
@@ -126,9 +125,11 @@ bool DimInfoMonObject::loadMonObject(){
   std::stringstream is;
   is.rdbuf()->pubsetbuf(c, m_StringSize);
   boost::archive::binary_iarchive *ia = new boost::archive::binary_iarchive(is);
+
   m_monObject->load(*ia, 0);
   if (ia) {delete ia; ia = 0;}
   if (!m_monObject->serviceActive ()) m_monObject->setServiceActive (true);
+  return true;
 }
 
 MonObject *DimInfoMonObject::monObject() {

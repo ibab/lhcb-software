@@ -17,18 +17,22 @@ DimInfoServers::~DimInfoServers() {
 }
 
 void DimInfoServers::infoHandler() {
-  
+
   int tmpStringSize = -1;
   while ( (tmpStringSize = getSize()) <=0 ){usleep(10000);}
-  
+
   std::string value = getString();
-  
+
   m_processMgr->updateServerMap(value, m_serverMap);
-  
-  //if ("" == m_serverChoosed) m_serverChoosed = chooseServer();
-  
-  IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, (void *) &m_serverMap);
-  
+
+  if ("" == m_serverChoosed) {
+    if (0 != m_serverMap.size())
+      IocSensor::instance().send(m_processMgr->service(), s_createInfoServices, (void *) &m_serverMap); // this command also updateServiceMap
+  }
+  else {
+    IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoServer, (void *) &m_serverMap);
+  }
+
   //m_processMgr->serviceMap()->updateMap(m_serverMap);
 }
 

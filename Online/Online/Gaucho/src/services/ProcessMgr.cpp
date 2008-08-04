@@ -16,6 +16,10 @@ ProcessMgr::ProcessMgr(std::string name, IMessageSvc* msgSvc, Interactor *servic
 ProcessMgr::~ProcessMgr() {
 }
 
+void ProcessMgr::updateMap(){
+  m_serviceMap->updateMap(m_dimInfoServers->serverMap());
+}
+
 void ProcessMgr::createInfoServers() {
   MsgStream msg(msgSvc(), name());
   m_serviceMap = new BaseServiceMap(name(), this);
@@ -27,13 +31,6 @@ void ProcessMgr::createInfoServices(std::string serverName){
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Creating Service Status"<< endreq;
   m_dimInfoServices = new DimInfoServices(this, serverName);
-}
-
-void ProcessMgr::createServiceMap() {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Creating Map"<< endreq;
-  
-  m_serviceMap->createMap(m_dimInfoServers->serverMap(), m_dimInfoServices->serviceSet());
 }
 
 void ProcessMgr::createTimerProcess(int refreshTime) {
@@ -259,7 +256,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         continue; // we don't do nothing with Savers
       }
       if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
-        nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
+        nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
         msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
       }
       
@@ -296,7 +293,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
           }
         }
         if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
-          nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
+          nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
           msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
         }
       }
@@ -347,3 +344,4 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
   
   return serverList;
 }
+	

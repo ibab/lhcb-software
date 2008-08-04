@@ -101,7 +101,7 @@ void MonH1F::load2(boost::archive::binary_iarchive  & ar){
 }
 
 void MonH1F::save2(boost::archive::binary_oarchive  & ar){
-  if (m_hist != 0) splitObject();
+  if (0 != m_hist) splitObject();
   save3(ar);
 }
 
@@ -161,7 +161,7 @@ TH1F* MonH1F::hist(){
 void MonH1F::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TH1F " << name << endreq;
+  msgStream <<MSG::INFO<<"Creating TH1F " << name << endreq;
   m_hist = new TH1F(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax);
   objectCreated = true;
 }
@@ -169,38 +169,33 @@ void MonH1F::createObject(){
   createObject(sName);
 }
 void MonH1F::write(){
-  if (!objectCreated){ 
+  MsgStream msgStream = createMsgStream();
+  if (!objectCreated){
     createObject();
     loadObject();
   }
   m_hist->Write();
 }
 void MonH1F::loadObject(){
+  MsgStream msgStream = createMsgStream();
   if (!objectCreated) {
-    MsgStream msgStream = createMsgStream();
     msgStream <<MSG::ERROR<<"Can't load object non created" << endreq;
-    
-    return;  
+    return;
   }
   m_hist->Reset();
   FriendOfTH1F * fot = (FriendOfTH1F *)m_hist; 
-  
   for (int i = 0; i < (nbinsx+2) ; ++i){
     m_hist->SetBinContent(i, binCont[i]);
   }
-  
   m_hist->SetEntries(nEntries);
-
   for (int i = 0; i < (nbinsx+2) ; ++i){
     m_hist->SetBinError(i, binErr[i]);
   }
-
   if (bBinLabel){
     for (int i = 0; i < (nbinsx+2) ; ++i){
       m_hist->GetXaxis()->SetBinLabel(i, binLabel[i].c_str());
     } 
   }
-
   fot->fDimension = m_fDimension;
   //ar & fot->fIntegral = m_fIntegral;
   fot->fMaximum = m_fMaximum;
@@ -211,7 +206,6 @@ void MonH1F::loadObject(){
   fot->fTsumwx2 = m_fTsumwx2;
 
   fot->fSumw2.Set(m_fSumSize);
-
   for (int i=0 ; i < m_fSumSize; ++i) {
     fot->fSumw2[i] = m_fSumw2[i];
   }
@@ -456,3 +450,69 @@ void MonH1F::print(){
   
 }
 
+void MonH1F::printObject(){
+  MsgStream msgStream = createMsgStream();
+  if (0==m_hist) {
+    msgStream <<MSG::INFO<<"Sorry, The Histogram is 0...!!! "<<endreq;
+    return;
+  }
+  if (NULL==m_hist) {
+    msgStream <<MSG::INFO<<"Sorry, The Histogram is NULL...!!! "<<endreq;
+    return;
+  }
+  FriendOfTH1F * fot = (FriendOfTH1F *)m_hist; 
+  
+  msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  msgStream <<MSG::INFO<<"********H1F Histogram***************"<<endreq;
+  msgStream <<MSG::INFO<<"Title="<<m_hist->GetTitle()<<endreq;
+  msgStream <<MSG::INFO<<"nEntries="<<(int) m_hist->GetEntries()<<endreq;
+  msgStream <<MSG::INFO<<"nbinsx="<<m_hist->GetNbinsX()<<endreq;
+  msgStream <<MSG::INFO<<"Xmin="<<m_hist->GetXaxis()->GetXmin()<<endreq;
+  msgStream <<MSG::INFO<<"Xmax="<<m_hist->GetXaxis()->GetXmax()<<endreq;
+  msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  msgStream <<MSG::INFO<<"BinContents:"<<endreq;
+  for (int i = 0; i < (m_hist->GetNbinsX()+2) ; ++i){
+    msgStream <<((float) (m_hist->GetBinContent(i)))<<" ";
+  }
+  msgStream << endreq;
+  msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  msgStream <<MSG::INFO<<"BinErrors:"<<endreq;
+  for (int i = 0; i < (m_hist->GetNbinsX()+2) ; ++i){
+    msgStream <<((float) (m_hist->GetBinError(i)))<<" ";
+  }
+  msgStream << endreq;
+  msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  bool bBinLabel = false;
+  for (int i = 0; i < (m_hist->GetNbinsX()+2) ; ++i){
+    std::string binLab = m_hist->GetXaxis()->GetBinLabel(i);
+    if (binLab.length() > 0 ){
+      bBinLabel = true;
+      break;
+    }
+  }
+
+  if (bBinLabel){
+    msgStream <<MSG::INFO<<"BinLabels:"<<endreq;
+    for (int i = 0; i < (m_hist->GetNbinsX()+2) ; ++i){
+      msgStream <<m_hist->GetXaxis()->GetBinLabel(i)<<" ";
+    }
+    msgStream << endreq;
+    msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  }
+  msgStream <<MSG::INFO<<"Dimension="<< fot->fDimension << endreq;
+  //msgStream << MSG::INFO<<"Integral="<< m_fIntegral << endreq;
+  msgStream <<MSG::INFO<<"Maximum="<< fot->fMaximum << endreq;
+  msgStream <<MSG::INFO<<"Minimum="<< fot->fMinimum << endreq;
+  msgStream <<MSG::INFO<<"Tsumw="<< fot->fTsumw << endreq;
+  msgStream <<MSG::INFO<<"Tsumw2="<< fot->fTsumw2 << endreq;
+  msgStream <<MSG::INFO<<"Tsumwx="<< fot->fTsumwx << endreq;
+  msgStream <<MSG::INFO<<"Tsumwx2="<< fot->fTsumwx2 << endreq;
+  msgStream <<MSG::INFO<<"*************************************"<<endreq;
+  msgStream <<MSG::INFO<<"Sumw2:"<<endreq;
+  for (int i=0;i<((int)(fot->fSumw2.GetSize()));++i) {
+    msgStream << fot->fSumw2[i] <<" ";
+  }
+  msgStream << endreq;
+  msgStream << MSG::INFO<<"*************************************"<<endreq;
+
+}

@@ -8,9 +8,9 @@ DimInfoServices::DimInfoServices(ProcessMgr *processMgr, std::string serverName)
   DimInfo((serverName + "/SERVICE_LIST").c_str(), -1)
  ,m_name("DimInfoServices")
  ,m_processMgr(processMgr)
-{ 
+{
  alreadyDone = false;
-} 
+}
 
 DimInfoServices::~DimInfoServices()
 {
@@ -27,8 +27,9 @@ void DimInfoServices::infoHandler()
   
   m_processMgr->updateServiceSet(value, m_serviceSet);
   
-  IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
-
+  //IocSensor::instance().send(m_processMgr->service(), s_createServiceMap , m_processMgr->service());
+  //IocSensor::instance().send(m_processMgr->service(), s_updateServiceMap, m_processMgr->dimInfoServers()); //start Timer*/
+  IocSensor::instance().send(m_processMgr->service(), s_updateSvcMapFromInfoService, (void *) &m_serviceSet);
   alreadyDone = true;
 }
 

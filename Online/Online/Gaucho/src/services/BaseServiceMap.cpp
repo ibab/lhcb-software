@@ -18,7 +18,7 @@ BaseServiceMap::BaseServiceMap(std::string name, ProcessMgr *processMgr):
   m_name("BaseServiceMap"),
   m_processMgr(processMgr)
 {
-   isAlreadyCreated = false;
+ 
 }
 
 BaseServiceMap::~BaseServiceMap() {
@@ -30,55 +30,33 @@ IMessageSvc* BaseServiceMap::msgSvc()
   return m_processMgr->msgSvc();
 }
 
-void BaseServiceMap::createMap(std::map<std::string, bool, std::less<std::string> > serverMap, std::set<std::string> serviceSet) 
-{
-  MsgStream msg(msgSvc(), name());
-  
-  m_serverMapLocal = serverMap;
-  m_serviceSetLocal = serviceSet;
-  
-  printLocalSet();
-  
-  std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
-  
-  for (svrMapIt = m_serverMapLocal.begin(); svrMapIt != m_serverMapLocal.end(); ++svrMapIt) {  
-    if (!svrMapIt->second) continue; // inactive Server
-    includeServerInMaps(svrMapIt->first);
-  }
-  
-  isAlreadyCreated = true;
-}
-
-void BaseServiceMap::printLocalSet() {
-  
+void BaseServiceMap::printServiceSet() {
  MsgStream msg(m_processMgr->msgSvc(), name());
-  
  std::set<std::string>::iterator it;
- 
- for (it = m_serviceSetLocal.begin(); it != m_serviceSetLocal.end(); ++it){
+ for (it = m_serviceSet.begin(); it != m_serviceSet.end(); ++it){
    msg << MSG::DEBUG << "Service " << *it << endreq;    
   }
 }
 
-void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string> > &serverMap)
+void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string> > serverMap)
 {
   MsgStream msg(msgSvc(), name());
   
-  msg << MSG::DEBUG << "verifying if Map is already created" << endreq;
-  if (!isAlreadyCreated) return;
+  msg << MSG::DEBUG << "verifying if we have the ServiceSet seted" << endreq;
+  if (0 == m_serviceSet.size()) return;
   msg << MSG::DEBUG << "verifying if current Map is equal to local map " << endreq;
-  if (serverMap == m_serverMapLocal) return;
+  if (serverMap == m_serverMap) return;
   
   std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
   
   msg << MSG::DEBUG << "printing local set services " << endreq;
-  printLocalSet();
+  printServiceSet();
     
   msg << MSG::DEBUG << "***************************************************************" << endreq;
   msg << MSG::DEBUG << " Excluding Servers from Maps" << endreq;
   msg << MSG::DEBUG << "***************************************************************" << endreq;
   //printMap();
-  for (svrMapIt=m_serverMapLocal.begin() ; svrMapIt != m_serverMapLocal.end(); ++svrMapIt){
+  for (svrMapIt=m_serverMap.begin() ; svrMapIt != m_serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // is already inactive in local dimInfo
     if (serverMap.find(svrMapIt->first)->second) continue; // Server active, we don't have to exclude
     msg << MSG::DEBUG << "   Server: " << svrMapIt->first << endreq;
@@ -89,14 +67,14 @@ void BaseServiceMap::updateMap(std::map<std::string, bool, std::less<std::string
   msg << MSG::DEBUG << "***************************************************************" << endreq;
   for (svrMapIt=serverMap.begin() ; svrMapIt != serverMap.end(); ++svrMapIt){
     if (!svrMapIt->second) continue; // Server inactive, we don't have to include
-    if (m_serverMapLocal.find(svrMapIt->first) != m_serverMapLocal.end()) // if it is in local we verify if its active
-      if (m_serverMapLocal.find(svrMapIt->first)->second) continue; // is already active in local dimInfo  
+    if (m_serverMap.find(svrMapIt->first) != m_serverMap.end()) // if it is in local we verify if its active
+      if (m_serverMap.find(svrMapIt->first)->second) continue; // is already active in local dimInfo  
    
     msg << MSG::DEBUG << "   Server: " << svrMapIt->first << endreq;
     includeServerInMaps(svrMapIt->first);
   }
   
-  m_serverMapLocal = serverMap;
+  m_serverMap = serverMap;
 }
 
 void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
@@ -105,7 +83,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
   std::set<std::string>::iterator svcSetIt;  
   
   if (m_dimInfo.size() <= 0) {
-    for (svcSetIt = m_serviceSetLocal.begin(); svcSetIt != m_serviceSetLocal.end(); ++svcSetIt) {
+    for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
       msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
       insertDimInfo(*svcSetIt, serverName);
       if (m_processMgr->isAdder()) {
@@ -115,7 +93,7 @@ void BaseServiceMap::includeServerInMaps(const std::string &serverName) {
     }
   }
   else {
-    for (svcSetIt = m_serviceSetLocal.begin(); svcSetIt != m_serviceSetLocal.end(); ++svcSetIt) {
+    for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
       msg << MSG::DEBUG << "Service " << *svcSetIt << endreq;    
       insertDimInfo(*svcSetIt, serverName);
     }
@@ -139,7 +117,7 @@ void BaseServiceMap::excludeServerInMaps(const std::string &serverName) {
 
   std::set<std::string>::iterator svcSetIt;  
   
-  for (svcSetIt = m_serviceSetLocal.begin(); svcSetIt != m_serviceSetLocal.end(); ++svcSetIt) {
+  for (svcSetIt = m_serviceSet.begin(); svcSetIt != m_serviceSet.end(); ++svcSetIt) {
     int numLastInfos = deleteDimInfo(*svcSetIt, serverName);
     if ( 0 == numLastInfos) {
       if (m_processMgr->isAdder()) deleteDimService(*svcSetIt);
@@ -177,18 +155,21 @@ void BaseServiceMap::insertDimInfo(const std::string &serviceName, const std::st
       
   msg << MSG::DEBUG << "creating MonObject in DimInfoMonObject " << endreq;
   m_dimInfo[groupName][elementName]->createMonObject();
-  
+  if (!m_processMgr->isAdder()) {// If it's a Saver we also create the object
+    if (0 != m_dimInfo[groupName][elementName]->monObject())
+      m_dimInfo[groupName][elementName]->monObject()->createObject();
+  }
 }
 
 int BaseServiceMap::deleteDimInfo(const std::string &serviceName, const std::string &serverName)
 {
   MsgStream msg(msgSvc(), name());
-  
+
   std::string termSvcName = createTermServiceName (serviceName, serverName);
-   
+
   std::string groupName = "";
   std::string elementName = "";
-  
+
   if (m_processMgr->isAdder()) {
     groupName = createAdderName (serviceName);
     elementName = serverName;
@@ -202,36 +183,35 @@ int BaseServiceMap::deleteDimInfo(const std::string &serviceName, const std::str
     msg << MSG::DEBUG << " sorry there is no group " << groupName << " in the map" << endreq;    
     return 1;
   }
-  
+
   if (m_dimInfo[groupName].find(elementName) == m_dimInfo[groupName].end()){
     msg << MSG::DEBUG << " sorry there is no element " << elementName << "in group " << groupName << endreq;    
     return 1;
   }
-  
+
   msg << MSG::DEBUG << " erasing element "<< elementName <<" from group "<< groupName <<endreq;
   msg << MSG::DEBUG << " the serviceName was: "<< m_dimInfo[groupName][elementName]->dimInfo()->getName() <<endreq;
   delete m_dimInfo[groupName][elementName]; m_dimInfo[groupName][elementName]=0; m_dimInfo[groupName].erase(elementName);
-  
-  
+
   if (m_dimInfo[groupName].size()!=0)  return 1;
-  
+
   msg << MSG::DEBUG << " The group is empty after erasing element "<< elementName << ". We have to erase the group too." <<endreq;
   msg << MSG::DEBUG << " erasing group "<< groupName << " from map "<< endreq;  
   m_dimInfo.erase(groupName);
-  
+
   return 0;
 }
 
 void BaseServiceMap::insertDimService(const std::string &serviceName, const std::string &serverName)
 {
-    
+
   MsgStream msg(msgSvc(), name());
-  
+
   std::string adderName = createAdderName (serviceName);
 
   std::string groupName = "";
   std::string elementName = "";
-  
+
   if (m_processMgr->isAdder()) {
     groupName = createAdderName (serviceName);
     elementName = serverName;
@@ -317,56 +297,60 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   return adderName;
 }
 
-
 void BaseServiceMap::write(std::string saveDir, std::string &fileName, int &fileSize)
 {
   MsgStream msg(msgSvc(), name());
-  
+
+  if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())) {
+    msg << MSG::INFO << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    return;
+  }
+
   std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
   std::map<std::string, bool, std::less<std::string> >::iterator it;
   std::map<std::string, DimInfoMonObject*>::iterator it2;
-  
+
   TFile *f=0;
-  
+
   char timestr[64];
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
-  
+
   for (it = serverMap.begin(); it != serverMap.end(); ++it){
-    msg << MSG::INFO << "Server : " << it->first << endreq;    
-    
+    msg << MSG::INFO << "Server : " << it->first << endreq;
+
     if (!it->second) continue;
-    
+
     fileSize=0;
     std::string tmpfile = saveDir + "/" +  it->first + "-" + timestr + ".root"; 
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
-      
+
     f = new TFile(fileName.c_str(),"create");
-       
+    //TFile f(fileName.c_str(),"create");
+
     msg << MSG::DEBUG << "Writing MonObjects"<< endreq;
-      
+
     std::string groupName = it->first;
-  
+
     for (it2 = m_dimInfo[groupName].begin(); it2 != m_dimInfo[groupName].end(); ++it2)
     {
+      if(0 == it2->second->monObject()) continue;
+      it2->second->loadMonObject();
       std::string type = it2->second->monObject()->typeName();
-    
-      msg << MSG::DEBUG << " Service " << it2->first << " has a " << type <<endreq;  
-    
-      if (s_monH1F == type) ((MonH1F*) it2->second->monObject())->write();
-      if (s_monH1D == type) ((MonH1D*) it2->second->monObject())->write();
-      if (s_monH2F == type) ((MonH2F*) it2->second->monObject())->write();
-      if (s_monH2D == type) ((MonH2D*) it2->second->monObject())->write();
-      if (s_monProfile == type) ((MonProfile*) it2->second->monObject())->write();
-      //it->second->monObject()->write();
+      msg << MSG::DEBUG << " Service " << it2->first << " is a " << type <<endreq;
+      if ((s_monH1F == type)||(s_monH1D == type)||(s_monH1F == type)||(s_monH2D == type)||(s_monProfile == type)) {
+        it2->second->monObject()->loadObject();
+        it2->second->monObject()->write();
+      }
+      else {
+        msg << MSG::ERROR << "MonObject of type " << type << " can not be writed."<< endreq; 
+      }
     }
-      
     fileSize=(int)f->GetSize();
     f->Close();
     delete f;f=0;
-    msg << MSG::DEBUG << "Deleting MonObjects"<< endreq;
   }
 }
 
@@ -375,7 +359,12 @@ void BaseServiceMap::add() {
   MsgStream msg(msgSvc(), name());
   
   std::map<std::string, DimInfoMonObject*>::iterator it;
-       
+
+  if ((0 == m_serverMap.size())||(0 == m_serviceSet.size())||(0 == m_dimInfo.size())){
+    msg << MSG::INFO << " Adder can't add because the ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
+    return;
+  }
+
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
     std::cout << "========================ADDER=================================" << std::endl;
@@ -424,3 +413,21 @@ void BaseServiceMap::add() {
   }
 }
 
+/*
+void BaseServiceMap::createMap(std::map<std::string, bool, std::less<std::string> > serverMap, std::set<std::string> serviceSet) 
+{
+  MsgStream msg(msgSvc(), name());
+  
+  m_serverMap = serverMap;
+  m_serviceSet = serviceSet;
+  
+  printLocalSet();
+  
+  std::map<std::string, bool, std::less<std::string> >::iterator svrMapIt;
+  
+  for (svrMapIt = m_serverMap.begin(); svrMapIt != m_serverMap.end(); ++svrMapIt) {  
+    if (!svrMapIt->second) continue; // inactive Server
+    includeServerInMaps(svrMapIt->first);
+  }
+}
+*/

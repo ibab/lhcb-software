@@ -185,7 +185,7 @@ TProfile* MonProfile::profile(){
 void MonProfile::createObject(std::string name){
   if (!isLoaded) return;
   MsgStream msgStream = createMsgStream();
-  msgStream <<MSG::DEBUG<<"Creating TProfile " << name << endreq;
+  msgStream <<MSG::INFO<<"Creating TProfile " << name << endreq;
   m_profile = new TProfile(name.c_str(), sTitle.c_str(), nbinsx, Xmin, Xmax, Ymin, Ymax);
   objectCreated = true;
 }

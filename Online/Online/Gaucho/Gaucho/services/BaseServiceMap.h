@@ -23,8 +23,8 @@ public:
   IMessageSvc* msgSvc();
   std::string name() { return m_name;}
   
-  void createMap(std::map<std::string, bool, std::less<std::string> > serverMap, std::set<std::string> serviceSet);
-  void updateMap(std::map<std::string, bool, std::less<std::string> > &serverMap);
+  //void createMap(std::map<std::string, bool, std::less<std::string> > serverMap, std::set<std::string> serviceSet);
+  void updateMap(std::map<std::string, bool, std::less<std::string> > serverMap);
   
   void includeServerInMaps(const std::string &serverName);
   void excludeServerInMaps(const std::string &serverName);
@@ -39,18 +39,19 @@ public:
   std::string createAdderName (const std::string &serviceName);
 
   void printMap();
-  void printLocalSet();
+  void printServiceSet();
   
   void write(std::string saveDir, std::string &fileName, int &fileSize);
   void add();
   
+  void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
+  
 private:
   std::string m_name;
   ProcessMgr *m_processMgr;
-  bool isAlreadyCreated;
-  
-  std::map<std::string, bool, std::less<std::string> > m_serverMapLocal;
-  std::set<std::string> m_serviceSetLocal;
+
+  std::map<std::string, bool, std::less<std::string> > m_serverMap;
+  std::set<std::string> m_serviceSet;
   
 protected:
   
@@ -59,7 +60,6 @@ protected:
   
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> > m_dimInfo;
   std::map<std::string, std::map<std::string, DimInfoMonObject*>, std::less<std::string> >::iterator m_dimInfoIt;
-
 };
 
 #endif    // SaverSvc_BaseServiceMap_H
