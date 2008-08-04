@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.8 2008-07-24 10:11:34 sfurcas Exp $ // Include files
+// $Id: Fidel.cpp,v 1.9 2008-08-04 11:05:52 sfurcas Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -31,39 +31,41 @@ Fidel::Fidel( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
   
 {
-  declareProperty("minMass",   m_minMass = 4000); 
-  declareProperty("maxMass",   m_maxMass = 7000);  
-  declareProperty("minPt",     m_minPt = -999);
-  declareProperty("minP",      m_minP = -999);
-  declareProperty("maxChi2",   m_maxChi2 = -999);
-  declareProperty("maxPointing",m_maxPointing = -999);  
-  declareProperty("pid",       m_pid = 511);
-  declareProperty("maxIpchi2", m_maxIpchi2 = -999);
-  declareProperty("minCts",    m_minCts = -999);  
-  declareProperty("minProb",   m_minProb = -999);
-  declareProperty("minFsB1Res",m_minFsB1Res = -999);
-  declareProperty("minFsB2Res",m_minFsB2Res = -999);
-  declareProperty("minFsB1ch", m_minFsB1ch = -999);
-  declareProperty("minFsB2ch", m_minFsB2ch = -999);
-  declareProperty("minFsB1KS0",m_minFsB1KS0 = -999);
-  declareProperty("minFsB2KS0",m_minFsB2KS0 = -999);
-  declareProperty("minFs",     m_minFs=-999);
-  declareProperty("minChFs",   m_minChFs=-999);
+  declareProperty("minMass",    m_minMass = 4000,  "Minimum B candidate mass"); 
+  declareProperty("maxMass",    m_maxMass = 7000,  "Maximum B candidate mass");  
+  declareProperty("minPt",      m_minPt = -999,    "Minimum Pt" );
+  declareProperty("minP",       m_minP = -999,     "Minimum P");
+  declareProperty("maxChi2",    m_maxChi2 = -999,  "Max Chi2 Vtx" );
+  declareProperty("maxPointing",m_maxPointing = -999,"Max pointing angle");  
+  declareProperty("pid",        m_pid = 511,       "Default Pid");
+  declareProperty("maxIpchi2", m_maxIpchi2 = -999, "Maximum Chi2 Impact parameter");
+  declareProperty("minCts",    m_minCts = -999,    "Minimum Flight Significance");  
+  declareProperty("minProb",   m_minProb = -999,   "Minimum Probability of Chi2 vtx");
+  declareProperty("minFsB1Res",m_minFsB1Res = -999,"Minimum Flight Significance B-Res1");
+  declareProperty("minFsB2Res",m_minFsB2Res = -999,"Minimum Flight Significance B-Res2");
+  declareProperty("minFsB1ch", m_minFsB1ch = -999, "Minimum Flight Significance B-Ch1");
+  declareProperty("minFsB2ch", m_minFsB2ch = -999, "Minimum Flight Significance B-Ch2");
+  declareProperty("minFsB1KS0",m_minFsB1KS0 = -999,"Minimum Flight Significance B-KS01");
+  declareProperty("minFsB2KS0",m_minFsB2KS0 = -999,"Minimum Flight Significance B-KS02");
+  declareProperty("minFs",     m_minFs=-999,       "Minimum Flight Significance between PV and Res");
+  declareProperty("minChFs",   m_minChFs=-999,     "Minimum Flight Significance between PV and Charmed particle");
  
-  declareProperty("inputParticles",m_inputParticles = 1000);
-  declareProperty("basicparticle",m_basicparticle = false);
-  declareProperty("checkQ",m_checkQ = true );
-  declareProperty("checkB",m_checkB = true );
-  declareProperty("checkL",m_checkL = true );
-  declareProperty("minQ",m_minQ = 0);
-  declareProperty("maxQ",m_maxQ = 0);
-  declareProperty("minB",m_minB = 0);
-  declareProperty("maxB",m_maxB = 0);
-  declareProperty("minL",m_minL = 0);
-  declareProperty("maxL",m_maxL = 0);
-  declareProperty("cc",m_cc = true );
-  declareProperty("muonReq",m_muonReq = false);
+  declareProperty("inputParticles",m_inputParticles = 1000,"Max number particles in the loop");
+  declareProperty("basicparticle",m_basicparticle = false,"Enable particles couple in loop");
+  declareProperty("checkQ",m_checkQ = true,"Check quantum numbers-Charge");
+  declareProperty("checkB",m_checkB = true,"Check quantum numbers-baryon number");
+  declareProperty("checkL",m_checkL = true,"Check quantum numbers-lepton number");
+  declareProperty("minQ",m_minQ = 0,       "Minimum charge");
+  declareProperty("maxQ",m_maxQ = 0,       "Maximum charge");
+  declareProperty("minB",m_minB = 0,       "Minimum baryon number");
+  declareProperty("maxB",m_maxB = 0,       "Maximum baryon number");
+  declareProperty("minL",m_minL = 0,       "Minimum lepton number");
+  declareProperty("maxL",m_maxL = 0,       "Maximum lepton number");
+  declareProperty("cc",m_cc = true,        "Check quantum number for charge coniugate");
+  declareProperty("muonReq",m_muonReq = false,"Enable to simulate Hlt single muon");
   
+  
+
 }
 //=============================================================================
 // Destructor
@@ -234,7 +236,7 @@ StatusCode Fidel::execute() {
         angleP = acos(cosangle);//angle in rad
       }
       //pointing>0
-      if(angleP<0)continue;
+      if(cosangle<0)continue;
       
       //--------------------//
       //  chi2Probability   //
@@ -267,8 +269,6 @@ StatusCode Fidel::execute() {
          FsB2>-999 && FsB2<m_minFsB2Res)continue;
       else if((abs(id2.pid())==411 || abs(id2.pid())==431 || abs(id2.pid())==421) && FsB2>-999 && FsB2<m_minFsB2ch)continue;
       else if(abs(id2.pid())==310 && FsB2>-999 && FsB2<m_minFsB2KS0)continue;
- 
-
 
 
       desktop()->keep(&BCand); 

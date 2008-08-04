@@ -3,6 +3,9 @@
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+! 2008-08-04 - Sara Furcas
+- Added comments in Fidel.cpp and Fidel.h
+
 ! 2008-07-24 - Sara Furcas
  - Modified each Flight Significance (projected) cut in Fidel.cpp; added:
    1)m_minChFs to do a cut in Flight significance for charmed particles (Ds-D-D0)
