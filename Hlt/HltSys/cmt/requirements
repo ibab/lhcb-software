@@ -7,41 +7,41 @@ branches cmt doc options
 # HLT1 and common packages
 #=======================================================
 
-use HltCommon           v3r4    Hlt   # Jose Angel Hernando-Morata
-use HltTracking         v3r4    Hlt   # Jose Angel Hernando-Morata
+use HltCommon           v3r5    Hlt   # Jose Angel Hernando-Morata
+use HltTracking         v3r5    Hlt   # Jose Angel Hernando-Morata
 use HltHadAlley         v3r3    Hlt   # Jose Angel Hernando-Morata
 
-use HltEcalAlley        v1r0    Hlt   # Mariusz Witek
+use HltEcalAlley        v1r1    Hlt   # Mariusz Witek
 
-use HltMuon             v3r3    Hlt   # Alessia Satta          
-use HltMuonAlley        v2r4p1  Hlt   # Sandra Amato 
-use HltL0Conf           v2r2    Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r2    Hlt   # Alessia Satta/Sandra Amato  
+use HltMuon             v3r4    Hlt   # Alessia Satta          
+use HltMuonAlley        v2r5    Hlt   # Sandra Amato 
+use HltL0Conf           v2r3    Hlt   # Johannes Albrecht
+use HltL0MuonConf       v3r3    Hlt   # Alessia Satta/Sandra Amato  
 
-use HltRecChecker	v1r6	Hlt   # Jose Angel Hernando-Morata
+use HltRecChecker	v1r7	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v1r1	Hlt   # Bruno de Paula
 use HltLuminosity       v1r1    Hlt   # Jaap Panman
 
 use HltRawData          v1r0    Hlt   # Tomasz Skwarnicki
 
 # And now for something completely different
-use HltPython	        v1r7    Hlt   # Jose Angel Hernando-Morata
+use HltPython	        v1r8    Hlt   # Jose Angel Hernando-Morata
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use HltSelections       v7r2    Hlt   # Patrick Koppenburg
+use HltSelections       v8r0    Hlt   # Patrick Koppenburg
 use Fidel               v1r2    Phys  # Sara Furcas    
 use HltKshort           v1r4    Hlt   # Jaap Panman
 
-use HltSelChecker       v6r3    Hlt   # Patrick Koppenburg
+use HltSelChecker       v7r0    Hlt   # Patrick Koppenburg
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use HltBase             v4r4   Hlt    # Jose Angel Hernando-Morata
+use HltBase             v5r0   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r6   Phys   # Tomasz Skwarnicki  
