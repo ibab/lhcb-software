@@ -144,9 +144,9 @@ class DeleteDevicesWindowController(object):
         print "DeleteDevicesWindowController.onDelete() end"
     def onClose(self):
         print "DeleteDevicesWindowController.onClose() start"
-        self.newDevicesWindow.hide()
-        self.newDevicesWindow.destroy()
-        print "NewDevicesWindowController.onClose() end"
+        self.deleteDevicesWindow.hide()
+        self.deleteDevicesWindow.destroy()
+        print "DeleteDevicesWindowController.onClose() end"
     def onClickNewDevices(self):
         print "DeleteDevicesWindowController.onClickNewDevices() start"
         data = self.newDevicesList.currentItem().data(0, 32).toString()

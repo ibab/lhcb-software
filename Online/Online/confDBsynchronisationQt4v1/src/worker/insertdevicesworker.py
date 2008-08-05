@@ -37,10 +37,10 @@ class InsertDevicesWorker(QThread):
                 print (inst)
                 self.confDB.log("error inserting ports for "+str(device)+"\n"+str(inst))
             self.emit(QtCore.SIGNAL("workProgressed(int)"), workDone)
+        self.confDB.insert_MUNIN(self.db)
         try:
             self.confDB.createThrottleConnectivity(self.db, equipDBSystem.getAllDevices(), equipDBSystem)
         except RuntimeError, inst:
             print "error creating throttle connectivity for "+str(device.devicename)+"\n"+str(inst)
-        self.confDB.insert_MUNIN(self.db)
         self.emit(QtCore.SIGNAL("workFinished()"))
         print "InsertDevicesWorker.run() end"

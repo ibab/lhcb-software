@@ -54,7 +54,7 @@ class SpareDB:
             query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE serialnb = '"+spare.serialnb+"' and device_status = 2"
             confdb_spare_result = self.confDB.executeSelectQuery(query)
             if len(confdb_spare_result) > 0:
-                confdb_spare = Spare(confdb_spare_result[0][0], confdb_spare_result[0][1], confdb_spare_result[0][2], confdb_spare_result[0][3], confdb_spare_result[0][4], confdb_spare_result[0][5], "", "") #TODO: ip spare
+                confdb_spare = Spare(confdb_spare_result[0][0], confdb_spare_result[0][1], confdb_spare_result[0][2], confdb_spare_result[0][3], confdb_spare_result[0][4], confdb_spare_result[0][5], "", "")
                 if spare.__cmp__(confdb_spare) != 0:
                     new_spares.append(spare)
                     print "Spare in lhcbintegration: "+str(spare)
@@ -68,7 +68,7 @@ class SpareDB:
         query = "SELECT hwname, hwtype, serialnb, responsible, location, user_comments from lhcb_hw_devices WHERE device_status = 2 and serialnb like '4%'"
         confdb_spare_result = self.confDB.executeSelectQuery(query)
         for spare_result in confdb_spare_result:
-            spares.append(Spare(spare_result[0], spare_result[1], spare_result[2], spare_result[3], spare_result[4], spare_result[5], "", "")) #TODO: ip adress for spare 
+            spares.append(Spare(spare_result[0], spare_result[1], spare_result[2], spare_result[3], spare_result[4], spare_result[5], "", ""))
         print "SpareDB.getSparesInConfDB() end"
         return spares
     """returns a list of Spares existing in confDB as String like: sparename (spare_serialnb)"""

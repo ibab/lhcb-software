@@ -4,6 +4,7 @@ from config import eDB_name, eDB_user, eDB_pass, dhcp_file, dhcp_flags
 from config import cDB_name, cDB_user, cDB_pass
 import cx_Oracle
 from confDBpython import CONFDB
+from confDBpython import *
 from utilities import getModuleType
 from utilities import getDetector
 from model.DHCP import DHCP
@@ -147,7 +148,7 @@ class ConfigurationDB(DataBase):
         DataBase.__init__(self, name, user, password, logfile)
         self.dhcp = DHCP(dhcp_file, dhcp_flags)
     def getDevicesCount(self):
-        query = "select count(*) count from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
+        query = "select count(*) count from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 or devicetypeid = 664"
         result = self.executeSelectQuery(query)
         if result is not None:
             return result[0][0]
@@ -155,7 +156,7 @@ class ConfigurationDB(DataBase):
             return 0
     """deletes all devices"""
     def removeAllDevices(self):
-        query = "select devicename from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
+        query = "select devicename from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 or devicetypeid = 664"
         result = self.executeSelectQuery(query)
         db = connect()
         if len(result) > 1:
@@ -177,14 +178,14 @@ class ConfigurationDB(DataBase):
         self.executeQuery(query)
     """return all devices"""
     def getAllDevices(self):
-        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 ORDER BY devicename ASC"
+        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 or devicetypeid = 664 ORDER BY devicename ASC"
         result = self.executeSelectQuery(query)
         devices = []
         for r in result:
             devices.append(str(r[0])+" ("+str(r[1])+")")
         return devices
     def getAllDevicesAsString(self):
-        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 ORDER BY devicename ASC"
+        query = "select devicename, serialnb from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 or devicetypeid = 664 ORDER BY devicename ASC"
         result = self.executeSelectQuery(query)
         devices = []
         for r in result:
@@ -473,6 +474,7 @@ class ConfigurationDB(DataBase):
                 try:
                     self.log("source hugin "+hugins[i]+" destination munin port" +str(i+1))
                     db.InsertMultipleMacroLinks(hugins[i],"TFCMUNIN01","0",str(i+1),"THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
+                    self.log("connected "+ hugins[i] +" with tfcmunin01")
                 except RuntimeError, inst:
                         self.log("could not connect "+ hugins[i] +" with tfcmunin01, this could also mean that this connection is already been inserted into the database"+"\n"+inst.__str__())
             except RuntimeError, inst:
@@ -574,9 +576,7 @@ class ConfigurationDB(DataBase):
                 try:
                     sdevid  = db.GetDeviceID_devicename(upper(hugin))
                     ddevid  = db.GetDeviceID_devicename(upper(masterhugin))
-                    print upper(hugin), sdevid
-                    print upper(masterhugin), ddevid
-                    db.InsertMultipleMacroLinks(str(sdevid), str(ddevid), "0", str(dport), "THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
+                    db.InsertMultipleMacroLinks(upper(hugin), upper(masterhugin), "0", str(dport), "THROTTLE_data_out","THROTTLE_data_in","THROTTLE_data",0,"Throttle Link",1,1)
                     self.log("connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport)
                 except RuntimeError, inst:
                     self.log("error connecting "+hugin+", Port 0 with "+masterhugin+", Port "+dport+" "+inst.__str__())
@@ -729,12 +729,12 @@ class ConfigurationDB(DataBase):
     """returns a device with the given serial or None if not found"""
     def insert_MUNIN(self, db):
         try:
-            db.InsertMultipleFunctionalDevices("TFC","TFCMUNIN01","MUNIN",1,0,"Serial Number","MUNIN","RICHARD JACOBSSON","D3XXXX","First Try to enter Munin","none",1,1)
-            controlport = []
+            db.InsertMultipleFunctionalDevices("TFC","TFCMUNIN01","MUNIN",1,0,"4ODLAUTTFCMUNIN01","MUNIN","RICHARD JACOBSSON","D3XXXX","TFCMUNIN01","none",1,1)
+            controlport = IntVec()
             controlport.append(100) #speed
             controlport.append(1)   #admin_status
             controlport.append(1)   #pxi booting
-            intvector = []
+            intvector = IntVec()
             intvector.append(0) #speed         
             intvector.append(1) #admin_status  
             intvector.append(0) #pxi booting   
@@ -911,8 +911,16 @@ class EquipmentDB(DataBase):
             item_id1 board.item_id%TYPE;
             item_id2 board.item_id%TYPE;
         BEGIN
+            item_id1 = 0;
+            item_id2 = 0;
             SELECT label, item_id, name INTO location1, item_id1, name1 FROM board WHERE item_id = 'SERIALNUMBER1';
             SELECT label, item_id, name INTO location2, item_id2, name2 FROM board WHERE item_id = 'SERIALNUMBER2';
+            if item_id1 = 0 or item_id2 = 0 then
+                exit;
+            end if;
+            if item_id1 = item_id2 then
+                exit;
+            end if;
             UPDATE board SET label = location2||'UNIQUE', name = name2||'UNIQUE' WHERE item_id = item_id1;
             UPDATE board SET label = location1||'UNIQUE', name = name1||'UNIQUE' WHERE item_id = item_id2;
             UPDATE board SET label = location2, name = name2 WHERE item_id = item_id1;

@@ -14,7 +14,7 @@ class RemoveAllDevicesWorker(QThread):
         workDone = 0
         db = self.db
         if self.devicenames is None:
-            query = "select devicename, deviceid from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645"
+            query = "select devicename, deviceid from lhcb_lg_devices where devicetypeid = 644 or devicetypeid = 645 or devicetypeid = 664"
             result = self.confDB.executeSelectQuery(query)
             if len(result) == 0:
                 print "no devices found"

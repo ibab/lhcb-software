@@ -83,6 +83,7 @@ class MainWindowController(Controller):
         mainWindow.connect(mainWindow.deleteSparesAction, QtCore.SIGNAL("triggered()"), self.onDeleteSpares)
     def onExit(self):
         print "MainWindowController.onExit() start"
+        self.logfile.flush()
         self.mainWindow.emit(QtCore.SIGNAL('closeEmitApp()'))
         print "MainWindowController.onExit() end"
     def onCreateSummaryLog(self):
