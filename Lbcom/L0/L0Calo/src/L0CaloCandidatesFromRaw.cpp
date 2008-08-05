@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.15 2008-07-17 20:38:38 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.16 2008-08-05 10:24:15 robbep Exp $
 // Include files 
 
 // from Gaudi
@@ -91,15 +91,13 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
       int sourceZero( 0 ) , sourceOne( 0 ) ;
 
       // convert the banks to two arrays of ints.
+      data.reserve( banks.size() ) ;
       for ( std::vector<LHCb::RawBank*>::const_iterator itBnk = banks.begin(); 
             banks.end() != itBnk; ++itBnk ) {
-        unsigned int* body = (*itBnk)->data();
-        std::vector<unsigned int> temp;
-        for ( int k = 0; (*itBnk)->size()/4 > k; ++k ) {
-          temp.push_back( *body++ );
-        }
-        data.push_back( temp );
 
+        data.push_back( std::vector< unsigned int >( (*itBnk) -> begin< unsigned int >() ,
+                                                     (*itBnk) -> end< unsigned int >() ) ) ;
+        
         if ( 0 == (*itBnk) -> sourceID() ) ++sourceZero ;
         else ++sourceOne ;
       }

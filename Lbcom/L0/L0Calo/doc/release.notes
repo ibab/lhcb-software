@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.118 2008-07-30 06:47:34 cattanem Exp $
+! $Id: release.notes,v 1.119 2008-08-05 10:24:15 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2008-08-05 - Patrick Robbe
+ - src/L0CaloCandidatesFromRaw.cpp: improve speed following Gerhard Raven
+   suggestions
 
 !========================= L0Calo v9r16 2008-07-29 ========================
 ! 2008-07-30 - Marco Cattaneo
