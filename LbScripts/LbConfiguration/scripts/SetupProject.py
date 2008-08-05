@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.15 2008-08-05 16:52:24 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.16 2008-08-05 17:49:56 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1318,8 +1318,10 @@ class SetupProject:
                 varname = self.project_info.name.upper() + "ROOT"
                 if varname in env:
                     exedir = os.path.join(env[varname], env["CMTCONFIG"])
-                    messages.append('Appending %s to the path.' % exedir)
-                    env["PATH"] = os.pathsep.join([env["PATH"], exedir])
+                    if os.path.isdir(exedir):
+                        # it make sense to add it only if it exists
+                        messages.append('Appending %s to the path.' % exedir)
+                        env["PATH"] = os.pathsep.join([env["PATH"], exedir])
                 
         else:
             tmps = self.project_info.name
