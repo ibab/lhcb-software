@@ -18,7 +18,6 @@ apply_pattern reflex_dictionary dictionary=UPI \
 
 macro_append UPI_reflex_options " -D__GCCXML -DSCREEN "
 # Gnerate dictionary rootmap file
-apply_pattern generate_rootmap library=UPIDict
 apply_pattern declare_python_modules files=*.py
 
 private
