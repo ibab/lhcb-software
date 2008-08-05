@@ -3,6 +3,14 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v2r0>2008-08-05 Analysis v2r0 - First LHCb v25 version</A></H1><PRE>
+
+ - Based on LHCb v25r0 and Gaudi v20r2
+ - IGeomDispcalculator now obolete
+ - FilterDesktop has new default filter
+ - Std particles renamed StdDC06 asn frozen
+ - Preseletions reflect this
+
 </PRE><H1><A NAME=v1r14>2008-07-08 Analysis v1r14 - First LHCb v24 version</A></H1><PRE>
 
  - Uses LHCb v24r1
