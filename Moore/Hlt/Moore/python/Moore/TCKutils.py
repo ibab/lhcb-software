@@ -49,6 +49,42 @@ def _getConfigurations( cas = ConfigFileAccessSvc() ) :
         info[ i.ref().str() ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
 
+def _xget( id_ , cas = ConfigFileAccessSvc() ) :
+    #TODO: if id not a list, make it into one...
+    ids = [ _digest(i) for i in id_ ]
+    pc = PropertyConfigSvc( prefetchConfig = [ i.str() for i in ids ],
+                            ConfigAccessSvc = cas.getFullName() )
+    cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
+    # run program...
+    ApplicationMgr().OutputLevel = ERROR
+    appMgr = GaudiPython.AppMgr()
+    appMgr.initialize()
+    appMgr.createSvc(pc.getFullName())
+    svc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
+    table = dict()
+    for id in ids :
+        tab = dict()
+        for i in svc.collectLeafRefs( id ) :
+            propConfig = svc.resolvePropertyConfig( i )
+            #print '    got ' + propConfig.name()
+            if propConfig.name() in tab.keys() : raise KeyError("Already in list for %s: '%s'"%(id.str(),propConfig.name()))
+            tab[propConfig.name()] = propConfig
+        table[id.str()] = tab
+    return table 
+
+def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
+    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
+    setl = set( table[lhs].keys() )
+    setr = set( table[rhs].keys() )
+    onlyInLhs = setl - setr
+    if len(onlyInLhs)>0 : print 'only in ' + lhs + ': ' + str(onlyInLhs)
+    onlyInRhs = setr - setl
+    if len(onlyInRhs)>0 : print 'only in ' + rhs + ': ' + str(onlyInRhs)
+    for i in setl & setr :
+        l = table[lhs][i]
+        r = table[rhs][i]
+        if (l.digest() != r.digest()) : print i + ' differs!!'
+
 
 def _copyTree(svc,nodeRef,prefix) :
     node = svc.readConfigTreeNode(nodeRef)
@@ -63,7 +99,6 @@ def _copyTree(svc,nodeRef,prefix) :
 
 def _copy( source , target ) :
     csvc = ConfigStackAccessSvc( ConfigAccessSvcs = [ target.getFullName(), source.getFullName() ], OutputLevel=DEBUG )
-    # run program...
     ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.initialize()
@@ -78,7 +113,7 @@ def _copy( source , target ) :
     print 'done copying...'
 
 def _showAlgorithms(id, cas ) :
-    if type(id) == str: id = digest( id )
+    id = _digest( id )
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
     cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
