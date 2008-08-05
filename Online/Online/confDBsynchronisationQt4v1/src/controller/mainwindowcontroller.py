@@ -1,4 +1,5 @@
 from PyQt4 import QtCore
+from PyQt4.QtCore import QMutex
 from view.mainwindow import MainWindow
 from controller import Controller
 from newdeviceswindowcontroller import NewDevicesWindowController
@@ -26,6 +27,8 @@ class MainWindowController(Controller):
         Controller.__init__(self, True)
         self.application = application
         self.equipDBSystem = None
+        self.sparesMutex = QMutex()
+        self.devicesMutex = QMutex()
         self.devicesInfo = self.getDevicesInfo()
         self.sparesInfo = self.getSparesInfo()
         self.mainWindow = MainWindow(self)
@@ -130,11 +133,15 @@ class MainWindowController(Controller):
         print "MainWindowController.onRefresh() end"
     def onRefreshDevicesWidget(self):
         print "MainWindowController.onRefreshDevicesWidget() start"
+        self.devicesMutex.lock()
         self.devicesWidget.setDevicesInfo(self.devicesInfo)
+        self.devicesMutex.unlock()
         print "MainWindowController.onRefreshDevicesWidget() end"
     def onRefreshSparesWidget(self):
         print "MainWindowController.onRefreshSparesWidget() start"
+        self.sparesMutex.lock()
         self.sparesWidget.setSparesInfo(self.sparesInfo)
+        self.sparesMutex.unlock()
         print "MainWindowController.onRefreshSparesWidget() end"
     def onUpdate(self):
         print "MainWindowController.onUpdate() start"

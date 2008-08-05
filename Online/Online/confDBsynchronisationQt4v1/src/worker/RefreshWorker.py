@@ -11,10 +11,6 @@ class RefreshWorker(QThread):
         self.devicesInfo = devicesInfo
         self.sparesInfo = sparesInfo
         self.parentController = parentController
-        #self.connect(self, QtCore.SIGNAL("NewDevicesWithDHCPData(int)"), self.sparesInfo, QtCore.SLOT("setNewDevicesWithDHCPData(*QObject, int)"))
-        #self.connect(self, QtCore.SIGNAL("NewDevicesWithoutDHCPData(int)"), self.sparesInfo, QtCore.SLOT("setNewDevicesWithoutDHCPData(*QObject, int)"))
-        #self.connect(self, QtCore.SIGNAL("ChangedDevices(int)"), self.sparesInfo, QtCore.SLOT("setChangedDevices(*QObject, int)"))
-        #self.connect(self, QtCore.SIGNAL("DevicesUpToDate(int)"), self.sparesInfo, QtCore.SLOT("DevicesUpToDate(*QObject, int)"))
         self.connect(self, QtCore.SIGNAL("devicesInfoChanged()"), self.parentController.onRefreshDevicesWidget)
         self.connect(self, QtCore.SIGNAL("sparesInfoChanged()"), self.parentController.onRefreshSparesWidget)
     def run(self):

@@ -125,6 +125,7 @@ class DataBase:
             cursor.execute("commit")
         cursor.close()
     """sends a commit"""
+    #TODO: this function is an error, check for occurences of use and then delete it
     def commit(self, query):
         cursor = self.getConnection().cursor()
         cursor.execute("commit")
