@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.62 2008-07-07 13:36:38 jpalac Exp $
+! $Id: release.notes,v 1.63 2008-08-05 16:55:05 pkoppenb Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
 
+!========================== MicroDSTAlgorithm v3r2p1 2008-08-05 ===================
 ! 2008-07-07 - Juan PALACIOS
  - src/CopyPrimaryVertices.cpp
   . Return StatusCode::SUCCESS if cloning fails, and print a warning message.
