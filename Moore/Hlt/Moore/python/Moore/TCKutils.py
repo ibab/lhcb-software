@@ -3,6 +3,7 @@ from Gaudi.Configuration import*
 from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc,ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
 
 from Moore.Sandbox import execInSandbox
+from pprint import pprint
 
 ### add some decoration...
 GaudiPython.gbl.Gaudi.Math.MD5.__str__ = GaudiPython.gbl.Gaudi.Math.MD5.str
@@ -31,23 +32,18 @@ def _createTCKEntries(d, cas ) :
         s.writeConfigTreeNodeAlias(alias)
 
 
-def _getConfigurations( cas ) :
+def _getConfigurations( cas = ConfigFileAccessSvc() ) :
     ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.createSvc(cas.getFullName())
     s = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
-    d = {}
-    x = set()
-    for i in ['TOPLEVEL','TCK','TAG' ] :
-        d[i] = s.configTreeNodeAliases( alias( i+'/'  ) ) 
-#        x.append( [ j.ref() for j in d[i] ) # get the label of this config...
-    info = {} 
-    for i in d['TOPLEVEL'] : 
-        info[ i.ref().str()  ] = dict(zip(  ['release','runtype'],  i.alias().str().split('/')[1:3]))
-        ref = s.readConfigTreeNode( i.ref() )
-        info[ i.ref().str() ].update( { 'label' : ref.get().label() } )
-    for i in d['TCK'] :      info[ i.ref().str()  ].update( { 'TCK' : _tck(i.alias().str().split('/')[-1]) } )
-    for i in d['TAG'] :      info[ i.ref().str()  ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
+    info = dict()
+    for i in s.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
+        info[ i.ref().str() ] = Configuration( i,s )
+    for i in s.configTreeNodeAliases( alias( 'TCK/'  ) ) :
+        info[ i.ref().str() ].update( { 'TCK' : _tck(i.alias().str().split('/')[-1]) } )
+    for i in s.configTreeNodeAliases( alias( 'TAG/'  ) ) :
+        info[ i.ref().str() ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
 
 
@@ -70,8 +66,8 @@ def _copy( source , target ) :
     appMgr.initialize()
     appMgr.createSvc(csvc.getFullName())
     s = appMgr.service(csvc.getFullName(),'IConfigAccessSvc')
-    for label in [ 'TOPLEVEL','TCK','ALIAS' ] :
-        for i in s.configTreeNodeAliases( alias(label+'/') ) : 
+    for label in [ 'TOPLEVEL/','TCK/','ALIAS/' ] :
+        for i in s.configTreeNodeAliases( alias(label) ) :
             print '\n\n copying tree ' + str(i.alias()) + '\n\n'
             _copyTree(s,i.ref(),' ')
             print '\n\n writing alias ' + str(i.alias()) + '\n\n'
@@ -134,53 +130,64 @@ def _updateProperties(id,algname,props, cas  ) :
 
 
 ### and now define the routines visible from the outside world...
+
+class Configuration :
+    " A class representing a configuration entry "
+    def __init__(self,alias,svc) :
+        self.info = { 'id' : alias.ref().str() , 'TCK' : '<NONE>', 'label' : '<NONE>' }
+        self.info.update( zip(['release','runtype'],alias.alias().str().split('/')[1:3]))
+        self.info.update( { 'label' :svc.readConfigTreeNode( alias.ref() ).get().label() } )
+    def __getitem__(self,label) : 
+        return self.info[label]
+    def update(self,d) : self.info.update( d )
+    def printSimple(self,prefix='      ') : 
+        tck = self.info['TCK']
+        if type(tck) == int : tck = '0x%08x' % tck
+        print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
+        
+
+
 def updateProperties(id,algname,properties, cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _updateProperties, id,algname,properties,cas )
 def createTCKEntries(d, cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
-def listConfigurations( cas = ConfigFileAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
-    print '\n\n   List of configurations'
-    for release in set( [ i['release'] for i in info.itervalues()  ] ) : 
-        print release
-        for runtype in set( [ i['runtype'] for i in info.itervalues() if i['release']==release ] ) :
-            print '    ' + runtype
-            for c in [ k for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] :
-                tck = '  <NONE>  '
-                if 'TCK' in info[c] : tck = '0x%08x' % info[c]['TCK']
-                print '       %s : %s : %s' % ( tck , c, info[c]['label'] )
-    return info
-
-def getReleases( cas = ConfigFileAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
-    rel = set( [ i['release']  for i in info.itervalues()  ] )
-    from pprint import pprint
-    pprint(rel)
-    return rel
-
-def getRunTypes( release, cas = ConfigFileAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
-    rt = set( [ i['runtype']  for i in info.itervalues() if i['release']==release ] )
-    from pprint import pprint
-    pprint(rt)
-    return rt
-
-def getTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
-    info = execInSandbox( _getConfigurations, cas )
-    rt = [ (k,v['TCK'])  for k,v in info.iteritems() if v['release']==release and v['runtype']==runtype] 
-    from pprint import pprint
-    pprint(rt)
-    return rt
-
 def copy( source = ConfigFileAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
     return execInSandbox( _copy, source, target )
-    
-                               
-
 def showAlgorithms( id, cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _showAlgorithms, id, cas )
 def showProperties( id, algname,property='',cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _showProperties, id,algname,property,cas )
+
+def getConfigurations( cas = ConfigFileAccessSvc() ) :
+    return execInSandbox( _getConfigurations, cas )
+def getReleases( cas = ConfigFileAccessSvc() ) :
+    return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
+def getRunTypes( release, cas = ConfigFileAccessSvc() ) :
+    info = execInSandbox( _getConfigurations, cas )
+    return set( [ i['runtype']  for i in info.itervalues() if i['release']==release ] )
+def getTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
+    info = execInSandbox( _getConfigurations, cas )
+    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if v['release']==release and v['runtype']==runtype] 
+
+def printConfigurations( info ) :
+    for release in set( [ i['release'] for i in info.itervalues()  ] ) : 
+        print release
+        confInRelease = [ i for i in info.itervalues() if i['release']==release ]
+        for runtype in set( [ i['runtype'] for i in confInRelease ] ) :
+            print '    ' + runtype
+            [ i.printSimple('      ') for i in confInRelease if i['runtype']==runtype ] 
+def printReleases( rel ) : pprint(rel)
+def printRunTypes( rt ) : pprint(rt)
+def printTCKs( tcks ) : pprint(tcks)
+
+def listConfigurations( cas = ConfigFileAccessSvc() ) :
+    return printConfigurations( getConfigurations(cas) )
+def listReleases( cas = ConfigFileAccessSvc() ) :
+    return printReleases( getReleases() ) 
+def listRunTypes( release, cas = ConfigFileAccessSvc() ) :
+    return printRunTypes( getRunTypes(release) ) 
+def listTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
+    return printTCKs( getTCKs(release,runtype) ) 
 
 
 ######  do the actual work...
