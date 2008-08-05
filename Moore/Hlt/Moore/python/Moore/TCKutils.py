@@ -181,25 +181,11 @@ class PropCfg :
         self.digest = x.digest().str()
         self.props = dict()
         for i in x.properties() : self.props.update( { i.first: i.second } )
-    def properties() : return self.props()
-    def fullName() : return  self.type + '/' + self.name + ' ('+self.kind+')'
-    def __str__(self) :
-        return '[' + self.fullName() + ': '+ str(self.props)+']'
+    def properties(self) : return self.props
+    def fqn(self) : return  self.type + '/' + self.name + ' ('+self.kind+')'
+    def fmt(self) :
+        return [  "'"+k+"': "+v+'\n'  for k,v in self.props.iteritems() ]
 
-def _propdiff(lhs,rhs,prefix = '    ') :
-    propl = set( lhs.props.keys() )
-    propr = set( rhs.props.keys() )
-    print prefix + ' <<<<<<< only on lhs' 
-    print prefix + str(propl-propr)
-    print prefix + ' >>>>>>> only on rhs' 
-    print prefix + str(propr-propl)
-    for i in propl & propr :
-        (l,r) = ( lhs.props[i], rhs.props[i] )
-        if  l != r : 
-            print prefix + ' <<<<<<< lhs ' 
-            print prefix + "'" + i + "' : " + l
-            print prefix + ' >>>>>>> rhs ' 
-            print prefix + "'" + i + "' : " + r
 
 def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
     table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
@@ -213,12 +199,13 @@ def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
     if len(onlyInRhs)>0 : 
         print 'only in ' + rhs + ': ' 
         for i in onlyInRhs : print '   ' + i
-    print 'different:'
     for i in setl & setr :
         (l,r) = ( table[lhs][i], table[rhs][i] )
         if l.digest != r.digest : 
-            print '   ' + i 
-            _propdiff(l,r,'      ')
+            from difflib import unified_diff
+            print ''.join( unified_diff(l.fmt(), r.fmt(), 
+                                        l.fqn() + '  ' + lhs,
+                                        r.fqn() + '  ' + rhs, n=0 ) )
 
 
 
