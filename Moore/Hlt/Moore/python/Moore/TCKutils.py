@@ -182,9 +182,24 @@ class PropCfg :
         self.props = dict()
         for i in x.properties() : self.props.update( { i.first: i.second } )
     def properties() : return self.props()
+    def fullName() : return  self.type + '/' + self.name + ' ('+self.kind+')'
     def __str__(self) :
-        return '[' + self.type + '/' + self.name + ' ('+self.kind+'): '+ str(self.props)+']'
+        return '[' + self.fullName() + ': '+ str(self.props)+']'
 
+def _propdiff(lhs,rhs,prefix = '    ') :
+    propl = set( lhs.props.keys() )
+    propr = set( rhs.props.keys() )
+    print prefix + ' <<<<<<< only on lhs' 
+    print prefix + str(propl-propr)
+    print prefix + ' >>>>>>> only on rhs' 
+    print prefix + str(propr-propl)
+    for i in propl & propr :
+        (l,r) = ( lhs.props[i], rhs.props[i] )
+        if  l != r : 
+            print prefix + ' <<<<<<< lhs ' 
+            print prefix + "'" + i + "' : " + l
+            print prefix + ' >>>>>>> rhs ' 
+            print prefix + "'" + i + "' : " + r
 
 def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
     table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
@@ -203,8 +218,7 @@ def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
         (l,r) = ( table[lhs][i], table[rhs][i] )
         if l.digest != r.digest : 
             print '   ' + i 
-            print '       ' + lhs + ':' + str(l)
-            print '       ' + rhs + ':' + str(r)
+            _propdiff(l,r,'      ')
 
 
 
