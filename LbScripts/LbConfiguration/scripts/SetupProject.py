@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.14 2008-08-04 20:41:14 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.15 2008-08-05 16:52:24 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -1277,6 +1277,7 @@ class SetupProject:
         script = "" # things we need to append to the setup script (like aliases)
         messages = [] # lines to print (feedback)
         if not self.build_env: # this part is needed only if we do not ask for build only env
+            self._always("Configuring %s" % self.project_info)
             tmp_dir = self._prepare_tmp_local_project()
             try:
                 (script,err) = self._gen_setup(tmp_dir,env)
@@ -1311,6 +1312,14 @@ class SetupProject:
             else:
                 lines[0] = '(taken from %s)' % lines[0]
             messages += lines
+            
+            # FIXME: Hack to hide the fact that old projects were not setting the PATH for the executable
+            if self.project_info.policy == 'old':
+                varname = self.project_info.name.upper() + "ROOT"
+                if varname in env:
+                    exedir = os.path.join(env[varname], env["CMTCONFIG"])
+                    messages.append('Appending %s to the path.' % exedir)
+                    env["PATH"] = os.pathsep.join([env["PATH"], exedir])
                 
         else:
             tmps = self.project_info.name

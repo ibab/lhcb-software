@@ -1,3 +1,9 @@
+2008-08-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py:
+	   - print a message before trying to set up the environment
+	   - added a hack to get old applications in the path (not set by default)
+
 2008-08-04  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:
