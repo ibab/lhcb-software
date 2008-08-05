@@ -3,6 +3,20 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v7r0>2008-08-05 Phys v6r0 - First version with LHCb v25 series</A></H1><PRE>
+ - Based on LHCb v25r0 and Gaudi v20r2
+ - Default behaviour is for real data stripping, using LoKi tools and IDistanceCalculator
+   . See http://indico.cern.ch/conferenceDisplay.py?confId=33039
+ - Backward compatibility with DC06 is maintained but not mainstream.
+   . IGeomDispCalculator interface now obsolete, but can still be used for backward compatibility
+   . The related PV is now set using IDistanceCalculator, which can lead to some differences
+     with previous versions.
+ - Default tool for FilterDesktop is now LoKi::Hybrid::FilterCriterion.
+   . To get the previous behaviour do
+
+FilterDesktop.FilterCriterion = "ByPIDFilterCriterion" ;// not default anymore
+ 
+
 </PRE><H1><A NAME=v6r14>2008-07-03 Phys v6r14 - First version with LHCb v24 series</A></H1><PRE>
 
 ###############################################################################

@@ -1,5 +1,5 @@
 package PhysSys
-version v6r14
+version v7r0
 
 branches doc cmt
 
@@ -10,11 +10,11 @@ branches doc cmt
 
 #===================================================================
 use  ProtoParticleFilter        v1r3     Phys   # Chris Jones
-use  DaVinciTools       	v16r2    Phys   # Juan Palacios
+use  DaVinciTools       	v17r0    Phys   # Juan Palacios
 use  DaVinciTransporter 	v3r8     Phys   # Juan Palacios
 use  ParticleMaker      	v4r1     Phys   # Chris Jones
-use  VertexFit			v5r2     Phys   # Yuehong Xie
-use  LoKiFitters                v1r2     Phys   # Vanya Belyaev
+use  VertexFit			v5r3     Phys   # Yuehong Xie
+use  LoKiFitters                v2r0     Phys   # Vanya Belyaev
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
