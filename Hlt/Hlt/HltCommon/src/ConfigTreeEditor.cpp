@@ -23,6 +23,10 @@ using namespace std;
 using namespace boost;
 using namespace boost::lambda;
 
+namespace {
+    static const std::string empty;
+};
+
 /////////Utility class for easy manipulation of configurations/////////////////////////////
 class ConfigTree {
 public:
@@ -100,7 +104,7 @@ public:
          // given that the graph might contain cycles, we need one
          // lookup table which is 'global' to the tree -- so we put
          // it into the 'root' node.
-   ConfigTree(const ConfigTreeNode::digest_type& in, IPropertyConfigSvc& r)
+   ConfigTree(const ConfigTreeNode::digest_type& in, IPropertyConfigSvc& r, const std::string& label = empty )
     : m_lookup( new ConfigTree::Lookup(r) )
     , m_ownedLeaf(0)
     , m_root(this)
@@ -109,6 +113,10 @@ public:
    {
         addParent((ConfigTree*)0);
         addLeaf();
+        if (!label.empty()) m_label = label; // update label!
+        else { 
+            m_label += " ( mutation of " + in.str() + " )";
+        }
         addDeps();
    }
 
@@ -127,6 +135,7 @@ public:
    void addLeaf() {
         const ConfigTreeNode *c = lookupConfigTreeNode( m_origDigest );
         assert(c!=0);
+        m_label = c->label();
         if ( !c->leaf().invalid() ) {
             m_leaf = lookupPropertyConfig( c->leaf() );
             assert(m_leaf!=0);
@@ -167,7 +176,7 @@ public:
        }
        const ConfigTreeNode *c = lookupConfigTreeNode( m_origDigest );
        assert(c!=0);
-       auto_ptr<ConfigTreeNode> nc( c->clone( lr,nr ) );
+       auto_ptr<ConfigTreeNode> nc( c->clone( lr,nr, m_label ) );
        return w.writeConfigTreeNode( *nc );
    }
 
@@ -226,6 +235,7 @@ private:
    ConfigTree                    *m_root;
    const PropertyConfig          *m_leaf;
    ConfigTreeNode::digest_type    m_origDigest;
+   string                         m_label;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -274,9 +284,10 @@ StatusCode ConfigTreeEditor::finalize() {
 
 ConfigTreeNode::digest_type
 ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
-                                 const multimap<string,pair<string,string> >& updates) const
+                                 const multimap<string,pair<string,string> >& updates,
+                                 const string& label) const
 {
-   ConfigTree tree( in, *m_propertyConfigSvc );
+   ConfigTree tree( in, *m_propertyConfigSvc, label );
    typedef multimap<string,pair<string,string> > map_t;
    map_t::const_iterator i = updates.begin();
    while ( i!=updates.end() ) {
@@ -292,7 +303,8 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
 
 ConfigTreeNode::digest_type
 ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
-                                 const vector<string>& updates) const {
+                                 const vector<string>& updates,
+                                 const string& label) const {
 
    multimap<string,pair<string,string> >  mm;
    for (vector<string>::const_iterator i = updates.begin(); i!=updates.end(); ++i) {
@@ -304,7 +316,7 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
        string key  = lhs.substr(d+1,string::npos);
        mm.insert( make_pair( comp, make_pair(key, rhs ) ) );
    }
-   return updateAndWrite( in, mm );
+   return updateAndWrite( in, mm, label );
 }
 
 

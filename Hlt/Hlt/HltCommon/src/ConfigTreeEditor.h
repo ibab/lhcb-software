@@ -1,4 +1,4 @@
-// $Id: ConfigTreeEditor.h,v 1.3 2008-03-06 15:42:08 pkoppenb Exp $
+// $Id: ConfigTreeEditor.h,v 1.4 2008-08-05 11:59:35 graven Exp $
 #ifndef CONFIGTREEEDITOR_H 
 #define CONFIGTREEEDITOR_H 1
 #include "GaudiAlg/GaudiTool.h"
@@ -41,10 +41,12 @@ public:
    // multimap of 'component' -> 'key','value'
    ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
                                               const std::multimap<std::string,
-                                                                  std::pair<std::string,std::string> >& updates) const;
+                                                                  std::pair<std::string,std::string> >& updates,
+                                              const std::string& label) const;
 
    ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
-                                              const std::vector<std::string>& updates) const ;
+                                              const std::vector<std::string>& updates,
+                                              const std::string& label) const ;
 
 private:
     std::string         s_propertyConfigSvc, s_configAccessSvc;

@@ -3,6 +3,9 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!2008-08-05 - Gerhard Raven
+  - when copy-and-modifying configurations, allow one to specify a new label..
+
 !2008-08-03 - Gerhard Raven
   - fix default TCK data location
   - adapt to change in TCK on-disk format 
