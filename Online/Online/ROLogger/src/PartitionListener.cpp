@@ -1,4 +1,4 @@
-// $Id: PartitionListener.cpp,v 1.9 2008-07-02 16:18:33 frankb Exp $
+// $Id: PartitionListener.cpp,v 1.10 2008-08-05 21:24:52 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.9 2008-07-02 16:18:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionListener.cpp,v 1.10 2008-08-05 21:24:52 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionListener.h"
@@ -110,8 +110,6 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     svc += "/gaudi/log";
     f->push_back(svc);
   }
-  // f->push_back("STORE");
-  // f->push_back("MONA08");
   if ( h->name() == "LHCb" ) f->push_back("/CALD07/gaudi/log");
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }

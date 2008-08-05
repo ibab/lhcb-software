@@ -1,14 +1,14 @@
 #!/bin/bash
 export UTGID=Errlog_$$
 #. /group/online/dataflow/scripts/preamble.sh
-export DATAFLOWDIR=/group/online/dataflow
-. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars
+#export DATAFLOWDIR=/group/online/dataflow
+#. /home/frankm/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars
 #. $DATAFLOWDIR/cmtuser/Online_v4r8/Online/ROLogger/cmt/setup.vars.opt
 #. ${DATAFLOWDIR}/scripts/cleanEnviron.sh DISPLAY TERM HOST
 #
 export DIM_DNS_NODE=ecs03
-directory=`dirname $0`
-eval `${directory}/internal/getMonOpts.sh $*`
+#directory=`dirname $0`
+#eval `${directory}/internal/getMonOpts.sh $*`
 export TAN_PORT=YES
 export TAN_NODE=${HOST}
 export UTGID=${HOST}_Errlog_$$;
