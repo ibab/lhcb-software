@@ -69,6 +69,7 @@ class SwapDevicesWindowController(object):
         self.swapDeviceWithSpareWorker = SwapDeviceWithSpareWorker(str(self.device1), str(self.device2), self.parentController.getSpareDB())
         self.swapDeviceWithSpareWorker.connect(self.swapDeviceWithSpareWorker, QtCore.SIGNAL("workProgressed(int)"), self.progressDialog, QtCore.SLOT("setValue(int)"))
         self.swapDeviceWithSpareWorker.connect(self.swapDeviceWithSpareWorker, QtCore.SIGNAL("workFinished()"), self.onFinish)
+        self.swapDeviceWithSpareWorker.connect(self.swapDeviceWithSpareWorker, QtCore.SIGNAL("errorWhileWorking(PyQt_PyObject)"), self.onError)
         self.swapDeviceWithSpareWorker.start()
         print "SwapDevicesWindowController.onSwap() end"
     def onClose(self):
@@ -77,10 +78,15 @@ class SwapDevicesWindowController(object):
         self.swapDevicesWindow.destroy()
         print "SwapDevicesWindowController.onClose() end"
     def onFinish(self):
-        print "InsertNewSparesController.onFinish() start"
+        print "SwapSparesController.onFinish() start"
         #self.parentController.onRefresh() not neessary: no. of devices and spares has not changed
         self.progressDialog.hide()
         self.progressDialog.destroy()
         QtGui.QMessageBox.information(None, "Finish", "Swapping devices finished. Check log-files for details.")
         self.onClose()
-        print "InsertNewSparesController.onFinish() start"
+        print "SwapSparesController.onFinish() start"
+    def onError(self, msg):
+        self.progressDialog.hide()
+        self.progressDialog.destroy()
+        QtGui.QMessageBox.information(None, "Error", str(msg))
+        self.onClose()

@@ -17,13 +17,12 @@ class SwapDeviceWithSpareWorker(QThread):
             sparemacaddress = self.spareDB.equipDB.dhcp.getMACBySerial(self.sparestring)
             if sparemacaddress is None:
                 print "macaddress for "+str(self.sparestring)+" not found!"
+                self.emit(QtCore.SIGNAL("errorWhileWorking(PyQt_PyObject)"), "macaddress for "+str(self.sparestring)+" not found!")
+            else:
+                self.emit(QtCore.SIGNAL("workProgressed(int)"), 25)
+                self.spareDB.confDB.replaceDeviceBySpare(self.devicestring, self.sparestring, sparemacaddress)
+                self.emit(QtCore.SIGNAL("workProgressed(int)"), 50)
+                #self.spareDB.equipDB.swapDevices(devicestring, sparestring) #TODO: test this method
+                self.emit(QtCore.SIGNAL("workProgressed(int)"), 75)
                 self.emit(QtCore.SIGNAL("workFinished()"))
-                QtGui.QMessageBox.information(None, "Error", "macaddress for "+str(self.sparestring)+" not found!")
-                return
-            self.emit(QtCore.SIGNAL("workProgressed(int)"), 25)
-            self.spareDB.confDB.replaceDeviceBySpare(self.devicestring, self.sparestring, sparemacaddress)
-            self.emit(QtCore.SIGNAL("workProgressed(int)"), 50)
-            #self.spareDB.equipDB.swapDevices(devicestring, sparestring) #TODO: test this method
-            self.emit(QtCore.SIGNAL("workProgressed(int)"), 75)
-            self.emit(QtCore.SIGNAL("workFinished()"))
             print "SwapDeviceWithSpareWorker.run() end"
