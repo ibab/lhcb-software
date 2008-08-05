@@ -3,6 +3,7 @@
 //--------------------------
 #include "$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts"
 
+/*
 // Emulate L0
 ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 #include "$L0DUROOT/options/L0Sequence.opts"
@@ -10,4 +11,4 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/L0" };
 
 L0Muon.WriteOnTES = true ;
 L0DU.WriteOnTES = true ;
-
+*/
