@@ -17,7 +17,9 @@ vector_string = GaudiPython.gbl.std.vector('std::string')
 def _tck(x) :
     if type(x) == str and x[0:2] == '0x' :  return int(x,16)
     return int(x)
-
+def _digest(x) :
+    if type(x) == str : x = digest( x )
+    return x
 
 def _createTCKEntries(d, cas ) :
     ApplicationMgr().OutputLevel = ERROR
@@ -25,8 +27,9 @@ def _createTCKEntries(d, cas ) :
     appMgr.createSvc(cas.getFullName())
     s = appMgr.service(cas.getFullName(),'IConfigAccessSvc')
     for tck,id in d.iteritems() :
-        if type(id) == str : id = digest( id )
-        print ' creating mapping:  TCK: ' + str(tck) + ' -> ID: ' + str(id)
+        id  = _digest(id)
+        tck = _tck(tck)
+        print ' creating mapping:  TCK: ' + ('0x%08x'%tck) + ' -> ID: ' + str(id)
         ref = s.readConfigTreeNode( id )
         alias = TCK( ref.get(), tck )
         s.writeConfigTreeNodeAlias(alias)
@@ -102,7 +105,7 @@ def _showProperties(id,algname,property, cas ) :
     x = appMgr.toolsvc().create(cte.name(),interface='IConfigTreeEditor')
     x.printProperties(id,algname,property)
 
-def _updateProperties(id,algname,props, cas  ) :
+def _updateProperties(id,algname,props, label, cas  ) :
     if type(id) == str: id = digest( id )
     pc = PropertyConfigSvc( prefetchConfig = [ id.str() ],
                             ConfigAccessSvc = cas.getFullName() )
@@ -121,8 +124,10 @@ def _updateProperties(id,algname,props, cas  ) :
     (release,runtype) = a[0].alias().str().split('/',3)[1:3]
     updates = vector_string()
     for k,v in props.iteritems() : 
-        updates.push_back( algname + '.' + k + ': ' + v)
-    newId = ed.updateAndWrite(id,updates)
+        item = algname + '.' + k + ': ' + v
+        print 'updating: ' + item
+        updates.push_back( item )
+    newId = ed.updateAndWrite(id,updates,label)
     noderef = cf.readConfigTreeNode( newId )
     top = topLevelAlias( release, runtype, noderef.get() )
     cf.writeConfigTreeNodeAlias(top)
@@ -147,8 +152,8 @@ class Configuration :
         
 
 
-def updateProperties(id,algname,properties, cas = ConfigFileAccessSvc() ) :
-    return execInSandbox( _updateProperties, id,algname,properties,cas )
+def updateProperties(id,algname,properties,label='', cas = ConfigFileAccessSvc() ) :
+    return execInSandbox( _updateProperties, id,algname,properties,label, cas )
 def createTCKEntries(d, cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _createTCKEntries, d, cas )
 def copy( source = ConfigFileAccessSvc() , target = ConfigDBAccessSvc(ReadOnly=False) ) :
