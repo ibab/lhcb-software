@@ -1,9 +1,0 @@
-/** @file Plots.opts
- *
- *  Options to switch on plotting for HLT selections
- *
- *  @author P. Koppenburg
- *  @date 2007-05-06
- */
-//--------------------------------------------------------------
-#include "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py"

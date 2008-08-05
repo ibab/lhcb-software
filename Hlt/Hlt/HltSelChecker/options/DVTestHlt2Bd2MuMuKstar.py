@@ -27,8 +27,6 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder())
 FilterTrueTracks().MCDecayFinder.Decay =  "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc" 
-FilterTrueTracks("FilterTrueMuons").addTool(MCDecayFinder())
-FilterTrueTracks("FilterTrueMuons").MCDecayFinder.Decay =  "[[B0]nos => ^K+ ^pi- ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc, [[B0]os => ^K- ^pi+ ^mu+ ^mu- {,gamma}{,gamma}{,gamma}{,gamma}]cc" 
 #
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
