@@ -49,13 +49,12 @@ def _getConfigurations( cas = ConfigFileAccessSvc() ) :
         info[ i.ref().str() ].update( { 'TAG' : i.alias().str().split('/')[1:] } )
     return info
 
-def _xget( id_ , cas = ConfigFileAccessSvc() ) :
+def _xget( configIDs , cas = ConfigFileAccessSvc() ) :
     #TODO: if id not a list, make it into one...
-    ids = [ _digest(i) for i in id_ ]
-    pc = PropertyConfigSvc( prefetchConfig = [ i.str() for i in ids ],
+    ids = [ _digest(i) for i in configIDs ]
+    pc = PropertyConfigSvc( prefetchConfig = [ id.str() for id in ids ],
                             ConfigAccessSvc = cas.getFullName() )
     cte = ConfigTreeEditor( PropertyConfigSvc = pc.getFullName() )
-    # run program...
     ApplicationMgr().OutputLevel = ERROR
     appMgr = GaudiPython.AppMgr()
     appMgr.initialize()
@@ -63,27 +62,15 @@ def _xget( id_ , cas = ConfigFileAccessSvc() ) :
     svc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
     table = dict()
     for id in ids :
+        print 'fetching information for ' + id.str()
         tab = dict()
         for i in svc.collectLeafRefs( id ) :
             propConfig = svc.resolvePropertyConfig( i )
             #print '    got ' + propConfig.name()
             if propConfig.name() in tab.keys() : raise KeyError("Already in list for %s: '%s'"%(id.str(),propConfig.name()))
-            tab[propConfig.name()] = propConfig
+            tab[propConfig.name()] = PropCfg( propConfig )
         table[id.str()] = tab
     return table 
-
-def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
-    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
-    setl = set( table[lhs].keys() )
-    setr = set( table[rhs].keys() )
-    onlyInLhs = setl - setr
-    if len(onlyInLhs)>0 : print 'only in ' + lhs + ': ' + str(onlyInLhs)
-    onlyInRhs = setr - setl
-    if len(onlyInRhs)>0 : print 'only in ' + rhs + ': ' + str(onlyInRhs)
-    for i in setl & setr :
-        l = table[lhs][i]
-        r = table[rhs][i]
-        if (l.digest() != r.digest()) : print i + ' differs!!'
 
 
 def _copyTree(svc,nodeRef,prefix) :
@@ -184,7 +171,42 @@ class Configuration :
         tck = self.info['TCK']
         if type(tck) == int : tck = '0x%08x' % tck
         print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
-        
+
+class PropCfg :
+    " A class representing a PropertyConfig "
+    def __init__(self, x) :
+        self.name = x.name()
+        self.type = x.type()
+        self.kind = x.kind()
+        self.digest = x.digest().str()
+        self.props = dict()
+        for i in x.properties() : self.props.update( { i.first: i.second } )
+    def properties() : return self.props()
+    def __str__(self) :
+        return '[' + self.type + '/' + self.name + ' ('+self.kind+'): '+ str(self.props)+']'
+
+
+def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
+    table = execInSandbox( _xget, [ lhs, rhs ] , cas ) 
+    setl = set( table[lhs].keys() )
+    setr = set( table[rhs].keys() )
+    onlyInLhs = setl - setr
+    if len(onlyInLhs)>0 : 
+        print 'only in ' + lhs + ': '
+        for i in onlyInLhs : print '   ' + i
+    onlyInRhs = setr - setl
+    if len(onlyInRhs)>0 : 
+        print 'only in ' + rhs + ': ' 
+        for i in onlyInRhs : print '   ' + i
+    print 'different:'
+    for i in setl & setr :
+        (l,r) = ( table[lhs][i], table[rhs][i] )
+        if l.digest != r.digest : 
+            print '   ' + i 
+            print '       ' + lhs + ':' + str(l)
+            print '       ' + rhs + ':' + str(r)
+
+
 
 
 def updateProperties(id,algname,properties,label='', cas = ConfigFileAccessSvc() ) :
