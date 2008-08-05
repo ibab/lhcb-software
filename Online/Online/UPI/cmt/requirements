@@ -3,7 +3,7 @@ branches cmt UPI src
 #
 use OnlineKernel v* Online
 #
-apply_pattern install_more_includes more=UPI
+apply_pattern install_more_includes more=UPI 
 #
 library  UPI *.cpp
 
@@ -24,4 +24,7 @@ apply_pattern declare_python_modules files=*.py
 private
 use Python v* LCG_Interfaces -no_auto_imports
 private
-macro_append  cppflags " -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 "
+macro_append  cppflags " -ansi -pedantic -W -Wall -Woverloaded-virtual -Wno-long-long -Wnon-virtual-dtor -Wwrite-strings -Wpointer-arith -Wno-non-template-friend -Wimplicit -Wreturn-type -Wunused -Wparentheses -Wctor-dtor-privacy -pthread -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
+
+
+
