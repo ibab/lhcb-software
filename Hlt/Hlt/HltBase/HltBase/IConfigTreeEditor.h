@@ -1,4 +1,4 @@
-// $Id: IConfigTreeEditor.h,v 1.1 2008-03-06 15:11:30 graven Exp $
+// $Id: IConfigTreeEditor.h,v 1.2 2008-08-05 12:01:06 graven Exp $
 #ifndef ICONFIGTREEEDITOR_H 
 #define ICONFIGTREEEDITOR_H 1
 
@@ -56,10 +56,12 @@ public:
   // Failure is indicated by returning an 'invalid' digest.
   virtual ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
                                                      const std::multimap<std::string,
-                                                                 std::pair<std::string,std::string> >& updates) const = 0;
+                                                                 std::pair<std::string,std::string> >& updates,
+                                                     const std::string& label) const = 0;
 
   virtual ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
-                                                     const std::vector<std::string>& updates) const = 0;
+                                                     const std::vector<std::string>& updates,
+                                                     const std::string& label) const = 0;
 
 };
 #endif // ICONFIGTREEEDITOR_H
