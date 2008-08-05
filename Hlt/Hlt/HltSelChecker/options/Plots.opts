@@ -6,4 +6,4 @@
  *  @date 2007-05-06
  */
 //--------------------------------------------------------------
-#include "$HLTSELECTIONSROOT/options/HltMonitorPlots.opts"
+#include "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py"
