@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.343 2008-08-04 16:31:29 pkoppenb Exp $
+! $Id: release.notes,v 1.344 2008-08-05 16:09:03 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+!========================== DaVinciTools v17r0 2008-08-05 ===================
 ! 2008-08-04 - Patrick Koppenburg
  - ContextTool : do not preload obsolete geomTool to avoid unnecessary warnings.
 
