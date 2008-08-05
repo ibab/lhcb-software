@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-08-05 - Patrick Koppenburg
+ - Add Z0Checker algorithm and DVTestHlt2Z0.py for Z0, which are a bit different.
+
 ! 2008-07-11 - Patrick Koppenburg
  - Remove all True*.opts files, remove the TrueFilterCriterion association,
    juts keep FilterTrueTracks and put it in a unique file FilterTrueTracks.opts.
