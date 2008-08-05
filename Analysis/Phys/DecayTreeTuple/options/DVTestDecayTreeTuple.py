@@ -41,7 +41,8 @@ tuple.ToolList +=  [
     , "TupleToolPropertime"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
-    , "TupleToolTrackInfo" ]
+    , "TupleToolTrackInfo"
+    , "TupleToolTISTOS" ]
 
 tuple.addTool( PhysDesktop())
 tuple.PhysDesktop.InputLocations = ["Phys/DC06SelBu2eeK"]
@@ -51,7 +52,7 @@ ApplicationMgr().TopAlg += [ tuple ]
 
 # another Tuple with only event-stuff
 evtTuple = EventTuple()
-evtTuple..ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
+evtTuple.ToolList = [ "TupleToolTrigger", "TupleToolEventInfo" , "TupleToolGeneration" ]
 ApplicationMgr().TopAlg += [ evtTuple ]
 
 
@@ -59,4 +60,5 @@ ApplicationMgr().TopAlg += [ evtTuple ]
 ApplicationMgr().EvtMax = 1000 
 
 NTupleSvc().Output = ["FILE1 DATAFILE='Tuple.root' TYP='ROOT' OPT='NEW'"]
+
 
