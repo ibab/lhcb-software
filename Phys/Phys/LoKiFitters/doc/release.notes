@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.8 2008-07-15 10:12:21 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2008-08-05 16:00:45 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiFitters v2r0 2008-08-05 ===================
 ! 2008-07-15 - Vanya BELYAEV
  
 - add new tool LoKi::TrgDistanceCalculator - 
