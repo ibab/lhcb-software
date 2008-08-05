@@ -204,8 +204,8 @@ def diff( lhs, rhs , cas = ConfigFileAccessSvc() ) :
         if l.digest != r.digest : 
             from difflib import unified_diff
             print ''.join( unified_diff(l.fmt(), r.fmt(), 
-                                        l.fqn() + '  ' + lhs,
-                                        r.fqn() + '  ' + rhs, n=0 ) )
+                                        l.fqn(), r.fqn(),
+                                        lhs, rhs, n=0) )
 
 
 
