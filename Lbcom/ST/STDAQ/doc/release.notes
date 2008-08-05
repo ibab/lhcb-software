@@ -4,6 +4,8 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2008-08-05 - fix problem in cluster decoding in case of all banks lost
+
 !=============================== STDAQ v3r10 2008-07-29 ======================
 ! 2008-07-25 - Jeroen Van Tilburg
  - Bug in TTReadoutTool.cpp: Removed condition that skips addSector in a

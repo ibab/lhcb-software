@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.35 2008-07-18 09:37:26 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.36 2008-08-05 12:01:29 mneedham Exp $
 
 #include <algorithm>
 
@@ -102,7 +102,8 @@ StatusCode RawBankToSTClusterAlg::decodeBanks(RawEvent* rawEvt,
   if (missing.empty() == false){
     counter("lost Banks") += missing.size();
     if (tBanks.size() == 0){
-       ++counter("no banks found");
+      createSummaryBlock(0, STDAQ::inValidPcn, false, bankList, missing);
+      ++counter("no banks found");
       return StatusCode::SUCCESS;
     }
   }
