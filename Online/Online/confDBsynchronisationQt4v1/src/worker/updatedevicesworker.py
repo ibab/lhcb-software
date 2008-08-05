@@ -36,6 +36,5 @@ class UpdateDevicesWorker(QThread):
             self.confDB.updateDHCPDataOfDevice(device, self.db)
             workDone += factor
             self.emit(QtCore.SIGNAL("workProgressed(int)"), workDone)
-        #create throttle connectivity
         self.emit(QtCore.SIGNAL("workFinished()"))
         print "UpdateAllDevicesWorker.run() end"
