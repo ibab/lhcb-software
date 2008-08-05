@@ -30,6 +30,8 @@ HltCaloRecoSequence.Members = {"GaudiSequencer/RecoCALOSeq" };
 // Options for Calo reconstruction
 #include "$CALORECOROOT/options/HltCaloSeq.opts"
 
+/// PATCH /// @todo remove
+HltRecoCALOSeq.Members -= { "GaudiSequencer/HltCaloDigits" };
 
 //---------------------
 HltRecoRZVeloSequence.MeasureTime = true;
