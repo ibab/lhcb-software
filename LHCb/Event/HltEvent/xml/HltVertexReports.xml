@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Skwarnicki -->
+<!--- Created : 2008-08-05 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+
+  <package name='HltEvent'>
+
+
+<!-- HltVertexReports class -->
+
+    <class
+      name        = 'HltVertexReports'
+      author      = 'Tomasz Skwarnicki'
+      desc        = 'managed container of Hlt Trigger Vertex Reports'
+      id          = '7551' >
+      
+      <location name='Default'  place='Hlt/VertexReports' />
+      <location name='Emulated' place='Hlt/Emu/VertexReports' />
+
+      <base name='DataObject' />
+      &DataObject;
+
+      <import name='GaudiKernel/SmartRefVector' />
+      <import name='GaudiKernel/VectorMap' />
+      <import name='Event/VertexBase' />
+      <import name='vector' std='TRUE' />
+
+      <typedef
+        type   = 'SmartRefVector&lt; LHCb::VertexBase &gt;'
+        def    = 'HltVertexReport'
+        desc   = 'list of vertices for given trigger selection'
+        access = 'PUBLIC'
+      />
+
+      <typedef
+        type   = 'GaudiUtils::VectorMap&lt; std::string, HltVertexReport &gt;'
+        def    = 'Container'
+        desc   = 'container of HltVertexReport-s keyed by trigger selection name'
+        access = 'PUBLIC'
+      />
+
+      <attribute
+        type      = 'LHCb::HltVertexReports::Container'
+        name      = 'vertexReports'
+        desc      = 'container of HltVertexReport-s keyed by trigger selection name'
+        access    = 'PROTECTED' />
+
+      <!-- report accessor (for convenience) -->
+
+      <method 
+         name='vertexReport'
+         type='const LHCb::HltVertexReports::HltVertexReport*'
+         argList = 'const std::string selectionName'
+         desc='return pointer to Hlt Vertex Report for given trigger selection name (==0 if not found)'
+         const = 'TRUE' >
+        <code>
+    Container::const_iterator rep = m_vertexReports.find(selectionName);
+    if( rep==m_vertexReports.end() )return ((const LHCb::HltVertexReports::HltVertexReport*)(0));
+    return &amp;(rep->second);
+        </code>
+      </method>
+
+      <!-- selection name inquiries (for convenience) -->
+
+      <method
+         name = 'hasSelectionName'
+         type = 'bool'
+         argList = 'const std::string selectionName'
+         desc = 'check if the trigger selection name is present in the container'
+         access ='PUBLIC'
+         const = 'TRUE'
+       >
+        <code>
+          return (m_vertexReports.find(selectionName)!=m_vertexReports.end());
+       </code>
+      </method>
+
+      <method
+        type = 'std::vector &lt; std::string &gt;'
+        name = 'selectionNames'
+        desc = 'return names of the selections stored in the container'
+        const = 'TRUE' >
+        <code>
+    std::vector&lt;std::string&gt; names;
+    Container::const_iterator it = m_vertexReports.begin();
+    while ( it != m_vertexReports.end()) names.push_back((it++)->first);
+    return names;
+        </code>
+      </method>
+
+    <!-- basic iterators -->
+
+      <method
+         name = 'begin'
+         type = 'LHCb::HltVertexReports::Container::const_iterator'
+         desc = 'begin iterator'
+         access ='PUBLIC'
+         const = 'TRUE' >
+        <code>
+          return m_vertexReports.begin();
+       </code>
+      </method>
+        
+      <method
+         name = 'end'
+         type = 'LHCb::HltVertexReports::Container::const_iterator'
+         desc = 'end iterator'
+         access ='PUBLIC'
+         const = 'TRUE'>
+        <code>
+          return m_vertexReports.end();
+       </code>
+      </method>
+        
+      <method
+         name = 'find'
+         type = 'LHCb::HltVertexReports::Container::const_iterator'
+         argList = 'const std::string selectionName'
+         desc = 'find HltVertexReport in the container given its trigger selection name'
+         const = 'TRUE' >
+        <code>
+          return m_vertexReports.find(selectionName);
+       </code>
+      </method>
+        
+     <!-- size -->
+
+     <method
+        name='size'
+        type='LHCb::HltVertexReports::Container::size_type'
+        desc='size of the HltVertexReports container (i.e. number of vertex reports stored)'
+        const = 'TRUE' >
+        <code>
+   return m_vertexReports.size();
+       </code>
+      </method>
+      
+
+     <!-- insertor -->
+
+      <method
+        name='insert'
+        type='StatusCode'
+        argList='const std::string selectionName,const LHCb::HltVertexReports::HltVertexReport vertexReport'
+        desc='insert HltVertexReport for given selectionName, returns StatusCode::FAILURE if duplicate selection name'        
+      >
+        <code>
+   if( m_vertexReports.insert(selectionName,vertexReport).second )return StatusCode::SUCCESS;
+   return StatusCode::FAILURE;
+        </code>
+      </method>
+
+      <!-- readable printout -->
+
+      <method
+        name='fillStream'
+        type='std::ostream&amp;'
+        argList='std::ostream&amp; s'
+        desc='intelligent printout' 
+        const='TRUE' >
+        <code>
+          std::ostream&amp; ss = const_cast&lt; std::ostream&amp; &gt;(s);
+          ss &lt;&lt; " HltVertexReports : { "  &lt;&lt; std::endl;
+          for(Container::const_iterator i=m_vertexReports.begin();
+                                        i!=m_vertexReports.end(); ++i){
+           ss &lt;&lt; " selectionName : " &lt;&lt; i->first;
+	   ss &lt;&lt; " HltVertexReport : size " &lt;&lt; i->second.size() 
+	      &lt;&lt; std::endl;
+	      for( HltVertexReport::const_iterator iv=i->second.begin();
+		   iv!=i->second.end();++iv ){
+		   const VertexBase &amp; v = **iv; 	      
+              ss &lt;&lt; " x " &lt;&lt; v.position().x();
+              ss &lt;&lt; " y " &lt;&lt; v.position().y();
+              ss &lt;&lt; " z " &lt;&lt; v.position().z();
+              ss &lt;&lt; " chi2 " &lt;&lt; v.chi2();
+              ss &lt;&lt; " ndf " &lt;&lt; v.nDoF();
+              ss &lt;&lt; std::endl;
+	      }	      
+          }
+          ss &lt;&lt; " }" &lt;&lt; std::endl;
+          return ss;
+        </code>
+      </method>
+
+    </class>
+
+
+  </package>
+
+</gdd>

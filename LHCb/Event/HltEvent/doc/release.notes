@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2008-08-06 - Tomasz Skwarnicki
+ - added HltVertexReports.xml
+
 !======================== HltEvent v8r11 2008-07-29 ==========================
 ! 2008-07-28 - Tomasz Skwarnicki
  - Added HltDecReports and HltSelReports, containers of Hlt decisions and 
