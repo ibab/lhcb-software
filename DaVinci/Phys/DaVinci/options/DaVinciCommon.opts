@@ -62,6 +62,10 @@ ApplicationMgr.AppName = "DaVinci" ;
  * standard particles options
  */
 #include "$COMMONPARTICLESROOT/options/StandardOptions.opts"
+/*
+ * DC06 standard options
+ */
+#include "$COMMONPARTICLESROOT/options/StandardDC06Options.opts"
 
 //-------------------------------------------------------------
 // Check StatusCodes

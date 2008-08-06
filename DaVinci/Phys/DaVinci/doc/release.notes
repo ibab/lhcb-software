@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.225 2008-07-19 14:23:47 jonrob Exp $
+ $Id: release.notes,v 1.226 2008-08-06 08:52:36 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2008-08-06 - Patrick Koppenburg
+ - Include DC06 standard particles options 
+ - Increment to v20r0
 
 ! 2008-07-19 - Christopher Rob Jones
  - Update example ganga job file for ganga version 5. Old ganga 4 compatible
