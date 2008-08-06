@@ -3,6 +3,8 @@
 ! Responsible : Jose A. Hernando
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v4r0 2008-08-06 ===================
 !2008-08-05 - Gerhard Raven
   - when copy-and-modifying configurations, allow one to specify a new label..
 
