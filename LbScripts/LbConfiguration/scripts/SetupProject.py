@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.16 2008-08-05 17:49:56 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.17 2008-08-06 12:27:12 marcocle Exp $"
 
 ########################################################################
 # Useful constants
@@ -16,6 +16,13 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "LCGCMT"]
+
+# List of pairs (project,[packages]) to automatically select for override
+# The project are prepended to the list of overriding packages and 
+# the packages are appended to the list of used packages
+auto_override_projects = [("ExtraPackages", []),
+                          #("LHCbGrid", ["LHCbGridSys"]), # enabled with --use-grid
+                          ]
 
 ########################################################################
 # Utility classes
@@ -915,6 +922,13 @@ class SetupProject:
                           nargs = 0,
                           help="Add a project to override packages")
         
+        parser.add_option("--no-auto-override", action="store_false",
+                          dest = "auto_override",
+                          help = "Do not automatically prepend the projects %s" % auto_override_projects)
+        
+        parser.add_option("--use-grid", action="store_true",
+                          help = "Enable auto selection of LHCbGrid project")
+        
         parser.set_defaults(output=None,
                             mktemp=False,
                             loglevel = 3,
@@ -926,7 +940,9 @@ class SetupProject:
                             tag_add = [],
                             set_CMTPATH = False,
                             runtime_projects = [],
-                            overriding_projects = []
+                            overriding_projects = [],
+                            auto_override = True,
+                            use_grid = False
                             )
         
         if 'CMTSITE' in os.environ and \
@@ -1239,7 +1255,7 @@ class SetupProject:
                 return 1                
             self.runtime_projects.append(pi)
         
-        # runtime projects
+        # overriding projects
         self.overriding_projects = []
         for p,v in self.opts.overriding_projects:
             vv = FindProjectVersions(p, self.search_path, self.user_area)
@@ -1252,6 +1268,18 @@ class SetupProject:
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (v, p))
                 return 1                
             self.overriding_projects.append(pi)
+        
+        # use LHCbGrid
+        if self.use_grid:
+            auto_override_projects.append( ("LHCbGrid", ["LHCbGridSys"]) )
+        
+        # auto-override projects
+        if self.auto_override:
+            for p, pkgs  in auto_override_projects:
+                vv = FindProjectVersions(p, self.search_path, self.user_area)
+                if vv:
+                    self.overriding_projects.insert(0, makeProjectInfo(versions = vv))
+                    self.use += pkgs
         
         for p in self.overriding_projects + [self.project_info] + self.runtime_projects :
             self._verbose("Project %s %s uses %s policy"%(p.name,

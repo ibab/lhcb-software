@@ -558,7 +558,7 @@ class SetupProjectTestCase(unittest.TestCase):
                 write("project Brunel_%s\n\nuse BRUNEL BRUNEL_%s\n"%(v,v))
             
             env['User_release_area'] = tmp_dir
-            x = os.popen4("python SetupProject.py --shell=%s Brunel %s"%(_shell,v))
+            x = os.popen4("python SetupProject.py --shell=%s --no-auto-override Brunel %s"%(_shell,v))
             s = x[1].read().strip()
             
             self._check_env(s,"Brunel",v)
@@ -699,7 +699,7 @@ version v999r999
         self._createFakeProject(version = "v1r0", tmp_dir = tmp_dir)
         env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
         try:
-            x = os.popen4("python SetupProject.py --shell=%s --disable-CASTOR TestProject"%_shell)
+            x = os.popen4("python SetupProject.py --shell=%s --no-auto-override --disable-CASTOR TestProject"%_shell)
             s = x[1].read()
             self.assert_(project_configured(s, "TestProject", None))
         finally:
@@ -715,7 +715,7 @@ version v999r999
         env["CMTPROJECTPATH"] = env["User_release_area"] = tmp_dir
         
         try:
-            x = os.popen3("python SetupProject.py --shell=%s --disable-CASTOR TestProject --ask"%_shell)
+            x = os.popen3("python SetupProject.py --shell=%s --no-auto-override --disable-CASTOR TestProject --ask"%_shell)
     
             self.assertEquals("Please enter",x[2].read(12))
     

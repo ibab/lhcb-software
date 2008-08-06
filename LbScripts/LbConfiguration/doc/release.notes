@@ -1,3 +1,11 @@
+2008-08-06  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* scripts/SetupProject.py:
+	   - added a list of projects that should always be used (except if
+	     explicitly disabled) if present. (Only ExtraPackages for the moment)
+	   - added the option "--use-grid" to add LHCbGrid to the list of
+	     automatically used projects
+
 2008-08-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* scripts/SetupProject.py:
