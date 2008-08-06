@@ -9,8 +9,18 @@
 #
 # NB : This file is for the ganga 5 releases
 #
-# Submit with
-#  > ganga Boole_Ganga.py
+# To submit you start ganga with the command "ganga" and then
+# at the ganga prompt type
+#
+# [In] 1 : ganga Boole_Ganga.py
+#
+# As an alternative you can also submit the job directly from 
+# the Unix prompt with the line
+# 
+# [user@lxplus]~% ganga Boole_Ganga.py
+# 
+# but in this way you will have the overhead of starting Ganga 
+# for each job you submit.
 #
 #===============================================================================
 #
@@ -84,7 +94,7 @@ j.merger = None
 #j.merger = RootMerger( files = ['histos.root'], ignorefailed = True )
 
 # SmartMerger - Able to handle various file formats (including root files)
-#               See ghelp( SmartMerger ) for more details
+#               See help( SmartMerger ) for more details
 #j.merger = SmartMerger( files = ['histos.root'], ignorefailed = True )
 #-------------------------------------------------------------------------------
 
