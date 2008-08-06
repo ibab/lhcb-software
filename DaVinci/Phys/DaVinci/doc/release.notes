@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.226 2008-08-06 08:52:36 pkoppenb Exp $
+ $Id: release.notes,v 1.227 2008-08-06 10:52:10 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -10,6 +10,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-08-06 - Patrick Koppenburg
+ - Put the meat into options/DaVinci.py and make DaVinci.opts dummy
  - Include DC06 standard particles options 
  - Increment to v20r0
 
