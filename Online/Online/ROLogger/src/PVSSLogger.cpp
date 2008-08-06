@@ -25,7 +25,7 @@ namespace ROLogger {
     int m_checkLimit;
     time_t m_lastChecked;
     
-    std::string _prefix() const;
+    std::string _prefix(const std::string& tag="INFO") const;
   public:
     /// Initializing constructor
     LogDirectory(const std::string& nam);
@@ -101,11 +101,13 @@ namespace ROLogger {
 
 using namespace ROLogger;
 
-std::string LogDirectory::_prefix() const {
+std::string LogDirectory::_prefix(const std::string& tag) const {
   char prefix[132];
   time_t tim = ::time(0);
   tm* now = ::localtime(&tim);
-  ::strftime(prefix,sizeof(prefix),"%b%d-%H%M%S[INFO] ",now);
+  ::strftime(prefix,sizeof(prefix),"%b%d-%H%M%S[",now);
+  ::strcat(prefix,tag.c_str());
+  ::strcat(prefix,"] ");
   ::strcat(prefix,m_node.c_str());
   ::strcat(prefix,": ");
   return prefix;
@@ -269,6 +271,9 @@ int LogDirectory::publish() {
   size_t bytes, rd, buff_len = 0;
   char *buff = 0;
   std::string prefix = _prefix();
+  std::string pref_err = _prefix("ERROR");
+  std::string pref_warn = _prefix("WARN");
+
   ::lib_rtl_sleep(50);
   for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)  {
     const std::string& fn = (*i).first;
@@ -316,9 +321,15 @@ int LogDirectory::publish() {
 	  }
 	  use = use && ::strstr(p0,"Started Gaudijob ") == 0;
 	  use = use && ::strstr(p0,"parenttype ") == 0;
+	  use = use && ::strstr(p0,"<GAUDIJOB:") == 0;
 	  if ( use ) {
 	    std::stringstream os;
-	    os << std::left << std::setw(60) << prefix+fn.substr(0,fn.length()-4)+": " 
+	    std::string pref = prefix;
+	    if ( 0 == strstr(p0,"ERROR") )
+	      pref = pref_err;
+	    else if ( strstr(p0,"> can not execute action <") )
+	      pref = pref_warn;
+	    os << std::left << std::setw(60) << pref+fn.substr(0,fn.length()-4)+": " 
 	       << e->remainder << p0 << std::endl;
 	    print(os.str());
 	  }
