@@ -3,7 +3,8 @@ from PyQt4.QtGui import QFont
 
 
 class DeleteDevicesWindow(QtGui.QWidget):
-    def __init__(self):
+    def __init__(self, parentController):
+        self.parentController = parentController
         QtGui.QWidget.__init__(self)
         self.resize(640, 480)
         self.center()
@@ -12,6 +13,11 @@ class DeleteDevicesWindow(QtGui.QWidget):
         screen = QtGui.QDesktopWidget().screenGeometry()
         size =  self.geometry()
         self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
+    def closeEvent(self, event):
+        print "DeleteDevicesWindow.closeEvent() start"
+        self.parentController.devicesActionMutex.unlock()
+        event.accept()
+        print "DeleteDevicesWindow.closeEvent() end"
 
 class DevicesList(QtGui.QTreeWidget):
     def __init__(self, parent, geometry, headerLabel):

@@ -124,12 +124,6 @@ class DataBase:
         if commit:
             cursor.execute("commit")
         cursor.close()
-    """sends a commit"""
-    #TODO: this function is an error, check for occurences of use and then delete it
-    def commit(self, query):
-        cursor = self.getConnection().cursor()
-        cursor.execute("commit")
-        cursor.close()
     """doing a select query which will not modify data in the database and returning the result"""
     def executeSelectQuery(self, query):
         cursor = self.getConnection().cursor()
@@ -247,11 +241,6 @@ class ConfigurationDB(DataBase):
             if device_up_to_date == True:
                 #print "adding "+str(device)+"to devices_up_to_date"
                 devices_up_to_date.addDevice(device)
-        #print len(new_devices_with_dhcp.getAllDevices())
-        #print len(new_devices_without_dhcp.getAllDevices())
-        #print len(changed_location_system.getAllDevices())
-        #print len(changed_dhcp_system.getAllDevices())
-        #print len(devices_up_to_date.getAllDevices())
         cursor.close()
         return [ new_devices_with_dhcp, new_devices_without_dhcp, changed_location_system, changed_dhcp_system, devices_up_to_date]
     """updates the location of a given device"""

@@ -23,6 +23,7 @@ class UpdateDevicesController(object):
         print "UpdateDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
+        self.parentController.devicesActionMutex.unlock()
         QtGui.QMessageBox.information(None, "Finish", "Updating devices finished. Check log-files for details.")
         self.parentController.onRefreshDevices()
         print "UpdateDevicesController.onFinish() start"

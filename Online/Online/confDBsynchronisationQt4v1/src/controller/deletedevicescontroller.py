@@ -30,6 +30,7 @@ class DeleteDevicesController(object):
         print "DeleteDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
-        self.parentController.onRefreshDevices()
+        self.parentController.devicesActionMutex.unlock()
         QtGui.QMessageBox.information(None, "Finish", "Deleteing devices from ConfDB has finished. Check log-files for details.")
+        self.parentController.onRefreshDevices()
         print "DeleteDevicesController.onFinish() end"

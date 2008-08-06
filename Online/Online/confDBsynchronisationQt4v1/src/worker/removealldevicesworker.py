@@ -66,8 +66,8 @@ class RemoveAllDevicesWorker(QThread):
                         db.DeletePortRow(p)
                         self.confDB.log("deleted port: "+str(p))
                     except RuntimeError, inst:
-                        print "port "+str(p)+" for "+nam+" were not deleted! Reason: "+inst.__str__()
-                        self.confDB.log("port "+str(p)+" for "+nam+" were not deleted! Reason: "+inst.__str__())
+                        print "port "+str(p)+" for "+device[0]+" were not deleted! Reason: "+inst.__str__()
+                        self.confDB.log("port "+str(p)+" for "+device[0]+" were not deleted! Reason: "+inst.__str__())
                         self.emit(QtCore.SIGNAL("setValue(int)"), workDone)
                         continue
                 try:

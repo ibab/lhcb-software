@@ -3,8 +3,9 @@ from PyQt4.QtGui import QFont
 
 
 class NewDevicesWindow(QtGui.QWidget):
-    def __init__(self):
+    def __init__(self, parentController):
         QtGui.QWidget.__init__(self)
+        self.parentController = parentController
         self.resize(640, 480)
         self.center()
         #self.show()
@@ -12,6 +13,11 @@ class NewDevicesWindow(QtGui.QWidget):
         screen = QtGui.QDesktopWidget().screenGeometry()
         size =  self.geometry()
         self.move((screen.width()-size.width())/2, (screen.height()-size.height())/2)
+    def closeEvent(self, event):
+        print "NewDevicesWindow.closeEvent() start"
+        self.parentController.devicesActionMutex.unlock()
+        event.accept()
+        print "newDevicesWindow.closeEvent() end"
 
 class DevicesList(QtGui.QTreeWidget):
     def __init__(self, parent, geometry, headerLabel):

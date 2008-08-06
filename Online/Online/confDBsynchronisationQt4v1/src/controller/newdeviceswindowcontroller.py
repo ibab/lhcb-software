@@ -5,10 +5,10 @@ from view.newdeviceswindow import DevicesList
 from insertnewdevicescontroller import InsertNewDevicesController
 
 class NewDevicesWindowController(object):
-    def __init__(self, confDB, equipDB, parentController):
+    def __init__(self, parentController):
         self.parentController = parentController
-        self.confDB = confDB
-        self.equipDB = equipDB
+        self.confDB = self.parentController.getConfDBCxOracleConnection()
+        self.equipDB = self.parentController.getEquipDBCxOracleConnection()
         system = self.equipDB.getSystem()
         self.newDevicesListModel = []
         allDevices = system.getAllDevices()
@@ -28,7 +28,7 @@ class NewDevicesWindowController(object):
         progressDialog.destroy()
         if len(self.newDevicesListModel) == 0:
             QtGui.QMessageBox.information(None, "No new devices", "There are no new devices.\nIt seems that configuration database is synchronal with lhcbintegration.")
-        self.newDevicesWindow = NewDevicesWindow()
+        self.newDevicesWindow = NewDevicesWindow(self.parentController)
         
         self.selectedDevicesListModel = []
         
@@ -86,7 +86,7 @@ class NewDevicesWindowController(object):
         self.newDevicesWindow.connect(self.removeThisButton, QtCore.SIGNAL("clicked()"), self.onRemoveThis)
         
         self.newDevicesWindow.connect(self.insertButton, QtCore.SIGNAL("clicked()"), self.onInsert)
-        self.newDevicesWindow.connect(self.closeButton, QtCore.SIGNAL("clicked()"), self.onClose)
+        self.newDevicesWindow.connect(self.closeButton, QtCore.SIGNAL("clicked()"), self.newDevicesWindow.close)
         
         #self.newDevicesWindow.connect(self.newDevicesList, QtCore.SIGNAL('itemClicked(QTreeWidgetItem*, int)'), self.onClickNewDevices)
         #self.newDevicesWindow.connect(self.selectedDevicesList, QtCore.SIGNAL('itemClicked(QTreeWidgetItem*, int)'), self.onClickSelectedDevices)
@@ -143,11 +143,6 @@ class NewDevicesWindowController(object):
             self.newDevicesWindow.destroy()
             self.insertNewDevicesController = InsertNewDevicesController(itemSerials, self.parentController)
         print "NewDevicesWindowController.onInsert() end"
-    def onClose(self):
-        print "NewDevicesWindowController.onClose() start"
-        self.newDevicesWindow.hide()
-        self.newDevicesWindow.destroy()
-        print "NewDevicesWindowController.onClose() end"
     def onClickNewDevices(self):
         print "NewDevicesWindowController.onClickNewDevices() start"
         data = self.newDevicesList.currentItem().data(0, 32).toString()

@@ -19,5 +19,6 @@ class TFCMunin01Controller(object):
         print "InsertNewSparesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
+        self.parentController.devicesActionMutex.unlock()
         QtGui.QMessageBox.information(None, "Finish", "Connecting Hugins to TFCMUNIN01. Check log-files for details.")
         print "InsertNewSparesController.onFinish() start"

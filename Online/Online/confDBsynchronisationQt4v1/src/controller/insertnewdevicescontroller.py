@@ -1,6 +1,7 @@
 from worker.insertdevicesworker import InsertDevicesWorker
 from controller import Controller
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtCore import QMutex
 
 class InsertNewDevicesController(object):
     def __init__(self, serialnbs, parentController):
@@ -22,6 +23,7 @@ class InsertNewDevicesController(object):
         print "InsertNewDevicesController.onFinish() start"
         self.progressDialog.hide()
         self.progressDialog.destroy()
+        self.parentController.devicesActionMutex.unlock()
         QtGui.QMessageBox.information(None, "Finish", "Inserting devices finished. Check log-files for details.")
         self.parentController.onRefreshDevices()
         print "InsertNewDevicesController.onFinish() end"

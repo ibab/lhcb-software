@@ -30,7 +30,7 @@ class DeleteDevicesWindowController(object):
         if len(self.newDevicesListModel) == 0:
             QtGui.QMessageBox.information(None, "No devices", "At the moment there exist no devices\nin ConfDB which could be deleted!.")
             return
-        self.deleteDevicesWindow = DeleteDevicesWindow()
+        self.deleteDevicesWindow = DeleteDevicesWindow(self.parentController)
         
         self.selectedDevicesListModel = []
         
@@ -88,7 +88,7 @@ class DeleteDevicesWindowController(object):
         self.deleteDevicesWindow.connect(self.removeThisButton, QtCore.SIGNAL("clicked()"), self.onRemoveThis)
         
         self.deleteDevicesWindow.connect(self.deleteButton, QtCore.SIGNAL("clicked()"), self.onDelete)
-        self.deleteDevicesWindow.connect(self.closeButton, QtCore.SIGNAL("clicked()"), self.onClose)
+        self.deleteDevicesWindow.connect(self.closeButton, QtCore.SIGNAL("clicked()"), self.deleteDevicesWindow.close)
 
         self.deleteDevicesWindow.show()
     def setNewDevicesListModel(self, newDevicesListModel):
@@ -142,11 +142,6 @@ class DeleteDevicesWindowController(object):
             self.deleteDevicesWindow.destroy()
             self.deleteDevicesController = DeleteDevicesController(self.parentController, itemSerials)
         print "DeleteDevicesWindowController.onDelete() end"
-    def onClose(self):
-        print "DeleteDevicesWindowController.onClose() start"
-        self.deleteDevicesWindow.hide()
-        self.deleteDevicesWindow.destroy()
-        print "DeleteDevicesWindowController.onClose() end"
     def onClickNewDevices(self):
         print "DeleteDevicesWindowController.onClickNewDevices() start"
         data = self.newDevicesList.currentItem().data(0, 32).toString()

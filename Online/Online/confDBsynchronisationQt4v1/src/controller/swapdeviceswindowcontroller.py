@@ -82,6 +82,8 @@ class SwapDevicesWindowController(object):
         #self.parentController.onRefresh() not neessary: no. of devices and spares has not changed
         self.progressDialog.hide()
         self.progressDialog.destroy()
+        self.parentController.devicesActionMutex.unlock()
+        self.parentController.sparesActionMutex.unlock()
         QtGui.QMessageBox.information(None, "Finish", "Swapping devices finished. Check log-files for details.")
         self.onClose()
         print "SwapSparesController.onFinish() start"
