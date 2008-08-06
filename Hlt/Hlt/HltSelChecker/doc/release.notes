@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2008-08-06 - Patrick Koppenburg
- - Rename B2DiMuon nto BiasedDiMuon
+ - Rename B2DiMuon to BiasedDiMuon
+ - HltStatistics : protects against non-run Hlt
 
 !========================== HltSelChecker v7r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg

@@ -1,10 +1,11 @@
-// $Id: Hlt2Statistics.cpp,v 1.2 2008-07-01 16:48:41 pkoppenb Exp $
+// $Id: Hlt2Statistics.cpp,v 1.3 2008-08-06 19:17:50 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/GenHeader.h" 
+#include "Event/HltSummary.h"
 #include "Kernel/ParticleID.h" 
 // local
 #include "Hlt2Statistics.h"
@@ -108,14 +109,15 @@ StatusCode Hlt2Statistics::execute() {
     }
     if (msgLevel(MSG::VERBOSE)) verbose() << "Process type is " << (*ic)->processType() << endmsg ;
   }
-  
 
   // fill result for HLT
-  if ( m_summaryTool->decision() ) if (!m_algoCorr->fillResult("Hlt2", true )) return StatusCode::FAILURE;
-  strings sels = m_summaryTool->selections() ;
-  for (strings::const_iterator i = sels.begin() ; i!= sels.end() ; ++i){
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling " << *i << endmsg;
-    if (!m_algoCorr->fillResult(*i, true )) return StatusCode::FAILURE;
+  if ( exist<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default)){  
+    if ( m_summaryTool->decision() ) if (!m_algoCorr->fillResult("Hlt2", true )) return StatusCode::FAILURE;
+    strings sels = m_summaryTool->selections() ;
+    for (strings::const_iterator i = sels.begin() ; i!= sels.end() ; ++i){
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling " << *i << endmsg;
+      if (!m_algoCorr->fillResult(*i, true )) return StatusCode::FAILURE;
+    }
   }
   
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "End of event" << endmsg;
