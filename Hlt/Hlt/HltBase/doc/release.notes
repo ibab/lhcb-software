@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v5r0 2008-08-06 ===================
 ! 2008-08-05 - Gerhard Raven
  - allow specification of new label when copy-and-modifying configurations
 
