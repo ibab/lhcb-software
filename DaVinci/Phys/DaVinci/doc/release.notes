@@ -1,4 +1,4 @@
- $Id: release.notes,v 1.228 2008-08-06 10:53:08 pkoppenb Exp $
+ $Id: release.notes,v 1.229 2008-08-06 10:55:53 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,7 +9,12 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v1920 2008-08-06 ===================
+! 2008-08-06 - Chris Jones
+ - Fix typo in DaVinci_Ganga.py and add usage suggestion from Ulrik.
+ - For clarity remove DaVinci_Old_Ganga.py (ganga 4 is obsolete, users should 
+   move to 5)
+
+!========================== DaVinci v20r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg
  - Put the meat into options/DaVinci.py and make DaVinci.opts dummy
  - Include DC06 standard particles options 
