@@ -325,7 +325,7 @@ int LogDirectory::publish() {
 	  if ( use ) {
 	    std::stringstream os;
 	    std::string pref = prefix;
-	    if ( 0 == strstr(p0,"ERROR") )
+	    if ( strstr(p0,"ERROR") )
 	      pref = pref_err;
 	    else if ( strstr(p0,"> can not execute action <") )
 	      pref = pref_warn;

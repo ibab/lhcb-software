@@ -10,7 +10,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.10 2008-06-05 09:42:15 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/PartitionDisplay.cpp,v 1.11 2008-08-06 13:59:53 frankb Exp $
 
 // Framework include files
 #include "ROLogger/PartitionDisplay.h"
@@ -135,6 +135,7 @@ void PartitionDisplay::updateFarms() {
     ::upic_insert_param_line(m_id, CMD_COM2, ++nf, setupParams(m_monitoring,true).c_str(), "");
     m_items[nf] = std::make_pair(true,m_monitoring);
   }
+  ::upic_set_cursor(m_id,m_menuCursor=CMD_WILD_NODE,0);
 }
 
 void PartitionDisplay::handle(const Event& ev) {
