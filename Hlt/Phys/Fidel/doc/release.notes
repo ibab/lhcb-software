@@ -4,7 +4,8 @@
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
 
-! 2008-08-04 - Patrick Koppenburg
+!!========================== Fidel v1r2 2008-08-06 ===================
+ 2008-08-04 - Patrick Koppenburg
  - Removed Hlt2SelB2TwoBody.py. Use the one in HltSelections.
  - Check StatusCodes
 
