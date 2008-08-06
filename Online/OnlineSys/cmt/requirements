@@ -27,7 +27,7 @@ use InsertDB          v1r2     Online
 use MBMDump           v1r8     Online
 use OMAlib            v1r1     Online
 use OnlineDummyReader v1r4     Online
-use OnlineHistDB      v4r9     Online
+use OnlineHistDB      v4r10    Online
 use OnlineKernel      v1r18    Online
 use OnlineTasks       v1r13    Online
 use Presenter         v0r10    Online
