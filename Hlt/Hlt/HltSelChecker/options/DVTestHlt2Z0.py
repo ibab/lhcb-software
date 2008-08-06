@@ -7,7 +7,7 @@
  ####################################################
 from Gaudi.Configuration import *
 from Configurables import Z0Checker, HltBackgroundCategory
-importOptions ("$HLTSELECTIONSROOT/options/DVTestHlt.py")
+importOptions ("$HLTSELECTIONSROOT/options/DVTestHlt2.py")
 #
 # background category
 #

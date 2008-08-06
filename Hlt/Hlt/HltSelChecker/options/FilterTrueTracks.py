@@ -9,8 +9,8 @@ from Gaudi.Configuration import *
 from Configurables import GaudiSequencer, FilterTrueTracks, HltCorrelations
 #
 GaudiSequencer("SeqTrueSignalTracks").Members = [ FilterTrueTracks() ]
-FilterTrueTracks.TracksPath = [ "Hlt/Track/Forward" ]
-FilterTrueTracks.OutputPath = "Hlt/Track/Signal"
+FilterTrueTracks().TracksPath = [ "Hlt/Track/Forward" ]
+FilterTrueTracks().OutputPath = "Hlt/Track/Signal"
 #
 # You *MUST* also configure FilterTrueTracks.MCDecayFinder.Decay
 #

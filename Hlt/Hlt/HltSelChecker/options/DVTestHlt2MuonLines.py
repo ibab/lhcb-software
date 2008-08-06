@@ -32,11 +32,11 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 #
 # Options
 #
-importOptions( "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts")
+importOptions( "$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
-ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ]                             
+ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2MuMuKstar.root' TYP='ROOT' OPT='NEW'" ] 
 
 ###

@@ -12,6 +12,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-08-06 - Patrick Koppenburg
+ - Some bug fixes in options
+
 ! 2008-08-05 - Patrick Koppenburg
  - Add Z0Checker algorithm and DVTestHlt2Z0.py for Z0, which are a bit different.
  - Translate all .opts to .py

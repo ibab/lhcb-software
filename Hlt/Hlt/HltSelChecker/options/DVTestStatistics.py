@@ -7,7 +7,7 @@
 from Gaudi.Configuration import *
 from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger
 
-importOptions("$HLTSELECTIONSROOT/options/DVTestHlt.opts")
+importOptions("$HLTSELECTIONSROOT/options/DVTestHlt2.py")
 
 # sequencer
 statseq = GaudiSequencer("StatisticsSeq")
@@ -39,14 +39,9 @@ NTupleSvc().Output = ["FILE1 DATAFILE='HltStatsTuple.root' TYP='ROOT' OPT='NEW'"
 
 # Hlt2Statistics().OutputLevel = 1 ;
 
-# importOptions("$HLTSELECTIONSROOT/options/Bs2JpsiPhiDigi.opts")
-# importOptions("$HLTSELECTIONSROOT/options/Bs2PhiPhiDigi.opts")
-# importOptions("$HLTSELECTIONSROOT/options/B2DstarX.opts")
-importOptions("$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts")
-# importOptions("$HLTSELECTIONSROOT/options/MinimumBiasRaw.opts")
-# importOptions("$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts")
+importOptions("$HLTSELECTIONSROOT/options/MinimumBiasDst.py")
 
-ApplicationMgr().EvtMax = 100000
+ApplicationMgr().EvtMax = 10000
 
 EventSelector().PrintFreq = 1000 
 
