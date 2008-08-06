@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2008-08-06 - Patrick Koppenburg
+ - Rename B2DiMuon nto BiasedDiMuon
+
 !========================== HltSelChecker v7r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg
  - Some bug fixes in options
