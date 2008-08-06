@@ -4,6 +4,7 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v2r3 2008-08-06 ===================
 ! 2008-07-29 - Johannes Albrecht
  - TsaConfirmTool.h,cpp: changes for Panoramix drawing now also in TsaConfirmTool
 
