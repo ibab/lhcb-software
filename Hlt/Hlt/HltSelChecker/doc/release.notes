@@ -3,15 +3,8 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
-!
-! Plan is to add all channels stripped by Hans:
-!   Done:  B2DiMuon B2HH B2JpsiX_MuMu Bd2D0Kstar Bd2MuMuKstar Bs2DsH Bs2PhiPhi 
-!          Bs2MuMu Dst-PiD-HH Bd2DstMu Bu2llK Bs2DsDs Bu2KD 
-!   To do: Bd2DstPi (not stripped by Hans)
-!   Not yet in HLT : Bd2PiPiPi Bd2KstD2KSPiPi Bs2phigamma
-!
-!-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v7r0 2008-08-06 ===================
 ! 2008-08-06 - Patrick Koppenburg
  - Some bug fixes in options
 
