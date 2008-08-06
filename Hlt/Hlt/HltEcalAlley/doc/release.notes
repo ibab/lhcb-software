@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v1r1 2008-08-06 ===================
 ! 2008-07-31 - Gerhard Raven
  - adapt to changes to HltAlgorithm
 

@@ -3,10 +3,11 @@
 ! Responsible : Jaap Panman
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
+
+!========================== HltLuminosity v1r1 2008-08-06 ===================
 ! 2008-08-01 - Gerhard Raven
  - follow changes to HltAlgorithm
 
-!=============== HltLuminosity v1r1 2008-07-31 =============================
 ! 2008-07-23 - Jaap Panman
  - add algorithms to count objects: LumiCountHltTracks, LumiCountTracks, 
  - LumiCountVertices, LumiFromL0DU
