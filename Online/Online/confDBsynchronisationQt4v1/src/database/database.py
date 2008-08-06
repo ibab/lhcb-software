@@ -13,6 +13,7 @@ from model.Hugin import Hugin
 from model.Tell1 import Tell1
 from model.UKL1 import UKL1
 from model.spare import Spare
+from model.TFCMUNIN01 import TFCMUNIN01
 from string import upper, lower, split, replace
 #import wx
 from re import compile, sub
@@ -773,6 +774,7 @@ class ConfigurationDB(DataBase):
                 pass
         return vetells
     def getDeviceBySerial(self, serialnb):
+        tfcmunin01 = TFCMUNIN01(tfc)
         #print "ConfigurationDB.getDeviceBySerial("+str(serialnb)+") start"
         query = """SELECT lg.devicename, lg.location, hw.responsible, lg.serialnb, ipinfo.ipaddress, p.macaddress
                     FROM lhcb_hw_devices hw 
@@ -784,6 +786,8 @@ class ConfigurationDB(DataBase):
         if len(result) == 0:
             #print "module with serilanb "+str(serialnb)+" not found!"
             return None
+        if serialnb == tfcmunin01.sn:
+            return tfcmunin01
         module = result[0]
         if len(module) == 0:
             return None #device not found
@@ -854,10 +858,15 @@ class EquipmentDB(DataBase):
         devices = self.getAllDevices()
         for device in devices:
             system.addDevice(device) #will manage the subsystems automatically
-            system.getMasterHugin(device)
+            #system.getMasterHugin(device)
+        tfcmunin01 = TFCMUNIN01(tfc)
+        system.addDevice(tfcmunin01)
         return system
     """returns a device with the given serial or None if not found"""
     def getDeviceBySerial(self, serial):
+        tfcmunin01 = TFCMUNIN01(tfc)
+        if serial == tfcmunin01.sn:
+            return tfcmunin01
         query = "select b.name,b.label,b.responsible,b.position,b.item_id from board b where item_id = '"+str(serial)+"'"
         modules = self.executeSelectQuery(query)
         if len(modules) == 0:
