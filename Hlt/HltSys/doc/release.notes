@@ -5,6 +5,9 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+! 2008-08-06 - Patrick Koppenburg
+ - L0.opts : Flag it as temporary. Will be removed in next version. 
+
 ! 2008-08-05 - Patrick Koppenburg
  - UGLY PATCH in HltRecoSequence.opts
 /// PATCH /// @todo remove                                                                                                                  
