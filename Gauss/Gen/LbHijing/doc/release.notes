@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2008-08-06 - Patrick Robbe 
+ - Move to HEPMC2
+
 !========================= LbHijing v3r2 2008-04-11 ==========================
 ! 2008-04-10 - Gloria CORTI
  - Remove obsolete LbHijing_load.cpp

@@ -4,6 +4,8 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 // from Event
 #include "Event/GenCollision.h"
@@ -115,19 +117,25 @@ StatusCode HijingProduction::generateEvent( HepMC::GenEvent * theEvent ,
 
   // Now convert to LHCb units:
   for ( HepMC::GenEvent::particle_iterator p = theEvent -> particles_begin() ;
-        p != theEvent -> particles_end() ; ++p ) 
-    (*p) -> set_momentum( (*p) -> momentum() * GeV ) ;
-
+        p != theEvent -> particles_end() ; ++p ) {
+    HepMC::FourVector newMom ;
+    newMom.setX( (*p) -> momentum() . x() * Gaudi::Units::GeV ) ;
+    newMom.setY( (*p) -> momentum() . y() * Gaudi::Units::GeV ) ;
+    newMom.setZ( (*p) -> momentum() . z() * Gaudi::Units::GeV ) ;
+    newMom.setT( (*p) -> momentum() . t() * Gaudi::Units::GeV ) ;
+  }
+  
   // Not really needed since all particles come from (0,0,0,0)
   // but done anyway to have a consistent implementation
   // with the other generators
   for ( HepMC::GenEvent::vertex_iterator v = theEvent -> vertices_begin() ;
         v != theEvent -> vertices_end() ; ++v ) {
-    CLHEP::HepLorentzVector newPos ;
+    HepMC::FourVector newPos ;
     newPos.setX( (*v) -> position() . x() ) ;
     newPos.setY( (*v) -> position() . y() ) ;
     newPos.setZ( (*v) -> position() . z() ) ;
-    newPos.setT( ( (*v) -> position() . t() * mm ) / CLHEP::c_light ) ;
+    newPos.setT( ( (*v) -> position() . t() * Gaudi::Units::mm ) / 
+                 Gaudi::Units::c_light ) ;
 
     (*v) -> set_position( newPos ) ;
   }
