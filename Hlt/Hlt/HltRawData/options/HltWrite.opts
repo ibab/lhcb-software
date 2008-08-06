@@ -7,11 +7,15 @@ ApplicationMgr.DLLs += { "HltRawData" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/HltWriteSeq" };
 HltWriteSeq.MeasureTime = true;
 
-HltWriteSeq.Members += {"HltDecReportsMaker","HltSelReportsMaker","HltDecReportsWriter","HltSelReportsWriter"};
+HltWriteSeq.Members += {"HltDecReportsMaker" ,"HltSelReportsMaker" ,"HltVertexReportsMaker"};
+HltWriteSeq.Members += {"HltDecReportsWriter","HltSelReportsWriter","HltVertexReportsWriter"};
+
 HltDecReportsMaker.OutputLevel            = 3;
 HltDecReportsWriter.OutputLevel            = 3;
 HltSelReportsMaker.OutputLevel            = 3;
 HltSelReportsWriter.OutputLevel            = 3;
+HltVertexReportsMaker.OutputLevel            = 3;
+HltVertexReportsWriter.OutputLevel            = 3;
 
 
 // 0=infinity 1=always 100=every 100th event etc.
@@ -52,4 +56,6 @@ HltSelReportsMaker.SelectionMaxCandidatesDebug = {
    "RZVelo" : 0, 
    "Velo"   : 0 
 };
+
+HltVertexReportsMaker.VertexSelections += {"PV2D"};
 
