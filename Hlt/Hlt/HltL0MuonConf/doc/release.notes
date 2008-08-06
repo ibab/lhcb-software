@@ -3,6 +3,8 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Matching of Muon object (L0 or Muon segment) to T station
 !-----------------------------------------------------------------------------
+
+!========================== HltL0MuonConf v3r3 2008-08-06 ===================
 ! 2008-07-30 - Gerhard Raven
  - follow changes to HltAlgorithm in HltBase
 
