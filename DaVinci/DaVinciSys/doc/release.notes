@@ -3,6 +3,18 @@ Package     : Phys/DaVinci
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v20r0>2008-08-06 DaVinci v20r0. First version with LHCb v25 series</A></H1><PRE>
+Based on Phys v7r0, Analysis v2r0, Rec v5r10, HLT v4r0, Lbcom v6r21, LHCb v25r0, Gaudi v20r2, LCGCMT 55
+
+ - Users are encouraged to write python options. 
+ - Default geometry tool is now IDistanceCalculator. IGeomDispCalculator is obsolete
+ - Standard Particles for DC06 renamed to StdDC06LooseXXX. 
+   . Selections adapted accordingly.
+   . One can now start editing StdLooseXXX for real data
+ - FilterDesktop uses LoKi::Hybrid::FilterCriterion. Change Filter to get old behaviour.
+   . Selections adapted accordingly
+ - New state machine in Hlt1, all-python options Hlt2
+
 </PRE><H1><A NAME=v19r14>2008-07-09 DaVinci v19r14. First version with LHCb v24 series</A></H1><PRE>
 Based on Phys v6r14, Analysis v1r14, Rec v5r8, HLT v3r4, Lbcom v6r19, LHCb v24r0, Gaudi v20r1, LCGCMT 55
 
