@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.11 2008-08-04 07:12:38 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/components/DimCmdServer.h,v 1.12 2008-08-06 15:40:59 evh Exp $
 #ifndef GAUCHO_DIMCMDSERVER_H
 #define GAUCHO_DIMCMDSERVER_H 1
 
@@ -30,7 +30,7 @@ class DimCmdServer : public DimCommand {
 protected:
   IIncidentSvc* m_incidentSvc;
 public:
-  DimCmdServer(std::string name,ISvcLocator* svclocator );
+  DimCmdServer(std::string name,ISvcLocator* svclocator, IGauchoMonitorSvc* publishsvc );
   virtual ~DimCmdServer();
   void commandHandler();
 private:
@@ -39,8 +39,8 @@ private:
   IMessageSvc* m_msgsvc;
   IHistogram* myhisto;
   DataObject* mydataobject;
-  IGauchoMonitorSvc* m_publishsvc;
- 
+  IGauchoMonitorSvc* m_publishSvc;
+
 };
 
 #endif //GAUCHO_DIMCMDSERVER_H

@@ -79,6 +79,10 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
+  if( IService::INITIALIZED == this->state() ) {
+    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
+    return StatusCode::SUCCESS; 
+  }
   Service::initialize(); 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
@@ -88,20 +92,21 @@ StatusCode MonitorSvc::initialize() {
     m_dimpropsvr= new DimPropServer(m_utgid, serviceLocator());
     msg << MSG::INFO << "DimPropServer created with name " << m_utgid << endreq;
   }
-  else msg << MSG::INFO << "DimPropServer process is disabled." << endreq;
+  else msg << MSG::INFO << "DimPropServer process is disable." << endreq;
 
   if ( 0 == m_disableDimPropServer) {
-    m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator());
+    m_dimcmdsvr = new DimCmdServer( (m_utgid+"/"), serviceLocator(), this);
     msg << MSG::INFO << "DimCmdServer created with name " << (m_utgid+"/") << endreq;
   }
-  else msg << MSG::INFO << "DimCmdServer process is disabled." << endreq; 
+  else msg << MSG::INFO << "DimCmdServer process is disable." << endreq; 
 
   if ( 0 == m_disableMonRate) {
-    msg << MSG::DEBUG << "Declaring MonRate Information" << endreq;
+    msg << MSG::INFO << "new MonRate " << endreq;
     m_monRate = new MonRate(msgSvc(), "MonitorSvc", 0);
     m_monRateDeclared = false;
+    msg << MSG::INFO << "End of new MonRate Information" << endreq;
   }
-  else  msg << MSG::INFO << "MonRate process is disabled." << endreq; 
+  else  msg << MSG::INFO << "MonRate process is disable." << endreq; 
 
   return StatusCode::SUCCESS;
 }
@@ -233,14 +238,21 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
   if (name.find("COUNTER_TO_RATE") != std::string::npos) {
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
-      if (!m_monRateDeclared) { 
+      if (!m_monRateDeclared) {
+        msg << MSG::INFO << "Declaring MonRate " << endreq; 
         if (!registerName("monRate", this)) return;
+        msg << MSG::INFO << "Setting comments in MonRate " << endreq; 
         m_monRate->setComments("My name is MonRate. Nice to meet you !!");
+        msg << MSG::INFO << "Registering MonRate " << endreq; 
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if ("" == dimSvcName.second) return;
+        msg << MSG::INFO << "Printing MonRate " << endreq;
+        m_monRate->print();
+        msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
+      msg << MSG::INFO << "Adding Counter to MonRate"<< newName << ", whit description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disable." << endreq; 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.11 2008-08-04 07:12:38 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/lib/MonObject.cpp,v 1.12 2008-08-06 15:40:59 evh Exp $
 
 // Include files
 #include "Gaucho/MonObject.h"

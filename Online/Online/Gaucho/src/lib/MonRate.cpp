@@ -19,7 +19,6 @@ MonRate::~MonRate(){
 
 void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar, version);
-  
   ar & (*m_runNumber);
   ar & (*m_cycleNumber);
   ar & (*m_deltaT);
@@ -36,7 +35,6 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
   }
   
   m_profile = new TProfile("profile","MonRate Profile", size, 0, size);
-  
   m_profile->Fill(0.00, 1.00, 1.00);
   int i = 1;
   for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
@@ -44,9 +42,8 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_profile->Fill((double)i, (double)(*(m_counterMapIt->second.first)), 1.00);
     i++;
   }
-  
+
   MonProfile::save(ar, version);
-  
   delete m_profile; m_profile = 0;
 }
 

@@ -96,7 +96,7 @@ StatusCode UpdateAndReset::initialize() {
 
   if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_timeFirstEvInRun, m_timeLastEvInCycle, m_gpsTimeLastEvInCycle);
 
-  //start(20); // we wait a few seconds 
+  //DimTimer::start(20); // we wait a few seconds 
 
   return StatusCode::SUCCESS;
 }
@@ -114,7 +114,7 @@ void UpdateAndReset::timerHandler()
   verifyAndProcessRunChange("timer");
   verifyAndProcessCycleChange("timer");
 
-  start(1); // we verify the cycle status every 1 second
+  DimTimer::start(1); // we verify the cycle status every 1 second
 //  msg << MSG::INFO << "***********************End timerHandler*******************************" << endreq;
 //  msg << MSG::INFO << "**********************************************************************" << endreq;
 }
@@ -140,7 +140,7 @@ StatusCode UpdateAndReset::execute() {
   // This is because of plot method declareinfo in the execute method...
   if (m_firstExecute){ 
    m_firstExecute = false;
-   start(1); 
+   DimTimer::start(1); 
   }
 //  msg << MSG::DEBUG << "End of Execute method # " << m_countExecutes << endreq;
 //  msg << MSG::DEBUG << "*****************************************************************************" << endreq;

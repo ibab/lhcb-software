@@ -1,4 +1,4 @@
-// $Id: DimPropServer.cpp,v 1.12 2008-08-04 14:22:52 evh Exp $
+// $Id: DimPropServer.cpp,v 1.13 2008-08-06 15:40:59 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -24,8 +24,8 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IHistogramSvc.h"
 //#include "AIDA/IHistogram1D.h"
-#include "Gaucho/IGauchoMonitorSvc.h"
-#include "GaudiKernel/IMonitorSvc.h"
+// #include "Gaucho/IGauchoMonitorSvc.h"
+// #include "GaudiKernel/IMonitorSvc.h"
 #include "AIDA/IAxis.h"
 
 #ifdef WIN32
@@ -36,20 +36,15 @@ namespace wins {
 #include <unistd.h>
 #endif
 
+//m_histogramSvc =EventDataService but used as generic name for anything on store
+// IGauchoMonitorSvc* m_publishsvc;
 
-//EDS =EventDataService but used as generic name for anything on store
-IHistogramSvc* EDS=0; 
-IService* m_EDS;
-IGauchoMonitorSvc* m_publishsvc;
-
-
-DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) : 
-  DimRpc(name.c_str(),"C", "C") {
+DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :  DimRpc(name.c_str(),"C", "C") {
   StatusCode sc;
-  m_publishsvc = 0;
+  //m_publishsvc = 0;
+  m_histogramSvc = 0; 
   // get pointer to ServiceLocator
   m_svcloc = svclocator;    
-  
   // get msg logging
   sc = svclocator->service("MessageSvc", m_msgsvc);
   MsgStream log(m_msgsvc, "DimPropServer");  
@@ -60,11 +55,8 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :
     log << MSG::DEBUG << "MessageSvc located." << endreq;
   }
 
-
   // to walk the transient store  
-
-
-  sc = svclocator->service("HistogramDataSvc",EDS,true); 
+  sc = svclocator->service("HistogramDataSvc", m_histogramSvc,true); 
   if (sc.isSuccess()){    
     log << MSG::INFO << "Found the HistogramDataService" << endreq;
   }
@@ -72,6 +64,14 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :
     log << MSG::FATAL << "Unable to locate the HistogramDataService" << endreq;
   }   
   
+  //to traverse the transient store  
+//   sc = svclocator->service("MonitorSvc", m_publishsvc, true );
+//   if( sc.isSuccess() )   {
+//     log << MSG::INFO << "Found the IPublish interface" << endreq;
+//   }
+//   else {    
+//     log << MSG::FATAL << "Unable to locate the IPublish interface." << endreq;
+//   }  
 
   // get pointer to ApplicationMgr
   IProperty* appmgr;
@@ -94,14 +94,11 @@ DimPropServer::DimPropServer(std::string name, ISvcLocator* svclocator) :
     log << MSG::FATAL << "Unable to locate the AlgorithmFactory" << endreq;
   }
 
-  
 }
-
 
 DimPropServer::~DimPropServer() {
-  if (EDS) EDS->release();
+  if (m_histogramSvc) m_histogramSvc->release();
 }
-
 
 void DimPropServer::rpcHandler() {
   StatusCode sc;
@@ -174,7 +171,7 @@ void DimPropServer::rpcHandler() {
       if ((strcmp(nextRPCcommand,"listhistos")==0)|| (strncmp(nextRPCcommand,"resethistos",11)==0)){
         int size=0;
         std::string  m_rootName;
-        SmartDataPtr<DataObject> root(EDS,m_rootName);
+        SmartDataPtr<DataObject> root(m_histogramSvc,m_rootName);
         std::string store_name = "Unknown";
         IRegistry* pReg = root->registry();
         IRegistry* pObj;
@@ -186,7 +183,7 @@ void DimPropServer::rpcHandler() {
         }
         pObj=root->registry();
 	     	    	    
-        SmartIF<IDataManagerSvc> mgr(EDS);
+        SmartIF<IDataManagerSvc> mgr(m_histogramSvc);
         if ( mgr )    {
           typedef std::vector<IRegistry*> Leaves;
           Leaves leaves;
@@ -209,7 +206,7 @@ void DimPropServer::rpcHandler() {
 	       
                 //add histogram title	
                 myhisto=0;
-                sc=EDS->retrieveObject(id,mydataobject);
+                sc=m_histogramSvc->retrieveObject(id,mydataobject);
                 if (sc.isSuccess()) {
                   myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
 		  if ((strcmp(nextRPCcommand,"resethistos")==0)||(strstr(nextRPCcommand,myhisto->title().c_str())!=0)) {
