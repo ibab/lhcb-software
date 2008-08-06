@@ -3,7 +3,7 @@ Package     : PhysSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v7r0>2008-08-05 Phys v6r0 - First version with LHCb v25 series</A></H1><PRE>
+</PRE><H1><A NAME=v7r0>2008-08-05 Phys v7r0 - First version with LHCb v25 series</A></H1><PRE>
  - Based on LHCb v25r0 and Gaudi v20r2
  - Default behaviour is for real data stripping, using LoKi tools and IDistanceCalculator
    . See http://indico.cern.ch/conferenceDisplay.py?confId=33039
