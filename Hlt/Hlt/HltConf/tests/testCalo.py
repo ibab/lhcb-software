@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: testCalo.py,v 1.1.1.1 2008-08-07 11:05:28 ibelyaev Exp $ 
+# $Id: testCalo.py,v 1.2 2008-08-07 12:35:56 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  Simple script to test the class Hlt1Line
@@ -12,7 +12,7 @@ Simple script to test the class Hlt1Line
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -21,7 +21,7 @@ from Configurables import GaudiSequencer
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
-from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop
+from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop , hlt1Termini
 
 
 recoRZVelo = GaudiSequencer('Hlt1RecoRZVeloSequence') 
@@ -70,8 +70,8 @@ addHlt1Prop ( 'OutputSelection' )
 
 print singleHadron3
 
-print " The list of all created lines: ", hlt1Lines() 
-
+print " The list of all created lines:\n", hlt1Lines() 
+print ' Termini:\n', hlt1Termini ()
     
 # =============================================================================
 # The END 

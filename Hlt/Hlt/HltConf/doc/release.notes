@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.1.1.1 2008-08-07 11:05:28 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2008-08-07 12:35:56 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : 
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-07 - Vanya BELYAEV
+
+
+ - python/HltConf/HltLine.py
+   
+     add the method terminus to get the terminus (decision) of the line 
+
 
 ! 2008-08-07 - Vanya BELYAEV
 

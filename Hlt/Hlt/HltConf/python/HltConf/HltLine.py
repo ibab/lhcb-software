@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.2 2008-08-07 12:00:11 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.3 2008-08-07 12:35:56 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #
@@ -15,13 +15,15 @@ The simple module which defines few configurables for HLT line
 
 The module defines three major public symbols :
 
- - class    Hlt1Line   :
+ - class    Hlt1Line    :
       simple class to create the proper 'Configurable' for Hlt1 'lines'
- - class    Hlt1Member :
+ - class    Hlt1Member  :
       helper class to represent the member of Hl1 'line'
- - function htl1Lines  :
+ - function htl1Lines   :
       bookeeping routine which keeps the track of all created Hlt1 'lines'
-
+ - function hlt1Termini :
+      simle function which returns termini for all created Hlt lines
+      
 Also three helper symbols are defined:
 
  - function hlt1Props  :
@@ -37,12 +39,13 @@ Also three helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
             'Hlt1Member'  ,  ## the representation of the line member 
             'hlt1Lines'   ,  ## list of all created lines 
+            'hlt1Termini' ,  ## all termini for created alleys 
             'hlt1Props'   ,  ## list of all major properties for inspection
             'addHlt1Prop' ,  ## add attribute/property into the list 
             'rmHlt1Prop'  )  ## remove attribute/property form the list 
@@ -97,12 +100,30 @@ def hlt1Lines () :
     """
     Simple function which returns the (tuple) of all currently created Hlt1Lines
     
-    >>> lines = HltLines()
+    >>> lines = hlt1Lines()
     >>> print lines
     >>> for line in lines : print line
+
+    it is also a good way to get all 'termini' from the registered Hlt lines:
+
+    >>> termini = [ p.terminus() for p in hlt1Lines() ]
     
     """
     return tuple(_hlt_1_lines__)
+
+# =============================================================================
+## Simple function whcih returns the termini for all created Hlt1 lines
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2008-08-06
+def hlt1Termini () :
+    """
+    Simple function which returns the termini for all created Hlt1 lines:
+    
+    >>> termini = hlt1Termini ()
+    
+    """
+    t = [ l.terminus() for l in hlt1Lines() ]
+    return tuple(t)
 
 # =============================================================================
 ## Add the created line into the local storage of created Hlt1Lines 
@@ -336,7 +357,7 @@ class Hlt1Line(object):
                    algos     = [] ,   # the list of algorithms/members
                    **args         ) : # other configuration parameters
         """
-        The constructor, whcijh essentially defines the line
+        The constructor, whcih essentially defines the line
         
         The major arguments
         - 'name'      : short name of the line, e.g, 'SingleMuon'
@@ -355,6 +376,9 @@ class Hlt1Line(object):
         self._algos     = algos
         self._args      = args
 
+        # terminus:
+        self._terminus  = None 
+        
         # check for forbidden attributes
         mdict = {} 
         for key in args :
@@ -446,6 +470,7 @@ class Hlt1Line(object):
 
         ## finally add the decision algorithm!
         _members += [ LineDecision ( decisionName ( line ) ) ]   
+        self._terminus = decisionName ( line )
                     
         # finally create the sequence
         self._sequencer = GaudiSequencer ( self.name()        ,
@@ -506,7 +531,20 @@ class Hlt1Line(object):
         _ids = [] 
         for alg in self._algos :
             if Hlt1Member is type(alg) : _ids += [ alg.id() ] 
-        return _ids 
+        return _ids
+    ## get the terminus of the line
+    def terminus ( self ) :
+        """
+        Get the actual terminus of the line
+
+        >>> line = ...
+        >>> terminus = line.terminus()
+        
+        """
+        if not self._terminus :
+            raise AttributeError, "The line %s does not define valid terminus " % self.subname()
+        return self._terminus
+    
     ## Clone the line  
     def clone ( self , name , **args ) :
         """
