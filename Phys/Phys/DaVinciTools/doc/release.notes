@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.345 2008-08-07 11:32:00 pkoppenb Exp $
+! $Id: release.notes,v 1.346 2008-08-07 11:32:16 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -8,6 +8,7 @@
  - CombineParticles : Set default value of MotherCut to "Configure me!". This 
    forces a python error if the cut is not configured. Was "NONE", cutting all 
    candidates away silently.
+ - Increment to v7r1
 
 !========================== DaVinciTools v17r0 2008-08-05 ===================
 ! 2008-08-04 - Patrick Koppenburg

@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.20 2008-08-04 09:26:35 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.21 2008-08-07 11:32:00 pkoppenb Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -163,7 +163,7 @@
       /// the cut to be applied for combination of good daughters 
       std::string  m_combinationCut   ; // the cut to be applied for combination of good daughters 
       /// the cut to be applied to the constructed mother particle 
-      std::string  m_motherCut        ; // the cut to be applied to the constructed mother particle 
+      std::string  m_motherCut        ; // the cut to be applied to the constructed mother particle. Must be configured. 
       /// the type/name of hybrid C++/Python factory 
       std::string  m_factory          ; // the type/name of hybrid C++/Python factory 
       /// "DaughterPlots" tool 
@@ -228,7 +228,7 @@ CombineParticles::CombineParticles
   , m_decayDescriptors ()  // the decay descriptors 
   , m_daughterCuts     ()  // the cuts for daughter particles 
   , m_combinationCut   ( "ATRUE" ) // the cut for the combination of daughters
-  , m_motherCut        ( "NONE"  ) // the final cut for the mother particle 
+  , m_motherCut        ( "Configure me!"  ) // the final cut for the mother particle. Must be configured
   , m_factory  ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC")
     // plots:
   , m_daughtersPlotsName   ( "LoKi::Hybrid::PlotTool/DaughtersPlots"    )
@@ -267,7 +267,7 @@ CombineParticles::CombineParticles
   declareProperty ( "CombinationCut"   , m_combinationCut   , 
                     "The cut to be applied for combination of good daughters"   ) ;
   declareProperty ( "MotherCut"        , m_motherCut        , 
-                    "The cut to be applied for the constructed mother particle" ) ;
+                    "The cut to be applied for the constructed mother particle. Must be configured." ) ;
   //
   declareProperty ( "DaughtersPlots"   , m_daughtersPlotsName   , 
                     "The type/name for 'Daughters   Plots' tool " ) ;
