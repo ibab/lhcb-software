@@ -20,6 +20,7 @@ from showlogwindowcontroller import ShowLogWindowController
 from selectlogfilecontroller import SelectLogFileController
 from createsummarylogcontroller import CreateSummaryLogController
 from deletedeviceswindowcontroller import DeleteDevicesWindowController
+from deletespareswindowcontroller import DeleteSparesWindowController
 
 class MainWindowController(Controller):
     def __init__(self, application):
@@ -199,6 +200,6 @@ class MainWindowController(Controller):
     def onDeleteSpares(self):
         print "MainWindowController.onDeleteSpares() start"
         if self.sparesActionMutex.tryLock():
-            self.deleteSparesController = DeleteSparesController(self)
+            self.deleteSparesWindowController = DeleteSparesWindowController(self)
         print "MainWindowController.onDeleteSpares() end"
 

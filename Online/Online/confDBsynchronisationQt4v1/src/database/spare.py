@@ -145,6 +145,19 @@ class SpareDB:
                 print "error deleting :"+str(spare)
         database.disconnect(db)
         print "SpareDB.DeleteSpare end"
+    """deletes a list of spare"""
+    def DeleteSparesBySerials(self, spares, db):
+        print "SpareDB.DeleteSparesBySerials start"
+        if spares is None:
+            return None
+        for spare in spares:
+            try:
+                db.DeleteHWDevice(spare)
+                self.logfile.write("deleted spare "+str(spare)+" from confdb")
+            except:
+                self.logfile.write("error deleting spare "+str(spare)+" from confdb")
+                print "error deleting :"+str(spare)
+        print "SpareDB.DeleteSparesBySerials end"
     """replaces a device with a spare
        hwname = ipname of the device to be replaced, spare is a Spare that replaces the device"""
     def replaceDevice(self, hwname, spare, confdb):
