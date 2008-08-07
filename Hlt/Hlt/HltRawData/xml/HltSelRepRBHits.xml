@@ -193,7 +193,13 @@ Then sequences must be pushed back in the sequencial order.'
           >
         <code>
           validateIndex(iSeq);
-          return (std::vector&lt; LHCbID &gt;(sequenceBegin(iSeq),sequenceEnd(iSeq)));
+          //doesn't work on WIN32  return (std::vector&lt; LHCbID &gt;(sequenceBegin(iSeq),sequenceEnd(iSeq)));
+	  std::vector&lt; LHCbID &gt; hitseq;
+	  unsigned int* iend=sequenceEnd(iSeq);
+	  for(unsigned int* i=sequenceBegin(iSeq);i!=iend;++i){
+	        hitseq.push_back( LHCbID( *i ) );
+	  }
+	  return hitseq;
         </code>
       </method>
  

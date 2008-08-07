@@ -4,6 +4,9 @@
 ! Purpose     : Hlt Raw Data Writers and Readers, Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2008-08-07 - Tomasz Skwarnicki
+ - fix WIN32 related problem in HltSelRepRBHits
+
 ! 2008-08-06 - Tomasz Skwarnicki
  - add HltVertexReports
 
