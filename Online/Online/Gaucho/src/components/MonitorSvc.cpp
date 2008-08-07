@@ -79,10 +79,10 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
 
   MsgStream msg(msgSvc(),"MonitorSvc");
-  if( IService::INITIALIZED == this->state() ) {
-    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
-    return StatusCode::SUCCESS; 
-  }
+//  if( IService::INITIALIZED == this->state() ) {
+//    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
+//    return StatusCode::SUCCESS; 
+//  }
   Service::initialize(); 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
