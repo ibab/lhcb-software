@@ -62,14 +62,11 @@ def _xget( configIDs , cas = ConfigFileAccessSvc() ) :
     svc = appMgr.service(pc.getFullName(),'IPropertyConfigSvc')
     table = dict()
     for id in ids :
-        print 'fetching information for ' + id.str()
-        tab = dict()
+        table[id.str()] = dict()
         for i in svc.collectLeafRefs( id ) :
             propConfig = svc.resolvePropertyConfig( i )
-            #print '    got ' + propConfig.name()
-            if propConfig.name() in tab.keys() : raise KeyError("Already in list for %s: '%s'"%(id.str(),propConfig.name()))
-            tab[propConfig.name()] = PropCfg( propConfig )
-        table[id.str()] = tab
+            if propConfig.name() in table[id.str()].keys() : raise KeyError("Already in list for %s: '%s'"%(id.str(),propConfig.name()))
+            table[id.str()][propConfig.name()] = PropCfg( propConfig )
     return table 
 
 
@@ -143,7 +140,8 @@ def _updateProperties(id,algname,props, label, cas  ) :
     if len(a) != 1 : 
         print 'something went wrong: no unique toplevel match for ' + str(id)
         return
-    (release,runtype) = a[0].alias().str().split('/',3)[1:3]
+    print a[0].alias().str()
+    (release,hlttype) = a[0].alias().str().split('/',3)[1:3]
     updates = vector_string()
     for k,v in props.iteritems() : 
         item = algname + '.' + k + ': ' + v
@@ -151,7 +149,7 @@ def _updateProperties(id,algname,props, label, cas  ) :
         updates.push_back( item )
     newId = ed.updateAndWrite(id,updates,label)
     noderef = cf.readConfigTreeNode( newId )
-    top = topLevelAlias( release, runtype, noderef.get() )
+    top = topLevelAlias( release, hlttype, noderef.get() )
     cf.writeConfigTreeNodeAlias(top)
     print 'wrote ' + str(top.alias())
 
@@ -162,7 +160,7 @@ class Configuration :
     " A class representing a configuration entry "
     def __init__(self,alias,svc) :
         self.info = { 'id' : alias.ref().str() , 'TCK' : '<NONE>', 'label' : '<NONE>' }
-        self.info.update( zip(['release','runtype'],alias.alias().str().split('/')[1:3]))
+        self.info.update( zip(['release','hlttype'],alias.alias().str().split('/')[1:3]))
         self.info.update( { 'label' :svc.readConfigTreeNode( alias.ref() ).get().label() } )
     def __getitem__(self,label) : 
         return self.info[label]
@@ -171,6 +169,10 @@ class Configuration :
         tck = self.info['TCK']
         if type(tck) == int : tck = '0x%08x' % tck
         print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
+    def PVSS(self) :
+        tck = self.info['TCK']
+        if type(tck) == int : tck = '0x%08x' % tck
+        return  '%20s : %10s : %s : %s\n'%(self.info['hlttype'],tck,self.info['id'],self.info['label'])
 
 class PropCfg :
     " A class representing a PropertyConfig "
@@ -225,32 +227,38 @@ def getConfigurations( cas = ConfigFileAccessSvc() ) :
     return execInSandbox( _getConfigurations, cas )
 def getReleases( cas = ConfigFileAccessSvc() ) :
     return set( [ i['release']  for i in getConfigurations(cas).itervalues()  ] )
-def getRunTypes( release, cas = ConfigFileAccessSvc() ) :
+def getHltTypes( release, cas = ConfigFileAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    return set( [ i['runtype']  for i in info.itervalues() if i['release']==release ] )
-def getTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
+    return set( [ i['hlttype']  for i in info.itervalues() if i['release']==release ] )
+def getTCKs( release, hlttype, cas = ConfigFileAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if v['release']==release and v['runtype']==runtype] 
+    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if v['release']==release and v['hlttype']==hlttype] 
 
 def printConfigurations( info ) :
     for release in set( [ i['release'] for i in info.itervalues()  ] ) : 
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]
-        for runtype in set( [ i['runtype'] for i in confInRelease ] ) :
-            print '    ' + runtype
-            [ i.printSimple('      ') for i in confInRelease if i['runtype']==runtype ] 
+        for hlttype in set( [ i['hlttype'] for i in confInRelease ] ) :
+            print '    ' + hlttype
+            [ i.printSimple('      ') for i in confInRelease if i['hlttype']==hlttype ] 
+def dumpForPVSS( info, root ) :
+    for release in set( [ i['release'] for i in info.itervalues()  ] ) : 
+        f=open( root + '/' + release,  'w')
+        [ f.write( i.PVSS() ) for i in info.itervalues() if i['release']==release ]
+        f.close()
+
 def printReleases( rel ) : pprint(rel)
-def printRunTypes( rt ) : pprint(rt)
+def printHltTypes( rt ) : pprint(rt)
 def printTCKs( tcks ) : pprint(tcks)
 
 def listConfigurations( cas = ConfigFileAccessSvc() ) :
     return printConfigurations( getConfigurations(cas) )
 def listReleases( cas = ConfigFileAccessSvc() ) :
     return printReleases( getReleases() ) 
-def listRunTypes( release, cas = ConfigFileAccessSvc() ) :
-    return printRunTypes( getRunTypes(release) ) 
-def listTCKs( release, runtype, cas = ConfigFileAccessSvc() ) :
-    return printTCKs( getTCKs(release,runtype) ) 
+def listHltTypes( release, cas = ConfigFileAccessSvc() ) :
+    return printHltTypes( getHltTypes(release) ) 
+def listTCKs( release, hlttype, cas = ConfigFileAccessSvc() ) :
+    return printTCKs( getTCKs(release,hlttype) ) 
 
 
 ######  do the actual work...

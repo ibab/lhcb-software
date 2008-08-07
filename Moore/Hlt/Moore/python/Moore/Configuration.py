@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.15 2008-08-04 20:37:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2008-08-07 16:12:44 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -20,7 +20,7 @@ class Moore(ConfigurableUser):
         , "DDDBtag" :          'DEFAULT'
         , "condDBtag" :        'DEFAULT'
         , "inputType":         'dst' # must either 'mdf' or 'dst'
-        , "runType" :          'Physics_Hlt1+Hlt2'
+        , "HltType" :          'PHYSICS_Hlt1+Hlt2'
         , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
@@ -83,12 +83,13 @@ class Moore(ConfigurableUser):
         if inputType != 'DST' : 
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         importOptions('$STDOPTS/DecodeRawEvent.opts')
-        
         ApplicationMgr().ExtSvc.append(  "DataOnDemandSvc"   ); # needed for DecodeRawEvent...
         importOptions('$STDOPTS/DC06Conditions.opts')
         # forward some other settings... TODO: make a dictionary..
         self.setOtherProp( LHCbApp(), 'useOracleCondDB' )
         importOptions( "$DDDBROOT/options/DDDB.py" )
+        # the next is for 2008 data & MC, i.e. NOT for DC'06
+        # importOptions( "$DDDBROOT/options/LHCb-2008.py" )
         self.setOtherProp( LHCbApp(), 'DDDBtag' )
         self.setOtherProp( LHCbApp(), 'condDBtag' )
         self.setOtherProp( LHCbApp(), 'skipEvents' )
