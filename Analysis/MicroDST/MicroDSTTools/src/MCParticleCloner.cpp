@@ -1,4 +1,4 @@
-// $Id: MCParticleCloner.cpp,v 1.4 2008-04-23 13:01:55 jpalac Exp $
+// $Id: MCParticleCloner.cpp,v 1.5 2008-08-07 14:08:29 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -106,8 +106,9 @@ void  MCParticleCloner::cloneDecayVertices(const SmartRefVector<LHCb::MCVertex>&
   for (SmartRefVector<LHCb::MCVertex>::const_iterator iEndVtx = endVertices.begin(); 
        iEndVtx!=endVertices.end(); 
        ++iEndVtx) {
-    if ((*iEndVtx)->isDecay() ) {
-      verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx) << endmsg;
+    if ((*iEndVtx)->isDecay() && !((*iEndVtx)->products().empty()) ) {
+      verbose() << "Cloning Decay Vertex\n" << *(*iEndVtx) 
+                << "\n with " << (*iEndVtx)->products().size() << " products!"<< endmsg;
       LHCb::MCVertex* decayVertexClone = (*m_vertexCloner)(*iEndVtx);
       clonedParticle->addToEndVertices(decayVertexClone);
       verbose() << "Cloned it!\n" <<  *(*iEndVtx) << endmsg;
