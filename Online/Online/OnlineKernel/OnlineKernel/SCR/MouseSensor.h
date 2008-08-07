@@ -6,11 +6,12 @@
 
 // System includes
 #include <map>
-#include <set>
+#include <vector>
 
 namespace SCR {
   // Forward declarations
   struct Pasteboard;
+  struct Display;
 
   /**
    * Communication object describing the Mouse click events.
@@ -25,6 +26,7 @@ namespace SCR {
     unsigned char x;
     unsigned char y;
     unsigned int  msec;
+    Display*      display;
     /// Standard constructor
     MouseEvent(int key, int x, int y, unsigned int us);
   };
@@ -37,7 +39,7 @@ namespace SCR {
    * @author M.Frank
    */
   class MouseSensor : public Sensor {
-    typedef std::set<Interactor*>    Targets;
+    typedef std::vector<Interactor*> Targets;
     typedef std::map<void*, Targets> Clients;
 
     /// Buffer with clients

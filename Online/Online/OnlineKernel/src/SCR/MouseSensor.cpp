@@ -12,8 +12,7 @@ static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
   static unsigned int click = 0;
   unsigned int now=RTL::SysTime::now(), diff = now-click;
   Event* ev = new Event(0,ScrMouseEvent);
-
-  new(ev->get<void>()) MouseEvent(key,x,y,~0x0);
+  new(ev->get<void>()) MouseEvent(key,x,y,-1U);
   ::wtc_insert(WT_FACILITY_SCR_MOUSE,ev);
   if ( diff<300 && click != 0 ) {
     ev = new Event(0,ScrMouseEvent);
@@ -29,7 +28,7 @@ static int scr_mouse_handler(SCR::Pasteboard* /* pb */,int key,int x,int y) {
 
 /// Standard constructor
 MouseEvent::MouseEvent(int key, int x_val, int y_val, unsigned int ms) 
-: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), msec(ms)
+: button(key&0x3), modifier(key>>2), x(x_val-0x20), y(y_val-0x20), display(0), msec(ms)
 {
 }
 
@@ -75,6 +74,7 @@ void MouseSensor::dispatch( void* arg )  {
       Clients::const_iterator i = m_clients.find(display);
       if ( i != m_clients.end() ) {
 	const Targets& t = (*i).second;
+	m->display = display;
 	for(Targets::const_iterator j=t.begin(); j!=t.end(); ++j) {
 	  (*j)->handle(*(ev.get()));
 	}
@@ -86,7 +86,10 @@ void MouseSensor::dispatch( void* arg )  {
 /// Subscribe Interactor target to display mouse-events
 void MouseSensor::add(Interactor* actor, void* display) {
   if ( display ) {
-    m_clients[display].insert(actor);
+    Targets& t = m_clients[display];
+    for(Targets::iterator j=t.begin(); j!=t.end(); ++j)
+      if ( *j == actor ) return;
+    t.push_back(actor);
   }
 }
 
@@ -105,8 +108,10 @@ void MouseSensor::remove(Interactor* actor, void* display) {
     }
     else {
       for(Targets::iterator j=t.begin(); j!=t.end(); ++j) {
-	t.erase(j);
-	break;
+	if ( (*j) == actor ) {
+	  t.erase(j);
+	  break;
+	}
       }
     }
     if ( t.empty() ) m_clients.erase(i);
