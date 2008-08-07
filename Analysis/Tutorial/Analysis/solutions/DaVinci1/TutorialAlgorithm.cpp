@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.4 2008-03-04 19:22:42 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.5 2008-08-07 16:22:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -79,7 +79,7 @@ StatusCode TutorialAlgorithm::loopOnMuons(const LHCb::Particle::ConstVector& muo
           ipv != pvs.end() ; ++ipv ){
       double IP, IPE;
       debug() << (*ipv)->position() << endmsg ;
-      sc = geomDispCalculator()->calcImpactPar(*(*im), *(*ipv), IP, IPE);
+      sc = distanceCalculator()->distance((*im), (*ipv), IP, IPE);
       if (sc){
         plot(IP, "IP", "Muon IP", 0., 10.*Gaudi::Units::mm);
         if (IPE>0.) plot(IP/IPE, "IPS", "Muon IP/error", 0., 10.);

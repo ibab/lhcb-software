@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.9 2008-06-03 09:58:38 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.10 2008-08-07 16:22:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,7 @@ StatusCode TutorialAlgorithm::plotMuon(const LHCb::Particle* mu, const std::stri
   {
     double IP, IPE;
     debug() << (*ipv)->position() << endmsg ;
-    sc = geomDispCalculator()->calcImpactPar(*mu, *(*ipv), IP, IPE);
+    sc = distanceCalculator()->distance(mu, (*ipv), IP, IPE);
     if (sc){
       plot(IP, head+"MuIP", head+" Muon IP", 0., 10.*mm);
       if (IPE>0.) plot(IP/IPE, head+"MuIPS",  head+" Muon IP/error", 0., 10.);

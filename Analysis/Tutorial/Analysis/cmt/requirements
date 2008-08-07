@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.38 2008-07-10 16:47:00 pkoppenb Exp $ 
+# $Id: requirements,v 1.39 2008-08-07 16:22:34 pkoppenb Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.38 $
+# CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.39 $
 # ============================================================================
 # Created    : 2004-11-04
 # Maintainer : P. Koppenburg
 # ============================================================================
 package           Analysis
-version           v7r4
+version           v7r5
 
 # ============================================================================
 # Structure, i.e. directories to process. 
@@ -49,5 +49,3 @@ private
 library     AnalysisTest -suffix=Test ../solutions/DaVinci3/*.cpp ../solutions/DaVinci6/*.cpp -import=AIDA
 apply_pattern linker_library library=AnalysisTest
 end_private
-
-

@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2008-08-07 - Patrick Koppenburg
+ - Use IDistanceCalculator everywhere
+ - Compile all solutions
+ - Increment to v7r5
+
 !========================== Analysis v7r4 2008-08-05 ===================
 ! 2008-07-10 - Patrick Koppenburg
  - Use IDistanceCalculator
