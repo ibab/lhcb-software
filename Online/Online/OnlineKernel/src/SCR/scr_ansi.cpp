@@ -49,14 +49,15 @@ static bool _p=false;
 
 
 void scrc_resetANSI()   {
-#define plain()            fputs("\033[0m",stdout)
-#define changetoascii()    fputs("\033(B",stdout)
   int fd = fileno(stdin); 
   ::fflush (stdout);
-  changetoascii();
-  plain ();       /* all attribytes off */
+  ::fputs("\033(B",stdout);
+  ::fputs("\033[0m",stdout);    // all attributes off
+  ::fputs("\033[?91",stdout);   // Mouse OFF
+  ::fputs("\033[?10001",stdout);
   ::fflush (stdout);
   ::fprintf (stdout, "\033>");
+  ::fprintf (stdout, "\033c");
   ::fflush (stdout);
 #ifdef _WIN32
   ::clrscr();
@@ -602,6 +603,9 @@ int scrc_check_key_buffer (char *buffer)
 	buffer++;
 	switch (*buffer)
 	  {
+          case 'M': // ignore mouse events here!
+	    if ( *++buffer && *++buffer && *++buffer ) return INVALID;
+	    return UNKNOWN;
 	  case 'A': _RET(MOVE_UP,b,*buffer);       // Arrow key UP
 	  case 'B': _RET(MOVE_DOWN,b,*buffer);     // Arrow key DOWN
 	  case 'C': _RET(MOVE_RIGHT,b,*buffer);    // Arrow key RIGHT
@@ -874,8 +878,8 @@ void scrc_enable_mouse(Pasteboard* pb) {
 }
 //---------------------------------------------------------------------------
 void scrc_disable_mouse(Pasteboard* pb) {
-  //::scrc_putes("[?10001",pb); // Stop sending event on press & release
   ::scrc_putes("[?91",pb);
+  ::scrc_putes("[?10001",pb); // Stop sending event on press & release
 }
 //---------------------------------------------------------------------------
 void scrc_handle_mouse(Pasteboard* pb, char key)  {
