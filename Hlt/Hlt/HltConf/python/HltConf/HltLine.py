@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.1.1.1 2008-08-07 11:05:28 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.2 2008-08-07 12:00:11 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #
@@ -37,7 +37,7 @@ Also three helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1.1.1 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -438,11 +438,7 @@ class Hlt1Line(object):
                     if margs.has_key ( 'OutputSelection' ) :
                         _checkSelection ( 'OutputSelection' , margs , algName , line ) 
                         _outputsel = margs['OutputSelection']
-                    else :
-                        # do we really need it?
-                        # Is it more safe and betetr to rely on C++ default?
-                        margs['OutputSelection'] = _outputsel  
-                    
+                
                 # create the algorithm:
                 _members += [ alg.Type( memberName ( alg , line )  , **margs ) ]         
         
