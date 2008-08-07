@@ -43,7 +43,8 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
 DecayTreeTuple("Hlt2DecayTreeTuple").addTool(PhysDesktop())
 DecayTreeTuple("Hlt2DecayTreeTuple").PhysDesktop.InputLocations = ["Phys/Hlt2SelBu2D0K_KsHH"]
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc"#
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "{[B+ -> (^D0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc, [B+ -> (^D~0 -> (^KS0 -> ^pi+ ^pi-) ^pi+ ^pi-) ^K+]cc}"
+#
 # Options
 #
 EventSelector().Input   = [
@@ -52,7 +53,7 @@ EventSelector().Input   = [
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
-NTupleSvc.Output =  [ "FILE1 DATAFILE='HLT-Bu2D0K_KsHH.root' TYP='ROOT' OPT='NEW'" ] 
+NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bu2D0K_KsHH.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bu2D0K_KsHH.root"
 
 

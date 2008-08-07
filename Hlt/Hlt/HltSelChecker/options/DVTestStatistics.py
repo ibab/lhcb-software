@@ -5,7 +5,7 @@
  #  @date 2008-06-24
  #
 from Gaudi.Configuration import *
-from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger
+from Configurables import Hlt2Statistics, CheckSelResult, EventTuple, TupleToolGeneration, TupleToolTrigger, L0Filter
 
 importOptions("$HLTSELECTIONSROOT/options/DVTestHlt2.py")
 
@@ -20,7 +20,7 @@ filter.Algorithms = [ "Hlt2Decision" ]
 
 
 # make Hlt2 statistics
-statseq.Members += ["Hlt2Statistics" ]
+statseq.Members += ["L0Filter", "Hlt2Statistics" ]
 
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")

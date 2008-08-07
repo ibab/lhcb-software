@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2008-08-07 - Patrick Koppenburg
+ - A few fixes to get it to run with only Hlt2
+
 ! 2008-08-06 - Patrick Koppenburg
  - Rename B2DiMuon to BiasedDiMuon
  - HltStatistics : protects against non-run Hlt

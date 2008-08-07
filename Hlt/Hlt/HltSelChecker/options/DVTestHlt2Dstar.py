@@ -53,6 +53,6 @@ ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Dstar.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Dstar.root"
 
-ApplicationMgr().EvtMax = 100 
+ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
 EventSelector().PrintFreq = 1 

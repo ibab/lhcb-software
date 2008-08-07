@@ -1,4 +1,4 @@
-// $Id: HltBackgroundCategory.cpp,v 1.16 2008-07-11 17:06:36 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.17 2008-08-07 09:07:54 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -83,6 +83,7 @@ StatusCode HltBackgroundCategory::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
 
+  if (!exist<LHCb::HltSummary>(LHCb::HltSummaryLocation::Default)) return StatusCode::SUCCESS ;
   if ( !(m_summaryTool->decision())) return StatusCode::SUCCESS ;
 
   Particle2MCLinker* linker = 0;

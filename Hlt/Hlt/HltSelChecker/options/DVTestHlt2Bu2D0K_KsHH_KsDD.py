@@ -36,7 +36,7 @@ GaudiSequencer("SeqHlt2TruthFilter").IgnoreFilterPassed = TRUE
 #
 # Overwrite input - uncomment to run HLT on TRUE signal only
 #
-importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
+# importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
 ###
  # Tuple
  #/
