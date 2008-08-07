@@ -30,7 +30,7 @@ Z0Checker("HltMuZ0Checker").Locations = [ "/Event/Phys/Hlt2Muons/Particles" ]
 MessageSvc().Format = "% F%50W%S%7W%R%T %0W%M"
 
 ApplicationMgr().EvtMax = -1 
-EventSelector().PrintFreq = 1 
+EventSelector().PrintFreq = 10
 
 EventSelector().Input   = [
   "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001929/DST/0000/00001929_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

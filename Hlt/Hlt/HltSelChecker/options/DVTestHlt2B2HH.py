@@ -56,7 +56,7 @@ HistogramPersistencySvc().OutputFile = "DVHlt2-B2HH.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 1 
+EventSelector().PrintFreq = 10 
 
 # ApplicationMgr().TopAlg += [ "PrintTree" ]
 # PrintTree().PhysDesktop.InputLocations = [ "Phys/Hlt2SelB2HH" ]

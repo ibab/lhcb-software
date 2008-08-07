@@ -59,4 +59,4 @@ HistogramPersistencySvc().OutputFile = "DVHlt2-Bu2D0K_KsHH.root"
 
 ApplicationMgr().EvtMax = -1 
 #EventSelector().FirstEvent = 815 
-EventSelector().PrintFreq = 1 
+EventSelector().PrintFreq = 10 

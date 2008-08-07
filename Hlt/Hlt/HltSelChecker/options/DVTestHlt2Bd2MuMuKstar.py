@@ -50,7 +50,7 @@ HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2MuMuKstar.root"
 
 ApplicationMgr().EvtMax = -1 
 EventSelector().FirstEvent = 1 
-EventSelector().PrintFreq = 1 
+EventSelector().PrintFreq = 10 
 
 # ApplicationMgr().TopAlg += [ "PrintTree", "PrintMCTree" ]
 # PrintTree.PhysDesktop.InputLocations = [ "Phys/Hlt2SharedDiMuon" ]
