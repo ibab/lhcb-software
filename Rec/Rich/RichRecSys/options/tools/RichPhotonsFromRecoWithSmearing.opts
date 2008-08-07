@@ -4,24 +4,24 @@
 #include "$RICHRECSYSOPTS/tools/RichPhotonPredictor.opts"
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithGaussianCKSmear/RichPhotonCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithGaussianCKSmear/RichPhotonCreator" };
 //                                                     Aero   C4F10   CF4
-ToolSvc.Offline.RichPhotonCreator.RadiatorsToSmear = { true,  false,  false };
-ToolSvc.Offline.RichPhotonCreator.SmearingWidths   = { 0.1,   0.01,   0.01  };
-ToolSvc.Offline.RichPhotonCreator.ApplySmearingToAllPhotons = false;
+ToolSvc.Offline_RichPhotonCreator.RadiatorsToSmear = { true,  false,  false };
+ToolSvc.Offline_RichPhotonCreator.SmearingWidths   = { 0.1,   0.01,   0.01  };
+ToolSvc.Offline_RichPhotonCreator.ApplySmearingToAllPhotons = false;
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelegatedPhotonCreator" };
-ToolSvc.Offline.RichDelegatedPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelegatedPhotonCreator" };
+ToolSvc.Offline_RichDelegatedPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
 //                                                                         Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.Offline.RichDelegatedPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.Offline.RichDelegatedPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline_RichDelegatedPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline_RichDelegatedPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.Offline.RichDelegatedPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline_RichDelegatedPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.Offline.RichDelegatedPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+ToolSvc.Offline_RichDelegatedPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.Offline.RichDelegatedPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline_RichDelegatedPhotonCreator.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };

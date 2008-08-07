@@ -2,32 +2,33 @@
 // Options to create RichRecTracks from TrStoredTrack reconstructed information
 
 // Define the RichRecTrack creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromRecoTracks/RichTrackCreator" };
 
-// Momentum cuts ( in the for tracktype/minP/maxP )
-ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
-ToolSvc.Offline.RichTrackCreator.TrackSelector.VeloTT.MinPCut  = 1;
-ToolSvc.Offline.RichTrackCreator.TrackSelector.KsTrack.MinPCut = 1;
-ToolSvc.Offline.RichTrackCreator.TrackSelector.Seed.MinSeedLikelihood = -15;
-ToolSvc.Offline.RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
-ToolSvc.Offline.RichTrackCreator.TrackSelector.CloneCut = -1e10;
+// Track agls
+ToolSvc.Offline_RichTrackCreator.TrackSelector.TrackAlgs = { "Seed","Match","Forward","KsTrack","VeloTT" };
+// Momentum cuts (the defaults)
+//ToolSvc.Offline_RichTrackCreator.TrackSelector.VeloTT.MinPCut  = 1;
+//ToolSvc.Offline_RichTrackCreator.TrackSelector.KsTrack.MinPCut = 1;
+//ToolSvc.Offline_RichTrackCreator.TrackSelector.Seed.MinSeedLikelihood = -15;
+//ToolSvc.Offline_RichTrackCreator.TrackSelector.Match.MaxMatchChi2 = 200;
+//ToolSvc.Offline_RichTrackCreator.TrackSelector.CloneCut = -1e10;
 
 // define the RichTrackSegment nickname to use
-ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "TrSegMaker";
+ToolSvc.Offline_RichTrackCreator.TrackSegmentTool = "TrSegMaker";
 
 //-----------------------------------------------------------------------------------------------------
 // Configure the RichTrackSegment maker
 //-----------------------------------------------------------------------------------------------------
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DetailedTrSegMakerFromRecoTracks/TrSegMaker" };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::DetailedTrSegMakerFromRecoTracks/TrSegMaker" };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.PrimaryTrackExtrapolator = "TrackHerabExtrapolator";
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.BackupTrackExtrapolator  = "TrackParabolicExtrapolator";
 // which radiators to use                                                Aerogel   C4F10    CF4
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.UseRadiators             = { true,     true,    true    };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.UseRadiators             = { true,     true,    true    };
 // options
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
-//ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0,0,0 };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm,     500*mm,  1500*mm };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false,    true,    false   };
-ToolSvc.Offline.RichTrackCreator.TrSegMaker.ZTolerances              = { 800*mm,   2000*mm, 3000*mm };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.ExtrapolateFromReference = false;
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.SegmentType              = "AllStateVectors";
+//ToolSvc.Offline_RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0,0,0 };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.MinRadiatorPathLength    = { 0*mm,     500*mm,  1500*mm };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.CheckBeamPipe            = { false,    true,    false   };
+ToolSvc.Offline_RichTrackCreator.TrSegMaker.ZTolerances              = { 800*mm,   2000*mm, 3000*mm };
 //-----------------------------------------------------------------------------------------------------

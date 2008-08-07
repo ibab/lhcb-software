@@ -20,7 +20,7 @@ RecoRICHSeq.Context = "Offline";
 //LoadRawTracks.LoadRawTracks   = true;
 
 //-----------------------------------------------------------------------------
-// Initialisation (Technically not needed, but nuseful for timing studies)
+// Initialisation (Technically not needed, but useful for timing studies)
 //-----------------------------------------------------------------------------
 RecoRICHSeq.Members += { "GaudiSequencer/RichRecInitSeq" };
 RichRecInitSeq.MeasureTime = true;
@@ -107,7 +107,7 @@ RichPIDSeq.Members += { "Rich::Rec::HierarchicalPIDMerge/MergeRichPIDs" };
 // ========================================================================================
 
 // Particle types to consider
-//ToolSvc.Offline.RichPhotonCreator.Predictor.ParticleTypes = { "pion", "kaon" };
+//ToolSvc.Offline_RichPhotonCreator.Predictor.ParticleTypes = { "pion", "kaon" };
 //ToolSvc.RichParticleProperties.ParticleTypes         = { "pion", "kaon" };
 
 // Local Algorithm parameters
@@ -119,7 +119,7 @@ ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 // Cherenkov angle space tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
@@ -168,3 +168,4 @@ MergeRichPIDs.UseGlobalPIDs    = true;
 
 // summary maker parameters
 RichRecSummary.PhotonNSigma = { 1.0, 1.5, 1.5 };
+

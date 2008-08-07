@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2008-08-07 - Chris Jones
+ - Add python Configuration
+
 !====================== RichRecSys v3r12 2008-07-29 ==========================
 ! 2008-07-22 - Chris Jones
  - Disable the Rich::Rec::SummaryAlg algorithm

@@ -5,7 +5,7 @@
 // ============================================================================
 
 // Set offline mode
-RecoRICHSeq.Context = "Offline";
+RecoRICHSeq.Context = "Offline_;
 
 //-----------------------------------------------------------------------------
 // Uncomment these to make sure data (tracks and raw event) are in memory
@@ -94,7 +94,7 @@ RichHltGlobalPID.HistoProduce  = false;
 // ========================================================================================
 
 // Particle types to consider
-ToolSvc.Offline.RichParticleProperties.ParticleTypes = { "pion", "kaon" };
+ToolSvc.Offline_RichParticleProperties.ParticleTypes = { "pion", "kaon" };
 ToolSvc.RichParticleProperties.ParticleTypes         = { "pion", "kaon" };
 
 // Local Algorithm parameters
@@ -106,7 +106,7 @@ ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 // Cherenkov angle space tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::LocalPID::PIDToolAngleSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;

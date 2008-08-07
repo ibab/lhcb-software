@@ -3,19 +3,19 @@
 // which come from true cherenkov hits
 
 // use the tool that uses RichDigits
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromSignalRawBuffer/RichPixelCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromSignalRawBuffer/RichPixelCreator" };
 
 // Which RICH detectors to use                         RICH1   RICH2
-ToolSvc.Offline.RichPixelCreatorReco.UseDetectors = {  true,   true   };
+ToolSvc.Offline_RichPixelCreatorReco.UseDetectors = {  true,   true   };
 
 // Turn on/off the filtering of hits that do not associated to tracked MCParticles
-ToolSvc.Offline.RichPixelCreator.FilterTracklessDigits = false;
+ToolSvc.Offline_RichPixelCreator.FilterTracklessDigits = false;
 
 // reject ALL background hits ?
-ToolSvc.Offline.RichPixelCreator.RejectAllBackgrounds = false;
+ToolSvc.Offline_RichPixelCreator.RejectAllBackgrounds = false;
 
 // reject HPD reflections
-ToolSvc.Offline.RichPixelCreator.RejectHPDReflections = true;
+ToolSvc.Offline_RichPixelCreator.RejectHPDReflections = true;
 
 // reject SI back-scatter
-ToolSvc.Offline.RichPixelCreator.RejectBackScatter = true;
+ToolSvc.Offline_RichPixelCreator.RejectBackScatter = true;

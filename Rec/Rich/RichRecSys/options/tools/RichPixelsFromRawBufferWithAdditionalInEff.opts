@@ -1,12 +1,12 @@
 
 // use the tool that decodes directly from RawBuffer
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PixelCreatorWithForcedIneffic/RichPixelCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PixelCreatorWithForcedIneffic/RichPixelCreator" };
 
 // Which RICH detectors to use                      RICH1   RICH2
-ToolSvc.Offline.RichPixelCreator.UseDetectors  = {  true,   true   };
+ToolSvc.Offline_RichPixelCreator.UseDetectors  = {  true,   true   };
 
 // Do not perform book keeping in order to speed things up
-ToolSvc.Offline.RichPixelCreator.DoBookKeeping = false;
+ToolSvc.Offline_RichPixelCreator.DoBookKeeping = false;
 
 // fraction of hits to remove
-ToolSvc.Offline.RichPixelCreator.RejectFraction = 0.2;
+ToolSvc.Offline_RichPixelCreator.RejectFraction = 0.2;

@@ -1,26 +1,26 @@
 
 // the clustering tools to use in each RICH
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/PixelCreatorClustering" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/PixelCreatorClustering" };
 
 // Use this option to suppress the pixel clustering entirely. Useful for HLT mode where
 // clusters are not needed so do not run this to save time
-ToolSvc.Offline.RichPixelCreator.SuppressClusterFinding = false;
+ToolSvc.Offline_RichPixelCreator.SuppressClusterFinding = false;
 
 // Use these options to disable hit clustering. In this mode each RichSmartID is made into a
 // single RichRecPixel object. Note that clustering is still performed, and the RichRecPixel
 // has its associated cluster assigned
 //                                                        RICH1   RICH2
-ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { false,  false };
-//ToolSvc.Offline.RichPixelCreator.ApplyPixelClustering = { true,   true };
+ToolSvc.Offline_RichPixelCreator.ApplyPixelClustering = { false,  false };
+//ToolSvc.Offline_RichPixelCreator.ApplyPixelClustering = { true,   true };
 
 // Cluster finding options
 //----------------------------------------------------------------------------------------
 // RICH1 options
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = false;
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MinClusterSize = 1;
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich1.MaxClusterSize = 9999;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1.AllowDiagonalsInClusters = false;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1.MinClusterSize = 1;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1.MaxClusterSize = 9999;
 // RICH2 options
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = false;
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MinClusterSize = 1;
-ToolSvc.Offline.RichPixelCreator.PixelClusteringRich2.MaxClusterSize = 9999;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2.AllowDiagonalsInClusters = false;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2.MinClusterSize = 1;
+ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2.MaxClusterSize = 9999;
 //----------------------------------------------------------------------------------------

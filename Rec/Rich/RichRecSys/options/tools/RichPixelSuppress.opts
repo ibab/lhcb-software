@@ -4,17 +4,17 @@
 // =============================
 
 // First phase rejection in decoding. Disable for the moment for monitoring purposes
-ToolSvc.RichRawDataFormatTool.MaxHPDOccupancy = 999999;
+//ToolSvc.RichRawDataFormatTool.MaxHPDOccupancy = 999999;
 // Turn on pixel rejection in pixel creator tool
-ToolSvc.Offline.RichPixelCreator.ApplyPixelSuppression = true;
+ToolSvc.Offline_RichPixelCreator.ApplyPixelSuppression = true;
 
 // Block HPD rejection based on fluctuations above average occupancy
 /*
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/PixelSuppress" };
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MinHPDFills       = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc = 100;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.OccCutScaleFactor = 4.5;
-ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
+ToolSvc.Offline_RichToolRegistry.Tools += { "RichHighOccHPDSuppressionTool/PixelSuppress" };
+ToolSvc.Offline_RichPixelCreator.PixelSuppress.MinHPDFills       = 20;
+ToolSvc.Offline_RichPixelCreator.PixelSuppress.AbsoluteMaxHPDOcc = 100;
+ToolSvc.Offline_RichPixelCreator.PixelSuppress.OccCutScaleFactor = 4.5;
+ToolSvc.Offline_RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 */
 
 // Pixel rejection based on cluster finding + 
@@ -22,35 +22,35 @@ ToolSvc.Offline.RichPixelCreator.PixelSuppress.MemoryFactor      = 20;
 
 // RICH1
 //----------------------------------------------------------------------------------------------------
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich1" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich1" };
 // Options for bulk suppression
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.WhichRich = "RICH1";
-//ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.UseRunningOccupancies = true;
-//ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.PrintXML              = true;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.ClusteringTool.AllowDiagonalsInClusters = true;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.MinHPDFills            = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.MemoryFactor           = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.AbsoluteMaxHPDOcc      = 200;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.OccCutScaleFactor      = 14;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.WhichRich = "RICH1";
+//ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.UseRunningOccupancies = true;
+//ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.PrintXML              = true;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.ClusteringTool.AllowDiagonalsInClusters = true;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.MinHPDFills            = 20;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.MemoryFactor           = 20;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.AbsoluteMaxHPDOcc      = 200;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.OccCutScaleFactor      = 14;
 // Options for pixel cluster suppression
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.MaxPixelClusterSize    = 10;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich1.MinHPDOccForClustering = 10;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.MaxPixelClusterSize    = 10;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1.MinHPDOccForClustering = 10;
 
 // RICH2
 //----------------------------------------------------------------------------------------------------
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich2" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusterSuppressionTool/PixelSuppressRich2" };
 // Options for bulk suppression
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.WhichRich = "RICH2";
-//ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.UseRunningOccupancies = true;
-//ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.PrintXML              = true;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.ClusteringTool.AllowDiagonalsInClusters = true;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MinHPDFills            = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MemoryFactor           = 20;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.AbsoluteMaxHPDOcc      = 200;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.OccCutScaleFactor      = 14;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.WhichRich = "RICH2";
+//ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.UseRunningOccupancies = true;
+//ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.PrintXML              = true;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.ClusteringTool.AllowDiagonalsInClusters = true;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.MinHPDFills            = 20;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.MemoryFactor           = 20;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.AbsoluteMaxHPDOcc      = 200;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.OccCutScaleFactor      = 14;
 // Options for pixel cluster suppression
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MaxPixelClusterSize    = 8;
-ToolSvc.Offline.RichPixelCreator.PixelSuppressRich2.MinHPDOccForClustering = 8;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.MaxPixelClusterSize    = 8;
+ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2.MinHPDOccForClustering = 8;
 
 // Clustering tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/ClusteringTool" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::DAQ::HPDPixelClusteringTool/ClusteringTool" };

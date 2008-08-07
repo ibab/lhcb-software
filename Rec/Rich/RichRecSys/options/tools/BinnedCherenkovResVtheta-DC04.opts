@@ -1,26 +1,26 @@
 
 // Cherenkov resolution - fixed binned implementation
-ToolSvc.Offline.RichToolRegistry.Tools += 
+ToolSvc.Offline_RichToolRegistry.Tools += 
 { 
  "Rich::Rec::BinnedCKResVthetaForRecoTracks/RichCherenkovResolution" 
 };
 
 // binned resolutions
-ToolSvc.Offline.RichCherenkovResolution.NAerogelResBins         = { 0.2, 0.25 };
-ToolSvc.Offline.RichCherenkovResolution.AerogelForwardRes       = { 0.00355, 0.00263, 0.00249 };
-ToolSvc.Offline.RichCherenkovResolution.AerogelMatchRes         = { 0.00340, 0.00280, 0.00249 };
-ToolSvc.Offline.RichCherenkovResolution.AerogelFollowRes        = { 1.0,     1.0,     1.0     };
-ToolSvc.Offline.RichCherenkovResolution.AerogelVTTRes           = { 0.01000, 0.00436, 0.00267 };
-ToolSvc.Offline.RichCherenkovResolution.AerogelKsTrackRes       = { 0.00375, 0.00287, 0.00264 };
-ToolSvc.Offline.RichCherenkovResolution.NRich1GasResBins        = { 0.03, 0.05 };
-ToolSvc.Offline.RichCherenkovResolution.Rich1GasForwardRes      = { 0.00244, 0.00163, 0.00150 };
-ToolSvc.Offline.RichCherenkovResolution.Rich1GasMatchRes        = { 0.00255, 0.00174, 0.00167 };
-ToolSvc.Offline.RichCherenkovResolution.Rich1GasFollowRes       = { 1.0,     1.0,     1.0     };
-ToolSvc.Offline.RichCherenkovResolution.Rich1GasVTTRes          = { 0.01000, 0.00312, 0.00193 };
-ToolSvc.Offline.RichCherenkovResolution.Rich1GasKsTrackRes      = { 0.00263, 0.00181, 0.00177 };
-ToolSvc.Offline.RichCherenkovResolution.NRich2GasResBins        = { 0.018, 0.028 };
-ToolSvc.Offline.RichCherenkovResolution.Rich2GasForwardRes      = { 0.000953, 0.000630, 0.000554 };
-ToolSvc.Offline.RichCherenkovResolution.Rich2GasMatchRes        = { 0.000841, 0.000658, 0.000600 };
-ToolSvc.Offline.RichCherenkovResolution.Rich2GasFollowRes       = { 1.0,      1.0,      1.0      };
-ToolSvc.Offline.RichCherenkovResolution.Rich2GasSeedRes         = { 0.001150, 0.000836, 0.000669 };
-ToolSvc.Offline.RichCherenkovResolution.Rich2GasKsTrackRes      = { 0.001020, 0.000736, 0.000619 };
+ToolSvc.Offline_RichCherenkovResolution.NAerogelResBins         = { 0.2, 0.25 };
+ToolSvc.Offline_RichCherenkovResolution.AerogelForwardRes       = { 0.00355, 0.00263, 0.00249 };
+ToolSvc.Offline_RichCherenkovResolution.AerogelMatchRes         = { 0.00340, 0.00280, 0.00249 };
+ToolSvc.Offline_RichCherenkovResolution.AerogelFollowRes        = { 1.0,     1.0,     1.0     };
+ToolSvc.Offline_RichCherenkovResolution.AerogelVTTRes           = { 0.01000, 0.00436, 0.00267 };
+ToolSvc.Offline_RichCherenkovResolution.AerogelKsTrackRes       = { 0.00375, 0.00287, 0.00264 };
+ToolSvc.Offline_RichCherenkovResolution.NRich1GasResBins        = { 0.03, 0.05 };
+ToolSvc.Offline_RichCherenkovResolution.Rich1GasForwardRes      = { 0.00244, 0.00163, 0.00150 };
+ToolSvc.Offline_RichCherenkovResolution.Rich1GasMatchRes        = { 0.00255, 0.00174, 0.00167 };
+ToolSvc.Offline_RichCherenkovResolution.Rich1GasFollowRes       = { 1.0,     1.0,     1.0     };
+ToolSvc.Offline_RichCherenkovResolution.Rich1GasVTTRes          = { 0.01000, 0.00312, 0.00193 };
+ToolSvc.Offline_RichCherenkovResolution.Rich1GasKsTrackRes      = { 0.00263, 0.00181, 0.00177 };
+ToolSvc.Offline_RichCherenkovResolution.NRich2GasResBins        = { 0.018, 0.028 };
+ToolSvc.Offline_RichCherenkovResolution.Rich2GasForwardRes      = { 0.000953, 0.000630, 0.000554 };
+ToolSvc.Offline_RichCherenkovResolution.Rich2GasMatchRes        = { 0.000841, 0.000658, 0.000600 };
+ToolSvc.Offline_RichCherenkovResolution.Rich2GasFollowRes       = { 1.0,      1.0,      1.0      };
+ToolSvc.Offline_RichCherenkovResolution.Rich2GasSeedRes         = { 0.001150, 0.000836, 0.000669 };
+ToolSvc.Offline_RichCherenkovResolution.Rich2GasKsTrackRes      = { 0.001020, 0.000736, 0.000619 };

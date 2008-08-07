@@ -1,19 +1,19 @@
 
 // geometrical photon reconstruction
-ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline_RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
 
 // use Quartic solving tool
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 
 //                                                                                 Aero   C4F10  CF4
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+//ToolSvc.Offline_RichPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline_RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
 
 // Correction factors for small biases                                                Aero          C4F10          CF4
-ToolSvc.Offline.RichPhotonCreator.PhotonParams.CKThetaQuartzRefractCorrections = { -0.000358914, -0.000192933, -3.49182e-05 };
+ToolSvc.Offline_RichPhotonCreator.PhotonParams.CKThetaQuartzRefractCorrections = { -0.000358914, -0.000192933, -3.49182e-05 };

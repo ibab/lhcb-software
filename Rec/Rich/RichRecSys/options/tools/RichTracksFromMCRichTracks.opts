@@ -3,21 +3,21 @@
 
 // Define the primary RichTrackCreator to be the delegator tool
 // This tool sends the real work to other tools depending on the configuration
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrackCreatorFromMCRichTracks/RichTrackCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::TrackCreatorFromMCRichTracks/RichTrackCreator" };
 
 // track selection
-ToolSvc.Offline.RichTrackCreator.TrackSelector.TrackAlgs = { "MCRichTrack" };
-ToolSvc.Offline.RichTrackCreator.TrackSelector.MCRichTrack.MinPCut  = 1;
+ToolSvc.Offline_RichTrackCreator.TrackSelector.TrackAlgs = { "MCRichTrack" };
+ToolSvc.Offline_RichTrackCreator.TrackSelector.MCRichTrack.MinPCut  = 1;
 
 // define the RichTrackSegment nickname to use
-ToolSvc.Offline.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
+ToolSvc.Offline_RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
 
 // Configure the RichTrackSegment maker for reconstructed tracks
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::TrSegMakerFromMCRichTracks/RichDetTrSegMaker" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::TrSegMakerFromMCRichTracks/RichDetTrSegMaker" };
 
 // which radiators to use                          Aerogel   C4F10    CF4
-ToolSvc.Offline.RichDetTrSegMaker.UseRadiators = { true,     true,    true };
+ToolSvc.Offline_RichDetTrSegMaker.UseRadiators = { true,     true,    true };
 
 // track location
-//ToolSvc.Offline.RichRecMCTruthTool.TrackLocation = "Rec/Rich/MCFakedTracks";
-ToolSvc.Offline.RichTrackCreator.TrackLocation   = "Rec/Rich/MCFakedTracks";
+//ToolSvc.Offline_RichRecMCTruthTool.TrackLocation = "Rec/Rich/MCFakedTracks";
+ToolSvc.Offline_RichTrackCreator.TrackLocation   = "Rec/Rich/MCFakedTracks";

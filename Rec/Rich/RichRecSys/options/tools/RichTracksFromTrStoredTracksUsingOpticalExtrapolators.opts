@@ -6,10 +6,10 @@
 // Define the primary track creator tool
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::DelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::DelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 
 // Setup delegated tools for each track type
-ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
+ToolSvc.Offline_RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
                                                       "match/RichTrackCrLongVTT",
                                                       "veloTT/RichTrackCrLongVTT",
                                                       "seed/RichTrackCrSeedKs",
@@ -17,7 +17,7 @@ ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVT
                                                       "KsTrack/RichTrackCrSeedKs" };
 
 // turn off or on book keeping
-ToolSvc.Offline.RichTrackCreator.DoBookKeeping = false;
+ToolSvc.Offline_RichTrackCreator.DoBookKeeping = false;
 
 //----------------------------------------------------------------------------------------------
 
@@ -25,48 +25,48 @@ ToolSvc.Offline.RichTrackCreator.DoBookKeeping = false;
 // Configuration for RichTrackCrLongVTT
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
 
 // Selected track types
-ToolSvc.Offline.RichTrackCrLongVTT.TrackSelection =
+ToolSvc.Offline_RichTrackCrLongVTT.TrackSelection =
   { "unique", "positive", "negative", "forward", "match", "veloTT" };
 
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.Offline.RichTrackCrLongVTT.TrackMomentumCuts = { "forward/0/1e10",
+ToolSvc.Offline_RichTrackCrLongVTT.TrackMomentumCuts = { "forward/0/1e10",
                                                          "match/0/1e10",
                                                          "veloTT/1/1e10" };
 
 // define the RichTrackSegment nickname to use
-ToolSvc.Offline.RichTrackCrLongVTT.TracOffline.RichToolRegistrykSegmentTool = "RichDetTrSegLongVTT";
+ToolSvc.Offline_RichTrackCrLongVTT.TracOffline_RichToolRegistrykSegmentTool = "RichDetTrSegLongVTT";
 
 // turn off book keeping ( if needed done by delegator tool )
-ToolSvc.Offline.RichTrackCrLongVTT.DoBookKeeping = false;
+ToolSvc.Offline_RichTrackCrLongVTT.DoBookKeeping = false;
 
-//-------------------------------------Offline.RichToolRegistry---------------------------------------------------------
+//-------------------------------------Offline_RichToolRegistry---------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------
 // Configuration for RichDetTrSegLongVTT
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegLongVTT" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegLongVTT" };
 
 // Extrapolator tools
-ToolSvc.Offline.RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
-ToolSvc.Offline.RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrHerabExtrapolator";
+ToolSvc.Offline_RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
+ToolSvc.Offline_RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrHerabExtrapolator";
 
 //ToolSvc.TrRichExtrapolatorForLongVTT.StartPointExtrapolator = "TrParabolicExtrapolator";
-ToolSvc.Offline.TrRichExtrapolatorForLongVTT.StartPointExtrapolator = "TrHerabExtrapolator";
+ToolSvc.Offline_TrRichExtrapolatorForLongVTT.StartPointExtrapolator = "TrHerabExtrapolator";
 
 // which radiators to use                            Aerogel   C4F10    CF4
-ToolSvc.Offline.RichDetTrSegLongVTT.UseRadiators = { true,     true,    true   };
+ToolSvc.Offline_RichDetTrSegLongVTT.UseRadiators = { true,     true,    true   };
 
 // Where to start looking for states                  R1 entry    R1 exit   R2 entry    R2 exit
-ToolSvc.Offline.RichDetTrSegLongVTT.NominalStateZ = { 0*mm,       0*mm,     9450*mm,    9450*mm };
+ToolSvc.Offline_RichDetTrSegLongVTT.NominalStateZ = { 0*mm,       0*mm,     9450*mm,    9450*mm };
 // allowed tolerences in each radiator                Aerogel     C4F10     CF4
-ToolSvc.Offline.RichDetTrSegLongVTT.ZTolerances   = { 800*mm,     800*mm,   2000*mm };
+ToolSvc.Offline_RichDetTrSegLongVTT.ZTolerances   = { 800*mm,     800*mm,   2000*mm };
 
 // Always extrapolate from starting reference states
-ToolSvc.Offline.RichDetTrSegLongVTT.ExtrapolateFromReference = true;
+ToolSvc.Offline_RichDetTrSegLongVTT.ExtrapolateFromReference = true;
 
 //----------------------------------------------------------------------------------------------
 
@@ -75,21 +75,21 @@ ToolSvc.Offline.RichDetTrSegLongVTT.ExtrapolateFromReference = true;
 // Configuration for RichTrackCrSeedKs
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
 
 // Selected track types
-ToolSvc.Offline.RichTrackCrSeedKs.TrackSelection =
+ToolSvc.Offline_RichTrackCrSeedKs.TrackSelection =
   { "unique", "positive", "negative", "seed", "KsTrack" };
 
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.Offline.RichTrackCrSeedKs.TrackMomentumCuts = { "seed/0/1e10",
+ToolSvc.Offline_RichTrackCrSeedKs.TrackMomentumCuts = { "seed/0/1e10",
                                                         "KsTrack/0/1e10" };
 
 // define the RichTrackSegment nickname to use
-ToolSvc.Offline.RichTrackCrSeedKs.TrackSegmentTool = "RichDetTrSegSeedKs";
+ToolSvc.Offline_RichTrackCrSeedKs.TrackSegmentTool = "RichDetTrSegSeedKs";
 
 // turn off book keeping ( if needed done by delegator tool )
-ToolSvc.Offline.RichTrackCrSeedKs.DoBookKeeping = false;
+ToolSvc.Offline_RichTrackCrSeedKs.DoBookKeeping = false;
 
 //----------------------------------------------------------------------------------------------
 
@@ -97,24 +97,24 @@ ToolSvc.Offline.RichTrackCrSeedKs.DoBookKeeping = false;
 // Configuration for RichDetTrSegSeedKs
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegSeedKs" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::TrSegMakerFromTrStoredTracks/RichDetTrSegSeedKs" };
 
 // Extrapolator tools
-ToolSvc.Offline.RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";
-ToolSvc.Offline.RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrHerabExtrapolator";
+ToolSvc.Offline_RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";
+ToolSvc.Offline_RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrHerabExtrapolator";
 
 //ToolSvc.TrRichExtrapolatorForSeedKs.StartPointExtrapolator  = "TrParabolicExtrapolator";
-ToolSvc.Offline.TrRichExtrapolatorForSeedKs.StartPointExtrapolator  = "TrHerabExtrapolator";
+ToolSvc.Offline_TrRichExtrapolatorForSeedKs.StartPointExtrapolator  = "TrHerabExtrapolator";
 
 // which radiators to use                           Aerogel   C4F10    CF4
-ToolSvc.Offline.RichDetTrSegSeedKs.UseRadiators = { true,     true,    true   };
+ToolSvc.Offline_RichDetTrSegSeedKs.UseRadiators = { true,     true,    true   };
 
 // Where to start looking for states                  R1 entry    R1 exit   R2 entry    R2 exit
-ToolSvc.Offline.RichDetTrSegSeedKs.NominalStateZ =  { 0*mm,       0*mm,     9450*mm,    9450*mm };
+ToolSvc.Offline_RichDetTrSegSeedKs.NominalStateZ =  { 0*mm,       0*mm,     9450*mm,    9450*mm };
 // allowed tolerences in each radiator               Aerogel     C4F10     CF4
-ToolSvc.Offline.RichDetTrSegSeedKs.ZTolerances   =  { 1200*mm,    1200*mm,  2000*mm };
+ToolSvc.Offline_RichDetTrSegSeedKs.ZTolerances   =  { 1200*mm,    1200*mm,  2000*mm };
 
 // Always extrapolate from starting reference states
-ToolSvc.Offline.RichDetTrSegSeedKs.ExtrapolateFromReference = true;
+ToolSvc.Offline_RichDetTrSegSeedKs.ExtrapolateFromReference = true;
 
 //----------------------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 // Photon reconstruction using MC inforamtion for true cherenkov photons hit position
 
 // Main photon creator - delegates work to MC or Reco creators
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithMCHitPosition/RichPhotonCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithMCHitPosition/RichPhotonCreator" };
 
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
@@ -12,27 +12,27 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorWithMCH
 //=================================================================================================
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhotonCreatorReco" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichPhotonCreatorReco" };
 //                                                                    Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.Offline.RichPhotonCreatorReco.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.Offline.RichPhotonCreatorReco.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline_RichPhotonCreatorReco.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline_RichPhotonCreatorReco.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.Offline.RichPhotonCreatorReco.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline_RichPhotonCreatorReco.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // N sigma on expected CK theta resolution
-ToolSvc.Offline.RichPhotonCreatorReco.NSigma                     = {  3.8,     3.3,     3.3    };
+ToolSvc.Offline_RichPhotonCreatorReco.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 //                                                                                     Aero   C4F10  CF4
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckSideCrossing               = { false, true,  true  };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
-ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline_RichPhotonCreatorReco.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
 

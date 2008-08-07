@@ -6,28 +6,28 @@
 #include "$RICHRECSYSOPTS/tools/RichPhotonPredictor.opts"
 
 // RichRecPhoton Creator
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorCheatedTrackDir/RichPhotonCreator" };
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelPhotonCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorCheatedTrackDir/RichPhotonCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonCreator/RichDelPhotonCreator" };
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.Offline.RichDelPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.Offline.RichDelPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline_RichDelPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline_RichDelPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.Offline.RichDelPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline_RichDelPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // N sigma on expected CK theta resolution
-ToolSvc.Offline.RichDelPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
+ToolSvc.Offline_RichDelPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.Offline.RichDelPhotonCreator.PhotonRecoTool  = "PhotonParams";
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::PhotonRecoUsingQuarticSoln/PhotonParams" };
 
 //                                                                                    Aero   C4F10  CF4
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
-ToolSvc.Offline.RichDelPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.FindUnambiguousPhotons          = { true,  true,  true  };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.UseMirrorSegmentAllignment      = { true,  true,  true  };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.RejectAmbiguousPhotons          = { false, false, false };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.CheckBeamPipe                   = { true,  true,  true  };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.CheckSideCrossing               = { false, true,  true  };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.MinActiveFraction               = { 0.2,   0.2,   0.2   };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.CheckPrimaryMirrorSegments      = { false, false, false };
+ToolSvc.Offline_RichDelPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 3,     3,     3     };

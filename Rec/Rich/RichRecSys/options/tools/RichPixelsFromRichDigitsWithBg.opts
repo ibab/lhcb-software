@@ -3,10 +3,10 @@
 // This cache is then used to add a specified number of background particles to each event
 
 // use the tool that uses RichDigits
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromRichDigitsWithBg/RichPixelCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PixelCreatorFromRichDigitsWithBg/RichPixelCreator" };
 
 // Which RICH detectors to use                     RICH1   RICH2
-ToolSvc.Offline.RichPixelCreator.UseDetectors = {  true,   true   };
+ToolSvc.Offline_RichPixelCreator.UseDetectors = {  true,   true   };
 
 // number of particles to add each event                         RICH1    RICH2
-ToolSvc.Offline.RichPixelCreator.NumberBackgroundTracksToAdd = { 10,      10    };
+ToolSvc.Offline_RichPixelCreator.NumberBackgroundTracksToAdd = { 10,      10    };

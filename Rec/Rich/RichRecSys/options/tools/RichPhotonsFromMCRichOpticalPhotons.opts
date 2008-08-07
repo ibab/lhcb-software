@@ -1,16 +1,16 @@
 
 // RichRecPhoton Creator - Uses the MC information from MCRichOptical photons
 // to only reconstruct true photons with the MC geometry
-ToolSvc.Offline.RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };
+ToolSvc.Offline_RichToolRegistry.Tools += { "Rich::Rec::MC::PhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };
 
 //                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline_RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline_RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline_RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // N sigma on expected CK theta resolution
-ToolSvc.Offline.RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
+ToolSvc.Offline_RichPhotonCreator.NSigma                     = {  3.8,     3.3,     3.3    };
 
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
