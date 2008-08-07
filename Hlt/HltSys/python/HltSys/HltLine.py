@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.1 2008-08-06 14:38:11 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.2 2008-08-07 10:42:46 ibelyaev Exp $ 
 # =============================================================================
 ## @file
-#  simple module which defines few configurables for HLT lines
-#  @author Vanay BELYAEV Ivan.Belyaev@nikhef.nl
+#
+#  simple module which defines few helper classes & utilities
+#  for configuration of Hlt(1) lines
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-06-22
 # =============================================================================
 """
 The simple module which defines few configurables for HLT line
 
-The module defines three public symbols :
+The module defines three major public symbols :
 
  - class    Hlt1Line   :
       simple class to create the proper 'Configurable' for Hlt1 'lines'
@@ -18,42 +21,73 @@ The module defines three public symbols :
       helper class to represent the member of Hl1 'line'
  - function htl1Lines  :
       bookeeping routine which keeps the track of all created Hlt1 'lines'
- 
+
+Also three helper symbols are defined:
+
+ - function hlt1Props  :
+      simple function which shows the current list of 'major'
+      properties/attributes of algorithms to be inspected
+ - function addHlt1Prop :
+      the function which allows to add more properties/attributes
+      into the list of of 'major' properties to be inspected 
+ - function rmHlt1Prop :
+      the function which allows to remove the properties/attributes
+      from the list of of 'major' properties to be inspected 
+  
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $ "
 # =============================================================================
 
-__all__ = ( 'Hlt1Line'   ,
-            'Hlt1Member' ,
-            'hlt1Lines'  )
+__all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
+            'Hlt1Member'  ,  ## the representation of the line member 
+            'hlt1Lines'   ,  ## list of all created lines 
+            'hlt1Props'   ,  ## list of all major properties for inspection
+            'addHlt1Prop' ,  ## add attribute/property into the list 
+            'rmHlt1Prop'  )  ## remove attribute/property form the list 
 
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
 
-from Configurables import DeterministicPrescaler as Prescaler
+from Configurables import DeterministicPrescaler as PreScaler
 
-from Configurables import HltL0Filter 
-#from Configurables import L0Entry
+from Configurables import HltL0Filter            as L0Filter 
 
-from Configurables import HltTrackUpgrade
-from Configurables import HltTrackMatch
-from Configurables import HltTrackFilter
-from Configurables import HltVertexMaker1
-from Configurables import HltVertexMaker2
-from Configurables import HltVertexFilter
-# from Configurables import HltTrackPrepare
-# from Configurables import HltVertexPrepare
+from Configurables import HltTrackUpgrade        as TrackUpgrade 
+from Configurables import HltTrackMatch          as TrackMatch   
+from Configurables import HltTrackFilter         as TrackFilter 
+from Configurables import HltVertexMaker1        as VertexMaker1 
+from Configurables import HltVertexMaker2        as VertexMaker2 
+from Configurables import HltVertexFilter        as VertexFilter 
+
+## @todo introduce the proper decision 
+from Configurables import HelloWorld             as LineDecision 
 
 
-def prescalerName  ( line ) : return 'Hlt1%sPrescaler'  % line
-def postscalerName ( line ) : return 'Hlt1%sPostscaler' % line
-def l0entryName    ( line ) : return 'Hlt1%sL0Filter'   % line
-def memberName     ( member, line ) : return 'Hlt1%s%s'%(line,member.subname())
+## Convention: the name of 'PreScaler' algorithm inside HltLine
+def prescalerName  ( line ) :
+    """ Convention: the name of 'PreScaler' algorithm inside HltLine """
+    return 'Hlt1%sPreScaler'  % line
+## Convention: the name of 'PostScaler' algorithm inside HltLine
+def postscalerName ( line ) :
+    """ Convention: the name of 'PostScaler' algorithm inside HltLine """
+    return 'Hlt1%sPostScaler' % line
+## Convention: the name of 'L0Filter' algorithm inside HltLine
+def l0entryName    ( line ) :
+    """ Convention: the name of 'L0Filter' algorithm inside HltLine """
+    return 'Hlt1%sL0Filter'   % line
+## Convention: the generic name of 'member' algorithm inside HltLine 
+def memberName     ( member, line ) :
+    """ Convention: the generic name of 'member' algorithm inside HltLine """
+    return 'Hlt1%s%s'%(line,member.subname())
+## Convention: the name of 'Decision' algorithm inside HltLine
+def decisionName   ( line ) :
+    """Convention: the name of 'Decision' algorithm inside HltLine"""
+    return 'Hlt1%sDecision'   % line
 
 
 ## the list of all created lines 
-hlt_1_lines__ = []
+_hlt_1_lines__ = []
 
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt1Lines
@@ -68,18 +102,24 @@ def hlt1Lines () :
     >>> for line in lines : print line
     
     """
-    return tuple(hlt_1_lines__)
+    return tuple(_hlt_1_lines__)
 
 # =============================================================================
+## Add the created line into the local storage of created Hlt1Lines 
+def _add_to_hlt1_lines_( line ) :
+    """
+    Add the line into the local storage of created Hlt1Lines 
+    """
+    _hlt_1_lines__.append ( line ) 
+        
+# =============================================================================
 ## the list of valid members of Hlt1 sequencer 
-_types_ = { HltTrackUpgrade    : 'TU'  
-            , HltTrackMatch    : 'TM'  
-            , HltTrackFilter   : 'TF'  
-            , HltVertexMaker1  : 'VM1' 
-            , HltVertexMaker2  : 'VM2'
-            , HltVertexFilter  : 'VF'  
-            #, HltTrackPrepare  : 'TP'  # not valid anymore 
-            #, HltVertexPrepare : 'VP'  # not valid anymore 
+_types_ = { TrackUpgrade    : 'TU'  
+            , TrackMatch    : 'TM'  
+            , TrackFilter   : 'TF'  
+            , VertexMaker1  : 'VM1' 
+            , VertexMaker2  : 'VM2'
+            , VertexFilter  : 'VF'
             } 
 
 ## protected attributes 
@@ -323,9 +363,11 @@ class Hlt1Line(object):
             mdict[key] = args[key] 
         #start to contruct the sequence        
         _members = []
+
+        line = self.subname()
         
-        _members += [ Prescaler   ( prescalerName  ( self.subname () ) , AcceptFraction = self._prescale  ) ]
-        _members += [ HltL0Filter ( l0entryName    ( self.subname () ) , L0Channels     = self._L0        ) ]
+        _members += [ PreScaler ( prescalerName  ( line ) , AcceptFraction = self._prescale  ) ]
+        _members += [ L0Filter  ( l0entryName    ( line ) , L0Channels     = self._L0        ) ]
         
         _outputsel = None
 
@@ -339,7 +381,8 @@ class Hlt1Line(object):
             else :
                 
                 margs = alg.Args.copy() 
-
+                algName = alg.name ( line )
+                
                 ## need input selection?
                 if   'InputSelection3' in alg.Type.__slots__ :
                     # check input selections
@@ -348,7 +391,7 @@ class Hlt1Line(object):
                                        [ 'InputSelection3' , 'InputSelection2' , 'InputSelection1' ] ,
                                        # not allowed:
                                        [ 'InputSelection'  , 'InputSelections' ] ,
-                                       alg.name ( self.subname() ) , self.subname() ) ;
+                                       algName , line ) ;
                     #
                 elif 'InputSelection2' in alg.Type.__slots__ :
                     # check input selections
@@ -357,7 +400,7 @@ class Hlt1Line(object):
                                        [ 'InputSelection2' , 'InputSelection1' ] ,
                                        # not allowed:
                                        [ 'InputSelection'  , 'InputSelections' , 'InputSelection3' ] ,
-                                       alg.name ( self.subname() ) , self.subname() ) ;
+                                       algName , line ) ;
                     # 
                 elif 'InputSelections' in alg.Type.__slots__ :
                     # check input selections
@@ -366,13 +409,13 @@ class Hlt1Line(object):
                                        [ 'InputSelections' ] ,
                                        # not allowed:
                                        [ 'InputSelection'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                       alg.name ( self.subname() ) , self.subname() ) ;
+                                       algName , line ) ;
                     #
                 elif 'InputSelection' in alg.Type.__slots__ :
                     # come manual work 
                     _inputsel = _outputsel
                     if margs.has_key ( 'InputSelection' ) :
-                        _checkSelection ( 'InputSelection' , margs , alg.name ( self.subname () ) , self.subname() )
+                        _checkSelection ( 'InputSelection' , margs , algName , line )
                         _inputsel = margs['InputSelection']
                     if not _inputsel :
                         raise AttributeError, 'Cannot deduce InputSelection neither from argument nor from previous alg'
@@ -383,46 +426,100 @@ class Hlt1Line(object):
                                        [ 'InputSelection' ] ,
                                        # not allowed:
                                        [ 'InputSelections'  , 'InputSelection1' , 'InputSelection2' , 'InputSelection3' ] ,
-                                       alg.name ( self.subname() ) , self.subname() ) ;
+                                       algName , line ) ;
                     #
                 else :
-                    print "%s WARNING: HtlMember('%s') with strange configuration " % ( self.name() , alg.name() )
+                    print "%s WARNING: HtlMember('%s') with strange configuration " % ( self.name() , algName )
 
                 
                 ## output selection ( the algorithm name)
                 if 'OutputSelection' in alg.Type.__slots__ : 
-                    _outputsel = alg.name( self.subname() )
+                    _outputsel = algName
                     if margs.has_key ( 'OutputSelection' ) :
-                        _checkSelection ( 'OutputSelection' , margs , alg.name() , self.subname() ) 
-                        
+                        _checkSelection ( 'OutputSelection' , margs , algName , line ) 
+                        _outputsel = margs['OutputSelection']
+                    else :
+                        # do we really need it?
+                        # Is it more safe and betetr to rely on C++ default?
+                        margs['OutputSelection'] = _outputsel  
+                    
                 # create the algorithm:
-                _members += [ alg.Type( memberName ( alg , self.subname() )  , **margs ) ]         
+                _members += [ alg.Type( memberName ( alg , line )  , **margs ) ]         
         
-        _members += [ Prescaler ( postscalerName ( self.subname () ) , AcceptFraction = self._postscale ) ]
-        
+        _members += [ PreScaler    ( postscalerName ( line ) , AcceptFraction = self._postscale ) ]
+
+        ## finally add the decision algorithm!
+        _members += [ LineDecision ( decisionName ( line ) ) ]   
+                    
         # finally create the sequence
         self._sequencer = GaudiSequencer ( self.name()        ,
                                            Members = _members ,
                                            **mdict            ) ;
         
         # register into the local storage of all created Lines
-        #global hlt_1_lines 
-        hlt_1_lines__.append ( self ) 
+        _add_to_hlt1_lines_( self ) 
 
+    ## 'sub-name' of Hlt Line 
+    def subname   ( self ) :
+        """ 'Sub-name' of the Hlt line  """ 
+        return            self._name
+    ## Full name of Hlt line 
+    def name      ( self ) :
+        """ Full name of Hlt Line """
+        return 'Hlt1%s' % self._name
+    ## the actual type of Hlt Line 
+    def type      ( self ) :
+        """ The actual type of Hlt Line """
+        return Hlt1Line
+    ## Get the underlying 'Configurable'
+    #  probably it is the most important method except the constructor
+    #
+    #  @code 
+    #  >>> line = Hlt1Line ( .... )
+    #  >>> conf = line.sequencer()
+    #  @endcode
+    def sequencer ( self ) :
+        """
+        Get the underlying 'Configurable' instance 
+        probably it is the most important method except the constructor
         
-    def subname   ( self ) : return            self._name
-    def name      ( self ) : return 'Hlt1%s' % self._name 
-    def type      ( self ) : return Hlt1Line
-    def sequencer ( self ) : return self._sequencer
-    
+        >>> line = Hlt1Line ( .... )
+        >>> conf = line.sequencer()
+        
+        """
+        return self._sequencer
+    ## Get the underlying 'Configurable'
+    #  probably it is the most important method except the constructor
+    #
+    #  @code 
+    #  >>> line = Hlt1Line ( .... )
+    #  >>> conf = line.configurable() 
+    #  @endcode    
+    def configurable ( self ) :
+        """
+        Get the underlying 'Configurable' instance 
+        probably it is the most important method except the constructor
+        
+        >>> line = Hlt1Line ( .... )
+        >>> conf = line.configurable()
+        """
+        return self.sequencer()
+    ## get the lits of all 'IDs' for all members 
     def ids ( self ) :
+        """ Get the list of all IDs for all members """
         _ids = [] 
         for alg in self._algos :
             if Hlt1Member is type(alg) : _ids += [ alg.id() ] 
         return _ids 
-            
+    ## Clone the line  
     def clone ( self , name , **args ) :
-
+        """
+        Clone the line
+        
+        A new Hlt Line is created with new name, all property/attrributes maps
+        are updated accordingly.
+        
+        """
         # classify arguments:
         _own   = {} # own arguments 
         _seq   = {} # arguments for sequencer
@@ -452,7 +549,8 @@ class Hlt1Line(object):
         if _other :
             raise AttributeError, 'Invalid attributes are detected: %s'%_other 
 
-        # get all "OLD" arguments. and update them with all arguments, understandable by Sequencer 
+        # get all "OLD" arguments
+        # and update them with all arguments, understandable by Sequencer 
         __args.update ( _seq   )
 
         return Hlt1Line ( name      = __name       ,
@@ -462,9 +560,10 @@ class Hlt1Line(object):
                           algos     = __algos      , **__args )
     
     
-       
 
-
+# =============================================================================
+# Soem useful decorations 
+# =============================================================================
 ## Calculate the effective length of the string
 #  which is the length from the last '\n'-symbol 
 def len1 ( line ) :
@@ -476,6 +575,63 @@ def len1 ( line ) :
     if 0 > _i : return len(line)
     return len(line) - _i
 
+## the major properties/attributes  
+_hlt1_props_   = [ 'AcceptFraction'    , 
+                   'PercertPass'       ,
+                   'L0Channels'        ,
+                   'InputSelection'    ,
+                   'InputSelection1'   ,
+                   'InputSelection2'   ,
+                   'InputSelection3'   ,
+                   'InputSelections'   ,
+                   #'OutputSelection'   ,
+                   'RecoName'          ,
+                   'MatchName'         ,
+                   'FilterDescription' ] 
+
+## Get the tuple of major interesting properties for Hlt1  objects
+def hlt1Props () :
+    """
+    Get the tuple of major interesting properties for Hlt1  objects
+
+    >>> print hlt1Props()
+    
+    """
+    _hlt1_props_.sort() 
+    return tuple(_hlt1_props_)
+
+## Add the item into the list of Hlt major proeprties 
+def addHlt1Prop ( prop ) :
+    """
+    Add the item into the list of Hlt major proeprties
+    
+    >>> print hlt1Props ()
+    >>> print addHlt1Prop ( 'OutputLevel' )
+    
+    """
+    if  not list is type(prop) and not  tuple is type(prop) : prop = [ prop ] 
+    # loop over all items:
+    for item in prop :
+        if not item in _hlt1_props_ : _hlt1_props_.append ( item )
+    # 
+    return hlt1Props()
+
+## remove the item from the list of Hlt1 major properties
+def rmHlt1Prop ( prop ) :
+    """
+    Remove the item into the list of Hlt major proeprties
+    
+    >>> print hlt1Props ()
+    >>> rmHlt1Prop ( 'OutputLevel' )
+    
+    """
+    if  not list is type(prop) and not  tuple is type(prop) : prop = [ prop ]
+    for item in prop :
+        if not item in _hlt1_props_ : return hlt1Props() 
+        pos = _hlt1_props_.index ( item )
+        del _hlt1_props_[ pos ]
+    return hlt1Props() 
+
 # =============================================================================
 ## Print the major properties/attributes of the configurables
 #  @param obj  the object to be inspected
@@ -484,8 +640,10 @@ def len1 ( line ) :
 #  @paral l1   the indentation parameter
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-08-06
-def prnt ( obj , # the object 
-           lst , line = '' , l1 = 65 ) :
+def prnt ( obj        ,   # the object 
+           lst  = []  ,   # list of 'major' properties
+           line = ''  ,   # the line to eb updated
+           l1   = 65  ) : # the indentation/format parameter 
     """
     Print the major properties/attributes of the configurables
     @param obj  the object to be inspected
@@ -499,7 +657,11 @@ def prnt ( obj , # the object
     >>> print prnt ( obj , [ 'OutputLevel' , 'Members'] ) # print... 
     
     """
-    if list is not type(lst) : lst = [ lst ]
+    if not lst : lst = hlt1Props () 
+    elif list  is type(lst) : pass
+    elif tuple is type(lst) : pass
+    else : lst = [ lst ]
+    #
     for item in lst :
         if hasattr ( obj , item ) :
             if l1 < len1( line ) : line += '\n' + l1*' '
@@ -513,19 +675,9 @@ def prnt ( obj , # the object
 #  @param lst   the list of major properties/attributes 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-08-06
-def __enroll__ ( self                             , ## the object
-                 level = 0                        , ## the recursion level
-                 lst   = [ 'AcceptFraction'    , 
-                           'PercertPass'       ,
-                           'L0Channels'        ,
-                           'InputSelection'    ,
-                           'InputSelection1'   ,
-                           'InputSelection2'   ,
-                           'InputSelection3'   ,
-                           'InputSelections'   ,
-                           'RecoName'          ,
-                           'MatchName'         ,
-                           'FilterDescription' ] ) : ## the major properties 
+def __enroll__ ( self       ,   ## the object
+                 level = 0  ,   ## the recursion level
+                 lst   = [] ) : ## the major properties  
     """
     The helper function for narcissic self-print of sequences  & algorithms 
     @param self  the object to be inspected
@@ -535,9 +687,10 @@ def __enroll__ ( self                             , ## the object
     @date 2008-08-06
     
     """
+    
     if hasattr ( self , 'sequencer' ) :
         return __enroll__ ( self.sequencer() , level )
-    
+
     _indent_ = ('%-3d'%level) + level * '   ' 
     line = _indent_ + self.name ()
     while len(line) < 40 : line = line + ' '
@@ -550,7 +703,7 @@ def __enroll__ ( self                             , ## the object
     # use the recursion 
     if hasattr ( self , 'Members' ) :
         _ms = self.Members
-        for _m in _ms : line = line + __enroll__ ( _m , level + 1 ) 
+        for _m in _ms : line = line + __enroll__ ( _m , level + 1 , lst ) 
     return line
 
 
