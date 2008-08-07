@@ -52,10 +52,10 @@ EventSelector().Input   = [
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
-ApplicationMgr.ExtSvc +=  [ "NTupleSvc" ]                             
+ApplicationMgr().ExtSvc +=  [ "NTupleSvc" ]                             
 NTupleSvc().Output =  [ "FILE1 DATAFILE='HLT-Bd2D0Kstar.root' TYP='ROOT' OPT='NEW'" ] 
 HistogramPersistencySvc().OutputFile = "DVHlt2-Bd2D0Kstar.root"
 
-ApplicationMgr.EvtMax = -1 
+ApplicationMgr().EvtMax = -1 
 #EventSelector().FirstEvent = 815 
 EventSelector().PrintFreq = 10 
