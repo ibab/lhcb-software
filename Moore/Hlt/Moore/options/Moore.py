@@ -31,12 +31,13 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #HltConfigSvc().OutputLevel = DEBUG
 #HltConfigSvc().checkOdin = False
 #
-Moore().runType = 'Physics_Hlt1'
-#Moore().runType = 'Physics_Hlt1+Hlt2'
-#Moore().runType = 'Commissioning'
+Moore().HltType = 'PHYSICS_Hlt1'
+#Moore().HltType = 'PHYSICS_Hlt1+Hlt2'
+#Moore().HltType = 'DEFAULT'  # current commissioning setup
 
 #Moore().DDDBtag = '2008-default'
 #Moore().condDBtag = '2008-default'
+# importOptions( "$DDDBROOT/options/LHCb-2008.py" )
 
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
 
