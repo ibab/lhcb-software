@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.189 2008-08-07 15:51:48 jonrob Exp $
+! $Id: release.notes,v 1.190 2008-08-07 15:52:55 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -6,6 +6,8 @@
 
 ! 2008-08-07 - Chris Jones
  - Add python configuration files
+ - Change ToolRegistry names from Offline.XXX to Offline_XXX to avoid 
+   problems with python configurables
 
 !====================== RichKernel v7r14 2008-07-27 ====================
 ! 2008-07-25 - Chris Jones
