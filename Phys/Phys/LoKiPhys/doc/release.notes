@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.67 2008-07-16 21:17:42 cattanem Exp $ 
+! $Id: release.notes,v 1.68 2008-08-07 15:02:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2008-08-07 - Vanya BELYAEV
+
+ - python/LoKiPhys/functions.py
+
+    add missing LV0, LV01, LV02, LV03 & LV04 symbols 
+    Many thanks to Ulrich Kerzel for reporting the problem
+
+- cmt/requirements
+
+    version incremen to v7r7 
+
 
 !========================== LoKiPhys v7r6 2008-07-16 ==========================
 ! 2008-07-09 - Vanya BELYAEV

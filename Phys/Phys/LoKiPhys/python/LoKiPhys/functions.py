@@ -361,6 +361,19 @@ DR2      = LoKi.Particles.DeltaR2
 ## @see LoKi::Cust::TRPCHI2 
 TRPCHI2  = LoKi.Particles.TrackChi2Prob ()
 
+
+# cosine of the decay  angle
+LV0    = LoKi.Particles.DecayAngle
+# cosine of the decay  angle for the first  daughter 
+LV01   = LoKi.Particles.DecayAngle ( 1 )
+# cosine of the decay  angle for the second daughter 
+LV02   = LoKi.Particles.DecayAngle ( 2 )
+# cosine of the decay  angle for the third  daughter 
+LV03   = LoKi.Particles.DecayAngle ( 3 )
+# cosine of the decay  angle for the fourth daughter 
+LV04   = LoKi.Particles.DecayAngle ( 4 )
+
+
 # meta-functions requested by Patrick KOPPENBURG:
 ## @see LoKi::Cuts::INGENERATION 
 INGENERATION  = LoKi.Particles.InGeneration
