@@ -1,0 +1,18 @@
+! $Id: release.notes,v 1.1.1.1 2008-08-07 11:05:28 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! Package     : Hlt/HltConf
+! Responsible : 
+! Purpose     : HLT Configuration 
+! -----------------------------------------------------------------------------
+
+! 2008-08-07 - Vanya BELYAEV
+
+ - new package
+
+   currently contains only the python modules for creation of configurables 
+   for Hlt1 "lines"
+
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
