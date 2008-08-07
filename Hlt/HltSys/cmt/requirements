@@ -1,7 +1,7 @@
 package HltSys
 version v4r0
 
-branches cmt doc options python
+branches cmt doc options
 
 #=======================================================
 # HLT1 and common packages
@@ -27,6 +27,8 @@ use HltRawData          v1r0    Hlt   # Tomasz Skwarnicki
 # And now for something completely different
 use HltPython	        v1r8    Hlt   # Jose Angel Hernando-Morata
 
+use HltConf             v1r0    Hlt  
+
 #=======================================================
 # HLT2 packages
 #=======================================================
@@ -45,13 +47,6 @@ use HltBase             v5r0   Hlt    # Jose Angel Hernando-Morata
 
 use LoKiTrigger         v7r3   Phys   # Vanya Belyaev
 use TisTosTobbing       v2r6   Phys   # Tomasz Skwarnicki  
-
-
-# =============================================================================
-# Cpoy python modules into InstallArea 
-# =============================================================================
-apply_pattern install_python_modules
-
 
 
 # Allow the generation of QMTest summary 
