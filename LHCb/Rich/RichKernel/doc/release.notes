@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.188 2008-07-27 16:07:10 cattanem Exp $
+! $Id: release.notes,v 1.189 2008-08-07 15:51:48 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2008-08-07 - Chris Jones
+ - Add python configuration files
 
 !====================== RichKernel v7r14 2008-07-27 ====================
 ! 2008-07-25 - Chris Jones

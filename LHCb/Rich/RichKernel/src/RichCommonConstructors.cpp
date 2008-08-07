@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.5 2008-03-25 15:55:03 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.6 2008-08-07 15:51:48 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
@@ -31,7 +31,7 @@ Rich::CommonBase<GaudiAlgorithm>::CommonBase( const std::string& name,
     m_toolReg      ( NULL                          ),
     m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
@@ -56,7 +56,7 @@ Rich::CommonBase<GaudiHistoAlg>::CommonBase( const std::string& name,
     m_toolReg      ( NULL                          ),
     m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
@@ -81,7 +81,7 @@ Rich::CommonBase<GaudiTupleAlg>::CommonBase( const std::string& name,
     m_toolReg      ( NULL                          ),
     m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
@@ -107,7 +107,7 @@ Rich::CommonBase<GaudiTool>::CommonBase( const std::string& type,
     m_toolReg   ( NULL                          ),
     m_jos       ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
@@ -132,7 +132,7 @@ Rich::CommonBase<GaudiHistoTool>::CommonBase( const std::string& type,
     m_toolReg      ( NULL                          ),
     m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }
@@ -157,7 +157,7 @@ Rich::CommonBase<GaudiTupleTool>::CommonBase( const std::string& type,
     m_toolReg      ( NULL                          ),
     m_jos          ( NULL                          ),
     m_regName      ( context().empty() ?
-                     "RichToolRegistry" : context()+".RichToolRegistry" )
+                     "RichToolRegistry" : context()+"_RichToolRegistry" )
 {
   declareProperty( "ToolRegistryName", m_regName );
 }

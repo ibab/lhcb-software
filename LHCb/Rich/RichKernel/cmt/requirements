@@ -2,14 +2,14 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.72 2008-07-24 18:04:14 papanest Exp $
+# $Id: requirements,v 1.73 2008-08-07 15:51:48 jonrob Exp $
 #============================================================================
 
 package RichKernel
 version v7r14
 
 # ================ structure =================================================
-branches RichKernel cmt dict doc src
+branches RichKernel cmt dict doc src python
 
 # ================ dependencies ==============================================
 use DAQEvent           v*   Event
@@ -19,6 +19,7 @@ use Boost              v*   LCG_Interfaces
 
 # ================ environment ===============================================
 apply_pattern install_more_includes more=RichKernel
+apply_pattern install_python_modules
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
@@ -32,5 +33,4 @@ apply_pattern reflex_dictionary                                       \
               options="-U__MINGW32__"
 
 # Debug flag
-macro_append cppflags "" \
-          Linux&debug " -DRICHDEBUG "
+macro_append cppflags "" Linux&debug " -DRICHDEBUG "
