@@ -4,8 +4,14 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.3 2008-04-24 15:32:50 jpalac Exp $
+! $Id: release.notes,v 1.4 2008-08-08 12:21:43 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-08 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r1
+ - Add MicroDST/ICloneFlavourTag.h
+  . New interface for cloning of LHCb::FlavourTag objects.
 
 !===================== MicroDSTinterfaces v1r0p1 2008-04-24 ==================
 
