@@ -1,33 +1,21 @@
-/** @file 
- *  Test file for HLT
- *
- *  @author P. Koppenburg
- *  @date 2006-02-01
- */
-//--------------------------------------------------------------
-#include "$HLTSELECTIONSROOT/options/DVTestHlt.opts"
+## @file 
+ #  Test file for HLT background category
+ #
+ #  @author P. Koppenburg
+ #  @date 2007-08-08
+ #
+##--------------------------------------------------------------
+from Gaudi.Configuration import *
+from Configurables import HltBackgroundCategory
 
-ApplicationMgr.TopAlg += { "HltBackgroundCategory" } ; 
-HltBackgroundCategory.PrintTree = true ;
+importOptions ( "$HLTSELECTIONSROOT/options/DVTestHlt2.py" )
 
+ApplicationMgr().TopAlg += [ HltBackgroundCategory() ] 
+HltBackgroundCategory().PrintTree = TRUE
 
-// ToolSvc.RelatedPVFinder.OutputLevel =1 ;
-// Bu2LLKTuple.OutputLevel = 2 ;
+importOptions ( "$HLTSELECTIONSROOT/options/MinimumBiasDst.py" )
 
-//MessageSvc.OutputLevel = 2 ;
-//MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
-MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
-
-//ChargedProtoPAlg.OutputLevel = 2 ;
-
-
-//#include "$HLTSELECTIONSROOT/options/Bs2JpsiPhiDigi.opts"
-//#include "$HLTSELECTIONSROOT/options/Bs2PhiPhiDigi.opts"
-//#include "$HLTSELECTIONSROOT/options/B2DstarX.opts"
-#include "$HLTSELECTIONSROOT/options/MinimumBiasPFN.opts"
-//#include "$HLTSELECTIONSROOT/options/MinimumBiasRaw.opts"
-//#include "$HLTSELECTIONSROOT/options/Bd2MuMuKstarPFN.opts"
-ApplicationMgr.EvtMax = 10000 ;
-EventSelector.PrintFreq = 100 ;
+ApplicationMgr().EvtMax = 10000 
+EventSelector().PrintFreq = 100 
 
 

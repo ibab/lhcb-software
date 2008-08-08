@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2008-08-08 - Patrick Koppenburg
+ - One python file was still options... 
+
 ! 2008-08-07 - Patrick Koppenburg
  - A few fixes to get it to run with only Hlt2
 
