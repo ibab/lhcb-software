@@ -1,43 +1,54 @@
 //
 // ********************************************************************
-// * DISCLAIMER                                                       *
+// * License and Disclaimer                                           *
 // *                                                                  *
-// * The following disclaimer summarizes all the specific disclaimers *
-// * of contributors to this software. The specific disclaimers,which *
-// * govern, are listed with their locations in:                      *
-// *   http://cern.ch/geant4/license                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
-// * use.                                                             *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
 // *                                                                  *
-// * This  code  implementation is the  intellectual property  of the *
-// * GEANT4 collaboration.                                            *
-// * By copying,  distributing  or modifying the Program (or any work *
-// * based  on  the Program)  you indicate  your  acceptance of  this *
-// * statement, and all its terms.                                    *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.12 2008-01-21 16:53:44 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.13 2008-08-08 09:23:14 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
 // Cerenkov Radiation Class Implementation
 ////////////////////////////////////////////////////////////////////////
 //
-// File:        RichG4Cerenkov.cc
-// Description: Continuous Process -- Generation of Cerenkov Photons
+// File:        RichG4Cerenkov.cc 
+// Description: Discrete Process -- Generation of Cerenkov Photons
 // Version:     2.1
-// Created:     1996-02-21
+// Created:     1996-02-21  
 // Author:      Juliet Armstrong
-// Updated:     2001-09-17, migration of Materials to pure STL (mma)
+// Updated:     2007-09-30 by Peter Gumplinger
+//              > change inheritance to G4VDiscreteProcess
+//              GetContinuousStepLimit -> GetMeanFreePath (StronglyForced)
+//              AlongStepDoIt -> PostStepDoIt
+//              2005-08-17 by Peter Gumplinger
+//              > change variable name MeanNumPhotons -> MeanNumberOfPhotons
+//              2005-07-28 by Peter Gumplinger
+//              > add G4ProcessType to constructor
+//              2001-09-17, migration of Materials to pure STL (mma) 
 //              2000-11-12 by Peter Gumplinger
 //              > add check on CerenkovAngleIntegrals->IsFilledVectorExist()
-//              in method GetAverageNumberOfPhotons
-//              > and a test for MeanNumPhotons <= 0.0 in DoIt
+//              in method GetAverageNumberOfPhotons 
+//              > and a test for MeanNumberOfPhotons <= 0.0 in DoIt
 //              2000-09-18 by Peter Gumplinger
 //              > change: aSecondaryPosition=x0+rand*aStep.GetDeltaPosition();
 //                        aSecondaryTrack->SetTouchable(0);
@@ -50,6 +61,7 @@
 // mail:        gum@triumf.ca
 //
 //  modifed for LHCb and renamed RichG4Cerenkov SE 1-4-2005
+//  modified to be similar to that in  G4.9.1 on 5-8-2008 SE
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
@@ -62,88 +74,96 @@
 //#include "RichG4CherenkovAnalysis.h"
 #include "RichG4QwAnalysis.h"
 // end of include localanalysis
+
 using namespace std;
 
 /////////////////////////
-// Class Implementation
+// Class Implementation  
 /////////////////////////
 
-//////////////
-// Operators
-//////////////
+        //////////////
+        // Operators
+        //////////////
 
 // RichG4Cerenkov::operator=(const RichG4Cerenkov &right)
 // {
 // }
 
-/////////////////
-// Constructors
-/////////////////
+        /////////////////
+        // Constructors
+        /////////////////
 
-RichG4Cerenkov::RichG4Cerenkov(const G4String& processName,
-                               G4ProcessType aType)
-  : G4VContinuousProcess(processName,aType),
+RichG4Cerenkov::RichG4Cerenkov(const G4String& processName, G4ProcessType type)
+  : G4VDiscreteProcess(processName, type),
     fRichVerboseInfoTag(false),
     fMaxPhotonPerRadiatorFlag(false)
 {
-  // In the above the 3 is for the three RICH radiators.
-  fTrackSecondariesFirst = false;
-  fMaxPhotons = 0;
+        G4cout << "RichG4Cerenkov::RichG4Cerenkov constructor" << G4endl;
+        G4cout << "NOTE: this is now a G4VDiscreteProcess!" << G4endl;
+        G4cout << "Required change in UserPhysicsList: " << G4endl;
+        G4cout << "change: pmanager->AddContinuousProcess(theCerenkovProcess);" << G4endl;
+        G4cout << "to:     pmanager->AddProcess(theCerenkovProcess);" << G4endl;
+        G4cout << "        pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);" << G4endl;
 
-  thePhysicsTable = NULL;
+	fTrackSecondariesFirst = false;
+	fMaxPhotons = 0;
 
-  if (verboseLevel>0) {
-    G4cout << GetProcessName() << " is created " << G4endl;
-  }
+        thePhysicsTable = NULL;
 
-  BuildThePhysicsTable();
+	if (verboseLevel>0) {
+           G4cout << GetProcessName() << " is created " << G4endl;
+	}
+
+	BuildThePhysicsTable();
 }
+
 
 // RichG4Cerenkov::RichG4Cerenkov(const RichG4Cerenkov &right)
 // {
 // }
 
-////////////////
-// Destructors
-////////////////
+        ////////////////
+        // Destructors
+        ////////////////
 
-RichG4Cerenkov::~RichG4Cerenkov()
+RichG4Cerenkov::~RichG4Cerenkov() 
 {
-  if (thePhysicsTable != NULL) {
-    thePhysicsTable->clearAndDestroy();
-    delete thePhysicsTable;
-  }
+	if (thePhysicsTable != NULL) {
+	   thePhysicsTable->clearAndDestroy();
+           delete thePhysicsTable;
+	}
 }
 
-////////////
-// Methods
-////////////
+        ////////////
+        // Methods
+        ////////////
 
-// AlongStepDoIt
+// PostStepDoIt
 // -------------
 //
 G4VParticleChange*
-RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
-  // This routine is called for each tracking Step of a charged particle
-  // in a radiator. A Poisson-distributed number of photons is generated
-  // according to the Cerenkov formula, distributed evenly along the track
-  // segment and uniformly azimuth w.r.t. the particle direction. The
-  // parameters are then transformed into the Master Reference System, and
-  // they are added to the particle change.
+// This routine is called for each tracking Step of a charged particle
+// in a radiator. A Poisson-distributed number of photons is generated
+// according to the Cerenkov formula, distributed evenly along the track
+// segment and uniformly azimuth w.r.t. the particle direction. The 
+// parameters are then transformed into the Master Reference System, and 
+// they are added to the particle change. 
 
 {
-  //////////////////////////////////////////////////////
-  // Should we ensure that the material is dispersive?
-  //////////////////////////////////////////////////////
 
-  aParticleChange.Initialize(aTrack);
+	//////////////////////////////////////////////////////
+	// Should we ensure that the material is dispersive?
+	//////////////////////////////////////////////////////
 
-  const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-  const G4Material* aMaterial = aTrack.GetMaterial();
+        aParticleChange.Initialize(aTrack);
 
-  G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
-  G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
+        const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
+        const G4Material* aMaterial = aTrack.GetMaterial();
+
+	G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
+	G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
   // test printout by SE
 
   // G4String  pPreVolName=  pPreStepPoint->
@@ -155,200 +175,208 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
   // end of test printout by SE
 
-  G4ThreeVector x0 = pPreStepPoint->GetPosition();
-  G4ThreeVector p0 = aStep.GetDeltaPosition().unit();
-  G4double t0 = pPreStepPoint->GetGlobalTime();
+	G4ThreeVector x0 = pPreStepPoint->GetPosition();
+        G4ThreeVector p0 = aStep.GetDeltaPosition().unit();
+	G4double t0 = pPreStepPoint->GetGlobalTime();
 
-  G4MaterialPropertiesTable* aMaterialPropertiesTable =
-    aMaterial->GetMaterialPropertiesTable();
-  if (!aMaterialPropertiesTable)
-    return G4VContinuousProcess::AlongStepDoIt(aTrack, aStep);
+        G4MaterialPropertiesTable* aMaterialPropertiesTable =
+                               aMaterial->GetMaterialPropertiesTable();
+        if (!aMaterialPropertiesTable)
+           return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
-  //Change by SE to produce photons only within a limited range of RefIndex.
-  // const G4MaterialPropertyVector* Rindex =
-  //        aMaterialPropertiesTable->GetProperty("RINDEX");
-  const G4MaterialPropertyVector* Rindex =
-    aMaterialPropertiesTable->GetProperty("CKVRNDX");
-  // End of change by SE
+       //Change by SE to produce photons only within a limited range of RefIndex.
+        //	const G4MaterialPropertyVector* Rindex = 
+        //        aMaterialPropertiesTable->GetProperty("RINDEX"); 
+      	const G4MaterialPropertyVector* Rindex = 
+                aMaterialPropertiesTable->GetProperty("CKVRNDX"); 
 
-  if (!Rindex)
-    return G4VContinuousProcess::AlongStepDoIt(aTrack, aStep);
+        if (!Rindex)return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
-  G4double MeanNumPhotons =
-    GetAverageNumberOfPhotons(aParticle,aMaterial,Rindex);
+        // particle charge
+        const G4double charge = aParticle->GetDefinition()->GetPDGCharge();
 
-  if (MeanNumPhotons <= 0.0) {
+        // particle beta
+        const G4double beta = (pPreStepPoint ->GetBeta() +
+                               pPostStepPoint->GetBeta())/2.;
 
-    // return unchanged particle and no secondaries
+	G4double MeanNumberOfPhotons = 
+                 GetAverageNumberOfPhotons(charge,beta,aMaterial,Rindex);
 
-    aParticleChange.SetNumberOfSecondaries(0);
+        if (MeanNumberOfPhotons <= 0.0) {
 
-    return G4VContinuousProcess::AlongStepDoIt(aTrack, aStep);
+                // return unchanged particle and no secondaries
 
-  }
+                aParticleChange.SetNumberOfSecondaries(0);
+ 
+                return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
-  G4double step_length;
-  step_length = aStep.GetStepLength();
+        }
 
-  MeanNumPhotons = MeanNumPhotons * step_length;
+        G4double step_length;
+        step_length = aStep.GetStepLength();
 
-  G4int NumPhotons = (G4int) G4Poisson(MeanNumPhotons);
+	MeanNumberOfPhotons = MeanNumberOfPhotons * step_length;
 
-  if (NumPhotons <= 0) {
+	G4int NumPhotons = (G4int) G4Poisson(MeanNumberOfPhotons);
 
-    // return unchanged particle and no secondaries
+	if (NumPhotons <= 0) {
 
-    aParticleChange.SetNumberOfSecondaries(0);
+		// return unchanged particle and no secondaries  
 
-    return G4VContinuousProcess::AlongStepDoIt(aTrack, aStep);
-  }
+		aParticleChange.SetNumberOfSecondaries(0);
+		
+                return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
+	}
 
-  ////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
 
-  aParticleChange.SetNumberOfSecondaries(NumPhotons);
+	aParticleChange.SetNumberOfSecondaries(NumPhotons);
 
-  if (fTrackSecondariesFirst) {
-    if (aTrack.GetTrackStatus() == fAlive )
-      aParticleChange.ProposeTrackStatus(fSuspend);
-  }
+        if (fTrackSecondariesFirst) {
+           if (aTrack.GetTrackStatus() == fAlive )
+                   aParticleChange.ProposeTrackStatus(fSuspend);
+        }
+	
+	////////////////////////////////////////////////////////////////
 
-  ////////////////////////////////////////////////////////////////
+	G4double Pmin = Rindex->GetMinPhotonMomentum();
+	G4double Pmax = Rindex->GetMaxPhotonMomentum();
 
-  G4double Pmin = Rindex->GetMinPhotonMomentum();
-  G4double Pmax = Rindex->GetMaxPhotonMomentum();
-  G4double dp = Pmax - Pmin;
+  //	G4double Pmin = Rindex->GetMinPhotonEnergy(); //for the future G4 versions after 4.9.1
+	//G4double Pmax = Rindex->GetMaxPhotonEnergy();   //for the future G4 versions after 4.9.1 
 
-  G4double nMax = Rindex->GetMaxProperty();
+	G4double dp = Pmax - Pmin;
 
-  G4double BetaInverse = aParticle->GetTotalEnergy() /
-    aParticle->GetTotalMomentum();
+	G4double nMax = Rindex->GetMaxProperty();
 
-  G4double maxCos = BetaInverse / nMax;
-  G4double maxSin2 = (1.0 - maxCos) * (1.0 + maxCos);
+        G4double BetaInverse = 1./beta;
 
-  for (G4int i = 0; i < NumPhotons; i++) {
+	G4double maxCos = BetaInverse / nMax; 
+	G4double maxSin2 = (1.0 - maxCos) * (1.0 + maxCos);
 
-    // Determine photon momentum
+	for (G4int i = 0; i < NumPhotons; i++) {
 
-    G4double rand;
-    G4double sampledMomentum, sampledRI;
-    G4double cosTheta, sin2Theta;
+		// Determine photon energy
 
-    // sample a momentum
+		G4double rand;
+		G4double sampledEnergy, sampledRI; 
+		G4double cosTheta, sin2Theta;
+		
+		// sample an energy
 
-    do {
-      rand = G4UniformRand();
-      sampledMomentum = Pmin + rand * dp;
-      sampledRI = Rindex->GetProperty(sampledMomentum);
-      cosTheta = BetaInverse / sampledRI;
+		do {
+			rand = G4UniformRand();	
+			sampledEnergy = Pmin + rand * dp; 
+			sampledRI = Rindex->GetProperty(sampledEnergy);
+			cosTheta = BetaInverse / sampledRI;  
 
-      sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
-      rand = G4UniformRand();
+			sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
+			rand = G4UniformRand();	
 
-    } while (rand*maxSin2 > sin2Theta);
+		} while (rand*maxSin2 > sin2Theta);
 
-    // Generate random position of photon on cone surface
-    // defined by Theta
+		// Generate random position of photon on cone surface 
+		// defined by Theta 
 
-    rand = G4UniformRand();
+		rand = G4UniformRand();
 
-    G4double phi = twopi*rand;
-    G4double sinPhi = sin(phi);
-    G4double cosPhi = cos(phi);
+		G4double phi = twopi*rand;
+		G4double sinPhi = sin(phi);
+		G4double cosPhi = cos(phi);
 
-    // calculate x,y, and z components of photon momentum
-    // (in coord system with primary particle direction
-    //  aligned with the z axis)
+		// calculate x,y, and z components of photon energy
+		// (in coord system with primary particle direction 
+		//  aligned with the z axis)
 
-    G4double sinTheta = sqrt(sin2Theta);
-    G4double px = sinTheta*cosPhi;
-    G4double py = sinTheta*sinPhi;
-    G4double pz = cosTheta;
+		G4double sinTheta = sqrt(sin2Theta); 
+		G4double px = sinTheta*cosPhi;
+		G4double py = sinTheta*sinPhi;
+		G4double pz = cosTheta;
 
-    // Create photon momentum direction vector
-    // The momentum direction is still with respect
-    // to the coordinate system where the primary
-    // particle direction is aligned with the z axis
+		// Create photon momentum direction vector 
+		// The momentum direction is still with respect
+	 	// to the coordinate system where the primary
+		// particle direction is aligned with the z axis  
 
-    G4ParticleMomentum photonMomentum(px, py, pz);
+		G4ParticleMomentum photonMomentum(px, py, pz);
 
-    // Rotate momentum direction back to global reference
-    // system
+		// Rotate momentum direction back to global reference
+		// system 
 
-    photonMomentum.rotateUz(p0);
+                photonMomentum.rotateUz(p0);
 
-    // Determine polarization of new photon
+		// Determine polarization of new photon 
 
-    G4double sx = cosTheta*cosPhi;
-    G4double sy = cosTheta*sinPhi;
-    G4double sz = -sinTheta;
+		G4double sx = cosTheta*cosPhi;
+		G4double sy = cosTheta*sinPhi; 
+		G4double sz = -sinTheta;
 
-    G4ThreeVector photonPolarization(sx, sy, sz);
+		G4ThreeVector photonPolarization(sx, sy, sz);
 
-    // Rotate back to original coord system
+		// Rotate back to original coord system 
 
-    photonPolarization.rotateUz(p0);
+                photonPolarization.rotateUz(p0);
+		
+                // Generate a new photon:
 
-    // Generate a new photon:
+                G4DynamicParticle* aCerenkovPhoton =
+                  new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(), 
+  					                 photonMomentum);
+		aCerenkovPhoton->SetPolarization
+				     (photonPolarization.x(),
+				      photonPolarization.y(),
+				      photonPolarization.z());
 
-    G4DynamicParticle* aCerenkovPhoton =
-      new G4DynamicParticle(G4OpticalPhoton::OpticalPhoton(),
-                            photonMomentum);
-    aCerenkovPhoton->SetPolarization
-      (photonPolarization.x(),
-       photonPolarization.y(),
-       photonPolarization.z());
+		aCerenkovPhoton->SetKineticEnergy(sampledEnergy);
 
-    aCerenkovPhoton->SetKineticEnergy(sampledMomentum);
+                // Generate new G4Track object:
 
-    // Generate new G4Track object:
-
-    rand = G4UniformRand();
+		rand = G4UniformRand();
 
     G4double delta = rand * aStep.GetStepLength();
-    G4double deltaTime = delta /
-      ((pPreStepPoint->GetVelocity()+
-        pPostStepPoint->GetVelocity())/2.);
-
+		G4double deltaTime = delta /
+                       ((pPreStepPoint->GetVelocity()+
+                         pPostStepPoint->GetVelocity())/2.);
     G4double aSecondaryTime = t0 + deltaTime;
 
     G4ThreeVector aSecondaryPosition =
-      x0 + rand * aStep.GetDeltaPosition();
+                  x0 + rand * aStep.GetDeltaPosition();
 
-    G4Track* aSecondaryTrack =
-      new G4Track(aCerenkovPhoton,aSecondaryTime,aSecondaryPosition);
+		G4Track* aSecondaryTrack = 
+		new G4Track(aCerenkovPhoton,aSecondaryTime,aSecondaryPosition);
 
     aSecondaryTrack->SetTouchableHandle((G4VTouchable*)0);
 
     aSecondaryTrack->SetParentID(aTrack.GetTrackID());
 
-    //Addtions made by SE to Tag the info regarding photon
+    //Additions made by SE to Tag the info regarding photon
     //production. SE 15-10-2002.
     G4Track* aTaggedSecondaryTrack
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
-                                   cosTheta,phi,sampledMomentum,fRichVerboseInfoTag );
+                                   cosTheta,phi,sampledEnergy,fRichVerboseInfoTag );
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
- 
     // end of additions by SE to tag the info on photon production.
     // also the next line is commented out as as result.
     // aParticleChange.AddSecondary(aSecondaryTrack);
+		//aParticleChange.AddSecondary(aSecondaryTrack);
 
-  }
+	}
    // test analysis by SE. Not needed for regular production running.
   // RichG4CherenkovProdFeaturesHisto(aTrack);
   // RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
   // if( aRichG4QwAnalysis->qwAnalysisNtupleBooked() ) {
   //  aRichG4QwAnalysis ->FillQwAnalysisHisto(aTrack);
   // }
-    // end of test analysis by SE
+  // end of test analysis by SE
 
-  if (verboseLevel>0) {
-    G4cout << "\n Exiting from RichG4Cerenkov::DoIt -- NumberOfSecondaries = "
-           << aParticleChange.GetNumberOfSecondaries() << G4endl;
-  }
+	if (verboseLevel>0) {
+	G4cout << "\n Exiting from RichG4Cerenkov::DoIt -- NumberOfSecondaries = " 
+	     << aParticleChange.GetNumberOfSecondaries() << G4endl;
+	}
 
-  return G4VContinuousProcess::AlongStepDoIt(aTrack, aStep);
+	return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 }
+
 
 // BuildThePhysicsTable for the Cerenkov process
 // ---------------------------------------------
@@ -356,145 +384,161 @@ RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 void RichG4Cerenkov::BuildThePhysicsTable()
 {
-  if (thePhysicsTable) return;
+	if (thePhysicsTable) return;
 
-  const G4MaterialTable* theMaterialTable=
-    G4Material::GetMaterialTable();
-  G4int numOfMaterials = G4Material::GetNumberOfMaterials();
+	const G4MaterialTable* theMaterialTable=
+	 		       G4Material::GetMaterialTable();
+	G4int numOfMaterials = G4Material::GetNumberOfMaterials();
 
-  // create new physics table
+	// create new physics table
+	
+	thePhysicsTable = new G4PhysicsTable(numOfMaterials);
 
-  thePhysicsTable = new G4PhysicsTable(numOfMaterials);
+	// loop for materials
 
-  // loop for materials
+	for (G4int i=0 ; i < numOfMaterials; i++)
+	{
+		G4PhysicsOrderedFreeVector* aPhysicsOrderedFreeVector =
+					new G4PhysicsOrderedFreeVector();
 
-  for (G4int i=0 ; i < numOfMaterials; i++)
-  {
-    G4PhysicsOrderedFreeVector* aPhysicsOrderedFreeVector =
-      new G4PhysicsOrderedFreeVector();
+		// Retrieve vector of refraction indices for the material
+		// from the material's optical properties table 
 
-    // Retrieve vector of refraction indices for the material
-    // from the material's optical properties table
+		G4Material* aMaterial = (*theMaterialTable)[i];
 
-    G4Material* aMaterial = (*theMaterialTable)[i];
+		G4MaterialPropertiesTable* aMaterialPropertiesTable =
+				aMaterial->GetMaterialPropertiesTable();
 
-    G4MaterialPropertiesTable* aMaterialPropertiesTable =
-      aMaterial->GetMaterialPropertiesTable();
-
-    if (aMaterialPropertiesTable) {
+		if (aMaterialPropertiesTable) {
 
       //Change by SE to produce photons only within a limited range of RefIndex.
-      //     G4MaterialPropertyVector* theRefractionIndexVector =
-      //         aMaterialPropertiesTable->GetProperty("RINDEX");
-      G4MaterialPropertyVector* theRefractionIndexVector =
-        aMaterialPropertiesTable->GetProperty("CKVRNDX");
+		  // G4MaterialPropertyVector* theRefractionIndexVector = 
+		  //  	   aMaterialPropertiesTable->GetProperty("RINDEX");
+
+		   G4MaterialPropertyVector* theRefractionIndexVector = 
+		    	   aMaterialPropertiesTable->GetProperty("CKVRNDX");
       //end of change by SE
 
-      if (theRefractionIndexVector) {
+		   if (theRefractionIndexVector) {
+		
+		      // Retrieve the first refraction index in vector
+		      // of (photon energy, refraction index) pairs 
 
-        // Retrieve the first refraction index in vector
-        // of (photon momentum, refraction index) pairs
+		      theRefractionIndexVector->ResetIterator();
+		      ++(*theRefractionIndexVector);	// advance to 1st entry 
 
-        theRefractionIndexVector->ResetIterator();
-        ++(*theRefractionIndexVector); // advance to 1st entry
+		      G4double currentRI = theRefractionIndexVector->
+		  			   GetProperty();
 
-        G4double currentRI = theRefractionIndexVector->
-          GetProperty();
+		      if (currentRI > 1.0) {
 
-        if (currentRI > 1.0) {
+			 // Create first (photon energy, Cerenkov Integral)
+			 // pair  
 
-          // Create first (photon momentum, Cerenkov Integral)
-          // pair
+			 G4double currentPM = theRefractionIndexVector->
+			 			 GetPhotonMomentum();
+       //			 G4double currentPM = theRefractionIndexVector->
+			 //			 GetPhotonEnergy();  // for future  G4 versions after G4.9.1
 
-          G4double currentPM = theRefractionIndexVector->
-            GetPhotonMomentum();
-          G4double currentCAI = 0.0;
+			 G4double currentCAI = 0.0;
 
-          aPhysicsOrderedFreeVector->
-            InsertValues(currentPM , currentCAI);
+			 aPhysicsOrderedFreeVector->
+			 	 InsertValues(currentPM , currentCAI);
 
-          // Set previous values to current ones prior to loop
+			 // Set previous values to current ones prior to loop
 
-          G4double prevPM  = currentPM;
-          G4double prevCAI = currentCAI;
-          G4double prevRI  = currentRI;
+			 G4double prevPM  = currentPM;
+			 G4double prevCAI = currentCAI;
+                	 G4double prevRI  = currentRI;
 
-          // loop over all (photon momentum, refraction index)
-          // pairs stored for this material
+			 // loop over all (photon energy, refraction index)
+			 // pairs stored for this material  
 
-          while(++(*theRefractionIndexVector))
-          {
-            currentRI=theRefractionIndexVector->
-              GetProperty();
+			 while(++(*theRefractionIndexVector))
+			 {
+				currentRI=theRefractionIndexVector->	
+						GetProperty();
 
-            currentPM = theRefractionIndexVector->
-              GetPhotonMomentum();
+				currentPM = theRefractionIndexVector->
+						GetPhotonMomentum();
+        //				currentPM = theRefractionIndexVector->
+        //			GetPhotonEnergy(); for future G4 versions after G4.9.1
 
-            currentCAI = 0.5*(1.0/(prevRI*prevRI) +
-                              1.0/(currentRI*currentRI));
+				currentCAI = 0.5*(1.0/(prevRI*prevRI) +
+					          1.0/(currentRI*currentRI));
 
-            currentCAI = prevCAI +
-              (currentPM - prevPM) * currentCAI;
+				currentCAI = prevCAI + 
+					     (currentPM - prevPM) * currentCAI;
 
-            aPhysicsOrderedFreeVector->
-              InsertValues(currentPM, currentCAI);
+				aPhysicsOrderedFreeVector->
+				    InsertValues(currentPM, currentCAI);
 
-            prevPM  = currentPM;
-            prevCAI = currentCAI;
-            prevRI  = currentRI;
-          }
+				prevPM  = currentPM;
+				prevCAI = currentCAI;
+				prevRI  = currentRI;
+			 }
 
-        }
-      }
-    }
+		      }
+		   }
+		}
 
-    // The Cerenkov integral for a given material
-    // will be inserted in thePhysicsTable
-    // according to the position of the material in
-    // the material table.
+	// The Cerenkov integral for a given material
+	// will be inserted in thePhysicsTable
+	// according to the position of the material in
+	// the material table. 
 
-    thePhysicsTable->insertAt(i,aPhysicsOrderedFreeVector);
+	thePhysicsTable->insertAt(i,aPhysicsOrderedFreeVector); 
 
-  }
+	}
 }
 
-// GetContinuousStepLimit
-// ----------------------
+// GetMeanFreePath
+// ---------------
 //
 
-G4double
-RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
-                                       G4double  ,
-                                       G4double  ,
-                                       G4double& )
+G4double RichG4Cerenkov::GetMeanFreePath(const G4Track& aTrack,
+                                           G4double,
+                                           G4ForceCondition* condition)
 {
-  // If user has defined an average maximum number of photons to
-  // be generated in a Step, then return the Step length for that
-  // number of photons.
+        *condition = StronglyForced;
 
-  if (fMaxPhotons <= 0) return DBL_MAX;
+	// If user has defined an average maximum number of photons to
+	// be generated in a Step, then return the Step length for that 
+	// number of photons. 
+ 
+	if (fMaxPhotons <= 0) return DBL_MAX;
 
-  const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
-  const G4Material* aMaterial = aTrack.GetMaterial();
+        const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
+        const G4Material* aMaterial = aTrack.GetMaterial();
 
-  G4MaterialPropertiesTable* aMaterialPropertiesTable =
-    aMaterial->GetMaterialPropertiesTable();
-  if (!aMaterialPropertiesTable) return DBL_MAX;
+        G4MaterialPropertiesTable* aMaterialPropertiesTable =
+                               aMaterial->GetMaterialPropertiesTable();
+        if (!aMaterialPropertiesTable) return DBL_MAX;
 
-  //Change by SE to produce photons only within a limited range of RefIndex.
-  //        const G4MaterialPropertyVector* Rindex =
-  //        aMaterialPropertiesTable->GetProperty("RINDEX");
-  const G4MaterialPropertyVector* Rindex =
-    aMaterialPropertiesTable->GetProperty("CKVRNDX");
-  //end of change by SE
-  if (!Rindex) return DBL_MAX;
+       //Change by SE to produce photons only within a limited range of RefIndex.
+       //      const G4MaterialPropertyVector* Rindex =
+       //              aMaterialPropertiesTable->GetProperty("RINDEX");
 
-  G4double MeanNumPhotons =
-    GetAverageNumberOfPhotons(aParticle,aMaterial,Rindex);
+        const G4MaterialPropertyVector* Rindex =
+                aMaterialPropertiesTable->GetProperty("CKVRNDX");
+       //end of change by SE
 
-  if(MeanNumPhotons <= 0.0) return DBL_MAX;
+        if (!Rindex) return DBL_MAX;
 
-  G4double StepLimit = fMaxPhotons / MeanNumPhotons;
+        // particle charge
+        const G4double charge = aParticle->GetDefinition()->GetPDGCharge();
+
+        // particle beta
+        const G4double beta = aParticle->GetTotalMomentum() /
+                              aParticle->GetTotalEnergy();
+
+	G4double MeanNumberOfPhotons = 
+                 GetAverageNumberOfPhotons(charge,beta,aMaterial,Rindex);
+
+        if(MeanNumberOfPhotons <= 0.0) return DBL_MAX;
+
+	G4double StepLimit = fMaxPhotons / MeanNumberOfPhotons;
+
   // Change by SE to modify the step limit for different
   // radiators if the flag for that is switched on.
   // June 2004.
@@ -505,101 +549,102 @@ RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
       RichG4MatRadIdentifier::RichG4MatRadIdentifierInstance();
     G4int CurMaxPhotPerStepLim =
       aRichG4MatRadIdentifier-> getRadiatorPhotPerStepLimit(aMaterial-> GetIndex());
-    StepLimit = CurMaxPhotPerStepLim/MeanNumPhotons;
+    StepLimit = CurMaxPhotPerStepLim/MeanNumberOfPhotons;
   }
-
+  
   // end of modification by SE
 
-  return StepLimit;
+	return StepLimit;
 }
 
 // GetAverageNumberOfPhotons
 // -------------------------
 // This routine computes the number of Cerenkov photons produced per
-// GEANT-unit (millimeter) in the current medium.
+// GEANT-unit (millimeter) in the current medium. 
 //             ^^^^^^^^^^
 
-G4double
-RichG4Cerenkov::GetAverageNumberOfPhotons(const G4DynamicParticle* aParticle,
-                                          const G4Material* aMaterial,
-                                          const G4MaterialPropertyVector* Rindex) const
+G4double 
+RichG4Cerenkov::GetAverageNumberOfPhotons(const G4double charge,
+                              const G4double beta, 
+			      const G4Material* aMaterial,
+			      const G4MaterialPropertyVector* Rindex) const
 {
-  const G4double Rfact = 369.81/(eV * cm);
+	const G4double Rfact = 369.81/(eV * cm);
 
-  if(aParticle->GetTotalMomentum() <= 0.0)return 0.0;
+        if(beta <= 0.0)return 0.0;
 
-  G4double BetaInverse = aParticle->GetTotalEnergy() /
-    aParticle->GetTotalMomentum();
+        G4double BetaInverse = 1./beta;
 
-  // Vectors used in computation of Cerenkov Angle Integral:
-  //  - Refraction Indices for the current material
-  // - new G4PhysicsOrderedFreeVector allocated to hold CAI's
+	// Vectors used in computation of Cerenkov Angle Integral:
+	// 	- Refraction Indices for the current material
+	//	- new G4PhysicsOrderedFreeVector allocated to hold CAI's
+ 
+	G4int materialIndex = aMaterial->GetIndex();
 
-  G4int materialIndex = aMaterial->GetIndex();
+	// Retrieve the Cerenkov Angle Integrals for this material  
 
-  // Retrieve the Cerenkov Angle Integrals for this material
+	G4PhysicsOrderedFreeVector* CerenkovAngleIntegrals =
+	(G4PhysicsOrderedFreeVector*)((*thePhysicsTable)(materialIndex));
 
-  G4PhysicsOrderedFreeVector* CerenkovAngleIntegrals =
-    (G4PhysicsOrderedFreeVector*)((*thePhysicsTable)(materialIndex));
+        if(!(CerenkovAngleIntegrals->IsFilledVectorExist()))return 0.0;
 
-  if(!(CerenkovAngleIntegrals->IsFilledVectorExist()))return 0.0;
+	// Min and Max photon energies 
+	G4double Pmin = Rindex->GetMinPhotonMomentum();
+	G4double Pmax = Rindex->GetMaxPhotonMomentum();
 
-  // Min and Max photon momenta
-  G4double Pmin = Rindex->GetMinPhotonMomentum();
-  G4double Pmax = Rindex->GetMaxPhotonMomentum();
+  //	G4double Pmin = Rindex->GetMinPhotonEnergy(); // for future G4 versions after G4.9.1
+  //	G4double Pmax = Rindex->GetMaxPhotonEnergy(); // for future G4 versions after G4.9.1
 
-  // Min and Max Refraction Indices
-  G4double nMin = Rindex->GetMinProperty();
-  G4double nMax = Rindex->GetMaxProperty();
+	// Min and Max Refraction Indices 
+	G4double nMin = Rindex->GetMinProperty();	
+	G4double nMax = Rindex->GetMaxProperty();
 
-  // Max Cerenkov Angle Integral
-  G4double CAImax = CerenkovAngleIntegrals->GetMaxValue();
+	// Max Cerenkov Angle Integral 
+	G4double CAImax = CerenkovAngleIntegrals->GetMaxValue();
 
-  G4double dp, ge;
+	G4double dp, ge;
 
-  // If n(Pmax) < 1/Beta -- no photons generated
+	// If n(Pmax) < 1/Beta -- no photons generated 
 
-  if (nMax < BetaInverse) {
-    dp = 0;
-    ge = 0;
-  }
+	if (nMax < BetaInverse) {
+		dp = 0;
+		ge = 0;
+	} 
 
-  // otherwise if n(Pmin) >= 1/Beta -- photons generated
+	// otherwise if n(Pmin) >= 1/Beta -- photons generated  
 
-  else if (nMin > BetaInverse) {
-    dp = Pmax - Pmin;
-    ge = CAImax;
-  }
+	else if (nMin > BetaInverse) {
+		dp = Pmax - Pmin;	
+		ge = CAImax; 
+	} 
 
-  // If n(Pmin) < 1/Beta, and n(Pmax) >= 1/Beta, then
-  // we need to find a P such that the value of n(P) == 1/Beta.
-  // Interpolation is performed by the GetPhotonMomentum() and
-  // GetProperty() methods of the G4MaterialPropertiesTable and
-  // the GetValue() method of G4PhysicsVector.
+	// If n(Pmin) < 1/Beta, and n(Pmax) >= 1/Beta, then
+	// we need to find a P such that the value of n(P) == 1/Beta.
+	// Interpolation is performed by the GetPhotonEnergy() and
+	// GetProperty() methods of the G4MaterialPropertiesTable and
+	// the GetValue() method of G4PhysicsVector.  
 
-  else {
-    Pmin = Rindex->GetPhotonMomentum(BetaInverse);
-    dp = Pmax - Pmin;
+	else {
+    //		Pmin = Rindex->GetPhotonEnergy(BetaInverse); // for future G4 versions after G4.9.1
+		Pmin = Rindex->GetPhotonMomentum(BetaInverse);
+		dp = Pmax - Pmin;
 
-    // need boolean for current implementation of G4PhysicsVector
-    // ==> being phased out
-    G4bool isOutRange;
-    G4double CAImin = CerenkovAngleIntegrals->
-      GetValue(Pmin, isOutRange);
-    ge = CAImax - CAImin;
+		// need boolean for current implementation of G4PhysicsVector
+		// ==> being phased out
+		G4bool isOutRange;
+		G4double CAImin = CerenkovAngleIntegrals->
+                                  GetValue(Pmin, isOutRange);
+		ge = CAImax - CAImin;
 
-    if (verboseLevel>0) {
-      G4cout << "CAImin = " << CAImin << G4endl;
-      G4cout << "ge = " << ge << G4endl;
-    }
-  }
+		if (verboseLevel>0) {
+			G4cout << "CAImin = " << CAImin << G4endl;
+			G4cout << "ge = " << ge << G4endl;
+		}
+	}
+	
+	// Calculate number of photons 
+	G4double NumPhotons = Rfact * charge/eplus * charge/eplus *
+                                 (dp - ge * BetaInverse*BetaInverse);
 
-  // particle charge
-  G4double charge = aParticle->GetDefinition()->GetPDGCharge();
-
-  // Calculate number of photons
-  G4double NumPhotons = Rfact * charge/eplus * charge/eplus *
-    (dp - ge * BetaInverse*BetaInverse);
-
-  return NumPhotons;
+	return NumPhotons;		
 }

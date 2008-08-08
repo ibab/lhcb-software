@@ -1,4 +1,4 @@
-// $Id: GiGaPhysConstructorOp.cpp,v 1.21 2008-01-29 12:43:17 seaso Exp $
+// $Id: GiGaPhysConstructorOp.cpp,v 1.22 2008-08-08 09:23:41 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -305,7 +305,10 @@ void GiGaPhysConstructorOp::ConstructOp() {
         if (theCerenkovProcess->IsApplicable(*particle)) 
           {
             G4ProcessManager* pmanager = particle->GetProcessManager();
-            pmanager->AddContinuousProcess(theCerenkovProcess);
+	    // pmanager->AddContinuousProcess(theCerenkovProcess);
+            // this modif to be similar to that G4.9.1 onwards. SE 5-8-2008
+            pmanager->AddProcess(theCerenkovProcess);
+            pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
           }
       }
     //    G4cout<<"Particle name  "<<particleName<<endl;

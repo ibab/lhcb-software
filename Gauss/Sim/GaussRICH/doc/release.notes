@@ -5,6 +5,10 @@
 !----------------------------------------------------------------------------- 
 
 !========================= GaussRICH v9r0 2008-06-26 =========================
+! 2008-08-08 - Sajan Easo
+  Modified the RichG4Cerenkov to be a poststep process , similar to
+  what is suggested in the recent G4.9. This needed a modification in 
+  GiGaPhysConstructorOp.cpp as well.
 ! 2008-07-30 - Sajan Easo 
   Updated the RichHpdProperties.cpp to be compatible with the latest RichDet when
   accesing the HPD QE info from the DataBase.

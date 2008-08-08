@@ -1,27 +1,30 @@
 //
 // ********************************************************************
-// * DISCLAIMER                                                       *
+// * License and Disclaimer                                           *
 // *                                                                  *
-// * The following disclaimer summarizes all the specific disclaimers *
-// * of contributors to this software. The specific disclaimers,which *
-// * govern, are listed with their locations in:                      *
-// *   http://cern.ch/geant4/license                                  *
+// * The  Geant4 software  is  copyright of the Copyright Holders  of *
+// * the Geant4 Collaboration.  It is provided  under  the terms  and *
+// * conditions of the Geant4 Software License,  included in the file *
+// * LICENSE and available at  http://cern.ch/geant4/license .  These *
+// * include a list of copyright holders.                             *
 // *                                                                  *
 // * Neither the authors of this software system, nor their employing *
 // * institutes,nor the agencies providing financial support for this *
 // * work  make  any representation or  warranty, express or implied, *
 // * regarding  this  software system or assume any liability for its *
-// * use.                                                             *
+// * use.  Please see the license in the file  LICENSE  and URL above *
+// * for the full disclaimer and the limitation of liability.         *
 // *                                                                  *
-// * This  code  implementation is the  intellectual property  of the *
-// * GEANT4 collaboration.                                            *
-// * By copying,  distributing  or modifying the Program (or any work *
-// * based  on  the Program)  you indicate  your  acceptance of  this *
-// * statement, and all its terms.                                    *
+// * This  code  implementation is the result of  the  scientific and *
+// * technical work of the GEANT4 collaboration.                      *
+// * By using,  copying,  modifying or  distributing the software (or *
+// * any work based  on the software)  you  agree  to acknowledge its *
+// * use  in  resulting  scientific  publications,  and indicate your *
+// * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.hh,v 1.6 2008-01-21 16:53:44 seaso Exp $
+// $Id: RichG4Cerenkov.hh,v 1.7 2008-08-08 09:23:14 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -30,15 +33,19 @@
 ////////////////////////////////////////////////////////////////////////
 //
 // File:        RichG4Cerenkov.hh  
-// Description:	Continuous Process -- Generation of Cerenkov Photons
+// Description:	Discrete Process - Generation of Cerenkov Photons
 // Version:     2.0
 // Created:     1996-02-21
 // Author:      Juliet Armstrong
-// Updated:     1999-10-29 add method and class descriptors
+// Updated:     2007-09-30 change inheritance to G4VDiscreteProcess
+//              2005-07-28 add G4ProcessType to constructor
+//              1999-10-29 add method and class descriptors
 //              1997-04-09 by Peter Gumplinger
 //              > G4MaterialPropertiesTable; new physics/tracking scheme
 // mail:        gum@triumf.ca
 // Modifed for LHCb and renamed RichG4Cerenkov   SE 1-4-2005.
+// Modified to be similar to the G4.9.1 version in 5-8-2008 SE 
+//
 ////////////////////////////////////////////////////////////////////////
 
 #ifndef RichG4Cerenkov_h
@@ -54,7 +61,7 @@
 #include "G4ThreeVector.hh"
 #include "G4ParticleMomentum.hh"
 #include "G4Step.hh"
-#include "G4VContinuousProcess.hh"
+#include "G4VDiscreteProcess.hh"
 #include "G4OpticalPhoton.hh"
 #include "G4DynamicParticle.hh"
 #include "G4Material.hh" 
@@ -64,15 +71,15 @@
 #include <vector>
 
 // Class Description:
-// Continuous Process -- Generation of Cerenkov Photons.
-// Class inherits publicly from G4VContinuousProcess.
+// Discrete Process -- Generation of Cerenkov Photons.
+// Class inherits publicly from G4VDiscreteProcess.
 // Class Description - End:
 
 /////////////////////
 // Class Definition
 /////////////////////
 
-class RichG4Cerenkov : public G4VContinuousProcess  
+class RichG4Cerenkov : public G4VDiscreteProcess  
 {
 
 private:
@@ -89,8 +96,8 @@ public: // Without description
 	// Constructors and Destructor
 	////////////////////////////////
 
-	RichG4Cerenkov(const G4String& processName = "RichG4Cerenkov",
-                     G4ProcessType aType = fOptical);
+	RichG4Cerenkov(const G4String& processName = "Cerenkov", 
+                            G4ProcessType type = fElectromagnetic);
 
 	// RichG4Cerenkov(const RichG4Cerenkov &right);
 
@@ -105,14 +112,13 @@ public: // With description
         G4bool IsApplicable(const G4ParticleDefinition& aParticleType);
         // Returns true -> 'is applicable', for all charged particles.
 
-	G4double GetContinuousStepLimit(const G4Track& aTrack,
-					G4double  ,
-					G4double  ,
-                                        G4double& );
-        // Returns the continuous step limit defined by the Cerenkov
-        // process.
+        G4double GetMeanFreePath(const G4Track& aTrack,
+                                 G4double ,
+                                 G4ForceCondition* );
+        // Returns the discrete step limit and sets the 'StronglyForced'
+        // condition for the DoIt to be invoked at every step.
 
-	G4VParticleChange* AlongStepDoIt(const G4Track& aTrack, 
+	G4VParticleChange* PostStepDoIt(const G4Track& aTrack, 
 					const G4Step&  aStep);
         // This is the method implementing the Cerenkov process.
 
@@ -135,14 +141,13 @@ public: // With description
         void DumpPhysicsTable() const;
         // Prints the physics table.
 
-      G4bool GetRichVerboseInfoTag(){return  fRichVerboseInfoTag;}
-      void SetRichVerboseInfoTag(G4bool aVTagValue)
+       G4bool GetRichVerboseInfoTag(){return  fRichVerboseInfoTag;}
+       void SetRichVerboseInfoTag(G4bool aVTagValue)
              {fRichVerboseInfoTag = aVTagValue;}
         
-      void SetMaxPhotonPerRadiatorFlag
-      (const G4bool aMaxNumPerStepRadiatorFlag)
-      {fMaxPhotonPerRadiatorFlag=aMaxNumPerStepRadiatorFlag;}
-  
+       void SetMaxPhotonPerRadiatorFlag
+       (const G4bool aMaxNumPerStepRadiatorFlag)
+       {fMaxPhotonPerRadiatorFlag=aMaxNumPerStepRadiatorFlag;}
 
 private:
 
@@ -152,7 +157,8 @@ private:
 	// Helper Functions
 	/////////////////////
 
-	G4double GetAverageNumberOfPhotons(const G4DynamicParticle *aParticle,
+	G4double GetAverageNumberOfPhotons(const G4double charge,
+                                const G4double beta,
 		    		const G4Material *aMaterial,
 				const G4MaterialPropertyVector* Rindex) const;
 
@@ -171,9 +177,8 @@ private:
 
 	G4bool fTrackSecondariesFirst;
 	G4int  fMaxPhotons;
-        G4bool fRichVerboseInfoTag;
-        G4bool fMaxPhotonPerRadiatorFlag;
-
+  G4bool fRichVerboseInfoTag;
+  G4bool fMaxPhotonPerRadiatorFlag;
 };
 
 ////////////////////
@@ -183,7 +188,11 @@ private:
 inline 
 G4bool RichG4Cerenkov::IsApplicable(const G4ParticleDefinition& aParticleType)
 {
-   return (aParticleType.GetPDGCharge() != 0);
+   if (aParticleType.GetParticleName() != "chargedgeantino" ) {
+      return (aParticleType.GetPDGCharge() != 0);
+   } else {
+      return false;
+   }
 }
 
 inline 
