@@ -1,10 +1,12 @@
-// $Id: CopyFlavourTag.cpp,v 1.1 2008-04-16 10:25:13 jpalac Exp $
+// $Id: CopyFlavourTag.cpp,v 1.2 2008-08-08 12:41:34 jpalac Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 // from LHCb
 #include "Event/FlavourTag.h"
+// from MicroDST
+#include "MicroDST/ICloneFlavourTag.h"
 // local
 #include "CopyFlavourTag.h"
 
@@ -23,9 +25,12 @@ DECLARE_ALGORITHM_FACTORY( CopyFlavourTag );
 //=============================================================================
 CopyFlavourTag::CopyFlavourTag( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : MicroDSTAlgorithm ( name , pSvcLocator )
+  : 
+  MicroDSTAlgorithm ( name , pSvcLocator ),
+  m_cloner(0),
+  m_tagClonerName("FlavourTagCloner")
 {
-
+  declareProperty( "ICloneFlavourTag", m_tagClonerName );
 }
 //=============================================================================
 // Destructor
@@ -42,6 +47,14 @@ StatusCode CopyFlavourTag::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_cloner = tool<ICloneFlavourTag>(m_tagClonerName, this);
+
+  if (m_cloner) {
+    debug() << "Found ICloneFlavourTag" << endmsg;
+  } else {
+    error() << "Failed to find ICloneFlavourTag" << endmsg;
+  }
 
   if (inputTESLocation()=="")  {
     verbose() << "changing input TES location " << endmsg;
@@ -63,8 +76,8 @@ StatusCode CopyFlavourTag::execute() {
   verbose() << "Going to store FlavourTag bank from " << inputTESLocation()
             << " into " << fullOutputTESLocation() << endmsg;
   return 
-    (0!=copyKeyedContainer<LHCb::FlavourTags,FlavourTagKeyedItemCopy>( inputTESLocation(),
-                                                                       fullOutputTESLocation() ) ) ?
+    (0!=copyKeyedContainer<LHCb::FlavourTags,ICloneFlavourTag>( inputTESLocation(),
+                                                                m_cloner) ) ?
     StatusCode::SUCCESS : StatusCode::FAILURE;
   
 }

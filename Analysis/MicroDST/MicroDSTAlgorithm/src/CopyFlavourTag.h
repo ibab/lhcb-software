@@ -1,10 +1,15 @@
-// $Id: CopyFlavourTag.h,v 1.1 2008-04-16 10:25:13 jpalac Exp $
+// $Id: CopyFlavourTag.h,v 1.2 2008-08-08 12:41:34 jpalac Exp $
 #ifndef COPYFLAVOURTAG_H 
 #define COPYFLAVOURTAG_H 1
 
 // Include files
-// from Gaudi
+// from MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
+
+namespace MicroDST
+{
+  class ICloneFlavourTag;
+}
 
 
 /** @class CopyFlavourTag CopyFlavourTag.h
@@ -18,6 +23,9 @@
  *  If InputLocation already contains a leading "/Event" it is removed.
  *  If no InputLocation is specified the FlavourTags are taken from 
  *  LHCb::FlavourTagLocation::Default
+ *  The cloning action os performed by an implementation of the 
+ *  ICloneFlavourTag interface. This is steerable via the ICloneFlavourTag
+ *  property, with default value FlavourTagCloner.
  *
  *  <b>Example</b>: Clone the LHCb::FlavourTags from default location ("Phys/Tagging") 
  *  to "/Event/MyLocation/Phys/Tagging"
@@ -45,5 +53,10 @@ public:
 private:
   typedef MicroDST::BasicCopy<LHCb::FlavourTag> FlavourTagCopy;
   typedef MicroDST::CloneKeyedContainerItem<LHCb::FlavourTag, FlavourTagCopy> FlavourTagKeyedItemCopy;
+
+  ICloneFlavourTag* m_cloner;
+
+  std::string m_tagClonerName;
+
 };
 #endif // COPYFLAVOURTAG_H
