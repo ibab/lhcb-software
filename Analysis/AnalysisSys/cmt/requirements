@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2008-08-05 17:09:59 pkoppenb Exp $
+# $Id: requirements,v 1.57 2008-08-08 13:06:18 jpalac Exp $
 package AnalysisSys
 version v2r0
 
@@ -47,14 +47,14 @@ use  Stripping          	v6r6     Tools   # Patrick Koppenburg
 
 ####################################################################
 use  MicroDSTBase        	v1r1p1  MicroDST          # Juan Palacios
-use  MicroDSTInterfaces  	v1r0p1  MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r2    MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r2p1  MicroDST          # Ulrich Kerzel
+use  MicroDSTInterfaces  	v1r1    MicroDST          # Juan Palacios
+use  MicroDSTTools      	v1r3    MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	v3r3  MicroDST          # Ulrich Kerzel
 
 
 ####################################################################
-use Analysis            	v7r4    Tutorial          # P. Koppenburg
-use LoKiExample         	v7r5    Ex                # Vanya Belyaev
+use Analysis            	v7r5    Tutorial          # P. Koppenburg
+use LoKiExample         	v7r4    Ex                # Vanya Belyaev
 
 
 # Allow the generation of QMTest summary 
