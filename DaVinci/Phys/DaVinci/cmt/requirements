@@ -1,15 +1,15 @@
-# $Id: requirements,v 1.386 2008-08-06 10:54:10 pkoppenb Exp $
+# $Id: requirements,v 1.387 2008-08-08 14:26:40 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v20r0
+version           v20r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src job options tests
+branches          cmt doc src job options tests python
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
