@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.63 2008-08-05 16:55:05 pkoppenb Exp $
+! $Id: release.notes,v 1.64 2008-08-08 12:41:52 jpalac Exp $
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !============================================================
+
+! 2008-08-08 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r3
+ - src/CopyFlavourTag{.cpp, .h}
+  . Algorithm now delegates cloning action to implementation of 
+    ICloneFlavourTagging interface. Needed to add this to allow to add
+    a pointer to a clone of the B candidate that has been tagged.
+  . Add property "ICloneFlavourTag" to allow to switch between different
+    implementations of ICloneFlavourTag. Default set to FlavourTagCloner.
 
 !========================== MicroDSTAlgorithm v3r2p1 2008-08-05 ===================
 ! 2008-07-07 - Juan PALACIOS
