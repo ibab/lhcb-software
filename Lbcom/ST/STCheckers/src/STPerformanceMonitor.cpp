@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.1 2008-08-04 07:22:33 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.2 2008-08-08 07:31:27 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -31,13 +31,15 @@ DECLARE_ALGORITHM_FACTORY( STPerformanceMonitor );
 STPerformanceMonitor::STPerformanceMonitor( const std::string& name, 
                                 ISvcLocator* pSvcLocator ) :
   GaudiHistoAlg(name, pSvcLocator),
-  m_tracker(0)
+  m_tracker(0),
+  m_event(0) 
 {
   // constructer
   declareProperty("DetType", m_detType = "TT" );
   declareProperty("summaryLocation",m_summaryLocation = STSummaryLocation::TTSummary );
   declareProperty("readoutToolName",m_readoutToolName = "ITReadoutTool" );
   declareProperty("InputData", m_clusterLocation = STClusterLocation::TTClusters);
+  declareProperty("ExpectedEvents", m_expectedEvents = 100000);
 }
 
 STPerformanceMonitor::~STPerformanceMonitor()
@@ -70,6 +72,9 @@ StatusCode STPerformanceMonitor::initialize()
 
 StatusCode STPerformanceMonitor::execute()
 {
+
+  ++m_event;
+
   // retrieve the event summary
   const STSummary* summary = get<STSummary>(m_summaryLocation);
 
@@ -97,6 +102,8 @@ StatusCode STPerformanceMonitor::execute()
 
   frac /= sectors.size(); 
   plot(frac, 1,"active fraction", 0., 1., 200);
+
+  plot2D(m_event, frac, 11,"active fraction versus time", 0., m_expectedEvents, 0., 1., 50, 200);
 
   // get the occupancy
   const double occ = clusterCont->size()/(m_tracker->nStrip()*frac); 
