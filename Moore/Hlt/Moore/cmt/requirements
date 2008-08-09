@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.26 2008-08-06 06:51:11 pkoppenb Exp $
+# $Id: requirements,v 1.27 2008-08-09 12:05:35 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #============================================================================
@@ -12,7 +12,7 @@ branches doc cmt options
 
 #============================================================================
 
-# Set the default path for Brunel options.
+# Set the default path for Moore options.
 set MOOREOPTS ${MOOREROOT}/options
 
 # Packages needed to compile and link the application
