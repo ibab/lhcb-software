@@ -31,15 +31,15 @@ HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 #HltConfigSvc().OutputLevel = DEBUG
 #HltConfigSvc().checkOdin = False
 #
-Moore().HltType = 'PHYSICS_Hlt1'
-#Moore().HltType = 'PHYSICS_Hlt1+Hlt2'
-#Moore().HltType = 'DEFAULT'  # current commissioning setup
+Moore().hltType = 'PHYSICS_Hlt1'
+#Moore().hltType = 'PHYSICS_Hlt1+Hlt2'
+#Moore().hltType = 'DEFAULT'  # current commissioning setup
 
 #Moore().DDDBtag = '2008-default'
 #Moore().condDBtag = '2008-default'
 # importOptions( "$DDDBROOT/options/LHCb-2008.py" )
 
-#files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
+files= [ '/data/bfys/lhcb/MinBias-L0strip/DC06_L0_v1_lumi2_MuonHadron_40000ev_' + str(f) +'.mdf'  for f in range(1,3) ]
 
 #files= [ '/data/bfys/lhcb/MinBias-L0strip/MBL0-lumi2-' + str(f) +'.dst'  for f in range(1,5) ]
 
@@ -48,8 +48,8 @@ Moore().HltType = 'PHYSICS_Hlt1'
 #          '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-3.dst',
 #          '/afs/cern.ch/lhcb/group/trigger/vol3/dijkstra/Selections/MBL0-lumi2-4.dst' ]
 
-files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_1.mdf',
-          'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
+#files = [ 'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_1.mdf',
+#          'castor:/castor/cern.ch/user/s/snies/mdf/DC06_L0_v1_lumi2_MuonHadron_40000ev_2.mdf' ]
 
 
 filetype = files[0][-3:].upper()

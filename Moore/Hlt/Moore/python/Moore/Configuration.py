@@ -1,7 +1,7 @@
 """
 High level configuration tools for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.16 2008-08-07 16:12:44 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2008-08-09 12:05:52 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -20,7 +20,7 @@ class Moore(ConfigurableUser):
         , "DDDBtag" :          'DEFAULT'
         , "condDBtag" :        'DEFAULT'
         , "inputType":         'dst' # must either 'mdf' or 'dst'
-        , "HltType" :          'PHYSICS_Hlt1+Hlt2'
+        , "hltType" :          'PHYSICS_Hlt1+Hlt2'
         , "runTiming"  :       False # include additional timing information
         , "useTCK"     :       False # use TCK instead of options...
         , "prefetchTCK" :      [ ] # which TCKs to prefetch. Initial TCK used is first one...
@@ -48,8 +48,8 @@ class Moore(ConfigurableUser):
             else:
                 setattr(other,name,self.getProp(name))
 
-    def validRunTypes(self):
-        return [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1', 'Commissioning' ] 
+    def validHltTypes(self):
+        return [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1', 'DEFAULT' ] 
 
     def getRelease(self):
         import re,fileinput
@@ -123,13 +123,13 @@ class Moore(ConfigurableUser):
                 importOptions('$HLTSYSROOT/options/HltDAQ.opts')
             else :
                 importOptions('$HLTSYSROOT/options/HltInit.opts')
-                runtype = self.getProp('runType')
-                if runtype not in self.validRunTypes() :  raise TypeError("Unknown runtype '%s'"%runtype)
-                if inputType == 'DST' and runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : 
+                hlttype = self.getProp('hltType')
+                if hlttype not in self.validHltTypes() :  raise TypeError("Unknown hlttype '%s'"%hlttype)
+                if inputType == 'DST' and hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' ] : 
                         importOptions('$L0DUROOT/options/ReplaceL0DUBankWithEmulated.opts')
-                if runtype in [ 'Physics_Hlt1+Hlt2', 'Physics_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
-                if runtype in [ 'Physics_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
-                if runtype in [ 'Commissioning' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
+                if hlttype in [ 'PHYSICS_Hlt1+Hlt2', 'PHYSICS_Hlt1' ] : importOptions('$HLTSYSROOT/options/Hlt1.opts')
+                if hlttype in [ 'PHYSICS_Hlt1+Hlt2' ] :                 importOptions('$HLTSYSROOT/options/Hlt2.opts')
+                if hlttype in [ 'DEFAULT' ] :                     importOptions('$HLTSYSROOT/options/RandomPrescaling.opts')
             if self.getProp('runTiming') :
                 importOptions('$HLTSYSROOT/options/HltAlleysTime.opts')
                 importOptions('$HLTSYSROOT/options/HltAlleysHistos.opts')
@@ -138,7 +138,7 @@ class Moore(ConfigurableUser):
             gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in ApplicationMgr().TopAlg ]
                               , ConfigSvc = [ 'ToolSvc','HltDataSvc','HltANNSvc' ]
                               , ConfigAccessSvc = self.getConfigAccessSvc().getName()
-                              , runType = self.getProp('runType')
+                              , hltType = self.getProp('hltType')
                               , mooreRelease = self.getRelease()
                               , label = self.getProp('configLabel'))
             # make sure gen is the very first Top algorithm...
