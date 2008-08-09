@@ -2,6 +2,7 @@
 #define HLTDATASVC_H
 
 #include "HltBase/IHltDataSvc.h"
+#include "Kernel/IANNSvc.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -46,9 +47,11 @@ private:
 
   mutable std::auto_ptr<MsgStream>     m_msg;
   IDataProviderSvc& evtSvc() const;
+  IANNSvc&          annSvc() const;
   //
 
   mutable IDataProviderSvc* m_evtSvc;
+  mutable IANNSvc*          m_annSvc;
   std::auto_ptr<Hlt::Configuration> m_hltConf;
 
   std::string                         m_TESOutputPrefix;

@@ -38,6 +38,7 @@ HltDataSvc::HltDataSvc( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : Service ( name , pSvcLocator )
   , m_evtSvc(0)
+  , m_annSvc(0)
   , m_hltConf(0)
 {
     declareProperty("OutputPrefix" ,m_TESOutputPrefix = "Hlt/Selection");
@@ -91,6 +92,7 @@ StatusCode HltDataSvc::finalize() {
   StatusCode status = Service::finalize();
   m_hltConf.reset( (Hlt::Configuration*)0 );
   if (m_evtSvc) { m_evtSvc->release(); m_evtSvc=0; }
+  if (m_annSvc) { m_annSvc->release(); m_annSvc=0; }
   return status;
 }
 
@@ -105,6 +107,15 @@ IDataProviderSvc& HltDataSvc::evtSvc() const {
   return *m_evtSvc;
 }
 
+IANNSvc& HltDataSvc::annSvc() const {
+  if (m_annSvc == 0) {
+    StatusCode sc = serviceLocator()->service("HltANNSvc", m_annSvc);
+    if (sc.isFailure() || m_annSvc == 0) { 
+        throw GaudiException( name()+"::annSvc() no service found","",StatusCode::FAILURE);
+    }
+  }
+  return *m_annSvc;
+}
 
 StatusCode 
 HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesFromTES) {
@@ -120,6 +131,11 @@ HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesF
         return StatusCode::FAILURE;
     }
     if (!originatesFromTES) { 
+        if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
+            error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
+                    << "unknown to HltANNSvc" << endmsg;
+            return StatusCode::FAILURE;
+        }
         if (std::find(m_parents.begin(),m_parents.end(),parent)!=m_parents.end()) {
             error() << " parent already registerd an output selection... " << endmsg;
             return StatusCode::FAILURE;

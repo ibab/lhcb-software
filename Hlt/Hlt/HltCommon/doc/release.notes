@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!2008-08-09 - Gerhard Raven
+  - make HltDataSvc check with HltANNSvc to see if selection name is known
+
 !========================== HltCommon v4r0 2008-08-06 ===================
 !2008-08-05 - Gerhard Raven
   - when copy-and-modifying configurations, allow one to specify a new label..
