@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.8 2008-07-30 13:33:16 graven Exp $
+// $Id: HltTypes.h,v 1.9 2008-08-10 19:57:54 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
@@ -15,8 +15,6 @@
 namespace LHCb {
   class Track;
   class RecVertex;
-  class L0CaloCandidate;
-  class L0MuonCandidate;
 }
 
 namespace AIDA {
