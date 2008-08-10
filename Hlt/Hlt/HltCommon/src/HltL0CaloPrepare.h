@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.h,v 1.2 2008-07-30 13:37:32 graven Exp $
+// $Id: HltL0CaloPrepare.h,v 1.3 2008-08-10 18:27:54 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -7,7 +7,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "HltBase/ICaloSeedTool.h"
-#include "Event/L0CaloCandidate.h"
+#include "GaudiKernel/Property.h"
 
 /** @class HltHadAlleyPreTrigger HltHadAlleyPreTrigger.h
  *  
@@ -30,10 +30,9 @@ public:
 private:
 
   void makeTrack(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
-
   void addExtras(const LHCb::L0CaloCandidate& calo, LHCb::Track& track);
 
-protected:
+private:
 
   Hlt::SelectionContainer1<LHCb::Track> m_selection; 
   //Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
@@ -47,8 +46,21 @@ protected:
   Hlt::Histo* m_histoEt;
   Hlt::Histo* m_histoEt1;
 
+  class caloTypeProperty {
+  public:
+    caloTypeProperty(caloTypeProperty& rhs) ;
+    caloTypeProperty(const std::string& s) ;
+    caloTypeProperty& operator=(const std::string& s) ;
+    L0DUBase::CaloType::Type operator()() const { return m_val;}
+    StringProperty& property() { return m_prop;}
+    void updateHandler(Property&);
+  private:
+    StringProperty m_prop;
+    L0DUBase::CaloType::Type m_val;
+  };
+
   double m_minEt;
-  int m_caloType;
+  HltL0CaloPrepare::caloTypeProperty m_caloType;
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

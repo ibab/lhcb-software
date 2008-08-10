@@ -65,7 +65,6 @@ PrepareL0HadronDecisionSeq.Members = {
 PrepareL0AllMuonsSeq.Members = {
   "HltL0Filter/Hlt1L0AllMuons"
   ,"HltL0MuonPrepare/L0AllMuons" 
-  //  ,  "L0MuonCandidatesFromRaw" // removed following a change in L0Muon v7r3
 };
 
 PrepareL0MuonORMuonNoGlobSeq.Members = {
@@ -88,11 +87,6 @@ PrepareL0MuonNoGlobDecisionSeq.Members = {
   "HltL0Filter/Hlt1L0MuonNoGlob",
   "HltL0MuonPrepare/L0MuonNoGlobDecision"
 };
-
-// TODO
-//from L0, fixes bug in newest release of L0CaloAlg (HLT_v3r3) JAH & JA
-//
-L0Calo.UsePSSPD = false;
 
 // //@ja TODO: this should be where the options for L0HadronDecision are set ?
 L0HadronDecision.CaloMakerTool="HadronSeedTool";
@@ -120,12 +114,12 @@ Hlt1L0MuonORMuonNoGlob.OutputLevel = 3;
 Hlt1L0DiMuon.OutputLevel = 3;
 Hlt1L0MuonNoGlob.OutputLevel = 3;
 
-// see L0DUBase::Fiber::Type
-L0ElectronDecision.CaloType = 0;  // electron 
-L0PhotonDecision.CaloType = 1;  // photon 
-L0HadronDecision.CaloType = 2;  // hadron
-L0LocalPi0Decision.CaloType = 3;  // localPi0
-L0GlobalPi0Decision.CaloType = 4;  // globalPi0
+// see L0DUBase::CaloType::Type
+L0ElectronDecision.CaloType = "Electron";
+L0PhotonDecision.CaloType = "Photon";
+L0HadronDecision.CaloType = "Hadron"; 
+L0LocalPi0Decision.CaloType = "Pi0Local"; 
+L0GlobalPi0Decision.CaloType = "Pi0Global";
 
 
 L0ElectronDecision.MinEt = 2600.0; 

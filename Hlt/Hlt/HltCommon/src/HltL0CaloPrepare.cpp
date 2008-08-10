@@ -1,10 +1,12 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.8 2008-07-30 13:37:32 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.9 2008-08-10 18:27:54 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "boost/foreach.hpp"
 #include <memory>
+#include "Event/L0DUBase.h"
+#include "Event/L0CaloCandidate.h"
 
 // local
 #include "HltL0CaloPrepare.h"
@@ -20,7 +22,46 @@ using namespace LHCb;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltL0CaloPrepare );
 
+static L0DUBase::CaloType::Type string2type(const std::string& s) {
+    typedef GaudiUtils::VectorMap<std::string,L0DUBase::CaloType::Type> map_t;
+    static map_t map;
+    if (map.empty()) {
+#define _insert_map_(x) { map.insert( #x,  L0DUBase::CaloType::x ); }
+    _insert_map_( Electron ) ; _insert_map_( Photon   );
+    _insert_map_( Hadron   ) ; _insert_map_( Pi0Local );
+    _insert_map_( Pi0Global) ; _insert_map_( SumEt    );
+    _insert_map_( SpdMult  ) ;
+    _insert_map_( HadronSlave1Out ); _insert_map_( HadronSlave2Out );
+    _insert_map_( HadronSlave1In );  _insert_map_( HadronSlave2In );
+    _insert_map_( SumEtSlave1Out );  _insert_map_( SumEtSlave2Out );
+    _insert_map_( SumEtSlave1In );   _insert_map_( SumEtSlave2In )
+   }
+   map_t::const_iterator i = map.find(s);
+   if (i==map.end()){ 
+        throw GaudiException("Unknown L0 calo type name",s,StatusCode::FAILURE);
+        return L0DUBase::CaloType::Type(0); // never reached, keep compiler happy..
+   }
+   return i->second;
+}
 
+void HltL0CaloPrepare::caloTypeProperty::updateHandler(Property&) {
+    m_val = string2type( m_prop.value() );
+}
+
+HltL0CaloPrepare::caloTypeProperty::caloTypeProperty(HltL0CaloPrepare::caloTypeProperty& rhs) 
+    : m_prop(rhs.m_prop)
+    , m_val(rhs.m_val)
+{ m_prop.declareUpdateHandler( &HltL0CaloPrepare::caloTypeProperty::updateHandler, this ); }
+
+HltL0CaloPrepare::caloTypeProperty::caloTypeProperty(const std::string& s) 
+    : m_prop(s)
+    , m_val( string2type(s) )
+{ m_prop.declareUpdateHandler( &HltL0CaloPrepare::caloTypeProperty::updateHandler, this ); }
+
+HltL0CaloPrepare::caloTypeProperty& HltL0CaloPrepare::caloTypeProperty::operator=(const std::string& s) 
+{   m_prop = s;
+    m_val = string2type(s);
+}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -31,9 +72,10 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
   , m_caloMaker(0)
   , m_histoEt(0)
   , m_histoEt1(0)
+  , m_caloType("Hadron")
 {
   declareProperty("MinEt", m_minEt = 3500.);
-  declareProperty("CaloType", m_caloType = 2);
+  declareProperty("CaloType", m_caloType.property() );
 
   declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
                   L0CaloCandidateLocation::Full);
@@ -86,7 +128,7 @@ StatusCode HltL0CaloPrepare::execute() {
 
   // BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
   BOOST_FOREACH(const L0CaloCandidate* calo, *input ) {
-    if (calo->type() == m_caloType && calo->et() >= m_minEt) {
+    if (calo->type() == m_caloType() && calo->et() > m_minEt) {
         std::auto_ptr<Track> tcalo( new Track() );
         if (m_caloMaker) {
             StatusCode sc = m_caloMaker->makeTrack(*calo,*tcalo);
