@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.11 2008-08-04 12:09:34 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.12 2008-08-10 18:27:03 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -55,7 +55,7 @@ HltGenConfig::HltGenConfig( const string& name, ISvcLocator* pSvcLocator)
                                                       ( string("HltDataSvc") ) );
     declareProperty("ConfigAccessSvc",   s_accessSvc = "ConfigFileAccessSvc");
     declareProperty("PropertyConfigSvc", s_configSvc = "PropertyConfigSvc");
-    declareProperty("runType", m_runType );
+    declareProperty("hltType", m_hltType );
     declareProperty("mooreRelease", m_release );
     declareProperty("label", m_label );
 }
@@ -75,8 +75,8 @@ StatusCode HltGenConfig::initialize() {
     IToolSvc* toolSvc = svc<IToolSvc>("ToolSvc",true);
     toolSvc->registerObserver(this);
     // FIXME: need to unregister at some point!!!
-    if (m_runType.empty()) {
-        error() << "You must specify the runtype label for a configuration..." << endmsg;
+    if (m_hltType.empty()) {
+        error() << "You must specify the hltType label for a configuration..." << endmsg;
         return StatusCode::FAILURE;
     }
     if (m_label.empty()) {
@@ -187,7 +187,7 @@ StatusCode HltGenConfig::generateConfig() const {
     info() << " top id for this config: " << topDigest << endmsg;
 
     // create top level alias for this id
-    ConfigTreeNodeAlias::alias_type topAlias = m_accessSvc->writeConfigTreeNodeAlias( ConfigTreeNodeAlias::createTopLevel(m_release,m_runType,topConfig) );
+    ConfigTreeNodeAlias::alias_type topAlias = m_accessSvc->writeConfigTreeNodeAlias( ConfigTreeNodeAlias::createTopLevel(m_release,m_hltType,topConfig) );
     if (topAlias.invalid()) {
         error() << "problem writing alias " << endmsg;
         return StatusCode::FAILURE;
