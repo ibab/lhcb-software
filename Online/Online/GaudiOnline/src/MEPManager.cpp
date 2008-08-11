@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.19 2008-06-05 19:01:59 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.20 2008-08-11 12:02:21 frankb Exp $
 //  ====================================================================
 //  MEPManager.cpp
 //  --------------------------------------------------------------------
@@ -166,7 +166,7 @@ StatusCode LHCb::MEPManager::initialize()  {
 
 StatusCode LHCb::MEPManager::finalize()  {
   MsgStream log(msgSvc(), "MEPManager");
-  log << MSG::WARNING << "Excluding from buffers. No more buffer access possible." << endmsg;
+  log << MSG::INFO << "Excluding from buffers. No more buffer access possible." << endmsg;
   m_buffMap.clear();
   if ( m_mepID != MEP_INV_DESC )  {
     mep_exclude(m_mepID);
