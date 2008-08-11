@@ -4,7 +4,7 @@ import os, sys, tempfile, re, sys
 from stat import S_ISDIR
 import getopt
 
-_cvs_id = "$Id: SetupProject.py,v 1.17 2008-08-06 12:27:12 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.18 2008-08-11 15:57:27 hmdegaud Exp $"
 
 ########################################################################
 # Useful constants
@@ -15,7 +15,7 @@ lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
 project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" , 
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix", "LbScripts", "LCGCMT"]
+                 "Panoramix", "LbScripts", "Curie", "LCGCMT"]
 
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and 
