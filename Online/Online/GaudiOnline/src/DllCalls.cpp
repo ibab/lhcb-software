@@ -147,7 +147,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
   RTL::CLI cli(argc, argv, help_GaudiOnline);
   std::string runable = "AppMgrRunable";
   std::string evtloop = "EventLoopMgr";
-  std::string msgsvc  = "LHCb::DimMessageSvc";
+  std::string msgsvc  = "MessageSvc";
   std::string opts    = "jobOptions.txt";
   bool autostart = cli.getopt("autostart",3) != 0;
   SmartIF<IProperty> p(Gaudi::createApplicationMgr());

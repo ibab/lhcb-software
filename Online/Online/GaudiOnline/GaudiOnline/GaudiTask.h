@@ -97,18 +97,25 @@ namespace LHCb  {
     virtual ~GaudiTask();
     /// Incident handler implemenentation: Inform that a new incident has occured
     virtual void handle(const Incident& incident);
+
     /// Run the complete job (from intialize to terminate)
     virtual StatusCode run();
+
     /// Callback on exiting task
     virtual StatusCode unload();
+
     /// Callback on I/O cancel
     virtual StatusCode cancel();
+
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
+
     /// Callback to process event
     virtual StatusCode nextEvent(int num_event);
+
     /// Access flag to indicate if runable has stopped executing
     bool eventThread() const { return m_eventThread; }
+
     /// Set flag to indicate if runable has stopped executing
     void setEventThread(bool val)  { m_eventThread = val; }
 

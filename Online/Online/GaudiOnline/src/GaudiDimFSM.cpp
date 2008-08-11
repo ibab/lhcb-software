@@ -30,10 +30,22 @@ StatusCode LHCb::GaudiDimFSM::initialize()  {
     : printErr(1,"Failed to initialize Application manager.");
 }
   
+/// Start the application
+StatusCode LHCb::GaudiDimFSM::start()  {
+  return m_appMgr->start().isSuccess() ? DimTaskFSM::start()
+    : printErr(1,"Failed to start Application manager.");
+}
+  
 StatusCode LHCb::GaudiDimFSM::nextEvent(int /* num_event */)  {
   //_asm int 3
   return m_appMgr->nextEvent(1).isSuccess()  ? DimTaskFSM::nextEvent(1)
     : printErr(1,"Failed to execute single shot.");
+}
+  
+/// Stop the application
+StatusCode LHCb::GaudiDimFSM::stop()  {
+  return m_appMgr->stop().isSuccess() ? DimTaskFSM::stop()
+    : printErr(1,"Failed to start Application manager.");
 }
   
 StatusCode LHCb::GaudiDimFSM::finalize()  {
