@@ -1,4 +1,4 @@
-// $Id: TrackCloner.h,v 1.2 2008-08-11 15:54:02 jpalac Exp $
+// $Id: TrackCloner.h,v 1.3 2008-08-11 16:01:13 jpalac Exp $
 #ifndef MICRODST_TRACKPARTICLECLONER_H 
 #define MICRODST_TRACKCLONER_H 1
 
@@ -10,7 +10,10 @@
 
 /** @class TrackCloner TrackCloner.h src/TrackCloner.h
  *  
- *
+ *  Clone an LHCb::Track. At the moment this does nothing other than 
+ *  performing a simple clone and storing the clone in the appropriate
+ *  TES location. It is a plalce holder for future, more complex cloning.
+ *  
  *  @author Juan PALACIOS
  *  @date   2008-04-01
  */
