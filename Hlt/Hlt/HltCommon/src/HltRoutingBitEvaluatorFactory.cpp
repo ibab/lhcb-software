@@ -5,6 +5,7 @@
 #include <boost/spirit/actor.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/ref.hpp>
+#include <memory>
 
 using namespace std;
 using namespace boost;
@@ -29,34 +30,34 @@ namespace {
     public:
         eval_and(HltRoutingBitEvaluatorFactory::evaluator* lhs,
                  HltRoutingBitEvaluatorFactory::evaluator* rhs) : m_lhs(lhs),m_rhs(rhs) {}
-        ~eval_and() { delete m_lhs; delete m_rhs;}
+        ~eval_and() { }
         bool evaluate()  const  { return m_lhs->evaluate() && m_rhs->evaluate(); }
         ostream& print(ostream& os) const { return os << "and[" << *m_lhs << "," << *m_rhs << "]" ; }
     private:
-        HltRoutingBitEvaluatorFactory::evaluator* m_lhs;
-        HltRoutingBitEvaluatorFactory::evaluator* m_rhs;
+        auto_ptr<HltRoutingBitEvaluatorFactory::evaluator> m_lhs;
+        auto_ptr<HltRoutingBitEvaluatorFactory::evaluator> m_rhs;
     };
 
     class eval_or : public HltRoutingBitEvaluatorFactory::evaluator {
     public:
         eval_or(HltRoutingBitEvaluatorFactory::evaluator* lhs,
                 HltRoutingBitEvaluatorFactory::evaluator* rhs) : m_lhs(lhs),m_rhs(rhs) {}
-        ~eval_or() { delete m_lhs; delete m_rhs;}
+        ~eval_or() { }
         bool evaluate()  const  { return m_lhs->evaluate() || m_rhs->evaluate(); }
         ostream& print(ostream& os) const { return os << "or[" << *m_lhs << "," << *m_rhs << "]" ; }
     private:
-        HltRoutingBitEvaluatorFactory::evaluator* m_lhs;
-        HltRoutingBitEvaluatorFactory::evaluator* m_rhs;
+        auto_ptr<HltRoutingBitEvaluatorFactory::evaluator> m_lhs;
+        auto_ptr<HltRoutingBitEvaluatorFactory::evaluator> m_rhs;
     };
 
     class eval_not : public HltRoutingBitEvaluatorFactory::evaluator {
     public:
         eval_not(HltRoutingBitEvaluatorFactory::evaluator* rhs): m_rhs(rhs) {}
-        ~eval_not() { delete m_rhs;}
+        ~eval_not() { }
         bool evaluate()  const  { return !m_rhs->evaluate(); }
         ostream& print(ostream& os) const { return os << "not[" << *m_rhs << "]" ; }
     private:
-        HltRoutingBitEvaluatorFactory::evaluator* m_rhs;
+        auto_ptr<HltRoutingBitEvaluatorFactory::evaluator> m_rhs;
     };
 
     class evaluator_factory {
@@ -70,17 +71,18 @@ namespace {
         evaluator_factory(const std::string& input,HltAlgorithm& parent) {
             parent.debug() << "parsing '" << input <<"'" << endreq;
 
-            // TODO simplify using closures...
+            // TODO simplify using closures/phoenix
             // TODO see http://www.boost.org/doc/libs/1_34_1/libs/spirit/doc/closures.html
 
             // define our grammar, 
             // and associate parser actions
-            rule<phrase_scanner_t> decision, term, expression;
-            decision   = (+alnum_p)[ bind(&evaluator_factory::op_push,this,ref(parent),_1,_2)] ;
-            term       = decision | '(' >> expression >> ')' ;
-            expression = term >> *( ( '|' >> term ) [ bind(&evaluator_factory::op_or,this,_1,_2)   ]
-                                  | ( '&' >> term ) [ bind(&evaluator_factory::op_and,this,_1,_2) ]
-                                  );
+            rule<phrase_scanner_t> decision, term, unary, expression;
+            term       = (+alnum_p)                         [ bind(&evaluator_factory::op_push,this,ref(parent),_1,_2)] 
+                       | '(' >> expression >> ')';
+            unary      = term |  ('!'>>term)                [ bind(&evaluator_factory::op_not,this,_1,_2) ];
+            expression = unary >> *( ( '|' >> unary )       [ bind(&evaluator_factory::op_or ,this,_1,_2) ]
+                                   | ( '&' >> unary )       [ bind(&evaluator_factory::op_and,this,_1,_2) ]
+                                   );
             parse_info<> info = parse( input.c_str(), expression, space_p  );
 
             m_valid = info.full;
