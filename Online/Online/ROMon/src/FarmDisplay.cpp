@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.11 2008-07-15 12:18:34 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.12 2008-08-11 08:59:25 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.11 2008-07-15 12:18:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.12 2008-08-11 08:59:25 frankb Exp $
 
 #include "ROMon/RecSubfarmDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
@@ -555,7 +555,7 @@ void FarmSubDisplay::handle(const Event& ev) {
       return;
     }
     setFocus();
-    IocSensor::instance().send(parent(),m->usec == -1UL ? CMD_POSCURSOR : CMD_SHOW,this);
+    IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
     return;
   }
   default:
@@ -822,7 +822,7 @@ void RecFarmSubDisplay::handle(const Event& ev) {
   case ScrMouseEvent: {
     const MouseEvent* m = ev.get<MouseEvent>();
     setFocus();
-    IocSensor::instance().send(parent(),m->usec == -1UL ? CMD_POSCURSOR : CMD_SHOW,this);
+    IocSensor::instance().send(parent(),m->msec == (unsigned int)-1 ? CMD_POSCURSOR : CMD_SHOW,this);
     break;
   }
   default:
@@ -1465,10 +1465,10 @@ void FarmDisplay::handle(const Event& ev) {
     if ( m->button == 2 ) {
       IocSensor::instance().send(this,CMD_SHOWHELP,this);
     }
-    else if ( m->usec != -1UL ) {
+    else if ( m->msec != (unsigned int)-1 ) {
       IocSensor::instance().send(this,CMD_SHOWSUBFARM,this);
     }
-    else if ( m_subfarmDisplay && m->usec == -1UL ) {
+    else if ( m_subfarmDisplay && m->msec == (unsigned int)-1 ) {
       if ( m->display == m_nodeSelector->display() ) {
 	SubfarmDisplay* sfd = (m_mode==HLT_MODE) ? (SubfarmDisplay*)m_subfarmDisplay : 0;
 	RecSubfarmDisplay* rsfd = (m_mode==RECO_MODE) ? (RecSubfarmDisplay*)m_subfarmDisplay : 0;
