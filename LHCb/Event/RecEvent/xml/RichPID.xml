@@ -4,7 +4,7 @@
 <package name="RecEvent">
 
 <!-- **************************************************************************
-  * $Id: RichPID.xml,v 1.8 2007-08-09 15:25:37 jonrob Exp $
+  * $Id: RichPID.xml,v 1.9 2008-08-11 12:27:35 jpalac Exp $
   *****************************************************************************
   * XML-description of RichPID class                                          *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -47,6 +47,12 @@
 		initList = "KeyedObject&lt;int&gt;(), m_pidResultCode(pid-&gt;pidResultCode()), m_particleLLValues(pid-&gt;particleLLValues()), m_track(pid-&gt;track())">
                 <arg const="TRUE" inout="BYVALUE" name="pid" type="LHCb::RichPID*"/>
                 <code/>
+      	</constructor>
+
+	<constructor 
+		desc     = "Copy constructor. Creates a new RichPID object with the same pid information" 
+		initList = "KeyedObject&lt;int&gt;(), m_pidResultCode(pid.m_pidResultCode), m_particleLLValues(pid.m_particleLLValues), m_track(pid.m_track)">
+                <arg const="TRUE" name="pid" type="LHCb::RichPID"/>
       	</constructor>
 
         <method 
