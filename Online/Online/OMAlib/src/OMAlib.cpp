@@ -1,31 +1,54 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.5 2008-05-14 10:01:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/src/OMAlib.cpp,v 1.6 2008-08-11 08:05:16 ggiacomo Exp $
 /*
   Online Monitoring Analysis library
   G. Graziani (INFN Firenze)
 
 */
-
+#include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAlib.h"
 #include "OMAlib/OMAAlgorithms.h"
 using namespace std;
 
-OMAlib::OMAlib(OnlineHistDB* HistDB) : m_histDB(HistDB), m_debug(2) { 
+// constructor to be used if already connected to HistDB (use NULL for not using HistDB)
+OMAlib::OMAlib(OnlineHistDB* HistDB) : OMAcommon() { 
+  m_histDB = HistDB;
   m_localDBsession=false;
   doAlgList(); 
 }
-  
+
+// constructor opening a new DB session
 OMAlib::OMAlib(std::string DBpasswd, 
-	       std::string DBuser , 
-	       std::string DB) : m_debug(2) {
+               std::string DBuser , 
+               std::string DB) : OMAcommon() {
   m_histDB = new OnlineHistDB(DBpasswd , DBuser, DB);
-  m_localDBsession=true;
+  if(m_histDB) 
+    m_localDBsession=true;
+  doAlgList();   
+}
+
+// constructor with a new default (read-only) DB session
+OMAlib::OMAlib() : OMAcommon() {
+  m_histDB = new OnlineHistDB();
+  if(m_histDB) m_localDBsession=true;
   doAlgList(); 
 }
 
-OMAlib::OMAlib() : m_debug(2) {
-  m_histDB = new OnlineHistDB();
-  m_localDBsession=true;
+void OMAlib::openDBSession(std::string DBpasswd, 
+                      std::string DBuser , 
+                      std::string DB) {
+  if (m_localDBsession) {
+    delete m_histDB;
+    m_histDB = NULL;
+    m_localDBsession = false;
+  }
+  m_histDB = new OnlineHistDB(DBpasswd , DBuser, DB);
+  if(m_histDB) {
+    m_localDBsession=true;
+    if (m_histDB->canwrite())
+      syncList();
+  }
 }
+
 
 OMAlib::~OMAlib() {
   std::map<std::string, OMAalg*>::iterator i;
@@ -35,20 +58,28 @@ OMAlib::~OMAlib() {
     delete m_histDB;
 }
 
-
+// initialize available algorithms and synchronize with DB algorithm list
 void OMAlib::doAlgList() {
-  m_algorithms["CheckXRange"] = new OMACheckXRange();
-  m_algorithms["CheckMeanAndSigma"] = new OMACheckMeanAndSigma();
-  m_algorithms["GaussFit"] = new OMAGaussFit();
+  OMAcommon* Env = (OMAcommon*) this;
+  m_algorithms["CheckXRange"] = new OMACheckXRange(Env);
+  m_algorithms["CheckMeanAndSigma"] = new OMACheckMeanAndSigma(Env);
+  m_algorithms["GaussFit"] = new OMAGaussFit(Env);
+  m_algorithms["CheckHolesAndSpikes"] = new OMACheckHolesAndSpikes(Env);
+  m_algorithms["CheckEmptyBins"] = new OMACheckEmptyBins(Env);
+  m_algorithms["CompareToReference"] = new OMACompareToReference(Env);
 
-  m_algorithms["Efficiency"] = new OMAEfficiency();
-  m_algorithms["Divide"] = new OMADivide();
-  m_algorithms["HMerge"] = new OMAHMerge();
-  m_algorithms["Scale"] = new OMAScale();
-  syncList();
+  m_algorithms["Efficiency"] = new OMAEfficiency(Env);
+  m_algorithms["Divide"] = new OMADivide(Env);
+  m_algorithms["HMerge"] = new OMAHMerge(Env);
+  m_algorithms["Scale"] = new OMAScale(Env);
+
+  if (m_histDB) {
+    if (m_histDB->canwrite())
+      syncList();
+  }
 }
 
-
+// check that all algorithms are declared to the DB
 void OMAlib::syncList() {
   if (m_histDB) {
     if (m_histDB->getAlgListID() >= 0 &&
@@ -101,3 +132,5 @@ void OMAlib::syncList() {
     }
   }
 }
+
+

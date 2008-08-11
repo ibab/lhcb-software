@@ -1,10 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.2 2008-03-14 16:12:05 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAScale.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
 
-OMAScale::OMAScale() : OMAHcreatorAlg("Scale") {
+OMAScale::OMAScale(OMAcommon* Env) : 
+  OMAHcreatorAlg("Scale", Env) {
   m_ninput = 2;
   m_histSetFlag = false;
   m_npars = 0;

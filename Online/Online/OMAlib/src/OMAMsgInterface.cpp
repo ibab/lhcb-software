@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.2 2008-04-30 13:28:54 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
 #include <iostream>
 #include "OMAlib/OMAMsgInterface.h"
 
@@ -8,7 +8,7 @@
 // 2008-02-29 : Giacomo Graziani
 //-----------------------------------------------------------------------------
 
-OMAMsgInterface::OMAMsgInterface(  ) : msgMode(LOCAL) {
+OMAMsgInterface::OMAMsgInterface(  ) : m_msgMode(LOCAL) {
 
 }
 

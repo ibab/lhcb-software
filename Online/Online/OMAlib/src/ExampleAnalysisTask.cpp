@@ -1,4 +1,5 @@
-// $Id: ExampleAnalysisTask.cpp,v 1.2 2008-04-30 13:28:54 ggiacomo Exp $
+// $Id: ExampleAnalysisTask.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/ExampleAnalysisTask.h"
 
 //for using Histogram DB

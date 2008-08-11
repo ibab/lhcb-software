@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -25,12 +25,13 @@ public:
   virtual void raiseMessage(OMAMsgLevel level,
                             std::string message,
                             std::string histogramName); 
-  void setMessageMode(OMAMsgMode mode) 
-  { msgMode = mode;}
-
+  /// set output message interface
+  void setMessageMode(OMAMsgMode mode) {
+    m_msgMode = mode;}
+  /// get output message interface
+  inline OMAMsgInterface::OMAMsgMode messageMode() {
+    return m_msgMode;}
 protected:
-  OMAMsgMode msgMode;
-private:
-
+  OMAMsgMode m_msgMode;
 };
 #endif // OMALIB_OMAMSGINTERFACE_H

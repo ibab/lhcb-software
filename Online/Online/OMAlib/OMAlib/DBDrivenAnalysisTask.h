@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.h,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.h,v 1.4 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_DBDRIVENANALYSISTASK_H
 #define OMALIB_DBDRIVENANALYSISTASK_H 1
 #include <map>
@@ -7,6 +7,7 @@
 class OnlineHistogram;
 class TH1;
 class TFile;
+
 class DBDrivenAnalysisTask : public AnalysisTask 
 {
  public:

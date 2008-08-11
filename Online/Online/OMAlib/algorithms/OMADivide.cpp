@@ -1,10 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.1 2008-05-14 10:02:25 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMADivide.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
 
-OMADivide::OMADivide() : OMAHcreatorAlg("Divide") {
+OMADivide::OMADivide(OMAcommon* Env) : 
+  OMAHcreatorAlg("Divide", Env) {
   m_ninput = 2;
   m_histSetFlag = false;
   m_npars = 0;

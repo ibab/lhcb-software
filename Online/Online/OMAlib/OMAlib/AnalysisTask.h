@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.4 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -8,17 +8,12 @@
  *  @author Giacomo Graziani
  *  @date   2008-02-18
  */
-#include "OMAlib/OMAMsgInterface.h"
+#include "OMAlib/OMAlib.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/AlgFactory.h"
-#include <string>
-#include <vector>
 
-class OMAlib;
-class OnlineHistDB;
 class SavesetFinder;
 
-class AnalysisTask : public OMAMsgInterface, public GaudiAlgorithm {
+class AnalysisTask : public OMAlib, public GaudiAlgorithm {
 public:
   AnalysisTask( const std::string& name, 
                 ISvcLocator* pSvcLocator );
@@ -33,9 +28,6 @@ public:
                              std::string Task) = 0;
 
 protected:
-  OMAlib* m_omalib;
-  OnlineHistDB* m_histDB;
-
   bool m_useDB;
   std::string m_DB;
   std::string m_DBuser;

@@ -1,10 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 #include <TH2D.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
 
 
-OMAHMerge::OMAHMerge() : OMAHcreatorAlg("HMerge") {
+OMAHMerge::OMAHMerge(OMAcommon* Env) : 
+  OMAHcreatorAlg("HMerge", Env) {
   m_ninput = 8;
   m_histSetFlag = true;
   m_npars = 0;

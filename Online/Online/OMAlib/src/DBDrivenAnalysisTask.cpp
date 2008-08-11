@@ -1,8 +1,7 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.3 2008-04-30 13:28:54 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.4 2008-08-11 08:05:16 ggiacomo Exp $
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
-#include "OMAlib/OMAlib.h"
-#include "OMAlib/OMAalg.h"
 #include <TH1.h>
 #include <TFile.h>
 
@@ -62,13 +61,16 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
           inputs.clear();
           if ((*ih)->getAnaSettings(anaIDs[iana], &warningThr, &alarmThr, &inputs, mask) ) {
             if (!mask) {
-              OMAalg* thisalg=m_omalib->getAlg(anaAlgs[iana]);
+              OMAalg* thisalg= getAlg(anaAlgs[iana]);
               if (thisalg) {
-                if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) )
+                if (OMACheckAlg* cka = dynamic_cast<OMACheckAlg*>(thisalg) ) {
+                  if( thisalg->needRef() ) 
+                    thisalg->setRef( getReference((*ih)) );
                   cka->exec(*(rooth),
                             warningThr,
                             alarmThr,
                             inputs);
+                }
                 else {
                   err()<<"algorithm "<<anaAlgs[iana]<< " is not a check algorithm"<<endmsg;
                 }
@@ -144,7 +146,7 @@ TH1* DBDrivenAnalysisTask::onTheFlyHistogram(OnlineHistogram* h,
   else {
     verbose() << "   calling creation algorithm ..."<<endmsg;
     
-    OMAalg* thisalg=m_omalib->getAlg(Algorithm);
+    OMAalg* thisalg=getAlg(Algorithm);
     
     if (thisalg) {
       if (OMAHcreatorAlg* hca = dynamic_cast<OMAHcreatorAlg*>(thisalg) ) {

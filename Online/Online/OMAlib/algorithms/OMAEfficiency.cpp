@@ -1,10 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAEfficiency.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 #include <TH1F.h>
 #include <TH2F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
 
-OMAEfficiency::OMAEfficiency() : OMAHcreatorAlg("Efficiency") {
+OMAEfficiency::OMAEfficiency(OMAcommon* Env) : 
+  OMAHcreatorAlg("Efficiency", Env) {
   m_ninput = 2;
   m_histSetFlag = false;
   m_npars = 0;

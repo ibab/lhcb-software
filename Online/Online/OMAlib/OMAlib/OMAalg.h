@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.4 2008-04-30 13:28:54 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.5 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -7,52 +7,57 @@
  *  @author Giacomo Graziani (INFN Firenze)
  *  @date 3/10/2007
  */
-#include "OnlineHistDB/OnlineHistDB.h"
-#include "OMAlib/OMAMsgInterface.h"
+#include "OMAlib/OMAcommon.h"
 #include <TH1.h>
 
-class OMAalg : public OMAMsgInterface
+class OMAalg 
 {
  public:
-  OMAalg(std::string Name);
+  OMAalg(std::string Name, OMAcommon* OMAenv);
   virtual ~OMAalg();
   inline std::string& name() { return m_name;}
-  std::string type();
+  typedef enum { HCREATOR, CHECK} AlgType;
+  inline AlgType type() {return m_type;}
+  std::string typestr();
   inline int npars() const {return m_npars;}
   inline int ninput() const {return m_ninput;}
   inline std::string& doc() {return m_doc;}
   inline std::string& parName(int i)  { return m_parnames[i];}
-
+  inline bool needRef() { return m_needRef; }
+  inline void setRef(TH1* ReferenceHist) { m_ref = ReferenceHist; }
+  
  protected:
-  void setType(std::string type);
+  inline void setType(AlgType type) {m_type = type;}
   inline void setNpars(int N) {m_npars = N;}
   void setNinput(int N) {m_ninput = N;}
   inline void setDoc(std::string Doc) {m_doc = Doc;}
   void setParNames(std::vector<std::string> &ParNames);
-  virtual void raiseMessage(OMAMsgLevel level,
-                            std::string message,
-                            std::string histogramName );
+  void raiseMessage(OMAMsgInterface::OMAMsgLevel level,
+                    std::string message,
+                    std::string histogramName );
+  inline void setNeedRef() { m_needRef = true; }
 
   std::string m_name;
-  typedef enum { HCREATOR, CHECK} AlgType;
   AlgType m_type;
   unsigned int m_npars;
   unsigned int m_ninput;
   std::vector<std::string> m_parnames;
   std::string m_doc;
-
+  OMAcommon* m_omaEnv;
+  bool m_needRef;
+  TH1* m_ref;
  private:
    // private dummy copy constructor and assignment operator 
-  OMAalg(const OMAalg&): OMAMsgInterface() {}
+  OMAalg(const OMAalg&) {}
   OMAalg & operator= (const OMAalg&) {return *this;}
-
 
 };
 
 class OMACheckAlg : public OMAalg
 {
  public:
-  OMACheckAlg(std::string Name) : OMAalg(Name) {setType("CHECK");}
+  OMACheckAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv) {
+    setType(OMAalg::CHECK); }
   virtual ~OMACheckAlg() {}
   inline std::string inputName(int i) const { return m_inputNames[i];}
 
@@ -65,7 +70,7 @@ class OMACheckAlg : public OMAalg
   std::vector<std::string> m_inputNames;
  private:
    // private dummy copy constructor and assignment operator 
-  OMACheckAlg(const OMACheckAlg&) : OMAalg(m_name) {}
+  OMACheckAlg(const OMACheckAlg&) : OMAalg(m_name, NULL) {}
   OMACheckAlg & operator= (const OMACheckAlg&) {return *this;}
 };
 
@@ -73,7 +78,8 @@ class OMACheckAlg : public OMAalg
 class OMAHcreatorAlg : public OMAalg
 {
  public:
-  OMAHcreatorAlg(std::string Name) : OMAalg(Name) {setType("HCREATOR");}
+  OMAHcreatorAlg(std::string Name, OMAcommon* OMAenv) : OMAalg(Name,OMAenv) {
+    setType(OMAalg::HCREATOR);}
   virtual ~OMAHcreatorAlg() {}
   
   virtual TH1*  exec( const std::vector<TH1*> *sources,
@@ -92,9 +98,7 @@ class OMAHcreatorAlg : public OMAalg
 
  private:
    // private dummy copy constructor and assignment operator 
-  OMAHcreatorAlg(const OMAHcreatorAlg&) : OMAalg(m_name) {}
+  OMAHcreatorAlg(const OMAHcreatorAlg&) : OMAalg(m_name, NULL) {}
   OMAHcreatorAlg & operator= (const OMAHcreatorAlg&) {return *this;}
-
-
 };
 #endif // OMALIB_OMAALG_H

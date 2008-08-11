@@ -1,56 +1,57 @@
-// $Id: OMACheckMeanAndSigma.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: OMACheckMeanAndSigma.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TMath.h>
 #include "OMAlib/OMAAlgorithms.h"
 using namespace TMath;
 
-OMACheckMeanAndSigma::OMACheckMeanAndSigma() : OMACheckAlg("CheckMeanAndSigma") {
+OMACheckMeanAndSigma::OMACheckMeanAndSigma(OMAcommon* Env) : 
+  OMACheckAlg("CheckMeanAndSigma", Env) {
   m_npars = 4;
   m_parnames.push_back("MinMean");
   m_parnames.push_back("MaxMean");
   m_parnames.push_back("MinSigma");
   m_parnames.push_back("MaxSigma");
   m_ninput = 1;
-  m_inputNames.push_back("significance");
+  m_inputNames.push_back("confidence");
   m_doc = "Check that the Histogram average and standard deviation are in the specified ranges";
-  m_doc +=  " with a given normal significance (default is 0.95)";
+  m_doc +=  " with a given normal confidence level (default is 0.95)";
 }
 
 void OMACheckMeanAndSigma::exec(TH1 &Histo,
                           std::vector<float> & warn_thresholds,
                           std::vector<float> & alarm_thresholds,
                           std::vector<float> & input_pars) {
-  float significance=0.95;
+  float confidence=0.95;
   if ( !input_pars.empty() )
-    significance = input_pars[0];
+    confidence = input_pars[0];
   if( warn_thresholds.size() <4 ||  alarm_thresholds.size() <4 )
     return;
 
   if (false == checkMean(Histo,alarm_thresholds[0],alarm_thresholds[1],
-                         significance) ) { // alarm on
-    raiseMessage( ALARM , 
+                         confidence) ) { // alarm on
+    raiseMessage( OMAMsgInterface::ALARM , 
                   " Mean out of range",
                   Histo.GetName());
   }
   else {
     if (false == checkMean(Histo,warn_thresholds[0],warn_thresholds[1],
-                           significance) ) { // warning on
-      raiseMessage( WARNING , 
+                           confidence) ) { // warning on
+      raiseMessage( OMAMsgInterface::WARNING , 
                     " Mean out of range",
                     Histo.GetName());
     }
   }
   if (false == checkSigma(Histo,alarm_thresholds[2],alarm_thresholds[3],
-                         significance) ) { // alarm on
-    raiseMessage( ALARM , 
+                         confidence) ) { // alarm on
+    raiseMessage( OMAMsgInterface::ALARM , 
                   " Sigma out of range",
                   Histo.GetName());
   }
   else {
     if (false == checkSigma(Histo,warn_thresholds[2],warn_thresholds[3],
-                           significance) ) { // warning on
-      raiseMessage( WARNING , 
+                           confidence) ) { // warning on
+      raiseMessage( OMAMsgInterface::WARNING , 
                     " Sigma out of range",
                     Histo.GetName());
     }

@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.6 2008-07-30 08:34:13 ggiacomo Exp $
+! $Id: release.notes,v 1.7 2008-08-11 08:05:16 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20080808 - OMAlib v1r2
+  - support for loading reference histograms
+  - some reshuffling of class inheritance
+  - new check algorithms: OMACheckEmptyBins, OMACompareToReference,
+      OMACheckHolesAndSpikes
 
 ! 20080730 
   remove ROOT version requirement, not needed since Online v4r10

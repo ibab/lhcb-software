@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.6 2008-05-14 10:01:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAlib.h,v 1.7 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_OMALIB_H
 #define OMALIB_OMALIB_H 1
 /** @class  OMAlib OMAlib.h OMAlib/OMAlib.h
@@ -9,17 +9,12 @@
  */
 #include <map>
 #include "OnlineHistDB/OnlineHistDBEnv.h"
+#include "OMAlib/OMAcommon.h"
 #include "OMAlib/OMAalg.h"
 class OnlineHistDB;
 
-namespace OMAconstants {
-  static const int AlgListID = 4;
-  static const std::string version = "v1r1";
-  static const double epsilon = 1.e-10;
-}
 
-
-class OMAlib
+class OMAlib : public OMAcommon
 {
  public:
   /// constructor to be used if already connected to HistDB (use NULL for not using HistDB)
@@ -31,27 +26,18 @@ class OMAlib
   /// constructor with a new default (read-only) DB session
   OMAlib();  
   virtual ~OMAlib ();
+  /// open DB session
+  void openDBSession(std::string DBpasswd, 
+                     std::string DBuser , 
+                     std::string DB);
   /// retrieve algorithm from the known algorithm list
   inline OMAalg* getAlg(std::string Name){    
     return m_algorithms[Name];}
-  inline OnlineHistDB* dbSession() {
-    return m_histDB;}
-  /// set where algorithms should send messages 
-  inline void setMessageMode(OMAMsgInterface::OMAMsgMode mode) {
-    std::map<std::string, OMAalg*>::iterator ia;
-    for (ia=m_algorithms.begin(); ia != m_algorithms.end(); ia++) {
-      ia->second->setMessageMode(mode);
-    }
-  }
 
  private:
   void doAlgList();
   void syncList();
   bool m_localDBsession;
-  OnlineHistDB* m_histDB;
   std::map<std::string, OMAalg*> m_algorithms;
-  int m_debug;
 };
-
-
 #endif // OMALIB_OMALIB_H

@@ -1,9 +1,10 @@
-// $Id: OMACheckXRange.cpp,v 1.1 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: OMACheckXRange.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
 
 #include <TH1F.h>
 #include "OMAlib/OMAAlgorithms.h"
 
-OMACheckXRange::OMACheckXRange() : OMACheckAlg("CheckXRange") {
+OMACheckXRange::OMACheckXRange(OMAcommon* Env) : 
+  OMACheckAlg("CheckXRange", Env) {
   m_npars = 2;
   m_parnames.push_back("Min");
   m_parnames.push_back("Max");
@@ -29,14 +30,14 @@ void OMACheckXRange::exec(TH1 &Histo,
 		       float alarm_max) {
   bool ok=true;
   if (false == check(Histo,alarm_min,alarm_max) ) { // alarm on
-    raiseMessage( ALARM , 
+    raiseMessage( OMAMsgInterface::ALARM , 
                   " entries out of range",
                   Histo.GetName());
     ok = false;
   }
   else {
     if (false == check(Histo,warn_min,warn_max) ) { // warning on
-      raiseMessage( WARNING , 
+      raiseMessage( OMAMsgInterface::WARNING , 
                     " entries out of range",
                     Histo.GetName());
       ok = false;

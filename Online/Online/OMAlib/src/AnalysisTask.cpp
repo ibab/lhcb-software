@@ -1,10 +1,8 @@
-// $Id: AnalysisTask.cpp,v 1.2 2008-03-11 18:23:26 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.3 2008-08-11 08:05:16 ggiacomo Exp $
 
 
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
-// HistDB
-#include "OnlineHistDB/OnlineHistDB.h"
 // local
 #include "OMAlib/OMAlib.h"
 #include "OMAlib/AnalysisTask.h"
@@ -17,12 +15,10 @@
 //-----------------------------------------------------------------------------
 
 
-
 AnalysisTask::AnalysisTask( const std::string& name,
                             ISvcLocator* pSvcLocator)
-  : OMAMsgInterface(),
+  : OMAlib(NULL),
     GaudiAlgorithm ( name , pSvcLocator ),
-    m_histDB (NULL),
     m_inputFiles(0),
     m_inputTasks(0)
 {
@@ -36,7 +32,6 @@ AnalysisTask::AnalysisTask( const std::string& name,
 }
 
 AnalysisTask::~AnalysisTask() {
-  delete m_omalib;
   std::vector<SavesetFinder*>::iterator iSS;
   for(iSS = m_saveset.begin() ; iSS != m_saveset.end() ; iSS++) {
     delete (*iSS);
@@ -49,17 +44,11 @@ StatusCode AnalysisTask::initialize() {
   if ( sc.isFailure() ) return sc;  
 
   // where to send messages 
-  msgMode = (OMAMsgMode) m_MessageMode;
+  setMessageMode( (OMAMsgMode) m_MessageMode);
 
-  // instantiate OMAlib with or without HistDB
+  // use HistDB if requested
   if(m_useDB)
-    m_omalib = new OMAlib( m_DBpw, m_DBuser, m_DB );
-  else
-    m_omalib = new OMAlib( (OnlineHistDB*) NULL );
-
-  m_histDB = m_omalib->dbSession();
-  m_omalib->setMessageMode(msgMode);
-
+    openDBSession( m_DBpw, m_DBuser, m_DB );
 
   if ( ! m_inputFiles.empty() ) {
     // single shot: analyze these files now 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.5 2008-05-14 10:01:16 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAAlgorithms.h,v 1.6 2008-08-11 08:05:15 ggiacomo Exp $
 #ifndef OMALIB_OMAALGORITHMS_H
 #define OMALIB_OMAALGORITHMS_H 1
 
@@ -13,7 +13,7 @@ class TF1;
 class OMACheckXRange : public OMACheckAlg
 {
   public:
-  OMACheckXRange();
+  OMACheckXRange(OMAcommon* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
@@ -32,7 +32,7 @@ class OMACheckXRange : public OMACheckAlg
 class OMACheckMeanAndSigma : public OMACheckAlg
 {
   public:
-  OMACheckMeanAndSigma();
+  OMACheckMeanAndSigma(OMAcommon* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
@@ -51,7 +51,7 @@ class OMACheckMeanAndSigma : public OMACheckAlg
 class OMAGaussFit : public OMACheckAlg
 {
  public:
-  OMAGaussFit();
+  OMAGaussFit(OMAcommon* Env);
   virtual void exec(TH1 &Histo,
                     std::vector<float> & warn_thresholds,
                     std::vector<float> & alarm_thresholds,
@@ -64,13 +64,43 @@ class OMAGaussFit : public OMACheckAlg
                    float sig);
 };
 
+class OMACheckHolesAndSpikes  : public OMACheckAlg
+{
+ public:
+  OMACheckHolesAndSpikes(OMAcommon* Env);
+  enum DeltaMode {MinMode=0, Ratio =1, AbsDiff =2, SigmaDiff=3, MaxMode=4};
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+};
+
+class OMACheckEmptyBins  : public OMACheckAlg
+{
+ public:
+  OMACheckEmptyBins(OMAcommon* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+};
+
+class OMACompareToReference : public OMACheckAlg
+{
+ public:
+  OMACompareToReference(OMAcommon* Env);
+  virtual void exec(TH1 &Histo,
+                    std::vector<float> & warn_thresholds,
+                    std::vector<float> & alarm_thresholds,
+                    std::vector<float> & input_pars);
+};
 
 //------ Histogram Creator Algorithms ------------------//
 
 class OMAEfficiency : public OMAHcreatorAlg
 {
  public:
-  OMAEfficiency();
+  OMAEfficiency(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string outName,
@@ -86,7 +116,7 @@ class OMAEfficiency : public OMAHcreatorAlg
 class OMADivide : public OMAHcreatorAlg
 {
  public:
-  OMADivide();
+  OMADivide(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string outName,
@@ -103,7 +133,7 @@ class OMADivide : public OMAHcreatorAlg
 class OMAHMerge : public OMAHcreatorAlg
 {
  public:
-  OMAHMerge();
+  OMAHMerge(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string outName,
@@ -123,7 +153,7 @@ class OMAHMerge : public OMAHcreatorAlg
 class OMAScale : public OMAHcreatorAlg
 {
  public:
-  OMAScale();
+  OMAScale(OMAcommon* Env);
   virtual TH1* exec( const std::vector<TH1*> *sources,
                      const std::vector<float> *params,
                      std::string outName,
