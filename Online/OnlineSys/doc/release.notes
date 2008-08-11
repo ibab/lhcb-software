@@ -9,6 +9,7 @@
      New version v4r12 built against LHCb v25r0.
      Changes and bug fixes as found during the commissioning in
      GaudiOnline, Gaucho, OnlineKernel, ROMon and ROLogger.
+     New package Online/RawBankSizes to histogram bank sizes.
 
 </PRE><H1><A NAME=v4r11>2008-07-09 OnlineSys v4r11</A></H1><PRE>
      New version v4r11 built against LHCb v24r0.
