@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.1 2008-04-01 12:35:26 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.2 2008-08-11 15:20:48 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 // from LHCb
 #include "Event/ProtoParticle.h"
 #include "Event/Track.h"
+#include "Event/MuonPID.h"
+#include "Event/RichPID.h"
 
 // from MicroDST
 #include <MicroDST/ICloneTrack.h>
@@ -70,6 +72,16 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
     LHCb::Track* clonedTrack = (*m_trackCloner)(protoParticle->track() );
     if (clonedTrack) protoParticleClone->setTrack(clonedTrack);
   }
+
+  LHCb::RichPID* clonedRichPID =  
+    cloneKeyedContainerItem<LHCb::RichPID, RichPIDCloner>(protoParticle->richPID());
+
+  if (clonedRichPID) protoParticleClone->setRichPID(clonedRichPID);
+
+  LHCb::MuonPID* clonedMuonPID =  
+    cloneKeyedContainerItem<LHCb::MuonPID, MuonPIDCloner>(protoParticle->muonPID());
+
+  if (clonedMuonPID) protoParticleClone->setMuonPID(clonedMuonPID);
 
   return protoParticleClone;
   
