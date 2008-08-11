@@ -1,4 +1,4 @@
-// $Id: TrackCloner.h,v 1.1 2008-04-01 12:34:34 jpalac Exp $
+// $Id: TrackCloner.h,v 1.2 2008-08-11 15:54:02 jpalac Exp $
 #ifndef MICRODST_TRACKPARTICLECLONER_H 
 #define MICRODST_TRACKCLONER_H 1
 
@@ -32,7 +32,7 @@ protected:
 
 private:
 
-  LHCb::Track* clone(const LHCb::Track* protoParticle);
+  LHCb::Track* clone(const LHCb::Track* track);
 
 private:
 

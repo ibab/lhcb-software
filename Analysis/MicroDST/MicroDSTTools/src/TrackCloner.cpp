@@ -1,4 +1,4 @@
-// $Id: TrackCloner.cpp,v 1.1 2008-04-01 12:34:34 jpalac Exp $
+// $Id: TrackCloner.cpp,v 1.2 2008-08-11 15:54:02 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -46,9 +46,9 @@ StatusCode TrackCloner::initialize()
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-LHCb::Track* TrackCloner::operator() (const LHCb::Track* protoParticle)
+LHCb::Track* TrackCloner::operator() (const LHCb::Track* track)
 {
-  return this->clone(protoParticle);
+  return this->clone(track);
 }
 //=============================================================================
 LHCb::Track* TrackCloner::clone(const LHCb::Track* track)
