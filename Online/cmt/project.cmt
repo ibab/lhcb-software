@@ -4,3 +4,4 @@ use LHCB LHCB_v25r0
 
 build_strategy with_installarea
 setup_strategy root
+
