@@ -1,4 +1,4 @@
-// $Id: ProtoParticleCloner.cpp,v 1.2 2008-08-11 15:20:48 jpalac Exp $
+// $Id: ProtoParticleCloner.cpp,v 1.3 2008-08-11 16:02:10 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -68,20 +68,21 @@ LHCb::ProtoParticle* ProtoParticleCloner::clone(const LHCb::ProtoParticle* proto
   LHCb::ProtoParticle* protoParticleClone = 
     cloneKeyedContainerItem<LHCb::ProtoParticle, BasicProtoParticleCloner>(protoParticle);
 
-  if ( m_trackCloner!=0 && protoParticle->track()!=0 ) {
-    LHCb::Track* clonedTrack = (*m_trackCloner)(protoParticle->track() );
-    if (clonedTrack) protoParticleClone->setTrack(clonedTrack);
-  }
+  if ( m_trackCloner!=0 )
+    protoParticleClone->setTrack( (*m_trackCloner)(protoParticle->track() ) );
 
   LHCb::RichPID* clonedRichPID =  
     cloneKeyedContainerItem<LHCb::RichPID, RichPIDCloner>(protoParticle->richPID());
 
-  if (clonedRichPID) protoParticleClone->setRichPID(clonedRichPID);
-
   LHCb::MuonPID* clonedMuonPID =  
     cloneKeyedContainerItem<LHCb::MuonPID, MuonPIDCloner>(protoParticle->muonPID());
 
-  if (clonedMuonPID) protoParticleClone->setMuonPID(clonedMuonPID);
+  if (clonedRichPID) clonedRichPID->setTrack(protoParticleClone->track());
+  
+  if (clonedMuonPID) clonedRichPID->setTrack(protoParticleClone->track());
+
+  protoParticleClone->setRichPID(clonedRichPID);  
+  protoParticleClone->setMuonPID(clonedMuonPID);
 
   return protoParticleClone;
   
