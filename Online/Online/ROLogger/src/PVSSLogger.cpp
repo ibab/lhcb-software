@@ -6,7 +6,7 @@ namespace ROLogger {
   // Forward declarations
   class LogFileEntry;
   /**
-   */
+  */
   class LogDirectory {
     /// Definition of file map
     typedef std::map<std::string,LogFileEntry*> Files;
@@ -22,15 +22,19 @@ namespace ROLogger {
     Files       m_files;
     /// FIFO file descriptor
     int m_fifo;
+    /// Max. number of seconds before checking for new files
     int m_checkLimit;
+    /// Time stamp of last file existence check.
     time_t m_lastChecked;
-    
+
     std::string _prefix(const std::string& tag="INFO") const;
   public:
+
     /// Initializing constructor
     LogDirectory(const std::string& nam);
     /// Default destructor
     virtual ~LogDirectory(); 
+
     /// Connect output fifo
     int connect(const std::string& fifo);
     /// Open all log files
@@ -63,9 +67,18 @@ namespace ROLogger {
 #include <fcntl.h>
 #include "RTL/rtl.h"
 #include "RTL/readdir.h"
+#ifdef _WIN32
+#include <io.h>
+#include <direct.h>
+#include <sys/stat.h>
+#define O_NONBLOCK 0x0
+#define W_OK       0x6
+inline bool S_ISFIFO(int) { return false; }
+#endif
 
 namespace ROLogger {
-  struct LogFileEntry {
+  class LogFileEntry {
+  public:
     struct stat   data;
     size_t        pointer;
     int           fd;
@@ -90,8 +103,8 @@ namespace ROLogger {
       fd = ::open(fn.c_str(),O_RDONLY);
       pointer = begin ? 0 : data.st_size;
       if ( fd != -1 ) {
-	if ( !begin ) ::lseek(fd,0,SEEK_END);
-	return 1;
+        if ( !begin ) ::lseek(fd,0,SEEK_END);
+        return 1;
       }
       fd = 0;
       return 0;
@@ -115,16 +128,12 @@ std::string LogDirectory::_prefix(const std::string& tag) const {
 
 /// Initializing constructor
 LogDirectory::LogDirectory(const std::string& nam)
-  : m_name(nam), m_node("Unknown"), m_fifo(-1)
+: m_name(nam), m_node("Unknown"), m_fifo(-1)
 {
-  char txt[64];
   m_checkLimit = 3;
   m_maxFileChange = 7*24*3600;
-  if ( !::gethostname(txt,sizeof(txt)) ) {
-    if ( ::strchr(txt,'.') ) *::strchr(txt,'.') = 0;
-    m_node = txt;
-  }
-  m_process = ::getenv("UTGID");
+  m_node = RTL::nodeNameShort();
+  m_process = RTL::processName();
   ::chdir(m_name.c_str());
 }
 
@@ -141,30 +150,30 @@ LogDirectory::~LogDirectory()
 int LogDirectory::connect(const std::string& fifo) {
   struct stat statBuf;
   if( ::access(fifo.c_str(),W_OK) == -1 )    { // access denied
-    printf("access(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
+    ::printf("access(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
     if ( errno == ENOENT )
-      printf("Please, run \"logSrv -p %s -s <srv_name>\"!\n",fifo.c_str());
+      ::printf("Please, run \"logSrv -p %s -s <srv_name>\"!\n",fifo.c_str());
     return 0;
   }
   // get fifo information
   if( ::stat(fifo.c_str(),&statBuf )==-1)  {
-    printf("stat(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
+    ::printf("stat(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
     return 0;
   }
   // check if fifo is a FIFO */
   if( !S_ISFIFO(statBuf.st_mode) )  {
-    printf("I-node: \"%s\" is not a FIFO!\n",fifo.c_str());
+    ::printf("I-node: \"%s\" is not a FIFO!\n",fifo.c_str());
     return 0;
   }
   // open error log 
   m_fifo = ::open(fifo.c_str(),O_WRONLY|O_NONBLOCK|O_APPEND);
   if ( m_fifo==-1 )  {
     if(errno==ENXIO)    {
-      printf("No process has the FIFO \"%s\" open for reading!\n",fifo.c_str());
-      printf("Please, run \"logSrv -p %s -s <srv_name>\"!\n",fifo.c_str());
+      ::printf("No process has the FIFO \"%s\" open for reading!\n",fifo.c_str());
+      ::printf("Please, run \"logSrv -p %s -s <srv_name>\"!\n",fifo.c_str());
     }
     else    {
-      printf("open(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
+      ::printf("open(\"%s\"): %s!\n",fifo.c_str(),::strerror(errno));
     }
     return 0;
   }
@@ -173,7 +182,7 @@ int LogDirectory::connect(const std::string& fifo) {
 
 /// Read directory content
 int LogDirectory::read(bool prt) {
- std::string prefix = _prefix();
+  std::string prefix = _prefix();
   DIR* dir=::opendir(m_name.c_str());
   if ( dir ) {
     time_t now = time(0);
@@ -182,27 +191,27 @@ int LogDirectory::read(bool prt) {
       std::string fn = dp->d_name;
       size_t idx = fn.rfind(".");
       if ( fn.substr(idx) == ".log" ) {
-	Files::iterator i=m_files.find(fn);
-	if ( i == m_files.end() ) {
-	  std::auto_ptr<LogFileEntry> e(new LogFileEntry(m_name+"/"+fn));
-	  if ( now-e->data.st_mtime < m_maxFileChange ) {
-	    // file needs to be modified at least during the last week.....
-	    m_files[fn] = e.release();
-	  }
-	  else if ( prt ) {
-	    const struct stat& s = e->data;
-	    std::string mod = ::ctime(&e->data.st_mtime);
-	    std::stringstream os;
-	    os << prefix << std::left << std::setw(28) 
-	       << fn.substr(0,fn.length()-4)+": " 
-	       << "Last Modified: " << mod.substr(0,mod.length()-1)
-	       << " Size:" << std::setw(9) << std::right << s.st_size
-	       << " INode:" << std::setw(6) << std::right << s.st_ino
-	       << "   ---> File too old and ignored"
-	       << std::endl;
-	    print(os.str());
-	  }
-	}
+        Files::iterator i=m_files.find(fn);
+        if ( i == m_files.end() ) {
+          std::auto_ptr<LogFileEntry> e(new LogFileEntry(m_name+"/"+fn));
+          if ( now-e->data.st_mtime < m_maxFileChange ) {
+            // file needs to be modified at least during the last week.....
+            m_files[fn] = e.release();
+          }
+          else if ( prt ) {
+            const struct stat& s = e->data;
+            std::string mod = ::ctime(&e->data.st_mtime);
+            std::stringstream os;
+            os << prefix << std::left << std::setw(28) 
+              << fn.substr(0,fn.length()-4)+": " 
+              << "Last Modified: " << mod.substr(0,mod.length()-1)
+              << " Size:" << std::setw(9) << std::right << s.st_size
+              << " INode:" << std::setw(6) << std::right << s.st_ino
+              << "   ---> File too old and ignored"
+              << std::endl;
+            print(os.str());
+          }
+        }
       }
     }
     ::closedir(dir);
@@ -221,11 +230,11 @@ void LogDirectory::dump() {
     std::string mod = ::ctime(&s.st_mtime);
     std::stringstream os;
     os << prefix << std::left << std::setw(28) 
-       << fn.substr(0,fn.length()-4)+": " 
-       << "Last Modified: " << mod.substr(0,mod.length()-1)
-       << " Size:" << std::setw(9) << std::right << s.st_size
-       << " INode:" << std::setw(6) << std::right << s.st_ino
-       << std::endl;
+      << fn.substr(0,fn.length()-4)+": " 
+      << "Last Modified: " << mod.substr(0,mod.length()-1)
+      << " Size:" << std::setw(9) << std::right << s.st_size
+      << " INode:" << std::setw(6) << std::right << s.st_ino
+      << std::endl;
     print(os.str());
   }
 }
@@ -236,9 +245,9 @@ int LogDirectory::open(bool begin, bool prt) {
   for(Files::iterator i=m_files.begin(); i!=m_files.end();++i)  {
     if ( (*i).second->fd == 0 ) {
       if ( !(*i).second->open((*i).first,begin) ) 
-	ret = 0;
+        ret = 0;
       else if ( prt )
-	print("Opened successfully log file:"+(*i).first+"\n");
+        print("Opened successfully log file:"+(*i).first+"\n");
     }
   }
   return ret;
@@ -287,56 +296,56 @@ int LogDirectory::publish() {
     bytes = e->data.st_size-e->pointer;
     if ( bytes>0 ) {
       if ( bytes+1 > buff_len ) {
-	if ( buff ) delete [] buff;
-	buff = new char[buff_len=bytes+1];
+        if ( buff ) delete [] buff;
+        buff = new char[buff_len=bytes+1];
       }
       for(rd=0; rd<bytes; ) {
-	int cnt = ::read(fd,buff+rd,bytes-rd);
-	if ( cnt > 0 ) rd += cnt;
-	else if ( errno == EINTR ) continue;
-	else break;
+        int cnt = ::read(fd,buff+rd,bytes-rd);
+        if ( cnt > 0 ) rd += cnt;
+        else if ( errno == EINTR ) continue;
+        else break;
       }
       e->pointer += bytes;
       if ( rd > 0 ) {
-	char *p, *p0 = buff;
-	for(size_t j=0; j<bytes;++j) {
-	  if ( buff[j]==0 ) buff[j] = ' ';
-	}
-	buff[bytes] = 0;
-	while ( (p=::strchr(p0,'\n')) != 0 ) {
-	  *p = 0;
-	  size_t len = ::strlen(p0)+e->remainder.length();
-	  bool use = len > 0;
-	  if ( ::strncmp(fn.c_str(),"smi",3)==0 ) {
-	    if ( ::strstr(p0,"_FWDM>") != 0 ) {
-	      use = use && ::strstr(p0,"<DISABLE/DEVICE") == 0;
-	      use = use && ::strstr(p0,"<ERROR>") == 0;
-	    }
-	    if ( ::strstr(p0,"_FWM>") != 0 ) {
-	      use = use && ::strstr(p0,"<INCLUDED>") == 0;
-	      use = use && ::strstr(p0,"executing action : ") == 0;
-	    }
-	    use = use && ::strstr(p0,"External action :") == 0;
-	    use = use && ::strstr(p0,"executing action : <LOAD/PART_NAME=") == 0;
-	  }
-	  use = use && ::strstr(p0,"Started Gaudijob ") == 0;
-	  use = use && ::strstr(p0,"parenttype ") == 0;
-	  use = use && ::strstr(p0,"<GAUDIJOB:") == 0;
-	  if ( use ) {
-	    std::stringstream os;
-	    std::string pref = prefix;
-	    if ( strstr(p0,"ERROR") )
-	      pref = pref_err;
-	    else if ( strstr(p0,"> can not execute action <") )
-	      pref = pref_warn;
-	    os << std::left << std::setw(60) << pref+fn.substr(0,fn.length()-4)+": " 
-	       << e->remainder << p0 << std::endl;
-	    print(os.str());
-	  }
-	  e->remainder = "";
-	  p0 = ++p;
-	}
-	e->remainder = (p0 < buff+bytes) ? p0 : "";
+        char *p, *p0 = buff;
+        for(size_t j=0; j<bytes;++j) {
+          if ( buff[j]==0 ) buff[j] = ' ';
+        }
+        buff[bytes] = 0;
+        while ( (p=::strchr(p0,'\n')) != 0 ) {
+          *p = 0;
+          size_t len = ::strlen(p0)+e->remainder.length();
+          bool use = len > 0;
+          if ( ::strncmp(fn.c_str(),"smi",3)==0 ) {
+            if ( ::strstr(p0,"_FWDM>") != 0 ) {
+              use = use && ::strstr(p0,"<DISABLE/DEVICE") == 0;
+              use = use && ::strstr(p0,"<ERROR>") == 0;
+            }
+            if ( ::strstr(p0,"_FWM>") != 0 ) {
+              use = use && ::strstr(p0,"<INCLUDED>") == 0;
+              use = use && ::strstr(p0,"executing action : ") == 0;
+            }
+            use = use && ::strstr(p0,"External action :") == 0;
+            use = use && ::strstr(p0,"executing action : <LOAD/PART_NAME=") == 0;
+          }
+          use = use && ::strstr(p0,"Started Gaudijob ") == 0;
+          use = use && ::strstr(p0,"parenttype ") == 0;
+          use = use && ::strstr(p0,"<GAUDIJOB:") == 0;
+          if ( use ) {
+            std::stringstream os;
+            std::string pref = prefix;
+            if ( strstr(p0,"ERROR") )
+              pref = pref_err;
+            else if ( strstr(p0,"> can not execute action <") )
+              pref = pref_warn;
+            os << std::left << std::setw(60) << pref+fn.substr(0,fn.length()-4)+": " 
+              << e->remainder << p0 << std::endl;
+            print(os.str());
+          }
+          e->remainder = "";
+          p0 = ++p;
+        }
+        e->remainder = (p0 < buff+bytes) ? p0 : "";
       }
     }
   }
@@ -354,13 +363,13 @@ void LogDirectory::checkFiles() {
       LogFileEntry* e = (*i).second;
       int res = ::stat(fn.c_str(),&buf);
       if ( 0 == res  ) {
-	if ( buf.st_ino == e->data.st_ino ) {
-	  continue;
-	}
-	print("Log file:"+fn+" changed. Closing old entry.\n");
-	(*i).second = new LogFileEntry(buf);
-	(*i).second->open(fn,true);
-	continue;
+        if ( buf.st_ino == e->data.st_ino ) {
+          continue;
+        }
+        print("Log file:"+fn+" changed. Closing old entry.\n");
+        (*i).second = new LogFileEntry(buf);
+        (*i).second->open(fn,true);
+        continue;
       }
       print("Failed to stat "+fn+" Removing log file from check-list....\n");
       m_files.erase(i);
@@ -379,9 +388,9 @@ extern "C" int romon_pvss_logger(int, char** argv) {
     if ( dir.read(true) ) {
       dir.dump();
       if ( dir.open(false,false) ) {
-	while(1) {
-	  dir.publish();
-	}
+        while(1) {
+          dir.publish();
+        }
       }
     }
   }
