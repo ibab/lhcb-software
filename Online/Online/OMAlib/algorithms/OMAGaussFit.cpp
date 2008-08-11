@@ -1,4 +1,4 @@
-// $Id: OMAGaussFit.cpp,v 1.2 2008-08-11 08:05:15 ggiacomo Exp $
+// $Id: OMAGaussFit.cpp,v 1.3 2008-08-11 17:52:01 ggiacomo Exp $
 
 #include <TH1F.h>
 #include <TF1.h>
@@ -80,14 +80,16 @@ bool OMAGaussFit::checkParam( TF1* fit,
                               float sig) {
   bool out = true;
   int ndf= fit->GetNDF();
-  double param= fit->GetParameter(ipar);
-  double error= fit->GetParError(ipar);
-  if( param < min || param > max ) {
-    // param out of range: check if deviation from range is significant
-    double delta = 
-      ( param < min ) ? (min-param)/error : (param-max)/error;
-    if( StudentI(delta, ndf) < sig)  
-      out = false;      
+  if (ndf>0) {
+    double param= fit->GetParameter(ipar);
+    double error= fit->GetParError(ipar);
+    if( param < min || param > max ) {
+      // param out of range: check if deviation from range is significant
+      double delta = 
+        ( param < min ) ? (min-param)/error : (param-max)/error;
+      if( StudentI(delta, ndf) > sig)  
+        out = false;      
+    }
   }
   return out;
 }
