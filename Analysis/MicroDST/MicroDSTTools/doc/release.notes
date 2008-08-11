@@ -3,15 +3,23 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.13 2008-08-11 15:20:28 jpalac Exp $
+! $Id: release.notes,v 1.14 2008-08-11 16:02:51 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2008-08-11 - Juan PALACIOS
+ - src/TrackCloner.h, src/ProtoParticleCloner.h
+  . Add some doxygen documentation.
+ - src/ProtoParticleCloner.cpp
+  . Clean up the clone method.
 
 ! 2008-08-11 - Juan PALACIOS
  - Add src/CloneFlavourTag{.cpp, .h}
   . Implementaiton of ICloneFlavourTag. Sets the LHCb::FlavourTag tagged B
     field to the clone of the tagged particle, if the clone already exists.
  - src/ProtoParticleCloner{.cpp, .h}
-  . Clone the ProtoParticle's associated MuonPID and RichPID
+  . Clone the ProtoParticle's associated MuonPID and RichPID. It uses no
+    specialised cloners, so it takes care of correctly setting the MuonPID
+    and RichPID LHCb::Track* field.
 
 ! 2008-08-07 - Juan PALACIOS
  - src/MCParticleCloner.cpp
