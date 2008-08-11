@@ -18,6 +18,8 @@ use $(CCPCHist_use)
 macro CCPCHist_use "CCPCHist v2r6 Online" slc4-amd64 ""
 use DIM               v17r7    Online
 use ExampleGaucho     v2r5     Online
+# Does not work on WIN32
+# use FarmMonitor       v1r0     Online
 use Gaucho            v5r6p3   Online
 use GaudiOnline       v2r19    Online
 use GaudiUPI          v1r9     Online
@@ -32,6 +34,7 @@ use OnlineKernel      v1r19    Online
 use OnlineTasks       v1r13    Online
 use Presenter         v0r10    Online
 use PyDIM             v2r5     Online
+use RawBankSizes      v1r2     Online
 use ROMon             v1r6     Online
 use ROLogger          v0r4     Online
 use Saver             v1r5     Online
