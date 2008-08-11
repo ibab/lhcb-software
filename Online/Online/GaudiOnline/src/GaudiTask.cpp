@@ -247,7 +247,6 @@ int GaudiTask::configApplication()  {
   MsgStream log(msgSvc(), name());
   StatusCode sc = StatusCode::FAILURE;
   m_eventThread = false;
-  Gaudi::setInstance(m_subMgr);
   if (m_optOptions.find(".opts") != std::string::npos)
     sc = configSubManager();
   else
@@ -451,7 +450,10 @@ StatusCode GaudiTask::nextEvent(int /* num_event */)  {
 StatusCode GaudiTask::configSubManager() {
   MsgStream log(msgSvc(), name());
   if ( 0 == m_subMgr )  {
+    Gaudi::setInstance((IAppMgrUI*)0);
+    Gaudi::setInstance((ISvcLocator*)0);
     m_subMgr = Gaudi::createApplicationMgrEx("GaudiSvc", "ApplicationMgr");
+    Gaudi::setInstance(m_subMgr);
   }
   else {
     log << MSG::WARNING << "2nd. layer is already present - reusing instance" << endmsg;
@@ -474,6 +476,8 @@ StatusCode GaudiTask::configPythonSubManager() {
   MsgStream log(msgSvc(), name());
   m_python = std::auto_ptr<PythonInterpreter>(new PythonInterpreter());
   m_subMgr = 0;
+  Gaudi::setInstance((IAppMgrUI*)0);
+  Gaudi::setInstance((ISvcLocator*)0);
   log << MSG::DEBUG << "Python setup:" << m_optOptions << endmsg;
   std::string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0) 
     ? m_optOptions.substr(8) : loadScript(m_optOptions);
@@ -489,6 +493,7 @@ StatusCode GaudiTask::configPythonSubManager() {
       return StatusCode::FAILURE;
     }
     m_subMgr = Gaudi::createApplicationMgr("GaudiSvc", "ApplicationMgr");
+    Gaudi::setInstance(m_subMgr);
     log << MSG::ALWAYS << "Python initialization done." << endmsg;
     return StatusCode::SUCCESS;
   }
