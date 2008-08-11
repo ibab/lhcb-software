@@ -1,6 +1,12 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2008-08-09 Markus Frank
+ - Fix bug in GaudiTaskFSM reported by Ulrich&Kurt for running online apps standalone.
+   Options file for testing feature: options/TestOffline.opts
+ - Fix bug to properly install second layer application manager. Was screwed when
+   adding python options support.
+
 ! 2008-06-19 Markus Frank
  - Implement possibility to use python job options in the second layer.
 
