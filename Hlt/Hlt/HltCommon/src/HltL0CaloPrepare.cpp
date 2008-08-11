@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.9 2008-08-10 18:27:54 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.10 2008-08-11 06:41:32 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,7 @@ HltL0CaloPrepare::caloTypeProperty::caloTypeProperty(const std::string& s)
 HltL0CaloPrepare::caloTypeProperty& HltL0CaloPrepare::caloTypeProperty::operator=(const std::string& s) 
 {   m_prop = s;
     m_val = string2type(s);
+    return *this;
 }
 //=============================================================================
 // Standard constructor, initializes variables
