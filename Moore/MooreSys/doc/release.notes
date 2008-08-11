@@ -3,6 +3,13 @@ Package     : MooreSys
 Package Coordinator : P. Koppenburg, M. Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v5r0>2008-08-11 Moore v5r0</A></H1><PRE>
+Based on Phys v7r0, Rec v5r10, HLT v4r0, Lbcom v6r21, LHCb v25r0, Gaudi v20r1, LCGCMT 55
+
+ . Many changes for Gaudi state machine and use of TCK.
+ . Hlt1: New packages HltEcalAlley, HltLuminosity, HltGlobalMonitor, HltRawData
+ . Hlt2: Removed all .opts files and replaced by .py.
+
 ! 2008-07-28 - Gerhard Raven
   - add TCKData package
 
