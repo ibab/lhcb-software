@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.cpp,v 1.12 2008-08-11 08:59:25 frankb Exp $
+// $Id: FarmDisplay.cpp,v 1.13 2008-08-11 12:09:23 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.12 2008-08-11 08:59:25 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/FarmDisplay.cpp,v 1.13 2008-08-11 12:09:23 frankb Exp $
 
 #include "ROMon/RecSubfarmDisplay.h"
 #include "ROMon/SubfarmDisplay.h"
@@ -1503,7 +1503,7 @@ void FarmDisplay::handle(const Event& ev) {
       set_cursor();
       break;
     case CMD_HANDLE_KEY:
-      handleKeyboard((int)ev.data);
+      handleKeyboard(int((long)ev.data));
       break;
     case CMD_SHOWSUBFARM: {
       RTL::Lock lock(s_lock,true);
