@@ -1,4 +1,4 @@
-// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.7 2008-07-01 14:28:21 cattanem Exp $
+// $Id: StateSimpleBetheBlochEnergyCorrectionTool.cpp,v 1.8 2008-08-11 07:16:23 truf Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -70,7 +70,7 @@ void StateSimpleBetheBlochEnergyCorrectionTool::correctState( LHCb::State& state
   qOverP < 0.0 ? newP = GSL_MIN(1.0/qOverP - bbLoss, -m_minMomentumAfterEnergyCorr) :
                  newP = GSL_MAX(1.0/qOverP + bbLoss, m_minMomentumAfterEnergyCorr);
 
-  newP = 1.0/newP;
+  tX[4] = 1.0/newP;
 }
 
 //=============================================================================
