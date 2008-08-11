@@ -138,8 +138,8 @@ static void help_GaudiOnline() {
   std::cout << "    -msgsvc=<class-name>     Name of the Gaudi message service to be installed" << std::endl;
   std::cout << "    -options=<file-name>     Job options file name" << std::endl;
   std::cout << "    -debug=yes               Invoke debugger at startup (WIN32)" << std::endl;
-  std::cout << "    -loop                      Set event loop flag." << std::endl;
-  std::cout << "    -auto[start]               Immediately go running without listening to DIM." << std::endl;
+  std::cout << "    -loop                    Set event loop flag." << std::endl;
+  std::cout << "    -auto[start]             Immediately go running without listening to DIM." << std::endl;
   std::cout << "    " << std::endl;
 }
 
@@ -201,6 +201,7 @@ extern "C" int GaudiOnline(int argc, char** argv)  {
       std::cout << "Commencing autostart sequence..." << std::endl;
       IOCSENSOR.send(actor,LHCb::DimTaskFSM::CONFIGURE);
       IOCSENSOR.send(actor,LHCb::DimTaskFSM::INITIALIZE);
+      IOCSENSOR.send(actor,LHCb::DimTaskFSM::START);
     }
     else  {
       std::cout << "Autostart failed: LHCb::GaudiDimFSM is no Interactor!" << std::endl;
