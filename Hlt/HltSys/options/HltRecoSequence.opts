@@ -102,7 +102,7 @@ Hlt1RecoSequence.Members = {
 Hlt1RecoRZVeloTracksSequence.MeasureTime = true;
 Hlt1RecoRZVeloTracksSequence.Members += { 
   "GaudiSequencer/HltRecoRZVeloTracksSequence",
-  "HltTrackPrepare/Hlt1PrepareRZVelo"
+  "HltTrackFilter/Hlt1PrepareRZVelo"
 };
 
 Hlt1RecoRZPVSequence.MeasureTime = true;

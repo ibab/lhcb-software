@@ -83,7 +83,7 @@ HltLumiCountSequence.Members = {
 // *************************************************
 // filter to get backward tracks (always pass)
 HltBWRZVeloSequence.Members += { 
-  "HltTrackPrepare/HltPrepareBWRZVelo",
+  "HltTrackFilter/HltPrepareBWRZVelo",
   "DummyLumiAlley/HltDummyBWRZVelo"
 };
 
@@ -139,7 +139,7 @@ LumiCountRZVelo.OutputContainer="Hlt/LumiSummary";
 HltBWRZVeloSequence.MeasureTime = true;
 HltBWRZVeloSequence.ModeOr = true;         // should always pass
 
-HltPrepareBWRZVelo.InputSelection   = "Hlt/Track/RZVelo";
+HltPrepareBWRZVelo.InputSelection   = "TES:Hlt/Track/RZVelo";
 HltPrepareBWRZVelo.AddInfo = false;
 HltPrepareBWRZVelo.FilterDescriptor = {"IsBackward,>,0.5"};
 HltPrepareBWRZVelo.OutputSelection     = "BWRZVelo";
