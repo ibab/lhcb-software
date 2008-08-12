@@ -19,6 +19,8 @@ application  FixDoubleAlgName ../main/FixDoubleAlgName.cpp
 macro_append FixDoubleAlgName_dependencies " OnlineHistDB "
 application  ChangeTaskName ../main/ChangeTaskName.cpp
 macro_append ChangeTaskName_dependencies " OnlineHistDB "
+application  ChangeAlgorithmName ../main/ChangeAlgorithmName.cpp
+macro_append ChangeAlgorithmName_dependencies " OnlineHistDB "
 
 #use the -full version to work with cern DBDEV10 Oracle server
 macro oracle_config_version 10.2.0.3-full

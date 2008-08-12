@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.7 2008-05-14 15:00:57 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistTask.cpp,v 1.8 2008-08-12 10:37:31 ggiacomo Exp $
 #include "OnlineHistDB/OnlineHistTask.h"
 using namespace std;
 using namespace OnlineHistDBEnv_constants;
@@ -80,6 +80,24 @@ bool  OnlineHistTask::rename(std::string &NewName) {
   if(out>0) m_name = NewName;
   return (out>0);
 }
+
+bool  OnlineHistTask::renameAlgo(std::string &OldName, std::string &NewName) {
+  int out=0;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OnlineHistTask::renameAlgo";
+  if ( OCI_SUCCESS == prepareOCIStatement
+       (stmt, "BEGIN :out := ONLINEHISTDB.RENAMEALGO(:task,:old,:new); END;") ) {    
+    myOCIBindInt   (stmt,":out", out);  
+    myOCIBindString(stmt,":task",m_name);
+    myOCIBindString(stmt,":old", OldName);
+    myOCIBindString(stmt,":new", NewName);  
+    myOCIStmtExecute(stmt);
+    releaseOCIStatement(stmt);
+  }
+  if(out>0) m_name = NewName;
+  return (out>0);
+}
+
 
 
 bool OnlineHistTask::setSubDetectors(std::string SubDet1,
