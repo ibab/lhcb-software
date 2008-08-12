@@ -1,4 +1,4 @@
-// $Id: FarmDisplay.h,v 1.7 2008-07-15 12:18:34 frankb Exp $
+// $Id: FarmDisplay.h,v 1.8 2008-08-12 14:00:11 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.7 2008-07-15 12:18:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/FarmDisplay.h,v 1.8 2008-08-12 14:00:11 frankb Exp $
 #ifndef ROMON_FARMDISPLAY_H
 #define ROMON_FARMDISPLAY_H 1
 
@@ -52,6 +52,9 @@ namespace ROMon {
     CMD_POSCURSOR,
     CMD_SHOW,
     CMD_SHOWSUBFARM,
+    CMD_SHOWMBM,
+    CMD_SHOWCPU,
+    CMD_SHOWPROCS,
     CMD_SHOWHELP,
     CMD_HANDLE_KEY,
     CMD_LAST
