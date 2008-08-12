@@ -64,7 +64,7 @@ void ProcessMgr::setUtgid(const std::string &utgid)
   std::size_t second_us = m_utgid.find("_", first_us + 1);
   m_nodeName = m_utgid.substr(0, first_us);
   std::string other = m_utgid.substr(first_us + 1, second_us - first_us - 1);
-  if ((other == "Adder")||(other == "ADDER")) m_isAdder = true;
+  if ((other.compare("Adder")==0)||(other.compare("ADDER")==0)) m_isAdder = true;
 } 
 
 void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> &serviceSet) {
@@ -109,9 +109,9 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     else{
       task = Misc::splitString(utgid, "_")[1];
       // we don't do nothing with Savers
-      if ((task == "Saver")||(task == "SAVER")) continue; 
+      if ((task.compare("Saver")==0)||(task.compare("SAVER")==0)) continue; 
 
-      if ((task == "Adder")||(task == "ADDER")) {
+      if ((task.compare("Adder")==0)||(task.compare("ADDER")==0)) {
         if (serviceParts.size() < 5 ) continue; 
         task = serviceParts[index];
         index++;
@@ -251,7 +251,7 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
       partName = (*serverListTotIt).substr(0, first_us);
       nodeName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
       taskName = (*serverListTotIt).substr(second_us + 1, third_us - second_us - 1);
-      if ((taskName == "Saver")||(taskName == "SAVER")||(taskName == "Adder")||(taskName == "ADDER")) {
+      if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)||(taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)) {
         msg << MSG::DEBUG << "refused because we don't save ADDERS nor save SAVERS. "<< endreq;    
         continue; // we don't do nothing with Savers
       }
@@ -279,22 +279,23 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
     else {
       nodeName = (*serverListTotIt).substr(0, first_us);
       taskName = (*serverListTotIt).substr(first_us + 1, second_us - first_us - 1);
-      if ((taskName == "Saver")||(taskName == "SAVER")) {
+      if ((taskName.compare("Saver")==0)||(taskName.compare("SAVER")==0)) {
         msg << MSG::DEBUG << "refused because we don't add nor save SAVERS. "<< endreq;    
         continue; // we don't do nothing with Savers
       }
       if (isAdder()) { // This is an Adder
         msg << MSG::DEBUG << " We are inside an ADDER " << endreq;
-      
-        if ((taskName == "Adder")||(taskName == "ADDER")){
-          if (nodeName.size() ==  m_nodeName.size()) {
-            msg << MSG::DEBUG << "REFUSED because it is an adder with the same node name size. "<< endreq;
-            continue; // The nodeName have to be smaller size if the Adder is adding Adders
+        if (nodeName.compare("Bridge") != 0) {
+          if ((taskName.compare("Adder")==0)||(taskName.compare("ADDER")==0)){
+            if (nodeName.size() ==  m_nodeName.size()) {
+              msg << MSG::DEBUG << "REFUSED because it is an adder with the same node name size. "<< endreq;
+              continue; // The nodeName have to be smaller size if the Adder is adding Adders
+            }
           }
-        }
-        if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
-          nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
-          msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
+          if (nodeName.size() !=  m_nodeName.size()) { // If nodeName have smaller size 
+            nodeName = nodeName.substr(0, m_nodeName.size()); // we resize the nodename to do the match.
+            msg << MSG::DEBUG << "nodeName="<< nodeName << endreq;
+          }
         }
       }
       else { // This is a Saver
@@ -308,35 +309,53 @@ std::set<std::string> ProcessMgr::decodeServerList(const std::string &serverList
         }
       }
     }
-    
-    // checking the nodeName
-    msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
-    if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
-      msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
-      continue;
-    }
-    else msg << MSG::DEBUG << "nodeName OK" << endreq;
 
-    
-    if ((taskName != "Adder")&&(taskName != "ADDER")) {
-      // when the server is not an adder we can check the task name here.
-      
+    if (nodeName.compare("Bridge")==0) {
+      std::string subfarmName = taskName;
       bool chooseIt=true;
-      if (m_taskName.size()) chooseIt=false;
-      for(it=m_taskName.begin(); it!=m_taskName.end(); ++it){
-        msg << MSG::DEBUG << "comparing taskName="<< taskName << " with "<< (*it) << endreq;
-        if (Misc::findCaseIns((*it), taskName) != std::string::npos) {
+      if (m_subfarmName.size()) chooseIt=false;
+      for(it=m_subfarmName.begin(); it!=m_subfarmName.end(); ++it){
+        msg << MSG::DEBUG << "comparing subfarmName="<< subfarmName << " with "<< (*it) << endreq;
+        if (Misc::findCaseIns((*it), subfarmName) != std::string::npos) {
           chooseIt=true;
           break;
         }
       }
       if (!chooseIt) {
-        msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+        msg << MSG::DEBUG << "REFUSED because subfarmName NOT OK" << endreq;
         continue; 
       }
-      else msg << MSG::DEBUG << "taskName OK" << endreq;
+      else msg << MSG::DEBUG << "subfarmName OK" << endreq;
     }
-    
+    else {
+      // checking the nodeName
+      msg << MSG::DEBUG << "comparing nodeName="<< nodeName << " with "<< m_nodeName << endreq;    
+      if (Misc::findCaseIns(m_nodeName, nodeName) == std::string::npos){
+        msg << MSG::DEBUG << "REFUSED because nodeName NOT OK" << endreq;
+        continue;
+      }
+      else msg << MSG::DEBUG << "nodeName OK" << endreq;
+
+
+      if ((taskName != "Adder")&&(taskName != "ADDER")) {
+        // when the server is not an adder we can check the task name here.
+
+        bool chooseIt=true;
+        if (m_taskName.size()) chooseIt=false;
+        for(it=m_taskName.begin(); it!=m_taskName.end(); ++it){
+          msg << MSG::DEBUG << "comparing taskName="<< taskName << " with "<< (*it) << endreq;
+          if (Misc::findCaseIns((*it), taskName) != std::string::npos) {
+            chooseIt=true;
+            break;
+          }
+        }
+        if (!chooseIt) {
+          msg << MSG::DEBUG << "REFUSED because taskName NOT OK" << endreq;
+          continue; 
+        }
+        else msg << MSG::DEBUG << "taskName OK" << endreq;
+      }
+    }
     std::string serverName = (*serverListTotIt).substr(0, (*serverListTotIt).find("@"));
     msg << MSG::DEBUG << "Server="<<serverName << " will be considered"<< endreq;
     serverList.insert(serverName);
