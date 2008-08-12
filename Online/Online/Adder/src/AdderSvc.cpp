@@ -22,6 +22,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
 {
   //declareProperty("partname",m_partName); adders doesn't consider services with partname
   declareProperty("taskname",m_taskName);
+  declareProperty("subfarmname",m_subfarmName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
   declareProperty("refreshTime",  m_refreshTime=5);
@@ -48,8 +49,8 @@ StatusCode AdderSvc::initialize() {
   std::string taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
 
   if ((taskName != "Adder")&&(taskName != "ADDER")) {
-    msg << MSG::DEBUG << "This is not an Adder !" << endreq;
-    msg << MSG::DEBUG << "Please try nodeName_Adder_1" << endreq;
+    msg << MSG::ERROR << "This is not an Adder !" << endreq;
+    msg << MSG::ERROR << "Please try nodeName_Adder_1" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -60,6 +61,7 @@ StatusCode AdderSvc::initialize() {
   }
 
   msg << MSG::DEBUG << "***************************************************** " << endreq;
+
   msg << MSG::DEBUG << "****************** Welcome to Adder ***************** " << endreq;
   msg << MSG::DEBUG << "***************************************************** " << endreq;
   msg << MSG::DEBUG << "This Adder will add data published in : " << m_dimClientDns << endreq;
@@ -88,6 +90,7 @@ StatusCode AdderSvc::initialize() {
 
   msg << MSG::DEBUG << "creating ProcessMgr" << endreq;
   m_processMgr = new ProcessMgr (name(), msgSvc(), this);
+  m_processMgr->setSubFarmVector(m_subfarmName);
   m_processMgr->setTaskVector(m_taskName);
   m_processMgr->setAlgorithmVector(m_algorithmName);
   m_processMgr->setObjectVector(m_objectName);
@@ -96,13 +99,6 @@ StatusCode AdderSvc::initialize() {
   m_processMgr->createInfoServers();
 
   m_processMgr->createTimerProcess(m_refreshTime);
-
-  //msg << MSG::DEBUG << "Activing PostEvent to CreateServiceMap............." << endreq;
-  //IocSensor::instance().send(this, s_createServiceMap, this);
-  //m_processMgr->createServiceMap();
-  //m_processMgr->serviceMap()->printMap();
-  //sleep(10);
-  //msg << MSG::DEBUG << "Befor startTimer we sleep 10 seconds............." << endreq;
 
   msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/

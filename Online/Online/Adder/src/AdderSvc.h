@@ -7,6 +7,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 
 class IIncidentSvc;
+
 class ProcessManager;
 namespace LHCb {
 
@@ -37,6 +38,7 @@ private:
   std::string m_nodeName;
   
   std::vector<std::string> m_taskName;
+  std::vector<std::string> m_subfarmName;
   std::vector<std::string> m_algorithmName;
   std::vector<std::string> m_objectName;
   
