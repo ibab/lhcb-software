@@ -1,0 +1,35 @@
+from OnlineEnv import *
+
+def _run(app):     end_config()
+
+pid = PartitionID
+pnam = PartitionName
+
+#------------------------------------------------------------------------------------------------
+def runSender(target): _run(dataSenderApp(pid,pnam,target,'RESULT',False,True))
+#------------------------------------------------------------------------------------------------
+def runReceiver():     _run(dataReceiverApp(pid,pnam,'OUT',True))
+#------------------------------------------------------------------------------------------------
+def runEvtProd():      _run(mepConverterApp(pid,pnam,bursts=True,freq=0.001))
+#------------------------------------------------------------------------------------------------
+def runEvtHolder():    _run(mepHolderApp(pid,pnam))
+#------------------------------------------------------------------------------------------------
+def runMBMRead(percent=1,print_freq=0.0001):
+  _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
+#------------------------------------------------------------------------------------------------
+def runEvtServer(buffer, partitionBuffers):
+  _run(evtServerApp(pid,pnam,buffer=buffer,partitionBuffers=partitionBuffers))
+#------------------------------------------------------------------------------------------------
+def runOutBuffer():
+  _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=OUT -c',partitionBuffers=True))
+#------------------------------------------------------------------------------------------------
+def runDiskWR(buffer, partitionBuffers, decode, output):
+  _run(diskWRApp(pid,pnam,buffer,partitionBuffers,decode,output))
+#------------------------------------------------------------------------------------------------
+def runNetCons(source,load=1,print_freq=0.0005):
+  algs = [storeExplorer(load=load,freq=print_freq)]
+  _run(netConsumerApp(pid,pnam,source,algs))
+#------------------------------------------------------------------------------------------------
+def runMepBuffer():
+  flags = '-s=7000 -e=100 -u=5 -b=12 -f -i=MEP -c -s=200 -e=500 -u=14 -f -i=EVENT -c -s=200 -e=100 -u=14 -f -i=RESULT -c'
+  _run(mbmInitApp(pid,pnam,flags))

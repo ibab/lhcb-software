@@ -1,0 +1,242 @@
+import Gaudi.Configuration as CFG
+import Configurables as Configs
+
+mbm_requirements={}
+mbm_requirements['MEP']   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
+mbm_requirements['EVENT'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
+mbm_requirements['RESULT']= "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ALL;Frequency=PERC;Perc=100.0"
+mbm_requirements['OTHER'] = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=%s;Frequency=PERC;Perc=100.0"
+
+ApplicationMgr = CFG.ApplicationMgr
+
+#------------------------------------------------------------------------------------------------
+def patchExitHandler():
+  "Remove the GaudiPython exithandler. It is only harmful in the online envoriment"
+  import atexit
+  handlers = []
+  for i in atexit._exithandlers:
+    if str(i[0]).find('function _atexit_ at ') == -1:
+      handlers.append(i)
+  atexit._exithandlers = handlers
+  #print atexit._exithandlers
+  
+#------------------------------------------------------------------------------------------------
+def printConfiguration():
+  "Print the configuration setup."
+  import pprint
+  pprint.pprint(CFG.configurationDict())
+
+#------------------------------------------------------------------------------------------------
+def storeExplorer(load=1,freq=0.0001,name='StoreExplorerAlg'):
+  alg                = CFG.StoreExplorerAlg(name)
+  alg.Load           = load
+  alg.PrintFreq      = freq
+  return alg
+
+#------------------------------------------------------------------------------------------------
+def prescaler(percent=25,name='Prescaler'):
+  alg                = CFG.Prescaler(name)
+  alg.PercentPass    = percent
+  alg.OutputLevel    = 4
+  return alg
+
+#------------------------------------------------------------------------------------------------
+def diskWriter(output,input=3,compress=0,genMD5=True,datatype=2,name='Writer'):
+  alg                      = Configs.LHCb__MDFWriter(name)
+  alg.Connection           = output
+  alg.InputDataType        = input
+  alg.DataType             = datatype
+  alg.Compress             = compress
+  alg.GenerateMD5          = genMD5
+  return alg
+
+#------------------------------------------------------------------------------------------------
+def evtSender(target,name='Sender'):
+  sender                   = Configs.LHCb__SocketDataSender(name)
+  sender.DataSink          = target
+  sender.Compress          = 0
+  sender.InputDataType     = 1
+  sender.DataType          = 3
+  return sender
+  
+#------------------------------------------------------------------------------------------------
+def msgSvc():
+  svc                  = CFG.MessageSvc()
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def mepManager(partitionID,partitionName,buffers,partitionBuffers=False,flags=None,name='MEPManager'):
+  svc = Configs.LHCb__MEPManager(name)
+  svc.Buffers           = buffers
+  svc.PartitionID       = partitionID
+  svc.PartitionName     = partitionName
+  svc.PartitionBuffers  = partitionBuffers
+  if flags is not None: svc.InitFlags = flags
+  return svc
+  
+#------------------------------------------------------------------------------------------------
+def evtServerRunable(mepMgr,buffer,request=None,name='Runable'):
+  svc = Configs.LHCb__EventServerRunable(name)
+  if request is not None: 
+    if request == 'MEP':      svc.REQ = mbm_requirements['MEP']
+    elif request == 'EVENT':  svc.REQ = mbm_requirements['EVENT']
+    elif request == 'RESULT': svc.REQ = mbm_requirements['RESULT']
+    else:                     svc.REQ = mbm_requirements['OTHER']%(str(request),)
+  svc.MEPManager        = mepMgr
+  svc.Input             = buffer
+  return svc  
+  
+#------------------------------------------------------------------------------------------------
+def evtRunable(mepMgr,name='Runable'):
+  svc = Configs.LHCb__EventRunable(name)
+  svc.MEPManager        = mepMgr
+  return svc
+  
+#------------------------------------------------------------------------------------------------
+def onlineRunable(wait,name='Runable'):
+  svc = Configs.LHCb__OnlineRunable(name)
+  svc.Wait = wait
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def evtReceiver(buffer,name='Receiver'):
+  svc = Configs.LHCb__SocketDataReceiver(name)
+  svc.Buffer = buffer
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def rawPersistencySvc():
+  svc                  = CFG.EventPersistencySvc()
+  svc.CnvServices      = ['LHCb::RawDataCnvSvc/RawDataCnvSvc' ]
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def evtDataSvc():
+  svc                  = CFG.EventDataSvc()
+  svc.RootCLID         = 1
+  svc.EnableFaultHandler = True
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def mbmSelector(input=None,type=None,decode=True):
+  svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
+  svc.Decode     = decode
+  if input is not None:
+    svc.Input    = input
+    if input == 'MEP':          svc.REQ1 = mbm_requirements['MEP']
+    elif input == 'EVENT':      svc.REQ1 = mbm_requirements['EVENT']
+    elif input == 'RESULT':     svc.REQ1 = mbm_requirements['RESULT']
+    elif type is not None:      svc.REQ1 = mbm_requirements['OTHER']%(str(type),)
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def netSelector(input=None,type=None):
+  svc = Configs.LHCb__NetworkEvtSelector('EventSelector')
+  if input is not None:    svc.Input    = input
+  if type is not None:     svc.REQ1 = mbm_requirements['OTHER']%(str(type),)
+  return svc
+
+#------------------------------------------------------------------------------------------------
+def end_config():
+  import GaudiPython
+  gaudi = GaudiPython.AppMgr()
+  patchExitHandler()
+  printConfiguration()
+  return gaudi
+
+#------------------------------------------------------------------------------------------------
+def _application(histpersistency, evtsel=None, extsvc=None, runable=None, algs=None):
+  app                      = ApplicationMgr()
+  app.HistogramPersistency = histpersistency
+  if extsvc is not None:      app.ExtSvc   = extsvc
+  if evtsel is not None:      app.EvtSel   = evtsel
+  if runable is not None:     app.Runable  = runable
+  if algs is not None:        app.TopAlg  += algs
+  return app
+
+#------------------------------------------------------------------------------------------------
+#
+#  Some default applications used for dataflow
+#
+#------------------------------------------------------------------------------------------------
+def mbmInitApp(partID, partName, flags,partitionBuffers=False):
+  "MBM manager applications to initialize buffer managers."
+  mepMgr = mepManager(partID,partName,[],partitionBuffers=partitionBuffers,flags=flags)
+  return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=onlineRunable(1))
+
+#------------------------------------------------------------------------------------------------
+def mepHolderApp(partID, partName):
+  "MEP Holder application for usage of multi event packet buffers."
+  extsvc               = [Configs.MonitorSvc(), mepManager(partID,partName,['MEP'])]
+  runable              = Configs.LHCb__MEPHolderSvc('Runable')
+  runable.Requirements = [mbm_requirements['MEP']]
+  return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable)
+
+#------------------------------------------------------------------------------------------------
+def mepConverterApp(partID, partName, bursts=True, freq=0.):
+  "MEP to event converter application for usage of multi event packet buffers."
+  mepMgr               = mepManager(partID,partName,['MEP','EVENT'])
+  runable              = Configs.LHCb__MEPConverterSvc('Runable')
+  runable.BurstMode    = bursts
+  runable.PrintFreq    = freq
+  runable.Requirements = [mbm_requirements['MEP']]
+  return _application('NONE',evtsel='NONE',extsvc=[Configs.MonitorSvc(), mepMgr],runable=runable)
+
+#------------------------------------------------------------------------------------------------
+def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,algs=[]):
+  mepMgr               = mepManager(partID,partName,[buffer], partitionBuffers)
+  runable              = evtRunable(mepMgr)
+  evtSel               = mbmSelector(buffer,decode=decode)
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  sender               = evtSender(target)
+  algs                 = algs
+  algs.append(sender)
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def dataReceiverApp(partID, partName, buffer, partitionBuffers=True,algs=[]):
+  mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers)
+  runable              = onlineRunable(3)
+  receiver             = evtReceiver(buffer)
+  extsvc               = [Configs.MonitorSvc(),mepMgr,receiver]
+  return _application('NONE',evtsel='NONE',extsvc=extsvc,runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def evtServerApp(partID, partName, buffer, partitionBuffers):
+  "Event server application to distribute events over the network to clients."
+  mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers)
+  runable              = evtServerRunable(mepMgr,buffer=buffer,request='USER')
+  evtPers              = rawPersistencySvc()
+  return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=runable)
+
+#------------------------------------------------------------------------------------------------
+def netConsumerApp(partID, partName, source, algs=[]):
+  "Simple network consumer picking events from the event server application."
+  mepMgr               = mepManager(partID,partName,[])
+  runable              = evtRunable(mepMgr)
+  evtSel               = netSelector(source,'ALL')
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def defaultFilterApp(partID, partName, percent, print_freq):
+  mepMgr               = mepManager(partID,partName,['EVENT','RESULT'])
+  runable              = evtRunable(mepMgr)
+  evtSel               = mbmSelector('EVENT')
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  seq                  = CFG.Sequencer('SendSequence')
+  seq.Members          = [prescaler(percent=percent), Configs.LHCb__DecisionSetterAlg('DecisionSetter')]
+  algs                 = [storeExplorer(load=1,freq=print_freq),seq]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def diskWRApp(partID, partName, buffer, partitionBuffers, decode, output):
+  "Simple disk writer dumping events from file to disk."
+  mepMgr               = mepManager(partID,partName,[buffer],partitionBuffers=partitionBuffers)
+  evtSel               = mbmSelector(input=buffer,decode=decode,type='ALL')
+  evtPers              = rawPersistencySvc()
+  algs                 = [storeExplorer(load=1,freq=0.001),diskWriter(output=output,input=3,compress=0)]
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=evtRunable(mepMgr),algs=algs)
