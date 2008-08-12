@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: testCalo.py,v 1.2 2008-08-07 12:35:56 ibelyaev Exp $ 
+# $Id: testCalo.py,v 1.3 2008-08-12 13:19:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  Simple script to test the class Hlt1Line
@@ -12,7 +12,7 @@ Simple script to test the class Hlt1Line
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -21,7 +21,11 @@ from Configurables import GaudiSequencer
 
 from HltConf.HltLine import Hlt1Line   as Line
 from HltConf.HltLine import Hlt1Member as Member
-from HltConf.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop , hlt1Termini
+from HltConf.HltLine import hlt1Lines
+from HltConf.HltLine import addHlt1Prop, rmHlt1Prop , hlt1Termini
+from HltConf.HltLine import hlt1InputSelections, hlt1OutputSelections, hlt1Selections
+
+
 
 
 recoRZVelo = GaudiSequencer('Hlt1RecoRZVeloSequence') 
@@ -61,6 +65,15 @@ singleHadron3 = singleHadron.clone (
     , TMVeloCalo = { 'MatchName' : 'SomeOtherMatchAlgorihtm'}
     ) 
 
+singleHadron4 = singleHadron.clone (
+    'SingleHadron4'
+    , L0  = []  
+    , HLT = [ 'selection1' ,'selection2' ] 
+    , prescale  = 0.05 
+    , postscale = 0.65
+    , TMVeloCalo = { 'MatchName' : 'SomeOtherMatchAlgorihtm'}
+    ) 
+
 print singleHadron 
 
 addHlt1Prop ( 'OutputLevel'     ) 
@@ -70,9 +83,21 @@ addHlt1Prop ( 'OutputSelection' )
 
 print singleHadron3
 
+print singleHadron4
+
 print " The list of all created lines:\n", hlt1Lines() 
 print ' Termini:\n', hlt1Termini ()
-    
+
+print 'All input  selections', hlt1InputSelections()
+print 'All output selections', hlt1OutputSelections()
+
+sels = hlt1Selections()
+
+print ' INPUT        ', sels['Input']
+print ' OUTPUT       ', sels['Output']
+print ' INPUT&OUTOUT ', sels['Input&Output']
+print ' INPUT-OUTPUT ', sels['Input-Output']
+print ' OUTPUT-INPUT ', sels['Output-Input']
 # =============================================================================
 # The END 
 # =============================================================================

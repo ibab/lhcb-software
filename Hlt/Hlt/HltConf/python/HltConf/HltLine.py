@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.3 2008-08-07 12:35:56 ibelyaev Exp $ 
+# $Id: HltLine.py,v 1.4 2008-08-12 13:19:28 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #
@@ -24,7 +24,7 @@ The module defines three major public symbols :
  - function hlt1Termini :
       simle function which returns termini for all created Hlt lines
       
-Also three helper symbols are defined:
+Also few helper symbols are defined:
 
  - function hlt1Props  :
       simple function which shows the current list of 'major'
@@ -35,11 +35,26 @@ Also three helper symbols are defined:
  - function rmHlt1Prop :
       the function which allows to remove the properties/attributes
       from the list of of 'major' properties to be inspected 
-  
+
+ - function hlt1InputSelections :
+      get tuple of all known input selections
+      
+ - function hlt1OutputSelections :
+      get tuple of all known output selections
+
+ - function hlt1Selections :
+      get dictionaty for all known selections:
+         'Input'        : all input  selections 
+         'Output'       : all output selections 
+         'All'          : all input&output selections 
+         'Input-Output' : all unmatched input selections 
+         'Output-Input' : all unmatched output selections 
+         'Input&Output' : all matched selections
+         
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself 
@@ -48,13 +63,19 @@ __all__ = ( 'Hlt1Line'    ,  ## the Hlt line itself
             'hlt1Termini' ,  ## all termini for created alleys 
             'hlt1Props'   ,  ## list of all major properties for inspection
             'addHlt1Prop' ,  ## add attribute/property into the list 
-            'rmHlt1Prop'  )  ## remove attribute/property form the list 
+            'rmHlt1Prop'  ,  ## remove attribute/property form the list
+            'hlt1InputSelections'  , ## the list of all known input selections
+            'hlt1OutputSelections' , ## the list of all known output selections
+            'hlt1Selections' ) ## the list of all matched selections
+            
+            
 
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
 
 from Configurables import DeterministicPrescaler as PreScaler
 
 from Configurables import HltL0Filter            as L0Filter 
+from Configurables import HltSelectionFilter     as HLTFilter 
 
 from Configurables import HltTrackUpgrade        as TrackUpgrade 
 from Configurables import HltTrackMatch          as TrackMatch   
@@ -79,6 +100,10 @@ def postscalerName ( line ) :
 def l0entryName    ( line ) :
     """ Convention: the name of 'L0Filter' algorithm inside HltLine """
     return 'Hlt1%sL0Filter'   % line
+## Convention: the name of 'HLTFilter' algorithm inside HltLine
+def hltentryName    ( line ) :
+    """ Convention: the name of 'HLTFilter' algorithm inside HltLine """
+    return 'Hlt1%sHltFilter'   % line
 ## Convention: the generic name of 'member' algorithm inside HltLine 
 def memberName     ( member, line ) :
     """ Convention: the generic name of 'member' algorithm inside HltLine """
@@ -125,6 +150,89 @@ def hlt1Termini () :
     t = [ l.terminus() for l in hlt1Lines() ]
     return tuple(t)
 
+## the list of all input selections
+_hlt_1_input_selections__  = []
+## the list of all output selections
+_hlt_1_output_selections__ = []
+
+# =============================================================================
+## get the list of all known input selections
+def hlt1InputSelections ( ) :
+    """
+    Get the full list/tuple of known input selections
+
+    >>> inputs = hlt1InputSelections()
+    
+    """
+    return tuple(_hlt_1_input_selections__)
+
+
+# =============================================================================
+## get the list of all known output selections
+def hlt1OutputSelections ( ) :
+    """
+    Get the full list/tuple of known output selections
+
+    >>> outputs = hlt1OutputSelections()
+    
+    """
+    return tuple(_hlt_1_output_selections__)
+
+# =============================================================================
+## add the selection to the list of input selections
+def _add_to_hlt1_input_selections_ ( sel ) :
+    """
+    Add the selection to the list of input selections
+    """
+    if list is not type(sel) and tuple is not type(sel) : sel = [sel]
+    for s in sel :
+        if s not in hlt1InputSelections() :
+            _hlt_1_input_selections__.append ( s )
+    _hlt_1_input_selections__.sort()
+    return hlt1InputSelections ()
+
+# =============================================================================
+## add the selection to the list of output selections
+def _add_to_hlt1_output_selections_ ( sel ) :
+    """
+    Add the selection to the list of output selections
+    """
+    if list is not type(sel) and tuple is not type(sel) : sel = [sel]
+    for s in sel :
+        if s not in hlt1OutputSelections() :
+            _hlt_1_output_selections__.append ( s)
+    _hlt_1_output_selections__.sort()
+    return hlt1OutputSelections ()
+
+
+# =============================================================================
+## get the dictionary of all selections 
+def hlt1Selections() :
+    """
+    Get the dictionary of all selections
+
+    >>> sels = hlt1Selections()
+
+    >>> print sels['All']    # get all selections 
+    >>> print sels['Input']  # get input  selections 
+    >>> print sels['Output'] # get output selections 
+    >>> print sels['Input-Output'] # get unmatched input selections 
+    >>> print sels['Output-Input'] # get unmatched output selections 
+    >>> print sels['Input&Output'] # get matched input/output selections 
+    
+    """
+    dct = {}
+    dct [ 'Input'  ] = hlt1InputSelections ()
+    dct [ 'Output' ] = hlt1OutputSelections ()
+    import sets
+    s1 = sets.Set( hlt1InputSelections  () )
+    s2 = sets.Set( hlt1OutputSelections () )
+    dct [ 'All' ] = tuple(s1.union(s2) )
+    dct [ 'Input&Output' ] = tuple(s1.intersection(s2) )
+    dct [ 'Input-Output' ] = tuple(s1.difference(s2))
+    dct [ 'Output-Input' ] = tuple(s2.difference(s1))
+    return dct
+    
 # =============================================================================
 ## Add the created line into the local storage of created Hlt1Lines 
 def _add_to_hlt1_lines_( line ) :
@@ -146,7 +254,7 @@ _types_ = { TrackUpgrade    : 'TU'
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'L0' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'L0' , 'algos' , 'HLT' ) 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -346,13 +454,15 @@ class Hlt1Line(object):
     #  The major arguments
     #    - 'name'      : short name of the line, e.g, 'SingleMuon'
     #    - 'prescale'  : the prescaler factor
-    #    - 'L0'        : the list of L0Channels names for HltL0Filter 
+    #    - 'L0'        : the list of L0Channels names for L0Filter 
+    #    - 'HLT'       : the list of HLT selections for HLTFilter
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
     def __init__ ( self           ,
                    name           ,   # the base name for the Line
                    prescale  = 1  ,   # prescale factor
                    L0        = [] ,   # list of L0 cnannels  
+                   HLT       = [] ,   # list of HLT selections  
                    postscale = 1  ,   # prescale factor
                    algos     = [] ,   # the list of algorithms/members
                    **args         ) : # other configuration parameters
@@ -362,7 +472,8 @@ class Hlt1Line(object):
         The major arguments
         - 'name'      : short name of the line, e.g, 'SingleMuon'
         - 'prescale'  : the prescaler factor
-        - 'L0'        : the list of L0Channels names for HltL0Filter 
+        - 'L0'        : the list of L0Channels names for L0Filter 
+        - 'HLT'       : the list of HLT selections for HLTFilter  
         - 'algos'     : the list of actual members 
         - 'postscale' : the postscale factor
         
@@ -370,12 +481,20 @@ class Hlt1Line(object):
         # 1) save all parameters (needed for the proper cloning)
         self._name      = name
         self._prescale  = prescale
-        if str is type(L0) : L0 = [L0] 
-        self._L0        = L0  
+        
+        if str is type(L0)  : L0  = [L0]
+        self._L0        = L0
+        
+        if str is type(HLT) : HLT = [HLT] 
+        self._HLT       = HLT
+        
         self._postscale = postscale
         self._algos     = algos
         self._args      = args
 
+        if L0 and HLT :
+            raise AttributeError, "The attribute L0 and HLT are exclusive %s" % name 
+        
         # terminus:
         self._terminus  = None 
         
@@ -391,7 +510,10 @@ class Hlt1Line(object):
         line = self.subname()
         
         _members += [ PreScaler ( prescalerName  ( line ) , AcceptFraction = self._prescale  ) ]
-        _members += [ L0Filter  ( l0entryName    ( line ) , L0Channels     = self._L0        ) ]
+        if   L0  :
+            _members += [ L0Filter   ( l0entryName  ( line ) , L0Channels      = self._L0  ) ]
+        elif HLT : 
+            _members += [ HLTFilter  ( hltentryName ( line ) , InputSelections = self._HLT ) ]
         
         _outputsel = None
 
@@ -471,12 +593,30 @@ class Hlt1Line(object):
         ## finally add the decision algorithm!
         _members += [ LineDecision ( decisionName ( line ) ) ]   
         self._terminus = decisionName ( line )
-                    
+
+        # register selections:
+        for _m in _members :
+            if hasattr ( _m , 'InputSelection'  ) :
+                _add_to_hlt1_input_selections_ ( _m.InputSelection  )
+            if hasattr ( _m , 'InputSelections' ) :
+                _add_to_hlt1_input_selections_ ( _m.InputSelections )
+            if hasattr ( _m , 'InputSelection1' ) :
+                _add_to_hlt1_input_selections_ ( _m.InputSelection1 )
+            if hasattr ( _m , 'InputSelection2' ) :
+                _add_to_hlt1_input_selections_ ( _m.InputSelection2 )
+            if hasattr ( _m , 'InputSelection3' ) :
+                _add_to_hlt1_input_selections_ ( _m.InputSelection3 )
+            if hasattr ( type(_m) , 'OutputSelection' ) :
+                if hasattr ( _m , 'OutputSelection' ) :
+                    _add_to_hlt1_output_selections_ ( _m.OutputSelection )
+                else :
+                    _add_to_hlt1_output_selections_ ( _m.name         () )
+
         # finally create the sequence
         self._sequencer = GaudiSequencer ( self.name()        ,
                                            Members = _members ,
                                            **mdict            ) ;
-        
+
         # register into the local storage of all created Lines
         _add_to_hlt1_lines_( self ) 
 
@@ -568,6 +708,7 @@ class Hlt1Line(object):
         __prescale   = args.get ( 'prescale'  , self._prescale  ) 
         __postscale  = args.get ( 'postscale' , self._postscale )  
         __L0         = args.get ( 'L0'        , self._L0        )         
+        __HLT        = args.get ( 'HLT'       , self._HLT       )         
         __algos      = args.get ( 'algos'     , self._algos     )      
         __args       = self._args
 
@@ -590,6 +731,7 @@ class Hlt1Line(object):
         return Hlt1Line ( name      = __name       ,
                           prescale  = __prescale   ,
                           L0        = __L0         ,
+                          HLT       = __HLT        ,
                           postscale = __postscale  ,
                           algos     = __algos      , **__args )
     
