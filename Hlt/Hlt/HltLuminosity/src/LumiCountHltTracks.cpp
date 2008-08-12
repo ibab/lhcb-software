@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -95,12 +95,12 @@ StatusCode LumiCountHltTracks::execute() {
     // initialize output class
     hltLS = new LHCb::HltLumiSummary();
     m_HltLumiSummarys->insert( hltLS );
-    info() << m_OutputContainerName << " not found, made a new one" << endmsg ;
+    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
     hltLS = *m_HltLumiSummarys->begin();
-    info() << m_OutputContainerName << " found, used the old one" << endmsg ;
+    debug() << m_OutputContainerName << " found, used the old one" << endmsg ;
   }
 
 

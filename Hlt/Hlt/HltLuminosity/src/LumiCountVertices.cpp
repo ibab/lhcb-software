@@ -1,4 +1,4 @@
-// $Id: LumiCountVertices.cpp,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiCountVertices.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -90,19 +90,19 @@ StatusCode LumiCountVertices::execute() {
     // initialize output class
     hltLS = new LHCb::HltLumiSummary();
     m_HltLumiSummarys->insert( hltLS );
-    info() << m_OutputContainerName << " not found, made a new one" << endmsg ;
+    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
     hltLS = *m_HltLumiSummarys->begin();
-    info() << m_OutputContainerName << " found, used the old one" << endmsg ;
+    debug() << m_OutputContainerName << " found, used the old one" << endmsg ;
   }
 
   // ------------------------------------------
   // load the track objects
   int nCounter =  0;
   if ( !exist<LHCb::RecVertices>(m_InputSelectionName) ){
-    info() << m_InputSelectionName << " not found" << endmsg ;
+    error() << m_InputSelectionName << " not found" << endmsg ;
   } else {
     // get the container
     m_InputContainer = get<LHCb::RecVertices>(m_InputSelectionName);

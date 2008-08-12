@@ -3,6 +3,8 @@
 ! Responsible : Jaap Panman
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
+! 2008-08-12 - Gerhard Raven
+ - reduce verbosity
 
 !========================== HltLuminosity v1r1 2008-08-06 ===================
 ! 2008-08-01 - Gerhard Raven

@@ -1,4 +1,4 @@
-// $Id: HltLumiFillRawBuffer.cpp,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: HltLumiFillRawBuffer.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -7,6 +7,13 @@
 // local
 #include "Event/HltLumiSummary.h"
 #include "HltLumiFillRawBuffer.h"
+
+//////////////////////////////////////////
+//
+// TODO: move to HltRawData (GR)
+//
+//////////////////////////////////////////
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltLumiFillRawBuffer
@@ -122,7 +129,7 @@ void HltLumiFillRawBuffer::fillDataBankShort ( ) {
   if ( exist<LHCb::HltLumiSummarys>(m_inputBank) ){
     LHCb::HltLumiSummarys* m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_inputBank);
     LHCb::HltLumiSummary* hltLS = *m_HltLumiSummarys->begin();
-    info() << m_inputBank << " found" << endmsg ;
+    debug() << m_inputBank << " found" << endmsg ;
 
     for ( int iKey = 0; iKey < m_LastKey; ++iKey ) {
       // check for existing counters

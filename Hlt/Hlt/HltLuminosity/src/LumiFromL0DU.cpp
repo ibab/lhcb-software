@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.1 2008-07-31 21:34:47 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.2 2008-08-12 20:33:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -91,19 +91,19 @@ StatusCode LumiFromL0DU::execute() {
     // initialize output class
     hltLS = new LHCb::HltLumiSummary();
     m_HltLumiSummarys->insert( hltLS );
-    info() << m_OutputContainerName << " not found, made a new one" << endmsg ;
+    debug() << m_OutputContainerName << " not found, made a new one" << endmsg ;
   }
   else {
     m_HltLumiSummarys = get<LHCb::HltLumiSummarys>(m_OutputContainerName);
     hltLS = *m_HltLumiSummarys->begin();
-    info() << m_OutputContainerName << " found, used the old one" << endmsg ;
+    debug() << m_OutputContainerName << " found, used the old one" << endmsg ;
   }
 
   // ------------------------------------------
   // load the L0DU configuration
   int nCounter =  0;
   if ( !exist<LHCb::L0DUReport>(m_InputSelectionName) ){
-    info() << m_InputSelectionName << " not found" << endmsg ;
+    warning() << m_InputSelectionName << " not found" << endmsg ;
   } else {
     // get the container
     m_L0DUReport = get<LHCb::L0DUReport>(m_InputSelectionName);

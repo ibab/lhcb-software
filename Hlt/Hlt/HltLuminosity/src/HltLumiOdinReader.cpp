@@ -1,4 +1,4 @@
-// $Id: HltLumiOdinReader.cpp,v 1.2 2008-08-01 08:13:21 graven Exp $
+// $Id: HltLumiOdinReader.cpp,v 1.3 2008-08-12 20:33:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,7 @@ StatusCode HltLumiOdinReader::execute() {
   std::stringstream trType("");
   bxType << (LHCb::ODIN::BXTypes) odin->bunchCrossingType();
   trType << (LHCb::ODIN::TriggerType) odin->triggerType();
-  info() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
+  debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str() << endreq;
   m_selection.output()->setDecision(true);
 
   return StatusCode::SUCCESS;
