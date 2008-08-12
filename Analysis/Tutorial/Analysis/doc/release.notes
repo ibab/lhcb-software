@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v7r5 2008-08-12 ===================
+! 2008-08-12 - Patrick Koppenburg
+ - Fix a few typos. Tag as v7r5 to match instructions from wiki page.
+
 ! 2008-08-07 - Patrick Koppenburg
  - Use IDistanceCalculator everywhere
  - Compile all solutions

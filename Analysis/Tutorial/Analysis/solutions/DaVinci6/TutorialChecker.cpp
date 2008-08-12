@@ -1,4 +1,4 @@
-// $Id: TutorialChecker.cpp,v 1.13 2008-07-10 16:47:00 pkoppenb Exp $
+// $Id: TutorialChecker.cpp,v 1.14 2008-08-12 13:07:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -110,16 +110,16 @@ StatusCode TutorialChecker::fillReco(Tuple& tuple,const LHCb::Particle* b) {
     err() << "Cannot store more than 20 PVs. Resize ntuple" << endmsg;
     return StatusCode::FAILURE ;
   }
-  std::vector<double> ips, ipes;
+  std::vector<double> ips, ipchi2s;
   for ( LHCb::RecVertex::ConstVector::const_iterator ipv = PVs.begin() ; 
         ipv != PVs.end() ; ++ipv ){
-    double ip, ipe;
-    distanceCalculator()->distance(b, (*ipv), ip, ipe);
+    double ip, ipchi2;
+    distanceCalculator()->distance(b, (*ipv), ip, ipchi2);
     ips.push_back(ip);
-    ipes.push_back(ipe);
+    ipchi2s.push_back(ipchi2);
   }  
   tuple->farray( "IP",  ips.begin(), ips.end(), "PVs", 20);
-  tuple->farray( "IPe", ipes.begin(), ipes.end(), "PVs", 20);
+  tuple->farray( "IPchi2", ipchi2s.begin(), ipchi2s.end(), "PVs", 20);
   // One could think about going down to the daughters...
 
   return StatusCode::SUCCESS;
