@@ -8,6 +8,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 	KRunOnPhysics number :=1, KRunOnCalib number :=0, KRunOnEmpty number :=0, SFreq float := NULL, 
 	Ref  varchar2:='NONE' );
  function RenameTask(oldName IN varchar2, newName IN varchar2) return number;
+ function RenameAlgo(Task IN varchar2, oldName IN varchar2, newName IN varchar2) return number;
  procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '');
  procedure DeclareHistByServiceName(ServiceName IN varchar2);
  function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  varchar2,  thetype  VIEWHISTOGRAM.HSTYPE%TYPE ) 
@@ -244,6 +245,8 @@ exception
  
 -----------------------
 function RenameTask(oldName IN varchar2, newName IN varchar2) return number is
+ oldRegTask varchar2(100) := '^'||oldName||'/';
+ newRegTask varchar2(100) := newName||'/';
  begin
   savepoint beforeRNTwrite;
   DeclareTask(newName);
@@ -251,6 +254,8 @@ function RenameTask(oldName IN varchar2, newName IN varchar2) return number is
       (select RUNONPHYSICS,RUNONCALIB,RUNONEMPTY,SUBSYS1,SUBSYS2,SUBSYS3,SAVEFREQUENCY,REFERENCE from task where
        TASKNAME=oldName) where TASKNAME=newName;
   UPDATE HISTOGRAMSET set HSTASK=newName where HSTASK=oldName;
+  UPDATE HISTOGRAM set NAME=REGEXP_REPLACE(NAME,oldRegTask,newRegTask) where HSET in 
+      (SELECT HSID from HISTOGRAMSET where HSTASK=newName);
   delete from TASK where TASKNAME=oldName;
   if (SQL%ROWCOUNT = 0) then
    ROLLBACK TO beforeRNTwrite;
@@ -262,6 +267,26 @@ function RenameTask(oldName IN varchar2, newName IN varchar2) return number is
   raise_application_error(-20050,SQLERRM);
 end RenameTask;
 -----------------------
+
+function RenameAlgo(Task IN varchar2, oldName IN varchar2, newName IN varchar2) return number is
+ oldRegTask varchar2(100) := '/'||oldName||'/';
+ newRegTask varchar2(100) := '/'||newName||'/';
+ begin
+  savepoint beforeRNAwrite;
+  UPDATE HISTOGRAMSET set HSALGO=newName where HSALGO=oldName and HSTASK=Task;
+  UPDATE HISTOGRAM set NAME=REGEXP_REPLACE(NAME,oldRegTask,newRegTask) where HSET in 
+      (SELECT HSID from HISTOGRAMSET where HSALGO=newName and HSTASK=Task);
+  if (SQL%ROWCOUNT = 0) then
+   ROLLBACK TO beforeRNAwrite;
+  end if;
+  return SQL%ROWCOUNT;
+ exception
+ when OTHERS then 
+  ROLLBACK TO beforeRNAwrite;
+  raise_application_error(-20050,SQLERRM);
+end RenameAlgo;
+-----------------------
+
 
 procedure DeclareHistogram(tk IN varchar2,algo IN  varchar2 := '', title IN  varchar2:= '_BYSN_', 
                            mytype  VIEWHISTOGRAM.HSTYPE%TYPE := '') is
