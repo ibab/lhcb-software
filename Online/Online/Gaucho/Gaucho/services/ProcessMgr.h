@@ -50,11 +50,14 @@ public:
 
   void setPartVector(const std::vector<std::string> &partName) {m_partName = partName; m_withPartitionName = true;}
   void setTaskVector(const std::vector<std::string> &taskName) {m_taskName = taskName;}
+  void setSubFarmVector(const std::vector<std::string> &subfarmName) {m_subfarmName = subfarmName;}
   void setAlgorithmVector(const std::vector<std::string> &algorithmName) {m_algorithmName = algorithmName;}
   void setObjectVector(const std::vector<std::string> &objectName) {m_objectName = objectName;}
   void setUtgid(const std::string &utgid);
+
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void timerHandler();
+
 
 private:
   std::set<std::string> decodeServerList(const std::string &serverListS);
@@ -71,6 +74,7 @@ protected:
   bool m_withPartitionName;
   std::vector<std::string> m_partName;
   std::vector<std::string> m_taskName;
+  std::vector<std::string> m_subfarmName;
   std::vector<std::string> m_algorithmName;
   std::vector<std::string> m_objectName;
   std::string m_saveDir;
