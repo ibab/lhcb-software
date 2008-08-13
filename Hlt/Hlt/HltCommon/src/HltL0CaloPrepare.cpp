@@ -1,9 +1,10 @@
-// $Id: HltL0CaloPrepare.cpp,v 1.10 2008-08-11 06:41:32 graven Exp $
+// $Id: HltL0CaloPrepare.cpp,v 1.11 2008-08-13 07:19:27 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "boost/foreach.hpp"
+#include "boost/assign/list_of.hpp"
 #include <memory>
 #include "Event/L0DUBase.h"
 #include "Event/L0CaloCandidate.h"
@@ -77,14 +78,10 @@ HltL0CaloPrepare::HltL0CaloPrepare( const std::string& name,
 {
   declareProperty("MinEt", m_minEt = 3500.);
   declareProperty("CaloType", m_caloType.property() );
-
-  declareProperty("CaloCandidatesLocation", m_caloCandidatesLocation = 
-                  L0CaloCandidateLocation::Full);
-                  // L0CaloCandidateLocation::Default);
-
   declareProperty("CaloMakerTool", m_caloMakerName = "");
 
-  m_selection.declareProperties();
+  //FIXME/TODO: check whether Full should not be Default...
+  m_selection.declareProperties( boost::assign::map_list_of(1,std::string("TES:")+L0CaloCandidateLocation::Full)  );
 }
 //=============================================================================
 // Destructor
@@ -106,8 +103,6 @@ StatusCode HltL0CaloPrepare::initialize() {
   m_histoEt = initializeHisto("Et",0.,6000.,100);
   m_histoEt1 = initializeHisto("Et1",0.,6000.,100);
 
-  debug() << " calo candidates location " 
-          << m_caloCandidatesLocation << endreq;
 
   m_caloMaker = (m_caloMakerName.empty() 
                     ? (ICaloSeedTool*)0
@@ -123,12 +118,10 @@ StatusCode HltL0CaloPrepare::initialize() {
 //=============================================================================
 StatusCode HltL0CaloPrepare::execute() {
 
-  L0CaloCandidates* input = get<L0CaloCandidates>(m_caloCandidatesLocation);
   Tracks* output = new Tracks();
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
 
-  // BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
-  BOOST_FOREACH(const L0CaloCandidate* calo, *input ) {
+  BOOST_FOREACH(const L0CaloCandidate* calo, *m_selection.input<1>()) {
     if (calo->type() == m_caloType() && calo->et() > m_minEt) {
         std::auto_ptr<Track> tcalo( new Track() );
         if (m_caloMaker) {
@@ -143,12 +136,10 @@ StatusCode HltL0CaloPrepare::execute() {
   }
 
   if (m_debug) {
-    // debug()  << "# Input: " << m_selection.input<1>()->size() 
-    debug()  << "# Input: " << input->size() 
+    debug()  << "# Input: " << m_selection.input<1>()->size() 
              << " -> # Output: " << m_selection.output()->size() << endreq;
   }
   if (m_debug) printInfo(" Calos ",*m_selection.output());
-
   return StatusCode::SUCCESS;
 }
 

@@ -22,8 +22,6 @@
 ///////////  alternative: register ourselves as auditor (for parent algo only?)
 /// usecase: see HltCommon/src/HltTFilter, the 'prepare' variant...
 
-///////////TODO: once an algorithm has registered an output, don't allow it to
-///////////      pick up another input, nor to register another output
 ///////////TODO; verify that the output for a given algorithm has all inputs for
 ///////////      that algorithm registered in the selection (and nothing more/less)
 ///////////TODO: don't allow changes after first beginEvent...
@@ -41,7 +39,6 @@ HltDataSvc::HltDataSvc( const std::string& name,
   , m_annSvc(0)
   , m_hltConf(0)
 {
-    declareProperty("OutputPrefix" ,m_TESOutputPrefix = "Hlt/Selection");
 }
 
 //=============================================================================
@@ -127,9 +124,12 @@ HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesF
     }
     if (sel->id().empty()) {
         error() << " attempt by " << parent->name() << " to register an unnamed selection... " << endmsg;
-        assert(1==0);
         return StatusCode::FAILURE;
     }
+    typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
+    std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
+    if (p.first!=p.second) return StatusCode::FAILURE; // already there...
+
     if (!originatesFromTES) { 
         if (!annSvc().value("Hlt1SelectionID",sel->id().str())) {
             error() << "attempt by " << parent->name() << " to register a selection, " << sel->id() 
@@ -145,13 +145,8 @@ HltDataSvc::addSelection(Hlt::Selection* sel,IAlgorithm* parent,bool originatesF
     } else {
         debug() << "adding TES input selection " << sel->id() << " requested by " << parent->name() << endmsg;
     }
-    typedef std::map<stringKey,Hlt::Selection*>::iterator iter_t;
-    std::pair<iter_t,iter_t> p = m_mapselections.equal_range(sel->id());
-    if (p.first!=p.second) return StatusCode::FAILURE; // already there...
+    m_ownedSelections.push_back(sel);
     m_mapselections.insert(p.first,std::make_pair(sel->id(),sel));
-    if (!originatesFromTES) {
-        m_ownedSelections.push_back(sel);
-    }
     return StatusCode::SUCCESS;
 }
 
@@ -197,8 +192,10 @@ HltDataSvc::config() {
 
 void HltDataSvc::handle( const Incident& ) {
     for ( std::map<stringKey,Hlt::Selection*>::iterator i  = m_mapselections.begin();
-                                                        i != m_mapselections.end(); ++i)
+                                                        i != m_mapselections.end(); ++i) {
+        // std::cout << "cleaning " << i->first << std::endl;
         i->second->clean(); // invalidates all selections, resets decision to 'no', i.e. reject
+    }
 };
 
 MsgStream& HltDataSvc::msg(MSG::Level level) const {

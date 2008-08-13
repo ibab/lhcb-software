@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.cpp,v 1.10 2008-08-04 12:09:34 graven Exp $
+// $Id: HltL0MuonPrepare.cpp,v 1.11 2008-08-13 07:19:27 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ HltL0MuonPrepare::HltL0MuonPrepare( const std::string& name,
   , m_selections(*this)
 {
   declareProperty("MinPt", m_PtMin = 0.1);
-  m_selections.declareProperties();
+  m_selections.declareProperties( boost::assign::map_list_of( 1,std::string("TES:")+L0MuonCandidateLocation::Default) );
 }
 //=============================================================================
 // Destructor
@@ -62,13 +62,10 @@ StatusCode HltL0MuonPrepare::initialize() {
 //=============================================================================
 StatusCode HltL0MuonPrepare::execute() {
 
-
-  L0MuonCandidates* input = get<L0MuonCandidates>(L0MuonCandidateLocation::Default);
   Tracks* muons = new Tracks();
   put(muons, "Hlt/Track/"+m_selections.output()->id().str());
 
-  //BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selections.input<1>()) {
-  BOOST_FOREACH( L0MuonCandidate* l0muon, *input) {
+  BOOST_FOREACH( L0MuonCandidate* l0muon, *m_selections.input<1>()) {
     debug() << "l0pt " << l0muon->pt()<< endmsg;
     if (fabs(l0muon->pt()) < m_PtMin) continue;
     if (checkClone(l0muon)) {
@@ -86,9 +83,8 @@ StatusCode HltL0MuonPrepare::execute() {
   }
 
   if (m_debug) {
-    // debug() << "# Input: " << m_selections.input<1>()->size() 
-    debug() << "# Input: " << input->size() 
-            << " -> # Output: " << m_selections.output()->size() << endreq;
+     debug() << "# Input: " << m_selections.input<1>()->size() 
+             << " -> # Output: " << m_selections.output()->size() << endreq;
   }
 
   return StatusCode::SUCCESS;

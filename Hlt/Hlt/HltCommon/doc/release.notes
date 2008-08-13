@@ -5,6 +5,12 @@
 !----------------------------------------------------------------------------
 
 !2008-08-11 - Gerhard Raven
+  - HltL0{Muon,Calo}Prepare now get their input through HltDataSvc
+  - refactor RoutingBits: RoutingBitsWriter is moved to HltRawData,
+    the RoutingBitEvaluatorFactory is renamed to HltSelectionCombinerFactory,
+    and inherits from the IHtSelectionCombinerFactory interface
+
+!2008-08-11 - Gerhard Raven
   - add ! (not) to grammar in HltRoutingBitEvaluatorFactory
 
 !2008-08-09 - Gerhard Raven

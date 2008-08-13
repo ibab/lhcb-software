@@ -1,4 +1,4 @@
-// $Id: HltL0CaloPrepare.h,v 1.3 2008-08-10 18:27:54 graven Exp $
+// $Id: HltL0CaloPrepare.h,v 1.4 2008-08-13 07:19:27 graven Exp $
 #ifndef HLTCOMMON_HLTLOCALOPREPARE_H 
 #define HLTCOMMON_HLTL0CALOPREPARE_H 1
 
@@ -34,11 +34,7 @@ private:
 
 private:
 
-  Hlt::SelectionContainer1<LHCb::Track> m_selection; 
-  //Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
-
-  std::string m_caloCandidatesLocation;
-  std::string m_outputL0CaloCandidatesName;
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::L0CaloCandidate> m_selection; 
 
   std::string m_caloMakerName;  
   ICaloSeedTool* m_caloMaker;

@@ -1,4 +1,4 @@
-// $Id: HltL0MuonPrepare.h,v 1.2 2008-07-30 13:37:32 graven Exp $
+// $Id: HltL0MuonPrepare.h,v 1.3 2008-08-13 07:19:27 graven Exp $
 #ifndef HLTCOMMON_HLTL0MUONPREPARE_H 
 #define HLTCOMMON_HLTL0MUONPREPARE_H 1
 
@@ -33,8 +33,7 @@ private:
   IMuonSeedTool* m_maker;
 
   bool checkClone(LHCb::L0MuonCandidate* muon);
-  // Hlt::SelectionContainer2<LHCb::Track,LHCb::L0MuonCandidate> m_selections;
-  Hlt::SelectionContainer1<LHCb::Track> m_selections;
+  Hlt::SelectionContainer2<LHCb::Track,LHCb::L0MuonCandidate> m_selections;
 
 };
 #endif // HLTHADALLEYPRETRIGGER_H

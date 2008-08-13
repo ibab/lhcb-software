@@ -54,7 +54,6 @@ private:
   mutable IANNSvc*          m_annSvc;
   std::auto_ptr<Hlt::Configuration> m_hltConf;
 
-  std::string                         m_TESOutputPrefix;
   std::map<stringKey,Hlt::Selection*> m_mapselections;
   std::vector<Hlt::Selection*>        m_ownedSelections; //owner of HltSelection
 
