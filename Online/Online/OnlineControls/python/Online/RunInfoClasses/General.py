@@ -106,7 +106,7 @@ class General:
     self.tae         = None
     self.storeSlice  = None
     self.monSlice    = None
-    dpn = self.manager.name()+':'+self.name+'_RunInfo.general.outputLevel'
+    dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
       self.outputLvl = self.dp('general.outputLevel')
     dpn = self.manager.name()+':'+self.name+self.postfix+'.general.acceptRate'
@@ -115,19 +115,12 @@ class General:
     dpn = self.manager.name()+':'+self.name+self.postfix+'.general.TAE'
     if self.devMgr.exists(dpn):
       self.tae = self.dp('general.TAE')
-    dpn = self.manager.name()+':'+self.name+'_RunInfo.Storage.storeSlice'
+    dpn = self.manager.name()+':'+self.name+postfix+'.Storage.storeSlice'
     if self.devMgr.exists(dpn):
       self.storeSlice = self.dp('Storage.storeSlice')
-    dpn = self.manager.name()+':'+self.name+'_RunInfo.MonFarm.monSlice'
+    dpn = self.manager.name()+':'+self.name+postfix+'.MonFarm.monSlice'
     if self.devMgr.exists(dpn):
       self.monSlice = self.dp('MonFarm.monSlice')
-
-    if self.outputLvl is not None:
-      self.reader.add(self.outputLvl)
-    if self.acceptFrac is not None:
-      self.reader.add(self.acceptFrac)
-    if self.tae is not None:
-      self.reader.add(self.tae)
 
     if complete:
       self.addBasic()
@@ -146,6 +139,13 @@ class General:
     self.reader.add(self.runTyp)
     self.reader.add(self.partID)
     self.reader.add(self.partition)
+    if self.outputLvl is not None:
+      self.reader.add(self.outputLvl)
+    if self.acceptFrac is not None:
+      self.reader.add(self.acceptFrac)
+    if self.tae is not None:
+      self.reader.add(self.tae)
+
     
   # ===========================================================================
   def addHLT(self):
@@ -172,31 +172,6 @@ class General:
     self.monInfra    = self.dp('MonFarm.monInfrastructure')
     self.relayInfra  = self.dp('MonFarm.relayInfrastructure')
 
-    self.tell1Boards = self.dp('SubDetectors.tell1List')
-
-    # General run info 
-    self.reader.add(self.runTyp)
-    self.reader.add(self.partID)
-    self.reader.add(self.partition)
-    if self.outputLvl is not None:
-      self.reader.add(self.outputLvl)
-    if self.acceptFrac is not None:
-      self.reader.add(self.acceptFrac)
-    if self.tae is not None:
-      self.reader.add(self.tae)
-
-    # HLT information
-    self.reader.add(self.nSubFarm)
-
-    # Storage information
-    self.reader.add(self.storageDir)
-    self.reader.add(self.storeFlag)
-    self.reader.add(self.streams)
-    self.reader.add(self.strMult)
-    self.reader.add(self.rcvInfra)
-    self.reader.add(self.strInfra)
-    if self.storeSlice is not None:
-      self.reader.add(self.storeSlice)
     # Monitoring information
     self.reader.add(self.monFlag)
     self.reader.add(self.monTypes)
@@ -206,8 +181,6 @@ class General:
     self.reader.add(self.relayInfra)
     if self.monSlice is not None:
       self.reader.add(self.monSlice)
-    # Subdetector information
-    self.reader.add(self.tell1Boards)    
 
   # ===========================================================================
   def addStorage(self):
@@ -220,14 +193,17 @@ class General:
     self.strInfra    = self.dp('Storage.streamInfrastructure')
     self.streams     = self.dp('Storage.streamTypes')
     self.strMult     = self.dp('Storage.streamMultiplicity')
-    self.reader.add(self.storageDir)
+
     self.reader.add(self.storeFlag)
+    self.reader.add(self.storageDir)
     self.reader.add(self.rcvStrategy)
     self.reader.add(self.rcvInfra)
     self.reader.add(self.strStrategy)
     self.reader.add(self.streams)
     self.reader.add(self.strMult)
     self.reader.add(self.strInfra)
+    if self.storeSlice is not None:
+      self.reader.add(self.storeSlice)
     
   # ===========================================================================
   def dp(self,name):
@@ -353,8 +329,12 @@ class General:
        corresponding to a given active partition identifier.
     """
     if self.partID.data is None: self.load()
-    res = _isDetectorInReadout(self.partID.data,name)
-    return res
+    return _isDetectorInReadout(self.partID.data,name)
+  
+  # ===========================================================================
+  def partitionName(self):
+    "Access to the active partition name."
+    return self._dataItem(self.partition)
   
   # ===========================================================================
   def setPartitionID(self,partID,save=0):
@@ -389,8 +369,8 @@ class General:
     "Access Accept rate in percent from RunInfo."
     if self.acceptFrac:
       if self.acceptFrac.data is None: self.load()
-      return int(self.acceptFrac.data)
-    return 100
+      return float(self.acceptFrac.data)
+    return 1.0
 
   # ===========================================================================
   def TAE(self):
